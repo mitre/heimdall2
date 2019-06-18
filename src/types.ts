@@ -1,5 +1,5 @@
 const DATA_NOT_FOUND_MESSAGE : string = "N/A";
-const DEFAULT_IMPACT : number = -1;
+const NUMBER_NOT_FOUND : number = -1;
 
 /*
 Compendium of changes from base store, aside from the obvious:
@@ -111,11 +111,15 @@ class Control {
     /* The data of an inspec control. May contain results, if it was part of a run */
     parent : Profile | InspecOutput;
     tags : ControlTags;
+    results : ControlResult[];
     rule_title : string;
     vuln_discuss : string;
     code : string;
     impact: number;
     vuln_num : string;
+    source_file : string;
+    source_line : number;
+    message : string;
 
     // TODO: We don't currently properly handle these
     refs : any[];
@@ -139,37 +143,45 @@ class Control {
 
         // As numbers, impact and code need to be strings for consistency
         // We keep impact for computing severity
-        this.impact = o.impact || DEFAULT_IMPACT;
+        this.impact = o.impact || NUMBER_NOT_FOUND;
         this.code = o.code || DATA_NOT_FOUND_MESSAGE;
 
         // The id/vuln_num is truncated partially. I don't really know why - wisdom of the elders I guess
         this.vuln_num = o.id || DATA_NOT_FOUND_MESSAGE;
         if(this.vuln_num.match(/\d+\.\d+/)) { // Taken from store - reason unclear
-            this.vuln_num = this.vuln_num.match(/\d+(\.\d+)*/)[0];
+            let match = this.vuln_num.match(/\d+(\.\d+)*/);
+            if (match) {
+                this.vuln_num = match[0];
+            }
         }
 
         // Have to pull these out but not terribly difficult
-        const {ref, line} = source_location;
-        this.source_file = ref || DATA_NOT_FOUND_MESSAGE;
-        this.source_line = line || DATA_NOT_FOUND_MESSAGE;
+        if(o.source_location) {
+            this.source_file = o.source_location.ref || DATA_NOT_FOUND_MESSAGE;
+            this.source_line = o.source_location.line || NUMBER_NOT_FOUND;
+        }
+        else {
+            this.source_file = DATA_NOT_FOUND_MESSAGE;
+            this.source_line = NUMBER_NOT_FOUND;
+        }
 
         // Next, we handle building message, and interring results
         // Initialize message. If it's of no impact, prefix with what it is
-        if(this.impact_val == 0) {
+        if(this.impact == 0) {
             this.message = this.vuln_discuss + "\n\n";
         } else {
             this.message = "";
         }
 
         // Track statuses and results as well
-        results = results || [];
-        this.results = map(r => new ControlResult(r), this.results);
+        let results : any[] = o.results || [];
+        this.results = results.map((r : any) => new ControlResult(this, r));
 
         // Compose our message
-        this.results.foreach(r => this.message += r.toMessageLine());
+        this.results.forEach(r => this.message += r.toMessageLine());
     }
 
-    get finding_details() {
+    get finding_details() : string {
         let result = '';
         switch(this.status) {
             case "Failed": 
@@ -186,6 +198,8 @@ class Control {
                 } else {
                     return "No test available for this control";
                 }
+            default:
+                throw "Error: invalid status generated"
         }
     }
 
@@ -208,17 +222,17 @@ class Control {
         }
     }
 
-    get profile_name() {
+    get profile_name() : string {
         /* Returns the programatically determined profile name of this control */
         let prefix;
-        if(this.parent) {
+        if(this.parent instanceof InspecOutput) {
             // It's a result - name as such
             prefix = "result;"
         }
         else {
             prefix = "profile;"
         }
-        return prefix + this.name + ": " + this.parent.version;
+        return prefix + this.rule_title + ": " + this.parent.version;
     }
 
     get start_time() {
@@ -239,99 +253,138 @@ class Control {
 
 class ControlTags {
     /* Contains data for the tags on a Control.  */
-    constructor(parent, jsonObject){
-        // Set the parent. Would be of type Control
+    parent : Control;
+    gid : string;
+    group_title : string;
+    rule_id : string;
+    rule_ver : string;
+    cci_ref : string;
+    cis_family : string;
+    cis_rid : string;
+    cis_level : string;
+    check_content : string;
+    fix_text : string;
+    rationale : string;
+    nist : string[];
+
+    constructor(parent : Control, jsonObject : any){
+        // Set the parent. 
         this.parent = parent;
 
-        // Extract rest from json
-        const {
-            gid, gtitle, rid, stig_id, cci, nist, check, fix, rationale,
-            cis_family, cis_rid, cis_level, } = jsonObject;
+        // Abbreviate our param to make this all nicer looking
+        let o = jsonObject;
 
-        this.gid = gid || DATA_NOT_FOUND_MESSAGE;
-        this.group_title = gtitle || DATA_NOT_FOUND_MESSAGE;
-        this.rule_id = rid || DATA_NOT_FOUND_MESSAGE;
-        this.rule_ver = stig_id || DATA_NOT_FOUND_MESSAGE;
-        this.cci_ref = cci || DATA_NOT_FOUND_MESSAGE;
-        this.cis_family = cis_family || DATA_NOT_FOUND_MESSAGE;
-        this.cis_rid = cis_rid || DATA_NOT_FOUND_MESSAGE;
-        this.cis_level = cis_level || DATA_NOT_FOUND_MESSAGE;
+        this.gid = o.gid || DATA_NOT_FOUND_MESSAGE;
+        this.group_title = o.gtitle || DATA_NOT_FOUND_MESSAGE;
+        this.rule_id = o.rid || DATA_NOT_FOUND_MESSAGE;
+        this.rule_ver = o.stig_id || DATA_NOT_FOUND_MESSAGE;
+        this.cci_ref = o.cci || DATA_NOT_FOUND_MESSAGE;
+        this.cis_family = o.cis_family || DATA_NOT_FOUND_MESSAGE;
+        this.cis_rid = o.cis_rid || DATA_NOT_FOUND_MESSAGE;
+        this.cis_level = o.cis_level || DATA_NOT_FOUND_MESSAGE;
 
         // This case is slightly special as nist is a list.
-        this.nist = nist || ['unmapped'];
+        this.nist = o.nist || ['unmapped'];
 
         // These need slight correction, as they are paragraphs of data
-        this.check_content = fixParagraphData(check);
-        this.fix_text = fixParagraphData(fix);
-        this.rationale = fixParagraphData(rationale);
+        this.check_content = fixParagraphData(o.check);
+        this.fix_text = fixParagraphData(o.fix);
+        this.rationale = fixParagraphData(o.rationale);
     }
 }
 
 
 class ControlResult {
-    constructor(parent, jsonObject) {
-        // Set the parent. Would be of type Control
+    /* Holds the results of (part of) a single control.  */
+    parent : Control;
+    start_time : string;
+    backtrace : string;
+    status : string;
+    skip_message : string;
+    code_desc : string;
+    message : string;
+    exception : any;
+
+    constructor(parent : Control, jsonObject : any) {
+        // Set the parent. 
         this.parent = parent;
 
-        // Extract relevant fields from json
-        const {start_time, backtrace, status, skip_message, code_desc, message, exception} = jsonObject;
+        // Abbreviate our param to make this all nicer looking
+        let o = jsonObject;
 
         // Rest we copy more or less as normal
-        this.start_time = start_time || DATA_NOT_FOUND_MESSAGE;
-        this.backtrace = backtrace || DATA_NOT_FOUND_MESSAGE;
-        this.status = status || DATA_NOT_FOUND_MESSAGE;
-        this.skip_message = skip_message || DATA_NOT_FOUND_MESSAGE;
-        this.code_desc = code_desc || DATA_NOT_FOUND_MESSAGE;
-        this.message = message || DATA_NOT_FOUND_MESSAGE;
-        this.exception = exception;
+        this.start_time = o.start_time || DATA_NOT_FOUND_MESSAGE;
+        this.backtrace = o.backtrace || DATA_NOT_FOUND_MESSAGE;
+        this.status = o.status || DATA_NOT_FOUND_MESSAGE;
+        this.skip_message = o.skip_message || DATA_NOT_FOUND_MESSAGE;
+        this.code_desc = o.code_desc || DATA_NOT_FOUND_MESSAGE;
+        this.message = o.message || DATA_NOT_FOUND_MESSAGE;
+        this.exception = o.exception;
     }
 
     toMessageLine() {
         switch(this.status) {
             case "skipped": 
-                return "SKIPPED -- " + this.skip_message + '\n';
+                return "SKIPPED -- " + this.skip_message + "\n";
             case "failed":  
-                return "FAILED -- Test: " + result.code_desc + '\nMessage: ' + result.message + '\n';
+                return "FAILED -- Test: " + this.code_desc + "\nMessage: " + this.message + "\n";
             case "passed":  
-                return "PASSED -- " + result.code_desc + '\n';
+                return "PASSED -- " + this.code_desc + "\n";
             case "error": 
-                return "ERROR -- Test: " + result.code_desc + '\nMessage: ' + result.message + '\n';
+                return "ERROR -- Test: " + this.code_desc + "\nMessage: " + this.message + "\n";
             default:
-                return "Exception: " + result.exception + "\n";
+                return "Exception: " + this.exception + "\n";
         }
     }
 }
 
 
 class Group {
-    constructor(parent, jsonObject) {
-        // Set the parent. Would be of type Profile
+    /* Contains information regarding the grouping of a controls within a profile */
+
+    parent : Profile;
+    title : string;
+    controls : string[];
+    id : string;
+
+    constructor(parent : Profile, jsonObject : any) {
+        // Set the parent.
         this.parent = parent;
 
-        // Extract rest from json
-        const { title, controls, id} = jsonObject;
-        this.title = title || DATA_NOT_FOUND_MESSAGE;
-        this.controls = controls || DATA_NOT_FOUND_MESSAGE; // Note that this is a list of ids.
-        this.id = id || DATA_NOT_FOUND_MESSAGE;
+        // Abbreviate our param to make this all nicer looking
+        let o = jsonObject;
+
+        this.title = o.title || DATA_NOT_FOUND_MESSAGE;
+        this.controls = o.controls || [];
+        this.id = o.id || DATA_NOT_FOUND_MESSAGE;
     }
 
     // TODO: Make a function to grab the actual controls via routing thru parent
 }
 
 class Attribute {
-    constructor(parent, jsonObject) {
+    /* Contains further information about a profile*/
+
+    parent : Profile;
+    name : string;
+    options_description : string;
+    options_default : string;
+
+    constructor(parent : Profile, jsonObject : any) {
         // Set the parent. Would be of type Profile
         this.parent = parent;
 
+        // Abbreviate our param to make this all nicer looking
+        let o = jsonObject;
+
         // Extract rest from json
-        const {name, options} = jsonObject;
-        this.name = name;
-        if(options) {
-            this.options_description = options["description"];
-            this.options_default = options["default"];
+        this.name = o.name;
+        if(o.options) {
+            this.options_description = o.options.description || DATA_NOT_FOUND_MESSAGE;
+            this.options_default = o.options.default || DATA_NOT_FOUND_MESSAGE;
         } else {
-            this.options_description = options["description"] || DATA_NOT_FOUND_MESSAGE;
-            this.options_default = options["default"] || DATA_NOT_FOUND_MESSAGE;
+            this.options_description = DATA_NOT_FOUND_MESSAGE;
+            this.options_default = DATA_NOT_FOUND_MESSAGE;
         }
     }
 }
