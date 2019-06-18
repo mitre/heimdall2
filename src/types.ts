@@ -1,5 +1,5 @@
-const DATA_NOT_FOUND_MESSAGE : string = "N/A";
-const NUMBER_NOT_FOUND : number = -1;
+const DATA_NOT_FOUND_MESSAGE: string = "N/A";
+const NUMBER_NOT_FOUND: number = -1;
 
 /*
 Compendium of changes from base store, aside from the obvious:
@@ -9,39 +9,41 @@ Compendium of changes from base store, aside from the obvious:
 
 */
 
-function fixParagraphData(s : string | undefined) : string {
+function fixParagraphData(s: string | undefined): string {
     // Given a string or undefined s, will return that string/undefined
     // as a paragraph broken up by <br> tags instead of newlines
-    if(s) {
-        return s.replace(new RegExp("\n", 'g'), '<br>');
-    }
-    else {
+    if (s) {
+        return s.replace(new RegExp("\n", "g"), "<br>");
+    } else {
         return DATA_NOT_FOUND_MESSAGE;
     }
 }
 
 class InspecOutput {
     /* Contains the result(s) of running one or more inspec profiles */
-    version : string;
-    platform : string;
-    controls : Control[];
-    profiles : Profile[];
+    version: string;
+    platform: string;
+    controls: Control[];
+    profiles: Profile[];
 
     // TODO: We don't currently properly handle these
-    other_checks : any[];
-    statistics : any;
-    
+    other_checks: any[];
+    statistics: any;
 
-    constructor(jsonObject : any) {
+    constructor(jsonObject: any) {
         // No parent; this is a top level type
         // Abbreviate our param to make this nicer looking
         let o = jsonObject;
 
         // Save these to properties
-        this.version  = o.version  || DATA_NOT_FOUND_MESSAGE;
+        this.version = o.version || DATA_NOT_FOUND_MESSAGE;
         this.platform = o.platform || DATA_NOT_FOUND_MESSAGE;
-        this.controls = (o.controls || []).map((c : any) => new Control(this, c));
-        this.profiles = (o.profiles || []).map((p : any) => new Profile(this, p));
+        this.controls = (o.controls || []).map(
+            (c: any) => new Control(this, c)
+        );
+        this.profiles = (o.profiles || []).map(
+            (p: any) => new Profile(this, p)
+        );
         this.other_checks = o.other_checks || [];
         this.statistics = o.statistics || {};
     }
@@ -49,31 +51,29 @@ class InspecOutput {
 
 class Profile {
     /* The data of an inspec profile. May contain results, if it was part of a run */
-    parent : InspecOutput | undefined;
-    name : string;
-    title : string;
-    maintainer : string;
-    copyright : string;
-    copyright_email : string;
-    license : string;
-    summary : string;
-    version : string;
-    depends : string;
-    supports : string;
-    sha256 : string;
+    parent: InspecOutput | undefined;
+    name: string;
+    title: string;
+    maintainer: string;
+    copyright: string;
+    copyright_email: string;
+    license: string;
+    summary: string;
+    version: string;
+    depends: string;
+    supports: string;
+    sha256: string;
     generator_name: string;
     generator_version: string;
-    controls : Control[];
-    groups : Group[];
-    attributes : Attribute[];
+    controls: Control[];
+    groups: Group[];
+    attributes: Attribute[];
 
-
-
-    constructor(parent : InspecOutput | undefined, jsonObject : any) {
+    constructor(parent: InspecOutput | undefined, jsonObject: any) {
         // Save our parent. Would be of type InspecOutput
         // Note: can be null, in case of loading a profile independently
         this.parent = parent;
-        
+
         // Abbreviate our param to make this nicer looking
         let o = jsonObject;
 
@@ -91,42 +91,45 @@ class Profile {
         this.sha256 = o.sha256 || DATA_NOT_FOUND_MESSAGE;
 
         // These we break out of their nesting
-        if(o.generator){
+        if (o.generator) {
             this.generator_name = o.generator.name || DATA_NOT_FOUND_MESSAGE;
-            this.generator_version = o.generator.version  || DATA_NOT_FOUND_MESSAGE;
+            this.generator_version =
+                o.generator.version || DATA_NOT_FOUND_MESSAGE;
         } else {
             this.generator_name = DATA_NOT_FOUND_MESSAGE;
             this.generator_version = DATA_NOT_FOUND_MESSAGE;
         }
-        
-        // Get controls, groups, and attributes. 
-        this.controls   = (o.controls   || []).map((c : any) => new Control(this, c));
-        this.groups     = (o.groups     || []).map((g : any) => new Group(this, g));
-        this.attributes = (o.attributes || []).map((a : any) => new Attribute(this, a));
+
+        // Get controls, groups, and attributes.
+        this.controls = (o.controls || []).map(
+            (c: any) => new Control(this, c)
+        );
+        this.groups = (o.groups || []).map((g: any) => new Group(this, g));
+        this.attributes = (o.attributes || []).map(
+            (a: any) => new Attribute(this, a)
+        );
     }
 }
 
-
 class Control {
     /* The data of an inspec control. May contain results, if it was part of a run */
-    parent : Profile | InspecOutput;
-    tags : ControlTags;
-    results : ControlResult[];
-    rule_title : string;
-    vuln_discuss : string;
-    code : string;
+    parent: Profile | InspecOutput;
+    tags: ControlTags;
+    results: ControlResult[];
+    rule_title: string;
+    vuln_discuss: string;
+    code: string;
     impact: number;
-    vuln_num : string;
-    source_file : string;
-    source_line : number;
-    message : string;
+    vuln_num: string;
+    source_file: string;
+    source_line: number;
+    message: string;
 
     // TODO: We don't currently properly handle these
-    refs : any[];
+    refs: any[];
 
-
-    constructor(parent : Profile | InspecOutput, jsonObject : any) {
-        // Set the parent. 
+    constructor(parent: Profile | InspecOutput, jsonObject: any) {
+        // Set the parent.
         this.parent = parent;
 
         // Abbreviate our param to make this all nicer looking
@@ -148,7 +151,8 @@ class Control {
 
         // The id/vuln_num is truncated partially. I don't really know why - wisdom of the elders I guess
         this.vuln_num = o.id || DATA_NOT_FOUND_MESSAGE;
-        if(this.vuln_num.match(/\d+\.\d+/)) { // Taken from store - reason unclear
+        if (this.vuln_num.match(/\d+\.\d+/)) {
+            // Taken from store - reason unclear
             let match = this.vuln_num.match(/\d+(\.\d+)*/);
             if (match) {
                 this.vuln_num = match[0];
@@ -156,42 +160,53 @@ class Control {
         }
 
         // Have to pull these out but not terribly difficult
-        if(o.source_location) {
+        if (o.source_location) {
             this.source_file = o.source_location.ref || DATA_NOT_FOUND_MESSAGE;
             this.source_line = o.source_location.line || NUMBER_NOT_FOUND;
-        }
-        else {
+        } else {
             this.source_file = DATA_NOT_FOUND_MESSAGE;
             this.source_line = NUMBER_NOT_FOUND;
         }
 
         // Next, we handle building message, and interring results
         // Initialize message. If it's of no impact, prefix with what it is
-        if(this.impact == 0) {
+        if (this.impact == 0) {
             this.message = this.vuln_discuss + "\n\n";
         } else {
             this.message = "";
         }
 
         // Track statuses and results as well
-        let results : any[] = o.results || [];
-        this.results = results.map((r : any) => new ControlResult(this, r));
+        let results: any[] = o.results || [];
+        this.results = results.map((r: any) => new ControlResult(this, r));
 
         // Compose our message
-        this.results.forEach(r => this.message += r.toMessageLine());
+        this.results.forEach(r => (this.message += r.toMessageLine()));
     }
 
-    get finding_details() : string {
-        let result = '';
-        switch(this.status) {
-            case "Failed": 
-                return "One or more of the automated tests failed or was inconclusive for the control \n\n " + this.message + "\n";
-            case "Passed": 
-                return "All Automated tests passed for the control \n\n " + this.message + "\n"; 
-            case "Not Reviewed": 
-                return "Automated test skipped due to known accepted condition in the control : \n\n" + this.message + "\n"; 
-            case "Not Applicable": 
-                return "Justification: \n\n" + this.message + "\n"; 
+    get finding_details(): string {
+        let result = "";
+        switch (this.status) {
+            case "Failed":
+                return (
+                    "One or more of the automated tests failed or was inconclusive for the control \n\n " +
+                    this.message +
+                    "\n"
+                );
+            case "Passed":
+                return (
+                    "All Automated tests passed for the control \n\n " +
+                    this.message +
+                    "\n"
+                );
+            case "Not Reviewed":
+                return (
+                    "Automated test skipped due to known accepted condition in the control : \n\n" +
+                    this.message +
+                    "\n"
+                );
+            case "Not Applicable":
+                return "Justification: \n\n" + this.message + "\n";
             case "Profile Error":
                 if (this.message) {
                     return "Exception: \n\n" + this.message + "\n";
@@ -199,15 +214,15 @@ class Control {
                     return "No test available for this control";
                 }
             default:
-                throw "Error: invalid status generated"
+                throw "Error: invalid status generated";
         }
     }
 
-    get status() : string {
+    get status(): string {
         throw "Not implemented";
     }
 
-    get severity() : string {
+    get severity(): string {
         /* Compute the severity of this report as a string */
         if (this.impact < 0.1) {
             return "none";
@@ -217,30 +232,28 @@ class Control {
             return "medium";
         } else if (this.impact < 0.9) {
             return "high";
-        } else  {
+        } else {
             return "critical";
         }
     }
 
-    get profile_name() : string {
+    get profile_name(): string {
         /* Returns the programatically determined profile name of this control */
         let prefix;
-        if(this.parent instanceof InspecOutput) {
+        if (this.parent instanceof InspecOutput) {
             // It's a result - name as such
-            prefix = "result;"
-        }
-        else {
-            prefix = "profile;"
+            prefix = "result;";
+        } else {
+            prefix = "profile;";
         }
         return prefix + this.rule_title + ": " + this.parent.version;
     }
 
     get start_time() {
         /* Returns the start time of this control's run, as determiend by the time of the first test*/
-        if(this.results) {
+        if (this.results) {
             return this.results[0].start_time;
-        }
-        else {
+        } else {
             return DATA_NOT_FOUND_MESSAGE;
         }
     }
@@ -250,25 +263,24 @@ class Control {
     }
 }
 
-
 class ControlTags {
     /* Contains data for the tags on a Control.  */
-    parent : Control;
-    gid : string;
-    group_title : string;
-    rule_id : string;
-    rule_ver : string;
-    cci_ref : string;
-    cis_family : string;
-    cis_rid : string;
-    cis_level : string;
-    check_content : string;
-    fix_text : string;
-    rationale : string;
-    nist : string[];
+    parent: Control;
+    gid: string;
+    group_title: string;
+    rule_id: string;
+    rule_ver: string;
+    cci_ref: string;
+    cis_family: string;
+    cis_rid: string;
+    cis_level: string;
+    check_content: string;
+    fix_text: string;
+    rationale: string;
+    nist: string[];
 
-    constructor(parent : Control, jsonObject : any){
-        // Set the parent. 
+    constructor(parent: Control, jsonObject: any) {
+        // Set the parent.
         this.parent = parent;
 
         // Abbreviate our param to make this all nicer looking
@@ -284,7 +296,7 @@ class ControlTags {
         this.cis_level = o.cis_level || DATA_NOT_FOUND_MESSAGE;
 
         // This case is slightly special as nist is a list.
-        this.nist = o.nist || ['unmapped'];
+        this.nist = o.nist || ["unmapped"];
 
         // These need slight correction, as they are paragraphs of data
         this.check_content = fixParagraphData(o.check);
@@ -293,20 +305,19 @@ class ControlTags {
     }
 }
 
-
 class ControlResult {
     /* Holds the results of (part of) a single control.  */
-    parent : Control;
-    start_time : string;
-    backtrace : string;
-    status : string;
-    skip_message : string;
-    code_desc : string;
-    message : string;
-    exception : any;
+    parent: Control;
+    start_time: string;
+    backtrace: string;
+    status: string;
+    skip_message: string;
+    code_desc: string;
+    message: string;
+    exception: any;
 
-    constructor(parent : Control, jsonObject : any) {
-        // Set the parent. 
+    constructor(parent: Control, jsonObject: any) {
+        // Set the parent.
         this.parent = parent;
 
         // Abbreviate our param to make this all nicer looking
@@ -323,31 +334,42 @@ class ControlResult {
     }
 
     toMessageLine() {
-        switch(this.status) {
-            case "skipped": 
+        switch (this.status) {
+            case "skipped":
                 return "SKIPPED -- " + this.skip_message + "\n";
-            case "failed":  
-                return "FAILED -- Test: " + this.code_desc + "\nMessage: " + this.message + "\n";
-            case "passed":  
+            case "failed":
+                return (
+                    "FAILED -- Test: " +
+                    this.code_desc +
+                    "\nMessage: " +
+                    this.message +
+                    "\n"
+                );
+            case "passed":
                 return "PASSED -- " + this.code_desc + "\n";
-            case "error": 
-                return "ERROR -- Test: " + this.code_desc + "\nMessage: " + this.message + "\n";
+            case "error":
+                return (
+                    "ERROR -- Test: " +
+                    this.code_desc +
+                    "\nMessage: " +
+                    this.message +
+                    "\n"
+                );
             default:
                 return "Exception: " + this.exception + "\n";
         }
     }
 }
 
-
 class Group {
     /* Contains information regarding the grouping of a controls within a profile */
 
-    parent : Profile;
-    title : string;
-    controls : string[];
-    id : string;
+    parent: Profile;
+    title: string;
+    controls: string[];
+    id: string;
 
-    constructor(parent : Profile, jsonObject : any) {
+    constructor(parent: Profile, jsonObject: any) {
         // Set the parent.
         this.parent = parent;
 
@@ -365,12 +387,12 @@ class Group {
 class Attribute {
     /* Contains further information about a profile*/
 
-    parent : Profile;
-    name : string;
-    options_description : string;
-    options_default : string;
+    parent: Profile;
+    name: string;
+    options_description: string;
+    options_default: string;
 
-    constructor(parent : Profile, jsonObject : any) {
+    constructor(parent: Profile, jsonObject: any) {
         // Set the parent. Would be of type Profile
         this.parent = parent;
 
@@ -379,8 +401,9 @@ class Attribute {
 
         // Extract rest from json
         this.name = o.name;
-        if(o.options) {
-            this.options_description = o.options.description || DATA_NOT_FOUND_MESSAGE;
+        if (o.options) {
+            this.options_description =
+                o.options.description || DATA_NOT_FOUND_MESSAGE;
             this.options_default = o.options.default || DATA_NOT_FOUND_MESSAGE;
         } else {
             this.options_description = DATA_NOT_FOUND_MESSAGE;
