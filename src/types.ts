@@ -219,7 +219,21 @@ class Control {
     }
 
     get status(): string {
-        throw "Not implemented";
+        if(this.status_list.includes("error")) {
+            return "Profile Error";
+        } else {
+            if(this.impact == 0) {
+                return "Not Applicable";
+            } else if(this.status_list.includes("failed")) {
+                return "Failed";
+            } else if(this.status_list.includes("passed")) {
+                return "Passed";
+            } else if(this.status_list.includes("skipped")) {
+                return "Not Reviewed";
+            } else {
+                return "Profile Error";
+            }
+        }
     }
 
     get severity(): string {
@@ -249,7 +263,7 @@ class Control {
         return prefix + this.rule_title + ": " + this.parent.version;
     }
 
-    get start_time() {
+    get start_time() : string {
         /* Returns the start time of this control's run, as determiend by the time of the first test*/
         if (this.results) {
             return this.results[0].start_time;
@@ -258,7 +272,7 @@ class Control {
         }
     }
 
-    get status_list() {
+    get status_list() : string[] {
         return this.results.map(r => r.status);
     }
 }

@@ -4,5 +4,8 @@
         "module": "commonjs",
         "outDir": "out",
         "strict": true,
+        "lib": [
+            "es7"
+        ],
     }
 }
