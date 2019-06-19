@@ -51,7 +51,7 @@ class InspecOutput {
 
 class Profile {
     /* The data of an inspec profile. May contain results, if it was part of a run */
-    parent: InspecOutput | undefined;
+    parent: InspecOutput | null;
     name: string;
     title: string;
     maintainer: string;
@@ -69,7 +69,7 @@ class Profile {
     groups: Group[];
     attributes: Attribute[];
 
-    constructor(parent: InspecOutput | undefined, jsonObject: any) {
+    constructor(parent: InspecOutput | null, jsonObject: any) {
         // Save our parent. Would be of type InspecOutput
         // Note: can be null, in case of loading a profile independently
         this.parent = parent;
@@ -120,7 +120,7 @@ class Control {
     vuln_discuss: string;
     code: string;
     impact: number;
-    vuln_num: string;
+    id: string;
     source_file: string;
     source_line: number;
     message: string;
@@ -137,6 +137,7 @@ class Control {
 
         // Save and rename data to match what was in store
         this.rule_title = o.title || DATA_NOT_FOUND_MESSAGE;
+        this.id = o.id || DATA_NOT_FOUND_MESSAGE;
         this.refs = o.refs || DATA_NOT_FOUND_MESSAGE;
         this.tags = new ControlTags(this, o.tags);
 
@@ -149,15 +150,6 @@ class Control {
         this.impact = o.impact || NUMBER_NOT_FOUND;
         this.code = o.code || DATA_NOT_FOUND_MESSAGE;
 
-        // The id/vuln_num is truncated partially. I don't really know why - wisdom of the elders I guess
-        this.vuln_num = o.id || DATA_NOT_FOUND_MESSAGE;
-        if (this.vuln_num.match(/\d+\.\d+/)) {
-            // Taken from store - reason unclear
-            let match = this.vuln_num.match(/\d+(\.\d+)*/);
-            if (match) {
-                this.vuln_num = match[0];
-            }
-        }
 
         // Have to pull these out but not terribly difficult
         if (o.source_location) {
@@ -182,6 +174,17 @@ class Control {
 
         // Compose our message
         this.results.forEach(r => (this.message += r.toMessageLine()));
+    }
+
+    get vuln_num(): string {
+        // We truncate the id based up to its first decimal (as far as I can tell - update later)
+        if (this.id.match(/\d+\.\d+/)) {
+            let match = this.vuln_num.match(/\d+(\.\d+)*/);
+            if (match) {
+                return match[0];
+            }
+        }
+        return this.id;
     }
 
     get finding_details(): string {
