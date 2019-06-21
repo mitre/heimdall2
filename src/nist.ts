@@ -6,8 +6,10 @@
  * A NistHash is a large record containing information about many families, and by extension their categories
  */
 
+ import {ControlStatus, Control} from "./types";
+
 // Format is [Name, Description, NumberOfChildren]
-type NistFamilyDescription = [string, string, number];
+export type NistFamilyDescription = [string, string, number];
 
 const families: NistFamilyDescription[] = [
     ["UM", "Unmapped", 1],
@@ -35,17 +37,17 @@ const families: NistFamilyDescription[] = [
 // TODO: Replace NistControlHash with just "ControL" if such is feasible
 
 // Represents the status of a group of controsl. Typically holds the value of the "worst" control amongst the group
-type ControlGroupStatus = ControlStatus | "Empty";
+export type ControlGroupStatus = ControlStatus | "Empty";
 
 // A peculiar type of seemingly indistinguishable utility from just using a Control. TODO: Decipher why. is it just the drilldown chart API demands it?
-type NistControlHash = {
+export type NistControlHash = {
     name: string; // The name of the control
     status: ControlStatus; // the status of the control
     value: number;
 };
 
 // Holds all of the data related to a NIST vuln category, nested in a family. EX: RA-4, PM-12, etc.
-type NistCategory = {
+export type NistCategory = {
     // Sometimes referred to as a subfamily
     name: string; // Derived from its parent, and the index it has amongst its parents children
     count: number; // How many controls it holds
@@ -55,7 +57,7 @@ type NistCategory = {
 };
 
 // Holds all of the data related to a NIST vuln vamily, EX: SC, SI, etc.
-type NistFamily = {
+export type NistFamily = {
     name: string; // A name - 2 character NIST code.
     desc: string; // A description
     count: number; // How many categories it holds
@@ -64,10 +66,10 @@ type NistFamily = {
 };
 
 // Top level structure. Holds many families
-type NistHash = { name: string; children: NistFamily[] };
+export type NistHash = { name: string; children: NistFamily[] };
 
-type ControlHashItem = Control[];
-type ControlHash = { [index: string]: ControlHashItem }; // Maps nist categories to lists of relevant controls
+export type ControlHashItem = Control[];
+export type ControlHash = { [index: string]: ControlHashItem }; // Maps nist categories to lists of relevant controls
 
 function generateNewNistFamily(fam: NistFamilyDescription): NistFamily {
     /* Creates an "empty" (IE 0 count everywhere) nist family hash based on a family description. */
@@ -96,7 +98,7 @@ function generateNewNistFamily(fam: NistFamilyDescription): NistFamily {
     };
 }
 
-function generateNewNistHash(): NistHash {
+export function generateNewNistHash(): NistHash {
     /**
      *  Generate an "empty" (IE 0 count everywhere) hash of all the nist family descriptions in the global constant "families".
      */
@@ -106,7 +108,7 @@ function generateNewNistHash(): NistHash {
     };
 }
 
-function generateNewControlHash(): ControlHash {
+export function generateNewControlHash(): ControlHash {
     /**
      * Generate an "empty" (IE empty lists) hash of all the nist family subgroup names to be populated with controls.
      * Note that this is slightly more inefficient thatn if we just generated them while we made the nist hash, but it is

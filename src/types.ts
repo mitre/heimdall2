@@ -12,14 +12,14 @@ various properties have been made getters to prevent invalid state configuration
 */
 
 // These types are used throughout for control/result status and impact
-type ControlStatus =
+export type ControlStatus =
     | "Passed"
     | "Failed"
     | "Not Applicable"
     | "Not Reviewed"
     | "Profile Error";
-type ResultStatus = "passed" | "failed" | "skipped" | "error";
-type Severity = "none" | "low" | "medium" | "high" | "critical";
+export type ResultStatus = "passed" | "failed" | "skipped" | "error";
+export type Severity = "none" | "low" | "medium" | "high" | "critical";
 
 function fixParagraphData(s: string | undefined): string {
     // Given a string or undefined s, will return that string/undefined
@@ -31,7 +31,7 @@ function fixParagraphData(s: string | undefined): string {
     }
 }
 
-class InspecOutput {
+export class InspecOutput {
     /* Contains the result(s) of running one or more inspec profiles */
     version: string;
     platform: string;
@@ -61,7 +61,7 @@ class InspecOutput {
     }
 }
 
-class Profile {
+export class Profile {
     /* The data of an inspec profile. May contain results, if it was part of a run */
     parent: InspecOutput | null;
     name: string;
@@ -123,7 +123,7 @@ class Profile {
     }
 }
 
-class Control {
+export class Control {
     /* The data of an inspec control. May contain results, if it was part of a run */
     parent: Profile | InspecOutput;
     tags: ControlTags;
@@ -291,7 +291,7 @@ class Control {
     }
 }
 
-class ControlTags {
+export class ControlTags {
     /* Contains data for the tags on a Control.  */
     parent: Control;
     gid: string;
@@ -333,7 +333,7 @@ class ControlTags {
     }
 }
 
-class ControlResult {
+export class ControlResult {
     /* Holds the results of (part of) a single control.  */
     parent: Control;
     start_time: string;
@@ -389,7 +389,7 @@ class ControlResult {
     }
 }
 
-class Group {
+export class Group {
     /* Contains information regarding the grouping of a controls within a profile */
 
     parent: Profile;
@@ -412,7 +412,7 @@ class Group {
     // TODO: Make a function to grab the actual controls via routing thru parent
 }
 
-class Attribute {
+export class Attribute {
     /* Contains further information about a profile*/
 
     parent: Profile;

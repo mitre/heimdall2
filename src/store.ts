@@ -15,6 +15,10 @@
  *
  */
 
+ import {ControlStatus, Severity, InspecOutput, Profile, Control} from "./types";
+ import {ControlHash, NistHash, generateNewControlHash, generateNewNistHash, ControlGroupStatus} from "./nist";
+
+
 // These types are used for controls, etc.
 // Mostly self explanatory
 
@@ -842,7 +846,7 @@ class HeimdallState extends State {
          * The name here is a misnomer - nistHash already provides the filtered families.
          * What this does is provide a modified record structure of all currently visible controls, removing any empty families/categories,
          * as well as replacing each control with a slightly modified version. Unclear exactly why, but so it goes.
-         * TODO: Figure out why, lol.
+         * TODO: Figure out why the record needs to be in that particular format. On-site processing probably better
          */
         this.assertValid();
         return this.filteredFamilies;
@@ -867,5 +871,3 @@ class HeimdallState extends State {
         return fam_status;
     }
 }
-
-export const store = new HeimdallState();

@@ -2,10 +2,12 @@
     "compilerOptions": {
         "target": "es5",
         "module": "commonjs",
-        "outDir": "out",
+        "rootDir": "src",
+        "outDir": "dist",
         "strict": true,
         "lib": [
             "es7"
         ],
-    }
+        "declaration": true,
+    },
 }

@@ -1,0 +1,22 @@
+{
+  "name": "inspecjs",
+  "version": "0.0.1",
+  "description": "© 2018 The MITRE Corporation.",
+  "main": "store.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mitre/inspecjs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mitre/inspecjs/issues"
+  },
+  "homepage": "https://github.com/mitre/inspecjs#readme",
+  "types": "dist/store.d.ts"
+}
