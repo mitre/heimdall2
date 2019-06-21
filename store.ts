@@ -27,10 +27,26 @@ const STATUSES: ControlStatus[] = [
 ];
 const SEVERITIES: Severity[] = ["low", "medium", "high", "critical"];
 
+// Used in the headers at the top counting statuses
 type StatusCount = [ControlStatus, number];
 type SeverityCount = [Severity, number];
 type StatusHash = { [k in ControlStatus]: number };
 type SeverityHash = { [k in Severity]: number };
+
+// Used to track data in FilteredFamilies
+type FilteredFamilyItem = {
+    vuln_discuss: string;
+    check_content: string;
+    fix_text: string;
+};
+type FilteredFamilyCategory = { name: string; items: FilteredFamilyItem[] };
+type FilteredFamily = {
+    name: string;
+    desc: string;
+    items: FilteredFamilyCategory[];
+};
+
+// Used to track whether data is currently valid
 type Validity = "Valid" | "Invalid" | "InProgress";
 
 class ControlFilter {
@@ -773,19 +789,15 @@ class HeimdallState extends State {
     }
 
     updateFilteredFamilies() {
-        let filteredFamilies: any[] = []; // TODO Properly annotate this type
+        let filteredFamilies: FilteredFamily[] = [];
 
         // For each family, we want to explore its categories and
         this.nistHash.children.forEach(family => {
             // This record tracks entries for each categories controls
-            let categoryEntries: any[] = []; // TODO: properly annotate this type
+            let categoryEntries: FilteredFamilyCategory[] = []; // TODO: properly annotate this type
 
             family.children.forEach(category => {
-                let children: {
-                    vuln_discuss: string;
-                    check_content: string;
-                    fix_text: string;
-                }[] = [];
+                let children: FilteredFamilyItem[] = [];
 
                 category.children.forEach(controlHash => {
                     let control = this.getControl(controlHash["name"]);
@@ -795,7 +807,7 @@ class HeimdallState extends State {
                     // TODO: As with the ControlHash in nist.ts, we would like to examine the possibility
                     //       of not having any special conversion occur here, instead using the control directly.
                     //       This would obviate this entire function (except for the debatable utility of clearing empty lists)
-                    let modifiedControlHash = {
+                    let modifiedControlHash: FilteredFamilyItem = {
                         vuln_discuss: control.vuln_discuss.replace(
                             /<br>/g,
                             "\n"
