@@ -848,20 +848,20 @@ class HeimdallState extends State {
         return this.filteredFamilies;
     }
 
-    private getStatusValue( status_Ary: ControlGroupStatus[]): ControlGroupStatus {
+    private getStatusValue(statuses: ControlGroupStatus[]): ControlGroupStatus {
         /**
          * Sumarrizes an array of status into a single status
          */
         var fam_status: ControlGroupStatus = "Empty";
-        if (status_Ary.includes("Failed")) {
+        if (statuses.includes("Failed")) {
             fam_status = "Failed";
-        } else if (status_Ary.includes("Profile Error")) {
+        } else if (statuses.includes("Profile Error")) {
             fam_status = "Profile Error";
-        } else if (status_Ary.includes("Not Reviewed")) {
+        } else if (statuses.includes("Not Reviewed")) {
             fam_status = "Not Reviewed";
-        } else if (status_Ary.includes("Passed")) {
+        } else if (statuses.includes("Passed")) {
             fam_status = "Passed";
-        } else if (status_Ary.includes("Not Applicable")) {
+        } else if (statuses.includes("Not Applicable")) {
             fam_status = "Not Applicable";
         }
         return fam_status;
