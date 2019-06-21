@@ -12,9 +12,14 @@ various properties have been made getters to prevent invalid state configuration
 */
 
 // These types are used throughout for control/result status and impact
-type ControlStatus = "Passed" | "Failed" | "Not Applicable" | "Not Reviewed" | "Profile Error";
+type ControlStatus =
+    | "Passed"
+    | "Failed"
+    | "Not Applicable"
+    | "Not Reviewed"
+    | "Profile Error";
 type ResultStatus = "passed" | "failed" | "skipped" | "error";
-type Impact = "none" | "low" | "medium" | "high" | "critical";
+type Severity = "none" | "low" | "medium" | "high" | "critical";
 
 function fixParagraphData(s: string | undefined): string {
     // Given a string or undefined s, will return that string/undefined
@@ -157,7 +162,6 @@ class Control {
         this.impact = o.impact || NUMBER_NOT_FOUND;
         this.code = o.code || DATA_NOT_FOUND_MESSAGE;
 
-
         // Have to pull these out but not terribly difficult
         if (o.source_location) {
             this.source_file = o.source_location.ref || DATA_NOT_FOUND_MESSAGE;
@@ -229,16 +233,16 @@ class Control {
     }
 
     get status(): ControlStatus {
-        if(this.status_list.includes("error")) {
+        if (this.status_list.includes("error")) {
             return "Profile Error";
         } else {
-            if(this.impact == 0) {
+            if (this.impact == 0) {
                 return "Not Applicable";
-            } else if(this.status_list.includes("failed")) {
+            } else if (this.status_list.includes("failed")) {
                 return "Failed";
-            } else if(this.status_list.includes("passed")) {
+            } else if (this.status_list.includes("passed")) {
                 return "Passed";
-            } else if(this.status_list.includes("skipped")) {
+            } else if (this.status_list.includes("skipped")) {
                 return "Not Reviewed";
             } else {
                 return "Profile Error";
@@ -246,7 +250,7 @@ class Control {
         }
     }
 
-    get severity(): Impact {
+    get severity(): Severity {
         /* Compute the severity of this report as a string */
         if (this.impact < 0.1) {
             return "none";
@@ -273,7 +277,7 @@ class Control {
         return prefix + this.rule_title + ": " + this.parent.version;
     }
 
-    get start_time() : string {
+    get start_time(): string {
         /* Returns the start time of this control's run, as determiend by the time of the first test*/
         if (this.results) {
             return this.results[0].start_time;
@@ -282,7 +286,7 @@ class Control {
         }
     }
 
-    get status_list() : ResultStatus[] {
+    get status_list(): ResultStatus[] {
         return this.results.map(r => r.status);
     }
 }

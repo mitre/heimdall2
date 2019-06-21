@@ -4,35 +4,38 @@
  * Ascertain whether the condition that searches don't apply if they're only one character actually matters/should be kept.
  * Clean up old gross dict-typings, such as those in FilteredFamilies, that might be better suited to remain as Controls.
  * More documentation always good
- * Improve the invalidation schema. Currently separate getter/updater function. Vue does this with just an update function. How is this possible? 
+ * Improve the invalidation schema. Currently separate getter/updater function. Vue does this with just an update function. How is this possible?
  *      Addendum to that: maybe find a way to represent chain dependencies.
  * Deduce the mysterious difference between getControls and getNISTControls. I'm fairly confident that I got the implementation correct, but why distinguish in the first place?
  * Test more.
  * Get rid of weird return types like in getCompliance. This will require me to edit vue. I relish the opportunity!
  *      This also applies to things like get/set severityFilter which should (obviously) take/yield a Severity type!
  *      However, it raises the issue of how do we deal with invalid inputs. in general we should warn and stuff if we get something that the system doesn't like!
- * Likewise ensure that getSelectedControl behaves as we expect it to in the face of invalid key (answer is: probably not!) 
- * 
+ * Likewise ensure that getSelectedControl behaves as we expect it to in the face of invalid key (answer is: probably not!)
+ *
  */
 
+// These types are used for controls, etc.
+// Mostly self explanatory
 
- // These types are used for controls, etc.
- // Mostly self explanatory
-
- const STATUSES: ControlStatus[] = [ "Passed", "Failed", "Not Applicable", "Not Reviewed", "Profile Error"];
- const SEVERITIES: Severity[] = ["low", "medium", "high", "critical"];
- 
+const STATUSES: ControlStatus[] = [
+    "Passed",
+    "Failed",
+    "Not Applicable",
+    "Not Reviewed",
+    "Profile Error",
+];
+const SEVERITIES: Severity[] = ["low", "medium", "high", "critical"];
 
 type StatusCount = [ControlStatus, number];
 type SeverityCount = [Severity, number];
-type StatusHash = {[k in ControlStatus] : number};
-type SeverityHash = {[k in Severity]: number};
+type StatusHash = { [k in ControlStatus]: number };
+type SeverityHash = { [k in Severity]: number };
 type Validity = "Valid" | "Invalid" | "InProgress";
-
 
 class ControlFilter {
     /**
-     * Holds the state of the control filters. 
+     * Holds the state of the control filters.
      * This is partially a misnomer because it does not include the family filters.
      * For whatever reason, there are separate functions (NI)
      */
@@ -44,15 +47,15 @@ class ControlFilter {
         /**
          * Returns true if the given control satisfies the status, impact, and search term filters
          */
-        if(this.status && this.status != control.status) {
+        if (this.status && this.status != control.status) {
             return false;
         }
         // Must stringify the impact, but otherwise just check equality
-        else if(this.severity && this.severity != control.severity) {
+        else if (this.severity && this.severity != control.severity) {
             return false;
         }
         // Finally, if there's a search term, we return based on that
-        if(this.searchTerm) {
+        if (this.searchTerm) {
             let term = this.searchTerm.toLowerCase();
             // Check if any of the following list contain it, in lower case
             return [
@@ -61,10 +64,11 @@ class ControlFilter {
                 control.severity,
                 control.status,
                 control.finding_details,
-                control.code
-            ].map(s => s.toLowerCase())
-            .map(s => s.includes(term))
-            .reduce((a, b) => a || b);
+                control.code,
+            ]
+                .map(s => s.toLowerCase())
+                .map(s => s.includes(term))
+                .reduce((a, b) => a || b);
         } else {
             // No search term; we're fine
             return true;
@@ -77,24 +81,23 @@ class State {
      * This class contaisn functions for ingesting one or more reports, and querying/building statistics from them.
      */
     // These fjields hold the currently ingested data
-    controls: {[index:string] : Control} = {} ; // Maps control-id's to controls
+    controls: { [index: string]: Control } = {}; // Maps control-id's to controls
     // TODO: Keep reports/profiles instead of just throwing them out
 
     // These are our derived fields
     protected allControls: Control[] = [];
-
 
     /* Data validity control */
 
     // This property tracks whether our current hashes are up to date
     // Has three states: Valid (no need to update) | Invalid (need to update) | InProgress (We haven't left the call)
     // InProgress is necessary so we don't get caught in a recursive loop
-    private valid : Validity = "Invalid";
+    private valid: Validity = "Invalid";
 
     // This function ensures that the State's "derived" values are kept up to date
     // Call it before each retreival
     protected assertValid() {
-        if(this.valid != "Invalid") {
+        if (this.valid != "Invalid") {
             return;
         } else {
             // Invalid: update everything
@@ -112,12 +115,10 @@ class State {
     // Call it after each data modification
     invalidate() {
         // Don't want to mess with InProgress data. Just be careful to not mess with the flow overmuch
-        if(this.valid == "Valid"){
+        if (this.valid == "Valid") {
             this.valid = "Invalid";
         }
     }
-
-
 
     /* Data modification */
 
@@ -144,7 +145,7 @@ class State {
          * Add an inspec profile to the store
          */
         this.invalidate();
-         pro.controls.forEach(c => this.addControl(c));
+        pro.controls.forEach(c => this.addControl(c));
     }
 
     reset(): void {
@@ -159,13 +160,12 @@ class State {
 
     getControl(control_id: string): Control {
         /**
-         * Retrieve the control with the provided ID. 
+         * Retrieve the control with the provided ID.
          * WARNING: Currently does not handle if the ID does not exist. Tread carefully
          * Note that editing a control here is likely to cause issues
          */
         this.assertValid();
         return this.controls[control_id];
-    
     }
 
     getAllControls(): Control[] {
@@ -176,8 +176,6 @@ class State {
         return this.allControls;
     }
 
-
-
     /* Data updating */
 
     private updateControls(): void {
@@ -186,7 +184,7 @@ class State {
 
     private updateAllControls(): void {
         this.allControls = [];
-        for(let key in this.controls) {
+        for (let key in this.controls) {
             this.allControls.push(this.controls[key]);
         }
     }
@@ -194,8 +192,8 @@ class State {
 
 class HeimdallState extends State {
     /**
-     * This subclass has data specifically useful for the heimdall site. 
-     * However, they may also be more broadly useful. 
+     * This subclass has data specifically useful for the heimdall site.
+     * However, they may also be more broadly useful.
      * A goal for future work would be to make the site and the underlying data less tightly coupled.
      * But for now, we're just making a slot in replacement, not fiddling with the vue.
      */
@@ -209,7 +207,7 @@ class HeimdallState extends State {
     selectedControlID: string | null = null; // The currently selected NIST control, if any
     filter: ControlFilter = new ControlFilter();
 
-    // These fields are statistics/derived data of currently ingested report(s)/controls/profiles. 
+    // These fields are statistics/derived data of currently ingested report(s)/controls/profiles.
     // They are updated via the updateDerivedData function
     protected nistControls: Control[] = []; // depends on controls. This may seem a frivolous dependency but it may eventually not be
     protected filteredControls: Control[] = []; // depends on nistControls
@@ -217,8 +215,8 @@ class HeimdallState extends State {
         "Not Applicable": 0,
         "Not Reviewed": 0,
         "Profile Error": 0,
-        "Failed": 0,
-        "Passed": 0,
+        Failed: 0,
+        Passed: 0,
     }; // depends on filteredControls
     protected severityHash: SeverityHash = {
         critical: 0,
@@ -231,12 +229,11 @@ class HeimdallState extends State {
     protected severityCount: SeverityCount[] = []; // Depends on impacthash
     protected compliance: number = 0; // Depends on statushash
     protected controlsHash: ControlHash = {}; // Depends on nistControls
-    protected nistHash: NistHash = {name: "", children: []}; // Depends on nistControls and controlsHash
+    protected nistHash: NistHash = { name: "", children: [] }; // Depends on nistControls and controlsHash
     protected bindValue: string = ""; // Depends on title, filters, basically everything and yet also nothing. Do it last.
-    
-    
+
     /* Data updating */
-    
+
     protected updateDerivedData() {
         super.updateDerivedData();
         // Update them in order of dependency. ORDER MATTERS!
@@ -252,7 +249,6 @@ class HeimdallState extends State {
         this.updateBindValue();
     }
 
-    
     private updateBindValue(): void {
         this.bindValue = [
             this.filter.status,
@@ -261,25 +257,29 @@ class HeimdallState extends State {
             this.selectedFamily,
             this.selectedSubFamily,
             this.selectedControlID,
-        ].map(v => v || "none").join(";");
+        ]
+            .map(v => v || "none")
+            .join(";");
     }
 
     private updateCompliance(): void {
         /** Compute the compliance */
-        let total = this.statusHash["Passed"] + this.statusHash["Failed"] + this.statusHash["Not Reviewed"] + this.statusHash["Profile Error"];
-        this.compliance = 100 * this.statusHash["Passed"] / total;
-
+        let total =
+            this.statusHash["Passed"] +
+            this.statusHash["Failed"] +
+            this.statusHash["Not Reviewed"] +
+            this.statusHash["Profile Error"];
+        this.compliance = (100 * this.statusHash["Passed"]) / total;
     }
-
 
     private updateControlHash(): void {
         /**
          * Rebuilds the ctrl hashes, which is essentially a mapping of nist codes to lists of relevant controls.
-         * 
+         *
          * TODO: Unless it is explicitly necessary (something which I've seen absolutely no indication of outside of NistHash construction), I would
          * highly recommend that we remove controls_hsh, and instead attempt to provide a mechanism by which we can quickly
          * filter all controls at once. somehow. It would be quite a bit easier to modify but maybe slower. Comes down to versatil vs efficiency
-         * 
+         *
          */
 
         // Remake our hashes, empty
@@ -317,20 +317,19 @@ class HeimdallState extends State {
         }
 
         // If we have a family filter, then build from nist controls.
-        if(fam_filter) {
+        if (fam_filter) {
             this.filteredControls = [];
             this.nistControls.forEach(control => {
                 // Create a string of all the nist tags for searching
                 let nist_val = control.tags.nist.join();
 
                 // Verify that it includes our family filter
-                if(nist_val.includes(fam_filter as string)){ // The "as string" is necessary because we know fam_filter to be not null, but TypeScript can't tell
+                if (nist_val.includes(fam_filter as string)) {
+                    // The "as string" is necessary because we know fam_filter to be not null, but TypeScript can't tell
                     this.filteredControls.push(control);
-                } 
-                
+                }
             });
-        }
-        else {
+        } else {
             // If there is no family filter, then just make it the same as nistControls
             this.filteredControls = this.nistControls;
         }
@@ -343,7 +342,7 @@ class HeimdallState extends State {
         // Now iterate over controls, adding only if they pass inspection
         this.allControls.forEach(control => {
             // Check that it matches our current filters. if so, add it
-            if(this.filter.accepts(control)) {
+            if (this.filter.accepts(control)) {
                 this.nistControls.push(control);
             }
         });
@@ -353,7 +352,7 @@ class HeimdallState extends State {
         /**
          * Rebuilds the nist hash, which is essentially just a categorization of controls by family/category.
          */
-        
+
         // Remake our hashes, empty
         this.nistHash = generateNewNistHash();
 
@@ -406,11 +405,11 @@ class HeimdallState extends State {
     private updateStatusHash(): void {
         // Reinitialize our status dicts
         this.statusHash = {
-            "Passed": 0,
-            "Failed": 0,
+            Passed: 0,
+            Failed: 0,
             "Not Applicable": 0,
             "Not Reviewed": 0,
-            "Profile Error": 0
+            "Profile Error": 0,
         };
 
         this.filteredControls.forEach((control: Control) => {
@@ -425,8 +424,8 @@ class HeimdallState extends State {
             low: 0,
             medium: 0,
             high: 0,
-            critical: 0
-        }
+            critical: 0,
+        };
 
         this.filteredControls.forEach((control: Control) => {
             this.severityHash[control.severity] += 1;
@@ -435,7 +434,7 @@ class HeimdallState extends State {
 
     private updateStatusCount(): void {
         // Build our statuses
-        this.statusCount = []
+        this.statusCount = [];
         STATUSES.forEach(status => {
             this.statusCount.push([status, this.statusHash[status]]);
         });
@@ -443,14 +442,11 @@ class HeimdallState extends State {
 
     private updateSeverityCount(): void {
         // Build our impacts
-        this.severityCount = []
+        this.severityCount = [];
         SEVERITIES.forEach(severity => {
             this.severityCount.push([severity, this.severityHash[severity]]);
         });
     }
-
-
-
 
     /* Data retreival */
 
@@ -464,31 +460,29 @@ class HeimdallState extends State {
         return this.bindValue;
     }
 
-
     getCompliance(): [[string, number]] {
         /**
          * Computes the percent compliance of the (currently filtered) controls.
          * Note: The bizarre return signature is due to requirements of other vue components. Kind of dumb, really
          * TODO: Make it just return a number, for gods sake
          */
-        this.assertValid()
+        this.assertValid();
         return [["Data", this.compliance]];
     }
-    
 
     getControls(): Control[] {
         /**
          * This function is similar to getNistControls (and in fact USUALLY returns a subset of it).
          * However, it differs in the following two ways:
          * 1. If we have a control selected, then we only return that control in a one-item array
-         * 2. If we have a family or subfamily filter, only return controls that meet the criteria 
+         * 2. If we have a family or subfamily filter, only return controls that meet the criteria
          *    of getNistControls AND are relevant to that nist family/category
-         * 
-         * Rule #1 is somewhat odd in that it just completely ignores the getNistControls filters. 
+         *
+         * Rule #1 is somewhat odd in that it just completely ignores the getNistControls filters.
          * If we have a selection, then that's what we return, full stop.
          */
         this.assertValid();
-        return this.filteredControls;        
+        return this.filteredControls;
     }
 
     getImpactFilter(): string {
@@ -506,7 +500,6 @@ class HeimdallState extends State {
         this.assertValid();
         return this.severityHash;
     }
-
 
     getNistControls(): Control[] {
         /** 
@@ -535,10 +528,9 @@ class HeimdallState extends State {
          * Get the currently selected control, if there is one. Returns null if none
          */
         this.assertValid();
-        if(this.selectedControlID) {
+        if (this.selectedControlID) {
             return this.controls[this.selectedControlID];
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -550,7 +542,6 @@ class HeimdallState extends State {
         this.assertValid();
         return this.selectedFamily || "";
     }
-    
 
     getSelectedSubFamily(): string {
         /**
@@ -565,7 +556,7 @@ class HeimdallState extends State {
          * Returns the current severity filter. Of debatable usefulness, but harmless.
          */
         this.assertValid();
-        return this.filter.severity || ""; 
+        return this.filter.severity || "";
     }
 
     getStatus(): StatusHash {
@@ -576,7 +567,6 @@ class HeimdallState extends State {
         return this.statusHash;
     }
 
-
     getStatusFilter(): string {
         /**
          * Returns the current status filter. Of debatable usefulness, but harmless.
@@ -585,9 +575,8 @@ class HeimdallState extends State {
         return this.filter.status || "";
     }
 
-    
     /* Data modification */
-    
+
     setImpactFilter(val: string): void {
         /**
          * @deprecated Same reason as with get
@@ -619,7 +608,7 @@ class HeimdallState extends State {
         this.selectedFamily = val;
         this.invalidate();
     }
-    
+
     setSelectedSubFamily(val: string): void {
         /**
          * Sets the selected subfamily filter
@@ -655,8 +644,6 @@ class HeimdallState extends State {
         this.invalidate();
     }
 
-
-
     reset(): void {
         /**
          * Deletes all data in the store and clears all filters
@@ -673,7 +660,7 @@ class HeimdallState extends State {
         this.invalidate();
     }
 
-    parseFile(content : string, file_name: string ) {
+    parseFile(content: string, file_name: string) {
         // Clear old controls
         this.controls = {};
 
@@ -704,11 +691,11 @@ class HeimdallState extends State {
     updateNistAndControlHash(): void {
         /**
          * Rebuilds the nist/ctrl hashes, which are essentially just categorization of each control by its Nist family/category
-         * 
+         *
          * TODO: Unless it is explicitly necessary (something which I've seen absolutely no indication of), I would
          * highly recommend that we remove controls_hsh, and instead attempt to provide a mechanism by which we can quickly
          * filter all controls at once. somehow. It would be quite a bit easier to modify but maybe slower. Comes down to versatil vs efficiency
-         * 
+         *
          * TODO: If we don't do the above, at least split them into two functions
          */
 
@@ -729,7 +716,7 @@ class HeimdallState extends State {
                 }
             });
         });
-        
+
         // Next, we update the counts on each family, tracking a miniateurized version of each control
         // TODO: Determine whether this miniateurization is necessary. Hunch is no, and that it's just some back-compat stuff we could ez fix elsewhere. But we'll see
         this.nistHash.children.forEach(family => {
@@ -775,7 +762,7 @@ class HeimdallState extends State {
         });
         // Job's done
     }
-    
+
     getFilteredFamilies() {
         /**
          * The name here is a misnomer - nistHash already provides the filtered families.
@@ -788,13 +775,17 @@ class HeimdallState extends State {
     updateFilteredFamilies() {
         let filteredFamilies: any[] = []; // TODO Properly annotate this type
 
-        // For each family, we want to explore its categories and 
+        // For each family, we want to explore its categories and
         this.nistHash.children.forEach(family => {
             // This record tracks entries for each categories controls
             let categoryEntries: any[] = []; // TODO: properly annotate this type
 
             family.children.forEach(category => {
-                let children: {vuln_discuss: string, check_content: string, fix_text: string}[] = [];
+                let children: {
+                    vuln_discuss: string;
+                    check_content: string;
+                    fix_text: string;
+                }[] = [];
 
                 category.children.forEach(controlHash => {
                     let control = this.getControl(controlHash["name"]);
@@ -805,10 +796,16 @@ class HeimdallState extends State {
                     //       of not having any special conversion occur here, instead using the control directly.
                     //       This would obviate this entire function (except for the debatable utility of clearing empty lists)
                     let modifiedControlHash = {
-                        vuln_discuss : control.vuln_discuss.replace( /<br>/g, "\n"),
-                        check_content : control.tags.check_content.replace( /<br>/g, "\n"),
-                        fix_text : control.tags.fix_text.replace( /<br>/g, "\n"),
-                    }
+                        vuln_discuss: control.vuln_discuss.replace(
+                            /<br>/g,
+                            "\n"
+                        ),
+                        check_content: control.tags.check_content.replace(
+                            /<br>/g,
+                            "\n"
+                        ),
+                        fix_text: control.tags.fix_text.replace(/<br>/g, "\n"),
+                    };
 
                     // Push it in
                     children.push(modifiedControlHash);
@@ -836,11 +833,11 @@ class HeimdallState extends State {
         return filteredFamilies;
     }
 
-    getStatusValue(status_Ary: ControlGroupStatus[]) : ControlGroupStatus {
+    getStatusValue(status_Ary: ControlGroupStatus[]): ControlGroupStatus {
         /**
          * Sumarrizes an array of status into a single status
          */
-        var fam_status : ControlGroupStatus = "Empty";
+        var fam_status: ControlGroupStatus = "Empty";
         if (status_Ary.includes("Failed")) {
             fam_status = "Failed";
         } else if (status_Ary.includes("Profile Error")) {
@@ -854,6 +851,6 @@ class HeimdallState extends State {
         }
         return fam_status;
     }
-};
+}
 
 export const store = new HeimdallState();

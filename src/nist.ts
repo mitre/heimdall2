@@ -38,35 +38,36 @@ const families: NistFamilyDescription[] = [
 type ControlGroupStatus = ControlStatus | "Empty";
 
 // A peculiar type of seemingly indistinguishable utility from just using a Control. TODO: Decipher why. is it just the drilldown chart API demands it?
-type NistControlHash = { 
+type NistControlHash = {
     name: string; // The name of the control
     status: ControlStatus; // the status of the control
-    value: number; 
-}
+    value: number;
+};
 
 // Holds all of the data related to a NIST vuln category, nested in a family. EX: RA-4, PM-12, etc.
-type NistCategory = {  // Sometimes referred to as a subfamily
+type NistCategory = {
+    // Sometimes referred to as a subfamily
     name: string; // Derived from its parent, and the index it has amongst its parents children
-    count: number;  // How many controls it holds
-    value: number;  // Its value (?????)
+    count: number; // How many controls it holds
+    value: number; // Its value (?????)
     status: ControlGroupStatus; // The combined status of all it's members
     children: NistControlHash[]; // The controls themselves
 };
 
 // Holds all of the data related to a NIST vuln vamily, EX: SC, SI, etc.
-type NistFamily = { 
-    name: string;  // A name - 2 character NIST code.
+type NistFamily = {
+    name: string; // A name - 2 character NIST code.
     desc: string; // A description
     count: number; // How many categories it holds
     status: ControlGroupStatus; // The combined status of all it's members
-    children: NistCategory[]; 
+    children: NistCategory[];
 };
 
- // Top level structure. Holds many families
+// Top level structure. Holds many families
 type NistHash = { name: string; children: NistFamily[] };
 
 type ControlHashItem = Control[];
-type ControlHash = { [index:string] : ControlHashItem }; // Maps nist categories to lists of relevant controls
+type ControlHash = { [index: string]: ControlHashItem }; // Maps nist categories to lists of relevant controls
 
 function generateNewNistFamily(fam: NistFamilyDescription): NistFamily {
     /* Creates an "empty" (IE 0 count everywhere) nist family hash based on a family description. */
@@ -91,18 +92,18 @@ function generateNewNistFamily(fam: NistFamilyDescription): NistFamily {
         desc: description,
         count: 0,
         children: fam_children,
-        status: "Empty"
+        status: "Empty",
     };
 }
 
 function generateNewNistHash(): NistHash {
     /**
-     *  Generate an "empty" (IE 0 count everywhere) hash of all the nist family descriptions in the global constant "families". 
+     *  Generate an "empty" (IE 0 count everywhere) hash of all the nist family descriptions in the global constant "families".
      */
     return {
         name: "NIST SP 800-53",
-        children: families.map(f => generateNewNistFamily(f))
-    }
+        children: families.map(f => generateNewNistFamily(f)),
+    };
 }
 
 function generateNewControlHash(): ControlHash {
@@ -111,16 +112,15 @@ function generateNewControlHash(): ControlHash {
      * Note that this is slightly more inefficient thatn if we just generated them while we made the nist hash, but it is
      * unlikely to have a significant impact
      */
-    let result : ControlHash = {};
-    for(let family of generateNewNistHash().children) {
-        for(let familyItem of family.children) {
+    let result: ControlHash = {};
+    for (let family of generateNewNistHash().children) {
+        for (let familyItem of family.children) {
             let key: string = familyItem.name;
             result[key] = [];
         }
     }
     return result;
 }
-
 
 /* ************************************************************************* */
 /* **************************** Old Stuff ********************************** */
