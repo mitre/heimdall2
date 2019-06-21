@@ -11,6 +11,11 @@ various properties have been made getters to prevent invalid state configuration
 
 */
 
+// These types are used throughout for control/result status and impact
+type ControlStatus = "Passed" | "Failed" | "Not Applicable" | "Not Reviewed" | "Profile Error";
+type ResultStatus = "passed" | "failed" | "skipped" | "error";
+type Impact = "none" | "low" | "medium" | "high" | "critical";
+
 function fixParagraphData(s: string | undefined): string {
     // Given a string or undefined s, will return that string/undefined
     // as a paragraph broken up by <br> tags instead of newlines
@@ -223,7 +228,7 @@ class Control {
         }
     }
 
-    get status(): string {
+    get status(): ControlStatus {
         if(this.status_list.includes("error")) {
             return "Profile Error";
         } else {
@@ -241,7 +246,7 @@ class Control {
         }
     }
 
-    get severity(): string {
+    get severity(): Impact {
         /* Compute the severity of this report as a string */
         if (this.impact < 0.1) {
             return "none";
@@ -277,7 +282,7 @@ class Control {
         }
     }
 
-    get status_list() : string[] {
+    get status_list() : ResultStatus[] {
         return this.results.map(r => r.status);
     }
 }
@@ -329,7 +334,7 @@ class ControlResult {
     parent: Control;
     start_time: string;
     backtrace: string;
-    status: string;
+    status: ResultStatus;
     skip_message: string;
     code_desc: string;
     message: string;
@@ -352,7 +357,7 @@ class ControlResult {
         this.exception = o.exception;
     }
 
-    toMessageLine() {
+    toMessageLine(): string {
         switch (this.status) {
             case "skipped":
                 return "SKIPPED -- " + this.skip_message + "\n";
