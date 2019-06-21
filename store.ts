@@ -231,8 +231,8 @@ class HeimdallState extends State {
         "Not Applicable": 0,
         "Not Reviewed": 0,
         "Profile Error": 0,
-        Failed: 0,
-        Passed: 0,
+        "Failed": 0,
+        "Passed": 0,
     }; // depends on filteredControls
     protected severityHash: SeverityHash = {
         critical: 0,
@@ -247,6 +247,7 @@ class HeimdallState extends State {
     protected controlsHash: ControlHash = {}; // Depends on nistControls
     protected nistHash: NistHash = { name: "", children: [] }; // Depends on nistControls and controlsHash
     protected bindValue: string = ""; // Depends on title, filters, basically everything and yet also nothing. Do it last.
+    protected filteredFamilies: FilteredFamily[] = []; // Depends on nistHash
 
     /* Data updating */
 
@@ -263,6 +264,7 @@ class HeimdallState extends State {
         this.updateSeverityCount();
         this.updateCompliance();
         this.updateBindValue();
+        this.updateFilteredFamilies();
     }
 
     private updateBindValue(): void {
@@ -351,6 +353,62 @@ class HeimdallState extends State {
         }
     }
 
+    protected updateFilteredFamilies(): void {
+        // Clear
+        this.filteredFamilies = [];
+
+        // For each family, we want to explore its categories and
+        this.nistHash.children.forEach(family => {
+            // This record tracks entries for each categories controls
+            let categoryEntries: FilteredFamilyCategory[] = []; // TODO: properly annotate this type
+
+            family.children.forEach(category => {
+                let children: FilteredFamilyItem[] = [];
+
+                category.children.forEach(controlHash => {
+                    let control = this.getControl(controlHash["name"]);
+
+                    // For some reason, we undo the earlier replacement of "\n" -> <br>
+                    // We only need these parameters, and we deliberately avoid modifying the control itself
+                    // TODO: As with the ControlHash in nist.ts, we would like to examine the possibility
+                    //       of not having any special conversion occur here, instead using the control directly.
+                    //       This would obviate this entire function (except for the debatable utility of clearing empty lists)
+                    let modifiedControlHash: FilteredFamilyItem = {
+                        vuln_discuss: control.vuln_discuss.replace(
+                            /<br>/g,
+                            "\n"
+                        ),
+                        check_content: control.tags.check_content.replace(
+                            /<br>/g,
+                            "\n"
+                        ),
+                        fix_text: control.tags.fix_text.replace(/<br>/g, "\n"),
+                    };
+
+                    // Push it in
+                    children.push(modifiedControlHash);
+                });
+
+                // If we actually found any children, add this category to our list of listings to display for this family
+                if (children) {
+                    categoryEntries.push({
+                        name: category.name,
+                        items: children,
+                    });
+                }
+            });
+
+            // If any of our categories had
+            if (categoryEntries.length > 0) {
+                this.filteredFamilies.push({
+                    name: family.name,
+                    desc: family.desc,
+                    items: categoryEntries,
+                });
+            }
+        });
+    }
+
     private updateNistControls(): void {
         // Begin with an empty list
         this.nistControls = [];
@@ -421,8 +479,8 @@ class HeimdallState extends State {
     private updateStatusHash(): void {
         // Reinitialize our status dicts
         this.statusHash = {
-            Passed: 0,
-            Failed: 0,
+            "Passed": 0,
+            "Failed": 0,
             "Not Applicable": 0,
             "Not Reviewed": 0,
             "Profile Error": 0,
@@ -786,66 +844,11 @@ class HeimdallState extends State {
          * as well as replacing each control with a slightly modified version. Unclear exactly why, but so it goes.
          * TODO: Figure out why, lol.
          */
+        this.assertValid();
+        return this.filteredFamilies;
     }
 
-    updateFilteredFamilies() {
-        let filteredFamilies: FilteredFamily[] = [];
-
-        // For each family, we want to explore its categories and
-        this.nistHash.children.forEach(family => {
-            // This record tracks entries for each categories controls
-            let categoryEntries: FilteredFamilyCategory[] = []; // TODO: properly annotate this type
-
-            family.children.forEach(category => {
-                let children: FilteredFamilyItem[] = [];
-
-                category.children.forEach(controlHash => {
-                    let control = this.getControl(controlHash["name"]);
-
-                    // For some reason, we undo the earlier replacement of "\n" -> <br>
-                    // We only need these parameters, and we deliberately avoid modifying the control itself
-                    // TODO: As with the ControlHash in nist.ts, we would like to examine the possibility
-                    //       of not having any special conversion occur here, instead using the control directly.
-                    //       This would obviate this entire function (except for the debatable utility of clearing empty lists)
-                    let modifiedControlHash: FilteredFamilyItem = {
-                        vuln_discuss: control.vuln_discuss.replace(
-                            /<br>/g,
-                            "\n"
-                        ),
-                        check_content: control.tags.check_content.replace(
-                            /<br>/g,
-                            "\n"
-                        ),
-                        fix_text: control.tags.fix_text.replace(/<br>/g, "\n"),
-                    };
-
-                    // Push it in
-                    children.push(modifiedControlHash);
-                });
-
-                // If we actually found any children, add this category to our list of listings to display for this family
-                if (children) {
-                    categoryEntries.push({
-                        name: category.name,
-                        items: children,
-                    });
-                }
-            });
-
-            // If any of our categories had
-            if (categoryEntries.length > 0) {
-                filteredFamilies.push({
-                    name: family.name,
-                    desc: family.desc,
-                    items: categoryEntries,
-                });
-            }
-        });
-
-        return filteredFamilies;
-    }
-
-    getStatusValue(status_Ary: ControlGroupStatus[]): ControlGroupStatus {
+    private getStatusValue( status_Ary: ControlGroupStatus[]): ControlGroupStatus {
         /**
          * Sumarrizes an array of status into a single status
          */
