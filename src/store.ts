@@ -210,7 +210,7 @@ class State {
     }
 }
 
-class HeimdallState extends State {
+export class HeimdallState extends State {
     /**
      * This subclass has data specifically useful for the heimdall site.
      * However, they may also be more broadly useful.
