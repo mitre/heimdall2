@@ -2,7 +2,8 @@
   "name": "inspecjs",
   "version": "0.0.1",
   "description": "© 2018 The MITRE Corporation.",
-  "main": "./dist/store.js",
+  "files": [ "dist" ],
+  "main": "dist/inspecjs",
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
