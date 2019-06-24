@@ -12,7 +12,7 @@
  *      This also applies to things like get/set severityFilter which should (obviously) take/yield a Severity type!
  *      However, it raises the issue of how do we deal with invalid inputs. in general we should warn and stuff if we get something that the system doesn't like!
  * Likewise ensure that getSelectedControl behaves as we expect it to in the face of invalid key (answer is: probably not!)
- *
+ * 
  */
 
  import {ControlStatus, Severity, InspecOutput, Profile, Control} from "./types";
@@ -209,6 +209,7 @@ export class State {
         }
     }
 }
+
 
 export class HeimdallState extends State {
     /**
@@ -637,6 +638,14 @@ export class HeimdallState extends State {
         return this.filter.severity || "";
     }
 
+    getShowing(): string {
+        /**
+         * Returns the current showing data. I HIGHLY Suggest that this be moved to an independent Vuex state 
+         */
+        this.assertValid();
+        return this.showing;
+    }
+
     getStatus(): StatusHash {
         /**
          * Return the current status hash.
@@ -651,6 +660,14 @@ export class HeimdallState extends State {
          */
         this.assertValid();
         return this.filter.status || "";
+    }
+
+    getTitle(): string {
+        /**
+         * Returns the current title. TODO: Investigate ways to more simply setup these trivial getter/setter pairs, if such would be worthwhile
+         */
+         this.assertValid();
+         return this.title;
     }
 
     /* Data modification */
@@ -701,6 +718,15 @@ export class HeimdallState extends State {
          * TODO: error checking
          */
         this.filter.severity = val;
+        this.invalidate();
+    }
+
+    setShowing(val: string): void {
+        /**
+         * Sets the current showing page item.
+         * TODO: Make this strongly typed and in its own class. HeimdallState currently is a mess of different concepts.
+         */
+        this.showing = val;
         this.invalidate();
     }
 
