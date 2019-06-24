@@ -96,7 +96,7 @@ class ControlFilter {
     }
 }
 
-class State {
+export class State {
     /**
      * This class contaisn functions for ingesting one or more reports, and querying/building statistics from them.
      */
@@ -210,7 +210,7 @@ class State {
     }
 }
 
-class HeimdallState extends State {
+export class HeimdallState extends State {
     /**
      * This subclass has data specifically useful for the heimdall site.
      * However, they may also be more broadly useful.
@@ -766,80 +766,6 @@ class HeimdallState extends State {
         this.invalidate();
     }
 
-    updateNistAndControlHash(): void {
-        /**
-         * Rebuilds the nist/ctrl hashes, which are essentially just categorization of each control by its Nist family/category
-         *
-         * TODO: Unless it is explicitly necessary (something which I've seen absolutely no indication of), I would
-         * highly recommend that we remove controls_hsh, and instead attempt to provide a mechanism by which we can quickly
-         * filter all controls at once. somehow. It would be quite a bit easier to modify but maybe slower. Comes down to versatil vs efficiency
-         *
-         * TODO: If we don't do the above, at least split them into two functions
-         */
-
-        // Remake our hashes, empty
-        this.nistHash = generateNewNistHash();
-        this.controlsHash = generateNewControlHash();
-
-        // Get all of our controls as well, based on the status/severity/search BUT NOT selected family filters
-        var controls = this.getNistControls();
-
-        // For each control, go through its nist tags and put a reference to the control in the corresponding array of our controls hash
-        controls.forEach(control => {
-            control.tags.nist.forEach(tag => {
-                if (tag in this.controlsHash) {
-                    this.controlsHash[tag].push(control);
-                } else {
-                    this.controlsHash[tag] = [control];
-                }
-            });
-        });
-
-        // Next, we update the counts on each family, tracking a miniateurized version of each control
-        // TODO: Determine whether this miniateurization is necessary. Hunch is no, and that it's just some back-compat stuff we could ez fix elsewhere. But we'll see
-        this.nistHash.children.forEach(family => {
-            // Track statuses for the family
-            let familyStatuses: ControlGroupStatus[] = [];
-
-            // Go through each family item
-            family.children.forEach(category => {
-                // Fetch the relevant controls
-                let categoryControls = this.controlsHash[category.name];
-
-                // If they exist, we want a summary of their statuses and to count them as well
-                if (categoryControls) {
-                    // Track statuses for the category
-                    let categoryStatuses: ControlStatus[] = [];
-
-                    // Iterate over the controls we cached in the step before this in ctl_hash
-                    categoryControls.forEach(control => {
-                        // Save the status
-                        categoryStatuses.push(control.status);
-
-                        // Make a simple representation of the control for our records
-                        var controlHash = {
-                            name: control.tags.gid,
-                            status: control.status,
-                            value: 1,
-                        };
-
-                        // Save and count
-                        category.children.push(controlHash);
-                        category.count += 1;
-                        family.count += 1;
-                    });
-
-                    // Finally, derive the status for the category, and track it in the family list
-                    category.status = this.getStatusValue(categoryStatuses);
-                    familyStatuses.push(category.status);
-                }
-            });
-
-            // Store the summarized status
-            family.status = this.getStatusValue(familyStatuses);
-        });
-        // Job's done
-    }
 
     getFilteredFamilies() {
         /**
