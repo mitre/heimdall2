@@ -535,14 +535,14 @@ export class HeimdallState extends State {
         return this.bindValue;
     }
 
-    getCompliance(): [[string, number]] {
+    getCompliance(): number {
         /**
          * Computes the percent compliance of the (currently filtered) controls.
          * Note: The bizarre return signature is due to requirements of other vue components. Kind of dumb, really
          * TODO: Make it just return a number, for gods sake
          */
         this.assertValid();
-        return [["Data", this.compliance]];
+        return this.compliance;
     }
 
     getControls(): Control[] {
@@ -652,7 +652,15 @@ export class HeimdallState extends State {
         return this.showing;
     }
 
-    getStatus(): StatusHash {
+    getStatusCount(): StatusCount[] {
+        /**
+         * Return the current status counts.
+         */
+        this.assertValid();
+        return this.statusCount;
+    }
+
+    getStatusHash(): StatusHash {
         /**
          * Return the current status hash.
          */
