@@ -102,7 +102,7 @@ export class HeimdallState extends State {
     // These fields relate to the currently selected options
     selectedFamily: string | null = null; // The currently selected NIST family, if any
     selectedSubFamily: string | null = null; // The currently selected NIST category, if any
-    selectedControlID: string | null = null; // The currently selected NIST control, if any. Value should be a unique ID, not the control ID
+    selectedControlID: number | null = null; // The currently selected NIST control, if any. Value should be a unique ID, not the control ID
     filter: ControlFilter = new ControlFilter();
 
     // These fields are statistics/derived data of currently ingested report(s)/controls/profiles.
@@ -482,7 +482,14 @@ export class HeimdallState extends State {
          */
         this.assertValid();
         if (this.selectedControlID) {
-            return this.getControlByUniqueID[this.selectedControlID];
+            let found = this.getControlByUniqueID(this.selectedControlID);
+            if(found === undefined) {
+                console.error("Somehow user-selected control with id ${this.selectedControlID} does not exist");
+                return null;
+            }
+            else {
+                return found;
+            }
         } else {
             return null;
         }
@@ -570,7 +577,7 @@ export class HeimdallState extends State {
         this.invalidate();
     }
 
-    setSelectedControl(val: string): void {
+    setSelectedControl(val: number): void {
         /**
          * Sets the selected control id
          */

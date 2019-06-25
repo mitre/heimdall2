@@ -1,4 +1,4 @@
-import { HeimdallState } from "../src/store";
+import { HeimdallState } from "../src/heimdall_store";
 import * as fs from 'fs';
 
 it ('Should parse JSON examples for flat profiles', () => {

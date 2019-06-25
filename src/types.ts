@@ -20,10 +20,9 @@ export type ControlStatus =
     | "Profile Error";
 export type ResultStatus = "passed" | "failed" | "skipped" | "error";
 export type Severity = "none" | "low" | "medium" | "high" | "critical";
-export type UniqueID = number;
 
 var _uniqueCtr: number = 0;
-function genUniqueID(): UniqueID {
+function genUniqueID(): number {
     _uniqueCtr += 1;
     return _uniqueCtr;
 }
@@ -51,7 +50,7 @@ export class InspecOutput {
     statistics: any;
 
     // Uniquely identify this object for later recall.
-    unique_id: UniqueID = genUniqueID();
+    unique_id: number = genUniqueID();
 
     constructor(jsonObject: any) {
         // No parent; this is a top level type
@@ -93,7 +92,7 @@ export class Profile {
     attributes: Attribute[];
 
     // Uniquely identify this object for later recall.
-    unique_id: UniqueID = genUniqueID();
+    unique_id: number = genUniqueID();
 
     constructor(parent: InspecOutput | null, jsonObject: any) {
         // Save our parent. Would be of type InspecOutput
@@ -156,7 +155,7 @@ export class Control {
     refs: any[];
 
     // Uniquely identify this object for later recall.
-    unique_id: UniqueID = genUniqueID();
+    unique_id: number = genUniqueID();
 
     constructor(parent: Profile | InspecOutput, jsonObject: any) {
         // Set the parent.
