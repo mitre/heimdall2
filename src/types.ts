@@ -151,7 +151,7 @@ export class Control {
         this.rule_title = o.title || DATA_NOT_FOUND_MESSAGE;
         this.id = o.id || DATA_NOT_FOUND_MESSAGE;
         this.refs = o.refs || DATA_NOT_FOUND_MESSAGE;
-        this.tags = new ControlTags(this, o.tags);
+        this.tags = new ControlTags(this, o.tags || {});
 
         // This long-form data needs to be fixed for proper html formatting
         this.code = fixParagraphData(o.code);
