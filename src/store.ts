@@ -428,10 +428,6 @@ export class HeimdallState extends State {
     }
 
     private updateNistHash(): void {
-        /**
-         * Rebuilds the nist hash, which is essentially just a categorization of controls by family/category.
-         */
-
         // Remake our hashes, empty
         this.nistHash = generateNewNistHash();
 
@@ -592,6 +588,16 @@ export class HeimdallState extends State {
          */
         this.assertValid();
         return this.nistControls;
+    }
+
+    getNistHash(): NistHash {
+        /**
+         * Returns the nist hash, which is essentially just a categorization of controls by family/category.
+         * See nist.ts for more involved documentation about what exactly it contains.
+         */
+
+        this.assertValid();
+        return this.nistHash;
     }
 
     getSearchTerm(): string {
@@ -822,4 +828,12 @@ export class HeimdallState extends State {
         }
         return fam_status;
     }
+}
+
+
+// Hope to make a decorator here that lets us elide all the rather redundant getters/setters
+function gettersetter(getter: boolean, setter: boolean, updateFunction: () => void) {
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+        //descriptor.enumerable = value;
+    };
 }
