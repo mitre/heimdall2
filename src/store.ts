@@ -15,7 +15,7 @@
  * 
  */
 
- import {ControlStatus, Severity, InspecOutput, Profile, Control} from "./types";
+ import {ControlStatus, Severity, InspecOutput, Profile, Control, UniqueID} from "./types";
  import {ControlHash, NistHash, generateNewControlHash, generateNewNistHash, ControlGroupStatus} from "./nist";
 
 
@@ -101,11 +101,14 @@ export class State {
      * This class contaisn functions for ingesting one or more reports, and querying/building statistics from them.
      */
     // These fjields hold the currently ingested data
-    controls: { [index: string]: Control } = {}; // Maps control-id's to controls
-    // TODO: Keep reports/profiles instead of just throwing them out
+    protected allOutputs: InspecOutput[] = [];
+    protected allProfiles: Profile[] = [];
+    protected allControls: Control[] = [];
 
     // These are our derived fields
-    protected allControls: Control[] = [];
+    protected outputIDHash: { [index: number]: InspecOutput} = {}; // Map's uniqueIDs to profiles. UniqueIDS change from run to run
+    protected profileIDHash: { [index: number]: Profile} = {}; // Map's uniqueIDs to profiles. UniqueIDS change from run to run
+    protected controlIDHash: { [index: number]: Control } = {}; // Maps uniqueIDs to controls. UniqueIDS change from run to run
 
     /* Data validity control */
 
@@ -128,8 +131,6 @@ export class State {
     }
 
     protected updateDerivedData() {
-        this.updateControls();
-        this.updateAllControls();
     }
 
     // Call it after each data modification
@@ -142,12 +143,11 @@ export class State {
 
     /* Data modification */
 
-    addControl(con: Control) {
+    private addControl(con: Control) {
         /**
          * Add a control to the store.
          */
-        this.invalidate();
-        this.controls[con.id] = con;
+        this.allControls.push(con);
     }
 
     addInspecOutput(out: InspecOutput) {
@@ -155,9 +155,9 @@ export class State {
          * Add an entire inspec run output to the store.
          */
         this.invalidate();
-        out.profiles.forEach(profile => {
-            profile.controls.forEach(c => this.addControl(c));
-        });
+        this.allOutputs.push(out);
+        this.outputIDHash[out.unique_id] = out;
+        out.profiles.forEach(profile => this.addInspecProfile(profile));
     }
 
     addInspecProfile(pro: Profile) {
@@ -165,48 +165,75 @@ export class State {
          * Add an inspec profile to the store
          */
         this.invalidate();
+        this.allProfiles.push(pro);
+        this.profileIDHash[pro.unique_id] = pro;
         pro.controls.forEach(c => this.addControl(c));
     }
 
     reset(): void {
         /**
-         * TODO: Improve if necessary
+         * Clear all interred data
          */
-        this.controls = {};
+        this.allControls = [];
+        this.allProfiles = [];
+        this.allOutputs = []
+        this.outputIDHash = {};
+        this.profileIDHash = {};
+        this.controlIDHash = {};
         this.invalidate();
     }
 
     /* Data retreival */
 
-    getControl(control_id: string): Control {
-        /**
-         * Retrieve the control with the provided ID.
-         * WARNING: Currently does not handle if the ID does not exist. Tread carefully
-         * Note that editing a control here is likely to cause issues
-         */
-        this.assertValid();
-        return this.controls[control_id];
-    }
-
     getAllControls(): Control[] {
         /**
          * Returns all of the controls we have as a single list, unfiltered.
+         * Do not edit these - treat them as read only.
          */
         this.assertValid();
         return this.allControls;
     }
 
-    /* Data updating */
-
-    private updateControls(): void {
-        // Currently this is unnecessary; however, as we move forward it may become more
+    getAllProfiles(): Profile[] {
+        /**
+         * Returns all of the profiles we have currently as a single list, unfiltered.
+         * Do not edit these - treat them as read only.
+         */
+        this.assertValid();
+        return this.allProfiles;
     }
 
-    private updateAllControls(): void {
-        this.allControls = [];
-        for (let key in this.controls) {
-            this.allControls.push(this.controls[key]);
-        }
+    getAllOutputs(): InspecOutput[] {
+        /**
+         * Returns all of the outputs we have currently as a single list, unfiltered.
+         * Do not edit these - treat thema s read only.
+         */
+        this.assertValid();
+        return this.allOutputs;
+    }
+
+    getControlByUniqueID(uniqueId: number): Control | undefined {
+        /**
+         * Returns the control with the given unique ID, if it exists
+         */
+        this.assertValid();
+        return this.controlIDHash[uniqueId];
+    }
+
+    getProfileByUniqueID(uniqueId: number): Profile | undefined {
+        /**
+         * Returns the profile with the given unique ID, if it exists
+         */
+        this.assertValid();
+        return this.profileIDHash[uniqueId];
+    }
+
+    getOutputByUniqueID(uniqueId: number): InspecOutput | undefined {
+        /**
+         * Returns the output with the given unique ID, if it exists
+         */
+        this.assertValid();
+        return this.outputIDHash[uniqueId];
     }
 }
 
@@ -225,7 +252,7 @@ export class HeimdallState extends State {
     // These fields relate to the currently selected options
     selectedFamily: string | null = null; // The currently selected NIST family, if any
     selectedSubFamily: string | null = null; // The currently selected NIST category, if any
-    selectedControlID: string | null = null; // The currently selected NIST control, if any
+    selectedControlID: string | null = null; // The currently selected NIST control, if any. Value should be a unique ID, not the control ID
     filter: ControlFilter = new ControlFilter();
 
     // These fields are statistics/derived data of currently ingested report(s)/controls/profiles.
@@ -605,7 +632,7 @@ export class HeimdallState extends State {
          */
         this.assertValid();
         if (this.selectedControlID) {
-            return this.controls[this.selectedControlID];
+            return this.getControlByUniqueID[this.selectedControlID];
         } else {
             return null;
         }
@@ -771,7 +798,7 @@ export class HeimdallState extends State {
 
     parseFile(content: string, file_name: string) {
         // Clear old controls
-        this.controls = {};
+        this.reset();
 
         // Parse to json
         var json = JSON.parse(content);

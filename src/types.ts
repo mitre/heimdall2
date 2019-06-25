@@ -20,6 +20,13 @@ export type ControlStatus =
     | "Profile Error";
 export type ResultStatus = "passed" | "failed" | "skipped" | "error";
 export type Severity = "none" | "low" | "medium" | "high" | "critical";
+export type UniqueID = number;
+
+var _uniqueCtr: number = 0;
+function genUniqueID(): UniqueID {
+    _uniqueCtr += 1;
+    return _uniqueCtr;
+}
 
 function fixParagraphData(s: string | undefined): string {
     // Given a string or undefined s, will return that string/undefined
@@ -31,6 +38,7 @@ function fixParagraphData(s: string | undefined): string {
     }
 }
 
+
 export class InspecOutput {
     /* Contains the result(s) of running one or more inspec profiles */
     version: string;
@@ -41,6 +49,9 @@ export class InspecOutput {
     // TODO: We don't currently properly handle these
     other_checks: any[];
     statistics: any;
+
+    // Uniquely identify this object for later recall.
+    unique_id: UniqueID = genUniqueID();
 
     constructor(jsonObject: any) {
         // No parent; this is a top level type
@@ -80,6 +91,9 @@ export class Profile {
     controls: Control[];
     groups: Group[];
     attributes: Attribute[];
+
+    // Uniquely identify this object for later recall.
+    unique_id: UniqueID = genUniqueID();
 
     constructor(parent: InspecOutput | null, jsonObject: any) {
         // Save our parent. Would be of type InspecOutput
@@ -137,8 +151,12 @@ export class Control {
     source_line: number;
     message: string;
 
-    // TODO: We don't currently properly handle these
+
+    // TODO: We don't currently "properly" handle refs - there's probably something we ought to do with it
     refs: any[];
+
+    // Uniquely identify this object for later recall.
+    unique_id: UniqueID = genUniqueID();
 
     constructor(parent: Profile | InspecOutput, jsonObject: any) {
         // Set the parent.
