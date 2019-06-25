@@ -1,7 +1,3 @@
 out/
 dist/
-<<<<<<< HEAD
 node_modules/
-=======
-node_modules
->>>>>>> e61f075c4f0348539a6ad967a22651a34ecc8d72
