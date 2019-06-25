@@ -34,17 +34,9 @@ const families: NistFamilyDescription[] = [
 ];
 
 // Our types to be layed out in our hashes
-// TODO: Replace NistControlHash with just "ControL" if such is feasible
 
 // Represents the status of a group of controsl. Typically holds the value of the "worst" control amongst the group
 export type ControlGroupStatus = ControlStatus | "Empty";
-
-// A peculiar type of seemingly indistinguishable utility from just using a Control. TODO: Decipher why. is it just the drilldown chart API demands it?
-export type NistControlHash = {
-    name: string; // The name of the control
-    status: ControlStatus; // the status of the control
-    value: number;
-};
 
 // Holds all of the data related to a NIST vuln category, nested in a family. EX: RA-4, PM-12, etc.
 export type NistCategory = {
