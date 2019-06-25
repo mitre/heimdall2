@@ -231,7 +231,7 @@ export class HeimdallState extends State {
     // These fields are statistics/derived data of currently ingested report(s)/controls/profiles.
     // They are updated via the updateDerivedData function
     protected nistControls: Control[] = []; // depends on controls. This may seem a frivolous dependency but it may eventually not be
-    protected filteredControls: Control[] = []; // depends on nistControls
+    protected filteredNistControls: Control[] = []; // depends on nistControls
     protected statusHash: StatusHash = {
         "Not Applicable": 0,
         "Not Reviewed": 0,
@@ -262,7 +262,7 @@ export class HeimdallState extends State {
         this.updateNistControls();
         this.updateControlHash();
         this.updateNistHash();
-        this.updateFilteredControls();
+        this.updateFilteredNistControls();
         this.updateStatusHash();
         this.updateSeverityHash();
         this.updateStatusCount();
@@ -323,11 +323,11 @@ export class HeimdallState extends State {
         });
     }
 
-    private updateFilteredControls(): void {
+    private updateFilteredNistControls(): void {
         // if we have one selected just set as that
         let selected = this.getSelectedControl();
         if (selected) {
-            this.filteredControls = [selected];
+            this.filteredNistControls = [selected];
         }
 
         // Otherwise we just apply additional filtering to nist controls
@@ -341,7 +341,7 @@ export class HeimdallState extends State {
 
         // If we have a family filter, then build from nist controls.
         if (fam_filter) {
-            this.filteredControls = [];
+            this.filteredNistControls = [];
             this.nistControls.forEach(control => {
                 // Create a string of all the nist tags for searching
                 let nist_val = control.tags.nist.join();
@@ -349,12 +349,12 @@ export class HeimdallState extends State {
                 // Verify that it includes our family filter
                 if (nist_val.includes(fam_filter as string)) {
                     // The "as string" is necessary because we know fam_filter to be not null, but TypeScript can't tell
-                    this.filteredControls.push(control);
+                    this.filteredNistControls.push(control);
                 }
             });
         } else {
             // If there is no family filter, then just make it the same as nistControls
-            this.filteredControls = this.nistControls;
+            this.filteredNistControls = this.nistControls;
         }
     }
 
@@ -480,7 +480,7 @@ export class HeimdallState extends State {
             "Profile Error": 0,
         };
 
-        this.filteredControls.forEach((control: Control) => {
+        this.filteredNistControls.forEach((control: Control) => {
             this.statusHash[control.status] += 1;
         });
     }
@@ -495,7 +495,7 @@ export class HeimdallState extends State {
             critical: 0,
         };
 
-        this.filteredControls.forEach((control: Control) => {
+        this.filteredNistControls.forEach((control: Control) => {
             this.severityHash[control.severity] += 1;
         });
     }
@@ -538,7 +538,7 @@ export class HeimdallState extends State {
         return this.compliance;
     }
 
-    getControls(): Control[] {
+    getFilteredNistControls(): Control[] {
         /**
          * This function is similar to getNistControls (and in fact USUALLY returns a subset of it).
          * However, it differs in the following two ways:
@@ -550,7 +550,7 @@ export class HeimdallState extends State {
          * If we have a selection, then that's what we return, full stop.
          */
         this.assertValid();
-        return this.filteredControls;
+        return this.filteredNistControls;
     }
 
     getImpactFilter(): string {
@@ -573,10 +573,8 @@ export class HeimdallState extends State {
         /** 
          * Returns a list of controls to show, based on factors such as filters, search terms, and current selections.
          * More specifically: 
-         * - If we have a selected control, return just that control instead
          * - If we have a search term, only return controls that contain that term
          * - If we have a impact filter, only return controls that match that filter
-
          * - If we have a status filter, only return controls that match that filter
          */
         this.assertValid();
