@@ -370,9 +370,7 @@ export class HeimdallState extends State {
             family.children.forEach(category => {
                 let children: FilteredFamilyItem[] = [];
 
-                category.children.forEach(controlHash => {
-                    let control = this.getControl(controlHash["name"]);
-
+                category.children.forEach(control => {
                     // For some reason, we undo the earlier replacement of "\n" -> <br>
                     // We only need these parameters, and we deliberately avoid modifying the control itself
                     // TODO: As with the ControlHash in nist.ts, we would like to examine the possibility
@@ -452,15 +450,10 @@ export class HeimdallState extends State {
                         // Save the status
                         categoryStatuses.push(control.status);
 
-                        // Make a simple representation of the control for our records
-                        var controlHash = {
-                            name: control.tags.gid,
-                            status: control.status,
-                            value: 1,
-                        };
+                        // Save the control
+                        category.children.push(control);
 
-                        // Save and count
-                        category.children.push(controlHash);
+                        // Count
                         category.count += 1;
                         family.count += 1;
                     });

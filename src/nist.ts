@@ -53,7 +53,7 @@ export type NistCategory = {
     count: number; // How many controls it holds
     value: number; // Its value (?????)
     status: ControlGroupStatus; // The combined status of all it's members
-    children: NistControlHash[]; // The controls themselves
+    children: Control[]; // The controls themselves
 };
 
 // Holds all of the data related to a NIST vuln vamily, EX: SC, SI, etc.
