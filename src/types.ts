@@ -27,16 +27,6 @@ function genUniqueID(): number {
     return _uniqueCtr;
 }
 
-function fixParagraphData(s: string | undefined): string {
-    // Given a string or undefined s, will return that string/undefined
-    // as a paragraph broken up by <br> tags instead of newlines
-    if (s) {
-        return s.replace(new RegExp("\n", "g"), "<br>");
-    } else {
-        return DATA_NOT_FOUND_MESSAGE;
-    }
-}
-
 export class InspecOutput {
     /* Contains the result(s) of running one or more inspec profiles */
     version: string;
@@ -160,7 +150,7 @@ export class Control {
         let o = jsonObject;
 
         // Save and rename data to match what was in store
-        this.code = fixParagraphData(o.code); // This long-form data needs to be fixed for proper html formatting
+        this.code = o.code || DATA_NOT_FOUND_MESSAGE;
         this.id = o.id || DATA_NOT_FOUND_MESSAGE;
         this.impact = o.impact || NUMBER_NOT_FOUND;
         this.refs = o.refs || DATA_NOT_FOUND_MESSAGE;
@@ -180,7 +170,7 @@ export class Control {
 
         // We broke this into a sub-object for modularity
         this.tags = new ControlTags(this, o.tags || {});
-        this.vuln_discuss = fixParagraphData(o.desc);
+        this.vuln_discuss = o.desc || DATA_NOT_FOUND_MESSAGE;
 
         // Compose our message
         this.message =
@@ -322,8 +312,8 @@ export class ControlTags {
         this.cis_family = o.cis_family || DATA_NOT_FOUND_MESSAGE;
         this.cis_level = o.cis_level || DATA_NOT_FOUND_MESSAGE;
         this.cis_rid = o.cis_rid || DATA_NOT_FOUND_MESSAGE;
-        this.check_content = fixParagraphData(o.check); // These need slight correction, as they are paragraphs of data. Same with any other fixPData
-        this.fix_text = fixParagraphData(o.fix);
+        this.check_content = o.check || DATA_NOT_FOUND_MESSAGE;
+        this.fix_text = o.fix || DATA_NOT_FOUND_MESSAGE;
         this.gid = o.gid || DATA_NOT_FOUND_MESSAGE;
         this.group_title = o.gtitle || DATA_NOT_FOUND_MESSAGE;
 
@@ -344,7 +334,7 @@ export class ControlTags {
             }
         });
 
-        this.rationale = fixParagraphData(o.rationale);
+        this.rationale = o.rationale || DATA_NOT_FOUND_MESSAGE;
         this.rule_id = o.rid || DATA_NOT_FOUND_MESSAGE;
         this.rule_ver = o.stig_id || DATA_NOT_FOUND_MESSAGE;
     }
