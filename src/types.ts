@@ -335,14 +335,14 @@ export class ControlTags {
             this.raw_nist = o.nist || ["UM-1"];
         }
         // Now we build "real" nist
-        let matched_nist = this.raw_nist.map(code => {
+        this.nist = []
+        this.raw_nist.forEach(code => {
             let pattern = /^[A-Z]{2}-[0-9]+/;
             let match = code.match(pattern);
-            if (match) {
-                return match[0];
+            if (match && !this.nist.includes(match[0])) {
+                this.nist.push(match[0]);
             }
         });
-        this.nist = matched_nist.filter(x => x) as string[]; // Simple filter gets rid of nulls
 
         this.rationale = fixParagraphData(o.rationale);
         this.rule_id = o.rid || DATA_NOT_FOUND_MESSAGE;
