@@ -152,7 +152,7 @@ export class Control {
         // Save and rename data to match what was in store
         this.code = o.code || DATA_NOT_FOUND_MESSAGE;
         this.id = o.id || DATA_NOT_FOUND_MESSAGE;
-        this.impact = o.impact || NUMBER_NOT_FOUND;
+        this.impact = (o.impact === undefined) ? NUMBER_NOT_FOUND : o.impact;
         this.refs = o.refs || DATA_NOT_FOUND_MESSAGE;
 
         // We map results out to ControlResult s
