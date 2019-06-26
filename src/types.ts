@@ -73,22 +73,23 @@ export class InspecOutput {
 export class Profile {
     /* The data of an inspec profile. May contain results, if it was part of a run */
     parent: InspecOutput | null;
-    name: string;
-    title: string;
-    maintainer: string;
+    attributes: Attribute[];
+    controls: Control[];
     copyright: string;
     copyright_email: string;
-    license: string;
-    summary: string;
-    version: string;
     depends: string;
-    supports: string;
-    sha256: string;
     generator_name: string;
     generator_version: string;
-    controls: Control[];
     groups: Group[];
-    attributes: Attribute[];
+    license: string;
+    maintainer: string;
+    name: string;
+    sha256: string;
+    summary: string;
+    supports: string;
+    title: string;
+    version: string;
+
 
     // Uniquely identify this object for later recall.
     unique_id: number = genUniqueID();
@@ -102,27 +103,22 @@ export class Profile {
         let o = jsonObject;
 
         // These we assign immediately
-        this.name = o.name || DATA_NOT_FOUND_MESSAGE;
-        this.title = o.title || DATA_NOT_FOUND_MESSAGE;
-        this.maintainer = o.maintainer || DATA_NOT_FOUND_MESSAGE;
         this.copyright = o.copyright || DATA_NOT_FOUND_MESSAGE;
         this.copyright_email = o.copyright_email || DATA_NOT_FOUND_MESSAGE;
-        this.license = o.license || DATA_NOT_FOUND_MESSAGE;
-        this.summary = o.summary || DATA_NOT_FOUND_MESSAGE;
-        this.version = o.version || DATA_NOT_FOUND_MESSAGE;
-        this.depends = o.depends || DATA_NOT_FOUND_MESSAGE;
-        this.supports = o.supports || DATA_NOT_FOUND_MESSAGE;
-        this.sha256 = o.sha256 || DATA_NOT_FOUND_MESSAGE;
 
-        // These we break out of their nesting
-        if (o.generator) {
-            this.generator_name = o.generator.name || DATA_NOT_FOUND_MESSAGE;
-            this.generator_version =
-                o.generator.version || DATA_NOT_FOUND_MESSAGE;
-        } else {
-            this.generator_name = DATA_NOT_FOUND_MESSAGE;
-            this.generator_version = DATA_NOT_FOUND_MESSAGE;
-        }
+        // These we break out of their nesting. Generator isn't guaranteed to be there
+        this.generator_name = (o.generator && o.generator.name) || DATA_NOT_FOUND_MESSAGE;
+        this.generator_version = (o.generator && o.generator.version) || DATA_NOT_FOUND_MESSAGE;
+
+        this.depends = o.depends || DATA_NOT_FOUND_MESSAGE;
+        this.license = o.license || DATA_NOT_FOUND_MESSAGE;
+        this.maintainer = o.maintainer || DATA_NOT_FOUND_MESSAGE;
+        this.name = o.name || DATA_NOT_FOUND_MESSAGE;
+        this.sha256 = o.sha256 || DATA_NOT_FOUND_MESSAGE;
+        this.summary = o.summary || DATA_NOT_FOUND_MESSAGE;
+        this.supports = o.supports || DATA_NOT_FOUND_MESSAGE;
+        this.title = o.title || DATA_NOT_FOUND_MESSAGE;
+        this.version = o.version || DATA_NOT_FOUND_MESSAGE;
 
         // Get controls, groups, and attributes.
         this.controls = (o.controls || []).map(
@@ -138,16 +134,16 @@ export class Profile {
 export class Control {
     /* The data of an inspec control. May contain results, if it was part of a run */
     parent: Profile | InspecOutput;
-    tags: ControlTags;
+    code: string;
+    id: string;
+    impact: number;
+    message: string;
     results: ControlResult[];
     rule_title: string;
-    vuln_discuss: string;
-    code: string;
-    impact: number;
-    id: string;
     source_file: string;
     source_line: number;
-    message: string;
+    tags: ControlTags;
+    vuln_discuss: string;
 
     // TODO: We don't currently "properly" handle refs - there's probably something we ought to do with it
     refs: any[];
@@ -163,42 +159,25 @@ export class Control {
         let o = jsonObject;
 
         // Save and rename data to match what was in store
-        this.rule_title = o.title || DATA_NOT_FOUND_MESSAGE;
+        this.code = fixParagraphData(o.code); // This long-form data needs to be fixed for proper html formatting
         this.id = o.id || DATA_NOT_FOUND_MESSAGE;
+        this.impact = o.impact || NUMBER_NOT_FOUND;
         this.refs = o.refs || DATA_NOT_FOUND_MESSAGE;
-        this.tags = new ControlTags(this, o.tags || {});
 
-        // This long-form data needs to be fixed for proper html formatting
-        this.code = fixParagraphData(o.code);
+        // We map results out to ControlResult s
+        this.results = (o.results || []).map((r: any) => new ControlResult(this, r)); // Map these to results
+        this.rule_title = o.title || DATA_NOT_FOUND_MESSAGE;
+
+        // We break these out. o.source_location may be null
+        this.source_file = (o.source_location && o.source_location.ref) || DATA_NOT_FOUND_MESSAGE;
+        this.source_line = (o.source_location && o.source_location.line) || NUMBER_NOT_FOUND;
+
+        // We broke this into a sub-object for modularity
+        this.tags = new ControlTags(this, o.tags || {});
         this.vuln_discuss = fixParagraphData(o.desc);
 
-        // As numbers, impact and code need to be strings for consistency
-        // We keep impact for computing severity
-        this.impact = o.impact || NUMBER_NOT_FOUND;
-        this.code = o.code || DATA_NOT_FOUND_MESSAGE;
-
-        // Have to pull these out but not terribly difficult
-        if (o.source_location) {
-            this.source_file = o.source_location.ref || DATA_NOT_FOUND_MESSAGE;
-            this.source_line = o.source_location.line || NUMBER_NOT_FOUND;
-        } else {
-            this.source_file = DATA_NOT_FOUND_MESSAGE;
-            this.source_line = NUMBER_NOT_FOUND;
-        }
-
-        // Next, we handle building message, and interring results
-        // Initialize message. If it's of no impact, prefix with what it is
-        if (this.impact == 0) {
-            this.message = this.vuln_discuss + "\n\n";
-        } else {
-            this.message = "";
-        }
-
-        // Track statuses and results as well
-        let results: any[] = o.results || [];
-        this.results = results.map((r: any) => new ControlResult(this, r));
-
         // Compose our message
+        this.message = (this.impact == 0) ? (this.vuln_discuss + "\n\n") : DATA_NOT_FOUND_MESSAGE; // We only put the vuln discuss
         this.results.forEach(r => (this.message += r.toMessageLine()));
     }
 
@@ -309,19 +288,19 @@ export class Control {
 export class ControlTags {
     /* Contains data for the tags on a Control.  */
     parent: Control;
+    cci_ref: string;
+    check_content: string;
+    cis_family: string;
+    cis_level: string;
+    cis_rid: string;
+    fix_text: string;
     gid: string;
     group_title: string;
+    nist: string[]; // The nist categories that this control checks.
+    rationale: string;
+    raw_nist: string[]; // These are the nist categories as written in the file. It can sometimes contain things like "AC-16 (5)" or "Rev_4"
     rule_id: string;
     rule_ver: string;
-    cci_ref: string;
-    cis_family: string;
-    cis_rid: string;
-    cis_level: string;
-    check_content: string;
-    fix_text: string;
-    rationale: string;
-    nist: string[]; // The nist categories that this control checks.
-    raw_nist: string[]; // These are the nist categories as written in the file. It can sometimes contain things like "AC-16 (5)" or "Rev_4"
 
     constructor(parent: Control, jsonObject: any) {
         // Set the parent.
@@ -330,14 +309,14 @@ export class ControlTags {
         // Abbreviate our param to make this all nicer looking
         let o = jsonObject;
 
-        this.gid = o.gid || DATA_NOT_FOUND_MESSAGE;
-        this.group_title = o.gtitle || DATA_NOT_FOUND_MESSAGE;
-        this.rule_id = o.rid || DATA_NOT_FOUND_MESSAGE;
-        this.rule_ver = o.stig_id || DATA_NOT_FOUND_MESSAGE;
         this.cci_ref = o.cci || DATA_NOT_FOUND_MESSAGE;
         this.cis_family = o.cis_family || DATA_NOT_FOUND_MESSAGE;
-        this.cis_rid = o.cis_rid || DATA_NOT_FOUND_MESSAGE;
         this.cis_level = o.cis_level || DATA_NOT_FOUND_MESSAGE;
+        this.cis_rid = o.cis_rid || DATA_NOT_FOUND_MESSAGE;
+        this.check_content = fixParagraphData(o.check); // These need slight correction, as they are paragraphs of data. Same with any other fixPData
+        this.fix_text = fixParagraphData(o.fix);
+        this.gid = o.gid || DATA_NOT_FOUND_MESSAGE;
+        this.group_title = o.gtitle || DATA_NOT_FOUND_MESSAGE;
 
         // This case is slightly special as nist is usually a list. If none are provided, we just say it related to the unmapped category UM-1
         // However, nist is also sometimes a string. In such a case, wrap it in a list to be sure
@@ -357,10 +336,9 @@ export class ControlTags {
             });
         this.nist = (matched_nist.filter(x => x) as string[]); // Simple filter gets rid of nulls
 
-        // These need slight correction, as they are paragraphs of data
-        this.check_content = fixParagraphData(o.check);
-        this.fix_text = fixParagraphData(o.fix);
         this.rationale = fixParagraphData(o.rationale);
+        this.rule_id = o.rid || DATA_NOT_FOUND_MESSAGE;
+        this.rule_ver = o.stig_id || DATA_NOT_FOUND_MESSAGE;
     }
 }
 
