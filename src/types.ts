@@ -37,7 +37,6 @@ function fixParagraphData(s: string | undefined): string {
     }
 }
 
-
 export class InspecOutput {
     /* Contains the result(s) of running one or more inspec profiles */
     version: string;
@@ -149,7 +148,6 @@ export class Control {
     source_file: string;
     source_line: number;
     message: string;
-
 
     // TODO: We don't currently "properly" handle refs - there's probably something we ought to do with it
     refs: any[];
@@ -322,7 +320,8 @@ export class ControlTags {
     check_content: string;
     fix_text: string;
     rationale: string;
-    nist: string[]; // The nist categories that this control checks. We prefer that this remains alphabetically ordered
+    nist: string[]; // The nist categories that this control checks.
+    raw_nist: string[]; // These are the nist categories as written in the file. It can sometimes contain things like "AC-16 (5)" or "Rev_4"
 
     constructor(parent: Control, jsonObject: any) {
         // Set the parent.
@@ -340,8 +339,23 @@ export class ControlTags {
         this.cis_rid = o.cis_rid || DATA_NOT_FOUND_MESSAGE;
         this.cis_level = o.cis_level || DATA_NOT_FOUND_MESSAGE;
 
-        // This case is slightly special as nist is a list. If none are provided, we just say it related to the unmapped category UM-1
-        this.nist = o.nist || ["UM-1"];
+        // This case is slightly special as nist is usually a list. If none are provided, we just say it related to the unmapped category UM-1
+        // However, nist is also sometimes a string. In such a case, wrap it in a list to be sure
+        if (o.nist && typeof o.nist == "string") {
+            this.raw_nist = [o.nist];
+        } else {
+            this.raw_nist = o.nist || ["UM-1"];
+        }
+        // Now we build "real" nist
+        let matched_nist = this.raw_nist
+            .map(code => {
+                let pattern = /^[A-Z]{2}-[0-9]+/;
+                let match = code.match(pattern);
+                if (match) {
+                    return match[0];
+                }
+            });
+        this.nist = (matched_nist.filter(x => x) as string[]); // Simple filter gets rid of nulls
 
         // These need slight correction, as they are paragraphs of data
         this.check_content = fixParagraphData(o.check);
