@@ -74,6 +74,7 @@ export class State {
          * Add a control to the store.
          */
         this.allControls.push(con);
+        this.controlIDHash[con.unique_id] = con;
     }
 
     addInspecOutput(out: InspecOutput) {

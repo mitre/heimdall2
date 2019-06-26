@@ -205,6 +205,7 @@ export class HeimdallState extends State {
         let selected = this.getSelectedControl();
         if (selected) {
             this.filteredNistControls = [selected];
+            return;
         }
 
         // Otherwise we just apply additional filtering to nist controls
