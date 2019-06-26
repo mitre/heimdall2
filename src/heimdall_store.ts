@@ -126,7 +126,7 @@ export class HeimdallState extends State {
     protected statusCount: StatusCount[] = []; // Depends on statusHash
     protected severityCount: SeverityCount[] = []; // Depends on impacthash
     protected compliance: number = 0; // Depends on statushash
-    protected controlsHash: ControlHash = {}; // Depends on nistControls
+    protected controlNistHash: ControlHash = {}; // Depends on nistControls
     protected nistHash: NistHash = { name: "", children: [] }; // Depends on nistControls and controlsHash
     protected bindValue: string = ""; // Depends on title, filters, basically everything and yet also nothing. Do it last.
     protected filteredFamilies: FilteredFamily[] = []; // Depends on nistHash
@@ -137,7 +137,7 @@ export class HeimdallState extends State {
         super.updateDerivedData();
         // Update them in order of dependency. ORDER MATTERS!
         this.updateNistControls();
-        this.updateControlHash();
+        this.updateControlNistHash();
         this.updateNistHash();
         this.updateFilteredNistControls();
         this.updateStatusHash();
@@ -172,7 +172,7 @@ export class HeimdallState extends State {
         this.compliance = (100 * this.statusHash["Passed"]) / total;
     }
 
-    private updateControlHash(): void {
+    private updateControlNistHash(): void {
         /**
          * Rebuilds the ctrl hashes, which is essentially a mapping of nist codes to lists of relevant controls.
          *
@@ -183,7 +183,7 @@ export class HeimdallState extends State {
          */
 
         // Remake our hashes, empty
-        this.controlsHash = generateNewControlHash();
+        this.controlNistHash = generateNewControlHash();
 
         // Get all of our controls as well, based on the status/severity/search BUT NOT selected family filters
         var controls = this.getNistControls();
@@ -191,10 +191,10 @@ export class HeimdallState extends State {
         // For each control, go through its nist tags and put a reference to the control in the corresponding array of our controls hash
         controls.forEach(control => {
             control.tags.nist.forEach(tag => {
-                if (tag in this.controlsHash) {
-                    this.controlsHash[tag].push(control);
+                if (tag in this.controlNistHash) {
+                    this.controlNistHash[tag].push(control);
                 } else {
-                    this.controlsHash[tag] = [control];
+                    this.controlNistHash[tag] = [control];
                 }
             });
         });
@@ -315,7 +315,7 @@ export class HeimdallState extends State {
             // Go through each family item
             family.children.forEach(category => {
                 // Fetch the relevant controls
-                let categoryControls = this.controlsHash[category.name];
+                let categoryControls = this.controlNistHash[category.name];
 
                 // If they exist, we want a summary of their statuses and to count them as well
                 if (categoryControls) {
