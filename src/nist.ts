@@ -61,7 +61,7 @@ export type NistFamily = {
 export type NistHash = { name: string; children: NistFamily[] };
 
 export type ControlHashItem = Control[];
-export type ControlHash = { [index: string]: ControlHashItem }; // Maps nist categories to lists of relevant controls
+export type ControlNistHash = { [index: string]: ControlHashItem }; // Maps nist categories to lists of relevant controls
 
 function generateNewNistFamily(fam: NistFamilyDescription): NistFamily {
     /* Creates an "empty" (IE 0 count everywhere) nist family hash based on a family description. */
@@ -100,13 +100,13 @@ export function generateNewNistHash(): NistHash {
     };
 }
 
-export function generateNewControlHash(): ControlHash {
+export function generateNewControlHash(): ControlNistHash {
     /**
      * Generate an "empty" (IE empty lists) hash of all the nist family subgroup names to be populated with controls.
      * Note that this is slightly more inefficient thatn if we just generated them while we made the nist hash, but it is
      * unlikely to have a significant impact
      */
-    let result: ControlHash = {};
+    let result: ControlNistHash = {};
     for (let family of generateNewNistHash().children) {
         for (let familyItem of family.children) {
             let key: string = familyItem.name;
