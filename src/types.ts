@@ -90,7 +90,6 @@ export class Profile {
     title: string;
     version: string;
 
-
     // Uniquely identify this object for later recall.
     unique_id: number = genUniqueID();
 
@@ -107,8 +106,10 @@ export class Profile {
         this.copyright_email = o.copyright_email || DATA_NOT_FOUND_MESSAGE;
 
         // These we break out of their nesting. Generator isn't guaranteed to be there
-        this.generator_name = (o.generator && o.generator.name) || DATA_NOT_FOUND_MESSAGE;
-        this.generator_version = (o.generator && o.generator.version) || DATA_NOT_FOUND_MESSAGE;
+        this.generator_name =
+            (o.generator && o.generator.name) || DATA_NOT_FOUND_MESSAGE;
+        this.generator_version =
+            (o.generator && o.generator.version) || DATA_NOT_FOUND_MESSAGE;
 
         this.depends = o.depends || DATA_NOT_FOUND_MESSAGE;
         this.license = o.license || DATA_NOT_FOUND_MESSAGE;
@@ -165,19 +166,27 @@ export class Control {
         this.refs = o.refs || DATA_NOT_FOUND_MESSAGE;
 
         // We map results out to ControlResult s
-        this.results = (o.results || []).map((r: any) => new ControlResult(this, r)); // Map these to results
+        this.results = (o.results || []).map(
+            (r: any) => new ControlResult(this, r)
+        ); // Map these to results
         this.rule_title = o.title || DATA_NOT_FOUND_MESSAGE;
 
         // We break these out. o.source_location may be null
-        this.source_file = (o.source_location && o.source_location.ref) || DATA_NOT_FOUND_MESSAGE;
-        this.source_line = (o.source_location && o.source_location.line) || NUMBER_NOT_FOUND;
+        this.source_file =
+            (o.source_location && o.source_location.ref) ||
+            DATA_NOT_FOUND_MESSAGE;
+        this.source_line =
+            (o.source_location && o.source_location.line) || NUMBER_NOT_FOUND;
 
         // We broke this into a sub-object for modularity
         this.tags = new ControlTags(this, o.tags || {});
         this.vuln_discuss = fixParagraphData(o.desc);
 
         // Compose our message
-        this.message = (this.impact == 0) ? (this.vuln_discuss + "\n\n") : DATA_NOT_FOUND_MESSAGE; // We only put the vuln discuss
+        this.message =
+            this.impact == 0
+                ? this.vuln_discuss + "\n\n"
+                : DATA_NOT_FOUND_MESSAGE; // We only put the vuln discuss
         this.results.forEach(r => (this.message += r.toMessageLine()));
     }
 
@@ -326,15 +335,14 @@ export class ControlTags {
             this.raw_nist = o.nist || ["UM-1"];
         }
         // Now we build "real" nist
-        let matched_nist = this.raw_nist
-            .map(code => {
-                let pattern = /^[A-Z]{2}-[0-9]+/;
-                let match = code.match(pattern);
-                if (match) {
-                    return match[0];
-                }
-            });
-        this.nist = (matched_nist.filter(x => x) as string[]); // Simple filter gets rid of nulls
+        let matched_nist = this.raw_nist.map(code => {
+            let pattern = /^[A-Z]{2}-[0-9]+/;
+            let match = code.match(pattern);
+            if (match) {
+                return match[0];
+            }
+        });
+        this.nist = matched_nist.filter(x => x) as string[]; // Simple filter gets rid of nulls
 
         this.rationale = fixParagraphData(o.rationale);
         this.rule_id = o.rid || DATA_NOT_FOUND_MESSAGE;
