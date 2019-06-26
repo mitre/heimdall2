@@ -353,13 +353,13 @@ export class ControlTags {
 export class ControlResult {
     /* Holds the results of (part of) a single control.  */
     parent: Control;
-    start_time: string;
     backtrace: string;
-    status: ResultStatus;
-    skip_message: string;
     code_desc: string;
-    message: string;
     exception: any;
+    message: string;
+    skip_message: string;
+    start_time: string;
+    status: ResultStatus;
 
     constructor(parent: Control, jsonObject: any) {
         // Set the parent.
@@ -369,13 +369,13 @@ export class ControlResult {
         let o = jsonObject;
 
         // Rest we copy more or less as normal
-        this.start_time = o.start_time || DATA_NOT_FOUND_MESSAGE;
         this.backtrace = o.backtrace || DATA_NOT_FOUND_MESSAGE;
-        this.status = o.status || DATA_NOT_FOUND_MESSAGE;
-        this.skip_message = o.skip_message || DATA_NOT_FOUND_MESSAGE;
         this.code_desc = o.code_desc || DATA_NOT_FOUND_MESSAGE;
-        this.message = o.message || DATA_NOT_FOUND_MESSAGE;
         this.exception = o.exception;
+        this.message = o.message || DATA_NOT_FOUND_MESSAGE;
+        this.skip_message = o.skip_message || DATA_NOT_FOUND_MESSAGE;
+        this.start_time = o.start_time || DATA_NOT_FOUND_MESSAGE;
+        this.status = o.status || DATA_NOT_FOUND_MESSAGE;
     }
 
     toMessageLine(): string {
