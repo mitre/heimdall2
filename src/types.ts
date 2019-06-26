@@ -371,7 +371,7 @@ export class ControlResult {
         // Rest we copy more or less as normal
         this.backtrace = o.backtrace || DATA_NOT_FOUND_MESSAGE;
         this.code_desc = o.code_desc || DATA_NOT_FOUND_MESSAGE;
-        this.exception = o.exception;
+        this.exception = o.exception || DATA_NOT_FOUND_MESSAGE;
         this.message = o.message || DATA_NOT_FOUND_MESSAGE;
         this.skip_message = o.skip_message || DATA_NOT_FOUND_MESSAGE;
         this.start_time = o.start_time || DATA_NOT_FOUND_MESSAGE;
