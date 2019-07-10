@@ -20,6 +20,7 @@ export type ControlStatus =
     | "Profile Error";
 export type ResultStatus = "passed" | "failed" | "skipped" | "error";
 export type Severity = "none" | "low" | "medium" | "high" | "critical";
+export type ControlTags = Object;
 
 var _uniqueCtr: number = 0;
 function genUniqueID(): number {
@@ -169,7 +170,7 @@ export class Control {
             (o.source_location && o.source_location.line) || NUMBER_NOT_FOUND;
 
         // We broke this into a sub-object for modularity
-        this.tags = new ControlTags(this, o.tags || {});
+        this.tags = o.tags || {};
         this.vuln_discuss = o.desc || DATA_NOT_FOUND_MESSAGE;
 
         // Compose our message
@@ -284,61 +285,6 @@ export class Control {
     }
 }
 
-export class ControlTags {
-    /* Contains data for the tags on a Control.  */
-    parent: Control;
-    cci_ref: string;
-    check_content: string;
-    cis_family: string;
-    cis_level: string;
-    cis_rid: string;
-    fix_text: string;
-    gid: string;
-    group_title: string;
-    nist: string[]; // The nist categories that this control checks.
-    rationale: string;
-    raw_nist: string[]; // These are the nist categories as written in the file. It can sometimes contain things like "AC-16 (5)" or "Rev_4"
-    rule_id: string;
-    rule_ver: string;
-
-    constructor(parent: Control, jsonObject: any) {
-        // Set the parent.
-        this.parent = parent;
-
-        // Abbreviate our param to make this all nicer looking
-        let o = jsonObject;
-
-        this.cci_ref = o.cci || DATA_NOT_FOUND_MESSAGE;
-        this.cis_family = o.cis_family || DATA_NOT_FOUND_MESSAGE;
-        this.cis_level = o.cis_level || DATA_NOT_FOUND_MESSAGE;
-        this.cis_rid = o.cis_rid || DATA_NOT_FOUND_MESSAGE;
-        this.check_content = o.check || DATA_NOT_FOUND_MESSAGE;
-        this.fix_text = o.fix || DATA_NOT_FOUND_MESSAGE;
-        this.gid = o.gid || DATA_NOT_FOUND_MESSAGE;
-        this.group_title = o.gtitle || DATA_NOT_FOUND_MESSAGE;
-
-        // This case is slightly special as nist is usually a list. If none are provided, we just say it related to the unmapped category UM-1
-        // However, nist is also sometimes a string. In such a case, wrap it in a list to be sure
-        if (o.nist && typeof o.nist == "string") {
-            this.raw_nist = [o.nist];
-        } else {
-            this.raw_nist = o.nist || ["UM-1"];
-        }
-        // Now we build "real" nist
-        this.nist = []
-        this.raw_nist.forEach(code => {
-            let pattern = /^[A-Z]{2}-[0-9]+/;
-            let match = code.match(pattern);
-            if (match && !this.nist.includes(match[0])) {
-                this.nist.push(match[0]);
-            }
-        });
-
-        this.rationale = o.rationale || DATA_NOT_FOUND_MESSAGE;
-        this.rule_id = o.rid || DATA_NOT_FOUND_MESSAGE;
-        this.rule_ver = o.stig_id || DATA_NOT_FOUND_MESSAGE;
-    }
-}
 
 export class ControlResult {
     /* Holds the results of (part of) a single control.  */
