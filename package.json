@@ -2,9 +2,7 @@
   "name": "inspecjs",
   "version": "0.0.1",
   "description": "© 2018 The MITRE Corporation.",
-  "files": [
-    "dist"
-  ],
+  "files": [ "dist" ],
   "main": "dist/inspecjs",
   "dependencies": {},
   "devDependencies": {
