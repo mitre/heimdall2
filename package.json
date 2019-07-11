@@ -6,6 +6,7 @@
     "dist"
   ],
   "main": "dist/inspecjs",
+  "types": "./dist/inspec.d.ts",
   "dependencies": {},
   "devDependencies": {
     "@types/jest": "^24.0.15",
@@ -30,6 +31,5 @@
   "bugs": {
     "url": "https://github.com/mitre/inspecjs/issues"
   },
-  "homepage": "https://github.com/mitre/inspecjs#readme",
-  "types": "./dist/store.d.ts"
+  "homepage": "https://github.com/mitre/inspecjs#readme"
 }
