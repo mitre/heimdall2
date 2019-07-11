@@ -1,11 +1,12 @@
 {
   "name": "inspecjs",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "© 2018 The MITRE Corporation.",
   "files": [
     "dist"
   ],
   "main": "dist/inspecjs",
+  "types": "./dist/inspecjs.d.ts",
   "dependencies": {},
   "devDependencies": {
     "@types/jest": "^24.0.15",
@@ -30,6 +31,5 @@
   "bugs": {
     "url": "https://github.com/mitre/inspecjs/issues"
   },
-  "homepage": "https://github.com/mitre/inspecjs#readme",
-  "types": "./dist/store.d.ts"
+  "homepage": "https://github.com/mitre/inspecjs#readme"
 }
