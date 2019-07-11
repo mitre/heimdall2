@@ -14,7 +14,7 @@
     "jest": "^24.8.0",
     "lite-server": "^2.5.3",
     "ts-jest": "^24.0.2",
-    "typescript": "^3.5.2"
+    "typescript": "^3.5.3"
   },
   "scripts": {
     "build": "tsc",

@@ -20,7 +20,7 @@ export type ControlStatus =
     | "Profile Error";
 export type ResultStatus = "passed" | "failed" | "skipped" | "error";
 export type Severity = "none" | "low" | "medium" | "high" | "critical";
-export type ControlTags = Object;
+export type ControlTags = { [key:string]: any};
 
 var _uniqueCtr: number = 0;
 function genUniqueID(): number {

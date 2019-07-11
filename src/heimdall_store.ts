@@ -45,6 +45,27 @@ type FilteredFamily = {
     items: FilteredFamilyCategory[];
 };
 
+export function simplifyNistTags(rawNistTags: string[]): string[] {
+    /**
+     * Takes a list of nist tags, and reduces them to only the "proper" tags.
+     * EG:
+     * ["AC-5", "SP-6 b", "SP-6 c", "Rev-5"] -> ["AC-5", "SP-6"]
+     */
+    if (rawNistTags === []) {
+        return ["UM-1"];
+    } else {
+        let nist: string[] = [];
+        let pattern = /^[A-Z]{2}-[0-9]+/;
+        rawNistTags.forEach(tag => {
+            let match = tag.match(pattern);
+            if (match && !nist.includes(match[0])) {
+                nist.push(match[0]);
+            }
+        });
+        return nist;
+    }
+}
+
 class ControlFilter {
     /**
      * Holds the state of the control filters.
@@ -156,7 +177,26 @@ export class HeimdallState extends State {
 
         // For each control, go through its nist tags and put a reference to the control in the corresponding array of our controls hash
         controls.forEach(control => {
-            control.tags.nist.forEach(tag => {
+            let rawTags: any = control.tags["nist"];
+            let controlTags: string[];
+
+            // Ensure its a list of strings
+            if(typeof rawTags === "string") {
+                controlTags = [rawTags];
+            } else if(rawTags instanceof Array 
+                && rawTags.map(s => typeof s === "string").reduce((a: boolean, b: boolean) => a && b)) {
+                // It's an array of strings
+                controlTags = rawTags;
+            } else {
+                // Just give up -  we don't know how to handle this type
+                controlTags = [];
+            }
+
+            // Now, we simplify 
+            controlTags = simplifyNistTags(controlTags);
+
+            // Add them to the hash
+            controlTags.forEach(tag => {
                 if (tag in controlNistHash) {
                     controlNistHash[tag].push(control);
                 } else {
