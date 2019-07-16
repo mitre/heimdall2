@@ -12,24 +12,51 @@ TODO: Remove DATA_NOT_FOUND_MESSAGE and replace with the more sensible `undefine
 */
 
 // These types are used throughout for control/result status and impact
+
+/**
+ * The statuses that a control might have.
+ *
+ * This is computed as follows:
+ * If the profile has 0 impact, it is "Not Applicable"
+ * Else, if it contains a "failed" amidst its status list, it is "Failed"
+ * Else, if it contains a "passed" amidst its status list, it is "Passed"
+ * Else, if it contains a "skipped" amidst its status list, it is "Not Reviewed"
+ * Else, there are no results, and so the profile is marked as "Profile Error".
+ * 
+ * Note that as currently implemented, this implies that a control that has not been rune is an "Error".
+ * TODO: Make this more clear? Add another status?
+ */
 export type ControlStatus =
     | "Passed"
     | "Failed"
     | "Not Applicable"
     | "Not Reviewed"
     | "Profile Error";
-export type ResultStatus = "passed" | "failed" | "skipped" | "error";
-export type Severity = "none" | "low" | "medium" | "high" | "critical";
-export type ControlTags = { [key:string]: any};
 
-var _uniqueCtr: number = 0;
+/** The statuses that a PART of a control (IE a describe block) might have. */
+export type ResultStatus = "passed" | "failed" | "skipped" | "error";
+
+/** The severities a control can have. These map numeric impact values to No/Low/Medium/High/Crtiical impact
+ * [0, 0.01) => No impact
+ * [0.01, 0.4) => Low impact
+ * [0.4, 0.7) => Medium impact
+ * [0.7, 0.9) => High impact
+ * [0.9, 1.0] => Critical impact 
+ */
+export type Severity = "none" | "low" | "medium" | "high" | "critical";
+
+/** The tags for a control */
+export type ControlTags = { [key: string]: any };
+
+let _uniqueCtr: number = 0;
+/** Generates a new id, guaranteed to be unique per-runtime */
 function genUniqueID(): number {
     _uniqueCtr += 1;
     return _uniqueCtr;
 }
 
 /**
- *  Contains the result(s) of running one or more inspec profiles 
+ *  Contains the result(s) of running one or more inspec profiles
  */
 export class InspecOutput {
     version: string;
@@ -125,16 +152,16 @@ export class Profile {
     }
 }
 
-/** 
+/**
  * Represents an inspec control.
- * 
+ *
  * May or not contain results, depending on if this was loaded from an Inspec Result, or just an Inspec Profile.
  */
 export class Control {
     /** The Profile or InspecOutput from which this Control was taken */
     parent: Profile | InspecOutput;
-    /** 
-     * The raw source code of the control. 
+    /**
+     * The raw source code of the control.
      * Note that if this is an overlay control, it does not include the underlying source code
      */
     code: string;
@@ -142,13 +169,9 @@ export class Control {
     /** The ID of this control. */
     id: string;
 
-    /** 
-     * The impact of this control, as a number ranging. from 0 to 1.0  
-     * [0, 0.01) => No impact
-     * [0.01, 0.4) => Low impact
-     * [0.4, 0.7) => Medium impact
-     * [0.7, 0.9) => High impact
-     * [0.9, 1.0] => Critical impact
+    /**
+     * The impact of this control, as a number ranging. from 0 to 1.0. 
+     * See Severity type docs for what severities these numbers correspond to.
      * */
     impact: number;
 
@@ -181,8 +204,8 @@ export class Control {
     /** The line number in the source file that this rule originates from. */
     source_line: number;
 
-    /** 
-     * The tags on this control. 
+    /**
+     * The tags on this control.
      * Note that this data can essentially take any form.
      * No tags are specifically guaranteed to exist.
      */
@@ -207,7 +230,7 @@ export class Control {
         // Save and rename data to match what was in store
         this.code = o.code || DATA_NOT_FOUND_MESSAGE;
         this.id = o.id || DATA_NOT_FOUND_MESSAGE;
-        this.impact = (o.impact === undefined) ? NUMBER_NOT_FOUND : o.impact;
+        this.impact = o.impact === undefined ? NUMBER_NOT_FOUND : o.impact;
         this.refs = o.refs || DATA_NOT_FOUND_MESSAGE;
 
         // We map results out to ControlResult s
@@ -287,14 +310,8 @@ export class Control {
         }
     }
 
-    /** 
+    /**
      * Returns the control status as computed for the entire control.
-     * This is computed as follows:
-     * If the profile has 0 impact, it is "Not Applicable"
-     * Else, if it contains a "failed" amidst its status list, it is "Failed"
-     * Else, if it contains a "passed" amidst its status list, it is "Passed"
-     * Else, if it contains a "skipped" amidst its status list, it is "Not Reviewed" 
-     * Else, there are no results, and so the profile is marked as "Profile Error" 
      */
     get status(): ControlStatus {
         if (this.status_list.includes("error")) {
@@ -314,7 +331,10 @@ export class Control {
         }
     }
 
-    /** Compute the severity of this report as a string */
+    /** 
+     * Compute the severity of this report as a string 
+     * See the documentation of the `Severity` type for specific parameters.
+     */
     get severity(): Severity {
         if (this.impact < 0.1) {
             return "none";
@@ -356,9 +376,8 @@ export class Control {
     }
 }
 
-
-/** 
- * Holds the results of a describe block inside of single control.  
+/**
+ * Holds the results of a describe block inside of single control.
  */
 export class ControlResult {
     /** The Control that this result came from. */
@@ -379,7 +398,7 @@ export class ControlResult {
      */
     message: string;
 
-    /** 
+    /**
      * A string explaining why this message was skipped (if it was skipped at all).
      * Note that even if the block was skipped, this message is not guaranteed to exist.
      */
@@ -408,7 +427,7 @@ export class ControlResult {
         this.status = o.status || DATA_NOT_FOUND_MESSAGE;
     }
 
-    /** 
+    /**
      * A helper function to converting this to a message line in the Control.message property.
      * Useful for logging.
      * This variable is UNSTABLE and should not be used as a ground-truth for testing, as it's format may be changed
@@ -478,7 +497,7 @@ export class Attribute {
     /** The name of this attribute/input */
     name: string;
 
-    /** 
+    /**
      * A description of the options for this input.
      * E.G. might state that it takes a number, a file, etc.
      */
