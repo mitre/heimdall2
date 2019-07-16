@@ -15,11 +15,13 @@
     "jest": "^24.8.0",
     "lite-server": "^2.5.3",
     "ts-jest": "^24.0.2",
+    "typedoc": "^0.14.2",
     "typescript": "^3.5.3"
   },
   "scripts": {
     "build": "tsc",
-    "test": "jest --watch"
+    "test": "jest --watch",
+    "docs": "typedoc --out docs ./src"
   },
   "repository": {
     "type": "git",

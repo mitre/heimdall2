@@ -45,12 +45,12 @@ type FilteredFamily = {
     items: FilteredFamilyCategory[];
 };
 
+/**
+ * Takes a list of nist tags, and reduces them to only the "proper" tags.
+ * EG:
+ * ["AC-5", "SP-6 b", "SP-6 c", "Rev-5"] -> ["AC-5", "SP-6"]
+ */
 export function simplifyNistTags(rawNistTags: string[]): string[] {
-    /**
-     * Takes a list of nist tags, and reduces them to only the "proper" tags.
-     * EG:
-     * ["AC-5", "SP-6 b", "SP-6 c", "Rev-5"] -> ["AC-5", "SP-6"]
-     */
     if (rawNistTags === []) {
         return ["UM-1"];
     } else {
@@ -66,20 +66,20 @@ export function simplifyNistTags(rawNistTags: string[]): string[] {
     }
 }
 
+/**
+ * Holds the state of the control filters.
+ * This is partially a misnomer because it does not include the family filters.
+ * For whatever reason, there are separate functions (NI)
+ */
 class ControlFilter {
-    /**
-     * Holds the state of the control filters.
-     * This is partially a misnomer because it does not include the family filters.
-     * For whatever reason, there are separate functions (NI)
-     */
     status: ControlStatus | null = null;
     severity: Severity | null = null;
     searchTerm: string | null = null;
 
+    /**
+     * Returns true if the given control satisfies the status, impact, and search term filters
+     */
     accepts(control: Control): boolean {
-        /**
-         * Returns true if the given control satisfies the status, impact, and search term filters
-         */
         if (this.status && this.status != control.status) {
             return false;
         }
@@ -109,50 +109,31 @@ class ControlFilter {
     }
 }
 
+/**
+ * This subclass has data specifically useful for the heimdall site.
+ * However, they may also be more broadly useful.
+ * A goal for future work would be to make the site and the underlying data less tightly coupled.
+ * But for now, we're just making a slot in replacement, not fiddling with the vue.
+ */
 export class HeimdallState extends State {
-    /**
-     * This subclass has data specifically useful for the heimdall site.
-     * However, they may also be more broadly useful.
-     * A goal for future work would be to make the site and the underlying data less tightly coupled.
-     * But for now, we're just making a slot in replacement, not fiddling with the vue.
-     */
     // These fields relate to the web-state visuals
     title: string = "";
     showing: string = "About";
 
     // These fields relate to the currently selected options
-    selectedFamily: string | null = null; // The currently selected NIST family, if any
-    selectedSubFamily: string | null = null; // The currently selected NIST category, if any
-    selectedControlID: number | null = null; // The currently selected NIST control, if any. Value should be a unique ID, not the control ID
+    /** The currently selected NIST family, if any */
+    selectedFamily: string | null = null;
+    /** The currently selected NIST category, if any. */
+    selectedSubFamily: string | null = null;
+    /**  The currently selected NIST control, if any. Value should be a unique ID, not the control ID */
+    selectedControlID: number | null = null;
+    /**  The filters. Broken out into a separate class for sensibility. TODO: Add "selectedControlID" and siblings to this */
     filter: ControlFilter = new ControlFilter();
 
-    // These fields are statistics/derived data of currently ingested report(s)/controls/profiles.
-    // They are updated via the updateDerivedData function
-
-    /* Data updating */
-
-    getBindValue(): string {
-        /**
-         * Produce a string encoding the current state of user inputs on the site.
-         * We watch for changes in this to determine whether or not to re-run.
-         * Really just appends a bunch of strings together to form a more-or-less unique value.
-         */
-        return [
-            this.filter.status,
-            this.filter.severity,
-            this.filter.searchTerm,
-            this.selectedFamily,
-            this.selectedSubFamily,
-            this.selectedControlID,
-        ]
-            .map(v => v || "none")
-            .join(";");
-    }
-
+    /**
+     * Computes the percent compliance of the (currently filtered) controls.
+     */
     getCompliance(): number {
-        /**
-         * Computes the percent compliance of the (currently filtered) controls.
-         */
         let statusHash = this.getStatusHash();
         let total =
             statusHash["Passed"] +
@@ -162,13 +143,12 @@ export class HeimdallState extends State {
         return (100 * statusHash["Passed"]) / total;
     }
 
+    /**
+     * Returns the control nist hash,
+     * which is essentially a mapping of nist codes to
+     * lists of relevant controls.
+     */
     getControlNistHash(): ControlNistHash {
-        /**
-         * Returns the control nist hash,
-         * which is essentially a mapping of nist codes to
-         * lists of relevant controls.
-         */
-
         // Make an empty hash
         let controlNistHash: ControlNistHash = generateNewControlHash();
 
@@ -181,10 +161,14 @@ export class HeimdallState extends State {
             let controlTags: string[];
 
             // Ensure its a list of strings
-            if(typeof rawTags === "string") {
+            if (typeof rawTags === "string") {
                 controlTags = [rawTags];
-            } else if(rawTags instanceof Array 
-                && rawTags.map(s => typeof s === "string").reduce((a: boolean, b: boolean) => a && b)) {
+            } else if (
+                rawTags instanceof Array &&
+                rawTags
+                    .map(s => typeof s === "string")
+                    .reduce((a: boolean, b: boolean) => a && b)
+            ) {
                 // It's an array of strings
                 controlTags = rawTags;
             } else {
@@ -192,7 +176,7 @@ export class HeimdallState extends State {
                 controlTags = [];
             }
 
-            // Now, we simplify 
+            // Now, we simplify
             controlTags = simplifyNistTags(controlTags);
 
             // Add them to the hash
@@ -207,17 +191,17 @@ export class HeimdallState extends State {
         return controlNistHash;
     }
 
+    /**
+     * This function is similar to getNistControls (and in fact USUALLY returns a subset of it).
+     * However, it differs in the following two ways:
+     * 1. If we have a control selected, then we only return that control in a one-item array
+     * 2. If we have a family or subfamily filter, only return controls that meet the criteria
+     *    of getNistControls AND are relevant to that nist family/category
+     *
+     * Rule #1 is somewhat odd in that it just completely ignores the getNistControls filters.
+     * If we have a selection, then that's what we return, full stop.
+     */
     getFilteredNistControls(): Control[] {
-        /**
-         * This function is similar to getNistControls (and in fact USUALLY returns a subset of it).
-         * However, it differs in the following two ways:
-         * 1. If we have a control selected, then we only return that control in a one-item array
-         * 2. If we have a family or subfamily filter, only return controls that meet the criteria
-         *    of getNistControls AND are relevant to that nist family/category
-         *
-         * Rule #1 is somewhat odd in that it just completely ignores the getNistControls filters.
-         * If we have a selection, then that's what we return, full stop.
-         */
         // if we have one selected just set as that
         let selected = this.getSelectedControl();
         if (selected) {
@@ -253,14 +237,13 @@ export class HeimdallState extends State {
         }
     }
 
+    /**
+     * The name here is a misnomer - nistHash already provides the filtered families.
+     * What this does is provide a modified record structure of all currently visible controls, removing any empty families/categories,
+     * as well as replacing each control with a slightly modified version. Unclear exactly why, but so it goes.
+     * TODO: Figure out why the record needs to be in that particular format. On-site processing probably better
+     */
     getFilteredFamilies(): FilteredFamily[] {
-        /**
-         * The name here is a misnomer - nistHash already provides the filtered families.
-         * What this does is provide a modified record structure of all currently visible controls, removing any empty families/categories,
-         * as well as replacing each control with a slightly modified version. Unclear exactly why, but so it goes.
-         * TODO: Figure out why the record needs to be in that particular format. On-site processing probably better
-         */
-
         let filteredFamilies: FilteredFamily[] = [];
 
         // For each family, we want to explore its categories and
@@ -314,15 +297,14 @@ export class HeimdallState extends State {
         return filteredFamilies;
     }
 
+    /**
+     * Returns a list of controls to show, based on factors such as filters, search terms, and current selections.
+     * More specifically:
+     * - If we have a search term, only return controls that contain that term
+     * - If we have a impact filter, only return controls that match that filter
+     * - If we have a status filter, only return controls that match that filter
+     */
     getNistControls(): Control[] {
-        /**
-         * Returns a list of controls to show, based on factors such as filters, search terms, and current selections.
-         * More specifically:
-         * - If we have a search term, only return controls that contain that term
-         * - If we have a impact filter, only return controls that match that filter
-         * - If we have a status filter, only return controls that match that filter
-         */
-
         // Begin with an empty list
         let nistControls: Control[] = [];
 
@@ -337,11 +319,11 @@ export class HeimdallState extends State {
         return nistControls;
     }
 
+    /**
+     * Returns the nist hash, which is essentially just a categorization of controls by family/category.
+     * See nist.ts for more involved documentation about what exactly it contains.
+     */
     getNistHash(): NistHash {
-        /**
-         * Returns the nist hash, which is essentially just a categorization of controls by family/category.
-         * See nist.ts for more involved documentation about what exactly it contains.
-         */
         let nistHash: NistHash = generateNewNistHash();
         let controlNistHash = this.getControlNistHash();
 
@@ -387,10 +369,10 @@ export class HeimdallState extends State {
         return nistHash;
     }
 
+    /**
+     * Return the current status hash mapping statuses to control count.
+     */
     getStatusHash(): StatusHash {
-        /**
-         * Return the current status hash mapping statuses to control count.
-         */
         let statusHash: StatusHash = {
             "Passed": 0,
             "Failed": 0,
@@ -405,11 +387,10 @@ export class HeimdallState extends State {
         return statusHash;
     }
 
+    /**
+     * Returns the current severity hash, mapping severities to control counts.
+     */
     getSeverityHash(): SeverityHash {
-        /**
-         * Returns the current severity hash, mapping severities to control counts.
-         */
-
         let severityHash: SeverityHash = {
             none: 0,
             low: 0,
@@ -424,10 +405,10 @@ export class HeimdallState extends State {
         return severityHash;
     }
 
+    /**
+     * Return the current status counts, pairings of [Status, #ControlsWithThatStatus]
+     */
     getStatusCount(): StatusCount[] {
-        /**
-         * Return the current status counts, pairings of [Status, #ControlsWithThatStatus]
-         */
         let statusCount: StatusCount[] = [];
         let statusHash = this.getStatusHash();
         STATUSES.forEach(status => {
@@ -436,10 +417,10 @@ export class HeimdallState extends State {
         return statusCount;
     }
 
+    /**
+     * * Return the current severity counts, pairings of [Severity, #ControlsWithThatSeverity]
+     */
     getSeverityCount(): SeverityCount[] {
-        /**
-         * * Return the current severity counts, pairings of [Severity, #ControlsWithThatSeverity]
-         */
         // Build our severities
         let severityCount: SeverityCount[] = [];
         let severityHash = this.getSeverityHash();
@@ -449,19 +430,17 @@ export class HeimdallState extends State {
         return severityCount;
     }
 
-    /* Data retreival */
-
+    /**
+     * Returns the current search term.
+     */
     getSearchTerm(): string | null {
-        /**
-         * Returns the current search term.
-         */
         return this.filter.searchTerm;
     }
 
+    /**
+     * Get the currently selected control, if there is one. Returns null if none
+     */
     getSelectedControl(): Control | null {
-        /**
-         * Get the currently selected control, if there is one. Returns null if none
-         */
         if (this.selectedControlID) {
             let found = this.getControlByUniqueID(this.selectedControlID);
             if (found === undefined) {
@@ -477,120 +456,120 @@ export class HeimdallState extends State {
         }
     }
 
+    /**
+     * Returns the currently selected family
+     */
     getSelectedFamily(): string | null {
-        /**
-         * Returns the currently selected family
-         */
         return this.selectedFamily;
     }
 
+    /**
+     * Returns the currently selected sub-family (or as I've taken to calling them, category)
+     */
     getSelectedSubFamily(): string | null {
-        /**
-         * Returns the currently selected sub-family (or as I've taken to calling them, category)
-         */
         return this.selectedSubFamily;
     }
 
+    /**
+     * Returns the current severity filter. Of debatable usefulness, but harmless.
+     */
     getSeverityFilter(): Severity | null {
-        /**
-         * Returns the current severity filter. Of debatable usefulness, but harmless.
-         */
         return this.filter.severity;
     }
 
+    /**
+     * Returns the current showing data. I HIGHLY Suggest that this be moved to an independent Vuex state
+     */
     getShowing(): string {
-        /**
-         * Returns the current showing data. I HIGHLY Suggest that this be moved to an independent Vuex state
-         */
         return this.showing;
     }
 
+    /**
+     * Returns the current status filter. Of debatable usefulness, but harmless.
+     */
     getStatusFilter(): ControlStatus | null {
-        /**
-         * Returns the current status filter. Of debatable usefulness, but harmless.
-         */
         return this.filter.status;
     }
 
+    /**
+     * Returns the current title. TODO: Investigate ways to more simply setup these trivial getter/setter pairs, if such would be worthwhile
+     */
     getTitle(): string {
-        /**
-         * Returns the current title. TODO: Investigate ways to more simply setup these trivial getter/setter pairs, if such would be worthwhile
-         */
         return this.title;
     }
 
     /* Data modification */
 
+    /**
+     * @deprecated Same reason as with get
+     */
     setImpactFilter(val: string): void {
-        /**
-         * @deprecated Same reason as with get
-         */
         this.setSeverityFilter(val as Severity);
     }
 
+    /**
+     * Sets the search term
+     */
     setSearchTerm(val: string): void {
-        /**
-         * Sets the search term
-         */
         this.filter.searchTerm = val;
     }
 
+    /**
+     * Sets the selected control id
+     */
     setSelectedControl(val: number): void {
-        /**
-         * Sets the selected control id
-         */
         this.selectedControlID = val;
     }
 
+    /**
+     * Sets the selected family filter
+     */
     setSelectedFamily(val: string): void {
-        /**
-         * Sets the selected family filter
-         */
         this.selectedFamily = val;
     }
 
+    /**
+     * Sets the selected subfamily filter
+     */
     setSelectedSubFamily(val: string): void {
-        /**
-         * Sets the selected subfamily filter
-         */
         this.selectedSubFamily = val;
     }
 
+    /**
+     * Sets our severity filter.
+     * TODO: error checking
+     */
     setSeverityFilter(val: Severity): void {
-        /**
-         * Sets our severity filter.
-         * TODO: error checking
-         */
         this.filter.severity = val;
     }
 
+    /**
+     * Sets the current showing page item.
+     * TODO: Make this strongly typed and in its own class. HeimdallState currently is a mess of different concepts.
+     */
     setShowing(val: string): void {
-        /**
-         * Sets the current showing page item.
-         * TODO: Make this strongly typed and in its own class. HeimdallState currently is a mess of different concepts.
-         */
         this.showing = val;
     }
 
+    /**
+     * Sets the status filter.
+     * TODO: Error checking
+     */
     setStatusFilter(val: ControlStatus): void {
-        /**
-         * Sets the status filter.
-         * TODO: Error checking
-         */
         this.filter.status = val;
     }
 
+    /**
+     * Sets the title, and for some reason also the showing.
+     */
     setTitle(val: string): void {
-        /**
-         * Sets the title, and for some reason also the showing.
-         */
         this.title = val;
     }
 
+    /**
+     * Deletes all data in the store and clears all filters
+     */
     reset(): void {
-        /**
-         * Deletes all data in the store and clears all filters
-         */
         super.reset();
         // Simple - just wipe controls, and reset filters.
         // May need to modify this later. TODO
@@ -626,10 +605,10 @@ export class HeimdallState extends State {
         this.selectedSubFamily = null;
     }
 
+    /**
+     * Sumarrizes an array of status into a single status
+     */
     private getStatusValue(statuses: ControlGroupStatus[]): ControlGroupStatus {
-        /**
-         * Sumarrizes an array of status into a single status
-         */
         var fam_status: ControlGroupStatus = "Empty";
         if (statuses.includes("Failed")) {
             fam_status = "Failed";

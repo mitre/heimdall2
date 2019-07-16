@@ -10,20 +10,16 @@
  *      This also applies to things like get/set severityFilter which should (obviously) take/yield a Severity type!
  *      However, it raises the issue of how do we deal with invalid inputs. in general we should warn and stuff if we get something that the system doesn't like!
  * Likewise ensure that getSelectedControl behaves as we expect it to in the face of invalid key (answer is: probably not!)
- * 
+ *
  *
  */
 
-import {
-    InspecOutput,
-    Profile,
-    Control,
-} from "./types";
+import { InspecOutput, Profile, Control } from "./types";
 
+/**
+ * This class contaisn functions for ingesting one or more reports, and querying/building statistics from them.
+ */
 export class State {
-    /**
-     * This class contaisn functions for ingesting one or more reports, and querying/building statistics from them.
-     */
     // These fjields hold the currently ingested data
     protected allOutputs: InspecOutput[] = [];
     protected allProfiles: Profile[] = [];
@@ -36,36 +32,36 @@ export class State {
 
     /* Data modification */
 
+    /**
+     * Add a control to the store.
+     */
     private addControl(con: Control) {
-        /**
-         * Add a control to the store.
-         */
         this.allControls.push(con);
         this.controlIDHash[con.unique_id] = con;
     }
 
+    /**
+     * Add an entire inspec run output to the store.
+     */
     addInspecOutput(out: InspecOutput) {
-        /**
-         * Add an entire inspec run output to the store.
-         */
         this.allOutputs.push(out);
         this.outputIDHash[out.unique_id] = out;
         out.profiles.forEach(profile => this.addInspecProfile(profile));
     }
 
+    /**
+     * Add an inspec profile to the store
+     */
     addInspecProfile(pro: Profile) {
-        /**
-         * Add an inspec profile to the store
-         */
         this.allProfiles.push(pro);
         this.profileIDHash[pro.unique_id] = pro;
         pro.controls.forEach(c => this.addControl(c));
     }
 
+    /**
+     * Clear all interred data
+     */
     reset(): void {
-        /**
-         * Clear all interred data
-         */
         this.allControls = [];
         this.allProfiles = [];
         this.allOutputs = [];
@@ -76,48 +72,48 @@ export class State {
 
     /* Data retreival */
 
+    /**
+     * Returns all of the controls we have as a single list, unfiltered.
+     * Do not edit these - treat them as read only.
+     */
     getAllControls(): Control[] {
-        /**
-         * Returns all of the controls we have as a single list, unfiltered.
-         * Do not edit these - treat them as read only.
-         */
         return this.allControls;
     }
 
+    /**
+     * Returns all of the profiles we have currently as a single list, unfiltered.
+     * Do not edit these - treat them as read only.
+     */
     getAllProfiles(): Profile[] {
-        /**
-         * Returns all of the profiles we have currently as a single list, unfiltered.
-         * Do not edit these - treat them as read only.
-         */
         return this.allProfiles;
     }
 
+    /**
+     * Returns all of the outputs we have currently as a single list, unfiltered.
+     * Do not edit these - treat thema s read only.
+     */
     getAllOutputs(): InspecOutput[] {
-        /**
-         * Returns all of the outputs we have currently as a single list, unfiltered.
-         * Do not edit these - treat thema s read only.
-         */
         return this.allOutputs;
     }
 
+    /**
+     * Returns the control with the given unique ID, if it exists
+     */
     getControlByUniqueID(uniqueId: number): Control | undefined {
-        /**
-         * Returns the control with the given unique ID, if it exists
-         */
         return this.controlIDHash[uniqueId];
     }
 
+    /**
+     * Returns the profile with the given unique ID, if it exists
+     */
     getProfileByUniqueID(uniqueId: number): Profile | undefined {
-        /**
-         * Returns the profile with the given unique ID, if it exists
-         */
         return this.profileIDHash[uniqueId];
     }
 
+    /**
+     * Returns the output with the given unique ID, if it exists
+     */
     getOutputByUniqueID(uniqueId: number): InspecOutput | undefined {
-        /**
-         * Returns the output with the given unique ID, if it exists
-         */
         return this.outputIDHash[uniqueId];
     }
 }
