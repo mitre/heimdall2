@@ -14,6 +14,7 @@
     "chai": "^4.2.0",
     "jest": "^24.8.0",
     "lite-server": "^2.5.3",
+    "quicktype": "^15.0.197",
     "ts-jest": "^24.0.2",
     "typedoc": "^0.14.2",
     "typescript": "^3.5.3"
@@ -21,7 +22,8 @@
   "scripts": {
     "build": "tsc",
     "test": "jest --watch",
-    "docs": "typedoc --out docs ./src"
+    "docs": "typedoc --out docs ./src",
+    "gen-types": "bash scripts/update_schema.sh"
   },
   "repository": {
     "type": "git",
