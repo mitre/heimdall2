@@ -7,3 +7,6 @@ export {ProfileJSON as ProfileJSON_1_0} from "./generated-parsers/profile-json";
 
 // Export Conversion functions
 export {ConversionResult, convertFile} from "./fileparse";
+
+// Export HDF format
+export { wrapHDFFormat, HDFControl } from "./compat-wrappers";
