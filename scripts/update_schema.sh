@@ -26,6 +26,9 @@ done
 mkdir -p './work/interfaces'
 for SCHEMA in ${SCHEMAS[@]}
 do
-    npx quicktype -l ts -s schema --src "./work/schemas/$VERSION/$SCHEMA.json" -o "./src/parsers/$VERSION/$SCHEMA.ts"  --runtime-typecheck
+    npx quicktype -l ts -s schema --src "./work/schemas/$VERSION/$SCHEMA.json" -o "./src/generated-parsers/$VERSION/$SCHEMA.ts"  --runtime-typecheck
 done
 
+# Remove work directory trash
+rm -r './work/interfaces'
+# rm -r './work/schemas'
