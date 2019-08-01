@@ -40,20 +40,26 @@ export type ResultStatus = "passed" | "failed" | "skipped" | "error";
 
 /**
  * This interface acts as a polyfill on controls for our HDF "guaranteed" derived types, to provide a stable
- * method for acessing their properties
+ * method for acessing their properties across different schemas.
  */
 export interface HDFControl {
-    // Guaranteed
-    id: string;
+    /**
+     * The control that this interface wraps
+     */
+    wraps: parsetypes.AnyFullControl;
+
     /**
      * Get the control status as computed for the entire control.
      */
     status: ControlStatus;
+
     /**
      * TODO: Document whatever the hell this actually is
      */
     vuln_num: string;
+
     severity: Severity;
+
     /**
      * A string that essentially acts as a user-facing log of the results of the success/failure of each
      * part of the control's code.
@@ -73,7 +79,6 @@ export interface HDFControl {
      * this controls status, followed by the contents of this.message.
      */
     finding_details: string;
-
 
     /**
      * Returns the nist tags with any extraneous/duplicate data (Rev4, (b), etc.) removed,
@@ -98,7 +103,7 @@ export interface HDFControl {
  * TODO: Figure out if/how we want to error out when a polyfill is impossible
  * @param ctrl The control to polyfill
  */
-export function wrapHDFFormat(ctrl: parsetypes.AnyFullControl): HDFControl {
+export function hdfWrapControl(ctrl: parsetypes.AnyFullControl): HDFControl {
     // Determine which schema it is
     if ((ctrl as ResultControl_1_0).results !== undefined) {
         let rctrl = ctrl as ResultControl_1_0;
@@ -109,7 +114,7 @@ export function wrapHDFFormat(ctrl: parsetypes.AnyFullControl): HDFControl {
     }
 
     // In theory future schemas will be easier to decipher because of a version tag
-    //throw "Error: Control did not match any expected schema";
+    throw "Error: Control did not match any expected schema";
 }
 
 // V 1.0 implementation
@@ -117,9 +122,9 @@ export function wrapHDFFormat(ctrl: parsetypes.AnyFullControl): HDFControl {
 import { ControlResult as ControlResult_1_0 } from "./generated-parsers/exec-json";
 abstract class HDFControl_1_0 implements HDFControl {
     // We use this as a reference
-    base: ResultControl_1_0 | ProfileControl_1_0;
+    wraps: ResultControl_1_0 | ProfileControl_1_0;
     constructor(forControl: ResultControl_1_0 | ProfileControl_1_0) {
-        this.base = forControl;
+        this.wraps = forControl;
     }
 
     // Helper for turning control results into strings
@@ -143,13 +148,27 @@ abstract class HDFControl_1_0 implements HDFControl {
     // Abstracts
     abstract get message(): string;
 
-    // Delegates
-    get id(): string {
-        return this.base.id;
+    get nist_tags(): string[] | undefined {
+        return this.wraps.tags["nist"];
     }
 
-    get nist_tags(): string[] | undefined {
-        return this.base.tags["nist"];
+    get fixed_nist_tags(): string[] | undefined {
+        const tags = this.nist_tags;
+        if(tags === undefined) {
+            return undefined;
+        }
+
+        // Otherwise, filter to only those that follow format @@-#, 
+        // where @ is any capital letter, and # is any number (1 or more digits)
+        const pattern = /[A-Z][A-Z]-[0-9]+/.compile();
+        let results: string[] = [];
+        tags.forEach(tag => {
+            let finding = tag.match(pattern);
+            if(finding !== null && !results.includes(finding[0])) {
+                results.push(finding[0]);
+            }
+        });
+        return results;
     }
 
     /**
@@ -157,13 +176,13 @@ abstract class HDFControl_1_0 implements HDFControl {
      */
     get vuln_num(): string {
         // We truncate the id based up to its first decimal (as far as I can tell - update later)
-        if (this.base.id.match(/\d+\.\d+/)) {
+        if (this.wraps.id.match(/\d+\.\d+/)) {
             let match = this.vuln_num.match(/\d+(\.\d+)*/);
             if (match) {
                 return match[0];
             }
         }
-        return this.base.id;
+        return this.wraps.id;
     }
 
     get finding_details(): string {
@@ -201,7 +220,7 @@ abstract class HDFControl_1_0 implements HDFControl {
         if (this.status_list.includes("error")) {
             return "Profile Error";
         } else {
-            if (this.base.impact == 0) {
+            if (this.wraps.impact == 0) {
                 return "Not Applicable";
             } else if (this.status_list.includes("failed")) {
                 return "Failed";
@@ -216,13 +235,13 @@ abstract class HDFControl_1_0 implements HDFControl {
     }
 
     get severity(): Severity {
-        if (this.base.impact < 0.1) {
+        if (this.wraps.impact < 0.1) {
             return "none";
-        } else if (this.base.impact < 0.4) {
+        } else if (this.wraps.impact < 0.4) {
             return "low";
-        } else if (this.base.impact < 0.7) {
+        } else if (this.wraps.impact < 0.7) {
             return "medium";
-        } else if (this.base.impact < 0.9) {
+        } else if (this.wraps.impact < 0.9) {
             return "high";
         } else {
             return "critical";
@@ -241,25 +260,25 @@ class HDFControl_1_0_Exec extends HDFControl_1_0 implements HDFControl {
     }
 
     // Helper to cast
-    private get rbase(): ResultControl_1_0 {
-        return this.base as ResultControl_1_0;
+    private get typed_wrap(): ResultControl_1_0 {
+        return this.wraps as ResultControl_1_0;
     }
 
     get message(): string {
-        if (this.base.impact != 0) {
+        if (this.typed_wrap.impact != 0) {
             // If it has any impact, convert each result to a message line and chain them all together
-            return this.rbase.results
+            return this.typed_wrap.results
                 .map(HDFControl_1_0.toMessageLine)
                 .join("");
         } else {
             // If it's no impact, just post the description (if it exists)
-            return this.base.desc || "No message found.";
+            return this.typed_wrap.desc || "No message found.";
         }
     }
 
     get start_time(): string | undefined {
-        if (this.rbase.results) {
-            return this.rbase.results[0].start_time;
+        if (this.typed_wrap.results) {
+            return this.typed_wrap.results[0].start_time;
         }
         return undefined;
     }
@@ -270,8 +289,13 @@ class HDFControl_1_0_Profile extends HDFControl_1_0 implements HDFControl {
         super(control);
     }
 
+    // Helper to cast
+    private get typed_wrap(): ResultControl_1_0 {
+        return this.wraps as ResultControl_1_0;
+    }
+
     get message(): string {
         // If it's no impact, just post the description (if it exists)
-        return this.base.desc || "No message found.";
+        return this.typed_wrap.desc || "No message found.";
     }
 }

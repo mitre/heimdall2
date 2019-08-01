@@ -38,14 +38,18 @@ export function convertFile(json_text: string): ConversionResult {
     try {
         result["1_0_ProfileJson"] = PROFILE_JSON_1_0.Convert.toProfileJSON(json_text);
         return result;
-    } catch(e){ /* Don't care */ }
+    } catch(e){ console.log(e)/* Don't care */ }
 
     // 1.*
     // ...
 
-    throw "Unable to convert inspec json";
+    throw "Unable to convert inspec json output. Please verify it's from an up-to-date version of the program!";
 }
 
 // Provide some convenient types for different schemas
+// All (non-min) results at once
+export type AnyExec = EXEC_JSON_1_0.ExecJSON;
+// All profiles at once
+export type AnyProfile = PROFILE_JSON_1_0.ProfileJSON | EXEC_JSON_1_0.ExecJSONProfile;
 // All full (not min) controls at once
 export type AnyFullControl = PROFILE_JSON_1_0.ProfileJSONControl | EXEC_JSON_1_0.ExecJSONControl; 
