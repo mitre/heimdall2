@@ -11,6 +11,7 @@ export interface ProfileJSON {
     controls:         ProfileJSONControl[];
     copyright?:       string;
     copyright_email?: string;
+    depends?:         Dependency[];
     generator?:       Generator;
     groups:           ControlGroup[];
     inputs:           { [key: string]: any }[];
@@ -56,6 +57,17 @@ export interface SourceLocation {
      * Path to the file that this statement originates from
      */
     ref: string;
+}
+
+export interface Dependency {
+    compliance?:   string;
+    git?:          string;
+    name?:         string;
+    path?:         string;
+    skip_message?: string;
+    status?:       string;
+    supermarket?:  string;
+    url?:          string;
 }
 
 export interface Generator {
@@ -239,6 +251,7 @@ const typeMap: any = {
         { json: "controls", js: "controls", typ: a(r("ProfileJSONControl")) },
         { json: "copyright", js: "copyright", typ: u(undefined, "") },
         { json: "copyright_email", js: "copyright_email", typ: u(undefined, "") },
+        { json: "depends", js: "depends", typ: u(undefined, a(r("Dependency"))) },
         { json: "generator", js: "generator", typ: u(undefined, r("Generator")) },
         { json: "groups", js: "groups", typ: a(r("ControlGroup")) },
         { json: "inputs", js: "inputs", typ: a(m("any")) },
@@ -268,6 +281,16 @@ const typeMap: any = {
     "SourceLocation": o([
         { json: "line", js: "line", typ: 3.14 },
         { json: "ref", js: "ref", typ: "" },
+    ], false),
+    "Dependency": o([
+        { json: "compliance", js: "compliance", typ: u(undefined, "") },
+        { json: "git", js: "git", typ: u(undefined, "") },
+        { json: "name", js: "name", typ: u(undefined, "") },
+        { json: "path", js: "path", typ: u(undefined, "") },
+        { json: "skip_message", js: "skip_message", typ: u(undefined, "") },
+        { json: "status", js: "status", typ: u(undefined, "") },
+        { json: "supermarket", js: "supermarket", typ: u(undefined, "") },
+        { json: "url", js: "url", typ: u(undefined, "") },
     ], false),
     "Generator": o([
         { json: "name", js: "name", typ: "" },

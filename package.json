@@ -20,7 +20,7 @@
     "typescript": "^3.5.3"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --strict",
     "test": "jest --watch",
     "docs": "typedoc --out docs ./src",
     "gen-types": "bash scripts/update_schema.sh"

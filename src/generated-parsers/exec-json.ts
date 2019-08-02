@@ -119,11 +119,13 @@ export interface SourceLocation {
 }
 
 export interface Dependency {
+    compliance?:   string;
     git?:          string;
     name?:         string;
     path?:         string;
     skip_message?: string;
     status?:       string;
+    supermarket?:  string;
     url?:          string;
 }
 
@@ -389,11 +391,13 @@ const typeMap: any = {
         { json: "ref", js: "ref", typ: "" },
     ], false),
     "Dependency": o([
+        { json: "compliance", js: "compliance", typ: u(undefined, "") },
         { json: "git", js: "git", typ: u(undefined, "") },
         { json: "name", js: "name", typ: u(undefined, "") },
         { json: "path", js: "path", typ: u(undefined, "") },
         { json: "skip_message", js: "skip_message", typ: u(undefined, "") },
         { json: "status", js: "status", typ: u(undefined, "") },
+        { json: "supermarket", js: "supermarket", typ: u(undefined, "") },
         { json: "url", js: "url", typ: u(undefined, "") },
     ], false),
     "ControlGroup": o([
