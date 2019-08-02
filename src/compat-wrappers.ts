@@ -19,7 +19,8 @@ import { setFlagsFromString } from "v8";
  * TODO: Make this more clear? Add another status?
  */
 export type ControlStatus =
-    | "From Profile"
+    | "From Profile"    /** If it is from a `inspec profile` run */
+    | "No Data"         /** If there are no results in this control */
     | "Passed"
     | "Failed"
     | "Not Applicable"
@@ -210,29 +211,14 @@ abstract class HDFControl_1_0 implements HDFControl {
                 }
             case "From Profile":
                 return "No tests are run in a profile json."
+            case "No Data":
+                return "This control had no results - perhaps it was overlayed?"
 
             default:
                 throw "Error: invalid status generated";
         }
     }
 
-    get status(): ControlStatus {
-        if (this.status_list.includes("error")) {
-            return "Profile Error";
-        } else {
-            if (this.wraps.impact == 0) {
-                return "Not Applicable";
-            } else if (this.status_list.includes("failed")) {
-                return "Failed";
-            } else if (this.status_list.includes("passed")) {
-                return "Passed";
-            } else if (this.status_list.includes("skipped")) {
-                return "Not Reviewed";
-            } else {
-                return "Profile Error";
-            }
-        }
-    }
 
     get severity(): Severity {
         if (this.wraps.impact < 0.1) {
@@ -248,10 +234,7 @@ abstract class HDFControl_1_0 implements HDFControl {
         }
     }
 
-    get status_list(): ResultStatus[] {
-        throw "aaaah";
-        // return this.base.results.map(r => r.status);
-    }
+    abstract get status(): ControlStatus;
 }
 
 class HDFControl_1_0_Exec extends HDFControl_1_0 implements HDFControl {
@@ -282,6 +265,36 @@ class HDFControl_1_0_Exec extends HDFControl_1_0 implements HDFControl {
         }
         return undefined;
     }
+
+    get status_list(): ResultStatus[] {
+        return this.typed_wrap.results.map(cr => {
+            if(cr.backtrace !== undefined) {
+                return "error";
+            } else {
+                return cr.status;
+            }
+        });
+    }
+
+    get status(): ControlStatus {
+        if (this.status_list.includes("error")) {
+            return "Profile Error";
+        } else {
+            if (this.status_list.length == 0) {
+                return "No Data";
+            } else if (this.wraps.impact == 0) {
+                return "Not Applicable";
+            } else if (this.status_list.includes("failed")) {
+                return "Failed";
+            } else if (this.status_list.includes("passed")) {
+                return "Passed";
+            } else if (this.status_list.includes("skipped")) {
+                return "Not Reviewed";
+            } else {
+                return "Profile Error";
+            }
+        }
+    }
 }
 
 class HDFControl_1_0_Profile extends HDFControl_1_0 implements HDFControl {
@@ -297,5 +310,9 @@ class HDFControl_1_0_Profile extends HDFControl_1_0 implements HDFControl {
     get message(): string {
         // If it's no impact, just post the description (if it exists)
         return this.typed_wrap.desc || "No message found.";
+    }
+
+    get status(): ControlStatus {
+        return "From Profile";
     }
 }
