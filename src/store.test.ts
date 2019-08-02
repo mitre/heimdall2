@@ -1,6 +1,7 @@
-import { HeimdallState } from "../src/heimdall_store";
-import * as fs from 'fs';
+// import { HeimdallState } from "../src/heimdall_store";
+// import * as fs from 'fs';
 
+/*
 it ('Should parse JSON examples for flat profiles', () => {
     let json = fs.readFileSync("tst/examples/profile/profile.json","utf-8");
     let state = new HeimdallState;
@@ -13,3 +14,4 @@ it ('Should parse JSON examples for flat profiles', () => {
         ['Profile Error',  0]
       ]);;
   });
+  */
