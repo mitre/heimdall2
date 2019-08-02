@@ -14,7 +14,7 @@ export interface ExecJsonmin {
 }
 
 export interface ExecJSONMINControl {
-    backtrace?:     string;
+    backtrace?:     string[];
     code_desc:      string;
     exception?:     string;
     id:             string;
@@ -201,7 +201,7 @@ const typeMap: any = {
         { json: "version", js: "version", typ: "" },
     ], false),
     "ExecJSONMINControl": o([
-        { json: "backtrace", js: "backtrace", typ: u(undefined, "") },
+        { json: "backtrace", js: "backtrace", typ: u(undefined, a("")) },
         { json: "code_desc", js: "code_desc", typ: "" },
         { json: "exception", js: "exception", typ: u(undefined, "") },
         { json: "id", js: "id", typ: "" },

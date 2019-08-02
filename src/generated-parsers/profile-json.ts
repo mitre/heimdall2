@@ -23,9 +23,16 @@ export interface ProfileJSON {
 }
 
 export interface ProfileJSONControl {
-    code:            string;
-    desc:            null | string;
-    descriptions:    { [key: string]: any };
+    /**
+     * The raw source code of the control. Note that if this is an overlay control, it does not
+     * include the underlying source code
+     */
+    code:         string;
+    desc:         null | string;
+    descriptions: { [key: string]: any };
+    /**
+     * The ID of this control
+     */
     id:              string;
     impact:          number;
     refs:            Reference[];
@@ -35,7 +42,7 @@ export interface ProfileJSONControl {
 }
 
 export interface Reference {
-    ref?: string;
+    ref?: { [key: string]: any }[] | string;
     url?: string;
     uri?: string;
 }
@@ -74,15 +81,16 @@ export interface ControlGroup {
     /**
      * The name of the group
      */
-    title?: string;
+    title?: null | string;
 }
 
 export interface SupportedPlatform {
-    "os-family"?:      string;
-    "os-name"?:        string;
-    platform?:         string;
-    "platform-family": string;
-    "platform-name"?:  string;
+    "os-family"?:       string;
+    "os-name"?:         string;
+    platform?:          string;
+    "platform-family"?: string;
+    "platform-name"?:   string;
+    release?:           string;
 }
 
 // Converts JSON strings to/from your types
@@ -253,7 +261,7 @@ const typeMap: any = {
         { json: "title", js: "title", typ: u(null, "") },
     ], false),
     "Reference": o([
-        { json: "ref", js: "ref", typ: u(undefined, "") },
+        { json: "ref", js: "ref", typ: u(undefined, u(a(m("any")), "")) },
         { json: "url", js: "url", typ: u(undefined, "") },
         { json: "uri", js: "uri", typ: u(undefined, "") },
     ], "any"),
@@ -268,13 +276,14 @@ const typeMap: any = {
     "ControlGroup": o([
         { json: "controls", js: "controls", typ: a("") },
         { json: "id", js: "id", typ: "" },
-        { json: "title", js: "title", typ: u(undefined, "") },
+        { json: "title", js: "title", typ: u(undefined, u(null, "")) },
     ], false),
     "SupportedPlatform": o([
         { json: "os-family", js: "os-family", typ: u(undefined, "") },
         { json: "os-name", js: "os-name", typ: u(undefined, "") },
         { json: "platform", js: "platform", typ: u(undefined, "") },
-        { json: "platform-family", js: "platform-family", typ: "" },
+        { json: "platform-family", js: "platform-family", typ: u(undefined, "") },
         { json: "platform-name", js: "platform-name", typ: u(undefined, "") },
-    ], false),
+        { json: "release", js: "release", typ: u(undefined, "") },
+    ], "any"),
 };

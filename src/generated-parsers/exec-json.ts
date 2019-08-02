@@ -22,10 +22,7 @@ export interface Platform {
     /**
      * The version of the platform this was run on.
      */
-    release: string;
-    /**
-     * TODO: Document this property
-     */
+    release:    string;
     target_id?: string;
 }
 
@@ -34,10 +31,14 @@ export interface ExecJSONProfile {
     controls:         ExecJSONControl[];
     copyright?:       string;
     copyright_email?: string;
+    depends?:         Dependency[];
+    description?:     string;
     groups:           ControlGroup[];
+    inspec_version?:  string;
     license?:         string;
     maintainer?:      string;
     name:             string;
+    parent_profile?:  string;
     sha256:           string;
     skip_message?:    string;
     status:           string;
@@ -48,12 +49,28 @@ export interface ExecJSONProfile {
 }
 
 export interface ExecJSONControl {
-    code:            string;
-    desc:            null | string;
-    descriptions:    ControlDescription[];
-    id:              string;
-    impact:          number;
-    refs:            Reference[];
+    /**
+     * The raw source code of the control. Note that if this is an overlay control, it does not
+     * include the underlying source code
+     */
+    code:         string;
+    desc:         null | string;
+    descriptions: ControlDescription[];
+    /**
+     * The ID of this control
+     */
+    id:     string;
+    impact: number;
+    refs:   Reference[];
+    /**
+     * A list of all results of the controls describe blocks.
+     *
+     * For instance, if in the controls code we had the following:
+     * describe sshd_config do
+     * its('Port') { should cmp 22 }
+     * end
+     * The result of this block as a ControlResult would be appended to the results list.
+     */
     results:         ControlResult[];
     source_location: SourceLocation;
     tags:            { [key: string]: any };
@@ -66,13 +83,13 @@ export interface ControlDescription {
 }
 
 export interface Reference {
-    ref?: string;
+    ref?: { [key: string]: any }[] | string;
     url?: string;
     uri?: string;
 }
 
 export interface ControlResult {
-    backtrace?:    { [key: string]: any };
+    backtrace?:    string[];
     code_desc:     string;
     exception?:    string;
     message?:      string;
@@ -80,7 +97,14 @@ export interface ControlResult {
     run_time:      number;
     skip_message?: string;
     start_time:    string;
-    status:        string;
+    status:        ControlResultStatus;
+}
+
+export enum ControlResultStatus {
+    Error = "error",
+    Failed = "failed",
+    Passed = "passed",
+    Skipped = "skipped",
 }
 
 export interface SourceLocation {
@@ -92,6 +116,15 @@ export interface SourceLocation {
      * Path to the file that this statement originates from
      */
     ref: string;
+}
+
+export interface Dependency {
+    git?:          string;
+    name?:         string;
+    path?:         string;
+    skip_message?: string;
+    status?:       string;
+    url?:          string;
 }
 
 export interface ControlGroup {
@@ -106,15 +139,16 @@ export interface ControlGroup {
     /**
      * The name of the group
      */
-    title?: string;
+    title?: null | string;
 }
 
 export interface SupportedPlatform {
-    "os-family"?:      string;
-    "os-name"?:        string;
-    platform?:         string;
-    "platform-family": string;
-    "platform-name"?:  string;
+    "os-family"?:       string;
+    "os-name"?:         string;
+    platform?:          string;
+    "platform-family"?: string;
+    "platform-name"?:   string;
+    release?:           string;
 }
 
 export interface Statistics {
@@ -302,10 +336,14 @@ const typeMap: any = {
         { json: "controls", js: "controls", typ: a(r("ExecJSONControl")) },
         { json: "copyright", js: "copyright", typ: u(undefined, "") },
         { json: "copyright_email", js: "copyright_email", typ: u(undefined, "") },
+        { json: "depends", js: "depends", typ: u(undefined, a(r("Dependency"))) },
+        { json: "description", js: "description", typ: u(undefined, "") },
         { json: "groups", js: "groups", typ: a(r("ControlGroup")) },
+        { json: "inspec_version", js: "inspec_version", typ: u(undefined, "") },
         { json: "license", js: "license", typ: u(undefined, "") },
         { json: "maintainer", js: "maintainer", typ: u(undefined, "") },
         { json: "name", js: "name", typ: "" },
+        { json: "parent_profile", js: "parent_profile", typ: u(undefined, "") },
         { json: "sha256", js: "sha256", typ: "" },
         { json: "skip_message", js: "skip_message", typ: u(undefined, "") },
         { json: "status", js: "status", typ: "" },
@@ -331,12 +369,12 @@ const typeMap: any = {
         { json: "label", js: "label", typ: "" },
     ], false),
     "Reference": o([
-        { json: "ref", js: "ref", typ: u(undefined, "") },
+        { json: "ref", js: "ref", typ: u(undefined, u(a(m("any")), "")) },
         { json: "url", js: "url", typ: u(undefined, "") },
         { json: "uri", js: "uri", typ: u(undefined, "") },
     ], "any"),
     "ControlResult": o([
-        { json: "backtrace", js: "backtrace", typ: u(undefined, m("any")) },
+        { json: "backtrace", js: "backtrace", typ: u(undefined, a("")) },
         { json: "code_desc", js: "code_desc", typ: "" },
         { json: "exception", js: "exception", typ: u(undefined, "") },
         { json: "message", js: "message", typ: u(undefined, "") },
@@ -344,24 +382,33 @@ const typeMap: any = {
         { json: "run_time", js: "run_time", typ: 3.14 },
         { json: "skip_message", js: "skip_message", typ: u(undefined, "") },
         { json: "start_time", js: "start_time", typ: "" },
-        { json: "status", js: "status", typ: "" },
+        { json: "status", js: "status", typ: r("ControlResultStatus") },
     ], false),
     "SourceLocation": o([
         { json: "line", js: "line", typ: 3.14 },
         { json: "ref", js: "ref", typ: "" },
     ], false),
+    "Dependency": o([
+        { json: "git", js: "git", typ: u(undefined, "") },
+        { json: "name", js: "name", typ: u(undefined, "") },
+        { json: "path", js: "path", typ: u(undefined, "") },
+        { json: "skip_message", js: "skip_message", typ: u(undefined, "") },
+        { json: "status", js: "status", typ: u(undefined, "") },
+        { json: "url", js: "url", typ: u(undefined, "") },
+    ], false),
     "ControlGroup": o([
         { json: "controls", js: "controls", typ: a("") },
         { json: "id", js: "id", typ: "" },
-        { json: "title", js: "title", typ: u(undefined, "") },
+        { json: "title", js: "title", typ: u(undefined, u(null, "")) },
     ], false),
     "SupportedPlatform": o([
         { json: "os-family", js: "os-family", typ: u(undefined, "") },
         { json: "os-name", js: "os-name", typ: u(undefined, "") },
         { json: "platform", js: "platform", typ: u(undefined, "") },
-        { json: "platform-family", js: "platform-family", typ: "" },
+        { json: "platform-family", js: "platform-family", typ: u(undefined, "") },
         { json: "platform-name", js: "platform-name", typ: u(undefined, "") },
-    ], false),
+        { json: "release", js: "release", typ: u(undefined, "") },
+    ], "any"),
     "Statistics": o([
         { json: "controls", js: "controls", typ: u(undefined, r("StatisticHash")) },
         { json: "duration", js: "duration", typ: 3.14 },
@@ -374,4 +421,10 @@ const typeMap: any = {
     "StatisticBlock": o([
         { json: "total", js: "total", typ: 3.14 },
     ], false),
+    "ControlResultStatus": [
+        "error",
+        "failed",
+        "passed",
+        "skipped",
+    ],
 };
