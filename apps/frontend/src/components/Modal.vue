@@ -59,14 +59,6 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 
-interface ToolbarItem {
-  text: string;
-  icon?: string;
-  "icon-alt"?: string;
-  model?: boolean;
-  children?: ToolbarItem[];
-}
-
 // We declare the props separately to make props types inferable.
 const ModalProps = Vue.extend({
   props: {

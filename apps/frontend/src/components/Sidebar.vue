@@ -58,12 +58,12 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 
-interface ToolbarItem {
+interface SidebarItem {
   text: string;
   icon?: string;
   "icon-alt"?: string;
   model?: boolean;
-  children?: ToolbarItem[];
+  children?: SidebarItem[];
 }
 
 // We declare the props separately to make props types inferable.
@@ -78,7 +78,7 @@ const SidebarProps = Vue.extend({
 })
 export default class Sidebar extends SidebarProps {
   // Icons
-  items: ToolbarItem[] = [
+  items: SidebarItem[] = [
     { icon: "contacts", text: "Contacts" },
     { icon: "history", text: "Frequently contacted" },
     { icon: "content_copy", text: "Duplicates" },
