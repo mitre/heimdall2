@@ -1,5 +1,5 @@
 {
-  "name": "heimdall-vuetify2",
+  "name": "heimdall-vuetify",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,14 +9,22 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "@types/c3": "^0.7.1",
+    "apexcharts": "^3.8.4",
+    "c3": "^0.7.3",
     "core-js": "^2.6.5",
+    "roboto-fontface": "*",
     "vue": "^2.6.10",
+    "vue-apexcharts": "^1.4.0",
+    "vue-c3": "^1.2.11",
     "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.1.0",
     "vue-router": "^3.0.3",
+    "vuetify": "^2.0.0",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "@mdi/font": "^3.8.95",
     "@types/chai": "^4.1.0",
     "@types/mocha": "^5.2.4",
     "@vue/cli-plugin-babel": "^3.10.0",
@@ -33,9 +41,15 @@
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-vue": "^5.0.0",
     "lint-staged": "^8.1.5",
+    "material-design-icons-iconfont": "^5.0.1",
+    "node-sass": "^4.9.0",
     "prettier": "^1.18.2",
+    "sass": "^1.17.4",
+    "sass-loader": "^7.1.0",
     "typescript": "^3.4.3",
-    "vue-template-compiler": "^2.6.10"
+    "vue-cli-plugin-vuetify": "^0.6.1",
+    "vue-template-compiler": "^2.6.10",
+    "vuetify-loader": "^1.2.2"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
