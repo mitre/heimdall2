@@ -6,7 +6,7 @@
       multiple
       display-size
       counter
-      clearable="false"
+      :clearable="false"
       accept=".json,application/json"
       label="Upload inspec data"
       @change="filesSelected"
@@ -42,11 +42,11 @@ export default class FileReader extends FileReaderProps {
       // If we only have one file, go to it
       if (files.length == 1) {
         // Go to that directory
-        this.$router.push("/results/" + unique_id);
+        // this.$router.push("/results/" + unique_id);
       }
 
       // Clear it
-      this.$refs.fileInput.value = [];
+      // this.$refs.fileInput.value = [];
     });
   }
 }

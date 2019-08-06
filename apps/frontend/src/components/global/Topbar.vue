@@ -6,7 +6,9 @@
     dark
   >
     <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon
+        @click.stop="$emit('toggle-drawer')"
+      ></v-app-bar-nav-icon>
       <span class="hidden-sm-and-down">Google Contacts</span>
     </v-toolbar-title>
     <v-text-field
@@ -41,9 +43,7 @@ import Component from "vue-class-component";
 
 // We declare the props separately to make props types inferable.
 const TopbarProps = Vue.extend({
-  props: {
-    drawer: Boolean
-  }
+  props: {}
 });
 
 @Component({
