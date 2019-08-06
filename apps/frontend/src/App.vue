@@ -57,7 +57,6 @@ export default class App extends AppProps {
   drawer: boolean = false;
 
   created() {
-    console.log(this);
     this.$vuetify.theme.dark = true;
   }
 }

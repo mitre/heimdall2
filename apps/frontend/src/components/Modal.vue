@@ -69,5 +69,7 @@ const ModalProps = Vue.extend({
 @Component({
   components: {}
 })
-export default class Modal extends ModalProps {}
+export default class Modal extends ModalProps {
+  dialog: boolean = false;
+}
 </script>
