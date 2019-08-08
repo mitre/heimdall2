@@ -18,7 +18,7 @@
             gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
           >
             <v-card-title
-              class="fill-height align-end"
+              class="fill-height"
               v-text="card.title"
             ></v-card-title>
           </v-img>
