@@ -1,12 +1,13 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import Data from "./data_store";
-import Filtered from "./data_filters";
-import Lookup from "./lookup_hashes";
-import SeverityCounts from "./severity_counts";
-import Sidebar from "./sidebar";
-import StatusCounts from "./status_counts";
-import Intake from "./report_intake";
+import InspecDataModule from "./data_store";
+import FilteredDataModule from "./data_filters";
+import StatusCountModule from "./status_counts";
+import SeverityCountModule from "./severity_counts";
+import HashLookupModule from "./lookup_hashes";
+import InspecIntakeModule from "./report_intake";
+import SidebarModule from "./sidebar";
+import ColorHackModule from "./color_hack";
 
 Vue.use(Vuex);
 
@@ -23,18 +24,18 @@ Vue.use(Vuex);
  * EG: Filtered controls are useful almost everywhere, whereas
  * the current page of a datatable probably isn't. Be sensible
  */
+interface StoreType {
+  data: InspecDataModule;
+  filteredData: FilteredDataModule;
+  statusCounts: StatusCountModule;
+  severityCounts: SeverityCountModule;
+  lookup: HashLookupModule;
+  intake: InspecIntakeModule;
+  sidebar: SidebarModule;
+  colors: ColorHackModule;
+}
+const store = new Vuex.Store<StoreType>({});
 
-const store = new Vuex.Store({
-  modules: {
-    data: Data,
-    filteredData: Filtered,
-    statusCounts: StatusCounts,
-    severityCounts: SeverityCounts,
-    lookup: Lookup,
-    intake: Intake,
-    sidebar: Sidebar
-  }
-});
 console.log(store);
 
 export default store;

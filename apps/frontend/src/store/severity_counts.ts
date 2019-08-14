@@ -25,6 +25,8 @@ function countSeverity(filter: Filter, severity: Severity): number {
 
 @Module({
   namespaced: true,
+  dynamic: true,
+  store: Store,
   name: "severityCounts"
 })
 class SeverityCountModule extends VuexModule {

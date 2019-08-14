@@ -43,8 +43,10 @@ export type LoadOptions = {
 };
 
 @Module({
-  namespaced: true
-  // name: "intake",
+  namespaced: true,
+  dynamic: true,
+  store: Store,
+  name: "intake"
 })
 class InspecIntakeModule extends VuexModule {
   /** Load a file with the specified options */

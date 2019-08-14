@@ -1,20 +1,22 @@
 <template>
-  <v-layout align-start justify-space-around row>
-    <v-flex v-for="card in cardProps" :key="card.title" xs12 sm6 md3>
-      <v-card :color="card.color" dark height="100px">
+  <v-row align-start justify-space-around row>
+    <v-col xs-3 v-for="card in cardProps" :key="card.title">
+      <v-card :color="card.color">
         <v-card-title>
           <v-icon large left>mdi-{{ card.icon }}</v-icon>
           <span class="title">{{ card.title + ": " + card.number }}</span>
         </v-card-title>
         <v-card-text v-text="card.subtitle" />
       </v-card>
-    </v-flex>
-  </v-layout>
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
+import { getModule } from "vuex-module-decorators";
+import StatusCountModule from "../../store/status_counts";
 
 interface CardProps {
   icon: string;
@@ -35,34 +37,36 @@ const StatusCardRowProps = Vue.extend({
 export default class StatusCardRow extends StatusCardRowProps {
   // Cards
   get cardProps(): CardProps[] {
+    let counts = getModule(StatusCountModule, this.$store);
+    let filter = {};
     return [
       {
         icon: "check-circle",
         title: "Passed",
         subtitle: "All tests passed.",
-        color: "#0f0", // These shouldn't be hard coded
-        number: this.$store.getters["statusCounts/passed"]({})
+        color: "success", // These shouldn't be hard coded
+        number: counts.passed(filter)
       },
       {
         icon: "close-circle",
         title: "Failed",
         subtitle: "Has tests that failed.",
-        color: "#f00",
-        number: this.$store.getters["statusCounts/failed"]({})
+        color: "error",
+        number: counts.failed(filter)
       },
       {
         icon: "minus-circle",
         title: "Not Applicable",
         subtitle: "System exception/absent component.",
-        color: "#00f",
-        number: this.$store.getters["statusCounts/notApplicable"]({})
+        color: "info",
+        number: counts.notApplicable(filter)
       },
       {
         icon: "alert-circle",
         title: "Not Reviewed",
         subtitle: "Manual testing required/disabled test.",
-        color: "#888",
-        number: this.$store.getters["statusCounts/notReviewed"]({})
+        color: "warning",
+        number: counts.notReviewed(filter)
       }
     ];
   }

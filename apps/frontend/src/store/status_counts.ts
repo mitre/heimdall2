@@ -24,6 +24,8 @@ function countStatus(filter: Filter, status: ControlStatus): number {
 
 @Module({
   namespaced: true,
+  dynamic: true,
+  store: Store,
   name: "statusCounts"
 })
 class StatusCountModule extends VuexModule {

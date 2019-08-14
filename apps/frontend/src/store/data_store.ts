@@ -82,6 +82,8 @@ export interface ContextualizedControl
 
 @Module({
   namespaced: true,
+  dynamic: true,
+  store: Store,
   name: "data"
 })
 class InspecDataModule extends VuexModule {

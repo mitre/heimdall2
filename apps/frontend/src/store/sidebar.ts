@@ -49,6 +49,8 @@ function makeFileItem(file: InspecFile): SidebarItem {
 
 @Module({
   namespaced: true,
+  dynamic: true,
+  store: Store,
   name: "sidebar"
 })
 class SidebarModule extends VuexModule {

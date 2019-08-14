@@ -85,7 +85,8 @@ const ControlTableProps = Vue.extend({
 });
 
 @Component({
-  components: {}
+  components: {},
+  mixins: []
 })
 export default class ControlTable extends ControlTableProps {
   customFilter(items: Item[], search: string) {

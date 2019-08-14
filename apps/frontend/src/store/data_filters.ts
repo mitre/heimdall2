@@ -34,6 +34,8 @@ export interface Filter {
 
 @Module({
   namespaced: true,
+  dynamic: true,
+  store: Store,
   name: "filteredData"
 })
 class FilteredDataModule extends VuexModule {

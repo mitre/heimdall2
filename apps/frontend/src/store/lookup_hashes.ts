@@ -4,6 +4,8 @@ import Store from "./store";
 
 @Module({
   namespaced: true,
+  dynamic: true,
+  store: Store,
   name: "lookup"
 })
 class HashLookupModule extends VuexModule {
