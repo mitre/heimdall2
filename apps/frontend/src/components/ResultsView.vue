@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid grid-list-md pa-5>
+  <v-container fluid grid-list-md pa-2>
     <!-- Count Cards -->
     <StatusCardRow />
 
@@ -8,27 +8,31 @@
       <v-col xs-4>
         <v-card class="fill-height">
           <v-card-title>Status Counts</v-card-title>
-          <v-card-text
-            ><StatusChart :filter="filter" v-on:filter-status="setStatusFilter"
-          /></v-card-text>
+          <v-card-text>
+            <StatusChart
+              :filter="filter"
+              v-on:filter-status="setStatusFilter"
+            />
+          </v-card-text>
         </v-card>
       </v-col>
       <v-col xs-4>
         <v-card class="fill-height">
           <v-card-title>Severity Counts</v-card-title>
-          <v-card-text
-            ><SeverityChart
+          <v-card-text>
+            <SeverityChart
               :filter="filter"
               v-on:filter-severity="setSeverityFilter"
-          /></v-card-text>
+            />
+          </v-card-text>
         </v-card>
       </v-col>
       <v-col xs-4>
         <v-card class="fill-height">
           <v-card-title>Compliance Level</v-card-title>
           <v-card-text>
-            <ComplianceChart :filter="filter" />
-            [Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100]
+            <ComplianceChart :filter="filter" />[Passed/(Passed + Failed + Not
+            Reviewed + Profile Error) * 100]
           </v-card-text>
         </v-card>
       </v-col>
@@ -38,8 +42,8 @@
     <v-row>
       <v-col xs-12>
         <v-card elevation="2" title="test">
-          <v-card-title>TreeMap </v-card-title>
-          <v-card-text> WIP </v-card-text>
+          <v-card-title>TreeMap</v-card-title>
+          <v-card-text>WIP</v-card-text>
         </v-card>
       </v-col>
     </v-row>

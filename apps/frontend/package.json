@@ -9,24 +9,24 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "@types/c3": "^0.7.1",
+    "@types/c3": "^0.7.2",
     "apexcharts": "^3.8.4",
     "c3": "^0.5.4",
     "core-js": "^2.6.5",
-    "roboto-fontface": "*",
     "inspecjs": "0.1.0",
+    "roboto-fontface": "*",
     "vue": "^2.6.10",
     "vue-apexcharts": "^1.4.0",
     "vue-c3": "^1.2.11",
     "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.1.0",
-    "vue-router": "^3.0.3",
-    "vuetify": "^2.0.0",
+    "vue-router": "^3.1.2",
+    "vuetify": "^2.0.7",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "@mdi/font": "^3.8.95",
-    "@types/chai": "^4.1.0",
+    "@mdi/font": "^3.9.97",
+    "@types/chai": "^4.2.0",
     "@types/mocha": "^5.2.4",
     "@vue/cli-plugin-babel": "^3.10.0",
     "@vue/cli-plugin-eslint": "^3.10.0",
@@ -46,12 +46,12 @@
     "node-sass": "^4.9.0",
     "prettier": "^1.18.2",
     "sass": "^1.17.4",
-    "sass-loader": "^7.1.0",
+    "sass-loader": "^7.2.0",
     "typescript": "^3.4.3",
-    "vue-cli-plugin-vuetify": "^0.6.1",
+    "vue-cli-plugin-vuetify": "^0.6.3",
     "vue-template-compiler": "^2.6.10",
-    "vuex-module-decorators": "^0.9.9",
-    "vuetify-loader": "^1.2.2"
+    "vuetify-loader": "^1.2.2",
+    "vuex-module-decorators": "^0.9.11"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"

@@ -52,6 +52,16 @@
         </v-list-item>
       </template>
     </v-list>
+    <v-layout align-center>
+      <v-flex xs6 class="text-center">
+        <v-switch
+          label="Light/Dark"
+          v-model="goDark"
+          v-on:change="updateDark"
+          align-center
+        ></v-switch>
+      </v-flex>
+    </v-layout>
   </v-navigation-drawer>
 </template>
 
@@ -109,5 +119,9 @@ export default class Sidebar extends SidebarProps {
     { icon: "phonelink", text: "App downloads" },
     { icon: "keyboard", text: "Go to the old version" }
   ];
+  goDark: boolean = true;
+  updateDark() {
+    this.$vuetify.theme.dark = this.goDark;
+  }
 }
 </script>
