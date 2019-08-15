@@ -13,3 +13,6 @@ export { ControlStatus, Severity, ResultStatus } from "./compat-wrappers";
 
 // Export HDF format
 export { hdfWrapControl, HDFControl } from "./compat-wrappers";
+
+// Export nist utilities
+export * from "./nist";
