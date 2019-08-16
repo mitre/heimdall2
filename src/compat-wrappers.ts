@@ -9,23 +9,24 @@ import { setFlagsFromString } from "v8";
  * The statuses that a control might have.
  *
  * This is computed as follows:
- * If the profile has 0 impact, it is "Not Applicable"
+ * If it came from a profile view output (thus was not run), it is "From Profile"
+ * Else, if it has no statuses (implying no describe blocks), it is "No Data"
+ * Else, if it has 0 impact, it is "Not Applicable"
+ * Else, if it contains an "error" amidst its status list, it is "Profile Error"
  * Else, if it contains a "failed" amidst its status list, it is "Failed"
  * Else, if it contains a "passed" amidst its status list, it is "Passed"
- * Else, if it contains a "skipped" amidst its status list, it is "Not Reviewed"
- * Else, there are no results, and so the profile is marked as "Profile Error".
- *
- * Note that as currently implemented, this implies that a control that has not been run is an "Error".
- * TODO: Make this more clear? Add another status?
+ * Else, if it contains a "skipped" amidst its status list, it is "Not Reviewed". 
+ * Note that the "Not Reviewed" case implicitly means ALL of its statuses are "skipped"
+ * These cases are in theory comprehensive, but if somehow no apply, it is still Profile Error
  */
 export type ControlStatus =
-    | "From Profile"    /** If it is from a `inspec profile` run */
-    | "No Data"         /** If there are no results in this control */
+    "Not Applicable"
+    | "From Profile"    
+    | "No Data"         
+    | "Profile Error"
     | "Passed"
     | "Failed"
-    | "Not Applicable"
-    | "Not Reviewed"
-    | "Profile Error";
+    | "Not Reviewed";
 
 /** The severities a control can have. These map numeric impact values to No/Low/Medium/High/Crtiical impact
  * [0, 0.01) => No impact
@@ -86,7 +87,7 @@ export interface HDFControl {
      * Returns the nist tags with any extraneous/duplicate data (Rev4, (b), etc.) removed,
      * sorted alphabetically
      */
-    fixed_nist_tags?: string[];
+    fixed_nist_tags: string[];
 
     /** Get the start time of this control's run, as determiend by the time of the first test.
      * If no tests were run, (it is a profile-json or has no tests) returns undefined
@@ -151,18 +152,20 @@ abstract class HDFControl_1_0 implements HDFControl {
     abstract get message(): string;
 
     get nist_tags(): string[]  {
-        return this.wraps.tags["nist"] || ["UM-1"];
+        let fetched: string[] | undefined = this.wraps.tags["nist"];
+        if(fetched == null || fetched.length === 0) {
+            return ["UM-1"];
+        } else {
+            return fetched;
+        }
     }
 
-    get fixed_nist_tags(): string[] | undefined {
+    get fixed_nist_tags(): string[] {
         const tags = this.nist_tags;
-        if(tags === undefined) {
-            return undefined;
-        }
 
         // Otherwise, filter to only those that follow format @@-#, 
         // where @ is any capital letter, and # is any number (1 or more digits)
-        const pattern = /[A-Z][A-Z]-[0-9]+/.compile();
+        const pattern = /[A-Z][A-Z]-[0-9]+/;
         let results: string[] = [];
         tags.forEach(tag => {
             let finding = tag.match(pattern);
