@@ -72,8 +72,9 @@ export interface HDFControl {
     // May be present depending on type of input
     /**
      * Returns the nist tags if they exist.
+     * If none exist, returns "UM-1"
      */
-    nist_tags?: string[];
+    nist_tags: string[];
 
     /**
      * Returns a user-facing representation of the result of this status, consisting of a message explaining
@@ -149,8 +150,8 @@ abstract class HDFControl_1_0 implements HDFControl {
     // Abstracts
     abstract get message(): string;
 
-    get nist_tags(): string[] | undefined {
-        return this.wraps.tags["nist"];
+    get nist_tags(): string[]  {
+        return this.wraps.tags["nist"] || ["UM-1"];
     }
 
     get fixed_nist_tags(): string[] | undefined {

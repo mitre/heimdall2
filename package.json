@@ -16,7 +16,7 @@
     "lite-server": "^2.5.3",
     "quicktype": "^15.0.197",
     "ts-jest": "^24.0.2",
-    "typedoc": "^0.14.2",
+    "typedoc": "^0.15.0",
     "typescript": "^3.5.3"
   },
   "scripts": {
