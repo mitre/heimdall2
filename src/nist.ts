@@ -177,7 +177,7 @@ export function populateNistHash(controls: HDFControl[], hash: NistHash): void {
  * Next, we would have 
  */
 function updateStatus(group: ControlGroupStatus, control: ControlStatus): ControlGroupStatus {
-    const precedence: ControlGroupStatus[] = ["Empty", "From Profile", "No Data", "Not Applicable", "Profile Error", "Failed", "Passed", "Not Reviewed"];
+    const precedence: ControlGroupStatus[] = ["Empty", "From Profile", "No Data", "Not Applicable", "Not Reviewed", "Passed", "Failed", "Profile Error"];
     let i1 = precedence.indexOf(group);
     let i2 = precedence.indexOf(control);
     if(i2 > i1) {
