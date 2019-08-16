@@ -36,6 +36,4 @@ interface StoreType {
 }
 const store = new Vuex.Store<StoreType>({});
 
-console.log(store);
-
 export default store;
