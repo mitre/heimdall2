@@ -3,7 +3,7 @@
     <vue-apex-charts
       id="chart"
       type="radialBar"
-      height="300"
+      width="350"
       :options="chartOptions"
       :series="series"
     />

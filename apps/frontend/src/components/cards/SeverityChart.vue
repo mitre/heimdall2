@@ -2,7 +2,7 @@
   <ApexPieChart
     :categories="categories"
     :series="series"
-    v-on:category-selected="onSelect"
+    @category-selected="onSelect"
   />
 </template>
 
@@ -17,13 +17,14 @@ import { Severity } from "inspecjs";
 // We declare the props separately to make props types inferable.
 const SeverityChartProps = Vue.extend({
   props: {
+    value: String, // The currently selected severity, or null
     filter: Object // Of type Filer from filteredData
   }
 });
 
 /**
  * Categories property must be of type Category
- * Emits "filter-severity" with payload of Severity
+ * Model is of type Severity | null - reflects selected severity
  */
 @Component({
   components: {
@@ -33,29 +34,29 @@ const SeverityChartProps = Vue.extend({
 export default class SeverityChart extends SeverityChartProps {
   categories: Category<Severity>[] = [
     // { label: "Low", value: "low", icon: "SquareIcon", color: "var(--v-success-base)" },
-    { label: "Low", value: "low", icon: "SquareIcon", color: "severityLow" },
+    { label: "Low", value: "low", color: "severityLow" },
     {
       label: "Medium",
       value: "medium",
-      icon: "SquareIcon",
       color: "severityMedium"
     },
     {
       label: "High",
       value: "high",
-      icon: "SquareIcon",
       color: "severityHigh"
     },
     {
       label: "Critical",
       value: "critical",
-      icon: "SquareIcon",
       color: "severityCritical"
     }
   ];
 
   get series(): number[] {
-    let counts: SeverityCountModule = getModule(SeverityCountModule);
+    let counts: SeverityCountModule = getModule(
+      SeverityCountModule,
+      this.$store
+    );
     return [
       counts.low(this.filter),
       counts.medium(this.filter),
@@ -65,7 +66,12 @@ export default class SeverityChart extends SeverityChartProps {
   }
 
   onSelect(severity: Category<Severity>) {
-    this.$emit("filter-severity", severity.value);
+    // In the case that the values are the same, we want to instead emit null
+    if (severity.value === this.value) {
+      this.$emit("input", null);
+    } else {
+      this.$emit("input", severity.value);
+    }
   }
 }
 </script>

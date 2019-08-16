@@ -54,7 +54,6 @@ class InspecIntakeModule extends VuexModule {
   async loadFile(options: LoadOptions) {
     // Make the reader
     let reader = new FileReader();
-
     // Setup the callback
     reader.onload = (event: ProgressEvent) => {
       // Get our text
@@ -71,7 +70,7 @@ class InspecIntakeModule extends VuexModule {
       try {
         result = convertFile(text);
       } catch (e) {
-        console.log(
+        console.error(
           `Failed to convert file ${filename} due to error "${e}". We should display this as an error modal.`
         );
         return;
@@ -98,7 +97,7 @@ class InspecIntakeModule extends VuexModule {
         };
         data.addProfile(profileFile);
       } else {
-        console.log(`Unhandled file type ${Object.keys(result)}`);
+        console.error(`Unhandled file type ${Object.keys(result)}`);
       }
     };
 

@@ -1,9 +1,9 @@
 <template>
   <div slot="no-body">
     <vue-apex-charts
-      id="chart"
+      :id="chart_id"
       type="donut"
-      height="300"
+      :width="350"
       :options="chartOptions"
       :series="_series"
     />
@@ -14,7 +14,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import VueApexCharts from "vue-apexcharts";
-import { ApexOptions } from "apexcharts";
+import { ApexOptions, exec } from "apexcharts";
 import { install } from "vuetify/es5/install";
 import { getModule } from "vuex-module-decorators";
 import ColorHackModule from "../../store/color_hack";
@@ -23,7 +23,6 @@ import ColorHackModule from "../../store/color_hack";
 export interface Category<C extends string> {
   label: string;
   value: C;
-  icon: string;
   color: string;
 }
 
@@ -32,7 +31,6 @@ function isCategory(x: any): x is Category<string> {
   return (
     typeof x.label === "string" &&
     typeof x.value === "string" &&
-    typeof x.icon === "string" &&
     typeof x.color === "string"
   );
 }
@@ -45,6 +43,12 @@ const ApexPieChartProps = Vue.extend({
   }
 });
 
+let id_counter = 0;
+function next_id(): number {
+  id_counter += 1;
+  return id_counter;
+}
+
 /**
  * Emits "category-selected" with payload of type Category whenever a category is selected.
  */
@@ -54,8 +58,10 @@ const ApexPieChartProps = Vue.extend({
   }
 })
 export default class ApexPieChart extends ApexPieChartProps {
+  chart_id: string = `piechart_${next_id}`;
+
   /**
-   * Provide a type-checked accessor to our categories property
+   * Provide a type-checked accessor to our categories propertyt
    */
   get _categories(): Category<string>[] {
     // Ensure it's an array
@@ -94,15 +100,7 @@ export default class ApexPieChart extends ApexPieChartProps {
     let final = this.series as number[];
 
     // If we have any non-zero data, just returngive 0.01 of all
-    if (final.some(x => x > 0)) {
-      return final;
-    } else {
-      // Otherwise, give an extremely small number (e.g. 0.00001) for all, so we have something visible
-      // TODO: Make this better
-      return this._categories.map(
-        _ => 0.000000000000000000000000000000000000000001
-      );
-    }
+    return final;
   }
 
   // Generate the chart options based on _categories
@@ -117,6 +115,9 @@ export default class ApexPieChart extends ApexPieChartProps {
       },
       legend: {
         position: "bottom",
+        onItemClick: {
+          toggleDataSeries: false
+        },
         labels: {
           useSeriesColors: true
         }
@@ -127,11 +128,12 @@ export default class ApexPieChart extends ApexPieChartProps {
           show: false
         },
         events: {
-          dataPointSelection: (event, chartContext, config) =>
+          dataPointSelection: (event, chartContext, config) => {
             this.$emit(
               "category-selected",
               this._categories[config.dataPointIndex]
-            ),
+            );
+          },
           dataPointMouseEnter: (event, chartContext, config) => {
             document.body.style.cursor = "pointer";
           },

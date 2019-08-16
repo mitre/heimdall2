@@ -8,23 +8,17 @@
       <v-col xs-4>
         <v-card class="fill-height">
           <v-card-title>Status Counts</v-card-title>
-          <v-card-text>
-            <StatusChart
-              :filter="filter"
-              v-on:filter-status="setStatusFilter"
-            />
-          </v-card-text>
+          <v-card-text
+            ><StatusChart :filter="filter" v-model="statusFilter"
+          /></v-card-text>
         </v-card>
       </v-col>
       <v-col xs-4>
         <v-card class="fill-height">
           <v-card-title>Severity Counts</v-card-title>
-          <v-card-text>
-            <SeverityChart
-              :filter="filter"
-              v-on:filter-severity="setSeverityFilter"
-            />
-          </v-card-text>
+          <v-card-text
+            ><SeverityChart :filter="filter" v-model="severityFilter"
+          /></v-card-text>
         </v-card>
       </v-col>
       <v-col xs-4>
@@ -71,6 +65,7 @@ import SeverityChart from "@/components/cards/SeverityChart.vue";
 import ComplianceChart from "@/components/cards/ComplianceChart.vue";
 import { Filter } from "../store/data_filters";
 import { ControlStatus, Severity } from "inspecjs";
+import { FileID } from "../store/report_intake";
 
 // We declare the props separately
 // to make props types inferrable.
@@ -89,31 +84,54 @@ const ResultsProps = Vue.extend({
   }
 })
 export default class Results extends ResultsProps {
-  // Stores the current filter
-  filter: Filter = {};
+  /**
+   * The currently selected severity, as modeled by the severity chart
+   */
+  severityFilter: Severity | null = null;
 
-  setSeverityFilter(newSeverity: Severity): void {
-    // If they've picked the same one, we reset to undefined.
-    // Otherwise, we set it as the new filter
-    let newFilter = { ...this.filter };
-    if (newSeverity === this.filter.severity) {
-      newFilter.severity = undefined;
+  /**
+   * The currently selected status, as modeled by the status chart
+   */
+  statusFilter: ControlStatus | null = null;
+
+  /**
+   * The current search term, as modeled by <NOTHING YET>
+   * Never null - but should be passed as such if empty
+   */
+  searchTerm: string = "";
+
+  /**
+   * The current state of the treemap as modeled by the treemap (duh).
+   * All properties can be null.
+   * Once can reliably expect that if a "deep" selection is not null, then its parent should also be not-null.
+   */
+  treemapSelections: unknown;
+
+  /**
+   * The currently selected file, if one exists.
+   * Controlled by router.
+   */
+  get fileFilter(): FileID | null {
+    let id_string: string = this.$route.params.id;
+    let as_int = parseInt(id_string);
+    if (isNaN(as_int)) {
+      return null;
     } else {
-      newFilter.severity = newSeverity;
+      return as_int as FileID;
     }
-    this.filter = newFilter;
   }
 
-  setStatusFilter(newStatus: ControlStatus): void {
-    // If they've picked the same one, we reset to undefined.
-    // Otherwise, we set it as the new filter
-    let newFilter = { ...this.filter };
-    if (newStatus === this.filter.status) {
-      newFilter.status = undefined;
-    } else {
-      newFilter.status = newStatus;
-    }
-    this.filter = newFilter;
+  /**
+   * The filter, created by
+   */
+  get filter(): Filter {
+    // console.log(`New filter: status = ${this.statusFilter}, severity = ${this.severityFilter}, fromFile = ${this.fileFilter}`);
+    return {
+      status: this.statusFilter || undefined,
+      severity: this.severityFilter || undefined,
+      fromFile: this.fileFilter || undefined,
+      omit_overlayed_controls: true
+    };
   }
 }
 </script>

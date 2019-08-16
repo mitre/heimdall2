@@ -266,6 +266,19 @@ class InspecDataModule extends VuexModule {
   }
 
   /**
+   * Unloads the file with the given id
+   */
+  @Mutation
+  removeFile(file_id: FileID) {
+    this.profileFiles = this.profileFiles.filter(
+      pf => pf.unique_id !== file_id
+    );
+    this.executionFiles = this.executionFiles.filter(
+      ef => ef.unique_id !== file_id
+    );
+  }
+
+  /**
    * Clear all stored data.
    */
   @Mutation

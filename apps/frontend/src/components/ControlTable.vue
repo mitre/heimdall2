@@ -144,6 +144,7 @@ import { hdfWrapControl, HDFControl } from "inspecjs";
 
 //TODO: add line numbers
 import "prismjs";
+//@ts-ignore
 import Prism from "vue-prism-component";
 //import Prism from "prismjs";
 //Prism.highlightAll();

@@ -1,8 +1,8 @@
 <template>
   <v-app id="inspire">
     <!-- Top+Sidebar -->
-    <Sidebar :drawer="drawer" />
-    <Topbar v-on:toggle-drawer="drawer = !drawer" />
+    <Sidebar v-model="drawer" />
+    <Topbar @toggle-drawer="drawer = !drawer" />
 
     <v-content>
       <Toolbar />
@@ -22,7 +22,11 @@
       <v-icon>add</v-icon>
     </v-btn>
 
-    <Modal :dialog="dialog" v-on:modal-dismissed="dialog = false" />
+    <Modal
+      :dialog="dialog"
+      @modal-dismissed="dialog = false"
+      @file-loaded="drawer = true"
+    />
 
     <v-spacer />
     <Footer />

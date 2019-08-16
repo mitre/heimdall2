@@ -2,7 +2,7 @@
   <ApexPieChart
     :categories="categories"
     :series="series"
-    v-on:category-selected="onSelect"
+    @category-selected="onSelect"
   />
 </template>
 
@@ -13,18 +13,18 @@ import ApexPieChart, { Category } from "@/components/generic/ApexPieChart.vue";
 import { getModule } from "vuex-module-decorators";
 import StatusCountModule from "../../store/status_counts";
 import { ControlStatus } from "inspecjs";
-import colors from "vuetify/es5/util/colors";
 
 // We declare the props separately to make props types inferable.
 const StatusChartProps = Vue.extend({
   props: {
+    value: String, // The currently selected status, or null
     filter: Object // Of type Filer from filteredData
   }
 });
 
 /**
  * Categories property must be of type Category
- * Emits "filter-status" with payload of type ControlStatus
+ * Model is of type ControlStatus | null - reflects selected severity
  */
 @Component({
   components: {
@@ -36,31 +36,26 @@ export default class StatusChart extends StatusChartProps {
     {
       label: "Passed",
       value: "Passed",
-      icon: "CheckCircleIcon",
       color: "statusPassed"
     },
     {
       label: "Failed",
       value: "Failed",
-      icon: "XCircleIcon",
       color: "statusFailed"
     },
     {
       label: "Not Applicable",
       value: "Not Applicable",
-      icon: "SlashIcon",
       color: "statusNotApplicable"
     },
     {
       label: "Not Reviewed",
       value: "Not Reviewed",
-      icon: "AlertTriangleIcon",
       color: "statusNotReviewed"
     },
     {
       label: "Profile Error",
       value: "Profile Error",
-      icon: "AlertCircleIcon",
       color: "statusProfileError"
     }
   ];
@@ -76,8 +71,13 @@ export default class StatusChart extends StatusChartProps {
     ];
   }
 
-  onSelect(impact: Category<ControlStatus>) {
-    this.$emit("filter-status", impact.value);
+  onSelect(status: Category<ControlStatus>) {
+    // In the case that the values are the same, we want to instead emit null
+    if (status.value === this.value) {
+      this.$emit("input", null);
+    } else {
+      this.$emit("input", status.value);
+    }
   }
 }
 </script>

@@ -1,15 +1,11 @@
 <template>
   <div>
     <v-file-input
-      ref="fileInput"
-      chips
-      multiple
+      v-model="curr_file"
       display-size
-      counter
-      :clearable="false"
       accept=".json,application/json"
       label="Upload inspec data"
-      @change="filesSelected"
+      @change="commitFile"
     ></v-file-input>
   </div>
 </template>
@@ -17,6 +13,14 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
+
+function isValidFile(f: File | File[] | null): f is File {
+  if (f === null || f === undefined) {
+    return false;
+  } else {
+    return (f as File).name !== undefined;
+  }
+}
 
 // We declare the props separately to make props types inferable.
 const FileReaderProps = Vue.extend({
@@ -29,25 +33,18 @@ const FileReaderProps = Vue.extend({
   components: {}
 })
 export default class FileReader extends FileReaderProps {
-  $refs!: {
-    fileInput: any; // v-file-input
-  };
+  curr_file: File | File[] | null = null;
 
-  filesSelected(files: File[]) {
-    files.forEach(file => {
+  commitFile(file: File | File[] | null) {
+    if (isValidFile(file)) {
       // Submit it to be loaded
       let unique_id = this.$store.getters["data/nextFreeFileID"];
       this.$store.dispatch("intake/loadFile", { file, unique_id });
+      this.$emit("got-file");
 
-      // If we only have one file, go to it
-      if (files.length == 1) {
-        // Go to that directory
-        // this.$router.push("/results/" + unique_id);
-      }
-
-      // Clear it
-      // this.$refs.fileInput.value = [];
-    });
+      // Clear
+      this.curr_file = [];
+    }
   }
 }
 </script>
