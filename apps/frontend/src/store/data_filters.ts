@@ -8,7 +8,11 @@ import {
   ControlStatus,
   Severity,
   hdfWrapControl as hdf,
-  HDFControl
+  HDFControl,
+  AnyFullControl,
+  NistFamily,
+  NistCategory,
+  hdfWrapControl
 } from "inspecjs";
 import { FileID, isInspecFile } from "./report_intake";
 import Store from "./store";
@@ -29,7 +33,50 @@ export interface Filter {
   /** Whether or not to allow/include overlayed controls */
   omit_overlayed_controls?: boolean;
 
-  // Add more as necessary
+  /** A search term string, case insensitive
+   * We look for this in
+   * - control ID
+   * - rule title
+   * - severity
+   * - status
+   * - finding details (from HDF)
+   * - code
+   */
+  search_term?: string;
+
+  /** The current state of the Nist Treemap. Used to further filter by nist categories etc. */
+  nist_filters?: NistMapState;
+}
+
+export interface NistMapState {
+  selectedFamily: string | null;
+  selectedCategory: string | null;
+  selectedControlID: string | null;
+}
+
+/**
+ * Facillitates the search functionality
+ * @param term The string to search with
+ * @param context_control The control to search for term in
+ */
+function contains_term(
+  context_control: ContextualizedControl,
+  term: string
+): boolean {
+  let control = context_control.data;
+  let as_hdf = hdf(control);
+  // Get our (non-null) searchable data
+  let searchables: string[] = [
+    control.id,
+    control.title,
+    control.code,
+    as_hdf.severity,
+    as_hdf.status,
+    as_hdf.finding_details
+  ].filter(s => s !== null) as string[];
+
+  // See if any contain term
+  return searchables.some(s => s.toLowerCase().includes(term));
 }
 
 @Module({
@@ -87,11 +134,15 @@ class FilteredDataModule extends VuexModule {
     // Establish to vue that we depend on this.contextStore
     let _depends: any = this.dataStore.contextStore;
     return (filter: Filter = {}) => {
-      // Generate a hash. TODO: Make more efficient
-      let id = JSON.stringify(filter);
+      // Generate a hash for cache purposes.
+      // If the "search_term" string is not null, we don't cache - no need to pollute
+      let id: string | null = null;
+      if (filter.search_term !== null) {
+        id = JSON.stringify(filter);
+      }
 
       // Check if we have this cached:
-      if (id in localCache) {
+      if (id !== null && id in localCache) {
         return [...localCache[id]];
       }
 
@@ -117,8 +168,40 @@ class FilteredDataModule extends VuexModule {
         controls = controls.filter(control => control.extended_by.length === 0);
       }
 
+      // Filter by search term
+      if (filter.search_term !== undefined) {
+        let term = filter.search_term.toLowerCase();
+
+        // Filter controls to those that contain search term
+        controls = controls.filter(c => contains_term(c, term));
+      }
+
+      // Filter by nist stuff
+      if (filter.nist_filters !== undefined) {
+        let f = filter.nist_filters;
+        controls = controls.filter(c => {
+          let as_hdf = hdfWrapControl(c.data);
+          if (f.selectedControlID !== null) {
+            return as_hdf.wraps.id.includes(f.selectedControlID);
+          } else if (f.selectedCategory !== null) {
+            return as_hdf.nist_tags.some((tag: string) =>
+              tag.includes(f.selectedCategory!)
+            );
+          } else if (f.selectedFamily !== null) {
+            return as_hdf.nist_tags.some((tag: string) =>
+              tag.includes(f.selectedFamily!)
+            );
+          } else {
+            // No filters - so we don't!
+            return true;
+          }
+        });
+      }
+
       // Save to cache
-      localCache[id] = controls;
+      if (id !== null) {
+        localCache[id] = controls;
+      }
       return [...controls]; // Return a shallow copy
     };
   }

@@ -40,7 +40,8 @@ export default class FileReader extends FileReaderProps {
       // Submit it to be loaded
       let unique_id = this.$store.getters["data/nextFreeFileID"];
       this.$store.dispatch("intake/loadFile", { file, unique_id });
-      this.$emit("got-file");
+      this.$router.push(`/results/${unique_id}`);
+      this.$emit("got-file", unique_id);
 
       // Clear
       this.curr_file = [];

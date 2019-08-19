@@ -44,28 +44,28 @@ export default class StatusCardRow extends StatusCardRowProps {
         icon: "check-circle",
         title: "Passed",
         subtitle: "All tests passed.",
-        color: "success", // These shouldn't be hard coded
+        color: "statusPassed", // These shouldn't be hard coded
         number: counts.passed(filter)
       },
       {
         icon: "close-circle",
         title: "Failed",
         subtitle: "Has tests that failed.",
-        color: "error",
+        color: "statusFailed",
         number: counts.failed(filter)
       },
       {
         icon: "minus-circle",
         title: "Not Applicable",
         subtitle: "System exception/absent component.",
-        color: "info",
+        color: "statusNotApplicable",
         number: counts.notApplicable(filter)
       },
       {
         icon: "alert-circle",
         title: "Not Reviewed",
         subtitle: "Manual testing required/disabled test.",
-        color: "warning",
+        color: "statusNotReviewed",
         number: counts.notReviewed(filter)
       }
     ];

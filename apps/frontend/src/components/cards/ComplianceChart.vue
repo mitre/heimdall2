@@ -107,7 +107,7 @@ export default class ComplianceChart extends ComplianceChartProps {
     if (total == 0) {
       return [0];
     } else {
-      return [(100.0 * passed) / total];
+      return [Math.round((100.0 * passed) / total)];
     }
   }
 }

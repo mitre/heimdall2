@@ -9,7 +9,7 @@
         <v-card class="fill-height">
           <v-card-title>Status Counts</v-card-title>
           <v-card-text
-            ><StatusChart :filter="filter" v-model="statusFilter"
+            ><StatusChart :filter="all_filter" v-model="statusFilter"
           /></v-card-text>
         </v-card>
       </v-col>
@@ -17,7 +17,7 @@
         <v-card class="fill-height">
           <v-card-title>Severity Counts</v-card-title>
           <v-card-text
-            ><SeverityChart :filter="filter" v-model="severityFilter"
+            ><SeverityChart :filter="all_filter" v-model="severityFilter"
           /></v-card-text>
         </v-card>
       </v-col>
@@ -25,8 +25,8 @@
         <v-card class="fill-height">
           <v-card-title>Compliance Level</v-card-title>
           <v-card-text>
-            <ComplianceChart :filter="filter" />[Passed/(Passed + Failed + Not
-            Reviewed + Profile Error) * 100]
+            <ComplianceChart :filter="all_filter" />[Passed/(Passed + Failed +
+            Not Reviewed + Profile Error) * 100]
           </v-card-text>
         </v-card>
       </v-col>
@@ -37,7 +37,12 @@
       <v-col xs-12>
         <v-card elevation="2" title="test">
           <v-card-title>TreeMap</v-card-title>
-          <v-card-text>WIP</v-card-text>
+          <v-card-text
+            ><Treemap
+              :filter="treemap_filter"
+              v-model="nistFilters"
+              @clear="clear"
+          /></v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -58,14 +63,14 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import StatusCardRow from "@/components/cards/StatusCardRow.vue";
-import TreeMap from "@/components/TreeMap.vue";
+import Treemap from "@/components/cards/Treemap.vue";
 import ControlTable from "@/components/ControlTable.vue";
 import StatusChart from "@/components/cards/StatusChart.vue";
 import SeverityChart from "@/components/cards/SeverityChart.vue";
 import ComplianceChart from "@/components/cards/ComplianceChart.vue";
-import { Filter } from "../store/data_filters";
+import { Filter, NistMapState } from "@/store/data_filters";
 import { ControlStatus, Severity } from "inspecjs";
-import { FileID } from "../store/report_intake";
+import { FileID } from "@/store/report_intake";
 
 // We declare the props separately
 // to make props types inferrable.
@@ -76,7 +81,7 @@ const ResultsProps = Vue.extend({
 @Component({
   components: {
     StatusCardRow,
-    TreeMap,
+    Treemap,
     ControlTable,
     StatusChart,
     SeverityChart,
@@ -95,17 +100,20 @@ export default class Results extends ResultsProps {
   statusFilter: ControlStatus | null = null;
 
   /**
-   * The current search term, as modeled by <NOTHING YET>
-   * Never null - but should be passed as such if empty
-   */
-  searchTerm: string = "";
-
-  /**
    * The current state of the treemap as modeled by the treemap (duh).
-   * All properties can be null.
    * Once can reliably expect that if a "deep" selection is not null, then its parent should also be not-null.
    */
-  treemapSelections: unknown;
+  nistFilters: NistMapState = {
+    selectedFamily: null,
+    selectedCategory: null,
+    selectedControlID: null
+  };
+
+  /**
+   * The current search term, as modeled by <NOTHING YET>
+   * Never empty - should in that case be null
+   */
+  searchTerm: string | null = null;
 
   /**
    * The currently selected file, if one exists.
@@ -122,15 +130,43 @@ export default class Results extends ResultsProps {
   }
 
   /**
-   * The filter, created by
+   * The filter for charts. Contains all of our filter stuff
    */
-  get filter(): Filter {
+  get all_filter(): Filter {
+    // console.log(`New filter: status = ${this.statusFilter}, severity = ${this.severityFilter}, fromFile = ${this.fileFilter}`);
+    return {
+      status: this.statusFilter || undefined,
+      severity: this.severityFilter || undefined,
+      fromFile: this.fileFilter || undefined,
+      nist_filters: this.nistFilters,
+      omit_overlayed_controls: true
+    };
+  }
+
+  /**
+   * The filter for treemap. Omits its own stuff
+   */
+  get treemap_filter(): Filter {
     // console.log(`New filter: status = ${this.statusFilter}, severity = ${this.severityFilter}, fromFile = ${this.fileFilter}`);
     return {
       status: this.statusFilter || undefined,
       severity: this.severityFilter || undefined,
       fromFile: this.fileFilter || undefined,
       omit_overlayed_controls: true
+    };
+  }
+
+  /**
+   * Clear all filters
+   */
+  clear() {
+    this.severityFilter = null;
+    this.statusFilter = null;
+    this.searchTerm = null;
+    this.nistFilters = {
+      selectedFamily: null,
+      selectedCategory: null,
+      selectedControlID: null
     };
   }
 }

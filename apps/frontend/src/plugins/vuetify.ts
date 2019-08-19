@@ -9,6 +9,7 @@ let statuses = {
   statusPassed: colors.green.base,
   statusFailed: colors.red.base,
   statusNotApplicable: colors.lightBlue.base,
+  statusNoData: colors.orange.lighten1,
   statusNotReviewed: colors.orange.base,
   statusProfileError: colors.indigo.base,
   statusNotRun: colors.teal.base // for From Profile and No Data
