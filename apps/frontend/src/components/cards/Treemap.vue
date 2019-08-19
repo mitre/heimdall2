@@ -103,7 +103,6 @@
                 @click="selectNode(selectedNode.parent)"
                 :width="width"
                 :y="top_margin * -1"
-                v-if="selectedNode.parent"
               ></rect>
 
               <!-- The visible square text element with the id (basically a breadcumb, if you will) -->
@@ -274,7 +273,13 @@ export default class Treemap extends TreemapProps {
   }
 
   // Callbacks for our tree
-  selectNode(n: d3.HierarchyRectangularNode<TreemapDatumType>): void {
+  selectNode(n: null | d3.HierarchyRectangularNode<TreemapDatumType>): void {
+    // Avoid selecting falsey nodes
+    if (!n) {
+      console.log("Attempted to select Null Node in Treemap");
+      return;
+    }
+
     // Get our path to the selected node
     let route = n.ancestors().reverse();
 

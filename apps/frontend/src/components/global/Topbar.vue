@@ -9,7 +9,7 @@
       <v-app-bar-nav-icon
         @click.stop="$emit('toggle-drawer')"
       ></v-app-bar-nav-icon>
-      <span class="hidden-sm-and-down">Google Contacts</span>
+      <span class="hidden-sm-and-down">Heimdall Lite</span>
     </v-toolbar-title>
     <v-text-field
       flat
@@ -28,10 +28,7 @@
     </v-btn>
     <v-btn icon large>
       <v-avatar size="32px" item>
-        <v-img
-          src="https://cdn.vuetifyjs.com/images/logos/logo.svg"
-          alt="Vuetify"
-        ></v-img>
+        <v-img :src="require('@/assets/logo.png')" alt="Heimdall"></v-img>
       </v-avatar>
     </v-btn>
   </v-app-bar>
