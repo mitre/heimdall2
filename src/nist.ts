@@ -33,49 +33,54 @@ const families: NistFamilyDescription[] = [
     ["SA", "System and Services Acquisition", 22],
 ];
 
+/** All a control in a nist hash really needs is a status */
+interface NistControlRequirements {
+    fixed_nist_tags: string[];
+    status: ControlStatus;
+}
+
 // Our types to be layed out in our hashes
 
 // Represents the status of a group of controsl. Typically holds the value of the "worst" control amongst the group
 // Empty means no controls are in the given group
 export type ControlGroupStatus = ControlStatus | "Empty";
 
-// Holds all of the data related to a NIST vuln category, nested in a family. EX: RA-4, PM-12, etc.
-export type NistCategory = {
+/** Holds all of the data related to a NIST vuln category, nested in a family. EX: RA-4, PM-12, etc. */
+export type NistCategory<T extends NistControlRequirements> = {
     // Sometimes referred to as a subfamily
     name: string; // Derived from its parent, and the index it has amongst its parents children
     count: number; // How many controls it holds
     value: number; // Its value (?????)
     status: ControlGroupStatus; // The combined status of all it's members
-    children: HDFControl[]; // The controls themselves
+    children: T[]; // The controls themselves
 };
 
-// Holds all of the data related to a NIST vuln vamily, EX: SC, SI, etc.
-export type NistFamily = {
+/** Holds all of the data related to a NIST vuln vamily, EX: SC, SI, etc. */
+export type NistFamily<T extends NistControlRequirements> = {
     name: string; // A name - 2 character NIST code.
     desc: string; // A description
     count: number; // How many categories it holds
     status: ControlGroupStatus; // The combined status of all it's members
-    children: NistCategory[];
+    children: NistCategory<T>[];
 };
 
-// Top level structure. Holds many families
-export type NistHash = { 
+/** Top level structure in a NIST hash. Holds many families */
+export type NistHash<T extends NistControlRequirements> = { 
     name: string; 
-    children: NistFamily[];
+    children: NistFamily<T>[];
     count: number;
     status: ControlGroupStatus; 
 };
 
-export type ControlHashItem = HDFControl[];
-export type ControlNistHash = { [index: string]: ControlHashItem }; // Maps nist categories to lists of relevant controls
+export type ControlNistHash<T extends NistControlRequirements> = { [index: string]: T[] }; // Maps nist categories to lists of relevant controls
 
-function generateNewNistFamily(fam: NistFamilyDescription): NistFamily {
+function generateNewNistFamily<T extends NistControlRequirements>(fam: NistFamilyDescription): NistFamily<T> {
     /* Creates an "empty" (IE 0 count everywhere) nist family hash based on a family description. */
     // Destructure the family to the relevant components
     let [name, description, num_children] = fam;
 
     // First we generate our children
-    let fam_children: NistCategory[] = [];
+    let fam_children: NistCategory<T>[] = [];
     for (let i = 1; i <= num_children; i++) {
         fam_children.push({
             name: name + "-" + i,
@@ -96,25 +101,25 @@ function generateNewNistFamily(fam: NistFamilyDescription): NistFamily {
     };
 }
 
-export function generateNewNistHash(): NistHash {
+export function generateNewNistHash<T extends NistControlRequirements>(): NistHash<T> {
     /**
      *  Generate an "empty" (IE 0 count everywhere) hash of all the nist family descriptions in the global constant "families".
      */
     return {
         name: "NIST SP 800-53",
-        children: families.map(f => generateNewNistFamily(f)),
+        children: families.map(f => generateNewNistFamily<T>(f)),
         count: 0,
         status: "Empty"
     };
 }
 
-export function generateNewControlHash(): ControlNistHash {
+export function generateNewControlHash<T extends NistControlRequirements>(): ControlNistHash<T> {
     /**
      * Generate an "empty" (IE empty lists) hash of all the nist family subgroup names to be populated with controls.
      * Note that this is slightly more inefficient thatn if we just generated them while we made the nist hash, but it is
      * unlikely to have a significant impact
      */
-    let result: ControlNistHash = {};
+    let result: ControlNistHash<T> = {};
     for (let family of generateNewNistHash().children) {
         for (let familyItem of family.children) {
             let key: string = familyItem.name;
@@ -127,7 +132,7 @@ export function generateNewControlHash(): ControlNistHash {
 /**
  * Adds the given controls to the nist hash
  */
-export function populateNistHash(controls: HDFControl[], hash: NistHash): void {
+export function populateNistHash<T extends NistControlRequirements>(controls: T[], hash: NistHash<T>): void {
   // Add each control to the hash where appropriate
   controls.forEach(control => {
     control.fixed_nist_tags.forEach(tag => {
@@ -168,19 +173,34 @@ export function populateNistHash(controls: HDFControl[], hash: NistHash): void {
   });
 }
 
+
 /** 
  * Computes the groups status having added control.
- * There's a natural precedence to statuses. 
- * For instance, we would not mark a group as Passed if we added a Failed.
+ * There's a natural precedence to statuses, at least in a list/group
+ * For instance, we would not mark a group as Passed if it contained a Failed.
  * Clearly "Empty" is the lowest precedence, as adding any control would wipe it out.
- * Following those we have "Not run" and then "No data", which are effectively just no status.
- * Next, we would have 
+ * Following we have "From Profile" since it is in some way the absence of status, but also lacks run context.
+ * Next, "Not Applicable" since it means that though we ran we don't care about the result
+ * "Not Reviewed" implies that had the test run it would've mattered, but it was skipped deliberately
+ * "No Data" is similarly a lack of result, but in this case unexpected, and thus worthy of more scrutiny
+ * "Passed" means that a test passed! But "Failed" should override, since fails are really what we're looking for
+ * Finally, "Profile Errors" mean something is broken and needs to be fixed, and thus overrides all
+ * 
+ * Returns:
+ * < 0  if a < b (by the above criteria)
+ * 0    if a === b
+ * > 0  if a > b
  */
-function updateStatus(group: ControlGroupStatus, control: ControlStatus): ControlGroupStatus {
+export function compare_statuses(a: ControlGroupStatus, b: ControlGroupStatus) {
     const precedence: ControlGroupStatus[] = ["Empty", "From Profile", "No Data", "Not Applicable", "Not Reviewed", "Passed", "Failed", "Profile Error"];
-    let i1 = precedence.indexOf(group);
-    let i2 = precedence.indexOf(control);
-    if(i2 > i1) {
+    let a_i = precedence.indexOf(a);
+    let b_i = precedence.indexOf(b);
+    return a_i - b_i;
+}
+
+
+function updateStatus(group: ControlGroupStatus, control: ControlStatus): ControlGroupStatus {
+    if(compare_statuses(group, control) > 0) {
         // Our new control has shifted the status!
         return control;
     } else {
