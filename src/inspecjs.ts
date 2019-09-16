@@ -1,18 +1,23 @@
 // Our foreign package API.
 
 // Export all currently handled schema types
-export {ExecJSON as ExecJSON_1_0} from "./generated-parsers/exec-json";
-export {ExecJsonmin as ExecJSONMin_1_0} from "./generated-parsers/exec-jsonmin";
-export {ProfileJSON as ProfileJSON_1_0} from "./generated-parsers/profile-json";
+import * as schemas_1_0 from "./versions/v_1_0";
+export { schemas_1_0 };
 
 // Export Conversion functions
-export {ConversionResult, convertFile, AnyExec, AnyProfile, AnyFullControl} from "./fileparse";
+import * as parse from "./fileparse";
+export { parse };
 
 // Export types
-export { ControlStatus, Severity, ResultStatus } from "./compat-wrappers";
+export { ControlStatus, Severity, SegmentStatus } from "./compat_wrappers";
 
 // Export HDF format
-export { hdfWrapControl, HDFControl } from "./compat-wrappers";
+export {
+    hdfWrapControl,
+    HDFControl,
+    HDFControlSegment,
+} from "./compat_wrappers";
 
 // Export nist utilities
-export * from "./nist";
+import * as nist from "./nist"
+export { nist };

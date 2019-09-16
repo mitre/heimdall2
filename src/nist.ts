@@ -6,7 +6,7 @@
  * A NistHash is a large record containing information about many families, and by extension their categories
  */
 
- import {ControlStatus, HDFControl} from "./compat-wrappers";
+ import {ControlStatus} from "./compat_wrappers";
 
 // Format is [Name, Description, NumberOfChildren]
 export type NistFamilyDescription = [string, string, number];

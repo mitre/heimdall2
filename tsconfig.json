@@ -5,9 +5,10 @@
         "rootDir": "src",
         "outDir": "dist",
         "strict": true,
+        "baseUrl": ".",
         "lib": [
             "es7"
         ],
-        "declaration": true,
-    },
+        "declaration": true
+    }
 }

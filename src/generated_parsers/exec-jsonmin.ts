@@ -6,6 +6,7 @@
 //
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
+import preprocess from "../preprocessor";
 
 export interface ExecJsonmin {
     controls:   ExecJSONMINControl[];
@@ -57,7 +58,7 @@ export interface StatisticBlock {
 // and asserts the results of JSON.parse at runtime
 export class Convert {
     public static toExecJsonmin(json: string): ExecJsonmin {
-        return cast(JSON.parse(json), r("ExecJsonmin"));
+        return cast(preprocess(json), r("ExecJsonmin"));
     }
 
     public static execJsonminToJson(value: ExecJsonmin): string {
@@ -199,7 +200,7 @@ const typeMap: any = {
         { json: "controls", js: "controls", typ: a(r("ExecJSONMINControl")) },
         { json: "statistics", js: "statistics", typ: r("Statistics") },
         { json: "version", js: "version", typ: "" },
-    ], false),
+    ], "any"),
     "ExecJSONMINControl": o([
         { json: "backtrace", js: "backtrace", typ: u(undefined, a("")) },
         { json: "code_desc", js: "code_desc", typ: "" },
@@ -211,17 +212,17 @@ const typeMap: any = {
         { json: "resource", js: "resource", typ: u(undefined, "") },
         { json: "skip_message", js: "skip_message", typ: u(undefined, "") },
         { json: "status", js: "status", typ: "" },
-    ], false),
+    ], "any"),
     "Statistics": o([
         { json: "controls", js: "controls", typ: u(undefined, r("StatisticHash")) },
         { json: "duration", js: "duration", typ: 3.14 },
-    ], false),
+    ], "any"),
     "StatisticHash": o([
         { json: "failed", js: "failed", typ: u(undefined, r("StatisticBlock")) },
         { json: "passed", js: "passed", typ: u(undefined, r("StatisticBlock")) },
         { json: "skipped", js: "skipped", typ: u(undefined, r("StatisticBlock")) },
-    ], false),
+    ], "any"),
     "StatisticBlock": o([
         { json: "total", js: "total", typ: 3.14 },
-    ], false),
+    ], "any"),
 };

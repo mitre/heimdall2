@@ -1,23 +1,23 @@
 {
   "name": "inspecjs",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "© 2018 The MITRE Corporation.",
   "files": [
     "dist"
   ],
-  "main": "dist/inspecjs",
+  "main": "./dist/inspecjs",
   "types": "./dist/inspecjs.d.ts",
   "dependencies": {},
   "devDependencies": {
-    "@types/jest": "^24.0.15",
-    "@types/node": "^12.0.10",
+    "@types/jest": "^24.0.18",
+    "@types/node": "^12.7.4",
     "chai": "^4.2.0",
-    "jest": "^24.8.0",
-    "lite-server": "^2.5.3",
-    "quicktype": "^15.0.197",
+    "jest": "^24.9.0",
+    "lite-server": "^2.5.4",
+    "quicktype": "^15.0.201",
     "ts-jest": "^24.0.2",
     "typedoc": "^0.15.0",
-    "typescript": "^3.5.3"
+    "typescript": "^3.6.2"
   },
   "scripts": {
     "build": "rm -r ./dist; tsc --strict",
