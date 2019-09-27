@@ -1,11 +1,5 @@
 <template>
-  <v-footer
-    app
-    color="blue darken-3"
-    dark
-    title="footer"
-    class="white--text font-weight-light"
-  >
+  <v-footer app title="footer" class="font-weight-light" color="background">
     <span>The MITRE Corporation &copy; 2019</span>
   </v-footer>
 </template>

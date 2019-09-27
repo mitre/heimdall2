@@ -1,10 +1,5 @@
 <template>
-  <v-app-bar
-    :clipped-left="$vuetify.breakpoint.lgAndUp"
-    app
-    color="blue darken-3"
-    dark
-  >
+  <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" color="background" app>
     <!-- The title and nav bar -->
     <v-toolbar-title class="ml-0 pl-4">
       <v-app-bar-nav-icon
@@ -15,7 +10,7 @@
     <v-spacer />
 
     <!-- Our customizable content -->
-    <slot> </slot>
+    <slot></slot>
 
     <!-- Login information or whatever -->
     <v-btn icon large>

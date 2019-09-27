@@ -33,9 +33,8 @@
       text-anchor="middle"
       :x="x + width / 2"
       :y="y + height / 2"
+      >{{ label }}</text
     >
-      {{ label }}
-    </text>
   </g>
 </template>
 
@@ -285,7 +284,7 @@ text {
 }
 
 .theme--dark text {
-  fill: #fff;
+  fill: #f8f8f8;
   font-size: large;
 }
 
@@ -294,7 +293,7 @@ text {
 }
 
 rect {
-  stroke: #888;
+  stroke: #000000;
   fill-opacity: 0;
   stroke-width: 1;
   pointer-events: none;

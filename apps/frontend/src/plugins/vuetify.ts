@@ -46,7 +46,7 @@ export default new Vuetify({
         ...statuses,
         ...severities,
         ...compliances,
-        background: "#d0d0d0"
+        background: "#f8f8f8"
       }
     },
     options: {

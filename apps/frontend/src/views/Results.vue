@@ -4,6 +4,7 @@
     <template #topbar-content>
       <v-text-field
         flat
+        solo
         solo-inverted
         hide-details
         prepend-inner-icon="search"
@@ -11,9 +12,7 @@
         v-model="search_term"
       ></v-text-field>
       <v-spacer />
-      <v-btn @click="clear" title="Clear all set filters">
-        Clear
-      </v-btn>
+      <v-btn @click="clear" title="Clear all set filters">Clear</v-btn>
     </template>
 
     <!-- The main content: cards, etc -->
@@ -50,9 +49,10 @@
               <v-card-actions class="justify-center">
                 <ComplianceChart :filter="all_filter" />
               </v-card-actions>
-              <v-card-text style="text-align: center">
-                [Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100]
-              </v-card-text>
+              <v-card-text style="text-align: center"
+                >[Passed/(Passed + Failed + Not Reviewed + Profile Error) *
+                100]</v-card-text
+              >
             </v-card>
           </v-col>
         </v-row>
