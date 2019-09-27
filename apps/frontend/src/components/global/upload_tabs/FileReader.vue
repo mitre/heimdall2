@@ -4,9 +4,14 @@
       v-model="curr_file"
       display-size
       multiple
-      accept=".json,application/json"
-      label="Upload inspec data"
+      accept=".json, application/json"
       @change="commitFile"
+      placeholder="Load InSpec Results"
+      append-icon="mdi-file-upload"
+      prepend-icon="mdi"
+      filled
+      rounded
+      background-color="info"
     ></v-file-input>
   </div>
 </template>
@@ -32,10 +37,8 @@ function fix_files(f: File | File[] | null | undefined): File[] {
 }
 
 // We declare the props separately to make props types inferable.
-const FileReaderProps = Vue.extend({
-  props: {
-    text: String
-  }
+const Props = Vue.extend({
+  props: {}
 });
 
 /**
@@ -46,7 +49,7 @@ const FileReaderProps = Vue.extend({
 @Component({
   components: {}
 })
-export default class FileReader extends FileReaderProps {
+export default class FileReader extends Props {
   curr_file: File | File[] | null | undefined = null;
 
   /** Callback for our file reader */
@@ -76,3 +79,9 @@ export default class FileReader extends FileReaderProps {
   }
 }
 </script>
+
+<style scoped>
+div.v-file-input {
+  margin-left: -36px;
+}
+</style>

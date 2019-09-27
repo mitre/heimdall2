@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="font-weight-bold">
     <!-- Toolbar -->
     <v-row>
       <v-col cols="12">
@@ -7,7 +7,7 @@
           <v-switch
             v-model="single_expand"
             label="Single expand"
-            class="mt-2"
+            class="mt-2 "
           ></v-switch>
         </v-toolbar>
       </v-col>

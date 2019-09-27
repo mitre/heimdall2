@@ -28,7 +28,7 @@ function calculateColor(colorName: string): string {
     let value_string = "#" + value.toString(16).substr(1);
     return value_string;
   } else {
-    throw `Error generating color ${colorName}`;
+    throw new Error(`Error generating color ${colorName}`);
   }
 }
 

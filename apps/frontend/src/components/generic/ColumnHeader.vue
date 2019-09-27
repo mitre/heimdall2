@@ -66,11 +66,11 @@ export default class ColumnHeader extends Props {
     switch (this.sort as Sort) {
       default:
       case "none":
-        return "sort";
+        return "mdi-sort-variant";
       case "ascending":
-        return "arrow_upward";
+        return "mdi-sort-ascending";
       case "descending":
-        return "arrow_downward";
+        return "mdi-sort-descending";
       case "disabled":
         return "";
     }

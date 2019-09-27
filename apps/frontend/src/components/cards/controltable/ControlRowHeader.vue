@@ -11,7 +11,7 @@
         <v-card-text class="pa-2">
           {{ control.status }}
           <v-icon class="float-right">{{
-            expanded ? "expand_more" : "expand_less"
+            expanded ? "mdi-chevron-down" : "mdi-chevron-up"
           }}</v-icon>
         </v-card-text>
       </v-card>
@@ -19,10 +19,15 @@
 
     <template #severity>
       <v-card-text class="pa-2">
-        <v-icon v-for="i in severity_arrow_count" :key="i" class="stack-icon">
-          chevron_right
+        <v-icon small v-for="i in severity_arrow_count" :key="i">
+          mdi-checkbox-blank-circle
         </v-icon>
-        {{ control.severity }}
+        <v-icon small v-for="i in 4 - severity_arrow_count" :key="i">
+          mdi-checkbox-blank-circle-outline
+        </v-icon>
+        <br />
+        <v-divider class="lighten-4 mx-1"> </v-divider>
+        {{ control.severity.toUpperCase() }}
       </v-card-text>
     </template>
 

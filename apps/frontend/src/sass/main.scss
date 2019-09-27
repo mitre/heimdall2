@@ -1,0 +1,17 @@
+// src/sass/main.scss
+
+// Any changes to a default variable must be
+// declared above the initial style import
+$font-size-root: 14px;
+
+// Required for modifying core defaults
+@import '~vuetify/src/styles/styles.sass';
+
+// Any component modifications must be imported
+// @import '~vuetify/src/styles/elements/_code.sass';
+
+$code-color: false;
+$code-kbd-border-radius: false; 
+$code-kbd-font-size: false;
+$code-kbd-font-weight: false;
+

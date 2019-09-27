@@ -6,7 +6,7 @@
       </v-col>
       <v-col :cols="8">
         <v-btn @click="up" :disabled="!allow_up" block x-small>
-          <v-icon v-if="allow_up"> arrow_back </v-icon>
+          <v-icon v-if="allow_up"> mdi-arrow-left </v-icon>
           {{ selected_node.data.name }}
         </v-btn>
       </v-col>

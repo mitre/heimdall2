@@ -1,11 +1,15 @@
 # How is inspec data read/stored?
 
-## FileReader Component
+Up to date as of Sept 16
 
-The entry point to our data flow is the FileReader.vue component.
-The file reader doesn't actually do any data handling of its own; it simply accepts files and routes them to an appropraite location.
-In this case, it dispatches a "loadFile" action with the file as a payload.
-This action is (currently) only handled by the report_intake.ts Vuex module.
+
+## UploadNexus Component
+
+The entry point to our data flow is the UploadNexus.vue component.
+This acts as a multiplexer between various sub-components, which all individually handle submitting their selected files to the report intake module.
+These readers don't typically actually do any data handling on their own; it simply accepts files and routes them to an appropraite location.
+This is achieved by dispatching a "loadFile" action with the file as a payload.
+Upon success, they report the newly filled file ids as an array via the "got-files" event
 
 ## Report Intake Module
 

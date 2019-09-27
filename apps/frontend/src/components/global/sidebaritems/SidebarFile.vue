@@ -1,5 +1,5 @@
 <template>
-  <v-list-item :to="`/results/${file.unique_id}`">
+  <v-list-item :to="`/results/${file.unique_id}`" :title="file.filename">
     <v-list-item-avatar>
       <v-icon v-text="icon" small />
     </v-list-item-avatar>
@@ -10,7 +10,7 @@
 
     <v-list-item-action>
       <v-btn icon x-small v-on:click="close_this_file">
-        <v-icon>close</v-icon
+        <v-icon>mdi-close</v-icon
         ><!--close-circle-->
       </v-btn>
     </v-list-item-action>
@@ -43,7 +43,7 @@ export default class FileItem extends FileItemProps {
     if (this.file.profile !== undefined) {
       return "note";
     } else {
-      return "assessment";
+      return "mdi-google-analytics";
     }
   }
 }

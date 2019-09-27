@@ -105,7 +105,7 @@ export default class Sidebar extends SidebarProps {
   // Dynamic list setup
   get items(): AnyProp[] {
     return [
-      { icon: "info", text: "Help" },
+      { icon: "mdi-information", text: "Help" },
       {
         text: "Files",
         files: this.visible_files
@@ -113,12 +113,12 @@ export default class Sidebar extends SidebarProps {
       {
         text: "Tools",
         children: [
-          { text: "Import", icon: "printer" },
-          { text: "Export", icon: "printer" },
-          { text: "Print", icon: "printer" }
+          { text: "Import", icon: "mdi-printer" },
+          { text: "Export", icon: "mdi-printer" },
+          { text: "Print", icon: "mdi-printer" }
         ]
       },
-      { icon: "info", text: "About" }
+      { icon: "mdi-information", text: "About" }
     ];
   }
 
@@ -137,3 +137,13 @@ export default class Sidebar extends SidebarProps {
   }
 }
 </script>
+
+<style scoped>
+nav.v-navigation-drawer {
+  /* Need !important as a max-height derived from the footer being always
+     visible is applied directly to element by vuetify */
+  max-height: 100vh !important;
+  /* z-index hides behind footer and topbar */
+  z-index: 1;
+}
+</style>

@@ -66,13 +66,13 @@ export default class ApexPieChart extends ApexPieChartProps {
   get _categories(): Category<string>[] {
     // Ensure it's an array
     if (!(this.categories instanceof Array)) {
-      throw "categories must be an array of type Category";
+      throw new Error("categories must be an array of type Category");
     }
 
     // Ensure each are categories
     this.categories.forEach(element => {
       if (!isCategory(element)) {
-        throw `Invalid category ${element}`;
+        throw new Error(`Invalid category ${element}`);
       }
     });
 
@@ -86,13 +86,13 @@ export default class ApexPieChart extends ApexPieChartProps {
   get _series(): number[] {
     // Ensure it's an array
     if (!(this.series instanceof Array)) {
-      throw "series must be an array of numbers";
+      throw new Error("series must be an array of numbers");
     }
 
     // Ensure all of its elements are numbers
     this.series.forEach(element => {
       if (typeof element !== "number") {
-        throw `Invalid series item ${element}`;
+        throw new Error(`Invalid series item ${element}`);
       }
     });
 

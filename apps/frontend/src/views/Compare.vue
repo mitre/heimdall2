@@ -32,12 +32,7 @@
     </v-btn>
 
     <!-- File select modal -->
-    <Modal v-model="dialog">
-      <v-card>
-        <v-card-title class="grey darken-2">Load files</v-card-title>
-        <FileReader @got-file="dialog = false" />
-      </v-card>
-    </Modal>
+    <UploadNexus v-model="dialog" @got-files="dialog = false" />
   </BaseView>
 </template>
 
@@ -46,7 +41,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import BaseView from "@/views/BaseView.vue";
 import Modal from "@/components/global/Modal.vue";
-import FileReader from "@/components/global/FileReader.vue";
+import UploadNexus from "@/components/global/UploadNexus.vue";
 
 import CompareRow from "@/components/cards/comparison/CompareRow.vue";
 
@@ -67,7 +62,7 @@ const Props = Vue.extend({
   components: {
     BaseView,
     Modal,
-    FileReader,
+    UploadNexus,
     CompareRow
   }
 })

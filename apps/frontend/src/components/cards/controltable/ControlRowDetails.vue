@@ -1,6 +1,6 @@
 <template>
   <v-row no-gutters>
-    <v-col cols="12">
+    <v-col cols="12" class="font-weight-bold">
       <v-card>
         <v-tabs>
           <v-tabs-slider></v-tabs-slider>
@@ -16,7 +16,7 @@
           </v-tab>
 
           <v-tab-item value="tab-test">
-            <v-container>
+            <v-container fluid>
               <v-row>
                 <v-col cols="12">
                   <span>{{ control.finding_details.split(":")[0] }}:</span>
@@ -26,34 +26,48 @@
                 </v-col>
               </v-row>
               <v-row
+                cols="12"
                 v-for="(result, index) in control.wraps.results"
                 :key="index"
+                :class="zebra(index)"
               >
-                <v-col cols="1" class="stripes">{{
-                  result.status.toUpperCase()
-                }}</v-col>
-                <v-col cols="5" class="stripes right">
-                  <prism language="makefile" class="fill-height"
-                    >Test: {{ result.code_desc }}</prism
+                <v-col sm="12" md="12" lg="1" xl="1"
+                  ><v-card
+                    :color="status_color"
+                    height="100%"
+                    width="100%"
+                    tile
                   >
+                    <h3>{{ result.status.toUpperCase() }}</h3>
+                  </v-card>
                 </v-col>
-                <v-col v-if="result.message" cols="6" class="stripes right">
-                  <prism language="makefile" class="fill-height"
-                    >Result: {{ result.message }}
-                  </prism>
+                <v-col v-if="!result.message" cols="11" class="right">
+                  <h3>Test</h3>
+                  <v-divider> </v-divider>
+                  <pre>{{ result.code_desc }}</pre>
+                </v-col>
+                <v-col v-if="result.message" cols="5" class="right">
+                  <h3>Test</h3>
+                  <v-divider> </v-divider>
+                  <pre>{{ result.code_desc }}</pre>
+                </v-col>
+                <v-col v-if="result.message" cols="6" class="right">
+                  <h3>Result</h3>
+                  <v-divider> </v-divider>
+                  <pre>{{ result.message }}</pre>
                 </v-col>
               </v-row>
             </v-container>
           </v-tab-item>
 
           <v-tab-item value="tab-details">
-            <v-container>
+            <v-container fluid>
               <!-- Create a row for each detail -->
               <template v-for="(detail, index) in details">
-                <v-row :key="index">
-                  <v-col cols="1"> {{ detail.name }}: </v-col>
-                  <v-col cols="11" :class="detail.class">
-                    {{ detail.value }}
+                <v-row :key="index" :class="zebra(index)">
+                  <v-col cols="12" :class="detail.class">
+                    <h3>{{ detail.name }}:</h3>
+                    <pre>{{ detail.value }}</pre>
                   </v-col>
                   <v-divider> </v-divider>
                 </v-row>
@@ -62,7 +76,7 @@
           </v-tab-item>
 
           <v-tab-item value="tab-code">
-            <v-container>
+            <v-container fluid>
               <v-row>
                 <v-col cols="12">
                   <prism language="ruby">{{ control.wraps.code }}</prism>
@@ -83,8 +97,6 @@ import { HDFControl, ControlStatus } from "inspecjs";
 
 //TODO: add line numbers
 import "prismjs";
-import "prismjs/themes/prism-tomorrow.css";
-import "prismjs/components/prism-scss.min";
 import "prismjs/components/prism-makefile.js";
 import "prismjs/components/prism-ruby.js";
 //@ts-ignore
@@ -113,6 +125,11 @@ const ControlRowDetailsProps = Vue.extend({
   components: { Prism }
 })
 export default class ControlRowDetails extends ControlRowDetailsProps {
+  get status_color(): string {
+    // maps stuff like "not applicable" -> "statusnotapplicable", which is a defined color name
+    return `status${this.control.status.replace(" ", "")}`;
+  }
+
   get details(): Detail[] {
     return [
       {
@@ -149,10 +166,41 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
       }
     ];
   }
+  zebra(ix: number): string {
+    return ix % 2 ? "" : "zebra-table";
+  }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.theme--dark {
+  @import "~prismjs/themes/prism-tomorrow.css";
+}
+/*.theme--light {
+  @import "~prismjs/themes/prism.css";
+}*/
+.v-application {
+  pre.language-ruby {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+  code.language-ruby {
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    box-shadow: none;
+  }
+}
+
+pre {
+  white-space: pre-wrap; /* Since CSS 2.1 */
+  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+  white-space: -pre-wrap; /* Opera 4-6 */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
+.zebra-table {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+/*
 .v-application code {
   background-color: revert;
   color: revert;
@@ -165,6 +213,7 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
   overflow-wrap: break-word;
   max-width: 100%;
 }
+*/
 .code-card {
   height: inherit;
   margin: inherit;
@@ -174,13 +223,11 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
   min-width: 125px;
   justify-content: center;
 }
+/*
 code[class*="language-"] {
   word-break: break-word;
 }
-div[class*="stripes"] {
-  border-style: solid;
-  border-width: 1px;
-}
+*/
 .right {
   margin-left: -1px;
 }
