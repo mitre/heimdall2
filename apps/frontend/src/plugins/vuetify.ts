@@ -12,7 +12,8 @@ let statuses = {
   statusNoData: colors.orange.lighten1,
   statusNotReviewed: colors.orange.base,
   statusProfileError: colors.indigo.base,
-  statusNotRun: colors.teal.base // for From Profile and No Data
+  statusNotRun: colors.teal.darken2,
+  statusFromProfile: colors.teal.base
 };
 
 let severities = {
@@ -35,8 +36,18 @@ export default new Vuetify({
   theme: {
     dark: true,
     themes: {
-      dark: { ...statuses, ...severities, ...compliances },
-      light: { ...statuses, ...severities, ...compliances }
+      dark: {
+        ...statuses,
+        ...severities,
+        ...compliances,
+        background: "#303030"
+      },
+      light: {
+        ...statuses,
+        ...severities,
+        ...compliances,
+        background: "#d0d0d0"
+      }
     },
     options: {
       customProperties: true

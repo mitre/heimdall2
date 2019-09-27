@@ -1,5 +1,6 @@
 import { Module, VuexModule, getModule } from "vuex-module-decorators";
-import Store from "./store";
+import Store from "@/store/store";
+import { ControlStatus, nist, Severity } from "inspecjs";
 
 /**
  * Gets a hex code for the given color
@@ -8,18 +9,18 @@ import Store from "./store";
  */
 function calculateColor(colorName: string): string {
   // Create our dummy element
-  let a: HTMLDivElement = document.createElement("div");
-  a.style.color = colorName;
+  let elt: HTMLDivElement = document.createElement("div");
+  elt.style.color = colorName;
 
   // Add it to the doc and get the resulting style
-  let style = window.getComputedStyle(document.body.appendChild(a));
+  let style = window.getComputedStyle(document.body.appendChild(elt));
 
   // Parse out the colors
   let rawColors = (style.color as string).match(/\d+/g) as RegExpExecArray; // We know this will succeed - we've already given the colors
   let colors = rawColors.map((a: string) => parseInt(a, 10));
 
   // Cleanup
-  document.body.removeChild(a);
+  document.body.removeChild(elt);
   if (colors.length >= 3) {
     // Make a (padded) integer representing the hex code
     let value = (1 << 24) + (colors[0] << 16) + (colors[1] << 8) + colors[2];
@@ -69,6 +70,58 @@ class ColorHackModule extends VuexModule {
 
         localCache[colorName] = color;
         return color;
+      }
+    };
+  }
+
+  /**
+   * Parameterized getter that returns an appropriate rgb color code for a given control (group) status
+   */
+  get colorForStatus(): (status: nist.ControlGroupStatus) => string {
+    return (status: nist.ControlGroupStatus) => {
+      switch (status) {
+        case "Passed":
+          return this.lookupColor("statusPassed");
+        case "Failed":
+          return this.lookupColor("statusFailed");
+        case "No Data":
+          return this.lookupColor("statusNoData");
+        case "Not Applicable":
+          return this.lookupColor("statusNotApplicable");
+        case "Not Reviewed":
+          return this.lookupColor("statusNotReviewed");
+        case "Profile Error":
+          return this.lookupColor("statusProfileError");
+        case "From Profile":
+          return this.lookupColor("statusFromProfile");
+        case "Empty":
+          return "black";
+        default:
+          console.warn(`No color defined for ${status}`);
+          return "rgb(187, 187, 187)";
+      }
+    };
+  }
+
+  /**
+   * Parameterized getter that returns an appropriate rgb color code for a given control severity
+   */
+  get colorForSeverity(): (severity: Severity) => string {
+    return (severity: Severity) => {
+      switch (status) {
+        case "none":
+          return this.lookupColor("severityNone");
+        case "low":
+          return this.lookupColor("severityLow");
+        case "medium":
+          return this.lookupColor("severityMedium");
+        case "high":
+          return this.lookupColor("severityHigh");
+        case "critical":
+          return this.lookupColor("severityCritical");
+        default:
+          console.warn(`No color defined for ${status}`);
+          return "rgb(187, 187, 187)";
       }
     };
   }

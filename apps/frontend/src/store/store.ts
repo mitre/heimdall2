@@ -1,13 +1,13 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import InspecDataModule from "./data_store";
-import FilteredDataModule from "./data_filters";
-import StatusCountModule from "./status_counts";
-import SeverityCountModule from "./severity_counts";
-import HashLookupModule from "./lookup_hashes";
-import InspecIntakeModule from "./report_intake";
-import SidebarModule from "./sidebar";
-import ColorHackModule from "./color_hack";
+import InspecDataModule from "@/store/data_store";
+import FilteredDataModule from "@/store/data_filters";
+import StatusCountModule from "@/store/status_counts";
+import SeverityCountModule from "@/store/severity_counts";
+import HashLookupModule from "@/store/lookup_hashes";
+import InspecIntakeModule from "@/store/report_intake";
+import SidebarModule from "@/store/sidebar";
+import ColorHackModule from "@/store/color_hack";
 
 Vue.use(Vuex);
 

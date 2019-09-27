@@ -1,46 +1,36 @@
 <template>
-  <v-card>
-    <v-card-text>
-      <v-container>
-        <v-row dense>
-          <v-col :cols="2">
-            NIST SP 800-53 Coverage
-          </v-col>
-          <v-col :cols="8">
-            <v-btn @click="up" :disabled="!allow_up" block x-small>
-              <v-icon v-if="allow_up"> arrow_back </v-icon>
-              {{ selected_node.data.name }}
-            </v-btn>
-          </v-col>
-          <v-col :cols="2">
-            <v-btn @click="clear" block x-small>
-              <v-icon icon="chart" />
-              Clear Filter
-            </v-btn>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col :cols="12" v-resize:debounce="on_resize">
-            <svg id="chartBody" :width="width" :height="height">
-              <g
-                style="shape-rendering: crispEdges;"
-                preserveAspectRatio="xMidYMid meet"
-              >
-                <!-- The body -->
-                <Cell
-                  :selected_node="selected_node"
-                  :selected_control_id="value.selectedControlID"
-                  :node="treemap_layout"
-                  :scales="scales"
-                  @select-node="select_node"
-                />
-              </g>
-            </svg>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-card-text>
-  </v-card>
+  <v-container fluid>
+    <v-row dense>
+      <v-col :cols="4">
+        NIST SP 800-53 Coverage
+      </v-col>
+      <v-col :cols="8">
+        <v-btn @click="up" :disabled="!allow_up" block x-small>
+          <v-icon v-if="allow_up"> arrow_back </v-icon>
+          {{ selected_node.data.name }}
+        </v-btn>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col :cols="12" v-resize:debounce="on_resize">
+        <svg id="chartBody" :width="width" :height="height">
+          <g
+            style="shape-rendering: crispEdges;"
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <!-- The body -->
+            <Cell
+              :selected_node="selected_node"
+              :selected_control_id="value.selectedControlID"
+              :node="treemap_layout"
+              :scales="scales"
+              @select-node="select_node"
+            />
+          </g>
+        </svg>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -48,17 +38,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import { getModule } from "vuex-module-decorators";
-import {
-  ControlStatus,
-  HDFControl,
-  NistHash,
-  hdfWrapControl,
-  NistFamily,
-  NistCategory,
-  generateNewNistHash,
-  populateNistHash,
-  ControlGroupStatus
-} from "inspecjs";
+import { ControlStatus, HDFControl, nist, hdfWrapControl } from "inspecjs";
 import * as d3 from "d3";
 import FilteredDataModule, { NistMapState } from "@/store/data_filters";
 import {
@@ -101,7 +81,7 @@ const TreemapProps = Vue.extend({
 })
 export default class Treemap extends TreemapProps {
   /** The svg internal coordinate space */
-  width: number = 1200;
+  width: number = 1600;
   height: number = 530;
 
   /** The currently selected treemap node. Wrapped to avoid initialization woes */
@@ -115,7 +95,7 @@ export default class Treemap extends TreemapProps {
     if (val.selectedFamily) {
       let new_curr = curr.children!.find(
         child =>
-          (child.data as NistFamily<CCWrapper>).name === val.selectedFamily
+          (child.data as nist.NistFamily<CCWrapper>).name === val.selectedFamily
       );
       if (new_curr !== undefined) {
         curr = new_curr;
@@ -135,7 +115,8 @@ export default class Treemap extends TreemapProps {
     if (val.selectedCategory) {
       let new_curr = curr.children!.find(
         child =>
-          (child.data as NistCategory<CCWrapper>).name === val.selectedCategory
+          (child.data as nist.NistCategory<CCWrapper>).name ===
+          val.selectedCategory
       );
       if (new_curr !== undefined) {
         curr = new_curr;
@@ -196,7 +177,7 @@ export default class Treemap extends TreemapProps {
    * Note that regardless of what filtering this treeview applies,
    * we want the treeview itself to remain unaffected.
    */
-  get nist_hash(): NistHash<CCWrapper> {
+  get nist_hash(): nist.NistHash<CCWrapper> {
     // Get our data module
     let data: FilteredDataModule = getModule(FilteredDataModule, this.$store);
 
@@ -205,7 +186,8 @@ export default class Treemap extends TreemapProps {
     return nistHashForControls(controls);
   }
 
-  /** Generates a d3 heirarchy structure outlining all of the data in the nist hash */
+  /** Generates a d3 heirarchy structure, with appropriate bounds to our width
+   *  detailing all of the controls in the nist hash */
   get treemap_layout(): d3.HierarchyRectangularNode<TreemapDatumType> {
     let hierarchy = nistHashToTreeMap(this.nist_hash);
     let treemap = d3
@@ -217,13 +199,7 @@ export default class Treemap extends TreemapProps {
   }
 
   // Callbacks for our tree
-  select_node(n: null | d3.HierarchyRectangularNode<TreemapDatumType>): void {
-    // Avoid selecting falsey nodes
-    if (!n) {
-      console.log("Attempted to select Null Node in Treemap");
-      return;
-    }
-
+  select_node(n: d3.HierarchyRectangularNode<TreemapDatumType>): void {
     // Get our path to the selected node
     let route = n.ancestors().reverse();
 
@@ -234,10 +210,10 @@ export default class Treemap extends TreemapProps {
 
     // Depending on length of route, assign values
     if (route.length > 1) {
-      selected_family = (route[1].data as NistFamily<CCWrapper>).name;
+      selected_family = (route[1].data as nist.NistFamily<CCWrapper>).name;
     }
     if (route.length > 2) {
-      selected_category = (route[2].data as NistCategory<CCWrapper>).name;
+      selected_category = (route[2].data as nist.NistCategory<CCWrapper>).name;
     }
     if (route.length > 3) {
       selected_control_id = (route[3].data as CCWrapper).ctrl.data.id;
@@ -256,14 +232,11 @@ export default class Treemap extends TreemapProps {
     this.$emit("input", new_state);
   }
 
-  /** Submits an event to clear all filters */
-  clear(): void {
-    this.$emit("clear");
-  }
-
   /** Submits an event to go up one node */
   up(): void {
-    this.select_node(this.selected_node.parent);
+    if (this.selected_node.parent !== null) {
+      this.select_node(this.selected_node.parent);
+    }
   }
 
   /** Controls whether we should allow up */
@@ -290,6 +263,5 @@ text {
 
 rect {
   fill: none;
-  stroke: ;
 }
 </style>

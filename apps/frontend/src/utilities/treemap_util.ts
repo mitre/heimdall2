@@ -1,13 +1,8 @@
-import {
-  HDFControl,
-  NistHash,
-  NistFamily,
-  NistCategory,
-  hdfWrapControl,
-  ControlStatus,
-  generateNewNistHash,
-  populateNistHash
-} from "inspecjs";
+/**
+ * Tools used for generating the treemaps consumed by, of course, the Treemap card and associated components.
+ */
+
+import { HDFControl, hdfWrapControl, ControlStatus, nist } from "inspecjs";
 import * as d3 from "d3";
 import { ContextualizedControl } from "@/store/data_store";
 
@@ -17,7 +12,7 @@ import { ContextualizedControl } from "@/store/data_store";
 export class CCWrapper {
   ctrl: ContextualizedControl;
   hdf: HDFControl;
-  category?: NistCategory<CCWrapper>;
+  category?: nist.NistCategory<CCWrapper>;
 
   constructor(ctrl: ContextualizedControl) {
     this.ctrl = ctrl;
@@ -34,35 +29,50 @@ export class CCWrapper {
   }
 }
 
-// The type accepted by d3 treemap functions
+/** A simple wrapper type representing what any node's data might be in our treemap */
 export type TreemapDatumType =
-  | NistHash<CCWrapper>
-  | NistFamily<CCWrapper>
-  | NistCategory<CCWrapper>
+  | nist.NistHash<CCWrapper>
+  | nist.NistFamily<CCWrapper>
+  | nist.NistCategory<CCWrapper>
   | CCWrapper;
+
+/** The type of our treemap nodes, prior to rendering */
 export type TreemapNode = d3.HierarchyNode<TreemapDatumType>;
 
-// Crappy type checkers; don't expect these to be safe elsewehre
+/**
+ * A crappy type checker capable of distinguishing CCWrapper data from other data in our treemap.
+ * Shouldn't be used anywhere outside of treemap
+ */
 export function isCCWrapper(ctrl: TreemapDatumType): ctrl is CCWrapper {
   return (ctrl as CCWrapper).hdf !== undefined;
 }
 
+/**
+ * A crappy type checker capable of distinguishing Nist group data from other data in our treemap.
+ * Shouldn't be used anywhere outside of treemap
+ */
 export function isNistGrouping(
   grp: TreemapDatumType
 ): grp is
-  | NistHash<CCWrapper>
-  | NistFamily<CCWrapper>
-  | NistCategory<CCWrapper> {
+  | nist.NistHash<CCWrapper>
+  | nist.NistFamily<CCWrapper>
+  | nist.NistCategory<CCWrapper> {
   return !isCCWrapper(grp);
 }
 
+/** Generates a NistHash for the provided set of controls.
+ * Said nist hash is templatized on the type CCWrapper, and is slightly unique to our use case in that
+ * the NistCategory <-> CCWrapper relation is one-to-one, on the CCWrapper.category prop.
+ *
+ * This lets us generate fixed-layout treemaps!
+ */
 export function nistHashForControls(
-  controls: ContextualizedControl[]
-): NistHash<CCWrapper> {
+  controls: Readonly<ContextualizedControl[]>
+): nist.NistHash<CCWrapper> {
   // Generate the hash
   let wrapped_controls = controls.map(c => new CCWrapper(c));
-  let hash = generateNewNistHash<CCWrapper>();
-  populateNistHash(wrapped_controls, hash);
+  let hash = nist.generateNewNistHash<CCWrapper>();
+  nist.populateNistHash(wrapped_controls, hash);
 
   // Bind the categories
   hash.children.forEach(family => {
@@ -78,7 +88,16 @@ export function nistHashForControls(
   return hash;
 }
 
-export function nistHashToTreeMap(hash: NistHash<CCWrapper>): TreemapNode {
+/**
+ * Generates a tree map from the given nist hash, using the size of each category to inversely scale it with controls.
+ * Thus each category has a fixed weight!
+ * Categories/Families are further sorted by name, and the
+ *
+ * @param hash The nist hash to turn into a tree map
+ */
+export function nistHashToTreeMap(
+  hash: Readonly<nist.NistHash<CCWrapper>>
+): TreemapNode {
   // Find the largest count category. We use this to set the weights in individual controls so they fill their parent
   let biggest = 1;
   hash.children.forEach(family => {

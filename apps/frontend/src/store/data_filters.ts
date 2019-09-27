@@ -1,21 +1,23 @@
+/**
+ * This module provides a cached, reusable method for filtering data from data_store.
+ */
+
 import { Module, VuexModule, getModule } from "vuex-module-decorators";
 import DataModule, {
   ContextualizedProfile,
-  ContextualizedControl,
-  ContextualizedExecution
-} from "./data_store";
+  ContextualizedControl
+} from "@/store/data_store";
 import {
   ControlStatus,
   Severity,
   hdfWrapControl as hdf,
-  HDFControl,
-  AnyFullControl,
-  NistFamily,
-  NistCategory,
   hdfWrapControl
 } from "inspecjs";
-import { FileID, isInspecFile } from "./report_intake";
-import Store from "./store";
+import { FileID, isInspecFile } from "@/store/report_intake";
+import Store from "@/store/store";
+import LRUCache from "lru-cache";
+
+const MAX_CACHE_ENTRIES = 20;
 
 /** Contains common filters on data from the store. */
 export interface Filter {
@@ -93,15 +95,20 @@ class FilteredDataModule extends VuexModule {
   /**
    * Parameterized getter.
    * Get all profiles from the specified file id.
+   * Filters only based on the file ID
    */
-  get profiles(): (filter: Filter) => ContextualizedProfile[] {
-    // const localCache: {[key: string]: Control[]} = {};
-    // Establish to vue that we depend on this.contextStore
-    // let _depends: any = this.contextStore;
-    return (filter: Filter = {}) => {
-      // If there is no filter, just return all
-      if (filter.fromFile === undefined) {
-        return this.dataStore.contextualProfiles;
+  get profiles(): (file: FileID) => readonly ContextualizedProfile[] {
+    // Setup a cache for this run
+    const depends = this.dataStore.contextualProfiles;
+    const localCache: LRUCache<FileID, ContextualizedProfile[]> = new LRUCache(
+      MAX_CACHE_ENTRIES
+    );
+
+    return (file: FileID) => {
+      // Generate a cache id
+      let cached = localCache.get(file);
+      if (cached !== undefined) {
+        return cached;
       }
 
       // Initialize our list to add valid profiles to
@@ -110,12 +117,12 @@ class FilteredDataModule extends VuexModule {
       // Filter to those that match our filter. In this case that just means come from the right file id
       this.dataStore.contextualProfiles.forEach(prof => {
         if (isInspecFile(prof.sourced_from)) {
-          if (prof.sourced_from.unique_id === filter.fromFile) {
+          if (prof.sourced_from.unique_id === file) {
             profiles.push(prof);
           }
         } else {
           // Its a report; go two levels up to get its file
-          if (prof.sourced_from.sourced_from.unique_id === filter.fromFile) {
+          if (prof.sourced_from.sourced_from.unique_id === file) {
             profiles.push(prof);
           }
         }
@@ -128,26 +135,39 @@ class FilteredDataModule extends VuexModule {
   /**
    * Parameterized getter.
    * Get all controls from all profiles from the specified file id.
+   * Utlizes the profiles getter to accelerate the file filter.
    */
-  get controls(): (filter: Filter) => ContextualizedControl[] {
-    const localCache: { [key: string]: ContextualizedControl[] } = {};
-    // Establish to vue that we depend on this.contextStore
-    let _depends: any = this.dataStore.contextStore;
+  get controls(): (filter: Filter) => readonly ContextualizedControl[] {
+    /** Cache by filter */
+    const depends = this.dataStore.contextualControls;
+    const localCache: LRUCache<
+      string,
+      readonly ContextualizedControl[]
+    > = new LRUCache(MAX_CACHE_ENTRIES);
+
     return (filter: Filter = {}) => {
       // Generate a hash for cache purposes.
       // If the "search_term" string is not null, we don't cache - no need to pollute
-      let id: string | null = null;
-      if (filter.search_term !== null) {
-        id = JSON.stringify(filter);
-      }
+      let id: string = filter_cache_key(filter);
 
       // Check if we have this cached:
-      if (id !== null && id in localCache) {
-        return [...localCache[id]];
+      let cached = localCache.get(id);
+      if (cached !== undefined) {
+        return cached;
       }
 
       // First get all of the profiles using the same filter
-      let controls = this.profiles(filter).flatMap(profile => profile.contains);
+      let profiles: readonly ContextualizedProfile[];
+      let controls: readonly ContextualizedControl[];
+      if (filter.fromFile !== undefined) {
+        // Get profiles
+        profiles = this.profiles(filter.fromFile);
+        // And all the controls they contain
+        controls = profiles.flatMap(profile => profile.contains);
+      } else {
+        // No file filter => we don't care about profile. Jump directly to the full control list
+        controls = this.dataStore.contextualControls;
+      }
 
       // Filter by status, if necessary
       if (filter.status !== undefined) {
@@ -178,9 +198,14 @@ class FilteredDataModule extends VuexModule {
 
       // Filter by nist stuff
       if (filter.nist_filters !== undefined) {
+        // Shorthand the nist filters
         let f = filter.nist_filters;
+
         controls = controls.filter(c => {
+          // Get an hdf version so we have
           let as_hdf = hdfWrapControl(c.data);
+
+          // Short circuit in order controlID > Category >  Family, see if any sat
           if (f.selectedControlID !== null) {
             return as_hdf.wraps.id.includes(f.selectedControlID);
           } else if (f.selectedCategory !== null) {
@@ -198,13 +223,35 @@ class FilteredDataModule extends VuexModule {
         });
       }
 
-      // Save to cache
-      if (id !== null) {
-        localCache[id] = controls;
-      }
-      return [...controls]; // Return a shallow copy
+      // Freeze and save to cache
+      let r = Object.freeze(controls);
+      localCache.set(id, r);
+      return r;
     };
   }
 }
 
 export default FilteredDataModule;
+
+/**
+ * Generates a unique string to represent a filter.
+ * Does some minor "acceleration" techniques such as
+ * - annihilating empty search terms
+ * - defaulting "omit_overlayed_controls"
+ */
+export function filter_cache_key(f: Filter) {
+  // fix the search term
+  let new_search: string;
+  if (f.search_term !== undefined) {
+    new_search = f.search_term.trim();
+  } else {
+    new_search = "";
+  }
+
+  let new_f: Filter = {
+    search_term: new_search,
+    omit_overlayed_controls: f.omit_overlayed_controls || false,
+    ...f
+  };
+  return JSON.stringify(new_f);
+}

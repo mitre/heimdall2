@@ -9,10 +9,9 @@ import {
   Action,
   getModule
 } from "vuex-module-decorators";
-import Store from "./store";
-import DataStore from "./data_store";
-import router from "../../src/router.js";
-import { InspecFile } from "./report_intake";
+import Store from "@/store/store";
+import DataStore from "@/store/data_store";
+import { InspecFile } from "@/store/report_intake";
 
 type SidebarItem = {
   /** Router path */

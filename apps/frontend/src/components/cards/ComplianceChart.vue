@@ -15,12 +15,12 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import VueApexCharts from "vue-apexcharts";
 import { getModule } from "vuex-module-decorators";
-import ColorHackModule from "../../store/color_hack";
+import ColorHackModule from "@/store/color_hack";
 import FilteredDataModule, { Filter } from "@/store/data_filters";
 import { ControlStatus, Severity } from "inspecjs";
 import { ApexOptions } from "apexcharts";
-import InspecDataModule from "../../store/data_store";
-import StatusCountModule from "../../store/status_counts";
+import InspecDataModule from "@/store/data_store";
+import StatusCountModule from "@/store/status_counts";
 
 // We declare the props separately
 // to make props types inferrable.
@@ -112,15 +112,3 @@ export default class ComplianceChart extends ComplianceChartProps {
   }
 }
 </script>
-
-<!--
-<style scoped>
-.card {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  flex-grow: 1;
-  height: 107%; /*ehhh*/
-}
-</style>
--->

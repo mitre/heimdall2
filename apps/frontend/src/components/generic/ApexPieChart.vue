@@ -17,7 +17,7 @@ import VueApexCharts from "vue-apexcharts";
 import { ApexOptions, exec } from "apexcharts";
 import { install } from "vuetify/es5/install";
 import { getModule } from "vuex-module-decorators";
-import ColorHackModule from "../../store/color_hack";
+import ColorHackModule from "@/store/color_hack";
 
 // Represents a slice of the pie.
 export interface Category<C extends string> {

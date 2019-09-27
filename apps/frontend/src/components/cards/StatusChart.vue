@@ -11,7 +11,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import ApexPieChart, { Category } from "@/components/generic/ApexPieChart.vue";
 import { getModule } from "vuex-module-decorators";
-import StatusCountModule from "../../store/status_counts";
+import StatusCountModule from "@/store/status_counts";
 import { ControlStatus } from "inspecjs";
 
 // We declare the props separately to make props types inferable.

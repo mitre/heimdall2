@@ -1,12 +1,11 @@
 /**
- * Counts the severities of controls.
+ * Reads and parses inspec files
  */
 
-import { convertFile, ConversionResult } from "inspecjs";
+import { parse } from "inspecjs";
 import { Module, VuexModule, getModule, Action } from "vuex-module-decorators";
-import { AnyExec, AnyProfile, AnyFullControl } from "inspecjs";
-import DataModule from "./data_store";
-import Store from "./store";
+import DataModule from "@/store/data_store";
+import Store from "@/store/store";
 
 /** Each FileID corresponds to a unique File in this store */
 export type FileID = number;
@@ -30,9 +29,9 @@ export function isInspecFile(f: any): f is InspecFile {
 }
 
 /** Represents a file containing an Inspec Execution output */
-export type ExecutionFile = InspecFile & { execution: AnyExec };
+export type ExecutionFile = InspecFile & { execution: parse.AnyExec };
 /** Represents a file containing an Inspec Profile (not run) */
-export type ProfileFile = InspecFile & { profile: AnyProfile };
+export type ProfileFile = InspecFile & { profile: parse.AnyProfile };
 
 export type LoadOptions = {
   /** The file to load */
@@ -66,9 +65,9 @@ class InspecIntakeModule extends VuexModule {
       const filename = options.file.name;
 
       // Convert it
-      let result: ConversionResult;
+      let result: parse.ConversionResult;
       try {
-        result = convertFile(text);
+        result = parse.convertFile(text);
       } catch (e) {
         console.error(
           `Failed to convert file ${filename} due to error "${e}". We should display this as an error modal.`
@@ -107,3 +106,17 @@ class InspecIntakeModule extends VuexModule {
 }
 
 export default InspecIntakeModule;
+
+// Track granted file ids
+let last_granted_unique_id: number = 0;
+
+/**
+ * Yields a guaranteed currently free file ID.
+ * This is the computed as the highest currently held file id + 1
+ * It does not "fill spaces" of closed files, so that in any given
+ * session we will never repeat a file ID with a different file object.
+ */
+export function next_free_file_ID(): FileID {
+  last_granted_unique_id += 1;
+  return last_granted_unique_id;
+}

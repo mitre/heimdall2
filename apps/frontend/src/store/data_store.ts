@@ -3,20 +3,16 @@
  */
 
 import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
-import {
-  AnyExec as Execution,
-  AnyProfile as Profile,
-  AnyFullControl as Control,
-  HDFControl
-} from "inspecjs";
-import {
-  FileID,
-  ExecutionFile,
-  ProfileFile,
-  InspecFile
-} from "./report_intake";
-import Store from "./store";
-import { ExecJSONProfile } from "inspecjs/dist/generated-parsers/exec-json";
+import { HDFControl, parse, schemas_1_0 } from "inspecjs";
+import { FileID, ExecutionFile, ProfileFile } from "@/store/report_intake";
+import Store from "@/store/store";
+
+// Alias some types
+type Execution = parse.AnyExec;
+type Profile = parse.AnyProfile;
+type Control = parse.AnyFullControl;
+
+type ExecProfile = schemas_1_0.ExecJSON.Profile;
 
 /**
  * Mixin type to express that this type wraps another data type to add additional fields,
@@ -66,6 +62,7 @@ interface Contains<Item> {
 }
 
 // Create our three primary data types from the above mixins
+// Essentially this is just describing the parent/child relationships each type has
 export interface ContextualizedExecution
   extends WrapsType<Execution>,
     Sourced<ExecutionFile>,
@@ -105,9 +102,9 @@ class InspecDataModule extends VuexModule {
    * Recompute all contextual data
    */
   get contextStore(): [
-    ContextualizedExecution[],
-    ContextualizedProfile[],
-    ContextualizedControl[]
+    readonly ContextualizedExecution[],
+    readonly ContextualizedProfile[],
+    readonly ContextualizedControl[]
   ] {
     // Initialize all our arrays
     let executions: ContextualizedExecution[] = [];
@@ -142,7 +139,8 @@ class InspecDataModule extends VuexModule {
       // After our initial save of profiles, we go over them _again_ to establish parentage/dependency
       exec_file_context.contains.forEach(exec_files_profile => {
         // We know these are from a report; label as such
-        let as_exec = exec_files_profile.data as ExecJSONProfile;
+        let as_exec = exec_files_profile.data as ExecProfile;
+
         // If it has a parent profile then we link them by extendedby/extendsfrom
         if (as_exec.parent_profile !== undefined) {
           // Look it up
@@ -215,36 +213,27 @@ class InspecDataModule extends VuexModule {
   }
 
   /**
-   * Get executions as contextual items
+   * Returns a readonly list of all executions currently held in the data store
+   * including associated context
    */
-  get contextualExecutions(): ContextualizedExecution[] {
+  get contextualExecutions(): readonly ContextualizedExecution[] {
     return this.contextStore[0];
   }
 
   /**
-   * Get overlay profiles, etc.
+   * Returns a readonly list of all profiles currently held in the data store
+   * including associated context
    */
-  get contextualProfiles(): ContextualizedProfile[] {
+  get contextualProfiles(): readonly ContextualizedProfile[] {
     return this.contextStore[1];
   }
 
   /**
-   * Get overlayed controls, etc.
+   * Returns a readonly list of all controls currently held in the data store
+   * including associated context
    */
-  get contextualControls(): ContextualizedControl[] {
+  get contextualControls(): readonly ContextualizedControl[] {
     return this.contextStore[2];
-  }
-
-  /**
-   * Yields a guaranteed currently free file ID
-   */
-  get nextFreeFileID(): FileID {
-    let currentMax = 0;
-    // If we have any files find the max among them
-    if (this.allFiles.length) {
-      currentMax = Math.max(...this.allFiles.map(f => f.unique_id));
-    }
-    return currentMax + 1;
   }
 
   /**

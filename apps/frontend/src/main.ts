@@ -15,3 +15,9 @@ new Vue({
   vuetify,
   render: h => h(App)
 }).$mount("#app");
+
+// The following line is a hot patch to add regex support, theyre are better
+// places to edit Prism variables, but could not locate them. Namely this is
+// the Prism library variables, and not the Prism component variables
+//@ts-ignore
+Prism.languages.rb.string[5].pattern = /("|')(\1|(?:(?![^\\]\1)[\s\S])*[^\\]\1)/g;
