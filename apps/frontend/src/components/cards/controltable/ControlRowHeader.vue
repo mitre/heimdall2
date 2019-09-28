@@ -22,7 +22,7 @@
         <v-icon small v-for="i in severity_arrow_count" :key="i">
           mdi-checkbox-blank-circle
         </v-icon>
-        <v-icon small v-for="i in 4 - severity_arrow_count" :key="i">
+        <v-icon small v-for="i in 4 - severity_arrow_count" :key="5 - i">
           mdi-checkbox-blank-circle-outline
         </v-icon>
         <br />
