@@ -12,20 +12,19 @@ import * as parsetypes from "./fileparse";
  * The statuses that a control might have.
  *
  * This is computed as follows:
- * If it came from a profile view output (thus was not run), it is "From Profile"
- * Else, if it has no statuses (implying no describe blocks), it is "No Data"
- * Else, if it has 0 impact, it is "Not Applicable"
- * Else, if it contains an "error" amidst its status list, it is "Profile Error"
- * Else, if it contains a "failed" amidst its status list, it is "Failed"
- * Else, if it contains a "passed" amidst its status list, it is "Passed"
- * Else, if it contains a "skipped" amidst its status list, it is "Not Reviewed".
- * Note that the "Not Reviewed" case implicitly means ALL of its statuses are "skipped"
+ * 1. any kind of error -> "Profile Error"
+ * 2. impact 0 -> "Not Applicable" (except if #1)
+ * 3. has any failed tests -> "Failed" (except if #1 or #2)
+ * 4. has skip and pass -> "Passed" (except if #1 or #2)
+ * 5. all tests within a control pass -> "Passed" (except if #1 or #2)
+ * 6. only skips -> Requires Manual Review (except if #1 or #2)
+ * 7. No data at all (but from exec) -> "Profile Error"
+ * 8. from profile -> "From Profile"
  * These cases are in theory comprehensive, but if somehow no apply, it is still Profile Error
  */
 export type ControlStatus =
     | "Not Applicable"
     | "From Profile"
-    | "No Data"
     | "Profile Error"
     | "Passed"
     | "Failed"

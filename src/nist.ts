@@ -179,7 +179,7 @@ export function populateNistHash<T extends NistControlRequirements>(controls: T[
  * There's a natural precedence to statuses, at least in a list/group
  * For instance, we would not mark a group as Passed if it contained a Failed.
  * Clearly "Empty" is the lowest precedence, as adding any control would wipe it out.
- * Following we have "From Profile" since it is in some way the absence of status, but also lacks run context.
+ * Following we have "From Profile" since it is in some way the absence of status, but also lacks run context. We care more about literally anything else
  * Next, "Not Applicable" since it means that though we ran we don't care about the result
  * "Not Reviewed" implies that had the test run it would've mattered, but it was skipped deliberately
  * "No Data" is similarly a lack of result, but in this case unexpected, and thus worthy of more scrutiny
@@ -192,7 +192,7 @@ export function populateNistHash<T extends NistControlRequirements>(controls: T[
  * > 0  if a > b
  */
 export function compare_statuses(a: ControlGroupStatus, b: ControlGroupStatus) {
-    const precedence: ControlGroupStatus[] = ["Empty", "From Profile", "No Data", "Not Applicable", "Not Reviewed", "Passed", "Failed", "Profile Error"];
+    const precedence: ControlGroupStatus[] = ["Empty", "From Profile", "Not Applicable", "Not Reviewed", "Passed", "Failed", "Profile Error"];
     let a_i = precedence.indexOf(a);
     let b_i = precedence.indexOf(b);
     return a_i - b_i;

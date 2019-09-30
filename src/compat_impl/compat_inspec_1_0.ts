@@ -77,16 +77,15 @@ abstract class HDFControl_1_0 implements HDFControl {
             case "Not Applicable":
                 return `Justification:\n\n${this.message}\n`;
             case "Profile Error":
-                if (this.message) {
+                if (this.status_list === undefined) {
+                    return "No describe blocks were run in this control";
+                } else if (this.message !== undefined) {
                     return `Exception:\n\n${this.message}\n`;
                 } else {
-                    return `No test available for this control.`;
+                    return `No details available for this control.`;
                 }
             case "From Profile":
                 return "No tests are run in a profile json.";
-            case "No Data":
-                return "This control had no results - perhaps it was overlayed?";
-
             default:
                 throw "Error: invalid status generated";
         }
@@ -113,24 +112,24 @@ abstract class HDFControl_1_0 implements HDFControl {
     }
 
     get status(): ControlStatus {
-        if (this.status_list === undefined) {
+        if (this.is_profile) {
             return "From Profile";
-        } else if (this.status_list.includes("error")) {
+        } else if (
+            this.status_list === undefined ||
+            this.status_list.length === 0 ||
+            this.status_list.includes("error")
+        ) {
             return "Profile Error";
+        } else if (this.wraps.impact == 0) {
+            return "Not Applicable";
+        } else if (this.status_list.includes("failed")) {
+            return "Failed";
+        } else if (this.status_list.includes("passed")) {
+            return "Passed";
+        } else if (this.status_list.includes("skipped")) {
+            return "Not Reviewed";
         } else {
-            if (this.status_list.length == 0) {
-                return "No Data";
-            } else if (this.wraps.impact == 0) {
-                return "Not Applicable";
-            } else if (this.status_list.includes("failed")) {
-                return "Failed";
-            } else if (this.status_list.includes("passed")) {
-                return "Passed";
-            } else if (this.status_list.includes("skipped")) {
-                return "Not Reviewed";
-            } else {
-                return "Profile Error";
-            }
+            return "Profile Error"; // Shouldn't get here, but might as well have fallback
         }
     }
 
