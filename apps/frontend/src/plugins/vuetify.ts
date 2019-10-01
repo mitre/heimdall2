@@ -40,12 +40,14 @@ export default new Vuetify({
         ...statuses,
         ...severities,
         ...compliances,
+        mitre: "#303030",
         background: "#303030"
       },
       light: {
         ...statuses,
         ...severities,
         ...compliances,
+        mitre: "#005B95",
         background: "#f8f8f8"
       }
     },

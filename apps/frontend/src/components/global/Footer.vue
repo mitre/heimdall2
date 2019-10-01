@@ -1,5 +1,10 @@
 <template>
-  <v-footer app title="footer" class="font-weight-light" color="background">
+  <v-footer
+    app
+    title="footer"
+    class="font-weight-thin white--text"
+    color="mitre"
+  >
     <span>The MITRE Corporation &copy; 2019</span>
   </v-footer>
 </template>
