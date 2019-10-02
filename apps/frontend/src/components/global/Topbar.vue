@@ -20,7 +20,10 @@
     <!-- Login information or whatever -->
     <v-btn icon large>
       <v-avatar size="32px" item>
-        <v-img :src="require('@/assets/logo.png')" alt="Heimdall"></v-img>
+        <v-img
+          :src="require('@/assets/logo-xs-orange-white.svg')"
+          alt="Heimdall Logo"
+        ></v-img>
       </v-avatar>
     </v-btn>
   </v-app-bar>
