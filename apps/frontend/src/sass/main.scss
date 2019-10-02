@@ -14,4 +14,9 @@ $code-color: false;
 $code-kbd-border-radius: false; 
 $code-kbd-font-size: false;
 $code-kbd-font-weight: false;
-
+.theme--dark {
+	@import "~prismjs/themes/prism-tomorrow";
+}
+.theme--light {
+	@import "~prismjs/themes/prism";
+}

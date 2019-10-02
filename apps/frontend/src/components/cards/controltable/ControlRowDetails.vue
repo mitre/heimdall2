@@ -173,18 +173,8 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
 </script>
 
 <style lang="scss" scoped>
-.theme--dark {
-  @import "~prismjs/themes/prism-tomorrow.css";
-}
-/*.theme--light {
-  @import "~prismjs/themes/prism.css";
-}*/
 .v-application {
-  pre.language-ruby {
-    background-color: rgba(0, 0, 0, 0.3);
-  }
   code.language-ruby {
-    background-color: rgba(0, 0, 0, 0);
     border: none;
     box-shadow: none;
   }
