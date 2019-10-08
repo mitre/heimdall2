@@ -90,7 +90,7 @@ export interface Reference {
 }
 
 export interface ControlResult {
-    backtrace?:    string[];
+    backtrace?:    string[] | null;
     code_desc:     string;
     exception?:    string;
     message?:      string;
@@ -378,7 +378,7 @@ const typeMap: any = {
         { json: "uri", js: "uri", typ: u(undefined, "") },
     ], "any"),
     "ControlResult": o([
-        { json: "backtrace", js: "backtrace", typ: u(undefined, a("")) },
+        { json: "backtrace", js: "backtrace", typ: u(undefined, u(a(""), null)) },
         { json: "code_desc", js: "code_desc", typ: "" },
         { json: "exception", js: "exception", typ: u(undefined, "") },
         { json: "message", js: "message", typ: u(undefined, "") },

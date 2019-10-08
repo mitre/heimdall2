@@ -22,6 +22,7 @@ export interface ProfileJSON {
     status?:          string;
     supports:         SupportedPlatform[];
     title?:           string;
+    version?:         string;
 }
 
 export interface ProfileJSONControl {
@@ -35,12 +36,12 @@ export interface ProfileJSONControl {
     /**
      * The ID of this control
      */
-    id:              string;
-    impact:          number;
-    refs:            Reference[];
-    source_location: SourceLocation;
-    tags:            { [key: string]: any };
-    title:           null | string;
+    id:               string;
+    impact:           number;
+    refs?:            Reference[];
+    source_location?: SourceLocation;
+    tags:             { [key: string]: any };
+    title:            null | string;
 }
 
 export interface Reference {
@@ -263,6 +264,7 @@ const typeMap: any = {
         { json: "status", js: "status", typ: u(undefined, "") },
         { json: "supports", js: "supports", typ: a(r("SupportedPlatform")) },
         { json: "title", js: "title", typ: u(undefined, "") },
+        { json: "version", js: "version", typ: u(undefined, "") },
     ], "any"),
     "ProfileJSONControl": o([
         { json: "code", js: "code", typ: "" },
@@ -270,8 +272,8 @@ const typeMap: any = {
         { json: "descriptions", js: "descriptions", typ: u(undefined, m("any")) },
         { json: "id", js: "id", typ: "" },
         { json: "impact", js: "impact", typ: 3.14 },
-        { json: "refs", js: "refs", typ: a(r("Reference")) },
-        { json: "source_location", js: "source_location", typ: r("SourceLocation") },
+        { json: "refs", js: "refs", typ: u(undefined, a(r("Reference"))) },
+        { json: "source_location", js: "source_location", typ: u(undefined, r("SourceLocation")) },
         { json: "tags", js: "tags", typ: m("any") },
         { json: "title", js: "title", typ: u(null, "") },
     ], "any"),

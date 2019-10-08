@@ -9,7 +9,7 @@ set -e
 # Ensure we were given an argument
 # [[ -n $1 ]] || { echo "Must supply a version number" >&2; exit 1; }
 # set VERSION=$1
-set VERSION="."
+VERSION="."
 
 # Declare our schemas - those that we will ask inspec to generate
 declare -a SCHEMAS=('exec-json' 'exec-jsonmin' 'profile-json')
@@ -26,12 +26,14 @@ done
 # Quicktype each
 echo "Generating types"
 mkdir -p "./work/interfaces"
-mkdir -p "./../generated_parsers/$VERSION"
+mkdir -p "./src/generated_parsers/$VERSION"
 for SCHEMA in ${SCHEMAS[@]}
 do
     # Generate the parser
-    OUTFILE="./../generated_parsers/$VERSION/$SCHEMA.ts"
-    npx quicktype -l ts -s schema --src "./work/schemas/$VERSION/$SCHEMA.json" -o $OUTFILE --runtime-typecheck # --quiet
+    OUTFILE="./src/generated_parsers/$VERSION/$SCHEMA.ts"
+    # OUTFILE="tmp"
+    SCHEMAFILE="./work/schemas/$VERSION/$SCHEMA.json"
+    npx quicktype -l ts -s schema --src "$SCHEMAFILE" -o $OUTFILE --runtime-typecheck
 
     # Modify it to utilize a null filter parser
     # Add the import
