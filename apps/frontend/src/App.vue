@@ -1,5 +1,5 @@
 <template>
-  <v-app id="inspire" style="background: var(--v-background-base)">
+  <v-app id="inspire" class="override">
     <!-- Router view. Typically a "subclass" of Base -->
     <router-view></router-view>
 
@@ -25,12 +25,3 @@ const AppProps = Vue.extend({});
 })
 export default class App extends AppProps {}
 </script>
-
-<!-- Style to fix dark mode to use our color scheme -->
-<style>
-.theme--light.v-card,
-.theme--light.v-sheet,
-.theme--light.v-navigation-drawer {
-  background: var(--v-background-lighten-1);
-}
-</style>

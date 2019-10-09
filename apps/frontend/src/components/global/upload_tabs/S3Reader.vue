@@ -395,10 +395,11 @@ export default class S3Reader extends Props {
     switch (code) {
       case "TokenRefreshRequired":
       case "ExpiredToken":
-        this.shown_window = "BaseAuth";
-        this.shown_error =
-          "MFA Authorization expired. Please input fresh token.";
+        this.shown_window = "NoAuth";
+        this.shown_error = "Authorization expired. Please input fresh token.";
         this.mfa_token = "";
+        this.assumed_role_creds = null;
+        this.refresh();
         break;
       case "InvalidAccessKeyId":
         this.shown_window = "NoAuth";

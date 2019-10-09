@@ -3,13 +3,11 @@
     <!-- Toolbar -->
     <v-row>
       <v-col cols="12">
-        <v-toolbar flat>
-          <v-switch
-            v-model="single_expand"
-            label="Single expand"
-            class="mt-2 "
-          ></v-switch>
-        </v-toolbar>
+        <v-switch
+          v-model="single_expand"
+          label="Single expand"
+          class="mt-2 "
+        ></v-switch>
       </v-col>
     </v-row>
 

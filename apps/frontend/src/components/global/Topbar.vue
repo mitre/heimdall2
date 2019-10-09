@@ -1,16 +1,13 @@
 <template>
-  <v-app-bar
-    :clipped-left="$vuetify.breakpoint.lgAndUp"
-    color="mitre"
-    class="font-weight-medium white--text"
-    app
-  >
+  <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app color="primary">
     <!-- The title and nav bar -->
     <v-toolbar-title class="ml-0 pl-4">
       <v-app-bar-nav-icon
         @click.stop="$emit('toggle-drawer')"
       ></v-app-bar-nav-icon>
-      <span class="hidden-sm-and-down">Heimdall Lite</span>
+      <span class="hidden-sm-and-down primary-visible--text">
+        {{ title }}
+      </span>
     </v-toolbar-title>
     <v-spacer />
 
@@ -35,7 +32,9 @@ import Component from "vue-class-component";
 
 // We declare the props separately to make props types inferable.
 const TopbarProps = Vue.extend({
-  props: {}
+  props: {
+    title: String
+  }
 });
 
 @Component({

@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row class="foreground">
     <v-col cols="12">
       <v-card color="background lighten-2" elevation="2">
         <ResponsiveRowSmall

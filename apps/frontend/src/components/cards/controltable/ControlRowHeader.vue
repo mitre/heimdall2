@@ -115,14 +115,7 @@ export default class ControlRowHeader extends ControlRowHeaderProps {
 </script>
 
 <style scoped>
-.center {
-  text-align: justify;
-}
-
-.stack-icon {
-  margin-left: -8px;
-  margin-right: -8px;
-  margin-top: -8px;
-  margin-bottom: -8px;
+.lightened-row .v-card {
+  background: var(--v-background-lighten-2);
 }
 </style>

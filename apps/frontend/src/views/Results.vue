@@ -1,5 +1,5 @@
 <template>
-  <BaseView>
+  <BaseView :title="curr_title">
     <!-- Topbar config - give it a search bar -->
     <template #topbar-content>
       <v-text-field
@@ -10,9 +10,16 @@
         prepend-inner-icon="mdi-magnify"
         label="Search"
         v-model="search_term"
+        clearable
       ></v-text-field>
       <v-spacer />
-      <v-btn @click="clear" title="Clear all set filters">Clear</v-btn>
+      <v-btn
+        @click="clear"
+        title="Clear all set filters"
+        :disabled="!can_clear"
+      >
+        Clear
+      </v-btn>
     </template>
 
     <!-- The main content: cards, etc -->
@@ -121,6 +128,8 @@ import ComplianceChart from "@/components/cards/ComplianceChart.vue";
 import { Filter, NistMapState } from "@/store/data_filters";
 import { ControlStatus, Severity } from "inspecjs";
 import { FileID } from "@/store/report_intake";
+import { getModule } from "vuex-module-decorators";
+import InspecDataModule from "../store/data_store";
 
 // We declare the props separately
 // to make props types inferrable.
@@ -230,6 +239,38 @@ export default class Results extends ResultsProps {
       selectedCategory: null,
       selectedControlID: null
     };
+  }
+
+  /**
+   * Returns true if we can currently clear.
+   * Essentially, just controls whether the button is available
+   */
+  get can_clear(): boolean {
+    // Return if any params not null/empty
+    if (
+      this.severity_filter ||
+      this.status_filter ||
+      this.search_term !== "" ||
+      this.nist_filters.selectedFamily
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * The title to override with
+   */
+  get curr_title(): String | undefined {
+    if (this.file_filter !== null) {
+      let store = getModule(InspecDataModule, this.$store);
+      let file = store.allFiles.find(f => f.unique_id === this.file_filter);
+      if (file) {
+        return file.filename;
+      }
+    }
+    return undefined;
   }
 
   /**
