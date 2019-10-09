@@ -52,7 +52,7 @@ export function convertFile(json_text: string): ConversionResult {
     }
 
     errors.forEach(e => console.warn(e));
-    throw "Unable to convert inspec json output. Please verify it's from an up-to-date version of the program!";
+    throw new Error("Unable to convert inspec json output. Please verify it's from an up-to-date version of the program!");
 }
 
 // Provide some convenient types for different schemas

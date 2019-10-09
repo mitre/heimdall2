@@ -163,5 +163,5 @@ export function hdfWrapControl(ctrl: parsetypes.AnyFullControl): HDFControl {
     }
 
     // In theory future schemas will be easier to decipher because of a version tag
-    throw "Error: Control did not match any expected schema";
+    throw new Error("Control did not match any expected schema");
 }

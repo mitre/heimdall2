@@ -87,7 +87,7 @@ abstract class HDFControl_1_0 implements HDFControl {
             case "From Profile":
                 return "No tests are run in a profile json.";
             default:
-                throw "Error: invalid status generated";
+                throw new Error("Error: invalid status generated");
         }
     }
 
