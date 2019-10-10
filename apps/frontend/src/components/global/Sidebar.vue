@@ -23,6 +23,7 @@
             :key="i"
             :text="child.text"
             :icon="child.icon"
+            @click="child.on_click"
           />
         </v-list-group>
 
@@ -45,19 +46,28 @@
         </v-list-group>
 
         <!-- Simple, independent links -->
-        <LinkItem v-else :key="item.text" :text="item.text" :icon="item.icon" />
+        <LinkItem
+          v-else
+          :key="item.text"
+          :text="item.text"
+          :icon="item.icon"
+          @click="item.on_click"
+        />
       </template>
     </v-list>
-    <v-layout align-center>
-      <v-flex class="text-center">
+    <ExportCaat></ExportCaat>
+    <v-layout>
+      <v-flex class="center-switch">
         <v-switch
           label="Light/Dark"
           v-model="dark"
           v-on:change="updateDark"
-          align-center
         ></v-switch>
       </v-flex>
     </v-layout>
+    <hr />
+    <AboutModal></AboutModal>
+    <HelpModal></HelpModal>
   </v-navigation-drawer>
 </template>
 
@@ -69,11 +79,15 @@ import { getModule } from "vuex-module-decorators";
 import InspecDataModule from "@/store/data_store";
 import FileItem from "@/components/global/sidebaritems/SidebarFile.vue";
 import LinkItem from "@/components/global/sidebaritems/SidebarLink.vue";
+import ExportCaat from "@/components/global/ExportCaat.vue";
+import AboutModal from "@/components/global/AboutModal.vue";
+import HelpModal from "@/components/global/HelpModal.vue";
 
 interface LinkProps {
   text: string; // To label the item
   icon: string; // Visually but same difference
-  link?: string; // Where to redirect to
+  link?: string; // Where to redirect to, if we want
+  on_click: () => void; // Callback function on click, if desired
 }
 
 interface FolderProps {
@@ -98,14 +112,16 @@ const SidebarProps = Vue.extend({
 @Component({
   components: {
     LinkItem,
-    FileItem
+    FileItem,
+    ExportCaat,
+    AboutModal,
+    HelpModal
   }
 })
 export default class Sidebar extends SidebarProps {
   // Dynamic list setup
   get items(): AnyProp[] {
     return [
-      { icon: "mdi-information", text: "Help" },
       {
         text: "Files",
         files: this.visible_files
@@ -113,12 +129,11 @@ export default class Sidebar extends SidebarProps {
       {
         text: "Tools",
         children: [
-          { text: "Import", icon: "mdi-printer" },
-          { text: "Export", icon: "mdi-printer" },
-          { text: "Print", icon: "mdi-printer" }
+          { text: "Import", icon: "printer", on_click: () => {} },
+          { text: "Export", icon: "printer", on_click: () => {} },
+          { text: "Print", icon: "printer", on_click: () => {} }
         ]
-      },
-      { icon: "mdi-information", text: "About" }
+      }
     ];
   }
 
@@ -145,5 +160,8 @@ nav.v-navigation-drawer {
   max-height: 100vh !important;
   /* z-index hides behind footer and topbar */
   z-index: 1;
+}
+.center-switch {
+  margin-left: 15px;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <v-list-item :to="link">
+  <v-list-item :to="link" @click="$emit('click', $event)">
     <v-list-item-action>
       <v-icon>{{ icon }}</v-icon>
     </v-list-item-action>
@@ -26,8 +26,7 @@ const LinkItemProps = Vue.extend({
     },
     link: {
       type: String,
-      required: false,
-      default: "/"
+      required: false
     }
   }
 });
