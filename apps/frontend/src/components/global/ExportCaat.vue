@@ -1,15 +1,15 @@
 <template>
-  <div class="caat-btn-container">
-    <v-tooltip top>
-      <template v-slot:activator="{ on }">
-        <v-btn v-on:click="exportCaat" v-on="on"
-          ><v-icon>mdi-download</v-icon>
-          <div class="button-txt">CAAT Spreadsheet Data</div></v-btn
-        >
-      </template>
-      <span>Compliance Assessment Audit Tracking Data</span>
-    </v-tooltip>
-  </div>
+  <v-tooltip top>
+    <template v-slot:activator="{ on }">
+      <LinkItem
+        key="export_caat"
+        text="CAAT Spreadsheet Data"
+        icon="mdi-download"
+        v-on="on"
+      />
+    </template>
+    <span>Compliance Assessment Audit Tracking Data</span>
+  </v-tooltip>
 </template>
 
 <script lang="ts">
@@ -20,6 +20,7 @@ import FilteredDataModule, { Filter } from "@/store/data_filters";
 import XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { hdfWrapControl, HDFControl, ControlStatus } from "inspecjs";
+import LinkItem from "@/components/global/sidebaritems/SidebarLink.vue";
 
 type CAATRow = string[];
 type CAAT = CAATRow[];
@@ -31,7 +32,9 @@ const Props = Vue.extend({
 });
 
 @Component({
-  components: {}
+  components: {
+    LinkItem
+  }
 })
 export default class ExportCaat extends Props {
   /** Turns a control into a CAAT row.
@@ -222,47 +225,7 @@ export default class ExportCaat extends Props {
 </script>
 
 <style>
-.caat-btn-container {
-  margin-left: 4px;
-}
 .button-txt {
   font-size: 10pt;
-}
-/* Tooltip container */
-.tooltip {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-}
-
-/* Tooltip text */
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: 120px;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  padding: 5px 0;
-  border-radius: 6px;
-
-  /* Position the tooltip text - see examples below! */
-  position: absolute;
-  z-index: 1;
-}
-
-.tooltip .tooltiptext::after {
-  content: " ";
-  position: absolute;
-  top: 100%; /* At the bottom of the tooltip */
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: black transparent transparent transparent;
-}
-
-/* Show the tooltip text when you mouse over the tooltip container */
-.tooltip:hover .tooltiptext {
-  visibility: visible;
 }
 </style>

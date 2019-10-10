@@ -12,14 +12,14 @@ export function visible_against(color_hex: string): string {
   let color = Chroma.hex(color_hex);
 
   // Rotate 50 degrees in hue (arbitrary # but seems nice)
-  color = color.set("hsl.h", "+50");
+  color = color.set("hsl.h", "+180");
 
   // Now set its luminance to the opposite extreme
   let lum = color.luminance();
   if (lum < 0.5) {
     color = color.luminance(0.8);
   } else {
-    color = color.luminance(0.2);
+    color = color.luminance(0.1);
   }
   return color.hex();
 }

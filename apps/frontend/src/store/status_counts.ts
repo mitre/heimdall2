@@ -27,7 +27,6 @@ function count_statuses(data: FilteredData, filter: Filter): StatusHash {
   let hash: StatusHash = {
     Failed: 0,
     "From Profile": 0,
-    "No Data": 0,
     "Not Applicable": 0,
     "Not Reviewed": 0,
     Passed: 0,
@@ -102,10 +101,6 @@ class StatusCountModule extends VuexModule {
 
   get fromProfile(): (filter: Filter) => number {
     return filter => this.hash(filter)["From Profile"];
-  }
-
-  get noData(): (filter: Filter) => number {
-    return filter => this.hash(filter)["No Data"];
   }
 }
 

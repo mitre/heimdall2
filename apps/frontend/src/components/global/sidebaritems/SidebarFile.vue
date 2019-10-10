@@ -10,8 +10,7 @@
 
     <v-list-item-action>
       <v-btn icon x-small v-on:click="close_this_file">
-        <v-icon>mdi-close</v-icon
-        ><!--close-circle-->
+        <v-icon> mdi-close </v-icon>
       </v-btn>
     </v-list-item-action>
   </v-list-item>

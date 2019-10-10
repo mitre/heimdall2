@@ -1,8 +1,9 @@
 <template>
   <v-list-item :to="link" @click="$emit('click', $event)">
-    <v-list-item-action>
-      <v-icon>{{ icon }}</v-icon>
-    </v-list-item-action>
+    <v-list-item-avatar>
+      <v-icon v-text="icon" small />
+    </v-list-item-avatar>
+
     <v-list-item-content>
       <v-list-item-title>{{ text }}</v-list-item-title>
     </v-list-item-content>

@@ -1,5 +1,5 @@
 <template>
-  <v-app id="inspire" class="override">
+  <v-app id="inspire">
     <!-- Router view. Typically a "subclass" of Base -->
     <router-view></router-view>
 

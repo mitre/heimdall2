@@ -5,69 +5,27 @@
     :clipped="$vuetify.breakpoint.lgAndUp"
     app
   >
-    <v-list dense>
-      <template v-for="item in items">
-        <!-- Link lists -->
-        <v-list-group v-if="item.children" :key="item.text">
-          <!-- The expand toggle -->
-          <template v-slot:activator>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>{{ item.text }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-          <!-- The items -->
-          <LinkItem
-            v-for="(child, i) in item.children"
-            :key="i"
-            :text="child.text"
-            :icon="child.icon"
-            @click="child.on_click"
-          />
-        </v-list-group>
-
-        <!-- File lists -->
-        <v-list-group
-          v-else-if="item.files"
-          :key="item.text"
-          v-model="item.model"
-        >
-          <!-- The expand toggle -->
-          <template v-slot:activator>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>{{ item.text }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-          <!-- The items -->
-          <FileItem v-for="(file, i) in item.files" :key="i" :file="file" />
-        </v-list-group>
-
-        <!-- Simple, independent links -->
-        <LinkItem
-          v-else
-          :key="item.text"
-          :text="item.text"
-          :icon="item.icon"
-          @click="item.on_click"
-        />
-      </template>
+    <v-list dense class="px-2" subheader>
+      <v-subheader>Files</v-subheader>
+      <FileItem v-for="(file, i) in visible_files" :key="i" :file="file" />
     </v-list>
-    <ExportCaat></ExportCaat>
-    <v-layout>
-      <v-flex class="center-switch">
-        <v-switch
-          label="Light/Dark"
-          v-model="dark"
-          v-on:change="updateDark"
-        ></v-switch>
-      </v-flex>
-    </v-layout>
-    <hr />
-    <AboutModal></AboutModal>
-    <HelpModal></HelpModal>
+
+    <v-list dense class="px-2" subheader>
+      <v-subheader>Info</v-subheader>
+      <AboutModal />
+      <HelpModal />
+    </v-list>
+
+    <v-list dense class="px-2" subheader>
+      <v-subheader>Tools</v-subheader>
+      <ExportCaat></ExportCaat>
+      <v-list-item>
+        <div class="d-flex center-switch">
+          <v-switch label="Light/Dark" v-model="dark" v-on:change="updateDark">
+          </v-switch>
+        </div>
+      </v-list-item>
+    </v-list>
   </v-navigation-drawer>
 </template>
 

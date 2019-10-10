@@ -84,8 +84,6 @@ class ColorHackModule extends VuexModule {
           return this.lookupColor("statusPassed");
         case "Failed":
           return this.lookupColor("statusFailed");
-        case "No Data":
-          return this.lookupColor("statusNoData");
         case "Not Applicable":
           return this.lookupColor("statusNotApplicable");
         case "Not Reviewed":
