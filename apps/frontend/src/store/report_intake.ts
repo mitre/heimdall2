@@ -60,21 +60,31 @@ export type TextLoadOptions = {
   name: "intake"
 })
 class InspecIntakeModule extends VuexModule {
-  /** Load a file with the specified options */
+  /**
+   * Load a file with the specified options. Promises an error message on failure
+   */
   @Action
-  async loadFile(options: FileLoadOptions): Promise<void> {
+  async loadFile(options: FileLoadOptions): Promise<Error | null> {
     let read = read_file_async(options.file);
-    read.then(text =>
-      this.loadText({
-        text,
-        unique_id: options.unique_id,
-        filename: options.file.name
-      })
-    );
+    return read
+      .then(text =>
+        this.loadText({
+          text,
+          unique_id: options.unique_id,
+          filename: options.file.name
+        })
+      )
+      .then(err => {
+        return err;
+      });
   }
 
+  /*
+   * Due to issues with catching errors from Actions, this function returns its
+   * errors. null implies the text load was successful.
+   */
   @Action
-  async loadText(options: TextLoadOptions): Promise<void> {
+  async loadText(options: TextLoadOptions): Promise<Error | null> {
     // Fetch our data store
     const data = getModule(DataModule, Store);
 
@@ -83,7 +93,7 @@ class InspecIntakeModule extends VuexModule {
     try {
       result = parse.convertFile(options.text);
     } catch (e) {
-      throw new Error(
+      return new Error(
         `Failed to convert file ${options.filename} due to error "${e}".`
       );
     }
@@ -109,8 +119,9 @@ class InspecIntakeModule extends VuexModule {
       };
       data.addProfile(profileFile);
     } else {
-      throw new Error("Couldn't parse data");
+      return new Error("Couldn't parse data");
     }
+    return null;
   }
 }
 
