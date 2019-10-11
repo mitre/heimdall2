@@ -50,7 +50,7 @@ const statuses = {
   statusNotApplicable: colors.lightBlue.base,
   statusNoData: colors.orange.lighten1,
   statusNotReviewed: colors.orange.base,
-  statusProfileError: colors.indigo.base,
+  statusProfileError: colors.indigo.lighten2,
   statusNotRun: colors.teal.darken2,
   statusFromProfile: colors.teal.base
 };
@@ -62,7 +62,7 @@ let mitrePrimaryGrey = gen_variants("#5f636a");
 let mitreSecondaryGrey = gen_variants("#cfdeea");
 let mitreSecondaryBlue = gen_variants("#00b3dc");
 let darkBackground = gen_variants("#303030");
-let lightBackground = gen_variants("#d6d6d6");
+let lightBackground = gen_variants("#e0e0e0", 2); // Want more extreme variations
 
 const branding = {
   mitrePrimaryBlue,
@@ -103,8 +103,10 @@ const veautiful = new Vuetify({
         ...severities,
         ...compliances,
         ...branding,
-        primary: darkBackground,
-        "primary-visible": gen_visibilities(darkBackground),
+        primary: mitreSecondaryBlue,
+        "primary-visible": gen_visibilities(mitreSecondaryBlue),
+        bar: darkBackground,
+        "bar-visible": gen_visibilities(darkBackground),
         secondary: darkBackground,
         "secondary-visible": gen_visibilities(darkBackground)
       },
@@ -115,6 +117,8 @@ const veautiful = new Vuetify({
         ...branding,
         primary: mitrePrimaryBlue,
         "primary-visible": gen_visibilities(mitrePrimaryBlue),
+        bar: mitrePrimaryBlue,
+        "bar-visible": gen_visibilities(mitrePrimaryBlue),
         secondary: lightBackground,
         "secondary-visible": gen_visibilities(lightBackground)
       }

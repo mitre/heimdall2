@@ -19,7 +19,7 @@ export function visible_against(color_hex: string): string {
   if (lum < 0.5) {
     color = color.luminance(0.8);
   } else {
-    color = color.luminance(0.1);
+    color = color.luminance(0.03);
   }
   return color.hex();
 }

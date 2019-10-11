@@ -33,7 +33,10 @@
     <template #main-content>
       <v-container fluid grid-list-md pa-2>
         <!-- Count Cards -->
-        <StatusCardRow :filter="all_filter" />
+        <StatusCardRow
+          :filter="all_filter"
+          @show-errors="status_filter = 'Profile Error'"
+        />
 
         <!-- Compliance Cards -->
         <v-row justify="space-around">

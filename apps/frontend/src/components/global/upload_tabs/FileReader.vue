@@ -3,14 +3,18 @@
     <v-container>
       <v-row>
         <v-col cols="12" align="center">
-          <img :src="require('@/assets/logo.png')" />
+          <v-img
+            :src="require('@/assets/logo-orange-tsp.svg')"
+            max-width="164"
+          />
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="12" align="center">
-          <div class="d-flex flex-wrap justify-center">
-            <span class="display-4 px-0">Heimdall-</span>
-            <span class="display-4 px-0">Lite</span>
+          <div class="d-flex flex-column justify-center">
+            <span :class="title_class">Heimdall</span>
+            <span :class="title_class">Lite</span>
+            <span class="subtitle-2 px-0">{{ version }}</span>
           </div>
         </v-col>
       </v-row>
@@ -32,6 +36,7 @@ import InspecIntakeModule, {
   FileID,
   next_free_file_ID
 } from "@/store/report_intake";
+import AppInfoModule from "@/store/app_info";
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -79,17 +84,17 @@ export default class FileReader extends Props {
     // Notify we got files
     this.$emit("got-files", unique_ids);
   }
+
+  get title_class(): string[] {
+    if (this.$vuetify.breakpoint.mdAndUp) {
+      return ["display-4", "px-0"];
+    } else {
+      return ["display-2", "px-0"];
+    }
+  }
+
+  get version(): string {
+    return getModule(AppInfoModule, this.$store).version;
+  }
 }
 </script>
-
-<style scoped>
-div.v-file-input {
-  margin-left: -36px;
-  background-color: var(--v-primary-base);
-}
-</style>
-<style lang="scss">
-.invert {
-  filter: invert(90%);
-}
-</style>

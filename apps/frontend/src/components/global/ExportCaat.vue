@@ -3,8 +3,9 @@
     <template v-slot:activator="{ on }">
       <LinkItem
         key="export_caat"
-        text="CAAT Spreadsheet Data"
+        text="CAAT Spreadsheet"
         icon="mdi-download"
+        @click="export_caat()"
         v-on="on"
       />
     </template>
@@ -20,7 +21,9 @@ import FilteredDataModule, { Filter } from "@/store/data_filters";
 import XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { hdfWrapControl, HDFControl, ControlStatus } from "inspecjs";
-import LinkItem from "@/components/global/sidebaritems/SidebarLink.vue";
+import LinkItem, {
+  LinkAction
+} from "@/components/global/sidebaritems/SidebarLink.vue";
 
 type CAATRow = string[];
 type CAAT = CAATRow[];
@@ -132,9 +135,7 @@ export default class ExportCaat extends Props {
     ];
   }
 
-  exportCaat(event: any) {
-    event.preventDefault();
-
+  export_caat() {
     // Get our data
     let filter: Filter = {};
     let filter_module = getModule(FilteredDataModule, this.$store);
@@ -194,11 +195,6 @@ export default class ExportCaat extends Props {
     );
   }
 
-  testControls() {
-    let filter: Filter = {};
-    console.log(getModule(FilteredDataModule, this.$store).controls(filter)); //this.$store.getters["data/allControls"]);
-  }
-
   /** Outputs the given number as a 2-digit string. Brittle **/
   pad_two_digits(s: number): string {
     return s < 10 ? `0${s}` : `${s}`;
@@ -223,9 +219,3 @@ export default class ExportCaat extends Props {
   }
 }
 </script>
-
-<style>
-.button-txt {
-  font-size: 10pt;
-}
-</style>

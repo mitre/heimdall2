@@ -3,10 +3,8 @@
     <v-col
       cols="12"
       sm="6"
-      md="6"
-      lg="3"
-      xl="3"
-      v-for="card in cardProps"
+      md="3"
+      v-for="card in standardCardProps"
       :key="card.title"
     >
       <v-card height="100%" :color="card.color">
@@ -17,6 +15,31 @@
         <v-card-text v-text="card.subtitle" />
       </v-card>
     </v-col>
+    <v-col cols="12" v-if="errorProps.number">
+      <v-card
+        color="statusProfileError"
+        class="d-flex flex-no-wrap justify-space-between"
+        elevation="12"
+      >
+        <div>
+          <v-card-title>
+            <v-icon class="pr-3" large>mdi-{{ errorProps.icon }}</v-icon>
+            <span class="title">
+              {{ `ALERT: ${errorProps.number} ${errorProps.title}` }}
+            </span>
+          </v-card-title>
+          <v-card-text v-text="errorProps.subtitle" />
+        </div>
+        <v-card-actions>
+          <v-btn
+            @click="$emit('show-errors')"
+            :disabled="filter.status === 'Profile Error'"
+          >
+            Filter to Errors
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-col>
   </v-row>
 </template>
 
@@ -25,6 +48,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import { getModule } from "vuex-module-decorators";
 import StatusCountModule from "@/store/status_counts";
+import { Filter } from "../../store/data_filters";
 
 interface CardProps {
   icon: string;
@@ -46,15 +70,15 @@ const StatusCardRowProps = Vue.extend({
 })
 export default class StatusCardRow extends StatusCardRowProps {
   // Cards
-  get cardProps(): CardProps[] {
+  get standardCardProps(): CardProps[] {
     let counts = getModule(StatusCountModule, this.$store);
-    let filter = this.filter;
+    let filter = this.filter as Filter;
     return [
       {
         icon: "check-circle",
         title: "Passed",
         subtitle: "All tests passed.",
-        color: "statusPassed", // These shouldn't be hard coded
+        color: "statusPassed",
         number: counts.passed(filter)
       },
       {
@@ -79,6 +103,24 @@ export default class StatusCardRow extends StatusCardRowProps {
         number: counts.notReviewed(filter)
       }
     ];
+  }
+
+  get errorProps(): CardProps | null {
+    let counts = getModule(StatusCountModule, this.$store);
+    let filter = this.filter as Filter;
+    // Want to ignore existing status filter
+    filter = {
+      ...filter,
+      status: undefined
+    };
+    return {
+      icon: "alert-circle",
+      title: "Profile Errors",
+      subtitle:
+        "Errors running test - check profile run privileges or check with the author of profile",
+      color: "statusProfileError",
+      number: counts.profileError(filter)
+    };
   }
 }
 </script>

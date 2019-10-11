@@ -8,6 +8,7 @@ import HashLookupModule from "@/store/lookup_hashes";
 import InspecIntakeModule from "@/store/report_intake";
 import SidebarModule from "@/store/sidebar";
 import ColorHackModule from "@/store/color_hack";
+import AppInfoModule from "@/store/app_info";
 
 Vue.use(Vuex);
 
@@ -33,6 +34,7 @@ interface StoreType {
   intake: InspecIntakeModule;
   sidebar: SidebarModule;
   colors: ColorHackModule;
+  info: AppInfoModule;
 }
 const store = new Vuex.Store<StoreType>({});
 

@@ -11,16 +11,16 @@
     </v-list>
 
     <v-list dense class="px-2" subheader>
-      <v-subheader>Info</v-subheader>
-      <AboutModal />
-      <HelpModal />
+      <v-subheader>Tools</v-subheader>
+      <ExportCaat></ExportCaat>
     </v-list>
 
     <v-list dense class="px-2" subheader>
-      <v-subheader>Tools</v-subheader>
-      <ExportCaat></ExportCaat>
+      <v-subheader>Info</v-subheader>
+      <AboutModal />
+      <HelpModal />
       <v-list-item>
-        <div class="d-flex center-switch">
+        <div class="d-flex justify-center">
           <v-switch label="Light/Dark" v-model="dark" v-on:change="updateDark">
           </v-switch>
         </div>
@@ -41,25 +41,6 @@ import ExportCaat from "@/components/global/ExportCaat.vue";
 import AboutModal from "@/components/global/AboutModal.vue";
 import HelpModal from "@/components/global/HelpModal.vue";
 
-interface LinkProps {
-  text: string; // To label the item
-  icon: string; // Visually but same difference
-  link?: string; // Where to redirect to, if we want
-  on_click: () => void; // Callback function on click, if desired
-}
-
-interface FolderProps {
-  text: string; // To label the item
-  children: LinkProps[]; // Child links
-}
-
-interface FilesProps {
-  text: string; // To label the item
-  files: Array<ExecutionFile | ProfileFile>; // The files to display
-}
-
-type AnyProp = LinkProps | FolderProps | FilesProps;
-
 // We declare the props separately to make props types inferable.
 const SidebarProps = Vue.extend({
   props: {
@@ -77,24 +58,7 @@ const SidebarProps = Vue.extend({
   }
 })
 export default class Sidebar extends SidebarProps {
-  // Dynamic list setup
-  get items(): AnyProp[] {
-    return [
-      {
-        text: "Files",
-        files: this.visible_files
-      },
-      {
-        text: "Tools",
-        children: [
-          { text: "Import", icon: "printer", on_click: () => {} },
-          { text: "Export", icon: "printer", on_click: () => {} },
-          { text: "Print", icon: "printer", on_click: () => {} }
-        ]
-      }
-    ];
-  }
-
+  /** Generates files for all */
   get visible_files(): Array<ProfileFile | ExecutionFile> {
     let data_store = getModule(InspecDataModule, this.$store);
     let files = data_store.allFiles;
@@ -103,6 +67,11 @@ export default class Sidebar extends SidebarProps {
 
   /** Whether or not we're dark mode */
   dark: boolean = true;
+
+  /** Initial configuration of dark mode */
+  mounted() {
+    this.dark = this.$vuetify.theme.dark;
+  }
 
   /** Updates theme darkness */
   updateDark() {
@@ -118,8 +87,5 @@ nav.v-navigation-drawer {
   max-height: 100vh !important;
   /* z-index hides behind footer and topbar */
   z-index: 1;
-}
-.center-switch {
-  margin-left: 15px;
 }
 </style>

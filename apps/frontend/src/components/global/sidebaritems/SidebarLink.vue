@@ -28,9 +28,18 @@ const LinkItemProps = Vue.extend({
     link: {
       type: String,
       required: false
+    },
+    action: {
+      type: Object, // Of type linkaction
+      required: false
     }
   }
 });
+
+/** If provided, will be called whenever clicked. */
+export interface LinkAction {
+  callback: () => void;
+}
 
 @Component({
   components: {}
