@@ -160,7 +160,7 @@ export class ExecControl extends HDFControl_1_0 implements HDFControl {
     }
 
     get start_time(): string | undefined {
-        if (this.typed_wrap.results) {
+        if (this.typed_wrap.results && this.typed_wrap.results.length) {
             return this.typed_wrap.results[0].start_time;
         }
         return undefined;
