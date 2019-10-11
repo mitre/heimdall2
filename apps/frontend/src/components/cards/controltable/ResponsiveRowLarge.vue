@@ -1,9 +1,7 @@
 <template>
   <v-row no-gutters>
     <v-col class="pa-0" :cols="2">
-      <v-card tile flat class="fill-height">
-        <slot name="status" />
-      </v-card>
+      <slot name="status" />
     </v-col>
 
     <v-col class="pa-0" :cols="2">

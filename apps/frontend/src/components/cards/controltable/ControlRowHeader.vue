@@ -3,15 +3,15 @@
   <ResponsiveRowSwitch>
     <template #status>
       <v-card
-        class="ma-1"
         :color="status_color"
         hover
         @click="$emit('toggle', !expanded)"
+        class="fill-height"
       >
         <v-card-text class="pa-2">
           {{ control.status }}
           <v-icon class="float-right">{{
-            expanded ? "mdi-chevron-down" : "mdi-chevron-up"
+            expanded ? "mdi-chevron-up" : "mdi-chevron-down"
           }}</v-icon>
         </v-card-text>
       </v-card>
