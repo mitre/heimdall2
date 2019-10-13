@@ -77,7 +77,7 @@ abstract class HDFControl_1_0 implements HDFControl {
             case "Not Applicable":
                 return `Justification:\n\n${this.message}\n`;
             case "Profile Error":
-                if (this.status_list === undefined) {
+                if (this.status_list === undefined || this.status_list.length === 0) {
                     return "No describe blocks were run in this control";
                 } else if (this.message !== undefined) {
                     return `Exception:\n\n${this.message}\n`;
