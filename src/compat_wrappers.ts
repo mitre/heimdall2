@@ -140,7 +140,7 @@ export interface HDFControlSegment {
     start_time: string;
 
     /** The run time of this segment, in seconds */
-    run_time: number;
+    run_time?: number;
 
     /** Which inspec resource this control used, if one could be determined */
     resource?: string;

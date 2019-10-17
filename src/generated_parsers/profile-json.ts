@@ -6,23 +6,22 @@
 //
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
-import preprocess from "../preprocessor";
 
 export interface ProfileJSON {
     controls:         ProfileJSONControl[];
-    copyright?:       string;
-    copyright_email?: string;
-    depends?:         Dependency[];
-    generator?:       Generator;
+    copyright?:       null | string;
+    copyright_email?: null | string;
+    depends?:         Dependency[] | null;
+    generator?:       null | Generator;
     groups:           ControlGroup[];
-    inputs?:          { [key: string]: any }[];
-    maintainer?:      string;
+    inputs?:          { [key: string]: any }[] | null;
+    maintainer?:      null | string;
     name:             string;
     sha256:           string;
-    status?:          string;
+    status?:          null | string;
     supports:         SupportedPlatform[];
-    title?:           string;
-    version?:         string;
+    title?:           null | string;
+    version?:         null | string;
 }
 
 export interface ProfileJSONControl {
@@ -31,17 +30,17 @@ export interface ProfileJSONControl {
      * include the underlying source code
      */
     code:          string;
-    desc:          null | string;
-    descriptions?: { [key: string]: any };
+    desc?:         null | string;
+    descriptions?: { [key: string]: any } | null;
     /**
      * The ID of this control
      */
     id:               string;
     impact:           number;
-    refs?:            Reference[];
-    source_location?: SourceLocation;
+    refs?:            Reference[] | null;
+    source_location?: null | SourceLocation;
     tags:             { [key: string]: any };
-    title:            null | string;
+    title?:           null | string;
 }
 
 export interface Reference {
@@ -54,23 +53,23 @@ export interface SourceLocation {
     /**
      * The line at which this statement is located in the file
      */
-    line: number;
+    line?: number | null;
     /**
      * Path to the file that this statement originates from
      */
-    ref: string;
+    ref?: null | string;
 }
 
 export interface Dependency {
-    branch?:       string;
-    compliance?:   string;
-    git?:          string;
-    name?:         string;
-    path?:         string;
-    skip_message?: string;
-    status?:       string;
-    supermarket?:  string;
-    url?:          string;
+    branch?:       null | string;
+    compliance?:   null | string;
+    git?:          null | string;
+    name?:         null | string;
+    path?:         null | string;
+    skip_message?: null | string;
+    status?:       null | string;
+    supermarket?:  null | string;
+    url?:          null | string;
 }
 
 export interface Generator {
@@ -100,19 +99,19 @@ export interface ControlGroup {
 }
 
 export interface SupportedPlatform {
-    "os-family"?:       string;
-    "os-name"?:         string;
-    platform?:          string;
-    "platform-family"?: string;
-    "platform-name"?:   string;
-    release?:           string;
+    "os-family"?:       null | string;
+    "os-name"?:         null | string;
+    platform?:          null | string;
+    "platform-family"?: null | string;
+    "platform-name"?:   null | string;
+    release?:           null | string;
 }
 
 // Converts JSON strings to/from your types
 // and asserts the results of JSON.parse at runtime
 export class Convert {
     public static toProfileJSON(json: string): ProfileJSON {
-        return cast(preprocess(json), r("ProfileJSON"));
+        return cast(JSON.parse(json), r("ProfileJSON"));
     }
 
     public static profileJSONToJson(value: ProfileJSON): string {
@@ -121,7 +120,7 @@ export class Convert {
 }
 
 function invalidValue(typ: any, val: any): never {
-    throw new Error(`Invalid value ${JSON.stringify(val)} for type ${JSON.stringify(typ)}`);
+    throw Error(`Invalid value ${JSON.stringify(val)} for type ${JSON.stringify(typ)}`);
 }
 
 function jsonToJSProps(typ: any): any {
@@ -252,30 +251,30 @@ function r(name: string) {
 const typeMap: any = {
     "ProfileJSON": o([
         { json: "controls", js: "controls", typ: a(r("ProfileJSONControl")) },
-        { json: "copyright", js: "copyright", typ: u(undefined, "") },
-        { json: "copyright_email", js: "copyright_email", typ: u(undefined, "") },
-        { json: "depends", js: "depends", typ: u(undefined, a(r("Dependency"))) },
-        { json: "generator", js: "generator", typ: u(undefined, r("Generator")) },
+        { json: "copyright", js: "copyright", typ: u(undefined, u(null, "")) },
+        { json: "copyright_email", js: "copyright_email", typ: u(undefined, u(null, "")) },
+        { json: "depends", js: "depends", typ: u(undefined, u(a(r("Dependency")), null)) },
+        { json: "generator", js: "generator", typ: u(undefined, u(null, r("Generator"))) },
         { json: "groups", js: "groups", typ: a(r("ControlGroup")) },
-        { json: "inputs", js: "inputs", typ: u(undefined, a(m("any"))) },
-        { json: "maintainer", js: "maintainer", typ: u(undefined, "") },
+        { json: "inputs", js: "inputs", typ: u(undefined, u(a(m("any")), null)) },
+        { json: "maintainer", js: "maintainer", typ: u(undefined, u(null, "")) },
         { json: "name", js: "name", typ: "" },
         { json: "sha256", js: "sha256", typ: "" },
-        { json: "status", js: "status", typ: u(undefined, "") },
+        { json: "status", js: "status", typ: u(undefined, u(null, "")) },
         { json: "supports", js: "supports", typ: a(r("SupportedPlatform")) },
-        { json: "title", js: "title", typ: u(undefined, "") },
-        { json: "version", js: "version", typ: u(undefined, "") },
+        { json: "title", js: "title", typ: u(undefined, u(null, "")) },
+        { json: "version", js: "version", typ: u(undefined, u(null, "")) },
     ], "any"),
     "ProfileJSONControl": o([
         { json: "code", js: "code", typ: "" },
-        { json: "desc", js: "desc", typ: u(null, "") },
-        { json: "descriptions", js: "descriptions", typ: u(undefined, m("any")) },
+        { json: "desc", js: "desc", typ: u(undefined, u(null, "")) },
+        { json: "descriptions", js: "descriptions", typ: u(undefined, u(m("any"), null)) },
         { json: "id", js: "id", typ: "" },
         { json: "impact", js: "impact", typ: 3.14 },
-        { json: "refs", js: "refs", typ: u(undefined, a(r("Reference"))) },
-        { json: "source_location", js: "source_location", typ: u(undefined, r("SourceLocation")) },
+        { json: "refs", js: "refs", typ: u(undefined, u(a(r("Reference")), null)) },
+        { json: "source_location", js: "source_location", typ: u(undefined, u(null, r("SourceLocation"))) },
         { json: "tags", js: "tags", typ: m("any") },
-        { json: "title", js: "title", typ: u(null, "") },
+        { json: "title", js: "title", typ: u(undefined, u(null, "")) },
     ], "any"),
     "Reference": o([
         { json: "ref", js: "ref", typ: u(undefined, u(a(m("any")), "")) },
@@ -283,19 +282,19 @@ const typeMap: any = {
         { json: "uri", js: "uri", typ: u(undefined, "") },
     ], "any"),
     "SourceLocation": o([
-        { json: "line", js: "line", typ: 3.14 },
-        { json: "ref", js: "ref", typ: "" },
+        { json: "line", js: "line", typ: u(undefined, u(3.14, null)) },
+        { json: "ref", js: "ref", typ: u(undefined, u(null, "")) },
     ], "any"),
     "Dependency": o([
-        { json: "branch", js: "branch", typ: u(undefined, "") },
-        { json: "compliance", js: "compliance", typ: u(undefined, "") },
-        { json: "git", js: "git", typ: u(undefined, "") },
-        { json: "name", js: "name", typ: u(undefined, "") },
-        { json: "path", js: "path", typ: u(undefined, "") },
-        { json: "skip_message", js: "skip_message", typ: u(undefined, "") },
-        { json: "status", js: "status", typ: u(undefined, "") },
-        { json: "supermarket", js: "supermarket", typ: u(undefined, "") },
-        { json: "url", js: "url", typ: u(undefined, "") },
+        { json: "branch", js: "branch", typ: u(undefined, u(null, "")) },
+        { json: "compliance", js: "compliance", typ: u(undefined, u(null, "")) },
+        { json: "git", js: "git", typ: u(undefined, u(null, "")) },
+        { json: "name", js: "name", typ: u(undefined, u(null, "")) },
+        { json: "path", js: "path", typ: u(undefined, u(null, "")) },
+        { json: "skip_message", js: "skip_message", typ: u(undefined, u(null, "")) },
+        { json: "status", js: "status", typ: u(undefined, u(null, "")) },
+        { json: "supermarket", js: "supermarket", typ: u(undefined, u(null, "")) },
+        { json: "url", js: "url", typ: u(undefined, u(null, "")) },
     ], "any"),
     "Generator": o([
         { json: "name", js: "name", typ: "" },
@@ -307,11 +306,11 @@ const typeMap: any = {
         { json: "title", js: "title", typ: u(undefined, u(null, "")) },
     ], "any"),
     "SupportedPlatform": o([
-        { json: "os-family", js: "os-family", typ: u(undefined, "") },
-        { json: "os-name", js: "os-name", typ: u(undefined, "") },
-        { json: "platform", js: "platform", typ: u(undefined, "") },
-        { json: "platform-family", js: "platform-family", typ: u(undefined, "") },
-        { json: "platform-name", js: "platform-name", typ: u(undefined, "") },
-        { json: "release", js: "release", typ: u(undefined, "") },
+        { json: "os-family", js: "os-family", typ: u(undefined, u(null, "")) },
+        { json: "os-name", js: "os-name", typ: u(undefined, u(null, "")) },
+        { json: "platform", js: "platform", typ: u(undefined, u(null, "")) },
+        { json: "platform-family", js: "platform-family", typ: u(undefined, u(null, "")) },
+        { json: "platform-name", js: "platform-name", typ: u(undefined, u(null, "")) },
+        { json: "release", js: "release", typ: u(undefined, u(null, "")) },
     ], "any"),
 };

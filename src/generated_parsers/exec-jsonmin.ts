@@ -6,7 +6,6 @@
 //
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
-import preprocess from "../preprocessor";
 
 export interface ExecJsonmin {
     controls:   ExecJSONMINControl[];
@@ -15,23 +14,20 @@ export interface ExecJsonmin {
 }
 
 export interface ExecJSONMINControl {
-    backtrace?:     string[];
+    backtrace?:     string[] | null;
     code_desc:      string;
-    exception?:     string;
+    exception?:     null | string;
     id:             string;
-    message?:       string;
-    profile_id:     null | string;
+    message?:       null | string;
+    profile_id?:    null | string;
     profile_sha256: string;
-    resource?:      string;
-    skip_message?:  string;
+    resource?:      null | string;
+    skip_message?:  null | string;
     status:         string;
 }
 
 export interface Statistics {
-    /**
-     * Breakdowns of control statistics by result
-     */
-    controls?: StatisticHash;
+    controls?: null | StatisticHash;
     /**
      * How long (in seconds) this inspec exec ran for.
      */
@@ -42,9 +38,9 @@ export interface Statistics {
  * Breakdowns of control statistics by result
  */
 export interface StatisticHash {
-    failed?:  StatisticBlock;
-    passed?:  StatisticBlock;
-    skipped?: StatisticBlock;
+    failed?:  null | StatisticBlock;
+    passed?:  null | StatisticBlock;
+    skipped?: null | StatisticBlock;
 }
 
 export interface StatisticBlock {
@@ -58,7 +54,7 @@ export interface StatisticBlock {
 // and asserts the results of JSON.parse at runtime
 export class Convert {
     public static toExecJsonmin(json: string): ExecJsonmin {
-        return cast(preprocess(json), r("ExecJsonmin"));
+        return cast(JSON.parse(json), r("ExecJsonmin"));
     }
 
     public static execJsonminToJson(value: ExecJsonmin): string {
@@ -67,7 +63,7 @@ export class Convert {
 }
 
 function invalidValue(typ: any, val: any): never {
-    throw new Error(`Invalid value ${JSON.stringify(val)} for type ${JSON.stringify(typ)}`);
+    throw Error(`Invalid value ${JSON.stringify(val)} for type ${JSON.stringify(typ)}`);
 }
 
 function jsonToJSProps(typ: any): any {
@@ -202,25 +198,25 @@ const typeMap: any = {
         { json: "version", js: "version", typ: "" },
     ], "any"),
     "ExecJSONMINControl": o([
-        { json: "backtrace", js: "backtrace", typ: u(undefined, a("")) },
+        { json: "backtrace", js: "backtrace", typ: u(undefined, u(a(""), null)) },
         { json: "code_desc", js: "code_desc", typ: "" },
-        { json: "exception", js: "exception", typ: u(undefined, "") },
+        { json: "exception", js: "exception", typ: u(undefined, u(null, "")) },
         { json: "id", js: "id", typ: "" },
-        { json: "message", js: "message", typ: u(undefined, "") },
-        { json: "profile_id", js: "profile_id", typ: u(null, "") },
+        { json: "message", js: "message", typ: u(undefined, u(null, "")) },
+        { json: "profile_id", js: "profile_id", typ: u(undefined, u(null, "")) },
         { json: "profile_sha256", js: "profile_sha256", typ: "" },
-        { json: "resource", js: "resource", typ: u(undefined, "") },
-        { json: "skip_message", js: "skip_message", typ: u(undefined, "") },
+        { json: "resource", js: "resource", typ: u(undefined, u(null, "")) },
+        { json: "skip_message", js: "skip_message", typ: u(undefined, u(null, "")) },
         { json: "status", js: "status", typ: "" },
     ], "any"),
     "Statistics": o([
-        { json: "controls", js: "controls", typ: u(undefined, r("StatisticHash")) },
+        { json: "controls", js: "controls", typ: u(undefined, u(null, r("StatisticHash"))) },
         { json: "duration", js: "duration", typ: 3.14 },
     ], "any"),
     "StatisticHash": o([
-        { json: "failed", js: "failed", typ: u(undefined, r("StatisticBlock")) },
-        { json: "passed", js: "passed", typ: u(undefined, r("StatisticBlock")) },
-        { json: "skipped", js: "skipped", typ: u(undefined, r("StatisticBlock")) },
+        { json: "failed", js: "failed", typ: u(undefined, u(null, r("StatisticBlock"))) },
+        { json: "passed", js: "passed", typ: u(undefined, u(null, r("StatisticBlock"))) },
+        { json: "skipped", js: "skipped", typ: u(undefined, u(null, r("StatisticBlock"))) },
     ], "any"),
     "StatisticBlock": o([
         { json: "total", js: "total", typ: 3.14 },
