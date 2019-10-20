@@ -31,7 +31,12 @@ type CAAT = CAATRow[];
 // We declare the props separately
 // to make props types inferrable.
 const Props = Vue.extend({
-  props: {}
+  props: {
+    filter: {
+      type: Object, // Of type Filter
+      required: true
+    }
+  }
 });
 
 @Component({
@@ -91,7 +96,11 @@ export default class ExportCaat extends Props {
       row.push(""); //row.push("InSpec"); // Assessment/Audit Company
       row.push("Test"); // Test Method
       row.push(fix(control.wraps.tags.check)); // Test Objective
-      row.push(fix(control.message)); // Test Result Description
+      let test_result = `${control.status}: ${control.message.replace(
+        "\n",
+        "; "
+      )}`;
+      row.push(fix(test_result)); // Test Result Description
       if (control.status === "Passed") {
         row.push("Satisfied");
       } else {
@@ -137,9 +146,8 @@ export default class ExportCaat extends Props {
 
   export_caat() {
     // Get our data
-    let filter: Filter = {};
     let filter_module = getModule(FilteredDataModule, this.$store);
-    let controls = filter_module.controls(filter);
+    let controls = filter_module.controls(this.filter as Filter);
 
     // Initialize our data structures
     let caat: CAAT = [this.header()];

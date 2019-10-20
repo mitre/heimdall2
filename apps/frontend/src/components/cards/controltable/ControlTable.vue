@@ -48,29 +48,24 @@
 
     <!-- Body -->
     <div class="scrollzone" style="overflow-y: auto; height: 600px;">
-      <template v-for="item in visible_items">
-        <ControlRowHeader
-          :key="item.key + 'h'"
-          :control="item"
-          :expanded="expanded.includes(item.key)"
-          @toggle="toggle(item.key)"
-        />
-        <ControlRowDetails
-          v-if="expanded.includes(item.key)"
-          :key="item.key + 'b'"
-          :control="item"
-        />
-      </template>
-
-      <!-- Loading -->
-      <infinite-loading
-        :identifier="infinite_scroller_watch"
-        @infinite="infinite_handler"
+      <v-lazy
+        v-for="item in items"
+        :key="item.key"
+        min-height="50"
+        transition="fade-transition"
       >
-        <div slot="spinner">Loading...</div>
-        <div slot="no-more">No more</div>
-        <div slot="no-results">No controls</div>
-      </infinite-loading>
+        <div>
+          <ControlRowHeader
+            :control="item"
+            :expanded="expanded.includes(item.key)"
+            @toggle="toggle(item.key)"
+          />
+          <ControlRowDetails
+            v-if="expanded.includes(item.key)"
+            :control="item"
+          />
+        </div>
+      </v-lazy>
     </div>
   </v-container>
 </template>
@@ -82,7 +77,6 @@ import ControlRowHeader from "@/components/cards/controltable/ControlRowHeader.v
 import ControlRowDetails from "@/components/cards/controltable/ControlRowDetails.vue";
 import ColumnHeader, { Sort } from "@/components/generic/ColumnHeader.vue";
 import ResponsiveRowSwitch from "@/components/cards/controltable/ResponsiveRowSwitch.vue";
-import InfiniteLoading, { StateChanger } from "vue-infinite-loading";
 
 import { getModule } from "vuex-module-decorators";
 import { hdfWrapControl, HDFControl, ControlStatus } from "inspecjs";
@@ -114,21 +108,15 @@ const ControlTableProps = Vue.extend({
     ControlRowHeader,
     ControlRowDetails,
     ColumnHeader,
-    ResponsiveRowSwitch,
-    InfiniteLoading
+    ResponsiveRowSwitch
   }
 })
 export default class ControlTable extends ControlTableProps {
   // Whether to allow multiple expansions
   single_expand: boolean = false;
 
-  // How many items to show per page
-
   // List of currently expanded options. If unique id is in here, it is expanded
   expanded: Array<string> = [];
-
-  /** Currently loaded infinite items */
-  visible_items: ListElt[] = [];
 
   /** Identifier for infinite scroller tracking */
   infinite_scroller_id: number = 1;
@@ -137,21 +125,6 @@ export default class ControlTable extends ControlTableProps {
   sort_id: Sort = "none";
   sort_status: Sort = "none";
   sort_severity: Sort = "none";
-
-  /** utility getter that acts as a watch,
-   * incrementing infinite_scroller_id when called
-   */
-  get infinite_scroller_watch() {
-    // Increment our internal
-    this.visible_items = [];
-    this.infinite_scroller_id += 1;
-
-    // We care about our items!
-    let watched_vals = this.items;
-
-    // Return our internal
-    return this.infinite_scroller_id;
-  }
 
   /** Callback to handle setting a new sort */
   set_sort(column: "id" | "status" | "severity", new_sort: Sort) {
@@ -254,32 +227,5 @@ export default class ControlTable extends ControlTableProps {
     }
     return this.raw_items.sort((a, b) => cmp(a, b) * factor);
   }
-
-  /** Show one more page worth of stuff */
-  infinite_handler(state: StateChanger) {
-    // Budget for more items
-    let base = this.visible_items.length;
-
-    // If we've hit capacity already, abort
-    if (base >= this.items.length) {
-      // Say we've loaded all we can
-      state.complete();
-    } else {
-      // Push on the next item
-      this.visible_items.push(this.items[base]);
-      state.loaded();
-    }
-  }
 }
 </script>
-
-<style scoped>
-.scrollzone {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  overflow: -moz-scrollbars-none;
-}
-.scrollzone::-webkit-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-</style>

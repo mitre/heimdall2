@@ -1,16 +1,32 @@
 let HtmlWebpackPlugin = require("html-webpack-plugin");
 let HtmlWebpackInlineSourcePlugin = require("html-webpack-inline-source-plugin");
 var webpack = require("webpack");
+
+// Lookup constants
 const fs = require("fs");
 const packageJson = fs.readFileSync("./package.json");
-const version = JSON.parse(packageJson).version || 0;
+const parsed = JSON.parse(packageJson);
+const version = parsed.version || 0;
+const description = parsed.description || "";
+const repository = parsed.repository.url || "";
+const license = parsed.license || "";
+const changelog = parsed.changelog || "";
+const branch = parsed.branch || "";
+const issues = parsed.issues || "";
+
 module.exports = {
   publicPath: process.env.NODE_ENV === "production" ? "./" : "/",
   configureWebpack: {
     plugins: [
       new webpack.DefinePlugin({
         "process.env": {
-          PACKAGE_VERSION: '"' + version + '"'
+          PACKAGE_VERSION: '"' + version + '"',
+          DESCRIPTION: '"' + description + '"',
+          REPOSITORY: '"' + repository + '"',
+          LICENSE: '"' + license + '"',
+          CHANGELOG: '"' + changelog + '"',
+          BRANCH: '"' + branch + '"',
+          ISSUES: '"' + issues + '"'
         }
       }),
       new HtmlWebpackPlugin({

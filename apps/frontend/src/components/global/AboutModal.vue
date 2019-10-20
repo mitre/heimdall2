@@ -12,22 +12,28 @@
         <p>
           <br />
           <span class="title">
-            <strong>Version:</strong>
             {{ version }}
           </span>
           <br />
           <br />
           <span class="subtitle-2">
+            <strong>Changelog:</strong>
+            <a :href="'' + repository + branch + changelog + ''">
+              {{ repository }}{{ branch }}{{ changelog }}
+            </a>
+          </span>
+          <br />
+          <span class="subtitle-2">
             <strong>Github:</strong>
-            <a href="https://github.com/mitre/heimdall-vuetify">
-              https://github.com/mitre/heimdall-vuetify
+            <a :href="'' + repository + ''">
+              {{ repository }}
             </a>
           </span>
           <br />
           <span class="subtitle-2">
             <br />
             If you would like to report an Issue or Feature Request,
-            <a href="https://github.com/mitre/heimdall-vuetify/issues/new">
+            <a :href="'' + repository + issues + ''">
               let us know on github.
             </a>
           </span>
@@ -65,6 +71,18 @@ export default class HelpModal extends Props {
   dialog: boolean = false;
   get version(): string {
     return getModule(AppInfoModule, this.$store).version;
+  }
+  get changelog(): string {
+    return getModule(AppInfoModule, this.$store).changelog;
+  }
+  get repository(): string {
+    return getModule(AppInfoModule, this.$store).repository;
+  }
+  get branch(): string {
+    return getModule(AppInfoModule, this.$store).branch;
+  }
+  get issues(): string {
+    return getModule(AppInfoModule, this.$store).issues;
   }
 }
 </script>

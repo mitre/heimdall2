@@ -123,12 +123,15 @@ export class ControlDelta {
 
   /** Compute the diff in lines-of-code  */
   get code_changes(): ControlChangeGroup {
+    let old_code = this.old.data.code || "";
+    let new_code = this.old.data.code || "";
+
     // Compute the changes in the lines
     let line_diff = structuredPatch(
       "old_filename",
       "new_filename",
-      this.old.data.code,
-      this.new.data.code
+      old_code,
+      new_code
     );
 
     // Convert them to change objects

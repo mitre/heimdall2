@@ -6,7 +6,6 @@ import StatusCountModule from "@/store/status_counts";
 import SeverityCountModule from "@/store/severity_counts";
 import HashLookupModule from "@/store/lookup_hashes";
 import InspecIntakeModule from "@/store/report_intake";
-import SidebarModule from "@/store/sidebar";
 import ColorHackModule from "@/store/color_hack";
 import AppInfoModule from "@/store/app_info";
 
@@ -32,7 +31,6 @@ interface StoreType {
   severityCounts: SeverityCountModule;
   lookup: HashLookupModule;
   intake: InspecIntakeModule;
-  sidebar: SidebarModule;
   colors: ColorHackModule;
   info: AppInfoModule;
 }

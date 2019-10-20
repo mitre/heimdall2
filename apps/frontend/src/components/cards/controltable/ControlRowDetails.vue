@@ -16,48 +16,43 @@
           </v-tab>
 
           <v-tab-item value="tab-test">
-            <v-container fluid>
-              <v-row>
-                <v-col cols="12">
-                  <span>{{ control.finding_details.split(":")[0] }}:</span>
+            <v-container>
+              <v-col justify="center">
+                <v-card class="text-center" @click="expanded = !expanded">
+                  <v-card-text class="pa-2">
+                    {{ header }}
+                    <v-icon class="float-right">{{
+                      expanded ? "mdi-chevron-up" : "mdi-chevron-down"
+                    }}</v-icon>
+                  </v-card-text>
+                </v-card>
+                <v-spacer></v-spacer>
+                <v-divider></v-divider>
+                <v-row>
                   <br />
-                  <br />
-                  <span>{{ control.wraps.desc }}</span>
-                </v-col>
-              </v-row>
-              <v-row
-                cols="12"
-                v-for="(result, index) in control.wraps.results"
-                :key="index"
-                :class="zebra(index)"
-              >
-                <v-col sm="12" md="12" lg="1" xl="1"
-                  ><v-card
-                    :color="status_color"
-                    height="100%"
-                    width="100%"
-                    tile
-                  >
-                    <h3>{{ result.status.toUpperCase() }}</h3>
-                  </v-card>
-                </v-col>
-                <v-col v-if="!result.message" cols="11" class="right">
-                  <h3>Test</h3>
-                  <v-divider> </v-divider>
-                  <pre>{{ result.code_desc }}</pre>
-                </v-col>
-                <v-col v-if="result.message" cols="5" class="right">
-                  <h3>Test</h3>
-                  <v-divider> </v-divider>
-                  <pre>{{ result.code_desc }}</pre>
-                </v-col>
-                <v-col v-if="result.message" cols="6" class="right">
-                  <h3>Result</h3>
-                  <v-divider> </v-divider>
-                  <pre>{{ result.message }}</pre>
-                </v-col>
-              </v-row>
+                  <v-col cols="12">
+                    <pre v-show="expanded" class="text-center">{{
+                      control.wraps.desc
+                    }}</pre>
+                    <pre
+                      v-show="!expanded"
+                      class="text-center"
+                      ref="desc"
+                      v-line-clamp="2"
+                      >{{ control.wraps.desc }}</pre
+                    >
+                  </v-col>
+                </v-row>
+              </v-col>
             </v-container>
+            <ControlRowCol
+              v-for="(result, index) in control.wraps.results"
+              :key="index"
+              :class="zebra(index)"
+              :result="result"
+              :statusCode="control.status"
+            >
+            </ControlRowCol>
           </v-tab-item>
 
           <v-tab-item value="tab-details">
@@ -93,6 +88,7 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
+import ControlRowCol from "@/components/cards/controltable/ControlRowCol.vue";
 import { HDFControl, ControlStatus } from "inspecjs";
 
 //TODO: add line numbers
@@ -121,13 +117,46 @@ const ControlRowDetailsProps = Vue.extend({
   }
 });
 
+interface CollapsableElement extends Element {
+  offsetHeight: Number;
+  offsetWidth: Number;
+}
+
 @Component({
-  components: { Prism }
+  components: {
+    ControlRowCol,
+    Prism
+  }
 })
 export default class ControlRowDetails extends ControlRowDetailsProps {
-  get status_color(): string {
-    // maps stuff like "not applicable" -> "statusnotapplicable", which is a defined color name
-    return `status${this.control.status.replace(" ", "")}`;
+  clamped: boolean = false;
+  expanded: boolean = false;
+
+  // Checks if an element has been clamped
+  isClamped(el: CollapsableElement | undefined | null) {
+    if (!el) {
+      return false;
+    }
+    return el.offsetHeight < el.scrollHeight || el.offsetWidth < el.scrollWidth;
+  }
+
+  mounted() {
+    // Wait until nextTick to ensure that element has been rendered and clamping
+    // applied, otherwise it may show up as null or 0.
+    var that = this;
+    this.$nextTick(function() {
+      that.clamped = this.isClamped(this.$refs.desc as CollapsableElement);
+    });
+  }
+
+  /** Shown above the description */
+  get header(): string {
+    let msg_split = (this.control as HDFControl).finding_details.split(":");
+    if (msg_split.length === 1) {
+      return msg_split[0] + ".";
+    } else {
+      return msg_split[0] + ":";
+    }
   }
 
   get details(): Detail[] {
@@ -173,6 +202,10 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
 </script>
 
 <style lang="scss" scoped>
+.clickable {
+  cursor: pointer;
+}
+
 .v-application {
   code.language-ruby {
     border: none;
@@ -187,8 +220,11 @@ pre {
   white-space: -o-pre-wrap; /* Opera 7 */
   word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
-.zebra-table {
-  background-color: rgba(0, 0, 0, 0.3);
+.theme--dark .zebra-table {
+  background-color: var(--v-secondary-lighten2);
+}
+.theme--light .zebra-table {
+  background-color: var(--v-secondary-lighten1);
 }
 /*
 .v-application code {

@@ -9,7 +9,9 @@
     </Topbar>
 
     <!-- Sidebar to navigate between different views -->
-    <Sidebar v-model="drawer" />
+    <Sidebar v-model="drawer">
+      <slot name="sidebar-content-tools"></slot>
+    </Sidebar>
 
     <!-- The actual content. Slotted by our "descendants" -->
     <v-content>

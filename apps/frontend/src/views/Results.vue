@@ -29,6 +29,11 @@
       </v-btn>
     </template>
 
+    <!-- Custom sidebar content -->
+    <template #sidebar-content-tools>
+      <ExportCaat :filter="all_filter"></ExportCaat>
+    </template>
+
     <!-- The main content: cards, etc -->
     <template #main-content>
       <v-container fluid grid-list-md pa-2>
@@ -127,6 +132,7 @@ import StatusChart from "@/components/cards/StatusChart.vue";
 import SeverityChart from "@/components/cards/SeverityChart.vue";
 import ComplianceChart from "@/components/cards/ComplianceChart.vue";
 import ProfileData from "@/components/cards/ProfileData.vue";
+import ExportCaat from "@/components/global/ExportCaat.vue";
 
 import { Filter, NistMapState } from "@/store/data_filters";
 import { ControlStatus, Severity } from "inspecjs";
@@ -150,7 +156,8 @@ const ResultsProps = Vue.extend({
     StatusChart,
     SeverityChart,
     ComplianceChart,
-    ProfileData
+    ProfileData,
+    ExportCaat
   }
 })
 export default class Results extends ResultsProps {

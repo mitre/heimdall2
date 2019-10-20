@@ -71,6 +71,7 @@ export default class FileReader extends Props {
       let intake_module = getModule(InspecIntakeModule, this.$store);
       intake_module.loadFile({ file, unique_id }).then(err => {
         if (err) {
+          console.error(`Error loading file ${file.name}`);
           toast({
             message: String(err),
             isDark: isDark
