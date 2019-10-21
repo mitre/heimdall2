@@ -62,7 +62,11 @@ abstract class HDFControl_1_0 implements HDFControl {
                 results.push(finding[0]);
             }
         });
-        return results;
+        if(results.length) {
+            return results;
+        } else {
+            return ["UM-1"];
+        }
     }
 
     get finding_details(): string {
