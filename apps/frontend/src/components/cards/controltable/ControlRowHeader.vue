@@ -35,15 +35,7 @@
       <v-card-text class="pa-2">{{ control.wraps.id }}</v-card-text>
     </template>
     <template #tags>
-      <v-chip-group column active-class="NONE">
-        <v-chip
-          v-for="tag in control.fixed_nist_tags"
-          :key="tag"
-          active-class="NONE"
-        >
-          {{ tag }}
-        </v-chip>
-      </v-chip-group>
+      <span>{{ control.nist_tags.join(", ") }}</span>
     </template>
   </ResponsiveRowSwitch>
 </template>
