@@ -16,7 +16,9 @@ const issues = parsed.issues || "";
 
 module.exports = {
   //publicPath: process.env.NODE_ENV === "production" ? "./" : "/",
-  publicPath: process.env.NODE_ENV === "production" ? "heimdall-vuetify" : "/",
+  publicPath: process.env.NODE_ENV === "production"
+  ? "heimdall-vuetify"
+  : "/",
   outputDir: "docs",
   configureWebpack: {
     plugins: [
