@@ -15,11 +15,7 @@ const branch = parsed.branch || "";
 const issues = parsed.issues || "";
 
 module.exports = {
-  //publicPath: process.env.NODE_ENV === "production" ? "./" : "/",
-  publicPath: process.env.NODE_ENV === "production"
-  ? "heimdall-vuetify"
-  : "/",
-  outputDir: "docs",
+  publicPath: process.env.NODE_ENV === "production" ? "./" : "/",
   configureWebpack: {
     plugins: [
       new webpack.DefinePlugin({
