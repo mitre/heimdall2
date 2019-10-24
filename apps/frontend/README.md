@@ -1,6 +1,8 @@
+# heimdall-vuetify
+![](https://github.com/mitre/heimdall-vuetify/workflows/heimdall-vuetify/badge.svg)
+
 [![Netlify Status](https://api.netlify.com/api/v1/badges/2b914cc2-27b8-4469-86bb-32bfad03aaa1/deploy-status)](https://app.netlify.com/sites/heimdall-vuetify/deploys)
 
-# heimdall-vuetify
 Heimdall-Vuetify is an InSpec results viewer based on Vuetify.js.
 
 ## Project setup
