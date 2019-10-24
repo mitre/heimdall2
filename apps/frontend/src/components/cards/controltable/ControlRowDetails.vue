@@ -16,41 +16,51 @@
           </v-tab>
 
           <v-tab-item value="tab-test">
-            <v-container>
-              <v-col justify="center">
-                <v-card class="text-center" @click="expanded = !expanded">
-                  <v-card-text class="pa-2">
-                    {{ header }}
-                    <v-icon class="float-right">{{
-                      expanded ? "mdi-chevron-up" : "mdi-chevron-down"
-                    }}</v-icon>
-                  </v-card-text>
-                </v-card>
-                <v-spacer></v-spacer>
-                <v-divider></v-divider>
-                <v-row>
-                  <br />
-                  <v-col cols="12">
-                    <pre v-show="expanded" class="text-center">{{
-                      control.wraps.desc
-                    }}</pre>
-                    <pre
-                      v-show="!expanded"
-                      class="text-center"
-                      ref="desc"
-                      v-line-clamp="2"
-                      >{{ control.wraps.desc }}</pre
-                    >
-                  </v-col>
-                </v-row>
-              </v-col>
-            </v-container>
+            <v-clamp autoresize :max-lines="2">
+              <template slot="default">{{ header }}</template>
+              <template slot="after" slot-scope="{ toggle, expanded, clamped }">
+                <v-icon
+                  fab
+                  v-if="!expanded && clamped"
+                  right
+                  medium
+                  @click="toggle"
+                >
+                  add_box
+                </v-icon>
+                <v-icon fab v-if="expanded" right medium @click="toggle">
+                  indeterminate_check_box
+                </v-icon>
+              </template>
+            </v-clamp>
+            <v-spacer></v-spacer>
+            <v-divider></v-divider>
+            <br />
+            <v-clamp autoresize :max-lines="2">
+              <template slot="default">{{
+                control.wraps.desc.trim()
+              }}</template>
+              <template slot="after" slot-scope="{ toggle, expanded, clamped }">
+                <v-icon
+                  fab
+                  v-if="!expanded && clamped"
+                  right
+                  medium
+                  @click="toggle"
+                >
+                  add_box
+                </v-icon>
+                <v-icon fab v-if="expanded" right medium @click="toggle">
+                  indeterminate_check_box
+                </v-icon>
+              </template>
+            </v-clamp>
             <ControlRowCol
               v-for="(result, index) in control.wraps.results"
               :key="index"
               :class="zebra(index)"
               :result="result"
-              :statusCode="control.status"
+              :statusCode="result.status"
             >
             </ControlRowCol>
           </v-tab-item>
@@ -90,6 +100,8 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import ControlRowCol from "@/components/cards/controltable/ControlRowCol.vue";
 import { HDFControl, ControlStatus } from "inspecjs";
+//@ts-ignore
+import VClamp from "vue-clamp";
 
 //TODO: add line numbers
 import "prismjs";
@@ -125,6 +137,7 @@ interface CollapsableElement extends Element {
 @Component({
   components: {
     ControlRowCol,
+    VClamp,
     Prism
   }
 })

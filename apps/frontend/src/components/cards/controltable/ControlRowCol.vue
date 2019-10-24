@@ -15,27 +15,51 @@
     </v-col>
     <v-col
       v-if="!result.message"
-      lg="9"
-      xl="9"
-      cols="10"
-      sm="10"
-      md="10"
+      lg="11"
+      xl="11"
+      cols="12"
+      sm="12"
+      md="12"
       class="right"
     >
-      <h3>Test</h3>
+      <h3 class="pl-2">Test</h3>
       <v-divider></v-divider>
-      <pre v-show="expanded">{{ result.code_desc }}</pre>
-      <pre v-show="!expanded" ref="message" v-line-clamp="2">{{
-        result.code_desc
-      }}</pre>
+      <v-clamp
+        class="pl-2 mono"
+        autoresize
+        :max-lines="2"
+        :expanded.sync="expanded"
+      >
+        <template slot="default">{{ result.code_desc.trim() }}</template>
+        <template slot="after" slot-scope="{ toggle, expanded, clamped }">
+          <v-icon fab v-if="!expanded && clamped" right medium @click="toggle"
+            >add_box</v-icon
+          >
+          <v-icon fab v-if="expanded" right medium @click="toggle"
+            >indeterminate_check_box</v-icon
+          >
+        </template>
+      </v-clamp>
     </v-col>
-    <v-col v-else lg="4" xl="4" sm="6" md="6" xs="6" class="right">
-      <h3>Test</h3>
+    <v-col v-else lg="6" xl="6" sm="6" md="6" xs="6" class="right">
+      <h3 class="pl-2">Test</h3>
       <v-divider></v-divider>
-      <pre v-show="expanded">{{ result.code_desc }}</pre>
-      <pre v-show="!expanded" ref="message" v-line-clamp="2">{{
-        result.code_desc
-      }}</pre>
+      <v-clamp
+        class="pl-2 mono"
+        autoresize
+        :max-lines="2"
+        :expanded.sync="expanded"
+      >
+        <template slot="default">{{ result.code_desc.trim() }}</template>
+        <template slot="after" slot-scope="{ toggle, expanded, clamped }">
+          <v-icon fab v-if="!expanded && clamped" right medium @click="toggle"
+            >add_box</v-icon
+          >
+          <v-icon fab v-if="expanded" right medium @click="toggle"
+            >indeterminate_check_box</v-icon
+          >
+        </template>
+      </v-clamp>
     </v-col>
     <v-col
       v-if="result.message"
@@ -46,32 +70,24 @@
       xl="5"
       class="right"
     >
-      <h3>Result</h3>
+      <h3 class="pl-2">Result</h3>
       <v-divider></v-divider>
-      <pre v-show="expanded">{{ result.message.trim() }}</pre>
-      <pre v-show="!expanded" v-line-clamp="2" :ref="'code'">{{
-        result.message.trim()
-      }}</pre>
-    </v-col>
-    <v-col
-      v-if="clamp"
-      cols="12"
-      sm="12"
-      md="12"
-      lg="2"
-      xl="2"
-      @click="expanded = !expanded"
-    >
-      <div v-if="!expanded">
-        <h3>Expand</h3>
-        <v-divider></v-divider>
-        <v-icon>mdi-arrow-expand</v-icon>
-      </div>
-      <div v-else>
-        <h3>Collapse</h3>
-        <v-divider></v-divider>
-        <v-icon>mdi-arrow-collapse</v-icon>
-      </div>
+      <v-clamp
+        class="pl-2 mono"
+        autoresize
+        :max-lines="2"
+        :expanded.sync="expanded"
+      >
+        <template slot="default">{{ result.message.trim() }}</template>
+        <template slot="after" slot-scope="{ toggle, expanded, clamped }">
+          <v-icon fab v-if="!expanded && clamped" right medium @click="toggle"
+            >add_box</v-icon
+          >
+          <v-icon fab v-if="expanded" right medium @click="toggle"
+            >indeterminate_check_box</v-icon
+          >
+        </template>
+      </v-clamp>
     </v-col>
   </v-row>
 </template>
@@ -80,6 +96,8 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import { HDFControl, ControlStatus } from "inspecjs";
+//@ts-ignore
+import VClamp from "vue-clamp";
 
 interface CollapsableElement extends Element {
   offsetHeight: Number;
@@ -101,7 +119,9 @@ const ControlRowColProps = Vue.extend({
 });
 
 @Component({
-  components: {}
+  components: {
+    VClamp
+  }
 })
 export default class ControlRowCol extends ControlRowColProps {
   expanded: boolean = false;
@@ -111,35 +131,18 @@ export default class ControlRowCol extends ControlRowColProps {
     // maps stuff like "not applicable" -> "statusnotapplicable", which is a defined color name
     return `status${this.statusCode.replace(" ", "")}`;
   }
-
-  // Checks if an element has been clamped
-  isClamped(el: CollapsableElement | undefined | null) {
-    if (!el) {
-      return false;
-    }
-    return el.offsetHeight < el.scrollHeight || el.offsetWidth < el.scrollWidth;
-  }
-
-  mounted() {
-    // Wait until nextTick to ensure that element has been rendered and clamping
-    // applied, otherwise it may show up as null or 0.
-    var that = this;
-    this.$nextTick(function() {
-      that.clamp =
-        this.isClamped(this.$refs.message as CollapsableElement) ||
-        this.isClamped(this.$refs.code as CollapsableElement);
-    });
-  }
 }
 </script>
 
 <style lang="scss" scoped>
-pre {
+.mono {
   white-space: pre-wrap; /* Since CSS 2.1 */
   white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
   white-space: -pre-wrap; /* Opera 4-6 */
   white-space: -o-pre-wrap; /* Opera 7 */
   word-wrap: break-word; /* Internet Explorer 5.5+ */
+  font-family: Consolas, Monaco, Lucida Console, Liberation Mono,
+    DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
 }
 .right {
   margin-left: -1px;
