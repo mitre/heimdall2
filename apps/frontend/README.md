@@ -5,10 +5,10 @@
 
 Heimdall-Vuetify is an InSpec results viewer based on Vuetify.js. It is hosted on the following platforms.
 
-#####Netlify
+##### Netlify
 https://heimdall-vuetify.netlify.com/
 
-#####GitHub Pages
+##### GitHub Pages
 https://mitre.github.io/heimdall-vuetify/#/
 
 ## Project setup
