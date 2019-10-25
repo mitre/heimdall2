@@ -3,7 +3,13 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/2b914cc2-27b8-4469-86bb-32bfad03aaa1/deploy-status)](https://app.netlify.com/sites/heimdall-vuetify/deploys)
 
-Heimdall-Vuetify is an InSpec results viewer based on Vuetify.js.
+Heimdall-Vuetify is an InSpec results viewer based on Vuetify.js. It is hosted on the following platforms.
+
+Netlify
+https://heimdall-vuetify.netlify.com/
+
+GitHub Pages
+https://mitre.github.io/heimdall-vuetify/#/
 
 ## Project setup
 ```
