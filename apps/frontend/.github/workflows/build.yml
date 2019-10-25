@@ -1,4 +1,4 @@
-name: heimdall-vuetify
+name: Test
 on:
   push:
   pull_request:
@@ -23,9 +23,6 @@ jobs:
       - name: Lint with npm 
         run: |
           npm run lint
-#      - name: Run unit tests with npm 
-#        run: |
-#          npm run test:unit
         env:
           CI: true
         
