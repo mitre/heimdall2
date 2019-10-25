@@ -92,14 +92,5 @@
     "vue-template-compiler": "^2.6.10",
     "vuetify-loader": "^1.2.2",
     "vuex-module-decorators": "^0.9.11"
-  },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,vue,ts}": [
-      "vue-cli-service lint",
-      "git add"
-    ]
   }
 }
