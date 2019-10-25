@@ -17,4 +17,4 @@ jobs:
         BASE_BRANCH: master # The branch the action should deploy from.
         BRANCH: gh-pages # The branch the action should deploy to.
         FOLDER: dist # The folder the action should deploy.
-        BUILD_SCRIPT: npm install && npm run build # The build script the action should run prior to deploying.
+        BUILD_SCRIPT: npm install && npm run build && npm run lint --fix # The build script the action should run prior to deploying.
