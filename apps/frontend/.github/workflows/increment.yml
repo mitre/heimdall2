@@ -1,8 +1,10 @@
 name: Increment Version
+
 on:
   push:
     branches:
-      - master
+      - release/*
+
 jobs:
   build:
     runs-on: ubuntu-latest

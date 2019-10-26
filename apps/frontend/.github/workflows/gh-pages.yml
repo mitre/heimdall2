@@ -1,34 +1,24 @@
-name: github pages
-
+name: Deploy to GitHub Pagesgit
 on:
   push:
     branches:
-    - master
-    - release/*
-
+      - master
+      - release/*
 jobs:
-  build-deploy:
-    runs-on: ubuntu-18.04
+  build-and-deploy:
+    runs-on: ubuntu-16.04
     steps:
-    - uses: actions/checkout@master
-
-    - name: setup node
-      uses: actions/setup-node@v1
-      with:
-        node-version: '12.x'
-
-    - name: install
-      run: npm install
-
-    - name: test
-      run: npm test
-
-    - name: build
-      run: npm run build
-
-    - name: deploy
-      uses: peaceiris/actions-gh-pages@v2.5.0
-      env:
-        ACTIONS_DEPLOY_KEY: ${{ secrets.GITHUB_TOKEN }}
-        PUBLISH_BRANCH: gh-pages
-        PUBLISH_DIR: ./dist
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Setup node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12"
+      - name: Build and Deploy
+        uses: JamesIves/github-pages-deploy-action@master
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACTION_TOKEN }}
+          BASE_BRANCH: master # The branch the action should deploy from.
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: dist # The folder the action should deploy.
+          BUILD_SCRIPT: npm install && npm run build # The build script the action should run prior to deploying.

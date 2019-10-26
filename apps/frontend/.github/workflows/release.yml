@@ -1,4 +1,4 @@
-name: Publish Release
+name: Draft Release
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   update_draft_release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-16.04
     steps:
       # Drafts your next Release notes as Pull Requests are merged into "master"
       - uses: toolmantim/release-drafter@v5.2.0

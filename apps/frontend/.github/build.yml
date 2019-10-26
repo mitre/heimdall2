@@ -1,0 +1,28 @@
+name: Test
+on:
+  push:
+  pull_request:
+jobs:
+  test:
+    name: Build and test heimdall-vuetify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout heimdall-vuetify
+        uses: actions/checkout@v1
+      - name: Setup node.js
+        uses: actions/setup-node@v1
+      - name: Install npm
+        run: |
+          npm install
+      - name: Build with npm
+        run: |
+          npm run build
+      - name: Test with npm
+        run: | 
+          npm run test
+      - name: Lint with npm 
+        run: |
+          npm run lint
+        env:
+          CI: true
+        
