@@ -5,13 +5,21 @@
     </template>
 
     <v-card>
-      <v-card-title class="headline grey" primary-title>
-        How to use Heimdall Lite {{ version }}
-      </v-card-title>
+      <v-card-title class="headline grey" primary-title
+        >How to use Heimdall Lite {{ version }}</v-card-title
+      >
 
       <v-card-text>
         <br />
-        <h1>View the results of an InSpec execution json</h1>
+
+        <h2>
+          View the results of an
+          <a href="htps://www.inspec.io">InSpec</a> profile execution (using
+          InSpec's JSON reporter) or the results from
+          <a href="https://github.com/mitre/heimdall_tools">Heimdall Tools</a>
+          which converts many Static and Dynamic scanning tools Results to a
+          Heimdall Data Format JSON file.
+        </h2>
         <br />
         <p>
           Easily see how many controls passed and failed.
@@ -23,46 +31,38 @@
         <br />
         <hr />
         <br />
-        <h1>
+        <h2>
           Use the treemap to navigate through your controls by NIST family
           classification.
-        </h1>
+        </h2>
         <br />
         <v-img src="../../assets/treemap.png" />
         <br />
         <hr />
         <br />
-        <h1>
-          Use the data table to sort your controls and see more details.
-        </h1>
+        <h2>Use the data table to sort your controls and see more details.</h2>
         <br />
         <v-img src="../../assets/data_table.png" />
         <br />
         <hr />
         <br />
-        <h1>
+        <h2>
           Click on a control to detect which tests passed or failed, or see its
           details and code.
-        </h1>
+        </h2>
         <br />
         <v-img src="../../assets/control_data.png" />
         <br />
         <hr />
         <br />
-        <h1 class="text-center">
-          View the profile before you execute it on a system.
-        </h1>
+        <h2>View the profile before you execute it on a system.</h2>
         <br />
         <p>
           The profile must be loaded into Heimdall Lite as a json value.
           <br />To create a json of a profile use the following steps:
         </p>
-        <li>
-          Open a terminal to the directory of the profile.
-        </li>
-        <li>
-          Run the command: `inspec json [path to profile] -o [name]`
-        </li>
+        <li>Open a terminal to the directory of the profile.</li>
+        <li>Run the command: `inspec json [path to profile] -o [name]`</li>
       </v-card-text>
 
       <v-divider></v-divider>
