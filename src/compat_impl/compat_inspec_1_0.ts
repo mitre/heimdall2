@@ -13,10 +13,15 @@ import {
     SegmentStatus,
     HDFControlSegment,
 } from "../compat_wrappers";
+import { parse_nist, NistControl, NistRevision, is_control } from "../nist";
 
 abstract class HDFControl_1_0 implements HDFControl {
+    // We cache these here
+    _parsed_nist_tags?: NistControl[];
+    _parsed_nist_revision?: NistRevision | null;
     // We use this as a reference
     wraps: ResultControl_1_0 | ProfileControl_1_0;
+
     constructor(forControl: ResultControl_1_0 | ProfileControl_1_0) {
         this.wraps = forControl;
     }
@@ -40,33 +45,62 @@ abstract class HDFControl_1_0 implements HDFControl {
     // Abstracts
     abstract get message(): string;
 
-    get nist_tags(): string[] {
+    get raw_nist_tags(): string[] {
         let fetched: string[] | undefined | null = this.wraps.tags["nist"];
-        if (!fetched || fetched.length === 0) {
+        if (!fetched) {
             return ["UM-1"];
         } else {
             return fetched;
         }
     }
 
-    get fixed_nist_tags(): string[] {
-        const tags = this.nist_tags;
+    /** Generates the nist tags, as needed. */
+    private parse_nist() {
+        // Initialize
+        this._parsed_nist_tags = [];
+        this._parsed_nist_revision = null;
+        let seen_specs = new Set<string>(); // Used to track duplication
 
-        // Otherwise, filter to only those that follow format @@-#,
-        // where @ is any capital letter, and # is any number (1 or more digits)
-        const pattern = /[A-Z][A-Z]-[0-9]+/;
-        let results: string[] = [];
-        tags.forEach(tag => {
-            let finding = tag.match(pattern);
-            if (finding !== null && !results.includes(finding[0])) {
-                results.push(finding[0]);
+        // Process item by item
+        this.raw_nist_tags.map(parse_nist).forEach(x => {
+            if (!x) {
+                return;
+            } else if (is_control(x)) {
+                let spec_chain = x.sub_specifiers.join("-");
+                if (!seen_specs.has(spec_chain)) {
+                    seen_specs.add(spec_chain);
+                    this._parsed_nist_tags!.push(x);
+                }
+            } else {
+                this._parsed_nist_revision = x;
             }
         });
-        if(results.length) {
-            return results;
-        } else {
-            return ["UM-1"];
+
+        // Sort the tags
+        this._parsed_nist_tags = this._parsed_nist_tags.sort((a, b) =>
+            a.localCompare(b)
+        );
+
+        // Stub if necessary
+        if (this._parsed_nist_tags.length === 0) {
+            this._parsed_nist_tags.push(parse_nist("UM-1") as NistControl);
         }
+    }
+
+    get parsed_nist_tags(): NistControl[] {
+        if (this._parsed_nist_tags === undefined) {
+            // Do the computations now, to save time later. These are fairly expensive
+            this.parse_nist();
+        }
+        return this._parsed_nist_tags!;
+    }
+
+    get parsed_nist_revision(): NistRevision {
+        if (this._parsed_nist_revision === undefined) {
+            // Do the computations now, to save time later. These are fairly expensive
+            this.parse_nist();
+        }
+        return this._parsed_nist_revision!;
     }
 
     get finding_details(): string {
