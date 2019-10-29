@@ -1,16 +1,10 @@
 <template>
   <v-row>
     <v-col cols="12" sm="12" md="12" lg="1" xl="1">
-      <v-layout
-        style="margin: 0px"
-        fill-height
-        :class="status_color"
-        justify-center
-        align-center
-      >
-        <v-card :color="status_color" flat>
+      <v-layout class="pl-2" fill-height justify-center align-center>
+        <v-btn :color="status_color" block depressed>
           <h3>{{ result.status.toUpperCase() }}</h3>
-        </v-card>
+        </v-btn>
       </v-layout>
     </v-col>
     <v-col
@@ -22,10 +16,10 @@
       md="12"
       class="right"
     >
-      <h3 class="pl-2">Test</h3>
+      <h3 class="pa-2">Test</h3>
       <v-divider></v-divider>
       <v-clamp
-        class="pl-2 mono"
+        class="pa-2 mono text-justify"
         autoresize
         :max-lines="2"
         :expanded.sync="expanded"
@@ -33,19 +27,19 @@
         <template slot="default">{{ result.code_desc.trim() }}</template>
         <template slot="after" slot-scope="{ toggle, expanded, clamped }">
           <v-icon fab v-if="!expanded && clamped" right medium @click="toggle"
-            >add_box</v-icon
+            >mdi-plus-box</v-icon
           >
           <v-icon fab v-if="expanded" right medium @click="toggle"
-            >indeterminate_check_box</v-icon
+            >mdi-minus-box</v-icon
           >
         </template>
       </v-clamp>
     </v-col>
-    <v-col v-else lg="6" xl="6" sm="6" md="6" xs="6" class="right">
-      <h3 class="pl-2">Test</h3>
+    <v-col v-else lg="6" xl="6" sm="6" md="6" cols="12" class="left">
+      <h3 class="pa-2">Test</h3>
       <v-divider></v-divider>
       <v-clamp
-        class="pl-2 mono"
+        class="pa-2 mono preserve-whitespace text-justify"
         autoresize
         :max-lines="2"
         :expanded.sync="expanded"
@@ -53,27 +47,27 @@
         <template slot="default">{{ result.code_desc.trim() }}</template>
         <template slot="after" slot-scope="{ toggle, expanded, clamped }">
           <v-icon fab v-if="!expanded && clamped" right medium @click="toggle"
-            >add_box</v-icon
+            >mdi-plus-box</v-icon
           >
           <v-icon fab v-if="expanded" right medium @click="toggle"
-            >indeterminate_check_box</v-icon
+            >mdi-minus-box</v-icon
           >
         </template>
       </v-clamp>
     </v-col>
     <v-col
       v-if="result.message"
-      cols="6"
+      cols="12"
       sm="6"
       md="6"
       lg="5"
       xl="5"
-      class="right"
+      class="left"
     >
-      <h3 class="pl-2">Result</h3>
+      <h3 class="pa-2">Result</h3>
       <v-divider></v-divider>
       <v-clamp
-        class="pl-2 mono"
+        class="pa-2 mono preserve-whitespace text-justify"
         autoresize
         :max-lines="2"
         :expanded.sync="expanded"
@@ -81,10 +75,10 @@
         <template slot="default">{{ result.message.trim() }}</template>
         <template slot="after" slot-scope="{ toggle, expanded, clamped }">
           <v-icon fab v-if="!expanded && clamped" right medium @click="toggle"
-            >add_box</v-icon
+            >mdi-plus-box</v-icon
           >
           <v-icon fab v-if="expanded" right medium @click="toggle"
-            >indeterminate_check_box</v-icon
+            >mdi-minus-box</v-icon
           >
         </template>
       </v-clamp>
@@ -135,15 +129,6 @@ export default class ControlRowCol extends ControlRowColProps {
 </script>
 
 <style lang="scss" scoped>
-.mono {
-  white-space: pre-wrap; /* Since CSS 2.1 */
-  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-  white-space: -pre-wrap; /* Opera 4-6 */
-  white-space: -o-pre-wrap; /* Opera 7 */
-  word-wrap: break-word; /* Internet Explorer 5.5+ */
-  font-family: Consolas, Monaco, Lucida Console, Liberation Mono,
-    DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-}
 .right {
   margin-left: -1px;
 }

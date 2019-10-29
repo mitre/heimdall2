@@ -24,9 +24,9 @@
         <div>
           <v-card-title>
             <v-icon class="pr-3" large>mdi-{{ errorProps.icon }}</v-icon>
-            <span class="title">
-              {{ `ALERT: ${errorProps.number} ${errorProps.title}` }}
-            </span>
+            <span class="title">{{
+              `ALERT: ${errorProps.number} ${errorProps.title}`
+            }}</span>
           </v-card-title>
           <v-card-text v-text="errorProps.subtitle" />
         </div>
@@ -34,9 +34,8 @@
           <v-btn
             @click="$emit('show-errors')"
             :disabled="filter.status === 'Profile Error'"
+            >Filter to Errors</v-btn
           >
-            Filter to Errors
-          </v-btn>
         </v-card-actions>
       </v-card>
     </v-col>
@@ -77,28 +76,28 @@ export default class StatusCardRow extends StatusCardRowProps {
       {
         icon: "check-circle",
         title: "Passed",
-        subtitle: "All tests passed.",
+        subtitle: "All tests passed",
         color: "statusPassed",
         number: counts.passed(filter)
       },
       {
         icon: "close-circle",
         title: "Failed",
-        subtitle: "Has tests that failed.",
+        subtitle: "Has tests that failed",
         color: "statusFailed",
         number: counts.failed(filter)
       },
       {
         icon: "minus-circle",
         title: "Not Applicable",
-        subtitle: "System exception/absent component.",
+        subtitle: "System exception or absent component",
         color: "statusNotApplicable",
         number: counts.notApplicable(filter)
       },
       {
         icon: "alert-circle",
         title: "Not Reviewed",
-        subtitle: "Manual testing required/disabled test.",
+        subtitle: "Can only be tested manually at this time",
         color: "statusNotReviewed",
         number: counts.notReviewed(filter)
       }

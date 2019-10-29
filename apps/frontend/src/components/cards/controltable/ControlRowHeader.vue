@@ -2,26 +2,31 @@
   <!-- Need to catch for ResponsiveRowSwitch @toggle events for small view -->
   <ResponsiveRowSwitch>
     <template #status>
-      <v-card :color="status_color" hover @click="$emit('toggle', !expanded)">
-        <v-card-text class="pa-2">
+      <v-card
+        :color="status_color"
+        class="pl-2 font-weight-bold"
+        hover
+        @click="$emit('toggle', !expanded)"
+      >
+        <v-card-text class="pa-2 font-weight-bold">
           {{ control.status }}
-          <v-icon class="float-right">{{
-            expanded ? "mdi-chevron-up" : "mdi-chevron-down"
-          }}</v-icon>
+          <v-icon class="float-right">
+            {{ expanded ? "mdi-chevron-down" : "mdi-chevron-up" }}
+          </v-icon>
         </v-card-text>
       </v-card>
     </template>
 
     <template #severity>
       <v-card-text class="pa-2">
-        <v-icon small v-for="i in severity_arrow_count" :key="i">
-          mdi-checkbox-blank-circle
-        </v-icon>
-        <v-icon small v-for="i in 4 - severity_arrow_count" :key="5 - i">
-          mdi-checkbox-blank-circle-outline
-        </v-icon>
+        <v-icon small v-for="i in severity_arrow_count" :key="i"
+          >mdi-checkbox-blank-circle</v-icon
+        >
+        <v-icon small v-for="i in 4 - severity_arrow_count" :key="5 - i"
+          >mdi-checkbox-blank-circle-outline</v-icon
+        >
         <br />
-        <v-divider class="lighten-4 mx-1"> </v-divider>
+        <v-divider class="lighten-4 mx-1"></v-divider>
         {{ control.severity.toUpperCase() }}
       </v-card-text>
     </template>
