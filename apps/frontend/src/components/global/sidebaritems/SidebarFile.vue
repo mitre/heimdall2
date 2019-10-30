@@ -5,11 +5,11 @@
     </v-list-item-avatar>
 
     <v-list-item-content>
-      <v-list-item-title>{{ file.filename }}</v-list-item-title>
+      <v-list-item-title v-text="file.filename" />
     </v-list-item-content>
 
-    <v-list-item-action>
-      <v-btn icon x-small v-on:click="close_this_file">
+    <v-list-item-action @click="close_this_file">
+      <v-btn icon small>
         <v-icon> mdi-close </v-icon>
       </v-btn>
     </v-list-item-action>
@@ -33,7 +33,9 @@ const FileItemProps = Vue.extend({
   components: {}
 })
 export default class FileItem extends FileItemProps {
-  close_this_file() {
+  close_this_file(evt: Event) {
+    evt.stopPropagation();
+    evt.preventDefault();
     let data_store = getModule(InspecDataModule, this.$store);
     data_store.removeFile(this.file.unique_id);
   }

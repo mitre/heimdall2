@@ -12,10 +12,11 @@
         v-model="search_term"
         clearable
       ></v-text-field>
-      <v-spacer />
       <v-btn @click="dialog = true" :disabled="dialog" class="mx-2">
-        Upload
-        <v-icon class="pl-2">
+        <span class="d-none d-md-inline pr-2">
+          Upload
+        </span>
+        <v-icon>
           mdi-cloud-upload
         </v-icon>
       </v-btn>
@@ -25,7 +26,12 @@
         title="Clear all set filters"
         :disabled="!can_clear"
       >
-        Clear
+        <span class="d-none d-md-inline pr-2">
+          Clear
+        </span>
+        <v-icon>
+          mdi-filter-remove
+        </v-icon>
       </v-btn>
     </template>
 

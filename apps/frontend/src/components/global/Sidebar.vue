@@ -4,6 +4,11 @@
     @input="$emit('input', $event)"
     :clipped="$vuetify.breakpoint.lgAndUp"
     app
+    style="margin-top: 56px;"
+    disable-resize-watcher
+    fixed
+    temporary
+    width="375px"
   >
     <v-list dense class="px-2" subheader>
       <v-subheader>Files</v-subheader>
@@ -69,6 +74,9 @@ export default class Sidebar extends SidebarProps {
   get visible_files(): Array<ProfileFile | ExecutionFile> {
     let data_store = getModule(InspecDataModule, this.$store);
     let files = data_store.allFiles;
+    console.log(files.map(f => f.filename));
+    files = files.sort((a, b) => a.filename.localeCompare(b.filename));
+    console.log(files.map(f => f.filename));
     return files;
   }
 
