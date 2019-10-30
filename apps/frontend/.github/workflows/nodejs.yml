@@ -5,10 +5,10 @@ on: [push]
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-  strategy:
-  matrix:
-    os: [macOS-10.14, windows-2016, ubuntu-18.04]
-    node: [8, 10, 12]
+    strategy:
+    matrix:
+      os: [macOS-10.14, windows-2016, ubuntu-18.04]
+      node: [8, 10, 12]
     steps:
       - uses: actions/checkout@v1
       - name: ${{ matrix.os }} using Node.js ${{ matrix.node-version }}
