@@ -44,6 +44,11 @@ module.exports = {
     }
   },
   chainWebpack: config => {
+    config.module
+      .rule("vue")
+      .use("vue-svg-inline-loader")
+      .loader("vue-svg-inline-loader")
+      .options();
     ["vue-modules", "vue", "normal-modules", "normal"].forEach(match => {
       config.module
         .rule("scss")

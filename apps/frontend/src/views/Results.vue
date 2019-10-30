@@ -16,7 +16,7 @@
       <v-btn @click="dialog = true" :disabled="dialog" class="mx-2">
         Upload
         <v-icon class="pl-2">
-          cloud_upload
+          mdi-cloud-upload
         </v-icon>
       </v-btn>
       <v-btn

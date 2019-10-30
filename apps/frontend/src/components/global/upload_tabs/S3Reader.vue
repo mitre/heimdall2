@@ -39,7 +39,7 @@
       <div class="d-flex justify-space-between">
         <v-btn small title="Back" @click="back">
           <v-icon>
-            arrow_back
+            mdi-arrow-left
           </v-icon>
         </v-btn>
         <span>MFA Auth Required</span>
@@ -62,7 +62,7 @@
       <div class="d-flex justify-space-between">
         <v-btn small title="Back" @click="back">
           <v-icon>
-            arrow_back
+            mdi-arrow-left
           </v-icon>
         </v-btn>
         <span>From {{ bucket_name }}</span>

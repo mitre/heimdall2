@@ -3,9 +3,11 @@
     <v-container>
       <v-row>
         <v-col cols="12" align="center">
-          <v-img
-            :src="require('@/assets/logo-orange-tsp.svg')"
-            max-width="164"
+          <!-- Use inline style to emulate v-img props -->
+          <img
+            src="@/assets/logo-orange-tsp.svg"
+            svg-inline
+            style="max-width: 164px; max-height: 164px;"
           />
         </v-col>
       </v-row>
