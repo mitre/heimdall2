@@ -7,7 +7,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x]
+        node-version: [10.x, 12.x]
         os: [macOS-10.14, windows-2016, ubuntu-18.04]
     steps:
       - uses: actions/checkout@v1
@@ -18,7 +18,7 @@ jobs:
       - name: npm installbuild, and test
         run: npm install
       - name: npm build
-        run: npm run build --if-present
+        run: npm run build
       - name: npm test
         run: npm run test
       - name: npm lint 
