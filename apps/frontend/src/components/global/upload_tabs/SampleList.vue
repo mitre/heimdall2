@@ -46,6 +46,26 @@ const Props = Vue.extend({
 export default class SampleList extends Props {
   samples: Sample[] = [
     {
+      name: "Sonarqube Java Heimdall_tools Sample",
+      url:
+        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/sonarqube_java_sample.json"
+    },
+    {
+      name: "OWASP ZAP Webgoat Heimdall_tools Sample",
+      url:
+        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/owasp_zap_webgoat.json"
+    },
+    {
+      name: "OWASP ZAP Zero_WebAppSecurity Heimdall_tools Sample",
+      url:
+        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/owasp_zap_zero.webappsecurity.json"
+    },
+    {
+      name: "Fortify Heimdall_tools Sample",
+      url:
+        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/fortify_h_tools_conv_webgoat.json"
+    },
+    {
       name: "AWS S3 Permissions Check InSpec Sample",
       url:
         "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/aws-s3-baseline.json"
