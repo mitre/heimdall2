@@ -173,38 +173,39 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
   }
 
   get details(): Detail[] {
+    let cntrl = this.control as HDFControl;
     return [
       {
         name: "Control",
-        value: this.control.wraps.id
+        value: cntrl.wraps.id
       },
       {
         name: "Title",
-        value: this.control.wraps.title
+        value: cntrl.wraps.title
       },
       {
         name: "Desc",
-        value: this.control.wraps.desc
+        value: cntrl.wraps.desc
       },
       {
         name: "Severity",
-        value: this.control.severity
+        value: cntrl.severity
       },
       {
         name: "Impact",
-        value: this.control.wraps.impact
+        value: cntrl.wraps.impact
       },
       {
         name: "Nist",
-        value: this.control.nist_tags.join(", ")
+        value: cntrl.raw_nist_tags.join(", ")
       },
       {
         name: "Check Text",
-        value: this.control.wraps.tags.check
+        value: cntrl.wraps.tags.check
       },
       {
         name: "Fix Text",
-        value: this.control.wraps.tags.fix
+        value: cntrl.wraps.tags.fix
       }
     ];
   }

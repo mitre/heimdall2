@@ -7,7 +7,7 @@
       <v-col :cols="8">
         <v-btn @click="up" :disabled="!allow_up" block x-small>
           <v-icon v-if="allow_up"> mdi-arrow-left </v-icon>
-          {{ selected_node.data.name }}
+          {{ "NIST-853 -> " + value.join(" -> ") }}
         </v-btn>
       </v-col>
     </v-row>
@@ -20,10 +20,10 @@
           >
             <!-- The body -->
             <Cell
-              :selected_node="selected_node"
-              :selected_control_id="value.selectedControlID"
-              :node="treemap_layout"
+              :selected_control_id="selected_control"
+              :node="selected_node"
               :scales="scales"
+              :depth="0"
               @select-node="select_node"
             />
           </g>
@@ -40,25 +40,36 @@ import Component from "vue-class-component";
 import { getModule } from "vuex-module-decorators";
 import { ControlStatus, HDFControl, nist, hdfWrapControl } from "inspecjs";
 import * as d3 from "d3";
-import FilteredDataModule, { NistMapState } from "@/store/data_filters";
+import FilteredDataModule, { TreeMapState } from "@/store/data_filters";
 import {
-  nistHashToTreeMap,
   TreemapNode,
-  TreemapDatumType,
-  nistHashForControls,
-  CCWrapper
+  build_nist_tree_map,
+  is_leaf,
+  is_parent
 } from "@/utilities/treemap_util";
 import { HierarchyRectangularNode, tree } from "d3";
 import Cell, { XYScale } from "@/components/cards/treemap/Cell.vue";
 //@ts-ignore
 import resize from "vue-resize-directive";
+import ColorHackModule from "../../../store/color_hack";
+import { compare_arrays } from "@/utilities/helper_util";
 
 // We declare the props separately to make props types inferable.
 const TreemapProps = Vue.extend({
   props: {
     value: {
-      type: Object, // Of type NistMapState
+      type: Array, // Of type Array<TreeMapNode>, representing current descent path
       required: true
+    },
+    /*
+    path: {
+      type: Array, // Of type TreeMapState, representing current descent path
+      required: true
+    },
+    */
+    selected_control: {
+      // Represents control id
+      required: false
     },
     filter: {
       type: Object, // Of type Filter
@@ -67,10 +78,7 @@ const TreemapProps = Vue.extend({
   }
 });
 
-/**
- * Categories property must be of type Category
- * Emits "filter-status" with payload of type ControlStatus
- */
+// Respects a v-model of type TreeMapState
 @Component({
   components: {
     Cell
@@ -84,69 +92,53 @@ export default class Treemap extends TreemapProps {
   width: number = 1600;
   height: number = 530;
 
+  /** Typed getter on current spec path */
+  get _state(): TreeMapState {
+    return this.value as TreeMapState;
+  }
+
   /** The currently selected treemap node. Wrapped to avoid initialization woes */
-  get selected_node(): d3.HierarchyRectangularNode<TreemapDatumType> {
+  get selected_node(): d3.HierarchyRectangularNode<TreemapNode> {
     // Get typed versions of the curr state
-    let val: NistMapState = this.value;
+    // Set curr to root
     let curr = this.treemap_layout;
+    let depth = 0;
 
-    // Try to go to the selected family
-    // If we cannot go, fail out and update the state
-    if (val.selectedFamily) {
-      let new_curr = curr.children!.find(
-        child =>
-          (child.data as nist.NistFamily<CCWrapper>).name === val.selectedFamily
-      );
-      if (new_curr !== undefined) {
-        curr = new_curr;
-      } else {
-        // Unable to go to the specified family
-        let revised: NistMapState = {
-          selectedFamily: null, // This one failed
-          selectedCategory: null,
-          selectedControlID: null
-        };
-        this.$emit("input", revised);
-        return curr;
-      }
-    }
-    // Try to go to the selected category
-    // If we cannot go, fail out and update the state
-    if (val.selectedCategory) {
-      let new_curr = curr.children!.find(
-        child =>
-          (child.data as nist.NistCategory<CCWrapper>).name ===
-          val.selectedCategory
-      );
-      if (new_curr !== undefined) {
-        curr = new_curr;
-      } else {
-        // Unable to go to the specified category
-        let revised: NistMapState = {
-          selectedFamily: val.selectedFamily, // This one went off ok
-          selectedCategory: null, // This one failed
-          selectedControlID: null
-        };
-        this.$emit("input", revised);
-        return curr;
-      }
-    }
+    try {
+      for (; depth < this._state.length; depth++) {
+        // If the current has no children, then just bail here
+        if (curr.children === undefined) {
+          throw "no children to go into";
+        }
 
-    // Check the selected category. We don't actually go to it, just validate that it exists
-    if (val.selectedControlID) {
-      let test_curr = curr.children!.find(
-        child =>
-          (child.data as CCWrapper).ctrl.data.id === val.selectedControlID
-      );
-      if (test_curr == undefined) {
-        // Unable to go to the specified control
-        let revised: NistMapState = {
-          selectedFamily: val.selectedFamily, // This one went off ok
-          selectedCategory: val.selectedCategory, // This one as well
-          selectedControlID: null // This one failed
-        };
-        this.$emit("input", revised);
+        // Fetch the next path spec
+        let next_specifiers = this._state.slice(0, depth + 1);
+
+        let new_curr = curr.children.find(child => {
+          if (is_parent(child.data)) {
+            let ss_a = child.data.nist_control.sub_specifiers;
+            return (
+              compare_arrays(ss_a, next_specifiers, (a, b) =>
+                a.localeCompare(b)
+              ) === 0
+            );
+          } else {
+            return false; // We cannot go into a leaf (OR CAN WE? MUST DECIDE, AT SOME POINT)
+          }
+        });
+        if (new_curr) {
+          if (new_curr.children && new_curr.children.length) {
+            curr = new_curr;
+          } else {
+            throw "empty";
+          }
+        } else {
+          throw "truncate";
+        }
       }
+    } catch (some_traversal_error) {
+      // Slice to last successful depth. Slice is non inclusive so this works
+      this.set_path(this._state.slice(0, depth));
     }
 
     // Return as deep as we travelled
@@ -172,26 +164,22 @@ export default class Treemap extends TreemapProps {
     };
   }
 
-  /**
-   * Fetches the controls we want to display in this tree, and turns them into a hash
-   * Note that regardless of what filtering this treeview applies,
-   * we want the treeview itself to remain unaffected.
-   */
-  get nist_hash(): nist.NistHash<CCWrapper> {
+  /** Generates a d3 heirarchy structure, with appropriate bounds to our width
+   *  detailing all of the controls in the nist hash */
+  get treemap_layout(): d3.HierarchyRectangularNode<TreemapNode> {
     // Get our data module
     let data: FilteredDataModule = getModule(FilteredDataModule, this.$store);
 
-    // Get the current filtered data
+    // Get the currejnt filtered data
     let controls = data.controls(this.filter);
-    return nistHashForControls(controls);
-  }
 
-  /** Generates a d3 heirarchy structure, with appropriate bounds to our width
-   *  detailing all of the controls in the nist hash */
-  get treemap_layout(): d3.HierarchyRectangularNode<TreemapDatumType> {
-    let hierarchy = nistHashToTreeMap(this.nist_hash);
+    // Build the map
+    let hierarchy = build_nist_tree_map(
+      controls,
+      getModule(ColorHackModule, this.$store)
+    );
     let treemap = d3
-      .treemap<TreemapDatumType>()
+      .treemap<TreemapNode>()
       .size([this.width, this.height])
       .round(false)
       .paddingInner(0)(hierarchy);
@@ -199,49 +187,44 @@ export default class Treemap extends TreemapProps {
   }
 
   // Callbacks for our tree
-  select_node(n: d3.HierarchyRectangularNode<TreemapDatumType>): void {
-    // Get our path to the selected node
-    let route = n.ancestors().reverse();
-
-    // Initialize all as null
-    let selected_family: string | null = null;
-    let selected_category: string | null = null;
-    let selected_control_id: string | null = null;
-
-    // Depending on length of route, assign values
-    if (route.length > 1) {
-      selected_family = (route[1].data as nist.NistFamily<CCWrapper>).name;
-    }
-    if (route.length > 2) {
-      selected_category = (route[2].data as nist.NistCategory<CCWrapper>).name;
-    }
-    if (route.length > 3) {
-      selected_control_id = (route[3].data as CCWrapper).ctrl.data.id;
-      // If they click the same one, clear
-      if (selected_control_id === this.value.selectedControlID) {
-        selected_control_id = null;
+  select_node(n: d3.HierarchyRectangularNode<TreemapNode>): void {
+    // If it is a leaf, then select it
+    let new_state = [...this._state];
+    if (is_leaf(n.data)) {
+      let id = n.data.control.data.id;
+      if (id !== this.selected_control) {
+        this.$emit("update:selected_control", id);
+      } else {
+        this.$emit("update:selected_control", null);
+      }
+    } else {
+      // Otherwise, dive away. Set course for the leading title
+      let cntrl = n.data.nist_control;
+      if (cntrl) {
+        this.set_path(cntrl.sub_specifiers);
       }
     }
-
-    // Construct the state and emit
-    let new_state: NistMapState = {
-      selectedFamily: selected_family,
-      selectedCategory: selected_category,
-      selectedControlID: selected_control_id
-    };
-    this.$emit("input", new_state);
   }
 
   /** Submits an event to go up one node */
   up(): void {
-    if (this.selected_node.parent !== null) {
-      this.select_node(this.selected_node.parent);
+    if (this._state.length) {
+      // Slice and dice, baybee
+      this.set_path(this._state.slice(0, this._state.length - 1));
+
+      // Also clear selected
+      this.$emit("update:selected_control", null);
     }
+  }
+
+  /** Typed method to wrap changes in the depth */
+  set_path(path_spec: TreeMapState) {
+    this.$emit("input", path_spec);
   }
 
   /** Controls whether we should allow up */
   get allow_up(): boolean {
-    return this.selected_node.parent !== null;
+    return this._state.length > 0;
   }
 
   /** Called on resize */

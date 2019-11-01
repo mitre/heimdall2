@@ -55,10 +55,16 @@ export default class ExportCaat extends Props {
     let row: CAATRow = [];
 
     // Figure out the nist tags to make a family
-    let family = control.fixed_nist_tags[0];
-    // If its length is 4, then we want to pad the 0. E.g. AB-1 -> AB-01
-    if (family.length === 4) {
-      family = family.substr(0, 3) + "0" + family[3];
+    let root_control = control.parsed_nist_tags[0];
+    let family = root_control.family || "UM";
+    let pad = (x: string) => ("00" + x).slice(-2); // Pads a string to two digits
+    let nist_control_number = pad(root_control.sub_specifiers[1] || "01");
+    let nist_control: string;
+    if (!Number.isNaN(Number.parseInt(root_control.sub_specifiers[2] || ""))) {
+      let sub_number = pad(root_control.sub_specifiers[2]);
+      nist_control = `${family}-${nist_control_number}(${sub_number})`;
+    } else {
+      nist_control = `${family}-${nist_control_number}`;
     }
 
     let gid = control.wraps.tags.gid;
@@ -73,10 +79,11 @@ export default class ExportCaat extends Props {
       vuln_list.push(control.wraps.tags.gid);
 
       // Designate a helper to deal with null/undefined
-      let fix = (x: string | null | undefined) => x || "";
+      let fix = (x: string | null | undefined) =>
+        (x || "").replace(/(\r\n|\n|\r)/gm, " ");
 
       // Build up the row
-      row.push(family); // Control Number
+      row.push(nist_control); // Control Number
       row.push(
         "Test " + fix(control.wraps.id) + " - " + fix(control.wraps.title)
       ); // Finding Title
@@ -95,7 +102,7 @@ export default class ExportCaat extends Props {
       row.push("Self-Assessment "); // Source
       row.push(""); //row.push("InSpec"); // Assessment/Audit Company
       row.push("Test"); // Test Method
-      row.push(fix(control.wraps.tags.check)); // Test Objective
+      row.push(fix(control.wraps.tags.check || control.descriptions.check)); // Test Objective
       let test_result = `${control.status}: ${control.message.replace(
         "\n",
         "; "
@@ -106,7 +113,7 @@ export default class ExportCaat extends Props {
       } else {
         row.push("Other Than Satisfied");
       }
-      row.push(fix(control.wraps.tags.fix)); // Recommended Corrective Action(s)
+      row.push(fix(control.wraps.tags.fix || control.descriptions.fix)); // Recommended Corrective Action(s)
       row.push(""); // Effect on Business
       row.push(""); // Likelihood
       row.push(fix(control.severity)); // Impact

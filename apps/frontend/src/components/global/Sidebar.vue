@@ -74,9 +74,7 @@ export default class Sidebar extends SidebarProps {
   get visible_files(): Array<ProfileFile | ExecutionFile> {
     let data_store = getModule(InspecDataModule, this.$store);
     let files = data_store.allFiles;
-    console.log(files.map(f => f.filename));
     files = files.sort((a, b) => a.filename.localeCompare(b.filename));
-    console.log(files.map(f => f.filename));
     return files;
   }
 

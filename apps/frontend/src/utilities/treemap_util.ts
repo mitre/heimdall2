@@ -2,90 +2,204 @@
  * Tools used for generating the treemaps consumed by, of course, the Treemap card and associated components.
  */
 
-import { HDFControl, hdfWrapControl, ControlStatus, nist } from "inspecjs";
+import { hdfWrapControl, ControlStatus, nist } from "inspecjs";
 import * as d3 from "d3";
 import { ContextualizedControl } from "@/store/data_store";
+import { control_unique_key } from "./format_util";
+import ColorHackModule from "@/store/color_hack";
+import Chroma from "chroma-js";
 
-/**
- * A simple wrapping class needed to facilitate inspecjs nist function usage
- */
-export class CCWrapper {
-  ctrl: ContextualizedControl;
-  hdf: HDFControl;
-  category?: nist.NistCategory<CCWrapper>;
-
-  constructor(ctrl: ContextualizedControl) {
-    this.ctrl = ctrl;
-    this.hdf = hdfWrapControl(ctrl.data);
-    this.category = undefined;
-  }
-
-  get fixed_nist_tags(): string[] {
-    return this.hdf.fixed_nist_tags;
-  }
-
-  get status(): ControlStatus {
-    return this.hdf.status;
-  }
-}
+// How deep into nist trees we allow
+const MAX_DEPTH = 2;
 
 /** A simple wrapper type representing what any node's data might be in our treemap */
-export type TreemapDatumType =
-  | nist.NistHash<CCWrapper>
-  | nist.NistFamily<CCWrapper>
-  | nist.NistCategory<CCWrapper>
-  | CCWrapper;
+interface AbsTreemapNode {
+  title: string;
+  subtitle?: string;
+  hovertext?: string;
+  key: string;
+  color?: Chroma.Color;
+  parent: TreemapNodeParent | null; // The parent of this node.
+  nist_control: nist.NistControl; // The nist control which this node is associated with. Not necessarily unique (e.g. leaves)
+}
+export interface TreemapNodeParent extends AbsTreemapNode {
+  children: TreemapNode[]; // Maps the next sub-specifier to children
+}
+
+export interface TreemapNodeLeaf extends AbsTreemapNode {
+  control: ContextualizedControl;
+}
+
+export function is_leaf(n: TreemapNode): n is TreemapNodeLeaf {
+  return (n as TreemapNodeLeaf).control !== undefined;
+}
+
+export function is_parent(n: TreemapNode): n is TreemapNodeParent {
+  return (n as TreemapNodeParent).children !== undefined;
+}
 
 /** The type of our treemap nodes, prior to rendering */
-export type TreemapNode = d3.HierarchyNode<TreemapDatumType>;
+export type TreemapNode = TreemapNodeLeaf | TreemapNodeParent;
+export type D3TreemapNode = d3.HierarchyNode<TreemapNode>;
 
 /**
- * A crappy type checker capable of distinguishing CCWrapper data from other data in our treemap.
- * Shouldn't be used anywhere outside of treemap
+ * Converts a list of controls to treemap leaves.
+ * Actually a one-to-many mapping since we must make a unique leaf for each nist control on each control!
+ * @param controls The controls to build into a nist node map
  */
-export function isCCWrapper(ctrl: TreemapDatumType): ctrl is CCWrapper {
-  return (ctrl as CCWrapper).hdf !== undefined;
-}
-
-/**
- * A crappy type checker capable of distinguishing Nist group data from other data in our treemap.
- * Shouldn't be used anywhere outside of treemap
- */
-export function isNistGrouping(
-  grp: TreemapDatumType
-): grp is
-  | nist.NistHash<CCWrapper>
-  | nist.NistFamily<CCWrapper>
-  | nist.NistCategory<CCWrapper> {
-  return !isCCWrapper(grp);
-}
-
-/** Generates a NistHash for the provided set of controls.
- * Said nist hash is templatized on the type CCWrapper, and is slightly unique to our use case in that
- * the NistCategory <-> CCWrapper relation is one-to-one, on the CCWrapper.category prop.
- *
- * This lets us generate fixed-layout treemaps!
- */
-export function nistHashForControls(
-  controls: Readonly<ContextualizedControl[]>
-): nist.NistHash<CCWrapper> {
-  // Generate the hash
-  let wrapped_controls = controls.map(c => new CCWrapper(c));
-  let hash = nist.generateNewNistHash<CCWrapper>();
-  nist.populateNistHash(wrapped_controls, hash);
-
-  // Bind the categories
-  hash.children.forEach(family => {
-    family.children.forEach(category => {
-      category.children = category.children.map(cc => {
-        let specific = new CCWrapper(cc.ctrl);
-        specific.category = category;
-        return specific;
-      });
+function controls_to_nist_node_data(
+  contextualized_controls: Readonly<ContextualizedControl[]>,
+  colors: ColorHackModule
+): TreemapNodeLeaf[] {
+  return contextualized_controls.flatMap(cc => {
+    // Get the status color
+    let color = Chroma.hex(
+      colors.colorForStatus(hdfWrapControl(cc.data).status)
+    );
+    // Now make leaves for each nist control
+    let hdf = hdfWrapControl(cc.data);
+    return hdf.parsed_nist_tags.map(nc => {
+      let leaf: TreemapNodeLeaf = {
+        title: cc.data.id,
+        subtitle: cc.data.title || undefined,
+        hovertext: cc.data.desc || undefined,
+        key: control_unique_key(cc) + nc.raw_text,
+        control: cc,
+        nist_control: nc,
+        color,
+        parent: null // We set this later
+      };
+      return leaf;
     });
   });
+}
 
-  return hash;
+/** Builds a scaffolding for the nist items using the given root.
+ * Also constructs a lookup table of control nodes.
+ * Only goes max_depth deep.
+ */
+function recursive_nist_map(
+  parent: TreemapNodeParent | null,
+  node: Readonly<nist.NistHierarchyNode>,
+  control_lookup: { [key: string]: TreemapNodeParent },
+  max_depth: number
+): TreemapNodeParent {
+  // Init child list
+  let children: TreemapNode[] = [];
+
+  // Make our final value
+  let ret: TreemapNodeParent = {
+    key: node.control.raw_text!,
+    title: node.control.raw_text!, // TODO: Make this like, suck less. IE give more descriptive stuff
+    nist_control: node.control,
+    parent,
+    children
+  };
+
+  // Fill our children
+  if (node.control.sub_specifiers.length < max_depth) {
+    node.children.forEach(child => {
+      // Get the last subspec.
+      let final_subspec =
+        child.control.sub_specifiers[child.control.sub_specifiers.length - 1];
+
+      // Assign it, recursively computing the rest
+      children.push(recursive_nist_map(ret, child, control_lookup, max_depth));
+    });
+  }
+
+  // Save to lookup
+  control_lookup[lookup_key_for(node.control, max_depth)] = ret;
+  return ret;
+}
+
+/** Colorizes a treemap based on each nodes children. */
+function colorize_tree_map(root: TreemapNodeParent) {
+  // First colorize children, recursively
+  root.children.forEach(child => {
+    if (is_parent(child)) {
+      colorize_tree_map(child);
+    }
+  });
+
+  // Now all children should have valid colors
+  // We decide this node's color as a composite of all underlying node colors
+  let child_colors = root.children
+    .map(c => c.color)
+    .filter(c => c !== undefined) as Chroma.Color[];
+  // If we have any, then set our color
+  if (child_colors.length) {
+    // Set the color
+    let avg_color = Chroma.average(child_colors);
+    root.color = avg_color;
+  }
+}
+
+/** Generates a lookup key for the given control */
+function lookup_key_for(x: nist.NistControl, max_depth: number): string {
+  if (max_depth) {
+    return x.sub_specifiers.slice(0, max_depth).join("-");
+  } else {
+    return x.sub_specifiers.join("-");
+  }
+}
+
+/** Populates a treemap using the given lookup table */
+function populate_tree_map(
+  lookup: { [key: string]: TreemapNodeParent },
+  leaves: TreemapNodeLeaf[],
+  max_depth: number
+) {
+  // Populate it
+  leaves.forEach(leaf => {
+    let parent = lookup[lookup_key_for(leaf.nist_control, max_depth)];
+    if (parent) {
+      // We found a node that will accept it (matches its control)
+      // We can do this as because we know we constructed these to only have empty children
+      parent.children.push(leaf);
+      leaf.parent = parent;
+    } else {
+      console.warn(
+        `Warning: unable to assign control ${leaf.nist_control.raw_text} to valid treemap leaf`
+      );
+    }
+  });
+}
+
+/**
+ * Assembles the provided leaves into a nist map.
+ * Colorizes nodes as appropriate, and assigns parentage
+ */
+function build_populated_nist_map(
+  data: TreemapNodeLeaf[],
+  colors: ColorHackModule
+): TreemapNodeParent {
+  // Build our scaffold
+  let lookup: { [key: string]: TreemapNodeParent } = {};
+  let root_children: TreemapNodeParent[] = [];
+  let root: TreemapNodeParent = {
+    key: "tree_root",
+    title: "NIST-853 Controls",
+    children: root_children,
+    parent: null,
+    nist_control: new nist.NistControl([], "NIST-853")
+  };
+
+  // Fill out children, recursively
+  nist.FULL_NIST_HIERARCHY.forEach(n => {
+    let child = recursive_nist_map(root, n, lookup, MAX_DEPTH);
+    let tag = child.nist_control.sub_specifiers[0];
+    root_children.push(child);
+  });
+
+  // Populate them with leaves
+  populate_tree_map(lookup, data, MAX_DEPTH);
+
+  // Colorize it
+  colorize_tree_map(root);
+
+  // Done
+  return root;
 }
 
 /**
@@ -93,62 +207,40 @@ export function nistHashForControls(
  * Thus each category has a fixed weight!
  * Categories/Families are further sorted by name, and the
  *
- * @param hash The nist hash to turn into a tree map
+ * @param data The nist hash to turn into a tree map
  */
-export function nistHashToTreeMap(
-  hash: Readonly<nist.NistHash<CCWrapper>>
-): TreemapNode {
-  // Find the largest count category. We use this to set the weights in individual controls so they fill their parent
-  let biggest = 1;
-  hash.children.forEach(family => {
-    family.children.forEach(category => {
-      if (category.count > biggest) {
-        biggest = category.count;
-      }
-    });
-  });
-
-  // Build the heirarchy
+function node_data_to_tree_map(
+  data: Readonly<TreemapNodeParent>
+): D3TreemapNode {
   let ret = d3
-    .hierarchy<TreemapDatumType>(hash, (d: TreemapDatumType) => {
-      if (isNistGrouping(d)) {
+    .hierarchy<TreemapNode>(data, (d: TreemapNode) => {
+      if (is_parent(d)) {
         return d.children;
       }
     })
-    .sort((a, b) => {
-      let a_s: string;
-      let b_s: string;
-      // If a group, give the name. If a control, give status+name
-      if (isNistGrouping(a.data)) {
-        a_s = a.data.name;
-      } else {
-        a_s = a.data.status + a.data.ctrl.data.id;
-      }
-
-      //ditto
-      if (isNistGrouping(b.data)) {
-        b_s = b.data.name;
-      } else {
-        b_s = b.data.status + b.data.ctrl.data.id;
-      }
-
-      return a_s.localeCompare(b_s);
-    })
-    // Determines the weight of the table
-    // We want the families to have a fixed layout, so this is fairly constant
-    .sum(d => {
-      // Note that these give individual weightings - d3 does the actual summing for us
-      if (isNistGrouping(d)) {
-        if (d.children.length === 0) {
-          // Empty elements given a base size
+    .sort((a, b) => a.data.title.localeCompare(b.data.title))
+    .sum(root => {
+      if (is_parent(root)) {
+        if (root.children.length === 0) {
           return 1;
         } else {
+          // Children will make up the weight
           return 0;
         }
       } else {
-        // Controls fill their parent, proportionally
-        return 1.0 / d.category!.count;
+        return 1.0 / root.parent!.children.length;
       }
     });
   return ret;
+}
+
+/** Does all the steps */
+export function build_nist_tree_map(
+  data: Readonly<ContextualizedControl[]>,
+  colors: ColorHackModule
+): D3TreemapNode {
+  let leaves = controls_to_nist_node_data(data, colors);
+  let b = build_populated_nist_map(leaves, colors);
+  let c = node_data_to_tree_map(b);
+  return c;
 }

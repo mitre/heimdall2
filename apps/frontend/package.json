@@ -37,7 +37,7 @@
     "html-loader": "^0.5.5",
     "html-webpack-inline-source-plugin": "0.0.10",
     "html-webpack-plugin": "^3.2.0",
-    "inspecjs": "0.7.1",
+    "inspecjs": "0.8.1",
     "lru-cache": "^5.1.1",
     "material-components-web": "^3.2.0",
     "prismjs": "^1.17.1",

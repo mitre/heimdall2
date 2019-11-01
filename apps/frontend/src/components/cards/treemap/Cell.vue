@@ -1,22 +1,22 @@
 <template>
   <!-- We can use Vue transitions too! -->
   <g>
-    <!-- Generate our children here -->
-    <Cell
-      v-for="child in node.children"
-      :key="key_for(child.data)"
-      :selected_node="selected_node"
-      :selected_control_id="selected_control_id"
-      :depth="child_depth"
-      :node="child"
-      :scales="scales"
-      @select-node="select_node"
-    />
+    <!-- Generate our children here. Only do so for parents, and if they aren't too deep -->
+    <g v-if="is_parent">
+      <Cell
+        v-for="child in node.children"
+        :key="child.data.key"
+        :selected_control_id="selected_control_id"
+        :depth="depth + 1"
+        :node="child"
+        :scales="scales"
+        @select-node="select_node"
+      />
+    </g>
 
-    <!-- The actual body of this square.  width add selectedNode.x0-->
+    <!-- The actual body of this square. Visible only if depth === 1 (ie a direct child of parent) or depth === 2 (one level deeper) -->
     <rect
-      v-if="_depth >= 0"
-      :key="label"
+      v-if="depth >= 1"
       :style="cell_style"
       :x="x"
       :y="y"
@@ -33,7 +33,7 @@
       text-anchor="middle"
       :x="x + width / 2"
       :y="y + height / 2"
-      >{{ label }}</text
+      >{{ node.data.title }}</text
     >
   </g>
 </template>
@@ -45,11 +45,11 @@ import { getModule } from "vuex-module-decorators";
 import { ControlStatus, HDFControl, nist } from "inspecjs";
 import * as d3 from "d3";
 import {
-  TreemapDatumType,
-  CCWrapper,
-  isCCWrapper
+  TreemapNode,
+  TreemapNodeLeaf,
+  TreemapNodeParent,
+  is_leaf
 } from "@/utilities/treemap_util";
-import { control_unique_key } from "@/utilities/format_util";
 import { HierarchyRectangularNode } from "d3";
 import ColorHackModule from "@/store/color_hack";
 
@@ -61,10 +61,6 @@ export interface XYScale {
 // We declare the props separately to make props types inferable.
 const CellProps = Vue.extend({
   props: {
-    selected_node: {
-      type: Object, // Of type d3.HierarchyRectangularNode<TreemapDatumType>,
-      required: true
-    },
     selected_control_id: {
       type: String, // Of type string
       required: false
@@ -75,7 +71,8 @@ const CellProps = Vue.extend({
     },
     depth: {
       type: Number, // Distance of this node to curr selected. 0 => it is curr selected. undefined => Sub root / unknown
-      required: false
+      required: false,
+      default: 0
     },
     scales: {
       type: Object, // Of type XYScale
@@ -98,29 +95,16 @@ export default class Cell extends CellProps {
   /**
    * Typed getter for this Cell's node, IE the rectangle that it is in charge of drawing.
    */
-  get _node(): d3.HierarchyRectangularNode<TreemapDatumType> {
+  get _node(): d3.HierarchyRectangularNode<TreemapNode> {
     return this.node;
-  }
-
-  /**
-   * Typed getter for the selected node, which defines which node we are "zoomed into".
-   * Note that the selected control will NEVER be the selected node, since we do not zoom into that level.
-   * Use selected_node_id for that purpose!
-   */
-  get _selected_node(): d3.HierarchyRectangularNode<TreemapDatumType> {
-    return this.selected_node;
   }
 
   /**
    * Typed getter for depth that also automatically substitutes "undefined" for 0 where appropriate
    * To be clear, "appropriate" is when this is the selected node, using Object.is
    */
-  get _depth(): number | undefined {
-    if (this.depth === undefined) {
-      return Object.is(this._node, this._selected_node) ? 0 : undefined;
-    } else {
-      return this.depth;
-    }
+  get _depth(): number {
+    return this.depth;
   }
 
   /** Typed getter for scale_x prop. Performs no type checking.
@@ -141,19 +125,14 @@ export default class Cell extends CellProps {
     return this.scales.scale_y;
   }
 
-  /** Depth to pass to childen.
-   * Using a getter here to avoid having to deal with consequences of what undefined + 1 comes out to */
-  get child_depth(): number | undefined {
-    if (this._depth !== undefined) {
-      return this._depth + 1;
-    } else {
-      return undefined;
-    }
-  }
-
   /** Are we a control? Use treemap util type checker */
   get is_control(): boolean {
-    return isCCWrapper(this._node.data);
+    return is_leaf(this._node.data);
+  }
+
+  /** Invert of above. Checks if this node has children, essentially */
+  get is_parent(): boolean {
+    return !this.is_control;
   }
 
   /** Are we selected? True if selected_control_id matches our id, and we are in selected heirarchy */
@@ -161,7 +140,8 @@ export default class Cell extends CellProps {
     return (
       this.is_control && // We are a control
       this._depth !== undefined && // Implies an ancesrtor is selected
-      (this._node.data as CCWrapper).ctrl.data.id === this.selected_control_id // Our control id matches
+      (this._node.data as TreemapNodeLeaf).control.data.id ===
+        this.selected_control_id // Our control id matches
     );
   }
 
@@ -195,85 +175,40 @@ export default class Cell extends CellProps {
   get cell_classes(): string[] {
     // Type stuff
     let s: string[] = [];
-    if (!this.is_control) {
-      if (
-        (this._node.data as nist.NistCategory<CCWrapper>).children.length === 0
-      ) {
+    if (this.is_parent) {
+      s.push("parent");
+      if (!this._node.children || !this._node.children.length) {
         s.push("empty");
       }
+    } else {
+      s.push("leaf");
     }
 
     // Depth stuff
-    if (this._depth === undefined) {
-      s.push("unfocused");
-    } else if (this._depth === 0) {
+    if (this._depth === 0) {
       s.push("root");
     } else if (this._depth === 1) {
       s.push("top");
-    }
-
-    // More depth stuff
-    switch (this._node.depth) {
-      case 0:
-        s.push("hash");
-        break;
-      case 1:
-        s.push("family");
-        break;
-      case 2:
-        s.push("category");
-        break;
-      case 3:
-        s.push("control");
+    } else if (this._depth >= 1) {
+      s.push("nested");
     }
 
     return s;
   }
 
   get cell_style(): string {
-    let style = `fill: ${this.color};`;
-    return style;
+    if (this._node.data.color) {
+      return `fill: ${this._node.data.color.css()};`;
+    }
+    return "fill-opacity: 0";
   }
 
   /**
    * Callback fired when the user clicks a node. Passes up from cell to cell until it reaches Treemap
    */
-  select_node(n: null | d3.HierarchyRectangularNode<TreemapDatumType>): void {
+  select_node(n: d3.HierarchyRectangularNode<TreemapNode>): void {
     // Pass it up to root
     this.$emit("select-node", n);
-  }
-
-  /**
-   * Looks up a fill color for this node based on its status.
-   */
-  get color(): string {
-    // Observe color
-    let observed = this.$vuetify.theme.dark;
-    let cmod = getModule(ColorHackModule, this.$store);
-    return cmod.colorForStatus(this._node.data.status);
-  }
-
-  /**
-   * Provides a label for this node's data.
-   * This is shown as centered text in the main cell
-   */
-  get label(): string {
-    if (isCCWrapper(this._node.data)) {
-      return this._node.data.ctrl.data.id;
-    } else {
-      return this._node.data.name;
-    }
-  }
-
-  /**
-   * Generates unique keys for treemap datums.
-   */
-  key_for(data: TreemapDatumType): string {
-    if (isCCWrapper(data)) {
-      return control_unique_key(data.ctrl);
-    } else {
-      return data.name;
-    }
   }
 }
 </script>
@@ -290,43 +225,38 @@ text {
 
 .theme--light text {
   fill: #000;
+  font-size: large;
 }
 
+/* Basic settings for our chart. Things unclickable by default */
 rect {
   stroke: #000000;
-  fill-opacity: 0;
-  stroke-width: 1;
   pointer-events: none;
+  fill-opacity: 0;
 }
 
+/* We want top to be clickable. */
 rect.top {
   pointer-events: auto;
+  stroke-width: 2;
 }
 
-rect.control {
+/* We want leaves */
+rect.leaf {
   fill-opacity: 1;
+}
+
+/* Otherwise, don't want nested to draw strokes */
+rect.nested {
+  stroke-width: 1;
+}
+
+rect.nested.leaf {
   stroke-width: 0;
 }
 
-rect.control.top {
-  stroke-width: 1;
-}
-
-rect.family.empty,
-rect.category.empty {
-  fill-opacity: 0.1;
-  fill: black;
-}
-rect.family:hover,
-rect.category:hover {
-  fill: #222;
-}
-
+/* Make tops transparent but also more thickly drawn when hovered */
 rect.top:hover {
-  fill-opacity: 0.1;
-}
-
-rect.family {
   stroke-width: 3;
 }
 </style>

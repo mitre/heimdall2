@@ -6,7 +6,6 @@ import { Module, VuexModule, Mutation, Action } from "vuex-module-decorators";
 import { HDFControl, parse, schemas_1_0 } from "inspecjs";
 import { FileID, ExecutionFile, ProfileFile } from "@/store/report_intake";
 import Store from "@/store/store";
-import { AnyFullControl } from "inspecjs/dist/fileparse";
 
 // Alias some types
 type Execution = parse.AnyExec;
@@ -180,7 +179,7 @@ class InspecDataModule extends VuexModule {
     // Add them first, establishing the parent/child relationship while we do so
     profiles.forEach(profile_context => {
       profile_context.data.controls.forEach(
-        (profile_control: AnyFullControl) => {
+        (profile_control: parse.AnyFullControl) => {
           let profile_control_context: ContextualizedControl = {
             data: profile_control,
             sourced_from: profile_context,

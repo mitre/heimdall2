@@ -45,7 +45,7 @@ import UploadNexus from "@/components/global/UploadNexus.vue";
 
 import CompareRow from "@/components/cards/comparison/CompareRow.vue";
 
-import { Filter, NistMapState } from "@/store/data_filters";
+import { Filter } from "@/store/data_filters";
 import { ControlStatus, Severity } from "inspecjs";
 import { FileID } from "@/store/report_intake";
 import { ComparisonContext } from "../utilities/delta_util";

@@ -17,7 +17,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import UploadNexus from "@/components/global/UploadNexus.vue";
 
-import { Filter, NistMapState } from "@/store/data_filters";
+import { Filter } from "@/store/data_filters";
 import { FileID } from "@/store/report_intake";
 
 // We declare the props separately

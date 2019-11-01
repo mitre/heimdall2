@@ -185,8 +185,8 @@ export class ControlDelta {
     header_changes.push(
       new ControlChange(
         "NIST Tags",
-        this.old_hdf.nist_tags.join(", "),
-        this.new_hdf.nist_tags.join(", ")
+        this.old_hdf.raw_nist_tags.join(", "),
+        this.new_hdf.raw_nist_tags.join(", ")
       )
     );
 
