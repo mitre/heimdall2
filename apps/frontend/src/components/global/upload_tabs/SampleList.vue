@@ -1,10 +1,9 @@
 <template>
   <v-card>
-    <v-list two-line>
+    <v-list>
       <v-list-item v-for="(sample, index) in samples" :key="index">
         <v-list-item-content>
           <v-list-item-title v-text="sample.name" />
-          <v-list-item-subtitle v-text="sample.description" />
         </v-list-item-content>
         <v-list-item-action>
           <v-btn icon @click="load_sample(sample)">
@@ -29,7 +28,6 @@ import InspecDataModule from "../../../store/data_store";
 
 interface Sample {
   name: string;
-  description: string;
   url: string;
 }
 
@@ -48,10 +46,29 @@ const Props = Vue.extend({
 export default class SampleList extends Props {
   samples: Sample[] = [
     {
-      name: "RHEL-7 Output",
-      description: "It is some rhel7 stuff!",
+      name: "AWS S3 Permissions Check InSpec Sample",
       url:
-        "https://raw.githubusercontent.com/mitre/inspec-samples/master/json/results/rhel-7-output.json"
+        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/aws-s3-baseline.json"
+    },
+    {
+      name: "AWS CIS Foundations Baseline InSpec Sample",
+      url:
+        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/cis-aws-foundations-baseline.json"
+    },
+    {
+      name: "NGINX Inspec Sample",
+      url:
+        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/good_nginxresults.json"
+    },
+    {
+      name: "Red Hat CVE Vulnerability Scan InSpec Sample",
+      url:
+        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/rhel_cve_vulnerability_scan_baseline_with_failures.json"
+    },
+    {
+      name: "Ubuntu STIG Baseline InSpec Sample",
+      url:
+        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/ubuntu-16.04-baseline-results.json"
     }
   ];
 
