@@ -57,35 +57,35 @@ const Props = Vue.extend({
 export default class FileReader extends Props {
   /** Callback for our file reader */
   commit_files(files: File[]) {
-    // Coerce into a more ergonomic type
-    let unique_ids: FileID[] = []; // Use this to track generated file ids
-    files.forEach(file => {
-      // Generate file ids
-      let unique_id = next_free_file_ID();
-      unique_ids.push(unique_id);
+    let valid_ids: FileID[] = []; // Use this to track those that get successfully uploaded
 
-      // The error toast is globally registered, and has no awareness of the
-      // theme setting, so this component passes it up
-      let toast = this.$toasted.global.error;
-      let isDark = this.$vuetify.theme.dark;
+    // Promise an upload of each
+    let upload_promises = files.map(file => {
+      // Generate file id
+      let unique_id = next_free_file_ID();
 
       // Submit it to be loaded, and display an error if it fails
       let intake_module = getModule(InspecIntakeModule, this.$store);
-      intake_module.loadFile({ file, unique_id }).then(err => {
+      return intake_module.loadFile({ file, unique_id }).then(err => {
         if (err) {
           console.error(`Error loading file ${file.name}`);
-          toast({
+          this.$toasted.global.error({
             message: String(err),
-            isDark: isDark
+            isDark: this.$vuetify.theme.dark
           });
+        } else {
+          // Store the given id as valid
+          valid_ids.push(unique_id);
         }
       });
-
-      // Todo: Set the uploaded files as "active" in some sort of file selection scheme
     });
 
-    // Notify we got files
-    this.$emit("got-files", unique_ids);
+    // When they're all done, emit event.
+    // To use promise.all we must make each promise explicitly allow rejection without breaking promise.all failfast
+    let guaranteed_promises = upload_promises.map(p => p.catch(err => err));
+    Promise.all(guaranteed_promises).then(_ =>
+      this.$emit("got-files", valid_ids)
+    );
   }
 
   get title_class(): string[] {
