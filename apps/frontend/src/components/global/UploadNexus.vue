@@ -15,6 +15,10 @@
         Local Files
       </v-tab>
 
+      <v-tab href="#uploadtab-samples">
+        Samples
+      </v-tab>
+
       <v-tab href="#uploadtab-s3">
         S3 Bucket
       </v-tab>
@@ -26,6 +30,11 @@
       <!-- Include those components -->
       <v-tab-item value="uploadtab-local">
         <FileReader @got-files="got_files" />
+        <HelpFooter />
+      </v-tab-item>
+
+      <v-tab-item value="uploadtab-samples">
+        <SampleList @got-files="got_files" />
         <HelpFooter />
       </v-tab-item>
 
@@ -51,6 +60,7 @@ import Modal from "@/components/global/Modal.vue";
 import FileReader from "@/components/global/upload_tabs/FileReader.vue";
 import HelpFooter from "@/components/global/upload_tabs/HelpFooter.vue";
 import S3Reader from "@/components/global/upload_tabs/S3Reader.vue";
+import SampleList from "@/components/global/upload_tabs/SampleList.vue";
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -69,7 +79,8 @@ const Props = Vue.extend({
     Modal,
     FileReader,
     HelpFooter,
-    S3Reader
+    S3Reader,
+    SampleList
   }
 })
 export default class UploadNexus extends Props {

@@ -27,7 +27,6 @@
     "apexcharts": "^3.10.1",
     "aws-sdk": "^2.560.0",
     "babel-plugin-prismjs": "^1.1.1",
-    "c3": "^0.5.4",
     "chroma-js": "^2.1.0",
     "core-js": "^2.6.10",
     "d3": "^5.12.0",
