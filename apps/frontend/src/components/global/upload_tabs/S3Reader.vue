@@ -21,7 +21,7 @@
           label="Secret Token"
           required
           :rules="field_rules"
-          :append-icon="show_secret ? 'visibility' : 'visibility_off'"
+          :append-icon="show_secret ? 'mdi-eye' : 'mdi-eye-off'"
           :type="show_secret ? 'text' : 'password'"
           @click:append="show_secret = !show_secret"
         />
