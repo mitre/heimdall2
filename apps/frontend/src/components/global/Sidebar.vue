@@ -15,7 +15,7 @@
       <FileItem v-for="(file, i) in visible_files" :key="i" :file="file" />
       <v-list-item to="/results/all" title="Show all files' controls">
         <v-list-item-avatar>
-          <v-icon small>list</v-icon>
+          <v-icon small>mdi-format-list-bulleted</v-icon>
         </v-list-item-avatar>
 
         <v-list-item-content>
@@ -31,8 +31,16 @@
 
     <v-list dense class="px-2" subheader>
       <v-subheader>Info</v-subheader>
-      <AboutModal />
-      <HelpModal />
+      <AboutModal>
+        <template v-slot:clickable="{ on }">
+          <LinkItem key="about" text="About" icon="mdi-information" v-on="on" />
+        </template>
+      </AboutModal>
+      <HelpModal>
+        <template v-slot:clickable="{ on }">
+          <LinkItem key="help" text="Help" icon="mdi-help-circle" v-on="on" />
+        </template>
+      </HelpModal>
       <v-list-item>
         <div class="d-flex justify-center">
           <v-switch label="Light/Dark" v-model="dark" v-on:change="updateDark">

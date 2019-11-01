@@ -1,7 +1,9 @@
 <template>
   <v-dialog v-model="dialog" width="75%">
+    <!-- clickable slot passes the activator prop up to parent 
+        This allows the parent to pass in a clickable icon -->
     <template v-slot:activator="{ on }">
-      <LinkItem key="help" text="Help" icon="info" v-on="on"></LinkItem>
+      <slot name="clickable" v-bind:on="on"> </slot>
     </template>
 
     <v-card>
@@ -88,9 +90,7 @@ const Props = Vue.extend({
   props: {}
 });
 @Component({
-  components: {
-    LinkItem
-  }
+  components: {}
 })
 export default class HelpModal extends Props {
   dialog: boolean = false;

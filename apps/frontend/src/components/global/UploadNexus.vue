@@ -26,14 +26,17 @@
       <!-- Include those components -->
       <v-tab-item value="uploadtab-local">
         <FileReader @got-files="got_files" />
+        <HelpFooter />
       </v-tab-item>
 
       <v-tab-item value="uploadtab-s3">
         <S3Reader class="pa-4" @got-files="got_files" />
+        <HelpFooter />
       </v-tab-item>
 
       <v-tab-item value="uploadtab-splunk">
         Coming soon
+        <HelpFooter />
       </v-tab-item>
     </v-tabs>
   </Modal>
@@ -46,6 +49,7 @@ import { getModule } from "vuex-module-decorators";
 import InspecIntakeModule, { FileID } from "@/store/report_intake";
 import Modal from "@/components/global/Modal.vue";
 import FileReader from "@/components/global/upload_tabs/FileReader.vue";
+import HelpFooter from "@/components/global/upload_tabs/HelpFooter.vue";
 import S3Reader from "@/components/global/upload_tabs/S3Reader.vue";
 
 // We declare the props separately to make props types inferable.
@@ -64,6 +68,7 @@ const Props = Vue.extend({
   components: {
     Modal,
     FileReader,
+    HelpFooter,
     S3Reader
   }
 })
