@@ -31,7 +31,7 @@ export interface Statistics {
     /**
      * How long (in seconds) this inspec exec ran for.
      */
-    duration: number;
+    duration?: number | null;
 }
 
 /**
@@ -211,7 +211,7 @@ const typeMap: any = {
     ], "any"),
     "Statistics": o([
         { json: "controls", js: "controls", typ: u(undefined, u(null, r("StatisticHash"))) },
-        { json: "duration", js: "duration", typ: 3.14 },
+        { json: "duration", js: "duration", typ: u(undefined, u(3.14, null)) },
     ], "any"),
     "StatisticHash": o([
         { json: "failed", js: "failed", typ: u(undefined, u(null, r("StatisticBlock"))) },

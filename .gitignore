@@ -3,3 +3,5 @@ dist/
 docs/
 node_modules/
 work/
+src/tst/parse_testbed/*
+**/.DS_Store

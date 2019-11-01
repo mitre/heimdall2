@@ -51,8 +51,12 @@ export function convertFile(json_text: string): ConversionResult {
         errors.push(e);
     }
 
-    errors.forEach(e => console.warn(e));
-    throw new Error("Unable to convert inspec json output. Please verify it's from an up-to-date version of the program!");
+    // errors.forEach(e => console.warn(e));
+    throw new Error(
+        "Unable to convert input json. " +
+            "This usually means the file is malformed - please check that the software that generated it is up to date, " +
+            "and, failing that, file an issue with the inspecjs project on github"
+    );
 }
 
 // Provide some convenient types for different schemas

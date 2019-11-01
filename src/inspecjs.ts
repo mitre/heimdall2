@@ -19,5 +19,5 @@ export {
 } from "./compat_wrappers";
 
 // Export nist utilities
-import * as nist from "./nist"
+import * as nist from "./nist";
 export { nist };

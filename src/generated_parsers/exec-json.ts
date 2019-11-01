@@ -75,6 +75,7 @@ export interface ExecJSONControl {
     source_location: SourceLocation;
     tags:            { [key: string]: any };
     title?:          null | string;
+    waiver_data?:    null | WaiverData;
 }
 
 export interface ControlDescription {
@@ -116,6 +117,14 @@ export interface SourceLocation {
      * Path to the file that this statement originates from
      */
     ref?: null | string;
+}
+
+export interface WaiverData {
+    expiration_date?:       null | string;
+    justification?:         null | string;
+    message?:               null | string;
+    run?:                   boolean | null;
+    skipped_due_to_waiver?: null | string;
 }
 
 export interface Dependency {
@@ -363,6 +372,7 @@ const typeMap: any = {
         { json: "source_location", js: "source_location", typ: r("SourceLocation") },
         { json: "tags", js: "tags", typ: m("any") },
         { json: "title", js: "title", typ: u(undefined, u(null, "")) },
+        { json: "waiver_data", js: "waiver_data", typ: u(undefined, u(null, r("WaiverData"))) },
     ], "any"),
     "ControlDescription": o([
         { json: "data", js: "data", typ: "" },
@@ -387,6 +397,13 @@ const typeMap: any = {
     "SourceLocation": o([
         { json: "line", js: "line", typ: u(undefined, u(3.14, null)) },
         { json: "ref", js: "ref", typ: u(undefined, u(null, "")) },
+    ], "any"),
+    "WaiverData": o([
+        { json: "expiration_date", js: "expiration_date", typ: u(undefined, u(null, "")) },
+        { json: "justification", js: "justification", typ: u(undefined, u(null, "")) },
+        { json: "message", js: "message", typ: u(undefined, u(null, "")) },
+        { json: "run", js: "run", typ: u(undefined, u(true, null)) },
+        { json: "skipped_due_to_waiver", js: "skipped_due_to_waiver", typ: u(undefined, u(null, "")) },
     ], "any"),
     "Dependency": o([
         { json: "branch", js: "branch", typ: u(undefined, u(null, "")) },

@@ -41,7 +41,12 @@ export type ControlStatus =
 export type Severity = "none" | "low" | "medium" | "high" | "critical";
 
 /** The statuses that a segment of a control (IE a describe block) might have. */
-export type SegmentStatus = "passed" | "failed" | "skipped" | "error" | "no_status";
+export type SegmentStatus =
+    | "passed"
+    | "failed"
+    | "skipped"
+    | "error"
+    | "no_status";
 
 /**
  * This interface acts as a polyfill on controls for our HDF "guaranteed" derived types, to provide a stable
@@ -55,6 +60,8 @@ export interface HDFControl {
 
     /**
      * Get the control status as computed for the entire control.
+     * See the below for discussion of how this should be computed.
+     * https://github.com/mitre/heimdall-vuetify/issues/57
      */
     status: ControlStatus;
 
@@ -94,7 +101,6 @@ export interface HDFControl {
      */
     parsed_nist_revision: NistRevision | null;
 
-
     /** Get the start time of this control's run, as determiend by the time of the first test.
      * If no tests were run, (it is a profile-json or has no tests) returns undefined
      */
@@ -114,6 +120,12 @@ export interface HDFControl {
 
     /** Easy check if this is a profile */
     is_profile: boolean;
+
+    /** Maps string labels to description items. */
+    descriptions: { [key: string]: string };
+
+    /** Returns whether this control was waived. */
+    waived: boolean;
 }
 
 /**

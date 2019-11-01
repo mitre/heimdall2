@@ -1,9 +1,9 @@
 // Get filesystem
 import * as fs from "fs";
 import * as path from "path";
-import { ConversionResult, convertFile } from "../src/fileparse";
-import { ControlStatus, hdfWrapControl, HDFControl } from "../src/inspecjs";
-import { ExecJSONMin, ExecJSON } from "../src/versions/v_1_0";
+import { ConversionResult, convertFile } from "../fileparse";
+import { ControlStatus, hdfWrapControl, HDFControl } from "../inspecjs";
+import { ExecJSONMin, ExecJSON } from "../versions/v_1_0";
 
 /** Reads the contents of the given files into an array of strings. */
 function readFiles(
@@ -16,15 +16,17 @@ function readFiles(
             console.log(err);
             return;
         }
+        // Sort the filenames
+        filenames = filenames.sort();
+
         filenames.forEach(function(filename) {
-            fs.readFile(dirname + filename, "utf-8", function(err, content) {
-                if (err) {
-                    console.log(`Error reading file ${filename}`);
-                    console.log(err);
-                    return;
-                }
+            try {
+                let content = fs.readFileSync(dirname + filename, "utf-8");
                 onFileContent(filename, content);
-            });
+            } catch (err) {
+                console.log(`Error reading file ${filename}`);
+                console.log(err);
+            }
         });
     });
 }
@@ -85,6 +87,7 @@ function count_exec_1_0(x: ExecJSON.Execution): Counts {
     controls = filter_overlays(controls);
 
     // Count
+    console.log(controls.filter(c => c.status === "Profile Error").map(c => c.wraps.id).sort());
     return count_hdf(controls);
 }
 
