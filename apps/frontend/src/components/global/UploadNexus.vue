@@ -12,43 +12,31 @@
     >
       <v-tabs-slider></v-tabs-slider>
       <!-- Define our tabs -->
-      <v-tab href="#uploadtab-local">
-        Local Files
-      </v-tab>
+      <v-tab href="#uploadtab-local">Local Files</v-tab>
 
-      <v-tab href="#uploadtab-samples">
-        Samples
-      </v-tab>
+      <v-tab href="#uploadtab-s3">S3 Bucket</v-tab>
 
-      <v-tab href="#uploadtab-s3">
-        S3 Bucket
-      </v-tab>
-
-      <v-tab href="#uploadtab-splunk">
-        Splunk
-      </v-tab>
+      <v-tab href="#uploadtab-splunk">Splunk</v-tab>
+      <v-spacer />
+      <v-divider />
+      <v-tab href="#uploadtab-samples">Samples</v-tab>
 
       <!-- Include those components -->
       <v-tab-item value="uploadtab-local">
         <FileReader @got-files="got_files" />
-        <HelpFooter />
       </v-tab-item>
 
       <v-tab-item value="uploadtab-samples">
         <SampleList @got-files="got_files" />
-        <HelpFooter />
       </v-tab-item>
 
       <v-tab-item value="uploadtab-s3">
         <S3Reader class="pa-4" @got-files="got_files" />
-        <HelpFooter />
       </v-tab-item>
 
-      <v-tab-item value="uploadtab-splunk">
-        Coming soon
-        <HelpFooter />
-      </v-tab-item>
+      <v-tab-item value="uploadtab-splunk">Coming soon</v-tab-item>
     </v-tabs>
+    <HelpFooter />
   </Modal>
 </template>
 

@@ -16,7 +16,6 @@
           <div class="d-flex flex-column justify-center">
             <span :class="title_class">Heimdall</span>
             <span :class="title_class">Lite</span>
-            <span class="subtitle-2 px-0">{{ version }}</span>
           </div>
         </v-col>
       </v-row>
