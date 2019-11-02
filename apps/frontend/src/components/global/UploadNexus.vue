@@ -8,6 +8,7 @@
       :vertical="$vuetify.breakpoint.mdAndUp"
       active
       color="primary-visible"
+      show-arrows
     >
       <v-tabs-slider></v-tabs-slider>
       <!-- Define our tabs -->
