@@ -1,6 +1,5 @@
 <template>
   <v-card>
-    <v-card-title>S3 Bucket</v-card-title>
     <v-card-subtitle>Easily load data from an S3 bucket</v-card-subtitle>
     <v-container>
       <div v-if="shown_window === 'NoAuth'">
@@ -76,9 +75,9 @@
               <!-- Title: The item key -->
               <v-list-item-title>{{ val.Key }}</v-list-item-title>
               <!-- Subtitle: Date of creation -->
-              <v-list-item-subtitle>{{
-                val.LastModified
-              }}</v-list-item-subtitle>
+              <v-list-item-subtitle>
+                {{ val.LastModified }}
+              </v-list-item-subtitle>
             </v-list-item-content>
             <!-- Action: Click to add -->
             <v-list-item-action>

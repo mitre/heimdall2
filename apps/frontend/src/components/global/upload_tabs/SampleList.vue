@@ -1,10 +1,9 @@
 <template>
   <v-card>
-    <v-card-title>Heimdall Samples</v-card-title>
-    <v-card-subtitle
-      >Samples to show the power of the Heimdall application and supported HDF
-      formats</v-card-subtitle
-    >
+    <v-card-subtitle>
+      Samples to show the power of the Heimdall application and supported HDF
+      formats
+    </v-card-subtitle>
     <v-list>
       <v-list-item v-for="(sample, index) in samples" :key="index">
         <v-list-item-content>
