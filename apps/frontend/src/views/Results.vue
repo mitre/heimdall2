@@ -143,9 +143,10 @@ import ExportCaat from "@/components/global/ExportCaat.vue";
 
 import { Filter, TreeMapState } from "@/store/data_filters";
 import { ControlStatus, Severity } from "inspecjs";
-import { FileID } from "@/store/report_intake";
+import InspecIntakeModule, { FileID } from "@/store/report_intake";
 import { getModule } from "vuex-module-decorators";
 import InspecDataModule from "../store/data_store";
+import { need_redirect_file } from "@/utilities/helper_util";
 
 // We declare the props separately
 // to make props types inferrable.
@@ -208,11 +209,28 @@ export default class Results extends ResultsProps {
   get file_filter(): FileID | null {
     let id_string: string = this.$route.params.id;
     let as_int = parseInt(id_string);
+    let result: FileID | null;
     if (isNaN(as_int)) {
-      return null;
+      result = null;
     } else {
-      return as_int as FileID;
+      result = as_int as FileID;
     }
+
+    // Route if necessary
+    let redir = need_redirect_file(
+      result,
+      getModule(InspecDataModule, this.$store)
+    );
+    if (redir !== "ok") {
+      if (redir === "root") {
+        this.$router.push("/");
+      } else {
+        this.$router.push(`/results/${redir}`);
+        result = redir;
+      }
+    }
+
+    return result;
   }
 
   /**
