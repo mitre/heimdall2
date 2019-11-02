@@ -1,10 +1,10 @@
 <template>
   <v-card>
     <v-container class="bar lighten-2">
-      <v-row justify="space-between" no-gutters>
+      <v-row justify="space-around" no-gutters>
         <AboutModal>
           <template v-slot:clickable="{ on }">
-            <v-btn v-on="on" text>
+            <v-btn v-on="on" text small>
               <v-icon small>mdi-information</v-icon>
               <span class="d-none d-sm-inline pl-3">About</span>
             </v-btn>
@@ -12,21 +12,26 @@
         </AboutModal>
         <HelpModal>
           <template v-slot:clickable="{ on }">
-            <v-btn v-on="on" text>
+            <v-btn v-on="on" text small>
               <v-icon small>mdi-help-circle</v-icon>
               <span class="d-none d-sm-inline pl-3">Help</span>
             </v-btn>
           </template>
         </HelpModal>
-        <v-btn :href="repository" target="_blank" text>
+        <v-btn :href="repository" target="_blank" text small>
           <v-icon small>mdi-github-circle</v-icon>
           <span class="d-none d-sm-inline pl-3">Github</span>
         </v-btn>
-        <v-btn :href="repository" target="_blank" text>
+        <v-btn :href="repository" target="_blank" text small>
           <v-icon small>mdi-library-books</v-icon>
-          <span class="d-none d-sm-inline pl-3">Documentation</span>
+          <span class="d-none d-sm-inline pl-3">Docs</span>
         </v-btn>
-        <v-btn :href="repository + branch + changelog" target="_blank" text>
+        <v-btn
+          :href="repository + branch + changelog"
+          target="_blank"
+          text
+          small
+        >
           <span class="d-sm-inline pl-3 text-center">{{ version }}</span>
         </v-btn>
       </v-row>

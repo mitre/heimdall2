@@ -23,7 +23,7 @@ declare const process: {
 class AppInfoModule extends VuexModule {
   /** The app version */
   get version(): string {
-    return `Ver.${process.env.PACKAGE_VERSION}`;
+    return `v${process.env.PACKAGE_VERSION}`;
   }
 
   /** The app description */
