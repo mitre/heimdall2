@@ -1,98 +1,96 @@
 <template>
-  <div>
-    <div v-if="shown_window === 'NoAuth'">
-      <span>
-        Provide S3 credentials
-      </span>
-      <div v-if="shown_error">
-        <p class="font-italic error--text">{{ shown_error }}</p>
+  <v-card>
+    <v-card-title>S3 Bucket</v-card-title>
+    <v-card-subtitle>Easily load data from an S3 bucket</v-card-subtitle>
+    <v-container>
+      <div v-if="shown_window === 'NoAuth'">
+        <span>Provide S3 credentials</span>
+        <div v-if="shown_error">
+          <p class="font-italic error--text">{{ shown_error }}</p>
+        </div>
+        <v-form v-model="valid">
+          <!-- :rules="nameRules" -->
+          <v-text-field
+            v-model="base_access_token"
+            label="Access Token"
+            lazy-validation="lazy"
+            required
+            :rules="field_rules"
+          />
+          <v-text-field
+            v-model="base_secret_token"
+            label="Secret Token"
+            required
+            :rules="field_rules"
+            :append-icon="show_secret ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="show_secret ? 'text' : 'password'"
+            @click:append="show_secret = !show_secret"
+          />
+          <v-text-field
+            v-model="s3_role_arn"
+            label="AWS S3 Role ARN"
+            required
+            :rules="field_rules"
+          />
+          <v-text-field v-model="bucket_name" label="Bucket" required />
+          <v-btn :disabled="!valid" @click="refresh">Submit</v-btn>
+        </v-form>
       </div>
-      <v-form v-model="valid">
-        <!-- :rules="nameRules" -->
-        <v-text-field
-          v-model="base_access_token"
-          label="Access Token"
-          lazy-validation="lazy"
-          required
-          :rules="field_rules"
-        />
-        <v-text-field
-          v-model="base_secret_token"
-          label="Secret Token"
-          required
-          :rules="field_rules"
-          :append-icon="show_secret ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="show_secret ? 'text' : 'password'"
-          @click:append="show_secret = !show_secret"
-        />
-        <v-text-field
-          v-model="s3_role_arn"
-          label="AWS S3 Role ARN"
-          required
-          :rules="field_rules"
-        />
-        <v-text-field v-model="bucket_name" label="Bucket" required />
-        <v-btn :disabled="!valid" @click="refresh"> Submit </v-btn>
-      </v-form>
-    </div>
-    <div v-else-if="shown_window === 'BaseAuth'">
-      <div class="d-flex justify-space-between">
-        <v-btn small title="Back" @click="back">
-          <v-icon>
-            mdi-arrow-left
-          </v-icon>
-        </v-btn>
-        <span>MFA Auth Required</span>
-        <div />
+      <div v-else-if="shown_window === 'BaseAuth'">
+        <div class="d-flex justify-space-between">
+          <v-btn small title="Back" @click="back">
+            <v-icon>mdi-arrow-left</v-icon>
+          </v-btn>
+          <span>MFA Auth Required</span>
+          <div />
+        </div>
+        <div v-if="shown_error">
+          <p class="font-italic error--text">{{ shown_error }}</p>
+        </div>
+        <v-form v-model="valid">
+          <v-text-field
+            v-model="mfa_serial"
+            label="MFA Auth Device Serial Key"
+            required
+          />
+          <v-text-field v-model="mfa_token" label="MFA Auth Token" required />
+          <v-btn :disabled="!valid" @click="refresh">Submit</v-btn>
+        </v-form>
       </div>
-      <div v-if="shown_error">
-        <p class="font-italic error--text">{{ shown_error }}</p>
+      <div v-else-if="shown_window === 'FullyAuthed'">
+        <div class="d-flex justify-space-between">
+          <v-btn small title="Back" @click="back">
+            <v-icon>mdi-arrow-left</v-icon>
+          </v-btn>
+          <span>From {{ bucket_name }}</span>
+          <v-btn small title="Reload" @click="refresh">
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
+        </div>
+        <v-list :two-line="true">
+          <v-list-item v-if="files.length === 0"
+            >No items found! Try refreshing?</v-list-item
+          >
+          <v-list-item v-for="(val, index) in files" :key="val.Key">
+            <v-list-item-content>
+              <!-- Title: The item key -->
+              <v-list-item-title>{{ val.Key }}</v-list-item-title>
+              <!-- Subtitle: Date of creation -->
+              <v-list-item-subtitle>{{
+                val.LastModified
+              }}</v-list-item-subtitle>
+            </v-list-item-content>
+            <!-- Action: Click to add -->
+            <v-list-item-action>
+              <v-btn icon @click="load_file(index)">
+                <v-icon>mdi-plus-circle</v-icon>
+              </v-btn>
+            </v-list-item-action>
+          </v-list-item>
+        </v-list>
       </div>
-      <v-form v-model="valid">
-        <v-text-field
-          v-model="mfa_serial"
-          label="MFA Auth Device Serial Key"
-          required
-        />
-        <v-text-field v-model="mfa_token" label="MFA Auth Token" required />
-        <v-btn :disabled="!valid" @click="refresh"> Submit </v-btn>
-      </v-form>
-    </div>
-    <div v-else-if="shown_window === 'FullyAuthed'">
-      <div class="d-flex justify-space-between">
-        <v-btn small title="Back" @click="back">
-          <v-icon>
-            mdi-arrow-left
-          </v-icon>
-        </v-btn>
-        <span>From {{ bucket_name }}</span>
-        <v-btn small title="Reload" @click="refresh">
-          <v-icon>
-            mdi-refresh
-          </v-icon>
-        </v-btn>
-      </div>
-      <v-list :two-line="true">
-        <v-list-item v-if="files.length === 0">
-          No items found! Try refreshing?
-        </v-list-item>
-        <v-list-item v-for="(val, index) in files" :key="val.Key">
-          <v-list-item-content>
-            <!-- Title: The item key -->
-            <v-list-item-title>{{ val.Key }}</v-list-item-title>
-            <!-- Subtitle: Date of creation -->
-            <v-list-item-subtitle>{{ val.LastModified }}</v-list-item-subtitle>
-          </v-list-item-content>
-          <!-- Action: Click to add -->
-          <v-list-item-action>
-            <v-btn icon @click="load_file(index)">
-              <v-icon>mdi-plus-circle</v-icon>
-            </v-btn>
-          </v-list-item-action>
-        </v-list-item>
-      </v-list>
-    </div>
-  </div>
+    </v-container>
+  </v-card>
 </template>
 
 <script lang="ts">

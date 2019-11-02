@@ -1,5 +1,9 @@
 <template>
   <v-card>
+    <v-card-title>Load Local Results</v-card-title>
+    <v-card-subtitle
+      >Easily load any supported Heidmall Data Format file</v-card-subtitle
+    >
     <v-container>
       <v-row>
         <v-col cols="12" align="center">
