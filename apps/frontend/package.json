@@ -28,7 +28,7 @@
     "aws-sdk": "^2.562.0",
     "babel-plugin-prismjs": "^1.1.1",
     "chroma-js": "^2.1.0",
-    "core-js": "^2.6.10",
+    "core-js": "^3.3.6",
     "d3": "^5.12.0",
     "date-fns": "^2.6.0",
     "diff": "^4.0.1",

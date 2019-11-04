@@ -4,12 +4,8 @@ import Vuetify, { colors } from "vuetify/lib";
 import Toasted from "vue-toasted";
 import { ToastOptions } from "vue-toasted/types/index";
 import { gen_variants, gen_visibilities } from "@/utilities/color_util";
-//@ts-ignore
-import lineClamp from "vue-line-clamp";
 
 Vue.use(Vuetify);
-
-Vue.use(lineClamp, { importCss: true });
 
 Vue.use(Toasted);
 // options to the toast

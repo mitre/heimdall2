@@ -16,6 +16,7 @@ const issues = parsed.issues || "";
 
 module.exports = {
   publicPath: process.env.NODE_ENV === "production" ? "./" : "/",
+  transpileDependencies: [/(\/|\\)vuetify(\/|\\)/],
   configureWebpack: {
     plugins: [
       new webpack.DefinePlugin({
