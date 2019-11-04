@@ -205,16 +205,18 @@ class InspecDataModule extends VuexModule {
 
       // Next step: Extract controls and connect them
       // Extract.
+      let this_files_controls: ContextualizedControl[] = [];
       exec_file_context.contains.forEach(p => {
         let p_controls = p.data.controls as schemas_1_0.ExecJSON.Control[];
         p.contains = p_controls.map(c => {
           return new ContextualizedControlImp(c, p, [], []);
         });
         controls.push(...p.contains);
+        this_files_controls.push(...p.contains);
       });
 
       // Link.
-      controls.forEach(cc => {
+      this_files_controls.forEach(cc => {
         // First, we scan for a matching control id in the parent profile
         let extended_profile: ContextualizedProfile | undefined =
           cc.sourced_from.extends_from[0]; // Only ever going to have 1 element, max
@@ -235,7 +237,7 @@ class InspecDataModule extends VuexModule {
         // and we aren't the "base" control that gets filled with results, we go hunting for said base control
         // Unfortunately, if theres more than 2 profiles there's ultimately no way to figure out which one was applied "last".
         // This method leaves them as siblings. However, as a fallback method that is perhaps the best we can hope for
-        let same_id = controls.filter(c => c.data.id === cc.data.id);
+        let same_id = this_files_controls.filter(c => c.data.id === cc.data.id);
         let same_id_populated = same_id.find(
           c => c.hdf.segments && c.hdf.segments.length
         );
