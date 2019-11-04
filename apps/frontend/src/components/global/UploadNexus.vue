@@ -37,13 +37,13 @@
       <v-tab-item value="uploadtab-splunk">
         <v-container>
           <v-row class="title pa-2">
-            <p>Comming Soon</p>
+            <p>Coming Soon</p>
           </v-row>
           <v-row class="pa-2 text-justify">
             <p>
               Soon Heimdall will be able to consume Heimdall Results Format data
               from a Splunk data source making it easy to access your enterprise
-              secuirty data right from the browsers, any-time and any-where.
+              security data right from the browsers, any-time and any-where.
             </p>
           </v-row>
         </v-container>
