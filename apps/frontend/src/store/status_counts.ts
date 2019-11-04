@@ -6,7 +6,7 @@ import { Module, VuexModule, getModule } from "vuex-module-decorators";
 import FilteredData, { Filter, filter_cache_key } from "@/store/data_filters";
 import Store from "@/store/store";
 import LRUCache from "lru-cache";
-import { ControlStatus } from "inspecjs";
+import { ControlStatus, hdfWrapControl } from "inspecjs";
 import InspecDataModule from "@/store/data_store";
 
 // The hash that we will generally be working with herein
@@ -33,7 +33,7 @@ function count_statuses(data: FilteredData, filter: Filter): StatusHash {
     "Profile Error": 0
   };
   controls.forEach(c => {
-    let status: ControlStatus = c.root.hdf.status;
+    let status: ControlStatus = hdfWrapControl(c.data).status;
     hash[status] += 1;
   });
 
@@ -62,7 +62,7 @@ class StatusCountModule extends VuexModule {
   get hash(): (filter: Filter) => StatusHash {
     // Establish our cache and dependency
     let depends: any = this.inspec_data.contextualControls;
-    let cache: LRUCache<string, StatusHash> = new LRUCache(30);
+    let cache: LRUCache<string, StatusHash> = new LRUCache(10);
 
     return (filter: Filter) => {
       let id = filter_cache_key(filter);

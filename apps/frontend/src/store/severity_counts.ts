@@ -6,7 +6,7 @@ import { Module, VuexModule, getModule } from "vuex-module-decorators";
 import FilteredData, { Filter, filter_cache_key } from "@/store/data_filters";
 import Store from "@/store/store";
 import LRUCache from "lru-cache";
-import { Severity } from "inspecjs";
+import { Severity, hdfWrapControl } from "inspecjs";
 import InspecDataModule from "@/store/data_store";
 
 // The hash that we will generally be working with herein
@@ -32,7 +32,7 @@ function count_severities(data: FilteredData, filter: Filter): SeverityHash {
     critical: 0
   };
   controls.forEach(c => {
-    let severity: Severity = c.root.hdf.severity;
+    let severity: Severity = hdfWrapControl(c.data).severity;
     hash[severity] += 1;
   });
 
@@ -61,7 +61,7 @@ class SeverityCountModule extends VuexModule {
   get hash(): (filter: Filter) => SeverityHash {
     // Establish our cache and dependency
     let depends: any = this.inspec_data.contextualControls;
-    let cache: LRUCache<string, SeverityHash> = new LRUCache(30);
+    let cache: LRUCache<string, SeverityHash> = new LRUCache(10);
 
     return (filter: Filter) => {
       let id = filter_cache_key(filter);

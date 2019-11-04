@@ -38,7 +38,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import { getModule } from "vuex-module-decorators";
-import { ControlStatus, HDFControl, nist } from "inspecjs";
+import { ControlStatus, HDFControl, nist, hdfWrapControl } from "inspecjs";
 import * as d3 from "d3";
 import FilteredDataModule, { TreeMapState } from "@/store/data_filters";
 import {
