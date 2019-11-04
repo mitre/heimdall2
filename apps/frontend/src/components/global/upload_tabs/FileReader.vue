@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-subtitle
-      >Easily load any supported Heidmall Data Format file</v-card-subtitle
+      >Easily load any supported Heimdall Data Format file</v-card-subtitle
     >
     <v-container>
       <v-row>
