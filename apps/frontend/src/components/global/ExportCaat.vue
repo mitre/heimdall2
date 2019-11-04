@@ -20,7 +20,7 @@ import { getModule } from "vuex-module-decorators";
 import FilteredDataModule, { Filter } from "@/store/data_filters";
 import XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import { hdfWrapControl, HDFControl, ControlStatus } from "inspecjs";
+import { HDFControl, ControlStatus } from "inspecjs";
 import LinkItem, {
   LinkAction
 } from "@/components/global/sidebaritems/SidebarLink.vue";
@@ -165,7 +165,7 @@ export default class ExportCaat extends Props {
 
     // Turn controls into rows
     let rows_unfiltered: Array<CAATRow | null> = controls.map(ctrl =>
-      this.to_row(hdfWrapControl(ctrl.data), vuln_list)
+      this.to_row(ctrl.root.hdf, vuln_list)
     );
 
     // Filter out nulls

@@ -7,12 +7,7 @@ import DataModule, {
   ContextualizedProfile,
   ContextualizedControl
 } from "@/store/data_store";
-import {
-  ControlStatus,
-  Severity,
-  hdfWrapControl as hdf,
-  hdfWrapControl
-} from "inspecjs";
+import { ControlStatus, Severity } from "inspecjs";
 import { FileID, isInspecFile } from "@/store/report_intake";
 import Store from "@/store/store";
 import LRUCache from "lru-cache";
@@ -65,13 +60,12 @@ function contains_term(
   context_control: ContextualizedControl,
   term: string
 ): boolean {
-  let control = context_control.data;
-  let as_hdf = hdf(control);
+  let as_hdf = context_control.root.hdf;
   // Get our (non-null) searchable data
   let searchables: string[] = [
-    control.id,
-    control.title,
-    control.code,
+    as_hdf.wraps.id,
+    as_hdf.wraps.title,
+    as_hdf.wraps.code,
     as_hdf.severity,
     as_hdf.status,
     as_hdf.finding_details
@@ -177,14 +171,14 @@ class FilteredDataModule extends VuexModule {
       // Filter by status, if necessary
       if (filter.status !== undefined) {
         controls = controls.filter(
-          control => hdf(control.data).status === filter.status
+          control => control.root.hdf.status === filter.status
         );
       }
 
       // Filter by severity, if necessary
       if (filter.severity !== undefined) {
         controls = controls.filter(
-          control => hdf(control.data).severity === filter.severity
+          control => control.root.hdf.severity === filter.severity
         );
       }
 
@@ -211,9 +205,7 @@ class FilteredDataModule extends VuexModule {
 
         controls = controls.filter(c => {
           // Get an hdf version so we have the fixed nist tags
-          let as_hdf = hdfWrapControl(c.data);
-
-          return as_hdf.parsed_nist_tags.some(t => control.contains(t));
+          return c.root.hdf.parsed_nist_tags.some(t => control.contains(t));
         });
       }
 

@@ -91,12 +91,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import { ContextualizedControl } from "@/store/data_store";
-import {
-  HDFControl,
-  HDFControlSegment,
-  hdfWrapControl,
-  SegmentStatus
-} from "inspecjs";
+import { HDFControl, HDFControlSegment, SegmentStatus } from "inspecjs";
 import { ControlDelta, ControlChangeGroup } from "@/utilities/delta_util";
 import { diffArrays, ArrayOptions } from "diff";
 import ChangeItem from "@/components/cards/comparison/ChangeItem.vue";
@@ -123,12 +118,12 @@ export default class DeltaView extends Props {
 
   /** Formatted name for our older control */
   get old_name(): string {
-    return hdfWrapControl(this._delta.old.data).start_time || "Old";
+    return this._delta.old.root.hdf.start_time || "Old";
   }
 
   /** Formatted name for our newer control */
   get new_name(): string {
-    return hdfWrapControl(this._delta.new.data).start_time || "New";
+    return this._delta.new.root.hdf.start_time || "New";
   }
 
   /**

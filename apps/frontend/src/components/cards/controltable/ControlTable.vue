@@ -79,7 +79,7 @@ import ColumnHeader, { Sort } from "@/components/generic/ColumnHeader.vue";
 import ResponsiveRowSwitch from "@/components/cards/controltable/ResponsiveRowSwitch.vue";
 
 import { getModule } from "vuex-module-decorators";
-import { hdfWrapControl, HDFControl, ControlStatus } from "inspecjs";
+import { HDFControl, ControlStatus } from "inspecjs";
 import FilteredDataModule from "@/store/data_filters";
 import { control_unique_key } from "@/utilities/format_util";
 
@@ -175,8 +175,7 @@ export default class ControlTable extends ControlTableProps {
       let key = control_unique_key(d);
 
       // File, hdf wrapper
-      let hdf = hdfWrapControl(d.data);
-      let with_id = Object.assign(hdf, {
+      let with_id = Object.assign(d.root.hdf, {
         key,
         status_val: [
           "Passed",
@@ -185,9 +184,9 @@ export default class ControlTable extends ControlTableProps {
           "Not Reviewed",
           "Profile Error",
           "Failed"
-        ].indexOf(hdf.status),
+        ].indexOf(d.root.hdf.status),
         severity_val: ["none", "low", "medium", "high", "critical"].indexOf(
-          hdf.severity
+          d.root.hdf.severity
         )
       });
       return with_id;
