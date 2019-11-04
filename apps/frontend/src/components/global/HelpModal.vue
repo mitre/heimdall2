@@ -57,14 +57,6 @@
         <br />
         <hr />
         <br />
-        <h2>View the profile before you execute it on a system.</h2>
-        <br />
-        <p>
-          The profile must be loaded into Heimdall Lite as a json value.
-          <br />To create a json of a profile use the following steps:
-        </p>
-        <li>Open a terminal to the directory of the profile.</li>
-        <li>Run the command: `inspec json [path to profile] -o [name]`</li>
       </v-card-text>
 
       <v-divider></v-divider>
