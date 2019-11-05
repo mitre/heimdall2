@@ -10,7 +10,7 @@ import { ControlStatus } from "inspecjs";
 import InspecDataModule from "@/store/data_store";
 
 // The hash that we will generally be working with herein
-type StatusHash = { [key in ControlStatus]: number };
+export type StatusHash = { [key in ControlStatus]: number };
 
 // Helper function for counting a status in a list of controls
 function count_statuses(data: FilteredData, filter: Filter): StatusHash {
