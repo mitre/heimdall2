@@ -31,6 +31,10 @@
 
 - Add a 'samples' section to the loading modal which links to a preconfigured s3 source or github file source [\#150](https://github.com/mitre/heimdall-vuetify/issues/150)
 
+**Merged pull requests:**
+
+- Added tests [\#168](https://github.com/mitre/heimdall-vuetify/pull/168) ([Mitriol](https://github.com/Mitriol))
+
 ## [v0.0.7](https://github.com/mitre/heimdall-vuetify/tree/v0.0.7) (2019-10-25)
 
 [Full Changelog](https://github.com/mitre/heimdall-vuetify/compare/v0.0.6...v0.0.7)
