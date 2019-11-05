@@ -6,12 +6,7 @@ import {
   ContextualizedExecution,
   ContextualizedControl
 } from "@/store/data_store";
-import {
-  hdfWrapControl,
-  HDFControl,
-  HDFControlSegment,
-  SegmentStatus
-} from "inspecjs";
+import { HDFControlSegment } from "inspecjs";
 import {
   structuredPatch,
   createPatch,
@@ -104,16 +99,6 @@ export class ControlDelta {
   /** The newer control */
   new: ContextualizedControl;
 
-  /** The older control, conveniently bundles as an hdf */
-  get old_hdf(): HDFControl {
-    return hdfWrapControl(this.old.data);
-  }
-
-  /** The newer control, conveniently bundles as an hdf */
-  get new_hdf(): HDFControl {
-    return hdfWrapControl(this.new.data);
-  }
-
   constructor(old: ContextualizedControl, _new: ContextualizedControl) {
     this.old = old;
     this.new = _new;
@@ -169,15 +154,19 @@ export class ControlDelta {
 
     // Change in status, obviously.
     header_changes.push(
-      new ControlChange("Status", this.old_hdf.status, this.new_hdf.status)
+      new ControlChange(
+        "Status",
+        this.old.root.hdf.status,
+        this.new.root.hdf.status
+      )
     );
 
     // And severity! Why not
     header_changes.push(
       new ControlChange(
         "Severity",
-        this.old_hdf.severity,
-        this.new_hdf.severity
+        this.old.root.hdf.severity,
+        this.new.root.hdf.severity
       )
     );
 
@@ -185,8 +174,8 @@ export class ControlDelta {
     header_changes.push(
       new ControlChange(
         "NIST Tags",
-        this.old_hdf.raw_nist_tags.join(", "),
-        this.new_hdf.raw_nist_tags.join(", ")
+        this.old.root.hdf.raw_nist_tags.join(", "),
+        this.new.root.hdf.raw_nist_tags.join(", ")
       )
     );
 
@@ -202,8 +191,8 @@ export class ControlDelta {
    */
   get segment_changes(): ControlChangeGroup[] {
     // Change in individual control segments
-    let old_segs = this.old_hdf.segments;
-    let new_segs = this.new_hdf.segments;
+    let old_segs = this.old.root.hdf.segments;
+    let new_segs = this.new.root.hdf.segments;
     if (old_segs === undefined || new_segs === undefined) {
       // Oh well
       return [];
@@ -281,8 +270,8 @@ export class ComparisonContext {
           // TODO: Move this to a more stable, external library based solution
           // TODO: Create a method for getting the start time of an execution, and instead do this sort on executions at the start
           // Convert to dates, and
-          let a_date = new Date(hdfWrapControl(a.data).start_time || 0);
-          let b_date = new Date(hdfWrapControl(b.data).start_time || 0);
+          let a_date = new Date(a.root.hdf.start_time || 0);
+          let b_date = new Date(b.root.hdf.start_time || 0);
           return a_date.valueOf() - b_date.valueOf();
         })
       );

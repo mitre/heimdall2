@@ -2,7 +2,7 @@
  * Tools used for generating the treemaps consumed by, of course, the Treemap card and associated components.
  */
 
-import { hdfWrapControl, ControlStatus, nist } from "inspecjs";
+import { nist } from "inspecjs";
 import * as d3 from "d3";
 import { ContextualizedControl } from "@/store/data_store";
 import { control_unique_key } from "./format_util";
@@ -53,12 +53,9 @@ function controls_to_nist_node_data(
 ): TreemapNodeLeaf[] {
   return contextualized_controls.flatMap(cc => {
     // Get the status color
-    let color = Chroma.hex(
-      colors.colorForStatus(hdfWrapControl(cc.data).status)
-    );
+    let color = Chroma.hex(colors.colorForStatus(cc.root.hdf.status));
     // Now make leaves for each nist control
-    let hdf = hdfWrapControl(cc.data);
-    return hdf.parsed_nist_tags.map(nc => {
+    return cc.root.hdf.parsed_nist_tags.map(nc => {
       let leaf: TreemapNodeLeaf = {
         title: cc.data.id,
         subtitle: cc.data.title || undefined,

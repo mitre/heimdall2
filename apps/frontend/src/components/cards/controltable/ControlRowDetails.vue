@@ -37,9 +37,7 @@
             <v-divider></v-divider>
             <br />
             <v-clamp class="pb-2" autoresize :max-lines="2">
-              <template slot="default">{{
-                control.wraps.desc.trim()
-              }}</template>
+              <template slot="default">{{ control.data.desc.trim() }}</template>
               <template slot="after" slot-scope="{ toggle, expanded, clamped }">
                 <v-icon
                   fab
@@ -56,7 +54,7 @@
               </template>
             </v-clamp>
             <ControlRowCol
-              v-for="(result, index) in control.wraps.results"
+              v-for="(result, index) in control.root.data.results"
               :key="index"
               :class="zebra(index)"
               :result="result"
@@ -84,7 +82,7 @@
             <v-container fluid>
               <v-row>
                 <v-col cols="12">
-                  <prism language="ruby">{{ control.wraps.code }}</prism>
+                  <prism language="ruby">{{ control.full_code }}</prism>
                 </v-col>
               </v-row>
             </v-container>
@@ -112,6 +110,7 @@ import Prism from "vue-prism-component";
 Vue.component("prism", Prism);
 
 import "prismjs/components/prism-ruby.js";
+import { ContextualizedControl } from "../../../store/data_store";
 
 interface Detail {
   name: string;
@@ -123,7 +122,7 @@ interface Detail {
 const ControlRowDetailsProps = Vue.extend({
   props: {
     control: {
-      type: Object, // Of type HDFControl
+      type: Object, // Of type ContextualizedControl
       required: true
     }
   }
@@ -145,6 +144,11 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
   clamped: boolean = false;
   expanded: boolean = false;
 
+  /** Typed getter aroun control prop */
+  get _control(): ContextualizedControl {
+    return this.control;
+  }
+
   // Checks if an element has been clamped
   isClamped(el: CollapsableElement | undefined | null) {
     if (!el) {
@@ -164,7 +168,7 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
 
   /** Shown above the description */
   get header(): string {
-    let msg_split = (this.control as HDFControl).finding_details.split(":");
+    let msg_split = this._control.root.hdf.finding_details.split(":");
     if (msg_split.length === 1) {
       return msg_split[0] + ".";
     } else {
@@ -173,39 +177,39 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
   }
 
   get details(): Detail[] {
-    let cntrl = this.control as HDFControl;
+    let c = this._control;
     return [
       {
         name: "Control",
-        value: cntrl.wraps.id
+        value: c.data.id
       },
       {
         name: "Title",
-        value: cntrl.wraps.title
+        value: c.data.title
       },
       {
         name: "Desc",
-        value: cntrl.wraps.desc
+        value: c.data.desc
       },
       {
         name: "Severity",
-        value: cntrl.severity
+        value: c.root.hdf.severity
       },
       {
         name: "Impact",
-        value: cntrl.wraps.impact
+        value: c.data.impact
       },
       {
         name: "Nist",
-        value: cntrl.raw_nist_tags.join(", ")
+        value: c.hdf.raw_nist_tags.join(", ")
       },
       {
         name: "Check Text",
-        value: cntrl.wraps.tags.check
+        value: c.data.tags.check || c.hdf.descriptions.check
       },
       {
         name: "Fix Text",
-        value: cntrl.wraps.tags.fix
+        value: c.data.tags.fix || c.hdf.descriptions.fix
       }
     ];
   }

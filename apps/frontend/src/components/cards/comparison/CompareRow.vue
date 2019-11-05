@@ -39,7 +39,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import { ContextualizedControl } from "@/store/data_store";
-import { HDFControl, hdfWrapControl } from "inspecjs";
+import { HDFControl } from "inspecjs";
 import { ControlDelta } from "@/utilities/delta_util";
 import DeltaView from "@/components/cards/comparison/DeltaView.vue";
 
@@ -84,7 +84,7 @@ export default class CompareRow extends Props {
 
   /** Just maps controls to hdf. Makes our template a bit less verbose */
   get hdf_controls(): HDFControl[] {
-    return this._controls.map(c => hdfWrapControl(c.data));
+    return this._controls.map(c => c.root.hdf);
   }
 
   /** If exactly two controls selected, provides a delta. Elsewise gives null */
@@ -101,7 +101,7 @@ export default class CompareRow extends Props {
   /** Returns the HDF control that we want to show details for iff it is the only selected control */
   get details(): HDFControl | null {
     if (this.selected_controls.length === 1) {
-      return hdfWrapControl(this.selected_controls[0].data);
+      return this.selected_controls[0].root.hdf;
     }
     return null;
   }

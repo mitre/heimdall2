@@ -9,7 +9,7 @@
         @click="$emit('toggle', !expanded)"
       >
         <v-card-text class="pa-2 font-weight-bold">
-          {{ control.status }}
+          {{ control.root.hdf.status }}
           <v-icon class="float-right">
             {{ expanded ? "mdi-chevron-down" : "mdi-chevron-up" }}
           </v-icon>
@@ -27,7 +27,7 @@
         >
         <br />
         <v-divider class="lighten-4 mx-1"></v-divider>
-        {{ control.severity.toUpperCase() }}
+        {{ control.hdf.severity.toUpperCase() }}
       </v-card-text>
     </template>
 
@@ -37,12 +37,12 @@
 
     <!-- ID and Tags -->
     <template #id>
-      <v-card-text class="pa-2">{{ control.wraps.id }}</v-card-text>
+      <v-card-text class="pa-2">{{ control.data.id }}</v-card-text>
     </template>
     <template #tags>
       <v-chip-group column active-class="NONE">
         <v-chip
-          v-for="(tag, i) in control.raw_nist_tags"
+          v-for="(tag, i) in control.hdf.raw_nist_tags"
           :key="i"
           active-class="NONE"
         >
@@ -58,6 +58,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import { HDFControl, ControlStatus, Severity } from "inspecjs";
 import ResponsiveRowSwitch from "@/components/cards/controltable/ResponsiveRowSwitch.vue";
+import { ContextualizedControl } from "../../../store/data_store";
 
 // We declare the props separately to make props types inferable.
 const ControlRowHeaderProps = Vue.extend({
@@ -80,25 +81,25 @@ const ControlRowHeaderProps = Vue.extend({
 })
 export default class ControlRowHeader extends ControlRowHeaderProps {
   /** Typed getter for control */
-  get _control(): HDFControl {
+  get _control(): ContextualizedControl {
     return this.control;
   }
 
   get truncated_title(): string {
-    if (this._control.wraps.title && this._control.wraps.title.length > 80) {
-      return this._control.wraps.title.substr(0, 80) + "...";
+    if (this._control.data.title && this._control.data.title.length > 80) {
+      return this._control.data.title.substr(0, 80) + "...";
     } else {
-      return this._control.wraps.title || "Untitled";
+      return this._control.data.title || "Untitled";
     }
   }
 
   get status_color(): string {
     // maps stuff like "not applicable" -> "statusnotapplicable", which is a defined color name
-    return `status${this._control.status.replace(" ", "")}`;
+    return `status${this._control.root.hdf.status.replace(" ", "")}`;
   }
 
   get severity_arrow_count(): number {
-    switch (this._control.severity) {
+    switch (this._control.hdf.severity) {
       default:
       case "none":
         return 0;

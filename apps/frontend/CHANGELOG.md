@@ -15,6 +15,11 @@
 - Add github pages deploy on the repo [\#123](https://github.com/mitre/heimdall-vuetify/issues/123)
 - Fix expand arrow direction on control detail table [\#90](https://github.com/mitre/heimdall-vuetify/issues/90)
 - Heimdall-Lite title should be 'Heimdall Lite' and adjust text size on breakpoints [\#81](https://github.com/mitre/heimdall-vuetify/issues/81)
+- Tab sliders + url validation [\#159](https://github.com/mitre/heimdall-vuetify/pull/159) ([Mitriol](https://github.com/Mitriol))
+- Samples tab [\#158](https://github.com/mitre/heimdall-vuetify/pull/158) ([Mitriol](https://github.com/Mitriol))
+- Lm 149 [\#157](https://github.com/mitre/heimdall-vuetify/pull/157) ([lukemalinowski](https://github.com/lukemalinowski))
+- Cleanup for HL2.0 [\#142](https://github.com/mitre/heimdall-vuetify/pull/142) ([aaronlippold](https://github.com/aaronlippold))
+- BUG: Fix \#137 [\#138](https://github.com/mitre/heimdall-vuetify/pull/138) ([lukemalinowski](https://github.com/lukemalinowski))
 
 **Fixed bugs:**
 
@@ -26,10 +31,22 @@
 - Incorrect return point on Failed Upload / Parsing - should return to App root. [\#94](https://github.com/mitre/heimdall-vuetify/issues/94)
 - Standardize counting across toolchains for results [\#57](https://github.com/mitre/heimdall-vuetify/issues/57)
 - Fix light mode to use MITRE Blue and White for header and footer background and text [\#52](https://github.com/mitre/heimdall-vuetify/issues/52)
+- Add Testing Data  [\#166](https://github.com/mitre/heimdall-vuetify/pull/166) ([aaronlippold](https://github.com/aaronlippold))
+- BUG: Fix missing icons in single page builds [\#153](https://github.com/mitre/heimdall-vuetify/pull/153) ([lukemalinowski](https://github.com/lukemalinowski))
 
 **Closed issues:**
 
 - Add a 'samples' section to the loading modal which links to a preconfigured s3 source or github file source [\#150](https://github.com/mitre/heimdall-vuetify/issues/150)
+
+**Merged pull requests:**
+
+- Revert "Final counting fixes" [\#164](https://github.com/mitre/heimdall-vuetify/pull/164) ([aaronlippold](https://github.com/aaronlippold))
+- Final counting fixes [\#163](https://github.com/mitre/heimdall-vuetify/pull/163) ([Mitriol](https://github.com/Mitriol))
+- Lm 160 [\#161](https://github.com/mitre/heimdall-vuetify/pull/161) ([lukemalinowski](https://github.com/lukemalinowski))
+- Fix \#94 [\#156](https://github.com/mitre/heimdall-vuetify/pull/156) ([Mitriol](https://github.com/Mitriol))
+- Sidebar Embiggening + Buttons collapsing to icons [\#154](https://github.com/mitre/heimdall-vuetify/pull/154) ([Mitriol](https://github.com/Mitriol))
+- Treemap Generification, NIST Fixes,  [\#152](https://github.com/mitre/heimdall-vuetify/pull/152) ([Mitriol](https://github.com/Mitriol))
+- NodeJS CICD Wrokflow [\#140](https://github.com/mitre/heimdall-vuetify/pull/140) ([aaronlippold](https://github.com/aaronlippold))
 
 ## [v0.0.7](https://github.com/mitre/heimdall-vuetify/tree/v0.0.7) (2019-10-25)
 
@@ -85,6 +102,15 @@
 - Make the graphs show properly [\#3](https://github.com/mitre/heimdall-vuetify/issues/3)
 - Make a proper entry page [\#2](https://github.com/mitre/heimdall-vuetify/issues/2)
 - Make sidebar show files on JSON upload [\#1](https://github.com/mitre/heimdall-vuetify/issues/1)
+- adding google analytics functionality [\#112](https://github.com/mitre/heimdall-vuetify/pull/112) ([HackerShark](https://github.com/HackerShark))
+- Yet another Medley of Changes [\#88](https://github.com/mitre/heimdall-vuetify/pull/88) ([Mitriol](https://github.com/Mitriol))
+- ENH: Add vue toast support Fix \#64 \#65 [\#74](https://github.com/mitre/heimdall-vuetify/pull/74) ([lukemalinowski](https://github.com/lukemalinowski))
+- export caat and modals branch [\#55](https://github.com/mitre/heimdall-vuetify/pull/55) ([cjdoherty](https://github.com/cjdoherty))
+- Color scheme improvements [\#54](https://github.com/mitre/heimdall-vuetify/pull/54) ([Mitriol](https://github.com/Mitriol))
+- S3 Bucket Support \(WIP\) [\#44](https://github.com/mitre/heimdall-vuetify/pull/44) ([Mitriol](https://github.com/Mitriol))
+- Backwards compatibility improvements and Comparison scaffolding [\#35](https://github.com/mitre/heimdall-vuetify/pull/35) ([Mitriol](https://github.com/Mitriol))
+- STY: Merge style fixes [\#26](https://github.com/mitre/heimdall-vuetify/pull/26) ([lukemalinowski](https://github.com/lukemalinowski))
+- Profile Results table [\#17](https://github.com/mitre/heimdall-vuetify/pull/17) ([v1kramb](https://github.com/v1kramb))
 
 **Fixed bugs:**
 
@@ -107,12 +133,46 @@
 - Headers for control details should be above content  [\#32](https://github.com/mitre/heimdall-vuetify/issues/32)
 - Performance issue when displaying all in datatable [\#21](https://github.com/mitre/heimdall-vuetify/issues/21)
 - Netlify build fails with confusing errors [\#11](https://github.com/mitre/heimdall-vuetify/issues/11)
+- BUG: Fix \#125 and swap out vue-line-clamp for vue-clamp [\#127](https://github.com/mitre/heimdall-vuetify/pull/127) ([lukemalinowski](https://github.com/lukemalinowski))
+- adding link to changelog in about modal as well as updating all current links [\#121](https://github.com/mitre/heimdall-vuetify/pull/121) ([HackerShark](https://github.com/HackerShark))
+- BUG: Fix console.logs on status\_color [\#120](https://github.com/mitre/heimdall-vuetify/pull/120) ([lukemalinowski](https://github.com/lukemalinowski))
+- Fix \#53 [\#113](https://github.com/mitre/heimdall-vuetify/pull/113) ([lukemalinowski](https://github.com/lukemalinowski))
+- Fixed styling issues on Control Table [\#91](https://github.com/mitre/heimdall-vuetify/pull/91) ([Mitriol](https://github.com/Mitriol))
+- Chrome code highlighting final [\#63](https://github.com/mitre/heimdall-vuetify/pull/63) ([lukemalinowski](https://github.com/lukemalinowski))
+- Minor CSS and stylistic changes [\#22](https://github.com/mitre/heimdall-vuetify/pull/22) ([lukemalinowski](https://github.com/lukemalinowski))
 
 **Closed issues:**
 
 - Sidebar has excess data [\#48](https://github.com/mitre/heimdall-vuetify/issues/48)
 - Control details table should not have margins [\#37](https://github.com/mitre/heimdall-vuetify/issues/37)
 - transfer treemap from heimdall vue [\#7](https://github.com/mitre/heimdall-vuetify/issues/7)
+
+**Merged pull requests:**
+
+- Replaced control table nist tags with full versions [\#130](https://github.com/mitre/heimdall-vuetify/pull/130) ([Mitriol](https://github.com/Mitriol))
+- Disabled no-console error flag in eslintrc [\#129](https://github.com/mitre/heimdall-vuetify/pull/129) ([Mitriol](https://github.com/Mitriol))
+- Making some minor updates to the readme. [\#126](https://github.com/mitre/heimdall-vuetify/pull/126) ([djhaynes](https://github.com/djhaynes))
+- Heimdall tools output support [\#119](https://github.com/mitre/heimdall-vuetify/pull/119) ([Mitriol](https://github.com/Mitriol))
+- Made notifications require manual dismiss [\#114](https://github.com/mitre/heimdall-vuetify/pull/114) ([Mitriol](https://github.com/Mitriol))
+- Improved scrolling of control table. This shouldn't be auto merged. [\#111](https://github.com/mitre/heimdall-vuetify/pull/111) ([Mitriol](https://github.com/Mitriol))
+- Fix \#102 - Sidebar now has an all-files button [\#108](https://github.com/mitre/heimdall-vuetify/pull/108) ([Mitriol](https://github.com/Mitriol))
+- Export CAAT now respects filters. [\#107](https://github.com/mitre/heimdall-vuetify/pull/107) ([Mitriol](https://github.com/Mitriol))
+- Fix re-broken version [\#106](https://github.com/mitre/heimdall-vuetify/pull/106) ([Mitriol](https://github.com/Mitriol))
+- Fix issue \#78 - adds more app info to vuex store [\#100](https://github.com/mitre/heimdall-vuetify/pull/100) ([Mitriol](https://github.com/Mitriol))
+- Fixed repeat version in about modal. Fix \#96 [\#99](https://github.com/mitre/heimdall-vuetify/pull/99) ([Mitriol](https://github.com/Mitriol))
+- Fixed exception messages, as well as status dropdown size [\#98](https://github.com/mitre/heimdall-vuetify/pull/98) ([Mitriol](https://github.com/Mitriol))
+- Made zebra table look better in light mode [\#97](https://github.com/mitre/heimdall-vuetify/pull/97) ([Mitriol](https://github.com/Mitriol))
+- Modal Fixes [\#76](https://github.com/mitre/heimdall-vuetify/pull/76) ([Mitriol](https://github.com/Mitriol))
+- Profile view [\#73](https://github.com/mitre/heimdall-vuetify/pull/73) ([Mitriol](https://github.com/Mitriol))
+- Sketch logo and SVGs [\#60](https://github.com/mitre/heimdall-vuetify/pull/60) ([aaronlippold](https://github.com/aaronlippold))
+- Minor color fixes pushing to 1.0 [\#51](https://github.com/mitre/heimdall-vuetify/pull/51) ([aaronlippold](https://github.com/aaronlippold))
+- Control Table prototype revision [\#24](https://github.com/mitre/heimdall-vuetify/pull/24) ([Mitriol](https://github.com/Mitriol))
+- Treemap improvements [\#23](https://github.com/mitre/heimdall-vuetify/pull/23) ([Mitriol](https://github.com/Mitriol))
+- Treemap and filter integration [\#19](https://github.com/mitre/heimdall-vuetify/pull/19) ([Mitriol](https://github.com/Mitriol))
+- Sidebar files [\#18](https://github.com/mitre/heimdall-vuetify/pull/18) ([Mitriol](https://github.com/Mitriol))
+- Theme toggle [\#15](https://github.com/mitre/heimdall-vuetify/pull/15) ([aaronlippold](https://github.com/aaronlippold))
+- Charts implementation [\#10](https://github.com/mitre/heimdall-vuetify/pull/10) ([Mitriol](https://github.com/Mitriol))
+- fixed the count card sizing issues [\#6](https://github.com/mitre/heimdall-vuetify/pull/6) ([aaronlippold](https://github.com/aaronlippold))
 
 
 

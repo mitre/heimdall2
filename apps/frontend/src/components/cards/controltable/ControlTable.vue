@@ -56,13 +56,13 @@
       >
         <div>
           <ControlRowHeader
-            :control="item"
+            :control="item.control"
             :expanded="expanded.includes(item.key)"
             @toggle="toggle(item.key)"
           />
           <ControlRowDetails
             v-if="expanded.includes(item.key)"
-            :control="item"
+            :control="item.control"
           />
         </div>
       </v-lazy>
@@ -79,18 +79,21 @@ import ColumnHeader, { Sort } from "@/components/generic/ColumnHeader.vue";
 import ResponsiveRowSwitch from "@/components/cards/controltable/ResponsiveRowSwitch.vue";
 
 import { getModule } from "vuex-module-decorators";
-import { hdfWrapControl, HDFControl, ControlStatus } from "inspecjs";
+import { HDFControl, ControlStatus } from "inspecjs";
 import FilteredDataModule from "@/store/data_filters";
 import { control_unique_key } from "@/utilities/format_util";
+import { ContextualizedControl } from "../../../store/data_store";
 
 // Tracks the visibility of an HDF control
-interface ListElt extends HDFControl {
+interface ListElt {
   // A unique id to be used as a key.
   key: string;
 
-  // Computed values for status and severity "value"
+  // Computed values for status and severity "value", for sorting
   status_val: number;
   severity_val: number;
+
+  control: ContextualizedControl;
 }
 
 // We declare the props separately to make props types inferable.
@@ -175,9 +178,9 @@ export default class ControlTable extends ControlTableProps {
       let key = control_unique_key(d);
 
       // File, hdf wrapper
-      let hdf = hdfWrapControl(d.data);
-      let with_id = Object.assign(hdf, {
+      let with_id: ListElt = {
         key,
+        control: d,
         status_val: [
           "Passed",
           "Not Applicable",
@@ -185,11 +188,11 @@ export default class ControlTable extends ControlTableProps {
           "Not Reviewed",
           "Profile Error",
           "Failed"
-        ].indexOf(hdf.status),
+        ].indexOf(d.root.hdf.status),
         severity_val: ["none", "low", "medium", "high", "critical"].indexOf(
-          hdf.severity
+          d.root.hdf.severity
         )
-      });
+      };
       return with_id;
     });
   }
@@ -202,7 +205,8 @@ export default class ControlTable extends ControlTableProps {
     let cmp: (a: ListElt, b: ListElt) => number;
 
     if (this.sort_id === "ascending" || this.sort_id === "descending") {
-      cmp = (a: ListElt, b: ListElt) => a.wraps.id.localeCompare(b.wraps.id);
+      cmp = (a: ListElt, b: ListElt) =>
+        a.control.data.id.localeCompare(b.control.data.id);
       if (this.sort_id === "ascending") {
         factor = -1;
       }
