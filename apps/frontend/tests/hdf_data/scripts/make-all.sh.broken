@@ -1,0 +1,1 @@
+ls *.json | sort | xargs -I % bash -c "bundle exec ../exe/inspec_tools summary -j % -o %.info ; cat %.info | jq .status > %.counts"

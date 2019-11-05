@@ -1,0 +1,37 @@
+{
+  "failed": {
+    "total": 82,
+    "critical": 0,
+    "high": 3,
+    "medium": 74,
+    "low": 5
+  },
+  "passed": {
+    "total": 23,
+    "critical": 0,
+    "high": 5,
+    "medium": 18,
+    "low": 0
+  },
+  "no_impact": {
+    "total": 5,
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "skipped": {
+    "total": 90,
+    "critical": 0,
+    "high": 4,
+    "medium": 83,
+    "low": 3
+  },
+  "error": {
+    "total": 0,
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  }
+}
