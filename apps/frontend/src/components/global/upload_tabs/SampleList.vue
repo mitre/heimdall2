@@ -90,6 +90,11 @@ export default class SampleList extends Props {
         "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/rhel_cve_vulnerability_scan_baseline_with_failures.json"
     },
     {
+      name: "RedHat 7 STIG Baseline InSpec Sample",
+      url:
+        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/rhel7-results.json"
+    },
+    {
       name: "Ubuntu STIG Baseline InSpec Sample",
       url:
         "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/ubuntu-16.04-baseline-results.json"
