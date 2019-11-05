@@ -34,6 +34,7 @@
 **Merged pull requests:**
 
 - fixed test data after update to inspec\_tools [\#170](https://github.com/mitre/heimdall-vuetify/pull/170) ([aaronlippold](https://github.com/aaronlippold))
+- Earonne rhel7 results sample [\#169](https://github.com/mitre/heimdall-vuetify/pull/169) ([Mitriol](https://github.com/Mitriol))
 - Added tests [\#168](https://github.com/mitre/heimdall-vuetify/pull/168) ([Mitriol](https://github.com/Mitriol))
 
 ## [v0.0.7](https://github.com/mitre/heimdall-vuetify/tree/v0.0.7) (2019-10-25)
