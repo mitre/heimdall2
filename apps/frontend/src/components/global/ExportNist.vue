@@ -3,7 +3,7 @@
     <template v-slot:activator="{ on }">
       <LinkItem
         key="export_nist"
-        text="NIST Coverage"
+        text="NIST SP 800-53 Security Control Coverage"
         icon="mdi-download"
         @click="export_nist()"
         v-on="on"
