@@ -171,7 +171,7 @@ export default class ExportNIST extends Props {
     let wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
     saveAs(
       new Blob([this.s2ab(wbout)], { type: "application/octet-stream" }),
-      "NIST-SP-800-53-SC-Coverage-" +
+      "NIST-SP-800-53-Security-Control-Coverage-" +
         this.convertDate(new Date(), "-") +
         ".xlsx"
     );
