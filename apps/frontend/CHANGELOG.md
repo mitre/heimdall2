@@ -19,6 +19,7 @@
 - Fix expand arrow direction on control detail table [\#90](https://github.com/mitre/heimdall-vuetify/issues/90)
 - Heimdall-Lite title should be 'Heimdall Lite' and adjust text size on breakpoints [\#81](https://github.com/mitre/heimdall-vuetify/issues/81)
 - Use package.json for all relevant data items in the app: version, desc, repo\_url, License, etc. [\#78](https://github.com/mitre/heimdall-vuetify/issues/78)
+- Show Profile Errors toast when loading a file with profile errors. [\#58](https://github.com/mitre/heimdall-vuetify/issues/58)
 
 **Fixed bugs:**
 
