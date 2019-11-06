@@ -62,9 +62,9 @@ const statuses = {
   statusFromProfile: colors.teal.base,
   statuspassed: colors.green.base,
   statusfailed: colors.red.base,
-  statusskipped: colors.lightBlue.base,
   statusnodata: colors.orange.lighten1,
   statusnotreviewed: colors.orange.base,
+  statusskipped: colors.orange.base,
   statusprofileerror: colors.indigo.lighten2,
   statusnotrun: colors.teal.darken2,
   statusfromprofile: colors.teal.base

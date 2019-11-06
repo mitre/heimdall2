@@ -134,9 +134,9 @@
       top
     >
       <span class="subtitle-2"
-        >All controls are filtered. Use the
-        <v-icon small>mdi-filter-remove</v-icon> button in the top right to
-        clear filters and show all.</span
+        >All results are filtered out. Use the
+        <v-icon>mdi-filter-remove</v-icon> button in the top right to clear
+        filters and show all.</span
       >
     </v-snackbar>
   </BaseView>
@@ -316,6 +316,8 @@ export default class Results extends ResultsProps {
     let filter = getModule(FilteredDataModule, this.$store);
     if (filter.controls(this.all_filter).length === 0) {
       this.filter_snackbar = true;
+    } else {
+      this.filter_snackbar = false;
     }
 
     // Finally, return our result
