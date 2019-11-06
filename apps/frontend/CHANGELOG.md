@@ -18,6 +18,7 @@
 
 **Fixed bugs:**
 
+- Consistent Code display for overlays, clearer separators between blocks [\#167](https://github.com/mitre/heimdall-vuetify/issues/167)
 - Windows IE browser support [\#160](https://github.com/mitre/heimdall-vuetify/issues/160)
 - Update top bar in Mobile view to use only icons to save space [\#148](https://github.com/mitre/heimdall-vuetify/issues/148)
 - Fix pre-commit hooks [\#136](https://github.com/mitre/heimdall-vuetify/issues/136)
@@ -33,6 +34,7 @@
 
 **Merged pull requests:**
 
+- Jh/code fix [\#171](https://github.com/mitre/heimdall-vuetify/pull/171) ([Mitriol](https://github.com/Mitriol))
 - fixed test data after update to inspec\_tools [\#170](https://github.com/mitre/heimdall-vuetify/pull/170) ([aaronlippold](https://github.com/aaronlippold))
 - Earonne rhel7 results sample [\#169](https://github.com/mitre/heimdall-vuetify/pull/169) ([Mitriol](https://github.com/Mitriol))
 - Added tests [\#168](https://github.com/mitre/heimdall-vuetify/pull/168) ([Mitriol](https://github.com/Mitriol))
