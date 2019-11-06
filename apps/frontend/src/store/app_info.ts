@@ -31,7 +31,7 @@ class AppInfoModule extends VuexModule {
     return process.env.DESCRIPTION;
   }
 
-  /** The full app repository url, e.g. "https://github.com/mitre/heimdall-vuetify" */
+  /** The full app repository url, e.g. "https://github.com/mitre/heimdall-lite" */
   get repository(): string {
     return process.env.REPOSITORY;
   }
@@ -41,7 +41,7 @@ class AppInfoModule extends VuexModule {
     return this.repository.split("/")[3];
   }
 
-  /** The project name of the repo url, e.g. heimdall-vuetify */
+  /** The project name of the repo url, e.g. heimdall-lite */
   get repo_name(): string {
     return this.repository.split("/")[4];
   }

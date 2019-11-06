@@ -19,7 +19,7 @@ let options: ToastOptions = {
     {
       text: "Report Issue",
       href:
-        "https://github.com/mitre/heimdall-vuetify/issues/new?assignees=&labels=bug&template=bug_report.md&title="
+        "https://github.com/mitre/heimdall-lite/issues/new?assignees=&labels=bug&template=bug_report.md&title="
     },
     {
       text: "Dismiss",

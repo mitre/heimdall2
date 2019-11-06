@@ -1,42 +1,88 @@
-# heimdall-vuetify
-![](https://github.com/mitre/heimdall-vuetify/workflows/heimdall-vuetify/badge.svg)
+# heimdall-lite v2.0.0
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/2b914cc2-27b8-4469-86bb-32bfad03aaa1/deploy-status)](https://app.netlify.com/sites/heimdall-vuetify/deploys)
+![](https://github.com/mitre/heimdall-lite/workflows/heimdall-vuetify/badge.svg)
+![Docker Pulls](https://img.shields.io/docker/pulls/mitre/heimdall-lite?label=Docker%20Hub%20Pulls)
+![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/mitre/heimdall-lite)
 
-Heimdall-Vuetify is an InSpec results viewer based on Vuetify.js. It is hosted on the following platforms.
+[![Netlify Status](https://api.netlify.com/api/v1/badges/2b914cc2-27b8-4469-86bb-32bfad03aaa1/deploy-status)](https://app.netlify.com/sites/heimdall-lite/deploys)
 
-##### Netlify
-https://heimdall-vuetify.netlify.com/
+Heimdall Lite 2.0 is a JavaScript based security results viewer and review tool supporting multiple security results formats, such as: InSpec, SonarQube, OWASP-Zap and Fortify which you can load locally, from S3 and other data sources.
 
-##### GitHub Pages
-https://mitre.github.io/heimdall-vuetify/#/
+## Hosted
+
+### Netlify
+
+<https://heimdall-lite.netlify.com/>
+
+### GitHub Pages
+
+<https://mitre.github.io/heimdall-lite/#/>
+
+## Installation & Use
+
+As a single-page javascript app - you can run [Heimdall-Lite](https://github.com/mitre/heimdall-lite/) from any web-server, a _secured_ S3 bucket or directly via GitHub Pages (as it is here). [Heimdall-Lite](https://github.com/mitre/heimdall-lite/) gives you the ability to easily review and produce reports about your InSpec run, filter the results for easy review and hot-wash, print out reports, generate System Security Plan (SSP) content, and much more.
+
+## Heimdall vs Heimdall-Lite
+
+There are two versions of the MITRE Heimdall Viewer - the full [Heimdall](https://github.com/mitre/heimdall/) and the [Heimdall-Lite](https://github.com/mitre/heimdall-lite/) version. We produced each to meet different needs and use-cases.
+
+### Features
+
+|                                                                                | [Heimdall-Lite](https://github.com/mitre/heimdall-lite/) | [Heimdall](https://github.com/mitre/heimdall/)                                |
+| :----------------------------------------------------------------------------- | :------------------------------------------------------- | :---------------------------------------------------------------------------- |
+| Installation Requirements                                                      | any web server                                           | rails 5.x Server <br /> Postgres Server                                       |
+| Overview Dashboard & Counts                                                    | x                                                        | x                                                                             |
+| 800-53 Partition and TreeMap View                                              | x                                                        | x                                                                             |
+| Data Table / Control Summary                                                   | x                                                        | x                                                                             |
+| InSpec Code / Control Viewer                                                   | x                                                        | x                                                                             |
+| SSP Content Generator                                                          |                                                          | x                                                                             |
+| PDF Report and Print View                                                      | x                                                        | x                                                                             |
+|                                                                                |                                                          |                                                                               |
+| Users & Roles & multi-team support                                             |                                                          | x                                                                             |
+| Authentication & Authorization                                                 | Hosting Webserver                                        | Hosting Webserver<br />LDAP<br />GitHub OAUTH & SAML<br />GitLab OAUTH & SAML |
+| Advanced Data / Filters for Reports and Viewing                                |                                                          | x                                                                             |
+| Multiple Report Output<br />(DISA Checklist XML, CAT, XCCDF-Results, and more) |                                                          | x                                                                             |
+| Authenticated REST API                                                         |                                                          | x                                                                             |
+| InSpec Run 'Delta' View                                                        |                                                          | x                                                                             |
+| Multi-Report Tagging, Filtering and Delta View                                 |                                                          | x                                                                             |
+
+### Use Cases
+
+| [Heimdall-Lite](https://github.com/mitre/heimdall-lite/) | [Heimdall](https://github.com/mitre/heimdall/)           |
+| :------------------------------------------------------- | :------------------------------------------------------- |
+| Ship the App & Data via simple Email                     | Multiple Teams Support                                   |
+| Minimal Footprint & Deployment Time                      | Timeline and Report History                              |
+| Local or disconnected Use                                | Centralized Deployment Model                             |
+| One-Time Quick Reviews                                   | Need to view the delta between one or more runs          |
+| Decentralized Deployment                                 | Need to view subsets of the 800-53 control alignment     |
+| Minimal A&A Time                                         | Need to produce more complex reports in multiple formats |
 
 ## Project setup
+
 ```
 npm install
 ```
 
 ### Compiles and hot-reloads for development
+
 ```
 npm run serve
 ```
 
 ### Compiles and minifies for production
+
 ```
 npm run build
 ```
 
-### Run your tests
-```
-npm run test
-```
-
 ### Lints and fixes files
+
 ```
 npm run lint
 ```
 
 ### Run your unit tests
+
 ```
 npm run test:unit
 ```
@@ -61,7 +107,7 @@ Please feel free to contact us by **opening an issue** on the issue board, or, a
 
 Approved for Public Release; Distribution Unlimited. Case Number 18-3678.
 
-### NOTICE  
+### NOTICE
 
 MITRE hereby grants express written permission to use, reproduce, distribute, modify, and otherwise leverage this software to the extent permitted by the licensed terms provided in the LICENSE.md file included with this project.
 
@@ -71,4 +117,4 @@ This software was produced for the U. S. Government under Contract Number HHSM-5
 
 No other use other than that granted to the U. S. Government, or to those acting on behalf of the U. S. Government under that Clause is authorized without the express written permission of The MITRE Corporation.
 
-For further information, please contact The MITRE Corporation, Contracts Management Office, 7515 Colshire Drive, McLean, VA  22102-7539, (703) 983-6000.
+For further information, please contact The MITRE Corporation, Contracts Management Office, 7515 Colshire Drive, McLean, VA 22102-7539, (703) 983-6000.
