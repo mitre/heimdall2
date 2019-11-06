@@ -6,15 +6,19 @@
 
 **Implemented enhancements:**
 
+- Link to v1.0 [\#162](https://github.com/mitre/heimdall-vuetify/issues/162)
 - The hamburger icon seems a bit too far right [\#155](https://github.com/mitre/heimdall-vuetify/issues/155)
 - Please allow the file menu to open to the full width of the screen over top the other display items [\#151](https://github.com/mitre/heimdall-vuetify/issues/151)
 - Add `Help`, `About`, GitHub and Docs links to the upload modal to the landing page [\#149](https://github.com/mitre/heimdall-vuetify/issues/149)
+- Improve user feedback when we failed to parse a file [\#147](https://github.com/mitre/heimdall-vuetify/issues/147)
 - Removing any leading spaces from text in Control Details on the Results table [\#143](https://github.com/mitre/heimdall-vuetify/issues/143)
+- Add timestamp similar to HL and Heimdall Server [\#141](https://github.com/mitre/heimdall-vuetify/issues/141)
 - Change "Not Reviewed" meaning [\#139](https://github.com/mitre/heimdall-vuetify/issues/139)
 - Generalize Help splash screen [\#137](https://github.com/mitre/heimdall-vuetify/issues/137)
 - Add github pages deploy on the repo [\#123](https://github.com/mitre/heimdall-vuetify/issues/123)
 - Fix expand arrow direction on control detail table [\#90](https://github.com/mitre/heimdall-vuetify/issues/90)
 - Heimdall-Lite title should be 'Heimdall Lite' and adjust text size on breakpoints [\#81](https://github.com/mitre/heimdall-vuetify/issues/81)
+- Use package.json for all relevant data items in the app: version, desc, repo\_url, License, etc. [\#78](https://github.com/mitre/heimdall-vuetify/issues/78)
 
 **Fixed bugs:**
 
@@ -34,6 +38,7 @@
 
 **Merged pull requests:**
 
+- The LAST COMMIT?  [\#173](https://github.com/mitre/heimdall-vuetify/pull/173) ([Mitriol](https://github.com/Mitriol))
 - Jh/code fix [\#171](https://github.com/mitre/heimdall-vuetify/pull/171) ([Mitriol](https://github.com/Mitriol))
 - fixed test data after update to inspec\_tools [\#170](https://github.com/mitre/heimdall-vuetify/pull/170) ([aaronlippold](https://github.com/aaronlippold))
 - Earonne rhel7 results sample [\#169](https://github.com/mitre/heimdall-vuetify/pull/169) ([Mitriol](https://github.com/Mitriol))
