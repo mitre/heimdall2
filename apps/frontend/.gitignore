@@ -12,6 +12,11 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Don't accidentally commit sensitive data
+# You can still commit these manually
+tests/hdf_data/raw_data/
+tests/hdf_data/inspec_tools_info
+
 # Editor directories and files
 .idea
 .vscode

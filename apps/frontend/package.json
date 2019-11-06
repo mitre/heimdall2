@@ -1,6 +1,6 @@
 {
-  "name": "heimdall-lite",
-  "version": "1.9.9",
+  "name": "heimdall-vuetify",
+  "version": "1.99.99",
   "description": "A Security Results Viewer",
   "private": true,
   "repository": {

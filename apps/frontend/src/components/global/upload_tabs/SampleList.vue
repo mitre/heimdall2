@@ -29,6 +29,7 @@ import InspecIntakeModule, {
   next_free_file_ID
 } from "@/store/report_intake";
 import InspecDataModule from "../../../store/data_store";
+import AppInfoModule from "../../../store/app_info";
 
 interface Sample {
   name: string;
@@ -48,58 +49,55 @@ const Props = Vue.extend({
   components: {}
 })
 export default class SampleList extends Props {
-  samples: Sample[] = [
-    {
-      name: "Sonarqube Java Heimdall_tools Sample",
-      url:
-        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/sonarqube_java_sample.json"
-    },
-    {
-      name: "OWASP ZAP Webgoat Heimdall_tools Sample",
-      url:
-        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/owasp_zap_webgoat.json"
-    },
-    {
-      name: "OWASP ZAP Zero_WebAppSecurity Heimdall_tools Sample",
-      url:
-        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/owasp_zap_zero.webappsecurity.json"
-    },
-    {
-      name: "Fortify Heimdall_tools Sample",
-      url:
-        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/fortify_h_tools_conv_webgoat.json"
-    },
-    {
-      name: "AWS S3 Permissions Check InSpec Sample",
-      url:
-        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/aws-s3-baseline.json"
-    },
-    {
-      name: "AWS CIS Foundations Baseline InSpec Sample",
-      url:
-        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/cis-aws-foundations-baseline.json"
-    },
-    {
-      name: "NGINX Inspec Sample",
-      url:
-        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/good_nginxresults.json"
-    },
-    {
-      name: "Red Hat CVE Vulnerability Scan InSpec Sample",
-      url:
-        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/rhel_cve_vulnerability_scan_baseline_with_failures.json"
-    },
-    {
-      name: "RedHat 7 STIG Baseline InSpec Sample",
-      url:
-        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/rhel7-results.json"
-    },
-    {
-      name: "Ubuntu STIG Baseline InSpec Sample",
-      url:
-        "https://raw.githubusercontent.com/mitre/heimdall-vuetify/master/samples/ubuntu-16.04-baseline-results.json"
-    }
-  ];
+  get samples(): Sample[] {
+    return [
+      {
+        name: "Sonarqube Java Heimdall_tools Sample",
+        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/sonarqube_java_sample.json`
+      },
+      {
+        name: "OWASP ZAP Webgoat Heimdall_tools Sample",
+        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/owasp_zap_webgoat.json`
+      },
+      {
+        name: "OWASP ZAP Zero_WebAppSecurity Heimdall_tools Sample",
+        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/owasp_zap_zero.webappsecurity.json`
+      },
+      {
+        name: "Fortify Heimdall_tools Sample",
+        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/fortify_h_tools_conv_webgoat.json`
+      },
+      {
+        name: "AWS S3 Permissions Check InSpec Sample",
+        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/aws-s3-baseline.json`
+      },
+      {
+        name: "AWS CIS Foundations Baseline InSpec Sample",
+        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/cis-aws-foundations-baseline.json`
+      },
+      {
+        name: "NGINX Inspec Sample",
+        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/good_nginxresults.json`
+      },
+      {
+        name: "Red Hat CVE Vulnerability Scan InSpec Sample",
+        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/rhel_cve_vulnerability_scan_baseline_with_failures.json`
+      },
+      {
+        name: "RedHat 7 STIG Baseline InSpec Sample",
+        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/rhel7-results.json`
+      },
+      {
+        name: "Ubuntu STIG Baseline InSpec Sample",
+        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/ubuntu-16.04-baseline-results.json`
+      }
+    ];
+  }
+
+  get repo(): string {
+    let mod = getModule(AppInfoModule, this.$store);
+    return `${mod.repo_org}/${mod.repo_name}`;
+  }
 
   /** Callback for our list item clicks */
   load_sample(sample: Sample) {

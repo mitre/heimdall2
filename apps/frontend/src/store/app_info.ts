@@ -23,7 +23,7 @@ declare const process: {
 class AppInfoModule extends VuexModule {
   /** The app version */
   get version(): string {
-    return `v${process.env.PACKAGE_VERSION}`;
+    return process.env.PACKAGE_VERSION;
   }
 
   /** The app description */
@@ -31,9 +31,19 @@ class AppInfoModule extends VuexModule {
     return process.env.DESCRIPTION;
   }
 
-  /** The app repository */
+  /** The full app repository url, e.g. "https://github.com/mitre/heimdall-vuetify" */
   get repository(): string {
     return process.env.REPOSITORY;
+  }
+
+  /** The username/org part of the repo url, e.g. mitre */
+  get repo_org(): string {
+    return this.repository.split("/")[3];
+  }
+
+  /** The project name of the repo url, e.g. heimdall-vuetify */
+  get repo_name(): string {
+    return this.repository.split("/")[4];
   }
 
   /** The app license */

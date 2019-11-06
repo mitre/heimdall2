@@ -69,6 +69,7 @@ import StatusCountModule from "@/store/status_counts";
 import { getModule } from "vuex-module-decorators";
 import FilteredDataModule, { Filter } from "../../store/data_filters";
 import { profile_unique_key } from "../../utilities/format_util";
+import { InspecFile, ProfileFile } from "../../store/report_intake";
 
 /**
  * Makes a ContextualizedProfile work as a TreeView item
@@ -156,6 +157,32 @@ export default class ProfileData extends Props {
       label: "Version",
       text: (this.selected.data as any).version //Todo: fix
     });
+
+    // Deduce filename, start time
+    let from_file: InspecFile;
+    let start_time: string | null;
+    if (this.selected.from_execution) {
+      let exec = this.selected.sourced_from as ContextualizedExecution;
+      from_file = exec.sourced_from;
+      let with_time = this.selected.contains.find(x => x.root.hdf.start_time);
+      start_time = (with_time && with_time.root.hdf.start_time) || null;
+    } else {
+      from_file = this.selected.sourced_from as ProfileFile;
+      start_time = null;
+    }
+
+    // And put the filename
+    output.push({
+      label: "From file",
+      text: from_file.filename
+    });
+
+    if (start_time) {
+      output.push({
+        label: "Start time",
+        text: start_time
+      });
+    }
 
     if (this.selected.data.sha256) {
       output.push({

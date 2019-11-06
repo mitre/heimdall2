@@ -23,8 +23,18 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" align="center">
+        <v-spacer />
+        <v-col align="center" cols="4">
           <UploadButton @files-selected="commit_files" />
+        </v-col>
+        <v-col align="right" cols="4">
+          <a
+            href="https://mitre.github.io/heimdall-lite-1.0/"
+            target="_blank"
+            class="mr-2"
+          >
+            Looking for 1.0?
+          </a>
         </v-col>
       </v-row>
     </v-container>

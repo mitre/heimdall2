@@ -22,6 +22,7 @@
       </v-btn>
       <v-btn
         class="mx-2"
+        :class="can_clear ? 'glow' : ''"
         @click="clear"
         title="Clear all set filters"
         :disabled="!can_clear"
@@ -38,6 +39,7 @@
     <!-- Custom sidebar content -->
     <template #sidebar-content-tools>
       <ExportCaat :filter="all_filter"></ExportCaat>
+      <ExportNist :filter="all_filter"></ExportNist>
     </template>
 
     <!-- The main content: cards, etc -->
@@ -102,7 +104,6 @@
                   :filter="treemap_full_filter"
                   v-model="tree_filters"
                   v-bind:selected_control.sync="control_selection"
-                  @clear="clear"
                 />
               </v-card-text>
             </v-card>
@@ -123,6 +124,21 @@
 
     <!-- File select modal -->
     <UploadNexus v-model="dialog" @got-files="on_got_files" />
+
+    <!-- Everything-is-filtered snackbar -->
+    <v-snackbar
+      style="margin-top: 44px;"
+      v-model="filter_snackbar"
+      :timeout="10000"
+      color="warning"
+      top
+    >
+      <span class="subtitle-2"
+        >All controls are filtered. Use the
+        <v-icon small>mdi-filter-remove</v-icon> button in the top right to
+        clear filters and show all.</span
+      >
+    </v-snackbar>
   </BaseView>
 </template>
 
@@ -140,8 +156,9 @@ import SeverityChart from "@/components/cards/SeverityChart.vue";
 import ComplianceChart from "@/components/cards/ComplianceChart.vue";
 import ProfileData from "@/components/cards/ProfileData.vue";
 import ExportCaat from "@/components/global/ExportCaat.vue";
+import ExportNist from "@/components/global/ExportNist.vue";
 
-import { Filter, TreeMapState } from "@/store/data_filters";
+import FilteredDataModule, { Filter, TreeMapState } from "@/store/data_filters";
 import { ControlStatus, Severity } from "inspecjs";
 import InspecIntakeModule, { FileID } from "@/store/report_intake";
 import { getModule } from "vuex-module-decorators";
@@ -165,7 +182,8 @@ const ResultsProps = Vue.extend({
     SeverityChart,
     ComplianceChart,
     ProfileData,
-    ExportCaat
+    ExportCaat,
+    ExportNist
   }
 })
 export default class Results extends ResultsProps {
@@ -194,6 +212,9 @@ export default class Results extends ResultsProps {
    * Never empty - should in that case be null
    */
   search_term: string = "";
+
+  /** Model for if all-filtered snackbar should be showing */
+  filter_snackbar: boolean = false;
 
   /* This is supposed to cause the dialog to automatically appear if there is
    * no file uploaded
@@ -265,6 +286,7 @@ export default class Results extends ResultsProps {
    * Clear all filters
    */
   clear() {
+    this.filter_snackbar = false;
     this.severity_filter = null;
     this.status_filter = null;
     this.control_selection = null;
@@ -278,16 +300,26 @@ export default class Results extends ResultsProps {
    */
   get can_clear(): boolean {
     // Return if any params not null/empty
+    let result: boolean;
     if (
       this.severity_filter ||
       this.status_filter ||
       this.search_term !== "" ||
       this.tree_filters.length
     ) {
-      return true;
+      result = true;
     } else {
-      return false;
+      result = false;
     }
+
+    // Logic to check: are any files actually visible?
+    let filter = getModule(FilteredDataModule, this.$store);
+    if (filter.controls(this.all_filter).length === 0) {
+      this.filter_snackbar = true;
+    }
+
+    // Finally, return our result
+    return result;
   }
 
   /**
@@ -324,3 +356,9 @@ export default class Results extends ResultsProps {
   }
 }
 </script>
+
+<style scoped>
+.glow {
+  box-shadow: 0px 0px 8px 6px #5a5;
+}
+</style>

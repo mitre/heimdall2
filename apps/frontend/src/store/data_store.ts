@@ -77,7 +77,10 @@ export interface ContextualizedProfile
   extends WrapsType<Profile>,
     Sourced<ContextualizedExecution | ProfileFile>,
     Contains<ContextualizedControl[]>,
-    Extendable<ContextualizedProfile> {}
+    Extendable<ContextualizedProfile> {
+  /** Helper flag tracking whether this profile is from an execution. */
+  from_execution: boolean;
+}
 export interface ContextualizedControl
   extends WrapsType<Control>,
     Sourced<ContextualizedProfile>,
@@ -210,7 +213,8 @@ class InspecDataModule extends VuexModule {
           sourced_from: exec_file_context,
           extended_by: [],
           extends_from: [],
-          contains: []
+          contains: [],
+          from_execution: true
         };
         profiles.push(exec_files_profile_context);
 
@@ -234,10 +238,6 @@ class InspecDataModule extends VuexModule {
           if (parent) {
             parent.extends_from.push(exec_files_profile);
             exec_files_profile.extended_by.push(parent);
-          } else {
-            console.warn(
-              `Warning: Unable to find parent profile for profile ${as_exec.name} in spite of its attribute parent_profile: ${as_exec.parent_profile}. Verify data is properly structured`
-            );
           }
         }
       });
@@ -320,7 +320,8 @@ class InspecDataModule extends VuexModule {
         sourced_from: profile_file,
         extended_by: [],
         extends_from: [],
-        contains: []
+        contains: [],
+        from_execution: false
       };
       profiles.push(profile_file_context);
 

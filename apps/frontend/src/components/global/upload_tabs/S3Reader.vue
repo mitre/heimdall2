@@ -382,8 +382,6 @@ export default class S3Reader extends Props {
     let code: string = error.code;
     let message: string = error.message;
 
-    console.log(`Got error ${code} with message ${message}`);
-
     // Get what we're supposed to do with it
     switch (code) {
       case "TokenRefreshRequired":

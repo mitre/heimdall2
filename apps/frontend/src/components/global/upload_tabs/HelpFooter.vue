@@ -32,6 +32,7 @@
           text
           small
         >
+          <v-icon small>mdi-alpha-v-circle</v-icon>
           <span class="d-sm-inline pl-3 text-center">{{ version }}</span>
         </v-btn>
       </v-row>
