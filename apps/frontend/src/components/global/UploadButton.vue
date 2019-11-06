@@ -1,10 +1,10 @@
 <template>
-  <div>
-    <v-btn @click="show_selector">
+  <div class="caption font-weight-medium">
+    <v-btn :small="$vuetify.breakpoint.smAndDown" @click="show_selector">
       Upload
-      <v-icon class="pl-2">
-        mdi-file-upload
-      </v-icon>
+      <v-icon :small="$vuetify.breakpoint.smAndDown" class="pl-2"
+        >mdi-file-upload</v-icon
+      >
     </v-btn>
     <div hidden>
       <input
