@@ -122,12 +122,39 @@ class ContextualizedControlImp implements ContextualizedControl {
     return curr;
   }
 
+  /** Returns whether this control is just a duplicate of base/root (but is not itself root) */
+  get is_redundant(): boolean {
+    return (
+      !this.data.code ||
+      this.data.code.trim() === "" ||
+      (this.extends_from.length > 0 && this.data.code === this.root.data.code)
+    );
+  }
+
   get full_code(): string {
-    let appendage = `# ${this.sourced_from.data.name}\n\n${this.data.code}`;
+    // If we extend from something, we behave slightly differently
     if (this.extends_from.length) {
-      return appendage + "\n\n" + this.extends_from[0].full_code.trim();
+      let ancestor = this.extends_from[0];
+      if (this.is_redundant) {
+        return ancestor.full_code;
+      } else {
+        return `\
+=========================================================
+# Profile name: ${this.sourced_from.data.name}
+=========================================================
+
+${this.data.code}
+
+${this.extends_from[0].full_code}`.trim();
+      }
     } else {
-      return appendage;
+      // We are the endpoint
+      return `\
+=========================================================
+# Profile name: ${this.sourced_from.data.name}
+=========================================================
+
+${this.data.code}`.trim();
     }
   }
 }

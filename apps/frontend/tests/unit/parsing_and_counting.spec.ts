@@ -56,7 +56,6 @@ describe("Parsing", () => {
       let counts: any = JSON.parse(count_file_content);
 
       // Get the expected counts
-      console.log(file.filename);
       let expected: StatusHash = {
         Failed: counts.failed.total,
         Passed: counts.passed.total,
@@ -66,14 +65,24 @@ describe("Parsing", () => {
         "Not Applicable": counts.no_impact.total
       };
 
+      let expected_with_filename = {
+        filename: file.filename,
+        ...expected
+      };
+
       // Get the actual
       let actual = status_count.hash({
         omit_overlayed_controls: true,
         fromFile: file.unique_id
       });
 
+      let actual_with_filename = {
+        filename: file.filename,
+        ...actual
+      };
+
       // Compare 'em
-      expect(actual).to.eql(expected);
+      expect(actual_with_filename).to.eql(expected_with_filename);
     });
   });
 });
