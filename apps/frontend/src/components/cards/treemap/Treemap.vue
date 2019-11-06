@@ -2,12 +2,12 @@
   <v-container fluid>
     <v-row dense>
       <v-col :cols="4">
-        NIST SP 800-53 Coverage
+        NIST SP 800-53 Security Control Coverage
       </v-col>
       <v-col :cols="8">
         <v-btn @click="up" :disabled="!allow_up" block x-small>
           <v-icon v-if="allow_up"> mdi-arrow-left </v-icon>
-          {{ "NIST-853 -> " + value.join(" -> ") }}
+          {{ "NIST-SP-800-53 -> " + value.join(" -> ") }}
         </v-btn>
       </v-col>
     </v-row>

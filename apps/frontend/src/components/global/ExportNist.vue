@@ -29,6 +29,7 @@ import { FileID, ExecutionFile } from "../../store/report_intake";
 import InspecDataModule from "../../store/data_store";
 
 const MAX_CELL_SIZE = 32000; // Rounding a bit here.
+const MAX_SHEET_NAME_SIZE = 31;
 export type NISTRow = [string];
 export type NISTList = NISTRow[];
 
@@ -73,7 +74,7 @@ export default class ExportNIST extends Props {
   }
 
   /** Makes a sheet for the given file id */
-  sheet_for(file?: ExecutionFile) {
+  sheet_for(file?: ExecutionFile): Sheet {
     // If file not provided
     let filename: string = "All files";
     let id: FileID | undefined = undefined;
@@ -89,7 +90,7 @@ export default class ExportNIST extends Props {
     let controls = filter_module.controls(modified_filter);
 
     // Initialize our data structures
-    let sheet: NISTList = [["Nist Control Coverage"]];
+    let sheet: NISTList = [["NIST SP 800-53 Security Control Coverage"]];
 
     // Get them all
     let nist_controls: NistControl[] = [];
@@ -121,7 +122,7 @@ export default class ExportNIST extends Props {
     sheet.push(...as_rows);
 
     return {
-      name: filename,
+      name: filename.slice(0, MAX_SHEET_NAME_SIZE),
       data: sheet
     };
   }
@@ -143,7 +144,7 @@ export default class ExportNIST extends Props {
     let wb = XLSX.utils.book_new();
 
     wb.Props = {
-      Title: "NIST Control Coverage",
+      Title: "NIST SP 800-53 Security Control Coverage",
       Subject: "Controls",
       Author: "Heimdall",
       CreatedDate: new Date()
@@ -160,7 +161,9 @@ export default class ExportNIST extends Props {
     let wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
     saveAs(
       new Blob([this.s2ab(wbout)], { type: "application/octet-stream" }),
-      "NIST-" + this.convertDate(new Date(), "-") + ".xlsx"
+      "NIST-SP-800-53-SC-Coverage-" +
+        this.convertDate(new Date(), "-") +
+        ".xlsx"
     );
   }
 
