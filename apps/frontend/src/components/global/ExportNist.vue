@@ -90,7 +90,9 @@ export default class ExportNIST extends Props {
     let controls = filter_module.controls(modified_filter);
 
     // Initialize our data structures
-    let sheet: NISTList = [["NIST SP 800-53 Security Control Coverage"]];
+    let sheet: NISTList = [
+      [`${filename} NIST SP 800-53 Security Control Coverage`]
+    ];
 
     // Get them all
     let nist_controls: NistControl[] = [];
@@ -152,10 +154,18 @@ export default class ExportNIST extends Props {
 
     // Push all sheets
     sheets.forEach(sheet => {
-      wb.SheetNames.push(sheet.name);
+      // Avoid name duplication
+      let i = 2;
+      let new_name = sheet.name;
+      while (wb.SheetNames.includes(new_name)) {
+        let appendage = ` (${i})`;
+        new_name = sheet.name.slice(0, MAX_SHEET_NAME_SIZE - appendage.length);
+        new_name += appendage;
+      }
+      wb.SheetNames.push(new_name);
 
       let ws = XLSX.utils.aoa_to_sheet(sheet.data);
-      wb.Sheets[sheet.name] = ws;
+      wb.Sheets[new_name] = ws;
     });
 
     let wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
