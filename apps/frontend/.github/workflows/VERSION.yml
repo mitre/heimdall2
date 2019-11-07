@@ -1,9 +1,9 @@
 name: Generate VERSION.md
+
 on:
-  push:
-    # branches to consider in the event; optional, defaults to all
-    branches:
-      - master
+  release:
+    types: [published]
+
 jobs:
   test:
     name: Generate VERSION.md
