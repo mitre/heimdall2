@@ -9,10 +9,10 @@ jobs:
     name: Generate VERSION.md
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout heimdall-vuetify
-        uses: actions/checkout@v1  
+      - name: Checkout heimdall-lite
+        uses: actions/checkout@v1
         with:
-          token: ${{secrets.GITHUB_TOKEN}}   
+          token: ${{secrets.GITHUB_TOKEN}}
       - name: Get information for VERSION.md
         run: |
           git pull origin master
@@ -26,8 +26,8 @@ jobs:
         uses: github-actions-x/commit@v2.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          push-branch: 'master'
-          commit-message: 'Publish version information'
-          force-add: 'true'
+          push-branch: "master"
+          commit-message: "Publish version information"
+          force-add: "true"
         env:
           CI: true
