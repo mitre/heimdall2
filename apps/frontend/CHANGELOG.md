@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.0.2](https://github.com/mitre/heimdall-lite/tree/v2.0.2) (2019-11-07)
+
+[Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.1...v2.0.2)
+
+**Merged pull requests:**
+
+- Workflow fixes [\#179](https://github.com/mitre/heimdall-lite/pull/179) ([aaronlippold](https://github.com/aaronlippold))
+
 ## [v2.0.1](https://github.com/mitre/heimdall-lite/tree/v2.0.1) (2019-11-07)
 
 [Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.0...v2.0.1)
