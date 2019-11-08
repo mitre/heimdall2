@@ -17,8 +17,8 @@ jobs:
         run: |
           git pull origin master
           echo "**Release:** " > VERSION.md
-          git describe --tags $(git rev-list --tags --max-count=1) >> VERSION.md >> VERSION.md
-          git describe --tags $(git rev-list --tags --max-count=1) >> VERSION
+          git describe --tags $(git rev-list --tags --max-count=1) >> VERSION.md
+          git describe --tags $(git rev-list --tags --max-count=1) > VERSION
           echo "<br><br>**Date:** " >> VERSION.md
           git show -s --format=%ci $(git rev-list --tags --max-count=1) >> VERSION.md
           echo "<br><br>**Commit:** " >> VERSION.md
