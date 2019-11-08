@@ -83,7 +83,7 @@ or
 
 `docker run -d -p 8080:80 heimdall-lite:v#.#.#`
 
-You can then access heimdall-lite via: `localhost:8080`\*\*
+You can then access heimdall-lite via: `localhost:8080`
 
 ## Project setup
 
