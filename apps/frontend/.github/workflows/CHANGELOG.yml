@@ -23,7 +23,7 @@ jobs:
       - name: Run github_changelog_generator
         run: |
           git pull origin master
-          export CHANGELOG_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+          export CHANGELOG_GITHUB_TOKEN=${{ secrets.ACTIONS_DEPLOY_KEY }}
           github_changelog_generator -u mitre -p heimdall-lite
       - name: Commit and push changes to CHANGELOG.md
         uses: github-actions-x/commit@v2.1
