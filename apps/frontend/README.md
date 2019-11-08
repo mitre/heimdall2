@@ -1,6 +1,6 @@
 # heimdall-lite v2.0.0
 
-![](https://github.com/mitre/heimdall-lite/workflows/heimdall-lite/badge.svg)
+![](https://github.com/mitre/heimdall-lite/workflows/heimdall-vuetify/badge.svg)
 
 ![Docker Pulls](https://img.shields.io/docker/pulls/mitre/heimdall-lite?label=Docker%20Hub%20Pulls)
 
