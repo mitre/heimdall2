@@ -3,7 +3,7 @@ FROM node:lts-alpine as build-stage
 WORKDIR /app
 # update npm & install vue cli peer dependencies
 RUN npm install -g npm
-RUN npm install -g @vue/cli @vue/cli-service
+RUN npm install -g @vue/cli @vue/cli-service @vue/cli-plugin-typescript vue-template-compiler
 
 COPY package*.json ./
 RUN npm install --production
