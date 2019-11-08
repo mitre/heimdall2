@@ -1,4 +1,4 @@
-# heimdall-lite v2.0.0
+# heimdall-lite v2.0
 
 ![](https://github.com/mitre/heimdall-lite/workflows/heimdall-vuetify/badge.svg)
 
