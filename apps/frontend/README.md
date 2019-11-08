@@ -57,6 +57,32 @@ There are two versions of the MITRE Heimdall Viewer - the full [Heimdall](https:
 | Decentralized Deployment                                 | Need to view subsets of the 800-53 control alignment     |
 | Minimal A&A Time                                         | Need to produce more complex reports in multiple formats |
 
+## General Deployment
+
+Heimdall Lite is a standard VueJS app so for help with a local deployment, please see: <https://cli.vuejs.org/guide/deployment.html#general-guidelines>
+
+## Docker Deployment
+
+<https://hub.docker.com/r/mitre/heimdall-lite>
+
+### Pulling from Docker
+
+`docker pull mitre/heimdall-lite:latest`
+
+or
+
+`docker pull mitre/heimdall-lite:v#.#.#`
+
+### Running via Docker
+
+`docker run -d -p 8080:80 heimdall-lite:latest`
+
+or
+
+`docker run -d -p 8080:80 heimdall-lite:v#.#.#`
+
+You can then access heimdall-lite via: `localhost:8080`\*\*
+
 ## Project setup
 
 ```
