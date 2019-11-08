@@ -1,7 +1,9 @@
 # heimdall-lite v2.0.0
 
-![](https://github.com/mitre/heimdall-lite/workflows/heimdall-vuetify/badge.svg)
+![](https://github.com/mitre/heimdall-lite/workflows/heimdall-lite/badge.svg)
+
 ![Docker Pulls](https://img.shields.io/docker/pulls/mitre/heimdall-lite?label=Docker%20Hub%20Pulls)
+
 ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/mitre/heimdall-lite)
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/2b914cc2-27b8-4469-86bb-32bfad03aaa1/deploy-status)](https://app.netlify.com/sites/heimdall-lite/deploys)
