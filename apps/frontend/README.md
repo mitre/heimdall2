@@ -6,9 +6,9 @@
 
 ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/mitre/heimdall-lite)
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/2b914cc2-27b8-4469-86bb-32bfad03aaa1/deploy-status)](https://app.netlify.com/sites/heimdall-lite/deploys)
-
 Heimdall Lite 2.0 is a JavaScript based security results viewer and review tool supporting multiple security results formats, such as: InSpec, SonarQube, OWASP-Zap and Fortify which you can load locally, from S3 and other data sources.
+
+![FHeimdall Lite 2.0 Demo](public/heidmall-lite-2.0-demo-5fps.gif)
 
 ## Hosted
 
