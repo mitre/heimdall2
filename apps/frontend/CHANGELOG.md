@@ -16,6 +16,10 @@
 
 - Docker Support [\#180](https://github.com/mitre/heimdall-lite/pull/180) ([aaronlippold](https://github.com/aaronlippold))
 
+**Merged pull requests:**
+
+- Bump inspecjs version to 0.8.3 [\#184](https://github.com/mitre/heimdall-lite/pull/184) ([lukemalinowski](https://github.com/lukemalinowski))
+
 ## [v2.0.2](https://github.com/mitre/heimdall-lite/tree/v2.0.2) (2019-11-07)
 
 [Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.1...v2.0.2)
@@ -124,6 +128,7 @@
 - Jh/code fix [\#171](https://github.com/mitre/heimdall-lite/pull/171) ([Mitriol](https://github.com/Mitriol))
 - fixed test data after update to inspec\_tools [\#170](https://github.com/mitre/heimdall-lite/pull/170) ([aaronlippold](https://github.com/aaronlippold))
 - Earonne rhel7 results sample [\#169](https://github.com/mitre/heimdall-lite/pull/169) ([Mitriol](https://github.com/Mitriol))
+- Added tests [\#168](https://github.com/mitre/heimdall-lite/pull/168) ([Mitriol](https://github.com/Mitriol))
 
 
 
