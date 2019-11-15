@@ -124,7 +124,6 @@
 - Jh/code fix [\#171](https://github.com/mitre/heimdall-lite/pull/171) ([Mitriol](https://github.com/Mitriol))
 - fixed test data after update to inspec\_tools [\#170](https://github.com/mitre/heimdall-lite/pull/170) ([aaronlippold](https://github.com/aaronlippold))
 - Earonne rhel7 results sample [\#169](https://github.com/mitre/heimdall-lite/pull/169) ([Mitriol](https://github.com/Mitriol))
-- Added tests [\#168](https://github.com/mitre/heimdall-lite/pull/168) ([Mitriol](https://github.com/Mitriol))
 
 
 
