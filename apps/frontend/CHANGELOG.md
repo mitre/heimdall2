@@ -1,5 +1,13 @@
 # Changelog
 
+## [untagged-3d7e236be46ad9b125a0](https://github.com/mitre/heimdall-lite/tree/untagged-3d7e236be46ad9b125a0) (2019-11-15)
+
+[Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.5...untagged-3d7e236be46ad9b125a0)
+
+**Merged pull requests:**
+
+- Bump inspecjs version to 0.8.3 [\#184](https://github.com/mitre/heimdall-lite/pull/184) ([lukemalinowski](https://github.com/lukemalinowski))
+
 ## [v2.0.5](https://github.com/mitre/heimdall-lite/tree/v2.0.5) (2019-11-08)
 
 [Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.4...v2.0.5)
@@ -15,10 +23,6 @@
 **Implemented enhancements:**
 
 - Docker Support [\#180](https://github.com/mitre/heimdall-lite/pull/180) ([aaronlippold](https://github.com/aaronlippold))
-
-**Merged pull requests:**
-
-- Bump inspecjs version to 0.8.3 [\#184](https://github.com/mitre/heimdall-lite/pull/184) ([lukemalinowski](https://github.com/lukemalinowski))
 
 ## [v2.0.2](https://github.com/mitre/heimdall-lite/tree/v2.0.2) (2019-11-07)
 
