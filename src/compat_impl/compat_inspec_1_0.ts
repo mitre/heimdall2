@@ -190,8 +190,7 @@ export class ExecControl extends HDFControl_1_0 implements HDFControl {
         // Check waived
         if (
             control.waiver_data &&
-            (!control.waiver_data.run ||
-                control.waiver_data.skipped_due_to_waiver)
+            control.waiver_data.skipped_due_to_waiver
         ) {
             this.waived = true;
         }
