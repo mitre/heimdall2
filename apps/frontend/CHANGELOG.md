@@ -1,6 +1,10 @@
 # Changelog
 
-## [v2.0.6](https://github.com/mitre/heimdall-lite/tree/untagged-3d7e236be46ad9b125a0) (2019-11-15)
+## [v2.0.6](https://github.com/mitre/heimdall-lite/tree/v2.0.6) (2019-11-15)
+
+[Full Changelog](https://github.com/mitre/heimdall-lite/compare/untagged-3d7e236be46ad9b125a0...v2.0.6)
+
+## [untagged-3d7e236be46ad9b125a0](https://github.com/mitre/heimdall-lite/tree/untagged-3d7e236be46ad9b125a0) (2019-11-15)
 
 [Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.5...untagged-3d7e236be46ad9b125a0)
 
@@ -23,6 +27,7 @@
 **Implemented enhancements:**
 
 - Docker Support [\#180](https://github.com/mitre/heimdall-lite/pull/180) ([aaronlippold](https://github.com/aaronlippold))
+- Fix \#174 [\#175](https://github.com/mitre/heimdall-lite/pull/175) ([Mitriol](https://github.com/Mitriol))
 
 ## [v2.0.2](https://github.com/mitre/heimdall-lite/tree/v2.0.2) (2019-11-07)
 
@@ -86,7 +91,6 @@
 - Make a proper entry page [\#2](https://github.com/mitre/heimdall-lite/issues/2)
 - Make sidebar show files on JSON upload [\#1](https://github.com/mitre/heimdall-lite/issues/1)
 - Release 2.0 [\#177](https://github.com/mitre/heimdall-lite/pull/177) ([aaronlippold](https://github.com/aaronlippold))
-- Fix \#174 [\#175](https://github.com/mitre/heimdall-lite/pull/175) ([Mitriol](https://github.com/Mitriol))
 
 **Fixed bugs:**
 
