@@ -65,9 +65,25 @@ There are two versions of the MITRE Heimdall Viewer - the full [Heimdall](https:
 | Decentralized Deployment                                 | Need to view subsets of the 800-53 control alignment     |
 | Minimal A&A Time                                         | Need to produce more complex reports in multiple formats |
 
-## General Deployment
+# General Deployment
+
+## NodeJS Deployment
 
 Heimdall Lite is a standard VueJS app so for help with a local deployment, please see: <https://cli.vuejs.org/guide/deployment.html#general-guidelines>
+
+Heimdall Lite is published to the <npmjs.org> MITRE site at <https://www.npmjs.com/package/heimdall-lite>.
+
+### Running via npm
+
+To run Heimdall Lite locally, just use the `npm` built-in utility `npx`:
+
+`npx heimdall-lite`
+
+If you use this tool often and want to have it installed locally, use the following command:
+
+`npm install -g heimdall-lite`
+
+Then, any subsequent `npx heimdall-lite` will use the local version and load much more quickly.
 
 ## Docker Deployment
 
