@@ -3,13 +3,9 @@
     <!-- The title and nav bar -->
     <v-toolbar-title class="pr-2">
       <v-app-bar-nav-icon @click.stop="$emit('toggle-drawer')">
-        <v-icon color="bar-visible">
-          mdi-menu
-        </v-icon>
+        <v-icon color="bar-visible">mdi-menu</v-icon>
       </v-app-bar-nav-icon>
-      <span class="hidden-sm-and-down bar-visible--text">
-        {{ title }}
-      </span>
+      <span class="hidden-sm-and-down bar-visible--text">{{ title }}</span>
     </v-toolbar-title>
     <v-spacer />
 
@@ -24,6 +20,11 @@
           alt="Heimdall Logo"
         ></v-img>
       </v-avatar>
+    </v-btn>
+    <v-btn icon large v-on:click="toggleDark">
+      <v-icon :color="this.$vuetify.theme.dark ? 'grey' : 'white'"
+        >mdi-theme-light-dark</v-icon
+      >
     </v-btn>
   </v-app-bar>
 </template>
@@ -47,5 +48,19 @@ export default class Topbar extends TopbarProps {
   clear(): void {
     this.$emit("clear");
   }
+
+  /** Updates theme darkness */
+  toggleDark() {
+    this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+  }
+
+  // FIXME
+  // This seems like it could be useful??
+
+  // if (this.$vuetify.theme.dark) {
+  //   metaThemeColor.setAttribute("content", "#212121");
+  // } else {
+  //   metaThemeColor.setAttribute("content", "#0277bd");
+  // }
 }
 </script>

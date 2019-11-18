@@ -41,12 +41,6 @@
           <LinkItem key="help" text="Help" icon="mdi-help-circle" v-on="on" />
         </template>
       </HelpModal>
-      <v-list-item>
-        <div class="d-flex justify-center">
-          <v-switch label="Light/Dark" v-model="dark" v-on:change="updateDark">
-          </v-switch>
-        </div>
-      </v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -84,19 +78,6 @@ export default class Sidebar extends SidebarProps {
     let files = data_store.allFiles;
     files = files.sort((a, b) => a.filename.localeCompare(b.filename));
     return files;
-  }
-
-  /** Whether or not we're dark mode */
-  dark: boolean = true;
-
-  /** Initial configuration of dark mode */
-  mounted() {
-    this.dark = this.$vuetify.theme.dark;
-  }
-
-  /** Updates theme darkness */
-  updateDark() {
-    this.$vuetify.theme.dark = this.dark;
   }
 }
 </script>
