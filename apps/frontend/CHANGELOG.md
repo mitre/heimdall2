@@ -1,5 +1,22 @@
 # Changelog
 
+## [v2.0.11](https://github.com/mitre/heimdall-lite/tree/v2.0.11) (2019-11-18)
+
+[Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.6...v2.0.11)
+
+**Implemented enhancements:**
+
+- Update the Light/Dark UX [\#186](https://github.com/mitre/heimdall-lite/pull/186) ([aaronlippold](https://github.com/aaronlippold))
+
+**Fixed bugs:**
+
+- \[BUG\] Ensure testing data and other extras are ignored durning production package builds. [\#185](https://github.com/mitre/heimdall-lite/issues/185)
+- \[BUG\] All controls marked Not\_Applicable on results from Inspec 4.18 \(waiver\_data feild\) [\#183](https://github.com/mitre/heimdall-lite/issues/183)
+
+**Merged pull requests:**
+
+- Added npx quick-run capabilities to npm published package. [\#187](https://github.com/mitre/heimdall-lite/pull/187) ([Mitriol](https://github.com/Mitriol))
+
 ## [v2.0.6](https://github.com/mitre/heimdall-lite/tree/v2.0.6) (2019-11-15)
 
 [Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.5...v2.0.6)
