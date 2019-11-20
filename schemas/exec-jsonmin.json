@@ -1,1 +1,123 @@
-{"type":"object","additionalProperties":true,"required":["statistics","controls","version"],"properties":{"statistics":{"$ref":"#/definitions/Statistics"},"version":{"type":"string"},"controls":{"type":"array","items":{"$ref":"#/definitions/Exec_JSON-MIN_Control"}}},"title":"Exec JSON-MIN output","definitions":{"Exec_JSON-MIN_Control":{"type":"object","additionalProperties":true,"required":["id","profile_id","profile_sha256","status","code_desc"],"properties":{"id":{"type":"string"},"profile_id":{"type":["string","null"]},"profile_sha256":{"type":"string"},"status":{"type":"string"},"code_desc":{"type":"string"},"skip_message":{"type":"string"},"resource":{"type":"string"},"message":{"type":"string"},"exception":{"type":"string"},"backtrace":{"type":"array","items":{"type":"string"}}},"title":"Exec JSON-MIN Control"},"Statistic_Block":{"type":"object","additionalProperties":true,"required":["total"],"properties":{"total":{"type":"number","description":"Total number of controls (in this category) for this inspec execution."}},"title":"Statistic Block"},"Statistic_Hash":{"type":"object","additionalProperties":true,"required":[],"properties":{"passed":{"$ref":"#/definitions/Statistic_Block"},"skipped":{"$ref":"#/definitions/Statistic_Block"},"failed":{"$ref":"#/definitions/Statistic_Block"}},"title":"Statistic Hash"},"Statistics":{"type":"object","additionalProperties":true,"required":[],"properties":{"duration":{"type":"number","description":"How long (in seconds) this inspec exec ran for."},"controls":{"$ref":"#/definitions/Statistic_Hash","description":"Breakdowns of control statistics by result"}},"title":"Statistics"}}}
+{
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "statistics",
+    "controls",
+    "version"
+  ],
+  "properties": {
+    "statistics": {
+      "$ref": "#/definitions/Statistics"
+    },
+    "version": {
+      "type": "string"
+    },
+    "controls": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Exec_JSON-MIN_Control"
+      }
+    }
+  },
+  "title": "Exec JSON-MIN output",
+  "definitions": {
+    "Exec_JSON-MIN_Control": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "profile_id",
+        "profile_sha256",
+        "status",
+        "code_desc"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "profile_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "profile_sha256": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "code_desc": {
+          "type": "string"
+        },
+        "skip_message": {
+          "type": "string"
+        },
+        "resource": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "exception": {
+          "type": "string"
+        },
+        "backtrace": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "Exec JSON-MIN Control"
+    },
+    "Statistic_Block": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "total"
+      ],
+      "properties": {
+        "total": {
+          "type": "number",
+          "description": "Total number of controls (in this category) for this inspec execution."
+        }
+      },
+      "title": "Statistic Block"
+    },
+    "Statistic_Hash": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [],
+      "properties": {
+        "passed": {
+          "$ref": "#/definitions/Statistic_Block"
+        },
+        "skipped": {
+          "$ref": "#/definitions/Statistic_Block"
+        },
+        "failed": {
+          "$ref": "#/definitions/Statistic_Block"
+        }
+      },
+      "title": "Statistic Hash"
+    },
+    "Statistics": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [],
+      "properties": {
+        "duration": {
+          "type": "number",
+          "description": "How long (in seconds) this inspec exec ran for."
+        },
+        "controls": {
+          "$ref": "#/definitions/Statistic_Hash",
+          "description": "Breakdowns of control statistics by result"
+        }
+      },
+      "title": "Statistics"
+    }
+  }
+}
