@@ -41,13 +41,18 @@
     </template>
     <template #tags>
       <v-chip-group column active-class="NONE">
-        <v-chip
+        <v-tooltip
+          bottom
           v-for="(tag, i) in control.hdf.raw_nist_tags"
           :key="i"
-          active-class="NONE"
         >
-          {{ tag }}
-        </v-chip>
+          <template v-slot:activator="{ on }">
+            <v-chip v-on="on" active-class="NONE">
+              {{ tag }}
+            </v-chip>
+          </template>
+          <span>{{ tooltip(tag) }}</span>
+        </v-tooltip>
       </v-chip-group>
     </template>
   </ResponsiveRowSwitch>
@@ -59,6 +64,7 @@ import Component from "vue-class-component";
 import { HDFControl, ControlStatus, Severity } from "inspecjs";
 import ResponsiveRowSwitch from "@/components/cards/controltable/ResponsiveRowSwitch.vue";
 import { ContextualizedControl } from "../../../store/data_store";
+import { NIST_DESCRIPTIONS } from "@/utilities/nist_util";
 
 // We declare the props separately to make props types inferable.
 const ControlRowHeaderProps = Vue.extend({
@@ -83,6 +89,14 @@ export default class ControlRowHeader extends ControlRowHeaderProps {
   /** Typed getter for control */
   get _control(): ContextualizedControl {
     return this.control;
+  }
+
+  // Get NIST tag description for NIST tag, this is pulled from the 800-53 xml
+  // and relies on a script not contained in the project
+  get tooltip(): (tag: string) => string {
+    return (tag: string) => {
+      return this.descriptionForTag(tag);
+    };
   }
 
   get truncated_title(): string {
@@ -116,6 +130,12 @@ export default class ControlRowHeader extends ControlRowHeaderProps {
 
   fmtNist(nist: string[]): string {
     return nist.join(", ");
+  }
+
+  // Get NIST tag description for NIST tag, this is pulled from the 800-53 xml
+  // and relies on a script not contained in the project
+  descriptionForTag(tag: string): string {
+    return NIST_DESCRIPTIONS[tag] || "Unrecognized tag";
   }
 }
 </script>
