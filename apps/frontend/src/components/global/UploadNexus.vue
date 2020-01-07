@@ -7,6 +7,8 @@
     <v-tabs
       :vertical="$vuetify.breakpoint.mdAndUp"
       active
+      :value="active_tab"
+      @change="selected_tab"
       color="primary-visible"
       show-arrows
     >
@@ -61,8 +63,11 @@ import InspecIntakeModule, { FileID } from "@/store/report_intake";
 import Modal from "@/components/global/Modal.vue";
 import FileReader from "@/components/global/upload_tabs/FileReader.vue";
 import HelpFooter from "@/components/global/upload_tabs/HelpFooter.vue";
-import S3Reader from "@/components/global/upload_tabs/S3Reader.vue";
+import S3Reader from "@/components/global/upload_tabs/aws/S3Reader.vue";
 import SampleList from "@/components/global/upload_tabs/SampleList.vue";
+import { LocalStorageVal } from "../../utilities/helper_util";
+
+const local_tab = new LocalStorageVal<string>("nexus_curr_tab");
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -86,7 +91,18 @@ const Props = Vue.extend({
   }
 })
 export default class UploadNexus extends Props {
-  activeTab: Number = 0;
+  active_tab: string = ""; // Set in mounted
+
+  // Loads the last open tab
+  mounted() {
+    this.active_tab = local_tab.get_default("uploadtab-local");
+  }
+
+  // Handles change in tab
+  selected_tab(new_tab: string) {
+    this.active_tab = new_tab;
+    local_tab.set(new_tab);
+  }
 
   // Event passthrough
   got_files(files: FileID[]) {

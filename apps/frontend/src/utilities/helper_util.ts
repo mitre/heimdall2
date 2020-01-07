@@ -60,3 +60,53 @@ export function need_redirect_file(
     }
   }
 }
+
+/** Stores/retrives a simple JSON object from localstorage.
+ * Will not store/retrieve methods - be advised! It won't work with class types!
+ */
+export class LocalStorageVal<T> {
+  private storage_key: string;
+
+  constructor(storage_key: string) {
+    this.storage_key = storage_key;
+  }
+
+  /** Retrieves the currently held item, as resolved by JSON.parse */
+  get(): T | null {
+    // Fetch the string, failing early if not set
+    let s = window.localStorage.getItem(this.storage_key);
+    if (!s) {
+      return null;
+    }
+
+    // Then try parsing. On fail, clear and go null
+    try {
+      let v = JSON.parse(s);
+      return v;
+    } catch (error) {
+      this.clear();
+      return null;
+    }
+  }
+
+  /** Wraps get, providing the provided default if necessary */
+  get_default(_default: T): T {
+    let v = this.get();
+    if (v === null) {
+      return _default;
+    } else {
+      return v;
+    }
+  }
+
+  /** Sets the local storage value to the given value, stringified */
+  set(val: T): void {
+    let nv = JSON.stringify(val);
+    window.localStorage.setItem(this.storage_key, nv);
+  }
+
+  /** Clears the local storage value */
+  clear(): void {
+    window.localStorage.removeItem(this.storage_key);
+  }
+}
