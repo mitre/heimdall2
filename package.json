@@ -1,6 +1,6 @@
 {
   "name": "inspecjs",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "© 2018 The MITRE Corporation.",
   "files": [
     "dist"

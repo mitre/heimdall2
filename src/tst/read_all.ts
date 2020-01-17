@@ -100,7 +100,7 @@ function format_count(c: Counts) {
     Profile Error   : ${c["Profile Error"]}`;
 }
 
-readFiles("tst/parse_testbed/", (fn, content) => {
+readFiles("parse_testbed/", (fn, content) => {
     console.log(`Reading file ${fn}`);
 
     // Convert it

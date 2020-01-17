@@ -151,12 +151,14 @@ export interface HDFControlSegment {
     /** A line by line trace of where this.exception occurred */
     backtrace?: string[];
 
-    /** The start time of this segment, in format
+    /** The start time of this segment, which is typically in the format.
      *
      * yyyy-mm-ddThh:mm:ss+|-HH:MM
      *
      * Where yyyy is year, mm d=month, dd day, hh hour, mm minute, ss second,
      * plus or minus HH:MM s the time zone offset.
+     * 
+     * However, this isn't guaranteed
      */
     start_time: string;
 
