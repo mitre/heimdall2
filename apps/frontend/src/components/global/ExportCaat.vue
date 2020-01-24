@@ -103,7 +103,7 @@ export default class ExportCaat extends Props {
       row.push("Self-Assessment "); // Source
       row.push(""); //row.push("InSpec"); // Assessment/Audit Company
       row.push("Test"); // Test Method
-      row.push(fix(control.wraps.tags.check || control.descriptions.check)); // Test Objective
+      row.push(fix(control.descriptions.check || control.wraps.tags.check)); // Test Objective
       let test_result = `${control.status}: ${control.message.replace(
         "\n",
         "; "
@@ -114,7 +114,7 @@ export default class ExportCaat extends Props {
       } else {
         row.push("Other Than Satisfied");
       }
-      row.push(fix(control.wraps.tags.fix || control.descriptions.fix)); // Recommended Corrective Action(s)
+      row.push(fix(control.descriptions.fix || control.wraps.tags.fix)); // Recommended Corrective Action(s)
       row.push(""); // Effect on Business
       row.push(""); // Likelihood
       row.push(fix(control.severity)); // Impact

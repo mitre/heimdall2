@@ -205,11 +205,11 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
       },
       {
         name: "Check Text",
-        value: c.data.tags.check || c.hdf.descriptions.check
+        value: c.hdf.descriptions.check || c.data.tags.check
       },
       {
         name: "Fix Text",
-        value: c.data.tags.fix || c.hdf.descriptions.fix
+        value: c.hdf.descriptions.fix || c.data.tags.fix
       }
     ];
   }
