@@ -13,9 +13,9 @@ export { ControlStatus, Severity, SegmentStatus } from "./compat_wrappers";
 
 // Export HDF format
 export {
-    hdfWrapControl,
-    HDFControl,
-    HDFControlSegment,
+  hdfWrapControl,
+  HDFControl,
+  HDFControlSegment
 } from "./compat_wrappers";
 
 // Export nist utilities

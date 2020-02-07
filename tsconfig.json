@@ -5,6 +5,7 @@
         "rootDir": "src",
         "outDir": "dist",
         "strict": true,
+        "sourceMap": true,
         "baseUrl": ".",
         "lib": [
             "es7"
