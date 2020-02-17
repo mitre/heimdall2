@@ -1,5 +1,5 @@
-import { ExecJSONControl as ResultControl_1_0 } from "./generated_parsers/exec-json";
-import { ProfileJSONControl as ProfileControl_1_0 } from "./generated_parsers/profile-json";
+import { ExecJSONControl as ResultControl_1_0 } from "./generated_parsers/v_1_0/exec-json";
+import { ProfileJSONControl as ProfileControl_1_0 } from "./generated_parsers/v_1_0/profile-json";
 import {
   ProfileControl as HDFProfileControl_1_0,
   ExecControl as HDFExecControl_1_0
