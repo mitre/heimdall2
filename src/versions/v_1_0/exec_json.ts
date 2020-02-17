@@ -5,6 +5,7 @@ export {
   ControlDescription,
   ControlGroup,
   ControlResult,
+  ControlResultStatus,
   Dependency as ProfileDependency,
   Platform,
   Reference,
