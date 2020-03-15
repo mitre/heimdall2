@@ -4,25 +4,27 @@
       <v-text-field
         :value="mfa_token"
         @input="change_mfa_token"
+        @keyup.enter="proceed"
         label="MFA Token"
         :rules="[req_rule, mfa_rule]"
       />
       <v-text-field
         :value="mfa_serial"
         @input="change_mfa_serial"
+        @keyup.enter="proceed"
         label="MFA Device ARN (Optional)"
         hint="Defaults to virtual IAM device"
       />
-      <v-btn color="red" @click="$emit('exit-mfa')" class="my-2 mr-3">
-        Cancel
-      </v-btn>
       <v-btn
         color="primary"
         :disabled="!valid"
-        class="my-2 mr-3"
+        class="my-2 mr-2"
         @click="$emit('auth-mfa')"
       >
         Login
+      </v-btn>
+      <v-btn color="red" @click="proceed" class="my-2 ml-2">
+        Cancel
       </v-btn>
     </v-form>
   </v-stepper-content>
@@ -87,6 +89,11 @@ export default class S3Reader extends Props {
   change_mfa_serial(new_value: string) {
     local_mfa_serial.set(new_value);
     this.$emit("update:mfa_serial", new_value);
+  }
+
+  /** When button is pressed or enter is pressed */
+  proceed() {
+    this.$emit("exit-mfa");
   }
 }
 </script>

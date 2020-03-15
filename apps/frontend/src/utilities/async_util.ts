@@ -30,3 +30,8 @@ export function defined<T>(x: T | null | undefined): T {
     return x;
   }
 }
+
+/** Sleeps for a given # of milliseconds */
+export function delay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}

@@ -72,7 +72,6 @@ export async function list_buckets(creds: AuthCreds) {
 export interface MFA_Info {
   SerialNumber: string | null; // If null, use deduced token
   TokenCode: string;
-  DurationSeconds: number;
 }
 
 /** Attempts to deduce the virtual mfa device serial code from the provided */
@@ -91,6 +90,7 @@ export function derive_mfa_serial(user_access_token: string): string | null {
 export async function get_session_token(
   access_token: string,
   secret_key: string,
+  duration: number,
   mfa_info?: MFA_Info
 ): Promise<Auth> {
   // Instanciate STS with our base and secret token
@@ -122,7 +122,7 @@ export async function get_session_token(
       mfa_info.SerialNumber || info.probable_user_mfa_device!; // We cannot get to this stage if
     result = sts
       .getSessionToken({
-        DurationSeconds: mfa_info.DurationSeconds,
+        DurationSeconds: duration,
         SerialNumber: mfa_info.SerialNumber,
         TokenCode: mfa_info.TokenCode
       })
@@ -162,7 +162,7 @@ export function transcribe_error(error: AWSError): string {
     case "InvalidAccessKeyId":
       return "Provided access key is invalid.";
     case "AccessDenied":
-      return `Access denied: ${message}`;
+      return `Access denied. This likely means that your account does not have access to the specified bucket, or that it requires MFA authentication.`;
     case "AccountProblem":
       return `Account problem detected: ${message}`;
     case "CredentialsNotSupported":

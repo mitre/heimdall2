@@ -110,3 +110,55 @@ export class LocalStorageVal<T> {
     window.localStorage.removeItem(this.storage_key);
   }
 }
+
+/** A useful shorthand */
+export type Hash<T> = { [key: string]: T };
+
+/** Groups items by using the provided key function */
+export function group_by<T>(
+  items: Array<T>,
+  key_getter: (v: T) => string
+): Hash<Array<T>> {
+  let result: Hash<Array<T>> = {};
+  for (let i of items) {
+    // Get the items key
+    let key = key_getter(i);
+
+    // Get the list it should go in
+    let corr_list = result[key];
+    if (corr_list) {
+      // If list exists, place
+      corr_list.push(i);
+    } else {
+      // List does not exist; create and put
+      result[key] = [i];
+    }
+  }
+  return result;
+}
+
+/** Maps a hash to a new hash, with the same keys but each value replaced with a new (mapped) value */
+export function map_hash<T, G>(
+  old: Hash<T>,
+  map_function: (v: T) => G
+): Hash<G> {
+  let result: Hash<G> = {};
+  for (let key in old) {
+    result[key] = map_function(old[key]);
+  }
+  return result;
+}
+
+/** Converts a simple, single level json dict into uri params */
+export function to_uri_params(params: Hash<string | number | boolean>) {
+  let esc = encodeURIComponent;
+  let query = Object.keys(params)
+    .map(k => esc(k) + "=" + esc(params[k]))
+    .join("&");
+  return query;
+}
+
+/** Generate a basic authentication string for http requests */
+export function basic_auth(username: string, password: string): string {
+  return "Basic " + Buffer.from(`${username}:${password}`).toString("base64");
+}

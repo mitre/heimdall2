@@ -1,42 +1,44 @@
 <template>
-  <v-stepper v-model="step" vertical>
-    <v-stepper-step :complete="!!assumed_role" step="1">
-      Account Credentials {{ step === 1 ? shown_error : "" }}
-    </v-stepper-step>
+  <ErrorTooltip ref="error_tooltip">
+    <v-stepper v-model="step" vertical>
+      <v-stepper-step :complete="!!assumed_role" step="1">
+        Account Credentials
+      </v-stepper-step>
 
-    <AuthStepBasic
-      v-bind:access_token.sync="access_token"
-      v-bind:secret_token.sync="secret_token"
-      @auth-basic="handle_basic"
-      @goto-mfa="handle_goto_mfa"
-    />
+      <AuthStepBasic
+        v-bind:access_token.sync="access_token"
+        v-bind:secret_token.sync="secret_token"
+        @auth-basic="handle_basic"
+        @goto-mfa="handle_goto_mfa"
+      />
 
-    <v-stepper-step
-      :complete="!!assumed_role && assumed_role.from_mfa"
-      step="2"
-    >
-      MFA Authorization {{ step === 2 ? shown_error : "" }}
-    </v-stepper-step>
+      <v-stepper-step
+        :complete="!!assumed_role && assumed_role.from_mfa"
+        step="2"
+      >
+        MFA Authorization
+      </v-stepper-step>
 
-    <AuthStepMFA
-      v-bind:mfa_token.sync="mfa_token"
-      v-bind:mfa_serial.sync="mfa_serial"
-      @auth-mfa="handle_mfa"
-      @exit-mfa="handle_cancel_mfa"
-    />
+      <AuthStepMFA
+        v-bind:mfa_token.sync="mfa_token"
+        v-bind:mfa_serial.sync="mfa_serial"
+        @auth-mfa="handle_proceed_mfa"
+        @exit-mfa="handle_cancel_mfa"
+      />
 
-    <v-stepper-step step="3">
-      Browse Bucket {{ step === 3 ? shown_error : "" }}
-    </v-stepper-step>
+      <v-stepper-step step="3">
+        Browse Bucket
+      </v-stepper-step>
 
-    <FileList
-      :auth="assumed_role"
-      :files="files"
-      @exit-list="handle_cancel_mfa"
-      @got-files="got_files"
-      @load-bucket="load_bucket"
-    />
-  </v-stepper>
+      <FileList
+        :auth="assumed_role"
+        :files="files"
+        @exit-list="handle_cancel_mfa"
+        @got-files="got_files"
+        @load-bucket="load_bucket"
+      />
+    </v-stepper>
+  </ErrorTooltip>
 </template>
 
 <script lang="ts">
@@ -57,6 +59,7 @@ import {
   AUTH_DURATION
 } from "../../../../utilities/aws_util";
 import InspecIntakeModule, { FileID } from "@/store/report_intake";
+import ErrorTooltip from "../../../generic/ErrorTooltip.vue";
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -77,13 +80,11 @@ const local_session_information = new LocalStorageVal<Auth | null>(
   components: {
     AuthStepBasic,
     AuthStepMFA,
-    FileList
+    FileList,
+    ErrorTooltip
   }
 })
 export default class S3Reader extends Props {
-  /** What error is currently shown, if any. Shared between stages. */
-  error: string | null = null;
-
   /** Form required field rules. Maybe eventually expand to other stuff */
   req_rule = (v: string | null | undefined) =>
     (v || "").trim().length > 0 || "Field is Required";
@@ -112,24 +113,13 @@ export default class S3Reader extends Props {
     this.mfa_token = "";
   }
 
-  get shown_error(): string {
-    if (this.error) {
-      return ` - ${this.error}`;
-    } else {
-      return "";
-    }
-  }
-
   /**
    * Handle a basic login.
    * Gets a session token
    */
   handle_basic() {
-    // If we need another error, it will be set shortly. If not, the old one is probably not relevant
-    this.error = null;
-
     // Attempt to assume role based on if we've determined 2fa necessary
-    get_session_token(this.access_token, this.secret_token).then(
+    get_session_token(this.access_token, this.secret_token, AUTH_DURATION).then(
       // Success of get session token - now need to determine if MFA necessary
       success => {
         this.assumed_role = success;
@@ -143,8 +133,21 @@ export default class S3Reader extends Props {
     );
   }
 
+  /** If the user tries to login by going to MFA, first check that the account is valid */
   handle_goto_mfa() {
-    this.step = 2;
+    // Attempt to assume role based on if we've determined 2fa necessary
+    // Don't need the duration to be very long
+    get_session_token(this.access_token, this.secret_token, 10).then(
+      // Success of get session token - now need to determine if MFA necessary
+      success => {
+        this.step = 2;
+      },
+
+      // Failure of initial get session token: want to set error normally
+      failure => {
+        this.handle_error(failure);
+      }
+    );
   }
 
   handle_cancel_mfa() {
@@ -163,19 +166,20 @@ export default class S3Reader extends Props {
   /** Handle an MFA login.
    * Determine whether further action is necessary
    */
-  handle_mfa() {
-    // If we need another error, it will be set here
-    this.error = null;
-
+  handle_proceed_mfa() {
     // Build our mfa params
     let mfa: MFA_Info = {
       SerialNumber: this.mfa_serial || null,
-      TokenCode: this.mfa_token,
-      DurationSeconds: AUTH_DURATION
+      TokenCode: this.mfa_token
     };
 
     // Attempt to assume role based on if we've determined 2fa necessary
-    get_session_token(this.access_token, this.secret_token, mfa).then(
+    get_session_token(
+      this.access_token,
+      this.secret_token,
+      AUTH_DURATION,
+      mfa
+    ).then(
       success => {
         // Keep them
         this.assumed_role = success;
@@ -223,7 +227,9 @@ export default class S3Reader extends Props {
    */
   handle_error(error: any): void {
     let t_error = error as AWSError;
-    this.error = transcribe_error(t_error);
+    let formatted_error = transcribe_error(t_error);
+    let queue = this.$refs["error_tooltip"] as ErrorTooltip;
+    queue.show_error(formatted_error);
   }
 
   /** Callback on got files */

@@ -31,6 +31,7 @@
     "@types/d3": "^5.7.2",
     "@types/diff": "^4.0.2",
     "@types/prismjs": "^1.16.0",
+    "@types/xml-js": "^1.0.0",
     "@vue/cli": "^4.0.5",
     "apexcharts": "^3.10.1",
     "aws-sdk": "^2.573.0",
@@ -38,7 +39,7 @@
     "chroma-js": "^2.1.0",
     "connect": "^3.7.0",
     "core-js": "^3.4.1",
-    "d3": "^5.13.1",
+    "d3": "^5.15.0",
     "date-fns": "^2.6.0",
     "diff": "^4.0.1",
     "file-saver": "^2.0.2",
@@ -67,7 +68,8 @@
     "vue-toasted": "^1.1.27",
     "vuetify": "^2.1.10",
     "vuex": "^3.1.2",
-    "xlsx": "^0.15.2"
+    "xlsx": "^0.15.2",
+    "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "@mdi/font": "^3.9.97",
@@ -95,7 +97,7 @@
     "fibers": "^4.0.2",
     "lint-staged": "^8.1.5",
     "material-design-icons-iconfont": "^5.0.1",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.13.1",
     "prettier": "^1.19.1",
     "sass": "^1.23.6",
     "sass-loader": "^7.3.1",

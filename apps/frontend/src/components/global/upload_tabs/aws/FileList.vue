@@ -2,7 +2,11 @@
   <v-stepper-content step="3">
     <div class="d-flex flex-column">
       <div class="d-flex justify-space-between">
-        <v-text-field v-model="form_bucket_name" label="Bucket name" />
+        <v-text-field
+          v-model="form_bucket_name"
+          label="Bucket name"
+          @keyup.enter="load"
+        />
         <v-btn
           title="Load"
           @click="load"
@@ -12,9 +16,10 @@
           <v-icon>mdi-cloud-download</v-icon>
         </v-btn>
       </div>
+
       <v-list :two-line="true">
         <v-list-item v-if="files.length === 0"
-          >No items found! Try refreshing?</v-list-item
+          >No items found! Try different terms?</v-list-item
         >
         <v-list-item v-for="(val, index) in files" :key="val.Key">
           <v-list-item-content>
