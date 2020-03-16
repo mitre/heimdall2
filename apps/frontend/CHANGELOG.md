@@ -1,5 +1,27 @@
 # Changelog
 
+## [v2.0.12](https://github.com/mitre/heimdall-lite/tree/v2.0.12) (2020-03-15)
+
+[Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.11...v2.0.12)
+
+**Implemented enhancements:**
+
+- Add node-semver to the project [\#182](https://github.com/mitre/heimdall-lite/issues/182)
+- release-2.0 [\#176](https://github.com/mitre/heimdall-lite/issues/176)
+- Re-introduce nist tag "pill" visuals [\#133](https://github.com/mitre/heimdall-lite/issues/133)
+- Investigate second implementation method for infinite scroll [\#92](https://github.com/mitre/heimdall-lite/issues/92)
+- Add a hover information modal that shows the capability definition as reference [\#72](https://github.com/mitre/heimdall-lite/issues/72)
+- Add tooltips to NIST tag chips [\#190](https://github.com/mitre/heimdall-lite/pull/190) ([lukemalinowski](https://github.com/lukemalinowski))
+
+**Closed issues:**
+
+- Make ContextualizedControl wrap HDFControl, instead of it being one or the other [\#122](https://github.com/mitre/heimdall-lite/issues/122)
+
+**Merged pull requests:**
+
+- Added splunk support [\#201](https://github.com/mitre/heimdall-lite/pull/201) ([Mitriol](https://github.com/Mitriol))
+- Reworked AWS S3 dialogue to be more user friendly, and have proper MFA support [\#192](https://github.com/mitre/heimdall-lite/pull/192) ([Mitriol](https://github.com/Mitriol))
+
 ## [v2.0.11](https://github.com/mitre/heimdall-lite/tree/v2.0.11) (2019-11-18)
 
 [Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.6...v2.0.11)
@@ -7,6 +29,7 @@
 **Implemented enhancements:**
 
 - Update the Light/Dark UX [\#186](https://github.com/mitre/heimdall-lite/pull/186) ([aaronlippold](https://github.com/aaronlippold))
+- Release 2.0 [\#177](https://github.com/mitre/heimdall-lite/pull/177) ([aaronlippold](https://github.com/aaronlippold))
 
 **Fixed bugs:**
 
@@ -20,10 +43,6 @@
 ## [v2.0.6](https://github.com/mitre/heimdall-lite/tree/v2.0.6) (2019-11-15)
 
 [Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.5...v2.0.6)
-
-**Fixed bugs:**
-
-- Resolved issues with counts from InSpec 4.18.x data - fixed `inspecjs` [\#184](https://github.com/mitre/heimdall-lite/pull/184) ([lukemalinowski](https://github.com/lukemalinowski))
 
 ## [v2.0.5](https://github.com/mitre/heimdall-lite/tree/v2.0.5) (2019-11-08)
 
@@ -40,6 +59,10 @@
 **Implemented enhancements:**
 
 - Docker Support [\#180](https://github.com/mitre/heimdall-lite/pull/180) ([aaronlippold](https://github.com/aaronlippold))
+
+**Fixed bugs:**
+
+- Resolved issues with counts from InSpec 4.18.x data - fixed `inspecjs` [\#184](https://github.com/mitre/heimdall-lite/pull/184) ([lukemalinowski](https://github.com/lukemalinowski))
 
 ## [v2.0.2](https://github.com/mitre/heimdall-lite/tree/v2.0.2) (2019-11-07)
 
@@ -102,7 +125,6 @@
 - Make the graphs show properly [\#3](https://github.com/mitre/heimdall-lite/issues/3)
 - Make a proper entry page [\#2](https://github.com/mitre/heimdall-lite/issues/2)
 - Make sidebar show files on JSON upload [\#1](https://github.com/mitre/heimdall-lite/issues/1)
-- Release 2.0 [\#177](https://github.com/mitre/heimdall-lite/pull/177) ([aaronlippold](https://github.com/aaronlippold))
 - Fix \#174 [\#175](https://github.com/mitre/heimdall-lite/pull/175) ([Mitriol](https://github.com/Mitriol))
 
 **Fixed bugs:**
