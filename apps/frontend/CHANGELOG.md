@@ -29,7 +29,6 @@
 **Implemented enhancements:**
 
 - Update the Light/Dark UX [\#186](https://github.com/mitre/heimdall-lite/pull/186) ([aaronlippold](https://github.com/aaronlippold))
-- Release 2.0 [\#177](https://github.com/mitre/heimdall-lite/pull/177) ([aaronlippold](https://github.com/aaronlippold))
 
 **Fixed bugs:**
 
@@ -43,6 +42,10 @@
 ## [v2.0.6](https://github.com/mitre/heimdall-lite/tree/v2.0.6) (2019-11-15)
 
 [Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.5...v2.0.6)
+
+**Fixed bugs:**
+
+- Resolved issues with counts from InSpec 4.18.x data - fixed `inspecjs` [\#184](https://github.com/mitre/heimdall-lite/pull/184) ([lukemalinowski](https://github.com/lukemalinowski))
 
 ## [v2.0.5](https://github.com/mitre/heimdall-lite/tree/v2.0.5) (2019-11-08)
 
@@ -59,10 +62,6 @@
 **Implemented enhancements:**
 
 - Docker Support [\#180](https://github.com/mitre/heimdall-lite/pull/180) ([aaronlippold](https://github.com/aaronlippold))
-
-**Fixed bugs:**
-
-- Resolved issues with counts from InSpec 4.18.x data - fixed `inspecjs` [\#184](https://github.com/mitre/heimdall-lite/pull/184) ([lukemalinowski](https://github.com/lukemalinowski))
 
 ## [v2.0.2](https://github.com/mitre/heimdall-lite/tree/v2.0.2) (2019-11-07)
 
@@ -125,6 +124,7 @@
 - Make the graphs show properly [\#3](https://github.com/mitre/heimdall-lite/issues/3)
 - Make a proper entry page [\#2](https://github.com/mitre/heimdall-lite/issues/2)
 - Make sidebar show files on JSON upload [\#1](https://github.com/mitre/heimdall-lite/issues/1)
+- Release 2.0 [\#177](https://github.com/mitre/heimdall-lite/pull/177) ([aaronlippold](https://github.com/aaronlippold))
 - Fix \#174 [\#175](https://github.com/mitre/heimdall-lite/pull/175) ([Mitriol](https://github.com/Mitriol))
 
 **Fixed bugs:**
