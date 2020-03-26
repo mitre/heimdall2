@@ -37,7 +37,7 @@
             <v-divider></v-divider>
             <br />
             <v-clamp class="pb-2" autoresize :max-lines="2">
-              <template slot="default">{{ control.data.desc.trim() }}</template>
+              <template slot="default">{{ main_desc }}</template>
               <template slot="after" slot-scope="{ toggle, expanded, clamped }">
                 <v-icon
                   fab
@@ -149,6 +149,14 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
     return this.control;
   }
 
+  get main_desc(): string {
+    if (this._control.data.desc) {
+      return this._control.data.desc.trim();
+    } else {
+      return "No description";
+    }
+  }
+
   // Checks if an element has been clamped
   isClamped(el: CollapsableElement | undefined | null) {
     if (!el) {
@@ -211,8 +219,9 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
         name: "Fix Text",
         value: c.hdf.descriptions.fix || c.data.tags.fix
       }
-    ];
+    ].filter(v => v.value); // Get rid of nulls
   }
+
   zebra(ix: number): string {
     return ix % 2 ? "" : "zebra-table";
   }
