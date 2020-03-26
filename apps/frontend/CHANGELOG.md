@@ -1,5 +1,13 @@
 # Changelog
 
+## [v2.0.15](https://github.com/mitre/heimdall-lite/tree/v2.0.15) (2020-03-26)
+
+[Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.14...v2.0.15)
+
+**Merged pull requests:**
+
+- Fixed controls not properly handling null desc blocks [\#204](https://github.com/mitre/heimdall-lite/pull/204) ([Mitriol](https://github.com/Mitriol))
+
 ## [v2.0.14](https://github.com/mitre/heimdall-lite/tree/v2.0.14) (2020-03-17)
 
 [Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.12...v2.0.14)
