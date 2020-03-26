@@ -1,5 +1,9 @@
 # Changelog
 
+## [v2.0.14](https://github.com/mitre/heimdall-lite/tree/v2.0.14) (2020-03-17)
+
+[Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.12...v2.0.14)
+
 ## [v2.0.12](https://github.com/mitre/heimdall-lite/tree/v2.0.12) (2020-03-15)
 
 [Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.11...v2.0.12)
