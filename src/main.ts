@@ -8,7 +8,8 @@ async function bootstrap() {
   app.use(helmet());
   app.useGlobalPipes(
     new ValidationPipe({
-      transform: true
+      transform: true,
+      whitelist: true
     })
   );
   await app.listen(3000);
