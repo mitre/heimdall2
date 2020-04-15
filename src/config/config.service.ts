@@ -8,6 +8,7 @@ export class ConfigService {
     console.log('Attempting to read configuration file `.env`!');
     try {
       this.envConfig = dotenv.parse(fs.readFileSync('.env'));
+      console.log('Read config!');
     } catch (error) {
       if(error.code === 'ENOENT') {
         // File probably does not exist
