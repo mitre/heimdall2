@@ -6,6 +6,7 @@ import { Column, Model, Table, IsEmail, Unique, AllowNull, CreatedAt, UpdatedAt,
 export class User extends Model<User> {
   @PrimaryKey
   @AutoIncrement
+  @AllowNull(false)
   @Column(DataType.BIGINT)
   id: number;
 
@@ -16,10 +17,12 @@ export class User extends Model<User> {
   email: string;
 
   @CreatedAt
+  @AllowNull(false)
   @Column
   createdAt: Date;
 
   @UpdatedAt
+  @AllowNull(false)
   @Column
   updatedAt: Date;
 }
