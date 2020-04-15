@@ -5,7 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 @Controller('users')
 export class UsersController {
   @Get(':id')
-  findById(@Param('id') id: string) {
+  findById(@Param('id') id: number) {
     return `This action returns user ${id}`;
   }
 
@@ -15,12 +15,12 @@ export class UsersController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     return `This action updates user ${id}`;
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return `This action removes user ${id}`;
   }
 }
