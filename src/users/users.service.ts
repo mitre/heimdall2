@@ -37,8 +37,9 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     let user = new User();
-    const userData = await user.save();
-    return userData;
+    user.email = createUserDto.email;
+    let userData = await user.save();
+    return new UserDto(userData);
   }
 
   async remove(id: number) {
