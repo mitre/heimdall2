@@ -21,7 +21,7 @@ export class UsersController {
 
   @Put(':id')
   async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-    return `This action updates user ${id}`;
+    return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')

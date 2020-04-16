@@ -16,6 +16,22 @@ export class User extends Model<User> {
   @Column
   email: string;
 
+  @AllowNull(true)
+  @Column
+  firstName: string;
+
+  @AllowNull(true)
+  @Column
+  lastName: string;
+
+  @AllowNull(true)
+  @Column
+  organization: string;
+
+  @AllowNull(true)
+  @Column
+  title: string;
+
   @CreatedAt
   @AllowNull(false)
   @Column
