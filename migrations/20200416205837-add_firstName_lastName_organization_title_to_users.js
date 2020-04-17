@@ -4,19 +4,19 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
-        queryInterface.addColumn('User', 'firstName', {
+        queryInterface.addColumn('Users', 'firstName', {
           type: Sequelize.STRING,
           allowNull: true
         }, { transaction: t }),
-        queryInterface.addColumn('User', 'lastName', {
+        queryInterface.addColumn('Users', 'lastName', {
           type: Sequelize.STRING,
           allowNull: true
         }, { transaction: t }),
-        queryInterface.addColumn('User', 'organization', {
+        queryInterface.addColumn('Users', 'organization', {
           type: Sequelize.STRING,
           allowNull: true
         }, { transaction: t }),
-        queryInterface.addColumn('User', 'title', {
+        queryInterface.addColumn('Users', 'title', {
           type: Sequelize.STRING,
           allowNull: true
         }, { transaction: t })
@@ -27,10 +27,10 @@ module.exports = {
   down: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
-        queryInterface.removeColumn('User', 'firstName', { transaction: t }),
-        queryInterface.removeColumn('User', 'lastName', { transaction: t }),
-        queryInterface.removeColumn('User', 'organization', { transaction: t }),
-        queryInterface.removeColumn('User', 'title', { transaction: t })
+        queryInterface.removeColumn('Users', 'firstName', { transaction: t }),
+        queryInterface.removeColumn('Users', 'lastName', { transaction: t }),
+        queryInterface.removeColumn('Users', 'organization', { transaction: t }),
+        queryInterface.removeColumn('Users', 'title', { transaction: t })
       ])
     })
   }
