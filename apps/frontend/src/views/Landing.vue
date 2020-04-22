@@ -3,6 +3,7 @@
     <v-row>
       <v-col center xl="8" md="8" sm="12" xs="12">
         <UploadNexus
+          v-if="is_logged_in"
           :value="dialog"
           @got-files="on_got_files"
           :persistent="true"
@@ -16,6 +17,8 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import UploadNexus from "@/components/global/UploadNexus.vue";
+import ServerModule from "@/store/server";
+import { getModule } from "vuex-module-decorators";
 
 import { Filter } from "@/store/data_filters";
 import { FileID } from "@/store/report_intake";
@@ -34,6 +37,36 @@ const LandingProps = Vue.extend({
 export default class Landing extends LandingProps {
   /** Whether or not the model is showing */
   dialog: boolean = true;
+
+  /* This is supposed to cause the dialog to automatically appear if there is
+   * no file uploaded
+   */
+  mounted() {
+    this.checkLoggedIn();
+  }
+
+  get is_logged_in(): boolean {
+    if (this.token) {
+      console.log("is_logged_in - token: " + this.token + "end token");
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  get token(): string {
+    let mod = getModule(ServerModule, this.$store);
+    return mod.token || "";
+  }
+
+  checkLoggedIn() {
+    console.log("token: " + this.token + "end token");
+    if (!this.token) {
+      console.log("Go to auth");
+      this.dialog = false;
+      this.$router.push("/");
+    }
+  }
 
   /**
    * Invoked when file(s) are loaded.

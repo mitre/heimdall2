@@ -34,6 +34,14 @@
           mdi-filter-remove
         </v-icon>
       </v-btn>
+      <v-btn @click="log_out" class="mx-2">
+        <span class="d-none d-md-inline pr-2">
+          Logout
+        </span>
+        <v-icon>
+          mdi-logout
+        </v-icon>
+      </v-btn>
     </template>
 
     <!-- Custom sidebar content -->
@@ -164,6 +172,7 @@ import InspecIntakeModule, { FileID } from "@/store/report_intake";
 import { getModule } from "vuex-module-decorators";
 import InspecDataModule from "../store/data_store";
 import { need_redirect_file } from "@/utilities/helper_util";
+import ServerModule from "@/store/server";
 
 // We declare the props separately
 // to make props types inferrable.
@@ -244,7 +253,7 @@ export default class Results extends ResultsProps {
     );
     if (redir !== "ok") {
       if (redir === "root") {
-        this.$router.push("/");
+        this.$router.push("/home");
       } else {
         this.$router.push(`/results/${redir}`);
         result = redir;
@@ -292,6 +301,12 @@ export default class Results extends ResultsProps {
     this.control_selection = null;
     this.search_term = "";
     this.tree_filters = [];
+  }
+
+  log_out() {
+    getModule(ServerModule, this.$store).clear_token();
+    this.dialog = false;
+    this.$router.push("/");
   }
 
   /**

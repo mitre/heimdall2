@@ -1,47 +1,57 @@
 <template>
-  <Modal
-    :value="value"
-    @input="$emit('input', $event.target.value)"
-    :persistent="persistent"
-  >
-    <v-tabs
-      :vertical="$vuetify.breakpoint.mdAndUp"
-      active
-      :value="active_tab"
-      @change="selected_tab"
-      color="primary-visible"
-      show-arrows
+  <v-container>
+    <Modal
+      :value="value"
+      @input="$emit('input', $event.target.value)"
+      :persistent="persistent"
     >
-      <v-tabs-slider></v-tabs-slider>
-      <!-- Define our tabs -->
-      <v-tab href="#uploadtab-local">Local Files</v-tab>
+      <v-tabs
+        :vertical="$vuetify.breakpoint.mdAndUp"
+        active
+        :value="active_tab"
+        @change="selected_tab"
+        color="primary-visible"
+        show-arrows
+      >
+        <v-tabs-slider></v-tabs-slider>
+        <!-- Define our tabs -->
+        <v-tab href="#uploadtab-local">Local Files</v-tab>
 
-      <v-tab href="#uploadtab-s3">S3 Bucket</v-tab>
+        <v-tab v-if="is_logged_in" href="#uploadtab-database">
+          {{ user }} Files
+        </v-tab>
 
-      <v-tab href="#uploadtab-splunk">Splunk</v-tab>
-      <v-spacer />
-      <v-divider />
-      <v-tab href="#uploadtab-samples">Samples</v-tab>
+        <v-tab href="#uploadtab-s3">S3 Bucket</v-tab>
 
-      <!-- Include those components -->
-      <v-tab-item value="uploadtab-local">
-        <FileReader @got-files="got_files" />
-      </v-tab-item>
+        <v-tab href="#uploadtab-splunk">Splunk</v-tab>
+        <v-spacer />
+        <v-divider />
+        <v-tab href="#uploadtab-samples">Samples</v-tab>
 
-      <v-tab-item value="uploadtab-samples">
-        <SampleList @got-files="got_files" />
-      </v-tab-item>
+        <!-- Include those components -->
+        <v-tab-item value="uploadtab-local">
+          <FileReader @got-files="got_files" />
+        </v-tab-item>
 
-      <v-tab-item value="uploadtab-s3">
-        <S3Reader @got-files="got_files" />
-      </v-tab-item>
+        <v-tab-item value="uploadtab-database">
+          <DatabaseReader @got-files="got_files" />
+        </v-tab-item>
 
-      <v-tab-item value="uploadtab-splunk">
-        <SplunkReader @got-files="got_files" />
-      </v-tab-item>
-    </v-tabs>
-    <HelpFooter />
-  </Modal>
+        <v-tab-item value="uploadtab-samples">
+          <SampleList @got-files="got_files" />
+        </v-tab-item>
+
+        <v-tab-item value="uploadtab-s3">
+          <S3Reader @got-files="got_files" />
+        </v-tab-item>
+
+        <v-tab-item value="uploadtab-splunk">
+          <SplunkReader @got-files="got_files" />
+        </v-tab-item>
+      </v-tabs>
+      <HelpFooter />
+    </Modal>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -51,11 +61,24 @@ import { getModule } from "vuex-module-decorators";
 import InspecIntakeModule, { FileID } from "@/store/report_intake";
 import Modal from "@/components/global/Modal.vue";
 import FileReader from "@/components/global/upload_tabs/FileReader.vue";
+import DatabaseReader from "@/components/global/upload_tabs/DatabaseReader.vue";
 import HelpFooter from "@/components/global/upload_tabs/HelpFooter.vue";
 import S3Reader from "@/components/global/upload_tabs/aws/S3Reader.vue";
 import SplunkReader from "@/components/global/upload_tabs/splunk/SplunkReader.vue";
 import SampleList from "@/components/global/upload_tabs/SampleList.vue";
-import { LocalStorageVal } from "../../utilities/helper_util";
+import ServerModule from "@/store/server";
+import { LocalStorageVal } from "@/utilities/helper_util";
+
+export class UserProfile {
+  id?: number;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  image?: string;
+  phone_number?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 const local_tab = new LocalStorageVal<string>("nexus_curr_tab");
 
@@ -75,6 +98,7 @@ const Props = Vue.extend({
   components: {
     Modal,
     FileReader,
+    DatabaseReader,
     HelpFooter,
     S3Reader,
     SplunkReader,
@@ -86,7 +110,30 @@ export default class UploadNexus extends Props {
 
   // Loads the last open tab
   mounted() {
+    console.log("mount UploadNexus");
     this.active_tab = local_tab.get_default("uploadtab-local");
+  }
+
+  get is_logged_in(): boolean {
+    if (this.token) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  get token(): string {
+    let mod = getModule(ServerModule, this.$store);
+    return mod.token || "";
+  }
+
+  get user(): string {
+    let mod = getModule(ServerModule, this.$store);
+    if (mod.profile) {
+      return mod.profile.email || "pending";
+    } else {
+      return "pending";
+    }
   }
 
   // Handles change in tab

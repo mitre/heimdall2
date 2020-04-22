@@ -8,6 +8,7 @@ import HashLookupModule from "@/store/lookup_hashes";
 import InspecIntakeModule from "@/store/report_intake";
 import ColorHackModule from "@/store/color_hack";
 import AppInfoModule from "@/store/app_info";
+import HeimdallServerModule from "./server";
 
 Vue.use(Vuex);
 
@@ -33,6 +34,7 @@ interface StoreType {
   intake: InspecIntakeModule;
   colors: ColorHackModule;
   info: AppInfoModule;
+  heimdallServer: HeimdallServerModule;
 }
 const store = new Vuex.Store<StoreType>({});
 
