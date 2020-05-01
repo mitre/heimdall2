@@ -48,82 +48,76 @@ const Props = Vue.extend({
 export default class ExportCaat extends Props {
   /** Turns a control into a CAAT row.
    *  Checks vuln_list first to see if this gid is already included
-   * Returns null if it should be excluded based on vuln_list
-   * If not, adds gid to vuln_list
    */
-  to_row(control: HDFControl, vuln_list: string[]): CAATRow | null {
-    // Establish our row
-    let row: CAATRow = [];
+  to_rows(control: HDFControl): CAATRow[] {
+    // init rows
+    let all_rows: CAATRow[] = [];
 
-    // Figure out the nist tags to make a family
-    let root_control = control.parsed_nist_tags[0];
-    let family = root_control.family || "UM";
-    let pad = (x: string) => ("00" + x).slice(-2); // Pads a string to two digits
-    let nist_control_number = pad(root_control.sub_specifiers[1] || "01");
-    let nist_control: string;
-    if (!Number.isNaN(Number.parseInt(root_control.sub_specifiers[2] || ""))) {
-      let sub_number = pad(root_control.sub_specifiers[2]);
-      nist_control = `${family}-${nist_control_number}(${sub_number})`;
-    } else {
-      nist_control = `${family}-${nist_control_number}`;
-    }
+    console.log("-----");
+    for (let formatted of control.canonized_nist({
+      max_specifiers: 3,
+      pad_zeros: true,
+      allow_letters: false,
+      add_spaces: false
+    })) {
+      // Establish our row
+      let row: CAATRow = [];
 
-    let gid = control.wraps.tags.gid;
-    // If it's impact is not 0 and it's gid (if one is provided) hasn't been seen, build the row. Else return null
-    if (
-      control.wraps.impact === 0 ||
-      (gid !== undefined && vuln_list.includes(gid))
-    ) {
-      return null;
-    } else {
-      // Flag this as seen
-      vuln_list.push(control.wraps.tags.gid);
+      if (!formatted) {
+        continue;
+      }
 
-      // Designate a helper to deal with null/undefined
-      let fix = (x: string | null | undefined) =>
-        (x || "").replace(/(\r\n|\n|\r)/gm, " ").slice(0, MAX_CELL_SIZE);
-
-      // Build up the row
-      row.push(nist_control); // Control Number
-      row.push(
-        "Test " + fix(control.wraps.id) + " - " + fix(control.wraps.title)
-      ); // Finding Title
-      if (control.start_time) {
-        row.push(this.convertDate(new Date(control.start_time), "/")); // Date Identified
+      // If it's impact is not 0 and it's gid (if one is provided) hasn't been seen, build the row. Else return null
+      if (control.wraps.impact === 0) {
+        continue;
       } else {
-        row.push("");
-      }
-      row.push(""); //row.push(fix(control.wraps.tags.stig_id)); // Finding ID
-      row.push(""); // Information System or Program Name
-      row.push(""); // Repeat Findings
-      row.push(""); // Repeat Finding CFACTS Weakness ID
-      row.push(fix(control.wraps.title)); // Finding Description
-      row.push(fix(control.wraps.desc)); // Weakness Description
-      row.push("Security"); // Control Weakness Type
-      row.push("Self-Assessment "); // Source
-      row.push(""); //row.push("InSpec"); // Assessment/Audit Company
-      row.push("Test"); // Test Method
-      row.push(fix(control.descriptions.check || control.wraps.tags.check)); // Test Objective
-      let test_result = `${control.status}: ${control.message.replace(
-        "\n",
-        "; "
-      )}`;
-      row.push(fix(test_result)); // Test Result Description
-      if (control.status === "Passed") {
-        row.push("Satisfied");
-      } else {
-        row.push("Other Than Satisfied");
-      }
-      row.push(fix(control.descriptions.fix || control.wraps.tags.fix)); // Recommended Corrective Action(s)
-      row.push(""); // Effect on Business
-      row.push(""); // Likelihood
-      row.push(fix(control.severity)); // Impact
+        // Designate a helper to deal with null/undefined
+        let fix = (x: string | null | undefined) =>
+          (x || "").replace(/(\r\n|\n|\r)/gm, " ").slice(0, MAX_CELL_SIZE);
 
-      if (row.length !== this.header().length) {
-        throw new Error("Row of wrong size");
+        // Build up the row
+        row.push(formatted); // Control Number
+        row.push(
+          "Test " + fix(control.wraps.id) + " - " + fix(control.wraps.title)
+        ); // Finding Title
+        if (control.start_time) {
+          row.push(this.convertDate(new Date(control.start_time), "/")); // Date Identified
+        } else {
+          row.push("");
+        }
+        row.push(""); //row.push(fix(control.wraps.tags.stig_id)); // Finding ID
+        row.push(""); // Information System or Program Name
+        row.push(""); // Repeat Findings
+        row.push(""); // Repeat Finding CFACTS Weakness ID
+        row.push(fix(control.wraps.title)); // Finding Description
+        row.push(fix(control.wraps.desc)); // Weakness Description
+        row.push("Security"); // Control Weakness Type
+        row.push("Self-Assessment "); // Source
+        row.push(""); //row.push("InSpec"); // Assessment/Audit Company
+        row.push("Test"); // Test Method
+        row.push(fix(control.descriptions.check || control.wraps.tags.check)); // Test Objective
+        let test_result = `${control.status}: ${control.message.replace(
+          "\n",
+          "; "
+        )}`;
+        row.push(fix(test_result)); // Test Result Description
+        if (control.status === "Passed") {
+          row.push("Satisfied");
+        } else {
+          row.push("Other Than Satisfied");
+        }
+        row.push(fix(control.descriptions.fix || control.wraps.tags.fix)); // Recommended Corrective Action(s)
+        row.push(""); // Effect on Business
+        row.push(""); // Likelihood
+        row.push(fix(control.severity)); // Impact
+
+        if (row.length !== this.header().length) {
+          throw new Error("Row of wrong size");
+        }
+        all_rows.push(row);
       }
-      return row;
     }
+    return all_rows;
   }
 
   /** Gets the standardized CAAT header */
@@ -160,21 +154,35 @@ export default class ExportCaat extends Props {
     // Initialize our data structures
     let caat: CAAT = [this.header()];
 
-    // Eliminate controls with matching gids
-    let vuln_list: string[] = [];
-    // controls.forEach(
-
     // Turn controls into rows
-    let rows_unfiltered: Array<CAATRow | null> = controls.map(ctrl =>
-      this.to_row(ctrl.root.hdf, vuln_list)
-    );
+    let non_deduped_rows: Array<CAATRow> = [];
+    let hit_ids = new Set();
+    for (let ctrl of controls) {
+      let root = ctrl.root.hdf;
+      if (hit_ids.has(root.wraps.id)) {
+        continue;
+      } else {
+        hit_ids.add(root.wraps.id);
+        non_deduped_rows.push(...this.to_rows(root));
+      }
+    }
 
-    // Filter out nulls
-    let rows: CAATRow[] = rows_unfiltered.filter(x => x !== null) as CAATRow[];
+    // Deduplicate controls
+    let hit_controls = new Set();
+    let rows = [];
+    for (let r of non_deduped_rows) {
+      let ctrl = r[0];
+      if (!hit_controls.has(ctrl)) {
+        hit_controls.add(ctrl);
+        rows.push(r);
+      }
+    }
+    // DEBUG
+    rows = non_deduped_rows;
 
     // Sort them by id
     rows = rows.sort((a, b) => {
-      // We sort by family (index 0), then by severity within
+      // We sort by control (index 0), then by severity within
       let a_fam = a[0];
       let a_imp = a[19];
       let b_fam = b[0];
