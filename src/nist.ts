@@ -7,6 +7,13 @@ const NIST_CONTROL_RE = /^([A-Z]{2})-([0-9]+)(.*)$/;
 const SPEC_SPLITTER = /[\s|\(|\)|\.]+/; // Includes all whitespace, periods, and parenthesis
 const REV_RE = /^rev[\s_.]+(\d+)$/i; // Matches Rev_5 etc
 
+export interface CanonizationConfig {
+  max_specifiers: number;
+  pad_zeros: boolean;
+  allow_letters: boolean;
+  add_spaces: boolean;
+}
+
 /** Represents a single nist control, or group of controls if the sub specs are vague enoug. */
 export class NistControl {
   /** The sequence of sub-specifiers making up the "parts" of the nist tags
@@ -91,6 +98,53 @@ export class NistControl {
     } else {
       return undefined;
     }
+  }
+
+  /**
+   * Returns the "canonical" representation of this control, based on the provided parameters.
+   * This is, unfortunately, slightly expensive.
+   * Avoid repeating this if possible.
+   */
+  canonize(config: CanonizationConfig): string {
+    const ss = this.sub_specifiers;
+
+    // Build our string. Start with family
+    let s = this.family || "";
+    if(ss.length > 1) {
+      s += "-"
+    }
+
+    for (let i = 1; i < ss.length && i < config.max_specifiers; i++) {
+      let spec = ss[i];
+
+      // Handle numbers
+      if (!Number.isNaN(Number.parseInt(spec))) {
+        // If we need to, pad zeros
+        if (config.pad_zeros && spec.length < 2) {
+          spec = "0" + spec;
+        }
+
+        // If index past 1, wrap in parens
+        if (i > 1) {
+          spec = "(" + spec + ")";
+
+          // If space, add space
+          if (config.add_spaces) {
+            spec = " " + spec;
+          }
+        }
+
+        // Append
+        s += spec;
+      } else if (config.allow_letters) {
+        // It's a letter. Add a .
+        if (config.add_spaces) {
+          s += " ";
+        }
+        s += spec + ".";
+      }
+    }
+    return s;
   }
 }
 

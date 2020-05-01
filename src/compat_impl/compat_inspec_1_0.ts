@@ -13,7 +13,13 @@ import {
   SegmentStatus,
   HDFControlSegment
 } from "../compat_wrappers";
-import { parse_nist, NistControl, NistRevision, is_control } from "../nist";
+import {
+  parse_nist,
+  NistControl,
+  NistRevision,
+  is_control,
+  CanonizationConfig
+} from "../nist";
 
 abstract class HDFControl_1_0 implements HDFControl {
   // Declare all properties expected
@@ -129,6 +135,17 @@ abstract class HDFControl_1_0 implements HDFControl {
     }
 
     return [parsed_nist_tags, parsed_nist_revision];
+  }
+
+  canonized_nist(config: CanonizationConfig): string[] {
+    const result: string[] = [];
+    for (const v of this.parsed_nist_tags) {
+      const s = v.canonize(config);
+      if (!result.includes(s)) {
+        result.push(s);
+      }
+    }
+    return result;
   }
 
   private static compute_severity(

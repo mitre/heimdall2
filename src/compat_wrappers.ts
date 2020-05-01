@@ -5,7 +5,7 @@ import {
   ExecControl as HDFExecControl_1_0
 } from "./compat_impl/compat_inspec_1_0";
 import * as parsetypes from "./fileparse";
-import { NistControl, NistRevision } from "./nist";
+import { NistControl, NistRevision, CanonizationConfig } from "./nist";
 
 // These types are used throughout for control/result status and impact
 
@@ -95,6 +95,14 @@ export interface HDFControl {
    * Sorted lexicographically, first by family, then by corresponding sub-specifiers.
    */
   parsed_nist_tags: NistControl[];
+
+  /**
+   * Processes all of this controls nist tags to the given spec.
+   * Since this is derived from parsed_nist_tags, this will also be
+   * lexicographically sorted.
+   * It is also deduplicated!
+   */
+  canonized_nist(config: CanonizationConfig): string[];
 
   /**
    * Returns the revision of the nist tags, if it was found.
