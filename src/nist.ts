@@ -110,8 +110,8 @@ export class NistControl {
 
     // Build our string. Start with family
     let s = this.family || "";
-    if(ss.length > 1) {
-      s += "-"
+    if (ss.length > 1) {
+      s += "-";
     }
 
     for (let i = 1; i < ss.length && i < config.max_specifiers; i++) {
