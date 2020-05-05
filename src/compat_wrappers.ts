@@ -4,7 +4,7 @@ import {
   ProfileControl as HDFProfileControl_1_0,
   ExecControl as HDFExecControl_1_0
 } from "./compat_impl/compat_inspec_1_0";
-import * as parsetypes from "./fileparse";
+import * as parse from "./fileparse";
 import { NistControl, NistRevision, CanonizationConfig } from "./nist";
 
 // These types are used throughout for control/result status and impact
@@ -56,7 +56,7 @@ export interface HDFControl {
   /**
    * The control that this interface wraps
    */
-  wraps: parsetypes.AnyFullControl;
+  wraps: parse.AnyControl;
 
   /**
    * Get the control status as computed for the entire control.
@@ -183,7 +183,7 @@ export interface HDFControlSegment {
  *
  * @param ctrl The control to polyfill
  */
-export function hdfWrapControl(ctrl: parsetypes.AnyFullControl): HDFControl {
+export function hdfWrapControl(ctrl: parse.AnyControl): HDFControl {
   // Determine which schema it is
   if ((ctrl as ResultControl_1_0).results !== undefined) {
     const rctrl = ctrl as ResultControl_1_0;

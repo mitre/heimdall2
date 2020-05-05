@@ -6,7 +6,8 @@ export { schemas_1_0 };
 
 // Export Conversion functions
 import * as parse from "./fileparse";
-export { parse };
+import * as context from "./context";
+export { parse, context };
 
 // Export types
 export { ControlStatus, Severity, SegmentStatus } from "./compat_wrappers";

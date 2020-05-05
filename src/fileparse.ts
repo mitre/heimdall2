@@ -3,6 +3,12 @@
 import * as EXEC_JSON_1_0 from "./generated_parsers/v_1_0/exec-json";
 import * as EXEC_JSON_MIN_1_0 from "./generated_parsers/v_1_0/exec-jsonmin";
 import * as PROFILE_JSON_1_0 from "./generated_parsers/v_1_0/profile-json";
+import {
+  ContextualizedEvaluation,
+  ContextualizedProfile,
+  contextualizeEvaluation,
+  contextualizeProfile
+} from "./context";
 
 // TODO: Any future versions
 
@@ -15,7 +21,7 @@ interface _ConversionResult {
   "1_0_ProfileJson"?: PROFILE_JSON_1_0.ProfileJSON;
 }
 
-export type ConversionErrors = { [K in keyof ConversionResult]?: any };
+export type ConversionErrors = { [K in keyof _ConversionResult]?: any };
 export interface ConversionResult extends _ConversionResult {
   errors?: ConversionErrors;
 }
@@ -76,11 +82,53 @@ export function convertFile(
 // Provide some convenient types for different schemas
 // All (non-min) results at once
 export type AnyExec = EXEC_JSON_1_0.ExecJSON;
+export type AnyEval = AnyExec;
 // All profiles at once
 export type AnyProfile =
   | PROFILE_JSON_1_0.ProfileJSON
   | EXEC_JSON_1_0.ExecJSONProfile;
+export type AnyEvalProfile = EXEC_JSON_1_0.ExecJSONProfile;
 // All full (not min) controls at once
-export type AnyFullControl =
+export type AnyControl =
   | PROFILE_JSON_1_0.ProfileJSONControl
   | EXEC_JSON_1_0.ExecJSONControl;
+export type AnyEvalControl = EXEC_JSON_1_0.ExecJSONControl;
+
+/**
+ * Converts a file and makes a contextual datum of it
+ */
+export function convertFileContextual(
+  json_text: string
+): ContextualizedEvaluation | ContextualizedProfile {
+  // Convert it
+  const result = convertFile(json_text, true);
+
+  // Determine what sort of file we (hopefully) have, then add it
+  if (result["1_0_ExecJson"]) {
+    // Handle as exec
+    const evaluation = result["1_0_ExecJson"];
+    return contextualizeEvaluation(evaluation);
+  } else if (result["1_0_ProfileJson"]) {
+    // Handle as profile
+    const profile = result["1_0_ProfileJson"];
+    return contextualizeProfile(profile);
+  } else {
+    const err = new Error(
+      "Failed to convert file ${options.filename} due to possible errors"
+    );
+    (err as any).json_errors = result;
+    throw err;
+  }
+}
+
+export function isContextualizedEvaluation(
+  v: ContextualizedEvaluation | ContextualizedProfile
+): v is ContextualizedEvaluation {
+  return (v as ContextualizedProfile).from_evaluation === undefined;
+}
+
+export function isContextualizedProfile(
+  v: ContextualizedEvaluation | ContextualizedProfile
+): v is ContextualizedProfile {
+  return !isContextualizedEvaluation(v);
+}
