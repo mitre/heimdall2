@@ -1,5 +1,21 @@
 # Changelog
 
+## [v2.0.16](https://github.com/mitre/heimdall-lite/tree/v2.0.16) (2020-05-05)
+
+[Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.15...v2.0.16)
+
+**Implemented enhancements:**
+
+- Expand CAAT to cover report for all NIST tag entries [\#214](https://github.com/mitre/heimdall-lite/issues/214)
+- Fixed how wrappers are processed to avoid a control-linking edge case [\#220](https://github.com/mitre/heimdall-lite/pull/220) ([Mitriol](https://github.com/Mitriol))
+
+**Merged pull requests:**
+
+- remove login [\#218](https://github.com/mitre/heimdall-lite/pull/218) ([sjoshi10](https://github.com/sjoshi10))
+- Fixed CAAT to meet new requirements [\#217](https://github.com/mitre/heimdall-lite/pull/217) ([Mitriol](https://github.com/Mitriol))
+- Auth changes [\#212](https://github.com/mitre/heimdall-lite/pull/212) ([sjoshi10](https://github.com/sjoshi10))
+- Login dev [\#210](https://github.com/mitre/heimdall-lite/pull/210) ([robthew](https://github.com/robthew))
+
 ## [v2.0.15](https://github.com/mitre/heimdall-lite/tree/v2.0.15) (2020-03-26)
 
 [Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.14...v2.0.15)
