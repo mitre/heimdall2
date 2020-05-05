@@ -62,14 +62,16 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import InspecDataModule, {
-  ContextualizedExecution,
-  ContextualizedProfile
+  SourcedContextualizedProfile,
+  SourcedContextualizedEvaluation,
+  isFromProfileFile
 } from "@/store/data_store";
 import StatusCountModule from "@/store/status_counts";
 import { getModule } from "vuex-module-decorators";
 import FilteredDataModule, { Filter } from "../../store/data_filters";
 import { profile_unique_key } from "../../utilities/format_util";
 import { InspecFile, ProfileFile } from "../../store/report_intake";
+import { context } from "inspecjs";
 
 /**
  * Makes a ContextualizedProfile work as a TreeView item
@@ -84,7 +86,7 @@ class TreeItem {
   /** The children on the treeview */
   children: TreeItem[];
 
-  constructor(profile: ContextualizedProfile) {
+  constructor(profile: context.ContextualizedProfile) {
     // Base information
     this.id = profile_unique_key(profile);
     this.name = profile.data.name;
@@ -113,10 +115,11 @@ export default class ProfileData extends Props {
   }
 
   /** Flat representation of all profiles that ought to be visible  */
-  get visible_profiles(): Readonly<ContextualizedProfile[]> {
+  get visible_profiles(): Readonly<context.ContextualizedProfile[]> {
     // Get all profiles
     let store = getModule(InspecDataModule, this.$store);
-    let profiles: Readonly<ContextualizedProfile[]> = store.contextualProfiles;
+    let profiles: Readonly<context.ContextualizedProfile[]> =
+      store.contextualProfiles;
     let filter = this.filter as Filter;
     if (filter.fromFile !== undefined) {
       let filtered = getModule(FilteredDataModule, this.$store);
@@ -126,7 +129,7 @@ export default class ProfileData extends Props {
   }
 
   /** Strips visible profiles down to those that are not extended from any others. The "Top" profiles */
-  get root_profiles(): ContextualizedProfile[] {
+  get root_profiles(): context.ContextualizedProfile[] {
     // Strip to roots
     let profiles = this.visible_profiles.filter(
       p => p.extends_from.length === 0
@@ -135,7 +138,7 @@ export default class ProfileData extends Props {
   }
 
   /** Get the most recently selected */
-  get selected(): ContextualizedProfile | undefined {
+  get selected(): context.ContextualizedProfile | undefined {
     // If no active, then who cares
     if (!this.active.length) return undefined;
 
@@ -161,14 +164,15 @@ export default class ProfileData extends Props {
     // Deduce filename, start time
     let from_file: InspecFile;
     let start_time: string | null;
-    if (this.selected.from_execution) {
-      let exec = this.selected.sourced_from as ContextualizedExecution;
-      from_file = exec.sourced_from;
+    if (isFromProfileFile(this.selected)) {
+      from_file = this.selected.from_file as ProfileFile;
+      start_time = null;
+    } else {
+      let exec = (this.selected
+        .sourced_from as unknown) as SourcedContextualizedEvaluation;
+      from_file = exec.from_file;
       let with_time = this.selected.contains.find(x => x.root.hdf.start_time);
       start_time = (with_time && with_time.root.hdf.start_time) || null;
-    } else {
-      from_file = this.selected.sourced_from as ProfileFile;
-      start_time = null;
     }
 
     // And put the filename

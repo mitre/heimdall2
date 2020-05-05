@@ -3,16 +3,16 @@
  */
 
 import {
-  ContextualizedControl,
-  ContextualizedProfile,
-  ContextualizedExecution
+  SourcedContextualizedProfile,
+  SourcedContextualizedEvaluation,
+  isFromProfileFile
 } from "@/store/data_store";
-import { isInspecFile } from "@/store/report_intake";
+import { context } from "inspecjs";
 
 export function execution_unique_key(
-  exec: Readonly<ContextualizedExecution>
+  exec: Readonly<SourcedContextualizedEvaluation>
 ): string {
-  return `exec_${exec.sourced_from.unique_id}`;
+  return `exec_${exec.from_file.unique_id}`;
 }
 
 /**
@@ -20,12 +20,18 @@ export function execution_unique_key(
  * @param profile
  */
 export function profile_unique_key(
-  profile: Readonly<ContextualizedProfile>
+  profile: Readonly<context.ContextualizedProfile>
 ): string {
-  if (isInspecFile(profile.sourced_from)) {
-    return `profile_${profile.sourced_from.unique_id}`;
+  if (isFromProfileFile(profile)) {
+    return `profile_${profile.from_file.unique_id}`;
   } else {
-    return execution_unique_key(profile.sourced_from) + "-" + profile.data.name;
+    return (
+      execution_unique_key(
+        profile.sourced_from as SourcedContextualizedEvaluation
+      ) +
+      "-" +
+      profile.data.name
+    );
   }
 }
 
@@ -34,7 +40,13 @@ export function profile_unique_key(
  * @param ctrl The control to generate the key for
  */
 export function control_unique_key(
-  ctrl: Readonly<ContextualizedControl>
+  ctrl: Readonly<context.ContextualizedControl>
 ): string {
-  return profile_unique_key(ctrl.sourced_from) + "-" + ctrl.data.id;
+  return (
+    profile_unique_key(
+      ctrl.sourced_from as Readonly<context.ContextualizedProfile>
+    ) +
+    "-" +
+    ctrl.data.id
+  );
 }

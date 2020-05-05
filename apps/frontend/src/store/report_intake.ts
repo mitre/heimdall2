@@ -24,13 +24,9 @@ export type InspecFile = {
   /** The filename that this file was uploaded under. */
   filename: string;
 };
-export function isInspecFile(f: any): f is InspecFile {
-  const t = f as InspecFile;
-  return t.filename !== undefined && t.unique_id !== undefined;
-}
 
 /** Represents a file containing an Inspec Execution output */
-export type ExecutionFile = InspecFile & { execution: parse.AnyExec };
+export type EvaluationFile = InspecFile & { execution: parse.AnyExec };
 /** Represents a file containing an Inspec Profile (not run) */
 export type ProfileFile = InspecFile & { profile: parse.AnyProfile };
 

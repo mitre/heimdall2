@@ -38,7 +38,7 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-import { ContextualizedControl } from "@/store/data_store";
+import { context } from "inspecjs";
 import { HDFControl } from "inspecjs";
 import { ControlDelta } from "@/utilities/delta_util";
 import DeltaView from "@/components/cards/comparison/DeltaView.vue";
@@ -72,14 +72,14 @@ export default class CompareRow extends Props {
   }
 
   /** Provides actual data about which controls we have selected */
-  get selected_controls(): ContextualizedControl[] {
+  get selected_controls(): context.ContextualizedControl[] {
     // Multiple selected
     return this.selection.map(i => this._controls[i]);
   }
 
   /** Typed getter on controls */
-  get _controls(): ContextualizedControl[] {
-    return this.controls as ContextualizedControl[];
+  get _controls(): context.ContextualizedControl[] {
+    return this.controls as context.ContextualizedControl[];
   }
 
   /** Just maps controls to hdf. Makes our template a bit less verbose */

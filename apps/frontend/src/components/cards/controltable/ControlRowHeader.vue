@@ -63,7 +63,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import { HDFControl, ControlStatus, Severity } from "inspecjs";
 import ResponsiveRowSwitch from "@/components/cards/controltable/ResponsiveRowSwitch.vue";
-import { ContextualizedControl } from "../../../store/data_store";
+import { context } from "inspecjs";
 import { NIST_DESCRIPTIONS } from "@/utilities/nist_util";
 
 // We declare the props separately to make props types inferable.
@@ -87,7 +87,7 @@ const ControlRowHeaderProps = Vue.extend({
 })
 export default class ControlRowHeader extends ControlRowHeaderProps {
   /** Typed getter for control */
-  get _control(): ContextualizedControl {
+  get _control(): context.ContextualizedControl {
     return this.control;
   }
 

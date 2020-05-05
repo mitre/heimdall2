@@ -90,8 +90,12 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-import { ContextualizedControl } from "@/store/data_store";
-import { HDFControl, HDFControlSegment, SegmentStatus } from "inspecjs";
+import {
+  context,
+  HDFControl,
+  HDFControlSegment,
+  SegmentStatus
+} from "inspecjs";
 import { ControlDelta, ControlChangeGroup } from "@/utilities/delta_util";
 import { diffArrays, ArrayOptions } from "diff";
 import ChangeItem from "@/components/cards/comparison/ChangeItem.vue";

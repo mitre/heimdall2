@@ -49,7 +49,7 @@ We are left with either an ExecJSON or ProfileJSON object.
 Since there are multipe versions of the schema, we may end up with a plethora of types to actually deal with.
 Fortunately, since Execution/Profile data are for the most part identical across versions, we simply use the AnyExec, AnyProfile, and AnyControl union types to handle general cases.
 
-We bundle these into a dict with the structure designated by the `ExecutionFile` and `ProfileFile` data structures, as found in `data_store.ts`.
+We bundle these into a dict with the structure designated by the `EvaluationFile` and `ProfileFile` data structures, as found in `data_store.ts`.
 If you don't feel like looking, essentially these both contain a `unique_id` property and a `filename` property, as well as a property for ExecJSON data or ProfileJSON data, as appropriate.
 Unique id just lets us uniquely referred to the file.
 Think of it like a file handle in Unix - an arbitrary but unique number.

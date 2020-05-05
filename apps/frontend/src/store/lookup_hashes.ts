@@ -5,11 +5,12 @@
  * - Control ID -> All controls with that id
  */
 import { Module, VuexModule, getModule } from "vuex-module-decorators";
-import DataModule, { ContextualizedControl } from "@/store/data_store";
+import DataModule from "@/store/data_store";
+import { context } from "inspecjs";
 import Store from "@/store/store";
 
 // Control ID hash
-export type ControlHash = { [key: string]: ContextualizedControl[] };
+export type ControlHash = { [key: string]: context.ContextualizedControl[] };
 
 @Module({
   namespaced: true,

@@ -2,11 +2,8 @@
  * Provides utlities for comparing executions
  */
 
-import {
-  ContextualizedExecution,
-  ContextualizedControl
-} from "@/store/data_store";
-import { HDFControlSegment } from "inspecjs";
+import { SourcedContextualizedEvaluation } from "@/store/data_store";
+import { HDFControlSegment, context } from "inspecjs";
 import {
   structuredPatch,
   createPatch,
@@ -94,12 +91,15 @@ function changelog_segments(
  */
 export class ControlDelta {
   /** The older control */
-  old: ContextualizedControl;
+  old: context.ContextualizedControl;
 
   /** The newer control */
-  new: ContextualizedControl;
+  new: context.ContextualizedControl;
 
-  constructor(old: ContextualizedControl, _new: ContextualizedControl) {
+  constructor(
+    old: context.ContextualizedControl,
+    _new: context.ContextualizedControl
+  ) {
     this.old = old;
     this.new = _new;
   }
@@ -230,8 +230,8 @@ export class ControlDelta {
  * @param exec The execution to grab controls from
  */
 function extract_top_level_controls(
-  exec: ContextualizedExecution
-): ContextualizedControl[] {
+  exec: context.ContextualizedEvaluation
+): context.ContextualizedControl[] {
   // Get all controls
   let all_controls = exec.contains.flatMap(p => p.contains);
 
@@ -241,14 +241,14 @@ function extract_top_level_controls(
 }
 
 /** Matches ControlID keys to Arrays of Controls, sorted by time */
-type MatchedControls = { [key: string]: Array<ContextualizedControl> };
+type MatchedControls = { [key: string]: Array<context.ContextualizedControl> };
 
 /** Helps manage comparing change(s) between one or more profile executions */
 export class ComparisonContext {
   /** A list of old-new control pairings */
   pairings: MatchedControls;
 
-  constructor(executions: readonly ContextualizedExecution[]) {
+  constructor(executions: readonly context.ContextualizedEvaluation[]) {
     // Get all of the "top level" controls from each execution, IE those that actually ran
     let all_controls = executions.flatMap(extract_top_level_controls);
 
@@ -266,14 +266,19 @@ export class ComparisonContext {
 
       // Sort them by start time
       Object.values(matched).forEach(ctrl_list =>
-        ctrl_list.sort((a: ContextualizedControl, b: ContextualizedControl) => {
-          // TODO: Move this to a more stable, external library based solution
-          // TODO: Create a method for getting the start time of an execution, and instead do this sort on executions at the start
-          // Convert to dates, and
-          let a_date = new Date(a.root.hdf.start_time || 0);
-          let b_date = new Date(b.root.hdf.start_time || 0);
-          return a_date.valueOf() - b_date.valueOf();
-        })
+        ctrl_list.sort(
+          (
+            a: context.ContextualizedControl,
+            b: context.ContextualizedControl
+          ) => {
+            // TODO: Move this to a more stable, external library based solution
+            // TODO: Create a method for getting the start time of an execution, and instead do this sort on executions at the start
+            // Convert to dates, and
+            let a_date = new Date(a.root.hdf.start_time || 0);
+            let b_date = new Date(b.root.hdf.start_time || 0);
+            return a_date.valueOf() - b_date.valueOf();
+          }
+        )
       );
     });
 

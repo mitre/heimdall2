@@ -82,7 +82,7 @@ import { getModule } from "vuex-module-decorators";
 import { HDFControl, ControlStatus } from "inspecjs";
 import FilteredDataModule from "@/store/data_filters";
 import { control_unique_key } from "@/utilities/format_util";
-import { ContextualizedControl } from "../../../store/data_store";
+import { context } from "inspecjs";
 
 // Tracks the visibility of an HDF control
 interface ListElt {
@@ -93,7 +93,7 @@ interface ListElt {
   status_val: number;
   severity_val: number;
 
-  control: ContextualizedControl;
+  control: context.ContextualizedControl;
 }
 
 // We declare the props separately to make props types inferable.

@@ -2,9 +2,8 @@
  * Tools used for generating the treemaps consumed by, of course, the Treemap card and associated components.
  */
 
-import { nist } from "inspecjs";
+import { nist, context } from "inspecjs";
 import * as d3 from "d3";
-import { ContextualizedControl } from "@/store/data_store";
 import { control_unique_key } from "./format_util";
 import ColorHackModule from "@/store/color_hack";
 import Chroma from "chroma-js";
@@ -27,7 +26,7 @@ export interface TreemapNodeParent extends AbsTreemapNode {
 }
 
 export interface TreemapNodeLeaf extends AbsTreemapNode {
-  control: ContextualizedControl;
+  control: context.ContextualizedControl;
 }
 
 export function is_leaf(n: TreemapNode): n is TreemapNodeLeaf {
@@ -48,7 +47,7 @@ export type D3TreemapNode = d3.HierarchyNode<TreemapNode>;
  * @param controls The controls to build into a nist node map
  */
 function controls_to_nist_node_data(
-  contextualized_controls: Readonly<ContextualizedControl[]>,
+  contextualized_controls: Readonly<context.ContextualizedControl[]>,
   colors: ColorHackModule
 ): TreemapNodeLeaf[] {
   return contextualized_controls.flatMap(cc => {
@@ -233,7 +232,7 @@ function node_data_to_tree_map(
 
 /** Does all the steps */
 export function build_nist_tree_map(
-  data: Readonly<ContextualizedControl[]>,
+  data: Readonly<context.ContextualizedControl[]>,
   colors: ColorHackModule
 ): D3TreemapNode {
   let leaves = controls_to_nist_node_data(data, colors);

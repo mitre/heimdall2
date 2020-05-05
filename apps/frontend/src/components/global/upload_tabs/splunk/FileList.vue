@@ -46,7 +46,7 @@ import { getModule } from "vuex-module-decorators";
 import {
   FileID,
   next_free_file_ID,
-  ExecutionFile
+  EvaluationFile
 } from "@/store/report_intake";
 import {
   SplunkEndpoint,
@@ -116,7 +116,7 @@ export default class FileList extends Props {
           unique_id,
           filename: `${event.filename} (Splunk)`,
           execution: exec
-        } as ExecutionFile;
+        } as EvaluationFile;
         getModule(InspecDataModule, this.$store).addExecution(file);
         this.$emit("got-files", [unique_id]);
       })

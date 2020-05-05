@@ -25,7 +25,7 @@ import LinkItem, {
   LinkAction
 } from "@/components/global/sidebaritems/SidebarLink.vue";
 import { NistControl } from "inspecjs/dist/nist";
-import { FileID, ExecutionFile } from "../../store/report_intake";
+import { FileID, EvaluationFile } from "../../store/report_intake";
 import InspecDataModule from "../../store/data_store";
 
 const MAX_CELL_SIZE = 32000; // Rounding a bit here.
@@ -74,7 +74,7 @@ export default class ExportNIST extends Props {
   }
 
   /** Makes a sheet for the given file id */
-  sheet_for(file?: ExecutionFile): Sheet {
+  sheet_for(file?: EvaluationFile): Sheet {
     // If file not provided
     let filename: string = "All files";
     let id: FileID | undefined = undefined;
@@ -134,7 +134,7 @@ export default class ExportNIST extends Props {
     let data = getModule(InspecDataModule, this.$store);
 
     // Get files we plan on exporting
-    let files: Array<ExecutionFile | undefined> = [
+    let files: Array<EvaluationFile | undefined> = [
       undefined,
       ...data.executionFiles
     ];

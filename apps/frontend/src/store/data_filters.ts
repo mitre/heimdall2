@@ -4,14 +4,15 @@
 
 import { Module, VuexModule, getModule } from "vuex-module-decorators";
 import DataModule, {
-  ContextualizedProfile,
-  ContextualizedControl
+  SourcedContextualizedProfile,
+  SourcedContextualizedEvaluation,
+  isFromProfileFile
 } from "@/store/data_store";
 import { ControlStatus, Severity } from "inspecjs";
-import { FileID, isInspecFile } from "@/store/report_intake";
+import { FileID } from "@/store/report_intake";
 import Store from "@/store/store";
 import LRUCache from "lru-cache";
-import { nist } from "inspecjs";
+import { context, nist } from "inspecjs";
 
 const MAX_CACHE_ENTRIES = 20;
 
@@ -57,7 +58,7 @@ export type TreeMapState = string[]; // Representing the current path spec, from
  * @param context_control The control to search for term in
  */
 function contains_term(
-  context_control: ContextualizedControl,
+  context_control: context.ContextualizedControl,
   term: string
 ): boolean {
   let as_hdf = context_control.root.hdf;
@@ -91,12 +92,13 @@ class FilteredDataModule extends VuexModule {
    * Get all profiles from the specified file id.
    * Filters only based on the file ID
    */
-  get profiles(): (file: FileID) => readonly ContextualizedProfile[] {
+  get profiles(): (file: FileID) => readonly context.ContextualizedProfile[] {
     // Setup a cache for this run
     const depends = this.dataStore.contextualProfiles;
-    const localCache: LRUCache<FileID, ContextualizedProfile[]> = new LRUCache(
-      MAX_CACHE_ENTRIES
-    );
+    const localCache: LRUCache<
+      FileID,
+      context.ContextualizedProfile[]
+    > = new LRUCache(MAX_CACHE_ENTRIES);
 
     return (file: FileID) => {
       // Generate a cache id
@@ -106,17 +108,18 @@ class FilteredDataModule extends VuexModule {
       }
 
       // Initialize our list to add valid profiles to
-      let profiles: ContextualizedProfile[] = [];
+      let profiles: context.ContextualizedProfile[] = [];
 
       // Filter to those that match our filter. In this case that just means come from the right file id
       this.dataStore.contextualProfiles.forEach(prof => {
-        if (isInspecFile(prof.sourced_from)) {
-          if (prof.sourced_from.unique_id === file) {
+        if (isFromProfileFile(prof)) {
+          if (prof.from_file.unique_id === file) {
             profiles.push(prof);
           }
         } else {
           // Its a report; go two levels up to get its file
-          if (prof.sourced_from.sourced_from.unique_id === file) {
+          let ev = prof.sourced_from as SourcedContextualizedEvaluation;
+          if (ev.from_file.unique_id === file) {
             profiles.push(prof);
           }
         }
@@ -131,12 +134,12 @@ class FilteredDataModule extends VuexModule {
    * Get all controls from all profiles from the specified file id.
    * Utlizes the profiles getter to accelerate the file filter.
    */
-  get controls(): (filter: Filter) => readonly ContextualizedControl[] {
+  get controls(): (filter: Filter) => readonly context.ContextualizedControl[] {
     /** Cache by filter */
     const depends = this.dataStore.contextualControls;
     const localCache: LRUCache<
       string,
-      readonly ContextualizedControl[]
+      readonly context.ContextualizedControl[]
     > = new LRUCache(MAX_CACHE_ENTRIES);
 
     return (filter: Filter = {}) => {
@@ -151,8 +154,8 @@ class FilteredDataModule extends VuexModule {
       }
 
       // First get all of the profiles using the same filter
-      let profiles: readonly ContextualizedProfile[];
-      let controls: readonly ContextualizedControl[];
+      let profiles: readonly context.ContextualizedProfile[];
+      let controls: readonly context.ContextualizedControl[];
       if (filter.fromFile !== undefined) {
         // Get profiles
         profiles = this.profiles(filter.fromFile);

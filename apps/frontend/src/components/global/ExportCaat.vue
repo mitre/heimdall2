@@ -53,7 +53,6 @@ export default class ExportCaat extends Props {
     // init rows
     let all_rows: CAATRow[] = [];
 
-    console.log("-----");
     for (let formatted of control.canonized_nist({
       max_specifiers: 3,
       pad_zeros: true,
