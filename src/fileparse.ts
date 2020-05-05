@@ -124,7 +124,7 @@ export function convertFileContextual(
 export function isContextualizedEvaluation(
   v: ContextualizedEvaluation | ContextualizedProfile
 ): v is ContextualizedEvaluation {
-  return (v as ContextualizedProfile).from_evaluation === undefined;
+  return (v as ContextualizedProfile).sourced_from === undefined;
 }
 
 export function isContextualizedProfile(
