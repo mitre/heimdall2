@@ -267,17 +267,20 @@ class InspecDataModule extends VuexModule {
             return;
           }
 
-          // Get the profile that this control's owning profile is extending
-          let extended_profile = cc.sourced_from.extends_from[0]; // Only ever going to have 1 element, max
-
-          // Hunt for its ancestor in the extended profile
-          let ancestor = extended_profile.contains.find(
-            c => c.data.id === cc.data.id
-          );
-          if (ancestor) {
-            ancestor.extended_by.push(cc);
-            cc.extends_from.push(ancestor);
-            return;
+          // Get the profile(s) that this control's owning profile is extending
+          // For a wrapper profile, there might be many of these!
+          // We don't know which one it will be, so we iterate
+          for (let extended_profile of cc.sourced_from.extends_from) {
+            // Hunt for its ancestor in the extended profile
+            let ancestor = extended_profile.contains.find(
+              c => c.data.id === cc.data.id
+            );
+            // First one we find with a matching id we assume is the root (or at least, closer to root)
+            if (ancestor) {
+              ancestor.extended_by.push(cc);
+              cc.extends_from.push(ancestor);
+              return;
+            }
           }
           // If it's not found, then we just assume it does not exist!
         } else {
