@@ -32,6 +32,18 @@ export class User extends Model<User> {
   @Column
   title: string;
 
+  @AllowNull(false)
+  @Column
+  encryptedPassword: string;
+
+  @AllowNull(true)
+  @Column
+  forcePasswordChange: boolean;
+
+  @AllowNull(true)
+  @Column
+  passwordChangedAt: Date;
+
   @CreatedAt
   @AllowNull(false)
   @Column
