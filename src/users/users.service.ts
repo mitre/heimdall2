@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './user.model';
 import { UserDto } from './dto/user.dto';
@@ -38,6 +38,7 @@ export class UsersService {
     user.lastName = createUserDto.lastName;
     user.title = createUserDto.title;
     user.organization = createUserDto.organization;
+    user.encryptedPassword = createUserDto.password;
     const userData = await user.save();
     return new UserDto(userData);
   }

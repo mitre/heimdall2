@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, UseFilters } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, UseFilters, UsePipes } from '@nestjs/common';
 import { UserDto } from './dto/user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 import { UniqueConstraintErrorFilter } from '../filters/unique-constraint-error.filter';
+import { PasswordsMatchPipe } from '../pipes/passwords-match.pipe';
 
 @Controller('users')
 export class UsersController {
@@ -14,6 +15,7 @@ export class UsersController {
   }
 
   @Post()
+  @UsePipes(new PasswordsMatchPipe)
   @UseFilters(new UniqueConstraintErrorFilter())
   async create(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
     return this.usersService.create(createUserDto);
