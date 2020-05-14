@@ -50,6 +50,11 @@ export class UsersService {
     user.lastName = updateUserDto.lastName || user.lastName;
     user.title = updateUserDto.title || user.title;
     user.organization = updateUserDto.organization || user.organization;
+    if(updateUserDto.password) {
+      user.encryptedPassword = updateUserDto.password;
+      user.passwordChangedAt = new Date();
+      user.forcePasswordChange = false;
+    }
     const userData = await user.save();
     return new UserDto(userData);
   }

@@ -22,6 +22,7 @@ export class UsersController {
   }
 
   @Put(':id')
+  @UsePipes(new PasswordsMatchPipe())
   async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
