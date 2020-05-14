@@ -20,9 +20,9 @@ export class UniqueConstraintErrorFilter implements ExceptionFilter {
   }
 
   buildMessage(errors: ValidationErrorItem[]): {}[] {
-    let builtErrors:{}[] = [];
+    const builtErrors:{}[] = [];
     errors.forEach((error) => {
-      let message: { [id: string] : string } = {};
+      const message: { [id: string] : string } = {};
       message[error.path] = error.message;
       builtErrors.push(message);
     });
