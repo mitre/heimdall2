@@ -1,9 +1,10 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './user.model';
 import { UserDto } from './dto/user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { hash, compare } from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -38,20 +39,23 @@ export class UsersService {
     user.lastName = createUserDto.lastName;
     user.title = createUserDto.title;
     user.organization = createUserDto.organization;
-    user.encryptedPassword = createUserDto.password;
+    user.encryptedPassword = await hash(createUserDto.password, 14);
     const userData = await user.save();
     return new UserDto(userData);
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.userModel.findByPk<User>(id);
+    if(!(await compare(updateUserDto.currentPassword, user.encryptedPassword))) {
+      throw new UnauthorizedException;
+    }
     user.email = updateUserDto.email || user.email;
     user.firstName = updateUserDto.firstName || user.firstName;
     user.lastName = updateUserDto.lastName || user.lastName;
     user.title = updateUserDto.title || user.title;
     user.organization = updateUserDto.organization || user.organization;
     if(updateUserDto.password) {
-      user.encryptedPassword = updateUserDto.password;
+      user.encryptedPassword = await hash(updateUserDto.password, 14);
       user.passwordChangedAt = new Date();
       user.forcePasswordChange = false;
     }

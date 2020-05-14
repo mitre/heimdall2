@@ -15,7 +15,7 @@ export class UsersController {
   }
 
   @Post()
-  @UsePipes(new PasswordsMatchPipe)
+  @UsePipes(new PasswordsMatchPipe())
   @UseFilters(new UniqueConstraintErrorFilter())
   async create(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
     return this.usersService.create(createUserDto);
