@@ -1,0 +1,16 @@
+const path = require('path');
+require('dotenv').config();
+
+const config = {
+  username: process.env.DATABASE_USERNAME || 'postgres',
+  password: process.env.DATABASE_PASSWORD || '',
+  database: process.env.DATABASE_NAME || `heimdall-server-${process.env.NODE_ENV.toLowerCase()}`,
+  host: process.env.DATABASE_HOST || '127.0.0.1',
+  port: process.env.DATABASE_PORT || 5432,
+  dialect: 'postgres',
+  operatorsAliases: false
+};
+
+module.exports = {
+  url: `${config.dialect}://${config.username}:${config.password}:@${config.host}:${config.port}/${config.database}`
+};
