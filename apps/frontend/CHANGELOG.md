@@ -36,6 +36,7 @@
 
 - Add node-semver to the project [\#182](https://github.com/mitre/heimdall-lite/issues/182)
 - release-2.0 [\#176](https://github.com/mitre/heimdall-lite/issues/176)
+- Link to v1.0 [\#162](https://github.com/mitre/heimdall-lite/issues/162)
 - Re-introduce nist tag "pill" visuals [\#133](https://github.com/mitre/heimdall-lite/issues/133)
 - Investigate second implementation method for infinite scroll [\#92](https://github.com/mitre/heimdall-lite/issues/92)
 - Add a hover information modal that shows the capability definition as reference [\#72](https://github.com/mitre/heimdall-lite/issues/72)
@@ -87,10 +88,6 @@
 
 [Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.2...v2.0.3)
 
-**Implemented enhancements:**
-
-- Docker Support [\#180](https://github.com/mitre/heimdall-lite/pull/180) ([aaronlippold](https://github.com/aaronlippold))
-
 ## [v2.0.2](https://github.com/mitre/heimdall-lite/tree/v2.0.2) (2019-11-07)
 
 [Full Changelog](https://github.com/mitre/heimdall-lite/compare/v2.0.1...v2.0.2)
@@ -114,7 +111,6 @@
 **Implemented enhancements:**
 
 - NIST SP 800-53 Use Refinements [\#174](https://github.com/mitre/heimdall-lite/issues/174)
-- Link to v1.0 [\#162](https://github.com/mitre/heimdall-lite/issues/162)
 - The hamburger icon seems a bit too far right [\#155](https://github.com/mitre/heimdall-lite/issues/155)
 - Please allow the file menu to open to the full width of the screen over top the other display items [\#151](https://github.com/mitre/heimdall-lite/issues/151)
 - Add `Help`, `About`, GitHub and Docs links to the upload modal to the landing page [\#149](https://github.com/mitre/heimdall-lite/issues/149)
@@ -152,6 +148,7 @@
 - Make the graphs show properly [\#3](https://github.com/mitre/heimdall-lite/issues/3)
 - Make a proper entry page [\#2](https://github.com/mitre/heimdall-lite/issues/2)
 - Make sidebar show files on JSON upload [\#1](https://github.com/mitre/heimdall-lite/issues/1)
+- Docker Support [\#180](https://github.com/mitre/heimdall-lite/pull/180) ([aaronlippold](https://github.com/aaronlippold))
 - Release 2.0 [\#177](https://github.com/mitre/heimdall-lite/pull/177) ([aaronlippold](https://github.com/aaronlippold))
 - Fix \#174 [\#175](https://github.com/mitre/heimdall-lite/pull/175) ([Mitriol](https://github.com/Mitriol))
 
