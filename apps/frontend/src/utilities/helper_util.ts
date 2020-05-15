@@ -41,16 +41,21 @@ export function need_redirect_file(
   data: InspecDataModule
 ): "ok" | number | "root" {
   // If we have no files, always exit
+  console.log("data.allFiles.length: " + data.allFiles.length);
   if (data.allFiles.length === 0) {
     return "root";
   }
 
+  console.log("curr_target: " + curr_target);
   // If we have no filter (IE "all" is our curr route), we already know there are files, so its fine
   if (curr_target === null) {
     return "ok";
   }
   // We have a filter: check it's valid
   else {
+    data.allFiles.forEach(data_file => {
+      console.log(data_file.unique_id + ": " + data_file.filename);
+    });
     if (data.allFiles.some(f => f.unique_id === curr_target)) {
       // This file exists
       return "ok";

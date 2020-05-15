@@ -9,6 +9,7 @@ import Store from "@/store/store";
 import { LocalStorageVal } from "@/utilities/helper_util";
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { plainToClass } from "class-transformer";
+import { ExecutionFile, ProfileFile, FileID } from "@/store/report_intake";
 
 export interface LoginHash {
   username: string;
@@ -29,6 +30,10 @@ export class UserProfile {
 
 const local_token = new LocalStorageVal<string | null>("auth_token");
 const local_user = new LocalStorageVal<UserProfile | null>("user_profile");
+const local_user_evaluations = new LocalStorageVal<string | null>(
+  "user_evaluations"
+);
+const local_evaluation = new LocalStorageVal<string | null>("evaluation");
 
 type ConnErrorType =
   | "NO_CONNECTION"
@@ -81,6 +86,8 @@ class HeimdallServerModule extends VuexModule {
   /** Our currently granted JWT token */
   token: string | null = local_token.get();
   profile: UserProfile | null = local_user.get();
+  user_evaluations: string | null = local_user_evaluations.get();
+  evaluation: string | null = local_evaluation.get();
 
   /** Mutation to set above, as well as to update our localstorage */
   @Mutation
@@ -90,19 +97,44 @@ class HeimdallServerModule extends VuexModule {
     local_token.set(new_token);
   }
 
+  /** Mutation to set above, as well as to update our localstorage */
+  @Mutation
+  set_evaluation(evaluation: string | null) {
+    this.evaluation = evaluation;
+    console.log("server.ts - set evaluation: " + this.evaluation);
+    local_evaluation.set(evaluation);
+  }
+
   /* Actions to authorize and set token */
   @Action
   clear_token() {
     this.set_token(null);
+    this.set_user_profile(null);
+    this.set_user_evaluations(null);
   }
 
   /** Mutation to set user_profile, as well as to update our localstorage */
   @Mutation
   set_user_profile(new_user: string | null) {
-    //let user = plainToClass(UserProfile, v.data);
-    this.profile = plainToClass(UserProfile, new_user);
+    if (new_user) {
+      this.profile = plainToClass(UserProfile, new_user);
+    } else {
+      this.profile = null;
+    }
     console.log("server.ts - set user: " + this.profile);
     local_user.set(this.profile);
+  }
+
+  /** Mutation to set user_profile, as well as to update our localstorage */
+  @Mutation
+  set_user_evaluations(evals: string | null) {
+    if (evals) {
+      this.user_evaluations = evals;
+    } else {
+      this.user_evaluations = null;
+    }
+    console.log("server.ts - set user_evaluations: " + this.user_evaluations);
+    local_user_evaluations.set(this.user_evaluations);
   }
 
   /** Attempts to login to the server */
@@ -134,6 +166,7 @@ class HeimdallServerModule extends VuexModule {
           this.set_token(v.access_token);
           console.log("got token" + v.access_token);
           this.retrieve_profile();
+          this.retrieve_personal_evaluations();
         } else {
           console.error(
             `Something went wrong: Got ${v.access_token} for login response`
@@ -191,7 +224,7 @@ class HeimdallServerModule extends VuexModule {
   @Action
   async retrieve_profile(): Promise<void> {
     console.log("Getting " + this.connection!.url + "/auth/profile");
-    //curl http://localhost:3000/auth/profile -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm..."
+    //curl http://localhost:8050/auth/profile -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm..."
     return axios
       .get(this.connection!.url + "/auth/profile", {
         headers: {
@@ -199,8 +232,68 @@ class HeimdallServerModule extends VuexModule {
         }
       })
       .then((v: any) => {
-        console.log("any user: " + JSON.stringify(v.data));
         this.set_user_profile(v.data);
+      });
+  }
+
+  /** Attempts to save evaluation to the database */
+  @Action
+  async save_evaluation(evaluation: ExecutionFile): Promise<void> {
+    console.log(
+      "Saving execution to " + this.connection!.url + "/executions/upload"
+    );
+    const options = {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    };
+    return axios
+      .post(
+        this.connection!.url + "/executions/upload",
+        {
+          evaluation: evaluation.execution,
+          filename: evaluation.filename
+        },
+        options
+      )
+      .then((v: any) => {
+        console.log("saved");
+      });
+  }
+
+  /** Attempts to retrieve a list of personal evaluations */
+  @Action
+  async retrieve_personal_evaluations(): Promise<void> {
+    console.log("Getting " + this.connection!.url + "/executions/personal");
+    //curl http://localhost:8050/executions/personal -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm..."
+    return axios
+      .get(this.connection!.url + "/executions/personal", {
+        headers: {
+          Authorization: `Bearer ${this.token}`
+        }
+      })
+      .then((v: any) => {
+        console.log("personal evals: " + JSON.stringify(v.data));
+        this.set_user_evaluations(v.data);
+      });
+  }
+
+  /** Attempts to retrieve a list of personal evaluations */
+  @Action
+  async retrieve_evaluation(file_id: FileID): Promise<void> {
+    console.log(
+      "Getting " + this.connection!.url + "/executions/fetch/" + file_id
+    );
+    //curl http://localhost:8050/executions/personal -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm..."
+    return axios
+      .get(this.connection!.url + "/executions/fetch/" + file_id, {
+        headers: {
+          Authorization: `Bearer ${this.token}`
+        }
+      })
+      .then((v: any) => {
+        console.log("got evaluation: " + JSON.stringify(v.data));
+        this.set_evaluation(v.data);
       });
   }
 

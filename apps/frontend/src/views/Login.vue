@@ -102,7 +102,7 @@ export default class Login extends LoginProps {
 
   // Loads the last open tab
   mounted() {
-    console.log("mount UploadNexus");
+    console.log("mount Login");
     this.active_tab = "login-tab";
   }
 

@@ -4,39 +4,21 @@
       >Easily load any supported Heimdall Data Format file</v-card-subtitle
     >
     <v-container>
-      <v-row>
-        <v-col cols="12" align="center">
-          <!-- Use inline style to emulate v-img props -->
-          <img
-            src="@/assets/logo-orange-tsp.svg"
-            svg-inline
-            style="max-width: 164px; max-height: 164px;"
-          />
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12" align="center">
-          <div class="d-flex flex-column justify-center">
-            <span :class="title_class">Heimdall</span>
-            <span :class="title_class">Lite</span>
-          </div>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-spacer />
-        <v-col align="center" cols="4">
-          <!--UploadButton @files-selected="commit_files" /-->
-        </v-col>
-        <v-col align="right" cols="4">
-          <a
-            href="https://mitre.github.io/heimdall-lite-1.0/"
-            target="_blank"
-            class="mr-2"
-          >
-            Looking for 1.0?
-          </a>
-        </v-col>
-      </v-row>
+      <v-list>
+        <v-list-item
+          v-for="(evaluation, index) in personal_evaluations"
+          :key="index"
+        >
+          <v-list-item-content>
+            <v-list-item-title v-text="evaluation_label(evaluation)" />
+          </v-list-item-content>
+          <v-list-item-action>
+            <v-btn icon @click="load_this_evaluation(evaluation)">
+              <v-icon>mdi-plus-circle</v-icon>
+            </v-btn>
+          </v-list-item-action>
+        </v-list-item>
+      </v-list>
     </v-container>
   </v-card>
 </template>
@@ -45,7 +27,33 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import { getModule } from "vuex-module-decorators";
+import ServerModule from "@/store/server";
 import AppInfoModule from "@/store/app_info";
+import { plainToClass } from "class-transformer";
+import InspecIntakeModule, {
+  FileID,
+  next_free_file_ID
+} from "@/store/report_intake";
+
+export class Content {
+  name!: string;
+  value!: string;
+}
+export class Evaluation {
+  id!: number;
+  version!: string;
+  createdAt!: Date;
+  updatedAt!: Date;
+  tags!: Tag[];
+}
+export class Tag {
+  id!: number;
+  tagger_id!: number;
+  tagger_type!: string;
+  content!: Content;
+  createdAt!: Date;
+  updatedAt!: Date;
+}
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -60,16 +68,73 @@ const Props = Vue.extend({
   components: {}
 })
 export default class DatabaseReader extends Props {
-  get title_class(): string[] {
-    if (this.$vuetify.breakpoint.mdAndUp) {
-      return ["display-4", "px-0"];
+  get personal_evaluations(): Evaluation[] {
+    let mod = getModule(ServerModule, this.$store);
+    if (mod.user_evaluations) {
+      let eval_obj = Array.from(mod.user_evaluations) || [];
+      const evals: Evaluation[] = eval_obj.map((x: any) =>
+        plainToClass(Evaluation, x)
+      );
+      console.log("evals: " + evals.length);
+      return evals;
     } else {
-      return ["display-2", "px-0"];
+      return [new Evaluation()];
     }
   }
 
-  get version(): string {
-    return getModule(AppInfoModule, this.$store).version;
+  evaluation_label(evaluation: Evaluation): string {
+    let label = evaluation.version;
+    if (evaluation.tags) {
+      evaluation.tags.forEach(tag => {
+        console.log("tag " + tag.content.name + ": " + tag.content.value);
+        if (tag.content.name == "filename") {
+          label = tag.content.value;
+        }
+      });
+    }
+    return label;
+  }
+
+  async load_this_evaluation(evaluation: Evaluation): Promise<void> {
+    console.log("load this file: " + evaluation.id);
+    const host = process.env.VUE_APP_API_URL!;
+    // Generate an id
+    let unique_id = next_free_file_ID();
+
+    // TODO
+    let filename = "evaluation";
+
+    // Get intake module
+    let intake_module = getModule(InspecIntakeModule, this.$store);
+    let mod = getModule(ServerModule, this.$store);
+    await mod
+      .connect(host)
+      .catch(bad => {
+        console.error("Unable to connect to " + host);
+      })
+      .then(() => {
+        console.log("here");
+        return mod.retrieve_evaluation(evaluation.id);
+      })
+      .catch(bad => {
+        console.error(`bad login ${bad}`);
+      })
+      .then(() => {
+        console.log("here2");
+        if (mod.evaluation) {
+          console.log("here3");
+          //let upload = `{"unique_id": ${unique_id},"filename": "${filename}","execution":${JSON.stringify(
+          //  mod.evaluation
+          //)}}`;
+          intake_module.loadText({
+            text: JSON.stringify(mod.evaluation),
+            unique_id: unique_id,
+            filename: filename
+          });
+          console.log("Loaded " + unique_id);
+          this.$emit("got-files", [unique_id]);
+        }
+      });
   }
 }
 </script>

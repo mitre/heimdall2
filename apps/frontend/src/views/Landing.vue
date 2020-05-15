@@ -45,7 +45,7 @@ export default class Landing extends LandingProps {
   }
 
   get is_logged_in(): boolean {
-    if (this.token) {
+    if (this.checkLoggedIn()) {
       console.log("is_logged_in - token: " + this.token + "end token");
       return true;
     } else {
@@ -59,9 +59,12 @@ export default class Landing extends LandingProps {
   }
 
   checkLoggedIn() {
-    console.log("token: " + this.token + "end token");
-    /*  if (!this.token) {
-      console.log("Go to auth");
+    //let server = getModule(ServerModule, this.$store);
+    if (this.token) {
+      //console.log("profile: " + JSON.stringify(server.profile));
+      return true;
+    } else {
+      console.log("Go to login");
       this.dialog = false;
      // this.$router.push("/login");
     }*/
@@ -71,11 +74,13 @@ export default class Landing extends LandingProps {
    * Invoked when file(s) are loaded.
    */
   on_got_files(ids: FileID[]) {
+    console.log("on_got_files");
     // Close the dialog
     this.dialog = false;
 
     // If just one file, focus it
     if (ids.length === 1) {
+      console.log("one file: " + ids[0]);
       this.$router.push(`/results/${ids[0]}`);
     }
 

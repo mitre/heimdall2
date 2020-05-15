@@ -144,6 +144,7 @@ export default class UploadNexus extends Props {
 
   // Event passthrough
   got_files(files: FileID[]) {
+    console.log("got_files");
     this.$emit("got-files", files);
   }
 }
