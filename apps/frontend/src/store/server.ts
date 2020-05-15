@@ -9,7 +9,7 @@ import Store from "@/store/store";
 import { LocalStorageVal } from "@/utilities/helper_util";
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { plainToClass } from "class-transformer";
-import { ExecutionFile, ProfileFile, FileID } from "@/store/report_intake";
+import { EvaluationFile, ProfileFile, FileID } from "@/store/report_intake";
 
 export interface LoginHash {
   username: string;
@@ -238,7 +238,7 @@ class HeimdallServerModule extends VuexModule {
 
   /** Attempts to save evaluation to the database */
   @Action
-  async save_evaluation(evaluation: ExecutionFile): Promise<void> {
+  async save_evaluation(evaluation: EvaluationFile): Promise<void> {
     console.log(
       "Saving execution to " + this.connection!.url + "/executions/upload"
     );

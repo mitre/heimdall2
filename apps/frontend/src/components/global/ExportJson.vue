@@ -20,7 +20,7 @@ import { saveAs } from "file-saver";
 import LinkItem, {
   LinkAction
 } from "@/components/global/sidebaritems/SidebarLink.vue";
-import { ExecutionFile, ProfileFile } from "@/store/report_intake";
+import { EvaluationFile, ProfileFile } from "@/store/report_intake";
 import { getModule } from "vuex-module-decorators";
 import InspecDataModule from "../../store/data_store";
 
@@ -43,14 +43,14 @@ export default class ExportJSON extends Props {
     let file = store.allFiles.find(f => f.unique_id === file_id);
     if (file) {
       if (file.hasOwnProperty("execution")) {
-        this.export_execution(file as ExecutionFile);
+        this.export_execution(file as EvaluationFile);
       } else {
         this.export_profile(file as ProfileFile);
       }
     }
   }
 
-  export_execution(file?: ExecutionFile) {
+  export_execution(file?: EvaluationFile) {
     if (file) {
       let blob = new Blob([JSON.stringify(file.execution)], {
         type: "application/json"

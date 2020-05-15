@@ -66,8 +66,8 @@ export default class Landing extends LandingProps {
     } else {
       console.log("Go to login");
       this.dialog = false;
-     // this.$router.push("/login");
-    }*/
+      // this.$router.push("/login");
+    }
   }
 
   /**

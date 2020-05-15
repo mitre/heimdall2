@@ -4,21 +4,31 @@
       >Easily load any supported Heimdall Data Format file</v-card-subtitle
     >
     <v-container>
-      <v-list>
-        <v-list-item
-          v-for="(evaluation, index) in personal_evaluations"
-          :key="index"
-        >
-          <v-list-item-content>
-            <v-list-item-title v-text="evaluation_label(evaluation)" />
-          </v-list-item-content>
-          <v-list-item-action>
-            <v-btn icon @click="load_this_evaluation(evaluation)">
-              <v-icon>mdi-plus-circle</v-icon>
-            </v-btn>
-          </v-list-item-action>
-        </v-list-item>
-      </v-list>
+      <v-data-table
+        dense
+        :headers="headers"
+        :items="items"
+        :search="search"
+        :hide-default-header="hideHeaders"
+        :show-select="showSelect"
+        :loading="isLoading"
+        item-key="name"
+        class="elevation-1"
+      >
+        <template v-slot:body="{ items }">
+          <tbody>
+            <tr v-for="item in items" :key="item.name">
+              <td>{{ item.filename }}</td>
+              <td>{{ item.version }}</td>
+              <td>
+                <v-btn icon @click="load_this_evaluation(item)">
+                  <v-icon>mdi-plus-circle</v-icon>
+                </v-btn>
+              </td>
+            </tr>
+          </tbody>
+        </template>
+      </v-data-table>
     </v-container>
   </v-card>
 </template>
@@ -41,6 +51,7 @@ export class Content {
 }
 export class Evaluation {
   id!: number;
+  filename!: string;
   version!: string;
   createdAt!: Date;
   updatedAt!: Date;
@@ -68,6 +79,47 @@ const Props = Vue.extend({
   components: {}
 })
 export default class DatabaseReader extends Props {
+  get headers(): Object[] {
+    return [
+      {
+        text: "Filename",
+        align: "start",
+        sortable: true,
+        value: "filename"
+      },
+      { text: "Version", sortable: true, value: "version" },
+      { text: "Select", value: "select" }
+    ];
+  }
+  get search(): string {
+    return "";
+  }
+  get hideHeaders(): Boolean {
+    return false;
+  }
+  get showSelect(): Boolean {
+    return false;
+  }
+  get isLoading(): Boolean {
+    return false;
+  }
+
+  get items(): Evaluation[] {
+    let mod = getModule(ServerModule, this.$store);
+    if (mod.user_evaluations) {
+      let eval_obj = Array.from(mod.user_evaluations) || [];
+      const evals: Evaluation[] = eval_obj.map((x: any) =>
+        plainToClass(Evaluation, x)
+      );
+      console.log("evals: " + evals.length);
+      evals.forEach(eva => {
+        eva.filename = this.evaluation_label(eva);
+      });
+      return evals;
+    } else {
+      return [new Evaluation()];
+    }
+  }
   get personal_evaluations(): Evaluation[] {
     let mod = getModule(ServerModule, this.$store);
     if (mod.user_evaluations) {

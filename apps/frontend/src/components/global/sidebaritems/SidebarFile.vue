@@ -27,7 +27,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import { getModule } from "vuex-module-decorators";
 import InspecDataModule from "@/store/data_store";
-import { ExecutionFile, ProfileFile } from "@/store/report_intake";
+import { EvaluationFile, ProfileFile } from "@/store/report_intake";
 import ServerModule from "@/store/server";
 
 // We declare the props separately to make props types inferable.
@@ -61,14 +61,14 @@ export default class FileItem extends FileItemProps {
     console.log("got file");
     if (file) {
       if (file.hasOwnProperty("execution")) {
-        this.save_evaluation(file as ExecutionFile);
+        this.save_evaluation(file as EvaluationFile);
       } else {
         this.save_profile(file as ProfileFile);
       }
     }
   }
 
-  async save_evaluation(file?: ExecutionFile): Promise<void> {
+  async save_evaluation(file?: EvaluationFile): Promise<void> {
     console.log("Save evaluation to " + this.host);
     // checking if the input is valid
     if (file) {
