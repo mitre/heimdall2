@@ -5,6 +5,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 import { UniqueConstraintErrorFilter } from '../filters/unique-constraint-error.filter';
 import { PasswordsMatchPipe } from '../pipes/passwords-match.pipe';
+import { PasswordComplexityPipe } from '../pipes/password-complexity.pipe';
+import { PasswordChangePipe } from '../pipes/password-change.pipe';
 
 @Controller('users')
 export class UsersController {
@@ -15,14 +17,14 @@ export class UsersController {
   }
 
   @Post()
-  @UsePipes(new PasswordsMatchPipe())
+  @UsePipes(new PasswordsMatchPipe(), new PasswordComplexityPipe())
   @UseFilters(new UniqueConstraintErrorFilter())
   async create(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
     return this.usersService.create(createUserDto);
   }
 
   @Put(':id')
-  @UsePipes(new PasswordsMatchPipe())
+  @UsePipes(new PasswordsMatchPipe(), new PasswordComplexityPipe(), new PasswordChangePipe())
   async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
