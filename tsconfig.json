@@ -10,7 +10,9 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
-    "typeRoots": ["./node_modules/*/node_modules/@types/"]
+    "typeRoots": ["./node_modules/*/node_modules/@types/"],
+    "esModuleInterop": true,
+    "lib": ["es2020"]
   },
   "exclude": ["node_modules", "dist"]
 }
