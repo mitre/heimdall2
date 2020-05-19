@@ -20,7 +20,7 @@ export class PasswordChangePipe implements PipeTransform {
       RegExp('[^\w\s]', 'g')
     ]
 
-    for(let validator of validators) {
+    for(const validator of validators) {
       const currentMatch = [...current.matchAll(validator)];
       const futureMatch = [...future.matchAll(validator)];
       if(currentMatch == futureMatch) {
