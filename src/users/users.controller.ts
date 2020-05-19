@@ -32,6 +32,6 @@ export class UsersController {
 
   @Delete(':id')
   async remove(@Param('id') id: number, @Body() deleteUserDto: DeleteUserDto): Promise<UserDto> {
-    return this.usersService.remove(id)
+    return this.usersService.remove(id, deleteUserDto)
   }
 }
