@@ -2,6 +2,7 @@ import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException } from
 
 @Injectable()
 export class PasswordComplexityPipe implements PipeTransform {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   transform(value: any, metadata: ArgumentMetadata) {
     if(this.hasClasses(value.password) && this.noRepeats(value.password)) {
       return value;

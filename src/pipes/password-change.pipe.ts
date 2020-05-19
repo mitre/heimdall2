@@ -3,6 +3,7 @@ import levenshtein = require('js-levenshtein');
 
 @Injectable()
 export class PasswordChangePipe implements PipeTransform {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   transform(value: any, metadata: ArgumentMetadata) {
     if (levenshtein(value.password, value.currentPassword) > 8 && this.classesChanged(value.password, value.currentPassword)) {
       return value;
