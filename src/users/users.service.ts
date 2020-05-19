@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './user.model';
 import { UserDto } from './dto/user.dto';
@@ -20,6 +20,7 @@ export class UsersService {
 
   async findById(id: number): Promise<UserDto> {
     const user = await this.userModel.findByPk<User>(id);
+    this.exists(user);
     return new UserDto(user);
   }
 
@@ -29,6 +30,7 @@ export class UsersService {
         email
       }
     });
+    this.exists(user)
     return new UserDto(user);
   }
 
@@ -46,6 +48,7 @@ export class UsersService {
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.userModel.findByPk<User>(id);
+    this.exists(user);
     if(!(await compare(updateUserDto.currentPassword, user.encryptedPassword))) {
       throw new UnauthorizedException;
     }
@@ -65,7 +68,14 @@ export class UsersService {
 
   async remove(id: number) {
     const user = await this.userModel.findByPk<User>(id);
+    this.exists(user);
     await user.destroy();
     return new UserDto(user);
+  }
+
+  exists(user: User) : void {
+    if (!user) {
+      throw new NotFoundException('User with given id not found');
+    }
   }
 }
