@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Delete, Param, Body, UseFilters, UsePipes }
 import { UserDto } from './dto/user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { DeleteUserDto } from './dto/delete-user.dto';
 import { UsersService } from './users.service';
 import { UniqueConstraintErrorFilter } from '../filters/unique-constraint-error.filter';
 import { PasswordsMatchPipe } from '../pipes/passwords-match.pipe';
@@ -30,7 +31,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number): Promise<UserDto> {
+  async remove(@Param('id') id: number, @Body() deleteUserDto: DeleteUserDto): Promise<UserDto> {
     return this.usersService.remove(id)
   }
 }

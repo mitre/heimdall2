@@ -4,6 +4,7 @@ import { User } from './user.model';
 import { UserDto } from './dto/user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { DeleteUserDto } from './dto/delete-user.dto';
 import { hash, compare } from 'bcrypt';
 
 @Injectable()
@@ -66,9 +67,12 @@ export class UsersService {
     return new UserDto(userData);
   }
 
-  async remove(id: number) {
+  async remove(id: number, deleteUserDto: DeleteUserDto) {
     const user = await this.userModel.findByPk<User>(id);
     this.exists(user);
+    if(!(await compare(deleteUserDto.password, user.encryptedPassword))) {
+      throw new UnauthorizedException;
+    }
     await user.destroy();
     return new UserDto(user);
   }
