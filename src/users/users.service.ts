@@ -50,6 +50,8 @@ export class UsersService {
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.userModel.findByPk<User>(id);
     this.exists(user);
+    console.log(updateUserDto.currentPassword);
+    console.log(user.encryptedPassword);
     if(!(await compare(updateUserDto.currentPassword, user.encryptedPassword))) {
       throw new UnauthorizedException;
     }

@@ -25,8 +25,7 @@ export class UsersController {
   }
 
   @Put(':id')
-  @UsePipes(new PasswordsMatchPipe(), new PasswordComplexityPipe(), new PasswordChangePipe())
-  async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
+  async update(@Param('id') id: number, @Body(new PasswordsMatchPipe(), new PasswordChangePipe(), new PasswordComplexityPipe()) updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
 
