@@ -1,0 +1,36 @@
+# Name that will be displayed on the repo's actions page.
+name: Setup
+
+# Events that will trigger this automation to run.
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs: 
+  build:
+    runs-on: ubuntu-late
+    services: 
+      postgres:
+       image: postgres
+       env:
+          POSTGRES_PASSWORD: postgres
+        ports: 
+        - 5432
+    steps: 
+     - uses: actions/checkout@v2
+     - name: Setup Node.js
+     - uses: actions/setup-node@v1
+       with:
+        node-version: '12'
+     - name: npm Install
+       run: npm install
+     - name: Run unit tests
+       run: npm run test
+     - name: Run e2e tests
+       run: npm run test:e2e
+     - name: Run test coverage
+       run: npm run test:cov
+     - name: Run lint
+       run: npm run lint
