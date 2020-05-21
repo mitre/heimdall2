@@ -23,14 +23,19 @@ jobs:
      - name: Setup Node.js
      - uses: actions/setup-node@v1
        with:
-        node-version: '12'
+        node-version: '12.x'
+
      - name: npm Install
        run: npm install
+
      - name: Run unit tests
        run: npm run test
+
      - name: Run e2e tests
        run: npm run test:e2e
+
      - name: Run test coverage
        run: npm run test:cov
+       
      - name: Run lint
        run: npm run lint
