@@ -1,0 +1,34 @@
+name: Setup
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs: 
+  build:
+    runs-on: ubuntu-late
+    
+    steps: 
+     - uses: actions/checkout@v2
+     - name: Setup Node.js
+     - uses: actions/setup-node@v1
+       with:
+        node-version: '12.x'
+        # What versions of node do we need to test on?
+
+     - name: npm Install
+       run: npm install
+
+     - name: Run unit tests
+       run: npm run test
+
+     - name: Run e2e tests
+       run: npm run test:e2e
+
+     - name: Run test coverage
+       run: npm run test:cov
+
+     - name: Run lint
+       run: npm run lint
