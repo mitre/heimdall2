@@ -8,15 +8,14 @@ on:
 
 jobs: 
   build:
-    runs-on: ubuntu-late
-    
+    runs-on: ubuntu-latest
+
     steps: 
      - uses: actions/checkout@v2
      - name: Setup Node.js
      - uses: actions/setup-node@v1
        with:
         node-version: '12.x'
-        # What versions of node do we need to test on?
 
      - name: npm Install
        run: npm install
