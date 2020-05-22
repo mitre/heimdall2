@@ -1,7 +1,5 @@
-# Name that will be displayed on the repo's actions page.
 name: Setup
 
-# Events that will trigger this automation to run.
 on:
   push:
     branches: [ master ]
@@ -36,6 +34,6 @@ jobs:
 
      - name: Run test coverage
        run: npm run test:cov
-       
+
      - name: Run lint
        run: npm run lint
