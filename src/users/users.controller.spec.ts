@@ -19,7 +19,8 @@ describe("UsersController", () => {
                 {
                     provide: UsersService,
                     useFactory: () => ({
-                        create: jest.fn(() => true),
+                        create: jest.fn(),
+                        findByID: jest.fn(),
                     })
                 }
             ],
