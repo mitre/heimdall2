@@ -46,7 +46,9 @@ describe("UsersController", () => {
         });
 
         it("should find by ID", () => {
-            
+            const id: number = 7;
+            usersController.findById(id);
+            expect(usersService.findById).toHaveBeenCalledWith(id);
         });
     });
 });
