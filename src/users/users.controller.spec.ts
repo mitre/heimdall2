@@ -1,10 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c00e275... Added first unit test for users controller
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { User } from './user.model';
 import { UserDto } from './dto/user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+<<<<<<< HEAD
 =======
 import { SequelizeModule } from '@nestjs/sequelize';
 import { UsersController } from '../../src/users/users.controller';
@@ -14,6 +18,8 @@ import { User } from '../../src/users/user.model';
 import { UserDto } from '../../src/users/dto/user.dto';
 import { CreateUserDto } from '../../src/users/dto/create-user.dto';
 >>>>>>> 2a8b421... Update
+=======
+>>>>>>> c00e275... Added first unit test for users controller
 import { async } from 'rxjs/internal/scheduler/async';
 
 // Test suite for the UsersController
@@ -26,6 +32,9 @@ describe("UsersController", () => {
         module = await Test.createTestingModule({
             controllers: [UsersController],
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c00e275... Added first unit test for users controller
             providers: [
                 {
                     provide: UsersService,
@@ -34,17 +43,24 @@ describe("UsersController", () => {
                     })
                 }
             ],
+<<<<<<< HEAD
         }).compile();
 =======
             providers: [UsersService],
         }).compile();
 
 >>>>>>> 2a8b421... Update
+=======
+        }).compile();
+>>>>>>> c00e275... Added first unit test for users controller
         usersService = module.get<UsersService>(UsersService);
         usersController = module.get<UsersController>(UsersController);
     });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c00e275... Added first unit test for users controller
     // Test suite for findByID
     describe("UsersController", () => {
         it("should create", async () => {
@@ -60,6 +76,7 @@ describe("UsersController", () => {
             usersController.create(userDTO);
             expect(usersService.create).toHaveBeenCalledWith(userDTO);
         });
+<<<<<<< HEAD
 
         it("should find by ID", () => {
             
@@ -81,4 +98,11 @@ describe("UsersController", () => {
     //     });
     // });
 >>>>>>> 2a8b421... Update
+=======
+
+        it("should find by ID", () => {
+            
+        });
+    });
+>>>>>>> c00e275... Added first unit test for users controller
 });
