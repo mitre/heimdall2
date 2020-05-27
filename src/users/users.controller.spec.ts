@@ -1,16 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { User } from './user.model';
-import { UserDto } from './dto/user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { async } from 'rxjs/internal/scheduler/async';
+import { DeleteUserDto } from './dto/delete-user.dto';
 
 // Test suite for the UsersController
 describe("UsersController", () => {
     let usersController: UsersController;
     let usersService: UsersService;
     let module: TestingModule;
+
+    const ID: number = 7;
 
     beforeEach(async () => {
         module = await Test.createTestingModule({
@@ -20,17 +21,27 @@ describe("UsersController", () => {
                     provide: UsersService,
                     useFactory: () => ({
                         create: jest.fn(),
-                        findByID: jest.fn(),
+                        findById: jest.fn(),
+                        update: jest.fn(),
+                        remove: jest.fn()
                     })
                 }
             ],
         }).compile();
+
         usersService = module.get<UsersService>(UsersService);
         usersController = module.get<UsersController>(UsersController);
     });
 
-    // Test suite for findByID
     describe("UsersController", () => {
+        // Tests the findById function
+        it("should findById", () => {
+            usersController.findById(ID);
+            expect(usersService.findById).toHaveBeenCalledWith(ID);
+            expect(usersService.findById).toBeCalledTimes(1);
+        });
+
+        // Tests the create function
         it("should create", async () => {
             const userDTO: CreateUserDto = {
                 email: "abc@fakeemail.com",
@@ -43,12 +54,34 @@ describe("UsersController", () => {
             };
             usersController.create(userDTO);
             expect(usersService.create).toHaveBeenCalledWith(userDTO);
+            expect(usersService.create).toBeCalledTimes(1);
         });
 
-        it("should find by ID", () => {
-            const id: number = 7;
-            usersController.findById(id);
-            expect(usersService.findById).toHaveBeenCalledWith(id);
+        // Tests the update function
+        it("should update", () => {
+            const updateUserDTO: UpdateUserDto = {
+                email: "updatedemail@yahoo.com",
+                firstName: "Jane",
+                lastName: "Doe",
+                organization: "Fake Org",
+                title: "Intern",
+                password: "newpassword",
+                passwordConfirmation: "newpassword",
+                currentPassword: "currentpassword"
+            };
+            usersController.update(ID, updateUserDTO);
+            expect(usersService.update).toHaveBeenCalledWith(ID, updateUserDTO);
+            expect(usersService.update).toBeCalledTimes(1);
+        });
+
+        // Tests the remove function
+        it("should remove", () => {
+            const deleteUserDTO : DeleteUserDto = {
+                password: "deleteuserdto"
+            };
+            usersController.remove(ID, deleteUserDTO);
+            expect(usersService.remove).toHaveBeenCalledWith(ID, deleteUserDTO);
+            expect(usersService.remove).toBeCalledTimes(1);
         });
     });
 });
