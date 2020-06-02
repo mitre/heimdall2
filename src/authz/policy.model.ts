@@ -1,0 +1,36 @@
+import { Table, Model, AutoIncrement, PrimaryKey, DataType,
+         Column, AllowNull, CreatedAt, UpdatedAt } from 'sequelize-typescript';
+
+@Table
+export class Policy extends Model<Policy> {
+  @PrimaryKey
+  @AutoIncrement
+  @AllowNull(false)
+  @Column(DataType.BIGINT)
+  id: number;
+
+  @AllowNull(false)
+  @Column
+  role: string;
+
+  @AllowNull(false)
+  @Column
+  actions: string;
+
+  @AllowNull(false)
+  @Column
+  targets: string;
+
+  @Column(DataType.JSON)
+  attributes;
+
+  @CreatedAt
+  @AllowNull(false)
+  @Column
+  createdAt: Date;
+
+  @UpdatedAt
+  @AllowNull(false)
+  @Column
+  updatedAt: Date;
+}
