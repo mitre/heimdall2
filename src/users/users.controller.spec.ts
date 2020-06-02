@@ -2,8 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import * as consts from '../test.constants';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UserDto } from './dto/user.dto';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 // Test suite for the UsersController
 describe("UsersController Unit Tests", () => {
@@ -31,27 +30,146 @@ describe("UsersController Unit Tests", () => {
         usersController = module.get<UsersController>(UsersController);
     });
 
-    // Tests the findById function
-    it("should findById", async () => {
-        expect(await usersController.findById(consts.ID)).toBe(consts.USER_ONE_DTO);
-        expect(usersService.findById).toHaveReturnedWith(consts.USER_ONE_DTO);
+    describe("FindbyId function", () => {
+        // Tests the findById function with valid ID
+        it("should test findById with valid ID", async () => {
+            expect(await usersController.findById(consts.ID)).toBe(consts.USER_ONE_DTO);
+            expect(usersService.findById).toHaveReturnedWith(consts.USER_ONE_DTO);
+        });
+
+        // Tests the findById function with ID that is "not found"
+        it("should test findById with invalid ID", async () => {
+            jest.spyOn(usersService, "findById").mockImplementation(() => {
+                throw new NotFoundException('User with given id not found');
+            });
+            try {
+                await usersController.findById(consts.ID);
+            }
+            catch (e) {
+                expect(e).toBeInstanceOf(NotFoundException);
+                expect(e.message).toBe('User with given id not found');
+            }
+        });
     });
 
-    // Tests the create function
-    it("should create", async () => {
-        expect(await usersController.create(consts.CREATE_USER_DTO_TEST_OBJ)).toEqual(consts.USER_ONE_DTO);
-        expect(usersService.create).toHaveReturnedWith(consts.USER_ONE_DTO);
+    describe("Create function", () => {
+        // Tests the create function with valid dto
+        it("should test the create function with valid dto", async () => {
+            expect(await usersController.create(consts.CREATE_USER_DTO_TEST_OBJ)).toEqual(consts.USER_ONE_DTO);
+            expect(usersService.create).toHaveReturnedWith(consts.USER_ONE_DTO);
+        });
+
+        // Tests the create function with dto that is missing email
+        it("should test the create function with missing email field", async () => {
+            jest.spyOn(usersService, "create").mockImplementation(() => {
+                throw new Error("User.email cannot be null");
+            });
+            try {
+                await usersController.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD);
+            }
+            catch (e) {
+                expect(e.message).toBe("User.email cannot be null")
+            }
+        });
+
+        // Tests the create function with dto that is missing password
+        it("should test the create function with missing password field", async () => {
+            jest.spyOn(usersService, "create").mockImplementation(() => {
+                throw new UnauthorizedException("data and salt arguments required"); ("data and salt arguments required");
+            });
+            try {
+                await usersController.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD);
+            }
+            catch (e) {
+                expect(e).toBeInstanceOf(UnauthorizedException);
+                expect(e.message).toBe("data and salt arguments required")
+            }
+        });
+
+        // Tests the create function with dto that is missing passwordConfirmation
+        it("should test the create function with missing password confirmation field", async () => {
+            jest.spyOn(usersService, "create").mockImplementation(() => {
+                throw new UnauthorizedException("data and salt arguments required");
+            });
+            try {
+                await usersController.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD);
+            }
+            catch (e) {
+                expect(e).toBeInstanceOf(UnauthorizedException);
+                expect(e.message).toBe("data and salt arguments required");
+            }
+        });
     });
 
-    // Tests the update function
-    it("should update", async () => {
-        expect(await usersController.update(consts.ID, consts.UPDATE_USER_DTO_TEST_OBJ)).toEqual(consts.USER_ONE_DTO);
-        expect(usersService.update).toHaveReturnedWith(consts.USER_ONE_DTO);
+    describe("Update function", () => {
+        // Tests the update function with valid dto
+        it("should test the update function with a valid update dto", async () => {
+            expect(await usersController.update(consts.ID, consts.UPDATE_USER_DTO_TEST_OBJ)).toEqual(consts.USER_ONE_DTO);
+            expect(usersService.update).toHaveReturnedWith(consts.USER_ONE_DTO);
+        });
+
+        // Tests the update function with ID that is "not found"
+        it("should test update function with invalid ID", async () => {
+            jest.spyOn(usersService, "update").mockImplementation(() => {
+                throw new NotFoundException('User with given id not found');
+            });
+            try {
+                await usersController.update(consts.ID, consts.UPDATE_USER_DTO_TEST_OBJ);
+            }
+            catch (e) {
+                expect(e).toBeInstanceOf(NotFoundException);
+                expect(e.message).toBe('User with given id not found');
+            }
+        });
+
+        // Tests the update function with dto that is missing currentPassword
+        it("should test the update function with a dto that is missing currentPassword field", async () => {
+            jest.spyOn(usersService, "update").mockImplementation(() => {
+                throw new UnauthorizedException("data and salt arguments required");
+            });
+            try {
+                await usersController.update(consts.ID, consts.UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD);
+            }
+            catch (e) {
+                expect(e).toBeInstanceOf(UnauthorizedException);
+                expect(e.message).toBe("data and salt arguments required");
+            }
+        });
     });
 
-    // Tests the remove function
-    it("should remove", async () => {
-        expect(await usersController.remove(consts.ID, consts.DELETE_USER_DTO_TEST_OBJ)).toEqual(consts.USER_ONE_DTO);
-        expect(usersService.remove).toHaveReturnedWith(consts.USER_ONE_DTO);
+    describe("Remove function", () => {
+        // Tests the remove function with valid dto
+        it("should remove", async () => {
+            expect(await usersController.remove(consts.ID, consts.DELETE_USER_DTO_TEST_OBJ)).toEqual(consts.USER_ONE_DTO);
+            expect(usersService.remove).toHaveReturnedWith(consts.USER_ONE_DTO);
+        });
+
+        // Tests the remove function with ID that is "not found"
+        it("should test remove function with invalid ID", async () => {
+            jest.spyOn(usersService, "remove").mockImplementation(() => {
+                throw new NotFoundException('User with given id not found');
+            });
+            try {
+                await usersController.remove(consts.ID, consts.DELETE_USER_DTO_TEST_OBJ);
+            }
+            catch (e) {
+                expect(e).toBeInstanceOf(NotFoundException);
+                expect(e.message).toBe('User with given id not found');
+            }
+        });
+
+        // Tests the remove function with dto that is missing password
+        it("should test remove function with a dto that is missing password field", async () => {
+            jest.spyOn(usersService, "remove").mockImplementation(() => {
+                throw new UnauthorizedException("data and salt arguments required");
+            });
+            try {
+                await usersController.remove(consts.ID, consts.DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD);
+            }
+            catch (e) {
+                expect(e).toBeInstanceOf(UnauthorizedException);
+                expect(e.message).toBe("data and salt arguments required");
+            }
+        });
     });
 });
