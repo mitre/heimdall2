@@ -4,8 +4,6 @@ import { UsersService } from './users.service';
 import * as consts from '../test.constants';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserDto } from './dto/user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { DeleteUserDto } from './dto/delete-user.dto';
 
 // Test suite for the UsersController
 describe("UsersController Unit Tests", () => {
@@ -20,10 +18,10 @@ describe("UsersController Unit Tests", () => {
                 {
                     provide: UsersService,
                     useFactory: () => ({
-                        create: jest.fn(CreateUserDto => UserDto),
-                        findById: jest.fn(number => UserDto),
-                        update: jest.fn((number, UpdateUserDto) => UserDto),
-                        remove: jest.fn((number, DeleteUserDto) => UserDto)
+                        create: jest.fn(CreateUserDto => consts.USER_ONE_DTO),
+                        findById: jest.fn(number => consts.USER_ONE_DTO),
+                        update: jest.fn((number, UpdateUserDto) => consts.USER_ONE_DTO),
+                        remove: jest.fn((number, DeleteUserDto) => consts.USER_ONE_DTO)
                     })
                 }
             ],
@@ -34,30 +32,26 @@ describe("UsersController Unit Tests", () => {
     });
 
     // Tests the findById function
-    it("should findById", () => {
-        usersController.findById(consts.ID);
-        expect(usersService.findById).toHaveBeenCalledWith(consts.ID);
-        expect(usersService.findById).toBeCalledTimes(1);
+    it("should findById", async () => {
+        expect(await usersController.findById(consts.ID)).toBe(consts.USER_ONE_DTO);
+        expect(usersService.findById).toHaveReturnedWith(consts.USER_ONE_DTO);
     });
 
     // Tests the create function
     it("should create", async () => {
-        usersController.create(consts.CREATE_USER_DTO_TEST_OBJ);
-        expect(usersService.create).toHaveBeenCalledWith(consts.CREATE_USER_DTO_TEST_OBJ);
-        expect(usersService.create).toBeCalledTimes(1);
+        expect(await usersController.create(consts.CREATE_USER_DTO_TEST_OBJ)).toEqual(consts.USER_ONE_DTO);
+        expect(usersService.create).toHaveReturnedWith(consts.USER_ONE_DTO);
     });
 
     // Tests the update function
-    it("should update", () => {
-        usersController.update(consts.ID, consts.UPDATE_USER_DTO_TEST_OBJ);
-        expect(usersService.update).toHaveBeenCalledWith(consts.ID, consts.UPDATE_USER_DTO_TEST_OBJ);
-        expect(usersService.update).toBeCalledTimes(1);
+    it("should update", async () => {
+        expect(await usersController.update(consts.ID, consts.UPDATE_USER_DTO_TEST_OBJ)).toEqual(consts.USER_ONE_DTO);
+        expect(usersService.update).toHaveReturnedWith(consts.USER_ONE_DTO);
     });
 
     // Tests the remove function
-    it("should remove", () => {
-        usersController.remove(consts.ID, consts.DELETE_USER_DTO_TEST_OBJ);
-        expect(usersService.remove).toHaveBeenCalledWith(consts.ID, consts.DELETE_USER_DTO_TEST_OBJ);
-        expect(usersService.remove).toBeCalledTimes(1);
+    it("should remove", async () => {
+        expect(await usersController.remove(consts.ID, consts.DELETE_USER_DTO_TEST_OBJ)).toEqual(consts.USER_ONE_DTO);
+        expect(usersService.remove).toHaveReturnedWith(consts.USER_ONE_DTO);
     });
 });
