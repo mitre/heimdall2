@@ -10,6 +10,6 @@ import { UsersController } from './users.controller';
   ],
   providers: [UsersService],
   controllers: [UsersController],
-  exports: [SequelizeModule]
+  exports: [SequelizeModule, UsersService]
 })
 export class UsersModule {}
