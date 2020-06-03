@@ -4,24 +4,30 @@ import { User } from './user.model';
 import { getModelToken, SequelizeModule } from '@nestjs/sequelize';
 import * as consts from '../../src/test.constants';
 import { Repository } from 'sequelize-typescript';
+import { ConfigModule } from '../../src/config/config.module';
+import { ConfigService } from '../../src/config/config.service';
 
 describe("UsersService Unit Tests", () => {
     let usersService: UsersService;
     let module: TestingModule;
     // Used for the remove() function
-    let userID;
+    let userID: number;
 
     beforeAll(async () => {
         module = await Test.createTestingModule({
             imports: [
-                SequelizeModule.forRoot({
-                    dialect: 'postgres',
-                    host: 'localhost',
-                    port: 5432,
-                    username: 'postgres',
-                    password: '2710CtM7$',
-                    database: 'postgres2',
-                    models: [User],
+                SequelizeModule.forRootAsync({
+                    imports: [ConfigModule],
+                    inject: [ConfigService],
+                    useFactory: (configService: ConfigService) => ({
+                        dialect: 'postgres',
+                        host: configService.get('DATABASE_HOST') || "127.0.0.1",
+                        port: Number(configService.get('DATABASE_PORT')) || 5432,
+                        username: configService.get('DATABASE_USERNAME') || "postgres",
+                        password: configService.get('DATABASE_PASSWORD') || "",
+                        database: configService.get('DATABASE_NAME') || `heimdall-server-${configService.get('NODE_ENV').toLowerCase()}`,
+                        models: [User],
+                    }),
                 }),
                 SequelizeModule.forFeature([User])
             ],
