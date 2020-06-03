@@ -19,6 +19,17 @@ export const TEST_USER: User = {
 }
 
 // @ts-ignore
+export const TEST_USER_WITHOUT_EMAIL: User = {
+    firstName: "Test",
+    lastName: "Dummy",
+    role: "user",
+    title: "fake title",
+    // Encrypted password should match password, 'Letmein123'
+    encryptedPassword: "$2b$14$qXq14f2Ttm/Sj2XiIQu3pub67ZkZ.vOalKSSjOiFCkvMZmn5y6Eiy",
+    organization: "Fake Org",
+}
+
+// @ts-ignore
 export const TEST_USER_WITHOUT_FIRST_NAME: User = {
     email: "abc@yahoo.com",
     lastName: "Dummy",
@@ -85,7 +96,7 @@ export const CREATE_USER_DTO_TEST_OBJ: CreateUserDto = {
 export const CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS: CreateUserDto = {
     email: "abc@yahoo.com",
     password: "Letmein123",
-    passwordConfirmation: "Letmein12",
+    passwordConfirmation: "Password",
     firstName: "Test",
     lastName: "Dummy",
     title: "fake title",
@@ -163,20 +174,97 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD: 
 };
 
 export const UPDATE_USER_DTO_TEST_OBJ: UpdateUserDto = {
-    email: "updatedemail@yahoo.com",
-    firstName: "Doe",
-    lastName: "John",
-    organization: "Fake org",
-    title: "Fake title",
+    email: "abc@yahoo.com",
+    firstName: "Test",
+    lastName: "Dummy",
+    organization: "Fake Org",
+    title: "fake title",
     password: "Letmein123",
     passwordConfirmation: "Letmein123",
     currentPassword: "Letmein123"
 };
 
+// @ts-ignore
+export const UPDATE_USER_DTO_TEST_WITHOUT_EMAIL: UpdateUserDto = {
+    firstName: "Test",
+    lastName: "Dummy",
+    organization: "Fake Org",
+    title: "fake title",
+    password: "Letmein123",
+    passwordConfirmation: "Letmein123",
+    currentPassword: "Letmein123"
+};
+
+// @ts-ignore
+export const UPDATE_USER_DTO_TEST_WITHOUT_FIRST_NAME: UpdateUserDto = {
+    email: "abc@yahoo.com",
+    lastName: "Dummy",
+    organization: "Fake Org",
+    title: "fake title",
+    password: "Letmein123",
+    passwordConfirmation: "Letmein123",
+    currentPassword: "Letmein123"
+};
+
+// @ts-ignore
+export const UPDATE_USER_DTO_TEST_WITHOUT_LAST_NAME: UpdateUserDto = {
+    email: "abc@yahoo.com",
+    firstName: "Test",
+    organization: "Fake Org",
+    title: "fake title",
+    password: "Letmein123",
+    passwordConfirmation: "Letmein123",
+    currentPassword: "Letmein123"
+};
+
+// @ts-ignore
+export const UPDATE_USER_DTO_TEST_WITHOUT_ORGANIZATION: UpdateUserDto = {
+    email: "abc@yahoo.com",
+    firstName: "Test",
+    lastName: "Dummy",
+    title: "fake title",
+    password: "Letmein123",
+    passwordConfirmation: "Letmein123",
+    currentPassword: "Letmein123"
+};
+
+// @ts-ignore
+export const UPDATE_USER_DTO_TEST_WITHOUT_TITLE: UpdateUserDto = {
+    email: "abc@yahoo.com",
+    firstName: "Test",
+    lastName: "Dummy",
+    organization: "Fake Org",
+    password: "Letmein123",
+    passwordConfirmation: "Letmein123",
+    currentPassword: "Letmein123"
+};
+
+// @ts-ignore
+export const UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD: UpdateUserDto = {
+    email: "abc@yahoo.com",
+    firstName: "Test",
+    lastName: "Dummy",
+    organization: "Fake Org",
+    title: "fake title",
+    passwordConfirmation: "Letmein123",
+    currentPassword: "Letmein123"
+};
+
+// @ts-ignore
+export const UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD_CONFIRMATION: UpdateUserDto = {
+    email: "abc@yahoo.com",
+    firstName: "Test",
+    lastName: "Dummy",
+    organization: "Fake Org",
+    title: "fake title",
+    password: "Letmein123",
+    currentPassword: "Letmein123"
+};
+
 export const UPDATE_FAILURE_USER_DTO_TEST_OBJ: UpdateUserDto = {
-    email: "updatedemail@yahoo.com",
-    firstName: "Doe",
-    lastName: "John",
+    email: "abc@yahoo.com",
+    firstName: "Test",
+    lastName: "Dummy",
     organization: "Fake Org",
     title: "fake title",
     password: "Letmein12",
@@ -186,9 +274,9 @@ export const UPDATE_FAILURE_USER_DTO_TEST_OBJ: UpdateUserDto = {
 
 // @ts-ignore
 export const UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD: UpdateUserDto = {
-    email: "updatedemail@yahoo.com",
-    firstName: "Doe",
-    lastName: "John",
+    email: "abc@yahoo.com",
+    firstName: "Test",
+    lastName: "Dummy",
     organization: "Fake Org",
     title: "fake title",
     password: "Letmein123",
@@ -210,6 +298,8 @@ export const DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD: DeleteUserDto = {};
 export const USER_ONE_DTO = new UserDto(USER_ARRAY[0]);
 
 export const USER_TWO_DTO = new UserDto(USER_ARRAY[1]);
+
+export const USER_DTO_WITHOUT_EMAIL = new UserDto(TEST_USER_WITHOUT_EMAIL);
 
 export const USER_DTO_WITHOUT_FIRST_NAME = new UserDto(TEST_USER_WITHOUT_FIRST_NAME);
 

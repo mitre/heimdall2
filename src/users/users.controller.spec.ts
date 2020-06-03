@@ -61,30 +61,6 @@ describe("UsersController Unit Tests", () => {
             expect(usersService.create).toHaveReturnedWith(consts.USER_ONE_DTO);
         });
 
-        // Tests the create function without first name
-        it("should test the create function with missing first name field", async () => {
-            jest.spyOn(usersService, "create").mockImplementation(async () => consts.USER_DTO_WITHOUT_FIRST_NAME);
-            expect(await usersController.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_FIRST_NAME)).toEqual(consts.USER_DTO_WITHOUT_FIRST_NAME);
-        });
-
-        // Tests the create function without last name
-        it("should test the create function with missing last name field", async () => {
-            jest.spyOn(usersService, "create").mockImplementation(async () => consts.USER_DTO_WITHOUT_LAST_NAME);
-            expect(await usersController.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_LAST_NAME)).toEqual(consts.USER_DTO_WITHOUT_LAST_NAME);
-        });
-
-        // Tests the create function without organization
-        it("should test the create function with missing organization field", async () => {
-            jest.spyOn(usersService, "create").mockImplementation(async () => consts.USER_DTO_WITHOUT_ORGANIZATION);
-            expect(await usersController.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ORGANIZATION)).toEqual(consts.USER_DTO_WITHOUT_ORGANIZATION);
-        });
-
-        // Tests the create function without title
-        it("should test the create function with missing title field", async () => {
-            jest.spyOn(usersService, "create").mockImplementation(async () => consts.USER_DTO_WITHOUT_TITLE);
-            expect(await usersController.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_TITLE)).toEqual(consts.USER_DTO_WITHOUT_TITLE);
-        });
-
         // Tests the create function with dto that is missing email
         it("should test the create function with missing email field", async () => {
             expect.assertions(1);
@@ -128,17 +104,6 @@ describe("UsersController Unit Tests", () => {
                 expect(e.message).toBe("data and salt arguments required");
             }
         });
-
-        // it("should test create function when passwords do not match", async () => {
-        //     expect.assertions(2);
-        //     try {
-        //         await usersController.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS);
-        //     }
-        //     catch(e) {
-        //         expect(e).toBeInstanceOf(BadRequestException);
-        //         expect(e.message).toBe("Passwords do not match");
-        //     }
-        // });
     });
 
     describe("Update function", () => {

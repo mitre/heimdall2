@@ -22,4 +22,15 @@ describe('AppController (e2e)', () => {
       .expect(200)
       .expect('Hello World!');
   });
+
+    //     it("should test create function when passwords do not match", async () => {
+    //         expect.assertions(2);
+    //         try {
+    //             await usersController.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS);
+    //         }
+    //         catch(e) {
+    //             expect(e).toBeInstanceOf(BadRequestException);
+    //             expect(e.message).toBe("Passwords do not match");
+    //         }
+    //     });
 });
