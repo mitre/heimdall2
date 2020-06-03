@@ -66,121 +66,181 @@ describe("UsersService Unit Tests", () => {
                 updateFlag = false;
             expect(updateFlag).toBe(false);
         });
-    });
 
-    describe("FindAll function", () => {
-        // Tests the findAll function
-        it("should findAll", async () => {
-            const userdtoArray = await usersService.findAll();
+        // Tests the create function with dto that has no email field
+        it("should test create function with missing email field", async () => {
+            expect.assertions(1);
+            try {
+                const user = await usersService.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD);
+            }
+            catch (e) {
+                expect(e.message).toBe("notNull Violation: User.email cannot be null");
+            }
+        });
 
-            expect(userdtoArray[userdtoArray.length-1].email).toEqual(consts.USER_DTO_ARRAY[0].email);
-            expect(userdtoArray[userdtoArray.length-1].firstName).toEqual(consts.USER_DTO_ARRAY[0].firstName);
-            expect(userdtoArray[userdtoArray.length-1].lastName).toEqual(consts.USER_DTO_ARRAY[0].lastName);
-            expect(userdtoArray[userdtoArray.length-1].title).toEqual(consts.USER_DTO_ARRAY[0].title);
-            expect(userdtoArray[userdtoArray.length-1].organization).toEqual(consts.USER_DTO_ARRAY[0].organization);
+        // Tests the create function with dto that has invalid email field
+        it("should test create function with invalid email field", async () => {
+            expect.assertions(1);
+            try {
+                const user = await usersService.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD);
+            }
+            catch (e) {
+                expect(e.message).toBe("Validation error: Validation isEmail on email failed");
+            }
+        });
 
-            /* Expect that the dates equals each other for the createdAt value. Can't just see
-                if the createdAt equal eachother due to time created being off by a couple of seconds */
-            expect(userdtoArray[userdtoArray.length-1].createdAt.getDate()).toEqual(consts.USER_DTO_ARRAY[0].createdAt.getDate());
+        // Tests the create function with dto that has no password field
+        it("should test create function with missing password field", async () => {
+            expect.assertions(1);
+            try {
+                const user = await usersService.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD);
+            }
+            catch (e) {
+                expect(e.message).toBe("data and salt arguments required");
+            }
+        });
 
-            /* The id of the test constant is undefined, so if 
-                findAll is successful, the id's should not be equal */
-            let idFlag: boolean;
-            if (userdtoArray[userdtoArray.length-1].id != consts.USER_ONE_DTO.id)
-                idFlag = false;
-            expect(idFlag).toBe(false);
+        // Tests the create function with dto that has no passwordConfirmation field
+        it("should test create function with missing password confirmation field", async () => {
+            expect.assertions(1);
+            try {
+                const user = await usersService.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD);
+            }
+            catch (e) {
+                expect(e.message).toBe("Validation error");
+            }
         });
     });
 
-    describe("FindById function", () => {
-        // Tests the findById function
-        it("should findById", async () => {
-            const user = await usersService.findById(userID);
+    // describe("FindAll function", () => {
+    //     // Tests the findAll function
+    //     it("should findAll", async () => {
+    //         const userdtoArray = await usersService.findAll();
 
-            expect(user.email).toEqual(consts.USER_ONE_DTO.email);
-            expect(user.firstName).toEqual(consts.USER_ONE_DTO.firstName);
-            expect(user.lastName).toEqual(consts.USER_ONE_DTO.lastName);
-            expect(user.title).toEqual(consts.USER_ONE_DTO.title);
-            expect(user.organization).toEqual(consts.USER_ONE_DTO.organization);
+    //         expect(userdtoArray[userdtoArray.length-1].email).toEqual(consts.USER_DTO_ARRAY[0].email);
+    //         expect(userdtoArray[userdtoArray.length-1].firstName).toEqual(consts.USER_DTO_ARRAY[0].firstName);
+    //         expect(userdtoArray[userdtoArray.length-1].lastName).toEqual(consts.USER_DTO_ARRAY[0].lastName);
+    //         expect(userdtoArray[userdtoArray.length-1].title).toEqual(consts.USER_DTO_ARRAY[0].title);
+    //         expect(userdtoArray[userdtoArray.length-1].organization).toEqual(consts.USER_DTO_ARRAY[0].organization);
 
-            /* Expect that the dates equals each other for the createdAt value. Can't just see
-                if the createdAt equal eachother due to time created being off by a couple of seconds */
-            expect(user.createdAt.getDate()).toEqual(consts.USER_ONE_DTO.createdAt.getDate());
+    //         /* Expect that the dates equals each other for the createdAt value. Can't just see
+    //             if the createdAt equal eachother due to time created being off by a couple of seconds */
+    //         expect(userdtoArray[userdtoArray.length-1].createdAt.getDate()).toEqual(consts.USER_DTO_ARRAY[0].createdAt.getDate());
 
-            /* The id of the test constant is undefined, so if 
-                findById is successful, the id's should not be equal */
-            let idFlag: boolean;
-            if (user.id != consts.USER_ONE_DTO.id)
-                idFlag = false;
-            expect(idFlag).toBe(false);
+    //         /* The id of the test constant is undefined, so if 
+    //             findAll is successful, the id's should not be equal */
+    //         let idFlag: boolean;
+    //         if (userdtoArray[userdtoArray.length-1].id != consts.USER_ONE_DTO.id)
+    //             idFlag = false;
+    //         expect(idFlag).toBe(false);
+    //     });
+    // });
+
+    // describe("FindById function", () => {
+    //     // Tests the findById function
+    //     it("should findById", async () => {
+    //         const user = await usersService.findById(userID);
+
+    //         expect(user.email).toEqual(consts.USER_ONE_DTO.email);
+    //         expect(user.firstName).toEqual(consts.USER_ONE_DTO.firstName);
+    //         expect(user.lastName).toEqual(consts.USER_ONE_DTO.lastName);
+    //         expect(user.title).toEqual(consts.USER_ONE_DTO.title);
+    //         expect(user.organization).toEqual(consts.USER_ONE_DTO.organization);
+
+    //         /* Expect that the dates equals each other for the createdAt value. Can't just see
+    //             if the createdAt equal eachother due to time created being off by a couple of seconds */
+    //         expect(user.createdAt.getDate()).toEqual(consts.USER_ONE_DTO.createdAt.getDate());
+
+    //         /* The id of the test constant is undefined, so if 
+    //             findById is successful, the id's should not be equal */
+    //         let idFlag: boolean;
+    //         if (user.id != consts.USER_ONE_DTO.id)
+    //             idFlag = false;
+    //         expect(idFlag).toBe(false);
+    //     });
+    // });
+
+    // describe("FindByEmail function", () => {
+    //         // Tests the findByEmail function
+    //         it("should findByEmail", async () => {
+    //             const user = await usersService.findByEmail(consts.TEST_USER.email)
+
+    //             expect(user.email).toEqual(consts.USER_ONE_DTO.email);
+    //             expect(user.firstName).toEqual(consts.USER_ONE_DTO.firstName);
+    //             expect(user.lastName).toEqual(consts.USER_ONE_DTO.lastName);
+    //             expect(user.title).toEqual(consts.USER_ONE_DTO.title);
+    //             expect(user.organization).toEqual(consts.USER_ONE_DTO.organization);
+
+    //             /* Expect that the dates equals each other for the createdAt value. Can't just see
+    //                 if the createdAt equal eachother due to time created being off by a couple of seconds */
+    //             expect(user.createdAt.getDate()).toEqual(consts.USER_ONE_DTO.createdAt.getDate());
+
+    //             /* The id of the test constant is undefined, so if 
+    //                 findByEmail is successful, the id's should not be equal */
+    //             let idFlag: boolean;
+    //             if (user.id != consts.USER_ONE_DTO.id)
+    //                 idFlag = false;
+    //             expect(idFlag).toBe(false);
+    //         });
+    //     });
+
+    describe("Update function", () => {
+        // Tests the update function (Successful update)
+        it("should update everything", async () => {
+            const updatedUser = await usersService.update(userID, consts.UPDATE_USER_DTO_TEST_OBJ);
+
+            expect(updatedUser.email).toEqual(consts.UPDATE_USER_DTO_TEST_OBJ.email);
+            expect(updatedUser.firstName).toEqual(consts.UPDATE_USER_DTO_TEST_OBJ.firstName);
+            expect(updatedUser.lastName).toEqual(consts.UPDATE_USER_DTO_TEST_OBJ.lastName);
+            expect(updatedUser.title).toEqual(consts.UPDATE_USER_DTO_TEST_OBJ.title);
+            expect(updatedUser.organization).toEqual(consts.UPDATE_USER_DTO_TEST_OBJ.organization);
+
+            // If create is successful, these two values should not be equal
+            let updateFlag: boolean;
+            if (updatedUser.updatedAt.valueOf() != consts.USER_ONE_DTO.updatedAt.valueOf())
+                updateFlag = false;
+            expect(updateFlag).toBe(false);
+        });
+
+        // Tests the update function (Fail update)
+        it("should fail the update (throw UnauthorizedException)", async () => {
+            expect(async () => { await usersService.update(userID, consts.UPDATE_FAILURE_USER_DTO_TEST_OBJ) })
+                .rejects.toThrow();
+        });
+
+        // Tests the update function with dto that has invalid email field
+        it("should test update function with invalid email field", async () => {
+            expect.assertions(1);
+            try {
+                const user = await usersService.create(consts.UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL);
+            }
+            catch (e) {
+                expect(e.message).toBe("Validation error: Validation isEmail on email failed");
+            }
+        });
+
+        // Tests the update function with dto that has no currentPassword field
+        it("should test the update function with no current password field", async () => {
+            
         });
     });
 
-    describe("FindByEmail function", () => {
-            // Tests the findByEmail function
-            it("should findByEmail", async () => {
-                const user = await usersService.findByEmail(consts.TEST_USER.email)
 
-                expect(user.email).toEqual(consts.USER_ONE_DTO.email);
-                expect(user.firstName).toEqual(consts.USER_ONE_DTO.firstName);
-                expect(user.lastName).toEqual(consts.USER_ONE_DTO.lastName);
-                expect(user.title).toEqual(consts.USER_ONE_DTO.title);
-                expect(user.organization).toEqual(consts.USER_ONE_DTO.organization);
-
-                /* Expect that the dates equals each other for the createdAt value. Can't just see
-                    if the createdAt equal eachother due to time created being off by a couple of seconds */
-                expect(user.createdAt.getDate()).toEqual(consts.USER_ONE_DTO.createdAt.getDate());
-
-                /* The id of the test constant is undefined, so if 
-                    findByEmail is successful, the id's should not be equal */
-                let idFlag: boolean;
-                if (user.id != consts.USER_ONE_DTO.id)
-                    idFlag = false;
-                expect(idFlag).toBe(false);
-            });
+    describe("Remove function", () => {
+        // Tests the remove function (Fail remove)
+        it("should fail remove (throw UnauthorizedException)", async () => {
+            expect(async () => { await usersService.remove(userID, consts.DELETE_FAILRE_USER_DTO_TEST_OBJ) })
+                .rejects.toThrow();
         });
 
-        describe("Update function", () => {
-            // Tests the update function (Successful update)
-            it("should update everything", async () => {
-                const updatedUser = await usersService.update(userID, consts.UPDATE_USER_DTO_TEST_OBJ);
-
-                expect(updatedUser.email).toEqual(consts.UPDATE_USER_DTO_TEST_OBJ.email);
-                expect(updatedUser.firstName).toEqual(consts.UPDATE_USER_DTO_TEST_OBJ.firstName);
-                expect(updatedUser.lastName).toEqual(consts.UPDATE_USER_DTO_TEST_OBJ.lastName);
-                expect(updatedUser.title).toEqual(consts.UPDATE_USER_DTO_TEST_OBJ.title);
-                expect(updatedUser.organization).toEqual(consts.UPDATE_USER_DTO_TEST_OBJ.organization);
-
-                // If create is successful, these two values should not be equal
-                let updateFlag: boolean;
-                if (updatedUser.updatedAt.valueOf() != consts.USER_ONE_DTO.updatedAt.valueOf())
-                    updateFlag = false;
-                expect(updateFlag).toBe(false);
-            });
-
-            // Tests the update function (Fail update)
-            it("should fail the update (throw UnauthorizedException)", async () => {
-                expect(async () => { await usersService.update(userID, consts.UPDATE_FAILURE_USER_DTO_TEST_OBJ) })
-                    .rejects.toThrow();
-            });
+        // Tests the remove function (Successful remove)
+        it("should remove", async () => {
+            const removedUser = await usersService.remove(userID, consts.DELETE_USER_DTO_TEST_OBJ);
+            expect(removedUser.email).toEqual(consts.UPDATE_USER_DTO_TEST_OBJ.email);
         });
+    });
 
-
-        describe("Remove function", () => {
-            // Tests the remove function (Fail remove)
-            it("should fail remove (throw UnauthorizedException)", async () => {
-                expect(async () => { await usersService.remove(userID, consts.DELETE_FAILRE_USER_DTO_TEST_OBJ) })
-                    .rejects.toThrow();
-            });
-
-            // Tests the remove function (Successful remove)
-            it("should remove", async () => {
-                const removedUser = await usersService.remove(userID, consts.DELETE_USER_DTO_TEST_OBJ);
-                expect(removedUser.email).toEqual(consts.UPDATE_USER_DTO_TEST_OBJ.email);
-            });
-        });
-
-        afterAll(async () => {
-            module.close();
-        });
-    })
+    afterAll(async () => {
+        module.close();
+    });
+})
