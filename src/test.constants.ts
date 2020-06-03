@@ -323,7 +323,7 @@ export const USER_DTO_WITHOUT_TITLE = new UserDto(TEST_USER_WITHOUT_TITLE);
 
 export const USER_DTO_ARRAY: UserDto[] = [USER_ONE_DTO, USER_TWO_DTO];
 
-// export function usersServicesTestAssertions(user: UserDto) {
+// export function usersServiceTestAssertions(user: UserDto) {
 //     expect(user.email).toEqual(USER_ONE_DTO.email);
 //     expect(user.firstName).toEqual(USER_ONE_DTO.firstName);
 //     expect(user.lastName).toEqual(USER_ONE_DTO.lastName);
