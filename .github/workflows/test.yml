@@ -21,6 +21,12 @@ jobs:
        uses: actions/setup-node@v1
        with:
         node-version: '12.x'
+     - name: Setup PostgresSQL database
+       uses: harmon758/postgresql-action@v1
+       with:
+        postgresql db: heimdallts_jest_testing_service_db
+        postgresql user: postgres
+        postgresql password: postgres
 
      - name: Install dependencies
        run: npm ci
