@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import * as consts from '../test.constants';
-import { NotFoundException, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 // Test suite for the UsersController
 describe("UsersController Unit Tests", () => {
@@ -18,10 +18,10 @@ describe("UsersController Unit Tests", () => {
                     provide: UsersService,
                     useFactory: () => ({
                         // These mock functions are used for the basic "positive" tests
-                        create: jest.fn(CreateUserDto => consts.USER_ONE_DTO),
-                        findById: jest.fn(number => consts.USER_ONE_DTO),
-                        update: jest.fn((number, UpdateUserDto) => consts.UPDATED_USER_DTO),
-                        remove: jest.fn((number, DeleteUserDto) => consts.USER_ONE_DTO)
+                        create: jest.fn(() => consts.USER_ONE_DTO),
+                        findById: jest.fn(() => consts.USER_ONE_DTO),
+                        update: jest.fn(() => consts.UPDATED_USER_DTO),
+                        remove: jest.fn(() => consts.USER_ONE_DTO)
                     })
                 }
             ],

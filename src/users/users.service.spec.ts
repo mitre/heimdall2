@@ -72,7 +72,7 @@ describe("UsersService Unit Tests", () => {
         it("should test create function with missing email field", async () => {
             expect.assertions(1);
             try {
-                const user = await usersService.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD);
+                await usersService.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD);
             }
             catch (e) {
                 expect(e.message).toBe("notNull Violation: User.email cannot be null");
@@ -83,7 +83,7 @@ describe("UsersService Unit Tests", () => {
         it("should test create function with invalid email field", async () => {
             expect.assertions(1);
             try {
-                const user = await usersService.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD);
+                await usersService.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD);
             }
             catch (e) {
                 expect(e.message).toBe("Validation error: Validation isEmail on email failed");
@@ -94,7 +94,7 @@ describe("UsersService Unit Tests", () => {
         it("should test create function with missing password field", async () => {
             expect.assertions(1);
             try {
-                const user = await usersService.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD);
+                await usersService.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD);
             }
             catch (e) {
                 expect(e.message).toBe("data and salt arguments required");
@@ -105,7 +105,7 @@ describe("UsersService Unit Tests", () => {
         it("should test create function with missing password confirmation field", async () => {
             expect.assertions(1);
             try {
-                const user = await usersService.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD);
+                await usersService.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD);
             }
             catch (e) {
                 expect(e.message).toBe("Validation error");
@@ -207,7 +207,7 @@ describe("UsersService Unit Tests", () => {
         it("should test update function with invalid email field", async () => {
             expect.assertions(1);
             try {
-                const user = await usersService.update(userID, consts.UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL);
+                await usersService.update(userID, consts.UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL);
             }
             catch (e) {
                 expect(e.message).toBe("Validation error: Validation isEmail on email failed");
@@ -218,7 +218,7 @@ describe("UsersService Unit Tests", () => {
         it("should test the update function with no current password field", async () => {
             expect.assertions(1);
             try {
-                const user = await usersService.update(userID, consts.UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD);
+                await usersService.update(userID, consts.UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD);
             }
             catch (e) {
                 expect(e.message).toBe("data and hash arguments required");
@@ -230,7 +230,7 @@ describe("UsersService Unit Tests", () => {
             expect.assertions(1);
             try {
                 // Password of UpdateUserDto does not match password of the user represented by userID
-                const user = await usersService.update(userID, consts.UPDATE_FAILURE_USER_DTO_TEST_OBJ);
+                await usersService.update(userID, consts.UPDATE_FAILURE_USER_DTO_TEST_OBJ);
             }
             catch (e) {
                 expect(e).toBeInstanceOf(UnauthorizedException);
@@ -245,7 +245,7 @@ describe("UsersService Unit Tests", () => {
             expect.assertions(1);
             try {
                 // Password of DeleteUserDto does not match password of the user represented by userID
-                const user = await usersService.remove(userID, consts.DELETE_FAILRE_USER_DTO_TEST_OBJ);
+                await usersService.remove(userID, consts.DELETE_FAILRE_USER_DTO_TEST_OBJ);
             }
             catch (e) {
                 expect(e).toBeInstanceOf(UnauthorizedException);
@@ -258,7 +258,7 @@ describe("UsersService Unit Tests", () => {
             expect.assertions(1);
             try {
                 // Password of DeleteUserDto does not match password of the user represented by userID
-                const user = await usersService.remove(userID, consts.DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD);
+                await usersService.remove(userID, consts.DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD);
             }
             catch (e) {
                 expect(e.message).toBe("data and hash arguments required");

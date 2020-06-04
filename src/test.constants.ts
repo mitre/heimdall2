@@ -4,7 +4,7 @@ import { DeleteUserDto } from "./users/dto/delete-user.dto";
 import { User } from './users/user.model';
 import { UserDto } from "./users/dto/user.dto";
 
-export const ID: number = 7;
+export const ID = 7;
 
 // @ts-ignore
 export const TEST_USER: User = {
