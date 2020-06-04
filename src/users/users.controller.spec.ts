@@ -20,7 +20,7 @@ describe("UsersController Unit Tests", () => {
                         // These mock functions are used for the basic "positive" tests
                         create: jest.fn(CreateUserDto => consts.USER_ONE_DTO),
                         findById: jest.fn(number => consts.USER_ONE_DTO),
-                        update: jest.fn((number, UpdateUserDto) => consts.USER_ONE_DTO),
+                        update: jest.fn((number, UpdateUserDto) => consts.UPDATED_USER_DTO),
                         remove: jest.fn((number, DeleteUserDto) => consts.USER_ONE_DTO)
                     })
                 }
@@ -109,8 +109,8 @@ describe("UsersController Unit Tests", () => {
     describe("Update function", () => {
         // Tests the update function with valid dto (basic positive test)
         it("should test the update function with a valid update dto", async () => {
-            expect(await usersController.update(consts.ID, consts.UPDATE_USER_DTO_TEST_OBJ)).toEqual(consts.USER_ONE_DTO);
-            expect(usersService.update).toHaveReturnedWith(consts.USER_ONE_DTO);
+            expect(await usersController.update(consts.ID, consts.UPDATE_USER_DTO_TEST_OBJ)).toEqual(consts.UPDATED_USER_DTO);
+            expect(usersService.update).toHaveReturnedWith(consts.UPDATED_USER_DTO);
         });
 
         // Tests the update function with ID that is "not found"

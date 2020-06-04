@@ -21,6 +21,19 @@ export const TEST_USER: User = {
 }
 
 // @ts-ignore
+export const UPDATED_TEST_USER: User = {
+    email: "updatedemail@yahoo.com",
+    firstName: "Updated",
+    lastName: "Name",
+    title: "updated title",
+    // Encrypted password should match password, 'Letmein123'
+    encryptedPassword: "$2b$14$qXq14f2Ttm/Sj2XiIQu3pub67ZkZ.vOalKSSjOiFCkvMZmn5y6Eiy",
+    organization: "Updated Org",
+    createdAt: new Date(),
+    updatedAt: new Date()
+}
+
+// @ts-ignore
 export const TEST_USER_WITHOUT_EMAIL: User = {
     firstName: "Test",
     lastName: "Dummy",
@@ -93,6 +106,8 @@ export const USER_ARRAY: User[] = [
     TEST_USER,
     // @ts-ignore
     TEST_USER_WITHOUT_FIRST_NAME,
+    // @ts-ignore
+    UPDATED_TEST_USER,
 ];
 
 export const CREATE_USER_DTO_TEST_OBJ: CreateUserDto = {
@@ -197,11 +212,11 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD: 
 };
 
 export const UPDATE_USER_DTO_TEST_OBJ: UpdateUserDto = {
-    email: "abc@yahoo.com",
-    firstName: "Test",
-    lastName: "Dummy",
-    organization: "Fake Org",
-    title: "fake title",
+    email: "updatedemail@yahoo.com",
+    firstName: "Updated",
+    lastName: "Name",
+    organization: "Updated Org",
+    title: "updated title",
     password: "Letmein123",
     passwordConfirmation: "Letmein123",
     currentPassword: "Letmein123"
@@ -333,6 +348,9 @@ export const DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD: DeleteUserDto = {};
 export const USER_ONE_DTO = new UserDto(USER_ARRAY[0]);
 
 export const USER_TWO_DTO = new UserDto(USER_ARRAY[1]);
+
+// UPDATED_TEST_USER dto
+export const UPDATED_USER_DTO = new UserDto(USER_ARRAY[2]);
 
 export const USER_DTO_WITHOUT_EMAIL = new UserDto(TEST_USER_WITHOUT_EMAIL);
 
