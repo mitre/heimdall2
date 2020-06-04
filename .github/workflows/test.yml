@@ -2,13 +2,16 @@ name: Test
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches: [ ss-testing-pipeline ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    services: 
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
 
     steps:
      - uses: actions/checkout@v2
@@ -17,12 +20,22 @@ jobs:
        with:
         node-version: '12.x'
 
-     - name: npm Install
-       run: npm install
+     - name: Install dependencies
+       run: npm ci
 
      - name: Run unit tests
-       run: npm run test
-
+       env: 
+         DATABASE_HOST: localhost
+         DATABASE_PORT: 5432
+         DATABASE_USERNAME: postgres
+         DATABASE_PASSWORD: postgres
+         DATABASE_NAME: heimdallts_jest_testing_service_db
+         JWT_SECRET: test
+         NODE_ENV: production
+       run: |
+         npx sequelize-cli db:create
+         npx sequelize-cli db:migrate
+         npm run test
      - name: Run e2e tests
        run: npm run test:e2e
 
