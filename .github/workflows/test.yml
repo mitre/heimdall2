@@ -7,11 +7,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    services: 
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_PASSWORD: postgres
 
     steps:
      - uses: actions/checkout@v2
@@ -39,7 +34,6 @@ jobs:
          JWT_SECRET: test
          NODE_ENV: production
        run: |
-         npx sequelize-cli db:create
          npx sequelize-cli db:migrate
          npm run test
      - name: Run e2e tests
