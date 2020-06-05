@@ -11,7 +11,7 @@ jobs:
       postgres:
         image: postgres:latest
         ports:
-          - 5432
+          - 5432:5432
 
     steps:
      - uses: actions/checkout@v2
