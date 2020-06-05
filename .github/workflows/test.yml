@@ -2,9 +2,7 @@ name: Test
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches: [ ss-testing-pipeline ]
 
 jobs:
   build:
@@ -27,12 +25,16 @@ jobs:
      - name: Install dependencies
        run: npm ci
 
-     - name: Run unit tests
+     - name: Copy .env-ci to .env
+       run: cp .env-ci .env
+
+     - name: Create/migrate db
        run: |
-         cp .env-ci .env
          npx sequelize-cli db:create
          npx sequelize-cli db:migrate
-         npm run test
+
+     - name: Run unit tests
+       run: npm run test
          
      - name: Run e2e tests
        run: npm run test:e2e
