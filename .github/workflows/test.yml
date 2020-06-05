@@ -26,7 +26,7 @@ jobs:
      - name: Run unit tests
        run: |
          cp .env-ci .env
-         npx sequelize-cli db:migrate
+         npx sequelize-cli db:create
          npx sequelize-cli db:migrate
          npm run test
      - name: Run e2e tests
