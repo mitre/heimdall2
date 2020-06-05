@@ -101,77 +101,77 @@ describe('UsersService Unit Tests', () => {
     });
   });
 
-  // describe('FindAll function', () => {
-  //   // Tests the findAll function
-  //   it('should findAll', async () => {
-  //     const userdtoArray = await usersService.findAll();
+  describe('FindAll function', () => {
+    // Tests the findAll function
+    it('should findAll', async () => {
+      const userdtoArray = await usersService.findAll();
 
-  //     expect(userdtoArray[userdtoArray.length - 1].email).toEqual(consts.USER_DTO_ARRAY[0].email);
-  //     expect(userdtoArray[userdtoArray.length - 1].firstName).toEqual(consts.USER_DTO_ARRAY[0].firstName);
-  //     expect(userdtoArray[userdtoArray.length - 1].lastName).toEqual(consts.USER_DTO_ARRAY[0].lastName);
-  //     expect(userdtoArray[userdtoArray.length - 1].title).toEqual(consts.USER_DTO_ARRAY[0].title);
-  //     expect(userdtoArray[userdtoArray.length - 1].organization).toEqual(consts.USER_DTO_ARRAY[0].organization);
+      expect(userdtoArray[userdtoArray.length - 1].email).toEqual(consts.USER_DTO_ARRAY[0].email);
+      expect(userdtoArray[userdtoArray.length - 1].firstName).toEqual(consts.USER_DTO_ARRAY[0].firstName);
+      expect(userdtoArray[userdtoArray.length - 1].lastName).toEqual(consts.USER_DTO_ARRAY[0].lastName);
+      expect(userdtoArray[userdtoArray.length - 1].title).toEqual(consts.USER_DTO_ARRAY[0].title);
+      expect(userdtoArray[userdtoArray.length - 1].organization).toEqual(consts.USER_DTO_ARRAY[0].organization);
 
-  //     /* Expect that the dates equals each other for the createdAt value. Can't just see
-  //         if the createdAt equal eachother due to time created being off by a couple of seconds */
-  //     expect(userdtoArray[userdtoArray.length - 1].createdAt.getDate()).toEqual(consts.USER_DTO_ARRAY[0].createdAt.getDate());
+      /* Expect that the dates equals each other for the createdAt value. Can't just see
+          if the createdAt equal eachother due to time created being off by a couple of seconds */
+      expect(userdtoArray[userdtoArray.length - 1].createdAt.getDate()).toEqual(consts.USER_DTO_ARRAY[0].createdAt.getDate());
 
-  //     /* The id of the test constant is undefined, so if 
-  //         findAll is successful, the id's should not be equal */
-  //     let idFlag: boolean;
-  //     if (userdtoArray[userdtoArray.length - 1].id != consts.USER_ONE_DTO.id)
-  //       idFlag = false;
-  //     expect(idFlag).toBe(false);
-  //   });
-  // });
+      /* The id of the test constant is undefined, so if 
+          findAll is successful, the id's should not be equal */
+      let idFlag: boolean;
+      if (userdtoArray[userdtoArray.length - 1].id != consts.USER_ONE_DTO.id)
+        idFlag = false;
+      expect(idFlag).toBe(false);
+    });
+  });
 
-  // describe('FindById function', () => {
-  //   // Tests the findById function
-  //   it('should findById', async () => {
-  //     const user = await usersService.findById(userID);
+  describe('FindById function', () => {
+    // Tests the findById function
+    it('should findById', async () => {
+      const user = await usersService.findById(userID);
 
-  //     expect(user.email).toEqual(consts.USER_ONE_DTO.email);
-  //     expect(user.firstName).toEqual(consts.USER_ONE_DTO.firstName);
-  //     expect(user.lastName).toEqual(consts.USER_ONE_DTO.lastName);
-  //     expect(user.title).toEqual(consts.USER_ONE_DTO.title);
-  //     expect(user.organization).toEqual(consts.USER_ONE_DTO.organization);
+      expect(user.email).toEqual(consts.USER_ONE_DTO.email);
+      expect(user.firstName).toEqual(consts.USER_ONE_DTO.firstName);
+      expect(user.lastName).toEqual(consts.USER_ONE_DTO.lastName);
+      expect(user.title).toEqual(consts.USER_ONE_DTO.title);
+      expect(user.organization).toEqual(consts.USER_ONE_DTO.organization);
 
-  //     /* Expect that the dates equals each other for the createdAt value. Can't just see
-  //         if the createdAt equal eachother due to time created being off by a couple of seconds */
-  //     expect(user.createdAt.getDate()).toEqual(consts.USER_ONE_DTO.createdAt.getDate());
+      /* Expect that the dates equals each other for the createdAt value. Can't just see
+          if the createdAt equal eachother due to time created being off by a couple of seconds */
+      expect(user.createdAt.getDate()).toEqual(consts.USER_ONE_DTO.createdAt.getDate());
 
-  //     /* The id of the test constant is undefined, so if 
-  //         findById is successful, the id's should not be equal */
-  //     let idFlag: boolean;
-  //     if (user.id != consts.USER_ONE_DTO.id)
-  //       idFlag = false;
-  //     expect(idFlag).toBe(false);
-  //   });
-  // });
+      /* The id of the test constant is undefined, so if 
+          findById is successful, the id's should not be equal */
+      let idFlag: boolean;
+      if (user.id != consts.USER_ONE_DTO.id)
+        idFlag = false;
+      expect(idFlag).toBe(false);
+    });
+  });
 
-  // describe('FindByEmail function', () => {
-  //   // Tests the findByEmail function
-  //   it('should findByEmail', async () => {
-  //     const user = await usersService.findByEmail(consts.TEST_USER.email)
+  describe('FindByEmail function', () => {
+    // Tests the findByEmail function
+    it('should findByEmail', async () => {
+      const user = await usersService.findByEmail(consts.TEST_USER.email)
 
-  //     expect(user.email).toEqual(consts.USER_ONE_DTO.email);
-  //     expect(user.firstName).toEqual(consts.USER_ONE_DTO.firstName);
-  //     expect(user.lastName).toEqual(consts.USER_ONE_DTO.lastName);
-  //     expect(user.title).toEqual(consts.USER_ONE_DTO.title);
-  //     expect(user.organization).toEqual(consts.USER_ONE_DTO.organization);
+      expect(user.email).toEqual(consts.USER_ONE_DTO.email);
+      expect(user.firstName).toEqual(consts.USER_ONE_DTO.firstName);
+      expect(user.lastName).toEqual(consts.USER_ONE_DTO.lastName);
+      expect(user.title).toEqual(consts.USER_ONE_DTO.title);
+      expect(user.organization).toEqual(consts.USER_ONE_DTO.organization);
 
-  //     /* Expect that the dates equals each other for the createdAt value. Can't just see
-  //         if the createdAt equal eachother due to time created being off by a couple of seconds */
-  //     expect(user.createdAt.getDate()).toEqual(consts.USER_ONE_DTO.createdAt.getDate());
+      /* Expect that the dates equals each other for the createdAt value. Can't just see
+          if the createdAt equal eachother due to time created being off by a couple of seconds */
+      expect(user.createdAt.getDate()).toEqual(consts.USER_ONE_DTO.createdAt.getDate());
 
-  //     /* The id of the test constant is undefined, so if 
-  //         findByEmail is successful, the id's should not be equal */
-  //     let idFlag: boolean;
-  //     if (user.id != consts.USER_ONE_DTO.id)
-  //       idFlag = false;
-  //     expect(idFlag).toBe(false);
-  //   });
-  // });
+      /* The id of the test constant is undefined, so if 
+          findByEmail is successful, the id's should not be equal */
+      let idFlag: boolean;
+      if (user.id != consts.USER_ONE_DTO.id)
+        idFlag = false;
+      expect(idFlag).toBe(false);
+    });
+  });
 
   describe('Update function', () => {
     // Tests the update function (Successful update)
