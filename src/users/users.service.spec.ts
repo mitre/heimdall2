@@ -230,8 +230,9 @@ describe('UsersService Unit Tests', () => {
 
     // Tests the remove function (Successful remove)
     it('should remove created user', async () => {
+      console.log(userID);
       const removedUser = await usersService.remove(userID, DELETE_USER_DTO_TEST_OBJ);
-      expect(removedUser.email).toEqual(UPDATE_USER_DTO_TEST_OBJ.email);
+      expect(removedUser.email).toEqual(CREATE_USER_DTO_TEST_OBJ.email);
     });
   });
 })
