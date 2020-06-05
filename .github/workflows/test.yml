@@ -31,8 +31,6 @@ jobs:
          npx sequelize-cli db:create
          npx sequelize-cli db:migrate
          npm run test
-     - name: Run e2e tests
-       run: npm run test:e2e
 
      - name: Run test coverage
        run: npm run test:cov
