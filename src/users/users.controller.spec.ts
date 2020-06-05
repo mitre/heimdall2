@@ -1,4 +1,4 @@
-import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { NotFoundException, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
@@ -53,11 +53,11 @@ describe('UsersController Unit Tests', () => {
     // Tests the findById function with ID that is 'not found'
     it('should test findById with invalid ID', async () => {
       jest.spyOn(usersService, 'findById').mockImplementation(() => {
-        throw new NotFoundException('User with given id not found');
+        throw new NotFoundException();
       });
       expect(async () => {
         await usersController.findById(ID);
-      }).rejects.toThrowError('User with given id not found');
+      }).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -71,31 +71,31 @@ describe('UsersController Unit Tests', () => {
     // Tests the create function with dto that is missing email
     it('should test the create function with missing email field', async () => {
       jest.spyOn(usersService, 'create').mockImplementation(() => {
-        throw new Error('User.email cannot be null');
+        throw new BadRequestException();
       });
       expect(async () => {
         await usersController.create(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD);
-      }).rejects.toThrowError('User.email cannot be null');
+      }).rejects.toThrow(BadRequestException);
     });
 
     // Tests the create function with dto that is missing password
     it('should test the create function with missing password field', async () => {
       jest.spyOn(usersService, 'create').mockImplementation(() => {
-        throw new UnauthorizedException('data and salt arguments required');
+        throw new BadRequestException();
       });
       expect(async () => {
         await usersController.create(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD);
-      }).rejects.toThrowError('data and salt arguments required');
+      }).rejects.toThrow(BadRequestException);
     });
 
     // Tests the create function with dto that is missing passwordConfirmation
     it('should test the create function with missing password confirmation field', async () => {
       jest.spyOn(usersService, 'create').mockImplementation(() => {
-        throw new UnauthorizedException('data and salt arguments required');
+        throw new BadRequestException();
       });
       expect(async () => {
         await usersController.create(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD);
-      }).rejects.toThrowError('data and salt arguments required');
+      }).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -109,21 +109,21 @@ describe('UsersController Unit Tests', () => {
     // Tests the update function with ID that is 'not found'
     it('should test update function with invalid ID', async () => {
       jest.spyOn(usersService, 'update').mockImplementation(() => {
-        throw new NotFoundException('User with given id not found');
+        throw new NotFoundException();
       });
       expect(async () => {
         await usersController.update(ID, UPDATE_USER_DTO_TEST_OBJ);
-      }).rejects.toThrowError('User with given id not found');
+      }).rejects.toThrow(NotFoundException);
     });
 
     // Tests the update function with dto that is missing currentPassword
     it('should test the update function with a dto that is missing currentPassword field', async () => {
       jest.spyOn(usersService, 'update').mockImplementation(() => {
-        throw new UnauthorizedException('data and salt arguments required');
+        throw new BadRequestException();
       });
       expect(async () => {
         await usersController.update(ID, UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD);
-      }).rejects.toThrowError('data and salt arguments required');
+      }).rejects.toThrow(BadRequestException);
     });
   });
 
@@ -137,21 +137,21 @@ describe('UsersController Unit Tests', () => {
     // Tests the remove function with ID that is 'not found'
     it('should test remove function with invalid ID', async () => {
       jest.spyOn(usersService, 'remove').mockImplementation(() => {
-        throw new NotFoundException('User with given id not found');
+        throw new NotFoundException();
       });
       expect(async () => {
         await usersController.remove(ID, DELETE_USER_DTO_TEST_OBJ);
-      }).rejects.toThrowError('User with given id not found');
+      }).rejects.toThrow(NotFoundException);
     });
 
     // Tests the remove function with dto that is missing password
     it('should test remove function with a dto that is missing password field', async () => {
       jest.spyOn(usersService, 'remove').mockImplementation(() => {
-        throw new UnauthorizedException('data and salt arguments required');
+        throw new BadRequestException();
       });
       expect(async () => {
         await usersController.remove(ID, DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD);
-      }).rejects.toThrowError('data and salt arguments required');
+      }).rejects.toThrow(BadRequestException);
     });
   });
 });
