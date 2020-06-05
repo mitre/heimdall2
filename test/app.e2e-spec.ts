@@ -29,7 +29,7 @@ describe('AppController (e2e)', () => {
   //     it("should test create function when passwords do not match", async () => {
   //         expect.assertions(2);
   //         try {
-  //             await usersController.create(consts.CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS);
+  //             await usersController.create(CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS);
   //         }
   //         catch(e) {
   //             expect(e).toBeInstanceOf(BadRequestException);

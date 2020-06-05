@@ -1,8 +1,8 @@
-import { CreateUserDto } from './users/dto/create-user.dto';
-import { UpdateUserDto } from './users/dto/update-user.dto';
-import { DeleteUserDto } from './users/dto/delete-user.dto';
-import { User } from './users/user.model';
-import { UserDto } from './users/dto/user.dto';
+import { CreateUserDto } from '../src/users/dto/create-user.dto';
+import { UpdateUserDto } from '../src/users/dto/update-user.dto';
+import { DeleteUserDto } from '../src/users/dto/delete-user.dto';
+import { User } from '../src/users/user.model';
+import { UserDto } from '../src/users/dto/user.dto';
 
 export const ID = 7;
 
@@ -371,7 +371,7 @@ export const USER_DTO_ARRAY: UserDto[] = [USER_ONE_DTO, USER_TWO_DTO];
 //     expect(user.title).toEqual(USER_ONE_DTO.title);
 //     expect(user.organization).toEqual(USER_ONE_DTO.organization);
 
-//     /* The id of the test constant is undefined, so if 
+//     /* The id of the test constant is undefined, so if
 //         create is successful, the id's should not be equal */
 //     let idFlag: boolean;
 //     if (user.id != USER_ONE_DTO.id)
