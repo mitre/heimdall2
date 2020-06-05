@@ -2,7 +2,9 @@ name: Test
 
 on:
   push:
-    branches: [ ss-testing-pipeline ]
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   build:
