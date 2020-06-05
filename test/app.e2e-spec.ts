@@ -18,22 +18,4 @@ describe('AppController (e2e)', () => {
   afterAll(() => {
     app.close();
   });
-
-  it('/ (GET)', () => {
-    // return request(app.getHttpServer())
-    //   .get('/')
-    //   .expect(200)
-    //   .expect('Hello World!');
-  });
-
-  //     it("should test create function when passwords do not match", async () => {
-  //         expect.assertions(2);
-  //         try {
-  //             await usersController.create(CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS);
-  //         }
-  //         catch(e) {
-  //             expect(e).toBeInstanceOf(BadRequestException);
-  //             expect(e.message).toBe("Passwords do not match");
-  //         }
-  //     });
 });
