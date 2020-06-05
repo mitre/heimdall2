@@ -8,10 +8,10 @@ export const databaseProviders = [
     inject: [ConfigService],
     useFactory: (configService: ConfigService) => ({
       dialect: 'postgres',
-      host: configService.get('DATABASE_HOST') || "127.0.0.1",
+      host: configService.get('DATABASE_HOST') || '127.0.0.1',
       port: Number(configService.get('DATABASE_PORT')) || 5432,
-      username: configService.get('DATABASE_USERNAME') || "postgres",
-      password: configService.get('DATABASE_PASSWORD') || "",
+      username: configService.get('DATABASE_USERNAME') || 'postgres',
+      password: configService.get('DATABASE_PASSWORD') || '',
       database: configService.get('DATABASE_NAME') || `heimdall-server-${ configService.get('NODE_ENV').toLowerCase() }`,
       autoLoadModels: true,
       synchronize: true,
