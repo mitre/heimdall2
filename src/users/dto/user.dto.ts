@@ -8,6 +8,8 @@ export class UserDto {
   readonly title: string;
   readonly role: string;
   readonly organization: string;
+  readonly loginCount: number;
+  readonly lastLogin: Date;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -19,6 +21,8 @@ export class UserDto {
     this.title = user.title;
     this.role = user.role;
     this.organization = user.organization;
+    this.loginCount = user.loginCount;
+    this.lastLogin = user.lastLogin;
     this.createdAt = user.createdAt;
     this.updatedAt = user.updatedAt;
   }

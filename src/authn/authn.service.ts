@@ -14,6 +14,7 @@ export class AuthnService {
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.usersService.findModelByEmail(email);
     if(user && (await compare(password, user.encryptedPassword))) {
+      this.usersService.updateLoginMetadata(user);
       return new UserDto(user);
     } else {
       return null;

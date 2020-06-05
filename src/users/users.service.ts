@@ -76,6 +76,12 @@ export class UsersService {
     return new UserDto(userData);
   }
 
+  async updateLoginMetadata(user: User) {
+    user.lastLogin = new Date();
+    user.loginCount++;
+    user.save();
+  }
+
   async remove(id: number, deleteUserDto: DeleteUserDto) {
     const user = await this.userModel.findByPk<User>(id);
     this.exists(user);
