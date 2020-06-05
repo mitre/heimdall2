@@ -60,16 +60,10 @@ describe('UsersService Unit Tests', () => {
 
       /* The id of the test constant is undefined, so if 
           create is successful, the id's should not be equal */
-      let idFlag: boolean;
-      if (user.id != consts.USER_ONE_DTO.id)
-        idFlag = false;
-      expect(idFlag).toBe(false);
+      expect((user.id == consts.USER_ONE_DTO.id)).toBeFalsy();
 
       // If create is successful, these two values should not be equal
-      let updateFlag: boolean;
-      if (user.updatedAt.valueOf() != consts.USER_ONE_DTO.updatedAt.valueOf())
-        updateFlag = false;
-      expect(updateFlag).toBe(false);
+      expect((user.updatedAt.valueOf() == consts.USER_ONE_DTO.updatedAt.valueOf())).toBeFalsy();
     });
 
     // Tests the create function with dto that has no email field
@@ -118,10 +112,7 @@ describe('UsersService Unit Tests', () => {
 
       /* The id of the test constant is undefined, so if 
           findAll is successful, the id's should not be equal */
-      let idFlag: boolean;
-      if (userdtoArray[userdtoArray.length - 1].id != consts.USER_ONE_DTO.id)
-        idFlag = false;
-      expect(idFlag).toBe(false);
+      expect((userdtoArray[userdtoArray.length - 1].id == consts.USER_ONE_DTO.id)).toBeFalsy();
     });
   });
 
@@ -142,10 +133,7 @@ describe('UsersService Unit Tests', () => {
 
       /* The id of the test constant is undefined, so if 
           findById is successful, the id's should not be equal */
-      let idFlag: boolean;
-      if (user.id != consts.USER_ONE_DTO.id)
-        idFlag = false;
-      expect(idFlag).toBe(false);
+      expect((user.id == consts.USER_ONE_DTO.id)).toBeFalsy();
     });
   });
 
@@ -166,10 +154,7 @@ describe('UsersService Unit Tests', () => {
 
       /* The id of the test constant is undefined, so if 
           findByEmail is successful, the id's should not be equal */
-      let idFlag: boolean;
-      if (user.id != consts.USER_ONE_DTO.id)
-        idFlag = false;
-      expect(idFlag).toBe(false);
+      expect((user.id == consts.USER_ONE_DTO.id)).toBeFalsy();
     });
   });
 
@@ -185,10 +170,7 @@ describe('UsersService Unit Tests', () => {
       expect(updatedUser.organization).toEqual(consts.UPDATE_USER_DTO_TEST_OBJ.organization);
 
       // If create is successful, these two values should not be equal
-      let updateFlag: boolean;
-      if (updatedUser.updatedAt.valueOf() != consts.USER_ONE_DTO.updatedAt.valueOf())
-        updateFlag = false;
-      expect(updateFlag).toBe(false);
+      expect((updatedUser.updatedAt.valueOf() == consts.USER_ONE_DTO.updatedAt.valueOf())).toBeFalsy();
     });
 
     // Tests the update function with dto that has invalid email field
