@@ -22,9 +22,17 @@ export class AuthzService {
     }
   }
 
-  async can(action, resource): Promise<boolean> {
+  async can(subject, action, resource): Promise<boolean> {
+    if(subject.role == 'admin') {
+      return true;
+    }
     resource = resource.split('/')[1];
-    const answer = await this.abac.can({role: 'admin'}, action, resource, {});
+    const answer = await this.abac.can(
+      { role: subject.role },
+      action,
+      resource,
+      {}
+    );
     return answer.granted;
   }
 }

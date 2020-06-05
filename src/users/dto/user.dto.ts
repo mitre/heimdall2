@@ -6,6 +6,7 @@ export class UserDto {
   readonly firstName: string;
   readonly lastName: string;
   readonly title: string;
+  readonly role: string;
   readonly organization: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -16,6 +17,7 @@ export class UserDto {
     this.firstName = user.firstName;
     this.lastName = user.lastName;
     this.title = user.title;
+    this.role = user.role;
     this.organization = user.organization;
     this.createdAt = user.createdAt;
     this.updatedAt = user.updatedAt;
