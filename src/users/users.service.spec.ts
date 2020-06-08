@@ -21,7 +21,8 @@ import {
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD,
   UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
-  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD
+  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD,
+  UPDATED_TEST_USER
 } from '../../test/test.constants';
 
 describe('UsersService Unit Tests', () => {
@@ -230,9 +231,12 @@ describe('UsersService Unit Tests', () => {
 
     // Tests the remove function (Successful remove)
     it('should remove created user', async () => {
-      console.log(userID);
       const removedUser = await usersService.remove(userID, DELETE_USER_DTO_TEST_OBJ);
-      expect(removedUser.email).toEqual(CREATE_USER_DTO_TEST_OBJ.email);
+      expect(removedUser.email).toEqual(UPDATE_USER_DTO_TEST_OBJ.email);
+      expect(removedUser.firstName).toEqual(UPDATE_USER_DTO_TEST_OBJ.firstName);
+      expect(removedUser.lastName).toEqual(UPDATE_USER_DTO_TEST_OBJ.lastName);
+      expect(removedUser.organization).toEqual(UPDATE_USER_DTO_TEST_OBJ.organization);
+      expect(removedUser.title).toEqual(UPDATE_USER_DTO_TEST_OBJ.title);
     });
   });
 })
