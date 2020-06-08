@@ -2,9 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from './user.model';
 import { UsersService } from './users.service';
-import { ConfigModule } from '../../src/config/config.module';
-import { ConfigService } from '../../src/config/config.service';
+import { DatabaseModule } from '../database/database.module';
+import { ConfigModule } from '../config/config.module';
 import { UnauthorizedException } from '@nestjs/common';
+import { TestHelperModule } from '../../test/helpers/test-helper.module';
+import { TestHelperService } from '../../test/helpers/test-helper.service';
 import {
   NULL_USER,
   TEST_USER,
@@ -27,36 +29,26 @@ import {
 
 describe('UsersService Unit Tests', () => {
   let usersService: UsersService;
-  let module: TestingModule;
-  // Used for the remove() function
+  let testHelperService: TestHelperService;
   let userID: number;
 
-  beforeAll(async () => {
-    module = await Test.createTestingModule({
+  beforeEach(async () => {
+    const module = await Test.createTestingModule({
       imports: [
-        SequelizeModule.forRootAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: (configService: ConfigService) => ({
-            dialect: 'postgres',
-            host: configService.get('DATABASE_HOST') || '127.0.0.1',
-            port: Number(configService.get('DATABASE_PORT')) || 5432,
-            username: configService.get('DATABASE_USERNAME') || 'postgres',
-            password: configService.get('DATABASE_PASSWORD') || '',
-            database: configService.get('DATABASE_NAME') || `heimdall-server-${configService.get('NODE_ENV').toLowerCase()}`,
-            models: [User],
-          }),
-        }),
+        DatabaseModule,
+        TestHelperModule,
+        ConfigModule,
         SequelizeModule.forFeature([User])
       ],
-      providers: [UsersService,],
+      providers: [
+        UsersService,
+        TestHelperService
+      ],
     }).compile();
 
+    testHelperService = module.get<TestHelperService>(TestHelperService);
+    await testHelperService.cleanAll();
     usersService = module.get<UsersService>(UsersService);
-  });
-
-  afterAll((done) => {
-    module.close();
   });
 
   // Checks to make sure the exists function throws exception for non-existant user
