@@ -38,9 +38,6 @@ jobs:
          npx sequelize-cli db:create
          npx sequelize-cli db:migrate
 
-     - name: Run unit tests
-       run: npm run test
-
      - name: Run test coverage
        run: npm run test:cov
 
