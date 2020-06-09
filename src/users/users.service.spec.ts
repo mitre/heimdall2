@@ -18,6 +18,8 @@ import {
   CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
+  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD,
+  CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS,
 } from '../../test/test.constants';
 import { DatabaseService } from '../database/database.service';
 
@@ -192,5 +194,9 @@ describe('UsersService', () => {
       expect(removedUser.title).toEqual(user.title);
       await expect(usersService.findByEmail(user.email)).rejects.toThrow(NotFoundException);
     });
+  });
+
+  afterAll(async () => {
+    await databaseService.closeConnection();
   });
 });
