@@ -10,6 +10,10 @@ export class TestHelperService {
     }
   }
 
+  async closeConnection() {
+    this.databaseService.closeConnection();
+  }
+
   async cleanAll() {
     this.databaseService.cleanAll();
   }

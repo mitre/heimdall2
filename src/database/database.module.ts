@@ -17,7 +17,8 @@ import { ConfigService } from '../config/config.service';
         password: configService.get('DATABASE_PASSWORD') || '',
         database: configService.get('DATABASE_NAME') || `heimdall-server-${ configService.get('NODE_ENV').toLowerCase() }`,
         autoLoadModels: true,
-        synchronize: true,
+        synchronize: configService.get('NODE_ENV').toLowerCase() == 'test' ? false : true,
+        logging: false,
         pool: {
           max: 5,
           min: 0,

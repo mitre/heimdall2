@@ -3,6 +3,7 @@ import { UpdateUserDto } from '../src/users/dto/update-user.dto';
 import { DeleteUserDto } from '../src/users/dto/delete-user.dto';
 import { User } from '../src/users/user.model';
 import { UserDto } from '../src/users/dto/user.dto';
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
 
 export const ID = 7;
 
@@ -119,6 +120,16 @@ export const CREATE_USER_DTO_TEST_OBJ: CreateUserDto = {
   title: 'fake title',
   organization: 'Fake Org',
 };
+
+export const CREATE_USER_DTO_TEST_OBJ_2: CreateUserDto = {
+  email: 'def@yahoo.com',
+  password: 'Letmein123',
+  passwordConfirmation: 'Letmein123',
+  firstName: 'Test',
+  lastName: 'Dummy',
+  title: 'fake title',
+  organization: 'Fake Org'
+}
 
 export const CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS: CreateUserDto = {
   email: 'abc@yahoo.com',
@@ -337,7 +348,7 @@ export const DELETE_USER_DTO_TEST_OBJ: DeleteUserDto = {
   password: 'Letmein123'
 };
 
-export const DELETE_FAILRE_USER_DTO_TEST_OBJ: DeleteUserDto = {
+export const DELETE_FAILURE_USER_DTO_TEST_OBJ: DeleteUserDto = {
   password: 'Letmein12'
 };
 
@@ -363,3 +374,4 @@ export const USER_DTO_WITHOUT_ORGANIZATION = new UserDto(TEST_USER_WITHOUT_ORGAN
 export const USER_DTO_WITHOUT_TITLE = new UserDto(TEST_USER_WITHOUT_TITLE);
 
 export const USER_DTO_ARRAY: UserDto[] = [USER_ONE_DTO, USER_TWO_DTO];
+/* eslint-enable @typescript-eslint/ban-ts-ignore */

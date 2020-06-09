@@ -1,177 +1,139 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
+import { DatabaseModule } from '../database/database.module';
+import { UsersService } from './users.service';
+import { NotFoundException, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from './user.model';
-import { UsersService } from './users.service';
-import { DatabaseModule } from '../database/database.module';
-import { ConfigModule } from '../config/config.module';
-import { UnauthorizedException } from '@nestjs/common';
-import { TestHelperModule } from '../../test/helpers/test-helper.module';
-import { TestHelperService } from '../../test/helpers/test-helper.service';
 import {
-  NULL_USER,
   TEST_USER,
   USER_ONE_DTO,
-  USER_DTO_ARRAY,
   CREATE_USER_DTO_TEST_OBJ,
   DELETE_USER_DTO_TEST_OBJ,
   UPDATE_USER_DTO_TEST_OBJ,
-  DELETE_FAILRE_USER_DTO_TEST_OBJ,
+  CREATE_USER_DTO_TEST_OBJ_2,
+  DELETE_FAILURE_USER_DTO_TEST_OBJ,
   UPDATE_FAILURE_USER_DTO_TEST_OBJ,
   UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL,
   DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD,
   CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD,
-  UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
-  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD,
-  UPDATED_TEST_USER
 } from '../../test/test.constants';
+import { DatabaseService } from '../database/database.service';
 
-describe('UsersService Unit Tests', () => {
+describe('UsersService', () => {
   let usersService: UsersService;
-  let testHelperService: TestHelperService;
-  let userID: number;
+  let databaseService: DatabaseService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [
-        DatabaseModule,
-        TestHelperModule,
-        ConfigModule,
-        SequelizeModule.forFeature([User])
-      ],
-      providers: [
-        UsersService,
-        TestHelperService
-      ],
+      imports: [DatabaseModule, SequelizeModule.forFeature([User])],
+      providers: [UsersService, DatabaseService]
     }).compile();
 
-    testHelperService = module.get<TestHelperService>(TestHelperService);
-    await testHelperService.cleanAll();
     usersService = module.get<UsersService>(UsersService);
+    databaseService = module.get<DatabaseService>(DatabaseService);
   });
 
-  // Checks to make sure the exists function throws exception for non-existant user
-  it('should throw NotFoundException from exists function', () => {
-    expect(() => { usersService.exists(NULL_USER) }).toThrow('User with given id not found');
+  beforeEach(() => {
+    return databaseService.cleanAll();
   });
 
-  describe('Create function', () => {
-    // Tests the create function
-    it('should create', async () => {
+  describe('exists', () => {
+    it('throws an error when null', () => {
+      expect(() => {
+        usersService.exists(null)
+      }).toThrow(NotFoundException);
+    });
+
+    it('returns true when given a User', () => {
+      expect(() => {
+        usersService.exists(TEST_USER)
+      }).toBeTruthy();
+    });
+  });
+
+  describe('Create', () => {
+    it('should create a valid User', async () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      userID = user.id;
-
+      expect(user.id).toBeDefined;
       expect(user.email).toEqual(USER_ONE_DTO.email);
       expect(user.firstName).toEqual(USER_ONE_DTO.firstName);
       expect(user.lastName).toEqual(USER_ONE_DTO.lastName);
       expect(user.title).toEqual(USER_ONE_DTO.title);
       expect(user.organization).toEqual(USER_ONE_DTO.organization);
-
-      /* The id of the test constant is undefined, so if
-          create is successful, the id's should not be equal */
-      expect((user.id == USER_ONE_DTO.id)).toBeFalsy();
-
-      // If create is successful, these two values should not be equal
-      expect((user.updatedAt.valueOf() == USER_ONE_DTO.updatedAt.valueOf())).toBeFalsy();
+      expect(user.updatedAt.valueOf()).not.toBe(USER_ONE_DTO.updatedAt.valueOf());
     });
 
-    // Tests the create function with dto that has no email field
-    it('should test create function with missing email field', async () => {
-      expect(async () => {
-        await usersService.create(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD)
-      }).rejects.toThrowError('notNull Violation: User.email cannot be null');
+    it('should throw an error when missing the email field', async () => {
+      expect.assertions(1);
+      await expect(usersService.create(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD)).rejects.toThrow('notNull Violation: User.email cannot be null');
     });
 
-    // Tests the create function with dto that has invalid email field
-    it('should test create function with invalid email field', async () => {
-      expect(async () => {
-        await usersService.create(CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD)
-      }).rejects.toThrowError('Validation isEmail on email failed');
+    it('should throw an error when email field is invalid', async () => {
+      expect.assertions(1);
+      await expect(usersService.create(CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD)).rejects.toThrow('Validation isEmail on email failed');
     });
 
-    // Tests the create function with dto that has no password field
-    it('should test create function with missing password field', async () => {
-      expect(async () => {
-        await usersService.create(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD)
-      }).rejects.toThrowError('data and salt arguments required');
-    });
-
-    // Tests the create function with dto that has no passwordConfirmation field
-    it('should test create function with missing password confirmation field', async () => {
-      expect(async () => {
-        await usersService.create(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD)
-      }).rejects.toThrowError('Validation error');
+    it('should throw an error when missing the password field', async () => {
+      expect.assertions(1);
+      await expect(usersService.create(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD)).rejects.toThrow(BadRequestException);
     });
   });
 
-  describe('FindAll function', () => {
-    // Tests the findAll function
-    it('should findAll', async () => {
-      const userdtoArray = await usersService.findAll();
-
-      expect(userdtoArray[userdtoArray.length - 1].email).toEqual(USER_DTO_ARRAY[0].email);
-      expect(userdtoArray[userdtoArray.length - 1].firstName).toEqual(USER_DTO_ARRAY[0].firstName);
-      expect(userdtoArray[userdtoArray.length - 1].lastName).toEqual(USER_DTO_ARRAY[0].lastName);
-      expect(userdtoArray[userdtoArray.length - 1].title).toEqual(USER_DTO_ARRAY[0].title);
-      expect(userdtoArray[userdtoArray.length - 1].organization).toEqual(USER_DTO_ARRAY[0].organization);
-
-      /* Expect that the dates equals each other for the createdAt value. Can't just see
-          if the createdAt equal eachother due to time created being off by a couple of seconds */
-      expect(userdtoArray[userdtoArray.length - 1].createdAt.getDate()).toEqual(USER_DTO_ARRAY[0].createdAt.getDate());
-
-      /* The id of the test constant is undefined, so if
-          findAll is successful, the id's should not be equal */
-      expect((userdtoArray[userdtoArray.length - 1].id == USER_ONE_DTO.id)).toBeFalsy();
+  describe('FindAll', () => {
+    it('should find all users', async () => {
+      const userOne = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const userTwo = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
+      const userDtoArray = await usersService.findAll();
+      expect(userDtoArray).toContainEqual(userOne);
+      expect(userDtoArray).toContainEqual(userTwo);
     });
   });
 
-  describe('FindById function', () => {
-    // Tests the findById function
-    it('should findById', async () => {
-      const user = await usersService.findById(userID);
+  describe('FindById', () => {
+    it('should find users by id', async () => {
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const foundUser = await usersService.findById(user.id);
+      expect(foundUser.email).toEqual(user.email);
+      expect(foundUser.firstName).toEqual(user.firstName);
+      expect(foundUser.lastName).toEqual(user.lastName);
+      expect(foundUser.title).toEqual(user.title);
+      expect(foundUser.organization).toEqual(user.organization);
+      expect(foundUser.createdAt.valueOf()).toEqual(user.createdAt.valueOf());
+      expect(foundUser.id).toEqual(user.id);
+    });
 
-      expect(user.email).toEqual(USER_ONE_DTO.email);
-      expect(user.firstName).toEqual(USER_ONE_DTO.firstName);
-      expect(user.lastName).toEqual(USER_ONE_DTO.lastName);
-      expect(user.title).toEqual(USER_ONE_DTO.title);
-      expect(user.organization).toEqual(USER_ONE_DTO.organization);
-
-      /* Expect that the dates equals each other for the createdAt value. Can't just see
-          if the createdAt equal eachother due to time created being off by a couple of seconds */
-      expect(user.createdAt.getDate()).toEqual(USER_ONE_DTO.createdAt.getDate());
-
-      /* The id of the test constant is undefined, so if
-          findById is successful, the id's should not be equal */
-      expect((user.id == USER_ONE_DTO.id)).toBeFalsy();
+    it('should throw an error if user does not exist', async () => {
+      expect.assertions(1);
+      await expect(usersService.findById(-1)).rejects.toThrow(NotFoundException);
     });
   });
 
-  describe('FindByEmail function', () => {
-    // Tests the findByEmail function
-    it('should findByEmail', async () => {
-      const user = await usersService.findByEmail(TEST_USER.email)
+  describe('FindByEmail', () => {
+    it('should find users by email', async () => {
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const foundUser = await usersService.findByEmail(user.email)
+      expect(foundUser.email).toEqual(user.email);
+      expect(foundUser.firstName).toEqual(user.firstName);
+      expect(foundUser.lastName).toEqual(user.lastName);
+      expect(foundUser.title).toEqual(user.title);
+      expect(foundUser.organization).toEqual(user.organization);
+      expect(foundUser.createdAt.valueOf()).toEqual(user.createdAt.valueOf());
+      expect(foundUser.id).toEqual(user.id);
+    });
 
-      expect(user.email).toEqual(USER_ONE_DTO.email);
-      expect(user.firstName).toEqual(USER_ONE_DTO.firstName);
-      expect(user.lastName).toEqual(USER_ONE_DTO.lastName);
-      expect(user.title).toEqual(USER_ONE_DTO.title);
-      expect(user.organization).toEqual(USER_ONE_DTO.organization);
-
-      /* Expect that the dates equals each other for the createdAt value. Can't just see
-          if the createdAt equal eachother due to time created being off by a couple of seconds */
-      expect(user.createdAt.getDate()).toEqual(USER_ONE_DTO.createdAt.getDate());
-
-      /* The id of the test constant is undefined, so if
-          findByEmail is successful, the id's should not be equal */
-      expect((user.id == USER_ONE_DTO.id)).toBeFalsy();
+    it('should throw an error if user does not exist', async () => {
+      expect.assertions(1);
+      await expect(usersService.findByEmail('doesnotexist@example.com')).rejects.toThrow(NotFoundException);
     });
   });
 
-  describe('Update function', () => {
+  describe('Update', () => {
     // Tests the update function (Successful update)
-    it('should update everything', async () => {
-      const updatedUser = await usersService.update(userID, UPDATE_USER_DTO_TEST_OBJ);
+    it('should update a user', async () => {
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const updatedUser = await usersService.update(user.id, UPDATE_USER_DTO_TEST_OBJ);
 
       expect(updatedUser.email).toEqual(UPDATE_USER_DTO_TEST_OBJ.email);
       expect(updatedUser.firstName).toEqual(UPDATE_USER_DTO_TEST_OBJ.firstName);
@@ -179,56 +141,56 @@ describe('UsersService Unit Tests', () => {
       expect(updatedUser.title).toEqual(UPDATE_USER_DTO_TEST_OBJ.title);
       expect(updatedUser.organization).toEqual(UPDATE_USER_DTO_TEST_OBJ.organization);
 
-      // If create is successful, these two values should not be equal
-      expect((updatedUser.updatedAt.valueOf() == USER_ONE_DTO.updatedAt.valueOf())).toBeFalsy();
+      expect(updatedUser.email).not.toEqual(user.email);
+      expect(updatedUser.firstName).not.toEqual(user.firstName);
+      expect(updatedUser.lastName).not.toEqual(user.lastName);
+      expect(updatedUser.title).not.toEqual(user.title);
+      expect(updatedUser.organization).not.toEqual(user.organization);
+      expect(updatedUser.updatedAt.valueOf()).not.toEqual(user.updatedAt.valueOf());
     });
 
-    // Tests the update function with dto that has invalid email field
-    it('should test update function with invalid email field', async () => {
-      expect(async () => {
-        await usersService.update(userID, UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL)
-      }).rejects.toThrowError('Validation error: Validation isEmail on email failed');
+    it('should throw an error when the email is invalid', async () => {
+      expect.assertions(1);
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      await expect(usersService.update(user.id, UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL)).rejects.toThrow('Validation error: Validation isEmail on email failed');
     });
 
-    // Tests the update function with dto that has no currentPassword field
-    it('should test the update function with no current password field', async () => {
-      expect(async () => {
-        await usersService.update(userID, UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD)
-      }).rejects.toThrowError('data and hash arguments required');
-    });
-
-    // Tests the update function with mismatching passwords (Fail update)
-    it('should test the update function with mismatching password fields', async () => {
-      expect(async () => {
-        await usersService.update(userID, UPDATE_FAILURE_USER_DTO_TEST_OBJ)
-      }).rejects.toThrowError(UnauthorizedException);
+    it('should throw an error when password fields do not match', async () => {
+      expect.assertions(1);
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      await expect(usersService.update(user.id, UPDATE_FAILURE_USER_DTO_TEST_OBJ)).rejects.toThrow(UnauthorizedException);
     });
   });
 
+  describe('Remove', () => {
+    it('should throw an error when user does not exist', async () => {
+      expect.assertions(1);
+      await expect(usersService.remove(1, DELETE_USER_DTO_TEST_OBJ)).rejects.toThrow(NotFoundException);
+    });
 
-  describe('Remove function', () => {
-    // Tests the remove function with DeleteUserDto that has mismatching password
-    it('should test the remove function with mismatching password fields', async () => {
-      expect(async () => {
-        await usersService.remove(userID, DELETE_FAILRE_USER_DTO_TEST_OBJ)
-      }).rejects.toThrowError(UnauthorizedException);
+    it('should throw an error when password fields do not match', async () => {
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      expect.assertions(1);
+      await expect(usersService.remove(user.id, DELETE_FAILURE_USER_DTO_TEST_OBJ)).rejects.toThrow(UnauthorizedException);
     });
 
     // Tests the remove function with DeleteUserDto that has no password field
-    it('should test the remove function with no password field', async () => {
-      expect(async () => {
-        await usersService.remove(userID, DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD)
-      }).rejects.toThrowError('data and hash arguments required');
+    it('should throw an error when password field is blank', async () => {
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      expect.assertions(1);
+      await expect(usersService.remove(user.id, DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD)).rejects.toThrow(UnauthorizedException);
     });
 
-    // Tests the remove function (Successful remove)
     it('should remove created user', async () => {
-      const removedUser = await usersService.remove(userID, DELETE_USER_DTO_TEST_OBJ);
-      expect(removedUser.email).toEqual(UPDATE_USER_DTO_TEST_OBJ.email);
-      expect(removedUser.firstName).toEqual(UPDATE_USER_DTO_TEST_OBJ.firstName);
-      expect(removedUser.lastName).toEqual(UPDATE_USER_DTO_TEST_OBJ.lastName);
-      expect(removedUser.organization).toEqual(UPDATE_USER_DTO_TEST_OBJ.organization);
-      expect(removedUser.title).toEqual(UPDATE_USER_DTO_TEST_OBJ.title);
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const removedUser = await usersService.remove(user.id, DELETE_USER_DTO_TEST_OBJ);
+      expect.assertions(6);
+      expect(removedUser.email).toEqual(user.email);
+      expect(removedUser.firstName).toEqual(user.firstName);
+      expect(removedUser.lastName).toEqual(user.lastName);
+      expect(removedUser.organization).toEqual(user.organization);
+      expect(removedUser.title).toEqual(user.title);
+      await expect(usersService.findByEmail(user.email)).rejects.toThrow(NotFoundException);
     });
   });
-})
+});
