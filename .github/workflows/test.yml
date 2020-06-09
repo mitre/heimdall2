@@ -39,7 +39,6 @@ jobs:
 
      - name: Create/migrate db
        run: |
-         npx sequelize-cli db:create
          npx sequelize-cli db:migrate
 
      - name: Run test coverage
