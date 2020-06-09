@@ -166,6 +166,17 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD: CreateUserDto = 
 };
 
 // @ts-ignore
+export const CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD: CreateUserDto = {
+    email: "NotAValidEmail",
+    password: "Letmein123",
+    passwordConfirmation: "Letmein123",
+    firstName: "Test",
+    lastName: "Dummy",
+    title: "fake title",
+    organization: "Fake Org",
+};
+
+// @ts-ignore
 export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD: CreateUserDto = {
     email: "abc@yahoo.com",
     passwordConfirmation: "Letmein123",
@@ -198,6 +209,18 @@ export const UPDATE_USER_DTO_TEST_OBJ: UpdateUserDto = {
 
 // @ts-ignore
 export const UPDATE_USER_DTO_TEST_WITHOUT_EMAIL: UpdateUserDto = {
+    firstName: "Test",
+    lastName: "Dummy",
+    organization: "Fake Org",
+    title: "fake title",
+    password: "Letmein123",
+    passwordConfirmation: "Letmein123",
+    currentPassword: "Letmein123"
+};
+
+// @ts-ignore
+export const UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL: UpdateUserDto = {
+    email: "NotAValidEmail",
     firstName: "Test",
     lastName: "Dummy",
     organization: "Fake Org",
