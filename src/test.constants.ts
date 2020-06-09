@@ -16,6 +16,8 @@ export const TEST_USER: User = {
     // Encrypted password should match password, 'Letmein123'
     encryptedPassword: "$2b$14$qXq14f2Ttm/Sj2XiIQu3pub67ZkZ.vOalKSSjOiFCkvMZmn5y6Eiy",
     organization: "Fake Org",
+    createdAt: new Date(),
+    updatedAt: new Date()
 }
 
 // @ts-ignore
@@ -27,6 +29,8 @@ export const TEST_USER_WITHOUT_EMAIL: User = {
     // Encrypted password should match password, 'Letmein123'
     encryptedPassword: "$2b$14$qXq14f2Ttm/Sj2XiIQu3pub67ZkZ.vOalKSSjOiFCkvMZmn5y6Eiy",
     organization: "Fake Org",
+    createdAt: new Date(),
+    updatedAt: new Date()
 }
 
 // @ts-ignore
@@ -38,6 +42,8 @@ export const TEST_USER_WITHOUT_FIRST_NAME: User = {
     // Encrypted password should match password, 'Letmein123'
     encryptedPassword: "$2b$14$qXq14f2Ttm/Sj2XiIQu3pub67ZkZ.vOalKSSjOiFCkvMZmn5y6Eiy",
     organization: "Fake Org",
+    createdAt: new Date(),
+    updatedAt: new Date()
 }
 
 // @ts-ignore
@@ -49,6 +55,8 @@ export const TEST_USER_WITHOUT_LAST_NAME: User = {
     // Encrypted password should match password, 'Letmein123'
     encryptedPassword: "$2b$14$qXq14f2Ttm/Sj2XiIQu3pub67ZkZ.vOalKSSjOiFCkvMZmn5y6Eiy",
     organization: "Fake Org",
+    createdAt: new Date(),
+    updatedAt: new Date()
 }
 
 // @ts-ignore
@@ -60,6 +68,8 @@ export const TEST_USER_WITHOUT_ORGANIZATION: User = {
     title: "fake title",
     // Encrypted password should match password, 'Letmein123'
     encryptedPassword: "$2b$14$qXq14f2Ttm/Sj2XiIQu3pub67ZkZ.vOalKSSjOiFCkvMZmn5y6Eiy",
+    createdAt: new Date(),
+    updatedAt: new Date()
 }
 
 // @ts-ignore
@@ -71,6 +81,8 @@ export const TEST_USER_WITHOUT_TITLE: User = {
     // Encrypted password should match password, 'Letmein123'
     encryptedPassword: "$2b$14$qXq14f2Ttm/Sj2XiIQu3pub67ZkZ.vOalKSSjOiFCkvMZmn5y6Eiy",
     organization: "Fake Org",
+    createdAt: new Date(),
+    updatedAt: new Date()
 }
 
 export const NULL_USER: User = null;
@@ -309,4 +321,25 @@ export const USER_DTO_WITHOUT_ORGANIZATION = new UserDto(TEST_USER_WITHOUT_ORGAN
 
 export const USER_DTO_WITHOUT_TITLE = new UserDto(TEST_USER_WITHOUT_TITLE);
 
-export const USER_DTO_ARRAY: UserDto[] = [USER_ONE_DTO];
+export const USER_DTO_ARRAY: UserDto[] = [USER_ONE_DTO, USER_TWO_DTO];
+
+// export function usersServicesTestAssertions(user: UserDto) {
+//     expect(user.email).toEqual(USER_ONE_DTO.email);
+//     expect(user.firstName).toEqual(USER_ONE_DTO.firstName);
+//     expect(user.lastName).toEqual(USER_ONE_DTO.lastName);
+//     expect(user.title).toEqual(USER_ONE_DTO.title);
+//     expect(user.organization).toEqual(USER_ONE_DTO.organization);
+
+//     /* The id of the test constant is undefined, so if 
+//         create is successful, the id's should not be equal */
+//     let idFlag: boolean;
+//     if (user.id != USER_ONE_DTO.id)
+//         idFlag = false;
+//     expect(idFlag).toBe(false);
+
+//     // If create is successful, these two values should not be equal
+//     let updateFlag: boolean;
+//     if (user.updatedAt.valueOf() != USER_ONE_DTO.updatedAt.valueOf())
+//         updateFlag = false;
+//     expect(updateFlag).toBe(false);
+// }
