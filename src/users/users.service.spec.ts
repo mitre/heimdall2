@@ -31,6 +31,8 @@ describe('UsersService', () => {
       providers: [UsersService, DatabaseService]
     }).compile();
 
+    testHelperService = module.get<TestHelperService>(TestHelperService);
+    await testHelperService.cleanAll();
     usersService = module.get<UsersService>(UsersService);
     databaseService = module.get<DatabaseService>(DatabaseService);
   });
