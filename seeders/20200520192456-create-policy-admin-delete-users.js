@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('Policy', [{
+    return queryInterface.bulkInsert('Policies', [{
       role: 'admin',
       actions: 'delete',
       targets: 'users',
@@ -12,6 +12,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('Policy', null, {});
+    return queryInterface.bulkDelete('Policies', null, {});
   }
 };

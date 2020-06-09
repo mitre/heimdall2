@@ -42,6 +42,15 @@ export class User extends Model<User> {
 
   @AllowNull(true)
   @Column
+  lastLogin: Date;
+
+  @AllowNull(false)
+  @Default(0)
+  @Column
+  loginCount: number;
+
+  @AllowNull(true)
+  @Column
   passwordChangedAt: Date;
 
   @AllowNull(false)

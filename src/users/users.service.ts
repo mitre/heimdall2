@@ -35,6 +35,15 @@ export class UsersService {
     return new UserDto(user);
   }
 
+  async findModelByEmail(email: string): Promise<User> {
+    const user = await this.userModel.findOne<User>({
+      where: {
+        email
+      }
+    });
+    return user;
+  }
+
   async create(createUserDto: CreateUserDto) {
     const user = new User();
     user.email = createUserDto.email;
@@ -73,6 +82,12 @@ export class UsersService {
     }
     const userData = await user.save();
     return new UserDto(userData);
+  }
+
+  async updateLoginMetadata(user: User) {
+    user.lastLogin = new Date();
+    user.loginCount++;
+    user.save();
   }
 
   async remove(id: number, deleteUserDto: DeleteUserDto) {
