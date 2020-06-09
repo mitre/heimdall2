@@ -9,6 +9,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
 
     steps:
      - uses: actions/checkout@v2
@@ -17,17 +24,20 @@ jobs:
        with:
         node-version: '12.x'
 
-     - name: npm Install
-       run: npm install
+     - name: Install dependencies
+       run: npm ci
 
-     - name: Run unit tests
-       run: npm run test
+     - name: Run lint
+       run: npm run lint
 
-     - name: Run e2e tests
-       run: npm run test:e2e
+     - name: Copy .env-ci to .env
+       run: cp test/.env-ci .env
+
+     - name: Create/migrate db
+       run: |
+         npx sequelize-cli db:create
+         npx sequelize-cli db:migrate
 
      - name: Run test coverage
        run: npm run test:cov
 
-     - name: Run lint
-       run: npm run lint

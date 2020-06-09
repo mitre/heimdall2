@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, NotFoundException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './user.model';
 import { UserDto } from './dto/user.dto';
@@ -51,7 +51,11 @@ export class UsersService {
     user.lastName = createUserDto.lastName;
     user.title = createUserDto.title;
     user.organization = createUserDto.organization;
-    user.encryptedPassword = await hash(createUserDto.password, 14);
+    try {
+      user.encryptedPassword = await hash(createUserDto.password, 14);
+    } catch {
+      throw new BadRequestException
+    }
     const userData = await user.save();
     return new UserDto(userData);
   }
@@ -59,7 +63,11 @@ export class UsersService {
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.userModel.findByPk<User>(id);
     this.exists(user);
-    if(!(await compare(updateUserDto.currentPassword, user.encryptedPassword))) {
+    try {
+      if(!(await compare(updateUserDto.password, user.encryptedPassword))) {
+        throw new UnauthorizedException;
+      }
+    } catch {
       throw new UnauthorizedException;
     }
     user.email = updateUserDto.email || user.email;
@@ -85,16 +93,22 @@ export class UsersService {
   async remove(id: number, deleteUserDto: DeleteUserDto) {
     const user = await this.userModel.findByPk<User>(id);
     this.exists(user);
-    if(!(await compare(deleteUserDto.password, user.encryptedPassword))) {
+    try {
+      if(!(await compare(deleteUserDto.password, user.encryptedPassword))) {
+        throw new UnauthorizedException;
+      }
+    } catch {
       throw new UnauthorizedException;
     }
     await user.destroy();
     return new UserDto(user);
   }
 
-  exists(user: User) : void {
+  exists(user: User) : boolean {
     if (!user) {
       throw new NotFoundException('User with given id not found');
+    } else {
+      return true;
     }
   }
 }
