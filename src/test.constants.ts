@@ -13,6 +13,7 @@ export const TEST_USER: User = {
     lastName: "Dummy",
     role: "user",
     title: "fake title",
+    // Encrypted password should match password, 'Letmein123'
     encryptedPassword: "$2b$14$qXq14f2Ttm/Sj2XiIQu3pub67ZkZ.vOalKSSjOiFCkvMZmn5y6Eiy",
     organization: "Fake Org",
 }
@@ -31,6 +32,36 @@ export const CREATE_USER_DTO_TEST_OBJ: CreateUserDto = {
     email: "abc@yahoo.com",
     password: "Letmein123",
     passwordConfirmation: "Letmein123",
+    firstName: "Test",
+    lastName: "Dummy",
+    title: "fake title",
+    organization: "Fake Org",
+};
+
+// @ts-ignore
+export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD: CreateUserDto = {
+    password: "Letmein123",
+    passwordConfirmation: "Letmein123",
+    firstName: "Test",
+    lastName: "Dummy",
+    title: "fake title",
+    organization: "Fake Org",
+};
+
+// @ts-ignore
+export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD: CreateUserDto = {
+    email: "abc@yahoo.com",
+    passwordConfirmation: "Letmein123",
+    firstName: "Test",
+    lastName: "Dummy",
+    title: "fake title",
+    organization: "Fake Org",
+};
+
+// @ts-ignore
+export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD: CreateUserDto = {
+    email: "abc@yahoo.com",
+    password: "Letmein123",
     firstName: "Test",
     lastName: "Dummy",
     title: "fake title",
@@ -59,6 +90,17 @@ export const UPDATE_FAILURE_USER_DTO_TEST_OBJ: UpdateUserDto = {
     currentPassword: "Letmein12"
 };
 
+// @ts-ignore
+export const UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD: UpdateUserDto = {
+    email: "updatedemail@yahoo.com",
+    firstName: "Doe",
+    lastName: "John",
+    organization: "Fake Org",
+    title: "fake title",
+    password: "Letmein123",
+    passwordConfirmation: "Letmein123",
+};
+
 export const DELETE_USER_DTO_TEST_OBJ: DeleteUserDto = {
     password: "Letmein123"
 };
@@ -66,6 +108,9 @@ export const DELETE_USER_DTO_TEST_OBJ: DeleteUserDto = {
 export const DELETE_FAILRE_USER_DTO_TEST_OBJ: DeleteUserDto = {
     password: "Letmein12"
 };
+
+// @ts-ignore
+export const DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD: DeleteUserDto = {};
 
 // TEST_USER dto
 export const USER_ONE_DTO = new UserDto(USER_ARRAY[0]);
