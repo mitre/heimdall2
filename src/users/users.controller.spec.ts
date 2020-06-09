@@ -2,7 +2,6 @@ import { NotFoundException, BadRequestException, CanActivate } from '@nestjs/com
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-<<<<<<< HEAD
 import {
   ID,
   USER_ONE_DTO,
@@ -17,12 +16,6 @@ import {
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD,
 } from '../../test/test.constants';
 import { AbacGuard } from '../guards/abac.guard';
-=======
-import { User } from './user.model';
-import { UserDto } from './dto/user.dto';
-import { CreateUserDto } from './dto/create-user.dto';
-import { async } from 'rxjs/internal/scheduler/async';
->>>>>>> a789aba... Rebased with master
 
 // Test suite for the UsersController
 describe('UsersController Unit Tests', () => {
@@ -162,9 +155,5 @@ describe('UsersController Unit Tests', () => {
         await usersController.remove(ID, DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD);
       }).rejects.toThrow(BadRequestException);
     });
-<<<<<<< HEAD
   });
 });
-=======
-});
->>>>>>> a789aba... Rebased with master
