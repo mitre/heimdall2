@@ -24,6 +24,7 @@ describe('UsersController Unit Tests', () => {
   let usersService: UsersService;
   let module: TestingModule;
 
+<<<<<<< HEAD
   beforeEach(async () => {
     module = await Test.createTestingModule({
       controllers: [UsersController],
@@ -40,6 +41,24 @@ describe('UsersController Unit Tests', () => {
         },
       ],
     }).overrideGuard(AbacGuard).useValue(mockAbacGuard).compile();
+=======
+    beforeEach(async () => {
+        module = await Test.createTestingModule({
+            controllers: [UsersController],
+            providers: [
+                {
+                    provide: UsersService,
+                    useFactory: () => ({
+                        // These mock functions are used for the basic "positive" tests
+                        create: jest.fn(CreateUserDto => consts.USER_ONE_DTO),
+                        findById: jest.fn(number => consts.USER_ONE_DTO),
+                        update: jest.fn((number, UpdateUserDto) => consts.UPDATED_USER_DTO),
+                        remove: jest.fn((number, DeleteUserDto) => consts.USER_ONE_DTO)
+                    })
+                }
+            ],
+        }).compile();
+>>>>>>> d55e4d5... Added more negative tests to users.service.spec and updated test.constants
 
     usersService = module.get<UsersService>(UsersService);
     usersController = module.get<UsersController>(UsersController);
@@ -101,12 +120,21 @@ describe('UsersController Unit Tests', () => {
     });
   });
 
+<<<<<<< HEAD
   describe('Update function', () => {
     // Tests the update function with valid dto (basic positive test)
     it('should test the update function with a valid update dto', async () => {
       expect(await usersController.update(ID, UPDATE_USER_DTO_TEST_OBJ)).toEqual(UPDATED_USER_DTO);
       expect(usersService.update).toHaveReturnedWith(UPDATED_USER_DTO);
     });
+=======
+    describe("Update function", () => {
+        // Tests the update function with valid dto (basic positive test)
+        it("should test the update function with a valid update dto", async () => {
+            expect(await usersController.update(consts.ID, consts.UPDATE_USER_DTO_TEST_OBJ)).toEqual(consts.UPDATED_USER_DTO);
+            expect(usersService.update).toHaveReturnedWith(consts.UPDATED_USER_DTO);
+        });
+>>>>>>> d55e4d5... Added more negative tests to users.service.spec and updated test.constants
 
     // Tests the update function with ID that is 'not found'
     it('should test update function with invalid ID', async () => {
