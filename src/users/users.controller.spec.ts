@@ -1,4 +1,4 @@
-import { NotFoundException, BadRequestException } from '@nestjs/common';
+import { NotFoundException, BadRequestException, CanActivate } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
@@ -15,9 +15,11 @@ import {
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD,
 } from '../../test/test.constants';
+import { AbacGuard } from '../guards/abac.guard';
 
 // Test suite for the UsersController
 describe('UsersController Unit Tests', () => {
+  const mockAbacGuard: CanActivate = { canActivate: jest.fn(() => true)};
   let usersController: UsersController;
   let usersService: UsersService;
   let module: TestingModule;
@@ -35,9 +37,9 @@ describe('UsersController Unit Tests', () => {
             update: jest.fn(() => UPDATED_USER_DTO),
             remove: jest.fn(() => USER_ONE_DTO)
           })
-        }
+        },
       ],
-    }).compile();
+    }).overrideGuard(AbacGuard).useValue(mockAbacGuard).compile();
 
     usersService = module.get<UsersService>(UsersService);
     usersController = module.get<UsersController>(UsersController);
