@@ -1,6 +1,6 @@
 <template>
   <ErrorTooltip ref="error_tooltip">
-    <v-stepper v-model="step" vertical>
+    <v-stepper v-model="step" vertical class="elevation-0">
       <v-stepper-step step="1">
         Login Credentials
       </v-stepper-step>

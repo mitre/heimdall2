@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card class="elevation-0">
     <v-card-subtitle
       >Easily load any supported Heimdall Data Format file</v-card-subtitle
     >

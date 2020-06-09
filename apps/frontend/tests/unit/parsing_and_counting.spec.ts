@@ -16,7 +16,7 @@ import { readFileSync } from "fs";
 describe("Parsing", () => {
   it("Report intake can read every raw file in hdf_data", function() {
     // Give it time!
-    this.timeout(0);
+    jest.setTimeout(0);
     let raw = AllRaw();
     let intake = getModule(ReportIntakeModule, Store);
     let id = 0;

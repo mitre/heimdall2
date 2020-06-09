@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card class="elevation-0">
     <v-card-subtitle>
       Samples to show the power of the Heimdall application and supported HDF
       formats

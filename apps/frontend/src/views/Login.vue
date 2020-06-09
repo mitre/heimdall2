@@ -102,13 +102,36 @@ export default class Login extends LoginProps {
 
   // Loads the last open tab
   mounted() {
-    console.log("mount Login");
-    this.active_tab = "login-tab";
+    console.log("mount UploadNexus");
+    this.checkLoggedIn();
+    let mod = getModule(ServerModule, this.$store);
+    if (mod.serverMode == undefined) {
+      mod.server_mode();
+    }
+    // this.$router.push("/home");
   }
 
   // Handles change in tab
   selected_tab(new_tab: string) {
     this.active_tab = new_tab;
+  }
+
+  get is_logged_in(): boolean {
+    if (this.token) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  checkLoggedIn() {
+    console.log("token: " + this.token + "end token");
+    if (this.token) {
+      this.$router.push("/home");
+    }
+  }
+  get token(): string {
+    let mod = getModule(ServerModule, this.$store);
+    return mod.token || "";
   }
 
   get watches(): string {
@@ -128,7 +151,11 @@ export default class Login extends LoginProps {
 
   async login(): Promise<void> {
     // checking if the input is valid
-    const host = process.env.VUE_APP_API_URL!;
+    let mod = getModule(ServerModule, this.$store);
+
+    const host = mod.serverUrl;
+
+    console.log(host);
     if ((this.$refs.form as any).validate()) {
       console.log("Login to Backend test");
       let creds: LoginHash = {
@@ -137,7 +164,6 @@ export default class Login extends LoginProps {
         confirm_password: this.confirm_password
       };
       //this.loading = true;
-      let mod = getModule(ServerModule, this.$store);
       await mod
         .connect(host)
         .catch(bad => {
@@ -145,7 +171,6 @@ export default class Login extends LoginProps {
           this.$router.go(0);
         })
         .then(() => {
-          console.log("here");
           return mod.login(creds);
         })
         .catch(bad => {
@@ -153,7 +178,6 @@ export default class Login extends LoginProps {
           this.$router.go(0);
         })
         .then(() => {
-          console.log("here2");
           this.$router.push("/home");
         });
     }

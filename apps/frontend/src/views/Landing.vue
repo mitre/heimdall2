@@ -3,6 +3,7 @@
     <v-row>
       <v-col center xl="8" md="8" sm="12" xs="12">
         <UploadNexus
+          v-if="is_logged_in"
           :value="dialog"
           @got-files="on_got_files"
           :persistent="true"
@@ -36,37 +37,51 @@ const LandingProps = Vue.extend({
 export default class Landing extends LandingProps {
   /** Whether or not the model is showing */
   dialog: boolean = true;
+  servermode: boolean = true;
 
   /* This is supposed to cause the dialog to automatically appear if there is
    * no file uploaded
    */
   mounted() {
-    this.checkLoggedIn();
+    let mod = getModule(ServerModule, this.$store);
+    if (mod.serverMode == undefined) {
+      mod.server_mode();
+    }
+
+    if (mod.serverMode) {
+      this.checkLoggedIn();
+    }
   }
 
   get is_logged_in(): boolean {
-    if (this.checkLoggedIn()) {
-      console.log("is_logged_in - token: " + this.token + "end token");
+    let mod = getModule(ServerModule, this.$store);
+    if (mod.serverMode == undefined) {
+      return false;
+    } else if (mod.serverMode == false) {
       return true;
     } else {
-      return false;
+      if (this.token) {
+        console.log("is_logged_in - token: " + this.token + "end token");
+        return true;
+      } else {
+        this.$router.push("/login");
+        return false;
+      }
     }
   }
 
   get token(): string {
+    console.log("token");
     let mod = getModule(ServerModule, this.$store);
     return mod.token || "";
   }
 
   checkLoggedIn() {
-    //let server = getModule(ServerModule, this.$store);
-    if (this.token) {
-      //console.log("profile: " + JSON.stringify(server.profile));
-      return true;
-    } else {
-      console.log("Go to login");
-      this.dialog = false;
-      // this.$router.push("/login");
+    console.log("token: " + this.token + "end token");
+    if (!this.token) {
+      console.log("Go to auth");
+      //  this.dialog = false;
+      this.$router.push("/login");
     }
   }
 

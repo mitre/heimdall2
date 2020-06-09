@@ -12,7 +12,7 @@
     "sourceMap": true,
     "noImplicitAny": true,
     "baseUrl": ".",
-    "types": ["webpack-env", "mocha", "chai", "vuetify", "node"],
+    "types": ["webpack-env", "jest", "chai", "vuetify", "node"],
     "paths": {
       "@/*": ["src/*"],
       "vue-analytics": ["src/types/vue-analytics"]

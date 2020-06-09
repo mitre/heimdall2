@@ -72,7 +72,8 @@ export class HSConnectionConfig {
 class HeimdallServerModule extends VuexModule {
   /** Our current target server parameters */
   connection: HSConnectionConfig | null = null;
-
+  serverMode: boolean | null = null;
+  serverUrl: string = "";
   @Mutation
   set_connection(new_url: string) {
     this.connection = new HSConnectionConfig(new_url);
@@ -80,6 +81,7 @@ class HeimdallServerModule extends VuexModule {
 
   @Action
   async connect(new_url: string): Promise<void> {
+    console.log("connected :" + new_url);
     this.set_connection(new_url);
   }
 
@@ -95,6 +97,51 @@ class HeimdallServerModule extends VuexModule {
     this.token = new_token;
     console.log("server.ts - set token: " + this.token);
     local_token.set(new_token);
+  }
+  @Mutation
+  mod_server_url(value: string) {
+    this.serverUrl = value;
+  }
+
+  @Mutation
+  mod_server_mode(value: boolean) {
+    this.serverMode = value;
+  }
+
+  @Action
+  server_mode() {
+    let url = window.location.origin + "/api";
+    console.log(url);
+    /*This will check if api is available */
+    if (process.env.VUE_APP_API_URL) {
+      this.mod_server_url(process.env.VUE_APP_API_URL); // this.serverUrl = process.env.VUE_APP_API_URL;
+      this.mod_server_mode(true);
+    } else {
+      axios
+        .get(url, {
+          validateStatus: function(status) {
+            return status < 500; // Reject only if the status code is greater than or equal to 500
+          }
+        })
+        .then(res => {
+          console.log("test");
+          if (res.status == 200) {
+            this.mod_server_mode(true); //window.location.href;
+            this.mod_server_url(url); // = true;
+          } else {
+            this.mod_server_mode(false);
+          }
+        })
+        .catch(error => {
+          console.log("caught error");
+          this.mod_server_mode(false);
+        });
+    }
+  }
+
+  @Mutation
+  set_server_url(url: string) {
+    this.serverUrl = url;
   }
 
   /** Mutation to set above, as well as to update our localstorage */

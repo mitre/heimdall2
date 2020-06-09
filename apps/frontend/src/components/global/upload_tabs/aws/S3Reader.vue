@@ -1,6 +1,6 @@
 <template>
   <ErrorTooltip ref="error_tooltip">
-    <v-stepper v-model="step" vertical>
+    <v-stepper v-model="step" vertical class="elevation-0">
       <v-stepper-step :complete="!!assumed_role" step="1">
         Account Credentials
       </v-stepper-step>

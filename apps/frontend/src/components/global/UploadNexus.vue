@@ -5,6 +5,9 @@
       @input="$emit('input', $event.target.value)"
       :persistent="persistent"
     >
+      <div v-if="is_logged_in" style="padding: 8px;float: right; width:100px">
+        <v-btn id="logout" @click="logout()" color="normal">Logout</v-btn>
+      </div>
       <v-tabs
         :vertical="$vuetify.breakpoint.mdAndUp"
         active
@@ -115,8 +118,14 @@ export default class UploadNexus extends Props {
   }
 
   get is_logged_in(): boolean {
-    if (this.token) {
-      return true;
+    let mod = getModule(ServerModule, this.$store);
+
+    if (mod.serverMode) {
+      if (this.token) {
+        return true;
+      } else {
+        return false;
+      }
     } else {
       return false;
     }
@@ -136,6 +145,12 @@ export default class UploadNexus extends Props {
     }
   }
 
+  //logout from backend
+  logout() {
+    console.log("logout");
+    getModule(ServerModule, this.$store).clear_token();
+    this.$router.push("/login");
+  }
   // Handles change in tab
   selected_tab(new_tab: string) {
     this.active_tab = new_tab;

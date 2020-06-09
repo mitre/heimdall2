@@ -34,7 +34,7 @@
           mdi-filter-remove
         </v-icon>
       </v-btn>
-      <v-btn @click="log_out" class="mx-2">
+      <v-btn v-if="is_server_mode" @click="log_out" class="mx-2">
         <span class="d-none d-md-inline pr-2">
           Logout
         </span>
@@ -235,6 +235,10 @@ export default class Results extends ResultsProps {
     if (this.file_filter) this.dialog = false;
   }
 
+  get is_server_mode(): boolean | null {
+    let mod = getModule(ServerModule, this.$store);
+    return mod.serverMode;
+  }
   /**
    * The currently selected file, if one exists.
    * Controlled by router.
