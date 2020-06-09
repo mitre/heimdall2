@@ -2,9 +2,7 @@ name: Test
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches: [ ss-testing-pipeline ]
 
 jobs:
   build:
@@ -41,6 +39,7 @@ jobs:
 
      - name: Create/migrate db
        run: |
+         cp .env-ci .env
          npx sequelize-cli db:migrate
 
      - name: Run test coverage
