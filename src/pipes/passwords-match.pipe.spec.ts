@@ -1,5 +1,5 @@
 import { PasswordsMatchPipe } from './passwords-match.pipe';
-import { ArgumentMetadata, Body, BadRequestException } from '@nestjs/common';
+import { ArgumentMetadata, BadRequestException } from '@nestjs/common';
 import { CREATE_USER_DTO_TEST_OBJ, CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS } from '../../test/test.constants';
 
 describe('PasswordsMatchPipe', () => {
