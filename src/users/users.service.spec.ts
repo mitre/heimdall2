@@ -33,6 +33,8 @@ describe('UsersService', () => {
 
     usersService = module.get<UsersService>(UsersService);
     databaseService = module.get<DatabaseService>(DatabaseService);
+
+    jest.setTimeout(10000);
   });
 
   beforeEach(() => {
