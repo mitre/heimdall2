@@ -7,6 +7,7 @@ import { Module, VuexModule, getModule, Action } from "vuex-module-decorators";
 import DataModule from "@/store/data_store";
 import Store from "@/store/store";
 import { read_file_async } from "@/utilities/async_util";
+import { Evaluation, Tag } from "@/types/models.ts";
 
 /** Each FileID corresponds to a unique File in this store */
 export type FileID = number;
@@ -23,6 +24,13 @@ export type InspecFile = {
   unique_id: FileID;
   /** The filename that this file was uploaded under. */
   filename: string;
+
+  database_id?: number;
+
+  tags?: Tag[];
+
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 /** Represents a file containing an Inspec Execution output */
@@ -44,6 +52,13 @@ export type TextLoadOptions = {
 
   /** The unique id to grant it */
   unique_id: FileID;
+
+  database_id?: number;
+
+  createdAt?: Date;
+  updatedAt?: Date;
+
+  tags?: Tag[];
 
   /** The text to use for it. */
   text: string;
@@ -81,7 +96,7 @@ class InspecIntakeModule extends VuexModule {
    */
   @Action
   async loadText(options: TextLoadOptions): Promise<Error | null> {
-    console.log("Load Text: " + options.text);
+    //console.log("Load Text: " + options.text);
     // Fetch our data store
     const data = getModule(DataModule, Store);
 
@@ -104,13 +119,27 @@ class InspecIntakeModule extends VuexModule {
       console.log("is Execution");
       let execution = result["1_0_ExecJson"];
       execution = Object.freeze(execution);
-      let reportFile = {
-        unique_id: options.unique_id,
-        filename: options.filename,
-        execution
-      };
-      console.log("addExecution");
-      data.addExecution(reportFile);
+      if (options.database_id) {
+        let reportFile = {
+          unique_id: options.unique_id,
+          filename: options.filename,
+          database_id: options.database_id,
+          createdAt: options.createdAt,
+          updatedAt: options.updatedAt,
+          tags: options.tags,
+          execution
+        };
+        console.log("add Database Execution");
+        data.addExecution(reportFile);
+      } else {
+        let reportFile = {
+          unique_id: options.unique_id,
+          filename: options.filename,
+          execution
+        };
+        console.log("add Execution");
+        data.addExecution(reportFile);
+      }
     } else if (result["1_0_ProfileJson"]) {
       // Handle as profile
       console.log("is Profile");

@@ -74,3 +74,16 @@ $code-kbd-font-weight: false;
   white-space: -o-pre-wrap; /* Opera 7 */
 }
 
+.column_wrapper {
+  max-height: 200px;
+  display: flex;
+  text-align: left;
+  flex-flow: column wrap;
+}
+
+.hide {
+  display: block !important;
+}
+.show {
+  display: block !important;
+}

@@ -9,12 +9,32 @@ import Store from "@/store/store";
 import { LocalStorageVal } from "@/utilities/helper_util";
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { plainToClass } from "class-transformer";
-import { EvaluationFile, ProfileFile, FileID } from "@/store/report_intake";
+import InspecIntakeModule, {
+  EvaluationFile,
+  ProfileFile,
+  FileID,
+  next_free_file_ID
+} from "@/store/report_intake";
+import { Evaluation } from "@/types/models.ts";
 
 export interface LoginHash {
   username: string;
   password: string;
 }
+export interface TagIdsHash {
+  id: number;
+  tagger_id: number;
+}
+export interface TagHash {
+  tagger_id: number;
+  name: string;
+  value: string;
+}
+export interface RetrieveHash {
+  unique_id: number;
+  eva: Evaluation;
+}
+
 /** The body of a registration Request */
 //"id":1,"first_name":null,"last_name":null,"email":"email@gmail.com","image":null,"phone_number":null,"createdAt":"2020-03-23T15:57:33.044Z","updatedAt":"2020-03-23T15:57:33.044Z"}
 export class UserProfile {
@@ -34,6 +54,7 @@ const local_user_evaluations = new LocalStorageVal<string | null>(
   "user_evaluations"
 );
 const local_evaluation = new LocalStorageVal<string | null>("evaluation");
+const local_tags = new LocalStorageVal<string | null>("evaluation_tags");
 
 type ConnErrorType =
   | "NO_CONNECTION"
@@ -90,6 +111,7 @@ class HeimdallServerModule extends VuexModule {
   profile: UserProfile | null = local_user.get();
   user_evaluations: string | null = local_user_evaluations.get();
   evaluation: string | null = local_evaluation.get();
+  tags: string | null = local_tags.get();
 
   /** Mutation to set above, as well as to update our localstorage */
   @Mutation
@@ -150,6 +172,14 @@ class HeimdallServerModule extends VuexModule {
     this.evaluation = evaluation;
     console.log("server.ts - set evaluation: " + this.evaluation);
     local_evaluation.set(evaluation);
+  }
+
+  /** Mutation to set above, as well as to update our localstorage */
+  @Mutation
+  set_tags(tags: string | null) {
+    this.tags = tags;
+    console.log("server.ts - set tags: " + this.tags);
+    local_tags.set(tags);
   }
 
   /* Actions to authorize and set token */
@@ -320,27 +350,122 @@ class HeimdallServerModule extends VuexModule {
         }
       })
       .then((v: any) => {
-        console.log("personal evals: " + JSON.stringify(v.data));
+        //console.log("personal evals: " + JSON.stringify(v.data));
         this.set_user_evaluations(v.data);
       });
   }
 
-  /** Attempts to retrieve a list of personal evaluations */
+  /** Attempts to retrieve an evaluations */
   @Action
-  async retrieve_evaluation(file_id: FileID): Promise<void> {
+  async retrieve_evaluation(eval_hash: RetrieveHash): Promise<void> {
     console.log(
-      "Getting " + this.connection!.url + "/executions/fetch/" + file_id
+      "Getting " +
+        this.connection!.url +
+        "/executions/fetch/" +
+        eval_hash.eva.id
     );
     //curl http://localhost:8050/executions/personal -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm..."
     return axios
-      .get(this.connection!.url + "/executions/fetch/" + file_id, {
+      .get(this.connection!.url + "/executions/fetch/" + eval_hash.eva.id, {
         headers: {
           Authorization: `Bearer ${this.token}`
         }
       })
       .then((v: any) => {
         console.log("got evaluation: " + JSON.stringify(v.data));
-        this.set_evaluation(v.data);
+        let intake_module = getModule(InspecIntakeModule, Store);
+        intake_module.loadText({
+          text: JSON.stringify(v.data),
+          unique_id: eval_hash.unique_id,
+          filename: eval_hash.eva.filename,
+          database_id: eval_hash.eva.id,
+          createdAt: eval_hash.eva.createdAt,
+          updatedAt: eval_hash.eva.updatedAt,
+          tags: eval_hash.eva.tags
+        });
+      });
+  }
+
+  /** Attempts to retrieve an evaluations */
+  @Action
+  async retrieve_tags(file_id: FileID): Promise<void> {
+    console.log(
+      "Getting " + this.connection!.url + "/executions/tags/" + file_id
+    );
+    //curl http://localhost:8050/executions/personal -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm..."
+    return axios
+      .get(this.connection!.url + "/executions/tags/" + file_id, {
+        headers: {
+          Authorization: `Bearer ${this.token}`
+        }
+      })
+      .then((v: any) => {
+        console.log("got tags: " + JSON.stringify(v.data));
+        this.set_tags(v.data);
+      });
+  }
+
+  /** Attempts to save evaluation to the database */
+  @Action
+  async save_tag(tag: TagHash): Promise<void> {
+    console.log(
+      "Saving tag (" +
+        tag["name"] +
+        ": " +
+        tag["value"] +
+        ") to " +
+        this.connection!.url +
+        "/executions/tags/" +
+        tag["tagger_id"]
+    );
+    const options = {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    };
+    return axios
+      .post(
+        this.connection!.url + "/executions/tags/" + tag["tagger_id"],
+        {
+          name: tag["name"],
+          value: tag["value"]
+        },
+        options
+      )
+      .then((v: any) => {
+        console.log("saved");
+      });
+  }
+
+  /** Attempts to retrieve an evaluations */
+  @Action
+  async delete_tag(tag: TagIdsHash): Promise<void> {
+    console.log(
+      "Deleting " +
+        this.connection!.url +
+        "/executions/" +
+        tag["tagger_id"] +
+        "/tags/" +
+        tag["id"]
+    );
+    //curl http://localhost:8050/executions/personal -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm..."
+    return axios
+      .delete(
+        this.connection!.url +
+          "/executions/" +
+          tag["tagger_id"] +
+          "/tags/" +
+          tag["id"],
+        {
+          headers: {
+            Authorization: `Bearer ${this.token}`
+          }
+        }
+      )
+      .then((v: any) => {
+        console.log("deleted tag");
+        console.log("got tags: " + JSON.stringify(v.data));
+        this.set_tags(v.data);
       });
   }
 

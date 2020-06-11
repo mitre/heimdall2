@@ -40,31 +40,19 @@ import { getModule } from "vuex-module-decorators";
 import ServerModule from "@/store/server";
 import AppInfoModule from "@/store/app_info";
 import { plainToClass } from "class-transformer";
+import { LocalStorageVal } from "@/utilities/helper_util";
 import InspecIntakeModule, {
   FileID,
   next_free_file_ID
 } from "@/store/report_intake";
+import { Evaluation } from "@/types/models.ts";
 
-export class Content {
-  name!: string;
-  value!: string;
+export interface RetrieveHash {
+  unique_id: number;
+  eva: Evaluation;
 }
-export class Evaluation {
-  id!: number;
-  filename!: string;
-  version!: string;
-  createdAt!: Date;
-  updatedAt!: Date;
-  tags!: Tag[];
-}
-export class Tag {
-  id!: number;
-  tagger_id!: number;
-  tagger_type!: string;
-  content!: Content;
-  createdAt!: Date;
-  updatedAt!: Date;
-}
+
+const local_evaluation_id = new LocalStorageVal<number | null>("evaluation_id");
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -120,6 +108,7 @@ export default class DatabaseReader extends Props {
       return [new Evaluation()];
     }
   }
+
   get personal_evaluations(): Evaluation[] {
     let mod = getModule(ServerModule, this.$store);
     if (mod.user_evaluations) {
@@ -153,11 +142,6 @@ export default class DatabaseReader extends Props {
     // Generate an id
     let unique_id = next_free_file_ID();
 
-    // TODO
-    let filename = "evaluation";
-
-    // Get intake module
-    let intake_module = getModule(InspecIntakeModule, this.$store);
     let mod = getModule(ServerModule, this.$store);
     await mod
       .connect(host)
@@ -166,26 +150,18 @@ export default class DatabaseReader extends Props {
       })
       .then(() => {
         console.log("here");
-        return mod.retrieve_evaluation(evaluation.id);
+        let eva_hash: RetrieveHash = {
+          unique_id: unique_id,
+          eva: evaluation
+        };
+        return mod.retrieve_evaluation(eva_hash);
       })
       .catch(bad => {
         console.error(`bad login ${bad}`);
       })
       .then(() => {
-        console.log("here2");
-        if (mod.evaluation) {
-          console.log("here3");
-          //let upload = `{"unique_id": ${unique_id},"filename": "${filename}","execution":${JSON.stringify(
-          //  mod.evaluation
-          //)}}`;
-          intake_module.loadText({
-            text: JSON.stringify(mod.evaluation),
-            unique_id: unique_id,
-            filename: filename
-          });
-          console.log("Loaded " + unique_id);
-          this.$emit("got-files", [unique_id]);
-        }
+        console.log("Loaded " + unique_id);
+        this.$emit("got-files", [unique_id]);
       });
   }
 }
