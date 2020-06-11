@@ -13,7 +13,6 @@
 
 - remove login [\#218](https://github.com/mitre/heimdall-lite/pull/218) ([sjoshi10](https://github.com/sjoshi10))
 - Fixed CAAT to meet new requirements [\#217](https://github.com/mitre/heimdall-lite/pull/217) ([Mitriol](https://github.com/Mitriol))
-- Auth changes [\#212](https://github.com/mitre/heimdall-lite/pull/212) ([sjoshi10](https://github.com/sjoshi10))
 - Login dev [\#210](https://github.com/mitre/heimdall-lite/pull/210) ([robthew](https://github.com/robthew))
 
 ## [v2.0.15](https://github.com/mitre/heimdall-lite/tree/v2.0.15) (2020-03-26)
@@ -47,6 +46,7 @@
 
 **Merged pull requests:**
 
+- Auth changes [\#212](https://github.com/mitre/heimdall-lite/pull/212) ([sjoshi10](https://github.com/sjoshi10))
 - Added splunk support [\#201](https://github.com/mitre/heimdall-lite/pull/201) ([Mitriol](https://github.com/Mitriol))
 - Reworked AWS S3 dialogue to be more user friendly, and have proper MFA support [\#192](https://github.com/mitre/heimdall-lite/pull/192) ([Mitriol](https://github.com/Mitriol))
 
