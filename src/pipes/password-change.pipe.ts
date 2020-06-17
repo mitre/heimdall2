@@ -24,7 +24,7 @@ export class PasswordChangePipe implements PipeTransform {
     for(const validator of validators) {
       const currentMatch = [...current.matchAll(validator)];
       const futureMatch = [...future.matchAll(validator)];
-      if(currentMatch == futureMatch) {
+      if(JSON.stringify(currentMatch) === JSON.stringify(futureMatch)) {
         return false;
       }
     }

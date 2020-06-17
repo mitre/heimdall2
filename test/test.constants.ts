@@ -228,9 +228,15 @@ export const UPDATE_USER_DTO_TEST_OBJ: UpdateUserDto = {
   lastName: 'Name',
   organization: 'Updated Org',
   title: 'updated title',
+<<<<<<< HEAD
   password: 'LETmeiN123$$$tP',
   passwordConfirmation: 'LETmeiN123$$$tP',
   currentPassword: 'LETmeiN123$$$tP'
+=======
+  password: 'Letmein123',
+  passwordConfirmation: 'Letmein123',
+  currentPassword: 'UpdatedPassword89$'
+>>>>>>> e4af6fa... Added unit tests for password-change.pipe
 };
 
 export const UPDATE_USER_DTO_TEST_OBJ_WITH_LEVENSHTEIN_DISTANCE_OF_FOUR: UpdateUserDto = {
@@ -239,9 +245,15 @@ export const UPDATE_USER_DTO_TEST_OBJ_WITH_LEVENSHTEIN_DISTANCE_OF_FOUR: UpdateU
   lastName: 'Name',
   organization: 'Updated Org',
   title: 'updated title',
+<<<<<<< HEAD
   password: 'LETmeiN927!$@tP',
   passwordConfirmation: 'LETmeiN123$$$tP',
   currentPassword: 'ABCdefG456!@#pT'
+=======
+  password: 'Letmein123',
+  passwordConfirmation: 'Letmein123',
+  currentPassword: 'LetSamIn123'
+>>>>>>> e4af6fa... Added unit tests for password-change.pipe
 };
 
 // @ts-ignore
