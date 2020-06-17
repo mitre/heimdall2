@@ -51,8 +51,7 @@ describe('PasswordChangePipe', () => {
     to the classesChanged function being tested above) */
   describe('Test Valid Password Changes', () => {
     it('should return the same UpdateUserDto', () => {
-      jest.spyOn(passwordChangePipe, 'classesChanged').mockReturnValueOnce(true);
-      expect(passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ, metaData)).toEqual(UPDATE_USER_DTO_TEST_OBJ);
+      expect(passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ_WITH_LEVENSHTEIN_DISTANCE_OF_FOUR, metaData)).toEqual(UPDATE_USER_DTO_TEST_OBJ_WITH_LEVENSHTEIN_DISTANCE_OF_FOUR);
     });
   });
 
@@ -60,9 +59,8 @@ describe('PasswordChangePipe', () => {
     that's Levenshtein Distance is < 8, it throws a BadRequestException */
   describe('Test Invalid Password Changes', () => {
     it('should throw a BadRequestException', () => {
-      jest.spyOn(passwordChangePipe, 'classesChanged').mockReturnValueOnce(true);
-      expect(() => passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ_WITH_LEVENSHTEIN_DISTANCE_OF_FOUR, metaData)).toThrowError(BadRequestException);
-      expect(() => passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ_WITH_LEVENSHTEIN_DISTANCE_OF_FOUR, metaData)).toThrowError('A minimum of four character classes must be changed when updating a password.' +
+      expect(() => passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ, metaData)).toThrowError(BadRequestException);
+      expect(() => passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ, metaData)).toThrowError('A minimum of four character classes must be changed when updating a password.' +
         ' A minimum of eight of the total number of characters must be changed when updating a password.');
     });
   });
