@@ -1,9 +1,9 @@
 import { PasswordComplexityPipe } from './password-complexity.pipe';
 import { ArgumentMetadata, BadRequestException } from '@nestjs/common';
 import { CREATE_USER_DTO_TEST_OBJ, UPDATE_USER_DTO_TEST_OBJ, 
-         CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD, 
-        UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD }
-        from '../../test/test.constants';
+  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD, 
+  UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD }
+  from '../../test/test.constants';
 
 describe('PasswordComplexityPipe', () => {
   let passwordComplexityPipe: PasswordComplexityPipe;
