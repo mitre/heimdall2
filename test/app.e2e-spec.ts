@@ -35,7 +35,7 @@ describe('AppController (e2e)', () => {
 
   describe('/users', () => {
     it('should POST', async () => {
-      return request(app.getHttpServer()).post('/users').send(CREATE_USER_DTO_TEST_OBJ).expect(HttpStatus.CREATED).then(response => {
+      return request(app.getHttpServer()).post('/users').set('Content-Type', 'application/json').send(CREATE_USER_DTO_TEST_OBJ).expect(HttpStatus.CREATED).then(response => {
         expect(response.body.email).toEqual('abc@yahoo.com')
       });
     });
