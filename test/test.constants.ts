@@ -14,11 +14,7 @@ export const TEST_USER: User = {
   lastName: 'Dummy',
   role: 'user',
   title: 'fake title',
-<<<<<<< HEAD
-  // Encrypted password should match password, 'Letmein123'
-=======
   // Encrypted password should match password, 'LETmeiN123$$$tP'
->>>>>>> 4a9ffa9... Updated updateLoginMetaData() and add unit tests
   encryptedPassword: '$2b$14$35oeK.h84XPIohhjTpwuV.NuFr/5oEzbg4mxLNppvfrA42ztXr2.O',
   organization: 'Fake Org',
   loginCount: 0,
@@ -33,11 +29,7 @@ export const UPDATED_TEST_USER: User = {
   firstName: 'Updated',
   lastName: 'Name',
   title: 'updated title',
-<<<<<<< HEAD
-  // Encrypted password should match password, 'Letmein123'
-=======
   // Encrypted password should match password, 'LETmeiN123$$$tP'
->>>>>>> 4a9ffa9... Updated updateLoginMetaData() and add unit tests
   encryptedPassword: '$2b$14$35oeK.h84XPIohhjTpwuV.NuFr/5oEzbg4mxLNppvfrA42ztXr2.O',
   organization: 'Updated Org',
   loginCount: 0,
@@ -52,11 +44,7 @@ export const TEST_USER_WITHOUT_EMAIL: User = {
   lastName: 'Dummy',
   role: 'user',
   title: 'fake title',
-<<<<<<< HEAD
-  // Encrypted password should match password, 'Letmein123'
-=======
   // Encrypted password should match password, 'LETmeiN123$$$tP'
->>>>>>> 4a9ffa9... Updated updateLoginMetaData() and add unit tests
   encryptedPassword: '$2b$14$35oeK.h84XPIohhjTpwuV.NuFr/5oEzbg4mxLNppvfrA42ztXr2.O',
   organization: 'Fake Org',
   loginCount: 0,
@@ -71,11 +59,7 @@ export const TEST_USER_WITHOUT_FIRST_NAME: User = {
   lastName: 'Dummy',
   role: 'user',
   title: 'fake title',
-<<<<<<< HEAD
-  // Encrypted password should match password, 'Letmein123'
-=======
   // Encrypted password should match password, 'LETmeiN123$$$tP'
->>>>>>> 4a9ffa9... Updated updateLoginMetaData() and add unit tests
   encryptedPassword: '$2b$14$35oeK.h84XPIohhjTpwuV.NuFr/5oEzbg4mxLNppvfrA42ztXr2.O',
   organization: 'Fake Org',
   loginCount: 0,
@@ -90,11 +74,7 @@ export const TEST_USER_WITHOUT_LAST_NAME: User = {
   firstName: 'Test',
   role: 'user',
   title: 'fake title',
-<<<<<<< HEAD
-  // Encrypted password should match password, 'Letmein123'
-=======
   // Encrypted password should match password, 'LETmeiN123$$$tP'
->>>>>>> 4a9ffa9... Updated updateLoginMetaData() and add unit tests
   encryptedPassword: '$2b$14$35oeK.h84XPIohhjTpwuV.NuFr/5oEzbg4mxLNppvfrA42ztXr2.O',
   organization: 'Fake Org',
   loginCount: 0,
@@ -110,15 +90,10 @@ export const TEST_USER_WITHOUT_ORGANIZATION: User = {
   lastName: 'Dummy',
   role: 'user',
   title: 'fake title',
-<<<<<<< HEAD
-  // Encrypted password should match password, 'Letmein123'
-  encryptedPassword: '$2b$14$35oeK.h84XPIohhjTpwuV.NuFr/5oEzbg4mxLNppvfrA42ztXr2.O',
-=======
   // Encrypted password should match password, 'LETmeiN123$$$tP'
   encryptedPassword: '$2b$14$35oeK.h84XPIohhjTpwuV.NuFr/5oEzbg4mxLNppvfrA42ztXr2.O',
   loginCount: 0,
   lastLogin: new Date(),
->>>>>>> 4a9ffa9... Updated updateLoginMetaData() and add unit tests
   createdAt: new Date(),
   updatedAt: new Date()
 }
@@ -129,11 +104,7 @@ export const TEST_USER_WITHOUT_TITLE: User = {
   firstName: 'Test',
   lastName: 'Dummy',
   role: 'user',
-<<<<<<< HEAD
-  // Encrypted password should match password, 'Letmein123'
-=======
   // Encrypted password should match password, 'LETmeiN123$$$tP'
->>>>>>> 4a9ffa9... Updated updateLoginMetaData() and add unit tests
   encryptedPassword: '$2b$14$35oeK.h84XPIohhjTpwuV.NuFr/5oEzbg4mxLNppvfrA42ztXr2.O',
   organization: 'Fake Org',
   loginCount: 0,
