@@ -33,6 +33,8 @@ describe('UsersService', () => {
 
     usersService = module.get<UsersService>(UsersService);
     databaseService = module.get<DatabaseService>(DatabaseService);
+
+    jest.setTimeout(10000);
   });
 
   beforeEach(() => {
@@ -159,6 +161,18 @@ describe('UsersService', () => {
       expect.assertions(1);
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       await expect(usersService.update(user.id, UPDATE_FAILURE_USER_DTO_TEST_OBJ)).rejects.toThrow(UnauthorizedException);
+    });
+  });
+
+  describe('UpdateLoginMetadata', () => {
+    it('should upate user lastLogin and loginCount', async () => {
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const oldLastLogin = TEST_USER.lastLogin;
+      TEST_USER.id = user.id;
+      await usersService.updateLoginMetadata(TEST_USER);
+
+      expect(TEST_USER.loginCount).toBe(1);
+      expect(TEST_USER.lastLogin).not.toBe(oldLastLogin);
     });
   });
 
