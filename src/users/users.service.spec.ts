@@ -166,13 +166,17 @@ describe('UsersService', () => {
     it('should upate user lastLogin and loginCount', async () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const lastLogin = user.lastLogin;
-      const test = await User.findByPk<User>(user.id);
+      const createdUser = await User.findByPk<User>(user.id);
 
-      await usersService.updateLoginMetadata(test);
-      await test.reload();
+      await usersService.updateLoginMetadata(createdUser);
       
-      expect(test.loginCount).toBe(1);
-      expect(test.lastLogin).not.toBe(lastLogin);
+      expect(createdUser.loginCount).toBe(1);
+      expect(createdUser.lastLogin).not.toBe(lastLogin);
+    });
+
+    it('should fail because user passed is null', async () => {
+      expect.assertions(1);
+      await expect(usersService.updateLoginMetadata(null)).rejects.toThrow(NotFoundException);
     });
   });
 
