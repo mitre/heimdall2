@@ -10,38 +10,50 @@ describe('PasswordChangePipe', () => {
     passwordChangePipe = new PasswordChangePipe();
   });
 
+  it('should make sure that the passwords-match pipe is defined', () => {
+    expect(passwordChangePipe).toBeDefined();
+  });
+
   // Tests the classesChanged Helper Function
   describe('classesChanged Helper Function', () => {
     it('should pass', () => {
-      expect(passwordChangePipe.classesChanged('TotallyDifferent199', 'Letmein123')).toBeTruthy();
+      expect(passwordChangePipe.classesChanged('Totally$Different199', 'Letmein123@')).toBeTruthy();
     });
 
     it('should fail because both passwords have the same uppercase letter(s) in the same order', () => {
-      expect(passwordChangePipe.classesChanged('abcLghE17', 'LEtmein123')).toBeFalsy();
+      expect(passwordChangePipe.classesChanged('abc$LghE17', 'LEtmein123')).toBeFalsy();
     });
 
     it('should pass because both passwords have the same uppercase letter(s) but in a different order', () => {
-      expect(passwordChangePipe.classesChanged('abcEghL17', 'LEtmein123')).toBeTruthy();
+      expect(passwordChangePipe.classesChanged('abc$EghL17', 'LEtmein123')).toBeTruthy();
     });
 
     it('should fail because both passwords have the same lowercase letter(s) in the same order', () => {
-      expect(passwordChangePipe.classesChanged('ABCDePQRSt', 'LetMEIN123')).toBeFalsy();
+      expect(passwordChangePipe.classesChanged('ABCDe$PQRSt', 'LetMEIN123')).toBeFalsy();
     });
 
     it('should pass because both passwords have the same lowercase letter(s) but in a different order', () => {
-      expect(passwordChangePipe.classesChanged('ABCDtPQRSe', 'LetMEIN123')).toBeTruthy();
+      expect(passwordChangePipe.classesChanged('ABCDt$PQRSe', 'LetMEIN123')).toBeTruthy();
     });
 
     it('should fail because both passwords have the same number(s) in the same order', () => {
-      expect(passwordChangePipe.classesChanged('ab0cDEF7', '0ABCdef7')).toBeFalsy();
+      expect(passwordChangePipe.classesChanged('ab0c$DEF7', '0ABCdef7')).toBeFalsy();
     });
 
     it('should pass because both passwords have the same number(s) but in a different order', () => {
-      expect(passwordChangePipe.classesChanged('ab7cDEF0', '0ABCdef7')).toBeTruthy();
+      expect(passwordChangePipe.classesChanged('ab7c$4DEF0', '0ABCdef7')).toBeTruthy();
+    });
+
+    it('should pass because both passwords have the same special character(s) but in a different order', () => {
+      expect(passwordChangePipe.classesChanged('ab$c D1EF&', '&ABCdef7$')).toBeTruthy();
+    });
+
+    it('should fail because both passwords have the same special character(s) but in the same order', () => {
+      expect(passwordChangePipe.classesChanged('&abc D1EF$', '&ABCdef7$')).toBeFalsy();
     });
 
     it('should fail because both passwords are the same', () => {
-      expect(passwordChangePipe.classesChanged('Letmein123', 'Letmein123')).toBeFalsy();
+      expect(passwordChangePipe.classesChanged('Letmein123$', 'Letmein123$')).toBeFalsy();
     });
   });
 
@@ -51,6 +63,7 @@ describe('PasswordChangePipe', () => {
     to the classesChanged function being tested above) */
   describe('Test Valid Password Changes', () => {
     it('should return the same UpdateUserDto', () => {
+      jest.spyOn(passwordChangePipe, 'classesChanged').mockReturnValueOnce(true);
       expect(passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ_WITH_LEVENSHTEIN_DISTANCE_OF_FOUR, metaData)).toEqual(UPDATE_USER_DTO_TEST_OBJ_WITH_LEVENSHTEIN_DISTANCE_OF_FOUR);
     });
   });
