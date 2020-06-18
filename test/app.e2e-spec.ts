@@ -10,8 +10,6 @@ describe('AppController (e2e)', () => {
   let databaseService: DatabaseService;
 
   beforeAll(async () => {
-    jest.setTimeout(10000);
-
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
       providers: [DatabaseService]
