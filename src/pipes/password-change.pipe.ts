@@ -18,13 +18,13 @@ export class PasswordChangePipe implements PipeTransform {
       RegExp('[a-z]', 'g'),
       RegExp('[A-Z]', 'g'),
       RegExp('[0-9]', 'g'),
-      RegExp('[^\w\s]', 'g')
+      RegExp(/[^\w\s]/, 'g')
     ]
 
     for(const validator of validators) {
       const currentMatch = [...current.matchAll(validator)];
       const futureMatch = [...future.matchAll(validator)];
-      if(currentMatch == futureMatch) {
+      if(JSON.stringify(currentMatch) === JSON.stringify(futureMatch)) {
         return false;
       }
     }
