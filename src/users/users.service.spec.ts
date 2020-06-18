@@ -165,12 +165,14 @@ describe('UsersService', () => {
   describe('UpdateLoginMetadata', () => {
     it('should upate user lastLogin and loginCount', async () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      const oldLastLogin = TEST_USER.lastLogin;
-      TEST_USER.id = user.id;
-      await usersService.updateLoginMetadata(TEST_USER);
+      const lastLogin = user.lastLogin;
+      const test = await User.findByPk<User>(user.id);
 
-      expect(TEST_USER.loginCount).toBe(1);
-      expect(TEST_USER.lastLogin).not.toBe(oldLastLogin);
+      await usersService.updateLoginMetadata(test);
+      await test.reload();
+      
+      expect(test.loginCount).toBe(1);
+      expect(test.lastLogin).not.toBe(lastLogin);
     });
   });
 

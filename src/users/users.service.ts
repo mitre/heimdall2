@@ -85,9 +85,6 @@ export class UsersService {
   }
 
   async updateLoginMetadata(user: User) {
-    // user.lastLogin = new Date();
-    // user.loginCount++;
-    // user.save();
     this.exists(user);
     const id = user.id;
     user.lastLogin = new Date();
