@@ -13,15 +13,19 @@ describe('PasswordComplexityPipe', () => {
     passwordComplexityPipe = new PasswordComplexityPipe();
   });
 
+  it('should make sure that the passwords-complexity pipe is defined', () => {
+    expect(passwordComplexityPipe).toBeDefined();
+  });
+
   describe('Helper Function Tests', () => {
     describe('hasClasses', () => {
       it('should fail because the password length is less than 15 characters', () => {
         expect(passwordComplexityPipe.hasClasses('$7aB')).toBeFalsy();
       });
 
-      // it('should fail because the password does not contain a special character', () => {
-      //   expect(passwordComplexityPipe.hasClasses('Testpasswordwithoutspecialchar7')).toBeFalsy();
-      // });
+      it('should fail because the password does not contain a special character', () => {
+        expect(passwordComplexityPipe.hasClasses('Testpasswordwithoutspecialchar7')).toBeFalsy();
+      });
 
       it('should fail because the password does not contain a number', () => {
         expect(passwordComplexityPipe.hasClasses('Testpasswordwithoutnumber$')).toBeFalsy();
@@ -65,13 +69,13 @@ describe('PasswordComplexityPipe', () => {
         expect(passwordComplexityPipe.noRepeats('1078')).toBeFalsy();
       });
 
-      // it('should fail because there is more than 3 consecutive repeating numbers in the password', () => {
-      //   expect(passwordComplexityPipe.noRepeats('$$$$')).toBeFalsy();
-      // });
+      it('should fail because there is more than 3 consecutive repeating numbers in the password', () => {
+        expect(passwordComplexityPipe.noRepeats('$$$$')).toBeFalsy();
+      });
 
-      // it('should fail because there is more than 3 special characters back-to-back in the password', () => {
-      //   expect(passwordComplexityPipe.noRepeats('!@#$')).toBeFalsy();
-      // });
+      it('should fail because there is more than 3 special characters back-to-back in the password', () => {
+        expect(passwordComplexityPipe.noRepeats('!@#$')).toBeFalsy();
+      });
 
       it('should fail because there is more than 3 consecutive white spaces in the password', () => {
         expect(passwordComplexityPipe.noRepeats('spa    ce')).toBeFalsy();
