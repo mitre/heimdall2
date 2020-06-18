@@ -129,6 +129,25 @@ describe('UsersService', () => {
     });
   });
 
+  describe('FindModelByEmail', () => {
+    it('should find user models by email', async () => {
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const foundUserModel = await usersService.findModelByEmail(user.email)
+      expect(foundUserModel.email).toEqual(user.email);
+      expect(foundUserModel.firstName).toEqual(user.firstName);
+      expect(foundUserModel.lastName).toEqual(user.lastName);
+      expect(foundUserModel.title).toEqual(user.title);
+      expect(foundUserModel.organization).toEqual(user.organization);
+      expect(foundUserModel.createdAt.valueOf()).toEqual(user.createdAt.valueOf());
+      expect(foundUserModel.id).toEqual(user.id);
+    });
+
+    it('should throw an error if user does not exist', async () => {
+      expect.assertions(1);
+      await expect(usersService.findModelByEmail('doesnotexist@example.com')).rejects.toThrow(NotFoundException);
+    });
+  });
+
   describe('Update', () => {
     // Tests the update function (Successful update)
     it('should update a user', async () => {

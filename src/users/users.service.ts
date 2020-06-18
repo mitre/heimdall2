@@ -31,7 +31,7 @@ export class UsersService {
         email
       }
     });
-    this.exists(user)
+    this.exists(user);
     return new UserDto(user);
   }
 
@@ -41,6 +41,7 @@ export class UsersService {
         email
       }
     });
+    this.exists(user);
     return user;
   }
 
