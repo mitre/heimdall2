@@ -1,7 +1,7 @@
 import { PasswordComplexityPipe } from './password-complexity.pipe';
 import { ArgumentMetadata, BadRequestException } from '@nestjs/common';
-import { CREATE_USER_DTO_TEST_OBJ, UPDATE_USER_DTO_TEST_OBJ, 
-  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD, 
+import { CREATE_USER_DTO_TEST_OBJ, UPDATE_USER_DTO_TEST_OBJ,
+  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
   UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD }
   from '../../test/test.constants';
 
@@ -19,7 +19,7 @@ describe('PasswordComplexityPipe', () => {
 
   describe('Helper Function Tests', () => {
     describe('hasClasses', () => {
-      it('should fail because the password length is less than 15 characters', () => {
+      it('should fail because the password length is less than 15 characters and it has all character classes', () => {
         expect(passwordComplexityPipe.hasClasses('$7aB')).toBeFalsy();
       });
 
@@ -39,7 +39,7 @@ describe('PasswordComplexityPipe', () => {
         expect(passwordComplexityPipe.hasClasses('TESTPASSWORDWITHOUTLOWERCASE7$')).toBeFalsy();
       });
 
-      it('should pass because the password meets the minimum requirements', () => {
+      it('should pass because the password has all character classes and is at least 15 characters', () => {
         expect(passwordComplexityPipe.hasClasses('Atestpassword7$')).toBeTruthy();
       });
     });
@@ -48,7 +48,7 @@ describe('PasswordComplexityPipe', () => {
       it('should fail because there is more than 3 consecutive repeating lowercase characters in the password', () => {
         expect(passwordComplexityPipe.noRepeats('aaaa')).toBeFalsy();
       });
-      
+
       it('should fail because there is more than 3 lowercase characters back-to-back in the password', () => {
         expect(passwordComplexityPipe.noRepeats('test')).toBeFalsy();
       });
@@ -88,9 +88,9 @@ describe('PasswordComplexityPipe', () => {
   });
 
   /* Tests the complexity of a user's password and that when it meets the requirements of:
-    15 characters or longer, at least 1 uppercase letter, lowercase letter, number, special character, 
-    the password meets the requirements of not containing more than three consecutive repeating 
-    characters, and it contains no more than four repeating characters from the same character class, 
+    15 characters or longer, at least 1 uppercase letter, lowercase letter, number, special character,
+    the password meets the requirements of not containing more than three consecutive repeating
+    characters, and it contains no more than four repeating characters from the same character class,
     the same dto object will be returned*/
   describe('Test Valid Password', () => {
     it('should return the same CreateUserDto', () => {
