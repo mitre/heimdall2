@@ -4,6 +4,7 @@ import { INestApplication, ValidationPipe, HttpStatus } from '@nestjs/common';
 import { AppModule } from './../src/app.module';
 import { DatabaseService } from './../src/database/database.service';
 import { CREATE_USER_DTO_TEST_OBJ, CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS, TEST_USER, CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD, CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD, CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD } from './test.constants';
+import { response } from 'express';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -32,12 +33,6 @@ describe('AppController (e2e)', () => {
   });
 
   describe('/users', () => {
-    describe('GET', () => {
-      it('should GET', () => {
-        return request(app.getHttpServer()).get('/users').expect(HttpStatus.NOT_FOUND);
-      });
-    });
-
     describe('POST', () => {
       it('should return 201 status when user is created', async () => {
         return await request(app.getHttpServer()).post('/users').set('Content-Type', 'application/json').send(CREATE_USER_DTO_TEST_OBJ).expect(HttpStatus.CREATED).then(response => {
@@ -88,12 +83,22 @@ describe('AppController (e2e)', () => {
       });
 
       it('should return 400 status if already exisitng email is given', async () => {
-        await request(app.getHttpServer()).post('/users').set('Content-Type', 'application/json').send(CREATE_USER_DTO_TEST_OBJ).expect(HttpStatus.CREATED)
+        await request(app.getHttpServer()).post('/users').set('Content-Type', 'application/json').send(CREATE_USER_DTO_TEST_OBJ).expect(HttpStatus.CREATED);
         return await request(app.getHttpServer()).post('/users').set('Content-Type', 'application/json').send(CREATE_USER_DTO_TEST_OBJ)
           .expect(HttpStatus.INTERNAL_SERVER_ERROR).then(response => {
             expect(response.body.messages[0].email).toEqual('email must be unique');
             expect(response.body.error).toEqual('Internal Server Error');
           });
+      });
+    });
+
+    describe('GET', () => {
+      it('should get user', async () => {
+        let id;
+        await request(app.getHttpServer()).post('/users').set('Content-Type', 'application/json').send(CREATE_USER_DTO_TEST_OBJ).expect(HttpStatus.CREATED).then(response => {
+          id = response.body.id;
+        });
+        return request(app.getHttpServer()).get('/users' + id).expect(HttpStatus.UNAUTHORIZED);
       });
     });
 
