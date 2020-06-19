@@ -31,7 +31,7 @@ export class UsersService {
         email
       }
     });
-    this.exists(user)
+    this.exists(user);
     return new UserDto(user);
   }
 
@@ -41,6 +41,7 @@ export class UsersService {
         email
       }
     });
+    this.exists(user);
     return user;
   }
 
@@ -64,7 +65,7 @@ export class UsersService {
     const user = await this.userModel.findByPk<User>(id);
     this.exists(user);
     try {
-      if(!(await compare(updateUserDto.password, user.encryptedPassword))) {
+      if(!(await compare(updateUserDto.currentPassword, user.encryptedPassword))) {
         throw new UnauthorizedException;
       }
     } catch {
@@ -85,9 +86,15 @@ export class UsersService {
   }
 
   async updateLoginMetadata(user: User) {
+    this.exists(user);
+    const id = user.id;
     user.lastLogin = new Date();
     user.loginCount++;
-    user.save();
+    await this.userModel.update<User>(user, {
+      where: {
+        id
+      }
+    });
   }
 
   async remove(id: number, deleteUserDto: DeleteUserDto) {
