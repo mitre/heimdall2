@@ -186,7 +186,7 @@ describe('UsersService', () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const updatedUser = await usersService.update(user.id, UPDATE_USER_DTO_TEST_WITHOUT_FIRST_NAME);
 
-      expect(updatedUser.email).toEqual(user.email);
+      expect(updatedUser.firstName).toEqual(user.firstName);
       expect(updatedUser.updatedAt.valueOf()).not.toEqual(user.updatedAt.valueOf());
     });
 
