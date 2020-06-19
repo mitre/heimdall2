@@ -12,8 +12,14 @@ import {
   UPDATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_2,
   DELETE_FAILURE_USER_DTO_TEST_OBJ,
-  UPDATE_FAILURE_USER_DTO_TEST_OBJ,
+  UPDATE_USER_DTO_TEST_WITHOUT_TITLE,
+  UPDATE_USER_DTO_TEST_WITHOUT_EMAIL,
+  UPDATE_USER_DTO_TEST_WITHOUT_LAST_NAME,
+  UPDATE_USER_DTO_TEST_WITHOUT_FIRST_NAME,
   UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL,
+  UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
+  UPDATE_USER_DTO_TEST_WITHOUT_ORGANIZATION,
+  UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD,
   DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD,
   CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD,
@@ -168,16 +174,71 @@ describe('UsersService', () => {
       expect(updatedUser.updatedAt.valueOf()).not.toEqual(user.updatedAt.valueOf());
     });
 
+    it('should update a user without updating email', async () => {
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const updatedUser = await usersService.update(user.id, UPDATE_USER_DTO_TEST_WITHOUT_EMAIL);
+
+      expect(updatedUser.email).toEqual(user.email);
+      expect(updatedUser.updatedAt.valueOf()).not.toEqual(user.updatedAt.valueOf());
+    });
+
+    it('should update a user without updating firstName', async () => {
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const updatedUser = await usersService.update(user.id, UPDATE_USER_DTO_TEST_WITHOUT_FIRST_NAME);
+
+      expect(updatedUser.email).toEqual(user.email);
+      expect(updatedUser.updatedAt.valueOf()).not.toEqual(user.updatedAt.valueOf());
+    });
+
+    it('should update a user without updating lastName', async () => {
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const updatedUser = await usersService.update(user.id, UPDATE_USER_DTO_TEST_WITHOUT_LAST_NAME);
+
+      expect(updatedUser.lastName).toEqual(user.lastName);
+      expect(updatedUser.updatedAt.valueOf()).not.toEqual(user.updatedAt.valueOf());
+    });
+
+    it('should update a user without updating organization', async () => {
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const updatedUser = await usersService.update(user.id, UPDATE_USER_DTO_TEST_WITHOUT_ORGANIZATION);
+
+      expect(updatedUser.organization).toEqual(user.organization);
+      expect(updatedUser.updatedAt.valueOf()).not.toEqual(user.updatedAt.valueOf());
+    });
+
+    it('should update a user without updating title', async () => {
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const updatedUser = await usersService.update(user.id, UPDATE_USER_DTO_TEST_WITHOUT_TITLE);
+
+      expect(updatedUser.title).toEqual(user.title);
+      expect(updatedUser.updatedAt.valueOf()).not.toEqual(user.updatedAt.valueOf());
+    });
+
+    it('should update a user without updating password', async () => {
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const beforeUpdate = await User.findByPk<User>(user.id);
+      await usersService.update(user.id, UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS);
+      const updatedUser = await User.findByPk<User>(user.id);
+
+      expect(updatedUser.email).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.email);
+      expect(updatedUser.firstName).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.firstName);
+      expect(updatedUser.lastName).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.lastName);
+      expect(updatedUser.organization).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.organization);
+      expect(updatedUser.title).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.title);
+      expect(updatedUser.encryptedPassword).toEqual(beforeUpdate.encryptedPassword);
+      expect(updatedUser.updatedAt.valueOf()).not.toEqual(user.updatedAt.valueOf());
+    });
+
+    it('should throw an error when the password is invalid', async () => {
+      expect.assertions(1);
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      await expect(usersService.update(user.id, UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD)).rejects.toThrow(UnauthorizedException);
+    });
+
     it('should throw an error when the email is invalid', async () => {
       expect.assertions(1);
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       await expect(usersService.update(user.id, UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL)).rejects.toThrow('Validation error: Validation isEmail on email failed');
-    });
-
-    it('should throw an error when password fields do not match', async () => {
-      expect.assertions(1);
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      await expect(usersService.update(user.id, UPDATE_FAILURE_USER_DTO_TEST_OBJ)).rejects.toThrow(UnauthorizedException);
     });
   });
 
@@ -188,7 +249,7 @@ describe('UsersService', () => {
       const createdUser = await User.findByPk<User>(user.id);
 
       await usersService.updateLoginMetadata(createdUser);
-      
+
       expect(createdUser.loginCount).toBe(1);
       expect(createdUser.lastLogin).not.toBe(lastLogin);
     });

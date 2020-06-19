@@ -65,7 +65,7 @@ export class UsersService {
     const user = await this.userModel.findByPk<User>(id);
     this.exists(user);
     try {
-      if(!(await compare(updateUserDto.password, user.encryptedPassword))) {
+      if(!(await compare(updateUserDto.currentPassword, user.encryptedPassword))) {
         throw new UnauthorizedException;
       }
     } catch {

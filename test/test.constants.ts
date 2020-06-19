@@ -337,6 +337,26 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD: UpdateUserDto = {
 };
 
 // @ts-ignore
+export const UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS: UpdateUserDto = {
+  email: 'updated@example.com',
+  firstName: 'Updated',
+  lastName: 'Updated',
+  organization: 'Updated',
+  title: 'Updated',
+  currentPassword: 'LETmeiN123$$$tP'
+}
+
+// @ts-ignore
+export const UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD: UpdateUserDto = {
+  email: 'abc@yahoo.com',
+  firstName: 'Test',
+  lastName: 'Dummy',
+  organization: 'Fake Org',
+  title: 'fake title',
+  currentPassword: 'invalid_password'
+}
+
+// @ts-ignore
 export const UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD_CONFIRMATION: UpdateUserDto = {
   email: 'abc@yahoo.com',
   firstName: 'Test',
