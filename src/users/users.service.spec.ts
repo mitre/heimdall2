@@ -24,6 +24,7 @@ import {
   CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
+  UPDATE_USER_DTO_TEST_WITHOUT_ROLE,
 } from '../../test/test.constants';
 import { DatabaseService } from '../database/database.service';
 
@@ -69,6 +70,7 @@ describe('UsersService', () => {
       expect(user.title).toEqual(USER_ONE_DTO.title);
       expect(user.organization).toEqual(USER_ONE_DTO.organization);
       expect(user.updatedAt.valueOf()).not.toBe(USER_ONE_DTO.updatedAt.valueOf());
+      expect(user.role).toEqual(USER_ONE_DTO.role);
     });
 
     it('should throw an error when missing the email field', async () => {
@@ -108,6 +110,7 @@ describe('UsersService', () => {
       expect(foundUser.organization).toEqual(user.organization);
       expect(foundUser.createdAt.valueOf()).toEqual(user.createdAt.valueOf());
       expect(foundUser.id).toEqual(user.id);
+      expect(foundUser.role).toEqual(user.role);
     });
 
     it('should throw an error if user does not exist', async () => {
@@ -127,6 +130,7 @@ describe('UsersService', () => {
       expect(foundUser.organization).toEqual(user.organization);
       expect(foundUser.createdAt.valueOf()).toEqual(user.createdAt.valueOf());
       expect(foundUser.id).toEqual(user.id);
+      expect(foundUser.role).toEqual(user.role);
     });
 
     it('should throw an error if user does not exist', async () => {
@@ -146,6 +150,7 @@ describe('UsersService', () => {
       expect(foundUserModel.organization).toEqual(user.organization);
       expect(foundUserModel.createdAt.valueOf()).toEqual(user.createdAt.valueOf());
       expect(foundUserModel.id).toEqual(user.id);
+      expect(foundUserModel.role).toEqual(user.role);
     });
 
     it('should throw an error if user does not exist', async () => {
@@ -165,6 +170,7 @@ describe('UsersService', () => {
       expect(updatedUser.lastName).toEqual(UPDATE_USER_DTO_TEST_OBJ.lastName);
       expect(updatedUser.title).toEqual(UPDATE_USER_DTO_TEST_OBJ.title);
       expect(updatedUser.organization).toEqual(UPDATE_USER_DTO_TEST_OBJ.organization);
+      expect(updatedUser.role).toEqual(UPDATE_USER_DTO_TEST_OBJ.role);
 
       expect(updatedUser.email).not.toEqual(user.email);
       expect(updatedUser.firstName).not.toEqual(user.firstName);
@@ -172,6 +178,7 @@ describe('UsersService', () => {
       expect(updatedUser.title).not.toEqual(user.title);
       expect(updatedUser.organization).not.toEqual(user.organization);
       expect(updatedUser.updatedAt.valueOf()).not.toEqual(user.updatedAt.valueOf());
+      expect(updatedUser.role).not.toEqual(user.role);
     });
 
     it('should update a user without updating email', async () => {
@@ -213,6 +220,14 @@ describe('UsersService', () => {
       expect(updatedUser.title).toEqual(user.title);
       expect(updatedUser.updatedAt.valueOf()).not.toEqual(user.updatedAt.valueOf());
     });
+    
+    it('should update a user without updating role', async () => {
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const updatedUser = await usersService.update(user.id, UPDATE_USER_DTO_TEST_WITHOUT_ROLE);
+
+      expect(updatedUser.role).toEqual(user.role);
+      expect(updatedUser.updatedAt.valueOf()).not.toEqual(user.updatedAt.valueOf());
+    });
 
     it('should update a user without updating password', async () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
@@ -225,6 +240,7 @@ describe('UsersService', () => {
       expect(updatedUser.lastName).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.lastName);
       expect(updatedUser.organization).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.organization);
       expect(updatedUser.title).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.title);
+      expect(updatedUser.role).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.role);
       expect(updatedUser.encryptedPassword).toEqual(beforeUpdate.encryptedPassword);
       expect(updatedUser.updatedAt.valueOf()).not.toEqual(user.updatedAt.valueOf());
     });
@@ -282,12 +298,13 @@ describe('UsersService', () => {
     it('should remove created user', async () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const removedUser = await usersService.remove(user.id, DELETE_USER_DTO_TEST_OBJ);
-      expect.assertions(6);
+      expect.assertions(7);
       expect(removedUser.email).toEqual(user.email);
       expect(removedUser.firstName).toEqual(user.firstName);
       expect(removedUser.lastName).toEqual(user.lastName);
       expect(removedUser.organization).toEqual(user.organization);
       expect(removedUser.title).toEqual(user.title);
+      expect(removedUser.role).toEqual(user.role);
       await expect(usersService.findByEmail(user.email)).rejects.toThrow(NotFoundException);
     });
   });
