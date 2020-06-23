@@ -7,6 +7,11 @@ import { UserDto } from '../src/users/dto/user.dto';
 
 export const ID = 7;
 
+export const LOGIN_AUTHENTICATION = {
+  email: 'abc@yahoo.com',
+  password: 'LETmeiN123$$$tP'
+};
+
 // @ts-ignore
 export const TEST_USER: User = {
   email: 'abc@yahoo.com',
