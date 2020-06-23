@@ -485,6 +485,8 @@ export const USER_ONE_DTO = new UserDto(USER_ARRAY[0]);
 
 export const USER_TWO_DTO = new UserDto(USER_ARRAY[1]);
 
+export const ADMIN_USER_DTO = new UserDto(ADMIN);
+
 // UPDATED_TEST_USER dto
 export const UPDATED_USER_DTO = new UserDto(USER_ARRAY[2]);
 
