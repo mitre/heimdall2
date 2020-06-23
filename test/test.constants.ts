@@ -309,9 +309,9 @@ export const UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD: UpdateUserDto = {
   organization: 'Updated Org',
   title: 'updated title',
   role: 'admin',
-  password: 'LETmeiN927!$@tP',
-  passwordConfirmation: 'LETmeiN123$$$tP',
-  currentPassword: 'ABCdefG456!@#pT'
+  password: 'ABCdefG456!@#pT',
+  passwordConfirmation: 'ABCdefG456!@#pT',
+  currentPassword: 'LETmeiN123$$$tP'
 };
 
 // @ts-ignore
@@ -321,8 +321,8 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_EMAIL: UpdateUserDto = {
   organization: 'Fake Org',
   title: 'fake title',
   role: 'admin',
-  password: 'LETmeiN123$$$tP',
-  passwordConfirmation: 'LETmeiN123$$$tP',
+  password: 'ABCdefG456!@#pT',
+  passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP'
 };
 
@@ -334,8 +334,8 @@ export const UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL: UpdateUserDto = {
   organization: 'Fake Org',
   title: 'fake title',
   role: 'admin',
-  password: 'LETmeiN123$$$tP',
-  passwordConfirmation: 'LETmeiN123$$$tP',
+  password: 'ABCdefG456!@#pT',
+  passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP'
 };
 
@@ -346,8 +346,8 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_FIRST_NAME: UpdateUserDto = {
   organization: 'Fake Org',
   title: 'fake title',
   role: 'admin',
-  password: 'LETmeiN123$$$tP',
-  passwordConfirmation: 'LETmeiN123$$$tP',
+  password: 'ABCdefG456!@#pT',
+  passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP'
 };
 
@@ -358,8 +358,8 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_LAST_NAME: UpdateUserDto = {
   organization: 'Fake Org',
   title: 'fake title',
   role: 'admin',
-  password: 'LETmeiN123$$$tP',
-  passwordConfirmation: 'LETmeiN123$$$tP',
+  password: 'ABCdefG456!@#pT',
+  passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP'
 };
 
@@ -370,8 +370,8 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_ORGANIZATION: UpdateUserDto = {
   lastName: 'Dummy',
   title: 'fake title',
   role: 'admin',
-  password: 'LETmeiN123$$$tP',
-  passwordConfirmation: 'LETmeiN123$$$tP',
+  password: 'ABCdefG456!@#pT',
+  passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP'
 };
 
@@ -382,8 +382,8 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_TITLE: UpdateUserDto = {
   lastName: 'Dummy',
   organization: 'Fake Org',
   role: 'admin',
-  password: 'LETmeiN123$$$tP',
-  passwordConfirmation: 'LETmeiN123$$$tP',
+  password: 'ABCdefG456!@#pT',
+  passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP'
 };
 
@@ -395,7 +395,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD: UpdateUserDto = {
   organization: 'Fake Org',
   title: 'fake title',
   role: 'admin',
-  passwordConfirmation: 'LETmeiN123$$$tP',
+  passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP'
 };
 
@@ -418,6 +418,8 @@ export const UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD: UpdateUserDto = {
   organization: 'Fake Org',
   title: 'fake title',
   role: 'admin',
+  password: 'ABCdefG456!@#pT',
+  passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'invalid_password'
 }
 
@@ -429,7 +431,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD_CONFIRMATION: UpdateUserDto =
   organization: 'Fake Org',
   title: 'fake title',
   role: 'admin',
-  password: 'LETmeiN123$$$tP',
+  password: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP'
 };
 
@@ -440,20 +442,8 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_ROLE: UpdateUserDto = {
   lastName: 'Dummy',
   organization: 'Fake Org',
   title: 'fake title',
-  password: 'LETmeiN123$$$tP',
-  passwordConfirmation: 'LETmeiN123$$$tP',
-  currentPassword: 'LETmeiN123$$$tP'
-};
-
-export const UPDATE_FAILURE_USER_DTO_TEST_OBJ: UpdateUserDto = {
-  email: 'abc@yahoo.com',
-  firstName: 'Test',
-  lastName: 'Dummy',
-  organization: 'Fake Org',
-  title: 'fake title',
-  role: 'admin',
-  password: 'LETmeiN123$$$t',
-  passwordConfirmation: 'LETmeiN123$$$tP',
+  password: 'ABCdefG456!@#pT',
+  passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP'
 };
 
@@ -465,8 +455,8 @@ export const UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD: UpdateUserDto 
   organization: 'Fake Org',
   title: 'fake title',
   role: 'admin',
-  password: 'LETmeiN123$$$tP',
-  passwordConfirmation: 'LETmeiN123$$$tP',
+  password: 'ABCdefG456!@#pT',
+  passwordConfirmation: 'ABCdefG456!@#pT',
 };
 
 export const DELETE_USER_DTO_TEST_OBJ: DeleteUserDto = {
@@ -474,7 +464,7 @@ export const DELETE_USER_DTO_TEST_OBJ: DeleteUserDto = {
 };
 
 export const DELETE_FAILURE_USER_DTO_TEST_OBJ: DeleteUserDto = {
-  password: 'LETmeiN123$$$t'
+  password: 'Invalid_password'
 };
 
 // @ts-ignore

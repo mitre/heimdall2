@@ -14,7 +14,8 @@ import { CREATE_USER_DTO_TEST_OBJ,
   DELETE_USER_DTO_TEST_OBJ, 
   DELETE_FAILURE_USER_DTO_TEST_OBJ, 
   CREATE_USER_DTO_ADMIN,
-  ADMIN
+  ADMIN,
+  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE
 } from './test.constants';
 
 describe('AppController (e2e)', () => {
@@ -94,6 +95,14 @@ describe('AppController (e2e)', () => {
           });
       });
 
+      it('should return 400 status if no role is provided', async () => {
+        return await request(app.getHttpServer()).post('/users').set('Content-Type', 'application/json').send(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE)
+          .expect(HttpStatus.BAD_REQUEST).then(response => {
+            expect(response.body.message[0]).toEqual('role should not be empty');
+            expect(response.body.error).toEqual('Bad Request');
+          });
+      });
+
       it('should return 500 status if already exisitng email is given', async () => {
         await request(app.getHttpServer()).post('/users').set('Content-Type', 'application/json').send(CREATE_USER_DTO_TEST_OBJ).expect(HttpStatus.CREATED);
         return await request(app.getHttpServer()).post('/users').set('Content-Type', 'application/json').send(CREATE_USER_DTO_TEST_OBJ)
@@ -132,7 +141,7 @@ describe('AppController (e2e)', () => {
       });
 
       it('should return 400 status if given invalid token', async () => {
-        let id = -1;
+        const id = -1;
         return request(app.getHttpServer()).get('/users/' + id).set('Authorization', 'bearer ' + 'badtoken').expect(HttpStatus.UNAUTHORIZED).then(response => {
           expect(response.body.message).toEqual('Unauthorized');
         });
@@ -191,63 +200,63 @@ describe('AppController (e2e)', () => {
         });
 
         return (await request(app.getHttpServer()).put('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD).expect(HttpStatus.UNAUTHORIZED));
+      });
     });
-  });
 
-  describe('DELETE', () => {
+    describe('DELETE', () => {
     // it('should return 200 status after user is deleted', async () => {
     //   let id;
     //   await request(app.getHttpServer()).post('/users').set('Content-Type', 'application/json').send(CREATE_USER_DTO_TEST_OBJ).expect(HttpStatus.CREATED).then(response => {
     //     id = response.body.id;
     //   });
 
-    //   let jwtToken;
-    //   await request(app.getHttpServer()).post('/authn/login').set('Content-Type', 'application/json').send(LOGIN_AUTHENTICATION).expect(HttpStatus.CREATED).then(response => {
-    //     jwtToken = response.body.accessToken;
-    //   });
+      //   let jwtToken;
+      //   await request(app.getHttpServer()).post('/authn/login').set('Content-Type', 'application/json').send(LOGIN_AUTHENTICATION).expect(HttpStatus.CREATED).then(response => {
+      //     jwtToken = response.body.accessToken;
+      //   });
 
-    //   return (await request(app.getHttpServer()).delete('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(DELETE_USER_DTO_TEST_OBJ).expect(HttpStatus.OK).then(response => {
-    //     expect(response.body.createdAt.valueOf()).not.toBe(TEST_USER.createdAt.valueOf());
-    //       expect(response.body.email).toEqual(TEST_USER.email);
-    //       expect(response.body.firstName).toEqual(TEST_USER.firstName);
-    //       expect(response.body.id).toEqual(id);
-    //       expect(response.body.lastLogin).toEqual(null);
-    //       expect(response.body.lastName).toEqual(TEST_USER.lastName);
-    //       expect(response.body.loginCount).toEqual(TEST_USER.loginCount.toString());
-    //       expect(response.body.organization).toEqual(TEST_USER.organization);
-    //       expect(response.body.role).toEqual(TEST_USER.role);
-    //       expect(response.body.title).toEqual(TEST_USER.title);
-    //       expect(response.body.updatedAt.valueOf()).not.toBe(TEST_USER.updatedAt.valueOf());
-    //   }));
-    // });
+      //   return (await request(app.getHttpServer()).delete('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(DELETE_USER_DTO_TEST_OBJ).expect(HttpStatus.OK).then(response => {
+      //     expect(response.body.createdAt.valueOf()).not.toBe(TEST_USER.createdAt.valueOf());
+      //       expect(response.body.email).toEqual(TEST_USER.email);
+      //       expect(response.body.firstName).toEqual(TEST_USER.firstName);
+      //       expect(response.body.id).toEqual(id);
+      //       expect(response.body.lastLogin).toEqual(null);
+      //       expect(response.body.lastName).toEqual(TEST_USER.lastName);
+      //       expect(response.body.loginCount).toEqual(TEST_USER.loginCount.toString());
+      //       expect(response.body.organization).toEqual(TEST_USER.organization);
+      //       expect(response.body.role).toEqual(TEST_USER.role);
+      //       expect(response.body.title).toEqual(TEST_USER.title);
+      //       expect(response.body.updatedAt.valueOf()).not.toBe(TEST_USER.updatedAt.valueOf());
+      //   }));
+      // });
 
-    // it('should return 401 status because password is wrong', async () => {
-    //   let id;
-    //   await request(app.getHttpServer()).post('/users').set('Content-Type', 'application/json').send(CREATE_USER_DTO_TEST_OBJ).expect(HttpStatus.CREATED).then(response => {
-    //     id = response.body.id;
-    //   });
+      // it('should return 401 status because password is wrong', async () => {
+      //   let id;
+      //   await request(app.getHttpServer()).post('/users').set('Content-Type', 'application/json').send(CREATE_USER_DTO_TEST_OBJ).expect(HttpStatus.CREATED).then(response => {
+      //     id = response.body.id;
+      //   });
 
-    //   let jwtToken;
-    //   await request(app.getHttpServer()).post('/authn/login').set('Content-Type', 'application/json').send(LOGIN_AUTHENTICATION).expect(HttpStatus.CREATED).then(response => {
-    //     jwtToken = response.body.accessToken;
-    //   });
+      //   let jwtToken;
+      //   await request(app.getHttpServer()).post('/authn/login').set('Content-Type', 'application/json').send(LOGIN_AUTHENTICATION).expect(HttpStatus.CREATED).then(response => {
+      //     jwtToken = response.body.accessToken;
+      //   });
 
-    //   return (await request(app.getHttpServer()).delete('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(DELETE_FAILURE_USER_DTO_TEST_OBJ).expect(HttpStatus.UNAUTHORIZED));
-    // });
+      //   return (await request(app.getHttpServer()).delete('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(DELETE_FAILURE_USER_DTO_TEST_OBJ).expect(HttpStatus.UNAUTHORIZED));
+      // });
 
-    it('should return 200 status after user is deleted by admin', async () => {
-      let id;
-      await request(app.getHttpServer()).post('/users').set('Content-Type', 'application/json').send(CREATE_USER_DTO_ADMIN).expect(HttpStatus.CREATED).then(response => {
-        id = response.body.id;
-      });
+      it('should return 200 status after user is deleted by admin', async () => {
+        let id;
+        await request(app.getHttpServer()).post('/users').set('Content-Type', 'application/json').send(CREATE_USER_DTO_ADMIN).expect(HttpStatus.CREATED).then(response => {
+          id = response.body.id;
+        });
 
-      let jwtToken;
-      await request(app.getHttpServer()).post('/authn/login').set('Content-Type', 'application/json').send(LOGIN_AUTHENTICATION).expect(HttpStatus.CREATED).then(response => {
-        jwtToken = response.body.accessToken;
-      });
+        let jwtToken;
+        await request(app.getHttpServer()).post('/authn/login').set('Content-Type', 'application/json').send(LOGIN_AUTHENTICATION).expect(HttpStatus.CREATED).then(response => {
+          jwtToken = response.body.accessToken;
+        });
 
-      await request(app.getHttpServer()).delete('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(DELETE_USER_DTO_TEST_OBJ).expect(HttpStatus.OK).then(response => {
-        expect(response.body.createdAt.valueOf()).not.toBe(ADMIN.createdAt.valueOf());
+        await request(app.getHttpServer()).delete('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(DELETE_USER_DTO_TEST_OBJ).expect(HttpStatus.OK).then(response => {
+          expect(response.body.createdAt.valueOf()).not.toBe(ADMIN.createdAt.valueOf());
           expect(response.body.email).toEqual(ADMIN.email);
           expect(response.body.firstName).toEqual(ADMIN.firstName);
           expect(response.body.id).toEqual(id);
@@ -258,15 +267,15 @@ describe('AppController (e2e)', () => {
           expect(response.body.role).toEqual(ADMIN.role);
           expect(response.body.title).toEqual(ADMIN.title);
           expect(response.body.updatedAt.valueOf()).not.toBe(ADMIN.updatedAt.valueOf());
-      });
+        });
 
-      return request(app.getHttpServer()).get('/users/' + id).set('Authorization', 'bearer ' + jwtToken).expect(HttpStatus.NOT_FOUND).then(response => {
-        expect(response.body.message).toEqual('User with given id not found');
-        expect(response.body.error).toEqual('Not Found');
+        return request(app.getHttpServer()).get('/users/' + id).set('Authorization', 'bearer ' + jwtToken).expect(HttpStatus.NOT_FOUND).then(response => {
+          expect(response.body.message).toEqual('User with given id not found');
+          expect(response.body.error).toEqual('Not Found');
+        });
       });
     });
   });
-});
 
   afterAll(async () => {
     await app.close();

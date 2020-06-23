@@ -39,5 +39,5 @@ jobs:
          npx sequelize-cli db:migrate
 
      - name: Run test coverage
-       run: npm run test:cov
+       run: npm run test:ci-cov
 
