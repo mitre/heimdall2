@@ -18,6 +18,9 @@ export class UpdateUserDto {
   readonly title: string;
 
   @IsOptional()
+  readonly role: string;
+
+  @IsOptional()
   readonly password: string;
 
   @IsOptional()

@@ -52,6 +52,7 @@ export class UsersService {
     user.lastName = createUserDto.lastName;
     user.title = createUserDto.title;
     user.organization = createUserDto.organization;
+    user.role = createUserDto.role;
     try {
       user.encryptedPassword = await hash(createUserDto.password, 14);
     } catch {
@@ -76,6 +77,7 @@ export class UsersService {
     user.lastName = updateUserDto.lastName || user.lastName;
     user.title = updateUserDto.title || user.title;
     user.organization = updateUserDto.organization || user.organization;
+    user.role = updateUserDto.role || user.role;
     if(updateUserDto.password) {
       user.encryptedPassword = await hash(updateUserDto.password, 14);
       user.passwordChangedAt = new Date();
