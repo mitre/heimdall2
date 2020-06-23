@@ -25,6 +25,7 @@ import {
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
   UPDATE_USER_DTO_TEST_WITHOUT_ROLE,
+  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE,
 } from '../../test/test.constants';
 import { DatabaseService } from '../database/database.service';
 
@@ -86,6 +87,11 @@ describe('UsersService', () => {
     it('should throw an error when missing the password field', async () => {
       expect.assertions(1);
       await expect(usersService.create(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD)).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw an error when missing the role field', async () => {
+      expect.assertions(1);
+      await expect(usersService.create(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE)).rejects.toThrow('notNull Violation: User.role cannot be null');
     });
   });
 
