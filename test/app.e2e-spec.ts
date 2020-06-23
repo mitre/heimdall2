@@ -199,7 +199,7 @@ describe('AppController (e2e)', () => {
           jwtToken = response.body.accessToken;
         });
 
-        return (await request(app.getHttpServer()).put('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD).expect(HttpStatus.UNAUTHORIZED));
+        return request(app.getHttpServer()).put('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD).expect(HttpStatus.UNAUTHORIZED);
       });
     });
 
@@ -241,7 +241,7 @@ describe('AppController (e2e)', () => {
       //     jwtToken = response.body.accessToken;
       //   });
 
-      //   return (await request(app.getHttpServer()).delete('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(DELETE_FAILURE_USER_DTO_TEST_OBJ).expect(HttpStatus.UNAUTHORIZED));
+      //   return request(app.getHttpServer()).delete('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(DELETE_FAILURE_USER_DTO_TEST_OBJ).expect(HttpStatus.UNAUTHORIZED);
       // });
 
       it('should return 200 status after user is deleted by admin', async () => {
