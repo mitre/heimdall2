@@ -6,9 +6,6 @@ import { UpdateUserDto } from '../users/dto/update-user.dto';
 export class PasswordChangePipe implements PipeTransform {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   transform(value: any, metadata: ArgumentMetadata) {
-    if(value.password == null) {
-      console.log("******value: " + (value instanceof UpdateUserDto));
-    }
     if((value instanceof UpdateUserDto) && (value.password == null) && (value.passwordConfirmation == null)) {
       return value;
     }
