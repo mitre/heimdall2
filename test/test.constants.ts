@@ -297,7 +297,7 @@ export const UPDATE_USER_DTO_TEST_OBJ: UpdateUserDto = {
   currentPassword: 'LETmeiN123$$$tP'
 };
 
-export const UPDATE_USER_DTO_TEST_OBJ_WITH_LEVENSHTEIN_DISTANCE_OF_FOUR: UpdateUserDto = {
+export const UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD: UpdateUserDto = {
   email: 'updatedemail@yahoo.com',
   firstName: 'Updated',
   lastName: 'Name',
