@@ -15,7 +15,8 @@ import { CREATE_USER_DTO_TEST_OBJ,
   DELETE_FAILURE_USER_DTO_TEST_OBJ, 
   CREATE_USER_DTO_ADMIN,
   ADMIN,
-  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE
+  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE,
+  UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS
 } from './test.constants';
 
 describe('AppController (e2e)', () => {
@@ -125,7 +126,7 @@ describe('AppController (e2e)', () => {
           jwtToken = response.body.accessToken;
         });
 
-        return request(app.getHttpServer()).get('/users/' + id).set('Authorization', 'bearer ' + jwtToken).expect(HttpStatus.OK).then(response => {
+        return await request(app.getHttpServer()).get('/users/' + id).set('Authorization', 'bearer ' + jwtToken).expect(HttpStatus.OK).then(response => {
           expect(response.body.createdAt.valueOf()).not.toBe(TEST_USER.createdAt.valueOf());
           expect(response.body.email).toEqual(TEST_USER.email);
           expect(response.body.firstName).toEqual(TEST_USER.firstName);
@@ -142,7 +143,7 @@ describe('AppController (e2e)', () => {
 
       it('should return 400 status if given invalid token', async () => {
         const id = -1;
-        return request(app.getHttpServer()).get('/users/' + id).set('Authorization', 'bearer ' + 'badtoken').expect(HttpStatus.UNAUTHORIZED).then(response => {
+        return await request(app.getHttpServer()).get('/users/' + id).set('Authorization', 'bearer ' + 'badtoken').expect(HttpStatus.UNAUTHORIZED).then(response => {
           expect(response.body.message).toEqual('Unauthorized');
         });
       });
@@ -160,7 +161,7 @@ describe('AppController (e2e)', () => {
           jwtToken = response.body.accessToken;
         });
 
-        return (await request(app.getHttpServer()).put('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD).expect(HttpStatus.OK).then(response => {
+        return await request(app.getHttpServer()).put('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD).expect(HttpStatus.OK).then(response => {
           expect(response.body.email).toEqual(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD.email);
           expect(response.body.firstName).toEqual(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD.firstName);
           expect(response.body.id).toEqual(id);
@@ -168,7 +169,29 @@ describe('AppController (e2e)', () => {
           expect(response.body.organization).toEqual(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD.organization);
           expect(response.body.title).toEqual(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD.title);
           expect(response.body.role).toEqual(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD.role);
-        }));
+        });
+      });
+
+      it('should return 200 status when user is updated without changing password', async () => {
+        let id;
+        await request(app.getHttpServer()).post('/users').set('Content-Type', 'application/json').send(CREATE_USER_DTO_TEST_OBJ).expect(HttpStatus.CREATED).then(response => {
+          id = response.body.id;
+        });
+
+        let jwtToken;
+        await request(app.getHttpServer()).post('/authn/login').set('Content-Type', 'application/json').send(LOGIN_AUTHENTICATION).expect(HttpStatus.CREATED).then(response => {
+          jwtToken = response.body.accessToken;
+        });
+
+        return await request(app.getHttpServer()).put('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS).expect(HttpStatus.OK).then(response => {
+          expect(response.body.email).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.email);
+          expect(response.body.firstName).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.firstName);
+          expect(response.body.id).toEqual(id);
+          expect(response.body.lastName).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.lastName);
+          expect(response.body.organization).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.organization);
+          expect(response.body.title).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.title);
+          expect(response.body.role).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.role);
+        });
       });
 
       it('should return 400 status when currentPassword is empty', async () => {
@@ -182,10 +205,10 @@ describe('AppController (e2e)', () => {
           jwtToken = response.body.accessToken;
         });
 
-        return (await request(app.getHttpServer()).put('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD).expect(HttpStatus.BAD_REQUEST).then(response => {
+        return await request(app.getHttpServer()).put('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD).expect(HttpStatus.BAD_REQUEST).then(response => {
           expect(response.body.message[0]).toEqual('currentPassword should not be empty');
           expect(response.body.error).toEqual('Bad Request');
-        }));
+        });
       })
 
       it('should return 401 status when currentPassword is wrong', async () => {
@@ -269,7 +292,7 @@ describe('AppController (e2e)', () => {
           expect(response.body.updatedAt.valueOf()).not.toBe(ADMIN.updatedAt.valueOf());
         });
 
-        return request(app.getHttpServer()).get('/users/' + id).set('Authorization', 'bearer ' + jwtToken).expect(HttpStatus.NOT_FOUND).then(response => {
+        return await request(app.getHttpServer()).get('/users/' + id).set('Authorization', 'bearer ' + jwtToken).expect(HttpStatus.NOT_FOUND).then(response => {
           expect(response.body.message).toEqual('User with given id not found');
           expect(response.body.error).toEqual('Not Found');
         });
