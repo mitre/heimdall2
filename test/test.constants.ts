@@ -7,9 +7,21 @@ import { UserDto } from '../src/users/dto/user.dto';
 
 export const ID = 7;
 
+export const MINUTE_IN_MILLISECONDS = 60000;
+
 export const LOGIN_AUTHENTICATION = {
   email: 'abc@yahoo.com',
   password: 'LETmeiN123$$$tP'
+};
+
+export const ADMIN_LOGIN_AUTHENTICATION = {
+  email: 'admin@yahoo.com',
+  password: 'LETmeiN123$$$tP'
+};
+
+export const BAD_LOGIN_AUTHENTICATION = {
+  email: 'abc@yahoo.com',
+  password: 'Invalid_password'
 };
 
 // @ts-ignore
@@ -157,13 +169,13 @@ export const CREATE_USER_DTO_TEST_OBJ: CreateUserDto = {
   role: 'user'
 };
 
-export const CREATE_USER_DTO_ADMIN: CreateUserDto = {
-  email: 'abc@yahoo.com',
+export const CREATE_ADMIN_DTO: CreateUserDto = {
+  email: 'admin@yahoo.com',
   password: 'LETmeiN123$$$tP',
   passwordConfirmation: 'LETmeiN123$$$tP',
   firstName: 'Test',
   lastName: 'Dummy',
-  title: 'fake title',
+  title: 'Admin',
   organization: 'Fake Org',
   role: 'admin'
 };
@@ -288,6 +300,18 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE: CreateUserDto = {
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
+};
+
+// @ts-ignore
+export const CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD: CreateUserDto = {
+  email: 'abc@yahoo.com',
+  password: 'InvalidPass1',
+  passwordConfirmation: 'InvalidPass1',
+  firstName: 'Test',
+  lastName: 'Dummy',
+  title: 'fake title',
+  organization: 'Fake Org',
+  role: 'admin'
 };
 
 export const UPDATE_USER_DTO_TEST_OBJ: UpdateUserDto = {
@@ -444,6 +468,30 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_ROLE: UpdateUserDto = {
   title: 'fake title',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'ABCdefG456!@#pT',
+  currentPassword: 'LETmeiN123$$$tP'
+};
+
+// @ts-ignore
+export const UPDATE_USER_DTO_TEST_WITH_NOT_COMPLEX_PASSWORD: UpdateUserDto = {
+  email: 'abc@yahoo.com',
+  firstName: 'Test',
+  lastName: 'Dummy',
+  organization: 'Fake Org',
+  title: 'fake title',
+  password: 'Invalidpass1',
+  passwordConfirmation: 'Invalidpass1',
+  currentPassword: 'LETmeiN123$$$tP'
+};
+
+export const UPDATE_USER_DTO_TEST_OBJ_WITH_MISSMATCHING_PASSWORDS: UpdateUserDto = {
+  email: 'updatedemail@yahoo.com',
+  firstName: 'Updated',
+  lastName: 'Name',
+  organization: 'Updated Org',
+  title: 'updated title',
+  role: 'admin',
+  password: 'ABCdefG456!@#pT',
+  passwordConfirmation: 'defABCg789*(%Pt',
   currentPassword: 'LETmeiN123$$$tP'
 };
 
