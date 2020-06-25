@@ -1,14 +1,27 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
-import { Module } from "@nestjs/common";
-import { EvaluationsService } from "./evaluations.service";
+import { Model, Column, Table, CreatedAt, UpdatedAt, BelongsTo, PrimaryKey, AllowNull, DataType
+} from "sequelize-typescript";
 
 
-@Injectable()
-export class Evaluation {
-  constructor(
-    @InjectModel(Evaluation)
-    private evaluation: typeof Evaluation
-  ) {}
+@Table
+export class Evaluation extends Model<Evaluation> {
+  @PrimaryKey
+  @AutoIncrement
+  @AllowNull(false)
+  @Column(DataType.BIGINT)
+  id: number;
 
+  @Column
+  version!: string;
+
+
+
+  @CreatedAt
+  @AllowNull(false)
+  @Column
+  createdAt: Date;
+
+  @UpdatedAt
+  @AllowNull(false)
+  @Column
+  updatedAt: Date;
 }
