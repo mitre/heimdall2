@@ -1,6 +1,11 @@
 import { PasswordChangePipe } from './password-change.pipe';
 import { ArgumentMetadata, BadRequestException } from '@nestjs/common';
-import { UPDATE_USER_DTO_TEST_OBJ, UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD, UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS } from '../../test/test.constants';
+import {
+  UPDATE_USER_DTO_TEST_OBJ,
+  UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD,
+  UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
+  CREATE_USER_DTO_TEST_OBJ
+} from '../../test/test.constants';
 
 describe('PasswordChangePipe', () => {
   let passwordChangePipe: PasswordChangePipe;
@@ -62,25 +67,25 @@ describe('PasswordChangePipe', () => {
     and at least 4 character classes are changed (2nd part is mocked out due
     to the classesChanged function being tested above) */
   describe('Test Valid Password Changes', () => {
-    // it('should return the same UpdateUserDto', () => {
-    //   jest.spyOn(passwordChangePipe, 'classesChanged').mockReturnValueOnce(true);
-    //   expect(passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD, metaData)).toEqual(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD);
-    // });
+    it('should return the same UpdateUserDto', () => {
+      jest.spyOn(passwordChangePipe, 'classesChanged').mockReturnValueOnce(true);
+      expect(passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD, metaData)).toEqual(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD);
+    });
 
     it('should return UpdateUserDto if password fields are null', () => {
       jest.spyOn(passwordChangePipe, 'classesChanged').mockReturnValueOnce(true);
-      expect(passwordChangePipe.transform(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS, metaData)).toEqual(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD);
+      expect(passwordChangePipe.transform(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS, metaData)).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS);
     });
   });
 
   /* Tests that when a user tries to update their password with a new password
     that's Levenshtein Distance is < 8, it throws a BadRequestException */
   describe('Test Invalid Password Changes', () => {
-    // it('should throw a BadRequestException', () => {
-    //   expect(() => passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ, metaData)).toThrowError(BadRequestException);
-    //   expect(() => passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ, metaData)).toThrowError('A minimum of four character classes must be changed when updating a password.' +
-    //     ' A minimum of eight of the total number of characters must be changed when updating a password.');
-    // });
+    it('should throw a BadRequestException', () => {
+      expect(() => passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ, metaData)).toThrowError(BadRequestException);
+      expect(() => passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ, metaData)).toThrowError('A minimum of four character classes must be changed when updating a password.' +
+        ' A minimum of eight of the total number of characters must be changed when updating a password.');
+    });
   });
 
 });

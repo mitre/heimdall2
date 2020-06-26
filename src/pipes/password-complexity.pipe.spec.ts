@@ -1,9 +1,11 @@
 import { PasswordComplexityPipe } from './password-complexity.pipe';
 import { ArgumentMetadata, BadRequestException } from '@nestjs/common';
-import { CREATE_USER_DTO_TEST_OBJ, UPDATE_USER_DTO_TEST_OBJ,
+import {
+  CREATE_USER_DTO_TEST_OBJ, UPDATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
-  UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD }
-  from '../../test/test.constants';
+  UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD,
+  UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS
+} from '../../test/test.constants';
 
 describe('PasswordComplexityPipe', () => {
   let passwordComplexityPipe: PasswordComplexityPipe;
@@ -100,6 +102,10 @@ describe('PasswordComplexityPipe', () => {
     it('should return the same UpdateUserDto', () => {
       expect(passwordComplexityPipe.transform(UPDATE_USER_DTO_TEST_OBJ, metaData)).toEqual(UPDATE_USER_DTO_TEST_OBJ);
     });
+
+    it('should return UpdateUserDto if password fields are null', () => {
+      expect(passwordComplexityPipe.transform(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS, metaData)).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS);
+    });
   });
 
   /* Tests that when a password does not meet all the minimum requirements,
@@ -108,17 +114,17 @@ describe('PasswordComplexityPipe', () => {
     it('should throw a BadRequestException for CreateUserDto', () => {
       expect(() => passwordComplexityPipe.transform(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD, metaData)).toThrowError(BadRequestException);
       expect(() => passwordComplexityPipe.transform(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD, metaData)).toThrowError('Password does not meet complexity requirements. Passwords are a minimum of 15' +
-      ' characters in length. Passwords must contain at least one special character, number, upper-case letter, and' +
-      ' lower-case letter. Passwords cannot contain more than three consecutive repeating characters.' +
-      ' Passwords cannot contain more than four repeating characters from the same character class.');
+        ' characters in length. Passwords must contain at least one special character, number, upper-case letter, and' +
+        ' lower-case letter. Passwords cannot contain more than three consecutive repeating characters.' +
+        ' Passwords cannot contain more than four repeating characters from the same character class.');
     });
 
     it('should throw a BadRequestException for UpdateUserDto', () => {
       expect(() => passwordComplexityPipe.transform(UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD, metaData)).toThrowError(BadRequestException);
       expect(() => passwordComplexityPipe.transform(UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD, metaData)).toThrowError('Password does not meet complexity requirements. Passwords are a minimum of 15' +
-      ' characters in length. Passwords must contain at least one special character, number, upper-case letter, and' +
-      ' lower-case letter. Passwords cannot contain more than three consecutive repeating characters.' +
-      ' Passwords cannot contain more than four repeating characters from the same character class.');
+        ' characters in length. Passwords must contain at least one special character, number, upper-case letter, and' +
+        ' lower-case letter. Passwords cannot contain more than three consecutive repeating characters.' +
+        ' Passwords cannot contain more than four repeating characters from the same character class.');
     });
   });
 });
