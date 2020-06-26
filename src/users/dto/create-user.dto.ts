@@ -22,4 +22,7 @@ export class CreateUserDto {
 
   @IsOptional()
   readonly title: string;
+
+  @IsNotEmpty()
+  readonly role: string;
 }

@@ -14,9 +14,27 @@ export const TEST_USER: User = {
   lastName: 'Dummy',
   role: 'user',
   title: 'fake title',
-  // Encrypted password should match password, 'Letmein123'
+  // Encrypted password should match password, 'LETmeiN123$$$tP'
   encryptedPassword: '$2b$14$35oeK.h84XPIohhjTpwuV.NuFr/5oEzbg4mxLNppvfrA42ztXr2.O',
   organization: 'Fake Org',
+  loginCount: 0,
+  lastLogin: new Date(),
+  createdAt: new Date(),
+  updatedAt: new Date()
+}
+
+// @ts-ignore
+export const ADMIN: User = {
+  email: 'abc@yahoo.com',
+  firstName: 'Test',
+  lastName: 'Dummy',
+  role: 'admin',
+  title: 'fake title',
+  // Encrypted password should match password, 'LETmeiN123$$$tP'
+  encryptedPassword: '$2b$14$35oeK.h84XPIohhjTpwuV.NuFr/5oEzbg4mxLNppvfrA42ztXr2.O',
+  organization: 'Fake Org',
+  loginCount: 0,
+  lastLogin: new Date(),
   createdAt: new Date(),
   updatedAt: new Date()
 }
@@ -27,9 +45,11 @@ export const UPDATED_TEST_USER: User = {
   firstName: 'Updated',
   lastName: 'Name',
   title: 'updated title',
-  // Encrypted password should match password, 'Letmein123'
+  // Encrypted password should match password, 'LETmeiN123$$$tP'
   encryptedPassword: '$2b$14$35oeK.h84XPIohhjTpwuV.NuFr/5oEzbg4mxLNppvfrA42ztXr2.O',
   organization: 'Updated Org',
+  loginCount: 0,
+  lastLogin: new Date(),
   createdAt: new Date(),
   updatedAt: new Date()
 }
@@ -40,9 +60,11 @@ export const TEST_USER_WITHOUT_EMAIL: User = {
   lastName: 'Dummy',
   role: 'user',
   title: 'fake title',
-  // Encrypted password should match password, 'Letmein123'
+  // Encrypted password should match password, 'LETmeiN123$$$tP'
   encryptedPassword: '$2b$14$35oeK.h84XPIohhjTpwuV.NuFr/5oEzbg4mxLNppvfrA42ztXr2.O',
   organization: 'Fake Org',
+  loginCount: 0,
+  lastLogin: new Date(),
   createdAt: new Date(),
   updatedAt: new Date()
 }
@@ -53,9 +75,11 @@ export const TEST_USER_WITHOUT_FIRST_NAME: User = {
   lastName: 'Dummy',
   role: 'user',
   title: 'fake title',
-  // Encrypted password should match password, 'Letmein123'
+  // Encrypted password should match password, 'LETmeiN123$$$tP'
   encryptedPassword: '$2b$14$35oeK.h84XPIohhjTpwuV.NuFr/5oEzbg4mxLNppvfrA42ztXr2.O',
   organization: 'Fake Org',
+  loginCount: 0,
+  lastLogin: new Date(),
   createdAt: new Date(),
   updatedAt: new Date()
 }
@@ -66,9 +90,11 @@ export const TEST_USER_WITHOUT_LAST_NAME: User = {
   firstName: 'Test',
   role: 'user',
   title: 'fake title',
-  // Encrypted password should match password, 'Letmein123'
+  // Encrypted password should match password, 'LETmeiN123$$$tP'
   encryptedPassword: '$2b$14$35oeK.h84XPIohhjTpwuV.NuFr/5oEzbg4mxLNppvfrA42ztXr2.O',
   organization: 'Fake Org',
+  loginCount: 0,
+  lastLogin: new Date(),
   createdAt: new Date(),
   updatedAt: new Date()
 }
@@ -80,8 +106,10 @@ export const TEST_USER_WITHOUT_ORGANIZATION: User = {
   lastName: 'Dummy',
   role: 'user',
   title: 'fake title',
-  // Encrypted password should match password, 'Letmein123'
+  // Encrypted password should match password, 'LETmeiN123$$$tP'
   encryptedPassword: '$2b$14$35oeK.h84XPIohhjTpwuV.NuFr/5oEzbg4mxLNppvfrA42ztXr2.O',
+  loginCount: 0,
+  lastLogin: new Date(),
   createdAt: new Date(),
   updatedAt: new Date()
 }
@@ -92,9 +120,11 @@ export const TEST_USER_WITHOUT_TITLE: User = {
   firstName: 'Test',
   lastName: 'Dummy',
   role: 'user',
-  // Encrypted password should match password, 'Letmein123'
+  // Encrypted password should match password, 'LETmeiN123$$$tP'
   encryptedPassword: '$2b$14$35oeK.h84XPIohhjTpwuV.NuFr/5oEzbg4mxLNppvfrA42ztXr2.O',
   organization: 'Fake Org',
+  loginCount: 0,
+  lastLogin: new Date(),
   createdAt: new Date(),
   updatedAt: new Date()
 }
@@ -119,6 +149,18 @@ export const CREATE_USER_DTO_TEST_OBJ: CreateUserDto = {
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
+  role: 'user'
+};
+
+export const CREATE_USER_DTO_ADMIN: CreateUserDto = {
+  email: 'abc@yahoo.com',
+  password: 'LETmeiN123$$$tP',
+  passwordConfirmation: 'LETmeiN123$$$tP',
+  firstName: 'Test',
+  lastName: 'Dummy',
+  title: 'fake title',
+  organization: 'Fake Org',
+  role: 'admin'
 };
 
 export const CREATE_USER_DTO_TEST_OBJ_2: CreateUserDto = {
@@ -128,7 +170,8 @@ export const CREATE_USER_DTO_TEST_OBJ_2: CreateUserDto = {
   firstName: 'Test',
   lastName: 'Dummy',
   title: 'fake title',
-  organization: 'Fake Org'
+  organization: 'Fake Org',
+  role: 'user'
 }
 
 export const CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS: CreateUserDto = {
@@ -139,6 +182,7 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS: CreateUserDto =
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
+  role: 'user'
 };
 
 // @ts-ignore
@@ -149,6 +193,7 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_FIRST_NAME: CreateUserDto = {
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
+  role: 'user'
 };
 
 // @ts-ignore
@@ -159,6 +204,7 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_LAST_NAME: CreateUserDto = {
   firstName: 'Test',
   title: 'fake title',
   organization: 'Fake Org',
+  role: 'user'
 };
 
 // @ts-ignore
@@ -169,6 +215,7 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ORGANIZATION: CreateUserDto =
   firstName: 'Test',
   lastName: 'Dummy',
   title: 'fake title',
+  role: 'user'
 };
 
 // @ts-ignore
@@ -179,6 +226,7 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_TITLE: CreateUserDto = {
   firstName: 'Test',
   lastName: 'Dummy',
   organization: 'Fake Org',
+  role: 'user'
 };
 
 // @ts-ignore
@@ -189,6 +237,7 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD: CreateUserDto = 
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
+  role: 'user'
 };
 
 // @ts-ignore
@@ -200,6 +249,7 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD: CreateUserDto = 
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
+  role: 'user'
 };
 
 // @ts-ignore
@@ -210,12 +260,25 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD: CreateUserDto
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
+  role: 'user'
 };
 
 // @ts-ignore
 export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD: CreateUserDto = {
   email: 'abc@yahoo.com',
   password: 'LETmeiN123$$$tP',
+  firstName: 'Test',
+  lastName: 'Dummy',
+  title: 'fake title',
+  organization: 'Fake Org',
+  role: 'user'
+};
+
+// @ts-ignore
+export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE: CreateUserDto = {
+  email: 'abc@yahoo.com',
+  password: 'LETmeiN123$$$tP',
+  passwordConfirmation: 'LETmeiN123$$$tP',
   firstName: 'Test',
   lastName: 'Dummy',
   title: 'fake title',
@@ -228,6 +291,7 @@ export const UPDATE_USER_DTO_TEST_OBJ: UpdateUserDto = {
   lastName: 'Name',
   organization: 'Updated Org',
   title: 'updated title',
+  role: 'admin',
   password: 'LETmeiN123$$$tP',
   passwordConfirmation: 'LETmeiN123$$$tP',
   currentPassword: 'LETmeiN123$$$tP'
@@ -239,6 +303,7 @@ export const UPDATE_USER_DTO_TEST_OBJ_WITH_LEVENSHTEIN_DISTANCE_OF_FOUR: UpdateU
   lastName: 'Name',
   organization: 'Updated Org',
   title: 'updated title',
+  role: 'admin',
   password: 'LETmeiN927!$@tP',
   passwordConfirmation: 'LETmeiN123$$$tP',
   currentPassword: 'ABCdefG456!@#pT'
@@ -250,6 +315,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_EMAIL: UpdateUserDto = {
   lastName: 'Dummy',
   organization: 'Fake Org',
   title: 'fake title',
+  role: 'admin',
   password: 'LETmeiN123$$$tP',
   passwordConfirmation: 'LETmeiN123$$$tP',
   currentPassword: 'LETmeiN123$$$tP'
@@ -262,6 +328,7 @@ export const UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL: UpdateUserDto = {
   lastName: 'Dummy',
   organization: 'Fake Org',
   title: 'fake title',
+  role: 'admin',
   password: 'LETmeiN123$$$tP',
   passwordConfirmation: 'LETmeiN123$$$tP',
   currentPassword: 'LETmeiN123$$$tP'
@@ -273,6 +340,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_FIRST_NAME: UpdateUserDto = {
   lastName: 'Dummy',
   organization: 'Fake Org',
   title: 'fake title',
+  role: 'admin',
   password: 'LETmeiN123$$$tP',
   passwordConfirmation: 'LETmeiN123$$$tP',
   currentPassword: 'LETmeiN123$$$tP'
@@ -284,6 +352,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_LAST_NAME: UpdateUserDto = {
   firstName: 'Test',
   organization: 'Fake Org',
   title: 'fake title',
+  role: 'admin',
   password: 'LETmeiN123$$$tP',
   passwordConfirmation: 'LETmeiN123$$$tP',
   currentPassword: 'LETmeiN123$$$tP'
@@ -295,6 +364,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_ORGANIZATION: UpdateUserDto = {
   firstName: 'Test',
   lastName: 'Dummy',
   title: 'fake title',
+  role: 'admin',
   password: 'LETmeiN123$$$tP',
   passwordConfirmation: 'LETmeiN123$$$tP',
   currentPassword: 'LETmeiN123$$$tP'
@@ -306,6 +376,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_TITLE: UpdateUserDto = {
   firstName: 'Test',
   lastName: 'Dummy',
   organization: 'Fake Org',
+  role: 'admin',
   password: 'LETmeiN123$$$tP',
   passwordConfirmation: 'LETmeiN123$$$tP',
   currentPassword: 'LETmeiN123$$$tP'
@@ -318,9 +389,32 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD: UpdateUserDto = {
   lastName: 'Dummy',
   organization: 'Fake Org',
   title: 'fake title',
+  role: 'admin',
   passwordConfirmation: 'LETmeiN123$$$tP',
   currentPassword: 'LETmeiN123$$$tP'
 };
+
+// @ts-ignore
+export const UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS: UpdateUserDto = {
+  email: 'updated@example.com',
+  firstName: 'Updated',
+  lastName: 'Updated',
+  organization: 'Updated',
+  title: 'Updated',
+  role: 'admin',
+  currentPassword: 'LETmeiN123$$$tP'
+}
+
+// @ts-ignore
+export const UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD: UpdateUserDto = {
+  email: 'abc@yahoo.com',
+  firstName: 'Test',
+  lastName: 'Dummy',
+  organization: 'Fake Org',
+  title: 'fake title',
+  role: 'admin',
+  currentPassword: 'invalid_password'
+}
 
 // @ts-ignore
 export const UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD_CONFIRMATION: UpdateUserDto = {
@@ -329,7 +423,20 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD_CONFIRMATION: UpdateUserDto =
   lastName: 'Dummy',
   organization: 'Fake Org',
   title: 'fake title',
+  role: 'admin',
   password: 'LETmeiN123$$$tP',
+  currentPassword: 'LETmeiN123$$$tP'
+};
+
+// @ts-ignore
+export const UPDATE_USER_DTO_TEST_WITHOUT_ROLE: UpdateUserDto = {
+  email: 'abc@yahoo.com',
+  firstName: 'Test',
+  lastName: 'Dummy',
+  organization: 'Fake Org',
+  title: 'fake title',
+  password: 'LETmeiN123$$$tP',
+  passwordConfirmation: 'LETmeiN123$$$tP',
   currentPassword: 'LETmeiN123$$$tP'
 };
 
@@ -339,6 +446,7 @@ export const UPDATE_FAILURE_USER_DTO_TEST_OBJ: UpdateUserDto = {
   lastName: 'Dummy',
   organization: 'Fake Org',
   title: 'fake title',
+  role: 'admin',
   password: 'LETmeiN123$$$t',
   passwordConfirmation: 'LETmeiN123$$$tP',
   currentPassword: 'LETmeiN123$$$tP'
@@ -351,6 +459,7 @@ export const UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD: UpdateUserDto 
   lastName: 'Dummy',
   organization: 'Fake Org',
   title: 'fake title',
+  role: 'admin',
   password: 'LETmeiN123$$$tP',
   passwordConfirmation: 'LETmeiN123$$$tP',
 };

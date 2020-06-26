@@ -19,7 +19,7 @@ export class PasswordComplexityPipe implements PipeTransform {
       RegExp('[a-z]'),
       RegExp('[A-Z]'),
       RegExp('[0-9]'),
-      RegExp('[^\w\s]'),
+      RegExp(/[^\w\s]/),
       RegExp('.{15,}')
     ];
     return validators.filter(expr => expr.test(password)).length == validators.length;
@@ -31,7 +31,7 @@ export class PasswordComplexityPipe implements PipeTransform {
       RegExp('[a-z]{4,}'),
       RegExp('[A-Z]{4,}'),
       RegExp('[0-9]{4,}'),
-      RegExp(/^\w\s]{4,}/)
+      RegExp(/[^\w\s]{4,}/)
     ]
     return validators.filter(expr => expr.test(password)).length == 0
   }
