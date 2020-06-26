@@ -1,5 +1,5 @@
-import { Model, Column, Table, CreatedAt, UpdatedAt, BelongsTo, PrimaryKey, AllowNull, DataType
-} from "sequelize-typescript";
+import { Model, Column, Table, CreatedAt, UpdatedAt, PrimaryKey, AllowNull, DataType
+} from 'sequelize-typescript';
 
 
 @Table
@@ -11,7 +11,7 @@ export class Evaluation extends Model<Evaluation> {
   id: number;
 
   @Column
-  version!: string;
+  version: string;
 
 
 

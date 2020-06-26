@@ -17,6 +17,10 @@ module.exports = {
           type: Sequelize.DATE,
           allowNull: false
         }
+        version: {
+          type: Sequelize.STRING,
+          allowNull: false
+        }
       })
     },
 
