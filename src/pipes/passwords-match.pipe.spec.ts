@@ -1,6 +1,11 @@
 import { PasswordsMatchPipe } from './passwords-match.pipe';
 import { ArgumentMetadata, BadRequestException } from '@nestjs/common';
-import { CREATE_USER_DTO_TEST_OBJ, CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS } from '../../test/test.constants';
+import {
+  CREATE_USER_DTO_TEST_OBJ,
+  CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS,
+  UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
+  UPDATE_USER_DTO_TEST_OBJ
+} from '../../test/test.constants';
 
 describe('PasswordsMatchPipe', () => {
   let passwordsMatchPipe: PasswordsMatchPipe;
@@ -19,6 +24,14 @@ describe('PasswordsMatchPipe', () => {
   describe('Test Matching Passwords', () => {
     it('should return the same CreateUserDto', () => {
       expect(passwordsMatchPipe.transform(CREATE_USER_DTO_TEST_OBJ, metaData)).toEqual(CREATE_USER_DTO_TEST_OBJ);
+    });
+
+    it('should return the same UpdateUserDto', () => {
+      expect(passwordsMatchPipe.transform(UPDATE_USER_DTO_TEST_OBJ, metaData)).toEqual(UPDATE_USER_DTO_TEST_OBJ);
+    });
+
+    it('should return UpdateUserDto if password fields are null', () => {
+      expect(passwordsMatchPipe.transform(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS, metaData)).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS);
     });
   });
 

@@ -1,6 +1,10 @@
 import { PasswordChangePipe } from './password-change.pipe';
 import { ArgumentMetadata, BadRequestException } from '@nestjs/common';
-import { UPDATE_USER_DTO_TEST_OBJ, UPDATE_USER_DTO_TEST_OBJ_WITH_LEVENSHTEIN_DISTANCE_OF_FOUR } from '../../test/test.constants';
+import {
+  UPDATE_USER_DTO_TEST_OBJ,
+  UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD,
+  UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
+} from '../../test/test.constants';
 
 describe('PasswordChangePipe', () => {
   let passwordChangePipe: PasswordChangePipe;
@@ -64,7 +68,12 @@ describe('PasswordChangePipe', () => {
   describe('Test Valid Password Changes', () => {
     it('should return the same UpdateUserDto', () => {
       jest.spyOn(passwordChangePipe, 'classesChanged').mockReturnValueOnce(true);
-      expect(passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ_WITH_LEVENSHTEIN_DISTANCE_OF_FOUR, metaData)).toEqual(UPDATE_USER_DTO_TEST_OBJ_WITH_LEVENSHTEIN_DISTANCE_OF_FOUR);
+      expect(passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD, metaData)).toEqual(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD);
+    });
+
+    it('should return UpdateUserDto if password fields are null', () => {
+      jest.spyOn(passwordChangePipe, 'classesChanged').mockReturnValueOnce(true);
+      expect(passwordChangePipe.transform(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS, metaData)).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS);
     });
   });
 
