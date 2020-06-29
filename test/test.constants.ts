@@ -323,7 +323,8 @@ export const UPDATE_USER_DTO_TEST_OBJ: UpdateUserDto = {
   role: 'admin',
   password: 'LETmeiN123$$$tP',
   passwordConfirmation: 'LETmeiN123$$$tP',
-  currentPassword: 'LETmeiN123$$$tP'
+  currentPassword: 'LETmeiN123$$$tP',
+  forcePasswordChange: true
 };
 
 export const UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD: UpdateUserDto = {
@@ -335,7 +336,8 @@ export const UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD: UpdateUserDto = {
   role: 'admin',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'ABCdefG456!@#pT',
-  currentPassword: 'LETmeiN123$$$tP'
+  currentPassword: 'LETmeiN123$$$tP',
+  forcePasswordChange: false
 };
 
 // @ts-ignore
@@ -492,7 +494,8 @@ export const UPDATE_USER_DTO_TEST_OBJ_WITH_MISSMATCHING_PASSWORDS: UpdateUserDto
   role: 'admin',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'defABCg789*(%Pt',
-  currentPassword: 'LETmeiN123$$$tP'
+  currentPassword: 'LETmeiN123$$$tP',
+  forcePasswordChange: false
 };
 
 // @ts-ignore

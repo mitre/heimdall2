@@ -226,7 +226,7 @@ describe('UsersService', () => {
       expect(updatedUser.title).toEqual(user.title);
       expect(updatedUser.updatedAt.valueOf()).not.toEqual(user.updatedAt.valueOf());
     });
-    
+
     it('should update a user without updating role', async () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const updatedUser = await usersService.update(user.id, UPDATE_USER_DTO_TEST_WITHOUT_ROLE);
@@ -316,6 +316,7 @@ describe('UsersService', () => {
   });
 
   afterAll(async () => {
+    await databaseService.cleanAll();
     await databaseService.closeConnection();
   });
 });

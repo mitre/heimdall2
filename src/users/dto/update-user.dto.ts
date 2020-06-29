@@ -26,6 +26,9 @@ export class UpdateUserDto {
   @IsOptional()
   readonly passwordConfirmation: string;
 
+  @IsOptional()
+  readonly forcePasswordChange: boolean;
+
   @IsNotEmpty()
   readonly currentPassword: string;
 }

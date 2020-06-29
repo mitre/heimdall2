@@ -72,17 +72,20 @@ export class UsersService {
     } catch {
       throw new UnauthorizedException;
     }
+    if(updateUserDto.password == null && user.forcePasswordChange) {
+      throw new BadRequestException('You must change your password');
+    } else if(updateUserDto.password) {
+      user.encryptedPassword = await hash(updateUserDto.password, 14);
+      user.passwordChangedAt = new Date();
+      user.forcePasswordChange = false;
+    }
     user.email = updateUserDto.email || user.email;
     user.firstName = updateUserDto.firstName || user.firstName;
     user.lastName = updateUserDto.lastName || user.lastName;
     user.title = updateUserDto.title || user.title;
     user.organization = updateUserDto.organization || user.organization;
     user.role = updateUserDto.role || user.role;
-    if(updateUserDto.password) {
-      user.encryptedPassword = await hash(updateUserDto.password, 14);
-      user.passwordChangedAt = new Date();
-      user.forcePasswordChange = false;
-    }
+    user.forcePasswordChange = updateUserDto.forcePasswordChange || user.forcePasswordChange;
     const userData = await user.save();
     return new UserDto(userData);
   }
