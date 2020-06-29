@@ -21,6 +21,7 @@ import {
   CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD,
   UPDATE_USER_DTO_TEST_WITH_NOT_COMPLEX_PASSWORD,
   UPDATE_USER_DTO_TEST_OBJ_WITH_MISSMATCHING_PASSWORDS,
+  UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
   ADMIN_LOGIN_AUTHENTICATION,
 } from './test.constants';
 
@@ -46,7 +47,7 @@ describe('/users', () => {
     await app.init();
   });
 
-  describe('POST', () => {
+  describe('Create', () => {
     beforeEach(async () => {
       await databaseService.cleanAll();
     });
@@ -142,7 +143,7 @@ describe('/users', () => {
     });
   });
 
-  describe(':id', () => {
+  describe('Functions that require authentication', () => {
     let id;
     let jwtToken;
 
@@ -160,7 +161,7 @@ describe('/users', () => {
       });
     });
 
-    describe('GET', async () => {
+    describe('Read', async () => {
       it('should return 200 status when user is returned', async () => {
         return await request(app.getHttpServer()).get('/users/' + id).set('Authorization', 'bearer ' + jwtToken).expect(HttpStatus.OK).then(response => {
           const createdAt = response.body.createdAt.valueOf();
@@ -192,7 +193,7 @@ describe('/users', () => {
       });
     });
 
-    describe('POST', async () => {
+    describe('Update', async () => {
       it('should return 200 status when user is updated', async () => {
         return await request(app.getHttpServer()).put('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD).expect(HttpStatus.OK).then(response => {
           expect(response.body.email).toEqual(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD.email);
@@ -205,17 +206,17 @@ describe('/users', () => {
         });
       });
 
-      // it('should return 200 status when user is updated without changing password', async () => {
-      //   return await request(app.getHttpServer()).put('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS).expect(HttpStatus.OK).then(response => {
-      //     expect(response.body.email).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.email);
-      //     expect(response.body.firstName).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.firstName);
-      //     expect(response.body.id).toEqual(id);
-      //     expect(response.body.lastName).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.lastName);
-      //     expect(response.body.organization).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.organization);
-      //     expect(response.body.title).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.title);
-      //     expect(response.body.role).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.role);
-      //   });
-      // });
+      it('should return 200 status when user is updated without changing password', async () => {
+        return await request(app.getHttpServer()).put('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS).expect(HttpStatus.OK).then(response => {
+          expect(response.body.email).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.email);
+          expect(response.body.firstName).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.firstName);
+          expect(response.body.id).toEqual(id);
+          expect(response.body.lastName).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.lastName);
+          expect(response.body.organization).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.organization);
+          expect(response.body.title).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.title);
+          expect(response.body.role).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.role);
+        });
+      });
 
       it('should return 400 status when currentPassword is empty', async () => {
         return await request(app.getHttpServer()).put('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD).expect(HttpStatus.BAD_REQUEST).then(response => {
@@ -245,7 +246,7 @@ describe('/users', () => {
       });
     });
 
-    describe('DELETE', async () => {
+    describe('Destroy', async () => {
       // it('should return 200 status after user is deleted', async () => {
       //   return (await request(app.getHttpServer()).delete('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(DELETE_USER_DTO_TEST_OBJ).expect(HttpStatus.OK).then(response => {
       //     const createdAt = response.body.createdAt.valueOf();
