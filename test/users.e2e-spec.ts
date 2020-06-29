@@ -14,13 +14,8 @@ import {
   UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD,
   UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD,
   DELETE_USER_DTO_TEST_OBJ,
-  DELETE_FAILURE_USER_DTO_TEST_OBJ,
   CREATE_ADMIN_DTO,
-  ADMIN,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE,
-  UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
-  USER_ONE_DTO,
-  ADMIN_USER_DTO,
   MINUTE_IN_MILLISECONDS,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD,
   CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD,
@@ -283,7 +278,7 @@ describe('/users', () => {
         await request(app.getHttpServer()).post('/users').set('Content-Type', 'application/json').send(CREATE_ADMIN_DTO).expect(HttpStatus.CREATED).then(response => {
           adminID = response.body.id;
         });
-  
+
         let adminJWTToken;
         await request(app.getHttpServer()).post('/authn/login').set('Content-Type', 'application/json').send(ADMIN_LOGIN_AUTHENTICATION).expect(HttpStatus.CREATED).then(response => {
           adminJWTToken = response.body.accessToken;
