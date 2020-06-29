@@ -1,7 +1,6 @@
 import { Model, Column, Table, CreatedAt, UpdatedAt, PrimaryKey, AllowNull, DataType
 } from 'sequelize-typescript';
 
-
 @Table
 export class Evaluation extends Model<Evaluation> {
   @PrimaryKey
@@ -12,9 +11,6 @@ export class Evaluation extends Model<Evaluation> {
 
   @Column
   version: string;
-  version!: string;
-
-
 
   @CreatedAt
   @AllowNull(false)

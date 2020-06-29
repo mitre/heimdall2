@@ -16,14 +16,11 @@ module.exports = {
         updatedAt: {
           type: Sequelize.DATE,
           allowNull: false
-        }
-<<<<<<< HEAD
+        },
         version: {
           type: Sequelize.STRING,
           allowNull: false
         }
-=======
->>>>>>> 1e60cf181be85c19cb3db147ff6aef31fa3851e9
       })
     },
 
