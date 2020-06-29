@@ -16,6 +16,8 @@ import {
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD,
 } from '../../test/test.constants';
 import { AbacGuard } from '../guards/abac.guard';
+import { DatabaseService } from '../database/database.service';
+import { DatabaseModule } from '../database/database.module';
 
 // Test suite for the UsersController
 describe('UsersController Unit Tests', () => {
@@ -23,11 +25,14 @@ describe('UsersController Unit Tests', () => {
   let usersController: UsersController;
   let usersService: UsersService;
   let module: TestingModule;
+  let databaseService: DatabaseService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     module = await Test.createTestingModule({
       controllers: [UsersController],
+      imports: [DatabaseModule],
       providers: [
+        DatabaseService,
         {
           provide: UsersService,
           useFactory: () => ({
@@ -43,6 +48,16 @@ describe('UsersController Unit Tests', () => {
 
     usersService = module.get<UsersService>(UsersService);
     usersController = module.get<UsersController>(UsersController);
+    databaseService = module.get<DatabaseService>(DatabaseService);
+  });
+
+  beforeEach(() => {
+    return databaseService.cleanAll();
+  });
+
+  afterAll(async () => {
+    await databaseService.cleanAll();
+    await databaseService.closeConnection();
   });
 
   describe('FindbyId function', () => {
@@ -155,5 +170,10 @@ describe('UsersController Unit Tests', () => {
         await usersController.remove(ID, DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD);
       }).rejects.toThrow(BadRequestException);
     });
+  });
+
+  afterAll(async () => {
+    await databaseService.cleanAll();
+    await databaseService.closeConnection();
   });
 });
