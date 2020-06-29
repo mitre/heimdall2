@@ -8,13 +8,11 @@ export class PasswordChangePipe implements PipeTransform {
     if ((value.password == null) && (value.passwordConfirmation == null)) {
       return value;
     }
-    else {
-      if (levenshtein(value.password, value.currentPassword) > 8 && this.classesChanged(value.password, value.currentPassword)) {
-        return value;
-      } else {
-        throw new BadRequestException('A minimum of four character classes must be changed when updating a password.' +
+    else if (levenshtein(value.password, value.currentPassword) > 8 && this.classesChanged(value.password, value.currentPassword)) {
+      return value;
+    } else {
+      throw new BadRequestException('A minimum of four character classes must be changed when updating a password.' +
           ' A minimum of eight of the total number of characters must be changed when updating a password.');
-      }
     }
   }
 
