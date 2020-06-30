@@ -4,7 +4,7 @@ import {
   UPDATE_USER_DTO_TEST_OBJ,
   UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD,
   UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
-} from '../../test/test.constants';
+} from '../../test/constants/users-test.constant';
 
 describe('PasswordChangePipe', () => {
   let passwordChangePipe: PasswordChangePipe;

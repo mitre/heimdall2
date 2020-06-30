@@ -5,7 +5,7 @@ import {
   CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS,
   UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
   UPDATE_USER_DTO_TEST_OBJ
-} from '../../test/test.constants';
+} from '../../test/constants/users-test.constant';
 
 describe('PasswordsMatchPipe', () => {
   let passwordsMatchPipe: PasswordsMatchPipe;

@@ -14,7 +14,7 @@ import {
   UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD,
-} from '../../test/test.constants';
+} from '../../test/constants/users-test.constant';
 import { AbacGuard } from '../guards/abac.guard';
 import { DatabaseService } from '../database/database.service';
 import { DatabaseModule } from '../database/database.module';

@@ -1,4 +1,4 @@
-import { PolicyDto } from '../src/authz/dto/policy.dto';
+import { PolicyDto } from '../../src/authz/dto/policy.dto';
 
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 

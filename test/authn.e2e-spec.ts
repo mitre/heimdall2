@@ -7,7 +7,7 @@ import {
   CREATE_USER_DTO_TEST_OBJ,
   LOGIN_AUTHENTICATION,
   BAD_LOGIN_AUTHENTICATION
-} from './test.constants';
+} from './constants/users-test.constant';
 
 describe('/authn', () => {
   let app: INestApplication;

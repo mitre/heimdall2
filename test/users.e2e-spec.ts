@@ -24,12 +24,12 @@ import {
   UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
   ADMIN_LOGIN_AUTHENTICATION,
   DELETE_FAILURE_USER_DTO_TEST_OBJ
-} from './test.constants';
+} from './constants/users-test.constant';
 import { AuthzService } from '../src/authz/authz.service';
 import {
   USER_DELETE_USERS_POLICY_DTO,
   USER_UPDATE_USERS_POLICY_DTO
-} from './policy-test.constants';
+} from './constants/policy-test.constant';
 
 describe('/users', () => {
   let app: INestApplication;

@@ -1,8 +1,8 @@
-import { CreateUserDto } from '../src/users/dto/create-user.dto';
-import { UpdateUserDto } from '../src/users/dto/update-user.dto';
-import { DeleteUserDto } from '../src/users/dto/delete-user.dto';
-import { User } from '../src/users/user.model';
-import { UserDto } from '../src/users/dto/user.dto';
+import { CreateUserDto } from '../../src/users/dto/create-user.dto';
+import { UpdateUserDto } from '../../src/users/dto/update-user.dto';
+import { DeleteUserDto } from '../../src/users/dto/delete-user.dto';
+import { User } from '../../src/users/user.model';
+import { UserDto } from '../../src/users/dto/user.dto';
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 
 export const ID = 7;
@@ -472,6 +472,18 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_ROLE: UpdateUserDto = {
   passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP'
 };
+
+// @ts-ignore
+export const UPDATE_USER_DTO_TEST_WITHOUT_FORCE_PASSWORD_CHANGE: UpdateUserDto = {
+  email: 'changed@yahoo.com',
+  currentPassword: 'LETmeiN123$$$tP'
+}
+
+// @ts-ignore
+export const UPDATE_USER_DTO_SETUP_FORCE_PASSWORD_CHANGE: UpdateUserDto = {
+  forcePasswordChange: true,
+  currentPassword: 'LETmeiN123$$$tP'
+}
 
 // @ts-ignore
 export const UPDATE_USER_DTO_TEST_WITH_NOT_COMPLEX_PASSWORD: UpdateUserDto = {
