@@ -9,7 +9,7 @@ Run the following to create and migrate the database:
 
 Run the application `npm run start`
 
-License
+# License
 
 NOTICE
 
