@@ -62,15 +62,11 @@ export class UsersService {
     return new UserDto(userData);
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto, isAdmin: boolean) {
     const user = await this.userModel.findByPk<User>(id);
     this.exists(user);
-    try {
-      if(!(await compare(updateUserDto.currentPassword, user.encryptedPassword))) {
-        throw new UnauthorizedException;
-      }
-    } catch {
-      throw new UnauthorizedException;
+    if(!isAdmin) {
+      await this.testPassword(updateUserDto, user);
     }
     if(updateUserDto.password == null && user.forcePasswordChange) {
       throw new BadRequestException('You must change your password');
@@ -121,6 +117,16 @@ export class UsersService {
       throw new NotFoundException('User with given id not found');
     } else {
       return true;
+    }
+  }
+
+  async testPassword(updateUserDto: UpdateUserDto, user: User) {
+    try {
+      if(!(await compare(updateUserDto.currentPassword, user.encryptedPassword))) {
+        throw new UnauthorizedException;
+      }
+    } catch {
+      throw new UnauthorizedException;
     }
   }
 }
