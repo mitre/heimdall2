@@ -23,19 +23,27 @@ import {
   UPDATE_USER_DTO_TEST_OBJ_WITH_MISSMATCHING_PASSWORDS,
   UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
   ADMIN_LOGIN_AUTHENTICATION,
+  DELETE_FAILURE_USER_DTO_TEST_OBJ
 } from './test.constants';
+import { AuthzService } from '../src/authz/authz.service';
+import {
+  USER_DELETE_USERS_POLICY_DTO,
+  USER_UPDATE_USERS_POLICY_DTO
+} from './policy-test.constants';
 
 describe('/users', () => {
   let app: INestApplication;
   let databaseService: DatabaseService;
+  let authzService: AuthzService;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-      providers: [DatabaseService]
+      providers: [DatabaseService, AuthzService]
     }).compile();
 
     databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
+    authzService = moduleFixture.get<AuthzService>(AuthzService);
 
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(
@@ -161,7 +169,7 @@ describe('/users', () => {
       });
     });
 
-    describe('Read', async () => {
+    describe('Read', () => {
       it('should return 200 status when user is returned', async () => {
         return await request(app.getHttpServer()).get('/users/' + id).set('Authorization', 'bearer ' + jwtToken).expect(HttpStatus.OK).then(response => {
           const createdAt = response.body.createdAt.valueOf();
@@ -193,7 +201,12 @@ describe('/users', () => {
       });
     });
 
-    describe('Update', async () => {
+    describe('Update', () => {
+      beforeEach(async () => {
+        await authzService.abac.allow(
+          USER_UPDATE_USERS_POLICY_DTO
+        );
+      });
       it('should return 200 status when user is updated', async () => {
         return await request(app.getHttpServer()).put('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD).expect(HttpStatus.OK).then(response => {
           expect(response.body.email).toEqual(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD.email);
@@ -246,33 +259,38 @@ describe('/users', () => {
       });
     });
 
-    describe('Destroy', async () => {
-      // it('should return 200 status after user is deleted', async () => {
-      //   return (await request(app.getHttpServer()).delete('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(DELETE_USER_DTO_TEST_OBJ).expect(HttpStatus.OK).then(response => {
-      //     const createdAt = response.body.createdAt.valueOf();
-      //     const updatedAt = response.body.updatedAt.valueOf();
-      //     // User should have been created within the last minuted
-      //     const createdWithinOneMinute = (new Date().getTime() - new Date(createdAt).getTime());
-      //     // User should have been updated within the last minuted
-      //     const updatedWithinOneMinute = (new Date().getTime() - new Date(updatedAt).getTime());
+    describe('Destroy', () => {
+      beforeEach(async () => {
+        await authzService.abac.allow(
+          USER_DELETE_USERS_POLICY_DTO
+        );
+      });
+      it('should return 200 status after user is deleted', async () => {
+        return (await request(app.getHttpServer()).delete('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(DELETE_USER_DTO_TEST_OBJ).expect(HttpStatus.OK).then(response => {
+          const createdAt = response.body.createdAt.valueOf();
+          const updatedAt = response.body.updatedAt.valueOf();
+          // User should have been created within the last minuted
+          const createdWithinOneMinute = (new Date().getTime() - new Date(createdAt).getTime());
+          // User should have been updated within the last minuted
+          const updatedWithinOneMinute = (new Date().getTime() - new Date(updatedAt).getTime());
 
-      //     expect(createdWithinOneMinute).toBeLessThanOrEqual(MINUTE_IN_MILLISECONDS);
-      //     expect(response.body.email).toEqual(CREATE_USER_DTO_TEST_OBJ.email);
-      //     expect(response.body.firstName).toEqual(CREATE_USER_DTO_TEST_OBJ.firstName);
-      //     expect(response.body.id).toEqual(id);
-      //     expect(response.body.lastLogin).toEqual(null);
-      //     expect(response.body.lastName).toEqual(CREATE_USER_DTO_TEST_OBJ.lastName);
-      //     expect(response.body.loginCount).toEqual('0');
-      //     expect(response.body.organization).toEqual(CREATE_USER_DTO_TEST_OBJ.organization);
-      //     expect(response.body.role).toEqual(CREATE_USER_DTO_TEST_OBJ.role);
-      //     expect(response.body.title).toEqual(CREATE_USER_DTO_TEST_OBJ.title);
-      //     expect(updatedWithinOneMinute).toBeLessThanOrEqual(MINUTE_IN_MILLISECONDS);
-      //   }));
-      // });
+          expect(createdWithinOneMinute).toBeLessThanOrEqual(MINUTE_IN_MILLISECONDS);
+          expect(response.body.email).toEqual(CREATE_USER_DTO_TEST_OBJ.email);
+          expect(response.body.firstName).toEqual(CREATE_USER_DTO_TEST_OBJ.firstName);
+          expect(response.body.id).toEqual(id);
+          expect(response.body.lastLogin).toEqual(null);
+          expect(response.body.lastName).toEqual(CREATE_USER_DTO_TEST_OBJ.lastName);
+          expect(response.body.loginCount).toEqual('0');
+          expect(response.body.organization).toEqual(CREATE_USER_DTO_TEST_OBJ.organization);
+          expect(response.body.role).toEqual(CREATE_USER_DTO_TEST_OBJ.role);
+          expect(response.body.title).toEqual(CREATE_USER_DTO_TEST_OBJ.title);
+          expect(updatedWithinOneMinute).toBeLessThanOrEqual(MINUTE_IN_MILLISECONDS);
+        }));
+      });
 
-      // it('should return 401 status because password is wrong', async () => {
-      //   return request(app.getHttpServer()).delete('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(DELETE_FAILURE_USER_DTO_TEST_OBJ).expect(HttpStatus.UNAUTHORIZED);
-      // });
+      it('should return 401 status because password is wrong', async () => {
+        return request(app.getHttpServer()).delete('/users/' + id).set('Authorization', 'bearer ' + jwtToken).send(DELETE_FAILURE_USER_DTO_TEST_OBJ).expect(HttpStatus.UNAUTHORIZED);
+      });
 
       it('should return 200 status after user is deleted by admin', async () => {
         let adminID;
