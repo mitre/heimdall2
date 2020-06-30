@@ -27,7 +27,7 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, AbacGuard)
   @Put(':id')
   async update(@Param('id') id: number, @Body(new PasswordsMatchPipe(), new PasswordChangePipe(), new PasswordComplexityPipe()) updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
