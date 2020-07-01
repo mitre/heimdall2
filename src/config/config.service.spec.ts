@@ -10,7 +10,7 @@ describe('Config Service', () => {
     });
   });
 
-  describe('Test get function when .env file does not exist', () => {
+  describe('Tests the get function when .env file does not exist', () => {
     it('should return undefined because env variable does not exist', () => {
       const configService = new ConfigService();
       expect(configService.get('DATABASE_NAME')).toBe(undefined);
@@ -26,7 +26,7 @@ describe('Config Service', () => {
     });
   });
 
-  describe('Tests get function when .env file does exist', () => {
+  describe('Tests the get function when .env file does exist', () => {
     beforeAll(() => {
       // Restore the fs binding to the real file system
       mock.restore();
@@ -40,6 +40,18 @@ describe('Config Service', () => {
     it('should return undefined because env variable does not exist', () => {
       const configService = new ConfigService();
       expect(configService.get('INVALID_VARIABLE')).toBe(undefined);
+    });
+  });
+
+  describe('Tests for thrown errors', () => {
+    it('should throw an EACCES error', () => {
+      mock({
+        '.env': mock.file({
+          content: 'DATABASE_NAME=heimdallts_jest_testing_service_db',
+          mode: 0o000, // Set file system permissions to none
+        })
+      });
+      expect(() => new ConfigService()).toThrowError();
     });
   });
 
