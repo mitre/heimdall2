@@ -1,5 +1,5 @@
-import { Policy } from "../policy.model";
-import { AbacAttributes } from "./abac-attributes.dto";
+import {Policy} from '../policy.model';
+import {AbacAttributes} from './abac-attributes.dto';
 
 export class PolicyDto {
   readonly role: string;

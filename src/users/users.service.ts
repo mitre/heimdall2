@@ -3,14 +3,14 @@ import {
   UnauthorizedException,
   NotFoundException,
   BadRequestException
-} from "@nestjs/common";
-import { InjectModel } from "@nestjs/sequelize";
-import { User } from "./user.model";
-import { UserDto } from "./dto/user.dto";
-import { CreateUserDto } from "./dto/create-user.dto";
-import { UpdateUserDto } from "./dto/update-user.dto";
-import { DeleteUserDto } from "./dto/delete-user.dto";
-import { hash, compare } from "bcrypt";
+} from '@nestjs/common';
+import {InjectModel} from '@nestjs/sequelize';
+import {User} from './user.model';
+import {UserDto} from './dto/user.dto';
+import {CreateUserDto} from './dto/create-user.dto';
+import {UpdateUserDto} from './dto/update-user.dto';
+import {DeleteUserDto} from './dto/delete-user.dto';
+import {hash, compare} from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -74,7 +74,7 @@ export class UsersService {
       await this.testPassword(updateUserDto, user);
     }
     if (updateUserDto.password == null && user.forcePasswordChange) {
-      throw new BadRequestException("You must change your password");
+      throw new BadRequestException('You must change your password');
     } else if (updateUserDto.password) {
       user.encryptedPassword = await hash(updateUserDto.password, 14);
       user.passwordChangedAt = new Date();
@@ -120,7 +120,7 @@ export class UsersService {
 
   exists(user: User): boolean {
     if (!user) {
-      throw new NotFoundException("User with given id not found");
+      throw new NotFoundException('User with given id not found');
     } else {
       return true;
     }

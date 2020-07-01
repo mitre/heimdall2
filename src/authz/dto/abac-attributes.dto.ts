@@ -1,5 +1,5 @@
 export class AbacAttributes {
-  readonly mode: "all" | "nothing";
+  readonly mode: 'all' | 'nothing';
   readonly except?: string[];
 
   constructor(attributes: any) {

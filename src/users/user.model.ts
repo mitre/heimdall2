@@ -11,7 +11,7 @@ import {
   AutoIncrement,
   DataType,
   Default
-} from "sequelize-typescript";
+} from 'sequelize-typescript';
 
 @Table
 export class User extends Model<User> {
@@ -65,7 +65,7 @@ export class User extends Model<User> {
   passwordChangedAt: Date;
 
   @AllowNull(false)
-  @Default("user")
+  @Default('user')
   @Column
   role: string;
 

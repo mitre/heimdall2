@@ -1,9 +1,9 @@
-import { Injectable } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import { UsersService } from "../users/users.service";
-import { User } from "../users/user.model";
-import { compare } from "bcrypt";
-import { ConfigService } from "../config/config.service";
+import {Injectable} from '@nestjs/common';
+import {JwtService} from '@nestjs/jwt';
+import {UsersService} from '../users/users.service';
+import {User} from '../users/user.model';
+import {compare} from 'bcrypt';
+import {ConfigService} from '../config/config.service';
 
 @Injectable()
 export class AuthnService {
@@ -33,7 +33,7 @@ export class AuthnService {
     if (payload.forcePasswordChange) {
       // Give the user 10 minutes to (hopefully) change their password.
       return {
-        accessToken: this.jwtService.sign(payload, { expiresIn: "600s" })
+        accessToken: this.jwtService.sign(payload, {expiresIn: '600s'})
       };
     } else {
       return {

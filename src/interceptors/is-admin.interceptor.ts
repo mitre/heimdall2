@@ -3,8 +3,8 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler
-} from "@nestjs/common";
-import { Observable } from "rxjs";
+} from '@nestjs/common';
+import {Observable} from 'rxjs';
 
 @Injectable()
 export class IsAdminInterceptor implements NestInterceptor {

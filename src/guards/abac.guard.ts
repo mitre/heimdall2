@@ -1,5 +1,5 @@
-import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
-import { AuthzService } from "../authz/authz.service";
+import {Injectable, CanActivate, ExecutionContext} from '@nestjs/common';
+import {AuthzService} from '../authz/authz.service';
 
 @Injectable()
 export class AbacGuard implements CanActivate {

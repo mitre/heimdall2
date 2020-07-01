@@ -1,5 +1,5 @@
-import { Injectable } from "@nestjs/common";
-import { Sequelize } from "sequelize-typescript";
+import {Injectable} from '@nestjs/common';
+import {Sequelize} from 'sequelize-typescript';
 
 @Injectable()
 export class DatabaseService {
@@ -11,7 +11,7 @@ export class DatabaseService {
 
   async cleanAll() {
     Object.values(this.sequelize.models).map(model => {
-      model.destroy({ truncate: true });
+      model.destroy({truncate: true});
     });
   }
 }

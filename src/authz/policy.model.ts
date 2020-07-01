@@ -8,7 +8,7 @@ import {
   AllowNull,
   CreatedAt,
   UpdatedAt
-} from "sequelize-typescript";
+} from 'sequelize-typescript';
 
 @Table
 export class Policy extends Model<Policy> {

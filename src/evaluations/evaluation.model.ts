@@ -8,7 +8,7 @@ import {
   AllowNull,
   DataType,
   AutoIncrement
-} from "sequelize-typescript";
+} from 'sequelize-typescript';
 
 @Table
 export class Evaluation extends Model<Evaluation> {

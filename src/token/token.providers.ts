@@ -1,10 +1,10 @@
-import { JwtModule } from "@nestjs/jwt";
-import { ConfigModule } from "../config/config.module";
-import { ConfigService } from "../config/config.service";
-import * as crypto from "crypto";
+import {JwtModule} from '@nestjs/jwt';
+import {ConfigModule} from '../config/config.module';
+import {ConfigService} from '../config/config.service';
+import * as crypto from 'crypto';
 
 function generateDefault(): string {
-  return crypto.randomBytes(64).toString("hex");
+  return crypto.randomBytes(64).toString('hex');
 }
 
 export const tokenProviders = [
@@ -12,9 +12,9 @@ export const tokenProviders = [
     imports: [ConfigModule],
     inject: [ConfigService],
     useFactory: (configService: ConfigService) => ({
-      secret: configService.get("JWT_SECRET") || generateDefault(),
+      secret: configService.get('JWT_SECRET') || generateDefault(),
       signOptions: {
-        expiresIn: configService.get("JWT_EXPIRE_TIME") || "60s"
+        expiresIn: configService.get('JWT_EXPIRE_TIME') || '60s'
       }
     })
   })
