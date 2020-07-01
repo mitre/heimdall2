@@ -126,7 +126,7 @@ export default class Login extends LoginProps {
   checkLoggedIn() {
     console.log("token: " + this.token + "end token");
     if (this.token) {
-      this.$router.push("/home");
+      this.$router.push("/profile");
     }
   }
   get token(): string {
@@ -138,7 +138,7 @@ export default class Login extends LoginProps {
     let server = getModule(ServerModule, this.$store);
     if (server.profile) {
       console.log("server profile: " + server.profile);
-      this.$router.push("/home");
+      this.$router.push("/profile");
       return "a";
     } else {
       return "b";
@@ -178,7 +178,7 @@ export default class Login extends LoginProps {
           this.$router.go(0);
         })
         .then(() => {
-          this.$router.push("/home");
+          this.$router.push("/profile");
         });
     }
   }

@@ -20,20 +20,6 @@
           mdi-cloud-upload
         </v-icon>
       </v-btn>
-      <v-btn
-        class="mx-2"
-        :class="can_clear ? 'glow' : ''"
-        @click="clear"
-        title="Clear all set filters"
-        :disabled="!can_clear"
-      >
-        <span class="d-none d-md-inline pr-2">
-          Clear
-        </span>
-        <v-icon>
-          mdi-filter-remove
-        </v-icon>
-      </v-btn>
       <v-btn v-if="is_server_mode" @click="log_out" class="mx-2">
         <span class="d-none d-md-inline pr-2">
           Logout

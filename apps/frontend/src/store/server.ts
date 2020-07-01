@@ -15,7 +15,7 @@ import InspecIntakeModule, {
   FileID,
   next_free_file_ID
 } from "@/store/report_intake";
-import { Evaluation } from "@/types/models.ts";
+import { Evaluation, UserProfile, Usergroup } from "@/types/models.ts";
 
 export interface LoginHash {
   username: string;
@@ -34,19 +34,23 @@ export interface RetrieveHash {
   unique_id: number;
   eva: Evaluation;
 }
+export interface UsergroupHash {
+  name: string;
+}
+export interface AddToUsergroupHash {
+  group_id: number;
+  evaluation_ids: number[];
+}
+export interface AddMemberUsergroupHash {
+  group_id: number;
+  user_id: number;
+}
+export interface GetUsergroupHash {
+  group_id: number;
+}
 
 /** The body of a registration Request */
 //"id":1,"first_name":null,"last_name":null,"email":"email@gmail.com","image":null,"phone_number":null,"createdAt":"2020-03-23T15:57:33.044Z","updatedAt":"2020-03-23T15:57:33.044Z"}
-export class UserProfile {
-  id!: number;
-  first_name!: string;
-  last_name!: string;
-  email!: string;
-  image!: string;
-  phone_number!: string;
-  createdAt!: Date;
-  updatedAt!: Date;
-}
 
 const local_token = new LocalStorageVal<string | null>("auth_token");
 const local_user = new LocalStorageVal<UserProfile | null>("user_profile");
@@ -55,6 +59,12 @@ const local_user_evaluations = new LocalStorageVal<string | null>(
 );
 const local_evaluation = new LocalStorageVal<string | null>("evaluation");
 const local_tags = new LocalStorageVal<string | null>("evaluation_tags");
+const local_usergroup = new LocalStorageVal<Usergroup | null>("usergroup");
+const local_usergroups = new LocalStorageVal<Usergroup[] | null>("usergroups");
+const local_personal_group = new LocalStorageVal<Usergroup | null>(
+  "personal_group"
+);
+const local_users = new LocalStorageVal<UserProfile[] | null>("users");
 
 type ConnErrorType =
   | "NO_CONNECTION"
@@ -109,6 +119,10 @@ class HeimdallServerModule extends VuexModule {
   /** Our currently granted JWT token */
   token: string | null = local_token.get();
   profile: UserProfile | null = local_user.get();
+  personal_group: Usergroup | null = local_personal_group.get();
+  usergroup: Usergroup | null = local_usergroup.get();
+  usergroups: Usergroup[] | null = local_usergroups.get();
+  users: UserProfile[] | null = local_users.get();
   user_evaluations: string | null = local_user_evaluations.get();
   evaluation: string | null = local_evaluation.get();
   tags: string | null = local_tags.get();
@@ -188,6 +202,9 @@ class HeimdallServerModule extends VuexModule {
     this.set_token(null);
     this.set_user_profile(null);
     this.set_user_evaluations(null);
+    this.set_usergroups(null);
+    this.set_usergroup(null);
+    this.set_users(null);
   }
 
   /** Mutation to set user_profile, as well as to update our localstorage */
@@ -200,6 +217,52 @@ class HeimdallServerModule extends VuexModule {
     }
     console.log("server.ts - set user: " + this.profile);
     local_user.set(this.profile);
+  }
+
+  /** Mutation to set usergroups */
+  @Mutation
+  set_usergroups(usergroups: string | null) {
+    console.log("Usergroups: " + JSON.stringify(usergroups));
+    if (usergroups) {
+      let eval_obj = Array.from(usergroups) || [];
+      this.usergroups = eval_obj.map((x: any) => plainToClass(Usergroup, x));
+      this.personal_group = this.usergroups.shift() || null;
+      local_usergroups.set(this.usergroups);
+      local_personal_group.set(this.personal_group);
+      console.log("this.usergroups: " + JSON.stringify(this.usergroups));
+      console.log(
+        "this.personal_group: " + JSON.stringify(this.personal_group)
+      );
+    } else {
+      local_usergroups.set(null);
+      local_personal_group.set(null);
+    }
+  }
+
+  /** Mutation to set usergroups */
+  @Mutation
+  set_users(users: string | null) {
+    console.log("users: " + JSON.stringify(users));
+    if (users) {
+      let eval_obj = Array.from(users) || [];
+      this.users = eval_obj.map((x: any) => plainToClass(UserProfile, x));
+      local_users.set(this.users);
+    } else {
+      local_users.set(null);
+    }
+  }
+
+  /** Mutation to set usergroups */
+  @Mutation
+  set_usergroup(usergroup: string | null) {
+    console.log("Usergroup: " + JSON.stringify(usergroup));
+    if (usergroup) {
+      this.usergroup = plainToClass(Usergroup, usergroup);
+      local_usergroup.set(this.usergroup);
+      console.log("this.usergroup: " + JSON.stringify(this.usergroup));
+    } else {
+      local_usergroup.set(null);
+    }
   }
 
   /** Mutation to set user_profile, as well as to update our localstorage */
@@ -244,6 +307,7 @@ class HeimdallServerModule extends VuexModule {
           console.log("got token" + v.access_token);
           this.retrieve_profile();
           this.retrieve_personal_evaluations();
+          this.retrieve_usergroups();
         } else {
           console.error(
             `Something went wrong: Got ${v.access_token} for login response`
@@ -355,6 +419,32 @@ class HeimdallServerModule extends VuexModule {
       });
   }
 
+  /** Attempts to retrieve a list of personal evaluations */
+  @Action
+  async retrieve_usergroups(): Promise<void> {
+    console.log("Getting " + this.connection!.url + "/teams/usergroups");
+    //curl http://localhost:8050/executions/personal -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm..."
+    return axios
+      .get(this.connection!.url + "/teams/usergroups", {
+        headers: {
+          Authorization: `Bearer ${this.token}`
+        }
+      })
+      .then((v: any) => {
+        //console.log("personal evals: " + JSON.stringify(v.data));
+        this.set_usergroups(v.data);
+      });
+  }
+
+  /** Attempts to retrieve a list of users */
+  @Action
+  async retrieve_users(): Promise<void> {
+    console.log("Getting " + this.connection!.url + "/users");
+    return axios.get(this.connection!.url + "/users").then((v: any) => {
+      this.set_users(v.data);
+    });
+  }
+
   /** Attempts to retrieve an evaluations */
   @Action
   async retrieve_evaluation(eval_hash: RetrieveHash): Promise<void> {
@@ -405,6 +495,25 @@ class HeimdallServerModule extends VuexModule {
       });
   }
 
+  /** Attempts to retrieve an evaluations */
+  @Action
+  async retrieve_usergroup(group: GetUsergroupHash): Promise<void> {
+    console.log(
+      "Getting " + this.connection!.url + "/teams/" + group["group_id"]
+    );
+    //curl http://localhost:8050/executions/personal -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm..."
+    return axios
+      .get(this.connection!.url + "/teams/" + group["group_id"], {
+        headers: {
+          Authorization: `Bearer ${this.token}`
+        }
+      })
+      .then((v: any) => {
+        console.log("got usergroup: " + JSON.stringify(v.data));
+        this.set_usergroup(v.data);
+      });
+  }
+
   /** Attempts to save evaluation to the database */
   @Action
   async save_tag(tag: TagHash): Promise<void> {
@@ -434,6 +543,95 @@ class HeimdallServerModule extends VuexModule {
       )
       .then((v: any) => {
         console.log("saved");
+      });
+  }
+
+  /** Attempts to save evaluation to the database */
+  @Action
+  async new_usergroup(group: UsergroupHash): Promise<void> {
+    console.log(
+      "Saving group " +
+        group["name"] +
+        " to " +
+        this.connection!.url +
+        "/teams/usergroups"
+    );
+    const options = {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    };
+    return axios
+      .post(
+        this.connection!.url + "/teams/usergroups",
+        {
+          name: group["name"]
+        },
+        options
+      )
+      .then((v: any) => {
+        console.log("saved");
+        this.set_usergroups(v.data);
+      });
+  }
+
+  /** Attempts to save evaluation to the database */
+  @Action
+  async add_to_usergroup(group: AddToUsergroupHash): Promise<void> {
+    console.log(
+      "Adding to group " +
+        group["group_id"] +
+        this.connection!.url +
+        "/executions/addusergroup/" +
+        group["group_id"]
+    );
+    const options = {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    };
+    return axios
+      .post(
+        this.connection!.url + "/executions/addusergroup/" + group["group_id"],
+        {
+          ids: group["evaluation_ids"]
+        },
+        options
+      )
+      .then((v: any) => {
+        console.log("saved");
+      });
+  }
+
+  /** Attempts to add a team member to a usergroup */
+  @Action
+  async add_team_member(group: AddMemberUsergroupHash): Promise<void> {
+    console.log(
+      "Adding to group " +
+        group["group_id"] +
+        this.connection!.url +
+        "/teams/" +
+        group["group_id"] +
+        "/add/" +
+        group["user_id"]
+    );
+    //curl -X POST http://localhost:8050/teams/13/add -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTU5MzUzOTM0MywiZXhwIjoxNTkzNTQyOTQzfQ.GEbmH01kA3yCEf6TVa8GbQXr355LP8d2UdIVA9TJ7xg"
+    const options = {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    };
+    return axios
+      .post(
+        this.connection!.url + "/teams/" + group["group_id"] + "/add",
+        {
+          user_id: group["user_id"]
+        },
+        options
+      )
+      .then((v: any) => {
+        console.log("got usergroup: " + JSON.stringify(v.data));
+        this.set_usergroup(v.data);
       });
   }
 

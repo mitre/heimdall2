@@ -20,9 +20,9 @@
         <!-- Define our tabs -->
         <v-tab href="#uploadtab-local">Local Files</v-tab>
 
-        <v-tab v-if="is_logged_in" href="#uploadtab-database">
+        <!--v-tab v-if="is_logged_in" href="#uploadtab-database">
           {{ user }} Files
-        </v-tab>
+        </v-tab-->
 
         <v-tab href="#uploadtab-s3">S3 Bucket</v-tab>
 
@@ -36,9 +36,9 @@
           <FileReader @got-files="got_files" />
         </v-tab-item>
 
-        <v-tab-item value="uploadtab-database">
+        <!--v-tab-item value="uploadtab-database">
           <DatabaseReader @got-files="got_files" />
-        </v-tab-item>
+        </v-tab-item-->
 
         <v-tab-item value="uploadtab-samples">
           <SampleList @got-files="got_files" />
@@ -64,7 +64,7 @@ import { getModule } from "vuex-module-decorators";
 import InspecIntakeModule, { FileID } from "@/store/report_intake";
 import Modal from "@/components/global/Modal.vue";
 import FileReader from "@/components/global/upload_tabs/FileReader.vue";
-import DatabaseReader from "@/components/global/upload_tabs/DatabaseReader.vue";
+//import DatabaseReader from "@/components/global/upload_tabs/DatabaseReader.vue";
 import HelpFooter from "@/components/global/upload_tabs/HelpFooter.vue";
 import S3Reader from "@/components/global/upload_tabs/aws/S3Reader.vue";
 import SplunkReader from "@/components/global/upload_tabs/splunk/SplunkReader.vue";
@@ -101,7 +101,7 @@ const Props = Vue.extend({
   components: {
     Modal,
     FileReader,
-    DatabaseReader,
+    //DatabaseReader,
     HelpFooter,
     S3Reader,
     SplunkReader,
