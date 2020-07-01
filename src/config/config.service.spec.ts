@@ -1,6 +1,6 @@
 import mock from 'mock-fs';
 import { ConfigService } from './config.service';
-import { ENV_MOCK_FILE } from '../../test/constants/users-test.constant';
+import { ENV_MOCK_FILE } from '../../test/constants/env-test.constant';
 
 /* If you run the test without --silent , you need to add console.log() before you mock out the 
 file system in the beforeAll() or it'll throw an error (this is a documented bug which can be 
@@ -60,13 +60,14 @@ describe('Config Service', () => {
 
   describe('Tests for thrown errors', () => {
     it('should throw an EACCES error', () => {
+      expect.assertions(1);
       mock({
         '.env': mock.file({
           content: 'DATABASE_NAME=heimdallts_jest_testing_service_db',
           mode: 0o000, // Set file system permissions to none
         })
       });
-      expect(() => new ConfigService()).toThrowError();
+      expect(() => new ConfigService()).toThrowError('EACCES: permission denied, open \'.env\'');
     });
 
     it('should throw an error in the get function', () => {
