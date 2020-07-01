@@ -1,45 +1,50 @@
 import mock from 'mock-fs';
 import { ConfigService } from './config.service';
-import { Test } from '@nestjs/testing';
 
 describe('Config Service', () => {
-  let configService: ConfigService;
-  // Log used because if not here, error is thrown
-  console.log();
-  mock({
-    // No files created (.env file does not exist yet)
-  });
 
   beforeAll(async () => {
-    const module = await Test.createTestingModule({
-      imports: [ConfigService],
-    }).compile();
-    
-    configService = module.get<ConfigService>(ConfigService);
+    // Used as an empty file system
+    mock({
+      // No files created (.env file does not exist yet)
+    });
   });
 
   describe('Test get function when .env file does not exist', () => {
-
-  });
-
-  describe('Tests for the get function', () => {
-    // it('should return the correct database name', () => {
-    //   expect(configService.get('DATABASE_NAME')).toEqual('heimdallts_jest_testing_service_db');
-    // });
-
     it('should return undefined because env variable does not exist', () => {
-      expect(configService.get('INVALID_VARIABLE')).toBe(undefined);
+      const configService = new ConfigService();
+      expect(configService.get('DATABASE_NAME')).toBe(undefined);
     });
 
-    // it('should return undefined because env variable does not exist', () => {
-    //   console.log(configService.get('DATABASE_NAME'));
-    //   expect(1).toBe(1);
-    //   // expect.assertions(1);
-    //   // expect(() => configService.get('DATABASE_NAME')).toThrowError();
-    // });
+    it('should print to the console about how it was unable to read .env file', () => {
+      const consoleSpy = jest.spyOn(console, 'log');
+      // Used to make sure logs are outputted
+      new ConfigService();
+      expect(consoleSpy).toHaveBeenCalledWith('Unable to read configuration file `.env`!')
+      expect(consoleSpy).toHaveBeenCalledWith('Does the file exist and is it readable by the current user?')
+      expect(consoleSpy).toHaveBeenCalledWith('Falling back to default or undefined values!')
+    });
+  });
+
+  describe('Tests get function when .env file does exist', () => {
+    beforeAll(() => {
+      // Restore the fs binding to the real file system
+      mock.restore();
+    });
+
+    it('should return the correct database name', () => {
+      const configService = new ConfigService();
+      expect(configService.get('DATABASE_NAME')).toEqual('heimdallts_jest_testing_service_db');
+    });
+
+    it('should return undefined because env variable does not exist', () => {
+      const configService = new ConfigService();
+      expect(configService.get('INVALID_VARIABLE')).toBe(undefined);
+    });
   });
 
   afterAll(() => {
+    // Restore the fs binding to the real file system
     mock.restore();
   })
 })
