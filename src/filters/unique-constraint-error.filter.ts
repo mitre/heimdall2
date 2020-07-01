@@ -1,6 +1,11 @@
-import { ExceptionFilter, Catch, ArgumentsHost, HttpStatus } from '@nestjs/common';
-import { Response } from 'express';
-import { UniqueConstraintError, ValidationErrorItem } from 'sequelize';
+import {
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpStatus
+} from '@nestjs/common';
+import {Response} from 'express';
+import {UniqueConstraintError, ValidationErrorItem} from 'sequelize';
 
 @Catch(UniqueConstraintError)
 export class UniqueConstraintErrorFilter implements ExceptionFilter {
@@ -10,19 +15,17 @@ export class UniqueConstraintErrorFilter implements ExceptionFilter {
     const status = HttpStatus.INTERNAL_SERVER_ERROR;
     const message = this.buildMessage(exception.errors);
 
-    response
-      .status(status)
-      .json({
-        statusCode: status,
-        error: 'Internal Server Error',
-        messages: message
-      });
+    response.status(status).json({
+      statusCode: status,
+      error: 'Internal Server Error',
+      messages: message
+    });
   }
 
   buildMessage(errors: ValidationErrorItem[]): {}[] {
-    const builtErrors:{}[] = [];
-    errors.forEach((error) => {
-      const message: { [id: string] : string } = {};
+    const builtErrors: {}[] = [];
+    errors.forEach(error => {
+      const message: {[id: string]: string} = {};
       message[error.path] = error.message;
       builtErrors.push(message);
     });

@@ -1,7 +1,11 @@
-import { NotFoundException, BadRequestException, CanActivate } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
-import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
+import {
+  NotFoundException,
+  BadRequestException,
+  CanActivate
+} from '@nestjs/common';
+import {Test, TestingModule} from '@nestjs/testing';
+import {UsersController} from './users.controller';
+import {UsersService} from './users.service';
 import {
   ID,
   USER_ONE_DTO,
@@ -13,21 +17,26 @@ import {
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD,
   UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
-  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD,
-} from '../../test/test.constants';
-import { AbacGuard } from '../guards/abac.guard';
+  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD
+} from '../../test/constants/users-test.constant';
+import {AbacGuard} from '../guards/abac.guard';
+import {DatabaseService} from '../database/database.service';
+import {DatabaseModule} from '../database/database.module';
 
 // Test suite for the UsersController
 describe('UsersController Unit Tests', () => {
-  const mockAbacGuard: CanActivate = { canActivate: jest.fn(() => true)};
+  const mockAbacGuard: CanActivate = {canActivate: jest.fn(() => true)};
   let usersController: UsersController;
   let usersService: UsersService;
   let module: TestingModule;
+  let databaseService: DatabaseService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     module = await Test.createTestingModule({
       controllers: [UsersController],
+      imports: [DatabaseModule],
       providers: [
+        DatabaseService,
         {
           provide: UsersService,
           useFactory: () => ({
@@ -37,12 +46,25 @@ describe('UsersController Unit Tests', () => {
             update: jest.fn(() => UPDATED_USER_DTO),
             remove: jest.fn(() => USER_ONE_DTO)
           })
-        },
-      ],
-    }).overrideGuard(AbacGuard).useValue(mockAbacGuard).compile();
+        }
+      ]
+    })
+      .overrideGuard(AbacGuard)
+      .useValue(mockAbacGuard)
+      .compile();
 
     usersService = module.get<UsersService>(UsersService);
     usersController = module.get<UsersController>(UsersController);
+    databaseService = module.get<DatabaseService>(DatabaseService);
+  });
+
+  beforeEach(() => {
+    return databaseService.cleanAll();
+  });
+
+  afterAll(async () => {
+    await databaseService.cleanAll();
+    await databaseService.closeConnection();
   });
 
   describe('FindbyId function', () => {
@@ -66,7 +88,9 @@ describe('UsersController Unit Tests', () => {
   describe('Create function', () => {
     // Tests the create function with valid dto (basic positive test)
     it('should test the create function with valid dto', async () => {
-      expect(await usersController.create(CREATE_USER_DTO_TEST_OBJ)).toEqual(USER_ONE_DTO);
+      expect(await usersController.create(CREATE_USER_DTO_TEST_OBJ)).toEqual(
+        USER_ONE_DTO
+      );
       expect(usersService.create).toHaveReturnedWith(USER_ONE_DTO);
     });
 
@@ -76,7 +100,9 @@ describe('UsersController Unit Tests', () => {
         throw new BadRequestException();
       });
       expect(async () => {
-        await usersController.create(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD);
+        await usersController.create(
+          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD
+        );
       }).rejects.toThrow(BadRequestException);
     });
 
@@ -86,7 +112,9 @@ describe('UsersController Unit Tests', () => {
         throw new BadRequestException();
       });
       expect(async () => {
-        await usersController.create(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD);
+        await usersController.create(
+          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD
+        );
       }).rejects.toThrow(BadRequestException);
     });
 
@@ -96,7 +124,9 @@ describe('UsersController Unit Tests', () => {
         throw new BadRequestException();
       });
       expect(async () => {
-        await usersController.create(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD);
+        await usersController.create(
+          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD
+        );
       }).rejects.toThrow(BadRequestException);
     });
   });
@@ -104,7 +134,9 @@ describe('UsersController Unit Tests', () => {
   describe('Update function', () => {
     // Tests the update function with valid dto (basic positive test)
     it('should test the update function with a valid update dto', async () => {
-      expect(await usersController.update(ID, UPDATE_USER_DTO_TEST_OBJ)).toEqual(UPDATED_USER_DTO);
+      expect(
+        await usersController.update('user', ID, UPDATE_USER_DTO_TEST_OBJ)
+      ).toEqual(UPDATED_USER_DTO);
       expect(usersService.update).toHaveReturnedWith(UPDATED_USER_DTO);
     });
 
@@ -114,7 +146,7 @@ describe('UsersController Unit Tests', () => {
         throw new NotFoundException();
       });
       expect(async () => {
-        await usersController.update(ID, UPDATE_USER_DTO_TEST_OBJ);
+        await usersController.update('user', ID, UPDATE_USER_DTO_TEST_OBJ);
       }).rejects.toThrow(NotFoundException);
     });
 
@@ -124,7 +156,11 @@ describe('UsersController Unit Tests', () => {
         throw new BadRequestException();
       });
       expect(async () => {
-        await usersController.update(ID, UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD);
+        await usersController.update(
+          'user',
+          ID,
+          UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD
+        );
       }).rejects.toThrow(BadRequestException);
     });
   });
@@ -132,7 +168,9 @@ describe('UsersController Unit Tests', () => {
   describe('Remove function', () => {
     // Tests the remove function with valid dto (basic positive test)
     it('should remove', async () => {
-      expect(await usersController.remove(ID, DELETE_USER_DTO_TEST_OBJ)).toEqual(USER_ONE_DTO);
+      expect(
+        await usersController.remove(ID, DELETE_USER_DTO_TEST_OBJ)
+      ).toEqual(USER_ONE_DTO);
       expect(usersService.remove).toHaveReturnedWith(USER_ONE_DTO);
     });
 
@@ -152,8 +190,16 @@ describe('UsersController Unit Tests', () => {
         throw new BadRequestException();
       });
       expect(async () => {
-        await usersController.remove(ID, DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD);
+        await usersController.remove(
+          ID,
+          DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD
+        );
       }).rejects.toThrow(BadRequestException);
     });
+  });
+
+  afterAll(async () => {
+    await databaseService.cleanAll();
+    await databaseService.closeConnection();
   });
 });

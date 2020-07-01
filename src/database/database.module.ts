@@ -1,8 +1,8 @@
-import { Module } from '@nestjs/common';
-import { DatabaseService } from './database.service';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { ConfigModule } from '../config/config.module';
-import { ConfigService } from '../config/config.service';
+import {Module} from '@nestjs/common';
+import {DatabaseService} from './database.service';
+import {SequelizeModule} from '@nestjs/sequelize';
+import {ConfigModule} from '../config/config.module';
+import {ConfigService} from '../config/config.service';
 
 @Module({
   imports: [
@@ -15,9 +15,12 @@ import { ConfigService } from '../config/config.service';
         port: Number(configService.get('DATABASE_PORT')) || 5432,
         username: configService.get('DATABASE_USERNAME') || 'postgres',
         password: configService.get('DATABASE_PASSWORD') || '',
-        database: configService.get('DATABASE_NAME') || `heimdall-server-${ configService.get('NODE_ENV').toLowerCase() }`,
+        database:
+          configService.get('DATABASE_NAME') ||
+          `heimdall-server-${configService.get('NODE_ENV').toLowerCase()}`,
         autoLoadModels: true,
-        synchronize: configService.get('NODE_ENV').toLowerCase() == 'test' ? false : true,
+        synchronize:
+          configService.get('NODE_ENV').toLowerCase() == 'test' ? false : true,
         logging: false,
         pool: {
           max: 5,
@@ -25,11 +28,10 @@ import { ConfigService } from '../config/config.service';
           acquire: 30000,
           idle: 10000
         }
-      }),
+      })
     })
   ],
   providers: [DatabaseService],
-  exports: [DatabaseService],
+  exports: [DatabaseService]
 })
-export class DatabaseModule {
-}
+export class DatabaseModule {}
