@@ -1,5 +1,6 @@
 import mock from 'mock-fs';
 import { ConfigService } from './config.service';
+import { ENV_MOCK_FILE } from '../../test/test.constants';
 
 describe('Config Service', () => {
 
@@ -28,13 +29,22 @@ describe('Config Service', () => {
 
   describe('Tests the get function when .env file does exist', () => {
     beforeAll(() => {
-      // Restore the fs binding to the real file system
-      mock.restore();
+      // Mock .env file
+      mock({
+        '.env': ENV_MOCK_FILE
+      });
     });
 
     it('should return the correct database name', () => {
       const configService = new ConfigService();
+      expect(configService.get('HEIMDALL_SERVER_PORT')).toEqual('8000');
+      expect(configService.get('DATABASE_HOST')).toEqual('localhost');
+      expect(configService.get('DATABASE_PORT')).toEqual('5432');
+      expect(configService.get('DATABASE_USERNAME')).toEqual('postgres');
+      expect(configService.get('DATABASE_PASSWORD')).toEqual('postgres');
       expect(configService.get('DATABASE_NAME')).toEqual('heimdallts_jest_testing_service_db');
+      expect(configService.get('JWT_SECRET')).toEqual('abc123');
+      expect(configService.get('NODE_ENV')).toEqual('test');
     });
 
     it('should return undefined because env variable does not exist', () => {
@@ -52,6 +62,15 @@ describe('Config Service', () => {
         })
       });
       expect(() => new ConfigService()).toThrowError();
+    });
+
+    it('should throw an error in the get function', () => {
+      mock({
+        '.env': ENV_MOCK_FILE
+      });
+      const configService = new ConfigService();
+      jest.spyOn(configService, 'get').mockImplementationOnce(() => {throw new Error('')});
+      expect(() => configService.get('DATABASE_NAME')).toThrowError();
     });
   });
 
