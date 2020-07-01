@@ -1,5 +1,5 @@
-import { Policy } from '../policy.model';
-import { AbacAttributes } from './abac-attributes.dto';
+import { Policy } from "../policy.model";
+import { AbacAttributes } from "./abac-attributes.dto";
 
 export class PolicyDto {
   readonly role: string;
@@ -11,7 +11,7 @@ export class PolicyDto {
     this.role = policy.role;
     this.actions = policy.actions;
     this.targets = policy.targets;
-    if(!(policy.attributes == null)) {
+    if (!(policy.attributes == null)) {
       this.attributes = new AbacAttributes(policy.attributes);
     }
   }

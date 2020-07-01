@@ -1,11 +1,16 @@
-import { Injectable, UnauthorizedException, NotFoundException, BadRequestException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
-import { User } from './user.model';
-import { UserDto } from './dto/user.dto';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { DeleteUserDto } from './dto/delete-user.dto';
-import { hash, compare } from 'bcrypt';
+import {
+  Injectable,
+  UnauthorizedException,
+  NotFoundException,
+  BadRequestException
+} from "@nestjs/common";
+import { InjectModel } from "@nestjs/sequelize";
+import { User } from "./user.model";
+import { UserDto } from "./dto/user.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { DeleteUserDto } from "./dto/delete-user.dto";
+import { hash, compare } from "bcrypt";
 
 @Injectable()
 export class UsersService {
@@ -15,8 +20,8 @@ export class UsersService {
   ) {}
 
   async findAll(): Promise<UserDto[]> {
-    const users =  await this.userModel.findAll<User>();
-    return users.map(user => new UserDto(user))
+    const users = await this.userModel.findAll<User>();
+    return users.map(user => new UserDto(user));
   }
 
   async findById(id: number): Promise<UserDto> {
@@ -56,7 +61,7 @@ export class UsersService {
     try {
       user.encryptedPassword = await hash(createUserDto.password, 14);
     } catch {
-      throw new BadRequestException
+      throw new BadRequestException();
     }
     const userData = await user.save();
     return new UserDto(userData);
@@ -65,12 +70,12 @@ export class UsersService {
   async update(id: number, updateUserDto: UpdateUserDto, isAdmin: boolean) {
     const user = await this.userModel.findByPk<User>(id);
     this.exists(user);
-    if(!isAdmin) {
+    if (!isAdmin) {
       await this.testPassword(updateUserDto, user);
     }
-    if(updateUserDto.password == null && user.forcePasswordChange) {
-      throw new BadRequestException('You must change your password');
-    } else if(updateUserDto.password) {
+    if (updateUserDto.password == null && user.forcePasswordChange) {
+      throw new BadRequestException("You must change your password");
+    } else if (updateUserDto.password) {
       user.encryptedPassword = await hash(updateUserDto.password, 14);
       user.passwordChangedAt = new Date();
       user.forcePasswordChange = false;
@@ -81,7 +86,8 @@ export class UsersService {
     user.title = updateUserDto.title || user.title;
     user.organization = updateUserDto.organization || user.organization;
     user.role = updateUserDto.role || user.role;
-    user.forcePasswordChange = updateUserDto.forcePasswordChange || user.forcePasswordChange;
+    user.forcePasswordChange =
+      updateUserDto.forcePasswordChange || user.forcePasswordChange;
     const userData = await user.save();
     return new UserDto(userData);
   }
@@ -102,19 +108,19 @@ export class UsersService {
     const user = await this.userModel.findByPk<User>(id);
     this.exists(user);
     try {
-      if(!(await compare(deleteUserDto.password, user.encryptedPassword))) {
-        throw new UnauthorizedException;
+      if (!(await compare(deleteUserDto.password, user.encryptedPassword))) {
+        throw new UnauthorizedException();
       }
     } catch {
-      throw new UnauthorizedException;
+      throw new UnauthorizedException();
     }
     await user.destroy();
     return new UserDto(user);
   }
 
-  exists(user: User) : boolean {
+  exists(user: User): boolean {
     if (!user) {
-      throw new NotFoundException('User with given id not found');
+      throw new NotFoundException("User with given id not found");
     } else {
       return true;
     }
@@ -122,11 +128,13 @@ export class UsersService {
 
   async testPassword(updateUserDto: UpdateUserDto, user: User) {
     try {
-      if(!(await compare(updateUserDto.currentPassword, user.encryptedPassword))) {
-        throw new UnauthorizedException;
+      if (
+        !(await compare(updateUserDto.currentPassword, user.encryptedPassword))
+      ) {
+        throw new UnauthorizedException();
       }
     } catch {
-      throw new UnauthorizedException;
+      throw new UnauthorizedException();
     }
   }
 }

@@ -1,6 +1,17 @@
-import { Column, Model, Table, IsEmail, Unique, AllowNull, CreatedAt, UpdatedAt,
-  PrimaryKey, AutoIncrement, DataType, Default
-} from 'sequelize-typescript';
+import {
+  Column,
+  Model,
+  Table,
+  IsEmail,
+  Unique,
+  AllowNull,
+  CreatedAt,
+  UpdatedAt,
+  PrimaryKey,
+  AutoIncrement,
+  DataType,
+  Default
+} from "sequelize-typescript";
 
 @Table
 export class User extends Model<User> {
@@ -54,7 +65,7 @@ export class User extends Model<User> {
   passwordChangedAt: Date;
 
   @AllowNull(false)
-  @Default('user')
+  @Default("user")
   @Column
   role: string;
 

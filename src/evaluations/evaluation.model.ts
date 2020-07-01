@@ -1,5 +1,14 @@
-import { Model, Column, Table, CreatedAt, UpdatedAt, PrimaryKey, AllowNull, DataType, AutoIncrement
-} from 'sequelize-typescript';
+import {
+  Model,
+  Column,
+  Table,
+  CreatedAt,
+  UpdatedAt,
+  PrimaryKey,
+  AllowNull,
+  DataType,
+  AutoIncrement
+} from "sequelize-typescript";
 
 @Table
 export class Evaluation extends Model<Evaluation> {

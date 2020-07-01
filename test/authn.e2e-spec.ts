@@ -1,15 +1,15 @@
-import { INestApplication, ValidationPipe, HttpStatus } from '@nestjs/common';
-import { TestingModule, Test } from '@nestjs/testing';
-import request from 'supertest';
-import { AppModule } from './../src/app.module';
-import { DatabaseService } from './../src/database/database.service';
+import { INestApplication, ValidationPipe, HttpStatus } from "@nestjs/common";
+import { TestingModule, Test } from "@nestjs/testing";
+import request from "supertest";
+import { AppModule } from "./../src/app.module";
+import { DatabaseService } from "./../src/database/database.service";
 import {
   CREATE_USER_DTO_TEST_OBJ,
   LOGIN_AUTHENTICATION,
   BAD_LOGIN_AUTHENTICATION
-} from './constants/users-test.constant';
+} from "./constants/users-test.constant";
 
-describe('/authn', () => {
+describe("/authn", () => {
   let app: INestApplication;
   let databaseService: DatabaseService;
 
@@ -35,23 +35,40 @@ describe('/authn', () => {
     await databaseService.cleanAll();
   });
 
-  describe('/login', () => {
-    it('should successfully return access token', async () => {
-      await request(app.getHttpServer()).post('/users').set('Content-Type', 'application/json').send(CREATE_USER_DTO_TEST_OBJ).expect(HttpStatus.CREATED);
-      return await request(app.getHttpServer()).post('/authn/login').set('Content-Type', 'application/json').send(LOGIN_AUTHENTICATION).expect(HttpStatus.CREATED).then(response => {
-        expect(response.body.accessToken).toBeDefined();
-      });
+  describe("/login", () => {
+    it("should successfully return access token", async () => {
+      await request(app.getHttpServer())
+        .post("/users")
+        .set("Content-Type", "application/json")
+        .send(CREATE_USER_DTO_TEST_OBJ)
+        .expect(HttpStatus.CREATED);
+      return await request(app.getHttpServer())
+        .post("/authn/login")
+        .set("Content-Type", "application/json")
+        .send(LOGIN_AUTHENTICATION)
+        .expect(HttpStatus.CREATED)
+        .then(response => {
+          expect(response.body.accessToken).toBeDefined();
+        });
     });
 
-    it('should return 401 status when bad login info is supplied', async () => {
-      await request(app.getHttpServer()).post('/users').set('Content-Type', 'application/json').send(CREATE_USER_DTO_TEST_OBJ).expect(HttpStatus.CREATED);
-      return request(app.getHttpServer()).post('/authn/login').set('Content-Type', 'application/json').send(BAD_LOGIN_AUTHENTICATION).expect(HttpStatus.UNAUTHORIZED);
+    it("should return 401 status when bad login info is supplied", async () => {
+      await request(app.getHttpServer())
+        .post("/users")
+        .set("Content-Type", "application/json")
+        .send(CREATE_USER_DTO_TEST_OBJ)
+        .expect(HttpStatus.CREATED);
+      return request(app.getHttpServer())
+        .post("/authn/login")
+        .set("Content-Type", "application/json")
+        .send(BAD_LOGIN_AUTHENTICATION)
+        .expect(HttpStatus.UNAUTHORIZED);
     });
-  })
+  });
 
   afterAll(async () => {
     await databaseService.cleanAll();
     await app.close();
     await databaseService.closeConnection();
   });
-})
+});

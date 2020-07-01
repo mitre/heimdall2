@@ -1,5 +1,14 @@
-import { Table, Model, AutoIncrement, PrimaryKey, DataType,
-  Column, AllowNull, CreatedAt, UpdatedAt } from 'sequelize-typescript';
+import {
+  Table,
+  Model,
+  AutoIncrement,
+  PrimaryKey,
+  DataType,
+  Column,
+  AllowNull,
+  CreatedAt,
+  UpdatedAt
+} from "sequelize-typescript";
 
 @Table
 export class Policy extends Model<Policy> {
