@@ -2,9 +2,14 @@ import mock from 'mock-fs';
 import { ConfigService } from './config.service';
 import { ENV_MOCK_FILE } from '../../test/test.constants';
 
+/* If you run the test without --silent , you need to add console.log() before you mock out the 
+file system in the beforeAll() or it'll throw an error (this is a documented bug which can be 
+found at https://github.com/tschaub/mock-fs/issues/234). 
+If you run the test with --silent (which we do by default), you don't need the log statement. */
 describe('Config Service', () => {
 
   beforeAll(async () => {
+    // console.log();
     // Used as an empty file system
     mock({
       // No files created (.env file does not exist yet)
@@ -69,7 +74,7 @@ describe('Config Service', () => {
         '.env': ENV_MOCK_FILE
       });
       const configService = new ConfigService();
-      jest.spyOn(configService, 'get').mockImplementationOnce(() => {throw new Error('')});
+      jest.spyOn(configService, 'get').mockImplementationOnce(() => { throw new Error('') });
       expect(() => configService.get('DATABASE_NAME')).toThrowError();
     });
   });
