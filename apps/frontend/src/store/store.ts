@@ -1,14 +1,14 @@
-import Vue from "vue";
-import Vuex from "vuex";
-import InspecDataModule from "@/store/data_store";
-import FilteredDataModule from "@/store/data_filters";
-import StatusCountModule from "@/store/status_counts";
-import SeverityCountModule from "@/store/severity_counts";
-import HashLookupModule from "@/store/lookup_hashes";
-import InspecIntakeModule from "@/store/report_intake";
-import ColorHackModule from "@/store/color_hack";
-import AppInfoModule from "@/store/app_info";
-import HeimdallServerModule from "./server";
+import Vue from 'vue';
+import Vuex from 'vuex';
+import InspecDataModule from '@/store/data_store';
+import FilteredDataModule from '@/store/data_filters';
+import StatusCountModule from '@/store/status_counts';
+import SeverityCountModule from '@/store/severity_counts';
+import HashLookupModule from '@/store/lookup_hashes';
+import InspecIntakeModule from '@/store/report_intake';
+import ColorHackModule from '@/store/color_hack';
+import AppInfoModule from '@/store/app_info';
+import HeimdallServerModule from './server';
 
 Vue.use(Vuex);
 

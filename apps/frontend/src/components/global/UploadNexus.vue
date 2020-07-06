@@ -58,19 +58,19 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { getModule } from "vuex-module-decorators";
-import InspecIntakeModule, { FileID } from "@/store/report_intake";
-import Modal from "@/components/global/Modal.vue";
-import FileReader from "@/components/global/upload_tabs/FileReader.vue";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {getModule} from 'vuex-module-decorators';
+import InspecIntakeModule, {FileID} from '@/store/report_intake';
+import Modal from '@/components/global/Modal.vue';
+import FileReader from '@/components/global/upload_tabs/FileReader.vue';
 //import DatabaseReader from "@/components/global/upload_tabs/DatabaseReader.vue";
-import HelpFooter from "@/components/global/upload_tabs/HelpFooter.vue";
-import S3Reader from "@/components/global/upload_tabs/aws/S3Reader.vue";
-import SplunkReader from "@/components/global/upload_tabs/splunk/SplunkReader.vue";
-import SampleList from "@/components/global/upload_tabs/SampleList.vue";
-import ServerModule from "@/store/server";
-import { LocalStorageVal } from "@/utilities/helper_util";
+import HelpFooter from '@/components/global/upload_tabs/HelpFooter.vue';
+import S3Reader from '@/components/global/upload_tabs/aws/S3Reader.vue';
+import SplunkReader from '@/components/global/upload_tabs/splunk/SplunkReader.vue';
+import SampleList from '@/components/global/upload_tabs/SampleList.vue';
+import ServerModule from '@/store/server';
+import {LocalStorageVal} from '@/utilities/helper_util';
 
 export class UserProfile {
   id?: number;
@@ -83,7 +83,7 @@ export class UserProfile {
   updatedAt?: Date;
 }
 
-const local_tab = new LocalStorageVal<string>("nexus_curr_tab");
+const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -109,12 +109,12 @@ const Props = Vue.extend({
   }
 })
 export default class UploadNexus extends Props {
-  active_tab: string = ""; // Set in mounted
+  active_tab: string = ''; // Set in mounted
 
   // Loads the last open tab
   mounted() {
-    console.log("mount UploadNexus");
-    this.active_tab = local_tab.get_default("uploadtab-local");
+    console.log('mount UploadNexus');
+    this.active_tab = local_tab.get_default('uploadtab-local');
   }
 
   get is_logged_in(): boolean {
@@ -133,23 +133,23 @@ export default class UploadNexus extends Props {
 
   get token(): string {
     let mod = getModule(ServerModule, this.$store);
-    return mod.token || "";
+    return mod.token || '';
   }
 
   get user(): string {
     let mod = getModule(ServerModule, this.$store);
     if (mod.profile) {
-      return mod.profile.email || "pending";
+      return mod.profile.email || 'pending';
     } else {
-      return "pending";
+      return 'pending';
     }
   }
 
   //logout from backend
   logout() {
-    console.log("logout");
+    console.log('logout');
     getModule(ServerModule, this.$store).clear_token();
-    this.$router.push("/login");
+    this.$router.push('/login');
   }
   // Handles change in tab
   selected_tab(new_tab: string) {
@@ -159,8 +159,8 @@ export default class UploadNexus extends Props {
 
   // Event passthrough
   got_files(files: FileID[]) {
-    console.log("got_files");
-    this.$emit("got-files", files);
+    console.log('got_files');
+    this.$emit('got-files', files);
   }
 }
 </script>

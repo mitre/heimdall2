@@ -9,10 +9,10 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
+import Vue from 'vue';
+import Component from 'vue-class-component';
 
-export type Sort = "ascending" | "descending" | "none" | "disabled";
+export type Sort = 'ascending' | 'descending' | 'none' | 'disabled';
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -35,7 +35,7 @@ export default class ColumnHeader extends Props {
    */
   get allow_sort(): boolean {
     // return true;
-    return this.sort !== "disabled";
+    return this.sort !== 'disabled';
   }
 
   /**
@@ -46,17 +46,17 @@ export default class ColumnHeader extends Props {
     let new_sort: string;
     switch (this.sort as Sort) {
       default: // Shouldn't happen but whatever
-      case "none":
-        new_sort = "descending";
+      case 'none':
+        new_sort = 'descending';
         break;
-      case "descending":
-        new_sort = "ascending";
+      case 'descending':
+        new_sort = 'ascending';
         break;
-      case "ascending":
-        new_sort = "descending";
+      case 'ascending':
+        new_sort = 'descending';
         break;
     }
-    this.$emit("input", new_sort);
+    this.$emit('input', new_sort);
   }
 
   /**
@@ -65,14 +65,14 @@ export default class ColumnHeader extends Props {
   get icon(): string {
     switch (this.sort as Sort) {
       default:
-      case "none":
-        return "mdi-sort-variant";
-      case "ascending":
-        return "mdi-sort-ascending";
-      case "descending":
-        return "mdi-sort-descending";
-      case "disabled":
-        return "";
+      case 'none':
+        return 'mdi-sort-variant';
+      case 'ascending':
+        return 'mdi-sort-ascending';
+      case 'descending':
+        return 'mdi-sort-descending';
+      case 'disabled':
+        return '';
     }
   }
 }

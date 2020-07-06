@@ -31,19 +31,19 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { getModule } from "vuex-module-decorators";
-import S3, { ObjectKey } from "aws-sdk/clients/s3";
-import { AWSError } from "aws-sdk/lib/error";
-import { LocalStorageVal } from "../../../../utilities/helper_util";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {getModule} from 'vuex-module-decorators';
+import S3, {ObjectKey} from 'aws-sdk/clients/s3';
+import {AWSError} from 'aws-sdk/lib/error';
+import {LocalStorageVal} from '../../../../utilities/helper_util';
 import {
   Auth,
   transcribe_error,
   get_session_token,
   MFA_Info
-} from "../../../../utilities/aws_util";
-import InspecIntakeModule, { FileID } from "@/store/report_intake";
+} from '../../../../utilities/aws_util';
+import InspecIntakeModule, {FileID} from '@/store/report_intake';
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -54,7 +54,7 @@ const Props = Vue.extend({
 });
 
 /** Localstorage keys */
-const local_mfa_serial = new LocalStorageVal<string>("aws_s3_mfa_serial");
+const local_mfa_serial = new LocalStorageVal<string>('aws_s3_mfa_serial');
 
 /**
  * File reader component for taking in inspec JSON data.
@@ -70,30 +70,30 @@ export default class S3Reader extends Props {
 
   /** Form required field rules. Maybe eventually expand to other stuff */
   req_rule = (v: string | null | undefined) =>
-    (v || "").trim().length > 0 || "Field is Required";
+    (v || '').trim().length > 0 || 'Field is Required';
   mfa_rule = (v: string | null | undefined) =>
-    (v || "").trim().match("^\\d{6}$") !== null ||
-    "Field must be the 6 number code from a valid authenticator device";
+    (v || '').trim().match('^\\d{6}$') !== null ||
+    'Field must be the 6 number code from a valid authenticator device';
 
   /** On mount, try to look up stored auth info */
   mounted() {
-    this.change_mfa_serial(local_mfa_serial.get_default(""));
+    this.change_mfa_serial(local_mfa_serial.get_default(''));
   }
 
   /** Handles changes to mfa serial */
   change_mfa_token(new_value: string) {
-    this.$emit("update:mfa_token", new_value);
+    this.$emit('update:mfa_token', new_value);
   }
 
   /** Handles changes to mfa token */
   change_mfa_serial(new_value: string) {
     local_mfa_serial.set(new_value);
-    this.$emit("update:mfa_serial", new_value);
+    this.$emit('update:mfa_serial', new_value);
   }
 
   /** When button is pressed or enter is pressed */
   proceed() {
-    this.$emit("exit-mfa");
+    this.$emit('exit-mfa');
   }
 }
 </script>

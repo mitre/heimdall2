@@ -1,28 +1,28 @@
-import "@mdi/font/css/materialdesignicons.css";
-import Vue from "vue";
-import Vuetify, { colors } from "vuetify/lib";
-import Toasted from "vue-toasted";
-import { ToastOptions } from "vue-toasted/types/index";
-import { gen_variants, gen_visibilities } from "@/utilities/color_util";
+import '@mdi/font/css/materialdesignicons.css';
+import Vue from 'vue';
+import Vuetify, {colors} from 'vuetify/lib';
+import Toasted from 'vue-toasted';
+import {ToastOptions} from 'vue-toasted/types/index';
+import {gen_variants, gen_visibilities} from '@/utilities/color_util';
 
 Vue.use(Vuetify);
 
 Vue.use(Toasted);
 // options to the toast
 let options: ToastOptions = {
-  theme: "toasted-primary",
-  position: "top-center",
+  theme: 'toasted-primary',
+  position: 'top-center',
   fullWidth: true,
-  containerClass: "background v-application",
-  className: "white--text",
+  containerClass: 'background v-application',
+  className: 'white--text',
   action: [
     {
-      text: "Report Issue",
+      text: 'Report Issue',
       href:
-        "https://github.com/mitre/heimdall-lite/issues/new?assignees=&labels=bug&template=bug_report.md&title="
+        'https://github.com/mitre/heimdall-lite/issues/new?assignees=&labels=bug&template=bug_report.md&title='
     },
     {
-      text: "Dismiss",
+      text: 'Dismiss',
       onClick: (_, toast_object) => toast_object.goAway(0)
     }
   ],
@@ -32,7 +32,7 @@ let options: ToastOptions = {
 
 // register the toast with the custom message
 Vue.toasted.register(
-  "error",
+  'error',
   payload => {
     if (!payload.message) {
       return `ERROR: An unidentified error has occured, if functionality
@@ -42,10 +42,10 @@ Vue.toasted.register(
 
     // The vue component passes in current dark mode setting, and the toast is adjusted
     // to be high contrast
-    options.className += payload.isDark ? " invert" : "";
+    options.className += payload.isDark ? ' invert' : '';
 
     // Display message passed by vue component
-    return "ERROR: " + payload.message;
+    return 'ERROR: ' + payload.message;
   },
   options
 );
@@ -72,25 +72,25 @@ const statuses = {
 
 // Get colors generated from base mitre using UtilColorGenerator.
 // These are identical to default vuetify shading, but now we can access them programatically!
-let mitrePrimaryBlue = gen_variants("#005b94");
-let mitrePrimaryGrey = gen_variants("#5f636a");
-let mitreSecondaryGrey = gen_variants("#cfdeea");
-let mitreSecondaryBlue = gen_variants("#00b3dc");
-let darkBackground = gen_variants("#303030");
-let lightBackground = gen_variants("#e0e0e0", 2); // Want more extreme variations
+let mitrePrimaryBlue = gen_variants('#005b94');
+let mitrePrimaryGrey = gen_variants('#5f636a');
+let mitreSecondaryGrey = gen_variants('#cfdeea');
+let mitreSecondaryBlue = gen_variants('#00b3dc');
+let darkBackground = gen_variants('#303030');
+let lightBackground = gen_variants('#e0e0e0', 2); // Want more extreme variations
 
 const branding = {
   mitrePrimaryBlue,
   mitrePrimaryGrey,
   mitreSecondaryGrey,
   mitreSecondaryBlue,
-  mitreSecondaryGreen: "#BFD228",
-  mitreSecondaryYellow: "#FFE23C",
-  mitreSecondaryOrange: "#F7901E",
-  mitreSecondaryRed: "#C6401D",
-  mitreSectionBackground: "#f3f2f2", //#eff3f5;
-  mitreSectionBorder: "#cfcfcf", //#b4bfae
-  mitreCardShadow: "#d6d6d6"
+  mitreSecondaryGreen: '#BFD228',
+  mitreSecondaryYellow: '#FFE23C',
+  mitreSecondaryOrange: '#F7901E',
+  mitreSecondaryRed: '#C6401D',
+  mitreSectionBackground: '#f3f2f2', //#eff3f5;
+  mitreSectionBorder: '#cfcfcf', //#b4bfae
+  mitreCardShadow: '#d6d6d6'
 };
 
 let severities = {
@@ -108,7 +108,7 @@ let compliances = {
 
 const veautiful = new Vuetify({
   icons: {
-    iconfont: "mdi"
+    iconfont: 'mdi'
   },
   theme: {
     dark: true,
@@ -119,11 +119,11 @@ const veautiful = new Vuetify({
         ...compliances,
         ...branding,
         primary: mitreSecondaryBlue,
-        "primary-visible": gen_visibilities(mitreSecondaryBlue),
+        'primary-visible': gen_visibilities(mitreSecondaryBlue),
         bar: darkBackground,
-        "bar-visible": gen_visibilities(darkBackground),
+        'bar-visible': gen_visibilities(darkBackground),
         secondary: darkBackground,
-        "secondary-visible": gen_visibilities(darkBackground)
+        'secondary-visible': gen_visibilities(darkBackground)
       },
       light: {
         ...statuses,
@@ -131,11 +131,11 @@ const veautiful = new Vuetify({
         ...compliances,
         ...branding,
         primary: mitrePrimaryBlue,
-        "primary-visible": gen_visibilities(mitrePrimaryBlue),
+        'primary-visible': gen_visibilities(mitrePrimaryBlue),
         bar: mitrePrimaryBlue,
-        "bar-visible": gen_visibilities(mitrePrimaryBlue),
+        'bar-visible': gen_visibilities(mitrePrimaryBlue),
         secondary: lightBackground,
-        "secondary-visible": gen_visibilities(lightBackground)
+        'secondary-visible': gen_visibilities(lightBackground)
       }
     },
     options: {

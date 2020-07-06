@@ -86,7 +86,7 @@
                   item-key="name"
                   class="elevation-1"
                 >
-                  <template v-slot:body="{ items }">
+                  <template v-slot:body="{items}">
                     <tbody>
                       <tr v-for="item in items" :key="item.name">
                         <td>{{ item.filename }}</td>
@@ -138,19 +138,19 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import BaseView from "@/views/BaseView.vue";
-import UploadNexus from "@/components/global/UploadNexus.vue";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import BaseView from '@/views/BaseView.vue';
+import UploadNexus from '@/components/global/UploadNexus.vue';
 import InspecIntakeModule, {
   FileID,
   next_free_file_ID
-} from "@/store/report_intake";
-import { plainToClass } from "class-transformer";
-import { getModule } from "vuex-module-decorators";
-import InspecDataModule from "../store/data_store";
-import ServerModule from "@/store/server";
-import { UserProfile, Evaluation, Usergroup } from "@/types/models.ts";
+} from '@/store/report_intake';
+import {plainToClass} from 'class-transformer';
+import {getModule} from 'vuex-module-decorators';
+import InspecDataModule from '../store/data_store';
+import ServerModule from '@/store/server';
+import {UserProfile, Evaluation, Usergroup} from '@/types/models.ts';
 export interface RetrieveHash {
   unique_id: number;
   eva: Evaluation;
@@ -185,24 +185,24 @@ export default class Profile extends ProfileProps {
   group_name: string | null = null;
   selected: number[] | null = null;
   selected_group: number | null = null;
-  curr_title: string = "Profile";
+  curr_title: string = 'Profile';
 
   get headers(): Object[] {
     return [
       {
-        text: "Filename",
-        align: "start",
+        text: 'Filename',
+        align: 'start',
         sortable: true,
-        value: "filename"
+        value: 'filename'
       },
-      { text: "Uploaded", sortable: true, value: "createdAt" },
-      { text: "Version", sortable: true, value: "version" },
-      { text: "Load", sortable: false },
-      { text: "Select", sortable: false }
+      {text: 'Uploaded', sortable: true, value: 'createdAt'},
+      {text: 'Version', sortable: true, value: 'version'},
+      {text: 'Load', sortable: false},
+      {text: 'Select', sortable: false}
     ];
   }
   get search(): string {
-    return "";
+    return '';
   }
   get hideHeaders(): Boolean {
     return false;
@@ -231,7 +231,7 @@ export default class Profile extends ProfileProps {
       const evals: Evaluation[] = eval_obj.map((x: any) =>
         plainToClass(Evaluation, x)
       );
-      console.log("evals: " + evals.length);
+      console.log('evals: ' + evals.length);
       evals.forEach(eva => {
         eva.filename = this.evaluation_label(eva);
       });
@@ -242,13 +242,13 @@ export default class Profile extends ProfileProps {
   }
 
   get usergroups(): Usergroup[] {
-    console.log("Get usergroups");
+    console.log('Get usergroups');
     let mod = getModule(ServerModule, this.$store);
     if (mod.usergroups) {
-      console.log("Return usergroups: " + JSON.stringify(mod.usergroups));
+      console.log('Return usergroups: ' + JSON.stringify(mod.usergroups));
       return mod.usergroups;
     } else {
-      console.log("No usergroups");
+      console.log('No usergroups');
       return [];
     }
   }
@@ -257,8 +257,8 @@ export default class Profile extends ProfileProps {
     let label = evaluation.version;
     if (evaluation.tags) {
       evaluation.tags.forEach(tag => {
-        console.log("tag " + tag.content.name + ": " + tag.content.value);
-        if (tag.content.name == "filename") {
+        console.log('tag ' + tag.content.name + ': ' + tag.content.value);
+        if (tag.content.name == 'filename') {
           label = tag.content.value;
         }
       });
@@ -267,7 +267,7 @@ export default class Profile extends ProfileProps {
   }
 
   group_url(usergroup: Usergroup): string {
-    return "/usergroup/" + usergroup.id;
+    return '/usergroup/' + usergroup.id;
   }
 
   open_usergroups_edit() {
@@ -281,7 +281,7 @@ export default class Profile extends ProfileProps {
   }
 
   async submit_usergroup(): Promise<void> {
-    console.log("submit " + this.group_name);
+    console.log('submit ' + this.group_name);
     const host = process.env.VUE_APP_API_URL!;
 
     if (this.group_name) {
@@ -294,7 +294,7 @@ export default class Profile extends ProfileProps {
       await mod
         .connect(host)
         .catch(bad => {
-          console.error("Unable to connect to " + host);
+          console.error('Unable to connect to ' + host);
         })
         .then(() => {
           return mod.new_usergroup(group_hash);
@@ -303,13 +303,13 @@ export default class Profile extends ProfileProps {
           console.error(`bad save ${bad}`);
         })
         .then(() => {
-          console.log("here2");
+          console.log('here2');
         });
     }
   }
 
   async load_this_evaluation(evaluation: Evaluation): Promise<void> {
-    console.log("load this file: " + evaluation.id);
+    console.log('load this file: ' + evaluation.id);
     const host = process.env.VUE_APP_API_URL!;
     // Generate an id
     let unique_id = next_free_file_ID();
@@ -318,10 +318,10 @@ export default class Profile extends ProfileProps {
     await mod
       .connect(host)
       .catch(bad => {
-        console.error("Unable to connect to " + host);
+        console.error('Unable to connect to ' + host);
       })
       .then(() => {
-        console.log("here");
+        console.log('here');
         let eva_hash: RetrieveHash = {
           unique_id: unique_id,
           eva: evaluation
@@ -332,13 +332,13 @@ export default class Profile extends ProfileProps {
         console.error(`bad login ${bad}`);
       })
       .then(() => {
-        console.log("Loaded " + unique_id);
+        console.log('Loaded ' + unique_id);
         this.on_got_files([unique_id]);
       });
   }
 
   async add_to_group(): Promise<void> {
-    console.log("Add " + this.selected + " to " + this.selected_group);
+    console.log('Add ' + this.selected + ' to ' + this.selected_group);
     const host = process.env.VUE_APP_API_URL!;
 
     if (this.selected && this.selected_group) {
@@ -350,7 +350,7 @@ export default class Profile extends ProfileProps {
       await mod
         .connect(host)
         .catch(bad => {
-          console.error("Unable to connect to " + host);
+          console.error('Unable to connect to ' + host);
         })
         .then(() => {
           return mod.add_to_usergroup(group_hash);
@@ -359,7 +359,7 @@ export default class Profile extends ProfileProps {
           console.error(`bad save ${bad}`);
         })
         .then(() => {
-          console.log("here2");
+          console.log('here2');
         });
     }
   }
@@ -367,7 +367,7 @@ export default class Profile extends ProfileProps {
   log_out() {
     getModule(ServerModule, this.$store).clear_token();
     this.dialog = false;
-    this.$router.push("/");
+    this.$router.push('/');
   }
 
   /**

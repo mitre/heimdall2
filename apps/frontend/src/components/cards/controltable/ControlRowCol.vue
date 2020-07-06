@@ -25,7 +25,7 @@
         :expanded.sync="expanded"
       >
         <template slot="default">{{ result.code_desc.trim() }}</template>
-        <template slot="after" slot-scope="{ toggle, expanded, clamped }">
+        <template slot="after" slot-scope="{toggle, expanded, clamped}">
           <v-icon fab v-if="!expanded && clamped" right medium @click="toggle"
             >mdi-plus-box</v-icon
           >
@@ -45,7 +45,7 @@
         :expanded.sync="expanded"
       >
         <template slot="default">{{ result.code_desc.trim() }}</template>
-        <template slot="after" slot-scope="{ toggle, expanded, clamped }">
+        <template slot="after" slot-scope="{toggle, expanded, clamped}">
           <v-icon fab v-if="!expanded && clamped" right medium @click="toggle"
             >mdi-plus-box</v-icon
           >
@@ -73,7 +73,7 @@
         :expanded.sync="expanded"
       >
         <template slot="default">{{ result.message.trim() }}</template>
-        <template slot="after" slot-scope="{ toggle, expanded, clamped }">
+        <template slot="after" slot-scope="{toggle, expanded, clamped}">
           <v-icon fab v-if="!expanded && clamped" right medium @click="toggle"
             >mdi-plus-box</v-icon
           >
@@ -87,11 +87,11 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { HDFControl, ControlStatus } from "inspecjs";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {HDFControl, ControlStatus} from 'inspecjs';
 //@ts-ignore
-import VClamp from "vue-clamp/dist/vue-clamp.js";
+import VClamp from 'vue-clamp/dist/vue-clamp.js';
 
 interface CollapsableElement extends Element {
   offsetHeight: Number;
@@ -123,7 +123,7 @@ export default class ControlRowCol extends ControlRowColProps {
 
   get status_color(): string {
     // maps stuff like "not applicable" -> "statusnotapplicable", which is a defined color name
-    return `status${this.statusCode.replace(" ", "")}`;
+    return `status${this.statusCode.replace(' ', '')}`;
   }
 }
 </script>

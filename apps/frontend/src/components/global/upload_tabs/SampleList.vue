@@ -20,16 +20,16 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { getModule } from "vuex-module-decorators";
-import { defined } from "@/utilities/async_util";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {getModule} from 'vuex-module-decorators';
+import {defined} from '@/utilities/async_util';
 import InspecIntakeModule, {
   FileID,
   next_free_file_ID
-} from "@/store/report_intake";
-import InspecDataModule from "../../../store/data_store";
-import AppInfoModule from "../../../store/app_info";
+} from '@/store/report_intake';
+import InspecDataModule from '../../../store/data_store';
+import AppInfoModule from '../../../store/app_info';
 
 interface Sample {
   name: string;
@@ -52,43 +52,43 @@ export default class SampleList extends Props {
   get samples(): Sample[] {
     return [
       {
-        name: "Sonarqube Java Heimdall_tools Sample",
+        name: 'Sonarqube Java Heimdall_tools Sample',
         url: `https://raw.githubusercontent.com/${this.repo}/master/samples/sonarqube_java_sample.json`
       },
       {
-        name: "OWASP ZAP Webgoat Heimdall_tools Sample",
+        name: 'OWASP ZAP Webgoat Heimdall_tools Sample',
         url: `https://raw.githubusercontent.com/${this.repo}/master/samples/owasp_zap_webgoat.json`
       },
       {
-        name: "OWASP ZAP Zero_WebAppSecurity Heimdall_tools Sample",
+        name: 'OWASP ZAP Zero_WebAppSecurity Heimdall_tools Sample',
         url: `https://raw.githubusercontent.com/${this.repo}/master/samples/owasp_zap_zero.webappsecurity.json`
       },
       {
-        name: "Fortify Heimdall_tools Sample",
+        name: 'Fortify Heimdall_tools Sample',
         url: `https://raw.githubusercontent.com/${this.repo}/master/samples/fortify_h_tools_conv_webgoat.json`
       },
       {
-        name: "AWS S3 Permissions Check InSpec Sample",
+        name: 'AWS S3 Permissions Check InSpec Sample',
         url: `https://raw.githubusercontent.com/${this.repo}/master/samples/aws-s3-baseline.json`
       },
       {
-        name: "AWS CIS Foundations Baseline InSpec Sample",
+        name: 'AWS CIS Foundations Baseline InSpec Sample',
         url: `https://raw.githubusercontent.com/${this.repo}/master/samples/cis-aws-foundations-baseline.json`
       },
       {
-        name: "NGINX Inspec Sample",
+        name: 'NGINX Inspec Sample',
         url: `https://raw.githubusercontent.com/${this.repo}/master/samples/good_nginxresults.json`
       },
       {
-        name: "Red Hat CVE Vulnerability Scan InSpec Sample",
+        name: 'Red Hat CVE Vulnerability Scan InSpec Sample',
         url: `https://raw.githubusercontent.com/${this.repo}/master/samples/rhel_cve_vulnerability_scan_baseline_with_failures.json`
       },
       {
-        name: "RedHat 7 STIG Baseline InSpec Sample",
+        name: 'RedHat 7 STIG Baseline InSpec Sample',
         url: `https://raw.githubusercontent.com/${this.repo}/master/samples/rhel7-results.json`
       },
       {
-        name: "Ubuntu STIG Baseline InSpec Sample",
+        name: 'Ubuntu STIG Baseline InSpec Sample',
         url: `https://raw.githubusercontent.com/${this.repo}/master/samples/ubuntu-16.04-baseline-results.json`
       }
     ];
@@ -107,10 +107,10 @@ export default class SampleList extends Props {
     // Get intake module
     let intake_module = getModule(InspecIntakeModule, this.$store);
     // Do fetch
-    fetch(sample.url, { method: "get" })
+    fetch(sample.url, {method: 'get'})
       .then(response => response.text())
       .then(text =>
-        intake_module.loadText({ filename: sample.name, unique_id, text })
+        intake_module.loadText({filename: sample.name, unique_id, text})
       )
       .then(err => {
         // Handle errors if necessary
@@ -118,7 +118,7 @@ export default class SampleList extends Props {
           throw `Error loading sample ${sample.name}`;
         } else {
           // Emit success
-          this.$emit("got-files", [unique_id]);
+          this.$emit('got-files', [unique_id]);
         }
       })
       .catch(err => {

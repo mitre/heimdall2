@@ -1,4 +1,4 @@
-import _Vue, { PluginFunction } from "vue";
+import _Vue, {PluginFunction} from 'vue';
 
 declare class VueAnalytics {
   static install(Vue: typeof _Vue, options: any): void;
@@ -19,15 +19,15 @@ declare class VueAnalytics {
 }
 export default VueAnalytics;
 
-declare module "vue-analytics" {}
+declare module 'vue-analytics' {}
 
-declare module "vue/types/options" {
+declare module 'vue/types/options' {
   interface ComponentOptions<V extends _Vue> {
     ga?: VueAnalytics;
   }
 }
 
-declare module "vue/types/vue" {
+declare module 'vue/types/vue' {
   interface Vue {
     $ga: VueAnalytics;
   }

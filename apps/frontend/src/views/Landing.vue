@@ -14,14 +14,14 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import UploadNexus from "@/components/global/UploadNexus.vue";
-import ServerModule from "@/store/server";
-import { getModule } from "vuex-module-decorators";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import UploadNexus from '@/components/global/UploadNexus.vue';
+import ServerModule from '@/store/server';
+import {getModule} from 'vuex-module-decorators';
 
-import { Filter } from "@/store/data_filters";
-import { FileID } from "@/store/report_intake";
+import {Filter} from '@/store/data_filters';
+import {FileID} from '@/store/report_intake';
 
 // We declare the props separately
 // to make props types inferrable.
@@ -61,29 +61,29 @@ export default class Landing extends LandingProps {
       return true;
     } else {
       if (this.token) {
-        console.log("is_logged_in - token: " + this.token + "end token");
+        console.log('is_logged_in - token: ' + this.token + 'end token');
         return true;
       } else {
-        this.$router.push("/login");
+        this.$router.push('/login');
         return false;
       }
     }
   }
 
   get token(): string {
-    console.log("token");
+    console.log('token');
     let mod = getModule(ServerModule, this.$store);
-    return mod.token || "";
+    return mod.token || '';
   }
 
   checkLoggedIn() {
-    console.log("token: " + this.token + "end token");
+    console.log('token: ' + this.token + 'end token');
     if (!this.token) {
-      console.log("Go to auth");
+      console.log('Go to auth');
       //  this.dialog = false;
-      this.$router.push("/login");
+      this.$router.push('/login');
     } else {
-      this.$router.push("/profile");
+      this.$router.push('/profile');
     }
   }
 
@@ -91,13 +91,13 @@ export default class Landing extends LandingProps {
    * Invoked when file(s) are loaded.
    */
   on_got_files(ids: FileID[]) {
-    console.log("on_got_files");
+    console.log('on_got_files');
     // Close the dialog
     this.dialog = false;
 
     // If just one file, focus it
     if (ids.length === 1) {
-      console.log("one file: " + ids[0]);
+      console.log('one file: ' + ids[0]);
       this.$router.push(`/results/${ids[0]}`);
     }
 

@@ -48,15 +48,15 @@
   </v-app>
 </template>
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { Filter } from "@/store/data_filters";
-import { FileID } from "@/store/report_intake";
-import { LocalStorageVal } from "@/utilities/helper_util";
-import { getModule } from "vuex-module-decorators";
-import ServerModule from "@/store/server";
-import VeeValidate from "vee-validate";
-import VuePassword from "vue-password";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {Filter} from '@/store/data_filters';
+import {FileID} from '@/store/report_intake';
+import {LocalStorageVal} from '@/utilities/helper_util';
+import {getModule} from 'vuex-module-decorators';
+import ServerModule from '@/store/server';
+import VeeValidate from 'vee-validate';
+import VuePassword from 'vue-password';
 
 Vue.use(VeeValidate);
 
@@ -78,11 +78,11 @@ const LoginProps = Vue.extend({
   }
 })
 export default class Login extends LoginProps {
-  username: string = "";
-  password: string = "";
-  confirm_password: string = "";
-  host: string = "";
-  active_tab: string = ""; // Set in mounted
+  username: string = '';
+  password: string = '';
+  confirm_password: string = '';
+  host: string = '';
+  active_tab: string = ''; // Set in mounted
 
   // Whether fields are valid
   valid = true;
@@ -91,18 +91,18 @@ export default class Login extends LoginProps {
   //loading = false;
 
   username_rules = [
-    (v: string) => !!v || "Username is required"
+    (v: string) => !!v || 'Username is required'
     // (v: string) => (v && v.length > 3) || "A username must be more than 3 characters long",
     // (v: string) => /^[a-z0-9_]+$/.test(v) || "A username can only contain letters and digits"
   ];
   password_rules = [
-    (v: string) => !!v || "Password is required"
+    (v: string) => !!v || 'Password is required'
     // (v: string) => (v && v.length > 7) || "The password must be longer than 7 characters"
   ];
 
   // Loads the last open tab
   mounted() {
-    console.log("mount UploadNexus");
+    console.log('mount UploadNexus');
     this.checkLoggedIn();
     let mod = getModule(ServerModule, this.$store);
     if (mod.serverMode == undefined) {
@@ -124,29 +124,29 @@ export default class Login extends LoginProps {
     }
   }
   checkLoggedIn() {
-    console.log("token: " + this.token + "end token");
+    console.log('token: ' + this.token + 'end token');
     if (this.token) {
-      this.$router.push("/profile");
+      this.$router.push('/profile');
     }
   }
   get token(): string {
     let mod = getModule(ServerModule, this.$store);
-    return mod.token || "";
+    return mod.token || '';
   }
 
   get watches(): string {
     let server = getModule(ServerModule, this.$store);
     if (server.profile) {
-      console.log("server profile: " + server.profile);
-      this.$router.push("/profile");
-      return "a";
+      console.log('server profile: ' + server.profile);
+      this.$router.push('/profile');
+      return 'a';
     } else {
-      return "b";
+      return 'b';
     }
   }
 
   signup() {
-    this.$router.push("/signup");
+    this.$router.push('/signup');
   }
 
   async login(): Promise<void> {
@@ -157,7 +157,7 @@ export default class Login extends LoginProps {
 
     console.log(host);
     if ((this.$refs.form as any).validate()) {
-      console.log("Login to Backend test");
+      console.log('Login to Backend test');
       let creds: LoginHash = {
         username: this.username,
         password: this.password,
@@ -167,7 +167,7 @@ export default class Login extends LoginProps {
       await mod
         .connect(host)
         .catch(bad => {
-          console.error("Unable to connect to " + host);
+          console.error('Unable to connect to ' + host);
           this.$router.go(0);
         })
         .then(() => {
@@ -178,7 +178,7 @@ export default class Login extends LoginProps {
           this.$router.go(0);
         })
         .then(() => {
-          this.$router.push("/profile");
+          this.$router.push('/profile');
         });
     }
   }

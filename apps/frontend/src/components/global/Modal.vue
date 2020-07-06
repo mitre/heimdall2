@@ -2,8 +2,8 @@
   <v-dialog
     :value="value"
     :persistent="persistent"
-    @click:outside="$emit('input', { target: false })"
-    @keydown.esc="$emit('input', { target: false })"
+    @click:outside="$emit('input', {target: false})"
+    @keydown.esc="$emit('input', {target: false})"
     width="80%"
     max-width="1000px"
     content-class="v-card"
@@ -13,8 +13,8 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
+import Vue from 'vue';
+import Component from 'vue-class-component';
 
 // We declare the props separately to make props types inferable.
 const ModalProps = Vue.extend({

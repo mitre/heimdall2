@@ -1,16 +1,16 @@
-import "core-js/stable";
-import Vue from "vue";
-import App from "@/App.vue";
-import router from "@/router";
-import store from "@/store/store";
-import vuetify from "@/plugins/vuetify"; // path to vuetify export
-import "roboto-fontface/css/roboto/roboto-fontface.css";
+import 'core-js/stable';
+import Vue from 'vue';
+import App from '@/App.vue';
+import router from '@/router';
+import store from '@/store/store';
+import vuetify from '@/plugins/vuetify'; // path to vuetify export
+import 'roboto-fontface/css/roboto/roboto-fontface.css';
 //import "@mdi/font/css/materialdesignicons.css";
-import "material-design-icons-iconfont/dist/material-design-icons.css";
-import VueAnalytics from "vue-analytics";
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
+import VueAnalytics from 'vue-analytics';
 
 Vue.use(VueAnalytics, {
-  id: "UA-149784359-1",
+  id: 'UA-149784359-1',
   router,
   debug: {
     enabled: true,
@@ -26,7 +26,7 @@ new Vue({
   store,
   vuetify,
   render: h => h(App)
-}).$mount("#app");
+}).$mount('#app');
 
 // The following line is a hot patch to add regex support, theyre are better
 // places to edit Prism variables, but could not locate them. Namely this is

@@ -21,8 +21,8 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
+import Vue from 'vue';
+import Component from 'vue-class-component';
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -38,7 +38,7 @@ export default class SplunkReader extends Props {
   index = 0;
   shunt() {
     this.index = (this.index + 1) % 4;
-    let refid = ["a", "b", "c", "d"][this.index];
+    let refid = ['a', 'b', 'c', 'd'][this.index];
     this.test_ref = this.$refs[refid] as Element;
     console.log(this.test_ref);
   }

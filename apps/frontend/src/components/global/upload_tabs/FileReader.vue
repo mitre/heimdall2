@@ -42,15 +42,15 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { getModule } from "vuex-module-decorators";
-import UploadButton from "@/components/global/UploadButton.vue";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {getModule} from 'vuex-module-decorators';
+import UploadButton from '@/components/global/UploadButton.vue';
 import InspecIntakeModule, {
   FileID,
   next_free_file_ID
-} from "@/store/report_intake";
-import AppInfoModule from "@/store/app_info";
+} from '@/store/report_intake';
+import AppInfoModule from '@/store/app_info';
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -78,7 +78,7 @@ export default class FileReader extends Props {
 
       // Submit it to be loaded, and display an error if it fails
       let intake_module = getModule(InspecIntakeModule, this.$store);
-      return intake_module.loadFile({ file, unique_id }).then(err => {
+      return intake_module.loadFile({file, unique_id}).then(err => {
         if (err) {
           console.error(`Error loading file ${file.name}`);
           this.$toasted.global.error({
@@ -96,15 +96,15 @@ export default class FileReader extends Props {
     // To use promise.all we must make each promise explicitly allow rejection without breaking promise.all failfast
     let guaranteed_promises = upload_promises.map(p => p.catch(err => err));
     Promise.all(guaranteed_promises).then(_ =>
-      this.$emit("got-files", valid_ids)
+      this.$emit('got-files', valid_ids)
     );
   }
 
   get title_class(): string[] {
     if (this.$vuetify.breakpoint.mdAndUp) {
-      return ["display-4", "px-0"];
+      return ['display-4', 'px-0'];
     } else {
-      return ["display-2", "px-0"];
+      return ['display-2', 'px-0'];
     }
   }
 

@@ -3,7 +3,7 @@
     <v-container class="bar lighten-2">
       <v-row justify="space-around" no-gutters>
         <AboutModal>
-          <template v-slot:clickable="{ on }">
+          <template v-slot:clickable="{on}">
             <v-btn v-on="on" text small>
               <v-icon small>mdi-information</v-icon>
               <span class="d-none d-sm-inline pl-3">About</span>
@@ -11,7 +11,7 @@
           </template>
         </AboutModal>
         <HelpModal>
-          <template v-slot:clickable="{ on }">
+          <template v-slot:clickable="{on}">
             <v-btn v-on="on" text small>
               <v-icon small>mdi-help-circle</v-icon>
               <span class="d-none d-sm-inline pl-3">Help</span>
@@ -41,12 +41,12 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { getModule } from "vuex-module-decorators";
-import HelpModal from "@/components/global/HelpModal.vue";
-import AboutModal from "@/components/global/AboutModal.vue";
-import AppInfoModule from "@/store/app_info";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {getModule} from 'vuex-module-decorators';
+import HelpModal from '@/components/global/HelpModal.vue';
+import AboutModal from '@/components/global/AboutModal.vue';
+import AppInfoModule from '@/store/app_info';
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
   props: {}

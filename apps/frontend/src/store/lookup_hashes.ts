@@ -4,19 +4,19 @@
  * Currently supported mappings are:
  * - Control ID -> All controls with that id
  */
-import { Module, VuexModule, getModule } from "vuex-module-decorators";
-import DataModule from "@/store/data_store";
-import { context } from "inspecjs";
-import Store from "@/store/store";
+import {Module, VuexModule, getModule} from 'vuex-module-decorators';
+import DataModule from '@/store/data_store';
+import {context} from 'inspecjs';
+import Store from '@/store/store';
 
 // Control ID hash
-export type ControlHash = { [key: string]: context.ContextualizedControl[] };
+export type ControlHash = {[key: string]: context.ContextualizedControl[]};
 
 @Module({
   namespaced: true,
   dynamic: true,
   store: Store,
-  name: "lookup"
+  name: 'lookup'
 })
 class HashLookupModule extends VuexModule {
   private get dataStore(): DataModule {

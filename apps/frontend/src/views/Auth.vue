@@ -9,7 +9,7 @@
                 <v-toolbar-title>Login to Heimdall</v-toolbar-title>
                 <v-spacer />
                 <v-tooltip bottom>
-                  <template v-slot:activator="{ on }">
+                  <template v-slot:activator="{on}">
                     <v-btn :href="source" icon large target="_blank" v-on="on">
                       <v-icon>mdi-code-tags</v-icon>
                     </v-btn>
@@ -17,7 +17,7 @@
                   <span>Source</span>
                 </v-tooltip>
                 <v-tooltip right>
-                  <template v-slot:activator="{ on }">
+                  <template v-slot:activator="{on}">
                     <v-btn
                       icon
                       large
@@ -62,13 +62,13 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { Filter } from "@/store/data_filters";
-import { FileID } from "@/store/report_intake";
-import { LocalStorageVal } from "@/utilities/helper_util";
-import { getModule } from "vuex-module-decorators";
-import ServerModule from "@/store/server";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {Filter} from '@/store/data_filters';
+import {FileID} from '@/store/report_intake';
+import {LocalStorageVal} from '@/utilities/helper_util';
+import {getModule} from 'vuex-module-decorators';
+import ServerModule from '@/store/server';
 
 export interface LoginHash {
   username: string;
@@ -87,10 +87,10 @@ const AuthProps = Vue.extend({
   components: {}
 })
 export default class Auth extends AuthProps {
-  username: string = "";
-  password: string = "";
-  host: string = "";
-  active_tab: string = ""; // Set in mounted
+  username: string = '';
+  password: string = '';
+  host: string = '';
+  active_tab: string = ''; // Set in mounted
 
   // Whether fields are valid
   valid = true;
@@ -99,19 +99,19 @@ export default class Auth extends AuthProps {
   //loading = false;
 
   username_rules = [
-    (v: string) => !!v || "Username is required"
+    (v: string) => !!v || 'Username is required'
     // (v: string) => (v && v.length > 3) || "A username must be more than 3 characters long",
     // (v: string) => /^[a-z0-9_]+$/.test(v) || "A username can only contain letters and digits"
   ];
   password_rules = [
-    (v: string) => !!v || "Password is required"
+    (v: string) => !!v || 'Password is required'
     // (v: string) => (v && v.length > 7) || "The password must be longer than 7 characters"
   ];
 
   // Loads the last open tab
   mounted() {
-    console.log("mount UploadNexus");
-    this.active_tab = "login-tab";
+    console.log('mount UploadNexus');
+    this.active_tab = 'login-tab';
   }
 
   // Handles change in tab
@@ -122,18 +122,18 @@ export default class Auth extends AuthProps {
   get watches(): string {
     let server = getModule(ServerModule, this.$store);
     if (server.profile) {
-      console.log("server profile: " + server.profile);
-      this.$router.push("/home");
-      return "a";
+      console.log('server profile: ' + server.profile);
+      this.$router.push('/home');
+      return 'a';
     } else {
-      return "b";
+      return 'b';
     }
   }
 
   async login(): Promise<void> {
     // checking if the input is valid
     if ((this.$refs.form as any).validate()) {
-      console.log("Login to " + this.host);
+      console.log('Login to ' + this.host);
       let creds: LoginHash = {
         username: this.username,
         password: this.password
@@ -143,7 +143,7 @@ export default class Auth extends AuthProps {
       await mod
         .connect(this.host)
         .catch(bad => {
-          console.error("Unable to connect to " + this.host);
+          console.error('Unable to connect to ' + this.host);
           this.$router.go(0);
         })
         .then(() => {
@@ -159,7 +159,7 @@ export default class Auth extends AuthProps {
   async register(): Promise<void> {
     // checking if the input is valid
     if ((this.$refs.form as any).validate()) {
-      console.log("Login to " + this.host);
+      console.log('Login to ' + this.host);
       let creds: LoginHash = {
         username: this.username,
         password: this.password
@@ -168,7 +168,7 @@ export default class Auth extends AuthProps {
       await mod
         .connect(this.host)
         .catch(bad => {
-          console.error("Unable to connect to " + this.host);
+          console.error('Unable to connect to ' + this.host);
           this.$router.go(0);
         })
         .then(() => {
@@ -183,7 +183,7 @@ export default class Auth extends AuthProps {
           this.$router.go(0);
         })
         .then(() => {
-          console.log("Registered!");
+          console.log('Registered!');
           this.$router.go(0);
         });
     }

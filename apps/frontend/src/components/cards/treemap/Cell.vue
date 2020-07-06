@@ -39,19 +39,19 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { getModule } from "vuex-module-decorators";
-import { ControlStatus, HDFControl, nist } from "inspecjs";
-import * as d3 from "d3";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {getModule} from 'vuex-module-decorators';
+import {ControlStatus, HDFControl, nist} from 'inspecjs';
+import * as d3 from 'd3';
 import {
   TreemapNode,
   TreemapNodeLeaf,
   TreemapNodeParent,
   is_leaf
-} from "@/utilities/treemap_util";
-import { HierarchyRectangularNode } from "d3";
-import ColorHackModule from "@/store/color_hack";
+} from '@/utilities/treemap_util';
+import {HierarchyRectangularNode} from 'd3';
+import ColorHackModule from '@/store/color_hack';
 
 export interface XYScale {
   scale_x: d3.ScaleLinear<number, number>;
@@ -87,7 +87,7 @@ const CellProps = Vue.extend({
  */
 @Component({
   components: {},
-  name: "Cell"
+  name: 'Cell'
 })
 export default class Cell extends CellProps {
   scale: number = 1.0;
@@ -176,21 +176,21 @@ export default class Cell extends CellProps {
     // Type stuff
     let s: string[] = [];
     if (this.is_parent) {
-      s.push("parent");
+      s.push('parent');
       if (!this._node.children || !this._node.children.length) {
-        s.push("empty");
+        s.push('empty');
       }
     } else {
-      s.push("leaf");
+      s.push('leaf');
     }
 
     // Depth stuff
     if (this._depth === 0) {
-      s.push("root");
+      s.push('root');
     } else if (this._depth === 1) {
-      s.push("top");
+      s.push('top');
     } else if (this._depth >= 1) {
-      s.push("nested");
+      s.push('nested');
     }
 
     return s;
@@ -200,7 +200,7 @@ export default class Cell extends CellProps {
     if (this._node.data.color) {
       return `fill: ${this._node.data.color.css()};`;
     }
-    return "fill-opacity: 0";
+    return 'fill-opacity: 0';
   }
 
   /**
@@ -208,7 +208,7 @@ export default class Cell extends CellProps {
    */
   select_node(n: d3.HierarchyRectangularNode<TreemapNode>): void {
     // Pass it up to root
-    this.$emit("select-node", n);
+    this.$emit('select-node', n);
   }
 }
 </script>

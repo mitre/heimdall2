@@ -6,14 +6,14 @@ export async function read_file_async(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     reader.onerror = () => {
       reader.abort();
-      reject(new DOMException("Problem parsing input file."));
+      reject(new DOMException('Problem parsing input file.'));
     };
 
     reader.onload = () => {
       if (reader.result !== null && reader.result !== undefined) {
         resolve(reader.result.toString());
       } else {
-        reject(new DOMException("Problem parsing input file."));
+        reject(new DOMException('Problem parsing input file.'));
       }
     };
     reader.readAsText(file);
@@ -25,7 +25,7 @@ export async function read_file_async(file: File): Promise<string> {
  */
 export function defined<T>(x: T | null | undefined): T {
   if (x === null || x === undefined) {
-    throw new Error("Value must not be null/undefined");
+    throw new Error('Value must not be null/undefined');
   } else {
     return x;
   }

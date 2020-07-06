@@ -11,8 +11,8 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
+import Vue from 'vue';
+import Component from 'vue-class-component';
 
 // We declare the props separately to make props types inferable.
 const LinkItemProps = Vue.extend({

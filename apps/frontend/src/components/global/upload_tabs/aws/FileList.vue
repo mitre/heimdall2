@@ -46,31 +46,31 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { getModule } from "vuex-module-decorators";
-import S3, { ObjectKey } from "aws-sdk/clients/s3";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {getModule} from 'vuex-module-decorators';
+import S3, {ObjectKey} from 'aws-sdk/clients/s3';
 import InspecIntakeModule, {
   FileID,
   next_free_file_ID
-} from "@/store/report_intake";
-import { AWSError } from "aws-sdk/lib/error";
+} from '@/store/report_intake';
+import {AWSError} from 'aws-sdk/lib/error';
 import {
   Auth,
   fetch_s3_file,
   transcribe_error
-} from "../../../../utilities/aws_util";
-import { LocalStorageVal } from "../../../../utilities/helper_util";
+} from '../../../../utilities/aws_util';
+import {LocalStorageVal} from '../../../../utilities/helper_util';
 
 const HEADERS: any = [
   {
-    text: "Filename",
-    align: "left",
+    text: 'Filename',
+    align: 'left',
     sortable: false,
-    value: "name"
+    value: 'name'
   },
-  { text: "Last Modified", value: "LastModified" },
-  { text: "Size", value: "Size" }
+  {text: 'Last Modified', value: 'LastModified'},
+  {text: 'Size', value: 'Size'}
 ];
 
 /*
@@ -84,7 +84,7 @@ const HEADERS: any = [
   } */
 
 // Caches the bucket name
-const local_bucket_name = new LocalStorageVal<string>("aws_bucket_name");
+const local_bucket_name = new LocalStorageVal<string>('aws_bucket_name');
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -100,7 +100,7 @@ const Props = Vue.extend({
 })
 export default class FileList extends Props {
   /** The name written in the form */
-  form_bucket_name: string = "";
+  form_bucket_name: string = '';
 
   /** Currently visible files */
   get _files(): S3.Object[] {
@@ -136,19 +136,19 @@ export default class FileList extends Props {
           unique_id
         });
       })
-      .then(() => this.$emit("got-files", [unique_id]))
+      .then(() => this.$emit('got-files', [unique_id]))
       .catch((failure: any) => this.handle_error(failure));
   }
 
   /** Recalls the last entered bucket name.  */
   mounted() {
-    this.form_bucket_name = local_bucket_name.get_default("");
+    this.form_bucket_name = local_bucket_name.get_default('');
   }
 
   /** Handles when load button clicked */
   load() {
     local_bucket_name.set(this.form_bucket_name);
-    this.$emit("load-bucket", this.form_bucket_name);
+    this.$emit('load-bucket', this.form_bucket_name);
   }
 
   /** Callback to handle an AWS error.
@@ -156,7 +156,7 @@ export default class FileList extends Props {
    */
   handle_error(error: any): void {
     let t_error = error as AWSError;
-    console.error("We should re-emit this in an appropriate place");
+    console.error('We should re-emit this in an appropriate place');
   }
 }
 </script>

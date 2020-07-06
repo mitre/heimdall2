@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" width="75%">
     <!-- clickable slot passes the activator prop up to parent 
         This allows the parent to pass in a clickable icon -->
-    <template v-slot:activator="{ on }">
+    <template v-slot:activator="{on}">
       <slot name="clickable" v-bind:on="on"> </slot>
     </template>
 
@@ -69,13 +69,13 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
+import Vue from 'vue';
+import Component from 'vue-class-component';
 
-import LinkItem from "@/components/global/sidebaritems/SidebarLink.vue";
+import LinkItem from '@/components/global/sidebaritems/SidebarLink.vue';
 
-import { getModule } from "vuex-module-decorators";
-import AppInfoModule from "@/store/app_info";
+import {getModule} from 'vuex-module-decorators';
+import AppInfoModule from '@/store/app_info';
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({

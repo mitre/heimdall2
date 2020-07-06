@@ -1,5 +1,5 @@
-import { Module, VuexModule } from "vuex-module-decorators";
-import Store from "@/store/store";
+import {Module, VuexModule} from 'vuex-module-decorators';
+import Store from '@/store/store';
 
 /** Configure this to match data set in vue.config.ts */
 declare const process: {
@@ -18,7 +18,7 @@ declare const process: {
   namespaced: true,
   dynamic: true,
   store: Store,
-  name: "info"
+  name: 'info'
 })
 class AppInfoModule extends VuexModule {
   /** The app version */
@@ -38,12 +38,12 @@ class AppInfoModule extends VuexModule {
 
   /** The username/org part of the repo url, e.g. mitre */
   get repo_org(): string {
-    return this.repository.split("/")[3];
+    return this.repository.split('/')[3];
   }
 
   /** The project name of the repo url, e.g. heimdall-lite */
   get repo_name(): string {
-    return this.repository.split("/")[4];
+    return this.repository.split('/')[4];
   }
 
   /** The app license */

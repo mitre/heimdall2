@@ -1,6 +1,6 @@
 <template>
   <v-tooltip top>
-    <template v-slot:activator="{ on }">
+    <template v-slot:activator="{on}">
       <LinkItem
         key="export_caat"
         text="CAAT Spreadsheet"
@@ -14,16 +14,16 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { getModule } from "vuex-module-decorators";
-import FilteredDataModule, { Filter } from "@/store/data_filters";
-import XLSX from "xlsx";
-import { saveAs } from "file-saver";
-import { HDFControl, ControlStatus } from "inspecjs";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {getModule} from 'vuex-module-decorators';
+import FilteredDataModule, {Filter} from '@/store/data_filters';
+import XLSX from 'xlsx';
+import {saveAs} from 'file-saver';
+import {HDFControl, ControlStatus} from 'inspecjs';
 import LinkItem, {
   LinkAction
-} from "@/components/global/sidebaritems/SidebarLink.vue";
+} from '@/components/global/sidebaritems/SidebarLink.vue';
 
 const MAX_CELL_SIZE = 32000; // Rounding a bit here.
 type CAATRow = string[];
@@ -72,46 +72,46 @@ export default class ExportCaat extends Props {
       } else {
         // Designate a helper to deal with null/undefined
         let fix = (x: string | null | undefined) =>
-          (x || "").replace(/(\r\n|\n|\r)/gm, " ").slice(0, MAX_CELL_SIZE);
+          (x || '').replace(/(\r\n|\n|\r)/gm, ' ').slice(0, MAX_CELL_SIZE);
 
         // Build up the row
         row.push(formatted); // Control Number
         row.push(
-          "Test " + fix(control.wraps.id) + " - " + fix(control.wraps.title)
+          'Test ' + fix(control.wraps.id) + ' - ' + fix(control.wraps.title)
         ); // Finding Title
         if (control.start_time) {
-          row.push(this.convertDate(new Date(control.start_time), "/")); // Date Identified
+          row.push(this.convertDate(new Date(control.start_time), '/')); // Date Identified
         } else {
-          row.push("");
+          row.push('');
         }
-        row.push(""); //row.push(fix(control.wraps.tags.stig_id)); // Finding ID
-        row.push(""); // Information System or Program Name
-        row.push(""); // Repeat Findings
-        row.push(""); // Repeat Finding CFACTS Weakness ID
+        row.push(''); //row.push(fix(control.wraps.tags.stig_id)); // Finding ID
+        row.push(''); // Information System or Program Name
+        row.push(''); // Repeat Findings
+        row.push(''); // Repeat Finding CFACTS Weakness ID
         row.push(fix(control.wraps.title)); // Finding Description
         row.push(fix(control.wraps.desc)); // Weakness Description
-        row.push("Security"); // Control Weakness Type
-        row.push("Self-Assessment "); // Source
-        row.push(""); //row.push("InSpec"); // Assessment/Audit Company
-        row.push("Test"); // Test Method
+        row.push('Security'); // Control Weakness Type
+        row.push('Self-Assessment '); // Source
+        row.push(''); //row.push("InSpec"); // Assessment/Audit Company
+        row.push('Test'); // Test Method
         row.push(fix(control.descriptions.check || control.wraps.tags.check)); // Test Objective
         let test_result = `${control.status}: ${control.message.replace(
-          "\n",
-          "; "
+          '\n',
+          '; '
         )}`;
         row.push(fix(test_result)); // Test Result Description
-        if (control.status === "Passed") {
-          row.push("Satisfied");
+        if (control.status === 'Passed') {
+          row.push('Satisfied');
         } else {
-          row.push("Other Than Satisfied");
+          row.push('Other Than Satisfied');
         }
         row.push(fix(control.descriptions.fix || control.wraps.tags.fix)); // Recommended Corrective Action(s)
-        row.push(""); // Effect on Business
-        row.push(""); // Likelihood
+        row.push(''); // Effect on Business
+        row.push(''); // Likelihood
         row.push(fix(control.severity)); // Impact
 
         if (row.length !== this.header().length) {
-          throw new Error("Row of wrong size");
+          throw new Error('Row of wrong size');
         }
         all_rows.push(row);
       }
@@ -122,26 +122,26 @@ export default class ExportCaat extends Props {
   /** Gets the standardized CAAT header */
   header(): CAATRow {
     return [
-      "Control Number",
-      "Finding Title",
-      "Date Identified",
-      "Finding ID",
-      "Information System or Program Name",
-      "Repeat Findings",
-      "Repeat Finding Weakness ID",
-      "Finding Description",
-      "Weakness Description",
-      "Control Weakness Type",
-      "Source",
-      "Assessment/Audit Company",
-      "Test Method",
-      "Test Objective",
-      "Test Result Description",
-      "Test Result",
-      "Recommended Corrective Action(s)",
-      "Effect on Business",
-      "Likelihood",
-      "Impact"
+      'Control Number',
+      'Finding Title',
+      'Date Identified',
+      'Finding ID',
+      'Information System or Program Name',
+      'Repeat Findings',
+      'Repeat Finding Weakness ID',
+      'Finding Description',
+      'Weakness Description',
+      'Control Weakness Type',
+      'Source',
+      'Assessment/Audit Company',
+      'Test Method',
+      'Test Objective',
+      'Test Result Description',
+      'Test Result',
+      'Recommended Corrective Action(s)',
+      'Effect on Business',
+      'Likelihood',
+      'Impact'
     ];
   }
 
@@ -200,21 +200,21 @@ export default class ExportCaat extends Props {
     let wb = XLSX.utils.book_new();
 
     wb.Props = {
-      Title: "Compliance Assessment/Audit Tracking (CAAT) Spreadsheet",
-      Subject: "Assessment Data",
-      Author: "Heimdall",
+      Title: 'Compliance Assessment/Audit Tracking (CAAT) Spreadsheet',
+      Subject: 'Assessment Data',
+      Author: 'Heimdall',
       CreatedDate: new Date()
     };
 
-    wb.SheetNames.push("Assessment Data");
+    wb.SheetNames.push('Assessment Data');
 
     let ws = XLSX.utils.aoa_to_sheet(caat);
-    wb.Sheets["Assessment Data"] = ws;
+    wb.Sheets['Assessment Data'] = ws;
 
-    let wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
+    let wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
     saveAs(
-      new Blob([this.s2ab(wbout)], { type: "application/octet-stream" }),
-      "CAAT-" + this.convertDate(new Date(), "-") + ".xlsx"
+      new Blob([this.s2ab(wbout)], {type: 'application/octet-stream'}),
+      'CAAT-' + this.convertDate(new Date(), '-') + '.xlsx'
     );
   }
 

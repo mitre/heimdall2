@@ -25,10 +25,10 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import Sidebar from "@/components/global/Sidebar.vue";
-import Topbar from "@/components/global/Topbar.vue";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import Sidebar from '@/components/global/Sidebar.vue';
+import Topbar from '@/components/global/Topbar.vue';
 
 // We declare the props separately
 // to make props types inferable.
@@ -36,7 +36,7 @@ const BaseProps = Vue.extend({
   props: {
     title: {
       type: String,
-      default: "Heimdall Lite"
+      default: 'Heimdall Lite'
     }
   }
 });

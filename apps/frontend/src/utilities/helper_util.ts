@@ -1,5 +1,5 @@
-import InspecDataModule from "@/store/data_store";
-import axios from "axios";
+import InspecDataModule from '@/store/data_store';
+import axios from 'axios';
 
 /** For helper functions that don't belong anywhere else */
 
@@ -40,26 +40,26 @@ export function compare_arrays<T>(
 export function need_redirect_file(
   curr_target: number | null,
   data: InspecDataModule
-): "ok" | number | "root" {
+): 'ok' | number | 'root' {
   // If we have no files, always exit
-  console.log("data.allFiles.length: " + data.allFiles.length);
+  console.log('data.allFiles.length: ' + data.allFiles.length);
   if (data.allFiles.length === 0) {
-    return "root";
+    return 'root';
   }
 
-  console.log("curr_target: " + curr_target);
+  console.log('curr_target: ' + curr_target);
   // If we have no filter (IE "all" is our curr route), we already know there are files, so its fine
   if (curr_target === null) {
-    return "ok";
+    return 'ok';
   }
   // We have a filter: check it's valid
   else {
     data.allFiles.forEach(data_file => {
-      console.log(data_file.unique_id + ": " + data_file.filename);
+      console.log(data_file.unique_id + ': ' + data_file.filename);
     });
     if (data.allFiles.some(f => f.unique_id === curr_target)) {
       // This file exists
-      return "ok";
+      return 'ok';
     } else {
       // Just go to first in list
       return data.allFiles[0].unique_id;
@@ -118,7 +118,7 @@ export class LocalStorageVal<T> {
 }
 
 /** A useful shorthand */
-export type Hash<T> = { [key: string]: T };
+export type Hash<T> = {[key: string]: T};
 
 /** Groups items by using the provided key function */
 export function group_by<T>(
@@ -159,12 +159,12 @@ export function map_hash<T, G>(
 export function to_uri_params(params: Hash<string | number | boolean>) {
   let esc = encodeURIComponent;
   let query = Object.keys(params)
-    .map(k => esc(k) + "=" + esc(params[k]))
-    .join("&");
+    .map(k => esc(k) + '=' + esc(params[k]))
+    .join('&');
   return query;
 }
 
 /** Generate a basic authentication string for http requests */
 export function basic_auth(username: string, password: string): string {
-  return "Basic " + Buffer.from(`${username}:${password}`).toString("base64");
+  return 'Basic ' + Buffer.from(`${username}:${password}`).toString('base64');
 }

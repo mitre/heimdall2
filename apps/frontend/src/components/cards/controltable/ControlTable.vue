@@ -71,18 +71,18 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import ControlRowHeader from "@/components/cards/controltable/ControlRowHeader.vue";
-import ControlRowDetails from "@/components/cards/controltable/ControlRowDetails.vue";
-import ColumnHeader, { Sort } from "@/components/generic/ColumnHeader.vue";
-import ResponsiveRowSwitch from "@/components/cards/controltable/ResponsiveRowSwitch.vue";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import ControlRowHeader from '@/components/cards/controltable/ControlRowHeader.vue';
+import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails.vue';
+import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
+import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 
-import { getModule } from "vuex-module-decorators";
-import { HDFControl, ControlStatus } from "inspecjs";
-import FilteredDataModule from "@/store/data_filters";
-import { control_unique_key } from "@/utilities/format_util";
-import { context } from "inspecjs";
+import {getModule} from 'vuex-module-decorators';
+import {HDFControl, ControlStatus} from 'inspecjs';
+import FilteredDataModule from '@/store/data_filters';
+import {control_unique_key} from '@/utilities/format_util';
+import {context} from 'inspecjs';
 
 // Tracks the visibility of an HDF control
 interface ListElt {
@@ -125,23 +125,23 @@ export default class ControlTable extends ControlTableProps {
   infinite_scroller_id: number = 1;
 
   // Sorts
-  sort_id: Sort = "none";
-  sort_status: Sort = "none";
-  sort_severity: Sort = "none";
+  sort_id: Sort = 'none';
+  sort_status: Sort = 'none';
+  sort_severity: Sort = 'none';
 
   /** Callback to handle setting a new sort */
-  set_sort(column: "id" | "status" | "severity", new_sort: Sort) {
-    this.sort_id = "none";
-    this.sort_status = "none";
-    this.sort_severity = "none";
+  set_sort(column: 'id' | 'status' | 'severity', new_sort: Sort) {
+    this.sort_id = 'none';
+    this.sort_status = 'none';
+    this.sort_severity = 'none';
     switch (column) {
-      case "id":
+      case 'id':
         this.sort_id = new_sort;
         break;
-      case "status":
+      case 'status':
         this.sort_status = new_sort;
         break;
-      case "severity":
+      case 'severity':
         this.sort_severity = new_sort;
         break;
     }
@@ -182,14 +182,14 @@ export default class ControlTable extends ControlTableProps {
         key,
         control: d,
         status_val: [
-          "Passed",
-          "Not Applicable",
-          "No Data",
-          "Not Reviewed",
-          "Profile Error",
-          "Failed"
+          'Passed',
+          'Not Applicable',
+          'No Data',
+          'Not Reviewed',
+          'Profile Error',
+          'Failed'
         ].indexOf(d.root.hdf.status),
-        severity_val: ["none", "low", "medium", "high", "critical"].indexOf(
+        severity_val: ['none', 'low', 'medium', 'high', 'critical'].indexOf(
           d.root.hdf.severity
         )
       };
@@ -204,26 +204,26 @@ export default class ControlTable extends ControlTableProps {
     // Our comparator function
     let cmp: (a: ListElt, b: ListElt) => number;
 
-    if (this.sort_id === "ascending" || this.sort_id === "descending") {
+    if (this.sort_id === 'ascending' || this.sort_id === 'descending') {
       cmp = (a: ListElt, b: ListElt) =>
         a.control.data.id.localeCompare(b.control.data.id);
-      if (this.sort_id === "ascending") {
+      if (this.sort_id === 'ascending') {
         factor = -1;
       }
     } else if (
-      this.sort_status === "ascending" ||
-      this.sort_status === "descending"
+      this.sort_status === 'ascending' ||
+      this.sort_status === 'descending'
     ) {
       cmp = (a: ListElt, b: ListElt) => a.status_val - b.status_val;
-      if (this.sort_status === "ascending") {
+      if (this.sort_status === 'ascending') {
         factor = -1;
       }
     } else if (
-      this.sort_severity === "ascending" ||
-      this.sort_severity === "descending"
+      this.sort_severity === 'ascending' ||
+      this.sort_severity === 'descending'
     ) {
       cmp = (a: ListElt, b: ListElt) => a.severity_val - b.severity_val;
-      if (this.sort_severity === "ascending") {
+      if (this.sort_severity === 'ascending') {
         factor = -1;
       }
     } else {

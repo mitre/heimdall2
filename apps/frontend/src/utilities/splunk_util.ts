@@ -1,8 +1,8 @@
-import { xml2js, ElementCompact } from "xml-js";
-import { delay } from "./async_util";
-import { parse } from "inspecjs";
-import { Hash, group_by, map_hash, basic_auth } from "./helper_util";
-import { schemas_1_0 } from "inspecjs";
+import {xml2js, ElementCompact} from 'xml-js';
+import {delay} from './async_util';
+import {parse} from 'inspecjs';
+import {Hash, group_by, map_hash, basic_auth} from './helper_util';
+import {schemas_1_0} from 'inspecjs';
 
 // env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -15,10 +15,10 @@ interface AbsMetaInfo {
   filename: string;
 
   /** The type of the file (NOT of this event!) */
-  filetype: "evaluation" | "profile";
+  filetype: 'evaluation' | 'profile';
 
   /** The subtype of this specific event */
-  subtype: "header" | "profile" | "control";
+  subtype: 'header' | 'profile' | 'control';
 
   /** A randomly generated GUID capturing all of the events in this file */
   guid: string;
@@ -41,19 +41,19 @@ interface AbsMetaInfo {
 
 /** The meta information for an event with the "evaluation" subtype */
 export interface ExecutionMetaInfo
-  extends Omit<AbsMetaInfo, "control_id" | "start_time" | "profile_sha256"> {
-  subtype: "header";
+  extends Omit<AbsMetaInfo, 'control_id' | 'start_time' | 'profile_sha256'> {
+  subtype: 'header';
 }
 
 /** The meta information for an event with the "profile" subtype */
 export interface ProfileMetaInfo
-  extends Omit<AbsMetaInfo, "control_id" | "start_time"> {
-  subtype: "profile";
+  extends Omit<AbsMetaInfo, 'control_id' | 'start_time'> {
+  subtype: 'profile';
 }
 
 /** The meta information for an event with the "control" subtype */
 export interface ControlMetaInfo extends AbsMetaInfo {
-  subtype: "control";
+  subtype: 'control';
 }
 
 /** This is what we expect to find in every parsed event representing an Evaluation
@@ -84,8 +84,8 @@ export interface ControlPayload {
 export type UnknownPayload = ExecutionPayload | ProfilePayload | ControlPayload;
 
 /* Job states */
-type CompleteJobStatus = "succeeded" | "failed";
-type PendingJobStatus = "pending"; // There are others, but we don't handle them for now
+type CompleteJobStatus = 'succeeded' | 'failed';
+type PendingJobStatus = 'pending'; // There are others, but we don't handle them for now
 type JobStatus = CompleteJobStatus | PendingJobStatus;
 interface JobState {
   status: JobStatus;
@@ -121,7 +121,7 @@ export class SplunkEndpoint {
       headers: {
         Authorization: this.auth_string
       },
-      method: "GET"
+      method: 'GET'
     }).then(
       response => {
         if (!response.ok) {
@@ -181,9 +181,9 @@ export class SplunkEndpoint {
         }
 
         // Determine what sort of file we (hopefully) have, then add it
-        if (result["1_0_ExecJson"]) {
+        if (result['1_0_ExecJson']) {
           // Handle as exec
-          let execution = result["1_0_ExecJson"];
+          let execution = result['1_0_ExecJson'];
           return execution;
         } else {
           throw SplunkErrorCode.SchemaViolation;
@@ -205,7 +205,7 @@ export class SplunkEndpoint {
     return this.create_search(search_string)
       .then(job_id => this.pend_job(job_id, 500))
       .then(job_state => {
-        if (job_state.status === "failed") {
+        if (job_state.status === 'failed') {
           throw SplunkErrorCode.SearchFailed;
         }
 
@@ -219,7 +219,7 @@ export class SplunkEndpoint {
   /** Returns the job id */
   private async create_search(search_string: string): Promise<JobID> {
     return fetch(`${this.host}/services/search/jobs`, {
-      method: "POST",
+      method: 'POST',
       headers: new Headers({
         Authorization: this.auth_string
       }),
@@ -241,7 +241,7 @@ export class SplunkEndpoint {
   /** Returns the current state of the job */
   private async check_job(job_id: JobID): Promise<JobState> {
     return fetch(`${this.host}/services/search/jobs/${job_id}`, {
-      method: "GET",
+      method: 'GET',
       headers: new Headers({
         Authorization: this.auth_string
       })
@@ -257,10 +257,10 @@ export class SplunkEndpoint {
         }) as ElementCompact;
 
         // Get the keys, and find the one with name "dispatchState"
-        let keys = xml.entry.content["s:dict"]["s:key"];
+        let keys = xml.entry.content['s:dict']['s:key'];
         let state: string | undefined;
         for (let k of keys) {
-          if (k._attributes.name === "dispatchState") {
+          if (k._attributes.name === 'dispatchState') {
             state = k._text;
           }
         }
@@ -268,17 +268,17 @@ export class SplunkEndpoint {
         // Check we found state
         if (!state) {
           // It probably failed if we can't find it lol
-          state = "FAILED";
+          state = 'FAILED';
         }
 
         // Decide result based on state
         let status: JobStatus;
-        if (state == "DONE") {
-          status = "succeeded";
-        } else if (state == "FAILED") {
-          status = "failed";
+        if (state == 'DONE') {
+          status = 'succeeded';
+        } else if (state == 'FAILED') {
+          status = 'failed';
         } else {
-          status = "pending";
+          status = 'pending';
         }
 
         // Construct the state
@@ -295,7 +295,7 @@ export class SplunkEndpoint {
         while (true) {
             /* eslint-enable */
       let state = await this.check_job(job_id);
-      if (state.status === "pending") {
+      if (state.status === 'pending') {
         await delay(interval);
         continue;
       } else {
@@ -312,7 +312,7 @@ export class SplunkEndpoint {
         headers: {
           Authorization: this.auth_string
         },
-        method: "GET"
+        method: 'GET'
       }
     )
       .then(response => {
@@ -322,7 +322,7 @@ export class SplunkEndpoint {
       .then(data => {
         // We basically can't, and really shouldn't, do typescript here. Output is 50% guaranteed to be wonk
         // Get all the raws
-        let raws: Array<string> = data["results"].map(
+        let raws: Array<string> = data['results'].map(
           (datum: any) => datum._raw
         );
 
@@ -367,9 +367,9 @@ function consolidate_file_payloads(
   // In the end we wish to produce a single evaluation EventPayload which in fact contains all data for the guid
   // Group by subtype
   let subtypes = group_by(file_payloads, event => event.meta.subtype);
-  let exec_events = (subtypes["header"] || []) as ExecutionPayload[];
-  let profile_events = (subtypes["profile"] || []) as ProfilePayload[];
-  let control_events = (subtypes["control"] || []) as ControlPayload[];
+  let exec_events = (subtypes['header'] || []) as ExecutionPayload[];
+  let profile_events = (subtypes['profile'] || []) as ProfilePayload[];
+  let control_events = (subtypes['control'] || []) as ControlPayload[];
 
   // Verify we only have one exec event
   if (exec_events.length !== 1) {
@@ -416,17 +416,17 @@ export enum SplunkErrorCode {
 export function process_error(
   r: Response | SplunkErrorCode | TypeError
 ): SplunkErrorCode {
-  console.warn("Got error in splunk operations");
+  console.warn('Got error in splunk operations');
   console.warn(r);
   if (r instanceof TypeError) {
-    console.warn("Typeerror");
-    if (r.message.includes("NetworkError")) {
+    console.warn('Typeerror');
+    if (r.message.includes('NetworkError')) {
       return SplunkErrorCode.BadNetwork;
-    } else if (r.message.includes("not a valid URL")) {
+    } else if (r.message.includes('not a valid URL')) {
       return SplunkErrorCode.BadUrl;
     }
   } else if (r instanceof Response) {
-    console.warn("Bad Response");
+    console.warn('Bad Response');
     // Based on the network code, guess
     let response = r as Response;
     switch (response.status) {
@@ -435,12 +435,12 @@ export function process_error(
       case 404: // URL got borked
         return SplunkErrorCode.PageNotFound;
       default:
-        console.log("Unsure how to handle error " + response.status);
+        console.log('Unsure how to handle error ' + response.status);
         return SplunkErrorCode.UnknownError;
     }
   } else if (typeof r === typeof SplunkErrorCode.UnknownError) {
     // It's already an error code - pass along
-    console.warn("SplunkErrorCode");
+    console.warn('SplunkErrorCode');
     return r;
   }
   // idk lol

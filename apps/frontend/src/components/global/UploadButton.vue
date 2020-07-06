@@ -19,8 +19,8 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
+import Vue from 'vue';
+import Component from 'vue-class-component';
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -38,7 +38,7 @@ const Props = Vue.extend({
 export default class UploadButton extends Props {
   /** Callback for our file reader */
   select_file() {
-    let raw_files = (this.$refs["real-input"] as any).files as
+    let raw_files = (this.$refs['real-input'] as any).files as
       | FileList
       | undefined
       | null;
@@ -46,7 +46,7 @@ export default class UploadButton extends Props {
     let files = fix_files(raw_files);
     if (files.length > 0) {
       // Notify we got files
-      this.$emit("files-selected", files);
+      this.$emit('files-selected', files);
     }
 
     // Clear
@@ -55,7 +55,7 @@ export default class UploadButton extends Props {
 
   /** Programatically show real input selector */
   show_selector() {
-    let file_input = this.$refs["real-input"];
+    let file_input = this.$refs['real-input'];
     (file_input as any).click();
   }
 }

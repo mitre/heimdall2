@@ -11,13 +11,13 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import VueApexCharts from "vue-apexcharts";
-import { ApexOptions, exec } from "apexcharts";
-import { install } from "vuetify/es5/install";
-import { getModule } from "vuex-module-decorators";
-import ColorHackModule from "@/store/color_hack";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import VueApexCharts from 'vue-apexcharts';
+import {ApexOptions, exec} from 'apexcharts';
+import {install} from 'vuetify/es5/install';
+import {getModule} from 'vuex-module-decorators';
+import ColorHackModule from '@/store/color_hack';
 
 // Represents a slice of the pie.
 export interface Category<C extends string> {
@@ -29,9 +29,9 @@ export interface Category<C extends string> {
 // Type guard for Category
 function isCategory(x: any): x is Category<string> {
   return (
-    typeof x.label === "string" &&
-    typeof x.value === "string" &&
-    typeof x.color === "string"
+    typeof x.label === 'string' &&
+    typeof x.value === 'string' &&
+    typeof x.color === 'string'
   );
 }
 
@@ -66,7 +66,7 @@ export default class ApexPieChart extends ApexPieChartProps {
   get _categories(): Category<string>[] {
     // Ensure it's an array
     if (!(this.categories instanceof Array)) {
-      throw new Error("categories must be an array of type Category");
+      throw new Error('categories must be an array of type Category');
     }
 
     // Ensure each are categories
@@ -86,12 +86,12 @@ export default class ApexPieChart extends ApexPieChartProps {
   get _series(): number[] {
     // Ensure it's an array
     if (!(this.series instanceof Array)) {
-      throw new Error("series must be an array of numbers");
+      throw new Error('series must be an array of numbers');
     }
 
     // Ensure all of its elements are numbers
     this.series.forEach(element => {
-      if (typeof element !== "number") {
+      if (typeof element !== 'number') {
         throw new Error(`Invalid series item ${element}`);
       }
     });
@@ -114,7 +114,7 @@ export default class ApexPieChart extends ApexPieChartProps {
         formatter: (val, opts) => opts.w.config.series[opts.seriesIndex]
       },
       legend: {
-        position: "bottom",
+        position: 'bottom',
         onItemClick: {
           toggleDataSeries: false
         },
@@ -123,22 +123,22 @@ export default class ApexPieChart extends ApexPieChartProps {
         }
       },
       chart: {
-        type: "donut",
+        type: 'donut',
         toolbar: {
           show: false
         },
         events: {
           dataPointSelection: (event, chartContext, config) => {
             this.$emit(
-              "category-selected",
+              'category-selected',
               this._categories[config.dataPointIndex]
             );
           },
           dataPointMouseEnter: (event, chartContext, config) => {
-            document.body.style.cursor = "pointer";
+            document.body.style.cursor = 'pointer';
           },
           dataPointMouseLeave: (event, chartContext, config) => {
-            document.body.style.cursor = "default";
+            document.body.style.cursor = 'default';
           }
         },
         dropShadow: {
@@ -149,7 +149,7 @@ export default class ApexPieChart extends ApexPieChartProps {
           opacity: 0.35
         }
       },
-      stroke: { width: 0 },
+      stroke: {width: 0},
       colors: this._categories.map(cat => colors.lookupColor(cat.color))
     };
   }

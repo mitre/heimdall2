@@ -2,12 +2,12 @@
  * Reads and parses inspec files
  */
 
-import { parse } from "inspecjs";
-import { Module, VuexModule, getModule, Action } from "vuex-module-decorators";
-import DataModule from "@/store/data_store";
-import Store from "@/store/store";
-import { read_file_async } from "@/utilities/async_util";
-import { Evaluation, Tag } from "@/types/models.ts";
+import {parse} from 'inspecjs';
+import {Module, VuexModule, getModule, Action} from 'vuex-module-decorators';
+import DataModule from '@/store/data_store';
+import Store from '@/store/store';
+import {read_file_async} from '@/utilities/async_util';
+import {Evaluation, Tag} from '@/types/models.ts';
 
 /** Each FileID corresponds to a unique File in this store */
 export type FileID = number;
@@ -34,9 +34,9 @@ export type InspecFile = {
 };
 
 /** Represents a file containing an Inspec Execution output */
-export type EvaluationFile = InspecFile & { execution: parse.AnyExec };
+export type EvaluationFile = InspecFile & {execution: parse.AnyExec};
 /** Represents a file containing an Inspec Profile (not run) */
-export type ProfileFile = InspecFile & { profile: parse.AnyProfile };
+export type ProfileFile = InspecFile & {profile: parse.AnyProfile};
 
 export type FileLoadOptions = {
   /** The file to load */
@@ -68,7 +68,7 @@ export type TextLoadOptions = {
   namespaced: true,
   dynamic: true,
   store: Store,
-  name: "intake"
+  name: 'intake'
 })
 class InspecIntakeModule extends VuexModule {
   /**
@@ -114,10 +114,10 @@ class InspecIntakeModule extends VuexModule {
     }
 
     // Determine what sort of file we (hopefully) have, then add it
-    if (result["1_0_ExecJson"]) {
+    if (result['1_0_ExecJson']) {
       // Handle as exec
-      console.log("is Execution");
-      let execution = result["1_0_ExecJson"];
+      console.log('is Execution');
+      let execution = result['1_0_ExecJson'];
       execution = Object.freeze(execution);
       if (options.database_id) {
         let reportFile = {
@@ -129,7 +129,7 @@ class InspecIntakeModule extends VuexModule {
           tags: options.tags,
           execution
         };
-        console.log("add Database Execution");
+        console.log('add Database Execution');
         data.addExecution(reportFile);
       } else {
         let reportFile = {
@@ -137,22 +137,22 @@ class InspecIntakeModule extends VuexModule {
           filename: options.filename,
           execution
         };
-        console.log("add Execution");
+        console.log('add Execution');
         data.addExecution(reportFile);
       }
-    } else if (result["1_0_ProfileJson"]) {
+    } else if (result['1_0_ProfileJson']) {
       // Handle as profile
-      console.log("is Profile");
-      let profile = result["1_0_ProfileJson"];
+      console.log('is Profile');
+      let profile = result['1_0_ProfileJson'];
       let profileFile = {
         unique_id: options.unique_id,
         filename: options.filename,
         profile
       };
-      console.log("addProfile");
+      console.log('addProfile');
       data.addProfile(profileFile);
     } else {
-      console.log("is Nothing");
+      console.log('is Nothing');
       return new Error("Couldn't parse data");
     }
     return null;

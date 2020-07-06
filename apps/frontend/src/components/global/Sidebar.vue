@@ -32,12 +32,12 @@
     <v-list dense class="px-2" subheader>
       <v-subheader>Info</v-subheader>
       <AboutModal>
-        <template v-slot:clickable="{ on }">
+        <template v-slot:clickable="{on}">
           <LinkItem key="about" text="About" icon="mdi-information" v-on="on" />
         </template>
       </AboutModal>
       <HelpModal>
-        <template v-slot:clickable="{ on }">
+        <template v-slot:clickable="{on}">
           <LinkItem key="help" text="Help" icon="mdi-help-circle" v-on="on" />
         </template>
       </HelpModal>
@@ -46,15 +46,15 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { InspecFile, EvaluationFile, ProfileFile } from "@/store/report_intake";
-import { getModule } from "vuex-module-decorators";
-import InspecDataModule from "@/store/data_store";
-import FileItem from "@/components/global/sidebaritems/SidebarFile.vue";
-import LinkItem from "@/components/global/sidebaritems/SidebarLink.vue";
-import AboutModal from "@/components/global/AboutModal.vue";
-import HelpModal from "@/components/global/HelpModal.vue";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {InspecFile, EvaluationFile, ProfileFile} from '@/store/report_intake';
+import {getModule} from 'vuex-module-decorators';
+import InspecDataModule from '@/store/data_store';
+import FileItem from '@/components/global/sidebaritems/SidebarFile.vue';
+import LinkItem from '@/components/global/sidebaritems/SidebarLink.vue';
+import AboutModal from '@/components/global/AboutModal.vue';
+import HelpModal from '@/components/global/HelpModal.vue';
 
 // We declare the props separately to make props types inferable.
 const SidebarProps = Vue.extend({

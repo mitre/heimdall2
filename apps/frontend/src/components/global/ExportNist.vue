@@ -1,6 +1,6 @@
 <template>
   <v-tooltip top>
-    <template v-slot:activator="{ on }">
+    <template v-slot:activator="{on}">
       <LinkItem
         key="export_nist"
         text="NIST SP 800-53 Security Control Coverage"
@@ -14,19 +14,19 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { getModule } from "vuex-module-decorators";
-import FilteredDataModule, { Filter } from "@/store/data_filters";
-import XLSX from "xlsx";
-import { saveAs } from "file-saver";
-import { HDFControl, ControlStatus } from "inspecjs";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {getModule} from 'vuex-module-decorators';
+import FilteredDataModule, {Filter} from '@/store/data_filters';
+import XLSX from 'xlsx';
+import {saveAs} from 'file-saver';
+import {HDFControl, ControlStatus} from 'inspecjs';
 import LinkItem, {
   LinkAction
-} from "@/components/global/sidebaritems/SidebarLink.vue";
-import { NistControl } from "inspecjs/dist/nist";
-import { FileID, EvaluationFile } from "../../store/report_intake";
-import InspecDataModule from "../../store/data_store";
+} from '@/components/global/sidebaritems/SidebarLink.vue';
+import {NistControl} from 'inspecjs/dist/nist';
+import {FileID, EvaluationFile} from '../../store/report_intake';
+import InspecDataModule from '../../store/data_store';
 
 const MAX_CELL_SIZE = 32000; // Rounding a bit here.
 const MAX_SHEET_NAME_SIZE = 31;
@@ -59,13 +59,13 @@ export default class ExportNIST extends Props {
   format_tag(control: NistControl): string | null {
     // For now just do raw text. Once Mo's nist work is done we can make sure these are well formed
     if (control.raw_text) {
-      return control.raw_text.replace(/\s/g, "");
+      return control.raw_text.replace(/\s/g, '');
     } else if (control.sub_specifiers.length < 2) {
       // Too short: abort
       return null;
     } else {
       // Just construct as best we can
-      let base = control.sub_specifiers[0] + "-" + control.sub_specifiers[1];
+      let base = control.sub_specifiers[0] + '-' + control.sub_specifiers[1];
       for (let i = 2; i < control.sub_specifiers.length; i++) {
         base += control.sub_specifiers[i];
       }
@@ -76,7 +76,7 @@ export default class ExportNIST extends Props {
   /** Makes a sheet for the given file id */
   sheet_for(file?: EvaluationFile): Sheet {
     // If file not provided
-    let filename: string = "All files";
+    let filename: string = 'All files';
     let id: FileID | undefined = undefined;
     if (file) {
       id = file.unique_id;
@@ -86,7 +86,7 @@ export default class ExportNIST extends Props {
     // Get our data
     let filter_module = getModule(FilteredDataModule, this.$store);
     let base_filter = this.filter as Filter;
-    let modified_filter: Filter = { ...base_filter, fromFile: id };
+    let modified_filter: Filter = {...base_filter, fromFile: id};
     let controls = filter_module.controls(modified_filter);
 
     // Initialize our data structures
@@ -146,9 +146,9 @@ export default class ExportNIST extends Props {
     let wb = XLSX.utils.book_new();
 
     wb.Props = {
-      Title: "NIST SP 800-53 Security Control Coverage",
-      Subject: "Controls",
-      Author: "Heimdall",
+      Title: 'NIST SP 800-53 Security Control Coverage',
+      Subject: 'Controls',
+      Author: 'Heimdall',
       CreatedDate: new Date()
     };
 
@@ -168,12 +168,12 @@ export default class ExportNIST extends Props {
       wb.Sheets[new_name] = ws;
     });
 
-    let wbout = XLSX.write(wb, { bookType: "xlsx", type: "binary" });
+    let wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
     saveAs(
-      new Blob([this.s2ab(wbout)], { type: "application/octet-stream" }),
-      "NIST-SP-800-53-Security-Control-Coverage-" +
-        this.convertDate(new Date(), "-") +
-        ".xlsx"
+      new Blob([this.s2ab(wbout)], {type: 'application/octet-stream'}),
+      'NIST-SP-800-53-Security-Control-Coverage-' +
+        this.convertDate(new Date(), '-') +
+        '.xlsx'
     );
   }
 

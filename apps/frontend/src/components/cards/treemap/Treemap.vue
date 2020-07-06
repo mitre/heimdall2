@@ -7,7 +7,7 @@
       <v-col :cols="8">
         <v-btn @click="up" :disabled="!allow_up" block x-small>
           <v-icon v-if="allow_up"> mdi-arrow-left </v-icon>
-          {{ "NIST-SP-800-53 -> " + value.join(" -> ") }}
+          {{ 'NIST-SP-800-53 -> ' + value.join(' -> ') }}
         </v-btn>
       </v-col>
     </v-row>
@@ -35,24 +35,24 @@
 
 <script lang="ts">
 //               preserveAspectRatio="xMidYMid meet"
-import Vue from "vue";
-import Component from "vue-class-component";
-import { getModule } from "vuex-module-decorators";
-import { ControlStatus, HDFControl, nist } from "inspecjs";
-import * as d3 from "d3";
-import FilteredDataModule, { TreeMapState } from "@/store/data_filters";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {getModule} from 'vuex-module-decorators';
+import {ControlStatus, HDFControl, nist} from 'inspecjs';
+import * as d3 from 'd3';
+import FilteredDataModule, {TreeMapState} from '@/store/data_filters';
 import {
   TreemapNode,
   build_nist_tree_map,
   is_leaf,
   is_parent
-} from "@/utilities/treemap_util";
-import { HierarchyRectangularNode, tree } from "d3";
-import Cell, { XYScale } from "@/components/cards/treemap/Cell.vue";
+} from '@/utilities/treemap_util';
+import {HierarchyRectangularNode, tree} from 'd3';
+import Cell, {XYScale} from '@/components/cards/treemap/Cell.vue';
 //@ts-ignore
-import resize from "vue-resize-directive";
-import ColorHackModule from "../../../store/color_hack";
-import { compare_arrays } from "@/utilities/helper_util";
+import resize from 'vue-resize-directive';
+import ColorHackModule from '../../../store/color_hack';
+import {compare_arrays} from '@/utilities/helper_util';
 
 // We declare the props separately to make props types inferable.
 const TreemapProps = Vue.extend({
@@ -108,7 +108,7 @@ export default class Treemap extends TreemapProps {
       for (; depth < this._state.length; depth++) {
         // If the current has no children, then just bail here
         if (curr.children === undefined) {
-          throw "no children to go into";
+          throw 'no children to go into';
         }
 
         // Fetch the next path spec
@@ -130,10 +130,10 @@ export default class Treemap extends TreemapProps {
           if (new_curr.children && new_curr.children.length) {
             curr = new_curr;
           } else {
-            throw "empty";
+            throw 'empty';
           }
         } else {
-          throw "truncate";
+          throw 'truncate';
         }
       }
     } catch (some_traversal_error) {
@@ -193,9 +193,9 @@ export default class Treemap extends TreemapProps {
     if (is_leaf(n.data)) {
       let id = n.data.control.data.id;
       if (id !== this.selected_control) {
-        this.$emit("update:selected_control", id);
+        this.$emit('update:selected_control', id);
       } else {
-        this.$emit("update:selected_control", null);
+        this.$emit('update:selected_control', null);
       }
     } else {
       // Otherwise, dive away. Set course for the leading title
@@ -213,13 +213,13 @@ export default class Treemap extends TreemapProps {
       this.set_path(this._state.slice(0, this._state.length - 1));
 
       // Also clear selected
-      this.$emit("update:selected_control", null);
+      this.$emit('update:selected_control', null);
     }
   }
 
   /** Typed method to wrap changes in the depth */
   set_path(path_spec: TreeMapState) {
-    this.$emit("input", path_spec);
+    this.$emit('input', path_spec);
   }
 
   /** Controls whether we should allow up */
@@ -241,7 +241,7 @@ text {
   pointer-events: none;
   font-weight: bold;
   font-size: 1.1em;
-  fill: "primary";
+  fill: 'primary';
 }
 
 rect {

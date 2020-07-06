@@ -1,6 +1,6 @@
 <template>
   <v-tooltip top>
-    <template v-slot:activator="{ on }">
+    <template v-slot:activator="{on}">
       <LinkItem
         key="export_json"
         text="Export as JSON"
@@ -14,15 +14,15 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { saveAs } from "file-saver";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {saveAs} from 'file-saver';
 import LinkItem, {
   LinkAction
-} from "@/components/global/sidebaritems/SidebarLink.vue";
-import { EvaluationFile, ProfileFile } from "@/store/report_intake";
-import { getModule } from "vuex-module-decorators";
-import InspecDataModule from "../../store/data_store";
+} from '@/components/global/sidebaritems/SidebarLink.vue';
+import {EvaluationFile, ProfileFile} from '@/store/report_intake';
+import {getModule} from 'vuex-module-decorators';
+import InspecDataModule from '../../store/data_store';
 
 // We declare the props separately
 // to make props types inferrable.
@@ -42,7 +42,7 @@ export default class ExportJSON extends Props {
     let store = getModule(InspecDataModule, this.$store);
     let file = store.allFiles.find(f => f.unique_id === file_id);
     if (file) {
-      if (file.hasOwnProperty("execution")) {
+      if (file.hasOwnProperty('execution')) {
         this.export_execution(file as EvaluationFile);
       } else {
         this.export_profile(file as ProfileFile);
@@ -53,7 +53,7 @@ export default class ExportJSON extends Props {
   export_execution(file?: EvaluationFile) {
     if (file) {
       let blob = new Blob([JSON.stringify(file.execution)], {
-        type: "application/json"
+        type: 'application/json'
       });
       if (blob) {
         saveAs(blob, file.filename);
@@ -64,7 +64,7 @@ export default class ExportJSON extends Props {
   export_profile(file?: ProfileFile) {
     if (file) {
       let blob = new Blob([JSON.stringify(file.profile)], {
-        type: "application/json"
+        type: 'application/json'
       });
       if (blob) {
         saveAs(blob, file.filename);

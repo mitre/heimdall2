@@ -64,12 +64,12 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
+import Vue from 'vue';
+import Component from 'vue-class-component';
 
-import ResponsiveRowLarge from "@/components/cards/controltable/ResponsiveRowLarge.vue";
-import ResponsiveRowMedium from "@/components/cards/controltable/ResponsiveRowMedium.vue";
-import ResponsiveRowSmall from "@/components/cards/controltable/ResponsiveRowSmall.vue";
+import ResponsiveRowLarge from '@/components/cards/controltable/ResponsiveRowLarge.vue';
+import ResponsiveRowMedium from '@/components/cards/controltable/ResponsiveRowMedium.vue';
+import ResponsiveRowSmall from '@/components/cards/controltable/ResponsiveRowSmall.vue';
 
 const Props = Vue.extend({
   props: {

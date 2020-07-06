@@ -6,8 +6,8 @@ import {
   SourcedContextualizedProfile,
   SourcedContextualizedEvaluation,
   isFromProfileFile
-} from "@/store/data_store";
-import { context } from "inspecjs";
+} from '@/store/data_store';
+import {context} from 'inspecjs';
 
 export function execution_unique_key(
   exec: Readonly<SourcedContextualizedEvaluation>
@@ -29,7 +29,7 @@ export function profile_unique_key(
       execution_unique_key(
         profile.sourced_from as SourcedContextualizedEvaluation
       ) +
-      "-" +
+      '-' +
       profile.data.name
     );
   }
@@ -46,7 +46,7 @@ export function control_unique_key(
     profile_unique_key(
       ctrl.sourced_from as Readonly<context.ContextualizedProfile>
     ) +
-    "-" +
+    '-' +
     ctrl.data.id
   );
 }

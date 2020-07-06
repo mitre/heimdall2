@@ -1,1 +1,1 @@
-declare module "zxcvbn";
+declare module 'zxcvbn';

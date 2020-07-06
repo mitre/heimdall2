@@ -6,11 +6,11 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { getModule } from "vuex-module-decorators";
-import ColorHackModule from "@/store/color_hack";
-import { Color } from "vuetify/lib/util/colors";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {getModule} from 'vuex-module-decorators';
+import ColorHackModule from '@/store/color_hack';
+import {Color} from 'vuetify/lib/util/colors';
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -25,12 +25,12 @@ const Props = Vue.extend({
   components: {}
 })
 export default class UtilColorGenerator extends Props {
-  color: string = "background";
+  color: string = 'background';
 
   get body(): string {
     let cmodule = getModule(ColorHackModule, this.$store);
     let color = colorVariants(cmodule, this.color);
-    let br = "\n";
+    let br = '\n';
     let rows = Object.keys(color)
       .map(key => `\t${key}: "${(color as any)[key]}"`)
       .join(`,${br}`);
@@ -45,20 +45,20 @@ export default class UtilColorGenerator extends Props {
 function colorVariants(cmod: ColorHackModule, base: string): Color {
   // List all of our suffixes
   let suffixes: Array<keyof Color> = [
-    "darken4",
-    "darken3",
-    "darken2",
-    "darken1",
-    "base",
-    "lighten1",
-    "lighten2",
-    "lighten3",
-    "lighten4",
-    "lighten5",
-    "accent1",
-    "accent2",
-    "accent3",
-    "accent4"
+    'darken4',
+    'darken3',
+    'darken2',
+    'darken1',
+    'base',
+    'lighten1',
+    'lighten2',
+    'lighten3',
+    'lighten4',
+    'lighten5',
+    'accent1',
+    'accent2',
+    'accent3',
+    'accent4'
   ];
 
   // Generate

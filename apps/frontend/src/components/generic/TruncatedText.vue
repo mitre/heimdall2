@@ -1,6 +1,6 @@
 <template>
   <v-tooltip bottom>
-    <template v-slot:activator="{ on }">
+    <template v-slot:activator="{on}">
       <span
         ref="text"
         v-on="on"
@@ -15,8 +15,8 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
+import Vue from 'vue';
+import Component from 'vue-class-component';
 
 // https://stackoverflow.com/questions/143815/determine-if-an-html-elements-content-overflows
 // Determines if the passed element is overflowing its bounds,
@@ -28,12 +28,12 @@ function check_overflow(el: HTMLElement): boolean {
   let curr_overflow: string | null = el.style.overflow;
 
   // Change to disallow overflow to see if it's happening
-  if (curr_overflow === null || curr_overflow === "visible") {
-    el.style.overflow = "hidden";
+  if (curr_overflow === null || curr_overflow === 'visible') {
+    el.style.overflow = 'hidden';
   }
 
   // Determine if overflowing by widths/heights
-  let inner_width = parseInt(window.getComputedStyle(el).width || "0");
+  let inner_width = parseInt(window.getComputedStyle(el).width || '0');
   let is_overflowing = inner_width < el.scrollWidth;
 
   // Put back the old overflow
@@ -55,7 +55,7 @@ const Props = Vue.extend({
     },
     span_style: {
       type: String,
-      default: ""
+      default: ''
     }
   }
 });
@@ -63,8 +63,8 @@ const Props = Vue.extend({
 @Component
 export default class TruncatedText extends Props {
   get is_truncated(): boolean {
-    if (this.$refs["text"] !== undefined) {
-      return check_overflow(this.$refs["text"] as HTMLElement);
+    if (this.$refs['text'] !== undefined) {
+      return check_overflow(this.$refs['text'] as HTMLElement);
     } else {
       return false;
     }

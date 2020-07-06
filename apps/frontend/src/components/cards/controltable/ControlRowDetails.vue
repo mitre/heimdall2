@@ -18,7 +18,7 @@
           <v-tab-item value="tab-test">
             <v-clamp class="pa-1" autoresize :max-lines="2">
               <template slot="default">{{ header }}</template>
-              <template slot="after" slot-scope="{ toggle, expanded, clamped }">
+              <template slot="after" slot-scope="{toggle, expanded, clamped}">
                 <v-icon
                   fab
                   v-if="!expanded && clamped"
@@ -38,7 +38,7 @@
             <br />
             <v-clamp class="pb-2" autoresize :max-lines="2">
               <template slot="default">{{ main_desc }}</template>
-              <template slot="after" slot-scope="{ toggle, expanded, clamped }">
+              <template slot="after" slot-scope="{toggle, expanded, clamped}">
                 <v-icon
                   fab
                   v-if="!expanded && clamped"
@@ -94,23 +94,23 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import ControlRowCol from "@/components/cards/controltable/ControlRowCol.vue";
-import { HDFControl, ControlStatus } from "inspecjs";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
+import {HDFControl, ControlStatus} from 'inspecjs';
 //@ts-ignore
-import VClamp from "vue-clamp/dist/vue-clamp.js";
+import VClamp from 'vue-clamp/dist/vue-clamp.js';
 
 //TODO: add line numbers
-import "prismjs";
-import "prismjs/components/prism-makefile.js";
-import "prismjs/components/prism-ruby.js";
+import 'prismjs';
+import 'prismjs/components/prism-makefile.js';
+import 'prismjs/components/prism-ruby.js';
 //@ts-ignore
-import Prism from "vue-prism-component";
-Vue.component("prism", Prism);
+import Prism from 'vue-prism-component';
+Vue.component('prism', Prism);
 
-import "prismjs/components/prism-ruby.js";
-import { context } from "inspecjs";
+import 'prismjs/components/prism-ruby.js';
+import {context} from 'inspecjs';
 
 interface Detail {
   name: string;
@@ -153,7 +153,7 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
     if (this._control.data.desc) {
       return this._control.data.desc.trim();
     } else {
-      return "No description";
+      return 'No description';
     }
   }
 
@@ -176,11 +176,11 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
 
   /** Shown above the description */
   get header(): string {
-    let msg_split = this._control.root.hdf.finding_details.split(":");
+    let msg_split = this._control.root.hdf.finding_details.split(':');
     if (msg_split.length === 1) {
-      return msg_split[0] + ".";
+      return msg_split[0] + '.';
     } else {
-      return msg_split[0] + ":";
+      return msg_split[0] + ':';
     }
   }
 
@@ -188,42 +188,42 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
     let c = this._control;
     return [
       {
-        name: "Control",
+        name: 'Control',
         value: c.data.id
       },
       {
-        name: "Title",
+        name: 'Title',
         value: c.data.title
       },
       {
-        name: "Desc",
+        name: 'Desc',
         value: c.data.desc
       },
       {
-        name: "Severity",
+        name: 'Severity',
         value: c.root.hdf.severity
       },
       {
-        name: "Impact",
+        name: 'Impact',
         value: c.data.impact
       },
       {
-        name: "Nist",
-        value: c.hdf.raw_nist_tags.join(", ")
+        name: 'Nist',
+        value: c.hdf.raw_nist_tags.join(', ')
       },
       {
-        name: "Check Text",
+        name: 'Check Text',
         value: c.hdf.descriptions.check || c.data.tags.check
       },
       {
-        name: "Fix Text",
+        name: 'Fix Text',
         value: c.hdf.descriptions.fix || c.data.tags.fix
       }
     ].filter(v => v.value); // Get rid of nulls
   }
 
   zebra(ix: number): string {
-    return ix % 2 ? "" : "zebra-table";
+    return ix % 2 ? '' : 'zebra-table';
   }
 }
 </script>

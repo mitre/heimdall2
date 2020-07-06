@@ -3,8 +3,8 @@
  * Not written with an eye towards efficiency - prefer that these be done staitcally
  */
 
-import { VuetifyParsedThemeItem } from "vuetify/types/services/theme";
-import Chroma from "chroma-js";
+import {VuetifyParsedThemeItem} from 'vuetify/types/services/theme';
+import Chroma from 'chroma-js';
 
 /** Makes a color that is visible against the provided color */
 export function visible_against(color_hex: string): string {
@@ -12,7 +12,7 @@ export function visible_against(color_hex: string): string {
   let color = Chroma.hex(color_hex);
 
   // Rotate 50 degrees in hue (arbitrary # but seems nice)
-  color = color.set("hsl.h", "+180");
+  color = color.set('hsl.h', '+180');
 
   // Now set its luminance to the opposite extreme
   let lum = color.luminance();
@@ -76,7 +76,7 @@ export function gen_variants(
 export function gen_visibilities(
   colorset: VuetifyParsedThemeItem
 ): VuetifyParsedThemeItem {
-  let c: VuetifyParsedThemeItem = { ...colorset };
+  let c: VuetifyParsedThemeItem = {...colorset};
   Object.keys(c).forEach(key => {
     c[key] = visible_against(c[key]!);
   });

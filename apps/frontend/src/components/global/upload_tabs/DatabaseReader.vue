@@ -15,7 +15,7 @@
         item-key="name"
         class="elevation-1"
       >
-        <template v-slot:body="{ items }">
+        <template v-slot:body="{items}">
           <tbody>
             <tr v-for="item in items" :key="item.name">
               <td>{{ item.filename }}</td>
@@ -34,25 +34,25 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { getModule } from "vuex-module-decorators";
-import ServerModule from "@/store/server";
-import AppInfoModule from "@/store/app_info";
-import { plainToClass } from "class-transformer";
-import { LocalStorageVal } from "@/utilities/helper_util";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {getModule} from 'vuex-module-decorators';
+import ServerModule from '@/store/server';
+import AppInfoModule from '@/store/app_info';
+import {plainToClass} from 'class-transformer';
+import {LocalStorageVal} from '@/utilities/helper_util';
 import InspecIntakeModule, {
   FileID,
   next_free_file_ID
-} from "@/store/report_intake";
-import { Evaluation } from "@/types/models.ts";
+} from '@/store/report_intake';
+import {Evaluation} from '@/types/models.ts';
 
 export interface RetrieveHash {
   unique_id: number;
   eva: Evaluation;
 }
 
-const local_evaluation_id = new LocalStorageVal<number | null>("evaluation_id");
+const local_evaluation_id = new LocalStorageVal<number | null>('evaluation_id');
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -70,17 +70,17 @@ export default class DatabaseReader extends Props {
   get headers(): Object[] {
     return [
       {
-        text: "Filename",
-        align: "start",
+        text: 'Filename',
+        align: 'start',
         sortable: true,
-        value: "filename"
+        value: 'filename'
       },
-      { text: "Version", sortable: true, value: "version" },
-      { text: "Select", value: "select" }
+      {text: 'Version', sortable: true, value: 'version'},
+      {text: 'Select', value: 'select'}
     ];
   }
   get search(): string {
-    return "";
+    return '';
   }
   get hideHeaders(): Boolean {
     return false;
@@ -99,7 +99,7 @@ export default class DatabaseReader extends Props {
       const evals: Evaluation[] = eval_obj.map((x: any) =>
         plainToClass(Evaluation, x)
       );
-      console.log("evals: " + evals.length);
+      console.log('evals: ' + evals.length);
       evals.forEach(eva => {
         eva.filename = this.evaluation_label(eva);
       });
@@ -116,7 +116,7 @@ export default class DatabaseReader extends Props {
       const evals: Evaluation[] = eval_obj.map((x: any) =>
         plainToClass(Evaluation, x)
       );
-      console.log("evals: " + evals.length);
+      console.log('evals: ' + evals.length);
       return evals;
     } else {
       return [new Evaluation()];
@@ -127,8 +127,8 @@ export default class DatabaseReader extends Props {
     let label = evaluation.version;
     if (evaluation.tags) {
       evaluation.tags.forEach(tag => {
-        console.log("tag " + tag.content.name + ": " + tag.content.value);
-        if (tag.content.name == "filename") {
+        console.log('tag ' + tag.content.name + ': ' + tag.content.value);
+        if (tag.content.name == 'filename') {
           label = tag.content.value;
         }
       });
@@ -137,7 +137,7 @@ export default class DatabaseReader extends Props {
   }
 
   async load_this_evaluation(evaluation: Evaluation): Promise<void> {
-    console.log("load this file: " + evaluation.id);
+    console.log('load this file: ' + evaluation.id);
     const host = process.env.VUE_APP_API_URL!;
     // Generate an id
     let unique_id = next_free_file_ID();
@@ -146,10 +146,10 @@ export default class DatabaseReader extends Props {
     await mod
       .connect(host)
       .catch(bad => {
-        console.error("Unable to connect to " + host);
+        console.error('Unable to connect to ' + host);
       })
       .then(() => {
-        console.log("here");
+        console.log('here');
         let eva_hash: RetrieveHash = {
           unique_id: unique_id,
           eva: evaluation
@@ -160,8 +160,8 @@ export default class DatabaseReader extends Props {
         console.error(`bad login ${bad}`);
       })
       .then(() => {
-        console.log("Loaded " + unique_id);
-        this.$emit("got-files", [unique_id]);
+        console.log('Loaded ' + unique_id);
+        this.$emit('got-files', [unique_id]);
       });
   }
 }

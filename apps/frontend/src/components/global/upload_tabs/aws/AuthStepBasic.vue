@@ -38,20 +38,20 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { getModule } from "vuex-module-decorators";
-import S3, { ObjectKey } from "aws-sdk/clients/s3";
-import { AWSError } from "aws-sdk/lib/error";
-import { LocalStorageVal } from "../../../../utilities/helper_util";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {getModule} from 'vuex-module-decorators';
+import S3, {ObjectKey} from 'aws-sdk/clients/s3';
+import {AWSError} from 'aws-sdk/lib/error';
+import {LocalStorageVal} from '../../../../utilities/helper_util';
 import {
   Auth,
   transcribe_error,
   get_session_token,
   MFA_Info
-} from "../../../../utilities/aws_util";
-import InspecIntakeModule, { FileID } from "@/store/report_intake";
-import FileList from "@/components/global/upload_tabs/aws/FileList.vue";
+} from '../../../../utilities/aws_util';
+import InspecIntakeModule, {FileID} from '@/store/report_intake';
+import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -62,8 +62,8 @@ const Props = Vue.extend({
 });
 
 /** Localstorage keys */
-const local_access_token = new LocalStorageVal<string>("aws_s3_access_token");
-const local_secret_token = new LocalStorageVal<string>("aws_s3_secret_token");
+const local_access_token = new LocalStorageVal<string>('aws_s3_access_token');
+const local_secret_token = new LocalStorageVal<string>('aws_s3_secret_token');
 
 /**
  * File reader component for taking in inspec JSON data.
@@ -84,25 +84,25 @@ export default class S3Reader extends Props {
 
   /** Form required field rules. Maybe eventually expand to other stuff */
   req_rule = (v: string | null | undefined) =>
-    (v || "").trim().length > 0 || "Field is Required";
+    (v || '').trim().length > 0 || 'Field is Required';
 
   // Callback for change in access token
   change_access_token(new_value: string) {
     local_access_token.set(new_value);
-    this.$emit("update:access_token", new_value);
+    this.$emit('update:access_token', new_value);
   }
 
   // Callback for change in secret token
   change_secret_token(new_value: string) {
     local_secret_token.set(new_value);
-    this.$emit("update:secret_token", new_value);
+    this.$emit('update:secret_token', new_value);
   }
 
   /** On mount, try to look up stored auth info */
   mounted() {
     // Load our credentials
-    this.change_access_token(local_access_token.get_default(""));
-    this.change_secret_token(local_secret_token.get_default(""));
+    this.change_access_token(local_access_token.get_default(''));
+    this.change_secret_token(local_secret_token.get_default(''));
   }
 }
 </script>

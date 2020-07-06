@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import * as fs from 'fs';
 
 /** Returns sorted list of files in a directory */
 export function list_files(dir_path: string) {
@@ -23,7 +23,7 @@ export function read_files(dir_name: string): FileResult[] {
 
   // Read them all
   let result = files.map(filename => {
-    let content = fs.readFileSync(dir_name + filename, "utf-8");
+    let content = fs.readFileSync(dir_name + filename, 'utf-8');
     let result: FileResult = {
       name: filename,
       content
@@ -33,7 +33,7 @@ export function read_files(dir_name: string): FileResult[] {
   return result;
 }
 
-export type FileHash = { [key: string]: FileResult };
+export type FileHash = {[key: string]: FileResult};
 function populate_hash(results: FileResult[]) {
   let hash: FileHash = {};
   results.forEach(f => {
@@ -43,16 +43,16 @@ function populate_hash(results: FileResult[]) {
 }
 
 export function AllCounts(): FileHash {
-  let results = read_files("tests/hdf_data/counts/");
+  let results = read_files('tests/hdf_data/counts/');
   return populate_hash(results);
 }
 
 export function AllInfo(): FileHash {
-  let results = read_files("tests/hdf_data/inspec_tools_info/");
+  let results = read_files('tests/hdf_data/inspec_tools_info/');
   return populate_hash(results);
 }
 
 export function AllRaw(): FileHash {
-  let results = read_files("tests/hdf_data/raw_data/");
+  let results = read_files('tests/hdf_data/raw_data/');
   return populate_hash(results);
 }

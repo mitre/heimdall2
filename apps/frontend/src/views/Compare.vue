@@ -37,20 +37,20 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import BaseView from "@/views/BaseView.vue";
-import Modal from "@/components/global/Modal.vue";
-import UploadNexus from "@/components/global/UploadNexus.vue";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import BaseView from '@/views/BaseView.vue';
+import Modal from '@/components/global/Modal.vue';
+import UploadNexus from '@/components/global/UploadNexus.vue';
 
-import CompareRow from "@/components/cards/comparison/CompareRow.vue";
+import CompareRow from '@/components/cards/comparison/CompareRow.vue';
 
-import { Filter } from "@/store/data_filters";
-import { ControlStatus, Severity, context } from "inspecjs";
-import { FileID } from "@/store/report_intake";
-import { ComparisonContext } from "../utilities/delta_util";
-import { getModule } from "vuex-module-decorators";
-import InspecDataModule from "../store/data_store";
+import {Filter} from '@/store/data_filters';
+import {ControlStatus, Severity, context} from 'inspecjs';
+import {FileID} from '@/store/report_intake';
+import {ComparisonContext} from '../utilities/delta_util';
+import {getModule} from 'vuex-module-decorators';
+import InspecDataModule from '../store/data_store';
 
 // We declare the props separately
 // to make props types inferrable.

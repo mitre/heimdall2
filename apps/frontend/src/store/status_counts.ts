@@ -2,15 +2,15 @@
  * Counts the statuses of controls.
  */
 
-import { Module, VuexModule, getModule } from "vuex-module-decorators";
-import FilteredData, { Filter, filter_cache_key } from "@/store/data_filters";
-import Store from "@/store/store";
-import LRUCache from "lru-cache";
-import { ControlStatus } from "inspecjs";
-import InspecDataModule from "@/store/data_store";
+import {Module, VuexModule, getModule} from 'vuex-module-decorators';
+import FilteredData, {Filter, filter_cache_key} from '@/store/data_filters';
+import Store from '@/store/store';
+import LRUCache from 'lru-cache';
+import {ControlStatus} from 'inspecjs';
+import InspecDataModule from '@/store/data_store';
 
 // The hash that we will generally be working with herein
-export type StatusHash = { [key in ControlStatus]: number };
+export type StatusHash = {[key in ControlStatus]: number};
 
 // Helper function for counting a status in a list of controls
 function count_statuses(data: FilteredData, filter: Filter): StatusHash {
@@ -26,11 +26,11 @@ function count_statuses(data: FilteredData, filter: Filter): StatusHash {
   // Count 'em out
   let hash: StatusHash = {
     Failed: 0,
-    "From Profile": 0,
-    "Not Applicable": 0,
-    "Not Reviewed": 0,
+    'From Profile': 0,
+    'Not Applicable': 0,
+    'Not Reviewed': 0,
     Passed: 0,
-    "Profile Error": 0
+    'Profile Error': 0
   };
   controls.forEach(c => {
     let status: ControlStatus = c.root.hdf.status;
@@ -45,7 +45,7 @@ function count_statuses(data: FilteredData, filter: Filter): StatusHash {
   namespaced: true,
   dynamic: true,
   store: Store,
-  name: "statusCounts"
+  name: 'statusCounts'
 })
 class StatusCountModule extends VuexModule {
   /** Use vuex caching to always have access to our filtered data module */
@@ -80,27 +80,27 @@ class StatusCountModule extends VuexModule {
   }
 
   get passed(): (filter: Filter) => number {
-    return filter => this.hash(filter)["Passed"];
+    return filter => this.hash(filter)['Passed'];
   }
 
   get failed(): (filter: Filter) => number {
-    return filter => this.hash(filter)["Failed"];
+    return filter => this.hash(filter)['Failed'];
   }
 
   get notApplicable(): (filter: Filter) => number {
-    return filter => this.hash(filter)["Not Applicable"];
+    return filter => this.hash(filter)['Not Applicable'];
   }
 
   get notReviewed(): (filter: Filter) => number {
-    return filter => this.hash(filter)["Not Reviewed"];
+    return filter => this.hash(filter)['Not Reviewed'];
   }
 
   get profileError(): (filter: Filter) => number {
-    return filter => this.hash(filter)["Profile Error"];
+    return filter => this.hash(filter)['Profile Error'];
   }
 
   get fromProfile(): (filter: Filter) => number {
-    return filter => this.hash(filter)["From Profile"];
+    return filter => this.hash(filter)['From Profile'];
   }
 }
 

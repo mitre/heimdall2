@@ -2,15 +2,15 @@
  * Counts the severities of controls.
  */
 
-import { Module, VuexModule, getModule } from "vuex-module-decorators";
-import FilteredData, { Filter, filter_cache_key } from "@/store/data_filters";
-import Store from "@/store/store";
-import LRUCache from "lru-cache";
-import { Severity } from "inspecjs";
-import InspecDataModule from "@/store/data_store";
+import {Module, VuexModule, getModule} from 'vuex-module-decorators';
+import FilteredData, {Filter, filter_cache_key} from '@/store/data_filters';
+import Store from '@/store/store';
+import LRUCache from 'lru-cache';
+import {Severity} from 'inspecjs';
+import InspecDataModule from '@/store/data_store';
 
 // The hash that we will generally be working with herein
-type SeverityHash = { [key in Severity]: number };
+type SeverityHash = {[key in Severity]: number};
 
 // Helper function for counting a status in a list of controls
 function count_severities(data: FilteredData, filter: Filter): SeverityHash {
@@ -44,7 +44,7 @@ function count_severities(data: FilteredData, filter: Filter): SeverityHash {
   namespaced: true,
   dynamic: true,
   store: Store,
-  name: "severityCounts"
+  name: 'severityCounts'
 })
 class SeverityCountModule extends VuexModule {
   /** Use vuex caching to always have access to our filtered data module */
@@ -79,23 +79,23 @@ class SeverityCountModule extends VuexModule {
   }
 
   get none(): (filter: Filter) => number {
-    return filter => this.hash(filter)["none"];
+    return filter => this.hash(filter)['none'];
   }
 
   get low(): (filter: Filter) => number {
-    return filter => this.hash(filter)["low"];
+    return filter => this.hash(filter)['low'];
   }
 
   get medium(): (filter: Filter) => number {
-    return filter => this.hash(filter)["medium"];
+    return filter => this.hash(filter)['medium'];
   }
 
   get high(): (filter: Filter) => number {
-    return filter => this.hash(filter)["high"];
+    return filter => this.hash(filter)['high'];
   }
 
   get critical(): (filter: Filter) => number {
-    return filter => this.hash(filter)["critical"];
+    return filter => this.hash(filter)['critical'];
   }
 }
 

@@ -1,1 +1,1 @@
-declare module "vue-password";
+declare module 'vue-password';

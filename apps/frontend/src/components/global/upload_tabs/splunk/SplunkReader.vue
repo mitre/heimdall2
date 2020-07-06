@@ -59,17 +59,17 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { getModule } from "vuex-module-decorators";
-import InspecIntakeModule, { FileID } from "@/store/report_intake";
-import AuthStep from "./AuthStep.vue";
-import FileList from "./FileList.vue";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {getModule} from 'vuex-module-decorators';
+import InspecIntakeModule, {FileID} from '@/store/report_intake';
+import AuthStep from './AuthStep.vue';
+import FileList from './FileList.vue';
 import {
   SplunkEndpoint,
   SplunkErrorCode
-} from "../../../../utilities/splunk_util";
-import ErrorTooltip from "../../../generic/ErrorTooltip.vue";
+} from '../../../../utilities/splunk_util';
+import ErrorTooltip from '../../../generic/ErrorTooltip.vue';
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -122,34 +122,34 @@ export default class SplunkReader extends Props {
         this.error_count += 1;
         // https://docs.splunk.com/Documentation/Splunk/8.0.1/Admin/Serverconf
         this.show_error_message(
-          "Connection to host failed. Please ensure that the hostname is correct, and that your splunk server has been properly configured to allow CORS requests. Please see https://docs.splunk.com/Documentation/Splunk/8.0.1/Admin/Serverconf for information on how to enable CORS."
+          'Connection to host failed. Please ensure that the hostname is correct, and that your splunk server has been properly configured to allow CORS requests. Please see https://docs.splunk.com/Documentation/Splunk/8.0.1/Admin/Serverconf for information on how to enable CORS.'
         );
         break;
       case SplunkErrorCode.PageNotFound:
         this.error_count += 1;
         this.show_error_message(
-          "Connection made with errors. Please ensure your hostname is formatted as shown in the example."
+          'Connection made with errors. Please ensure your hostname is formatted as shown in the example.'
         );
         break;
       case SplunkErrorCode.BadAuth:
-        this.show_error_message("Bad username or password.");
+        this.show_error_message('Bad username or password.');
         break;
       case SplunkErrorCode.SearchFailed:
-        this.show_error_message("Internal splunk error while searching");
+        this.show_error_message('Internal splunk error while searching');
         break;
       case SplunkErrorCode.ConsolidationFailed:
       case SplunkErrorCode.SchemaViolation:
         this.error_count += 1;
-        this.show_error_message("Error creating execution from splunk events.");
+        this.show_error_message('Error creating execution from splunk events.');
         break;
       case SplunkErrorCode.InvalidGUID:
         this.show_error_message(
-          "Duplicate execution GUID detected. The odds of this happening should be astronomically low. Please file a bug report."
+          'Duplicate execution GUID detected. The odds of this happening should be astronomically low. Please file a bug report.'
         );
         break;
       case SplunkErrorCode.BadUrl:
         this.show_error_message(
-          "Invalid URL. Please ensure you have typed it correctly."
+          'Invalid URL. Please ensure you have typed it correctly.'
         );
         break;
       case SplunkErrorCode.UnknownError:
@@ -162,13 +162,13 @@ export default class SplunkReader extends Props {
 
   /** Give our error tooltip the message */
   show_error_message(msg: string) {
-    let tt = this.$refs["error_tooltip"] as ErrorTooltip;
+    let tt = this.$refs['error_tooltip'] as ErrorTooltip;
     tt.show_error(msg);
   }
 
   /** Callback on got files */
   got_files(files: Array<FileID>) {
-    this.$emit("got-files", files);
+    this.$emit('got-files', files);
   }
 }
 </script>

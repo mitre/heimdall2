@@ -30,8 +30,8 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
+import Vue from 'vue';
+import Component from 'vue-class-component';
 
 // We declare the props separately to make props types inferable.
 const TopbarProps = Vue.extend({
@@ -46,7 +46,7 @@ const TopbarProps = Vue.extend({
 export default class Topbar extends TopbarProps {
   /** Submits an event to clear all filters */
   clear(): void {
-    this.$emit("clear");
+    this.$emit('clear');
   }
 
   /** Updates theme darkness */
