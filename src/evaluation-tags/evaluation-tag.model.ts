@@ -17,6 +17,14 @@ export class EvaluationTag extends Model<EvaluationTag> {
   @Column
   value: string;
 
+  @AllowNull(false)
+  @Column
+  createdAt: Date;
+
+  @AllowNull(false)
+  @Column
+  updatedAt: Date;
+
   @ForeignKey(() => Evaluation)
   @Column(DataType.BIGINT)
   evaluationId: number;
