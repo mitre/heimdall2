@@ -160,8 +160,9 @@ export class NistControl {
         if (config.add_spaces) {
           s += " ";
         }
+        s += spec;
         if (config.add_periods) {
-          s += spec + ".";
+          s += ".";
         }
       }
     }
