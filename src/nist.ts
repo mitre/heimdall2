@@ -9,17 +9,33 @@ const REV_RE = /^rev[\s_.]+(\d+)$/i; // Matches Rev_5 etc
 
 export interface CanonizationConfig {
   max_specifiers: number;
-  pad_zeros: boolean;
-  allow_letters: boolean;
-  add_spaces: boolean;
+
+  // All are assumed false
+  pad_zeros?: boolean; // default false
+  allow_letters?: boolean; // default true
+  add_spaces?: boolean; // default true
+  add_parens?: boolean; // default true
+  add_periods?: boolean; // default true
+}
+
+function default_partial_config(c: CanonizationConfig): CanonizationConfig {
+  return {
+    pad_zeros: false,
+    allow_letters: true,
+    add_spaces: true,
+    add_parens: true,
+    add_periods: true,
+    ...c
+  };
 }
 
 /** Represents a single nist control, or group of controls if the sub specs are vague enoug. */
 export class NistControl {
   /** The sequence of sub-specifiers making up the "parts" of the nist tags
-   * E.g.  in "SI-7 (14)(b)", we would have ["SI", "7", "(14)", "(b)"]
-   *       in "SI-4a.2.", we would have ["SI", "4", "a.", "2."];
+   * E.g.  in "SI-7 (14)(b)", we would have ["SI", "7", "14", "b"]
+   *       in "SI-4a.2.", we would have ["SI", "4", "a, "2"];
    * First element is guaranteed to be a 2-letter family
+   * Note that we strip punctuation
    */
   sub_specifiers: string[]; // Guaranteed to be of length at least one on a "real" control
 
@@ -106,6 +122,7 @@ export class NistControl {
    * Avoid repeating this if possible.
    */
   canonize(config: CanonizationConfig): string {
+    config = default_partial_config(config);
     const ss = this.sub_specifiers;
 
     // Build our string. Start with family
@@ -126,7 +143,9 @@ export class NistControl {
 
         // If index past 1, wrap in parens
         if (i > 1) {
-          spec = "(" + spec + ")";
+          if (config.add_parens) {
+            spec = "(" + spec + ")";
+          }
 
           // If space, add space
           if (config.add_spaces) {
@@ -141,7 +160,9 @@ export class NistControl {
         if (config.add_spaces) {
           s += " ";
         }
-        s += spec + ".";
+        if (config.add_periods) {
+          s += spec + ".";
+        }
       }
     }
     return s;
