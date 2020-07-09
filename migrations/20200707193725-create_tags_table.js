@@ -49,9 +49,9 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('EvaluationTags')
+    return queryInterface.removeColumn('Evaluations', 'evaluationTagId')
     .then(() => {
-      return queryInterface.removeColumn('Evaluations', 'evaluationTagId')
+      return queryInterface.dropTable('EvaluationTags')
     });
   }
 };
