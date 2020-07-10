@@ -7,7 +7,6 @@ import {
 
 describe('EvaluationTagsController', () => {
   let evaluationTagsController: EvaluationTagsController;
-  let evaluationTagsService: EvaluationTagsService;
   let module: TestingModule;
 
   beforeAll(async () => {
@@ -21,7 +20,6 @@ describe('EvaluationTagsController', () => {
       }]
     }).compile();
     evaluationTagsController = module.get<EvaluationTagsController>(EvaluationTagsController);
-    evaluationTagsService = module.get<EvaluationTagsService>(EvaluationTagsService);
   });
 
 
