@@ -3,6 +3,7 @@ import {InjectModel} from '@nestjs/sequelize';
 import {EvaluationTag} from './evaluation-tag.model';
 import {EvaluationTagDto} from './dto/evaluation-tag.dto';
 import {CreateEvaluationTagDto} from './dto/create-evaluation-tag.dto';
+import {UpdateEvaluationTagDto} from './dto/update-evaluation-tag.dto';
 
 @Injectable()
 export class EvaluationTagsService {
@@ -22,6 +23,13 @@ export class EvaluationTagsService {
     // evaluationTag.evaluationId = evaluationId;
     const createEvaluationTagDtoData = await evaluationTag.save();
     return new EvaluationTagDto(createEvaluationTagDtoData);
+  }
+
+  async update(id: number, updateEvaluationTagDto: UpdateEvaluationTagDto): Promise<EvaluationTagDto> {
+    const evaluationTag = await EvaluationTag.findByPk<EvaluationTag>(id);
+    this.exists(evaluationTag);
+    evaluationTag.update(updateEvaluationTagDto);
+    return new EvaluationTagDto(evaluationTag);
   }
 
   async remove(id: number): Promise<EvaluationTagDto> {

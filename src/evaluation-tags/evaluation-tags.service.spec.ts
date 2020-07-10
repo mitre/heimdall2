@@ -10,7 +10,10 @@ import {
   EVALUATION_TAG_1,
   CREATE_EVALUATION_TAG_DTO,
   CREATE_EVALUATION_TAG_DTO_MISSING_KEY,
-  CREATE_EVALUATION_TAG_DTO_MISSING_VALUE
+  CREATE_EVALUATION_TAG_DTO_MISSING_VALUE,
+  UPDATE_EVALUATION_TAG_DTO,
+  UPDATE_EVALUATION_TAG_DTO_MISSING_VALUE,
+  UPDATE_EVALUATION_TAG_DTO_MISSING_KEY
 } from '../../test/constants/evaluation-tags-test.contant';
 
 describe('EvaluationTagsService', () => {
@@ -91,6 +94,32 @@ describe('EvaluationTagsService', () => {
       await evaluationTagsService.create(CREATE_EVALUATION_TAG_DTO);
       foundEvaluationTags = await evaluationTagsService.findAll();
       expect(foundEvaluationTags.length).toBeGreaterThan(1);
+    });
+  });
+
+  describe('Update', () => {
+    it('should update given a valid dto', async () => {
+      const evaluationTag = await evaluationTagsService.create(CREATE_EVALUATION_TAG_DTO)
+      const updatedEvaluationTag = await evaluationTagsService.update(evaluationTag.id, UPDATE_EVALUATION_TAG_DTO);
+      expect(updatedEvaluationTag.key).toEqual(UPDATE_EVALUATION_TAG_DTO.key);
+      expect(updatedEvaluationTag.value).toEqual(UPDATE_EVALUATION_TAG_DTO.value);
+      expect(updatedEvaluationTag.updatedAt.valueOf()).not.toEqual(evaluationTag.updatedAt.valueOf());
+    });
+
+    it('should update only key', async () => {
+      const evaluationTag = await evaluationTagsService.create(CREATE_EVALUATION_TAG_DTO)
+      const updatedEvaluationTag = await evaluationTagsService.update(evaluationTag.id, UPDATE_EVALUATION_TAG_DTO_MISSING_VALUE);
+      expect(updatedEvaluationTag.key).toEqual(UPDATE_EVALUATION_TAG_DTO.key);
+      expect(updatedEvaluationTag.value).toEqual(evaluationTag.value);
+      expect(updatedEvaluationTag.updatedAt.valueOf()).not.toEqual(evaluationTag.updatedAt.valueOf());
+    });
+
+    it('should update only value', async () => {
+      const evaluationTag = await evaluationTagsService.create(CREATE_EVALUATION_TAG_DTO)
+      const updatedEvaluationTag = await evaluationTagsService.update(evaluationTag.id, UPDATE_EVALUATION_TAG_DTO_MISSING_KEY);
+      expect(updatedEvaluationTag.value).toEqual(UPDATE_EVALUATION_TAG_DTO.value);
+      expect(updatedEvaluationTag.key).toEqual(evaluationTag.key);
+      expect(updatedEvaluationTag.updatedAt.valueOf()).not.toEqual(evaluationTag.updatedAt.valueOf());
     });
   });
 
