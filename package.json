@@ -20,12 +20,13 @@
     "test:cov": "jest --silent --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --runInBand --silent --config ./test/jest-e2e.json",
-    "test:ci-cov": "jest --silent --coverage --runInBand"
+    "test:ci-cov": "jest --silent --coverage --runInBand",
+    "test:ui": "jest -c test/jest.config.integration.js --runInBand"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.13",
     "@nestjs/core": "^7.0.13",
-    "@nestjs/jwt": "^7.0.0",
+    "@nestjs/jwt": "^7.1.0",
     "@nestjs/passport": "^7.0.0",
     "@nestjs/platform-express": "^7.0.13",
     "@nestjs/sequelize": "^0.1.0",
@@ -35,11 +36,13 @@
     "class-validator": "^0.12.0",
     "dotenv": "^8.2.0",
     "helmet": "^3.22.0",
+    "jest-puppeteer": "^4.4.0",
     "js-levenshtein": "^1.1.6",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "pg": "^8.2.1",
+    "puppeteer": "^5.1.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.4",
@@ -52,13 +55,16 @@
     "@nestjs/cli": "^7.1.5",
     "@nestjs/schematics": "^7.0.0",
     "@nestjs/testing": "^7.0.13",
+    "@types/expect-puppeteer": "^4.4.3",
     "@types/express": "^4.17.6",
     "@types/jest": "^25.2.3",
+    "@types/jest-environment-puppeteer": "^4.3.2",
     "@types/js-levenshtein": "^1.1.0",
     "@types/mock-fs": "^4.10.0",
     "@types/node": "^13.13.6",
     "@types/passport-jwt": "^3.0.3",
     "@types/passport-local": "^1.0.33",
+    "@types/puppeteer": "^3.0.1",
     "@types/sequelize": "^4.28.9",
     "@types/supertest": "^2.0.9",
     "@types/validator": "^13.0.0",
@@ -90,7 +96,6 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node",
     "testTimeout": 10000
   }
 }
