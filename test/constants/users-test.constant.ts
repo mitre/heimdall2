@@ -154,6 +154,22 @@ export const TEST_USER_WITHOUT_TITLE: User = {
   updatedAt: new Date()
 };
 
+// @ts-ignore
+export const TEST_USER_WITH_INVALID_ROLE: User = {
+  email: 'abc@yahoo.com',
+  firstName: 'Test',
+  lastName: 'Dummy',
+  role: 'unknown',
+  // Encrypted password should match password, 'LETmeiN123$$$tP'
+  encryptedPassword:
+    '$2b$14$35oeK.h84XPIohhjTpwuV.NuFr/5oEzbg4mxLNppvfrA42ztXr2.O',
+  organization: 'Fake Org',
+  loginCount: 0,
+  lastLogin: new Date(),
+  createdAt: new Date(),
+  updatedAt: new Date()
+};
+
 export const NULL_USER: User = null;
 
 // @ts-ignore

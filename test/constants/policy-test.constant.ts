@@ -2,6 +2,12 @@ import {PolicyDto} from '../../src/authz/dto/policy.dto';
 
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 
+export const ADMIN_DELETE_USERS_POLICY_DTO: PolicyDto = {
+  role: 'admin',
+  actions: 'delete',
+  targets: 'users'
+};
+
 export const USER_DELETE_USERS_POLICY_DTO: PolicyDto = {
   role: 'user',
   actions: 'delete',
