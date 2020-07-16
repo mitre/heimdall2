@@ -70,7 +70,7 @@ describe('UsersService', () => {
   describe('Create', () => {
     it('should create a valid User', async () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      expect(user.id).toBeDefined;
+      expect(user.id).toBeDefined();
       expect(user.email).toEqual(USER_ONE_DTO.email);
       expect(user.firstName).toEqual(USER_ONE_DTO.firstName);
       expect(user.lastName).toEqual(USER_ONE_DTO.lastName);
