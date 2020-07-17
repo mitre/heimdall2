@@ -1,9 +1,20 @@
 import "expect-puppeteer";
 
-jest.setTimeout(10000)
+jest.setTimeout(5000)
 describe("Integration tests", () => {
   beforeAll(async () => {
-    await page.goto("http:/localhost:3000/login");
+    await page.goto("http:/localhost:3000/signup");
+  });
+
+  it("Registration", async () => {
+    await expect(page).toFillForm('form[name="signup_form"]', {
+      email: "test@mitre.com",
+      password: "aaa111bbb222ccc333DDD444!",
+      password_confirmation:"aaa111bbb222ccc333DDD444!",
+      role: "admin"
+    });
+    await expect(page).toClick("button", { text: "Register" });
+    await page.waitForNavigation();
   });
 
   it("Login", async () => {
@@ -12,20 +23,16 @@ describe("Integration tests", () => {
       password: "aaa111bbb222ccc333DDD444!"
     });
     await expect(page).toClick("button", { text: "Login" });
-  //  await page.waitForNavigation();
+    await page.waitForNavigation();
   });
 
   it("Upload Sample", async () => {
-    //await expect(page).toClick("a", { text: "Samples" });
-   // await page.waitForNavigation();
-   await page.waitForNavigation();
    await expect(page).toClick("button", { text: "Upload" });
    await page.waitForSelector("#sample_tab");
     await page.click("#sample_tab");
     await page.waitForSelector("#sample_button");
     await expect(page).toClick("#sample_button", { text: "" });
 
- //   expect(page).toClick("#samplebutton", { text: "" });
   });
 
 
