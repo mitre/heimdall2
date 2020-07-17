@@ -8,7 +8,7 @@ describe("Integration tests", () => {
 
   it("Registration", async () => {
     await expect(page).toFillForm('form[name="signup_form"]', {
-      email: "test@mitre.com",
+      email: "test@mitre.org",
       password: "aaa111bbb222ccc333DDD444!",
       password_confirmation:"aaa111bbb222ccc333DDD444!",
       role: "admin"
@@ -19,7 +19,7 @@ describe("Integration tests", () => {
 
   it("Login", async () => {
     await expect(page).toFillForm('form[name="login_form"]', {
-      login: "saurabjdc1@gmail.com",
+      login: "test@mitre.org",
       password: "aaa111bbb222ccc333DDD444!"
     });
     await expect(page).toClick("button", { text: "Login" });
