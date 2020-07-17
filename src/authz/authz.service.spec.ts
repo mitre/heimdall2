@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthzService } from './authz.service';
 import { DatabaseService } from '../../src/database/database.service';
 import { Policy } from './policy.model';
-import { SequelizeModule } from '@nestjs/sequelize';
+import { SequelizeModule, getModelToken } from '@nestjs/sequelize';
 import { DatabaseModule } from '../../src/database/database.module';
 import {
   ADMIN_DELETE_USERS_POLICY_DTO,
