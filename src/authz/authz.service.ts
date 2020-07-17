@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
-import { SimpleAbac } from 'simple-abac';
-import { Policy } from './policy.model';
-import { PolicyDto } from './dto/policy.dto';
+import {Injectable} from '@nestjs/common';
+import {InjectModel} from '@nestjs/sequelize';
+import {SimpleAbac} from 'simple-abac';
+import {Policy} from './policy.model';
+import {PolicyDto} from './dto/policy.dto';
 
 @Injectable()
 export class AuthzService {
@@ -34,7 +34,7 @@ export class AuthzService {
     }
     resource = resource.split('/')[1];
     const answer = await this.abac.can(
-      { role: subject.role },
+      {role: subject.role},
       action,
       resource,
       {}
