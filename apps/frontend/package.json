@@ -80,6 +80,7 @@
   },
   "devDependencies": {
     "@mdi/font": "^3.9.97",
+    "@mdi/js": "^5.3.45",
     "@types/chai": "^4.2.5",
     "@types/chai-as-promised": "^7.1.2",
     "@types/file-saver": "^2.0.1",
