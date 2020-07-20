@@ -19,7 +19,12 @@ export class AuthzService {
   private async loadAllPolicies() {
     const policies = await this.policyModel.findAll<Policy>();
     for (const policy of policies) {
-      this.abac.allow(new PolicyDto(policy));
+      const policyDto = new PolicyDto(policy);
+      this.abac.allow(policyDto);
+      console.log('Loaded Policy!');
+      console.log('\tRole: ' + policyDto.role);
+      console.log('\tAction: ' + policyDto.actions);
+      console.log('\tResource: ' + policyDto.targets + '\n');
     }
   }
 

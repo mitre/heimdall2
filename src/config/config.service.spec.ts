@@ -1,13 +1,12 @@
 import mock from 'mock-fs';
-import { ConfigService } from './config.service';
-import { ENV_MOCK_FILE } from '../../test/constants/env-test.constant';
+import {ConfigService} from './config.service';
+import {ENV_MOCK_FILE} from '../../test/constants/env-test.constant';
 
 /* If you run the test without --silent , you need to add console.log() before you mock out the 
 file system in the beforeAll() or it'll throw an error (this is a documented bug which can be 
 found at https://github.com/tschaub/mock-fs/issues/234). 
 If you run the test with --silent (which we do by default), you don't need the log statement. */
 describe('Config Service', () => {
-
   beforeAll(async () => {
     // console.log();
     // Used as an empty file system
@@ -26,9 +25,15 @@ describe('Config Service', () => {
       const consoleSpy = jest.spyOn(console, 'log');
       // Used to make sure logs are outputted
       new ConfigService();
-      expect(consoleSpy).toHaveBeenCalledWith('Unable to read configuration file `.env`!')
-      expect(consoleSpy).toHaveBeenCalledWith('Does the file exist and is it readable by the current user?')
-      expect(consoleSpy).toHaveBeenCalledWith('Falling back to default or undefined values!')
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Unable to read configuration file `.env`!'
+      );
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Does the file exist and is it readable by the current user?'
+      );
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Falling back to default or undefined values!'
+      );
     });
   });
 
@@ -47,7 +52,9 @@ describe('Config Service', () => {
       expect(configService.get('DATABASE_PORT')).toEqual('5432');
       expect(configService.get('DATABASE_USERNAME')).toEqual('postgres');
       expect(configService.get('DATABASE_PASSWORD')).toEqual('postgres');
-      expect(configService.get('DATABASE_NAME')).toEqual('heimdallts_jest_testing_service_db');
+      expect(configService.get('DATABASE_NAME')).toEqual(
+        'heimdallts_jest_testing_service_db'
+      );
       expect(configService.get('JWT_SECRET')).toEqual('abc123');
       expect(configService.get('NODE_ENV')).toEqual('test');
     });
@@ -64,10 +71,12 @@ describe('Config Service', () => {
       mock({
         '.env': mock.file({
           content: 'DATABASE_NAME=heimdallts_jest_testing_service_db',
-          mode: 0o000, // Set file system permissions to none
+          mode: 0o000 // Set file system permissions to none
         })
       });
-      expect(() => new ConfigService()).toThrowError('EACCES: permission denied, open \'.env\'');
+      expect(() => new ConfigService()).toThrowError(
+        "EACCES: permission denied, open '.env'"
+      );
     });
 
     it('should throw an error in the get function', () => {
@@ -75,7 +84,9 @@ describe('Config Service', () => {
         '.env': ENV_MOCK_FILE
       });
       const configService = new ConfigService();
-      jest.spyOn(configService, 'get').mockImplementationOnce(() => { throw new Error('') });
+      jest.spyOn(configService, 'get').mockImplementationOnce(() => {
+        throw new Error('');
+      });
       expect(() => configService.get('DATABASE_NAME')).toThrowError();
     });
   });
@@ -83,5 +94,5 @@ describe('Config Service', () => {
   afterAll(() => {
     // Restore the fs binding to the real file system
     mock.restore();
-  })
-})
+  });
+});

@@ -1,4 +1,5 @@
-export const ENV_MOCK_FILE = 'HEIMDALL_SERVER_PORT=8000\n' +
+export const ENV_MOCK_FILE =
+  'HEIMDALL_SERVER_PORT=8000\n' +
   'DATABASE_HOST=localhost\n' +
   'DATABASE_PORT=5432\n' +
   'DATABASE_USERNAME=postgres\n' +
