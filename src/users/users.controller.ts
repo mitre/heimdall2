@@ -51,7 +51,7 @@ export class UsersController {
       new PasswordChangePipe(),
       new PasswordComplexityPipe()
     )
-    updateUserDto: UpdateUserDto
+      updateUserDto: UpdateUserDto
   ) {
     return this.usersService.update(id, updateUserDto, role == 'admin');
   }
