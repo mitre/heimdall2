@@ -20,8 +20,13 @@ export class Evaluation extends Model<Evaluation> {
   @Column(DataType.BIGINT)
   id: number;
 
+  @AllowNull(false)
   @Column
   version: string;
+
+  @AllowNull(false)
+  @Column(DataType.JSON)
+  data: Object;
 
   @CreatedAt
   @AllowNull(false)
