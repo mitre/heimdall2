@@ -21,6 +21,7 @@ export class EvaluationsService {
   async create(createEvaluationDto: CreateEvaluationDto): Promise<EvaluationDto> {
     const evaluation = new Evaluation();
     evaluation.version = createEvaluationDto.version;
+    evaluation.data = createEvaluationDto.data;
     const evaluationData = await evaluation.save();
     return new EvaluationDto(evaluationData);
   }
@@ -29,7 +30,6 @@ export class EvaluationsService {
     const evaluation = await this.evaluationModel.findByPk<Evaluation>(id);
     this.exists(evaluation);
     evaluation.update(updateEvaluationDto);
-    evaluation.version = updateEvaluationDto.version || evaluation.version;
     const evaluationData = await evaluation.save();
     return new EvaluationDto(evaluationData);
   }
