@@ -1,7 +1,10 @@
-import { IsOptional } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 export class CreateEvaluationDto {
 
-  @IsOptional()
+  @IsNotEmpty()
   readonly version: string;
+
+  @IsNotEmpty()
+  readonly data: Object;
 }
