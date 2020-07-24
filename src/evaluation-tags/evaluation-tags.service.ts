@@ -16,13 +16,12 @@ export class EvaluationTagsService {
     return evaluationTags.map(evaluationTag => new EvaluationTagDto(evaluationTag));
   }
 
-  async create(createEvaluationTagDto: CreateEvaluationTagDto): Promise<EvaluationTagDto> {
+  async create(evaluationId: number, createEvaluationTagDto: CreateEvaluationTagDto): Promise<EvaluationTag> {
     const evaluationTag = new EvaluationTag();
     evaluationTag.key = createEvaluationTagDto.key;
     evaluationTag.value = createEvaluationTagDto.value;
-    // evaluationTag.evaluationId = evaluationId;
-    const createEvaluationTagDtoData = await evaluationTag.save();
-    return new EvaluationTagDto(createEvaluationTagDtoData);
+    evaluationTag.evaluationId = evaluationId;
+    return await evaluationTag.save();
   }
 
   async update(id: number, updateEvaluationTagDto: UpdateEvaluationTagDto): Promise<EvaluationTagDto> {
@@ -37,6 +36,10 @@ export class EvaluationTagsService {
     this.exists(evaluationTag);
     await evaluationTag.destroy();
     return new EvaluationTagDto(evaluationTag);
+  }
+
+  objectFromDto(createEvaluationTagDto: CreateEvaluationTagDto): EvaluationTag {
+    return new EvaluationTag(createEvaluationTagDto);
   }
 
   exists(evaluationTag: EvaluationTag): boolean {

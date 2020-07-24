@@ -66,9 +66,8 @@ describe('Authz Service', () => {
 
   describe('Tests logging of the policies', () => {
     let newModule: TestingModule;
-    let newAuthzService: AuthzService;
     // Used to make sure policies logs are printed
-    let consoleSpy = jest.spyOn(console, 'log');
+    const consoleSpy = jest.spyOn(console, 'log');
 
     beforeAll(async () => {
       newModule = await Test.createTestingModule({
@@ -84,8 +83,6 @@ describe('Authz Service', () => {
           }
         ]
       }).compile();
-
-      newAuthzService = newModule.get<AuthzService>(AuthzService);
     });
 
     it('should log the loaded policies', async () => {

@@ -26,7 +26,7 @@ export class Evaluation extends Model<Evaluation> {
 
   @AllowNull(false)
   @Column(DataType.JSON)
-  data: Object;
+  data: Record<string, any>;
 
   @CreatedAt
   @AllowNull(false)
