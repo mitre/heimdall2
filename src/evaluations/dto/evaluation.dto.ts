@@ -1,4 +1,4 @@
-import { Evaluation } from '../evaluation.model';
+import {Evaluation} from '../evaluation.model';
 import {EvaluationTagDto} from '../../evaluation-tags/dto/evaluation-tag.dto';
 
 export class EvaluationDto {

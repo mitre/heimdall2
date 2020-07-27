@@ -39,5 +39,5 @@ export class Evaluation extends Model<Evaluation> {
   updatedAt: Date;
 
   @HasMany(() => EvaluationTag)
-  evaluationTags: EvaluationTag[]
+  evaluationTags: EvaluationTag[];
 }

@@ -75,7 +75,7 @@ describe('Config Service', () => {
         })
       });
       expect(() => new ConfigService()).toThrowError(
-        'EACCES: permission denied, open \'.env\''
+        "EACCES: permission denied, open '.env'"
       );
     });
 

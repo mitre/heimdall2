@@ -1,4 +1,14 @@
-import {Table, Model, AutoIncrement, AllowNull, PrimaryKey, Column, DataType, BelongsTo, ForeignKey} from 'sequelize-typescript';
+import {
+  Table,
+  Model,
+  AutoIncrement,
+  AllowNull,
+  PrimaryKey,
+  Column,
+  DataType,
+  BelongsTo,
+  ForeignKey
+} from 'sequelize-typescript';
 import {Evaluation} from '../evaluations/evaluation.model';
 
 @Table

@@ -21,23 +21,35 @@ export class EvaluationsService {
     return evaluations.map(evaluation => new EvaluationDto(evaluation));
   }
 
-  async create(createEvaluationDto: CreateEvaluationDto): Promise<EvaluationDto> {
+  async create(
+    createEvaluationDto: CreateEvaluationDto
+  ): Promise<EvaluationDto> {
     const evaluation = new Evaluation();
     evaluation.version = createEvaluationDto.version;
     evaluation.data = createEvaluationDto.data;
     const evaluationData = await evaluation.save();
     const evaluationTagsPromises = [];
-    createEvaluationDto.evaluationTags.forEach(async (createEvaluationTagDto) => {
-      evaluationTagsPromises.push(this.evaluationTagsService.create(evaluationData.id, this.evaluationTagsService.objectFromDto(createEvaluationTagDto)))
+    createEvaluationDto.evaluationTags.forEach(async createEvaluationTagDto => {
+      evaluationTagsPromises.push(
+        this.evaluationTagsService.create(
+          evaluationData.id,
+          this.evaluationTagsService.objectFromDto(createEvaluationTagDto)
+        )
+      );
     });
     const evaluationTags = await Promise.all(evaluationTagsPromises);
-    console.log(evaluationTags)
+    console.log(evaluationTags);
     evaluationData.evaluationTags = evaluationTags;
     return new EvaluationDto(await evaluationData.save());
   }
 
-  async update(id: number, updateEvaluationDto: UpdateEvaluationDto): Promise<EvaluationDto> {
-    const evaluation = await this.evaluationModel.findByPk<Evaluation>(id, {include: [EvaluationTag]});
+  async update(
+    id: number,
+    updateEvaluationDto: UpdateEvaluationDto
+  ): Promise<EvaluationDto> {
+    const evaluation = await this.evaluationModel.findByPk<Evaluation>(id, {
+      include: [EvaluationTag]
+    });
     this.exists(evaluation);
     evaluation.update(updateEvaluationDto);
     const evaluationData = await evaluation.save();
@@ -45,14 +57,18 @@ export class EvaluationsService {
   }
 
   async remove(id: number): Promise<EvaluationDto> {
-    const evaluation = await this.evaluationModel.findByPk<Evaluation>(id);
+    const evaluation = await this.evaluationModel.findByPk<Evaluation>(id, {
+      include: [EvaluationTag]
+    });
     this.exists(evaluation);
     await evaluation.destroy();
     return new EvaluationDto(evaluation);
   }
 
   async findById(id: number): Promise<EvaluationDto> {
-    const evaluation = await this.evaluationModel.findByPk<Evaluation>(id);
+    const evaluation = await this.evaluationModel.findByPk<Evaluation>(id, {
+      include: [EvaluationTag]
+    });
     this.exists(evaluation);
     return new EvaluationDto(evaluation);
   }
@@ -64,5 +80,4 @@ export class EvaluationsService {
       return true;
     }
   }
-
 }

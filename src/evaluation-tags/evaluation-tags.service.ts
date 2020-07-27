@@ -7,16 +7,24 @@ import {UpdateEvaluationTagDto} from './dto/update-evaluation-tag.dto';
 
 @Injectable()
 export class EvaluationTagsService {
-  constructor(@InjectModel(EvaluationTag)
+  constructor(
+    @InjectModel(EvaluationTag)
     private evaluationTagModel: typeof EvaluationTag
   ) {}
 
   async findAll(): Promise<EvaluationTagDto[]> {
-    const evaluationTags = await this.evaluationTagModel.findAll<EvaluationTag>();
-    return evaluationTags.map(evaluationTag => new EvaluationTagDto(evaluationTag));
+    const evaluationTags = await this.evaluationTagModel.findAll<
+      EvaluationTag
+    >();
+    return evaluationTags.map(
+      evaluationTag => new EvaluationTagDto(evaluationTag)
+    );
   }
 
-  async create(evaluationId: number, createEvaluationTagDto: CreateEvaluationTagDto): Promise<EvaluationTag> {
+  async create(
+    evaluationId: number,
+    createEvaluationTagDto: CreateEvaluationTagDto
+  ): Promise<EvaluationTag> {
     const evaluationTag = new EvaluationTag();
     evaluationTag.key = createEvaluationTagDto.key;
     evaluationTag.value = createEvaluationTagDto.value;
@@ -24,7 +32,10 @@ export class EvaluationTagsService {
     return await evaluationTag.save();
   }
 
-  async update(id: number, updateEvaluationTagDto: UpdateEvaluationTagDto): Promise<EvaluationTagDto> {
+  async update(
+    id: number,
+    updateEvaluationTagDto: UpdateEvaluationTagDto
+  ): Promise<EvaluationTagDto> {
     const evaluationTag = await EvaluationTag.findByPk<EvaluationTag>(id);
     this.exists(evaluationTag);
     evaluationTag.update(updateEvaluationTagDto);
@@ -32,7 +43,9 @@ export class EvaluationTagsService {
   }
 
   async remove(id: number): Promise<EvaluationTagDto> {
-    const evaluationTag = await this.evaluationTagModel.findByPk<EvaluationTag>(id);
+    const evaluationTag = await this.evaluationTagModel.findByPk<EvaluationTag>(
+      id
+    );
     this.exists(evaluationTag);
     await evaluationTag.destroy();
     return new EvaluationTagDto(evaluationTag);

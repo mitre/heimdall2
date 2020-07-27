@@ -16,9 +16,7 @@ import {
   UPDATE_EVALUATION_TAG_DTO_MISSING_VALUE,
   UPDATE_EVALUATION_TAG_DTO_MISSING_KEY
 } from '../../test/constants/evaluation-tags-test.contant';
-import {
-  EVALUATION_1
-} from '../../test/constants/evaluations-test.constant';
+import {EVALUATION_1} from '../../test/constants/evaluations-test.constant';
 
 describe('EvaluationTagsService', () => {
   let evaluationTagsService: EvaluationTagsService;
@@ -27,14 +25,19 @@ describe('EvaluationTagsService', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [DatabaseModule, SequelizeModule.forFeature([EvaluationTag, Evaluation])],
+      imports: [
+        DatabaseModule,
+        SequelizeModule.forFeature([EvaluationTag, Evaluation])
+      ],
       providers: [DatabaseService, EvaluationTagsService, EvaluationsService]
     }).compile();
 
-    evaluationTagsService = module.get<EvaluationTagsService>(EvaluationTagsService);
+    evaluationTagsService = module.get<EvaluationTagsService>(
+      EvaluationTagsService
+    );
     evaluationsService = module.get<EvaluationsService>(EvaluationsService);
     databaseService = module.get<DatabaseService>(DatabaseService);
-  })
+  });
 
   afterAll(async () => {
     await databaseService.cleanAll();
@@ -62,7 +65,10 @@ describe('EvaluationTagsService', () => {
   describe('Create', () => {
     it('should create a valid EvaluationTag', async () => {
       const evaluation = await evaluationsService.create(EVALUATION_1);
-      const evaluationTag = await evaluationTagsService.create(evaluation.id, CREATE_EVALUATION_TAG_DTO);
+      const evaluationTag = await evaluationTagsService.create(
+        evaluation.id,
+        CREATE_EVALUATION_TAG_DTO
+      );
       expect(evaluationTag.id).toBeDefined();
       expect(evaluationTag.evaluationId).toEqual(evaluation.id);
       expect(evaluationTag.createdAt).toBeDefined();
@@ -76,17 +82,27 @@ describe('EvaluationTagsService', () => {
         expect.assertions(1);
         const evaluation = await evaluationsService.create(EVALUATION_1);
         await expect(
-          evaluationTagsService.create(evaluation.id, CREATE_EVALUATION_TAG_DTO_MISSING_KEY)
-        ).rejects.toThrow('notNull Violation: EvaluationTag.key cannot be null');
+          evaluationTagsService.create(
+            evaluation.id,
+            CREATE_EVALUATION_TAG_DTO_MISSING_KEY
+          )
+        ).rejects.toThrow(
+          'notNull Violation: EvaluationTag.key cannot be null'
+        );
       });
 
       it('should throw an error with value', async () => {
         expect.assertions(1);
         const evaluation = await evaluationsService.create(EVALUATION_1);
         await expect(
-          evaluationTagsService.create(evaluation.id, CREATE_EVALUATION_TAG_DTO_MISSING_VALUE)
-        ).rejects.toThrow('notNull Violation: EvaluationTag.value cannot be null');
-      })
+          evaluationTagsService.create(
+            evaluation.id,
+            CREATE_EVALUATION_TAG_DTO_MISSING_VALUE
+          )
+        ).rejects.toThrow(
+          'notNull Violation: EvaluationTag.value cannot be null'
+        );
+      });
     });
   });
 
@@ -98,11 +114,17 @@ describe('EvaluationTagsService', () => {
       expect(foundEvaluationTags).toBeDefined();
       expect(foundEvaluationTags.length).toEqual(0);
       // One existing tag
-      await evaluationTagsService.create(evaluation.id, CREATE_EVALUATION_TAG_DTO);
+      await evaluationTagsService.create(
+        evaluation.id,
+        CREATE_EVALUATION_TAG_DTO
+      );
       foundEvaluationTags = await evaluationTagsService.findAll();
       expect(foundEvaluationTags.length).toEqual(1);
       // Multiple existing tags
-      await evaluationTagsService.create(evaluation.id, CREATE_EVALUATION_TAG_DTO);
+      await evaluationTagsService.create(
+        evaluation.id,
+        CREATE_EVALUATION_TAG_DTO
+      );
       foundEvaluationTags = await evaluationTagsService.findAll();
       expect(foundEvaluationTags.length).toBeGreaterThan(1);
     });
@@ -111,44 +133,77 @@ describe('EvaluationTagsService', () => {
   describe('Update', () => {
     it('should update given a valid dto', async () => {
       const evaluation = await evaluationsService.create(EVALUATION_1);
-      const evaluationTag = await evaluationTagsService.create(evaluation.id, CREATE_EVALUATION_TAG_DTO)
-      const updatedEvaluationTag = await evaluationTagsService.update(evaluationTag.id, UPDATE_EVALUATION_TAG_DTO);
+      const evaluationTag = await evaluationTagsService.create(
+        evaluation.id,
+        CREATE_EVALUATION_TAG_DTO
+      );
+      const updatedEvaluationTag = await evaluationTagsService.update(
+        evaluationTag.id,
+        UPDATE_EVALUATION_TAG_DTO
+      );
       expect(updatedEvaluationTag.key).toEqual(UPDATE_EVALUATION_TAG_DTO.key);
-      expect(updatedEvaluationTag.value).toEqual(UPDATE_EVALUATION_TAG_DTO.value);
-      expect(updatedEvaluationTag.updatedAt.valueOf()).not.toEqual(evaluationTag.updatedAt.valueOf());
+      expect(updatedEvaluationTag.value).toEqual(
+        UPDATE_EVALUATION_TAG_DTO.value
+      );
+      expect(updatedEvaluationTag.updatedAt.valueOf()).not.toEqual(
+        evaluationTag.updatedAt.valueOf()
+      );
     });
 
     it('should update only key', async () => {
       const evaluation = await evaluationsService.create(EVALUATION_1);
-      const evaluationTag = await evaluationTagsService.create(evaluation.id, CREATE_EVALUATION_TAG_DTO)
-      const updatedEvaluationTag = await evaluationTagsService.update(evaluationTag.id, UPDATE_EVALUATION_TAG_DTO_MISSING_VALUE);
+      const evaluationTag = await evaluationTagsService.create(
+        evaluation.id,
+        CREATE_EVALUATION_TAG_DTO
+      );
+      const updatedEvaluationTag = await evaluationTagsService.update(
+        evaluationTag.id,
+        UPDATE_EVALUATION_TAG_DTO_MISSING_VALUE
+      );
       expect(updatedEvaluationTag.key).toEqual(UPDATE_EVALUATION_TAG_DTO.key);
       expect(updatedEvaluationTag.value).toEqual(evaluationTag.value);
-      expect(updatedEvaluationTag.updatedAt.valueOf()).not.toEqual(evaluationTag.updatedAt.valueOf());
+      expect(updatedEvaluationTag.updatedAt.valueOf()).not.toEqual(
+        evaluationTag.updatedAt.valueOf()
+      );
     });
 
     it('should update only value', async () => {
       const evaluation = await evaluationsService.create(EVALUATION_1);
-      const evaluationTag = await evaluationTagsService.create(evaluation.id, CREATE_EVALUATION_TAG_DTO)
-      const updatedEvaluationTag = await evaluationTagsService.update(evaluationTag.id, UPDATE_EVALUATION_TAG_DTO_MISSING_KEY);
-      expect(updatedEvaluationTag.value).toEqual(UPDATE_EVALUATION_TAG_DTO.value);
+      const evaluationTag = await evaluationTagsService.create(
+        evaluation.id,
+        CREATE_EVALUATION_TAG_DTO
+      );
+      const updatedEvaluationTag = await evaluationTagsService.update(
+        evaluationTag.id,
+        UPDATE_EVALUATION_TAG_DTO_MISSING_KEY
+      );
+      expect(updatedEvaluationTag.value).toEqual(
+        UPDATE_EVALUATION_TAG_DTO.value
+      );
       expect(updatedEvaluationTag.key).toEqual(evaluationTag.key);
-      expect(updatedEvaluationTag.updatedAt.valueOf()).not.toEqual(evaluationTag.updatedAt.valueOf());
+      expect(updatedEvaluationTag.updatedAt.valueOf()).not.toEqual(
+        evaluationTag.updatedAt.valueOf()
+      );
     });
   });
 
   describe('Remove', () => {
     it('should remove an existing tag', async () => {
       const evaluation = await evaluationsService.create(EVALUATION_1);
-      const evaluationTag = await evaluationTagsService.create(evaluation.id, CREATE_EVALUATION_TAG_DTO);
+      const evaluationTag = await evaluationTagsService.create(
+        evaluation.id,
+        CREATE_EVALUATION_TAG_DTO
+      );
       expect(evaluationTag).toBeDefined();
-      const removedEvaluationTag = await evaluationTagsService.remove(evaluationTag.id);
+      const removedEvaluationTag = await evaluationTagsService.remove(
+        evaluationTag.id
+      );
       expect(removedEvaluationTag.key).toEqual(evaluationTag.key);
       expect(removedEvaluationTag.value).toEqual(evaluationTag.value);
-      const foundEvaluationTag = await EvaluationTag.findByPk<EvaluationTag>(evaluationTag.id)
+      const foundEvaluationTag = await EvaluationTag.findByPk<EvaluationTag>(
+        evaluationTag.id
+      );
       expect(foundEvaluationTag).toEqual(null);
     });
   });
 });
-
-
