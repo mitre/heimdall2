@@ -1,20 +1,19 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
-import {InjectModel} from '@nestjs/sequelize';
-import {Evaluation} from './evaluation.model';
-import {EvaluationDto} from './dto/evaluation.dto';
-import {CreateEvaluationDto} from './dto/create-evaluation.dto';
-import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
-import {EvaluationTagsService} from '../evaluation-tags/evaluation-tags.service';
-import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { Evaluation } from './evaluation.model';
+import { EvaluationDto } from './dto/evaluation.dto';
+import { CreateEvaluationDto } from './dto/create-evaluation.dto';
+import { UpdateEvaluationDto } from './dto/update-evaluation.dto';
+import { EvaluationTagsService } from '../evaluation-tags/evaluation-tags.service';
+import { EvaluationTag } from '../evaluation-tags/evaluation-tag.model';
 
 @Injectable()
 export class EvaluationsService {
   constructor(
     @InjectModel(Evaluation)
     private evaluationModel: typeof Evaluation,
-    @InjectModel(EvaluationTag)
     private evaluationTagsService: EvaluationTagsService
-  ) {}
+  ) { }
 
   async findAll(): Promise<EvaluationDto[]> {
     const evaluations = await this.evaluationModel.findAll<Evaluation>();
@@ -31,14 +30,13 @@ export class EvaluationsService {
     const evaluationTagsPromises = [];
     createEvaluationDto.evaluationTags.forEach(async createEvaluationTagDto => {
       evaluationTagsPromises.push(
-        this.evaluationTagsService.create(
+        await this.evaluationTagsService.create(
           evaluationData.id,
           this.evaluationTagsService.objectFromDto(createEvaluationTagDto)
         )
       );
     });
     const evaluationTags = await Promise.all(evaluationTagsPromises);
-    console.log(evaluationTags);
     evaluationData.evaluationTags = evaluationTags;
     return new EvaluationDto(await evaluationData.save());
   }
