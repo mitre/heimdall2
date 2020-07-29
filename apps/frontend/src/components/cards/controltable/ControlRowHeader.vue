@@ -11,7 +11,7 @@
         <v-card-text class="pa-2 font-weight-bold">
           {{ control.root.hdf.status }}
           <v-icon class="float-right">
-            {{ expanded ? 'mdi-chevron-down' : 'mdi-chevron-up' }}
+            {{ expanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
           </v-icon>
         </v-card-text>
       </v-card>
