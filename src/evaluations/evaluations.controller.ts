@@ -1,9 +1,18 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, UseGuards } from '@nestjs/common';
-import { EvaluationDto } from './dto/evaluation.dto';
-import { CreateEvaluationDto } from './dto/create-evaluation.dto';
-import { UpdateEvaluationDto } from './dto/update-evaluation.dto';
-import { EvaluationsService } from './evaluations.service';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+  UseGuards
+} from '@nestjs/common';
+import {EvaluationDto} from './dto/evaluation.dto';
+import {CreateEvaluationDto} from './dto/create-evaluation.dto';
+import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
+import {EvaluationsService} from './evaluations.service';
+import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 
 @Controller('evaluations')
 @UseGuards(JwtAuthGuard)
@@ -20,17 +29,22 @@ export class EvaluationsController {
   }
 
   @Post()
-  async create(@Body() createEvaluationDto: CreateEvaluationDto): Promise<EvaluationDto> {
+  async create(
+    @Body() createEvaluationDto: CreateEvaluationDto
+  ): Promise<EvaluationDto> {
     return this.evaluationsService.create(createEvaluationDto);
   }
 
   @Put(':id')
-  async update(@Param('id') id: number, @Body() updateEvaluationDto: UpdateEvaluationDto): Promise<UpdateEvaluationDto> {
+  async update(
+    @Param('id') id: number,
+    @Body() updateEvaluationDto: UpdateEvaluationDto
+  ): Promise<UpdateEvaluationDto> {
     return this.evaluationsService.update(id, updateEvaluationDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: number): Promise<EvaluationDto> {
-    return this.evaluationsService.remove(id)
+    return this.evaluationsService.remove(id);
   }
 }
