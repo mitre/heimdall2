@@ -1,20 +1,21 @@
 export async function register(page, USER) {
-    await expect(page).toFillForm('form[name="signup_form"]', {
-        email: USER.email,
-        password: USER.password,
-        password_confirmation: USER.passwordConfirmation,
-        role: USER.role
-      });
-       const wait =  page.waitForNavigation();
-       expect(page).toClick("button", { text: "Register" })
-       const response = await page.waitForResponse(res => res.url() === "http://localhost:3000/users" )
-      if(response.status() == 200){
-      await wait 
-      }
-      const data = await response.status()
-      return data; 
+  await expect(page).toFillForm('form[name="signup_form"]', {
+    email: USER.email,
+    password: USER.password,
+    password_confirmation: USER.passwordConfirmation,
+    role: USER.role
+  });
+  const wait = page.waitForNavigation();
+  expect(page).toClick('button', {text: 'Register'});
+  const response = await page.waitForResponse(
+    res => res.url() === 'http://localhost:3000/users'
+  );
+  if (response.status() == 200) {
+    await wait;
+  }
+  const data = await response.status();
+  return data;
 }
-
 
 /*
 export async function login( USER) {
