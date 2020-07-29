@@ -98,12 +98,12 @@ export default class ComplianceChart extends ComplianceChartProps {
   get series(): number[] {
     // Get access to the status counts, to compute compliance percentages
     let counts = getModule(StatusCountModule, this.$store);
-    let passed = counts.passed(this.filter);
+    let passed = counts.countOf(this.filter, 'Passed');
     let total =
       passed +
-      counts.failed(this.filter) +
-      counts.profileError(this.filter) +
-      counts.notReviewed(this.filter);
+      counts.countOf(this.filter, 'Failed') +
+      counts.countOf(this.filter, 'Profile Error') +
+      counts.countOf(this.filter, 'Not Reviewed');
     if (total == 0) {
       return [0];
     } else {

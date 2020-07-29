@@ -42,7 +42,7 @@
       </template>
 
       <template #tags>
-        <ColumnHeader text="Tags" sort="disabled" />
+        <ColumnHeader text="800-53 Controls & CCIs" sort="disabled" />
       </template>
     </ResponsiveRowSwitch>
 

@@ -9,8 +9,11 @@ import DataStore from '../../src/store/data_store';
 import {getModule} from 'vuex-module-decorators';
 import {AllRaw} from '../util/fs';
 import FilteredDataModule from '@/store/data_filters';
-import StatusCountModule, {StatusHash} from '@/store/status_counts';
-import {readFileSync} from 'fs';
+import StatusCountModule, {ControlStatusHash} from '@/store/status_counts';
+import {readFileSync, fstat, writeFileSync} from 'fs';
+import {NIST_DESCRIPTIONS} from '@/utilities/nist_util';
+import {nist} from 'inspecjs';
+import {is_control} from 'inspecjs/dist/nist';
 // import { shallowMount } from "@vue/test-utils";
 
 describe('Parsing', () => {
@@ -56,7 +59,7 @@ describe('Parsing', () => {
       let counts: any = JSON.parse(count_file_content);
 
       // Get the expected counts
-      let expected: StatusHash = {
+      let expected: ControlStatusHash = {
         Failed: counts.failed.total,
         Passed: counts.passed.total,
         'From Profile': 0,
@@ -76,9 +79,21 @@ describe('Parsing', () => {
         fromFile: file.unique_id
       });
 
+      let {
+        PassedTests,
+        FailedOutOf,
+        FailedTests,
+        NotApplicableTests,
+        NotReviewedTests,
+        ErroredOutOf,
+        ErroredTests,
+        TotalTests,
+        ...actual_stripped
+      } = actual;
+
       let actual_with_filename = {
         filename: file.filename,
-        ...actual
+        ...actual_stripped
       };
 
       // Compare 'em

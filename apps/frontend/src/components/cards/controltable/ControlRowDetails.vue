@@ -54,8 +54,8 @@
               </template>
             </v-clamp>
             <ControlRowCol
-              v-for="(result, index) in control.root.data.results"
-              :key="index"
+              v-for="(result, index) in control.root.hdf.segments"
+              :key="'col' + index"
               :class="zebra(index)"
               :result="result"
               :statusCode="result.status"
@@ -67,7 +67,7 @@
             <v-container fluid>
               <!-- Create a row for each detail -->
               <template v-for="(detail, index) in details">
-                <v-row :key="index" :class="zebra(index)">
+                <v-row :key="'tab' + index" :class="zebra(index)">
                   <v-col cols="12" :class="detail.class">
                     <h3>{{ detail.name }}:</h3>
                     <h4 class="mono preserve-whitespace">{{ detail.value }}</h4>
@@ -149,6 +149,17 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
     return this.control;
   }
 
+  get cciControlString(): string | null {
+    let cci = this._control.hdf.wraps.tags.cci;
+    if (!cci) {
+      return null;
+    } else if (Array.isArray(cci)) {
+      return cci.join(', ');
+    } else {
+      return cci;
+    }
+  }
+
   get main_desc(): string {
     if (this._control.data.desc) {
       return this._control.data.desc.trim();
@@ -208,8 +219,12 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
         value: c.data.impact
       },
       {
-        name: 'Nist',
+        name: 'Nist controls',
         value: c.hdf.raw_nist_tags.join(', ')
+      },
+      {
+        name: 'CCI controls',
+        value: this.cciControlString
       },
       {
         name: 'Check Text',

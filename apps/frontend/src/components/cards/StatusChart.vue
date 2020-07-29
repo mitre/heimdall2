@@ -63,11 +63,11 @@ export default class StatusChart extends StatusChartProps {
   get series(): number[] {
     let counts: StatusCountModule = getModule(StatusCountModule, this.$store);
     return [
-      counts.passed(this.filter),
-      counts.failed(this.filter),
-      counts.notApplicable(this.filter),
-      counts.notReviewed(this.filter),
-      counts.profileError(this.filter)
+      counts.countOf(this.filter, 'Passed'),
+      counts.countOf(this.filter, 'Failed'),
+      counts.countOf(this.filter, 'Not Applicable'),
+      counts.countOf(this.filter, 'Not Reviewed'),
+      counts.countOf(this.filter, 'Profile Error')
     ];
   }
 
