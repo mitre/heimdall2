@@ -1,7 +1,7 @@
 import {Test, TestingModule} from '@nestjs/testing';
 import {EvaluationTagsController} from './evaluation-tags.controller';
 import {EvaluationTagsService} from './evaluation-tags.service';
-import {EVALUATION_TAG_DTO} from '../../test/constants/evaluation-tags-test.contant';
+import {EVALUATION_TAG_DTO} from '../../test/constants/evaluation-tags-test.constant';
 
 describe('EvaluationTagsController', () => {
   let evaluationTagsController: EvaluationTagsController;
