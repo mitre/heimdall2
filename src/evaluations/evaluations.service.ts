@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Evaluation } from './evaluation.model';
 import { EvaluationDto } from './dto/evaluation.dto';
@@ -6,13 +6,15 @@ import { CreateEvaluationDto } from './dto/create-evaluation.dto';
 import { UpdateEvaluationDto } from './dto/update-evaluation.dto';
 import { EvaluationTagsService } from '../evaluation-tags/evaluation-tags.service';
 import { EvaluationTag } from '../evaluation-tags/evaluation-tag.model';
+import { DatabaseService } from '../database/database.service';
 
 @Injectable()
 export class EvaluationsService {
   constructor(
     @InjectModel(Evaluation)
     private evaluationModel: typeof Evaluation,
-    private evaluationTagsService: EvaluationTagsService
+    private evaluationTagsService: EvaluationTagsService,
+    private databaseService: DatabaseService
   ) { }
 
   async findAll(): Promise<EvaluationDto[]> {
@@ -59,7 +61,14 @@ export class EvaluationsService {
       include: [EvaluationTag]
     });
     this.exists(evaluation);
-    await evaluation.destroy();
+    await this.databaseService.sequelize.transaction(async (transaction) => {
+      await Promise.all([
+        evaluation.evaluationTags.map(async (evaluationTag) => {
+          await evaluationTag.destroy({transaction});
+        })
+      ]);
+      return await evaluation.destroy({transaction});
+    });
     return new EvaluationDto(evaluation);
   }
 
