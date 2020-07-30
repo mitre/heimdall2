@@ -30,17 +30,13 @@ export class EvaluationsService {
     const evaluation = new Evaluation();
     evaluation.version = createEvaluationDto.version;
     evaluation.data = createEvaluationDto.data;
+    // Save the evaluation with no tags to get an ID.
     const evaluationData = await evaluation.save();
-    const evaluationTagsPromises = [];
-    createEvaluationDto.evaluationTags.forEach(async createEvaluationTagDto => {
-      evaluationTagsPromises.push(
-        await this.evaluationTagsService.create(
-          evaluationData.id,
-          this.evaluationTagsService.objectFromDto(createEvaluationTagDto)
-        )
-      );
+    const evaluationTagsPromises = createEvaluationDto.evaluationTags.map(async (createEvaluationTagDto) => {
+      return await this.evaluationTagsService.create(evaluationData.id, this.evaluationTagsService.objectFromDto(createEvaluationTagDto))
     });
-    const evaluationTags = await Promise.all(evaluationTagsPromises);
+
+    const evaluationTags = await Promise.all(evaluationTagsPromises)
     evaluationData.evaluationTags = evaluationTags;
     return new EvaluationDto(await evaluationData.save());
   }
