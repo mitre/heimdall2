@@ -16,6 +16,7 @@ export const EVALUATION_TAG_DTO: EvaluationTagDto = {
   id: 10001,
   key: 'key string',
   value: 'value string',
+  evaluationId: 1,
   createdAt: new Date(),
   updatedAt: new Date()
 };
