@@ -15,7 +15,7 @@ import {
   UPDATE_EVALUATION_TAG_DTO,
   UPDATE_EVALUATION_TAG_DTO_MISSING_VALUE,
   UPDATE_EVALUATION_TAG_DTO_MISSING_KEY
-} from '../../test/constants/evaluation-tags-test.contant';
+} from '../../test/constants/evaluation-tags-test.constant';
 import {EVALUATION_1} from '../../test/constants/evaluations-test.constant';
 
 describe('EvaluationTagsService', () => {
