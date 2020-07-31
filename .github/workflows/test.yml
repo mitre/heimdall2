@@ -60,5 +60,11 @@ jobs:
      - name: Run application
        run: npm run start &
        
+     - name: sleep 30
+       run: sleep 30
+       
+     - name: run curl
+       run: curl localhost:3000
+       
      - name: Run e2e UI tests
        run: npm run test:ui
