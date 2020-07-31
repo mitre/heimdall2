@@ -51,10 +51,10 @@ describe('Login and Logout', () => {
     await expect(page.url()).toBe('http://localhost:3000/login');
 
     await page.waitForFunction(
-      'document.querySelector("body").innerText.includes("ERROR: Unauthorized")'
+      'document.querySelector("body").innerText.includes("ERROR: User with given id not found")'
     );
     const text = await page.evaluate(() => document.body.innerHTML);
-    await expect(text).toContain('ERROR: Unauthorized');
+    await expect(text).toContain('ERROR: User with given id not found');
   });
 
   it('Logout working', async () => {
