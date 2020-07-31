@@ -2,7 +2,7 @@
   <v-row>
     <v-col cols="12" sm="12" md="12" lg="1" xl="1">
       <v-layout class="pl-2" fill-height justify-center align-center>
-        <v-btn :color="status_color" block depressed>
+        <v-btn class="unclickable-button" :color="status_color" block depressed>
           <h3>{{ result.status.toUpperCase() }}</h3>
         </v-btn>
       </v-layout>
@@ -131,5 +131,9 @@ export default class ControlRowCol extends ControlRowColProps {
 <style lang="scss" scoped>
 .right {
   margin-left: -1px;
+}
+
+button.unclickable-button {
+  pointer-events: none;
 }
 </style>
