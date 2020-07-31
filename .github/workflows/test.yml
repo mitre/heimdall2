@@ -58,4 +58,7 @@ jobs:
        run: npm run test:e2e
        
      - name: Run application
-       run: npm run start
+       run: npm run start &
+       
+     - name: Run e2e UI tests
+       run: npm run test:ui
