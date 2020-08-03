@@ -8,7 +8,7 @@ export async function register(page, USER) {
   const wait = page.waitForNavigation();
   expect(page).toClick('button', {text: 'Register'});
   const response = await page.waitForResponse(
-    res => res.url() === 'http://localhost:3000/users'
+    res => res.url() === 'http://localhost:8000/users'
   );
   if (response.status() == 200) {
     await wait;

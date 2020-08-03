@@ -23,7 +23,7 @@ describe('Registration', () => {
   });
 
   beforeEach(async () => {
-    await page.goto('http:/localhost:3000/signup');
+    await page.goto('http:/localhost:8000/signup');
   });
 
   it('Registration Success', async () => {
@@ -42,7 +42,7 @@ describe('Registration', () => {
   it('Registration failure because email already exists', async () => {
     const response = await register(page, CREATE_USER_DTO_TEST_OBJ_2);
     expect(response).toBe(201);
-    await page.goto('http:/localhost:3000/signup');
+    await page.goto('http:/localhost:8000/signup');
     page.waitForNavigation();
     const response2 = await register(page, CREATE_USER_DTO_TEST_OBJ_2);
     expect(response2).toBe(500);

@@ -23,7 +23,7 @@ describe('Login and Logout', () => {
     databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
   });
   beforeEach(async () => {
-    await page.goto('http:/localhost:3000/');
+    await page.goto('http:/localhost:8000/');
   });
   afterEach(async () => {
     await page.evaluate(() => {
@@ -35,20 +35,20 @@ describe('Login and Logout', () => {
     await register(CREATE_ADMIN_DTO);
     const response = await login(page, ADMIN_LOGIN_AUTHENTICATION);
     await expect(response).toBe(201);
-    await expect(page.url()).toBe('http://localhost:3000/profile');
+    await expect(page.url()).toBe('http://localhost:8000/profile');
   });
 
   it('Login failure with wrong password', async () => {
     await register(CREATE_USER_DTO_TEST_OBJ);
     const response = await login(page, BAD_LOGIN_AUTHENTICATION);
     await expect(response).toBe(401);
-    await expect(page.url()).toBe('http://localhost:3000/login');
+    await expect(page.url()).toBe('http://localhost:8000/login');
   });
 
   it('Login failure when user does not exist', async () => {
     const response = await login(page, WRONG_EMAIL_AUTHENTICATION);
     await expect(response).toBe(404);
-    await expect(page.url()).toBe('http://localhost:3000/login');
+    await expect(page.url()).toBe('http://localhost:8000/login');
 
     await page.waitForFunction(
       'document.querySelector("body").innerText.includes("ERROR: User with given id not found")'
@@ -60,11 +60,11 @@ describe('Login and Logout', () => {
   it('Logout working', async () => {
     const response = await login(page, ADMIN_LOGIN_AUTHENTICATION);
     await expect(response).toBe(201);
-    await expect(page.url()).toBe('http://localhost:3000/profile');
+    await expect(page.url()).toBe('http://localhost:8000/profile');
     page.click('#logout');
 
     await page.waitForSelector('#login');
-    await expect(page.url()).toBe('http://localhost:3000/login');
+    await expect(page.url()).toBe('http://localhost:8000/login');
   });
   afterAll(async () => {
     await databaseService.cleanAll();
