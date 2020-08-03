@@ -64,11 +64,5 @@ jobs:
        run: sleep 30
        
      - name: Run e2e UI tests
-       run: netstat -tlpn
-       
-     - name: run curl
-       run: curl localhost:3000
-       
-     - name: Run e2e UI tests
        run: npm run test:ui
 
