@@ -24,6 +24,7 @@
     "build": "vue-cli-service build",
     "prepack": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "lint:ci": "vue-cli-service lint --no-fix  --maxWarnings 0",
     "test:unit": "jest"
   },
   "dependencies": {
