@@ -1,44 +1,42 @@
 <template>
-  <ErrorTooltip ref="error_tooltip">
-    <v-stepper v-model="step" vertical class="elevation-0">
-      <v-stepper-step :complete="!!assumed_role" step="1">
-        Account Credentials
-      </v-stepper-step>
+  <v-stepper v-model="step" vertical class="elevation-0">
+    <v-stepper-step :complete="!!assumed_role" step="1">
+      Account Credentials
+    </v-stepper-step>
 
-      <AuthStepBasic
-        v-bind:access_token.sync="access_token"
-        v-bind:secret_token.sync="secret_token"
-        @auth-basic="handle_basic"
-        @goto-mfa="handle_goto_mfa"
-      />
+    <AuthStepBasic
+      v-bind:access_token.sync="access_token"
+      v-bind:secret_token.sync="secret_token"
+      @auth-basic="handle_basic"
+      @goto-mfa="handle_goto_mfa"
+    />
 
-      <v-stepper-step
-        :complete="!!assumed_role && assumed_role.from_mfa"
-        step="2"
-      >
-        MFA Authorization
-      </v-stepper-step>
+    <v-stepper-step
+      :complete="!!assumed_role && assumed_role.from_mfa"
+      step="2"
+    >
+      MFA Authorization
+    </v-stepper-step>
 
-      <AuthStepMFA
-        v-bind:mfa_token.sync="mfa_token"
-        v-bind:mfa_serial.sync="mfa_serial"
-        @auth-mfa="handle_proceed_mfa"
-        @exit-mfa="handle_cancel_mfa"
-      />
+    <AuthStepMFA
+      v-bind:mfa_token.sync="mfa_token"
+      v-bind:mfa_serial.sync="mfa_serial"
+      @auth-mfa="handle_proceed_mfa"
+      @exit-mfa="handle_cancel_mfa"
+    />
 
-      <v-stepper-step step="3">
-        Browse Bucket
-      </v-stepper-step>
+    <v-stepper-step step="3">
+      Browse Bucket
+    </v-stepper-step>
 
-      <FileList
-        :auth="assumed_role"
-        :files="files"
-        @exit-list="handle_cancel_mfa"
-        @got-files="got_files"
-        @load-bucket="load_bucket"
-      />
-    </v-stepper>
-  </ErrorTooltip>
+    <FileList
+      :auth="assumed_role"
+      :files="files"
+      @exit-list="handle_cancel_mfa"
+      @got-files="got_files"
+      @load-bucket="load_bucket"
+    />
+  </v-stepper>
 </template>
 
 <script lang="ts">
@@ -59,7 +57,6 @@ import {
   AUTH_DURATION
 } from '../../../../utilities/aws_util';
 import InspecIntakeModule, {FileID} from '@/store/report_intake';
-import ErrorTooltip from '../../../generic/ErrorTooltip.vue';
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -80,8 +77,7 @@ const local_session_information = new LocalStorageVal<Auth | null>(
   components: {
     AuthStepBasic,
     AuthStepMFA,
-    FileList,
-    ErrorTooltip
+    FileList
   }
 })
 export default class S3Reader extends Props {
@@ -228,8 +224,11 @@ export default class S3Reader extends Props {
   handle_error(error: any): void {
     let t_error = error as AWSError;
     let formatted_error = transcribe_error(t_error);
-    let queue = this.$refs['error_tooltip'] as ErrorTooltip;
-    queue.show_error(formatted_error);
+    // Toast whatever error we got
+    this.$toasted.global.error({
+      message: formatted_error,
+      isDark: this.$vuetify.theme.dark
+    });
   }
 
   /** Callback on got files */

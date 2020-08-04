@@ -12,7 +12,7 @@ Vue.use(Toasted);
 let options: ToastOptions = {
   theme: 'toasted-primary',
   position: 'top-center',
-  fullWidth: true,
+  fullWidth: false,
   containerClass: 'background v-application',
   className: 'white--text',
   action: [
@@ -27,7 +27,7 @@ let options: ToastOptions = {
     }
   ],
   // icon: 'mdi-alert-octagram',
-  duration: 1e12 // effectively infinite.
+  duration: 10000 // only feels infinite.
 };
 
 // register the toast with the custom message

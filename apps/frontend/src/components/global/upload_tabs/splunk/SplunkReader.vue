@@ -1,61 +1,59 @@
 <template>
-  <ErrorTooltip ref="error_tooltip">
-    <v-stepper v-model="step" vertical class="elevation-0">
-      <v-stepper-step step="1">
-        Login Credentials
-      </v-stepper-step>
-      <v-stepper-step step="2">
-        Search Execution Events
-      </v-stepper-step>
+  <v-stepper v-model="step" vertical class="elevation-0">
+    <v-stepper-step step="1">
+      Login Credentials
+    </v-stepper-step>
+    <v-stepper-step step="2">
+      Search Execution Events
+    </v-stepper-step>
 
-      <AuthStep
-        @authenticated="handle_login"
-        @error="handle_error"
-        @show-help="error_count = -1"
-      />
+    <AuthStep
+      @authenticated="handle_login"
+      @error="handle_error"
+      @show-help="error_count = -1"
+    />
 
-      <!-- :complete="!!assumed_role && assumed_role.from_mfa" -->
+    <!-- :complete="!!assumed_role && assumed_role.from_mfa" -->
 
-      <FileList
-        :endpoint="splunk_state"
-        @exit-list="handle_logout"
-        @got-files="got_files"
-        @error="handle_error"
-      />
+    <FileList
+      :endpoint="splunk_state"
+      @exit-list="handle_logout"
+      @got-files="got_files"
+      @error="handle_error"
+    />
 
-      <v-overlay
-        :opacity="50"
-        absolute="absolute"
-        :value="error_count >= 3 || error_count < 0"
-      >
-        <div class="text-center">
-          <p>
-            <span v-if="error_count > 0">
-              It seems you may be having trouble using the Splunk toolkit. Are
-              you sure that you have configured it properly?
-            </span>
-            <br />
-            <span>
-              For installation instructions and further information, check here:
-            </span>
-            <v-btn
-              target="_blank"
-              href="https://github.com/mitre/hdf-json-to-splunk/"
-              text
-              color="info"
-              px-0
-            >
-              <v-icon pr-2>mdi-github-circle</v-icon>
-              Splunk HDF Plugin
-            </v-btn>
-          </p>
-          <v-btn color="info" @click="error_count = 0">
-            Ok
+    <v-overlay
+      :opacity="50"
+      absolute="absolute"
+      :value="error_count >= 3 || error_count < 0"
+    >
+      <div class="text-center">
+        <p>
+          <span v-if="error_count > 0">
+            It seems you may be having trouble using the Splunk toolkit. Are you
+            sure that you have configured it properly?
+          </span>
+          <br />
+          <span>
+            For installation instructions and further information, check here:
+          </span>
+          <v-btn
+            target="_blank"
+            href="https://github.com/mitre/hdf-json-to-splunk/"
+            text
+            color="info"
+            px-0
+          >
+            <v-icon pr-2>mdi-github-circle</v-icon>
+            Splunk HDF Plugin
           </v-btn>
-        </div>
-      </v-overlay>
-    </v-stepper>
-  </ErrorTooltip>
+        </p>
+        <v-btn color="info" @click="error_count = 0">
+          Ok
+        </v-btn>
+      </div>
+    </v-overlay>
+  </v-stepper>
 </template>
 
 <script lang="ts">
@@ -69,7 +67,6 @@ import {
   SplunkEndpoint,
   SplunkErrorCode
 } from '../../../../utilities/splunk_util';
-import ErrorTooltip from '../../../generic/ErrorTooltip.vue';
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -84,8 +81,7 @@ const Props = Vue.extend({
 @Component({
   components: {
     AuthStep,
-    FileList,
-    ErrorTooltip
+    FileList
   }
 })
 export default class SplunkReader extends Props {
@@ -117,6 +113,7 @@ export default class SplunkReader extends Props {
    * Sets shown error.
    */
   handle_error(error: SplunkErrorCode): void {
+    this.step = 1;
     switch (error) {
       case SplunkErrorCode.BadNetwork:
         this.error_count += 1;
@@ -162,8 +159,11 @@ export default class SplunkReader extends Props {
 
   /** Give our error tooltip the message */
   show_error_message(msg: string) {
-    let tt = this.$refs['error_tooltip'] as ErrorTooltip;
-    tt.show_error(msg);
+    // Toast whatever error we got
+    this.$toasted.global.error({
+      message: msg,
+      isDark: this.$vuetify.theme.dark
+    });
   }
 
   /** Callback on got files */

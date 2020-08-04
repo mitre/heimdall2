@@ -154,6 +154,7 @@ export default class UploadNexus extends Props {
   // Handles change in tab
   selected_tab(new_tab: string) {
     this.active_tab = new_tab;
+    this.$toasted.clear();
     local_tab.set(new_tab);
   }
 
