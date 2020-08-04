@@ -120,13 +120,13 @@ import UploadNexus from '@/components/global/UploadNexus.vue';
 import InspecIntakeModule, {
   FileID,
   next_free_file_ID
-} from "@/store/report_intake";
-import { plainToClass } from "class-transformer";
-import { getModule } from "vuex-module-decorators";
-import InspecDataModule from "../store/data_store";
-import ServerModule from "@/store/server";
-import { UserProfile, Evaluation, Usergroup } from "@/types/models.ts";
-import UserMenu from "@/components/global/UserMenu.vue";
+} from '@/store/report_intake';
+import {plainToClass} from 'class-transformer';
+import {getModule} from 'vuex-module-decorators';
+import InspecDataModule from '../store/data_store';
+import ServerModule from '@/store/server';
+import {UserProfile, Evaluation, Usergroup} from '@/types/models.ts';
+import UserMenu from '@/components/global/UserMenu.vue';
 
 export interface RetrieveHash {
   unique_id: number;
@@ -364,7 +364,7 @@ export default class UsergroupView extends UsergroupProps {
 
   profile_page() {
     this.dialog = false;
-    this.$router.push("/profile");
+    this.$router.push('/profile');
   }
 
   log_out() {

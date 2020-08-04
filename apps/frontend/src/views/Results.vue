@@ -138,31 +138,31 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import BaseView from "@/views/BaseView.vue";
-import UploadNexus from "@/components/global/UploadNexus.vue";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import BaseView from '@/views/BaseView.vue';
+import UploadNexus from '@/components/global/UploadNexus.vue';
 
-import StatusCardRow from "@/components/cards/StatusCardRow.vue";
-import ControlTable from "@/components/cards/controltable/ControlTable.vue";
-import Treemap from "@/components/cards/treemap/Treemap.vue";
-import StatusChart from "@/components/cards/StatusChart.vue";
-import SeverityChart from "@/components/cards/SeverityChart.vue";
-import ComplianceChart from "@/components/cards/ComplianceChart.vue";
-import ProfileData from "@/components/cards/ProfileData.vue";
-import ExportCaat from "@/components/global/ExportCaat.vue";
-import ExportNist from "@/components/global/ExportNist.vue";
-import ExportJson from "@/components/global/ExportJson.vue";
-import EvaluationInfo from "@/components/cards/EvaluationInfo.vue";
+import StatusCardRow from '@/components/cards/StatusCardRow.vue';
+import ControlTable from '@/components/cards/controltable/ControlTable.vue';
+import Treemap from '@/components/cards/treemap/Treemap.vue';
+import StatusChart from '@/components/cards/StatusChart.vue';
+import SeverityChart from '@/components/cards/SeverityChart.vue';
+import ComplianceChart from '@/components/cards/ComplianceChart.vue';
+import ProfileData from '@/components/cards/ProfileData.vue';
+import ExportCaat from '@/components/global/ExportCaat.vue';
+import ExportNist from '@/components/global/ExportNist.vue';
+import ExportJson from '@/components/global/ExportJson.vue';
+import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 
-import FilteredDataModule, { Filter, TreeMapState } from "@/store/data_filters";
-import { ControlStatus, Severity } from "inspecjs";
-import InspecIntakeModule, { FileID } from "@/store/report_intake";
-import { getModule } from "vuex-module-decorators";
-import InspecDataModule from "../store/data_store";
-import { need_redirect_file } from "@/utilities/helper_util";
-import ServerModule from "@/store/server";
-import UserMenu from "@/components/global/UserMenu.vue";
+import FilteredDataModule, {Filter, TreeMapState} from '@/store/data_filters';
+import {ControlStatus, Severity} from 'inspecjs';
+import InspecIntakeModule, {FileID} from '@/store/report_intake';
+import {getModule} from 'vuex-module-decorators';
+import InspecDataModule from '../store/data_store';
+import {need_redirect_file} from '@/utilities/helper_util';
+import ServerModule from '@/store/server';
+import UserMenu from '@/components/global/UserMenu.vue';
 
 // We declare the props separately
 // to make props types inferrable.
@@ -305,7 +305,7 @@ export default class Results extends ResultsProps {
 
   profile_page() {
     this.dialog = false;
-    this.$router.push("/profile");
+    this.$router.push('/profile');
   }
 
   log_out() {
