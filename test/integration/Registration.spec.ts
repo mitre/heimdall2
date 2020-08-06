@@ -23,7 +23,8 @@ describe('Registration', () => {
   });
 
   beforeEach(async () => {
-    await page.goto('http:/localhost:8000/signup');
+    await databaseService.cleanAll();
+    await page.goto(process.env.APP_URL+'/signup');
   });
 
   it('Registration Success', async () => {
@@ -42,14 +43,14 @@ describe('Registration', () => {
   it('Registration failure because email already exists', async () => {
     const response = await register(page, CREATE_USER_DTO_TEST_OBJ_2);
     expect(response).toBe(201);
-    await page.goto('http:/localhost:8000/signup');
+    await page.goto(process.env.APP_URL+'/signup');
     page.waitForNavigation();
     const response2 = await register(page, CREATE_USER_DTO_TEST_OBJ_2);
     expect(response2).toBe(500);
   });
 
   afterAll(async () => {
-    await databaseService.cleanAll();
+    await databaseService.closeConnection();
     //      await databaseService.closeConnection();
   });
 });

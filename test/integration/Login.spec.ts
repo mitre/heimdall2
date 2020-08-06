@@ -23,7 +23,8 @@ describe('Login', () => {
     databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
   });
   beforeEach(async () => {
-    await page.goto('http:/localhost:8000/');
+    await page.goto(process.env.APP_URL);
+    await databaseService.cleanAll();
   });
   afterEach(async () => {
     await page.evaluate(() => {
@@ -35,7 +36,7 @@ describe('Login', () => {
     await register(CREATE_ADMIN_DTO);
     const response = await login(page, ADMIN_LOGIN_AUTHENTICATION);
     await expect(response).toBe(201);
-    await expect(page.url()).toBe('http://localhost:8000/profile');
+    await expect(page.url()).toBe(process.env.APP_URL+'/profile');
     const searchValue = await page.$eval('#upload-btn > span', el => el.innerHTML);
     expect(searchValue).toContain('Upload');
     const searchValue2 = await page.$eval('#logout > span', el => el.innerHTML);
@@ -47,13 +48,13 @@ describe('Login', () => {
     await register(CREATE_USER_DTO_TEST_OBJ);
     const response = await login(page, BAD_LOGIN_AUTHENTICATION);
     await expect(response).toBe(401);
-    await expect(page.url()).toBe('http://localhost:8000/login');
+    await expect(page.url()).toBe(process.env.APP_URL+'/login');
   });
 
   it('Login failure when user does not exist', async () => {
     const response = await login(page, WRONG_EMAIL_AUTHENTICATION);
     await expect(response).toBe(404);
-    await expect(page.url()).toBe('http://localhost:8000/login');
+    await expect(page.url()).toBe(process.env.APP_URL+'/login');
 
     await page.waitForFunction(
       'document.querySelector("body").innerText.includes("ERROR: User with given id not found")'
@@ -63,8 +64,8 @@ describe('Login', () => {
   });
 
   afterAll(async () => {
-    await databaseService.cleanAll();
-    //      await databaseService.closeConnection();
+   // await databaseService.cleanAll();
+    await databaseService.closeConnection();
   });
   
 
@@ -82,7 +83,8 @@ describe('Logout', () => {
     databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
   });
   beforeEach(async () => {
-    await page.goto('http:/localhost:8000/');
+    await page.goto(process.env.APP_URL);
+    await databaseService.cleanAll();
   });
   afterEach(async () => {
     await page.evaluate(() => {
@@ -94,16 +96,16 @@ describe('Logout', () => {
     await register(CREATE_ADMIN_DTO);
     const response = await login(page, ADMIN_LOGIN_AUTHENTICATION);
     await expect(response).toBe(201);
-    await expect(page.url()).toBe('http://localhost:8000/profile');
+    await expect(page.url()).toBe(process.env.APP_URL+'/profile');
     page.click('#logout');
 
     await page.waitForSelector('#login');
-    await expect(page.url()).toBe('http://localhost:8000/login');
+    await expect(page.url()).toBe(process.env.APP_URL+'/login');
   });
 
   afterAll(async () => {
-    await databaseService.cleanAll();
-    //      await databaseService.closeConnection();
+   // await databaseService.cleanAll();
+    await databaseService.closeConnection();
   });
   
 

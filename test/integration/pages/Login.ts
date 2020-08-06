@@ -9,7 +9,7 @@ export async function login(page, USER) {
   const wait = page.waitForNavigation();
   page.click('#login');
   const response = await page.waitForResponse(
-    res => res.url() === 'http://localhost:8000/authn/login'
+    res => res.url() === process.env.APP_URL+'/authn/login'
   );
 
   if (response.status() == 201 || response.status() == 401) {
@@ -21,9 +21,9 @@ export async function login(page, USER) {
 
 export async function register(USER) {
   return axios
-    .post('http://localhost:8000/users', USER)
+    .post(process.env.APP_URL+'/users', USER)
     .then(({data}) => {
-      console.log(data);
+      console.log(data)
       return data;
     })
     .catch(error => {
