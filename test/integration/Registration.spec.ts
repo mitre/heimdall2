@@ -56,7 +56,10 @@ describe('Registration', () => {
   });
 
   afterAll(async () => {
+    await databaseService.cleanAll();
+    await await page.evaluate(() => {
+      localStorage.clear();
+    });
     await databaseService.closeConnection();
-    //      await databaseService.closeConnection();
   });
 });

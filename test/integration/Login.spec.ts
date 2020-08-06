@@ -1,4 +1,4 @@
-import {login} from './pages/Login';
+import {login,getToken} from './pages/Login';
 import {addUser} from './pages/Registration';
 import {AppModule} from '../../src/app.module';
 import {Test, TestingModule} from '@nestjs/testing';
@@ -35,6 +35,7 @@ describe('Login', () => {
 
   it('Login working', async () => {
     await addUser(CREATE_ADMIN_DTO);
+    await getToken(ADMIN_LOGIN_AUTHENTICATION);
     const response = await login(page, ADMIN_LOGIN_AUTHENTICATION);
     await expect(response).toBe(201);
     await expect(page.url()).toBe(process.env.APP_URL+'/profile');
@@ -69,7 +70,10 @@ describe('Login', () => {
   });
 
   afterAll(async () => {
-   // await databaseService.cleanAll();
+    await databaseService.cleanAll();
+    await await page.evaluate(() => {
+      localStorage.clear();
+    });
     await databaseService.closeConnection();
   });
   
@@ -111,7 +115,10 @@ describe('Logout', () => {
   });
 
   afterAll(async () => {
-   // await databaseService.cleanAll();
+    await databaseService.cleanAll();
+    await await page.evaluate(() => {
+      localStorage.clear();
+    });
     await databaseService.closeConnection();
   });
   
