@@ -57,12 +57,6 @@ jobs:
      - name: Run e2e tests
        run: npm run test:e2e
        
-     - name: Run application
-       run: npm run start &
-       
-     - name: sleep 30
-       run: sleep 30
-       
      - name: Run e2e UI tests
        run: npm run test:ui
 
