@@ -6,7 +6,8 @@ module.exports = {
   launch: {
     dumpio: true,
     headless: true,
-    args: ["--disable-infobars"]
+    args: ["--disable-infobars"],
+    defaultViewport: null
   },
   server: {
     command: 'npm run start',
