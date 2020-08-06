@@ -1,12 +1,12 @@
-import { Injectable, NotFoundException, Inject } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
-import { Evaluation } from './evaluation.model';
-import { EvaluationDto } from './dto/evaluation.dto';
-import { CreateEvaluationDto } from './dto/create-evaluation.dto';
-import { UpdateEvaluationDto } from './dto/update-evaluation.dto';
-import { EvaluationTagsService } from '../evaluation-tags/evaluation-tags.service';
-import { EvaluationTag } from '../evaluation-tags/evaluation-tag.model';
-import { DatabaseService } from '../database/database.service';
+import {Injectable, NotFoundException} from '@nestjs/common';
+import {InjectModel} from '@nestjs/sequelize';
+import {Evaluation} from './evaluation.model';
+import {EvaluationDto} from './dto/evaluation.dto';
+import {CreateEvaluationDto} from './dto/create-evaluation.dto';
+import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
+import {EvaluationTagsService} from '../evaluation-tags/evaluation-tags.service';
+import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
+import {DatabaseService} from '../database/database.service';
 
 @Injectable()
 export class EvaluationsService {
@@ -15,7 +15,7 @@ export class EvaluationsService {
     private evaluationModel: typeof Evaluation,
     private evaluationTagsService: EvaluationTagsService,
     private databaseService: DatabaseService
-  ) { }
+  ) {}
 
   async findAll(): Promise<EvaluationDto[]> {
     const evaluations = await this.evaluationModel.findAll<Evaluation>({
@@ -32,11 +32,16 @@ export class EvaluationsService {
     evaluation.data = createEvaluationDto.data;
     // Save the evaluation with no tags to get an ID.
     const evaluationData = await evaluation.save();
-    const evaluationTagsPromises = createEvaluationDto.evaluationTags.map(async (createEvaluationTagDto) => {
-      return await this.evaluationTagsService.create(evaluationData.id, this.evaluationTagsService.objectFromDto(createEvaluationTagDto))
-    });
+    const evaluationTagsPromises = createEvaluationDto.evaluationTags.map(
+      async createEvaluationTagDto => {
+        return await this.evaluationTagsService.create(
+          evaluationData.id,
+          this.evaluationTagsService.objectFromDto(createEvaluationTagDto)
+        );
+      }
+    );
 
-    const evaluationTags = await Promise.all(evaluationTagsPromises)
+    const evaluationTags = await Promise.all(evaluationTagsPromises);
     evaluationData.evaluationTags = evaluationTags;
     return new EvaluationDto(await evaluationData.save());
   }
@@ -59,9 +64,9 @@ export class EvaluationsService {
       include: [EvaluationTag]
     });
     this.exists(evaluation);
-    await this.databaseService.sequelize.transaction(async (transaction) => {
+    await this.databaseService.sequelize.transaction(async transaction => {
       await Promise.all([
-        evaluation.evaluationTags.map(async (evaluationTag) => {
+        evaluation.evaluationTags.map(async evaluationTag => {
           await evaluationTag.destroy({transaction});
         })
       ]);
