@@ -1,4 +1,3 @@
-import axios from 'axios';
 
 export async function login(page, USER) {
   await expect(page).toFillForm('form[name="login_form"]', {
@@ -17,16 +16,4 @@ export async function login(page, USER) {
   }
   const data = await response.status();
   return data;
-}
-
-export async function register(USER) {
-  return axios
-    .post(process.env.APP_URL+'/users', USER)
-    .then(({data}) => {
-      console.log(data)
-      return data;
-    })
-    .catch(error => {
-      console.log(error);
-    });
 }

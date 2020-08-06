@@ -1,4 +1,5 @@
-import {login, register} from './pages/Login';
+import {login} from './pages/Login';
+import {addUser} from './pages/Registration';
 import {AppModule} from '../../src/app.module';
 import {Test, TestingModule} from '@nestjs/testing';
 
@@ -33,7 +34,7 @@ describe('Login', () => {
   });
 
   it('Login working', async () => {
-    await register(CREATE_ADMIN_DTO);
+    await addUser(CREATE_ADMIN_DTO);
     const response = await login(page, ADMIN_LOGIN_AUTHENTICATION);
     await expect(response).toBe(201);
     await expect(page.url()).toBe(process.env.APP_URL+'/profile');
@@ -45,7 +46,7 @@ describe('Login', () => {
   });
 
   it('Login failure with wrong password', async () => {
-    await register(CREATE_USER_DTO_TEST_OBJ);
+    await addUser(CREATE_USER_DTO_TEST_OBJ);
     const response = await login(page, BAD_LOGIN_AUTHENTICATION);
     await expect(response).toBe(401);
     await expect(page.url()).toBe(process.env.APP_URL+'/login');
@@ -93,7 +94,7 @@ describe('Logout', () => {
   });
 
   it('Logout working', async () => {
-    await register(CREATE_ADMIN_DTO);
+    await addUser(CREATE_ADMIN_DTO);
     const response = await login(page, ADMIN_LOGIN_AUTHENTICATION);
     await expect(response).toBe(201);
     await expect(page.url()).toBe(process.env.APP_URL+'/profile');

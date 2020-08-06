@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export async function register(page, USER) {
   await expect(page).toFillForm('form[name="signup_form"]', {
     email: USER.email,
@@ -17,6 +19,16 @@ export async function register(page, USER) {
   return data;
 }
 
+export async function addUser(USER) {
+  return axios
+    .post(process.env.APP_URL+'/users', USER)
+    .then(({data}) => {
+      return data;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
 /*
 export async function login( USER) {
 

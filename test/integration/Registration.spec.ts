@@ -1,6 +1,6 @@
 import {Test, TestingModule} from '@nestjs/testing';
 import {AppModule} from '../../src/app.module';
-
+import {addUser} from './pages/Registration';
 import {
   CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS,
@@ -41,8 +41,7 @@ describe('Registration', () => {
   });
 
   it('Registration failure because email already exists', async () => {
-    const response = await register(page, CREATE_USER_DTO_TEST_OBJ_2);
-    expect(response).toBe(201);
+    await addUser(CREATE_USER_DTO_TEST_OBJ_2);
     await page.goto(process.env.APP_URL+'/signup');
     page.waitForNavigation();
     const response2 = await register(page, CREATE_USER_DTO_TEST_OBJ_2);
