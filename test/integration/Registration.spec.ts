@@ -40,7 +40,7 @@ describe('Registration', () => {
       CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
     );
     expect(response).toBe(400);
-    const registerButton = await page.$eval('#registration > span', el => el.innerHTML);
+    const registerButton = await page.$eval('#register > span', el => el.innerHTML);
     await expect(registerButton).toContain('Register');
   });
 
@@ -50,7 +50,7 @@ describe('Registration', () => {
     page.waitForNavigation();
     const response = await register(page, CREATE_USER_DTO_TEST_OBJ_2);
     expect(response).toBe(500);
-    const registerButton = await page.$eval('#registration > span', el => el.innerHTML);
+    const registerButton = await page.$eval('#register > span', el => el.innerHTML);
     await expect(registerButton).toContain('Register');
 
   });
