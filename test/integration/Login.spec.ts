@@ -38,10 +38,10 @@ describe('Login', () => {
     const response = await login(page, ADMIN_LOGIN_AUTHENTICATION);
     await expect(response).toBe(201);
     await expect(page.url()).toBe(process.env.APP_URL+'/profile');
-    const searchValue = await page.$eval('#upload-btn > span', el => el.innerHTML);
-    expect(searchValue).toContain('Upload');
-    const searchValue2 = await page.$eval('#logout > span', el => el.innerHTML);
-    expect(searchValue2).toContain('Logout');
+    const uploadButton = await page.$eval('#upload-btn > span', el => el.innerHTML);
+    expect(uploadButton).toContain('Upload');
+    const logoutButton = await page.$eval('#logout > span', el => el.innerHTML);
+    expect(logoutButton).toContain('Logout');
 
   });
 
@@ -50,6 +50,8 @@ describe('Login', () => {
     const response = await login(page, BAD_LOGIN_AUTHENTICATION);
     await expect(response).toBe(401);
     await expect(page.url()).toBe(process.env.APP_URL+'/login');
+    const loginButton = await page.$eval('#login > span', el => el.innerHTML);
+    await expect(loginButton).toContain('Login');
   });
 
   it('Login failure when user does not exist', async () => {
@@ -62,6 +64,8 @@ describe('Login', () => {
     );
     const text = await page.evaluate(() => document.body.innerHTML);
     await expect(text).toContain('ERROR: User with given id not found');
+    const loginButton = await page.$eval('#login > span', el => el.innerHTML);
+    await expect(loginButton).toContain('Login');
   });
 
   afterAll(async () => {
@@ -102,6 +106,8 @@ describe('Logout', () => {
 
     await page.waitForSelector('#login');
     await expect(page.url()).toBe(process.env.APP_URL+'/login');
+    const loginButton = await page.$eval('#login > span', el => el.innerHTML);
+    await expect(loginButton).toContain('Login');
   });
 
   afterAll(async () => {
