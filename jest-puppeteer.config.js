@@ -4,8 +4,16 @@ module.exports = {
   launch: {
     dumpio: true,
     headless: true,
-    args: ['--disable-infobars'],
-    defaultViewport: null
+    args: [
+      '--disable-infobars',
+      '--disable-gpu',
+      '--hide-scrollbars',
+      '--mute-audio'
+    ],
+    defaultViewport: {
+      height: 1080,
+      width: 1920
+    }
   },
   server: {
     command: 'npm run start',
