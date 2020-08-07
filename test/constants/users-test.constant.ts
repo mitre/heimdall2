@@ -24,11 +24,6 @@ export const BAD_LOGIN_AUTHENTICATION = {
   password: 'Invalid_password'
 };
 
-export const WRONG_EMAIL_AUTHENTICATION = {
-  email: 'email_doesnt_exist@yahoo.com',
-  password: 'LETmeiN123$$$tP'
-};
-
 // @ts-ignore
 export const TEST_USER: User = {
   email: 'abc@yahoo.com',
