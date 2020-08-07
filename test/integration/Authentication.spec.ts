@@ -36,7 +36,7 @@ describe('Authentication', () => {
     await page.goto(appUrl);
   });
 
-  describe('Login Form', async () => {
+  describe('Login Form', () => {
     it('authenticates a user with valid credentials', async () => {
       await addUser(CREATE_ADMIN_DTO);
       const response = await login(page, ADMIN_LOGIN_AUTHENTICATION);
@@ -72,7 +72,7 @@ describe('Authentication', () => {
     });
   });
 
-  describe('Logout Button', async () => {
+  describe('Logout Button', () => {
     it('logs a user out', async () => {
       await addUser(CREATE_ADMIN_DTO);
       const response = await login(page, ADMIN_LOGIN_AUTHENTICATION);
@@ -85,7 +85,7 @@ describe('Authentication', () => {
   });
 
   afterAll(async () => {
-    await await page.evaluate(() => {
+    await page.evaluate(() => {
       localStorage.clear();
     });
     await databaseService.closeConnection();

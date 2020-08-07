@@ -35,7 +35,7 @@ describe('Registration', () => {
     await page.goto(appUrl + '/signup');
   });
 
-  describe('Registration Form', async() => {
+  describe('Registration Form', () => {
     it('allows a user to create an account', async () => {
       const response = await register(page, CREATE_ADMIN_DTO);
       expect(response).toBe(201);
