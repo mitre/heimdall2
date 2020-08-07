@@ -18,14 +18,3 @@ export async function login(page, USER) {
   const data = await response.status();
   return data;
 }
-
-export async function getToken(USER) {
-  return axios
-    .post(process.env.APP_URL+'/authn/login', USER)
-    .then(({data}) => {
-      return data;
-    })
-    .catch(error => {
-      console.log(error);
-    });
-}
