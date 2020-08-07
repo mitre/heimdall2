@@ -23,10 +23,12 @@ describe('Login', () => {
 
     databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
   });
+
   beforeEach(async () => {
     await page.goto(process.env.APP_URL);
     await databaseService.cleanAll();
   });
+
   afterEach(async () => {
     await page.evaluate(() => {
       localStorage.clear();
@@ -90,14 +92,13 @@ describe('Logout', () => {
 
     databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
   });
+
   beforeEach(async () => {
     await page.goto(process.env.APP_URL);
-    await databaseService.cleanAll();
-  });
-  afterEach(async () => {
     await page.evaluate(() => {
       localStorage.clear();
     });
+    await databaseService.cleanAll();
   });
 
   it('Logout working', async () => {
@@ -114,8 +115,7 @@ describe('Logout', () => {
   });
 
   afterAll(async () => {
-    await databaseService.cleanAll();
-    await await page.evaluate(() => {
+    await page.evaluate(() => {
       localStorage.clear();
     });
     await databaseService.closeConnection();

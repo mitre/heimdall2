@@ -24,6 +24,9 @@ describe('Registration', () => {
 
   beforeEach(async () => {
     await databaseService.cleanAll();
+    await page.evaluate(() => {
+      localStorage.clear();
+    });
     await page.goto(process.env.APP_URL + '/signup');
   });
 
@@ -61,8 +64,7 @@ describe('Registration', () => {
   });
 
   afterAll(async () => {
-    await databaseService.cleanAll();
-    await await page.evaluate(() => {
+    await page.evaluate(() => {
       localStorage.clear();
     });
     await databaseService.closeConnection();
