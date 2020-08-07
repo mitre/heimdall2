@@ -24,7 +24,7 @@ describe('Registration', () => {
 
   beforeEach(async () => {
     await databaseService.cleanAll();
-    await page.goto(process.env.APP_URL+'/signup');
+    await page.goto(process.env.APP_URL + '/signup');
   });
 
   it('Registration Success', async () => {
@@ -40,19 +40,24 @@ describe('Registration', () => {
       CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
     );
     expect(response).toBe(400);
-    const registerButton = await page.$eval('#register > span', el => el.innerHTML);
+    const registerButton = await page.$eval(
+      '#register > span',
+      el => el.innerHTML
+    );
     await expect(registerButton).toContain('Register');
   });
 
   it('Registration failure because email already exists', async () => {
     await addUser(CREATE_USER_DTO_TEST_OBJ_2);
-    await page.goto(process.env.APP_URL+'/signup');
+    await page.goto(process.env.APP_URL + '/signup');
     page.waitForNavigation();
     const response = await register(page, CREATE_USER_DTO_TEST_OBJ_2);
     expect(response).toBe(500);
-    const registerButton = await page.$eval('#register > span', el => el.innerHTML);
+    const registerButton = await page.$eval(
+      '#register > span',
+      el => el.innerHTML
+    );
     await expect(registerButton).toContain('Register');
-
   });
 
   afterAll(async () => {

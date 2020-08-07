@@ -37,19 +37,21 @@ describe('Login', () => {
     await addUser(CREATE_ADMIN_DTO);
     const response = await login(page, ADMIN_LOGIN_AUTHENTICATION);
     await expect(response).toBe(201);
-    await expect(page.url()).toBe(process.env.APP_URL+'/profile');
-    const uploadButton = await page.$eval('#upload-btn > span', el => el.innerHTML);
+    await expect(page.url()).toBe(process.env.APP_URL + '/profile');
+    const uploadButton = await page.$eval(
+      '#upload-btn > span',
+      el => el.innerHTML
+    );
     expect(uploadButton).toContain('Upload');
     const logoutButton = await page.$eval('#logout > span', el => el.innerHTML);
     expect(logoutButton).toContain('Logout');
-
   });
 
   it('Login failure with wrong password', async () => {
     await addUser(CREATE_USER_DTO_TEST_OBJ);
     const response = await login(page, BAD_LOGIN_AUTHENTICATION);
     await expect(response).toBe(401);
-    await expect(page.url()).toBe(process.env.APP_URL+'/login');
+    await expect(page.url()).toBe(process.env.APP_URL + '/login');
     const loginButton = await page.$eval('#login > span', el => el.innerHTML);
     await expect(loginButton).toContain('Login');
   });
@@ -57,7 +59,7 @@ describe('Login', () => {
   it('Login failure when user does not exist', async () => {
     const response = await login(page, WRONG_EMAIL_AUTHENTICATION);
     await expect(response).toBe(404);
-    await expect(page.url()).toBe(process.env.APP_URL+'/login');
+    await expect(page.url()).toBe(process.env.APP_URL + '/login');
 
     await page.waitForFunction(
       'document.querySelector("body").innerText.includes("ERROR: User with given id not found")'
@@ -75,8 +77,6 @@ describe('Login', () => {
     });
     await databaseService.closeConnection();
   });
-
-
 });
 
 describe('Logout', () => {
@@ -104,11 +104,11 @@ describe('Logout', () => {
     await addUser(CREATE_ADMIN_DTO);
     const response = await login(page, ADMIN_LOGIN_AUTHENTICATION);
     await expect(response).toBe(201);
-    await expect(page.url()).toBe(process.env.APP_URL+'/profile');
+    await expect(page.url()).toBe(process.env.APP_URL + '/profile');
     page.click('#logout');
 
     await page.waitForSelector('#login');
-    await expect(page.url()).toBe(process.env.APP_URL+'/login');
+    await expect(page.url()).toBe(process.env.APP_URL + '/login');
     const loginButton = await page.$eval('#login > span', el => el.innerHTML);
     await expect(loginButton).toContain('Login');
   });
@@ -120,6 +120,4 @@ describe('Logout', () => {
     });
     await databaseService.closeConnection();
   });
-
-
 });

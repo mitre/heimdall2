@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 export async function login(page, USER) {
   await expect(page).toFillForm('form[name="login_form"]', {
@@ -9,7 +9,7 @@ export async function login(page, USER) {
   const wait = page.waitForNavigation();
   page.click('#login');
   const response = await page.waitForResponse(
-    res => res.url() === process.env.APP_URL+'/authn/login'
+    res => res.url() === process.env.APP_URL + '/authn/login'
   );
 
   if (response.status() == 201 || response.status() == 401) {

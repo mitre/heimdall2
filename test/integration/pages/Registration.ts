@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 export async function register(page, USER) {
   await expect(page).toFillForm('form[name="signup_form"]', {
@@ -10,7 +10,7 @@ export async function register(page, USER) {
   const wait = page.waitForNavigation();
   expect(page).toClick('button', {text: 'Register'});
   const response = await page.waitForResponse(
-    res => res.url() === process.env.APP_URL+'/users'
+    res => res.url() === process.env.APP_URL + '/users'
   );
   if (response.status() == 200) {
     await wait;
@@ -21,7 +21,7 @@ export async function register(page, USER) {
 
 export async function addUser(USER) {
   return axios
-    .post(process.env.APP_URL+'/users', USER)
+    .post(process.env.APP_URL + '/users', USER)
     .then(({data}) => {
       return data;
     })
