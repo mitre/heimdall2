@@ -14,5 +14,5 @@
     "lib": ["es2020"]
   },
   "exclude": ["node_modules", "dist", "client"],
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "test/**/*"]
 }
