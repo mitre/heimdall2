@@ -10,6 +10,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'prettier',
     'prettier/@typescript-eslint',
+    'plugin:prettier/recommended',
   ],
   root: true,
   env: {
@@ -20,7 +21,5 @@ module.exports = {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    'quotes': [2, 'single'],
-    'indent': ['error', 2]
   },
 };

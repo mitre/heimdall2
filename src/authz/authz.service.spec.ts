@@ -65,12 +65,11 @@ describe('Authz Service', () => {
   });
 
   describe('Tests logging of the policies', () => {
-    let newModule: TestingModule;
     // Used to make sure policies logs are printed
     const consoleSpy = jest.spyOn(console, 'log');
 
     beforeAll(async () => {
-      newModule = await Test.createTestingModule({
+      await Test.createTestingModule({
         imports: [DatabaseModule, SequelizeModule.forFeature([Policy])],
         providers: [
           DatabaseService,
