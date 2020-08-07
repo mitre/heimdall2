@@ -1,12 +1,12 @@
-import {login} from './pages/Login';
-import {addUser} from './pages/Registration';
+import {LandingPage} from './pages/landing.page';
+import {IntegrationSpecHelper} from './helpers/integration-spec.helper';
 import {AppModule} from '../../src/app.module';
 import {Test, TestingModule} from '@nestjs/testing';
 import {
   CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
   BAD_LOGIN_AUTHENTICATION,
-  ADMIN_LOGIN_AUTHENTICATION,
+  ADMIN_LOGIN_AUTHENTICATION
 } from '../constants/users-test.constant';
 import {DatabaseService} from '../../src/database/database.service';
 import {ConfigService} from '../../src/config/config.service';
@@ -15,6 +15,9 @@ describe('Authentication', () => {
   let databaseService: DatabaseService;
   let configService: ConfigService;
   let appUrl: string;
+
+  const landingPage = new LandingPage();
+  const integrationSpecHelper = new IntegrationSpecHelper();
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -38,28 +41,37 @@ describe('Authentication', () => {
 
   describe('Login Form', () => {
     it('authenticates a user with valid credentials', async () => {
-      await addUser(CREATE_ADMIN_DTO);
-      const response = await login(page, ADMIN_LOGIN_AUTHENTICATION);
+      await integrationSpecHelper.addUser(CREATE_ADMIN_DTO);
+      const response = await landingPage.login(
+        page,
+        ADMIN_LOGIN_AUTHENTICATION
+      );
       await expect(response).toBe(201);
       const uploadButton = await page.$eval(
         '#upload-btn > span',
         el => el.innerHTML
       );
       expect(uploadButton).toContain('Upload');
-      const logoutButton = await page.$eval('#logout > span', el => el.innerHTML);
+      const logoutButton = await page.$eval(
+        '#logout > span',
+        el => el.innerHTML
+      );
       expect(logoutButton).toContain('Logout');
     });
 
     it('fails to authenticate a user with an incorrect password', async () => {
-      await addUser(CREATE_USER_DTO_TEST_OBJ);
-      const response = await login(page, BAD_LOGIN_AUTHENTICATION);
+      await integrationSpecHelper.addUser(CREATE_USER_DTO_TEST_OBJ);
+      const response = await landingPage.login(page, BAD_LOGIN_AUTHENTICATION);
       await expect(response).toBe(401);
       const loginButton = await page.$eval('#login > span', el => el.innerHTML);
       await expect(loginButton).toContain('Login');
     });
 
     it('fails to find a user that does not exist', async () => {
-      const response = await login(page, ADMIN_LOGIN_AUTHENTICATION);
+      const response = await landingPage.login(
+        page,
+        ADMIN_LOGIN_AUTHENTICATION
+      );
       await expect(response).toBe(404);
 
       await page.waitForFunction(
@@ -74,7 +86,7 @@ describe('Authentication', () => {
 
   describe('Logout Button', () => {
     it('logs a user out', async () => {
-      await addUser(CREATE_ADMIN_DTO);
+      await integrationSpecHelper.addUser(CREATE_ADMIN_DTO);
       const response = await login(page, ADMIN_LOGIN_AUTHENTICATION);
       await expect(response).toBe(201);
       page.click('#logout');

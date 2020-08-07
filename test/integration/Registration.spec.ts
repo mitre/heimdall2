@@ -1,12 +1,12 @@
 import {Test, TestingModule} from '@nestjs/testing';
 import {AppModule} from '../../src/app.module';
-import {addUser} from './pages/Registration';
+import {IntegrationSpecHelper} from './helpers/integration-spec.helper';
 import {
   CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS,
   CREATE_USER_DTO_TEST_OBJ_2
 } from '../constants/users-test.constant';
-import {register} from './pages/Registration';
+import {RegistrationPage} from './pages/registration.page';
 import {DatabaseService} from '../../src/database/database.service';
 import {ConfigService} from '../../src/config/config.service';
 
@@ -14,6 +14,9 @@ describe('Registration', () => {
   let databaseService: DatabaseService;
   let configService: ConfigService;
   let appUrl: string;
+
+  const registrationPage = new RegistrationPage();
+  const integrationSpecHelper = new IntegrationSpecHelper();
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -37,14 +40,14 @@ describe('Registration', () => {
 
   describe('Registration Form', () => {
     it('allows a user to create an account', async () => {
-      const response = await register(page, CREATE_ADMIN_DTO);
+      const response = await registrationPage.register(page, CREATE_ADMIN_DTO);
       expect(response).toBe(201);
       const loginButton = await page.$eval('#login > span', el => el.innerHTML);
       await expect(loginButton).toContain('Login');
     });
 
     it('rejects passwords that do not match', async () => {
-      const response = await register(
+      const response = await registrationPage.register(
         page,
         CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
       );
@@ -57,9 +60,12 @@ describe('Registration', () => {
     });
 
     it('rejects emails that already exist', async () => {
-      await addUser(CREATE_USER_DTO_TEST_OBJ_2);
+      await integrationSpecHelper.addUser(CREATE_USER_DTO_TEST_OBJ_2);
       page.waitForNavigation();
-      const response = await register(page, CREATE_USER_DTO_TEST_OBJ_2);
+      const response = await registrationPage.register(
+        page,
+        CREATE_USER_DTO_TEST_OBJ_2
+      );
       expect(response).toBe(500);
       const registerButton = await page.$eval(
         '#register > span',
