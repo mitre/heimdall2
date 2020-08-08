@@ -15,9 +15,9 @@ describe('Authentication', () => {
   let databaseService: DatabaseService;
   let configService: ConfigService;
   let appUrl: string;
+  let integrationSpecHelper: IntegrationSpecHelper;
 
   const landingPage = new LandingPage();
-  const integrationSpecHelper = new IntegrationSpecHelper();
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -28,7 +28,9 @@ describe('Authentication', () => {
     databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
     configService = moduleFixture.get<ConfigService>(ConfigService);
 
-    appUrl = `localhost:${configService.get('HEIMDALL_SERVER_PORT' || '3000')}`;
+    appUrl = `localhost:${configService.get('HEIMDALL_SERVER_PORT') || '3000'}`;
+
+    integrationSpecHelper = new IntegrationSpecHelper(appUrl);
   });
 
   beforeEach(async () => {
@@ -87,9 +89,9 @@ describe('Authentication', () => {
   describe('Logout Button', () => {
     it('logs a user out', async () => {
       await integrationSpecHelper.addUser(CREATE_ADMIN_DTO);
-      const response = await login(page, ADMIN_LOGIN_AUTHENTICATION);
-      await expect(response).toBe(201);
-      page.click('#logout');
+      const response = await landingPage.login(page, ADMIN_LOGIN_AUTHENTICATION);
+      await expect(response.status()).toBe(201);
+      await page.click('#logout');
       await page.waitForSelector('#login');
       const loginButton = await page.$eval('#login > span', el => el.innerHTML);
       await expect(loginButton).toContain('Login');

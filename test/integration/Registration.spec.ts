@@ -14,9 +14,8 @@ describe('Registration', () => {
   let databaseService: DatabaseService;
   let configService: ConfigService;
   let appUrl: string;
-
+  let integrationSpecHelper: IntegrationSpecHelper;
   const registrationPage = new RegistrationPage();
-  const integrationSpecHelper = new IntegrationSpecHelper();
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -27,7 +26,9 @@ describe('Registration', () => {
     databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
     configService = moduleFixture.get<ConfigService>(ConfigService);
 
-    appUrl = `localhost:${configService.get('HEIMDALL_SERVER_PORT' || '3000')}`;
+    appUrl = `localhost:${configService.get('HEIMDALL_SERVER_PORT') || '3000'}`;
+
+    integrationSpecHelper = new IntegrationSpecHelper(appUrl);
   });
 
   beforeEach(async () => {

@@ -1,20 +1,15 @@
+import {Page, Response} from 'puppeteer';
+import {CreateUserDto} from '../../../src/users/dto/create-user.dto';
+
 export class RegistrationPage {
-  async register(page, USER) {
+  async register(page: Page, user: CreateUserDto): Promise<Response> {
     await expect(page).toFillForm('form[name="signup_form"]', {
-      email: USER.email,
-      password: USER.password,
-      passwordConfirmation: USER.passwordConfirmation,
-      role: USER.role
+      email: user.email,
+      password: user.password,
+      passwordConfirmation: user.passwordConfirmation,
+      role: user.role
     });
-    const wait = page.waitForNavigation();
-    expect(page).toClick('button', {text: 'Register'});
-    const response = await page.waitForResponse(
-      res => res.url() === process.env.APP_URL + '/users'
-    );
-    if (response.status() == 200) {
-      await wait;
-    }
-    const data = await response.status();
-    return data;
+    await page.click('Register');
+    return await page.waitForNavigation({waitUntil: 'domcontentloaded'});
   }
 }
