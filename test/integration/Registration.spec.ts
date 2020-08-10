@@ -26,7 +26,7 @@ describe('Registration', () => {
     databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
     configService = moduleFixture.get<ConfigService>(ConfigService);
 
-    appUrl = `localhost:${configService.get('HEIMDALL_SERVER_PORT') || '3000'}`;
+    appUrl = `http://localhost:${configService.get('HEIMDALL_SERVER_PORT') || '3000'}`;
 
     integrationSpecHelper = new IntegrationSpecHelper(appUrl);
   });

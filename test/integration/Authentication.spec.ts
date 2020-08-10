@@ -28,7 +28,7 @@ describe('Authentication', () => {
     databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
     configService = moduleFixture.get<ConfigService>(ConfigService);
 
-    appUrl = `localhost:${configService.get('HEIMDALL_SERVER_PORT') || '3000'}`;
+    appUrl = `http://localhost:${configService.get('HEIMDALL_SERVER_PORT') || '3000'}`;
 
     integrationSpecHelper = new IntegrationSpecHelper(appUrl);
   });
@@ -74,7 +74,7 @@ describe('Authentication', () => {
         page,
         ADMIN_LOGIN_AUTHENTICATION
       );
-      await expect(response).toBe(404);
+      await expect(response.status()).toBe(404);
 
       await page.waitForFunction(
         'document.querySelector("body").innerText.includes("ERROR: User with given id not found")'
@@ -91,8 +91,7 @@ describe('Authentication', () => {
       await integrationSpecHelper.addUser(CREATE_ADMIN_DTO);
       const response = await landingPage.login(page, ADMIN_LOGIN_AUTHENTICATION);
       await expect(response.status()).toBe(201);
-      await page.click('#logout');
-      await page.waitForSelector('#login');
+      landingPage.logout(page);
       const loginButton = await page.$eval('#login > span', el => el.innerHTML);
       await expect(loginButton).toContain('Login');
     });
