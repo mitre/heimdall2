@@ -33,6 +33,8 @@ describe('Registration', () => {
 
   beforeEach(async () => {
     await databaseService.cleanAll();
+    // Must navigate to appUrl to get permissions to access local storage
+    await page.goto(appUrl);
     await page.evaluate(() => {
       localStorage.clear();
     });

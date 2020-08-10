@@ -6,7 +6,7 @@ export class IntegrationSpecHelper {
     this.url = url;
   }
 
-  async addUser(user): Promise<any> {
+  async addUser(user: any): Promise<any> {
     return axios
       .post(this.url + '/users', user)
       .then(({data}) => {
@@ -15,5 +15,10 @@ export class IntegrationSpecHelper {
       .catch(error => {
         console.log(error);
       });
+  }
+
+  // Useful for debugging
+  static async sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
