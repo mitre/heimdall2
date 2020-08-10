@@ -4,7 +4,7 @@
       <LinkItem
         key="export_json"
         text="Export as JSON"
-        icon="mdi-download"
+        icon="mdi-code-json"
         @click="export_json()"
         v-on="on"
       />
@@ -22,7 +22,10 @@ import LinkItem, {
 } from '@/components/global/sidebaritems/SidebarLink.vue';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {getModule} from 'vuex-module-decorators';
-import InspecDataModule from '../../store/data_store';
+import InspecDataModule, {isFromProfileFile} from '../../store/data_store';
+import FilteredDataModule from '../../store/data_filters';
+import {ZipFile} from 'yazl';
+import concat from 'concat-stream';
 
 // We declare the props separately
 // to make props types inferrable.
@@ -30,46 +33,72 @@ const Props = Vue.extend({
   props: {}
 });
 
+type FileData = {
+  name: string;
+  contents: string;
+};
+
 @Component({
   components: {
     LinkItem
   }
 })
 export default class ExportJSON extends Props {
+  populate_files(): FileData[] {
+    let filter_mod = getModule(FilteredDataModule, this.$store);
+    let ids = filter_mod.selected_file_ids;
+    let fileData = new Array<FileData>();
+    for (let evaluation of filter_mod.evaluations(ids)) {
+      fileData.push({
+        name: this.cleanup_filename(evaluation.from_file.filename),
+        contents: JSON.stringify(evaluation.data)
+      });
+    }
+    for (let prof of filter_mod.profiles(ids)) {
+      if (isFromProfileFile(prof)) {
+        fileData.push({
+          name: prof.from_file.filename,
+          contents: JSON.stringify(prof.data)
+        });
+      }
+    }
+    return fileData;
+  }
+  //exports .zip of jsons if multiple are selected, if one is selected it will export that .json file
   export_json() {
-    let id_string: string = this.$route.params.id;
-    let file_id = parseInt(id_string);
-    let store = getModule(InspecDataModule, this.$store);
-    let file = store.allFiles.find(f => f.unique_id === file_id);
-    if (file) {
-      if (file.hasOwnProperty('execution')) {
-        this.export_execution(file as EvaluationFile);
-      } else {
-        this.export_profile(file as ProfileFile);
+    let files = this.populate_files();
+    if (files.length < 1) {
+      return;
+    } else if (files.length === 1) {
+      //will only ever loop once
+      for (let file of files) {
+        let blob = new Blob([file.contents], {
+          type: 'application/json'
+        });
+        saveAs(blob, file.name);
       }
+    } else {
+      let zipfile = new ZipFile();
+      for (let file of files) {
+        let buffer = Buffer.from(file.contents);
+        zipfile.addBuffer(buffer, file.name);
+      }
+      //let zipfile.addBuffer(Buffer.from("hello"), "hello.txt");
+      // call end() after all the files have been added
+      zipfile.outputStream.pipe(
+        concat({encoding: 'uint8array'}, (b: Uint8Array) => {
+          saveAs(new Blob([b]), 'exported_jsons.zip');
+        })
+      );
+      zipfile.end();
     }
   }
-
-  export_execution(file?: EvaluationFile) {
-    if (file) {
-      let blob = new Blob([JSON.stringify(file.execution)], {
-        type: 'application/json'
-      });
-      if (blob) {
-        saveAs(blob, file.filename);
-      }
+  cleanup_filename(filename: string): string {
+    filename = filename.replace(/\s+/g, '_');
+    if (filename.substring(filename.length - 6) != '.json') {
+      filename = filename + '.json';
     }
-  }
-
-  export_profile(file?: ProfileFile) {
-    if (file) {
-      let blob = new Blob([JSON.stringify(file.profile)], {
-        type: 'application/json'
-      });
-      if (blob) {
-        saveAs(blob, file.filename);
-      }
-    }
+    return filename;
   }
 }
 </script>

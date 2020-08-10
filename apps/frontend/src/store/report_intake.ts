@@ -2,7 +2,7 @@
  * Reads and parses inspec files
  */
 
-import {parse} from 'inspecjs';
+import {parse, context} from 'inspecjs';
 import {Module, VuexModule, getModule, Action} from 'vuex-module-decorators';
 import DataModule from '@/store/data_store';
 import Store from '@/store/store';
@@ -33,10 +33,26 @@ export type InspecFile = {
   updatedAt?: Date;
 };
 
+/** Modify our contextual types to sort of have back-linking to sourced from files */
+export interface SourcedContextualizedEvaluation
+  extends context.ContextualizedEvaluation {
+  from_file: EvaluationFile;
+}
+
+export interface SourcedContextualizedProfile
+  extends context.ContextualizedProfile {
+  from_file: ProfileFile;
+}
+
 /** Represents a file containing an Inspec Execution output */
-export type EvaluationFile = InspecFile & {execution: parse.AnyExec};
+export type EvaluationFile = InspecFile & {
+  evaluation: SourcedContextualizedEvaluation;
+};
+
 /** Represents a file containing an Inspec Profile (not run) */
-export type ProfileFile = InspecFile & {profile: parse.AnyProfile};
+export type ProfileFile = InspecFile & {
+  profile: SourcedContextualizedProfile;
+};
 
 export type FileLoadOptions = {
   /** The file to load */
@@ -96,7 +112,6 @@ class InspecIntakeModule extends VuexModule {
    */
   @Action
   async loadText(options: TextLoadOptions): Promise<Error | null> {
-    //console.log("Load Text: " + options.text);
     // Fetch our data store
     const data = getModule(DataModule, Store);
 
@@ -115,42 +130,44 @@ class InspecIntakeModule extends VuexModule {
 
     // Determine what sort of file we (hopefully) have, then add it
     if (result['1_0_ExecJson']) {
-      // Handle as exec
-      console.log('is Execution');
-      let execution = result['1_0_ExecJson'];
-      execution = Object.freeze(execution);
-      if (options.database_id) {
-        let reportFile = {
-          unique_id: options.unique_id,
-          filename: options.filename,
-          database_id: options.database_id,
-          createdAt: options.createdAt,
-          updatedAt: options.updatedAt,
-          tags: options.tags,
-          execution
-        };
-        console.log('add Database Execution');
-        data.addExecution(reportFile);
-      } else {
-        let reportFile = {
-          unique_id: options.unique_id,
-          filename: options.filename,
-          execution
-        };
-        console.log('add Execution');
-        data.addExecution(reportFile);
-      }
-    } else if (result['1_0_ProfileJson']) {
-      // Handle as profile
-      console.log('is Profile');
-      let profile = result['1_0_ProfileJson'];
-      let profileFile = {
+      // A bit of chicken and egg here
+      let eval_file = {
         unique_id: options.unique_id,
         filename: options.filename,
-        profile
-      };
-      console.log('addProfile');
-      data.addProfile(profileFile);
+        database_id: options.database_id,
+        createdAt: options.createdAt,
+        updatedAt: options.updatedAt,
+        tags: options.tags
+        // evaluation
+      } as EvaluationFile;
+
+      // Fixup the evaluation to be Sourced from a file. Requires a temporary type break
+      let evaluation = (context.contextualizeEvaluation(
+        result['1_0_ExecJson']
+      ) as unknown) as SourcedContextualizedEvaluation;
+      evaluation.from_file = eval_file;
+
+      // Set and freeze
+      eval_file.evaluation = evaluation;
+      Object.freeze(evaluation);
+      data.addExecution(eval_file);
+    } else if (result['1_0_ProfileJson']) {
+      // Handle as profile
+      let profile_file = {
+        unique_id: options.unique_id,
+        filename: options.filename
+      } as ProfileFile;
+
+      // Fixup the evaluation to be Sourced from a file. Requires a temporary type break
+      let profile = (context.contextualizeProfile(
+        result['1_0_ProfileJson']
+      ) as unknown) as SourcedContextualizedProfile;
+      profile.from_file = profile_file;
+
+      // Set and freeze
+      profile_file.profile = profile;
+      Object.freeze(profile);
+      data.addProfile(profile_file);
     } else {
       console.log('is Nothing');
       return new Error("Couldn't parse data");

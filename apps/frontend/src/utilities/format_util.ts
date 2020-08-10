@@ -2,12 +2,12 @@
  * Functions for formatting items to have unique keys. Principally used for vuex v-for key generation.
  */
 
+import {isFromProfileFile} from '@/store/data_store';
+import {context} from 'inspecjs';
 import {
   SourcedContextualizedProfile,
-  SourcedContextualizedEvaluation,
-  isFromProfileFile
-} from '@/store/data_store';
-import {context} from 'inspecjs';
+  SourcedContextualizedEvaluation
+} from '@/store/report_intake';
 
 export function execution_unique_key(
   exec: Readonly<SourcedContextualizedEvaluation>
@@ -25,13 +25,9 @@ export function profile_unique_key(
   if (isFromProfileFile(profile)) {
     return `profile_${profile.from_file.unique_id}`;
   } else {
-    return (
-      execution_unique_key(
-        profile.sourced_from as SourcedContextualizedEvaluation
-      ) +
-      '-' +
-      profile.data.name
-    );
+    return `${execution_unique_key(
+      profile.sourced_from as SourcedContextualizedEvaluation
+    )}-${profile.data.name}`;
   }
 }
 

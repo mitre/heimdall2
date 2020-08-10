@@ -76,7 +76,7 @@ describe('Parsing', () => {
       // Get the actual
       let actual = status_count.hash({
         omit_overlayed_controls: true,
-        fromFile: file.unique_id
+        fromFile: [file.unique_id]
       });
 
       let {

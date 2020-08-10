@@ -2,12 +2,12 @@
  * This module provides a cached, reusable method for filtering data from data_store.
  */
 
-import {Module, VuexModule, getModule} from 'vuex-module-decorators';
-import DataModule, {
+import {Module, VuexModule, getModule, Mutation} from 'vuex-module-decorators';
+import {
   SourcedContextualizedProfile,
-  SourcedContextualizedEvaluation,
-  isFromProfileFile
-} from '@/store/data_store';
+  SourcedContextualizedEvaluation
+} from '@/store/report_intake';
+import DataModule, {isFromProfileFile} from '@/store/data_store';
 import {ControlStatus, Severity} from 'inspecjs';
 import {FileID} from '@/store/report_intake';
 import Store from '@/store/store';
@@ -20,7 +20,7 @@ const MAX_CACHE_ENTRIES = 20;
 export interface Filter {
   // General
   /** Which file these objects came from. Undefined => any */
-  fromFile?: FileID;
+  fromFile: FileID[];
 
   // Control specific
   /** What status the controls can have. Undefined => any */
@@ -83,47 +83,74 @@ function contains_term(
   name: 'filteredData'
 })
 class FilteredDataModule extends VuexModule {
+  selected_file_ids: FileID[] = [];
+
+  @Mutation
+  set_toggle_file_on(file: FileID): void {
+    if (this.selected_file_ids.includes(file)) {
+      return;
+    }
+    this.selected_file_ids.push(file);
+  }
+
+  @Mutation
+  set_toggle_file_off(file: FileID): void {
+    let checked = this.selected_file_ids.indexOf(file);
+    if (checked != -1) {
+      this.selected_file_ids.splice(checked, 1);
+    }
+  }
+
+  // Just override the whole list
+  @Mutation
+  set_toggled_files(files: FileID[]): void {
+    this.selected_file_ids.splice(0, this.selected_file_ids.length, ...files);
+  }
+
   private get dataStore(): DataModule {
     return getModule(DataModule, Store);
   }
 
   /**
    * Parameterized getter.
-   * Get all profiles from the specified file id.
+   * Get all evaluations from the specified file ids
+   */
+  get evaluations(): (
+    files: FileID[]
+  ) => readonly SourcedContextualizedEvaluation[] {
+    return (files: FileID[]) => {
+      return this.dataStore.contextualExecutions.filter(e =>
+        files.includes(e.from_file.unique_id)
+      );
+    };
+  }
+
+  /**
+   * Parameterized getter.
+   * Get all profiles from the specified file ids.
    * Filters only based on the file ID
    */
-  get profiles(): (file: FileID) => readonly context.ContextualizedProfile[] {
-    // Setup a cache for this run
-    const depends = this.dataStore.contextualProfiles;
-    const localCache: LRUCache<
-      FileID,
-      context.ContextualizedProfile[]
-    > = new LRUCache(MAX_CACHE_ENTRIES);
-
-    return (file: FileID) => {
-      // Generate a cache id
-      let cached = localCache.get(file);
-      if (cached !== undefined) {
-        return cached;
-      }
-
+  get profiles(): (
+    files: FileID[]
+  ) => readonly context.ContextualizedProfile[] {
+    return (files: FileID[]) => {
       // Initialize our list to add valid profiles to
       let profiles: context.ContextualizedProfile[] = [];
 
       // Filter to those that match our filter. In this case that just means come from the right file id
-      this.dataStore.contextualProfiles.forEach(prof => {
+      for (let prof of this.dataStore.contextualProfiles) {
         if (isFromProfileFile(prof)) {
-          if (prof.from_file.unique_id === file) {
+          if (files.includes(prof.from_file.unique_id)) {
             profiles.push(prof);
           }
         } else {
           // Its a report; go two levels up to get its file
           let ev = prof.sourced_from as SourcedContextualizedEvaluation;
-          if (ev.from_file.unique_id === file) {
+          if (files.includes(ev.from_file.unique_id)) {
             profiles.push(prof);
           }
         }
-      });
+      }
 
       return profiles;
     };
@@ -142,7 +169,7 @@ class FilteredDataModule extends VuexModule {
       readonly context.ContextualizedControl[]
     > = new LRUCache(MAX_CACHE_ENTRIES);
 
-    return (filter: Filter = {}) => {
+    return (filter: Filter) => {
       // Generate a hash for cache purposes.
       // If the "search_term" string is not null, we don't cache - no need to pollute
       let id: string = filter_cache_key(filter);
@@ -156,15 +183,10 @@ class FilteredDataModule extends VuexModule {
       // First get all of the profiles using the same filter
       let profiles: readonly context.ContextualizedProfile[];
       let controls: readonly context.ContextualizedControl[];
-      if (filter.fromFile !== undefined) {
-        // Get profiles
-        profiles = this.profiles(filter.fromFile);
-        // And all the controls they contain
-        controls = profiles.flatMap(profile => profile.contains);
-      } else {
-        // No file filter => we don't care about profile. Jump directly to the full control list
-        controls = this.dataStore.contextualControls;
-      }
+      // Get profiles
+      profiles = this.profiles(filter.fromFile);
+      // And all the controls they contain
+      controls = profiles.flatMap(profile => profile.contains);
 
       // Filter by control id
       if (filter.control_id !== undefined) {

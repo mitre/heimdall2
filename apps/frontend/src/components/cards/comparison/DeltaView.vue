@@ -1,112 +1,61 @@
 <!-- Visualizes a delta between two controls -->
 <template>
-  <v-card>
-    <v-container fluid>
-      <!-- Title row -->
-      <ChangeItem class="background lighten-2">
-        <template #old>
-          {{ old_name }}
-        </template>
-        <template #new>
-          {{ new_name }}
-        </template>
-      </ChangeItem>
+  <v-container fluid>
+    <!-- Header stuff -->
+    <v-row v-if="head_changes" justify="center">
+      <v-col cols="12">
+        <span class="font-weight-black"> Metadata changes: </span>
+      </v-col>
+    </v-row>
 
-      <!-- Header stuff -->
-      <v-row v-if="header_changes.any" justify="center">
-        <v-col cols="12">
-          <span class="font-weight-black"> Header changes: </span>
-        </v-col>
-      </v-row>
-
-      <ChangeItem v-for="change in header_changes.changes" :key="change.name">
-        <template #name>
-          {{ change.name }}
-        </template>
-        <template #old>
-          {{ change.old }}
-        </template>
-        <template #new>
-          {{ change.new }}
-        </template>
-      </ChangeItem>
-
-      <!-- Code stuff -->
-      <v-row v-if="code_changes.any" justify="center">
-        <v-col cols="12">
-          <span class="font-weight-black"> Code changes: </span>
-        </v-col>
-      </v-row>
-
-      <ChangeItem v-for="change in code_changes.changes" :key="change.name">
-        <template #name>
-          {{ change.name }}
-        </template>
-        <template #old>
-          {{ change.old }}
-        </template>
-        <template #new>
-          {{ change.new }}
-        </template>
-      </ChangeItem>
-
-      <!-- Result stuff -->
-      <v-row v-if="result_changes.length > 0" justify="center">
-        <v-col cols="12">
-          <span class="font-weight-black"> Result changes: </span>
-        </v-col>
-      </v-row>
-
-      <!-- A title per changed segment. We truncate these -->
-      <template v-for="change_group in result_changes">
-        <v-row justify="center" :key="change_group.name">
-          <v-col cols="12">
-            <TruncatedText
-              :span_classes="['font-weight-bold']"
-              :text="change_group.name"
-            />
-          </v-col>
-        </v-row>
-
-        <ChangeItem
-          v-for="change in change_group.changes"
-          :key="change_group.name + change.name"
-        >
-          <template #name>
-            {{ change.name }}
-          </template>
-          <template #old>
-            {{ change.old }}
-          </template>
-          <template #new>
-            {{ change.new }}
-          </template>
-        </ChangeItem>
-      </template>
-    </v-container>
-  </v-card>
+    <ChangeItem
+      v-for="change in header_changes.changes"
+      :key="change.name"
+      :change="change"
+      :shift="shift"
+    >
+    </ChangeItem>
+  </v-container>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {context, HDFControl, HDFControlSegment, SegmentStatus} from 'inspecjs';
-import {ControlDelta, ControlChangeGroup} from '@/utilities/delta_util';
+import {
+  ControlDelta,
+  ControlChangeGroup,
+  NOT_SELECTED
+} from '@/utilities/delta_util';
 import {diffArrays, ArrayOptions} from 'diff';
 import ChangeItem from '@/components/cards/comparison/ChangeItem.vue';
 import TruncatedText from '@/components/generic/TruncatedText.vue';
+import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
+
+//TODO: add line numbers
+import 'prismjs';
+import 'prismjs/components/prism-makefile.js';
+import 'prismjs/components/prism-ruby.js';
+//@ts-ignore
+import Prism from 'vue-prism-component';
+Vue.component('prism', Prism);
+
+import 'prismjs/components/prism-ruby.js';
 
 // Define our props
 const Props = Vue.extend({
   props: {
-    delta: Object // Of type ControlDelta
+    delta: Object, // Of type ControlDelta
+    shift: Number
   }
 });
 
 @Component({
   components: {
     ChangeItem,
-    TruncatedText
+    TruncatedText,
+    Prism,
+    ControlRowCol
   }
 })
 export default class DeltaView extends Props {
@@ -115,14 +64,15 @@ export default class DeltaView extends Props {
     return this.delta as ControlDelta;
   }
 
-  /** Formatted name for our older control */
-  get old_name(): string {
-    return this._delta.old.root.hdf.start_time || 'Old';
-  }
-
-  /** Formatted name for our newer control */
-  get new_name(): string {
-    return this._delta.new.root.hdf.start_time || 'New';
+  get head_changes(): boolean {
+    for (let change of this.header_changes.changes) {
+      for (let value of change.values) {
+        if (value != NOT_SELECTED) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   /**
@@ -130,14 +80,6 @@ export default class DeltaView extends Props {
    */
   get header_changes(): ControlChangeGroup {
     return this._delta.header_changes;
-  }
-
-  get code_changes(): ControlChangeGroup | undefined {
-    return this._delta.code_changes;
-  }
-
-  get result_changes(): ControlChangeGroup[] | undefined {
-    return this._delta.segment_changes;
   }
 }
 </script>

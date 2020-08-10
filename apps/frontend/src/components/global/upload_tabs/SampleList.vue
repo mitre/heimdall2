@@ -4,18 +4,20 @@
       Samples to show the power of the Heimdall application and supported HDF
       formats
     </v-card-subtitle>
-    <v-list>
-      <v-list-item v-for="(sample, index) in samples" :key="index">
+    <v-list max-height="434" style="overflow-y:scroll;">
+      <v-list-item v-for="(sample, index) in samples" :key="index" class="mx-2">
         <v-list-item-content>
           <v-list-item-title v-text="sample.name" />
         </v-list-item-content>
-        <v-list-item-action>
-          <v-btn icon @click="load_sample(sample)">
-            <v-icon>mdi-plus-circle</v-icon>
-          </v-btn>
+        <v-list-item-action @click="select_samp(sample)">
+          <v-checkbox color="blue" :input-value="selected(sample)" />
         </v-list-item-action>
       </v-list-item>
     </v-list>
+    <v-btn block class="px-2" @click="load_selected_samps">
+      Load
+      <v-icon class="pl-2"> mdi-file-upload</v-icon>
+    </v-btn>
   </v-card>
 </template>
 
@@ -30,11 +32,7 @@ import InspecIntakeModule, {
 } from '@/store/report_intake';
 import InspecDataModule from '../../../store/data_store';
 import AppInfoModule from '../../../store/app_info';
-
-interface Sample {
-  name: string;
-  url: string;
-}
+import {samples, Sample} from '@/utilities/sample_util';
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -49,85 +47,56 @@ const Props = Vue.extend({
   components: {}
 })
 export default class SampleList extends Props {
+  selected_samps: Sample[] = [];
+
   get samples(): Sample[] {
-    return [
-      {
-        name: 'Sonarqube Java Heimdall_tools Sample',
-        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/sonarqube_java_sample.json`
-      },
-      {
-        name: 'OWASP ZAP Webgoat Heimdall_tools Sample',
-        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/owasp_zap_webgoat.json`
-      },
-      {
-        name: 'OWASP ZAP Zero_WebAppSecurity Heimdall_tools Sample',
-        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/owasp_zap_zero.webappsecurity.json`
-      },
-      {
-        name: 'Fortify Heimdall_tools Sample',
-        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/fortify_h_tools_conv_webgoat.json`
-      },
-      {
-        name: 'AWS S3 Permissions Check InSpec Sample',
-        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/aws-s3-baseline.json`
-      },
-      {
-        name: 'AWS CIS Foundations Baseline InSpec Sample',
-        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/cis-aws-foundations-baseline.json`
-      },
-      {
-        name: 'NGINX Inspec Sample',
-        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/good_nginxresults.json`
-      },
-      {
-        name: 'Red Hat CVE Vulnerability Scan InSpec Sample',
-        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/rhel_cve_vulnerability_scan_baseline_with_failures.json`
-      },
-      {
-        name: 'RedHat 7 STIG Baseline InSpec Sample',
-        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/rhel7-results.json`
-      },
-      {
-        name: 'Ubuntu STIG Baseline InSpec Sample',
-        url: `https://raw.githubusercontent.com/${this.repo}/master/samples/ubuntu-16.04-baseline-results.json`
-      }
-    ];
+    return samples;
   }
 
-  get repo(): string {
-    let mod = getModule(AppInfoModule, this.$store);
-    return `${mod.repo_org}/${mod.repo_name}`;
+  selected(samp: Sample): boolean {
+    return this.selected_samps.includes(samp);
   }
 
   /** Callback for our list item clicks */
   load_sample(sample: Sample) {
-    // Generate an id
-    let unique_id = next_free_file_ID();
-
-    // Get intake module
     let intake_module = getModule(InspecIntakeModule, this.$store);
-    // Do fetch
-    fetch(sample.url, {method: 'get'})
-      .then(response => response.text())
-      .then(text =>
-        intake_module.loadText({filename: sample.name, unique_id, text})
-      )
+    let unique_id = next_free_file_ID();
+    return intake_module
+      .loadText({
+        text: JSON.stringify(sample.sample),
+        filename: sample.name,
+        unique_id
+      })
       .then(err => {
-        // Handle errors if necessary
         if (err) {
-          throw `Error loading sample ${sample.name}`;
+          console.error(`Error loading sample ${sample.name}`);
+          this.$toasted.global.error({
+            message: String(err),
+            isDark: this.$vuetify.theme.dark
+          });
         } else {
-          // Emit success
           this.$emit('got-files', [unique_id]);
         }
-      })
-      .catch(err => {
-        // Toast whatever error we got
-        this.$toasted.global.error({
-          message: String(err),
-          isDark: this.$vuetify.theme.dark
-        });
       });
+  }
+
+  load_selected_samps() {
+    for (let samp of this.selected_samps) {
+      this.load_sample(samp);
+    }
+    this.selected_samps = [];
+  }
+
+  select_samp(samp: Sample) {
+    let checked = this.selected_samps.indexOf(samp);
+    // If the sample is currently checked then this is a toggle to uncheck it
+    // indexOf returns -1 if the element is not in the list
+    if (checked != -1) {
+      this.selected_samps.splice(checked);
+    } // Otherwise this is a toggle to check it, added to the selected samples list
+    else {
+      this.selected_samps.push(samp);
+    }
   }
 }
 </script>

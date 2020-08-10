@@ -4,7 +4,7 @@
     <template #topbar-content>
       <v-btn @click="dialog = true" :disabled="dialog" class="mx-2">
         <span class="d-none d-md-inline pr-2">
-          Upload
+          Load
         </span>
         <v-icon>
           mdi-cloud-upload

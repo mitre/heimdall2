@@ -1,54 +1,52 @@
 <template>
-  <v-card>
-    <v-row class="pa-4" justify="space-between">
-      <v-col cols="5">
-        <b>Filename:</b> {{ filename }}<br />
-        <b>InSpec version:</b> {{ version }}<br />
-        <b>Platform:</b> {{ platform_name }} {{ platform_release }}<br />
-        <b>Duration:</b> {{ duration }}<br />
-      </v-col>
-      <v-divider vertical></v-divider>
-      <v-col v-if="show_tags" class="text-center">
-        <div v-if="tags" class="column_wrapper">
+  <v-row class="pa-4" justify="space-between">
+    <v-col :cols="info_cols">
+      <b>Filename:</b> {{ filename }}<br />
+      <b>Tool Version:</b> {{ inspec_version }}<br />
+      <b>Platform:</b> {{ platform }}<br />
+      <b>Duration:</b> {{ get_duration }}<br />
+    </v-col>
+    <!--v-divider vertical></v-divider-->
+    <v-col v-if="show_tags" class="text-center">
+      <div v-if="tags" class="column_wrapper">
+        <div v-for="item in tags.filter(not_filename)" :key="item.id">
+          <b>{{ item.content.name }}:</b> {{ item.content.value }}
+        </div>
+      </div>
+    </v-col>
+    <v-col v-if="edit_tags" class="text-center">
+      <div class="column_wrapper">
+        <v-list v-if="tags" dense class="px-2" subheader>
+          <v-subheader>Remove Tag</v-subheader>
           <div v-for="item in tags.filter(not_filename)" :key="item.id">
             <b>{{ item.content.name }}:</b> {{ item.content.value }}
+            <v-btn icon small @click="remove_tag(item)">
+              <v-icon> mdi-close </v-icon>
+            </v-btn>
           </div>
-        </div>
-      </v-col>
-      <v-col v-if="edit_tags" class="text-center">
-        <div class="column_wrapper">
-          <v-list v-if="tags" dense class="px-2" subheader>
-            <v-subheader>Remove Tag</v-subheader>
-            <div v-for="item in tags.filter(not_filename)" :key="item.id">
-              <b>{{ item.content.name }}:</b> {{ item.content.value }}
-              <v-btn icon small @click="remove_tag(item)">
-                <v-icon> mdi-close </v-icon>
-              </v-btn>
-            </div>
-          </v-list>
-          <v-list dense class="px-2" subheader>
-            <v-subheader>Add Tag</v-subheader>
-            <v-form ref="form">
-              <v-combobox
-                :items="tag_list"
-                v-model="tag_name"
-                label="Tag Name"
-                dense
-              ></v-combobox>
-              <v-text-field v-model="tag_value" label="Value" />
-              <v-btn class="mr-4" @click="submit_tag">submit</v-btn>
-            </v-form>
-          </v-list>
-        </div>
-      </v-col>
-      <v-btn v-if="show_tags" icon small @click="open_tag_edit">
-        <v-icon class="float-right"> mdi-pencil-box-outline </v-icon>
-      </v-btn>
-      <v-btn v-if="edit_tags" icon small @click="close_tag_edit">
-        <v-icon class="float-right"> mdi-close </v-icon>
-      </v-btn>
-    </v-row>
-  </v-card>
+        </v-list>
+        <v-list dense class="px-2" subheader>
+          <v-subheader>Add Tag</v-subheader>
+          <v-form ref="form">
+            <v-combobox
+              :items="tag_list"
+              v-model="tag_name"
+              label="Tag Name"
+              dense
+            ></v-combobox>
+            <v-text-field v-model="tag_value" label="Value" />
+            <v-btn class="mr-4" @click="submit_tag">submit</v-btn>
+          </v-form>
+        </v-list>
+      </div>
+    </v-col>
+    <v-btn v-if="show_tags" icon small @click="open_tag_edit">
+      <v-icon class="float-right"> mdi-pencil-box-outline </v-icon>
+    </v-btn>
+    <v-btn v-if="edit_tags" icon small @click="close_tag_edit">
+      <v-icon class="float-right"> mdi-close </v-icon>
+    </v-btn>
+  </v-row>
 </template>
 
 <script lang="ts">
@@ -64,6 +62,7 @@ import {plainToClass} from 'class-transformer';
 import {Evaluation, Tag, Tags} from '@/types/models.ts';
 import VeeValidate from 'vee-validate';
 import VuePassword from 'vue-password';
+import {FileName} from 'aws-sdk/clients/iot';
 
 Vue.use(VeeValidate);
 
@@ -81,7 +80,7 @@ export interface TagHash {
 // to make props types inferrable.
 const EvaluationInfoProps = Vue.extend({
   props: {
-    filter: Number // Of type Filer from filteredData
+    file_filter: Number // Of type Filer from filteredData
   }
 });
 
@@ -102,76 +101,91 @@ export default class EvaluationInfo extends EvaluationInfoProps {
   database_id: number | null = null;
 
   created() {
-    console.log('created');
     this.load_file();
   }
 
   updated() {
     let store = getModule(InspecDataModule, this.$store);
-    let file = store.allFiles.find(f => f.unique_id === this.filter);
+    let file = store.allFiles.find(f => f.unique_id === this.file_filter);
     if (file) {
       let eva = file as EvaluationFile;
-      this.version = eva.execution.version;
-      this.platform_name = eva.execution.platform.name;
-      this.platform_release = eva.execution.platform.release;
-      this.duration = eva.execution.statistics.duration;
+      this.version = eva.evaluation.data.version;
+      this.platform_name = eva.evaluation.data.platform.name;
+      this.platform_release = eva.evaluation.data.platform.release;
+      this.duration = eva.evaluation.data.statistics.duration;
       this.database_id = eva.database_id || null;
     }
-    console.log('updated ID: ' + this.filter + ', DBID: ' + this.database_id);
     if (!this.database_id) {
       this.show_tags = false;
       this.edit_tags = false;
-      console.log('No Tags');
     } else {
       this.show_tags = true;
     }
   }
 
   mounted() {
-    console.log('mounted ID: ' + this.filter + ', DBID: ' + this.database_id);
+    let mod = getModule(ServerModule, this.$store);
+    if (mod.serverMode == undefined) {
+      mod.server_mode();
+    }
     if (!this.database_id) {
       this.show_tags = false;
       this.edit_tags = false;
-      console.log('No Tags');
     } else {
       this.show_tags = true;
     }
   }
 
   watch() {
-    console.log('Prop changed: ' + this.filter);
+    console.log('Prop changed: ' + this.file_filter);
   }
 
-  get filename() {
-    let store = getModule(InspecDataModule, this.$store);
-    let file = store.allFiles.find(f => f.unique_id === this.filter);
-    if (file) {
-      let eva = file as EvaluationFile;
-      console.log('filename 1: ' + eva.filename);
-      if (eva.database_id === null) {
-        console.log('no database id');
-      } else {
-        this.database_id = eva.database_id || null;
-        this.load_tags(this.database_id);
-      }
-      return eva.filename;
-    } else {
-      return null;
+  get filename(): string {
+    return this.file.filename;
+  }
+
+  get inspec_version(): string {
+    return this.file.evaluation.data.version;
+  }
+
+  get platform(): string {
+    return (
+      this.file.evaluation.data.platform.name +
+      this.file.evaluation.data.platform.release
+    );
+  }
+
+  get get_duration(): string {
+    return this.file.evaluation.data.statistics.duration + '';
+  }
+
+  //gets file to retrieve corresponding data
+  get file(): EvaluationFile {
+    let filter_module = getModule(FilteredDataModule, this.$store);
+    return filter_module.evaluations([this.file_filter])[0].from_file;
+  }
+
+  //gives more room for actual info when the "tags" button is not displayed
+  get info_cols(): number {
+    let mod = getModule(ServerModule, this.$store);
+    if (mod.serverMode) {
+      return 5;
     }
+    return 12;
   }
 
   load_file() {
-    console.log('load_file: ' + this.filter);
+    console.log('load_file: ' + this.file_filter);
     let store = getModule(InspecDataModule, this.$store);
-    let file = store.allFiles.find(f => f.unique_id === this.filter);
+    let file = store.allFiles.find(f => f.unique_id === this.file_filter);
     if (file) {
       let eva = file as EvaluationFile;
       console.log('filename 2: ' + eva.filename);
       this.filename2 = eva.filename;
-      this.version = eva.execution.version;
-      this.platform_name = eva.execution.platform.name;
-      this.platform_release = eva.execution.platform.release;
-      this.duration = eva.execution.statistics.duration;
+      this.version = eva.evaluation.data.version;
+      this.platform_name = eva.evaluation.data.platform.name;
+      this.platform_release = eva.evaluation.data.platform.release;
+      this.duration = eva.evaluation.data.statistics.duration;
       this.tags = eva.tags || null;
       if (eva.database_id === null) {
         console.log('null file');

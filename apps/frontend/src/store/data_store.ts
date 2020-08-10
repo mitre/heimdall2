@@ -2,7 +2,13 @@
  * Tracks uploaded files, and their parsed contents
  */
 
-import {Module, VuexModule, Mutation, Action} from 'vuex-module-decorators';
+import {
+  Module,
+  VuexModule,
+  Mutation,
+  Action,
+  getModule
+} from 'vuex-module-decorators';
 import {
   HDFControl,
   parse,
@@ -11,24 +17,22 @@ import {
   ControlStatus,
   context
 } from 'inspecjs';
-import {FileID, EvaluationFile, ProfileFile} from '@/store/report_intake';
+import {
+  FileID,
+  EvaluationFile,
+  ProfileFile,
+  InspecFile,
+  SourcedContextualizedProfile,
+  SourcedContextualizedEvaluation
+} from '@/store/report_intake';
 import Store from '@/store/store';
+import FilteredDataModule from './data_filters';
 
 /** We make some new variant types of the Contextual types, to include their files*/
-export interface SourcedContextualizedProfile
-  extends context.ContextualizedProfile {
-  from_file: ProfileFile;
-}
-
 export function isFromProfileFile(
   p: context.ContextualizedProfile
 ): p is SourcedContextualizedProfile {
   return p.sourced_from === null;
-}
-
-export interface SourcedContextualizedEvaluation
-  extends context.ContextualizedEvaluation {
-  from_file: EvaluationFile;
 }
 
 @Module({
@@ -61,31 +65,25 @@ class InspecDataModule extends VuexModule {
     readonly context.ContextualizedControl[]
   ] {
     // Initialize all our arrays
-    let executions: SourcedContextualizedEvaluation[] = [];
+    let evaluations: SourcedContextualizedEvaluation[] = [];
     let profiles: context.ContextualizedProfile[] = [];
     let controls: context.ContextualizedControl[] = [];
 
     // Process our data
     for (let f of this.executionFiles) {
-      let fc = context.contextualizeEvaluation(f.execution);
-      let sfc = (fc as unknown) as SourcedContextualizedEvaluation;
-      sfc.from_file = f;
-      executions.push(Object.freeze(sfc));
-      profiles.push(...fc.contains);
+      evaluations.push(f.evaluation);
+      profiles.push(...f.evaluation.contains);
     }
 
     for (let f of this.profileFiles) {
-      let fc = context.contextualizeProfile(f.profile);
-      let sfc = (fc as unknown) as SourcedContextualizedProfile;
-      sfc.from_file = f;
-      profiles.push(Object.freeze(sfc));
+      profiles.push(f.profile);
     }
 
     for (let p of profiles) {
       controls.push(...p.contains);
     }
 
-    return [executions, profiles, controls];
+    return [evaluations, profiles, controls];
   }
 
   /**
@@ -141,6 +139,8 @@ class InspecDataModule extends VuexModule {
     this.executionFiles = this.executionFiles.filter(
       ef => ef.unique_id !== file_id
     );
+    let filtered_module = getModule(FilteredDataModule, Store);
+    filtered_module.set_toggle_file_off(file_id);
   }
 
   /**

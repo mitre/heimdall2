@@ -39,7 +39,9 @@ function isCategory(x: any): x is Category<string> {
 const ApexPieChartProps = Vue.extend({
   props: {
     categories: Array, // Should be of type Category[]
-    series: Array // Should be of type number[]
+    series: Array, // Should be of type number[]
+    center_label: String,
+    center_value: String
   }
 });
 
@@ -120,6 +122,23 @@ export default class ApexPieChart extends ApexPieChartProps {
         },
         labels: {
           useSeriesColors: true
+        }
+      },
+      plotOptions: {
+        pie: {
+          donut: {
+            labels: {
+              show: true,
+              value: {color: '#99a2ac'},
+              total: {
+                show: !!(this.center_label && this.center_value),
+                label: this.center_label,
+                showAlways: true,
+                color: '#008FFB',
+                formatter: () => this.center_value
+              }
+            }
+          }
         }
       },
       chart: {

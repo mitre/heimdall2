@@ -1,5 +1,9 @@
 <template>
-  <v-list-item :to="`/results/${file.unique_id}`" :title="file.filename">
+  <v-list-item @click="select_file_exclusive" :title="file.filename">
+    <v-list-item-action @click="select_file">
+      <v-checkbox :input-value="selected" color="blue" />
+    </v-list-item-action>
+
     <v-list-item-avatar>
       <v-icon v-text="icon" small />
     </v-list-item-avatar>
@@ -8,7 +12,7 @@
       <v-list-item-title v-text="file.filename" />
     </v-list-item-content>
 
-    <v-list-item-action @click="save_this_file">
+    <v-list-item-action v-if="serverMode" @click="save_this_file">
       <v-btn icon small>
         <v-icon> mdi-content-save </v-icon>
       </v-btn>
@@ -27,7 +31,8 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {getModule} from 'vuex-module-decorators';
 import InspecDataModule from '@/store/data_store';
-import {EvaluationFile, ProfileFile} from '@/store/report_intake';
+import FilteredDataModule from '@/store/data_filters';
+import {EvaluationFile, ProfileFile, FileID} from '@/store/report_intake';
 import ServerModule from '@/store/server';
 
 // We declare the props separately to make props types inferable.
@@ -43,6 +48,33 @@ const FileItemProps = Vue.extend({
 export default class FileItem extends FileItemProps {
   host: string = 'http://localhost:8050';
 
+  select_file(evt: Event) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    let data_store = getModule(FilteredDataModule, this.$store);
+    if (!this.selected) {
+      data_store.set_toggle_file_on(this.file.unique_id);
+    } else {
+      data_store.set_toggle_file_off(this.file.unique_id);
+    }
+  }
+
+  select_file_exclusive(evt: Event) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    let data_store = getModule(FilteredDataModule, this.$store);
+
+    // Clear all except this one
+    data_store.set_toggled_files([this.file.unique_id]);
+  }
+
+  //checks if file is selected
+  get selected(): boolean {
+    let data_store = getModule(FilteredDataModule, this.$store);
+    return data_store.selected_file_ids.includes(this.file.unique_id);
+  }
+
+  //removes uploaded file from the currently observed files, not from database
   close_this_file(evt: Event) {
     evt.stopPropagation();
     evt.preventDefault();
@@ -50,15 +82,14 @@ export default class FileItem extends FileItemProps {
     data_store.removeFile(this.file.unique_id);
   }
 
+  //saves file to database
   save_this_file(evt: Event) {
     evt.stopPropagation();
     evt.preventDefault();
-    console.log('save this file');
     let data_store = getModule(InspecDataModule, this.$store);
     let file = data_store.allFiles.find(
       f => f.unique_id === this.file.unique_id
     );
-    console.log('got file');
     if (file) {
       if (file.hasOwnProperty('execution')) {
         this.save_evaluation(file as EvaluationFile);
@@ -88,20 +119,34 @@ export default class FileItem extends FileItemProps {
     }
   }
 
+  //saves profile to database
   save_profile(file?: ProfileFile) {
+    // Strip the file
     if (file) {
-      let blob = new Blob([JSON.stringify(file.profile)], {
+      let decontextualized = file.profile.data;
+      let blob = new Blob([JSON.stringify(decontextualized)], {
         type: 'application/json'
       });
     }
   }
 
+  //gives different icons for a file if it is just a profile
   get icon(): string {
     if (this.file.profile !== undefined) {
       return 'note';
     } else {
       return 'mdi-google-analytics';
     }
+  }
+
+  //checks if heimdall is in server mode
+  get serverMode(): boolean {
+    let mod = getModule(ServerModule, this.$store);
+    if (mod.serverMode == undefined) {
+      mod.server_mode();
+    }
+
+    return mod.serverMode!;
   }
 }
 </script>

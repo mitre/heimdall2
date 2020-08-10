@@ -4,7 +4,7 @@
       <LinkItem
         key="export_nist"
         text="NIST SP 800-53 Security Control Coverage"
-        icon="mdi-download"
+        icon="mdi-file-excel-outline"
         @click="export_nist()"
         v-on="on"
       />
@@ -74,17 +74,19 @@ export default class ExportNIST extends Props {
   }
 
   /** Makes a sheet for the given file id */
-  sheet_for(file?: EvaluationFile): Sheet {
+  sheet_for(file?: FileID): Sheet {
+    let filter_module = getModule(FilteredDataModule, this.$store);
+    let data_store = getModule(InspecDataModule, this.$store);
+
     // If file not provided
     let filename: string = 'All files';
-    let id: FileID | undefined = undefined;
+    let id: FileID[] = filter_module.selected_file_ids;
     if (file) {
-      id = file.unique_id;
-      filename = file.filename;
+      id = [file];
+      filename = data_store.allFiles.find(x => x.unique_id == file)!.filename;
     }
 
     // Get our data
-    let filter_module = getModule(FilteredDataModule, this.$store);
     let base_filter = this.filter as Filter;
     let modified_filter: Filter = {...base_filter, fromFile: id};
     let controls = filter_module.controls(modified_filter);
@@ -131,12 +133,12 @@ export default class ExportNIST extends Props {
 
   export_nist() {
     // Get our data module
-    let data = getModule(InspecDataModule, this.$store);
+    let data = getModule(FilteredDataModule, this.$store);
 
     // Get files we plan on exporting
-    let files: Array<EvaluationFile | undefined> = [
+    let files: Array<FileID | undefined> = [
       undefined,
-      ...data.executionFiles
+      ...data.selected_file_ids
     ];
 
     // Convert to sheets

@@ -5,7 +5,10 @@ import router from '@/router';
 import store from '@/store/store';
 import vuetify from '@/plugins/vuetify'; // path to vuetify export
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
+//import "@mdi/font/css/materialdesignicons.css";
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import VueAnalytics from 'vue-analytics';
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
 
 Vue.use(VueAnalytics, {
   id: 'UA-149784359-1',

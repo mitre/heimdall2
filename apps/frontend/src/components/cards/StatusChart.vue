@@ -2,6 +2,8 @@
   <ApexPieChart
     :categories="categories"
     :series="series"
+    :center_label="center_label"
+    :center_value="center_value"
     @category-selected="onSelect"
   />
 </template>
@@ -18,7 +20,9 @@ import {ControlStatus} from 'inspecjs';
 const StatusChartProps = Vue.extend({
   props: {
     value: String, // The currently selected status, or null
-    filter: Object // Of type Filer from filteredData
+    filter: Object, // Of type Filer from filteredData
+    show_compliance: Boolean
+    //supress: Boolean // Supress status selection
   }
 });
 
@@ -59,6 +63,30 @@ export default class StatusChart extends StatusChartProps {
       color: 'statusProfileError'
     }
   ];
+
+  get center_label(): string {
+    if (this.show_compliance) {
+      return 'Compliance:';
+    }
+    return '';
+  }
+
+  get center_value(): string {
+    if (this.show_compliance) {
+      let counts = getModule(StatusCountModule, this.$store);
+      let passed = counts.countOf(this.filter, 'Passed');
+      let total =
+        passed +
+        counts.countOf(this.filter, 'Failed') +
+        counts.countOf(this.filter, 'Profile Error') +
+        counts.countOf(this.filter, 'Profile Error');
+      if (total == 0) {
+        return '0%';
+      } else {
+        return '' + Math.round((100.0 * passed) / total) + '%';
+      }
+    } else return '';
+  }
 
   get series(): number[] {
     let counts: StatusCountModule = getModule(StatusCountModule, this.$store);
