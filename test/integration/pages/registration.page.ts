@@ -1,4 +1,4 @@
-import {Page, Response} from 'puppeteer';
+import {Page} from 'puppeteer';
 import {CreateUserDto} from '../../../src/users/dto/create-user.dto';
 
 export class RegistrationPage {

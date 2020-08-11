@@ -1,4 +1,4 @@
-import {Page, Response} from 'puppeteer';
+import {Page} from 'puppeteer';
 
 export class LogInPage {
   async loginSuccess(page: Page, user: any): Promise<void> {
@@ -26,7 +26,7 @@ export class LogInPage {
   async logout(page: Page): Promise<void> {
     await Promise.all([
       page.waitForSelector('#login_button'),
-      page.click('#logout'),
+      page.click('#logout')
     ]);
   }
 

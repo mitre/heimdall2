@@ -1,9 +1,8 @@
 import {Test, TestingModule} from '@nestjs/testing';
 import {AppModule} from '../../src/app.module';
-import {IntegrationSpecHelper} from './helpers/integration-spec.helper';
 import {
   CREATE_ADMIN_DTO,
-  CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS,
+  CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
 } from '../constants/users-test.constant';
 import {RegistrationPage} from './pages/registration.page';
 import {LogInPage} from './pages/log-in.page';
@@ -17,7 +16,6 @@ describe('Registration', () => {
   let databaseService: DatabaseService;
   let configService: ConfigService;
   let appUrl: string;
-  let integrationSpecHelper: IntegrationSpecHelper;
 
   const registrationPage = new RegistrationPage();
   const logInPage = new LogInPage();
@@ -34,9 +32,8 @@ describe('Registration', () => {
     databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
     configService = moduleFixture.get<ConfigService>(ConfigService);
 
-    appUrl = `http://localhost:${configService.get('HEIMDALL_SERVER_PORT') || '3000'}`;
-
-    integrationSpecHelper = new IntegrationSpecHelper(appUrl);
+    appUrl = `http://localhost:${configService.get('HEIMDALL_SERVER_PORT') ||
+      '3000'}`;
   });
 
   beforeEach(async () => {
@@ -53,11 +50,17 @@ describe('Registration', () => {
     it('allows a user to create an account', async () => {
       await registrationPage.registerSuccess(page, CREATE_ADMIN_DTO);
       await logInVerifier.verifyLoginFormPresent(page);
-      await toastVerifier.verifySuccessPresent(page, 'You have successfully registered, please sign in');
+      await toastVerifier.verifySuccessPresent(
+        page,
+        'You have successfully registered, please sign in'
+      );
     });
 
     it('rejects passwords that do not match', async () => {
-      await registrationPage.registerFailure(page, CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS);
+      await registrationPage.registerFailure(
+        page,
+        CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
+      );
       await registrationVerifier.verifyRegistrationFormPresent(page);
       await toastVerifier.verifyErrorPresent(page, 'Passwords do not match');
     });
@@ -66,7 +69,10 @@ describe('Registration', () => {
       await registrationPage.registerSuccess(page, CREATE_ADMIN_DTO);
       await logInPage.switchToRegister(page);
       await registrationPage.registerFailure(page, CREATE_ADMIN_DTO);
-      await toastVerifier.verifyErrorPresent(page, 'An unidentified error has occured');
+      await toastVerifier.verifyErrorPresent(
+        page,
+        'An unidentified error has occured'
+      );
     });
   });
 

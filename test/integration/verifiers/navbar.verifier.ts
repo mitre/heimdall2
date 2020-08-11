@@ -7,12 +7,18 @@ export class NavbarVerifier {
   }
 
   async verifyTitle(page: Page, title: string): Promise<void> {
-    const navbarTitle = await page.$eval('#toolbar_title > span', el => el.innerHTML);
+    const navbarTitle = await page.$eval(
+      '#toolbar_title > span',
+      el => el.innerHTML
+    );
     expect(navbarTitle).toEqual(title);
   }
 
   async verifyUpload(page: Page): Promise<void> {
-    const uploadButton = await page.$eval('#upload-btn > span', el => el.innerHTML);
+    const uploadButton = await page.$eval(
+      '#upload-btn > span',
+      el => el.innerHTML
+    );
     expect(uploadButton).toContain('Load');
   }
 }

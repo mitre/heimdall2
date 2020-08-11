@@ -34,7 +34,8 @@ describe('Authentication', () => {
     databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
     configService = moduleFixture.get<ConfigService>(ConfigService);
 
-    appUrl = `http://localhost:${configService.get('HEIMDALL_SERVER_PORT') || '3000'}`;
+    appUrl = `http://localhost:${configService.get('HEIMDALL_SERVER_PORT') ||
+      '3000'}`;
 
     integrationSpecHelper = new IntegrationSpecHelper(appUrl);
   });
@@ -66,7 +67,7 @@ describe('Authentication', () => {
       await integrationSpecHelper.addUser(CREATE_USER_DTO_TEST_OBJ);
       await logInPage.loginFailure(page, BAD_LOGIN_AUTHENTICATION);
       await logInVerifier.verifyLoginFormPresent(page);
-      await toastVerifier.verifyErrorPresent(page, 'Unauthorized')
+      await toastVerifier.verifyErrorPresent(page, 'Unauthorized');
     });
 
     it('fails to find a user that does not exist', async () => {
@@ -74,7 +75,10 @@ describe('Authentication', () => {
       // be shown to the user.
       await logInPage.loginFailure(page, ADMIN_LOGIN_AUTHENTICATION);
       await logInVerifier.verifyLoginFormPresent(page);
-      await toastVerifier.verifyErrorPresent(page, 'ERROR: User with given id not found');
+      await toastVerifier.verifyErrorPresent(
+        page,
+        'ERROR: User with given id not found'
+      );
     });
   });
 
