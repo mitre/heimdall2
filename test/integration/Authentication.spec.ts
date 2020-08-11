@@ -79,7 +79,7 @@ describe('Authentication', () => {
   });
 
   describe('Logout Button', () => {
-    it.only('logs a user out', async () => {
+    it('logs a user out', async () => {
       // Scenario Description: After successfully authenticating and then clicking log out
       // the user should see an empty log in page.
       await integrationSpecHelper.addUser(CREATE_ADMIN_DTO);
