@@ -97,6 +97,7 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "coverageDirectory": "../coverage",
+    "testEnvironment": "node",
     "testTimeout": 10000
   }
 }
