@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {CreateUserDto} from '../../../src/users/dto/create-user.dto';
 
 export class IntegrationSpecHelper {
   private readonly url: string;
@@ -6,7 +7,7 @@ export class IntegrationSpecHelper {
     this.url = url;
   }
 
-  async addUser(user: any): Promise<any> {
+  async addUser(user: CreateUserDto): Promise<any> {
     return axios
       .post(this.url + '/users', user)
       .then(({data}) => {

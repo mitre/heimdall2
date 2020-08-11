@@ -1,6 +1,6 @@
-import {LandingPage} from './pages/log-in.page';
+import {LogInPage} from './pages/log-in.page';
 import {LogInVerifier} from './verifiers/log-in.verifier';
-import {ErrorVerifier} from './verifiers/error.verifier';
+import {ToastVerifier} from './verifiers/toast.verifier';
 import {NavbarVerifier} from './verifiers/navbar.verifier';
 import {IntegrationSpecHelper} from './helpers/integration-spec.helper';
 import {AppModule} from '../../src/app.module';
@@ -20,9 +20,9 @@ describe('Authentication', () => {
   let appUrl: string;
   let integrationSpecHelper: IntegrationSpecHelper;
 
-  const landingPage = new LandingPage();
+  const logInPage = new LogInPage();
   const logInVerifier = new LogInVerifier();
-  const errorVerifier = new ErrorVerifier();
+  const toastVerifier = new ToastVerifier();
   const navbarVerifier = new NavbarVerifier();
 
   beforeAll(async () => {
@@ -54,9 +54,9 @@ describe('Authentication', () => {
       // Scenario Description: A user successfully authenticates with username and
       // password. The navbar is checked for the presence of correct buttons and title
       await integrationSpecHelper.addUser(CREATE_ADMIN_DTO);
-      await landingPage.login(page, ADMIN_LOGIN_AUTHENTICATION);
+      await logInPage.loginSuccess(page, ADMIN_LOGIN_AUTHENTICATION);
       await navbarVerifier.verifyUpload(page);
-      await navbarVerifier.verifyTitle('Profile');
+      await navbarVerifier.verifyTitle(page, 'Profile');
       await navbarVerifier.verifyLogout(page);
     });
 
@@ -64,30 +64,30 @@ describe('Authentication', () => {
       // Scenario Description: If a user fails to authenticate they will be brought back
       // to the login form with an error.
       await integrationSpecHelper.addUser(CREATE_USER_DTO_TEST_OBJ);
-      await landingPage.login(page, BAD_LOGIN_AUTHENTICATION);
+      await logInPage.loginFailure(page, BAD_LOGIN_AUTHENTICATION);
       await logInVerifier.verifyLoginFormPresent(page);
-      await errorVerifier.verifyErrorPresent(page, 'Unauthorized')
+      await toastVerifier.verifyErrorPresent(page, 'Unauthorized')
     });
 
     it('fails to find a user that does not exist', async () => {
       // Scenario Description: If a user is not found in the database an error toast will
       // be shown to the user.
-      await landingPage.loginNoWait(page, ADMIN_LOGIN_AUTHENTICATION);
+      await logInPage.loginFailure(page, ADMIN_LOGIN_AUTHENTICATION);
       await logInVerifier.verifyLoginFormPresent(page);
-      await errorVerifier.verifyErrorPresent(page, 'ERROR: User with given id not found');
+      await toastVerifier.verifyErrorPresent(page, 'ERROR: User with given id not found');
     });
   });
 
   describe('Logout Button', () => {
-    it('logs a user out', async () => {
+    it.only('logs a user out', async () => {
       // Scenario Description: After successfully authenticating and then clicking log out
       // the user should see an empty log in page.
       await integrationSpecHelper.addUser(CREATE_ADMIN_DTO);
-      await landingPage.login(page, ADMIN_LOGIN_AUTHENTICATION);
+      await logInPage.loginSuccess(page, ADMIN_LOGIN_AUTHENTICATION);
       await navbarVerifier.verifyUpload(page);
-      await navbarVerifier.verifyTitle('Profile');
+      await navbarVerifier.verifyTitle(page, 'Profile');
       await navbarVerifier.verifyLogout(page);
-      await landingPage.logout(page);
+      await logInPage.logout(page);
       await logInVerifier.verifyLoginFormPresent(page);
     });
   });
