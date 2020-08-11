@@ -34,6 +34,10 @@ describe('Authz Service', () => {
     authzService.abac.allow(USER_DELETE_USERS_POLICY_DTO);
   });
 
+  beforeEach(() => {
+    return databaseService.cleanAll();
+  });
+
   describe('Test the can function', () => {
     it('should grant access when subject has admin role', async () => {
       expect(await authzService.can(ADMIN, 'delete', '/users')).toBeTruthy();
@@ -101,6 +105,7 @@ describe('Authz Service', () => {
   });
 
   afterAll(async () => {
+    await databaseService.cleanAll();
     await databaseService.closeConnection();
   });
 });
