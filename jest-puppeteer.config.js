@@ -3,12 +3,13 @@ require('dotenv').config();
 module.exports = {
   launch: {
     dumpio: true,
-    headless: true,
+    headless: process.env.HEIMDALL_HEADLESS_TESTS && true,
     args: [
       '--disable-infobars',
       '--disable-gpu',
       '--hide-scrollbars',
-      '--mute-audio'
+      '--mute-audio',
+      '--disable-dev-shm-usage'
     ],
     defaultViewport: {
       height: 1080,
