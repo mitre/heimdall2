@@ -1,9 +1,18 @@
 require('dotenv').config();
 
+function headless() {
+  input = process.env.HEIMDALL_HEADLESS_TESTS;
+  if(typeof input !== 'undefined' && input) {
+    return input == 'true';
+  } else {
+    return true;
+  }
+}
+
 module.exports = {
   launch: {
     dumpio: true,
-    headless: process.env.HEIMDALL_HEADLESS_TESTS == 'true' && true,
+    headless: headless(),
     args: [
       '--disable-infobars',
       '--disable-gpu',
