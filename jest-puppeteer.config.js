@@ -18,7 +18,8 @@ module.exports = {
       '--disable-gpu',
       '--hide-scrollbars',
       '--mute-audio',
-      '--disable-dev-shm-usage'
+      '--disable-dev-shm-usage',
+      '--no-sandbox'
     ],
     defaultViewport: {
       height: 1080,
