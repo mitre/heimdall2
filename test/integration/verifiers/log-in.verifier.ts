@@ -1,6 +1,6 @@
 import {Page} from 'puppeteer';
 
-export class LandingPageVerifier {
+export class LogInVerifier {
   async verifyLoginFormPresent(page: Page): Promise<void> {
     const loginFormHeader = await page.$eval('#login_form_title', el => el.innerHTML);
     const loginLabel = await page.$eval('label[for="login_field"]', el => el.innerHTML);
