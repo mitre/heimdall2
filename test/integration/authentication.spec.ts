@@ -77,7 +77,7 @@ describe('Authentication', () => {
       await logInVerifier.verifyLoginFormPresent(page);
       await toastVerifier.verifyErrorPresent(
         page,
-        'ERROR: User with given id not found'
+        'User with given id not found'
       );
     });
   });
