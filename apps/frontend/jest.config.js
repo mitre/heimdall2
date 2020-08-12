@@ -12,6 +12,7 @@ module.exports = {
   },
   moduleDirectories: ['node_modules', 'src'],
   moduleNameMapper: {
-    '^@[/](.+)': '<rootDir>/src/$1'
+    '^@[/](.+)': '<rootDir>/src/$1',
+    '^.+\\.(css)$': '<rootDir>/tests/util/cssTransform.js'
   }
 };
