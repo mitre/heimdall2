@@ -79,7 +79,7 @@ export default class StatusChart extends StatusChartProps {
         passed +
         counts.countOf(this.filter, 'Failed') +
         counts.countOf(this.filter, 'Profile Error') +
-        counts.countOf(this.filter, 'Profile Error');
+        counts.countOf(this.filter, 'Not Reviewed');
       if (total == 0) {
         return '0%';
       } else {
