@@ -37,9 +37,26 @@ jobs:
        run: |
          npx sequelize-cli db:create
          npx sequelize-cli db:migrate
+         
+     - name: Checkout frontend
+       uses: actions/checkout@v2
+       with:
+         ref: heimdall2
+         repository: mitre/heimdall-lite
+         path: client
 
+     - name: Build frontend
+       run: |
+         npm install
+         npm run build 
+       working-directory: client
+       
      - name: Run test coverage
        run: npm run test:ci-cov
 
      - name: Run e2e tests
        run: npm run test:e2e
+       
+     - name: Run e2e UI tests
+       run: npm run test:ui
+

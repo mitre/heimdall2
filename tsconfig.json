@@ -13,5 +13,6 @@
     "esModuleInterop": true,
     "lib": ["es2020"]
   },
-  "exclude": ["node_modules", "dist", "client"]
+  "exclude": ["node_modules", "dist", "client"],
+  "include": ["src/**/*", "test/**/*"]
 }
