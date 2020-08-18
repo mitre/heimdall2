@@ -67,6 +67,7 @@
     "vue-apexcharts": "^1.5.1",
     "vue-clamp": "^0.2.2",
     "vue-class-component": "^7.0.2",
+    "vue-file-agent": "^1.7.3",
     "vue-highlightjs": "^1.3.3",
     "vue-line-clamp": "^1.3.2",
     "vue-password": "^3.0.0",
