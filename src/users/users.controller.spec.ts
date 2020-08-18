@@ -62,11 +62,6 @@ describe('UsersController Unit Tests', () => {
     return databaseService.cleanAll();
   });
 
-  afterAll(async () => {
-    await databaseService.cleanAll();
-    await databaseService.closeConnection();
-  });
-
   describe('FindbyId function', () => {
     // Tests the findById function with valid ID (basic positive test)
     it('should test findById with valid ID', async () => {
