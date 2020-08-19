@@ -1,7 +1,7 @@
 import {EvaluationTag} from '../evaluation-tag.model';
 
 export class EvaluationTagDto {
-  id: number;
+  readonly id: number;
   readonly key: string;
   readonly value: string;
   readonly evaluationId: number;

@@ -32,7 +32,7 @@ export class EvaluationsService {
     evaluation.data = createEvaluationDto.data;
     // Save the evaluation with no tags to get an ID.
     const evaluationData = await evaluation.save();
-    const evaluationTagsPromises = createEvaluationDto.evaluationTags.map(
+    const evaluationTagsPromises = createEvaluationDto?.evaluationTags?.map(
       async createEvaluationTagDto => {
         return await this.evaluationTagsService.create(
           evaluationData.id,
@@ -41,8 +41,12 @@ export class EvaluationsService {
       }
     );
 
-    const evaluationTags = await Promise.all(evaluationTagsPromises);
-    evaluationData.evaluationTags = evaluationTags;
+    if(!(evaluationTagsPromises == undefined)) {
+      const evaluationTags = await Promise.all(evaluationTagsPromises);
+      evaluationData.evaluationTags = evaluationTags;
+    } else {
+      evaluationData.evaluationTags = [];
+    }
     return new EvaluationDto(await evaluationData.save());
   }
 

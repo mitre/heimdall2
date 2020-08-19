@@ -1,7 +1,10 @@
 import {CreateEvaluationDto} from '../../src/evaluations/dto/create-evaluation.dto';
 import {UpdateEvaluationDto} from '../../src/evaluations/dto/update-evaluation.dto';
 import {EvaluationDto} from '../../src/evaluations/dto/evaluation.dto';
-import {CREATE_EVALUATION_TAG_DTO} from './evaluation-tags-test.constant';
+import {
+  CREATE_EVALUATION_TAG_DTO,
+  UPDATE_EVALUATION_TAG_DTO
+} from './evaluation-tags-test.constant';
 import {Evaluation} from '../../src/evaluations/evaluation.model';
 
 export const EVALUATION_1: CreateEvaluationDto = {
@@ -41,6 +44,23 @@ export const UPDATE_EVALUATION: UpdateEvaluationDto = {
   version: '1.1',
   evaluationTags: []
 };
+
+// @ts-ignore
+export const UPDATE_EVALUATION_VERSION_ONLY: UpdateEvaluationDto = {
+  version: '1.1'
+};
+
+// @ts-ignore
+export const UPDATE_EVALUATION_DATA_ONLY: UpdateEvaluationDto = {
+  data: {
+    version: '1.0'
+  }
+};
+
+// @ts-ignore
+export const UPDATE_EVALUATION_TAG_ONLY: UpdateEvaluationDto = {
+  evaluationTags: [UPDATE_EVALUATION_TAG_DTO]
+}
 
 export const EVALUATION_DTO: EvaluationDto = {
   id: 9999,
