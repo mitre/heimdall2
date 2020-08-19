@@ -156,7 +156,7 @@
     <v-snackbar
       style="margin-top: 44px;"
       v-model="filter_snackbar"
-      :timeout="-1"
+      :timeout="0"
       color="warning"
       top
     >
