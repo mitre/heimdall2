@@ -6,6 +6,7 @@ import {
   UPDATE_EVALUATION_TAG_DTO
 } from './evaluation-tags-test.constant';
 import {Evaluation} from '../../src/evaluations/evaluation.model';
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
 
 export const EVALUATION_1: CreateEvaluationDto = {
   data: {},
@@ -17,25 +18,25 @@ export const EVALUATION_WITH_TAGS_1: CreateEvaluationDto = {
   data: {},
   version: '1.0',
   evaluationTags: [CREATE_EVALUATION_TAG_DTO]
-}
+};
 
 // @ts-ignore
 export const CREATE_EVALUATION_DTO_WITHOUT_TAGS: CreateEvaluationDto = {
   data: {},
   version: '1.0'
-}
+};
 
 // @ts-ignore
 export const CREATE_EVALUATION_DTO_WITHOUT_VERSION: CreateEvaluationDto = {
   data: {},
   evaluationTags: [CREATE_EVALUATION_TAG_DTO]
-}
+};
 
 // @ts-ignore
 export const CREATE_EVALUATION_DTO_WITHOUT_DATA: CreateEvaluationDto = {
   version: '1.0',
   evaluationTags: [CREATE_EVALUATION_TAG_DTO]
-}
+};
 
 export const UPDATE_EVALUATION: UpdateEvaluationDto = {
   data: {
@@ -60,7 +61,7 @@ export const UPDATE_EVALUATION_DATA_ONLY: UpdateEvaluationDto = {
 // @ts-ignore
 export const UPDATE_EVALUATION_TAG_ONLY: UpdateEvaluationDto = {
   evaluationTags: [UPDATE_EVALUATION_TAG_DTO]
-}
+};
 
 export const EVALUATION_DTO: EvaluationDto = {
   id: 9999,
@@ -69,7 +70,7 @@ export const EVALUATION_DTO: EvaluationDto = {
   evaluationTags: [],
   createdAt: new Date(),
   updatedAt: new Date()
-}
+};
 
 // @ts-ignore
 export const EVALUATION: Evaluation = {
@@ -79,4 +80,5 @@ export const EVALUATION: Evaluation = {
   evaluationTags: [],
   createdAt: new Date(),
   updatedAt: new Date()
-}
+};
+/* eslint-enable @typescript-eslint/ban-ts-ignore */

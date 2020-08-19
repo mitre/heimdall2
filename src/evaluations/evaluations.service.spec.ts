@@ -15,8 +15,7 @@ import {
   CREATE_EVALUATION_DTO_WITHOUT_DATA,
   CREATE_EVALUATION_DTO_WITHOUT_VERSION,
   UPDATE_EVALUATION_VERSION_ONLY,
-  UPDATE_EVALUATION_DATA_ONLY,
-  UPDATE_EVALUATION_TAG_ONLY
+  UPDATE_EVALUATION_DATA_ONLY
 } from '../../test/constants/evaluations-test.constant';
 
 describe('EvaluationsService', () => {
@@ -35,7 +34,9 @@ describe('EvaluationsService', () => {
     }).compile();
 
     evaluationsService = module.get<EvaluationsService>(EvaluationsService);
-    evaluationTagsService = module.get<EvaluationTagsService>(EvaluationTagsService);
+    evaluationTagsService = module.get<EvaluationTagsService>(
+      EvaluationTagsService
+    );
     databaseService = module.get<DatabaseService>(DatabaseService);
   });
 
@@ -52,7 +53,7 @@ describe('EvaluationsService', () => {
 
     it('returns true when given an evaluation', async () => {
       expect(() => {
-        evaluationsService.exists(EVALUATION)
+        evaluationsService.exists(EVALUATION);
       }).toBeTruthy();
     });
   });
@@ -60,10 +61,14 @@ describe('EvaluationsService', () => {
   describe('findAll', () => {
     it('should find all evaluations', async () => {
       let evaluationsDtoArray = await evaluationsService.findAll();
-      expect(evaluationsDtoArray).toEqual([])
+      expect(evaluationsDtoArray).toEqual([]);
 
-      const evaluationOne = await evaluationsService.create(EVALUATION_WITH_TAGS_1);
-      const evaluationTwo = await evaluationsService.create(EVALUATION_WITH_TAGS_1);
+      const evaluationOne = await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1
+      );
+      const evaluationTwo = await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1
+      );
       evaluationsDtoArray = await evaluationsService.findAll();
       expect(evaluationsDtoArray).toContainEqual(evaluationOne);
       expect(evaluationsDtoArray).toContainEqual(evaluationTwo);
@@ -72,20 +77,26 @@ describe('EvaluationsService', () => {
 
   describe('findById', () => {
     it('should find evaluations by id', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_WITH_TAGS_1);
+      const evaluation = await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1
+      );
       const foundEvaluation = await evaluationsService.findById(evaluation.id);
       expect(evaluation).toEqual(foundEvaluation);
     });
 
     it('should throw an error if an evaluation does not exist', async () => {
       expect.assertions(1);
-      await expect(evaluationsService.findById(-1)).rejects.toThrow(NotFoundException);
+      await expect(evaluationsService.findById(-1)).rejects.toThrow(
+        NotFoundException
+      );
     });
   });
 
   describe('create', () => {
     it('should create a new evaluation with evaluation tags', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_WITH_TAGS_1);
+      const evaluation = await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1
+      );
       expect(evaluation.id).toBeDefined();
       expect(evaluation.updatedAt).toBeDefined();
       expect(evaluation.createdAt).toBeDefined();
@@ -94,17 +105,25 @@ describe('EvaluationsService', () => {
       expect(evaluation.evaluationTags[0].evaluationId).toBeDefined();
       expect(evaluation.evaluationTags[0].updatedAt).toBeDefined();
       expect(evaluation.evaluationTags[0].createdAt).toBeDefined();
-      expect(evaluation.evaluationTags[0].value).toEqual(EVALUATION_WITH_TAGS_1.evaluationTags[0].value);
-      expect(evaluation.evaluationTags[0].key).toEqual(EVALUATION_WITH_TAGS_1.evaluationTags[0].key);
+      expect(evaluation.evaluationTags[0].value).toEqual(
+        EVALUATION_WITH_TAGS_1.evaluationTags[0].value
+      );
+      expect(evaluation.evaluationTags[0].key).toEqual(
+        EVALUATION_WITH_TAGS_1.evaluationTags[0].key
+      );
     });
 
     it('should create a new evaluation without evaluation tags', async () => {
-      const evaluation = await evaluationsService.create(CREATE_EVALUATION_DTO_WITHOUT_TAGS)
+      const evaluation = await evaluationsService.create(
+        CREATE_EVALUATION_DTO_WITHOUT_TAGS
+      );
       expect(evaluation.id).toBeDefined();
       expect(evaluation.updatedAt).toBeDefined();
       expect(evaluation.createdAt).toBeDefined();
       expect(evaluation.data).toEqual(CREATE_EVALUATION_DTO_WITHOUT_TAGS.data);
-      expect(evaluation.version).toEqual(CREATE_EVALUATION_DTO_WITHOUT_TAGS.version);
+      expect(evaluation.version).toEqual(
+        CREATE_EVALUATION_DTO_WITHOUT_TAGS.version
+      );
       expect(evaluation.evaluationTags.length).toBe(0);
       expect((await evaluationTagsService.findAll()).length).toBe(0);
     });
@@ -117,10 +136,10 @@ describe('EvaluationsService', () => {
     });
 
     it('should throw an error when missing the version field', async () => {
-     expect.assertions(1);
-     await expect(
-       evaluationsService.create(CREATE_EVALUATION_DTO_WITHOUT_VERSION)
-     ).rejects.toThrow('notNull Violation: Evaluation.version cannot be null');
+      expect.assertions(1);
+      await expect(
+        evaluationsService.create(CREATE_EVALUATION_DTO_WITHOUT_VERSION)
+      ).rejects.toThrow('notNull Violation: Evaluation.version cannot be null');
     });
   });
 
@@ -134,46 +153,63 @@ describe('EvaluationsService', () => {
     });
 
     it('should update all fields of an evaluation', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_WITH_TAGS_1);
-      const updatedEvaluation = await evaluationsService.update(evaluation.id, UPDATE_EVALUATION)
-      expect(updatedEvaluation.id).toEqual(evaluation.id)
+      const evaluation = await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1
+      );
+      const updatedEvaluation = await evaluationsService.update(
+        evaluation.id,
+        UPDATE_EVALUATION
+      );
+      expect(updatedEvaluation.id).toEqual(evaluation.id);
       expect(updatedEvaluation.createdAt).toEqual(evaluation.createdAt);
       expect(updatedEvaluation.updatedAt).not.toEqual(evaluation.updatedAt);
-      expect(updatedEvaluation.evaluationTags).not.toEqual(evaluation.evaluationTags);
+      expect(updatedEvaluation.evaluationTags).not.toEqual(
+        evaluation.evaluationTags
+      );
       expect(updatedEvaluation.data).not.toEqual(evaluation.data);
       expect(updatedEvaluation.version).not.toEqual(evaluation.version);
     });
 
-    it('should add additional evaluation tags to an evaluation', async () => {
+    // To be implemented after changing the update method to update EvaluationTags
 
-    });
+    // it('should add additional evaluation tags to an evaluation', async () => {});
 
-    it('should remove tags from an evaluation', async () => {
+    // it('should remove tags from an evaluation', async () => {});
 
-    });
-
-    it('should update existing evaluation tags', async () => {
-
-    })
+    // it('should update existing evaluation tags', async () => {});
 
     it('should only update data if provided', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_WITH_TAGS_1);
-      const updatedEvaluation = await evaluationsService.update(evaluation.id, UPDATE_EVALUATION_DATA_ONLY);
-      expect(updatedEvaluation.id).toEqual(evaluation.id)
+      const evaluation = await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1
+      );
+      const updatedEvaluation = await evaluationsService.update(
+        evaluation.id,
+        UPDATE_EVALUATION_DATA_ONLY
+      );
+      expect(updatedEvaluation.id).toEqual(evaluation.id);
       expect(updatedEvaluation.createdAt).toEqual(evaluation.createdAt);
       expect(updatedEvaluation.updatedAt).not.toEqual(evaluation.updatedAt);
-      expect(updatedEvaluation.evaluationTags).toEqual(evaluation.evaluationTags);
+      expect(updatedEvaluation.evaluationTags).toEqual(
+        evaluation.evaluationTags
+      );
       expect(updatedEvaluation.data).not.toEqual(evaluation.data);
       expect(updatedEvaluation.version).toEqual(evaluation.version);
     });
 
     it('should only update version if provided', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_WITH_TAGS_1);
-      const updatedEvaluation = await evaluationsService.update(evaluation.id, UPDATE_EVALUATION_VERSION_ONLY);
-      expect(updatedEvaluation.id).toEqual(evaluation.id)
+      const evaluation = await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1
+      );
+      const updatedEvaluation = await evaluationsService.update(
+        evaluation.id,
+        UPDATE_EVALUATION_VERSION_ONLY
+      );
+      expect(updatedEvaluation.id).toEqual(evaluation.id);
       expect(updatedEvaluation.createdAt).toEqual(evaluation.createdAt);
       expect(updatedEvaluation.updatedAt).not.toEqual(evaluation.updatedAt);
-      expect(updatedEvaluation.evaluationTags).toEqual(evaluation.evaluationTags);
+      expect(updatedEvaluation.evaluationTags).toEqual(
+        evaluation.evaluationTags
+      );
       expect(updatedEvaluation.data).toEqual(evaluation.data);
       expect(updatedEvaluation.version).not.toEqual(evaluation.version);
     });
@@ -181,20 +217,24 @@ describe('EvaluationsService', () => {
 
   describe('remove', () => {
     it('should remove an evaluation and its evaluation tags given an id', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_WITH_TAGS_1);
+      const evaluation = await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1
+      );
       const removedEvaluation = await evaluationsService.remove(evaluation.id);
       const foundEvaluationTags = await evaluationTagsService.findAll();
       expect(foundEvaluationTags.length).toEqual(0);
       expect(removedEvaluation).toEqual(evaluation);
 
-      await expect(evaluationsService.findById(removedEvaluation.id)).rejects.toThrow(
-        NotFoundException
-      );
+      await expect(
+        evaluationsService.findById(removedEvaluation.id)
+      ).rejects.toThrow(NotFoundException);
     });
 
     it('should throw an error when the evaluation does not exist', async () => {
       expect.assertions(1);
-      await expect(evaluationsService.findById(-1)).rejects.toThrow(NotFoundException);
+      await expect(evaluationsService.findById(-1)).rejects.toThrow(
+        NotFoundException
+      );
     });
   });
 

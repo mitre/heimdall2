@@ -46,7 +46,7 @@ describe('/evaluations', () => {
           .post('/evaluations')
           .set('Content-Type', 'application/json')
           .send(EVALUATION_1)
-          .expect(HttpStatus.UNAUTHORIZED)
+          .expect(HttpStatus.UNAUTHORIZED);
       });
     });
 
@@ -54,7 +54,7 @@ describe('/evaluations', () => {
       it('should return 401 when unauthenticated', async () => {
         await request(app.getHttpServer())
           .get('/evaluations')
-          .expect(HttpStatus.UNAUTHORIZED)
+          .expect(HttpStatus.UNAUTHORIZED);
       });
     });
 
@@ -64,7 +64,7 @@ describe('/evaluations', () => {
           .put('/evaluations/1')
           .set('Content-Type', 'application/json')
           .send(UPDATE_EVALUATION)
-          .expect(HttpStatus.UNAUTHORIZED)
+          .expect(HttpStatus.UNAUTHORIZED);
       });
     });
 
@@ -84,7 +84,7 @@ describe('/evaluations', () => {
       await request(app.getHttpServer())
         .post('/users')
         .set('Content-Type', 'application/json')
-        .send(CREATE_USER_DTO_TEST_OBJ)
+        .send(CREATE_USER_DTO_TEST_OBJ);
 
       await request(app.getHttpServer())
         .post('/authn/login')
@@ -93,7 +93,7 @@ describe('/evaluations', () => {
         .then(response => {
           jwtToken = response.body.accessToken;
         });
-    })
+    });
 
     describe('Create', () => {
       it('should create an evaluation', async () => {
@@ -107,8 +107,10 @@ describe('/evaluations', () => {
             const createdAt = response.body.createdAt.valueOf();
             const updatedAt = response.body.updatedAt.valueOf();
 
-            const createdDelta = new Date().getTime() - new Date(createdAt).getTime();
-            const updatedDelta = new Date().getTime() - new Date(updatedAt).getTime();
+            const createdDelta =
+              new Date().getTime() - new Date(createdAt).getTime();
+            const updatedDelta =
+              new Date().getTime() - new Date(updatedAt).getTime();
 
             // 1 minute in ms
             expect(createdDelta).toBeLessThanOrEqual(60000);
@@ -116,7 +118,9 @@ describe('/evaluations', () => {
             expect(response.body.id).toBeDefined();
             expect(response.body.version).toEqual(EVALUATION_1.version);
             expect(response.body.data).toEqual(EVALUATION_1.data);
-            expect(response.body.evaluationTags).toEqual(EVALUATION_1.evaluationTags);
+            expect(response.body.evaluationTags).toEqual(
+              EVALUATION_1.evaluationTags
+            );
           });
       });
 
@@ -131,16 +135,24 @@ describe('/evaluations', () => {
             const createdAt = response.body.evaluationTags[0].createdAt.valueOf();
             const updatedAt = response.body.evaluationTags[0].updatedAt.valueOf();
 
-            const createdDelta = new Date().getTime() - new Date(createdAt).getTime();
-            const updatedDelta = new Date().getTime() - new Date(updatedAt).getTime();
+            const createdDelta =
+              new Date().getTime() - new Date(createdAt).getTime();
+            const updatedDelta =
+              new Date().getTime() - new Date(updatedAt).getTime();
 
             // 1 minute in ms
             expect(createdDelta).toBeLessThanOrEqual(60000);
             expect(updatedDelta).toBeLessThanOrEqual(60000);
-            expect(response.body.evaluationTags[0].key).toEqual(EVALUATION_WITH_TAGS_1.evaluationTags[0].key);
-            expect(response.body.evaluationTags[0].value).toEqual(EVALUATION_WITH_TAGS_1.evaluationTags[0].value);
+            expect(response.body.evaluationTags[0].key).toEqual(
+              EVALUATION_WITH_TAGS_1.evaluationTags[0].key
+            );
+            expect(response.body.evaluationTags[0].value).toEqual(
+              EVALUATION_WITH_TAGS_1.evaluationTags[0].value
+            );
             expect(response.body.evaluationTags[0].id).toBeDefined();
-            expect(response.body.id).toEqual(response.body.evaluationTags[0].evaluationId);
+            expect(response.body.id).toEqual(
+              response.body.evaluationTags[0].evaluationId
+            );
           });
       });
     });
@@ -155,7 +167,7 @@ describe('/evaluations', () => {
           .set('Authorization', 'bearer ' + jwtToken)
           .send(EVALUATION_WITH_TAGS_1)
           .then(response => {
-            evaluation = response.body
+            evaluation = response.body;
           });
       });
 
@@ -167,7 +179,7 @@ describe('/evaluations', () => {
             .expect(HttpStatus.OK)
             .then(response => {
               expect(response.body).toEqual(evaluation);
-            })
+            });
         });
 
         it('should get all evaluations', async () => {
@@ -177,7 +189,7 @@ describe('/evaluations', () => {
             .expect(HttpStatus.OK)
             .then(response => {
               expect(response.body[0]).toEqual(evaluation);
-            })
+            });
         });
       });
 
@@ -190,12 +202,13 @@ describe('/evaluations', () => {
             .expect(HttpStatus.OK)
             .then(response => {
               const updatedAt = response.body.updatedAt.valueOf();
-              const updatedDelta = new Date().getTime() - new Date(updatedAt).getTime();
+              const updatedDelta =
+                new Date().getTime() - new Date(updatedAt).getTime();
               expect(updatedDelta).toBeLessThanOrEqual(60000);
               expect(response.body.updatedAt);
               expect(response.body.data).toEqual(evaluation.data);
               expect(response.body.version).toEqual(evaluation.version);
-            })
+            });
         });
       });
 
@@ -206,7 +219,7 @@ describe('/evaluations', () => {
             .set('Authorization', 'bearer ' + jwtToken)
             .expect(HttpStatus.OK)
             .then(response => {
-              expect(response.body).toEqual(evaluation)
+              expect(response.body).toEqual(evaluation);
             });
 
           await request(app.getHttpServer())
@@ -215,13 +228,12 @@ describe('/evaluations', () => {
             .then(response => {
               // There should be no tags in the database at this point because the evaluation
               // containing them was deleted
-              expect(response.body).toEqual([])
+              expect(response.body).toEqual([]);
             });
         });
       });
     });
   });
-
 
   afterAll(async () => {
     await databaseService.cleanAll();

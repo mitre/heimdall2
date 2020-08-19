@@ -35,13 +35,15 @@ describe('EvaluationsController', () => {
             create: jest.fn(() => EVALUATION_DTO),
             remove: jest.fn(() => EVALUATION_DTO)
           })
-        },
+        }
       ]
     }).compile();
 
     databaseService = module.get<DatabaseService>(DatabaseService);
     evaluationsService = module.get<EvaluationsService>(EvaluationsService);
-    evaluationsController = module.get<EvaluationsController>(EvaluationsController);
+    evaluationsController = module.get<EvaluationsController>(
+      EvaluationsController
+    );
   });
 
   beforeEach(() => {
@@ -79,7 +81,7 @@ describe('EvaluationsController', () => {
 
     it('should create an evaluation without tags', async () => {
       await evaluationsController.create(CREATE_EVALUATION_DTO_WITHOUT_TAGS);
-      expect(evaluationsService.create).toHaveReturnedWith(EVALUATION_DTO)
+      expect(evaluationsService.create).toHaveReturnedWith(EVALUATION_DTO);
     });
 
     it('should throw a bad request when evaluation version is missing', async () => {
@@ -88,7 +90,9 @@ describe('EvaluationsController', () => {
       });
 
       expect(async () => {
-        await evaluationsController.create(CREATE_EVALUATION_DTO_WITHOUT_VERSION);
+        await evaluationsController.create(
+          CREATE_EVALUATION_DTO_WITHOUT_VERSION
+        );
       }).rejects.toThrow(BadRequestException);
     });
 
@@ -106,7 +110,7 @@ describe('EvaluationsController', () => {
   describe('update', () => {
     // All fields in the UpdateEvaluationDto are optional, just test with all of them
     it('should update an evaluation given a valid DTO', async () => {
-      await evaluationsController.update(1, UPDATE_EVALUATION)
+      await evaluationsController.update(1, UPDATE_EVALUATION);
       expect(evaluationsService.update).toHaveReturnedWith(EVALUATION_DTO);
     });
   });
@@ -114,7 +118,7 @@ describe('EvaluationsController', () => {
   describe('remove', () => {
     it('should remove an evaluation', async () => {
       await evaluationsController.remove(1);
-      expect(evaluationsService.remove).toHaveReturnedWith(EVALUATION_DTO)
+      expect(evaluationsService.remove).toHaveReturnedWith(EVALUATION_DTO);
     });
   });
 
