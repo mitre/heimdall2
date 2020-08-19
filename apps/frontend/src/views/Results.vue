@@ -58,7 +58,9 @@
             <ProfData
               class="my-4 mx-10"
               v-if="eval_info != null"
-              :selected_prof="root_profiles[eval_info]"
+              :selected_prof="
+                root_profiles[prof_ids.indexOf(file_filter[eval_info])]
+              "
             ></ProfData>
           </v-col>
           <v-col
@@ -77,7 +79,9 @@
           <ProfData
             class="my-4 mx-10"
             v-if="eval_info != null && file_filter.length <= 3"
-            :selected_prof="root_profiles[eval_info]"
+            :selected_prof="
+              root_profiles[prof_ids.indexOf(file_filter[eval_info])]
+            "
           ></ProfData>
         </v-row>
         <!-- Count Cards -->
@@ -200,9 +204,13 @@ import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 
 import FilteredDataModule, {Filter, TreeMapState} from '@/store/data_filters';
 import {ControlStatus, Severity} from 'inspecjs';
-import InspecIntakeModule, {FileID} from '@/store/report_intake';
+import InspecIntakeModule, {
+  FileID,
+  SourcedContextualizedEvaluation,
+  SourcedContextualizedProfile
+} from '@/store/report_intake';
 import {getModule} from 'vuex-module-decorators';
-import InspecDataModule from '../store/data_store';
+import InspecDataModule, {isFromProfileFile} from '../store/data_store';
 import {need_redirect_file} from '@/utilities/helper_util';
 import ServerModule from '@/store/server';
 import ProfData from '@/components/cards/ProfData.vue';
@@ -427,10 +435,17 @@ export default class Results extends ResultsProps {
   }
 
   //gets profile ids for the profData component to display corresponding info
-  get prof_ids(): string[] {
+  get prof_ids(): number[] {
     let ids = [];
     for (let prof of this.root_profiles) {
-      ids.push(profile_unique_key(prof));
+      if (!isFromProfileFile(prof)) {
+        ids.push(
+          (prof.sourced_from as SourcedContextualizedEvaluation).from_file
+            .unique_id
+        );
+      } else {
+        ids.push(prof.from_file.unique_id);
+      }
     }
     return ids;
   }
