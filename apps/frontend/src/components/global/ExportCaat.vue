@@ -16,8 +16,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {getModule} from 'vuex-module-decorators';
-import FilteredDataModule, {Filter} from '@/store/data_filters';
+import {FilteredDataModule, Filter} from '@/store/data_filters';
 import XLSX from 'xlsx';
 import {saveAs} from 'file-saver';
 import {HDFControl, ControlStatus} from 'inspecjs';
@@ -147,8 +146,7 @@ export default class ExportCaat extends Props {
 
   export_caat() {
     // Get our data
-    let filter_module = getModule(FilteredDataModule, this.$store);
-    let controls = filter_module.controls(this.filter as Filter);
+    let controls = FilteredDataModule.controls(this.filter as Filter);
 
     // Initialize our data structures
     let caat: CAAT = [this.header()];

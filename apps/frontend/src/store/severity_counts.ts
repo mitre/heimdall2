@@ -3,11 +3,15 @@
  */
 
 import {Module, VuexModule, getModule} from 'vuex-module-decorators';
-import FilteredData, {Filter, filter_cache_key} from '@/store/data_filters';
+import {
+  Filter,
+  filter_cache_key,
+  FilteredData,
+  FilteredDataModule
+} from '@/store/data_filters';
 import Store from '@/store/store';
 import LRUCache from 'lru-cache';
 import {Severity} from 'inspecjs';
-import InspecDataModule from '@/store/data_store';
 
 // The hash that we will generally be working with herein
 type SeverityHash = {[key in Severity]: number};
@@ -46,21 +50,10 @@ function count_severities(data: FilteredData, filter: Filter): SeverityHash {
   store: Store,
   name: 'severityCounts'
 })
-class SeverityCountModule extends VuexModule {
-  /** Use vuex caching to always have access to our filtered data module */
-  private get filtered_data(): FilteredData {
-    return getModule(FilteredData, Store);
-  }
-
-  /** Ditto to base data, for dependency purposes */
-  private get inspec_data(): InspecDataModule {
-    return getModule(InspecDataModule, Store);
-  }
-
+export class SeverityCount extends VuexModule {
   /** Generates a hash mapping each status -> a count of its members */
   get hash(): (filter: Filter) => SeverityHash {
     // Establish our cache and dependency
-    let depends: any = this.inspec_data.contextualControls;
     let cache: LRUCache<string, SeverityHash> = new LRUCache(30);
 
     return (filter: Filter) => {
@@ -72,7 +65,7 @@ class SeverityCountModule extends VuexModule {
       }
 
       // Elsewise, generate, cache, then return
-      let result = count_severities(this.filtered_data, filter);
+      let result = count_severities(FilteredDataModule, filter);
       cache.set(id, result);
       return result;
     };
@@ -99,4 +92,4 @@ class SeverityCountModule extends VuexModule {
   }
 }
 
-export default SeverityCountModule;
+export const SeverityCountModule = getModule(SeverityCount);

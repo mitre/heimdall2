@@ -42,7 +42,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {getModule} from 'vuex-module-decorators';
 import S3, {ObjectKey} from 'aws-sdk/clients/s3';
 import {AWSError} from 'aws-sdk/lib/error';
 import {LocalStorageVal} from '../../../../utilities/helper_util';
@@ -56,7 +55,8 @@ import {
   MFA_Info,
   AUTH_DURATION
 } from '../../../../utilities/aws_util';
-import InspecIntakeModule, {FileID} from '@/store/report_intake';
+import {FileID} from '@/store/report_intake';
+import ErrorTooltip from '../../../generic/ErrorTooltip.vue';
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
@@ -100,14 +100,6 @@ export default class S3Reader extends Props {
 
   /** Currently loaded file list from bucket */
   files: S3.Object[] = [];
-
-  /**
-   * Logs out of current auth stage
-   */
-  logout() {
-    this.assumed_role = null;
-    this.mfa_token = '';
-  }
 
   /**
    * Handle a basic login.

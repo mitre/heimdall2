@@ -10,9 +10,8 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
-import {getModule} from 'vuex-module-decorators';
-import SeverityCountModule from '@/store/severity_counts';
 import {Severity} from 'inspecjs';
+import {SeverityCountModule} from '@/store/severity_counts';
 
 // We declare the props separately to make props types inferable.
 const SeverityChartProps = Vue.extend({
@@ -53,15 +52,11 @@ export default class SeverityChart extends SeverityChartProps {
   ];
 
   get series(): number[] {
-    let counts: SeverityCountModule = getModule(
-      SeverityCountModule,
-      this.$store
-    );
     return [
-      counts.low(this.filter),
-      counts.medium(this.filter),
-      counts.high(this.filter),
-      counts.critical(this.filter)
+      SeverityCountModule.low(this.filter),
+      SeverityCountModule.medium(this.filter),
+      SeverityCountModule.high(this.filter),
+      SeverityCountModule.critical(this.filter)
     ];
   }
 

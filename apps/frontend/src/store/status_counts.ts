@@ -3,11 +3,16 @@
  */
 
 import {Module, VuexModule, getModule} from 'vuex-module-decorators';
-import FilteredData, {Filter, filter_cache_key} from '@/store/data_filters';
+import {
+  FilteredData,
+  Filter,
+  filter_cache_key,
+  FilteredDataModule
+} from '@/store/data_filters';
 import Store from '@/store/store';
 import LRUCache from 'lru-cache';
 import {ControlStatus} from 'inspecjs';
-import InspecDataModule from '@/store/data_store';
+import {InspecDataModule} from '@/store/data_store';
 
 // The hash that we will generally be working with herein
 export type ControlStatusHash = {[key in ControlStatus]: number};
@@ -84,21 +89,10 @@ function count_statuses(data: FilteredData, filter: Filter): StatusHash {
   store: Store,
   name: 'statusCounts'
 })
-class StatusCountModule extends VuexModule {
-  /** Use vuex caching to always have access to our filtered data module */
-  private get filtered_data(): FilteredData {
-    return getModule(FilteredData, Store);
-  }
-
-  /** Ditto to base data, for dependency purposes */
-  private get inspec_data(): InspecDataModule {
-    return getModule(InspecDataModule, Store);
-  }
-
+export class StatusCount extends VuexModule {
   /** Generates a hash mapping each status -> a count of its members */
   get hash(): (filter: Filter) => StatusHash {
     // Establish our cache and dependency
-    let depends: any = this.inspec_data.contextualControls;
     let cache: LRUCache<string, StatusHash> = new LRUCache(30);
 
     return (filter: Filter) => {
@@ -110,7 +104,7 @@ class StatusCountModule extends VuexModule {
       }
 
       // Elsewise, generate, cache, then return
-      let result = count_statuses(this.filtered_data, filter);
+      let result = count_statuses(FilteredDataModule, filter);
       cache.set(id, result);
       return result;
     };
@@ -121,4 +115,4 @@ class StatusCountModule extends VuexModule {
   }
 }
 
-export default StatusCountModule;
+export const StatusCountModule = getModule(StatusCount);

@@ -16,8 +16,7 @@ import Component from 'vue-class-component';
 import VueApexCharts from 'vue-apexcharts';
 import {ApexOptions, exec} from 'apexcharts';
 import {install} from 'vuetify/es5/install';
-import {getModule} from 'vuex-module-decorators';
-import ColorHackModule from '@/store/color_hack';
+import {ColorHackModule} from '@/store/color_hack';
 
 // Represents a slice of the pie.
 export interface Category<C extends string> {
@@ -107,9 +106,6 @@ export default class ApexPieChart extends ApexPieChartProps {
 
   // Generate the chart options based on _categories
   get chartOptions(): ApexOptions {
-    // Apex charts does not support color names; must use color hack module
-    let colors = getModule(ColorHackModule, this.$store);
-
     return {
       labels: this._categories.map(cat => cat.label),
       dataLabels: {
@@ -169,7 +165,10 @@ export default class ApexPieChart extends ApexPieChartProps {
         }
       },
       stroke: {width: 0},
-      colors: this._categories.map(cat => colors.lookupColor(cat.color))
+      // Apex charts does not support color names; must use color hack module
+      colors: this._categories.map(cat =>
+        ColorHackModule.lookupColor(cat.color)
+      )
     };
   }
 }

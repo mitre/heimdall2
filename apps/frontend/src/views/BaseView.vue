@@ -3,7 +3,6 @@
         in every view. "Subclass" by utilizing the slots. -->
 <template>
   <div>
-    <div v-if="no_files"></div>
     <!-- Top appbar. The center content of it is configured via the topbar-content slot -->
     <Topbar :title="title" @toggle-drawer="drawer = !drawer">
       <slot name="topbar-content"></slot>
@@ -30,8 +29,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import Sidebar from '@/components/global/Sidebar.vue';
 import Topbar from '@/components/global/Topbar.vue';
-import {getModule} from 'vuex-module-decorators';
-import InspecDataModule from '@/store/data_store';
+import {InspecDataModule} from '@/store/data_store';
 
 // We declare the props separately
 // to make props types inferable.
@@ -53,13 +51,5 @@ const BaseProps = Vue.extend({
 export default class Base extends BaseProps {
   /** Models if the drawer is open */
   drawer: boolean = false;
-
-  get no_files(): boolean {
-    let data = getModule(InspecDataModule, this.$store).allFiles.length === 0;
-    if (data) {
-      this.$router.push('/');
-    }
-    return data;
-  }
 }
 </script>

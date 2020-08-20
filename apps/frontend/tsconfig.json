@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "resolveJsonModule": true,
-    "target": "esnext",
-    "module": "esnext",
+    "target": "ES2019",
+    "module": "commonjs",
     "strict": true,
     "jsx": "preserve",
     "importHelpers": true,
@@ -18,7 +18,7 @@
       "@/*": ["src/*"],
       "vue-analytics": ["src/types/vue-analytics"]
     },
-    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+    "lib": ["ES2019", "dom", "dom.iterable", "scripthost"]
   },
   "include": [
     "src/**/*.ts",

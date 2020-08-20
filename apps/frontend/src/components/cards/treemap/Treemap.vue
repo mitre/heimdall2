@@ -37,10 +37,9 @@
 //               preserveAspectRatio="xMidYMid meet"
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {getModule} from 'vuex-module-decorators';
 import {ControlStatus, HDFControl, nist} from 'inspecjs';
 import * as d3 from 'd3';
-import FilteredDataModule, {TreeMapState} from '@/store/data_filters';
+import {FilteredDataModule, TreeMapState} from '@/store/data_filters';
 import {
   TreemapNode,
   build_nist_tree_map,
@@ -51,7 +50,7 @@ import {HierarchyRectangularNode, tree} from 'd3';
 import Cell, {XYScale} from '@/components/cards/treemap/Cell.vue';
 //@ts-ignore
 import resize from 'vue-resize-directive';
-import ColorHackModule from '../../../store/color_hack';
+import {ColorHackModule} from '../../../store/color_hack';
 import {compare_arrays} from '@/utilities/helper_util';
 
 // We declare the props separately to make props types inferable.
@@ -167,17 +166,11 @@ export default class Treemap extends TreemapProps {
   /** Generates a d3 heirarchy structure, with appropriate bounds to our width
    *  detailing all of the controls in the nist hash */
   get treemap_layout(): d3.HierarchyRectangularNode<TreemapNode> {
-    // Get our data module
-    let data: FilteredDataModule = getModule(FilteredDataModule, this.$store);
-
     // Get the currejnt filtered data
-    let controls = data.controls(this.filter);
+    let controls = FilteredDataModule.controls(this.filter);
 
     // Build the map
-    let hierarchy = build_nist_tree_map(
-      controls,
-      getModule(ColorHackModule, this.$store)
-    );
+    let hierarchy = build_nist_tree_map(controls, ColorHackModule);
     let treemap = d3
       .treemap<TreemapNode>()
       .size([this.width, this.height])

@@ -5,7 +5,7 @@
  * - Control ID -> All controls with that id
  */
 import {Module, VuexModule, getModule} from 'vuex-module-decorators';
-import DataModule from '@/store/data_store';
+import {InspecDataModule} from '@/store/data_store';
 import {context} from 'inspecjs';
 import Store from '@/store/store';
 
@@ -18,11 +18,7 @@ export type ControlHash = {[key: string]: context.ContextualizedControl[]};
   store: Store,
   name: 'lookup'
 })
-class HashLookupModule extends VuexModule {
-  private get dataStore(): DataModule {
-    return getModule(DataModule, Store);
-  }
-
+export class HashLookup extends VuexModule {
   /**
    * Returns a hash of all controls keyed by their ids.
    * Note that each key is a list - This is to accomodate the case in which IDs overlap, e.g. when many files are loaded.
@@ -33,7 +29,7 @@ class HashLookupModule extends VuexModule {
     const final: ControlHash = {};
 
     // Add every control to it.
-    this.dataStore.contextualControls.forEach(c => {
+    InspecDataModule.contextualControls.forEach(c => {
       if (c.data.id in final) {
         final[c.data.id].push(c);
       } else {
@@ -46,4 +42,4 @@ class HashLookupModule extends VuexModule {
   }
 }
 
-export default HashLookupModule;
+export const HashLookupModule = getModule(HashLookup);

@@ -78,9 +78,8 @@ import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails
 import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 
-import {getModule} from 'vuex-module-decorators';
 import {HDFControl, ControlStatus} from 'inspecjs';
-import FilteredDataModule from '@/store/data_filters';
+import {FilteredDataModule} from '@/store/data_filters';
 import {control_unique_key} from '@/utilities/format_util';
 import {context} from 'inspecjs';
 
@@ -173,8 +172,7 @@ export default class ControlTable extends ControlTableProps {
 
   /** Return items as key, value pairs */
   get raw_items(): ListElt[] {
-    let mod = getModule(FilteredDataModule, this.$store);
-    return mod.controls(this.filter).map(d => {
+    return FilteredDataModule.controls(this.filter).map(d => {
       let key = control_unique_key(d);
 
       // File, hdf wrapper

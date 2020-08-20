@@ -21,9 +21,8 @@ import LinkItem, {
   LinkAction
 } from '@/components/global/sidebaritems/SidebarLink.vue';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
-import {getModule} from 'vuex-module-decorators';
-import InspecDataModule, {isFromProfileFile} from '../../store/data_store';
-import FilteredDataModule from '../../store/data_filters';
+import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
+import {FilteredDataModule} from '@/store/data_filters';
 import {ZipFile} from 'yazl';
 import concat from 'concat-stream';
 
@@ -45,16 +44,15 @@ type FileData = {
 })
 export default class ExportJSON extends Props {
   populate_files(): FileData[] {
-    let filter_mod = getModule(FilteredDataModule, this.$store);
-    let ids = filter_mod.selected_file_ids;
+    let ids = FilteredDataModule.selected_file_ids;
     let fileData = new Array<FileData>();
-    for (let evaluation of filter_mod.evaluations(ids)) {
+    for (let evaluation of FilteredDataModule.evaluations(ids)) {
       fileData.push({
         name: this.cleanup_filename(evaluation.from_file.filename),
         contents: JSON.stringify(evaluation.data)
       });
     }
-    for (let prof of filter_mod.profiles(ids)) {
+    for (let prof of FilteredDataModule.profiles(ids)) {
       if (isFromProfileFile(prof)) {
         fileData.push({
           name: prof.from_file.filename,

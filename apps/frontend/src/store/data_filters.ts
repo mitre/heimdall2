@@ -3,11 +3,8 @@
  */
 
 import {Module, VuexModule, getModule, Mutation} from 'vuex-module-decorators';
-import {
-  SourcedContextualizedProfile,
-  SourcedContextualizedEvaluation
-} from '@/store/report_intake';
-import DataModule, {isFromProfileFile} from '@/store/data_store';
+import {SourcedContextualizedEvaluation} from '@/store/report_intake';
+import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
 import {ControlStatus, Severity} from 'inspecjs';
 import {FileID} from '@/store/report_intake';
 import Store from '@/store/store';
@@ -82,7 +79,7 @@ function contains_term(
   store: Store,
   name: 'filteredData'
 })
-class FilteredDataModule extends VuexModule {
+export class FilteredData extends VuexModule {
   selected_file_ids: FileID[] = [];
 
   @Mutation
@@ -107,10 +104,6 @@ class FilteredDataModule extends VuexModule {
     this.selected_file_ids.splice(0, this.selected_file_ids.length, ...files);
   }
 
-  private get dataStore(): DataModule {
-    return getModule(DataModule, Store);
-  }
-
   /**
    * Parameterized getter.
    * Get all evaluations from the specified file ids
@@ -119,7 +112,7 @@ class FilteredDataModule extends VuexModule {
     files: FileID[]
   ) => readonly SourcedContextualizedEvaluation[] {
     return (files: FileID[]) => {
-      return this.dataStore.contextualExecutions.filter(e =>
+      return InspecDataModule.contextualExecutions.filter(e =>
         files.includes(e.from_file.unique_id)
       );
     };
@@ -138,7 +131,7 @@ class FilteredDataModule extends VuexModule {
       let profiles: context.ContextualizedProfile[] = [];
 
       // Filter to those that match our filter. In this case that just means come from the right file id
-      for (let prof of this.dataStore.contextualProfiles) {
+      InspecDataModule.contextualProfiles.forEach(prof => {
         if (isFromProfileFile(prof)) {
           if (files.includes(prof.from_file.unique_id)) {
             profiles.push(prof);
@@ -150,7 +143,7 @@ class FilteredDataModule extends VuexModule {
             profiles.push(prof);
           }
         }
-      }
+      });
 
       return profiles;
     };
@@ -163,7 +156,6 @@ class FilteredDataModule extends VuexModule {
    */
   get controls(): (filter: Filter) => readonly context.ContextualizedControl[] {
     /** Cache by filter */
-    const depends = this.dataStore.contextualControls;
     const localCache: LRUCache<
       string,
       readonly context.ContextualizedControl[]
@@ -242,7 +234,7 @@ class FilteredDataModule extends VuexModule {
   }
 }
 
-export default FilteredDataModule;
+export const FilteredDataModule = getModule(FilteredData);
 
 /**
  * Generates a unique string to represent a filter.

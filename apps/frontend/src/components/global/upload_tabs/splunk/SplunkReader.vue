@@ -59,8 +59,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {getModule} from 'vuex-module-decorators';
-import InspecIntakeModule, {FileID} from '@/store/report_intake';
+import {FileID} from '@/store/report_intake';
 import AuthStep from './AuthStep.vue';
 import FileList from './FileList.vue';
 import {
@@ -103,7 +102,7 @@ export default class SplunkReader extends Props {
     this.step = 2;
   }
 
-  /** When cancel/logoutis clicked from the search window */
+  /** When cancel/logout is clicked from the search window */
   handle_logout() {
     this.step = 1;
     this.splunk_state = null;

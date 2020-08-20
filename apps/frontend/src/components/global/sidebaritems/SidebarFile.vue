@@ -29,11 +29,11 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {getModule} from 'vuex-module-decorators';
-import InspecDataModule from '@/store/data_store';
-import FilteredDataModule from '@/store/data_filters';
+import {InspecDataModule} from '@/store/data_store';
+import {FilteredDataModule} from '@/store/data_filters';
 import {EvaluationFile, ProfileFile, FileID} from '@/store/report_intake';
-import ServerModule from '@/store/server';
+import {ServerModule} from '@/store/server';
+import {BackendModule} from '@/store/backend';
 
 // We declare the props separately to make props types inferable.
 const FileItemProps = Vue.extend({
@@ -51,43 +51,38 @@ export default class FileItem extends FileItemProps {
   select_file(evt: Event) {
     evt.stopPropagation();
     evt.preventDefault();
-    let data_store = getModule(FilteredDataModule, this.$store);
     if (!this.selected) {
-      data_store.set_toggle_file_on(this.file.unique_id);
+      FilteredDataModule.set_toggle_file_on(this.file.unique_id);
     } else {
-      data_store.set_toggle_file_off(this.file.unique_id);
+      FilteredDataModule.set_toggle_file_off(this.file.unique_id);
     }
   }
 
   select_file_exclusive(evt: Event) {
     evt.stopPropagation();
     evt.preventDefault();
-    let data_store = getModule(FilteredDataModule, this.$store);
 
     // Clear all except this one
-    data_store.set_toggled_files([this.file.unique_id]);
+    FilteredDataModule.set_toggled_files([this.file.unique_id]);
   }
 
   //checks if file is selected
   get selected(): boolean {
-    let data_store = getModule(FilteredDataModule, this.$store);
-    return data_store.selected_file_ids.includes(this.file.unique_id);
+    return FilteredDataModule.selected_file_ids.includes(this.file.unique_id);
   }
 
   //removes uploaded file from the currently observed files, not from database
   close_this_file(evt: Event) {
     evt.stopPropagation();
     evt.preventDefault();
-    let data_store = getModule(InspecDataModule, this.$store);
-    data_store.removeFile(this.file.unique_id);
+    InspecDataModule.removeFile(this.file.unique_id);
   }
 
   //saves file to database
   save_this_file(evt: Event) {
     evt.stopPropagation();
     evt.preventDefault();
-    let data_store = getModule(InspecDataModule, this.$store);
-    let file = data_store.allFiles.find(
+    let file = InspecDataModule.allFiles.find(
       f => f.unique_id === this.file.unique_id
     );
     if (file) {
@@ -100,18 +95,14 @@ export default class FileItem extends FileItemProps {
   }
 
   async save_evaluation(file?: EvaluationFile): Promise<void> {
-    console.log('Save evaluation to ' + this.host);
     // checking if the input is valid
     if (file) {
-      let mod = getModule(ServerModule, this.$store);
-      await mod
-        .connect(this.host)
+      await ServerModule.connect(this.host)
         .catch(bad => {
           console.error('Unable to connect to ' + this.host);
         })
         .then(() => {
-          console.log('mode.save_evaluation');
-          return mod.save_evaluation(file);
+          return ServerModule.save_evaluation(file);
         })
         .catch(bad => {
           console.error(`bad save ${bad}`);
@@ -140,13 +131,8 @@ export default class FileItem extends FileItemProps {
   }
 
   //checks if heimdall is in server mode
-  get serverMode(): boolean {
-    let mod = getModule(ServerModule, this.$store);
-    if (mod.serverMode == undefined) {
-      mod.server_mode();
-    }
-
-    return mod.serverMode!;
+  get serverMode() {
+    return BackendModule.serverMode;
   }
 }
 </script>

@@ -1,13 +1,9 @@
 import 'jest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
-import {getModule} from 'vuex-module-decorators';
 import {shallowMount, Wrapper} from '@vue/test-utils';
-import Store from '../../src/store/store';
-import FilteredDataModule from '@/store/data_filters';
-import StatusCountModule, {StatusHash} from '@/store/status_counts';
-import {readFileSync} from 'fs';
-import InspecDataModule from '@/store/data_store';
+import {FilteredDataModule} from '@/store/data_filters';
+import {StatusCountModule} from '@/store/status_counts';
 import {
   removeAllFiles,
   selectAllFiles,
@@ -18,7 +14,6 @@ import {
 import Results from '@/views/Results.vue';
 import ProfData from '@/components/cards/ProfData.vue';
 import {profile_unique_key} from '../../src/utilities/format_util';
-import StatusCardRow from '../../src/components/cards/StatusCardRow.vue';
 import StatusChart from '../../src/components/cards/StatusChart.vue';
 import SeverityChart from '../../src/components/cards/SeverityChart.vue';
 import ComplianceChart from '../../src/components/cards/ComplianceChart.vue';
@@ -55,10 +50,6 @@ wrapper = shallowMount(Results, {
   propsData: {}
 });
 
-let filter_store = getModule(FilteredDataModule, Store);
-let data_store = getModule(InspecDataModule, Store);
-let status_count = getModule(StatusCountModule, Store);
-
 loadSample('Acme Overlay Example');
 selectAllFiles();
 
@@ -67,7 +58,7 @@ describe('Profile Info', () => {
     loadAll();
     selectAllFiles();
     expect((wrapper.vm as any).file_filter.length).toBe(
-      filter_store.selected_file_ids.length
+      FilteredDataModule.selected_file_ids.length
     );
   });
 
@@ -164,216 +155,6 @@ describe('Profile Info', () => {
   });
 });
 
-describe('Status card row', () => {
-  it('count is correct', () => {
-    removeAllFiles();
-    loadAll();
-    selectAllFiles();
-    scrWrapper = shallowMount(StatusCardRow, {
-      vuetify,
-      propsData: {
-        filter: (wrapper.vm as any).all_filter
-      }
-    });
-
-    let expected = [
-      {
-        icon: 'check-circle',
-        title: 'Passed',
-        subtitle: 'All tests passed',
-        color: 'statusPassed',
-        number: expectedCount('passed')
-      },
-      {
-        icon: 'close-circle',
-        title: 'Failed',
-        subtitle: 'Has tests that failed',
-        color: 'statusFailed',
-        number: expectedCount('failed')
-      },
-      {
-        icon: 'minus-circle',
-        title: 'Not Applicable',
-        subtitle: 'System exception or absent component',
-        color: 'statusNotApplicable',
-        number: expectedCount('notApplicable')
-      },
-      {
-        icon: 'alert-circle',
-        title: 'Not Reviewed',
-        subtitle: 'Can only be tested manually at this time',
-        color: 'statusNotReviewed',
-        number: expectedCount('notReviewed')
-      }
-    ];
-    let expectedNum = expected.map(p => p.number);
-    expect(
-      (scrWrapper.vm as any).standardCardProps.map(
-        (p: {number: any}) => p.number
-      )
-    ).toEqual(expectedNum);
-  });
-
-  it('count on file with overlays is correct', () => {
-    removeAllFiles();
-    loadSample('Triple Overlay Example');
-    selectAllFiles();
-    let failed = 55;
-    let passed = 19;
-    let notReviewed = 82;
-    let notApplicable = 44;
-
-    let expected = [
-      {
-        icon: 'check-circle',
-        title: 'Passed',
-        subtitle: 'All tests passed',
-        color: 'statusPassed',
-        number: passed
-      },
-      {
-        icon: 'close-circle',
-        title: 'Failed',
-        subtitle: 'Has tests that failed',
-        color: 'statusFailed',
-        number: failed
-      },
-      {
-        icon: 'minus-circle',
-        title: 'Not Applicable',
-        subtitle: 'System exception or absent component',
-        color: 'statusNotApplicable',
-        number: notApplicable
-      },
-      {
-        icon: 'alert-circle',
-        title: 'Not Reviewed',
-        subtitle: 'Can only be tested manually at this time',
-        color: 'statusNotReviewed',
-        number: notReviewed
-      }
-    ];
-    let expectedNum = expected.map(p => p.number);
-    expect(
-      (scrWrapper.vm as any).standardCardProps.map(
-        (p: {number: any}) => p.number
-      )
-    ).toEqual(expectedNum);
-  });
-
-  it('counts errors', () => {
-    removeAllFiles();
-    loadSample('Red Hat Clean Sample');
-    loadSample('Red Hat With Failing Tests');
-    selectAllFiles();
-    let errors = 2;
-
-    let expected = {
-      icon: 'alert-circle',
-      title: 'Profile Errors',
-      subtitle:
-        'Errors running test - check profile run privileges or check with the author of profile',
-      color: 'statusProfileError',
-      number: errors
-    };
-
-    expect((scrWrapper.vm as any).errorProps.number).toEqual(expected.number);
-  });
-});
-
-describe('Status, Severity, Compliance, chart', () => {
-  it('status count is correct', () => {
-    removeAllFiles();
-    loadAll();
-    selectAllFiles();
-    statusChartWrapper = shallowMount(StatusChart, {
-      vuetify,
-      propsData: {
-        filter: (wrapper.vm as any).all_filter
-      }
-    });
-
-    let expected = [
-      expectedCount('passed'),
-      expectedCount('failed'),
-      expectedCount('notApplicable'),
-      expectedCount('notReviewed'),
-      expectedCount('profileError')
-    ];
-
-    expect((statusChartWrapper.vm as any).series).toEqual(expected);
-  });
-
-  it('status count on file with overlays is correct', () => {
-    removeAllFiles();
-    loadSample('Triple Overlay Example');
-    selectAllFiles();
-    let failed = 55;
-    let passed = 19;
-    let notReviewed = 82;
-    let notApplicable = 44;
-    let profileError = 0;
-
-    let expected = [passed, failed, notApplicable, notReviewed, profileError];
-    expect((statusChartWrapper.vm as any).series).toEqual(expected);
-  });
-
-  it('severity count is correct', () => {
-    sevChartWrapper = shallowMount(SeverityChart, {
-      vuetify,
-      propsData: {
-        filter: (wrapper.vm as any).all_filter
-      }
-    });
-    let low = 7;
-    let med = 140;
-    let high = 9;
-    let critical = 0;
-
-    let expected = [low, med, high, critical];
-    expect((sevChartWrapper.vm as any).series).toEqual(expected);
-  });
-
-  it('severity doesnt count Not Applicable', () => {
-    removeAllFiles();
-    loadSample('Red Hat Clean Sample');
-    selectAllFiles();
-    let recieved = 0;
-    for (let count of (sevChartWrapper.vm as any).series) {
-      recieved += count;
-    }
-
-    //all counts but profile error
-    let expected =
-      status_count.countOf((wrapper.vm as any).all_filter, 'Passed') +
-      status_count.countOf((wrapper.vm as any).all_filter, 'Failed') +
-      status_count.countOf((wrapper.vm as any).all_filter, 'Profile Error') +
-      status_count.countOf((wrapper.vm as any).all_filter, 'Not Reviewed');
-    expect(recieved).toEqual(expected);
-  });
-
-  it('compliance value is accurate', () => {
-    removeAllFiles();
-    loadAll();
-    selectAllFiles();
-    compChartWrapper = shallowMount(ComplianceChart, {
-      vuetify,
-      propsData: {
-        filter: (wrapper.vm as any).all_filter
-      }
-    });
-
-    let expected = Math.round(
-      (100.0 * expectedCount('passed')!) /
-        (expectedCount('passed')! +
-          expectedCount('failed')! +
-          expectedCount('notReviewed')! +
-          expectedCount('profileError')!)
-    );
-    expect((compChartWrapper.vm as any).series[0]).toBe(expected);
-  });
-});
-
 describe('Datatable', () => {
   it('displays correct number of controls with many files', () => {
     removeAllFiles();
@@ -400,11 +181,10 @@ describe('Datatable', () => {
         .map((item: ListElt) => item.control.data.id)
         .sort()
     ).toEqual(
-      filter_store
-        .controls({
-          fromFile: filter_store.selected_file_ids,
-          omit_overlayed_controls: true
-        })
+      FilteredDataModule.controls({
+        fromFile: FilteredDataModule.selected_file_ids,
+        omit_overlayed_controls: true
+      })
         .map(c => c.data.id)
         .sort()
     );

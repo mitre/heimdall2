@@ -24,14 +24,14 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {getModule} from 'vuex-module-decorators';
 import {defined} from '@/utilities/async_util';
-import InspecIntakeModule, {
+import {
+  InspecIntakeModule,
   FileID,
   next_free_file_ID
 } from '@/store/report_intake';
-import InspecDataModule from '../../../store/data_store';
-import AppInfoModule from '../../../store/app_info';
+import {InspecDataModule} from '@/store/data_store';
+import {AppInfoModule} from '@/store/app_info';
 import {samples, Sample} from '@/utilities/sample_util';
 
 // We declare the props separately to make props types inferable.
@@ -59,25 +59,22 @@ export default class SampleList extends Props {
 
   /** Callback for our list item clicks */
   load_sample(sample: Sample) {
-    let intake_module = getModule(InspecIntakeModule, this.$store);
     let unique_id = next_free_file_ID();
-    return intake_module
-      .loadText({
-        text: JSON.stringify(sample.sample),
-        filename: sample.name,
-        unique_id
-      })
-      .then(err => {
-        if (err) {
-          console.error(`Error loading sample ${sample.name}`);
-          this.$toasted.global.error({
-            message: String(err),
-            isDark: this.$vuetify.theme.dark
-          });
-        } else {
-          this.$emit('got-files', [unique_id]);
-        }
-      });
+    return InspecIntakeModule.loadText({
+      text: JSON.stringify(sample.sample),
+      filename: sample.name,
+      unique_id
+    }).then(err => {
+      if (err) {
+        console.error(`Error loading sample ${sample.name}`);
+        this.$toasted.global.error({
+          message: String(err),
+          isDark: this.$vuetify.theme.dark
+        });
+      } else {
+        this.$emit('got-files', [unique_id]);
+      }
+    });
   }
 
   load_selected_samps() {

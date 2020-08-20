@@ -42,8 +42,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {getModule} from 'vuex-module-decorators';
-import InspecIntakeModule, {
+import {
   FileID,
   next_free_file_ID,
   EvaluationFile,
@@ -53,8 +52,8 @@ import {
   SplunkEndpoint,
   ExecutionMetaInfo,
   SplunkErrorCode
-} from '../../../../utilities/splunk_util';
-import InspecDataModule from '../../../../store/data_store';
+} from '@/utilities/splunk_util';
+import {InspecDataModule} from '@/store/data_store';
 import {contextualizeEvaluation} from 'inspecjs/dist/context';
 
 const SEARCH_INTERVAL = 10000;
@@ -126,7 +125,7 @@ export default class FileList extends Props {
         file.evaluation = contextualized;
         Object.freeze(contextualized);
 
-        getModule(InspecDataModule, this.$store).addExecution(file);
+        InspecDataModule.addExecution(file);
         this.$emit('got-files', [unique_id]);
       })
       .catch(fail => {

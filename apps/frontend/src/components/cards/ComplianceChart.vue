@@ -14,13 +14,12 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import VueApexCharts from 'vue-apexcharts';
-import {getModule} from 'vuex-module-decorators';
-import ColorHackModule from '@/store/color_hack';
-import FilteredDataModule, {Filter} from '@/store/data_filters';
+import {ColorHackModule} from '@/store/color_hack';
+import {FilteredDataModule, Filter} from '@/store/data_filters';
 import {ControlStatus, Severity} from 'inspecjs';
 import {ApexOptions} from 'apexcharts';
-import InspecDataModule from '@/store/data_store';
-import StatusCountModule from '@/store/status_counts';
+import {InspecDataModule} from '@/store/data_store';
+import {StatusCountModule} from '@/store/status_counts';
 
 // We declare the props separately
 // to make props types inferrable.
@@ -37,9 +36,6 @@ const ComplianceChartProps = Vue.extend({
 })
 export default class ComplianceChart extends ComplianceChartProps {
   get chartOptions(): ApexOptions {
-    // Get our color module
-    let colors = getModule(ColorHackModule, this.$store);
-
     // Produce our options
     let result: ApexOptions = {
       plotOptions: {
@@ -66,11 +62,11 @@ export default class ComplianceChart extends ComplianceChartProps {
         colors: [
           function(data: {value: number}) {
             if (data.value < 60) {
-              return colors.lookupColor('complianceLow');
+              return ColorHackModule.lookupColor('complianceLow');
             } else if (data.value >= 60 && data.value < 90) {
-              return colors.lookupColor('complianceMedium');
+              return ColorHackModule.lookupColor('complianceMedium');
             } else {
-              return colors.lookupColor('complianceHigh');
+              return ColorHackModule.lookupColor('complianceHigh');
             }
           }
         ]
@@ -97,13 +93,12 @@ export default class ComplianceChart extends ComplianceChartProps {
    */
   get series(): number[] {
     // Get access to the status counts, to compute compliance percentages
-    let counts = getModule(StatusCountModule, this.$store);
-    let passed = counts.countOf(this.filter, 'Passed');
+    let passed = StatusCountModule.countOf(this.filter, 'Passed');
     let total =
       passed +
-      counts.countOf(this.filter, 'Failed') +
-      counts.countOf(this.filter, 'Profile Error') +
-      counts.countOf(this.filter, 'Not Reviewed');
+      StatusCountModule.countOf(this.filter, 'Failed') +
+      StatusCountModule.countOf(this.filter, 'Profile Error') +
+      StatusCountModule.countOf(this.filter, 'Not Reviewed');
     if (total == 0) {
       return [0];
     } else {

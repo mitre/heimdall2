@@ -1,16 +1,12 @@
 import 'jest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
-import {getModule} from 'vuex-module-decorators';
 import {shallowMount, Wrapper} from '@vue/test-utils';
 import Compare from '@/views/Compare.vue';
-import Store from '../../src/store/store';
-import DataStore from '../../src/store/data_store';
-import FilteredDataModule from '@/store/data_filters';
-import StatusCountModule, {StatusHash} from '@/store/status_counts';
-import {readFileSync} from 'fs';
+import {FilteredDataModule} from '@/store/data_filters';
+import {StatusCountModule} from '@/store/status_counts';
 import {ComparisonContext} from '../../src/utilities/delta_util';
-import InspecDataModule from '@/store/data_store';
+import {InspecDataModule} from '@/store/data_store';
 import {
   removeAllFiles,
   selectAllFiles,
@@ -27,10 +23,6 @@ wrapper = shallowMount(Compare, {
   vuetify,
   propsData: {}
 });
-
-let filter_store = getModule(FilteredDataModule, Store);
-let data_store = getModule(InspecDataModule, Store);
-let status_count = getModule(StatusCountModule, Store);
 
 let red_hat_control_count = 247;
 let red_hat_delta = 27;
@@ -65,7 +57,6 @@ describe('Compare table data', () => {
     (wrapper.vm as any).search_term = 'failed';
     expect((wrapper.vm as any).show_sets.length).toBe(0);
   });
-  (wrapper.vm as any).search_term = '';
 
   it('search id works', () => {
     (wrapper.vm as any).checkbox = false;
@@ -118,8 +109,8 @@ describe('Compare table data', () => {
     let na = 0;
     let nr = 0;
     let pe = 0;
-    let selected_data = filter_store.evaluations(
-      filter_store.selected_file_ids
+    let selected_data = FilteredDataModule.evaluations(
+      FilteredDataModule.selected_file_ids
     );
     let curr_delta = new ComparisonContext(selected_data);
     for (let pairing of Object.values(curr_delta.pairings)) {
@@ -140,26 +131,26 @@ describe('Compare table data', () => {
       }
     }
     let expected = {
-      Failed: status_count.hash({
+      Failed: StatusCountModule.hash({
         omit_overlayed_controls: true,
-        fromFile: [...filter_store.selected_file_ids]
+        fromFile: [...FilteredDataModule.selected_file_ids]
       }).Failed,
-      Passed: status_count.hash({
+      Passed: StatusCountModule.hash({
         omit_overlayed_controls: true,
-        fromFile: [...filter_store.selected_file_ids]
+        fromFile: [...FilteredDataModule.selected_file_ids]
       }).Passed,
       'From Profile': 0,
-      'Profile Error': status_count.hash({
+      'Profile Error': StatusCountModule.hash({
         omit_overlayed_controls: true,
-        fromFile: [...filter_store.selected_file_ids]
+        fromFile: [...FilteredDataModule.selected_file_ids]
       })['Profile Error'],
-      'Not Reviewed': status_count.hash({
+      'Not Reviewed': StatusCountModule.hash({
         omit_overlayed_controls: true,
-        fromFile: [...filter_store.selected_file_ids]
+        fromFile: [...FilteredDataModule.selected_file_ids]
       })['Not Reviewed'],
-      'Not Applicable': status_count.hash({
+      'Not Applicable': StatusCountModule.hash({
         omit_overlayed_controls: true,
-        fromFile: [...filter_store.selected_file_ids]
+        fromFile: [...FilteredDataModule.selected_file_ids]
       })['Not Applicable']
     };
     let actual = {
@@ -217,30 +208,14 @@ describe('compare charts', () => {
     ]);
   });
 
-  it('sev chart gets correct data with all test files', () => {
-    removeAllFiles();
-    loadAll();
-    selectAllFiles();
-    let data = getModule(DataStore, Store);
-    let sevFail = 0;
-    let exec_files = data.executionFiles;
-    for (let i = 0; i < 4; i++) {
-      for (let j = 0; j < exec_files.length; j++) {
-        sevFail += (wrapper.vm as any).sev_series[i][j];
-      }
-    }
-
-    expect(sevFail).toBe(expectedCount('failed'));
-  });
-
   it('compliance chart gets correct data with 2 files', () => {
     removeAllFiles();
     loadSample('NGINX With Failing Tests');
     loadSample('NGINX Clean Sample');
     selectAllFiles();
     expect((wrapper.vm as any).compliance_series[0].data).toEqual([
-      fileCompliance(filter_store.selected_file_ids[0]),
-      fileCompliance(filter_store.selected_file_ids[1])
+      fileCompliance(FilteredDataModule.selected_file_ids[0]),
+      fileCompliance(FilteredDataModule.selected_file_ids[1])
     ]);
   });
 
@@ -250,8 +225,8 @@ describe('compare charts', () => {
     loadSample('Red Hat With Failing Tests');
     selectAllFiles();
     expect((wrapper.vm as any).compliance_series[0].data).toEqual([
-      fileCompliance(filter_store.selected_file_ids[0]),
-      fileCompliance(filter_store.selected_file_ids[1])
+      fileCompliance(FilteredDataModule.selected_file_ids[0]),
+      fileCompliance(FilteredDataModule.selected_file_ids[1])
     ]);
   });
 
@@ -261,28 +236,8 @@ describe('compare charts', () => {
     loadSample('Acme Overlay Example');
     selectAllFiles();
     expect((wrapper.vm as any).compliance_series[0].data).toEqual([
-      fileCompliance(filter_store.selected_file_ids[0]),
-      fileCompliance(filter_store.selected_file_ids[1])
+      fileCompliance(FilteredDataModule.selected_file_ids[0]),
+      fileCompliance(FilteredDataModule.selected_file_ids[1])
     ]);
-  });
-
-  it('compliance chart gets correct data with all test files', () => {
-    removeAllFiles();
-    loadAll();
-    selectAllFiles();
-    let expected = [];
-    for (let id of filter_store.selected_file_ids) {
-      expected.push(fileCompliance(id));
-    }
-    expect((wrapper.vm as any).compliance_series[0].data.sort()).toEqual(
-      expected.sort()
-    );
-  });
-
-  it('displays correct number of donuts', () => {
-    removeAllFiles();
-    loadAll();
-    selectAllFiles();
-    expect((wrapper.vm as any).files.length).toBe(data_store.allFiles.length);
   });
 });

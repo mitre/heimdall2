@@ -8,8 +8,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {getModule} from 'vuex-module-decorators';
-import ColorHackModule from '@/store/color_hack';
+import {ColorHack, ColorHackModule} from '@/store/color_hack';
 import {Color} from 'vuetify/lib/util/colors';
 
 // We declare the props separately to make props types inferable.
@@ -28,8 +27,7 @@ export default class UtilColorGenerator extends Props {
   color: string = 'background';
 
   get body(): string {
-    let cmodule = getModule(ColorHackModule, this.$store);
-    let color = colorVariants(cmodule, this.color);
+    let color = colorVariants(ColorHackModule, this.color);
     let br = '\n';
     let rows = Object.keys(color)
       .map(key => `\t${key}: "${(color as any)[key]}"`)
@@ -42,7 +40,7 @@ export default class UtilColorGenerator extends Props {
 /**
  * Outputs all of the variants of a theme color
  */
-function colorVariants(cmod: ColorHackModule, base: string): Color {
+function colorVariants(cmod: ColorHack, base: string): Color {
   // List all of our suffixes
   let suffixes: Array<keyof Color> = [
     'darken4',

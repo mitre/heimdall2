@@ -52,10 +52,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import InspecDataModule from '@/store/data_store';
-import {getModule} from 'vuex-module-decorators';
-import ServerModule from '@/store/server';
-import FilteredDataModule, {Filter} from '../../store/data_filters';
+import {InspecDataModule} from '@/store/data_store';
+import {ServerModule} from '@/store/server';
+import {FilteredDataModule, Filter} from '../../store/data_filters';
 import {InspecFile, EvaluationFile} from '../../store/report_intake';
 import {context} from 'inspecjs';
 import {plainToClass} from 'class-transformer';
@@ -105,8 +104,9 @@ export default class EvaluationInfo extends EvaluationInfoProps {
   }
 
   updated() {
-    let store = getModule(InspecDataModule, this.$store);
-    let file = store.allFiles.find(f => f.unique_id === this.file_filter);
+    let file = InspecDataModule.allFiles.find(
+      f => f.unique_id === this.file_filter
+    );
     if (file) {
       let eva = file as EvaluationFile;
       this.version = eva.evaluation.data.version;
@@ -124,20 +124,12 @@ export default class EvaluationInfo extends EvaluationInfoProps {
   }
 
   mounted() {
-    let mod = getModule(ServerModule, this.$store);
-    if (mod.serverMode == undefined) {
-      mod.server_mode();
-    }
     if (!this.database_id) {
       this.show_tags = false;
       this.edit_tags = false;
     } else {
       this.show_tags = true;
     }
-  }
-
-  watch() {
-    console.log('Prop changed: ' + this.file_filter);
   }
 
   get filename(): string {
@@ -161,26 +153,23 @@ export default class EvaluationInfo extends EvaluationInfoProps {
 
   //gets file to retrieve corresponding data
   get file(): EvaluationFile {
-    let filter_module = getModule(FilteredDataModule, this.$store);
-    return filter_module.evaluations([this.file_filter])[0].from_file;
+    return FilteredDataModule.evaluations([this.file_filter])[0].from_file;
   }
 
   //gives more room for actual info when the "tags" button is not displayed
   get info_cols(): number {
-    let mod = getModule(ServerModule, this.$store);
-    if (mod.serverMode) {
+    if (ServerModule.serverMode) {
       return 5;
     }
     return 12;
   }
 
   load_file() {
-    console.log('load_file: ' + this.file_filter);
-    let store = getModule(InspecDataModule, this.$store);
-    let file = store.allFiles.find(f => f.unique_id === this.file_filter);
+    let file = InspecDataModule.allFiles.find(
+      f => f.unique_id === this.file_filter
+    );
     if (file) {
       let eva = file as EvaluationFile;
-      console.log('filename 2: ' + eva.filename);
       this.filename2 = eva.filename;
       this.version = eva.evaluation.data.version;
       this.platform_name = eva.evaluation.data.platform.name;
@@ -188,7 +177,6 @@ export default class EvaluationInfo extends EvaluationInfoProps {
       this.duration = eva.evaluation.data.statistics.duration;
       this.tags = eva.tags || null;
       if (eva.database_id === null) {
-        console.log('null file');
         this.show_tags = false;
         this.edit_tags = false;
       } else {
@@ -212,7 +200,6 @@ export default class EvaluationInfo extends EvaluationInfoProps {
   }
 
   async submit_tag(): Promise<void> {
-    console.log('submit ' + this.tag_name + ': ' + this.tag_value);
     const host = process.env.VUE_APP_API_URL!;
 
     let file_id: number | null = this.database_id;
@@ -224,23 +211,18 @@ export default class EvaluationInfo extends EvaluationInfoProps {
       };
       (this.$refs.form as any).reset();
       // Get server module
-      let mod = getModule(ServerModule, this.$store);
-      await mod
-        .connect(host)
+      await ServerModule.connect(host)
         .catch(bad => {
           console.error('Unable to connect to ' + host);
         })
         .then(() => {
-          return mod.save_tag(tag_hash);
+          return ServerModule.save_tag(tag_hash);
         })
         .catch(bad => {
           console.error(`bad save ${bad}`);
         })
         .then(() => {
-          console.log('here2');
-          if (file_id === null) {
-            console.log('null file');
-          } else {
+          if (file_id !== null) {
             this.load_tags(file_id);
           }
         });
@@ -248,29 +230,23 @@ export default class EvaluationInfo extends EvaluationInfoProps {
   }
 
   async remove_tag(tag: Tag): Promise<void> {
-    console.log('remove ' + JSON.stringify(tag));
-
     const host = process.env.VUE_APP_API_URL!;
     let tag_hash: TagIdsHash = {
       tagger_id: tag.tagger_id,
       id: tag.id
     };
     // Get server module
-    let mod = getModule(ServerModule, this.$store);
-    await mod
-      .connect(host)
+    await ServerModule.connect(host)
       .catch(bad => {
         console.error('Unable to connect to ' + host);
       })
       .then(() => {
-        console.log('delete tag:' + tag.id);
-        return mod.delete_tag(tag_hash);
+        return ServerModule.delete_tag(tag_hash);
       })
       .catch(bad => {
         console.error(`bad delete ${bad}`);
       })
       .then(() => {
-        console.log('here2');
         this.load_tags(tag.tagger_id);
       });
   }
@@ -280,13 +256,9 @@ export default class EvaluationInfo extends EvaluationInfoProps {
   }
 
   watches() {
-    let mod = getModule(ServerModule, this.$store);
-    console.log('watches ' + JSON.stringify(mod.tags));
-    if (mod.tags) {
-      console.log('mod.tags = ' + JSON.stringify(mod.tags));
-      let tags_obj = Array.from(mod.tags) || [];
+    if (ServerModule.tags) {
+      let tags_obj = Array.from(ServerModule.tags) || [];
       const eva_tags: Tag[] = tags_obj.map((x: any) => plainToClass(Tag, x));
-      console.log('tags: ' + eva_tags.length);
       this.tags = eva_tags;
       return this.tags;
     } else {
@@ -295,38 +267,28 @@ export default class EvaluationInfo extends EvaluationInfoProps {
   }
 
   update_tags() {
-    console.log('update_tags');
-    let mod = getModule(ServerModule, this.$store);
-    if (mod.tags) {
-      console.log('mod.tags = ' + JSON.stringify(mod.tags));
-      let tags_obj = Array.from(mod.tags) || [];
+    if (ServerModule.tags) {
+      let tags_obj = Array.from(ServerModule.tags) || [];
       const eva_tags: Tag[] = tags_obj.map((x: any) => plainToClass(Tag, x));
-      console.log('tags: ' + eva_tags.length);
       this.tags = eva_tags;
     }
   }
 
   async load_tags(file_id: number | null): Promise<void> {
-    console.log('load_tags for ' + file_id);
     if (file_id) {
       const host = process.env.VUE_APP_API_URL!;
 
-      // Get server module
-      let mod = getModule(ServerModule, this.$store);
-      await mod
-        .connect(host)
+      await ServerModule.connect(host)
         .catch(bad => {
           console.error('Unable to connect to ' + host);
         })
         .then(() => {
-          console.log('here');
-          return mod.retrieve_tags(file_id);
+          return ServerModule.retrieve_tags(file_id);
         })
         .catch(bad => {
           console.error(`bad retrieve ${bad}`);
         })
         .then(() => {
-          console.log('here2');
           this.update_tags();
         });
     }

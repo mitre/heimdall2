@@ -12,8 +12,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
-import {getModule} from 'vuex-module-decorators';
-import StatusCountModule from '@/store/status_counts';
+import {StatusCountModule} from '@/store/status_counts';
 import {ControlStatus} from 'inspecjs';
 
 // We declare the props separately to make props types inferable.
@@ -73,13 +72,12 @@ export default class StatusChart extends StatusChartProps {
 
   get center_value(): string {
     if (this.show_compliance) {
-      let counts = getModule(StatusCountModule, this.$store);
-      let passed = counts.countOf(this.filter, 'Passed');
+      let passed = StatusCountModule.countOf(this.filter, 'Passed');
       let total =
         passed +
-        counts.countOf(this.filter, 'Failed') +
-        counts.countOf(this.filter, 'Profile Error') +
-        counts.countOf(this.filter, 'Not Reviewed');
+        StatusCountModule.countOf(this.filter, 'Failed') +
+        StatusCountModule.countOf(this.filter, 'Profile Error') +
+        StatusCountModule.countOf(this.filter, 'Not Reviewed');
       if (total == 0) {
         return '0%';
       } else {
@@ -89,13 +87,12 @@ export default class StatusChart extends StatusChartProps {
   }
 
   get series(): number[] {
-    let counts: StatusCountModule = getModule(StatusCountModule, this.$store);
     return [
-      counts.countOf(this.filter, 'Passed'),
-      counts.countOf(this.filter, 'Failed'),
-      counts.countOf(this.filter, 'Not Applicable'),
-      counts.countOf(this.filter, 'Not Reviewed'),
-      counts.countOf(this.filter, 'Profile Error')
+      StatusCountModule.countOf(this.filter, 'Passed'),
+      StatusCountModule.countOf(this.filter, 'Failed'),
+      StatusCountModule.countOf(this.filter, 'Not Applicable'),
+      StatusCountModule.countOf(this.filter, 'Not Reviewed'),
+      StatusCountModule.countOf(this.filter, 'Profile Error')
     ];
   }
 

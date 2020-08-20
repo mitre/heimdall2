@@ -1,13 +1,10 @@
 <template>
-  <v-container>
+  <div>
     <Modal
       :value="value"
       @input="$emit('input', $event.target.value)"
       :persistent="persistent"
     >
-      <div v-if="is_logged_in" style="padding: 8px;float: right; width:100px">
-        <v-btn id="logout" @click="logout()" color="normal">Logout</v-btn>
-      </div>
       <v-tabs
         :vertical="$vuetify.breakpoint.mdAndUp"
         active
@@ -18,18 +15,14 @@
       >
         <v-tabs-slider></v-tabs-slider>
         <!-- Define our tabs -->
-        <v-tab href="#uploadtab-local">Local Files</v-tab>
-
-        <!--v-tab v-if="is_logged_in" href="#uploadtab-database">
-          {{ user }} Files
-        </v-tab-->
+        <v-tab id="local_files_tab" href="#uploadtab-local">Local Files</v-tab>
 
         <v-tab href="#uploadtab-s3">S3 Bucket</v-tab>
 
         <v-tab href="#uploadtab-splunk">Splunk</v-tab>
         <v-spacer />
         <v-divider />
-        <v-tab href="#uploadtab-samples">Samples</v-tab>
+        <v-tab id="sample_tab" href="#uploadtab-samples">Samples</v-tab>
 
         <!-- Include those components -->
         <v-tab-item value="uploadtab-local">
@@ -54,34 +47,21 @@
       </v-tabs>
       <HelpFooter />
     </Modal>
-  </v-container>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {getModule} from 'vuex-module-decorators';
-import InspecIntakeModule, {FileID} from '@/store/report_intake';
+import {InspecIntakeModule, FileID} from '@/store/report_intake';
 import Modal from '@/components/global/Modal.vue';
 import FileReader from '@/components/global/upload_tabs/FileReader.vue';
-//import DatabaseReader from "@/components/global/upload_tabs/DatabaseReader.vue";
 import HelpFooter from '@/components/global/upload_tabs/HelpFooter.vue';
 import S3Reader from '@/components/global/upload_tabs/aws/S3Reader.vue';
 import SplunkReader from '@/components/global/upload_tabs/splunk/SplunkReader.vue';
 import SampleList from '@/components/global/upload_tabs/SampleList.vue';
-import ServerModule from '@/store/server';
 import {LocalStorageVal} from '@/utilities/helper_util';
-
-export class UserProfile {
-  id?: number;
-  first_name?: string;
-  last_name?: string;
-  email?: string;
-  image?: string;
-  phone_number?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+import {FilteredDataModule} from '@/store/data_filters';
 
 const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
 
@@ -101,7 +81,6 @@ const Props = Vue.extend({
   components: {
     Modal,
     FileReader,
-    //DatabaseReader,
     HelpFooter,
     S3Reader,
     SplunkReader,
@@ -109,48 +88,8 @@ const Props = Vue.extend({
   }
 })
 export default class UploadNexus extends Props {
-  active_tab: string = ''; // Set in mounted
+  active_tab: string = local_tab.get_default('uploadtab-local');
 
-  // Loads the last open tab
-  mounted() {
-    console.log('mount UploadNexus');
-    this.active_tab = local_tab.get_default('uploadtab-local');
-  }
-
-  get is_logged_in(): boolean {
-    let mod = getModule(ServerModule, this.$store);
-
-    if (mod.serverMode) {
-      if (this.token) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
-
-  get token(): string {
-    let mod = getModule(ServerModule, this.$store);
-    return mod.token || '';
-  }
-
-  get user(): string {
-    let mod = getModule(ServerModule, this.$store);
-    if (mod.profile) {
-      return mod.profile.email || 'pending';
-    } else {
-      return 'pending';
-    }
-  }
-
-  //logout from backend
-  logout() {
-    console.log('logout');
-    getModule(ServerModule, this.$store).clear_token();
-    this.$router.push('/login');
-  }
   // Handles change in tab
   selected_tab(new_tab: string) {
     this.active_tab = new_tab;
@@ -160,8 +99,11 @@ export default class UploadNexus extends Props {
 
   // Event passthrough
   got_files(files: FileID[]) {
-    console.log('got_files');
     this.$emit('got-files', files);
+
+    for (let f of files) {
+      FilteredDataModule.set_toggle_file_on(f);
+    }
   }
 }
 </script>

@@ -1,18 +1,5 @@
 <template>
   <BaseView :title="curr_title">
-    <!-- Topbar config - give it a search bar -->
-    <template #topbar-content>
-      <v-btn @click="dialog = true" :disabled="dialog" class="mx-2">
-        <span class="d-none d-md-inline pr-2">
-          Load
-        </span>
-        <v-icon>
-          mdi-cloud-upload
-        </v-icon>
-      </v-btn>
-      <UserMenu />
-    </template>
-
     <!-- The main content: cards, etc -->
     <template #main-content>
       <v-container fluid grid-list-md pa-2>
@@ -106,9 +93,6 @@
         </v-row>
       </v-container>
     </template>
-
-    <!-- File select modal -->
-    <UploadNexus v-model="dialog" @got-files="on_got_files" />
   </BaseView>
 </template>
 
@@ -116,15 +100,9 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import BaseView from '@/views/BaseView.vue';
-import UploadNexus from '@/components/global/UploadNexus.vue';
-import InspecIntakeModule, {
-  FileID,
-  next_free_file_ID
-} from '@/store/report_intake';
+import {FileID, next_free_file_ID} from '@/store/report_intake';
 import {plainToClass} from 'class-transformer';
-import {getModule} from 'vuex-module-decorators';
-import InspecDataModule from '../store/data_store';
-import ServerModule from '@/store/server';
+import {ServerModule} from '@/store/server';
 import {UserProfile, Evaluation, Usergroup} from '@/types/models.ts';
 import UserMenu from '@/components/global/UserMenu.vue';
 
@@ -157,7 +135,6 @@ const UsergroupProps = Vue.extend({
 @Component({
   components: {
     BaseView,
-    UploadNexus,
     UserMenu
   }
 })
@@ -174,7 +151,6 @@ export default class UsergroupView extends UsergroupProps {
 
   created() {
     this.group_id = Number(this.$route.params.id);
-    console.log('created');
     this.load_usergroup();
     this.load_users();
   }
@@ -207,28 +183,25 @@ export default class UsergroupView extends UsergroupProps {
   }
 
   get user(): UserProfile {
-    let mod = getModule(ServerModule, this.$store);
-    if (mod.profile) {
-      this.user_id = mod.profile.id;
-      return mod.profile;
+    if (ServerModule.profile) {
+      this.user_id = ServerModule.profile.id;
+      return ServerModule.profile;
     } else {
       return new UserProfile();
     }
   }
 
   get users(): UserProfile[] {
-    let mod = getModule(ServerModule, this.$store);
-    if (mod.users) {
-      return mod.users;
+    if (ServerModule.users) {
+      return ServerModule.users;
     } else {
       return [];
     }
   }
 
   get usergroup(): Usergroup {
-    let mod = getModule(ServerModule, this.$store);
-    if (mod.usergroup) {
-      return mod.usergroup;
+    if (ServerModule.usergroup) {
+      return ServerModule.usergroup;
     } else {
       return new Usergroup();
     }
@@ -238,7 +211,6 @@ export default class UsergroupView extends UsergroupProps {
     let label = evaluation.version;
     if (evaluation.tags) {
       evaluation.tags.forEach(tag => {
-        console.log('tag ' + tag.content.name + ': ' + tag.content.value);
         if (tag.content.name == 'filename') {
           label = tag.content.value;
         }
@@ -253,46 +225,33 @@ export default class UsergroupView extends UsergroupProps {
       group_id: Number(this.$route.params.id)
     };
 
-    console.log('load this usergroup: ' + group_hash['group_id']);
-
-    let mod = getModule(ServerModule, this.$store);
-    await mod
-      .connect(host)
+    await ServerModule.connect(host)
       .catch(bad => {
         console.error('Unable to connect to ' + host);
       })
       .then(() => {
-        console.log('here');
-        return mod.retrieve_usergroup(group_hash);
+        return ServerModule.retrieve_usergroup(group_hash);
       })
       .catch(bad => {
         console.error(`bad login ${bad}`);
       })
-      .then(() => {
-        console.log('Loaded usergroup');
-      });
+      .then(() => {});
   }
 
   async load_users(): Promise<void> {
     const host = process.env.VUE_APP_API_URL!;
-    console.log('load users: ');
 
-    let mod = getModule(ServerModule, this.$store);
-    await mod
-      .connect(host)
+    await ServerModule.connect(host)
       .catch(bad => {
         console.error('Unable to connect to ' + host);
       })
       .then(() => {
-        console.log('here');
-        return mod.retrieve_users();
+        return ServerModule.retrieve_users();
       })
       .catch(bad => {
         console.error(`bad login ${bad}`);
       })
-      .then(() => {
-        console.log('Loaded users');
-      });
+      .then(() => {});
   }
 
   open_usergroup_edit() {
@@ -306,7 +265,6 @@ export default class UsergroupView extends UsergroupProps {
   }
 
   async submit_user(): Promise<void> {
-    console.log('submit ' + this.group_id + ', ' + this.selected_user);
     const host = process.env.VUE_APP_API_URL!;
 
     if (this.group_id && this.selected_user) {
@@ -315,62 +273,42 @@ export default class UsergroupView extends UsergroupProps {
         user_id: this.selected_user
       };
       (this.$refs.form as any).reset();
-      let mod = getModule(ServerModule, this.$store);
-      await mod
-        .connect(host)
+
+      await ServerModule.connect(host)
         .catch(bad => {
           console.error('Unable to connect to ' + host);
         })
         .then(() => {
-          return mod.add_team_member(group_hash);
+          return ServerModule.add_team_member(group_hash);
         })
         .catch(bad => {
           console.error(`bad save ${bad}`);
-        })
-        .then(() => {
-          console.log('here');
         });
     }
   }
 
   async load_this_evaluation(evaluation: Evaluation): Promise<void> {
-    console.log('load this file: ' + evaluation.id);
     const host = process.env.VUE_APP_API_URL!;
     // Generate an id
     let unique_id = next_free_file_ID();
 
-    let mod = getModule(ServerModule, this.$store);
-    await mod
-      .connect(host)
+    await ServerModule.connect(host)
       .catch(bad => {
         console.error('Unable to connect to ' + host);
       })
       .then(() => {
-        console.log('here');
         let eva_hash: RetrieveHash = {
           unique_id: unique_id,
           eva: evaluation
         };
-        return mod.retrieve_evaluation(eva_hash);
+        return ServerModule.retrieve_evaluation(eva_hash);
       })
       .catch(bad => {
         console.error(`bad login ${bad}`);
       })
       .then(() => {
-        console.log('Loaded ' + unique_id);
         this.on_got_files([unique_id]);
       });
-  }
-
-  profile_page() {
-    this.dialog = false;
-    this.$router.push('/profile');
-  }
-
-  log_out() {
-    getModule(ServerModule, this.$store).clear_token();
-    this.dialog = false;
-    this.$router.push('/');
   }
 
   /**

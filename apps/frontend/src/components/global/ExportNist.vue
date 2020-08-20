@@ -16,8 +16,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {getModule} from 'vuex-module-decorators';
-import FilteredDataModule, {Filter} from '@/store/data_filters';
+import {FilteredDataModule, Filter} from '@/store/data_filters';
 import XLSX from 'xlsx';
 import {saveAs} from 'file-saver';
 import {HDFControl, ControlStatus} from 'inspecjs';
@@ -25,8 +24,8 @@ import LinkItem, {
   LinkAction
 } from '@/components/global/sidebaritems/SidebarLink.vue';
 import {NistControl} from 'inspecjs/dist/nist';
-import {FileID, EvaluationFile} from '../../store/report_intake';
-import InspecDataModule from '../../store/data_store';
+import {FileID, EvaluationFile} from '@/store/report_intake';
+import {InspecDataModule} from '@/store/data_store';
 
 const MAX_CELL_SIZE = 32000; // Rounding a bit here.
 const MAX_SHEET_NAME_SIZE = 31;
@@ -75,21 +74,19 @@ export default class ExportNIST extends Props {
 
   /** Makes a sheet for the given file id */
   sheet_for(file?: FileID): Sheet {
-    let filter_module = getModule(FilteredDataModule, this.$store);
-    let data_store = getModule(InspecDataModule, this.$store);
-
     // If file not provided
     let filename: string = 'All files';
-    let id: FileID[] = filter_module.selected_file_ids;
+    let id: FileID[] = FilteredDataModule.selected_file_ids;
     if (file) {
       id = [file];
-      filename = data_store.allFiles.find(x => x.unique_id == file)!.filename;
+      filename = InspecDataModule.allFiles.find(x => x.unique_id == file)!
+        .filename;
     }
 
     // Get our data
     let base_filter = this.filter as Filter;
     let modified_filter: Filter = {...base_filter, fromFile: id};
-    let controls = filter_module.controls(modified_filter);
+    let controls = FilteredDataModule.controls(modified_filter);
 
     // Initialize our data structures
     let sheet: NISTList = [
@@ -132,13 +129,10 @@ export default class ExportNIST extends Props {
   }
 
   export_nist() {
-    // Get our data module
-    let data = getModule(FilteredDataModule, this.$store);
-
     // Get files we plan on exporting
     let files: Array<FileID | undefined> = [
       undefined,
-      ...data.selected_file_ids
+      ...FilteredDataModule.selected_file_ids
     ];
 
     // Convert to sheets

@@ -2,18 +2,8 @@
  * Provides utlities for comparing executions
  */
 
-import {SourcedContextualizedEvaluation} from '@/store/report_intake';
 import {HDFControlSegment, context} from 'inspecjs';
-import {
-  structuredPatch,
-  createPatch,
-  diffArrays,
-  Change as DiffChange,
-  diffJson
-} from 'diff';
-import {exec} from 'child_process';
 import {EvaluationFile} from '@/store/report_intake';
-import {getModule} from 'vuex-module-decorators';
 import {ContextualizedEvaluation} from 'inspecjs/dist/context';
 
 export const NOT_SELECTED = 'not selected';
@@ -81,25 +71,6 @@ export class ControlChangeGroup {
   clean() {
     this.changes = this.changes.filter(c => c.valid);
   }
-}
-
-/** Combines two hashes into a series of changes.
- * If any keys are missing from the first/second, they are treated as the empty string.
- * Note that these "changes" might not necessarily be valid.
- */
-function changelog_segments(items: HDFControlSegment[]): ControlChange[] {
-  // Get all the keys we care about
-  let all_keys: Array<keyof HDFControlSegment>;
-  all_keys = ['status', 'code_desc', 'exception', 'message', 'resource']; // determines output order, which are displayed, etc.
-
-  // Map them to changes
-  let changes: ControlChange[] = [];
-  all_keys.forEach(key => {
-    let versions: string[] = items.map(i => i[key] + '' || '');
-    changes.push(new ControlChange(key, versions));
-  });
-
-  return changes;
 }
 
 /**

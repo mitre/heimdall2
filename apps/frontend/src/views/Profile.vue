@@ -1,17 +1,6 @@
 <template>
-  <BaseView :title="curr_title">
-    <!-- Topbar config - give it a search bar -->
-    <template #topbar-content>
-      <v-btn @click="dialog = true" :disabled="dialog" class="mx-2">
-        <span class="d-none d-md-inline pr-2">
-          Load
-        </span>
-        <v-icon>
-          mdi-cloud-upload
-        </v-icon>
-      </v-btn>
-      <UserMenu />
-    </template>
+  <BaseView title="Profile">
+    <template #topbar-content />
 
     <!-- The main content: cards, etc -->
     <template #main-content>
@@ -21,10 +10,10 @@
         <v-card>
           <v-row class="pa-4" justify="space-between">
             <v-col cols="5">
-              <b>Name:</b> {{ user.first_name }} {{ user.last_name }}<br />
-              <b>Email:</b> {{ user.email }}<br />
-              <b>Created:</b> {{ user.created_at }}<br />
-              <b>Updated:</b> {{ user.updated_at }}<br />
+              <p><b>Name:</b> {{ user.first_name }} {{ user.last_name }}</p>
+              <p><b>Email:</b> {{ user.email }}</p>
+              <p><b>Created:</b> {{ user.created_at }}</p>
+              <p><b>Updated:</b> {{ user.updated_at }}</p>
             </v-col>
             <v-divider vertical></v-divider>
             <v-col v-if="show_groups" class="text-center">
@@ -63,10 +52,9 @@
         <v-row>
           <v-col xs-12>
             <v-card class="elevation-0">
-              <v-card-subtitle
-                >Easily load any supported Heimdall Data Format
-                file</v-card-subtitle
-              >
+              <v-card-subtitle>
+                Easily load any supported Heimdall Data Format file
+              </v-card-subtitle>
               <v-container>
                 <v-data-table
                   dense
@@ -124,9 +112,6 @@
         </v-row>
       </v-container>
     </template>
-
-    <!-- File select modal -->
-    <UploadNexus v-model="dialog" @got-files="on_got_files" />
   </BaseView>
 </template>
 
@@ -134,15 +119,10 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import BaseView from '@/views/BaseView.vue';
-import UploadNexus from '@/components/global/UploadNexus.vue';
-import InspecIntakeModule, {
-  FileID,
-  next_free_file_ID
-} from '@/store/report_intake';
+import Navbar from '@/views/Navbar.vue';
+import {FileID, next_free_file_ID} from '@/store/report_intake';
 import {plainToClass} from 'class-transformer';
-import {getModule} from 'vuex-module-decorators';
-import InspecDataModule from '../store/data_store';
-import ServerModule from '@/store/server';
+import {ServerModule} from '@/store/server';
 import {UserProfile, Evaluation, Usergroup} from '@/types/models.ts';
 import UserMenu from '@/components/global/UserMenu.vue';
 
@@ -168,20 +148,16 @@ const ProfileProps = Vue.extend({
 @Component({
   components: {
     BaseView,
-    UploadNexus,
     UserMenu
   }
 })
 export default class Profile extends ProfileProps {
-  dialog: boolean = false;
-  is_server_mode: boolean = true;
   show_groups: boolean = true;
   edit_groups: boolean = false;
   user_id: number | null = null;
   group_name: string | null = null;
   selected: number[] | null = null;
   selected_group: number | null = null;
-  curr_title: string = 'Profile';
 
   get headers(): Object[] {
     return [
@@ -211,23 +187,20 @@ export default class Profile extends ProfileProps {
   }
 
   get user(): UserProfile {
-    let mod = getModule(ServerModule, this.$store);
-    if (mod.profile) {
-      this.user_id = mod.profile.id;
-      return mod.profile;
+    if (ServerModule.profile) {
+      this.user_id = ServerModule.profile.id;
+      return ServerModule.profile;
     } else {
       return new UserProfile();
     }
   }
 
   get items(): Evaluation[] {
-    let mod = getModule(ServerModule, this.$store);
-    if (mod.user_evaluations) {
-      let eval_obj = Array.from(mod.user_evaluations) || [];
+    if (ServerModule.user_evaluations) {
+      let eval_obj = Array.from(ServerModule.user_evaluations) || [];
       const evals: Evaluation[] = eval_obj.map((x: any) =>
         plainToClass(Evaluation, x)
       );
-      console.log('evals: ' + evals.length);
       evals.forEach(eva => {
         eva.filename = this.evaluation_label(eva);
       });
@@ -238,13 +211,9 @@ export default class Profile extends ProfileProps {
   }
 
   get usergroups(): Usergroup[] {
-    console.log('Get usergroups');
-    let mod = getModule(ServerModule, this.$store);
-    if (mod.usergroups) {
-      console.log('Return usergroups: ' + JSON.stringify(mod.usergroups));
-      return mod.usergroups;
+    if (ServerModule.usergroups) {
+      return ServerModule.usergroups;
     } else {
-      console.log('No usergroups');
       return [];
     }
   }
@@ -253,7 +222,6 @@ export default class Profile extends ProfileProps {
     let label = evaluation.version;
     if (evaluation.tags) {
       evaluation.tags.forEach(tag => {
-        console.log('tag ' + tag.content.name + ': ' + tag.content.value);
         if (tag.content.name == 'filename') {
           label = tag.content.value;
         }
@@ -277,7 +245,6 @@ export default class Profile extends ProfileProps {
   }
 
   async submit_usergroup(): Promise<void> {
-    console.log('submit ' + this.group_name);
     const host = process.env.VUE_APP_API_URL!;
 
     if (this.group_name) {
@@ -285,56 +252,48 @@ export default class Profile extends ProfileProps {
         name: this.group_name
       };
       (this.$refs.form as any).reset();
-      // Get server module
-      let mod = getModule(ServerModule, this.$store);
-      await mod
-        .connect(host)
+      await ServerModule.connect(host)
         .catch(bad => {
           console.error('Unable to connect to ' + host);
         })
         .then(() => {
-          return mod.new_usergroup(group_hash);
+          return ServerModule.new_usergroup(group_hash);
         })
         .catch(bad => {
           console.error(`bad save ${bad}`);
         })
-        .then(() => {
-          console.log('here2');
-        });
+        .then(() => {});
     }
   }
 
   async load_this_evaluation(evaluation: Evaluation): Promise<void> {
-    console.log('load this file: ' + evaluation.id);
     const host = process.env.VUE_APP_API_URL!;
     // Generate an id
     let unique_id = next_free_file_ID();
 
-    let mod = getModule(ServerModule, this.$store);
-    await mod
-      .connect(host)
+    await ServerModule.connect(host)
       .catch(bad => {
         console.error('Unable to connect to ' + host);
       })
       .then(() => {
-        console.log('here');
         let eva_hash: RetrieveHash = {
           unique_id: unique_id,
           eva: evaluation
         };
-        return mod.retrieve_evaluation(eva_hash);
+        return ServerModule.retrieve_evaluation(eva_hash);
       })
       .catch(bad => {
         console.error(`bad login ${bad}`);
       })
       .then(() => {
-        console.log('Loaded ' + unique_id);
-        this.on_got_files([unique_id]);
+        // TODO: The following line being removed breaks the ability for users
+        // To import profile results, however this function is currently broken
+        // anyway since it has not yet been migrated over to the heimdall2 server
+        // this.on_got_files([unique_id]);
       });
   }
 
   async add_to_group(): Promise<void> {
-    console.log('Add ' + this.selected + ' to ' + this.selected_group);
     const host = process.env.VUE_APP_API_URL!;
 
     if (this.selected && this.selected_group) {
@@ -342,51 +301,17 @@ export default class Profile extends ProfileProps {
         group_id: this.selected_group,
         evaluation_ids: this.selected
       };
-      let mod = getModule(ServerModule, this.$store);
-      await mod
-        .connect(host)
+      await ServerModule.connect(host)
         .catch(bad => {
           console.error('Unable to connect to ' + host);
         })
         .then(() => {
-          return mod.add_to_usergroup(group_hash);
+          return ServerModule.add_to_usergroup(group_hash);
         })
         .catch(bad => {
           console.error(`bad save ${bad}`);
         })
-        .then(() => {
-          console.log('here2');
-        });
-    }
-  }
-
-  profile_page() {
-    this.dialog = false;
-    this.$router.push('/profile');
-  }
-
-  log_out() {
-    getModule(ServerModule, this.$store).clear_token();
-    this.dialog = false;
-    this.$router.push('/');
-  }
-
-  /**
-   * Invoked when file(s) are loaded.
-   */
-  on_got_files(ids: FileID[]) {
-    // Close the dialog
-    this.dialog = false;
-
-    // If just one file, focus it
-    if (ids.length === 1) {
-      this.$router.push(`/results/${ids[0]}`);
-    }
-
-    // If more than one, focus all.
-    // TODO: Provide support for focusing a subset of files
-    else if (ids.length > 1) {
-      this.$router.push(`/results/all`);
+        .then(() => {});
     }
   }
 }

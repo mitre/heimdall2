@@ -45,8 +45,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {getModule} from 'vuex-module-decorators';
-import StatusCountModule from '@/store/status_counts';
+import {StatusCountModule} from '@/store/status_counts';
 import {Filter} from '../../store/data_filters';
 
 interface CardProps {
@@ -70,69 +69,72 @@ const StatusCardRowProps = Vue.extend({
 export default class StatusCardRow extends StatusCardRowProps {
   // Cards
   get standardCardProps(): CardProps[] {
-    let counts = getModule(StatusCountModule, this.$store);
     let filter = this.filter as Filter;
     return [
       {
         icon: 'check-circle',
         title: 'Passed',
-        subtitle: `Has ${counts.countOf(
+        subtitle: `Has ${StatusCountModule.countOf(
           this.filter,
           'PassedTests'
-        )} tests passed out of ${counts.countOf(this.filter, 'TotalTests')}`,
+        )} tests passed out of ${StatusCountModule.countOf(
+          this.filter,
+          'TotalTests'
+        )}`,
         color: 'statusPassed',
-        number: counts.countOf(this.filter, 'Passed')
+        number: StatusCountModule.countOf(this.filter, 'Passed')
       },
       {
         icon: 'close-circle',
         title: 'Failed',
-        subtitle: `Has ${counts.countOf(
+        subtitle: `Has ${StatusCountModule.countOf(
           this.filter,
           'FailedTests'
-        )} of ${counts.countOf(this.filter, 'TotalTests')} tests that failed`,
+        )} of ${StatusCountModule.countOf(
+          this.filter,
+          'TotalTests'
+        )} tests that failed`,
         color: 'statusFailed',
-        number: counts.countOf(this.filter, 'Failed')
+        number: StatusCountModule.countOf(this.filter, 'Failed')
       },
       {
         icon: 'minus-circle',
         title: 'Not Applicable',
-        subtitle: `System exception or absent component (${counts.countOf(
+        subtitle: `System exception or absent component (${StatusCountModule.countOf(
           this.filter,
           'NotApplicableTests'
         )} tests)`,
         color: 'statusNotApplicable',
-        number: counts.countOf(this.filter, 'Not Applicable')
+        number: StatusCountModule.countOf(this.filter, 'Not Applicable')
       },
       {
         icon: 'alert-circle',
         title: 'Not Reviewed',
-        subtitle: `Can only be tested manually at this time (${counts.countOf(
+        subtitle: `Can only be tested manually at this time (${StatusCountModule.countOf(
           this.filter,
           'NotReviewedTests'
         )} tests)`,
         color: 'statusNotReviewed',
-        number: counts.countOf(this.filter, 'Not Reviewed')
+        number: StatusCountModule.countOf(this.filter, 'Not Reviewed')
       }
     ];
   }
 
   get errorProps(): CardProps | null {
-    let counts = getModule(StatusCountModule, this.$store);
-    let filter = this.filter as Filter;
     // Want to ignore existing status filter
-    filter = {
-      ...filter,
+    let filter = {
+      ...this.filter,
       status: undefined
     };
     return {
       icon: 'alert-circle',
       title: 'Profile Errors',
-      subtitle: `Errors running test - check profile run privileges or check with the author of profile (${counts.countOf(
+      subtitle: `Errors running test - check profile run privileges or check with the author of profile (${StatusCountModule.countOf(
         filter,
         'ErroredTests'
       )} tests)`,
       color: 'statusProfileError',
-      number: counts.countOf(this.filter, 'Profile Error')
+      number: StatusCountModule.countOf(this.filter, 'Profile Error')
     };
   }
 }

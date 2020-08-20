@@ -1,14 +1,15 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import InspecDataModule from '@/store/data_store';
-import FilteredDataModule from '@/store/data_filters';
-import StatusCountModule from '@/store/status_counts';
-import SeverityCountModule from '@/store/severity_counts';
-import HashLookupModule from '@/store/lookup_hashes';
-import InspecIntakeModule from '@/store/report_intake';
-import ColorHackModule from '@/store/color_hack';
-import AppInfoModule from '@/store/app_info';
-import HeimdallServerModule from './server';
+import {InspecData} from '@/store/data_store';
+import {FilteredData} from '@/store/data_filters';
+import {StatusCount} from '@/store/status_counts';
+import {SeverityCount} from '@/store/severity_counts';
+import {HashLookup} from '@/store/lookup_hashes';
+import {InspecIntake} from '@/store/report_intake';
+import {ColorHack} from '@/store/color_hack';
+import {AppInfo} from '@/store/app_info';
+import {Server} from './server';
+import {IBackendState} from './backend';
 
 Vue.use(Vuex);
 
@@ -25,16 +26,17 @@ Vue.use(Vuex);
  * EG: Filtered controls are useful almost everywhere, whereas
  * the current page of a datatable probably isn't. Be sensible
  */
-interface StoreType {
-  data: InspecDataModule;
-  filteredData: FilteredDataModule;
-  statusCounts: StatusCountModule;
-  severityCounts: SeverityCountModule;
-  lookup: HashLookupModule;
-  intake: InspecIntakeModule;
-  colors: ColorHackModule;
-  info: AppInfoModule;
-  heimdallServer: HeimdallServerModule;
+export interface StoreType {
+  data: InspecData;
+  filteredData: FilteredData;
+  statusCounts: StatusCount;
+  severityCounts: SeverityCount;
+  lookup: HashLookup;
+  intake: InspecIntake;
+  colors: ColorHack;
+  info: AppInfo;
+  heimdallServer: Server;
+  backend: IBackendState;
 }
 const store = new Vuex.Store<StoreType>({});
 

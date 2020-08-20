@@ -435,7 +435,6 @@ export function process_error(
       case 404: // URL got borked
         return SplunkErrorCode.PageNotFound;
       default:
-        console.log('Unsure how to handle error ' + response.status);
         return SplunkErrorCode.UnknownError;
     }
   } else if (typeof r === typeof SplunkErrorCode.UnknownError) {

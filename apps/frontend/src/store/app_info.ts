@@ -1,4 +1,4 @@
-import {Module, VuexModule} from 'vuex-module-decorators';
+import {Module, VuexModule, getModule} from 'vuex-module-decorators';
 import Store from '@/store/store';
 
 /** Configure this to match data set in vue.config.ts */
@@ -20,7 +20,7 @@ declare const process: {
   store: Store,
   name: 'info'
 })
-class AppInfoModule extends VuexModule {
+export class AppInfo extends VuexModule {
   /** The app version */
   get version(): string {
     return process.env.PACKAGE_VERSION;
@@ -67,4 +67,4 @@ class AppInfoModule extends VuexModule {
   }
 }
 
-export default AppInfoModule;
+export const AppInfoModule = getModule(AppInfo);

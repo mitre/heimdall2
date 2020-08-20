@@ -48,9 +48,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {getModule} from 'vuex-module-decorators';
 import S3, {ObjectKey} from 'aws-sdk/clients/s3';
-import InspecIntakeModule, {
+import {
+  InspecIntakeModule,
   FileID,
   next_free_file_ID
 } from '@/store/report_intake';
@@ -125,12 +125,11 @@ export default class FileList extends Props {
 
     // Generate file id for it, and prep module for load
     let unique_id = next_free_file_ID();
-    let intake_module = getModule(InspecIntakeModule, this.$store);
 
     // Fetch it from s3, and promise to submit it to be loaded afterwards
     await fetch_s3_file(this._auth.creds, file.Key!, this.form_bucket_name)
       .then(content => {
-        return intake_module.loadText({
+        return InspecIntakeModule.loadText({
           text: content,
           filename: file.Key!,
           unique_id

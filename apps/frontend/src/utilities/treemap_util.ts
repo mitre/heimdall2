@@ -5,7 +5,7 @@
 import {nist, context} from 'inspecjs';
 import * as d3 from 'd3';
 import {control_unique_key} from './format_util';
-import ColorHackModule from '@/store/color_hack';
+import {ColorHack} from '@/store/color_hack';
 import Chroma from 'chroma-js';
 
 // How deep into nist trees we allow
@@ -48,7 +48,7 @@ export type D3TreemapNode = d3.HierarchyNode<TreemapNode>;
  */
 function controls_to_nist_node_data(
   contextualized_controls: Readonly<context.ContextualizedControl[]>,
-  colors: ColorHackModule
+  colors: ColorHack
 ): TreemapNodeLeaf[] {
   return contextualized_controls.flatMap(cc => {
     // Get the status color
@@ -168,7 +168,7 @@ function populate_tree_map(
  */
 function build_populated_nist_map(
   data: TreemapNodeLeaf[],
-  colors: ColorHackModule
+  colors: ColorHack
 ): TreemapNodeParent {
   // Build our scaffold
   let lookup: {[key: string]: TreemapNodeParent} = {};
@@ -233,7 +233,7 @@ function node_data_to_tree_map(
 /** Does all the steps */
 export function build_nist_tree_map(
   data: Readonly<context.ContextualizedControl[]>,
-  colors: ColorHackModule
+  colors: ColorHack
 ): D3TreemapNode {
   let leaves = controls_to_nist_node_data(data, colors);
   let b = build_populated_nist_map(leaves, colors);

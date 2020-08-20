@@ -38,7 +38,7 @@ function calculateColor(colorName: string): string {
   store: Store,
   name: 'colorHack'
 })
-class ColorHackModule extends VuexModule {
+export class ColorHack extends VuexModule {
   /**
    * Get a color's (e.g. red, blue, info, error) hex code by name.
    * Tries a class color before a base/builtin color
@@ -125,4 +125,4 @@ class ColorHackModule extends VuexModule {
   }
 }
 
-export default ColorHackModule;
+export const ColorHackModule = getModule(ColorHack);

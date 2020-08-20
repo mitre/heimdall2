@@ -41,7 +41,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {getModule} from 'vuex-module-decorators';
 import {ControlStatus, HDFControl, nist} from 'inspecjs';
 import * as d3 from 'd3';
 import {
@@ -51,7 +50,6 @@ import {
   is_leaf
 } from '@/utilities/treemap_util';
 import {HierarchyRectangularNode} from 'd3';
-import ColorHackModule from '@/store/color_hack';
 
 export interface XYScale {
   scale_x: d3.ScaleLinear<number, number>;

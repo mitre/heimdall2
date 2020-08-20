@@ -15,8 +15,6 @@ import Component from 'vue-class-component';
 import VueApexCharts from 'vue-apexcharts';
 import {ApexOptions, exec} from 'apexcharts';
 import {install} from 'vuetify/es5/install';
-import {getModule} from 'vuex-module-decorators';
-import ColorHackModule from '@/store/color_hack';
 
 // We declare the props separately to make props types inferable.
 const ApexLineChartProps = Vue.extend({
@@ -103,9 +101,6 @@ export default class ApexLineChart extends ApexLineChartProps {
 
   // Generate the chart options based on _categories
   get chartOptions(): ApexOptions {
-    // Apex charts does not support color names; must use color hack module
-    let colors = getModule(ColorHackModule, this.$store);
-
     return {
       chart: {
         height: 350,

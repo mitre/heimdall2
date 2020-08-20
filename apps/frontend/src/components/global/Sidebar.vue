@@ -72,13 +72,12 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {InspecFile, EvaluationFile, ProfileFile} from '@/store/report_intake';
-import {getModule} from 'vuex-module-decorators';
-import InspecDataModule from '@/store/data_store';
+import {InspecDataModule} from '@/store/data_store';
 import FileItem from '@/components/global/sidebaritems/SidebarFile.vue';
 import LinkItem from '@/components/global/sidebaritems/SidebarLink.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
 import HelpModal from '@/components/global/HelpModal.vue';
-import FilteredDataModule from '../../store/data_filters';
+import {FilteredDataModule} from '../../store/data_filters';
 
 // We declare the props separately to make props types inferable.
 const SidebarProps = Vue.extend({
@@ -98,32 +97,26 @@ const SidebarProps = Vue.extend({
 export default class Sidebar extends SidebarProps {
   //selects/deselects all files. Will select all unless all are already selected
   toggle_all(): void {
-    let filtered_module = getModule(FilteredDataModule, this.$store);
-    let data_module = getModule(InspecDataModule, this.$store);
-
     if (this.all_toggled) {
-      filtered_module.set_toggled_files([]);
+      FilteredDataModule.set_toggled_files([]);
     } else {
-      filtered_module.set_toggled_files(
-        data_module.allFiles.map(v => v.unique_id)
+      FilteredDataModule.set_toggled_files(
+        InspecDataModule.allFiles.map(v => v.unique_id)
       );
     }
   }
 
   //checks if all files are selected
   get all_toggled(): boolean {
-    let filtered_module = getModule(FilteredDataModule, this.$store);
-    let data_module = getModule(InspecDataModule, this.$store);
-
     return (
-      data_module.allFiles.length == filtered_module.selected_file_ids.length
+      InspecDataModule.allFiles.length ==
+      FilteredDataModule.selected_file_ids.length
     );
   }
 
   /** Generates files for all */
   get visible_files(): Array<ProfileFile | EvaluationFile> {
-    let data_store = getModule(InspecDataModule, this.$store);
-    let files = data_store.allFiles;
+    let files = InspecDataModule.allFiles;
     files = files.sort((a, b) => a.filename.localeCompare(b.filename));
     return files;
   }

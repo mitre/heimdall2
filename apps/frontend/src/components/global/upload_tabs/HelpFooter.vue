@@ -43,10 +43,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {getModule} from 'vuex-module-decorators';
 import HelpModal from '@/components/global/HelpModal.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
-import AppInfoModule from '@/store/app_info';
+import {AppInfoModule} from '@/store/app_info';
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({
   props: {}
@@ -64,16 +63,16 @@ const Props = Vue.extend({
 })
 export default class HelpFooter extends Props {
   get version(): string {
-    return getModule(AppInfoModule, this.$store).version;
+    return AppInfoModule.version;
   }
   get changelog(): string {
-    return getModule(AppInfoModule, this.$store).changelog;
+    return AppInfoModule.changelog;
   }
   get repository(): string {
-    return getModule(AppInfoModule, this.$store).repository;
+    return AppInfoModule.repository;
   }
   get branch(): string {
-    return getModule(AppInfoModule, this.$store).branch;
+    return AppInfoModule.branch;
   }
 }
 </script>

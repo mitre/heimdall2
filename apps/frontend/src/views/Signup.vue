@@ -6,26 +6,31 @@
           <v-col cols="12" sm="8" md="4">
             <v-card class="elevation-12">
               <v-toolbar color="primary" dark flat>
-                <v-toolbar-title>Registration form</v-toolbar-title>
+                <v-toolbar-title id="registration_form_title">
+                  Registration form
+                </v-toolbar-title>
                 <v-spacer />
               </v-toolbar>
               <v-card-text>
-                <v-form ref="form">
+                <v-form name="signup_form" ref="form">
                   <v-text-field
-                    label="Username"
-                    name="username"
+                    label="Email"
+                    name="email"
+                    id="email_field"
                     prepend-icon="person"
                     type="text"
-                    v-model="username"
+                    v-model="email"
+                    required
                   />
                   <br />
                   <div>
                     <label
-                      for="input-140"
+                      for="password"
                       class="v-label theme--dark"
                       style="padding: 35px;"
-                      >Password</label
                     >
+                      Password
+                    </label>
                   </div>
                   <div
                     style="float: left; height: 40px"
@@ -34,8 +39,9 @@
                     <i
                       aria-hidden="true"
                       class="v-icon notranslate material-icons theme--dark"
-                      >lock</i
                     >
+                      lock
+                    </i>
                   </div>
                   <div class="v-text-field__slot">
                     <VuePassword
@@ -44,12 +50,11 @@
                       type="password"
                       v-model="password"
                       label="password"
+                      name="password"
                       v-validate="'required'"
                       id="password"
-                      :error-messages="errors.collect('password')"
                       :strength-meter-only="true"
                       :strength="strength"
-                      maxlength="70"
                       data-vv-name="password"
                       required
                       :disableToggle="true"
@@ -58,28 +63,44 @@
                   </div>
                   <br />
                   <v-text-field
-                    id="confirm_password"
+                    id="passwordConfirmation"
                     label="Confirm Password"
-                    name="confirm_password"
+                    name="passwordConfirmation"
                     prepend-icon="lock"
                     type="password"
-                    v-model="confirm_password"
+                    v-model="passwordConfirmation"
                     v-validate="'required|confirmed:password'"
-                    :error-messages="errors.collect('confirm_password')"
-                    maxlength="70"
-                    data-vv-name="confirm_password"
+                    data-vv-name="password confirmation"
                     required
                   />
-                  <v-btn @click="register" depressed large color="primary"
-                    >Register</v-btn
+                  <br />
+                  <v-text-field
+                    id="role"
+                    label="Role"
+                    name="role"
+                    prepend-icon="assignment_ind"
+                    type="text"
+                    v-model="role"
+                    required
+                  />
+                  <v-btn
+                    id="register"
+                    @click="register"
+                    depressed
+                    large
+                    color="primary"
                   >
+                    Register
+                  </v-btn>
                 </v-form>
               </v-card-text>
               <v-card-actions>
                 <v-spacer />
 
                 <div class="my-2">
-                  <v-btn @click="login" depressed small>Login</v-btn>
+                  <router-link to="/login">
+                    <v-btn id="login_button" depressed small>Login</v-btn>
+                  </router-link>
                 </div>
               </v-card-actions>
             </v-card>
@@ -95,18 +116,18 @@ import Component from 'vue-class-component';
 import {Filter} from '@/store/data_filters';
 import {FileID} from '@/store/report_intake';
 import {LocalStorageVal} from '@/utilities/helper_util';
-import {getModule} from 'vuex-module-decorators';
-import ServerModule from '@/store/server';
 import VeeValidate from 'vee-validate';
 import VuePassword from 'vue-password';
 import zxcvbn from 'zxcvbn';
+import {BackendModule} from '../store/backend';
 
 Vue.use(VeeValidate);
 
-export interface LoginHash {
-  username: string;
+export interface SignupHash {
+  email: string;
   password: string;
-  confirm_password: string;
+  passwordConfirmation: string;
+  role: string;
 }
 
 // We declare the props separately
@@ -121,10 +142,10 @@ const SignupProps = Vue.extend({
   }
 })
 export default class Signup extends SignupProps {
-  username: string = '';
+  email: string = '';
   password: string = '';
-  confirm_password: string = '';
-  host: string = '';
+  passwordConfirmation: string = '';
+  role: string = '';
   active_tab: string = '';
   strength: number = 0;
   // Set in mounted
@@ -135,19 +156,8 @@ export default class Signup extends SignupProps {
   // Whether we're currently loading
   //loading = false;
 
-  username_rules = [
-    (v: string) => !!v || 'Username is required'
-    // (v: string) => (v && v.length > 3) || "A username must be more than 3 characters long",
-    // (v: string) => /^[a-z0-9_]+$/.test(v) || "A username can only contain letters and digits"
-  ];
-  password_rules = [
-    (v: string) => !!v || 'Password is required'
-    // (v: string) => (v && v.length > 7) || "The password must be longer than 7 characters"
-  ];
-
   // Loads the last open tab
   mounted() {
-    console.log('mount UploadNexus');
     this.active_tab = 'login-tab';
   }
 
@@ -156,16 +166,6 @@ export default class Signup extends SignupProps {
     this.active_tab = new_tab;
   }
 
-  get watches(): string {
-    let server = getModule(ServerModule, this.$store);
-    if (server.profile) {
-      console.log('server profile: ' + server.profile);
-      this.$router.push('/home');
-      return 'a';
-    } else {
-      return 'b';
-    }
-  }
   login() {
     this.$router.push('/login');
   }
@@ -176,38 +176,26 @@ export default class Signup extends SignupProps {
 
   async register(): Promise<void> {
     // checking if the input is valid
-
-    const host = process.env.VUE_APP_API_URL!;
     if ((this.$refs.form as any).validate()) {
-      console.log('Login to ' + host);
-      console.log(this.confirm_password);
-      console.log(this.password);
-      let creds: LoginHash = {
-        username: this.username,
+      let creds: SignupHash = {
+        email: this.email,
         password: this.password,
-        confirm_password: this.confirm_password
+        passwordConfirmation: this.passwordConfirmation,
+        role: this.role
       };
-      let mod = getModule(ServerModule, this.$store);
-      await mod
-        .connect(host)
-        .catch(bad => {
-          console.error('Unable to connect to ' + host);
-          this.$router.go(0);
-        })
+
+      BackendModule.Register(creds)
         .then(() => {
-          return mod.register(creds);
+          this.$router.push('/login');
+          this.$toasted.show(
+            'You have successfully registered, please sign in',
+            {type: 'success'}
+          );
         })
-        .catch(bad => {
-          console.error(`bad register ${bad}`);
+        .catch(error => {
           this.$toasted.global.error({
-            message: String(bad),
-            isDark: this.$vuetify.theme.dark
+            message: error.response.data.message
           });
-          this.$router.push('/login');
-        })
-        .then(() => {
-          console.log('Registered!');
-          this.$router.push('/login');
         });
     }
   }

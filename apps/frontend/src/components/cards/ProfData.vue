@@ -83,16 +83,15 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import InspecDataModule, {isFromProfileFile} from '@/store/data_store';
+import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
 import {
   SourcedContextualizedProfile,
   SourcedContextualizedEvaluation
 } from '@/store/report_intake';
-import StatusCountModule from '@/store/status_counts';
-import {getModule} from 'vuex-module-decorators';
-import FilteredDataModule, {Filter} from '../../store/data_filters';
+import {StatusCountModule} from '@/store/status_counts';
+import {FilteredDataModule, Filter} from '@/store/data_filters';
 import {profile_unique_key} from '../../utilities/format_util';
-import {InspecFile, ProfileFile} from '../../store/report_intake';
+import {InspecFile, ProfileFile} from '@/store/report_intake';
 import {context} from 'inspecjs';
 
 /**
@@ -153,8 +152,7 @@ export default class ProfileData extends Props {
     if (this.true_active == undefined) {
       return this.selected_prof;
     }
-    let data = getModule(InspecDataModule, this.$store);
-    let selected_profile = data.contextualProfiles.find(
+    let selected_profile = InspecDataModule.contextualProfiles.find(
       p => profile_unique_key(p) == this.true_active
     );
     return selected_profile;

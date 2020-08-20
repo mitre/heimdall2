@@ -9,24 +9,16 @@ import {
   Action,
   getModule
 } from 'vuex-module-decorators';
-import {
-  HDFControl,
-  parse,
-  schemas_1_0,
-  hdfWrapControl,
-  ControlStatus,
-  context
-} from 'inspecjs';
+import {context} from 'inspecjs';
 import {
   FileID,
   EvaluationFile,
   ProfileFile,
-  InspecFile,
   SourcedContextualizedProfile,
   SourcedContextualizedEvaluation
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import FilteredDataModule from './data_filters';
+import {FilteredDataModule} from './data_filters';
 
 /** We make some new variant types of the Contextual types, to include their files*/
 export function isFromProfileFile(
@@ -41,7 +33,7 @@ export function isFromProfileFile(
   store: Store,
   name: 'data'
 })
-class InspecDataModule extends VuexModule {
+export class InspecData extends VuexModule {
   /** State var containing all execution files that have been added */
   executionFiles: EvaluationFile[] = [];
 
@@ -139,8 +131,7 @@ class InspecDataModule extends VuexModule {
     this.executionFiles = this.executionFiles.filter(
       ef => ef.unique_id !== file_id
     );
-    let filtered_module = getModule(FilteredDataModule, Store);
-    filtered_module.set_toggle_file_off(file_id);
+    FilteredDataModule.set_toggle_file_off(file_id);
   }
 
   /**
@@ -153,4 +144,4 @@ class InspecDataModule extends VuexModule {
   }
 }
 
-export default InspecDataModule;
+export const InspecDataModule = getModule(InspecData);
