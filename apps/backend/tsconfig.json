@@ -11,8 +11,18 @@
     "baseUrl": "./",
     "incremental": true,
     "esModuleInterop": true,
-    "lib": ["es2020"]
+    "lib": [
+      "es2020"
+    ],
+    "paths": {}
   },
-  "exclude": ["node_modules", "dist", "client"],
-  "include": ["src/**/*", "test/**/*"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "client"
+  ],
+  "include": [
+    "src/**/*",
+    "test/**/*"
+  ]
 }
