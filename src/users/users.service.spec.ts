@@ -54,13 +54,13 @@ describe('UsersService', () => {
   });
 
   describe('exists', () => {
-    it('throws an error when null', () => {
+    it('throws an error when null', async () => {
       expect(() => {
         usersService.exists(null);
       }).toThrow(NotFoundException);
     });
 
-    it('returns true when given a User', () => {
+    it('returns true when given a User', async () => {
       expect(() => {
         usersService.exists(TEST_USER);
       }).toBeTruthy();

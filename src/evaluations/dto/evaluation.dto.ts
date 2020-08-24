@@ -13,7 +13,9 @@ export class EvaluationDto {
     this.id = evaluation.id;
     this.version = evaluation.version;
     this.data = evaluation.data;
-    this.evaluationTags = evaluation.evaluationTags;
+    this.evaluationTags = evaluation.evaluationTags.map(
+      tag => new EvaluationTagDto(tag)
+    );
     this.createdAt = evaluation.createdAt;
     this.updatedAt = evaluation.updatedAt;
   }
