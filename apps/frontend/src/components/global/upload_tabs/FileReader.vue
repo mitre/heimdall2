@@ -28,7 +28,6 @@
               <VueFileAgent
                 ref="vueFileAgent"
                 :multiple="true"
-                :accept="'.json, application/json'"
                 :helpText="'Choose files to upload'"
                 @select="filesSelected($event)"
                 v-model="fileRecords"
