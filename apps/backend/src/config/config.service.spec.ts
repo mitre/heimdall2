@@ -2,9 +2,9 @@ import mock from 'mock-fs';
 import {ConfigService} from './config.service';
 import {ENV_MOCK_FILE} from '../../test/constants/env-test.constant';
 
-/* If you run the test without --silent , you need to add console.log() before you mock out the 
-file system in the beforeAll() or it'll throw an error (this is a documented bug which can be 
-found at https://github.com/tschaub/mock-fs/issues/234). 
+/* If you run the test without --silent , you need to add console.log() before you mock out the
+file system in the beforeAll() or it'll throw an error (this is a documented bug which can be
+found at https://github.com/tschaub/mock-fs/issues/234).
 If you run the test with --silent (which we do by default), you don't need the log statement. */
 describe('Config Service', () => {
   beforeAll(async () => {

@@ -5,12 +5,12 @@
   "author": "",
   "license": "Apache-2.0",
   "scripts": {
-    "prebuild": "rimraf dist",
+    "prebuild": "rimraf ../../dist/server",
     "build": "nest build",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node ../../dist/server/main",
     "lint": "eslint \"{src,migrations,seeders,test}/**/*.ts\" --fix",
     "lint:ci": "eslint \"{src,migrations,seeders,test}/**/*.ts\" --max-warnings 0",
     "test": "jest --silent",
@@ -18,7 +18,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --silent --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --runInBand --silent --config ./apps/heimdall2/test/jest-e2e.json",
+    "test:e2e": "jest --runInBand --silent --config test/jest-e2e.json",
     "test:ci-cov": "jest --silent --coverage --runInBand",
     "test:ui": "jest -c test/integration/jest.config.integration.js --runInBand"
   },
@@ -55,34 +55,23 @@
     "@nestjs/testing": "^7.0.13",
     "@types/expect-puppeteer": "^4.4.3",
     "@types/express": "^4.17.6",
-    "@types/jest": "^25.2.3",
     "@types/jest-environment-puppeteer": "^4.3.2",
     "@types/js-levenshtein": "^1.1.0",
     "@types/mock-fs": "^4.10.0",
-    "@types/node": "^13.13.6",
     "@types/passport-jwt": "^3.0.3",
     "@types/passport-local": "^1.0.33",
     "@types/puppeteer": "^3.0.1",
     "@types/sequelize": "^4.28.9",
     "@types/supertest": "^2.0.9",
     "@types/validator": "^13.0.0",
-    "@typescript-eslint/eslint-plugin": "^2.34.0",
-    "@typescript-eslint/parser": "^2.34.0",
-    "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-prettier": "^3.1.4",
-    "eslint-plugin-vue": "^6.2.2",
-    "jest": "25.5.4",
     "mock-fs": "^4.12.0",
-    "prettier": "^1.19.1",
     "puppeteer": "^2.1.1",
     "supertest": "^4.0.2",
-    "ts-jest": "^25.5.1",
     "ts-loader": "^6.2.1",
     "ts-node": "^8.10.1",
-    "tsconfig-paths": "^3.9.0",
-    "typescript": "^3.9.2"
+    "tsconfig-paths": "^3.9.0"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -90,16 +79,13 @@
       "json",
       "ts"
     ],
-    "rootDir": ".",
+    "rootDir": "src",
     "testRegex": ".spec.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "coverageDirectory": "./coverage",
     "testEnvironment": "node",
-    "testTimeout": 10000,
-    "roots": [
-      "<rootDir>/apps/"
-    ]
+    "testTimeout": 10000
   }
 }

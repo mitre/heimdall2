@@ -25,38 +25,31 @@ jobs:
         node-version: '12.x'
 
      - name: Install dependencies
-       run: npm ci
+       run: lerna bootstrap --hoist
 
      - name: Run lint
-       run: npm run lint:ci
+       run: lerna run lint:ci
 
      - name: Copy .env-ci to .env
-       run: cp test/.env-ci .env
+       run: cp apps/backend/test/.env-ci apps/backend/.env
 
      - name: Create/migrate db
        run: |
-         npx sequelize-cli db:create
-         npx sequelize-cli db:migrate
-         
-     - name: Checkout frontend
-       uses: actions/checkout@v2
-       with:
-         ref: heimdall2
-         repository: mitre/heimdall-lite
-         path: client
+        lerna exec "npx sequelize-cli db:migrate" --scope heimdall-server
+        lerna exec "npx sequelize-cli db:migrate" --scope heimdall-server
 
      - name: Build frontend
        run: |
-         npm install
-         npm run build 
-       working-directory: client
-       
+        lerna run build --scope heimdall-lite
+
      - name: Run test coverage
-       run: npm run test:ci-cov
+       run: lerna run test:ci-cov
+
+     - name: Run frontend tests
+       run: lerna run test:unit --scope heimdall-lite
 
      - name: Run e2e tests
-       run: npm run test:e2e
-       
-     - name: Run e2e UI tests
-       run: npm run test:ui
+       run: lerna run test:e2e
 
+     - name: Run e2e UI tests
+       run: lerna run test:ui

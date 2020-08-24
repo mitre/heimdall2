@@ -161,7 +161,7 @@ export default class ApexLineChart extends ApexLineChartProps {
         },
         labels: {
           style: {
-            color: this.white_black
+            colors: this.white_black
           }
         }
       },

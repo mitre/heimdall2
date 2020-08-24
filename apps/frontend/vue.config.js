@@ -20,6 +20,7 @@ module.exports = {
   devServer: {
     proxy: process.env.VUE_APP_API_URL
   },
+  outputDir: '../../dist/frontend',
   configureWebpack: {
     devtool: 'source-map',
     plugins: [
