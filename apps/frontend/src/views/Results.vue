@@ -11,6 +11,7 @@
         label="Search"
         v-model="search_term"
         clearable
+        @click:clear="clear_search()"
         class="mx-2"
       />
 
@@ -315,6 +316,10 @@ export default class Results extends ResultsProps {
     this.control_selection = null;
     this.search_term = '';
     this.tree_filters = [];
+  }
+
+  clear_search() {
+    this.search_term = '';
   }
 
   /**
