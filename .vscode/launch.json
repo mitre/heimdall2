@@ -17,7 +17,7 @@
         "ts-node/register"
       ],
       "sourceMaps": true,
-      "cwd": "${workspaceRoot}",
+      "cwd": "${workspaceRoot}/apps/backend",
       "protocol": "inspector"
     },
     {
@@ -30,12 +30,14 @@
         "--runInBand"
       ],
       "console": "integratedTerminal",
+      "cwd": "${workspaceRoot}/apps/backend",
       "internalConsoleOptions": "neverOpen",
       "port": 9229,
       "smartStep": true
     },
     {
       "name": "Debug Jest e2e Tests",
+      "cwd": "${workspaceRoot}/apps/backend",
       "type": "node",
       "request": "launch",
       "runtimeArgs": [

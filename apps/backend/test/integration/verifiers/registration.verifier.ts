@@ -28,7 +28,7 @@ export class RegistrationVerifier {
       el => el.innerHTML
     );
 
-    expect(registrationFormHeader).toEqual('Registration form');
+    expect(registrationFormHeader).toContain('Registration form');
     expect(emailLabel).toEqual('Email');
     expect(passwordLabel).toContain('Password');
     expect(passwordConfirmationLabel).toEqual('Confirm Password');

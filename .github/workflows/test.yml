@@ -43,7 +43,7 @@ jobs:
 
      - name: Build frontend
        run: |
-        npx lerna run build --scope heimdall-lite
+        npx lerna run build
 
      - name: Run test coverage
        run: npx lerna run test:ci-cov

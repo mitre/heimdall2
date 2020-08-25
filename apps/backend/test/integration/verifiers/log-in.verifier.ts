@@ -23,10 +23,10 @@ export class LogInVerifier {
       el => el.innerHTML
     );
 
-    expect(loginFormHeader).toEqual('Login form');
-    expect(loginLabel).toEqual('Login');
-    expect(passwordLabel).toEqual('Password');
+    expect(loginFormHeader).toContain('Login form');
+    expect(loginLabel).toContain('Login');
+    expect(passwordLabel).toContain('Password');
     expect(loginButton).toContain('Login');
-    expect(signUpButton).toEqual('Sign Up');
+    expect(signUpButton).toContain('Sign Up');
   }
 }
