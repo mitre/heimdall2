@@ -58,6 +58,9 @@ export class EvaluationsService {
       include: [EvaluationTag]
     });
     this.exists(evaluation);
+    const evaluationTagDelta = this.databaseService.getDelta(evaluation.evaluationTags, updateEvaluationDto.evaluationTags);
+
+
     evaluation.update(updateEvaluationDto);
     const evaluationData = await evaluation.save();
     return new EvaluationDto(evaluationData);
