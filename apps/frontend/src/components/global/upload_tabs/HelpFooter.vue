@@ -26,12 +26,7 @@
           <v-icon small>mdi-library-books</v-icon>
           <span class="d-none d-sm-inline pl-3">Docs</span>
         </v-btn>
-        <v-btn
-          :href="repository + branch + changelog"
-          target="_blank"
-          text
-          small
-        >
+        <v-btn :href="repository + changelog" target="_blank" text small>
           <v-icon small>mdi-alpha-v-circle</v-icon>
           <span class="d-sm-inline pl-3 text-center">{{ version }}</span>
         </v-btn>
