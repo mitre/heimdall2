@@ -1,4 +1,4 @@
-name: Test
+name: Lint Heimdall
 
 on:
   push:
@@ -46,27 +46,3 @@ jobs:
 
      - name: Run lint
        run: npx lerna run lint:ci
-
-     - name: Copy .env-ci to .env
-       run: cp apps/backend/test/.env-ci apps/backend/.env
-
-     - name: Create/migrate db
-       run: |
-        npx lerna exec "npx sequelize-cli db:create" --scope heimdall-server
-        npx lerna exec "npx sequelize-cli db:migrate" --scope heimdall-server
-
-     - name: Build frontend and server for E2E UI tests
-       run: |
-        npx lerna run build
-
-     - name: Run test coverage
-       run: npx lerna run test:ci-cov --stream
-
-     - name: Run frontend tests
-       run: npx lerna run test --scope heimdall-lite --stream
-
-     - name: Run e2e tests
-       run: npx lerna run test:e2e --stream
-
-     - name: Run e2e UI tests
-       run: npx lerna run test:ui --stream
