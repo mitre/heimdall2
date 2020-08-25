@@ -24,32 +24,35 @@ jobs:
        with:
         node-version: '12.x'
 
-     - name: Install dependencies
-       run: lerna bootstrap --hoist
+     - name: Install lerna and dev dependencies
+       run: npm install
+
+     - name: Install project dependencies
+       run: npx lerna bootstrap --hoist
 
      - name: Run lint
-       run: lerna run lint:ci
+       run: npx lerna run lint:ci
 
      - name: Copy .env-ci to .env
        run: cp apps/backend/test/.env-ci apps/backend/.env
 
      - name: Create/migrate db
        run: |
-        lerna exec "npx sequelize-cli db:migrate" --scope heimdall-server
-        lerna exec "npx sequelize-cli db:migrate" --scope heimdall-server
+        npx lerna exec "npx sequelize-cli db:create" --scope heimdall-server
+        npx lerna exec "npx sequelize-cli db:migrate" --scope heimdall-server
 
      - name: Build frontend
        run: |
-        lerna run build --scope heimdall-lite
+        npx lerna run build --scope heimdall-lite
 
      - name: Run test coverage
-       run: lerna run test:ci-cov
+       run: npx lerna run test:ci-cov
 
      - name: Run frontend tests
-       run: lerna run test:unit --scope heimdall-lite
+       run: npx lerna run test:unit --scope heimdall-lite
 
      - name: Run e2e tests
-       run: lerna run test:e2e
+       run: npx lerna run test:e2e
 
      - name: Run e2e UI tests
-       run: lerna run test:ui
+       run: npx lerna run test:ui
