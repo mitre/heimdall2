@@ -41,7 +41,7 @@ jobs:
         npx lerna exec "npx sequelize-cli db:create" --scope heimdall-server
         npx lerna exec "npx sequelize-cli db:migrate" --scope heimdall-server
 
-     - name: Build frontend
+     - name: Build frontend and server for E2E UI tests
        run: |
         npx lerna run build
 
