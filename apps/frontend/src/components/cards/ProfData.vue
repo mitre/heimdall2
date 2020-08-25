@@ -17,7 +17,7 @@
           selection-type="independent"
           transition
         >
-          <template v-slot:prepend="{item, active}">
+          <template>
             <v-icon>mdi-note</v-icon>
           </template>
         </v-treeview>
@@ -37,7 +37,7 @@
             selection-type="independent"
             transition
           >
-            <template v-slot:prepend="{item, child_active}">
+            <template>
               <v-icon>mdi-note</v-icon>
             </template>
           </v-treeview>

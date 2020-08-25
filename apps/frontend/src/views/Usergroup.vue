@@ -61,7 +61,7 @@
                   item-key="name"
                   class="elevation-1"
                 >
-                  <template v-slot:body="{items}">
+                  <template>
                     <tbody>
                       <tr
                         v-for="item in usergroup.evaluations"
