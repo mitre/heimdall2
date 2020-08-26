@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "Debug Nest Framework",
       "args": [
-        "${workspaceFolder}/src/main.ts"
+        "${workspaceRoot}/apps/backend/src/main.ts"
       ],
       "runtimeArgs": [
         "--nolazy",
