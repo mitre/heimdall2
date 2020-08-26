@@ -17,17 +17,29 @@ export class DatabaseService {
   }
 
   getDelta<T extends DeltaArgs>(source: Array<T>, updated: Array<T>) {
-    if(source === undefined || updated === undefined) {
+    if (source === undefined || updated === undefined) {
       return {
         added: [],
         changed: [],
         deleted: []
-      }
+      };
     }
 
-    let added = updated.filter(updatedItem => source.find(sourceItem => sourceItem.id === updatedItem.id) === undefined);
-    let changed = updated.filter(updatedItem => source.find(sourceItem => sourceItem.id === updatedItem.id) !== undefined);
-    let deleted = source.filter(sourceItem => updated.find(updatedItem => updatedItem.id === sourceItem.id) === undefined);
+    const added = updated.filter(
+      updatedItem =>
+        source.find(sourceItem => sourceItem.id === updatedItem.id) ===
+        undefined
+    );
+    const changed = updated.filter(
+      updatedItem =>
+        source.find(sourceItem => sourceItem.id === updatedItem.id) !==
+        undefined
+    );
+    const deleted = source.filter(
+      sourceItem =>
+        updated.find(updatedItem => updatedItem.id === sourceItem.id) ===
+        undefined
+    );
 
     return {
       added: added,
@@ -36,4 +48,3 @@ export class DatabaseService {
     };
   }
 }
-

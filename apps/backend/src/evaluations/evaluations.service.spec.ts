@@ -175,7 +175,9 @@ describe('EvaluationsService', () => {
     });
 
     it('should add additional evaluation tags to an evaluation', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_WITH_TAGS_1);
+      const evaluation = await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1
+      );
       const updatedEvaluation = await evaluationsService.update(
         evaluation.id,
         UPDATE_EVALUATION_ADD_TAGS_1
@@ -190,8 +192,10 @@ describe('EvaluationsService', () => {
       expect(updatedEvaluation.evaluationTags).not.toEqual(
         evaluation.evaluationTags
       );
-      expect(updatedEvaluation.evaluationTags.length).toBeGreaterThan(evaluation.evaluationTags.length);
-      updatedEvaluation.evaluationTags.forEach((tag) => {
+      expect(updatedEvaluation.evaluationTags.length).toBeGreaterThan(
+        evaluation.evaluationTags.length
+      );
+      updatedEvaluation.evaluationTags.forEach(tag => {
         expect(tag.id).toBeDefined();
         expect(tag.createdAt).toBeDefined();
         expect(tag.updatedAt).toBeDefined();
@@ -199,7 +203,9 @@ describe('EvaluationsService', () => {
     });
 
     it('should remove tags from an evaluation', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_WITH_TAGS_1);
+      const evaluation = await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1
+      );
       const updatedEvaluation = await evaluationsService.update(
         evaluation.id,
         UPDATE_EVALUATION_REMOVE_TAGS_1
@@ -218,17 +224,19 @@ describe('EvaluationsService', () => {
     });
 
     it('should update existing evaluation tags', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_WITH_TAGS_1);
+      const evaluation = await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1
+      );
       const updateEvaluationTagDto: UpdateEvaluationTagDto = {
         id: evaluation.evaluationTags[0].id,
         key: 'updated key',
         value: 'updated value'
-      }
+      };
       const updateEvaluationDto: UpdateEvaluationDto = {
         data: undefined,
         version: undefined,
         evaluationTags: [updateEvaluationTagDto]
-      }
+      };
       const updatedEvaluation = await evaluationsService.update(
         evaluation.id,
         updateEvaluationDto
@@ -240,7 +248,9 @@ describe('EvaluationsService', () => {
       expect(updatedEvaluation.data).toEqual(evaluation.data);
       expect(updatedEvaluation.version).toEqual(evaluation.version);
       // ---
-      expect(updatedEvaluation.evaluationTags).not.toEqual(evaluation.evaluationTags);
+      expect(updatedEvaluation.evaluationTags).not.toEqual(
+        evaluation.evaluationTags
+      );
       expect(updatedEvaluation.evaluationTags.length).toEqual(1);
       const originalTag = evaluation.evaluationTags[0];
       const updatedTag = updatedEvaluation.evaluationTags[0];

@@ -66,12 +66,12 @@ export const UPDATE_EVALUATION_TAG_ONLY: UpdateEvaluationDto = {
 // @ts-ignore
 export const UPDATE_EVALUATION_ADD_TAGS_1: UpdateEvaluationDto = {
   evaluationTags: [UPDATE_EVALUATION_TAG_DTO, CREATE_EVALUATION_TAG_DTO]
-}
+};
 
 // @ts-ignore
 export const UPDATE_EVALUATION_REMOVE_TAGS_1: UpdateEvaluationDto = {
   evaluationTags: []
-}
+};
 
 export const EVALUATION_DTO: EvaluationDto = {
   id: 9999,

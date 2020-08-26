@@ -7,14 +7,12 @@ describe('DatabaseSerivce', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [
-        DatabaseModule
-      ],
+      imports: [DatabaseModule],
       providers: [DatabaseService]
     }).compile();
 
     databaseService = module.get<DatabaseService>(DatabaseService);
-  })
+  });
 
   afterAll(async () => {
     await databaseService.cleanAll();
@@ -36,7 +34,7 @@ describe('DatabaseSerivce', () => {
       const source = [{id: 1}, {id: 2}, {id: 3}];
       const updated = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
 
-      const delta = databaseService.getDelta(source, updated)
+      const delta = databaseService.getDelta(source, updated);
 
       expect(delta.added.length).toEqual(1);
       expect(delta.changed.length).toEqual(3);
@@ -47,7 +45,7 @@ describe('DatabaseSerivce', () => {
       const source = [{id: 1, prop: 1}];
       const updated = [{id: 1, prop: 2}];
 
-      const delta = databaseService.getDelta(source, updated)
+      const delta = databaseService.getDelta(source, updated);
 
       expect(delta.added.length).toEqual(0);
       expect(delta.changed.length).toEqual(1);
@@ -60,7 +58,7 @@ describe('DatabaseSerivce', () => {
       const source = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
       const updated = [{id: 1}, {id: 2}, {id: 4}];
 
-      const delta = databaseService.getDelta(source, updated)
+      const delta = databaseService.getDelta(source, updated);
 
       expect(delta.added.length).toEqual(0);
       expect(delta.changed.length).toEqual(3);
@@ -71,7 +69,7 @@ describe('DatabaseSerivce', () => {
       const source = [];
       const updated = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
 
-      const delta = databaseService.getDelta(source, updated)
+      const delta = databaseService.getDelta(source, updated);
 
       expect(delta.added.length).toEqual(4);
       expect(delta.changed.length).toEqual(0);
@@ -82,7 +80,7 @@ describe('DatabaseSerivce', () => {
       const source = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
       const updated = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
 
-      const delta = databaseService.getDelta(source, updated)
+      const delta = databaseService.getDelta(source, updated);
 
       expect(delta.added.length).toEqual(0);
       expect(delta.changed.length).toEqual(4);
@@ -93,7 +91,7 @@ describe('DatabaseSerivce', () => {
       const source = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
       const updated = [];
 
-      const delta = databaseService.getDelta(source, updated)
+      const delta = databaseService.getDelta(source, updated);
 
       expect(delta.added.length).toEqual(0);
       expect(delta.changed.length).toEqual(0);

@@ -7,7 +7,7 @@ import {IUpdateEvaluationTag} from '@heimdall/interfaces';
 
 export class UpdateEvaluationTagDto implements IUpdateEvaluationTag {
   @IsNumber()
-  readonly id: number
+  readonly id: number;
 
   @IsOptional()
   @IsString()

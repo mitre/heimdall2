@@ -9,7 +9,6 @@ import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {DatabaseService} from '../database/database.service';
 import {CreateEvaluationTagDto} from '../evaluation-tags/dto/create-evaluation-tag.dto';
 import {UpdateEvaluationTagDto} from '../evaluation-tags/dto/update-evaluation-tag.dto';
-import {EvaluationTagDto} from '../evaluation-tags/dto/evaluation-tag.dto'
 
 @Injectable()
 export class EvaluationsService {
@@ -62,44 +61,50 @@ export class EvaluationsService {
     });
     this.exists(evaluation);
 
-    if(updateEvaluationDto.data !== undefined) {
+    if (updateEvaluationDto.data !== undefined) {
       evaluation.set('data', updateEvaluationDto.data);
     }
 
-    if(updateEvaluationDto.version !== undefined) {
+    if (updateEvaluationDto.version !== undefined) {
       evaluation.set('version', updateEvaluationDto.version);
     }
 
-    if(updateEvaluationDto.evaluationTags !== undefined) {
+    if (updateEvaluationDto.evaluationTags !== undefined) {
       const evaluationTagsDelta = this.databaseService.getDelta(
         evaluation.evaluationTags,
         updateEvaluationDto.evaluationTags
       );
 
-      const createTagPromises = evaluationTagsDelta.added.map(async evaluationTag => {
-        return await this.evaluationTagsService.create(
-          evaluation.id,
-          new CreateEvaluationTagDto(evaluationTag),
-        );
-      });
+      const createTagPromises = evaluationTagsDelta.added.map(
+        async evaluationTag => {
+          return await this.evaluationTagsService.create(
+            evaluation.id,
+            new CreateEvaluationTagDto(evaluationTag)
+          );
+        }
+      );
 
-      const updateTagPromises = evaluationTagsDelta.changed.map(async evaluationTag => {
-        return await this.evaluationTagsService.update(
-          evaluationTag.id,
-          new UpdateEvaluationTagDto(evaluationTag),
-        )
-      });
+      const updateTagPromises = evaluationTagsDelta.changed.map(
+        async evaluationTag => {
+          return await this.evaluationTagsService.update(
+            evaluationTag.id,
+            new UpdateEvaluationTagDto(evaluationTag)
+          );
+        }
+      );
 
-      const deleteTagPromises = evaluationTagsDelta.deleted.map(async evaluationTag => {
-        return await this.evaluationTagsService.remove(
-          evaluationTag.id,
-        );
-      });
+      const deleteTagPromises = evaluationTagsDelta.deleted.map(
+        async evaluationTag => {
+          return await this.evaluationTagsService.remove(evaluationTag.id);
+        }
+      );
 
       const createTags = await Promise.all(createTagPromises);
       const updateTags = await Promise.all(updateTagPromises);
       await Promise.all(deleteTagPromises);
-      evaluation.set('evaluationTags', [...createTags, ...updateTags], {raw: true});
+      evaluation.set('evaluationTags', [...createTags, ...updateTags], {
+        raw: true
+      });
     }
     return new EvaluationDto(await evaluation.save());
   }

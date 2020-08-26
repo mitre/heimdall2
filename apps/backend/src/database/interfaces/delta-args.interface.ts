@@ -1,3 +1,3 @@
 export interface DeltaArgs {
-  id: number
+  id: number;
 }
