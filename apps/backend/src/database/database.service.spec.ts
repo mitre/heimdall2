@@ -44,14 +44,16 @@ describe('DatabaseSerivce', () => {
     });
 
     it('returns the correct value when an item is changed', async () => {
-      const source = [{id: 1}];
-      const updated = [{id: 1}];
+      const source = [{id: 1, prop: 1}];
+      const updated = [{id: 1, prop: 2}];
 
       const delta = databaseService.getDelta(source, updated)
 
       expect(delta.added.length).toEqual(0);
       expect(delta.changed.length).toEqual(1);
       expect(delta.deleted.length).toEqual(0);
+
+      expect(delta.changed[0].prop).toEqual(updated[0].prop);
     });
 
     it('returns the correct value when an item is deleted', async () => {

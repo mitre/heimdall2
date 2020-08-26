@@ -16,7 +16,7 @@ export class DatabaseService {
     });
   }
 
-  getDelta<T extends DeltaArgs>(source: Array<T>, updated: Array<T> ) {
+  getDelta<T extends DeltaArgs>(source: Array<T>, updated: Array<T>) {
     if(source === undefined || updated === undefined) {
       return {
         added: [],
@@ -26,7 +26,7 @@ export class DatabaseService {
     }
 
     let added = updated.filter(updatedItem => source.find(sourceItem => sourceItem.id === updatedItem.id) === undefined);
-    let changed = source.filter(sourceItem => updated.find(updatedItem => updatedItem.id === sourceItem.id) !== undefined);
+    let changed = updated.filter(updatedItem => source.find(sourceItem => sourceItem.id === updatedItem.id) !== undefined);
     let deleted = source.filter(sourceItem => updated.find(updatedItem => updatedItem.id === sourceItem.id) === undefined);
 
     return {

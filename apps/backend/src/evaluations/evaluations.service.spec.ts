@@ -15,8 +15,12 @@ import {
   CREATE_EVALUATION_DTO_WITHOUT_DATA,
   CREATE_EVALUATION_DTO_WITHOUT_VERSION,
   UPDATE_EVALUATION_VERSION_ONLY,
-  UPDATE_EVALUATION_DATA_ONLY
+  UPDATE_EVALUATION_DATA_ONLY,
+  UPDATE_EVALUATION_ADD_TAGS_1,
+  UPDATE_EVALUATION_REMOVE_TAGS_1
 } from '../../test/constants/evaluations-test.constant';
+import {UpdateEvaluationTagDto} from '../evaluation-tags/dto/update-evaluation-tag.dto';
+import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 
 describe('EvaluationsService', () => {
   let evaluationsService: EvaluationsService;
@@ -170,13 +174,82 @@ describe('EvaluationsService', () => {
       expect(updatedEvaluation.version).not.toEqual(evaluation.version);
     });
 
-    // To be implemented after changing the update method to update EvaluationTags
+    it('should add additional evaluation tags to an evaluation', async () => {
+      const evaluation = await evaluationsService.create(EVALUATION_WITH_TAGS_1);
+      const updatedEvaluation = await evaluationsService.update(
+        evaluation.id,
+        UPDATE_EVALUATION_ADD_TAGS_1
+      );
+      expect(updatedEvaluation.id).toEqual(evaluation.id);
+      expect(updatedEvaluation.createdAt).toEqual(evaluation.createdAt);
+      expect(updatedEvaluation.data).toEqual(evaluation.data);
+      expect(updatedEvaluation.version).toEqual(evaluation.version);
+      // Evaluation was not updated, only assoc was.
+      expect(updatedEvaluation.updatedAt).toEqual(evaluation.updatedAt);
+      // ---
+      expect(updatedEvaluation.evaluationTags).not.toEqual(
+        evaluation.evaluationTags
+      );
+      expect(updatedEvaluation.evaluationTags.length).toBeGreaterThan(evaluation.evaluationTags.length);
+      updatedEvaluation.evaluationTags.forEach((tag) => {
+        expect(tag.id).toBeDefined();
+        expect(tag.createdAt).toBeDefined();
+        expect(tag.updatedAt).toBeDefined();
+      });
+    });
 
-    // it('should add additional evaluation tags to an evaluation', async () => {});
+    it('should remove tags from an evaluation', async () => {
+      const evaluation = await evaluationsService.create(EVALUATION_WITH_TAGS_1);
+      const updatedEvaluation = await evaluationsService.update(
+        evaluation.id,
+        UPDATE_EVALUATION_REMOVE_TAGS_1
+      );
+      expect(updatedEvaluation.id).toEqual(evaluation.id);
+      expect(updatedEvaluation.createdAt).toEqual(evaluation.createdAt);
+      expect(updatedEvaluation.data).toEqual(evaluation.data);
+      expect(updatedEvaluation.version).toEqual(evaluation.version);
+      // Evaluation was not updated, only assoc was.
+      expect(updatedEvaluation.updatedAt).toEqual(evaluation.updatedAt);
+      // ---
+      expect(updatedEvaluation.evaluationTags).not.toEqual(
+        evaluation.evaluationTags
+      );
+      expect(updatedEvaluation.evaluationTags.length).toEqual(0);
+    });
 
-    // it('should remove tags from an evaluation', async () => {});
-
-    // it('should update existing evaluation tags', async () => {});
+    it('should update existing evaluation tags', async () => {
+      const evaluation = await evaluationsService.create(EVALUATION_WITH_TAGS_1);
+      const updateEvaluationTagDto: UpdateEvaluationTagDto = {
+        id: evaluation.evaluationTags[0].id,
+        key: 'updated key',
+        value: 'updated value'
+      }
+      const updateEvaluationDto: UpdateEvaluationDto = {
+        data: undefined,
+        version: undefined,
+        evaluationTags: [updateEvaluationTagDto]
+      }
+      const updatedEvaluation = await evaluationsService.update(
+        evaluation.id,
+        updateEvaluationDto
+      );
+      expect(updatedEvaluation.id).toEqual(evaluation.id);
+      expect(updatedEvaluation.createdAt).toEqual(evaluation.createdAt);
+      // Evaluation was not updated, only assoc was.
+      expect(updatedEvaluation.updatedAt).toEqual(evaluation.updatedAt);
+      expect(updatedEvaluation.data).toEqual(evaluation.data);
+      expect(updatedEvaluation.version).toEqual(evaluation.version);
+      // ---
+      expect(updatedEvaluation.evaluationTags).not.toEqual(evaluation.evaluationTags);
+      expect(updatedEvaluation.evaluationTags.length).toEqual(1);
+      const originalTag = evaluation.evaluationTags[0];
+      const updatedTag = updatedEvaluation.evaluationTags[0];
+      expect(updatedTag.createdAt).toEqual(originalTag.createdAt);
+      expect(updatedTag.updatedAt).not.toEqual(originalTag.updatedAt);
+      expect(updatedTag.createdAt).toEqual(originalTag.createdAt);
+      expect(updatedTag.key).toEqual(updateEvaluationTagDto.key);
+      expect(updatedTag.value).toEqual(updateEvaluationTagDto.value);
+    });
 
     it('should only update data if provided', async () => {
       const evaluation = await evaluationsService.create(
