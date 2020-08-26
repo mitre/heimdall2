@@ -1,4 +1,4 @@
-# Heimdall2k
+# Heimdall Enterprise Server 2.0
 
 Create the database by setting the appropriate environment variables found in `.env-example` in
 `.env`
@@ -11,15 +11,17 @@ Run the application `npm run start`
 
 # License
 
-NOTICE
+### NOTICE
 
 © 2019-2020 The MITRE Corporation.
 
 Approved for Public Release; Distribution Unlimited. Case Number 18-3678.
-NOTICE
+
+### NOTICE
 
 MITRE hereby grants express written permission to use, reproduce, distribute, modify, and otherwise leverage this software to the extent permitted by the licensed terms provided in the LICENSE.md file included with this project.
-NOTICE
+
+### NOTICE
 
 This software was produced for the U. S. Government under Contract Number HHSM-500-2012-00008I, and is subject to Federal Acquisition Regulation Clause 52.227-14, Rights in Data-General.
 
