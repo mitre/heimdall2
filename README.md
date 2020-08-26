@@ -15,7 +15,9 @@ This project uses [Lerna](https://lerna.js.org/) (multi-project manager) to mana
 
 In order to run Heimdall Server, Postgresql must be installed and the following one-time steps must be performed:
 
+
     cp apps/backend/.env-example apps/backend/.env
+    # Edit /apps/backend/.env to reflect the appropriate configuration for your system
     npx lerna exec "npx sequelize-cli db:create" --scope heimdall-server
     npx lerna exec "npx sequelize-cli db:migrate" --scope heimdall-server
 
