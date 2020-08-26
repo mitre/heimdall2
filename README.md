@@ -7,7 +7,7 @@ This repository contains the source code for the Heimdall 2 Backend and Frontend
 This project uses [Lerna](https://lerna.js.org/) (multi-project manager) to manage dependencies and run the applications. Installing dependencies can be done by running
 
     npm install
-    lerna bootstrap --hoist
+    npx lerna bootstrap
 
 ## How to Run
 
@@ -16,8 +16,8 @@ This project uses [Lerna](https://lerna.js.org/) (multi-project manager) to mana
 In order to run Heimdall Server, Postgresql must be installed and the following one-time steps must be performed:
 
     cp apps/backend/.env-example apps/backend/.env
-    lerna exec "npx sequelize-cli db:create" --scope heimdall-server
-    lerna exec "npx sequelize-cli db:migrate" --scope heimdall-server
+    npx lerna exec "npx sequelize-cli db:create" --scope heimdall-server
+    npx lerna exec "npx sequelize-cli db:migrate" --scope heimdall-server
 
 Once the above steps are completed it is possible to start heimdall-server using the following command
 
