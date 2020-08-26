@@ -1,13 +1,32 @@
 # Heimdall Enterprise Server 2.0
 
-Create the database by setting the appropriate environment variables found in `.env-example` in
-`.env`
+This repository contains the source code for the Heimdall 2 Backend and Frontend (Heimdall-Lite).
 
-Run the following to create and migrate the database:
-* `npx sequelize-cli db:create`
-* `npx sequelize-cli db:migrate`
+## How to Install
 
-Run the application `npm run start`
+This project uses [Lerna](https://lerna.js.org/) (multi-project manager) to manage dependencies and run the applications. Installing dependencies can be done by running
+
+    npm install
+    npx lerna bootstrap --hoist
+
+## How to Run
+
+#### Heimdall Server + Frontend Development
+
+In order to run Heimdall Server, Postgresql must be installed and the following one-time steps must be performed:
+
+    cp apps/backend/.env-example apps/backend/.env
+    # Edit /apps/backend/.env to reflect the appropriate configuration for your system
+    npx lerna exec "npx sequelize-cli db:create" --scope heimdall-server
+    npx lerna exec "npx sequelize-cli db:migrate" --scope heimdall-server
+
+Once the above steps are completed it is possible to start heimdall-server using the following command
+
+    npm run start:dev
+
+#### Heimdall Lite Standalone
+
+    npm run lite:dev
 
 # License
 

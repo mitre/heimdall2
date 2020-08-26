@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "../../dist/server",
+    "baseUrl": "./",
+    "incremental": true,
+    "esModuleInterop": true,
+    "lib": [
+      "es2020"
+    ],
+    "paths": {}
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "client"
+  ],
+  "include": [
+    "src/**/*",
+    "test/**/*"
+  ]
+}
