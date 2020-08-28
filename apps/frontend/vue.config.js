@@ -18,7 +18,9 @@ module.exports = {
   publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
   transpileDependencies: [/(\/|\\)vuetify(\/|\\)/],
   devServer: {
-    proxy: process.env.VUE_APP_API_URL
+    proxy: process.env.HEIMDALL_SERVER_PORT
+      ? 'http://127.0.0.1:' + process.env.HEIMDALL_SERVER_PORT
+      : ''
   },
   outputDir: '../../dist/frontend',
   configureWebpack: {

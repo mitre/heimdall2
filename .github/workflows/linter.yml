@@ -38,11 +38,11 @@ jobs:
        with:
         node-version: '12.x'
 
-     - name: Install lerna and dev dependencies
-       run: npm install
+     - name: Install lerna
+       run: npm install -g lerna
 
      - name: Install project dependencies
-       run: npx lerna bootstrap --hoist
+       run: lerna bootstrap --hoist
 
      - name: Run lint
-       run: npx lerna run lint:ci
+       run: lerna run lint:ci
