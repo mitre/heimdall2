@@ -17,7 +17,9 @@
           <v-expansion-panel-header title="View controls' results">
             <div v-if="curr_route_path != '/results'">
               <v-list-item to="/results" title="View controls' results">
-                Evaluations (click here to view)
+                <button @click="reset_selection">
+                  Evaluations (click here to view)
+                </button>
               </v-list-item>
             </div>
             <div v-else><v-list-item>Evaluations</v-list-item></div>
@@ -52,7 +54,9 @@
           <v-expansion-panel-header title="View controls' results">
             <div v-if="curr_route_path != '/profiles'">
               <v-list-item to="/profiles" title="View controls' results">
-                Profiles (click here to view)
+                <button @click="reset_selection">
+                  Profiles (click here to view)
+                </button>
               </v-list-item>
             </div>
             <div v-else><v-list-item>Profiles</v-list-item></div>
@@ -87,7 +91,9 @@
           <v-expansion-panel-header title="Compare evaluations' controls">
             <div v-if="curr_route_path != '/compare'">
               <v-list-item to="/compare" title="Compare evaluations' controls">
-                Results Comparison (click here to view)
+                <button @click="reset_selection">
+                  Results Comparison (click here to view)
+                </button>
               </v-list-item>
             </div>
             <div v-else><v-list-item>Results Comparison</v-list-item></div>
@@ -176,10 +182,14 @@ export default class Sidebar extends SidebarProps {
     if (this.all_toggled) {
       FilteredDataModule.set_toggled_files([]);
     } else {
-      FilteredDataModule.set_toggled_files(
-        InspecDataModule.allFiles.map(v => v.unique_id)
-      );
+      this.reset_selection();
     }
+  }
+
+  reset_selection(): void {
+    FilteredDataModule.set_toggled_files(
+      InspecDataModule.allFiles.map(v => v.unique_id)
+    );
   }
 
   //checks if all files are selected
