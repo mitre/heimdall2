@@ -6,7 +6,7 @@ This repository contains the source code for the Heimdall 2 Backend and Frontend
 
 This project uses [Lerna](https://lerna.js.org/) (multi-project manager) to manage dependencies and run the applications. Installing dependencies can be done by running
 
-    npm install
+    npm install -g lerna
     npx lerna bootstrap --hoist
 
 ## How to Run

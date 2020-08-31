@@ -38,11 +38,11 @@ jobs:
        with:
         node-version: '12.x'
 
-     - name: Install lerna and dev dependencies
-       run: npm install
+     - name: Install lerna
+       run: npm install -g lerna
 
      - name: Install project dependencies
-       run: npx lerna bootstrap --hoist
+       run: lerna bootstrap --hoist
 
      - name: Run frontend tests
-       run: npx lerna run test --scope heimdall-lite --stream
+       run: lerna run test --scope heimdall-lite --stream
