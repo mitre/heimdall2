@@ -270,15 +270,15 @@ export default class Results extends ResultsProps {
    * Controlled by router.
    */
   get file_filter(): FileID[] {
-    var file_ids = [...FilteredDataModule.selected_file_ids]; // 1 based
+    var file_ids = [...FilteredDataModule.selected_file_ids];
 
-    var files = InspecDataModule.allEvaluationFiles; // 0 based
+    var files = InspecDataModule.allEvaluationFiles;
 
     // do better!
     for (var x = 0; x < files.length; x++)
       for (var y = 0; y < file_ids.length; y++)
         if (files[x].unique_id === file_ids[y]) {
-          // remove profile file
+          // remove evaluation file
           file_ids.splice(y, 1);
           y--;
         }

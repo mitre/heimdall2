@@ -200,16 +200,19 @@ export default class Sidebar extends SidebarProps {
     );
   }
 
+  // get the value of the current route
   get curr_route_path() {
     return this.$router.currentRoute.path;
   }
   
+  // get all visible evaluation files
   get visible_evaluation_files(): Array<EvaluationFile> {
     let files = InspecDataModule.allEvaluationFiles;
     files = files.sort((a, b) => a.filename.localeCompare(b.filename));
     return files;
   }
 
+  // get all visible profile files
   get visible_profile_files(): Array<ProfileFile> {
     let files = InspecDataModule.allProfileFiles;
     files = files.sort((a, b) => a.filename.localeCompare(b.filename));

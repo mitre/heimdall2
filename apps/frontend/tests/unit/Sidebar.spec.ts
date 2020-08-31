@@ -26,9 +26,6 @@ describe('Sidebar tests', () => {
   it('correct number of sidebar links', () => {
     loadAll();
     selectAllFiles();
-    //expect((wrapper.vm as any).visible_files.length).toBe(
-    //  InspecDataModule.allFiles.length
-    //);
     expect((wrapper.vm as any).visible_evaluation_files.length).toBe(
       InspecDataModule.allEvaluationFiles.length
     );
