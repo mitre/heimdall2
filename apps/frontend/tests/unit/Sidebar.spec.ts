@@ -6,7 +6,7 @@ import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {selectAllFiles, loadAll} from '../util/testingUtils';
 import Sidebar from '../../src/components/global/Sidebar.vue';
-import VueRouter from 'vue-router'
+import VueRouter from 'vue-router';
 
 const vuetify = new Vuetify();
 const localVue = createLocalVue();
