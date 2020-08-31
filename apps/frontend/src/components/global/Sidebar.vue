@@ -11,40 +11,114 @@
     width="375px"
   >
     <v-list dense class="px-2" subheader>
-      <v-subheader>Files</v-subheader>
-      <FileItem v-for="(file, i) in visible_files" :key="i" :file="file" />
-      <v-list-item @click="toggle_all" title="Show all files' controls">
-        <v-list-item-avatar>
-          <v-icon small>mdi-format-list-bulleted</v-icon>
-        </v-list-item-avatar>
-
-        <v-list-item-content>
-          <v-list-item-title>
-            <div v-if="all_toggled">Deselect all reports</div>
-            <div v-else>Select all reports</div>
-          </v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
       <v-subheader>Views</v-subheader>
-      <v-list-item to="/results" title="View controls' results">
-        <v-list-item-avatar>
-          <v-icon small>mdi-television-guide</v-icon>
-        </v-list-item-avatar>
-
-        <v-list-item-content>
-          <v-list-item-title>Results</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-      <v-list-item to="/compare" title="Compare evaluations' controls">
-        <v-list-item-avatar>
-          <v-icon small>mdi-triangle-outline</v-icon>
-        </v-list-item-avatar>
-
-        <v-list-item-content>
-          <v-list-item-title>Comparison</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+      <v-expansion-panels flat="true">
+        <v-expansion-panel>
+          <v-expansion-panel-header title="View controls' results">
+            <div v-if="curr_route_path != '/results'">
+              <v-list-item to="/results" title="View controls' results">
+                Evaluations (click here to view)
+              </v-list-item>
+            </div>
+            <div v-else><v-list-item>Evaluations</v-list-item></div>
+          </v-expansion-panel-header>
+          <div v-if="curr_route_path == '/results'">
+            <v-expansion-panel-content>
+              <FileItem
+                v-for="(file, i) in visible_evaluation_files"
+                :key="i"
+                :file="file"
+              />
+              <v-list-item @click="toggle_all" title="Show all files' controls">
+                <v-list-item-avatar>
+                  <v-icon small>mdi-format-list-bulleted</v-icon>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    <div v-if="all_toggled">Deselect all reports</div>
+                    <div v-else>Select all reports</div>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-expansion-panel-content>
+          </div>
+          <div v-else>
+            <v-expansion-panel-content>
+              Can not view Evaluations in this view
+            </v-expansion-panel-content>
+          </div>
+        </v-expansion-panel>
+        <v-expansion-panel>
+          <v-expansion-panel-header title="View controls' results">
+            <div v-if="curr_route_path != '/profiles'">
+              <v-list-item to="/profiles" title="View controls' results">
+                Profiles (click here to view)
+              </v-list-item>
+            </div>
+            <div v-else><v-list-item>Profiles</v-list-item></div>
+          </v-expansion-panel-header>
+          <div v-if="curr_route_path == '/profiles'">
+            <v-expansion-panel-content>
+              <ProfileItem
+                v-for="(file, i) in visible_profile_files"
+                :key="i"
+                :file="file"
+              />
+              <v-list-item @click="toggle_all" title="Show all files' controls">
+                <v-list-item-avatar>
+                  <v-icon small>mdi-format-list-bulleted</v-icon>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    <div v-if="all_toggled">Deselect all profiles</div>
+                    <div v-else>Select all profiles</div>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-expansion-panel-content>
+          </div>
+          <div v-else>
+            <v-expansion-panel-content>
+              Can not view Profiles in this view
+            </v-expansion-panel-content>
+          </div>
+        </v-expansion-panel>
+        <v-expansion-panel>
+          <v-expansion-panel-header title="Compare evaluations' controls">
+            <div v-if="curr_route_path != '/compare'">
+              <v-list-item to="/compare" title="Compare evaluations' controls">
+                Results Comparison (click here to view)
+              </v-list-item>
+            </div>
+            <div v-else><v-list-item>Results Comparison</v-list-item></div>
+          </v-expansion-panel-header>
+          <div v-if="curr_route_path == '/compare'">
+            <v-expansion-panel-content>
+              <FileItem
+                v-for="(file, i) in visible_evaluation_files"
+                :key="i"
+                :file="file"
+              />
+              <v-list-item @click="toggle_all" title="Show all files' controls">
+                <v-list-item-avatar>
+                  <v-icon small>mdi-format-list-bulleted</v-icon>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    <div v-if="all_toggled">Deselect all reports</div>
+                    <div v-else>Select all reports</div>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-expansion-panel-content>
+          </div>
+          <div v-else>
+            <v-expansion-panel-content>
+              Can not view Evaluations Comparison in this view
+            </v-expansion-panel-content>
+          </div>
+        </v-expansion-panel>
+      </v-expansion-panels>
     </v-list>
 
     <v-list dense class="px-2" subheader>
@@ -74,6 +148,7 @@ import Component from 'vue-class-component';
 import {InspecFile, EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
 import FileItem from '@/components/global/sidebaritems/SidebarFile.vue';
+import ProfileItem from '@/components/global/sidebaritems/SidebarProfile.vue';
 import LinkItem from '@/components/global/sidebaritems/SidebarLink.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
 import HelpModal from '@/components/global/HelpModal.vue';
@@ -90,6 +165,7 @@ const SidebarProps = Vue.extend({
   components: {
     LinkItem,
     FileItem,
+    ProfileItem,
     AboutModal,
     HelpModal
   }
@@ -114,9 +190,24 @@ export default class Sidebar extends SidebarProps {
     );
   }
 
+  get curr_route_path() {
+    return this.$router.currentRoute.path;
+  }
   /** Generates files for all */
-  get visible_files(): Array<ProfileFile | EvaluationFile> {
+  get visible_files_old(): Array<ProfileFile | EvaluationFile> {
     let files = InspecDataModule.allFiles;
+    files = files.sort((a, b) => a.filename.localeCompare(b.filename));
+    return files;
+  }
+
+  get visible_evaluation_files(): Array<EvaluationFile> {
+    let files = InspecDataModule.allEvaluationFiles;
+    files = files.sort((a, b) => a.filename.localeCompare(b.filename));
+    return files;
+  }
+
+  get visible_profile_files(): Array<ProfileFile> {
+    let files = InspecDataModule.allProfileFiles;
     files = files.sort((a, b) => a.filename.localeCompare(b.filename));
     return files;
   }

@@ -40,12 +40,25 @@ export class InspecData extends VuexModule {
   /** State var containing all profile files that have been added */
   profileFiles: ProfileFile[] = [];
 
+  /** TODO: do we have a need to keep this function?  It can be replicated
+   * by a caller by calling the allEvaluationFiles() and allProfileFiles()
+   */
   /** Return all of the files that we currently have. */
   get allFiles(): (EvaluationFile | ProfileFile)[] {
     let result: (EvaluationFile | ProfileFile)[] = [];
     result.push(...this.executionFiles);
     result.push(...this.profileFiles);
     return result;
+  }
+
+  /* Return all evaluation files only */
+  get allEvaluationFiles(): EvaluationFile[] {
+    return this.executionFiles;
+  }
+
+  /* Return all profile files only */
+  get allProfileFiles(): ProfileFile[] {
+    return this.profileFiles;
   }
 
   /**

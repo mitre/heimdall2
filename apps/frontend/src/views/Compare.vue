@@ -1,5 +1,5 @@
 <template>
-  <BaseView v-resize="on_resize">
+  <BaseView v-resize="on_resize" :title="curr_title">
     <!-- Topbar config - give it a search bar -->
     <template #topbar-content>
       <v-text-field
@@ -222,7 +222,7 @@ import ProfileRow from '@/components/cards/comparison/ProfileRow.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
 import {EvaluationFile} from '@/store/report_intake';
 import {SourcedContextualizedEvaluation} from '@/store/report_intake';
-import {isFromProfileFile} from '@/store/data_store';
+import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
 import ApexLineChart, {
   SeriesItem
 } from '@/components/generic/ApexLineChart.vue';
@@ -574,6 +574,46 @@ export default class Compare extends Props {
       this.ableTab = true;
     }
     this.changeChartState();
+  }
+
+  /**
+   * The title to override with
+   */
+  get curr_title(): string | undefined {
+    if (this.file_filter.length == 1) {
+      let file = InspecDataModule.allEvaluationFiles.find(
+        f => f.unique_id === this.file_filter[0]
+      );
+      if (file) {
+        return 'Comparison View (' + file.filename + ' selected)';
+      }
+    }
+    if (this.file_filter.length > 1) {
+      return (
+        'Compare View (' +
+        this.file_filter.length +
+        ' evaluations selected' +
+        ')'
+      );
+    } else {
+      return 'Compare View (No files selected)';
+    }
+  }
+
+  get file_filter(): FileID[] {
+    var file_ids = [...FilteredDataModule.selected_file_ids]; // 1 based
+
+    let files = InspecDataModule.allProfileFiles; // 0 based
+
+    // do better!
+    for (var x = 0; x < files.length; x++)
+      for (var y = 0; y < file_ids.length; y++)
+        if (files[x].unique_id === file_ids[y]) {
+          // remove profile file
+          file_ids.splice(y, 1);
+          y--;
+        }
+    return file_ids;
   }
 }
 </script>

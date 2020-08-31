@@ -209,7 +209,6 @@ import {context} from 'inspecjs';
 import {profile_unique_key} from '../utilities/format_util';
 import UserMenu from '@/components/global/UserMenu.vue';
 import {BackendModule} from '@/store/backend';
-import {EvaluationFile} from '../store/report_intake';
 
 // We declare the props separately
 // to make props types inferrable.
@@ -265,15 +264,15 @@ export default class Results extends ResultsProps {
   filter_snackbar: boolean = false;
 
   eval_info: number | null = null;
+
   /**
    * The currently selected file, if one exists.
    * Controlled by router.
    */
-
   get file_filter(): FileID[] {
-    var file_ids = [...FilteredDataModule.selected_file_ids];
+    var file_ids = [...FilteredDataModule.selected_file_ids]; // 1 based
 
-    let files = InspecDataModule.allProfileFiles;
+    var files = InspecDataModule.allEvaluationFiles; // 0 based
 
     // do better!
     for (var x = 0; x < files.length; x++)
@@ -283,7 +282,6 @@ export default class Results extends ResultsProps {
           file_ids.splice(y, 1);
           y--;
         }
-
     return file_ids;
   }
 
@@ -370,22 +368,19 @@ export default class Results extends ResultsProps {
    */
   get curr_title(): string | undefined {
     if (this.file_filter.length == 1) {
-      let file = InspecDataModule.allEvaluationFiles.find(
+      let file = InspecDataModule.allProfileFiles.find(
         f => f.unique_id === this.file_filter[0]
       );
       if (file) {
-        return 'Evaluations View (' + file.filename + ' selected)';
+        'Profiles View (' + file.filename + ' selected)';
       }
     }
     if (this.file_filter.length > 1) {
       return (
-        'Evaluations View (' +
-        this.file_filter.length +
-        ' evaluations selected' +
-        ')'
+        'Profiles View (' + this.file_filter.length + ' profiles selected' + ')'
       );
     } else {
-      return 'Evaluations View (No files selected)';
+      return 'Profiles View (No files selected)';
     }
   }
 

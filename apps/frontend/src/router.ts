@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Results from '@/views/Results.vue';
+import Profiles from '@/views/Profiles.vue';
 import Compare from '@/views/Compare.vue';
 import Landing from '@/views/Landing.vue';
 import Profile from '@/views/Profile.vue';
@@ -18,6 +19,12 @@ const router = new Router({
       path: '/results',
       name: 'results',
       component: Results,
+      meta: {requiresAuth: true}
+    },
+    {
+      path: '/profiles',
+      name: 'profiles',
+      component: Profiles,
       meta: {requiresAuth: true}
     },
     {
