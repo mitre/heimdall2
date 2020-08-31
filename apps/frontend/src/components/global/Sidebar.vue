@@ -12,7 +12,7 @@
   >
     <v-list dense class="px-2" subheader>
       <v-subheader>File Views</v-subheader>
-      <v-expansion-panels flat="true">
+      <v-expansion-panels flat="true" v-model="file_views">
         <v-expansion-panel>
           <v-expansion-panel-header title="View controls' results">
             <div
@@ -172,6 +172,8 @@ const SidebarProps = Vue.extend({
   }
 })
 export default class Sidebar extends SidebarProps {
+  file_views = 0;
+
   //selects/deselects all files. Will select all unless all are already selected
   toggle_all(): void {
     if (this.all_toggled) {
@@ -179,6 +181,13 @@ export default class Sidebar extends SidebarProps {
     } else {
       this.reset_selection();
     }
+  }
+
+  created() {
+    // open the appropriate v-expansion-panel based on current view
+    if (this.curr_route_path == '/results') this.file_views = 0;
+    else if (this.curr_route_path == '/compare') this.file_views = 0;
+    else if (this.curr_route_path == '/profiles') this.file_views = 1;
   }
 
   reset_selection(): void {
