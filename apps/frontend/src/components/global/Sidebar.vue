@@ -203,13 +203,7 @@ export default class Sidebar extends SidebarProps {
   get curr_route_path() {
     return this.$router.currentRoute.path;
   }
-  /** Generates files for all */
-  get visible_files_old(): Array<ProfileFile | EvaluationFile> {
-    let files = InspecDataModule.allFiles;
-    files = files.sort((a, b) => a.filename.localeCompare(b.filename));
-    return files;
-  }
-
+  
   get visible_evaluation_files(): Array<EvaluationFile> {
     let files = InspecDataModule.allEvaluationFiles;
     files = files.sort((a, b) => a.filename.localeCompare(b.filename));
