@@ -11,20 +11,28 @@
     width="375px"
   >
     <v-list dense class="px-2" subheader>
-      <v-subheader>Views</v-subheader>
+      <v-subheader>File Views</v-subheader>
       <v-expansion-panels flat="true">
         <v-expansion-panel>
           <v-expansion-panel-header title="View controls' results">
-            <div v-if="curr_route_path != '/results'">
+            <div
+              v-if="
+                curr_route_path != '/results' && curr_route_path != '/compare'
+              "
+            >
               <v-list-item to="/results" title="View controls' results">
                 <button @click="reset_selection">
-                  Evaluations (click here to view)
+                  Results (click here to view)
                 </button>
               </v-list-item>
             </div>
-            <div v-else><v-list-item>Evaluations</v-list-item></div>
+            <div v-else><v-list-item>Results</v-list-item></div>
           </v-expansion-panel-header>
-          <div v-if="curr_route_path == '/results'">
+          <div
+            v-if="
+              curr_route_path == '/results' || curr_route_path == '/compare'
+            "
+          >
             <v-expansion-panel-content>
               <FileItem
                 v-for="(file, i) in visible_evaluation_files"
@@ -42,11 +50,36 @@
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
+              <div v-if="curr_route_path == '/results'">
+                <v-list-item to="/compare" title="View results">
+                  <v-list-item-avatar>
+                    <v-icon small>mdi-triangle-outline</v-icon>
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      Results Comparison View
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </div>
+              <div v-else-if="curr_route_path == '/compare'">
+                <v-list-item to="/results" title="Compare results">
+                  <v-list-item-avatar>
+                    <v-icon small>mdi-television-guide</v-icon>
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      Results View
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </div>
+              <div v-else></div>
             </v-expansion-panel-content>
           </div>
           <div v-else>
             <v-expansion-panel-content>
-              Can not view Evaluations in this view
+              Can not view Results in this view
             </v-expansion-panel-content>
           </div>
         </v-expansion-panel>
@@ -87,46 +120,8 @@
             </v-expansion-panel-content>
           </div>
         </v-expansion-panel>
-        <v-expansion-panel>
-          <v-expansion-panel-header title="Compare evaluations' controls">
-            <div v-if="curr_route_path != '/compare'">
-              <v-list-item to="/compare" title="Compare evaluations' controls">
-                <button @click="reset_selection">
-                  Results Comparison (click here to view)
-                </button>
-              </v-list-item>
-            </div>
-            <div v-else><v-list-item>Results Comparison</v-list-item></div>
-          </v-expansion-panel-header>
-          <div v-if="curr_route_path == '/compare'">
-            <v-expansion-panel-content>
-              <FileItem
-                v-for="(file, i) in visible_evaluation_files"
-                :key="i"
-                :file="file"
-              />
-              <v-list-item @click="toggle_all" title="Show all files' controls">
-                <v-list-item-avatar>
-                  <v-icon small>mdi-format-list-bulleted</v-icon>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    <div v-if="all_toggled">Deselect all reports</div>
-                    <div v-else>Select all reports</div>
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-expansion-panel-content>
-          </div>
-          <div v-else>
-            <v-expansion-panel-content>
-              Can not view Evaluations Comparison in this view
-            </v-expansion-panel-content>
-          </div>
-        </v-expansion-panel>
       </v-expansion-panels>
     </v-list>
-
     <v-list dense class="px-2" subheader>
       <v-subheader>Tools</v-subheader>
       <slot></slot>
@@ -204,7 +199,7 @@ export default class Sidebar extends SidebarProps {
   get curr_route_path() {
     return this.$router.currentRoute.path;
   }
-  
+
   // get all visible evaluation files
   get visible_evaluation_files(): Array<EvaluationFile> {
     let files = InspecDataModule.allEvaluationFiles;
