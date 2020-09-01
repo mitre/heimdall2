@@ -1,0 +1,32 @@
+version: '3.5'
+
+services:
+  database:
+    image: postgres:13
+    restart: unless-stopped
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secretpassword
+      POSTGRES_DB: heimdall2
+      PGDATA: /var/lib/postgresql/data/pgdata
+    expose:
+      - "5432"
+  server:
+    image: heimdall2
+    restart: unless-stopped
+    environment:
+      HEIMDALL_SERVER_PORT: 3000
+      DATABASE_HOST: database
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: secretpassword
+      DATABASE_NAME: heimdall2
+      JWT_SECRET: PXMYqNJu4K7QpTYrgdhnyU/bj8Oi6LBMokL83iJaO3Q=
+      JWT_EXPIRE_TIME: 60s
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    depends_on:
+      - "database"
