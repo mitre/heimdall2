@@ -2,20 +2,21 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "start:dev": "VUE_APP_API_URL=http://localhost:3000 lerna exec 'npm run start:dev'",
-    "lite:dev": "lerna exec 'npm run start:dev' --scope heimdall-lite"
+    "start:dev": "dotenv -e apps/backend/.env lerna exec npm run start:dev",
+    "lite:dev": "lerna exec npm run start:dev --scope heimdall-lite"
   },
   "devDependencies": {
     "@types/jest": "^26.0.7",
     "@types/node": "^13.13.6",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
+    "dotenv-cli": "^3.2.0",
     "eslint": "^6.8.0",
     "eslint-plugin-prettier": "^3.1.4",
     "jest": "^26.4.2",
     "lerna": "^3.22.1",
     "prettier": "^1.19.1",
     "ts-jest": "^26.1.3",
-    "typescript": "^3.9.7",
-    "@typescript-eslint/eslint-plugin": "^2.34.0",
-    "@typescript-eslint/parser": "^2.34.0"
+    "typescript": "^3.9.7"
   }
 }
