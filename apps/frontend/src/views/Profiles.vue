@@ -372,7 +372,7 @@ export default class Results extends ResultsProps {
         f => f.unique_id === this.file_filter[0]
       );
       if (file) {
-        'Profiles View (' + file.filename + ' selected)';
+        return 'Profiles View (' + file.filename + ' selected)';
       }
     }
     if (this.file_filter.length > 1) {
