@@ -1,6 +1,7 @@
 import {User} from '../user.model';
+import {IUser} from '@heimdall/interfaces';
 
-export class UserDto {
+export class UserDto implements IUser {
   id: number;
   readonly email: string;
   readonly firstName: string;

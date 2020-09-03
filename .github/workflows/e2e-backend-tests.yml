@@ -41,8 +41,11 @@ jobs:
      - name: Install lerna
        run: npm install -g lerna
 
+     - name: Remove frontend code to ensure the proper dependencies are declared in the backend package.json
+       run: rm -rf apps/frontend
+
      - name: Install project dependencies
-       run: lerna bootstrap --hoist
+       run: lerna bootstrap --hoist --ci
 
      - name: Copy .env-ci to .env
        run: cp apps/backend/test/.env-ci apps/backend/.env
@@ -54,3 +57,6 @@ jobs:
 
      - name: Run e2e tests
        run: lerna run test:e2e --stream
+
+     - name: Ensure the app builds cleanly without frontend dependencies
+       run: lerna run build --scope heimdall-server
