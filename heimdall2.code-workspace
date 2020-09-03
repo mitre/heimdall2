@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": "Frontend",
+			"path": "apps/frontend"
+		},
+		{
+			"name": "Backend",
+			"path": "apps/backend"
+		},
+		{
+			"name": "Heimdall",
+			"path": "."
+		}
+	],
+	"settings": {}
+}
