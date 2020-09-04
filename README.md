@@ -28,6 +28,45 @@ Once the above steps are completed it is possible to start heimdall-server using
 
     npm run lite:dev
 
+
+### Run With Docker
+
+Given that Heimdall requires at least a database service, we use Docker Compose.
+
+#### Setup Docker Container (Clean Install)
+
+1. Install Docker
+2. Download heimdall by running `git clone https://github.com/mitre/heimdall2.git`.
+3. Navigate to the base folder where `docker-compose.yml` is located
+4. Run the following commands in a terminal window from the heimdall source directory:
+   1. `./setup-docker-secrets.sh`
+   2. `docker-compose up -d`
+6. Navigate to `http://127.0.0.1:3000`
+
+#### Running Docker Container
+
+Make sure you have run the setup steps at least once before following these steps!
+
+1. Run the following command in a terminal window:
+   - `docker-compose up -d`
+2. Go to `127.0.0.1:3000` in a web browser
+
+##### Updating Docker Container
+
+A new version of the docker container can be retrieved by running:
+
+```
+docker-compose pull
+docker-compose up -d
+```
+
+This will fetch the latest version of the container, redeploy if a newer version exists, and then apply any database migrations if applicable. No data should be lost by this operation.
+
+##### Stopping the Container
+
+`docker-compose down` # From the source directory you started from
+
+
 # License
 
 ### NOTICE
