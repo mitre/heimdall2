@@ -51,7 +51,8 @@
           <v-expansion-panel-content>
             <div
               v-if="
-                visible_evaluation_files != null && visible_evaluation_files.length > 0
+                visible_evaluation_files != null &&
+                  visible_evaluation_files.length > 0
               "
             >
               <FileItem
@@ -84,7 +85,10 @@
           </v-expansion-panel-header>
           <v-expansion-panel-content>
             <div
-              v-if="visible_profile_files != null && visible_profile_files.length > 0"
+              v-if="
+                visible_profile_files != null &&
+                  visible_profile_files.length > 0
+              "
             >
               <ProfileItem
                 v-for="(file, i) in visible_profile_files"
