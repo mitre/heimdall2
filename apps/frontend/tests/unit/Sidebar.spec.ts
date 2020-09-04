@@ -34,11 +34,29 @@ describe('Sidebar tests', () => {
     );
   });
   it('select/deselect all works', () => {
-    (wrapper.vm as any).toggle_all();
+    // deselect all profiles and evaluations
+    (wrapper.vm as any).toggle_all_profiles();
+    (wrapper.vm as any).toggle_all_evaluations();
     expect(FilteredDataModule.selected_file_ids).toEqual([]);
-    (wrapper.vm as any).toggle_all();
+
+    // select all profiles and evaluations
+    (wrapper.vm as any).toggle_all_profiles();
+    (wrapper.vm as any).toggle_all_evaluations();
     expect(FilteredDataModule.selected_file_ids.length).toEqual(
       InspecDataModule.allFiles.length
+    );
+
+    // select profiles only
+    (wrapper.vm as any).toggle_all_evaluations();
+    expect(FilteredDataModule.selected_file_ids.length).toEqual(
+      InspecDataModule.allProfileFiles.length
+    );
+
+    // select evaluations only
+    (wrapper.vm as any).toggle_all_profiles();
+    (wrapper.vm as any).toggle_all_evaluations();
+    expect(FilteredDataModule.selected_file_ids.length).toEqual(
+      InspecDataModule.allEvaluationFiles.length
     );
   });
 });

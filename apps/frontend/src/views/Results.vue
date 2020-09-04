@@ -379,10 +379,7 @@ export default class Results extends ResultsProps {
     }
     if (this.file_filter.length > 1) {
       return (
-        'Results View (' +
-        this.file_filter.length +
-        ' evaluations selected' +
-        ')'
+        'Results View (' + this.file_filter.length + ' results selected' + ')'
       );
     } else {
       return 'Results View (No files selected)';

@@ -592,7 +592,7 @@ export default class Compare extends Props {
       return (
         'Compare View (' +
         this.file_filter.length +
-        ' evaluations selected' +
+        ' results selected' +
         ')'
       );
     } else {

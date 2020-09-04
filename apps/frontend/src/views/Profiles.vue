@@ -141,7 +141,7 @@
         <v-row>
           <v-col xs-12>
             <v-card elevation="2">
-              <v-card-title>Results View Data</v-card-title>
+              <v-card-title>Profiles View Data</v-card-title>
               <ControlTable :filter="all_filter" />
             </v-card>
           </v-col>
@@ -158,7 +158,7 @@
       top
     >
       <span class="subtitle-2" v-if="file_filter.length">
-        All results are filtered out. Use the
+        All profiles are filtered out. Use the
         <v-icon>mdi-filter-remove</v-icon> button in the top right to clear
         filters and show all.
       </span>
@@ -212,7 +212,7 @@ import {BackendModule} from '@/store/backend';
 
 // We declare the props separately
 // to make props types inferrable.
-const ResultsProps = Vue.extend({
+const ProfilesProps = Vue.extend({
   props: {}
 });
 
@@ -233,7 +233,7 @@ const ResultsProps = Vue.extend({
     UserMenu
   }
 })
-export default class Results extends ResultsProps {
+export default class Profiles extends ProfilesProps {
   /** Whether or not the model is showing */
   dialog: boolean = false;
 
