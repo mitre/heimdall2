@@ -590,10 +590,7 @@ export default class Compare extends Props {
     }
     if (this.file_filter.length > 1) {
       return (
-        'Compare View (' +
-        this.file_filter.length +
-        ' results selected' +
-        ')'
+        'Compare View (' + this.file_filter.length + ' results selected' + ')'
       );
     } else {
       return 'Compare View (No files selected)';
