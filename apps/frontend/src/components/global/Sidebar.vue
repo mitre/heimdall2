@@ -49,27 +49,33 @@
             <v-list-item>Results</v-list-item>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <FileItem
-              v-for="(file, i) in visible_evaluation_files"
-              :key="i"
-              :file="file"
-            />
-            <v-list-item
-              @click="toggle_all_evaluations"
-              title="Show all files' controls"
+            <div
+              v-if="
+                visible_evaluation_files != null && visible_evaluation_files.length > 0
+              "
             >
-              <v-list-item-avatar>
-                <v-icon small>mdi-format-list-bulleted</v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  <div v-if="all_toggled_evaluation">
-                    Deselect all results set
-                  </div>
-                  <div v-else>Select all results set</div>
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
+              <FileItem
+                v-for="(file, i) in visible_evaluation_files"
+                :key="i"
+                :file="file"
+              />
+              <v-list-item
+                @click="toggle_all_evaluations"
+                title="Show all files' controls"
+              >
+                <v-list-item-avatar>
+                  <v-icon small>mdi-format-list-bulleted</v-icon>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    <div v-if="all_toggled_evaluation">
+                      Deselect all results set
+                    </div>
+                    <div v-else>Select all results set</div>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </div>
           </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel>
@@ -77,25 +83,29 @@
             <v-list-item>Profiles</v-list-item>
           </v-expansion-panel-header>
           <v-expansion-panel-content>
-            <ProfileItem
-              v-for="(file, i) in visible_profile_files"
-              :key="i"
-              :file="file"
-            />
-            <v-list-item
-              @click="toggle_all_profiles"
-              title="Show all files' controls"
+            <div
+              v-if="visible_profile_files != null && visible_profile_files.length > 0"
             >
-              <v-list-item-avatar>
-                <v-icon small>mdi-format-list-bulleted</v-icon>
-              </v-list-item-avatar>
-              <v-list-item-content>
-                <v-list-item-title>
-                  <div v-if="all_toggled_profiles">Deselect all profiles</div>
-                  <div v-else>Select all profiles</div>
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
+              <ProfileItem
+                v-for="(file, i) in visible_profile_files"
+                :key="i"
+                :file="file"
+              />
+              <v-list-item
+                @click="toggle_all_profiles"
+                title="Show all files' controls"
+              >
+                <v-list-item-avatar>
+                  <v-icon small>mdi-format-list-bulleted</v-icon>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    <div v-if="all_toggled_profiles">Deselect all profiles</div>
+                    <div v-else>Select all profiles</div>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </div>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
