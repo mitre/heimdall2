@@ -1,6 +1,7 @@
 import {EvaluationTag} from '../evaluation-tag.model';
+import {IEvaluationTag} from '@heimdall/interfaces';
 
-export class EvaluationTagDto {
+export class EvaluationTagDto implements IEvaluationTag {
   readonly id: number;
   readonly key: string;
   readonly value: string;

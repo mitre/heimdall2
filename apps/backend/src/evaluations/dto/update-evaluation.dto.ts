@@ -1,7 +1,8 @@
 import {IsOptional} from 'class-validator';
 import {UpdateEvaluationTagDto} from '../../evaluation-tags/dto/update-evaluation-tag.dto';
+import {IUpdateEvaluation} from '@heimdall/interfaces';
 
-export class UpdateEvaluationDto {
+export class UpdateEvaluationDto implements IUpdateEvaluation {
   @IsOptional()
   readonly version: string;
 
