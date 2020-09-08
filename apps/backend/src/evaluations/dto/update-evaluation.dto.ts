@@ -1,6 +1,8 @@
 import {IsOptional} from 'class-validator';
-import {UpdateEvaluationTagDto} from '../../evaluation-tags/dto/update-evaluation-tag.dto';
 import {IUpdateEvaluation} from '@heimdall/interfaces';
+import {UpdateEvaluationTagDto} from '../../evaluation-tags/dto/update-evaluation-tag.dto';
+import {CreateEvaluationTagDto} from '../../evaluation-tags/dto/create-evaluation-tag.dto';
+import {DeleteEvaluationTagDto} from '../../evaluation-tags/dto/delete-evaluation-tag.dto';
 
 export class UpdateEvaluationDto implements IUpdateEvaluation {
   @IsOptional()
@@ -10,5 +12,9 @@ export class UpdateEvaluationDto implements IUpdateEvaluation {
   readonly data: Record<string, any>;
 
   @IsOptional()
-  readonly evaluationTags: UpdateEvaluationTagDto[];
+  readonly evaluationTags: (
+    | UpdateEvaluationTagDto
+    | CreateEvaluationTagDto
+    | DeleteEvaluationTagDto
+  )[];
 }
