@@ -1,4 +1,4 @@
-name: Run E2E Backend Tests
+name: Run Backend Tests
 
 on:
   push:
@@ -57,6 +57,9 @@ jobs:
 
      - name: Run e2e tests
        run: lerna run test:e2e --stream
+
+     - name: Run unit tests
+       run: lerna run test:ci-cov --stream
 
      - name: Ensure the app builds cleanly without frontend dependencies
        run: lerna run build --scope heimdall-server
