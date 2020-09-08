@@ -16,6 +16,3 @@ if ! grep -qF "JWT_SECRET" .env; then
 	echo ".env does not contain JWT_SECRET, generating secret..."
 	echo "JWT_SECRET=$(openssl rand -hex 64)" >> .env
 fi
-
-
-
