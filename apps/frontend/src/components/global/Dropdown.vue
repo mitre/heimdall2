@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <v-menu offset-y :close-on-content-click="false">
+    <v-menu offset-y offset-overflow :close-on-content-click="false">
       <template v-slot:activator="{on}">
         <div color="none" dark v-on="on">
           <v-avatar size="32px" item>
@@ -9,6 +9,7 @@
               alt="Heimdall Logo"
             ></v-img>
           </v-avatar>
+          <v-icon small>mdi-menu-down</v-icon>
         </div>
       </template>
       <v-list>
