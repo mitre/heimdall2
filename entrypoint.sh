@@ -19,7 +19,7 @@ if [ "$1" = 'node' ]; then
     JWT_SECRET=$JWT_SECRET
     JWT_EXPIRE_TIME=$JWT_EXPIRE_TIME
     NODE_ENV=$NODE_ENV
-    " >> /app/dist/server/.env
+    " > /app/dist/server/.env
 
     npx lerna exec "npx sequelize-cli db:migrate" --scope heimdall-server
 fi
