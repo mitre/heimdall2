@@ -3,7 +3,7 @@ import Vue from 'vue';
 import Vuetify from 'vuetify';
 import {shallowMount, Wrapper} from '@vue/test-utils';
 import {FilteredDataModule} from '@/store/data_filters';
-import {StatusCountModule} from '@/store/status_counts';
+
 import {
   removeAllFiles,
   selectAllFiles,
@@ -14,9 +14,7 @@ import {
 import Results from '@/views/Results.vue';
 import ProfData from '@/components/cards/ProfData.vue';
 import {profile_unique_key} from '../../src/utilities/format_util';
-import StatusChart from '../../src/components/cards/StatusChart.vue';
-import SeverityChart from '../../src/components/cards/SeverityChart.vue';
-import ComplianceChart from '../../src/components/cards/ComplianceChart.vue';
+
 import ControlTable from '../../src/components/cards/controltable/ControlTable.vue';
 import {context} from 'inspecjs';
 interface ListElt {

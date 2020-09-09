@@ -127,7 +127,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {InspecFile, EvaluationFile, ProfileFile} from '@/store/report_intake';
+import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
 import FileItem from '@/components/global/sidebaritems/SidebarFile.vue';
 import ProfileItem from '@/components/global/sidebaritems/SidebarProfile.vue';

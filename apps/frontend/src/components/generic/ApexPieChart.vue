@@ -14,8 +14,8 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import VueApexCharts from 'vue-apexcharts';
-import {ApexOptions, exec} from 'apexcharts';
-import {install} from 'vuetify/es5/install';
+import {ApexOptions} from 'apexcharts';
+
 import {ColorHackModule} from '@/store/color_hack';
 
 // Represents a slice of the pie.

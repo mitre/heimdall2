@@ -2,7 +2,7 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "start:dev": "dotenv -e apps/backend/.env lerna exec npm run start:dev",
+    "start:dev": "dotenv -e apps/backend/.env -- lerna exec npm run start:dev --ignore @heimdall/interfaces",
     "lite:dev": "lerna exec npm run start:dev --scope heimdall-lite"
   },
   "devDependencies": {
@@ -12,7 +12,9 @@
     "@typescript-eslint/parser": "^2.34.0",
     "dotenv-cli": "^3.2.0",
     "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-unused-imports": "^0.1.3",
     "jest": "^26.4.2",
     "lerna": "^3.22.1",
     "prettier": "^1.19.1",

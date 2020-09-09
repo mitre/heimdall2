@@ -15,10 +15,9 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import VueApexCharts from 'vue-apexcharts';
 import {ColorHackModule} from '@/store/color_hack';
-import {FilteredDataModule, Filter} from '@/store/data_filters';
-import {ControlStatus, Severity} from 'inspecjs';
+
 import {ApexOptions} from 'apexcharts';
-import {InspecDataModule} from '@/store/data_store';
+
 import {StatusCountModule} from '@/store/status_counts';
 
 // We declare the props separately
