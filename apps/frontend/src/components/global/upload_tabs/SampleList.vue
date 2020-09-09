@@ -24,14 +24,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {defined} from '@/utilities/async_util';
-import {
-  InspecIntakeModule,
-  FileID,
-  next_free_file_ID
-} from '@/store/report_intake';
-import {InspecDataModule} from '@/store/data_store';
-import {AppInfoModule} from '@/store/app_info';
+
+import {InspecIntakeModule, next_free_file_ID} from '@/store/report_intake';
+
 import {samples, Sample} from '@/utilities/sample_util';
 
 // We declare the props separately to make props types inferable.

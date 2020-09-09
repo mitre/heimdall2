@@ -40,16 +40,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import S3, {ObjectKey} from 'aws-sdk/clients/s3';
-import {AWSError} from 'aws-sdk/lib/error';
+
 import {LocalStorageVal} from '../../../../utilities/helper_util';
-import {
-  Auth,
-  transcribe_error,
-  get_session_token,
-  MFA_Info
-} from '../../../../utilities/aws_util';
-import {InspecIntakeModule, FileID} from '@/store/report_intake';
+
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
 
 // We declare the props separately to make props types inferable.

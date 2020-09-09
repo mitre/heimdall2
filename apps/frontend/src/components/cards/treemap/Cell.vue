@@ -41,14 +41,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {ControlStatus, HDFControl, nist} from 'inspecjs';
+
 import * as d3 from 'd3';
-import {
-  TreemapNode,
-  TreemapNodeLeaf,
-  TreemapNodeParent,
-  is_leaf
-} from '@/utilities/treemap_util';
+import {TreemapNode, TreemapNodeLeaf, is_leaf} from '@/utilities/treemap_util';
 import {HierarchyRectangularNode} from 'd3';
 
 export interface XYScale {
