@@ -38,7 +38,7 @@
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>
-            Profile View
+            Profiles View
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
