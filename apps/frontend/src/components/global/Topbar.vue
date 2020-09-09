@@ -34,7 +34,7 @@
       </v-icon>
     </v-btn>
 
-    <Dropdown />
+    <HelpAboutDropdown />
     <v-btn icon large v-on:click="toggleDark">
       <v-icon :color="this.$vuetify.theme.dark ? 'grey' : 'white'"
         >mdi-theme-light-dark</v-icon
@@ -48,7 +48,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import Dropdown from '@/components/global/Dropdown.vue';
+import HelpAboutDropdown from '@/components/global/HelpAboutDropdown.vue';
 import {BackendModule} from '@/store/backend';
 import {FileID} from '@/store/report_intake';
 import UploadNexus from '@/components/global/UploadNexus.vue';
@@ -63,7 +63,7 @@ const TopbarProps = Vue.extend({
 @Component({
   components: {
     UploadNexus,
-    Dropdown
+    HelpAboutDropdown
   }
 })
 export default class Topbar extends TopbarProps {
