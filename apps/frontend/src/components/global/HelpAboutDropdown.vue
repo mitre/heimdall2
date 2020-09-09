@@ -3,18 +3,18 @@
     <v-menu offset-y offset-overflow :close-on-content-click="false">
       <template v-slot:activator="{on, attrs}">
         <div class="clickable-icon" v-on="on" v-bind="attrs">
-          <v-avatar size="32px" item>
-            <v-img
-              :src="require('@/assets/logo-xs-orange-white.svg')"
-              alt="Heimdall Logo"
-            ></v-img>
-          </v-avatar>
+          <v-btn size="40px" icon large>
+            <v-avatar size="32px" item>
+              <v-img
+                :src="require('@/assets/logo-xs-orange-white.svg')"
+                alt="Heimdall Logo"
+              ></v-img>
+            </v-avatar>
+          </v-btn>
           <v-icon small>mdi-menu-down</v-icon>
         </div>
       </template>
       <v-list>
-        <v-list-item>
-          <v-list-item-title>
             <HelpModal>
               <template v-slot:clickable="{on}">
                 <LinkItem
@@ -26,10 +26,6 @@
                 >
               </template>
             </HelpModal>
-          </v-list-item-title>
-        </v-list-item>
-        <v-list-item>
-          <v-list-item-title>
             <AboutModal>
               <template v-slot:clickable="{on}">
                 <LinkItem
@@ -41,8 +37,6 @@
                 >
               </template>
             </AboutModal>
-          </v-list-item-title>
-        </v-list-item>
       </v-list>
     </v-menu>
   </div>
@@ -52,6 +46,7 @@
 .clickable-icon {
   cursor: pointer;
 }
+.v-list-item--link::before { background-color: red; }
 </style>
 
 <script lang="ts">
