@@ -61,8 +61,6 @@ import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
 import FileItem from '@/components/global/sidebaritems/SidebarFile.vue';
 import LinkItem from '@/components/global/sidebaritems/SidebarLink.vue';
-import AboutModal from '@/components/global/AboutModal.vue';
-import HelpModal from '@/components/global/HelpModal.vue';
 import {FilteredDataModule} from '../../store/data_filters';
 
 // We declare the props separately to make props types inferable.
@@ -75,9 +73,7 @@ const SidebarProps = Vue.extend({
 @Component({
   components: {
     LinkItem,
-    FileItem,
-    AboutModal,
-    HelpModal
+    FileItem
   }
 })
 export default class Sidebar extends SidebarProps {
