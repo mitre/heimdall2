@@ -367,7 +367,7 @@ export default class Profiles extends ProfilesProps {
    * The title to override with
    */
   get curr_title(): string {
-    let returnText = 'Profiles View'
+    let returnText = 'Profiles View';
     if (this.file_filter.length == 1) {
       let file = InspecDataModule.allProfileFiles.find(
         f => f.unique_id === this.file_filter[0]
@@ -375,8 +375,7 @@ export default class Profiles extends ProfilesProps {
       if (file) {
         returnText += ` (${file.filename} selected)`;
       }
-    }
-    else {
+    } else {
       returnText += ` (${this.file_filter.length} results selected)`;
     }
     return returnText;

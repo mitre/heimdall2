@@ -368,8 +368,9 @@ export default class Results extends ResultsProps {
   /**
    * The title to override with
    */
+
   get curr_title(): string {
-    let returnText = 'Results View'
+    let returnText = 'Results View';
     if (this.file_filter.length == 1) {
       let file = InspecDataModule.allEvaluationFiles.find(
         f => f.unique_id === this.file_filter[0]
@@ -377,8 +378,7 @@ export default class Results extends ResultsProps {
       if (file) {
         returnText += ` (${file.filename} selected)`;
       }
-    }
-    else {
+    } else {
       returnText += ` (${this.file_filter.length} results selected)`;
     }
     return returnText;

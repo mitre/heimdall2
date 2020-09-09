@@ -45,15 +45,11 @@
       <v-subheader>Files</v-subheader>
       <v-expansion-panels flat="true" v-model="file_views">
         <v-expansion-panel>
-          <v-expansion-panel-header title="View controls' results">
-            <v-list-item>Results</v-list-item>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <div
-              v-if="
-                visible_evaluation_files.length > 0
-              "
-            >
+          <div v-if="visible_evaluation_files.length > 0">
+            <v-expansion-panel-header title="View controls' results">
+              <v-list-item>Results</v-list-item>
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
               <FileItem
                 v-for="(file, i) in visible_evaluation_files"
                 :key="i"
@@ -75,19 +71,15 @@
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
-            </div>
-          </v-expansion-panel-content>
+            </v-expansion-panel-content>
+          </div>
         </v-expansion-panel>
         <v-expansion-panel>
-          <v-expansion-panel-header title="View controls' results">
-            <v-list-item>Profiles</v-list-item>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <div
-              v-if="
-                visible_profile_files.length > 0
-              "
-            >
+          <div v-if="visible_profile_files.length > 0">
+            <v-expansion-panel-header title="View controls' results">
+              <v-list-item>Profiles</v-list-item>
+            </v-expansion-panel-header>
+            <v-expansion-panel-content>
               <ProfileItem
                 v-for="(file, i) in visible_profile_files"
                 :key="i"
@@ -107,8 +99,8 @@
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
-            </div>
-          </v-expansion-panel-content>
+            </v-expansion-panel-content>
+          </div>
         </v-expansion-panel>
       </v-expansion-panels>
     </v-list>
