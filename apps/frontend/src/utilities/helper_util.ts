@@ -1,5 +1,4 @@
 import {InspecData} from '@/store/data_store';
-import axios from 'axios';
 
 /** For helper functions that don't belong anywhere else */
 

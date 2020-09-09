@@ -188,7 +188,7 @@ import Treemap from '@/components/cards/treemap/Treemap.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
 import SeverityChart from '@/components/cards/SeverityChart.vue';
 import ComplianceChart from '@/components/cards/ComplianceChart.vue';
-import ProfileData from '@/components/cards/ProfileData.vue';
+
 import ExportCaat from '@/components/global/ExportCaat.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
@@ -196,17 +196,12 @@ import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 
 import {FilteredDataModule, Filter, TreeMapState} from '@/store/data_filters';
 import {ControlStatus, Severity} from 'inspecjs';
-import {
-  InspecIntakeModule,
-  FileID,
-  SourcedContextualizedEvaluation,
-  SourcedContextualizedProfile
-} from '@/store/report_intake';
+import {FileID, SourcedContextualizedEvaluation} from '@/store/report_intake';
 import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
-import {need_redirect_file} from '@/utilities/helper_util';
+
 import ProfData from '@/components/cards/ProfData.vue';
 import {context} from 'inspecjs';
-import {profile_unique_key} from '../utilities/format_util';
+
 import UserMenu from '@/components/global/UserMenu.vue';
 import {BackendModule} from '@/store/backend';
 import {EvaluationFile} from '../store/report_intake';

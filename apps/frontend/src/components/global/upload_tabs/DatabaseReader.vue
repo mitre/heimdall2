@@ -37,14 +37,10 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {ServerModule} from '@/store/server';
-import {AppInfoModule} from '@/store/app_info';
+
 import {plainToClass} from 'class-transformer';
 import {LocalStorageVal} from '@/utilities/helper_util';
-import {
-  InspecIntakeModule,
-  FileID,
-  next_free_file_ID
-} from '@/store/report_intake';
+import {next_free_file_ID} from '@/store/report_intake';
 import {Evaluation} from '@/types/models.ts';
 
 export interface RetrieveHash {

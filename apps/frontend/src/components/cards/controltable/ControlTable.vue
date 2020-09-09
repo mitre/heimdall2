@@ -5,7 +5,7 @@
       <v-col cols="12">
         <v-switch
           v-model="single_expand"
-          label="Single expand"
+          :label="single_expand ? 'Single Expand' : 'Multiple Expand'"
           class="mt-2 "
         ></v-switch>
       </v-col>
@@ -78,7 +78,6 @@ import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails
 import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 
-import {HDFControl, ControlStatus} from 'inspecjs';
 import {FilteredDataModule} from '@/store/data_filters';
 import {control_unique_key} from '@/utilities/format_util';
 import {context} from 'inspecjs';

@@ -35,11 +35,10 @@ export class EvaluationTagsService {
   async update(
     id: number,
     updateEvaluationTagDto: UpdateEvaluationTagDto
-  ): Promise<EvaluationTagDto> {
+  ): Promise<EvaluationTag> {
     const evaluationTag = await EvaluationTag.findByPk<EvaluationTag>(id);
     this.exists(evaluationTag);
-    evaluationTag.update(updateEvaluationTagDto);
-    return new EvaluationTagDto(evaluationTag);
+    return await evaluationTag.update(updateEvaluationTagDto);
   }
 
   async remove(id: number): Promise<EvaluationTagDto> {

@@ -54,7 +54,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import LinkItem from '@/components/global/sidebaritems/SidebarLink.vue';
+
 import {AppInfoModule} from '@/store/app_info';
 
 // We declare the props separately to make props types inferable.
