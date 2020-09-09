@@ -1,4 +1,11 @@
-import {IsEmail, IsNotEmpty, IsOptional} from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsIn,
+  IsString,
+  MinLength
+} from 'class-validator';
 import {ICreateUser} from '@heimdall/interfaces';
 
 export class CreateUserDto implements ICreateUser {
@@ -7,23 +14,33 @@ export class CreateUserDto implements ICreateUser {
   readonly email: string;
 
   @IsNotEmpty()
+  @IsString()
+  @MinLength(15)
   readonly password: string;
 
   @IsNotEmpty()
+  @IsString()
+  @MinLength(15)
   readonly passwordConfirmation: string;
 
   @IsOptional()
+  @IsString()
   readonly firstName: string;
 
   @IsOptional()
+  @IsString()
   readonly lastName: string;
 
   @IsOptional()
+  @IsString()
   readonly organization: string;
 
   @IsOptional()
+  @IsString()
   readonly title: string;
 
   @IsNotEmpty()
+  @IsString()
+  @IsIn(['user'])
   readonly role: string;
 }
