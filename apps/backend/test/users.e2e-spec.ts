@@ -165,9 +165,7 @@ describe('/users', () => {
         .send(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD)
         .expect(HttpStatus.BAD_REQUEST)
         .then(response => {
-          expect(response.body.message[0]).toEqual(
-            'password must be a string'
-          );
+          expect(response.body.message[0]).toEqual('password must be a string');
           expect(response.body.error).toEqual('Bad Request');
         });
     });
@@ -209,7 +207,9 @@ describe('/users', () => {
         .send(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE)
         .expect(HttpStatus.BAD_REQUEST)
         .then(response => {
-          expect(response.body.message[0]).toEqual('role must be one of the following values: user');
+          expect(response.body.message[0]).toEqual(
+            'role must be one of the following values: user'
+          );
           expect(response.body.error).toEqual('Bad Request');
         });
     });
@@ -461,9 +461,9 @@ describe('/users', () => {
       });
 
       it('should return 200 status after user is deleted by admin', async () => {
-        const admin = await usersService.create(CREATE_ADMIN_DTO)
+        const admin = await usersService.create(CREATE_ADMIN_DTO);
 
-        let adminJWTToken: String;
+        let adminJWTToken: string;
         await request(app.getHttpServer())
           .post('/authn/login')
           .set('Content-Type', 'application/json')

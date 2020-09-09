@@ -4,7 +4,6 @@ import {
   IsNotEmpty,
   IsString,
   IsIn,
-  MinLength,
   IsBoolean
 } from 'class-validator';
 import {IUpdateUser} from '@heimdall/interfaces';
