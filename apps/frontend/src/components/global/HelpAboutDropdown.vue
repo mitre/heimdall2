@@ -1,8 +1,8 @@
 <template>
   <div class="text-center">
     <v-menu offset-y offset-overflow :close-on-content-click="false">
-      <template v-slot:activator="{on}">
-        <div color="none" dark v-on="on">
+      <template v-slot:activator="{ on, attrs }">
+        <div class="clickable-icon" v-on="on" v-bind="attrs">
           <v-avatar size="32px" item>
             <v-img
               :src="require('@/assets/logo-xs-orange-white.svg')"
@@ -16,7 +16,7 @@
         <v-list-item>
           <v-list-item-title>
             <HelpModal>
-              <template v-slot:clickable="{on}">
+              <template v-slot:clickable="{ on }">
                 <LinkItem
                   key="help"
                   text="Help"
@@ -31,7 +31,7 @@
         <v-list-item>
           <v-list-item-title>
             <AboutModal>
-              <template v-slot:clickable="{on}">
+              <template v-slot:clickable="{ on }">
                 <LinkItem
                   key="about"
                   text="About"
@@ -48,14 +48,22 @@
   </div>
 </template>
 
+<style scoped>
+.clickable-icon {
+  cursor: pointer;
+}
+</style>
+
 <script lang="ts">
-import HelpModal from '@/components/global/HelpModal.vue';
-import AboutModal from '@/components/global/AboutModal.vue';
+import LinkItem from "@/components/global/sidebaritems/SidebarLink.vue";
+import AboutModal from "@/components/global/AboutModal.vue";
+import HelpModal from "@/components/global/HelpModal.vue";
 
 export default {
   components: {
     HelpModal,
-    AboutModal
+    AboutModal,
+    LinkItem
   }
 };
 </script>
