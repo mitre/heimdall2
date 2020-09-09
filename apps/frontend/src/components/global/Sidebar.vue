@@ -51,20 +51,6 @@
       <v-subheader>Tools</v-subheader>
       <slot></slot>
     </v-list>
-
-    <v-list dense class="px-2" subheader>
-      <v-subheader>Info</v-subheader>
-      <AboutModal>
-        <template v-slot:clickable="{on}">
-          <LinkItem key="about" text="About" icon="mdi-information" v-on="on" />
-        </template>
-      </AboutModal>
-      <HelpModal>
-        <template v-slot:clickable="{on}">
-          <LinkItem key="help" text="Help" icon="mdi-help-circle" v-on="on" />
-        </template>
-      </HelpModal>
-    </v-list>
   </v-navigation-drawer>
 </template>
 
