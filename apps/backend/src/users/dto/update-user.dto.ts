@@ -37,12 +37,10 @@ export class UpdateUserDto implements IUpdateUser {
 
   @IsOptional()
   @IsString()
-  @MinLength(15)
   readonly password: string;
 
   @IsOptional()
   @IsString()
-  @MinLength(15)
   readonly passwordConfirmation: string;
 
   @IsOptional()

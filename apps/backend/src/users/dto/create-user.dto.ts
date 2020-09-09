@@ -15,12 +15,10 @@ export class CreateUserDto implements ICreateUser {
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(15)
   readonly password: string;
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(15)
   readonly passwordConfirmation: string;
 
   @IsOptional()
