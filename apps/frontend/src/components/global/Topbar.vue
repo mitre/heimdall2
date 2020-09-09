@@ -34,14 +34,7 @@
       </v-icon>
     </v-btn>
 
-    <v-btn icon large>
-      <v-avatar size="32px" item>
-        <v-img
-          :src="require('@/assets/logo-xs-orange-white.svg')"
-          alt="Heimdall Logo"
-        ></v-img>
-      </v-avatar>
-    </v-btn>
+    <Dropdown />
     <v-btn icon large v-on:click="toggleDark">
       <v-icon :color="this.$vuetify.theme.dark ? 'grey' : 'white'"
         >mdi-theme-light-dark</v-icon
@@ -55,6 +48,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import Dropdown from '@/components/global/Dropdown.vue';
 import {BackendModule} from '@/store/backend';
 import {FileID} from '@/store/report_intake';
 import UploadNexus from '@/components/global/UploadNexus.vue';
@@ -68,7 +62,8 @@ const TopbarProps = Vue.extend({
 
 @Component({
   components: {
-    UploadNexus
+    UploadNexus,
+    Dropdown
   }
 })
 export default class Topbar extends TopbarProps {
