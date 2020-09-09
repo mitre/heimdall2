@@ -97,7 +97,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
-import {HDFControl, ControlStatus} from 'inspecjs';
+
 //@ts-ignore
 import VClamp from 'vue-clamp/dist/vue-clamp.js';
 

@@ -84,12 +84,8 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
-import {
-  SourcedContextualizedProfile,
-  SourcedContextualizedEvaluation
-} from '@/store/report_intake';
-import {StatusCountModule} from '@/store/status_counts';
-import {FilteredDataModule, Filter} from '@/store/data_filters';
+import {SourcedContextualizedEvaluation} from '@/store/report_intake';
+
 import {profile_unique_key} from '../../utilities/format_util';
 import {InspecFile, ProfileFile} from '@/store/report_intake';
 import {context} from 'inspecjs';

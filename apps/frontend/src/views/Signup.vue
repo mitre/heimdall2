@@ -113,9 +113,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Filter} from '@/store/data_filters';
-import {FileID} from '@/store/report_intake';
-import {LocalStorageVal} from '@/utilities/helper_util';
+
 import VeeValidate from 'vee-validate';
 import VuePassword from 'vue-password';
 import zxcvbn from 'zxcvbn';

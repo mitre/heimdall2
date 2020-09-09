@@ -12,7 +12,6 @@ import {
 import Store from '@/store/store';
 import LRUCache from 'lru-cache';
 import {ControlStatus} from 'inspecjs';
-import {InspecDataModule} from '@/store/data_store';
 
 // The hash that we will generally be working with herein
 export type ControlStatusHash = {[key in ControlStatus]: number};

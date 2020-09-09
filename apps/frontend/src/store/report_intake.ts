@@ -7,7 +7,7 @@ import {Module, VuexModule, getModule, Action} from 'vuex-module-decorators';
 import {InspecDataModule} from '@/store/data_store';
 import Store from '@/store/store';
 import {read_file_async} from '@/utilities/async_util';
-import {Evaluation, Tag} from '@/types/models.ts';
+import {Tag} from '@/types/models.ts';
 
 /** Each FileID corresponds to a unique File in this store */
 export type FileID = number;

@@ -43,16 +43,11 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {
-  FileID,
   next_free_file_ID,
   EvaluationFile,
   SourcedContextualizedEvaluation
 } from '@/store/report_intake';
-import {
-  SplunkEndpoint,
-  ExecutionMetaInfo,
-  SplunkErrorCode
-} from '@/utilities/splunk_util';
+import {SplunkEndpoint, ExecutionMetaInfo} from '@/utilities/splunk_util';
 import {InspecDataModule} from '@/store/data_store';
 import {contextualizeEvaluation} from 'inspecjs/dist/context';
 

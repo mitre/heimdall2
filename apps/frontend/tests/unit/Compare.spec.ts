@@ -6,14 +6,12 @@ import Compare from '@/views/Compare.vue';
 import {FilteredDataModule} from '@/store/data_filters';
 import {StatusCountModule} from '@/store/status_counts';
 import {ComparisonContext} from '../../src/utilities/delta_util';
-import {InspecDataModule} from '@/store/data_store';
+
 import {
   removeAllFiles,
   selectAllFiles,
   loadSample,
-  loadAll,
-  fileCompliance,
-  expectedCount
+  fileCompliance
 } from '../util/testingUtils';
 
 const vuetify = new Vuetify();

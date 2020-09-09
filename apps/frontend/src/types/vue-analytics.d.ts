@@ -1,4 +1,4 @@
-import _Vue, {PluginFunction} from 'vue';
+import _Vue from 'vue';
 
 declare class VueAnalytics {
   static install(Vue: typeof _Vue, options: any): void;

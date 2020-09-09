@@ -21,13 +21,13 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {context, HDFControl, HDFControlSegment, SegmentStatus} from 'inspecjs';
+
 import {
   ControlDelta,
   ControlChangeGroup,
   NOT_SELECTED
 } from '@/utilities/delta_util';
-import {diffArrays, ArrayOptions} from 'diff';
+
 import ChangeItem from '@/components/cards/comparison/ChangeItem.vue';
 import TruncatedText from '@/components/generic/TruncatedText.vue';
 import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
