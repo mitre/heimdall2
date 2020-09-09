@@ -51,8 +51,7 @@
           <v-expansion-panel-content>
             <div
               v-if="
-                visible_evaluation_files != null &&
-                  visible_evaluation_files.length > 0
+                visible_evaluation_files.length > 0
               "
             >
               <FileItem
@@ -86,8 +85,7 @@
           <v-expansion-panel-content>
             <div
               v-if="
-                visible_profile_files != null &&
-                  visible_profile_files.length > 0
+                visible_profile_files.length > 0
               "
             >
               <ProfileItem
