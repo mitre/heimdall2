@@ -12,7 +12,7 @@
   >
     <v-list dense class="px-2" subheader>
       <v-subheader>Views</v-subheader>
-      <v-list-item to="/results" title="Compare results">
+      <v-list-item to="/results" title="View results">
         <v-list-item-avatar>
           <v-icon small>mdi-television-guide</v-icon>
         </v-list-item-avatar>
@@ -22,7 +22,7 @@
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item to="/compare" title="View results">
+      <v-list-item to="/compare" title="Compare results">
         <v-list-item-avatar>
           <v-icon small>mdi-triangle-outline</v-icon>
         </v-list-item-avatar>
@@ -32,7 +32,7 @@
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item to="/profiles" title="View controls' results">
+      <v-list-item to="/profiles" title="View profiles">
         <v-list-item-avatar>
           <v-icon small>mdi-television-guide</v-icon>
         </v-list-item-avatar>
