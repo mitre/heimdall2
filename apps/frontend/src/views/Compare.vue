@@ -577,29 +577,27 @@ export default class Compare extends Props {
 
   /**
    * The title to override with
-   */
-  get curr_title(): string | undefined {
+   */  
+  get curr_title(): string {
+    let returnText = 'Comparison View'
     if (this.file_filter.length == 1) {
       let file = InspecDataModule.allEvaluationFiles.find(
         f => f.unique_id === this.file_filter[0]
       );
       if (file) {
-        return 'Comparison View (' + file.filename + ' selected)';
+        returnText += ` (${file.filename} selected)`;
       }
     }
-    if (this.file_filter.length > 1) {
-      return (
-        'Compare View (' + this.file_filter.length + ' results selected' + ')'
-      );
-    } else {
-      return 'Compare View (No files selected)';
+    else {
+      returnText += ` (${this.file_filter.length} results selected)`;
     }
+    return returnText;
   }
 
   get file_filter(): FileID[] {
-    var file_ids = [...FilteredDataModule.selected_file_ids]; // 1 based
+    var file_ids = [...FilteredDataModule.selected_file_ids];
 
-    let files = InspecDataModule.allProfileFiles; // 0 based
+    let files = InspecDataModule.allProfileFiles;
 
     // do better!
     for (var x = 0; x < files.length; x++)

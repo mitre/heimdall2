@@ -366,22 +366,20 @@ export default class Profiles extends ProfilesProps {
   /**
    * The title to override with
    */
-  get curr_title(): string | undefined {
+  get curr_title(): string {
+    let returnText = 'Profiles View'
     if (this.file_filter.length == 1) {
       let file = InspecDataModule.allProfileFiles.find(
         f => f.unique_id === this.file_filter[0]
       );
       if (file) {
-        return 'Profiles View (' + file.filename + ' selected)';
+        returnText += ` (${file.filename} selected)`;
       }
     }
-    if (this.file_filter.length > 1) {
-      return (
-        'Profiles View (' + this.file_filter.length + ' profiles selected' + ')'
-      );
-    } else {
-      return 'Profiles View (No files selected)';
+    else {
+      returnText += ` (${this.file_filter.length} results selected)`;
     }
+    return returnText;
   }
 
   //changes width of eval info if it is in server mode and needs more room for tags

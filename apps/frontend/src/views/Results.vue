@@ -368,22 +368,20 @@ export default class Results extends ResultsProps {
   /**
    * The title to override with
    */
-  get curr_title(): string | undefined {
+  get curr_title(): string {
+    let returnText = 'Results View'
     if (this.file_filter.length == 1) {
       let file = InspecDataModule.allEvaluationFiles.find(
         f => f.unique_id === this.file_filter[0]
       );
       if (file) {
-        return 'Results View (' + file.filename + ' selected)';
+        returnText += ` (${file.filename} selected)`;
       }
     }
-    if (this.file_filter.length > 1) {
-      return (
-        'Results View (' + this.file_filter.length + ' results selected' + ')'
-      );
-    } else {
-      return 'Results View (No files selected)';
+    else {
+      returnText += ` (${this.file_filter.length} results selected)`;
     }
+    return returnText;
   }
 
   //changes width of eval info if it is in server mode and needs more room for tags
