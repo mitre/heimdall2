@@ -4,6 +4,8 @@
 
 This repository contains the source code for the Heimdall 2 Backend and Frontend (Heimdall-Lite).
 
+## Heimdall Lite
+
 ### Demos
 
 ![Heimdall Lite 2.0 Demo GIF](/apps/frontend/public/heidmall-lite-2.0-demo-5fps.gif)
@@ -12,13 +14,13 @@ This repository contains the source code for the Heimdall 2 Backend and Frontend
 
 [![Heimdall Lite 2.0 Demo YouTube](https://img.youtube.com/vi/1jXHWZ0gHQg/0.jpg)](https://www.youtube.com/watch?v=1jXHWZ0gHQg)
 
-## Hosted
+### Hosted
 
-### Netlify
+#### Netlify (Built off Master Branch)
 
 <https://heimdall-lite.netlify.com/>
 
-### GitHub Pages
+#### GitHub Pages (Built off Last Release)
 
 <https://heimdall-lite.mitre.org>
 
@@ -110,15 +112,15 @@ Once the above steps are completed it is possible to start heimdall-server using
 ### Developing Heimdall Lite Standalone
 
     npm run lite:dev
-    
+
 ### Lint and fix files
 
     lerna run lint
-    
+
 ### Compile and minify the frontend and backend for production
 
     lerna run build
-    
+
 ### Run tests
 
     # Frontend + Backend End to End Tests (Expects lerna run build to have been run)
@@ -128,7 +130,7 @@ Once the above steps are completed it is possible to start heimdall-server using
     # Run Backend Nest Tests
     lerna run test:e2e --stream
     lerna run test:ci-cov --stream
-    
+
 ## Versioning and State of Development
 
 This project uses the [Semantic Versioning Policy](https://semver.org/)
