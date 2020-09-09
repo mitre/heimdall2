@@ -10,6 +10,7 @@
         active
         :value="active_tab"
         @change="selected_tab"
+        background-color="grey darken-3"
         color="primary-visible"
         show-arrows
       >
