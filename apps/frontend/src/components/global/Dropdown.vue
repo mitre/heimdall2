@@ -49,7 +49,6 @@
 </template>
 
 <script lang="ts">
-import {AppInfoModule} from '@/store/app_info';
 import HelpModal from '@/components/global/HelpModal.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
 
