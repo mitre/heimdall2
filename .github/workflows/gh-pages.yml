@@ -14,6 +14,9 @@ jobs:
         with:
           node-version: "12.x"
 
+      - name: Install lerna
+        run: npm install -g lerna
+
       - name: Install project dependencies
         run: lerna bootstrap --hoist --ci
 
