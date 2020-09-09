@@ -51,7 +51,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import UploadButton from '@/components/global/UploadButton.vue';
+
 import {
   InspecIntakeModule,
   FileID,

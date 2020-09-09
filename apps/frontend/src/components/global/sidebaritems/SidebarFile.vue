@@ -31,7 +31,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {InspecDataModule} from '@/store/data_store';
 import {FilteredDataModule} from '@/store/data_filters';
-import {EvaluationFile, ProfileFile, FileID} from '@/store/report_intake';
+import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {ServerModule} from '@/store/server';
 import {BackendModule} from '@/store/backend';
 

@@ -52,7 +52,6 @@ import Dropdown from '@/components/global/Dropdown.vue';
 import {BackendModule} from '@/store/backend';
 import {FileID} from '@/store/report_intake';
 import UploadNexus from '@/components/global/UploadNexus.vue';
-import {FilteredDataModule} from '@/store/data_filters';
 
 // We declare the props separately to make props types inferable.
 const TopbarProps = Vue.extend({

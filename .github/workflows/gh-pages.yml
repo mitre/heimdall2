@@ -1,0 +1,30 @@
+name: Deploy to GitHub Pages
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@master
+
+      - name: setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+
+      - name: Install lerna
+        run: npm install -g lerna
+
+      - name: Install project dependencies
+        run: lerna bootstrap --hoist --ci
+
+      - name: Build Heimdall Lite
+        run: lerna run build --scope heimdall-lite
+
+      - name: deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist/frontend

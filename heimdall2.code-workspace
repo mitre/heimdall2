@@ -1,0 +1,20 @@
+{
+  "folders": [
+    {
+      "name": "Frontend",
+      "path": "apps/frontend"
+    },
+    {
+      "name": "Backend",
+      "path": "apps/backend"
+    },
+    {
+      "name": "Heimdall",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false
+  }
+}

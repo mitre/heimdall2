@@ -1,16 +1,13 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "target": "es2017",
-    "sourceMap": true,
     "outDir": "../../dist/server",
     "baseUrl": "./",
     "incremental": true,
-    "esModuleInterop": true,
     "lib": [
       "es2020"
     ],
@@ -18,8 +15,6 @@
   },
   "exclude": [
     "node_modules",
-    "dist",
-    "client"
   ],
   "include": [
     "src/**/*",

@@ -73,7 +73,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {HDFControl, ControlStatus} from 'inspecjs';
+
 //@ts-ignore
 import VClamp from 'vue-clamp/dist/vue-clamp.js';
 

@@ -101,7 +101,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import BaseView from '@/views/BaseView.vue';
 import {FileID, next_free_file_ID} from '@/store/report_intake';
-import {plainToClass} from 'class-transformer';
+
 import {ServerModule} from '@/store/server';
 import {UserProfile, Evaluation, Usergroup} from '@/types/models.ts';
 import UserMenu from '@/components/global/UserMenu.vue';

@@ -11,6 +11,10 @@ This project uses [Lerna](https://lerna.js.org/) (multi-project manager) to mana
 
 ## How to Run
 
+#### Development Environment
+
+It is suggested to use VSCode for development on this project. For convenience, a heimdall2.code-workspace file has been provided at the root of this repository. Loading this workspace into VSCode will fix Intellisense imports and configures editor defaults to match what eslint will check for during PRs.
+
 #### Heimdall Server + Frontend Development
 
 In order to run Heimdall Server, Postgresql must be installed and the following one-time steps must be performed:
