@@ -221,7 +221,7 @@ import {StatusCountModule} from '@/store/status_counts';
 import ProfileRow from '@/components/cards/comparison/ProfileRow.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
 import {EvaluationFile} from '@/store/report_intake';
-import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
+import {InspecDataModule} from '@/store/data_store';
 import ApexLineChart, {
   SeriesItem
 } from '@/components/generic/ApexLineChart.vue';
