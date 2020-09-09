@@ -23,8 +23,8 @@
       :width="width"
       :height="height"
       :class="cell_classes"
-      @click="select_node(node)"
       :rx="is_selected ? 20 : 0"
+      @click="select_node(node)"
     />
 
     <text

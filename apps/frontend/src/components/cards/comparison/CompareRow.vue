@@ -10,12 +10,12 @@
 
       <!-- Various Statuses -->
       <v-col
+        v-for="index in shown_files"
+        :key="index - 1"
         cols="4"
         xs="4"
         md="5"
-        v-for="index in shown_files"
         filter
-        :key="index - 1"
         :value="index - 1"
       >
         <v-btn
@@ -25,9 +25,9 @@
             `status${hdf_controls[index - 1 + shift].status.replace(' ', '')}`
           "
           centered
-          @click="view(index - 1 + shift, $event)"
           :depressed="selection[index - 1 + shift]"
           :outlined="selection[index - 1 + shift]"
+          @click="view(index - 1 + shift, $event)"
         >
           <template
             v-if="hdf_controls[index - 1 + shift].status == 'Not Applicable'"
@@ -49,22 +49,22 @@
     </v-row>
     <div v-if="num_selected > 0">
       <v-row>
-        <v-col cols="12" key="delta">
+        <v-col key="delta" cols="12">
           <DeltaView :delta="delta" :shift="shift" />
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="3" xs="3" sm="2" md="1"></v-col>
         <v-col
+          v-for="index in shown_files"
+          :key="index - 1"
           cols="4"
           xs="4"
           md="5"
-          v-for="index in shown_files"
-          :key="index - 1"
         >
           <ControlRowDetails
-            :tab.sync="tab"
             v-if="selection[index - 1 + shift]"
+            :tab.sync="tab"
             :control="controls[index - 1 + shift]"
           />
         </v-col>

@@ -2,16 +2,16 @@
   <div>
     <Modal
       :value="value"
-      @input="$emit('input', $event.target.value)"
       :persistent="persistent"
+      @input="$emit('input', $event.target.value)"
     >
       <v-tabs
         :vertical="$vuetify.breakpoint.mdAndUp"
         active
         :value="active_tab"
-        @change="selected_tab"
         color="primary-visible"
         show-arrows
+        @change="selected_tab"
       >
         <v-tabs-slider></v-tabs-slider>
         <!-- Define our tabs -->
