@@ -592,19 +592,12 @@ export default class Compare extends Props {
   }
 
   get file_filter(): FileID[] {
-    var file_ids = [...FilteredDataModule.selected_file_ids];
-
+    let file_ids = [...FilteredDataModule.selected_file_ids];
     let files = InspecDataModule.allProfileFiles;
 
-    // do better!
-    for (var x = 0; x < files.length; x++)
-      for (var y = 0; y < file_ids.length; y++)
-        if (files[x].unique_id === file_ids[y]) {
-          // remove profile file
-          file_ids.splice(y, 1);
-          y--;
-        }
-    return file_ids;
+    return file_ids.filter(file_id =>
+      files.every(file => file_id != file.unique_id)
+    );
   }
 }
 </script>

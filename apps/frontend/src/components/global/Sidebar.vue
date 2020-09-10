@@ -286,15 +286,9 @@ export default class Sidebar extends SidebarProps {
     let file_ids = [...FilteredDataModule.selected_file_ids];
     let files = InspecDataModule.allProfileFiles;
 
-    // is there a better way to do this?
-    for (let x = 0; x < files.length; x++)
-      for (let y = 0; y < file_ids.length; y++)
-        if (files[x].unique_id === file_ids[y]) {
-          // remove profile file
-          file_ids.splice(y, 1);
-          y--;
-        }
-    return file_ids;
+    return file_ids.filter(file_id =>
+      files.every(file => file_id != file.unique_id)
+    );
   }
 
   // get all the currently selected profiles
@@ -302,15 +296,9 @@ export default class Sidebar extends SidebarProps {
     let file_ids = [...FilteredDataModule.selected_file_ids];
     let files = InspecDataModule.allEvaluationFiles;
 
-    // is there a better way to do this?
-    for (let x = 0; x < files.length; x++)
-      for (let y = 0; y < file_ids.length; y++)
-        if (files[x].unique_id === file_ids[y]) {
-          // remove evalation file
-          file_ids.splice(y, 1);
-          y--;
-        }
-    return file_ids;
+    return file_ids.filter(file_id =>
+      files.every(file => file_id != file.unique_id)
+    );
   }
 }
 </script>
