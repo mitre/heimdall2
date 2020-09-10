@@ -12,14 +12,14 @@
                 <v-spacer />
               </v-toolbar>
               <v-card-text>
-                <v-form name="signup_form" ref="form">
+                <v-form ref="form" name="signup_form">
                   <v-text-field
+                    id="email_field"
+                    v-model="email"
                     label="Email"
                     name="email"
-                    id="email_field"
                     prepend-icon="person"
                     type="text"
-                    v-model="email"
                     required
                   />
                   <br />
@@ -45,50 +45,50 @@
                   </div>
                   <div class="v-text-field__slot">
                     <VuePassword
-                      style="padding-left: 35px;"
+                      id="password"
                       ref="password"
-                      type="password"
                       v-model="password"
+                      v-validate="'required'"
+                      style="padding-left: 35px;"
+                      type="password"
                       label="password"
                       name="password"
-                      v-validate="'required'"
-                      id="password"
                       :strength-meter-only="true"
                       :strength="strength"
                       data-vv-name="password"
                       required
-                      :disableToggle="true"
+                      :disable-toggle="true"
                       @input="updateStrength"
                     />
                   </div>
                   <br />
                   <v-text-field
                     id="passwordConfirmation"
+                    v-model="passwordConfirmation"
+                    v-validate="'required|confirmed:password'"
                     label="Confirm Password"
                     name="passwordConfirmation"
                     prepend-icon="lock"
                     type="password"
-                    v-model="passwordConfirmation"
-                    v-validate="'required|confirmed:password'"
                     data-vv-name="password confirmation"
                     required
                   />
                   <br />
                   <v-text-field
                     id="role"
+                    v-model="role"
                     label="Role"
                     name="role"
                     prepend-icon="assignment_ind"
                     type="text"
-                    v-model="role"
                     required
                   />
                   <v-btn
                     id="register"
-                    @click="register"
                     depressed
                     large
                     color="primary"
+                    @click="register"
                   >
                     Register
                   </v-btn>

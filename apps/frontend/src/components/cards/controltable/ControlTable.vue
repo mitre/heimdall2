@@ -16,24 +16,24 @@
       <template #id>
         <ColumnHeader
           text="ID"
-          @input="set_sort('id', $event)"
           :sort="sort_id"
+          @input="set_sort('id', $event)"
         />
       </template>
 
       <template #status>
         <ColumnHeader
           text="Status"
-          @input="set_sort('status', $event)"
           :sort="sort_status"
+          @input="set_sort('status', $event)"
         />
       </template>
 
       <template #severity>
         <ColumnHeader
           text="Severity"
-          @input="set_sort('severity', $event)"
           :sort="sort_severity"
+          @input="set_sort('severity', $event)"
         />
       </template>
 

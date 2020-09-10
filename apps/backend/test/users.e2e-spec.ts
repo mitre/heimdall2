@@ -3,6 +3,7 @@ import request from 'supertest';
 import {INestApplication, ValidationPipe, HttpStatus} from '@nestjs/common';
 import {AppModule} from './../src/app.module';
 import {DatabaseService} from './../src/database/database.service';
+import {UsersService} from './../src/users/users.service';
 import {
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS,
@@ -35,6 +36,7 @@ describe('/users', () => {
   let app: INestApplication;
   let databaseService: DatabaseService;
   let authzService: AuthzService;
+  let usersService: UsersService;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -44,6 +46,7 @@ describe('/users', () => {
 
     databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
     authzService = moduleFixture.get<AuthzService>(AuthzService);
+    usersService = moduleFixture.get<UsersService>(UsersService);
 
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(
@@ -162,9 +165,7 @@ describe('/users', () => {
         .send(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD)
         .expect(HttpStatus.BAD_REQUEST)
         .then(response => {
-          expect(response.body.message[0]).toEqual(
-            'password should not be empty'
-          );
+          expect(response.body.message[0]).toEqual('password must be a string');
           expect(response.body.error).toEqual('Bad Request');
         });
     });
@@ -177,7 +178,7 @@ describe('/users', () => {
         .expect(HttpStatus.BAD_REQUEST)
         .then(response => {
           expect(response.body.message[0]).toEqual(
-            'passwordConfirmation should not be empty'
+            'passwordConfirmation must be a string'
           );
           expect(response.body.error).toEqual('Bad Request');
         });
@@ -206,7 +207,9 @@ describe('/users', () => {
         .send(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE)
         .expect(HttpStatus.BAD_REQUEST)
         .then(response => {
-          expect(response.body.message[0]).toEqual('role should not be empty');
+          expect(response.body.message[0]).toEqual(
+            'role must be one of the following values: user'
+          );
           expect(response.body.error).toEqual('Bad Request');
         });
     });
@@ -362,7 +365,7 @@ describe('/users', () => {
           .expect(HttpStatus.BAD_REQUEST)
           .then(response => {
             expect(response.body.message[0]).toEqual(
-              'currentPassword should not be empty'
+              'currentPassword must be a string'
             );
             expect(response.body.error).toEqual('Bad Request');
           });
@@ -458,17 +461,9 @@ describe('/users', () => {
       });
 
       it('should return 200 status after user is deleted by admin', async () => {
-        let adminID;
-        await request(app.getHttpServer())
-          .post('/users')
-          .set('Content-Type', 'application/json')
-          .send(CREATE_ADMIN_DTO)
-          .expect(HttpStatus.CREATED)
-          .then(response => {
-            adminID = response.body.id;
-          });
+        const admin = await usersService.create(CREATE_ADMIN_DTO);
 
-        let adminJWTToken;
+        let adminJWTToken: string;
         await request(app.getHttpServer())
           .post('/authn/login')
           .set('Content-Type', 'application/json')
@@ -479,7 +474,7 @@ describe('/users', () => {
           });
 
         await request(app.getHttpServer())
-          .delete('/users/' + adminID)
+          .delete('/users/' + admin.id)
           .set('Authorization', 'bearer ' + adminJWTToken)
           .send(DELETE_USER_DTO_TEST_OBJ)
           .expect(HttpStatus.OK)
@@ -498,7 +493,7 @@ describe('/users', () => {
             );
             expect(response.body.email).toEqual(CREATE_ADMIN_DTO.email);
             expect(response.body.firstName).toEqual(CREATE_ADMIN_DTO.firstName);
-            expect(response.body.id).toEqual(adminID);
+            expect(response.body.id).toEqual(admin.id);
             expect(response.body.lastLogin).toEqual(null);
             expect(response.body.lastName).toEqual(CREATE_ADMIN_DTO.lastName);
             expect(response.body.loginCount).toEqual('0');
@@ -513,7 +508,7 @@ describe('/users', () => {
           });
 
         return await request(app.getHttpServer())
-          .get('/users/' + adminID)
+          .get('/users/' + admin.id)
           .set('Authorization', 'bearer ' + adminJWTToken)
           .expect(HttpStatus.NOT_FOUND)
           .then(response => {

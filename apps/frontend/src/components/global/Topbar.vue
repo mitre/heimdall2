@@ -13,10 +13,10 @@
     <slot></slot>
 
     <v-btn
-      @click="uploadModal = true"
+      id="upload-btn"
       :disabled="uploadModal"
       class="mx-2"
-      id="upload-btn"
+      @click="uploadModal = true"
     >
       <span class="d-none d-md-inline pr-2">
         Load
@@ -25,7 +25,7 @@
         mdi-cloud-upload
       </v-icon>
     </v-btn>
-    <v-btn v-if="serverMode" @click="logOut" id="logout">
+    <v-btn v-if="serverMode" id="logout" @click="logOut">
       <span class="d-none d-md-inline pr-2">
         Logout
       </span>
@@ -42,7 +42,7 @@
         ></v-img>
       </v-avatar>
     </v-btn>
-    <v-btn icon large v-on:click="toggleDark">
+    <v-btn icon large @click="toggleDark">
       <v-icon :color="this.$vuetify.theme.dark ? 'grey' : 'white'"
         >mdi-theme-light-dark</v-icon
       >
