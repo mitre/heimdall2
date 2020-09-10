@@ -216,8 +216,8 @@ describe('/users', () => {
   });
 
   describe('Functions that require authentication', () => {
-    let id;
-    let jwtToken;
+    let id: number;
+    let jwtToken: string;
 
     // Clear the database and retrieve access token
     beforeEach(async () => {

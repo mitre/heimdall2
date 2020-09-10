@@ -28,7 +28,7 @@ export class AuthzService {
     }
   }
 
-  async can(subject, action, resource): Promise<boolean> {
+  async can(subject: any, action: string, resource:string): Promise<boolean> {
     if (subject.role == 'admin') {
       return true;
     }
