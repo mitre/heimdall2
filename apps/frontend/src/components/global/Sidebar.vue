@@ -283,22 +283,12 @@ export default class Sidebar extends SidebarProps {
 
   // get all the currently selected evaluations
   get selected_evaluations(): number[] {
-    let file_ids = [...FilteredDataModule.selected_file_ids];
-    let files = InspecDataModule.allProfileFiles;
-
-    return file_ids.filter(file_id =>
-      files.every(file => file_id != file.unique_id)
-    );
+    return FilteredDataModule.selected_evaluations;
   }
 
   // get all the currently selected profiles
   get selected_profiles(): number[] {
-    let file_ids = [...FilteredDataModule.selected_file_ids];
-    let files = InspecDataModule.allEvaluationFiles;
-
-    return file_ids.filter(file_id =>
-      files.every(file => file_id != file.unique_id)
-    );
+    return FilteredDataModule.selected_profiles;
   }
 }
 </script>

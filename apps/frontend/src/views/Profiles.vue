@@ -263,12 +263,7 @@ export default class Profiles extends ProfilesProps {
    * Controlled by router.
    */
   get file_filter(): FileID[] {
-    let file_ids = [...FilteredDataModule.selected_file_ids];
-    let files = InspecDataModule.allEvaluationFiles;
-
-    return file_ids.filter(file_id =>
-      files.every(file => file_id != file.unique_id)
-    );
+    return FilteredDataModule.selected_profiles;
   }
 
   // Returns true if no files are uploaded

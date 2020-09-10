@@ -149,6 +149,24 @@ export class FilteredData extends VuexModule {
     };
   }
 
+  get selected_evaluations(): number[] {
+    let file_ids = [...this.selected_file_ids];
+    let files = InspecDataModule.allProfileFiles;
+
+    return file_ids.filter(file_id =>
+      files.every(file => file_id != file.unique_id)
+    );
+  }
+
+  get selected_profiles(): number[] {
+    let file_ids = [...this.selected_file_ids];
+    let files = InspecDataModule.allEvaluationFiles;
+
+    return file_ids.filter(file_id =>
+      files.every(file => file_id != file.unique_id)
+    );
+  }
+
   /**
    * Parameterized getter.
    * Get all controls from all profiles from the specified file id.

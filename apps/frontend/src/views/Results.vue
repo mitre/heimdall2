@@ -265,12 +265,7 @@ export default class Results extends ResultsProps {
    */
 
   get file_filter(): FileID[] {
-    let file_ids = [...FilteredDataModule.selected_file_ids];
-    let files = InspecDataModule.allProfileFiles;
-
-    return file_ids.filter(file_id =>
-      files.every(file => file_id != file.unique_id)
-    );
+    return FilteredDataModule.selected_evaluations;
   }
 
   // Returns true if no files are uploaded
