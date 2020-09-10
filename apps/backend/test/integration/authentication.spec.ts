@@ -6,10 +6,9 @@ import {IntegrationSpecHelper} from './helpers/integration-spec.helper';
 import {AppModule} from '../../src/app.module';
 import {Test, TestingModule} from '@nestjs/testing';
 import {
-  CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
   BAD_LOGIN_AUTHENTICATION,
-  ADMIN_LOGIN_AUTHENTICATION
+  LOGIN_AUTHENTICATION
 } from '../constants/users-test.constant';
 import {DatabaseService} from '../../src/database/database.service';
 import {ConfigService} from '../../src/config/config.service';
@@ -54,8 +53,8 @@ describe('Authentication', () => {
     it('authenticates a user with valid credentials', async () => {
       // Scenario Description: A user successfully authenticates with username and
       // password. The navbar is checked for the presence of correct buttons and title
-      await integrationSpecHelper.addUser(CREATE_ADMIN_DTO);
-      await logInPage.loginSuccess(page, ADMIN_LOGIN_AUTHENTICATION);
+      await integrationSpecHelper.addUser(CREATE_USER_DTO_TEST_OBJ);
+      await logInPage.loginSuccess(page, LOGIN_AUTHENTICATION);
       await navbarVerifier.verifyUpload(page);
       await navbarVerifier.verifyTitle(page, 'Profile');
       await navbarVerifier.verifyLogout(page);
@@ -73,7 +72,7 @@ describe('Authentication', () => {
     it('fails to find a user that does not exist', async () => {
       // Scenario Description: If a user is not found in the database an error toast will
       // be shown to the user.
-      await logInPage.loginFailure(page, ADMIN_LOGIN_AUTHENTICATION);
+      await logInPage.loginFailure(page, CREATE_USER_DTO_TEST_OBJ);
       await logInVerifier.verifyLoginFormPresent(page);
       await toastVerifier.verifyErrorPresent(
         page,
@@ -86,8 +85,8 @@ describe('Authentication', () => {
     it('logs a user out', async () => {
       // Scenario Description: After successfully authenticating and then clicking log out
       // the user should see an empty log in page.
-      await integrationSpecHelper.addUser(CREATE_ADMIN_DTO);
-      await logInPage.loginSuccess(page, ADMIN_LOGIN_AUTHENTICATION);
+      await integrationSpecHelper.addUser(CREATE_USER_DTO_TEST_OBJ);
+      await logInPage.loginSuccess(page, LOGIN_AUTHENTICATION);
       await navbarVerifier.verifyUpload(page);
       await navbarVerifier.verifyTitle(page, 'Profile');
       await navbarVerifier.verifyLogout(page);
