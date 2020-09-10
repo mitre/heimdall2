@@ -11,7 +11,7 @@
     @input="$emit('input', $event)"
   >
     <v-list dense class="px-2" subheader>
-      <v-subheader>Files</v-subheader>
+      <!--v-subheader>Files</v-subheader>
       <FileItem v-for="(file, i) in visible_files" :key="i" :file="file" />
       <v-list-item title="Show all files' controls" @click="toggle_all">
         <v-list-item-avatar>
@@ -24,7 +24,7 @@
             <div v-else>Select all reports</div>
           </v-list-item-title>
         </v-list-item-content>
-      </v-list-item>
+      </v-list-item-->
       <v-subheader>Views</v-subheader>
       <div v-if="visible_evaluation_files.length > 0">
         <v-list-item to="/results" title="View results">
@@ -38,7 +38,7 @@
           </v-list-item-content>
         </v-list-item>
       </div>
-      <div v-else>
+      <!--div v-else>
         <v-list-item :color="blue" title="View results">
           <v-list-item-avatar>
             <v-icon small>mdi-television-guide</v-icon>
@@ -49,7 +49,7 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-      </div>
+      </div -->
       <div v-if="visible_evaluation_files.length > 0">
         <v-list-item to="/compare" title="Compare results">
           <v-list-item-avatar>
@@ -62,7 +62,7 @@
           </v-list-item-content>
         </v-list-item>
       </div>
-      <div v-else>
+      <!-- div v-else>
         <v-list-item title="Compare results">
           <v-list-item-avatar>
             <v-icon small>mdi-triangle-outline</v-icon>
@@ -73,7 +73,7 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-      </div>
+      </div -->
       <div v-if="visible_profile_files.length > 0">
         <v-list-item to="/profiles" title="View profiles">
           <v-list-item-avatar>
@@ -86,7 +86,7 @@
           </v-list-item-content>
         </v-list-item>
       </div>
-      <div v-else>
+      <!-- div v-else>
         <v-list-item title="View profiles">
           <v-list-item-avatar>
             <v-icon small>mdi-television-guide</v-icon>
@@ -97,12 +97,12 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-      </div>
+      </div -->
       <v-subheader>Files</v-subheader>
       <v-expansion-panels v-model="file_views" flat="true">
         <v-expansion-panel>
           <div v-if="visible_evaluation_files.length > 0">
-            <v-expansion-panel-header title="View controls' results">
+            <v-expansion-panel-header title="Results">
               <v-list-item>Results</v-list-item>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
@@ -112,7 +112,7 @@
                 :file="file"
               />
               <v-list-item
-                title="Show all files' controls"
+                title="Toggle selection on all results"
                 @click="toggle_all_evaluations"
               >
                 <v-list-item-avatar>
@@ -132,7 +132,7 @@
         </v-expansion-panel>
         <v-expansion-panel>
           <div v-if="visible_profile_files.length > 0">
-            <v-expansion-panel-header title="View controls' results">
+            <v-expansion-panel-header title="Profiles">
               <v-list-item>Profiles</v-list-item>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
@@ -142,7 +142,7 @@
                 :file="file"
               />
               <v-list-item
-                title="Show all files' controls"
+                title="Toggle selection of all profiles"
                 @click="toggle_all_profiles"
               >
                 <v-list-item-avatar>
