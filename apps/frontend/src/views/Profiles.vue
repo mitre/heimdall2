@@ -196,6 +196,7 @@ import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 import {FilteredDataModule, Filter, TreeMapState} from '@/store/data_filters';
 import {ControlStatus, Severity} from 'inspecjs';
 import {FileID, SourcedContextualizedEvaluation} from '@/store/report_intake';
+
 import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
 import ProfData from '@/components/cards/ProfData.vue';
 import {context} from 'inspecjs';
