@@ -101,6 +101,7 @@ export class FilteredData extends VuexModule {
   // Just override the whole list
   @Mutation
   set_toggled_files(files: FileID[]): void {
+    this.selected_file_ids.length = 0;
     this.selected_file_ids.splice(0, this.selected_file_ids.length, ...files);
   }
 
@@ -149,6 +150,7 @@ export class FilteredData extends VuexModule {
     };
   }
 
+  /* get the currently select evaluations */
   get selected_evaluations(): number[] {
     let file_ids = [...this.selected_file_ids];
     let files = InspecDataModule.allProfileFiles;
@@ -158,6 +160,7 @@ export class FilteredData extends VuexModule {
     );
   }
 
+  /* get the currently selected profiles */
   get selected_profiles(): number[] {
     let file_ids = [...this.selected_file_ids];
     let files = InspecDataModule.allEvaluationFiles;

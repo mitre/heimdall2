@@ -221,7 +221,6 @@ export default class Sidebar extends SidebarProps {
 
   // select the specified files
   set_selected_files(files: number[]): void {
-    FilteredDataModule.set_toggled_files([]);
     FilteredDataModule.set_toggled_files(files);
   }
 
