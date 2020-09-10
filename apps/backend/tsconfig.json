@@ -5,6 +5,7 @@
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
+    "noImplicitAny": true,
     "outDir": "../../dist/server",
     "baseUrl": "./",
     "incremental": true,
