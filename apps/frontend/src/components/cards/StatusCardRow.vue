@@ -1,11 +1,11 @@
 <template>
   <v-row>
     <v-col
+      v-for="card in standardCardProps"
+      :key="card.title"
       cols="12"
       sm="6"
       md="3"
-      v-for="card in standardCardProps"
-      :key="card.title"
     >
       <v-card height="100%" :color="card.color">
         <v-card-title>
@@ -15,7 +15,7 @@
         <v-card-text v-text="card.subtitle" />
       </v-card>
     </v-col>
-    <v-col cols="12" v-if="errorProps.number">
+    <v-col v-if="errorProps.number" cols="12">
       <v-card
         color="statusProfileError"
         class="d-flex flex-no-wrap justify-space-between"
@@ -32,8 +32,8 @@
         </div>
         <v-card-actions>
           <v-btn
-            @click="$emit('show-errors')"
             :disabled="filter.status === 'Profile Error'"
+            @click="$emit('show-errors')"
             >Filter to Errors</v-btn
           >
         </v-card-actions>

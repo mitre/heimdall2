@@ -32,7 +32,7 @@
           range.
         </template>
       </v-data-table>
-      <v-btn color="red" @click="logout" class="my-2">
+      <v-btn color="red" class="my-2" @click="logout">
         Logout
       </v-btn>
     </div>
