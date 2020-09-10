@@ -74,13 +74,13 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {HDFControl, ControlStatus, Severity, nist} from 'inspecjs';
+import {nist} from 'inspecjs';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 import {context} from 'inspecjs';
 import {NIST_DESCRIPTIONS, nist_canon_config} from '@/utilities/nist_util';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
-import {Tags} from '../../../types/models';
-import {is_control, NistControl} from 'inspecjs/dist/nist';
+
+import {is_control} from 'inspecjs/dist/nist';
 //@ts-ignore
 import VClamp from 'vue-clamp/dist/vue-clamp.js';
 

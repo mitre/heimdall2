@@ -1,6 +1,7 @@
 import {IsEmail, IsOptional, IsNotEmpty} from 'class-validator';
+import {IUpdateUser} from '@heimdall/interfaces';
 
-export class UpdateUserDto {
+export class UpdateUserDto implements IUpdateUser {
   @IsEmail()
   @IsOptional()
   readonly email: string;

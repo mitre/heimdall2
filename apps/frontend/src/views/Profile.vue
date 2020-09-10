@@ -119,8 +119,8 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import BaseView from '@/views/BaseView.vue';
-import Navbar from '@/views/Navbar.vue';
-import {FileID, next_free_file_ID} from '@/store/report_intake';
+
+import {next_free_file_ID} from '@/store/report_intake';
 import {plainToClass} from 'class-transformer';
 import {ServerModule} from '@/store/server';
 import {UserProfile, Evaluation, Usergroup} from '@/types/models.ts';

@@ -2,13 +2,7 @@
  * Tracks uploaded files, and their parsed contents
  */
 
-import {
-  Module,
-  VuexModule,
-  Mutation,
-  Action,
-  getModule
-} from 'vuex-module-decorators';
+import {Module, VuexModule, Mutation, getModule} from 'vuex-module-decorators';
 import {context} from 'inspecjs';
 import {
   FileID,

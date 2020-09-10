@@ -29,7 +29,6 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import Sidebar from '@/components/global/Sidebar.vue';
 import Topbar from '@/components/global/Topbar.vue';
-import {InspecDataModule} from '@/store/data_store';
 
 // We declare the props separately
 // to make props types inferable.

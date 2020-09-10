@@ -2,7 +2,7 @@
  * Provides utlities for comparing executions
  */
 
-import {HDFControlSegment, context} from 'inspecjs';
+import {context} from 'inspecjs';
 import {EvaluationFile} from '@/store/report_intake';
 import {ContextualizedEvaluation} from 'inspecjs/dist/context';
 

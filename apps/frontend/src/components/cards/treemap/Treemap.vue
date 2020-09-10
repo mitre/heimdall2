@@ -37,7 +37,7 @@
 //               preserveAspectRatio="xMidYMid meet"
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {ControlStatus, HDFControl, nist} from 'inspecjs';
+
 import * as d3 from 'd3';
 import {FilteredDataModule, TreeMapState} from '@/store/data_filters';
 import {
@@ -46,7 +46,7 @@ import {
   is_leaf,
   is_parent
 } from '@/utilities/treemap_util';
-import {HierarchyRectangularNode, tree} from 'd3';
+import {HierarchyRectangularNode} from 'd3';
 import Cell, {XYScale} from '@/components/cards/treemap/Cell.vue';
 //@ts-ignore
 import resize from 'vue-resize-directive';

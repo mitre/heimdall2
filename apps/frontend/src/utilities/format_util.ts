@@ -4,10 +4,7 @@
 
 import {isFromProfileFile} from '@/store/data_store';
 import {context} from 'inspecjs';
-import {
-  SourcedContextualizedProfile,
-  SourcedContextualizedEvaluation
-} from '@/store/report_intake';
+import {SourcedContextualizedEvaluation} from '@/store/report_intake';
 
 export function execution_unique_key(
   exec: Readonly<SourcedContextualizedEvaluation>

@@ -12,36 +12,78 @@
   >
     <v-list dense class="px-2" subheader>
       <v-subheader>Views</v-subheader>
-      <v-list-item to="/results" title="View results">
-        <v-list-item-avatar>
-          <v-icon small>mdi-television-guide</v-icon>
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title>
-            Results View
-          </v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-      <v-list-item to="/compare" title="Compare results">
-        <v-list-item-avatar>
-          <v-icon small>mdi-triangle-outline</v-icon>
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title>
-            Results Comparison View
-          </v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-      <v-list-item to="/profiles" title="View profiles">
-        <v-list-item-avatar>
-          <v-icon small>mdi-television-guide</v-icon>
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title>
-            Profiles View
-          </v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+      <div v-if="visible_evaluation_files.length > 0">
+        <v-list-item to="/results" title="View results">
+          <v-list-item-avatar>
+            <v-icon small>mdi-television-guide</v-icon>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>
+              Results View
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </div>
+      <div v-else>
+        <v-list-item :color="blue" title="View results">
+          <v-list-item-avatar>
+            <v-icon small>mdi-television-guide</v-icon>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>
+              Results View
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </div>
+      <div v-if="visible_evaluation_files.length > 0">
+        <v-list-item to="/compare" title="Compare results">
+          <v-list-item-avatar>
+            <v-icon small>mdi-triangle-outline</v-icon>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>
+              Results Comparison View
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </div>
+      <div v-else>
+        <v-list-item title="Compare results">
+          <v-list-item-avatar>
+            <v-icon small>mdi-triangle-outline</v-icon>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>
+              Results Comparison View
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </div>
+      <div v-if="visible_profile_files.length > 0">
+        <v-list-item to="/profiles" title="View profiles">
+          <v-list-item-avatar>
+            <v-icon small>mdi-television-guide</v-icon>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>
+              Profiles View
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </div>
+      <div v-else>
+        <v-list-item title="View profiles">
+          <v-list-item-avatar>
+            <v-icon small>mdi-television-guide</v-icon>
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>
+              Profiles View
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </div>
       <v-subheader>Files</v-subheader>
       <v-expansion-panels flat="true" v-model="file_views">
         <v-expansion-panel>
@@ -127,7 +169,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {InspecFile, EvaluationFile, ProfileFile} from '@/store/report_intake';
+import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
 import FileItem from '@/components/global/sidebaritems/SidebarFile.vue';
 import ProfileItem from '@/components/global/sidebaritems/SidebarProfile.vue';
