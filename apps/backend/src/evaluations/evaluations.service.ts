@@ -43,7 +43,7 @@ export class EvaluationsService {
       }
     );
 
-    if (!(evaluationTagsPromises == undefined)) {
+    if (evaluationTagsPromises != undefined) {
       const evaluationTags = await Promise.all(evaluationTagsPromises);
       evaluationData.evaluationTags = evaluationTags;
     } else {
