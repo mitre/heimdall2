@@ -11,7 +11,7 @@ export class PolicyDto {
     this.role = policy.role;
     this.actions = policy.actions;
     this.targets = policy.targets;
-    if (!(policy.attributes == null)) {
+    if (policy.attributes != null) {
       this.attributes = new AbacAttributes(policy.attributes);
     }
   }
