@@ -7,7 +7,7 @@ import {compare} from 'bcrypt';
 export class AuthnService {
   constructor(
     private usersService: UsersService,
-    private jwtService: JwtService,
+    private jwtService: JwtService
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
