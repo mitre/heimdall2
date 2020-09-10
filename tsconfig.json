@@ -9,6 +9,7 @@
     "sourceMap": true,
     "target": "ES2019",
     "esModuleInterop": true,
+    "noImplicitAny": true
   },
   "exclude": [
     "node_modules",
