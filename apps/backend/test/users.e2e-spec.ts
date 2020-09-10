@@ -222,7 +222,6 @@ describe('/users', () => {
     // Clear the database and retrieve access token
     beforeEach(async () => {
       await databaseService.cleanAll();
-      id;
       await request(app.getHttpServer())
         .post('/users')
         .set('Content-Type', 'application/json')
@@ -232,7 +231,6 @@ describe('/users', () => {
           id = response.body.id;
         });
 
-      jwtToken;
       await request(app.getHttpServer())
         .post('/authn/login')
         .set('Content-Type', 'application/json')

@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 function headless() {
-  input = process.env.HEIMDALL_HEADLESS_TESTS;
+  const input = process.env.HEIMDALL_HEADLESS_TESTS;
   if(typeof input !== 'undefined' && input) {
     return input == 'true';
   } else {
