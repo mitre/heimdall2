@@ -6,7 +6,6 @@
         v-model="search_term"
         flat
         solo
-        solo-inverted
         hide-details
         prepend-inner-icon="mdi-magnify"
         label="Search"

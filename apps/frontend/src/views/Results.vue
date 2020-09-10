@@ -5,9 +5,8 @@
       <v-text-field
         v-model="search_term"
         flat
-        solo
-        solo-inverted
         hide-details
+        solo
         prepend-inner-icon="mdi-magnify"
         label="Search"
         clearable
