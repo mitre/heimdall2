@@ -170,7 +170,7 @@
       <span class="subtitle-2" v-else>
         No files are currently enabled for viewing. Open the
         <v-icon class="mx-1">mdi-menu</v-icon> sidebar menu, and ensure that the
-        file(s) you wish to view have are
+        file(s) you wish to view are
         <v-icon class="mx-1">mdi-checkbox-marked</v-icon> checked.
       </span>
     </v-snackbar>
