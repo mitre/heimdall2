@@ -3,19 +3,19 @@
     <!-- Topbar config - give it a search bar -->
     <template #topbar-content>
       <v-text-field
+        v-model="search_term"
         flat
         solo
         solo-inverted
         hide-details
         prepend-inner-icon="mdi-magnify"
         label="Search"
-        v-model="search_term"
         clearable
-        @click:clear="clear_search()"
         class="mx-2"
+        @click:clear="clear_search()"
       />
 
-      <v-btn @click="clear" :disabled="!can_clear">
+      <v-btn :disabled="!can_clear" @click="clear">
         <span class="d-none d-md-inline pr-2">
           Clear
         </span>
@@ -36,12 +36,12 @@
         <!-- Evaluation Info -->
         <v-row>
           <v-col v-if="file_filter.length > 3">
-            <v-slide-group show-arrows v-model="eval_info">
+            <v-slide-group v-model="eval_info" show-arrows>
               <v-slide-item
                 v-for="(file, i) in file_filter"
                 :key="i"
-                class="mx-2"
                 v-slot:default="{active, toggle}"
+                class="mx-2"
               >
                 <v-card :width="info_width" @click="toggle">
                   <EvaluationInfo :file_filter="file" />
@@ -52,16 +52,16 @@
               </v-slide-item>
             </v-slide-group>
             <ProfData
-              class="my-4 mx-10"
               v-if="eval_info != null"
+              class="my-4 mx-10"
               :selected_prof="
                 root_profiles[prof_ids.indexOf(file_filter[eval_info])]
               "
             ></ProfData>
           </v-col>
           <v-col
-            v-else
             v-for="(file, i) in file_filter"
+            v-else
             :key="i"
             :cols="12 / file_filter.length"
           >
@@ -73,8 +73,8 @@
             </v-card>
           </v-col>
           <ProfData
-            class="my-4 mx-10"
             v-if="eval_info != null && file_filter.length <= 3"
+            class="my-4 mx-10"
             :selected_prof="
               root_profiles[prof_ids.indexOf(file_filter[eval_info])]
             "
@@ -91,7 +91,7 @@
             <v-card class="fill-height">
               <v-card-title class="justify-center">Status Counts</v-card-title>
               <v-card-actions class="justify-center">
-                <StatusChart :filter="all_filter" v-model="status_filter" />
+                <StatusChart v-model="status_filter" :filter="all_filter" />
               </v-card-actions>
             </v-card>
           </v-col>
@@ -101,7 +101,7 @@
                 >Severity Counts</v-card-title
               >
               <v-card-actions class="justify-center">
-                <SeverityChart :filter="all_filter" v-model="severity_filter" />
+                <SeverityChart v-model="severity_filter" :filter="all_filter" />
               </v-card-actions>
             </v-card>
           </v-col>
@@ -128,9 +128,9 @@
               <v-card-title>TreeMap</v-card-title>
               <v-card-text>
                 <Treemap
-                  :filter="treemap_full_filter"
                   v-model="tree_filters"
-                  v-bind:selected_control.sync="control_selection"
+                  :filter="treemap_full_filter"
+                  :selected_control.sync="control_selection"
                 />
               </v-card-text>
             </v-card>
@@ -151,23 +151,23 @@
 
     <!-- Everything-is-filtered snackbar -->
     <v-snackbar
-      style="margin-top: 44px;"
       v-model="filter_snackbar"
+      style="margin-top: 44px;"
       :timeout="0"
       color="warning"
       top
     >
-      <span class="subtitle-2" v-if="file_filter.length">
+      <span v-if="file_filter.length" class="subtitle-2">
         All profiles are filtered out. Use the
         <v-icon>mdi-filter-remove</v-icon> button in the top right to clear
         filters and show all.
       </span>
-      <span class="subtitle-2" v-else-if="no_files">
+      <span v-else-if="no_files" class="subtitle-2">
         No files are currently loaded. Press the <strong>LOAD</strong>
         <v-icon class="mx-1"> mdi-cloud-upload</v-icon> button above to load
         some.
       </span>
-      <span class="subtitle-2" v-else>
+      <span v-else class="subtitle-2">
         No files are currently enabled for viewing. Open the
         <v-icon class="mx-1">mdi-menu</v-icon> sidebar menu, and ensure that the
         file(s) you wish to view are

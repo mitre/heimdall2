@@ -99,7 +99,7 @@
         </v-list-item>
       </div>
       <v-subheader>Files</v-subheader>
-      <v-expansion-panels flat="true" v-model="file_views">
+      <v-expansion-panels v-model="file_views" flat="true">
         <v-expansion-panel>
           <div v-if="visible_evaluation_files.length > 0">
             <v-expansion-panel-header title="View controls' results">
@@ -112,8 +112,8 @@
                 :file="file"
               />
               <v-list-item
-                @click="toggle_all_evaluations"
                 title="Show all files' controls"
+                @click="toggle_all_evaluations"
               >
                 <v-list-item-avatar>
                   <v-icon small>mdi-format-list-bulleted</v-icon>
@@ -142,8 +142,8 @@
                 :file="file"
               />
               <v-list-item
-                @click="toggle_all_profiles"
                 title="Show all files' controls"
+                @click="toggle_all_profiles"
               >
                 <v-list-item-avatar>
                   <v-icon small>mdi-format-list-bulleted</v-icon>

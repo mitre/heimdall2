@@ -1,10 +1,10 @@
 <template>
-  <v-list-item @click="select_file_exclusive" :title="file.filename">
+  <v-list-item :title="file.filename" @click="select_file_exclusive">
     <v-list-item-action @click="select_file">
       <v-checkbox :input-value="selected" color="blue" />
     </v-list-item-action>
     <v-list-item-avatar>
-      <v-icon v-text="icon" small />
+      <v-icon small v-text="icon" />
     </v-list-item-avatar>
     <v-list-item-content>
       <v-list-item-title v-text="file.filename" />
