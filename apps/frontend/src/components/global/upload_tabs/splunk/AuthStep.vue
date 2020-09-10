@@ -22,8 +22,8 @@
         color="primary"
         :disabled="!valid || logging_in"
         :loading="logging_in"
-        @click="try_login"
         class="my-2"
+        @click="try_login"
       >
         Login
       </v-btn>
