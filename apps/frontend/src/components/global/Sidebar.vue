@@ -1,7 +1,6 @@
 <template>
   <v-navigation-drawer
     :value="value"
-    @input="$emit('input', $event)"
     :clipped="$vuetify.breakpoint.lgAndUp"
     app
     style="margin-top: 56px;"
@@ -9,11 +8,12 @@
     fixed
     temporary
     width="375px"
+    @input="$emit('input', $event)"
   >
     <v-list dense class="px-2" subheader>
       <v-subheader>Files</v-subheader>
       <FileItem v-for="(file, i) in visible_files" :key="i" :file="file" />
-      <v-list-item @click="toggle_all" title="Show all files' controls">
+      <v-list-item title="Show all files' controls" @click="toggle_all">
         <v-list-item-avatar>
           <v-icon small>mdi-format-list-bulleted</v-icon>
         </v-list-item-avatar>
