@@ -3,14 +3,21 @@ import Vue from 'vue';
 import App from '@/App.vue';
 import router from '@/router';
 import store from '@/store/store';
-import vuetify from '@/plugins/vuetify'; // path to vuetify export
+import vuetify from '@/plugins/vuetify';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
-//import "@mdi/font/css/materialdesignicons.css";
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import VueAnalytics from 'vue-analytics';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import {BackendModule} from './store/backend';
 import axios from 'axios';
+import SetupToasted from '@/plugins/SetupToasted';
+import Toasted from 'vue-toasted';
+import Vuetify from 'vuetify/lib';
+
+Vue.use(Toasted);
+SetupToasted();
+
+Vue.use(Vuetify);
 
 Vue.use(VueAnalytics, {
   id: 'UA-149784359-1',

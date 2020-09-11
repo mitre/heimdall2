@@ -1,13 +1,13 @@
 <template>
   <v-dialog
+    id="#modal"
     :value="value"
     :persistent="persistent"
-    id="#modal"
-    @click:outside="$emit('input', {target: false})"
-    @keydown.esc="$emit('input', {target: false})"
     width="80%"
     max-width="1000px"
     content-class="v-card"
+    @click:outside="$emit('input', {target: false})"
+    @keydown.esc="$emit('input', {target: false})"
   >
     <slot> Default Modal </slot>
   </v-dialog>

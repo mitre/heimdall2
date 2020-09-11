@@ -3,9 +3,9 @@
     <template v-slot:activator="{on}">
       <span
         ref="text"
-        v-on="on"
         :style="span_style"
         :class="['overflow'] + span_class"
+        v-on="on"
       >
         {{ text }}
       </span>

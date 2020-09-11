@@ -3,13 +3,12 @@
     <!-- Topbar config - give it a search bar -->
     <template #topbar-content>
       <v-text-field
+        v-model="search_term"
         flat
         solo
-        solo-inverted
         hide-details
         prepend-inner-icon="mdi-magnify"
         label="Search"
-        v-model="search_term"
         clearable
       ></v-text-field>
     </template>
@@ -24,7 +23,7 @@
             </div>
           </v-col>
         </v-row>
-        <v-tabs fixed-tabs v-model="tab" icons-and-text show-arrows>
+        <v-tabs v-model="tab" fixed-tabs icons-and-text show-arrows>
           <v-tab key="status" @click="changeTab(0)">
             <v-flex style="padding-top: 28px;">
               Status by Results File
@@ -114,8 +113,8 @@
             </v-col>
             <v-col>
               <v-checkbox
-                color="blue"
                 v-model="checkbox"
+                color="blue"
                 :label="'Display Only Changed Results'"
               ></v-checkbox>
             </v-col>
@@ -152,8 +151,8 @@
                   <v-btn icon small style="float: right;">
                     <v-icon
                       v-if="files.length > num_shown_files"
-                      @click="scroll_left"
                       :disabled="start_index == 0"
+                      @click="scroll_left"
                       >mdi-arrow-left</v-icon
                     >
                   </v-btn>
@@ -175,8 +174,8 @@
                   <v-btn icon small>
                     <v-icon
                       v-if="files.length > num_shown_files"
-                      @click="scroll_right"
                       :disabled="start_index >= files.length - num_shown_files"
+                      @click="scroll_right"
                       >mdi-arrow-right</v-icon
                     >
                   </v-btn>
@@ -187,10 +186,10 @@
           <v-divider dark></v-divider>
           <CompareRow
             v-for="(control_set, i) in show_sets"
+            :key="i"
             :controls="control_set"
             :shown_files="num_shown_files"
             class="my-4"
-            :key="i"
             :shift="start_index"
             :expanded="expanded_view"
           />
