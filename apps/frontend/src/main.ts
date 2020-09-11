@@ -10,7 +10,7 @@ import VueAnalytics from 'vue-analytics';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import {BackendModule} from './store/backend';
 import axios from 'axios';
-import SetupToasted from '@/plugins/toasted';
+import SetupToasted from '@/plugins/SetupToasted';
 import Toasted from 'vue-toasted';
 import Vuetify from 'vuetify/lib';
 
