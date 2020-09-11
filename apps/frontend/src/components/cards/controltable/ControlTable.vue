@@ -47,7 +47,6 @@
     </ResponsiveRowSwitch>
 
     <!-- Body -->
-    <div class="scrollzone" style="overflow-y: auto; height: 600px;">
       <v-lazy
         v-for="item in items"
         :key="item.key"
@@ -66,7 +65,7 @@
           />
         </div>
       </v-lazy>
-    </div>
+
   </v-container>
 </template>
 
