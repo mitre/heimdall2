@@ -65,7 +65,6 @@
           />
         </div>
       </v-lazy>
-
   </v-container>
 </template>
 
