@@ -47,26 +47,24 @@
     </ResponsiveRowSwitch>
 
     <!-- Body -->
-    <div class="scrollzone" style="overflow-y: auto; height: 600px;">
-      <v-lazy
-        v-for="item in items"
-        :key="item.key"
-        min-height="50"
-        transition="fade-transition"
-      >
-        <div>
-          <ControlRowHeader
-            :control="item.control"
-            :expanded="expanded.includes(item.key)"
-            @toggle="toggle(item.key)"
-          />
-          <ControlRowDetails
-            v-if="expanded.includes(item.key)"
-            :control="item.control"
-          />
-        </div>
-      </v-lazy>
-    </div>
+    <v-lazy
+      v-for="item in items"
+      :key="item.key"
+      min-height="50"
+      transition="fade-transition"
+    >
+      <div>
+        <ControlRowHeader
+          :control="item.control"
+          :expanded="expanded.includes(item.key)"
+          @toggle="toggle(item.key)"
+        />
+        <ControlRowDetails
+          v-if="expanded.includes(item.key)"
+          :control="item.control"
+        />
+      </div>
+    </v-lazy>
   </v-container>
 </template>
 
