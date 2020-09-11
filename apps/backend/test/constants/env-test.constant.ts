@@ -7,3 +7,5 @@ export const ENV_MOCK_FILE =
   'DATABASE_NAME=heimdallts_jest_testing_service_db\n' +
   'JWT_SECRET=abc123\n' +
   'NODE_ENV=test\n';
+
+export const SIMPLE_ENV_MOCK_FILE = 'HEIMDALL_SERVER_PORT=8001\n';

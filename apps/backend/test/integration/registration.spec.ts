@@ -67,6 +67,7 @@ describe('Registration', () => {
 
     it('rejects emails that already exist', async () => {
       await registrationPage.registerSuccess(page, CREATE_USER_DTO_TEST_OBJ);
+      await logInPage.dismissToast(page);
       await logInPage.switchToRegister(page);
       await registrationPage.registerFailure(page, CREATE_USER_DTO_TEST_OBJ);
       await toastVerifier.verifyErrorPresent(
