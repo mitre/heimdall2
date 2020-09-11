@@ -2,7 +2,7 @@
   <div class="text-center">
     <v-menu offset-y offset-overflow :close-on-content-click="false">
       <template v-slot:activator="{on, attrs}">
-        <div class="clickable-icon" v-on="on" v-bind="attrs">
+        <div class="clickable-icon" v-bind="attrs" v-on="on">
           <v-btn size="40px" icon large>
             <v-avatar size="32px" item>
               <v-img
@@ -15,28 +15,20 @@
         </div>
       </template>
       <v-list>
-            <HelpModal>
-              <template v-slot:clickable="{on}">
-                <LinkItem
-                  key="help"
-                  text="Help"
-                  icon="mdi-help-circle"
-                  v-on="on"
-                  >Help</LinkItem
-                >
-              </template>
-            </HelpModal>
-            <AboutModal>
-              <template v-slot:clickable="{on}">
-                <LinkItem
-                  key="about"
-                  text="About"
-                  icon="mdi-information"
-                  v-on="on"
-                  >About</LinkItem
-                >
-              </template>
-            </AboutModal>
+        <HelpModal>
+          <template v-slot:clickable="{on}">
+            <LinkItem key="help" text="Help" icon="mdi-help-circle" v-on="on"
+              >Help</LinkItem
+            >
+          </template>
+        </HelpModal>
+        <AboutModal>
+          <template v-slot:clickable="{on}">
+            <LinkItem key="about" text="About" icon="mdi-information" v-on="on"
+              >About</LinkItem
+            >
+          </template>
+        </AboutModal>
       </v-list>
     </v-menu>
   </div>
@@ -46,7 +38,9 @@
 .clickable-icon {
   cursor: pointer;
 }
-.v-list-item--link::before { background-color: red; }
+.v-list-item--link::before {
+  background-color: red;
+}
 </style>
 
 <script lang="ts">
