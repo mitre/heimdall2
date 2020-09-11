@@ -11,7 +11,15 @@ module.exports = {
   extends: ['plugin:vue/recommended', '@vue/prettier', '@vue/typescript'],
   rules: {
     'no-console': 'off',
-    'unused-imports/no-unused-imports-ts': 'error',
+    'unused-imports/no-unused-imports-ts': [
+      'error',
+      {
+        vars: 'all',
+        varsIgnorePattern: '^_^',
+        args: 'after-used',
+        argsIgnorePattern: '^_'
+      }
+    ],
     'no-return-await': 'error',
     'no-throw-literal': 'error',
     'vue/require-default-prop': 'off',
