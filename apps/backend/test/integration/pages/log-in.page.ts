@@ -18,7 +18,7 @@ export class LogInPage {
       password: user.password
     });
     await Promise.all([
-      page.waitForSelector('.toasted.white--text.toasted-primary.default'),
+      page.waitForSelector('.toasted.toasted-primary.default'),
       page.click('#login_button')
     ]);
   }
@@ -34,6 +34,13 @@ export class LogInPage {
     await Promise.all([
       page.waitForSelector('#login_button'),
       page.click('#sign_up_button')
+    ]);
+  }
+
+  async dismissToast(page: Page): Promise<void> {
+    await Promise.all([
+      page.waitForSelector('.toasted.toasted-primary.default'),
+      page.click('.action.ripple')
     ]);
   }
 }
