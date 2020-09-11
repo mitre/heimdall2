@@ -15,7 +15,7 @@ export class UpdateEvaluationTagDto implements IUpdateEvaluationTag {
   @IsString()
   readonly value: string;
 
-  constructor(dto) {
+  constructor(dto: UpdateEvaluationTagDto) {
     this.id = dto.id;
     this.key = dto.key;
     this.value = dto.value;

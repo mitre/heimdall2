@@ -31,7 +31,7 @@ export class Policy extends Model<Policy> {
   targets: string;
 
   @Column(DataType.JSON)
-  attributes;
+  attributes: any;
 
   @CreatedAt
   @AllowNull(false)

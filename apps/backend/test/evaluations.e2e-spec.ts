@@ -78,7 +78,7 @@ describe('/evaluations', () => {
   });
 
   describe('Authenticated', () => {
-    let jwtToken;
+    let jwtToken: string;
 
     beforeEach(async () => {
       await request(app.getHttpServer())
@@ -158,7 +158,7 @@ describe('/evaluations', () => {
     });
 
     describe('With an existing evaluation', () => {
-      let evaluation;
+      let evaluation: any;
 
       beforeEach(async () => {
         await request(app.getHttpServer())

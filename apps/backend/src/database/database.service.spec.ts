@@ -21,8 +21,8 @@ describe('DatabaseSerivce', () => {
 
   describe('getDelta', () => {
     it('returns the correct value when no items are given', async () => {
-      const source = [];
-      const updated = [];
+      const source: any = [];
+      const updated: any = [];
 
       const delta = databaseService.getDelta(source, updated);
       expect(delta.added.length).toEqual(0);
@@ -66,7 +66,7 @@ describe('DatabaseSerivce', () => {
     });
 
     it('returns the correct value when all items are added', async () => {
-      const source = [];
+      const source: any = [];
       const updated = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
 
       const delta = databaseService.getDelta(source, updated);
@@ -89,7 +89,7 @@ describe('DatabaseSerivce', () => {
 
     it('returns the correct value when all items are deleted', async () => {
       const source = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
-      const updated = [];
+      const updated: any = [];
 
       const delta = databaseService.getDelta(source, updated);
 
