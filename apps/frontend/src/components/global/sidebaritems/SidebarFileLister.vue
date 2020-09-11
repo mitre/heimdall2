@@ -57,11 +57,22 @@ export default class FileItem extends FileItemProps {
   }
 
   select_file_exclusive(evt: Event) {
-    let files = FilteredDataModule.selected_profiles;
-    files.push(this.file.unique_id);
-    FilteredDataModule.set_toggled_files(files);
+    let path = '';
+    let current_path = this.$router.currentRoute.path;
 
-    this.$router.push({path: '/results'});
+    if (this.file.hasOwnProperty('evaluation')) {
+      let files = FilteredDataModule.selected_profiles;
+      files.push(this.file.unique_id);
+      FilteredDataModule.set_toggled_files(files);
+      path = '/results';
+    } else if (this.file.hasOwnProperty('profile')) {
+      let files = FilteredDataModule.selected_evaluations;
+      files.push(this.file.unique_id);
+      FilteredDataModule.set_toggled_files(files);
+      path = '/profiles';
+    }
+
+    if (path != current_path) this.$router.push({path: path});
   }
 
   //checks if file is selected

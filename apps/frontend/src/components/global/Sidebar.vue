@@ -106,7 +106,7 @@
               <v-list-item>Results</v-list-item>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <FileItem
+              <FileLister
                 v-for="(file, i) in visible_evaluation_files"
                 :key="i"
                 :file="file"
@@ -136,7 +136,7 @@
               <v-list-item>Profiles</v-list-item>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <ProfileItem
+              <FileLister
                 v-for="(file, i) in visible_profile_files"
                 :key="i"
                 :file="file"
@@ -185,8 +185,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
-import FileItem from '@/components/global/sidebaritems/SidebarFile.vue';
-import ProfileItem from '@/components/global/sidebaritems/SidebarProfile.vue';
+import FileLister from '@/components/global/sidebaritems/SidebarFileLister.vue';
 import LinkItem from '@/components/global/sidebaritems/SidebarLink.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
 import HelpModal from '@/components/global/HelpModal.vue';
@@ -202,8 +201,7 @@ const SidebarProps = Vue.extend({
 @Component({
   components: {
     LinkItem,
-    FileItem,
-    ProfileItem,
+    FileLister,
     AboutModal,
     HelpModal
   }
@@ -211,6 +209,7 @@ const SidebarProps = Vue.extend({
 export default class Sidebar extends SidebarProps {
   // used to toggle v-exapansion-panel
   file_views = 0;
+  drawer = true;
 
   created() {
     // open the appropriate v-expansion-panel based on current route
