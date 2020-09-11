@@ -41,6 +41,6 @@ export class LogInPage {
     await Promise.all([
       page.waitForSelector('.toasted.toasted-primary.default'),
       page.click('.action.ripple')
-    ])
+    ]);
   }
 }
