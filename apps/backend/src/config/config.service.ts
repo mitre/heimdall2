@@ -16,7 +16,7 @@ export class ConfigService {
         console.log(
           'Does the file exist and is it readable by the current user?'
         );
-        console.log('Falling back to default or undefined values!');
+        console.log('Falling back to environment or undefined values!');
       } else {
         throw error;
       }
@@ -28,7 +28,7 @@ export class ConfigService {
       return this.envConfig[key];
     } catch (error) {
       if (error instanceof TypeError) {
-        return undefined;
+        return process.env[key];
       } else {
         throw error;
       }
