@@ -219,15 +219,12 @@ export default class Sidebar extends SidebarProps {
     else if (this.curr_route_path == '/profiles') this.file_views = 1;
   }
 
-  // select the specified files
-  set_selected_files(files: number[]): void {
-    FilteredDataModule.set_toggled_files(files);
-  }
-
   // toggle the "select all" for profiles
   toggle_all_profiles(): void {
     if (this.all_toggled_profiles) {
-      this.set_selected_files(FilteredDataModule.selected_evaluations);
+      FilteredDataModule.set_toggled_files(
+        FilteredDataModule.selected_evaluations
+      );
     } else {
       let files = InspecDataModule.allProfileFiles.map(v => v.unique_id);
       files.push(...FilteredDataModule.selected_evaluations);
@@ -246,11 +243,13 @@ export default class Sidebar extends SidebarProps {
   // toggle the "select all" for evaluations
   toggle_all_evaluations(): void {
     if (this.all_toggled_evaluation) {
-      this.set_selected_files(FilteredDataModule.selected_profiles);
+      FilteredDataModule.set_toggled_files(
+        FilteredDataModule.selected_profiles
+      );
     } else {
       let files = InspecDataModule.allEvaluationFiles.map(v => v.unique_id);
       files.push(...FilteredDataModule.selected_profiles);
-      this.set_selected_files(files);
+      FilteredDataModule.set_toggled_files(files);
     }
   }
 
