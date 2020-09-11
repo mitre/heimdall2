@@ -227,28 +227,31 @@ export default class Sidebar extends SidebarProps {
   // toggle the "select all" for profiles
   toggle_all_profiles(): void {
     if (this.all_toggled_profiles) {
-      this.set_selected_files(this.selected_evaluations);
+      let files = [];
+      files.push(FilteredDataModule.selected_evaluations);
+      FilteredDataModule.set_toggled_files(files);
     } else {
       let files = InspecDataModule.allProfileFiles.map(v => v.unique_id);
-      files.push(...this.selected_evaluations);
-      this.set_selected_files(files);
+      files.push(...FilteredDataModule.selected_evaluations);
+      FilteredDataModule.set_toggled_files(files);
     }
   }
 
   // check to see if all profiles is selected
   get all_toggled_profiles(): boolean {
     return (
-      this.selected_profiles.length == InspecDataModule.allProfileFiles.length
+      FilteredDataModule.selected_profiles.length ==
+      InspecDataModule.allProfileFiles.length
     );
   }
 
   // toggle the "select all" for evaluations
   toggle_all_evaluations(): void {
     if (this.all_toggled_evaluation) {
-      this.set_selected_files(this.selected_profiles);
+      this.set_selected_files(FilteredDataModule.selected_profiles);
     } else {
       let files = InspecDataModule.allEvaluationFiles.map(v => v.unique_id);
-      files.push(...this.selected_profiles);
+      files.push(...FilteredDataModule.selected_profiles);
       this.set_selected_files(files);
     }
   }
@@ -256,7 +259,7 @@ export default class Sidebar extends SidebarProps {
   // check to see if all evalutions are selected
   get all_toggled_evaluation(): boolean {
     return (
-      this.selected_evaluations.length ==
+      FilteredDataModule.selected_evaluations.length ==
       InspecDataModule.allEvaluationFiles.length
     );
   }
