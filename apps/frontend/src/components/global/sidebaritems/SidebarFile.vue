@@ -59,11 +59,9 @@ export default class FileItem extends FileItemProps {
   }
 
   select_file_exclusive(evt: Event) {
-    evt.stopPropagation();
-    evt.preventDefault();
-
-    // Clear all except this one
-    FilteredDataModule.set_toggled_files([this.file.unique_id]);
+    let files = FilteredDataModule.selected_profiles;
+    files.push(this.file.unique_id);
+    FilteredDataModule.set_toggled_files(files);
   }
 
   //checks if file is selected
@@ -73,8 +71,6 @@ export default class FileItem extends FileItemProps {
 
   //removes uploaded file from the currently observed files, not from database
   close_this_file(evt: Event) {
-    evt.stopPropagation();
-    evt.preventDefault();
     InspecDataModule.removeFile(this.file.unique_id);
   }
 

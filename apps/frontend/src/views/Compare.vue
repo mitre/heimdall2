@@ -328,12 +328,6 @@ export default class Compare extends Props {
     });
   }
 
-  collapse(evt: Event) {
-    evt.stopPropagation();
-    evt.preventDefault();
-    this.ableTab = !this.ableTab;
-  }
-
   get searched_sets(): ControlSeries[] {
     let term = (this.search_term || '').toLowerCase().trim();
     if (term == '') {
