@@ -38,7 +38,7 @@
           </v-list-item-content>
         </v-list-item>
       </div>
-      <!--div v-else>
+      <div v-else>
         <v-list-item :color="blue" title="View results">
           <v-list-item-avatar>
             <v-icon small>mdi-television-guide</v-icon>
@@ -49,7 +49,7 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-      </div -->
+      </div>
       <div v-if="visible_evaluation_files.length > 0">
         <v-list-item to="/compare" title="Compare results">
           <v-list-item-avatar>
@@ -62,7 +62,7 @@
           </v-list-item-content>
         </v-list-item>
       </div>
-      <!-- div v-else>
+      <div v-else>
         <v-list-item title="Compare results">
           <v-list-item-avatar>
             <v-icon small>mdi-triangle-outline</v-icon>
@@ -73,7 +73,7 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-      </div -->
+      </div>
       <div v-if="visible_profile_files.length > 0">
         <v-list-item to="/profiles" title="View profiles">
           <v-list-item-avatar>
@@ -86,7 +86,7 @@
           </v-list-item-content>
         </v-list-item>
       </div>
-      <!-- div v-else>
+      <div v-else>
         <v-list-item title="View profiles">
           <v-list-item-avatar>
             <v-icon small>mdi-television-guide</v-icon>
@@ -97,7 +97,7 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-      </div -->
+      </div>
       <v-subheader>Files</v-subheader>
       <v-expansion-panels v-model="file_views" flat="true">
         <v-expansion-panel>
