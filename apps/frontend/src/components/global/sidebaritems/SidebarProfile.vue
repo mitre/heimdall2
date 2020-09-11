@@ -60,6 +60,8 @@ export default class ProfileItem extends ProfileItemProps {
     let files = FilteredDataModule.selected_evaluations;
     files.push(this.file.unique_id);
     FilteredDataModule.set_toggled_files(files);
+
+    this.$router.push({path: '/profiles'});
   }
 
   //checks if file is selected
