@@ -33,12 +33,12 @@
         mdi-logout
       </v-icon>
     </v-btn>
-    <HelpAboutDropdown />
     <v-btn icon large @click="toggleDark">
       <v-icon :color="this.$vuetify.theme.dark ? 'grey' : 'white'"
         >mdi-theme-light-dark</v-icon
       >
     </v-btn>
+    <HelpAboutDropdown />
     <!-- File select modal -->
     <UploadNexus v-model="uploadModal" @got-files="on_got_files" />
   </v-app-bar>
