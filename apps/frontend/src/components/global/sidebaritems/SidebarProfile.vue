@@ -1,6 +1,6 @@
 <template>
   <v-list-item :title="file.filename" @click="select_file_exclusive">
-    <v-list-item-action @click="select_file">
+    <v-list-item-action @click.stop="select_file">
       <v-checkbox :input-value="selected" color="blue" />
     </v-list-item-action>
     <v-list-item-avatar>
@@ -47,8 +47,6 @@ export default class ProfileItem extends ProfileItemProps {
   host: string = 'http://localhost:8050';
 
   select_file(evt: Event) {
-    evt.stopPropagation();
-    evt.preventDefault();
     if (!this.selected) {
       FilteredDataModule.set_toggle_file_on(this.file.unique_id);
     } else {

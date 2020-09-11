@@ -227,9 +227,7 @@ export default class Sidebar extends SidebarProps {
   // toggle the "select all" for profiles
   toggle_all_profiles(): void {
     if (this.all_toggled_profiles) {
-      let files = [];
-      files.push(FilteredDataModule.selected_evaluations);
-      FilteredDataModule.set_toggled_files(files);
+      this.set_selected_files(FilteredDataModule.selected_evaluations);
     } else {
       let files = InspecDataModule.allProfileFiles.map(v => v.unique_id);
       files.push(...FilteredDataModule.selected_evaluations);
