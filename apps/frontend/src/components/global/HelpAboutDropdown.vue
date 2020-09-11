@@ -14,7 +14,7 @@
           <v-icon small>mdi-menu-down</v-icon>
         </div>
       </template>
-      <v-list>
+      <v-list class="pt-0 pb-0">
         <HelpModal>
           <template v-slot:clickable="{on}">
             <LinkItem key="help" text="Help" icon="mdi-help-circle" v-on="on"
@@ -37,9 +37,6 @@
 <style scoped>
 .clickable-icon {
   cursor: pointer;
-}
-.v-list-item--link::before {
-  background-color: red;
 }
 </style>
 
