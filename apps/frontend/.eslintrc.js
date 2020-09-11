@@ -8,9 +8,11 @@ module.exports = {
   env: {
     node: true
   },
-  extends: ['plugin:vue/essential', '@vue/prettier', '@vue/typescript'],
+  extends: ['plugin:vue/recommended', '@vue/prettier', '@vue/typescript'],
   rules: {
     'no-console': 'off',
-    'unused-imports/no-unused-imports-ts': 'error'
+    'unused-imports/no-unused-imports-ts': 'error',
+    'vue/require-default-prop': 'off',
+    'vue/prop-name-casing': 'off'
   }
 };

@@ -1,6 +1,9 @@
 import mock from 'mock-fs';
 import {ConfigService} from './config.service';
-import {ENV_MOCK_FILE} from '../../test/constants/env-test.constant';
+import {
+  ENV_MOCK_FILE,
+  SIMPLE_ENV_MOCK_FILE
+} from '../../test/constants/env-test.constant';
 
 /* If you run the test without --silent , you need to add console.log() before you mock out the
 file system in the beforeAll() or it'll throw an error (this is a documented bug which can be
@@ -32,7 +35,7 @@ describe('Config Service', () => {
         'Does the file exist and is it readable by the current user?'
       );
       expect(consoleSpy).toHaveBeenCalledWith(
-        'Falling back to default or undefined values!'
+        'Falling back to environment or undefined values!'
       );
     });
   });
@@ -57,6 +60,27 @@ describe('Config Service', () => {
       );
       expect(configService.get('JWT_SECRET')).toEqual('abc123');
       expect(configService.get('NODE_ENV')).toEqual('test');
+    });
+
+    it('should return undefined because env variable does not exist', () => {
+      const configService = new ConfigService();
+      expect(configService.get('INVALID_VARIABLE')).toBe(undefined);
+    });
+  });
+
+  describe('Tests the get function when environment file is sourced externally', () => {
+    beforeAll(() => {
+      // Mock .env file
+      mock({
+        '.env-loaded-externally': SIMPLE_ENV_MOCK_FILE
+      });
+      require('dotenv').config({path: '.env-loaded-externally'});
+    });
+
+    it('should return the correct database name', () => {
+      const configService = new ConfigService();
+      console.log(process.env);
+      expect(configService.get('HEIMDALL_SERVER_PORT')).toEqual('8001');
     });
 
     it('should return undefined because env variable does not exist', () => {

@@ -220,7 +220,8 @@ describe('UsersService', () => {
       expect(updatedUser.updatedAt.valueOf()).not.toEqual(
         user.updatedAt.valueOf()
       );
-      expect(updatedUser.role).not.toEqual(user.role);
+      // This will not change currently because there is only a 'user' role that can be updated via API.
+      expect(updatedUser.role).toEqual(user.role);
       expect(beforeUpdate.forcePasswordChange).not.toEqual(
         afterUpdate.forcePasswordChange
       );

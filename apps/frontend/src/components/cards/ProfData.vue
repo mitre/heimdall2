@@ -9,13 +9,13 @@
         <v-treeview
           :items="root_tree"
           :active="active"
-          @update:active="setActive"
           hoverable
           dense
           activatable
           color="info"
           selection-type="independent"
           transition
+          @update:active="setActive"
         >
           <template>
             <v-icon>mdi-note</v-icon>
@@ -29,13 +29,13 @@
           <v-treeview
             :items="items"
             :active="child_active"
-            @update:active="setChildActive"
             hoverable
             dense
             activatable
             color="info"
             selection-type="independent"
             transition
+            @update:active="setChildActive"
           >
             <template>
               <v-icon>mdi-note</v-icon>

@@ -29,8 +29,8 @@
           <v-subheader>Add Tag</v-subheader>
           <v-form ref="form">
             <v-combobox
-              :items="tag_list"
               v-model="tag_name"
+              :items="tag_list"
               label="Tag Name"
               dense
             ></v-combobox>

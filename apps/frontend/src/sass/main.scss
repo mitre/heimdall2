@@ -34,6 +34,7 @@ $code-kbd-font-weight: false;
 .theme--dark.v-card,
 .theme--dark.v-navigation-drawer,
 .theme--dark .v-stepper,
+.theme--dark .v-window__container,
 .theme--dark .v-dialog {
   background: var(--v-secondary-lighten1);
   background-color: var(--v-secondary-lighten1);
@@ -43,6 +44,7 @@ $code-kbd-font-weight: false;
 .theme--light.v-card,
 .theme--light.v-navigation-drawer,
 .theme--light .v-stepper,
+.theme--light .v-window__container,
 .theme--light .v-dialog {
   background: var(--v-secondary-lighten1);
   background-color: var(--v-secondary-lighten1);

@@ -4,7 +4,7 @@
       <v-row justify="space-around" no-gutters>
         <AboutModal>
           <template v-slot:clickable="{on}">
-            <v-btn v-on="on" text small>
+            <v-btn text small v-on="on">
               <v-icon small>mdi-information</v-icon>
               <span class="d-none d-sm-inline pl-3">About</span>
             </v-btn>
@@ -12,7 +12,7 @@
         </AboutModal>
         <HelpModal>
           <template v-slot:clickable="{on}">
-            <v-btn v-on="on" text small>
+            <v-btn text small v-on="on">
               <v-icon small>mdi-help-circle</v-icon>
               <span class="d-none d-sm-inline pl-3">Help</span>
             </v-btn>

@@ -9,9 +9,9 @@
         />
         <v-btn
           title="Load"
-          @click="load"
           :disabled="form_bucket_name.length < 1"
           class="fill-height pa-0"
+          @click="load"
         >
           <v-icon>mdi-cloud-download</v-icon>
         </v-btn>
@@ -38,7 +38,7 @@
           </v-list-item-action>
         </v-list-item>
       </v-list>
-      <v-btn color="red" @click="$emit('exit-list')" class="my-2 mr-3">
+      <v-btn color="red" class="my-2 mr-3" @click="$emit('exit-list')">
         Cancel
       </v-btn>
     </div>
