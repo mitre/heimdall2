@@ -31,8 +31,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {InspecDataModule} from '@/store/data_store';
 import {FilteredDataModule} from '@/store/data_filters';
-import {EvaluationFile, ProfileFile} from '@/store/report_intake';
-import {ServerModule} from '@/store/server';
+
 import {BackendModule} from '@/store/backend';
 
 // We declare the props separately to make props types inferable.
@@ -46,8 +45,6 @@ const FileItemProps = Vue.extend({
   components: {}
 })
 export default class FileItem extends FileItemProps {
-  host: string = 'http://localhost:8050';
-
   select_file(evt: Event) {
     if (!this.selected) {
       FilteredDataModule.set_toggle_file_on(this.file.unique_id);
@@ -80,52 +77,9 @@ export default class FileItem extends FileItemProps {
     return FilteredDataModule.selected_file_ids.includes(this.file.unique_id);
   }
 
-  //removes uploaded file from the currently observed files, not from database
+  //removes uploaded file from the currently observed files
   close_this_file(evt: Event) {
     InspecDataModule.removeFile(this.file.unique_id);
-  }
-
-  //saves file to database
-  save_this_file(evt: Event) {
-    evt.stopPropagation();
-    evt.preventDefault();
-    let file = InspecDataModule.allFiles.find(
-      f => f.unique_id === this.file.unique_id
-    );
-    if (file) {
-      if (file.hasOwnProperty('execution')) {
-        this.save_evaluation(file as EvaluationFile);
-      } else {
-        this.save_profile(file as ProfileFile);
-      }
-    }
-  }
-
-  async save_evaluation(file?: EvaluationFile): Promise<void> {
-    // checking if the input is valid
-    if (file) {
-      await ServerModule.connect(this.host)
-        .catch(bad => {
-          console.error('Unable to connect to ' + this.host);
-        })
-        .then(() => {
-          return ServerModule.save_evaluation(file);
-        })
-        .catch(bad => {
-          console.error(`bad save ${bad}`);
-        });
-    }
-  }
-
-  //saves profile to database
-  save_profile(file?: ProfileFile) {
-    // Strip the file
-    if (file) {
-      let decontextualized = file.profile.data;
-      let blob = new Blob([JSON.stringify(decontextualized)], {
-        type: 'application/json'
-      });
-    }
   }
 
   //gives different icons for a file if it is just a profile
