@@ -60,7 +60,7 @@ import Component from 'vue-class-component';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
 import FileItem from '@/components/global/sidebaritems/SidebarFile.vue';
-import LinkItem from '@/components/global/sidebaritems/SidebarLink.vue';
+import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {FilteredDataModule} from '../../store/data_filters';
 
 // We declare the props separately to make props types inferable.

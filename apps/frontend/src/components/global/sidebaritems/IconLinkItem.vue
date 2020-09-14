@@ -12,9 +12,7 @@
 
 <style scoped>
 .v-avatar {
-  height: 0px !important;
   min-width: 30px !important;
-  width: 0px !important;
 }
 </style>
 

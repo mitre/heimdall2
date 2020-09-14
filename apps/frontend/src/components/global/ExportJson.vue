@@ -17,7 +17,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {saveAs} from 'file-saver';
-import LinkItem from '@/components/global/sidebaritems/SidebarLink.vue';
+import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 
 import {isFromProfileFile} from '@/store/data_store';
 import {FilteredDataModule} from '@/store/data_filters';

@@ -3,7 +3,7 @@
     <v-menu offset-y offset-overflow :close-on-content-click="false">
       <template v-slot:activator="{on, attrs}">
         <div class="clickable-icon" v-bind="attrs" v-on="on">
-          <v-btn size="40px" icon large>
+          <v-btn icon large>
             <v-avatar size="32px" item>
               <v-img
                 :src="require('@/assets/logo-xs-orange-white.svg')"
@@ -41,7 +41,7 @@
 </style>
 
 <script lang="ts">
-import LinkItem from '@/components/global/sidebaritems/SidebarLink.vue';
+import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
 import HelpModal from '@/components/global/HelpModal.vue';
 
