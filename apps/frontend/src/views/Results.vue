@@ -282,7 +282,7 @@ export default class Results extends ResultsProps {
       severity: this.severity_filter || undefined,
       fromFile: this.file_filter,
       tree_filters: this.tree_filters,
-      search_term: this.search_term,
+      search_term: this.search_term || '',
       omit_overlayed_controls: true,
       control_id: this.control_selection || undefined
     };
@@ -296,7 +296,7 @@ export default class Results extends ResultsProps {
       status: this.status_filter || undefined,
       severity: this.severity_filter || undefined,
       fromFile: this.file_filter,
-      search_term: this.search_term,
+      search_term: this.search_term || '',
       omit_overlayed_controls: true
     };
   }
