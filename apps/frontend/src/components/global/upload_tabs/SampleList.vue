@@ -4,7 +4,7 @@
       Samples to show the power of the Heimdall application and supported HDF
       formats
     </v-card-subtitle>
-    <v-list max-height="434" style="overflow-y:scroll;" color="grey darken-3">
+    <v-list max-height="434" style="overflow-y:scroll;">
       <v-list-item v-for="(sample, index) in samples" :key="index" class="mx-2">
         <v-list-item-content>
           <v-list-item-title v-text="sample.name" />
