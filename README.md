@@ -87,10 +87,9 @@ Then, any subsequent `npx heimdall-lite` will use the local version and load muc
 
 ### How to Install
 
-This project uses [Lerna](https://lerna.js.org/) (multi-project manager) to manage dependencies and run the applications. Installing dependencies can be done by running
+This project uses [Yarn Workspaces](https://classic.yarnpkg.com/en/docs/workspaces/) and [Lerna](https://lerna.js.org/) to manage dependencies across the Frontend and Backend applications.
 
-    npm install -g lerna
-    npx lerna bootstrap --hoist
+    yarn install
 
 ### Development Environment
 
@@ -102,34 +101,34 @@ In order to run Heimdall Server, Postgresql must be installed and the following 
 
     cp apps/backend/.env-example apps/backend/.env
     # Edit /apps/backend/.env to reflect the appropriate configuration for your system
-    npx lerna exec "npx sequelize-cli db:create" --scope heimdall-server
-    npx lerna exec "npx sequelize-cli db:migrate" --scope heimdall-server
+    yarn backend sequelize-cli db:create
+    yarn backend sequelize-cli db:migrate
 
 Once the above steps are completed it is possible to start heimdall-server using the following command
 
-    npm run start:dev
+    yarn run start:dev
 
 ### Developing Heimdall Lite Standalone
 
-    npm run lite:dev
+    yarn frontend start:dev
 
 ### Lint and fix files
 
-    lerna run lint
+    yarn run lint
 
 ### Compile and minify the frontend and backend for production
 
-    lerna run build
+    yarn run build
 
 ### Run tests
 
     # Frontend + Backend End to End Tests (Expects lerna run build to have been run)
-    lerna run test:ui --stream
+    yarn backend test:ui
     # Run Frontend Vue Tests
-    lerna run test --scope heimdall-lite --stream
+    yarn frontend test
     # Run Backend Nest Tests
-    lerna run test:e2e --stream
-    lerna run test:ci-cov --stream
+    yarn backend test:e2e
+    yarn backend test:ci-cov
 
 ## Versioning and State of Development
 
