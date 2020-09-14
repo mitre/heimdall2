@@ -10,12 +10,6 @@
   </v-list-item>
 </template>
 
-<style scoped>
-.v-avatar {
-  min-width: 30px !important;
-}
-</style>
-
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
