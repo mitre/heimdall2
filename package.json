@@ -2,8 +2,18 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "start:dev": "dotenv -e apps/backend/.env -- lerna exec npm run start:dev --ignore @heimdall/interfaces",
-    "lite:dev": "lerna exec npm run start:dev --scope heimdall-lite"
+    "frontend": "yarn workspace heimdall-lite",
+    "backend": "yarn workspace heimdall-server",
+    "build": "npx lerna run build",
+    "lint": "npx lerna run lint",
+    "lint:ci": "npx lerna run lint:ci",
+    "start:dev": "dotenv -e apps/backend/.env -- npx lerna exec yarn run start:dev --ignore @heimdall/interfaces"
+  },
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "libs/*"
+    ]
   },
   "devDependencies": {
     "@types/jest": "^26.0.7",

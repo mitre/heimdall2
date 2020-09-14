@@ -38,28 +38,25 @@ jobs:
        with:
         node-version: '12.x'
 
-     - name: Install lerna
-       run: npm install -g lerna
-
      - name: Remove frontend code to ensure the proper dependencies are declared in the backend package.json
        run: rm -rf apps/frontend
 
      - name: Install project dependencies
-       run: lerna bootstrap --hoist --ci
+       run: yarn install --frozen-lockfile
 
      - name: Copy .env-ci to .env
        run: cp apps/backend/test/.env-ci apps/backend/.env
 
      - name: Create/migrate db
        run: |
-        lerna exec "npx sequelize-cli db:create" --scope heimdall-server
-        lerna exec "npx sequelize-cli db:migrate" --scope heimdall-server
+        yarn backend sequelize-cli db:create
+        yarn backend sequelize-cli db:migrate
 
      - name: Run e2e tests
-       run: lerna run test:e2e --stream
+       run: yarn backend test:e2e
 
      - name: Run unit tests
-       run: lerna run test:ci-cov --stream
+       run: yarn backend test:ci-cov
 
      - name: Ensure the app builds cleanly without frontend dependencies
-       run: lerna run build --scope heimdall-server
+       run: yarn backend build
