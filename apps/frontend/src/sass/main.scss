@@ -32,6 +32,8 @@ $code-kbd-font-weight: false;
 
 /** Backgrounds (middle) */
 .theme--dark.v-card,
+.theme--dark.v-list,
+.theme--dark.v-tabs>.v-tabs-bar,
 .theme--dark.v-navigation-drawer,
 .theme--dark .v-stepper,
 .theme--dark .v-window__container,
@@ -42,6 +44,8 @@ $code-kbd-font-weight: false;
 }
 
 .theme--light.v-card,
+.theme--light.v-list,
+.theme--light.v-tabs>.v-tabs-bar,
 .theme--light.v-navigation-drawer,
 .theme--light .v-stepper,
 .theme--light .v-window__container,
