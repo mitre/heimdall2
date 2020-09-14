@@ -9,7 +9,6 @@
         :vertical="$vuetify.breakpoint.mdAndUp"
         active
         :value="active_tab"
-        background-color="grey darken-3"
         color="primary-visible"
         show-arrows
         @change="selected_tab"
