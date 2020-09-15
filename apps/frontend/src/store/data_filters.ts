@@ -150,21 +150,21 @@ export class FilteredData extends VuexModule {
 
   /* get the currently select evaluations */
   get selected_evaluations(): number[] {
-    let file_ids = [...this.selected_file_ids];
-    let files = InspecDataModule.allProfileFiles;
+    const fileIds = [...this.selected_file_ids];
+    const files = InspecDataModule.allProfileFiles;
 
-    return file_ids.filter(file_id =>
-      files.every(file => file_id !== file.unique_id)
+    return fileIds.filter(fileId =>
+      files.every(file => fileId !== file.unique_id)
     );
   }
 
   /* get the currently selected profiles */
   get selected_profiles(): number[] {
-    let file_ids = [...this.selected_file_ids];
-    let files = InspecDataModule.allEvaluationFiles;
+    const fileIds = [...this.selected_file_ids];
+    const files = InspecDataModule.allEvaluationFiles;
 
-    return file_ids.filter(file_id =>
-      files.every(file => file_id !== file.unique_id)
+    return fileIds.filter(fileId =>
+      files.every(file => fileId !== file.unique_id)
     );
   }
 
