@@ -92,7 +92,7 @@
               <v-list-item>Results</v-list-item>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <FileLister
+              <FileList
                 v-for="(file, i) in visible_evaluation_files"
                 :key="i"
                 :file="file"
@@ -122,7 +122,7 @@
               <v-list-item>Profiles</v-list-item>
             </v-expansion-panel-header>
             <v-expansion-panel-content>
-              <FileLister
+              <FileList
                 v-for="(file, i) in visible_profile_files"
                 :key="i"
                 :file="file"
@@ -171,7 +171,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
-import FileLister from '@/components/global/sidebaritems/SidebarFileLister.vue';
+import FileList from '@/components/global/sidebaritems/SidebarFileList.vue';
 import LinkItem from '@/components/global/sidebaritems/SidebarLink.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
 import HelpModal from '@/components/global/HelpModal.vue';
@@ -187,7 +187,7 @@ const SidebarProps = Vue.extend({
 @Component({
   components: {
     LinkItem,
-    FileLister,
+    FileList,
     AboutModal,
     HelpModal
   }

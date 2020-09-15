@@ -3,13 +3,11 @@
  */
 
 import {Module, VuexModule, getModule, Mutation} from 'vuex-module-decorators';
-import {SourcedContextualizedEvaluation} from '@/store/report_intake';
+import {SourcedContextualizedEvaluation, FileID} from '@/store/report_intake';
 import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
-import {ControlStatus, Severity} from 'inspecjs';
-import {FileID} from '@/store/report_intake';
+import {ControlStatus, Severity, context, nist} from 'inspecjs';
 import Store from '@/store/store';
 import LRUCache from 'lru-cache';
-import {context, nist} from 'inspecjs';
 
 const MAX_CACHE_ENTRIES = 20;
 
@@ -93,7 +91,7 @@ export class FilteredData extends VuexModule {
   @Mutation
   set_toggle_file_off(file: FileID): void {
     let checked = this.selected_file_ids.indexOf(file);
-    if (checked != -1) {
+    if (checked !== -1) {
       this.selected_file_ids.splice(checked, 1);
     }
   }
@@ -156,7 +154,7 @@ export class FilteredData extends VuexModule {
     let files = InspecDataModule.allProfileFiles;
 
     return file_ids.filter(file_id =>
-      files.every(file => file_id != file.unique_id)
+      files.every(file => file_id !== file.unique_id)
     );
   }
 
@@ -166,7 +164,7 @@ export class FilteredData extends VuexModule {
     let files = InspecDataModule.allEvaluationFiles;
 
     return file_ids.filter(file_id =>
-      files.every(file => file_id != file.unique_id)
+      files.every(file => file_id !== file.unique_id)
     );
   }
 
