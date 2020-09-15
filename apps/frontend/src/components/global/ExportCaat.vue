@@ -4,7 +4,7 @@
       <LinkItem
         key="export_caat"
         text="CAAT Spreadsheet"
-        icon="mdi-file-excel-outline"
+        icon="mdi-file-excel"
         @click="export_caat()"
         v-on="on"
       />

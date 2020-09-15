@@ -5,7 +5,12 @@
   <div>
     <!-- Top appbar. The center content of it is configured via the topbar-content slot -->
     <Topbar :title="title" @toggle-drawer="drawer = !drawer">
-      <slot name="topbar-content"></slot>
+      <template #center>
+        <slot name="topbar-content"></slot>
+      </template>
+      <template #data>
+        <slot name="topbar-data"></slot>
+      </template>
     </Topbar>
 
     <!-- Sidebar to navigate between different views -->

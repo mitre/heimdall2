@@ -22,12 +22,32 @@
         <v-icon>mdi-filter-remove</v-icon>
       </v-btn>
     </template>
-
-    <!-- Custom sidebar content -->
-    <template #sidebar-content-tools>
-      <ExportCaat :filter="all_filter"></ExportCaat>
-      <ExportNist :filter="all_filter"></ExportNist>
-      <ExportJson></ExportJson>
+    <template #topbar-data>
+      <div class="text-center">
+        <v-menu offset-y>
+          <template v-slot:activator="{on, attrs}">
+            <v-btn v-bind="attrs" v-on="on">
+              <span class="d-none d-md-inline pr-2">
+                Export
+              </span>
+              <v-icon>
+                mdi-file-export
+              </v-icon>
+            </v-btn>
+          </template>
+          <v-list class="pt-0 pb-0">
+            <v-list-item class="pl-0 pr-0">
+              <ExportCaat :filter="all_filter"></ExportCaat>
+            </v-list-item>
+            <v-list-item class="pl-0 pr-0">
+              <ExportNist :filter="all_filter"></ExportNist>
+            </v-list-item>
+            <v-list-item class="pl-0 pr-0">
+              <ExportJson></ExportJson>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
     </template>
 
     <!-- The main content: cards, etc -->
