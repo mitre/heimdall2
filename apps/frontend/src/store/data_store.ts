@@ -33,7 +33,7 @@ export class InspecData extends VuexModule {
 
   /** State var containing all profile files that have been added */
   profileFiles: ProfileFile[] = [];
-  
+
   /** Return all of the files that we currently have. */
   get allFiles(): (EvaluationFile | ProfileFile)[] {
     let result: (EvaluationFile | ProfileFile)[] = [];

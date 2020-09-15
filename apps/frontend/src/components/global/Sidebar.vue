@@ -31,7 +31,7 @@
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title>
-              Results View
+              Results View (why is link deactivated?)
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -55,7 +55,7 @@
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title>
-              Results Comparison View
+              Results Comparison View (why is link deactivated?)
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -79,19 +79,19 @@
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title>
-              Profiles View
+              Profiles View (why is link deactivated?)
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </div>
       <v-subheader>Files</v-subheader>
-      <v-expansion-panels v-model="file_views" flat="true">
+      <v-expansion-panels v-model="file_views" flat>
         <v-expansion-panel>
-          <div v-if="visible_evaluation_files.length > 0">
-            <v-expansion-panel-header title="Results">
-              <v-list-item>Results</v-list-item>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
+          <v-expansion-panel-header title="Results">
+            <v-list-item>Results</v-list-item>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <div v-if="visible_evaluation_files.length > 0">
               <FileList
                 v-for="(file, i) in visible_evaluation_files"
                 :key="i"
@@ -113,22 +113,25 @@
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
-            </v-expansion-panel-content>
-          </div>
+            </div>
+            <div v-else>
+              Why is dropdown empty?
+            </div>
+          </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel>
-          <div v-if="visible_profile_files.length > 0">
-            <v-expansion-panel-header title="Profiles">
-              <v-list-item>Profiles</v-list-item>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
+          <v-expansion-panel-header title="Profiles">
+            <v-list-item>Profiles</v-list-item>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <div v-if="visible_profile_files.length > 0">
               <FileList
                 v-for="(file, i) in visible_profile_files"
                 :key="i"
                 :file="file"
               />
               <v-list-item
-                title="Toggle selection of all profiles"
+                title="Toggle selection on all profiles"
                 @click="toggle_all_profiles"
               >
                 <v-list-item-avatar>
@@ -136,13 +139,18 @@
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title>
-                    <div v-if="all_toggled_profiles">Deselect all profiles</div>
-                    <div v-else>Select all profiles</div>
+                    <div v-if="all_toggled_profile">
+                      Deselect all results set
+                    </div>
+                    <div v-else>Select all results set</div>
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
-            </v-expansion-panel-content>
-          </div>
+            </div>
+            <div v-else>
+              Why is dropdown empty?
+            </div>
+          </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
     </v-list>
@@ -172,7 +180,7 @@ import Component from 'vue-class-component';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
 import FileList from '@/components/global/sidebaritems/SidebarFileList.vue';
-import LinkItem from '@/components/global/sidebaritems/SidebarLink.vue';
+import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
 import HelpModal from '@/components/global/HelpModal.vue';
 import {FilteredDataModule} from '../../store/data_filters';
