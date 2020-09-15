@@ -23,7 +23,7 @@ export class RegistrationPage {
       role: user.role
     });
     await Promise.all([
-      page.waitForSelector('.toasted.white--text.toasted-primary.default'),
+      page.waitForSelector('.toasted.toasted-primary.default'),
       page.click('#register')
     ]);
   }

@@ -1,7 +1,7 @@
 import {Test, TestingModule} from '@nestjs/testing';
 import {AppModule} from '../../src/app.module';
 import {
-  CREATE_ADMIN_DTO,
+  CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
 } from '../constants/users-test.constant';
 import {RegistrationPage} from './pages/registration.page';
@@ -48,7 +48,7 @@ describe('Registration', () => {
 
   describe('Registration Form', () => {
     it('allows a user to create an account', async () => {
-      await registrationPage.registerSuccess(page, CREATE_ADMIN_DTO);
+      await registrationPage.registerSuccess(page, CREATE_USER_DTO_TEST_OBJ);
       await logInVerifier.verifyLoginFormPresent(page);
       await toastVerifier.verifySuccessPresent(
         page,
@@ -66,9 +66,10 @@ describe('Registration', () => {
     });
 
     it('rejects emails that already exist', async () => {
-      await registrationPage.registerSuccess(page, CREATE_ADMIN_DTO);
+      await registrationPage.registerSuccess(page, CREATE_USER_DTO_TEST_OBJ);
+      await logInPage.dismissToast(page);
       await logInPage.switchToRegister(page);
-      await registrationPage.registerFailure(page, CREATE_ADMIN_DTO);
+      await registrationPage.registerFailure(page, CREATE_USER_DTO_TEST_OBJ);
       await toastVerifier.verifyErrorPresent(
         page,
         'An unidentified error has occured'

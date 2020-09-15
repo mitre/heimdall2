@@ -218,7 +218,7 @@ export const CREATE_USER_DTO_TEST_OBJ_2: CreateUserDto = {
 export const CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS: CreateUserDto = {
   email: 'abc@yahoo.com',
   password: 'LETmeiN123$$$tP',
-  passwordConfirmation: 'Password',
+  passwordConfirmation: 'LETmeiN123%%%tP',
   firstName: 'Test',
   lastName: 'Dummy',
   title: 'fake title',
@@ -335,7 +335,7 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD: CreateUserDto = {
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
-  role: 'admin'
+  role: 'user'
 };
 
 export const UPDATE_USER_DTO_TEST_OBJ: UpdateUserDto = {
@@ -344,7 +344,7 @@ export const UPDATE_USER_DTO_TEST_OBJ: UpdateUserDto = {
   lastName: 'Name',
   organization: 'Updated Org',
   title: 'updated title',
-  role: 'admin',
+  role: 'user',
   password: 'LETmeiN123$$$tP',
   passwordConfirmation: 'LETmeiN123$$$tP',
   currentPassword: 'LETmeiN123$$$tP',
@@ -357,7 +357,7 @@ export const UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD: UpdateUserDto = {
   lastName: 'Name',
   organization: 'Updated Org',
   title: 'updated title',
-  role: 'admin',
+  role: 'user',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP',
@@ -370,7 +370,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_EMAIL: UpdateUserDto = {
   lastName: 'Dummy',
   organization: 'Fake Org',
   title: 'fake title',
-  role: 'admin',
+  role: 'user',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP'
@@ -383,7 +383,7 @@ export const UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL: UpdateUserDto = {
   lastName: 'Dummy',
   organization: 'Fake Org',
   title: 'fake title',
-  role: 'admin',
+  role: 'user',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP'
@@ -395,7 +395,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_FIRST_NAME: UpdateUserDto = {
   lastName: 'Dummy',
   organization: 'Fake Org',
   title: 'fake title',
-  role: 'admin',
+  role: 'user',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP'
@@ -407,7 +407,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_LAST_NAME: UpdateUserDto = {
   firstName: 'Test',
   organization: 'Fake Org',
   title: 'fake title',
-  role: 'admin',
+  role: 'user',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP'
@@ -419,7 +419,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_ORGANIZATION: UpdateUserDto = {
   firstName: 'Test',
   lastName: 'Dummy',
   title: 'fake title',
-  role: 'admin',
+  role: 'user',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP'
@@ -431,7 +431,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_TITLE: UpdateUserDto = {
   firstName: 'Test',
   lastName: 'Dummy',
   organization: 'Fake Org',
-  role: 'admin',
+  role: 'user',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP'
@@ -444,7 +444,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD: UpdateUserDto = {
   lastName: 'Dummy',
   organization: 'Fake Org',
   title: 'fake title',
-  role: 'admin',
+  role: 'user',
   passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP'
 };
@@ -456,7 +456,7 @@ export const UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS: UpdateUserDto = {
   lastName: 'Updated',
   organization: 'Updated',
   title: 'Updated',
-  role: 'admin',
+  role: 'user',
   currentPassword: 'LETmeiN123$$$tP'
 };
 
@@ -467,7 +467,7 @@ export const UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD: UpdateUserDto = {
   lastName: 'Dummy',
   organization: 'Fake Org',
   title: 'fake title',
-  role: 'admin',
+  role: 'user',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'ABCdefG456!@#pT',
   currentPassword: 'invalid_password'
@@ -480,7 +480,7 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD_CONFIRMATION: UpdateUserDto =
   lastName: 'Dummy',
   organization: 'Fake Org',
   title: 'fake title',
-  role: 'admin',
+  role: 'user',
   password: 'ABCdefG456!@#pT',
   currentPassword: 'LETmeiN123$$$tP'
 };
@@ -527,7 +527,7 @@ export const UPDATE_USER_DTO_TEST_OBJ_WITH_MISSMATCHING_PASSWORDS: UpdateUserDto
   lastName: 'Name',
   organization: 'Updated Org',
   title: 'updated title',
-  role: 'admin',
+  role: 'user',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'defABCg789*(%Pt',
   currentPassword: 'LETmeiN123$$$tP',
@@ -541,7 +541,7 @@ export const UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD: UpdateUserDto 
   lastName: 'Dummy',
   organization: 'Fake Org',
   title: 'fake title',
-  role: 'admin',
+  role: 'user',
   password: 'ABCdefG456!@#pT',
   passwordConfirmation: 'ABCdefG456!@#pT'
 };

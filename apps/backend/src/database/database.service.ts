@@ -11,7 +11,7 @@ export class DatabaseService {
   }
 
   async cleanAll() {
-    Object.values(this.sequelize.models).map(model => {
+    Object.values(this.sequelize.models).forEach(model => {
       model.destroy({where: {}});
     });
   }

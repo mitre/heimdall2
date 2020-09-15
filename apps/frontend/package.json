@@ -82,7 +82,7 @@
     "vue-svg-inline-loader": "^1.4.3",
     "vue-svg-loader": "^0.12.0",
     "vue-toasted": "^1.1.27",
-    "vuetify": "~2.1.10",
+    "vuetify": "^2.3.9",
     "vuex": "^3.1.2",
     "xlsx": "^0.15.2",
     "xml-js": "^1.6.11",

@@ -1,54 +1,6 @@
 import '@mdi/font/css/materialdesignicons.css';
-import Vue from 'vue';
 import Vuetify, {colors} from 'vuetify/lib';
-import Toasted from 'vue-toasted';
-import {ToastOptions} from 'vue-toasted/types/index';
 import {gen_variants, gen_visibilities} from '@/utilities/color_util';
-
-Vue.use(Vuetify);
-
-Vue.use(Toasted);
-// options to the toast
-let options: ToastOptions = {
-  theme: 'toasted-primary',
-  position: 'top-center',
-  fullWidth: false,
-  containerClass: 'background v-application',
-  className: 'white--text',
-  action: [
-    {
-      text: 'Report Issue',
-      href:
-        'https://github.com/mitre/heimdall-lite/issues/new?assignees=&labels=bug&template=bug_report.md&title='
-    },
-    {
-      text: 'Dismiss',
-      onClick: (_, toast_object) => toast_object.goAway(0)
-    }
-  ],
-  // icon: 'mdi-alert-octagram',
-  duration: 10000 // only feels infinite.
-};
-
-// register the toast with the custom message
-Vue.toasted.register(
-  'error',
-  payload => {
-    if (!payload.message) {
-      return `ERROR: An unidentified error has occured, if functionality
-        has degraded please try refreshing the page. If that does not fix the
-        issue you are experiencing, then please report the issue`;
-    }
-
-    // The vue component passes in current dark mode setting, and the toast is adjusted
-    // to be high contrast
-    options.className += payload.isDark ? ' invert' : '';
-
-    // Display message passed by vue component
-    return 'ERROR: ' + payload.message;
-  },
-  options
-);
 
 // "Not Applicable" | "Not Reviewed" | "Profile Error";
 const statuses = {

@@ -1,7 +1,6 @@
 <template>
   <v-navigation-drawer
     :value="value"
-    @input="$emit('input', $event)"
     :clipped="$vuetify.breakpoint.lgAndUp"
     app
     style="margin-top: 56px;"
@@ -9,11 +8,12 @@
     fixed
     temporary
     width="375px"
+    @input="$emit('input', $event)"
   >
     <v-list dense class="px-2" subheader>
       <v-subheader>Files</v-subheader>
       <FileItem v-for="(file, i) in visible_files" :key="i" :file="file" />
-      <v-list-item @click="toggle_all" title="Show all files' controls">
+      <v-list-item title="Show all files' controls" @click="toggle_all">
         <v-list-item-avatar>
           <v-icon small>mdi-format-list-bulleted</v-icon>
         </v-list-item-avatar>
@@ -69,9 +69,7 @@ import Component from 'vue-class-component';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
 import FileItem from '@/components/global/sidebaritems/SidebarFile.vue';
-import LinkItem from '@/components/global/sidebaritems/SidebarLink.vue';
-import AboutModal from '@/components/global/AboutModal.vue';
-import HelpModal from '@/components/global/HelpModal.vue';
+import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {FilteredDataModule} from '../../store/data_filters';
 
 // We declare the props separately to make props types inferable.
@@ -84,9 +82,7 @@ const SidebarProps = Vue.extend({
 @Component({
   components: {
     LinkItem,
-    FileItem,
-    AboutModal,
-    HelpModal
+    FileItem
   }
 })
 export default class Sidebar extends SidebarProps {

@@ -20,7 +20,7 @@ import {FilteredDataModule, Filter} from '@/store/data_filters';
 import XLSX from 'xlsx';
 import {saveAs} from 'file-saver';
 import {HDFControl} from 'inspecjs';
-import LinkItem from '@/components/global/sidebaritems/SidebarLink.vue';
+import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 
 const MAX_CELL_SIZE = 32000; // Rounding a bit here.
 type CAATRow = string[];

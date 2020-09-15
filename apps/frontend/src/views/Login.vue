@@ -12,30 +12,30 @@
                 <v-spacer />
               </v-toolbar>
               <v-card-text>
-                <v-form id="login_form" name="login_form" ref="form">
+                <v-form id="login_form" ref="form" name="login_form">
                   <v-text-field
                     id="login_field"
+                    v-model="email"
                     label="Login"
                     name="login"
                     prepend-icon="person"
                     type="text"
-                    v-model="email"
                     required
                   />
                   <v-text-field
                     id="password_field"
+                    v-model="password"
                     label="Password"
                     name="password"
                     prepend-icon="lock"
                     type="password"
-                    v-model="password"
                   />
                   <v-btn
                     id="login_button"
-                    @click="login"
                     depressed
                     large
                     color="primary"
+                    @click="login"
                   >
                     Login
                   </v-btn>
@@ -44,7 +44,7 @@
               <v-card-actions>
                 <v-spacer />
                 <div class="my-2">
-                  <v-btn id="sign_up_button" @click="signup" depressed small>
+                  <v-btn id="sign_up_button" depressed small @click="signup">
                     Sign Up
                   </v-btn>
                 </div>

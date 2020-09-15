@@ -3,34 +3,34 @@
     <v-form v-model="valid">
       <v-text-field
         :value="access_token"
-        @input="change_access_token"
         label="User Account Access Token"
         lazy-validation="lazy"
         :rules="[req_rule]"
+        @input="change_access_token"
       />
       <v-text-field
         :value="secret_token"
-        @input="change_secret_token"
         label="User Account Secret Token"
         :rules="[req_rule]"
         :append-icon="show_secret ? 'mdi-eye' : 'mdi-eye-off'"
         :type="show_secret ? 'text' : 'password'"
+        @input="change_secret_token"
         @click:append="show_secret = !show_secret"
       />
     </v-form>
     <v-btn
       color="primary"
       :disabled="!valid"
-      @click="$emit('auth-basic')"
       class="my-2 mr-3"
+      @click="$emit('auth-basic')"
     >
       Basic Login
     </v-btn>
     <v-btn
       color="green"
       :disabled="!valid"
-      @click="$emit('goto-mfa')"
       class="my-2 mr-3"
+      @click="$emit('goto-mfa')"
     >
       MFA Login
     </v-btn>

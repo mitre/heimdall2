@@ -14,14 +14,11 @@ jobs:
         with:
           node-version: "12.x"
 
-      - name: Install lerna
-        run: npm install -g lerna
-
       - name: Install project dependencies
-        run: lerna bootstrap --hoist --ci
+        run: yarn install --frozen-lockfile
 
       - name: Build Heimdall Lite
-        run: lerna run build --scope heimdall-lite
+        run: yarn frontend build
 
       - name: deploy
         uses: peaceiris/actions-gh-pages@v3

@@ -11,7 +11,7 @@ $font-size-root: 14px;
 // @import '~vuetify/src/styles/elements/_code.sass';
 
 $code-color: false;
-$code-kbd-border-radius: false; 
+$code-kbd-border-radius: false;
 $code-kbd-font-size: false;
 $code-kbd-font-weight: false;
 .theme--dark {
@@ -32,20 +32,28 @@ $code-kbd-font-weight: false;
 
 /** Backgrounds (middle) */
 .theme--dark.v-card,
+.theme--dark.v-list,
+.theme--dark.v-tabs>.v-tabs-bar,
 .theme--dark.v-navigation-drawer,
+.theme--dark .v-input__slot,
 .theme--dark .v-stepper,
+.theme--dark .v-window__container,
 .theme--dark .v-dialog {
   background: var(--v-secondary-lighten1);
-  background-color: var(--v-secondary-lighten1);
+  background-color: var(--v-secondary-lighten1) !important;
   color: var(--v-secondary-visible-lighten1);
 }
 
 .theme--light.v-card,
+.theme--light.v-list,
+.theme--light.v-tabs>.v-tabs-bar,
 .theme--light.v-navigation-drawer,
+.theme--light .v-input__slot,
 .theme--light .v-stepper,
+.theme--light .v-window__container,
 .theme--light .v-dialog {
   background: var(--v-secondary-lighten1);
-  background-color: var(--v-secondary-lighten1);
+  background-color: var(--v-secondary-lighten1) !important;
   color: var(--v-secondary-visible-lighten1);
 }
 
@@ -87,4 +95,3 @@ $code-kbd-font-weight: false;
 .show {
   display: block !important;
 }
-

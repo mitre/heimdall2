@@ -5,8 +5,8 @@
         <UploadNexus
           v-if="!serverMode"
           :value="true"
-          @got-files="on_got_files"
           :persistent="true"
+          @got-files="on_got_files"
         />
       </v-col>
     </v-row>

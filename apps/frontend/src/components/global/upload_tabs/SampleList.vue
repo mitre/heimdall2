@@ -84,7 +84,7 @@ export default class SampleList extends Props {
     // If the sample is currently checked then this is a toggle to uncheck it
     // indexOf returns -1 if the element is not in the list
     if (checked != -1) {
-      this.selected_samps.splice(checked);
+      this.selected_samps.splice(checked, 1);
     } // Otherwise this is a toggle to check it, added to the selected samples list
     else {
       this.selected_samps.push(samp);
