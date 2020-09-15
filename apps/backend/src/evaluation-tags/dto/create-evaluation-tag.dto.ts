@@ -16,7 +16,7 @@ export class CreateEvaluationTagDto implements ICreateEvaluationTag {
   @IsString()
   readonly value: string;
 
-  constructor(dto) {
+  constructor(dto: CreateEvaluationTagDto) {
     this.key = dto.key;
     this.value = dto.value;
   }
