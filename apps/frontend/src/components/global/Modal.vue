@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    id="#modal"
+    id="modal"
     :value="visible"
     :persistent="persistent"
     width="80%"

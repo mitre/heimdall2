@@ -15,13 +15,18 @@
       >
         <v-tabs-slider />
         <!-- Define our tabs -->
-        <v-tab id="local_files_tab" href="#uploadtab-local">Local Files</v-tab>
+        <v-tab id="select-tab-local" href="#uploadtab-local">Local Files</v-tab>
 
-        <v-tab :if="serverMode" href="#uploadtab-database">Database</v-tab>
+        <v-tab
+          v-if="serverMode"
+          id="select-tab-database"
+          href="#uploadtab-database"
+          >Database</v-tab
+        >
 
-        <v-tab href="#uploadtab-s3">S3 Bucket</v-tab>
+        <v-tab id="select-tab-s3" href="#uploadtab-s3">S3 Bucket</v-tab>
 
-        <v-tab href="#uploadtab-splunk">Splunk</v-tab>
+        <v-tab id="select-tab-splunk" href="#uploadtab-splunk">Splunk</v-tab>
 
         <v-spacer />
         <v-divider />
@@ -32,7 +37,7 @@
           <FileReader @got-files="got_files" />
         </v-tab-item>
 
-        <v-tab-item value="uploadtab-database">
+        <v-tab-item v-if="serverMode" value="uploadtab-database">
           <DatabaseReader @got-files="got_files" />
         </v-tab-item>
 

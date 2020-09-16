@@ -54,6 +54,14 @@ export function selectAllFiles(): void {
   }
 }
 
+// When using Vuetify v-dialog's this is necessary in order to avoid a
+// warning on the console when running tests.
+export function addElemWithDataAppToBody() {
+  const app = document.createElement('div');
+  app.setAttribute('data-app', 'true');
+  document.body.append(app);
+}
+
 export function fileCompliance(fileId: string) {
   const filter = {fromFile: [fileId]};
   let passed = StatusCountModule.countOf(filter, 'Passed');

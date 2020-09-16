@@ -25,8 +25,8 @@
       <div class="text-center">
         <v-menu>
           <template v-slot:activator="{on, attrs}">
-            <v-btn v-bind="attrs" class="btn-fix" v-on="on">
-              <span class="d-none d-md-inline pr-2">
+            <v-btn v-bind="attrs" class="mr-2" v-on="on">
+              <span class="d-none d-md-inline mr-2">
                 Export
               </span>
               <v-icon>

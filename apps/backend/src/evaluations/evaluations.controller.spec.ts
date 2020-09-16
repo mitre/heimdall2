@@ -9,7 +9,7 @@ import {
   EVALUATION_WITH_TAGS_1,
   CREATE_EVALUATION_DTO_WITHOUT_TAGS,
   CREATE_EVALUATION_DTO_WITHOUT_DATA,
-  CREATE_EVALUATION_DTO_WITHOUT_VERSION
+  CREATE_EVALUATION_DTO_WITHOUT_FILENAME
 } from '../../test/constants/evaluations-test.constant';
 import {NotFoundException, BadRequestException} from '@nestjs/common';
 
@@ -91,7 +91,7 @@ describe('EvaluationsController', () => {
 
       expect(async () => {
         await evaluationsController.create(
-          CREATE_EVALUATION_DTO_WITHOUT_VERSION
+          CREATE_EVALUATION_DTO_WITHOUT_FILENAME
         );
       }).rejects.toThrow(BadRequestException);
     });

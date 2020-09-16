@@ -7,7 +7,7 @@ export class LogInPage {
       password: user.password
     });
     await Promise.all([
-      page.waitForSelector('#upload-btn'),
+      page.waitForSelector('#uploadtab-local'),
       page.click('#login_button')
     ]);
   }

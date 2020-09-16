@@ -1,8 +1,17 @@
 <template>
   <v-card class="elevation-0">
-    <v-card-subtitle>
-      View files loaded into your organizations Heimdall Server instance.
-    </v-card-subtitle>
+    <v-container class="py-0 pl-0">
+      <v-row>
+        <v-col cols="9">
+          <v-card-subtitle class="py-0">
+            View files loaded into your organizations Heimdall Server instance.
+          </v-card-subtitle>
+        </v-col>
+        <v-col cols="3" class="text-right">
+          <LogoutButton />
+        </v-col>
+      </v-row>
+    </v-container>
     <LoadFileList
       :headers="headers"
       :files="files"
@@ -13,15 +22,16 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
+import LogoutButton from '@/components/generic/LogoutButton.vue';
 
 import axios from 'axios';
 
 import {FileID, InspecIntakeModule} from '@/store/report_intake';
 
 import {IEvaluation} from '@heimdall/interfaces';
+import ServerMixin from '@/mixins/ServerMixin';
 
 /**
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
@@ -29,10 +39,11 @@ import {IEvaluation} from '@heimdall/interfaces';
  */
 @Component({
   components: {
-    LoadFileList
+    LoadFileList,
+    LogoutButton
   }
 })
-export default class DatabaseReader extends Vue {
+export default class DatabaseReader extends mixins(ServerMixin) {
   files: IEvaluation[] = [];
   loading: boolean = true;
 
@@ -51,10 +62,19 @@ export default class DatabaseReader extends Vue {
   }
 
   get_all_results(): void {
-    axios.get<IEvaluation[]>('/evaluations').then(response => {
-      this.files = response.data;
-      this.loading = false;
-    });
+    axios
+      .get<IEvaluation[]>('/evaluations')
+      .then(response => {
+        this.files = response.data;
+      })
+      .catch(err => {
+        this.$toasted.global.error({
+          message: `${err}. Please reload the page and try again.`
+        });
+      })
+      .finally(() => {
+        this.loading = false;
+      });
   }
 
   load_results(evaluations: IEvaluation[]): void {

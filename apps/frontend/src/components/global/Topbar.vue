@@ -16,7 +16,7 @@
       id="upload-btn"
       :disabled="showModal"
       class="mx-2"
-      @click="showModal = true"
+      @click="show_modal"
     >
       <span class="d-none d-md-inline pr-2">
         Load
@@ -26,20 +26,13 @@
       </v-icon>
     </v-btn>
     <slot name="data" />
-    <v-btn v-if="serverMode" id="logout" @click="logOut">
-      <span class="d-none d-md-inline pr-2">
-        Logout
-      </span>
-      <v-icon>
-        mdi-logout
-      </v-icon>
-    </v-btn>
+    <LogoutButton />
     <HelpAboutDropdown />
     <!-- File select modal -->
     <UploadNexus
       :visible="showModal"
-      @close-modal="showModal = false"
-      @got-files="on_got_files"
+      @close-modal="close_modal"
+      @got-files="close_modal"
     />
   </v-app-bar>
 </template>
@@ -47,8 +40,8 @@
 <script lang="ts">
 import Component, {mixins} from 'vue-class-component';
 import HelpAboutDropdown from '@/components/global/HelpAboutDropdown.vue';
-import {ServerModule} from '@/store/server';
-import {FileID} from '@/store/report_intake';
+import LogoutButton from '@/components/generic/LogoutButton.vue';
+
 import UploadNexus from '@/components/global/UploadNexus.vue';
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop} from 'vue-property-decorator';
@@ -56,7 +49,8 @@ import {Prop} from 'vue-property-decorator';
 @Component({
   components: {
     UploadNexus,
-    HelpAboutDropdown
+    HelpAboutDropdown,
+    LogoutButton
   }
 })
 export default class Topbar extends mixins(ServerMixin) {
@@ -72,13 +66,12 @@ export default class Topbar extends mixins(ServerMixin) {
   /**
    * Invoked when file(s) are loaded.
    */
-  on_got_files(ids: FileID[]) {
-    // Close the dialog
+  close_modal() {
     this.showModal = false;
   }
 
-  logOut() {
-    ServerModule.Logout();
+  show_modal() {
+    this.showModal = true;
   }
 }
 </script>

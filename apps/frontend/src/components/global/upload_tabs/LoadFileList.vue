@@ -48,6 +48,7 @@ export default class LoadFileList extends Vue {
   selectedFiles: IEvaluation[] | Samples[] = [];
 
   load_results(evaluations: IEvaluation[]) {
+    this.selectedFiles = [];
     this.$emit('load_results', evaluations);
   }
 }

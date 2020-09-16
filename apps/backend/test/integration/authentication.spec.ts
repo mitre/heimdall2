@@ -1,5 +1,7 @@
 import {LogInPage} from './pages/log-in.page';
 import {LogInVerifier} from './verifiers/log-in.verifier';
+import {UploadNexusPage} from './pages/upload-nexus.page';
+import {UploadNexusVerifier} from './verifiers/upload-nexus.verifier';
 import {ToastVerifier} from './verifiers/toast.verifier';
 import {NavbarVerifier} from './verifiers/navbar.verifier';
 import {IntegrationSpecHelper} from './helpers/integration-spec.helper';
@@ -23,6 +25,8 @@ describe('Authentication', () => {
   const logInVerifier = new LogInVerifier();
   const toastVerifier = new ToastVerifier();
   const navbarVerifier = new NavbarVerifier();
+  const uploadNexusPage = new UploadNexusPage();
+  const uploadNexusVerifier = new UploadNexusVerifier();
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -55,9 +59,7 @@ describe('Authentication', () => {
       // password. The navbar is checked for the presence of correct buttons and title
       await integrationSpecHelper.addUser(CREATE_USER_DTO_TEST_OBJ);
       await logInPage.loginSuccess(page, LOGIN_AUTHENTICATION);
-      await navbarVerifier.verifyUpload(page);
-      await navbarVerifier.verifyTitle(page, 'Profile');
-      await navbarVerifier.verifyLogout(page);
+      await uploadNexusVerifier.verifyNexusLoaded(page);
     });
 
     it('fails to authenticate a user with an incorrect password', async () => {
@@ -87,8 +89,8 @@ describe('Authentication', () => {
       // the user should see an empty log in page.
       await integrationSpecHelper.addUser(CREATE_USER_DTO_TEST_OBJ);
       await logInPage.loginSuccess(page, LOGIN_AUTHENTICATION);
-      await navbarVerifier.verifyUpload(page);
-      await navbarVerifier.verifyTitle(page, 'Profile');
+      await uploadNexusVerifier.verifyNexusLoaded(page);
+      await uploadNexusPage.switchToTab(page, 'database');
       await navbarVerifier.verifyLogout(page);
       await logInPage.logout(page);
       await logInVerifier.verifyLoginFormPresent(page);
