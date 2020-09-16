@@ -97,7 +97,17 @@ It is suggested to use VSCode for development on this project. For convenience, 
 
 ### Heimdall Server + Frontend Development
 
-In order to run Heimdall Server, Postgresql must be installed and the following one-time steps must be performed:
+To run Heimdall Server, Postgresql must be installed and a user account must exist with the permission to create databases. If you would like to use something other than the default 'postgres' user, these steps:
+
+    # Start the Postgres terminal
+    psql postgres
+
+    # Create the user
+    CREATE USER <username> with encrypted password '<password>';
+    ALTER USER <username> CREATEDB;
+    quit
+
+Then, the following one-time steps must be performed:
 
     cp apps/backend/.env-example apps/backend/.env
     # Edit /apps/backend/.env to reflect the appropriate configuration for your system
