@@ -76,7 +76,7 @@
     "vue-password": "^3.0.0",
     "vue-prism-component": "~1.1.1",
     "vue-prismjs": "~1.2.0",
-    "vue-property-decorator": "^8.3.0",
+    "vue-property-decorator": "^9.0.0",
     "vue-resize-directive": "^1.2.0",
     "vue-router": "^3.1.3",
     "vue-svg-inline-loader": "^1.4.3",
