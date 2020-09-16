@@ -1,9 +1,9 @@
 <template>
   <div>
     <Modal
-      :value="value"
+      :visible="visible"
       :persistent="persistent"
-      @input="$emit('input', $event.target.value)"
+      @close-modal="$emit('close-modal')"
     >
       <v-tabs
         :vertical="$vuetify.breakpoint.mdAndUp"
@@ -17,9 +17,12 @@
         <!-- Define our tabs -->
         <v-tab id="local_files_tab" href="#uploadtab-local">Local Files</v-tab>
 
+        <v-tab :if="serverMode" href="#uploadtab-database">Database</v-tab>
+
         <v-tab href="#uploadtab-s3">S3 Bucket</v-tab>
 
         <v-tab href="#uploadtab-splunk">Splunk</v-tab>
+
         <v-spacer />
         <v-divider />
         <v-tab id="sample_tab" href="#uploadtab-samples">Samples</v-tab>
@@ -29,9 +32,9 @@
           <FileReader @got-files="got_files" />
         </v-tab-item>
 
-        <!--v-tab-item value="uploadtab-database">
+        <v-tab-item value="uploadtab-database">
           <DatabaseReader @got-files="got_files" />
-        </v-tab-item-->
+        </v-tab-item>
 
         <v-tab-item value="uploadtab-samples">
           <SampleList @got-files="got_files" />
@@ -51,27 +54,22 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 import {FileID} from '@/store/report_intake';
 import Modal from '@/components/global/Modal.vue';
 import FileReader from '@/components/global/upload_tabs/FileReader.vue';
 import HelpFooter from '@/components/global/upload_tabs/HelpFooter.vue';
 import S3Reader from '@/components/global/upload_tabs/aws/S3Reader.vue';
 import SplunkReader from '@/components/global/upload_tabs/splunk/SplunkReader.vue';
+import DatabaseReader from '@/components/global/upload_tabs/DatabaseReader.vue';
 import SampleList from '@/components/global/upload_tabs/SampleList.vue';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import {FilteredDataModule} from '@/store/data_filters';
 
-const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
+import ServerMixin from '@/mixins/ServerMixin';
+import {Prop} from 'vue-property-decorator';
 
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {
-    value: Boolean, // Whether it is open. Modelable
-    persistent: Boolean // Whether clicking outside closes
-  }
-});
+const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
 
 /**
  * Multiplexes all of our file upload components
@@ -80,6 +78,7 @@ const Props = Vue.extend({
 @Component({
   components: {
     Modal,
+    DatabaseReader,
     FileReader,
     HelpFooter,
     S3Reader,
@@ -87,7 +86,10 @@ const Props = Vue.extend({
     SampleList
   }
 })
-export default class UploadNexus extends Props {
+export default class UploadNexus extends mixins(ServerMixin) {
+  @Prop({default: true}) readonly visible!: Boolean;
+  @Prop({default: false}) readonly persistent!: Boolean;
+
   active_tab: string = local_tab.get_default('uploadtab-local');
 
   // Handles change in tab

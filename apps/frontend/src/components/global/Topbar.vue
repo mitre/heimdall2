@@ -14,9 +14,9 @@
 
     <v-btn
       id="upload-btn"
-      :disabled="uploadModal"
+      :disabled="showModal"
       class="mx-2"
-      @click="uploadModal = true"
+      @click="showModal = true"
     >
       <span class="d-none d-md-inline pr-2">
         Load
@@ -36,24 +36,22 @@
     </v-btn>
     <HelpAboutDropdown />
     <!-- File select modal -->
-    <UploadNexus v-model="uploadModal" @got-files="on_got_files" />
+    <UploadNexus
+      :visible="showModal"
+      @close-modal="showModal = false"
+      @got-files="on_got_files"
+    />
   </v-app-bar>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 import HelpAboutDropdown from '@/components/global/HelpAboutDropdown.vue';
 import {BackendModule} from '@/store/backend';
 import {FileID} from '@/store/report_intake';
 import UploadNexus from '@/components/global/UploadNexus.vue';
-
-// We declare the props separately to make props types inferable.
-const TopbarProps = Vue.extend({
-  props: {
-    title: String
-  }
-});
+import ServerMixin from '@/mixins/ServerMixin';
+import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -61,8 +59,10 @@ const TopbarProps = Vue.extend({
     HelpAboutDropdown
   }
 })
-export default class Topbar extends TopbarProps {
-  uploadModal: boolean = false;
+export default class Topbar extends mixins(ServerMixin) {
+  @Prop({required: true}) readonly title!: String;
+
+  showModal: boolean = false;
 
   /** Submits an event to clear all filters */
   clear(): void {
@@ -74,11 +74,7 @@ export default class Topbar extends TopbarProps {
    */
   on_got_files(ids: FileID[]) {
     // Close the dialog
-    this.uploadModal = false;
-  }
-
-  get serverMode() {
-    return BackendModule.serverMode;
+    this.showModal = false;
   }
 
   logOut() {

@@ -28,12 +28,14 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
+import axios from 'axios';
+import {ICreateEvaluation} from '@heimdall/interfaces';
 import {InspecDataModule} from '@/store/data_store';
 import {FilteredDataModule} from '@/store/data_filters';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
-import {ServerModule} from '@/store/server';
-import {BackendModule} from '@/store/backend';
+
+import ServerMixin from '@/mixins/ServerMixin';
 
 // We declare the props separately to make props types inferable.
 const FileItemProps = Vue.extend({
@@ -45,9 +47,7 @@ const FileItemProps = Vue.extend({
 @Component({
   components: {}
 })
-export default class FileItem extends FileItemProps {
-  host: string = 'http://localhost:8050';
-
+export default class FileItem extends mixins(FileItemProps, ServerMixin) {
   select_file(evt: Event) {
     evt.stopPropagation();
     evt.preventDefault();
@@ -86,7 +86,7 @@ export default class FileItem extends FileItemProps {
       f => f.unique_id === this.file.unique_id
     );
     if (file) {
-      if (file.hasOwnProperty('execution')) {
+      if (file.hasOwnProperty('evaluation')) {
         this.save_evaluation(file as EvaluationFile);
       } else {
         this.save_profile(file as ProfileFile);
@@ -94,20 +94,25 @@ export default class FileItem extends FileItemProps {
     }
   }
 
-  async save_evaluation(file?: EvaluationFile): Promise<void> {
-    // checking if the input is valid
-    if (file) {
-      await ServerModule.connect(this.host)
-        .catch(bad => {
-          console.error('Unable to connect to ' + this.host);
-        })
-        .then(() => {
-          return ServerModule.save_evaluation(file);
-        })
-        .catch(bad => {
-          console.error(`bad save ${bad}`);
+  save_evaluation(file: EvaluationFile) {
+    let evaluationDTO: ICreateEvaluation = {
+      data: file.evaluation.data,
+      filename: file.filename,
+      evaluationTags: []
+    };
+
+    axios
+      .post('/evaluations', evaluationDTO)
+      .then(() => {
+        this.$toasted.global.success({
+          message: 'Result saved successfully'
         });
-    }
+      })
+      .catch(error => {
+        this.$toasted.global.error({
+          message: error.response.data.message
+        });
+      });
   }
 
   //saves profile to database
@@ -128,11 +133,6 @@ export default class FileItem extends FileItemProps {
     } else {
       return 'mdi-google-analytics';
     }
-  }
-
-  //checks if heimdall is in server mode
-  get serverMode() {
-    return BackendModule.serverMode;
   }
 }
 </script>

@@ -93,7 +93,7 @@ export default class Login extends LoginProps {
 
   checkLoggedIn() {
     if (BackendModule.token) {
-      this.$router.push('/profile');
+      this.$router.push('/');
     }
   }
 
@@ -109,7 +109,7 @@ export default class Login extends LoginProps {
       };
       BackendModule.Login(creds)
         .then(() => {
-          this.$router.push('/profile');
+          this.$router.push('/');
         })
         .catch(error => {
           this.error = error.response.data.message;

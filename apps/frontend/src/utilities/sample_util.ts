@@ -15,69 +15,69 @@ import triple_overlay_profile from '../assets/samples/triple_overlay_profile_exa
 import acme_overlay from '../assets/samples/wrapper-acme-run.json';
 
 export interface Sample {
-  name: string;
-  sample: any;
+  filename: string;
+  data: any;
 }
 
 export const samples: Sample[] = [
   {
-    name: 'Sonarqube Java Heimdall_tools Sample',
-    sample: sonarqube_java_sample
+    filename: 'Sonarqube Java Heimdall_tools Sample',
+    data: sonarqube_java_sample
   },
   {
-    name: 'OWASP ZAP Webgoat Heimdall_tools Sample',
-    sample: owasp_zap_webgoat
+    filename: 'OWASP ZAP Webgoat Heimdall_tools Sample',
+    data: owasp_zap_webgoat
   },
   {
-    name: 'OWASP ZAP Zero_WebAppSecurity Heimdall_tools Sample',
-    sample: owasp_zap_zero
+    filename: 'OWASP ZAP Zero_WebAppSecurity Heimdall_tools Sample',
+    data: owasp_zap_zero
   },
   {
-    name: 'Fortify Heimdall_tools Sample',
-    sample: fortify_h_tools_conv_webgoat
+    filename: 'Fortify Heimdall_tools Sample',
+    data: fortify_h_tools_conv_webgoat
   },
   {
-    name: 'AWS S3 Permissions Check',
-    sample: aws_s3_baseline
+    filename: 'AWS S3 Permissions Check',
+    data: aws_s3_baseline
   },
   {
-    name: 'AWS CIS Foundations Baseline',
-    sample: cis_aws_foundations_baseline
+    filename: 'AWS CIS Foundations Baseline',
+    data: cis_aws_foundations_baseline
   },
   {
-    name: 'NGINX Clean Sample',
-    sample: good_nginxresults
+    filename: 'NGINX Clean Sample',
+    data: good_nginxresults
   },
   {
-    name: 'NGINX With Failing Tests',
-    sample: bad_nginx
+    filename: 'NGINX With Failing Tests',
+    data: bad_nginx
   },
   {
-    name: 'Red Hat CVE Vulnerability Scan',
-    sample: rhel_cve_vulnerability_scan_baseline_with_failures
+    filename: 'Red Hat CVE Vulnerability Scan',
+    data: rhel_cve_vulnerability_scan_baseline_with_failures
   },
   {
-    name: 'Red Hat 7 STIG Baseline',
-    sample: rhel7_results
+    filename: 'Red Hat 7 STIG Baseline',
+    data: rhel7_results
   },
   {
-    name: 'Ubuntu STIG Baseline',
-    sample: ubuntu_1604_baseline_results
+    filename: 'Ubuntu STIG Baseline',
+    data: ubuntu_1604_baseline_results
   },
   {
-    name: 'Red Hat With Failing Tests',
-    sample: red_hat_bad
+    filename: 'Red Hat With Failing Tests',
+    data: red_hat_bad
   },
   {
-    name: 'Red Hat Clean Sample',
-    sample: red_hat_good
+    filename: 'Red Hat Clean Sample',
+    data: red_hat_good
   },
   {
-    name: 'Triple Overlay Example',
-    sample: triple_overlay_profile
+    filename: 'Triple Overlay Example',
+    data: triple_overlay_profile
   },
   {
-    name: 'Acme Overlay Example',
-    sample: acme_overlay
+    filename: 'Acme Overlay Example',
+    data: acme_overlay
   }
 ];

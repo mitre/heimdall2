@@ -54,12 +54,13 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {InspecDataModule} from '@/store/data_store';
 import {ServerModule} from '@/store/server';
-import {FilteredDataModule} from '../../store/data_filters';
-import {EvaluationFile} from '../../store/report_intake';
+import {FilteredDataModule} from '@/store/data_filters';
+import {FileID, EvaluationFile} from '@/store/report_intake';
 
 import {plainToClass} from 'class-transformer';
 import {Tag} from '@/types/models.ts';
 import VeeValidate from 'vee-validate';
+import {Prop} from 'vue-property-decorator';
 
 Vue.use(VeeValidate);
 
@@ -73,18 +74,12 @@ export interface TagHash {
   value: string;
 }
 
-// We declare the props separately
-// to make props types inferrable.
-const EvaluationInfoProps = Vue.extend({
-  props: {
-    file_filter: Number // Of type Filer from filteredData
-  }
-});
-
 @Component({
   components: {}
 })
-export default class EvaluationInfo extends EvaluationInfoProps {
+export default class EvaluationInfo extends Vue {
+  @Prop({required: true}) readonly file_filter!: FileID;
+
   filename2: string | null = null;
   version: string | null = null;
   platform_name: string | null = null;

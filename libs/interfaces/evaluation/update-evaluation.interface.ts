@@ -5,7 +5,7 @@ import {
 } from '..';
 
 export interface IUpdateEvaluation {
-  readonly version: string;
+  readonly filename: string;
   readonly data: Record<string, any>;
   readonly evaluationTags: (
     | IUpdateEvaluationTag

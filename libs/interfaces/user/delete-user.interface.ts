@@ -1,3 +1,3 @@
-export class IDeleteUser {
+export interface IDeleteUser {
   readonly password: string;
 }

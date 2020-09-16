@@ -43,10 +43,10 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {
-  next_free_file_ID,
   EvaluationFile,
   SourcedContextualizedEvaluation
 } from '@/store/report_intake';
+import {v4 as uuid} from 'uuid';
 import {SplunkEndpoint, ExecutionMetaInfo} from '@/utilities/splunk_util';
 import {InspecDataModule} from '@/store/data_store';
 import {contextualizeEvaluation} from 'inspecjs/dist/context';
@@ -107,7 +107,7 @@ export default class FileList extends Props {
     // Get its full event list and reconstruct
     return this._endpoint!.get_execution(event.guid)
       .then(exec => {
-        let unique_id = next_free_file_ID();
+        let unique_id = uuid();
         let file = {
           unique_id,
           filename: `${event.filename} (Splunk)`

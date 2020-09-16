@@ -29,11 +29,13 @@
     "test": "jest"
   },
   "dependencies": {
+    "@heimdall/interfaces": "~0.0.1",
     "@types/chroma-js": "^1.4.3",
     "@types/concat-stream": "^1.6.0",
     "@types/d3": "^5.7.2",
     "@types/diff": "^4.0.2",
     "@types/prismjs": "^1.16.1",
+    "@types/uuid": "^8.3.0",
     "@types/xml-js": "^1.0.0",
     "@types/yazl": "^2.4.2",
     "@vue/cli": "^4.0.5",
@@ -63,6 +65,7 @@
     "lru-cache": "^5.1.1",
     "prismjs": "^1.21.0",
     "roboto-fontface": "*",
+    "uuid": "^8.3.0",
     "vee-validate": "^2.2.15",
     "vue": "~2.6.10",
     "vue-analytics": "^5.18.0",
