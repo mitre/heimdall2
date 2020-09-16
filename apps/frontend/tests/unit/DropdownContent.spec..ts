@@ -13,9 +13,7 @@ const localVue = createLocalVue();
 localVue.use(VueRouter);
 const router = new VueRouter();
 
-let wrapper: Wrapper<Vue>;
-
-wrapper = shallowMount(Sidebar, {
+const wrapper: Wrapper<Vue> = shallowMount(Sidebar, {
   localVue,
   router,
   vuetify,
