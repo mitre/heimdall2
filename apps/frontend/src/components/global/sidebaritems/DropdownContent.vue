@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panel>
+  <v-expansion-panel @change="redirect">
     <v-expansion-panel-header :title="text">
       <v-list-item>{{ text }}</v-list-item>
     </v-expansion-panel-header>
@@ -73,6 +73,22 @@ const DropdownContentProps = Vue.extend({
   }
 })
 export default class DropdownContent extends DropdownContentProps {
+  redirect(): void {
+    let redirectPath = '';
+
+    if (this.text === 'Results') {
+      redirectPath = '/results';
+    } else if (this.text === 'Profiles') {
+      redirectPath = '/profiles';
+    }
+
+    if (
+      redirectPath.length > 0 &&
+      redirectPath != this.$router.currentRoute.path
+    )
+      this.$router.push({path: redirectPath});
+  }
+
   // toggle the "select all" for profiles
   toggle_all_profiles(): void {
     if (this.all_toggled_profiles) {
