@@ -221,8 +221,7 @@ import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
 import ProfData from '@/components/cards/ProfData.vue';
 import {context} from 'inspecjs';
 
-import UserMenu from '@/components/global/UserMenu.vue';
-import {BackendModule} from '@/store/backend';
+import {ServerModule} from '@/store/server';
 
 // We declare the props separately
 // to make props types inferrable.
@@ -243,8 +242,7 @@ const ResultsProps = Vue.extend({
     ExportNist,
     ExportJson,
     EvaluationInfo,
-    ProfData,
-    UserMenu
+    ProfData
   }
 })
 export default class Results extends ResultsProps {
@@ -383,7 +381,7 @@ export default class Results extends ResultsProps {
 
   //changes width of eval info if it is in server mode and needs more room for tags
   get info_width(): number {
-    if (BackendModule.serverMode) {
+    if (ServerModule.serverMode) {
       return 500;
     }
     return 300;

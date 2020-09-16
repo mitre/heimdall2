@@ -3,11 +3,10 @@ import Router from 'vue-router';
 import Results from '@/views/Results.vue';
 import Compare from '@/views/Compare.vue';
 import Landing from '@/views/Landing.vue';
-import Profile from '@/views/Profile.vue';
 import Login from '@/views/Login.vue';
 import Signup from '@/views/Signup.vue';
 
-import {BackendModule} from './store/backend';
+import {ServerModule} from '@/store/server';
 
 Vue.use(Router);
 
@@ -33,12 +32,6 @@ const router = new Router({
       meta: {requiresAuth: true}
     },
     {
-      path: '/profile',
-      name: 'profile',
-      component: Profile,
-      meta: {requiresAuth: true}
-    },
-    {
       path: '/login',
       name: 'login',
       component: Login
@@ -57,9 +50,9 @@ const router = new Router({
 });
 
 router.beforeEach((to, _, next) => {
-  BackendModule.CheckForServer().then(() => {
+  ServerModule.CheckForServer().then(() => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
-      if (BackendModule.serverMode && !BackendModule.token) {
+      if (ServerModule.serverMode && !ServerModule.token) {
         next('/login');
         return;
       }
