@@ -26,7 +26,7 @@
       <div class="text-center">
         <v-menu offset-y>
           <template v-slot:activator="{on, attrs}">
-            <v-btn v-bind="attrs" v-on="on">
+            <v-btn v-bind="attrs" class="btn-fix" v-on="on">
               <span class="d-none d-md-inline pr-2">
                 Export
               </span>
@@ -196,6 +196,15 @@
     </v-snackbar>
   </BaseView>
 </template>
+
+<style scoped>
+.btn-fix:focus::before {
+  opacity: 0 !important;
+}
+.btn-fix:hover::before {
+  opacity: 0.08 !important;
+}
+</style>
 
 <script lang="ts">
 import Vue from 'vue';
