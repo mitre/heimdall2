@@ -25,7 +25,7 @@
         </v-list-item>
       </div>
       <div v-else>
-        <v-list-item :color="blue" title="View results">
+        <v-list-item title="View results">
           <v-list-item-avatar>
             <v-icon small>mdi-television-guide</v-icon>
           </v-list-item-avatar>
@@ -86,72 +86,16 @@
       </div>
       <v-subheader>Files</v-subheader>
       <v-expansion-panels v-model="file_views" flat>
-        <v-expansion-panel>
-          <v-expansion-panel-header title="Results">
-            <v-list-item>Results</v-list-item>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <div v-if="visible_evaluation_files.length > 0">
-              <FileList
-                v-for="(file, i) in visible_evaluation_files"
-                :key="i"
-                :file="file"
-              />
-              <v-list-item
-                title="Toggle selection on all results"
-                @click="toggle_all_evaluations"
-              >
-                <v-list-item-avatar>
-                  <v-icon small>mdi-format-list-bulleted</v-icon>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    <div v-if="all_toggled_evaluation">
-                      Deselect all results set
-                    </div>
-                    <div v-else>Select all results set</div>
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </div>
-            <div v-else>
-              Why is dropdown empty?
-            </div>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-        <v-expansion-panel>
-          <v-expansion-panel-header title="Profiles">
-            <v-list-item>Profiles</v-list-item>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <div v-if="visible_profile_files.length > 0">
-              <FileList
-                v-for="(file, i) in visible_profile_files"
-                :key="i"
-                :file="file"
-              />
-              <v-list-item
-                title="Toggle selection on all profiles"
-                @click="toggle_all_profiles"
-              >
-                <v-list-item-avatar>
-                  <v-icon small>mdi-format-list-bulleted</v-icon>
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    <div v-if="all_toggled_profile">
-                      Deselect all results set
-                    </div>
-                    <div v-else>Select all results set</div>
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </div>
-            <div v-else>
-              Why is dropdown empty?
-            </div>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
+        <DropdownContent
+          text="Results"
+          toggle="Select all result set"
+          :files="visible_evaluation_files"
+        ></DropdownContent>
+        <DropdownContent
+          text="Profiles"
+          toggle="Select all profile set"
+          :files="visible_profile_files"
+        ></DropdownContent>
       </v-expansion-panels>
     </v-list>
     <v-list dense class="px-2" subheader>
@@ -179,11 +123,11 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
-import FileList from '@/components/global/sidebaritems/SidebarFileList.vue';
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
 import HelpModal from '@/components/global/HelpModal.vue';
-import {FilteredDataModule} from '../../store/data_filters';
+
+import DropdownContent from '@/components/global/sidebaritems/DropdownContent.vue';
 
 // We declare the props separately to make props types inferable.
 const SidebarProps = Vue.extend({
@@ -195,8 +139,8 @@ const SidebarProps = Vue.extend({
 @Component({
   components: {
     LinkItem,
-    FileList,
     AboutModal,
+    DropdownContent,
     HelpModal
   }
 })
@@ -210,48 +154,6 @@ export default class Sidebar extends SidebarProps {
     if (this.curr_route_path == '/results') this.file_views = 0;
     else if (this.curr_route_path == '/compare') this.file_views = 0;
     else if (this.curr_route_path == '/profiles') this.file_views = 1;
-  }
-
-  // toggle the "select all" for profiles
-  toggle_all_profiles(): void {
-    if (this.all_toggled_profiles) {
-      FilteredDataModule.set_toggled_files(
-        FilteredDataModule.selected_evaluations
-      );
-    } else {
-      let files = InspecDataModule.allProfileFiles.map(v => v.unique_id);
-      files.push(...FilteredDataModule.selected_evaluations);
-      FilteredDataModule.set_toggled_files(files);
-    }
-  }
-
-  // check to see if all profiles is selected
-  get all_toggled_profiles(): boolean {
-    return (
-      FilteredDataModule.selected_profiles.length ==
-      InspecDataModule.allProfileFiles.length
-    );
-  }
-
-  // toggle the "select all" for evaluations
-  toggle_all_evaluations(): void {
-    if (this.all_toggled_evaluation) {
-      FilteredDataModule.set_toggled_files(
-        FilteredDataModule.selected_profiles
-      );
-    } else {
-      let files = InspecDataModule.allEvaluationFiles.map(v => v.unique_id);
-      files.push(...FilteredDataModule.selected_profiles);
-      FilteredDataModule.set_toggled_files(files);
-    }
-  }
-
-  // check to see if all evalutions are selected
-  get all_toggled_evaluation(): boolean {
-    return (
-      FilteredDataModule.selected_evaluations.length ==
-      InspecDataModule.allEvaluationFiles.length
-    );
   }
 
   // get the value of the current route
@@ -271,16 +173,6 @@ export default class Sidebar extends SidebarProps {
     let files = InspecDataModule.allProfileFiles;
     files = files.sort((a, b) => a.filename.localeCompare(b.filename));
     return files;
-  }
-
-  // get all the currently selected evaluations
-  get selected_evaluations(): number[] {
-    return FilteredDataModule.selected_evaluations;
-  }
-
-  // get all the currently selected profiles
-  get selected_profiles(): number[] {
-    return FilteredDataModule.selected_profiles;
   }
 }
 </script>

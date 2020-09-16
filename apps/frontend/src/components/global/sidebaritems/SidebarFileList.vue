@@ -1,5 +1,5 @@
 <template>
-  <v-list-item :title="file.filename" @click="select_file_exclusive">
+  <v-list-item :title="file.filename" @click.stop="select_file_exclusive">
     <v-list-item-action @click.stop="select_file">
       <v-checkbox :input-value="selected" color="blue" />
     </v-list-item-action>
@@ -18,7 +18,7 @@
       </v-btn>
     </v-list-item-action>
 
-    <v-list-item-action @click="close_this_file">
+    <v-list-item-action @click.stop="close_this_file">
       <v-btn icon small>
         <v-icon> mdi-close </v-icon>
       </v-btn>
@@ -55,7 +55,6 @@ export default class FileItem extends FileItemProps {
 
   select_file_exclusive(evt: Event) {
     let path = '';
-    let current_path = this.$router.currentRoute.path;
 
     if (this.file.hasOwnProperty('evaluation')) {
       let files = FilteredDataModule.selected_profiles;
@@ -69,7 +68,7 @@ export default class FileItem extends FileItemProps {
       path = '/profiles';
     }
 
-    if (path != current_path) this.$router.push({path: path});
+    if (path != this.$router.currentRoute.path) this.$router.push({path: path});
   }
 
   //checks if file is selected
