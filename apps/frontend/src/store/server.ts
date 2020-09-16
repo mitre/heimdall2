@@ -32,10 +32,10 @@ class Server extends VuexModule implements IServerState {
   token = '';
 
   @Mutation
-  SET_TOKEN(new_token: string) {
-    this.token = new_token;
-    local_token.set(new_token);
-    axios.defaults.headers.common['Authorization'] = `Bearer ${new_token}`;
+  SET_TOKEN(newToken: string) {
+    this.token = newToken;
+    local_token.set(newToken);
+    axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
   }
 
   @Mutation
@@ -66,18 +66,18 @@ class Server extends VuexModule implements IServerState {
     // This is the only function that manipulates the loading state. If loading is already set
     // then we have already loaded the server information and there is no need to check again.
     if (!this.loading) {
-      return;
+      return null;
     }
 
-    let potentialUrl = window.location.origin;
+    const potentialUrl = window.location.origin;
 
     return axios
-      .get(potentialUrl + '/server')
+      .get(`${potentialUrl}/server`)
       .then(response => {
-        if (response.status == 200) {
+        if (response.status === 200) {
           // This means the server successfully responded and we are therefore in server mode
           this.SET_SERVER(potentialUrl);
-          let token = local_token.get();
+          const token = local_token.get();
           if (token !== null) {
             this.SET_TOKEN(token);
           }
