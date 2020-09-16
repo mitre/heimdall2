@@ -41,10 +41,11 @@ new Vue({
       error => {
         // If there is no backend token then it is safe to assume this request
         // originated from the login page and should not perform the logout action.
-        if (ServerModule.token !== '' && error.response.status === 401) {
+        if (ServerModule.token !== '' && error?.response?.status === 401) {
           // if we catch a 401 error
           ServerModule.Logout();
         }
+        console.log(error);
         return Promise.reject(error); // reject the Promise, with the error as the reason
       }
     );

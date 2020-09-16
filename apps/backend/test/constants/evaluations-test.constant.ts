@@ -49,7 +49,7 @@ export const UPDATE_EVALUATION: UpdateEvaluationDto = {
 };
 
 // @ts-ignore
-export const UPDATE_EVALUATION_VERSION_ONLY: UpdateEvaluationDto = {
+export const UPDATE_EVALUATION_FILENAME_ONLY: UpdateEvaluationDto = {
   filename: 'example-result-new.json'
 };
 

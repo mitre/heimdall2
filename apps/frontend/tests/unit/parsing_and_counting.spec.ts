@@ -22,7 +22,7 @@ describe('Parsing', () => {
     });
 
     // Done!
-    return Promise.all(promises.map(p => expect(p).to.eventually.be.null));
+    return Promise.all(promises.map(p => expect(p).to.eventually.be.string));
   });
 
   // Note that the above side effect has LOADED THESE FILES! WE CAN USE THEM IN OTHER TESTS

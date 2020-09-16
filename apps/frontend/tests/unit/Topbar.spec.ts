@@ -1,32 +1,34 @@
-import {shallowMount} from '@vue/test-utils';
-import sinon from 'sinon';
+import {mount, Wrapper} from '@vue/test-utils';
 import Topbar from '@/components/global/Topbar.vue';
+import UploadNexus from '@/components/global/UploadNexus.vue';
+import Modal from '@/components/global/Modal.vue';
 import Vuetify from 'vuetify';
-import {ServerModule} from '@/store/server';
+import {addElemWithDataAppToBody} from '../util/testingUtils';
 
-jest.mock('@/store/server');
-const BackendModStub = sinon.stub(ServerModule);
+addElemWithDataAppToBody();
 
-describe('Logout button', () => {
+describe('The Topbar', () => {
   const vuetify = new Vuetify();
+  let wrapper: Wrapper<Vue>;
 
-  afterEach(function() {
-    sinon.restore();
+  beforeEach(() => {
+    wrapper = mount(Topbar, {
+      vuetify,
+      propsData: {
+        title: 'Example Title'
+      }
+    });
   });
 
-  it('Hides the Logout button when the application is not in Server Mode', () => {
-    BackendModStub.serverMode = false;
-    // Mounting the component has to happen after setting up the serverMode
-    const wrapper = shallowMount(Topbar, {vuetify});
-
-    expect(wrapper.find('#logout').exists()).toBe(false);
-  });
-
-  it('Displays a Logout button when the application is in Server Mode', () => {
-    BackendModStub.serverMode = true;
-    // Mounting the component has to happen after setting up the serverMode
-    const wrapper = shallowMount(Topbar, {vuetify});
-
-    expect(wrapper.find('#logout').exists()).toBe(true);
+  it('Displays the UploadNexus and closes it when the close action is emitted', async () => {
+    const uploadBtn = wrapper.find('#upload-btn');
+    expect(wrapper.findComponent(UploadNexus).props('visible')).toBeFalsy();
+    await uploadBtn.trigger('click');
+    expect(wrapper.findComponent(UploadNexus).props('visible')).toBeTruthy();
+    expect(uploadBtn.attributes('disabled')).toBeTruthy();
+    wrapper.findComponent(Modal).vm.$emit('close-modal');
+    await wrapper.vm.$nextTick();
+    expect(wrapper.findComponent(UploadNexus).props('visible')).toBeFalsy();
+    expect(uploadBtn.attributes('disabled')).toBeFalsy();
   });
 });
