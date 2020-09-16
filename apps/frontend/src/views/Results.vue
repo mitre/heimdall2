@@ -37,13 +37,13 @@
           </template>
           <v-list class="pt-0 pb-0">
             <v-list-item class="pl-0 pr-0">
-              <ExportCaat :filter="all_filter"></ExportCaat>
+              <ExportCaat :filter="all_filter" />
             </v-list-item>
             <v-list-item class="pl-0 pr-0">
-              <ExportNist :filter="all_filter"></ExportNist>
+              <ExportNist :filter="all_filter" />
             </v-list-item>
             <v-list-item class="pl-0 pr-0">
-              <ExportJson></ExportJson>
+              <ExportJson />
             </v-list-item>
           </v-list>
         </v-menu>

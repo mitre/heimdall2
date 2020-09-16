@@ -10,7 +10,7 @@
     <v-spacer />
 
     <!-- Our customizable content -->
-    <slot name="center"></slot>
+    <slot name="center" />
 
     <v-btn
       id="upload-btn"
