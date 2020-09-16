@@ -62,7 +62,7 @@ import Component from 'vue-class-component';
 
 import VeeValidate from 'vee-validate';
 import VuePassword from 'vue-password';
-import {BackendModule} from '@/store/backend';
+import {ServerModule} from '@/store/server';
 
 Vue.use(VeeValidate);
 
@@ -92,7 +92,7 @@ export default class Login extends LoginProps {
   }
 
   checkLoggedIn() {
-    if (BackendModule.token) {
+    if (ServerModule.token) {
       this.$router.push('/');
     }
   }
@@ -107,7 +107,7 @@ export default class Login extends LoginProps {
         email: this.email,
         password: this.password
       };
-      BackendModule.Login(creds)
+      ServerModule.Login(creds)
         .then(() => {
           this.$router.push('/');
         })

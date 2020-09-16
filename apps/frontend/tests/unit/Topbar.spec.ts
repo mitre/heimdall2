@@ -2,10 +2,10 @@ import {shallowMount} from '@vue/test-utils';
 import sinon from 'sinon';
 import Topbar from '@/components/global/Topbar.vue';
 import Vuetify from 'vuetify';
-import {BackendModule} from '@/store/backend';
+import {ServerModule} from '@/store/server';
 
-jest.mock('@/store/backend');
-const BackendModStub = sinon.stub(BackendModule);
+jest.mock('@/store/server');
+const BackendModStub = sinon.stub(ServerModule);
 
 describe('Logout button', () => {
   const vuetify = new Vuetify();

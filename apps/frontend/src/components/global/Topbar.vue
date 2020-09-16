@@ -47,7 +47,7 @@
 <script lang="ts">
 import Component, {mixins} from 'vue-class-component';
 import HelpAboutDropdown from '@/components/global/HelpAboutDropdown.vue';
-import {BackendModule} from '@/store/backend';
+import {ServerModule} from '@/store/server';
 import {FileID} from '@/store/report_intake';
 import UploadNexus from '@/components/global/UploadNexus.vue';
 import ServerMixin from '@/mixins/ServerMixin';
@@ -78,7 +78,7 @@ export default class Topbar extends mixins(ServerMixin) {
   }
 
   logOut() {
-    BackendModule.Logout();
+    ServerModule.Logout();
   }
 }
 </script>

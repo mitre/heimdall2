@@ -117,7 +117,7 @@ import Component from 'vue-class-component';
 import VeeValidate from 'vee-validate';
 import VuePassword from 'vue-password';
 import zxcvbn from 'zxcvbn';
-import {BackendModule} from '../store/backend';
+import {ServerModule} from '@/store/server';
 
 Vue.use(VeeValidate);
 
@@ -182,7 +182,7 @@ export default class Signup extends SignupProps {
         role: this.role
       };
 
-      BackendModule.Register(creds)
+      ServerModule.Register(creds)
         .then(() => {
           this.$router.push('/login');
           this.$toasted.global.success({
