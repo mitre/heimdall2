@@ -9,11 +9,7 @@ import Store from '@/store/store';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import axios from 'axios';
 import {plainToClass} from 'class-transformer';
-import {
-  InspecIntakeModule,
-  EvaluationFile,
-  FileID
-} from '@/store/report_intake';
+import {InspecIntakeModule, EvaluationFile} from '@/store/report_intake';
 import {Evaluation, UserProfile, Usergroup} from '@/types/models.ts';
 
 export interface LoginHash {
@@ -408,7 +404,6 @@ export class Server extends VuexModule {
       .then((v: any) => {
         InspecIntakeModule.loadText({
           text: JSON.stringify(v.data),
-          unique_id: eval_hash.unique_id,
           filename: eval_hash.eva.filename,
           database_id: eval_hash.eva.id,
           createdAt: eval_hash.eva.createdAt,
@@ -420,10 +415,10 @@ export class Server extends VuexModule {
 
   /** Attempts to retrieve an evaluations */
   @Action
-  async retrieve_tags(file_id: FileID): Promise<void> {
+  async retrieve_tags(fileId: number): Promise<void> {
     //curl http://localhost:8050/executions/personal -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm..."
     return axios
-      .get(this.connection!.url + '/executions/tags/' + file_id, {
+      .get(this.connection!.url + '/executions/tags/' + fileId, {
         headers: {
           Authorization: `Bearer ${this.token}`
         }

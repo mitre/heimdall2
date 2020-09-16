@@ -6,7 +6,7 @@ import Landing from '@/views/Landing.vue';
 import Profile from '@/views/Profile.vue';
 import Login from '@/views/Login.vue';
 import Signup from '@/views/Signup.vue';
-import Usergroup from '@/views/Usergroup.vue';
+
 import {BackendModule} from './store/backend';
 
 Vue.use(Router);
@@ -36,12 +36,6 @@ const router = new Router({
       path: '/profile',
       name: 'profile',
       component: Profile,
-      meta: {requiresAuth: true}
-    },
-    {
-      path: '/usergroup/:id',
-      name: 'usergroup',
-      component: Usergroup,
       meta: {requiresAuth: true}
     },
     {

@@ -59,38 +59,15 @@
                 <v-data-table
                   dense
                   :headers="headers"
-                  :items="items"
+                  :items="evaluations"
                   :search="search"
-                  :hide-default-header="hideHeaders"
-                  :show-select="showSelect"
-                  :loading="isLoading"
-                  item-key="name"
-                  class="elevation-1"
+                  item-key="id"
                 >
-                  <template v-slot:body="{items}">
-                    <tbody>
-                      <tr v-for="item in items" :key="item.name">
-                        <td>{{ item.filename }}</td>
-                        <td>{{ item.createdAt }}</td>
-                        <td>{{ item.version }}</td>
-                        <td>
-                          <v-btn icon @click="load_this_evaluation(item)">
-                            <v-icon>mdi-plus-circle</v-icon>
-                          </v-btn>
-                        </td>
-                        <td>
-                          <v-checkbox
-                            v-model="selected"
-                            :value="item.id"
-                            multiple
-                          />
-                        </td>
-                      </tr>
-                    </tbody>
+                  <template v-slot:[`item.createdAt`]="{item}">
+                    <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
                   </template>
                 </v-data-table>
               </v-container>
-              <p>Selected: {{ selected }}</p>
             </v-card>
           </v-col>
         </v-row>
@@ -119,12 +96,12 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import BaseView from '@/views/BaseView.vue';
+import axios from 'axios';
 
-import {next_free_file_ID} from '@/store/report_intake';
-import {plainToClass} from 'class-transformer';
 import {ServerModule} from '@/store/server';
 import {UserProfile, Evaluation, Usergroup} from '@/types/models.ts';
 import UserMenu from '@/components/global/UserMenu.vue';
+import {IEvaluation} from '@heimdall/interfaces';
 
 export interface RetrieveHash {
   unique_id: number;
@@ -158,6 +135,11 @@ export default class Profile extends ProfileProps {
   group_name: string | null = null;
   selected: number[] | null = null;
   selected_group: number | null = null;
+  evaluations: IEvaluation[] = [];
+
+  mounted() {
+    this.load_evaluations();
+  }
 
   get headers(): Object[] {
     return [
@@ -167,21 +149,14 @@ export default class Profile extends ProfileProps {
         sortable: true,
         value: 'filename'
       },
-      {text: 'Uploaded', sortable: true, value: 'createdAt'},
-      {text: 'Version', sortable: true, value: 'version'},
-      {text: 'Load', sortable: false},
-      {text: 'Select', sortable: false}
+      {text: 'Uploaded', value: 'createdAt', sortable: true},
+      {text: 'Load', value: 'load', sortable: false}
     ];
   }
   get search(): string {
     return '';
   }
-  get hideHeaders(): Boolean {
-    return false;
-  }
-  get showSelect(): Boolean {
-    return false;
-  }
+
   get isLoading(): Boolean {
     return false;
   }
@@ -195,19 +170,10 @@ export default class Profile extends ProfileProps {
     }
   }
 
-  get items(): Evaluation[] {
-    if (ServerModule.user_evaluations) {
-      let eval_obj = Array.from(ServerModule.user_evaluations) || [];
-      const evals: Evaluation[] = eval_obj.map((x: any) =>
-        plainToClass(Evaluation, x)
-      );
-      evals.forEach(eva => {
-        eva.filename = this.evaluation_label(eva);
-      });
-      return evals;
-    } else {
-      return [new Evaluation()];
-    }
+  load_evaluations(): void {
+    axios.get<IEvaluation[]>('/evaluations').then(response => {
+      this.evaluations = response.data;
+    });
   }
 
   get usergroups(): Usergroup[] {
@@ -264,33 +230,6 @@ export default class Profile extends ProfileProps {
         })
         .then(() => {});
     }
-  }
-
-  async load_this_evaluation(evaluation: Evaluation): Promise<void> {
-    const host = process.env.VUE_APP_API_URL!;
-    // Generate an id
-    let unique_id = next_free_file_ID();
-
-    await ServerModule.connect(host)
-      .catch(bad => {
-        console.error('Unable to connect to ' + host);
-      })
-      .then(() => {
-        let eva_hash: RetrieveHash = {
-          unique_id: unique_id,
-          eva: evaluation
-        };
-        return ServerModule.retrieve_evaluation(eva_hash);
-      })
-      .catch(bad => {
-        console.error(`bad login ${bad}`);
-      })
-      .then(() => {
-        // TODO: The following line being removed breaks the ability for users
-        // To import profile results, however this function is currently broken
-        // anyway since it has not yet been migrated over to the heimdall2 server
-        // this.on_got_files([unique_id]);
-      });
   }
 
   async add_to_group(): Promise<void> {

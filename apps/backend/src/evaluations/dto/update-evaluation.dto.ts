@@ -7,7 +7,7 @@ import {DeleteEvaluationTagDto} from '../../evaluation-tags/dto/delete-evaluatio
 export class UpdateEvaluationDto implements IUpdateEvaluation {
   @IsOptional()
   @IsString()
-  readonly version: string;
+  readonly filename: string;
 
   @IsOptional()
   @IsObject()

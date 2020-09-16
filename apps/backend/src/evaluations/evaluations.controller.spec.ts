@@ -66,7 +66,7 @@ describe('EvaluationsController', () => {
     });
   });
 
-  describe('findALl', () => {
+  describe('findAll', () => {
     it('should return a value when given an id', async () => {
       await evaluationsController.findAll();
       expect(evaluationsService.findAll).toHaveReturnedWith([EVALUATION_DTO]);

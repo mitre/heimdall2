@@ -1,9 +1,6 @@
 import 'jest';
 import {AllRaw} from '../util/fs';
-import {
-  InspecIntakeModule,
-  next_free_file_ID
-} from '../../src/store/report_intake';
+import {InspecIntakeModule} from '../../src/store/report_intake';
 import {FilteredDataModule} from '@/store/data_filters';
 import {StatusCountModule} from '@/store/status_counts';
 import {InspecDataModule} from '@/store/data_store';
@@ -15,19 +12,18 @@ let id = 0;
 export function createTestingVue() {}
 
 export function loadSample(sampleName: string) {
-  let sample: Sample = {name: '', sample: ''};
+  let sample: Sample = {filename: '', data: ''};
   for (let samp of samples) {
-    if (samp.name == sampleName) {
+    if (samp.filename === sampleName) {
       sample = samp;
     }
   }
-  if (sample.name === '') {
+  if (sample.filename === '') {
     return;
   }
   return InspecIntakeModule.loadText({
     filename: sampleName,
-    unique_id: next_free_file_ID(),
-    text: JSON.stringify(sample.sample)
+    text: JSON.stringify(sample.data)
   });
 }
 
@@ -40,7 +36,6 @@ export function loadAll(): void {
     // Do intake
     return InspecIntakeModule.loadText({
       filename: file_result.name,
-      unique_id: id,
       text: file_result.content
     });
   });
@@ -59,8 +54,8 @@ export function selectAllFiles(): void {
   }
 }
 
-export function fileCompliance(id: number) {
-  let filter = {fromFile: [id]};
+export function fileCompliance(fileId: string) {
+  const filter = {fromFile: [fileId]};
   let passed = StatusCountModule.countOf(filter, 'Passed');
   let total =
     passed +

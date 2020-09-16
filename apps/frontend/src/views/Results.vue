@@ -248,9 +248,6 @@ const ResultsProps = Vue.extend({
   }
 })
 export default class Results extends ResultsProps {
-  /** Whether or not the model is showing */
-  dialog: boolean = false;
-
   /**
    * The currently selected severity, as modeled by the severity chart
    */
@@ -406,7 +403,7 @@ export default class Results extends ResultsProps {
   }
 
   //gets profile ids for the profData component to display corresponding info
-  get prof_ids(): number[] {
+  get prof_ids(): FileID[] {
     let ids = [];
     for (let prof of this.root_profiles) {
       if (!isFromProfileFile(prof)) {

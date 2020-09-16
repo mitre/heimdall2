@@ -8,53 +8,55 @@ import {
 import {Evaluation} from '../../src/evaluations/evaluation.model';
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 
+const DEFAULT_FILE_NAME = 'example-result.json';
+
 export const EVALUATION_1: CreateEvaluationDto = {
   data: {},
-  version: '1.0',
+  filename: DEFAULT_FILE_NAME,
   evaluationTags: []
 };
 
 export const EVALUATION_WITH_TAGS_1: CreateEvaluationDto = {
   data: {},
-  version: '1.0',
+  filename: DEFAULT_FILE_NAME,
   evaluationTags: [CREATE_EVALUATION_TAG_DTO]
 };
 
 // @ts-ignore
 export const CREATE_EVALUATION_DTO_WITHOUT_TAGS: CreateEvaluationDto = {
   data: {},
-  version: '1.0'
+  filename: DEFAULT_FILE_NAME
 };
 
 // @ts-ignore
-export const CREATE_EVALUATION_DTO_WITHOUT_VERSION: CreateEvaluationDto = {
+export const CREATE_EVALUATION_DTO_WITHOUT_FILENAME: CreateEvaluationDto = {
   data: {},
   evaluationTags: [CREATE_EVALUATION_TAG_DTO]
 };
 
 // @ts-ignore
 export const CREATE_EVALUATION_DTO_WITHOUT_DATA: CreateEvaluationDto = {
-  version: '1.0',
+  filename: DEFAULT_FILE_NAME,
   evaluationTags: [CREATE_EVALUATION_TAG_DTO]
 };
 
 export const UPDATE_EVALUATION: UpdateEvaluationDto = {
   data: {
-    version: '1.0'
+    filename: DEFAULT_FILE_NAME
   },
-  version: '1.1',
+  filename: 'example-result-new.json',
   evaluationTags: []
 };
 
 // @ts-ignore
 export const UPDATE_EVALUATION_VERSION_ONLY: UpdateEvaluationDto = {
-  version: '1.1'
+  filename: 'example-result-new.json'
 };
 
 // @ts-ignore
 export const UPDATE_EVALUATION_DATA_ONLY: UpdateEvaluationDto = {
   data: {
-    version: '1.0'
+    filename: DEFAULT_FILE_NAME
   }
 };
 
@@ -76,7 +78,7 @@ export const UPDATE_EVALUATION_REMOVE_TAGS_1: UpdateEvaluationDto = {
 export const EVALUATION_DTO: EvaluationDto = {
   id: 9999,
   data: {},
-  version: '1.0',
+  filename: DEFAULT_FILE_NAME,
   evaluationTags: [],
   createdAt: new Date(),
   updatedAt: new Date()
@@ -86,7 +88,7 @@ export const EVALUATION_DTO: EvaluationDto = {
 export const EVALUATION: Evaluation = {
   id: 9999,
   data: {},
-  version: '1.0',
+  filename: DEFAULT_FILE_NAME,
   evaluationTags: [],
   createdAt: new Date(),
   updatedAt: new Date()
