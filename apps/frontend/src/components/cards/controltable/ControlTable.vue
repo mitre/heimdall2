@@ -7,7 +7,7 @@
           v-model="single_expand"
           :label="single_expand ? 'Single Expand' : 'Multiple Expand'"
           class="mt-2 "
-        ></v-switch>
+        />
       </v-col>
     </v-row>
 

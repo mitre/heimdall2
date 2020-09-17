@@ -33,7 +33,7 @@
               :items="tag_list"
               label="Tag Name"
               dense
-            ></v-combobox>
+            />
             <v-text-field v-model="tag_value" label="Value" />
             <v-btn class="mr-4" @click="submit_tag">submit</v-btn>
           </v-form>

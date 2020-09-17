@@ -13,6 +13,14 @@ module.exports = {
     'no-console': 'off',
     'unused-imports/no-unused-imports-ts': 'error',
     'vue/require-default-prop': 'off',
-    'vue/prop-name-casing': 'off'
+    'vue/prop-name-casing': 'off',
+    'vue/html-self-closing': [
+      'error',
+      {
+        html: {
+          void: 'always'
+        }
+      }
+    ]
   }
 };
