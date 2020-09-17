@@ -46,11 +46,6 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
-
-    <v-list dense class="px-2" subheader>
-      <v-subheader>Tools</v-subheader>
-      <slot></slot>
-    </v-list>
   </v-navigation-drawer>
 </template>
 

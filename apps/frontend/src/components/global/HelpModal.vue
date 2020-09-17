@@ -3,7 +3,7 @@
     <!-- clickable slot passes the activator prop up to parent
         This allows the parent to pass in a clickable icon -->
     <template v-slot:activator="{on}">
-      <slot name="clickable" :on="on"> </slot>
+      <slot name="clickable" :on="on" />
     </template>
 
     <v-card>
@@ -59,7 +59,7 @@
         <br />
       </v-card-text>
 
-      <v-divider></v-divider>
+      <v-divider />
 
       <v-card-actions>
         <v-btn color="primary" text @click="dialog = false">Close Window</v-btn>

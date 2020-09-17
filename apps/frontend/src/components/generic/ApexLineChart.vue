@@ -5,7 +5,7 @@
       height="350"
       :options="chartOptions"
       :series="series"
-    ></vue-apex-charts>
+    />
   </div>
 </template>
 
