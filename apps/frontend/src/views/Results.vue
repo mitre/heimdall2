@@ -22,12 +22,32 @@
         <v-icon>mdi-filter-remove</v-icon>
       </v-btn>
     </template>
-
-    <!-- Custom sidebar content -->
-    <template #sidebar-content-tools>
-      <ExportCaat :filter="all_filter"></ExportCaat>
-      <ExportNist :filter="all_filter"></ExportNist>
-      <ExportJson></ExportJson>
+    <template #topbar-data>
+      <div class="text-center">
+        <v-menu>
+          <template v-slot:activator="{on, attrs}">
+            <v-btn v-bind="attrs" class="btn-fix" v-on="on">
+              <span class="d-none d-md-inline pr-2">
+                Export
+              </span>
+              <v-icon>
+                mdi-file-export
+              </v-icon>
+            </v-btn>
+          </template>
+          <v-list class="py-0">
+            <v-list-item class="px-0">
+              <ExportCaat :filter="all_filter" />
+            </v-list-item>
+            <v-list-item class="px-0">
+              <ExportNist :filter="all_filter" />
+            </v-list-item>
+            <v-list-item class="px-0">
+              <ExportJson />
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
     </template>
 
     <!-- The main content: cards, etc -->
@@ -57,7 +77,7 @@
               :selected_prof="
                 root_profiles[prof_ids.indexOf(file_filter[eval_info])]
               "
-            ></ProfData>
+            />
           </v-col>
           <v-col
             v-for="(file, i) in file_filter"
@@ -78,7 +98,7 @@
             :selected_prof="
               root_profiles[prof_ids.indexOf(file_filter[eval_info])]
             "
-          ></ProfData>
+          />
         </v-row>
         <!-- Count Cards -->
         <StatusCardRow

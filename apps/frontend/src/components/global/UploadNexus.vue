@@ -13,7 +13,7 @@
         show-arrows
         @change="selected_tab"
       >
-        <v-tabs-slider></v-tabs-slider>
+        <v-tabs-slider />
         <!-- Define our tabs -->
         <v-tab id="local_files_tab" href="#uploadtab-local">Local Files</v-tab>
 
