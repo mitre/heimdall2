@@ -35,9 +35,7 @@
           </v-list-item>
         </div>
       </div>
-      <div v-else>
-        No {{ text }} are currently loaded.
-      </div>
+      <div v-else>No {{ text }} are currently loaded.</div>
     </v-expansion-panel-content>
   </v-expansion-panel>
 </template>
@@ -78,7 +76,6 @@ const DropdownContentProps = Vue.extend({
 })
 export default class DropdownContent extends DropdownContentProps {
   redirect(): void {
-    
     if (this.route !== this.$router.currentRoute.path)
       this.$router.push({path: this.route});
   }
