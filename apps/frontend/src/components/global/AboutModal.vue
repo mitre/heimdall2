@@ -3,7 +3,7 @@
     <!-- clickable slot passes the activator prop up to parent
         This allows the parent to pass in a clickable icon -->
     <template v-slot:activator="{on}">
-      <slot name="clickable" v-bind:on="on"> </slot>
+      <slot name="clickable" :on="on"> </slot>
     </template>
     <v-card>
       <v-card-title class="headline grey" primary-title>
@@ -54,7 +54,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import LinkItem from '@/components/global/sidebaritems/SidebarLink.vue';
+
 import {AppInfoModule} from '@/store/app_info';
 
 // We declare the props separately to make props types inferable.

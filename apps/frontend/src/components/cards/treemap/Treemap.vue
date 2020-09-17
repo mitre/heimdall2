@@ -5,14 +5,14 @@
         NIST SP 800-53 Security Control Coverage
       </v-col>
       <v-col :cols="8">
-        <v-btn @click="up" :disabled="!allow_up" block x-small>
+        <v-btn :disabled="!allow_up" block x-small @click="up">
           <v-icon v-if="allow_up"> mdi-arrow-left </v-icon>
           {{ 'NIST-SP-800-53 -> ' + value.join(' -> ') }}
         </v-btn>
       </v-col>
     </v-row>
     <v-row>
-      <v-col :cols="12" v-resize:debounce="on_resize">
+      <v-col v-resize:debounce="on_resize" :cols="12">
         <svg id="chartBody" :width="width" :height="height">
           <g
             style="shape-rendering: crispEdges;"
@@ -37,7 +37,7 @@
 //               preserveAspectRatio="xMidYMid meet"
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {ControlStatus, HDFControl, nist} from 'inspecjs';
+
 import * as d3 from 'd3';
 import {FilteredDataModule, TreeMapState} from '@/store/data_filters';
 import {
@@ -46,7 +46,7 @@ import {
   is_leaf,
   is_parent
 } from '@/utilities/treemap_util';
-import {HierarchyRectangularNode, tree} from 'd3';
+import {HierarchyRectangularNode} from 'd3';
 import Cell, {XYScale} from '@/components/cards/treemap/Cell.vue';
 //@ts-ignore
 import resize from 'vue-resize-directive';
@@ -68,6 +68,7 @@ const TreemapProps = Vue.extend({
     */
     selected_control: {
       // Represents control id
+      type: String,
       required: false
     },
     filter: {

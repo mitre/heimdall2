@@ -38,23 +38,19 @@ jobs:
        with:
         node-version: '12.x'
 
-     - name: Install lerna
-       run: npm install -g lerna
-
      - name: Install project dependencies
-       run: lerna bootstrap --hoist
+       run: yarn install --frozen-lockfile
 
      - name: Copy .env-ci to .env
        run: cp apps/backend/test/.env-ci apps/backend/.env
 
      - name: Create/migrate db
        run: |
-        lerna exec "npx sequelize-cli db:create" --scope heimdall-server
-        lerna exec "npx sequelize-cli db:migrate" --scope heimdall-server
+        yarn backend sequelize-cli db:create
+        yarn backend sequelize-cli db:migrate
 
      - name: Build frontend and server for E2E UI tests
-       run: |
-        lerna run build
+       run: yarn run build
 
      - name: Run e2e UI tests
-       run: lerna run test:ui --stream
+       run: yarn backend test:ui

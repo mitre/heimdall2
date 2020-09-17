@@ -2,16 +2,16 @@
   <div>
     <Modal
       :value="value"
-      @input="$emit('input', $event.target.value)"
       :persistent="persistent"
+      @input="$emit('input', $event.target.value)"
     >
       <v-tabs
         :vertical="$vuetify.breakpoint.mdAndUp"
         active
         :value="active_tab"
-        @change="selected_tab"
         color="primary-visible"
         show-arrows
+        @change="selected_tab"
       >
         <v-tabs-slider></v-tabs-slider>
         <!-- Define our tabs -->
@@ -53,7 +53,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {InspecIntakeModule, FileID} from '@/store/report_intake';
+import {FileID} from '@/store/report_intake';
 import Modal from '@/components/global/Modal.vue';
 import FileReader from '@/components/global/upload_tabs/FileReader.vue';
 import HelpFooter from '@/components/global/upload_tabs/HelpFooter.vue';

@@ -29,8 +29,8 @@
           <v-subheader>Add Tag</v-subheader>
           <v-form ref="form">
             <v-combobox
-              :items="tag_list"
               v-model="tag_name"
+              :items="tag_list"
               label="Tag Name"
               dense
             ></v-combobox>
@@ -54,14 +54,12 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {InspecDataModule} from '@/store/data_store';
 import {ServerModule} from '@/store/server';
-import {FilteredDataModule, Filter} from '../../store/data_filters';
-import {InspecFile, EvaluationFile} from '../../store/report_intake';
-import {context} from 'inspecjs';
+import {FilteredDataModule} from '../../store/data_filters';
+import {EvaluationFile} from '../../store/report_intake';
+
 import {plainToClass} from 'class-transformer';
-import {Evaluation, Tag, Tags} from '@/types/models.ts';
+import {Tag} from '@/types/models.ts';
 import VeeValidate from 'vee-validate';
-import VuePassword from 'vue-password';
-import {FileName} from 'aws-sdk/clients/iot';
 
 Vue.use(VeeValidate);
 

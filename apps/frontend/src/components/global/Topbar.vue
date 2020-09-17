@@ -13,10 +13,10 @@
     <slot></slot>
 
     <v-btn
-      @click="uploadModal = true"
+      id="upload-btn"
       :disabled="uploadModal"
       class="mx-2"
-      id="upload-btn"
+      @click="uploadModal = true"
     >
       <span class="d-none d-md-inline pr-2">
         Load
@@ -25,7 +25,7 @@
         mdi-cloud-upload
       </v-icon>
     </v-btn>
-    <v-btn v-if="serverMode" @click="logOut" id="logout">
+    <v-btn v-if="serverMode" id="logout" @click="logOut">
       <span class="d-none d-md-inline pr-2">
         Logout
       </span>
@@ -33,20 +33,12 @@
         mdi-logout
       </v-icon>
     </v-btn>
-
-    <v-btn icon large>
-      <v-avatar size="32px" item>
-        <v-img
-          :src="require('@/assets/logo-xs-orange-white.svg')"
-          alt="Heimdall Logo"
-        ></v-img>
-      </v-avatar>
-    </v-btn>
-    <v-btn icon large v-on:click="toggleDark">
+    <v-btn icon large @click="toggleDark">
       <v-icon :color="this.$vuetify.theme.dark ? 'grey' : 'white'"
         >mdi-theme-light-dark</v-icon
       >
     </v-btn>
+    <HelpAboutDropdown />
     <!-- File select modal -->
     <UploadNexus v-model="uploadModal" @got-files="on_got_files" />
   </v-app-bar>
@@ -55,10 +47,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import HelpAboutDropdown from '@/components/global/HelpAboutDropdown.vue';
 import {BackendModule} from '@/store/backend';
 import {FileID} from '@/store/report_intake';
 import UploadNexus from '@/components/global/UploadNexus.vue';
-import {FilteredDataModule} from '@/store/data_filters';
 
 // We declare the props separately to make props types inferable.
 const TopbarProps = Vue.extend({
@@ -69,7 +61,8 @@ const TopbarProps = Vue.extend({
 
 @Component({
   components: {
-    UploadNexus
+    UploadNexus,
+    HelpAboutDropdown
   }
 })
 export default class Topbar extends TopbarProps {

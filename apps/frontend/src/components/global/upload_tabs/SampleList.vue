@@ -24,14 +24,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {defined} from '@/utilities/async_util';
-import {
-  InspecIntakeModule,
-  FileID,
-  next_free_file_ID
-} from '@/store/report_intake';
-import {InspecDataModule} from '@/store/data_store';
-import {AppInfoModule} from '@/store/app_info';
+
+import {InspecIntakeModule, next_free_file_ID} from '@/store/report_intake';
+
 import {samples, Sample} from '@/utilities/sample_util';
 
 // We declare the props separately to make props types inferable.
@@ -89,7 +84,7 @@ export default class SampleList extends Props {
     // If the sample is currently checked then this is a toggle to uncheck it
     // indexOf returns -1 if the element is not in the list
     if (checked != -1) {
-      this.selected_samps.splice(checked);
+      this.selected_samps.splice(checked, 1);
     } // Otherwise this is a toggle to check it, added to the selected samples list
     else {
       this.selected_samps.push(samp);

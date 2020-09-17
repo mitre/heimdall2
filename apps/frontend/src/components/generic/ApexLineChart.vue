@@ -13,8 +13,7 @@
 import Vue, {PropType} from 'vue';
 import Component from 'vue-class-component';
 import VueApexCharts from 'vue-apexcharts';
-import {ApexOptions, exec} from 'apexcharts';
-import {install} from 'vuetify/es5/install';
+import {ApexOptions} from 'apexcharts';
 
 // We declare the props separately to make props types inferable.
 const ApexLineChartProps = Vue.extend({

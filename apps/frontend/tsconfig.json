@@ -1,18 +1,15 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "resolveJsonModule": true,
-    "target": "ES2019",
-    "module": "commonjs",
     "strict": true,
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
-    "experimentalDecorators": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "noImplicitAny": true,
-    "baseUrl": ".",
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
     "types": ["webpack-env", "jest", "chai", "vuetify", "node"],
     "paths": {
       "@/*": ["src/*"],

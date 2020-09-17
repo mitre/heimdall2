@@ -5,8 +5,8 @@
     </v-stepper-step>
 
     <AuthStepBasic
-      v-bind:access_token.sync="access_token"
-      v-bind:secret_token.sync="secret_token"
+      :access_token.sync="access_token"
+      :secret_token.sync="secret_token"
       @auth-basic="handle_basic"
       @goto-mfa="handle_goto_mfa"
     />
@@ -19,8 +19,8 @@
     </v-stepper-step>
 
     <AuthStepMFA
-      v-bind:mfa_token.sync="mfa_token"
-      v-bind:mfa_serial.sync="mfa_serial"
+      :mfa_token.sync="mfa_token"
+      :mfa_serial.sync="mfa_serial"
       @auth-mfa="handle_proceed_mfa"
       @exit-mfa="handle_cancel_mfa"
     />
@@ -42,7 +42,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import S3, {ObjectKey} from 'aws-sdk/clients/s3';
+import S3 from 'aws-sdk/clients/s3';
 import {AWSError} from 'aws-sdk/lib/error';
 import {LocalStorageVal} from '../../../../utilities/helper_util';
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
@@ -56,7 +56,6 @@ import {
   AUTH_DURATION
 } from '../../../../utilities/aws_util';
 import {FileID} from '@/store/report_intake';
-import ErrorTooltip from '../../../generic/ErrorTooltip.vue';
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({

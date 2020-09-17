@@ -6,12 +6,12 @@
         :color="status_color"
         class="pl-2 font-weight-bold"
         hover
-        @click="$emit('toggle', !expanded)"
+        @click="$emit('toggle', !controlExpanded)"
       >
         <v-card-text class="pa-2 font-weight-bold">
           {{ control.root.hdf.status }}
           <v-icon class="float-right">
-            {{ expanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
+            {{ controlExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
           </v-icon>
         </v-card-text>
       </v-card>
@@ -19,10 +19,10 @@
 
     <template #severity>
       <v-card-text class="pa-2">
-        <v-icon small v-for="i in severity_arrow_count" :key="'sev0' + i"
+        <v-icon v-for="i in severity_arrow_count" :key="'sev0' + i" small
           >mdi-checkbox-blank-circle</v-icon
         >
-        <v-icon small v-for="i in 4 - severity_arrow_count" :key="'sev1' + i"
+        <v-icon v-for="i in 4 - severity_arrow_count" :key="'sev1' + i" small
           >mdi-checkbox-blank-circle-outline</v-icon
         >
         <br />
@@ -35,10 +35,10 @@
       <v-clamp class="pa-2 title" autoresize :max-lines="4">
         <template slot="default">{{ control.data.title }}</template>
         <template slot="after" slot-scope="{toggle, expanded, clamped}">
-          <v-icon fab v-if="!expanded && clamped" right medium @click="toggle"
+          <v-icon v-if="!expanded && clamped" fab right medium @click="toggle"
             >mdi-plus-box</v-icon
           >
-          <v-icon fab v-if="expanded" right medium @click="toggle"
+          <v-icon v-if="expanded" fab right medium @click="toggle"
             >mdi-minus-box</v-icon
           >
         </template>
@@ -53,13 +53,13 @@
     </template>
     <template #tags>
       <v-chip-group column active-class="NONE">
-        <v-tooltip bottom v-for="(tag, i) in all_tags" :key="'chip' + i">
+        <v-tooltip v-for="(tag, i) in all_tags" :key="'chip' + i" bottom>
           <template v-slot:activator="{on}">
             <v-chip
-              v-on="on"
               :href="tag.url"
               target="_blank"
               active-class="NONE"
+              v-on="on"
             >
               {{ tag.label }}
             </v-chip>
@@ -74,13 +74,13 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {HDFControl, ControlStatus, Severity, nist} from 'inspecjs';
+import {nist} from 'inspecjs';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 import {context} from 'inspecjs';
 import {NIST_DESCRIPTIONS, nist_canon_config} from '@/utilities/nist_util';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
-import {Tags} from '../../../types/models';
-import {is_control, NistControl} from 'inspecjs/dist/nist';
+
+import {is_control} from 'inspecjs/dist/nist';
 //@ts-ignore
 import VClamp from 'vue-clamp/dist/vue-clamp.js';
 
@@ -97,7 +97,7 @@ const ControlRowHeaderProps = Vue.extend({
       type: Object, // Of type HDFControl (but with added key field)
       required: true
     },
-    expanded: {
+    controlExpanded: {
       type: Boolean, // Whether or this control should be open
       required: false
     }

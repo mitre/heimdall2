@@ -4,7 +4,7 @@ export class ToastVerifier {
   // Get the error from the page and then check its contents with error.
   async verifyErrorPresent(page: Page, error: string): Promise<void> {
     const toastText = await page.$eval(
-      '.toasted.white--text.toasted-primary.default',
+      '.toasted.toasted-primary.default',
       el => el.innerHTML
     );
     expect(toastText).toContain(error);
@@ -12,7 +12,7 @@ export class ToastVerifier {
 
   async verifySuccessPresent(page: Page, text: string): Promise<void> {
     const toastText = await page.$eval(
-      '.toasted.toasted-primary.success',
+      '.toasted.toasted-primary.default',
       el => el.innerHTML
     );
     expect(toastText).toContain(text);

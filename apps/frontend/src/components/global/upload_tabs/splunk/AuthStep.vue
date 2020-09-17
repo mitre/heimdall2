@@ -22,8 +22,8 @@
         color="primary"
         :disabled="!valid || logging_in"
         :loading="logging_in"
-        @click="try_login"
         class="my-2"
+        @click="try_login"
       >
         Login
       </v-btn>
@@ -42,7 +42,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {LocalStorageVal} from '../../../../utilities/helper_util';
-import {FileID} from '@/store/report_intake';
+
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
 import {SplunkEndpoint} from '../../../../utilities/splunk_util';
 

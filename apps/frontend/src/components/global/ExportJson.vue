@@ -17,11 +17,9 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {saveAs} from 'file-saver';
-import LinkItem, {
-  LinkAction
-} from '@/components/global/sidebaritems/SidebarLink.vue';
-import {EvaluationFile, ProfileFile} from '@/store/report_intake';
-import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
+import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+
+import {isFromProfileFile} from '@/store/data_store';
 import {FilteredDataModule} from '@/store/data_filters';
 import {ZipFile} from 'yazl';
 import concat from 'concat-stream';

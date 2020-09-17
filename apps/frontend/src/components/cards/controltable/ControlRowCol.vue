@@ -18,10 +18,10 @@
       >
         <template slot="default">{{ result.code_desc.trim() }}</template>
         <template slot="after" slot-scope="{toggle, expanded, clamped}">
-          <v-icon fab v-if="!expanded && clamped" right medium @click="toggle"
+          <v-icon v-if="!expanded && clamped" fab right medium @click="toggle"
             >mdi-plus-box</v-icon
           >
-          <v-icon fab v-if="expanded" right medium @click="toggle"
+          <v-icon v-if="expanded" fab right medium @click="toggle"
             >mdi-minus-box</v-icon
           >
         </template>
@@ -38,10 +38,10 @@
       >
         <template slot="default">{{ result.code_desc.trim() }}</template>
         <template slot="after" slot-scope="{toggle, expanded, clamped}">
-          <v-icon fab v-if="!expanded && clamped" right medium @click="toggle"
+          <v-icon v-if="!expanded && clamped" fab right medium @click="toggle"
             >mdi-plus-box</v-icon
           >
-          <v-icon fab v-if="expanded" right medium @click="toggle"
+          <v-icon v-if="expanded" fab right medium @click="toggle"
             >mdi-minus-box</v-icon
           >
         </template>
@@ -58,10 +58,10 @@
       >
         <template slot="default">{{ result.message.trim() }}</template>
         <template slot="after" slot-scope="{toggle, expanded, clamped}">
-          <v-icon fab v-if="!expanded && clamped" right medium @click="toggle"
+          <v-icon v-if="!expanded && clamped" fab right medium @click="toggle"
             >mdi-plus-box</v-icon
           >
-          <v-icon fab v-if="expanded" right medium @click="toggle"
+          <v-icon v-if="expanded" fab right medium @click="toggle"
             >mdi-minus-box</v-icon
           >
         </template>
@@ -73,7 +73,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {HDFControl, ControlStatus} from 'inspecjs';
+
 //@ts-ignore
 import VClamp from 'vue-clamp/dist/vue-clamp.js';
 

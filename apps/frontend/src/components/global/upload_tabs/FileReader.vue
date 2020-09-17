@@ -27,10 +27,10 @@
             <div v-if="!loading">
               <VueFileAgent
                 ref="vueFileAgent"
-                :multiple="true"
-                :helpText="'Choose files to upload'"
-                @select="filesSelected($event)"
                 v-model="fileRecords"
+                :multiple="true"
+                :help-text="'Choose files to upload'"
+                @select="filesSelected($event)"
               />
             </div>
             <div v-else>
@@ -51,7 +51,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import UploadButton from '@/components/global/UploadButton.vue';
+
 import {
   InspecIntakeModule,
   FileID,

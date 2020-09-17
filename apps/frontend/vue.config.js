@@ -18,8 +18,12 @@ module.exports = {
   publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
   transpileDependencies: [/(\/|\\)vuetify(\/|\\)/],
   devServer: {
-    proxy: process.env.HEIMDALL_SERVER_PORT
-      ? 'http://127.0.0.1:' + process.env.HEIMDALL_SERVER_PORT
+    // JWT_SECRET is a required secret for the backend. If it is sourced
+    // then it is safe to assume the app is in server mode in development.
+    // HEIMDALL_SERVER_PORT is not required so use the default backend port value
+    // is used here if JWT_SECRET is applied but HEIMDALL_SERVER_PORT is undefined
+    proxy: process.env.JWT_SECRET
+      ? 'http://127.0.0.1:' + (process.env.HEIMDALL_SERVER_PORT || 3000)
       : ''
   },
   outputDir: '../../dist/frontend',

@@ -5,7 +5,7 @@
       <v-col cols="12">
         <v-switch
           v-model="single_expand"
-          label="Single expand"
+          :label="single_expand ? 'Single Expand' : 'Multiple Expand'"
           class="mt-2 "
         ></v-switch>
       </v-col>
@@ -16,24 +16,24 @@
       <template #id>
         <ColumnHeader
           text="ID"
-          @input="set_sort('id', $event)"
           :sort="sort_id"
+          @input="set_sort('id', $event)"
         />
       </template>
 
       <template #status>
         <ColumnHeader
           text="Status"
-          @input="set_sort('status', $event)"
           :sort="sort_status"
+          @input="set_sort('status', $event)"
         />
       </template>
 
       <template #severity>
         <ColumnHeader
           text="Severity"
-          @input="set_sort('severity', $event)"
           :sort="sort_severity"
+          @input="set_sort('severity', $event)"
         />
       </template>
 
@@ -47,26 +47,24 @@
     </ResponsiveRowSwitch>
 
     <!-- Body -->
-    <div class="scrollzone" style="overflow-y: auto; height: 600px;">
-      <v-lazy
-        v-for="item in items"
-        :key="item.key"
-        min-height="50"
-        transition="fade-transition"
-      >
-        <div>
-          <ControlRowHeader
-            :control="item.control"
-            :expanded="expanded.includes(item.key)"
-            @toggle="toggle(item.key)"
-          />
-          <ControlRowDetails
-            v-if="expanded.includes(item.key)"
-            :control="item.control"
-          />
-        </div>
-      </v-lazy>
-    </div>
+    <v-lazy
+      v-for="item in items"
+      :key="item.key"
+      min-height="50"
+      transition="fade-transition"
+    >
+      <div>
+        <ControlRowHeader
+          :control="item.control"
+          :expanded="expanded.includes(item.key)"
+          @toggle="toggle(item.key)"
+        />
+        <ControlRowDetails
+          v-if="expanded.includes(item.key)"
+          :control="item.control"
+        />
+      </div>
+    </v-lazy>
   </v-container>
 </template>
 
@@ -78,7 +76,6 @@ import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails
 import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 
-import {HDFControl, ControlStatus} from 'inspecjs';
 import {FilteredDataModule} from '@/store/data_filters';
 import {control_unique_key} from '@/utilities/format_util';
 import {context} from 'inspecjs';

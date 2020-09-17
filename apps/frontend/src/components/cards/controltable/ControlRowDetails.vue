@@ -2,7 +2,7 @@
   <v-row no-gutters>
     <v-col cols="12" class="font-weight-bold">
       <v-card>
-        <v-tabs :value="actual_tab" @change="tab_change" fixed-tabs show-arrows>
+        <v-tabs :value="actual_tab" fixed-tabs show-arrows @change="tab_change">
           <v-tabs-slider></v-tabs-slider>
           <!-- Declare our tabs -->
           <v-tab href="#tab-test">
@@ -20,15 +20,15 @@
               <template slot="default">{{ header }}</template>
               <template slot="after" slot-scope="{toggle, expanded, clamped}">
                 <v-icon
-                  fab
                   v-if="!expanded && clamped"
+                  fab
                   right
                   medium
                   @click="toggle"
                 >
                   mdi-plus-box
                 </v-icon>
-                <v-icon fab v-if="expanded" right medium @click="toggle">
+                <v-icon v-if="expanded" fab right medium @click="toggle">
                   mdi-minus-box
                 </v-icon>
               </template>
@@ -40,15 +40,15 @@
               <template slot="default">{{ main_desc }}</template>
               <template slot="after" slot-scope="{toggle, expanded, clamped}">
                 <v-icon
-                  fab
                   v-if="!expanded && clamped"
+                  fab
                   right
                   medium
                   @click="toggle"
                 >
                   mdi-plus-box
                 </v-icon>
-                <v-icon fab v-if="expanded" right medium @click="toggle">
+                <v-icon v-if="expanded" fab right medium @click="toggle">
                   mdi-minus-box
                 </v-icon>
               </template>
@@ -58,9 +58,8 @@
               :key="'col' + index"
               :class="zebra(index)"
               :result="result"
-              :statusCode="result.status"
-            >
-            </ControlRowCol>
+              :status-code="result.status"
+            />
           </v-tab-item>
 
           <v-tab-item value="tab-details">
@@ -97,7 +96,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
-import {HDFControl, ControlStatus} from 'inspecjs';
+
 //@ts-ignore
 import VClamp from 'vue-clamp/dist/vue-clamp.js';
 

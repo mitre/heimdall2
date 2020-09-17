@@ -19,12 +19,10 @@ import Component from 'vue-class-component';
 import {FilteredDataModule, Filter} from '@/store/data_filters';
 import XLSX from 'xlsx';
 import {saveAs} from 'file-saver';
-import {HDFControl, ControlStatus} from 'inspecjs';
-import LinkItem, {
-  LinkAction
-} from '@/components/global/sidebaritems/SidebarLink.vue';
+
+import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {NistControl} from 'inspecjs/dist/nist';
-import {FileID, EvaluationFile} from '@/store/report_intake';
+import {FileID} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
 
 const MAX_CELL_SIZE = 32000; // Rounding a bit here.

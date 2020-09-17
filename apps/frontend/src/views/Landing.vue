@@ -5,8 +5,8 @@
         <UploadNexus
           v-if="!serverMode"
           :value="true"
-          @got-files="on_got_files"
           :persistent="true"
+          @got-files="on_got_files"
         />
       </v-col>
     </v-row>
@@ -17,9 +17,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import UploadNexus from '@/components/global/UploadNexus.vue';
-import {ServerModule} from '@/store/server';
 
-import {FilteredDataModule, Filter} from '@/store/data_filters';
 import {FileID} from '@/store/report_intake';
 import {BackendModule} from '@/store/backend';
 

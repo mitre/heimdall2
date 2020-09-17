@@ -9,13 +9,13 @@
         <v-treeview
           :items="root_tree"
           :active="active"
-          @update:active="setActive"
           hoverable
           dense
           activatable
           color="info"
           selection-type="independent"
           transition
+          @update:active="setActive"
         >
           <template>
             <v-icon>mdi-note</v-icon>
@@ -29,13 +29,13 @@
           <v-treeview
             :items="items"
             :active="child_active"
-            @update:active="setChildActive"
             hoverable
             dense
             activatable
             color="info"
             selection-type="independent"
             transition
+            @update:active="setChildActive"
           >
             <template>
               <v-icon>mdi-note</v-icon>
@@ -84,12 +84,8 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
-import {
-  SourcedContextualizedProfile,
-  SourcedContextualizedEvaluation
-} from '@/store/report_intake';
-import {StatusCountModule} from '@/store/status_counts';
-import {FilteredDataModule, Filter} from '@/store/data_filters';
+import {SourcedContextualizedEvaluation} from '@/store/report_intake';
+
 import {profile_unique_key} from '../../utilities/format_util';
 import {InspecFile, ProfileFile} from '@/store/report_intake';
 import {context} from 'inspecjs';

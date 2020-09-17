@@ -3,17 +3,17 @@
     <v-form v-model="valid">
       <v-text-field
         :value="mfa_token"
-        @input="change_mfa_token"
-        @keyup.enter="proceed"
         label="MFA Token"
         :rules="[req_rule, mfa_rule]"
+        @input="change_mfa_token"
+        @keyup.enter="proceed"
       />
       <v-text-field
         :value="mfa_serial"
-        @input="change_mfa_serial"
-        @keyup.enter="proceed"
         label="MFA Device ARN (Optional)"
         hint="Defaults to virtual IAM device"
+        @input="change_mfa_serial"
+        @keyup.enter="proceed"
       />
       <v-btn
         color="primary"
@@ -23,7 +23,7 @@
       >
         Login
       </v-btn>
-      <v-btn color="red" @click="proceed" class="my-2 ml-2">
+      <v-btn color="red" class="my-2 ml-2" @click="proceed">
         Cancel
       </v-btn>
     </v-form>
@@ -33,16 +33,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import S3, {ObjectKey} from 'aws-sdk/clients/s3';
-import {AWSError} from 'aws-sdk/lib/error';
+
 import {LocalStorageVal} from '../../../../utilities/helper_util';
-import {
-  Auth,
-  transcribe_error,
-  get_session_token,
-  MFA_Info
-} from '../../../../utilities/aws_util';
-import {InspecIntakeModule, FileID} from '@/store/report_intake';
 
 // We declare the props separately to make props types inferable.
 const Props = Vue.extend({

@@ -5,9 +5,9 @@
       <slot name="name" />
     </v-col>
     <v-col
-      class="px-2"
       v-for="(value, i) in values"
       :key="i"
+      class="px-2"
       cols="4"
       xs="4"
       md="5"
@@ -22,7 +22,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {ControlDelta} from '@/utilities/delta_util';
 
 const Props = Vue.extend({
   props: {
