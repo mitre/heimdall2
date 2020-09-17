@@ -15,7 +15,7 @@
               <p><b>Created:</b> {{ user.created_at }}</p>
               <p><b>Updated:</b> {{ user.updated_at }}</p>
             </v-col>
-            <v-divider vertical></v-divider>
+            <v-divider vertical />
             <v-col v-if="show_groups" class="text-center">
               <div v-if="usergroups" class="column_wrapper">
                 <v-list dense class="px-2" subheader>
@@ -83,7 +83,7 @@
                             v-model="selected"
                             :value="item.id"
                             multiple
-                          ></v-checkbox>
+                          />
                         </td>
                       </tr>
                     </tbody>
@@ -105,7 +105,7 @@
                 item-value="id"
                 label="Select"
                 single-line
-              ></v-select>
+              />
               <v-btn class="mr-4" @click="add_to_group">submit</v-btn>
             </v-list>
           </v-col>

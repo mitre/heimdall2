@@ -54,7 +54,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="3" xs="3" sm="2" md="1"></v-col>
+        <v-col cols="3" xs="3" sm="2" md="1" />
         <v-col
           v-for="index in shown_files"
           :key="index - 1"
@@ -71,7 +71,7 @@
         <!-- </transition-group> -->
       </v-row>
     </div>
-    <v-divider dark></v-divider>
+    <v-divider dark />
   </div>
 </template>
 

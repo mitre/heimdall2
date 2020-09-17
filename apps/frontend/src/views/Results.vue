@@ -77,7 +77,7 @@
               :selected_prof="
                 root_profiles[prof_ids.indexOf(file_filter[eval_info])]
               "
-            ></ProfData>
+            />
           </v-col>
           <v-col
             v-for="(file, i) in file_filter"
@@ -98,7 +98,7 @@
             :selected_prof="
               root_profiles[prof_ids.indexOf(file_filter[eval_info])]
             "
-          ></ProfData>
+          />
         </v-row>
         <!-- Count Cards -->
         <StatusCardRow

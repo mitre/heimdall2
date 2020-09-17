@@ -6,21 +6,21 @@
     <!-- Top appbar. The center content of it is configured via the topbar-content slot -->
     <Topbar :title="title" @toggle-drawer="drawer = !drawer">
       <template #center>
-        <slot name="topbar-content"></slot>
+        <slot name="topbar-content" />
       </template>
       <template #data>
-        <slot name="topbar-data"></slot>
+        <slot name="topbar-data" />
       </template>
     </Topbar>
 
     <!-- Sidebar to navigate between different views -->
     <Sidebar v-model="drawer">
-      <slot name="sidebar-content-tools"></slot>
+      <slot name="sidebar-content-tools" />
     </Sidebar>
 
     <!-- The actual content. Slotted by our "descendants" -->
     <v-content>
-      <slot name="main-content"></slot>
+      <slot name="main-content" />
     </v-content>
 
     <slot>
