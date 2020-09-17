@@ -24,7 +24,7 @@
     </template>
     <template #topbar-data>
       <div class="text-center">
-        <v-menu offset-y>
+        <v-menu>
           <template v-slot:activator="{on, attrs}">
             <v-btn v-bind="attrs" class="btn-fix" v-on="on">
               <span class="d-none d-md-inline pr-2">
@@ -35,14 +35,14 @@
               </v-icon>
             </v-btn>
           </template>
-          <v-list class="pt-0 pb-0">
-            <v-list-item class="pl-0 pr-0">
+          <v-list class="py-0">
+            <v-list-item class="px-0">
               <ExportCaat :filter="all_filter" />
             </v-list-item>
-            <v-list-item class="pl-0 pr-0">
+            <v-list-item class="px-0">
               <ExportNist :filter="all_filter" />
             </v-list-item>
-            <v-list-item class="pl-0 pr-0">
+            <v-list-item class="px-0">
               <ExportJson />
             </v-list-item>
           </v-list>
@@ -196,15 +196,6 @@
     </v-snackbar>
   </BaseView>
 </template>
-
-<style scoped>
-.btn-fix:focus::before {
-  opacity: 0 !important;
-}
-.btn-fix:hover::before {
-  opacity: 0.08 !important;
-}
-</style>
 
 <script lang="ts">
 import Vue from 'vue';
