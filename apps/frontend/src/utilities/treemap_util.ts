@@ -95,10 +95,6 @@ function recursive_nist_map(
   // Fill our children
   if (node.control.sub_specifiers.length < max_depth) {
     node.children.forEach(child => {
-      // Get the last subspec.
-      let final_subspec =
-        child.control.sub_specifiers[child.control.sub_specifiers.length - 1];
-
       // Assign it, recursively computing the rest
       children.push(recursive_nist_map(ret, child, control_lookup, max_depth));
     });
@@ -166,10 +162,7 @@ function populate_tree_map(
  * Assembles the provided leaves into a nist map.
  * Colorizes nodes as appropriate, and assigns parentage
  */
-function build_populated_nist_map(
-  data: TreemapNodeLeaf[],
-  colors: ColorHack
-): TreemapNodeParent {
+function build_populated_nist_map(data: TreemapNodeLeaf[]): TreemapNodeParent {
   // Build our scaffold
   let lookup: {[key: string]: TreemapNodeParent} = {};
   let root_children: TreemapNodeParent[] = [];
@@ -184,7 +177,6 @@ function build_populated_nist_map(
   // Fill out children, recursively
   nist.FULL_NIST_HIERARCHY.forEach(n => {
     let child = recursive_nist_map(root, n, lookup, MAX_DEPTH);
-    let tag = child.nist_control.sub_specifiers[0];
     root_children.push(child);
   });
 
@@ -236,7 +228,7 @@ export function build_nist_tree_map(
   colors: ColorHack
 ): D3TreemapNode {
   let leaves = controls_to_nist_node_data(data, colors);
-  let b = build_populated_nist_map(leaves, colors);
+  let b = build_populated_nist_map(leaves);
   let c = node_data_to_tree_map(b);
   return c;
 }

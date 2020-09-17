@@ -54,17 +54,6 @@ import {AWSError} from 'aws-sdk/lib/error';
 import {Auth, fetch_s3_file} from '../../../../utilities/aws_util';
 import {LocalStorageVal} from '../../../../utilities/helper_util';
 
-const HEADERS: any = [
-  {
-    text: 'Filename',
-    align: 'left',
-    sortable: false,
-    value: 'name'
-  },
-  {text: 'Last Modified', value: 'LastModified'},
-  {text: 'Size', value: 'Size'}
-];
-
 // Caches the bucket name
 const local_bucket_name = new LocalStorageVal<string>('aws_bucket_name');
 
@@ -113,7 +102,6 @@ export default class FileList extends Props {
           filename: file.Key!
         }).then(unique_id => this.$emit('got-files', [unique_id]));
       })
-      .catch((failure: any) => this.handle_error(failure));
   }
 
   /** Recalls the last entered bucket name.  */
@@ -125,14 +113,6 @@ export default class FileList extends Props {
   load() {
     local_bucket_name.set(this.form_bucket_name);
     this.$emit('load-bucket', this.form_bucket_name);
-  }
-
-  /** Callback to handle an AWS error.
-   * Sets shown error.
-   */
-  handle_error(error: any): void {
-    let t_error = error as AWSError;
-    console.error('We should re-emit this in an appropriate place');
   }
 }
 </script>

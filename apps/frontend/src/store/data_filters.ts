@@ -214,9 +214,6 @@ export class FilteredData extends VuexModule {
 
       // Filter by nist stuff
       if (filter.tree_filters && filter.tree_filters.length > 0) {
-        // Shorthand the nist filters
-        let f = filter.tree_filters;
-
         // Construct a nist control to represent the filter
         let control = new nist.NistControl(filter.tree_filters);
 

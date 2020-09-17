@@ -88,8 +88,6 @@ export default class FileItem extends mixins(FileItemProps, ServerMixin) {
     if (file) {
       if (file.hasOwnProperty('evaluation')) {
         this.save_evaluation(file as EvaluationFile);
-      } else {
-        this.save_profile(file as ProfileFile);
       }
     }
   }
@@ -113,17 +111,6 @@ export default class FileItem extends mixins(FileItemProps, ServerMixin) {
           message: error.response.data.message
         });
       });
-  }
-
-  //saves profile to database
-  save_profile(file?: ProfileFile) {
-    // Strip the file
-    if (file) {
-      let decontextualized = file.profile.data;
-      let blob = new Blob([JSON.stringify(decontextualized)], {
-        type: 'application/json'
-      });
-    }
   }
 
   //gives different icons for a file if it is just a profile

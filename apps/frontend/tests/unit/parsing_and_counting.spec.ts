@@ -59,17 +59,7 @@ describe('Parsing', () => {
         fromFile: [file.unique_id]
       });
 
-      let {
-        PassedTests,
-        FailedOutOf,
-        FailedTests,
-        NotApplicableTests,
-        NotReviewedTests,
-        ErroredOutOf,
-        ErroredTests,
-        TotalTests,
-        ...actual_stripped
-      } = actual;
+      let {...actual_stripped} = actual;
 
       let actual_with_filename = {
         filename: file.filename,
