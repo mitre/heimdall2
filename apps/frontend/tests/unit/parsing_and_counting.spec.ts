@@ -59,11 +59,11 @@ describe('Parsing', () => {
         fromFile: [file.unique_id]
       });
 
-      let {...actual_stripped} = actual;
+      const {...actualStripped} = actual;
 
       let actual_with_filename = {
         filename: file.filename,
-        ...actual_stripped
+        ...actualStripped
       };
 
       // Compare 'em

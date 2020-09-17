@@ -227,8 +227,7 @@ export function build_nist_tree_map(
   data: Readonly<context.ContextualizedControl[]>,
   colors: ColorHack
 ): D3TreemapNode {
-  let leaves = controls_to_nist_node_data(data, colors);
-  let b = build_populated_nist_map(leaves);
-  let c = node_data_to_tree_map(b);
-  return c;
+  const leaves = controls_to_nist_node_data(data, colors);
+  const b = build_populated_nist_map(leaves);
+  return node_data_to_tree_map(b);
 }
