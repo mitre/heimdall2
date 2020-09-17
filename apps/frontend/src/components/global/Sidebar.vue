@@ -11,90 +11,19 @@
     @input="$emit('input', $event)"
   >
     <v-list dense class="px-2" subheader>
-      <v-subheader>Views</v-subheader>
-      <div v-if="visible_evaluation_files.length > 0">
-        <v-list-item to="/results" title="View results">
-          <v-list-item-avatar>
-            <v-icon small>mdi-television-guide</v-icon>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>
-              Results View
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </div>
-      <div v-else>
-        <v-list-item title="View results">
-          <v-list-item-avatar>
-            <v-icon small>mdi-television-guide</v-icon>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>
-              Results View (why is link deactivated?)
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </div>
-      <div v-if="visible_evaluation_files.length > 0">
-        <v-list-item to="/compare" title="Compare results">
-          <v-list-item-avatar>
-            <v-icon small>mdi-triangle-outline</v-icon>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>
-              Results Comparison View
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </div>
-      <div v-else>
-        <v-list-item title="Compare results">
-          <v-list-item-avatar>
-            <v-icon small>mdi-triangle-outline</v-icon>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>
-              Results Comparison View (why is link deactivated?)
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </div>
-      <div v-if="visible_profile_files.length > 0">
-        <v-list-item to="/profiles" title="View profiles">
-          <v-list-item-avatar>
-            <v-icon small>mdi-television-guide</v-icon>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>
-              Profiles View
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </div>
-      <div v-else>
-        <v-list-item title="View profiles">
-          <v-list-item-avatar>
-            <v-icon small>mdi-television-guide</v-icon>
-          </v-list-item-avatar>
-          <v-list-item-content>
-            <v-list-item-title>
-              Profiles View (why is link deactivated?)
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </div>
       <v-subheader>Files</v-subheader>
       <v-expansion-panels v-model="file_views" flat>
         <DropdownContent
           text="Results"
           toggle="Select all result set"
           :files="visible_evaluation_files"
+          route="/results"
         />
         <DropdownContent
           text="Profiles"
           toggle="Select all profile set"
           :files="visible_profile_files"
+          route="/profiles"
         />
       </v-expansion-panels>
     </v-list>

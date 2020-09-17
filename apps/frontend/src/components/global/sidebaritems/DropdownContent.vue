@@ -36,7 +36,7 @@
         </div>
       </div>
       <div v-else>
-        Why is dropdown empty?
+        No {{ text }} are currently loaded.
       </div>
     </v-expansion-panel-content>
   </v-expansion-panel>
@@ -63,6 +63,10 @@ const DropdownContentProps = Vue.extend({
     files: {
       type: Array,
       required: true
+    },
+    route: {
+      type: String,
+      required: true
     }
   }
 });
@@ -74,19 +78,9 @@ const DropdownContentProps = Vue.extend({
 })
 export default class DropdownContent extends DropdownContentProps {
   redirect(): void {
-    let redirectPath = '';
-
-    if (this.text === 'Results') {
-      redirectPath = '/results';
-    } else if (this.text === 'Profiles') {
-      redirectPath = '/profiles';
-    }
-
-    if (
-      redirectPath.length > 0 &&
-      redirectPath != this.$router.currentRoute.path
-    )
-      this.$router.push({path: redirectPath});
+    
+    if (this.route !== this.$router.currentRoute.path)
+      this.$router.push({path: this.route});
   }
 
   // toggle the "select all" for profiles
