@@ -3,14 +3,14 @@ FROM node:lts as builder
 WORKDIR /src
 USER 0
 
-COPY package.json ./
-COPY lerna.json ./
-
+COPY package.json yarn.lock lerna.json ./
 COPY apps ./apps
+COPY libs ./libs
+COPY tsconfig.json .
 
-RUN npm install -g lerna
-RUN npx lerna bootstrap --hoist --ci
-RUN npx lerna run build
+RUN yarn --frozen-lockfile
+
+RUN yarn run build
 
 ### Production image
 
@@ -18,11 +18,11 @@ FROM node:lts-slim as app
 
 WORKDIR /app
 
-COPY package.json lerna.json ./
+COPY package.json yarn.lock lerna.json ./
 COPY apps/backend/package.json apps/backend/
 COPY apps/frontend/package.json apps/frontend/
-RUN npx lerna bootstrap --hoist --ci -- --production --no-optional 
-
+COPY libs/interfaces/package.json libs/interfaces/
+RUN yarn --production=true --frozen-lockfile 
 
 COPY --from=builder /src/dist/ /app/dist/
 COPY apps/backend/.sequelizerc /app/apps/backend/
@@ -34,6 +34,11 @@ WORKDIR /app/dist/server
 EXPOSE 3000
 
 COPY entrypoint.sh /usr/local/bin/
-ENTRYPOINT ["sh", "/usr/local/bin/entrypoint.sh"]
+RUN chmod 755 /usr/local/bin/entrypoint.sh
+
+USER node
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 CMD ["node", "main.js"]
+
