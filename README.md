@@ -189,6 +189,8 @@ Please feel free to look through our issues, make a fork and submit _PRs_ and im
 
 ### Issues and Support
 
+Please feel free to contact us by **opening an issue** on the issue board, or, at [inspec@mitre.org](mailto:inspec@mitre.org) should you have any suggestions, questions or issues. If you have more general questions about the use of our software or other concerns, please contact us at [opensource@mitre.org](mailto:opensource@mitre.org).
+
 ### NOTICE
 
 © 2019-2020 The MITRE Corporation.
