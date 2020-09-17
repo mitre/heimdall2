@@ -25,9 +25,9 @@
 
     <!-- Custom sidebar content -->
     <template #sidebar-content-tools>
-      <ExportCaat :filter="all_filter"></ExportCaat>
-      <ExportNist :filter="all_filter"></ExportNist>
-      <ExportJson></ExportJson>
+      <ExportCaat :filter="all_filter" />
+      <ExportNist :filter="all_filter" />
+      <ExportJson />
     </template>
 
     <!-- The main content: cards, etc -->
@@ -57,7 +57,7 @@
               :selected_prof="
                 root_profiles[prof_ids.indexOf(file_filter[eval_info])]
               "
-            ></ProfData>
+            />
           </v-col>
           <v-col
             v-for="(file, i) in file_filter"
@@ -78,7 +78,7 @@
             :selected_prof="
               root_profiles[prof_ids.indexOf(file_filter[eval_info])]
             "
-          ></ProfData>
+          />
         </v-row>
         <!-- Count Cards -->
         <StatusCardRow

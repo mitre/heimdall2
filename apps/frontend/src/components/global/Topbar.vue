@@ -10,7 +10,7 @@
     <v-spacer />
 
     <!-- Our customizable content -->
-    <slot></slot>
+    <slot name="center" />
 
     <v-btn
       id="upload-btn"
@@ -25,6 +25,7 @@
         mdi-cloud-upload
       </v-icon>
     </v-btn>
+    <slot name="data" />
     <v-btn v-if="serverMode" id="logout" @click="logOut">
       <span class="d-none d-md-inline pr-2">
         Logout

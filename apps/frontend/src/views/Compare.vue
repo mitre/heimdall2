@@ -10,7 +10,7 @@
         prepend-inner-icon="mdi-magnify"
         label="Search"
         clearable
-      ></v-text-field>
+      />
     </template>
 
     <!-- The main content: comparisons of each set of controls in control_sets, etc -->
@@ -89,7 +89,7 @@
                     :upper_range="100"
                     :title="'Total Compliance'"
                     :y_title="'% Compliance'"
-                  ></ApexLineChart>
+                  />
                 </v-col>
                 <v-col v-else-if="tab == 2 && ableTab" cols="12">
                   <ApexLineChart
@@ -99,9 +99,9 @@
                     :sev_chart="true"
                     :title="'Failed Tests by Severity'"
                     :y_title="'Tests Failed'"
-                  ></ApexLineChart>
+                  />
                 </v-col>
-                <v-col v-else cols="12"></v-col>
+                <v-col v-else cols="12" />
               </keep-alive>
             </transition>
           </v-col>
@@ -116,7 +116,7 @@
                 v-model="checkbox"
                 color="blue"
                 :label="'Display Only Changed Results'"
-              ></v-checkbox>
+              />
             </v-col>
           </v-row>
           <hr />
@@ -183,7 +183,7 @@
               </v-row>
             </v-col>
           </v-row>
-          <v-divider dark></v-divider>
+          <v-divider dark />
           <CompareRow
             v-for="(control_set, i) in show_sets"
             :key="i"

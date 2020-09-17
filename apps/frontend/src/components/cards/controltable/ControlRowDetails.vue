@@ -3,7 +3,7 @@
     <v-col cols="12" class="font-weight-bold">
       <v-card>
         <v-tabs :value="actual_tab" fixed-tabs show-arrows @change="tab_change">
-          <v-tabs-slider></v-tabs-slider>
+          <v-tabs-slider />
           <!-- Declare our tabs -->
           <v-tab href="#tab-test">
             Test
@@ -33,8 +33,8 @@
                 </v-icon>
               </template>
             </v-clamp>
-            <v-spacer></v-spacer>
-            <v-divider></v-divider>
+            <v-spacer />
+            <v-divider />
             <br />
             <v-clamp class="pb-2" autoresize :max-lines="2">
               <template slot="default">{{ main_desc }}</template>
@@ -71,7 +71,7 @@
                     <h3>{{ detail.name }}:</h3>
                     <h4 class="mono preserve-whitespace">{{ detail.value }}</h4>
                   </v-col>
-                  <v-divider> </v-divider>
+                  <v-divider />
                 </v-row>
               </template>
             </v-container>

@@ -90,17 +90,17 @@
           text="Results"
           toggle="Select all result set"
           :files="visible_evaluation_files"
-        ></DropdownContent>
+        />
         <DropdownContent
           text="Profiles"
           toggle="Select all profile set"
           :files="visible_profile_files"
-        ></DropdownContent>
+        />
       </v-expansion-panels>
     </v-list>
     <v-list dense class="px-2" subheader>
       <v-subheader>Tools</v-subheader>
-      <slot></slot>
+      <slot />
     </v-list>
     <v-list dense class="px-2" subheader>
       <v-subheader>Info</v-subheader>
