@@ -13,8 +13,7 @@
       :key="change.name"
       :change="change"
       :shift="shift"
-    >
-    </ChangeItem>
+    />
   </v-container>
 </template>
 

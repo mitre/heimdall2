@@ -9,7 +9,7 @@
     </v-col>
     <v-col v-if="!result.message" cols="12" sm="12" lg="10" class="right">
       <h3 class="pa-2">Test</h3>
-      <v-divider></v-divider>
+      <v-divider />
       <v-clamp
         class="pa-2 mono text-justify"
         autoresize
@@ -29,7 +29,7 @@
     </v-col>
     <v-col v-else sm="6" lg="5" cols="12" class="left">
       <h3 class="pa-2">Test</h3>
-      <v-divider></v-divider>
+      <v-divider />
       <v-clamp
         class="pa-2 mono preserve-whitespace text-justify"
         autoresize
@@ -49,7 +49,7 @@
     </v-col>
     <v-col v-if="result.message" cols="12" sm="6" lg="5" class="left">
       <h3 class="pa-2">Result</h3>
-      <v-divider></v-divider>
+      <v-divider />
       <v-clamp
         class="pa-2 mono preserve-whitespace text-justify"
         autoresize

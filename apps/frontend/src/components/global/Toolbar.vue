@@ -1,7 +1,7 @@
 <template>
   <v-sheet>
     <v-toolbar dense ma-4 pa-4>
-      <v-spacer></v-spacer>
+      <v-spacer />
       <v-toolbar-items>
         <template v-if="$vuetify.breakpoint.smAndUp">
           <v-btn icon>
