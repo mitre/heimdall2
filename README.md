@@ -162,7 +162,7 @@ Make sure you have run the setup steps at least once before following these step
    - `docker-compose up -d`
 2. Go to `127.0.0.1:3000` in a web browser
 
-##### Updating Docker Container
+#### Updating Docker Container
 
 A new version of the docker container can be retrieved by running:
 
@@ -173,7 +173,7 @@ docker-compose up -d
 
 This will fetch the latest version of the container, redeploy if a newer version exists, and then apply any database migrations if applicable. No data should be lost by this operation.
 
-##### Stopping the Container
+#### Stopping the Container
 
 `docker-compose down` # From the source directory you started from
 
