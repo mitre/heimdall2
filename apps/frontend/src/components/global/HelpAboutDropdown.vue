@@ -8,7 +8,7 @@
               <v-img
                 :src="require('@/assets/logo-xs-orange-white.svg')"
                 alt="Heimdall Logo"
-              ></v-img>
+              />
             </v-avatar>
           </v-btn>
           <v-icon small>mdi-menu-down</v-icon>

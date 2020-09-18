@@ -8,7 +8,7 @@
         <v-card>
           <v-row class="pa-4" justify="space-between">
             <v-col cols="5"> <b>Name:</b> {{ usergroup.name }}<br /> </v-col>
-            <v-divider vertical></v-divider>
+            <v-divider vertical />
             <v-col v-if="show_group" class="text-center">
               <div v-if="usergroup.users" class="column_wrapper">
                 <div v-for="item in usergroup.users" :key="item.id">
@@ -28,7 +28,7 @@
                       item-value="id"
                       label="Select"
                       single-line
-                    ></v-select>
+                    />
                     <v-btn class="mr-4" @click="submit_user">submit</v-btn>
                   </v-form>
                 </v-list>
@@ -80,7 +80,7 @@
                             v-model="selected"
                             :value="item.id"
                             multiple
-                          ></v-checkbox>
+                          />
                         </td>
                       </tr>
                     </tbody>
