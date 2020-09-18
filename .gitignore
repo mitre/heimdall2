@@ -38,3 +38,5 @@ coverage
 .env
 .env-prod
 .env-dev
+
+data/
