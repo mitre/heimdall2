@@ -10,6 +10,7 @@ import {ColorHack} from '@/store/color_hack';
 import {AppInfo} from '@/store/app_info';
 import {Server} from './server';
 import {IBackendState} from './backend';
+import {ISnackbarState} from './snackbar';
 
 Vue.use(Vuex);
 
@@ -31,6 +32,7 @@ export interface StoreType {
   filteredData: FilteredData;
   statusCounts: StatusCount;
   severityCounts: SeverityCount;
+  snackbar: ISnackbarState;
   lookup: HashLookup;
   intake: InspecIntake;
   colors: ColorHack;

@@ -33,12 +33,14 @@
 </template>
 
 <script>
+import {SnackbarModule} from '@/store/snackbar';
+
 export default {
   data() {
     return {
-      show: false,
-      error: false,
-      message: ''
+      show: SnackbarModule.show,
+      error: SnackbarModule.error,
+      message: SnackbarModule.message
     };
   }
 };
