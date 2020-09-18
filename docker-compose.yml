@@ -18,13 +18,8 @@ services:
     environment:
       - NODE_ENV=production
       - DATABASE_HOST=database
-      - DATABASE_PORT=5432
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
-      - HEIMDALL_SERVER_PORT=3000
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_EXPIRE_TIME=60s
-      - MIGRATE_DATABASE=true
-      - SEED_DATABASE=true
+    env_file: .env-prod
     ports:
       - "3000:3000"
     depends_on:

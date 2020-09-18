@@ -2,8 +2,8 @@
 const bcrypt = require('bcrypt');
 
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    let result = await queryInterface.sequelize.query(
+  up: async (queryInterface, _Sequelize) => {
+    const result = await queryInterface.sequelize.query(
       'SELECT COUNT(id) FROM "Users" WHERE role = \'admin\'',
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     )
@@ -17,7 +17,7 @@ module.exports = {
           firstName: 'Admin',
           email: 'admin@heimdall.local',
           role: 'admin',
-          encryptedPassword: await bcrypt.hashSync(password, 14),
+          encryptedPassword: bcrypt.hashSync(password, 14),
           passwordChangedAt: new Date(),
           forcePasswordChange: true,
           createdAt: new Date(),
@@ -31,7 +31,7 @@ module.exports = {
     }
   },
 
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface, _Sequelize) => {
     return queryInterface.bulkDelete(
       'Users',
       { role: 'admin' },

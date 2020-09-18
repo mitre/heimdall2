@@ -12,7 +12,15 @@ if ! grep -qF "DATABASE_PASSWORD" .env; then
 	echo "DATABASE_PASSWORD=$(openssl rand -hex 33)" >> .env
 fi
 
-if ! grep -qF "JWT_SECRET" .env; then
-	echo ".env does not contain JWT_SECRET, generating secret..."
-	echo "JWT_SECRET=$(openssl rand -hex 64)" >> .env
+if [ -f .env-prod ]; then
+	echo ".env-prod already exists, if you would like to regenerate your secrets, please delete this file and re-run the script."
+else
+	echo ".env-prod does not exist, creating..."
+  read -p 'Enter JWT_EXPIRE_TIME ex. 1d or 25m: ' expire
+  cat >.env-prod - << EOF
+JWT_SECRET=$(openssl rand -hex 64)
+JWT_EXPIRE_TIME=$expire
+EOF
 fi
+
+echo "Done"
