@@ -2,8 +2,6 @@
   <ApexPieChart
     :categories="categories"
     :series="series"
-    :center_label="center_label"
-    :center_value="center_value"
     @category-selected="onSelect"
   />
 </template>
@@ -21,7 +19,6 @@ const StatusChartProps = Vue.extend({
     value: String, // The currently selected status, or null
     filter: Object, // Of type Filer from filteredData
     show_compliance: Boolean
-    //supress: Boolean // Supress status selection
   }
 });
 
