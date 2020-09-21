@@ -41,34 +41,10 @@
 </template>
 
 <script lang="ts">
-//import Vue from 'vue';
-//import Component from 'vue-class-component';
 import {Vue, Component, Prop} from 'vue-property-decorator';
 import FileList from '@/components/global/sidebaritems/SidebarFileList.vue';
 import {InspecDataModule} from '@/store/data_store';
 import {FilteredDataModule} from '@/store/data_filters';
-
-// We declare the props separately to make props types inferable.
-/*const DropdownContentProps = Vue.extend({
-  props: {
-    text: {
-      type: String,
-      required: true
-    },
-    toggle: {
-      type: String,
-      required: true
-    },
-    files: {
-      type: Array,
-      required: true
-    },
-    route: {
-      type: String,
-      required: true
-    }
-  }
-});*/
 
 @Component({
   components: {
@@ -76,7 +52,6 @@ import {FilteredDataModule} from '@/store/data_filters';
   }
 })
 export default class DropdownContent extends Vue {
-  //DropdownContentProps {
   @Prop({type: String, required: true}) readonly text!: string;
   @Prop({type: String, required: true}) readonly toggle!: string;
   @Prop({type: Array, required: true}) readonly files!: Object[];
