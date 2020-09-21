@@ -6,21 +6,6 @@
     <v-expansion-panel-content>
       <div v-if="files.length > 0">
         <FileList v-for="(file, i) in files" :key="i" :file="file" />
-        <div v-if="text === 'Results'">
-          <v-list-item>
-            <v-list-item-action @click="compareView">
-              <v-checkbox color="blue" :input-value="selected" />
-            </v-list-item-action>
-
-            <v-list-item-avatar>
-              <v-icon small>mdi-triangle-outline</v-icon>
-            </v-list-item-avatar>
-
-            <v-list-item-content>
-              <v-list-item-title>Comparison</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </div>
         <div v-if="text === 'Profiles'">
           <v-list-item :title="toggle" @click="toggle_all_profiles">
             <v-list-item-avatar>
@@ -35,6 +20,17 @@
           </v-list-item>
         </div>
         <div v-else-if="text === 'Results'">
+          <v-list-item>
+            <v-list-item-action @click="compareView">
+              <v-checkbox color="blue" :input-value="selected" />
+            </v-list-item-action>
+            <v-list-item-avatar>
+              <v-icon small>mdi-triangle-outline</v-icon>
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title>Comparison</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item :title="toggle" @click="toggle_all_evaluations">
             <v-list-item-avatar>
               <v-icon small>mdi-format-list-bulleted</v-icon>
