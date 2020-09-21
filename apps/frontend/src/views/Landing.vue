@@ -20,6 +20,7 @@ import UploadNexus from '@/components/global/UploadNexus.vue';
 
 import {FileID} from '@/store/report_intake';
 import {BackendModule} from '@/store/backend';
+import {InspecDataModule} from '@/store/data_store';
 
 // We declare the props separately
 // to make props types inferrable.
@@ -51,7 +52,16 @@ export default class Landing extends LandingProps {
    * Invoked when file(s) are loaded.
    */
   on_got_files(ids: FileID[]) {
-    this.$router.push(`/results`);
+    let gotProfileFiles = false;
+    let gotExecutionFiles = false;
+
+    if (InspecDataModule.allProfileFiles.length > 0) gotProfileFiles = true;
+    if (InspecDataModule.allEvaluationFiles.length > 0)
+      gotExecutionFiles = true;
+
+    if (gotProfileFiles == true && gotExecutionFiles == false)
+      this.$router.push(`/profiles`);
+    else this.$router.push(`/results`);
   }
 }
 </script>
