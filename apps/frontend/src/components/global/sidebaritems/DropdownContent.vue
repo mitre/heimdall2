@@ -6,6 +6,21 @@
     <v-expansion-panel-content>
       <div v-if="files.length > 0">
         <FileList v-for="(file, i) in files" :key="i" :file="file" />
+        <div v-if="text === 'Results'">
+          <v-list-item>
+            <v-list-item-action @click="compareView">
+              <v-checkbox color="blue" :input-value="selected" />
+            </v-list-item-action>
+
+            <v-list-item-avatar>
+              <v-icon small>mdi-triangle-outline</v-icon>
+            </v-list-item-avatar>
+
+            <v-list-item-content>
+              <v-list-item-title>Comparison</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </div>
         <div v-if="text === 'Profiles'">
           <v-list-item :title="toggle" @click="toggle_all_profiles">
             <v-list-item-avatar>
@@ -102,6 +117,24 @@ export default class DropdownContent extends Vue {
       FilteredDataModule.selected_evaluations.length ==
       InspecDataModule.allEvaluationFiles.length
     );
+  }
+
+  // toggle between the comparison view and the results view
+  compareView(): void {
+    if (this.$router.currentRoute.path === '/results')
+      this.$router.push({path: '/compare'});
+    if (this.$router.currentRoute.path === '/compare')
+      this.$router.push({path: '/results'});
+  }
+
+  /** toggle the checkbox associated with the toggling between
+   the comparison view and results view */
+  get selected(): boolean {
+    let flag = false;
+    if (this.$router.currentRoute.path === '/results') flag = false;
+    if (this.$router.currentRoute.path === '/compare') flag = true;
+
+    return flag;
   }
 }
 </script>
