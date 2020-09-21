@@ -41,14 +41,15 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
+//import Vue from 'vue';
+//import Component from 'vue-class-component';
+import {Vue, Component, Prop} from 'vue-property-decorator';
 import FileList from '@/components/global/sidebaritems/SidebarFileList.vue';
 import {InspecDataModule} from '@/store/data_store';
 import {FilteredDataModule} from '@/store/data_filters';
 
 // We declare the props separately to make props types inferable.
-const DropdownContentProps = Vue.extend({
+/*const DropdownContentProps = Vue.extend({
   props: {
     text: {
       type: String,
@@ -67,14 +68,20 @@ const DropdownContentProps = Vue.extend({
       required: true
     }
   }
-});
+});*/
 
 @Component({
   components: {
     FileList
   }
 })
-export default class DropdownContent extends DropdownContentProps {
+export default class DropdownContent extends Vue {
+  //DropdownContentProps {
+  @Prop({type: String, required: true}) readonly text!: string;
+  @Prop({type: String, required: true}) readonly toggle!: string;
+  @Prop({type: Array, required: true}) readonly files!: Object[];
+  @Prop({type: String, required: true}) readonly route!: string;
+
   redirect(): void {
     if (this.route !== this.$router.currentRoute.path)
       this.$router.push({path: this.route});
