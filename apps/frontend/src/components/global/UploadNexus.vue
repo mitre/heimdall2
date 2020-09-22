@@ -62,6 +62,7 @@ import SplunkReader from '@/components/global/upload_tabs/splunk/SplunkReader.vu
 import SampleList from '@/components/global/upload_tabs/SampleList.vue';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import {FilteredDataModule} from '@/store/data_filters';
+import {InspecDataModule} from '@/store/data_store';
 
 const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
 
@@ -104,6 +105,13 @@ export default class UploadNexus extends Props {
     for (let f of files) {
       FilteredDataModule.set_toggle_file_on(f);
     }
+
+    if (
+      InspecDataModule.allProfileFiles.length > 0 &&
+      InspecDataModule.allEvaluationFiles.length === 0
+    )
+      this.$router.push(`/profiles`);
+    else this.$router.push(`/results`);
   }
 }
 </script>
