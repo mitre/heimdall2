@@ -90,14 +90,6 @@ export default class ApexLineChart extends ApexLineChartProps {
     return undefined;
   }
 
-  //changes text based on light or dark mode
-  get white_black(): string {
-    if (this.$vuetify.theme.dark) {
-      return '#FFFFFF';
-    }
-    return '#000000';
-  }
-
   // Generate the chart options based on _categories
   get chartOptions(): ApexOptions {
     return {
@@ -123,7 +115,7 @@ export default class ApexLineChart extends ApexLineChartProps {
         style: {
           fontFamily: 'Arial Black',
           fontSize: '14px',
-          color: this.white_black
+          color: '#FFFFFF'
         }
       },
       legend: {
@@ -148,19 +140,19 @@ export default class ApexLineChart extends ApexLineChartProps {
         },
         axisBorder: {
           show: true,
-          color: this.white_black,
+          color: '#FFFFFF',
           offsetX: 0,
           offsetY: 0
         },
         title: {
           text: this.y_title,
           style: {
-            color: this.white_black
+            color: '#FFFFFF'
           }
         },
         labels: {
           style: {
-            colors: this.white_black
+            colors: '#FFFFFF'
           }
         }
       },

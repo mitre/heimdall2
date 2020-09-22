@@ -294,17 +294,6 @@ pre {
   max-width: 99.9%;
   margin: auto;
 }
-
-.theme--light .zebra-table {
-  background-color: var(--v-secondary-lighten1);
-  max-width: 99.9%;
-  margin: auto;
-}
-
-.theme--light .non-zebra-table {
-  max-width: 99.9%;
-  margin: auto;
-}
 /*
 .v-application code {
   background-color: revert;

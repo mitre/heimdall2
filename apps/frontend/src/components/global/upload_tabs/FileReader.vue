@@ -97,8 +97,7 @@ export default class FileReader extends Props {
         if (err) {
           console.error(`Error loading file ${file.name}`);
           this.$toasted.global.error({
-            message: String(err),
-            isDark: this.$vuetify.theme.dark
+            message: String(err)
           });
         } else {
           // Store the given id as valid
