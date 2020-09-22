@@ -10,7 +10,7 @@
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
-    "types": ["webpack-env", "jest", "chai", "vuetify", "node"],
+    "types": ["jest", "chai", "vuetify", "node"],
     "paths": {
       "@/*": ["src/*"],
       "vue-analytics": ["src/types/vue-analytics"]
