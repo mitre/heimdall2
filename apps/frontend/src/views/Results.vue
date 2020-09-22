@@ -172,7 +172,7 @@
     <v-snackbar
       v-model="filter_snackbar"
       style="margin-top: 44px;"
-      :timeout="0"
+      :timeout="-1"
       color="warning"
       top
     >
