@@ -12,5 +12,5 @@ const config = {
 };
 
 module.exports = {
-  url: `${config.dialect}://${config.username}:${config.password}:@${config.host}:${config.port}/${config.database}`
+  url: process.env.DATABASE_URL || `${config.dialect}://${config.username}:${config.password}:@${config.host}:${config.port}/${config.database}`
 };
