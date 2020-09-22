@@ -1,5 +1,4 @@
 let HtmlWebpackPlugin = require('html-webpack-plugin');
-let HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 var webpack = require('webpack');
 
 // Lookup constants
@@ -44,8 +43,7 @@ module.exports = {
       new HtmlWebpackPlugin({
         template: 'public/index.html',
         inlineSource: '.(js|css)$'
-      }),
-      new HtmlWebpackInlineSourcePlugin()
+      })
     ]
   },
   css: {

@@ -6,7 +6,6 @@ import store from '@/store/store';
 import vuetify from '@/plugins/vuetify';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
-import VueAnalytics from 'vue-analytics';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import {BackendModule} from './store/backend';
 import axios from 'axios';
@@ -18,16 +17,6 @@ Vue.use(Toasted);
 SetupToasted();
 
 Vue.use(Vuetify);
-
-Vue.use(VueAnalytics, {
-  id: 'UA-149784359-1',
-  router,
-  debug: {
-    enabled: false,
-    trace: false,
-    sendHitTask: true
-  }
-});
 
 Vue.config.productionTip = false;
 
