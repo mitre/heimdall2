@@ -3,7 +3,7 @@ import {Page} from 'puppeteer';
 export class LogInPage {
   async loginSuccess(page: Page, user: any): Promise<void> {
     await expect(page).toFillForm('#login_form', {
-      login: user.email,
+      email: user.email,
       password: user.password
     });
     await Promise.all([
@@ -14,7 +14,7 @@ export class LogInPage {
 
   async loginFailure(page: Page, user: any): Promise<void> {
     await expect(page).toFillForm('#login_form', {
-      login: user.email,
+      email: user.email,
       password: user.password
     });
     await Promise.all([

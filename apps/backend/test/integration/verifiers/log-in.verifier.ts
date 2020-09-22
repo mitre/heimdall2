@@ -6,8 +6,8 @@ export class LogInVerifier {
       '#login_form_title',
       el => el.innerHTML
     );
-    const loginLabel = await page.$eval(
-      'label[for="login_field"]',
+    const emailLabel = await page.$eval(
+      'label[for="email_field"]',
       el => el.innerHTML
     );
     const passwordLabel = await page.$eval(
@@ -23,8 +23,8 @@ export class LogInVerifier {
       el => el.innerHTML
     );
 
-    expect(loginFormHeader).toContain('Login form');
-    expect(loginLabel).toContain('Login');
+    expect(loginFormHeader).toContain('Login to Heimdall Server');
+    expect(emailLabel).toContain('Email');
     expect(passwordLabel).toContain('Password');
     expect(loginButton).toContain('Login');
     expect(signUpButton).toContain('Sign Up');

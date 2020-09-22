@@ -7,7 +7,7 @@
             <v-card class="elevation-12">
               <v-toolbar color="primary" dark flat>
                 <v-toolbar-title id="registration_form_title">
-                  Registration form
+                  Register to Heimdall Server
                 </v-toolbar-title>
                 <v-spacer />
               </v-toolbar>
@@ -16,77 +16,53 @@
                   <v-text-field
                     id="email_field"
                     v-model="email"
-                    label="Email"
+                    :error-messages="emailErrors"
                     name="email"
+                    label="Email"
                     prepend-icon="person"
                     type="text"
-                    required
+                    @blur="$v.email.$touch()"
                   />
                   <br />
-                  <div>
-                    <label
-                      for="password"
-                      class="v-label theme--dark"
-                      style="padding: 35px;"
-                    >
-                      Password
-                    </label>
-                  </div>
-                  <div
-                    style="float: left; height: 40px"
-                    class="v-input__icon v-input__icon--prepend"
+                  <v-text-field
+                    id="password"
+                    v-model="password"
+                    :error-messages="passwordErrors"
+                    prepend-icon="lock"
+                    name="password"
+                    label="Password"
+                    :type="showPassword ? 'text' : 'password'"
+                    :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                    loading
+                    @click:append="showPassword = !showPassword"
+                    @blur="$v.password.$touch()"
                   >
-                    <i
-                      aria-hidden="true"
-                      class="v-icon notranslate material-icons theme--dark"
-                    >
-                      lock
-                    </i>
-                  </div>
-                  <div class="v-text-field__slot">
-                    <VuePassword
-                      id="password"
-                      ref="password"
-                      v-model="password"
-                      v-validate="'required'"
-                      style="padding-left: 35px;"
-                      type="password"
-                      label="password"
-                      name="password"
-                      :strength-meter-only="true"
-                      :strength="strength"
-                      data-vv-name="password"
-                      required
-                      :disable-toggle="true"
-                      @input="updateStrength"
-                    />
-                  </div>
+                    <template v-slot:progress>
+                      <v-progress-linear
+                        :value="passwordStrengthPercent"
+                        :color="passwordStrengthColor"
+                        absolute
+                        height="7"
+                      />
+                    </template>
+                  </v-text-field>
                   <br />
                   <v-text-field
                     id="passwordConfirmation"
                     v-model="passwordConfirmation"
-                    v-validate="'required|confirmed:password'"
-                    label="Confirm Password"
                     name="passwordConfirmation"
+                    :error-messages="passwordConfirmationErrors"
+                    label="Confirm Password"
                     prepend-icon="lock"
                     type="password"
-                    data-vv-name="password confirmation"
-                    required
+                    @blur="$v.passwordConfirmation.$touch()"
                   />
                   <br />
-                  <v-text-field
-                    id="role"
-                    v-model="role"
-                    label="Role"
-                    name="role"
-                    prepend-icon="assignment_ind"
-                    type="text"
-                    required
-                  />
                   <v-btn
                     id="register"
                     depressed
                     large
+                    :disabled="$v.$invalid"
                     color="primary"
                     @click="register"
                   >
@@ -114,12 +90,10 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-import VeeValidate from 'vee-validate';
-import VuePassword from 'vue-password';
 import zxcvbn from 'zxcvbn';
 import {ServerModule} from '@/store/server';
-
-Vue.use(VeeValidate);
+import {required, email, sameAs} from 'vuelidate/lib/validators';
+import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 
 export interface SignupHash {
   email: string;
@@ -128,48 +102,29 @@ export interface SignupHash {
   role: string;
 }
 
-// We declare the props separately
-// to make props types inferrable.
-const SignupProps = Vue.extend({
-  props: {}
-});
-
 @Component({
-  components: {
-    VuePassword
+  mixins: [UserValidatorMixin],
+  validations: {
+    email: {
+      required,
+      email
+    },
+    password: {
+      required
+    },
+    passwordConfirmation: {
+      sameAsPassword: sameAs('password')
+    }
   }
 })
-export default class Signup extends SignupProps {
+export default class Signup extends Vue {
   email: string = '';
   password: string = '';
   passwordConfirmation: string = '';
-  role: string = '';
-  active_tab: string = '';
-  strength: number = 0;
-  // Set in mounted
-
-  // Whether fields are valid
-  valid = true;
-
-  // Whether we're currently loading
-  //loading = false;
-
-  // Loads the last open tab
-  mounted() {
-    this.active_tab = 'login-tab';
-  }
-
-  // Handles change in tab
-  selected_tab(new_tab: string) {
-    this.active_tab = new_tab;
-  }
+  showPassword: boolean = false;
 
   login() {
     this.$router.push('/login');
-  }
-  updateStrength() {
-    const value = zxcvbn(this.password);
-    this.strength = value.score;
   }
 
   async register(): Promise<void> {
@@ -179,7 +134,7 @@ export default class Signup extends SignupProps {
         email: this.email,
         password: this.password,
         passwordConfirmation: this.passwordConfirmation,
-        role: this.role
+        role: 'user'
       };
 
       ServerModule.Register(creds)
@@ -195,6 +150,28 @@ export default class Signup extends SignupProps {
           });
         });
     }
+  }
+
+  // zxcvbn returns 0-4, and the progress bar expects a percentage
+  // 25 is used since 25 * 0 = 0 and 25 * 4 = 100
+  get passwordStrengthPercent() {
+    return zxcvbn(this.password).score * 25;
+  }
+
+  // Since there are 3 colors available, 0-49% displays red, 50% displays yellow, and 51-100% displays green
+  get passwordStrengthColor() {
+    return ['error', 'warning', 'success'][
+      Math.floor(this.passwordStrengthPercent / 50)
+    ];
+  }
+
+  get passwordConfirmationErrors() {
+    const errors: Array<string> = [];
+    if (!this.$v.passwordConfirmation.$dirty) return errors;
+    // !this.$v.passwordConfirmation.required && errors.push('Password confirmation is required.')
+    !this.$v.passwordConfirmation.sameAsPassword &&
+      errors.push('Password and password confirmation must match.');
+    return errors;
   }
 }
 </script>
