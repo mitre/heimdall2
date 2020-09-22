@@ -1,0 +1,26 @@
+version: '3.5'
+
+services:
+  database:
+    image: postgres:13
+    restart: unless-stopped
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=heimdall-server-production
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    expose:
+      - "5432"
+  server:
+    image: mitre/heimdall2
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - DATABASE_HOST=database
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+    env_file: .env-prod
+    ports:
+      - "3000:3000"
+    depends_on:
+      - "database"

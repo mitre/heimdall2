@@ -160,8 +160,7 @@ export default class SplunkReader extends Props {
   show_error_message(msg: string) {
     // Toast whatever error we got
     this.$toasted.global.error({
-      message: msg,
-      isDark: this.$vuetify.theme.dark
+      message: msg
     });
   }
 
