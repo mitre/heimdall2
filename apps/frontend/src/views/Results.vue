@@ -7,7 +7,6 @@
         flat
         hide-details
         solo
-        solo-inverted
         prepend-inner-icon="mdi-magnify"
         label="Search"
         clearable
