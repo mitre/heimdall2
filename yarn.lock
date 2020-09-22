@@ -3809,13 +3809,6 @@
     "@types/koa" "*"
     graphql "^15.3.0"
 
-"@types/helmet@^0.0.48":
-  version "0.0.48"
-  resolved "https://registry.yarnpkg.com/@types/helmet/-/helmet-0.0.48.tgz#e754399d2f4672ba63962e8490efd3edd31d9799"
-  integrity sha512-C7MpnvSDrunS1q2Oy1VWCY7CDWHozqSnM8P4tFeRTuzwqni+PYOjEredwcqWG+kLpYcgLsgcY3orHB54gbx2Jw==
-  dependencies:
-    "@types/express" "*"
-
 "@types/http-assert@*":
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/@types/http-assert/-/http-assert-1.5.1.tgz#d775e93630c2469c2f980fc27e3143240335db3b"
