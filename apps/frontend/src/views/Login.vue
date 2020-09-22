@@ -7,34 +7,41 @@
             <v-card class="elevation-12">
               <v-toolbar color="primary" dark flat>
                 <v-toolbar-title id="login_form_title">
-                  Login form
+                  Login to Heimdall Server
                 </v-toolbar-title>
                 <v-spacer />
               </v-toolbar>
               <v-card-text>
                 <v-form id="login_form" ref="form" name="login_form">
                   <v-text-field
-                    id="login_field"
+                    id="email_field"
                     v-model="email"
-                    label="Login"
-                    name="login"
+                    :error-messages="emailErrors"
+                    name="email"
+                    label="Email"
                     prepend-icon="person"
                     type="text"
                     required
+                    @blur="$v.email.$touch()"
                   />
                   <v-text-field
                     id="password_field"
                     v-model="password"
-                    label="Password"
+                    :error-messages="passwordErrors"
                     name="password"
+                    label="Password"
                     prepend-icon="lock"
-                    type="password"
+                    :type="showPassword ? 'text' : 'password'"
+                    :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                    @click:append="showPassword = !showPassword"
+                    @blur="$v.password.$touch()"
                   />
                   <v-btn
                     id="login_button"
                     depressed
                     large
                     color="primary"
+                    :disabled="$v.$invalid"
                     @click="login"
                   >
                     Login
@@ -59,33 +66,31 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-
-import VeeValidate from 'vee-validate';
-import VuePassword from 'vue-password';
+import UserValidatorMixin from '@/mixins/UserValidatorMixin';
+import {required, email} from 'vuelidate/lib/validators';
 import {ServerModule} from '@/store/server';
-
-Vue.use(VeeValidate);
 
 export interface LoginHash {
   email: string;
   password: string;
 }
 
-// We declare the props separately
-// to make props types inferrable.
-const LoginProps = Vue.extend({
-  props: {}
-});
-
 @Component({
-  components: {
-    VuePassword
+  mixins: [UserValidatorMixin],
+  validations: {
+    email: {
+      required,
+      email
+    },
+    password: {
+      required
+    }
   }
 })
-export default class Login extends LoginProps {
+export default class Login extends Vue {
   email: string = '';
   password: string = '';
-  error: string = '';
+  showPassword: boolean = false;
 
   mounted() {
     this.checkLoggedIn();
@@ -102,22 +107,19 @@ export default class Login extends LoginProps {
   }
 
   login() {
-    if ((this.$refs.form as any).validate()) {
-      let creds: LoginHash = {
-        email: this.email,
-        password: this.password
-      };
-      ServerModule.Login(creds)
-        .then(() => {
-          this.$router.push('/');
-        })
-        .catch(error => {
-          this.error = error.response.data.message;
-          this.$toasted.global.error({
-            message: this.error
-          });
+    let creds: LoginHash = {
+      email: this.email,
+      password: this.password
+    };
+    ServerModule.Login(creds)
+      .then(() => {
+        this.$router.push('/');
+      })
+      .catch(error => {
+        this.$toasted.global.error({
+          message: error.response.data.message
         });
-    }
+      });
   }
 }
 </script>
