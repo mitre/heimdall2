@@ -5194,9 +5194,9 @@ anymatch@^3.0.3, anymatch@~3.1.1:
     picomatch "^2.0.4"
 
 apexcharts@^3.10.1:
-  version "3.20.2"
-  resolved "https://registry.yarnpkg.com/apexcharts/-/apexcharts-3.20.2.tgz#902c7163e3a46350f839fcc71e0dc46b00fd3ae8"
-  integrity sha512-Wc3viU4BmkcGMKArkWr87Flr1+2YJWV0CDZheTaK4S7kNgg8Aw7a05u5gczRDyA68RsmdQ/ltLjpBBr1CKBUPA==
+  version "3.21.0"
+  resolved "https://registry.yarnpkg.com/apexcharts/-/apexcharts-3.21.0.tgz#307cb52d7ba6885c98d376a0c2d2a863177d6b16"
+  integrity sha512-yeulUZCTG57swbJ5oIJIjgfRdIsvmC/2WJanrZxNGhjtZf2B9NaT95pEtbrml1BILJKtMn4VbpXVZp+8Tzmydg==
   dependencies:
     svg.draggable.js "^2.2.2"
     svg.easing.js "^2.0.0"
