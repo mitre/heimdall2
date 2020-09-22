@@ -58,10 +58,10 @@ export async function list_buckets(creds: AuthCreds) {
     .promise()
     .then(
       success => {
-        throw 'Not implemented';
+        throw Error('Not implemented');
       },
       failure => {
-        throw 'Not implemented';
+        throw Error('Not implemented');
       }
     );
 
@@ -133,7 +133,7 @@ export async function get_session_token(
   }
 
   // Handle the response. On Success, save the creds. On error, throw that stuff back!
-  return await result.then(success => {
+  return result.then(success => {
     let creds: AuthCreds = {
       accessKeyId: success.Credentials!.AccessKeyId,
       secretAccessKey: success.Credentials!.SecretAccessKey,
