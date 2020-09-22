@@ -19,9 +19,9 @@
     </Sidebar>
 
     <!-- The actual content. Slotted by our "descendants" -->
-    <v-content>
+    <v-main>
       <slot name="main-content" />
-    </v-content>
+    </v-main>
 
     <slot>
       <!-- The default slot -->
