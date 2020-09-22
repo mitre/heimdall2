@@ -61,7 +61,6 @@
     "html-webpack-plugin": "^3.2.0",
     "inspecjs": "0.12.1",
     "lru-cache": "^5.1.1",
-    "material-components-web": "^7.0.0",
     "prismjs": "^1.21.0",
     "roboto-fontface": "*",
     "vee-validate": "^2.2.15",
