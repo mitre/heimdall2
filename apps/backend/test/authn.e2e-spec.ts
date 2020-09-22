@@ -42,7 +42,7 @@ describe('/authn', () => {
         .set('Content-Type', 'application/json')
         .send(CREATE_USER_DTO_TEST_OBJ)
         .expect(HttpStatus.CREATED);
-      return request(app.getHttpServer())
+      return await request(app.getHttpServer())
         .post('/authn/login')
         .set('Content-Type', 'application/json')
         .send(LOGIN_AUTHENTICATION)

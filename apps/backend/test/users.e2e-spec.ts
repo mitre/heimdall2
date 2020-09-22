@@ -104,7 +104,7 @@ describe('/users', () => {
     });
 
     it('should return 400 status if email is not provided', async () => {
-      return request(app.getHttpServer())
+      return await request(app.getHttpServer())
         .post('/users')
         .set('Content-Type', 'application/json')
         .send(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD)
@@ -116,7 +116,7 @@ describe('/users', () => {
     });
 
     it('should return 400 status if invalid email is provided', async () => {
-      return request(app.getHttpServer())
+      return await request(app.getHttpServer())
         .post('/users')
         .set('Content-Type', 'application/json')
         .send(CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD)
@@ -133,7 +133,7 @@ describe('/users', () => {
         .set('Content-Type', 'application/json')
         .send(CREATE_USER_DTO_TEST_OBJ)
         .expect(HttpStatus.CREATED);
-      return request(app.getHttpServer())
+      return await request(app.getHttpServer())
         .post('/users')
         .set('Content-Type', 'application/json')
         .send(CREATE_USER_DTO_TEST_OBJ)
@@ -147,7 +147,7 @@ describe('/users', () => {
     });
 
     it('should return 400 status if passwords dont match', async () => {
-      return request(app.getHttpServer())
+      return await request(app.getHttpServer())
         .post('/users')
         .set('Content-Type', 'application/json')
         .send(CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS)
@@ -159,7 +159,7 @@ describe('/users', () => {
     });
 
     it('should return 400 status if password is not provided', async () => {
-      return request(app.getHttpServer())
+      return await request(app.getHttpServer())
         .post('/users')
         .set('Content-Type', 'application/json')
         .send(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD)
@@ -171,7 +171,7 @@ describe('/users', () => {
     });
 
     it('should return 400 status if passwordConfirmation is not provided', async () => {
-      return request(app.getHttpServer())
+      return await request(app.getHttpServer())
         .post('/users')
         .set('Content-Type', 'application/json')
         .send(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD)
@@ -185,7 +185,7 @@ describe('/users', () => {
     });
 
     it('should return 400 status if password does not meet complexity requirements', async () => {
-      return request(app.getHttpServer())
+      return await request(app.getHttpServer())
         .post('/users')
         .set('Content-Type', 'application/json')
         .send(CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD)
@@ -201,7 +201,7 @@ describe('/users', () => {
     });
 
     it('should return 400 status if no role is provided', async () => {
-      return request(app.getHttpServer())
+      return await request(app.getHttpServer())
         .post('/users')
         .set('Content-Type', 'application/json')
         .send(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE)
@@ -243,7 +243,7 @@ describe('/users', () => {
 
     describe('Read', () => {
       it('should return 200 status when user is returned', async () => {
-        return request(app.getHttpServer())
+        return await request(app.getHttpServer())
           .get('/users/' + id)
           .set('Authorization', 'bearer ' + jwtToken)
           .expect(HttpStatus.OK)
@@ -283,7 +283,7 @@ describe('/users', () => {
 
       it('should return 400 status if given invalid token', async () => {
         const invalidID = -1;
-        return request(app.getHttpServer())
+        return await request(app.getHttpServer())
           .get('/users/' + invalidID)
           .set('Authorization', 'bearer ' + 'badtoken')
           .expect(HttpStatus.UNAUTHORIZED)
@@ -298,7 +298,7 @@ describe('/users', () => {
         await authzService.abac.allow(USER_UPDATE_USERS_POLICY_DTO);
       });
       it('should return 200 status when user is updated', async () => {
-        return request(app.getHttpServer())
+        return await request(app.getHttpServer())
           .put('/users/' + id)
           .set('Authorization', 'bearer ' + jwtToken)
           .send(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD)
@@ -327,7 +327,7 @@ describe('/users', () => {
       });
 
       it('should return 200 status when user is updated without changing password', async () => {
-        return request(app.getHttpServer())
+        return await request(app.getHttpServer())
           .put('/users/' + id)
           .set('Authorization', 'bearer ' + jwtToken)
           .send(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS)
@@ -356,7 +356,7 @@ describe('/users', () => {
       });
 
       it('should return 400 status when currentPassword is empty', async () => {
-        return request(app.getHttpServer())
+        return await request(app.getHttpServer())
           .put('/users/' + id)
           .set('Authorization', 'bearer ' + jwtToken)
           .send(UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD)
@@ -378,7 +378,7 @@ describe('/users', () => {
       });
 
       it('should return 400 status when password does not meet complexity requirements', async () => {
-        return request(app.getHttpServer())
+        return await request(app.getHttpServer())
           .put('/users/' + id)
           .set('Authorization', 'bearer ' + jwtToken)
           .send(UPDATE_USER_DTO_TEST_WITH_NOT_COMPLEX_PASSWORD)
@@ -394,7 +394,7 @@ describe('/users', () => {
       });
 
       it('should return 400 status when password and passwordConfirmation dont match', async () => {
-        return request(app.getHttpServer())
+        return await request(app.getHttpServer())
           .put('/users/' + id)
           .set('Authorization', 'bearer ' + jwtToken)
           .send(UPDATE_USER_DTO_TEST_OBJ_WITH_MISSMATCHING_PASSWORDS)
@@ -411,7 +411,7 @@ describe('/users', () => {
         await authzService.abac.allow(USER_DELETE_USERS_POLICY_DTO);
       });
       it('should return 200 status after user is deleted', async () => {
-        return request(app.getHttpServer())
+        return await request(app.getHttpServer())
           .delete('/users/' + id)
           .set('Authorization', 'bearer ' + jwtToken)
           .send(DELETE_USER_DTO_TEST_OBJ)
@@ -505,7 +505,7 @@ describe('/users', () => {
             );
           });
 
-        return request(app.getHttpServer())
+        return await request(app.getHttpServer())
           .get('/users/' + admin.id)
           .set('Authorization', 'bearer ' + adminJWTToken)
           .expect(HttpStatus.NOT_FOUND)

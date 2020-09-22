@@ -29,7 +29,7 @@ export class EvaluationTagsService {
     evaluationTag.key = createEvaluationTagDto.key;
     evaluationTag.value = createEvaluationTagDto.value;
     evaluationTag.evaluationId = evaluationId;
-    return evaluationTag.save();
+    return await evaluationTag.save();
   }
 
   async update(
@@ -38,7 +38,7 @@ export class EvaluationTagsService {
   ): Promise<EvaluationTag> {
     const evaluationTag = await EvaluationTag.findByPk<EvaluationTag>(id);
     this.exists(evaluationTag);
-    return evaluationTag.update(updateEvaluationTagDto);
+    return await evaluationTag.update(updateEvaluationTagDto);
   }
 
   async remove(id: number): Promise<EvaluationTagDto> {

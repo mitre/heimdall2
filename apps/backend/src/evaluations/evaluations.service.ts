@@ -36,7 +36,7 @@ export class EvaluationsService {
     const evaluationData = await evaluation.save();
     const evaluationTagsPromises = createEvaluationDto?.evaluationTags?.map(
       async createEvaluationTagDto => {
-        return this.evaluationTagsService.create(
+        return await this.evaluationTagsService.create(
           evaluationData.id,
           this.evaluationTagsService.objectFromDto(createEvaluationTagDto)
         );
@@ -77,7 +77,7 @@ export class EvaluationsService {
 
       const createTagPromises = evaluationTagsDelta.added.map(
         async evaluationTag => {
-          return this.evaluationTagsService.create(
+          return await this.evaluationTagsService.create(
             evaluation.id,
             new CreateEvaluationTagDto(evaluationTag)
           );
@@ -86,7 +86,7 @@ export class EvaluationsService {
 
       const updateTagPromises = evaluationTagsDelta.changed.map(
         async evaluationTag => {
-          return this.evaluationTagsService.update(
+          return await this.evaluationTagsService.update(
             evaluationTag.id,
             new UpdateEvaluationTagDto(evaluationTag)
           );
@@ -95,7 +95,7 @@ export class EvaluationsService {
 
       const deleteTagPromises = evaluationTagsDelta.deleted.map(
         async evaluationTag => {
-          return this.evaluationTagsService.remove(evaluationTag.id);
+          return await this.evaluationTagsService.remove(evaluationTag.id);
         }
       );
 
@@ -120,7 +120,7 @@ export class EvaluationsService {
           await evaluationTag.destroy({transaction});
         })
       ]);
-      return evaluation.destroy({transaction});
+      return await evaluation.destroy({transaction});
     });
     return new EvaluationDto(evaluation);
   }

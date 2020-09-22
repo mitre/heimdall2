@@ -22,7 +22,5 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     "unused-imports/no-unused-imports-ts": "error",
-    'no-return-await': 'error',
-    'no-throw-literal': 'error'
   },
 };
