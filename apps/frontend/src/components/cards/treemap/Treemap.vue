@@ -108,7 +108,7 @@ export default class Treemap extends TreemapProps {
       for (; depth < this._state.length; depth++) {
         // If the current has no children, then just bail here
         if (curr.children === undefined) {
-          throw 'no children to go into';
+          throw Error('no children to go into');
         }
 
         // Fetch the next path spec
@@ -130,10 +130,10 @@ export default class Treemap extends TreemapProps {
           if (new_curr.children && new_curr.children.length) {
             curr = new_curr;
           } else {
-            throw 'empty';
+            throw Error('empty');
           }
         } else {
-          throw 'truncate';
+          throw Error('truncate');
         }
       }
     } catch (some_traversal_error) {
