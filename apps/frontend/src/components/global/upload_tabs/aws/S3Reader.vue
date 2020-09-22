@@ -217,8 +217,7 @@ export default class S3Reader extends Props {
     let formatted_error = transcribe_error(t_error);
     // Toast whatever error we got
     this.$toasted.global.error({
-      message: formatted_error,
-      isDark: this.$vuetify.theme.dark
+      message: formatted_error
     });
   }
 

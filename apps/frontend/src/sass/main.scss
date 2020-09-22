@@ -17,16 +17,9 @@ $code-kbd-font-weight: false;
 .theme--dark {
 	@import "~prismjs/themes/prism-tomorrow";
 }
-.theme--light {
-	@import "~prismjs/themes/prism";
-}
 
 /* Backgrounds (root) */
 .theme--dark.v-application {
-  background: var(--v-secondary-base);
-}
-
-.theme--light.v-application {
   background: var(--v-secondary-base);
 }
 
@@ -39,19 +32,6 @@ $code-kbd-font-weight: false;
 .theme--dark .v-stepper,
 .theme--dark .v-window__container,
 .theme--dark .v-dialog {
-  background: var(--v-secondary-lighten1);
-  background-color: var(--v-secondary-lighten1) !important;
-  color: var(--v-secondary-visible-lighten1);
-}
-
-.theme--light.v-card,
-.theme--light.v-list,
-.theme--light.v-tabs>.v-tabs-bar,
-.theme--light.v-navigation-drawer,
-.theme--light .v-input__slot,
-.theme--light .v-stepper,
-.theme--light .v-window__container,
-.theme--light .v-dialog {
   background: var(--v-secondary-lighten1);
   background-color: var(--v-secondary-lighten1) !important;
   color: var(--v-secondary-visible-lighten1);
