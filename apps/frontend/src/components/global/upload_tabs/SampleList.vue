@@ -63,8 +63,7 @@ export default class SampleList extends Props {
       if (err) {
         console.error(`Error loading sample ${sample.name}`);
         this.$toasted.global.error({
-          message: String(err),
-          isDark: this.$vuetify.theme.dark
+          message: String(err)
         });
       } else {
         this.$emit('got-files', [unique_id]);
