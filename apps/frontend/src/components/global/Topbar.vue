@@ -34,11 +34,6 @@
         mdi-logout
       </v-icon>
     </v-btn>
-    <v-btn icon large @click="toggleDark">
-      <v-icon :color="this.$vuetify.theme.dark ? 'grey' : 'white'"
-        >mdi-theme-light-dark</v-icon
-      >
-    </v-btn>
     <HelpAboutDropdown />
     <!-- File select modal -->
     <UploadNexus v-model="uploadModal" @got-files="on_got_files" />
@@ -72,11 +67,6 @@ export default class Topbar extends TopbarProps {
   /** Submits an event to clear all filters */
   clear(): void {
     this.$emit('clear');
-  }
-
-  /** Updates theme darkness */
-  toggleDark() {
-    this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
   }
 
   /**
