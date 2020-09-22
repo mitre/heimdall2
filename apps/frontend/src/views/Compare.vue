@@ -576,7 +576,4 @@ export default class Compare extends Props {
 .compare-header {
   top: 100px;
 }
-.theme--light .zebra-table {
-  background-color: var(--v-secondary-lighten1);
-}
 </style>
