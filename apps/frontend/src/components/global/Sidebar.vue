@@ -88,14 +88,18 @@ export default class Sidebar extends SidebarProps {
   drawer = true;
 
   created() {
-    // open the appropriate v-expansion-panel based on current route
-    if (this.curr_route_path == '/results') this.file_views = 0;
-    else if (this.curr_route_path == '/compare') this.file_views = 0;
-    else if (this.curr_route_path == '/profiles') this.file_views = 1;
+    this.selectDropdown();
   }
 
   mounted() {
-    this.created();
+    this.selectDropdown();
+  }
+
+  // open the appropriate v-expansion-panel based on current route
+  selectDropdown() {
+    if (this.curr_route_path == '/results') this.file_views = 0;
+    else if (this.curr_route_path == '/compare') this.file_views = 0;
+    else if (this.curr_route_path == '/profiles') this.file_views = 1;
   }
 
   // get the value of the current route
