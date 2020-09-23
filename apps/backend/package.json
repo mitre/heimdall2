@@ -7,10 +7,9 @@
   "scripts": {
     "prebuild": "rimraf ../../dist/server",
     "build": "nest build",
-    "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node ../../dist/server/main",
+    "start": "node ../../dist/server/main",
     "lint": "eslint \"{src,migrations,seeders,test}/**/*.ts\" --fix",
     "lint:ci": "eslint \"{src,migrations,seeders,test}/**/*.ts\" --max-warnings 0",
     "test": "jest --silent",
