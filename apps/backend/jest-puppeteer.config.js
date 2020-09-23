@@ -28,7 +28,7 @@ module.exports = {
   },
   server: {
     command: 'npm run start:prod',
-    port: process.env.HEIMDALL_SERVER_PORT || 3000,
+    port: process.env.PORT || 3000,
     launchTimeout: 20000
   }
 };

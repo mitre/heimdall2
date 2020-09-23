@@ -51,7 +51,7 @@ describe('Config Service', () => {
 
     it('should return the correct database name', () => {
       const configService = new ConfigService();
-      expect(configService.get('HEIMDALL_SERVER_PORT')).toEqual('8000');
+      expect(configService.get('PORT')).toEqual('8000');
       expect(configService.get('DATABASE_HOST')).toEqual('localhost');
       expect(configService.get('DATABASE_PORT')).toEqual('5432');
       expect(configService.get('DATABASE_USERNAME')).toEqual('postgres');
@@ -80,7 +80,7 @@ describe('Config Service', () => {
 
     it('should return the correct database name', () => {
       const configService = new ConfigService();
-      expect(configService.get('HEIMDALL_SERVER_PORT')).toEqual('8001');
+      expect(configService.get('PORT')).toEqual('8001');
     });
 
     it('should return undefined because env variable does not exist', () => {

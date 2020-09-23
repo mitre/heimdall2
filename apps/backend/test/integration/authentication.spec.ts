@@ -37,7 +37,7 @@ describe('Authentication', () => {
     databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
     configService = moduleFixture.get<ConfigService>(ConfigService);
 
-    appUrl = `http://localhost:${configService.get('HEIMDALL_SERVER_PORT') ||
+    appUrl = `http://localhost:${configService.get('PORT') ||
       '3000'}`;
 
     integrationSpecHelper = new IntegrationSpecHelper(appUrl);
