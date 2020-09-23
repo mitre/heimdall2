@@ -7,8 +7,6 @@ import {InspecDataModule} from '@/store/data_store';
 import {samples, Sample} from '@/utilities/sample_util';
 import {readFileSync} from 'fs';
 
-let id = 0;
-
 export function createTestingVue() {}
 
 export function loadSample(sampleName: string) {
@@ -30,9 +28,6 @@ export function loadSample(sampleName: string) {
 export function loadAll(): void {
   let data = AllRaw();
   Object.values(data).map(file_result => {
-    // Increment counter
-    id += 1;
-
     // Do intake
     return InspecIntakeModule.loadText({
       filename: file_result.name,

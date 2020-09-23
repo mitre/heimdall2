@@ -33,7 +33,7 @@ import axios from 'axios';
 import {ICreateEvaluation} from '@heimdall/interfaces';
 import {InspecDataModule} from '@/store/data_store';
 import {FilteredDataModule} from '@/store/data_filters';
-import {EvaluationFile, ProfileFile} from '@/store/report_intake';
+import {EvaluationFile} from '@/store/report_intake';
 
 import ServerMixin from '@/mixins/ServerMixin';
 
@@ -88,8 +88,6 @@ export default class FileItem extends mixins(FileItemProps, ServerMixin) {
     if (file) {
       if (file.hasOwnProperty('evaluation')) {
         this.save_evaluation(file as EvaluationFile);
-      } else {
-        this.save_profile(file as ProfileFile);
       }
     }
   }
@@ -113,17 +111,6 @@ export default class FileItem extends mixins(FileItemProps, ServerMixin) {
           message: error.response.data.message
         });
       });
-  }
-
-  //saves profile to database
-  save_profile(file?: ProfileFile) {
-    // Strip the file
-    if (file) {
-      let decontextualized = file.profile.data;
-      let blob = new Blob([JSON.stringify(decontextualized)], {
-        type: 'application/json'
-      });
-    }
   }
 
   //gives different icons for a file if it is just a profile

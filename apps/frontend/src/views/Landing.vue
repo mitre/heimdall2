@@ -12,8 +12,6 @@
 import {Component} from 'vue-property-decorator';
 import UploadNexus from '@/components/global/UploadNexus.vue';
 
-import {FileID} from '@/store/report_intake';
-
 import ServerMixin from '@/mixins/ServerMixin';
 import {mixins} from 'vue-class-component';
 
@@ -26,7 +24,7 @@ export default class Landing extends mixins(ServerMixin) {
   /**
    * Invoked when file(s) are loaded.
    */
-  on_got_files(ids: FileID[]) {
+  on_got_files() {
     this.$router.push(`/results`);
   }
 }

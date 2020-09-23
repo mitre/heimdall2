@@ -87,7 +87,7 @@ export default class SplunkAuth extends Props {
 
     this.logging_in = true;
     s.check_auth()
-      .then(ok => {
+      .then(() => {
         // all goes well, proceed
         this.$emit('authenticated', s);
         this.logging_in = false;

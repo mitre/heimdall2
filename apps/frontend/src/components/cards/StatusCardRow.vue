@@ -46,7 +46,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {StatusCountModule} from '@/store/status_counts';
-import {Filter} from '../../store/data_filters';
 
 interface CardProps {
   icon: string;
@@ -69,7 +68,6 @@ const StatusCardRowProps = Vue.extend({
 export default class StatusCardRow extends StatusCardRowProps {
   // Cards
   get standardCardProps(): CardProps[] {
-    let filter = this.filter as Filter;
     return [
       {
         icon: 'check-circle',

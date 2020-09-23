@@ -57,10 +57,10 @@ export async function list_buckets(creds: AuthCreds) {
     .listBuckets()
     .promise()
     .then(
-      success => {
+      () => {
         throw Error('Not implemented');
       },
-      failure => {
+      () => {
         throw Error('Not implemented');
       }
     );

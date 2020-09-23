@@ -73,12 +73,6 @@ export default class FileReader extends Props {
   fileRecords = new Array();
   loading = false;
 
-  filesSelected(fileRecordsNewlySelected: any) {
-    this.loading = true;
-    this.commit_files(this.fileRecords.map(record => record.file));
-    this.fileRecords = new Array();
-  }
-
   /** Callback for our file reader */
   commit_files(files: File[]) {
     Promise.all(

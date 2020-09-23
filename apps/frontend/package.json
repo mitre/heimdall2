@@ -101,6 +101,7 @@
     "@types/sinon": "^9.0.4",
     "@types/vuelidate": "^0.7.13",
     "@vue/cli-plugin-babel": "^4.5.6",
+    "@types/lodash": "^4.14.161",
     "@vue/cli-plugin-eslint": "^4.5.4",
     "@vue/cli-plugin-typescript": "^3.12.1",
     "@vue/cli-service": "^3.12.1",
