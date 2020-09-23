@@ -52,11 +52,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-import {
-  InspecIntakeModule,
-  FileID,
-  next_free_file_ID
-} from '@/store/report_intake';
+import {InspecIntakeModule, FileID} from '@/store/report_intake';
 import {AppInfoModule} from '@/store/app_info';
 import vueFileAgent from 'vue-file-agent';
 import 'vue-file-agent/dist/vue-file-agent.css';
@@ -85,34 +81,23 @@ export default class FileReader extends Props {
 
   /** Callback for our file reader */
   commit_files(files: File[]) {
-    let valid_ids: FileID[] = []; // Use this to track those that get successfully uploaded
-
-    // Promise an upload of each
-    let upload_promises = files.map(file => {
-      // Generate file id
-      let unique_id = next_free_file_ID();
-
-      // Submit it to be loaded, and display an error if it fails
-      return InspecIntakeModule.loadFile({file, unique_id}).then(err => {
-        if (err) {
-          console.error(`Error loading file ${file.name}`);
+    Promise.all(
+      files.map(file => {
+        return InspecIntakeModule.loadFile({file}).catch(err => {
           this.$toasted.global.error({
             message: String(err)
           });
-        } else {
-          // Store the given id as valid
-          valid_ids.push(unique_id);
-        }
+        });
+      })
+    )
+      .then((fileIds: (FileID | void)[]) => {
+        // Since catching errors is handled by loadFile above,
+        // filter(Boolean) is used here to remove any falsey values.
+        this.$emit('got-files', fileIds.filter(Boolean));
+      })
+      .finally(() => {
+        this.loading = false;
       });
-    });
-
-    // When they're all done, emit event.
-    // To use promise.all we must make each promise explicitly allow rejection without breaking promise.all failfast
-    let guaranteed_promises = upload_promises.map(p => p.catch(err => err));
-    Promise.all(guaranteed_promises).then(_ => {
-      this.$emit('got-files', valid_ids);
-      this.loading = false;
-    });
   }
 
   get title_class(): string[] {

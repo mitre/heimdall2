@@ -4,7 +4,7 @@ import {IEvaluation} from '@heimdall/interfaces';
 
 export class EvaluationDto implements IEvaluation {
   id: number;
-  readonly version: string;
+  readonly filename: string;
   readonly data: Record<string, any>;
   readonly evaluationTags: EvaluationTagDto[];
   readonly createdAt: Date;
@@ -12,7 +12,7 @@ export class EvaluationDto implements IEvaluation {
 
   constructor(evaluation: Evaluation) {
     this.id = evaluation.id;
-    this.version = evaluation.version;
+    this.filename = evaluation.filename;
     this.data = evaluation.data;
     this.evaluationTags = evaluation.evaluationTags.map(
       tag => new EvaluationTagDto(tag)

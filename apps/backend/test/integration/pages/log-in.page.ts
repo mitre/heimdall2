@@ -3,18 +3,18 @@ import {Page} from 'puppeteer';
 export class LogInPage {
   async loginSuccess(page: Page, user: any): Promise<void> {
     await expect(page).toFillForm('#login_form', {
-      login: user.email,
+      email: user.email,
       password: user.password
     });
     await Promise.all([
-      page.waitForSelector('#upload-btn'),
+      page.waitForSelector('#uploadtab-local'),
       page.click('#login_button')
     ]);
   }
 
   async loginFailure(page: Page, user: any): Promise<void> {
     await expect(page).toFillForm('#login_form', {
-      login: user.email,
+      email: user.email,
       password: user.password
     });
     await Promise.all([

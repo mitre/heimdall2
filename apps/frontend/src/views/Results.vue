@@ -25,8 +25,8 @@
       <div class="text-center">
         <v-menu>
           <template v-slot:activator="{on, attrs}">
-            <v-btn v-bind="attrs" class="btn-fix" v-on="on">
-              <span class="d-none d-md-inline pr-2">
+            <v-btn v-bind="attrs" class="mr-2" v-on="on">
+              <span class="d-none d-md-inline mr-2">
                 Export
               </span>
               <v-icon>
@@ -221,8 +221,7 @@ import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
 import ProfData from '@/components/cards/ProfData.vue';
 import {context} from 'inspecjs';
 
-import UserMenu from '@/components/global/UserMenu.vue';
-import {BackendModule} from '@/store/backend';
+import {ServerModule} from '@/store/server';
 
 // We declare the props separately
 // to make props types inferrable.
@@ -243,14 +242,10 @@ const ResultsProps = Vue.extend({
     ExportNist,
     ExportJson,
     EvaluationInfo,
-    ProfData,
-    UserMenu
+    ProfData
   }
 })
 export default class Results extends ResultsProps {
-  /** Whether or not the model is showing */
-  dialog: boolean = false;
-
   /**
    * The currently selected severity, as modeled by the severity chart
    */
@@ -386,7 +381,7 @@ export default class Results extends ResultsProps {
 
   //changes width of eval info if it is in server mode and needs more room for tags
   get info_width(): number {
-    if (BackendModule.serverMode) {
+    if (ServerModule.serverMode) {
       return 500;
     }
     return 300;
@@ -406,7 +401,7 @@ export default class Results extends ResultsProps {
   }
 
   //gets profile ids for the profData component to display corresponding info
-  get prof_ids(): number[] {
+  get prof_ids(): FileID[] {
     let ids = [];
     for (let prof of this.root_profiles) {
       if (!isFromProfileFile(prof)) {

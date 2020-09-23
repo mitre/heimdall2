@@ -49,7 +49,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import S3 from 'aws-sdk/clients/s3';
-import {InspecIntakeModule, next_free_file_ID} from '@/store/report_intake';
+import {InspecIntakeModule} from '@/store/report_intake';
 import {AWSError} from 'aws-sdk/lib/error';
 import {Auth, fetch_s3_file} from '../../../../utilities/aws_util';
 import {LocalStorageVal} from '../../../../utilities/helper_util';
@@ -64,16 +64,6 @@ const HEADERS: any = [
   {text: 'Last Modified', value: 'LastModified'},
   {text: 'Size', value: 'Size'}
 ];
-
-/*
-  export interface S3.Object {
-    Key?: ObjectKey;
-    LastModified?: LastModified;
-    ETag?: ETag;
-    Size?: Size;
-    StorageClass?: ObjectStorageClass;
-    Owner?: Owner;
-  } */
 
 // Caches the bucket name
 const local_bucket_name = new LocalStorageVal<string>('aws_bucket_name');
@@ -115,19 +105,14 @@ export default class FileList extends Props {
     // Get it out of the list
     let file = this._files[index];
 
-    // Generate file id for it, and prep module for load
-    let unique_id = next_free_file_ID();
-
     // Fetch it from s3, and promise to submit it to be loaded afterwards
     await fetch_s3_file(this._auth.creds, file.Key!, this.form_bucket_name)
       .then(content => {
-        return InspecIntakeModule.loadText({
+        InspecIntakeModule.loadText({
           text: content,
-          filename: file.Key!,
-          unique_id
-        });
+          filename: file.Key!
+        }).then(unique_id => this.$emit('got-files', [unique_id]));
       })
-      .then(() => this.$emit('got-files', [unique_id]))
       .catch((failure: any) => this.handle_error(failure));
   }
 

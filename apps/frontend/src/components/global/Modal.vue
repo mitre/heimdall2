@@ -1,13 +1,13 @@
 <template>
   <v-dialog
-    id="#modal"
-    :value="value"
+    id="modal"
+    :value="visible"
     :persistent="persistent"
     width="80%"
     max-width="1000px"
     content-class="v-card"
-    @click:outside="$emit('input', {target: false})"
-    @keydown.esc="$emit('input', {target: false})"
+    @click:outside="$emit('close-modal')"
+    @keydown.esc="$emit('close-modal')"
   >
     <slot> Default Modal </slot>
   </v-dialog>
@@ -16,17 +16,13 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-
-// We declare the props separately to make props types inferable.
-const ModalProps = Vue.extend({
-  props: {
-    value: Boolean, // Whether or not to show,
-    persistent: Boolean // Whether clicking outside closes
-  }
-});
+import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {}
 })
-export default class Modal extends ModalProps {}
+export default class Modal extends Vue {
+  @Prop({default: true}) readonly visible!: Boolean;
+  @Prop({default: false}) readonly persistent!: Boolean;
+}
 </script>

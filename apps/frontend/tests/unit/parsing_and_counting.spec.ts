@@ -12,22 +12,17 @@ import {readFileSync} from 'fs';
 describe('Parsing', () => {
   it('Report intake can read every raw file in hdf_data', function() {
     let raw = AllRaw();
-    let id = 0;
 
     let promises = Object.values(raw).map(file_result => {
-      // Increment counter
-      id += 1;
-
       // Do intake
       return InspecIntakeModule.loadText({
         filename: file_result.name,
-        unique_id: id,
         text: file_result.content
       });
     });
 
     // Done!
-    return Promise.all(promises.map(p => expect(p).to.eventually.be.null));
+    return Promise.all(promises.map(p => expect(p).to.eventually.be.string));
   });
 
   // Note that the above side effect has LOADED THESE FILES! WE CAN USE THEM IN OTHER TESTS

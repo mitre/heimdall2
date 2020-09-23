@@ -1,8 +1,8 @@
 import {IEvaluationTag} from '..';
 
-export class IEvaluation {
+export interface IEvaluation {
   id: number;
-  readonly version: string;
+  readonly filename: string;
   readonly data: Record<string, any>;
   readonly evaluationTags: IEvaluationTag[];
   readonly createdAt: Date;

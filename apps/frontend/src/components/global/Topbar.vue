@@ -14,9 +14,9 @@
 
     <v-btn
       id="upload-btn"
-      :disabled="uploadModal"
+      :disabled="showModal"
       class="mx-2"
-      @click="uploadModal = true"
+      @click="show_modal"
     >
       <span class="d-none d-md-inline pr-2">
         Load
@@ -26,43 +26,37 @@
       </v-icon>
     </v-btn>
     <slot name="data" />
-    <v-btn v-if="serverMode" id="logout" @click="logOut">
-      <span class="d-none d-md-inline pr-2">
-        Logout
-      </span>
-      <v-icon>
-        mdi-logout
-      </v-icon>
-    </v-btn>
+    <LogoutButton />
     <HelpAboutDropdown />
     <!-- File select modal -->
-    <UploadNexus v-model="uploadModal" @got-files="on_got_files" />
+    <UploadNexus
+      :visible="showModal"
+      @close-modal="close_modal"
+      @got-files="close_modal"
+    />
   </v-app-bar>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 import HelpAboutDropdown from '@/components/global/HelpAboutDropdown.vue';
-import {BackendModule} from '@/store/backend';
-import {FileID} from '@/store/report_intake';
-import UploadNexus from '@/components/global/UploadNexus.vue';
+import LogoutButton from '@/components/generic/LogoutButton.vue';
 
-// We declare the props separately to make props types inferable.
-const TopbarProps = Vue.extend({
-  props: {
-    title: String
-  }
-});
+import UploadNexus from '@/components/global/UploadNexus.vue';
+import ServerMixin from '@/mixins/ServerMixin';
+import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {
     UploadNexus,
-    HelpAboutDropdown
+    HelpAboutDropdown,
+    LogoutButton
   }
 })
-export default class Topbar extends TopbarProps {
-  uploadModal: boolean = false;
+export default class Topbar extends mixins(ServerMixin) {
+  @Prop({required: true}) readonly title!: String;
+
+  showModal: boolean = false;
 
   /** Submits an event to clear all filters */
   clear(): void {
@@ -72,17 +66,12 @@ export default class Topbar extends TopbarProps {
   /**
    * Invoked when file(s) are loaded.
    */
-  on_got_files(ids: FileID[]) {
-    // Close the dialog
-    this.uploadModal = false;
+  close_modal() {
+    this.showModal = false;
   }
 
-  get serverMode() {
-    return BackendModule.serverMode;
-  }
-
-  logOut() {
-    BackendModule.Logout();
+  show_modal() {
+    this.showModal = true;
   }
 }
 </script>

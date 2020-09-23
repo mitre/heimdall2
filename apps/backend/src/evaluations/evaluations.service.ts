@@ -30,7 +30,7 @@ export class EvaluationsService {
     createEvaluationDto: CreateEvaluationDto
   ): Promise<EvaluationDto> {
     const evaluation = new Evaluation();
-    evaluation.version = createEvaluationDto.version;
+    evaluation.filename = createEvaluationDto.filename;
     evaluation.data = createEvaluationDto.data;
     // Save the evaluation with no tags to get an ID.
     const evaluationData = await evaluation.save();
@@ -65,8 +65,8 @@ export class EvaluationsService {
       evaluation.set('data', updateEvaluationDto.data);
     }
 
-    if (updateEvaluationDto.version !== undefined) {
-      evaluation.set('version', updateEvaluationDto.version);
+    if (updateEvaluationDto.filename !== undefined) {
+      evaluation.set('filename', updateEvaluationDto.filename);
     }
 
     if (updateEvaluationDto.evaluationTags !== undefined) {
