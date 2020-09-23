@@ -172,14 +172,14 @@ export class FilteredData extends VuexModule {
   // check to see if all profiles are selected
   get all_toggled_profiles(): boolean {
     return (
-      this.selected_profiles.length == InspecDataModule.allProfileFiles.length
+      this.selected_profiles.length === InspecDataModule.allProfileFiles.length
     );
   }
 
   // check to see if all evaluations are selected
   get all_toggled_evaluations(): boolean {
     return (
-      this.selected_evaluations.length ==
+      this.selected_evaluations.length ===
       InspecDataModule.allEvaluationFiles.length
     );
   }

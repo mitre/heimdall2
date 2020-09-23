@@ -29,10 +29,6 @@
           <FileReader @got-files="got_files" />
         </v-tab-item>
 
-        <!--v-tab-item value="uploadtab-database">
-          <DatabaseReader @got-files="got_files" />
-        </v-tab-item-->
-
         <v-tab-item value="uploadtab-samples">
           <SampleList @got-files="got_files" />
         </v-tab-item>
