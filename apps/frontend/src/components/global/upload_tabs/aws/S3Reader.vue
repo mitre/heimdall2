@@ -68,7 +68,6 @@ const local_session_information = new LocalStorageVal<Auth | null>(
 );
 
 /**
- * File reader component for taking in inspec JSON data.
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
  * Emits "got-files" with a list of the unique_ids of the loaded files.
  */
@@ -217,8 +216,7 @@ export default class S3Reader extends Props {
     let formatted_error = transcribe_error(t_error);
     // Toast whatever error we got
     this.$toasted.global.error({
-      message: formatted_error,
-      isDark: this.$vuetify.theme.dark
+      message: formatted_error
     });
   }
 

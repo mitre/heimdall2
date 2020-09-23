@@ -216,11 +216,6 @@ text {
   font-size: large;
 }
 
-.theme--light text {
-  fill: #000;
-  font-size: large;
-}
-
 /* Basic settings for our chart. Things unclickable by default */
 rect {
   stroke: #000000;

@@ -22,7 +22,7 @@ export class Evaluation extends Model<Evaluation> {
 
   @AllowNull(false)
   @Column
-  version: string;
+  filename: string;
 
   @AllowNull(false)
   @Column(DataType.JSON)

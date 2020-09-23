@@ -116,7 +116,7 @@ describe('/evaluations', () => {
             expect(createdDelta).toBeLessThanOrEqual(60000);
             expect(updatedDelta).toBeLessThanOrEqual(60000);
             expect(response.body.id).toBeDefined();
-            expect(response.body.version).toEqual(EVALUATION_1.version);
+            expect(response.body.filename).toEqual(EVALUATION_1.filename);
             expect(response.body.data).toEqual(EVALUATION_1.data);
             expect(response.body.evaluationTags).toEqual(
               EVALUATION_1.evaluationTags
