@@ -5,6 +5,7 @@
 import {Module, VuexModule, getModule, Mutation} from 'vuex-module-decorators';
 import {SourcedContextualizedEvaluation, FileID} from '@/store/report_intake';
 import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
+
 import {ControlStatus, Severity, context, nist} from 'inspecjs';
 import Store from '@/store/store';
 import LRUCache from 'lru-cache';
@@ -165,6 +166,21 @@ export class FilteredData extends VuexModule {
 
     return fileIds.filter(fileId =>
       files.every(file => fileId !== file.unique_id)
+    );
+  }
+
+  // check to see if all profiles are selected
+  get all_toggled_profiles(): boolean {
+    return (
+      this.selected_profiles.length == InspecDataModule.allProfileFiles.length
+    );
+  }
+
+  // check to see if all evaluations are selected
+  get all_toggled_evaluations(): boolean {
+    return (
+      this.selected_evaluations.length ==
+      InspecDataModule.allEvaluationFiles.length
     );
   }
 

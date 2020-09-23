@@ -18,12 +18,20 @@
           toggle="Select all result set"
           :files="visible_evaluation_files"
           route="/results"
+          :showdeltaview="true"
+          :openview="true"
+          :showtoggle="true"
+          @toggleAll="toggle_all_evaluations"
+          @compare="compareView"
         />
         <DropdownContent
           text="Profiles"
           toggle="Select all profile set"
           :files="visible_profile_files"
           route="/profiles"
+          :openview="true"
+          :showtoggle="true"
+          @toggleAll="toggle_all_profiles"
         />
       </v-expansion-panels>
     </v-list>
@@ -55,6 +63,7 @@ import {InspecDataModule} from '@/store/data_store';
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
 import HelpModal from '@/components/global/HelpModal.vue';
+import {FilteredDataModule} from '@/store/data_filters';
 
 import DropdownContent from '@/components/global/sidebaritems/DropdownContent.vue';
 
@@ -85,6 +94,10 @@ export default class Sidebar extends SidebarProps {
     else if (this.curr_route_path == '/profiles') this.file_views = 1;
   }
 
+  mounted() {
+    this.created();
+  }
+
   // get the value of the current route
   get curr_route_path() {
     return this.$router.currentRoute.path;
@@ -102,6 +115,40 @@ export default class Sidebar extends SidebarProps {
     let files = InspecDataModule.allProfileFiles;
     files = files.sort((a, b) => a.filename.localeCompare(b.filename));
     return files;
+  }
+
+  // toggle the "select all" for profiles
+  toggle_all_profiles(): void {
+    if (FilteredDataModule.all_toggled_profiles) {
+      FilteredDataModule.set_toggled_files(
+        FilteredDataModule.selected_evaluations
+      );
+    } else {
+      let files = InspecDataModule.allProfileFiles.map(v => v.unique_id);
+      files.push(...FilteredDataModule.selected_evaluations);
+      FilteredDataModule.set_toggled_files(files);
+    }
+  }
+
+  // toggle the "select all" for evaluations
+  toggle_all_evaluations(): void {
+    if (FilteredDataModule.all_toggled_evaluations) {
+      FilteredDataModule.set_toggled_files(
+        FilteredDataModule.selected_profiles
+      );
+    } else {
+      let files = InspecDataModule.allEvaluationFiles.map(v => v.unique_id);
+      files.push(...FilteredDataModule.selected_profiles);
+      FilteredDataModule.set_toggled_files(files);
+    }
+  }
+
+  // toggle between the comparison view and the results view
+  compareView(): void {
+    if (this.$router.currentRoute.path === '/results')
+      this.$router.push({path: '/compare'});
+    if (this.$router.currentRoute.path === '/compare')
+      this.$router.push({path: '/results'});
   }
 }
 </script>
