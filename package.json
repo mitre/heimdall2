@@ -5,6 +5,7 @@
     "frontend": "yarn workspace heimdall-lite",
     "backend": "yarn workspace heimdall-server",
     "build": "npx lerna run build",
+    "start": "yarn backend start",
     "lint": "npx lerna run lint",
     "lint:ci": "npx lerna run lint:ci",
     "start:dev": "dotenv -e apps/backend/.env -- npx lerna exec yarn run start:dev --ignore @heimdall/interfaces"
