@@ -12,8 +12,7 @@
     "baseUrl": "./",
     "types": ["jest", "chai", "vuetify", "node"],
     "paths": {
-      "@/*": ["src/*"],
-      "vue-analytics": ["src/types/vue-analytics"]
+      "@/*": ["src/*"]
     },
     "lib": ["ES2019", "dom", "dom.iterable", "scripthost"]
   },

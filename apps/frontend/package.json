@@ -67,7 +67,6 @@
     "roboto-fontface": "*",
     "uuid": "^8.3.0",
     "vue": "~2.6.10",
-    "vue-analytics": "^5.18.0",
     "vue-apexcharts": "^1.5.1",
     "vue-clamp": "^0.2.2",
     "vue-class-component": "^7.0.2",
