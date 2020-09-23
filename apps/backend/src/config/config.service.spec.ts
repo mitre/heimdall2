@@ -89,7 +89,6 @@ describe('Config Service', () => {
     });
   });
 
-
   describe('When using DATABASE_URL', () => {
     beforeAll(() => {
       mock({
@@ -99,11 +98,17 @@ describe('Config Service', () => {
 
     it('should correctly parse DATABASE_URL into its components', () => {
       const configService = new ConfigService();
-      expect(configService.get('DATABASE_HOST')).toEqual('ec2-00-000-11-123.compute-1.amazonaws.com')
-      expect(configService.get('DATABASE_PORT')).toEqual('5432')
-      expect(configService.get('DATABASE_USERNAME')).toEqual('abcdefghijk123456')
-      expect(configService.get('DATABASE_PASSWORD')).toEqual('000011112222333344455556666777778889999aaaabbbbccccddddeeeffff')
-      expect(configService.get('DATABASE_NAME')).toEqual('database01')
+      expect(configService.get('DATABASE_HOST')).toEqual(
+        'ec2-00-000-11-123.compute-1.amazonaws.com'
+      );
+      expect(configService.get('DATABASE_PORT')).toEqual('5432');
+      expect(configService.get('DATABASE_USERNAME')).toEqual(
+        'abcdefghijk123456'
+      );
+      expect(configService.get('DATABASE_PASSWORD')).toEqual(
+        '000011112222333344455556666777778889999aaaabbbbccccddddeeeffff'
+      );
+      expect(configService.get('DATABASE_NAME')).toEqual('database01');
     });
   });
 

@@ -37,8 +37,7 @@ describe('Authentication', () => {
     databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
     configService = moduleFixture.get<ConfigService>(ConfigService);
 
-    appUrl = `http://localhost:${configService.get('PORT') ||
-      '3000'}`;
+    appUrl = `http://localhost:${configService.get('PORT') || '3000'}`;
 
     integrationSpecHelper = new IntegrationSpecHelper(appUrl);
   });
