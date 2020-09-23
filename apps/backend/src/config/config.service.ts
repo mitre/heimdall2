@@ -11,6 +11,7 @@ export class ConfigService {
       console.log('Read config!');
     } catch (error) {
       if (error.code === 'ENOENT') {
+        this.envConfig = {};
         // File probably does not exist
         console.log('Unable to read configuration file `.env`!');
         console.log(
@@ -29,13 +30,10 @@ export class ConfigService {
   }
 
   private parseDatabaseUrl(): boolean {
-    if (
-      !this.envConfig['DATABASE_URL'] ||
-      process.env.DATABASE_URL === undefined
-    ) {
+    if (!this.get('DATABASE_URL')) {
       return false;
     } else {
-      const url = process.env.DATABASE_URL || this.get('DATABASE_URL');
+      const url = this.get('DATABASE_URL');
       const pattern = /^(?:([^:\/?#\s]+):\/{2})?(?:([^@\/?#\s]+)@)?([^\/?#\s]+)?(?:\/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$/;
       const matches = url.match(pattern);
 
@@ -68,14 +66,6 @@ export class ConfigService {
   }
 
   get(key: string): string | undefined {
-    try {
-      return this.envConfig[key];
-    } catch (error) {
-      if (error instanceof TypeError) {
-        return process.env[key];
-      } else {
-        throw error;
-      }
-    }
+    return process.env[key] || this.envConfig[key];
   }
 }

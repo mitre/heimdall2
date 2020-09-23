@@ -27,7 +27,7 @@ module.exports = {
     }
   },
   server: {
-    command: 'npm run start:prod',
+    command: 'npm run start',
     port: process.env.PORT || 3000,
     launchTimeout: 20000
   }

@@ -22,7 +22,7 @@ module.exports = {
     // PORT is not required so use the default backend port value
     // is used here if JWT_SECRET is applied but PORT is undefined
     proxy: process.env.JWT_SECRET
-      ? 'http://127.0.0.1:' + (process.env.PORT || 3000)
+      ? `http://127.0.0.1:' + ${process.env.PORT || 3000}`
       : ''
   },
   outputDir: '../../dist/frontend',
