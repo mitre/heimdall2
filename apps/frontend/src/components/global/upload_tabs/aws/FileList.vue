@@ -50,7 +50,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import S3 from 'aws-sdk/clients/s3';
 import {InspecIntakeModule} from '@/store/report_intake';
-import {AWSError} from 'aws-sdk/lib/error';
+
 import {Auth, fetch_s3_file} from '../../../../utilities/aws_util';
 import {LocalStorageVal} from '../../../../utilities/helper_util';
 
@@ -95,13 +95,16 @@ export default class FileList extends Props {
     let file = this._files[index];
 
     // Fetch it from s3, and promise to submit it to be loaded afterwards
-    await fetch_s3_file(this._auth.creds, file.Key!, this.form_bucket_name)
-      .then(content => {
-        InspecIntakeModule.loadText({
-          text: content,
-          filename: file.Key!
-        }).then(unique_id => this.$emit('got-files', [unique_id]));
-      })
+    await fetch_s3_file(
+      this._auth.creds,
+      file.Key!,
+      this.form_bucket_name
+    ).then(content => {
+      InspecIntakeModule.loadText({
+        text: content,
+        filename: file.Key!
+      }).then(unique_id => this.$emit('got-files', [unique_id]));
+    });
   }
 
   /** Recalls the last entered bucket name.  */

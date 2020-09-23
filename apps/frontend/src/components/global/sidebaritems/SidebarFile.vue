@@ -33,7 +33,7 @@ import axios from 'axios';
 import {ICreateEvaluation} from '@heimdall/interfaces';
 import {InspecDataModule} from '@/store/data_store';
 import {FilteredDataModule} from '@/store/data_filters';
-import {EvaluationFile, ProfileFile} from '@/store/report_intake';
+import {EvaluationFile} from '@/store/report_intake';
 
 import ServerMixin from '@/mixins/ServerMixin';
 
