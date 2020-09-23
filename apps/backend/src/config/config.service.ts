@@ -13,6 +13,7 @@ export class ConfigService {
         console.log(
           'DATABASE_URL parsed into smaller components (i.e. DATABASE_USER)'
         );
+      }
     } catch (error) {
       if (error.code === 'ENOENT') {
         // File probably does not exist
