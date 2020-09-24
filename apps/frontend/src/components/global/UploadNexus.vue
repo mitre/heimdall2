@@ -38,7 +38,7 @@
         </v-tab-item>
 
         <v-tab-item v-if="serverMode" value="uploadtab-database">
-          <DatabaseReader @got-files="got_files" />
+          <DatabaseReader :refresh="visible" @got-files="got_files" />
         </v-tab-item>
 
         <v-tab-item value="uploadtab-samples">
