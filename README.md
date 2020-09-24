@@ -16,13 +16,17 @@ This repository contains the source code for the Heimdall 2 Backend and Frontend
 
 ### Hosted
 
-#### Netlify (Built off Master Branch)
+#### Current Development (master branch) Preview
 
-<https://heimdall-lite.netlify.com/>
+These demos are only intended to show the functionality of Heimdall, please do not upload any sensitive data to them!
 
-#### GitHub Pages (Built off Last Release)
+(Heimdall Lite)[https://heimdall-lite.netlify.com/]
+(Heimdall Server)[https://mitre-heimdall-staging.herokuapp.com/]
 
-<https://heimdall-lite.mitre.org>
+#### Release Preview
+
+(Heimdall Lite)[https://heimdall-lite.mitre.org]
+(Heimdall Server)[https://mitre-heimdall.herokuapp.com/]
 
 ## Installation & Use
 
@@ -65,7 +69,7 @@ There are two versions of the MITRE Heimdall Viewer - the full Heimdall Enterpri
 
 ## General Deployment
 
-### NodeJS Deployment
+### Running Heimdall Lite
 
 Heimdall Lite is a standard VueJS app so for help with a local deployment, please see: <https://cli.vuejs.org/guide/deployment.html#general-guidelines>
 
@@ -82,6 +86,43 @@ If you use this tool often and want to have it installed locally, use the follow
 `npm install -g heimdall-lite`
 
 Then, any subsequent `npx heimdall-lite` will use the local version and load much more quickly.
+
+### Running Heimdall Server
+
+Given that Heimdall requires at least a database service, we use Docker and Docker Compose to provide a simple deployment experience.
+
+#### Setup Docker Container (Clean Install)
+
+1. Install Docker
+2. Download heimdall by running `git clone https://github.com/mitre/heimdall2.git`.
+3. Navigate to the base folder where `docker-compose.yml` is located
+4. Run the following commands in a terminal window from the heimdall source directory:
+   1. `./setup-docker-secrets.sh`
+   2. `docker-compose up -d`
+6. Navigate to `http://127.0.0.1:3000`
+
+#### Running Docker Container
+
+Make sure you have run the setup steps at least once before following these steps!
+
+1. Run the following command in a terminal window:
+   - `docker-compose up -d`
+2. Go to `127.0.0.1:3000` in a web browser
+
+#### Updating Docker Container
+
+A new version of the docker container can be retrieved by running:
+
+```
+docker-compose pull
+docker-compose up -d
+```
+
+This will fetch the latest version of the container, redeploy if a newer version exists, and then apply any database migrations if applicable. No data should be lost by this operation.
+
+#### Stopping the Container
+
+`docker-compose down` # From the source directory you started from
 
 ## For Developers
 
@@ -139,43 +180,6 @@ Once the above steps are completed it is possible to start heimdall-server using
     # Run Backend Nest Tests
     yarn backend test:e2e
     yarn backend test:ci-cov
-
-### Run With Docker
-
-Given that Heimdall requires at least a database service, we use Docker Compose.
-
-#### Setup Docker Container (Clean Install)
-
-1. Install Docker
-2. Download heimdall by running `git clone https://github.com/mitre/heimdall2.git`.
-3. Navigate to the base folder where `docker-compose.yml` is located
-4. Run the following commands in a terminal window from the heimdall source directory:
-   1. `./setup-docker-secrets.sh`
-   2. `docker-compose up -d`
-6. Navigate to `http://127.0.0.1:3000`
-
-#### Running Docker Container
-
-Make sure you have run the setup steps at least once before following these steps!
-
-1. Run the following command in a terminal window:
-   - `docker-compose up -d`
-2. Go to `127.0.0.1:3000` in a web browser
-
-#### Updating Docker Container
-
-A new version of the docker container can be retrieved by running:
-
-```
-docker-compose pull
-docker-compose up -d
-```
-
-This will fetch the latest version of the container, redeploy if a newer version exists, and then apply any database migrations if applicable. No data should be lost by this operation.
-
-#### Stopping the Container
-
-`docker-compose down` # From the source directory you started from
 
 ## Versioning and State of Development
 
