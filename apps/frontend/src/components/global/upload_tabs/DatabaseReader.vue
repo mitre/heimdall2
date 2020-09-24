@@ -32,6 +32,7 @@ import {FileID, InspecIntakeModule} from '@/store/report_intake';
 
 import {IEvaluation} from '@heimdall/interfaces';
 import ServerMixin from '@/mixins/ServerMixin';
+import {Prop, Watch} from 'vue-property-decorator';
 
 /**
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
@@ -44,6 +45,8 @@ import ServerMixin from '@/mixins/ServerMixin';
   }
 })
 export default class DatabaseReader extends mixins(ServerMixin) {
+  @Prop({default: false}) readonly refresh!: Boolean;
+
   files: IEvaluation[] = [];
   loading: boolean = true;
 
@@ -56,6 +59,14 @@ export default class DatabaseReader extends mixins(ServerMixin) {
     },
     {text: 'Uploaded', value: 'createdAt', sortable: true}
   ];
+
+  @Watch('refresh')
+  onChildChanged(newRefreshValue: boolean, _oldValue: boolean) {
+    if (newRefreshValue === true) {
+      // Whenever refresh is set to true, call refresh on the database results
+      this.get_all_results();
+    }
+  }
 
   mounted() {
     this.get_all_results();
