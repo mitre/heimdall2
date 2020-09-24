@@ -30,7 +30,7 @@
                 v-model="fileRecords"
                 :multiple="true"
                 :help-text="'Choose files to upload'"
-                @select="filesSelected($event)"
+                @select="filesSelected"
               />
             </div>
             <div v-else>
@@ -72,6 +72,12 @@ const Props = Vue.extend({
 export default class FileReader extends Props {
   fileRecords = new Array();
   loading = false;
+
+  filesSelected() {
+    this.loading = true;
+    this.commit_files(this.fileRecords.map(record => record.file));
+    this.fileRecords = new Array();
+  }
 
   /** Callback for our file reader */
   commit_files(files: File[]) {
