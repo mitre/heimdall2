@@ -20,13 +20,15 @@ This repository contains the source code for the Heimdall 2 Backend and Frontend
 
 These demos are only intended to show the functionality of Heimdall, please do not upload any sensitive data to them!
 
-(Heimdall Lite)[https://heimdall-lite.netlify.com/]
-(Heimdall Server)[https://mitre-heimdall-staging.herokuapp.com/]
+[Heimdall Lite](https://heimdall-lite.netlify.com/)
+
+[Heimdall Server](https://mitre-heimdall-staging.herokuapp.com/)
 
 #### Release Preview
 
-(Heimdall Lite)[https://heimdall-lite.mitre.org]
-(Heimdall Server)[https://mitre-heimdall.herokuapp.com/]
+[Heimdall Lite](https://heimdall-lite.mitre.org)
+
+[Heimdall Server](https://mitre-heimdall.herokuapp.com/)
 
 ## Installation & Use
 
@@ -86,6 +88,16 @@ If you use this tool often and want to have it installed locally, use the follow
 `npm install -g heimdall-lite`
 
 Then, any subsequent `npx heimdall-lite` will use the local version and load much more quickly.
+
+#### Running via Docker
+
+It is also possible to run heimdall-lite using Docker, using the following command:
+
+`docker run -d -p 8080:80 heimdall-lite:release-latest`
+
+You can then access heimdall-lite via: localhost:8080
+
+If you would prefer to run the bleeding edge version of heimdall-lite, replace `heimdall-lite:release-latest` with `heimdall-lite:latest`.
 
 ### Running Heimdall Server
 
