@@ -12,10 +12,7 @@
         :value="secret_token"
         label="User Account Secret Token"
         :rules="[req_rule]"
-        :append-icon="show_secret ? 'mdi-eye' : 'mdi-eye-off'"
-        :type="show_secret ? 'text' : 'password'"
         @input="change_secret_token"
-        @click:append="show_secret = !show_secret"
       />
     </v-form>
     <v-btn

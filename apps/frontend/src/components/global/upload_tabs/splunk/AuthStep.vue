@@ -2,14 +2,7 @@
   <v-stepper-content step="1">
     <v-form v-model="valid">
       <v-text-field v-model="username" label="Username" :rules="[req_rule]" />
-      <v-text-field
-        v-model="password"
-        label="Password"
-        :rules="[req_rule]"
-        :append-icon="show_secret ? 'mdi-eye' : 'mdi-eye-off'"
-        :type="show_secret ? 'text' : 'password'"
-        @click:append="show_secret = !show_secret"
-      />
+      <v-text-field v-model="password" label="Password" :rules="[req_rule]" />
       <v-text-field
         v-model="hostname"
         label="Hostname"
