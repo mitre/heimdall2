@@ -19,7 +19,7 @@
                     :error-messages="emailErrors"
                     name="email"
                     label="Email"
-                    prepend-icon="mdi-account"
+                    prepend-icon="person"
                     type="text"
                     required
                     @blur="$v.email.$touch()"
@@ -31,7 +31,7 @@
                     type="password"
                     name="password"
                     label="Password"
-                    prepend-icon="mdi-lock-outline"
+                    prepend-icon="lock"
                     @blur="$v.password.$touch()"
                   />
                   <v-btn
