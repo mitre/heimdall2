@@ -2,7 +2,8 @@ import mock from 'mock-fs';
 import {ConfigService} from './config.service';
 import {
   ENV_MOCK_FILE,
-  SIMPLE_ENV_MOCK_FILE
+  SIMPLE_ENV_MOCK_FILE,
+  DATABASE_URL_MOCK_ENV
 } from '../../test/constants/env-test.constant';
 
 /* If you run the test without --silent , you need to add console.log() before you mock out the
@@ -11,7 +12,7 @@ found at https://github.com/tschaub/mock-fs/issues/234).
 If you run the test with --silent (which we do by default), you don't need the log statement. */
 describe('Config Service', () => {
   beforeAll(async () => {
-    // console.log();
+    console.log();
     // Used as an empty file system
     mock({
       // No files created (.env file does not exist yet)
@@ -50,7 +51,7 @@ describe('Config Service', () => {
 
     it('should return the correct database name', () => {
       const configService = new ConfigService();
-      expect(configService.get('HEIMDALL_SERVER_PORT')).toEqual('8000');
+      expect(configService.get('PORT')).toEqual('8000');
       expect(configService.get('DATABASE_HOST')).toEqual('localhost');
       expect(configService.get('DATABASE_PORT')).toEqual('5432');
       expect(configService.get('DATABASE_USERNAME')).toEqual('postgres');
@@ -79,13 +80,35 @@ describe('Config Service', () => {
 
     it('should return the correct database name', () => {
       const configService = new ConfigService();
-      console.log(process.env);
-      expect(configService.get('HEIMDALL_SERVER_PORT')).toEqual('8001');
+      expect(configService.get('PORT')).toEqual('8001');
     });
 
     it('should return undefined because env variable does not exist', () => {
       const configService = new ConfigService();
       expect(configService.get('INVALID_VARIABLE')).toBe(undefined);
+    });
+  });
+
+  describe('When using DATABASE_URL', () => {
+    beforeAll(() => {
+      mock({
+        '.env': DATABASE_URL_MOCK_ENV
+      });
+    });
+
+    it('should correctly parse DATABASE_URL into its components', () => {
+      const configService = new ConfigService();
+      expect(configService.get('DATABASE_HOST')).toEqual(
+        'ec2-00-000-11-123.compute-1.amazonaws.com'
+      );
+      expect(configService.get('DATABASE_PORT')).toEqual('5432');
+      expect(configService.get('DATABASE_USERNAME')).toEqual(
+        'abcdefghijk123456'
+      );
+      expect(configService.get('DATABASE_PASSWORD')).toEqual(
+        '000011112222333344455556666777778889999aaaabbbbccccddddeeeffff'
+      );
+      expect(configService.get('DATABASE_NAME')).toEqual('database01');
     });
   });
 
@@ -112,6 +135,14 @@ describe('Config Service', () => {
         throw new Error('');
       });
       expect(() => configService.get('DATABASE_NAME')).toThrowError();
+    });
+  });
+
+  describe('Set', () => {
+    it('should set a key value', () => {
+      const configService = new ConfigService();
+      configService.set('test', 'value');
+      expect(configService.get('test')).toBe('value');
     });
   });
 

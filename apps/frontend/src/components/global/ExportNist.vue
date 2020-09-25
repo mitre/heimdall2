@@ -25,7 +25,6 @@ import {NistControl} from 'inspecjs/dist/nist';
 import {FileID} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
 
-const MAX_CELL_SIZE = 32000; // Rounding a bit here.
 const MAX_SHEET_NAME_SIZE = 31;
 export type NISTRow = [string];
 export type NISTList = NISTRow[];

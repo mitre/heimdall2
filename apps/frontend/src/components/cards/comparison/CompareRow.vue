@@ -114,10 +114,9 @@ export default class CompareRow extends Props {
       this.selection.push(false);
     } else {
       this.selection = [];
-      var x;
-      for (x in this._controls) {
+      this._controls.forEach(() => {
         this.selection.push(false);
-      }
+      });
     }
   }
 
@@ -209,7 +208,7 @@ export default class CompareRow extends Props {
 
   //Updates selection array to match file count
   get file_num_watch(): string {
-    this.selection = FilteredDataModule.selected_file_ids.map(x => false);
+    this.selection = FilteredDataModule.selected_file_ids.map(() => false);
     return FilteredDataModule.selected_file_ids.length + '';
   }
   /** If more than one row selected */

@@ -8,6 +8,7 @@ import {InspecDataModule} from '@/store/data_store';
 import {AllRaw} from '../util/fs';
 import {ControlStatusHash, StatusCountModule} from '@/store/status_counts';
 import {readFileSync} from 'fs';
+import _ from 'lodash';
 
 describe('Parsing', () => {
   it('Report intake can read every raw file in hdf_data', function() {
@@ -34,9 +35,9 @@ describe('Parsing', () => {
     // For each, we will filter then count
     exec_files.forEach(file => {
       // Get the corresponding count file
-      let count_filename = `tests/hdf_data/counts/${file.filename}.info.counts`;
-      let count_file_content = readFileSync(count_filename, 'utf-8');
-      let counts: any = JSON.parse(count_file_content);
+      const countFilename = `tests/hdf_data/counts/${file.filename}.info.counts`;
+      const countFileContent = readFileSync(countFilename, 'utf-8');
+      const counts: any = JSON.parse(countFileContent);
 
       // Get the expected counts
       let expected: ControlStatusHash = {
@@ -48,36 +49,34 @@ describe('Parsing', () => {
         'Not Applicable': counts.no_impact.total
       };
 
-      let expected_with_filename = {
+      const expectedWithFilename = {
         filename: file.filename,
         ...expected
       };
 
       // Get the actual
-      let actual = StatusCountModule.hash({
-        omit_overlayed_controls: true,
-        fromFile: [file.unique_id]
-      });
-
-      let {
-        PassedTests,
-        FailedOutOf,
-        FailedTests,
-        NotApplicableTests,
-        NotReviewedTests,
-        ErroredOutOf,
-        ErroredTests,
-        TotalTests,
-        ...actual_stripped
-      } = actual;
-
-      let actual_with_filename = {
+      const actualWithFilename = {
         filename: file.filename,
-        ...actual_stripped
+        ...StatusCountModule.hash({
+          omit_overlayed_controls: true,
+          fromFile: [file.unique_id]
+        })
       };
 
+      const strippedActualWithFilename = _.omit(
+        actualWithFilename,
+        'ErroredOutOf',
+        'FailedOutOf',
+        'PassedTests',
+        'FailedTests',
+        'NotApplicableTests',
+        'TotalTests',
+        'ErroredTests',
+        'NotReviewedTests'
+      );
+
       // Compare 'em
-      expect(actual_with_filename).to.eql(expected_with_filename);
+      expect(strippedActualWithFilename).to.eql(expectedWithFilename);
     });
   });
 });

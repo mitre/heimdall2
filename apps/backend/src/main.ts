@@ -16,7 +16,6 @@ async function bootstrap() {
       whitelist: true
     })
   );
-
-  await app.listen(configService.get('HEIMDALL_SERVER_PORT') || 3000);
+  await app.listen(configService.get('PORT') || 3000);
 }
 bootstrap();

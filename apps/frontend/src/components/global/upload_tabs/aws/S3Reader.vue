@@ -125,7 +125,7 @@ export default class S3Reader extends Props {
     // Don't need the duration to be very long
     get_session_token(this.access_token, this.secret_token, 10).then(
       // Success of get session token - now need to determine if MFA necessary
-      success => {
+      () => {
         this.step = 2;
       },
 

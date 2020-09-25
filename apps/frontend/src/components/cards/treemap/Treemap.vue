@@ -183,7 +183,6 @@ export default class Treemap extends TreemapProps {
   // Callbacks for our tree
   select_node(n: d3.HierarchyRectangularNode<TreemapNode>): void {
     // If it is a leaf, then select it
-    let new_state = [...this._state];
     if (is_leaf(n.data)) {
       let id = n.data.control.data.id;
       if (id !== this.selected_control) {
