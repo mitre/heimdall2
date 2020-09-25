@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
+import {StartupSettingsDto} from './dto/startup-settings.dto';
 
 export class ConfigService {
   private envConfig: {[key: string]: string};
@@ -27,6 +28,10 @@ export class ConfigService {
         'DATABASE_URL parsed into smaller components (i.e. DATABASE_USER)'
       );
     }
+  }
+
+  frontendStartupSettings(): StartupSettingsDto {
+    return new StartupSettingsDto({banner: this.get('WARNING_BANNER') || ''});
   }
 
   private parseDatabaseUrl(): boolean {
