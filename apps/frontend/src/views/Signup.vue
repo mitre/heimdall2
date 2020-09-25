@@ -19,7 +19,7 @@
                     :error-messages="emailErrors"
                     name="email"
                     label="Email"
-                    prepend-icon="person"
+                    prepend-icon="mdi-account"
                     type="text"
                     @blur="$v.email.$touch()"
                   />
@@ -28,7 +28,7 @@
                     id="password"
                     v-model="password"
                     :error-messages="passwordErrors"
-                    prepend-icon="lock"
+                    prepend-icon="mdi-lock"
                     name="password"
                     label="Password"
                     :type="showPassword ? 'text' : 'password'"
@@ -53,7 +53,7 @@
                     name="passwordConfirmation"
                     :error-messages="passwordConfirmationErrors"
                     label="Confirm Password"
-                    prepend-icon="lock"
+                    prepend-icon="mdi-lock-alert"
                     type="password"
                     @blur="$v.passwordConfirmation.$touch()"
                   />
