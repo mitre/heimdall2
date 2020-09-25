@@ -32,9 +32,6 @@
                     name="password"
                     label="Password"
                     prepend-icon="mdi-lock"
-                    :type="showPassword ? 'text' : 'password'"
-                    :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                    @click:append="showPassword = !showPassword"
                     @blur="$v.password.$touch()"
                   />
                   <v-btn
@@ -91,7 +88,6 @@ export interface LoginHash {
 export default class Login extends Vue {
   email: string = '';
   password: string = '';
-  showPassword: boolean = false;
 
   mounted() {
     this.checkLoggedIn();
