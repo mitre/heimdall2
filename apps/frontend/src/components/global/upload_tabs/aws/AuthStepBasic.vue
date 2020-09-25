@@ -11,6 +11,7 @@
       <v-text-field
         :value="secret_token"
         label="User Account Secret Token"
+        type="password"
         :rules="[req_rule]"
         @input="change_secret_token"
       />

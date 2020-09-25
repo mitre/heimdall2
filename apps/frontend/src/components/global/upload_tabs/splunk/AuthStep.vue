@@ -2,7 +2,12 @@
   <v-stepper-content step="1">
     <v-form v-model="valid">
       <v-text-field v-model="username" label="Username" :rules="[req_rule]" />
-      <v-text-field v-model="password" label="Password" :rules="[req_rule]" />
+      <v-text-field
+        v-model="password"
+        label="Password"
+        type="password"
+        :rules="[req_rule]"
+      />
       <v-text-field
         v-model="hostname"
         label="Hostname"

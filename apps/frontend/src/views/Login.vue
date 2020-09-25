@@ -28,6 +28,7 @@
                     id="password_field"
                     v-model="password"
                     :error-messages="passwordErrors"
+                    type="password"
                     name="password"
                     label="Password"
                     prepend-icon="mdi-lock-outline"
