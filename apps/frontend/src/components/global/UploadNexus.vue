@@ -5,6 +5,9 @@
       :persistent="persistent"
       @close-modal="$emit('close-modal')"
     >
+      <v-banner v-if="warning_banner" icon="mdi-alert" color="warning">
+        {{ warning_banner }}
+      </v-banner>
       <v-tabs
         :vertical="$vuetify.breakpoint.mdAndUp"
         active
@@ -38,7 +41,7 @@
         </v-tab-item>
 
         <v-tab-item v-if="serverMode" value="uploadtab-database">
-          <DatabaseReader @got-files="got_files" />
+          <DatabaseReader :refresh="visible" @got-files="got_files" />
         </v-tab-item>
 
         <v-tab-item value="uploadtab-samples">
@@ -74,6 +77,8 @@ import {FilteredDataModule} from '@/store/data_filters';
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop} from 'vue-property-decorator';
 
+import {ServerModule} from '@/store/server';
+
 const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
 
 /**
@@ -102,6 +107,10 @@ export default class UploadNexus extends mixins(ServerMixin) {
     this.active_tab = new_tab;
     this.$toasted.clear();
     local_tab.set(new_tab);
+  }
+
+  get warning_banner(): string {
+    return ServerModule.banner;
   }
 
   // Event passthrough

@@ -9,6 +9,8 @@ import Store from '@/store/store';
 import axios from 'axios';
 import {LocalStorageVal} from '@/utilities/helper_util';
 
+import {IStartupSettings} from '@heimdall/interfaces';
+
 const local_token = new LocalStorageVal<string | null>('auth_token');
 
 export interface IServerState {
@@ -16,6 +18,7 @@ export interface IServerState {
   serverUrl: string;
   loading: boolean;
   token: string;
+  banner: string;
 }
 
 @Module({
@@ -25,6 +28,7 @@ export interface IServerState {
   name: 'ServerModule'
 })
 class Server extends VuexModule implements IServerState {
+  banner = '';
   serverUrl = '';
   serverMode = false;
   loading = true;
@@ -36,6 +40,11 @@ class Server extends VuexModule implements IServerState {
     this.token = newToken;
     local_token.set(newToken);
     axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+  }
+
+  @Mutation
+  SET_STARTUP_SETTINGS(settings: IStartupSettings) {
+    this.banner = settings.banner;
   }
 
   @Mutation
@@ -77,6 +86,7 @@ class Server extends VuexModule implements IServerState {
         if (response.status === 200) {
           // This means the server successfully responded and we are therefore in server mode
           this.SET_SERVER(potentialUrl);
+          this.SET_STARTUP_SETTINGS(response.data);
           const token = local_token.get();
           if (token !== null) {
             this.SET_TOKEN(token);
