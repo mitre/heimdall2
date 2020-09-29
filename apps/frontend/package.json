@@ -62,7 +62,7 @@
     "html-webpack-inline-source-plugin": "0.0.10",
     "html-webpack-plugin": "^3.2.0",
     "inspecjs": "0.12.1",
-    "lru-cache": "^5.1.1",
+    "lru-cache": "^6.0.0",
     "prismjs": "^1.21.0",
     "roboto-fontface": "*",
     "uuid": "^8.3.0",
