@@ -30,7 +30,10 @@
                     :error-messages="passwordErrors"
                     name="password"
                     label="Password"
-                    prepend-icon="mdi-lock-outline"
+                    prepend-icon="mdi-lock"
+                    :type="showPassword ? 'text' : 'password'"
+                    :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                    @click:append="showPassword = !showPassword"
                     @blur="$v.password.$touch()"
                   />
                   <v-btn

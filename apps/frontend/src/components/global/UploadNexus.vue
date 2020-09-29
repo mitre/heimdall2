@@ -5,6 +5,9 @@
       :persistent="persistent"
       @close-modal="$emit('close-modal')"
     >
+      <v-banner v-if="warning_banner" icon="mdi-alert" color="warning">
+        {{ warning_banner }}
+      </v-banner>
       <v-tabs
         :vertical="$vuetify.breakpoint.mdAndUp"
         active
@@ -75,6 +78,8 @@ import {SnackbarModule} from '@/store/snackbar';
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop} from 'vue-property-decorator';
 
+import {ServerModule} from '@/store/server';
+
 const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
 
 /**
@@ -103,6 +108,10 @@ export default class UploadNexus extends mixins(ServerMixin) {
     this.active_tab = new_tab;
     SnackbarModule.SET_VISIBILITY(false);
     local_tab.set(new_tab);
+  }
+
+  get warning_banner(): string {
+    return ServerModule.banner;
   }
 
   // Event passthrough
