@@ -19,7 +19,7 @@
                     :error-messages="emailErrors"
                     name="email"
                     label="Email"
-                    prepend-icon="person"
+                    prepend-icon="mdi-account"
                     type="text"
                     required
                     @blur="$v.email.$touch()"
@@ -30,10 +30,7 @@
                     :error-messages="passwordErrors"
                     name="password"
                     label="Password"
-                    prepend-icon="lock"
-                    :type="showPassword ? 'text' : 'password'"
-                    :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                    @click:append="showPassword = !showPassword"
+                    prepend-icon="mdi-lock-outline"
                     @blur="$v.password.$touch()"
                   />
                   <v-btn
@@ -69,6 +66,7 @@ import Component from 'vue-class-component';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 import {required, email} from 'vuelidate/lib/validators';
 import {ServerModule} from '@/store/server';
+import {SnackbarModule} from '@/store/snackbar';
 
 export interface LoginHash {
   email: string;
@@ -116,9 +114,7 @@ export default class Login extends Vue {
         this.$router.push('/');
       })
       .catch(error => {
-        this.$toasted.global.error({
-          message: error.response.data.message
-        });
+        SnackbarModule.failure(error.response.data.message);
       });
   }
 }

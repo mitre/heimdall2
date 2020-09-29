@@ -1,5 +1,5 @@
 <template>
-  <v-snackbar v-model="show" timeout="10000">
+  <v-snackbar v-if="show" v-model="show" timeout="10000">
     <template v-if="error">
       <template v-if="message">ERROR: {{ message }}</template>
       <template v-else>
@@ -16,7 +16,6 @@
     <template v-slot:action="{attrs}">
       <v-btn
         v-if="error"
-        v-btn
         color="red"
         text
         href="https://github.com/mitre/heimdall2/issues/new/choose"
@@ -32,16 +31,24 @@
   </v-snackbar>
 </template>
 
-<script>
+<script lang="ts">
 import {SnackbarModule} from '@/store/snackbar';
+import Component from 'vue-class-component';
+import Vue from 'vue';
 
-export default {
-  data() {
-    return {
-      show: SnackbarModule.show,
-      error: SnackbarModule.error,
-      message: SnackbarModule.message
-    };
+@Component({})
+export default class Snackbar extends Vue {
+  get show(): boolean {
+    return SnackbarModule.show;
   }
-};
+  set show(visibility) {
+    SnackbarModule.SET_VISIBILITY(visibility);
+  }
+  get error(): boolean {
+    return SnackbarModule.error;
+  }
+  get message(): string {
+    return SnackbarModule.message;
+  }
+}
 </script>

@@ -1,10 +1,4 @@
-import {
-  Module,
-  VuexModule,
-  Action,
-  Mutation,
-  getModule
-} from 'vuex-module-decorators';
+import {Module, VuexModule, Mutation, getModule} from 'vuex-module-decorators';
 import Store from '@/store/store';
 
 export interface ISnackbarState {
@@ -23,17 +17,21 @@ export class Snackbar extends VuexModule {
   message = '';
   error = false;
   show = false;
-
+  @Mutation
   success(message: string) {
     this.error = false;
     this.message = message;
     this.show = true;
   }
-
+  @Mutation
   failure(message: string) {
     this.error = true;
     this.message = message;
     this.show = true;
+  }
+  @Mutation
+  SET_ERROR(error: boolean) {
+    this.error = error;
   }
 
   @Mutation
@@ -42,8 +40,8 @@ export class Snackbar extends VuexModule {
   }
 
   @Mutation
-  SHOW_SNACKBAR(message: string) {
-    this.show = true;
+  SET_VISIBILITY(visibility: boolean) {
+    this.show = visibility;
   }
 }
 
