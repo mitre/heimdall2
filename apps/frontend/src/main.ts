@@ -7,12 +7,7 @@ import vuetify from '@/plugins/vuetify';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import {ServerModule} from './store/server';
 import axios from 'axios';
-import SetupToasted from '@/plugins/SetupToasted';
-import Toasted from 'vue-toasted';
 import Vuetify from 'vuetify/lib';
-
-Vue.use(Toasted);
-SetupToasted();
 
 Vue.use(Vuetify);
 
