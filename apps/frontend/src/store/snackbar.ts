@@ -35,6 +35,10 @@ export class Snackbar extends VuexModule {
     this.context.commit('SET_MESSAGE', message);
     this.context.commit('SET_VISIBILITY', true);
   }
+  @Action
+  visibility(visibility: boolean) {
+    this.context.commit('SET_VISIBILITY', visibility);
+  }
   @Mutation
   SET_ERROR(error: boolean) {
     this.error = error;

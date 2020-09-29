@@ -106,7 +106,7 @@ export default class UploadNexus extends mixins(ServerMixin) {
   // Handles change in tab
   selected_tab(new_tab: string) {
     this.active_tab = new_tab;
-    SnackbarModule.SET_VISIBILITY(false);
+    SnackbarModule.visibility(false);
     local_tab.set(new_tab);
   }
 
