@@ -1,16 +1,20 @@
 <template>
   <v-snackbar v-if="show" id="info-snackbar" v-model="show" timeout="10000">
     <template v-if="error">
-      <template v-if="message">ERROR: {{ message }}</template>
-      <template v-else>
+      <template v-if="message" id="snackbar-message"
+        >ERROR: {{ message }}</template
+      >
+      <template v-else id="snackbar-message">
         ERROR: An unidentified error has occured, if functionality has degraded
         please try refreshing the page. If that does not fix the issue you are
         experiencing, then please report the issue.
       </template>
     </template>
     <template v-else>
-      <template v-if="message">{{ message }}</template>
-      <template v-else>The action completed successfully.</template>
+      <template v-if="message" id="snackbar-message">{{ message }}</template>
+      <template v-else id="snackbar-message">
+        The action completed successfully.</template
+      >
     </template>
 
     <template v-slot:action="{attrs}">
