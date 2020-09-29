@@ -1,5 +1,5 @@
 <template>
-  <v-snackbar v-if="show" v-model="show" timeout="10000">
+  <v-snackbar v-if="show" id="info-snackbar" v-model="show" timeout="10000">
     <template v-if="error">
       <template v-if="message">ERROR: {{ message }}</template>
       <template v-else>
@@ -16,6 +16,7 @@
     <template v-slot:action="{attrs}">
       <v-btn
         v-if="error"
+        id="report-error"
         color="red"
         text
         href="https://github.com/mitre/heimdall2/issues/new/choose"
@@ -24,7 +25,7 @@
       >
         Report Error
       </v-btn>
-      <v-btn text v-bind="attrs" @click="show = false">
+      <v-btn id="hide-snackbar" text v-bind="attrs" @click="show = false">
         Close
       </v-btn>
     </template>
