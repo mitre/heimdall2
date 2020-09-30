@@ -192,6 +192,14 @@ Once the above steps are completed it is possible to start heimdall-server using
     # Run Backend Nest Tests
     yarn backend test:e2e
     yarn backend test:ci-cov
+    
+### Creating a Release
+
+**Note:** This action requires appropriate privileges on the repository to perform.
+
+1. Ensure you have pulled the latest copy of the code locally onto your machine.
+1. Using `lerna version`, run `lerna version <explicit version>` or alternatively use one of the appropriate lerna keywords: `'major', 'minor', 'patch', 'premajor', 'preminor', 'prepatch', or 'prerelease'` to bump the version. This will push a new tag to Github.
+1. Navigate to `Releases` on Github and edit the release notes that `Release Drafter` has created for you, and assign them to the tag that you just pushed.
 
 ## Versioning and State of Development
 

@@ -1,7 +1,7 @@
 {
   "name": "heimdall-lite",
   "bin": "./src/server.js",
-  "version": "2.2.8",
+  "version": "2.3.0",
   "description": "Heimdall Lite 2.0 is a JavaScript based security results viewer and review tool supporting multiple security results formats, such as: InSpec, SonarQube, OWASP-Zap and Fortify which you can load locally, from S3 and other data sources.",
   "repository": {
     "type": "git",
@@ -29,7 +29,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@heimdall/interfaces": "~0.0.1",
+    "@heimdall/interfaces": "^2.3.0",
     "@types/chroma-js": "^1.4.3",
     "@types/concat-stream": "^1.6.0",
     "@types/d3": "^5.7.2",
@@ -62,7 +62,7 @@
     "html-webpack-inline-source-plugin": "0.0.10",
     "html-webpack-plugin": "^3.2.0",
     "inspecjs": "0.12.1",
-    "lru-cache": "^5.1.1",
+    "lru-cache": "^6.0.0",
     "prismjs": "^1.21.0",
     "roboto-fontface": "*",
     "uuid": "^8.3.0",
@@ -73,7 +73,7 @@
     "vue-file-agent": "^1.7.3",
     "vue-highlightjs": "^1.3.3",
     "vue-line-clamp": "^1.3.2",
-    "vue-prism-component": "~1.1.1",
+    "vue-prism-component": "~1.2.0",
     "vue-prismjs": "~1.2.0",
     "vue-property-decorator": "^9.0.0",
     "vue-resize-directive": "^1.2.0",
@@ -96,12 +96,12 @@
     "@types/chai-as-promised": "^7.1.2",
     "@types/file-saver": "^2.0.1",
     "@types/jest": "^26.0.7",
+    "@types/lodash": "^4.14.161",
     "@types/lru-cache": "^5.1.0",
     "@types/node": "^14.11.2",
     "@types/sinon": "^9.0.4",
     "@types/vuelidate": "^0.7.13",
     "@vue/cli-plugin-babel": "^4.5.6",
-    "@types/lodash": "^4.14.161",
     "@vue/cli-plugin-eslint": "^4.5.4",
     "@vue/cli-plugin-typescript": "^3.12.1",
     "@vue/cli-service": "^3.12.1",
@@ -112,7 +112,6 @@
     "eslint-plugin-vue": "^6.2.2",
     "jest": "^26.4.2",
     "jest-useragent-mock": "^0.1.1",
-    "lint-staged": "^8.1.5",
     "node-sass": "^4.13.1",
     "sass": "^1.23.6",
     "sass-loader": "^7.3.1",
@@ -123,15 +122,6 @@
     "vue-template-compiler": "^2.6.10",
     "vuetify-loader": "^1.3.1",
     "vuex-module-decorators": "^0.9.11"
-  },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,vue,ts}": [
-      "vue-cli-service lint",
-      "git add"
-    ]
   },
   "jest": {
     "moduleFileExtensions": [
