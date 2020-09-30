@@ -1,9 +1,7 @@
 <template>
   <v-snackbar v-if="show" id="info-snackbar" v-model="show" timeout="10000">
     <template v-if="error">
-      <template v-if="message" id="snackbar-message"
-        >ERROR: {{ message }}</template
-      >
+      <template v-if="message" id="snackbar-message">{{ message }}</template>
       <template v-else id="snackbar-message">
         ERROR: An unidentified error has occured, if functionality has degraded
         please try refreshing the page. If that does not fix the issue you are
@@ -47,7 +45,7 @@ export default class Snackbar extends Vue {
     return SnackbarModule.show;
   }
   set show(visibility) {
-    SnackbarModule.SET_VISIBILITY(visibility);
+    SnackbarModule.visibility(visibility);
   }
   get error(): boolean {
     return SnackbarModule.error;
