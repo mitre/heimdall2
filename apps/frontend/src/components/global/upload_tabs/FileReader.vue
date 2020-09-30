@@ -17,7 +17,7 @@
         <v-col cols="12" align="center">
           <div class="d-flex flex-column justify-center">
             <span :class="title_class">Heimdall</span>
-            <span v-if="serverMode" :class="title_class">Lite</span>
+            <span v-if="!serverMode" :class="title_class">Lite</span>
           </div>
         </v-col>
       </v-row>
