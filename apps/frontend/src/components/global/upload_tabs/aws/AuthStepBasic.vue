@@ -70,7 +70,6 @@ export default class S3Reader extends Props {
    * Shouldn't be used to interpret literally anything else as valid - just checks fields filled
    */
   valid: boolean = false;
-  show_secret: boolean = false;
 
   /** Form required field rules. Maybe eventually expand to other stuff */
   req_rule = (v: string | null | undefined) =>
