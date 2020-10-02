@@ -23,20 +23,6 @@ $code-kbd-font-weight: false;
   background: var(--v-secondary-base);
 }
 
-/** Backgrounds (middle) */
-.theme--dark.v-card,
-.theme--dark.v-list,
-.theme--dark.v-tabs>.v-tabs-bar,
-.theme--dark.v-navigation-drawer,
-.theme--dark .v-input__slot,
-.theme--dark .v-stepper,
-.theme--dark .v-window__container,
-.theme--dark .v-dialog {
-  background: var(--v-secondary-lighten1);
-  background-color: var(--v-secondary-lighten1) !important;
-  color: var(--v-secondary-visible-lighten1);
-}
-
 .container {
   background-color: inherit;
 }
@@ -75,3 +61,13 @@ $code-kbd-font-weight: false;
 .show {
   display: block !important;
 }
+
+
+@import '~vuetify/src/styles/styles.sass';
+$custom-colors: (
+    'background': var(--v-secondary-lighten1),
+    'cards': var(--v-secondary-lighten1),
+    'bg-color':  var(--v-secondary-lighten1),
+
+);
+$material-dark: map-merge($material-dark, $custom-colors);
