@@ -22,18 +22,19 @@
                     prepend-icon="mdi-account"
                     type="text"
                     required
+                    @keyup.enter="$refs.password.focus"
                     @blur="$v.email.$touch()"
                   />
                   <v-text-field
                     id="password_field"
+                    ref="password"
                     v-model="password"
                     :error-messages="passwordErrors"
+                    type="password"
                     name="password"
                     label="Password"
                     prepend-icon="mdi-lock"
-                    :type="showPassword ? 'text' : 'password'"
-                    :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                    @click:append="showPassword = !showPassword"
+                    @keyup.enter="login"
                     @blur="$v.password.$touch()"
                   />
                   <v-btn
@@ -90,7 +91,6 @@ export interface LoginHash {
 export default class Login extends Vue {
   email: string = '';
   password: string = '';
-  showPassword: boolean = false;
 
   mounted() {
     this.checkLoggedIn();
