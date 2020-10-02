@@ -65,7 +65,6 @@ export default class SplunkAuth extends Props {
    * Shouldn't be used to interpret literally anything else as valid - just checks fields filled
    */
   valid: boolean = false;
-  show_secret: boolean = false;
 
   /** State of input fields */
   username: string = '';
