@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-container id="help-bar" class="bar lighten-2">
+    <v-container fluid class="bar lighten-2">
       <v-row justify="space-around" no-gutters>
         <AboutModal>
           <template v-slot:clickable="{on}">
@@ -34,12 +34,6 @@
     </v-container>
   </v-card>
 </template>
-
-<style scoped>
-#help-bar {
-  max-width: 100%;
-}
-</style>
 
 <script lang="ts">
 import Vue from 'vue';
