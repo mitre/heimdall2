@@ -22,16 +22,19 @@
                     prepend-icon="mdi-account"
                     type="text"
                     required
+                    @keyup.enter="$refs.password.focus"
                     @blur="$v.email.$touch()"
                   />
                   <v-text-field
                     id="password_field"
+                    ref="password"
                     v-model="password"
                     :error-messages="passwordErrors"
                     type="password"
                     name="password"
                     label="Password"
                     prepend-icon="mdi-lock"
+                    @keyup.enter="login"
                     @blur="$v.password.$touch()"
                   />
                   <v-btn
