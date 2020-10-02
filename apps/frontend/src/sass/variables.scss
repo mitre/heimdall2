@@ -1,0 +1,22 @@
+$font-size-root: 14px;
+
+$code-background-color: '#272727';
+
+$material-dark-elevation-colors: (
+  '0': #303030,
+  '1': #3e3e3e,
+  '2': #2f2f2f,
+  '3': #323232,
+  '4': #272727,
+  '6': #3e3e3e,
+  '8': #3e3e3e,
+  '12': #3e3e3e,
+  '16': #3e3e3e,
+  '24': #3e3e3e
+);
+
+$material-dark: (
+  'background': map_get($material-dark-elevation-colors, '0'),
+  'surface': map_get($material-dark-elevation-colors, '0'),
+  'bg-color': map_get($material-dark-elevation-colors, '1'),
+);

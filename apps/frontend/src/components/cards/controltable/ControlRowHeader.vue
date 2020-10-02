@@ -26,7 +26,7 @@
           >mdi-checkbox-blank-circle-outline</v-icon
         >
         <br />
-        <v-divider class="lighten-4 mx-1" />
+        <v-divider class="mx-1" />
         {{ control.hdf.severity.toUpperCase() }}
       </v-card-text>
     </template>
@@ -195,9 +195,3 @@ export default class ControlRowHeader extends ControlRowHeaderProps {
   }
 }
 </script>
-
-<style scoped>
-.lightened-row .v-card {
-  background: var(--v-background-lighten-2);
-}
-</style>

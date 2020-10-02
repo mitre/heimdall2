@@ -106,6 +106,7 @@ import 'prismjs/components/prism-makefile.js';
 import 'prismjs/components/prism-ruby.js';
 //@ts-ignore
 import Prism from 'vue-prism-component';
+import 'prismjs/themes/prism-tomorrow.css';
 Vue.component('prism', Prism);
 
 import 'prismjs/components/prism-ruby.js';
@@ -266,6 +267,8 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
 </script>
 
 <style lang="scss" scoped>
+@import '@/sass/control-row-format.scss';
+
 .clickable {
   cursor: pointer;
 }
@@ -294,20 +297,7 @@ pre {
   max-width: 99.9%;
   margin: auto;
 }
-/*
-.v-application code {
-  background-color: revert;
-  color: revert;
-  display: revert;
-  font-size: revert;
-  -webkit-box-shadow: revert;
-  box-shadow: revert;
-  border-radius: revert;
-  white-space: auto;
-  overflow-wrap: break-word;
-  max-width: 100%;
-}
-*/
+
 .code-card {
   height: inherit;
   margin: inherit;
@@ -317,11 +307,7 @@ pre {
   min-width: 125px;
   justify-content: center;
 }
-/*
-code[class*="language-"] {
-  word-break: break-word;
-}
-*/
+
 .right {
   margin-left: -1px;
 }
