@@ -141,12 +141,12 @@ export default class Signup extends Vue {
       ServerModule.Register(creds)
         .then(() => {
           this.$router.push('/login');
-          SnackbarModule.success(
+          SnackbarModule.notify(
             'You have successfully registered, please sign in'
           );
         })
         .catch(error => {
-          SnackbarModule.failure(error.response.data.message);
+          SnackbarModule.notify(error.response.data.message);
         });
     }
   }

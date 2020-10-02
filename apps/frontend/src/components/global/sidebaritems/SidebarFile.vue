@@ -103,7 +103,7 @@ export default class FileItem extends mixins(FileItemProps, ServerMixin) {
     axios
       .post('/evaluations', evaluationDTO)
       .then(() => {
-        SnackbarModule.success('Result saved successfully');
+        SnackbarModule.notify('Result saved successfully');
       })
       .catch(error => {
         SnackbarModule.failure(error.response.data.message);

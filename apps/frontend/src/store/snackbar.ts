@@ -24,7 +24,7 @@ export class Snackbar extends VuexModule {
   error = false;
   show = false;
   @Action
-  success(message: string) {
+  notify(message: string) {
     this.SET_ERROR(false);
     this.SET_MESSAGE(message);
     this.SET_VISIBILITY(true);
