@@ -17,7 +17,7 @@
         <v-col cols="12" align="center">
           <div class="d-flex flex-column justify-center">
             <span :class="title_class">Heimdall</span>
-            <span :class="title_class">Lite</span>
+            <span v-if="!serverMode" :class="title_class">Lite</span>
           </div>
         </v-col>
       </v-row>
@@ -50,27 +50,24 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 
 import {SnackbarModule} from '@/store/snackbar';
 import {InspecIntakeModule, FileID} from '@/store/report_intake';
 import {AppInfoModule} from '@/store/app_info';
 import vueFileAgent from 'vue-file-agent';
+import ServerMixin from '@/mixins/ServerMixin';
 import 'vue-file-agent/dist/vue-file-agent.css';
 
 Vue.use(vueFileAgent);
 
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {}
-});
 /**
  * File reader component for taking in inspec JSON data.
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
  * Emits "got-files" with a list of the unique_ids of the loaded files.
  */
 @Component({})
-export default class FileReader extends Props {
+export default class FileReader extends mixins(ServerMixin) {
   fileRecords = new Array();
   loading = false;
 
