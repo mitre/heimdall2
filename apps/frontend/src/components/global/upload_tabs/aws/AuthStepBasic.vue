@@ -11,11 +11,9 @@
       <v-text-field
         :value="secret_token"
         label="User Account Secret Token"
+        type="password"
         :rules="[req_rule]"
-        :append-icon="show_secret ? 'mdi-eye' : 'mdi-eye-off'"
-        :type="show_secret ? 'text' : 'password'"
         @input="change_secret_token"
-        @click:append="show_secret = !show_secret"
       />
     </v-form>
     <v-btn
@@ -72,7 +70,6 @@ export default class S3Reader extends Props {
    * Shouldn't be used to interpret literally anything else as valid - just checks fields filled
    */
   valid: boolean = false;
-  show_secret: boolean = false;
 
   /** Form required field rules. Maybe eventually expand to other stuff */
   req_rule = (v: string | null | undefined) =>
