@@ -21,11 +21,13 @@
                     label="Email"
                     prepend-icon="mdi-account"
                     type="text"
+                    @keyup.enter="$refs.password.focus"
                     @blur="$v.email.$touch()"
                   />
                   <br />
                   <v-text-field
                     id="password"
+                    ref="password"
                     v-model="password"
                     :error-messages="passwordErrors"
                     prepend-icon="mdi-lock"
@@ -34,6 +36,7 @@
                     :type="showPassword ? 'text' : 'password'"
                     :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                     loading
+                    @keyup.enter="$refs.passwordConfirmation.focus"
                     @click:append="showPassword = !showPassword"
                     @blur="$v.password.$touch()"
                   >
@@ -49,12 +52,14 @@
                   <br />
                   <v-text-field
                     id="passwordConfirmation"
+                    ref="passwordConfirmation"
                     v-model="passwordConfirmation"
                     name="passwordConfirmation"
                     :error-messages="passwordConfirmationErrors"
                     label="Confirm Password"
                     prepend-icon="mdi-lock-alert"
                     type="password"
+                    @keyup.enter="register"
                     @blur="$v.passwordConfirmation.$touch()"
                   />
                   <br />

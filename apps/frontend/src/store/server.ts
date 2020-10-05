@@ -93,7 +93,10 @@ class Server extends VuexModule implements IServerState {
           }
         }
       })
-      .catch(_ => {})
+      .catch(_ => {
+        // If a error code is received from the server, this means the app is not in server mode
+        // and there is therefore no action is required.
+      })
       .then(_ => {
         this.SET_LOADING(false);
       });

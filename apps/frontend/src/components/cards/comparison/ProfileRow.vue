@@ -1,7 +1,7 @@
 <template>
   <v-col cols="4" xs="4" md="5">
     <div style="text-align:center;">
-      <i v-if="show_index">{{ index }} </i> <br />
+      <em v-if="show_index">{{ index }} </em> <br />
       {{ name }} <br />
       <p style="font-size: 12px;">{{ start_time }}</p>
     </div>

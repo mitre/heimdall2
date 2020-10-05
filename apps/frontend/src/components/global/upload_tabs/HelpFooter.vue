@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-container class="bar lighten-2">
+    <v-container fluid class="bar lighten-2">
       <v-row justify="space-around" no-gutters>
         <AboutModal>
           <template v-slot:clickable="{on}">
