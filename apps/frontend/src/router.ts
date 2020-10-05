@@ -17,12 +17,7 @@ const router = new Router({
       path: '/results',
       name: 'results',
       component: Results,
-      meta: {requiresAuth: true}
-    },
-    {
-      path: '/profiles',
-      name: 'profiles',
-      component: Results,
+      alias: '/profiles',
       meta: {requiresAuth: true}
     },
     {

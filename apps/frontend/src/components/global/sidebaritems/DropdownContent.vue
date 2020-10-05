@@ -1,16 +1,16 @@
 <template>
-  <v-expansion-panel @change="redirect">
+  <v-expansion-panel>
     <v-expansion-panel-header :title="text">
       <v-list-item>{{ text }}</v-list-item>
     </v-expansion-panel-header>
     <v-expansion-panel-content>
       <div v-if="files.length > 0">
         <FileList v-for="(file, i) in files" :key="i" :file="file" />
-        <div v-if="show_delta_view">
-          <v-list-item>
-            <v-list-item-action @click="compareView">
-              <v-checkbox color="blue" :input-value="selected" />
-            </v-list-item-action>
+        <div v-if="enableCompareView">
+          <v-list-item
+            :input-value="compareViewActive"
+            @click="$emit('toggle-compare-view')"
+          >
             <v-list-item-avatar>
               <v-icon small>mdi-triangle-outline</v-icon>
             </v-list-item-avatar>
@@ -19,14 +19,14 @@
             </v-list-item-content>
           </v-list-item>
         </div>
-        <div v-if="showtoggle === true">
-          <v-list-item :title="toggle" @click="toggle_all">
+        <div>
+          <v-list-item :title="toggle" @click="$emit('toggle-all')">
             <v-list-item-avatar>
               <v-icon small>mdi-format-list-bulleted</v-icon>
             </v-list-item-avatar>
             <v-list-item-content>
               <v-list-item-title>
-                <div>Select / Deselect all {{ text }}</div>
+                <div>{{ selectAllText }} all {{ text }}</div>
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -48,40 +48,18 @@ import FileList from '@/components/global/sidebaritems/SidebarFileList.vue';
 })
 export default class DropdownContent extends Vue {
   @Prop({type: String, required: true}) readonly text!: string;
+  @Prop({type: Boolean, required: true}) readonly allSelected!: boolean;
   @Prop({default: 'Toggle select all', type: String, required: false})
   readonly toggle!: string;
   @Prop({type: Array, required: true}) readonly files!: Object[];
   @Prop({type: String, required: false}) readonly route!: string;
   @Prop({default: false, type: Boolean, required: false})
-  readonly show_delta_view!: boolean;
+  readonly compareViewActive!: boolean;
   @Prop({default: false, type: Boolean, required: false})
-  readonly active!: boolean;
-  @Prop({default: false, type: Boolean, required: false})
-  readonly showtoggle!: boolean;
+  readonly enableCompareView!: boolean;
 
-  redirect(): void {
-    if (this.active && this.route !== this.$router.currentRoute.path)
-      this.$router.push({path: this.route});
-  }
-
-  toggle_all() {
-    this.$emit('toggleAll');
-  }
-
-  // toggle between the comparison view and the results view
-  compareView(): void {
-    this.$emit('compare');
-  }
-
-  /** toggle the checkbox associated with the toggling between
-   the comparison view and results view */
-  get selected(): boolean {
-    let flag = false;
-
-    if (this.$router.currentRoute.path === '/compare') flag = true;
-    else flag = false;
-
-    return flag;
+  get selectAllText(): string {
+    return this.allSelected ? 'Deselect' : 'Select';
   }
 }
 </script>

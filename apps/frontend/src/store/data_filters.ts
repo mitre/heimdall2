@@ -127,7 +127,7 @@ export class FilteredData extends VuexModule {
   }
 
   @Action
-  toggle_all_evaluations(): void {
+  public toggle_all_evaluations(): void {
     if (this.all_evaluations_selected) {
       this.CLEAR_ALL_EVALUATIONS();
     } else {
@@ -138,7 +138,7 @@ export class FilteredData extends VuexModule {
   }
 
   @Action
-  toggle_all_profiles(): void {
+  public toggle_all_profiles(): void {
     if (this.all_profiles_selected) {
       this.CLEAR_ALL_PROFILES();
     } else {
@@ -149,20 +149,20 @@ export class FilteredData extends VuexModule {
   }
 
   @Action
-  select_exclusive_evaluation(fileID: FileID): void {
+  public select_exclusive_evaluation(fileID: FileID): void {
     this.CLEAR_ALL_EVALUATIONS();
     this.SELECT_EVALUATIONS([fileID]);
   }
 
   @Action
-  select_exclusive_profile(fileID: FileID): void {
+  public select_exclusive_profile(fileID: FileID): void {
     this.CLEAR_ALL_PROFILES();
     this.SELECT_PROFILES([fileID]);
   }
 
   @Action
-  toggle_evaluation(fileID: FileID): void {
-    if (this.is_file_selected(fileID)) {
+  public toggle_evaluation(fileID: FileID): void {
+    if (this.selected_evaluation_ids.includes(fileID)) {
       this.CLEAR_EVALUATION(fileID);
     } else {
       this.SELECT_EVALUATIONS([fileID]);
@@ -170,20 +170,16 @@ export class FilteredData extends VuexModule {
   }
 
   @Action
-  toggle_profile(fileID: FileID): void {
-    if (this.is_file_selected(fileID)) {
+  public toggle_profile(fileID: FileID): void {
+    if (this.selected_profile_ids.includes(fileID)) {
       this.CLEAR_PROFILE(fileID);
     } else {
       this.SELECT_PROFILES([fileID]);
     }
   }
 
-  is_file_selected(fileID: FileID): boolean {
-    return this.selected_file_ids.includes(fileID);
-  }
-
   @Action
-  clear_file(fileID: FileID): void {
+  public clear_file(fileID: FileID): void {
     this.CLEAR_EVALUATION(fileID);
     this.CLEAR_PROFILE(fileID);
   }

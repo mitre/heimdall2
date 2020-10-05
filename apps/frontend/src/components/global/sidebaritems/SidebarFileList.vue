@@ -34,6 +34,7 @@ import {ICreateEvaluation} from '@heimdall/interfaces';
 import {InspecDataModule} from '@/store/data_store';
 import {FilteredDataModule} from '@/store/data_filters';
 import {EvaluationFile} from '@/store/report_intake';
+import {SnackbarModule} from '@/store/snackbar';
 
 import ServerMixin from '@/mixins/ServerMixin';
 
@@ -66,7 +67,7 @@ export default class FileItem extends mixins(FileItemProps, ServerMixin) {
 
   //checks if file is selected
   get selected(): boolean {
-    return FilteredDataModule.is_file_selected(this.file.unique_id);
+    return FilteredDataModule.selected_file_ids.includes(this.file.unique_id);
   }
 
   //removes uploaded file from the currently observed files

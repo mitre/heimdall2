@@ -5,6 +5,7 @@
     app
     style="margin-top: 56px;"
     disable-resize-watcher
+    disable-route-watcher
     fixed
     temporary
     width="375px"
@@ -12,26 +13,23 @@
   >
     <v-list dense class="px-2" subheader>
       <v-subheader>Files</v-subheader>
-      <v-expansion-panels v-model="selectDropdown" flat>
+      <v-expansion-panels v-model="active_path" accordion mandatory>
         <DropdownContent
           text="Results"
           toggle="Select all result set"
           :files="visible_evaluation_files"
-          route="/results"
-          :showdeltaview="true"
-          :openview="true"
-          :showtoggle="true"
-          @toggleAll="toggle_all_evaluations"
-          @compare="compareView"
+          :all-selected="all_evaluations_selected"
+          :enable-compare-view="true"
+          :compare-view-active="compareViewActive"
+          @toggle-all="toggle_all_evaluations"
+          @toggle-compare-view="compareView"
         />
         <DropdownContent
           text="Profiles"
           toggle="Select all profile set"
           :files="visible_profile_files"
-          route="/profiles"
-          :openview="true"
-          :showtoggle="true"
-          @toggleAll="toggle_all_profiles"
+          :all-selected="all_profiles_selected"
+          @toggle-all="toggle_all_profiles"
         />
       </v-expansion-panels>
     </v-list>
@@ -40,13 +38,14 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
 import HelpModal from '@/components/global/HelpModal.vue';
 import {FilteredDataModule} from '@/store/data_filters';
+import RouteMixin from '@/mixins/RouteMixin';
 
 import DropdownContent from '@/components/global/sidebaritems/DropdownContent.vue';
 
@@ -65,16 +64,24 @@ const SidebarProps = Vue.extend({
     HelpModal
   }
 })
-export default class Sidebar extends SidebarProps {
+export default class Sidebar extends mixins(SidebarProps, RouteMixin) {
   // open the appropriate v-expansion-panel based on current route
-  get selectDropdown() {
-    if (this.current_route === 'Profiles') return 1;
-    else return 0;
+  get active_path() {
+    if (this.current_route === '/profiles') return 1;
+    else if (
+      this.current_route === '/results' ||
+      this.current_route === '/compare'
+    )
+      return 0;
+    else return -1;
   }
 
-  // get the value of the current route
-  get current_route() {
-    return this.$router.currentRoute.name;
+  set active_path(id: number) {
+    // There are currently 2 available values that the v-modal can have,
+    // 0 -> results view
+    // 1 -> profile view
+    if (id === 0) this.navigateUnlessActive('/results');
+    else if (id === 1) this.navigateUnlessActive('/profiles');
   }
 
   // get all visible (uploaded) evaluation files
@@ -91,6 +98,18 @@ export default class Sidebar extends SidebarProps {
     return files;
   }
 
+  get all_evaluations_selected(): boolean {
+    return FilteredDataModule.all_evaluations_selected;
+  }
+
+  get all_profiles_selected(): boolean {
+    return FilteredDataModule.all_profiles_selected;
+  }
+
+  get compareViewActive(): boolean {
+    return this.current_route === '/compare';
+  }
+
   // toggle the "select all" for profiles
   toggle_all_profiles(): void {
     FilteredDataModule.toggle_all_profiles();
@@ -103,8 +122,10 @@ export default class Sidebar extends SidebarProps {
 
   // toggle between the comparison view and the results view
   compareView(): void {
-    if (this.current_route === 'Results') this.$router.push({path: '/compare'});
-    if (this.current_route === 'Compare') this.$router.push({path: '/results'});
+    if (this.current_route === '/results')
+      this.navigateUnlessActive('/compare');
+    if (this.current_route === '/compare')
+      this.navigateUnlessActive('/results');
   }
 }
 </script>

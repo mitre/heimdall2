@@ -171,7 +171,8 @@
     <!-- Everything-is-filtered snackbar -->
     <v-snackbar
       v-model="filter_snackbar"
-      style="margin-top: 44px;"
+      class="mt-11"
+      style="z-index: 2;"
       :timeout="-1"
       color="warning"
       top
@@ -222,6 +223,7 @@ import ProfData from '@/components/cards/ProfData.vue';
 import {context} from 'inspecjs';
 
 import {ServerModule} from '@/store/server';
+import {capitalize} from 'lodash';
 
 // We declare the props separately
 // to make props types inferrable.
@@ -279,7 +281,9 @@ export default class Results extends ResultsProps {
    */
 
   get file_filter(): FileID[] {
-    return FilteredDataModule.selected_evaluations;
+    if (this.current_route_name === 'results')
+      return FilteredDataModule.selected_evaluations;
+    else return FilteredDataModule.selected_profiles;
   }
 
   // Returns true if no files are uploaded
@@ -365,7 +369,7 @@ export default class Results extends ResultsProps {
    */
 
   get curr_title(): string {
-    let returnText = 'Results View';
+    let returnText = `${capitalize(this.current_route_name.slice(0, -1))} View`;
     if (this.file_filter.length == 1) {
       let file = InspecDataModule.allEvaluationFiles.find(
         f => f.unique_id === this.file_filter[0]
@@ -374,9 +378,13 @@ export default class Results extends ResultsProps {
         returnText += ` (${file.filename} selected)`;
       }
     } else {
-      returnText += ` (${this.file_filter.length} results selected)`;
+      returnText += ` (${this.file_filter.length} ${this.current_route_name} selected)`;
     }
     return returnText;
+  }
+
+  get current_route_name(): string {
+    return this.$router.currentRoute.path.substring(1);
   }
 
   //changes width of eval info if it is in server mode and needs more room for tags

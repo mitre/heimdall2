@@ -74,8 +74,10 @@ import SampleList from '@/components/global/upload_tabs/SampleList.vue';
 import {LocalStorageVal} from '@/utilities/helper_util';
 
 import {InspecDataModule} from '@/store/data_store';
+import {SnackbarModule} from '@/store/snackbar';
 
 import ServerMixin from '@/mixins/ServerMixin';
+import RouteMixin from '@/mixins/RouteMixin';
 import {Prop} from 'vue-property-decorator';
 
 import {ServerModule} from '@/store/server';
@@ -97,7 +99,7 @@ const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
     SampleList
   }
 })
-export default class UploadNexus extends mixins(ServerMixin) {
+export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
   @Prop({default: true}) readonly visible!: Boolean;
   @Prop({default: false}) readonly persistent!: Boolean;
 
@@ -106,7 +108,7 @@ export default class UploadNexus extends mixins(ServerMixin) {
   // Handles change in tab
   selected_tab(new_tab: string) {
     this.active_tab = new_tab;
-    this.$toasted.clear();
+    SnackbarModule.visibility(false);
     local_tab.set(new_tab);
   }
 
@@ -119,8 +121,8 @@ export default class UploadNexus extends mixins(ServerMixin) {
     this.$emit('got-files', files);
 
     if (InspecDataModule.allEvaluationFiles.length !== 0)
-      this.$router.push(`/results`);
-    else this.$router.push(`/profiles`);
+      this.navigateUnlessActive(`/results`);
+    else this.navigateUnlessActive(`/profiles`);
   }
 }
 </script>
