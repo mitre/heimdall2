@@ -25,6 +25,7 @@
 import Component, {mixins} from 'vue-class-component';
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
 import LogoutButton from '@/components/generic/LogoutButton.vue';
+import {SnackbarModule} from '@/store/snackbar';
 
 import axios from 'axios';
 
@@ -79,9 +80,7 @@ export default class DatabaseReader extends mixins(ServerMixin) {
         this.files = response.data;
       })
       .catch(err => {
-        this.$toasted.global.error({
-          message: `${err}. Please reload the page and try again.`
-        });
+        SnackbarModule.failure(`${err}. Please reload the page and try again.`);
       })
       .finally(() => {
         this.loading = false;
@@ -99,9 +98,7 @@ export default class DatabaseReader extends mixins(ServerMixin) {
           updatedAt: evaluation.updatedAt,
           tags: [] // Tags are not yet implemented, so for now the value is passed in empty
         }).catch(err => {
-          this.$toasted.global.error({
-            message: err
-          });
+          SnackbarModule.failure(err);
         });
       })
     ).then((fileIds: (FileID | void)[]) => {

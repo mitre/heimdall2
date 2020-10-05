@@ -19,6 +19,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
 import {FileID, InspecIntakeModule} from '@/store/report_intake';
+import {SnackbarModule} from '@/store/snackbar';
 
 import {samples, Sample} from '@/utilities/sample_util';
 
@@ -56,9 +57,7 @@ export default class SampleList extends Props {
         this.$emit('got-files', fileIds);
       })
       .catch(err => {
-        this.$toasted.global.error({
-          message: String(err)
-        });
+        SnackbarModule.failure(String(err));
       });
   }
 }

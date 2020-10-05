@@ -99,6 +99,7 @@ import zxcvbn from 'zxcvbn';
 import {ServerModule} from '@/store/server';
 import {required, email, sameAs} from 'vuelidate/lib/validators';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
+import {SnackbarModule} from '@/store/snackbar';
 
 export interface SignupHash {
   email: string;
@@ -145,14 +146,12 @@ export default class Signup extends Vue {
       ServerModule.Register(creds)
         .then(() => {
           this.$router.push('/login');
-          this.$toasted.global.success({
-            message: 'You have successfully registered, please sign in'
-          });
+          SnackbarModule.notify(
+            'You have successfully registered, please sign in'
+          );
         })
         .catch(error => {
-          this.$toasted.global.error({
-            message: error.response.data.message
-          });
+          SnackbarModule.notify(error.response.data.message);
         });
     }
   }

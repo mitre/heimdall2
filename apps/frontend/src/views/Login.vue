@@ -70,6 +70,7 @@ import Component from 'vue-class-component';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 import {required, email} from 'vuelidate/lib/validators';
 import {ServerModule} from '@/store/server';
+import {SnackbarModule} from '@/store/snackbar';
 
 export interface LoginHash {
   email: string;
@@ -116,9 +117,7 @@ export default class Login extends Vue {
         this.$router.push('/');
       })
       .catch(error => {
-        this.$toasted.global.error({
-          message: error.response.data.message
-        });
+        SnackbarModule.notify(error.response.data.message);
       });
   }
 }

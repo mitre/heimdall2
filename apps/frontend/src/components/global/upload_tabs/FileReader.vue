@@ -52,6 +52,7 @@
 import Vue from 'vue';
 import Component, {mixins} from 'vue-class-component';
 
+import {SnackbarModule} from '@/store/snackbar';
 import {InspecIntakeModule, FileID} from '@/store/report_intake';
 import {AppInfoModule} from '@/store/app_info';
 import vueFileAgent from 'vue-file-agent';
@@ -81,9 +82,7 @@ export default class FileReader extends mixins(ServerMixin) {
     Promise.all(
       files.map(file => {
         return InspecIntakeModule.loadFile({file}).catch(err => {
-          this.$toasted.global.error({
-            message: String(err)
-          });
+          SnackbarModule.failure(String(err));
         });
       })
     )
