@@ -5377,9 +5377,9 @@ await-to-js@^2.0.1:
   integrity sha512-CHBC6gQGCIzjZ09tJ+XmpQoZOn4GdWePB4qUweCaKNJ0D3f115YdhmYVTZ4rMVpiJ3cFzZcTYK1VMYEICV4YXw==
 
 aws-sdk@^2.573.0:
-  version "2.765.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.765.0.tgz#34e71dc7336b4593d2f521cdcbbf7542a0d1f8cb"
-  integrity sha512-FQdPKJ5LAhNxkpqwrjQ+hiEqEOezV/PfZBn5RcBG6vu8K3VuT4dE12mGTY3qkdHy7lhymeRS5rWcagTmabKFtA==
+  version "2.766.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.766.0.tgz#f0b05d827c79c78d16efab0520f4ed0c21573665"
+  integrity sha512-msEEF7veBrxU1TlhLL33du4oJdwJ6uAWogf9+S0v437AX2z6K5IFr5J78JBysBudRHO0L6aC8bat6OS3oPEQvQ==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
