@@ -1,10 +1,13 @@
 <template>
   <div>
     <Modal
-      :value="value"
+      :visible="visible"
       :persistent="persistent"
-      @input="$emit('input', $event.target.value)"
+      @close-modal="$emit('close-modal')"
     >
+      <v-banner v-if="warning_banner" icon="mdi-alert" color="warning">
+        {{ warning_banner }}
+      </v-banner>
       <v-tabs
         :vertical="$vuetify.breakpoint.mdAndUp"
         active
@@ -15,11 +18,19 @@
       >
         <v-tabs-slider />
         <!-- Define our tabs -->
-        <v-tab id="local_files_tab" href="#uploadtab-local">Local Files</v-tab>
+        <v-tab id="select-tab-local" href="#uploadtab-local">Local Files</v-tab>
 
-        <v-tab href="#uploadtab-s3">S3 Bucket</v-tab>
+        <v-tab
+          v-if="serverMode"
+          id="select-tab-database"
+          href="#uploadtab-database"
+          >Database</v-tab
+        >
 
-        <v-tab href="#uploadtab-splunk">Splunk</v-tab>
+        <v-tab id="select-tab-s3" href="#uploadtab-s3">S3 Bucket</v-tab>
+
+        <v-tab id="select-tab-splunk" href="#uploadtab-splunk">Splunk</v-tab>
+
         <v-spacer />
         <v-divider />
         <v-tab id="sample_tab" href="#uploadtab-samples">Samples</v-tab>
@@ -27,6 +38,10 @@
         <!-- Include those components -->
         <v-tab-item value="uploadtab-local">
           <FileReader @got-files="got_files" />
+        </v-tab-item>
+
+        <v-tab-item v-if="serverMode" value="uploadtab-database">
+          <DatabaseReader :refresh="visible" @got-files="got_files" />
         </v-tab-item>
 
         <v-tab-item value="uploadtab-samples">
@@ -47,28 +62,25 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 import {FileID} from '@/store/report_intake';
 import Modal from '@/components/global/Modal.vue';
 import FileReader from '@/components/global/upload_tabs/FileReader.vue';
 import HelpFooter from '@/components/global/upload_tabs/HelpFooter.vue';
 import S3Reader from '@/components/global/upload_tabs/aws/S3Reader.vue';
 import SplunkReader from '@/components/global/upload_tabs/splunk/SplunkReader.vue';
+import DatabaseReader from '@/components/global/upload_tabs/DatabaseReader.vue';
 import SampleList from '@/components/global/upload_tabs/SampleList.vue';
 import {LocalStorageVal} from '@/utilities/helper_util';
-import {FilteredDataModule} from '@/store/data_filters';
+
 import {InspecDataModule} from '@/store/data_store';
 
-const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
+import ServerMixin from '@/mixins/ServerMixin';
+import {Prop} from 'vue-property-decorator';
 
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {
-    value: Boolean, // Whether it is open. Modelable
-    persistent: Boolean // Whether clicking outside closes
-  }
-});
+import {ServerModule} from '@/store/server';
+
+const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
 
 /**
  * Multiplexes all of our file upload components
@@ -77,6 +89,7 @@ const Props = Vue.extend({
 @Component({
   components: {
     Modal,
+    DatabaseReader,
     FileReader,
     HelpFooter,
     S3Reader,
@@ -84,7 +97,10 @@ const Props = Vue.extend({
     SampleList
   }
 })
-export default class UploadNexus extends Props {
+export default class UploadNexus extends mixins(ServerMixin) {
+  @Prop({default: true}) readonly visible!: Boolean;
+  @Prop({default: false}) readonly persistent!: Boolean;
+
   active_tab: string = local_tab.get_default('uploadtab-local');
 
   // Handles change in tab
@@ -94,20 +110,17 @@ export default class UploadNexus extends Props {
     local_tab.set(new_tab);
   }
 
+  get warning_banner(): string {
+    return ServerModule.banner;
+  }
+
   // Event passthrough
   got_files(files: FileID[]) {
     this.$emit('got-files', files);
 
-    for (let f of files) {
-      FilteredDataModule.set_toggle_file_on(f);
-    }
-
-    if (
-      InspecDataModule.allProfileFiles.length > 0 &&
-      InspecDataModule.allEvaluationFiles.length === 0
-    )
-      this.$router.push(`/profiles`);
-    else this.$router.push(`/results`);
+    if (InspecDataModule.allEvaluationFiles.length !== 0)
+      this.$router.push(`/results`);
+    else this.$router.push(`/profiles`);
   }
 }
 </script>

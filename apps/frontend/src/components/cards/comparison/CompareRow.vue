@@ -27,7 +27,7 @@
           centered
           :depressed="selection[index - 1 + shift]"
           :outlined="selection[index - 1 + shift]"
-          @click="view(index - 1 + shift, $event)"
+          @click="view(index - 1 + shift)"
         >
           <template
             v-if="hdf_controls[index - 1 + shift].status == 'Not Applicable'"
@@ -114,10 +114,9 @@ export default class CompareRow extends Props {
       this.selection.push(false);
     } else {
       this.selection = [];
-      var x;
-      for (x in this._controls) {
+      this._controls.forEach(() => {
         this.selection.push(false);
-      }
+      });
     }
   }
 
@@ -174,11 +173,11 @@ export default class CompareRow extends Props {
   }
 
   //This is used to SELECT controls to view their data
-  view(index: number, evt: Event) {
+  view(index: number) {
     Vue.set(this.selection, index, !this.selection[index]);
   }
 
-  viewAll(evt: Event) {
+  viewAll() {
     let allTrue = true;
     for (let i = 0; i < this.selection.length; i++) {
       if (!this.selection[i]) {
@@ -205,7 +204,7 @@ export default class CompareRow extends Props {
 
   //Updates selection array to match file count
   get file_num_watch(): string {
-    this.selection = FilteredDataModule.selected_file_ids.map(x => false);
+    this.selection = FilteredDataModule.selected_file_ids.map(() => false);
     return FilteredDataModule.selected_file_ids.length + '';
   }
   /** If more than one row selected */

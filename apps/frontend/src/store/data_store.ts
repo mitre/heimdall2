@@ -135,7 +135,7 @@ export class InspecData extends VuexModule {
     this.executionFiles = this.executionFiles.filter(
       ef => ef.unique_id !== file_id
     );
-    FilteredDataModule.set_toggle_file_off(file_id);
+    FilteredDataModule.clear_file(file_id);
   }
 
   /**

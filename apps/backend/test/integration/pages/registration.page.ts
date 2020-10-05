@@ -6,8 +6,7 @@ export class RegistrationPage {
     await expect(page).toFillForm('form[name="signup_form"]', {
       email: user.email,
       password: user.password,
-      passwordConfirmation: user.passwordConfirmation,
-      role: user.role
+      passwordConfirmation: user.passwordConfirmation
     });
     await Promise.all([
       page.waitForNavigation({waitUntil: 'networkidle0'}),
@@ -16,15 +15,13 @@ export class RegistrationPage {
   }
 
   async registerFailure(page: Page, user: CreateUserDto): Promise<void> {
+    // passwordConfirmation is the field being tested here, therefore it
+    // cannot be the last item filled in on the form, otherwise it will
+    // still be in focus and the error will never display.
     await expect(page).toFillForm('form[name="signup_form"]', {
       email: user.email,
-      password: user.password,
       passwordConfirmation: user.passwordConfirmation,
-      role: user.role
+      password: user.password
     });
-    await Promise.all([
-      page.waitForSelector('.toasted.toasted-primary.default'),
-      page.click('#register')
-    ]);
   }
 }

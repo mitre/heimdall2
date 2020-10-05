@@ -37,10 +37,6 @@ interface InfoItem {
 const vuetify = new Vuetify();
 let wrapper: Wrapper<Vue>;
 let profInfoWrapper: Wrapper<Vue>;
-let scrWrapper: Wrapper<Vue>;
-let statusChartWrapper: Wrapper<Vue>;
-let sevChartWrapper: Wrapper<Vue>;
-let compChartWrapper: Wrapper<Vue>;
 let controlTableWrapper: Wrapper<Vue>;
 
 wrapper = shallowMount(Results, {

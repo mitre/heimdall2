@@ -33,7 +33,8 @@ export class AppInfo extends VuexModule {
 
   /** The full app repository url, e.g. "https://github.com/mitre/heimdall-lite" */
   get repository(): string {
-    return process.env.REPOSITORY;
+    // The following line causes an error when using mount() to mount components.
+    return process.env.REPOSITORY || '';
   }
 
   /** The username/org part of the repo url, e.g. mitre */

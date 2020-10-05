@@ -6,7 +6,7 @@
     <v-expansion-panel-content>
       <div v-if="files.length > 0">
         <FileList v-for="(file, i) in files" :key="i" :file="file" />
-        <div v-if="showdeltaview === true">
+        <div v-if="show_delta_view">
           <v-list-item>
             <v-list-item-action @click="compareView">
               <v-checkbox color="blue" :input-value="selected" />
@@ -53,16 +53,15 @@ export default class DropdownContent extends Vue {
   @Prop({type: Array, required: true}) readonly files!: Object[];
   @Prop({type: String, required: false}) readonly route!: string;
   @Prop({default: false, type: Boolean, required: false})
-  readonly showdeltaview!: boolean;
+  readonly show_delta_view!: boolean;
   @Prop({default: false, type: Boolean, required: false})
-  readonly openview!: boolean;
+  readonly active!: boolean;
   @Prop({default: false, type: Boolean, required: false})
   readonly showtoggle!: boolean;
 
   redirect(): void {
-    if (this.openview === true)
-      if (this.route !== this.$router.currentRoute.path)
-        this.$router.push({path: this.route});
+    if (this.active && this.route !== this.$router.currentRoute.path)
+      this.$router.push({path: this.route});
   }
 
   toggle_all() {

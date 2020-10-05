@@ -11,7 +11,7 @@ import {ICreateEvaluation} from '@heimdall/interfaces';
 export class CreateEvaluationDto implements ICreateEvaluation {
   @IsNotEmpty()
   @IsString()
-  readonly version: string;
+  readonly filename: string;
 
   @IsNotEmpty()
   @IsObject()

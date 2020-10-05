@@ -35,7 +35,7 @@ export default function SetupToasted() {
           has degraded please try refreshing the page. If that does not fix the
           issue you are experiencing, then please report the issue`;
       }
-      return 'ERROR: ' + payload.message;
+      return payload.message;
     },
     errorToastOptions
   );

@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-container class="bar lighten-2">
+    <v-container fluid class="bar lighten-2">
       <v-row justify="space-around" no-gutters>
         <AboutModal>
           <template v-slot:clickable="{on}">
@@ -45,11 +45,7 @@ import {AppInfoModule} from '@/store/app_info';
 const Props = Vue.extend({
   props: {}
 });
-/**
- * File reader component for taking in inspec JSON data.
- * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
- * Emits "got-files" with a list of the unique_ids of the loaded files.
- */
+
 @Component({
   components: {
     AboutModal,

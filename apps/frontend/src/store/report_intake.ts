@@ -9,8 +9,11 @@ import Store from '@/store/store';
 import {read_file_async} from '@/utilities/async_util';
 import {Tag} from '@/types/models.ts';
 
+import {v4 as uuid} from 'uuid';
+import {FilteredDataModule} from './data_filters';
+
 /** Each FileID corresponds to a unique File in this store */
-export type FileID = number;
+export type FileID = string;
 
 /** Represents the minimum data to represent an uploaded file handle. */
 export type InspecFile = {
@@ -57,17 +60,11 @@ export type ProfileFile = InspecFile & {
 export type FileLoadOptions = {
   /** The file to load */
   file: File;
-
-  /** The unique id to grant it */
-  unique_id: FileID;
 };
 
 export type TextLoadOptions = {
   /** The filename to denote this object with */
   filename: string;
-
-  /** The unique id to grant it */
-  unique_id: FileID;
 
   database_id?: number;
 
@@ -90,43 +87,28 @@ export class InspecIntake extends VuexModule {
   /**
    * Load a file with the specified options. Promises an error message on failure
    */
-  @Action
-  async loadFile(options: FileLoadOptions): Promise<Error | null> {
+  @Action({rawError: true})
+  async loadFile(options: FileLoadOptions): Promise<FileID> {
     let read = read_file_async(options.file);
-    return read
-      .then(text =>
-        this.loadText({
-          text,
-          unique_id: options.unique_id,
-          filename: options.file.name
-        })
-      )
-      .then(err => {
-        return err;
-      });
+    return read.then(text =>
+      this.loadText({
+        text,
+        filename: options.file.name
+      })
+    );
   }
 
-  /*
-   * Due to issues with catching errors from Actions, this function returns its
-   * errors. null implies the text load was successful.
-   */
-  @Action
-  async loadText(options: TextLoadOptions): Promise<Error | null> {
+  @Action({rawError: true})
+  async loadText(options: TextLoadOptions): Promise<FileID> {
     // Convert it
-    let result: parse.ConversionResult;
-    try {
-      result = parse.convertFile(options.text);
-    } catch (e) {
-      return new Error(
-        `Failed to convert file ${options.filename} due to error "${e}".`
-      );
-    }
+    const fileID: FileID = uuid();
+    const result: parse.ConversionResult = parse.convertFile(options.text);
 
     // Determine what sort of file we (hopefully) have, then add it
     if (result['1_0_ExecJson']) {
       // A bit of chicken and egg here
       let eval_file = {
-        unique_id: options.unique_id,
+        unique_id: fileID,
         filename: options.filename,
         database_id: options.database_id,
         createdAt: options.createdAt,
@@ -145,10 +127,11 @@ export class InspecIntake extends VuexModule {
       eval_file.evaluation = evaluation;
       Object.freeze(evaluation);
       InspecDataModule.addExecution(eval_file);
+      FilteredDataModule.toggle_evaluation(eval_file.unique_id);
     } else if (result['1_0_ProfileJson']) {
       // Handle as profile
       let profile_file = {
-        unique_id: options.unique_id,
+        unique_id: fileID,
         filename: options.filename
       } as ProfileFile;
 
@@ -162,25 +145,12 @@ export class InspecIntake extends VuexModule {
       profile_file.profile = profile;
       Object.freeze(profile);
       InspecDataModule.addProfile(profile_file);
+      FilteredDataModule.toggle_profile(profile_file.unique_id);
     } else {
-      return new Error("Couldn't parse data");
+      throw new Error("Couldn't parse data");
     }
-    return null;
+    return fileID;
   }
 }
 
 export const InspecIntakeModule = getModule(InspecIntake);
-
-// Track granted file ids
-let last_granted_unique_id: number = 0;
-
-/**
- * Yields a guaranteed currently free file ID.
- * This is the computed as the highest currently held file id + 1
- * It does not "fill spaces" of closed files, so that in any given
- * session we will never repeat a file ID with a different file object.
- */
-export function next_free_file_ID(): FileID {
-  last_granted_unique_id += 1;
-  return last_granted_unique_id;
-}

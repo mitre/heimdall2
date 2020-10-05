@@ -5,10 +5,8 @@
       <v-text-field
         v-model="password"
         label="Password"
+        type="password"
         :rules="[req_rule]"
-        :append-icon="show_secret ? 'mdi-eye' : 'mdi-eye-off'"
-        :type="show_secret ? 'text' : 'password'"
-        @click:append="show_secret = !show_secret"
       />
       <v-text-field
         v-model="hostname"
@@ -67,7 +65,6 @@ export default class SplunkAuth extends Props {
    * Shouldn't be used to interpret literally anything else as valid - just checks fields filled
    */
   valid: boolean = false;
-  show_secret: boolean = false;
 
   /** State of input fields */
   username: string = '';
@@ -87,7 +84,7 @@ export default class SplunkAuth extends Props {
 
     this.logging_in = true;
     s.check_auth()
-      .then(ok => {
+      .then(() => {
         // all goes well, proceed
         this.$emit('authenticated', s);
         this.logging_in = false;

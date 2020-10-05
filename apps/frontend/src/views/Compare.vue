@@ -59,7 +59,7 @@
                           <v-card class="fill-height">
                             <v-card-title class="justify-center">
                               <div style="text-align:center;">
-                                <i>{{ i + 1 }}</i>
+                                <em>{{ i + 1 }}</em>
                                 <br />
                                 {{ file.filename }}
                                 <br />
@@ -593,8 +593,5 @@ export default class Compare extends Props {
 <style lang="scss" scoped>
 .compare-header {
   top: 100px;
-}
-.theme--light .zebra-table {
-  background-color: var(--v-secondary-lighten1);
 }
 </style>

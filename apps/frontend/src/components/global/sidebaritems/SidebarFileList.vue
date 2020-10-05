@@ -12,13 +12,13 @@
       <v-list-item-title v-text="file.filename" />
     </v-list-item-content>
 
-    <v-list-item-action v-if="serverMode" @click="save_this_file">
+    <v-list-item-action v-if="serverMode" @click.stop="save_file">
       <v-btn icon small>
         <v-icon> mdi-content-save </v-icon>
       </v-btn>
     </v-list-item-action>
 
-    <v-list-item-action @click.stop="close_this_file">
+    <v-list-item-action @click.stop="close_file">
       <v-btn icon small>
         <v-icon> mdi-close </v-icon>
       </v-btn>
@@ -28,11 +28,14 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
+import axios from 'axios';
+import {ICreateEvaluation} from '@heimdall/interfaces';
 import {InspecDataModule} from '@/store/data_store';
 import {FilteredDataModule} from '@/store/data_filters';
+import {EvaluationFile} from '@/store/report_intake';
 
-import {BackendModule} from '@/store/backend';
+import ServerMixin from '@/mixins/ServerMixin';
 
 // We declare the props separately to make props types inferable.
 const FileItemProps = Vue.extend({
@@ -44,41 +47,59 @@ const FileItemProps = Vue.extend({
 @Component({
   components: {}
 })
-export default class FileItem extends FileItemProps {
-  select_file(evt: Event) {
-    if (!this.selected) {
-      FilteredDataModule.set_toggle_file_on(this.file.unique_id);
-    } else {
-      FilteredDataModule.set_toggle_file_off(this.file.unique_id);
+export default class FileItem extends mixins(FileItemProps, ServerMixin) {
+  select_file() {
+    if (this.file.hasOwnProperty('evaluation')) {
+      FilteredDataModule.toggle_evaluation(this.file.unique_id);
+    } else if (this.file.hasOwnProperty('profile')) {
+      FilteredDataModule.toggle_profile(this.file.unique_id);
     }
   }
 
-  select_file_exclusive(evt: Event) {
-    let path = '';
-
+  select_file_exclusive() {
     if (this.file.hasOwnProperty('evaluation')) {
-      let files = FilteredDataModule.selected_profiles;
-      files.push(this.file.unique_id);
-      FilteredDataModule.set_toggled_files(files);
-      path = '/results';
+      FilteredDataModule.select_exclusive_evaluation(this.file.unique_id);
     } else if (this.file.hasOwnProperty('profile')) {
-      let files = FilteredDataModule.selected_evaluations;
-      files.push(this.file.unique_id);
-      FilteredDataModule.set_toggled_files(files);
-      path = '/profiles';
+      FilteredDataModule.select_exclusive_profile(this.file.unique_id);
     }
-
-    if (path != this.$router.currentRoute.path) this.$router.push({path: path});
   }
 
   //checks if file is selected
   get selected(): boolean {
-    return FilteredDataModule.selected_file_ids.includes(this.file.unique_id);
+    return FilteredDataModule.is_file_selected(this.file.unique_id);
   }
 
   //removes uploaded file from the currently observed files
-  close_this_file(evt: Event) {
+  close_file() {
     InspecDataModule.removeFile(this.file.unique_id);
+  }
+
+  //saves file to database
+  save_file() {
+    let file = InspecDataModule.allFiles.find(
+      f => f.unique_id === this.file.unique_id
+    );
+    if (file) {
+      if (file.hasOwnProperty('evaluation')) {
+        this.save_evaluation(file as EvaluationFile);
+      }
+    }
+  }
+
+  save_evaluation(file: EvaluationFile) {
+    let evaluationDTO: ICreateEvaluation = {
+      data: file.evaluation.data,
+      filename: file.filename,
+      evaluationTags: []
+    };
+    axios
+      .post('/evaluations', evaluationDTO)
+      .then(() => {
+        SnackbarModule.notify('Result saved successfully');
+      })
+      .catch(error => {
+        SnackbarModule.failure(error.response.data.message);
+      });
   }
 
   //gives different icons for a file if it is just a profile
@@ -88,11 +109,6 @@ export default class FileItem extends FileItemProps {
     } else {
       return 'mdi-google-analytics';
     }
-  }
-
-  //checks if heimdall is in server mode
-  get serverMode() {
-    return BackendModule.serverMode;
   }
 }
 </script>

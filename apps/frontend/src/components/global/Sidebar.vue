@@ -12,7 +12,7 @@
   >
     <v-list dense class="px-2" subheader>
       <v-subheader>Files</v-subheader>
-      <v-expansion-panels v-model="file_views" flat>
+      <v-expansion-panels v-model="selectDropdown" flat>
         <DropdownContent
           text="Results"
           toggle="Select all result set"
@@ -34,23 +34,6 @@
           @toggleAll="toggle_all_profiles"
         />
       </v-expansion-panels>
-    </v-list>
-    <v-list dense class="px-2" subheader>
-      <v-subheader>Tools</v-subheader>
-      <slot />
-    </v-list>
-    <v-list dense class="px-2" subheader>
-      <v-subheader>Info</v-subheader>
-      <AboutModal>
-        <template v-slot:clickable="{on}">
-          <LinkItem key="about" text="About" icon="mdi-information" v-on="on" />
-        </template>
-      </AboutModal>
-      <HelpModal>
-        <template v-slot:clickable="{on}">
-          <LinkItem key="help" text="Help" icon="mdi-help-circle" v-on="on" />
-        </template>
-      </HelpModal>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -83,28 +66,15 @@ const SidebarProps = Vue.extend({
   }
 })
 export default class Sidebar extends SidebarProps {
-  // used to toggle v-exapansion-panel
-  file_views = 0;
-  drawer = true;
-
-  created() {
-    this.selectDropdown();
-  }
-
-  mounted() {
-    this.selectDropdown();
-  }
-
   // open the appropriate v-expansion-panel based on current route
-  selectDropdown() {
-    if (this.curr_route_path == '/results') this.file_views = 0;
-    else if (this.curr_route_path == '/compare') this.file_views = 0;
-    else if (this.curr_route_path == '/profiles') this.file_views = 1;
+  get selectDropdown() {
+    if (this.current_route === 'Profiles') return 1;
+    else return 0;
   }
 
   // get the value of the current route
-  get curr_route_path() {
-    return this.$router.currentRoute.path;
+  get current_route() {
+    return this.$router.currentRoute.name;
   }
 
   // get all visible (uploaded) evaluation files
@@ -123,36 +93,18 @@ export default class Sidebar extends SidebarProps {
 
   // toggle the "select all" for profiles
   toggle_all_profiles(): void {
-    if (FilteredDataModule.all_toggled_profiles) {
-      FilteredDataModule.set_toggled_files(
-        FilteredDataModule.selected_evaluations
-      );
-    } else {
-      let files = InspecDataModule.allProfileFiles.map(v => v.unique_id);
-      files.push(...FilteredDataModule.selected_evaluations);
-      FilteredDataModule.set_toggled_files(files);
-    }
+    FilteredDataModule.toggle_all_profiles();
   }
 
   // toggle the "select all" for evaluations
   toggle_all_evaluations(): void {
-    if (FilteredDataModule.all_toggled_evaluations) {
-      FilteredDataModule.set_toggled_files(
-        FilteredDataModule.selected_profiles
-      );
-    } else {
-      let files = InspecDataModule.allEvaluationFiles.map(v => v.unique_id);
-      files.push(...FilteredDataModule.selected_profiles);
-      FilteredDataModule.set_toggled_files(files);
-    }
+    FilteredDataModule.toggle_all_evaluations();
   }
 
   // toggle between the comparison view and the results view
   compareView(): void {
-    if (this.$router.currentRoute.path === '/results')
-      this.$router.push({path: '/compare'});
-    if (this.$router.currentRoute.path === '/compare')
-      this.$router.push({path: '/results'});
+    if (this.current_route === 'Results') this.$router.push({path: '/compare'});
+    if (this.current_route === 'Compare') this.$router.push({path: '/results'});
   }
 }
 </script>

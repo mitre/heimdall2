@@ -2,7 +2,13 @@
  * This module provides a cached, reusable method for filtering data from data_store.
  */
 
-import {Module, VuexModule, getModule, Mutation} from 'vuex-module-decorators';
+import {
+  Module,
+  VuexModule,
+  getModule,
+  Mutation,
+  Action
+} from 'vuex-module-decorators';
 import {SourcedContextualizedEvaluation, FileID} from '@/store/report_intake';
 import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
 
@@ -79,29 +85,107 @@ function contains_term(
   name: 'filteredData'
 })
 export class FilteredData extends VuexModule {
-  selected_file_ids: FileID[] = [];
+  selected_evaluation_ids: FileID[] = [];
+  selected_profile_ids: FileID[] = [];
 
   @Mutation
-  set_toggle_file_on(file: FileID): void {
-    if (this.selected_file_ids.includes(file)) {
-      return;
-    }
-    this.selected_file_ids.push(file);
+  SELECT_EVALUATIONS(files: FileID[]): void {
+    this.selected_evaluation_ids = [
+      ...new Set([...files, ...this.selected_evaluation_ids])
+    ];
   }
 
   @Mutation
-  set_toggle_file_off(file: FileID): void {
-    let checked = this.selected_file_ids.indexOf(file);
-    if (checked !== -1) {
-      this.selected_file_ids.splice(checked, 1);
+  SELECT_PROFILES(files: FileID[]): void {
+    this.selected_profile_ids = [
+      ...new Set([...files, ...this.selected_profile_ids])
+    ];
+  }
+
+  @Mutation
+  CLEAR_EVALUATION(removeId: FileID): void {
+    this.selected_evaluation_ids = this.selected_evaluation_ids.filter(
+      ids => ids !== removeId
+    );
+  }
+
+  @Mutation
+  CLEAR_PROFILE(removeId: FileID): void {
+    this.selected_profile_ids = this.selected_profile_ids.filter(
+      ids => ids !== removeId
+    );
+  }
+
+  @Mutation
+  CLEAR_ALL_EVALUATIONS(): void {
+    this.selected_evaluation_ids = [];
+  }
+
+  @Mutation
+  CLEAR_ALL_PROFILES(): void {
+    this.selected_profile_ids = [];
+  }
+
+  @Action
+  toggle_all_evaluations(): void {
+    if (this.all_evaluations_selected) {
+      this.CLEAR_ALL_EVALUATIONS();
+    } else {
+      this.SELECT_EVALUATIONS(
+        InspecDataModule.allEvaluationFiles.map(v => v.unique_id)
+      );
     }
   }
 
-  // Just override the whole list
-  @Mutation
-  set_toggled_files(files: FileID[]): void {
-    this.selected_file_ids.length = 0;
-    this.selected_file_ids.splice(0, this.selected_file_ids.length, ...files);
+  @Action
+  toggle_all_profiles(): void {
+    if (this.all_profiles_selected) {
+      this.CLEAR_ALL_PROFILES();
+    } else {
+      this.SELECT_PROFILES(
+        InspecDataModule.allProfileFiles.map(v => v.unique_id)
+      );
+    }
+  }
+
+  @Action
+  select_exclusive_evaluation(fileID: FileID): void {
+    this.CLEAR_ALL_EVALUATIONS();
+    this.SELECT_EVALUATIONS([fileID]);
+  }
+
+  @Action
+  select_exclusive_profile(fileID: FileID): void {
+    this.CLEAR_ALL_PROFILES();
+    this.SELECT_PROFILES([fileID]);
+  }
+
+  @Action
+  toggle_evaluation(fileID: FileID): void {
+    if (this.is_file_selected(fileID)) {
+      this.CLEAR_EVALUATION(fileID);
+    } else {
+      this.SELECT_EVALUATIONS([fileID]);
+    }
+  }
+
+  @Action
+  toggle_profile(fileID: FileID): void {
+    if (this.is_file_selected(fileID)) {
+      this.CLEAR_PROFILE(fileID);
+    } else {
+      this.SELECT_PROFILES([fileID]);
+    }
+  }
+
+  is_file_selected(fileID: FileID): boolean {
+    return this.selected_file_ids.includes(fileID);
+  }
+
+  @Action
+  clear_file(fileID: FileID): void {
+    this.CLEAR_EVALUATION(fileID);
+    this.CLEAR_PROFILE(fileID);
   }
 
   /**
@@ -150,8 +234,8 @@ export class FilteredData extends VuexModule {
   }
 
   /* get the currently select evaluations */
-  get selected_evaluations(): number[] {
-    const fileIds = [...this.selected_file_ids];
+  get selected_evaluations(): string[] {
+    const fileIds = [...this.selected_evaluation_ids];
     const files = InspecDataModule.allProfileFiles;
 
     return fileIds.filter(fileId =>
@@ -160,8 +244,8 @@ export class FilteredData extends VuexModule {
   }
 
   /* get the currently selected profiles */
-  get selected_profiles(): number[] {
-    const fileIds = [...this.selected_file_ids];
+  get selected_profiles(): string[] {
+    const fileIds = [...this.selected_profile_ids];
     const files = InspecDataModule.allEvaluationFiles;
 
     return fileIds.filter(fileId =>
@@ -169,15 +253,19 @@ export class FilteredData extends VuexModule {
     );
   }
 
+  get selected_file_ids(): FileID[] {
+    return [...this.selected_evaluation_ids, ...this.selected_profile_ids];
+  }
+
   // check to see if all profiles are selected
-  get all_toggled_profiles(): boolean {
+  get all_profiles_selected(): boolean {
     return (
       this.selected_profiles.length === InspecDataModule.allProfileFiles.length
     );
   }
 
   // check to see if all evaluations are selected
-  get all_toggled_evaluations(): boolean {
+  get all_evaluations_selected(): boolean {
     return (
       this.selected_evaluations.length ===
       InspecDataModule.allEvaluationFiles.length
@@ -249,9 +337,6 @@ export class FilteredData extends VuexModule {
 
       // Filter by nist stuff
       if (filter.tree_filters && filter.tree_filters.length > 0) {
-        // Shorthand the nist filters
-        let f = filter.tree_filters;
-
         // Construct a nist control to represent the filter
         let control = new nist.NistControl(filter.tree_filters);
 

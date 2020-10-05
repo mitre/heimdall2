@@ -18,7 +18,6 @@ export class RegistrationVerifier {
       'label[for="passwordConfirmation"]',
       el => el.innerHTML
     );
-    const roleLabel = await page.$eval('label[for="role"]', el => el.innerHTML);
     const registerButton = await page.$eval(
       '#register > span',
       el => el.innerHTML
@@ -28,11 +27,10 @@ export class RegistrationVerifier {
       el => el.innerHTML
     );
 
-    expect(registrationFormHeader).toContain('Registration form');
+    expect(registrationFormHeader).toContain('Register to Heimdall Server');
     expect(emailLabel).toEqual('Email');
     expect(passwordLabel).toContain('Password');
     expect(passwordConfirmationLabel).toEqual('Confirm Password');
-    expect(roleLabel).toEqual('Role');
     expect(registerButton).toContain('Register');
     expect(logInButton).toEqual('Login');
   }

@@ -1,46 +1,36 @@
 import 'jest';
 import {AllRaw} from '../util/fs';
-import {
-  InspecIntakeModule,
-  next_free_file_ID
-} from '../../src/store/report_intake';
+import {InspecIntakeModule} from '../../src/store/report_intake';
 import {FilteredDataModule} from '@/store/data_filters';
 import {StatusCountModule} from '@/store/status_counts';
 import {InspecDataModule} from '@/store/data_store';
 import {samples, Sample} from '@/utilities/sample_util';
 import {readFileSync} from 'fs';
 
-let id = 0;
-
 export function createTestingVue() {}
 
 export function loadSample(sampleName: string) {
-  let sample: Sample = {name: '', sample: ''};
+  let sample: Sample = {filename: '', data: ''};
   for (let samp of samples) {
-    if (samp.name == sampleName) {
+    if (samp.filename === sampleName) {
       sample = samp;
     }
   }
-  if (sample.name === '') {
+  if (sample.filename === '') {
     return;
   }
   return InspecIntakeModule.loadText({
     filename: sampleName,
-    unique_id: next_free_file_ID(),
-    text: JSON.stringify(sample.sample)
+    text: JSON.stringify(sample.data)
   });
 }
 
 export function loadAll(): void {
   let data = AllRaw();
   Object.values(data).map(file_result => {
-    // Increment counter
-    id += 1;
-
     // Do intake
     return InspecIntakeModule.loadText({
       filename: file_result.name,
-      unique_id: id,
       text: file_result.content
     });
   });
@@ -54,13 +44,19 @@ export function removeAllFiles(): void {
 }
 
 export function selectAllFiles(): void {
-  for (let file of InspecDataModule.allFiles) {
-    FilteredDataModule.set_toggle_file_on(file.unique_id);
-  }
+  FilteredDataModule.toggle_all_evaluations();
 }
 
-export function fileCompliance(id: number) {
-  let filter = {fromFile: [id]};
+// When using Vuetify v-dialog's this is necessary in order to avoid a
+// warning on the console when running tests.
+export function addElemWithDataAppToBody() {
+  const app = document.createElement('div');
+  app.setAttribute('data-app', 'true');
+  document.body.append(app);
+}
+
+export function fileCompliance(fileId: string) {
+  const filter = {fromFile: [fileId]};
   let passed = StatusCountModule.countOf(filter, 'Passed');
   let total =
     passed +
