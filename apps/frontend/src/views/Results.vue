@@ -171,7 +171,8 @@
     <!-- Everything-is-filtered snackbar -->
     <v-snackbar
       v-model="filter_snackbar"
-      style="margin-top: 44px; z-index: 2;"
+      class="mt-11"
+      style="z-index: 2;"
       :timeout="-1"
       color="warning"
       top
