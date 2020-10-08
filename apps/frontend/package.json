@@ -96,7 +96,7 @@
     "@vue/cli-plugin-eslint": "^4.5.4",
     "@vue/cli-service": "^4.5.7",
     "@vue/eslint-config-prettier": "^6.0.0",
-    "@vue/eslint-config-typescript": "^5.0.2",
+    "@vue/eslint-config-typescript": "^7.0.0",
     "@vue/test-utils": "^1.0.3",
     "babel-eslint": "^10.0.3",
     "eslint-plugin-vue": "^6.2.2",
