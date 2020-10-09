@@ -11,7 +11,9 @@
               />
             </v-avatar>
           </v-btn>
-          <v-icon small>mdi-menu-down</v-icon>
+          <v-icon small style="position: fixed; margin-top: .8em;"
+            >mdi-menu-down</v-icon
+          >
         </div>
       </template>
       <v-list class="pt-0 pb-0">
