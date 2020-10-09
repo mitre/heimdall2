@@ -34,6 +34,7 @@ import {ICreateEvaluation} from '@heimdall/interfaces';
 import {InspecDataModule} from '@/store/data_store';
 import {FilteredDataModule} from '@/store/data_filters';
 import {EvaluationFile} from '@/store/report_intake';
+import {SnackbarModule} from '@/store/snackbar';
 
 import ServerMixin from '@/mixins/ServerMixin';
 
@@ -102,14 +103,10 @@ export default class FileItem extends mixins(FileItemProps, ServerMixin) {
     axios
       .post('/evaluations', evaluationDTO)
       .then(() => {
-        this.$toasted.global.success({
-          message: 'Result saved successfully'
-        });
+        SnackbarModule.notify('Result saved successfully');
       })
       .catch(error => {
-        this.$toasted.global.error({
-          message: error.response.data.message
-        });
+        SnackbarModule.failure(error.response.data.message);
       });
   }
 

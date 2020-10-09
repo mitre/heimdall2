@@ -60,6 +60,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {FileID} from '@/store/report_intake';
+import {SnackbarModule} from '@/store/snackbar';
 import AuthStep from './AuthStep.vue';
 import FileList from './FileList.vue';
 import {
@@ -159,9 +160,7 @@ export default class SplunkReader extends Props {
   /** Give our error tooltip the message */
   show_error_message(msg: string) {
     // Toast whatever error we got
-    this.$toasted.global.error({
-      message: msg
-    });
+    SnackbarModule.failure(msg);
   }
 
   /** Callback on got files */

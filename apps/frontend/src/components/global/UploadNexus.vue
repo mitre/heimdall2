@@ -73,6 +73,7 @@ import DatabaseReader from '@/components/global/upload_tabs/DatabaseReader.vue';
 import SampleList from '@/components/global/upload_tabs/SampleList.vue';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import {FilteredDataModule} from '@/store/data_filters';
+import {SnackbarModule} from '@/store/snackbar';
 
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop} from 'vue-property-decorator';
@@ -105,7 +106,7 @@ export default class UploadNexus extends mixins(ServerMixin) {
   // Handles change in tab
   selected_tab(new_tab: string) {
     this.active_tab = new_tab;
-    this.$toasted.clear();
+    SnackbarModule.visibility(false);
     local_tab.set(new_tab);
   }
 

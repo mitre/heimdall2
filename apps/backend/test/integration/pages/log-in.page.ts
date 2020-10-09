@@ -18,7 +18,7 @@ export class LogInPage {
       password: user.password
     });
     await Promise.all([
-      page.waitForSelector('.toasted.toasted-primary.default'),
+      page.waitForSelector('#info-snackbar'),
       page.click('#login_button')
     ]);
   }
@@ -39,8 +39,8 @@ export class LogInPage {
 
   async dismissToast(page: Page): Promise<void> {
     await Promise.all([
-      page.waitForSelector('.toasted.toasted-primary.default'),
-      page.click('.action.ripple')
+      page.waitForSelector('#info-snackbar'),
+      page.click('#hide-snackbar')
     ]);
   }
 }

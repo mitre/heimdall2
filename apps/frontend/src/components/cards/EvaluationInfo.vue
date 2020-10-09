@@ -1,10 +1,10 @@
 <template>
   <v-row class="pa-4" justify="space-between">
     <v-col cols="12">
-      <b>Filename:</b> {{ filename }}<br />
-      <b>Tool Version:</b> {{ inspec_version }}<br />
-      <b>Platform:</b> {{ platform }}<br />
-      <b>Duration:</b> {{ get_duration }}<br />
+      <strong>Filename:</strong> {{ filename }}<br />
+      <strong>Tool Version:</strong> {{ inspec_version }}<br />
+      <strong>Platform:</strong> {{ platform }}<br />
+      <strong>Duration:</strong> {{ get_duration }}<br />
     </v-col>
   </v-row>
 </template>

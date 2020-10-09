@@ -45,6 +45,7 @@ import Component from 'vue-class-component';
 import S3 from 'aws-sdk/clients/s3';
 import {AWSError} from 'aws-sdk/lib/error';
 import {LocalStorageVal} from '../../../../utilities/helper_util';
+import {SnackbarModule} from '@/store/snackbar';
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
 import AuthStepMFA from '@/components/global/upload_tabs/aws/AuthStepMFA.vue';
 import AuthStepBasic from '@/components/global/upload_tabs/aws/AuthStepBasic.vue';
@@ -215,9 +216,7 @@ export default class S3Reader extends Props {
     let t_error = error as AWSError;
     let formatted_error = transcribe_error(t_error);
     // Toast whatever error we got
-    this.$toasted.global.error({
-      message: formatted_error
-    });
+    SnackbarModule.failure(formatted_error);
   }
 
   /** Callback on got files */
