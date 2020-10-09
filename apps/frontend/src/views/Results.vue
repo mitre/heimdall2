@@ -2,24 +2,45 @@
   <BaseView :title="curr_title">
     <!-- Topbar config - give it a search bar -->
     <template #topbar-content>
-      <v-text-field
-        v-model="search_term"
-        flat
-        hide-details
-        solo
-        prepend-inner-icon="mdi-magnify"
-        label="Search"
-        clearable
-        class="mx-2"
-        @click:clear="clear_search()"
-      />
+      <template v-if="!is_mobile">
+        <v-text-field
+          v-model="search_term"
+          flat
+          hide-details
+          solo
+          prepend-inner-icon="mdi-magnify"
+          label="Search"
+          clearable
+          class="mx-2"
+          @click:clear="clear_search()"
+        />
 
-      <v-btn :disabled="!can_clear" @click="clear">
-        <span class="d-none d-md-inline pr-2">
-          Clear
-        </span>
-        <v-icon>mdi-filter-remove</v-icon>
-      </v-btn>
+        <v-btn :disabled="!can_clear" @click="clear">
+          <span class="d-none d-md-inline pr-2">
+            Clear
+          </span>
+          <v-icon>mdi-filter-remove</v-icon>
+        </v-btn>
+      </template>
+      <template v-else
+        ><v-btn @click="show_search_mobile = true">
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+        <div v-if="show_search_mobile">
+          <v-text-field
+            v-model="search_term"
+            flat
+            hide-details
+            solo
+            prepend-inner-icon="mdi-magnify"
+            label="Search"
+            clearable
+            class="overtake-bar mx-2"
+            @blur="show_search_mobile = false"
+            @click:clear="clear"
+          />
+        </div>
+      </template>
     </template>
     <template #topbar-data>
       <div class="text-center">
@@ -273,6 +294,10 @@ export default class Results extends ResultsProps {
   filter_snackbar: boolean = false;
 
   eval_info: number | null = null;
+
+  /** Determines if we should make the search bar colapseable */
+  is_mobile: boolean = false;
+  show_search_mobile: boolean = false;
   /**
    * The currently selected file, if one exists.
    * Controlled by router.
@@ -287,6 +312,12 @@ export default class Results extends ResultsProps {
     return InspecDataModule.allFiles.length === 0;
   }
 
+  /**
+   * Check if the screen width will break the search bar
+   */
+  onResize() {
+    this.is_mobile = window.innerWidth < 600;
+  }
   /**
    * The filter for charts. Contains all of our filter stuff
    */
@@ -424,11 +455,30 @@ export default class Results extends ResultsProps {
       this.eval_info = index;
     }
   }
+  // Listening for window resize
+  created() {
+    this.onResize();
+
+    window.addEventListener('resize', this.onResize, {passive: true});
+  }
+
+  beforeDestroy() {
+    if (typeof window === 'undefined') return;
+
+    window.removeEventListener('resize', this.onResize);
+  }
 }
 </script>
 
 <style scoped>
 .glow {
   box-shadow: 0px 0px 8px 6px #5a5;
+}
+.overtake-bar {
+  width: 96%;
+  position: absolute;
+  left: 0px;
+  top: 4px;
+  z-index: 5;
 }
 </style>
