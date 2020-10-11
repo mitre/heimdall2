@@ -19991,10 +19991,10 @@ vuetify@^2.3.9:
   resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-2.3.13.tgz#afd5e00a1fe6a5207d3ee7f06f0bf3741b4f5f68"
   integrity sha512-1908+xtI329/L1MNdZ7DQ16u/HDOq7gNxSYREdQhzCKNWUymdkaFYaBY9kKPQd1JTwT+xQL7GKCH/fr9xrS1AA==
 
-vuex-module-decorators@^0.9.11:
-  version "0.9.11"
-  resolved "https://registry.yarnpkg.com/vuex-module-decorators/-/vuex-module-decorators-0.9.11.tgz#a1f27d0b4187ce96d99bb877fa09dfaddd067076"
-  integrity sha512-mqOqeQkWrVpdDE31loeLBj8ciHEpgtyRu8MzzxSpncjhVmggSmY4xdnwfxdXMfeDrcux6vHVWoJuzepgBhKkSA==
+vuex-module-decorators@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/vuex-module-decorators/-/vuex-module-decorators-1.0.1.tgz#d34dafb5428a3636f1c26d3d014c15fc9659ccd0"
+  integrity sha512-FLWZsXV5XAtl/bcKUyQFpnSBtpc3wK/7zSdy9oKbyp71mZd4ut5y2zSd219wWW9OG7WUOlVwac4rXFFDVnq7ug==
 
 vuex@^3.1.2:
   version "3.5.1"
