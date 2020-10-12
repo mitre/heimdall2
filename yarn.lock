@@ -19768,11 +19768,12 @@ vue-apexcharts@^1.5.1:
   resolved "https://registry.yarnpkg.com/vue-apexcharts/-/vue-apexcharts-1.6.0.tgz#c7d3afd93f712433d404e5ceeb4e3aa65f422af2"
   integrity sha512-sT6tuVTLBwfH3TA7azecDNS/W70bmz14ZJI7aE7QIqcG9I6OywyH7x3hcOeY1v1DxttI8Svc5RuYj4Dd+A5F4g==
 
-vue-clamp@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/vue-clamp/-/vue-clamp-0.2.2.tgz#66244d06b313d117ba0ea160641d89158368830e"
-  integrity sha512-WohCN3oTRz8PGWT2m1c1qsmb1oKKNA4A9MyGxUspfONkQJ7vrlk50R4NAG3H80F/CTdpkit6mxQh3eLtlpLccw==
+vue-clamp@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/vue-clamp/-/vue-clamp-0.3.1.tgz#f2ed2bea182256f6642af20b00cd6481be057728"
+  integrity sha512-03m9zpRfMN4Y5+2VWbCi6mBTNCMnNQ22ACEIegfluN2Sczd9A+/U69YQ5VRVIJ1WEziIogmQhdzZP+O7ikePMw==
   dependencies:
+    core-js "^3.6.5"
     resize-detector "^0.1.10"
 
 vue-class-component@^7.0.2:

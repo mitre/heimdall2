@@ -65,7 +65,7 @@
     "uuid": "^8.3.0",
     "vue": "~2.6.10",
     "vue-apexcharts": "^1.5.1",
-    "vue-clamp": "^0.2.2",
+    "vue-clamp": "^0.3.1",
     "vue-class-component": "^7.0.2",
     "vue-cli-plugin-vuetify": "~2.0.7",
     "vue-file-agent": "^1.7.3",
