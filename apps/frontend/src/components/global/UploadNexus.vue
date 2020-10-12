@@ -124,3 +124,9 @@ export default class UploadNexus extends mixins(ServerMixin) {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.theme--dark.v-tabs {
+  background: var(--v-secondary-lighten1);
+}
+</style>

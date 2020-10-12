@@ -46,25 +46,11 @@ module.exports = {
       })
     ]
   },
-  css: {
-    loaderOptions: {
-      sass: {
-        data: `@import "~@/sass/main.scss"`
-      }
-    }
-  },
   chainWebpack: config => {
     config.module
       .rule('vue')
       .use('vue-svg-inline-loader')
       .loader('vue-svg-inline-loader')
       .options();
-    ['vue-modules', 'vue', 'normal-modules', 'normal'].forEach(match => {
-      config.module
-        .rule('scss')
-        .oneOf(match)
-        .use('sass-loader')
-        .tap(opt => Object.assign(opt, {data: `@import '~@/sass/main.scss';`}));
-    });
   }
 };
