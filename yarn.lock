@@ -17504,18 +17504,17 @@ sentence-case@^3.0.3:
     tslib "^1.10.0"
     upper-case-first "^2.0.1"
 
-sequelize-cli@^5.5.1:
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/sequelize-cli/-/sequelize-cli-5.5.1.tgz#0b9c2fc04d082cc8ae0a8fe270b96bb606152bab"
-  integrity sha512-ZM4kUZvY3y14y+Rq3cYxGH7YDJz11jWHcN2p2x7rhAIemouu4CEXr5ebw30lzTBtyXV4j2kTO+nUjZOqzG7k+Q==
+sequelize-cli@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/sequelize-cli/-/sequelize-cli-6.2.0.tgz#fd02bfeae23b8226872f9947f3f8212cc49a4771"
+  integrity sha512-6WQ2x91hg30dUn66mXHnzvHATZ4pyI1GHSNbS/TNN/vRR4BLRSLijadeMgC8zqmKDsL0VqzVVopJWfJakuP++Q==
   dependencies:
-    bluebird "^3.5.3"
     cli-color "^1.4.0"
     fs-extra "^7.0.1"
     js-beautify "^1.8.8"
     lodash "^4.17.5"
     resolve "^1.5.0"
-    umzug "^2.1.0"
+    umzug "^2.3.0"
     yargs "^13.1.0"
 
 sequelize-pool@^2.3.0:
@@ -19318,7 +19317,7 @@ umask@^1.1.0:
   resolved "https://registry.yarnpkg.com/umask/-/umask-1.1.0.tgz#f29cebf01df517912bb58ff9c4e50fde8e33320d"
   integrity sha1-8pzr8B31F5ErtY/5xOUP3o4zMg0=
 
-umzug@^2.1.0:
+umzug@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/umzug/-/umzug-2.3.0.tgz#0ef42b62df54e216b05dcaf627830a6a8b84a184"
   integrity sha512-Z274K+e8goZK8QJxmbRPhl89HPO1K+ORFtm6rySPhFKfKc5GHhqdzD0SGhSWHkzoXasqJuItdhorSvY7/Cgflw==
