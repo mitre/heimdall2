@@ -34,7 +34,7 @@
     "@vue/cli-plugin-unit-jest": "~4.5.7",
     "apexcharts": "^3.10.1",
     "aws-sdk": "^2.573.0",
-    "axios": "^0.19.2",
+    "axios": "^0.20.0",
     "babel-plugin-prismjs": "^2.0.1",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
