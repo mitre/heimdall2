@@ -18,16 +18,14 @@ export class UniqueConstraintErrorFilter implements ExceptionFilter {
     response.status(status).json({
       statusCode: status,
       error: 'Internal Server Error',
-      messages: message
+      message: message
     });
   }
 
   buildMessage(errors: ValidationErrorItem[]): {}[] {
-    const builtErrors: {}[] = [];
+    const builtErrors: string[] = [];
     errors.forEach(error => {
-      const message: {[id: string]: string} = {};
-      message[error.path] = error.message;
-      builtErrors.push(message);
+      builtErrors.push(error.message);
     });
     return builtErrors;
   }

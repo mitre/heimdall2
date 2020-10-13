@@ -132,7 +132,6 @@ export default class Signup extends Vue {
   login() {
     this.$router.push('/login');
   }
-
   async register(): Promise<void> {
     // checking if the input is valid
     if ((this.$refs.form as any).validate()) {
@@ -151,7 +150,17 @@ export default class Signup extends Vue {
           );
         })
         .catch(error => {
-          SnackbarModule.notify(error.response.data.message);
+          if (typeof error.response.data.message === 'object') {
+            SnackbarModule.notify(
+              error.response.data.message
+                .map(function capitalize(c: string) {
+                  return c.charAt(0).toUpperCase() + c.slice(1);
+                })
+                .join(', ')
+            );
+          } else {
+            SnackbarModule.notify(error.response.data.message);
+          }
         });
     }
   }
@@ -161,7 +170,6 @@ export default class Signup extends Vue {
   get passwordStrengthPercent() {
     return zxcvbn(this.password).score * 25;
   }
-
   // Since there are 3 colors available, 0-49% displays red, 50% displays yellow, and 51-100% displays green
   get passwordStrengthColor() {
     return ['error', 'warning', 'success'][
