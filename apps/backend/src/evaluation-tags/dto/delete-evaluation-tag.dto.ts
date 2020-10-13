@@ -5,13 +5,13 @@ export class DeleteEvaluationTagDto implements IDeleteEvaluationTag {
   @IsNotEmpty()
   @IsNumber()
   @Min(1)
-  readonly id: number;
+  readonly id!: number;
 
   @IsNotEmpty()
   @IsString()
-  readonly key: string;
+  readonly key!: string;
 
   @IsNotEmpty()
   @IsString()
-  readonly value: string;
+  readonly value!: string;
 }

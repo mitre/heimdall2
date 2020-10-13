@@ -7,17 +7,19 @@ import {DeleteEvaluationTagDto} from '../../evaluation-tags/dto/delete-evaluatio
 export class UpdateEvaluationDto implements IUpdateEvaluation {
   @IsOptional()
   @IsString()
-  readonly filename: string;
+  readonly filename: string | undefined;
 
   @IsOptional()
   @IsObject()
-  readonly data: Record<string, any>;
+  readonly data: Record<string, any> | undefined;
 
   @IsOptional()
   @IsArray()
-  readonly evaluationTags: (
-    | UpdateEvaluationTagDto
-    | CreateEvaluationTagDto
-    | DeleteEvaluationTagDto
-  )[];
+  readonly evaluationTags:
+    | (
+        | UpdateEvaluationTagDto
+        | CreateEvaluationTagDto
+        | DeleteEvaluationTagDto
+      )[]
+    | undefined;
 }

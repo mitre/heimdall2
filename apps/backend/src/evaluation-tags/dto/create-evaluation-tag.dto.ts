@@ -6,15 +6,15 @@ export class CreateEvaluationTagDto implements ICreateEvaluationTag {
   @IsNumber()
   @Min(0)
   @Max(0)
-  readonly id: number;
+  readonly id!: number;
 
   @IsNotEmpty()
   @IsString()
-  readonly key: string;
+  readonly key!: string;
 
   @IsNotEmpty()
   @IsString()
-  readonly value: string;
+  readonly value!: string;
 
   constructor(dto: CreateEvaluationTagDto) {
     this.key = dto.key;

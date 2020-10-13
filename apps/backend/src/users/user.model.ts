@@ -19,63 +19,63 @@ export class User extends Model<User> {
   @AutoIncrement
   @AllowNull(false)
   @Column(DataType.BIGINT)
-  id: number;
+  id!: number;
 
   @Unique
   @IsEmail
   @AllowNull(false)
   @Column
-  email: string;
+  email!: string;
 
   @AllowNull(true)
   @Column
-  firstName: string;
+  firstName!: string | null;
 
   @AllowNull(true)
   @Column
-  lastName: string;
+  lastName!: string | null;
 
   @AllowNull(true)
   @Column
-  organization: string;
+  organization!: string | null;
 
   @AllowNull(true)
   @Column
-  title: string;
+  title!: string | null;
 
   @AllowNull(false)
   @Column
-  encryptedPassword: string;
+  encryptedPassword!: string;
 
   @AllowNull(true)
   @Column
-  forcePasswordChange: boolean;
+  forcePasswordChange!: boolean | null;
 
   @AllowNull(true)
   @Column
-  lastLogin: Date;
+  lastLogin!: Date | null;
 
   @AllowNull(false)
   @Default(0)
   @Column
-  loginCount: number;
+  loginCount!: number;
 
   @AllowNull(true)
   @Column
-  passwordChangedAt: Date;
+  passwordChangedAt!: Date | null;
 
   @AllowNull(false)
   @Default('user')
   @Column
-  role: string;
+  role!: string;
 
   @CreatedAt
   @AllowNull(false)
   @Column
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdatedAt
   @AllowNull(false)
   @Column
-  updatedAt: Date;
+  updatedAt!: Date;
 }

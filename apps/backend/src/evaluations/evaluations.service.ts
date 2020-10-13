@@ -9,6 +9,7 @@ import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {DatabaseService} from '../database/database.service';
 import {CreateEvaluationTagDto} from '../evaluation-tags/dto/create-evaluation-tag.dto';
 import {UpdateEvaluationTagDto} from '../evaluation-tags/dto/update-evaluation-tag.dto';
+import {FindOptions} from 'sequelize/types';
 
 @Injectable()
 export class EvaluationsService {
@@ -56,10 +57,9 @@ export class EvaluationsService {
     id: number,
     updateEvaluationDto: UpdateEvaluationDto
   ): Promise<EvaluationDto> {
-    const evaluation = await this.evaluationModel.findByPk<Evaluation>(id, {
+    const evaluation = await this.findByPkBang(id, {
       include: [EvaluationTag]
     });
-    this.exists(evaluation);
 
     if (updateEvaluationDto.data !== undefined) {
       evaluation.set('data', updateEvaluationDto.data);
@@ -110,11 +110,10 @@ export class EvaluationsService {
   }
 
   async remove(id: number): Promise<EvaluationDto> {
-    const evaluation = await this.evaluationModel.findByPk<Evaluation>(id, {
+    const evaluation = await this.findByPkBang(id, {
       include: [EvaluationTag]
     });
-    this.exists(evaluation);
-    await this.databaseService.sequelize.transaction(async (transaction) => {
+    await this.databaseService.sequelize.transaction(async transaction => {
       await Promise.all([
         evaluation.evaluationTags.map(async (evaluationTag) => {
           await evaluationTag.destroy({transaction});
@@ -126,18 +125,24 @@ export class EvaluationsService {
   }
 
   async findById(id: number): Promise<EvaluationDto> {
-    const evaluation = await this.evaluationModel.findByPk<Evaluation>(id, {
+    const evaluation = await this.findByPkBang(id, {
       include: [EvaluationTag]
     });
-    this.exists(evaluation);
     return new EvaluationDto(evaluation);
   }
 
-  exists(evaluation: Evaluation): boolean {
-    if (!evaluation) {
+  async findByPkBang(
+    identifier: string | number | Buffer | undefined,
+    options: Pick<FindOptions, 'include'>
+  ): Promise<Evaluation> {
+    const evaluation = await this.evaluationModel.findByPk<Evaluation>(
+      identifier,
+      options
+    );
+    if (evaluation === null) {
       throw new NotFoundException('Evaluation with given id not found');
     } else {
-      return true;
+      return evaluation;
     }
   }
 }

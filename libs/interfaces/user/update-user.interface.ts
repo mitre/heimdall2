@@ -1,12 +1,12 @@
 export interface IUpdateUser {
-  readonly email: string;
-  readonly firstName: string;
-  readonly lastName: string;
-  readonly organization: string;
-  readonly title: string;
-  readonly role: string;
-  readonly password: string;
-  readonly passwordConfirmation: string;
-  readonly forcePasswordChange: boolean;
+  readonly email: string | undefined;
+  readonly firstName: string | undefined;
+  readonly lastName: string | undefined;
+  readonly organization: string | undefined;
+  readonly title: string | undefined;
+  readonly role: string | undefined;
+  readonly password: string | undefined;
+  readonly passwordConfirmation: string | undefined;
+  readonly forcePasswordChange: boolean | undefined;
   readonly currentPassword: string;
 }

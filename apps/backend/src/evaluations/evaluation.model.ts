@@ -18,26 +18,26 @@ export class Evaluation extends Model<Evaluation> {
   @AutoIncrement
   @AllowNull(false)
   @Column(DataType.BIGINT)
-  id: number;
+  id!: number;
 
   @AllowNull(false)
   @Column
-  filename: string;
+  filename!: string;
 
   @AllowNull(false)
   @Column(DataType.JSON)
-  data: Record<string, any>;
+  data!: Record<string, any>;
 
   @CreatedAt
   @AllowNull(false)
   @Column
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdatedAt
   @AllowNull(false)
   @Column
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @HasMany(() => EvaluationTag)
-  evaluationTags: EvaluationTag[];
+  evaluationTags!: EvaluationTag[];
 }

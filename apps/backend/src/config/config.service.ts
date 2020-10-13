@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import {StartupSettingsDto} from './dto/startup-settings.dto';
 
 export class ConfigService {
-  private envConfig: {[key: string]: string};
+  private envConfig: {[key: string]: string | undefined};
 
   constructor() {
     console.log('Attempting to read configuration file `.env`!');
@@ -35,12 +35,14 @@ export class ConfigService {
   }
 
   private parseDatabaseUrl(): boolean {
-    if (!this.get('DATABASE_URL')) {
+    const url = this.get('DATABASE_URL');
+    if (url === undefined) {
       return false;
     } else {
-      const url = this.get('DATABASE_URL');
       const pattern = /^(?:([^:\/?#\s]+):\/{2})?(?:([^@\/?#\s]+)@)?([^\/?#\s]+)?(?:\/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$/;
       const matches = url.match(pattern);
+
+      if (matches === null) return false;
 
       this.set(
         'DATABASE_USERNAME',
@@ -66,7 +68,7 @@ export class ConfigService {
     }
   }
 
-  set(key: string, value: string) {
+  set(key: string, value: string | undefined) {
     this.envConfig[key] = value;
   }
 

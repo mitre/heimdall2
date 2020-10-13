@@ -196,6 +196,13 @@ describe('UsersService', () => {
     it('should update a user', async () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const beforeUpdate = await User.findByPk<User>(user.id);
+
+      if (beforeUpdate === null) {
+        throw new TypeError(
+          'User that was just created was not returned from the database. Create method may have failed silently.'
+        );
+      }
+
       const updatedUser = await usersService.update(
         user.id,
         UPDATE_USER_DTO_TEST_OBJ,
@@ -223,7 +230,7 @@ describe('UsersService', () => {
       // This will not change currently because there is only a 'user' role that can be updated via API.
       expect(updatedUser.role).toEqual(user.role);
       expect(beforeUpdate.forcePasswordChange).not.toEqual(
-        afterUpdate.forcePasswordChange
+        afterUpdate?.forcePasswordChange
       );
     });
 
@@ -327,6 +334,11 @@ describe('UsersService', () => {
     it('should update a user without updating password', async () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const beforeUpdate = await User.findByPk<User>(user.id);
+      if (beforeUpdate === null) {
+        throw new TypeError(
+          'User that was just created was not returned from the database. Create method may have failed silently.'
+        );
+      }
       await usersService.update(
         user.id,
         UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
@@ -334,28 +346,28 @@ describe('UsersService', () => {
       );
       const updatedUser = await User.findByPk<User>(user.id);
 
-      expect(updatedUser.email).toEqual(
+      expect(updatedUser?.email).toEqual(
         UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.email
       );
-      expect(updatedUser.firstName).toEqual(
+      expect(updatedUser?.firstName).toEqual(
         UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.firstName
       );
-      expect(updatedUser.lastName).toEqual(
+      expect(updatedUser?.lastName).toEqual(
         UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.lastName
       );
-      expect(updatedUser.organization).toEqual(
+      expect(updatedUser?.organization).toEqual(
         UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.organization
       );
-      expect(updatedUser.title).toEqual(
+      expect(updatedUser?.title).toEqual(
         UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.title
       );
-      expect(updatedUser.role).toEqual(
+      expect(updatedUser?.role).toEqual(
         UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.role
       );
-      expect(updatedUser.encryptedPassword).toEqual(
+      expect(updatedUser?.encryptedPassword).toEqual(
         beforeUpdate.encryptedPassword
       );
-      expect(updatedUser.updatedAt.valueOf()).not.toEqual(
+      expect(updatedUser?.updatedAt.valueOf()).not.toEqual(
         user.updatedAt.valueOf()
       );
     });
@@ -421,17 +433,16 @@ describe('UsersService', () => {
       const lastLogin = user.lastLogin;
       const createdUser = await User.findByPk<User>(user.id);
 
+      if (createdUser === null) {
+        throw new TypeError(
+          'User that was just created was not returned from the database. Create method may have failed silently.'
+        );
+      }
+
       await usersService.updateLoginMetadata(createdUser);
 
       expect(createdUser.loginCount).toBe(1);
       expect(createdUser.lastLogin).not.toBe(lastLogin);
-    });
-
-    it('should fail because user passed is null', async () => {
-      expect.assertions(1);
-      await expect(usersService.updateLoginMetadata(null)).rejects.toThrow(
-        NotFoundException
-      );
     });
   });
 

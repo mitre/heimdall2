@@ -5,11 +5,11 @@ import {
 } from '..';
 
 export interface IUpdateEvaluation {
-  readonly filename: string;
-  readonly data: Record<string, any>;
+  readonly filename: string | undefined;
+  readonly data: Record<string, any> | undefined;
   readonly evaluationTags: (
     | IUpdateEvaluationTag
     | ICreateEvaluationTag
     | IDeleteEvaluationTag
-  )[];
+  )[] | undefined;
 }

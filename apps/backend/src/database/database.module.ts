@@ -5,30 +5,26 @@ import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
 
 function getDatabaseName(configService: ConfigService): string {
-  if (
-    configService.get('DATABASE_NAME') === undefined &&
-    configService.get('NODE_ENV') === undefined
-  ) {
+  const databaseName = configService.get('DATABASE_NAME');
+  const nodeEnvironment = configService.get('NODE_ENV');
+
+  if (databaseName !== undefined) {
+    return databaseName;
+  } else if (nodeEnvironment !== undefined) {
+    return `heimdall-server-${nodeEnvironment.toLowerCase()}`;
+  } else {
     throw new TypeError(
       'NODE_ENV and DATABASE_NAME are undefined. Unable to set database or use the default based on environment.'
     );
-  } else if (
-    configService.get('DATABASE_NAME') === undefined &&
-    configService.get('NODE_ENV') !== undefined
-  ) {
-    return `heimdall-server-${configService.get('NODE_ENV').toLowerCase()}`;
-  } else {
-    return configService.get('DATABASE_NAME');
   }
 }
 
 function getSynchronize(configService: ConfigService): boolean {
-  if (configService.get('NODE_ENV') === undefined) {
+  const nodeEnvironment = configService.get('NODE_ENV');
+  if (nodeEnvironment === undefined) {
     throw new TypeError('NODE_ENV is not set and must be provided.');
   } else {
-    return configService.get('NODE_ENV').toLowerCase() === 'test'
-      ? false
-      : true;
+    return nodeEnvironment === 'test' ? false : true;
   }
 }
 
