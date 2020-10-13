@@ -23,7 +23,6 @@ function getDatabaseName(configService: ConfigService): string {
 }
 
 function getSynchronize(configService: ConfigService): boolean {
-  console.log('here');
   if (configService.get('NODE_ENV') === undefined) {
     throw new TypeError('NODE_ENV is not set and must be provided.');
   } else {
