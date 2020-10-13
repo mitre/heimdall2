@@ -2,7 +2,7 @@
   <div class="text-center">
     <v-menu offset-y offset-overflow :close-on-content-click="false">
       <template v-slot:activator="{on, attrs}">
-        <div class="clickable-icon" v-bind="attrs" v-on="on">
+        <div class="clickable-icon text-no-wrap" v-bind="attrs" v-on="on">
           <v-btn icon large>
             <v-avatar size="32px" item>
               <v-img
@@ -11,9 +11,7 @@
               />
             </v-avatar>
           </v-btn>
-          <v-icon small style="position: fixed; margin-top: .8em; right: 5px;"
-            >mdi-menu-down</v-icon
-          >
+          <v-icon small>mdi-menu-down</v-icon>
         </div>
       </template>
       <v-list class="pt-0 pb-0">
