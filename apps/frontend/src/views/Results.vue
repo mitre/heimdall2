@@ -371,7 +371,7 @@ export default class Results extends ResultsProps {
   get curr_title(): string {
     let returnText = `${capitalize(this.current_route_name.slice(0, -1))} View`;
     if (this.file_filter.length == 1) {
-      let file = InspecDataModule.allEvaluationFiles.find(
+      let file = InspecDataModule.allFiles.find(
         f => f.unique_id === this.file_filter[0]
       );
       if (file) {

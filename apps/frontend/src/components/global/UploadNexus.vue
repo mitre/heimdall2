@@ -73,7 +73,6 @@ import DatabaseReader from '@/components/global/upload_tabs/DatabaseReader.vue';
 import SampleList from '@/components/global/upload_tabs/SampleList.vue';
 import {LocalStorageVal} from '@/utilities/helper_util';
 
-import {InspecDataModule} from '@/store/data_store';
 import {SnackbarModule} from '@/store/snackbar';
 
 import ServerMixin from '@/mixins/ServerMixin';
@@ -81,6 +80,7 @@ import RouteMixin from '@/mixins/RouteMixin';
 import {Prop} from 'vue-property-decorator';
 
 import {ServerModule} from '@/store/server';
+import {FilteredDataModule} from '@/store/data_filters';
 
 const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
 
@@ -120,9 +120,24 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
   got_files(files: FileID[]) {
     this.$emit('got-files', files);
 
-    if (InspecDataModule.allEvaluationFiles.length !== 0)
-      this.navigateUnlessActive(`/results`);
-    else this.navigateUnlessActive(`/profiles`);
+    let numEvaluations = FilteredDataModule.selectedEvaluationIds.filter(eva =>
+      files.includes(eva)
+    ).length;
+    let numProfiles = FilteredDataModule.selectedProfileIds.filter(prof =>
+      files.includes(prof)
+    ).length;
+
+    if (numEvaluations > numProfiles) {
+      this.navigateUnlessActive('/results');
+    } else {
+      this.navigateUnlessActive('/profiles');
+    }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.theme--dark.v-tabs {
+  background: var(--v-secondary-lighten1);
+}
+</style>

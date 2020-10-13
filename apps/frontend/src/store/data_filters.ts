@@ -85,45 +85,45 @@ function contains_term(
   name: 'filteredData'
 })
 export class FilteredData extends VuexModule {
-  selected_evaluation_ids: FileID[] = [];
-  selected_profile_ids: FileID[] = [];
+  selectedEvaluationIds: FileID[] = [];
+  selectedProfileIds: FileID[] = [];
 
   @Mutation
   SELECT_EVALUATIONS(files: FileID[]): void {
-    this.selected_evaluation_ids = [
-      ...new Set([...files, ...this.selected_evaluation_ids])
+    this.selectedEvaluationIds = [
+      ...new Set([...files, ...this.selectedEvaluationIds])
     ];
   }
 
   @Mutation
   SELECT_PROFILES(files: FileID[]): void {
-    this.selected_profile_ids = [
-      ...new Set([...files, ...this.selected_profile_ids])
+    this.selectedProfileIds = [
+      ...new Set([...files, ...this.selectedProfileIds])
     ];
   }
 
   @Mutation
   CLEAR_EVALUATION(removeId: FileID): void {
-    this.selected_evaluation_ids = this.selected_evaluation_ids.filter(
+    this.selectedEvaluationIds = this.selectedEvaluationIds.filter(
       ids => ids !== removeId
     );
   }
 
   @Mutation
   CLEAR_PROFILE(removeId: FileID): void {
-    this.selected_profile_ids = this.selected_profile_ids.filter(
+    this.selectedProfileIds = this.selectedProfileIds.filter(
       ids => ids !== removeId
     );
   }
 
   @Mutation
   CLEAR_ALL_EVALUATIONS(): void {
-    this.selected_evaluation_ids = [];
+    this.selectedEvaluationIds = [];
   }
 
   @Mutation
   CLEAR_ALL_PROFILES(): void {
-    this.selected_profile_ids = [];
+    this.selectedProfileIds = [];
   }
 
   @Action
@@ -162,7 +162,7 @@ export class FilteredData extends VuexModule {
 
   @Action
   public toggle_evaluation(fileID: FileID): void {
-    if (this.selected_evaluation_ids.includes(fileID)) {
+    if (this.selectedEvaluationIds.includes(fileID)) {
       this.CLEAR_EVALUATION(fileID);
     } else {
       this.SELECT_EVALUATIONS([fileID]);
@@ -171,7 +171,7 @@ export class FilteredData extends VuexModule {
 
   @Action
   public toggle_profile(fileID: FileID): void {
-    if (this.selected_profile_ids.includes(fileID)) {
+    if (this.selectedProfileIds.includes(fileID)) {
       this.CLEAR_PROFILE(fileID);
     } else {
       this.SELECT_PROFILES([fileID]);
@@ -231,7 +231,7 @@ export class FilteredData extends VuexModule {
 
   /* get the currently select evaluations */
   get selected_evaluations(): string[] {
-    const fileIds = [...this.selected_evaluation_ids];
+    const fileIds = [...this.selectedEvaluationIds];
     const files = InspecDataModule.allProfileFiles;
 
     return fileIds.filter(fileId =>
@@ -241,7 +241,7 @@ export class FilteredData extends VuexModule {
 
   /* get the currently selected profiles */
   get selected_profiles(): string[] {
-    const fileIds = [...this.selected_profile_ids];
+    const fileIds = [...this.selectedProfileIds];
     const files = InspecDataModule.allEvaluationFiles;
 
     return fileIds.filter(fileId =>
@@ -250,7 +250,7 @@ export class FilteredData extends VuexModule {
   }
 
   get selected_file_ids(): FileID[] {
-    return [...this.selected_evaluation_ids, ...this.selected_profile_ids];
+    return [...this.selectedEvaluationIds, ...this.selectedProfileIds];
   }
 
   // check to see if all profiles are selected

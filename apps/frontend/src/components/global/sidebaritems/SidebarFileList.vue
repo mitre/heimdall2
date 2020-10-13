@@ -18,7 +18,7 @@
       </v-btn>
     </v-list-item-action>
 
-    <v-list-item-action @click.stop="close_file">
+    <v-list-item-action @click.stop="remove_file">
       <v-btn icon small>
         <v-icon> mdi-close </v-icon>
       </v-btn>
@@ -71,7 +71,7 @@ export default class FileItem extends mixins(FileItemProps, ServerMixin) {
   }
 
   //removes uploaded file from the currently observed files
-  close_file() {
+  remove_file() {
     InspecDataModule.removeFile(this.file.unique_id);
   }
 
@@ -106,7 +106,7 @@ export default class FileItem extends mixins(FileItemProps, ServerMixin) {
   //gives different icons for a file if it is just a profile
   get icon(): string {
     if (this.file.profile !== undefined) {
-      return 'note';
+      return 'mdi-note';
     } else {
       return 'mdi-google-analytics';
     }
