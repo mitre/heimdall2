@@ -27,7 +27,7 @@
           centered
           :depressed="selection[index - 1 + shift]"
           :outlined="selection[index - 1 + shift]"
-          @click="view(index - 1 + shift, $event)"
+          @click="view(index - 1 + shift)"
         >
           <template
             v-if="hdf_controls[index - 1 + shift].status == 'Not Applicable'"
@@ -173,15 +173,11 @@ export default class CompareRow extends Props {
   }
 
   //This is used to SELECT controls to view their data
-  view(index: number, evt: Event) {
-    evt.stopPropagation();
-    evt.preventDefault();
+  view(index: number) {
     Vue.set(this.selection, index, !this.selection[index]);
   }
 
-  viewAll(evt: Event) {
-    evt.stopPropagation();
-    evt.preventDefault();
+  viewAll() {
     let allTrue = true;
     for (let i = 0; i < this.selection.length; i++) {
       if (!this.selection[i]) {

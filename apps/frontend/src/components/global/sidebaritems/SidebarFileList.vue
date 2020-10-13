@@ -1,6 +1,6 @@
 <template>
-  <v-list-item :title="file.filename" @click="select_file_exclusive">
-    <v-list-item-action @click="select_file">
+  <v-list-item :title="file.filename" @click.stop="select_file_exclusive">
+    <v-list-item-action @click.stop="select_file">
       <v-checkbox :input-value="selected" color="blue" />
     </v-list-item-action>
 
@@ -12,13 +12,13 @@
       <v-list-item-title v-text="file.filename" />
     </v-list-item-content>
 
-    <v-list-item-action v-if="serverMode" @click="save_this_file">
+    <v-list-item-action v-if="serverMode" @click.stop="save_file">
       <v-btn icon small>
         <v-icon> mdi-content-save </v-icon>
       </v-btn>
     </v-list-item-action>
 
-    <v-list-item-action @click="close_this_file">
+    <v-list-item-action @click.stop="remove_file">
       <v-btn icon small>
         <v-icon> mdi-close </v-icon>
       </v-btn>
@@ -49,22 +49,20 @@ const FileItemProps = Vue.extend({
   components: {}
 })
 export default class FileItem extends mixins(FileItemProps, ServerMixin) {
-  select_file(evt: Event) {
-    evt.stopPropagation();
-    evt.preventDefault();
-    if (!this.selected) {
-      FilteredDataModule.set_toggle_file_on(this.file.unique_id);
-    } else {
-      FilteredDataModule.set_toggle_file_off(this.file.unique_id);
+  select_file() {
+    if (this.file.hasOwnProperty('evaluation')) {
+      FilteredDataModule.toggle_evaluation(this.file.unique_id);
+    } else if (this.file.hasOwnProperty('profile')) {
+      FilteredDataModule.toggle_profile(this.file.unique_id);
     }
   }
 
-  select_file_exclusive(evt: Event) {
-    evt.stopPropagation();
-    evt.preventDefault();
-
-    // Clear all except this one
-    FilteredDataModule.set_toggled_files([this.file.unique_id]);
+  select_file_exclusive() {
+    if (this.file.hasOwnProperty('evaluation')) {
+      FilteredDataModule.select_exclusive_evaluation(this.file.unique_id);
+    } else if (this.file.hasOwnProperty('profile')) {
+      FilteredDataModule.select_exclusive_profile(this.file.unique_id);
+    }
   }
 
   //checks if file is selected
@@ -72,17 +70,13 @@ export default class FileItem extends mixins(FileItemProps, ServerMixin) {
     return FilteredDataModule.selected_file_ids.includes(this.file.unique_id);
   }
 
-  //removes uploaded file from the currently observed files, not from database
-  close_this_file(evt: Event) {
-    evt.stopPropagation();
-    evt.preventDefault();
+  //removes uploaded file from the currently observed files
+  remove_file() {
     InspecDataModule.removeFile(this.file.unique_id);
   }
 
   //saves file to database
-  save_this_file(evt: Event) {
-    evt.stopPropagation();
-    evt.preventDefault();
+  save_file() {
     let file = InspecDataModule.allFiles.find(
       f => f.unique_id === this.file.unique_id
     );
@@ -113,7 +107,7 @@ export default class FileItem extends mixins(FileItemProps, ServerMixin) {
   //gives different icons for a file if it is just a profile
   get icon(): string {
     if (this.file.profile !== undefined) {
-      return 'note';
+      return 'mdi-note';
     } else {
       return 'mdi-google-analytics';
     }

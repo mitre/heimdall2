@@ -1,5 +1,5 @@
 <template>
-  <BaseView v-resize="on_resize">
+  <BaseView v-resize="on_resize" :title="curr_title">
     <!-- Topbar config - give it a search bar -->
     <template #topbar-content>
       <v-text-field
@@ -215,7 +215,8 @@ import {Category} from '@/components/generic/ApexPieChart.vue';
 import {StatusCountModule} from '@/store/status_counts';
 import ProfileRow from '@/components/cards/comparison/ProfileRow.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
-import {EvaluationFile} from '@/store/report_intake';
+import {EvaluationFile, FileID} from '@/store/report_intake';
+import {InspecDataModule} from '@/store/data_store';
 
 import ApexLineChart, {
   SeriesItem
@@ -324,12 +325,6 @@ export default class Compare extends Props {
       }
       return false;
     });
-  }
-
-  collapse(evt: Event) {
-    evt.stopPropagation();
-    evt.preventDefault();
-    this.ableTab = !this.ableTab;
   }
 
   get searched_sets(): ControlSeries[] {
@@ -568,6 +563,29 @@ export default class Compare extends Props {
       this.ableTab = true;
     }
     this.changeChartState();
+  }
+
+  /**
+   * The title to override with
+   */
+
+  get curr_title(): string {
+    let returnText = 'Comparison View';
+    if (this.file_filter.length == 1) {
+      let file = InspecDataModule.allEvaluationFiles.find(
+        f => f.unique_id === this.file_filter[0]
+      );
+      if (file) {
+        returnText += ` (${file.filename} selected)`;
+      }
+    } else {
+      returnText += ` (${this.file_filter.length} results selected)`;
+    }
+    return returnText;
+  }
+
+  get file_filter(): FileID[] {
+    return FilteredDataModule.selected_evaluations;
   }
 }
 </script>

@@ -5,6 +5,7 @@
     app
     style="margin-top: 56px;"
     disable-resize-watcher
+    disable-route-watcher
     fixed
     temporary
     width="375px"
@@ -12,51 +13,36 @@
   >
     <v-list dense class="px-2" subheader>
       <v-subheader>Files</v-subheader>
-      <FileItem v-for="(file, i) in visible_files" :key="i" :file="file" />
-      <v-list-item title="Show all files' controls" @click="toggle_all">
-        <v-list-item-avatar>
-          <v-icon small>mdi-format-list-bulleted</v-icon>
-        </v-list-item-avatar>
-
-        <v-list-item-content>
-          <v-list-item-title>
-            <div v-if="all_toggled">Deselect all reports</div>
-            <div v-else>Select all reports</div>
-          </v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-
-      <v-subheader>Views</v-subheader>
-      <v-list-item to="/results" title="View controls' results">
-        <v-list-item-avatar>
-          <v-icon small>mdi-television-guide</v-icon>
-        </v-list-item-avatar>
-
-        <v-list-item-content>
-          <v-list-item-title>Results</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-      <v-list-item to="/compare" title="Compare evaluations' controls">
-        <v-list-item-avatar>
-          <v-icon small>mdi-triangle-outline</v-icon>
-        </v-list-item-avatar>
-
-        <v-list-item-content>
-          <v-list-item-title>Comparison</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+      <v-expansion-panels v-model="active_path" accordion mandatory>
+        <DropdownContent
+          text="Results"
+          :files="visible_evaluation_files"
+          :all-selected="all_evaluations_selected"
+          :enable-compare-view="true"
+          :compare-view-active="compareViewActive"
+          @toggle-all="toggle_all_evaluations"
+          @toggle-compare-view="compareView"
+        />
+        <DropdownContent
+          text="Profiles"
+          :files="visible_profile_files"
+          :all-selected="all_profiles_selected"
+          @toggle-all="toggle_all_profiles"
+        />
+      </v-expansion-panels>
     </v-list>
   </v-navigation-drawer>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
-import FileItem from '@/components/global/sidebaritems/SidebarFile.vue';
-import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {FilteredDataModule} from '../../store/data_filters';
+import {FilteredDataModule} from '@/store/data_filters';
+import RouteMixin from '@/mixins/RouteMixin';
+
+import DropdownContent from '@/components/global/sidebaritems/DropdownContent.vue';
 
 // We declare the props separately to make props types inferable.
 const SidebarProps = Vue.extend({
@@ -67,35 +53,69 @@ const SidebarProps = Vue.extend({
 
 @Component({
   components: {
-    LinkItem,
-    FileItem
+    DropdownContent
   }
 })
-export default class Sidebar extends SidebarProps {
-  //selects/deselects all files. Will select all unless all are already selected
-  toggle_all(): void {
-    if (this.all_toggled) {
-      FilteredDataModule.set_toggled_files([]);
-    } else {
-      FilteredDataModule.set_toggled_files(
-        InspecDataModule.allFiles.map(v => v.unique_id)
-      );
-    }
+export default class Sidebar extends mixins(SidebarProps, RouteMixin) {
+  // open the appropriate v-expansion-panel based on current route
+  get active_path() {
+    if (this.current_route === '/profiles') return 1;
+    else if (
+      this.current_route === '/results' ||
+      this.current_route === '/compare'
+    )
+      return 0;
+    else return -1;
   }
 
-  //checks if all files are selected
-  get all_toggled(): boolean {
-    return (
-      InspecDataModule.allFiles.length ==
-      FilteredDataModule.selected_file_ids.length
-    );
+  set active_path(id: number) {
+    // There are currently 2 available values that the v-modal can have,
+    // 0 -> results view
+    // 1 -> profile view
+    if (id === 0) this.navigateUnlessActive('/results');
+    else if (id === 1) this.navigateUnlessActive('/profiles');
   }
 
-  /** Generates files for all */
-  get visible_files(): Array<ProfileFile | EvaluationFile> {
-    let files = InspecDataModule.allFiles;
-    files = files.sort((a, b) => a.filename.localeCompare(b.filename));
-    return files;
+  // get all visible (uploaded) evaluation files
+  get visible_evaluation_files(): EvaluationFile[] {
+    let files = InspecDataModule.allEvaluationFiles;
+    return files.sort((a, b) => a.filename.localeCompare(b.filename));
+  }
+
+  // get all visible (uploaded) profile files
+  get visible_profile_files(): ProfileFile[] {
+    let files = InspecDataModule.allProfileFiles;
+    return files.sort((a, b) => a.filename.localeCompare(b.filename));
+  }
+
+  get all_evaluations_selected(): boolean {
+    return FilteredDataModule.all_evaluations_selected;
+  }
+
+  get all_profiles_selected(): boolean {
+    return FilteredDataModule.all_profiles_selected;
+  }
+
+  get compareViewActive(): boolean {
+    return this.current_route === '/compare';
+  }
+
+  // toggle the "select all" for profiles
+  toggle_all_profiles(): void {
+    FilteredDataModule.toggle_all_profiles();
+  }
+
+  // toggle the "select all" for evaluations
+  toggle_all_evaluations(): void {
+    FilteredDataModule.toggle_all_evaluations();
+  }
+
+  // toggle between the comparison view and the results view
+  compareView(): void {
+    if (this.current_route === '/results')
+      this.navigateUnlessActive('/compare');
+    if (this.current_route === '/compare')
+      this.navigateUnlessActive('/results');
   }
 }
 </script>

@@ -190,7 +190,7 @@
       <span v-else class="subtitle-2">
         No files are currently enabled for viewing. Open the
         <v-icon class="mx-1">mdi-menu</v-icon> sidebar menu, and ensure that the
-        file(s) you wish to view have are
+        file(s) you wish to view are
         <v-icon class="mx-1">mdi-checkbox-marked</v-icon> checked.
       </span>
     </v-snackbar>
@@ -223,6 +223,7 @@ import ProfData from '@/components/cards/ProfData.vue';
 import {context} from 'inspecjs';
 
 import {ServerModule} from '@/store/server';
+import {capitalize} from 'lodash';
 
 // We declare the props separately
 // to make props types inferrable.
@@ -280,7 +281,9 @@ export default class Results extends ResultsProps {
    */
 
   get file_filter(): FileID[] {
-    return FilteredDataModule.selected_file_ids;
+    if (this.current_route_name === 'results')
+      return FilteredDataModule.selected_evaluations;
+    else return FilteredDataModule.selected_profiles;
   }
 
   // Returns true if no files are uploaded
@@ -364,20 +367,24 @@ export default class Results extends ResultsProps {
   /**
    * The title to override with
    */
-  get curr_title(): string | undefined {
+
+  get curr_title(): string {
+    let returnText = `${capitalize(this.current_route_name.slice(0, -1))} View`;
     if (this.file_filter.length == 1) {
       let file = InspecDataModule.allFiles.find(
         f => f.unique_id === this.file_filter[0]
       );
       if (file) {
-        return file.filename;
+        returnText += ` (${file.filename} selected)`;
       }
-    }
-    if (this.file_filter.length > 1) {
-      return this.file_filter.length + ' files selected';
     } else {
-      return 'No files selected';
+      returnText += ` (${this.file_filter.length} ${this.current_route_name} selected)`;
     }
+    return returnText;
+  }
+
+  get current_route_name(): string {
+    return this.$router.currentRoute.path.substring(1);
   }
 
   //changes width of eval info if it is in server mode and needs more room for tags
