@@ -16,7 +16,6 @@
       <v-expansion-panels v-model="active_path" accordion mandatory>
         <DropdownContent
           text="Results"
-          toggle="Select all result set"
           :files="visible_evaluation_files"
           :all-selected="all_evaluations_selected"
           :enable-compare-view="true"
@@ -26,7 +25,6 @@
         />
         <DropdownContent
           text="Profiles"
-          toggle="Select all profile set"
           :files="visible_profile_files"
           :all-selected="all_profiles_selected"
           @toggle-all="toggle_all_profiles"
@@ -41,9 +39,6 @@ import Vue from 'vue';
 import Component, {mixins} from 'vue-class-component';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
-import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import AboutModal from '@/components/global/AboutModal.vue';
-import HelpModal from '@/components/global/HelpModal.vue';
 import {FilteredDataModule} from '@/store/data_filters';
 import RouteMixin from '@/mixins/RouteMixin';
 
@@ -58,10 +53,7 @@ const SidebarProps = Vue.extend({
 
 @Component({
   components: {
-    LinkItem,
-    AboutModal,
-    DropdownContent,
-    HelpModal
+    DropdownContent
   }
 })
 export default class Sidebar extends mixins(SidebarProps, RouteMixin) {
@@ -85,17 +77,15 @@ export default class Sidebar extends mixins(SidebarProps, RouteMixin) {
   }
 
   // get all visible (uploaded) evaluation files
-  get visible_evaluation_files(): Array<EvaluationFile> {
+  get visible_evaluation_files(): EvaluationFile[] {
     let files = InspecDataModule.allEvaluationFiles;
-    files = files.sort((a, b) => a.filename.localeCompare(b.filename));
-    return files;
+    return files.sort((a, b) => a.filename.localeCompare(b.filename));
   }
 
   // get all visible (uploaded) profile files
-  get visible_profile_files(): Array<ProfileFile> {
+  get visible_profile_files(): ProfileFile[] {
     let files = InspecDataModule.allProfileFiles;
-    files = files.sort((a, b) => a.filename.localeCompare(b.filename));
-    return files;
+    return files.sort((a, b) => a.filename.localeCompare(b.filename));
   }
 
   get all_evaluations_selected(): boolean {

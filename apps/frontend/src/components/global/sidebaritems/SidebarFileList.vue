@@ -93,6 +93,7 @@ export default class FileItem extends mixins(FileItemProps, ServerMixin) {
       filename: file.filename,
       evaluationTags: []
     };
+
     axios
       .post('/evaluations', evaluationDTO)
       .then(() => {

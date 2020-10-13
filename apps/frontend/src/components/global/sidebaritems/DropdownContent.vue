@@ -20,7 +20,7 @@
           </v-list-item>
         </div>
         <div>
-          <v-list-item :title="toggle" @click="$emit('toggle-all')">
+          <v-list-item @click="$emit('toggle-all')">
             <v-list-item-avatar>
               <v-icon small>mdi-format-list-bulleted</v-icon>
             </v-list-item-avatar>
@@ -40,6 +40,7 @@
 <script lang="ts">
 import {Vue, Component, Prop} from 'vue-property-decorator';
 import FileList from '@/components/global/sidebaritems/SidebarFileList.vue';
+import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 
 @Component({
   components: {
@@ -49,9 +50,9 @@ import FileList from '@/components/global/sidebaritems/SidebarFileList.vue';
 export default class DropdownContent extends Vue {
   @Prop({type: String, required: true}) readonly text!: string;
   @Prop({type: Boolean, required: true}) readonly allSelected!: boolean;
-  @Prop({default: 'Toggle select all', type: String, required: false})
-  readonly toggle!: string;
-  @Prop({type: Array, required: true}) readonly files!: Object[];
+  @Prop({type: Array, required: true}) readonly files!:
+    | EvaluationFile[]
+    | ProfileFile[];
   @Prop({type: String, required: false}) readonly route!: string;
   @Prop({default: false, type: Boolean, required: false})
   readonly compareViewActive!: boolean;

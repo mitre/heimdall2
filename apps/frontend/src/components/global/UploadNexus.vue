@@ -72,13 +72,10 @@ import SplunkReader from '@/components/global/upload_tabs/splunk/SplunkReader.vu
 import DatabaseReader from '@/components/global/upload_tabs/DatabaseReader.vue';
 import SampleList from '@/components/global/upload_tabs/SampleList.vue';
 import {LocalStorageVal} from '@/utilities/helper_util';
-
 import {SnackbarModule} from '@/store/snackbar';
-
 import ServerMixin from '@/mixins/ServerMixin';
 import RouteMixin from '@/mixins/RouteMixin';
 import {Prop} from 'vue-property-decorator';
-
 import {ServerModule} from '@/store/server';
 import {FilteredDataModule} from '@/store/data_filters';
 

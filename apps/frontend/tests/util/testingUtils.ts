@@ -1,7 +1,7 @@
 import 'jest';
 import {AllRaw} from '../util/fs';
 import {InspecIntakeModule} from '../../src/store/report_intake';
-import {FilteredDataModule} from '@/store/data_filters';
+
 import {StatusCountModule} from '@/store/status_counts';
 import {InspecDataModule} from '@/store/data_store';
 import {samples, Sample} from '@/utilities/sample_util';
@@ -41,10 +41,6 @@ export function removeAllFiles(): void {
   for (let id of ids) {
     InspecDataModule.removeFile(id);
   }
-}
-
-export function selectAllFiles(): void {
-  FilteredDataModule.toggle_all_evaluations();
 }
 
 // When using Vuetify v-dialog's this is necessary in order to avoid a
