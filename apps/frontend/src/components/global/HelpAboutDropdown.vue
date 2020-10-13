@@ -11,7 +11,7 @@
               />
             </v-avatar>
           </v-btn>
-          <v-icon small style="position: fixed; margin-top: .8em;"
+          <v-icon small style="position: fixed; margin-top: .8em; right: 5px;"
             >mdi-menu-down</v-icon
           >
         </div>
