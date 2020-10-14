@@ -54,7 +54,7 @@
     <template #tags>
       <v-chip-group column active-class="NONE">
         <v-tooltip v-for="(tag, i) in all_tags" :key="'chip' + i" bottom>
-          <template v-slot:activator="{on}">
+          <template #activator="{on}">
             <v-chip
               :href="tag.url"
               target="_blank"

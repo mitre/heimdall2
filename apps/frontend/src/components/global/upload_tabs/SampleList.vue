@@ -9,7 +9,7 @@
       :files="samples"
       file-key="filename"
       loading="false"
-      @load_results="load_samples($event)"
+      @load-results="load_samples($event)"
     />
   </v-card>
 </template>

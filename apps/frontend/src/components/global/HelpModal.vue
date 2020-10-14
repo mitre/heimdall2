@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" width="75%">
     <!-- clickable slot passes the activator prop up to parent
         This allows the parent to pass in a clickable icon -->
-    <template v-slot:activator="{on}">
+    <template #activator="{on}">
       <slot name="clickable" :on="on" />
     </template>
 

@@ -1,6 +1,6 @@
 <template>
   <v-tooltip top>
-    <template v-slot:activator="{on}">
+    <template #activator="{on}">
       <LinkItem
         key="export_caat"
         text="CAAT Spreadsheet"

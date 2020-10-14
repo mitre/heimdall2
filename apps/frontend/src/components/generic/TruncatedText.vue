@@ -1,6 +1,6 @@
 <template>
   <v-tooltip bottom>
-    <template v-slot:activator="{on}">
+    <template #activator="{on}">
       <span
         ref="text"
         :style="span_style"

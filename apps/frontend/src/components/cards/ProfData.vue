@@ -17,7 +17,7 @@
           transition
           @update:active="setActive"
         >
-          <template>
+          <template #prepend>
             <v-icon>mdi-note</v-icon>
           </template>
         </v-treeview>
@@ -37,7 +37,7 @@
             transition
             @update:active="setChildActive"
           >
-            <template>
+            <template #prepend>
               <v-icon>mdi-note</v-icon>
             </template>
           </v-treeview>

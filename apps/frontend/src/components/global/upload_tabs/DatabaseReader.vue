@@ -16,7 +16,7 @@
       :headers="headers"
       :files="files"
       :loading="loading"
-      @load_results="load_results($event)"
+      @load-results="load_results($event)"
     />
   </v-card>
 </template>
