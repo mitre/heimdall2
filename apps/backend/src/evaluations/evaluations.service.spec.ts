@@ -8,7 +8,6 @@ import {SequelizeModule} from '@nestjs/sequelize';
 import {Test} from '@nestjs/testing';
 import {NotFoundException} from '@nestjs/common';
 import {
-  EVALUATION,
   UPDATE_EVALUATION,
   EVALUATION_WITH_TAGS_1,
   CREATE_EVALUATION_DTO_WITHOUT_TAGS,
@@ -46,20 +45,6 @@ describe('EvaluationsService', () => {
 
   beforeEach(() => {
     return databaseService.cleanAll();
-  });
-
-  describe('exists', () => {
-    it('throws an error when null', async () => {
-      expect(() => {
-        evaluationsService.exists(null);
-      }).toThrow(NotFoundException);
-    });
-
-    it('returns true when given an evaluation', async () => {
-      expect(() => {
-        evaluationsService.exists(EVALUATION);
-      }).toBeTruthy();
-    });
   });
 
   describe('findAll', () => {
@@ -109,6 +94,13 @@ describe('EvaluationsService', () => {
       expect(evaluation.evaluationTags[0].evaluationId).toBeDefined();
       expect(evaluation.evaluationTags[0].updatedAt).toBeDefined();
       expect(evaluation.evaluationTags[0].createdAt).toBeDefined();
+
+      if (EVALUATION_WITH_TAGS_1.evaluationTags === undefined) {
+        throw new TypeError(
+          'Evaluation fixture does not have any assocaited tags.'
+        );
+      }
+
       expect(evaluation.evaluationTags[0].value).toEqual(
         EVALUATION_WITH_TAGS_1.evaluationTags[0].value
       );

@@ -9,7 +9,6 @@ import {
 import {SequelizeModule} from '@nestjs/sequelize';
 import {User} from './user.model';
 import {
-  TEST_USER,
   USER_ONE_DTO,
   CREATE_USER_DTO_TEST_OBJ,
   DELETE_USER_DTO_TEST_OBJ,
@@ -51,20 +50,6 @@ describe('UsersService', () => {
 
   beforeEach(() => {
     return databaseService.cleanAll();
-  });
-
-  describe('exists', () => {
-    it('throws an error when null', async () => {
-      expect(() => {
-        usersService.exists(null);
-      }).toThrow(NotFoundException);
-    });
-
-    it('returns true when given a User', async () => {
-      expect(() => {
-        usersService.exists(TEST_USER);
-      }).toBeTruthy();
-    });
   });
 
   describe('Create', () => {
