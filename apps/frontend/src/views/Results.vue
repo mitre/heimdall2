@@ -16,18 +16,17 @@
         />
 
         <v-btn :disabled="!can_clear" @click="clear">
-          <span class="d-none d-md-inline pr-2">
-            Clear
-          </span>
+          <span class="d-none d-md-inline pr-2"> Clear </span>
           <v-icon>mdi-filter-remove</v-icon>
         </v-btn>
       </template>
       <template v-else
-        ><v-btn @click="show_search_mobile = true">
+        ><v-btn @click="handle_msearch_open">
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
-        <div v-if="show_search_mobile">
+        <div v-show="show_search_mobile">
           <v-text-field
+            ref="msearch"
             v-model="search_term"
             flat
             hide-details
@@ -45,14 +44,10 @@
     <template #topbar-data>
       <div class="text-center">
         <v-menu>
-          <template v-slot:activator="{on, attrs}">
+          <template #activator="{on, attrs}">
             <v-btn v-bind="attrs" class="mr-2" v-on="on">
-              <span class="d-none d-md-inline mr-2">
-                Export
-              </span>
-              <v-icon>
-                mdi-file-export
-              </v-icon>
+              <span class="d-none d-md-inline mr-2"> Export </span>
+              <v-icon> mdi-file-export </v-icon>
             </v-btn>
           </template>
           <v-list class="py-0">
@@ -80,12 +75,12 @@
               <v-slide-item
                 v-for="(file, i) in file_filter"
                 :key="i"
-                v-slot:default="{active, toggle}"
+                v-slot="{toggle}"
                 class="mx-2"
               >
                 <v-card :width="info_width" @click="toggle">
                   <EvaluationInfo :file_filter="file" />
-                  <v-card-subtitle style="text-align: right;">
+                  <v-card-subtitle style="text-align: right">
                     Profile Info ↓
                   </v-card-subtitle>
                 </v-card>
@@ -107,7 +102,7 @@
           >
             <v-card @click="toggle_prof(i)">
               <EvaluationInfo :file_filter="file" />
-              <v-card-subtitle style="text-align: right;">
+              <v-card-subtitle style="text-align: right">
                 Profile Info ↓
               </v-card-subtitle>
             </v-card>
@@ -193,7 +188,7 @@
     <v-snackbar
       v-model="filter_snackbar"
       class="mt-11"
-      style="z-index: 2;"
+      style="z-index: 2"
       :timeout="-1"
       color="warning"
       top
@@ -319,6 +314,11 @@ export default class Results extends ResultsProps {
   onResize() {
     this.is_mobile = window.innerWidth < 600;
   }
+
+  handle_msearch_open() {
+    this.show_search_mobile = true;
+  }
+
   /**
    * The filter for charts. Contains all of our filter stuff
    */
@@ -398,7 +398,7 @@ export default class Results extends ResultsProps {
   get curr_title(): string | undefined {
     if (this.file_filter.length == 1) {
       let file = InspecDataModule.allFiles.find(
-        f => f.unique_id === this.file_filter[0]
+        (f) => f.unique_id === this.file_filter[0]
       );
       if (file) {
         return file.filename;
@@ -427,7 +427,7 @@ export default class Results extends ResultsProps {
   get root_profiles(): context.ContextualizedProfile[] {
     // Strip to roots
     let profiles = this.visible_profiles.filter(
-      p => p.extended_by.length === 0
+      (p) => p.extended_by.length === 0
     );
     return profiles;
   }
