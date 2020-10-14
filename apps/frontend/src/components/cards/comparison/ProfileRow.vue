@@ -1,9 +1,9 @@
 <template>
   <v-col cols="4" xs="4" md="5">
-    <div style="text-align:center;">
+    <div style="text-align: center">
       <em v-if="show_index">{{ index }} </em> <br />
       {{ name }} <br />
-      <p style="font-size: 12px;">{{ start_time }}</p>
+      <p style="font-size: 12px">{{ start_time }}</p>
     </div>
   </v-col>
 </template>

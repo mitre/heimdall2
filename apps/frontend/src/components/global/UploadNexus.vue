@@ -117,10 +117,10 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
   got_files(files: FileID[]) {
     this.$emit('got-files', files);
 
-    let numEvaluations = FilteredDataModule.selectedEvaluationIds.filter(eva =>
-      files.includes(eva)
+    let numEvaluations = FilteredDataModule.selectedEvaluationIds.filter(
+      (eva) => files.includes(eva)
     ).length;
-    let numProfiles = FilteredDataModule.selectedProfileIds.filter(prof =>
+    let numProfiles = FilteredDataModule.selectedProfileIds.filter((prof) =>
       files.includes(prof)
     ).length;
 

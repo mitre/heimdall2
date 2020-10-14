@@ -76,10 +76,10 @@ export default class DatabaseReader extends mixins(ServerMixin) {
   get_all_results(): void {
     axios
       .get<IEvaluation[]>('/evaluations')
-      .then(response => {
+      .then((response) => {
         this.files = response.data;
       })
-      .catch(err => {
+      .catch((err) => {
         SnackbarModule.failure(`${err}. Please reload the page and try again.`);
       })
       .finally(() => {
@@ -89,7 +89,7 @@ export default class DatabaseReader extends mixins(ServerMixin) {
 
   load_results(evaluations: IEvaluation[]): void {
     Promise.all(
-      evaluations.map(evaluation => {
+      evaluations.map((evaluation) => {
         return InspecIntakeModule.loadText({
           text: JSON.stringify(evaluation.data),
           filename: evaluation.filename,
@@ -97,7 +97,7 @@ export default class DatabaseReader extends mixins(ServerMixin) {
           createdAt: evaluation.createdAt,
           updatedAt: evaluation.updatedAt,
           tags: [] // Tags are not yet implemented, so for now the value is passed in empty
-        }).catch(err => {
+        }).catch((err) => {
           SnackbarModule.failure(err);
         });
       })

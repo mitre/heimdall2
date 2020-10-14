@@ -77,7 +77,7 @@ export function gen_visibilities(
   colorset: VuetifyParsedThemeItem
 ): VuetifyParsedThemeItem {
   let c: VuetifyParsedThemeItem = {...colorset};
-  Object.keys(c).forEach(key => {
+  Object.keys(c).forEach((key) => {
     c[key] = visible_against(c[key]!);
   });
   return c;

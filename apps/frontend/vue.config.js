@@ -46,7 +46,7 @@ module.exports = {
       })
     ]
   },
-  chainWebpack: config => {
+  chainWebpack: (config) => {
     config.module
       .rule('vue')
       .use('vue-svg-inline-loader')

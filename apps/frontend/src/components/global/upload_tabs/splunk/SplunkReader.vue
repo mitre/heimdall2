@@ -1,11 +1,7 @@
 <template>
   <v-stepper v-model="step" vertical class="elevation-0">
-    <v-stepper-step step="1">
-      Login Credentials
-    </v-stepper-step>
-    <v-stepper-step step="2">
-      Search Execution Events
-    </v-stepper-step>
+    <v-stepper-step step="1"> Login Credentials </v-stepper-step>
+    <v-stepper-step step="2"> Search Execution Events </v-stepper-step>
 
     <AuthStep
       @authenticated="handle_login"
@@ -48,9 +44,7 @@
             Splunk HDF Plugin
           </v-btn>
         </p>
-        <v-btn color="info" @click="error_count = 0">
-          Ok
-        </v-btn>
+        <v-btn color="info" @click="error_count = 0"> Ok </v-btn>
       </div>
     </v-overlay>
   </v-stepper>

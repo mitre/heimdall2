@@ -72,10 +72,10 @@ function contains_term(
     as_hdf.severity,
     as_hdf.status,
     as_hdf.finding_details
-  ].filter(s => s !== null) as string[];
+  ].filter((s) => s !== null) as string[];
 
   // See if any contain term
-  return searchables.some(s => s.toLowerCase().includes(term));
+  return searchables.some((s) => s.toLowerCase().includes(term));
 }
 
 @Module({
@@ -105,14 +105,14 @@ export class FilteredData extends VuexModule {
   @Mutation
   CLEAR_EVALUATION(removeId: FileID): void {
     this.selectedEvaluationIds = this.selectedEvaluationIds.filter(
-      ids => ids !== removeId
+      (ids) => ids !== removeId
     );
   }
 
   @Mutation
   CLEAR_PROFILE(removeId: FileID): void {
     this.selectedProfileIds = this.selectedProfileIds.filter(
-      ids => ids !== removeId
+      (ids) => ids !== removeId
     );
   }
 
@@ -132,7 +132,7 @@ export class FilteredData extends VuexModule {
       this.CLEAR_ALL_EVALUATIONS();
     } else {
       this.SELECT_EVALUATIONS(
-        InspecDataModule.allEvaluationFiles.map(v => v.unique_id)
+        InspecDataModule.allEvaluationFiles.map((v) => v.unique_id)
       );
     }
   }
@@ -143,7 +143,7 @@ export class FilteredData extends VuexModule {
       this.CLEAR_ALL_PROFILES();
     } else {
       this.SELECT_PROFILES(
-        InspecDataModule.allProfileFiles.map(v => v.unique_id)
+        InspecDataModule.allProfileFiles.map((v) => v.unique_id)
       );
     }
   }
@@ -192,7 +192,7 @@ export class FilteredData extends VuexModule {
     files: FileID[]
   ) => readonly SourcedContextualizedEvaluation[] {
     return (files: FileID[]) => {
-      return InspecDataModule.contextualExecutions.filter(e =>
+      return InspecDataModule.contextualExecutions.filter((e) =>
         files.includes(e.from_file.unique_id)
       );
     };
@@ -211,7 +211,7 @@ export class FilteredData extends VuexModule {
       let profiles: context.ContextualizedProfile[] = [];
 
       // Filter to those that match our filter. In this case that just means come from the right file id
-      InspecDataModule.contextualProfiles.forEach(prof => {
+      InspecDataModule.contextualProfiles.forEach((prof) => {
         if (isFromProfileFile(prof)) {
           if (files.includes(prof.from_file.unique_id)) {
             profiles.push(prof);
@@ -234,8 +234,8 @@ export class FilteredData extends VuexModule {
     const fileIds = [...this.selectedEvaluationIds];
     const files = InspecDataModule.allProfileFiles;
 
-    return fileIds.filter(fileId =>
-      files.every(file => fileId !== file.unique_id)
+    return fileIds.filter((fileId) =>
+      files.every((file) => fileId !== file.unique_id)
     );
   }
 
@@ -244,8 +244,8 @@ export class FilteredData extends VuexModule {
     const fileIds = [...this.selectedProfileIds];
     const files = InspecDataModule.allEvaluationFiles;
 
-    return fileIds.filter(fileId =>
-      files.every(file => fileId !== file.unique_id)
+    return fileIds.filter((fileId) =>
+      files.every((file) => fileId !== file.unique_id)
     );
   }
 
@@ -297,30 +297,32 @@ export class FilteredData extends VuexModule {
       // Get profiles
       profiles = this.profiles(filter.fromFile);
       // And all the controls they contain
-      controls = profiles.flatMap(profile => profile.contains);
+      controls = profiles.flatMap((profile) => profile.contains);
 
       // Filter by control id
       if (filter.control_id !== undefined) {
-        controls = controls.filter(c => c.data.id === filter.control_id);
+        controls = controls.filter((c) => c.data.id === filter.control_id);
       }
 
       // Filter by status, if necessary
       if (filter.status !== undefined) {
         controls = controls.filter(
-          control => control.root.hdf.status === filter.status
+          (control) => control.root.hdf.status === filter.status
         );
       }
 
       // Filter by severity, if necessary
       if (filter.severity !== undefined) {
         controls = controls.filter(
-          control => control.root.hdf.severity === filter.severity
+          (control) => control.root.hdf.severity === filter.severity
         );
       }
 
       // Filter by overlay
       if (filter.omit_overlayed_controls) {
-        controls = controls.filter(control => control.extended_by.length === 0);
+        controls = controls.filter(
+          (control) => control.extended_by.length === 0
+        );
       }
 
       // Filter by search term
@@ -328,7 +330,7 @@ export class FilteredData extends VuexModule {
         let term = filter.search_term.toLowerCase();
 
         // Filter controls to those that contain search term
-        controls = controls.filter(c => contains_term(c, term));
+        controls = controls.filter((c) => contains_term(c, term));
       }
 
       // Filter by nist stuff
@@ -336,9 +338,9 @@ export class FilteredData extends VuexModule {
         // Construct a nist control to represent the filter
         let control = new nist.NistControl(filter.tree_filters);
 
-        controls = controls.filter(c => {
+        controls = controls.filter((c) => {
           // Get an hdf version so we have the fixed nist tags
-          return c.root.hdf.parsed_nist_tags.some(t => control.contains(t));
+          return c.root.hdf.parsed_nist_tags.some((t) => control.contains(t));
         });
       }
 

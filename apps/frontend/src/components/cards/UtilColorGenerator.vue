@@ -30,7 +30,7 @@ export default class UtilColorGenerator extends Props {
     let color = colorVariants(ColorHackModule, this.color);
     let br = '\n';
     let rows = Object.keys(color)
-      .map(key => `\t${key}: "${(color as any)[key]}"`)
+      .map((key) => `\t${key}: "${(color as any)[key]}"`)
       .join(`,${br}`);
     let output = `{${br}${rows}${br}}`;
     return output;
@@ -61,7 +61,7 @@ function colorVariants(cmod: ColorHack, base: string): Color {
 
   // Generate
   let l: any = {};
-  suffixes.forEach(suffix => {
+  suffixes.forEach((suffix) => {
     let full_name: string = `var(--v-${base}-${suffix})`;
     let color = cmod.lookupColor(full_name);
     l[suffix] = color;
