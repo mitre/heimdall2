@@ -3,7 +3,7 @@
     <v-container fluid class="bar lighten-2">
       <v-row justify="space-around" no-gutters>
         <AboutModal>
-          <template #clickable="{on}">
+          <template v-slot:clickable="{on}">
             <v-btn text small v-on="on">
               <v-icon small>mdi-information</v-icon>
               <span class="d-none d-sm-inline pl-3">About</span>
@@ -11,7 +11,7 @@
           </template>
         </AboutModal>
         <HelpModal>
-          <template #clickable="{on}">
+          <template v-slot:clickable="{on}">
             <v-btn text small v-on="on">
               <v-icon small>mdi-help-circle</v-icon>
               <span class="d-none d-sm-inline pl-3">Help</span>

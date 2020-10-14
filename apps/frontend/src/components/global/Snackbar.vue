@@ -1,8 +1,8 @@
 <template>
   <v-snackbar v-if="show" id="info-snackbar" v-model="show" timeout="10000">
-    {{ message }}
+    <template id="snackbar-message">{{ message }}</template>
 
-    <template #action="{attrs}">
+    <template v-slot:action="{attrs}">
       <v-btn
         v-if="error"
         id="report-error"

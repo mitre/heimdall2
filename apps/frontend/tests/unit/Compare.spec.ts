@@ -7,7 +7,12 @@ import {FilteredDataModule} from '@/store/data_filters';
 import {StatusCountModule} from '@/store/status_counts';
 import {ComparisonContext} from '../../src/utilities/delta_util';
 
-import {removeAllFiles, loadSample, fileCompliance} from '../util/testingUtils';
+import {
+  removeAllFiles,
+  selectAllFiles,
+  loadSample,
+  fileCompliance
+} from '../util/testingUtils';
 
 const vuetify = new Vuetify();
 let wrapper: Wrapper<Vue>;
@@ -21,6 +26,10 @@ let red_hat_control_count = 247;
 let red_hat_delta = 27;
 let nginx_control_count = 41;
 let nginx_delta = 3;
+
+beforeEach(() => {
+  selectAllFiles();
+});
 
 describe('Compare table data', () => {
   loadSample('NGINX With Failing Tests');
@@ -72,6 +81,7 @@ describe('Compare table data', () => {
 
   it('counts every unique control', () => {
     loadSample('Red Hat With Failing Tests');
+    selectAllFiles();
     (wrapper.vm as any).search_term = '';
     (wrapper.vm as any).checkbox = true;
     expect((wrapper.vm as any).control_sets.length).toBe(
@@ -85,6 +95,7 @@ describe('Compare table data', () => {
 
   it('shows all delta data of controls with multiple occurances when "show only changed"', () => {
     loadSample('Red Hat Clean Sample');
+    selectAllFiles();
     expect((wrapper.vm as any).show_sets.length).toBe(
       nginx_delta + red_hat_delta
     );
@@ -157,6 +168,7 @@ describe('compare charts', () => {
     removeAllFiles();
     loadSample('NGINX With Failing Tests');
     loadSample('NGINX Clean Sample');
+    selectAllFiles();
     //the values in expected are the correct data
     expect((wrapper.vm as any).sev_series).toEqual([
       [0, 0],
@@ -170,6 +182,7 @@ describe('compare charts', () => {
     removeAllFiles();
     loadSample('NGINX With Failing Tests');
     loadSample('Red Hat With Failing Tests');
+    selectAllFiles();
     //the values in expected are the correct data
     expect((wrapper.vm as any).sev_series).toEqual([
       [0, 6],
@@ -183,6 +196,7 @@ describe('compare charts', () => {
     removeAllFiles();
     loadSample('Triple Overlay Example');
     loadSample('Acme Overlay Example');
+    selectAllFiles();
     //the values in expected are the correct data
     expect((wrapper.vm as any).sev_series).toEqual([
       [3, 0],
@@ -196,35 +210,32 @@ describe('compare charts', () => {
     removeAllFiles();
     loadSample('NGINX With Failing Tests');
     loadSample('NGINX Clean Sample');
-    expect(new Set((wrapper.vm as any).compliance_series[0].data)).toEqual(
-      new Set([
-        fileCompliance(FilteredDataModule.selected_file_ids[0]),
-        fileCompliance(FilteredDataModule.selected_file_ids[1])
-      ])
-    );
+    selectAllFiles();
+    expect((wrapper.vm as any).compliance_series[0].data).toEqual([
+      fileCompliance(FilteredDataModule.selected_file_ids[0]),
+      fileCompliance(FilteredDataModule.selected_file_ids[1])
+    ]);
   });
 
   it('compliance chart gets correct data with 2 files with differing profiles', () => {
     removeAllFiles();
     loadSample('NGINX With Failing Tests');
     loadSample('Red Hat With Failing Tests');
-    expect(new Set((wrapper.vm as any).compliance_series[0].data)).toEqual(
-      new Set([
-        fileCompliance(FilteredDataModule.selected_file_ids[0]),
-        fileCompliance(FilteredDataModule.selected_file_ids[1])
-      ])
-    );
+    selectAllFiles();
+    expect((wrapper.vm as any).compliance_series[0].data).toEqual([
+      fileCompliance(FilteredDataModule.selected_file_ids[0]),
+      fileCompliance(FilteredDataModule.selected_file_ids[1])
+    ]);
   });
 
   it('compliance chart gets correct data with 2 files with overlayed profiles', () => {
     removeAllFiles();
     loadSample('Triple Overlay Example');
     loadSample('Acme Overlay Example');
-    expect(new Set((wrapper.vm as any).compliance_series[0].data)).toEqual(
-      new Set([
-        fileCompliance(FilteredDataModule.selected_file_ids[0]),
-        fileCompliance(FilteredDataModule.selected_file_ids[1])
-      ])
-    );
+    selectAllFiles();
+    expect((wrapper.vm as any).compliance_series[0].data).toEqual([
+      fileCompliance(FilteredDataModule.selected_file_ids[0]),
+      fileCompliance(FilteredDataModule.selected_file_ids[1])
+    ]);
   });
 });

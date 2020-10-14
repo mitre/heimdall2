@@ -11,10 +11,10 @@ import {readFileSync} from 'fs';
 import _ from 'lodash';
 
 describe('Parsing', () => {
-  it('Report intake can read every raw file in hdf_data', function () {
+  it('Report intake can read every raw file in hdf_data', function() {
     let raw = AllRaw();
 
-    let promises = Object.values(raw).map((file_result) => {
+    let promises = Object.values(raw).map(file_result => {
       // Do intake
       return InspecIntakeModule.loadText({
         filename: file_result.name,
@@ -23,17 +23,17 @@ describe('Parsing', () => {
     });
 
     // Done!
-    return Promise.all(promises.map((p) => expect(p).to.eventually.be.string));
+    return Promise.all(promises.map(p => expect(p).to.eventually.be.string));
   });
 
   // Note that the above side effect has LOADED THESE FILES! WE CAN USE THEM IN OTHER TESTS
 
-  it('Counts statuses correctly', function () {
+  it('Counts statuses correctly', function() {
     // Get the exec files
     let exec_files = InspecDataModule.executionFiles;
 
     // For each, we will filter then count
-    exec_files.forEach((file) => {
+    exec_files.forEach(file => {
       // Get the corresponding count file
       const countFilename = `tests/hdf_data/counts/${file.filename}.info.counts`;
       const countFileContent = readFileSync(countFilename, 'utf-8');

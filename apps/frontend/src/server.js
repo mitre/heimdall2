@@ -29,7 +29,7 @@ if (process.argv.length > 2) {
 var txt = fs.readFileSync(path.join(__dirname, '../dist/index.html'));
 
 // respond to all requests with index.html
-app.use(function (req, res) {
+app.use(function(req, res) {
   res.end(txt);
 });
 

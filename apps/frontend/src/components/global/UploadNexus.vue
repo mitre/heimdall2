@@ -72,12 +72,13 @@ import SplunkReader from '@/components/global/upload_tabs/splunk/SplunkReader.vu
 import DatabaseReader from '@/components/global/upload_tabs/DatabaseReader.vue';
 import SampleList from '@/components/global/upload_tabs/SampleList.vue';
 import {LocalStorageVal} from '@/utilities/helper_util';
-import {SnackbarModule} from '@/store/snackbar';
-import ServerMixin from '@/mixins/ServerMixin';
-import RouteMixin from '@/mixins/RouteMixin';
-import {Prop} from 'vue-property-decorator';
-import {ServerModule} from '@/store/server';
 import {FilteredDataModule} from '@/store/data_filters';
+import {SnackbarModule} from '@/store/snackbar';
+
+import ServerMixin from '@/mixins/ServerMixin';
+import {Prop} from 'vue-property-decorator';
+
+import {ServerModule} from '@/store/server';
 
 const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
 
@@ -96,7 +97,7 @@ const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
     SampleList
   }
 })
-export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
+export default class UploadNexus extends mixins(ServerMixin) {
   @Prop({default: true}) readonly visible!: Boolean;
   @Prop({default: false}) readonly persistent!: Boolean;
 
@@ -117,17 +118,8 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
   got_files(files: FileID[]) {
     this.$emit('got-files', files);
 
-    let numEvaluations = FilteredDataModule.selectedEvaluationIds.filter(
-      (eva) => files.includes(eva)
-    ).length;
-    let numProfiles = FilteredDataModule.selectedProfileIds.filter((prof) =>
-      files.includes(prof)
-    ).length;
-
-    if (numEvaluations > numProfiles) {
-      this.navigateUnlessActive('/results');
-    } else {
-      this.navigateUnlessActive('/profiles');
+    for (let f of files) {
+      FilteredDataModule.set_toggle_file_on(f);
     }
   }
 }

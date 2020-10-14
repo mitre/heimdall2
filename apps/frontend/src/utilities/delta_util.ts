@@ -69,7 +69,7 @@ export class ControlChangeGroup {
 
   /** Removes any changes if they aren't actually changes */
   clean() {
-    this.changes = this.changes.filter((c) => c.valid);
+    this.changes = this.changes.filter(c => c.valid);
   }
 }
 
@@ -101,7 +101,7 @@ export class ControlDelta {
     header_changes.push(
       new ControlChange(
         'ID',
-        this.controlsandnull.map((c) => {
+        this.controlsandnull.map(c => {
           if (c === null) {
             return NOT_SELECTED;
           }
@@ -114,7 +114,7 @@ export class ControlDelta {
     header_changes.push(
       new ControlChange(
         'Severity',
-        this.controlsandnull.map((c) => {
+        this.controlsandnull.map(c => {
           if (c === null) {
             return NOT_SELECTED;
           }
@@ -127,7 +127,7 @@ export class ControlDelta {
     header_changes.push(
       new ControlChange(
         'NIST Tags',
-        this.controlsandnull.map((c) => {
+        this.controlsandnull.map(c => {
           if (c === null) {
             return NOT_SELECTED;
           }
@@ -189,10 +189,10 @@ function extract_top_level_controls(
   exec: context.ContextualizedEvaluation
 ): context.ContextualizedControl[] {
   // Get all controls
-  let all_controls = exec.contains.flatMap((p) => p.contains);
+  let all_controls = exec.contains.flatMap(p => p.contains);
 
   // Filter to controls that aren't overlayed further
-  let top = all_controls.filter((control) => control.extended_by.length === 0);
+  let top = all_controls.filter(control => control.extended_by.length === 0);
   return top;
 }
 /** An array of contextualized controls with the same ID, sorted by time */
@@ -218,9 +218,9 @@ export class ComparisonContext {
         matched[id] = [];
       }
     }
-    let sorted_eval: Readonly<
-      context.ContextualizedEvaluation[]
-    > = sorted_evals(executions);
+    let sorted_eval: Readonly<context.ContextualizedEvaluation[]> = sorted_evals(
+      executions
+    );
     for (let ev of sorted_eval) {
       let ev_controls_by_id: {
         [k: string]: context.ContextualizedControl;

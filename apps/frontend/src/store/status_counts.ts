@@ -54,7 +54,7 @@ function count_statuses(data: FilteredData, filter: Filter): StatusHash {
     ErroredTests: 0,
     TotalTests: 0
   };
-  controls.forEach((c) => {
+  controls.forEach(c => {
     c = c.root;
     let status: ControlStatus = c.hdf.status;
     hash[status] += 1;
@@ -64,7 +64,7 @@ function count_statuses(data: FilteredData, filter: Filter): StatusHash {
     } else if (status == 'Failed') {
       hash.FailedOutOf += (c.hdf.segments || []).length;
       hash.FailedTests += (c.hdf.segments || []).filter(
-        (s) => s.status == 'failed'
+        s => s.status == 'failed'
       ).length;
     } else if (status == 'Not Applicable') {
       hash.NotApplicableTests += (c.hdf.segments || []).length;
@@ -73,7 +73,7 @@ function count_statuses(data: FilteredData, filter: Filter): StatusHash {
     } else if (status == 'Profile Error') {
       hash.ErroredOutOf += (c.hdf.segments || []).length;
       hash.ErroredTests += (c.hdf.segments || []).filter(
-        (s) => s.status == 'error'
+        s => s.status == 'error'
       ).length;
     }
   });

@@ -18,8 +18,12 @@
       class="mx-2"
       @click="show_modal"
     >
-      <span class="d-none d-md-inline pr-2"> Load </span>
-      <v-icon> mdi-cloud-upload </v-icon>
+      <span class="d-none d-md-inline pr-2">
+        Load
+      </span>
+      <v-icon>
+        mdi-cloud-upload
+      </v-icon>
     </v-btn>
     <slot name="data" />
     <LogoutButton />

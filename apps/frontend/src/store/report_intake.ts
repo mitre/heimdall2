@@ -10,7 +10,6 @@ import {read_file_async} from '@/utilities/async_util';
 import {Tag} from '@/types/models.ts';
 
 import {v4 as uuid} from 'uuid';
-import {FilteredDataModule} from './data_filters';
 
 /** Each FileID corresponds to a unique File in this store */
 export type FileID = string;
@@ -90,7 +89,7 @@ export class InspecIntake extends VuexModule {
   @Action({rawError: true})
   async loadFile(options: FileLoadOptions): Promise<FileID> {
     let read = read_file_async(options.file);
-    return read.then((text) =>
+    return read.then(text =>
       this.loadText({
         text,
         filename: options.file.name
@@ -127,7 +126,6 @@ export class InspecIntake extends VuexModule {
       eval_file.evaluation = evaluation;
       Object.freeze(evaluation);
       InspecDataModule.addExecution(eval_file);
-      FilteredDataModule.toggle_evaluation(eval_file.unique_id);
     } else if (result['1_0_ProfileJson']) {
       // Handle as profile
       let profile_file = {
@@ -145,7 +143,6 @@ export class InspecIntake extends VuexModule {
       profile_file.profile = profile;
       Object.freeze(profile);
       InspecDataModule.addProfile(profile_file);
-      FilteredDataModule.toggle_profile(profile_file.unique_id);
     } else {
       throw new Error("Couldn't parse data");
     }

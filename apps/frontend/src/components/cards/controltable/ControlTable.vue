@@ -6,7 +6,7 @@
         <v-switch
           v-model="single_expand"
           :label="single_expand ? 'Single Expand' : 'Multiple Expand'"
-          class="mt-2"
+          class="mt-2 "
         />
       </v-col>
     </v-row>
@@ -169,7 +169,7 @@ export default class ControlTable extends ControlTableProps {
 
   /** Return items as key, value pairs */
   get raw_items(): ListElt[] {
-    return FilteredDataModule.controls(this.filter).map((d) => {
+    return FilteredDataModule.controls(this.filter).map(d => {
       let key = control_unique_key(d);
 
       // File, hdf wrapper

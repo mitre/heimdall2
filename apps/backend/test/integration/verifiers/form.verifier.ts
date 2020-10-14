@@ -5,7 +5,7 @@ export class FormVerifier {
   async verifyVMessageErrorPresent(page: Page, error: string): Promise<void> {
     const toastText = await page.$eval(
       '.v-messages__message',
-      (el) => el.innerHTML
+      el => el.innerHTML
     );
     expect(toastText).toContain(error);
   }

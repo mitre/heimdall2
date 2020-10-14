@@ -123,12 +123,12 @@ export class SplunkEndpoint {
       },
       method: 'GET'
     }).then(
-      (response) => {
+      response => {
         if (!response.ok) {
           throw process_error(response);
         }
       },
-      (failure) => {
+      failure => {
         throw process_error(failure);
       }
     );
@@ -142,12 +142,12 @@ export class SplunkEndpoint {
     let get_executions_search =
       'spath "meta.subtype" | search "meta.subtype"=header';
 
-    return this.hdf_event_search(get_executions_search).then((events) => {
+    return this.hdf_event_search(get_executions_search).then(events => {
       // Because we only searched for headers, we can assume these to be eval events
       let eval_events = events as ExecutionPayload[];
 
       // Could perhaps just return e but I'd rather people didn't screw themselves
-      return eval_events.map((e) => e.meta);
+      return eval_events.map(e => e.meta);
     });
   }
 
@@ -163,15 +163,15 @@ export class SplunkEndpoint {
     execution_guid: string
   ): Promise<schemas_1_0.ExecJSON.Execution> {
     return this.get_execution_events(execution_guid)
-      .then((events) => consolidate_payloads(events))
-      .then((execs) => {
+      .then(events => consolidate_payloads(events))
+      .then(execs => {
         if (execs.length != 1) {
           throw SplunkErrorCode.InvalidGUID;
         } else {
           return execs[0];
         }
       })
-      .then((full_event) => {
+      .then(full_event => {
         // This is dumb and we should make the inspecjs layer more accepting of many file types
         let result: parse.ConversionResult;
         try {
@@ -203,15 +203,15 @@ export class SplunkEndpoint {
    */
   async hdf_event_search(search_string: string): Promise<UnknownPayload[]> {
     return this.create_search(search_string)
-      .then((job_id) => this.pend_job(job_id, 500))
-      .then((job_state) => {
+      .then(job_id => this.pend_job(job_id, 500))
+      .then(job_state => {
         if (job_state.status === 'failed') {
           throw SplunkErrorCode.SearchFailed;
         }
 
         return this.get_search_results(job_state.job_id);
       })
-      .catch((error) => {
+      .catch(error => {
         throw process_error(error);
       });
   }
@@ -225,11 +225,11 @@ export class SplunkEndpoint {
       }),
       body: `search=search index="hdf" | ${search_string}`
     })
-      .then((response) => {
+      .then(response => {
         if (!response.ok) throw process_error(response);
         return response.text();
       })
-      .then((text) => {
+      .then(text => {
         // Parse the xml
         let xml = xml2js(text, {
           compact: true
@@ -246,11 +246,11 @@ export class SplunkEndpoint {
         Authorization: this.auth_string
       })
     })
-      .then((response) => {
+      .then(response => {
         if (!response.ok) throw process_error(response);
         return response.text();
       })
-      .then((text) => {
+      .then(text => {
         // Parse the xml
         let xml = xml2js(text, {
           compact: true
@@ -315,11 +315,11 @@ export class SplunkEndpoint {
         method: 'GET'
       }
     )
-      .then((response) => {
+      .then(response => {
         if (!response.ok) throw process_error(response);
         return response.json();
       })
-      .then((data) => {
+      .then(data => {
         // We basically can't, and really shouldn't, do typescript here. Output is 50% guaranteed to be wonk
         // Get all the raws
         let raws: Array<string> = data['results'].map(
@@ -351,7 +351,7 @@ export function consolidate_payloads(
   payloads: UnknownPayload[]
 ): ExecutionPayload[] {
   // Group by exec id
-  let grouped = group_by(payloads, (pl) => pl.meta.guid);
+  let grouped = group_by(payloads, pl => pl.meta.guid);
 
   let built = map_hash(grouped, consolidate_file_payloads);
 
@@ -366,7 +366,7 @@ function consolidate_file_payloads(
 ): ExecutionPayload {
   // In the end we wish to produce a single evaluation EventPayload which in fact contains all data for the guid
   // Group by subtype
-  let subtypes = group_by(file_payloads, (event) => event.meta.subtype);
+  let subtypes = group_by(file_payloads, event => event.meta.subtype);
   let exec_events = (subtypes['header'] || []) as ExecutionPayload[];
   let profile_events = (subtypes['profile'] || []) as ProfilePayload[];
   let control_events = (subtypes['control'] || []) as ControlPayload[];
@@ -387,7 +387,7 @@ function consolidate_file_payloads(
   // Group controls, and then put them into the profiles
   let sha_grouped_controls = group_by(
     control_events,
-    (ctrl) => ctrl.meta.profile_sha256
+    ctrl => ctrl.meta.profile_sha256
   );
   for (let profile of profile_events) {
     // Get the corresponding controls, and put them into the profile

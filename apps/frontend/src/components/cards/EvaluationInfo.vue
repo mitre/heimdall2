@@ -36,7 +36,7 @@ export default class EvaluationInfo extends Vue {
 
   updated() {
     let file = InspecDataModule.allFiles.find(
-      (f) => f.unique_id === this.file_filter
+      f => f.unique_id === this.file_filter
     );
     if (file) {
       let eva = file as EvaluationFile;
@@ -74,7 +74,7 @@ export default class EvaluationInfo extends Vue {
 
   load_file() {
     let file = InspecDataModule.allFiles.find(
-      (f) => f.unique_id === this.file_filter
+      f => f.unique_id === this.file_filter
     );
     if (file) {
       let eva = file as EvaluationFile;

@@ -23,7 +23,9 @@
       >
         Login
       </v-btn>
-      <v-btn color="red" class="my-2 ml-2" @click="proceed"> Cancel </v-btn>
+      <v-btn color="red" class="my-2 ml-2" @click="proceed">
+        Cancel
+      </v-btn>
     </v-form>
   </v-stepper-content>
 </template>

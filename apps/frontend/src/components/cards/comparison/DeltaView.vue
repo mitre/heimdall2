@@ -37,7 +37,7 @@ import 'prismjs/components/prism-makefile.js';
 import 'prismjs/components/prism-ruby.js';
 //@ts-ignore
 import Prism from 'vue-prism-component';
-Vue.component('Prism', Prism);
+Vue.component('prism', Prism);
 
 import 'prismjs/components/prism-ruby.js';
 

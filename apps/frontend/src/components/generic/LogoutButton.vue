@@ -1,7 +1,11 @@
 <template>
   <v-btn v-if="serverMode" id="logout" @click="logOut">
-    <span class="d-none d-md-inline pr-2"> Logout </span>
-    <v-icon> mdi-logout </v-icon>
+    <span class="d-none d-md-inline pr-2">
+      Logout
+    </span>
+    <v-icon>
+      mdi-logout
+    </v-icon>
   </v-btn>
 </template>
 

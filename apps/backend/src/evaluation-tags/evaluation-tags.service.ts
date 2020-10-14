@@ -17,7 +17,7 @@ export class EvaluationTagsService {
       EvaluationTag
     >();
     return evaluationTags.map(
-      (evaluationTag) => new EvaluationTagDto(evaluationTag)
+      evaluationTag => new EvaluationTagDto(evaluationTag)
     );
   }
 

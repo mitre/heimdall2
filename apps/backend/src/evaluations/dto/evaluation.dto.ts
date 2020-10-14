@@ -15,7 +15,7 @@ export class EvaluationDto implements IEvaluation {
     this.filename = evaluation.filename;
     this.data = evaluation.data;
     this.evaluationTags = evaluation.evaluationTags.map(
-      (tag) => new EvaluationTagDto(tag)
+      tag => new EvaluationTagDto(tag)
     );
     this.createdAt = evaluation.createdAt;
     this.updatedAt = evaluation.updatedAt;

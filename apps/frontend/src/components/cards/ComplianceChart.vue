@@ -59,7 +59,7 @@ export default class ComplianceChart extends ComplianceChartProps {
       fill: {
         type: 'solid',
         colors: [
-          function (data: {value: number}) {
+          function(data: {value: number}) {
             if (data.value < 60) {
               return ColorHackModule.lookupColor('complianceLow');
             } else if (data.value >= 60 && data.value < 90) {

@@ -1,7 +1,9 @@
 <template>
   <v-container fluid>
     <v-row dense>
-      <v-col :cols="4"> NIST SP 800-53 Security Control Coverage </v-col>
+      <v-col :cols="4">
+        NIST SP 800-53 Security Control Coverage
+      </v-col>
       <v-col :cols="8">
         <v-btn :disabled="!allow_up" block x-small @click="up">
           <v-icon v-if="allow_up"> mdi-arrow-left </v-icon>
@@ -13,7 +15,7 @@
       <v-col v-resize:debounce="on_resize" :cols="12">
         <svg id="chartBody" :width="width" :height="height">
           <g
-            style="shape-rendering: crispEdges"
+            style="shape-rendering: crispEdges;"
             preserveAspectRatio="xMidYMid meet"
           >
             <!-- The body -->
@@ -112,7 +114,7 @@ export default class Treemap extends TreemapProps {
         // Fetch the next path spec
         let next_specifiers = this._state.slice(0, depth + 1);
 
-        let new_curr = curr.children.find((child) => {
+        let new_curr = curr.children.find(child => {
           if (is_parent(child.data)) {
             let ss_a = child.data.nist_control.sub_specifiers;
             return (

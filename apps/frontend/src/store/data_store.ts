@@ -42,16 +42,6 @@ export class InspecData extends VuexModule {
     return result;
   }
 
-  /* Return all evaluation files only */
-  get allEvaluationFiles(): EvaluationFile[] {
-    return this.executionFiles;
-  }
-
-  /* Return all profile files only */
-  get allProfileFiles(): ProfileFile[] {
-    return this.profileFiles;
-  }
-
   /**
    * Recompute all contextual data
    */
@@ -130,12 +120,12 @@ export class InspecData extends VuexModule {
   @Mutation
   removeFile(file_id: FileID) {
     this.profileFiles = this.profileFiles.filter(
-      (pf) => pf.unique_id !== file_id
+      pf => pf.unique_id !== file_id
     );
     this.executionFiles = this.executionFiles.filter(
-      (ef) => ef.unique_id !== file_id
+      ef => ef.unique_id !== file_id
     );
-    FilteredDataModule.clear_file(file_id);
+    FilteredDataModule.set_toggle_file_off(file_id);
   }
 
   /**

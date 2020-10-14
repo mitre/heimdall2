@@ -8,7 +8,7 @@
         :search="search"
         :items-per-page="5"
       >
-        <template #top>
+        <template v-slot:top>
           <v-toolbar>
             <v-toolbar-title>Splunk Executions</v-toolbar-title>
             <v-divider class="mx-4" inset vertical />
@@ -22,15 +22,19 @@
             />
           </v-toolbar>
         </template>
-        <template #[`item.actions`]="{item}">
-          <v-icon @click="load_event(item)"> mdi-plus-circle </v-icon>
+        <template v-slot:item.action="{item}">
+          <v-icon @click="load_event(item)">
+            mdi-plus-circle
+          </v-icon>
         </template>
-        <template #no-data>
+        <template v-slot:no-data>
           No data. Try relaxing your search conditions, or expanding the date
           range.
         </template>
       </v-data-table>
-      <v-btn color="red" class="my-2" @click="logout"> Logout </v-btn>
+      <v-btn color="red" class="my-2" @click="logout">
+        Logout
+      </v-btn>
     </div>
   </v-stepper-content>
 </template>
@@ -102,7 +106,7 @@ export default class FileList extends Props {
 
     // Get its full event list and reconstruct
     return this._endpoint!.get_execution(event.guid)
-      .then((exec) => {
+      .then(exec => {
         let unique_id = uuid();
         let file = {
           unique_id,
@@ -119,7 +123,7 @@ export default class FileList extends Props {
         InspecDataModule.addExecution(file);
         this.$emit('got-files', [unique_id]);
       })
-      .catch((fail) => {
+      .catch(fail => {
         this.$emit('error', fail);
       });
   }
@@ -148,7 +152,7 @@ export default class FileList extends Props {
       this.already_searching = true;
       this._endpoint
         .fetch_execution_list()
-        .then((l) => {
+        .then(l => {
           // On success, save the items
           this.items = l;
 
@@ -161,7 +165,7 @@ export default class FileList extends Props {
             this.next_search_time
           );
         })
-        .catch((error) => {
+        .catch(error => {
           this.items = [];
           this.already_searching = false;
           this.$emit('error', error);

@@ -35,7 +35,7 @@ function count_severities(data: FilteredData, filter: Filter): SeverityHash {
     high: 0,
     critical: 0
   };
-  controls.forEach((c) => {
+  controls.forEach(c => {
     let severity: Severity = c.root.hdf.severity;
     hash[severity] += 1;
   });
@@ -72,23 +72,23 @@ export class SeverityCount extends VuexModule {
   }
 
   get none(): (filter: Filter) => number {
-    return (filter) => this.hash(filter)['none'];
+    return filter => this.hash(filter)['none'];
   }
 
   get low(): (filter: Filter) => number {
-    return (filter) => this.hash(filter)['low'];
+    return filter => this.hash(filter)['low'];
   }
 
   get medium(): (filter: Filter) => number {
-    return (filter) => this.hash(filter)['medium'];
+    return filter => this.hash(filter)['medium'];
   }
 
   get high(): (filter: Filter) => number {
-    return (filter) => this.hash(filter)['high'];
+    return filter => this.hash(filter)['high'];
   }
 
   get critical(): (filter: Filter) => number {
-    return (filter) => this.hash(filter)['critical'];
+    return filter => this.hash(filter)['critical'];
   }
 }
 

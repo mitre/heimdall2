@@ -1,7 +1,7 @@
 import 'jest';
 import {AllRaw} from '../util/fs';
 import {InspecIntakeModule} from '../../src/store/report_intake';
-
+import {FilteredDataModule} from '@/store/data_filters';
 import {StatusCountModule} from '@/store/status_counts';
 import {InspecDataModule} from '@/store/data_store';
 import {samples, Sample} from '@/utilities/sample_util';
@@ -27,7 +27,7 @@ export function loadSample(sampleName: string) {
 
 export function loadAll(): void {
   let data = AllRaw();
-  Object.values(data).map((file_result) => {
+  Object.values(data).map(file_result => {
     // Do intake
     return InspecIntakeModule.loadText({
       filename: file_result.name,
@@ -37,9 +37,15 @@ export function loadAll(): void {
 }
 
 export function removeAllFiles(): void {
-  let ids = InspecDataModule.allFiles.map((f) => f.unique_id);
+  let ids = InspecDataModule.allFiles.map(f => f.unique_id);
   for (let id of ids) {
     InspecDataModule.removeFile(id);
+  }
+}
+
+export function selectAllFiles(): void {
+  for (let file of InspecDataModule.allFiles) {
+    FilteredDataModule.set_toggle_file_on(file.unique_id);
   }
 }
 
@@ -77,7 +83,7 @@ export function expectedCount(
   };
 
   // For each, we will filter then count
-  InspecDataModule.executionFiles.forEach((file) => {
+  InspecDataModule.executionFiles.forEach(file => {
     // Get the corresponding count file
     let count_filename = `tests/hdf_data/counts/${file.filename}.info.counts`;
     let count_file_content = readFileSync(count_filename, 'utf-8');

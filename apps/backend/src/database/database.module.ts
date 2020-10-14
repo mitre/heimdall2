@@ -4,34 +4,6 @@ import {SequelizeModule} from '@nestjs/sequelize';
 import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
 
-function getDatabaseName(configService: ConfigService): string {
-  if (
-    configService.get('DATABASE_NAME') === undefined &&
-    configService.get('NODE_ENV') === undefined
-  ) {
-    throw new TypeError(
-      'NODE_ENV and DATABASE_NAME are undefined. Unable to set database or use the default based on environment.'
-    );
-  } else if (
-    configService.get('DATABASE_NAME') === undefined &&
-    configService.get('NODE_ENV') !== undefined
-  ) {
-    return `heimdall-server-${configService.get('NODE_ENV').toLowerCase()}`;
-  } else {
-    return configService.get('DATABASE_NAME');
-  }
-}
-
-function getSynchronize(configService: ConfigService): boolean {
-  if (configService.get('NODE_ENV') === undefined) {
-    throw new TypeError('NODE_ENV is not set and must be provided.');
-  } else {
-    return configService.get('NODE_ENV').toLowerCase() === 'test'
-      ? false
-      : true;
-  }
-}
-
 @Module({
   imports: [
     SequelizeModule.forRootAsync({
@@ -43,9 +15,12 @@ function getSynchronize(configService: ConfigService): boolean {
         port: Number(configService.get('DATABASE_PORT')) || 5432,
         username: configService.get('DATABASE_USERNAME') || 'postgres',
         password: configService.get('DATABASE_PASSWORD') || '',
-        database: getDatabaseName(configService),
+        database:
+          configService.get('DATABASE_NAME') ||
+          `heimdall-server-${configService.get('NODE_ENV').toLowerCase()}`,
         autoLoadModels: true,
-        synchronize: getSynchronize(configService),
+        synchronize:
+          configService.get('NODE_ENV').toLowerCase() == 'test' ? false : true,
         logging: false,
         pool: {
           max: 5,

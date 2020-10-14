@@ -25,7 +25,9 @@
       @exit-mfa="handle_cancel_mfa"
     />
 
-    <v-stepper-step step="3"> Browse Bucket </v-stepper-step>
+    <v-stepper-step step="3">
+      Browse Bucket
+    </v-stepper-step>
 
     <FileList
       :auth="assumed_role"
@@ -106,13 +108,13 @@ export default class S3Reader extends Props {
     // Attempt to assume role based on if we've determined 2fa necessary
     get_session_token(this.access_token, this.secret_token, AUTH_DURATION).then(
       // Success of get session token - now need to determine if MFA necessary
-      (success) => {
+      success => {
         this.assumed_role = success;
         this.step = 3;
       },
 
       // Failure of initial get session token: want to set error normally
-      (failure) => {
+      failure => {
         this.handle_error(failure);
       }
     );
@@ -129,7 +131,7 @@ export default class S3Reader extends Props {
       },
 
       // Failure of initial get session token: want to set error normally
-      (failure) => {
+      failure => {
         this.handle_error(failure);
       }
     );
@@ -165,12 +167,12 @@ export default class S3Reader extends Props {
       AUTH_DURATION,
       mfa
     ).then(
-      (success) => {
+      success => {
         // Keep them
         this.assumed_role = success;
         this.step = 3;
       },
-      (failure) => {
+      failure => {
         this.handle_error(failure);
       }
     );
@@ -196,10 +198,10 @@ export default class S3Reader extends Props {
         MaxKeys: 100
       })
       .promise()
-      .then((success) => {
+      .then(success => {
         this.files = success.Contents || [];
       })
-      .catch((failure) => this.handle_error(failure));
+      .catch(failure => this.handle_error(failure));
   }
 
   /** Save the current credentials to local storage */

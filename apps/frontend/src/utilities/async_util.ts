@@ -33,5 +33,5 @@ export function defined<T>(x: T | null | undefined): T {
 
 /** Sleeps for a given # of milliseconds */
 export function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms));
 }

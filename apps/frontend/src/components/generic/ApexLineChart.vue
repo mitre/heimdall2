@@ -1,5 +1,5 @@
 <template>
-  <div style="color: black">
+  <div style="color: black;">
     <vue-apex-charts
       type="line"
       height="350"
@@ -20,14 +20,14 @@ const ApexLineChartProps = Vue.extend({
   props: {
     categories: {
       type: Array as PropType<string[]>,
-      validator: (value) => {
-        return value.every((element) => typeof element === 'string');
+      validator: value => {
+        return value.every(element => typeof element === 'string');
       }
     }, // Should be of type string[]
     series: {
       type: Array as PropType<SeriesItem[]>,
-      validator: (value) => {
-        return value.every((element) => typeof element === 'object');
+      validator: value => {
+        return value.every(element => typeof element === 'object');
       }
     }, // Should be of type object[]
     upper_range: Number, //upper bound of y axis

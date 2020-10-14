@@ -47,7 +47,7 @@ describe('/authn', () => {
         .set('Content-Type', 'application/json')
         .send(LOGIN_AUTHENTICATION)
         .expect(HttpStatus.CREATED)
-        .then((response) => {
+        .then(response => {
           expect(response.body.accessToken).toBeDefined();
         });
     });

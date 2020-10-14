@@ -28,7 +28,9 @@
       <v-spacer />
       <v-btn @click="$emit('show-help')">
         Help
-        <v-icon class="ml-2"> mdi-help-circle </v-icon>
+        <v-icon class="ml-2">
+          mdi-help-circle
+        </v-icon>
       </v-btn>
     </v-row>
   </v-stepper-content>
@@ -87,7 +89,7 @@ export default class SplunkAuth extends Props {
         this.$emit('authenticated', s);
         this.logging_in = false;
       })
-      .catch((err) => {
+      .catch(err => {
         this.logging_in = false;
         this.$emit('error', err);
       });

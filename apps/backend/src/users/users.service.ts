@@ -21,7 +21,7 @@ export class UsersService {
 
   async findAll(): Promise<UserDto[]> {
     const users = await this.userModel.findAll<User>();
-    return users.map((user) => new UserDto(user));
+    return users.map(user => new UserDto(user));
   }
 
   async findById(id: number): Promise<UserDto> {

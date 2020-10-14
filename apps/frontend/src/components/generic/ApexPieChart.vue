@@ -71,7 +71,7 @@ export default class ApexPieChart extends ApexPieChartProps {
     }
 
     // Ensure each are categories
-    this.categories.forEach((element) => {
+    this.categories.forEach(element => {
       if (!isCategory(element)) {
         throw new Error(`Invalid category ${element}`);
       }
@@ -91,7 +91,7 @@ export default class ApexPieChart extends ApexPieChartProps {
     }
 
     // Ensure all of its elements are numbers
-    this.series.forEach((element) => {
+    this.series.forEach(element => {
       if (typeof element !== 'number') {
         throw new Error(`Invalid series item ${element}`);
       }
@@ -107,7 +107,7 @@ export default class ApexPieChart extends ApexPieChartProps {
   // Generate the chart options based on _categories
   get chartOptions(): ApexOptions {
     return {
-      labels: this._categories.map((cat) => cat.label),
+      labels: this._categories.map(cat => cat.label),
       dataLabels: {
         formatter: (val, opts) => opts.w.config.series[opts.seriesIndex]
       },
@@ -149,10 +149,10 @@ export default class ApexPieChart extends ApexPieChartProps {
               this._categories[config.dataPointIndex]
             );
           },
-          dataPointMouseEnter: (_event) => {
+          dataPointMouseEnter: _event => {
             document.body.style.cursor = 'pointer';
           },
-          dataPointMouseLeave: (_event) => {
+          dataPointMouseLeave: _event => {
             document.body.style.cursor = 'default';
           }
         },
@@ -166,7 +166,7 @@ export default class ApexPieChart extends ApexPieChartProps {
       },
       stroke: {width: 0},
       // Apex charts does not support color names; must use color hack module
-      colors: this._categories.map((cat) =>
+      colors: this._categories.map(cat =>
         ColorHackModule.lookupColor(cat.color)
       )
     };

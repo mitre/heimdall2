@@ -17,7 +17,6 @@ const router = new Router({
       path: '/results',
       name: 'results',
       component: Results,
-      alias: '/profiles',
       meta: {requiresAuth: true}
     },
     {
@@ -52,7 +51,7 @@ const router = new Router({
 
 router.beforeEach((to, _, next) => {
   ServerModule.CheckForServer().then(() => {
-    if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
       if (ServerModule.serverMode && !ServerModule.token) {
         next('/login');
         return;

@@ -1,6 +1,6 @@
 <template>
   <v-tooltip top>
-    <template #activator="{on}">
+    <template v-slot:activator="{on}">
       <LinkItem
         key="export_json"
         text="Export as JSON"
