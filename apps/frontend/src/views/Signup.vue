@@ -40,7 +40,7 @@
                     @click:append="showPassword = !showPassword"
                     @blur="$v.password.$touch()"
                   >
-                    <template v-slot:progress>
+                    <template #progress>
                       <v-progress-linear
                         :value="passwordStrengthPercent"
                         :color="passwordStrengthColor"

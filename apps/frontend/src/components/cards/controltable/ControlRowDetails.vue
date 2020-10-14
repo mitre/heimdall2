@@ -107,7 +107,7 @@ import 'prismjs/components/prism-ruby.js';
 //@ts-ignore
 import Prism from 'vue-prism-component';
 import 'prismjs/themes/prism-tomorrow.css';
-Vue.component('prism', Prism);
+Vue.component('Prism', Prism);
 
 import 'prismjs/components/prism-ruby.js';
 import {context} from 'inspecjs';

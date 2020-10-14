@@ -8,7 +8,7 @@
         :search="search"
         :items-per-page="5"
       >
-        <template v-slot:top>
+        <template #top>
           <v-toolbar>
             <v-toolbar-title>Splunk Executions</v-toolbar-title>
             <v-divider class="mx-4" inset vertical />
@@ -22,12 +22,12 @@
             />
           </v-toolbar>
         </template>
-        <template v-slot:item.action="{item}">
+        <template #[`item.actions`]="{item}">
           <v-icon @click="load_event(item)">
             mdi-plus-circle
           </v-icon>
         </template>
-        <template v-slot:no-data>
+        <template #no-data>
           No data. Try relaxing your search conditions, or expanding the date
           range.
         </template>

@@ -1,6 +1,6 @@
 <template>
   <v-tooltip top>
-    <template v-slot:activator="{on}">
+    <template #activator="{on}">
       <LinkItem
         key="export_nist"
         text="NIST SP 800-53 Security Control Coverage"

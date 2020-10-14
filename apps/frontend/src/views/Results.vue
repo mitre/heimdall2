@@ -24,7 +24,7 @@
     <template #topbar-data>
       <div class="text-center">
         <v-menu>
-          <template v-slot:activator="{on, attrs}">
+          <template #activator="{on, attrs}">
             <v-btn v-bind="attrs" class="mr-2" v-on="on">
               <span class="d-none d-md-inline mr-2">
                 Export
@@ -59,7 +59,7 @@
               <v-slide-item
                 v-for="(file, i) in file_filter"
                 :key="i"
-                v-slot:default="{active, toggle}"
+                v-slot="{toggle}"
                 class="mx-2"
               >
                 <v-card :width="info_width" @click="toggle">
