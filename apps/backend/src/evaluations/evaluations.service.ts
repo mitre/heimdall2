@@ -113,7 +113,7 @@ export class EvaluationsService {
     const evaluation = await this.findByPkBang(id, {
       include: [EvaluationTag]
     });
-    await this.databaseService.sequelize.transaction(async transaction => {
+    await this.databaseService.sequelize.transaction(async (transaction) => {
       await Promise.all([
         evaluation.evaluationTags.map(async (evaluationTag) => {
           await evaluationTag.destroy({transaction});
