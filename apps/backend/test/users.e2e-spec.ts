@@ -139,9 +139,7 @@ describe('/users', () => {
         .send(CREATE_USER_DTO_TEST_OBJ)
         .expect(HttpStatus.INTERNAL_SERVER_ERROR)
         .then(response => {
-          expect(response.body.message[0].email).toEqual(
-            'email must be unique'
-          );
+          expect(response.body.message[0]).toEqual('email must be unique');
           expect(response.body.error).toEqual('Internal Server Error');
         });
     });
