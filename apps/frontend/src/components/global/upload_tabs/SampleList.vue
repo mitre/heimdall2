@@ -46,7 +46,7 @@ export default class SampleList extends Props {
 
   load_samples(samples: Sample[]) {
     Promise.all(
-      samples.map(sample => {
+      samples.map((sample) => {
         return InspecIntakeModule.loadText({
           text: JSON.stringify(sample.data),
           filename: sample.filename
@@ -56,7 +56,7 @@ export default class SampleList extends Props {
       .then((fileIds: FileID[]) => {
         this.$emit('got-files', fileIds);
       })
-      .catch(err => {
+      .catch((err) => {
         SnackbarModule.failure(String(err));
       });
   }

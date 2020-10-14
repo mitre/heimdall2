@@ -15,9 +15,7 @@
       />
 
       <v-btn :disabled="!can_clear" @click="clear">
-        <span class="d-none d-md-inline pr-2">
-          Clear
-        </span>
+        <span class="d-none d-md-inline pr-2"> Clear </span>
         <v-icon>mdi-filter-remove</v-icon>
       </v-btn>
     </template>
@@ -26,12 +24,8 @@
         <v-menu>
           <template #activator="{on, attrs}">
             <v-btn v-bind="attrs" class="mr-2" v-on="on">
-              <span class="d-none d-md-inline mr-2">
-                Export
-              </span>
-              <v-icon>
-                mdi-file-export
-              </v-icon>
+              <span class="d-none d-md-inline mr-2"> Export </span>
+              <v-icon> mdi-file-export </v-icon>
             </v-btn>
           </template>
           <v-list class="py-0">
@@ -64,7 +58,7 @@
               >
                 <v-card :width="info_width" @click="toggle">
                   <EvaluationInfo :file_filter="file" />
-                  <v-card-subtitle style="text-align: right;">
+                  <v-card-subtitle style="text-align: right">
                     Profile Info ↓
                   </v-card-subtitle>
                 </v-card>
@@ -86,7 +80,7 @@
           >
             <v-card @click="toggle_prof(i)">
               <EvaluationInfo :file_filter="file" />
-              <v-card-subtitle style="text-align: right;">
+              <v-card-subtitle style="text-align: right">
                 Profile Info ↓
               </v-card-subtitle>
             </v-card>
@@ -172,7 +166,7 @@
     <v-snackbar
       v-model="filter_snackbar"
       class="mt-11"
-      style="z-index: 2;"
+      style="z-index: 2"
       :timeout="-1"
       color="warning"
       top
@@ -372,7 +366,7 @@ export default class Results extends ResultsProps {
     let returnText = `${capitalize(this.current_route_name.slice(0, -1))} View`;
     if (this.file_filter.length == 1) {
       let file = InspecDataModule.allFiles.find(
-        f => f.unique_id === this.file_filter[0]
+        (f) => f.unique_id === this.file_filter[0]
       );
       if (file) {
         returnText += ` (${file.filename} selected)`;
@@ -403,7 +397,7 @@ export default class Results extends ResultsProps {
   get root_profiles(): context.ContextualizedProfile[] {
     // Strip to roots
     let profiles = this.visible_profiles.filter(
-      p => p.extended_by.length === 0
+      (p) => p.extended_by.length === 0
     );
     return profiles;
   }

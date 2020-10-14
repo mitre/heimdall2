@@ -10,7 +10,7 @@ export default class RouteMixin extends Vue {
   // Ignore errors caused by navigating to the
   // already active path
   navigateUnlessActive(route: string): void {
-    this.$router.push(route).catch(err => {
+    this.$router.push(route).catch((err) => {
       if (err.name !== 'NavigationDuplicated') {
         throw err;
       }

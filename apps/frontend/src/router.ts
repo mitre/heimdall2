@@ -52,7 +52,7 @@ const router = new Router({
 
 router.beforeEach((to, _, next) => {
   ServerModule.CheckForServer().then(() => {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (to.matched.some((record) => record.meta.requiresAuth)) {
       if (ServerModule.serverMode && !ServerModule.token) {
         next('/login');
         return;

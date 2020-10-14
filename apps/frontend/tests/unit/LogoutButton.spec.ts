@@ -10,7 +10,7 @@ const ServerModStub = sinon.stub(ServerModule);
 describe('Logout button', () => {
   const vuetify = new Vuetify();
 
-  afterEach(function() {
+  afterEach(function () {
     sinon.restore();
   });
 

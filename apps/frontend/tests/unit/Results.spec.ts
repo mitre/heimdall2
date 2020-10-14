@@ -192,7 +192,7 @@ describe('Datatable', () => {
         fromFile: FilteredDataModule.selected_file_ids,
         omit_overlayed_controls: true
       })
-        .map(c => c.data.id)
+        .map((c) => c.data.id)
         .sort()
     );
   });

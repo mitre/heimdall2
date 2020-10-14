@@ -150,7 +150,7 @@ export default class Signup extends Vue {
             'You have successfully registered, please sign in'
           );
         })
-        .catch(error => {
+        .catch((error) => {
           SnackbarModule.notify(error.response.data.message);
         });
     }

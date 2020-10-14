@@ -2,9 +2,7 @@
   <v-card :watcher="selected_watch">
     <v-row class="pa-4" justify="space-between">
       <v-col cols="3">
-        <v-card-text>
-          Parent Profile
-        </v-card-text>
+        <v-card-text> Parent Profile </v-card-text>
         <!-- literally of just the one root item -->
         <v-treeview
           :items="root_tree"
@@ -22,9 +20,7 @@
           </template>
         </v-treeview>
         <div v-if="items.length > 0">
-          <v-card-text>
-            Depends On These Profiles:
-          </v-card-text>
+          <v-card-text> Depends On These Profiles: </v-card-text>
           <!-- for the children of the root -->
           <v-treeview
             :items="items"
@@ -51,7 +47,7 @@
           <div
             v-if="!selected"
             class="title grey--text text--lighten-1 font-weight-light"
-            style="align-self: center;"
+            style="align-self: center"
           >
             Select a Profile
           </div>
@@ -107,7 +103,7 @@ class TreeItem {
     // Base information
     this.id = profile_unique_key(profile);
     this.name = profile.data.name;
-    this.children = profile.extends_from.map(p => new TreeItem(p));
+    this.children = profile.extends_from.map((p) => new TreeItem(p));
   }
 }
 
@@ -149,7 +145,7 @@ export default class ProfileData extends Props {
       return this.selected_prof;
     }
     let selected_profile = InspecDataModule.contextualProfiles.find(
-      p => profile_unique_key(p) == this.true_active
+      (p) => profile_unique_key(p) == this.true_active
     );
     return selected_profile;
   }
@@ -176,7 +172,7 @@ export default class ProfileData extends Props {
       let exec = (this.selected
         .sourced_from as unknown) as SourcedContextualizedEvaluation;
       from_file = exec.from_file;
-      let with_time = this.selected.contains.find(x => x.root.hdf.start_time);
+      let with_time = this.selected.contains.find((x) => x.root.hdf.start_time);
       start_time = (with_time && with_time.root.hdf.start_time) || null;
     }
 

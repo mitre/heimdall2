@@ -29,7 +29,7 @@ export class HashLookup extends VuexModule {
     const final: ControlHash = {};
 
     // Add every control to it.
-    InspecDataModule.contextualControls.forEach(c => {
+    InspecDataModule.contextualControls.forEach((c) => {
       if (c.data.id in final) {
         final[c.data.id].push(c);
       } else {

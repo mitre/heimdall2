@@ -76,7 +76,7 @@ export default class ExportNIST extends Props {
     let id: FileID[] = FilteredDataModule.selected_file_ids;
     if (file) {
       id = [file];
-      filename = InspecDataModule.allFiles.find(x => x.unique_id == file)!
+      filename = InspecDataModule.allFiles.find((x) => x.unique_id == file)!
         .filename;
     }
 
@@ -92,12 +92,12 @@ export default class ExportNIST extends Props {
 
     // Get them all
     let nist_controls: NistControl[] = [];
-    controls.forEach(c => {
+    controls.forEach((c) => {
       let tags = c.root.hdf.parsed_nist_tags;
-      tags.forEach(t => {
+      tags.forEach((t) => {
         if (
           !nist_controls.some(
-            other_tag => this.format_tag(other_tag) === this.format_tag(t)
+            (other_tag) => this.format_tag(other_tag) === this.format_tag(t)
           )
         ) {
           nist_controls.push(t);
@@ -109,12 +109,12 @@ export default class ExportNIST extends Props {
     nist_controls = nist_controls.sort((a, b) => a.localCompare(b));
 
     // Turn to strings
-    let as_strings_mostly = nist_controls.map(c => this.format_tag(c));
+    let as_strings_mostly = nist_controls.map((c) => this.format_tag(c));
 
     // Filter out nulls, bind into rows
     let as_rows = as_strings_mostly
-      .filter(v => v !== null)
-      .map(v => [v]) as NISTList;
+      .filter((v) => v !== null)
+      .map((v) => [v]) as NISTList;
 
     // Append to caat
     sheet.push(...as_rows);
@@ -133,7 +133,7 @@ export default class ExportNIST extends Props {
     ];
 
     // Convert to sheets
-    let sheets = files.map(file => this.sheet_for(file));
+    let sheets = files.map((file) => this.sheet_for(file));
 
     // Handle XLSX exporting
     let wb = XLSX.utils.book_new();
@@ -146,7 +146,7 @@ export default class ExportNIST extends Props {
     };
 
     // Push all sheets
-    sheets.forEach(sheet => {
+    sheets.forEach((sheet) => {
       // Avoid name duplication
       let i = 2;
       let new_name = sheet.name;

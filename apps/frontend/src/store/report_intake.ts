@@ -90,7 +90,7 @@ export class InspecIntake extends VuexModule {
   @Action({rawError: true})
   async loadFile(options: FileLoadOptions): Promise<FileID> {
     let read = read_file_async(options.file);
-    return read.then(text =>
+    return read.then((text) =>
       this.loadText({
         text,
         filename: options.file.name

@@ -5,15 +5,9 @@
         <v-tabs :value="actual_tab" fixed-tabs show-arrows @change="tab_change">
           <v-tabs-slider />
           <!-- Declare our tabs -->
-          <v-tab href="#tab-test">
-            Test
-          </v-tab>
-          <v-tab href="#tab-details">
-            Details
-          </v-tab>
-          <v-tab href="#tab-code">
-            Code
-          </v-tab>
+          <v-tab href="#tab-test"> Test </v-tab>
+          <v-tab href="#tab-details"> Details </v-tab>
+          <v-tab href="#tab-code"> Code </v-tab>
 
           <v-tab-item value="tab-test">
             <v-clamp class="pa-1" autoresize :max-lines="2">
@@ -199,7 +193,7 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
     // Wait until nextTick to ensure that element has been rendered and clamping
     // applied, otherwise it may show up as null or 0.
     var that = this;
-    this.$nextTick(function() {
+    this.$nextTick(function () {
       that.clamped = this.isClamped(this.$refs.desc as CollapsableElement);
     });
   }
@@ -253,7 +247,7 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
         name: 'Fix Text',
         value: c.hdf.descriptions.fix || c.data.tags.fix
       }
-    ].filter(v => v.value); // Get rid of nulls
+    ].filter((v) => v.value); // Get rid of nulls
   }
 
   //for zebra background

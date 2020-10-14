@@ -9,7 +9,7 @@
           <v-img
             src="@/assets/logo-orange-tsp.svg"
             svg-inline
-            style="max-width: 164px; max-height: 164px;"
+            style="max-width: 164px; max-height: 164px"
           />
         </v-col>
       </v-row>
@@ -73,15 +73,15 @@ export default class FileReader extends mixins(ServerMixin) {
 
   filesSelected() {
     this.loading = true;
-    this.commit_files(this.fileRecords.map(record => record.file));
+    this.commit_files(this.fileRecords.map((record) => record.file));
     this.fileRecords = new Array();
   }
 
   /** Callback for our file reader */
   commit_files(files: File[]) {
     Promise.all(
-      files.map(file => {
-        return InspecIntakeModule.loadFile({file}).catch(err => {
+      files.map((file) => {
+        return InspecIntakeModule.loadFile({file}).catch((err) => {
           SnackbarModule.failure(String(err));
         });
       })

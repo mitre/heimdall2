@@ -116,7 +116,7 @@ export default class Login extends Vue {
       .then(() => {
         this.$router.push('/');
       })
-      .catch(error => {
+      .catch((error) => {
         SnackbarModule.notify(error.response.data.message);
       });
   }

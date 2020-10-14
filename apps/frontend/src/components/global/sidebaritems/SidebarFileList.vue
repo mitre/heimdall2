@@ -78,7 +78,7 @@ export default class FileItem extends mixins(FileItemProps, ServerMixin) {
   //saves file to database
   save_file() {
     let file = InspecDataModule.allFiles.find(
-      f => f.unique_id === this.file.unique_id
+      (f) => f.unique_id === this.file.unique_id
     );
     if (file) {
       if (file.hasOwnProperty('evaluation')) {
@@ -99,7 +99,7 @@ export default class FileItem extends mixins(FileItemProps, ServerMixin) {
       .then(() => {
         SnackbarModule.notify('Result saved successfully');
       })
-      .catch(error => {
+      .catch((error) => {
         SnackbarModule.failure(error.response.data.message);
       });
   }

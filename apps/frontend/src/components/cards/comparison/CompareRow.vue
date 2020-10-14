@@ -3,7 +3,7 @@
     <v-row @click="viewAll">
       <!-- Control ID -->
       <v-col cols="3" xs="3" sm="2" md="1" class="pt-0">
-        <div style="text-align: center; padding: 19px;">
+        <div style="text-align: center; padding: 19px">
           {{ control_id }}
         </div>
       </v-col>
@@ -21,9 +21,10 @@
         <v-btn
           v-if="hdf_controls[index - 1 + shift] != null"
           width="100%"
-          :color="
-            `status${hdf_controls[index - 1 + shift].status.replace(' ', '')}`
-          "
+          :color="`status${hdf_controls[index - 1 + shift].status.replace(
+            ' ',
+            ''
+          )}`"
           centered
           :depressed="selection[index - 1 + shift]"
           :outlined="selection[index - 1 + shift]"
@@ -149,7 +150,7 @@ export default class CompareRow extends Props {
 
   /** Just maps controls to hdf. Makes our template a bit less verbose */
   get hdf_controls(): Array<HDFControl | null> {
-    return this._controls.map(c => {
+    return this._controls.map((c) => {
       if (c == null) {
         return null;
       }

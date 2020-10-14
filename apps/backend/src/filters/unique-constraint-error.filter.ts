@@ -24,7 +24,7 @@ export class UniqueConstraintErrorFilter implements ExceptionFilter {
 
   buildMessage(errors: ValidationErrorItem[]): {}[] {
     const builtErrors: {}[] = [];
-    errors.forEach(error => {
+    errors.forEach((error) => {
       const message: {[id: string]: string} = {};
       message[error.path] = error.message;
       builtErrors.push(message);

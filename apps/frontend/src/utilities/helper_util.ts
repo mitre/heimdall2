@@ -125,7 +125,7 @@ export function map_hash<T, G>(
 export function to_uri_params(params: Hash<string | number | boolean>) {
   let esc = encodeURIComponent;
   let query = Object.keys(params)
-    .map(k => esc(k) + '=' + esc(params[k]))
+    .map((k) => esc(k) + '=' + esc(params[k]))
     .join('&');
   return query;
 }
