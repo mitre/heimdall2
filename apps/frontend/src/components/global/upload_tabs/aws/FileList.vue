@@ -99,11 +99,11 @@ export default class FileList extends Props {
       this._auth.creds,
       file.Key!,
       this.form_bucket_name
-    ).then(content => {
+    ).then((content) => {
       InspecIntakeModule.loadText({
         text: content,
         filename: file.Key!
-      }).then(unique_id => this.$emit('got-files', [unique_id]));
+      }).then((unique_id) => this.$emit('got-files', [unique_id]));
     });
   }
 

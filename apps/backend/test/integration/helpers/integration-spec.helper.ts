@@ -13,13 +13,13 @@ export class IntegrationSpecHelper {
       .then(({data}) => {
         return data;
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   }
 
   // Useful for debugging
   static async sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

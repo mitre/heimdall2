@@ -1,5 +1,5 @@
 <template>
-  <BaseView v-resize="on_resize">
+  <BaseView v-resize="on_resize" :title="curr_title">
     <!-- Topbar config - give it a search bar -->
     <template #topbar-content>
       <v-text-field
@@ -18,26 +18,26 @@
       <v-container fluid grid-list-md pa-2>
         <v-row>
           <v-col cols="12">
-            <div style="position:relative; top:14px;">
+            <div style="position: relative; top: 14px">
               <h1>Results Comparisons</h1>
             </div>
           </v-col>
         </v-row>
         <v-tabs v-model="tab" fixed-tabs icons-and-text show-arrows>
           <v-tab key="status" @click="changeTab(0)">
-            <v-flex style="padding-top: 28px;">
+            <v-flex style="padding-top: 28px">
               Status by Results File
               <v-icon small>mdi-unfold-more-horizontal</v-icon>
             </v-flex>
           </v-tab>
           <v-tab key="compliance" @click="changeTab(1)">
-            <v-flex style="padding-top: 28px;">
+            <v-flex style="padding-top: 28px">
               % Compliance
               <v-icon small>mdi-unfold-more-horizontal</v-icon>
             </v-flex>
           </v-tab>
           <v-tab key="severity" @click="changeTab(2)">
-            <v-flex style="padding-top: 28px;">
+            <v-flex style="padding-top: 28px">
               Failed Tests by Severity
               <v-icon small>mdi-unfold-more-horizontal</v-icon>
             </v-flex>
@@ -58,7 +58,7 @@
                         >
                           <v-card class="fill-height">
                             <v-card-title class="justify-center">
-                              <div style="text-align:center;">
+                              <div style="text-align: center">
                                 <em>{{ i + 1 }}</em>
                                 <br />
                                 {{ file.filename }}
@@ -125,11 +125,15 @@
               <br />
               <v-row>
                 <v-col cols="8">
-                  <div style="text-align: right;">
+                  <div style="text-align: right">
                     <v-btn
                       icon
                       small
-                      style="float: left; padding-bottom: 8px; padding-left: 7px;"
+                      style="
+                        float: left;
+                        padding-bottom: 8px;
+                        padding-left: 7px;
+                      "
                       @click="changeSort"
                     >
                       <v-icon v-if="ascending">mdi-sort-descending</v-icon>
@@ -140,7 +144,7 @@
                         (width > 960 &&
                           $vuetify.breakpoint.name != 'md' &&
                           $vuetify.breakpoint.name != 'lg') ||
-                          width > 1800
+                        width > 1800
                       "
                       >Test ID</strong
                     >
@@ -148,7 +152,7 @@
                   </div>
                 </v-col>
                 <v-col cols="4">
-                  <v-btn icon small style="float: right;">
+                  <v-btn icon small style="float: right">
                     <v-icon
                       v-if="files.length > num_shown_files"
                       :disabled="start_index == 0"
@@ -215,7 +219,8 @@ import {Category} from '@/components/generic/ApexPieChart.vue';
 import {StatusCountModule} from '@/store/status_counts';
 import ProfileRow from '@/components/cards/comparison/ProfileRow.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
-import {EvaluationFile} from '@/store/report_intake';
+import {EvaluationFile, FileID} from '@/store/report_intake';
+import {InspecDataModule} from '@/store/data_store';
 
 import ApexLineChart, {
   SeriesItem
@@ -304,7 +309,7 @@ export default class Compare extends Props {
       }
       return ctrl.hdf.status;
     }
-    return this.searched_sets.filter(series => {
+    return this.searched_sets.filter((series) => {
       // Get the first status. If no change, all should equal this
       let first;
       for (let i = 0; i < series.length; i++) {
@@ -326,12 +331,6 @@ export default class Compare extends Props {
     });
   }
 
-  collapse(evt: Event) {
-    evt.stopPropagation();
-    evt.preventDefault();
-    this.ableTab = !this.ableTab;
-  }
-
   get searched_sets(): ControlSeries[] {
     let term = (this.search_term || '').toLowerCase().trim();
     if (term == '') {
@@ -350,10 +349,10 @@ export default class Compare extends Props {
         as_hdf.severity,
         as_hdf.status,
         as_hdf.finding_details
-      ].filter(s => s !== null) as string[];
+      ].filter((s) => s !== null) as string[];
 
       // See if any contain term
-      return searchables.some(s => s.toLowerCase().includes(term));
+      return searchables.some((s) => s.toLowerCase().includes(term));
     }
     let searched: ControlSeries[] = [];
     for (let series of this.control_sets) {
@@ -568,6 +567,29 @@ export default class Compare extends Props {
       this.ableTab = true;
     }
     this.changeChartState();
+  }
+
+  /**
+   * The title to override with
+   */
+
+  get curr_title(): string {
+    let returnText = 'Comparison View';
+    if (this.file_filter.length == 1) {
+      let file = InspecDataModule.allEvaluationFiles.find(
+        (f) => f.unique_id === this.file_filter[0]
+      );
+      if (file) {
+        returnText += ` (${file.filename} selected)`;
+      }
+    } else {
+      returnText += ` (${this.file_filter.length} results selected)`;
+    }
+    return returnText;
+  }
+
+  get file_filter(): FileID[] {
+    return FilteredDataModule.selected_evaluations;
   }
 }
 </script>

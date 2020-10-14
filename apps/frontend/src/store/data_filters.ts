@@ -2,14 +2,19 @@
  * This module provides a cached, reusable method for filtering data from data_store.
  */
 
-import {Module, VuexModule, getModule, Mutation} from 'vuex-module-decorators';
-import {SourcedContextualizedEvaluation} from '@/store/report_intake';
+import {
+  Module,
+  VuexModule,
+  getModule,
+  Mutation,
+  Action
+} from 'vuex-module-decorators';
+import {SourcedContextualizedEvaluation, FileID} from '@/store/report_intake';
 import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
-import {ControlStatus, Severity} from 'inspecjs';
-import {FileID} from '@/store/report_intake';
+
+import {ControlStatus, Severity, context, nist} from 'inspecjs';
 import Store from '@/store/store';
 import LRUCache from 'lru-cache';
-import {context, nist} from 'inspecjs';
 
 const MAX_CACHE_ENTRIES = 20;
 
@@ -67,10 +72,10 @@ function contains_term(
     as_hdf.severity,
     as_hdf.status,
     as_hdf.finding_details
-  ].filter(s => s !== null) as string[];
+  ].filter((s) => s !== null) as string[];
 
   // See if any contain term
-  return searchables.some(s => s.toLowerCase().includes(term));
+  return searchables.some((s) => s.toLowerCase().includes(term));
 }
 
 @Module({
@@ -80,28 +85,103 @@ function contains_term(
   name: 'filteredData'
 })
 export class FilteredData extends VuexModule {
-  selected_file_ids: FileID[] = [];
+  selectedEvaluationIds: FileID[] = [];
+  selectedProfileIds: FileID[] = [];
 
   @Mutation
-  set_toggle_file_on(file: FileID): void {
-    if (this.selected_file_ids.includes(file)) {
-      return;
-    }
-    this.selected_file_ids.push(file);
+  SELECT_EVALUATIONS(files: FileID[]): void {
+    this.selectedEvaluationIds = [
+      ...new Set([...files, ...this.selectedEvaluationIds])
+    ];
   }
 
   @Mutation
-  set_toggle_file_off(file: FileID): void {
-    let checked = this.selected_file_ids.indexOf(file);
-    if (checked != -1) {
-      this.selected_file_ids.splice(checked, 1);
+  SELECT_PROFILES(files: FileID[]): void {
+    this.selectedProfileIds = [
+      ...new Set([...files, ...this.selectedProfileIds])
+    ];
+  }
+
+  @Mutation
+  CLEAR_EVALUATION(removeId: FileID): void {
+    this.selectedEvaluationIds = this.selectedEvaluationIds.filter(
+      (ids) => ids !== removeId
+    );
+  }
+
+  @Mutation
+  CLEAR_PROFILE(removeId: FileID): void {
+    this.selectedProfileIds = this.selectedProfileIds.filter(
+      (ids) => ids !== removeId
+    );
+  }
+
+  @Mutation
+  CLEAR_ALL_EVALUATIONS(): void {
+    this.selectedEvaluationIds = [];
+  }
+
+  @Mutation
+  CLEAR_ALL_PROFILES(): void {
+    this.selectedProfileIds = [];
+  }
+
+  @Action
+  public toggle_all_evaluations(): void {
+    if (this.all_evaluations_selected) {
+      this.CLEAR_ALL_EVALUATIONS();
+    } else {
+      this.SELECT_EVALUATIONS(
+        InspecDataModule.allEvaluationFiles.map((v) => v.unique_id)
+      );
     }
   }
 
-  // Just override the whole list
-  @Mutation
-  set_toggled_files(files: FileID[]): void {
-    this.selected_file_ids.splice(0, this.selected_file_ids.length, ...files);
+  @Action
+  public toggle_all_profiles(): void {
+    if (this.all_profiles_selected) {
+      this.CLEAR_ALL_PROFILES();
+    } else {
+      this.SELECT_PROFILES(
+        InspecDataModule.allProfileFiles.map((v) => v.unique_id)
+      );
+    }
+  }
+
+  @Action
+  public select_exclusive_evaluation(fileID: FileID): void {
+    this.CLEAR_ALL_EVALUATIONS();
+    this.SELECT_EVALUATIONS([fileID]);
+  }
+
+  @Action
+  public select_exclusive_profile(fileID: FileID): void {
+    this.CLEAR_ALL_PROFILES();
+    this.SELECT_PROFILES([fileID]);
+  }
+
+  @Action
+  public toggle_evaluation(fileID: FileID): void {
+    if (this.selectedEvaluationIds.includes(fileID)) {
+      this.CLEAR_EVALUATION(fileID);
+    } else {
+      this.SELECT_EVALUATIONS([fileID]);
+    }
+  }
+
+  @Action
+  public toggle_profile(fileID: FileID): void {
+    if (this.selectedProfileIds.includes(fileID)) {
+      this.CLEAR_PROFILE(fileID);
+    } else {
+      this.SELECT_PROFILES([fileID]);
+    }
+  }
+
+  @Action
+  public clear_file(fileID: FileID): void {
+    this.CLEAR_EVALUATION(fileID);
+    this.CLEAR_PROFILE(fileID);
   }
 
   /**
@@ -112,7 +192,7 @@ export class FilteredData extends VuexModule {
     files: FileID[]
   ) => readonly SourcedContextualizedEvaluation[] {
     return (files: FileID[]) => {
-      return InspecDataModule.contextualExecutions.filter(e =>
+      return InspecDataModule.contextualExecutions.filter((e) =>
         files.includes(e.from_file.unique_id)
       );
     };
@@ -131,7 +211,7 @@ export class FilteredData extends VuexModule {
       let profiles: context.ContextualizedProfile[] = [];
 
       // Filter to those that match our filter. In this case that just means come from the right file id
-      InspecDataModule.contextualProfiles.forEach(prof => {
+      InspecDataModule.contextualProfiles.forEach((prof) => {
         if (isFromProfileFile(prof)) {
           if (files.includes(prof.from_file.unique_id)) {
             profiles.push(prof);
@@ -147,6 +227,45 @@ export class FilteredData extends VuexModule {
 
       return profiles;
     };
+  }
+
+  /* get the currently select evaluations */
+  get selected_evaluations(): string[] {
+    const fileIds = [...this.selectedEvaluationIds];
+    const files = InspecDataModule.allProfileFiles;
+
+    return fileIds.filter((fileId) =>
+      files.every((file) => fileId !== file.unique_id)
+    );
+  }
+
+  /* get the currently selected profiles */
+  get selected_profiles(): string[] {
+    const fileIds = [...this.selectedProfileIds];
+    const files = InspecDataModule.allEvaluationFiles;
+
+    return fileIds.filter((fileId) =>
+      files.every((file) => fileId !== file.unique_id)
+    );
+  }
+
+  get selected_file_ids(): FileID[] {
+    return [...this.selectedEvaluationIds, ...this.selectedProfileIds];
+  }
+
+  // check to see if all profiles are selected
+  get all_profiles_selected(): boolean {
+    return (
+      this.selected_profiles.length === InspecDataModule.allProfileFiles.length
+    );
+  }
+
+  // check to see if all evaluations are selected
+  get all_evaluations_selected(): boolean {
+    return (
+      this.selected_evaluations.length ===
+      InspecDataModule.allEvaluationFiles.length
+    );
   }
 
   /**
@@ -178,30 +297,32 @@ export class FilteredData extends VuexModule {
       // Get profiles
       profiles = this.profiles(filter.fromFile);
       // And all the controls they contain
-      controls = profiles.flatMap(profile => profile.contains);
+      controls = profiles.flatMap((profile) => profile.contains);
 
       // Filter by control id
       if (filter.control_id !== undefined) {
-        controls = controls.filter(c => c.data.id === filter.control_id);
+        controls = controls.filter((c) => c.data.id === filter.control_id);
       }
 
       // Filter by status, if necessary
       if (filter.status !== undefined) {
         controls = controls.filter(
-          control => control.root.hdf.status === filter.status
+          (control) => control.root.hdf.status === filter.status
         );
       }
 
       // Filter by severity, if necessary
       if (filter.severity !== undefined) {
         controls = controls.filter(
-          control => control.root.hdf.severity === filter.severity
+          (control) => control.root.hdf.severity === filter.severity
         );
       }
 
       // Filter by overlay
       if (filter.omit_overlayed_controls) {
-        controls = controls.filter(control => control.extended_by.length === 0);
+        controls = controls.filter(
+          (control) => control.extended_by.length === 0
+        );
       }
 
       // Filter by search term
@@ -209,7 +330,7 @@ export class FilteredData extends VuexModule {
         let term = filter.search_term.toLowerCase();
 
         // Filter controls to those that contain search term
-        controls = controls.filter(c => contains_term(c, term));
+        controls = controls.filter((c) => contains_term(c, term));
       }
 
       // Filter by nist stuff
@@ -217,9 +338,9 @@ export class FilteredData extends VuexModule {
         // Construct a nist control to represent the filter
         let control = new nist.NistControl(filter.tree_filters);
 
-        controls = controls.filter(c => {
+        controls = controls.filter((c) => {
           // Get an hdf version so we have the fixed nist tags
-          return c.root.hdf.parsed_nist_tags.some(t => control.contains(t));
+          return c.root.hdf.parsed_nist_tags.some((t) => control.contains(t));
         });
       }
 

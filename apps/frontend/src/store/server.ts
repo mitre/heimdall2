@@ -82,7 +82,7 @@ class Server extends VuexModule implements IServerState {
 
     return axios
       .get(`${potentialUrl}/server`)
-      .then(response => {
+      .then((response) => {
         if (response.status === 200) {
           // This means the server successfully responded and we are therefore in server mode
           this.SET_SERVER(potentialUrl);
@@ -93,11 +93,11 @@ class Server extends VuexModule implements IServerState {
           }
         }
       })
-      .catch(_ => {
+      .catch((_) => {
         // If a error code is received from the server, this means the app is not in server mode
         // and there is therefore no action is required.
       })
-      .then(_ => {
+      .then((_) => {
         this.SET_LOADING(false);
       });
   }

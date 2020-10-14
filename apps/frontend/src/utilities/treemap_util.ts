@@ -50,11 +50,11 @@ function controls_to_nist_node_data(
   contextualized_controls: Readonly<context.ContextualizedControl[]>,
   colors: ColorHack
 ): TreemapNodeLeaf[] {
-  return contextualized_controls.flatMap(cc => {
+  return contextualized_controls.flatMap((cc) => {
     // Get the status color
     let color = Chroma.hex(colors.colorForStatus(cc.root.hdf.status));
     // Now make leaves for each nist control
-    return cc.root.hdf.parsed_nist_tags.map(nc => {
+    return cc.root.hdf.parsed_nist_tags.map((nc) => {
       let leaf: TreemapNodeLeaf = {
         title: cc.data.id,
         subtitle: cc.data.title || undefined,
@@ -94,7 +94,7 @@ function recursive_nist_map(
 
   // Fill our children
   if (node.control.sub_specifiers.length < max_depth) {
-    node.children.forEach(child => {
+    node.children.forEach((child) => {
       // Assign it, recursively computing the rest
       children.push(recursive_nist_map(ret, child, control_lookup, max_depth));
     });
@@ -108,7 +108,7 @@ function recursive_nist_map(
 /** Colorizes a treemap based on each nodes children. */
 function colorize_tree_map(root: TreemapNodeParent) {
   // First colorize children, recursively
-  root.children.forEach(child => {
+  root.children.forEach((child) => {
     if (is_parent(child)) {
       colorize_tree_map(child);
     }
@@ -117,8 +117,8 @@ function colorize_tree_map(root: TreemapNodeParent) {
   // Now all children should have valid colors
   // We decide this node's color as a composite of all underlying node colors
   let child_colors = root.children
-    .map(c => c.color)
-    .filter(c => c !== undefined) as Chroma.Color[];
+    .map((c) => c.color)
+    .filter((c) => c !== undefined) as Chroma.Color[];
   // If we have any, then set our color
   if (child_colors.length) {
     // Set the color
@@ -143,7 +143,7 @@ function populate_tree_map(
   max_depth: number
 ) {
   // Populate it
-  leaves.forEach(leaf => {
+  leaves.forEach((leaf) => {
     let parent = lookup[lookup_key_for(leaf.nist_control, max_depth)];
     if (parent) {
       // We found a node that will accept it (matches its control)
@@ -175,7 +175,7 @@ function build_populated_nist_map(data: TreemapNodeLeaf[]): TreemapNodeParent {
   };
 
   // Fill out children, recursively
-  nist.FULL_NIST_HIERARCHY.forEach(n => {
+  nist.FULL_NIST_HIERARCHY.forEach((n) => {
     let child = recursive_nist_map(root, n, lookup, MAX_DEPTH);
     root_children.push(child);
   });
@@ -207,7 +207,7 @@ function node_data_to_tree_map(
       }
     })
     .sort((a, b) => a.data.title.localeCompare(b.data.title))
-    .sum(root => {
+    .sum((root) => {
       if (is_parent(root)) {
         if (root.children.length === 0) {
           return 1;

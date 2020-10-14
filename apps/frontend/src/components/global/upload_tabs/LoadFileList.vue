@@ -12,12 +12,12 @@
         mobile-breakpoint="0"
         class="elevation-1"
       >
-        <template v-slot:[`item.filename`]="{item}">
+        <template #[`item.filename`]="{item}">
           <span class="cursor-pointer" @click="load_results([item])">{{
             item.filename
           }}</span>
         </template>
-        <template v-slot:[`item.createdAt`]="{item}">
+        <template #[`item.createdAt`]="{item}">
           <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
         </template>
       </v-data-table>
@@ -49,7 +49,7 @@ export default class LoadFileList extends Vue {
 
   load_results(evaluations: IEvaluation[]) {
     this.selectedFiles = [];
-    this.$emit('load_results', evaluations);
+    this.$emit('load-results', evaluations);
   }
 }
 </script>
