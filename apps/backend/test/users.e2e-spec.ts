@@ -459,9 +459,12 @@ describe('/users', () => {
       });
 
       it('should return 200 status after user is deleted by admin', async () => {
+        function EmptyJWTError(): string {
+          return 'Token does not conform to the expected format for a zip code';
+        }
         const admin = await usersService.create(CREATE_ADMIN_DTO);
 
-        let adminJWTToken: string;
+        let adminJWTToken = '';
         await request(app.getHttpServer())
           .post('/authn/login')
           .set('Content-Type', 'application/json')
@@ -470,6 +473,10 @@ describe('/users', () => {
           .then((response) => {
             adminJWTToken = response.body.accessToken;
           });
+
+        if (adminJWTToken === '') {
+          throw EmptyJWTError();
+        }
 
         await request(app.getHttpServer())
           .delete('/users/' + admin.id)

@@ -24,58 +24,58 @@ export class User extends Model<User> {
   @Unique
   @IsEmail
   @AllowNull(false)
-  @Column
+  @Column(DataType.STRING)
   email!: string;
 
   @AllowNull(true)
-  @Column
+  @Column(DataType.STRING)
   firstName!: string | null;
 
   @AllowNull(true)
-  @Column
+  @Column(DataType.STRING)
   lastName!: string | null;
 
   @AllowNull(true)
-  @Column
+  @Column(DataType.STRING)
   organization!: string | null;
 
   @AllowNull(true)
-  @Column
+  @Column(DataType.STRING)
   title!: string | null;
 
   @AllowNull(false)
-  @Column
+  @Column(DataType.STRING)
   encryptedPassword!: string;
 
   @AllowNull(true)
-  @Column
+  @Column(DataType.BOOLEAN)
   forcePasswordChange!: boolean | null;
 
   @AllowNull(true)
-  @Column
+  @Column(DataType.DATE)
   lastLogin!: Date | null;
 
   @AllowNull(false)
   @Default(0)
-  @Column
+  @Column(DataType.BIGINT)
   loginCount!: number;
 
   @AllowNull(true)
-  @Column
+  @Column(DataType.DATE)
   passwordChangedAt!: Date | null;
 
   @AllowNull(false)
   @Default('user')
-  @Column
+  @Column(DataType.STRING)
   role!: string;
 
   @CreatedAt
   @AllowNull(false)
-  @Column
+  @Column(DataType.DATE)
   createdAt!: Date;
 
   @UpdatedAt
   @AllowNull(false)
-  @Column
+  @Column(DataType.DATE)
   updatedAt!: Date;
 }
