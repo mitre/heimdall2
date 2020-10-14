@@ -103,29 +103,14 @@ import Prism from 'vue-prism-component';
 import 'prismjs/themes/prism-tomorrow.css';
 Vue.component('Prism', Prism);
 
-import 'prismjs/components/prism-ruby.js';
 import {context} from 'inspecjs';
+import {Prop} from 'vue-property-decorator';
 
 interface Detail {
   name: string;
   value: string;
   class?: string;
 }
-
-// We declare the props separately to make props types inferable.
-const ControlRowDetailsProps = Vue.extend({
-  props: {
-    tab: {
-      type: String,
-      required: false,
-      default: null
-    },
-    control: {
-      type: Object, // Of type context.ContextualizedControl
-      required: true
-    }
-  }
-});
 
 interface CollapsableElement extends Element {
   offsetHeight: Number;
@@ -139,18 +124,17 @@ interface CollapsableElement extends Element {
     Prism
   }
 })
-export default class ControlRowDetails extends ControlRowDetailsProps {
+export default class ControlRowDetails extends Vue {
+  @Prop({type: String}) readonly tab!: string;
+  @Prop({type: Object, required: true})
+  readonly control!: context.ContextualizedControl;
+
   clamped: boolean = false;
   expanded: boolean = false;
   local_tab: string = 'tab-test';
 
-  /** Typed getter aroun control prop */
-  get _control(): context.ContextualizedControl {
-    return this.control;
-  }
-
   get cciControlString(): string | null {
-    let cci = this._control.hdf.wraps.tags.cci;
+    let cci = this.control.hdf.wraps.tags.cci;
     if (!cci) {
       return null;
     } else if (Array.isArray(cci)) {
@@ -161,8 +145,8 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
   }
 
   get main_desc(): string {
-    if (this._control.data.desc) {
-      return this._control.data.desc.trim();
+    if (this.control.data.desc) {
+      return this.control.data.desc.trim();
     } else {
       return 'No description';
     }
@@ -200,7 +184,7 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
 
   /** Shown above the description */
   get header(): string {
-    let msg_split = this._control.root.hdf.finding_details.split(':');
+    let msg_split = this.control.root.hdf.finding_details.split(':');
     if (msg_split.length === 1) {
       return msg_split[0] + '.';
     } else {
@@ -209,7 +193,7 @@ export default class ControlRowDetails extends ControlRowDetailsProps {
   }
 
   get details(): Detail[] {
-    let c = this._control;
+    let c = this.control;
     return [
       {
         name: 'Control',

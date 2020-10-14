@@ -83,6 +83,7 @@ import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import {is_control} from 'inspecjs/dist/nist';
 //@ts-ignore
 import VClamp from 'vue-clamp/dist/vue-clamp.js';
+import {Prop} from 'vue-property-decorator';
 
 interface Tag {
   label: string;
@@ -90,47 +91,37 @@ interface Tag {
   description: string;
 }
 
-// We declare the props separately to make props types inferable.
-const ControlRowHeaderProps = Vue.extend({
-  props: {
-    control: {
-      type: Object, // Of type HDFControl (but with added key field)
-      required: true
-    },
-    controlExpanded: {
-      type: Boolean, // Whether or this control should be open
-      required: false
-    }
-  }
-});
-
 @Component({
   components: {
     ResponsiveRowSwitch,
     VClamp
   }
 })
-export default class ControlRowHeader extends ControlRowHeaderProps {
+export default class ControlRowHeader extends Vue {
+  @Prop({type: Object, required: true})
+  readonly control!: context.ContextualizedControl;
+  @Prop({type: Boolean, default: false}) readonly controlExpanded!: boolean;
+
   /** Typed getter for control */
   get _control(): context.ContextualizedControl {
     return this.control;
   }
 
   get truncated_title(): string {
-    if (this._control.data.title && this._control.data.title.length > 80) {
-      return this._control.data.title.substr(0, 80) + '...';
+    if (this.control.data.title && this.control.data.title.length > 80) {
+      return this.control.data.title.substr(0, 80) + '...';
     } else {
-      return this._control.data.title || 'Untitled';
+      return this.control.data.title || 'Untitled';
     }
   }
 
   get status_color(): string {
     // maps stuff like "not applicable" -> "statusnotapplicable", which is a defined color name
-    return `status${this._control.root.hdf.status.replace(' ', '')}`;
+    return `status${this.control.root.hdf.status.replace(' ', '')}`;
   }
 
   get severity_arrow_count(): number {
-    switch (this._control.hdf.severity) {
+    switch (this.control.hdf.severity) {
       default:
       case 'none':
         return 0;
@@ -143,10 +134,6 @@ export default class ControlRowHeader extends ControlRowHeaderProps {
       case 'critical':
         return 4;
     }
-  }
-
-  fmtNist(nist: string[]): string {
-    return nist.join(', ');
   }
 
   // Get NIST tag description for NIST tag, this is pulled from the 800-53 xml
@@ -166,7 +153,7 @@ export default class ControlRowHeader extends ControlRowHeaderProps {
   }
 
   get all_tags(): Tag[] {
-    let nist_tags = this._control.hdf.raw_nist_tags;
+    let nist_tags = this.control.hdf.raw_nist_tags;
     nist_tags = nist_tags.filter((tag) => tag.search(/Rev.*\d/i) == -1);
     let nist_tag_objects = nist_tags.map((tag) => {
       let nisted = nist.parse_nist(tag);
@@ -182,7 +169,7 @@ export default class ControlRowHeader extends ControlRowHeaderProps {
       }
       return {label: tag, url: url, description: this.descriptionForTag(tag)};
     });
-    let cci_tags: string | string[] = this._control.data.tags.cci || '';
+    let cci_tags: string | string[] = this.control.data.tags.cci || '';
     if (!cci_tags) {
       return nist_tag_objects;
     } else if (typeof cci_tags == 'string') {

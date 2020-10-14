@@ -1,6 +1,6 @@
 import 'jest';
 import {AllRaw} from '../util/fs';
-import {InspecIntakeModule} from '../../src/store/report_intake';
+import {InspecIntakeModule} from '@/store/report_intake';
 
 import {StatusCountModule} from '@/store/status_counts';
 import {InspecDataModule} from '@/store/data_store';

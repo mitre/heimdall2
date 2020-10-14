@@ -17,6 +17,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
 
 // https://stackoverflow.com/questions/143815/determine-if-an-html-elements-content-overflows
 // Determines if the passed element is overflowing its bounds,
@@ -42,26 +43,12 @@ function check_overflow(el: HTMLElement): boolean {
   return is_overflowing;
 }
 
-// Define our props
-const Props = Vue.extend({
-  props: {
-    text: {
-      type: String,
-      required: true
-    },
-    span_class: {
-      type: Array, // Array<string>
-      default: () => []
-    },
-    span_style: {
-      type: String,
-      default: ''
-    }
-  }
-});
-
 @Component
-export default class TruncatedText extends Props {
+export default class TruncatedText extends Vue {
+  @Prop({type: String, required: true}) readonly text!: string;
+  @Prop({type: Array, default: () => []}) readonly span_class!: string[];
+  @Prop({type: String, default: ''}) readonly span_style!: string;
+
   get is_truncated(): boolean {
     if (this.$refs['text'] !== undefined) {
       return check_overflow(this.$refs['text'] as HTMLElement);

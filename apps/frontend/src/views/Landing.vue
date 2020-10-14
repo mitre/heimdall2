@@ -2,30 +2,21 @@
   <v-container>
     <v-row>
       <v-col center xl="8" md="8" sm="12" xs="12">
-        <UploadNexus :persistent="true" @got-files="on_got_files" />
+        <UploadNexus :persistent="true" />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
 import UploadNexus from '@/components/global/UploadNexus.vue';
-
-import ServerMixin from '@/mixins/ServerMixin';
-import {mixins} from 'vue-class-component';
 
 @Component({
   components: {
     UploadNexus
   }
 })
-export default class Landing extends mixins(ServerMixin) {
-  /**
-   * Invoked when file(s) are loaded.
-   */
-  on_got_files() {
-    this.$router.push(`/results`);
-  }
-}
+export default class Landing extends Vue {}
 </script>

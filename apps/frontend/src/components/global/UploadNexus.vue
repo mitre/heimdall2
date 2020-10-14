@@ -97,8 +97,8 @@ const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
   }
 })
 export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
-  @Prop({default: true}) readonly visible!: Boolean;
-  @Prop({default: false}) readonly persistent!: Boolean;
+  @Prop({default: true}) readonly visible!: boolean;
+  @Prop({default: false}) readonly persistent!: boolean;
 
   active_tab: string = local_tab.get_default('uploadtab-local');
 
@@ -125,7 +125,10 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
     ).length;
 
     if (numEvaluations > numProfiles) {
-      this.navigateUnlessActive('/results');
+      // Only navigate the user to the results page if they are not
+      // already on the compare page.
+      if ('/compare' !== this.current_route)
+        this.navigateUnlessActive('/results');
     } else {
       this.navigateUnlessActive('/profiles');
     }

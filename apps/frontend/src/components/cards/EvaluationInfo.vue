@@ -18,9 +18,7 @@ import {FileID, EvaluationFile} from '@/store/report_intake';
 
 import {Prop} from 'vue-property-decorator';
 
-@Component({
-  components: {}
-})
+@Component
 export default class EvaluationInfo extends Vue {
   @Prop({required: true}) readonly file_filter!: FileID;
 
@@ -38,7 +36,7 @@ export default class EvaluationInfo extends Vue {
     let file = InspecDataModule.allFiles.find(
       (f) => f.unique_id === this.file_filter
     );
-    if (file) {
+    if (file && file.hasOwnProperty('evaluation')) {
       let eva = file as EvaluationFile;
       this.version = eva.evaluation.data.version;
       this.platform_name = eva.evaluation.data.platform.name;
@@ -76,7 +74,7 @@ export default class EvaluationInfo extends Vue {
     let file = InspecDataModule.allFiles.find(
       (f) => f.unique_id === this.file_filter
     );
-    if (file) {
+    if (file && file.hasOwnProperty('evaluation')) {
       let eva = file as EvaluationFile;
       this.version = eva.evaluation.data.version;
       this.platform_name = eva.evaluation.data.platform.name;

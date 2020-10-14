@@ -24,6 +24,7 @@ import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {NistControl} from 'inspecjs/dist/nist';
 import {FileID} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
+import {Prop} from 'vue-property-decorator';
 
 const MAX_SHEET_NAME_SIZE = 31;
 export type NISTRow = [string];
@@ -34,23 +35,14 @@ export interface Sheet {
   data: NISTList;
 }
 
-// We declare the props separately
-// to make props types inferrable.
-const Props = Vue.extend({
-  props: {
-    filter: {
-      type: Object, // Of type Filter
-      required: true
-    }
-  }
-});
-
 @Component({
   components: {
     LinkItem
   }
 })
-export default class ExportNIST extends Props {
+export default class ExportNIST extends Vue {
+  @Prop({type: Object, required: true}) readonly filter!: Filter;
+
   /** Formats a tag into a well-structured nist string */
   format_tag(control: NistControl): string | null {
     // For now just do raw text. Once Mo's nist work is done we can make sure these are well formed
@@ -81,7 +73,7 @@ export default class ExportNIST extends Props {
     }
 
     // Get our data
-    let base_filter = this.filter as Filter;
+    let base_filter = this.filter;
     let modified_filter: Filter = {...base_filter, fromFile: id};
     let controls = FilteredDataModule.controls(modified_filter);
 
