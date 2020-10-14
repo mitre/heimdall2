@@ -54,6 +54,6 @@ const BaseProps = Vue.extend({
 })
 export default class Base extends BaseProps {
   /** Models if the drawer is open */
-  drawer: boolean = false;
+  drawer: boolean = true;
 }
 </script>

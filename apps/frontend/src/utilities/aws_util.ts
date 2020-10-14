@@ -44,7 +44,7 @@ export async function fetch_s3_file(
       Bucket: bucket_name
     })
     .promise()
-    .then(success => {
+    .then((success) => {
       let content: string = new TextDecoder('utf-8').decode(
         success.Body! as Uint8Array
       );
@@ -104,7 +104,7 @@ export async function get_session_token(
   await sts
     .getCallerIdentity({})
     .promise()
-    .then(success => {
+    .then((success) => {
       wip_info.user_account = success.Account!;
       wip_info.user_arn = success.Arn!;
       wip_info.user_id = success.UserId;
@@ -133,7 +133,7 @@ export async function get_session_token(
   }
 
   // Handle the response. On Success, save the creds. On error, throw that stuff back!
-  return result.then(success => {
+  return result.then((success) => {
     let creds: AuthCreds = {
       accessKeyId: success.Credentials!.AccessKeyId,
       secretAccessKey: success.Credentials!.SecretAccessKey,

@@ -40,7 +40,7 @@
                     @click:append="showPassword = !showPassword"
                     @blur="$v.password.$touch()"
                   >
-                    <template v-slot:progress>
+                    <template #progress>
                       <v-progress-linear
                         :value="passwordStrengthPercent"
                         :color="passwordStrengthColor"
@@ -150,7 +150,7 @@ export default class Signup extends Vue {
             'You have successfully registered, please sign in'
           );
         })
-        .catch(error => {
+        .catch((error) => {
           SnackbarModule.notify(error.response.data.message);
         });
     }

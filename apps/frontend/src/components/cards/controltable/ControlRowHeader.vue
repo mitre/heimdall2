@@ -54,7 +54,7 @@
     <template #tags>
       <v-chip-group column active-class="NONE">
         <v-tooltip v-for="(tag, i) in all_tags" :key="'chip' + i" bottom>
-          <template v-slot:activator="{on}">
+          <template #activator="{on}">
             <v-chip
               :href="tag.url"
               target="_blank"
@@ -167,8 +167,8 @@ export default class ControlRowHeader extends ControlRowHeaderProps {
 
   get all_tags(): Tag[] {
     let nist_tags = this._control.hdf.raw_nist_tags;
-    nist_tags = nist_tags.filter(tag => tag.search(/Rev.*\d/i) == -1);
-    let nist_tag_objects = nist_tags.map(tag => {
+    nist_tags = nist_tags.filter((tag) => tag.search(/Rev.*\d/i) == -1);
+    let nist_tag_objects = nist_tags.map((tag) => {
       let nisted = nist.parse_nist(tag);
       let url = '';
       if (nist.is_control(nisted)) {
@@ -188,7 +188,7 @@ export default class ControlRowHeader extends ControlRowHeaderProps {
     } else if (typeof cci_tags == 'string') {
       cci_tags = cci_tags.split(' ');
     }
-    let cci_tag_objects = cci_tags.map(cci => {
+    let cci_tag_objects = cci_tags.map((cci) => {
       return {label: cci, url: '', description: this.descriptionForTag(cci)};
     });
     return [...nist_tag_objects, ...cci_tag_objects];
