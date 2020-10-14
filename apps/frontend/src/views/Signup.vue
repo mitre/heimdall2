@@ -170,6 +170,7 @@ export default class Signup extends Vue {
   get passwordStrengthPercent() {
     return zxcvbn(this.password).score * 25;
   }
+
   // Since there are 3 colors available, 0-49% displays red, 50% displays yellow, and 51-100% displays green
   get passwordStrengthColor() {
     return ['error', 'warning', 'success'][
