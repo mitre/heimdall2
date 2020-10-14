@@ -27,9 +27,9 @@ export function loadSample(sampleName: string) {
 
 export function loadAll(): void {
   let data = AllRaw();
-  Object.values(data).map((file_result) => {
+  Object.values(data).forEach((file_result) => {
     // Do intake
-    return InspecIntakeModule.loadText({
+    InspecIntakeModule.loadText({
       filename: file_result.name,
       text: file_result.content
     });
