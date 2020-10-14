@@ -21,28 +21,18 @@ import XLSX from 'xlsx';
 import {saveAs} from 'file-saver';
 import {HDFControl} from 'inspecjs';
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import {Prop} from 'vue-property-decorator';
 
 const MAX_CELL_SIZE = 32000; // Rounding a bit here.
 type CAATRow = string[];
-type CAAT = CAATRow[];
-
-// We declare the props separately
-// to make props types inferrable.
-const Props = Vue.extend({
-  props: {
-    filter: {
-      type: Object, // Of type Filter
-      required: true
-    }
-  }
-});
 
 @Component({
   components: {
     LinkItem
   }
 })
-export default class ExportCaat extends Props {
+export default class ExportCaat extends Vue {
+  @Prop({type: Object, required: true}) readonly filter!: Filter;
   /** Turns a control into a CAAT row.
    *  Checks vuln_list first to see if this gid is already included
    */
@@ -144,10 +134,10 @@ export default class ExportCaat extends Props {
 
   export_caat() {
     // Get our data
-    let controls = FilteredDataModule.controls(this.filter as Filter);
+    let controls = FilteredDataModule.controls(this.filter);
 
     // Initialize our data structures
-    let caat: CAAT = [this.header()];
+    let caat: CAATRow[] = [this.header()];
 
     // Turn controls into rows
     let non_deduped_rows: Array<CAATRow> = [];

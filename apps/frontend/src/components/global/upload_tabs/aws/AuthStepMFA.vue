@@ -31,16 +31,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import {PropSync} from 'vue-property-decorator';
 
-import {LocalStorageVal} from '../../../../utilities/helper_util';
-
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {
-    mfa_serial: String,
-    mfa_token: String
-  }
-});
+import {LocalStorageVal} from '@/utilities/helper_util';
 
 /** Localstorage keys */
 const local_mfa_serial = new LocalStorageVal<string>('aws_s3_mfa_serial');
@@ -50,8 +43,10 @@ const local_mfa_serial = new LocalStorageVal<string>('aws_s3_mfa_serial');
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
  * Emits "got-files" with a list of the unique_ids of the loaded files.
  */
-@Component({})
-export default class S3Reader extends Props {
+@Component
+export default class S3Reader extends Vue {
+  @PropSync('mfa_token', {type: String}) token!: string;
+  @PropSync('mfa_serial', {type: String}) serial!: string;
   /** Models if currently displayed form is valid.
    * Shouldn't be used to interpret literally anything else as valid - just checks fields filled
    */
@@ -71,13 +66,13 @@ export default class S3Reader extends Props {
 
   /** Handles changes to mfa serial */
   change_mfa_token(new_value: string) {
-    this.$emit('update:mfa_token', new_value);
+    this.token = new_value;
   }
 
   /** Handles changes to mfa token */
   change_mfa_serial(new_value: string) {
     local_mfa_serial.set(new_value);
-    this.$emit('update:mfa_serial', new_value);
+    this.serial = new_value;
   }
 
   /** When button is pressed or enter is pressed */

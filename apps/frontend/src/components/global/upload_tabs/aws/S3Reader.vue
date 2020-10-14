@@ -42,7 +42,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import S3 from 'aws-sdk/clients/s3';
 import {AWSError} from 'aws-sdk/lib/error';
-import {LocalStorageVal} from '../../../../utilities/helper_util';
+import {LocalStorageVal} from '@/utilities/helper_util';
 import {SnackbarModule} from '@/store/snackbar';
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
 import AuthStepMFA from '@/components/global/upload_tabs/aws/AuthStepMFA.vue';
@@ -53,13 +53,8 @@ import {
   get_session_token,
   MFA_Info,
   AUTH_DURATION
-} from '../../../../utilities/aws_util';
+} from '@/utilities/aws_util';
 import {FileID} from '@/store/report_intake';
-
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {}
-});
 
 /** The cached session info */
 const local_session_information = new LocalStorageVal<Auth | null>(
@@ -77,7 +72,7 @@ const local_session_information = new LocalStorageVal<Auth | null>(
     FileList
   }
 })
-export default class S3Reader extends Props {
+export default class S3Reader extends Vue {
   /** Form required field rules. Maybe eventually expand to other stuff */
   req_rule = (v: string | null | undefined) =>
     (v || '').trim().length > 0 || 'Field is Required';

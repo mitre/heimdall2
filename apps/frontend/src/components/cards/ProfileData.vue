@@ -82,9 +82,10 @@ import Component from 'vue-class-component';
 import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
 import {SourcedContextualizedEvaluation} from '@/store/report_intake';
 
-import {profile_unique_key} from '../../utilities/format_util';
+import {profile_unique_key} from '@/utilities/format_util';
 import {InspecFile, ProfileFile} from '@/store/report_intake';
 import {context} from 'inspecjs';
+import {Prop} from 'vue-property-decorator';
 
 /**
  * Makes a ContextualizedProfile work as a TreeView item
@@ -107,18 +108,11 @@ class TreeItem {
   }
 }
 
-// We declare the props separately
-// to make props types inferrable.
-const Props = Vue.extend({
-  props: {
-    selected_prof: {type: Object, required: true}
-  }
-});
+@Component
+export default class ProfileData extends Vue {
+  @Prop({type: Object, required: true})
+  readonly selected_prof!: context.ContextualizedProfile;
 
-@Component({
-  components: {}
-})
-export default class ProfileData extends Props {
   //auto select the root prof
   mounted() {
     this.active = [profile_unique_key(this.selected_prof)];

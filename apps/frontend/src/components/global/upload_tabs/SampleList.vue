@@ -8,7 +8,7 @@
       :headers="headers"
       :files="samples"
       file-key="filename"
-      loading="false"
+      :loading="false"
       @load-results="load_samples($event)"
     />
   </v-card>
@@ -23,17 +23,12 @@ import {SnackbarModule} from '@/store/snackbar';
 
 import {samples, Sample} from '@/utilities/sample_util';
 
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {}
-});
-
 @Component({
   components: {
     LoadFileList
   }
 })
-export default class SampleList extends Props {
+export default class SampleList extends Vue {
   samples: Sample[] = samples;
   headers: Object[] = [
     {

@@ -19,21 +19,17 @@ import {ColorHackModule} from '@/store/color_hack';
 import {ApexOptions} from 'apexcharts';
 
 import {StatusCountModule} from '@/store/status_counts';
-
-// We declare the props separately
-// to make props types inferrable.
-const ComplianceChartProps = Vue.extend({
-  props: {
-    filter: Object // Of type Filer from filteredData
-  }
-});
+import {Prop} from 'vue-property-decorator';
+import {Filter} from '@/store/data_filters';
 
 @Component({
   components: {
     VueApexCharts
   }
 })
-export default class ComplianceChart extends ComplianceChartProps {
+export default class ComplianceChart extends Vue {
+  @Prop({type: Object, required: true}) readonly filter!: Filter;
+
   get chartOptions(): ApexOptions {
     // Produce our options
     let result: ApexOptions = {

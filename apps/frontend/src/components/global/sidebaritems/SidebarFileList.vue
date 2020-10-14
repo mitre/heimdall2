@@ -27,28 +27,21 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
 import Component, {mixins} from 'vue-class-component';
 import axios from 'axios';
 import {ICreateEvaluation} from '@heimdall/interfaces';
 import {InspecDataModule} from '@/store/data_store';
 import {FilteredDataModule} from '@/store/data_filters';
-import {EvaluationFile} from '@/store/report_intake';
+import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
 
 import ServerMixin from '@/mixins/ServerMixin';
+import {Prop} from 'vue-property-decorator';
 
-// We declare the props separately to make props types inferable.
-const FileItemProps = Vue.extend({
-  props: {
-    file: Object // Of type EvaluationFile or ProfileFile
-  }
-});
+@Component
+export default class FileItem extends mixins(ServerMixin) {
+  @Prop({type: Object}) readonly file!: EvaluationFile | ProfileFile;
 
-@Component({
-  components: {}
-})
-export default class FileItem extends mixins(FileItemProps, ServerMixin) {
   select_file() {
     if (this.file.hasOwnProperty('evaluation')) {
       FilteredDataModule.toggle_evaluation(this.file.unique_id);
@@ -106,7 +99,7 @@ export default class FileItem extends mixins(FileItemProps, ServerMixin) {
 
   //gives different icons for a file if it is just a profile
   get icon(): string {
-    if (this.file.profile !== undefined) {
+    if (this.file.hasOwnProperty('profile')) {
       return 'mdi-note';
     } else {
       return 'mdi-google-analytics';

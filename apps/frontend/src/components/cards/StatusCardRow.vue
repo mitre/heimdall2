@@ -46,6 +46,8 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {StatusCountModule} from '@/store/status_counts';
+import {Filter} from '@/store/data_filters';
+import {Prop} from 'vue-property-decorator';
 
 interface CardProps {
   icon: string;
@@ -55,17 +57,10 @@ interface CardProps {
   color: string;
 }
 
-// We declare the props separately to make props types inferable.
-const StatusCardRowProps = Vue.extend({
-  props: {
-    filter: Object // Of type Filter
-  }
-});
+@Component
+export default class StatusCardRow extends Vue {
+  @Prop({type: Object, required: true}) readonly filter!: Filter;
 
-@Component({
-  components: {}
-})
-export default class StatusCardRow extends StatusCardRowProps {
   // Cards
   get standardCardProps(): CardProps[] {
     return [

@@ -34,17 +34,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import Sidebar from '@/components/global/Sidebar.vue';
 import Topbar from '@/components/global/Topbar.vue';
-
-// We declare the props separately
-// to make props types inferable.
-const BaseProps = Vue.extend({
-  props: {
-    title: {
-      type: String,
-      default: 'Heimdall Lite'
-    }
-  }
-});
+import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -52,7 +42,8 @@ const BaseProps = Vue.extend({
     Topbar
   }
 })
-export default class Base extends BaseProps {
+export default class Base extends Vue {
+  @Prop({default: 'Heimdall'}) readonly title!: string;
   /** Models if the drawer is open */
   drawer: boolean = true;
 }

@@ -66,7 +66,7 @@ Vue.use(vueFileAgent);
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
  * Emits "got-files" with a list of the unique_ids of the loaded files.
  */
-@Component({})
+@Component
 export default class FileReader extends mixins(ServerMixin) {
   fileRecords = new Array();
   loading = false;
