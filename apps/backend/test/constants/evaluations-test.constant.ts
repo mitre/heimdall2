@@ -1,10 +1,7 @@
 import {CreateEvaluationDto} from '../../src/evaluations/dto/create-evaluation.dto';
 import {UpdateEvaluationDto} from '../../src/evaluations/dto/update-evaluation.dto';
 import {EvaluationDto} from '../../src/evaluations/dto/evaluation.dto';
-import {
-  CREATE_EVALUATION_TAG_DTO,
-  UPDATE_EVALUATION_TAG_DTO
-} from './evaluation-tags-test.constant';
+import {CREATE_EVALUATION_TAG_DTO} from './evaluation-tags-test.constant';
 import {Evaluation} from '../../src/evaluations/evaluation.model';
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 
@@ -44,8 +41,7 @@ export const UPDATE_EVALUATION: UpdateEvaluationDto = {
   data: {
     filename: DEFAULT_FILE_NAME
   },
-  filename: 'example-result-new.json',
-  evaluationTags: []
+  filename: 'example-result-new.json'
 };
 
 // @ts-ignore
@@ -58,21 +54,6 @@ export const UPDATE_EVALUATION_DATA_ONLY: UpdateEvaluationDto = {
   data: {
     filename: DEFAULT_FILE_NAME
   }
-};
-
-// @ts-ignore
-export const UPDATE_EVALUATION_TAG_ONLY: UpdateEvaluationDto = {
-  evaluationTags: [UPDATE_EVALUATION_TAG_DTO]
-};
-
-// @ts-ignore
-export const UPDATE_EVALUATION_ADD_TAGS_1: UpdateEvaluationDto = {
-  evaluationTags: [UPDATE_EVALUATION_TAG_DTO, CREATE_EVALUATION_TAG_DTO]
-};
-
-// @ts-ignore
-export const UPDATE_EVALUATION_REMOVE_TAGS_1: UpdateEvaluationDto = {
-  evaluationTags: []
 };
 
 export const EVALUATION_DTO: EvaluationDto = {

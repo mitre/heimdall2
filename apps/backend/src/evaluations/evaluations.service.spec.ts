@@ -14,12 +14,8 @@ import {
   CREATE_EVALUATION_DTO_WITHOUT_DATA,
   CREATE_EVALUATION_DTO_WITHOUT_FILENAME,
   UPDATE_EVALUATION_FILENAME_ONLY,
-  UPDATE_EVALUATION_DATA_ONLY,
-  UPDATE_EVALUATION_ADD_TAGS_1,
-  UPDATE_EVALUATION_REMOVE_TAGS_1
+  UPDATE_EVALUATION_DATA_ONLY
 } from '../../test/constants/evaluations-test.constant';
-import {UpdateEvaluationTagDto} from '../evaluation-tags/dto/update-evaluation-tag.dto';
-import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 
 describe('EvaluationsService', () => {
   let evaluationsService: EvaluationsService;
@@ -91,9 +87,9 @@ describe('EvaluationsService', () => {
       expect(evaluation.createdAt).toBeDefined();
       expect(evaluation.data).toEqual(EVALUATION_WITH_TAGS_1.data);
       expect(evaluation.filename).toEqual(EVALUATION_WITH_TAGS_1.filename);
-      expect(evaluation.evaluationTags[0].evaluationId).toBeDefined();
-      expect(evaluation.evaluationTags[0].updatedAt).toBeDefined();
-      expect(evaluation.evaluationTags[0].createdAt).toBeDefined();
+      expect(evaluation.evaluationTags?.[0].evaluationId).toBeDefined();
+      expect(evaluation.evaluationTags?.[0].updatedAt).toBeDefined();
+      expect(evaluation.evaluationTags?.[0].createdAt).toBeDefined();
 
       if (EVALUATION_WITH_TAGS_1.evaluationTags === undefined) {
         throw new TypeError(
@@ -101,10 +97,10 @@ describe('EvaluationsService', () => {
         );
       }
 
-      expect(evaluation.evaluationTags[0].value).toEqual(
+      expect(evaluation.evaluationTags?.[0].value).toEqual(
         EVALUATION_WITH_TAGS_1.evaluationTags[0].value
       );
-      expect(evaluation.evaluationTags[0].key).toEqual(
+      expect(evaluation.evaluationTags?.[0].key).toEqual(
         EVALUATION_WITH_TAGS_1.evaluationTags[0].key
       );
     });
@@ -120,7 +116,7 @@ describe('EvaluationsService', () => {
       expect(evaluation.filename).toEqual(
         CREATE_EVALUATION_DTO_WITHOUT_TAGS.filename
       );
-      expect(evaluation.evaluationTags.length).toBe(0);
+      expect(evaluation.evaluationTags).toBeNull();
       expect((await evaluationTagsService.findAll()).length).toBe(0);
     });
 
@@ -141,7 +137,6 @@ describe('EvaluationsService', () => {
     });
   });
 
-  // Current update implementation will not cascade to the evaluation tags
   describe('update', () => {
     it('should throw an error if an evaluation does not exist', async () => {
       expect.assertions(1);
@@ -166,93 +161,6 @@ describe('EvaluationsService', () => {
       );
       expect(updatedEvaluation.data).not.toEqual(evaluation.data);
       expect(updatedEvaluation.filename).not.toEqual(evaluation.filename);
-    });
-
-    it('should add additional evaluation tags to an evaluation', async () => {
-      const evaluation = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1
-      );
-      const updatedEvaluation = await evaluationsService.update(
-        evaluation.id,
-        UPDATE_EVALUATION_ADD_TAGS_1
-      );
-      expect(updatedEvaluation.id).toEqual(evaluation.id);
-      expect(updatedEvaluation.createdAt).toEqual(evaluation.createdAt);
-      expect(updatedEvaluation.data).toEqual(evaluation.data);
-      expect(updatedEvaluation.filename).toEqual(evaluation.filename);
-      // Evaluation was not updated, only assoc was.
-      expect(updatedEvaluation.updatedAt).toEqual(evaluation.updatedAt);
-      // ---
-      expect(updatedEvaluation.evaluationTags).not.toEqual(
-        evaluation.evaluationTags
-      );
-      expect(updatedEvaluation.evaluationTags.length).toBeGreaterThan(
-        evaluation.evaluationTags.length
-      );
-      updatedEvaluation.evaluationTags.forEach((tag) => {
-        expect(tag.id).toBeDefined();
-        expect(tag.createdAt).toBeDefined();
-        expect(tag.updatedAt).toBeDefined();
-      });
-    });
-
-    it('should remove tags from an evaluation', async () => {
-      const evaluation = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1
-      );
-      const updatedEvaluation = await evaluationsService.update(
-        evaluation.id,
-        UPDATE_EVALUATION_REMOVE_TAGS_1
-      );
-      expect(updatedEvaluation.id).toEqual(evaluation.id);
-      expect(updatedEvaluation.createdAt).toEqual(evaluation.createdAt);
-      expect(updatedEvaluation.data).toEqual(evaluation.data);
-      expect(updatedEvaluation.filename).toEqual(evaluation.filename);
-      // Evaluation was not updated, only assoc was.
-      expect(updatedEvaluation.updatedAt).toEqual(evaluation.updatedAt);
-      // ---
-      expect(updatedEvaluation.evaluationTags).not.toEqual(
-        evaluation.evaluationTags
-      );
-      expect(updatedEvaluation.evaluationTags.length).toEqual(0);
-    });
-
-    it('should update existing evaluation tags', async () => {
-      const evaluation = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1
-      );
-      const updateEvaluationTagDto: UpdateEvaluationTagDto = {
-        id: evaluation.evaluationTags[0].id,
-        key: 'updated key',
-        value: 'updated value'
-      };
-      const updateEvaluationDto: UpdateEvaluationDto = {
-        data: undefined,
-        filename: undefined,
-        evaluationTags: [updateEvaluationTagDto]
-      };
-      const updatedEvaluation = await evaluationsService.update(
-        evaluation.id,
-        updateEvaluationDto
-      );
-      expect(updatedEvaluation.id).toEqual(evaluation.id);
-      expect(updatedEvaluation.createdAt).toEqual(evaluation.createdAt);
-      // Evaluation was not updated, only assoc was.
-      expect(updatedEvaluation.updatedAt).toEqual(evaluation.updatedAt);
-      expect(updatedEvaluation.data).toEqual(evaluation.data);
-      expect(updatedEvaluation.filename).toEqual(evaluation.filename);
-      // ---
-      expect(updatedEvaluation.evaluationTags).not.toEqual(
-        evaluation.evaluationTags
-      );
-      expect(updatedEvaluation.evaluationTags.length).toEqual(1);
-      const originalTag = evaluation.evaluationTags[0];
-      const updatedTag = updatedEvaluation.evaluationTags[0];
-      expect(updatedTag.createdAt).toEqual(originalTag.createdAt);
-      expect(updatedTag.updatedAt).not.toEqual(originalTag.updatedAt);
-      expect(updatedTag.createdAt).toEqual(originalTag.createdAt);
-      expect(updatedTag.key).toEqual(updateEvaluationTagDto.key);
-      expect(updatedTag.value).toEqual(updateEvaluationTagDto.value);
     });
 
     it('should only update data if provided', async () => {

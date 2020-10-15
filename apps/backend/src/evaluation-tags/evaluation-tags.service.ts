@@ -21,6 +21,11 @@ export class EvaluationTagsService {
     );
   }
 
+  async findById(id: number): Promise<EvaluationTagDto> {
+    const evaluationTag = await this.findByPkBang(id);
+    return new EvaluationTagDto(evaluationTag);
+  }
+
   async create(
     evaluationId: number,
     createEvaluationTagDto: CreateEvaluationTagDto
