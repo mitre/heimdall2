@@ -37,6 +37,8 @@ import {DatabaseService} from '../database/database.service';
 describe('UsersService', () => {
   let usersService: UsersService;
   let databaseService: DatabaseService;
+  const errorString =
+    'User that was just created was not returned from the database. Create method may have failed silently.';
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
@@ -183,9 +185,7 @@ describe('UsersService', () => {
       const beforeUpdate = await User.findByPk<User>(user.id);
 
       if (beforeUpdate === null) {
-        throw new TypeError(
-          'User that was just created was not returned from the database. Create method may have failed silently.'
-        );
+        throw new TypeError(errorString);
       }
 
       const updatedUser = await usersService.update(
@@ -320,9 +320,7 @@ describe('UsersService', () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const beforeUpdate = await User.findByPk<User>(user.id);
       if (beforeUpdate === null) {
-        throw new TypeError(
-          'User that was just created was not returned from the database. Create method may have failed silently.'
-        );
+        throw new TypeError(errorString);
       }
       await usersService.update(
         user.id,
@@ -419,9 +417,7 @@ describe('UsersService', () => {
       const createdUser = await User.findByPk<User>(user.id);
 
       if (createdUser === null) {
-        throw new TypeError(
-          'User that was just created was not returned from the database. Create method may have failed silently.'
-        );
+        throw new TypeError(errorString);
       }
 
       await usersService.updateLoginMetadata(createdUser);

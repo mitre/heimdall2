@@ -40,12 +40,11 @@ export class UsersService {
   }
 
   async findModelByEmail(email: string): Promise<User> {
-    const user = await this.findOneBang({
+    return this.findOneBang({
       where: {
         email
       }
     });
-    return user;
   }
 
   async create(createUserDto: CreateUserDto) {

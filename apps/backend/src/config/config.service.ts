@@ -42,7 +42,9 @@ export class ConfigService {
       const pattern = /^(?:([^:\/?#\s]+):\/{2})?(?:([^@\/?#\s]+)@)?([^\/?#\s]+)?(?:\/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$/;
       const matches = url.match(pattern);
 
-      if (matches === null) return false;
+      if (matches === null) {
+        return false;
+      }
 
       this.set(
         'DATABASE_USERNAME',
