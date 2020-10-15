@@ -76,9 +76,10 @@ import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails
 import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 
-import {FilteredDataModule} from '@/store/data_filters';
+import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {control_unique_key} from '@/utilities/format_util';
 import {context} from 'inspecjs';
+import {Prop} from 'vue-property-decorator';
 
 // Tracks the visibility of an HDF control
 interface ListElt {
@@ -92,16 +93,6 @@ interface ListElt {
   control: context.ContextualizedControl;
 }
 
-// We declare the props separately to make props types inferable.
-const ControlTableProps = Vue.extend({
-  props: {
-    filter: {
-      type: Object, // Of type filter
-      required: true
-    }
-  }
-});
-
 @Component({
   components: {
     ControlRowHeader,
@@ -110,7 +101,8 @@ const ControlTableProps = Vue.extend({
     ResponsiveRowSwitch
   }
 })
-export default class ControlTable extends ControlTableProps {
+export default class ControlTable extends Vue {
+  @Prop({type: Object, required: true}) readonly filter!: Filter;
   // Whether to allow multiple expansions
   single_expand: boolean = false;
 

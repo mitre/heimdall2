@@ -5,7 +5,7 @@ import {shallowMount, Wrapper} from '@vue/test-utils';
 import Compare from '@/views/Compare.vue';
 import {FilteredDataModule} from '@/store/data_filters';
 import {StatusCountModule} from '@/store/status_counts';
-import {ComparisonContext} from '../../src/utilities/delta_util';
+import {ComparisonContext} from '@/utilities/delta_util';
 
 import {removeAllFiles, loadSample, fileCompliance} from '../util/testingUtils';
 

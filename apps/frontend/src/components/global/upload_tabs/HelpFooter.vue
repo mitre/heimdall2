@@ -41,10 +41,6 @@ import Component from 'vue-class-component';
 import HelpModal from '@/components/global/HelpModal.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
 import {AppInfoModule} from '@/store/app_info';
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {}
-});
 
 @Component({
   components: {
@@ -52,7 +48,7 @@ const Props = Vue.extend({
     HelpModal
   }
 })
-export default class HelpFooter extends Props {
+export default class HelpFooter extends Vue {
   get version(): string {
     return AppInfoModule.version;
   }

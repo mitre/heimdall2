@@ -50,7 +50,7 @@ import {Prop} from 'vue-property-decorator';
   }
 })
 export default class Topbar extends mixins(ServerMixin) {
-  @Prop({required: true}) readonly title!: String;
+  @Prop({type: String, required: true}) readonly title!: string;
 
   showModal: boolean = false;
 

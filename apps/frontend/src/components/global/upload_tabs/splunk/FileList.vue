@@ -46,19 +46,15 @@ import {v4 as uuid} from 'uuid';
 import {SplunkEndpoint, ExecutionMetaInfo} from '@/utilities/splunk_util';
 import {InspecDataModule} from '@/store/data_store';
 import {contextualizeEvaluation} from 'inspecjs/dist/context';
+import {Prop} from 'vue-property-decorator';
 
 const SEARCH_INTERVAL = 10000;
-
-const Props = Vue.extend({
-  props: {
-    endpoint: Object // Of type SplunkEndpoint. Can be null, but shouldn't be!
-  }
-});
 
 @Component({
   components: {}
 })
-export default class FileList extends Props {
+export default class FileList extends Vue {
+  @Prop({type: Object}) readonly endpoint!: SplunkEndpoint;
   /** The name written in the form */
   search: string = '';
 
@@ -84,14 +80,6 @@ export default class FileList extends Props {
   /** Currently fetch'd executions */
   items: ExecutionMetaInfo[] = [];
 
-  /** Typed getter for endpoint */
-  get _endpoint(): SplunkEndpoint | null {
-    if (this.endpoint == null) {
-      return null;
-    }
-    return this.endpoint as SplunkEndpoint;
-  }
-
   /** Callback for when user selects a file.
    * Loads it into our system.
    * We assume we're auth'd if this is called
@@ -101,7 +89,8 @@ export default class FileList extends Props {
     //let event = (null as unknown) as ExecutionMetaInfo;
 
     // Get its full event list and reconstruct
-    return this._endpoint!.get_execution(event.guid)
+    return this.endpoint
+      .get_execution(event.guid)
       .then((exec) => {
         let unique_id = uuid();
         let file = {
@@ -135,7 +124,7 @@ export default class FileList extends Props {
 
   /** Updates search results, if it is appropriate to do so */
   search_poller() {
-    if (!this._endpoint) {
+    if (!this.endpoint) {
       return;
     }
 
@@ -146,7 +135,7 @@ export default class FileList extends Props {
 
       // Then do the search
       this.already_searching = true;
-      this._endpoint
+      this.endpoint
         .fetch_execution_list()
         .then((l) => {
           // On success, save the items

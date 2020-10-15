@@ -5,7 +5,7 @@ import {shallowMount, Wrapper, createLocalVue} from '@vue/test-utils';
 import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {loadAll} from '../util/testingUtils';
-import Sidebar from '../../src/components/global/Sidebar.vue';
+import Sidebar from '@/components/global/Sidebar.vue';
 import VueRouter from 'vue-router';
 
 const vuetify = new Vuetify();

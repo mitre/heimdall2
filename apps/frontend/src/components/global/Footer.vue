@@ -10,13 +10,8 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-// We declare the props separately to make props types inferable.
-const FooterProps = Vue.extend({
-  props: {}
-});
-
 @Component({
   components: {}
 })
-export default class Footer extends FooterProps {}
+export default class Footer extends Vue {}
 </script>

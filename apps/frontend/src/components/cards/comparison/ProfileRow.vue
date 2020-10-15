@@ -10,14 +10,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-const Props = Vue.extend({
-  props: {
-    name: String,
-    start_time: String,
-    index: Number,
-    show_index: Boolean
-  }
-});
+import {Component, Prop} from 'vue-property-decorator';
 
-export default class DeltaView extends Props {}
+@Component
+export default class ProfileRow extends Vue {
+  @Prop({type: String, required: true}) readonly name!: string;
+  @Prop({type: String}) readonly start_time!: string;
+  @Prop({type: Number}) readonly index!: number;
+  @Prop({type: Boolean, default: false}) readonly show_index!: boolean;
+}
 </script>

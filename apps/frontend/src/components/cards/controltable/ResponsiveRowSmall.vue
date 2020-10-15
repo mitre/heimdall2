@@ -24,13 +24,8 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-const Props = Vue.extend({
-  props: {
-    statusColor: String
-  }
-});
 @Component
-export default class Row extends Props {}
+export default class Row extends Vue {}
 </script>
 
 <style scoped>

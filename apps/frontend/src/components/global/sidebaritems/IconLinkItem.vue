@@ -13,36 +13,12 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
 
-// We declare the props separately to make props types inferable.
-const LinkItemProps = Vue.extend({
-  props: {
-    text: {
-      type: String,
-      required: true
-    },
-    icon: {
-      type: String,
-      required: false
-    },
-    link: {
-      type: String,
-      required: false
-    },
-    action: {
-      type: Object, // Of type linkaction
-      required: false
-    }
-  }
-});
-
-/** If provided, will be called whenever clicked. */
-export interface LinkAction {
-  callback: () => void;
+@Component
+export default class LinkItem extends Vue {
+  @Prop({type: String, required: true}) readonly text!: string;
+  @Prop({type: String}) readonly icon!: string;
+  @Prop({type: String}) readonly link!: string;
 }
-
-@Component({
-  components: {}
-})
-export default class LinkItem extends LinkItemProps {}
 </script>

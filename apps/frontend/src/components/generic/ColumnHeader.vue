@@ -11,25 +11,14 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
 
 export type Sort = 'ascending' | 'descending' | 'none' | 'disabled';
 
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {
-    text: {
-      type: String,
-      required: true
-    },
-    sort: {
-      type: String, // Of type Sort
-      required: true
-    }
-  }
-});
-
 @Component
-export default class ColumnHeader extends Props {
+export default class ColumnHeader extends Vue {
+  @Prop({type: String, required: true}) readonly text!: string;
+  @Prop({type: String, required: true}) readonly sort!: Sort;
   /**
    * Simple boolean deciding whether or not to actually show/allow sorting
    */
@@ -44,7 +33,7 @@ export default class ColumnHeader extends Props {
    */
   toggle_sort(): void {
     let new_sort: string;
-    switch (this.sort as Sort) {
+    switch (this.sort) {
       default: // Shouldn't happen but whatever
       case 'none':
         new_sort = 'descending';
@@ -63,7 +52,7 @@ export default class ColumnHeader extends Props {
    * Computes the material theme getter to use for the sort icon
    */
   get icon(): string {
-    switch (this.sort as Sort) {
+    switch (this.sort) {
       default:
       case 'none':
         return 'mdi-sort-variant';
