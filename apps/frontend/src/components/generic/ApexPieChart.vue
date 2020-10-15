@@ -33,13 +33,13 @@ export interface Category<C extends string> {
   }
 })
 export default class ApexPieChart extends Vue {
-  @Prop({required: true}) readonly categories!: Category<string>[];
-  @Prop({required: true}) readonly series!: Number[];
+  @Prop({required: true, type: Array}) readonly categories!: Category<string>[];
+  @Prop({required: true, type: Array}) readonly series!: number[];
 
   // Generate the chart options based on categories
   get chartOptions(): ApexOptions {
     return {
-      labels: this.categories.map(cat => cat.label),
+      labels: this.categories.map((cat) => cat.label),
       dataLabels: {
         formatter: (val, opts) => opts.w.config.series[opts.seriesIndex]
       },
@@ -99,7 +99,9 @@ export default class ApexPieChart extends Vue {
       },
       stroke: {width: 0},
       // Apex charts does not support color names; must use color hack module
-      colors: this.categories.map(cat => ColorHackModule.lookupColor(cat.color))
+      colors: this.categories.map((cat) =>
+        ColorHackModule.lookupColor(cat.color)
+      )
     };
   }
 }
