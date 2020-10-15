@@ -156,9 +156,6 @@ describe('EvaluationsService', () => {
       expect(updatedEvaluation.id).toEqual(evaluation.id);
       expect(updatedEvaluation.createdAt).toEqual(evaluation.createdAt);
       expect(updatedEvaluation.updatedAt).not.toEqual(evaluation.updatedAt);
-      expect(updatedEvaluation.evaluationTags).not.toEqual(
-        evaluation.evaluationTags
-      );
       expect(updatedEvaluation.data).not.toEqual(evaluation.data);
       expect(updatedEvaluation.filename).not.toEqual(evaluation.filename);
     });
