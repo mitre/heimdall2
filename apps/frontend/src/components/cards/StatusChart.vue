@@ -2,8 +2,6 @@
   <ApexPieChart
     :categories="categories"
     :series="series"
-    :center_label="center_label"
-    :center_value="center_value"
     @category-selected="onSelect"
   />
 </template>
