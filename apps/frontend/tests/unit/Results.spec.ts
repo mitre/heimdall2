@@ -6,16 +6,15 @@ import {FilteredDataModule} from '@/store/data_filters';
 
 import {
   removeAllFiles,
-  selectAllFiles,
   loadSample,
   loadAll,
   expectedCount
 } from '../util/testingUtils';
 import Results from '@/views/Results.vue';
-import ProfData from '@/components/cards/ProfData.vue';
-import {profile_unique_key} from '../../src/utilities/format_util';
+import ProfData from '@/components/cards/ProfileData.vue';
+import {profile_unique_key} from '@/utilities/format_util';
 
-import ControlTable from '../../src/components/cards/controltable/ControlTable.vue';
+import ControlTable from '@/components/cards/controltable/ControlTable.vue';
 import {context} from 'inspecjs';
 interface ListElt {
   // A unique id to be used as a key.
@@ -34,27 +33,29 @@ interface InfoItem {
   info?: string;
 }
 
+const $router = {
+  currentRoute: {
+    path: '/results'
+  }
+};
 const vuetify = new Vuetify();
 let wrapper: Wrapper<Vue>;
 let profInfoWrapper: Wrapper<Vue>;
-let scrWrapper: Wrapper<Vue>;
-let statusChartWrapper: Wrapper<Vue>;
-let sevChartWrapper: Wrapper<Vue>;
-let compChartWrapper: Wrapper<Vue>;
 let controlTableWrapper: Wrapper<Vue>;
 
 wrapper = shallowMount(Results, {
   vuetify,
+  mocks: {
+    $router
+  },
   propsData: {}
 });
 
 loadSample('Acme Overlay Example');
-selectAllFiles();
 
 describe('Profile Info', () => {
   it('shows correct number of files', () => {
     loadAll();
-    selectAllFiles();
     expect((wrapper.vm as any).file_filter.length).toBe(
       FilteredDataModule.selected_file_ids.length
     );
@@ -63,10 +64,12 @@ describe('Profile Info', () => {
   it('no children', () => {
     removeAllFiles();
     loadSample('NGINX Clean Sample');
-    selectAllFiles();
 
     profInfoWrapper = shallowMount(ProfData, {
       vuetify,
+      mocks: {
+        $router
+      },
       propsData: {
         selected_prof: (wrapper.vm as any).root_profiles[0]
       }
@@ -78,10 +81,12 @@ describe('Profile Info', () => {
   it('2 children', () => {
     removeAllFiles();
     loadSample('Acme Overlay Example');
-    selectAllFiles();
 
     profInfoWrapper = shallowMount(ProfData, {
       vuetify,
+      mocks: {
+        $router
+      },
       propsData: {
         selected_prof: (wrapper.vm as any).root_profiles[0]
       }
@@ -99,10 +104,12 @@ describe('Profile Info', () => {
   it('children of children', () => {
     removeAllFiles();
     loadSample('Triple Overlay Example');
-    selectAllFiles();
 
     profInfoWrapper = shallowMount(ProfData, {
       vuetify,
+      mocks: {
+        $router
+      },
       propsData: {
         selected_prof: (wrapper.vm as any).root_profiles[0]
       }
@@ -157,9 +164,11 @@ describe('Datatable', () => {
   it('displays correct number of controls with many files', () => {
     removeAllFiles();
     loadAll();
-    selectAllFiles();
     controlTableWrapper = shallowMount(ControlTable, {
       vuetify,
+      mocks: {
+        $router
+      },
       propsData: {
         filter: (wrapper.vm as any).all_filter
       }
@@ -183,7 +192,7 @@ describe('Datatable', () => {
         fromFile: FilteredDataModule.selected_file_ids,
         omit_overlayed_controls: true
       })
-        .map(c => c.data.id)
+        .map((c) => c.data.id)
         .sort()
     );
   });

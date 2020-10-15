@@ -13,8 +13,8 @@ import {
   EVALUATION_WITH_TAGS_1,
   CREATE_EVALUATION_DTO_WITHOUT_TAGS,
   CREATE_EVALUATION_DTO_WITHOUT_DATA,
-  CREATE_EVALUATION_DTO_WITHOUT_VERSION,
-  UPDATE_EVALUATION_VERSION_ONLY,
+  CREATE_EVALUATION_DTO_WITHOUT_FILENAME,
+  UPDATE_EVALUATION_FILENAME_ONLY,
   UPDATE_EVALUATION_DATA_ONLY,
   UPDATE_EVALUATION_ADD_TAGS_1,
   UPDATE_EVALUATION_REMOVE_TAGS_1
@@ -105,7 +105,7 @@ describe('EvaluationsService', () => {
       expect(evaluation.updatedAt).toBeDefined();
       expect(evaluation.createdAt).toBeDefined();
       expect(evaluation.data).toEqual(EVALUATION_WITH_TAGS_1.data);
-      expect(evaluation.version).toEqual(EVALUATION_WITH_TAGS_1.version);
+      expect(evaluation.filename).toEqual(EVALUATION_WITH_TAGS_1.filename);
       expect(evaluation.evaluationTags[0].evaluationId).toBeDefined();
       expect(evaluation.evaluationTags[0].updatedAt).toBeDefined();
       expect(evaluation.evaluationTags[0].createdAt).toBeDefined();
@@ -125,8 +125,8 @@ describe('EvaluationsService', () => {
       expect(evaluation.updatedAt).toBeDefined();
       expect(evaluation.createdAt).toBeDefined();
       expect(evaluation.data).toEqual(CREATE_EVALUATION_DTO_WITHOUT_TAGS.data);
-      expect(evaluation.version).toEqual(
-        CREATE_EVALUATION_DTO_WITHOUT_TAGS.version
+      expect(evaluation.filename).toEqual(
+        CREATE_EVALUATION_DTO_WITHOUT_TAGS.filename
       );
       expect(evaluation.evaluationTags.length).toBe(0);
       expect((await evaluationTagsService.findAll()).length).toBe(0);
@@ -139,11 +139,13 @@ describe('EvaluationsService', () => {
       ).rejects.toThrow('notNull Violation: Evaluation.data cannot be null');
     });
 
-    it('should throw an error when missing the version field', async () => {
+    it('should throw an error when missing the filename field', async () => {
       expect.assertions(1);
       await expect(
-        evaluationsService.create(CREATE_EVALUATION_DTO_WITHOUT_VERSION)
-      ).rejects.toThrow('notNull Violation: Evaluation.version cannot be null');
+        evaluationsService.create(CREATE_EVALUATION_DTO_WITHOUT_FILENAME)
+      ).rejects.toThrow(
+        'notNull Violation: Evaluation.filename cannot be null'
+      );
     });
   });
 
@@ -171,7 +173,7 @@ describe('EvaluationsService', () => {
         evaluation.evaluationTags
       );
       expect(updatedEvaluation.data).not.toEqual(evaluation.data);
-      expect(updatedEvaluation.version).not.toEqual(evaluation.version);
+      expect(updatedEvaluation.filename).not.toEqual(evaluation.filename);
     });
 
     it('should add additional evaluation tags to an evaluation', async () => {
@@ -185,7 +187,7 @@ describe('EvaluationsService', () => {
       expect(updatedEvaluation.id).toEqual(evaluation.id);
       expect(updatedEvaluation.createdAt).toEqual(evaluation.createdAt);
       expect(updatedEvaluation.data).toEqual(evaluation.data);
-      expect(updatedEvaluation.version).toEqual(evaluation.version);
+      expect(updatedEvaluation.filename).toEqual(evaluation.filename);
       // Evaluation was not updated, only assoc was.
       expect(updatedEvaluation.updatedAt).toEqual(evaluation.updatedAt);
       // ---
@@ -195,7 +197,7 @@ describe('EvaluationsService', () => {
       expect(updatedEvaluation.evaluationTags.length).toBeGreaterThan(
         evaluation.evaluationTags.length
       );
-      updatedEvaluation.evaluationTags.forEach(tag => {
+      updatedEvaluation.evaluationTags.forEach((tag) => {
         expect(tag.id).toBeDefined();
         expect(tag.createdAt).toBeDefined();
         expect(tag.updatedAt).toBeDefined();
@@ -213,7 +215,7 @@ describe('EvaluationsService', () => {
       expect(updatedEvaluation.id).toEqual(evaluation.id);
       expect(updatedEvaluation.createdAt).toEqual(evaluation.createdAt);
       expect(updatedEvaluation.data).toEqual(evaluation.data);
-      expect(updatedEvaluation.version).toEqual(evaluation.version);
+      expect(updatedEvaluation.filename).toEqual(evaluation.filename);
       // Evaluation was not updated, only assoc was.
       expect(updatedEvaluation.updatedAt).toEqual(evaluation.updatedAt);
       // ---
@@ -234,7 +236,7 @@ describe('EvaluationsService', () => {
       };
       const updateEvaluationDto: UpdateEvaluationDto = {
         data: undefined,
-        version: undefined,
+        filename: undefined,
         evaluationTags: [updateEvaluationTagDto]
       };
       const updatedEvaluation = await evaluationsService.update(
@@ -246,7 +248,7 @@ describe('EvaluationsService', () => {
       // Evaluation was not updated, only assoc was.
       expect(updatedEvaluation.updatedAt).toEqual(evaluation.updatedAt);
       expect(updatedEvaluation.data).toEqual(evaluation.data);
-      expect(updatedEvaluation.version).toEqual(evaluation.version);
+      expect(updatedEvaluation.filename).toEqual(evaluation.filename);
       // ---
       expect(updatedEvaluation.evaluationTags).not.toEqual(
         evaluation.evaluationTags
@@ -276,16 +278,16 @@ describe('EvaluationsService', () => {
         evaluation.evaluationTags
       );
       expect(updatedEvaluation.data).not.toEqual(evaluation.data);
-      expect(updatedEvaluation.version).toEqual(evaluation.version);
+      expect(updatedEvaluation.filename).toEqual(evaluation.filename);
     });
 
-    it('should only update version if provided', async () => {
+    it('should only update filename if provided', async () => {
       const evaluation = await evaluationsService.create(
         EVALUATION_WITH_TAGS_1
       );
       const updatedEvaluation = await evaluationsService.update(
         evaluation.id,
-        UPDATE_EVALUATION_VERSION_ONLY
+        UPDATE_EVALUATION_FILENAME_ONLY
       );
       expect(updatedEvaluation.id).toEqual(evaluation.id);
       expect(updatedEvaluation.createdAt).toEqual(evaluation.createdAt);
@@ -294,7 +296,7 @@ describe('EvaluationsService', () => {
         evaluation.evaluationTags
       );
       expect(updatedEvaluation.data).toEqual(evaluation.data);
-      expect(updatedEvaluation.version).not.toEqual(evaluation.version);
+      expect(updatedEvaluation.filename).not.toEqual(evaluation.filename);
     });
   });
 

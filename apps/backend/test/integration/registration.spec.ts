@@ -10,6 +10,7 @@ import {DatabaseService} from '../../src/database/database.service';
 import {ConfigService} from '../../src/config/config.service';
 import {LogInVerifier} from './verifiers/log-in.verifier';
 import {ToastVerifier} from './verifiers/toast.verifier';
+import {FormVerifier} from './verifiers/form.verifier';
 import {RegistrationVerifier} from './verifiers/registration.verifier';
 
 describe('Registration', () => {
@@ -17,6 +18,7 @@ describe('Registration', () => {
   let configService: ConfigService;
   let appUrl: string;
 
+  const formVerifier = new FormVerifier();
   const registrationPage = new RegistrationPage();
   const logInPage = new LogInPage();
   const logInVerifier = new LogInVerifier();
@@ -32,8 +34,7 @@ describe('Registration', () => {
     databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
     configService = moduleFixture.get<ConfigService>(ConfigService);
 
-    appUrl = `http://localhost:${configService.get('HEIMDALL_SERVER_PORT') ||
-      '3000'}`;
+    appUrl = `http://localhost:${configService.get('PORT') || '3000'}`;
   });
 
   beforeEach(async () => {
@@ -56,13 +57,16 @@ describe('Registration', () => {
       );
     });
 
-    it('rejects passwords that do not match', async () => {
+    it.only('rejects passwords that do not match', async () => {
       await registrationPage.registerFailure(
         page,
         CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
       );
       await registrationVerifier.verifyRegistrationFormPresent(page);
-      await toastVerifier.verifyErrorPresent(page, 'Passwords do not match');
+      await formVerifier.verifyVMessageErrorPresent(
+        page,
+        'Password and password confirmation must match.'
+      );
     });
 
     it('rejects emails that already exist', async () => {

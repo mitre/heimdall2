@@ -76,16 +76,16 @@ export default class ApexPieChart extends Vue {
           show: false
         },
         events: {
-          dataPointSelection: (event, chartContext, config) => {
+          dataPointSelection: (_event, _chartContext, config) => {
             this.$emit(
               'category-selected',
               this.categories[config.dataPointIndex]
             );
           },
-          dataPointMouseEnter: (event, chartContext, config) => {
+          dataPointMouseEnter: (_event) => {
             document.body.style.cursor = 'pointer';
           },
-          dataPointMouseLeave: (event, chartContext, config) => {
+          dataPointMouseLeave: (_event) => {
             document.body.style.cursor = 'default';
           }
         },

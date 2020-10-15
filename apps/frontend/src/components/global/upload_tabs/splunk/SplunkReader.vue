@@ -1,11 +1,7 @@
 <template>
   <v-stepper v-model="step" vertical class="elevation-0">
-    <v-stepper-step step="1">
-      Login Credentials
-    </v-stepper-step>
-    <v-stepper-step step="2">
-      Search Execution Events
-    </v-stepper-step>
+    <v-stepper-step step="1"> Login Credentials </v-stepper-step>
+    <v-stepper-step step="2"> Search Execution Events </v-stepper-step>
 
     <AuthStep
       @authenticated="handle_login"
@@ -48,9 +44,7 @@
             Splunk HDF Plugin
           </v-btn>
         </p>
-        <v-btn color="info" @click="error_count = 0">
-          Ok
-        </v-btn>
+        <v-btn color="info" @click="error_count = 0"> Ok </v-btn>
       </div>
     </v-overlay>
   </v-stepper>
@@ -60,17 +54,10 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {FileID} from '@/store/report_intake';
+import {SnackbarModule} from '@/store/snackbar';
 import AuthStep from './AuthStep.vue';
 import FileList from './FileList.vue';
-import {
-  SplunkEndpoint,
-  SplunkErrorCode
-} from '../../../../utilities/splunk_util';
-
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {}
-});
+import {SplunkEndpoint, SplunkErrorCode} from '@/utilities/splunk_util';
 
 /**
  * File reader component for taking in inspec JSON data.
@@ -83,7 +70,7 @@ const Props = Vue.extend({
     FileList
   }
 })
-export default class SplunkReader extends Props {
+export default class SplunkReader extends Vue {
   /** Our session information, saved iff valid */
   splunk_state: SplunkEndpoint | null = null;
 
@@ -159,9 +146,7 @@ export default class SplunkReader extends Props {
   /** Give our error tooltip the message */
   show_error_message(msg: string) {
     // Toast whatever error we got
-    this.$toasted.global.error({
-      message: msg
-    });
+    SnackbarModule.failure(msg);
   }
 
   /** Callback on got files */

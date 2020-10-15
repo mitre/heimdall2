@@ -1,6 +1,6 @@
 <template>
   <v-tooltip top>
-    <template v-slot:activator="{on}">
+    <template #activator="{on}">
       <LinkItem
         key="export_json"
         text="Export as JSON"
@@ -24,12 +24,6 @@ import {FilteredDataModule} from '@/store/data_filters';
 import {ZipFile} from 'yazl';
 import concat from 'concat-stream';
 
-// We declare the props separately
-// to make props types inferrable.
-const Props = Vue.extend({
-  props: {}
-});
-
 type FileData = {
   name: string;
   contents: string;
@@ -40,7 +34,7 @@ type FileData = {
     LinkItem
   }
 })
-export default class ExportJSON extends Props {
+export default class ExportJSON extends Vue {
   populate_files(): FileData[] {
     let ids = FilteredDataModule.selected_file_ids;
     let fileData = new Array<FileData>();

@@ -3,10 +3,9 @@ FROM node:lts as builder
 WORKDIR /src
 USER 0
 
-COPY package.json yarn.lock lerna.json ./
+COPY package.json yarn.lock lerna.json tsconfig.json .prettierrc ./
 COPY apps ./apps
 COPY libs ./libs
-COPY tsconfig.json .
 
 RUN yarn --frozen-lockfile
 

@@ -6,7 +6,7 @@
         <v-switch
           v-model="single_expand"
           :label="single_expand ? 'Single Expand' : 'Multiple Expand'"
-          class="mt-2 "
+          class="mt-2"
         />
       </v-col>
     </v-row>
@@ -76,9 +76,10 @@ import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails
 import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 
-import {FilteredDataModule} from '@/store/data_filters';
+import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {control_unique_key} from '@/utilities/format_util';
 import {context} from 'inspecjs';
+import {Prop} from 'vue-property-decorator';
 
 // Tracks the visibility of an HDF control
 interface ListElt {
@@ -92,16 +93,6 @@ interface ListElt {
   control: context.ContextualizedControl;
 }
 
-// We declare the props separately to make props types inferable.
-const ControlTableProps = Vue.extend({
-  props: {
-    filter: {
-      type: Object, // Of type filter
-      required: true
-    }
-  }
-});
-
 @Component({
   components: {
     ControlRowHeader,
@@ -110,7 +101,8 @@ const ControlTableProps = Vue.extend({
     ResponsiveRowSwitch
   }
 })
-export default class ControlTable extends ControlTableProps {
+export default class ControlTable extends Vue {
+  @Prop({type: Object, required: true}) readonly filter!: Filter;
   // Whether to allow multiple expansions
   single_expand: boolean = false;
 
@@ -169,7 +161,7 @@ export default class ControlTable extends ControlTableProps {
 
   /** Return items as key, value pairs */
   get raw_items(): ListElt[] {
-    return FilteredDataModule.controls(this.filter).map(d => {
+    return FilteredDataModule.controls(this.filter).map((d) => {
       let key = control_unique_key(d);
 
       // File, hdf wrapper

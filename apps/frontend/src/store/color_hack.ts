@@ -1,6 +1,6 @@
 import {Module, VuexModule, getModule} from 'vuex-module-decorators';
 import Store from '@/store/store';
-import {nist, Severity} from 'inspecjs';
+import {nist} from 'inspecjs';
 
 /**
  * Gets a hex code for the given color
@@ -100,29 +100,5 @@ export class ColorHack extends VuexModule {
       }
     };
   }
-
-  /**
-   * Parameterized getter that returns an appropriate rgb color code for a given control severity
-   */
-  get colorForSeverity(): (severity: Severity) => string {
-    return (severity: Severity) => {
-      switch (status) {
-        case 'none':
-          return this.lookupColor('severityNone');
-        case 'low':
-          return this.lookupColor('severityLow');
-        case 'medium':
-          return this.lookupColor('severityMedium');
-        case 'high':
-          return this.lookupColor('severityHigh');
-        case 'critical':
-          return this.lookupColor('severityCritical');
-        default:
-          console.warn(`No color defined for ${status}`);
-          return 'rgb(187, 187, 187)';
-      }
-    };
-  }
 }
-
 export const ColorHackModule = getModule(ColorHack);

@@ -51,6 +51,21 @@
       "internalConsoleOptions": "neverOpen",
       "port": 9229,
       "smartStep": true
+    }, {
+      "name": "Debug Jest Integration Tests",
+      "cwd": "${workspaceRoot}/apps/backend",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "${workspaceRoot}/node_modules/.bin/jest",
+        "--runInBand",
+        "--config=./test/integration/jest.config.integration.js"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "port": 9229,
+      "smartStep": true
     }
   ]
 }

@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" width="75%">
     <!-- clickable slot passes the activator prop up to parent
         This allows the parent to pass in a clickable icon -->
-    <template v-slot:activator="{on}">
+    <template #activator="{on}">
       <slot name="clickable" :on="on" />
     </template>
 
@@ -74,14 +74,8 @@ import Component from 'vue-class-component';
 
 import {AppInfoModule} from '@/store/app_info';
 
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {}
-});
-@Component({
-  components: {}
-})
-export default class HelpModal extends Props {
+@Component
+export default class HelpModal extends Vue {
   dialog: boolean = false;
   get version(): string {
     return AppInfoModule.version;

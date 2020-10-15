@@ -3,22 +3,22 @@ import {Page} from 'puppeteer';
 export class LogInPage {
   async loginSuccess(page: Page, user: any): Promise<void> {
     await expect(page).toFillForm('#login_form', {
-      login: user.email,
+      email: user.email,
       password: user.password
     });
     await Promise.all([
-      page.waitForSelector('#upload-btn'),
+      page.waitForSelector('#uploadtab-local'),
       page.click('#login_button')
     ]);
   }
 
   async loginFailure(page: Page, user: any): Promise<void> {
     await expect(page).toFillForm('#login_form', {
-      login: user.email,
+      email: user.email,
       password: user.password
     });
     await Promise.all([
-      page.waitForSelector('.toasted.toasted-primary.default'),
+      page.waitForSelector('#info-snackbar'),
       page.click('#login_button')
     ]);
   }
@@ -39,8 +39,8 @@ export class LogInPage {
 
   async dismissToast(page: Page): Promise<void> {
     await Promise.all([
-      page.waitForSelector('.toasted.toasted-primary.default'),
-      page.click('.action.ripple')
+      page.waitForSelector('#info-snackbar'),
+      page.click('#hide-snackbar')
     ]);
   }
 }

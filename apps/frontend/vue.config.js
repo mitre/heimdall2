@@ -1,5 +1,4 @@
 let HtmlWebpackPlugin = require('html-webpack-plugin');
-let HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 var webpack = require('webpack');
 
 // Lookup constants
@@ -20,10 +19,10 @@ module.exports = {
   devServer: {
     // JWT_SECRET is a required secret for the backend. If it is sourced
     // then it is safe to assume the app is in server mode in development.
-    // HEIMDALL_SERVER_PORT is not required so use the default backend port value
-    // is used here if JWT_SECRET is applied but HEIMDALL_SERVER_PORT is undefined
+    // PORT is not required so use the default backend port value
+    // is used here if JWT_SECRET is applied but PORT is undefined
     proxy: process.env.JWT_SECRET
-      ? 'http://127.0.0.1:' + (process.env.HEIMDALL_SERVER_PORT || 3000)
+      ? `http://127.0.0.1:${process.env.PORT || 3000}`
       : ''
   },
   outputDir: '../../dist/frontend',
@@ -44,29 +43,14 @@ module.exports = {
       new HtmlWebpackPlugin({
         template: 'public/index.html',
         inlineSource: '.(js|css)$'
-      }),
-      new HtmlWebpackInlineSourcePlugin()
+      })
     ]
   },
-  css: {
-    loaderOptions: {
-      sass: {
-        data: `@import "~@/sass/main.scss"`
-      }
-    }
-  },
-  chainWebpack: config => {
+  chainWebpack: (config) => {
     config.module
       .rule('vue')
       .use('vue-svg-inline-loader')
       .loader('vue-svg-inline-loader')
       .options();
-    ['vue-modules', 'vue', 'normal-modules', 'normal'].forEach(match => {
-      config.module
-        .rule('scss')
-        .oneOf(match)
-        .use('sass-loader')
-        .tap(opt => Object.assign(opt, {data: `@import '~@/sass/main.scss';`}));
-    });
   }
 };

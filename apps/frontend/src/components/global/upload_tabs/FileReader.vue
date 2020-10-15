@@ -9,7 +9,7 @@
           <v-img
             src="@/assets/logo-orange-tsp.svg"
             svg-inline
-            style="max-width: 164px; max-height: 164px;"
+            style="max-width: 164px; max-height: 164px"
           />
         </v-col>
       </v-row>
@@ -17,7 +17,7 @@
         <v-col cols="12" align="center">
           <div class="d-flex flex-column justify-center">
             <span :class="title_class">Heimdall</span>
-            <span :class="title_class">Lite</span>
+            <span v-if="!serverMode" :class="title_class">Lite</span>
           </div>
         </v-col>
       </v-row>
@@ -30,7 +30,7 @@
                 v-model="fileRecords"
                 :multiple="true"
                 :help-text="'Choose files to upload'"
-                @select="filesSelected($event)"
+                @select="filesSelected"
               />
             </div>
             <div v-else>
@@ -50,69 +50,50 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 
-import {
-  InspecIntakeModule,
-  FileID,
-  next_free_file_ID
-} from '@/store/report_intake';
+import {SnackbarModule} from '@/store/snackbar';
+import {InspecIntakeModule, FileID} from '@/store/report_intake';
 import {AppInfoModule} from '@/store/app_info';
 import vueFileAgent from 'vue-file-agent';
+import ServerMixin from '@/mixins/ServerMixin';
 import 'vue-file-agent/dist/vue-file-agent.css';
 
 Vue.use(vueFileAgent);
 
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {}
-});
 /**
  * File reader component for taking in inspec JSON data.
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
  * Emits "got-files" with a list of the unique_ids of the loaded files.
  */
-@Component({})
-export default class FileReader extends Props {
+@Component
+export default class FileReader extends mixins(ServerMixin) {
   fileRecords = new Array();
   loading = false;
 
-  filesSelected(fileRecordsNewlySelected: any) {
+  filesSelected() {
     this.loading = true;
-    this.commit_files(this.fileRecords.map(record => record.file));
+    this.commit_files(this.fileRecords.map((record) => record.file));
     this.fileRecords = new Array();
   }
 
   /** Callback for our file reader */
   commit_files(files: File[]) {
-    let valid_ids: FileID[] = []; // Use this to track those that get successfully uploaded
-
-    // Promise an upload of each
-    let upload_promises = files.map(file => {
-      // Generate file id
-      let unique_id = next_free_file_ID();
-
-      // Submit it to be loaded, and display an error if it fails
-      return InspecIntakeModule.loadFile({file, unique_id}).then(err => {
-        if (err) {
-          console.error(`Error loading file ${file.name}`);
-          this.$toasted.global.error({
-            message: String(err)
-          });
-        } else {
-          // Store the given id as valid
-          valid_ids.push(unique_id);
-        }
+    Promise.all(
+      files.map((file) => {
+        return InspecIntakeModule.loadFile({file}).catch((err) => {
+          SnackbarModule.failure(String(err));
+        });
+      })
+    )
+      .then((fileIds: (FileID | void)[]) => {
+        // Since catching errors is handled by loadFile above,
+        // filter(Boolean) is used here to remove any falsey values.
+        this.$emit('got-files', fileIds.filter(Boolean));
+      })
+      .finally(() => {
+        this.loading = false;
       });
-    });
-
-    // When they're all done, emit event.
-    // To use promise.all we must make each promise explicitly allow rejection without breaking promise.all failfast
-    let guaranteed_promises = upload_promises.map(p => p.catch(err => err));
-    Promise.all(guaranteed_promises).then(_ => {
-      this.$emit('got-files', valid_ids);
-      this.loading = false;
-    });
   }
 
   get title_class(): string[] {

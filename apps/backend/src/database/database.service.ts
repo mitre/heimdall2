@@ -11,7 +11,7 @@ export class DatabaseService {
   }
 
   async cleanAll() {
-    Object.values(this.sequelize.models).forEach(model => {
+    Object.values(this.sequelize.models).forEach((model) => {
       model.destroy({where: {}});
     });
   }
@@ -26,18 +26,18 @@ export class DatabaseService {
     }
 
     const added = updated.filter(
-      updatedItem =>
-        source.find(sourceItem => sourceItem.id === updatedItem.id) ===
+      (updatedItem) =>
+        source.find((sourceItem) => sourceItem.id === updatedItem.id) ===
         undefined
     );
     const changed = updated.filter(
-      updatedItem =>
-        source.find(sourceItem => sourceItem.id === updatedItem.id) !==
+      (updatedItem) =>
+        source.find((sourceItem) => sourceItem.id === updatedItem.id) !==
         undefined
     );
     const deleted = source.filter(
-      sourceItem =>
-        updated.find(updatedItem => updatedItem.id === sourceItem.id) ===
+      (sourceItem) =>
+        updated.find((updatedItem) => updatedItem.id === sourceItem.id) ===
         undefined
     );
 

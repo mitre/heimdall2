@@ -90,7 +90,7 @@ describe('/evaluations', () => {
         .post('/authn/login')
         .set('Content-Type', 'application/json')
         .send(LOGIN_AUTHENTICATION)
-        .then(response => {
+        .then((response) => {
           jwtToken = response.body.accessToken;
         });
     });
@@ -103,7 +103,7 @@ describe('/evaluations', () => {
           .set('Authorization', 'bearer ' + jwtToken)
           .send(EVALUATION_1)
           .expect(HttpStatus.CREATED)
-          .then(response => {
+          .then((response) => {
             const createdAt = response.body.createdAt.valueOf();
             const updatedAt = response.body.updatedAt.valueOf();
 
@@ -116,7 +116,7 @@ describe('/evaluations', () => {
             expect(createdDelta).toBeLessThanOrEqual(60000);
             expect(updatedDelta).toBeLessThanOrEqual(60000);
             expect(response.body.id).toBeDefined();
-            expect(response.body.version).toEqual(EVALUATION_1.version);
+            expect(response.body.filename).toEqual(EVALUATION_1.filename);
             expect(response.body.data).toEqual(EVALUATION_1.data);
             expect(response.body.evaluationTags).toEqual(
               EVALUATION_1.evaluationTags
@@ -131,7 +131,7 @@ describe('/evaluations', () => {
           .set('Authorization', 'bearer ' + jwtToken)
           .send(EVALUATION_WITH_TAGS_1)
           .expect(HttpStatus.CREATED)
-          .then(response => {
+          .then((response) => {
             const createdAt = response.body.evaluationTags[0].createdAt.valueOf();
             const updatedAt = response.body.evaluationTags[0].updatedAt.valueOf();
 
@@ -166,7 +166,7 @@ describe('/evaluations', () => {
           .set('Content-Type', 'application/json')
           .set('Authorization', 'bearer ' + jwtToken)
           .send(EVALUATION_WITH_TAGS_1)
-          .then(response => {
+          .then((response) => {
             evaluation = response.body;
           });
       });
@@ -177,7 +177,7 @@ describe('/evaluations', () => {
             .get('/evaluations/' + evaluation.id)
             .set('Authorization', 'bearer ' + jwtToken)
             .expect(HttpStatus.OK)
-            .then(response => {
+            .then((response) => {
               expect(response.body).toEqual(evaluation);
             });
         });
@@ -187,7 +187,7 @@ describe('/evaluations', () => {
             .get('/evaluations')
             .set('Authorization', 'bearer ' + jwtToken)
             .expect(HttpStatus.OK)
-            .then(response => {
+            .then((response) => {
               expect(response.body[0]).toEqual(evaluation);
             });
         });
@@ -200,7 +200,7 @@ describe('/evaluations', () => {
             .set('Authorization', 'bearer ' + jwtToken)
             .set(UPDATE_EVALUATION)
             .expect(HttpStatus.OK)
-            .then(response => {
+            .then((response) => {
               const updatedAt = response.body.updatedAt.valueOf();
               const updatedDelta =
                 new Date().getTime() - new Date(updatedAt).getTime();
@@ -218,14 +218,14 @@ describe('/evaluations', () => {
             .delete('/evaluations/' + evaluation.id)
             .set('Authorization', 'bearer ' + jwtToken)
             .expect(HttpStatus.OK)
-            .then(response => {
+            .then((response) => {
               expect(response.body).toEqual(evaluation);
             });
 
           await request(app.getHttpServer())
             .get('/evaluation-tags')
             .set('Authorization', 'bearer ' + jwtToken)
-            .then(response => {
+            .then((response) => {
               // There should be no tags in the database at this point because the evaluation
               // containing them was deleted
               expect(response.body).toEqual([]);

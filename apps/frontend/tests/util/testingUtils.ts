@@ -1,66 +1,58 @@
 import 'jest';
 import {AllRaw} from '../util/fs';
-import {
-  InspecIntakeModule,
-  next_free_file_ID
-} from '../../src/store/report_intake';
-import {FilteredDataModule} from '@/store/data_filters';
+import {InspecIntakeModule} from '@/store/report_intake';
+
 import {StatusCountModule} from '@/store/status_counts';
 import {InspecDataModule} from '@/store/data_store';
 import {samples, Sample} from '@/utilities/sample_util';
 import {readFileSync} from 'fs';
 
-let id = 0;
-
 export function createTestingVue() {}
 
 export function loadSample(sampleName: string) {
-  let sample: Sample = {name: '', sample: ''};
+  let sample: Sample = {filename: '', data: ''};
   for (let samp of samples) {
-    if (samp.name == sampleName) {
+    if (samp.filename === sampleName) {
       sample = samp;
     }
   }
-  if (sample.name === '') {
+  if (sample.filename === '') {
     return;
   }
   return InspecIntakeModule.loadText({
     filename: sampleName,
-    unique_id: next_free_file_ID(),
-    text: JSON.stringify(sample.sample)
+    text: JSON.stringify(sample.data)
   });
 }
 
 export function loadAll(): void {
   let data = AllRaw();
-  Object.values(data).map(file_result => {
-    // Increment counter
-    id += 1;
-
+  Object.values(data).forEach((file_result) => {
     // Do intake
-    return InspecIntakeModule.loadText({
+    InspecIntakeModule.loadText({
       filename: file_result.name,
-      unique_id: id,
       text: file_result.content
     });
   });
 }
 
 export function removeAllFiles(): void {
-  let ids = InspecDataModule.allFiles.map(f => f.unique_id);
+  let ids = InspecDataModule.allFiles.map((f) => f.unique_id);
   for (let id of ids) {
     InspecDataModule.removeFile(id);
   }
 }
 
-export function selectAllFiles(): void {
-  for (let file of InspecDataModule.allFiles) {
-    FilteredDataModule.set_toggle_file_on(file.unique_id);
-  }
+// When using Vuetify v-dialog's this is necessary in order to avoid a
+// warning on the console when running tests.
+export function addElemWithDataAppToBody() {
+  const app = document.createElement('div');
+  app.setAttribute('data-app', 'true');
+  document.body.append(app);
 }
 
-export function fileCompliance(id: number) {
-  let filter = {fromFile: [id]};
+export function fileCompliance(fileId: string) {
+  const filter = {fromFile: [fileId]};
   let passed = StatusCountModule.countOf(filter, 'Passed');
   let total =
     passed +
@@ -85,7 +77,7 @@ export function expectedCount(
   };
 
   // For each, we will filter then count
-  InspecDataModule.executionFiles.forEach(file => {
+  InspecDataModule.executionFiles.forEach((file) => {
     // Get the corresponding count file
     let count_filename = `tests/hdf_data/counts/${file.filename}.info.counts`;
     let count_file_content = readFileSync(count_filename, 'utf-8');

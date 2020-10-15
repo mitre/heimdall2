@@ -2,9 +2,7 @@
   <v-card :watcher="selected_watch">
     <v-row class="pa-4" justify="space-between">
       <v-col cols="3">
-        <v-card-text>
-          Parent Profile
-        </v-card-text>
+        <v-card-text> Parent Profile </v-card-text>
         <!-- literally of just the one root item -->
         <v-treeview
           :items="root_tree"
@@ -17,14 +15,12 @@
           transition
           @update:active="setActive"
         >
-          <template>
+          <template #prepend>
             <v-icon>mdi-note</v-icon>
           </template>
         </v-treeview>
         <div v-if="items.length > 0">
-          <v-card-text>
-            Depends On These Profiles:
-          </v-card-text>
+          <v-card-text> Depends On These Profiles: </v-card-text>
           <!-- for the children of the root -->
           <v-treeview
             :items="items"
@@ -37,7 +33,7 @@
             transition
             @update:active="setChildActive"
           >
-            <template>
+            <template #prepend>
               <v-icon>mdi-note</v-icon>
             </template>
           </v-treeview>
@@ -51,7 +47,7 @@
           <div
             v-if="!selected"
             class="title grey--text text--lighten-1 font-weight-light"
-            style="align-self: center;"
+            style="align-self: center"
           >
             Select a Profile
           </div>
@@ -86,9 +82,10 @@ import Component from 'vue-class-component';
 import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
 import {SourcedContextualizedEvaluation} from '@/store/report_intake';
 
-import {profile_unique_key} from '../../utilities/format_util';
+import {profile_unique_key} from '@/utilities/format_util';
 import {InspecFile, ProfileFile} from '@/store/report_intake';
 import {context} from 'inspecjs';
+import {Prop} from 'vue-property-decorator';
 
 /**
  * Makes a ContextualizedProfile work as a TreeView item
@@ -107,22 +104,15 @@ class TreeItem {
     // Base information
     this.id = profile_unique_key(profile);
     this.name = profile.data.name;
-    this.children = profile.extends_from.map(p => new TreeItem(p));
+    this.children = profile.extends_from.map((p) => new TreeItem(p));
   }
 }
 
-// We declare the props separately
-// to make props types inferrable.
-const Props = Vue.extend({
-  props: {
-    selected_prof: {type: Object, required: true}
-  }
-});
+@Component
+export default class ProfileData extends Vue {
+  @Prop({type: Object, required: true})
+  readonly selected_prof!: context.ContextualizedProfile;
 
-@Component({
-  components: {}
-})
-export default class ProfileData extends Props {
   //auto select the root prof
   mounted() {
     this.active = [profile_unique_key(this.selected_prof)];
@@ -149,7 +139,7 @@ export default class ProfileData extends Props {
       return this.selected_prof;
     }
     let selected_profile = InspecDataModule.contextualProfiles.find(
-      p => profile_unique_key(p) == this.true_active
+      (p) => profile_unique_key(p) == this.true_active
     );
     return selected_profile;
   }
@@ -176,7 +166,7 @@ export default class ProfileData extends Props {
       let exec = (this.selected
         .sourced_from as unknown) as SourcedContextualizedEvaluation;
       from_file = exec.from_file;
-      let with_time = this.selected.contains.find(x => x.root.hdf.start_time);
+      let with_time = this.selected.contains.find((x) => x.root.hdf.start_time);
       start_time = (with_time && with_time.root.hdf.start_time) || null;
     }
 

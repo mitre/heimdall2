@@ -8,7 +8,7 @@ import {
 @Injectable()
 export class PasswordComplexityPipe implements PipeTransform {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  transform(value: any, metadata: ArgumentMetadata) {
+  transform(value: any, _metadata: ArgumentMetadata) {
     if (
       value.currentPassword != null &&
       value.password == null &&
@@ -37,7 +37,8 @@ export class PasswordComplexityPipe implements PipeTransform {
       RegExp('.{15,}')
     ];
     return (
-      validators.filter(expr => expr.test(password)).length == validators.length
+      validators.filter((expr) => expr.test(password)).length ==
+      validators.length
     );
   }
 
@@ -49,6 +50,6 @@ export class PasswordComplexityPipe implements PipeTransform {
       RegExp('[0-9]{4,}'),
       RegExp(/[^\w\s]{4,}/)
     ];
-    return validators.filter(expr => expr.test(password)).length == 0;
+    return validators.filter((expr) => expr.test(password)).length === 0;
   }
 }
