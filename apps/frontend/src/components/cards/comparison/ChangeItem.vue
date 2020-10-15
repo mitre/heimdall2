@@ -20,20 +20,18 @@
 </template>
 
 <script lang="ts">
+import {ControlChange} from '@/utilities/delta_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-
-const Props = Vue.extend({
-  props: {
-    change: Object,
-    shift: Number
-  }
-});
+import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {}
 })
-export default class ChangeItem extends Props {
+export default class ChangeItem extends Vue {
+  @Prop({type: Object, required: true}) readonly change!: ControlChange;
+  @Prop({type: Number, required: true}) readonly shift!: number;
+
   color(status: string): string {
     if (this.change.name.toLowerCase() == 'status') {
       return `status${status.replace(' ', '')}`;

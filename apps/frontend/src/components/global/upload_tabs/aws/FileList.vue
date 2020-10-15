@@ -51,40 +51,22 @@ import Component from 'vue-class-component';
 import S3 from 'aws-sdk/clients/s3';
 import {InspecIntakeModule} from '@/store/report_intake';
 
-import {Auth, fetch_s3_file} from '../../../../utilities/aws_util';
-import {LocalStorageVal} from '../../../../utilities/helper_util';
+import {Auth, fetch_s3_file} from '@/utilities/aws_util';
+import {LocalStorageVal} from '@/utilities/helper_util';
+import {Prop} from 'vue-property-decorator';
 
 // Caches the bucket name
 const local_bucket_name = new LocalStorageVal<string>('aws_bucket_name');
 
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {
-    auth: Object, // Can be null, but shouldn't be!
-    files: Array, // List of S3 objects of current files
-    error: String
-  }
-});
-
 @Component({
   components: {}
 })
-export default class FileList extends Props {
+export default class FileList extends Vue {
+  @Prop({type: Object}) readonly auth!: Auth;
+  @Prop({type: Array}) readonly files!: S3.Object[];
+
   /** The name written in the form */
   form_bucket_name: string = '';
-
-  /** Currently visible files */
-  get _files(): S3.Object[] {
-    return this.files as S3.Object[];
-  }
-
-  /** Typed getter for auth */
-  get _auth(): Auth {
-    if (this.auth === null) {
-      throw new Error("We aren't auth'd");
-    }
-    return this.auth as Auth;
-  }
 
   /** On mount, try to look up stored auth info */
   /** Callback for when user selects a file.
@@ -92,19 +74,17 @@ export default class FileList extends Props {
    */
   async load_file(index: number): Promise<void> {
     // Get it out of the list
-    let file = this._files[index];
+    let file = this.files[index];
 
     // Fetch it from s3, and promise to submit it to be loaded afterwards
-    await fetch_s3_file(
-      this._auth.creds,
-      file.Key!,
-      this.form_bucket_name
-    ).then(content => {
-      InspecIntakeModule.loadText({
-        text: content,
-        filename: file.Key!
-      }).then(unique_id => this.$emit('got-files', [unique_id]));
-    });
+    await fetch_s3_file(this.auth.creds, file.Key!, this.form_bucket_name).then(
+      (content) => {
+        InspecIntakeModule.loadText({
+          text: content,
+          filename: file.Key!
+        }).then((unique_id) => this.$emit('got-files', [unique_id]));
+      }
+    );
   }
 
   /** Recalls the last entered bucket name.  */

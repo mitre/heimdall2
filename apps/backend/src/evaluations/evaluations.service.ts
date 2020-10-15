@@ -23,7 +23,7 @@ export class EvaluationsService {
     const evaluations = await this.evaluationModel.findAll<Evaluation>({
       include: [EvaluationTag]
     });
-    return evaluations.map(evaluation => new EvaluationDto(evaluation));
+    return evaluations.map((evaluation) => new EvaluationDto(evaluation));
   }
 
   async create(
@@ -35,7 +35,7 @@ export class EvaluationsService {
     // Save the evaluation with no tags to get an ID.
     const evaluationData = await evaluation.save();
     const evaluationTagsPromises = createEvaluationDto?.evaluationTags?.map(
-      async createEvaluationTagDto => {
+      async (createEvaluationTagDto) => {
         return this.evaluationTagsService.create(
           evaluationData.id,
           this.evaluationTagsService.objectFromDto(createEvaluationTagDto)
@@ -76,7 +76,7 @@ export class EvaluationsService {
       );
 
       const createTagPromises = evaluationTagsDelta.added.map(
-        async evaluationTag => {
+        async (evaluationTag) => {
           return this.evaluationTagsService.create(
             evaluation.id,
             new CreateEvaluationTagDto(evaluationTag)
@@ -85,7 +85,7 @@ export class EvaluationsService {
       );
 
       const updateTagPromises = evaluationTagsDelta.changed.map(
-        async evaluationTag => {
+        async (evaluationTag) => {
           return this.evaluationTagsService.update(
             evaluationTag.id,
             new UpdateEvaluationTagDto(evaluationTag)
@@ -94,7 +94,7 @@ export class EvaluationsService {
       );
 
       const deleteTagPromises = evaluationTagsDelta.deleted.map(
-        async evaluationTag => {
+        async (evaluationTag) => {
           return this.evaluationTagsService.remove(evaluationTag.id);
         }
       );
@@ -114,9 +114,9 @@ export class EvaluationsService {
       include: [EvaluationTag]
     });
     this.exists(evaluation);
-    await this.databaseService.sequelize.transaction(async transaction => {
+    await this.databaseService.sequelize.transaction(async (transaction) => {
       await Promise.all([
-        evaluation.evaluationTags.map(async evaluationTag => {
+        evaluation.evaluationTags.map(async (evaluationTag) => {
           await evaluationTag.destroy({transaction});
         })
       ]);

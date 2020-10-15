@@ -2,7 +2,13 @@
   <v-row>
     <v-col cols="12" sm="12" lg="2">
       <v-layout class="pl-2" fill-height justify-center align-center>
-        <v-btn class="unclickable-button" :color="status_color" block depressed>
+        <v-btn
+          class="unclickable-button"
+          :color="status_color"
+          elevation="2"
+          block
+          depressed
+        >
           <h3>{{ result.status.toUpperCase() }}</h3>
         </v-btn>
       </v-layout>
@@ -76,32 +82,23 @@ import Component from 'vue-class-component';
 
 //@ts-ignore
 import VClamp from 'vue-clamp/dist/vue-clamp.js';
+import {Prop} from 'vue-property-decorator';
+import {HDFControlSegment} from 'inspecjs';
 
 interface CollapsableElement extends Element {
   offsetHeight: Number;
   offsetWidth: Number;
 }
 
-// We declare the props separately to make props types inferable.
-const ControlRowColProps = Vue.extend({
-  props: {
-    statusCode: {
-      type: String,
-      required: true
-    },
-    result: {
-      type: Object,
-      required: true
-    }
-  }
-});
-
 @Component({
   components: {
     VClamp
   }
 })
-export default class ControlRowCol extends ControlRowColProps {
+export default class ControlRowCol extends Vue {
+  @Prop({type: String, required: true}) readonly statusCode!: string;
+  @Prop({type: Object, required: true}) readonly result!: HDFControlSegment;
+
   expanded: boolean = false;
   clamp: boolean = false;
 
@@ -113,6 +110,8 @@ export default class ControlRowCol extends ControlRowColProps {
 </script>
 
 <style lang="scss" scoped>
+@import '@/sass/control-row-format.scss';
+
 button.unclickable-button {
   pointer-events: none;
 }

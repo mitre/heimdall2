@@ -12,14 +12,8 @@ import Component from 'vue-class-component';
 import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
 import {Severity} from 'inspecjs';
 import {SeverityCountModule} from '@/store/severity_counts';
-
-// We declare the props separately to make props types inferable.
-const SeverityChartProps = Vue.extend({
-  props: {
-    value: String, // The currently selected severity, or null
-    filter: Object // Of type Filer from filteredData
-  }
-});
+import {Filter} from '@/store/data_filters';
+import {Prop} from 'vue-property-decorator';
 
 /**
  * Categories property must be of type Category
@@ -30,7 +24,10 @@ const SeverityChartProps = Vue.extend({
     ApexPieChart
   }
 })
-export default class SeverityChart extends SeverityChartProps {
+export default class SeverityChart extends Vue {
+  @Prop({type: String}) readonly value!: string | null;
+  @Prop({type: Object, required: true}) readonly filter!: Filter;
+
   categories: Category<Severity>[] = [
     // { label: "Low", value: "low", icon: "SquareIcon", color: "var(--v-success-base)" },
     {label: 'Low', value: 'low', color: 'severityLow'},

@@ -8,7 +8,7 @@
         :search="search"
         :items-per-page="5"
       >
-        <template v-slot:top>
+        <template #top>
           <v-toolbar>
             <v-toolbar-title>Splunk Executions</v-toolbar-title>
             <v-divider class="mx-4" inset vertical />
@@ -22,19 +22,15 @@
             />
           </v-toolbar>
         </template>
-        <template v-slot:item.action="{item}">
-          <v-icon @click="load_event(item)">
-            mdi-plus-circle
-          </v-icon>
+        <template #[`item.actions`]="{item}">
+          <v-icon @click="load_event(item)"> mdi-plus-circle </v-icon>
         </template>
-        <template v-slot:no-data>
+        <template #no-data>
           No data. Try relaxing your search conditions, or expanding the date
           range.
         </template>
       </v-data-table>
-      <v-btn color="red" class="my-2" @click="logout">
-        Logout
-      </v-btn>
+      <v-btn color="red" class="my-2" @click="logout"> Logout </v-btn>
     </div>
   </v-stepper-content>
 </template>
@@ -50,19 +46,15 @@ import {v4 as uuid} from 'uuid';
 import {SplunkEndpoint, ExecutionMetaInfo} from '@/utilities/splunk_util';
 import {InspecDataModule} from '@/store/data_store';
 import {contextualizeEvaluation} from 'inspecjs/dist/context';
+import {Prop} from 'vue-property-decorator';
 
 const SEARCH_INTERVAL = 10000;
-
-const Props = Vue.extend({
-  props: {
-    endpoint: Object // Of type SplunkEndpoint. Can be null, but shouldn't be!
-  }
-});
 
 @Component({
   components: {}
 })
-export default class FileList extends Props {
+export default class FileList extends Vue {
+  @Prop({type: Object}) readonly endpoint!: SplunkEndpoint;
   /** The name written in the form */
   search: string = '';
 
@@ -88,14 +80,6 @@ export default class FileList extends Props {
   /** Currently fetch'd executions */
   items: ExecutionMetaInfo[] = [];
 
-  /** Typed getter for endpoint */
-  get _endpoint(): SplunkEndpoint | null {
-    if (this.endpoint == null) {
-      return null;
-    }
-    return this.endpoint as SplunkEndpoint;
-  }
-
   /** Callback for when user selects a file.
    * Loads it into our system.
    * We assume we're auth'd if this is called
@@ -105,8 +89,9 @@ export default class FileList extends Props {
     //let event = (null as unknown) as ExecutionMetaInfo;
 
     // Get its full event list and reconstruct
-    return this._endpoint!.get_execution(event.guid)
-      .then(exec => {
+    return this.endpoint
+      .get_execution(event.guid)
+      .then((exec) => {
         let unique_id = uuid();
         let file = {
           unique_id,
@@ -123,7 +108,7 @@ export default class FileList extends Props {
         InspecDataModule.addExecution(file);
         this.$emit('got-files', [unique_id]);
       })
-      .catch(fail => {
+      .catch((fail) => {
         this.$emit('error', fail);
       });
   }
@@ -139,7 +124,7 @@ export default class FileList extends Props {
 
   /** Updates search results, if it is appropriate to do so */
   search_poller() {
-    if (!this._endpoint) {
+    if (!this.endpoint) {
       return;
     }
 
@@ -150,9 +135,9 @@ export default class FileList extends Props {
 
       // Then do the search
       this.already_searching = true;
-      this._endpoint
+      this.endpoint
         .fetch_execution_list()
-        .then(l => {
+        .then((l) => {
           // On success, save the items
           this.items = l;
 
@@ -165,7 +150,7 @@ export default class FileList extends Props {
             this.next_search_time
           );
         })
-        .catch(error => {
+        .catch((error) => {
           this.items = [];
           this.already_searching = false;
           this.$emit('error', error);

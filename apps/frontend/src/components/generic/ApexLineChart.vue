@@ -1,5 +1,5 @@
 <template>
-  <div style="color: black;">
+  <div style="color: black">
     <vue-apex-charts
       type="line"
       height="350"
@@ -10,32 +10,12 @@
 </template>
 
 <script lang="ts">
-import Vue, {PropType} from 'vue';
+import Vue from 'vue';
 import Component from 'vue-class-component';
 import VueApexCharts from 'vue-apexcharts';
 import {ApexOptions} from 'apexcharts';
-
-// We declare the props separately to make props types inferable.
-const ApexLineChartProps = Vue.extend({
-  props: {
-    categories: {
-      type: Array as PropType<string[]>,
-      validator: value => {
-        return value.every(element => typeof element === 'string');
-      }
-    }, // Should be of type string[]
-    series: {
-      type: Array as PropType<SeriesItem[]>,
-      validator: value => {
-        return value.every(element => typeof element === 'object');
-      }
-    }, // Should be of type object[]
-    upper_range: Number, //upper bound of y axis
-    sev_chart: Boolean, //identifies chart as severity chart
-    title: String,
-    y_title: String
-  }
-});
+import {Category} from './ApexPieChart.vue';
+import {Prop} from 'vue-property-decorator';
 
 let id_counter = 0;
 function next_id(): number {
@@ -56,7 +36,14 @@ export interface SeriesItem {
     VueApexCharts
   }
 })
-export default class ApexLineChart extends ApexLineChartProps {
+export default class ApexLineChart extends Vue {
+  @Prop({required: true, type: Array}) readonly categories!: Category<string>[];
+  @Prop({required: true, type: Array}) readonly series!: number[];
+  @Prop({type: Number}) readonly upper_range!: number; //upper bound of y axis
+  @Prop({type: Boolean}) readonly sev_chart!: boolean; //identifies chart as severity chart
+  @Prop({type: String}) readonly title!: string;
+  @Prop({type: String}) readonly y_title!: string;
+
   chart_id: string = `line_chart_${next_id}`;
 
   get label_colors(): string[] {

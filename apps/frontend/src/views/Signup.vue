@@ -21,11 +21,13 @@
                     label="Email"
                     prepend-icon="mdi-account"
                     type="text"
+                    @keyup.enter="$refs.password.focus"
                     @blur="$v.email.$touch()"
                   />
                   <br />
                   <v-text-field
                     id="password"
+                    ref="password"
                     v-model="password"
                     :error-messages="passwordErrors"
                     prepend-icon="mdi-lock"
@@ -34,10 +36,11 @@
                     :type="showPassword ? 'text' : 'password'"
                     :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                     loading
+                    @keyup.enter="$refs.passwordConfirmation.focus"
                     @click:append="showPassword = !showPassword"
                     @blur="$v.password.$touch()"
                   >
-                    <template v-slot:progress>
+                    <template #progress>
                       <v-progress-linear
                         :value="passwordStrengthPercent"
                         :color="passwordStrengthColor"
@@ -49,12 +52,14 @@
                   <br />
                   <v-text-field
                     id="passwordConfirmation"
+                    ref="passwordConfirmation"
                     v-model="passwordConfirmation"
                     name="passwordConfirmation"
                     :error-messages="passwordConfirmationErrors"
                     label="Confirm Password"
                     prepend-icon="mdi-lock-alert"
                     type="password"
+                    @keyup.enter="register"
                     @blur="$v.passwordConfirmation.$touch()"
                   />
                   <br />
@@ -94,6 +99,7 @@ import zxcvbn from 'zxcvbn';
 import {ServerModule} from '@/store/server';
 import {required, email, sameAs} from 'vuelidate/lib/validators';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
+import {SnackbarModule} from '@/store/snackbar';
 
 export interface SignupHash {
   email: string;
@@ -140,14 +146,12 @@ export default class Signup extends Vue {
       ServerModule.Register(creds)
         .then(() => {
           this.$router.push('/login');
-          this.$toasted.global.success({
-            message: 'You have successfully registered, please sign in'
-          });
+          SnackbarModule.notify(
+            'You have successfully registered, please sign in'
+          );
         })
-        .catch(error => {
-          this.$toasted.global.error({
-            message: error.response.data.message
-          });
+        .catch((error) => {
+          SnackbarModule.notify(error.response.data.message);
         });
     }
   }

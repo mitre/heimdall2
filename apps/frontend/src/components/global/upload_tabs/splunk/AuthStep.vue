@@ -5,10 +5,8 @@
       <v-text-field
         v-model="password"
         label="Password"
+        type="password"
         :rules="[req_rule]"
-        :append-icon="show_secret ? 'mdi-eye' : 'mdi-eye-off'"
-        :type="show_secret ? 'text' : 'password'"
-        @click:append="show_secret = !show_secret"
       />
       <v-text-field
         v-model="hostname"
@@ -30,9 +28,7 @@
       <v-spacer />
       <v-btn @click="$emit('show-help')">
         Help
-        <v-icon class="ml-2">
-          mdi-help-circle
-        </v-icon>
+        <v-icon class="ml-2"> mdi-help-circle </v-icon>
       </v-btn>
     </v-row>
   </v-stepper-content>
@@ -41,18 +37,15 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {LocalStorageVal} from '../../../../utilities/helper_util';
+import {LocalStorageVal} from '@/utilities/helper_util';
 
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
-import {SplunkEndpoint} from '../../../../utilities/splunk_util';
+import {SplunkEndpoint} from '@/utilities/splunk_util';
 
 // Our saved fields
 const local_username = new LocalStorageVal<string>('splunk_username');
 const local_password = new LocalStorageVal<string>('splunk_password');
 const local_hostname = new LocalStorageVal<string>('splunk_hostname');
-
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({});
 
 /**
  *
@@ -62,12 +55,11 @@ const Props = Vue.extend({});
     FileList
   }
 })
-export default class SplunkAuth extends Props {
+export default class SplunkAuth extends Vue {
   /** Models if currently displayed form is valid.
    * Shouldn't be used to interpret literally anything else as valid - just checks fields filled
    */
   valid: boolean = false;
-  show_secret: boolean = false;
 
   /** State of input fields */
   username: string = '';
@@ -92,7 +84,7 @@ export default class SplunkAuth extends Props {
         this.$emit('authenticated', s);
         this.logging_in = false;
       })
-      .catch(err => {
+      .catch((err) => {
         this.logging_in = false;
         this.$emit('error', err);
       });

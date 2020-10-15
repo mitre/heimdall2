@@ -12,12 +12,12 @@
         mobile-breakpoint="0"
         class="elevation-1"
       >
-        <template v-slot:[`item.filename`]="{item}">
+        <template #[`item.filename`]="{item}">
           <span class="cursor-pointer" @click="load_results([item])">{{
             item.filename
           }}</span>
         </template>
-        <template v-slot:[`item.createdAt`]="{item}">
+        <template #[`item.createdAt`]="{item}">
           <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
         </template>
       </v-data-table>
@@ -42,14 +42,15 @@ import {Samples} from 'aws-sdk/clients/devicefarm';
 })
 export default class LoadFileList extends Vue {
   @Prop({required: true}) readonly headers!: Object[];
-  @Prop({default: false}) readonly loading!: boolean;
-  @Prop({default: 'id'}) readonly fileKey!: string;
-  @Prop({default: false}) readonly files!: IEvaluation[] | Samples[];
+  @Prop({type: Boolean, default: false}) readonly loading!: boolean;
+  @Prop({type: String, default: 'id'}) readonly fileKey!: string;
+  @Prop({required: true}) readonly files!: IEvaluation[] | Samples[];
+
   selectedFiles: IEvaluation[] | Samples[] = [];
 
   load_results(evaluations: IEvaluation[]) {
     this.selectedFiles = [];
-    this.$emit('load_results', evaluations);
+    this.$emit('load-results', evaluations);
   }
 }
 </script>

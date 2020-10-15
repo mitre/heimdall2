@@ -15,23 +15,17 @@
       />
 
       <v-btn :disabled="!can_clear" @click="clear">
-        <span class="d-none d-md-inline pr-2">
-          Clear
-        </span>
+        <span class="d-none d-md-inline pr-2"> Clear </span>
         <v-icon>mdi-filter-remove</v-icon>
       </v-btn>
     </template>
     <template #topbar-data>
       <div class="text-center">
         <v-menu>
-          <template v-slot:activator="{on, attrs}">
+          <template #activator="{on, attrs}">
             <v-btn v-bind="attrs" class="mr-2" v-on="on">
-              <span class="d-none d-md-inline mr-2">
-                Export
-              </span>
-              <v-icon>
-                mdi-file-export
-              </v-icon>
+              <span class="d-none d-md-inline mr-2"> Export </span>
+              <v-icon> mdi-file-export </v-icon>
             </v-btn>
           </template>
           <v-list class="py-0">
@@ -59,18 +53,18 @@
               <v-slide-item
                 v-for="(file, i) in file_filter"
                 :key="i"
-                v-slot:default="{active, toggle}"
+                v-slot="{toggle}"
                 class="mx-2"
               >
                 <v-card :width="info_width" @click="toggle">
                   <EvaluationInfo :file_filter="file" />
-                  <v-card-subtitle style="text-align: right;">
+                  <v-card-subtitle style="text-align: right">
                     Profile Info ↓
                   </v-card-subtitle>
                 </v-card>
               </v-slide-item>
             </v-slide-group>
-            <ProfData
+            <ProfileData
               v-if="eval_info != null"
               class="my-4 mx-10"
               :selected_prof="
@@ -86,12 +80,12 @@
           >
             <v-card @click="toggle_prof(i)">
               <EvaluationInfo :file_filter="file" />
-              <v-card-subtitle style="text-align: right;">
+              <v-card-subtitle style="text-align: right">
                 Profile Info ↓
               </v-card-subtitle>
             </v-card>
           </v-col>
-          <ProfData
+          <ProfileData
             v-if="eval_info != null && file_filter.length <= 3"
             class="my-4 mx-10"
             :selected_prof="
@@ -171,7 +165,8 @@
     <!-- Everything-is-filtered snackbar -->
     <v-snackbar
       v-model="filter_snackbar"
-      style="margin-top: 44px;"
+      class="mt-11"
+      style="z-index: 2"
       :timeout="-1"
       color="warning"
       top
@@ -189,7 +184,7 @@
       <span v-else class="subtitle-2">
         No files are currently enabled for viewing. Open the
         <v-icon class="mx-1">mdi-menu</v-icon> sidebar menu, and ensure that the
-        file(s) you wish to view have are
+        file(s) you wish to view are
         <v-icon class="mx-1">mdi-checkbox-marked</v-icon> checked.
       </span>
     </v-snackbar>
@@ -218,16 +213,11 @@ import {ControlStatus, Severity} from 'inspecjs';
 import {FileID, SourcedContextualizedEvaluation} from '@/store/report_intake';
 import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
 
-import ProfData from '@/components/cards/ProfData.vue';
+import ProfileData from '@/components/cards/ProfileData.vue';
 import {context} from 'inspecjs';
 
 import {ServerModule} from '@/store/server';
-
-// We declare the props separately
-// to make props types inferrable.
-const ResultsProps = Vue.extend({
-  props: {}
-});
+import {capitalize} from 'lodash';
 
 @Component({
   components: {
@@ -242,10 +232,10 @@ const ResultsProps = Vue.extend({
     ExportNist,
     ExportJson,
     EvaluationInfo,
-    ProfData
+    ProfileData
   }
 })
-export default class Results extends ResultsProps {
+export default class Results extends Vue {
   /**
    * The currently selected severity, as modeled by the severity chart
    */
@@ -279,7 +269,9 @@ export default class Results extends ResultsProps {
    */
 
   get file_filter(): FileID[] {
-    return FilteredDataModule.selected_file_ids;
+    if (this.current_route_name === 'results')
+      return FilteredDataModule.selected_evaluations;
+    else return FilteredDataModule.selected_profiles;
   }
 
   // Returns true if no files are uploaded
@@ -363,20 +355,24 @@ export default class Results extends ResultsProps {
   /**
    * The title to override with
    */
-  get curr_title(): string | undefined {
+
+  get curr_title(): string {
+    let returnText = `${capitalize(this.current_route_name.slice(0, -1))} View`;
     if (this.file_filter.length == 1) {
       let file = InspecDataModule.allFiles.find(
-        f => f.unique_id === this.file_filter[0]
+        (f) => f.unique_id === this.file_filter[0]
       );
       if (file) {
-        return file.filename;
+        returnText += ` (${file.filename} selected)`;
       }
-    }
-    if (this.file_filter.length > 1) {
-      return this.file_filter.length + ' files selected';
     } else {
-      return 'No files selected';
+      returnText += ` (${this.file_filter.length} ${this.current_route_name} selected)`;
     }
+    return returnText;
+  }
+
+  get current_route_name(): string {
+    return this.$router.currentRoute.path.substring(1);
   }
 
   //changes width of eval info if it is in server mode and needs more room for tags
@@ -395,7 +391,7 @@ export default class Results extends ResultsProps {
   get root_profiles(): context.ContextualizedProfile[] {
     // Strip to roots
     let profiles = this.visible_profiles.filter(
-      p => p.extended_by.length === 0
+      (p) => p.extended_by.length === 0
     );
     return profiles;
   }

@@ -8,8 +8,8 @@
       :headers="headers"
       :files="samples"
       file-key="filename"
-      loading="false"
-      @load_results="load_samples($event)"
+      :loading="false"
+      @load-results="load_samples($event)"
     />
   </v-card>
 </template>
@@ -19,20 +19,16 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
 import {FileID, InspecIntakeModule} from '@/store/report_intake';
+import {SnackbarModule} from '@/store/snackbar';
 
 import {samples, Sample} from '@/utilities/sample_util';
-
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {}
-});
 
 @Component({
   components: {
     LoadFileList
   }
 })
-export default class SampleList extends Props {
+export default class SampleList extends Vue {
   samples: Sample[] = samples;
   headers: Object[] = [
     {
@@ -45,7 +41,7 @@ export default class SampleList extends Props {
 
   load_samples(samples: Sample[]) {
     Promise.all(
-      samples.map(sample => {
+      samples.map((sample) => {
         return InspecIntakeModule.loadText({
           text: JSON.stringify(sample.data),
           filename: sample.filename
@@ -55,10 +51,8 @@ export default class SampleList extends Props {
       .then((fileIds: FileID[]) => {
         this.$emit('got-files', fileIds);
       })
-      .catch(err => {
-        this.$toasted.global.error({
-          message: String(err)
-        });
+      .catch((err) => {
+        SnackbarModule.failure(String(err));
       });
   }
 }

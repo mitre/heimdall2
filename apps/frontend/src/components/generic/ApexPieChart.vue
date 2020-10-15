@@ -82,10 +82,10 @@ export default class ApexPieChart extends Vue {
               this.categories[config.dataPointIndex]
             );
           },
-          dataPointMouseEnter: _event => {
+          dataPointMouseEnter: (_event) => {
             document.body.style.cursor = 'pointer';
           },
-          dataPointMouseLeave: _event => {
+          dataPointMouseLeave: (_event) => {
             document.body.style.cursor = 'default';
           }
         },

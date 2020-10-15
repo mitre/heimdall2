@@ -22,7 +22,7 @@ export function read_files(dir_name: string): FileResult[] {
   let files = list_files(dir_name);
 
   // Read them all
-  let result = files.map(filename => {
+  let result = files.map((filename) => {
     let content = fs.readFileSync(dir_name + filename, 'utf-8');
     let result: FileResult = {
       name: filename,
@@ -36,7 +36,7 @@ export function read_files(dir_name: string): FileResult[] {
 export type FileHash = {[key: string]: FileResult};
 export function populate_hash(results: FileResult[]) {
   let hash: FileHash = {};
-  results.forEach(f => {
+  results.forEach((f) => {
     hash[f.name] = f;
   });
   return hash;

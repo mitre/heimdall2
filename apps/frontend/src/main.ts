@@ -7,12 +7,7 @@ import vuetify from '@/plugins/vuetify';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import {ServerModule} from './store/server';
 import axios from 'axios';
-import SetupToasted from '@/plugins/SetupToasted';
-import Toasted from 'vue-toasted';
 import Vuetify from 'vuetify/lib';
-
-Vue.use(Toasted);
-SetupToasted();
 
 Vue.use(Vuetify);
 
@@ -24,8 +19,8 @@ new Vue({
   vuetify,
   created() {
     axios.interceptors.response.use(
-      response => response, // simply return the response
-      error => {
+      (response) => response, // simply return the response
+      (error) => {
         // If there is no backend token then it is safe to assume this request
         // originated from the login page and should not perform the logout action.
         if (ServerModule.token !== '' && error?.response?.status === 401) {
@@ -37,7 +32,7 @@ new Vue({
       }
     );
   },
-  render: h => h(App)
+  render: (h) => h(App)
 }).$mount('#app');
 
 // The following line is a hot patch to add regex support, theyre are better

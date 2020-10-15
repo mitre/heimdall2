@@ -25,9 +25,7 @@
       @exit-mfa="handle_cancel_mfa"
     />
 
-    <v-stepper-step step="3">
-      Browse Bucket
-    </v-stepper-step>
+    <v-stepper-step step="3"> Browse Bucket </v-stepper-step>
 
     <FileList
       :auth="assumed_role"
@@ -44,7 +42,8 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import S3 from 'aws-sdk/clients/s3';
 import {AWSError} from 'aws-sdk/lib/error';
-import {LocalStorageVal} from '../../../../utilities/helper_util';
+import {LocalStorageVal} from '@/utilities/helper_util';
+import {SnackbarModule} from '@/store/snackbar';
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
 import AuthStepMFA from '@/components/global/upload_tabs/aws/AuthStepMFA.vue';
 import AuthStepBasic from '@/components/global/upload_tabs/aws/AuthStepBasic.vue';
@@ -54,13 +53,8 @@ import {
   get_session_token,
   MFA_Info,
   AUTH_DURATION
-} from '../../../../utilities/aws_util';
+} from '@/utilities/aws_util';
 import {FileID} from '@/store/report_intake';
-
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {}
-});
 
 /** The cached session info */
 const local_session_information = new LocalStorageVal<Auth | null>(
@@ -78,7 +72,7 @@ const local_session_information = new LocalStorageVal<Auth | null>(
     FileList
   }
 })
-export default class S3Reader extends Props {
+export default class S3Reader extends Vue {
   /** Form required field rules. Maybe eventually expand to other stuff */
   req_rule = (v: string | null | undefined) =>
     (v || '').trim().length > 0 || 'Field is Required';
@@ -107,13 +101,13 @@ export default class S3Reader extends Props {
     // Attempt to assume role based on if we've determined 2fa necessary
     get_session_token(this.access_token, this.secret_token, AUTH_DURATION).then(
       // Success of get session token - now need to determine if MFA necessary
-      success => {
+      (success) => {
         this.assumed_role = success;
         this.step = 3;
       },
 
       // Failure of initial get session token: want to set error normally
-      failure => {
+      (failure) => {
         this.handle_error(failure);
       }
     );
@@ -130,7 +124,7 @@ export default class S3Reader extends Props {
       },
 
       // Failure of initial get session token: want to set error normally
-      failure => {
+      (failure) => {
         this.handle_error(failure);
       }
     );
@@ -166,12 +160,12 @@ export default class S3Reader extends Props {
       AUTH_DURATION,
       mfa
     ).then(
-      success => {
+      (success) => {
         // Keep them
         this.assumed_role = success;
         this.step = 3;
       },
-      failure => {
+      (failure) => {
         this.handle_error(failure);
       }
     );
@@ -197,10 +191,10 @@ export default class S3Reader extends Props {
         MaxKeys: 100
       })
       .promise()
-      .then(success => {
+      .then((success) => {
         this.files = success.Contents || [];
       })
-      .catch(failure => this.handle_error(failure));
+      .catch((failure) => this.handle_error(failure));
   }
 
   /** Save the current credentials to local storage */
@@ -215,9 +209,7 @@ export default class S3Reader extends Props {
     let t_error = error as AWSError;
     let formatted_error = transcribe_error(t_error);
     // Toast whatever error we got
-    this.$toasted.global.error({
-      message: formatted_error
-    });
+    SnackbarModule.failure(formatted_error);
   }
 
   /** Callback on got files */

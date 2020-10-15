@@ -18,12 +18,8 @@
       class="mx-2"
       @click="show_modal"
     >
-      <span class="d-none d-md-inline pr-2">
-        Load
-      </span>
-      <v-icon>
-        mdi-cloud-upload
-      </v-icon>
+      <span class="d-none d-md-inline pr-2"> Load </span>
+      <v-icon> mdi-cloud-upload </v-icon>
     </v-btn>
     <slot name="data" />
     <LogoutButton />
@@ -54,7 +50,7 @@ import {Prop} from 'vue-property-decorator';
   }
 })
 export default class Topbar extends mixins(ServerMixin) {
-  @Prop({required: true}) readonly title!: String;
+  @Prop({type: String, required: true}) readonly title!: string;
 
   showModal: boolean = false;
 

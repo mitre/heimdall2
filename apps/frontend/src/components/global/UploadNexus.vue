@@ -72,12 +72,12 @@ import SplunkReader from '@/components/global/upload_tabs/splunk/SplunkReader.vu
 import DatabaseReader from '@/components/global/upload_tabs/DatabaseReader.vue';
 import SampleList from '@/components/global/upload_tabs/SampleList.vue';
 import {LocalStorageVal} from '@/utilities/helper_util';
-import {FilteredDataModule} from '@/store/data_filters';
-
+import {SnackbarModule} from '@/store/snackbar';
 import ServerMixin from '@/mixins/ServerMixin';
+import RouteMixin from '@/mixins/RouteMixin';
 import {Prop} from 'vue-property-decorator';
-
 import {ServerModule} from '@/store/server';
+import {FilteredDataModule} from '@/store/data_filters';
 
 const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
 
@@ -96,16 +96,16 @@ const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
     SampleList
   }
 })
-export default class UploadNexus extends mixins(ServerMixin) {
-  @Prop({default: true}) readonly visible!: Boolean;
-  @Prop({default: false}) readonly persistent!: Boolean;
+export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
+  @Prop({default: true}) readonly visible!: boolean;
+  @Prop({default: false}) readonly persistent!: boolean;
 
   active_tab: string = local_tab.get_default('uploadtab-local');
 
   // Handles change in tab
   selected_tab(new_tab: string) {
     this.active_tab = new_tab;
-    this.$toasted.clear();
+    SnackbarModule.visibility(false);
     local_tab.set(new_tab);
   }
 
@@ -117,9 +117,27 @@ export default class UploadNexus extends mixins(ServerMixin) {
   got_files(files: FileID[]) {
     this.$emit('got-files', files);
 
-    for (let f of files) {
-      FilteredDataModule.set_toggle_file_on(f);
+    let numEvaluations = FilteredDataModule.selectedEvaluationIds.filter(
+      (eva) => files.includes(eva)
+    ).length;
+    let numProfiles = FilteredDataModule.selectedProfileIds.filter((prof) =>
+      files.includes(prof)
+    ).length;
+
+    if (numEvaluations > numProfiles) {
+      // Only navigate the user to the results page if they are not
+      // already on the compare page.
+      if ('/compare' !== this.current_route)
+        this.navigateUnlessActive('/results');
+    } else {
+      this.navigateUnlessActive('/profiles');
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.theme--dark.v-tabs {
+  background: var(--v-secondary-lighten1);
+}
+</style>

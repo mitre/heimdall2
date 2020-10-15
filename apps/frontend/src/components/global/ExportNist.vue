@@ -1,6 +1,6 @@
 <template>
   <v-tooltip top>
-    <template v-slot:activator="{on}">
+    <template #activator="{on}">
       <LinkItem
         key="export_nist"
         text="NIST SP 800-53 Security Control Coverage"
@@ -24,6 +24,7 @@ import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {NistControl} from 'inspecjs/dist/nist';
 import {FileID} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
+import {Prop} from 'vue-property-decorator';
 
 const MAX_SHEET_NAME_SIZE = 31;
 export type NISTRow = [string];
@@ -34,23 +35,14 @@ export interface Sheet {
   data: NISTList;
 }
 
-// We declare the props separately
-// to make props types inferrable.
-const Props = Vue.extend({
-  props: {
-    filter: {
-      type: Object, // Of type Filter
-      required: true
-    }
-  }
-});
-
 @Component({
   components: {
     LinkItem
   }
 })
-export default class ExportNIST extends Props {
+export default class ExportNIST extends Vue {
+  @Prop({type: Object, required: true}) readonly filter!: Filter;
+
   /** Formats a tag into a well-structured nist string */
   format_tag(control: NistControl): string | null {
     // For now just do raw text. Once Mo's nist work is done we can make sure these are well formed
@@ -76,12 +68,12 @@ export default class ExportNIST extends Props {
     let id: FileID[] = FilteredDataModule.selected_file_ids;
     if (file) {
       id = [file];
-      filename = InspecDataModule.allFiles.find(x => x.unique_id == file)!
+      filename = InspecDataModule.allFiles.find((x) => x.unique_id == file)!
         .filename;
     }
 
     // Get our data
-    let base_filter = this.filter as Filter;
+    let base_filter = this.filter;
     let modified_filter: Filter = {...base_filter, fromFile: id};
     let controls = FilteredDataModule.controls(modified_filter);
 
@@ -92,12 +84,12 @@ export default class ExportNIST extends Props {
 
     // Get them all
     let nist_controls: NistControl[] = [];
-    controls.forEach(c => {
+    controls.forEach((c) => {
       let tags = c.root.hdf.parsed_nist_tags;
-      tags.forEach(t => {
+      tags.forEach((t) => {
         if (
           !nist_controls.some(
-            other_tag => this.format_tag(other_tag) === this.format_tag(t)
+            (other_tag) => this.format_tag(other_tag) === this.format_tag(t)
           )
         ) {
           nist_controls.push(t);
@@ -109,12 +101,12 @@ export default class ExportNIST extends Props {
     nist_controls = nist_controls.sort((a, b) => a.localCompare(b));
 
     // Turn to strings
-    let as_strings_mostly = nist_controls.map(c => this.format_tag(c));
+    let as_strings_mostly = nist_controls.map((c) => this.format_tag(c));
 
     // Filter out nulls, bind into rows
     let as_rows = as_strings_mostly
-      .filter(v => v !== null)
-      .map(v => [v]) as NISTList;
+      .filter((v) => v !== null)
+      .map((v) => [v]) as NISTList;
 
     // Append to caat
     sheet.push(...as_rows);
@@ -133,7 +125,7 @@ export default class ExportNIST extends Props {
     ];
 
     // Convert to sheets
-    let sheets = files.map(file => this.sheet_for(file));
+    let sheets = files.map((file) => this.sheet_for(file));
 
     // Handle XLSX exporting
     let wb = XLSX.utils.book_new();
@@ -146,7 +138,7 @@ export default class ExportNIST extends Props {
     };
 
     // Push all sheets
-    sheets.forEach(sheet => {
+    sheets.forEach((sheet) => {
       // Avoid name duplication
       let i = 2;
       let new_name = sheet.name;

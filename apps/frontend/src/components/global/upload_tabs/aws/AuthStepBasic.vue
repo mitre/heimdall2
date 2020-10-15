@@ -11,11 +11,9 @@
       <v-text-field
         :value="secret_token"
         label="User Account Secret Token"
+        type="password"
         :rules="[req_rule]"
-        :append-icon="show_secret ? 'mdi-eye' : 'mdi-eye-off'"
-        :type="show_secret ? 'text' : 'password'"
         @input="change_secret_token"
-        @click:append="show_secret = !show_secret"
       />
     </v-form>
     <v-btn
@@ -41,17 +39,10 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-import {LocalStorageVal} from '../../../../utilities/helper_util';
+import {LocalStorageVal} from '@/utilities/helper_util';
 
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
-
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {
-    access_token: String,
-    secret_token: String
-  }
-});
+import {Prop} from 'vue-property-decorator';
 
 /** Localstorage keys */
 const local_access_token = new LocalStorageVal<string>('aws_s3_access_token');
@@ -67,12 +58,14 @@ const local_secret_token = new LocalStorageVal<string>('aws_s3_secret_token');
     FileList
   }
 })
-export default class S3Reader extends Props {
+export default class S3Reader extends Vue {
+  @Prop({type: String}) readonly access_token!: string;
+  @Prop({type: String}) readonly secret_token!: string;
+
   /** Models if currently displayed form is valid.
    * Shouldn't be used to interpret literally anything else as valid - just checks fields filled
    */
   valid: boolean = false;
-  show_secret: boolean = false;
 
   /** Form required field rules. Maybe eventually expand to other stuff */
   req_rule = (v: string | null | undefined) =>

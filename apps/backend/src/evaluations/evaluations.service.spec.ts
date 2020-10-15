@@ -197,7 +197,7 @@ describe('EvaluationsService', () => {
       expect(updatedEvaluation.evaluationTags.length).toBeGreaterThan(
         evaluation.evaluationTags.length
       );
-      updatedEvaluation.evaluationTags.forEach(tag => {
+      updatedEvaluation.evaluationTags.forEach((tag) => {
         expect(tag.id).toBeDefined();
         expect(tag.createdAt).toBeDefined();
         expect(tag.updatedAt).toBeDefined();

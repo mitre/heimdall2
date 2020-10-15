@@ -1,10 +1,10 @@
 <template>
   <v-row class="pa-4" justify="space-between">
     <v-col cols="12">
-      <b>Filename:</b> {{ filename }}<br />
-      <b>Tool Version:</b> {{ inspec_version }}<br />
-      <b>Platform:</b> {{ platform }}<br />
-      <b>Duration:</b> {{ get_duration }}<br />
+      <strong>Filename:</strong> {{ filename }}<br />
+      <strong>Tool Version:</strong> {{ inspec_version }}<br />
+      <strong>Platform:</strong> {{ platform }}<br />
+      <strong>Duration:</strong> {{ get_duration }}<br />
     </v-col>
   </v-row>
 </template>
@@ -18,9 +18,7 @@ import {FileID, EvaluationFile} from '@/store/report_intake';
 
 import {Prop} from 'vue-property-decorator';
 
-@Component({
-  components: {}
-})
+@Component
 export default class EvaluationInfo extends Vue {
   @Prop({required: true}) readonly file_filter!: FileID;
 
@@ -36,9 +34,9 @@ export default class EvaluationInfo extends Vue {
 
   updated() {
     let file = InspecDataModule.allFiles.find(
-      f => f.unique_id === this.file_filter
+      (f) => f.unique_id === this.file_filter
     );
-    if (file) {
+    if (file && file.hasOwnProperty('evaluation')) {
       let eva = file as EvaluationFile;
       this.version = eva.evaluation.data.version;
       this.platform_name = eva.evaluation.data.platform.name;
@@ -74,9 +72,9 @@ export default class EvaluationInfo extends Vue {
 
   load_file() {
     let file = InspecDataModule.allFiles.find(
-      f => f.unique_id === this.file_filter
+      (f) => f.unique_id === this.file_filter
     );
-    if (file) {
+    if (file && file.hasOwnProperty('evaluation')) {
       let eva = file as EvaluationFile;
       this.version = eva.evaluation.data.version;
       this.platform_name = eva.evaluation.data.platform.name;
