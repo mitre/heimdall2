@@ -20,8 +20,8 @@
           <v-icon>mdi-filter-remove</v-icon>
         </v-btn>
       </template>
-      <template v-else
-        ><v-btn @click="handle_msearch_open">
+      <template v-else>
+        <v-btn @click="show_search_mobile = true">
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
         <div v-show="show_search_mobile">
@@ -36,10 +36,13 @@
             clearable
             class="overtake-bar mx-2"
             clear-icon="mdi-filter-remove"
+            @click:clear="clear_search()"
             @blur="show_search_mobile = false"
-            @click:clear="clear"
           />
         </div>
+        <v-btn class="mx-2 mr-0" :disabled="!can_clear" @click="clear">
+          <v-icon>mdi-filter-remove</v-icon>
+        </v-btn>
       </template>
     </template>
     <template #topbar-data>
@@ -314,10 +317,6 @@ export default class Results extends ResultsProps {
    */
   onResize() {
     this.is_mobile = window.innerWidth < 600;
-  }
-
-  handle_msearch_open() {
-    this.show_search_mobile = true;
   }
 
   /**
