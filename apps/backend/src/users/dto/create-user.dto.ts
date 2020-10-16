@@ -4,34 +4,34 @@ import {ICreateUser} from '@heimdall/interfaces';
 export class CreateUserDto implements ICreateUser {
   @IsEmail()
   @IsNotEmpty()
-  readonly email: string;
+  readonly email!: string;
 
   @IsNotEmpty()
   @IsString()
-  readonly password: string;
+  readonly password!: string;
 
   @IsNotEmpty()
   @IsString()
-  readonly passwordConfirmation: string;
+  readonly passwordConfirmation!: string;
 
   @IsOptional()
   @IsString()
-  readonly firstName: string;
+  readonly firstName: string | undefined;
 
   @IsOptional()
   @IsString()
-  readonly lastName: string;
+  readonly lastName: string | undefined;
 
   @IsOptional()
   @IsString()
-  readonly organization: string;
+  readonly organization: string | undefined;
 
   @IsOptional()
   @IsString()
-  readonly title: string;
+  readonly title: string | undefined;
 
   @IsNotEmpty()
   @IsString()
   @IsIn(['user'])
-  readonly role: string;
+  readonly role!: string;
 }

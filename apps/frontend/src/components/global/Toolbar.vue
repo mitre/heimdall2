@@ -23,13 +23,8 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-// We declare the props separately to make props types inferable.
-const ToolbarProps = Vue.extend({
-  props: {}
-});
-
 @Component({
   components: {}
 })
-export default class Toolbar extends ToolbarProps {}
+export default class Toolbar extends Vue {}
 </script>

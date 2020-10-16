@@ -42,9 +42,10 @@ import {Samples} from 'aws-sdk/clients/devicefarm';
 })
 export default class LoadFileList extends Vue {
   @Prop({required: true}) readonly headers!: Object[];
-  @Prop({default: false}) readonly loading!: boolean;
-  @Prop({default: 'id'}) readonly fileKey!: string;
-  @Prop({default: false}) readonly files!: IEvaluation[] | Samples[];
+  @Prop({type: Boolean, default: false}) readonly loading!: boolean;
+  @Prop({type: String, default: 'id'}) readonly fileKey!: string;
+  @Prop({required: true}) readonly files!: IEvaluation[] | Samples[];
+
   selectedFiles: IEvaluation[] | Samples[] = [];
 
   load_results(evaluations: IEvaluation[]) {

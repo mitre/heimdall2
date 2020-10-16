@@ -57,15 +57,7 @@ import {FileID} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
 import AuthStep from './AuthStep.vue';
 import FileList from './FileList.vue';
-import {
-  SplunkEndpoint,
-  SplunkErrorCode
-} from '../../../../utilities/splunk_util';
-
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {}
-});
+import {SplunkEndpoint, SplunkErrorCode} from '@/utilities/splunk_util';
 
 /**
  * File reader component for taking in inspec JSON data.
@@ -78,7 +70,7 @@ const Props = Vue.extend({
     FileList
   }
 })
-export default class SplunkReader extends Props {
+export default class SplunkReader extends Vue {
   /** Our session information, saved iff valid */
   splunk_state: SplunkEndpoint | null = null;
 

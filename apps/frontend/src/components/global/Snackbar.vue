@@ -26,18 +26,22 @@ import {SnackbarModule} from '@/store/snackbar';
 import Component from 'vue-class-component';
 import Vue from 'vue';
 
-@Component({})
+@Component
 export default class Snackbar extends Vue {
   messageContent: string = '';
+
   get show(): boolean {
     return SnackbarModule.show;
   }
+
   set show(visibility) {
     SnackbarModule.visibility(visibility);
   }
+
   get error(): boolean {
     return SnackbarModule.error;
   }
+
   get message(): string {
     this.messageContent = SnackbarModule.message;
     if (this.error) {

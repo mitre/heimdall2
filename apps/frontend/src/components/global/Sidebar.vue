@@ -35,7 +35,6 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
 import Component, {mixins} from 'vue-class-component';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
@@ -43,20 +42,16 @@ import {FilteredDataModule} from '@/store/data_filters';
 import RouteMixin from '@/mixins/RouteMixin';
 
 import DropdownContent from '@/components/global/sidebaritems/DropdownContent.vue';
-
-// We declare the props separately to make props types inferable.
-const SidebarProps = Vue.extend({
-  props: {
-    value: Boolean // Whether or not this item should make itself visible
-  }
-});
+import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {
     DropdownContent
   }
 })
-export default class Sidebar extends mixins(SidebarProps, RouteMixin) {
+export default class Sidebar extends mixins(RouteMixin) {
+  @Prop({type: Boolean}) readonly value!: boolean;
+
   // open the appropriate v-expansion-panel based on current route
   get active_path() {
     if (this.current_route === '/profiles') return 1;

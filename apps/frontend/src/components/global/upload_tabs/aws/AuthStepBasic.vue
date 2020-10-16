@@ -39,17 +39,10 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-import {LocalStorageVal} from '../../../../utilities/helper_util';
+import {LocalStorageVal} from '@/utilities/helper_util';
 
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
-
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {
-    access_token: String,
-    secret_token: String
-  }
-});
+import {Prop} from 'vue-property-decorator';
 
 /** Localstorage keys */
 const local_access_token = new LocalStorageVal<string>('aws_s3_access_token');
@@ -65,7 +58,10 @@ const local_secret_token = new LocalStorageVal<string>('aws_s3_secret_token');
     FileList
   }
 })
-export default class S3Reader extends Props {
+export default class S3Reader extends Vue {
+  @Prop({type: String}) readonly access_token!: string;
+  @Prop({type: String}) readonly secret_token!: string;
+
   /** Models if currently displayed form is valid.
    * Shouldn't be used to interpret literally anything else as valid - just checks fields filled
    */

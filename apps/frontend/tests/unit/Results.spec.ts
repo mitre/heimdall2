@@ -11,10 +11,10 @@ import {
   expectedCount
 } from '../util/testingUtils';
 import Results from '@/views/Results.vue';
-import ProfData from '@/components/cards/ProfData.vue';
-import {profile_unique_key} from '../../src/utilities/format_util';
+import ProfData from '@/components/cards/ProfileData.vue';
+import {profile_unique_key} from '@/utilities/format_util';
 
-import ControlTable from '../../src/components/cards/controltable/ControlTable.vue';
+import ControlTable from '@/components/cards/controltable/ControlTable.vue';
 import {context} from 'inspecjs';
 interface ListElt {
   // A unique id to be used as a key.

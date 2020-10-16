@@ -2,8 +2,6 @@
   <ApexPieChart
     :categories="categories"
     :series="series"
-    :center_label="center_label"
-    :center_value="center_value"
     @category-selected="onSelect"
   />
 </template>
@@ -14,16 +12,8 @@ import Component from 'vue-class-component';
 import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
 import {StatusCountModule} from '@/store/status_counts';
 import {ControlStatus} from 'inspecjs';
-
-// We declare the props separately to make props types inferable.
-const StatusChartProps = Vue.extend({
-  props: {
-    value: String, // The currently selected status, or null
-    filter: Object, // Of type Filer from filteredData
-    show_compliance: Boolean
-    //supress: Boolean // Supress status selection
-  }
-});
+import {Prop} from 'vue-property-decorator';
+import {Filter} from '@/store/data_filters';
 
 /**
  * Categories property must be of type Category
@@ -34,7 +24,11 @@ const StatusChartProps = Vue.extend({
     ApexPieChart
   }
 })
-export default class StatusChart extends StatusChartProps {
+export default class StatusChart extends Vue {
+  @Prop({type: String}) readonly value!: string | null;
+  @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({type: Boolean, default: false}) show_compliance!: boolean;
+
   categories: Category<ControlStatus>[] = [
     {
       label: 'Passed',

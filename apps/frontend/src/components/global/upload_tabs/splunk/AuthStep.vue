@@ -37,18 +37,15 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {LocalStorageVal} from '../../../../utilities/helper_util';
+import {LocalStorageVal} from '@/utilities/helper_util';
 
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
-import {SplunkEndpoint} from '../../../../utilities/splunk_util';
+import {SplunkEndpoint} from '@/utilities/splunk_util';
 
 // Our saved fields
 const local_username = new LocalStorageVal<string>('splunk_username');
 const local_password = new LocalStorageVal<string>('splunk_password');
 const local_hostname = new LocalStorageVal<string>('splunk_hostname');
-
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({});
 
 /**
  *
@@ -58,7 +55,7 @@ const Props = Vue.extend({});
     FileList
   }
 })
-export default class SplunkAuth extends Props {
+export default class SplunkAuth extends Vue {
   /** Models if currently displayed form is valid.
    * Shouldn't be used to interpret literally anything else as valid - just checks fields filled
    */

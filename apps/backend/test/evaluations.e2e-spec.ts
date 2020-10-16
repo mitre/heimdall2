@@ -143,16 +143,22 @@ describe('/evaluations', () => {
             // 1 minute in ms
             expect(createdDelta).toBeLessThanOrEqual(60000);
             expect(updatedDelta).toBeLessThanOrEqual(60000);
-            expect(response.body.evaluationTags[0].key).toEqual(
-              EVALUATION_WITH_TAGS_1.evaluationTags[0].key
-            );
-            expect(response.body.evaluationTags[0].value).toEqual(
-              EVALUATION_WITH_TAGS_1.evaluationTags[0].value
-            );
-            expect(response.body.evaluationTags[0].id).toBeDefined();
-            expect(response.body.id).toEqual(
-              response.body.evaluationTags[0].evaluationId
-            );
+            if (EVALUATION_WITH_TAGS_1.evaluationTags === undefined) {
+              throw TypeError(
+                'Test fixture for Evaluation is set up improperly and has an undefined value for Evaluation Tags'
+              );
+            } else {
+              expect(response.body.evaluationTags[0].key).toEqual(
+                EVALUATION_WITH_TAGS_1.evaluationTags[0].key
+              );
+              expect(response.body.evaluationTags[0].value).toEqual(
+                EVALUATION_WITH_TAGS_1.evaluationTags[0].value
+              );
+              expect(response.body.evaluationTags[0].id).toBeDefined();
+              expect(response.body.id).toEqual(
+                response.body.evaluationTags[0].evaluationId
+              );
+            }
           });
       });
     });

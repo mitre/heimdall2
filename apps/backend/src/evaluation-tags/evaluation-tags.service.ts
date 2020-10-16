@@ -21,6 +21,11 @@ export class EvaluationTagsService {
     );
   }
 
+  async findById(id: number): Promise<EvaluationTagDto> {
+    const evaluationTag = await this.findByPkBang(id);
+    return new EvaluationTagDto(evaluationTag);
+  }
+
   async create(
     evaluationId: number,
     createEvaluationTagDto: CreateEvaluationTagDto
@@ -36,16 +41,12 @@ export class EvaluationTagsService {
     id: number,
     updateEvaluationTagDto: UpdateEvaluationTagDto
   ): Promise<EvaluationTag> {
-    const evaluationTag = await EvaluationTag.findByPk<EvaluationTag>(id);
-    this.exists(evaluationTag);
+    const evaluationTag = await this.findByPkBang(id);
     return evaluationTag.update(updateEvaluationTagDto);
   }
 
   async remove(id: number): Promise<EvaluationTagDto> {
-    const evaluationTag = await this.evaluationTagModel.findByPk<EvaluationTag>(
-      id
-    );
-    this.exists(evaluationTag);
+    const evaluationTag = await this.findByPkBang(id);
     await evaluationTag.destroy();
     return new EvaluationTagDto(evaluationTag);
   }
@@ -54,11 +55,16 @@ export class EvaluationTagsService {
     return new EvaluationTag(createEvaluationTagDto);
   }
 
-  exists(evaluationTag: EvaluationTag): boolean {
-    if (!evaluationTag) {
+  async findByPkBang(
+    identifier: string | number | Buffer | undefined
+  ): Promise<EvaluationTag> {
+    const evaluationTag = await EvaluationTag.findByPk<EvaluationTag>(
+      identifier
+    );
+    if (evaluationTag === null) {
       throw new NotFoundException('EvaluationTag with given id not found');
     } else {
-      return true;
+      return evaluationTag;
     }
   }
 }

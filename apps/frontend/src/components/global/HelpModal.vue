@@ -74,14 +74,8 @@ import Component from 'vue-class-component';
 
 import {AppInfoModule} from '@/store/app_info';
 
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {}
-});
-@Component({
-  components: {}
-})
-export default class HelpModal extends Props {
+@Component
+export default class HelpModal extends Vue {
   dialog: boolean = false;
   get version(): string {
     return AppInfoModule.version;
