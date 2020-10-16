@@ -20,6 +20,7 @@ export class EvaluationsService {
 
   async findAll(): Promise<EvaluationDto[]> {
     const evaluations = await this.evaluationModel.findAll<Evaluation>({
+      attributes: {exclude: ['data']},
       include: [EvaluationTag]
     });
     return evaluations.map((evaluation) => new EvaluationDto(evaluation));
