@@ -8,6 +8,7 @@
     "outDir": "../../dist/server",
     "baseUrl": "./",
     "incremental": true,
+    "strict": true,
     "lib": [
       "es2020"
     ],

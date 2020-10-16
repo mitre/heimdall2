@@ -22,20 +22,17 @@ export const EVALUATION_TAG_DTO: EvaluationTagDto = {
 };
 
 export const CREATE_EVALUATION_TAG_DTO: CreateEvaluationTagDto = {
-  id: 0,
   key: 'key string',
   value: 'value string'
 };
 
 // @ts-ignore
 export const CREATE_EVALUATION_TAG_DTO_MISSING_KEY: CreateEvaluationTagDto = {
-  id: 0,
   value: 'value string'
 };
 
 // @ts-ignore
 export const CREATE_EVALUATION_TAG_DTO_MISSING_VALUE: CreateEvaluationTagDto = {
-  id: 0,
   key: 'key string'
 };
 

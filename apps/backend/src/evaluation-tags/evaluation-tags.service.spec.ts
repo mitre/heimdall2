@@ -4,11 +4,10 @@ import {DatabaseService} from '../database/database.service';
 import {EvaluationTagsService} from './evaluation-tags.service';
 import {EvaluationTag} from './evaluation-tag.model';
 import {SequelizeModule} from '@nestjs/sequelize';
-import {NotFoundException} from '@nestjs/common';
+
 import {Evaluation} from '../evaluations/evaluation.model';
 import {EvaluationsService} from '../evaluations/evaluations.service';
 import {
-  EVALUATION_TAG_1,
   CREATE_EVALUATION_TAG_DTO,
   CREATE_EVALUATION_TAG_DTO_MISSING_KEY,
   CREATE_EVALUATION_TAG_DTO_MISSING_VALUE,
@@ -46,20 +45,6 @@ describe('EvaluationTagsService', () => {
 
   beforeEach(() => {
     return databaseService.cleanAll();
-  });
-
-  describe('exists', () => {
-    it('throws an error when null', () => {
-      expect(() => {
-        evaluationTagsService.exists(null);
-      }).toThrow(NotFoundException);
-    });
-
-    it('returns true when given an EvaluationTag', () => {
-      expect(() => {
-        evaluationTagsService.exists(EVALUATION_TAG_1);
-      }).toBeTruthy();
-    });
   });
 
   describe('Create', () => {

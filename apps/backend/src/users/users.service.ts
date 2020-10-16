@@ -11,6 +11,7 @@ import {CreateUserDto} from './dto/create-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
 import {DeleteUserDto} from './dto/delete-user.dto';
 import {hash, compare} from 'bcrypt';
+import {FindOptions} from 'sequelize/types';
 
 @Injectable()
 export class UsersService {
@@ -25,38 +26,34 @@ export class UsersService {
   }
 
   async findById(id: number): Promise<UserDto> {
-    const user = await this.userModel.findByPk<User>(id);
-    this.exists(user);
+    const user = await this.findByPkBang(id);
     return new UserDto(user);
   }
 
   async findByEmail(email: string): Promise<UserDto> {
-    const user = await this.userModel.findOne<User>({
+    const user = await this.findOneBang({
       where: {
         email
       }
     });
-    this.exists(user);
     return new UserDto(user);
   }
 
   async findModelByEmail(email: string): Promise<User> {
-    const user = await this.userModel.findOne<User>({
+    return this.findOneBang({
       where: {
         email
       }
     });
-    this.exists(user);
-    return user;
   }
 
   async create(createUserDto: CreateUserDto) {
     const user = new User();
     user.email = createUserDto.email;
-    user.firstName = createUserDto.firstName;
-    user.lastName = createUserDto.lastName;
-    user.title = createUserDto.title;
-    user.organization = createUserDto.organization;
+    user.firstName = createUserDto.firstName || null;
+    user.lastName = createUserDto.lastName || null;
+    user.title = createUserDto.title || null;
+    user.organization = createUserDto.organization || null;
     user.role = createUserDto.role;
     try {
       user.encryptedPassword = await hash(createUserDto.password, 14);
@@ -68,8 +65,7 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto, isAdmin: boolean) {
-    const user = await this.userModel.findByPk<User>(id);
-    this.exists(user);
+    const user = await this.findByPkBang(id);
     if (!isAdmin) {
       await this.testPassword(updateUserDto, user);
     }
@@ -93,7 +89,6 @@ export class UsersService {
   }
 
   async updateLoginMetadata(user: User) {
-    this.exists(user);
     const id = user.id;
     user.lastLogin = new Date();
     user.loginCount++;
@@ -105,8 +100,7 @@ export class UsersService {
   }
 
   async remove(id: number, deleteUserDto: DeleteUserDto) {
-    const user = await this.userModel.findByPk<User>(id);
-    this.exists(user);
+    const user = await this.findByPkBang(id);
     try {
       if (!(await compare(deleteUserDto.password, user.encryptedPassword))) {
         throw new UnauthorizedException();
@@ -118,11 +112,23 @@ export class UsersService {
     return new UserDto(user);
   }
 
-  exists(user: User): boolean {
-    if (!user) {
+  async findByPkBang(
+    identifier: string | number | Buffer | undefined
+  ): Promise<User> {
+    const user = await this.userModel.findByPk<User>(identifier);
+    if (user === null) {
       throw new NotFoundException('User with given id not found');
     } else {
-      return true;
+      return user;
+    }
+  }
+
+  async findOneBang(options: FindOptions | undefined): Promise<User> {
+    const user = await this.userModel.findOne<User>(options);
+    if (user === null) {
+      throw new NotFoundException('User with given id not found');
+    } else {
+      return user;
     }
   }
 

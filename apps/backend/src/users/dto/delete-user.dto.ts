@@ -5,5 +5,5 @@ export class DeleteUserDto implements IDeleteUser {
   @IsNotEmpty()
   @IsString()
   @MinLength(15)
-  readonly password: string;
+  readonly password!: string;
 }

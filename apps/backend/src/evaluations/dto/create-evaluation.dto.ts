@@ -11,13 +11,13 @@ import {ICreateEvaluation} from '@heimdall/interfaces';
 export class CreateEvaluationDto implements ICreateEvaluation {
   @IsNotEmpty()
   @IsString()
-  readonly filename: string;
+  readonly filename!: string;
 
   @IsNotEmpty()
   @IsObject()
-  readonly data: Record<string, any>;
+  readonly data!: Record<string, any>;
 
   @IsOptional()
   @IsArray()
-  readonly evaluationTags: CreateEvaluationTagDto[];
+  readonly evaluationTags: CreateEvaluationTagDto[] | undefined;
 }

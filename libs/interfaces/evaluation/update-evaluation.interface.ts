@@ -1,15 +1,4 @@
-import {
-  IUpdateEvaluationTag,
-  ICreateEvaluationTag,
-  IDeleteEvaluationTag
-} from '..';
-
 export interface IUpdateEvaluation {
-  readonly filename: string;
-  readonly data: Record<string, any>;
-  readonly evaluationTags: (
-    | IUpdateEvaluationTag
-    | ICreateEvaluationTag
-    | IDeleteEvaluationTag
-  )[];
+  readonly filename: string | undefined;
+  readonly data: Record<string, any> | undefined;
 }

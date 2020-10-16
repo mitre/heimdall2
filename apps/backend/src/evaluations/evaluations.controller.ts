@@ -39,7 +39,7 @@ export class EvaluationsController {
   async update(
     @Param('id') id: number,
     @Body() updateEvaluationDto: UpdateEvaluationDto
-  ): Promise<UpdateEvaluationDto> {
+  ): Promise<EvaluationDto> {
     return this.evaluationsService.update(id, updateEvaluationDto);
   }
 

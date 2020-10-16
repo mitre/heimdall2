@@ -19,63 +19,63 @@ export class User extends Model<User> {
   @AutoIncrement
   @AllowNull(false)
   @Column(DataType.BIGINT)
-  id: number;
+  id!: number;
 
   @Unique
   @IsEmail
   @AllowNull(false)
-  @Column
-  email: string;
+  @Column(DataType.STRING)
+  email!: string;
 
   @AllowNull(true)
-  @Column
-  firstName: string;
+  @Column(DataType.STRING)
+  firstName!: string | null;
 
   @AllowNull(true)
-  @Column
-  lastName: string;
+  @Column(DataType.STRING)
+  lastName!: string | null;
 
   @AllowNull(true)
-  @Column
-  organization: string;
+  @Column(DataType.STRING)
+  organization!: string | null;
 
   @AllowNull(true)
-  @Column
-  title: string;
+  @Column(DataType.STRING)
+  title!: string | null;
 
   @AllowNull(false)
-  @Column
-  encryptedPassword: string;
+  @Column(DataType.STRING)
+  encryptedPassword!: string;
 
   @AllowNull(true)
-  @Column
-  forcePasswordChange: boolean;
+  @Column(DataType.BOOLEAN)
+  forcePasswordChange!: boolean | null;
 
   @AllowNull(true)
-  @Column
-  lastLogin: Date;
+  @Column(DataType.DATE)
+  lastLogin!: Date | null;
 
   @AllowNull(false)
   @Default(0)
-  @Column
-  loginCount: number;
+  @Column(DataType.BIGINT)
+  loginCount!: number;
 
   @AllowNull(true)
-  @Column
-  passwordChangedAt: Date;
+  @Column(DataType.DATE)
+  passwordChangedAt!: Date | null;
 
   @AllowNull(false)
   @Default('user')
-  @Column
-  role: string;
+  @Column(DataType.STRING)
+  role!: string;
 
   @CreatedAt
   @AllowNull(false)
-  @Column
-  createdAt: Date;
+  @Column(DataType.DATE)
+  createdAt!: Date;
 
   @UpdatedAt
   @AllowNull(false)
-  @Column
-  updatedAt: Date;
+  @Column(DataType.DATE)
+  updatedAt!: Date;
 }
