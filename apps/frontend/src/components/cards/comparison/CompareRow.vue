@@ -84,16 +84,8 @@ import {HDFControl} from 'inspecjs';
 import {ControlDelta} from '@/utilities/delta_util';
 import DeltaView from '@/components/cards/comparison/DeltaView.vue';
 import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails.vue';
-import {FilteredDataModule} from '../../../store/data_filters';
-
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {
-    controls: Array, // Of type Array<ContextualizedControl>
-    shown_files: Number,
-    shift: Number
-  }
-});
+import {FilteredDataModule} from '@/store/data_filters';
+import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -101,7 +93,12 @@ const Props = Vue.extend({
     ControlRowDetails
   }
 })
-export default class CompareRow extends Props {
+export default class CompareRow extends Vue {
+  @Prop({type: Array, required: true})
+  readonly controls!: context.ContextualizedControl[];
+  @Prop({type: Number, required: true}) readonly shown_files!: number;
+  @Prop({type: Number, required: true}) readonly shift!: number;
+
   /** Models the currently selected chips. If it's a number */
   selection: boolean[] = [];
   tab: string = 'tab-test';
@@ -109,13 +106,13 @@ export default class CompareRow extends Props {
   /** Initialize our selection */
   mounted() {
     // Pick the first and last control, or as close as we can get to that
-    if (this._controls.length === 0) {
+    if (this.controls.length === 0) {
       this.selection.splice(0);
-    } else if (this._controls.length === 1) {
+    } else if (this.controls.length === 1) {
       this.selection.push(false);
     } else {
       this.selection = [];
-      this._controls.forEach(() => {
+      this.controls.forEach(() => {
         this.selection.push(false);
       });
     }
@@ -137,20 +134,15 @@ export default class CompareRow extends Props {
     var i;
     for (i = 0; i < this.selection.length; i++) {
       if (this.selection[i]) {
-        selected.push(this._controls[i]);
+        selected.push(this.controls[i]);
       }
     }
     return selected;
   }
 
-  /** Typed getter on controls */
-  get _controls(): context.ContextualizedControl[] {
-    return this.controls as context.ContextualizedControl[];
-  }
-
   /** Just maps controls to hdf. Makes our template a bit less verbose */
   get hdf_controls(): Array<HDFControl | null> {
-    return this._controls.map((c) => {
+    return this.controls.map((c) => {
       if (c == null) {
         return null;
       }

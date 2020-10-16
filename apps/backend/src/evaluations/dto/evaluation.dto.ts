@@ -6,7 +6,7 @@ export class EvaluationDto implements IEvaluation {
   id: number;
   readonly filename: string;
   readonly data: Record<string, any>;
-  readonly evaluationTags: EvaluationTagDto[];
+  readonly evaluationTags: EvaluationTagDto[] | null;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -14,9 +14,16 @@ export class EvaluationDto implements IEvaluation {
     this.id = evaluation.id;
     this.filename = evaluation.filename;
     this.data = evaluation.data;
-    this.evaluationTags = evaluation.evaluationTags.map(
-      (tag) => new EvaluationTagDto(tag)
-    );
+    if (
+      evaluation.evaluationTags === null ||
+      evaluation.evaluationTags === undefined
+    ) {
+      this.evaluationTags = null;
+    } else {
+      this.evaluationTags = evaluation.evaluationTags.map(
+        (tag) => new EvaluationTagDto(tag)
+      );
+    }
     this.createdAt = evaluation.createdAt;
     this.updatedAt = evaluation.updatedAt;
   }

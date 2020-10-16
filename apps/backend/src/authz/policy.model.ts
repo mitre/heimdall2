@@ -16,30 +16,30 @@ export class Policy extends Model<Policy> {
   @AutoIncrement
   @AllowNull(false)
   @Column(DataType.BIGINT)
-  id: number;
+  id!: number;
 
   @AllowNull(false)
   @Column
-  role: string;
+  role!: string;
 
   @AllowNull(false)
   @Column
-  actions: string;
+  actions!: string;
 
   @AllowNull(false)
   @Column
-  targets: string;
+  targets!: string;
 
   @Column(DataType.JSON)
-  attributes: any;
+  attributes!: any;
 
   @CreatedAt
   @AllowNull(false)
   @Column
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdatedAt
   @AllowNull(false)
   @Column
-  updatedAt: Date;
+  updatedAt!: Date;
 }

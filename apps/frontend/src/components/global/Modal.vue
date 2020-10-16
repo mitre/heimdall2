@@ -22,7 +22,7 @@ import {Prop} from 'vue-property-decorator';
   components: {}
 })
 export default class Modal extends Vue {
-  @Prop({default: true}) readonly visible!: Boolean;
-  @Prop({default: false}) readonly persistent!: Boolean;
+  @Prop({default: true}) readonly visible!: boolean;
+  @Prop({default: false}) readonly persistent!: boolean;
 }
 </script>

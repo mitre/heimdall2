@@ -16,14 +16,6 @@
       "libs/*"
     ]
   },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{js,vue,ts}": [
-      "yarn run lint -- --"
-    ]
-  },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
@@ -33,7 +25,6 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-unused-imports": "^0.1.3",
     "lerna": "^3.22.1",
-    "lint-staged": "^10.4.0",
     "prettier": "^2.1.2",
     "typescript": "^3.9.7"
   }

@@ -11,19 +11,12 @@ import Component from 'vue-class-component';
 import {ColorHack, ColorHackModule} from '@/store/color_hack';
 import {Color} from 'vuetify/lib/util/colors';
 
-// We declare the props separately to make props types inferable.
-const Props = Vue.extend({
-  props: {}
-});
-
 /**
  * Categories property must be of type Category
  * Model is of type Severity | null - reflects selected severity
  */
-@Component({
-  components: {}
-})
-export default class UtilColorGenerator extends Props {
+@Component
+export default class UtilColorGenerator extends Vue {
   color: string = 'background';
 
   get body(): string {

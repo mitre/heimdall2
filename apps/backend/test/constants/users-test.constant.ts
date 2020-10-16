@@ -170,8 +170,6 @@ export const TEST_USER_WITH_INVALID_ROLE: User = {
   updatedAt: new Date()
 };
 
-export const NULL_USER: User = null;
-
 // @ts-ignore
 export const USER_ARRAY: User[] = [
   // @ts-ignore

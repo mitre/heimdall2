@@ -11,42 +11,42 @@ import {IUpdateUser} from '@heimdall/interfaces';
 export class UpdateUserDto implements IUpdateUser {
   @IsEmail()
   @IsOptional()
-  readonly email: string;
+  readonly email: string | undefined;
 
   @IsOptional()
   @IsString()
-  readonly firstName: string;
+  readonly firstName!: string | undefined;
 
   @IsOptional()
   @IsString()
-  readonly lastName: string;
+  readonly lastName!: string | undefined;
 
   @IsOptional()
   @IsString()
-  readonly organization: string;
+  readonly organization!: string | undefined;
 
   @IsOptional()
   @IsString()
-  readonly title: string;
+  readonly title!: string | undefined;
 
   @IsOptional()
   @IsString()
   @IsIn(['user'])
-  readonly role: string;
+  readonly role: string | undefined;
 
   @IsOptional()
   @IsString()
-  readonly password: string;
+  readonly password: string | undefined;
 
   @IsOptional()
   @IsString()
-  readonly passwordConfirmation: string;
+  readonly passwordConfirmation: string | undefined;
 
   @IsOptional()
   @IsBoolean()
-  readonly forcePasswordChange: boolean;
+  readonly forcePasswordChange: boolean | undefined;
 
   @IsNotEmpty()
   @IsString()
-  readonly currentPassword: string;
+  readonly currentPassword!: string;
 }

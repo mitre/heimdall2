@@ -35,17 +35,21 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
+
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
 import HelpModal from '@/components/global/HelpModal.vue';
+import Component from 'vue-class-component';
 
-export default {
+@Component({
   components: {
     HelpModal,
     AboutModal,
     LinkItem
   }
-};
+})
+export default class HelpAboutDropdown extends Vue {}
 </script>
 
 <style scoped>

@@ -1,6 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {Sequelize} from 'sequelize-typescript';
 import {DeltaArgs} from './interfaces/delta-args.interface';
+import {IDelta} from './interfaces/delta.interface';
 
 @Injectable()
 export class DatabaseService {
@@ -16,7 +17,10 @@ export class DatabaseService {
     });
   }
 
-  getDelta<T extends DeltaArgs>(source: Array<T>, updated: Array<T>) {
+  getDelta<T extends DeltaArgs>(
+    source: Array<T>,
+    updated: Array<T>
+  ): IDelta<T> {
     if (source === undefined || updated === undefined) {
       return {
         added: [],

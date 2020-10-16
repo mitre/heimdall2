@@ -90,7 +90,7 @@
                 </v-card>
               </v-slide-item>
             </v-slide-group>
-            <ProfData
+            <ProfileData
               v-if="eval_info != null"
               class="my-4 mx-10"
               :selected_prof="
@@ -111,7 +111,7 @@
               </v-card-subtitle>
             </v-card>
           </v-col>
-          <ProfData
+          <ProfileData
             v-if="eval_info != null && file_filter.length <= 3"
             class="my-4 mx-10"
             :selected_prof="
@@ -239,16 +239,10 @@ import {ControlStatus, Severity} from 'inspecjs';
 import {FileID, SourcedContextualizedEvaluation} from '@/store/report_intake';
 import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
 
-import ProfData from '@/components/cards/ProfData.vue';
+import ProfileData from '@/components/cards/ProfileData.vue';
 import {context} from 'inspecjs';
 
 import {ServerModule} from '@/store/server';
-
-// We declare the props separately
-// to make props types inferrable.
-const ResultsProps = Vue.extend({
-  props: {}
-});
 
 @Component({
   components: {
@@ -263,10 +257,10 @@ const ResultsProps = Vue.extend({
     ExportNist,
     ExportJson,
     EvaluationInfo,
-    ProfData
+    ProfileData
   }
 })
-export default class Results extends ResultsProps {
+export default class Results extends Vue {
   /**
    * The currently selected severity, as modeled by the severity chart
    */

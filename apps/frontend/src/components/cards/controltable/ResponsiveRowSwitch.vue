@@ -71,11 +71,6 @@ import ResponsiveRowLarge from '@/components/cards/controltable/ResponsiveRowLar
 import ResponsiveRowMedium from '@/components/cards/controltable/ResponsiveRowMedium.vue';
 import ResponsiveRowSmall from '@/components/cards/controltable/ResponsiveRowSmall.vue';
 
-const Props = Vue.extend({
-  props: {
-    statusColor: String
-  }
-});
 @Component({
   components: {
     ResponsiveRowLarge,
@@ -83,5 +78,5 @@ const Props = Vue.extend({
     ResponsiveRowSmall
   }
 })
-export default class ControlRowHeader extends Props {}
+export default class ControlRowHeader extends Vue {}
 </script>

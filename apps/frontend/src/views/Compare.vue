@@ -19,7 +19,7 @@
         <v-row>
           <v-col cols="12">
             <div style="position: relative; top: 14px">
-              <h1>Results Comparisons</h1>
+              <h1>Results Comparison</h1>
             </div>
           </v-col>
         </v-row>
@@ -229,12 +229,6 @@ import ApexLineChart, {
 import resize from 'vue-resize-directive';
 import {get_eval_start_time} from '@/utilities/delta_util';
 
-// We declare the props separately
-// to make props types inferrable.
-const Props = Vue.extend({
-  props: {}
-});
-
 @Component({
   components: {
     BaseView,
@@ -248,7 +242,7 @@ const Props = Vue.extend({
     resize
   }
 })
-export default class Compare extends Props {
+export default class Compare extends Vue {
   categories: Category<ControlStatus>[] = [
     {
       label: 'Passed',
