@@ -20,6 +20,7 @@ import {
   MINUTE_IN_MILLISECONDS,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD,
   CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD,
+  UPDATE_USER_DTO_TEST_WITH_NOT_COMPLEX_PASSWORD,
   UPDATE_USER_DTO_TEST_OBJ_WITH_MISSMATCHING_PASSWORDS,
   UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
   ADMIN_LOGIN_AUTHENTICATION,
@@ -372,6 +373,22 @@ describe('/users', () => {
           .set('Authorization', 'bearer ' + jwtToken)
           .send(UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD)
           .expect(HttpStatus.UNAUTHORIZED);
+      });
+
+      it('should return 400 status when password does not meet complexity requirements', async () => {
+        return request(app.getHttpServer())
+          .put('/users/' + id)
+          .set('Authorization', 'bearer ' + jwtToken)
+          .send(UPDATE_USER_DTO_TEST_WITH_NOT_COMPLEX_PASSWORD)
+          .expect(HttpStatus.BAD_REQUEST)
+          .then((response) => {
+            expect(response.body.message).toEqual(
+              'Password does not meet complexity requirements. Passwords are a minimum of 15 characters in length. Passwords ' +
+                'must contain at least one special character, number, upper-case letter, and lower-case letter. Passwords cannot contain more than three consecutive repeating ' +
+                'characters. Passwords cannot contain more than four repeating characters from the same character class.'
+            );
+            expect(response.body.error).toEqual('Bad Request');
+          });
       });
 
       it('should return 400 status when password and passwordConfirmation dont match', async () => {
