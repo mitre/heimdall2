@@ -8383,14 +8383,14 @@ diff-sequences@^26.5.0:
   integrity sha512-ZXx86srb/iYy6jG71k++wBN9P9J05UNQ5hQHQd9MtMPvcqXPx/vKU69jfHV637D00Q2gSgPk2D+jSx3l1lDW/Q==
 
 diff2html@^3.1.7:
-  version "3.1.13"
-  resolved "https://registry.yarnpkg.com/diff2html/-/diff2html-3.1.13.tgz#a50321c55847c9754c874d361cfc0ba2853feeec"
-  integrity sha512-Gs4NbtynANYqkPbbGqZN6zwWJq6JofAb5it76xnEUTpFjWJndaCCjFVUoD7yFjEPB36MtwTtT/ptWcKyD9Vw9g==
+  version "3.1.14"
+  resolved "https://registry.yarnpkg.com/diff2html/-/diff2html-3.1.14.tgz#af5792136b2328a23e17ebaf81320149c9f0639f"
+  integrity sha512-Qot+l+v+aqGcuvJe1C8ZPev17deSyg+DOwICF3m8Ka/C3af1K2Wh2WENYulxv9CQyVhy2VarluR5fMfN5BEHIg==
   dependencies:
     diff "4.0.2"
     hogan.js "3.0.2"
   optionalDependencies:
-    highlight.js "10.1.2"
+    highlight.js "10.2.1"
 
 diff@4.0.2, diff@^4.0.1, diff@^4.0.2:
   version "4.0.2"
@@ -10815,10 +10815,10 @@ highlight.js@*, highlight.js@^10.0.3:
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.3.1.tgz#3ca6bf007377faae347e8135ff25900aac734b9a"
   integrity sha512-jeW8rdPdhshYKObedYg5XGbpVgb1/DT4AHvDFXhkU7UnGSIjy9kkJ7zHG7qplhFHMitTSzh5/iClKQk3Kb2RFQ==
 
-highlight.js@10.1.2:
-  version "10.1.2"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.1.2.tgz#c20db951ba1c22c055010648dfffd7b2a968e00c"
-  integrity sha512-Q39v/Mn5mfBlMff9r+zzA+gWxRsCRKwEMvYTiisLr/XUiFI/4puWt0Ojdko3R3JCNWGdOWaA5g/Yxqa23kC5AA==
+highlight.js@10.2.1:
+  version "10.2.1"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.2.1.tgz#09784fe2e95612abbefd510948945d4fe6fa9668"
+  integrity sha512-A+sckVPIb9zQTUydC9lpRX1qRFO/N0OKEh0NwIr65ckvWA/oMY8v9P3+kGRK3w2ULSh9E8v5MszXafodQ6039g==
 
 highlight.js@^9.6.0:
   version "9.18.3"
