@@ -35,7 +35,6 @@
             label="Search"
             clearable
             class="overtake-bar mx-2"
-            clear-icon="mdi-filter-remove"
             @click:clear="clear_search()"
             @blur="show_search_mobile = false"
           />
