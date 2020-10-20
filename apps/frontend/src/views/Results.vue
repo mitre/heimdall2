@@ -2,7 +2,7 @@
   <BaseView :title="curr_title">
     <!-- Topbar config - give it a search bar -->
     <template #topbar-content>
-      <template v-if="!is_mobile">
+      <template v-if="!$vuetify.breakpoint.xs">
         <v-text-field
           v-model="search_term"
           flat
@@ -293,7 +293,6 @@ export default class Results extends Vue {
   eval_info: number | null = null;
 
   /** Determines if we should make the search bar colapseable */
-  is_mobile: boolean = false;
   show_search_mobile: boolean = false;
   /**
    * The currently selected file, if one exists.
@@ -307,13 +306,6 @@ export default class Results extends Vue {
   // Returns true if no files are uploaded
   get no_files(): boolean {
     return InspecDataModule.allFiles.length === 0;
-  }
-
-  /**
-   * Check if the screen width will break the search bar
-   */
-  onResize() {
-    this.is_mobile = window.innerWidth < 600;
   }
 
   /**
@@ -462,18 +454,6 @@ export default class Results extends Vue {
     } else {
       this.eval_info = index;
     }
-  }
-  // Listening for window resize
-  created() {
-    this.onResize();
-
-    window.addEventListener('resize', this.onResize, {passive: true});
-  }
-
-  beforeDestroy() {
-    if (typeof window === 'undefined') return;
-
-    window.removeEventListener('resize', this.onResize);
   }
 }
 </script>
