@@ -21,7 +21,7 @@
         </v-btn>
       </template>
       <template v-else>
-        <v-btn @click="show_search_mobile = true">
+        <v-btn @click="showSearch">
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
         <div v-show="show_search_mobile">
@@ -261,6 +261,9 @@ import {ServerModule} from '@/store/server';
   }
 })
 export default class Results extends Vue {
+  $refs!: Vue['$refs'] & {
+    msearch: HTMLInputElement;
+  };
   /**
    * The currently selected severity, as modeled by the severity chart
    */
@@ -311,6 +314,16 @@ export default class Results extends Vue {
    */
   onResize() {
     this.is_mobile = window.innerWidth < 600;
+  }
+
+  /**
+   * Handles focusing on the search bar
+   */
+  showSearch(): void {
+    this.show_search_mobile = true;
+    this.$nextTick(() => {
+      this.$refs.msearch.focus();
+    });
   }
 
   /**
