@@ -2,47 +2,27 @@
   <BaseView :title="curr_title">
     <!-- Topbar config - give it a search bar -->
     <template #topbar-content>
-      <template v-if="!$vuetify.breakpoint.xs">
-        <v-text-field
-          v-model="search_term"
-          flat
-          hide-details
-          solo
-          prepend-inner-icon="mdi-magnify"
-          label="Search"
-          clearable
-          class="mx-2"
-          @click:clear="clear_search()"
-        />
-
-        <v-btn :disabled="!can_clear" @click="clear">
-          <span class="d-none d-md-inline pr-2"> Clear </span>
-          <v-icon>mdi-filter-remove</v-icon>
-        </v-btn>
-      </template>
-      <template v-else>
-        <v-btn @click="showSearch">
-          <v-icon>mdi-magnify</v-icon>
-        </v-btn>
-        <div v-show="show_search_mobile">
-          <v-text-field
-            ref="msearch"
-            v-model="search_term"
-            flat
-            hide-details
-            solo
-            prepend-inner-icon="mdi-magnify"
-            label="Search"
-            clearable
-            class="overtake-bar mx-2"
-            @click:clear="clear_search()"
-            @blur="show_search_mobile = false"
-          />
-        </div>
-        <v-btn class="mx-2 mr-0" :disabled="!can_clear" @click="clear">
-          <v-icon>mdi-filter-remove</v-icon>
-        </v-btn>
-      </template>
+      <v-text-field
+        v-show="show_search_mobile || !$vuetify.breakpoint.xs"
+        ref="search"
+        v-model="search_term"
+        flat
+        hide-details
+        solo
+        prepend-inner-icon="mdi-magnify"
+        label="Search"
+        clearable
+        :class="$vuetify.breakpoint.xs ? 'overtake-bar mx-2' : 'mx-2'"
+        @click:clear="clear_search()"
+        @blur="show_search_mobile = false"
+      />
+      <v-btn v-if="$vuetify.breakpoint.xs" class="mr-2" @click="showSearch">
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn>
+      <v-btn :disabled="!can_clear" @click="clear">
+        <span class="d-none d-md-inline pr-2"> Clear </span>
+        <v-icon>mdi-filter-remove</v-icon>
+      </v-btn>
     </template>
     <template #topbar-data>
       <div class="text-center">
@@ -242,6 +222,7 @@ import ProfileData from '@/components/cards/ProfileData.vue';
 import {context} from 'inspecjs';
 
 import {ServerModule} from '@/store/server';
+import {capitalize} from 'lodash';
 
 @Component({
   components: {
@@ -261,7 +242,7 @@ import {ServerModule} from '@/store/server';
 })
 export default class Results extends Vue {
   $refs!: Vue['$refs'] & {
-    msearch: HTMLInputElement;
+    search: HTMLInputElement;
   };
   /**
    * The currently selected severity, as modeled by the severity chart
@@ -299,7 +280,9 @@ export default class Results extends Vue {
    */
 
   get file_filter(): FileID[] {
-    return FilteredDataModule.selected_file_ids;
+    if (this.current_route_name === 'results')
+      return FilteredDataModule.selected_evaluations;
+    else return FilteredDataModule.selected_profiles;
   }
 
   // Returns true if no files are uploaded
@@ -313,7 +296,7 @@ export default class Results extends Vue {
   showSearch(): void {
     this.show_search_mobile = true;
     this.$nextTick(() => {
-      this.$refs.msearch.focus();
+      this.$refs.search.focus();
     });
   }
 
@@ -393,20 +376,23 @@ export default class Results extends Vue {
   /**
    * The title to override with
    */
-  get curr_title(): string | undefined {
+  get curr_title(): string {
+    let returnText = `${capitalize(this.current_route_name.slice(0, -1))} View`;
     if (this.file_filter.length == 1) {
       let file = InspecDataModule.allFiles.find(
         (f) => f.unique_id === this.file_filter[0]
       );
       if (file) {
-        return file.filename;
+        returnText += ` (${file.filename} selected)`;
       }
-    }
-    if (this.file_filter.length > 1) {
-      return this.file_filter.length + ' files selected';
     } else {
-      return 'No files selected';
+      returnText += ` (${this.file_filter.length} ${this.current_route_name} selected)`;
     }
+    return returnText;
+  }
+
+  get current_route_name(): string {
+    return this.$router.currentRoute.path.substring(1);
   }
 
   //changes width of eval info if it is in server mode and needs more room for tags
