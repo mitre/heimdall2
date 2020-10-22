@@ -197,7 +197,9 @@ describe('/evaluations', () => {
               expect(response.body[0].createdAt).toEqual(evaluation.createdAt);
               expect(response.body[0].updatedAt).toEqual(evaluation.updatedAt);
               expect(response.body[0].id).toEqual(evaluation.id);
-              expect(response.body[0].evaluationTags).toEqual(evaluation.evaluationTags);
+              expect(response.body[0].evaluationTags).toEqual(
+                evaluation.evaluationTags
+              );
             });
         });
       });
