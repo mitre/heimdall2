@@ -55,8 +55,22 @@ describe('EvaluationsService', () => {
         EVALUATION_WITH_TAGS_1
       );
       evaluationsDtoArray = await evaluationsService.findAll();
-      expect(evaluationsDtoArray).toContainEqual(evaluationOne);
-      expect(evaluationsDtoArray).toContainEqual(evaluationTwo);
+
+      expect(evaluationsDtoArray[0].id).toEqual(evaluationOne.id);
+      expect(evaluationsDtoArray[0].filename).toEqual(evaluationOne.filename);
+      expect(evaluationsDtoArray[0].createdAt).toEqual(evaluationOne.createdAt);
+      expect(evaluationsDtoArray[0].updatedAt).toEqual(evaluationOne.updatedAt);
+      expect(evaluationsDtoArray[0].evaluationTags).toEqual(
+        evaluationOne.evaluationTags
+      );
+
+      expect(evaluationsDtoArray[1].id).toEqual(evaluationTwo.id);
+      expect(evaluationsDtoArray[1].filename).toEqual(evaluationTwo.filename);
+      expect(evaluationsDtoArray[1].createdAt).toEqual(evaluationTwo.createdAt);
+      expect(evaluationsDtoArray[1].updatedAt).toEqual(evaluationTwo.updatedAt);
+      expect(evaluationsDtoArray[1].evaluationTags).toEqual(
+        evaluationTwo.evaluationTags
+      );
     });
   });
 

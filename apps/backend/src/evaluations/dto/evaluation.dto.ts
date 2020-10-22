@@ -3,9 +3,9 @@ import {EvaluationTagDto} from '../../evaluation-tags/dto/evaluation-tag.dto';
 import {IEvaluation} from '@heimdall/interfaces';
 
 export class EvaluationDto implements IEvaluation {
-  id: number;
+  readonly id: number;
   readonly filename: string;
-  readonly data: Record<string, any>;
+  readonly data: Record<string, any> | undefined;
   readonly evaluationTags: EvaluationTagDto[] | null;
   readonly createdAt: Date;
   readonly updatedAt: Date;
