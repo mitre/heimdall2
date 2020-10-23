@@ -12,6 +12,8 @@ import {LocalStorageVal} from '@/utilities/helper_util';
 import {IStartupSettings} from '@heimdall/interfaces';
 
 const local_token = new LocalStorageVal<string | null>('auth_token');
+const user_id = new LocalStorageVal<string | null>('user_id');
+const user_role = new LocalStorageVal<string | null>('user_role');
 
 export interface IServerState {
   serverMode: boolean;
@@ -28,18 +30,26 @@ export interface IServerState {
   name: 'ServerModule'
 })
 class Server extends VuexModule implements IServerState {
-  banner = '';
-  serverUrl = '';
-  serverMode = false;
-  loading = true;
+  banner: string = '';
+  serverUrl: string = '';
+  serverMode: boolean = false;
+  loading: boolean = true;
   /** Our currently granted JWT token */
-  token = '';
+  token: string = '';
+  /** Our User ID  */
+  userID: string = '';
 
   @Mutation
   SET_TOKEN(newToken: string) {
     this.token = newToken;
     local_token.set(newToken);
     axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+  }
+
+  @Mutation
+  SET_USERID(newID: string) {
+    this.userID = newID;
+    user_id.set(newID);
   }
 
   @Mutation
@@ -105,7 +115,11 @@ class Server extends VuexModule implements IServerState {
   @Action({rawError: true})
   public async Login(userInfo: {email: string; password: string}) {
     return axios.post('/authn/login', userInfo).then(({data}) => {
-      this.SET_TOKEN(data.accessToken);
+      const userID = user_id.get();
+      if (userID !== null) {
+        this.SET_TOKEN(data.accessToken);
+        this.SET_USERID(data.userID);
+      }
     });
   }
 
@@ -116,6 +130,21 @@ class Server extends VuexModule implements IServerState {
     passwordConfirmation: string;
   }) {
     return axios.post('/users', userInfo);
+  }
+
+  @Action({rawError: true})
+  public async updateUserInfo(userInfo: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    organization: string;
+  }) {
+    return axios.put(`/users/${user_id.get()}`, userInfo);
+  }
+
+  @Action({rawError: true})
+  public async UserInfo() {
+    return axios.get(`/users/${user_id.get()}`);
   }
 
   @Action

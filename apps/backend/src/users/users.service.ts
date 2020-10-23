@@ -64,11 +64,9 @@ export class UsersService {
     return new UserDto(userData);
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto, isAdmin: boolean) {
+  async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.findByPkBang(id);
-    if (!isAdmin) {
-      await this.testPassword(updateUserDto, user);
-    }
+    await this.testPassword(updateUserDto, user);
     if (updateUserDto.password == null && user.forcePasswordChange) {
       throw new BadRequestException('You must change your password');
     } else if (updateUserDto.password) {

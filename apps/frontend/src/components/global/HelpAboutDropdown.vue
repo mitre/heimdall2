@@ -15,6 +15,13 @@
         </div>
       </template>
       <v-list class="pt-0 pb-0">
+        <UserModal>
+          <template #clickable="{on}"
+            ><LinkItem key="user" text="User Info" icon="mdi-account" v-on="on"
+              >User Info</LinkItem
+            >
+          </template>
+        </UserModal>
         <HelpModal>
           <template #clickable="{on}">
             <LinkItem key="help" text="Help" icon="mdi-help-circle" v-on="on"
@@ -40,12 +47,15 @@ import Vue from 'vue';
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
 import HelpModal from '@/components/global/HelpModal.vue';
+import UserModal from '@/components/global/UserModal.vue';
+
 import Component from 'vue-class-component';
 
 @Component({
   components: {
     HelpModal,
     AboutModal,
+    UserModal,
     LinkItem
   }
 })
