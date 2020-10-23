@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" width="75%">
+  <v-dialog v-model="dialog" width="50%">
     <!-- clickable slot passes the activator prop up to parent
         This allows the parent to pass in a clickable icon -->
     <template #activator="{on}">
@@ -12,9 +12,16 @@
       <v-card-text>
         <br />
         <v-form>
-          <v-text-field v-model="firstName" label="First Name" />
-          <v-text-field v-model="lastName" label="Last Name" />
+          <v-row>
+            <v-col>
+              <v-text-field v-model="firstName" label="First Name" />
+            </v-col>
+            <v-col>
+              <v-text-field v-model="lastName" label="Last Name" />
+            </v-col>
+          </v-row>
           <v-text-field v-model="email" label="Email" />
+          <v-text-field v-model="title" label="Title" />
           <v-text-field v-model="organization" label="Organization" />
         </v-form>
         <v-divider />
@@ -48,7 +55,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {AppInfoModule} from '@/store/app_info';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
 
@@ -60,17 +66,16 @@ export default class UserModal extends Vue {
   lastName: string = '';
   email: string = '';
   organization: string = '';
+  title: string = '';
   currentPassword: string = '';
-
-  get version(): string {
-    return AppInfoModule.version;
-  }
 
   async getUserInfo(): Promise<void> {
     ServerModule.UserInfo().then((response) => {
       this.firstName = response.data.firstName;
       this.lastName = response.data.lastName;
       this.email = response.data.email;
+      this.organization = response.data.organization;
+      this.title = response.data.title;
     });
   }
 
@@ -80,6 +85,7 @@ export default class UserModal extends Vue {
       lastName: this.lastName,
       email: this.email,
       organization: this.organization,
+      title: this.title,
       currentPassword: this.currentPassword
     };
     ServerModule.updateUserInfo(userInfo)
