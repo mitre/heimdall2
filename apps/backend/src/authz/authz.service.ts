@@ -39,7 +39,6 @@ export class AuthzService {
       resource,
       {}
     );
-    console.log(answer);
     return answer.granted;
   }
 }
