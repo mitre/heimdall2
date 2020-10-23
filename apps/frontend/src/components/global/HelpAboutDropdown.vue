@@ -15,7 +15,7 @@
         </div>
       </template>
       <v-list class="pt-0 pb-0">
-        <UserModal>
+        <UserModal v-if="serverMode">
           <template #clickable="{on}"
             ><LinkItem key="user" text="User Info" icon="mdi-account" v-on="on"
               >User Info</LinkItem
@@ -48,6 +48,7 @@ import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
 import HelpModal from '@/components/global/HelpModal.vue';
 import UserModal from '@/components/global/UserModal.vue';
+import {ServerModule} from '@/store/server';
 
 import Component from 'vue-class-component';
 
@@ -59,7 +60,11 @@ import Component from 'vue-class-component';
     LinkItem
   }
 })
-export default class HelpAboutDropdown extends Vue {}
+export default class HelpAboutDropdown extends Vue {
+  get serverMode() {
+    return ServerModule.serverMode;
+  }
+}
 </script>
 
 <style scoped>
