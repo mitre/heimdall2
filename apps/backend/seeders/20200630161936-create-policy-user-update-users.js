@@ -6,7 +6,8 @@ module.exports = {
       'SELECT COUNT(id) FROM "Policies" WHERE role = \'user\' AND actions = \'put\' AND targets = \'users\'',
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     )
-    if(result[0].count === 0) {
+    if(result[0].count === '0') {
+      console.log('hello world')
       return queryInterface.bulkInsert('Policies', [{
         role: 'user',
         actions: 'put',
