@@ -80,7 +80,7 @@ export default class UserModal extends Vue {
   }
 
   async updateUserInfo(): Promise<void> {
-    let userInfo = {
+    const userInfo = {
       firstName: this.firstName,
       lastName: this.lastName,
       email: this.email,

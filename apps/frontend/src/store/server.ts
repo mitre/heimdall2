@@ -12,8 +12,7 @@ import {LocalStorageVal} from '@/utilities/helper_util';
 import {IStartupSettings} from '@heimdall/interfaces';
 
 const local_token = new LocalStorageVal<string | null>('auth_token');
-const user_id = new LocalStorageVal<string | null>('user_id');
-const user_role = new LocalStorageVal<string | null>('user_role');
+const localUserID = new LocalStorageVal<string | null>('localUserID');
 
 export interface IServerState {
   serverMode: boolean;
@@ -21,6 +20,7 @@ export interface IServerState {
   loading: boolean;
   token: string;
   banner: string;
+  userID: string;
 }
 
 @Module({
@@ -30,14 +30,14 @@ export interface IServerState {
   name: 'ServerModule'
 })
 class Server extends VuexModule implements IServerState {
-  banner: string = '';
-  serverUrl: string = '';
-  serverMode: boolean = false;
-  loading: boolean = true;
+  banner = '';
+  serverUrl = '';
+  serverMode = false;
+  loading = true;
   /** Our currently granted JWT token */
-  token: string = '';
+  token = '';
   /** Our User ID  */
-  userID: string = '';
+  userID = '';
 
   @Mutation
   SET_TOKEN(newToken: string) {
@@ -48,8 +48,8 @@ class Server extends VuexModule implements IServerState {
 
   @Mutation
   SET_USERID(newID: string) {
+    localUserID.set(newID);
     this.userID = newID;
-    user_id.set(newID);
   }
 
   @Mutation
@@ -115,11 +115,8 @@ class Server extends VuexModule implements IServerState {
   @Action({rawError: true})
   public async Login(userInfo: {email: string; password: string}) {
     return axios.post('/authn/login', userInfo).then(({data}) => {
-      const userID = user_id.get();
-      if (userID !== null) {
-        this.SET_TOKEN(data.accessToken);
-        this.SET_USERID(data.userID);
-      }
+      this.SET_TOKEN(data.accessToken);
+      this.SET_USERID(data.userID);
     });
   }
 
@@ -139,12 +136,12 @@ class Server extends VuexModule implements IServerState {
     email: string;
     organization: string;
   }) {
-    return axios.put(`/users/${user_id.get()}`, userInfo);
+    return axios.put(`/users/${localUserID.get()}`, userInfo);
   }
 
   @Action({rawError: true})
   public async UserInfo() {
-    return axios.get(`/users/${user_id.get()}`);
+    return axios.get(`/users/${localUserID.get()}`);
   }
 
   @Action

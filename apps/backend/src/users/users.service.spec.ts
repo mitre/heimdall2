@@ -190,8 +190,7 @@ describe('UsersService', () => {
 
       const updatedUser = await usersService.update(
         user.id,
-        UPDATE_USER_DTO_TEST_OBJ,
-        false
+        UPDATE_USER_DTO_TEST_OBJ
       );
       const afterUpdate = await User.findByPk<User>(user.id);
 
@@ -223,8 +222,7 @@ describe('UsersService', () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const updatedUser = await usersService.update(
         user.id,
-        UPDATE_USER_DTO_TEST_WITHOUT_EMAIL,
-        false
+        UPDATE_USER_DTO_TEST_WITHOUT_EMAIL
       );
 
       expect(updatedUser.email).toEqual(user.email);
@@ -237,8 +235,7 @@ describe('UsersService', () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const updatedUser = await usersService.update(
         user.id,
-        UPDATE_USER_DTO_TEST_WITHOUT_FIRST_NAME,
-        false
+        UPDATE_USER_DTO_TEST_WITHOUT_FIRST_NAME
       );
 
       expect(updatedUser.firstName).toEqual(user.firstName);
@@ -251,8 +248,7 @@ describe('UsersService', () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const updatedUser = await usersService.update(
         user.id,
-        UPDATE_USER_DTO_TEST_WITHOUT_LAST_NAME,
-        false
+        UPDATE_USER_DTO_TEST_WITHOUT_LAST_NAME
       );
 
       expect(updatedUser.lastName).toEqual(user.lastName);
@@ -265,8 +261,7 @@ describe('UsersService', () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const updatedUser = await usersService.update(
         user.id,
-        UPDATE_USER_DTO_TEST_WITHOUT_ORGANIZATION,
-        false
+        UPDATE_USER_DTO_TEST_WITHOUT_ORGANIZATION
       );
 
       expect(updatedUser.organization).toEqual(user.organization);
@@ -279,8 +274,7 @@ describe('UsersService', () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const updatedUser = await usersService.update(
         user.id,
-        UPDATE_USER_DTO_TEST_WITHOUT_TITLE,
-        false
+        UPDATE_USER_DTO_TEST_WITHOUT_TITLE
       );
 
       expect(updatedUser.title).toEqual(user.title);
@@ -293,8 +287,7 @@ describe('UsersService', () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const updatedUser = await usersService.update(
         user.id,
-        UPDATE_USER_DTO_TEST_WITHOUT_ROLE,
-        false
+        UPDATE_USER_DTO_TEST_WITHOUT_ROLE
       );
 
       expect(updatedUser.role).toEqual(user.role);
@@ -307,8 +300,7 @@ describe('UsersService', () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const updateUser = await usersService.update(
         user.id,
-        UPDATE_USER_DTO_TEST_WITHOUT_FORCE_PASSWORD_CHANGE,
-        false
+        UPDATE_USER_DTO_TEST_WITHOUT_FORCE_PASSWORD_CHANGE
       );
 
       expect(updateUser.updatedAt.valueOf()).not.toEqual(
@@ -324,8 +316,7 @@ describe('UsersService', () => {
       }
       await usersService.update(
         user.id,
-        UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
-        false
+        UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS
       );
       const updatedUser = await User.findByPk<User>(user.id);
 
@@ -359,8 +350,7 @@ describe('UsersService', () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const updateUser = await usersService.update(
         user.id,
-        UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD,
-        true
+        UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD
       );
 
       expect(updateUser.updatedAt.valueOf()).not.toEqual(
@@ -374,8 +364,7 @@ describe('UsersService', () => {
       await expect(
         usersService.update(
           user.id,
-          UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD,
-          false
+          UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD
         )
       ).rejects.toThrow(UnauthorizedException);
     });
@@ -384,11 +373,7 @@ describe('UsersService', () => {
       expect.assertions(1);
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       await expect(
-        usersService.update(
-          user.id,
-          UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL,
-          false
-        )
+        usersService.update(user.id, UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL)
       ).rejects.toThrow('Validation error: Validation isEmail on email failed');
     });
 
@@ -397,14 +382,12 @@ describe('UsersService', () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       await usersService.update(
         user.id,
-        UPDATE_USER_DTO_SETUP_FORCE_PASSWORD_CHANGE,
-        false
+        UPDATE_USER_DTO_SETUP_FORCE_PASSWORD_CHANGE
       );
       await expect(
         usersService.update(
           user.id,
-          UPDATE_USER_DTO_TEST_WITHOUT_FORCE_PASSWORD_CHANGE,
-          false
+          UPDATE_USER_DTO_TEST_WITHOUT_FORCE_PASSWORD_CHANGE
         )
       ).rejects.toThrow(BadRequestException);
     });

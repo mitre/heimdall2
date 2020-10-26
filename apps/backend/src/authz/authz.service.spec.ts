@@ -54,7 +54,11 @@ describe('Authz Service', () => {
 
       it('should deny access when subject role is invalid', async () => {
         expect(
-          await authzService.can(TEST_USER_WITH_INVALID_ROLE, 'delete', '/users')
+          await authzService.can(
+            TEST_USER_WITH_INVALID_ROLE,
+            'delete',
+            '/users'
+          )
         ).toBeFalsy();
       });
 
