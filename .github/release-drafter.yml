@@ -13,6 +13,9 @@ categories:
   - title: "Security Enhancements"
     labels:
       - "security"
+  - title: "Dependency Updates"
+    labels:
+      - "dependencies"
 change-template: "- $TITLE @$AUTHOR (#$NUMBER)"
 template: |
   $CHANGES

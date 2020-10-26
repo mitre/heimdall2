@@ -194,7 +194,12 @@ describe('/evaluations', () => {
             .set('Authorization', 'bearer ' + jwtToken)
             .expect(HttpStatus.OK)
             .then((response) => {
-              expect(response.body[0]).toEqual(evaluation);
+              expect(response.body[0].createdAt).toEqual(evaluation.createdAt);
+              expect(response.body[0].updatedAt).toEqual(evaluation.updatedAt);
+              expect(response.body[0].id).toEqual(evaluation.id);
+              expect(response.body[0].evaluationTags).toEqual(
+                evaluation.evaluationTags
+              );
             });
         });
       });

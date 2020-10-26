@@ -56,7 +56,9 @@ export interface XYScale {
  * Categories property must be of type Category
  * Emits "select-node" with payload of type d3.HierarchyRectangularNode<TreemapNode>
  */
-@Component
+@Component({
+  name: 'Cell'
+})
 export default class Cell extends Vue {
   @Prop({type: String}) readonly selected_control_id!: string;
   @Prop({type: Object, required: true})

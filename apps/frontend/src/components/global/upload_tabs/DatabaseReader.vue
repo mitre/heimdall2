@@ -89,17 +89,24 @@ export default class DatabaseReader extends mixins(ServerMixin) {
 
   load_results(evaluations: IEvaluation[]): void {
     Promise.all(
-      evaluations.map((evaluation) => {
-        return InspecIntakeModule.loadText({
-          text: JSON.stringify(evaluation.data),
-          filename: evaluation.filename,
-          database_id: evaluation.id,
-          createdAt: evaluation.createdAt,
-          updatedAt: evaluation.updatedAt,
-          tags: [] // Tags are not yet implemented, so for now the value is passed in empty
-        }).catch((err) => {
-          SnackbarModule.failure(err);
-        });
+      evaluations.map(async (evaluation) => {
+        return axios
+          .get<IEvaluation>(`/evaluations/${evaluation.id}`)
+          .then((response) => {
+            return InspecIntakeModule.loadText({
+              text: JSON.stringify(response.data.data),
+              filename: evaluation.filename,
+              database_id: evaluation.id,
+              createdAt: evaluation.createdAt,
+              updatedAt: evaluation.updatedAt,
+              tags: [] // Tags are not yet implemented, so for now the value is passed in empty
+            }).catch((err) => {
+              SnackbarModule.failure(err);
+            });
+          })
+          .catch((err) => {
+            SnackbarModule.failure(err);
+          });
       })
     ).then((fileIds: (FileID | void)[]) => {
       this.$emit('got-files', fileIds.filter(Boolean));

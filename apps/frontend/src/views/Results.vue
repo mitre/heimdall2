@@ -3,6 +3,8 @@
     <!-- Topbar config - give it a search bar -->
     <template #topbar-content>
       <v-text-field
+        v-show="show_search_mobile || !$vuetify.breakpoint.xs"
+        ref="search"
         v-model="search_term"
         flat
         hide-details
@@ -10,10 +12,13 @@
         prepend-inner-icon="mdi-magnify"
         label="Search"
         clearable
-        class="mx-2"
+        :class="$vuetify.breakpoint.xs ? 'overtake-bar mx-2' : 'mx-2'"
         @click:clear="clear_search()"
+        @blur="show_search_mobile = false"
       />
-
+      <v-btn v-if="$vuetify.breakpoint.xs" class="mr-2" @click="showSearch">
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn>
       <v-btn :disabled="!can_clear" @click="clear">
         <span class="d-none d-md-inline pr-2"> Clear </span>
         <v-icon>mdi-filter-remove</v-icon>
@@ -236,6 +241,9 @@ import {capitalize} from 'lodash';
   }
 })
 export default class Results extends Vue {
+  $refs!: Vue['$refs'] & {
+    search: HTMLInputElement;
+  };
   /**
    * The currently selected severity, as modeled by the severity chart
    */
@@ -263,6 +271,9 @@ export default class Results extends Vue {
   filter_snackbar: boolean = false;
 
   eval_info: number | null = null;
+
+  /** Determines if we should make the search bar colapseable */
+  show_search_mobile: boolean = false;
   /**
    * The currently selected file, if one exists.
    * Controlled by router.
@@ -277,6 +288,16 @@ export default class Results extends Vue {
   // Returns true if no files are uploaded
   get no_files(): boolean {
     return InspecDataModule.allFiles.length === 0;
+  }
+
+  /**
+   * Handles focusing on the search bar
+   */
+  showSearch(): void {
+    this.show_search_mobile = true;
+    this.$nextTick(() => {
+      this.$refs.search.focus();
+    });
   }
 
   /**
@@ -355,7 +376,6 @@ export default class Results extends Vue {
   /**
    * The title to override with
    */
-
   get curr_title(): string {
     let returnText = `${capitalize(this.current_route_name.slice(0, -1))} View`;
     if (this.file_filter.length == 1) {
@@ -426,5 +446,12 @@ export default class Results extends Vue {
 <style scoped>
 .glow {
   box-shadow: 0px 0px 8px 6px #5a5;
+}
+.overtake-bar {
+  width: 96%;
+  position: absolute;
+  left: 0px;
+  top: 4px;
+  z-index: 5;
 }
 </style>

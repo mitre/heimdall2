@@ -1,5 +1,5 @@
 <template>
-  <v-snackbar v-if="show" id="info-snackbar" v-model="show" timeout="10000">
+  <v-snackbar v-if="show" id="info-snackbar" v-model="show" timeout="10000" top>
     {{ message }}
 
     <template #action="{attrs}">
