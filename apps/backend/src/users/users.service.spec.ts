@@ -346,18 +346,6 @@ describe('UsersService', () => {
       );
     });
 
-    it('should update a user without matching password when admin', async () => {
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      const updateUser = await usersService.update(
-        user.id,
-        UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD
-      );
-
-      expect(updateUser.updatedAt.valueOf()).not.toEqual(
-        user.updatedAt.valueOf()
-      );
-    });
-
     it('should throw an error when the password is invalid', async () => {
       expect.assertions(1);
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
