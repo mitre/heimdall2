@@ -6,6 +6,7 @@ import {AuthzModule} from './authz/authz.module';
 import {AuthnModule} from './authn/authn.module';
 import {EvaluationTagsModule} from './evaluation-tags/evaluation-tags.module';
 import {EvaluationsModule} from './evaluations/evaluations.module';
+import {UpdatesModule} from './updates/updates.module';
 import {ServeStaticModule} from '@nestjs/serve-static';
 import {join} from 'path';
 import {AppController} from './app.controller';
@@ -22,7 +23,8 @@ import {AppController} from './app.controller';
     AuthzModule,
     AuthnModule,
     EvaluationTagsModule,
-    EvaluationsModule
+    EvaluationsModule,
+    UpdatesModule
   ]
 })
 export class AppModule {}
