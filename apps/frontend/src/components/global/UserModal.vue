@@ -58,7 +58,7 @@ import Component from 'vue-class-component';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
 
-@Component
+@Component({})
 export default class UserModal extends Vue {
   dialog: boolean = false;
 
