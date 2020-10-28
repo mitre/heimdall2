@@ -29,19 +29,19 @@ export class User extends Model<User> {
 
   @AllowNull(true)
   @Column(DataType.STRING)
-  firstName!: string | null;
+  firstName!: string | undefined;
 
   @AllowNull(true)
   @Column(DataType.STRING)
-  lastName!: string | null;
+  lastName!: string | undefined;
 
   @AllowNull(true)
   @Column(DataType.STRING)
-  organization!: string | null;
+  organization!: string | undefined;
 
   @AllowNull(true)
   @Column(DataType.STRING)
-  title!: string | null;
+  title!: string | undefined;
 
   @AllowNull(false)
   @Column(DataType.STRING)
@@ -49,11 +49,11 @@ export class User extends Model<User> {
 
   @AllowNull(true)
   @Column(DataType.BOOLEAN)
-  forcePasswordChange!: boolean | null;
+  forcePasswordChange!: boolean | undefined;
 
   @AllowNull(true)
   @Column(DataType.DATE)
-  lastLogin!: Date | null;
+  lastLogin!: Date | undefined;
 
   @AllowNull(false)
   @Default(0)
@@ -62,7 +62,7 @@ export class User extends Model<User> {
 
   @AllowNull(true)
   @Column(DataType.DATE)
-  passwordChangedAt!: Date | null;
+  passwordChangedAt!: Date | undefined;
 
   @AllowNull(false)
   @Default('user')

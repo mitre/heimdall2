@@ -4,12 +4,19 @@
       <template #activator="{on, attrs}">
         <div class="clickable-icon text-no-wrap" v-bind="attrs" v-on="on">
           <v-btn icon large>
-            <v-avatar size="32px" item>
-              <v-img
-                :src="require('@/assets/logo-xs-orange-white.svg')"
-                alt="Heimdall Logo"
-              />
-            </v-avatar>
+            <template v-if="!serverMode">
+              <v-avatar size="32px" item>
+                <v-img
+                  :src="require('@/assets/logo-xs-orange-white.svg')"
+                  alt="Heimdall Logo"
+                />
+              </v-avatar>
+            </template>
+            <template v-else>
+              <v-avatar size="32px" color="brown" item>
+                <span class="white--text headline">CM</span>
+              </v-avatar>
+            </template>
           </v-btn>
           <v-icon small>mdi-menu-down</v-icon>
         </div>
@@ -18,7 +25,7 @@
         <UserModal v-if="serverMode">
           <template #clickable="{on}"
             ><LinkItem key="user" text="User Info" icon="mdi-account" v-on="on"
-              >User Info</LinkItem
+              >My Profile</LinkItem
             >
           </template>
         </UserModal>
@@ -36,35 +43,32 @@
             >
           </template>
         </AboutModal>
+        <LogoutButton />
       </v-list>
     </v-menu>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
 import HelpModal from '@/components/global/HelpModal.vue';
 import UserModal from '@/components/global/UserModal.vue';
-import {ServerModule} from '@/store/server';
+import LogoutButton from '@/components/generic/LogoutButton.vue';
+import ServerMixin from '@/mixins/ServerMixin';
 
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 
 @Component({
   components: {
     HelpModal,
     AboutModal,
     UserModal,
-    LinkItem
+    LinkItem,
+    LogoutButton
   }
 })
-export default class HelpAboutDropdown extends Vue {
-  get serverMode() {
-    return ServerModule.serverMode;
-  }
-}
+export default class HelpAboutDropdown extends mixins(ServerMixin) {}
 </script>
 
 <style scoped>

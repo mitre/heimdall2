@@ -50,10 +50,10 @@ export class UsersService {
   async create(createUserDto: CreateUserDto) {
     const user = new User();
     user.email = createUserDto.email;
-    user.firstName = createUserDto.firstName || null;
-    user.lastName = createUserDto.lastName || null;
-    user.title = createUserDto.title || null;
-    user.organization = createUserDto.organization || null;
+    user.firstName = createUserDto.firstName || undefined;
+    user.lastName = createUserDto.lastName || undefined;
+    user.title = createUserDto.title || undefined;
+    user.organization = createUserDto.organization || undefined;
     user.role = createUserDto.role;
     try {
       user.encryptedPassword = await hash(createUserDto.password, 14);

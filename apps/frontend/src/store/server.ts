@@ -8,7 +8,7 @@ import {
 import Store from '@/store/store';
 import axios from 'axios';
 import {LocalStorageVal} from '@/utilities/helper_util';
-
+import {IUpdateUser, IUser} from '@heimdall/interfaces';
 import {IStartupSettings} from '@heimdall/interfaces';
 
 const local_token = new LocalStorageVal<string | null>('auth_token');
@@ -130,18 +130,13 @@ class Server extends VuexModule implements IServerState {
   }
 
   @Action({rawError: true})
-  public async updateUserInfo(userInfo: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    organization: string;
-  }) {
-    return axios.put(`/users/${localUserID.get()}`, userInfo);
+  public async updateUserInfo(userInfo: IUpdateUser): Promise<IUser> {
+    return axios.put(`/users/${this.userID}`, userInfo).then(({data}) => data);
   }
 
   @Action({rawError: true})
-  public async UserInfo() {
-    return axios.get(`/users/${localUserID.get()}`);
+  public async UserInfo(): Promise<IUser> {
+    return axios.get<IUser>(`/users/${this.userID}`).then(({data}) => data);
   }
 
   @Action
