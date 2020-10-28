@@ -2,6 +2,7 @@
   <ApexPieChart
     :categories="categories"
     :series="series"
+    :center-value="centerValue"
     @category-selected="onSelect"
   />
 </template>
@@ -57,14 +58,7 @@ export default class StatusChart extends Vue {
     }
   ];
 
-  get center_label(): string {
-    if (this.show_compliance) {
-      return 'Compliance:';
-    }
-    return '';
-  }
-
-  get center_value(): string {
+  get centerValue(): string {
     if (this.show_compliance) {
       let passed = StatusCountModule.countOf(this.filter, 'Passed');
       let total =
