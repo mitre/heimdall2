@@ -21,6 +21,8 @@ do
     echo Generating $SCHEMA
     echo '(TEMPORARILY DISABLED)'
     # inspec schema $SCHEMA > work/schemas/$VERSION/$SCHEMA.json;
+    # We just copy
+    cp -R './schemas/' './work/schemas/'
 
 done
 
