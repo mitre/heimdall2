@@ -124,7 +124,7 @@ export interface WaiverData {
     justification?:         null | string;
     message?:               null | string;
     run?:                   boolean | null;
-    skipped_due_to_waiver?: null | string;
+    skipped_due_to_waiver?: boolean | null | string;
 }
 
 export interface Dependency {
@@ -403,7 +403,7 @@ const typeMap: any = {
         { json: "justification", js: "justification", typ: u(undefined, u(null, "")) },
         { json: "message", js: "message", typ: u(undefined, u(null, "")) },
         { json: "run", js: "run", typ: u(undefined, u(true, null)) },
-        { json: "skipped_due_to_waiver", js: "skipped_due_to_waiver", typ: u(undefined, u(null, "")) },
+        { json: "skipped_due_to_waiver", js: "skipped_due_to_waiver", typ: u(undefined, u(true, null, "")) },
     ], "any"),
     "Dependency": o([
         { json: "branch", js: "branch", typ: u(undefined, u(null, "")) },

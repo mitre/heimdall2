@@ -499,7 +499,7 @@
       "required": [],
       "properties": {
         "skipped_due_to_waiver": {
-          "type": "string"
+          "type": ["string", "boolean"]
         },
         "run": {
           "type": "boolean"
