@@ -8,8 +8,7 @@ import {
 import Store from '@/store/store';
 import axios from 'axios';
 import {LocalStorageVal} from '@/utilities/helper_util';
-import {IUpdateUser, IUser} from '@heimdall/interfaces';
-import {IStartupSettings} from '@heimdall/interfaces';
+import {IUpdateUser, IUser, IStartupSettings} from '@heimdall/interfaces';
 
 const local_token = new LocalStorageVal<string | null>('auth_token');
 const localUserID = new LocalStorageVal<string | null>('localUserID');
