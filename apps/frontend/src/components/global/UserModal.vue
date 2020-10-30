@@ -77,7 +77,7 @@ export default class UserModal extends Vue {
   }
 
   async updateUserInfo(): Promise<void> {
-    if (this.userInfo != undefined) {
+    if (this.userInfo != null) {
       const updateUserInfo = {
         ...this.userInfo,
         password: undefined,
