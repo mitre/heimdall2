@@ -1,6 +1,11 @@
 <template>
   <div v-if="serverMode">
-    <LinkItem key="user" text="Logout" icon="mdi-logout" @click="logOut"
+    <LinkItem
+      id="logout_button"
+      key="user"
+      text="Logout"
+      icon="mdi-logout"
+      @click="logOut"
       >Logout</LinkItem
     >
   </div>
