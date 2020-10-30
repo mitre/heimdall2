@@ -93,11 +93,11 @@ Then, any subsequent `npx heimdall-lite` will use the local version and load muc
 
 It is also possible to run heimdall-lite using Docker, using the following command:
 
-`docker run -d -p 8080:80 heimdall-lite:release-latest`
+`docker run -d -p 8080:80 mitre/heimdall-lite:release-latest`
 
 You can then access heimdall-lite via: localhost:8080
 
-If you would prefer to run the bleeding edge version of heimdall-lite, replace `heimdall-lite:release-latest` with `heimdall-lite:latest`.
+If you would prefer to run the bleeding edge version of heimdall-lite, replace `mitre/heimdall-lite:release-latest` with `mitre/heimdall-lite:latest`.
 
 ### Running Heimdall Server
 

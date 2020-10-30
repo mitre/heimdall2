@@ -24,6 +24,18 @@ export interface Category<C extends string> {
   color: string;
 }
 
+// Options for Apex Total in donut chart
+type ApexTotalType = {
+  show?: boolean;
+  showAlways?: boolean;
+  fontFamily?: string;
+  fontWeight?: string | number;
+  fontSize?: string;
+  label?: string;
+  color?: string;
+  formatter?(w: any): string;
+};
+
 /**
  * Emits "category-selected" with payload of type Category whenever a category is selected.
  */
@@ -35,9 +47,26 @@ export interface Category<C extends string> {
 export default class ApexPieChart extends Vue {
   @Prop({required: true, type: Array}) readonly categories!: Category<string>[];
   @Prop({required: true, type: Array}) readonly series!: number[];
+  @Prop({required: false, type: String}) readonly centerValue!: string;
 
   // Generate the chart options based on categories
   get chartOptions(): ApexOptions {
+    // This prevents code duplication to use the default behavior of ApexCharts if the total needs to be calculated.
+    let totalHash: ApexTotalType = {
+      show: true,
+      color: '#008FFB'
+    };
+
+    if (this.centerValue) {
+      totalHash = {
+        ...totalHash,
+        label: 'Compliance',
+        formatter: () => {
+          return this.centerValue;
+        }
+      };
+    }
+
     return {
       labels: this.categories.map((cat) => cat.label),
       dataLabels: {
@@ -62,10 +91,7 @@ export default class ApexPieChart extends Vue {
                 color: undefined
               },
               value: {color: '#99a2ac'},
-              total: {
-                show: true,
-                color: '#008FFB'
-              }
+              total: totalHash
             }
           }
         }
