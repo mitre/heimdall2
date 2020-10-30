@@ -71,7 +71,11 @@ class Server extends VuexModule implements IServerState {
   @Mutation
   CLEAR_TOKEN() {
     local_token.clear();
-    location.reload();
+  }
+
+  @Mutation
+  CLEAR_USERID() {
+    localUserID.clear();
   }
 
   /* Try to find the Heimdall-Server backend. We have configured the Vue dev server to
@@ -98,8 +102,12 @@ class Server extends VuexModule implements IServerState {
           this.SET_SERVER(potentialUrl);
           this.SET_STARTUP_SETTINGS(response.data);
           const token = local_token.get();
+          const userID = localUserID.get();
           if (token !== null) {
             this.SET_TOKEN(token);
+          }
+          if (userID !== null) {
+            this.SET_USERID(userID);
           }
         }
       })
@@ -141,7 +149,9 @@ class Server extends VuexModule implements IServerState {
 
   @Action
   public Logout(): void {
+    this.CLEAR_USERID();
     this.CLEAR_TOKEN();
+    location.reload();
   }
 }
 

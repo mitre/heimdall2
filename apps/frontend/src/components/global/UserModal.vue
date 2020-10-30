@@ -10,8 +10,10 @@
       <v-card-title class="headline grey" primary-title
         >Update your account information</v-card-title
       >
-
-      <v-card-text>
+      <v-card-text v-if="userInfo === null">
+        <v-progress-linear indeterminate color="white" class="mb-0" />
+      </v-card-text>
+      <v-card-text v-else>
         <br />
         <v-form>
           <v-row>
@@ -29,7 +31,7 @@
         <v-divider />
         <v-form>
           <v-text-field
-            v-model="userInfo.currentPassword"
+            v-model="currentPassword"
             type="password"
             label="Current Password"
           />
@@ -65,7 +67,7 @@ import {IUser} from '@heimdall/interfaces';
 export default class UserModal extends Vue {
   dialog: boolean = false;
 
-  userInfo: IUser | undefined;
+  userInfo: IUser | null = null;
   currentPassword = '';
 
   async getUserInfo(): Promise<void> {
