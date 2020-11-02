@@ -23,7 +23,7 @@
     </v-btn>
     <slot name="data" />
 
-    <HelpAboutDropdown />
+    <TopbarDropdown />
     <!-- File select modal -->
     <UploadNexus
       :visible="showModal"
@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import Component, {mixins} from 'vue-class-component';
-import HelpAboutDropdown from '@/components/global/HelpAboutDropdown.vue';
+import TopbarDropdown from '@/components/global/TopbarDropdown.vue';
 
 import UploadNexus from '@/components/global/UploadNexus.vue';
 import ServerMixin from '@/mixins/ServerMixin';
@@ -44,7 +44,7 @@ import {Prop} from 'vue-property-decorator';
 @Component({
   components: {
     UploadNexus,
-    HelpAboutDropdown
+    TopbarDropdown
   }
 })
 export default class Topbar extends mixins(ServerMixin) {

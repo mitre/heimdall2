@@ -83,7 +83,7 @@ import Component, {mixins} from 'vue-class-component';
     LogoutButton
   }
 })
-export default class HelpAboutDropdown extends mixins(ServerMixin) {}
+export default class TopbarDropdown extends mixins(ServerMixin) {}
 </script>
 
 <style scoped>
