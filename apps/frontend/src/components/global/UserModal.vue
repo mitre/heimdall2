@@ -35,6 +35,29 @@
             type="password"
             label="Current Password"
           />
+          <v-btn @click="changePasswordDialog">Change Password</v-btn>
+          <div v-if="changePassword">
+            <v-text-field
+              v-model="newPassword"
+              type="password"
+              label="New Password"
+            >
+              <template #progress>
+                <v-progress-linear
+                  :value="passwordStrengthPercent"
+                  :color="passwordStrengthColor"
+                  absolute
+                  height="7"
+                />
+              </template>
+            </v-text-field>
+
+            <v-text-field
+              v-model="passwordConfirmation"
+              type="password"
+              label="Confirm Password"
+            />
+          </div>
         </v-form>
       </v-card-text>
 
@@ -69,6 +92,9 @@ export default class UserModal extends Vue {
 
   userInfo: IUser | null = null;
   currentPassword = '';
+  changePassword = false;
+  newPassword: string | undefined = undefined;
+  passwordConfirmation: string | undefined = undefined;
 
   async getUserInfo(): Promise<void> {
     ServerModule.UserInfo().then((response) => {
@@ -78,21 +104,45 @@ export default class UserModal extends Vue {
 
   async updateUserInfo(): Promise<void> {
     if (this.userInfo != null) {
-      const updateUserInfo = {
+      var updateUserInfo = {
         ...this.userInfo,
-        password: undefined,
-        passwordConfirmation: undefined,
+        password: this.newPassword,
+        passwordConfirmation: this.passwordConfirmation,
         forcePasswordChange: undefined,
         currentPassword: this.currentPassword
       };
+
       ServerModule.updateUserInfo(updateUserInfo)
         .then(() => {
           SnackbarModule.notify('User updated successfully.');
           this.dialog = false;
         })
         .catch((error) => {
-          SnackbarModule.failure(`Failed to update user: ${error}`);
+          SnackbarModule.notify(error.response.data.message);
+          if (typeof error.response.data.message === 'object') {
+            SnackbarModule.notify(
+              error.response.data.message
+                .map(function capitalize(c: string) {
+                  return c.charAt(0).toUpperCase() + c.slice(1);
+                })
+                .join(', ')
+            );
+          } else {
+            SnackbarModule.notify(error.response.data.message);
+          }
         });
+    }
+  }
+
+  changePasswordDialog() {
+    if (!this.changePassword) {
+      this.newPassword = '';
+      this.passwordConfirmation = '';
+      this.changePassword = true;
+    } else {
+      this.newPassword = undefined;
+      this.passwordConfirmation = undefined;
+      this.changePassword = false;
     }
   }
 
