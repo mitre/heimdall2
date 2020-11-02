@@ -14,7 +14,17 @@
             </template>
             <template v-else>
               <v-avatar size="32px" color="primary" item>
-                <span>CM</span>
+                <span
+                  v-if="
+                    userInfo === null ||
+                    userInfo.firstName == null ||
+                    userInfo.lastName == null
+                  "
+                  >JD</span
+                >
+                <span v-else>{{
+                  userInfo.firstName.charAt(0) + userInfo.lastName.charAt(0)
+                }}</span>
               </v-avatar>
             </template>
           </v-btn>
@@ -71,6 +81,8 @@ import HelpModal from '@/components/global/HelpModal.vue';
 import UserModal from '@/components/global/UserModal.vue';
 import LogoutButton from '@/components/generic/LogoutButton.vue';
 import ServerMixin from '@/mixins/ServerMixin';
+import {ServerModule} from '@/store/server';
+import {IUser} from '@heimdall/interfaces';
 
 import Component, {mixins} from 'vue-class-component';
 
@@ -83,7 +95,17 @@ import Component, {mixins} from 'vue-class-component';
     LogoutButton
   }
 })
-export default class TopbarDropdown extends mixins(ServerMixin) {}
+export default class TopbarDropdown extends mixins(ServerMixin) {
+  userInfo: IUser | null = null;
+  async getUserInfo(): Promise<void> {
+    ServerModule.UserInfo().then((response) => {
+      this.userInfo = response;
+    });
+  }
+  mounted() {
+    this.getUserInfo();
+  }
+}
 </script>
 
 <style scoped>
