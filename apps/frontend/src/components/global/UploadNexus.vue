@@ -33,7 +33,7 @@
 
         <v-spacer />
         <v-divider />
-        <v-tab id="sample_tab" href="#uploadtab-samples">Samples</v-tab>
+        <v-tab id="select-tab-sample" href="#uploadtab-samples">Samples</v-tab>
 
         <!-- Include those components -->
         <v-tab-item value="uploadtab-local">

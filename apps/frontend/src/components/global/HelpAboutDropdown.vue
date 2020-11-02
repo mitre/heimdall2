@@ -13,32 +13,47 @@
               </v-avatar>
             </template>
             <template v-else>
-              <v-avatar size="32px" color="brown" item>
-                <span class="white--text headline">CM</span>
+              <v-avatar size="32px" color="primary" item>
+                <span>CM</span>
               </v-avatar>
             </template>
           </v-btn>
-          <v-icon small>mdi-menu-down</v-icon>
+          <v-icon id="dropdown" small>mdi-menu-down</v-icon>
         </div>
       </template>
       <v-list class="pt-0 pb-0">
         <UserModal v-if="serverMode">
           <template #clickable="{on}"
-            ><LinkItem key="user" text="User Info" icon="mdi-account" v-on="on"
+            ><LinkItem
+              id="userModal"
+              key="user"
+              text="User Info"
+              icon="mdi-account"
+              v-on="on"
               >My Profile</LinkItem
             >
           </template>
         </UserModal>
         <HelpModal>
           <template #clickable="{on}">
-            <LinkItem key="help" text="Help" icon="mdi-help-circle" v-on="on"
+            <LinkItem
+              id="helpModal"
+              key="help"
+              text="Help"
+              icon="mdi-help-circle"
+              v-on="on"
               >Help</LinkItem
             >
           </template>
         </HelpModal>
         <AboutModal>
           <template #clickable="{on}">
-            <LinkItem key="about" text="About" icon="mdi-information" v-on="on"
+            <LinkItem
+              id="aboutModal"
+              key="about"
+              text="About"
+              icon="mdi-information"
+              v-on="on"
               >About</LinkItem
             >
           </template>
