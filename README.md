@@ -8,7 +8,7 @@ This repository contains the source code for the Heimdall 2 Backend and Frontend
 
 ### Demos
 
-![Heimdall Lite 2.0 Demo GIF](/apps/frontend/public/heidmall-lite-2.0-demo-5fps.gif)
+![Heimdall Lite 2.0 Demo GIF](/apps/frontend/public/heimdall-lite-2.0-demo-5fps.gif)
 
 #### Video
 
@@ -192,7 +192,7 @@ Once the above steps are completed it is possible to start heimdall-server using
     # Run Backend Nest Tests
     yarn backend test:e2e
     yarn backend test:ci-cov
-    
+
 ### Creating a Release
 
 **Note:** This action requires appropriate privileges on the repository to perform.
