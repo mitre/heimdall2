@@ -5,8 +5,8 @@ export class UserModalPage {
     await Promise.all([
       page.waitForSelector('#dropdown'),
       page.click('#dropdown'),
-      page.waitForSelector('#userModal'),
-      page.click('#userModal')
+      page.waitForSelector('#userProfile'),
+      page.click('#userProfile')
     ]);
   }
 }

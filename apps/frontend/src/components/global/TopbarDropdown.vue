@@ -39,6 +39,7 @@
               key="user"
               text="User Info"
               icon="mdi-account"
+              :htmlid="userProfile"
               v-on="on"
               >My Profile</LinkItem
             >

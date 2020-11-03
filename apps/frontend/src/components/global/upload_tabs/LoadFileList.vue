@@ -13,9 +13,12 @@
         class="elevation-1"
       >
         <template #[`item.filename`]="{item}">
-          <span class="cursor-pointer" @click="load_results([item])">{{
-            item.filename
-          }}</span>
+          <span
+            id="sampleItem"
+            class="cursor-pointer"
+            @click="load_results([item])"
+            >{{ item.filename }}</span
+          >
         </template>
         <template #[`item.createdAt`]="{item}">
           <span>{{ new Date(item.createdAt).toLocaleString() }}</span>

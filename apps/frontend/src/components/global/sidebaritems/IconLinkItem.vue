@@ -1,5 +1,5 @@
 <template>
-  <v-list-item :to="link" @click="$emit('click', $event)">
+  <v-list-item :id="htmlid" :to="link" @click="$emit('click', $event)">
     <v-list-item-avatar>
       <v-icon small v-text="icon" />
     </v-list-item-avatar>
@@ -18,6 +18,7 @@ import {Prop} from 'vue-property-decorator';
 @Component
 export default class LinkItem extends Vue {
   @Prop({type: String, required: true}) readonly text!: string;
+  @Prop({type: String}) readonly htmlid!: string;
   @Prop({type: String}) readonly icon!: string;
   @Prop({type: String}) readonly link!: string;
 }

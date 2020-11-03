@@ -18,15 +18,27 @@
         <v-form>
           <v-row>
             <v-col>
-              <v-text-field v-model="userInfo.firstName" label="First Name" />
+              <v-text-field
+                id="firstName"
+                v-model="userInfo.firstName"
+                label="First Name"
+              />
             </v-col>
             <v-col>
-              <v-text-field v-model="userInfo.lastName" label="Last Name" />
+              <v-text-field
+                id="lastName"
+                v-model="userInfo.lastName"
+                label="Last Name"
+              />
             </v-col>
           </v-row>
-          <v-text-field v-model="userInfo.email" label="Email" />
-          <v-text-field v-model="userInfo.title" label="Title" />
-          <v-text-field v-model="userInfo.organization" label="Organization" />
+          <v-text-field id="email" v-model="userInfo.email" label="Email" />
+          <v-text-field id="title" v-model="userInfo.title" label="Title" />
+          <v-text-field
+            id="organization"
+            v-model="userInfo.organization"
+            label="Organization"
+          />
         </v-form>
         <v-divider />
         <v-form>
