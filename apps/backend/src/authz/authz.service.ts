@@ -24,7 +24,8 @@ export class AuthzService {
       console.log('Loaded Policy!');
       console.log('\tRole: ' + policyDto.role);
       console.log('\tAction: ' + policyDto.actions);
-      console.log('\tResource: ' + policyDto.targets + '\n');
+      console.log('\tResource: ' + policyDto.targets);
+      console.log('\tCondition: ' + policyDto.condition?.toString() + '\n');
     }
   }
 

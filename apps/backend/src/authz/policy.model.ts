@@ -33,6 +33,9 @@ export class Policy extends Model<Policy> {
   @Column(DataType.JSON)
   attributes!: any;
 
+  @Column
+  condition!: string;
+
   @CreatedAt
   @AllowNull(false)
   @Column
