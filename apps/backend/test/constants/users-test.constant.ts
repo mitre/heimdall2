@@ -350,7 +350,7 @@ export const UPDATE_USER_DTO_TEST_OBJ: UpdateUserDto = {
 };
 
 export const UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD: UpdateUserDto = {
-  email: 'updatedemail@yahoo.com',
+  email: 'abc@yahoo.com',
   firstName: 'Updated',
   lastName: 'Name',
   organization: 'Updated Org',

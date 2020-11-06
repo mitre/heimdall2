@@ -54,6 +54,7 @@
           >
           <div v-if="changePassword">
             <v-text-field
+              id="newPassword"
               v-model="newPassword"
               name="newPassword"
               type="password"
@@ -70,6 +71,7 @@
             </v-text-field>
 
             <v-text-field
+              id="passwordConfirmation"
               v-model="passwordConfirmation"
               name="passwordConfirmation"
               type="password"

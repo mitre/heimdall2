@@ -6,9 +6,11 @@ import {DatabaseService} from '../../src/database/database.service';
 import {AppModule} from '../../src/app.module';
 import {ConfigService} from '../../src/config/config.service';
 import {IntegrationSpecHelper} from './helpers/integration-spec.helper';
+import {ToastVerifier} from './verifiers/toast.verifier';
 import {Test, TestingModule} from '@nestjs/testing';
 import {
   CREATE_USER_DTO_TEST_OBJ,
+  UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD,
   LOGIN_AUTHENTICATION
 } from '../constants/users-test.constant';
 import {UserModalVerifier} from './verifiers/user-modal.verifier';
@@ -20,6 +22,7 @@ describe('User Modal', () => {
   let integrationSpecHelper: IntegrationSpecHelper;
 
   const logInPage = new LogInPage();
+  const toastVerifier = new ToastVerifier();
   const userModalPage = new UserModalPage();
   const userModalVerifier = new UserModalVerifier();
   const uploadNexusPage = new UploadNexusPage();
@@ -59,5 +62,16 @@ describe('User Modal', () => {
     it('feilds exist', async () => {
       await userModalVerifier.verifyUserFieldsExist(page);
     });
+    it('successfully updates passwords', async () => {
+      await userModalPage.passwordResetSuccess(
+        page,
+        UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD
+      );
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // Give the backend enough time to update the entries
+      await toastVerifier.verifySuccessPresentSecondSnackbar(
+        page,
+        'User updated successfully.'
+      );
+    }, 60000);
   });
 });

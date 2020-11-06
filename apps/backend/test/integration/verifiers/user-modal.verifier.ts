@@ -65,4 +65,7 @@ export class UserModalVerifier {
     expect(currentPasswordElement);
     expect(currentPasswordLabel).toContain('Current Password');
   }
+  async verifyUpdateUserToast(page: Page) {
+    const toastTexts = await page.$x('//div[@class="v-snack__content"]');
+  }
 }

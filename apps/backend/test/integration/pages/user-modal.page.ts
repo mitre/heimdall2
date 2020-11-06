@@ -1,5 +1,4 @@
 import {Page} from 'puppeteer';
-import {UpdateUserDto} from 'src/users/dto/update-user.dto';
 
 export class UserModalPage {
   async userMenu(page: Page): Promise<void> {
@@ -10,13 +9,14 @@ export class UserModalPage {
     await dropdownItems[0].click();
     await page.waitForSelector('#firstName');
   }
-  async passwordResetSuccess(page: Page, user: UpdateUserDto): Promise<void> {
+  async passwordResetSuccess(page: Page, user: any): Promise<void> {
     await page.waitForSelector('#toggleChangePassword');
     await page.click('#toggleChangePassword');
+    await page.waitForSelector('#newPassword');
     await expect(page).toFillForm('form[name="changePassword"]', {
       currentPassword: user.currentPassword,
-      newPassword: user.password,
-      passwordConfirmation: user.passwordConfirmation
+      newPassword: 'LETmeiN123$$$tP',
+      passwordConfirmation: 'LETmeiN123$$$tP'
     });
     await page.click('#closeAndSaveChanges');
   }
