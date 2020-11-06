@@ -14,13 +14,12 @@
             </template>
             <template v-else>
               <v-avatar size="32px" color="primary" item>
+                <span v-if="!userInfo">JD</span>
                 <span
-                  v-if="
-                    userInfo === null ||
-                    userInfo.firstName == null ||
-                    userInfo.lastName == null
+                  v-else-if="
+                    !userInfo || !userInfo.firstName || !userInfo.lastName
                   "
-                  >JD</span
+                  >{{ userInfo.email.substring(0, 2) }}</span
                 >
                 <span v-else>{{
                   userInfo.firstName.charAt(0) + userInfo.lastName.charAt(0)
