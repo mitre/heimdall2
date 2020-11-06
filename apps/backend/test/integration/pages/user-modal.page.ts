@@ -5,9 +5,8 @@ export class UserModalPage {
   async userMenu(page: Page): Promise<void> {
     await page.waitForSelector('#dropdown');
     await page.click('#dropdown');
-    await page.waitForSelector('#dropdownList');
-    const userinfo = await page.$x('//div[@id="dropdownList"]/div');
-    await userinfo[0].click();
+    const dropdownItems = await page.$x('//div[@role="menuitem"]');
+    await dropdownItems[0].click();
     await page.waitForSelector('#firstName');
   }
   async passwordResetSuccess(page: Page, user: UpdateUserDto): Promise<void> {
