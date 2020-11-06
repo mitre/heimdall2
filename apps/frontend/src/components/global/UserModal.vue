@@ -41,16 +41,21 @@
           />
         </v-form>
         <v-divider />
-        <v-form>
+        <v-form name="changePassword">
           <v-text-field
+            id="currentPassword"
             v-model="currentPassword"
+            name="currentPassword"
             type="password"
             label="Current Password"
           />
-          <v-btn @click="changePasswordDialog">Change Password</v-btn>
+          <v-btn id="toggleChangePassword" @click="changePasswordDialog"
+            >Change Password</v-btn
+          >
           <div v-if="changePassword">
             <v-text-field
               v-model="newPassword"
+              name="newPassword"
               type="password"
               label="New Password"
             >
@@ -66,6 +71,7 @@
 
             <v-text-field
               v-model="passwordConfirmation"
+              name="passwordConfirmation"
               type="password"
               label="Confirm Password"
             />
@@ -77,12 +83,20 @@
 
       <v-card-actions>
         <v-col>
-          <v-btn color="primary" text @click="dialog = false"
+          <v-btn
+            id="closeAndDiscardChanges"
+            color="primary"
+            text
+            @click="dialog = false"
             >Close without saving</v-btn
           >
         </v-col>
         <v-col class="text-right">
-          <v-btn color="primary" text @click="updateUserInfo"
+          <v-btn
+            id="closeAndSaveChanges"
+            color="primary"
+            text
+            @click="updateUserInfo"
             >Save Changes</v-btn
           >
         </v-col>

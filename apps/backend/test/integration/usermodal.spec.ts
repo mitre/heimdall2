@@ -11,6 +11,7 @@ import {
   CREATE_USER_DTO_TEST_OBJ,
   LOGIN_AUTHENTICATION
 } from '../constants/users-test.constant';
+import {UserModalVerifier} from './verifiers/user-modal.verifier';
 
 describe('User Modal', () => {
   let databaseService: DatabaseService;
@@ -20,6 +21,7 @@ describe('User Modal', () => {
 
   const logInPage = new LogInPage();
   const userModalPage = new UserModalPage();
+  const userModalVerifier = new UserModalVerifier();
   const uploadNexusPage = new UploadNexusPage();
   const uploadNexusVerifier = new UploadNexusVerifier();
 
@@ -50,11 +52,12 @@ describe('User Modal', () => {
     await uploadNexusVerifier.verifyNexusLoaded(page);
     await uploadNexusPage.switchToTab(page, 'sample');
     await uploadNexusPage.loadFirstSample(page);
+    await userModalPage.userMenu(page);
   });
 
   describe('User Profile Modal', () => {
-    it('opens successully', async () => {
-      await userModalPage.userMenu(page);
+    it('feilds exist', async () => {
+      await userModalVerifier.verifyUserFieldsExist(page);
     });
   });
 });

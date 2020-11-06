@@ -33,7 +33,7 @@
 
         <v-spacer />
         <v-divider />
-        <v-tab id="select-tab-sample" href="#uploadtab-samples">Samples</v-tab>
+        <v-tab id="select-tab-sample" href="#uploadtab-sample">Samples</v-tab>
 
         <!-- Include those components -->
         <v-tab-item value="uploadtab-local">
@@ -44,7 +44,7 @@
           <DatabaseReader :refresh="visible" @got-files="got_files" />
         </v-tab-item>
 
-        <v-tab-item value="uploadtab-samples">
+        <v-tab-item value="uploadtab-sample">
           <SampleList @got-files="got_files" />
         </v-tab-item>
 
