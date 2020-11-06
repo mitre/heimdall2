@@ -7,9 +7,12 @@ import {
 } from 'vuex-module-decorators';
 import Store from '@/store/store';
 import axios from 'axios';
+
 import {LocalStorageVal} from '@/utilities/helper_util';
 
 import {IStartupSettings} from '@heimdall/interfaces';
+import {SnackbarModule} from '@/store/snackbar';
+import {AppInfoModule} from '@/store/app_info';
 
 const local_token = new LocalStorageVal<string | null>('auth_token');
 
@@ -116,6 +119,18 @@ class Server extends VuexModule implements IServerState {
     passwordConfirmation: string;
   }) {
     return axios.post('/users', userInfo);
+  }
+
+  @Action({rawError: true})
+  public async CheckForUpdate() {
+    const newest: string = await axios
+      .get(`${this.serverUrl}/updates`)
+      .then((response) => response.data.newest);
+    if (newest !== AppInfoModule.version) {
+      SnackbarModule.notify(
+        `There is a new version of Heimdall available (${newest}).`
+      );
+    }
   }
 
   @Action
