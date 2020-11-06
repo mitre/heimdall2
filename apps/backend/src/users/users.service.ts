@@ -1,8 +1,8 @@
 import {
   Injectable,
-  UnauthorizedException,
   NotFoundException,
-  BadRequestException
+  BadRequestException,
+  ForbiddenException
 } from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {User} from './user.model';
@@ -101,10 +101,10 @@ export class UsersService {
     const user = await this.findByPkBang(id);
     try {
       if (!(await compare(deleteUserDto.password, user.encryptedPassword))) {
-        throw new UnauthorizedException();
+        throw new ForbiddenException();
       }
     } catch {
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     }
     await user.destroy();
     return new UserDto(user);
@@ -135,10 +135,10 @@ export class UsersService {
       if (
         !(await compare(updateUserDto.currentPassword, user.encryptedPassword))
       ) {
-        throw new UnauthorizedException();
+        throw new ForbiddenException();
       }
     } catch {
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     }
   }
 }

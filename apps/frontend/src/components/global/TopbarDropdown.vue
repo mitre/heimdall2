@@ -14,16 +14,7 @@
             </template>
             <template v-else>
               <v-avatar size="32px" color="primary" item>
-                <span v-if="!userInfo">JD</span>
-                <span
-                  v-else-if="
-                    !userInfo || !userInfo.firstName || !userInfo.lastName
-                  "
-                  >{{ userInfo.email.substring(0, 2) }}</span
-                >
-                <span v-else>{{
-                  userInfo.firstName.charAt(0) + userInfo.lastName.charAt(0)
-                }}</span>
+                <span>{{ userInitials }}</span>
               </v-avatar>
             </template>
           </v-btn>
@@ -76,7 +67,6 @@ import UserModal from '@/components/global/UserModal.vue';
 import LogoutButton from '@/components/generic/LogoutButton.vue';
 import ServerMixin from '@/mixins/ServerMixin';
 import {ServerModule} from '@/store/server';
-import {IUser} from '@heimdall/interfaces';
 
 import Component, {mixins} from 'vue-class-component';
 
@@ -90,14 +80,15 @@ import Component, {mixins} from 'vue-class-component';
   }
 })
 export default class TopbarDropdown extends mixins(ServerMixin) {
-  userInfo: IUser | null = null;
-  async getUserInfo(): Promise<void> {
-    ServerModule.UserInfo().then((response) => {
-      this.userInfo = response;
-    });
-  }
-  mounted() {
-    this.getUserInfo();
+  get userInitials(): string {
+    if (ServerModule.userInfo.firstName && ServerModule.userInfo.lastName) {
+      return (
+        ServerModule.userInfo.firstName.charAt(0) +
+        ServerModule.userInfo.lastName.charAt(0)
+      );
+    } else {
+      return ServerModule.userInfo.email.substring(0, 2);
+    }
   }
 }
 </script>

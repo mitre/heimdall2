@@ -124,10 +124,8 @@ export default class UserModal extends Vue {
   newPassword: string | undefined = undefined;
   passwordConfirmation: string | undefined = undefined;
 
-  async getUserInfo(): Promise<void> {
-    ServerModule.UserInfo().then((response) => {
-      this.userInfo = response;
-    });
+  mounted() {
+    this.userInfo = {...ServerModule.userInfo};
   }
 
   async updateUserInfo(): Promise<void> {
@@ -172,10 +170,6 @@ export default class UserModal extends Vue {
       this.passwordConfirmation = undefined;
       this.changePassword = false;
     }
-  }
-
-  mounted() {
-    this.getUserInfo();
   }
 }
 </script>

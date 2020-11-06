@@ -20,6 +20,7 @@ export interface IServerState {
   token: string;
   banner: string;
   userID: string;
+  userInfo: IUser;
 }
 
 @Module({
@@ -37,6 +38,20 @@ class Server extends VuexModule implements IServerState {
   token = '';
   /** Our User ID  */
   userID = '';
+  /** Provide a sane default for userInfo in order to avoid having to null check it all the time */
+  userInfo: IUser = {
+    id: -1,
+    email: '',
+    firstName: '',
+    lastName: '',
+    title: '',
+    role: '',
+    organization: '',
+    loginCount: -1,
+    lastLogin: undefined,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  };
 
   @Mutation
   SET_TOKEN(newToken: string) {
@@ -54,6 +69,11 @@ class Server extends VuexModule implements IServerState {
   @Mutation
   SET_STARTUP_SETTINGS(settings: IStartupSettings) {
     this.banner = settings.banner;
+  }
+
+  @Mutation
+  SET_USER_INFO(info: IUser) {
+    this.userInfo = info;
   }
 
   @Mutation
@@ -108,6 +128,7 @@ class Server extends VuexModule implements IServerState {
           if (userID !== null) {
             this.SET_USERID(userID);
           }
+          this.GetUserInfo();
         }
       })
       .catch((_) => {
@@ -124,6 +145,7 @@ class Server extends VuexModule implements IServerState {
     return axios.post('/authn/login', userInfo).then(({data}) => {
       this.SET_TOKEN(data.accessToken);
       this.SET_USERID(data.userID);
+      this.GetUserInfo();
     });
   }
 
@@ -138,12 +160,19 @@ class Server extends VuexModule implements IServerState {
 
   @Action({rawError: true})
   public async updateUserInfo(userInfo: IUpdateUser): Promise<IUser> {
-    return axios.put(`/users/${this.userID}`, userInfo).then(({data}) => data);
+    return axios
+      .put<IUser>(`/users/${this.userID}`, userInfo)
+      .then(({data}) => {
+        this.SET_USER_INFO(data);
+        return data;
+      });
   }
 
   @Action({rawError: true})
-  public async UserInfo(): Promise<IUser> {
-    return axios.get<IUser>(`/users/${this.userID}`).then(({data}) => data);
+  public GetUserInfo(): void {
+    axios
+      .get<IUser>(`/users/${this.userID}`)
+      .then(({data}) => this.SET_USER_INFO(data));
   }
 
   @Action
