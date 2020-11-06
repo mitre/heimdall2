@@ -19,7 +19,7 @@ describe('Logout button', () => {
     // Mounting the component has to happen after setting up the serverMode
     const wrapper = shallowMount(LogoutButton, {vuetify});
 
-    expect(wrapper.find('#logout').exists()).toBe(false);
+    expect(wrapper.find('#logout_button').exists()).toBe(false);
   });
 
   it('Displays a Logout button when the application is in Server Mode', () => {
@@ -27,6 +27,6 @@ describe('Logout button', () => {
     // Mounting the component has to happen after setting up the serverMode
     const wrapper = shallowMount(LogoutButton, {vuetify});
 
-    expect(wrapper.find('#logout').exists()).toBe(true);
+    expect(wrapper.find('#logout_button').exists()).toBe(true);
   });
 });

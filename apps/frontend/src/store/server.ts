@@ -8,10 +8,10 @@ import {
 import Store from '@/store/store';
 import axios from 'axios';
 import {LocalStorageVal} from '@/utilities/helper_util';
-
-import {IStartupSettings} from '@heimdall/interfaces';
+import {IUpdateUser, IUser, IStartupSettings} from '@heimdall/interfaces';
 
 const local_token = new LocalStorageVal<string | null>('auth_token');
+const localUserID = new LocalStorageVal<string | null>('localUserID');
 
 export interface IServerState {
   serverMode: boolean;
@@ -19,6 +19,8 @@ export interface IServerState {
   loading: boolean;
   token: string;
   banner: string;
+  userID: string;
+  userInfo: IUser;
 }
 
 @Module({
@@ -34,6 +36,22 @@ class Server extends VuexModule implements IServerState {
   loading = true;
   /** Our currently granted JWT token */
   token = '';
+  /** Our User ID  */
+  userID = '';
+  /** Provide a sane default for userInfo in order to avoid having to null check it all the time */
+  userInfo: IUser = {
+    id: -1,
+    email: '',
+    firstName: '',
+    lastName: '',
+    title: '',
+    role: '',
+    organization: '',
+    loginCount: -1,
+    lastLogin: undefined,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  };
 
   @Mutation
   SET_TOKEN(newToken: string) {
@@ -43,8 +61,19 @@ class Server extends VuexModule implements IServerState {
   }
 
   @Mutation
+  SET_USERID(newID: string) {
+    localUserID.set(newID);
+    this.userID = newID;
+  }
+
+  @Mutation
   SET_STARTUP_SETTINGS(settings: IStartupSettings) {
     this.banner = settings.banner;
+  }
+
+  @Mutation
+  SET_USER_INFO(info: IUser) {
+    this.userInfo = info;
   }
 
   @Mutation
@@ -61,7 +90,11 @@ class Server extends VuexModule implements IServerState {
   @Mutation
   CLEAR_TOKEN() {
     local_token.clear();
-    location.reload();
+  }
+
+  @Mutation
+  CLEAR_USERID() {
+    localUserID.clear();
   }
 
   /* Try to find the Heimdall-Server backend. We have configured the Vue dev server to
@@ -88,9 +121,14 @@ class Server extends VuexModule implements IServerState {
           this.SET_SERVER(potentialUrl);
           this.SET_STARTUP_SETTINGS(response.data);
           const token = local_token.get();
+          const userID = localUserID.get();
           if (token !== null) {
             this.SET_TOKEN(token);
           }
+          if (userID !== null) {
+            this.SET_USERID(userID);
+          }
+          this.GetUserInfo();
         }
       })
       .catch((_) => {
@@ -106,6 +144,8 @@ class Server extends VuexModule implements IServerState {
   public async Login(userInfo: {email: string; password: string}) {
     return axios.post('/authn/login', userInfo).then(({data}) => {
       this.SET_TOKEN(data.accessToken);
+      this.SET_USERID(data.userID);
+      this.GetUserInfo();
     });
   }
 
@@ -118,9 +158,28 @@ class Server extends VuexModule implements IServerState {
     return axios.post('/users', userInfo);
   }
 
+  @Action({rawError: true})
+  public async updateUserInfo(userInfo: IUpdateUser): Promise<IUser> {
+    return axios
+      .put<IUser>(`/users/${this.userID}`, userInfo)
+      .then(({data}) => {
+        this.SET_USER_INFO(data);
+        return data;
+      });
+  }
+
+  @Action({rawError: true})
+  public GetUserInfo(): void {
+    axios
+      .get<IUser>(`/users/${this.userID}`)
+      .then(({data}) => this.SET_USER_INFO(data));
+  }
+
   @Action
   public Logout(): void {
+    this.CLEAR_USERID();
     this.CLEAR_TOKEN();
+    location.reload();
   }
 }
 

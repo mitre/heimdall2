@@ -1,8 +1,8 @@
 import {
   Injectable,
-  UnauthorizedException,
   NotFoundException,
-  BadRequestException
+  BadRequestException,
+  ForbiddenException
 } from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {User} from './user.model';
@@ -50,10 +50,10 @@ export class UsersService {
   async create(createUserDto: CreateUserDto) {
     const user = new User();
     user.email = createUserDto.email;
-    user.firstName = createUserDto.firstName || null;
-    user.lastName = createUserDto.lastName || null;
-    user.title = createUserDto.title || null;
-    user.organization = createUserDto.organization || null;
+    user.firstName = createUserDto.firstName || undefined;
+    user.lastName = createUserDto.lastName || undefined;
+    user.title = createUserDto.title || undefined;
+    user.organization = createUserDto.organization || undefined;
     user.role = createUserDto.role;
     try {
       user.encryptedPassword = await hash(createUserDto.password, 14);
@@ -64,11 +64,9 @@ export class UsersService {
     return new UserDto(userData);
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto, isAdmin: boolean) {
+  async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.findByPkBang(id);
-    if (!isAdmin) {
-      await this.testPassword(updateUserDto, user);
-    }
+    await this.testPassword(updateUserDto, user);
     if (updateUserDto.password == null && user.forcePasswordChange) {
       throw new BadRequestException('You must change your password');
     } else if (updateUserDto.password) {
@@ -103,10 +101,10 @@ export class UsersService {
     const user = await this.findByPkBang(id);
     try {
       if (!(await compare(deleteUserDto.password, user.encryptedPassword))) {
-        throw new UnauthorizedException();
+        throw new ForbiddenException();
       }
     } catch {
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     }
     await user.destroy();
     return new UserDto(user);
@@ -137,10 +135,10 @@ export class UsersService {
       if (
         !(await compare(updateUserDto.currentPassword, user.encryptedPassword))
       ) {
-        throw new UnauthorizedException();
+        throw new ForbiddenException();
       }
     } catch {
-      throw new UnauthorizedException();
+      throw new ForbiddenException();
     }
   }
 }

@@ -1,16 +1,16 @@
 module.exports = {
-  rootDir: ".",
-  preset: "jest-puppeteer",
-  testMatch: ["<rootDir>/*.spec.ts"],
+  rootDir: '.',
+  preset: 'jest-puppeteer',
+  testMatch: ['<rootDir>/*.spec.ts'],
   setupFilesAfterEnv: ['./jest.setup.js'],
-  moduleFileExtensions: ["vue", "ts", "tsx", "js", "jsx"],
+  moduleFileExtensions: ['vue', 'ts', 'tsx', 'js', 'jsx'],
 
-  cacheDirectory: "<rootDir>/.cache/unit",
+  cacheDirectory: '<rootDir>/.cache/unit',
   transform: {
-    "^.+\\.tsx?$": "ts-jest"
+    '^.+\\.tsx?$': 'ts-jest'
   },
-  moduleDirectories: ["node_modules", "src"],
+  moduleDirectories: ['node_modules', 'src'],
   moduleNameMapper: {
-    "^@[/](.+)": "<rootDir>/src/$1"
+    '^@[/](.+)': '<rootDir>/src/$1'
   }
 };

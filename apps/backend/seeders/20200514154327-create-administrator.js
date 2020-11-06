@@ -8,7 +8,7 @@ module.exports = {
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     )
 
-    if(result[0].count === 0) {
+    if(result[0].count === '0') {
       console.log('No administrator user exists! Creating an administrator.')
       var password = require('crypto').randomBytes(16).toString('hex')
       console.log('New administrator password is: ' + password)

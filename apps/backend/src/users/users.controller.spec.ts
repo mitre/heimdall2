@@ -130,7 +130,7 @@ describe('UsersController Unit Tests', () => {
     // Tests the update function with valid dto (basic positive test)
     it('should test the update function with a valid update dto', async () => {
       expect(
-        await usersController.update('user', ID, UPDATE_USER_DTO_TEST_OBJ)
+        await usersController.update(ID, UPDATE_USER_DTO_TEST_OBJ)
       ).toEqual(UPDATED_USER_DTO);
       expect(usersService.update).toHaveReturnedWith(UPDATED_USER_DTO);
     });
@@ -141,7 +141,7 @@ describe('UsersController Unit Tests', () => {
         throw new NotFoundException();
       });
       expect(async () => {
-        await usersController.update('user', ID, UPDATE_USER_DTO_TEST_OBJ);
+        await usersController.update(ID, UPDATE_USER_DTO_TEST_OBJ);
       }).rejects.toThrow(NotFoundException);
     });
 
@@ -152,7 +152,6 @@ describe('UsersController Unit Tests', () => {
       });
       expect(async () => {
         await usersController.update(
-          'user',
           ID,
           UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD
         );
