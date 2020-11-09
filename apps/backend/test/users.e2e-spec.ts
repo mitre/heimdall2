@@ -367,12 +367,12 @@ describe('/users', () => {
           });
       });
 
-      it('should return 401 status when currentPassword is wrong', async () => {
+      it('should return 403 status when currentPassword is wrong', async () => {
         return request(app.getHttpServer())
           .put('/users/' + id)
           .set('Authorization', 'bearer ' + jwtToken)
           .send(UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD)
-          .expect(HttpStatus.UNAUTHORIZED);
+          .expect(HttpStatus.FORBIDDEN);
       });
 
       it('should return 400 status when password does not meet complexity requirements', async () => {
@@ -448,12 +448,12 @@ describe('/users', () => {
           });
       });
 
-      it('should return 401 status because password is wrong', async () => {
+      it('should return 403 status because password is wrong', async () => {
         return request(app.getHttpServer())
           .delete('/users/' + id)
           .set('Authorization', 'bearer ' + jwtToken)
           .send(DELETE_FAILURE_USER_DTO_TEST_OBJ)
-          .expect(HttpStatus.UNAUTHORIZED);
+          .expect(HttpStatus.FORBIDDEN);
       });
 
       it('should return 200 status after user is deleted by admin', async () => {
