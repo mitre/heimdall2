@@ -31,6 +31,9 @@
             <v-divider />
             <br />
             <v-clamp class="pb-2" autoresize :max-lines="2">
+              <template v-if="caveat" slot="before"
+                >{{ caveat }}<v-divider
+              /></template>
               <template slot="default">{{ main_desc }}</template>
               <template slot="after" slot-scope="{toggle, expanded, clamped}">
                 <v-icon
@@ -191,7 +194,9 @@ export default class ControlRowDetails extends Vue {
       return msg_split[0] + ':';
     }
   }
-
+  get caveat(): string | undefined {
+    return this.control.hdf.descriptions.caveat;
+  }
   get details(): Detail[] {
     let c = this.control;
     return [
@@ -204,8 +209,20 @@ export default class ControlRowDetails extends Vue {
         value: c.data.title
       },
       {
+        name: 'Caveat',
+        value: c.hdf.descriptions.caveat
+      },
+      {
         name: 'Desc',
         value: c.data.desc
+      },
+      {
+        name: 'Rationale',
+        value: c.hdf.descriptions.rationale
+      },
+      {
+        name: 'Justification',
+        value: c.hdf.descriptions.justification
       },
       {
         name: 'Severity',
