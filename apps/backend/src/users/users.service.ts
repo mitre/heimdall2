@@ -1,17 +1,17 @@
 import {
-  Injectable,
-  NotFoundException,
   BadRequestException,
-  ForbiddenException
+  ForbiddenException,
+  Injectable,
+  NotFoundException
 } from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
-import {User} from './user.model';
-import {UserDto} from './dto/user.dto';
-import {CreateUserDto} from './dto/create-user.dto';
-import {UpdateUserDto} from './dto/update-user.dto';
-import {DeleteUserDto} from './dto/delete-user.dto';
-import {hash, compare} from 'bcrypt';
+import {compare, hash} from 'bcrypt';
 import {FindOptions} from 'sequelize/types';
+import {CreateUserDto} from './dto/create-user.dto';
+import {DeleteUserDto} from './dto/delete-user.dto';
+import {UpdateUserDto} from './dto/update-user.dto';
+import {UserDto} from './dto/user.dto';
+import {User} from './user.model';
 
 @Injectable()
 export class UsersService {

@@ -1,12 +1,11 @@
-import Vue from 'vue';
-import Router from 'vue-router';
-import Results from '@/views/Results.vue';
+import {ServerModule} from '@/store/server';
 import Compare from '@/views/Compare.vue';
 import Landing from '@/views/Landing.vue';
 import Login from '@/views/Login.vue';
+import Results from '@/views/Results.vue';
 import Signup from '@/views/Signup.vue';
-
-import {ServerModule} from '@/store/server';
+import Vue from 'vue';
+import Router from 'vue-router';
 
 Vue.use(Router);
 

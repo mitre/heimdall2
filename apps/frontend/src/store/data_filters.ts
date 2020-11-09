@@ -2,19 +2,18 @@
  * This module provides a cached, reusable method for filtering data from data_store.
  */
 
-import {
-  Module,
-  VuexModule,
-  getModule,
-  Mutation,
-  Action
-} from 'vuex-module-decorators';
-import {SourcedContextualizedEvaluation, FileID} from '@/store/report_intake';
 import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
-
-import {ControlStatus, Severity, context, nist} from 'inspecjs';
+import {FileID, SourcedContextualizedEvaluation} from '@/store/report_intake';
 import Store from '@/store/store';
+import {context, ControlStatus, nist, Severity} from 'inspecjs';
 import LRUCache from 'lru-cache';
+import {
+  Action,
+  getModule,
+  Module,
+  Mutation,
+  VuexModule
+} from 'vuex-module-decorators';
 
 const MAX_CACHE_ENTRIES = 20;
 

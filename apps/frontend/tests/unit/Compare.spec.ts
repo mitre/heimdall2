@@ -1,13 +1,12 @@
-import 'jest';
-import Vue from 'vue';
-import Vuetify from 'vuetify';
-import {shallowMount, Wrapper} from '@vue/test-utils';
-import Compare from '@/views/Compare.vue';
 import {FilteredDataModule} from '@/store/data_filters';
 import {StatusCountModule} from '@/store/status_counts';
 import {ComparisonContext} from '@/utilities/delta_util';
-
-import {removeAllFiles, loadSample, fileCompliance} from '../util/testingUtils';
+import Compare from '@/views/Compare.vue';
+import {shallowMount, Wrapper} from '@vue/test-utils';
+import 'jest';
+import Vue from 'vue';
+import Vuetify from 'vuetify';
+import {fileCompliance, loadSample, removeAllFiles} from '../util/testingUtils';
 
 const vuetify = new Vuetify();
 let wrapper: Wrapper<Vue>;

@@ -1,19 +1,19 @@
-import {LogInPage} from './pages/log-in.page';
-import {LogInVerifier} from './verifiers/log-in.verifier';
-import {UploadNexusPage} from './pages/upload-nexus.page';
-import {UploadNexusVerifier} from './verifiers/upload-nexus.verifier';
-import {ToastVerifier} from './verifiers/toast.verifier';
-import {NavbarVerifier} from './verifiers/navbar.verifier';
-import {IntegrationSpecHelper} from './helpers/integration-spec.helper';
-import {AppModule} from '../../src/app.module';
 import {Test, TestingModule} from '@nestjs/testing';
+import {AppModule} from '../../src/app.module';
+import {ConfigService} from '../../src/config/config.service';
+import {DatabaseService} from '../../src/database/database.service';
 import {
-  CREATE_USER_DTO_TEST_OBJ,
   BAD_LOGIN_AUTHENTICATION,
+  CREATE_USER_DTO_TEST_OBJ,
   LOGIN_AUTHENTICATION
 } from '../constants/users-test.constant';
-import {DatabaseService} from '../../src/database/database.service';
-import {ConfigService} from '../../src/config/config.service';
+import {IntegrationSpecHelper} from './helpers/integration-spec.helper';
+import {LogInPage} from './pages/log-in.page';
+import {UploadNexusPage} from './pages/upload-nexus.page';
+import {LogInVerifier} from './verifiers/log-in.verifier';
+import {NavbarVerifier} from './verifiers/navbar.verifier';
+import {ToastVerifier} from './verifiers/toast.verifier';
+import {UploadNexusVerifier} from './verifiers/upload-nexus.verifier';
 
 describe('Authentication', () => {
   let databaseService: DatabaseService;

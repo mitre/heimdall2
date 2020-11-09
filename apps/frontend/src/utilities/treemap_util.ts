@@ -2,11 +2,11 @@
  * Tools used for generating the treemaps consumed by, of course, the Treemap card and associated components.
  */
 
-import {nist, context} from 'inspecjs';
-import * as d3 from 'd3';
-import {control_unique_key} from './format_util';
 import {ColorHack} from '@/store/color_hack';
 import Chroma from 'chroma-js';
+import * as d3 from 'd3';
+import {context, nist} from 'inspecjs';
+import {control_unique_key} from './format_util';
 
 // How deep into nist trees we allow
 const MAX_DEPTH = 2;

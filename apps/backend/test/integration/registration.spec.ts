@@ -1,17 +1,17 @@
 import {Test, TestingModule} from '@nestjs/testing';
 import {AppModule} from '../../src/app.module';
+import {ConfigService} from '../../src/config/config.service';
+import {DatabaseService} from '../../src/database/database.service';
 import {
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
 } from '../constants/users-test.constant';
-import {RegistrationPage} from './pages/registration.page';
 import {LogInPage} from './pages/log-in.page';
-import {DatabaseService} from '../../src/database/database.service';
-import {ConfigService} from '../../src/config/config.service';
-import {LogInVerifier} from './verifiers/log-in.verifier';
-import {ToastVerifier} from './verifiers/toast.verifier';
+import {RegistrationPage} from './pages/registration.page';
 import {FormVerifier} from './verifiers/form.verifier';
+import {LogInVerifier} from './verifiers/log-in.verifier';
 import {RegistrationVerifier} from './verifiers/registration.verifier';
+import {ToastVerifier} from './verifiers/toast.verifier';
 
 describe('Registration', () => {
   let databaseService: DatabaseService;

@@ -4,10 +4,10 @@
  * Currently supported mappings are:
  * - Control ID -> All controls with that id
  */
-import {Module, VuexModule, getModule} from 'vuex-module-decorators';
 import {InspecDataModule} from '@/store/data_store';
-import {context} from 'inspecjs';
 import Store from '@/store/store';
+import {context} from 'inspecjs';
+import {getModule, Module, VuexModule} from 'vuex-module-decorators';
 
 // Control ID hash
 export type ControlHash = {[key: string]: context.ContextualizedControl[]};

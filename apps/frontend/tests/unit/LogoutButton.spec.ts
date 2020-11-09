@@ -1,8 +1,8 @@
+import LogoutButton from '@/components/generic/LogoutButton.vue';
+import {ServerModule} from '@/store/server';
 import {shallowMount} from '@vue/test-utils';
 import sinon from 'sinon';
-import LogoutButton from '@/components/generic/LogoutButton.vue';
 import Vuetify from 'vuetify';
-import {ServerModule} from '@/store/server';
 
 jest.mock('@/store/server');
 const ServerModStub = sinon.stub(ServerModule);

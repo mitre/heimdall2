@@ -1,8 +1,7 @@
-import {xml2js, ElementCompact} from 'xml-js';
+import {parse, schemas_1_0} from 'inspecjs';
+import {ElementCompact, xml2js} from 'xml-js';
 import {delay} from './async_util';
-import {parse} from 'inspecjs';
-import {group_by, map_hash, basic_auth} from './helper_util';
-import {schemas_1_0} from 'inspecjs';
+import {basic_auth, group_by, map_hash} from './helper_util';
 
 // env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 

@@ -1,14 +1,14 @@
 import {
-  Model,
-  Column,
-  Table,
-  CreatedAt,
-  UpdatedAt,
-  PrimaryKey,
   AllowNull,
-  DataType,
   AutoIncrement,
-  HasMany
+  Column,
+  CreatedAt,
+  DataType,
+  HasMany,
+  Model,
+  PrimaryKey,
+  Table,
+  UpdatedAt
 } from 'sequelize-typescript';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 

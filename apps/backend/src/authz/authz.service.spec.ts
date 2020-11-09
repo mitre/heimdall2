@@ -1,20 +1,20 @@
+import {getModelToken, SequelizeModule} from '@nestjs/sequelize';
 import {Test, TestingModule} from '@nestjs/testing';
-import {AuthzService} from './authz.service';
-import {DatabaseService} from '../../src/database/database.service';
-import {Policy} from './policy.model';
-import {SequelizeModule, getModelToken} from '@nestjs/sequelize';
 import {DatabaseModule} from '../../src/database/database.module';
+import {DatabaseService} from '../../src/database/database.service';
 import {
   ADMIN_DELETE_USERS_POLICY_DTO,
-  USER_DELETE_USERS_POLICY_DTO,
   POLICY_ARRAY,
+  USER_DELETE_USERS_POLICY_DTO,
   USER_UPDATE_USERS_POLICY_DTO
 } from '../../test/constants/policy-test.constant';
 import {
   ADMIN,
-  TEST_USER_WITH_INVALID_ROLE,
-  TEST_USER
+  TEST_USER,
+  TEST_USER_WITH_INVALID_ROLE
 } from '../../test/constants/users-test.constant';
+import {AuthzService} from './authz.service';
+import {Policy} from './policy.model';
 
 describe('Authz Service', () => {
   let testingModule: TestingModule;

@@ -1,6 +1,6 @@
-import {Module, Global} from '@nestjs/common';
-import {AuthzService} from './authz.service';
+import {Global, Module} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
+import {AuthzService} from './authz.service';
 import {Policy} from './policy.model';
 
 @Global()

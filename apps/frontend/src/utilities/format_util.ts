@@ -3,8 +3,8 @@
  */
 
 import {isFromProfileFile} from '@/store/data_store';
-import {context} from 'inspecjs';
 import {SourcedContextualizedEvaluation} from '@/store/report_intake';
+import {context} from 'inspecjs';
 
 export function execution_unique_key(
   exec: Readonly<SourcedContextualizedEvaluation>

@@ -1,8 +1,8 @@
 import {Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {SimpleAbac} from 'simple-abac';
-import {Policy} from './policy.model';
 import {PolicyDto} from './dto/policy.dto';
+import {Policy} from './policy.model';
 
 @Injectable()
 export class AuthzService {

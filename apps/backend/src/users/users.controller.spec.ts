@@ -1,27 +1,27 @@
 import {
-  NotFoundException,
   BadRequestException,
-  CanActivate
+  CanActivate,
+  NotFoundException
 } from '@nestjs/common';
 import {Test, TestingModule} from '@nestjs/testing';
+import {
+  CREATE_USER_DTO_TEST_OBJ,
+  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD,
+  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD,
+  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
+  DELETE_USER_DTO_TEST_OBJ,
+  DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD,
+  ID,
+  UPDATED_USER_DTO,
+  UPDATE_USER_DTO_TEST_OBJ,
+  UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD,
+  USER_ONE_DTO
+} from '../../test/constants/users-test.constant';
+import {DatabaseModule} from '../database/database.module';
+import {DatabaseService} from '../database/database.service';
+import {AbacGuard} from '../guards/abac.guard';
 import {UsersController} from './users.controller';
 import {UsersService} from './users.service';
-import {
-  ID,
-  USER_ONE_DTO,
-  UPDATED_USER_DTO,
-  CREATE_USER_DTO_TEST_OBJ,
-  DELETE_USER_DTO_TEST_OBJ,
-  UPDATE_USER_DTO_TEST_OBJ,
-  DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD,
-  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD,
-  UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD,
-  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
-  CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD
-} from '../../test/constants/users-test.constant';
-import {AbacGuard} from '../guards/abac.guard';
-import {DatabaseService} from '../database/database.service';
-import {DatabaseModule} from '../database/database.module';
 
 // Test suite for the UsersController
 describe('UsersController Unit Tests', () => {
