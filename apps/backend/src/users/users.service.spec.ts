@@ -3,8 +3,8 @@ import {DatabaseModule} from '../database/database.module';
 import {UsersService} from './users.service';
 import {
   NotFoundException,
-  UnauthorizedException,
-  BadRequestException
+  BadRequestException,
+  ForbiddenException
 } from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {User} from './user.model';
@@ -354,7 +354,7 @@ describe('UsersService', () => {
           user.id,
           UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD
         )
-      ).rejects.toThrow(UnauthorizedException);
+      ).rejects.toThrow(ForbiddenException);
     });
 
     it('should throw an error when the email is invalid', async () => {
@@ -411,7 +411,7 @@ describe('UsersService', () => {
       expect.assertions(1);
       await expect(
         usersService.remove(user.id, DELETE_FAILURE_USER_DTO_TEST_OBJ)
-      ).rejects.toThrow(UnauthorizedException);
+      ).rejects.toThrow(ForbiddenException);
     });
 
     // Tests the remove function with DeleteUserDto that has no password field
@@ -423,7 +423,7 @@ describe('UsersService', () => {
           user.id,
           DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD
         )
-      ).rejects.toThrow(UnauthorizedException);
+      ).rejects.toThrow(ForbiddenException);
     });
 
     it('should remove created user', async () => {
