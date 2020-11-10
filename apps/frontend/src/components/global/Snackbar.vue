@@ -14,6 +14,16 @@
       >
         Report Error
       </v-btn>
+      <v-btn
+        v-if="updateBar"
+        id="update-link"
+        color="primary"
+        text
+        href="https://github.com/mitre/heimdall2/releases"
+        target="_blank"
+        @click="show = false"
+        >View
+      </v-btn>
       <v-btn id="hide-snackbar" text v-bind="attrs" @click="show = false">
         Close
       </v-btn>
@@ -32,6 +42,10 @@ export default class Snackbar extends Vue {
 
   get show(): boolean {
     return SnackbarModule.show;
+  }
+
+  get updateBar(): boolean {
+    return SnackbarModule.updateBar;
   }
 
   set show(visibility) {
