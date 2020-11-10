@@ -27,7 +27,10 @@
         >
         <br />
         <v-divider class="mx-1" />
-        {{ control.hdf.severity.toUpperCase() }}
+        <div v-if="control.data.tags.severity">
+          {{ control.data.tags.severity.toUpperCase() }}
+        </div>
+        <div v-else>NONE</div>
       </v-card-text>
     </template>
 
@@ -121,7 +124,7 @@ export default class ControlRowHeader extends Vue {
   }
 
   get severity_arrow_count(): number {
-    switch (this.control.hdf.severity) {
+    switch (this.control.data.tags.severity) {
       default:
       case 'none':
         return 0;
