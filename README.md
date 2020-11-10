@@ -140,7 +140,7 @@ This will fetch the latest version of the container, redeploy if a newer version
 
 API usage only works when using Heimdall Enterprise Server (AKA "Server Mode").
 
-Proper API documentation does not exist yet. In the meantime here are quick instruction for uploading evaluations to Heimdall Server.
+Proper API documentation does not exist yet. In the meantime here are quick instructions for uploading evaluations to Heimdall Server.
 
 ```sh
 # Create a user (only needs to be done once)
