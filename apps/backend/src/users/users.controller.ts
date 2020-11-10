@@ -8,8 +8,7 @@ import {
   Body,
   UseFilters,
   UsePipes,
-  UseGuards,
-  UseInterceptors
+  UseGuards
 } from '@nestjs/common';
 import {UserDto} from './dto/user.dto';
 import {CreateUserDto} from './dto/create-user.dto';
@@ -22,7 +21,6 @@ import {PasswordComplexityPipe} from '../pipes/password-complexity.pipe';
 import {PasswordChangePipe} from '../pipes/password-change.pipe';
 import {AbacGuard} from '../guards/abac.guard';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
-import {IsAdminInterceptor} from '../interceptors/is-admin.interceptor';
 
 @Controller('users')
 export class UsersController {
@@ -41,10 +39,8 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard, AbacGuard)
-  @UseInterceptors(IsAdminInterceptor)
   @Put(':id')
   async update(
-    @Param('role') role: string,
     @Param('id') id: number,
     @Body(
       new PasswordsMatchPipe(),
@@ -53,7 +49,7 @@ export class UsersController {
     )
     updateUserDto: UpdateUserDto
   ) {
-    return this.usersService.update(id, updateUserDto, role == 'admin');
+    return this.usersService.update(id, updateUserDto);
   }
 
   @UseGuards(JwtAuthGuard, AbacGuard)

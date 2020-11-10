@@ -22,8 +22,8 @@
       <v-icon> mdi-cloud-upload </v-icon>
     </v-btn>
     <slot name="data" />
-    <LogoutButton />
-    <HelpAboutDropdown />
+
+    <TopbarDropdown />
     <!-- File select modal -->
     <UploadNexus
       :visible="showModal"
@@ -35,8 +35,7 @@
 
 <script lang="ts">
 import Component, {mixins} from 'vue-class-component';
-import HelpAboutDropdown from '@/components/global/HelpAboutDropdown.vue';
-import LogoutButton from '@/components/generic/LogoutButton.vue';
+import TopbarDropdown from '@/components/global/TopbarDropdown.vue';
 
 import UploadNexus from '@/components/global/UploadNexus.vue';
 import ServerMixin from '@/mixins/ServerMixin';
@@ -45,8 +44,7 @@ import {Prop} from 'vue-property-decorator';
 @Component({
   components: {
     UploadNexus,
-    HelpAboutDropdown,
-    LogoutButton
+    TopbarDropdown
   }
 })
 export default class Topbar extends mixins(ServerMixin) {

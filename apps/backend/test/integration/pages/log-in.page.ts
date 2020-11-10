@@ -25,8 +25,9 @@ export class LogInPage {
 
   async logout(page: Page): Promise<void> {
     await Promise.all([
-      page.waitForSelector('#login_button'),
-      page.click('#logout')
+      page.waitForSelector('#logout_button'),
+      page.click('#logout_button'),
+      page.waitForSelector('#login_form_title')
     ]);
   }
 

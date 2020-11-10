@@ -3,7 +3,7 @@ import {Page} from 'puppeteer';
 export class NavbarVerifier {
   async verifyLogout(page: Page): Promise<void> {
     const logoutButton = await page.$eval(
-      '#logout > span',
+      '#logout_button',
       (el) => el.innerHTML
     );
     expect(logoutButton).toContain('Logout');
