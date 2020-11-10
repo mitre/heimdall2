@@ -190,7 +190,7 @@ class Server extends VuexModule implements IServerState {
     const newest: string = await axios
       .get(`${this.serverUrl}/updates`)
       .then((response) => response.data.newest);
-    if (newest == AppInfoModule.version) {
+    if (newest !== AppInfoModule.version) {
       SnackbarModule.update(newest);
     }
   }
