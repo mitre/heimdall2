@@ -1,5 +1,5 @@
-import {User} from '../user.model';
 import {IUser} from '@heimdall/interfaces';
+import {User} from '../user.model';
 
 export class UserDto implements IUser {
   id: number;

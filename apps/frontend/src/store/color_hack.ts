@@ -1,6 +1,6 @@
-import {Module, VuexModule, getModule} from 'vuex-module-decorators';
 import Store from '@/store/store';
 import {nist} from 'inspecjs';
+import {getModule, Module, VuexModule} from 'vuex-module-decorators';
 
 /**
  * Gets a hex code for the given color

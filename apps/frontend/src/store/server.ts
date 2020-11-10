@@ -1,17 +1,16 @@
-import {
-  Module,
-  VuexModule,
-  Mutation,
-  Action,
-  getModule
-} from 'vuex-module-decorators';
 import Store from '@/store/store';
-import axios from 'axios';
-
 import {LocalStorageVal} from '@/utilities/helper_util';
+import {IStartupSettings, IUpdateUser, IUser} from '@heimdall/interfaces';
 import {SnackbarModule} from '@/store/snackbar';
 import {AppInfoModule} from '@/store/app_info';
-import {IUpdateUser, IUser, IStartupSettings} from '@heimdall/interfaces';
+import axios from 'axios';
+import {
+  Action,
+  getModule,
+  Module,
+  Mutation,
+  VuexModule
+} from 'vuex-module-decorators';
 
 const local_token = new LocalStorageVal<string | null>('auth_token');
 const localUserID = new LocalStorageVal<string | null>('localUserID');

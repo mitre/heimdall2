@@ -5,13 +5,13 @@ import fortify_h_tools_conv_webgoat from '../assets/samples/fortify_h_tools_conv
 import good_nginxresults from '../assets/samples/good_nginxresults.json';
 import owasp_zap_webgoat from '../assets/samples/owasp_zap_webgoat.json';
 import owasp_zap_zero from '../assets/samples/owasp_zap_zero.webappsecurity.json';
-import rhel_cve_vulnerability_scan_baseline_with_failures from '../assets/samples/rhel_cve_vulnerability_scan_baseline_with_failures.json';
-import rhel7_results from '../assets/samples/rhel7-results.json';
-import sonarqube_java_sample from '../assets/samples/sonarqube_java_sample.json';
-import ubuntu_1604_baseline_results from '../assets/samples/ubuntu-16.04-baseline-results.json';
 import red_hat_bad from '../assets/samples/red_hat_bad.json';
 import red_hat_good from '../assets/samples/red_hat_good.json';
+import rhel7_results from '../assets/samples/rhel7-results.json';
+import rhel_cve_vulnerability_scan_baseline_with_failures from '../assets/samples/rhel_cve_vulnerability_scan_baseline_with_failures.json';
+import sonarqube_java_sample from '../assets/samples/sonarqube_java_sample.json';
 import triple_overlay_profile from '../assets/samples/triple_overlay_profile_example.json';
+import ubuntu_1604_baseline_results from '../assets/samples/ubuntu-16.04-baseline-results.json';
 import acme_overlay from '../assets/samples/wrapper-acme-run.json';
 
 export interface Sample {

@@ -1,21 +1,20 @@
-import {Test} from '@nestjs/testing';
-import {DatabaseModule} from '../database/database.module';
-import {DatabaseService} from '../database/database.service';
-import {EvaluationTagsService} from './evaluation-tags.service';
-import {EvaluationTag} from './evaluation-tag.model';
 import {SequelizeModule} from '@nestjs/sequelize';
-
-import {Evaluation} from '../evaluations/evaluation.model';
-import {EvaluationsService} from '../evaluations/evaluations.service';
+import {Test} from '@nestjs/testing';
 import {
   CREATE_EVALUATION_TAG_DTO,
   CREATE_EVALUATION_TAG_DTO_MISSING_KEY,
   CREATE_EVALUATION_TAG_DTO_MISSING_VALUE,
   UPDATE_EVALUATION_TAG_DTO,
-  UPDATE_EVALUATION_TAG_DTO_MISSING_VALUE,
-  UPDATE_EVALUATION_TAG_DTO_MISSING_KEY
+  UPDATE_EVALUATION_TAG_DTO_MISSING_KEY,
+  UPDATE_EVALUATION_TAG_DTO_MISSING_VALUE
 } from '../../test/constants/evaluation-tags-test.constant';
 import {EVALUATION_1} from '../../test/constants/evaluations-test.constant';
+import {DatabaseModule} from '../database/database.module';
+import {DatabaseService} from '../database/database.service';
+import {Evaluation} from '../evaluations/evaluation.model';
+import {EvaluationsService} from '../evaluations/evaluations.service';
+import {EvaluationTag} from './evaluation-tag.model';
+import {EvaluationTagsService} from './evaluation-tags.service';
 
 describe('EvaluationTagsService', () => {
   let evaluationTagsService: EvaluationTagsService;

@@ -1,5 +1,5 @@
-import {IsOptional, IsString, IsObject} from 'class-validator';
 import {IUpdateEvaluation} from '@heimdall/interfaces';
+import {IsObject, IsOptional, IsString} from 'class-validator';
 
 export class UpdateEvaluationDto implements IUpdateEvaluation {
   @IsOptional()

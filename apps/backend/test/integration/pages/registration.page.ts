@@ -23,5 +23,6 @@ export class RegistrationPage {
       passwordConfirmation: user.passwordConfirmation,
       password: user.password
     });
+    await page.click('#register');
   }
 }

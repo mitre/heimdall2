@@ -1,11 +1,11 @@
-import {
-  Module,
-  VuexModule,
-  Mutation,
-  Action,
-  getModule
-} from 'vuex-module-decorators';
 import Store from '@/store/store';
+import {
+  Action,
+  getModule,
+  Module,
+  Mutation,
+  VuexModule
+} from 'vuex-module-decorators';
 
 export interface ISnackbarState {
   customText: string;

@@ -1,16 +1,16 @@
 import {
-  Column,
-  Model,
-  Table,
-  IsEmail,
-  Unique,
   AllowNull,
-  CreatedAt,
-  UpdatedAt,
-  PrimaryKey,
   AutoIncrement,
+  Column,
+  CreatedAt,
   DataType,
-  Default
+  Default,
+  IsEmail,
+  Model,
+  PrimaryKey,
+  Table,
+  Unique,
+  UpdatedAt
 } from 'sequelize-typescript';
 
 @Table

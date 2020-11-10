@@ -2,8 +2,8 @@
  * Provides utlities for comparing executions
  */
 
-import {context} from 'inspecjs';
 import {EvaluationFile} from '@/store/report_intake';
+import {context} from 'inspecjs';
 import {ContextualizedEvaluation} from 'inspecjs/dist/context';
 
 export const NOT_SELECTED = 'not selected';

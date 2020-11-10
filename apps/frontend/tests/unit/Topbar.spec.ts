@@ -1,7 +1,7 @@
-import {mount, Wrapper} from '@vue/test-utils';
+import Modal from '@/components/global/Modal.vue';
 import Topbar from '@/components/global/Topbar.vue';
 import UploadNexus from '@/components/global/UploadNexus.vue';
-import Modal from '@/components/global/Modal.vue';
+import {mount, Wrapper} from '@vue/test-utils';
 import Vuetify from 'vuetify';
 import {addElemWithDataAppToBody} from '../util/testingUtils';
 

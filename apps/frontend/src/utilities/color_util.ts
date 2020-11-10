@@ -3,8 +3,8 @@
  * Not written with an eye towards efficiency - prefer that these be done staitcally
  */
 
-import {VuetifyParsedThemeItem} from 'vuetify/types/services/theme';
 import Chroma from 'chroma-js';
+import {VuetifyParsedThemeItem} from 'vuetify/types/services/theme';
 
 /** Makes a color that is visible against the provided color */
 export function visible_against(color_hex: string): string {

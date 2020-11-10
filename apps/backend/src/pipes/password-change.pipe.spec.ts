@@ -1,10 +1,10 @@
-import {PasswordChangePipe} from './password-change.pipe';
 import {ArgumentMetadata, BadRequestException} from '@nestjs/common';
 import {
   UPDATE_USER_DTO_TEST_OBJ,
   UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD,
   UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS
 } from '../../test/constants/users-test.constant';
+import {PasswordChangePipe} from './password-change.pipe';
 
 describe('PasswordChangePipe', () => {
   let passwordChangePipe: PasswordChangePipe;

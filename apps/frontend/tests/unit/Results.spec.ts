@@ -1,21 +1,20 @@
+import ControlTable from '@/components/cards/controltable/ControlTable.vue';
+import ProfData from '@/components/cards/ProfileData.vue';
+import {FilteredDataModule} from '@/store/data_filters';
+import {profile_unique_key} from '@/utilities/format_util';
+import Results from '@/views/Results.vue';
+import {shallowMount, Wrapper} from '@vue/test-utils';
+import {context} from 'inspecjs';
 import 'jest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
-import {shallowMount, Wrapper} from '@vue/test-utils';
-import {FilteredDataModule} from '@/store/data_filters';
-
 import {
-  removeAllFiles,
-  loadSample,
+  expectedCount,
   loadAll,
-  expectedCount
+  loadSample,
+  removeAllFiles
 } from '../util/testingUtils';
-import Results from '@/views/Results.vue';
-import ProfData from '@/components/cards/ProfileData.vue';
-import {profile_unique_key} from '@/utilities/format_util';
 
-import ControlTable from '@/components/cards/controltable/ControlTable.vue';
-import {context} from 'inspecjs';
 interface ListElt {
   // A unique id to be used as a key.
   key: string;

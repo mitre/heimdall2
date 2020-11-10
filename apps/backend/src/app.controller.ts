@@ -1,4 +1,4 @@
-import {Get, Controller} from '@nestjs/common';
+import {Controller, Get} from '@nestjs/common';
 import {ConfigService} from './config/config.service';
 import {StartupSettingsDto} from './config/dto/startup-settings.dto';
 

@@ -1,12 +1,12 @@
-import 'jest';
-import Vue from 'vue';
-import Vuetify from 'vuetify';
-import {shallowMount, Wrapper, createLocalVue} from '@vue/test-utils';
+import Sidebar from '@/components/global/Sidebar.vue';
 import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
-import {loadAll} from '../util/testingUtils';
-import Sidebar from '@/components/global/Sidebar.vue';
+import {createLocalVue, shallowMount, Wrapper} from '@vue/test-utils';
+import 'jest';
+import Vue from 'vue';
 import VueRouter from 'vue-router';
+import Vuetify from 'vuetify';
+import {loadAll} from '../util/testingUtils';
 
 const vuetify = new Vuetify();
 const localVue = createLocalVue();

@@ -1,13 +1,13 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import {InspecData} from '@/store/data_store';
+import {AppInfo} from '@/store/app_info';
+import {ColorHack} from '@/store/color_hack';
 import {FilteredData} from '@/store/data_filters';
-import {StatusCount} from '@/store/status_counts';
-import {SeverityCount} from '@/store/severity_counts';
+import {InspecData} from '@/store/data_store';
 import {HashLookup} from '@/store/lookup_hashes';
 import {InspecIntake} from '@/store/report_intake';
-import {ColorHack} from '@/store/color_hack';
-import {AppInfo} from '@/store/app_info';
+import {SeverityCount} from '@/store/severity_counts';
+import {StatusCount} from '@/store/status_counts';
+import Vue from 'vue';
+import Vuex from 'vuex';
 import {IServerState} from './server';
 
 Vue.use(Vuex);
