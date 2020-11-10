@@ -12,7 +12,7 @@
           <v-tab-item value="tab-test">
             <div class="pa-4">
               <div v-if="caveat">
-                {{ caveat }}
+                Caveat: {{ caveat }}
                 <v-divider />
                 <br />
               </div>
