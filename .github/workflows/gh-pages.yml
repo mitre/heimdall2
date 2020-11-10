@@ -20,6 +20,12 @@ jobs:
       - name: Build Heimdall Lite
         run: yarn frontend build
 
+      - name: Build Heimdall Lite
+        run: yarn frontend build
+
+      - name: Write Heimdall-Lite CNAME file
+        run: 'echo "heimdall-lite.mitre.org" > ./dist/frontend/CNAME'
+
       - name: deploy
         uses: peaceiris/actions-gh-pages@v3
         with:

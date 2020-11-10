@@ -1,17 +1,26 @@
 <template>
-  <v-btn v-if="serverMode" id="logout" @click="logOut">
-    <span class="d-none d-md-inline pr-2"> Logout </span>
-    <v-icon> mdi-logout </v-icon>
-  </v-btn>
+  <div v-if="serverMode">
+    <LinkItem
+      id="logout_button"
+      key="user"
+      text="Logout"
+      icon="mdi-logout"
+      @click="logOut"
+      >Logout</LinkItem
+    >
+  </div>
 </template>
 
 <script lang="ts">
+import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import ServerMixin from '@/mixins/ServerMixin';
 import {ServerModule} from '@/store/server';
 import Component, {mixins} from 'vue-class-component';
 
 @Component({
-  components: {}
+  components: {
+    LinkItem
+  }
 })
 export default class LogoutButton extends mixins(ServerMixin) {
   logOut() {

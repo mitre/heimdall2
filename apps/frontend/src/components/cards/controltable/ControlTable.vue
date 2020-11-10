@@ -104,7 +104,7 @@ interface ListElt {
 export default class ControlTable extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
   // Whether to allow multiple expansions
-  single_expand: boolean = false;
+  single_expand: boolean = true;
 
   // List of currently expanded options. If unique id is in here, it is expanded
   expanded: Array<string> = [];

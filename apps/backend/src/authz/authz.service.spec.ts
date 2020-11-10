@@ -7,7 +7,8 @@ import {DatabaseModule} from '../../src/database/database.module';
 import {
   ADMIN_DELETE_USERS_POLICY_DTO,
   USER_DELETE_USERS_POLICY_DTO,
-  POLICY_ARRAY
+  POLICY_ARRAY,
+  USER_UPDATE_USERS_POLICY_DTO
 } from '../../test/constants/policy-test.constant';
 import {
   ADMIN,
@@ -32,6 +33,7 @@ describe('Authz Service', () => {
     // Seed database with policies
     authzService.abac.allow(ADMIN_DELETE_USERS_POLICY_DTO);
     authzService.abac.allow(USER_DELETE_USERS_POLICY_DTO);
+    authzService.abac.allow(USER_UPDATE_USERS_POLICY_DTO);
   });
 
   beforeEach(() => {
@@ -39,32 +41,44 @@ describe('Authz Service', () => {
   });
 
   describe('Test the can function', () => {
-    it('should grant access when subject has admin role', async () => {
-      expect(await authzService.can(ADMIN, 'delete', '/users')).toBeTruthy();
+    describe('delete users', () => {
+      it('should grant access when subject has admin role', async () => {
+        expect(await authzService.can(ADMIN, 'delete', '/users')).toBeTruthy();
+      });
+
+      it('should grant access when role, action, and resource are all valid', async () => {
+        expect(
+          await authzService.can(TEST_USER, 'delete', '/users')
+        ).toBeTruthy();
+      });
+
+      it('should deny access when subject role is invalid', async () => {
+        expect(
+          await authzService.can(
+            TEST_USER_WITH_INVALID_ROLE,
+            'delete',
+            '/users'
+          )
+        ).toBeFalsy();
+      });
+
+      it('should deny access when action is invalid delete', async () => {
+        expect(
+          await authzService.can(TEST_USER, 'invalid action', '/users')
+        ).toBeFalsy();
+      });
+
+      it('should deny access when resource is invalid', async () => {
+        expect(
+          await authzService.can(TEST_USER, 'delete', '/unknown')
+        ).toBeFalsy();
+      });
     });
 
-    it('should grant access when role, action, and resource are all valid', async () => {
-      expect(
-        await authzService.can(TEST_USER, 'delete', '/users')
-      ).toBeTruthy();
-    });
-
-    it('should deny access when subject role is invalid', async () => {
-      expect(
-        await authzService.can(TEST_USER_WITH_INVALID_ROLE, 'delete', '/users')
-      ).toBeFalsy();
-    });
-
-    it('should deny access when action is invalid', async () => {
-      expect(
-        await authzService.can(TEST_USER, 'invalid action', '/users')
-      ).toBeFalsy();
-    });
-
-    it('should deny access when resource is invalid', async () => {
-      expect(
-        await authzService.can(TEST_USER, 'delete', '/unknown')
-      ).toBeFalsy();
+    describe('update users', () => {
+      it('should grant access when role, action an dresource are all valid', async () => {
+        expect(await authzService.can(TEST_USER, 'put', '/users')).toBeTruthy();
+      });
     });
   });
 

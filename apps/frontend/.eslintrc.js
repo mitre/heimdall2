@@ -11,7 +11,7 @@ module.exports = {
   extends: ['plugin:vue/recommended', '@vue/prettier', '@vue/typescript'],
   rules: {
     'no-console': 'off',
-    'unused-imports/no-unused-imports-ts': 'error',
+    'unused-imports/no-unused-imports-ts': 'warn',
     'unused-imports/no-unused-vars-ts': [
       'warn',
       {
@@ -21,12 +21,12 @@ module.exports = {
         argsIgnorePattern: '^_'
       }
     ],
-    'no-return-await': 'error',
-    'no-throw-literal': 'error',
+    'no-return-await': 'warn',
+    'no-throw-literal': 'warn',
     'vue/require-default-prop': 'off',
     'vue/prop-name-casing': 'off',
     'vue/html-self-closing': [
-      'error',
+      'warn',
       {
         html: {
           void: 'always'

@@ -30,10 +30,12 @@ export class AuthnService {
     if (payload.forcePasswordChange) {
       // Give the user 10 minutes to (hopefully) change their password.
       return {
+        userID: user.id,
         accessToken: this.jwtService.sign(payload, {expiresIn: '600s'})
       };
     } else {
       return {
+        userID: user.id,
         accessToken: this.jwtService.sign(payload)
       };
     }

@@ -8,7 +8,7 @@ This repository contains the source code for the Heimdall 2 Backend and Frontend
 
 ### Demos
 
-![Heimdall Lite 2.0 Demo GIF](/apps/frontend/public/heidmall-lite-2.0-demo-5fps.gif)
+![Heimdall Lite 2.0 Demo GIF](/apps/frontend/public/heimdall-lite-2.0-demo-5fps.gif)
 
 #### Video
 
@@ -93,11 +93,11 @@ Then, any subsequent `npx heimdall-lite` will use the local version and load muc
 
 It is also possible to run heimdall-lite using Docker, using the following command:
 
-`docker run -d -p 8080:80 heimdall-lite:release-latest`
+`docker run -d -p 8080:80 mitre/heimdall-lite:release-latest`
 
 You can then access heimdall-lite via: localhost:8080
 
-If you would prefer to run the bleeding edge version of heimdall-lite, replace `heimdall-lite:release-latest` with `heimdall-lite:latest`.
+If you would prefer to run the bleeding edge version of heimdall-lite, replace `mitre/heimdall-lite:release-latest` with `mitre/heimdall-lite:latest`.
 
 ### Running Heimdall Server
 
@@ -166,6 +166,7 @@ Then, the following one-time steps must be performed:
     # Edit /apps/backend/.env to reflect the appropriate configuration for your system
     yarn backend sequelize-cli db:create
     yarn backend sequelize-cli db:migrate
+    yarn backend sequelize-cli db:seed:all
 
 Once the above steps are completed it is possible to start heimdall-server using the following command
 
@@ -192,7 +193,7 @@ Once the above steps are completed it is possible to start heimdall-server using
     # Run Backend Nest Tests
     yarn backend test:e2e
     yarn backend test:ci-cov
-    
+
 ### Creating a Release
 
 **Note:** This action requires appropriate privileges on the repository to perform.
