@@ -27,7 +27,7 @@ module.exports = {
     }
   },
   server: {
-    command: 'npm run start',
+    command: 'yarn run start',
     port: process.env.PORT || 3000,
     launchTimeout: 20000
   }

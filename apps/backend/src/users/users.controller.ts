@@ -1,26 +1,26 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
   Put,
-  Delete,
-  Param,
-  Body,
   UseFilters,
-  UsePipes,
-  UseGuards
+  UseGuards,
+  UsePipes
 } from '@nestjs/common';
-import {UserDto} from './dto/user.dto';
-import {CreateUserDto} from './dto/create-user.dto';
-import {UpdateUserDto} from './dto/update-user.dto';
-import {DeleteUserDto} from './dto/delete-user.dto';
-import {UsersService} from './users.service';
 import {UniqueConstraintErrorFilter} from '../filters/unique-constraint-error.filter';
-import {PasswordsMatchPipe} from '../pipes/passwords-match.pipe';
-import {PasswordComplexityPipe} from '../pipes/password-complexity.pipe';
-import {PasswordChangePipe} from '../pipes/password-change.pipe';
 import {AbacGuard} from '../guards/abac.guard';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
+import {PasswordChangePipe} from '../pipes/password-change.pipe';
+import {PasswordComplexityPipe} from '../pipes/password-complexity.pipe';
+import {PasswordsMatchPipe} from '../pipes/passwords-match.pipe';
+import {CreateUserDto} from './dto/create-user.dto';
+import {DeleteUserDto} from './dto/delete-user.dto';
+import {UpdateUserDto} from './dto/update-user.dto';
+import {UserDto} from './dto/user.dto';
+import {UsersService} from './users.service';
 
 @Controller('users')
 export class UsersController {

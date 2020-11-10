@@ -1,14 +1,13 @@
+import {InspecDataModule} from '@/store/data_store';
+import {InspecIntakeModule} from '@/store/report_intake';
+import {ControlStatusHash, StatusCountModule} from '@/store/status_counts';
 import chai from 'chai';
 import chai_as_promised from 'chai-as-promised';
-chai.use(chai_as_promised);
-const expect = chai.expect;
-
-import {InspecIntakeModule} from '@/store/report_intake';
-import {InspecDataModule} from '@/store/data_store';
-import {AllRaw} from '../util/fs';
-import {ControlStatusHash, StatusCountModule} from '@/store/status_counts';
 import {readFileSync} from 'fs';
 import _ from 'lodash';
+import {AllRaw} from '../util/fs';
+chai.use(chai_as_promised);
+const expect = chai.expect;
 
 describe('Parsing', () => {
   it('Report intake can read every raw file in hdf_data', function () {

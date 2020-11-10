@@ -1,13 +1,13 @@
-import 'core-js/stable';
-import Vue from 'vue';
 import App from '@/App.vue';
+import vuetify from '@/plugins/vuetify';
 import router from '@/router';
 import store from '@/store/store';
-import vuetify from '@/plugins/vuetify';
-import 'roboto-fontface/css/roboto/roboto-fontface.css';
-import {ServerModule} from './store/server';
 import axios from 'axios';
+import 'core-js/stable';
+import 'roboto-fontface/css/roboto/roboto-fontface.css';
+import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
+import {ServerModule} from './store/server';
 
 Vue.use(Vuetify);
 

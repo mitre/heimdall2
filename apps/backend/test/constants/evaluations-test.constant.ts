@@ -1,8 +1,8 @@
 import {CreateEvaluationDto} from '../../src/evaluations/dto/create-evaluation.dto';
-import {UpdateEvaluationDto} from '../../src/evaluations/dto/update-evaluation.dto';
 import {EvaluationDto} from '../../src/evaluations/dto/evaluation.dto';
-import {CREATE_EVALUATION_TAG_DTO} from './evaluation-tags-test.constant';
+import {UpdateEvaluationDto} from '../../src/evaluations/dto/update-evaluation.dto';
 import {Evaluation} from '../../src/evaluations/evaluation.model';
+import {CREATE_EVALUATION_TAG_DTO} from './evaluation-tags-test.constant';
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 
 const DEFAULT_FILE_NAME = 'example-result.json';

@@ -1,21 +1,21 @@
-import {EvaluationsService} from './evaluations.service';
-import {DatabaseService} from '../database/database.service';
-import {DatabaseModule} from '../database/database.module';
-import {Evaluation} from './evaluation.model';
-import {EvaluationTagsModule} from '../evaluation-tags/evaluation-tags.module';
-import {EvaluationTagsService} from '../evaluation-tags/evaluation-tags.service';
+import {NotFoundException} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test} from '@nestjs/testing';
-import {NotFoundException} from '@nestjs/common';
 import {
-  UPDATE_EVALUATION,
-  EVALUATION_WITH_TAGS_1,
-  CREATE_EVALUATION_DTO_WITHOUT_TAGS,
   CREATE_EVALUATION_DTO_WITHOUT_DATA,
   CREATE_EVALUATION_DTO_WITHOUT_FILENAME,
-  UPDATE_EVALUATION_FILENAME_ONLY,
-  UPDATE_EVALUATION_DATA_ONLY
+  CREATE_EVALUATION_DTO_WITHOUT_TAGS,
+  EVALUATION_WITH_TAGS_1,
+  UPDATE_EVALUATION,
+  UPDATE_EVALUATION_DATA_ONLY,
+  UPDATE_EVALUATION_FILENAME_ONLY
 } from '../../test/constants/evaluations-test.constant';
+import {DatabaseModule} from '../database/database.module';
+import {DatabaseService} from '../database/database.service';
+import {EvaluationTagsModule} from '../evaluation-tags/evaluation-tags.module';
+import {EvaluationTagsService} from '../evaluation-tags/evaluation-tags.service';
+import {Evaluation} from './evaluation.model';
+import {EvaluationsService} from './evaluations.service';
 
 describe('EvaluationsService', () => {
   let evaluationsService: EvaluationsService;

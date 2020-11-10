@@ -1,9 +1,9 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
-import {EvaluationTag} from './evaluation-tag.model';
-import {EvaluationTagDto} from './dto/evaluation-tag.dto';
 import {CreateEvaluationTagDto} from './dto/create-evaluation-tag.dto';
+import {EvaluationTagDto} from './dto/evaluation-tag.dto';
 import {UpdateEvaluationTagDto} from './dto/update-evaluation-tag.dto';
+import {EvaluationTag} from './evaluation-tag.model';
 
 @Injectable()
 export class EvaluationTagsService {

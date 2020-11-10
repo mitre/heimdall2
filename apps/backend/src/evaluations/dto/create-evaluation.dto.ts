@@ -1,12 +1,12 @@
+import {ICreateEvaluation} from '@heimdall/interfaces';
 import {
-  IsNotEmpty,
-  IsOptional,
-  IsObject,
   IsArray,
+  IsNotEmpty,
+  IsObject,
+  IsOptional,
   IsString
 } from 'class-validator';
 import {CreateEvaluationTagDto} from '../../evaluation-tags/dto/create-evaluation-tag.dto';
-import {ICreateEvaluation} from '@heimdall/interfaces';
 
 export class CreateEvaluationDto implements ICreateEvaluation {
   @IsNotEmpty()

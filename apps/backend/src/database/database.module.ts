@@ -1,8 +1,8 @@
 import {Module} from '@nestjs/common';
-import {DatabaseService} from './database.service';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
+import {DatabaseService} from './database.service';
 
 function getDatabaseName(configService: ConfigService): string {
   const databaseName = configService.get('DATABASE_NAME');

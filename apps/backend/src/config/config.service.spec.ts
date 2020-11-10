@@ -1,10 +1,10 @@
 import mock from 'mock-fs';
-import {ConfigService} from './config.service';
 import {
+  DATABASE_URL_MOCK_ENV,
   ENV_MOCK_FILE,
-  SIMPLE_ENV_MOCK_FILE,
-  DATABASE_URL_MOCK_ENV
+  SIMPLE_ENV_MOCK_FILE
 } from '../../test/constants/env-test.constant';
+import {ConfigService} from './config.service';
 
 /* If you run the test without --silent , you need to add console.log() before you mock out the
 file system in the beforeAll() or it'll throw an error (this is a documented bug which can be

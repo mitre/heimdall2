@@ -1,17 +1,17 @@
-import {EvaluationsService} from './evaluations.service';
-import {EvaluationsController} from './evaluations.controller';
-import {DatabaseModule} from '../database/database.module';
-import {DatabaseService} from '../database/database.service';
+import {BadRequestException, NotFoundException} from '@nestjs/common';
 import {Test, TestingModule} from '@nestjs/testing';
 import {
-  EVALUATION_DTO,
-  UPDATE_EVALUATION,
-  EVALUATION_WITH_TAGS_1,
-  CREATE_EVALUATION_DTO_WITHOUT_TAGS,
   CREATE_EVALUATION_DTO_WITHOUT_DATA,
-  CREATE_EVALUATION_DTO_WITHOUT_FILENAME
+  CREATE_EVALUATION_DTO_WITHOUT_FILENAME,
+  CREATE_EVALUATION_DTO_WITHOUT_TAGS,
+  EVALUATION_DTO,
+  EVALUATION_WITH_TAGS_1,
+  UPDATE_EVALUATION
 } from '../../test/constants/evaluations-test.constant';
-import {NotFoundException, BadRequestException} from '@nestjs/common';
+import {DatabaseModule} from '../database/database.module';
+import {DatabaseService} from '../database/database.service';
+import {EvaluationsController} from './evaluations.controller';
+import {EvaluationsService} from './evaluations.service';
 
 describe('EvaluationsController', () => {
   let evaluationsController: EvaluationsController;

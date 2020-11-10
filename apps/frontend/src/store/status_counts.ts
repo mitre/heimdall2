@@ -2,16 +2,16 @@
  * Counts the statuses of controls.
  */
 
-import {Module, VuexModule, getModule} from 'vuex-module-decorators';
 import {
-  FilteredData,
   Filter,
-  filter_cache_key,
-  FilteredDataModule
+  FilteredData,
+  FilteredDataModule,
+  filter_cache_key
 } from '@/store/data_filters';
 import Store from '@/store/store';
-import LRUCache from 'lru-cache';
 import {ControlStatus} from 'inspecjs';
+import LRUCache from 'lru-cache';
+import {getModule, Module, VuexModule} from 'vuex-module-decorators';
 
 // The hash that we will generally be working with herein
 export type ControlStatusHash = {[key in ControlStatus]: number};

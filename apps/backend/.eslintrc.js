@@ -4,7 +4,7 @@ module.exports = {
     project: 'tsconfig.json',
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint/eslint-plugin', 'unused-imports'],
+  plugins: ['@typescript-eslint/eslint-plugin'],
   extends: [
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
@@ -21,12 +21,7 @@ module.exports = {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    'no-return-await': 'error',
-    'no-throw-literal': 'error',
-    "unused-imports/no-unused-imports-ts": "error",
-    "unused-imports/no-unused-vars-ts": [
-			"warn",
-			{ vars: "all", varsIgnorePattern: "^_", args: "after-used", argsIgnorePattern: "^_" },
-		],
+    'no-return-await': 'warn',
+    'no-throw-literal': 'warn',
   },
 };

@@ -1,14 +1,12 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
-import {Evaluation} from './evaluation.model';
-import {EvaluationDto} from './dto/evaluation.dto';
-import {CreateEvaluationDto} from './dto/create-evaluation.dto';
-import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
-
-import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
-import {DatabaseService} from '../database/database.service';
-
 import {FindOptions} from 'sequelize/types';
+import {DatabaseService} from '../database/database.service';
+import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
+import {CreateEvaluationDto} from './dto/create-evaluation.dto';
+import {EvaluationDto} from './dto/evaluation.dto';
+import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
+import {Evaluation} from './evaluation.model';
 
 @Injectable()
 export class EvaluationsService {

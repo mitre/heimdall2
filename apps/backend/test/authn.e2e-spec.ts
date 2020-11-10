@@ -1,12 +1,12 @@
-import {INestApplication, ValidationPipe, HttpStatus} from '@nestjs/common';
-import {TestingModule, Test} from '@nestjs/testing';
+import {HttpStatus, INestApplication, ValidationPipe} from '@nestjs/common';
+import {Test, TestingModule} from '@nestjs/testing';
 import request from 'supertest';
 import {AppModule} from './../src/app.module';
 import {DatabaseService} from './../src/database/database.service';
 import {
+  BAD_LOGIN_AUTHENTICATION,
   CREATE_USER_DTO_TEST_OBJ,
-  LOGIN_AUTHENTICATION,
-  BAD_LOGIN_AUTHENTICATION
+  LOGIN_AUTHENTICATION
 } from './constants/users-test.constant';
 
 describe('/authn', () => {

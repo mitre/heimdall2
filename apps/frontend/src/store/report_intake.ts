@@ -2,14 +2,13 @@
  * Reads and parses inspec files
  */
 
-import {parse, context} from 'inspecjs';
-import {Module, VuexModule, getModule, Action} from 'vuex-module-decorators';
 import {InspecDataModule} from '@/store/data_store';
 import Store from '@/store/store';
-import {read_file_async} from '@/utilities/async_util';
 import {Tag} from '@/types/models.ts';
-
+import {read_file_async} from '@/utilities/async_util';
+import {context, parse} from 'inspecjs';
 import {v4 as uuid} from 'uuid';
+import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
 import {FilteredDataModule} from './data_filters';
 
 /** Each FileID corresponds to a unique File in this store */
