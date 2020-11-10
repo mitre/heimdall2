@@ -2939,9 +2939,9 @@
   integrity sha512-G+ITQPXkwTrslfG5L/BksmbLUA0M1iybEsmCWPqzSxsRRhJZimBKJkoMi8fr/CPygPTj4zO5pJH7I2/cm9M7SQ==
 
 "@types/chroma-js@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@types/chroma-js/-/chroma-js-2.1.0.tgz#612ce66f8eeb42e37ee90ce8c6da40d8845dc83c"
-  integrity sha512-2L+sToR0+0m/l8bTRF+Q5WkPuPpNjS2e+Zcs1xr1RRos3PJZHkrUJujZ+fwsKIfxA9NkqDKDhf8zlWCCm+rQhg==
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@types/chroma-js/-/chroma-js-2.1.1.tgz#49023bdf33bd7f739274f590487b5afbaf0c37e2"
+  integrity sha512-xo1Vsq/+xdYibbh1805yk1a2j92EAH4zPPgzcEEUr650svspy74OihCmDv5+p7cElhtn88W0TwQHWbNDJngJ8w==
 
 "@types/color-name@^1.1.1":
   version "1.1.1"
