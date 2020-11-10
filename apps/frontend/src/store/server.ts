@@ -15,6 +15,7 @@ import {IUpdateUser, IUser, IStartupSettings} from '@heimdall/interfaces';
 
 const local_token = new LocalStorageVal<string | null>('auth_token');
 const localUserID = new LocalStorageVal<string | null>('localUserID');
+const localUserRole = new LocalStorageVal<string | null>('localUserRole');
 
 export interface IServerState {
   serverMode: boolean;
@@ -23,6 +24,7 @@ export interface IServerState {
   token: string;
   banner: string;
   userID: string;
+  userRole: string;
   userInfo: IUser;
 }
 
@@ -41,6 +43,8 @@ class Server extends VuexModule implements IServerState {
   token = '';
   /** Our User ID  */
   userID = '';
+  /** Our User Role  */
+  userRole = '';
   /** Provide a sane default for userInfo in order to avoid having to null check it all the time */
   userInfo: IUser = {
     id: -1,
@@ -67,6 +71,18 @@ class Server extends VuexModule implements IServerState {
   SET_USERID(newID: string) {
     localUserID.set(newID);
     this.userID = newID;
+  }
+
+  @Mutation
+  SET_USERROLE(newRole: string) {
+    localUserRole.set(newRole);
+    this.userRole = newRole;
+  }
+
+  @Mutation
+  CLEAR_USERROLE() {
+    localUserRole.clear();
+    this.userRole = '';
   }
 
   @Mutation
@@ -125,11 +141,15 @@ class Server extends VuexModule implements IServerState {
           this.SET_STARTUP_SETTINGS(response.data);
           const token = local_token.get();
           const userID = localUserID.get();
+          const userRole = localUserRole.get();
           if (token !== null) {
             this.SET_TOKEN(token);
           }
           if (userID !== null) {
             this.SET_USERID(userID);
+          }
+          if (userRole !== null) {
+            this.SET_USERID(userRole);
           }
           this.GetUserInfo();
         }
@@ -148,6 +168,7 @@ class Server extends VuexModule implements IServerState {
     return axios.post('/authn/login', userInfo).then(({data}) => {
       this.SET_TOKEN(data.accessToken);
       this.SET_USERID(data.userID);
+      this.SET_USERROLE(data.role);
       this.GetUserInfo();
     });
   }
@@ -163,10 +184,13 @@ class Server extends VuexModule implements IServerState {
 
   @Action({rawError: true})
   public async CheckForUpdate() {
+    if (localUserRole.get() !== 'admin') {
+      return;
+    }
     const newest: string = await axios
       .get(`${this.serverUrl}/updates`)
       .then((response) => response.data.newest);
-    if (newest !== AppInfoModule.version) {
+    if (newest == AppInfoModule.version) {
       SnackbarModule.update(newest);
     }
   }
@@ -190,6 +214,7 @@ class Server extends VuexModule implements IServerState {
   @Action
   public Logout(): void {
     this.CLEAR_USERID();
+    this.CLEAR_USERROLE();
     this.CLEAR_TOKEN();
     location.reload();
   }
