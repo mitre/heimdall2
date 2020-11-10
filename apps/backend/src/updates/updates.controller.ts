@@ -3,7 +3,7 @@ import {UpdatesService} from './updates.service';
 
 @Controller('updates')
 export class UpdatesController {
-  constructor(private usersService: UpdatesService) {}
+  constructor(private readonly usersService: UpdatesService) {}
 
   @Get('')
   async checkUpdates(): Promise<any> {
