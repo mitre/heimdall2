@@ -38,13 +38,14 @@ describe('Registration', () => {
   });
 
   beforeEach(async () => {
-    await databaseService.cleanAll();
-    // Must navigate to appUrl to get permissions to access local storage
-    await page.goto(appUrl);
+    await page.goto(appUrl + '/signup');
+  });
+
+  afterEach(async () => {
     await page.evaluate(() => {
       localStorage.clear();
     });
-    await page.goto(appUrl + '/signup');
+    await databaseService.cleanAll();
   });
 
   describe('Registration Form', () => {
@@ -57,7 +58,7 @@ describe('Registration', () => {
       );
     });
 
-    it.only('rejects passwords that do not match', async () => {
+    it('rejects passwords that do not match', async () => {
       await registrationPage.registerFailure(
         page,
         CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
@@ -74,10 +75,7 @@ describe('Registration', () => {
       await logInPage.dismissToast(page);
       await logInPage.switchToRegister(page);
       await registrationPage.registerFailure(page, CREATE_USER_DTO_TEST_OBJ);
-      await toastVerifier.verifyErrorPresent(
-        page,
-        'An unidentified error has occured'
-      );
+      await toastVerifier.verifyErrorPresent(page, 'Email must be unique');
     });
   });
 
