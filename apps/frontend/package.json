@@ -27,7 +27,7 @@
     "@heimdall/interfaces": "^2.3.2",
     "@types/chroma-js": "^2.1.0",
     "@types/concat-stream": "^1.6.0",
-    "@types/d3": "^5.7.2",
+    "@types/d3": "^6.1.0",
     "@types/diff": "^4.0.2",
     "@types/prismjs": "^1.16.1",
     "@types/uuid": "^8.3.0",
