@@ -10,46 +10,14 @@
           <v-tab href="#tab-code"> Code </v-tab>
 
           <v-tab-item value="tab-test">
-            <v-clamp class="pa-1" autoresize :max-lines="2">
-              <template slot="default">{{ header }}</template>
-              <template slot="after" slot-scope="{toggle, expanded, clamped}">
-                <v-icon
-                  v-if="!expanded && clamped"
-                  fab
-                  right
-                  medium
-                  @click="toggle"
-                >
-                  mdi-plus-box
-                </v-icon>
-                <v-icon v-if="expanded" fab right medium @click="toggle">
-                  mdi-minus-box
-                </v-icon>
-              </template>
-            </v-clamp>
-            <v-spacer />
-            <v-divider />
-            <br />
-            <v-clamp class="pb-2" autoresize :max-lines="2">
-              <template v-if="caveat" slot="before"
-                >{{ caveat }}<v-divider
-              /></template>
-              <template slot="default">{{ main_desc }}</template>
-              <template slot="after" slot-scope="{toggle, expanded, clamped}">
-                <v-icon
-                  v-if="!expanded && clamped"
-                  fab
-                  right
-                  medium
-                  @click="toggle"
-                >
-                  mdi-plus-box
-                </v-icon>
-                <v-icon v-if="expanded" fab right medium @click="toggle">
-                  mdi-minus-box
-                </v-icon>
-              </template>
-            </v-clamp>
+            <div class="pa-4">
+              <div v-if="caveat">
+                {{ caveat }}
+                <v-divider />
+                <br />
+              </div>
+              {{ main_desc }}
+            </div>
             <ControlRowCol
               v-for="(result, index) in control.root.hdf.segments"
               :key="'col' + index"
@@ -94,9 +62,6 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
 
-//@ts-ignore
-import VClamp from 'vue-clamp/dist/vue-clamp.js';
-
 //TODO: add line numbers
 import 'prismjs';
 import 'prismjs/components/prism-makefile.js';
@@ -123,7 +88,6 @@ interface CollapsableElement extends Element {
 @Component({
   components: {
     ControlRowCol,
-    VClamp,
     Prism
   }
 })
@@ -132,8 +96,6 @@ export default class ControlRowDetails extends Vue {
   @Prop({type: Object, required: true})
   readonly control!: context.ContextualizedControl;
 
-  clamped: boolean = false;
-  expanded: boolean = false;
   local_tab: string = 'tab-test';
 
   get cciControlString(): string | null {
@@ -168,23 +130,6 @@ export default class ControlRowDetails extends Vue {
     }
   }
 
-  // Checks if an element has been clamped
-  isClamped(el: CollapsableElement | undefined | null) {
-    if (!el) {
-      return false;
-    }
-    return el.offsetHeight < el.scrollHeight || el.offsetWidth < el.scrollWidth;
-  }
-
-  mounted() {
-    // Wait until nextTick to ensure that element has been rendered and clamping
-    // applied, otherwise it may show up as null or 0.
-    var that = this;
-    this.$nextTick(function () {
-      that.clamped = this.isClamped(this.$refs.desc as CollapsableElement);
-    });
-  }
-
   /** Shown above the description */
   get header(): string {
     let msg_split = this.control.root.hdf.finding_details.split(':');
@@ -194,9 +139,11 @@ export default class ControlRowDetails extends Vue {
       return msg_split[0] + ':';
     }
   }
+
   get caveat(): string | undefined {
     return this.control.hdf.descriptions.caveat;
   }
+
   get details(): Detail[] {
     let c = this.control;
     return [
