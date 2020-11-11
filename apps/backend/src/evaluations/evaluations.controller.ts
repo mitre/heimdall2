@@ -1,18 +1,18 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
   Put,
-  Delete,
-  Param,
-  Body,
   UseGuards
 } from '@nestjs/common';
-import {EvaluationDto} from './dto/evaluation.dto';
+import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {CreateEvaluationDto} from './dto/create-evaluation.dto';
+import {EvaluationDto} from './dto/evaluation.dto';
 import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 import {EvaluationsService} from './evaluations.service';
-import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 
 @Controller('evaluations')
 @UseGuards(JwtAuthGuard)

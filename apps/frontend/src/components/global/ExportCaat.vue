@@ -76,7 +76,9 @@ export default class ExportCaat extends Vue {
         row.push(''); // Repeat Findings
         row.push(''); // Repeat Finding CFACTS Weakness ID
         row.push(fix(control.wraps.title)); // Finding Description
-        row.push(fix(control.wraps.desc)); // Weakness Description
+        // Prepend the caveat to the Weakness Description if there is one
+        let caveat = control.descriptions.caveat ? '(Caveat: ' + fix(control.descriptions.caveat) + ')\n' : '';
+        row.push(caveat + fix(control.wraps.desc)); // Weakness Description
         row.push('Security'); // Control Weakness Type
         row.push('Self-Assessment '); // Source
         row.push(''); //row.push("InSpec"); // Assessment/Audit Company

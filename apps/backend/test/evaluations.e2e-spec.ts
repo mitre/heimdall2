@@ -1,12 +1,12 @@
+import {HttpStatus, INestApplication, ValidationPipe} from '@nestjs/common';
 import {Test, TestingModule} from '@nestjs/testing';
-import {DatabaseService} from './../src/database/database.service';
-import {AppModule} from './../src/app.module';
-import {INestApplication, ValidationPipe, HttpStatus} from '@nestjs/common';
 import request from 'supertest';
+import {AppModule} from './../src/app.module';
+import {DatabaseService} from './../src/database/database.service';
 import {
   EVALUATION_1,
-  UPDATE_EVALUATION,
-  EVALUATION_WITH_TAGS_1
+  EVALUATION_WITH_TAGS_1,
+  UPDATE_EVALUATION
 } from './constants/evaluations-test.constant';
 import {
   CREATE_USER_DTO_TEST_OBJ,

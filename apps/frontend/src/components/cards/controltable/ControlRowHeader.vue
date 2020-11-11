@@ -35,17 +35,7 @@
     </template>
 
     <template #title>
-      <v-clamp class="pa-2 title" autoresize :max-lines="4">
-        <template slot="default">{{ control.data.title }}</template>
-        <template slot="after" slot-scope="{toggle, expanded, clamped}">
-          <v-icon v-if="!expanded && clamped" fab right medium @click="toggle"
-            >mdi-plus-box</v-icon
-          >
-          <v-icon v-if="expanded" fab right medium @click="toggle"
-            >mdi-minus-box</v-icon
-          >
-        </template>
-      </v-clamp>
+      <div class="pa-2 title">{{ control.data.title }}</div>
     </template>
 
     <!-- ID and Tags -->
@@ -84,8 +74,6 @@ import {NIST_DESCRIPTIONS, nist_canon_config} from '@/utilities/nist_util';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 
 import {is_control} from 'inspecjs/dist/nist';
-//@ts-ignore
-import VClamp from 'vue-clamp/dist/vue-clamp.js';
 import {Prop} from 'vue-property-decorator';
 
 interface Tag {
@@ -96,8 +84,7 @@ interface Tag {
 
 @Component({
   components: {
-    ResponsiveRowSwitch,
-    VClamp
+    ResponsiveRowSwitch
   }
 })
 export default class ControlRowHeader extends Vue {

@@ -1,5 +1,5 @@
-import {IsEmail, IsNotEmpty, IsOptional, IsIn, IsString} from 'class-validator';
 import {ICreateUser} from '@heimdall/interfaces';
+import {IsEmail, IsIn, IsNotEmpty, IsOptional, IsString} from 'class-validator';
 
 export class CreateUserDto implements ICreateUser {
   @IsEmail()

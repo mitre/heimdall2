@@ -1,12 +1,12 @@
 import {
-  Table,
-  Model,
-  AutoIncrement,
-  PrimaryKey,
-  DataType,
-  Column,
   AllowNull,
+  AutoIncrement,
+  Column,
   CreatedAt,
+  DataType,
+  Model,
+  PrimaryKey,
+  Table,
   UpdatedAt
 } from 'sequelize-typescript';
 

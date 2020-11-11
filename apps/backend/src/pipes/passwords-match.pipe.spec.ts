@@ -1,11 +1,11 @@
-import {PasswordsMatchPipe} from './passwords-match.pipe';
 import {ArgumentMetadata, BadRequestException} from '@nestjs/common';
 import {
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS,
-  UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
-  UPDATE_USER_DTO_TEST_OBJ
+  UPDATE_USER_DTO_TEST_OBJ,
+  UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS
 } from '../../test/constants/users-test.constant';
+import {PasswordsMatchPipe} from './passwords-match.pipe';
 
 describe('PasswordsMatchPipe', () => {
   let passwordsMatchPipe: PasswordsMatchPipe;

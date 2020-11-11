@@ -2,16 +2,16 @@
  * Counts the severities of controls.
  */
 
-import {Module, VuexModule, getModule} from 'vuex-module-decorators';
 import {
   Filter,
-  filter_cache_key,
   FilteredData,
-  FilteredDataModule
+  FilteredDataModule,
+  filter_cache_key
 } from '@/store/data_filters';
 import Store from '@/store/store';
-import LRUCache from 'lru-cache';
 import {Severity} from 'inspecjs';
+import LRUCache from 'lru-cache';
+import {getModule, Module, VuexModule} from 'vuex-module-decorators';
 
 // The hash that we will generally be working with herein
 type SeverityHash = {[key in Severity]: number};

@@ -1,4 +1,3 @@
-// eslint-disable-next-line unused-imports/no-unused-imports-ts
 import Vue, {VNode} from 'vue';
 
 declare global {

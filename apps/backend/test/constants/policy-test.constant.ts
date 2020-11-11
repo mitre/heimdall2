@@ -1,5 +1,5 @@
-import {PolicyDto} from '../../src/authz/dto/policy.dto';
 import {Policy} from 'src/authz/policy.model';
+import {PolicyDto} from '../../src/authz/dto/policy.dto';
 
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 

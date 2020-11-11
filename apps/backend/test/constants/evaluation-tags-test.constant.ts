@@ -1,7 +1,7 @@
 import {CreateEvaluationTagDto} from '../../src/evaluation-tags/dto/create-evaluation-tag.dto';
-import {EvaluationTag} from '../../src/evaluation-tags/evaluation-tag.model';
 import {EvaluationTagDto} from '../../src/evaluation-tags/dto/evaluation-tag.dto';
 import {UpdateEvaluationTagDto} from '../../src/evaluation-tags/dto/update-evaluation-tag.dto';
+import {EvaluationTag} from '../../src/evaluation-tags/evaluation-tag.model';
 
 /* eslint-disable @typescript-eslint/ban-ts-ignore */
 

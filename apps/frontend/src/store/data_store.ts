@@ -2,16 +2,16 @@
  * Tracks uploaded files, and their parsed contents
  */
 
-import {Module, VuexModule, Mutation, getModule} from 'vuex-module-decorators';
-import {context} from 'inspecjs';
 import {
-  FileID,
   EvaluationFile,
+  FileID,
   ProfileFile,
-  SourcedContextualizedProfile,
-  SourcedContextualizedEvaluation
+  SourcedContextualizedEvaluation,
+  SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
+import {context} from 'inspecjs';
+import {getModule, Module, Mutation, VuexModule} from 'vuex-module-decorators';
 import {FilteredDataModule} from './data_filters';
 
 /** We make some new variant types of the Contextual types, to include their files*/

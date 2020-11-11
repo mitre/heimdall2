@@ -1,5 +1,5 @@
-import STS from 'aws-sdk/clients/sts';
 import S3 from 'aws-sdk/clients/s3';
+import STS from 'aws-sdk/clients/sts';
 import {AWSError} from 'aws-sdk/lib/error';
 import {PromiseResult} from 'aws-sdk/lib/request';
 

@@ -1,5 +1,5 @@
-import {Module, VuexModule, getModule} from 'vuex-module-decorators';
 import Store from '@/store/store';
+import {getModule, Module, VuexModule} from 'vuex-module-decorators';
 
 /** Configure this to match data set in vue.config.ts */
 declare const process: {

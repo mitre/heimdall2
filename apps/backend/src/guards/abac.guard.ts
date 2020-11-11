@@ -1,4 +1,4 @@
-import {Injectable, CanActivate, ExecutionContext} from '@nestjs/common';
+import {CanActivate, ExecutionContext, Injectable} from '@nestjs/common';
 import {AuthzService} from '../authz/authz.service';
 
 @Injectable()

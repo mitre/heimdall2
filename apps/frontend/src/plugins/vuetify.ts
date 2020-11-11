@@ -1,6 +1,6 @@
+import {gen_variants, gen_visibilities} from '@/utilities/color_util';
 import '@mdi/font/css/materialdesignicons.css';
 import Vuetify, {colors} from 'vuetify/lib';
-import {gen_variants, gen_visibilities} from '@/utilities/color_util';
 
 // "Not Applicable" | "Not Reviewed" | "Profile Error";
 const statuses = {

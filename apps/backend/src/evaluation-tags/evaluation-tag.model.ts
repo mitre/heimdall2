@@ -1,13 +1,13 @@
 import {
-  Table,
-  Model,
-  AutoIncrement,
   AllowNull,
-  PrimaryKey,
+  AutoIncrement,
+  BelongsTo,
   Column,
   DataType,
-  BelongsTo,
-  ForeignKey
+  ForeignKey,
+  Model,
+  PrimaryKey,
+  Table
 } from 'sequelize-typescript';
 import {Evaluation} from '../evaluations/evaluation.model';
 
