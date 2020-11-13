@@ -30,12 +30,14 @@ export class Snackbar extends VuexModule {
   @Action
   notify(message: string) {
     this.SET_ERROR(false);
+    this.SET_UPDATE(false);
     this.SET_MESSAGE(message);
     this.SET_VISIBILITY(true);
   }
   @Action
   failure(message: string) {
     this.SET_ERROR(true);
+    this.SET_UPDATE(false);
     this.SET_MESSAGE(message);
     this.SET_VISIBILITY(true);
   }

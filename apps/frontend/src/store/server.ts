@@ -148,7 +148,7 @@ class Server extends VuexModule implements IServerState {
             this.SET_USERID(userID);
           }
           if (userRole !== null) {
-            this.SET_USERID(userRole);
+            this.SET_USERROLE(userRole);
           }
           this.GetUserInfo();
         }
@@ -160,6 +160,15 @@ class Server extends VuexModule implements IServerState {
       .then((_) => {
         this.SET_LOADING(false);
       });
+  }
+  @Action
+  public async checkForUpdate() {
+    const newest = await axios
+      .get('https://api.github.com/repos/mitre/heimdall2/releases/latest')
+      .then(({data}) => data.tag_name.replace('v', ''));
+    if (newest !== AppInfoModule.version) {
+      SnackbarModule.update(newest);
+    }
   }
 
   @Action({rawError: true})
@@ -179,19 +188,6 @@ class Server extends VuexModule implements IServerState {
     passwordConfirmation: string;
   }) {
     return axios.post('/users', userInfo);
-  }
-
-  @Action({rawError: true})
-  public async CheckForUpdate() {
-    if (localUserRole.get() !== 'admin') {
-      return;
-    }
-    const newest: string = await axios
-      .get(`${this.serverUrl}/updates`)
-      .then((response) => response.data.newest);
-    if (newest !== AppInfoModule.version) {
-      SnackbarModule.update(newest);
-    }
   }
 
   public async updateUserInfo(userInfo: IUpdateUser): Promise<IUser> {

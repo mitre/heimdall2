@@ -8,7 +8,6 @@ import {ConfigModule} from './config/config.module';
 import {DatabaseModule} from './database/database.module';
 import {EvaluationTagsModule} from './evaluation-tags/evaluation-tags.module';
 import {EvaluationsModule} from './evaluations/evaluations.module';
-import {UpdatesModule} from './updates/updates.module';
 import {UsersModule} from './users/users.module';
 
 @Module({
@@ -23,8 +22,7 @@ import {UsersModule} from './users/users.module';
     AuthzModule,
     AuthnModule,
     EvaluationTagsModule,
-    EvaluationsModule,
-    UpdatesModule
+    EvaluationsModule
   ]
 })
 export class AppModule {}

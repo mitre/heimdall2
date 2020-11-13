@@ -25,7 +25,7 @@ import {ServerModule} from '@/store/server';
 })
 export default class App extends Vue {
   checkForUpdates() {
-    ServerModule.CheckForUpdate();
+    ServerModule.checkForUpdate();
   }
   mounted() {
     this.checkForUpdates();
