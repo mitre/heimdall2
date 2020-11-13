@@ -1,8 +1,8 @@
+import {AppInfoModule} from '@/store/app_info';
+import {SnackbarModule} from '@/store/snackbar';
 import Store from '@/store/store';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import {IStartupSettings, IUpdateUser, IUser} from '@heimdall/interfaces';
-import {SnackbarModule} from '@/store/snackbar';
-import {AppInfoModule} from '@/store/app_info';
 import axios from 'axios';
 import {
   Action,
