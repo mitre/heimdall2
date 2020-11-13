@@ -190,6 +190,7 @@ class Server extends VuexModule implements IServerState {
     return axios.post('/users', userInfo);
   }
 
+  @Action({rawError: true})
   public async updateUserInfo(userInfo: IUpdateUser): Promise<IUser> {
     return axios
       .put<IUser>(`/users/${this.userID}`, userInfo)
