@@ -31,7 +31,7 @@
 
       <template #severity>
         <ColumnHeader
-          text="Severity"
+          :text="showImpact ? 'Impact' : 'Severity'"
           :sort="sort_severity"
           @input="set_sort('severity', $event)"
         />
@@ -57,6 +57,7 @@
         <ControlRowHeader
           :control="item.control"
           :expanded="expanded.includes(item.key)"
+          :show-impact="showImpact"
           @toggle="toggle(item.key)"
         />
         <ControlRowDetails
@@ -103,6 +104,7 @@ interface ListElt {
 })
 export default class ControlTable extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({type: Boolean, required: true}) readonly showImpact!: boolean;
   // Whether to allow multiple expansions
   single_expand: boolean = true;
 
