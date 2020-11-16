@@ -26,7 +26,9 @@
     <v-col v-if="result.message" cols="12" sm="6" lg="5" class="left">
       <h3 class="pa-2">Result</h3>
       <v-divider />
-      <div class="pa-2 mono text-justify">{{ result.code_desc.trim() }}</div>
+      <div class="pa-2 mono text-justify">
+        {{ result.message.trim() }}
+      </div>
     </v-col>
   </v-row>
 </template>
