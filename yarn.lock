@@ -2377,9 +2377,9 @@
     jsonwebtoken "8.5.1"
 
 "@nestjs/passport@^7.0.0":
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-7.1.1.tgz#8bd167a2e44e03c9462d5c883ba812922f14e312"
-  integrity sha512-thjjnGAkRBGc+AWlWEAi+bCQ0q7wXjCAqEPmWQPfsRLc+TvCm66WFSjjBRCdTlGpq5qS1BN9PUbt5byoT/E/vg==
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-7.1.2.tgz#9179fde27172a1b9a91d46af5ae507d6a9b26b04"
+  integrity sha512-6wqtfaD2AFhJ8zmtWV8irZMGzpRCOgX3JLqmpVTdUoOWVWrDmwKlLnOROpvoqAGwzQD5lLw5rdZQFhIkSvG4Yg==
 
 "@nestjs/platform-express@^7.0.13":
   version "7.5.2"
