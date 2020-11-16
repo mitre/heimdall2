@@ -160,7 +160,10 @@
           <v-col xs-12>
             <v-card elevation="2">
               <v-card-title>Results View Data</v-card-title>
-              <ControlTable :filter="all_filter" />
+              <ControlTable
+                :filter="all_filter"
+                :show-impact="is_result_view"
+              />
             </v-card>
           </v-col>
         </v-row>
@@ -280,9 +283,17 @@ export default class Results extends Vue {
    */
 
   get file_filter(): FileID[] {
-    if (this.current_route_name === 'results')
+    if (this.is_result_view)
       return FilteredDataModule.selected_evaluations;
     else return FilteredDataModule.selected_profiles;
+  }
+
+  /**
+   * Returns true if we're showing results
+   */
+
+  get is_result_view(): boolean {
+    return this.current_route_name === 'results';
   }
 
   // Returns true if no files are uploaded
