@@ -135,10 +135,10 @@ export class UsersService {
       if (
         !(await compare(updateUserDto.currentPassword, user.encryptedPassword))
       ) {
-        throw new ForbiddenException('Incorrect Password');
+        throw new ForbiddenException('Current password is incorrect');
       }
     } catch {
-      throw new ForbiddenException('Incorrect Password');
+      throw new ForbiddenException('Current password is incorrect');
     }
   }
 }
