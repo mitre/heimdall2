@@ -9,9 +9,9 @@ import {
 export class PasswordsMatchPipe implements PipeTransform {
   transform(
     value: {
-      currentPassword: string;
-      password: string;
-      passwordConfirmation: string;
+      currentPassword?: string;
+      password: string | undefined;
+      passwordConfirmation: string | undefined;
     },
     _metadata: ArgumentMetadata
   ): any {
