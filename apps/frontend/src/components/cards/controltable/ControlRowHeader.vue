@@ -19,15 +19,23 @@
 
     <template #severity>
       <v-card-text class="pa-2">
-        <v-icon v-for="i in severity_arrow_count" :key="'sev0' + i" small
-          >mdi-checkbox-blank-circle</v-icon
-        >
-        <v-icon v-for="i in 4 - severity_arrow_count" :key="'sev1' + i" small
-          >mdi-checkbox-blank-circle-outline</v-icon
-        >
-        <br />
-        <v-divider class="mx-1" />
-        {{ control.hdf.severity.toUpperCase() }}
+        <div v-if="showImpact">
+          <CircleRating
+            :filled-count="severity_arrow_count(control.hdf.severity)"
+            :total-count="4"
+          />
+          <v-divider class="mx-1" />
+          {{ (control.hdf.severity || 'none').toUpperCase() }}
+        </div>
+        <div v-else>
+          <CircleRating
+            :filled-count="severity_arrow_count(control.data.tags.severity)"
+            :total-count="4"
+          />
+          <br />
+          <v-divider class="mx-1" />
+          {{ (control.data.tags.severity || 'none').toUpperCase() }}
+        </div>
       </v-card-text>
     </template>
 
@@ -69,6 +77,7 @@ import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSw
 import {context} from 'inspecjs';
 import {NIST_DESCRIPTIONS, nist_canon_config} from '@/utilities/nist_util';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
+import CircleRating from '@/components/generic/CircleRating.vue';
 
 import {is_control} from 'inspecjs/dist/nist';
 import {Prop} from 'vue-property-decorator';
@@ -81,13 +90,15 @@ interface Tag {
 
 @Component({
   components: {
-    ResponsiveRowSwitch
+    ResponsiveRowSwitch,
+    CircleRating
   }
 })
 export default class ControlRowHeader extends Vue {
   @Prop({type: Object, required: true})
   readonly control!: context.ContextualizedControl;
   @Prop({type: Boolean, default: false}) readonly controlExpanded!: boolean;
+  @Prop({type: Boolean, default: false}) readonly showImpact!: boolean;
 
   /** Typed getter for control */
   get _control(): context.ContextualizedControl {
@@ -107,8 +118,8 @@ export default class ControlRowHeader extends Vue {
     return `status${this.control.root.hdf.status.replace(' ', '')}`;
   }
 
-  get severity_arrow_count(): number {
-    switch (this.control.hdf.severity) {
+  severity_arrow_count(severity: string): number {
+    switch (severity) {
       default:
       case 'none':
         return 0;
