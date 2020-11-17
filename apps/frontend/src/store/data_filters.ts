@@ -369,10 +369,10 @@ export function filter_cache_key(f: Filter) {
     new_search = '';
   }
 
-  const new_f: Filter = {
+  const newFilter: Filter = {
     search_term: new_search,
     omit_overlayed_controls: f.omit_overlayed_controls || false,
     ...f
   };
-  return JSON.stringify(new_f);
+  return JSON.stringify(newFilter);
 }

@@ -189,12 +189,10 @@ function extract_top_level_controls(
   exec: context.ContextualizedEvaluation
 ): context.ContextualizedControl[] {
   // Get all controls
-  const all_controls = exec.contains.flatMap((p) => p.contains);
+  const allControls = exec.contains.flatMap((p) => p.contains);
 
   // Filter to controls that aren't overlayed further
-  const top = all_controls.filter(
-    (control) => control.extended_by.length === 0
-  );
+  const top = allControls.filter((control) => control.extended_by.length === 0);
   return top;
 }
 /** An array of contextualized controls with the same ID, sorted by time */
@@ -210,33 +208,33 @@ export class ComparisonContext {
 
   constructor(executions: readonly context.ContextualizedEvaluation[]) {
     // Get all of the "top level" controls from each execution, IE those that actually ran
-    const all_controls = executions.flatMap(extract_top_level_controls);
+    const allControls = executions.flatMap(extract_top_level_controls);
 
     // Organize them by ID
     const matched: ControlSeriesLookup = {};
-    for (const ctrl of all_controls) {
+    for (const ctrl of allControls) {
       const id = ctrl.data.id;
       if (!(id in matched)) {
         matched[id] = [];
       }
     }
-    const sorted_eval: Readonly<
+    const sortedEval: Readonly<
       context.ContextualizedEvaluation[]
     > = sorted_evals(executions);
-    for (const ev of sorted_eval) {
-      const ev_controls_by_id: {
+    for (const ev of sortedEval) {
+      const evControlsById: {
         [k: string]: context.ContextualizedControl;
       } = {};
       for (const prof of ev.contains) {
         for (const ctrl of prof.contains) {
           if (ctrl.root == ctrl) {
-            ev_controls_by_id[ctrl.data.id] = ctrl;
+            evControlsById[ctrl.data.id] = ctrl;
           }
         }
       }
       for (const id of Object.keys(matched)) {
-        if (id in ev_controls_by_id) {
-          matched[id].push(ev_controls_by_id[id]);
+        if (id in evControlsById) {
+          matched[id].push(evControlsById[id]);
         } else {
           matched[id].push(null);
         }

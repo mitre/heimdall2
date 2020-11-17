@@ -15,20 +15,20 @@ const wrapper: Wrapper<Vue> = shallowMount(Compare, {
   propsData: {}
 });
 
-const red_hat_control_count = 247;
-const red_hat_delta = 27;
-const nginx_control_count = 41;
-const nginx_delta = 3;
+const redHatControlCount = 247;
+const redHatDelta = 27;
+const nginxControlCount = 41;
+const nginxDelta = 3;
 
 describe('Compare table data', () => {
   loadSample('NGINX With Failing Tests');
   it('correctly counts controls with 1 file', () => {
-    expect((wrapper.vm as any).control_sets.length).toBe(nginx_control_count);
+    expect((wrapper.vm as any).control_sets.length).toBe(nginxControlCount);
   });
 
   it('does not recount same controls with 2 files', () => {
     loadSample('NGINX With Failing Tests');
-    expect((wrapper.vm as any).control_sets.length).toBe(nginx_control_count);
+    expect((wrapper.vm as any).control_sets.length).toBe(nginxControlCount);
   });
 
   it('does not show any changed between two of the same', () => {
@@ -37,7 +37,7 @@ describe('Compare table data', () => {
 
   it('does not recount same controls with 3 files', () => {
     loadSample('NGINX With Failing Tests');
-    expect((wrapper.vm as any).control_sets.length).toBe(nginx_control_count);
+    expect((wrapper.vm as any).control_sets.length).toBe(nginxControlCount);
   });
 
   it('search works when nothing fits criteria', () => {
@@ -55,17 +55,17 @@ describe('Compare table data', () => {
     (wrapper.vm as any).search_term = '';
     (wrapper.vm as any).checkbox = true;
     loadSample('NGINX Clean Sample');
-    expect((wrapper.vm as any).control_sets.length).toBe(nginx_control_count);
+    expect((wrapper.vm as any).control_sets.length).toBe(nginxControlCount);
   });
 
   it('shows differing delta data when "show only changed"', () => {
-    expect((wrapper.vm as any).show_sets.length).toBe(nginx_delta);
+    expect((wrapper.vm as any).show_sets.length).toBe(nginxDelta);
   });
 
   it('search status works', () => {
     (wrapper.vm as any).checkbox = false;
     (wrapper.vm as any).search_term = 'failed';
-    expect((wrapper.vm as any).show_sets.length).toBe(nginx_delta);
+    expect((wrapper.vm as any).show_sets.length).toBe(nginxDelta);
   });
 
   it('counts every unique control', () => {
@@ -73,19 +73,17 @@ describe('Compare table data', () => {
     (wrapper.vm as any).search_term = '';
     (wrapper.vm as any).checkbox = true;
     expect((wrapper.vm as any).control_sets.length).toBe(
-      nginx_control_count + red_hat_control_count
+      nginxControlCount + redHatControlCount
     );
   });
 
   it('doesnt show data of controls with one instance when "show only changed"', () => {
-    expect((wrapper.vm as any).show_sets.length).toBe(nginx_delta);
+    expect((wrapper.vm as any).show_sets.length).toBe(nginxDelta);
   });
 
   it('shows all delta data of controls with multiple occurances when "show only changed"', () => {
     loadSample('Red Hat Clean Sample');
-    expect((wrapper.vm as any).show_sets.length).toBe(
-      nginx_delta + red_hat_delta
-    );
+    expect((wrapper.vm as any).show_sets.length).toBe(nginxDelta + redHatDelta);
   });
 
   it('ComparisonContext counts status correctly', () => {
@@ -94,11 +92,11 @@ describe('Compare table data', () => {
     let na = 0;
     let nr = 0;
     let pe = 0;
-    const selected_data = FilteredDataModule.evaluations(
+    const selectedData = FilteredDataModule.evaluations(
       FilteredDataModule.selected_file_ids
     );
-    const curr_delta = new ComparisonContext(selected_data);
-    for (const pairing of Object.values(curr_delta.pairings)) {
+    const currDelta = new ComparisonContext(selectedData);
+    for (const pairing of Object.values(currDelta.pairings)) {
       for (const ctrl of pairing) {
         if (ctrl === null) {
           continue;

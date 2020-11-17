@@ -9,9 +9,9 @@ import {
 export class PasswordComplexityPipe implements PipeTransform {
   transform(
     value: {
-      password: string;
-      currentPassword: string;
-      passwordConfirmation: string;
+      password: string | undefined;
+      currentPassword: string | undefined;
+      passwordConfirmation?: string | undefined;
     },
     _metadata: ArgumentMetadata
   ): any {
