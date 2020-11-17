@@ -7,8 +7,14 @@ import {
 
 @Injectable()
 export class PasswordsMatchPipe implements PipeTransform {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  transform(value: any, _metadata: ArgumentMetadata) {
+  transform(
+    value: {
+      currentPassword: string;
+      password: string;
+      passwordConfirmation: string;
+    },
+    _metadata: ArgumentMetadata
+  ): any {
     if (
       value.currentPassword != null &&
       value.password == null &&

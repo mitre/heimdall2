@@ -1,7 +1,12 @@
 import {Page} from 'puppeteer';
 
+interface BasicUser {
+  email: string;
+  password: string;
+}
+
 export class LogInPage {
-  async loginSuccess(page: Page, user: any): Promise<void> {
+  async loginSuccess(page: Page, user: BasicUser): Promise<void> {
     await expect(page).toFillForm('#login_form', {
       email: user.email,
       password: user.password
@@ -12,7 +17,7 @@ export class LogInPage {
     ]);
   }
 
-  async loginFailure(page: Page, user: any): Promise<void> {
+  async loginFailure(page: Page, user: BasicUser): Promise<void> {
     await expect(page).toFillForm('#login_form', {
       email: user.email,
       password: user.password

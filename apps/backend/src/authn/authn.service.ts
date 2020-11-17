@@ -20,7 +20,12 @@ export class AuthnService {
     }
   }
 
-  async login(user: any): Promise<any> {
+  async login(user: {
+    id: number;
+    email: string;
+    role: string;
+    forcePasswordChange: boolean | undefined;
+  }): Promise<{userID: number; accessToken: string}> {
     const payload = {
       email: user.email,
       sub: user.id,

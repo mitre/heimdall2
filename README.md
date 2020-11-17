@@ -202,7 +202,7 @@ Once the above steps are completed it is possible to start heimdall-server using
 
 ### Run tests
 
-    # Frontend + Backend End to End Tests (Expects lerna run build to have been run)
+    # Frontend + Backend End to End Tests (Expects `yarn build` to have been run)
     yarn backend test:ui
     # Run Frontend Vue Tests
     yarn frontend test

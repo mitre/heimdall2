@@ -95,7 +95,7 @@ export class ControlDelta {
   /** Returns the changes in "header" elements of a control. E.g. name, status, etc. */
   get header_changes(): ControlChangeGroup {
     // Init the list
-    let header_changes: ControlChange[] = [];
+    const header_changes: ControlChange[] = [];
 
     // Change in... ID? Theoretically possible!
     header_changes.push(
@@ -137,7 +137,7 @@ export class ControlDelta {
     );
 
     // Make the group and clean it
-    let result = new ControlChangeGroup('Control Details', header_changes);
+    const result = new ControlChangeGroup('Control Details', header_changes);
     result.clean();
     return result;
   }
@@ -146,8 +146,8 @@ export class ControlDelta {
 export function get_eval_start_time(
   ev: ContextualizedEvaluation
 ): string | null {
-  for (let prof of ev.contains) {
-    for (let ctrl of prof.contains) {
+  for (const prof of ev.contains) {
+    for (const ctrl of prof.contains) {
       if (ctrl.hdf.segments!.length) {
         return ctrl.hdf.segments![0].start_time;
       }
@@ -161,8 +161,8 @@ export function sorted_evals(
 ): Readonly<context.ContextualizedEvaluation[]> {
   let evals = [...input_evals];
   evals = evals.sort((a, b) => {
-    let a_date = new Date(get_eval_start_time(a) || 0);
-    let b_date = new Date(get_eval_start_time(b) || 0);
+    const a_date = new Date(get_eval_start_time(a) || 0);
+    const b_date = new Date(get_eval_start_time(b) || 0);
     return a_date.valueOf() - b_date.valueOf();
   });
   return evals;
@@ -173,8 +173,8 @@ export function sorted_eval_files(
 ): Readonly<EvaluationFile[]> {
   let fileArr = [...files];
   fileArr = fileArr.sort((a, b) => {
-    let a_date = new Date(get_eval_start_time(a.evaluation) || 0);
-    let b_date = new Date(get_eval_start_time(b.evaluation) || 0);
+    const a_date = new Date(get_eval_start_time(a.evaluation) || 0);
+    const b_date = new Date(get_eval_start_time(b.evaluation) || 0);
     return a_date.valueOf() - b_date.valueOf();
   });
   return fileArr;
@@ -189,10 +189,12 @@ function extract_top_level_controls(
   exec: context.ContextualizedEvaluation
 ): context.ContextualizedControl[] {
   // Get all controls
-  let all_controls = exec.contains.flatMap((p) => p.contains);
+  const all_controls = exec.contains.flatMap((p) => p.contains);
 
   // Filter to controls that aren't overlayed further
-  let top = all_controls.filter((control) => control.extended_by.length === 0);
+  const top = all_controls.filter(
+    (control) => control.extended_by.length === 0
+  );
   return top;
 }
 /** An array of contextualized controls with the same ID, sorted by time */
@@ -208,31 +210,31 @@ export class ComparisonContext {
 
   constructor(executions: readonly context.ContextualizedEvaluation[]) {
     // Get all of the "top level" controls from each execution, IE those that actually ran
-    let all_controls = executions.flatMap(extract_top_level_controls);
+    const all_controls = executions.flatMap(extract_top_level_controls);
 
     // Organize them by ID
-    let matched: ControlSeriesLookup = {};
-    for (let ctrl of all_controls) {
-      let id = ctrl.data.id;
+    const matched: ControlSeriesLookup = {};
+    for (const ctrl of all_controls) {
+      const id = ctrl.data.id;
       if (!(id in matched)) {
         matched[id] = [];
       }
     }
-    let sorted_eval: Readonly<
+    const sorted_eval: Readonly<
       context.ContextualizedEvaluation[]
     > = sorted_evals(executions);
-    for (let ev of sorted_eval) {
-      let ev_controls_by_id: {
+    for (const ev of sorted_eval) {
+      const ev_controls_by_id: {
         [k: string]: context.ContextualizedControl;
       } = {};
-      for (let prof of ev.contains) {
-        for (let ctrl of prof.contains) {
+      for (const prof of ev.contains) {
+        for (const ctrl of prof.contains) {
           if (ctrl.root == ctrl) {
             ev_controls_by_id[ctrl.data.id] = ctrl;
           }
         }
       }
-      for (let id of Object.keys(matched)) {
+      for (const id of Object.keys(matched)) {
         if (id in ev_controls_by_id) {
           matched[id].push(ev_controls_by_id[id]);
         } else {

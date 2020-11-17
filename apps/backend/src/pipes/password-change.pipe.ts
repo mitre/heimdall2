@@ -8,8 +8,14 @@ import levenshtein = require('js-levenshtein');
 
 @Injectable()
 export class PasswordChangePipe implements PipeTransform {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  transform(value: any, _metadata: ArgumentMetadata) {
+  transform(
+    value: {
+      currentPassword: string;
+      password: string;
+      passwordConfirmation: string;
+    },
+    _metadata: ArgumentMetadata
+  ): any {
     if (value.password == null && value.passwordConfirmation == null) {
       return value;
     } else if (

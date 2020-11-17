@@ -52,10 +52,10 @@ function controls_to_nist_node_data(
 ): TreemapNodeLeaf[] {
   return contextualized_controls.flatMap((cc) => {
     // Get the status color
-    let color = Chroma.hex(colors.colorForStatus(cc.root.hdf.status));
+    const color = Chroma.hex(colors.colorForStatus(cc.root.hdf.status));
     // Now make leaves for each nist control
     return cc.root.hdf.parsed_nist_tags.map((nc) => {
-      let leaf: TreemapNodeLeaf = {
+      const leaf: TreemapNodeLeaf = {
         title: cc.data.id,
         subtitle: cc.data.title || undefined,
         hovertext: cc.data.desc || undefined,
@@ -81,10 +81,10 @@ function recursive_nist_map(
   max_depth: number
 ): TreemapNodeParent {
   // Init child list
-  let children: TreemapNode[] = [];
+  const children: TreemapNode[] = [];
 
   // Make our final value
-  let ret: TreemapNodeParent = {
+  const ret: TreemapNodeParent = {
     key: node.control.raw_text!,
     title: node.control.raw_text!, // TODO: Make this like, suck less. IE give more descriptive stuff
     nist_control: node.control,
@@ -116,13 +116,13 @@ function colorize_tree_map(root: TreemapNodeParent) {
 
   // Now all children should have valid colors
   // We decide this node's color as a composite of all underlying node colors
-  let child_colors = root.children
+  const child_colors = root.children
     .map((c) => c.color)
     .filter((c) => c !== undefined) as Chroma.Color[];
   // If we have any, then set our color
   if (child_colors.length) {
     // Set the color
-    let avg_color = Chroma.average(child_colors);
+    const avg_color = Chroma.average(child_colors);
     root.color = avg_color;
   }
 }
@@ -144,7 +144,7 @@ function populate_tree_map(
 ) {
   // Populate it
   leaves.forEach((leaf) => {
-    let parent = lookup[lookup_key_for(leaf.nist_control, max_depth)];
+    const parent = lookup[lookup_key_for(leaf.nist_control, max_depth)];
     if (parent) {
       // We found a node that will accept it (matches its control)
       // We can do this as because we know we constructed these to only have empty children
@@ -164,9 +164,9 @@ function populate_tree_map(
  */
 function build_populated_nist_map(data: TreemapNodeLeaf[]): TreemapNodeParent {
   // Build our scaffold
-  let lookup: {[key: string]: TreemapNodeParent} = {};
-  let root_children: TreemapNodeParent[] = [];
-  let root: TreemapNodeParent = {
+  const lookup: {[key: string]: TreemapNodeParent} = {};
+  const root_children: TreemapNodeParent[] = [];
+  const root: TreemapNodeParent = {
     key: 'tree_root',
     title: 'NIST-853 Controls',
     children: root_children,
@@ -176,7 +176,7 @@ function build_populated_nist_map(data: TreemapNodeLeaf[]): TreemapNodeParent {
 
   // Fill out children, recursively
   nist.FULL_NIST_HIERARCHY.forEach((n) => {
-    let child = recursive_nist_map(root, n, lookup, MAX_DEPTH);
+    const child = recursive_nist_map(root, n, lookup, MAX_DEPTH);
     root_children.push(child);
   });
 
@@ -200,7 +200,7 @@ function build_populated_nist_map(data: TreemapNodeLeaf[]): TreemapNodeParent {
 function node_data_to_tree_map(
   data: Readonly<TreemapNodeParent>
 ): D3TreemapNode {
-  let ret = d3
+  const ret = d3
     .hierarchy<TreemapNode>(data, (d: TreemapNode) => {
       if (is_parent(d)) {
         return d.children;

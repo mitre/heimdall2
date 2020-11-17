@@ -3,7 +3,8 @@ import {DeleteUserDto} from '../../src/users/dto/delete-user.dto';
 import {UpdateUserDto} from '../../src/users/dto/update-user.dto';
 import {UserDto} from '../../src/users/dto/user.dto';
 import {User} from '../../src/users/user.model';
-/* eslint-disable @typescript-eslint/ban-ts-ignore */
+
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 
 export const ID = 7;
 
@@ -582,4 +583,5 @@ export const USER_DTO_WITHOUT_ORGANIZATION = new UserDto(
 export const USER_DTO_WITHOUT_TITLE = new UserDto(TEST_USER_WITHOUT_TITLE);
 
 export const USER_DTO_ARRAY: UserDto[] = [USER_ONE_DTO, USER_TWO_DTO];
-/* eslint-enable @typescript-eslint/ban-ts-ignore */
+
+/* eslint-enable @typescript-eslint/ban-ts-comment */

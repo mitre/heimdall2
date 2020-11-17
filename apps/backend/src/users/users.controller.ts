@@ -48,7 +48,7 @@ export class UsersController {
       new PasswordComplexityPipe()
     )
     updateUserDto: UpdateUserDto
-  ) {
+  ): Promise<UserDto> {
     return this.usersService.update(id, updateUserDto);
   }
 

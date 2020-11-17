@@ -9,17 +9,16 @@ import Vuetify from 'vuetify';
 import {fileCompliance, loadSample, removeAllFiles} from '../util/testingUtils';
 
 const vuetify = new Vuetify();
-let wrapper: Wrapper<Vue>;
 
-wrapper = shallowMount(Compare, {
+const wrapper: Wrapper<Vue> = shallowMount(Compare, {
   vuetify,
   propsData: {}
 });
 
-let red_hat_control_count = 247;
-let red_hat_delta = 27;
-let nginx_control_count = 41;
-let nginx_delta = 3;
+const red_hat_control_count = 247;
+const red_hat_delta = 27;
+const nginx_control_count = 41;
+const nginx_delta = 3;
 
 describe('Compare table data', () => {
   loadSample('NGINX With Failing Tests');
@@ -95,12 +94,12 @@ describe('Compare table data', () => {
     let na = 0;
     let nr = 0;
     let pe = 0;
-    let selected_data = FilteredDataModule.evaluations(
+    const selected_data = FilteredDataModule.evaluations(
       FilteredDataModule.selected_file_ids
     );
-    let curr_delta = new ComparisonContext(selected_data);
-    for (let pairing of Object.values(curr_delta.pairings)) {
-      for (let ctrl of pairing) {
+    const curr_delta = new ComparisonContext(selected_data);
+    for (const pairing of Object.values(curr_delta.pairings)) {
+      for (const ctrl of pairing) {
         if (ctrl === null) {
           continue;
         } else if (ctrl!.root.hdf.status == 'Passed') {
@@ -116,7 +115,7 @@ describe('Compare table data', () => {
         }
       }
     }
-    let expected = {
+    const expected = {
       Failed: StatusCountModule.hash({
         omit_overlayed_controls: true,
         fromFile: [...FilteredDataModule.selected_file_ids]
@@ -139,7 +138,7 @@ describe('Compare table data', () => {
         fromFile: [...FilteredDataModule.selected_file_ids]
       })['Not Applicable']
     };
-    let actual = {
+    const actual = {
       Failed: failed,
       Passed: passed,
       'From Profile': 0,

@@ -36,7 +36,7 @@ export class InspecData extends VuexModule {
 
   /** Return all of the files that we currently have. */
   get allFiles(): (EvaluationFile | ProfileFile)[] {
-    let result: (EvaluationFile | ProfileFile)[] = [];
+    const result: (EvaluationFile | ProfileFile)[] = [];
     result.push(...this.executionFiles);
     result.push(...this.profileFiles);
     return result;
@@ -61,21 +61,21 @@ export class InspecData extends VuexModule {
     readonly context.ContextualizedControl[]
   ] {
     // Initialize all our arrays
-    let evaluations: SourcedContextualizedEvaluation[] = [];
-    let profiles: context.ContextualizedProfile[] = [];
-    let controls: context.ContextualizedControl[] = [];
+    const evaluations: SourcedContextualizedEvaluation[] = [];
+    const profiles: context.ContextualizedProfile[] = [];
+    const controls: context.ContextualizedControl[] = [];
 
     // Process our data
-    for (let f of this.executionFiles) {
+    for (const f of this.executionFiles) {
       evaluations.push(f.evaluation);
       profiles.push(...f.evaluation.contains);
     }
 
-    for (let f of this.profileFiles) {
+    for (const f of this.profileFiles) {
       profiles.push(f.profile);
     }
 
-    for (let p of profiles) {
+    for (const p of profiles) {
       controls.push(...p.contains);
     }
 
