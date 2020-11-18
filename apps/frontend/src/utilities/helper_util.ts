@@ -14,7 +14,7 @@ export function compare_arrays<T>(
 ) {
   // Compare element-wise
   for (let i = 0; i < a.length && i < b.length; i++) {
-    let x = comparator(a[i], b[i]);
+    const x = comparator(a[i], b[i]);
     if (x) {
       return x;
     }
@@ -46,14 +46,14 @@ export class LocalStorageVal<T> {
   /** Retrieves the currently held item, as resolved by JSON.parse */
   get(): T | null {
     // Fetch the string, failing early if not set
-    let s = window.localStorage.getItem(this.storage_key);
+    const s = window.localStorage.getItem(this.storage_key);
     if (!s) {
       return null;
     }
 
     // Then try parsing. On fail, clear and go null
     try {
-      let v = JSON.parse(s);
+      const v = JSON.parse(s);
       return v;
     } catch (error) {
       this.clear();
@@ -63,7 +63,7 @@ export class LocalStorageVal<T> {
 
   /** Wraps get, providing the provided default if necessary */
   get_default(_default: T): T {
-    let v = this.get();
+    const v = this.get();
     if (v === null) {
       return _default;
     } else {
@@ -73,7 +73,7 @@ export class LocalStorageVal<T> {
 
   /** Sets the local storage value to the given value, stringified */
   set(val: T): void {
-    let nv = JSON.stringify(val);
+    const nv = JSON.stringify(val);
     window.localStorage.setItem(this.storage_key, nv);
   }
 
@@ -91,13 +91,13 @@ export function group_by<T>(
   items: Array<T>,
   key_getter: (v: T) => string
 ): Hash<Array<T>> {
-  let result: Hash<Array<T>> = {};
-  for (let i of items) {
+  const result: Hash<Array<T>> = {};
+  for (const i of items) {
     // Get the items key
-    let key = key_getter(i);
+    const key = key_getter(i);
 
     // Get the list it should go in
-    let corr_list = result[key];
+    const corr_list = result[key];
     if (corr_list) {
       // If list exists, place
       corr_list.push(i);
@@ -114,8 +114,8 @@ export function map_hash<T, G>(
   old: Hash<T>,
   map_function: (v: T) => G
 ): Hash<G> {
-  let result: Hash<G> = {};
-  for (let key in old) {
+  const result: Hash<G> = {};
+  for (const key in old) {
     result[key] = map_function(old[key]);
   }
   return result;
@@ -123,8 +123,8 @@ export function map_hash<T, G>(
 
 /** Converts a simple, single level json dict into uri params */
 export function to_uri_params(params: Hash<string | number | boolean>) {
-  let esc = encodeURIComponent;
-  let query = Object.keys(params)
+  const esc = encodeURIComponent;
+  const query = Object.keys(params)
     .map((k) => esc(k) + '=' + esc(params[k]))
     .join('&');
   return query;

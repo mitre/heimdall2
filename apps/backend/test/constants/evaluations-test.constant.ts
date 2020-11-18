@@ -3,7 +3,7 @@ import {EvaluationDto} from '../../src/evaluations/dto/evaluation.dto';
 import {UpdateEvaluationDto} from '../../src/evaluations/dto/update-evaluation.dto';
 import {Evaluation} from '../../src/evaluations/evaluation.model';
 import {CREATE_EVALUATION_TAG_DTO} from './evaluation-tags-test.constant';
-/* eslint-disable @typescript-eslint/ban-ts-ignore */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 
 const DEFAULT_FILE_NAME = 'example-result.json';
 
@@ -74,4 +74,4 @@ export const EVALUATION: Evaluation = {
   createdAt: new Date(),
   updatedAt: new Date()
 };
-/* eslint-enable @typescript-eslint/ban-ts-ignore */
+/* eslint-enable @typescript-eslint/ban-ts-comment */

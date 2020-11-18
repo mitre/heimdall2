@@ -9,27 +9,26 @@ import Vuetify from 'vuetify';
 import {fileCompliance, loadSample, removeAllFiles} from '../util/testingUtils';
 
 const vuetify = new Vuetify();
-let wrapper: Wrapper<Vue>;
 
-wrapper = shallowMount(Compare, {
+const wrapper: Wrapper<Vue> = shallowMount(Compare, {
   vuetify,
   propsData: {}
 });
 
-let red_hat_control_count = 247;
-let red_hat_delta = 27;
-let nginx_control_count = 41;
-let nginx_delta = 3;
+const redHatControlCount = 247;
+const redHatDelta = 27;
+const nginxControlCount = 41;
+const nginxDelta = 3;
 
 describe('Compare table data', () => {
   loadSample('NGINX With Failing Tests');
   it('correctly counts controls with 1 file', () => {
-    expect((wrapper.vm as any).control_sets.length).toBe(nginx_control_count);
+    expect((wrapper.vm as any).control_sets.length).toBe(nginxControlCount);
   });
 
   it('does not recount same controls with 2 files', () => {
     loadSample('NGINX With Failing Tests');
-    expect((wrapper.vm as any).control_sets.length).toBe(nginx_control_count);
+    expect((wrapper.vm as any).control_sets.length).toBe(nginxControlCount);
   });
 
   it('does not show any changed between two of the same', () => {
@@ -38,7 +37,7 @@ describe('Compare table data', () => {
 
   it('does not recount same controls with 3 files', () => {
     loadSample('NGINX With Failing Tests');
-    expect((wrapper.vm as any).control_sets.length).toBe(nginx_control_count);
+    expect((wrapper.vm as any).control_sets.length).toBe(nginxControlCount);
   });
 
   it('search works when nothing fits criteria', () => {
@@ -56,17 +55,17 @@ describe('Compare table data', () => {
     (wrapper.vm as any).search_term = '';
     (wrapper.vm as any).checkbox = true;
     loadSample('NGINX Clean Sample');
-    expect((wrapper.vm as any).control_sets.length).toBe(nginx_control_count);
+    expect((wrapper.vm as any).control_sets.length).toBe(nginxControlCount);
   });
 
   it('shows differing delta data when "show only changed"', () => {
-    expect((wrapper.vm as any).show_sets.length).toBe(nginx_delta);
+    expect((wrapper.vm as any).show_sets.length).toBe(nginxDelta);
   });
 
   it('search status works', () => {
     (wrapper.vm as any).checkbox = false;
     (wrapper.vm as any).search_term = 'failed';
-    expect((wrapper.vm as any).show_sets.length).toBe(nginx_delta);
+    expect((wrapper.vm as any).show_sets.length).toBe(nginxDelta);
   });
 
   it('counts every unique control', () => {
@@ -74,19 +73,17 @@ describe('Compare table data', () => {
     (wrapper.vm as any).search_term = '';
     (wrapper.vm as any).checkbox = true;
     expect((wrapper.vm as any).control_sets.length).toBe(
-      nginx_control_count + red_hat_control_count
+      nginxControlCount + redHatControlCount
     );
   });
 
   it('doesnt show data of controls with one instance when "show only changed"', () => {
-    expect((wrapper.vm as any).show_sets.length).toBe(nginx_delta);
+    expect((wrapper.vm as any).show_sets.length).toBe(nginxDelta);
   });
 
   it('shows all delta data of controls with multiple occurances when "show only changed"', () => {
     loadSample('Red Hat Clean Sample');
-    expect((wrapper.vm as any).show_sets.length).toBe(
-      nginx_delta + red_hat_delta
-    );
+    expect((wrapper.vm as any).show_sets.length).toBe(nginxDelta + redHatDelta);
   });
 
   it('ComparisonContext counts status correctly', () => {
@@ -95,12 +92,12 @@ describe('Compare table data', () => {
     let na = 0;
     let nr = 0;
     let pe = 0;
-    let selected_data = FilteredDataModule.evaluations(
+    const selectedData = FilteredDataModule.evaluations(
       FilteredDataModule.selected_file_ids
     );
-    let curr_delta = new ComparisonContext(selected_data);
-    for (let pairing of Object.values(curr_delta.pairings)) {
-      for (let ctrl of pairing) {
+    const currDelta = new ComparisonContext(selectedData);
+    for (const pairing of Object.values(currDelta.pairings)) {
+      for (const ctrl of pairing) {
         if (ctrl === null) {
           continue;
         } else if (ctrl!.root.hdf.status == 'Passed') {
@@ -116,7 +113,7 @@ describe('Compare table data', () => {
         }
       }
     }
-    let expected = {
+    const expected = {
       Failed: StatusCountModule.hash({
         omit_overlayed_controls: true,
         fromFile: [...FilteredDataModule.selected_file_ids]
@@ -139,7 +136,7 @@ describe('Compare table data', () => {
         fromFile: [...FilteredDataModule.selected_file_ids]
       })['Not Applicable']
     };
-    let actual = {
+    const actual = {
       Failed: failed,
       Passed: passed,
       'From Profile': 0,

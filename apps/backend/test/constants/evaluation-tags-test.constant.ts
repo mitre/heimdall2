@@ -3,7 +3,7 @@ import {EvaluationTagDto} from '../../src/evaluation-tags/dto/evaluation-tag.dto
 import {UpdateEvaluationTagDto} from '../../src/evaluation-tags/dto/update-evaluation-tag.dto';
 import {EvaluationTag} from '../../src/evaluation-tags/evaluation-tag.model';
 
-/* eslint-disable @typescript-eslint/ban-ts-ignore */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 
 // @ts-ignore
 export const EVALUATION_TAG_1: EvaluationTag = {
@@ -52,4 +52,4 @@ export const UPDATE_EVALUATION_TAG_DTO_MISSING_VALUE: UpdateEvaluationTagDto = {
   key: 'new key string'
 };
 
-/* eslint-enable @typescript-eslint/ban-ts-ignore */
+/* eslint-enable @typescript-eslint/ban-ts-comment */

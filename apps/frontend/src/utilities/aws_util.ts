@@ -45,7 +45,7 @@ export async function fetch_s3_file(
     })
     .promise()
     .then((success) => {
-      let content: string = new TextDecoder('utf-8').decode(
+      const content: string = new TextDecoder('utf-8').decode(
         success.Body! as Uint8Array
       );
       return content;
@@ -94,13 +94,13 @@ export async function get_session_token(
   mfa_info?: MFA_Info
 ): Promise<Auth> {
   // Instanciate STS with our base and secret token
-  let sts = new STS({
+  const sts = new STS({
     accessKeyId: access_token,
     secretAccessKey: secret_key
   });
 
   // Get the user info
-  let wip_info: Partial<AuthInfo> = {};
+  const wip_info: Partial<AuthInfo> = {};
   await sts
     .getCallerIdentity({})
     .promise()
@@ -113,7 +113,7 @@ export async function get_session_token(
     });
 
   // It's built - mark as such
-  let info = wip_info as AuthInfo;
+  const info = wip_info as AuthInfo;
 
   // Make our request to be the role
   let result: Promise<PromiseResult<STS.GetSessionTokenResponse, AWSError>>;
@@ -134,7 +134,7 @@ export async function get_session_token(
 
   // Handle the response. On Success, save the creds. On error, throw that stuff back!
   return result.then((success) => {
-    let creds: AuthCreds = {
+    const creds: AuthCreds = {
       accessKeyId: success.Credentials!.AccessKeyId,
       secretAccessKey: success.Credentials!.SecretAccessKey,
       sessionToken: success.Credentials!.SessionToken
@@ -152,7 +152,7 @@ export async function get_session_token(
  */
 export function transcribe_error(error: AWSError): string {
   // Unpack
-  let {code, message} = error;
+  const {code, message} = error;
 
   // Get what we're supposed to do with it
   switch (code) {

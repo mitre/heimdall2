@@ -19,7 +19,7 @@ export class IntegrationSpecHelper {
   }
 
   // Useful for debugging
-  static async sleep(ms: number) {
+  static async sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
