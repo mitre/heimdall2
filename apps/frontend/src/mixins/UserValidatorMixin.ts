@@ -44,7 +44,6 @@ export default class UserValidatorMixin extends Vue {
 
   get repeatPasswordErrors() {
     const errors: Array<string> = [];
-    console.log(this.$v);
     if (!this.$v.passwordConfirmation.$dirty) {
       return [];
     }

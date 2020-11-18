@@ -121,7 +121,7 @@ import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
 import {IUser, IUpdateUser} from '@heimdall/interfaces';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
-import {required, sameAs, email} from 'vuelidate/lib/validators';
+import {required, email} from 'vuelidate/lib/validators';
 
 @Component({
   mixins: [UserValidatorMixin],
