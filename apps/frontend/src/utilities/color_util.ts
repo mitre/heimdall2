@@ -15,7 +15,7 @@ export function visible_against(color_hex: string): string {
   color = color.set('hsl.h', '+180');
 
   // Now set its luminance to the opposite extreme
-  let lum = color.luminance();
+  const lum = color.luminance();
   if (lum < 0.5) {
     color = color.luminance(0.8);
   } else {
@@ -29,21 +29,21 @@ function lum_sigmoid(t: number, shift: number) {
   // The base sigmoid maps [-infinity, infinity] to [0, 1]
   // return 1/(1+Math.pow(Math.E, -t));
   // First compute inverse sigmoid to find our starting place
-  let logit_t = -Math.log(1 / t - 1);
+  const logit_t = -Math.log(1 / t - 1);
 
   // Then shift in domain and recompute using sigmoid
-  let shifted_logit = logit_t + shift;
-  let shifted_sigmoid = 1 / (1 + Math.pow(Math.E, -shifted_logit));
+  const shifted_logit = logit_t + shift;
+  const shifted_sigmoid = 1 / (1 + Math.pow(Math.E, -shifted_logit));
 
   return shifted_sigmoid;
 }
 
 /** Shifts a colors luminance by the specified amount */
 export function shift(base_color: string, amount: number): string {
-  let c = Chroma.hex(base_color);
-  let base_l = c.luminance();
-  let new_l = lum_sigmoid(base_l, amount);
-  let new_c = c.luminance(new_l);
+  const c = Chroma.hex(base_color);
+  const base_l = c.luminance();
+  const new_l = lum_sigmoid(base_l, amount);
+  const new_c = c.luminance(new_l);
   return new_c.hex();
 }
 
@@ -76,7 +76,7 @@ export function gen_variants(
 export function gen_visibilities(
   colorset: VuetifyParsedThemeItem
 ): VuetifyParsedThemeItem {
-  let c: VuetifyParsedThemeItem = {...colorset};
+  const c: VuetifyParsedThemeItem = {...colorset};
   Object.keys(c).forEach((key) => {
     c[key] = visible_against(c[key]!);
   });

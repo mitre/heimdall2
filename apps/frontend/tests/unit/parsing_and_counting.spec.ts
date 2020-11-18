@@ -11,9 +11,9 @@ const expect = chai.expect;
 
 describe('Parsing', () => {
   it('Report intake can read every raw file in hdf_data', function () {
-    let raw = AllRaw();
+    const raw = AllRaw();
 
-    let promises = Object.values(raw).map((file_result) => {
+    const promises = Object.values(raw).map((file_result) => {
       // Do intake
       return InspecIntakeModule.loadText({
         filename: file_result.name,
@@ -29,7 +29,7 @@ describe('Parsing', () => {
 
   it('Counts statuses correctly', function () {
     // Get the exec files
-    let exec_files = InspecDataModule.executionFiles;
+    const exec_files = InspecDataModule.executionFiles;
 
     // For each, we will filter then count
     exec_files.forEach((file) => {
@@ -39,7 +39,7 @@ describe('Parsing', () => {
       const counts: any = JSON.parse(countFileContent);
 
       // Get the expected counts
-      let expected: ControlStatusHash = {
+      const expected: ControlStatusHash = {
         Failed: counts.failed.total,
         Passed: counts.passed.total,
         'From Profile': 0,

@@ -7,16 +7,26 @@ import {
 
 @Injectable()
 export class PasswordComplexityPipe implements PipeTransform {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  transform(value: any, _metadata: ArgumentMetadata) {
+  transform(
+    value: {
+      password: string | undefined;
+      currentPassword?: string;
+      passwordConfirmation: string | undefined;
+    },
+    _metadata: ArgumentMetadata
+  ): any {
     if (
-      value.currentPassword != null &&
-      value.password == null &&
-      value.passwordConfirmation == null
+      value.currentPassword &&
+      !value.password &&
+      !value.passwordConfirmation
     ) {
       return value;
     }
-    if (this.hasClasses(value.password) && this.noRepeats(value.password)) {
+    if (
+      typeof value.password == 'string' &&
+      this.hasClasses(value.password) &&
+      this.noRepeats(value.password)
+    ) {
       return value;
     } else {
       throw new BadRequestException(

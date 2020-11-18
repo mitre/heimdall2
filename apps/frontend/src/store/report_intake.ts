@@ -88,7 +88,7 @@ export class InspecIntake extends VuexModule {
    */
   @Action({rawError: true})
   async loadFile(options: FileLoadOptions): Promise<FileID> {
-    let read = read_file_async(options.file);
+    const read = read_file_async(options.file);
     return read.then((text) =>
       this.loadText({
         text,
@@ -106,7 +106,7 @@ export class InspecIntake extends VuexModule {
     // Determine what sort of file we (hopefully) have, then add it
     if (result['1_0_ExecJson']) {
       // A bit of chicken and egg here
-      let eval_file = {
+      const eval_file = {
         unique_id: fileID,
         filename: options.filename,
         database_id: options.database_id,
@@ -117,7 +117,7 @@ export class InspecIntake extends VuexModule {
       } as EvaluationFile;
 
       // Fixup the evaluation to be Sourced from a file. Requires a temporary type break
-      let evaluation = (context.contextualizeEvaluation(
+      const evaluation = (context.contextualizeEvaluation(
         result['1_0_ExecJson']
       ) as unknown) as SourcedContextualizedEvaluation;
       evaluation.from_file = eval_file;
@@ -129,13 +129,13 @@ export class InspecIntake extends VuexModule {
       FilteredDataModule.toggle_evaluation(eval_file.unique_id);
     } else if (result['1_0_ProfileJson']) {
       // Handle as profile
-      let profile_file = {
+      const profile_file = {
         unique_id: fileID,
         filename: options.filename
       } as ProfileFile;
 
       // Fixup the evaluation to be Sourced from a file. Requires a temporary type break
-      let profile = (context.contextualizeProfile(
+      const profile = (context.contextualizeProfile(
         result['1_0_ProfileJson']
       ) as unknown) as SourcedContextualizedProfile;
       profile.from_file = profile_file;

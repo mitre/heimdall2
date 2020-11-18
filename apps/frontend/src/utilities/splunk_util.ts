@@ -138,12 +138,12 @@ export class SplunkEndpoint {
    */
   async fetch_execution_list(): Promise<ExecutionMetaInfo[]> {
     // This search lists evaluation headers
-    let get_executions_search =
+    const get_executions_search =
       'spath "meta.subtype" | search "meta.subtype"=header';
 
     return this.hdf_event_search(get_executions_search).then((events) => {
       // Because we only searched for headers, we can assume these to be eval events
-      let eval_events = events as ExecutionPayload[];
+      const eval_events = events as ExecutionPayload[];
 
       // Could perhaps just return e but I'd rather people didn't screw themselves
       return eval_events.map((e) => e.meta);
@@ -154,7 +154,7 @@ export class SplunkEndpoint {
     execution_guid: string
   ): Promise<UnknownPayload[]> {
     // This search, provided a guid, returns all headers for that guid
-    let specific_evaluation = `spath "meta.guid" | search "meta.guid"=${execution_guid}`;
+    const specific_evaluation = `spath "meta.guid" | search "meta.guid"=${execution_guid}`;
     return this.hdf_event_search(specific_evaluation);
   }
 
@@ -182,7 +182,7 @@ export class SplunkEndpoint {
         // Determine what sort of file we (hopefully) have, then add it
         if (result['1_0_ExecJson']) {
           // Handle as exec
-          let execution = result['1_0_ExecJson'];
+          const execution = result['1_0_ExecJson'];
           return execution;
         } else {
           throw SplunkErrorCode.SchemaViolation;
@@ -192,7 +192,7 @@ export class SplunkEndpoint {
 
   /** Creates a proper base64 encoded auth string, using this objects credentials. */
   private get auth_string(): string {
-    let auth_string = basic_auth(this.username, this.password);
+    const auth_string = basic_auth(this.username, this.password);
     return auth_string;
   }
 
@@ -230,7 +230,7 @@ export class SplunkEndpoint {
       })
       .then((text) => {
         // Parse the xml
-        let xml = xml2js(text, {
+        const xml = xml2js(text, {
           compact: true
         }) as ElementCompact;
         return xml.response.sid._text as string;
@@ -251,14 +251,14 @@ export class SplunkEndpoint {
       })
       .then((text) => {
         // Parse the xml
-        let xml = xml2js(text, {
+        const xml = xml2js(text, {
           compact: true
         }) as ElementCompact;
 
         // Get the keys, and find the one with name "dispatchState"
-        let keys = xml.entry.content['s:dict']['s:key'];
+        const keys = xml.entry.content['s:dict']['s:key'];
         let state: string | undefined;
-        for (let k of keys) {
+        for (const k of keys) {
           if (k._attributes.name === 'dispatchState') {
             state = k._text;
           }
@@ -293,7 +293,7 @@ export class SplunkEndpoint {
     /* eslint-disable */
         while (true) {
             /* eslint-enable */
-      let state = await this.check_job(job_id);
+      const state = await this.check_job(job_id);
       if (state.status === 'pending') {
         await delay(interval);
         continue;
@@ -321,13 +321,13 @@ export class SplunkEndpoint {
       .then((data) => {
         // We basically can't, and really shouldn't, do typescript here. Output is 50% guaranteed to be wonk
         // Get all the raws
-        let raws: Array<string> = data['results'].map(
+        const raws: Array<string> = data['results'].map(
           (datum: any) => datum._raw
         );
 
         // Parse to json, and freeze
-        let parsed = [] as UnknownPayload[];
-        for (let v of raws) {
+        const parsed = [] as UnknownPayload[];
+        for (const v of raws) {
           try {
             parsed.push(JSON.parse(v) as UnknownPayload);
           } catch (err) {
@@ -350,9 +350,9 @@ export function consolidate_payloads(
   payloads: UnknownPayload[]
 ): ExecutionPayload[] {
   // Group by exec id
-  let grouped = group_by(payloads, (pl) => pl.meta.guid);
+  const grouped = group_by(payloads, (pl) => pl.meta.guid);
 
-  let built = map_hash(grouped, consolidate_file_payloads);
+  const built = map_hash(grouped, consolidate_file_payloads);
 
   return Object.values(built);
 }
@@ -365,10 +365,10 @@ function consolidate_file_payloads(
 ): ExecutionPayload {
   // In the end we wish to produce a single evaluation EventPayload which in fact contains all data for the guid
   // Group by subtype
-  let subtypes = group_by(file_payloads, (event) => event.meta.subtype);
-  let exec_events = (subtypes['header'] || []) as ExecutionPayload[];
-  let profile_events = (subtypes['profile'] || []) as ProfilePayload[];
-  let control_events = (subtypes['control'] || []) as ControlPayload[];
+  const subtypes = group_by(file_payloads, (event) => event.meta.subtype);
+  const exec_events = (subtypes['header'] || []) as ExecutionPayload[];
+  const profile_events = (subtypes['profile'] || []) as ProfilePayload[];
+  const control_events = (subtypes['control'] || []) as ControlPayload[];
 
   // Verify we only have one exec event
   if (exec_events.length !== 1) {
@@ -378,20 +378,20 @@ function consolidate_file_payloads(
   }
 
   // Pull it out
-  let exec = exec_events[0];
+  const exec = exec_events[0];
 
   // Put all the profiles into the exec
   exec.profiles.push(...profile_events);
 
   // Group controls, and then put them into the profiles
-  let sha_grouped_controls = group_by(
+  const sha_grouped_controls = group_by(
     control_events,
     (ctrl) => ctrl.meta.profile_sha256
   );
-  for (let profile of profile_events) {
+  for (const profile of profile_events) {
     // Get the corresponding controls, and put them into the profile
-    let sha = profile.meta.profile_sha256;
-    let corr_controls = sha_grouped_controls[sha] || [];
+    const sha = profile.meta.profile_sha256;
+    const corr_controls = sha_grouped_controls[sha] || [];
     profile.controls.push(...corr_controls);
   }
 
@@ -427,7 +427,7 @@ export function process_error(
   } else if (r instanceof Response) {
     console.warn('Bad Response');
     // Based on the network code, guess
-    let response = r as Response;
+    const response = r as Response;
     switch (response.status) {
       case 401: // Bad username/password
         return SplunkErrorCode.BadAuth;

@@ -7,11 +7,11 @@ import {IDelta} from './interfaces/delta.interface';
 export class DatabaseService {
   constructor(readonly sequelize: Sequelize) {}
 
-  async closeConnection() {
+  async closeConnection(): Promise<void> {
     await this.sequelize.close();
   }
 
-  async cleanAll() {
+  async cleanAll(): Promise<void> {
     Object.values(this.sequelize.models).forEach((model) => {
       model.destroy({where: {}});
     });

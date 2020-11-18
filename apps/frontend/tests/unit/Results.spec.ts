@@ -38,11 +38,10 @@ const $router = {
   }
 };
 const vuetify = new Vuetify();
-let wrapper: Wrapper<Vue>;
 let profInfoWrapper: Wrapper<Vue>;
 let controlTableWrapper: Wrapper<Vue>;
 
-wrapper = shallowMount(Results, {
+const wrapper: Wrapper<Vue> = shallowMount(Results, {
   vuetify,
   mocks: {
     $router
@@ -91,11 +90,11 @@ describe('Profile Info', () => {
       }
     });
 
-    let actual = [
+    const actual = [
       (profInfoWrapper.vm as any).items[0].name,
       (profInfoWrapper.vm as any).items[1].name
     ];
-    let expected = ['ssh-baseline', 'ssl-baseline'];
+    const expected = ['ssh-baseline', 'ssl-baseline'];
 
     expect(actual).toEqual(expected);
   });
@@ -120,7 +119,7 @@ describe('Profile Info', () => {
   });
 
   it('parent has correct data', () => {
-    let expected: InfoItem[] = [
+    const expected: InfoItem[] = [
       {label: 'Version', text: '0.1.0'},
       {label: 'From file', text: 'Triple Overlay Example'},
       {label: 'Start time', text: '2020-06-01T18:50:31+00:00'},
@@ -137,7 +136,7 @@ describe('Profile Info', () => {
   });
 
   it('children have correct data', () => {
-    let expected: InfoItem[] = [
+    const expected: InfoItem[] = [
       {label: 'Version', text: '0.1.0'},
       {label: 'From file', text: 'Triple Overlay Example'},
       {label: 'Start time', text: '2020-06-01T18:50:31+00:00'},
@@ -172,7 +171,7 @@ describe('Datatable', () => {
         filter: (wrapper.vm as any).all_filter
       }
     });
-    let expected =
+    const expected =
       expectedCount('passed') +
       expectedCount('failed') +
       expectedCount('notReviewed') +

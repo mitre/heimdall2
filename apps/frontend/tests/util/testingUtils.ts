@@ -10,7 +10,7 @@ export function createTestingVue() {}
 
 export function loadSample(sampleName: string) {
   let sample: Sample = {filename: '', data: ''};
-  for (let samp of samples) {
+  for (const samp of samples) {
     if (samp.filename === sampleName) {
       sample = samp;
     }
@@ -25,7 +25,7 @@ export function loadSample(sampleName: string) {
 }
 
 export function loadAll(): void {
-  let data = AllRaw();
+  const data = AllRaw();
   Object.values(data).forEach((file_result) => {
     // Do intake
     InspecIntakeModule.loadText({
@@ -36,8 +36,8 @@ export function loadAll(): void {
 }
 
 export function removeAllFiles(): void {
-  let ids = InspecDataModule.allFiles.map((f) => f.unique_id);
-  for (let id of ids) {
+  const ids = InspecDataModule.allFiles.map((f) => f.unique_id);
+  for (const id of ids) {
     InspecDataModule.removeFile(id);
   }
 }
@@ -52,8 +52,8 @@ export function addElemWithDataAppToBody() {
 
 export function fileCompliance(fileId: string) {
   const filter = {fromFile: [fileId]};
-  let passed = StatusCountModule.countOf(filter, 'Passed');
-  let total =
+  const passed = StatusCountModule.countOf(filter, 'Passed');
+  const total =
     passed +
     StatusCountModule.countOf(filter, 'Failed') +
     StatusCountModule.countOf(filter, 'Profile Error') +
@@ -67,7 +67,7 @@ export function fileCompliance(fileId: string) {
 export function expectedCount(
   status: 'failed' | 'passed' | 'notReviewed' | 'notApplicable' | 'profileError'
 ) {
-  let statuses = {
+  const statuses = {
     failed: 0,
     passed: 0,
     notReviewed: 0,
@@ -78,9 +78,9 @@ export function expectedCount(
   // For each, we will filter then count
   InspecDataModule.executionFiles.forEach((file) => {
     // Get the corresponding count file
-    let count_filename = `tests/hdf_data/counts/${file.filename}.info.counts`;
-    let count_file_content = readFileSync(count_filename, 'utf-8');
-    let counts: any = JSON.parse(count_file_content);
+    const count_filename = `tests/hdf_data/counts/${file.filename}.info.counts`;
+    const count_file_content = readFileSync(count_filename, 'utf-8');
+    const counts: any = JSON.parse(count_file_content);
 
     statuses['failed'] += counts.failed.total;
     statuses['passed'] += counts.passed.total;
