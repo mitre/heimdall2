@@ -32,50 +32,57 @@
               />
             </v-col>
           </v-row>
-          <v-text-field id="email" v-model="userInfo.email" label="Email" />
+          <v-text-field
+            id="email_field"
+            v-model="email"
+            :error-messages="emailErrors"
+            name="email"
+            label="Email"
+            type="text"
+            required
+            @blur="$v.email.$touch()"
+          />
           <v-text-field id="title" v-model="userInfo.title" label="Title" />
           <v-text-field
             id="organization"
             v-model="userInfo.organization"
             label="Organization"
           />
-        </v-form>
-        <v-divider />
-        <v-form name="changePassword">
+          <v-divider />
           <v-text-field
-            id="currentPassword"
+            id="password_field"
+            ref="password"
             v-model="currentPassword"
-            name="currentPassword"
+            :error-messages="currentPasswordErrors"
             type="password"
-            label="Current Password"
+            name="password"
+            label="Please provide your current password to save changes to your profile"
+            @blur="$v.currentPassword.$touch()"
           />
           <v-btn id="toggleChangePassword" @click="changePasswordDialog"
             >Change Password</v-btn
           >
-          <div v-if="changePassword">
+          <div v-show="changePassword">
             <v-text-field
-              id="newPassword"
+              id="new_password_field"
+              ref="newPassword"
               v-model="newPassword"
-              name="newPassword"
+              :error-messages="newPasswordErrors"
               type="password"
+              name="newPassword"
               label="New Password"
-            >
-              <template #progress>
-                <v-progress-linear
-                  :value="passwordStrengthPercent"
-                  :color="passwordStrengthColor"
-                  absolute
-                  height="7"
-                />
-              </template>
-            </v-text-field>
+              @blur="$v.newPassword.$touch()"
+            />
 
             <v-text-field
-              id="passwordConfirmation"
+              id="repeat_password_field"
+              ref="repeatPassword"
               v-model="passwordConfirmation"
-              name="passwordConfirmation"
+              :error-messages="repeatPasswordErrors"
               type="password"
-              label="Confirm Password"
+              name="repeatPassword"
+              label="Repeat Password"
+              @blur="$v.passwordConfirmation.$touch()"
             />
           </div>
         </v-form>
@@ -112,17 +119,38 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
-import {IUser} from '@heimdall/interfaces';
+import {IUser, IUpdateUser} from '@heimdall/interfaces';
+import UserValidatorMixin from '@/mixins/UserValidatorMixin';
+import {required, sameAs, email} from 'vuelidate/lib/validators';
 
-@Component({})
+@Component({
+  mixins: [UserValidatorMixin],
+  validations: {
+    email: {
+      required,
+      email
+    },
+    currentPassword: {
+      required
+    },
+    newPassword: {
+      required
+    },
+    passwordConfirmation: {
+      required
+    }
+  }
+})
+
 export default class UserModal extends Vue {
   dialog: boolean = false;
 
   userInfo: IUser | null = null;
+  email = ServerModule.userInfo.email;
   currentPassword = '';
   changePassword = false;
-  newPassword: string | undefined = undefined;
-  passwordConfirmation: string | undefined = undefined;
+  newPassword = '';
+  passwordConfirmation = '';
 
   mounted() {
     this.userInfo = {...ServerModule.userInfo};
@@ -130,14 +158,21 @@ export default class UserModal extends Vue {
 
   async updateUserInfo(): Promise<void> {
     if (this.userInfo != null) {
-      var updateUserInfo = {
+      var updateUserInfo: IUpdateUser = {
         ...this.userInfo,
-        password: this.newPassword,
-        passwordConfirmation: this.passwordConfirmation,
+        email: this.email,
+        password: undefined,
+        passwordConfirmation: undefined,
         forcePasswordChange: undefined,
         currentPassword: this.currentPassword
       };
-
+      if(this.changePassword){
+        updateUserInfo = {
+          ...updateUserInfo,
+          password: this.newPassword,
+          passwordConfirmation: this.passwordConfirmation,
+        }
+      }
       ServerModule.updateUserInfo(updateUserInfo)
         .then(() => {
           SnackbarModule.notify('User updated successfully.');
@@ -161,15 +196,7 @@ export default class UserModal extends Vue {
   }
 
   changePasswordDialog() {
-    if (!this.changePassword) {
-      this.newPassword = '';
-      this.passwordConfirmation = '';
-      this.changePassword = true;
-    } else {
-      this.newPassword = undefined;
-      this.passwordConfirmation = undefined;
-      this.changePassword = false;
-    }
+    this.changePassword = !this.changePassword
   }
 }
 </script>
