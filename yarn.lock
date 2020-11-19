@@ -9766,9 +9766,9 @@ file-loader@^4.0.0, file-loader@^4.2.0:
     schema-utils "^2.5.0"
 
 file-saver@^2.0.2:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/file-saver/-/file-saver-2.0.4.tgz#44c40e835319c9836a84221b4e255d4bb4cb7bb5"
-  integrity sha512-QqJr2lQUcwRg9QeCSi1nZFSv4Mx7MYL7oZFFWdjihHfChIC/Qk3PSNCn+pz5OF8fQvmvOPDi+8eN5ienicWXiQ==
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/file-saver/-/file-saver-2.0.5.tgz#d61cfe2ce059f414d899e9dd6d4107ee25670c38"
+  integrity sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==
 
 file-type@^3.8.0:
   version "3.9.0"
