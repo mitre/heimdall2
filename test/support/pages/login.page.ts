@@ -1,12 +1,11 @@
-import {CreateUserDto} from "../../../apps/backend/src/users/dto/create-user.dto";
+import {UserDto} from "../../../apps/backend/src/users/dto/user.dto";
 
 export default class RegistrationPage {
   
-  registerSuccess(user: CreateUserDto) {
+  loginSuccess(user: any) {
     cy.get('input[name=email]').type(user.email);
     cy.get('input[name=password]').type(user.password);
-    cy.get('input[name=passwordConfirmation]').type(user.passwordConfirmation);
-    cy.get('#register').click();
+    cy.get('#login_button').click();
   }
 
   // registerFailure() {
