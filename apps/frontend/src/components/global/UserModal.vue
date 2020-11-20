@@ -34,13 +34,13 @@
           </v-row>
           <v-text-field
             id="email_field"
-            v-model="email"
-            :error-messages="emailErrors"
+            v-model="userInfo.email"
+            :error-messages="emailErrors($v.userInfo.email)"
             name="email"
             label="Email"
             type="text"
             required
-            @blur="$v.email.$touch()"
+            @blur="$v.userInfo.email.$touch()"
           />
           <v-text-field id="title" v-model="userInfo.title" label="Title" />
           <v-text-field
@@ -132,9 +132,11 @@ import {required, email} from 'vuelidate/lib/validators';
 @Component({
   mixins: [UserValidatorMixin],
   validations: {
-    email: {
-      required,
-      email
+    userInfo: {
+      email: {
+        required,
+        email
+      }
     },
     currentPassword: {
       required
@@ -150,13 +152,12 @@ import {required, email} from 'vuelidate/lib/validators';
 
 export default class UserModal extends Vue {
   dialog: boolean = false;
+  changePassword: boolean = false;
 
   userInfo: IUser | null = null;
-  email = ServerModule.userInfo.email;
-  currentPassword = '';
-  changePassword = false;
-  newPassword = '';
-  passwordConfirmation = '';
+  currentPassword: string = '';
+  newPassword: string = '';
+  passwordConfirmation: string = '';
 
   mounted() {
     this.userInfo = {...ServerModule.userInfo};
@@ -166,7 +167,6 @@ export default class UserModal extends Vue {
     if (this.userInfo != null) {
       var updateUserInfo: IUpdateUser = {
         ...this.userInfo,
-        email: this.email,
         password: undefined,
         passwordConfirmation: undefined,
         forcePasswordChange: undefined,

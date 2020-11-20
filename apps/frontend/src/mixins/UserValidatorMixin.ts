@@ -6,13 +6,13 @@ import {validationMixin} from 'vuelidate';
   mixins: [validationMixin]
 })
 export default class UserValidatorMixin extends Vue {
-  get emailErrors() {
+  emailErrors(field: ValidationProperties<any>) {
     const errors: Array<string> = [];
-    if (!this.$v.email.$dirty) {
+    if (!field.$dirty) {
       return [];
     }
-    !this.$v.email.required && errors.push('Email is required.');
-    !this.$v.email.email && errors.push('Must be valid email');
+    !field.required && errors.push('Email is required.');
+    !field.email && errors.push('Must be valid email');
     return errors;
   }
 
