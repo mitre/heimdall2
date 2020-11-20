@@ -29,7 +29,9 @@
                     id="password_field"
                     ref="password"
                     v-model="password"
-                    :error-messages="passwordErrors"
+                    :error-messages="
+                      requiredFieldError($v.password, 'Password')
+                    "
                     type="password"
                     name="password"
                     label="Password"

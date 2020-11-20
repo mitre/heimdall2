@@ -53,7 +53,9 @@
             id="password_field"
             ref="password"
             v-model="currentPassword"
-            :error-messages="currentPasswordErrors"
+            :error-messages="
+              requiredFieldError($v.currentPassword, 'Current Password')
+            "
             type="password"
             name="password"
             label="Please provide your current password to save changes to your profile"
@@ -67,7 +69,9 @@
               id="new_password_field"
               ref="newPassword"
               v-model="newPassword"
-              :error-messages="newPasswordErrors"
+              :error-messages="
+                requiredFieldError($v.newPassword, 'New Password')
+              "
               type="password"
               name="newPassword"
               label="New Password"
@@ -78,7 +82,9 @@
               id="repeat_password_field"
               ref="repeatPassword"
               v-model="passwordConfirmation"
-              :error-messages="repeatPasswordErrors"
+              :error-messages="
+                requiredFieldError($v.passwordConfirmation, 'Repeat Password')
+              "
               type="password"
               name="repeatPassword"
               label="Repeat Password"
