@@ -24,32 +24,4 @@ export default class UserValidatorMixin extends Vue {
     !field.required && errors.push(`${name} is required.`);
     return errors;
   }
-
-  get currentPasswordErrors() {
-    const errors: Array<string> = [];
-    if (!this.$v.currentPassword.$dirty) {
-      return [];
-    }
-    !this.$v.currentPassword.required && errors.push('Password is required.');
-    return errors;
-  }
-
-  get newPasswordErrors() {
-    const errors: Array<string> = [];
-    if (!this.$v.newPassword.$dirty) {
-      return [];
-    }
-    !this.$v.newPassword.required && errors.push('New Password is required.');
-    return errors;
-  }
-
-  get repeatPasswordErrors() {
-    const errors: Array<string> = [];
-    if (!this.$v.passwordConfirmation.$dirty) {
-      return [];
-    }
-    !this.$v.passwordConfirmation.required &&
-      errors.push('Repeated password is required.');
-    return errors;
-  }
 }
