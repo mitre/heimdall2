@@ -19956,9 +19956,9 @@ vue-prismjs@~1.2.0:
     prismjs "^1.6.0"
 
 vue-property-decorator@^9.0.0:
-  version "9.0.2"
-  resolved "https://registry.yarnpkg.com/vue-property-decorator/-/vue-property-decorator-9.0.2.tgz#118459d77b4d5613ab2bbccba2edd5d7af685d30"
-  integrity sha512-mxuJHfUGs/3rUyFj2vykDIvYXCUKBrzhemm7mT8dE9QYTbNA/4qVQ5gwhNCIkKyQc8RQIXQ+0jriqinUDuuU9w==
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/vue-property-decorator/-/vue-property-decorator-9.1.0.tgz#6b5b7d9f2833aa03857e443317f03fc74a4a4499"
+  integrity sha512-tc29P2ef1S5ADgjz74ezUAx2CUhBlVE05nQhlGQ/iMv5E6nQRHQT3Jx0hDloksu4tscdKJxuj6kqjyZv9/e5Ug==
 
 vue-resize-directive@^1.2.0:
   version "1.2.0"
