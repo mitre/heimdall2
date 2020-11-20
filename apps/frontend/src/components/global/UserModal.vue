@@ -127,7 +127,7 @@ import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
 import {IUser, IUpdateUser} from '@heimdall/interfaces';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
-import {required, email} from 'vuelidate/lib/validators';
+import {required, email, requiredIf} from 'vuelidate/lib/validators';
 
 @Component({
   mixins: [UserValidatorMixin],
@@ -142,10 +142,10 @@ import {required, email} from 'vuelidate/lib/validators';
       required
     },
     newPassword: {
-      required
+      required: requiredIf('changePassword')
     },
     passwordConfirmation: {
-      required
+      required: requiredIf('changePassword')
     }
   }
 })
@@ -164,7 +164,8 @@ export default class UserModal extends Vue {
   }
 
   async updateUserInfo(): Promise<void> {
-    if (this.userInfo != null) {
+    this.$v.$touch()
+    if (this.userInfo != null && !this.$v.$invalid) {
       var updateUserInfo: IUpdateUser = {
         ...this.userInfo,
         password: undefined,
