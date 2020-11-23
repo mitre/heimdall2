@@ -5,7 +5,7 @@ import LoginPage from '../support/pages/login.page';
 import UploadModal from '../support/components/upload.modal';
 import UserModal from '../support/components/user.modal';
 import UserModalVerifier from '../support/verifiers/user.modal.verifier';
-import {LOGIN_AUTHENTICATION} from '../../apps/backend/test/constants/users-test.constant';
+import {LOGIN_AUTHENTICATION, UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD} from '../../apps/backend/test/constants/users-test.constant';
 
 context('Results', () => {
   // Pages, verifiers, and modules
@@ -28,13 +28,15 @@ context('Results', () => {
   });
 
   describe('User Modal', () => {
-    it('successfully opens and displays the user modal', () => {
+    it('successfully opens and displays the user modal and allows users to change their data', () => {
       // Load first sample (typically "Sonarqube Java Heimdall_tools Sample")
       uploadModal.loadFirstSample();
       // Open the user modal
       userModal.openUserModal();
       // Make sure all the fields exist
       userModalVerifier.verifyFieldsExist();
+      // Change their user data
+      userModal.changeUserData(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD)
     })
   })
 })

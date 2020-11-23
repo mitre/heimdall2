@@ -24,7 +24,12 @@
       <v-list id="dropdownList" class="pt-0 pb-0">
         <UserModal v-if="serverMode" id="userModal">
           <template #clickable="{on}"
-            ><LinkItem key="user" text="User Info" icon="mdi-account" v-on="on"
+            ><LinkItem
+              id="userModal"
+              key="user"
+              text="User Info"
+              icon="mdi-account"
+              v-on="on"
               >My Profile</LinkItem
             >
           </template>

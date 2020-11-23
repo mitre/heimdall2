@@ -21,6 +21,7 @@
               <v-text-field
                 id="firstName"
                 v-model="userInfo.firstName"
+                name="firstName"
                 label="First Name"
               />
             </v-col>
@@ -28,6 +29,7 @@
               <v-text-field
                 id="lastName"
                 v-model="userInfo.lastName"
+                name="lastName"
                 label="Last Name"
               />
             </v-col>
@@ -46,6 +48,7 @@
           <v-text-field
             id="organization"
             v-model="userInfo.organization"
+            name="organization"
             label="Organization"
           />
           <v-divider />
