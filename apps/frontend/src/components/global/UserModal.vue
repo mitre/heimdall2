@@ -7,7 +7,7 @@
     </template>
 
     <v-card>
-      <v-card-title class="headline grey" primary-title
+      <v-card-title id="userModalTitle" class="headline grey" primary-title
         >Update your account information</v-card-title
       >
       <v-card-text v-if="userInfo === null">
@@ -15,7 +15,7 @@
       </v-card-text>
       <v-card-text v-else>
         <br />
-        <v-form>
+        <v-form name="userInfo">
           <v-row>
             <v-col>
               <v-text-field
