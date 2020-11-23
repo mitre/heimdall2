@@ -21,7 +21,7 @@ export interface ISnackbarState {
   name: 'SnackbarModule'
 })
 export class Snackbar extends VuexModule {
-  customText: string | undefined = 'owo';
+  customText: string | undefined = '';
   message = '';
   error = false;
   updateBar = false;
