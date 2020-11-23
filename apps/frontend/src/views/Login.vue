@@ -16,7 +16,7 @@
                   <v-text-field
                     id="email_field"
                     v-model="email"
-                    :error-messages="emailErrors"
+                    :error-messages="emailErrors($v.email)"
                     name="email"
                     label="Email"
                     prepend-icon="mdi-account"
@@ -29,7 +29,9 @@
                     id="password_field"
                     ref="password"
                     v-model="password"
-                    :error-messages="passwordErrors"
+                    :error-messages="
+                      requiredFieldError($v.password, 'Password')
+                    "
                     type="password"
                     name="password"
                     label="Password"

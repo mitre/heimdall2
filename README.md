@@ -136,6 +136,22 @@ This will fetch the latest version of the container, redeploy if a newer version
 
 `docker-compose down` # From the source directory you started from
 
+## API
+
+API usage only works when using Heimdall Enterprise Server (AKA "Server Mode").
+
+Proper API documentation does not exist yet. In the meantime here are quick instructions for uploading evaluations to Heimdall Server.
+
+```sh
+# Create a user (only needs to be done once)
+curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "password", "passwordConfirmation": "password", "role": "user" }' http://localhost:3000/users
+# Log in
+curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "password" }' http://localhost:3000/authn/login
+# The previous command returns a Bearer Token that needs to get placed in the following command
+# Upload evaluation
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer bearertokengoeshere" -d "@/home/example/Desktop/test.json" http://localhost:8000/evaluations
+```
+
 ## For Developers
 
 ### How to Install
@@ -186,7 +202,7 @@ Once the above steps are completed it is possible to start heimdall-server using
 
 ### Run tests
 
-    # Frontend + Backend End to End Tests (Expects lerna run build to have been run)
+    # Frontend + Backend End to End Tests (Expects `yarn build` to have been run)
     yarn backend test:ui
     # Run Frontend Vue Tests
     yarn frontend test

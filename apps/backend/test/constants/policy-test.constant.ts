@@ -1,7 +1,7 @@
 import {Policy} from 'src/authz/policy.model';
 import {PolicyDto} from '../../src/authz/dto/policy.dto';
 
-/* eslint-disable @typescript-eslint/ban-ts-ignore */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 
 export const ADMIN_DELETE_USERS_POLICY_DTO: PolicyDto = {
   role: 'admin',
@@ -48,4 +48,4 @@ export const POLICY_ARRAY: Policy[] = [
   ADMIN_DELETE_USERS_POLICY
 ];
 
-/* eslint-enable @typescript-eslint/ban-ts-ignore */
+/* eslint-enable @typescript-eslint/ban-ts-comment */

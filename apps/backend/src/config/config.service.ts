@@ -70,7 +70,7 @@ export class ConfigService {
     }
   }
 
-  set(key: string, value: string | undefined) {
+  set(key: string, value: string | undefined): void {
     this.envConfig[key] = value;
   }
 

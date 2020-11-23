@@ -75,6 +75,7 @@ describe('Config Service', () => {
       mock({
         '.env-loaded-externally': SIMPLE_ENV_MOCK_FILE
       });
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       require('dotenv').config({path: '.env-loaded-externally'});
     });
 

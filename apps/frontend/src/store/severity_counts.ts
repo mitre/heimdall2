@@ -19,16 +19,16 @@ type SeverityHash = {[key in Severity]: number};
 // Helper function for counting a status in a list of controls
 function count_severities(data: FilteredData, filter: Filter): SeverityHash {
   // Remove the status filter from the control filter
-  let new_filter: Filter = {
+  const new_filter: Filter = {
     status: undefined,
     ...filter
   };
 
   // Get the controls
-  let controls = data.controls(new_filter);
+  const controls = data.controls(new_filter);
 
   // Count 'em out
-  let hash: SeverityHash = {
+  const hash: SeverityHash = {
     none: 0,
     low: 0,
     medium: 0,
@@ -36,7 +36,7 @@ function count_severities(data: FilteredData, filter: Filter): SeverityHash {
     critical: 0
   };
   controls.forEach((c) => {
-    let severity: Severity = c.root.hdf.severity;
+    const severity: Severity = c.root.hdf.severity;
     hash[severity] += 1;
   });
 
@@ -54,18 +54,18 @@ export class SeverityCount extends VuexModule {
   /** Generates a hash mapping each status -> a count of its members */
   get hash(): (filter: Filter) => SeverityHash {
     // Establish our cache and dependency
-    let cache: LRUCache<string, SeverityHash> = new LRUCache(30);
+    const cache: LRUCache<string, SeverityHash> = new LRUCache(30);
 
     return (filter: Filter) => {
-      let id = filter_cache_key(filter);
-      let cached = cache.get(id);
+      const id = filter_cache_key(filter);
+      const cached = cache.get(id);
       // If cache hits, just return
       if (cached !== undefined) {
         return cached;
       }
 
       // Elsewise, generate, cache, then return
-      let result = count_severities(FilteredDataModule, filter);
+      const result = count_severities(FilteredDataModule, filter);
       cache.set(id, result);
       return result;
     };

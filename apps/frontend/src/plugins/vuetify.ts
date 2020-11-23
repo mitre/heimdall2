@@ -24,12 +24,12 @@ const statuses = {
 
 // Get colors generated from base mitre using UtilColorGenerator.
 // These are identical to default vuetify shading, but now we can access them programatically!
-let mitrePrimaryBlue = gen_variants('#005b94');
-let mitrePrimaryGrey = gen_variants('#5f636a');
-let mitreSecondaryGrey = gen_variants('#cfdeea');
-let mitreSecondaryBlue = gen_variants('#00b3dc');
-let darkBackground = gen_variants('#303030');
-let lightBackground = gen_variants('#e0e0e0', 2); // Want more extreme variations
+const mitrePrimaryBlue = gen_variants('#005b94');
+const mitrePrimaryGrey = gen_variants('#5f636a');
+const mitreSecondaryGrey = gen_variants('#cfdeea');
+const mitreSecondaryBlue = gen_variants('#00b3dc');
+const darkBackground = gen_variants('#303030');
+const lightBackground = gen_variants('#e0e0e0', 2); // Want more extreme variations
 
 const branding = {
   mitrePrimaryBlue,
@@ -45,14 +45,14 @@ const branding = {
   mitreCardShadow: '#d6d6d6'
 };
 
-let severities = {
+const severities = {
   severityLow: colors.yellow.base,
   severityMedium: colors.orange.base,
   severityHigh: colors.deepOrange.base,
   severityCritical: colors.red.base
 };
 
-let compliances = {
+const compliances = {
   complianceLow: colors.red.base,
   complianceMedium: colors.yellow.base,
   complianceHigh: colors.green.base

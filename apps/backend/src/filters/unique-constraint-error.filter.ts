@@ -9,7 +9,7 @@ import {UniqueConstraintError, ValidationErrorItem} from 'sequelize';
 
 @Catch(UniqueConstraintError)
 export class UniqueConstraintErrorFilter implements ExceptionFilter {
-  catch(exception: UniqueConstraintError, host: ArgumentsHost) {
+  catch(exception: UniqueConstraintError, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -22,7 +22,7 @@ export class UniqueConstraintErrorFilter implements ExceptionFilter {
     });
   }
 
-  buildMessage(errors: ValidationErrorItem[]): {}[] {
+  buildMessage(errors: ValidationErrorItem[]): string[] {
     const builtErrors: string[] = [];
     errors.forEach((error) => {
       builtErrors.push(error.message);

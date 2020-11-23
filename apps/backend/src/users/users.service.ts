@@ -47,7 +47,7 @@ export class UsersService {
     });
   }
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<UserDto> {
     const user = new User();
     user.email = createUserDto.email;
     user.firstName = createUserDto.firstName || undefined;
@@ -64,7 +64,7 @@ export class UsersService {
     return new UserDto(userData);
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<UserDto> {
     const user = await this.findByPkBang(id);
     await this.testPassword(updateUserDto, user);
     if (updateUserDto.password == null && user.forcePasswordChange) {
@@ -86,7 +86,7 @@ export class UsersService {
     return new UserDto(userData);
   }
 
-  async updateLoginMetadata(user: User) {
+  async updateLoginMetadata(user: User): Promise<void> {
     const id = user.id;
     user.lastLogin = new Date();
     user.loginCount++;
@@ -97,7 +97,7 @@ export class UsersService {
     });
   }
 
-  async remove(id: number, deleteUserDto: DeleteUserDto) {
+  async remove(id: number, deleteUserDto: DeleteUserDto): Promise<UserDto> {
     const user = await this.findByPkBang(id);
     try {
       if (!(await compare(deleteUserDto.password, user.encryptedPassword))) {
@@ -130,15 +130,15 @@ export class UsersService {
     }
   }
 
-  async testPassword(updateUserDto: UpdateUserDto, user: User) {
+  async testPassword(updateUserDto: UpdateUserDto, user: User): Promise<void> {
     try {
       if (
         !(await compare(updateUserDto.currentPassword, user.encryptedPassword))
       ) {
-        throw new ForbiddenException();
+        throw new ForbiddenException('Current password is incorrect');
       }
     } catch {
-      throw new ForbiddenException();
+      throw new ForbiddenException('Current password is incorrect');
     }
   }
 }

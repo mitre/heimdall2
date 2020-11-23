@@ -62,9 +62,9 @@ function contains_term(
   context_control: context.ContextualizedControl,
   term: string
 ): boolean {
-  let as_hdf = context_control.root.hdf;
+  const as_hdf = context_control.root.hdf;
   // Get our (non-null) searchable data
-  let searchables: string[] = [
+  const searchables: string[] = [
     as_hdf.wraps.id,
     as_hdf.wraps.title,
     as_hdf.wraps.code,
@@ -207,7 +207,7 @@ export class FilteredData extends VuexModule {
   ) => readonly context.ContextualizedProfile[] {
     return (files: FileID[]) => {
       // Initialize our list to add valid profiles to
-      let profiles: context.ContextualizedProfile[] = [];
+      const profiles: context.ContextualizedProfile[] = [];
 
       // Filter to those that match our filter. In this case that just means come from the right file id
       InspecDataModule.contextualProfiles.forEach((prof) => {
@@ -217,7 +217,7 @@ export class FilteredData extends VuexModule {
           }
         } else {
           // Its a report; go two levels up to get its file
-          let ev = prof.sourced_from as SourcedContextualizedEvaluation;
+          const ev = prof.sourced_from as SourcedContextualizedEvaluation;
           if (files.includes(ev.from_file.unique_id)) {
             profiles.push(prof);
           }
@@ -282,19 +282,20 @@ export class FilteredData extends VuexModule {
     return (filter: Filter) => {
       // Generate a hash for cache purposes.
       // If the "search_term" string is not null, we don't cache - no need to pollute
-      let id: string = filter_cache_key(filter);
+      const id: string = filter_cache_key(filter);
 
       // Check if we have this cached:
-      let cached = localCache.get(id);
+      const cached = localCache.get(id);
       if (cached !== undefined) {
         return cached;
       }
 
       // First get all of the profiles using the same filter
-      let profiles: readonly context.ContextualizedProfile[];
       let controls: readonly context.ContextualizedControl[];
       // Get profiles
-      profiles = this.profiles(filter.fromFile);
+      const profiles: readonly context.ContextualizedProfile[] = this.profiles(
+        filter.fromFile
+      );
       // And all the controls they contain
       controls = profiles.flatMap((profile) => profile.contains);
 
@@ -326,7 +327,7 @@ export class FilteredData extends VuexModule {
 
       // Filter by search term
       if (filter.search_term !== undefined) {
-        let term = filter.search_term.toLowerCase();
+        const term = filter.search_term.toLowerCase();
 
         // Filter controls to those that contain search term
         controls = controls.filter((c) => contains_term(c, term));
@@ -335,7 +336,7 @@ export class FilteredData extends VuexModule {
       // Filter by nist stuff
       if (filter.tree_filters && filter.tree_filters.length > 0) {
         // Construct a nist control to represent the filter
-        let control = new nist.NistControl(filter.tree_filters);
+        const control = new nist.NistControl(filter.tree_filters);
 
         controls = controls.filter((c) => {
           // Get an hdf version so we have the fixed nist tags
@@ -344,7 +345,7 @@ export class FilteredData extends VuexModule {
       }
 
       // Freeze and save to cache
-      let r = Object.freeze(controls);
+      const r = Object.freeze(controls);
       localCache.set(id, r);
       return r;
     };
@@ -368,10 +369,10 @@ export function filter_cache_key(f: Filter) {
     new_search = '';
   }
 
-  let new_f: Filter = {
+  const newFilter: Filter = {
     search_term: new_search,
     omit_overlayed_controls: f.omit_overlayed_controls || false,
     ...f
   };
-  return JSON.stringify(new_f);
+  return JSON.stringify(newFilter);
 }

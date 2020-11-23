@@ -29,16 +29,16 @@ export type StatusHash = ControlStatusHash & {
 // Helper function for counting a status in a list of controls
 function count_statuses(data: FilteredData, filter: Filter): StatusHash {
   // Remove the status filter from the control filter
-  let new_filter: Filter = {
+  const new_filter: Filter = {
     status: undefined,
     ...filter
   };
 
   // Get the controls
-  let controls = data.controls(new_filter);
+  const controls = data.controls(new_filter);
 
   // Count 'em out
-  let hash: StatusHash = {
+  const hash: StatusHash = {
     Failed: 0,
     'From Profile': 0,
     'Not Applicable': 0,
@@ -56,7 +56,7 @@ function count_statuses(data: FilteredData, filter: Filter): StatusHash {
   };
   controls.forEach((c) => {
     c = c.root;
-    let status: ControlStatus = c.hdf.status;
+    const status: ControlStatus = c.hdf.status;
     hash[status] += 1;
     hash.TotalTests += (c.hdf.segments || []).length;
     if (status == 'Passed') {
@@ -92,18 +92,18 @@ export class StatusCount extends VuexModule {
   /** Generates a hash mapping each status -> a count of its members */
   get hash(): (filter: Filter) => StatusHash {
     // Establish our cache and dependency
-    let cache: LRUCache<string, StatusHash> = new LRUCache(30);
+    const cache: LRUCache<string, StatusHash> = new LRUCache(30);
 
     return (filter: Filter) => {
-      let id = filter_cache_key(filter);
-      let cached = cache.get(id);
+      const id = filter_cache_key(filter);
+      const cached = cache.get(id);
       // If cache hits, just return
       if (cached !== undefined) {
         return cached;
       }
 
       // Elsewise, generate, cache, then return
-      let result = count_statuses(FilteredDataModule, filter);
+      const result = count_statuses(FilteredDataModule, filter);
       cache.set(id, result);
       return result;
     };

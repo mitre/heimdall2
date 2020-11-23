@@ -13,65 +13,22 @@
         </v-btn>
       </v-layout>
     </v-col>
-    <v-col v-if="!result.message" cols="12" sm="12" lg="10" class="right">
+    <v-col
+      cols="12"
+      :sm="result.message ? 6 : 12"
+      :lg="result.message ? 5 : 10"
+      :class="result.message ? 'left' : 'right'"
+    >
       <h3 class="pa-2">Test</h3>
       <v-divider />
-      <v-clamp
-        class="pa-2 mono text-justify"
-        autoresize
-        :max-lines="2"
-        :expanded.sync="expanded"
-      >
-        <template slot="default">{{ result.code_desc.trim() }}</template>
-        <template slot="after" slot-scope="{toggle, expanded, clamped}">
-          <v-icon v-if="!expanded && clamped" fab right medium @click="toggle"
-            >mdi-plus-box</v-icon
-          >
-          <v-icon v-if="expanded" fab right medium @click="toggle"
-            >mdi-minus-box</v-icon
-          >
-        </template>
-      </v-clamp>
-    </v-col>
-    <v-col v-else sm="6" lg="5" cols="12" class="left">
-      <h3 class="pa-2">Test</h3>
-      <v-divider />
-      <v-clamp
-        class="pa-2 mono preserve-whitespace text-justify"
-        autoresize
-        :max-lines="2"
-        :expanded.sync="expanded"
-      >
-        <template slot="default">{{ result.code_desc.trim() }}</template>
-        <template slot="after" slot-scope="{toggle, expanded, clamped}">
-          <v-icon v-if="!expanded && clamped" fab right medium @click="toggle"
-            >mdi-plus-box</v-icon
-          >
-          <v-icon v-if="expanded" fab right medium @click="toggle"
-            >mdi-minus-box</v-icon
-          >
-        </template>
-      </v-clamp>
+      <div class="pa-2 mono text-justify">{{ result.code_desc.trim() }}</div>
     </v-col>
     <v-col v-if="result.message" cols="12" sm="6" lg="5" class="left">
       <h3 class="pa-2">Result</h3>
       <v-divider />
-      <v-clamp
-        class="pa-2 mono preserve-whitespace text-justify"
-        autoresize
-        :max-lines="2"
-        :expanded.sync="expanded"
-      >
-        <template slot="default">{{ result.message.trim() }}</template>
-        <template slot="after" slot-scope="{toggle, expanded, clamped}">
-          <v-icon v-if="!expanded && clamped" fab right medium @click="toggle"
-            >mdi-plus-box</v-icon
-          >
-          <v-icon v-if="expanded" fab right medium @click="toggle"
-            >mdi-minus-box</v-icon
-          >
-        </template>
-      </v-clamp>
+      <div class="pa-2 mono text-justify">
+        {{ result.message.trim() }}
+      </div>
     </v-col>
   </v-row>
 </template>
@@ -80,8 +37,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-//@ts-ignore
-import VClamp from 'vue-clamp/dist/vue-clamp.js';
 import {Prop} from 'vue-property-decorator';
 import {HDFControlSegment} from 'inspecjs';
 
@@ -91,16 +46,11 @@ interface CollapsableElement extends Element {
 }
 
 @Component({
-  components: {
-    VClamp
-  }
+  components: {}
 })
 export default class ControlRowCol extends Vue {
   @Prop({type: String, required: true}) readonly statusCode!: string;
   @Prop({type: Object, required: true}) readonly result!: HDFControlSegment;
-
-  expanded: boolean = false;
-  clamp: boolean = false;
 
   get status_color(): string {
     // maps stuff like "not applicable" -> "statusnotapplicable", which is a defined color name
