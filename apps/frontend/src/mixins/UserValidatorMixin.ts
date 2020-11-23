@@ -1,26 +1,27 @@
 import {Component, Vue} from 'vue-property-decorator';
+import {ValidationProperties} from 'vue/types/vue';
 import {validationMixin} from 'vuelidate';
 
 @Component({
   mixins: [validationMixin]
 })
 export default class UserValidatorMixin extends Vue {
-  get emailErrors() {
+  emailErrors(field: ValidationProperties<any>) {
     const errors: Array<string> = [];
-    if (!this.$v.email.$dirty) {
+    if (!field.$dirty) {
       return [];
     }
-    !this.$v.email.required && errors.push('Email is required.');
-    !this.$v.email.email && errors.push('Must be valid email');
+    !field.required && errors.push('Email is required.');
+    !field.email && errors.push('Must be valid email');
     return errors;
   }
 
-  get passwordErrors() {
+  requiredFieldError(field: ValidationProperties<any>, name: string) {
     const errors: Array<string> = [];
-    if (!this.$v.password.$dirty) {
+    if (!field.$dirty) {
       return [];
     }
-    !this.$v.password.required && errors.push('Password is required.');
+    !field.required && errors.push(`${name} is required.`);
     return errors;
   }
 }
