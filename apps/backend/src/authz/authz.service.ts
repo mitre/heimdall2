@@ -33,7 +33,7 @@ export class AuthzService {
     action: string,
     resource: string
   ): Promise<boolean> {
-    if (subject.role == 'admin') {
+    if (subject.role === 'admin') {
       return true;
     }
     resource = resource.split('/')[1];

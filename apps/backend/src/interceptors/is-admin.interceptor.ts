@@ -9,7 +9,7 @@ import {UsersService} from '../users/users.service';
 
 @Injectable()
 export class IsAdminInterceptor implements NestInterceptor {
-  constructor(private usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   async intercept(
     context: ExecutionContext,

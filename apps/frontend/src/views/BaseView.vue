@@ -38,7 +38,6 @@ import Topbar from '@/components/global/Topbar.vue';
 import UpdateNotification from '@/components/global/UpdateNotification.vue';
 import {Prop} from 'vue-property-decorator';
 import {SidebarModule} from '@/store/sidebar_state';
-import {mapGetters} from 'vuex';
 
 @Component({
   components: {

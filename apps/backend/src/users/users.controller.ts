@@ -59,7 +59,7 @@ export class UsersController {
     )
     updateUserDto: UpdateUserDto
   ): Promise<UserDto> {
-    return this.usersService.update(id, updateUserDto, role == 'admin');
+    return this.usersService.update(id, updateUserDto, role === 'admin');
   }
 
   @UseGuards(JwtAuthGuard, AbacGuard)
@@ -70,6 +70,6 @@ export class UsersController {
     @Param('id') id: number,
     @Body() deleteUserDto: DeleteUserDto
   ): Promise<UserDto> {
-    return this.usersService.remove(id, deleteUserDto, role == 'admin');
+    return this.usersService.remove(id, deleteUserDto, role === 'admin');
   }
 }
