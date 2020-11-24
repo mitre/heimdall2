@@ -159,20 +159,30 @@ class Server extends VuexModule implements IServerState {
   }
 
   @Action({rawError: true})
-  public async updateUserInfo(userInfo: IUpdateUser): Promise<IUser> {
-    return axios
-      .put<IUser>(`/users/${this.userID}`, userInfo)
-      .then(({data}) => {
+  public async updateUserInfo(user: {
+    id: number;
+    info: IUpdateUser;
+  }): Promise<IUser> {
+    return axios.put<IUser>(`/users/${user.id}`, user.info).then(({data}) => {
+      if (this.userInfo.id === data.id) {
         this.SET_USER_INFO(data);
-        return data;
-      });
+      }
+      return data;
+    });
   }
 
   @Action({rawError: true})
-  public GetUserInfo(): void {
-    axios
-      .get<IUser>(`/users/${this.userID}`)
-      .then(({data}) => this.SET_USER_INFO(data));
+  public async GetUserInfo(): Promise<void> {
+    if (this.userID) {
+      axios
+        .get<IUser>(`/users/${this.userID}`)
+        .then(({data}) => this.SET_USER_INFO(data))
+        .catch(() =>
+          // If an error occurs fetching the users profile
+          // then clear their token and refresh the page
+          this.Logout()
+        );
+    }
   }
 
   @Action

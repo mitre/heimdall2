@@ -8,5 +8,5 @@ export interface IUpdateUser {
   readonly password: string | undefined;
   readonly passwordConfirmation: string | undefined;
   readonly forcePasswordChange: boolean | undefined;
-  readonly currentPassword: string;
+  readonly currentPassword?: string;
 }

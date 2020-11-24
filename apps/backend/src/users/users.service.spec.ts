@@ -346,13 +346,27 @@ describe('UsersService', () => {
       );
     });
 
+    it('should update a user without matching password when admin', async () => {
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const updateUser = await usersService.update(
+        user.id,
+        UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD,
+        true
+      );
+
+      expect(updateUser.updatedAt.valueOf()).not.toEqual(
+        user.updatedAt.valueOf()
+      );
+    });
+
     it('should throw an error when the password is invalid', async () => {
       expect.assertions(1);
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       await expect(
         usersService.update(
           user.id,
-          UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD
+          UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD,
+          false
         )
       ).rejects.toThrow(ForbiddenException);
     });
@@ -361,7 +375,11 @@ describe('UsersService', () => {
       expect.assertions(1);
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       await expect(
-        usersService.update(user.id, UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL)
+        usersService.update(
+          user.id,
+          UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL,
+          false
+        )
       ).rejects.toThrow('Validation error: Validation isEmail on email failed');
     });
 
@@ -370,12 +388,14 @@ describe('UsersService', () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       await usersService.update(
         user.id,
-        UPDATE_USER_DTO_SETUP_FORCE_PASSWORD_CHANGE
+        UPDATE_USER_DTO_SETUP_FORCE_PASSWORD_CHANGE,
+        false
       );
       await expect(
         usersService.update(
           user.id,
-          UPDATE_USER_DTO_TEST_WITHOUT_FORCE_PASSWORD_CHANGE
+          UPDATE_USER_DTO_TEST_WITHOUT_FORCE_PASSWORD_CHANGE,
+          false
         )
       ).rejects.toThrow(BadRequestException);
     });
@@ -402,7 +422,7 @@ describe('UsersService', () => {
     it('should throw an error when user does not exist', async () => {
       expect.assertions(1);
       await expect(
-        usersService.remove(1, DELETE_USER_DTO_TEST_OBJ)
+        usersService.remove(1, DELETE_USER_DTO_TEST_OBJ, false)
       ).rejects.toThrow(NotFoundException);
     });
 
@@ -410,7 +430,7 @@ describe('UsersService', () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       expect.assertions(1);
       await expect(
-        usersService.remove(user.id, DELETE_FAILURE_USER_DTO_TEST_OBJ)
+        usersService.remove(user.id, DELETE_FAILURE_USER_DTO_TEST_OBJ, false)
       ).rejects.toThrow(ForbiddenException);
     });
 
@@ -421,7 +441,8 @@ describe('UsersService', () => {
       await expect(
         usersService.remove(
           user.id,
-          DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD
+          DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD,
+          false
         )
       ).rejects.toThrow(ForbiddenException);
     });
@@ -430,7 +451,8 @@ describe('UsersService', () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const removedUser = await usersService.remove(
         user.id,
-        DELETE_USER_DTO_TEST_OBJ
+        DELETE_USER_DTO_TEST_OBJ,
+        false
       );
       expect.assertions(7);
       expect(removedUser.email).toEqual(user.email);
@@ -443,6 +465,25 @@ describe('UsersService', () => {
         NotFoundException
       );
     });
+  });
+
+  it('should delete a user without matching password when admin', async () => {
+    const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+    const removedUser = await usersService.remove(
+      user.id,
+      DELETE_USER_DTO_TEST_OBJ,
+      true
+    );
+    expect.assertions(7);
+    expect(removedUser.email).toEqual(user.email);
+    expect(removedUser.firstName).toEqual(user.firstName);
+    expect(removedUser.lastName).toEqual(user.lastName);
+    expect(removedUser.organization).toEqual(user.organization);
+    expect(removedUser.title).toEqual(user.title);
+    expect(removedUser.role).toEqual(user.role);
+    await expect(usersService.findByEmail(user.email)).rejects.toThrow(
+      NotFoundException
+    );
   });
 
   afterAll(async () => {

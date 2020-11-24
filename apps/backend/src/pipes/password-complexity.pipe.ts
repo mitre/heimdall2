@@ -10,16 +10,11 @@ export class PasswordComplexityPipe implements PipeTransform {
   transform(
     value: {
       password: string | undefined;
-      currentPassword?: string;
       passwordConfirmation: string | undefined;
     },
     _metadata: ArgumentMetadata
   ): any {
-    if (
-      value.currentPassword &&
-      !value.password &&
-      !value.passwordConfirmation
-    ) {
+    if (!value.password && !value.passwordConfirmation) {
       return value;
     }
     if (

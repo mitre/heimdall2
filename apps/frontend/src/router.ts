@@ -1,5 +1,6 @@
 import {AppInfoModule} from '@/store/app_info';
 import {ServerModule} from '@/store/server';
+import Admin from '@/views/Admin.vue';
 import Compare from '@/views/Compare.vue';
 import Landing from '@/views/Landing.vue';
 import Login from '@/views/Login.vue';
@@ -41,6 +42,12 @@ const router = new Router({
       path: '/signup',
       name: 'signup',
       component: Signup
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: Admin,
+      meta: {requiresAuth: true}
     },
     {
       path: '*',

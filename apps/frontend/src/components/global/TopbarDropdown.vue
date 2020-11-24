@@ -22,13 +22,31 @@
         </div>
       </template>
       <v-list id="dropdownList" class="pt-0 pb-0">
-        <UserModal v-if="serverMode" id="userModal">
-          <template #clickable="{on}"
-            ><LinkItem key="user" text="User Info" icon="mdi-account" v-on="on"
-              >My Profile</LinkItem
+        <div v-if="serverMode">
+          <div v-if="isAdmin">
+            <LinkItem
+              key="admin"
+              text="Admin Panel"
+              icon="mdi-shield-account"
+              link="admin"
+              >Admin Panel</LinkItem
             >
-          </template>
-        </UserModal>
+            <v-divider />
+          </div>
+          <UserModal id="userModal" :user="userInfo">
+            <template #clickable="{on}"
+              ><LinkItem
+                key="user"
+                text="User Info"
+                icon="mdi-account"
+                v-on="on"
+                >My Profile</LinkItem
+              >
+            </template>
+          </UserModal>
+          <LogoutButton />
+          <v-divider />
+        </div>
         <HelpModal>
           <template #clickable="{on}">
             <LinkItem
@@ -53,7 +71,6 @@
             >
           </template>
         </AboutModal>
-        <LogoutButton />
       </v-list>
     </v-menu>
   </div>
@@ -69,6 +86,7 @@ import ServerMixin from '@/mixins/ServerMixin';
 import {ServerModule} from '@/store/server';
 
 import Component, {mixins} from 'vue-class-component';
+import {IUser} from '@heimdall/interfaces';
 
 @Component({
   components: {
@@ -80,15 +98,23 @@ import Component, {mixins} from 'vue-class-component';
   }
 })
 export default class TopbarDropdown extends mixins(ServerMixin) {
+  get userInfo(): IUser {
+    return ServerModule.userInfo;
+  }
+
   get userInitials(): string {
-    if (ServerModule.userInfo.firstName && ServerModule.userInfo.lastName) {
+    if (this.userInfo.firstName && this.userInfo.lastName) {
       return (
-        ServerModule.userInfo.firstName.charAt(0) +
-        ServerModule.userInfo.lastName.charAt(0)
+        this.userInfo.firstName.charAt(0) +
+        this.userInfo.lastName.charAt(0)
       );
     } else {
-      return ServerModule.userInfo.email.substring(0, 2);
+      return this.userInfo.email.substring(0, 2);
     }
+  }
+
+  get isAdmin(): boolean {
+    return ServerModule.userInfo.role === 'admin';
   }
 }
 </script>
