@@ -147,7 +147,7 @@ class Server extends VuexModule implements IServerState {
   public async checkForUpdate() {
     // Only if we're running in lite mode or are admin
     console.log('hit');
-    if (!this.serverMode || this.userInfo.role == 'admin') {
+    if (!this.serverMode || this.userInfo.role === 'admin') {
       const tempBearer = axios.defaults.headers.common['Authorization'];
       axios.defaults.headers.common['Authorization'] = '';
       // Get newest release
