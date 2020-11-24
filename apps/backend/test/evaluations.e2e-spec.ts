@@ -12,6 +12,7 @@ import {
   CREATE_USER_DTO_TEST_OBJ,
   LOGIN_AUTHENTICATION
 } from './constants/users-test.constant';
+import {login, register} from './helpers/users.helper';
 
 describe('/evaluations', () => {
   let app: INestApplication;
@@ -81,18 +82,11 @@ describe('/evaluations', () => {
     let jwtToken: string;
 
     beforeEach(async () => {
-      await request(app.getHttpServer())
-        .post('/users')
-        .set('Content-Type', 'application/json')
-        .send(CREATE_USER_DTO_TEST_OBJ);
+      await register(app, CREATE_USER_DTO_TEST_OBJ);
 
-      await request(app.getHttpServer())
-        .post('/authn/login')
-        .set('Content-Type', 'application/json')
-        .send(LOGIN_AUTHENTICATION)
-        .then((response) => {
-          jwtToken = response.body.accessToken;
-        });
+      await login(app, LOGIN_AUTHENTICATION).then((response) => {
+        jwtToken = response.body.accessToken;
+      });
     });
 
     describe('Create', () => {

@@ -28,9 +28,11 @@ import {
   UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD,
   UPDATE_USER_DTO_TEST_WITH_NOT_COMPLEX_PASSWORD,
   UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
+  UPDATE_USER_DTO_WITH_ADMIN_ROLE,
   UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD,
   UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD
 } from './constants/users-test.constant';
+import {destroy, login, register, update} from './helpers/users.helper';
 
 describe('/users', () => {
   let app: INestApplication;
@@ -63,19 +65,26 @@ describe('/users', () => {
       await databaseService.cleanAll();
     });
 
+    it('should return 400 if a user tries to register as an admin', async () => {
+      await register(app, CREATE_ADMIN_DTO)
+        .expect(HttpStatus.BAD_REQUEST)
+        .then((response) => {
+          expect(response.body.message[0]).toEqual(
+            'role must be one of the following values: user'
+          );
+        });
+    });
+
     it('should return 201 status when user is created', async () => {
-      await request(app.getHttpServer())
-        .post('/users')
-        .set('Content-Type', 'application/json')
-        .send(CREATE_USER_DTO_TEST_OBJ)
+      await register(app, CREATE_USER_DTO_TEST_OBJ)
         .expect(HttpStatus.CREATED)
         .then((response) => {
           const createdAt = response.body.createdAt.valueOf();
           const updatedAt = response.body.updatedAt.valueOf();
-          // User should have been created within the last minuted
+          // User should have been created within the last minute
           const createdWithinOneMinute =
             new Date().getTime() - new Date(createdAt).getTime();
-          // User should have been updated within the last minuted
+          // User should have been updated within the last minute
           const updatedWithinOneMinute =
             new Date().getTime() - new Date(updatedAt).getTime();
 
@@ -103,10 +112,7 @@ describe('/users', () => {
     });
 
     it('should return 400 status if email is not provided', async () => {
-      return request(app.getHttpServer())
-        .post('/users')
-        .set('Content-Type', 'application/json')
-        .send(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD)
+      await register(app, CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD)
         .expect(HttpStatus.BAD_REQUEST)
         .then((response) => {
           expect(response.body.message[0]).toEqual('email should not be empty');
@@ -115,10 +121,7 @@ describe('/users', () => {
     });
 
     it('should return 400 status if invalid email is provided', async () => {
-      return request(app.getHttpServer())
-        .post('/users')
-        .set('Content-Type', 'application/json')
-        .send(CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD)
+      await register(app, CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD)
         .expect(HttpStatus.BAD_REQUEST)
         .then((response) => {
           expect(response.body.message[0]).toEqual('email must be an email');
@@ -126,16 +129,9 @@ describe('/users', () => {
         });
     });
 
-    it('should return 500 status if already exisitng email is given', async () => {
-      await request(app.getHttpServer())
-        .post('/users')
-        .set('Content-Type', 'application/json')
-        .send(CREATE_USER_DTO_TEST_OBJ)
-        .expect(HttpStatus.CREATED);
-      return request(app.getHttpServer())
-        .post('/users')
-        .set('Content-Type', 'application/json')
-        .send(CREATE_USER_DTO_TEST_OBJ)
+    it('should return 500 status if already existing email is given', async () => {
+      await register(app, CREATE_USER_DTO_TEST_OBJ).expect(HttpStatus.CREATED);
+      return register(app, CREATE_USER_DTO_TEST_OBJ)
         .expect(HttpStatus.INTERNAL_SERVER_ERROR)
         .then((response) => {
           expect(response.body.message[0]).toEqual('email must be unique');
@@ -144,10 +140,7 @@ describe('/users', () => {
     });
 
     it('should return 400 status if passwords dont match', async () => {
-      return request(app.getHttpServer())
-        .post('/users')
-        .set('Content-Type', 'application/json')
-        .send(CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS)
+      return register(app, CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS)
         .expect(HttpStatus.BAD_REQUEST)
         .then((response) => {
           expect(response.body.message).toEqual('Passwords do not match');
@@ -156,10 +149,7 @@ describe('/users', () => {
     });
 
     it('should return 400 status if password is not provided', async () => {
-      return request(app.getHttpServer())
-        .post('/users')
-        .set('Content-Type', 'application/json')
-        .send(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD)
+      return register(app, CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD)
         .expect(HttpStatus.BAD_REQUEST)
         .then((response) => {
           expect(response.body.message[0]).toEqual('password must be a string');
@@ -168,10 +158,10 @@ describe('/users', () => {
     });
 
     it('should return 400 status if passwordConfirmation is not provided', async () => {
-      return request(app.getHttpServer())
-        .post('/users')
-        .set('Content-Type', 'application/json')
-        .send(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD)
+      return register(
+        app,
+        CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD
+      )
         .expect(HttpStatus.BAD_REQUEST)
         .then((response) => {
           expect(response.body.message[0]).toEqual(
@@ -182,10 +172,7 @@ describe('/users', () => {
     });
 
     it('should return 400 status if password does not meet complexity requirements', async () => {
-      return request(app.getHttpServer())
-        .post('/users')
-        .set('Content-Type', 'application/json')
-        .send(CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD)
+      return register(app, CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD)
         .expect(HttpStatus.BAD_REQUEST)
         .then((response) => {
           expect(response.body.message).toEqual(
@@ -198,10 +185,7 @@ describe('/users', () => {
     });
 
     it('should return 400 status if no role is provided', async () => {
-      return request(app.getHttpServer())
-        .post('/users')
-        .set('Content-Type', 'application/json')
-        .send(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE)
+      return register(app, CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE)
         .expect(HttpStatus.BAD_REQUEST)
         .then((response) => {
           expect(response.body.message[0]).toEqual(
@@ -219,19 +203,13 @@ describe('/users', () => {
     // Clear the database and retrieve access token
     beforeEach(async () => {
       await databaseService.cleanAll();
-      await request(app.getHttpServer())
-        .post('/users')
-        .set('Content-Type', 'application/json')
-        .send(CREATE_USER_DTO_TEST_OBJ)
+      await register(app, CREATE_USER_DTO_TEST_OBJ)
         .expect(HttpStatus.CREATED)
         .then((response) => {
           id = response.body.id;
         });
 
-      await request(app.getHttpServer())
-        .post('/authn/login')
-        .set('Content-Type', 'application/json')
-        .send(LOGIN_AUTHENTICATION)
+      await login(app, LOGIN_AUTHENTICATION)
         .expect(HttpStatus.CREATED)
         .then((response) => {
           jwtToken = response.body.accessToken;
@@ -239,6 +217,16 @@ describe('/users', () => {
     });
 
     describe('Read', () => {
+      it('should return a 403 status when a non-admin tries to list all users', async () => {
+        return request(app.getHttpServer())
+          .get('/users')
+          .set('Authorization', 'bearer ' + jwtToken)
+          .expect(HttpStatus.FORBIDDEN)
+          .then((response) => {
+            expect(response.body.message).toEqual('Forbidden resource');
+          });
+      });
+
       it('should return 200 status when user is returned', async () => {
         return request(app.getHttpServer())
           .get('/users/' + id)
@@ -265,6 +253,7 @@ describe('/users', () => {
             expect(response.body.lastName).toEqual(
               CREATE_USER_DTO_TEST_OBJ.lastName
             );
+            expect(response.body.lastLogin).toBeDefined();
             expect(response.body.loginCount).toEqual('1');
             expect(response.body.organization).toEqual(
               CREATE_USER_DTO_TEST_OBJ.organization
@@ -294,10 +283,12 @@ describe('/users', () => {
         await authzService.abac.allow(USER_UPDATE_USERS_POLICY_DTO);
       });
       it('should return 200 status when user is updated', async () => {
-        return request(app.getHttpServer())
-          .put('/users/' + id)
-          .set('Authorization', 'bearer ' + jwtToken)
-          .send(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD)
+        return update(
+          app,
+          id,
+          UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD,
+          jwtToken
+        )
           .expect(HttpStatus.OK)
           .then((response) => {
             expect(response.body.email).toEqual(
@@ -323,10 +314,12 @@ describe('/users', () => {
       });
 
       it('should return 200 status when user is updated without changing password', async () => {
-        return request(app.getHttpServer())
-          .put('/users/' + id)
-          .set('Authorization', 'bearer ' + jwtToken)
-          .send(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS)
+        return update(
+          app,
+          id,
+          UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
+          jwtToken
+        )
           .expect(HttpStatus.OK)
           .then((response) => {
             expect(response.body.email).toEqual(
@@ -352,10 +345,12 @@ describe('/users', () => {
       });
 
       it('should return 400 status when currentPassword is empty', async () => {
-        return request(app.getHttpServer())
-          .put('/users/' + id)
-          .set('Authorization', 'bearer ' + jwtToken)
-          .send(UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD)
+        return update(
+          app,
+          id,
+          UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD,
+          jwtToken
+        )
           .expect(HttpStatus.FORBIDDEN)
           .then((response) => {
             expect(response.body.message).toEqual(
@@ -365,19 +360,30 @@ describe('/users', () => {
           });
       });
 
+      it('should not allow a user to change their role', async () => {
+        return update(app, id, UPDATE_USER_DTO_WITH_ADMIN_ROLE, jwtToken)
+          .expect(HttpStatus.OK)
+          .then((response) => {
+            expect(response.body.role).toEqual('user');
+          });
+      });
+
       it('should return 403 status when currentPassword is wrong', async () => {
-        return request(app.getHttpServer())
-          .put('/users/' + id)
-          .set('Authorization', 'bearer ' + jwtToken)
-          .send(UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD)
-          .expect(HttpStatus.FORBIDDEN);
+        return update(
+          app,
+          id,
+          UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD,
+          jwtToken
+        ).expect(HttpStatus.FORBIDDEN);
       });
 
       it('should return 400 status when password does not meet complexity requirements', async () => {
-        return request(app.getHttpServer())
-          .put('/users/' + id)
-          .set('Authorization', 'bearer ' + jwtToken)
-          .send(UPDATE_USER_DTO_TEST_WITH_NOT_COMPLEX_PASSWORD)
+        return update(
+          app,
+          id,
+          UPDATE_USER_DTO_TEST_WITH_NOT_COMPLEX_PASSWORD,
+          jwtToken
+        )
           .expect(HttpStatus.BAD_REQUEST)
           .then((response) => {
             expect(response.body.message).toEqual(
@@ -389,11 +395,13 @@ describe('/users', () => {
           });
       });
 
-      it('should return 400 status when password and passwordConfirmation dont match', async () => {
-        return request(app.getHttpServer())
-          .put('/users/' + id)
-          .set('Authorization', 'bearer ' + jwtToken)
-          .send(UPDATE_USER_DTO_TEST_OBJ_WITH_MISSMATCHING_PASSWORDS)
+      it("should return 400 status when password and passwordConfirmation don't match", async () => {
+        return update(
+          app,
+          id,
+          UPDATE_USER_DTO_TEST_OBJ_WITH_MISSMATCHING_PASSWORDS,
+          jwtToken
+        )
           .expect(HttpStatus.BAD_REQUEST)
           .then((response) => {
             expect(response.body.message).toEqual('Passwords do not match');
@@ -407,10 +415,7 @@ describe('/users', () => {
         await authzService.abac.allow(USER_DELETE_USERS_POLICY_DTO);
       });
       it('should return 200 status after user is deleted', async () => {
-        return request(app.getHttpServer())
-          .delete('/users/' + id)
-          .set('Authorization', 'bearer ' + jwtToken)
-          .send(DELETE_USER_DTO_TEST_OBJ)
+        return destroy(app, id, DELETE_USER_DTO_TEST_OBJ, jwtToken)
           .expect(HttpStatus.OK)
           .then((response) => {
             const createdAt = response.body.createdAt.valueOf();
@@ -446,11 +451,12 @@ describe('/users', () => {
       });
 
       it('should return 403 status because password is wrong', async () => {
-        return request(app.getHttpServer())
-          .delete('/users/' + id)
-          .set('Authorization', 'bearer ' + jwtToken)
-          .send(DELETE_FAILURE_USER_DTO_TEST_OBJ)
-          .expect(HttpStatus.FORBIDDEN);
+        return destroy(
+          app,
+          id,
+          DELETE_FAILURE_USER_DTO_TEST_OBJ,
+          jwtToken
+        ).expect(HttpStatus.FORBIDDEN);
       });
 
       it('should return 200 status after user is deleted by admin', async () => {
@@ -481,10 +487,10 @@ describe('/users', () => {
           .then((response) => {
             const createdAt = response.body.createdAt.valueOf();
             const updatedAt = response.body.updatedAt.valueOf();
-            // User should have been created within the last minuted
+            // User should have been created within the last minute
             const createdWithinOneMinute =
               new Date().getTime() - new Date(createdAt).getTime();
-            // User should have been updated within the last minuted
+            // User should have been updated within the last minute
             const updatedWithinOneMinute =
               new Date().getTime() - new Date(updatedAt).getTime();
 
@@ -516,6 +522,94 @@ describe('/users', () => {
             );
             expect(response.body.error).toEqual('Not Found');
           });
+      });
+    });
+  });
+
+  describe('Functions that require admin authentication', () => {
+    let jwtToken: string;
+    let editUserId: number;
+
+    // Clear the database and retrieve access token
+    beforeEach(async () => {
+      await databaseService.cleanAll();
+      await usersService.create(CREATE_ADMIN_DTO);
+
+      await login(app, ADMIN_LOGIN_AUTHENTICATION)
+        .expect(HttpStatus.CREATED)
+        .then((response) => {
+          jwtToken = response.body.accessToken;
+        });
+
+      // This creates the user that the next tests will update
+      await register(app, CREATE_USER_DTO_TEST_OBJ)
+        .expect(HttpStatus.CREATED)
+        .then((response) => {
+          editUserId = response.body.id;
+        });
+    });
+
+    it('should return a 200 status when an admin tries to list all users', async () => {
+      return request(app.getHttpServer())
+        .get('/users')
+        .set('Authorization', 'bearer ' + jwtToken)
+        .expect(HttpStatus.OK);
+    });
+
+    describe('Admin Update', () => {
+      it('should be able to update a user without providing the current password', async () => {
+        return update(
+          app,
+          editUserId,
+          UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD,
+          jwtToken
+        )
+          .expect(HttpStatus.OK)
+          .then((response) => {
+            expect(response.body.email).toEqual(
+              UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD.email
+            );
+            expect(response.body.firstName).toEqual(
+              UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD.firstName
+            );
+            expect(response.body.id).toEqual(editUserId);
+            expect(response.body.lastName).toEqual(
+              UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD.lastName
+            );
+            expect(response.body.organization).toEqual(
+              UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD.organization
+            );
+            expect(response.body.title).toEqual(
+              UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD.title
+            );
+            expect(response.body.role).toEqual(
+              UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD.role
+            );
+          });
+      });
+
+      it('should be able to update a user role', async () => {
+        return update(
+          app,
+          editUserId,
+          UPDATE_USER_DTO_WITH_ADMIN_ROLE,
+          jwtToken
+        )
+          .expect(HttpStatus.OK)
+          .then((response) => {
+            expect(response.body.role).toEqual('admin');
+          });
+      });
+    });
+
+    describe('Admin destroy', async () => {
+      it('should be able to destroy a user without a password', async () => {
+        return destroy(
+          app,
+          editUserId,
+          DELETE_USER_DTO_TEST_OBJ,
+          jwtToken
+        ).expect(HttpStatus.OK);
       });
     });
   });

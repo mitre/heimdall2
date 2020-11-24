@@ -43,6 +43,7 @@ describe('UsersController Unit Tests', () => {
             // These mock functions are used for the basic 'positive' tests
             create: jest.fn(() => USER_ONE_DTO),
             findById: jest.fn(() => USER_ONE_DTO),
+            findAll: jest.fn(() => [USER_ONE_DTO]),
             update: jest.fn(() => UPDATED_USER_DTO),
             remove: jest.fn(() => USER_ONE_DTO)
           })
@@ -77,6 +78,14 @@ describe('UsersController Unit Tests', () => {
       expect(async () => {
         await usersController.findById(ID);
       }).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('findAll function', () => {
+    // Tests the findAll function with valid ID (basic positive test)
+    it('should test findAll with valid ID', async () => {
+      expect(await usersController.findAll()).toEqual([USER_ONE_DTO]);
+      expect(usersService.findAll).toHaveReturnedWith([USER_ONE_DTO]);
     });
   });
 

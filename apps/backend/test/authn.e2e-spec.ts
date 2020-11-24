@@ -1,6 +1,5 @@
 import {HttpStatus, INestApplication, ValidationPipe} from '@nestjs/common';
 import {Test, TestingModule} from '@nestjs/testing';
-import request from 'supertest';
 import {AppModule} from './../src/app.module';
 import {DatabaseService} from './../src/database/database.service';
 import {
@@ -8,6 +7,7 @@ import {
   CREATE_USER_DTO_TEST_OBJ,
   LOGIN_AUTHENTICATION
 } from './constants/users-test.constant';
+import {login, register} from './helpers/users.helper';
 
 describe('/authn', () => {
   let app: INestApplication;
@@ -37,15 +37,8 @@ describe('/authn', () => {
 
   describe('/login', () => {
     it('should successfully return access token', async () => {
-      await request(app.getHttpServer())
-        .post('/users')
-        .set('Content-Type', 'application/json')
-        .send(CREATE_USER_DTO_TEST_OBJ)
-        .expect(HttpStatus.CREATED);
-      return request(app.getHttpServer())
-        .post('/authn/login')
-        .set('Content-Type', 'application/json')
-        .send(LOGIN_AUTHENTICATION)
+      await register(app, CREATE_USER_DTO_TEST_OBJ).expect(HttpStatus.CREATED);
+      return login(app, LOGIN_AUTHENTICATION)
         .expect(HttpStatus.CREATED)
         .then((response) => {
           expect(response.body.accessToken).toBeDefined();
@@ -53,16 +46,10 @@ describe('/authn', () => {
     });
 
     it('should return 401 status when bad login info is supplied', async () => {
-      await request(app.getHttpServer())
-        .post('/users')
-        .set('Content-Type', 'application/json')
-        .send(CREATE_USER_DTO_TEST_OBJ)
-        .expect(HttpStatus.CREATED);
-      return request(app.getHttpServer())
-        .post('/authn/login')
-        .set('Content-Type', 'application/json')
-        .send(BAD_LOGIN_AUTHENTICATION)
-        .expect(HttpStatus.UNAUTHORIZED);
+      await register(app, CREATE_USER_DTO_TEST_OBJ).expect(HttpStatus.CREATED);
+      return login(app, BAD_LOGIN_AUTHENTICATION).expect(
+        HttpStatus.UNAUTHORIZED
+      );
     });
   });
 

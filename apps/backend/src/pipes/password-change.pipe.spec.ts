@@ -2,7 +2,8 @@ import {ArgumentMetadata, BadRequestException} from '@nestjs/common';
 import {
   UPDATE_USER_DTO_TEST_OBJ,
   UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD,
-  UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS
+  UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
+  UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD
 } from '../../test/constants/users-test.constant';
 import {PasswordChangePipe} from './password-change.pipe';
 
@@ -86,10 +87,12 @@ describe('PasswordChangePipe', () => {
     and at least 4 character classes are changed (2nd part is mocked out due
     to the classesChanged function being tested above) */
   describe('Test Valid Password Changes', () => {
-    it('should return the same UpdateUserDto', () => {
+    beforeEach(() => {
       jest
         .spyOn(passwordChangePipe, 'classesChanged')
         .mockReturnValueOnce(true);
+    });
+    it('should return the same UpdateUserDto', () => {
       expect(
         passwordChangePipe.transform(
           UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD,
@@ -99,15 +102,26 @@ describe('PasswordChangePipe', () => {
     });
 
     it('should return UpdateUserDto if password fields are null', () => {
-      jest
-        .spyOn(passwordChangePipe, 'classesChanged')
-        .mockReturnValueOnce(true);
       expect(
         passwordChangePipe.transform(
           UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
           metaData
         )
       ).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS);
+    });
+
+    /*
+     * The password-change pipe should not fail when the currentPassword
+     * is missing. That check is the responsibility of the users service.
+     * This allows admins to update a user without their current password.
+     */
+    it('should should pass when the currentPassword is not provided and a valid new password is provided', () => {
+      expect(
+        passwordChangePipe.transform(
+          UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD,
+          metaData
+        )
+      ).toEqual(UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD);
     });
   });
 
