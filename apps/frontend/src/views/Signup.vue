@@ -16,7 +16,7 @@
                   <v-text-field
                     id="email_field"
                     v-model="email"
-                    :error-messages="emailErrors"
+                    :error-messages="emailErrors($v.email)"
                     name="email"
                     label="Email"
                     prepend-icon="mdi-account"
@@ -29,7 +29,9 @@
                     id="password"
                     ref="password"
                     v-model="password"
-                    :error-messages="passwordErrors"
+                    :error-messages="
+                      requiredFieldError($v.password, 'Password')
+                    "
                     prepend-icon="mdi-lock"
                     name="password"
                     label="Password"
@@ -55,7 +57,12 @@
                     ref="passwordConfirmation"
                     v-model="passwordConfirmation"
                     name="passwordConfirmation"
-                    :error-messages="passwordConfirmationErrors"
+                    :error-messages="
+                      requiredFieldError(
+                        $v.passwordConfirmation,
+                        'Password Confirmation'
+                      )
+                    "
                     label="Confirm Password"
                     prepend-icon="mdi-lock-alert"
                     type="password"
@@ -119,6 +126,7 @@ export interface SignupHash {
       required
     },
     passwordConfirmation: {
+      required,
       sameAsPassword: sameAs('password')
     }
   }

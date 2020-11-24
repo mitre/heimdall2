@@ -8,7 +8,6 @@ import {
 } from '../constants/users-test.constant';
 import {LogInPage} from './pages/log-in.page';
 import {RegistrationPage} from './pages/registration.page';
-import {FormVerifier} from './verifiers/form.verifier';
 import {LogInVerifier} from './verifiers/log-in.verifier';
 import {RegistrationVerifier} from './verifiers/registration.verifier';
 import {ToastVerifier} from './verifiers/toast.verifier';
@@ -18,7 +17,6 @@ describe('Registration', () => {
   let configService: ConfigService;
   let appUrl: string;
 
-  const formVerifier = new FormVerifier();
   const registrationPage = new RegistrationPage();
   const logInPage = new LogInPage();
   const logInVerifier = new LogInVerifier();
@@ -64,10 +62,6 @@ describe('Registration', () => {
         CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
       );
       await registrationVerifier.verifyRegistrationFormPresent(page);
-      await formVerifier.verifyVMessageErrorPresent(
-        page,
-        'Password and password confirmation must match.'
-      );
     });
 
     it('rejects emails that already exist', async () => {
