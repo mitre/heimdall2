@@ -64,10 +64,6 @@ describe('Registration', () => {
         CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
       );
       await registrationVerifier.verifyRegistrationFormPresent(page);
-      await formVerifier.verifyVMessageErrorPresent(
-        page,
-        'Password and password confirmation must match.'
-      );
     });
 
     it('rejects emails that already exist', async () => {
