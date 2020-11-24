@@ -15,7 +15,6 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import Footer from '@/components/global/Footer.vue';
 import Snackbar from '@/components/global/Snackbar.vue';
-import {ServerModule} from '@/store/server';
 
 @Component({
   components: {
@@ -23,12 +22,5 @@ import {ServerModule} from '@/store/server';
     Snackbar
   }
 })
-export default class App extends Vue {
-  checkForUpdates() {
-    ServerModule.checkForUpdate();
-  }
-  mounted() {
-    this.checkForUpdates();
-  }
-}
+export default class App extends Vue {}
 </script>

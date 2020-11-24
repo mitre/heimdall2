@@ -1,5 +1,4 @@
 import {AppInfoModule} from '@/store/app_info';
-import {SnackbarModule} from '@/store/snackbar';
 import Store from '@/store/store';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import {IStartupSettings, IUpdateUser, IUser} from '@heimdall/interfaces';
@@ -11,10 +10,10 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
+import {SnackbarModule} from './snackbar';
 
 const local_token = new LocalStorageVal<string | null>('auth_token');
 const localUserID = new LocalStorageVal<string | null>('localUserID');
-const localUserRole = new LocalStorageVal<string | null>('localUserRole');
 
 export interface IServerState {
   serverMode: boolean;
@@ -23,7 +22,6 @@ export interface IServerState {
   token: string;
   banner: string;
   userID: string;
-  userRole: string;
   userInfo: IUser;
 }
 
@@ -70,18 +68,6 @@ class Server extends VuexModule implements IServerState {
   SET_USERID(newID: string) {
     localUserID.set(newID);
     this.userID = newID;
-  }
-
-  @Mutation
-  SET_USERROLE(newRole: string) {
-    localUserRole.set(newRole);
-    this.userRole = newRole;
-  }
-
-  @Mutation
-  CLEAR_USERROLE() {
-    localUserRole.clear();
-    this.userRole = '';
   }
 
   @Mutation
@@ -140,15 +126,11 @@ class Server extends VuexModule implements IServerState {
           this.SET_STARTUP_SETTINGS(response.data);
           const token = local_token.get();
           const userID = localUserID.get();
-          const userRole = localUserRole.get();
           if (token !== null) {
             this.SET_TOKEN(token);
           }
           if (userID !== null) {
             this.SET_USERID(userID);
-          }
-          if (userRole !== null) {
-            this.SET_USERROLE(userRole);
           }
           this.GetUserInfo();
         }
@@ -163,11 +145,20 @@ class Server extends VuexModule implements IServerState {
   }
   @Action
   public async checkForUpdate() {
-    const newest = await axios
-      .get('https://api.github.com/repos/mitre/heimdall2/releases/latest')
-      .then(({data}) => data.tag_name.replace('v', ''));
-    if (newest !== AppInfoModule.version) {
-      SnackbarModule.update(newest);
+    // Only if we're running in lite mode or are admin
+    console.log('hit');
+    if (!this.serverMode || this.userInfo.role == 'admin') {
+      const tempBearer = axios.defaults.headers.common['Authorization'];
+      axios.defaults.headers.common['Authorization'] = '';
+      // Get newest release
+      const newest = await axios
+        .get('https://api.github.com/repos/mitre/heimdall2/tags')
+        .then(({data}) => data[0].name.replace('v', ''));
+      axios.defaults.headers.common['Authorization'] = tempBearer;
+      // Only show update if it's the newest version
+      if (newest !== AppInfoModule.version) {
+        SnackbarModule.update(newest);
+      }
     }
   }
 
@@ -176,7 +167,6 @@ class Server extends VuexModule implements IServerState {
     return axios.post('/authn/login', userInfo).then(({data}) => {
       this.SET_TOKEN(data.accessToken);
       this.SET_USERID(data.userID);
-      this.SET_USERROLE(data.role);
       this.GetUserInfo();
     });
   }
@@ -210,7 +200,6 @@ class Server extends VuexModule implements IServerState {
   @Action
   public Logout(): void {
     this.CLEAR_USERID();
-    this.CLEAR_USERROLE();
     this.CLEAR_TOKEN();
     location.reload();
   }

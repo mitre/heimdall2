@@ -29,20 +29,17 @@ export class AuthnService {
     const payload = {
       email: user.email,
       sub: user.id,
-      role: user.role,
       forcePasswordChange: user.forcePasswordChange
     };
     if (payload.forcePasswordChange) {
       // Give the user 10 minutes to (hopefully) change their password.
       return {
         userID: user.id,
-        role: user.role,
         accessToken: this.jwtService.sign(payload, {expiresIn: '600s'})
       };
     } else {
       return {
         userID: user.id,
-        role: user.role,
         accessToken: this.jwtService.sign(payload)
       };
     }
