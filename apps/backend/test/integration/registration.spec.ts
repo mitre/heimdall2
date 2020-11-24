@@ -8,7 +8,6 @@ import {
 } from '../constants/users-test.constant';
 import {LogInPage} from './pages/log-in.page';
 import {RegistrationPage} from './pages/registration.page';
-import {FormVerifier} from './verifiers/form.verifier';
 import {LogInVerifier} from './verifiers/log-in.verifier';
 import {RegistrationVerifier} from './verifiers/registration.verifier';
 import {ToastVerifier} from './verifiers/toast.verifier';
@@ -18,7 +17,6 @@ describe('Registration', () => {
   let configService: ConfigService;
   let appUrl: string;
 
-  const formVerifier = new FormVerifier();
   const registrationPage = new RegistrationPage();
   const logInPage = new LogInPage();
   const logInVerifier = new LogInVerifier();
