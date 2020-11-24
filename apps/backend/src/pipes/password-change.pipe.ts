@@ -10,7 +10,7 @@ import levenshtein = require('js-levenshtein');
 export class PasswordChangePipe implements PipeTransform {
   transform(
     value: {
-      currentPassword: string | undefined;
+      currentPassword?: string;
       password: string | undefined;
       passwordConfirmation: string | undefined;
     },

@@ -130,7 +130,7 @@ describe('UsersController Unit Tests', () => {
     // Tests the update function with valid dto (basic positive test)
     it('should test the update function with a valid update dto', async () => {
       expect(
-        await usersController.update(ID, UPDATE_USER_DTO_TEST_OBJ)
+        await usersController.update('user', ID, UPDATE_USER_DTO_TEST_OBJ)
       ).toEqual(UPDATED_USER_DTO);
       expect(usersService.update).toHaveReturnedWith(UPDATED_USER_DTO);
     });
@@ -141,7 +141,7 @@ describe('UsersController Unit Tests', () => {
         throw new NotFoundException();
       });
       expect(async () => {
-        await usersController.update(ID, UPDATE_USER_DTO_TEST_OBJ);
+        await usersController.update('user', ID, UPDATE_USER_DTO_TEST_OBJ);
       }).rejects.toThrow(NotFoundException);
     });
 
@@ -152,6 +152,7 @@ describe('UsersController Unit Tests', () => {
       });
       expect(async () => {
         await usersController.update(
+          'user',
           ID,
           UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD
         );
@@ -163,7 +164,7 @@ describe('UsersController Unit Tests', () => {
     // Tests the remove function with valid dto (basic positive test)
     it('should remove', async () => {
       expect(
-        await usersController.remove(ID, DELETE_USER_DTO_TEST_OBJ)
+        await usersController.remove('user', ID, DELETE_USER_DTO_TEST_OBJ)
       ).toEqual(USER_ONE_DTO);
       expect(usersService.remove).toHaveReturnedWith(USER_ONE_DTO);
     });
@@ -174,7 +175,7 @@ describe('UsersController Unit Tests', () => {
         throw new NotFoundException();
       });
       expect(async () => {
-        await usersController.remove(ID, DELETE_USER_DTO_TEST_OBJ);
+        await usersController.remove('user', ID, DELETE_USER_DTO_TEST_OBJ);
       }).rejects.toThrow(NotFoundException);
     });
 
@@ -185,6 +186,7 @@ describe('UsersController Unit Tests', () => {
       });
       expect(async () => {
         await usersController.remove(
+          'user',
           ID,
           DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD
         );

@@ -87,7 +87,6 @@ describe('/users', () => {
             CREATE_USER_DTO_TEST_OBJ.firstName
           );
           expect(response.body.id).toBeDefined();
-          expect(response.body.lastLogin).toEqual(null);
           expect(response.body.lastName).toEqual(
             CREATE_USER_DTO_TEST_OBJ.lastName
           );
@@ -263,11 +262,10 @@ describe('/users', () => {
               CREATE_USER_DTO_TEST_OBJ.firstName
             );
             expect(response.body.id).toEqual(id);
-            expect(response.body.lastLogin).toEqual(null);
             expect(response.body.lastName).toEqual(
               CREATE_USER_DTO_TEST_OBJ.lastName
             );
-            expect(response.body.loginCount).toEqual('0');
+            expect(response.body.loginCount).toEqual('1');
             expect(response.body.organization).toEqual(
               CREATE_USER_DTO_TEST_OBJ.organization
             );
@@ -358,12 +356,12 @@ describe('/users', () => {
           .put('/users/' + id)
           .set('Authorization', 'bearer ' + jwtToken)
           .send(UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD)
-          .expect(HttpStatus.BAD_REQUEST)
+          .expect(HttpStatus.FORBIDDEN)
           .then((response) => {
-            expect(response.body.message[0]).toEqual(
-              'currentPassword must be a string'
+            expect(response.body.message).toEqual(
+              'Current password is incorrect'
             );
-            expect(response.body.error).toEqual('Bad Request');
+            expect(response.body.error).toEqual('Forbidden');
           });
       });
 
@@ -432,11 +430,10 @@ describe('/users', () => {
               CREATE_USER_DTO_TEST_OBJ.firstName
             );
             expect(response.body.id).toEqual(id);
-            expect(response.body.lastLogin).toEqual(null);
             expect(response.body.lastName).toEqual(
               CREATE_USER_DTO_TEST_OBJ.lastName
             );
-            expect(response.body.loginCount).toEqual('0');
+            expect(response.body.loginCount).toEqual('1');
             expect(response.body.organization).toEqual(
               CREATE_USER_DTO_TEST_OBJ.organization
             );
@@ -497,9 +494,8 @@ describe('/users', () => {
             expect(response.body.email).toEqual(CREATE_ADMIN_DTO.email);
             expect(response.body.firstName).toEqual(CREATE_ADMIN_DTO.firstName);
             expect(response.body.id).toEqual(admin.id);
-            expect(response.body.lastLogin).toEqual(null);
             expect(response.body.lastName).toEqual(CREATE_ADMIN_DTO.lastName);
-            expect(response.body.loginCount).toEqual('0');
+            expect(response.body.loginCount).toEqual('1');
             expect(response.body.organization).toEqual(
               CREATE_ADMIN_DTO.organization
             );
