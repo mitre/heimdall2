@@ -29,6 +29,7 @@ export class AuthnService {
     const payload = {
       email: user.email,
       sub: user.id,
+      role: user.role,
       forcePasswordChange: user.forcePasswordChange
     };
     if (payload.forcePasswordChange) {
