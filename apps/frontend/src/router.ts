@@ -1,3 +1,4 @@
+import {AppInfoModule} from '@/store/app_info';
 import {ServerModule} from '@/store/server';
 import Compare from '@/views/Compare.vue';
 import Landing from '@/views/Landing.vue';
@@ -51,6 +52,7 @@ const router = new Router({
 
 router.beforeEach((to, _, next) => {
   ServerModule.CheckForServer().then(() => {
+    AppInfoModule.CheckForUpdates();
     if (to.matched.some((record) => record.meta.requiresAuth)) {
       if (ServerModule.serverMode && !ServerModule.token) {
         next('/login');

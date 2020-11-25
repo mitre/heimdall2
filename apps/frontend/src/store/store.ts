@@ -1,4 +1,4 @@
-import {AppInfo} from '@/store/app_info';
+import {IAppInfoState} from '@/store/app_info';
 import {ColorHack} from '@/store/color_hack';
 import {FilteredData} from '@/store/data_filters';
 import {InspecData} from '@/store/data_store';
@@ -33,7 +33,7 @@ export interface StoreType {
   lookup: HashLookup;
   intake: InspecIntake;
   colors: ColorHack;
-  info: AppInfo;
+  info: IAppInfoState;
   server: IServerState;
 }
 const store = new Vuex.Store<StoreType>({});

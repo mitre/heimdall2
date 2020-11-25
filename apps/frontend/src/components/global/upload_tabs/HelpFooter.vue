@@ -36,11 +36,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 import HelpModal from '@/components/global/HelpModal.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
-import {AppInfoModule} from '@/store/app_info';
+import AppInfoMixin from '@/mixins/AppInfoMixin'
 
 @Component({
   components: {
@@ -48,18 +47,5 @@ import {AppInfoModule} from '@/store/app_info';
     HelpModal
   }
 })
-export default class HelpFooter extends Vue {
-  get version(): string {
-    return AppInfoModule.version;
-  }
-  get changelog(): string {
-    return AppInfoModule.changelog;
-  }
-  get repository(): string {
-    return AppInfoModule.repository;
-  }
-  get branch(): string {
-    return AppInfoModule.branch;
-  }
-}
+export default class HelpFooter extends mixins(AppInfoMixin) {}
 </script>
