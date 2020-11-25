@@ -1,5 +1,5 @@
 export default class UploadModal {
-  loadFirstSample() {
+  loadFirstSample(): void {
     cy.get('#select-tab-sample').click();
     cy.get('#sampleItem').click();
   }

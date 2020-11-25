@@ -1,5 +1,5 @@
 export default class RegistrationPageVerifier {
-  registerFormPresent() {
+  registerFormPresent(): void {
     cy.get('form[name="signup_form"]').should('exist');
     cy.get('#registration_form_title').should(
       'contain',
@@ -13,7 +13,7 @@ export default class RegistrationPageVerifier {
     );
   }
 
-  registerButtonDisabled() {
+  registerButtonDisabled(): void {
     cy.get('#register').should('be.disabled');
   }
 }

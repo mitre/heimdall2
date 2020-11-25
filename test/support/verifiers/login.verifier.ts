@@ -1,5 +1,5 @@
 export default class LoginPageVerifier {
-  loginFormPresent() {
+  loginFormPresent(): void {
     cy.get('form[name="login_form"]').should('exist');
     cy.get('#login_form_title').should('contain', 'Login to Heimdall Server');
     cy.get('label[for=email_field]').should('contain', 'Email');

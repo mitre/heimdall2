@@ -45,6 +45,8 @@ context('Results', () => {
       userModalVerifier.verifyFieldsExist();
       // Change their user data
       userModal.changeUserData(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD);
+      // Check for success toast
+      // toastVerifier.toastTextContains('')
     });
   });
 });

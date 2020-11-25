@@ -1,5 +1,5 @@
 export default class UserModalVerifier {
-  verifyFieldsExist() {
+  verifyFieldsExist(): void {
     cy.get('#userModalTitle').should(
       'contain',
       'Update your account information'
