@@ -1,9 +1,9 @@
 /// <reference types="cypress" />
 
 import {LOGIN_AUTHENTICATION} from '../../apps/backend/test/constants/users-test.constant';
-import LoginPage from '../support/pages/login.page';
-import LoginPageVerifier from '../support/verifiers/login.verifier';
-import ToastVerifier from '../support/verifiers/toast.verifier';
+import LoginPage from '../support/pages/LoginPage';
+import LoginPageVerifier from '../support/verifiers/LoginPageVerifier';
+import ToastVerifier from '../support/verifiers/ToastVerifier';
 
 context('Login', () => {
   // Pages, verifiers, and modules

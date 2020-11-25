@@ -4,11 +4,11 @@ import {
   LOGIN_AUTHENTICATION,
   UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD
 } from '../../apps/backend/test/constants/users-test.constant';
-import UploadModal from '../support/components/upload.modal';
-import UserModal from '../support/components/user.modal';
-import LoginPage from '../support/pages/login.page';
-import ResultsPageVerifier from '../support/verifiers/results.verifier';
-import UserModalVerifier from '../support/verifiers/user.modal.verifier';
+import UploadModal from '../support/components/UploadModal';
+import UserModal from '../support/components/UserModal';
+import LoginPage from '../support/pages/LoginPage';
+import ResultsPageVerifier from '../support/verifiers/ResultsPageVerifier';
+import UserModalVerifier from '../support/verifiers/UserModalVerifier';
 
 context('Results', () => {
   // Pages, verifiers, and modules
