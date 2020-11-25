@@ -12,4 +12,8 @@ export default class RegistrationPageVerifier {
       'Confirm Password'
     );
   }
+
+  registerButtonDisabled() {
+    cy.get('#register').should('be.disabled');
+  }
 }
