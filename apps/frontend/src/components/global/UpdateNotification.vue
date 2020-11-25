@@ -37,6 +37,5 @@ export default class UpdateNotification extends mixins(AppInfoMixin) {
   get latestVersion(): string {
     return AppInfoModule.latestVersion;
   }
-
 }
 </script>

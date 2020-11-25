@@ -1,3 +1,4 @@
+import {AppInfoModule} from '@/store/app_info';
 import {ServerModule} from '@/store/server';
 import Compare from '@/views/Compare.vue';
 import Landing from '@/views/Landing.vue';
@@ -6,7 +7,6 @@ import Results from '@/views/Results.vue';
 import Signup from '@/views/Signup.vue';
 import Vue from 'vue';
 import Router from 'vue-router';
-import {AppInfoModule} from './store/app_info';
 
 Vue.use(Router);
 
