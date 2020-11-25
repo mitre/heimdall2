@@ -23,9 +23,8 @@
 <script lang="ts">
 import AppInfoMixin from '@/mixins/AppInfoMixin';
 import {AppInfoModule} from '@/store/app_info';
-import { ServerModule } from '@/store/server';
-import Vue from 'vue';
-import Component, { mixins } from 'vue-class-component';
+import {ServerModule} from '@/store/server';
+import Component, {mixins} from 'vue-class-component';
 
 @Component({})
 export default class UpdateNotification extends mixins(AppInfoMixin) {
