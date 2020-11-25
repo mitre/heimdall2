@@ -1,4 +1,4 @@
-import {CreateUserDto} from "../../../apps/backend/src/users/dto/create-user.dto";
+import {CreateUserDto} from '../../../apps/backend/src/users/dto/create-user.dto';
 
 export default class RegistrationPage {
   register(user: CreateUserDto) {

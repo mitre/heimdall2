@@ -1,11 +1,14 @@
 /// <reference types="cypress" />
 
-import LoginPage from '../support/pages/login.page';
-import ResultsPageVerifier from '../support/verifiers/results.verifier';
+import {
+  LOGIN_AUTHENTICATION,
+  UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD
+} from '../../apps/backend/test/constants/users-test.constant';
 import UploadModal from '../support/components/upload.modal';
 import UserModal from '../support/components/user.modal';
+import LoginPage from '../support/pages/login.page';
+import ResultsPageVerifier from '../support/verifiers/results.verifier';
 import UserModalVerifier from '../support/verifiers/user.modal.verifier';
-import {LOGIN_AUTHENTICATION, UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD} from '../../apps/backend/test/constants/users-test.constant';
 
 context('Results', () => {
   // Pages, verifiers, and modules
@@ -23,8 +26,8 @@ context('Results', () => {
   // The test
   describe('Results', () => {
     it('successfully loads and displays a result', () => {
-        // Load first sample (typically "Sonarqube Java Heimdall_tools Sample")
-        uploadModal.loadFirstSample();
+      // Load first sample (typically "Sonarqube Java Heimdall_tools Sample")
+      uploadModal.loadFirstSample();
     });
     it('displays correct data for the first sample', () => {
       uploadModal.loadFirstSample();
@@ -41,7 +44,7 @@ context('Results', () => {
       // Make sure all the fields exist
       userModalVerifier.verifyFieldsExist();
       // Change their user data
-      userModal.changeUserData(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD)
-    })
-  })
-})
+      userModal.changeUserData(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD);
+    });
+  });
+});

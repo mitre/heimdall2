@@ -4,6 +4,7 @@
   "scripts": {
     "frontend": "yarn workspace heimdall-lite",
     "backend": "yarn workspace heimdall-server",
+    "cypress": "yarn workspace @heimdall/cypress-tests",
     "build": "npx lerna run build",
     "start": "yarn backend start",
     "lint": "npx lerna run lint",
@@ -14,7 +15,8 @@
   "workspaces": {
     "packages": [
       "apps/*",
-      "libs/*"
+      "libs/*",
+      "test"
     ]
   },
   "devDependencies": {
