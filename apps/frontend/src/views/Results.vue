@@ -451,14 +451,6 @@ export default class Results extends Vue {
       this.eval_info = index;
     }
   }
-
-  checkForUpdates() {
-    ServerModule.checkForUpdate();
-  }
-
-  mounted() {
-    this.checkForUpdates();
-  }
 }
 </script>
 

@@ -1,4 +1,3 @@
-import {AppInfoModule} from '@/store/app_info';
 import Store from '@/store/store';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import {IStartupSettings, IUpdateUser, IUser} from '@heimdall/interfaces';
@@ -10,7 +9,6 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
-import {SnackbarModule} from './snackbar';
 
 const local_token = new LocalStorageVal<string | null>('auth_token');
 const localUserID = new LocalStorageVal<string | null>('localUserID');
@@ -40,8 +38,6 @@ class Server extends VuexModule implements IServerState {
   token = '';
   /** Our User ID  */
   userID = '';
-  /** Our User Role  */
-  userRole = '';
   /** Provide a sane default for userInfo in order to avoid having to null check it all the time */
   userInfo: IUser = {
     id: -1,
@@ -142,23 +138,6 @@ class Server extends VuexModule implements IServerState {
       .then((_) => {
         this.SET_LOADING(false);
       });
-  }
-  @Action
-  public async checkForUpdate() {
-    // Only if we're running in lite mode or are admin
-    if (!this.serverMode || this.userInfo.role === 'admin') {
-      const tempBearer = axios.defaults.headers.common['Authorization'];
-      axios.defaults.headers.common['Authorization'] = '';
-      // Get newest release
-      const newest = await axios
-        .get('https://api.github.com/repos/mitre/heimdall2/tags')
-        .then(({data}) => data[0].name.replace('v', ''));
-      axios.defaults.headers.common['Authorization'] = tempBearer;
-      // Only show update if it's the newest version
-      if (newest !== AppInfoModule.version) {
-        SnackbarModule.update(newest);
-      }
-    }
   }
 
   @Action({rawError: true})

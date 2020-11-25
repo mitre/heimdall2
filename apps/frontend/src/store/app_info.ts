@@ -1,5 +1,12 @@
 import Store from '@/store/store';
-import {getModule, Module, VuexModule} from 'vuex-module-decorators';
+import axios from 'axios';
+import {
+  Action,
+  getModule,
+  Module,
+  Mutation,
+  VuexModule
+} from 'vuex-module-decorators';
 
 /** Configure this to match data set in vue.config.ts */
 declare const process: {
@@ -14,13 +21,66 @@ declare const process: {
   };
 };
 
+export interface IAppInfoState {
+  latestVersion: string;
+  updateNotification: boolean;
+}
+
 @Module({
   namespaced: true,
   dynamic: true,
   store: Store,
   name: 'info'
 })
-export class AppInfo extends VuexModule {
+export class AppInfo extends VuexModule implements IAppInfoState {
+  checkedForUpdates = false;
+  updateNotification = false;
+  latestVersion = '';
+
+  @Mutation
+  SET_VERSION(newVersion: string) {
+    this.latestVersion = newVersion;
+  }
+
+  @Mutation
+  SET_UPDATE_NOTIFICATION(visible: boolean) {
+    this.updateNotification = visible;
+  }
+
+  @Mutation
+  SET_CHECKED_FOR_UPDATES(value: boolean) {
+    this.checkedForUpdates = value;
+  }
+
+  @Action
+  public async CheckForUpdates() {
+    if (this.checkedForUpdates === false) {
+      axios
+        .get('https://api.github.com/repos/mitre/heimdall2/tags', {
+          // Null out the request headers for this request
+          // in order to avoid sending the local app authorization
+          // to Github.
+          headers: {common: ''}
+        })
+        .then(({data}) => {
+          const latest = data[0].name.replace('v', '');
+          this.SET_VERSION(latest);
+          if (latest !== this.version) {
+            this.SET_UPDATE_NOTIFICATION(true);
+          }
+        })
+        .finally(() => {
+          // Guard to stop checking for updates every tab change
+          this.SET_CHECKED_FOR_UPDATES(true);
+        });
+    }
+  }
+
+  @Action
+  public SetUpdateVisibility(visible: boolean) {
+    this.SET_UPDATE_NOTIFICATION(visible);
+  }
+
   /** The app version */
   get version(): string {
     return process.env.PACKAGE_VERSION;

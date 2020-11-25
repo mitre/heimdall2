@@ -20,6 +20,7 @@
 
     <!-- The actual content. Slotted by our "descendants" -->
     <v-main>
+      <UpdateNotification />
       <slot name="main-content" />
     </v-main>
 
@@ -34,12 +35,14 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import Sidebar from '@/components/global/Sidebar.vue';
 import Topbar from '@/components/global/Topbar.vue';
+import UpdateNotification from '@/components/global/UpdateNotification.vue';
 import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {
     Sidebar,
-    Topbar
+    Topbar,
+    UpdateNotification
   }
 })
 export default class Base extends Vue {
