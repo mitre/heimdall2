@@ -3,7 +3,7 @@ import {UpdateUserDto} from "../../../apps/backend/src/users/dto/update-user.dto
 export default class UserModal {
   openUserModal() {
     cy.get('#dropdown').click();
-    cy.get('#userModal').click()
+    cy.get('#dropdownList').get('div[role="menuitem"]').first().click();
   }
   changeUserData(user: UpdateUserDto) {
     cy.get('input[name=firstName]').clear().type(user.firstName);
