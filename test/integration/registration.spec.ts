@@ -35,8 +35,8 @@ context('Registration', () => {
     })
 
     it('rejects mismatching passwords', () => {
-      registrationPage.registerNoSubmit(CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS)
-      
+      registrationPage.registerNoSubmit(CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS);
+      registrationVerifier.registerButtonDisabled();
     })
   });
 })

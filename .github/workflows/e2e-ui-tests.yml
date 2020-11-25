@@ -49,8 +49,9 @@ jobs:
         yarn backend sequelize-cli db:create
         yarn backend sequelize-cli db:migrate
 
-     - name: Build frontend and server for E2E UI tests
-       run: yarn run build
-
-     - name: Run e2e UI tests
-       run: yarn start & sleep 10; yarn test:ui
+     - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          build: yarn build
+          start: yarn start
+          wait-on: http://localhost:3000

@@ -14,6 +14,6 @@ export default class UserModal {
     cy.get('#toggleChangePassword').click();
     cy.get('input[name=newPassword]').clear().type(user.password);
     cy.get('input[name=repeatPassword]').clear().type(user.passwordConfirmation);
-    cy.get('#closeAndSaveChanges').click();
+    // cy.get('#closeAndSaveChanges').click();
   }
 }

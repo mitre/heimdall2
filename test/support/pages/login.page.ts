@@ -1,5 +1,3 @@
-import {UpdateUserDto} from "../../../apps/backend/src/users/dto/update-user.dto";
-
 export default class LoginPage {
   loginSuccess(user: {
     email: string,
