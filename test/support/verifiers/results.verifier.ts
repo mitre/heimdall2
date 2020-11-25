@@ -1,7 +1,7 @@
 export default class ResultsPageVerifier {
-  resultsDataCorrect() {
+  resultsDataCorrect(): void {
     const cardsHTML: string[] = [];
-    cy.get('[data-cy=cardText]').each((card) => {
+    cy.get('[data-cy=cardText]').each((card): void => {
       cardsHTML.push(card.text());
     });
     expect(cardsHTML).to.contain('Passed: 0');
