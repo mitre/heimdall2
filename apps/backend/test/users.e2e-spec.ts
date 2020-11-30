@@ -12,6 +12,7 @@ import {
 import {
   ADMIN_LOGIN_AUTHENTICATION,
   CREATE_ADMIN_DTO,
+  CREATE_SECOND_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD,
   CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD,
@@ -464,6 +465,8 @@ describe('/users', () => {
           return 'Token does not conform to the expected format for a zip code';
         }
         const admin = await usersService.create(CREATE_ADMIN_DTO);
+        // Create a second admin so that the first is one allowed to be deleted
+        await usersService.create(CREATE_SECOND_ADMIN_DTO);
 
         let adminJWTToken = '';
         await request(app.getHttpServer())
@@ -529,11 +532,14 @@ describe('/users', () => {
   describe('Functions that require admin authentication', () => {
     let jwtToken: string;
     let editUserId: number;
+    let adminUserId: number;
 
     // Clear the database and retrieve access token
     beforeEach(async () => {
       await databaseService.cleanAll();
-      await usersService.create(CREATE_ADMIN_DTO);
+      await usersService.create(CREATE_ADMIN_DTO).then((user) => {
+        adminUserId = user.id;
+      });
 
       await login(app, ADMIN_LOGIN_AUTHENTICATION)
         .expect(HttpStatus.CREATED)
@@ -604,12 +610,17 @@ describe('/users', () => {
 
     describe('Admin destroy', async () => {
       it('should be able to destroy a user without a password', async () => {
-        return destroy(
-          app,
-          editUserId,
-          DELETE_USER_DTO_TEST_OBJ,
-          jwtToken
-        ).expect(HttpStatus.OK);
+        return destroy(app, editUserId, {}, jwtToken).expect(HttpStatus.OK);
+      });
+
+      it('should not be able to destroy the only administrator', async () => {
+        return destroy(app, adminUserId, {}, jwtToken)
+          .expect(HttpStatus.FORBIDDEN)
+          .then((response) => {
+            expect(response.body.message).toEqual(
+              'Cannot destroy only administrator account, please promote another user to administrator first'
+            );
+          });
       });
     });
   });

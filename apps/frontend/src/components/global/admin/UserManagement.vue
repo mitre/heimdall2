@@ -24,10 +24,14 @@
           @update-user="updateUser"
         >
           <template #clickable="{on}"
-            ><v-icon small class="mr-2" v-on="on"> mdi-pencil </v-icon>
+            ><v-icon small title="Edit" class="mr-2" v-on="on">
+              mdi-pencil
+            </v-icon>
           </template>
         </UserModal>
-        <v-icon small @click="deleteUserDialog(item)"> mdi-delete </v-icon>
+        <v-icon small title="Delete" @click="deleteUserDialog(item)">
+          mdi-delete
+        </v-icon>
       </template>
       <template #no-data>
         <v-btn color="primary" @click="initialize"> Reset </v-btn>
@@ -100,7 +104,8 @@ export default class UserManagement extends Vue {
       axios.delete<IUser>(`/users/${this.editedUser.id}`).then((response) => {
         SnackbarModule.notify(`Successfully deleted user ${response.data.email}`);
       }).catch((err) => {
-        SnackbarModule.failure(`${err}. Please reload the page and try again.`);
+        // If the backend provided an error then show it, otherwise fallback to printing the client side error
+        SnackbarModule.failure(err?.response?.data?.message || `${err}. Please reload the page and try again.`);
       }).finally(() => {
         this.getUsers();
         this.closeDeleteDialog();

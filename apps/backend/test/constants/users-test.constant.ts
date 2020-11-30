@@ -203,6 +203,11 @@ export const CREATE_ADMIN_DTO: CreateUserDto = {
   role: 'admin'
 };
 
+export const CREATE_SECOND_ADMIN_DTO: CreateUserDto = {
+  ...CREATE_ADMIN_DTO,
+  email: 'admin2@yahoo.com'
+};
+
 export const CREATE_USER_DTO_TEST_OBJ_2: CreateUserDto = {
   email: 'def@yahoo.com',
   password: 'LETmeiN123$$$tP',

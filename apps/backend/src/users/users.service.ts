@@ -113,8 +113,18 @@ export class UsersService {
           throw new ForbiddenException();
         }
       } catch {
-        throw new ForbiddenException();
+        throw new ForbiddenException(
+          'Password was incorrect, could not delete account'
+        );
       }
+    }
+    const adminCount = await this.userModel.count({where: {role: 'admin'}});
+    // Do not allow the administrator to destroy the only
+    // administrator account
+    if (user.role === 'admin' && adminCount < 2) {
+      throw new ForbiddenException(
+        'Cannot destroy only administrator account, please promote another user to administrator first'
+      );
     }
     await user.destroy();
     return new UserDto(user);
