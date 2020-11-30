@@ -2,14 +2,14 @@
   <v-dialog v-model="dialog" width="75%">
     <!-- clickable slot passes the activator prop up to parent
         This allows the parent to pass in a clickable icon -->
-    <template #activator="{on}">
-      <slot name="clickable" :on="on" />
+    <template #activator="{on, attrs}">
+      <slot name="clickable" :on="on" :attrs="attrs" />
     </template>
 
     <v-card>
-      <v-card-title id="userModalTitle" class="headline grey" primary-title
-        >Update your account information</v-card-title
-      >
+      <v-card-title class="headline grey" primary-title>{{
+        title
+      }}</v-card-title>
       <v-card-text v-if="userInfo === null">
         <v-progress-linear indeterminate color="white" class="mb-0" />
       </v-card-text>
@@ -34,36 +34,51 @@
               />
             </v-col>
           </v-row>
-          <v-text-field
-            id="email_field"
-            v-model="userInfo.email"
-            :error-messages="emailErrors($v.userInfo.email)"
-            name="email"
-            label="Email"
-            type="text"
-            required
-            @blur="$v.userInfo.email.$touch()"
-          />
-          <v-text-field id="title" v-model="userInfo.title" label="Title" />
-          <v-text-field
-            id="organization"
-            v-model="userInfo.organization"
-            name="organization"
-            label="Organization"
-          />
-          <v-divider />
-          <v-text-field
-            id="password_field"
-            ref="password"
-            v-model="currentPassword"
-            :error-messages="
-              requiredFieldError($v.currentPassword, 'Current Password')
-            "
-            type="password"
-            name="password"
-            label="Please provide your current password to save changes to your profile"
-            @blur="$v.currentPassword.$touch()"
-          />
+          <v-row>
+            <v-col>
+              <v-text-field
+                id="email_field"
+                v-model="userInfo.email"
+                :error-messages="emailErrors($v.userInfo.email)"
+                name="email"
+                label="Email"
+                type="text"
+                required
+                @blur="$v.userInfo.email.$touch()"
+              />
+            </v-col>
+            <v-col v-if="admin">
+              <v-select v-model="userInfo.role" :items="roles" label="Role" />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-text-field id="title" v-model="userInfo.title" label="Title" />
+            </v-col>
+            <v-col>
+              <v-text-field
+                id="organization"
+                v-model="userInfo.organization"
+                label="Organization"
+              />
+            </v-col>
+          </v-row>
+
+          <div v-if="!admin">
+            <v-divider />
+            <v-text-field
+              id="password_field"
+              ref="password"
+              v-model="currentPassword"
+              :error-messages="
+                requiredFieldError($v.currentPassword, 'Current Password')
+              "
+              type="password"
+              name="password"
+              label="Please provide your current password to save changes to your profile"
+              @blur="$v.currentPassword.$touch()"
+            />
+          </div>
           <v-btn id="toggleChangePassword" @click="changePasswordDialog"
             >Change Password</v-btn
           >
@@ -130,7 +145,8 @@ import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
 import {IUser, IUpdateUser} from '@heimdall/interfaces';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
-import {required, email, requiredIf} from 'vuelidate/lib/validators';
+import {required, email, requiredIf, requiredUnless} from 'vuelidate/lib/validators';
+import {Prop} from 'vue-property-decorator';
 
 @Component({
   mixins: [UserValidatorMixin],
@@ -142,7 +158,7 @@ import {required, email, requiredIf} from 'vuelidate/lib/validators';
       }
     },
     currentPassword: {
-      required
+      required: requiredUnless('admin')
     },
     newPassword: {
       required: requiredIf('changePassword')
@@ -154,17 +170,18 @@ import {required, email, requiredIf} from 'vuelidate/lib/validators';
 })
 
 export default class UserModal extends Vue {
+  @Prop({type: Object, required: true}) readonly user!: IUser;
+  @Prop({type: Boolean, default: false}) readonly admin!: boolean;
+
+  roles: string[] = ['user', 'admin'];
+
   dialog: boolean = false;
   changePassword: boolean = false;
 
-  userInfo: IUser | null = null;
+  userInfo: IUser = {...this.user};
   currentPassword: string = '';
   newPassword: string = '';
   passwordConfirmation: string = '';
-
-  mounted() {
-    this.userInfo = {...ServerModule.userInfo};
-  }
 
   async updateUserInfo(): Promise<void> {
     this.$v.$touch()
@@ -174,8 +191,13 @@ export default class UserModal extends Vue {
         password: undefined,
         passwordConfirmation: undefined,
         forcePasswordChange: undefined,
-        currentPassword: this.currentPassword
       };
+      if(!this.admin) {
+        updateUserInfo = {
+          ...updateUserInfo,
+          currentPassword: this.currentPassword,
+        }
+      }
       if(this.changePassword){
         updateUserInfo = {
           ...updateUserInfo,
@@ -183,9 +205,10 @@ export default class UserModal extends Vue {
           passwordConfirmation: this.passwordConfirmation,
         }
       }
-      ServerModule.updateUserInfo(updateUserInfo)
-        .then(() => {
+      ServerModule.updateUserInfo({id: this.user.id, info: updateUserInfo})
+        .then((data) => {
           SnackbarModule.notify('User updated successfully.');
+          this.$emit('update-user', data);
           this.dialog = false;
         })
         .catch((error) => {
@@ -207,6 +230,14 @@ export default class UserModal extends Vue {
 
   changePasswordDialog() {
     this.changePassword = !this.changePassword
+  }
+
+  get title(): string {
+    if(this.admin) {
+      return `Update account information for ${this.user.email}`
+    } else {
+      return 'Update your account information'
+    }
   }
 }
 </script>

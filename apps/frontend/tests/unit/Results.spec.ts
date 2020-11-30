@@ -168,7 +168,8 @@ describe('Datatable', () => {
         $router
       },
       propsData: {
-        filter: (wrapper.vm as any).all_filter
+        filter: (wrapper.vm as any).all_filter,
+        showImpact: true
       }
     });
     const expected =

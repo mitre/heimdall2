@@ -1,14 +1,12 @@
 <template>
-  <div v-if="serverMode">
-    <LinkItem
-      id="logout_button"
-      key="user"
-      text="Logout"
-      icon="mdi-logout"
-      @click="logOut"
-      >Logout</LinkItem
-    >
-  </div>
+  <LinkItem
+    id="logout_button"
+    key="user"
+    text="Logout"
+    icon="mdi-logout"
+    @click="logOut"
+    >Logout</LinkItem
+  >
 </template>
 
 <script lang="ts">

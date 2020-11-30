@@ -1,4 +1,6 @@
+import {AppInfoModule} from '@/store/app_info';
 import {ServerModule} from '@/store/server';
+import Admin from '@/views/Admin.vue';
 import Compare from '@/views/Compare.vue';
 import Landing from '@/views/Landing.vue';
 import Login from '@/views/Login.vue';
@@ -42,6 +44,12 @@ const router = new Router({
       component: Signup
     },
     {
+      path: '/admin',
+      name: 'admin',
+      component: Admin,
+      meta: {requiresAuth: true, requiresAdmin: true}
+    },
+    {
       path: '*',
       redirect: '/results/all',
       meta: {requiresAuth: true}
@@ -51,9 +59,16 @@ const router = new Router({
 
 router.beforeEach((to, _, next) => {
   ServerModule.CheckForServer().then(() => {
+    AppInfoModule.CheckForUpdates();
     if (to.matched.some((record) => record.meta.requiresAuth)) {
       if (ServerModule.serverMode && !ServerModule.token) {
         next('/login');
+        return;
+      }
+    }
+    if (to.matched.some((record) => record.meta.requiresAdmin)) {
+      if (ServerModule.userInfo.role !== 'admin') {
+        next('/');
         return;
       }
     }

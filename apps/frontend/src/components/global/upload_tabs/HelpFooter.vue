@@ -5,7 +5,7 @@
         <AboutModal>
           <template #clickable="{on}">
             <v-btn text small v-on="on">
-              <v-icon small>mdi-information</v-icon>
+              <v-icon small>mdi-alpha-a-circle</v-icon>
               <span class="d-none d-sm-inline pl-3">About</span>
             </v-btn>
           </template>
@@ -19,11 +19,11 @@
           </template>
         </HelpModal>
         <v-btn :href="repository" target="_blank" text small>
-          <v-icon small>mdi-github-circle</v-icon>
+          <v-icon small>mdi-github</v-icon>
           <span class="d-none d-sm-inline pl-3">Github</span>
         </v-btn>
         <v-btn :href="repository" target="_blank" text small>
-          <v-icon small>mdi-library-books</v-icon>
+          <v-icon small>mdi-information</v-icon>
           <span class="d-none d-sm-inline pl-3">Docs</span>
         </v-btn>
         <v-btn :href="repository + changelog" target="_blank" text small>
@@ -36,11 +36,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 import HelpModal from '@/components/global/HelpModal.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
-import {AppInfoModule} from '@/store/app_info';
+import AppInfoMixin from '@/mixins/AppInfoMixin'
 
 @Component({
   components: {
@@ -48,18 +47,5 @@ import {AppInfoModule} from '@/store/app_info';
     HelpModal
   }
 })
-export default class HelpFooter extends Vue {
-  get version(): string {
-    return AppInfoModule.version;
-  }
-  get changelog(): string {
-    return AppInfoModule.changelog;
-  }
-  get repository(): string {
-    return AppInfoModule.repository;
-  }
-  get branch(): string {
-    return AppInfoModule.branch;
-  }
-}
+export default class HelpFooter extends mixins(AppInfoMixin) {}
 </script>

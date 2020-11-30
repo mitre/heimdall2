@@ -1,14 +1,15 @@
-import {AppInfo} from '@/store/app_info';
+import {IAppInfoState} from '@/store/app_info';
 import {ColorHack} from '@/store/color_hack';
 import {FilteredData} from '@/store/data_filters';
 import {InspecData} from '@/store/data_store';
 import {HashLookup} from '@/store/lookup_hashes';
 import {InspecIntake} from '@/store/report_intake';
+import {IServerState} from '@/store/server';
 import {SeverityCount} from '@/store/severity_counts';
+import {ISidebarState} from '@/store/sidebar_state';
 import {StatusCount} from '@/store/status_counts';
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {IServerState} from './server';
 
 Vue.use(Vuex);
 
@@ -33,8 +34,9 @@ export interface StoreType {
   lookup: HashLookup;
   intake: InspecIntake;
   colors: ColorHack;
-  info: AppInfo;
+  info: IAppInfoState;
   server: IServerState;
+  sidebar: ISidebarState;
 }
 const store = new Vuex.Store<StoreType>({});
 

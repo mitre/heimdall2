@@ -64,9 +64,15 @@ export class UsersService {
     return new UserDto(userData);
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<UserDto> {
+  async update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+    isAdmin: boolean
+  ): Promise<UserDto> {
     const user = await this.findByPkBang(id);
-    await this.testPassword(updateUserDto, user);
+    if (!isAdmin) {
+      await this.testPassword(updateUserDto, user);
+    }
     if (updateUserDto.password == null && user.forcePasswordChange) {
       throw new BadRequestException('You must change your password');
     } else if (updateUserDto.password) {
@@ -79,7 +85,10 @@ export class UsersService {
     user.lastName = updateUserDto.lastName || user.lastName;
     user.title = updateUserDto.title || user.title;
     user.organization = updateUserDto.organization || user.organization;
-    user.role = updateUserDto.role || user.role;
+    if (isAdmin) {
+      // Only admins can update roles
+      user.role = updateUserDto.role || user.role;
+    }
     user.forcePasswordChange =
       updateUserDto.forcePasswordChange || user.forcePasswordChange;
     const userData = await user.save();
@@ -87,24 +96,35 @@ export class UsersService {
   }
 
   async updateLoginMetadata(user: User): Promise<void> {
-    const id = user.id;
     user.lastLogin = new Date();
     user.loginCount++;
-    await this.userModel.update<User>(user, {
-      where: {
-        id
-      }
-    });
+    await user.save();
   }
 
-  async remove(id: number, deleteUserDto: DeleteUserDto): Promise<UserDto> {
+  async remove(
+    id: number,
+    deleteUserDto: DeleteUserDto,
+    isAdmin: boolean
+  ): Promise<UserDto> {
     const user = await this.findByPkBang(id);
-    try {
-      if (!(await compare(deleteUserDto.password, user.encryptedPassword))) {
-        throw new ForbiddenException();
+    if (!isAdmin) {
+      try {
+        if (!(await compare(deleteUserDto.password, user.encryptedPassword))) {
+          throw new ForbiddenException();
+        }
+      } catch {
+        throw new ForbiddenException(
+          'Password was incorrect, could not delete account'
+        );
       }
-    } catch {
-      throw new ForbiddenException();
+    }
+    const adminCount = await this.userModel.count({where: {role: 'admin'}});
+    // Do not allow the administrator to destroy the only
+    // administrator account
+    if (user.role === 'admin' && adminCount < 2) {
+      throw new ForbiddenException(
+        'Cannot destroy only administrator account, please promote another user to administrator first'
+      );
     }
     await user.destroy();
     return new UserDto(user);
