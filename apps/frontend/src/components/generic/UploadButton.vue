@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import Component, {mixins} from 'vue-class-component';
+import Component from 'vue-class-component';
 import UploadNexus from '@/components/global/UploadNexus.vue';
 import Vue from 'vue';
 
@@ -41,6 +41,5 @@ export default class LogoutButton extends Vue {
   show_modal() {
     this.showModal = true;
   }
-
 }
 </script>
