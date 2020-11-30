@@ -47,7 +47,7 @@ const router = new Router({
       path: '/admin',
       name: 'admin',
       component: Admin,
-      meta: {requiresAuth: true}
+      meta: {requiresAuth: true, requiresAdmin: true}
     },
     {
       path: '*',
@@ -63,6 +63,12 @@ router.beforeEach((to, _, next) => {
     if (to.matched.some((record) => record.meta.requiresAuth)) {
       if (ServerModule.serverMode && !ServerModule.token) {
         next('/login');
+        return;
+      }
+    }
+    if (to.matched.some((record) => record.meta.requiresAdmin)) {
+      if (ServerModule.userInfo.role !== 'admin') {
+        next('/');
         return;
       }
     }

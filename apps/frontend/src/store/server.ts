@@ -126,9 +126,9 @@ class Server extends VuexModule implements IServerState {
             this.SET_TOKEN(token);
           }
           if (userID !== null) {
-            this.SET_USERID(userID);
+            this.context.commit('SET_USERID', userID);
           }
-          this.GetUserInfo();
+          return this.GetUserInfo();
         }
       })
       .catch((_) => {
@@ -174,9 +174,9 @@ class Server extends VuexModule implements IServerState {
   @Action({rawError: true})
   public async GetUserInfo(): Promise<void> {
     if (this.userID) {
-      axios
+      return axios
         .get<IUser>(`/users/${this.userID}`)
-        .then(({data}) => this.SET_USER_INFO(data))
+        .then(({data}) => this.context.commit('SET_USER_INFO', data))
         .catch(() =>
           // If an error occurs fetching the users profile
           // then clear their token and refresh the page
