@@ -118,12 +118,12 @@ class Server extends VuexModule implements IServerState {
       .then((response) => {
         if (response.status === 200) {
           // This means the server successfully responded and we are therefore in server mode
-          this.SET_SERVER(potentialUrl);
-          this.SET_STARTUP_SETTINGS(response.data);
+          this.context.commit('SET_SERVER', potentialUrl);
+          this.context.commit('SET_STARTUP_SETTINGS', response.data);
           const token = local_token.get();
           const userID = localUserID.get();
           if (token !== null) {
-            this.SET_TOKEN(token);
+            this.context.commit('SET_TOKEN', token);
           }
           if (userID !== null) {
             this.context.commit('SET_USERID', userID);
@@ -136,15 +136,15 @@ class Server extends VuexModule implements IServerState {
         // and there is therefore no action is required.
       })
       .then((_) => {
-        this.SET_LOADING(false);
+        this.context.commit('SET_LOADING', false);
       });
   }
 
   @Action({rawError: true})
   public async Login(userInfo: {email: string; password: string}) {
     return axios.post('/authn/login', userInfo).then(({data}) => {
-      this.SET_TOKEN(data.accessToken);
-      this.SET_USERID(data.userID);
+      this.context.commit('SET_TOKEN', data.accessToken);
+      this.context.commit('SET_USERID', data.userID);
       this.GetUserInfo();
     });
   }
@@ -165,7 +165,7 @@ class Server extends VuexModule implements IServerState {
   }): Promise<IUser> {
     return axios.put<IUser>(`/users/${user.id}`, user.info).then(({data}) => {
       if (this.userInfo.id === data.id) {
-        this.SET_USER_INFO(data);
+        this.context.commit('SET_USER_INFO', data);
       }
       return data;
     });

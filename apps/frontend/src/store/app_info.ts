@@ -64,21 +64,21 @@ export class AppInfo extends VuexModule implements IAppInfoState {
         })
         .then(({data}) => {
           const latest = data[0].name.replace('v', '');
-          this.SET_VERSION(latest);
+          this.context.commit('SET_VERSION', latest);
           if (latest !== this.version) {
-            this.SET_UPDATE_NOTIFICATION(true);
+            this.context.commit('SET_UPDATE_NOTIFICATION', true);
           }
         })
         .finally(() => {
           // Guard to stop checking for updates every tab change
-          this.SET_CHECKED_FOR_UPDATES(true);
+          this.context.commit('SET_CHECKED_FOR_UPDATES', true);
         });
     }
   }
 
   @Action
   public SetUpdateVisibility(visible: boolean) {
-    this.SET_UPDATE_NOTIFICATION(visible);
+    this.context.commit('SET_UPDATE_NOTIFICATION', visible);
   }
 
   /** The app version */

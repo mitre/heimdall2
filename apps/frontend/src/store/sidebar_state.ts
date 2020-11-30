@@ -31,7 +31,7 @@ export class SidebarState extends VuexModule implements ISidebarState {
 
   @Action
   public UpdateActive(state: boolean): void {
-    this.SET_ACTIVE(state);
+    this.context.commit('SET_ACTIVE', state);
   }
 }
 
