@@ -28,7 +28,7 @@ import Vue from 'vue';
     UploadNexus
   }
 })
-export default class LogoutButton extends Vue {
+export default class UploadButton extends Vue {
   showModal: boolean = false;
 
   /**
