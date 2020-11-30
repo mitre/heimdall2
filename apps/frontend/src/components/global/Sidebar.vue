@@ -13,7 +13,7 @@
   >
     <v-list dense class="px-2" subheader>
       <v-subheader>Files</v-subheader>
-      <v-expansion-panels v-model="active_path" accordion mandatory>
+      <v-expansion-panels v-model="active_path" accordion>
         <DropdownContent
           text="Results"
           :files="visible_evaluation_files"

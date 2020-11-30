@@ -203,6 +203,11 @@ export const CREATE_ADMIN_DTO: CreateUserDto = {
   role: 'admin'
 };
 
+export const CREATE_SECOND_ADMIN_DTO: CreateUserDto = {
+  ...CREATE_ADMIN_DTO,
+  email: 'admin2@yahoo.com'
+};
+
 export const CREATE_USER_DTO_TEST_OBJ_2: CreateUserDto = {
   email: 'def@yahoo.com',
   password: 'LETmeiN123$$$tP',
@@ -460,7 +465,7 @@ export const UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS: UpdateUserDto = {
 };
 
 // @ts-ignore
-export const UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD: UpdateUserDto = {
+export const UPDATE_USER_DTO_WITH_NO_CURRENT_PASSWORD: UpdateUserDto = {
   email: 'abc@yahoo.com',
   firstName: 'Test',
   lastName: 'Dummy',
@@ -468,8 +473,19 @@ export const UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD: UpdateUserDto = {
   title: 'fake title',
   role: 'user',
   password: 'ABCdefG456!@#pT',
-  passwordConfirmation: 'ABCdefG456!@#pT',
+  passwordConfirmation: 'ABCdefG456!@#pT'
+};
+
+// @ts-ignore
+export const UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD: UpdateUserDto = {
+  ...UPDATE_USER_DTO_WITH_NO_CURRENT_PASSWORD,
   currentPassword: 'invalid_password'
+};
+
+// @ts-ignore
+export const UPDATE_USER_DTO_WITH_ADMIN_ROLE: UpdateUserDto = {
+  role: 'admin',
+  currentPassword: 'LETmeiN123$$$tP'
 };
 
 // @ts-ignore

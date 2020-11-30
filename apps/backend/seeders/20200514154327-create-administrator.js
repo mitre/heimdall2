@@ -11,6 +11,7 @@ module.exports = {
     if(result[0].count === '0') {
       console.log('No administrator user exists! Creating an administrator.')
       var password = require('crypto').randomBytes(16).toString('hex')
+      console.log('New administrator email is: admin@heimdall.local')
       console.log('New administrator password is: ' + password)
       console.log('You will be forced to change this password on first login.')
       return queryInterface.bulkInsert('Users', [{

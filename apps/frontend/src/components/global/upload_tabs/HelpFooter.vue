@@ -5,7 +5,7 @@
         <AboutModal>
           <template #clickable="{on}">
             <v-btn text small v-on="on">
-              <v-icon small>mdi-information</v-icon>
+              <v-icon small>mdi-alpha-a-circle</v-icon>
               <span class="d-none d-sm-inline pl-3">About</span>
             </v-btn>
           </template>
@@ -19,11 +19,11 @@
           </template>
         </HelpModal>
         <v-btn :href="repository" target="_blank" text small>
-          <v-icon small>mdi-github-circle</v-icon>
+          <v-icon small>mdi-github</v-icon>
           <span class="d-none d-sm-inline pl-3">Github</span>
         </v-btn>
         <v-btn :href="repository" target="_blank" text small>
-          <v-icon small>mdi-library-books</v-icon>
+          <v-icon small>mdi-information</v-icon>
           <span class="d-none d-sm-inline pl-3">Docs</span>
         </v-btn>
         <v-btn :href="repository + changelog" target="_blank" text small>

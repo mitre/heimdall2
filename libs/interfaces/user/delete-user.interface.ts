@@ -1,3 +1,3 @@
 export interface IDeleteUser {
-  readonly password: string;
+  readonly password?: string;
 }

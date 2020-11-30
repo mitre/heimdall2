@@ -5,11 +5,8 @@
   <div>
     <!-- Top appbar. The center content of it is configured via the topbar-content slot -->
     <Topbar :title="title" @toggle-drawer="drawer = !drawer">
-      <template #center>
+      <template #content>
         <slot name="topbar-content" />
-      </template>
-      <template #data>
-        <slot name="topbar-data" />
       </template>
     </Topbar>
 
@@ -37,6 +34,7 @@ import Sidebar from '@/components/global/Sidebar.vue';
 import Topbar from '@/components/global/Topbar.vue';
 import UpdateNotification from '@/components/global/UpdateNotification.vue';
 import {Prop} from 'vue-property-decorator';
+import {SidebarModule} from '@/store/sidebar_state';
 
 @Component({
   components: {
@@ -47,7 +45,14 @@ import {Prop} from 'vue-property-decorator';
 })
 export default class Base extends Vue {
   @Prop({default: 'Heimdall'}) readonly title!: string;
+
   /** Models if the drawer is open */
-  drawer: boolean = true;
+  get drawer(): boolean {
+    return SidebarModule.active
+  }
+
+  set drawer(state: boolean) {
+    SidebarModule.UpdateActive(state);
+  }
 }
 </script>

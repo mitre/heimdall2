@@ -191,7 +191,6 @@ export default class Signup extends Vue {
   get passwordConfirmationErrors() {
     const errors: Array<string> = [];
     if (!this.$v.passwordConfirmation.$dirty) return errors;
-    // !this.$v.passwordConfirmation.required && errors.push('Password confirmation is required.')
     !this.$v.passwordConfirmation.sameAsPassword &&
       errors.push('Password and password confirmation must match.');
     return errors;
