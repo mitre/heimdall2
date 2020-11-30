@@ -1,5 +1,5 @@
+import UploadButton from '@/components/generic/UploadButton.vue';
 import Modal from '@/components/global/Modal.vue';
-import Topbar from '@/components/global/Topbar.vue';
 import UploadNexus from '@/components/global/UploadNexus.vue';
 import {mount, Wrapper} from '@vue/test-utils';
 import Vuetify from 'vuetify';
@@ -7,16 +7,13 @@ import {addElemWithDataAppToBody} from '../util/testingUtils';
 
 addElemWithDataAppToBody();
 
-describe('The Topbar', () => {
+describe('The Upload Button', () => {
   const vuetify = new Vuetify();
   let wrapper: Wrapper<Vue>;
 
   beforeEach(() => {
-    wrapper = mount(Topbar, {
-      vuetify,
-      propsData: {
-        title: 'Example Title'
-      }
+    wrapper = mount(UploadButton, {
+      vuetify
     });
   });
 
