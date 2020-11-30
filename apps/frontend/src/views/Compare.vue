@@ -11,6 +11,7 @@
         label="Search"
         clearable
       />
+      <UploadButton />
     </template>
 
     <!-- The main content: comparisons of each set of controls in control_sets, etc -->
@@ -209,6 +210,7 @@ import Component from 'vue-class-component';
 import BaseView from '@/views/BaseView.vue';
 import Modal from '@/components/global/Modal.vue';
 import CompareRow from '@/components/cards/comparison/CompareRow.vue';
+import UploadButton from '@/components/generic/UploadButton.vue';
 
 import {FilteredDataModule} from '@/store/data_filters';
 import {ControlStatus, context} from 'inspecjs';
@@ -236,7 +238,8 @@ import {get_eval_start_time} from '@/utilities/delta_util';
     CompareRow,
     ProfileRow,
     StatusChart,
-    ApexLineChart
+    ApexLineChart,
+    UploadButton
   },
   directives: {
     resize

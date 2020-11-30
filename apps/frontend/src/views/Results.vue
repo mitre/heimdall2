@@ -1,6 +1,6 @@
 <template>
   <BaseView :title="curr_title">
-    <!-- Topbar config - give it a search bar -->
+    <!-- Topbar content - give it a search bar -->
     <template #topbar-content>
       <v-text-field
         v-show="show_search_mobile || !$vuetify.breakpoint.xs"
@@ -23,8 +23,7 @@
         <span class="d-none d-md-inline pr-2"> Clear </span>
         <v-icon>mdi-filter-remove</v-icon>
       </v-btn>
-    </template>
-    <template #topbar-data>
+      <UploadButton />
       <div class="text-center">
         <v-menu>
           <template #activator="{on, attrs}">
@@ -210,6 +209,7 @@ import Treemap from '@/components/cards/treemap/Treemap.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
 import SeverityChart from '@/components/cards/SeverityChart.vue';
 import ComplianceChart from '@/components/cards/ComplianceChart.vue';
+import UploadButton from '@/components/generic/UploadButton.vue';
 
 import ExportCaat from '@/components/global/ExportCaat.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
@@ -240,7 +240,8 @@ import {capitalize} from 'lodash';
     ExportNist,
     ExportJson,
     EvaluationInfo,
-    ProfileData
+    ProfileData,
+    UploadButton
   }
 })
 export default class Results extends Vue {

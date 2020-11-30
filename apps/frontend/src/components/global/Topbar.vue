@@ -9,27 +9,9 @@
     </v-toolbar-title>
     <v-spacer />
 
-    <!-- Our customizable content -->
-    <slot name="center" />
-
-    <v-btn
-      id="upload-btn"
-      :disabled="showModal"
-      class="mx-2"
-      @click="show_modal"
-    >
-      <span class="d-none d-md-inline pr-2"> Load </span>
-      <v-icon> mdi-cloud-upload </v-icon>
-    </v-btn>
-    <slot name="data" />
+    <slot name="content" />
 
     <TopbarDropdown />
-    <!-- File select modal -->
-    <UploadNexus
-      :visible="showModal"
-      @close-modal="close_modal"
-      @got-files="close_modal"
-    />
   </v-app-bar>
 </template>
 
@@ -50,22 +32,9 @@ import {Prop} from 'vue-property-decorator';
 export default class Topbar extends mixins(ServerMixin) {
   @Prop({type: String, required: true}) readonly title!: string;
 
-  showModal: boolean = false;
-
   /** Submits an event to clear all filters */
   clear(): void {
     this.$emit('clear');
-  }
-
-  /**
-   * Invoked when file(s) are loaded.
-   */
-  close_modal() {
-    this.showModal = false;
-  }
-
-  show_modal() {
-    this.showModal = true;
   }
 }
 </script>

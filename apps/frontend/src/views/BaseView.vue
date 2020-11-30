@@ -5,11 +5,8 @@
   <div>
     <!-- Top appbar. The center content of it is configured via the topbar-content slot -->
     <Topbar :title="title" @toggle-drawer="drawer = !drawer">
-      <template #center>
+      <template #content>
         <slot name="topbar-content" />
-      </template>
-      <template #data>
-        <slot name="topbar-data" />
       </template>
     </Topbar>
 
