@@ -1,6 +1,7 @@
 import {ValidationPipe} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
 import {json} from 'express';
+import rateLimit from 'express-rate-limit';
 import {AppModule} from './app.module';
 import {ConfigService} from './config/config.service';
 import helmet = require('helmet');
@@ -18,6 +19,18 @@ async function bootstrap() {
     })
   );
   app.use(json({limit: '50mb'}));
+  app.use(
+    '/authn/login',
+    rateLimit({
+      windowMs: 60 * 1000,
+      max: 20,
+      message: {
+        status: 429,
+        message: 'Too Many Requests',
+        error: 'Ratelimited'
+      }
+    })
+  );
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
