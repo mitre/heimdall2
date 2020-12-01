@@ -21,14 +21,18 @@
     >
       <h3 class="pa-2">Test</h3>
       <v-divider />
-      <div class="pa-2 mono text-justify">{{ result.code_desc.trim() }}</div>
+      <div
+        class="pa-2 mono text-justify"
+        v-html="sanitize_html(result.code_desc.trim())"
+      />
     </v-col>
     <v-col v-if="result.message" cols="12" sm="6" lg="5" class="left">
       <h3 class="pa-2">Result</h3>
       <v-divider />
-      <div class="pa-2 mono text-justify">
-        {{ result.message.trim() }}
-      </div>
+      <div
+        class="pa-2 mono text-justify"
+        v-html="sanitize_html(result.message.trim())"
+      />
     </v-col>
   </v-row>
 </template>
@@ -36,9 +40,11 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import sanitizeHtml from 'sanitize-html';
 
 import {Prop} from 'vue-property-decorator';
 import {HDFControlSegment} from 'inspecjs';
+import sanitize from 'sanitize-html';
 
 interface CollapsableElement extends Element {
   offsetHeight: Number;
@@ -52,9 +58,14 @@ export default class ControlRowCol extends Vue {
   @Prop({type: String, required: true}) readonly statusCode!: string;
   @Prop({type: Object, required: true}) readonly result!: HDFControlSegment;
 
+
   get status_color(): string {
     // maps stuff like "not applicable" -> "statusnotapplicable", which is a defined color name
     return `status${this.statusCode.replace(' ', '')}`;
+  }
+
+  sanitize_html(message: string): string {
+    return sanitize(message);
   }
 }
 </script>

@@ -16,6 +16,7 @@
                 <v-divider />
                 <br />
               </div>
+              <div v-html="sanitize_html(main_desc)" />
               {{ main_desc }}
             </div>
             <ControlRowCol
@@ -61,6 +62,8 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
+import sanitize from 'sanitize-html';
+
 
 //TODO: add line numbers
 import 'prismjs';
@@ -196,6 +199,10 @@ export default class ControlRowDetails extends Vue {
         value: c.hdf.descriptions.fix || c.data.tags.fix
       }
     ].filter((v) => v.value); // Get rid of nulls
+  }
+
+  sanitize_html(message: string): string {
+    return sanitize(message);
   }
 
   //for zebra background
