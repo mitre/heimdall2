@@ -8,7 +8,7 @@
     disable-route-watcher
     fixed
     temporary
-    width="375px"
+    width="600px"
     @input="$emit('input', $event)"
   >
     <v-list dense class="px-2" subheader>
