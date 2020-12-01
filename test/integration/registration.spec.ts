@@ -19,7 +19,7 @@ context('Registration', () => {
 
   // Run before each test
   beforeEach(() => {
-    const adminPassword = databaseHelper.createAdmin();
+    databaseHelper.createAdmin();
     cy.visit('127.0.0.1:3000/signup');
   });
 
