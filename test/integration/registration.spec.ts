@@ -5,18 +5,21 @@ import {
   CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD,
   CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
 } from '../../apps/backend/test/constants/users-test.constant';
+import DatabaseHelper from '../support/helpers/DatabaseHelper';
 import RegistrationPage from '../support/pages/RegistrationPage';
 import RegistrationVerifier from '../support/verifiers/RegistrationPageVerifier';
 import ToastVerifier from '../support/verifiers/ToastVerifier';
 
 context('Registration', () => {
   // Pages, verifiers, and modules
+  const databaseHelper = new DatabaseHelper();
   const registrationPage = new RegistrationPage();
   const registrationVerifier = new RegistrationVerifier();
   const toastVerifier = new ToastVerifier();
 
   // Run before each test
   beforeEach(() => {
+    const adminPassword = databaseHelper.createAdmin();
     cy.visit('127.0.0.1:3000/signup');
   });
 
@@ -31,6 +34,7 @@ context('Registration', () => {
     });
 
     it('rejects emails that already exist', async () => {
+      registrationPage.register(CREATE_USER_DTO_TEST_OBJ);
       registrationPage.register(CREATE_USER_DTO_TEST_OBJ);
       toastVerifier.toastTextContains('Email must be unique');
     });

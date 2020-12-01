@@ -4,4 +4,9 @@ export default class LoginPage {
     cy.get('input[name=password]').type(user.password);
     cy.get('#login_button').click();
   }
+  loginSuccessUserpass(username: string, password: string): void {
+    cy.get('input[name=email]').type(username);
+    cy.get('input[name=password]').type(password);
+    cy.get('#login_button').click();
+  }
 }

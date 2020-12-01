@@ -5,7 +5,9 @@
   "description": "",
   "scripts": {
     "lint": "eslint \"**/*.ts\" --fix",
-    "lint:ci": "eslint \"**/*.ts\" --max-warnings 0"
+    "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
+    "start": "true",
+    "start:dev": "true"
   },
   "devDependencies": {
     "eslint-plugin-cypress": "^2.11.2"

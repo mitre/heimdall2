@@ -7,7 +7,7 @@
     </template>
 
     <v-card>
-      <v-card-title class="headline grey" primary-title>{{
+      <v-card-title id="userModalTitle" class="headline grey" primary-title>{{
         title
       }}</v-card-title>
       <v-card-text v-if="userInfo === null">
