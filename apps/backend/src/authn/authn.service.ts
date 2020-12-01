@@ -1,6 +1,7 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
 import {compare} from 'bcrypt';
+import {User} from 'src/users/user.model';
 import {UsersService} from '../users/users.service';
 
 @Injectable()
@@ -11,7 +12,12 @@ export class AuthnService {
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.usersService.findModelByEmail(email);
+    let user: User;
+    try {
+      user = await this.usersService.findModelByEmail(email);
+    } catch {
+      throw new UnauthorizedException('Incorrect Username or Password');
+    }
     if (user && (await compare(password, user.encryptedPassword))) {
       this.usersService.updateLoginMetadata(user);
       return user;

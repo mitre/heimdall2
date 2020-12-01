@@ -68,7 +68,10 @@ describe('Authentication', () => {
       await integrationSpecHelper.addUser(CREATE_USER_DTO_TEST_OBJ);
       await logInPage.loginFailure(page, BAD_LOGIN_AUTHENTICATION);
       await logInVerifier.verifyLoginFormPresent(page);
-      await toastVerifier.verifyErrorPresent(page, 'Unauthorized');
+      await toastVerifier.verifyErrorPresent(
+        page,
+        'Incorrect Username or Password'
+      );
     });
 
     it('fails to find a user that does not exist', async () => {
@@ -78,7 +81,7 @@ describe('Authentication', () => {
       await logInVerifier.verifyLoginFormPresent(page);
       await toastVerifier.verifyErrorPresent(
         page,
-        'User with given id not found'
+        'Incorrect Username or Password'
       );
     });
   });
