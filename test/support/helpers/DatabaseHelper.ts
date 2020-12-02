@@ -3,6 +3,7 @@ export default class DatabaseHelper {
     const re = /[\n\r].*New administrator password is:s*([^\n\r]*)/;
     let adminPassword = '';
     cy.exec('sudo systemctl restart postgresql');
+    cy.exec('sleep 2');
     cy.exec('yarn backend sequelize-cli db:drop');
     cy.exec('yarn backend sequelize-cli db:create');
     cy.exec('yarn backend sequelize-cli db:migrate');
