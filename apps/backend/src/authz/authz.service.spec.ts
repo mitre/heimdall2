@@ -1,20 +1,7 @@
-import {getModelToken, SequelizeModule} from '@nestjs/sequelize';
 import {Test, TestingModule} from '@nestjs/testing';
-import {DatabaseModule} from '../../src/database/database.module';
 import {DatabaseService} from '../../src/database/database.service';
-import {
-  ADMIN_DELETE_USERS_POLICY_DTO,
-  POLICY_ARRAY,
-  USER_DELETE_USERS_POLICY_DTO,
-  USER_UPDATE_USERS_POLICY_DTO
-} from '../../test/constants/policy-test.constant';
-import {
-  ADMIN,
-  TEST_USER,
-  TEST_USER_WITH_INVALID_ROLE
-} from '../../test/constants/users-test.constant';
+import {ADMIN, TEST_USER} from '../../test/constants/users-test.constant';
 import {AuthzService} from './authz.service';
-import {Policy} from './policy.model';
 
 describe('Authz Service', () => {
   let testingModule: TestingModule;
@@ -23,21 +10,10 @@ describe('Authz Service', () => {
 
   beforeAll(async () => {
     testingModule = await Test.createTestingModule({
-      imports: [DatabaseModule, SequelizeModule.forFeature([Policy])],
-      providers: [DatabaseService, AuthzService]
+      providers: [AuthzService]
     }).compile();
 
     authzService = testingModule.get<AuthzService>(AuthzService);
-    databaseService = testingModule.get<DatabaseService>(DatabaseService);
-
-    // Seed database with policies
-    authzService.abac.allow(ADMIN_DELETE_USERS_POLICY_DTO);
-    authzService.abac.allow(USER_DELETE_USERS_POLICY_DTO);
-    authzService.abac.allow(USER_UPDATE_USERS_POLICY_DTO);
-  });
-
-  beforeEach(() => {
-    return databaseService.cleanAll();
   });
 
   describe('Test the can function', () => {
@@ -50,16 +26,6 @@ describe('Authz Service', () => {
         expect(
           await authzService.can(TEST_USER, 'delete', '/users')
         ).toBeTruthy();
-      });
-
-      it('should deny access when subject role is invalid', async () => {
-        expect(
-          await authzService.can(
-            TEST_USER_WITH_INVALID_ROLE,
-            'delete',
-            '/users'
-          )
-        ).toBeFalsy();
       });
 
       it('should deny access when action is invalid delete', async () => {
@@ -88,33 +54,15 @@ describe('Authz Service', () => {
 
     beforeAll(async () => {
       await Test.createTestingModule({
-        imports: [DatabaseModule, SequelizeModule.forFeature([Policy])],
-        providers: [
-          DatabaseService,
-          AuthzService,
-          {
-            provide: getModelToken(Policy),
-            useValue: {
-              findAll: jest.fn().mockReturnValueOnce(POLICY_ARRAY)
-            }
-          }
-        ]
+        providers: [AuthzService]
       }).compile();
     });
 
-    it('should log the loaded policies', async () => {
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Attempting to read configuration file `.env`!'
-      );
-      expect(consoleSpy).toHaveBeenCalledWith('Read config!');
+    it('should log the loaded default policies', async () => {
       expect(consoleSpy).toHaveBeenCalledWith('Loaded Policy!');
-      expect(consoleSpy).toHaveBeenCalledWith('\tRole: user');
+      expect(consoleSpy).toHaveBeenCalledWith('\tRole: any');
       expect(consoleSpy).toHaveBeenCalledWith('\tAction: delete');
-      expect(consoleSpy).toHaveBeenCalledWith('\tResource: users\n');
-      expect(consoleSpy).toHaveBeenCalledWith('Loaded Policy!');
-      expect(consoleSpy).toHaveBeenCalledWith('\tRole: admin');
-      expect(consoleSpy).toHaveBeenCalledWith('\tAction: delete');
-      expect(consoleSpy).toHaveBeenCalledWith('\tResource: users\n');
+      expect(consoleSpy).toHaveBeenCalledWith('\tResource: users');
     });
   });
 

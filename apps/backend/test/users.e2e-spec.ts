@@ -6,10 +6,6 @@ import {AppModule} from './../src/app.module';
 import {DatabaseService} from './../src/database/database.service';
 import {UsersService} from './../src/users/users.service';
 import {
-  USER_DELETE_USERS_POLICY_DTO,
-  USER_UPDATE_USERS_POLICY_DTO
-} from './constants/policy-test.constant';
-import {
   ADMIN_LOGIN_AUTHENTICATION,
   CREATE_ADMIN_DTO,
   CREATE_SECOND_ADMIN_DTO,
@@ -280,9 +276,6 @@ describe('/users', () => {
     });
 
     describe('Update', () => {
-      beforeEach(async () => {
-        await authzService.abac.allow(USER_UPDATE_USERS_POLICY_DTO);
-      });
       it('should return 200 status when user is updated', async () => {
         return update(
           app,
@@ -412,9 +405,6 @@ describe('/users', () => {
     });
 
     describe('Destroy', () => {
-      beforeEach(async () => {
-        await authzService.abac.allow(USER_DELETE_USERS_POLICY_DTO);
-      });
       it('should return 200 status after user is deleted', async () => {
         return destroy(app, id, DELETE_USER_DTO_TEST_OBJ, jwtToken)
           .expect(HttpStatus.OK)

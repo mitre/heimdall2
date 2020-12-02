@@ -1,31 +1,24 @@
 import {Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/sequelize';
 import {SimpleAbac} from 'simple-abac';
-import {PolicyDto} from './dto/policy.dto';
-import {Policy} from './policy.model';
+import {DEFAULT_POLICIES} from './policies';
 
 @Injectable()
 export class AuthzService {
   abac: SimpleAbac;
 
-  constructor(
-    @InjectModel(Policy)
-    private policyModel: typeof Policy
-  ) {
+  constructor() {
     this.abac = new SimpleAbac();
-    this.loadAllPolicies();
+    this.loadDefaultPolicies();
   }
 
-  private async loadAllPolicies() {
-    const policies = await this.policyModel.findAll<Policy>();
-    for (const policy of policies) {
-      const policyDto = new PolicyDto(policy);
-      this.abac.allow(policyDto);
+  private async loadDefaultPolicies() {
+    for (const policy of DEFAULT_POLICIES) {
+      this.abac.allow(policy);
       console.log('Loaded Policy!');
-      console.log('\tRole: ' + policyDto.role);
-      console.log('\tAction: ' + policyDto.actions);
-      console.log('\tResource: ' + policyDto.targets);
-      console.log('\tCondition: ' + policyDto.condition?.toString() + '\n');
+      console.log('\tRole: ' + policy.role);
+      console.log('\tAction: ' + policy.actions);
+      console.log('\tResource: ' + policy.targets);
+      console.log('\tCondition: ' + policy.condition?.toString() + '\n');
     }
   }
 
