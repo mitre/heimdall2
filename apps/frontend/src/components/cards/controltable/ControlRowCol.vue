@@ -45,8 +45,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import sanitizeHtml from 'sanitize-html';
-
 import {Prop} from 'vue-property-decorator';
 import {HDFControlSegment} from 'inspecjs';
 import sanitize from 'sanitize-html';
