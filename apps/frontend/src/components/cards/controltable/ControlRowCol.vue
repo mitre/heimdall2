@@ -23,7 +23,7 @@
       <v-divider />
       <!-- HTML is sanitized with sanitize-html -->
       <!-- eslint-disable -->
-      <div
+      <pre
         class="pa-2 mono text-justify"
         v-html="sanitize_html(result.code_desc.trim())" 
       />
@@ -54,9 +54,7 @@ interface CollapsableElement extends Element {
   offsetWidth: Number;
 }
 
-@Component({
-  components: {}
-})
+@Component({})
 export default class ControlRowCol extends Vue {
   @Prop({type: String, required: true}) readonly statusCode!: string;
   @Prop({type: Object, required: true}) readonly result!: HDFControlSegment;
