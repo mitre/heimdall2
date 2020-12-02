@@ -4,7 +4,12 @@
 <template>
   <div>
     <!-- Top appbar. The center content of it is configured via the topbar-content slot -->
-    <Topbar :title="title" @toggle-drawer="drawer = !drawer">
+    <Topbar
+      :title="title"
+      :style="{'z-index': topbarZIndex}"
+      :minimal-topbar="minimalTopbar"
+      @toggle-drawer="drawer = !drawer"
+    >
       <template #content>
         <slot name="topbar-content" />
       </template>
@@ -45,6 +50,8 @@ import {SidebarModule} from '@/store/sidebar_state';
 })
 export default class Base extends Vue {
   @Prop({default: 'Heimdall'}) readonly title!: string;
+  @Prop({default: 5}) readonly topbarZIndex!: number;
+  @Prop({default: false}) readonly minimalTopbar!: boolean;
 
   /** Models if the drawer is open */
   get drawer(): boolean {
@@ -56,3 +63,5 @@ export default class Base extends Vue {
   }
 }
 </script>
+
+<style scoped></style>
