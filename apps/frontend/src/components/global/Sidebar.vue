@@ -8,7 +8,7 @@
     disable-route-watcher
     fixed
     temporary
-    width="375px"
+    width="600px"
     @input="$emit('input', $event)"
   >
     <v-expansion-panels v-model="active_path" accordion>
