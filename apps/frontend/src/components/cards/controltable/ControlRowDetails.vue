@@ -35,7 +35,12 @@
                 <v-row :key="'tab' + index" :class="zebra(index)">
                   <v-col cols="12" :class="detail.class">
                     <h3>{{ detail.name }}:</h3>
-                    <h4 class="mono preserve-whitespace">{{ detail.value }}</h4>
+                    <!-- eslint-disable -->
+                    <h4
+                      class="mono preserve-whitespace"
+                      v-html="sanitize_html(detail.value)"
+                    />
+                    <!-- eslint-enable -->
                   </v-col>
                   <v-divider />
                 </v-row>
