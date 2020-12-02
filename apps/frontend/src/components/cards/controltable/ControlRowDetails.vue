@@ -17,7 +17,6 @@
                 <br />
               </div>
               <div v-html="sanitize_html(main_desc)" />
-              {{ main_desc }}
             </div>
             <ControlRowCol
               v-for="(result, index) in control.root.hdf.segments"
