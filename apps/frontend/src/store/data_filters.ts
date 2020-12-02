@@ -2,6 +2,7 @@
  * This module provides a cached, reusable method for filtering data from data_store.
  */
 
+import {Trinary} from '@/enums/Trinary';
 import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
 import {FileID, SourcedContextualizedEvaluation} from '@/store/report_intake';
 import Store from '@/store/store';
@@ -127,7 +128,7 @@ export class FilteredData extends VuexModule {
 
   @Action
   public toggle_all_evaluations(): void {
-    if (this.all_evaluations_selected) {
+    if (this.all_evaluations_selected === Trinary.On) {
       this.CLEAR_ALL_EVALUATIONS();
     } else {
       this.SELECT_EVALUATIONS(
@@ -138,7 +139,7 @@ export class FilteredData extends VuexModule {
 
   @Action
   public toggle_all_profiles(): void {
-    if (this.all_profiles_selected) {
+    if (this.all_profiles_selected === Trinary.On) {
       this.CLEAR_ALL_PROFILES();
     } else {
       this.SELECT_PROFILES(
@@ -253,18 +254,27 @@ export class FilteredData extends VuexModule {
   }
 
   // check to see if all profiles are selected
-  get all_profiles_selected(): boolean {
-    return (
-      this.selected_profiles.length === InspecDataModule.allProfileFiles.length
-    );
+  get all_profiles_selected(): Trinary {
+    switch (this.selected_profiles.length) {
+      case 0:
+        return Trinary.Off;
+      case InspecDataModule.allProfileFiles.length:
+        return Trinary.On;
+      default:
+        return Trinary.Mixed;
+    }
   }
 
   // check to see if all evaluations are selected
-  get all_evaluations_selected(): boolean {
-    return (
-      this.selected_evaluations.length ===
-      InspecDataModule.allEvaluationFiles.length
-    );
+  get all_evaluations_selected(): Trinary {
+    switch (this.selected_evaluations.length) {
+      case 0:
+        return Trinary.Off;
+      case InspecDataModule.allEvaluationFiles.length:
+        return Trinary.On;
+      default:
+        return Trinary.Mixed;
+    }
   }
 
   /**
