@@ -5,6 +5,7 @@
   <div>
     <!-- Top appbar. The center content of it is configured via the topbar-content slot -->
     <Topbar
+      v-if="showTopbar"
       :title="title"
       :style="{'z-index': topbarZIndex}"
       :minimal-topbar="minimalTopbar"
@@ -40,6 +41,7 @@ import Topbar from '@/components/global/Topbar.vue';
 import UpdateNotification from '@/components/global/UpdateNotification.vue';
 import {Prop} from 'vue-property-decorator';
 import {SidebarModule} from '@/store/sidebar_state';
+import {ServerModule} from '@/store/server';
 
 @Component({
   components: {
@@ -52,7 +54,7 @@ export default class Base extends Vue {
   @Prop({default: 'Heimdall'}) readonly title!: string;
   @Prop({default: 5}) readonly topbarZIndex!: number;
   @Prop({default: false}) readonly minimalTopbar!: boolean;
-
+  @Prop({default: true}) readonly showTopbar!: boolean;
   /** Models if the drawer is open */
   get drawer(): boolean {
     return SidebarModule.active

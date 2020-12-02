@@ -1,5 +1,11 @@
 <template>
-  <BaseView title="Load Sample" :topbar-z-index="1000" :minimal-topbar="true">
+  <BaseView
+    title="Load Sample"
+    :show-toolbar="false"
+    :show-topbar="server_mode"
+    :minimal-topbar="true"
+    :topbar-z-index="1000"
+  >
     <v-row>
       <v-col center xl="8" md="8" sm="12" xs="12">
         <UploadNexus retain-focus :persistent="true" />
@@ -13,6 +19,8 @@ import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
 import UploadNexus from '@/components/global/UploadNexus.vue';
 import BaseView from '@/views/BaseView.vue';
+import { ServerModule } from '@/store/server';
+
 
 @Component({
   components: {
@@ -20,5 +28,9 @@ import BaseView from '@/views/BaseView.vue';
     BaseView
   }
 })
-export default class Landing extends Vue {}
+export default class Landing extends Vue {
+  get server_mode(): boolean {
+    return ServerModule.serverMode
+  }
+}
 </script>
