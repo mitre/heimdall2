@@ -63,5 +63,3 @@ export default class Base extends Vue {
   }
 }
 </script>
-
-<style scoped></style>
