@@ -8,29 +8,26 @@
     disable-route-watcher
     fixed
     temporary
-    width="375px"
+    width="600px"
     @input="$emit('input', $event)"
   >
-    <v-list dense class="px-2" subheader>
-      <v-subheader>Files</v-subheader>
-      <v-expansion-panels v-model="active_path" accordion>
-        <DropdownContent
-          text="Results"
-          :files="visible_evaluation_files"
-          :all-selected="all_evaluations_selected"
-          :enable-compare-view="true"
-          :compare-view-active="compareViewActive"
-          @toggle-all="toggle_all_evaluations"
-          @toggle-compare-view="compareView"
-        />
-        <DropdownContent
-          text="Profiles"
-          :files="visible_profile_files"
-          :all-selected="all_profiles_selected"
-          @toggle-all="toggle_all_profiles"
-        />
-      </v-expansion-panels>
-    </v-list>
+    <v-expansion-panels v-model="active_path" accordion>
+      <DropdownContent
+        header-text="Results"
+        :files="visible_evaluation_files"
+        :all-selected="all_evaluations_selected"
+        :enable-compare-view="true"
+        :compare-view-active="compareViewActive"
+        @toggle-all="toggle_all_evaluations"
+        @toggle-compare-view="compareView"
+      />
+      <DropdownContent
+        header-text="Profiles"
+        :files="visible_profile_files"
+        :all-selected="all_profiles_selected"
+        @toggle-all="toggle_all_profiles"
+      />
+    </v-expansion-panels>
   </v-navigation-drawer>
 </template>
 
@@ -43,6 +40,8 @@ import RouteMixin from '@/mixins/RouteMixin';
 
 import DropdownContent from '@/components/global/sidebaritems/DropdownContent.vue';
 import {Prop} from 'vue-property-decorator';
+
+import { Trinary } from '@/enums/Trinary';
 
 @Component({
   components: {
@@ -83,11 +82,11 @@ export default class Sidebar extends mixins(RouteMixin) {
     return files.sort((a, b) => a.filename.localeCompare(b.filename));
   }
 
-  get all_evaluations_selected(): boolean {
+  get all_evaluations_selected(): Trinary {
     return FilteredDataModule.all_evaluations_selected;
   }
 
-  get all_profiles_selected(): boolean {
+  get all_profiles_selected(): Trinary {
     return FilteredDataModule.all_profiles_selected;
   }
 
