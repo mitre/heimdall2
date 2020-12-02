@@ -21,18 +21,23 @@
     >
       <h3 class="pa-2">Test</h3>
       <v-divider />
+      <!-- HTML is sanitized with sanitize-html -->
+      <!-- eslint-disable -->
       <div
         class="pa-2 mono text-justify"
-        v-html="sanitize_html(result.code_desc.trim())"
+        v-html="sanitize_html(result.code_desc.trim())" 
       />
+      <!-- eslint-enable -->
     </v-col>
     <v-col v-if="result.message" cols="12" sm="6" lg="5" class="left">
       <h3 class="pa-2">Result</h3>
       <v-divider />
+      <!-- eslint-disable -->
       <div
         class="pa-2 mono text-justify"
         v-html="sanitize_html(result.message.trim())"
       />
+      <!-- eslint-enable -->
     </v-col>
   </v-row>
 </template>

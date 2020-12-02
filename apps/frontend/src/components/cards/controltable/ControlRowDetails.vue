@@ -16,6 +16,7 @@
                 <v-divider />
                 <br />
               </div>
+              <!-- eslint-disable-next-line -->
               <div v-html="sanitize_html(main_desc)" />
             </div>
             <ControlRowCol
