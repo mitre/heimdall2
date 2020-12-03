@@ -6,14 +6,15 @@ import {UsersService} from '../users/users.service';
 export class AbacGuard implements CanActivate {
   constructor(
     private readonly authz: AuthzService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     return this.authz.can(
       await this.usersService.findById(request.user.id),
       request.method.toLowerCase(),
-      request.url
+      request.url,
+      request.body
     );
   }
 }

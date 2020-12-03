@@ -1,15 +1,18 @@
 import {
   AllowNull,
   AutoIncrement,
+  BelongsTo,
   Column,
   CreatedAt,
   DataType,
+  ForeignKey,
   HasMany,
   Model,
   PrimaryKey,
   Table,
   UpdatedAt
 } from 'sequelize-typescript';
+import {User} from '../users/user.model';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 
 @Table
@@ -18,7 +21,7 @@ export class Evaluation extends Model<Evaluation> {
   @AutoIncrement
   @AllowNull(false)
   @Column(DataType.BIGINT)
-  id!: number;
+  id!: string;
 
   @AllowNull(false)
   @Column
@@ -27,6 +30,13 @@ export class Evaluation extends Model<Evaluation> {
   @AllowNull(false)
   @Column(DataType.JSON)
   data!: Record<string, any>;
+
+  @ForeignKey(() => User)
+  @Column(DataType.BIGINT)
+  userId!: string;
+
+  @BelongsTo(() => User)
+  user!: User;
 
   @CreatedAt
   @AllowNull(false)

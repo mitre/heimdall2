@@ -65,7 +65,7 @@ export type TextLoadOptions = {
   /** The filename to denote this object with */
   filename: string;
 
-  database_id?: number;
+  database_id?: string;
 
   createdAt?: Date;
   updatedAt?: Date;

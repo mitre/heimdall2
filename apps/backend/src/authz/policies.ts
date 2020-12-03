@@ -34,5 +34,20 @@ export const DEFAULT_POLICIES: ISimpleAbacAbilities[] = [
     role: 'admin',
     actions: 'delete',
     targets: 'users'
+  },
+  // Allow administrators to create evaluations with no stipulations
+  {
+    role: 'admin',
+    actions: 'post',
+    targets: 'evaluations'
+  },
+  // Allow users to create evaluations that belong to their userId
+  {
+    role: 'user',
+    actions: 'post',
+    targets: 'evaluations',
+    condition: (userId, targetOptions) => {
+      return userId === targetOptions.userId;
+    }
   }
 ];

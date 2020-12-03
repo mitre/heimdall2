@@ -17,7 +17,7 @@ export class EvaluationTag extends Model<EvaluationTag> {
   @AutoIncrement
   @AllowNull(false)
   @Column(DataType.BIGINT)
-  id!: number;
+  id!: string;
 
   @AllowNull(false)
   @Column
@@ -37,7 +37,7 @@ export class EvaluationTag extends Model<EvaluationTag> {
 
   @ForeignKey(() => Evaluation)
   @Column(DataType.BIGINT)
-  evaluationId!: number;
+  evaluationId!: string;
 
   @BelongsTo(() => Evaluation)
   evaluation!: Evaluation;

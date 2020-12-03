@@ -15,7 +15,7 @@ import {UniqueConstraintErrorFilter} from '../filters/unique-constraint-error.fi
 import {AbacGuard} from '../guards/abac.guard';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {TestGuard} from '../guards/test.guard';
-import {IsAdminInterceptor} from '../interceptors/is-admin.interceptor';
+import {CurrentUserInterceptor} from '../interceptors/current-user.interceptor';
 import {PasswordChangePipe} from '../pipes/password-change.pipe';
 import {PasswordComplexityPipe} from '../pipes/password-complexity.pipe';
 import {PasswordsMatchPipe} from '../pipes/passwords-match.pipe';
@@ -49,10 +49,10 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard, AbacGuard)
-  @UseInterceptors(IsAdminInterceptor)
+  @UseInterceptors(CurrentUserInterceptor)
   @Put(':id')
   async update(
-    @Param('role') role: string, // This comes from IsAdminIntercepter, not from client side
+    @Param('currentUser') currentUser: UserDto, // This comes from CurrentUserInterceptor, not from client side
     @Param('id') id: number,
     @Body(
       new PasswordsMatchPipe(),
@@ -61,18 +61,18 @@ export class UsersController {
     )
     updateUserDto: UpdateUserDto
   ): Promise<UserDto> {
-    return this.usersService.update(id, updateUserDto, role === 'admin');
+    return this.usersService.update(id, updateUserDto, currentUser.role === 'admin');
   }
 
   @UseGuards(JwtAuthGuard, AbacGuard)
-  @UseInterceptors(IsAdminInterceptor)
+  @UseInterceptors(CurrentUserInterceptor)
   @Delete(':id')
   async remove(
-    @Param('role') role: string,
+    @Param('currentUser') currentUser: UserDto,
     @Param('id') id: number,
     @Body() deleteUserDto: DeleteUserDto
   ): Promise<UserDto> {
-    return this.usersService.remove(id, deleteUserDto, role === 'admin');
+    return this.usersService.remove(id, deleteUserDto, currentUser.role === 'admin');
   }
 
   @UseGuards(TestGuard)

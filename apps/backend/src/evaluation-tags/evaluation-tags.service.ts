@@ -19,13 +19,13 @@ export class EvaluationTagsService {
     );
   }
 
-  async findById(id: number): Promise<EvaluationTagDto> {
+  async findById(id: string): Promise<EvaluationTagDto> {
     const evaluationTag = await this.findByPkBang(id);
     return new EvaluationTagDto(evaluationTag);
   }
 
   async create(
-    evaluationId: number,
+    evaluationId: string,
     createEvaluationTagDto: CreateEvaluationTagDto
   ): Promise<EvaluationTag> {
     const evaluationTag = new EvaluationTag();
@@ -36,14 +36,14 @@ export class EvaluationTagsService {
   }
 
   async update(
-    id: number,
+    id: string,
     updateEvaluationTagDto: UpdateEvaluationTagDto
   ): Promise<EvaluationTag> {
     const evaluationTag = await this.findByPkBang(id);
     return evaluationTag.update(updateEvaluationTagDto);
   }
 
-  async remove(id: number): Promise<EvaluationTagDto> {
+  async remove(id: string): Promise<EvaluationTagDto> {
     const evaluationTag = await this.findByPkBang(id);
     await evaluationTag.destroy();
     return new EvaluationTagDto(evaluationTag);

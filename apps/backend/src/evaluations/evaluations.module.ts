@@ -1,5 +1,6 @@
 import {Module} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
+import {UsersModule} from '../users/users.module';
 import {DatabaseModule} from '../database/database.module';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {EvaluationTagsModule} from '../evaluation-tags/evaluation-tags.module';
@@ -11,7 +12,8 @@ import {EvaluationsService} from './evaluations.service';
     SequelizeModule.forFeature([Evaluation]),
     SequelizeModule.forFeature([EvaluationTag]),
     EvaluationTagsModule,
-    DatabaseModule
+    DatabaseModule,
+    UsersModule
   ],
   providers: [EvaluationsService],
   controllers: [EvaluationsController],
