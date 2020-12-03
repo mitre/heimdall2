@@ -45,9 +45,12 @@ jobs:
        run: cp apps/backend/test/.env-ci apps/backend/.env
 
      - name: Create/migrate db
+       env:
+        NODE_ENV: test
        run: |
         yarn backend sequelize-cli db:create
         yarn backend sequelize-cli db:migrate
+        yarn backend sequelize-cli db:seed:all
 
      - name: Cypress run
        uses: cypress-io/github-action@v2
