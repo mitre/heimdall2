@@ -56,6 +56,7 @@ jobs:
        uses: cypress-io/github-action@v2
        env:
          ALLOW_RESTART_DB: true
+         NODE_ENV: test
        with:
          build: yarn build
          start: yarn start
