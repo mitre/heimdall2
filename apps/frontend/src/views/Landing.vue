@@ -15,12 +15,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
 import Component, {mixins} from 'vue-class-component';
 import ServerMixin from '@/mixins/ServerMixin';
 import UploadNexus from '@/components/global/UploadNexus.vue';
 import BaseView from '@/views/BaseView.vue';
-import { ServerModule } from '@/store/server';
 
 
 @Component({
