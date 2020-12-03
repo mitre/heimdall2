@@ -3716,9 +3716,9 @@
   integrity sha512-eQ9qFW/fhfGJF8WKHGEHZEyVWfZxrT+6CLIJGBcZPfxUh/+BnEj+UCGYMlr9qZuX/2AltsvwrGqp0LhEW8D0zQ==
 
 "@types/validator@*", "@types/validator@^13.0.0":
-  version "13.1.0"
-  resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.1.0.tgz#3d776127dbce7dd31fc06f86d3428b072e631eba"
-  integrity sha512-gHUHI6pJaANIO2r6WcbT7+WMgbL9GZooR4tWpuBOETpDIqFNxwaJluE+6rj6VGYe8k6OkfhbHz2Fkm8kl06Igw==
+  version "13.1.1"
+  resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.1.1.tgz#8d220ae4851a1e745764c7ca72294b6d46aeb533"
+  integrity sha512-/39uXOKe1KV4ElXb8cp0RVyeRn9X1QRwllComMMql+FQ9nhmTx0Yhw+kJtccPSShsjma+KXjW/TiXyGUNqNn+w==
 
 "@types/validator@13.0.0":
   version "13.0.0"
@@ -7510,6 +7510,11 @@ create-hmac@^1.1.0, create-hmac@^1.1.4, create-hmac@^1.1.7:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
+create-require@^1.1.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/create-require/-/create-require-1.1.1.tgz#c1d7e8f1e5f6cfc9ff65f9cd352d37348756c333"
+  integrity sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==
+
 cross-env@^6.0.3:
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-6.0.3.tgz#4256b71e49b3a40637a0ce70768a6ef5c72ae941"
@@ -9076,9 +9081,9 @@ eslint-plugin-import@^2.20.1:
     tsconfig-paths "^3.9.0"
 
 eslint-plugin-prettier@^3.1.4:
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-prettier/-/eslint-plugin-prettier-3.1.4.tgz#168ab43154e2ea57db992a2cd097c828171f75c2"
-  integrity sha512-jZDa8z76klRqo+TdGDTFJSavwbnWK2ZpqGKNZ+VvweMW516pDUMmQ2koXvxEE4JhzNvTv+radye/bWGBmA6jmg==
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-prettier/-/eslint-plugin-prettier-3.2.0.tgz#af391b2226fa0e15c96f36c733f6e9035dbd952c"
+  integrity sha512-kOUSJnFjAUFKwVxuzy6sA5yyMx6+o9ino4gCdShzBNx4eyFRudWRYKCFolKjoM40PEiuU6Cn7wBLfq3WsGg7qg==
   dependencies:
     prettier-linter-helpers "^1.0.0"
 
@@ -19149,11 +19154,12 @@ ts-node@^8, ts-node@^8.4.1:
     yn "3.1.1"
 
 ts-node@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-9.0.0.tgz#e7699d2a110cc8c0d3b831715e417688683460b3"
-  integrity sha512-/TqB4SnererCDR/vb4S/QvSZvzQMJN8daAslg7MeaiHvD8rDZsSfXmNeNumyZZzMned72Xoq/isQljYSt8Ynfg==
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-9.1.0.tgz#95eae4c6d0f94f2545884078e1eb1b14d2155639"
+  integrity sha512-0yqcL4sgruCvM+w64LiAfNJo6+lHfCYc5Ajj4yiLNkJ9oZ2HWaa+Kso7htYOOxVQ7+csAjdUjffOe9PIqC4pMg==
   dependencies:
     arg "^4.1.0"
+    create-require "^1.1.0"
     diff "^4.0.1"
     make-error "^1.1.1"
     source-map-support "^0.5.17"
@@ -19827,9 +19833,9 @@ vue-cli-plugin-apollo@^0.21.3:
     ts-node "^8.4.1"
 
 vue-cli-plugin-vuetify@~2.0.7:
-  version "2.0.7"
-  resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify/-/vue-cli-plugin-vuetify-2.0.7.tgz#fcb4f1655e7c9199ee40dcbf6465e2355fd074d5"
-  integrity sha512-4riK5bzyvkZ4CxpQk/Vl6z8n8tmJUhuxh+k8xc/MZRdCt9RxAm3G4SxcEweroqKGXg+CRRfhqysaEQVtd4D40Q==
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify/-/vue-cli-plugin-vuetify-2.0.8.tgz#026051aad7820b356ec9cea208bf0f06e95a53a2"
+  integrity sha512-BHn9wwj/+B9v25mhZq2dV8NafM2LbogymjluPP+CjDnIdcwR3hW38r3nyKsZNPB1jXfWXsvVszipS3b8FqOBCg==
   dependencies:
     null-loader "^3.0.0"
     semver "^7.1.2"
