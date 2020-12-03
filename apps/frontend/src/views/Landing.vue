@@ -2,7 +2,7 @@
   <BaseView
     title="Load Sample"
     :show-toolbar="false"
-    :show-topbar="server_mode"
+    :show-topbar="serverMode"
     :minimal-topbar="true"
     :topbar-z-index="1000"
   >
@@ -16,7 +16,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import {Component} from 'vue-property-decorator';
+import Component, {mixins} from 'vue-class-component';
+import ServerMixin from '@/mixins/ServerMixin';
 import UploadNexus from '@/components/global/UploadNexus.vue';
 import BaseView from '@/views/BaseView.vue';
 import { ServerModule } from '@/store/server';
@@ -28,9 +29,5 @@ import { ServerModule } from '@/store/server';
     BaseView
   }
 })
-export default class Landing extends Vue {
-  get server_mode(): boolean {
-    return ServerModule.serverMode
-  }
-}
+export default class Landing extends mixins(ServerMixin) {}
 </script>
