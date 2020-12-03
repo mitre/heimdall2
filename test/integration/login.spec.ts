@@ -20,9 +20,9 @@ context('Login', () => {
 
   // Run before each test
   beforeEach(() => {
-    cy.visit('127.0.0.1:3000/login');
-    databaseHelper.createAdmin();
+    databaseHelper.clear();
     registrationPage.register(CREATE_USER_DTO_TEST_OBJ);
+    cy.visit('127.0.0.1:3000/login');
   });
 
   // The test

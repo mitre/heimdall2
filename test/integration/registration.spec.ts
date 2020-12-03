@@ -19,7 +19,7 @@ context('Registration', () => {
 
   // Run before each test
   beforeEach(() => {
-    databaseHelper.createAdmin();
+    databaseHelper.clear();
     cy.visit('127.0.0.1:3000/signup');
   });
 

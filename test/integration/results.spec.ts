@@ -26,7 +26,7 @@ context('Results', () => {
   const userModalVerifier = new UserModalVerifier();
   // Run before each test
   beforeEach(() => {
-    databaseHelper.createAdmin();
+    databaseHelper.clear();
     registrationPage.register(CREATE_USER_DTO_TEST_OBJ);
     cy.visit('127.0.0.1:3000/login');
     loginPage.loginSuccess(LOGIN_AUTHENTICATION);
