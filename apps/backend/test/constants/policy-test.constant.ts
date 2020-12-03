@@ -1,5 +1,5 @@
-import {Policy} from 'src/authz/policy.model';
 import {PolicyDto} from '../../src/authz/dto/policy.dto';
+import {Policy} from '../../src/authz/policy.model';
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
