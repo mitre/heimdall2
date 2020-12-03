@@ -48,17 +48,28 @@
               />
             </v-col>
             <v-col v-if="admin">
-              <v-select v-model="userInfo.role" :items="roles" label="Role" />
+              <v-select
+                v-model="userInfo.role"
+                :items="roles"
+                name="role"
+                label="Role"
+              />
             </v-col>
           </v-row>
           <v-row>
             <v-col>
-              <v-text-field id="title" v-model="userInfo.title" label="Title" />
+              <v-text-field
+                id="title"
+                v-model="userInfo.title"
+                name="title"
+                label="Title"
+              />
             </v-col>
             <v-col>
               <v-text-field
                 id="organization"
                 v-model="userInfo.organization"
+                name="organization"
                 label="Organization"
               />
             </v-col>
