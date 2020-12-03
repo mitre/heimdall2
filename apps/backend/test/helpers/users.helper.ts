@@ -1,6 +1,6 @@
 import {INestApplication} from '@nestjs/common';
-import {UpdateUserDto} from 'src/users/dto/update-user.dto';
 import request, {Test} from 'supertest';
+import {UpdateUserDto} from '../../src/users/dto/update-user.dto';
 
 export function register(
   app: INestApplication,
