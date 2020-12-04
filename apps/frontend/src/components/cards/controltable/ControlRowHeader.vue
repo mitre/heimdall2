@@ -39,9 +39,14 @@
       </v-card-text>
     </template>
 
+    <!-- eslint-disable -->
     <template #title>
-      <div class="pa-2 title">{{ control.data.title }}</div>
+      <div
+        class="pa-2 title"
+        v-html="sanitize_html(strip_xml(control.data.title))"
+      />
     </template>
+    <!-- eslint-enable -->
 
     <!-- ID and Tags -->
     <template #id>
@@ -78,6 +83,7 @@ import {context} from 'inspecjs';
 import {NIST_DESCRIPTIONS, nist_canon_config} from '@/utilities/nist_util';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import CircleRating from '@/components/generic/CircleRating.vue';
+import sanitize from 'sanitize-html';
 
 import {is_control} from 'inspecjs/dist/nist';
 import {Prop} from 'vue-property-decorator';
@@ -148,6 +154,19 @@ export default class ControlRowHeader extends Vue {
       return CCI_DESCRIPTIONS[tag.toUpperCase()].def;
     }
     return 'Unrecognized Tag';
+  }
+
+  sanitize_html(message: string): string {
+    return sanitize(message);
+  }
+
+  strip_xml(input: string): string {
+    const output = input;
+    output.replace('<Content>', '');
+    output.replace('</Content>', '');
+    output.replace('<Paragraph>', '');
+    output.replace('</Paragraph>', '');
+    return output;
   }
 
   get all_tags(): Tag[] {
