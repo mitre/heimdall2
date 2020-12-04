@@ -6,7 +6,9 @@
         <v-app-bar-nav-icon @click.stop="$emit('toggle-drawer')">
           <v-icon color="bar-visible">mdi-menu</v-icon>
         </v-app-bar-nav-icon>
-        <span class="hidden-sm-and-down bar-visible--text">{{ title }}</span>
+        <span class="hidden-sm-and-down bar-visible--text clamped">{{
+          title
+        }}</span>
       </v-toolbar-title>
     </div>
     <v-spacer />
@@ -41,3 +43,9 @@ export default class Topbar extends mixins(ServerMixin) {
   }
 }
 </script>
+
+<style scoped>
+.clamped {
+  overflow: hidden;
+}
+</style>

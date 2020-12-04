@@ -13,6 +13,13 @@ Vue.use(Vuetify);
 
 Vue.config.productionTip = false;
 
+Vue.filter(
+  'truncate',
+  function (text: string, stop: number, clamp: string | null) {
+    return text.slice(0, stop) + (stop < text.length ? clamp || '...' : '');
+  }
+);
+
 new Vue({
   router,
   store,
