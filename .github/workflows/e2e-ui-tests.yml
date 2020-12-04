@@ -58,6 +58,6 @@ jobs:
          ALLOW_RESTART_DB: true
          NODE_ENV: test
        with:
-         build: yarn build
+         build: NODE_ENV=development yarn build
          start: yarn start
          wait-on: http://127.0.0.1:3000
