@@ -1,22 +1,31 @@
 <template>
-  <v-container>
+  <BaseView
+    title="Load Sample"
+    :show-toolbar="false"
+    :show-topbar="serverMode"
+    :minimal-topbar="true"
+    :topbar-z-index="1000"
+  >
     <v-row>
       <v-col center xl="8" md="8" sm="12" xs="12">
-        <UploadNexus :persistent="true" />
+        <UploadNexus retain-focus :persistent="true" />
       </v-col>
     </v-row>
-  </v-container>
+  </BaseView>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import {Component} from 'vue-property-decorator';
+import Component, {mixins} from 'vue-class-component';
+import ServerMixin from '@/mixins/ServerMixin';
 import UploadNexus from '@/components/global/UploadNexus.vue';
+import BaseView from '@/views/BaseView.vue';
+
 
 @Component({
   components: {
-    UploadNexus
+    UploadNexus,
+    BaseView
   }
 })
-export default class Landing extends Vue {}
+export default class Landing extends mixins(ServerMixin) {}
 </script>
