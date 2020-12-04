@@ -68,7 +68,6 @@ jobs:
      - name: Upload coverage results
        uses: actions/upload-artifact@master
        if: always()
-         NODE_ENV: test
        with:
          name: cypress-screenshots
          path: test/screenshots
