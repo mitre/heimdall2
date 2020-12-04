@@ -64,3 +64,11 @@ jobs:
        with:
          start: yarn start
          wait-on: http://127.0.0.1:3000
+    
+     - name: Upload coverage results
+       uses: actions/upload-artifact@master
+       if: always()
+         NODE_ENV: test
+       with:
+         name: cypress-screenshots
+         path: test/screenshots
