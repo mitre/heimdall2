@@ -52,12 +52,15 @@ jobs:
         yarn backend sequelize-cli db:migrate
         yarn backend sequelize-cli db:seed:all
 
+     - name: Build Heimdall
+       env:
+        NODE_ENV: development
+       run: yarn build
+
      - name: Cypress run
        uses: cypress-io/github-action@v2
        env:
-         ALLOW_RESTART_DB: true
          NODE_ENV: test
        with:
-         build: NODE_ENV=development yarn build
          start: yarn start
          wait-on: http://127.0.0.1:3000
