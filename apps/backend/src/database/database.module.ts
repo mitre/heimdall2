@@ -2,8 +2,6 @@ import {Module} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
-import {UsersModule} from '../users/users.module';
-import {DatabaseController} from './database.controller';
 import {DatabaseService} from './database.service';
 
 function getDatabaseName(configService: ConfigService): string {
@@ -52,11 +50,8 @@ function getSynchronize(configService: ConfigService): boolean {
           idle: 10000
         }
       })
-    }),
-    UsersModule,
-    ConfigModule
+    })
   ],
-  controllers: [DatabaseController],
   providers: [DatabaseService],
   exports: [DatabaseService]
 })
