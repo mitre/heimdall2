@@ -1,7 +1,7 @@
 <template>
   <v-row class="foreground">
     <v-col cols="12">
-      <v-card color="grey darken-3" elevation="3">
+      <v-card color="grey darken-3" data-cy="controlRow" elevation="3">
         <ResponsiveRowSmall
           v-if="$vuetify.breakpoint.xsOnly"
           @toggle="$emit('toggle')"

@@ -10,6 +10,7 @@ import UserModal from '../support/components/UserModal';
 import DatabaseHelper from '../support/helpers/DatabaseHelper';
 import LoginPage from '../support/pages/LoginPage';
 import RegistrationPage from '../support/pages/RegistrationPage';
+import ResultsPage from '../support/pages/ResultsPage';
 import ResultsPageVerifier from '../support/verifiers/ResultsPageVerifier';
 import ToastVerifier from '../support/verifiers/ToastVerifier';
 import UserModalVerifier from '../support/verifiers/UserModalVerifier';
@@ -20,6 +21,7 @@ context('Results', () => {
   const loginPage = new LoginPage();
   const registrationPage = new RegistrationPage();
   const resultsPageVerifier = new ResultsPageVerifier();
+  const resultsPage = new ResultsPage();
   const toastVerifier = new ToastVerifier();
   const uploadModal = new UploadModal();
   const userModal = new UserModal();
@@ -35,8 +37,16 @@ context('Results', () => {
   // The test
   describe('Results', () => {
     it('displays correct data for the first sample', () => {
+      // Load first sample
       uploadModal.loadFirstSample();
+      // Open profile info
+      resultsPage.openProfileInfo();
+      // Make results data is correct
       resultsPageVerifier.resultsDataCorrect();
+      // Scroll controlls into view
+      cy.scrollTo('bottom');
+      // Make sure control rows display correct data
+      resultsPageVerifier.controlRowsCorrect();
     });
   });
 
