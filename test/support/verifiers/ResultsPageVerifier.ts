@@ -35,21 +35,4 @@ export default class ResultsPageVerifier {
       expect(card[0].innerText).to.be.oneOf(correctCards);
     });
   }
-
-  controlRowsCorrect(): void {
-    const correctFirstControlRow = {
-      status: 'Failed',
-      id: 'squid:S4347',
-      impact: 'HIGH',
-      title: '"SecureRandom" seeds should not be predictable'
-    };
-
-    cy.get('[data-cy=controlRow]').first((control) => {
-      expect(this.convertControl(control[0])).to.equal(correctFirstControlRow);
-    });
-  }
-
-  convertControl(control: any): object {
-    return control.children[0];
-  }
 }

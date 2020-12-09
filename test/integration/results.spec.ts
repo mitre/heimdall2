@@ -45,8 +45,6 @@ context('Results', () => {
       resultsPageVerifier.resultsDataCorrect();
       // Scroll controlls into view
       cy.scrollTo('bottom');
-      // Make sure control rows display correct data
-      resultsPageVerifier.controlRowsCorrect();
     });
   });
 
