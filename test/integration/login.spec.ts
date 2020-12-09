@@ -1,6 +1,7 @@
 /// <reference types="cypress" />
 
 import {
+  BAD_LOGIN_AUTHENTICATION,
   CREATE_USER_DTO_TEST_OBJ,
   LOGIN_AUTHENTICATION
 } from '../../apps/backend/test/constants/users-test.constant';
@@ -27,10 +28,14 @@ context('Login', () => {
 
   // The test
   describe('Login Form', () => {
-    it('allows a user to log in to their account', () => {
+    it('authenticates a user with valid credentials', () => {
       loginPageVerifier.loginFormPresent();
-      loginPage.loginSuccess(LOGIN_AUTHENTICATION);
+      loginPage.login(LOGIN_AUTHENTICATION);
       toastVerifier.toastTextContains('You have successfully signed in.');
+    });
+    it('fails to authenticate a user with invalid credentials', () => {
+      loginPage.login(BAD_LOGIN_AUTHENTICATION);
+      toastVerifier.toastTextContains('Incorrect Username or Password');
     });
   });
 });

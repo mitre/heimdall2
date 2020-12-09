@@ -33,7 +33,7 @@ context('Results', () => {
     databaseHelper.clear();
     registrationPage.register(CREATE_USER_DTO_TEST_OBJ);
     cy.visit('127.0.0.1:3000/login');
-    loginPage.loginSuccess(LOGIN_AUTHENTICATION);
+    loginPage.login(LOGIN_AUTHENTICATION);
   });
 
   // The test
@@ -67,7 +67,7 @@ context('Results', () => {
 
   describe('Logout Button', () => {
     it('sucessfully logs a user out', () => {
-      loginPage.loginSuccess(LOGIN_AUTHENTICATION);
+      loginPage.login(LOGIN_AUTHENTICATION);
       toastVerifier.toastTextContains('You have successfully signed in.');
       dropdown.logout();
       loginPageVerifier.loginFormPresent();
