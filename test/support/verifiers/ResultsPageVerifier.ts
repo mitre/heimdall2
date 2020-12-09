@@ -46,7 +46,6 @@ export default class ResultsPageVerifier {
 
     cy.get('[data-cy=controlRow]').first((control) => {
       expect(this.convertControl(control[0])).to.equal(correctFirstControlRow);
-      debugger;
     });
   }
 
