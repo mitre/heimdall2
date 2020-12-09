@@ -8084,9 +8084,9 @@ d3-zoom@2:
     d3-transition "2"
 
 d3@^6.1.1:
-  version "6.3.0"
-  resolved "https://registry.yarnpkg.com/d3/-/d3-6.3.0.tgz#516311510b345a70a5d9648626a6a74a2ff0b7f7"
-  integrity sha512-VllKodQILRuCxL/t6HAU6JAeNjcaqFZqWOtKgMbip0lpIiII+Rn7/FY1qfTELWZwt0KM/RfNf65UI68LZ5WYWA==
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/d3/-/d3-6.3.1.tgz#c5fe6c7abff432826775a9e04db80b5f2e22eb1c"
+  integrity sha512-rbaoA67o2N4lO1TCuvrTGQdowNb3zT0z2ygg6TLmJZAd7TRPg+lhbfDOVwQUAgdbRD+73kg2FrEQ9HLiap5H2w==
   dependencies:
     d3-array "2"
     d3-axis "2"
@@ -20171,9 +20171,9 @@ vuetify-loader@^1.6.0:
     loader-utils "^1.2.0"
 
 vuetify@^2.3.9:
-  version "2.3.19"
-  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-2.3.19.tgz#94ae6a8b0e2d52266b2a47c6a11021c63aa1b7b0"
-  integrity sha512-xqaiSEv0SUrzcoYU/N+orF7crRrhFkZt2ZPSDyPdHhiL6vMOFSYyz0OyGX3lAFykX/FJJMkNPgYTdg1l7WD1jA==
+  version "2.3.20"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-2.3.20.tgz#41326c97a330ababe929eb4c0919fb0cad2e8a46"
+  integrity sha512-W2GD+ex7sCOG3Z9gzspLcxw4osMAeXu4ldQXEzTr5xbqEWOzVSVU9Sx24xRUMpWsbrNY3YA/fBKrEUAkCFchpw==
 
 vuex-module-decorators@^1.0.1:
   version "1.0.1"
