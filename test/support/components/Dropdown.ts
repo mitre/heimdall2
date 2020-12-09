@@ -1,6 +1,6 @@
 import {UpdateUserDto} from '../../../apps/backend/src/users/dto/update-user.dto';
 
-export default class UserModal {
+export default class Dropdown {
   openUserModal(): void {
     cy.get('#dropdown').click();
     cy.get('#dropdownList').get('div[role="menuitem"]').first().click();
@@ -18,5 +18,10 @@ export default class UserModal {
       .clear()
       .type(user.passwordConfirmation);
     cy.get('#closeAndSaveChanges').click();
+  }
+
+  logout(): void {
+    cy.get('#dropdown').click();
+    cy.get('#logout_button').click();
   }
 }
