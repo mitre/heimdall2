@@ -22,32 +22,32 @@
       <h3 class="pa-2">Test</h3>
       <v-divider />
       <!-- HTML is sanitized with sanitize-html -->
-      <!-- eslint-disable -->
+      <!-- eslint-disable vue/no-v-html -->
       <pre
         class="pa-2 mono text-justify"
-        v-html="sanitize_html(result.code_desc.trim())" 
+        v-html="sanitize_html(result.code_desc.trim())"
       />
-      <!-- eslint-enable -->
+      <!-- eslint-enable vue/no-v-html -->
     </v-col>
     <v-col v-if="result.message" cols="12" sm="6" lg="5" class="left">
       <h3 class="pa-2">Result</h3>
       <v-divider />
-      <!-- eslint-disable -->
+      <!-- eslint-disable vue/no-v-html -->
       <div
         class="pa-2 mono text-justify"
         v-html="sanitize_html(result.message.trim())"
       />
-      <!-- eslint-enable -->
+      <!-- eslint-enable vue/no-v-html -->
     </v-col>
   </v-row>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {HDFControlSegment} from 'inspecjs';
-import sanitize from 'sanitize-html';
+import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
 
 interface CollapsableElement extends Element {
   offsetHeight: Number;
@@ -55,18 +55,13 @@ interface CollapsableElement extends Element {
 }
 
 @Component({})
-export default class ControlRowCol extends Vue {
+export default class ControlRowCol extends mixins(HtmlSanitizeMixin) {
   @Prop({type: String, required: true}) readonly statusCode!: string;
   @Prop({type: Object, required: true}) readonly result!: HDFControlSegment;
-
 
   get status_color(): string {
     // maps stuff like "not applicable" -> "statusnotapplicable", which is a defined color name
     return `status${this.statusCode.replace(' ', '')}`;
-  }
-
-  sanitize_html(message: string): string {
-    return sanitize(message);
   }
 }
 </script>

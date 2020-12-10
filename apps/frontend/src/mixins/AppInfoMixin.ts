@@ -1,7 +1,7 @@
 import {AppInfoModule} from '@/store/app_info';
 import {Component, Vue} from 'vue-property-decorator';
 
-@Component
+@Component({})
 export default class AppInfoMixin extends Vue {
   get version(): string {
     return AppInfoModule.version;
