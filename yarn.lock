@@ -2346,9 +2346,9 @@
   integrity sha512-Hu9hPxTdBZA0C4GrWTsSflzwsJ99oAk9jqAwpcszdFNqfjMjkPGuCM9QsVZbBP2bE8fxrVrPsNOILS6puY8e/A==
 
 "@nestjs/platform-express@^7.0.13":
-  version "7.5.5"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-7.5.5.tgz#fc6bc076f345762d5d4f4c17bb502eec4b8f6783"
-  integrity sha512-LvUH4RAI+LGfD2ZBsCgp+IMmBdvejtJCg9jHTYP0UERZb8imoFxNt7v65a88yLrMA58CEzT02v6FH2LgP50MJA==
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-7.6.0.tgz#b3e33adae9f007cff5a5408fdef3cfd5075700ba"
+  integrity sha512-3fcGOvWoEeT7fZPh7eg1ieMq6PnoFhE9+hocaCwz5wcFMBK/c7yGr5XOm5TpUL8l3+xZj7xxvtYz4RMDRMkljQ==
   dependencies:
     body-parser "1.19.0"
     cors "2.8.5"
