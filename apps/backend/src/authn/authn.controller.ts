@@ -1,7 +1,7 @@
 import {Controller, Post, Req, UseGuards} from '@nestjs/common';
 import {Request} from 'express';
-import {User} from '../users/user.model';
 import {LocalAuthGuard} from '../guards/local-auth.guard';
+import {User} from '../users/user.model';
 import {AuthnService} from './authn.service';
 
 @Controller('authn')

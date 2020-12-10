@@ -1,121 +1,122 @@
 import {
   BadRequestException,
-  CanActivate,
+  ForbiddenException,
   NotFoundException
 } from '@nestjs/common';
+import {SequelizeModule} from '@nestjs/sequelize';
 import {Test, TestingModule} from '@nestjs/testing';
+import {ValidationError} from 'sequelize';
 import {
+  CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
+  CREATE_USER_DTO_TEST_OBJ_2,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
   DELETE_USER_DTO_TEST_OBJ,
   DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD,
   ID,
-  UPDATED_USER_DTO,
   UPDATE_USER_DTO_TEST_OBJ,
-  UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD,
-  USER_ONE_DTO
+  UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD
 } from '../../test/constants/users-test.constant';
+import {AuthzService} from '../authz/authz.service';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
-import {AbacGuard} from '../guards/abac.guard';
+import {UserDto} from './dto/user.dto';
+import {User} from './user.model';
 import {UsersController} from './users.controller';
 import {UsersService} from './users.service';
 
 // Test suite for the UsersController
 describe('UsersController Unit Tests', () => {
-  const mockAbacGuard: CanActivate = {canActivate: jest.fn(() => true)};
   let usersController: UsersController;
   let usersService: UsersService;
   let module: TestingModule;
   let databaseService: DatabaseService;
 
+  let basicUser: User;
+  let adminUser: User;
+
   beforeAll(async () => {
     module = await Test.createTestingModule({
       controllers: [UsersController],
-      imports: [DatabaseModule],
-      providers: [
-        DatabaseService,
-        {
-          provide: UsersService,
-          useFactory: () => ({
-            // These mock functions are used for the basic 'positive' tests
-            create: jest.fn(() => USER_ONE_DTO),
-            findById: jest.fn(() => USER_ONE_DTO),
-            findAll: jest.fn(() => [USER_ONE_DTO]),
-            update: jest.fn(() => UPDATED_USER_DTO),
-            remove: jest.fn(() => USER_ONE_DTO)
-          })
-        }
-      ]
-    })
-      .overrideGuard(AbacGuard)
-      .useValue(mockAbacGuard)
-      .compile();
+      imports: [DatabaseModule, SequelizeModule.forFeature([User])],
+      providers: [AuthzService, DatabaseService, UsersService]
+    }).compile();
 
     usersService = module.get<UsersService>(UsersService);
     usersController = module.get<UsersController>(UsersController);
     databaseService = module.get<DatabaseService>(DatabaseService);
   });
 
-  beforeEach(() => {
-    return databaseService.cleanAll();
+  beforeEach(async () => {
+    await databaseService.cleanAll();
+    const userDto = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+    basicUser = await usersService.findByPkBang(userDto.id);
+    const adminDto = await usersService.create(CREATE_ADMIN_DTO);
+    adminUser = await usersService.findByPkBang(adminDto.id);
   });
 
   describe('FindbyId function', () => {
     // Tests the findById function with valid ID (basic positive test)
     it('should test findById with valid ID', async () => {
-      expect(await usersController.findById(ID)).toBe(USER_ONE_DTO);
-      expect(usersService.findById).toHaveReturnedWith(USER_ONE_DTO);
+      expect.assertions(1);
+
+      expect(
+        await usersController.findById(basicUser.id, {user: basicUser})
+      ).toEqual(new UserDto(await usersService.findById(basicUser.id)));
     });
 
     // Tests the findById function with ID that is 'not found'
     it('should test findById with invalid ID', async () => {
-      jest.spyOn(usersService, 'findById').mockImplementation(() => {
-        throw new NotFoundException();
-      });
-      expect(async () => {
-        await usersController.findById(ID);
+      expect.assertions(1);
+
+      await expect(async () => {
+        await usersController.findById(ID, {user: basicUser});
       }).rejects.toThrow(NotFoundException);
     });
   });
 
   describe('findAll function', () => {
     // Tests the findAll function with valid ID (basic positive test)
-    it('should test findAll with valid ID', async () => {
-      expect(await usersController.findAll()).toEqual([USER_ONE_DTO]);
-      expect(usersService.findAll).toHaveReturnedWith([USER_ONE_DTO]);
+    it('should list all users', async () => {
+      expect.assertions(1);
+
+      expect(await usersController.findAll({user: adminUser})).toEqual(
+        await usersService.findAll()
+      );
     });
   });
 
   describe('Create function', () => {
     // Tests the create function with valid dto (basic positive test)
     it('should test the create function with valid dto', async () => {
-      expect(await usersController.create(CREATE_USER_DTO_TEST_OBJ)).toEqual(
-        USER_ONE_DTO
+      expect.assertions(1);
+
+      const createdUser = await usersController.create(
+        CREATE_USER_DTO_TEST_OBJ_2
       );
-      expect(usersService.create).toHaveReturnedWith(USER_ONE_DTO);
+      expect(createdUser).toEqual(
+        new UserDto(await usersService.findById(createdUser.id))
+      );
     });
 
     // Tests the create function with dto that is missing email
     it('should test the create function with missing email field', async () => {
-      jest.spyOn(usersService, 'create').mockImplementation(() => {
-        throw new BadRequestException();
-      });
-      expect(async () => {
+      expect.assertions(1);
+
+      await expect(async () => {
         await usersController.create(
           CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD
         );
-      }).rejects.toThrow(BadRequestException);
+      }).rejects.toThrow(ValidationError);
     });
 
     // Tests the create function with dto that is missing password
     it('should test the create function with missing password field', async () => {
-      jest.spyOn(usersService, 'create').mockImplementation(() => {
-        throw new BadRequestException();
-      });
-      expect(async () => {
+      expect.assertions(1);
+
+      await expect(async () => {
         await usersController.create(
           CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD
         );
@@ -124,82 +125,95 @@ describe('UsersController Unit Tests', () => {
 
     // Tests the create function with dto that is missing passwordConfirmation
     it('should test the create function with missing password confirmation field', async () => {
-      jest.spyOn(usersService, 'create').mockImplementation(() => {
-        throw new BadRequestException();
-      });
-      expect(async () => {
+      expect.assertions(1);
+
+      await expect(async () => {
         await usersController.create(
           CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD
         );
-      }).rejects.toThrow(BadRequestException);
+      }).rejects.toThrow(ValidationError);
     });
   });
 
   describe('Update function', () => {
     // Tests the update function with valid dto (basic positive test)
     it('should test the update function with a valid update dto', async () => {
+      expect.assertions(1);
+
       expect(
-        await usersController.update('user', ID, UPDATE_USER_DTO_TEST_OBJ)
-      ).toEqual(UPDATED_USER_DTO);
-      expect(usersService.update).toHaveReturnedWith(UPDATED_USER_DTO);
+        await usersController.update(
+          basicUser.id,
+          {user: basicUser},
+          UPDATE_USER_DTO_TEST_OBJ
+        )
+      ).toEqual(new UserDto(await usersService.findById(basicUser.id)));
     });
 
     // Tests the update function with ID that is 'not found'
     it('should test update function with invalid ID', async () => {
-      jest.spyOn(usersService, 'update').mockImplementation(() => {
-        throw new NotFoundException();
-      });
-      expect(async () => {
-        await usersController.update('user', ID, UPDATE_USER_DTO_TEST_OBJ);
+      expect.assertions(1);
+
+      await expect(async () => {
+        await usersController.update(
+          ID,
+          {user: basicUser},
+          UPDATE_USER_DTO_TEST_OBJ
+        );
       }).rejects.toThrow(NotFoundException);
     });
 
     // Tests the update function with dto that is missing currentPassword
     it('should test the update function with a dto that is missing currentPassword field', async () => {
-      jest.spyOn(usersService, 'update').mockImplementation(() => {
-        throw new BadRequestException();
-      });
-      expect(async () => {
+      expect.assertions(1);
+
+      await expect(async () => {
         await usersController.update(
-          'user',
-          ID,
+          basicUser.id,
+          {user: basicUser},
           UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD
         );
-      }).rejects.toThrow(BadRequestException);
+      }).rejects.toThrow(ForbiddenException);
     });
   });
 
   describe('Remove function', () => {
     // Tests the remove function with valid dto (basic positive test)
     it('should remove', async () => {
+      expect.assertions(1);
+
       expect(
-        await usersController.remove('user', ID, DELETE_USER_DTO_TEST_OBJ)
-      ).toEqual(USER_ONE_DTO);
-      expect(usersService.remove).toHaveReturnedWith(USER_ONE_DTO);
+        await usersController.remove(
+          basicUser.id,
+          {user: basicUser},
+          DELETE_USER_DTO_TEST_OBJ
+        )
+      ).toEqual(new UserDto(basicUser));
     });
 
     // Tests the remove function with ID that is 'not found'
     it('should test remove function with invalid ID', async () => {
-      jest.spyOn(usersService, 'remove').mockImplementation(() => {
-        throw new NotFoundException();
-      });
-      expect(async () => {
-        await usersController.remove('user', ID, DELETE_USER_DTO_TEST_OBJ);
+      expect.assertions(1);
+
+      await expect(async () => {
+        await usersController.remove(
+          ID,
+          {user: adminUser},
+          DELETE_USER_DTO_TEST_OBJ
+        );
       }).rejects.toThrow(NotFoundException);
     });
 
     // Tests the remove function with dto that is missing password
     it('should test remove function with a dto that is missing password field', async () => {
-      jest.spyOn(usersService, 'remove').mockImplementation(() => {
-        throw new BadRequestException();
-      });
-      expect(async () => {
+      expect.assertions(1);
+
+      await expect(async () => {
         await usersController.remove(
-          'user',
-          ID,
+          basicUser.id,
+          {user: basicUser},
           DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD
         );
-      }).rejects.toThrow(BadRequestException);
+      }).rejects.toThrow(ForbiddenException);
     });
   });
 

@@ -1,5 +1,6 @@
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test} from '@nestjs/testing';
+import {EvaluationDto} from 'src/evaluations/dto/evaluation.dto';
 import {
   CREATE_EVALUATION_TAG_DTO,
   CREATE_EVALUATION_TAG_DTO_MISSING_KEY,
@@ -9,10 +10,13 @@ import {
   UPDATE_EVALUATION_TAG_DTO_MISSING_VALUE
 } from '../../test/constants/evaluation-tags-test.constant';
 import {EVALUATION_1} from '../../test/constants/evaluations-test.constant';
+import {CREATE_USER_DTO_TEST_OBJ} from '../../test/constants/users-test.constant';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {EvaluationsService} from '../evaluations/evaluations.service';
+import {User} from '../users/user.model';
+import {UsersService} from '../users/users.service';
 import {EvaluationTag} from './evaluation-tag.model';
 import {EvaluationTagsService} from './evaluation-tags.service';
 
@@ -20,14 +24,22 @@ describe('EvaluationTagsService', () => {
   let evaluationTagsService: EvaluationTagsService;
   let evaluationsService: EvaluationsService;
   let databaseService: DatabaseService;
+  let usersService: UsersService;
+  let user: User;
+  let evaluation: EvaluationDto;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       imports: [
         DatabaseModule,
-        SequelizeModule.forFeature([EvaluationTag, Evaluation])
+        SequelizeModule.forFeature([EvaluationTag, Evaluation, User])
       ],
-      providers: [DatabaseService, EvaluationTagsService, EvaluationsService]
+      providers: [
+        DatabaseService,
+        EvaluationTagsService,
+        EvaluationsService,
+        UsersService
+      ]
     }).compile();
 
     evaluationTagsService = module.get<EvaluationTagsService>(
@@ -35,6 +47,7 @@ describe('EvaluationTagsService', () => {
     );
     evaluationsService = module.get<EvaluationsService>(EvaluationsService);
     databaseService = module.get<DatabaseService>(DatabaseService);
+    usersService = module.get<UsersService>(UsersService);
   });
 
   afterAll(async () => {
@@ -42,13 +55,18 @@ describe('EvaluationTagsService', () => {
     await databaseService.closeConnection();
   });
 
-  beforeEach(() => {
-    return databaseService.cleanAll();
+  beforeEach(async () => {
+    await databaseService.cleanAll();
+    const userDto = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+    user = await usersService.findById(userDto.id);
+    evaluation = await evaluationsService.create({
+      ...EVALUATION_1,
+      userId: user.id
+    });
   });
 
   describe('Create', () => {
     it('should create a valid EvaluationTag', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_1);
       const evaluationTag = await evaluationTagsService.create(
         evaluation.id,
         CREATE_EVALUATION_TAG_DTO
@@ -64,7 +82,6 @@ describe('EvaluationTagsService', () => {
     describe('With missing fields', () => {
       it('should throw an error with key', async () => {
         expect.assertions(1);
-        const evaluation = await evaluationsService.create(EVALUATION_1);
         await expect(
           evaluationTagsService.create(
             evaluation.id,
@@ -77,7 +94,6 @@ describe('EvaluationTagsService', () => {
 
       it('should throw an error with value', async () => {
         expect.assertions(1);
-        const evaluation = await evaluationsService.create(EVALUATION_1);
         await expect(
           evaluationTagsService.create(
             evaluation.id,
@@ -92,7 +108,6 @@ describe('EvaluationTagsService', () => {
 
   describe('FindAll', () => {
     it('should find all existing EvaluationTags', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_1);
       // No existing tags
       let foundEvaluationTags = await evaluationTagsService.findAll();
       expect(foundEvaluationTags).toBeDefined();
@@ -116,7 +131,6 @@ describe('EvaluationTagsService', () => {
 
   describe('Update', () => {
     it('should update given a valid dto', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_1);
       const evaluationTag = await evaluationTagsService.create(
         evaluation.id,
         CREATE_EVALUATION_TAG_DTO
@@ -135,7 +149,6 @@ describe('EvaluationTagsService', () => {
     });
 
     it('should update only key', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_1);
       const evaluationTag = await evaluationTagsService.create(
         evaluation.id,
         CREATE_EVALUATION_TAG_DTO
@@ -152,7 +165,6 @@ describe('EvaluationTagsService', () => {
     });
 
     it('should update only value', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_1);
       const evaluationTag = await evaluationTagsService.create(
         evaluation.id,
         CREATE_EVALUATION_TAG_DTO
@@ -173,7 +185,6 @@ describe('EvaluationTagsService', () => {
 
   describe('Remove', () => {
     it('should remove an existing tag', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_1);
       const evaluationTag = await evaluationTagsService.create(
         evaluation.id,
         CREATE_EVALUATION_TAG_DTO

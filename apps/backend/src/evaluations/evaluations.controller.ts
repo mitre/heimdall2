@@ -6,10 +6,8 @@ import {
   Param,
   Post,
   Put,
-  UseGuards,
-  UseInterceptors
+  UseGuards
 } from '@nestjs/common';
-import {AbacGuard} from '../guards/abac.guard';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {CreateEvaluationDto} from './dto/create-evaluation.dto';
 import {EvaluationDto} from './dto/evaluation.dto';
@@ -30,7 +28,6 @@ export class EvaluationsController {
     return this.evaluationsService.findAll();
   }
 
-  @UseGuards(AbacGuard)
   @Post()
   async create(
     @Body() createEvaluationDto: CreateEvaluationDto

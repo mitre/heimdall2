@@ -1,3 +1,4 @@
+import {Ability} from '@casl/ability';
 import {
   BadRequestException,
   ForbiddenException,
@@ -7,6 +8,7 @@ import {
 import {InjectModel} from '@nestjs/sequelize';
 import {compare, hash} from 'bcrypt';
 import {FindOptions} from 'sequelize/types';
+import {Action} from '../casl/casl-ability.factory';
 import {CreateUserDto} from './dto/create-user.dto';
 import {DeleteUserDto} from './dto/delete-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
@@ -25,21 +27,11 @@ export class UsersService {
     return users.map((user) => new UserDto(user));
   }
 
-  async findById(id: number): Promise<UserDto> {
-    const user = await this.findByPkBang(id);
-    return new UserDto(user);
+  async findById(id: string): Promise<User> {
+    return this.findByPkBang(id);
   }
 
-  async findByEmail(email: string): Promise<UserDto> {
-    const user = await this.findOneBang({
-      where: {
-        email
-      }
-    });
-    return new UserDto(user);
-  }
-
-  async findModelByEmail(email: string): Promise<User> {
+  async findByEmail(email: string): Promise<User> {
     return this.findOneBang({
       where: {
         email
@@ -65,33 +57,37 @@ export class UsersService {
   }
 
   async update(
-    id: number,
+    userToUpdate: User,
     updateUserDto: UpdateUserDto,
-    isAdmin: boolean
+    abac: Ability
   ): Promise<UserDto> {
-    const user = await this.findByPkBang(id);
-    if (!isAdmin) {
-      await this.testPassword(updateUserDto, user);
+    if (!abac.can('update-no-password', userToUpdate)) {
+      await this.testPassword(updateUserDto, userToUpdate);
     }
-    if (updateUserDto.password == null && user.forcePasswordChange) {
+    if (
+      updateUserDto.password == null &&
+      userToUpdate.forcePasswordChange &&
+      !abac.can('skip-force-password-change', userToUpdate)
+    ) {
       throw new BadRequestException('You must change your password');
     } else if (updateUserDto.password) {
-      user.encryptedPassword = await hash(updateUserDto.password, 14);
-      user.passwordChangedAt = new Date();
-      user.forcePasswordChange = false;
+      userToUpdate.encryptedPassword = await hash(updateUserDto.password, 14);
+      userToUpdate.passwordChangedAt = new Date();
+      userToUpdate.forcePasswordChange = false;
     }
-    user.email = updateUserDto.email || user.email;
-    user.firstName = updateUserDto.firstName || user.firstName;
-    user.lastName = updateUserDto.lastName || user.lastName;
-    user.title = updateUserDto.title || user.title;
-    user.organization = updateUserDto.organization || user.organization;
-    if (isAdmin) {
+    userToUpdate.email = updateUserDto.email || userToUpdate.email;
+    userToUpdate.firstName = updateUserDto.firstName || userToUpdate.firstName;
+    userToUpdate.lastName = updateUserDto.lastName || userToUpdate.lastName;
+    userToUpdate.title = updateUserDto.title || userToUpdate.title;
+    userToUpdate.organization =
+      updateUserDto.organization || userToUpdate.organization;
+    if (abac.can('update-role', userToUpdate)) {
       // Only admins can update roles
-      user.role = updateUserDto.role || user.role;
+      userToUpdate.role = updateUserDto.role || userToUpdate.role;
     }
-    user.forcePasswordChange =
-      updateUserDto.forcePasswordChange || user.forcePasswordChange;
-    const userData = await user.save();
+    userToUpdate.forcePasswordChange =
+      updateUserDto.forcePasswordChange || userToUpdate.forcePasswordChange;
+    const userData = await userToUpdate.save();
     return new UserDto(userData);
   }
 
@@ -102,14 +98,18 @@ export class UsersService {
   }
 
   async remove(
-    id: number,
+    userToDelete: User,
     deleteUserDto: DeleteUserDto,
-    isAdmin: boolean
+    abac: Ability
   ): Promise<UserDto> {
-    const user = await this.findByPkBang(id);
-    if (!isAdmin) {
+    if (abac.cannot(Action.DeleteNoPassword, userToDelete)) {
       try {
-        if (!(await compare(deleteUserDto.password, user.encryptedPassword))) {
+        if (
+          !(await compare(
+            deleteUserDto.password,
+            userToDelete.encryptedPassword
+          ))
+        ) {
           throw new ForbiddenException();
         }
       } catch {
@@ -121,13 +121,13 @@ export class UsersService {
     const adminCount = await this.userModel.count({where: {role: 'admin'}});
     // Do not allow the administrator to destroy the only
     // administrator account
-    if (user.role === 'admin' && adminCount < 2) {
+    if (userToDelete.role === 'admin' && adminCount < 2) {
       throw new ForbiddenException(
         'Cannot destroy only administrator account, please promote another user to administrator first'
       );
     }
-    await user.destroy();
-    return new UserDto(user);
+    await userToDelete.destroy();
+    return new UserDto(userToDelete);
   }
 
   async findByPkBang(

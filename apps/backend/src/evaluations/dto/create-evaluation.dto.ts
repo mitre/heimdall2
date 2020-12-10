@@ -18,7 +18,7 @@ export class CreateEvaluationDto implements ICreateEvaluation {
   @IsObject()
   readonly data!: Record<string, any>;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsNumberString()
   readonly userId!: string;
 

@@ -12,8 +12,8 @@ import {
   Table,
   UpdatedAt
 } from 'sequelize-typescript';
-import {User} from '../users/user.model';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
+import {User} from '../users/user.model';
 
 @Table
 export class Evaluation extends Model<Evaluation> {

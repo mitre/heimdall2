@@ -1,3 +1,4 @@
+import {Ability} from '@casl/ability';
 import {
   BadRequestException,
   ForbiddenException,
@@ -6,6 +7,7 @@ import {
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test} from '@nestjs/testing';
 import {
+  CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_2,
   CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD,
@@ -29,12 +31,16 @@ import {
   UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD,
   USER_ONE_DTO
 } from '../../test/constants/users-test.constant';
+import {AuthzModule} from '../authz/authz.module';
+import {AuthzService} from '../authz/authz.service';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
+import {UserDto} from './dto/user.dto';
 import {User} from './user.model';
 import {UsersService} from './users.service';
 
 describe('UsersService', () => {
+  let authzService: AuthzService;
   let usersService: UsersService;
   let databaseService: DatabaseService;
   const errorString =
@@ -42,10 +48,15 @@ describe('UsersService', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [DatabaseModule, SequelizeModule.forFeature([User])],
-      providers: [UsersService, DatabaseService]
+      imports: [
+        DatabaseModule,
+        SequelizeModule.forFeature([User]),
+        AuthzModule
+      ],
+      providers: [UsersService, DatabaseService, AuthzService]
     }).compile();
 
+    authzService = module.get<AuthzService>(AuthzService);
     usersService = module.get<UsersService>(UsersService);
     databaseService = module.get<DatabaseService>(DatabaseService);
   });
@@ -56,6 +67,7 @@ describe('UsersService', () => {
 
   describe('Create', () => {
     it('should create a valid User', async () => {
+      expect.assertions(8);
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       expect(user.id).toBeDefined();
       expect(user.email).toEqual(USER_ONE_DTO.email);
@@ -102,6 +114,7 @@ describe('UsersService', () => {
 
   describe('FindAll', () => {
     it('should find all users', async () => {
+      expect.assertions(2);
       const userOne = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const userTwo = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
       const userDtoArray = await usersService.findAll();
@@ -112,6 +125,7 @@ describe('UsersService', () => {
 
   describe('FindById', () => {
     it('should find users by id', async () => {
+      expect.assertions(8);
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const foundUser = await usersService.findById(user.id);
       expect(foundUser.email).toEqual(user.email);
@@ -126,7 +140,7 @@ describe('UsersService', () => {
 
     it('should throw an error if user does not exist', async () => {
       expect.assertions(1);
-      await expect(usersService.findById(-1)).rejects.toThrow(
+      await expect(usersService.findById('-1')).rejects.toThrow(
         NotFoundException
       );
     });
@@ -134,16 +148,17 @@ describe('UsersService', () => {
 
   describe('FindByEmail', () => {
     it('should find users by email', async () => {
+      expect.assertions(6);
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const foundUser = await usersService.findByEmail(user.email);
-      expect(foundUser.email).toEqual(user.email);
-      expect(foundUser.firstName).toEqual(user.firstName);
-      expect(foundUser.lastName).toEqual(user.lastName);
-      expect(foundUser.title).toEqual(user.title);
-      expect(foundUser.organization).toEqual(user.organization);
-      expect(foundUser.createdAt.valueOf()).toEqual(user.createdAt.valueOf());
-      expect(foundUser.id).toEqual(user.id);
-      expect(foundUser.role).toEqual(user.role);
+      expect(foundUser.email).toEqual(CREATE_USER_DTO_TEST_OBJ.email);
+      expect(foundUser.firstName).toEqual(CREATE_USER_DTO_TEST_OBJ.firstName);
+      expect(foundUser.lastName).toEqual(CREATE_USER_DTO_TEST_OBJ.lastName);
+      expect(foundUser.title).toEqual(CREATE_USER_DTO_TEST_OBJ.title);
+      expect(foundUser.organization).toEqual(
+        CREATE_USER_DTO_TEST_OBJ.organization
+      );
+      expect(foundUser.role).toEqual(CREATE_USER_DTO_TEST_OBJ.role);
     });
 
     it('should throw an error if user does not exist', async () => {
@@ -154,46 +169,37 @@ describe('UsersService', () => {
     });
   });
 
-  describe('FindModelByEmail', () => {
-    it('should find user models by email', async () => {
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      const foundUserModel = await usersService.findModelByEmail(user.email);
-      expect(foundUserModel.email).toEqual(user.email);
-      expect(foundUserModel.firstName).toEqual(user.firstName);
-      expect(foundUserModel.lastName).toEqual(user.lastName);
-      expect(foundUserModel.title).toEqual(user.title);
-      expect(foundUserModel.organization).toEqual(user.organization);
-      expect(foundUserModel.createdAt.valueOf()).toEqual(
-        user.createdAt.valueOf()
-      );
-      expect(foundUserModel.id).toEqual(user.id);
-      expect(foundUserModel.role).toEqual(user.role);
-    });
-
-    it('should throw an error if user does not exist', async () => {
-      expect.assertions(1);
-      await expect(
-        usersService.findModelByEmail('doesnotexist@example.com')
-      ).rejects.toThrow(NotFoundException);
-    });
-  });
-
   describe('Update', () => {
-    // Tests the update function (Successful update)
-    it('should update a user', async () => {
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      const beforeUpdate = await User.findByPk<User>(user.id);
+    let createUserDto: UserDto;
+    let user: User;
+    let abacPolicy: Ability;
+    let adminAbacPolicy: Ability;
+    let userCreatedAt: Date;
 
-      if (beforeUpdate === null) {
+    beforeEach(async () => {
+      createUserDto = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const findUser = await User.findByPk<User>(createUserDto.id);
+      const adminDto = await usersService.create(CREATE_ADMIN_DTO);
+      const admin = await User.findByPk<User>(adminDto.id);
+
+      if (findUser === null || admin === null) {
         throw new TypeError(errorString);
+      } else {
+        user = findUser;
       }
 
+      userCreatedAt = user.updatedAt;
+      abacPolicy = authzService.abac.createForUser(user);
+      adminAbacPolicy = authzService.abac.createForUser(admin);
+    });
+
+    // Tests the update function (Successful update)
+    it('should update a user', async () => {
       const updatedUser = await usersService.update(
-        user.id,
+        user,
         UPDATE_USER_DTO_TEST_OBJ,
-        false
+        abacPolicy
       );
-      const afterUpdate = await User.findByPk<User>(user.id);
 
       expect(updatedUser.email).toEqual(UPDATE_USER_DTO_TEST_OBJ.email);
       expect(updatedUser.firstName).toEqual(UPDATE_USER_DTO_TEST_OBJ.firstName);
@@ -204,264 +210,253 @@ describe('UsersService', () => {
       );
       expect(updatedUser.role).toEqual(UPDATE_USER_DTO_TEST_OBJ.role);
 
-      expect(updatedUser.email).not.toEqual(user.email);
-      expect(updatedUser.firstName).not.toEqual(user.firstName);
-      expect(updatedUser.lastName).not.toEqual(user.lastName);
-      expect(updatedUser.title).not.toEqual(user.title);
-      expect(updatedUser.organization).not.toEqual(user.organization);
+      expect(updatedUser.email).not.toEqual(CREATE_USER_DTO_TEST_OBJ.email);
+      expect(updatedUser.firstName).not.toEqual(
+        CREATE_USER_DTO_TEST_OBJ.firstName
+      );
+      expect(updatedUser.lastName).not.toEqual(
+        CREATE_USER_DTO_TEST_OBJ.lastName
+      );
+      expect(updatedUser.title).not.toEqual(CREATE_USER_DTO_TEST_OBJ.title);
+      expect(updatedUser.organization).not.toEqual(
+        CREATE_USER_DTO_TEST_OBJ.organization
+      );
       expect(updatedUser.updatedAt.valueOf()).not.toEqual(
-        user.updatedAt.valueOf()
+        userCreatedAt.valueOf()
       );
       // This will not change currently because there is only a 'user' role that can be updated via API.
       expect(updatedUser.role).toEqual(user.role);
-      expect(beforeUpdate.forcePasswordChange).not.toEqual(
-        afterUpdate?.forcePasswordChange
+      expect(user.forcePasswordChange).toEqual(
+        UPDATE_USER_DTO_TEST_OBJ.forcePasswordChange
       );
     });
 
     it('should update a user without updating email', async () => {
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const updatedUser = await usersService.update(
-        user.id,
+        user,
         UPDATE_USER_DTO_TEST_WITHOUT_EMAIL,
-        false
+        abacPolicy
       );
 
-      expect(updatedUser.email).toEqual(user.email);
+      expect(updatedUser.email).toEqual(CREATE_USER_DTO_TEST_OBJ.email);
       expect(updatedUser.updatedAt.valueOf()).not.toEqual(
-        user.updatedAt.valueOf()
+        userCreatedAt.valueOf()
       );
     });
 
     it('should update a user without updating firstName', async () => {
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const updatedUser = await usersService.update(
-        user.id,
+        user,
         UPDATE_USER_DTO_TEST_WITHOUT_FIRST_NAME,
-        false
+        abacPolicy
       );
 
       expect(updatedUser.firstName).toEqual(user.firstName);
       expect(updatedUser.updatedAt.valueOf()).not.toEqual(
-        user.updatedAt.valueOf()
+        userCreatedAt.valueOf()
       );
     });
 
     it('should update a user without updating lastName', async () => {
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const updatedUser = await usersService.update(
-        user.id,
+        user,
         UPDATE_USER_DTO_TEST_WITHOUT_LAST_NAME,
-        false
+        abacPolicy
       );
 
       expect(updatedUser.lastName).toEqual(user.lastName);
       expect(updatedUser.updatedAt.valueOf()).not.toEqual(
-        user.updatedAt.valueOf()
+        userCreatedAt.valueOf()
       );
     });
 
     it('should update a user without updating organization', async () => {
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const updatedUser = await usersService.update(
-        user.id,
+        user,
         UPDATE_USER_DTO_TEST_WITHOUT_ORGANIZATION,
-        false
+        abacPolicy
       );
 
       expect(updatedUser.organization).toEqual(user.organization);
       expect(updatedUser.updatedAt.valueOf()).not.toEqual(
-        user.updatedAt.valueOf()
+        userCreatedAt.valueOf()
       );
     });
 
     it('should update a user without updating title', async () => {
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const updatedUser = await usersService.update(
-        user.id,
+        user,
         UPDATE_USER_DTO_TEST_WITHOUT_TITLE,
-        false
+        abacPolicy
       );
 
       expect(updatedUser.title).toEqual(user.title);
       expect(updatedUser.updatedAt.valueOf()).not.toEqual(
-        user.updatedAt.valueOf()
+        userCreatedAt.valueOf()
       );
     });
 
     it('should update a user without updating role', async () => {
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const updatedUser = await usersService.update(
-        user.id,
+        user,
         UPDATE_USER_DTO_TEST_WITHOUT_ROLE,
-        false
+        abacPolicy
       );
 
       expect(updatedUser.role).toEqual(user.role);
       expect(updatedUser.updatedAt.valueOf()).not.toEqual(
-        user.updatedAt.valueOf()
+        userCreatedAt.valueOf()
       );
     });
 
     it('should update a user without updating forcePasswordChange', async () => {
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const updateUser = await usersService.update(
-        user.id,
+        user,
         UPDATE_USER_DTO_TEST_WITHOUT_FORCE_PASSWORD_CHANGE,
-        false
+        abacPolicy
       );
 
       expect(updateUser.updatedAt.valueOf()).not.toEqual(
-        user.updatedAt.valueOf()
+        userCreatedAt.valueOf()
       );
     });
 
     it('should update a user without updating password', async () => {
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      const beforeUpdate = await User.findByPk<User>(user.id);
-      if (beforeUpdate === null) {
-        throw new TypeError(errorString);
-      }
-      await usersService.update(
-        user.id,
-        UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
-        false
-      );
-      const updatedUser = await User.findByPk<User>(user.id);
+      const {encryptedPassword} = user;
 
-      expect(updatedUser?.email).toEqual(
-        UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.email
+      await usersService.update(
+        user,
+        UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
+        abacPolicy
       );
-      expect(updatedUser?.firstName).toEqual(
+
+      expect(user.email).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.email);
+      expect(user.firstName).toEqual(
         UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.firstName
       );
-      expect(updatedUser?.lastName).toEqual(
+      expect(user.lastName).toEqual(
         UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.lastName
       );
-      expect(updatedUser?.organization).toEqual(
+      expect(user.organization).toEqual(
         UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.organization
       );
-      expect(updatedUser?.title).toEqual(
-        UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.title
-      );
-      expect(updatedUser?.role).toEqual(
-        UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.role
-      );
-      expect(updatedUser?.encryptedPassword).toEqual(
-        beforeUpdate.encryptedPassword
-      );
-      expect(updatedUser?.updatedAt.valueOf()).not.toEqual(
-        user.updatedAt.valueOf()
-      );
+      expect(user.title).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.title);
+      expect(user.role).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS.role);
+      expect(user.encryptedPassword).toEqual(encryptedPassword);
+      expect(user.updatedAt.valueOf()).not.toEqual(userCreatedAt.valueOf());
     });
 
     it('should update a user without matching password when admin', async () => {
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const {encryptedPassword} = user;
+
       const updateUser = await usersService.update(
-        user.id,
+        user,
         UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD,
-        true
+        adminAbacPolicy
       );
 
+      expect(user.encryptedPassword).not.toEqual(encryptedPassword);
+
       expect(updateUser.updatedAt.valueOf()).not.toEqual(
-        user.updatedAt.valueOf()
+        userCreatedAt.valueOf()
       );
     });
 
     it('should throw an error when the password is invalid', async () => {
       expect.assertions(1);
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       await expect(
         usersService.update(
-          user.id,
+          user,
           UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD,
-          false
+          abacPolicy
         )
       ).rejects.toThrow(ForbiddenException);
     });
 
     it('should throw an error when the email is invalid', async () => {
       expect.assertions(1);
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       await expect(
         usersService.update(
-          user.id,
+          user,
           UPDATE_USER_DTO_TEST_WITH_INVALID_EMAIL,
-          false
+          abacPolicy
         )
       ).rejects.toThrow('Validation error: Validation isEmail on email failed');
     });
 
     it('should throw an error when password is not updated and forcePasswordChange is true', async () => {
       expect.assertions(1);
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       await usersService.update(
-        user.id,
+        user,
         UPDATE_USER_DTO_SETUP_FORCE_PASSWORD_CHANGE,
-        false
+        abacPolicy
       );
       await expect(
         usersService.update(
-          user.id,
+          user,
           UPDATE_USER_DTO_TEST_WITHOUT_FORCE_PASSWORD_CHANGE,
-          false
+          abacPolicy
         )
       ).rejects.toThrow(BadRequestException);
     });
-  });
 
-  describe('UpdateLoginMetadata', () => {
-    it('should upate user lastLogin and loginCount', async () => {
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      const lastLogin = user.lastLogin;
-      const createdUser = await User.findByPk<User>(user.id);
+    describe('UpdateLoginMetadata', () => {
+      it('should update user lastLogin and loginCount', async () => {
+        const {lastLogin} = user;
 
-      if (createdUser === null) {
-        throw new TypeError(errorString);
-      }
+        await usersService.updateLoginMetadata(user);
 
-      await usersService.updateLoginMetadata(createdUser);
-
-      expect(createdUser.loginCount).toBe(1);
-      expect(createdUser.lastLogin).not.toBe(lastLogin);
+        expect(user.loginCount).toBe(1);
+        expect(user.lastLogin).not.toBe(lastLogin);
+      });
     });
   });
 
   describe('Remove', () => {
-    it('should throw an error when user does not exist', async () => {
-      expect.assertions(1);
-      await expect(
-        usersService.remove(1, DELETE_USER_DTO_TEST_OBJ, false)
-      ).rejects.toThrow(NotFoundException);
+    let user: User;
+    let abacPolicy: Ability;
+    let adminAbacPolicy: Ability;
+
+    beforeEach(async () => {
+      const userDto = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const userResponse = await User.findByPk<User>(userDto.id);
+      const adminDto = await usersService.create(CREATE_ADMIN_DTO);
+      const adminResponse = await User.findByPk<User>(adminDto.id);
+
+      if (userResponse === null || adminResponse === null) {
+        throw new TypeError(errorString);
+      } else {
+        user = userResponse;
+      }
+
+      abacPolicy = authzService.abac.createForUser(user);
+      adminAbacPolicy = authzService.abac.createForUser(adminResponse);
     });
 
     it('should throw an error when password fields do not match', async () => {
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       expect.assertions(1);
       await expect(
-        usersService.remove(user.id, DELETE_FAILURE_USER_DTO_TEST_OBJ, false)
+        usersService.remove(user, DELETE_FAILURE_USER_DTO_TEST_OBJ, abacPolicy)
       ).rejects.toThrow(ForbiddenException);
     });
 
     // Tests the remove function with DeleteUserDto that has no password field
     it('should throw an error when password field is blank', async () => {
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       expect.assertions(1);
       await expect(
         usersService.remove(
-          user.id,
+          user,
           DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD,
-          false
+          abacPolicy
         )
       ).rejects.toThrow(ForbiddenException);
     });
 
     it('should remove created user', async () => {
-      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const removedUser = await usersService.remove(
-        user.id,
+        user,
         DELETE_USER_DTO_TEST_OBJ,
-        false
+        abacPolicy
       );
       expect.assertions(7);
       expect(removedUser.email).toEqual(user.email);
@@ -474,25 +469,24 @@ describe('UsersService', () => {
         NotFoundException
       );
     });
-  });
 
-  it('should delete a user without matching password when admin', async () => {
-    const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-    const removedUser = await usersService.remove(
-      user.id,
-      DELETE_USER_DTO_TEST_OBJ,
-      true
-    );
-    expect.assertions(7);
-    expect(removedUser.email).toEqual(user.email);
-    expect(removedUser.firstName).toEqual(user.firstName);
-    expect(removedUser.lastName).toEqual(user.lastName);
-    expect(removedUser.organization).toEqual(user.organization);
-    expect(removedUser.title).toEqual(user.title);
-    expect(removedUser.role).toEqual(user.role);
-    await expect(usersService.findByEmail(user.email)).rejects.toThrow(
-      NotFoundException
-    );
+    it('should delete a user without matching password when admin', async () => {
+      const removedUser = await usersService.remove(
+        user,
+        DELETE_USER_DTO_TEST_OBJ,
+        adminAbacPolicy
+      );
+      expect.assertions(7);
+      expect(removedUser.email).toEqual(user.email);
+      expect(removedUser.firstName).toEqual(user.firstName);
+      expect(removedUser.lastName).toEqual(user.lastName);
+      expect(removedUser.organization).toEqual(user.organization);
+      expect(removedUser.title).toEqual(user.title);
+      expect(removedUser.role).toEqual(user.role);
+      await expect(usersService.findByEmail(user.email)).rejects.toThrow(
+        NotFoundException
+      );
+    });
   });
 
   afterAll(async () => {

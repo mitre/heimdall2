@@ -6,7 +6,7 @@ import {User} from '../../src/users/user.model';
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-export const ID = 7;
+export const ID = '7';
 
 export const MINUTE_IN_MILLISECONDS = 60000;
 
@@ -43,6 +43,12 @@ export const TEST_USER: User = {
 };
 
 // @ts-ignore
+export const TEST_USER_WITH_ID: User = {
+  ...TEST_USER,
+  id: '1'
+};
+
+// @ts-ignore
 export const ADMIN: User = {
   email: 'abc@yahoo.com',
   firstName: 'Test',
@@ -57,6 +63,12 @@ export const ADMIN: User = {
   lastLogin: new Date(),
   createdAt: new Date(),
   updatedAt: new Date()
+};
+
+// @ts-ignore
+export const ADMIN_WITH_ID: User = {
+  ...ADMIN,
+  id: '2'
 };
 
 // @ts-ignore

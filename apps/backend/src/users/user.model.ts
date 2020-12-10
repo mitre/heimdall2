@@ -1,4 +1,3 @@
-import {Sequelize} from 'sequelize';
 import {
   AllowNull,
   AutoIncrement,
@@ -14,13 +13,13 @@ import {
   UpdatedAt
 } from 'sequelize-typescript';
 
-@Table
+@Table({modelName: 'User'})
 export class User extends Model<User> {
   @PrimaryKey
   @AutoIncrement
   @AllowNull(false)
   @Column(DataType.BIGINT)
-  id!: number;
+  id!: string;
 
   @Unique
   @IsEmail
@@ -79,4 +78,8 @@ export class User extends Model<User> {
   @AllowNull(false)
   @Column(DataType.DATE)
   updatedAt!: Date;
+
+  get modelName(): string {
+    return 'User';
+  }
 }
