@@ -16,7 +16,8 @@
                 <v-divider />
                 <br />
               </div>
-              {{ main_desc }}
+              <!-- eslint-disable-next-line vue/no-v-html -->
+              <div v-html="sanitize_html(main_desc)" />
             </div>
             <ControlRowCol
               v-for="(result, index) in control.root.hdf.segments"
@@ -34,7 +35,12 @@
                 <v-row :key="'tab' + index" :class="zebra(index)">
                   <v-col cols="12" :class="detail.class">
                     <h3>{{ detail.name }}:</h3>
-                    <h4 class="mono preserve-whitespace">{{ detail.value }}</h4>
+                    <!-- eslint-disable vue/no-v-html -->
+                    <h4
+                      class="mono preserve-whitespace"
+                      v-html="sanitize_html(detail.value)"
+                    />
+                    <!-- eslint-enable vue/no-v-html -->
                   </v-col>
                   <v-divider />
                 </v-row>
@@ -59,8 +65,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
+import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
 
 //TODO: add line numbers
 import 'prismjs';
@@ -91,7 +98,7 @@ interface CollapsableElement extends Element {
     Prism
   }
 })
-export default class ControlRowDetails extends Vue {
+export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
   @Prop({type: String}) readonly tab!: string;
   @Prop({type: Object, required: true})
   readonly control!: context.ContextualizedControl;
