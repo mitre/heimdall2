@@ -64,9 +64,9 @@ jobs:
          start: yarn start
          wait-on: http://127.0.0.1:3000
     
-     - name: Upload coverage results
+     - name: Upload test screenshots
+       if: failure()
        uses: actions/upload-artifact@master
-       if: always()
        with:
          name: cypress-screenshots
          path: test/screenshots
