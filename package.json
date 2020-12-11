@@ -10,7 +10,8 @@
     "lint": "npx lerna run lint",
     "lint:ci": "npx lerna run lint:ci",
     "start:dev": "dotenv -e apps/backend/.env -- npx lerna exec yarn run start:dev --ignore @heimdall/interfaces",
-    "test:ui": "cypress run"
+    "test:ui": "cypress run",
+    "test:ui:open": "cypress open"
   },
   "workspaces": {
     "packages": [
@@ -22,7 +23,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.8.0",
     "@typescript-eslint/parser": "^4.8.0",
-    "cypress": "^5.5.0",
+    "cypress": "6.1.0",
     "dotenv-cli": "^4.0.0",
     "eslint": "^7.13.0",
     "eslint-config-prettier": "^7.0.0",
