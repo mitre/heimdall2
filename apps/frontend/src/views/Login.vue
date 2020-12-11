@@ -117,6 +117,7 @@ export default class Login extends Vue {
     ServerModule.Login(creds)
       .then(() => {
         this.$router.push('/');
+        SnackbarModule.notify('You have successfully signed in.');
       })
       .catch((error) => {
         SnackbarModule.notify(error.response.data.message);

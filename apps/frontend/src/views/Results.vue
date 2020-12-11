@@ -60,7 +60,11 @@
                 v-slot="{toggle}"
                 class="mx-2"
               >
-                <v-card :width="info_width" @click="toggle">
+                <v-card
+                  :width="info_width"
+                  data-cy="profileInfo"
+                  @click="toggle"
+                >
                   <EvaluationInfo :file_filter="file" />
                   <v-card-subtitle style="text-align: right">
                     Profile Info ↓
@@ -82,7 +86,7 @@
             :key="i"
             :cols="12 / file_filter.length"
           >
-            <v-card @click="toggle_prof(i)">
+            <v-card data-cy="profileInfo" @click="toggle_prof(i)">
               <EvaluationInfo :file_filter="file" />
               <v-card-subtitle style="text-align: right">
                 Profile Info ↓

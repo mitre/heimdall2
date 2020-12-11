@@ -59,7 +59,11 @@
               <div class="mb-2">{{ selected.data.title }}</div>
             </v-card-title>
             <v-divider />
-            <v-row class="text-left py-2" tag="v-card-text">
+            <v-row
+              class="text-left py-2"
+              tag="v-card-text"
+              data-cy="profileInfoFields"
+            >
               <template v-for="info in selected_info">
                 <v-col :key="info.label" tag="strong" md="4" sm="12">
                   {{ info.label }}:

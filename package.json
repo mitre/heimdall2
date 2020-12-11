@@ -4,21 +4,26 @@
   "scripts": {
     "frontend": "yarn workspace heimdall-lite",
     "backend": "yarn workspace heimdall-server",
+    "cypress-test": "yarn workspace @heimdall/cypress-tests",
     "build": "npx lerna run build",
     "start": "yarn backend start",
     "lint": "npx lerna run lint",
     "lint:ci": "npx lerna run lint:ci",
-    "start:dev": "dotenv -e apps/backend/.env -- npx lerna exec yarn run start:dev --ignore @heimdall/interfaces"
+    "start:dev": "dotenv -e apps/backend/.env -- npx lerna exec yarn run start:dev --ignore @heimdall/interfaces --ignore @heimdall/cypress-tests",
+    "test:ui": "cypress run",
+    "test:ui:open": "cypress open"
   },
   "workspaces": {
     "packages": [
       "apps/*",
-      "libs/*"
+      "libs/*",
+      "test"
     ]
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.8.0",
     "@typescript-eslint/parser": "^4.8.0",
+    "cypress": "6.1.0",
     "dotenv-cli": "^4.0.0",
     "eslint": "^7.13.0",
     "eslint-config-prettier": "^7.0.0",

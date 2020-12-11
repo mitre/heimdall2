@@ -1,0 +1,13 @@
+{
+  "name": "@heimdall/cypress-tests",
+  "version": "2.3.4",
+  "private": true,
+  "description": "",
+  "scripts": {
+    "lint": "eslint \"**/*.ts\" --fix",
+    "lint:ci": "eslint \"**/*.ts\" --max-warnings 0"
+  },
+  "devDependencies": {
+    "eslint-plugin-cypress": "^2.11.2"
+  }
+}
