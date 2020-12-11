@@ -1,6 +1,7 @@
 {
+  "baseUrl": "http://127.0.0.1:3000",
   "pluginsFile": false,
-  "supportFile": false,
+  "supportFile": "test/support/index.ts",
   "fixturesFolder": false,
   "integrationFolder": "test/integration",
   "screenshotsFolder": "test/screenshots",

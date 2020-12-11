@@ -7,7 +7,6 @@ import {
 } from '../../apps/backend/test/constants/users-test.constant';
 import Dropdown from '../support/components/Dropdown';
 import UploadModal from '../support/components/UploadModal';
-import DatabaseHelper from '../support/helpers/DatabaseHelper';
 import LoginPage from '../support/pages/LoginPage';
 import RegistrationPage from '../support/pages/RegistrationPage';
 import ResultsPage from '../support/pages/ResultsPage';
@@ -18,7 +17,6 @@ import UserModalVerifier from '../support/verifiers/UserModalVerifier';
 
 context('Results', () => {
   // Pages, verifiers, and modules
-  const databaseHelper = new DatabaseHelper();
   const dropdown = new Dropdown();
   const loginPage = new LoginPage();
   const loginPageVerifier = new LoginPageVerifier();
@@ -28,11 +26,11 @@ context('Results', () => {
   const toastVerifier = new ToastVerifier();
   const uploadModal = new UploadModal();
   const userModalVerifier = new UserModalVerifier();
+
   // Run before each test
   beforeEach(() => {
-    databaseHelper.clear();
     registrationPage.register(CREATE_USER_DTO_TEST_OBJ);
-    cy.visit('127.0.0.1:3000/login');
+    cy.visit('/login');
     loginPage.login(LOGIN_AUTHENTICATION);
     toastVerifier.toastTextContains('You have successfully signed in.');
   });

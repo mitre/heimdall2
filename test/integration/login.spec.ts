@@ -5,7 +5,6 @@ import {
   CREATE_USER_DTO_TEST_OBJ,
   LOGIN_AUTHENTICATION
 } from '../../apps/backend/test/constants/users-test.constant';
-import DatabaseHelper from '../support/helpers/DatabaseHelper';
 import LoginPage from '../support/pages/LoginPage';
 import RegistrationPage from '../support/pages/RegistrationPage';
 import LoginPageVerifier from '../support/verifiers/LoginPageVerifier';
@@ -13,7 +12,6 @@ import ToastVerifier from '../support/verifiers/ToastVerifier';
 
 context('Login', () => {
   // Pages, verifiers, and modules
-  const databaseHelper = new DatabaseHelper();
   const loginPage = new LoginPage();
   const loginPageVerifier = new LoginPageVerifier();
   const registrationPage = new RegistrationPage();
@@ -21,9 +19,8 @@ context('Login', () => {
 
   // Run before each test
   beforeEach(() => {
-    databaseHelper.clear();
     registrationPage.register(CREATE_USER_DTO_TEST_OBJ);
-    cy.visit('127.0.0.1:3000/login');
+    cy.visit('/login');
   });
 
   // The test
