@@ -15,13 +15,12 @@
       </v-card-text>
       <v-card-text v-else>
         <br />
-        <v-form name="userInfo">
+        <v-form data-cy="updateUserForm">
           <v-row>
             <v-col>
               <v-text-field
                 id="firstName"
                 v-model="userInfo.firstName"
-                name="firstName"
                 label="First Name"
               />
             </v-col>
@@ -29,7 +28,6 @@
               <v-text-field
                 id="lastName"
                 v-model="userInfo.lastName"
-                name="lastName"
                 label="Last Name"
               />
             </v-col>
@@ -40,7 +38,6 @@
                 id="email_field"
                 v-model="userInfo.email"
                 :error-messages="emailErrors($v.userInfo.email)"
-                name="email"
                 label="Email"
                 type="text"
                 required
@@ -48,28 +45,17 @@
               />
             </v-col>
             <v-col v-if="admin">
-              <v-select
-                v-model="userInfo.role"
-                :items="roles"
-                name="role"
-                label="Role"
-              />
+              <v-select v-model="userInfo.role" :items="roles" label="Role" />
             </v-col>
           </v-row>
           <v-row>
             <v-col>
-              <v-text-field
-                id="title"
-                v-model="userInfo.title"
-                name="title"
-                label="Title"
-              />
+              <v-text-field id="title" v-model="userInfo.title" label="Title" />
             </v-col>
             <v-col>
               <v-text-field
                 id="organization"
                 v-model="userInfo.organization"
-                name="organization"
                 label="Organization"
               />
             </v-col>
@@ -85,7 +71,6 @@
                 requiredFieldError($v.currentPassword, 'Current Password')
               "
               type="password"
-              name="password"
               label="Please provide your current password to save changes to your profile"
               @blur="$v.currentPassword.$touch()"
             />
@@ -102,7 +87,6 @@
                 requiredFieldError($v.newPassword, 'New Password')
               "
               type="password"
-              name="newPassword"
               label="New Password"
               @blur="$v.newPassword.$touch()"
             />
@@ -115,7 +99,6 @@
                 requiredFieldError($v.passwordConfirmation, 'Repeat Password')
               "
               type="password"
-              name="repeatPassword"
               label="Repeat Password"
               @blur="$v.passwordConfirmation.$touch()"
             />

@@ -4,6 +4,6 @@ export default class UserModalVerifier {
       'contain',
       'Update your account information'
     );
-    cy.get('form[name="userInfo"]').should('exist');
+    cy.get('[data-cy=updateUserForm]').should('exist');
   }
 }
