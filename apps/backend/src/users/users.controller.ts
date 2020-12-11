@@ -25,7 +25,6 @@ import {CreateUserDto} from './dto/create-user.dto';
 import {DeleteUserDto} from './dto/delete-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
 import {UserDto} from './dto/user.dto';
-import {User} from './user.model';
 import {UsersService} from './users.service';
 
 @Controller('users')
