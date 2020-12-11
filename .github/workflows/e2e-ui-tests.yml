@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       CYPRESS_TESTING: true
+      NODE_ENV: test
     services:
       postgres:
         image: postgres:latest
@@ -21,7 +22,6 @@ jobs:
 
     steps:
      - uses: actions/checkout@v2
-
 
      - name: Cache node modules
        uses: actions/cache@v2
@@ -55,6 +55,9 @@ jobs:
 
      - name: Build Heimdall
        run: yarn build
+       env:
+        NODE_ENV: production
+
      - name: Cypress run
        uses: cypress-io/github-action@v2
        with:

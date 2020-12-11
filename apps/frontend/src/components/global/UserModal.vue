@@ -7,9 +7,12 @@
     </template>
 
     <v-card>
-      <v-card-title id="userModalTitle" class="headline grey" primary-title>{{
-        title
-      }}</v-card-title>
+      <v-card-title
+        data-cy="userModalTitle"
+        class="headline grey"
+        primary-title
+        >{{ title }}</v-card-title
+      >
       <v-card-text v-if="userInfo === null">
         <v-progress-linear indeterminate color="white" class="mb-0" />
       </v-card-text>
