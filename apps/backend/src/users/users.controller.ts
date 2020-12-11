@@ -13,8 +13,8 @@ import {
 } from '@nestjs/common';
 import {UniqueConstraintErrorFilter} from '../filters/unique-constraint-error.filter';
 import {AbacGuard} from '../guards/abac.guard';
-import {DevelopmentGuard} from '../guards/development.guard';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
+import {TestGuard} from '../guards/test.guard';
 import {IsAdminInterceptor} from '../interceptors/is-admin.interceptor';
 import {PasswordChangePipe} from '../pipes/password-change.pipe';
 import {PasswordComplexityPipe} from '../pipes/password-complexity.pipe';
@@ -75,7 +75,7 @@ export class UsersController {
     return this.usersService.remove(id, deleteUserDto, role === 'admin');
   }
 
-  @UseGuards(DevelopmentGuard)
+  @UseGuards(TestGuard)
   @Post('clear')
   async clear(): Promise<void> {
     User.destroy({where: {}});
