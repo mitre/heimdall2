@@ -92,23 +92,18 @@ describe('CaslAbilityFactory', () => {
     ).toBeFalsy();
   });
 
-  // it('should allow administrators to skip a forced password change', () => {
+  it('should allow administrators to skip a forced password change', () => {
+    expect(
+      adminAbility.can(
+        Action.SkipForcePasswordChange,
+        subject('User', TEST_USER_WITH_ID)
+      )
+    ).toBeTruthy();
+  });
 
-  // });
-
-  // it('should allow administrators to update role', () => {
-
-  // });
-
-  // it('should allow administrators to skip a forced password change', () => {
-
-  // });
-
-  // it('should allow administrators to create evaluations with no stipulations', () => {
-
-  // });
-
-  // it('should allow users to create evaluations that belong to their userId', () => {
-
-  // });
+  it('should allow administrators to update role', () => {
+    expect(
+      adminAbility.can(Action.UpdateRole, subject('User', TEST_USER_WITH_ID))
+    ).toBeTruthy();
+  });
 });
