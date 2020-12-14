@@ -58,7 +58,16 @@ export default class DatabaseReader extends mixins(ServerMixin) {
       sortable: true,
       value: 'filename'
     },
-    {text: 'Uploaded', value: 'createdAt', sortable: true}
+    {
+      text: 'Tags',
+      value: 'evaluationTags',
+      sortable: true
+    },
+    {text: 'Uploaded', value: 'createdAt', sortable: true},
+    {
+      text: 'Actions',
+      value: 'actions'
+    }
   ];
 
   @Watch('refresh')
