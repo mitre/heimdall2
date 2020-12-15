@@ -18,7 +18,7 @@
             <v-btn color="blue darken-1" text @click="deleteDialog = false"
               >Cancel</v-btn
             >
-            <v-btn color="blue darken-1" text @click="deleteItemConfirm(item)"
+            <v-btn color="blue darken-1" text @click="deleteItemConfirm()"
               >OK</v-btn
             >
             <v-spacer />
@@ -29,6 +29,7 @@
         :visible="editDialog"
         :active-item="activeItem"
         :active-index="activeIndex"
+        @closeEditModal="closeEditModal"
       />
       <v-data-table
         v-model="selectedFiles"
@@ -108,6 +109,10 @@ export default class LoadFileList extends Vue {
     this.$emit('load-results', evaluations);
   }
 
+  closeEditModal() {
+    this.editDialog = false;
+  }
+
   editItem (item: IEvaluation) {
     this.activeItem = item
     this.activeIndex = this.files.indexOf(this.activeItem)
@@ -121,7 +126,7 @@ export default class LoadFileList extends Vue {
   }
 
   async deleteItemConfirm(): Promise<void>{
-    axios.delete(`/evaluations/${this.activeIndex}`).then((data) => {
+    axios.delete(`/evaluations/${this.activeItem.id}`).then((data) => {
       SnackbarModule.notify('Evaluation deleted successfully.')
       this.files.splice(this.activeIndex, 1)
     }).catch((error) => {
