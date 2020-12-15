@@ -25,7 +25,6 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     });
     // Get first email
     const primaryEmail = githubEmails.data[0];
-    console.log(primaryEmail);
     // Only validate if the user has verified their email with Github
     if (primaryEmail.verified) {
       // Check if the user already exists, if not they will be created
