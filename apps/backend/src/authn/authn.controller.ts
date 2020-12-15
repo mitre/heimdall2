@@ -17,7 +17,13 @@ export class AuthnController {
 
   @Get('github')
   @UseGuards(AuthGuard('github'))
+  async loginToGithub(@Req() req: Request): Promise<any> {
+    return this.authnService.login(req.user as User);
+  }
+
+  @Get('github/callback')
+  @UseGuards(AuthGuard('github'))
   async getUserFromGithubLogin(@Req() req: Request): Promise<any> {
-    return req.user;
+    return this.authnService.login(req.user as User);
   }
 }
