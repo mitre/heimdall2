@@ -29,7 +29,6 @@ export class EvaluationTagsService {
     createEvaluationTagDto: CreateEvaluationTagDto
   ): Promise<EvaluationTag> {
     const evaluationTag = new EvaluationTag();
-    evaluationTag.key = createEvaluationTagDto.key;
     evaluationTag.value = createEvaluationTagDto.value;
     evaluationTag.evaluationId = evaluationId;
     return evaluationTag.save();
