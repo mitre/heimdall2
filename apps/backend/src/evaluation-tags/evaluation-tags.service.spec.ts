@@ -3,8 +3,7 @@ import {Test} from '@nestjs/testing';
 import {
   CREATE_EVALUATION_TAG_DTO,
   CREATE_EVALUATION_TAG_DTO_MISSING_VALUE,
-  UPDATE_EVALUATION_TAG_DTO,
-  UPDATE_EVALUATION_TAG_DTO_MISSING_KEY
+  UPDATE_EVALUATION_TAG_DTO
 } from '../../test/constants/evaluation-tags-test.constant';
 import {EVALUATION_1} from '../../test/constants/evaluations-test.constant';
 import {DatabaseModule} from '../database/database.module';
@@ -116,6 +115,7 @@ describe('EvaluationTagsService', () => {
         evaluationTag.updatedAt.valueOf()
       );
     });
+  });
 
   describe('Remove', () => {
     it('should remove an existing tag', async () => {
