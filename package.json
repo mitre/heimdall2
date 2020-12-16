@@ -18,9 +18,9 @@
     "test:ui:open": "cypress open"
   },
   "workspaces": [
-      "apps/*",
-      "libs/*",
-      "test"
+    "apps/*",
+    "libs/*",
+    "test"
   ],
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.8.0",
