@@ -5,6 +5,7 @@ applications:
   memory: 2G
   buildpacks: 
     - nodejs_buildpack
+    - https://github.com/starkandwayne/pancake-buildpack
   services:
     - heimdall2-db  
   env:
@@ -13,4 +14,4 @@ applications:
     POSTGRES_DB: heimdall2-db
     # Update before deploying or use .env file with dotenv node package
     ADMIN_PASSWORD: ChangeMe123*
-  command: node main.js
+  command: yarn run start
