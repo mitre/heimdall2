@@ -1,13 +1,11 @@
 {
   "name": "root",
   "private": true,
-  "workspaces": {
-    "packages": [
-      "apps/*",
-      "libs/*",
-      "test"
-    ]
-  },
+  "workspaces": [
+    "apps/*",
+    "libs/*",
+    "test"
+  ],
   "scripts": {
     "backend": "yarn workspace heimdall-server",
     "build": "npx lerna run build",
