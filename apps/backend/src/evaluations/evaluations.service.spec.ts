@@ -114,9 +114,6 @@ describe('EvaluationsService', () => {
       expect(evaluation.evaluationTags?.[0].value).toEqual(
         EVALUATION_WITH_TAGS_1.evaluationTags[0].value
       );
-      expect(evaluation.evaluationTags?.[0].key).toEqual(
-        EVALUATION_WITH_TAGS_1.evaluationTags[0].key
-      );
     });
 
     it('should create a new evaluation without evaluation tags', async () => {

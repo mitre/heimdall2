@@ -9,9 +9,5 @@ export class DeleteEvaluationTagDto implements IDeleteEvaluationTag {
 
   @IsNotEmpty()
   @IsString()
-  readonly key!: string;
-
-  @IsNotEmpty()
-  @IsString()
   readonly value!: string;
 }

@@ -9,15 +9,10 @@ export class UpdateEvaluationTagDto implements IUpdateEvaluationTag {
 
   @IsOptional()
   @IsString()
-  readonly key: string;
-
-  @IsOptional()
-  @IsString()
   readonly value: string;
 
   constructor(dto: UpdateEvaluationTagDto) {
     this.id = dto.id;
-    this.key = dto.key;
     this.value = dto.value;
   }
 }
