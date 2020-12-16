@@ -7,7 +7,7 @@ COPY package.json yarn.lock lerna.json tsconfig.json .prettierrc ./
 COPY apps ./apps
 COPY libs ./libs
 
-RUN yarn --frozen-lockfile
+RUN yarn --frozen-lockfile --production
 
 RUN yarn run build
 
