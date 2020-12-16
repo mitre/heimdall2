@@ -21,6 +21,9 @@ COPY package.json yarn.lock lerna.json ./
 COPY apps/backend/package.json apps/backend/
 COPY apps/frontend/package.json apps/frontend/
 COPY libs/interfaces/package.json libs/interfaces/
+COPY --from=builder /src/apps/backend/node_modules apps/backend/node_modules
+COPY --from=builder /src/apps/frontend/node_modules apps/frontend/node_modules
+COPY --from=builder /src/node_modules node_modules
 RUN yarn --production=true --frozen-lockfile
 
 COPY --from=builder /src/dist/ /app/dist/
