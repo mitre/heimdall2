@@ -2354,9 +2354,9 @@
     webpack-node-externals "2.5.2"
 
 "@nestjs/common@^7.0.13":
-  version "7.6.2"
-  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-7.6.2.tgz#e3d4ba16be22f6068b61d5d640c30b7628507182"
-  integrity sha512-xsm/Arje/ePw8MrLFCmjyS8TXGPGG9vm0/E32CH87i27dmdlZ4OLwJ2NntLrhLWoa121bgIiRjVdxLIVWJk4EQ==
+  version "7.6.3"
+  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-7.6.3.tgz#95cd05af4f8f023b7ba34fd27e9fa5f3ce2b8da7"
+  integrity sha512-y6aOMZfWSBnAPi2g/UuhK0IIGNafIvgxAmOVjw9punui1mFpkBe0c0hkEnUOG3iDEVncqooqEgln48D160JA5g==
   dependencies:
     axios "0.21.0"
     iterare "1.2.1"
