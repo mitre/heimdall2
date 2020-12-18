@@ -7,15 +7,18 @@
     </template>
 
     <v-card>
-      <v-card-title class="headline grey" primary-title>{{
-        title
-      }}</v-card-title>
+      <v-card-title
+        data-cy="userModalTitle"
+        class="headline grey"
+        primary-title
+        >{{ title }}</v-card-title
+      >
       <v-card-text v-if="userInfo === null">
         <v-progress-linear indeterminate color="white" class="mb-0" />
       </v-card-text>
       <v-card-text v-else>
         <br />
-        <v-form>
+        <v-form data-cy="updateUserForm">
           <v-row>
             <v-col>
               <v-text-field
@@ -38,7 +41,6 @@
                 id="email_field"
                 v-model="userInfo.email"
                 :error-messages="emailErrors($v.userInfo.email)"
-                name="email"
                 label="Email"
                 type="text"
                 required
@@ -72,7 +74,6 @@
                 requiredFieldError($v.currentPassword, 'Current Password')
               "
               type="password"
-              name="password"
               label="Please provide your current password to save changes to your profile"
               @blur="$v.currentPassword.$touch()"
             />
@@ -89,7 +90,6 @@
                 requiredFieldError($v.newPassword, 'New Password')
               "
               type="password"
-              name="newPassword"
               label="New Password"
               @blur="$v.newPassword.$touch()"
             />
@@ -102,7 +102,6 @@
                 requiredFieldError($v.passwordConfirmation, 'Repeat Password')
               "
               type="password"
-              name="repeatPassword"
               label="Repeat Password"
               @blur="$v.passwordConfirmation.$touch()"
             />

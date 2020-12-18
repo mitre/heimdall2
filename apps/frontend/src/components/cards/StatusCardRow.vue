@@ -10,7 +10,9 @@
       <v-card height="100%" :color="card.color">
         <v-card-title>
           <v-icon large left>mdi-{{ card.icon }}</v-icon>
-          <span class="title">{{ card.title + ': ' + card.number }}</span>
+          <span class="title" data-cy="cardText">{{
+            card.title + ': ' + card.number
+          }}</span>
         </v-card-title>
         <v-card-text v-text="card.subtitle" />
       </v-card>

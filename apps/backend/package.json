@@ -18,8 +18,7 @@
     "test:cov": "jest --silent --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --runInBand --silent --config test/jest-e2e.json",
-    "test:ci-cov": "jest --silent --coverage --runInBand",
-    "test:ui": "jest -c test/integration/jest.config.integration.js --runInBand"
+    "test:ci-cov": "jest --silent --coverage --runInBand"
   },
   "dependencies": {
     "@heimdall/interfaces": "^2.3.5",
@@ -38,7 +37,6 @@
     "dotenv": "^8.2.0",
     "express-rate-limit": "^5.2.3",
     "helmet": "^4.1.1",
-    "jest-puppeteer": "^4.4.0",
     "js-levenshtein": "^1.1.6",
     "passport": "^0.4.1",
     "passport-github": "^1.1.0",

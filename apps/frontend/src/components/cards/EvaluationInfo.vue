@@ -1,6 +1,6 @@
 <template>
   <v-row class="pa-4" justify="space-between">
-    <v-col cols="12">
+    <v-col data-cy="fileinfo" cols="12">
       <strong>Filename:</strong> {{ filename }}<br />
       <strong>Tool Version:</strong> {{ inspec_version }}<br />
       <strong>Platform:</strong> {{ platform }}<br />

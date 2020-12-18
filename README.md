@@ -202,13 +202,20 @@ Once the above steps are completed it is possible to start heimdall-server using
 
 ### Run tests
 
-    # Frontend + Backend End to End Tests (Expects `yarn build` to have been run)
-    yarn backend test:ui
     # Run Frontend Vue Tests
     yarn frontend test
     # Run Backend Nest Tests
     yarn backend test:e2e
     yarn backend test:ci-cov
+
+#### Run Cypress End to End Tests
+
+The application includes E2E frontend + Backend tests (built using the [cypress.io](https://www.cypress.io/) framework). These perform automated checking that Heimdall Server is running as intended. In order to run these tests, a running instance of the application is required.
+
+    CYPRESS_TESTING=true yarn start:dev
+    CYPRESS_BASE_URL=http://localhost:8080 yarn test:ui:open
+
+The first command will start an instance of Heimdall Server and exposes additional routes required to allow the tests to run. The second will open the Cypress UI which will run the tests any time code changes are made.
 
 ### Creating a Release
 
