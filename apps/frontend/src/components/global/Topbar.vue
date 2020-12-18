@@ -1,14 +1,12 @@
 <template>
   <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app color="bar">
     <!-- The title and nav bar -->
-    <div v-if="!minimalTopbar">
-      <v-toolbar-title id="toolbar_title" class="pr-2">
-        <v-app-bar-nav-icon @click.stop="$emit('toggle-drawer')">
-          <v-icon color="bar-visible">mdi-menu</v-icon>
-        </v-app-bar-nav-icon>
-        <span class="hidden-sm-and-down bar-visible--text">{{ title }}</span>
-      </v-toolbar-title>
-    </div>
+    <v-toolbar-title v-if="!minimalTopbar" id="toolbar_title" class="pr-2">
+      <v-app-bar-nav-icon @click.stop="$emit('toggle-drawer')">
+        <v-icon color="bar-visible">mdi-menu</v-icon>
+      </v-app-bar-nav-icon>
+      <span class="hidden-sm-and-down bar-visible--text">{{ title }}</span>
+    </v-toolbar-title>
     <v-spacer />
 
     <slot name="content" />

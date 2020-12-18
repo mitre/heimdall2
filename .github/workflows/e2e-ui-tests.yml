@@ -9,6 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-20.04
+    env:
+      CYPRESS_TESTING: true
+      NODE_ENV: test
     services:
       postgres:
         image: postgres:latest
@@ -48,9 +51,22 @@ jobs:
        run: |
         yarn backend sequelize-cli db:create
         yarn backend sequelize-cli db:migrate
+        yarn backend sequelize-cli db:seed:all
 
-     - name: Build frontend and server for E2E UI tests
-       run: yarn run build
+     - name: Build Heimdall
+       run: yarn build
+       env:
+        NODE_ENV: production
 
-     - name: Run e2e UI tests
-       run: yarn backend test:ui
+     - name: Cypress run
+       uses: cypress-io/github-action@v2
+       with:
+         start: yarn start
+         wait-on: http://127.0.0.1:3000
+
+     - name: Upload test screenshots
+       if: failure()
+       uses: actions/upload-artifact@master
+       with:
+         name: cypress-screenshots
+         path: test/screenshots

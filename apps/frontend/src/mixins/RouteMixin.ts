@@ -1,6 +1,6 @@
 import {Component, Vue} from 'vue-property-decorator';
 
-@Component
+@Component({})
 export default class RouteMixin extends Vue {
   // get the value of the current route
   get current_route() {
