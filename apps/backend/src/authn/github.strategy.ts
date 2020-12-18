@@ -6,7 +6,7 @@ import {AuthnService} from './authn.service';
 
 @Injectable()
 export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
-  constructor(private authnService: AuthnService) {
+  constructor(private readonly authnService: AuthnService) {
     super({
       clientID: process.env.GITHUB_CLIENTID || 'disabled',
       clientSecret: process.env.GITHUB_CLIENTSECRET || 'disabled',
@@ -28,11 +28,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     // Only validate if the user has verified their email with Github
     if (primaryEmail.verified) {
       // Check if the user already exists, if not they will be created
-      const user = await this.authnService.oauthValidateUser(
-        primaryEmail.email
-      );
-      // Return session
-      return user;
+      return this.authnService.oauthValidateUser(primaryEmail.email);
     } else {
       throw new UnauthorizedException(
         'You need to verify your email with Github before you can log into Heimdall.'
