@@ -4,6 +4,7 @@ import Admin from '@/views/Admin.vue';
 import Compare from '@/views/Compare.vue';
 import Landing from '@/views/Landing.vue';
 import Login from '@/views/Login.vue';
+import OauthCallbackHandler from '@/views/OauthCallbackHandler.vue';
 import Results from '@/views/Results.vue';
 import Signup from '@/views/Signup.vue';
 import Vue from 'vue';
@@ -37,6 +38,11 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/authn/github/callback',
+      name: 'callback',
+      component: OauthCallbackHandler
     },
     {
       path: '/signup',

@@ -39,16 +39,24 @@
                     @keyup.enter="login"
                     @blur="$v.password.$touch()"
                   />
-                  <v-btn
-                    id="login_button"
-                    depressed
-                    large
-                    color="primary"
-                    :disabled="$v.$invalid"
-                    @click="login"
-                  >
-                    Login
-                  </v-btn>
+                  <v-row>
+                    <v-col align-self="left">
+                      <v-btn
+                        id="login_button"
+                        depressed
+                        large
+                        color="primary"
+                        :disabled="$v.$invalid"
+                        @click="login"
+                      >
+                        Login
+                      </v-btn>
+                    </v-col>
+                    <v-btn class="mr-3" large @click="loginGithub">
+                      <v-img :src="require('@/assets/github_mark.png')" />
+                      <div class="pl-2">Login with GitHub</div>
+                    </v-btn>
+                  </v-row>
                 </v-form>
               </v-card-text>
               <v-card-actions>
@@ -121,6 +129,10 @@ export default class Login extends Vue {
       .catch((error) => {
         SnackbarModule.notify(error.response.data.message);
       });
+  }
+
+  loginGithub() {
+    window.location.href = `http://${window.location.hostname}:${process.env.PORT || 3000}/authn/github`;
   }
 }
 </script>

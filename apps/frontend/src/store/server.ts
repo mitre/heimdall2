@@ -150,6 +150,22 @@ class Server extends VuexModule implements IServerState {
   }
 
   @Action({rawError: true})
+  public async LoginGithub(callbackCode: string | null) {
+    axios
+      .get('/authn/github/callback', {
+        params: {
+          code: callbackCode
+        }
+      })
+      .then(({data}) => {
+        this.context.commit('SET_TOKEN', data.accessToken);
+        this.context.commit('SET_USERID', data.userID);
+        this.GetUserInfo();
+      });
+    return;
+  }
+
+  @Action({rawError: true})
   public async Register(userInfo: {
     email: string;
     password: string;
