@@ -31,7 +31,17 @@ export class ConfigService {
   }
 
   frontendStartupSettings(): StartupSettingsDto {
-    return new StartupSettingsDto({banner: this.get('WARNING_BANNER') || ''});
+    const supportedOauth: string[] = ['github'];
+    const enabledOauth: string[] = [];
+    supportedOauth.forEach((oauthStrategy) => {
+      if (this.get(`${oauthStrategy.toUpperCase()}_CLIENTID`)) {
+        enabledOauth.push(oauthStrategy);
+      }
+    });
+    return new StartupSettingsDto({
+      banner: this.get('WARNING_BANNER') || '',
+      enabledOAuth: enabledOauth
+    });
   }
 
   private parseDatabaseUrl(): boolean {

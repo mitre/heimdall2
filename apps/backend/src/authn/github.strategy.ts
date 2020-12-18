@@ -8,8 +8,8 @@ import {AuthnService} from './authn.service';
 export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
   constructor(private authnService: AuthnService) {
     super({
-      clientID: process.env.GITHUB_CLIENTID,
-      clientSecret: process.env.GITHUB_CLIENTSECRET,
+      clientID: process.env.GITHUB_CLIENTID || 'disabled',
+      clientSecret: process.env.GITHUB_CLIENTSECRET || 'disabled',
       scope: 'user:email',
       passReqToCallback: true
     });

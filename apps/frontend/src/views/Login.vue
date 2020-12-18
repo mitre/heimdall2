@@ -40,7 +40,7 @@
                     @blur="$v.password.$touch()"
                   />
                   <v-row>
-                    <v-col align-self="left">
+                    <v-col>
                       <v-btn
                         id="login_button"
                         depressed
@@ -52,7 +52,12 @@
                         Login
                       </v-btn>
                     </v-col>
-                    <v-btn class="mr-3" large @click="loginGithub">
+                    <v-btn
+                      v-if="authStrategySupported('github')"
+                      class="mr-3"
+                      large
+                      @click="loginGithub"
+                    >
                       <v-img :src="require('@/assets/github_mark.png')" />
                       <div class="pl-2">Login with GitHub</div>
                     </v-btn>
@@ -115,6 +120,10 @@ export default class Login extends Vue {
 
   signup() {
     this.$router.push('/signup');
+  }
+
+  authStrategySupported(strategy: string) {
+    return ServerModule.enabledOAuth.includes(strategy)
   }
 
   login() {
