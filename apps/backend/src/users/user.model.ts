@@ -19,7 +19,7 @@ export class User extends Model<User> {
   @AutoIncrement
   @AllowNull(false)
   @Column(DataType.BIGINT)
-  id!: number;
+  id!: string;
 
   @Unique
   @IsEmail
@@ -78,4 +78,8 @@ export class User extends Model<User> {
   @AllowNull(false)
   @Column(DataType.DATE)
   updatedAt!: Date;
+
+  get modelName(): string {
+    return 'User';
+  }
 }

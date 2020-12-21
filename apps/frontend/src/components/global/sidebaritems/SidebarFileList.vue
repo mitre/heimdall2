@@ -37,6 +37,7 @@ import {SnackbarModule} from '@/store/snackbar';
 
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop} from 'vue-property-decorator';
+import {ServerModule} from '@/store/server';
 
 @Component
 export default class FileItem extends mixins(ServerMixin) {
@@ -84,6 +85,7 @@ export default class FileItem extends mixins(ServerMixin) {
     let evaluationDTO: ICreateEvaluation = {
       data: file.evaluation.data,
       filename: file.filename,
+      userId: ServerModule.userInfo.id,
       evaluationTags: []
     };
 

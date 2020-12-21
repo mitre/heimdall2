@@ -1,5 +1,5 @@
 export interface IUser {
-  id: number;
+  id: string;
   readonly email: string;
   readonly firstName: string | undefined;
   readonly lastName: string | undefined;

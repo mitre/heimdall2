@@ -14,7 +14,7 @@ export function register(
 
 export function update(
   app: INestApplication,
-  userId: number,
+  userId: string,
   user: UpdateUserDto,
   authorizationJWT: string
 ): Test {
@@ -36,7 +36,7 @@ export function login(
 
 export function destroy(
   app: INestApplication,
-  userId: number,
+  userId: string,
   user: {password?: string},
   authorizationJWT: string
 ): Test {

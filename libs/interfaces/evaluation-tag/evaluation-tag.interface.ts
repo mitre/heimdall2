@@ -1,8 +1,8 @@
 export interface IEvaluationTag {
-  readonly id: number;
+  readonly id: string;
   readonly key: string;
   readonly value: string;
-  readonly evaluationId: number;
+  readonly evaluationId: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }

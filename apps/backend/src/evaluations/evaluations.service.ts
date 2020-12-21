@@ -35,7 +35,7 @@ export class EvaluationsService {
   }
 
   async update(
-    id: number,
+    id: string,
     updateEvaluationDto: UpdateEvaluationDto
   ): Promise<EvaluationDto> {
     const evaluation = await this.findByPkBang(id, {
@@ -44,7 +44,7 @@ export class EvaluationsService {
     return new EvaluationDto(await evaluation.update(updateEvaluationDto));
   }
 
-  async remove(id: number): Promise<EvaluationDto> {
+  async remove(id: string): Promise<EvaluationDto> {
     const evaluation = await this.findByPkBang(id, {
       include: [EvaluationTag]
     });
@@ -61,7 +61,7 @@ export class EvaluationsService {
     return new EvaluationDto(evaluation);
   }
 
-  async findById(id: number): Promise<EvaluationDto> {
+  async findById(id: string): Promise<EvaluationDto> {
     const evaluation = await this.findByPkBang(id, {
       include: [EvaluationTag]
     });

@@ -10,6 +10,9 @@ import {
 } from '../../test/constants/evaluations-test.constant';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
+import {UsersController} from '../users/users.controller';
+import {UsersModule} from '../users/users.module';
+import {UsersService} from '../users/users.service';
 import {EvaluationsController} from './evaluations.controller';
 import {EvaluationsService} from './evaluations.service';
 
@@ -21,10 +24,11 @@ describe('EvaluationsController', () => {
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      controllers: [EvaluationsController],
-      imports: [DatabaseModule],
+      controllers: [EvaluationsController, UsersController],
+      imports: [DatabaseModule, UsersModule],
       providers: [
         DatabaseService,
+        UsersService,
         {
           provide: EvaluationsService,
           useFactory: () => ({
@@ -52,7 +56,7 @@ describe('EvaluationsController', () => {
 
   describe('findById', () => {
     it('should return a value when given an id', async () => {
-      await evaluationsController.findById(1);
+      await evaluationsController.findById('1');
       expect(evaluationsService.findById).toHaveReturnedWith(EVALUATION_DTO);
     });
 
@@ -61,7 +65,7 @@ describe('EvaluationsController', () => {
         throw new NotFoundException();
       });
       expect(async () => {
-        await evaluationsController.findById(0);
+        await evaluationsController.findById('0');
       }).rejects.toThrow(NotFoundException);
     });
   });
@@ -110,14 +114,14 @@ describe('EvaluationsController', () => {
   describe('update', () => {
     // All fields in the UpdateEvaluationDto are optional, just test with all of them
     it('should update an evaluation given a valid DTO', async () => {
-      await evaluationsController.update(1, UPDATE_EVALUATION);
+      await evaluationsController.update('1', UPDATE_EVALUATION);
       expect(evaluationsService.update).toHaveReturnedWith(EVALUATION_DTO);
     });
   });
 
   describe('remove', () => {
     it('should remove an evaluation', async () => {
-      await evaluationsController.remove(1);
+      await evaluationsController.remove('1');
       expect(evaluationsService.remove).toHaveReturnedWith(EVALUATION_DTO);
     });
   });
