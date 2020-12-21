@@ -2,14 +2,18 @@ import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import axios from 'axios';
 import {Strategy} from 'passport-github';
+import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
 
 @Injectable()
 export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
-  constructor(private readonly authnService: AuthnService) {
+  constructor(
+    private readonly authnService: AuthnService,
+    private readonly configService: ConfigService
+  ) {
     super({
-      clientID: process.env.GITHUB_CLIENTID || 'disabled',
-      clientSecret: process.env.GITHUB_CLIENTSECRET || 'disabled',
+      clientID: configService.get('GITHUB_CLIENTID') || 'disabled',
+      clientSecret: configService.get('GITHUB_CLIENTSECRET') || 'disabled',
       scope: 'user:email',
       passReqToCallback: true
     });
