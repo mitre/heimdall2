@@ -142,7 +142,7 @@ export default class Login extends Vue {
   }
 
   loginGithub() {
-    window.location.href = `http://${window.location.hostname}:${process.env.PORT || 3000}/authn/github`;
+    window.location.href = '/authn/github';
   }
 }
 </script>
