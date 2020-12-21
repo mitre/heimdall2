@@ -31,7 +31,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
       return this.authnService.oauthValidateUser(primaryEmail.email);
     } else {
       throw new UnauthorizedException(
-        'You need to verify your email with Github before you can log into Heimdall.'
+        'Please verify your email with Github before logging into Heimdall.'
       );
     }
   }
