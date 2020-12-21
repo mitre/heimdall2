@@ -31,7 +31,6 @@ export class EvaluationTagsController {
     @Param('evaluationId') evaluationId: string,
     @Body() createEvaluationTagDto: any
   ): Promise<EvaluationTagDto> {
-    console.log(evaluationId);
     return this.evaluationTagsService.create(
       parseInt(evaluationId),
       createEvaluationTagDto

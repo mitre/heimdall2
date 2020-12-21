@@ -2,13 +2,33 @@
   <Modal :visible="visible">
     <v-card>
       <v-card-title>
-        <span class="headline">Edit "{{ activeItem.filename }}"</span>
+        <span class="headline">Edit "{{ filename }}"</span>
       </v-card-title>
 
       <v-card-text>
         <v-container>
-          <v-text-field v-model="activeItem.filename" label="File name" />
+          <v-text-field v-model="filename" label="File name" />
           <v-divider class="pb-2" />
+          <v-dialog v-model="deleteTagDialog" max-width="500px">
+            <v-card>
+              <v-card-title class="headline"
+                >Are you sure you want to delete this tag?</v-card-title
+              >
+              <v-card-actions>
+                <v-spacer />
+                <v-btn
+                  color="blue darken-1"
+                  text
+                  @click="deleteTagDialog = false"
+                  >Cancel</v-btn
+                >
+                <v-btn color="blue darken-1" text @click="deleteTagConfirm()"
+                  >OK</v-btn
+                >
+                <v-spacer />
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
           <v-dialog v-model="newTagDialog" max-width="500px">
             <template #activator="{on, attrs}">
               <v-row class="d-flex flex-row-reverse">
@@ -25,10 +45,11 @@
               <v-card-text>
                 <v-container>
                   <v-col>
-                    <v-text-field v-model="newTag.key" label="Tag name" />
-                  </v-col>
-                  <v-col>
-                    <v-text-field v-model="newTag.value" label="Tag value" />
+                    <v-text-field
+                      v-model="activeTag.value"
+                      label="Tag value"
+                      @keyup.enter="commitTag()"
+                    />
                   </v-col>
                 </v-container>
               </v-card-text>
@@ -44,31 +65,12 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <v-data-table :headers="headers" :items="activeItem.evaluationTags">
-            <template #[`item.key`]="{item}">
-              <v-edit-dialog
-                :return-value.sync="item.key"
-                large
-                @save="saveTag(item)"
-              >
-                <div>{{ item.key }}</div>
-                <template #input>
-                  <div class="mt-4 title">Update {{ item.key }}</div>
-                  <v-text-field
-                    v-model="item.key"
-                    label="Edit"
-                    single-line
-                    counter
-                    autofocus
-                  />
-                </template>
-              </v-edit-dialog>
-            </template>
+          <v-data-table :headers="headers" :items="tags" disable-sort>
             <template #[`item.value`]="{item}">
               <v-edit-dialog
                 :return-value.sync="item.value"
                 large
-                @save="saveTag(item)"
+                @save="updateTag(item)"
               >
                 <div>{{ item.value }}</div>
                 <template #input>
@@ -82,6 +84,9 @@
                   />
                 </template>
               </v-edit-dialog>
+            </template>
+            <template #[`item.actions`]="{item}">
+              <v-icon small @click="deleteTag(item)">mdi-delete</v-icon>
             </template>
           </v-data-table>
         </v-container>
@@ -109,8 +114,11 @@ import axios from 'axios';
 import Component from 'vue-class-component';
 import Modal from '@/components/global/Modal.vue'
 import {Prop} from 'vue-property-decorator';
-import {IEvaluationTag, ICreateEvaluationTag} from '@heimdall/interfaces';
-import {SnackbarModule} from '@/store/snackbar';
+import {IEvaluationTag, ICreateEvaluationTag, IEvaluation} from '@heimdall/interfaces';
+import {Snackbar, SnackbarModule} from '@/store/snackbar';
+import {EvaluationModule} from '@/store/evaluations';
+import { Evaluation } from '@/types/models';
+import { ServerModule } from '@/store/server';
 
 @Component({
   components: {
@@ -119,72 +127,54 @@ import {SnackbarModule} from '@/store/snackbar';
 })
 export default class EditEvaluationModal extends Vue {
   @Prop({default: false}) visible!: boolean;
-  @Prop({default: {}}) activeItem: any;
 
   newTagDialog: boolean = false;
-  newTag: ICreateEvaluationTag = {
-    key: '',
-    value: ''
-  };
-  // Table Headers
+  deleteTagDialog: boolean = false;
+  showSelf: boolean = this.visible;
+
   headers: Object[] = [
     {
       text: 'Tag',
-      value: 'key'
+      value: 'value'
     },
     {
-      text: 'Value',
-      value: 'value'
+      text: 'Actions',
+      value: 'actions'
     }
   ];
 
-  async saveTag(item: IEvaluationTag): Promise<void> {
-    console.log(item)
-    axios.put(`/evaluation-tags/${item.id}`, item).then((response) => {
-      SnackbarModule.notify('Updated tag successfully.')
-    }).catch((error) => {
-      SnackbarModule.notify(error.response.data.message);
-      if (typeof error.response.data.message === 'object') {
-        SnackbarModule.notify(
-          error.response.data.message
-            .map(function capitalize(c: string) {
-              return c.charAt(0).toUpperCase() + c.slice(1);
-            }).join(', ')
-        );
-      }
-      else {
-        SnackbarModule.notify(error.response.data.message);
-      };
-    });
+  get filename() {
+    return EvaluationModule.activeEvaluation.filename;
   }
 
-  async saveEvaluation(): Promise<void> {
-    axios.put(`/evaluations/${this.activeItem.id}`, this.activeItem).then((response) => {
-      SnackbarModule.notify('Updated evaluation successfully.');
-      this.$emit('closeEditModal')
-    }).catch((error) => {
-      SnackbarModule.notify(error.response.data.message);
-      if (typeof error.response.data.message === 'object') {
-        SnackbarModule.notify(
-          error.response.data.message
-            .map(function capitalize(c: string) {
-              return c.charAt(0).toUpperCase() + c.slice(1);
-            })
-          .join(', ')
-        );
-      }
-      else {
-        SnackbarModule.notify(error.response.data.message);
-      };
-    });
+  set filename(filename: string) {
+    EvaluationModule.setActiveEvaluationFilename(filename);
+  }
+
+  get tags() {
+    return EvaluationModule.activeEvaluation.evaluationTags;
+  }
+
+  get activeTag() {
+    return EvaluationModule.activeTag;
+  }
+
+  async deleteTag(tag: any) {
+    EvaluationModule.deleteTag(tag);
+  }
+
+  async updateTag(tag: any) {
+    EvaluationModule.updateTag(tag);
   }
 
   async commitTag(): Promise<void> {
-    axios.post(`/evaluation-tags/${this.activeItem.id}`, this.newTag).then((response) => {
-      console.log(response);
-    })
-    this.activeItem.evaluationTags.push(this.newTag);
+    EvaluationModule.addTagToActiveEvaluation();
     this.newTagDialog = false
+  }
+
+  async saveEvaluation(): Promise<void> {
+    EvaluationModule.saveEvaluation();
+    this.$emit('closeEditModal')
   }
 }
 </script>

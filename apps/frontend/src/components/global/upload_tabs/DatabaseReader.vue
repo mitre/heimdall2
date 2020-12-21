@@ -66,7 +66,8 @@ export default class DatabaseReader extends mixins(ServerMixin) {
     {text: 'Uploaded', value: 'createdAt', sortable: true},
     {
       text: 'Actions',
-      value: 'actions'
+      value: 'actions',
+      align: 'right'
     }
   ];
 

@@ -27,7 +27,6 @@
       </v-dialog>
       <EditEvaluationModal
         :visible="editDialog"
-        :active-item="activeItem"
         :active-index="activeIndex"
         @closeEditModal="closeEditModal"
       />
@@ -81,9 +80,11 @@ import Component from 'vue-class-component';
 import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue'
 
 import {SnackbarModule} from '@/store/snackbar';
+import {EvaluationModule} from '@/store/evaluations'
 import {IEvaluation} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
 import {Samples} from 'aws-sdk/clients/devicefarm';
+import { Evaluation } from '@/types/models';
 
 @Component({
   components: {
@@ -114,19 +115,19 @@ export default class LoadFileList extends Vue {
   }
 
   editItem (item: IEvaluation) {
-    this.activeItem = item
-    this.activeIndex = this.files.indexOf(this.activeItem)
+    EvaluationModule.setActiveEvaluation(item);
+    this.activeIndex = this.files.indexOf(EvaluationModule.getActiveEvaluation);
     this.editDialog = true;
   }
 
   deleteItem(item: IEvaluation) {
-    this.activeItem = item
-    this.activeIndex = this.files.indexOf(this.activeItem)
+    EvaluationModule.setActiveEvaluation(item);
+    this.activeIndex = this.files.indexOf(EvaluationModule.getActiveEvaluation)
     this.deleteDialog = true;
   }
 
   async deleteItemConfirm(): Promise<void>{
-    axios.delete(`/evaluations/${this.activeItem.id}`).then((data) => {
+    axios.delete(`/evaluations/${EvaluationModule.getActiveEvaluation.id}`).then((data) => {
       SnackbarModule.notify('Evaluation deleted successfully.')
       this.files.splice(this.activeIndex, 1)
     }).catch((error) => {
