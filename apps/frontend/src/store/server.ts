@@ -144,6 +144,7 @@ class Server extends VuexModule implements IServerState {
   }
   @Action
   public async handleLogin(response: any) {
+    console.log(response.data);
     this.context.commit('SET_TOKEN', response.data.accessToken);
     this.context.commit('SET_USERID', response.data.userID);
   }
@@ -159,13 +160,13 @@ class Server extends VuexModule implements IServerState {
   @Action({rawError: true})
   public async LoginGithub(callbackCode: string | null) {
     return axios
-      .get('/authn/github/callback', {
+      .get(`/authn/github/callback`, {
         params: {
           code: callbackCode
         }
       })
-      .then(({data}) => {
-        this.handleLogin(data);
+      .then((response) => {
+        this.handleLogin(response);
         this.GetUserInfo();
       });
   }
