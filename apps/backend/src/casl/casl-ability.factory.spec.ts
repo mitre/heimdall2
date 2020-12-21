@@ -16,7 +16,7 @@ describe('CaslAbilityFactory', () => {
     adminAbility = abilityFactory.createForUser(ADMIN_WITH_ID);
   });
 
-  it('should allow anyone to get, put and delete their own user', () => {
+  it('should allow users to get, put and delete their own user', () => {
     expect(
       userAbility.can(Action.Read, subject('User', TEST_USER_WITH_ID))
     ).toBeTruthy();
@@ -71,7 +71,7 @@ describe('CaslAbilityFactory', () => {
     ).toBeFalsy();
   });
 
-  it('should allow administrators to update anyone', () => {
+  it('should allow administrators to update users', () => {
     expect(
       adminAbility.can(Action.Update, subject('User', TEST_USER_WITH_ID))
     ).toBeTruthy();

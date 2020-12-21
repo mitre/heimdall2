@@ -93,7 +93,7 @@ describe('/evaluations', () => {
     });
 
     describe('Create', () => {
-      it.only('should create an evaluation', async () => {
+      it('should create an evaluation', async () => {
         await request(app.getHttpServer())
           .post('/evaluations')
           .set('Content-Type', 'application/json')
@@ -168,7 +168,7 @@ describe('/evaluations', () => {
           .post('/evaluations')
           .set('Content-Type', 'application/json')
           .set('Authorization', 'bearer ' + jwtToken)
-          .send({EVALUATION_WITH_TAGS_1, userId: userId})
+          .send({...EVALUATION_WITH_TAGS_1, userId: userId})
           .then((response) => {
             evaluation = response.body;
           });

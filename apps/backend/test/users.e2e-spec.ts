@@ -586,10 +586,10 @@ describe('/users', () => {
       it('should not be able to update themselves without providing the current password', async () => {
         return update(
           app,
-          editUserId,
+          adminUserId,
           UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD,
           jwtToken
-        ).expect(HttpStatus.OK);
+        ).expect(HttpStatus.FORBIDDEN);
       });
 
       it('should be able to update a user role', async () => {
