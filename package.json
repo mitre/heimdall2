@@ -1,36 +1,36 @@
 {
   "name": "root",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "libs/*",
+    "test"
+  ],
   "scripts": {
-    "frontend": "yarn workspace heimdall-lite",
     "backend": "yarn workspace heimdall-server",
-    "cypress-test": "yarn workspace @heimdall/cypress-tests",
     "build": "npx lerna run build",
-    "start": "yarn backend start",
+    "cypress-test": "yarn workspace @heimdall/cypress-tests",
+    "frontend": "yarn workspace heimdall-lite",
     "lint": "npx lerna run lint",
     "lint:ci": "npx lerna run lint:ci",
+    "start": "yarn backend start",
     "start:dev": "dotenv -e apps/backend/.env -- npx lerna exec yarn run start:dev --ignore @heimdall/interfaces --ignore @heimdall/cypress-tests",
     "test:ui": "cypress run",
     "test:ui:open": "cypress open"
   },
-  "workspaces": {
-    "packages": [
-      "apps/*",
-      "libs/*",
-      "test"
-    ]
-  },
-  "devDependencies": {
+  "dependencies": {
     "@typescript-eslint/eslint-plugin": "^4.8.0",
     "@typescript-eslint/parser": "^4.8.0",
-    "cypress": "6.1.0",
-    "dotenv-cli": "^4.0.0",
     "eslint": "^7.13.0",
     "eslint-config-prettier": "^7.0.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "lerna": "^3.22.1",
     "prettier": "^2.1.2",
     "prettier-plugin-organize-imports": "^1.1.1",
     "typescript": "^4.0.5"
+  },
+  "devDependencies": {
+    "cypress": "6.1.0",
+    "dotenv-cli": "^4.0.0",
+    "lerna": "^3.22.1"
   }
 }
