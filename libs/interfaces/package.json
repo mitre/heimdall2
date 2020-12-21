@@ -1,8 +1,8 @@
 {
   "name": "@heimdall/interfaces",
   "version": "2.3.5",
-  "description": "",
   "private": true,
+  "description": "",
   "main": "index.ts",
   "scripts": {
     "lint": "eslint \"**/*.ts\" --fix",

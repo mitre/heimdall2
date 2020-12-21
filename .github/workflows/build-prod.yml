@@ -1,0 +1,35 @@
+name: Build in production mode
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+
+    steps:
+     - uses: actions/checkout@v2
+
+     - name: Setup Node.js
+       uses: actions/setup-node@v1
+       with:
+        node-version: '14.x'
+
+     - name: Remove all test code from the application
+       run: rm -rf apps/frontend/tests apps/backend/test test
+
+     - name: Install project dependencies
+       run: yarn install --frozen-lockfile --production
+
+     - name: Ensure the app builds cleanly with only production dependencies
+       run: yarn build
