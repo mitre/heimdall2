@@ -45,14 +45,14 @@ export class AuthnService {
         role: ''
       };
       this.usersService.create(createUser);
-      throw new UnauthorizedException('Incorrect Username or Password');
+      user = await this.usersService.findModelByEmail(email);
     }
+
     if (user) {
       this.usersService.updateLoginMetadata(user);
-      return user;
-    } else {
-      return null;
     }
+
+    return user;
   }
 
   async login(user: {
