@@ -9,14 +9,14 @@ import {EvaluationTag} from '../../src/evaluation-tags/evaluation-tag.model';
 export const EVALUATION_TAG_1: EvaluationTag = {
   key: 'key string',
   value: 'value string',
-  evaluationId: 1
+  evaluationId: '1'
 };
 
 export const EVALUATION_TAG_DTO: EvaluationTagDto = {
-  id: 10001,
+  id: '10001',
   key: 'key string',
   value: 'value string',
-  evaluationId: 1,
+  evaluationId: '1',
   createdAt: new Date(),
   updatedAt: new Date()
 };

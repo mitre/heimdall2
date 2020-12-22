@@ -3,10 +3,11 @@ import {EvaluationTagDto} from '../../evaluation-tags/dto/evaluation-tag.dto';
 import {Evaluation} from '../evaluation.model';
 
 export class EvaluationDto implements IEvaluation {
-  readonly id: number;
+  readonly id: string;
   readonly filename: string;
   readonly data: Record<string, any> | undefined;
   readonly evaluationTags: EvaluationTagDto[] | null;
+  readonly userId: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -24,6 +25,7 @@ export class EvaluationDto implements IEvaluation {
         (tag) => new EvaluationTagDto(tag)
       );
     }
+    this.userId = evaluation.userId;
     this.createdAt = evaluation.createdAt;
     this.updatedAt = evaluation.updatedAt;
   }

@@ -1,3 +1,4 @@
+import {ForbiddenError} from '@casl/ability';
 import {
   Body,
   Controller,
@@ -6,16 +7,16 @@ import {
   Param,
   Post,
   Put,
+  Request,
   UseFilters,
   UseGuards,
-  UseInterceptors,
   UsePipes
 } from '@nestjs/common';
+import {AuthzService} from '../authz/authz.service';
+import {Action} from '../casl/casl-ability.factory';
 import {UniqueConstraintErrorFilter} from '../filters/unique-constraint-error.filter';
-import {AbacGuard} from '../guards/abac.guard';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {TestGuard} from '../guards/test.guard';
-import {IsAdminInterceptor} from '../interceptors/is-admin.interceptor';
 import {PasswordChangePipe} from '../pipes/password-change.pipe';
 import {PasswordComplexityPipe} from '../pipes/password-complexity.pipe';
 import {PasswordsMatchPipe} from '../pipes/passwords-match.pipe';
@@ -28,16 +29,30 @@ import {UsersService} from './users.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly authz: AuthzService
+  ) {}
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async findById(@Param('id') id: number): Promise<UserDto> {
-    return this.usersService.findById(id);
+  async findById(
+    @Param('id') id: string,
+    @Request() request: {user: User}
+  ): Promise<UserDto> {
+    const user = await this.usersService.findById(id);
+
+    const abac = this.authz.abac.createForUser(request.user);
+    ForbiddenError.from(abac).throwUnlessCan(Action.Read, user);
+
+    return new UserDto(user);
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard, AbacGuard)
-  async findAll(): Promise<UserDto[]> {
+  @UseGuards(JwtAuthGuard)
+  async findAll(@Request() request: {user: User}): Promise<UserDto[]> {
+    const abac = this.authz.abac.createForUser(request.user);
+    ForbiddenError.from(abac).throwUnlessCan(Action.ReadAll, User);
+
     return this.usersService.findAll();
   }
 
@@ -48,12 +63,11 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @UseGuards(JwtAuthGuard, AbacGuard)
-  @UseInterceptors(IsAdminInterceptor)
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   async update(
-    @Param('role') role: string, // This comes from IsAdminIntercepter, not from client side
-    @Param('id') id: number,
+    @Param('id') id: string,
+    @Request() request: {user: User},
     @Body(
       new PasswordsMatchPipe(),
       new PasswordChangePipe(),
@@ -61,18 +75,25 @@ export class UsersController {
     )
     updateUserDto: UpdateUserDto
   ): Promise<UserDto> {
-    return this.usersService.update(id, updateUserDto, role === 'admin');
+    const abac = this.authz.abac.createForUser(request.user);
+    const userToUpdate = await this.usersService.findByPkBang(id);
+    ForbiddenError.from(abac).throwUnlessCan(Action.Update, userToUpdate);
+
+    return this.usersService.update(userToUpdate, updateUserDto, abac);
   }
 
-  @UseGuards(JwtAuthGuard, AbacGuard)
-  @UseInterceptors(IsAdminInterceptor)
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(
-    @Param('role') role: string,
-    @Param('id') id: number,
+    @Param('id') id: string,
+    @Request() request: {user: User},
     @Body() deleteUserDto: DeleteUserDto
   ): Promise<UserDto> {
-    return this.usersService.remove(id, deleteUserDto, role === 'admin');
+    const abac = this.authz.abac.createForUser(request.user);
+    const userToDelete = await this.usersService.findByPkBang(id);
+    ForbiddenError.from(abac).throwUnlessCan(Action.Delete, userToDelete);
+
+    return this.usersService.remove(userToDelete, deleteUserDto, abac);
   }
 
   @UseGuards(TestGuard)

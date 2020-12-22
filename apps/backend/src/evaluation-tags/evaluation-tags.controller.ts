@@ -24,13 +24,13 @@ export class EvaluationTagsController {
   }
 
   @Get(':id')
-  async findById(@Param('id') id: number): Promise<EvaluationTagDto> {
+  async findById(@Param('id') id: string): Promise<EvaluationTagDto> {
     return this.evaluationTagsService.findById(id);
   }
 
   @Post()
   async create(
-    @Param('evaluationId') evaluationId: number,
+    @Param('evaluationId') evaluationId: string,
     @Body() createEvaluationTagDto: CreateEvaluationTagDto
   ): Promise<EvaluationTagDto> {
     return this.evaluationTagsService.create(
@@ -41,14 +41,14 @@ export class EvaluationTagsController {
 
   @Put(':id')
   async update(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateEvaluationTagDto: UpdateEvaluationTagDto
   ): Promise<EvaluationTagDto> {
     return this.evaluationTagsService.update(id, updateEvaluationTagDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number): Promise<EvaluationTagDto> {
+  async remove(@Param('id') id: string): Promise<EvaluationTagDto> {
     return this.evaluationTagsService.remove(id);
   }
 }

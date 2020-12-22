@@ -38,11 +38,9 @@ class Server extends VuexModule implements IServerState {
   enabledOAuth: string[] = [];
   /** Our currently granted JWT token */
   token = '';
-  /** Our User ID  */
-  userID = '';
   /** Provide a sane default for userInfo in order to avoid having to null check it all the time */
   userInfo: IUser = {
-    id: -1,
+    id: '',
     email: '',
     firstName: '',
     lastName: '',
@@ -65,7 +63,7 @@ class Server extends VuexModule implements IServerState {
   @Mutation
   SET_USERID(newID: string) {
     localUserID.set(newID);
-    this.userID = newID;
+    this.userInfo.id = newID;
   }
 
   @Mutation
@@ -188,7 +186,7 @@ class Server extends VuexModule implements IServerState {
 
   @Action({rawError: true})
   public async updateUserInfo(user: {
-    id: number;
+    id: string;
     info: IUpdateUser;
   }): Promise<IUser> {
     return axios.put<IUser>(`/users/${user.id}`, user.info).then(({data}) => {
@@ -201,9 +199,9 @@ class Server extends VuexModule implements IServerState {
 
   @Action({rawError: true})
   public async GetUserInfo(): Promise<void> {
-    if (this.userID) {
+    if (this.userInfo.id) {
       return axios
-        .get<IUser>(`/users/${this.userID}`)
+        .get<IUser>(`/users/${this.userInfo.id}`)
         .then(({data}) => this.context.commit('SET_USER_INFO', data))
         .catch(() =>
           // If an error occurs fetching the users profile

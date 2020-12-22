@@ -1,14 +1,9 @@
 import {HttpStatus, INestApplication, ValidationPipe} from '@nestjs/common';
 import {Test, TestingModule} from '@nestjs/testing';
 import request from 'supertest';
-import {AuthzService} from '../src/authz/authz.service';
-import {AppModule} from './../src/app.module';
-import {DatabaseService} from './../src/database/database.service';
-import {UsersService} from './../src/users/users.service';
-import {
-  USER_DELETE_USERS_POLICY_DTO,
-  USER_UPDATE_USERS_POLICY_DTO
-} from './constants/policy-test.constant';
+import {AppModule} from '../src/app.module';
+import {DatabaseService} from '../src/database/database.service';
+import {UsersService} from '../src/users/users.service';
 import {
   ADMIN_LOGIN_AUTHENTICATION,
   CREATE_ADMIN_DTO,
@@ -38,17 +33,15 @@ import {destroy, login, register, update} from './helpers/users.helper';
 describe('/users', () => {
   let app: INestApplication;
   let databaseService: DatabaseService;
-  let authzService: AuthzService;
   let usersService: UsersService;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-      providers: [DatabaseService, AuthzService]
+      providers: [DatabaseService]
     }).compile();
 
     databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
-    authzService = moduleFixture.get<AuthzService>(AuthzService);
     usersService = moduleFixture.get<UsersService>(UsersService);
 
     app = moduleFixture.createNestApplication();
@@ -100,7 +93,7 @@ describe('/users', () => {
           expect(response.body.lastName).toEqual(
             CREATE_USER_DTO_TEST_OBJ.lastName
           );
-          expect(response.body.loginCount).toEqual('0');
+          expect(response.body.loginCount).toEqual(0);
           expect(response.body.organization).toEqual(
             CREATE_USER_DTO_TEST_OBJ.organization
           );
@@ -198,7 +191,7 @@ describe('/users', () => {
   });
 
   describe('Functions that require authentication', () => {
-    let id: number;
+    let id: string;
     let jwtToken: string;
 
     // Clear the database and retrieve access token
@@ -224,7 +217,9 @@ describe('/users', () => {
           .set('Authorization', 'bearer ' + jwtToken)
           .expect(HttpStatus.FORBIDDEN)
           .then((response) => {
-            expect(response.body.message).toEqual('Forbidden resource');
+            expect(response.body.message).toEqual(
+              'Cannot execute "read-all" on "User"'
+            );
           });
       });
 
@@ -255,7 +250,7 @@ describe('/users', () => {
               CREATE_USER_DTO_TEST_OBJ.lastName
             );
             expect(response.body.lastLogin).toBeDefined();
-            expect(response.body.loginCount).toEqual('1');
+            expect(response.body.loginCount).toEqual(1);
             expect(response.body.organization).toEqual(
               CREATE_USER_DTO_TEST_OBJ.organization
             );
@@ -280,9 +275,6 @@ describe('/users', () => {
     });
 
     describe('Update', () => {
-      beforeEach(async () => {
-        await authzService.abac.allow(USER_UPDATE_USERS_POLICY_DTO);
-      });
       it('should return 200 status when user is updated', async () => {
         return update(
           app,
@@ -412,9 +404,6 @@ describe('/users', () => {
     });
 
     describe('Destroy', () => {
-      beforeEach(async () => {
-        await authzService.abac.allow(USER_DELETE_USERS_POLICY_DTO);
-      });
       it('should return 200 status after user is deleted', async () => {
         return destroy(app, id, DELETE_USER_DTO_TEST_OBJ, jwtToken)
           .expect(HttpStatus.OK)
@@ -439,7 +428,7 @@ describe('/users', () => {
             expect(response.body.lastName).toEqual(
               CREATE_USER_DTO_TEST_OBJ.lastName
             );
-            expect(response.body.loginCount).toEqual('1');
+            expect(response.body.loginCount).toEqual(1);
             expect(response.body.organization).toEqual(
               CREATE_USER_DTO_TEST_OBJ.organization
             );
@@ -504,7 +493,7 @@ describe('/users', () => {
             expect(response.body.firstName).toEqual(CREATE_ADMIN_DTO.firstName);
             expect(response.body.id).toEqual(admin.id);
             expect(response.body.lastName).toEqual(CREATE_ADMIN_DTO.lastName);
-            expect(response.body.loginCount).toEqual('1');
+            expect(response.body.loginCount).toEqual(1);
             expect(response.body.organization).toEqual(
               CREATE_ADMIN_DTO.organization
             );
@@ -531,8 +520,8 @@ describe('/users', () => {
 
   describe('Functions that require admin authentication', () => {
     let jwtToken: string;
-    let editUserId: number;
-    let adminUserId: number;
+    let editUserId: string;
+    let adminUserId: string;
 
     // Clear the database and retrieve access token
     beforeEach(async () => {
@@ -594,6 +583,15 @@ describe('/users', () => {
           });
       });
 
+      it('should not be able to update themselves without providing the current password', async () => {
+        return update(
+          app,
+          adminUserId,
+          UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD,
+          jwtToken
+        ).expect(HttpStatus.FORBIDDEN);
+      });
+
       it('should be able to update a user role', async () => {
         return update(
           app,
@@ -614,7 +612,7 @@ describe('/users', () => {
       });
 
       it('should not be able to destroy the only administrator', async () => {
-        return destroy(app, adminUserId, {}, jwtToken)
+        return destroy(app, adminUserId, DELETE_USER_DTO_TEST_OBJ, jwtToken)
           .expect(HttpStatus.FORBIDDEN)
           .then((response) => {
             expect(response.body.message).toEqual(

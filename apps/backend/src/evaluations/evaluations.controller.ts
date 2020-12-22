@@ -19,7 +19,7 @@ import {EvaluationsService} from './evaluations.service';
 export class EvaluationsController {
   constructor(private evaluationsService: EvaluationsService) {}
   @Get(':id')
-  async findById(@Param('id') id: number): Promise<EvaluationDto> {
+  async findById(@Param('id') id: string): Promise<EvaluationDto> {
     return this.evaluationsService.findById(id);
   }
 
@@ -37,14 +37,14 @@ export class EvaluationsController {
 
   @Put(':id')
   async update(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateEvaluationDto: UpdateEvaluationDto
   ): Promise<EvaluationDto> {
     return this.evaluationsService.update(id, updateEvaluationDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number): Promise<EvaluationDto> {
+  async remove(@Param('id') id: string): Promise<EvaluationDto> {
     return this.evaluationsService.remove(id);
   }
 }

@@ -16,7 +16,7 @@ export class AuthnService {
   async validateUser(email: string, password: string): Promise<any> {
     let user: User;
     try {
-      user = await this.usersService.findModelByEmail(email);
+      user = await this.usersService.findByEmail(email);
     } catch {
       throw new UnauthorizedException('Incorrect Username or Password');
     }
@@ -56,11 +56,11 @@ export class AuthnService {
   }
 
   async login(user: {
-    id: number;
+    id: string;
     email: string;
     role: string;
     forcePasswordChange: boolean | undefined;
-  }): Promise<{userID: number; accessToken: string}> {
+  }): Promise<{userID: string; accessToken: string}> {
     const payload = {
       email: user.email,
       sub: user.id,
