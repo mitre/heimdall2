@@ -31,7 +31,7 @@ export class AuthnService {
   async oauthValidateUser(email: string): Promise<any> {
     let user: User;
     try {
-      user = await this.usersService.findModelByEmail(email);
+      user = await this.usersService.findByEmail(email);
     } catch {
       const randomPass = crypto.randomBytes(128).toString();
       const createUser: CreateUserDto = {
@@ -45,7 +45,7 @@ export class AuthnService {
         role: ''
       };
       this.usersService.create(createUser);
-      user = await this.usersService.findModelByEmail(email);
+      user = await this.usersService.findByEmail(email);
     }
 
     if (user) {

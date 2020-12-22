@@ -35,6 +35,7 @@ class Server extends VuexModule implements IServerState {
   serverUrl = '';
   serverMode = false;
   loading = true;
+  userID = '';
   enabledOAuth: string[] = [];
   /** Our currently granted JWT token */
   token = '';
