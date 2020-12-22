@@ -10,10 +10,14 @@ import {
   UPDATE_EVALUATION_DATA_ONLY,
   UPDATE_EVALUATION_FILENAME_ONLY
 } from '../../test/constants/evaluations-test.constant';
+import {CREATE_USER_DTO_TEST_OBJ} from '../../test/constants/users-test.constant';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
 import {EvaluationTagsModule} from '../evaluation-tags/evaluation-tags.module';
 import {EvaluationTagsService} from '../evaluation-tags/evaluation-tags.service';
+import {UserDto} from '../users/dto/user.dto';
+import {UsersModule} from '../users/users.module';
+import {UsersService} from '../users/users.service';
 import {Evaluation} from './evaluation.model';
 import {EvaluationsService} from './evaluations.service';
 
@@ -21,15 +25,18 @@ describe('EvaluationsService', () => {
   let evaluationsService: EvaluationsService;
   let evaluationTagsService: EvaluationTagsService;
   let databaseService: DatabaseService;
+  let usersService: UsersService;
+  let user: UserDto;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       imports: [
         DatabaseModule,
         SequelizeModule.forFeature([Evaluation]),
-        EvaluationTagsModule
+        EvaluationTagsModule,
+        UsersModule
       ],
-      providers: [EvaluationsService, DatabaseService]
+      providers: [EvaluationsService, DatabaseService, UsersService]
     }).compile();
 
     evaluationsService = module.get<EvaluationsService>(EvaluationsService);
@@ -37,10 +44,12 @@ describe('EvaluationsService', () => {
       EvaluationTagsService
     );
     databaseService = module.get<DatabaseService>(DatabaseService);
+    usersService = module.get<UsersService>(UsersService);
   });
 
-  beforeEach(() => {
-    return databaseService.cleanAll();
+  beforeEach(async () => {
+    await databaseService.cleanAll();
+    user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
   });
 
   describe('findAll', () => {
@@ -48,12 +57,14 @@ describe('EvaluationsService', () => {
       let evaluationsDtoArray = await evaluationsService.findAll();
       expect(evaluationsDtoArray).toEqual([]);
 
-      const evaluationOne = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1
-      );
-      const evaluationTwo = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1
-      );
+      const evaluationOne = await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        userId: user.id
+      });
+      const evaluationTwo = await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        userId: user.id
+      });
       evaluationsDtoArray = await evaluationsService.findAll();
 
       expect(evaluationsDtoArray[0].id).toEqual(evaluationOne.id);
@@ -76,16 +87,17 @@ describe('EvaluationsService', () => {
 
   describe('findById', () => {
     it('should find evaluations by id', async () => {
-      const evaluation = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1
-      );
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        userId: user.id
+      });
       const foundEvaluation = await evaluationsService.findById(evaluation.id);
       expect(evaluation).toEqual(foundEvaluation);
     });
 
     it('should throw an error if an evaluation does not exist', async () => {
       expect.assertions(1);
-      await expect(evaluationsService.findById(-1)).rejects.toThrow(
+      await expect(evaluationsService.findById('-1')).rejects.toThrow(
         NotFoundException
       );
     });
@@ -93,9 +105,10 @@ describe('EvaluationsService', () => {
 
   describe('create', () => {
     it('should create a new evaluation with evaluation tags', async () => {
-      const evaluation = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1
-      );
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        userId: user.id
+      });
       expect(evaluation.id).toBeDefined();
       expect(evaluation.updatedAt).toBeDefined();
       expect(evaluation.createdAt).toBeDefined();
@@ -117,9 +130,10 @@ describe('EvaluationsService', () => {
     });
 
     it('should create a new evaluation without evaluation tags', async () => {
-      const evaluation = await evaluationsService.create(
-        CREATE_EVALUATION_DTO_WITHOUT_TAGS
-      );
+      const evaluation = await evaluationsService.create({
+        ...CREATE_EVALUATION_DTO_WITHOUT_TAGS,
+        userId: user.id
+      });
       expect(evaluation.id).toBeDefined();
       expect(evaluation.updatedAt).toBeDefined();
       expect(evaluation.createdAt).toBeDefined();
@@ -152,14 +166,15 @@ describe('EvaluationsService', () => {
     it('should throw an error if an evaluation does not exist', async () => {
       expect.assertions(1);
       await expect(
-        evaluationsService.update(-1, UPDATE_EVALUATION)
+        evaluationsService.update('-1', UPDATE_EVALUATION)
       ).rejects.toThrow(NotFoundException);
     });
 
     it('should update all fields of an evaluation', async () => {
-      const evaluation = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1
-      );
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        userId: user.id
+      });
       const updatedEvaluation = await evaluationsService.update(
         evaluation.id,
         UPDATE_EVALUATION
@@ -172,9 +187,10 @@ describe('EvaluationsService', () => {
     });
 
     it('should only update data if provided', async () => {
-      const evaluation = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1
-      );
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        userId: user.id
+      });
       const updatedEvaluation = await evaluationsService.update(
         evaluation.id,
         UPDATE_EVALUATION_DATA_ONLY
@@ -190,9 +206,10 @@ describe('EvaluationsService', () => {
     });
 
     it('should only update filename if provided', async () => {
-      const evaluation = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1
-      );
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        userId: user.id
+      });
       const updatedEvaluation = await evaluationsService.update(
         evaluation.id,
         UPDATE_EVALUATION_FILENAME_ONLY
@@ -210,9 +227,10 @@ describe('EvaluationsService', () => {
 
   describe('remove', () => {
     it('should remove an evaluation and its evaluation tags given an id', async () => {
-      const evaluation = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1
-      );
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        userId: user.id
+      });
       const removedEvaluation = await evaluationsService.remove(evaluation.id);
       const foundEvaluationTags = await evaluationTagsService.findAll();
       expect(foundEvaluationTags.length).toEqual(0);
@@ -225,7 +243,7 @@ describe('EvaluationsService', () => {
 
     it('should throw an error when the evaluation does not exist', async () => {
       expect.assertions(1);
-      await expect(evaluationsService.findById(-1)).rejects.toThrow(
+      await expect(evaluationsService.findById('-1')).rejects.toThrow(
         NotFoundException
       );
     });

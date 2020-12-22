@@ -2,7 +2,7 @@ import {IUser} from '@heimdall/interfaces';
 import {User} from '../user.model';
 
 export class UserDto implements IUser {
-  id: number;
+  id: string;
   readonly email: string;
   readonly firstName: string | undefined;
   readonly lastName: string | undefined;

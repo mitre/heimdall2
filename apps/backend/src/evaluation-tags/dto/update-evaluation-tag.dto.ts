@@ -1,11 +1,17 @@
 import {IUpdateEvaluationTag} from '@heimdall/interfaces';
-import {IsNotEmpty, IsNumber, IsOptional, IsString, Min} from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumberString,
+  IsOptional,
+  IsString,
+  Min
+} from 'class-validator';
 
 export class UpdateEvaluationTagDto implements IUpdateEvaluationTag {
   @IsNotEmpty()
-  @IsNumber()
+  @IsNumberString()
   @Min(1)
-  readonly id: number;
+  readonly id: string;
 
   @IsOptional()
   @IsString()

@@ -9,6 +9,7 @@ import {
   UseGuards
 } from '@nestjs/common';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
+import {CreateEvaluationTagDto} from './dto/create-evaluation-tag.dto';
 import {EvaluationTagDto} from './dto/evaluation-tag.dto';
 import {EvaluationTagsService} from './evaluation-tags.service';
 
@@ -22,31 +23,31 @@ export class EvaluationTagsController {
   }
 
   @Get(':id')
-  async findById(@Param('id') id: number): Promise<EvaluationTagDto> {
+  async findById(@Param('id') id: string): Promise<EvaluationTagDto> {
     return this.evaluationTagsService.findById(id);
   }
 
   @Post(':evaluationId')
   async create(
     @Param('evaluationId') evaluationId: string,
-    @Body() createEvaluationTagDto: any
+    @Body() createEvaluationTagDto: CreateEvaluationTagDto
   ): Promise<EvaluationTagDto> {
     return this.evaluationTagsService.create(
-      parseInt(evaluationId),
+      evaluationId,
       createEvaluationTagDto
     );
   }
 
   @Put(':id')
   async update(
-    @Param('id') id: number,
-    @Body() updateEvaluationTagDto: any
+    @Param('id') id: string,
+    @Body() updateEvaluationTagDto: UpdateEvaluationTagDto
   ): Promise<EvaluationTagDto> {
     return this.evaluationTagsService.update(id, updateEvaluationTagDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number): Promise<EvaluationTagDto> {
+  async remove(@Param('id') id: string): Promise<EvaluationTagDto> {
     return this.evaluationTagsService.remove(id);
   }
 }

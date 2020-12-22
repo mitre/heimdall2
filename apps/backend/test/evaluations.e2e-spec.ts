@@ -1,8 +1,8 @@
 import {HttpStatus, INestApplication, ValidationPipe} from '@nestjs/common';
 import {Test, TestingModule} from '@nestjs/testing';
 import request from 'supertest';
+import {DatabaseService} from '../src/database/database.service';
 import {AppModule} from './../src/app.module';
-import {DatabaseService} from './../src/database/database.service';
 import {
   EVALUATION_1,
   EVALUATION_WITH_TAGS_1,
@@ -10,7 +10,8 @@ import {
 } from './constants/evaluations-test.constant';
 import {
   CREATE_USER_DTO_TEST_OBJ,
-  LOGIN_AUTHENTICATION
+  LOGIN_AUTHENTICATION,
+  MINUTE_IN_MILLISECONDS
 } from './constants/users-test.constant';
 import {login, register} from './helpers/users.helper';
 
@@ -79,12 +80,14 @@ describe('/evaluations', () => {
   });
 
   describe('Authenticated', () => {
+    let userId: string;
     let jwtToken: string;
 
     beforeEach(async () => {
       await register(app, CREATE_USER_DTO_TEST_OBJ);
 
       await login(app, LOGIN_AUTHENTICATION).then((response) => {
+        userId = response.body.userID;
         jwtToken = response.body.accessToken;
       });
     });
@@ -95,7 +98,7 @@ describe('/evaluations', () => {
           .post('/evaluations')
           .set('Content-Type', 'application/json')
           .set('Authorization', 'bearer ' + jwtToken)
-          .send(EVALUATION_1)
+          .send({...EVALUATION_1, userId: userId})
           .expect(HttpStatus.CREATED)
           .then((response) => {
             const createdAt = response.body.createdAt.valueOf();
@@ -107,8 +110,8 @@ describe('/evaluations', () => {
               new Date().getTime() - new Date(updatedAt).getTime();
 
             // 1 minute in ms
-            expect(createdDelta).toBeLessThanOrEqual(60000);
-            expect(updatedDelta).toBeLessThanOrEqual(60000);
+            expect(createdDelta).toBeLessThanOrEqual(MINUTE_IN_MILLISECONDS);
+            expect(updatedDelta).toBeLessThanOrEqual(MINUTE_IN_MILLISECONDS);
             expect(response.body.id).toBeDefined();
             expect(response.body.filename).toEqual(EVALUATION_1.filename);
             expect(response.body.data).toEqual(EVALUATION_1.data);
@@ -123,7 +126,7 @@ describe('/evaluations', () => {
           .post('/evaluations')
           .set('Content-Type', 'application/json')
           .set('Authorization', 'bearer ' + jwtToken)
-          .send(EVALUATION_WITH_TAGS_1)
+          .send({...EVALUATION_WITH_TAGS_1, userId: userId})
           .expect(HttpStatus.CREATED)
           .then((response) => {
             const createdAt = response.body.evaluationTags[0].createdAt.valueOf();
@@ -135,8 +138,8 @@ describe('/evaluations', () => {
               new Date().getTime() - new Date(updatedAt).getTime();
 
             // 1 minute in ms
-            expect(createdDelta).toBeLessThanOrEqual(60000);
-            expect(updatedDelta).toBeLessThanOrEqual(60000);
+            expect(createdDelta).toBeLessThanOrEqual(MINUTE_IN_MILLISECONDS);
+            expect(updatedDelta).toBeLessThanOrEqual(MINUTE_IN_MILLISECONDS);
             if (EVALUATION_WITH_TAGS_1.evaluationTags === undefined) {
               throw TypeError(
                 'Test fixture for Evaluation is set up improperly and has an undefined value for Evaluation Tags'
@@ -162,7 +165,7 @@ describe('/evaluations', () => {
           .post('/evaluations')
           .set('Content-Type', 'application/json')
           .set('Authorization', 'bearer ' + jwtToken)
-          .send(EVALUATION_WITH_TAGS_1)
+          .send({...EVALUATION_WITH_TAGS_1, userId: userId})
           .then((response) => {
             evaluation = response.body;
           });
@@ -206,7 +209,7 @@ describe('/evaluations', () => {
               const updatedAt = response.body.updatedAt.valueOf();
               const updatedDelta =
                 new Date().getTime() - new Date(updatedAt).getTime();
-              expect(updatedDelta).toBeLessThanOrEqual(60000);
+              expect(updatedDelta).toBeLessThanOrEqual(MINUTE_IN_MILLISECONDS);
               expect(response.body.updatedAt);
               expect(response.body.data).toEqual(evaluation.data);
               expect(response.body.version).toEqual(evaluation.version);
