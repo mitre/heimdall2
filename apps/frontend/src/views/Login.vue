@@ -117,7 +117,7 @@ export default class Login extends Vue {
       return s.replace(/([.*+?\^$(){}|\[\]\/\\])/g, '\\$1');
     }
     const match = document.cookie.match(
-      RegExp('(?:^|;\\s*)' + escapeName(name) + '=([^;]*)')
+      RegExp(`(?:^|;\\s*)${escapeName(name)}=([^;]*)`)
     );
     return match ? match[1] : null;
   }
