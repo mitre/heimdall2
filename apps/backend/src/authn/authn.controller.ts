@@ -24,6 +24,9 @@ export class AuthnController {
   @Get('github/callback')
   @UseGuards(AuthGuard('github'))
   async getUserFromGithubLogin(@Req() req: Request): Promise<any> {
-    return this.authnService.login(req.user as User);
+    const session = await this.authnService.login(req.user as User);
+    req.res?.cookie('userID', session.userID);
+    req.res?.cookie('accessToken', session.accessToken);
+    req.res?.redirect('/');
   }
 }
