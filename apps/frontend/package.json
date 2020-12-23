@@ -49,7 +49,7 @@
     "@types/chroma-js": "^2.1.0",
     "@types/concat-stream": "^1.6.0",
     "@types/d3": "^6.1.0",
-    "@types/diff": "^4.0.2",
+    "@types/diff": "^5.0.0",
     "@types/file-saver": "^2.0.1",
     "@types/lodash": "^4.14.161",
     "@types/lru-cache": "^5.1.0",
