@@ -133,7 +133,7 @@ export default class Login extends Vue {
     const userID: string | null = this.getCookie('userID');
     const accessToken: string | null = this.getCookie('accessToken');
     if (userID && accessToken) {
-      ServerModule.SetSessionValues({userID: userID, accessToken: accessToken});
+      ServerModule.handleLogin({userID: userID, accessToken: accessToken});
       this.delete_cookies(['userID', 'accessToken']);
     }
     if (ServerModule.token) {

@@ -20,7 +20,6 @@ export interface IServerState {
   token: string;
   banner: string;
   enabledOAuth: string[];
-  userID: string;
   userInfo: IUser;
 }
 
@@ -35,7 +34,6 @@ class Server extends VuexModule implements IServerState {
   serverUrl = '';
   serverMode = false;
   loading = true;
-  userID = '';
   enabledOAuth: string[] = [];
   /** Our currently granted JWT token */
   token = '';
@@ -142,24 +140,17 @@ class Server extends VuexModule implements IServerState {
       });
   }
   @Action
-  public async handleLogin(response: any) {
-    this.context.commit('SET_TOKEN', response.data.accessToken);
-    this.context.commit('SET_USERID', response.data.userID);
+  public async handleLogin(data: any) {
+    this.context.commit('SET_TOKEN', data.accessToken);
+    this.context.commit('SET_USERID', data.userID);
   }
 
   @Action({rawError: true})
   public async Login(userInfo: {email: string; password: string}) {
     return axios.post('/authn/login', userInfo).then((response) => {
-      this.handleLogin(response);
+      this.handleLogin(response.data);
       this.GetUserInfo();
     });
-  }
-
-  @Action
-  public SetSessionValues(sessionInfo: {userID: string; accessToken: string}) {
-    this.context.commit('SET_USERID', sessionInfo.userID);
-    this.context.commit('SET_TOKEN', sessionInfo.accessToken);
-    this.GetUserInfo();
   }
 
   @Action({rawError: true})
@@ -171,7 +162,7 @@ class Server extends VuexModule implements IServerState {
         }
       })
       .then((response) => {
-        this.handleLogin(response);
+        this.handleLogin(response.data);
         this.GetUserInfo();
       });
   }
