@@ -39,7 +39,7 @@
                     @keyup.enter="login"
                     @blur="$v.password.$touch()"
                   />
-                  <v-row>
+                  <v-row no-gutters>
                     <v-col>
                       <v-btn
                         id="login_button"
@@ -54,8 +54,8 @@
                     </v-col>
                     <v-btn
                       v-if="authStrategySupported('github')"
-                      class="mr-3"
                       large
+                      plain
                       @click="loginGithub"
                     >
                       <v-img :src="require('@/assets/github_mark.png')" />
@@ -63,8 +63,8 @@
                     </v-btn>
                     <v-btn
                       v-if="authStrategySupported('gitlab')"
-                      class="mr-3"
                       large
+                      plain
                       @click="loginGitlab"
                     >
                       <v-img :src="require('@/assets/gitlab_mark.png')" />
