@@ -113,13 +113,6 @@ export default class Login extends Vue {
   }
 
   checkLoggedIn() {
-    const userID: string = this.$cookies.get('userID');
-    const accessToken: string  = this.$cookies.get('accessToken');
-    if (userID && accessToken) {
-      ServerModule.handleLogin({userID: userID, accessToken: accessToken});
-      this.$cookies.remove('userID');
-      this.$cookies.remove('accessToken');
-    }
     if (ServerModule.token) {
       this.$router.push('/');
     }

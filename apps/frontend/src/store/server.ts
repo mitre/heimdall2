@@ -2,6 +2,7 @@ import Store from '@/store/store';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import {IStartupSettings, IUpdateUser, IUser} from '@heimdall/interfaces';
 import axios from 'axios';
+import Vue from 'vue';
 import {
   Action,
   getModule,
@@ -120,8 +121,8 @@ class Server extends VuexModule implements IServerState {
           // This means the server successfully responded and we are therefore in server mode
           this.context.commit('SET_SERVER', potentialUrl);
           this.context.commit('SET_STARTUP_SETTINGS', response.data);
-          const token = local_token.get();
-          const userID = localUserID.get();
+          const token = local_token.get() || Vue.$cookies.get('accessToken');
+          const userID = localUserID.get() || Vue.$cookies.get('userID');
           if (token !== null) {
             this.context.commit('SET_TOKEN', token);
           }
