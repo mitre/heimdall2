@@ -37,14 +37,6 @@ export class Evaluation extends VuexModule {
     return axios.delete(`/evaluations/${this.activeEvaluation.id}`);
   }
 
-  @Action
-  async saveEvaluation(): Promise<IEvaluation> {
-    return axios.put(
-      `/evaluations/${this.activeEvaluation.id}`,
-      this.activeEvaluation
-    );
-  }
-
   @Action({rawError: true})
   async addTagToActiveEvaluation() {
     return axios
