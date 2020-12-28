@@ -6,9 +6,11 @@ import axios from 'axios';
 import 'core-js/stable';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import Vue from 'vue';
+import VueCookies from 'vue-cookies';
 import Vuetify from 'vuetify/lib';
 import {ServerModule} from './store/server';
 
+Vue.use(VueCookies);
 Vue.use(Vuetify);
 
 Vue.config.productionTip = false;

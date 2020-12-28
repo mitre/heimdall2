@@ -27,12 +27,27 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     const githubEmails = await axios.get('https://api.github.com/user/emails', {
       headers: {Authorization: `token ${accessToken}`}
     });
+    // Get user's info
+    const userInfoResponse = await axios.get('https://api.github.com/user', {
+      headers: {Authorization: `token ${accessToken}`}
+    });
+    const firstName: string = userInfoResponse.data.name.substr(
+      0,
+      userInfoResponse.data.name.indexOf(' ')
+    );
+    const lastName: string = userInfoResponse.data.name.substr(
+      userInfoResponse.data.name.indexOf(' ') + 1
+    );
     // Get first email
     const primaryEmail = githubEmails.data[0];
     // Only validate if the user has verified their email with Github
     if (primaryEmail.verified) {
       // Check if the user already exists, if not they will be created
-      return this.authnService.oauthValidateUser(primaryEmail.email);
+      return this.authnService.oauthValidateUser(
+        primaryEmail.email,
+        firstName,
+        lastName
+      );
     } else {
       throw new UnauthorizedException(
         'Please verify your email with Github before logging into Heimdall.'

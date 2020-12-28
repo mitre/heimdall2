@@ -28,23 +28,28 @@ export class AuthnService {
     }
   }
 
-  async oauthValidateUser(email: string): Promise<any> {
+  async oauthValidateUser(
+    email: string,
+    firstName: string,
+    lastName: string
+  ): Promise<any> {
     let user: User;
+    console.log(email);
     try {
       user = await this.usersService.findByEmail(email);
     } catch {
-      const randomPass = crypto.randomBytes(128).toString();
+      const randomPass = crypto.randomBytes(128).toString('hex');
       const createUser: CreateUserDto = {
         email: email,
         password: randomPass,
         passwordConfirmation: randomPass,
-        firstName: '',
-        lastName: '',
+        firstName: firstName,
+        lastName: lastName,
         organization: '',
         title: '',
         role: ''
       };
-      this.usersService.create(createUser);
+      await this.usersService.create(createUser);
       user = await this.usersService.findByEmail(email);
     }
 

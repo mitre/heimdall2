@@ -112,29 +112,13 @@ export default class Login extends Vue {
     this.checkLoggedIn();
   }
 
-  getCookie(name: string) {
-    function escapeName(s: string) {
-      return s.replace(/([.*+?\^$(){}|\[\]\/\\])/g, '\\$1');
-    }
-    const match = document.cookie.match(
-      RegExp(`(?:^|;\\s*)${escapeName(name)}=([^;]*)`)
-    );
-    return match ? match[1] : null;
-  }
-
-  delete_cookies(names: string[]) {
-    names.forEach((name) => {
-      document.cookie =
-        name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    });
-  }
-
   checkLoggedIn() {
-    const userID: string | null = this.getCookie('userID');
-    const accessToken: string | null = this.getCookie('accessToken');
+    const userID: string = this.$cookies.get('userID');
+    const accessToken: string  = this.$cookies.get('accessToken');
     if (userID && accessToken) {
       ServerModule.handleLogin({userID: userID, accessToken: accessToken});
-      this.delete_cookies(['userID', 'accessToken']);
+      this.$cookies.remove('userID');
+      this.$cookies.remove('accessToken');
     }
     if (ServerModule.token) {
       this.$router.push('/');
