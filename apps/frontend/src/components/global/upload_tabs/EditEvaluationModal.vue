@@ -102,7 +102,7 @@
         >
           Cancel
         </v-btn>
-        <v-btn color=" darken-1" text @click="saveEvaluation()">Save</v-btn>
+        <v-btn color="darken-1" text @click="updateEvaluation()">Save</v-btn>
       </v-card-actions>
     </v-card>
   </Modal>
@@ -184,8 +184,8 @@ export default class EditEvaluationModal extends Vue {
     this.newTagDialog = false
   }
 
-  async saveEvaluation(): Promise<void> {
-    EvaluationModule.saveEvaluation();
+  async updateEvaluation(): Promise<void> {
+    EvaluationModule.updateEvaluation();
     this.$emit('closeEditModal')
   }
 }
