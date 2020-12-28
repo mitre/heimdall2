@@ -34,7 +34,6 @@ export class AuthnService {
     lastName: string
   ): Promise<any> {
     let user: User;
-    console.log(email);
     try {
       user = await this.usersService.findByEmail(email);
     } catch {
