@@ -123,6 +123,8 @@ class Server extends VuexModule implements IServerState {
           this.context.commit('SET_STARTUP_SETTINGS', response.data);
           const token = local_token.get() || Vue.$cookies.get('accessToken');
           const userID = localUserID.get() || Vue.$cookies.get('userID');
+          Vue.$cookies.remove('accessToken');
+          Vue.$cookies.remove('userID');
           if (token !== null) {
             this.context.commit('SET_TOKEN', token);
           }
