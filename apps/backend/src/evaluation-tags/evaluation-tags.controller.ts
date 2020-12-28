@@ -9,7 +9,6 @@ import {
   UseGuards
 } from '@nestjs/common';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
-import {CreateEvaluationTagDto} from './dto/create-evaluation-tag.dto';
 import {EvaluationTagDto} from './dto/evaluation-tag.dto';
 import {EvaluationTagsService} from './evaluation-tags.service';
 
@@ -30,7 +29,7 @@ export class EvaluationTagsController {
   @Post(':evaluationId')
   async create(
     @Param('evaluationId') evaluationId: string,
-    @Body() createEvaluationTagDto: CreateEvaluationTagDto
+    @Body() createEvaluationTagDto: {value: ''}
   ): Promise<EvaluationTagDto> {
     return this.evaluationTagsService.create(
       evaluationId,
@@ -41,7 +40,7 @@ export class EvaluationTagsController {
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Body() updateEvaluationTagDto: UpdateEvaluationTagDto
+    @Body() updateEvaluationTagDto: {id: string; value: string}
   ): Promise<EvaluationTagDto> {
     return this.evaluationTagsService.update(id, updateEvaluationTagDto);
   }

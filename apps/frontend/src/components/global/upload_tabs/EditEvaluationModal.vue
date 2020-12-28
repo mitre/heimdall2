@@ -160,15 +160,27 @@ export default class EditEvaluationModal extends Vue {
   }
 
   async deleteTag(tag: any) {
-    EvaluationModule.deleteTag(tag);
+    EvaluationModule.deleteTag(tag).then((response) => {
+      SnackbarModule.notify("Deleted tag successfully.")
+    }).catch((error) => {
+      SnackbarModule.HTTPFailure(error)
+    });;
   }
 
   async updateTag(tag: any) {
-    EvaluationModule.updateTag(tag);
+    EvaluationModule.updateTag(tag).then((response) => {
+      SnackbarModule.notify("Updated tag successfully.")
+    }).catch((error) => {
+      SnackbarModule.HTTPFailure(error)
+    });;
   }
 
   async commitTag(): Promise<void> {
-    EvaluationModule.addTagToActiveEvaluation();
+    EvaluationModule.addTagToActiveEvaluation().then((response) => {
+      SnackbarModule.notify("Added tag successfully.")
+    }).catch((error) => {
+      SnackbarModule.HTTPFailure(error)
+    });
     this.newTagDialog = false
   }
 

@@ -52,7 +52,13 @@
         </template>
         <template #[`item.evaluationTags`]="{item}">
           <template v-for="tag in item.evaluationTags">
-            <v-chip :key="tag.id + '_'" small>{{ tag.value }}</v-chip>
+            <v-chip
+              :key="tag.id + '_'"
+              small
+              close
+              @click:close="deleteTag(tag)"
+              >{{ tag.value }}</v-chip
+            >
           </template>
         </template>
         <template #[`item.createdAt`]="{item}">
@@ -120,30 +126,27 @@ export default class LoadFileList extends Vue {
     this.editDialog = true;
   }
 
-  deleteItem(item: IEvaluation) {
+  deleteItem(item: any) {
+    this.activeIndex = this.files.indexOf(item)
     EvaluationModule.setActiveEvaluation(item);
-    this.activeIndex = this.files.indexOf(EvaluationModule.getActiveEvaluation)
     this.deleteDialog = true;
   }
 
-  async deleteItemConfirm(): Promise<void>{
-    axios.delete(`/evaluations/${EvaluationModule.getActiveEvaluation.id}`).then((data) => {
-      SnackbarModule.notify('Evaluation deleted successfully.')
-      this.files.splice(this.activeIndex, 1)
+  deleteTag(item: any) {
+    this.activeIndex = this.files.indexOf(item)
+    EvaluationModule.deleteTag(item).then((response) => {
+      SnackbarModule.notify("Deleted tag successfully.")
     }).catch((error) => {
-      SnackbarModule.notify(error.response.data.message);
-        if (typeof error.response.data.message === 'object') {
-          SnackbarModule.notify(
-            error.response.data.message
-              .map(function capitalize(c: string) {
-                return c.charAt(0).toUpperCase() + c.slice(1);
-              })
-            .join(', ')
-          );
-        }
-      else {
-        SnackbarModule.notify(error.response.data.message);
-      }
+      SnackbarModule.HTTPFailure(error)
+    });
+  }
+
+  async deleteItemConfirm(): Promise<void>{
+    EvaluationModule.deleteEvaluation().then(() => {
+      this.files.splice(this.activeIndex, 1)
+      SnackbarModule.notify("Deleted evaluation successfully.")
+    }).catch((error) => {
+      SnackbarModule.HTTPFailure(error)
     });
     this.deleteDialog = false;
   }

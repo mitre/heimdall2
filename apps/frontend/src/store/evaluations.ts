@@ -17,8 +17,9 @@ import {
 })
 export class Evaluation extends VuexModule {
   activeEvaluation: IEvaluation = {
-    id: -1,
+    id: '',
     filename: '',
+    userId: '',
     createdAt: new Date(),
     updatedAt: new Date(),
     data: {},
@@ -32,6 +33,11 @@ export class Evaluation extends VuexModule {
   }
 
   @Action
+  async deleteEvaluation() {
+    return axios.delete(`/evaluations/${this.activeEvaluation.id}`);
+  }
+
+  @Action
   async saveEvaluation(): Promise<IEvaluation> {
     return axios.put(
       `/evaluations/${this.activeEvaluation.id}`,
@@ -40,8 +46,8 @@ export class Evaluation extends VuexModule {
   }
 
   @Action({rawError: true})
-  addTagToActiveEvaluation() {
-    axios
+  async addTagToActiveEvaluation() {
+    return axios
       .post(`/evaluation-tags/${this.activeEvaluation.id}`, this.activeTag)
       .then((response) => {
         this.context.commit('ADD_TAG', response.data);
@@ -51,19 +57,29 @@ export class Evaluation extends VuexModule {
   @Action
   setActiveEvaluationFilename(filename: string) {
     this.context.commit('UPDATE_FILENAME', filename);
+    return this.updateEvaluation();
   }
 
   @Action({rawError: true})
-  deleteTag(tag: any) {
+  async deleteTag(tag: any) {
     this.activeEvaluation.evaluationTags?.splice(
-      this.activeEvaluation.evaluationTags?.indexOf(tag)
+      this.activeEvaluation.evaluationTags?.indexOf(tag),
+      1
     );
-    axios.delete(`/evaluation-tags/${tag.id}`);
+    return axios.delete(`/evaluation-tags/${tag.id}`);
   }
 
   @Action({rawError: true})
-  updateTag(tag: any) {
-    axios.put(`/evaluation-tags/${tag.id}`, tag);
+  async updateTag(tag: any) {
+    return axios.put(`/evaluation-tags/${tag.id}`, tag);
+  }
+
+  @Action({rawError: true})
+  async updateEvaluation() {
+    return axios.put(
+      `/evaluations/${this.activeEvaluation.id}`,
+      this.activeEvaluation
+    );
   }
 
   @Mutation
