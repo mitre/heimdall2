@@ -61,6 +61,15 @@
                       <v-img :src="require('@/assets/github_mark.png')" />
                       <div class="pl-2">Login with GitHub</div>
                     </v-btn>
+                    <v-btn
+                      v-if="authStrategySupported('gitlab')"
+                      class="mr-3"
+                      large
+                      @click="loginGitlab"
+                    >
+                      <v-img :src="require('@/assets/gitlab_mark.png')" />
+                      <div class="pl-2">Login with GitLab</div>
+                    </v-btn>
                   </v-row>
                 </v-form>
               </v-card-text>
@@ -143,6 +152,9 @@ export default class Login extends Vue {
 
   loginGithub() {
     window.location.href = '/authn/github';
+  }
+  loginGitlab() {
+    window.location.href = '/authn/gitlab';
   }
 }
 </script>
