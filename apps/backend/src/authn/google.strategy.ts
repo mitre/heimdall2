@@ -1,7 +1,6 @@
 import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import {OAuth2Strategy} from 'passport-google-oauth';
-import {VerifyCallback} from 'passport-oauth2';
 import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
 
@@ -24,8 +23,7 @@ export class GoogleStrategy extends PassportStrategy(OAuth2Strategy, 'google') {
     refreshToken: string,
     profile: {
       [key: string]: any;
-    },
-    done: VerifyCallback
+    }
   ): Promise<any> {
     const {name, emails} = profile;
     const user = {
@@ -44,7 +42,5 @@ export class GoogleStrategy extends PassportStrategy(OAuth2Strategy, 'google') {
         'Please verify your email with Google before logging into Heimdall.'
       );
     }
-
-    done(null, user);
   }
 }
