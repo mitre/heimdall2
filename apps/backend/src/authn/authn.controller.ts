@@ -25,9 +25,7 @@ export class AuthnController {
   @UseGuards(AuthGuard('github'))
   async getUserFromGithubLogin(@Req() req: Request): Promise<any> {
     const session = await this.authnService.login(req.user as User);
-    req.res?.cookie('userID', session.userID);
-    req.res?.cookie('accessToken', session.accessToken);
-    req.res?.redirect('/');
+    await this.setSessionCookies(req, session);
   }
 
   @Get('gitlab')
@@ -40,6 +38,29 @@ export class AuthnController {
   @UseGuards(AuthGuard('gitlab'))
   async getUserFromGitlabLogin(@Req() req: Request): Promise<any> {
     const session = await this.authnService.login(req.user as User);
+    await this.setSessionCookies(req, session);
+  }
+
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async loginToGoogle(@Req() req: Request): Promise<any> {
+    return this.authnService.login(req.user as User);
+  }
+
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  async getUserFromGoogle(@Req() req: Request): Promise<any> {
+    const session = await this.authnService.login(req.user as User);
+    await this.setSessionCookies(req, session);
+  }
+
+  async setSessionCookies(
+    req: Request,
+    session: {
+      userID: string;
+      accessToken: string;
+    }
+  ): Promise<void> {
     req.res?.cookie('userID', session.userID);
     req.res?.cookie('accessToken', session.accessToken);
     req.res?.redirect('/');

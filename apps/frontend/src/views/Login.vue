@@ -39,8 +39,8 @@
                     @keyup.enter="login"
                     @blur="$v.password.$touch()"
                   />
-                  <v-row no-gutters>
-                    <v-col>
+                  <v-row>
+                    <v-col class="pl-10">
                       <v-btn
                         id="login_button"
                         depressed
@@ -52,24 +52,46 @@
                         Login
                       </v-btn>
                     </v-col>
-                    <v-btn
-                      v-if="authStrategySupported('github')"
-                      large
-                      plain
-                      @click="loginGithub"
+                    <v-row
+                      class="fill-height flex-column flex-nowrap"
+                      align="end"
+                      align-content="right"
+                      justify="right"
                     >
-                      <v-img :src="require('@/assets/github_mark.png')" />
-                      <div class="pl-2">Login with GitHub</div>
-                    </v-btn>
-                    <v-btn
-                      v-if="authStrategySupported('gitlab')"
-                      large
-                      plain
-                      @click="loginGitlab"
-                    >
-                      <v-img :src="require('@/assets/gitlab_mark.png')" />
-                      <div class="pl-2">Login with GitLab</div>
-                    </v-btn>
+                      <v-col cols="auto">
+                        <v-btn
+                          v-if="authStrategySupported('google')"
+                          plain
+                          @click="oauthLogin('google')"
+                        >
+                          <v-img :src="require('@/assets/google_mark.png')" />
+                          <div class="pl-2">Login with Google</div>
+                        </v-btn></v-col
+                      >
+                      <v-col cols="auto">
+                        <v-btn
+                          v-if="authStrategySupported('github')"
+                          plain
+                          @click="oauthLogin('github')"
+                        >
+                          <v-img :src="require('@/assets/github_mark.png')" />
+                          <div class="pl-2">Login with GitHub</div>
+                        </v-btn></v-col
+                      >
+                      <v-col cols="auto"
+                        ><v-btn
+                          v-if="authStrategySupported('gitlab')"
+                          plain
+                          @click="oauthLogin('gitlab')"
+                        >
+                          <v-img
+                            height="42"
+                            :src="require('@/assets/gitlab_mark.png')"
+                          />
+                          <div class="pl-2">Login with GitLab</div>
+                        </v-btn></v-col
+                      >
+                    </v-row>
                   </v-row>
                 </v-form>
               </v-card-text>
@@ -150,11 +172,8 @@ export default class Login extends Vue {
       });
   }
 
-  loginGithub() {
-    window.location.href = '/authn/github';
-  }
-  loginGitlab() {
-    window.location.href = '/authn/gitlab';
+  oauthLogin(site: string){
+    window.location.href = `/authn/${site}`;
   }
 }
 </script>

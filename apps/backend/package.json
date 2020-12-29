@@ -69,6 +69,7 @@
     "passport": "^0.4.1",
     "passport-github": "^1.1.0",
     "passport-gitlab2": "^5.0.0",
+    "passport-google-oauth": "^2.0.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "passport-oauth2": "^1.5.0",

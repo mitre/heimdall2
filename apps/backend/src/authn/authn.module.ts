@@ -7,6 +7,7 @@ import {AuthnController} from './authn.controller';
 import {AuthnService} from './authn.service';
 import {GithubStrategy} from './github.strategy';
 import {GitlabStrategy} from './gitlab.strategy';
+import {GoogleStrategy} from './google.strategy';
 import {JwtStrategy} from './jwt.strategy';
 import {LocalStrategy} from './local.strategy';
 
@@ -17,7 +18,8 @@ import {LocalStrategy} from './local.strategy';
     LocalStrategy,
     JwtStrategy,
     GithubStrategy,
-    GitlabStrategy
+    GitlabStrategy,
+    GoogleStrategy
   ],
   controllers: [AuthnController]
 })
