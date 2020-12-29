@@ -110,15 +110,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import axios from 'axios';
 import Component from 'vue-class-component';
 import Modal from '@/components/global/Modal.vue'
 import {Prop} from 'vue-property-decorator';
-import {IEvaluationTag, ICreateEvaluationTag, IEvaluation} from '@heimdall/interfaces';
-import {Snackbar, SnackbarModule} from '@/store/snackbar';
+import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations';
-import { Evaluation } from '@/types/models';
-import { ServerModule } from '@/store/server';
 
 @Component({
   components: {

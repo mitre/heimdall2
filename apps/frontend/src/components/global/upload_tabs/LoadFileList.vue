@@ -80,7 +80,6 @@
 </template>
 
 <script lang="ts">
-import axios from 'axios';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue'
@@ -90,7 +89,6 @@ import {EvaluationModule} from '@/store/evaluations'
 import {IEvaluation} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
 import {Samples} from 'aws-sdk/clients/devicefarm';
-import { Evaluation } from '@/types/models';
 
 @Component({
   components: {
