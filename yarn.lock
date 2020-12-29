@@ -20057,9 +20057,9 @@ vue-style-loader@^4.1.0, vue-style-loader@^4.1.2:
     loader-utils "^1.0.2"
 
 vue-svg-inline-loader@^2.0.0:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/vue-svg-inline-loader/-/vue-svg-inline-loader-2.0.1.tgz#2ee0bc8fe4ce6d669e2160cab82bb466cf1d251b"
-  integrity sha512-tr/zovoAMAS/pfD7C+Mb2WV/oFfDigidIX2qBoxv5xpVicngm73GEoYvMkwT/tmvxwCO/ACgONYZhrx/MZvm2Q==
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/vue-svg-inline-loader/-/vue-svg-inline-loader-2.1.1.tgz#ba237748bd8cd62480212eb7f3d4fc9d20b10d99"
+  integrity sha512-Chx0akO8seRAErGBieD1dAmdcf0A1aI+VuPwP3Iwepo0ni5mDVjDGqyHGd+yryoCYsSBgcs2+Gn3TKF0nZM1Rw==
   dependencies:
     loader-utils "^2.0.0"
     schema-utils "^3.0.0"
