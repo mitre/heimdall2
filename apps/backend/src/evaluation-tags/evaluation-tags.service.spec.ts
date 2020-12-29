@@ -3,7 +3,6 @@ import {Test} from '@nestjs/testing';
 import {EvaluationDto} from 'src/evaluations/dto/evaluation.dto';
 import {
   CREATE_EVALUATION_TAG_DTO,
-  CREATE_EVALUATION_TAG_DTO_MISSING_KEY,
   CREATE_EVALUATION_TAG_DTO_MISSING_VALUE,
   UPDATE_EVALUATION_TAG_DTO,
   UPDATE_EVALUATION_TAG_DTO_MISSING_VALUE
@@ -78,18 +77,6 @@ describe('EvaluationTagsService', () => {
     });
 
     describe('With missing fields', () => {
-      it('should throw an error with key', async () => {
-        expect.assertions(1);
-        await expect(
-          evaluationTagsService.create(
-            evaluation.id,
-            CREATE_EVALUATION_TAG_DTO_MISSING_KEY
-          )
-        ).rejects.toThrow(
-          'notNull Violation: EvaluationTag.key cannot be null'
-        );
-      });
-
       it('should throw an error with value', async () => {
         expect.assertions(1);
         await expect(
