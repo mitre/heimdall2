@@ -4,8 +4,7 @@ import {EvaluationDto} from 'src/evaluations/dto/evaluation.dto';
 import {
   CREATE_EVALUATION_TAG_DTO,
   CREATE_EVALUATION_TAG_DTO_MISSING_VALUE,
-  UPDATE_EVALUATION_TAG_DTO,
-  UPDATE_EVALUATION_TAG_DTO_MISSING_VALUE
+  UPDATE_EVALUATION_TAG_DTO
 } from '../../test/constants/evaluation-tags-test.constant';
 import {EVALUATION_1} from '../../test/constants/evaluations-test.constant';
 import {CREATE_USER_DTO_TEST_OBJ} from '../../test/constants/users-test.constant';
@@ -127,21 +126,6 @@ describe('EvaluationTagsService', () => {
       expect(updatedEvaluationTag.value).toEqual(
         UPDATE_EVALUATION_TAG_DTO.value
       );
-      expect(updatedEvaluationTag.updatedAt.valueOf()).not.toEqual(
-        evaluationTag.updatedAt.valueOf()
-      );
-    });
-
-    it('should update only key', async () => {
-      const evaluationTag = await evaluationTagsService.create(
-        evaluation.id,
-        CREATE_EVALUATION_TAG_DTO
-      );
-      const updatedEvaluationTag = await evaluationTagsService.update(
-        evaluationTag.id,
-        UPDATE_EVALUATION_TAG_DTO_MISSING_VALUE
-      );
-      expect(updatedEvaluationTag.value).toEqual(evaluationTag.value);
       expect(updatedEvaluationTag.updatedAt.valueOf()).not.toEqual(
         evaluationTag.updatedAt.valueOf()
       );
