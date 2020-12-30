@@ -14,6 +14,8 @@ This repository contains the source code for the Heimdall 2 Backend and Frontend
 
 [![Heimdall Lite 2.0 Demo YouTube](https://img.youtube.com/vi/1jXHWZ0gHQg/0.jpg)](https://www.youtube.com/watch?v=1jXHWZ0gHQg)
 
+## These demos are only intended to show the functionality of Heimdall, please do not upload any sensitive data to them!
+
 ### Hosted
 
 #### Released Previews
@@ -23,8 +25,6 @@ This repository contains the source code for the Heimdall 2 Backend and Frontend
 [Heimdall Server](https://mitre-heimdall.herokuapp.com/)
 
 #### Current *Development Master Branch* Preview
-
-These demos are only intended to show the functionality of Heimdall, please do not upload any sensitive data to them!
 
 [Heimdall Lite](https://heimdall-lite.netlify.com/)
 
