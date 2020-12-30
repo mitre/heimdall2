@@ -54,6 +54,19 @@ export class AuthnController {
     await this.setSessionCookies(req, session);
   }
 
+  @Get('okta')
+  @UseGuards(AuthGuard('okta'))
+  async loginToOkta(@Req() req: Request): Promise<any> {
+    return this.authnService.login(req.user as User);
+  }
+
+  @Get('okta/callback')
+  @UseGuards(AuthGuard('okta'))
+  async getUserFromOkta(@Req() req: Request): Promise<any> {
+    const session = await this.authnService.login(req.user as User);
+    await this.setSessionCookies(req, session);
+  }
+
   async setSessionCookies(
     req: Request,
     session: {
