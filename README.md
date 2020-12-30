@@ -16,19 +16,19 @@ This repository contains the source code for the Heimdall 2 Backend and Frontend
 
 ### Hosted
 
-#### Current Development (master branch) Preview
+#### Released Previews
+
+[Heimdall Lite](https://heimdall-lite.mitre.org)
+
+[Heimdall Server](https://mitre-heimdall.herokuapp.com/)
+
+#### Current *Development Master Branch* Preview
 
 These demos are only intended to show the functionality of Heimdall, please do not upload any sensitive data to them!
 
 [Heimdall Lite](https://heimdall-lite.netlify.com/)
 
 [Heimdall Server](https://mitre-heimdall-staging.herokuapp.com/)
-
-#### Release Preview
-
-[Heimdall Lite](https://heimdall-lite.mitre.org)
-
-[Heimdall Server](https://mitre-heimdall.herokuapp.com/)
 
 ## Installation & Use
 
