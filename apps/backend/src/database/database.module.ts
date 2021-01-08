@@ -35,6 +35,13 @@ function getSynchronize(configService: ConfigService): boolean {
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         dialect: 'postgres',
+        dialectOptions: {
+          ssl: Boolean(configService.get('DATABASE_SSL'))
+            ? {
+                rejectUnauthorized: false
+              }
+            : false
+        },
         host: configService.get('DATABASE_HOST') || '127.0.0.1',
         port: Number(configService.get('DATABASE_PORT')) || 5432,
         username: configService.get('DATABASE_USERNAME') || 'postgres',
