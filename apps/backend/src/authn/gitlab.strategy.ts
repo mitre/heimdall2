@@ -26,14 +26,10 @@ export class GitlabStrategy extends PassportStrategy(Strategy, 'gitlab') {
       [key: string]: any;
     }
   ): Promise<any> {
+    const nameArray = profile._json.name.split(' ');
     const email = profile.emails[0].value;
-    const firstName: string = profile._json.name.substr(
-      0,
-      profile._json.name.indexOf(' ')
-    );
-    const lastName: string = profile._json.name.substr(
-      profile._json.name.indexOf(' ') + 1
-    );
+    const firstName: string = nameArray.slice(0, -1).join(' ');
+    const lastName = nameArray[nameArray.length - 1];
     return this.authnService.oauthValidateUser(email, firstName, lastName);
   }
 }
