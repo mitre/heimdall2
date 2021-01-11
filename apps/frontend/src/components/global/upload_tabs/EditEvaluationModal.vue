@@ -1,5 +1,5 @@
 <template>
-  <Modal :visible="visible">
+  <Modal :visible="visible" width="50%">
     <v-card>
       <v-card-title>
         <span class="headline">Edit "{{ filename }}"</span>
@@ -47,7 +47,7 @@
                   <v-col>
                     <v-text-field
                       v-model="activeTag.value"
-                      label="Tag value"
+                      label="Tag Name"
                       @keyup.enter="commitTag()"
                     />
                   </v-col>

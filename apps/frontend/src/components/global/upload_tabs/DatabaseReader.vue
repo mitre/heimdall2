@@ -3,7 +3,7 @@
     <v-container class="py-0 pl-0">
       <v-row>
         <v-col cols="9">
-          <v-card-subtitle class="py-0">
+          <v-card-subtitle>
             View files loaded into your organizations Heimdall Server instance.
           </v-card-subtitle>
         </v-col>

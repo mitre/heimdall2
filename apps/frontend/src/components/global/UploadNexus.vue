@@ -3,6 +3,7 @@
     <Modal
       :visible="visible"
       :persistent="persistent"
+      width="70%"
       @close-modal="$emit('close-modal')"
     >
       <v-banner v-if="warning_banner" icon="mdi-alert" color="warning">
