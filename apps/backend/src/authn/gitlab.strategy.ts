@@ -13,7 +13,9 @@ export class GitlabStrategy extends PassportStrategy(Strategy, 'gitlab') {
     super({
       clientID: configService.get('GITLAB_CLIENTID') || 'disabled',
       clientSecret: configService.get('GITLAB_SECRET') || 'disabled',
-      callbackURL: configService.get('GITLAB_CALLBACK') || 'disabled'
+      callbackURL:
+        `${configService.get('EXTERNAL_URL')}/authn/gitlab/callback` ||
+        'disabled'
     });
   }
 
