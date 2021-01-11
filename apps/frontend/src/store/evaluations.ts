@@ -53,10 +53,11 @@ export class Evaluation extends VuexModule {
 
   @Action({rawError: true})
   async deleteTag(tag: any) {
-    this.activeEvaluation.evaluationTags?.splice(
-      this.activeEvaluation.evaluationTags?.indexOf(tag),
-      1
-    );
+    this.activeEvaluation.evaluationTags =
+      this.activeEvaluation.evaluationTags?.splice(
+        this.activeEvaluation.evaluationTags?.indexOf(tag),
+        1
+      ) || null;
     return axios.delete(`/evaluation-tags/${tag.id}`);
   }
 

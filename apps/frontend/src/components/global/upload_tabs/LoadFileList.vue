@@ -56,7 +56,7 @@
               :key="tag.id + '_'"
               small
               close
-              @click:close="deleteTag(tag)"
+              @click:close="deleteTag(tag, item)"
               >{{ tag.value }}</v-chip
             >
           </template>
@@ -130,10 +130,14 @@ export default class LoadFileList extends Vue {
     this.deleteDialog = true;
   }
 
-  deleteTag(item: any) {
-    this.activeIndex = this.files.indexOf(item)
-    EvaluationModule.deleteTag(item).then((response) => {
+  deleteTag(tag: any, evaluation: any) {
+    this.activeIndex = this.files.indexOf(tag)
+    EvaluationModule.deleteTag(tag).then((response) => {
       SnackbarModule.notify("Deleted tag successfully.")
+      evaluation.evaluationTags.splice(
+        evaluation.evaluationTags.indexOf(tag),
+        1
+      )
     }).catch((error) => {
       SnackbarModule.HTTPFailure(error)
     });
