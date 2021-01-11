@@ -84,10 +84,7 @@ export default class ExportCaat extends Vue {
         row.push(''); //row.push("InSpec"); // Assessment/Audit Company
         row.push('Test'); // Test Method
         row.push(fix(control.descriptions.check || control.wraps.tags.check)); // Test Objective
-        let test_result = `${control.status}: ${control.message.replace(
-          '\n',
-          '; '
-        )}`;
+        let test_result = `${control.status}: ${control.message}`;
         row.push(fix(test_result)); // Test Result Description
         if (control.status === 'Passed') {
           row.push('Satisfied');
