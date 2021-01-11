@@ -146,13 +146,7 @@ export default class EditEvaluationModal extends Vue {
 
   // Limit how many requests we are sending to the server
   set filename(filename: string) {
-    if (!this.awaitingFinishTyping) {
-      setTimeout(() => {
-        EvaluationModule.setActiveEvaluationFilename(filename);
-        this.awaitingFinishTyping = false;
-      }, 1000);
-    }
-    this.awaitingFinishTyping = true;
+    EvaluationModule.setActiveEvaluationFilename(filename);
   }
 
   get tags() {

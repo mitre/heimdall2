@@ -48,8 +48,7 @@ export class Evaluation extends VuexModule {
 
   @Action
   setActiveEvaluationFilename(filename: string) {
-    this.context.commit('UPDATE_FILENAME', filename);
-    return this.updateEvaluation();
+    return this.context.commit('UPDATE_FILENAME', filename);
   }
 
   @Action({rawError: true})
