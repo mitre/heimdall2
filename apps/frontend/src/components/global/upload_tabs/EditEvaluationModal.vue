@@ -127,6 +127,7 @@ export default class EditEvaluationModal extends Vue {
   newTagDialog: boolean = false;
   deleteTagDialog: boolean = false;
   showSelf: boolean = this.visible;
+  awaitingFinishTyping: boolean = false;
 
   headers: Object[] = [
     {
@@ -143,8 +144,15 @@ export default class EditEvaluationModal extends Vue {
     return EvaluationModule.activeEvaluation.filename;
   }
 
+  // Limit how many requests we are sending to the server
   set filename(filename: string) {
-    EvaluationModule.setActiveEvaluationFilename(filename);
+    if (!this.awaitingFinishTyping) {
+      setTimeout(() => {
+        EvaluationModule.setActiveEvaluationFilename(filename);
+        this.awaitingFinishTyping = false;
+      }, 1000);
+    }
+    this.awaitingFinishTyping = true;
   }
 
   get tags() {
