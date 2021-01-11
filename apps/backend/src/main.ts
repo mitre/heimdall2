@@ -22,8 +22,12 @@ async function bootstrap() {
     })
   );
   app.use(json({limit: '50mb'}));
-  await app.use(
-    session({secret: generateDefault(), saveUninitialized: true, resave: true})
+  app.use(
+    session({
+      secret: configService.get('JWT_SECRET') || generateDefault(),
+      saveUninitialized: true,
+      resave: true
+    })
   );
   app.use(passport.initialize());
   app.use(passport.session());
