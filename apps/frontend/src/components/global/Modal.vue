@@ -4,6 +4,7 @@
     :value="visible"
     :persistent="persistent"
     :width="width"
+    max-width="1900px"
     content-class="v-card"
     @click:outside="$emit('close-modal')"
     @keydown.esc="$emit('close-modal')"

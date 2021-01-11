@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container>
+    <v-container class="ml-0 pl-0 mr-0 pr-0 pb-0 mb-0">
       <v-text-field
         v-model="search"
         class="px-3 pb-1 elevation-1"
@@ -41,7 +41,7 @@
         :search="search"
         show-select
         mobile-breakpoint="0"
-        class="elevation-1"
+        class=""
       >
         <template #[`item.filename`]="{item}">
           <span
