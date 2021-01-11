@@ -44,7 +44,6 @@ import {
   is_leaf,
   is_parent
 } from '@/utilities/treemap_util';
-import {HierarchyRectangularNode} from 'd3';
 import Cell, {XYScale} from '@/components/cards/treemap/Cell.vue';
 //@ts-ignore
 import resize from 'vue-resize-directive';
