@@ -72,7 +72,6 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
 import Component, {mixins} from 'vue-class-component';
 import {nist} from 'inspecjs';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';

@@ -44,7 +44,6 @@ import Component from 'vue-class-component';
 
 import * as d3 from 'd3';
 import {TreemapNode, TreemapNodeLeaf, is_leaf} from '@/utilities/treemap_util';
-import {HierarchyRectangularNode} from 'd3';
 import {Prop} from 'vue-property-decorator';
 
 export interface XYScale {

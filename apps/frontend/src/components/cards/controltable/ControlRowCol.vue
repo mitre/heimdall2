@@ -43,7 +43,6 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {HDFControlSegment} from 'inspecjs';
