@@ -160,6 +160,7 @@ export default class EditEvaluationModal extends Vue {
   async deleteTag(tag: any) {
     EvaluationModule.deleteTag(tag).then((response) => {
       SnackbarModule.notify("Deleted tag successfully.")
+      EvaluationModule.updateEvaluation()
     }).catch((error) => {
       SnackbarModule.HTTPFailure(error)
     });;
@@ -168,6 +169,7 @@ export default class EditEvaluationModal extends Vue {
   async updateTag(tag: any) {
     EvaluationModule.updateTag(tag).then((response) => {
       SnackbarModule.notify("Updated tag successfully.")
+      EvaluationModule.updateEvaluation()
     }).catch((error) => {
       SnackbarModule.HTTPFailure(error)
     });;
@@ -176,6 +178,8 @@ export default class EditEvaluationModal extends Vue {
   async commitTag(): Promise<void> {
     EvaluationModule.addTagToActiveEvaluation().then((response) => {
       SnackbarModule.notify("Added tag successfully.")
+      EvaluationModule.updateEvaluation()
+      this.$emit('updateEvaluations')
     }).catch((error) => {
       SnackbarModule.HTTPFailure(error)
     });
@@ -185,6 +189,7 @@ export default class EditEvaluationModal extends Vue {
   async updateEvaluation(): Promise<void> {
     EvaluationModule.updateEvaluation();
     this.$emit('closeEditModal')
+    this.$emit('updateEvaluations')
   }
 }
 </script>

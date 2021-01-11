@@ -16,6 +16,7 @@
       :headers="headers"
       :files="files"
       :loading="loading"
+      @updateEvaluations="get_all_results"
       @load-results="load_results($event)"
     />
   </v-card>

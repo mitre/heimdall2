@@ -1,5 +1,5 @@
 import Store from '@/store/store';
-import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
+import {IEvaluation} from '@heimdall/interfaces';
 import axios from 'axios';
 import {
   Action,
@@ -39,11 +39,10 @@ export class Evaluation extends VuexModule {
 
   @Action({rawError: true})
   async addTagToActiveEvaluation() {
-    return axios
-      .post(`/evaluation-tags/${this.activeEvaluation.id}`, this.activeTag)
-      .then((response) => {
-        this.context.commit('ADD_TAG', response.data);
-      });
+    return axios.post(
+      `/evaluation-tags/${this.activeEvaluation.id}`,
+      this.activeTag
+    );
   }
 
   @Action
@@ -53,12 +52,7 @@ export class Evaluation extends VuexModule {
 
   @Action({rawError: true})
   async deleteTag(tag: any) {
-    this.activeEvaluation.evaluationTags =
-      this.activeEvaluation.evaluationTags?.splice(
-        this.activeEvaluation.evaluationTags?.indexOf(tag),
-        1
-      ) || null;
-    return axios.delete(`/evaluation-tags/${tag.id}`);
+    await axios.delete(`/evaluation-tags/${tag.id}`);
   }
 
   @Action({rawError: true})
@@ -68,17 +62,11 @@ export class Evaluation extends VuexModule {
 
   @Action({rawError: true})
   async updateEvaluation() {
-    return axios.put(
-      `/evaluations/${this.activeEvaluation.id}`,
-      this.activeEvaluation
-    );
-  }
-
-  @Mutation
-  ADD_TAG(tag: IEvaluationTag) {
-    if (this.activeEvaluation.evaluationTags) {
-      this.activeEvaluation.evaluationTags.push(tag);
-    }
+    return axios
+      .put(`/evaluations/${this.activeEvaluation.id}`, this.activeEvaluation)
+      .then((response) => {
+        this.context.commit('SET_ACTIVE_EVALUATION', response.data);
+      });
   }
 
   @Mutation
@@ -88,11 +76,6 @@ export class Evaluation extends VuexModule {
 
   @Mutation
   UPDATE_FILENAME(filename: string) {
-    this.activeEvaluation.filename = filename;
-  }
-
-  @Mutation
-  UPDATE_TAG(filename: string) {
     this.activeEvaluation.filename = filename;
   }
 

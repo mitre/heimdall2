@@ -28,6 +28,7 @@
       <EditEvaluationModal
         :visible="editDialog"
         :active-index="activeIndex"
+        @updateEvaluations="updateEvaluations"
         @closeEditModal="closeEditModal"
       />
       <v-data-table
@@ -118,6 +119,10 @@ export default class LoadFileList extends Vue {
     this.editDialog = false;
   }
 
+  updateEvaluations() {
+    this.$emit('updateEvaluations')
+  }
+
   editItem (item: IEvaluation) {
     EvaluationModule.setActiveEvaluation(item);
     this.activeIndex = this.files.indexOf(EvaluationModule.getActiveEvaluation);
@@ -131,13 +136,9 @@ export default class LoadFileList extends Vue {
   }
 
   deleteTag(tag: any, evaluation: any) {
-    this.activeIndex = this.files.indexOf(tag)
     EvaluationModule.deleteTag(tag).then((response) => {
       SnackbarModule.notify("Deleted tag successfully.")
-      evaluation.evaluationTags.splice(
-        evaluation.evaluationTags.indexOf(tag),
-        1
-      )
+      this.updateEvaluations()
     }).catch((error) => {
       SnackbarModule.HTTPFailure(error)
     });
