@@ -31,9 +31,9 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     const userInfoResponse = await axios.get('https://api.github.com/user', {
       headers: {Authorization: `token ${accessToken}`}
     });
-    const nameArray = userInfoResponse.data.name.split(' ');
-    const firstName: string = nameArray.slice(0, -1).join(' ');
-    const lastName = nameArray[nameArray.length - 1];
+    const {firstName, lastName} = this.authnService.splitName(
+      userInfoResponse.data.name
+    );
     // Get first email
     const primaryEmail = githubEmails.data[0];
     // Only validate if the user has verified their email with Github

@@ -84,4 +84,12 @@ export class AuthnService {
       };
     }
   }
+
+  splitName(fullName: string): {firstName: string; lastName: string} {
+    const nameArray = fullName.split(' ');
+    return {
+      firstName: nameArray.slice(0, -1).join(' '),
+      lastName: nameArray[nameArray.length - 1]
+    };
+  }
 }
