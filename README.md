@@ -10,7 +10,7 @@ This repository contains the source code for the Heimdall 2 Backend and Frontend
 
 | Loading Files                                                | Video                                                        |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| ![Heimdall Lite 2.0 Demo GIF](https://github.com/mitre/heimdall2/raw/master/apps/frontend/public/heimdall-lite-2.0-demo-5fps.gif) | [![Heimdall Lite 2.0 Demo YouTube](https://i.imgur.com/ezi3ov2.jpg)](https://www.youtube.com/watch?v=1jXHWZ0gHQg) |
+| ![Heimdall Lite 2.0 Demo GIF](https://github.com/mitre/heimdall2/raw/master/apps/frontend/public/heimdall-lite-2.0-demo-5fps.gif) | [![Heimdall Lite 2.0 Demo YouTube](https://github.com/mitre/heimdall2/raw/master/apps/frontend/public/heimdall-preview.jpg)](https://www.youtube.com/watch?v=1jXHWZ0gHQg) |
 
 ### Hosted
 
@@ -108,11 +108,11 @@ Given that Heimdall requires at least a database service, we use Docker and Dock
 
 1. Install Docker
 
-2. Download and extract the most recent heimdall release from our [releases page](https://github.com/mitre/heimdall2/releases).
+2. Download and extract the most recent Heimdall release from our [releases page](https://github.com/mitre/heimdall2/releases).
 
 3. Navigate to the base folder where `docker-compose.yml` is located
 
-4. Run the following commands in a terminal window from the heimdall source directory:
+4. Run the following commands in a terminal window from the Heimdall source directory:
    1. ```bash
       ./setup-docker-secrets.sh
       ```
