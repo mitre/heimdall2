@@ -1,6 +1,9 @@
 import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
 import {compare} from 'bcrypt';
+import * as crypto from 'crypto';
+import {ConfigService} from '../config/config.service';
+import {CreateUserDto} from '../users/dto/create-user.dto';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 
@@ -8,6 +11,7 @@ import {UsersService} from '../users/users.service';
 export class AuthnService {
   constructor(
     private usersService: UsersService,
+    private configService: ConfigService,
     private jwtService: JwtService
   ) {}
 
@@ -24,6 +28,37 @@ export class AuthnService {
     } else {
       return null;
     }
+  }
+
+  async validateOrCreateUser(
+    email: string,
+    firstName: string,
+    lastName: string
+  ): Promise<any> {
+    let user: User;
+    try {
+      user = await this.usersService.findByEmail(email);
+    } catch {
+      const randomPass = crypto.randomBytes(128).toString('hex');
+      const createUser: CreateUserDto = {
+        email: email,
+        password: randomPass,
+        passwordConfirmation: randomPass,
+        firstName: firstName,
+        lastName: lastName,
+        organization: '',
+        title: '',
+        role: ''
+      };
+      await this.usersService.create(createUser);
+      user = await this.usersService.findByEmail(email);
+    }
+
+    if (user) {
+      this.usersService.updateLoginMetadata(user);
+    }
+
+    return user;
   }
 
   async login(user: {
@@ -50,5 +85,13 @@ export class AuthnService {
         accessToken: this.jwtService.sign(payload)
       };
     }
+  }
+
+  splitName(fullName: string): {firstName: string; lastName: string} {
+    const nameArray = fullName.split(' ');
+    return {
+      firstName: nameArray.slice(0, -1).join(' '),
+      lastName: nameArray[nameArray.length - 1]
+    };
   }
 }
