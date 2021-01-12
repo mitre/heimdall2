@@ -40,7 +40,6 @@ export class Snackbar extends VuexModule {
 
   @Action
   HTTPFailure(error: any) {
-    console.log(error.response.data.message);
     if (typeof error.response.data.message === 'object') {
       this.notify(
         error.response.data.message
@@ -50,7 +49,7 @@ export class Snackbar extends VuexModule {
           .join(', ')
       );
     } else {
-      this.notify(error.response.data.message);
+      this.failure(error.response.data.message);
     }
   }
 
