@@ -54,7 +54,7 @@ There are two versions of the MITRE Heimdall Viewer - the full Heimdall Enterpri
 ### Use Cases
 
 | [Heimdall-Lite](https://github.com/mitre/heimdall-lite/) | [Heimdall](https://github.com/mitre/heimdall/)           |
-| :------------------------------------------------------- | :------------------------------------------------------- |
+| :------------------------------------------------------: | :------------------------------------------------------: |
 |            Ship the App & Data via simple Email          |                 Multiple Teams Support                   |
 |            Minimal Footprint & Deployment Time           |               Timeline and Report History                |
 |                Local or disconnected Use                 |               Centralized Deployment Model               |
