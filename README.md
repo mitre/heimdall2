@@ -55,12 +55,12 @@ There are two versions of the MITRE Heimdall Viewer - the full Heimdall Enterpri
 
 | [Heimdall-Lite](https://github.com/mitre/heimdall-lite/) | [Heimdall](https://github.com/mitre/heimdall/)           |
 | :------------------------------------------------------- | :------------------------------------------------------- |
-| Ship the App & Data via simple Email                     | Multiple Teams Support                                   |
-| Minimal Footprint & Deployment Time                      | Timeline and Report History                              |
-| Local or disconnected Use                                | Centralized Deployment Model                             |
-| One-Time Quick Reviews                                   | Need to view the delta between one or more runs          |
-| Decentralized Deployment                                 | Need to view subsets of the 800-53 control alignment     |
-| Minimal A&A Time                                         | Need to produce more complex reports in multiple formats |
+|            Ship the App & Data via simple Email          |                 Multiple Teams Support                   |
+|            Minimal Footprint & Deployment Time           |               Timeline and Report History                |
+|                Local or disconnected Use                 |               Centralized Deployment Model               |
+|                 One-Time Quick Reviews                   |       Need to view the delta between one or more runs    |
+|                Decentralized Deployment                  |   Need to view subsets of the 800-53 control alignment   |
+|                    Minimal A&A Time                      | Need to produce more complex reports in multiple formats |
 
 
 
@@ -132,7 +132,7 @@ Make sure you have run the setup steps at least once before following these step
    - ```bash
      docker-compose up -d
      ```
-2. Go to `127.0.0.1:3000` in a web browser
+2. Go to [`http://127.0.0.1:3000`](http://127.0.0.1:3000) in a web browser.
 
 #### Updating Docker Container
 
