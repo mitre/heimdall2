@@ -1,3 +1,4 @@
+import * as dotenv from 'dotenv';
 import mock from 'mock-fs';
 import {
   DATABASE_URL_MOCK_ENV,
@@ -76,10 +77,10 @@ describe('Config Service', () => {
         '.env-loaded-externally': SIMPLE_ENV_MOCK_FILE
       });
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      require('dotenv').config({path: '.env-loaded-externally'});
+      dotenv.config({path: '.env-loaded-externally'});
     });
 
-    it('should return the correct database name', () => {
+    it('should return the correct database port', () => {
       const configService = new ConfigService();
       expect(configService.get('PORT')).toEqual('8001');
     });

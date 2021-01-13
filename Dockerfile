@@ -28,6 +28,8 @@ RUN yarn --production=true --frozen-lockfile
 
 COPY --from=builder /src/dist/ /app/dist/
 COPY apps/backend/.sequelizerc /app/apps/backend/
+COPY apps/backend/db /app/apps/backend/db
+COPY apps/backend/config /app/apps/backend/config
 COPY apps/backend/migrations /app/apps/backend/migrations
 COPY apps/backend/seeders /app/apps/backend/seeders
 
