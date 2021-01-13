@@ -28,15 +28,15 @@ This repository contains the source code for the Heimdall 2 Backend and Frontend
 
 ## Heimdall vs Heimdall-Lite
 
-As a single-page javascript app - you can run Heimdall-Lite from any web-server, a _secured_ S3 bucket or directly via GitHub Pages (as it is here). Heimdall-Lite gives you the ability to easily review and produce reports about your InSpec run, filter the results for easy review and hot-wash, print out reports, generate System Security Plan (SSP) content, and much more.
-
 There are two versions of the MITRE Heimdall Viewer - the full Heimdall Enterprise Server and the Heimdall-Lite version. Both share the same frontend but have been produced to meet different needs and use-cases.
+
+As a single-page javascript app - you can run Heimdall-Lite from any web-server, a _secured_ S3 bucket or directly via GitHub Pages (as it is here). Heimdall-Lite gives you the ability to easily review and produce reports about your InSpec run, filter the results for easy review and hot-wash, print out reports, generate System Security Plan (SSP) content, and much more.
 
 ### Features
 
 |                                                              | [Heimdall-Lite](https://github.com/mitre/heimdall-lite/) |        [Heimdall](https://github.com/mitre/heimdall/)        |
 | :----------------------------------------------------------- | :------------------------------------------------------: | :----------------------------------------------------------: |
-| Installation Requirements                                    |                      any web server                      |           rails 5.x Server <br /> Postgres Server            |
+| Installation Requirements                                    |                      any web server                      |                       Postgres Server                        |
 | Overview Dashboard & Counts                                  |                            x                             |                              x                               |
 | 800-53 Partition and TreeMap View                            |                            x                             |                              x                               |
 | Data Table / Control Summary                                 |                            x                             |                              x                               |
@@ -113,25 +113,19 @@ Given that Heimdall requires at least a database service, we use Docker and Dock
 3. Navigate to the base folder where `docker-compose.yml` is located
 
 4. Run the following commands in a terminal window from the Heimdall source directory:
-   1. ```bash
-      ./setup-docker-secrets.sh
-      ```
-   
-   2. ```bash
-      docker-compose up -d
-      ```
-   
+   - ```bash
+     ./setup-docker-secrets.sh
+     docker-compose up -d
+     ```
+
 6. Navigate to  [`http://127.0.0.1:3000`](http://127.0.0.1:3000).
 
 #### Running Docker Container
 
 Make sure you have run the setup steps at least once before following these steps!
 
-1. Run the following command in a terminal window:
-   
-   - ```bash
-     docker-compose up -d
-     ```
+1. Run the following command in a terminal window: ``docker-compose up -d``
+
 2. Go to [`http://127.0.0.1:3000`](http://127.0.0.1:3000) in a web browser.
 
 #### Updating Docker Container
@@ -155,7 +149,7 @@ docker-compose down
 
 ---
 
-### Heimdall Server - Native
+### Heimdall Server - Native (Advanced)
 
 If you have your own database service, and would like to run Heimdall on your own server, you can do that as well. Instructions are only provided for a distributions with apt as a package manager (such as [Ubuntu Server](https://ubuntu.com/download/server)), however, the steps are the same for other distributions after installing dependencies.  
 
@@ -169,8 +163,8 @@ If you have your own database service, and would like to run Heimdall on your ow
 2. Download and extract the most recent release from our [releases page](https://github.com/mitre/heimdall2/releases) using wget:
 
    - ```bash
-     wget <url>
-     unzip <filename>
+     wget <latest release>
+     unzip <file name>
      ```
 
 3. Create the Postgres role:
@@ -192,12 +186,15 @@ If you have your own database service, and would like to run Heimdall on your ow
      yarn install
      ```
 
-5. Edit your .env file:
+5. Edit your .env file and create the database:
 
    - ```bash
      nano apps/backend/.env-example
      # Replace the comments with your values, if you want the default value, you can delete the line.
      mv apps/backend/.env-example apps/backend/.env
+     yarn backend sequelize-cli db:create
+     yarn backend sequelize-cli db:migrate
+     yarn backend sequelize-cli db:seed:all
      ```
 
 6. Build  and start the app:
@@ -231,53 +228,35 @@ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer beare
 
 ## For Developers
 
+The development installation process is the same as a native install for steps 1 through 5.
+
 ### How to Install
 
-This project uses [Yarn Workspaces](https://classic.yarnpkg.com/en/docs/workspaces/) and [Lerna](https://lerna.js.org/) to manage dependencies across the Frontend and Backend applications.
-
-    yarn install
-
-### Development Environment
-
-It is suggested to use VSCode for development on this project. For convenience, a heimdall2.code-workspace file has been provided at the root of this repository. Loading this workspace into VSCode will fix Intellisense imports and configures editor defaults to match what eslint will check for during PRs.
-
-### Heimdall Server + Frontend Development
-
-To run Heimdall Server, Postgresql must be installed and a user account must exist with the permission to create databases. If you would like to use something other than the default 'postgres' user, these steps:
-
-    # Start the Postgres terminal
-    psql postgres
-    
-    # Create the user
-    CREATE USER <username> with encrypted password '<password>';
-    ALTER USER <username> CREATEDB;
-    \q
-
-Then, the following one-time steps must be performed:
-
-    cp apps/backend/.env-example apps/backend/.env
-    # Edit /apps/backend/.env to reflect the appropriate configuration for your system
-    yarn backend sequelize-cli db:create
-    yarn backend sequelize-cli db:migrate
-    yarn backend sequelize-cli db:seed:all
-
-Once the above steps are completed it is possible to start heimdall-server using the following command
+Once you've completed steps 1 through 5 of the native install it is possible to start heimdall-server using the following command:
 
     yarn run start:dev
 
+This will start both the frontend and backend in development mode, meaning any changes you make to the source code will take effect immediately. 
+
 ### Developing Heimdall Lite Standalone
+
+If you only want to make changes to the frontend (heimdall-lite) use the following command:
 
     yarn frontend start:dev
 
 ### Lint and fix files
 
+To validate and lint your code run:
+
     yarn run lint
 
 ### Compile and minify the frontend and backend for production
 
-    yarn run build
+    yarn build
 
 ### Run tests
+
+To test your code to make sure everything still works:
 
     # Run Frontend Vue Tests
     yarn frontend test
@@ -318,7 +297,7 @@ Please feel free to contact us by **opening an issue** on the issue board, or, a
 
 ### NOTICE
 
-© 2019-2020 The MITRE Corporation.
+© 2019-2021 The MITRE Corporation.
 
 Approved for Public Release; Distribution Unlimited. Case Number 18-3678.
 
