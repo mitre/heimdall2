@@ -16,7 +16,7 @@ import {UsersModule} from './users/users.module';
   controllers: [AppController],
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'dist', 'frontend')
+      rootPath: join(__dirname, '..', '..', 'frontend')
     }),
     UsersModule,
     DatabaseModule,
