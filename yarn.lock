@@ -3739,7 +3739,7 @@
   resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.0.tgz#215c231dff736d5ba92410e6d602050cce7e273f"
   integrity sha512-eQ9qFW/fhfGJF8WKHGEHZEyVWfZxrT+6CLIJGBcZPfxUh/+BnEj+UCGYMlr9qZuX/2AltsvwrGqp0LhEW8D0zQ==
 
-"@types/validator@*", "@types/validator@^13.0.0":
+"@types/validator@*", "@types/validator@^13.0.0", "@types/validator@^13.1.3":
   version "13.1.3"
   resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.1.3.tgz#366b394aa3fbeed2392bf0a20ded606fa4a3d35e"
   integrity sha512-DaOWN1zf7j+8nHhqXhIgNmS+ltAC53NXqGxYuBhWqWgqolRhddKzfZU814lkHQSTG0IUfQxU7Cg0gb8fFWo2mA==
@@ -5557,9 +5557,9 @@ await-to-js@^2.0.1:
   integrity sha512-CHBC6gQGCIzjZ09tJ+XmpQoZOn4GdWePB4qUweCaKNJ0D3f115YdhmYVTZ4rMVpiJ3cFzZcTYK1VMYEICV4YXw==
 
 aws-sdk@^2.573.0:
-  version "2.826.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.826.0.tgz#000064f8c3a272dac3a8547b1bd4dac4a113fc69"
-  integrity sha512-fuNWmD9gfqrxxPbIIbbTeyEDGaKLqFG9kTXqdaPVpEZhH1xc2UwVJQRA7m+SwfQOcQd6hdS1ii0102DrPiFEdg==
+  version "2.827.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.827.0.tgz#372e37cabf0e8351de6d8f07a8f519bfaaeeae2a"
+  integrity sha512-71PWS1dqJ65/SeNgDQWEgbJ6oKCuB+Ypq30TM3EyzbAHaxl69WjQRK71oJ2bjhdIHfGQJtOV0G9wg4zpge4Erg==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -6699,9 +6699,9 @@ cjs-module-lexer@^0.6.0:
   integrity sha512-uc2Vix1frTfnuzxxu1Hp4ktSvM3QaI4oXl4ZUqL1wjTu/BGki9TrCWoqLTg/drR1KwAEarXuRFCG2Svr1GxPFw==
 
 class-transformer@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/class-transformer/-/class-transformer-0.3.1.tgz#ee681a5439ff2230fc57f5056412d3befa70d597"
-  integrity sha512-cKFwohpJbuMovS8xVLmn8N2AUbAuc8pVo4zEfsUVo8qgECOogns1WVk/FkOZoxhOPTyTYFckuoH+13FO+MQ8GA==
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/class-transformer/-/class-transformer-0.3.2.tgz#779ef5f124784324b40f8e927c774bd96cdecd4b"
+  integrity sha512-9QY6QXBH/+Gt1C3HBmJCrgY6+EFpIa6aLjfDnlXFx0zQl/HjrCE7qoaI0srNrxpMIfsobCpgUdDG5JYtJOpVsw==
 
 class-utils@^0.3.5:
   version "0.3.6"
@@ -6714,12 +6714,13 @@ class-utils@^0.3.5:
     static-extend "^0.1.1"
 
 class-validator@^0.13.0:
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/class-validator/-/class-validator-0.13.0.tgz#87770a90e4f9ac1a928631ae58dc6920299052ff"
-  integrity sha512-PNu14GiCXGqVKrCa7VJbDkA3wgB7ORdVwiK+DexcV0Dbk3UKLeHuD2Pn/BbhiFCcIf7GqChapnpZKaGFfdfVCQ==
+  version "0.13.1"
+  resolved "https://registry.yarnpkg.com/class-validator/-/class-validator-0.13.1.tgz#381b2001ee6b9e05afd133671fbdf760da7dec67"
+  integrity sha512-zWIeYFhUitvAHBwNhDdCRK09hWx+P0HUwFE8US8/CxFpMVzkUK8RJl7yOIE+BVu2lxyPNgeOaFv78tLE47jBIg==
   dependencies:
-    libphonenumber-js "^1.7.57"
-    validator "^13.1.1"
+    "@types/validator" "^13.1.3"
+    libphonenumber-js "^1.9.7"
+    validator "^13.5.2"
 
 clean-css@4.2.x, clean-css@^4.2.3:
   version "4.2.3"
@@ -13511,7 +13512,7 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-libphonenumber-js@^1.7.57:
+libphonenumber-js@^1.9.7:
   version "1.9.7"
   resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.9.7.tgz#51c0a2b600f8d40ff7a65947fe2c1ff7f85268c1"
   integrity sha512-mDY7fCe6dXd1ZUvYr3Q0ZaoqZ1DVXDSjcqa3AMGyudEd0Tyf8PoHkQ+9NucIBy9C/wFITPwL3Ef9SA148q20Cw==
@@ -19938,7 +19939,7 @@ validator@^10.11.0:
   resolved "https://registry.yarnpkg.com/validator/-/validator-10.11.0.tgz#003108ea6e9a9874d31ccc9e5006856ccd76b228"
   integrity sha512-X/p3UZerAIsbBfN/IwahhYaBbY68EN/UQBWHtsbXGT5bfrH/p4NQzUCG1kF/rtKaNpnJ7jAu6NGTdSNtyNIXMw==
 
-validator@^13.1.1:
+validator@^13.5.2:
   version "13.5.2"
   resolved "https://registry.yarnpkg.com/validator/-/validator-13.5.2.tgz#c97ae63ed4224999fb6f42c91eaca9567fe69a46"
   integrity sha512-mD45p0rvHVBlY2Zuy3F3ESIe1h5X58GPfAtslBjY7EtTqGquZTj+VX/J4RnHWN8FKq0C9WRVt1oWAcytWRuYLQ==
