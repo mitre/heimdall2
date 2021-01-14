@@ -24,7 +24,7 @@
       <!-- HTML is sanitized with sanitize-html -->
       <!-- eslint-disable vue/no-v-html -->
       <div
-        class="pa-2 mono text-justify pre-formatted"
+        class="pa-2 mono pre-formatted"
         v-html="sanitize_html(result.code_desc.trim())"
       />
       <!-- eslint-enable vue/no-v-html -->
@@ -34,7 +34,7 @@
       <v-divider />
       <!-- eslint-disable vue/no-v-html -->
       <div
-        class="pa-2 mono text-justify pre-formatted"
+        class="pa-2 mono pre-formatted"
         v-html="sanitize_html(result.message.trim())"
       />
       <!-- eslint-enable vue/no-v-html -->
