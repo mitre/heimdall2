@@ -37,6 +37,7 @@
         :headers="headers"
         :items="files"
         :loading="loading"
+        :sort-by.sync="sortBy"
         :item-key="fileKey"
         :search="search"
         show-select
@@ -100,6 +101,7 @@ export default class LoadFileList extends Vue {
   @Prop({required: true}) readonly headers!: Object[];
   @Prop({type: Boolean, default: false}) readonly loading!: boolean;
   @Prop({type: String, default: 'id'}) readonly fileKey!: string;
+  @Prop({type: String, default: 'filename'}) readonly sortBy!: string;
   @Prop({required: true}) readonly files!: IEvaluation[] | Samples[];
 
   selectedFiles: IEvaluation[] | Samples[] = [];
@@ -125,12 +127,10 @@ export default class LoadFileList extends Vue {
 
   editItem (item: IEvaluation) {
     EvaluationModule.setActiveEvaluation(item);
-    this.activeIndex = this.files.indexOf(EvaluationModule.getActiveEvaluation);
     this.editDialog = true;
   }
 
   deleteItem(item: any) {
-    this.activeIndex = this.files.indexOf(item)
     EvaluationModule.setActiveEvaluation(item);
     this.deleteDialog = true;
   }
@@ -146,7 +146,6 @@ export default class LoadFileList extends Vue {
 
   async deleteItemConfirm(): Promise<void>{
     EvaluationModule.deleteEvaluation().then(() => {
-      this.files.splice(this.activeIndex, 1)
       SnackbarModule.notify("Deleted evaluation successfully.")
     }).catch((error) => {
       SnackbarModule.HTTPFailure(error)

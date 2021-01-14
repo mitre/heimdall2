@@ -27,6 +27,7 @@ import Component, {mixins} from 'vue-class-component';
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
 import LogoutButton from '@/components/generic/LogoutButton.vue';
 import {SnackbarModule} from '@/store/snackbar';
+import {EvaluationModule} from '@/store/evaluations'
 
 import axios from 'axios';
 
@@ -49,7 +50,6 @@ import {Prop, Watch} from 'vue-property-decorator';
 export default class DatabaseReader extends mixins(ServerMixin) {
   @Prop({default: false}) readonly refresh!: Boolean;
 
-  files: IEvaluation[] = [];
   loading: boolean = true;
 
   headers: Object[] = [
@@ -88,7 +88,7 @@ export default class DatabaseReader extends mixins(ServerMixin) {
     axios
       .get<IEvaluation[]>('/evaluations')
       .then((response) => {
-        this.files = response.data;
+        EvaluationModule.setAllEvaluations(response.data)
       })
       .catch((err) => {
         SnackbarModule.failure(`${err}. Please reload the page and try again.`);
@@ -96,6 +96,10 @@ export default class DatabaseReader extends mixins(ServerMixin) {
       .finally(() => {
         this.loading = false;
       });
+  }
+
+  get files(){
+    return EvaluationModule.allEvaluations;
   }
 
   load_results(evaluations: IEvaluation[]): void {

@@ -79,7 +79,6 @@
                     v-model="item.value"
                     label="Edit"
                     single-line
-                    counter
                     autofocus
                   />
                 </template>
@@ -115,6 +114,7 @@ import Modal from '@/components/global/Modal.vue'
 import {Prop} from 'vue-property-decorator';
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations';
+import { ICreateEvaluationTag, IEvaluationTag } from '@heimdall/interfaces';
 
 @Component({
   components: {
@@ -128,6 +128,7 @@ export default class EditEvaluationModal extends Vue {
   deleteTagDialog: boolean = false;
   showSelf: boolean = this.visible;
   awaitingFinishTyping: boolean = false;
+  activeTag: any = {};
 
   headers: Object[] = [
     {
@@ -141,45 +142,42 @@ export default class EditEvaluationModal extends Vue {
   ];
 
   get filename() {
-    return EvaluationModule.activeEvaluation.filename;
-  }
-
-  // Limit how many requests we are sending to the server
-  set filename(filename: string) {
-    EvaluationModule.setActiveEvaluationFilename(filename);
+    return EvaluationModule.activeFilename;
   }
 
   get tags() {
-    return EvaluationModule.activeEvaluation.evaluationTags;
+    return EvaluationModule.activeTags;
   }
 
-  get activeTag() {
-    return EvaluationModule.activeTag;
+
+  set filename(filename: string) {
+    EvaluationModule.setActiveEvaluationFilename(filename)
   }
+
 
   async deleteTag(tag: any) {
     EvaluationModule.deleteTag(tag).then((response) => {
       SnackbarModule.notify("Deleted tag successfully.")
-      EvaluationModule.updateEvaluation()
+      this.$emit('updateEvaluations')
     }).catch((error) => {
       SnackbarModule.HTTPFailure(error)
-    });;
+    });
   }
 
   async updateTag(tag: any) {
     EvaluationModule.updateTag(tag).then((response) => {
       SnackbarModule.notify("Updated tag successfully.")
-      EvaluationModule.updateEvaluation()
+      this.$emit('updateEvaluations')
     }).catch((error) => {
       SnackbarModule.HTTPFailure(error)
-    });;
+    });
   }
 
   async commitTag(): Promise<void> {
-    EvaluationModule.addTagToActiveEvaluation().then((response) => {
-      SnackbarModule.notify("Added tag successfully.")
-      EvaluationModule.updateEvaluation()
-      this.$emit('updateEvaluations')
+    EvaluationModule.commitTag(this.activeTag).then((response) => {
+      SnackbarModule.notify("Added tag successfully.");
+      EvaluationModule.addTagToActiveEvaluation(response.data)
+      this.activeTag = {};
     }).catch((error) => {
       SnackbarModule.HTTPFailure(error)
     });
@@ -187,7 +185,7 @@ export default class EditEvaluationModal extends Vue {
   }
 
   async updateEvaluation(): Promise<void> {
-    EvaluationModule.updateEvaluation();
+    await EvaluationModule.updateEvaluation();
     this.$emit('closeEditModal')
     this.$emit('updateEvaluations')
   }
