@@ -52,12 +52,26 @@
                         Login
                       </v-btn>
                     </v-col>
-                    <v-row
-                      class="fill-height flex-column flex-nowrap"
-                      align="end"
-                      align-content="right"
-                      justify="right"
-                    >
+                    <v-col cols="auto">
+                      <v-btn
+                        id="sign_up_button"
+                        depressed
+                        large
+                        @click="signup"
+                      >
+                        Sign Up
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-form>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer />
+
+                <v-container fluid>
+                  <v-row align="center"> <v-divider />OR<v-divider /> </v-row>
+                  <div class="container d-flex flex-column">
+                    <v-row justify="space-between">
                       <v-col cols="auto">
                         <v-btn
                           v-if="authStrategySupported('google')"
@@ -92,16 +106,8 @@
                         </v-btn></v-col
                       >
                     </v-row>
-                  </v-row>
-                </v-form>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer />
-                <div class="my-2">
-                  <v-btn id="sign_up_button" depressed small @click="signup">
-                    Sign Up
-                  </v-btn>
-                </div>
+                  </div>
+                </v-container>
               </v-card-actions>
             </v-card>
           </v-col>
