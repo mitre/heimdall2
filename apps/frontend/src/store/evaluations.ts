@@ -17,7 +17,7 @@ import {
 })
 export class Evaluation extends VuexModule {
   allEvaluations: IEvaluation[] = [];
-  activeEvaluation: number = -1;
+  activeEvaluation = -1;
 
   @Action
   setAllEvaluations(evaluations: IEvaluation[]) {
