@@ -23,8 +23,8 @@
       <v-divider />
       <!-- HTML is sanitized with sanitize-html -->
       <!-- eslint-disable vue/no-v-html -->
-      <pre
-        class="pa-2 mono text-justify"
+      <div
+        class="pa-2 mono pre-formatted"
         v-html="sanitize_html(result.code_desc.trim())"
       />
       <!-- eslint-enable vue/no-v-html -->
@@ -34,7 +34,7 @@
       <v-divider />
       <!-- eslint-disable vue/no-v-html -->
       <div
-        class="pa-2 mono text-justify"
+        class="pa-2 mono pre-formatted"
         v-html="sanitize_html(result.message.trim())"
       />
       <!-- eslint-enable vue/no-v-html -->
@@ -70,5 +70,9 @@ export default class ControlRowCol extends mixins(HtmlSanitizeMixin) {
 
 button.unclickable-button {
   pointer-events: none;
+}
+
+.pre-formatted {
+  white-space: pre-wrap;
 }
 </style>
