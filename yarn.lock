@@ -2417,12 +2417,12 @@
     fs-extra "9.0.1"
     pluralize "8.0.0"
 
-"@nestjs/sequelize@^0.1.0":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@nestjs/sequelize/-/sequelize-0.1.1.tgz#1e4c7280eee4cb6f5265054bb929b4736d42edf6"
-  integrity sha512-WWClzAQx8LuCz8w608v+mLWT6vkq8AE1eMy62ra6BA7E+UzF0A5WKqwNjEpfIYRqQycANdiVHM6iS6uMHC4y7w==
+"@nestjs/sequelize@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@nestjs/sequelize/-/sequelize-0.2.0.tgz#11751eb348ecfbe2383360795c53c6d810c7e9ce"
+  integrity sha512-uS8mf+ReIE03Vzda2+/Ner0IGLYITLUml061CprADntgua4K3TnLVLt717HgqtdwYyrAPQNu/LxUBhCINEBxnQ==
   dependencies:
-    uuid "8.3.0"
+    uuid "8.3.2"
 
 "@nestjs/serve-static@^2.1.3":
   version "2.1.4"
@@ -19735,11 +19735,6 @@ uuid@3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
   integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
-
-uuid@8.3.0:
-  version "8.3.0"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.0.tgz#ab738085ca22dc9a8c92725e459b1d507df5d6ea"
-  integrity sha512-fX6Z5o4m6XsXBdli9g7DtWgAx+osMsRRZFKma1mIUsLCz6vRvv+pz5VNbyu9UEDzpMWulZfvpgb/cmDXVulYFQ==
 
 uuid@8.3.2, uuid@^8.0.0, uuid@^8.3.0:
   version "8.3.2"
