@@ -105,6 +105,19 @@
                           <div class="pl-2">Login with GitLab</div>
                         </v-btn></v-col
                       >
+                      <v-col cols="auto"
+                        ><v-btn
+                          v-if="authStrategySupported('okta')"
+                          plain
+                          @click="oauthLogin('okta')"
+                        >
+                          <v-img
+                            height="32"
+                            :src="require('@/assets/okta_mark.png')"
+                          />
+                          <div class="pl-2">Login with Okta</div>
+                        </v-btn></v-col
+                      >
                     </v-row>
                   </div>
                 </v-container>

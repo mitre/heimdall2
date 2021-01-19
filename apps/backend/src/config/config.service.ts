@@ -10,7 +10,7 @@ export class ConfigService {
   }
 
   frontendStartupSettings(): StartupSettingsDto {
-    const supportedOauth: string[] = ['github', 'gitlab', 'google'];
+    const supportedOauth: string[] = ['github', 'gitlab', 'google', 'okta'];
     const enabledOauth: string[] = [];
     supportedOauth.forEach((oauthStrategy) => {
       if (this.get(`${oauthStrategy.toUpperCase()}_CLIENTID`)) {
