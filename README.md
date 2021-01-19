@@ -228,15 +228,61 @@ curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer beare
 
 ## For Developers
 
-The development installation process is the same as a native install for steps 1 through 5.
-
 ### How to Install
 
-Once you've completed steps 1 through 5 of the native install it is possible to start heimdall-server using the following command:
+If you would like to change Heimdall to your needs, Heimdall has 'Development Mode' you can use, where if you make changes to the code, the app will automattically rebuild itself and use those changes. Please note that you should *not* run development mode when deploying Heimdall for general usage. To get started on a Debian-based distribution, follow these steps:
 
-    yarn run start:dev
+1. Install system dependencies:
 
-This will start both the frontend and backend in development mode, meaning any changes you make to the source code will take effect immediately. 
+   - ```bash
+     sudo apt install postgresql nodejs nano git
+     sudo npm install -g yarn
+     ```
+
+2. Download and extract the most recent release from our [releases page](https://github.com/mitre/heimdall2/releases) using wget:
+
+   - ```bash
+     git clone https://github.com/mitre/heimdall2
+     ```
+   
+3. Create the Postgres role:
+
+   - ```sql
+     # Start the Postgres terminal
+     psql postgres
+     
+     # Create the user
+     CREATE USER <username> with encrypted password '<password>';
+     ALTER USER <username> CREATEDB;
+     \q
+     ```
+
+4. Install project dependencies:
+
+   - ```bash
+     cd heimdall2
+     yarn install
+     ```
+
+5. Edit your .env file and create the database:
+
+   - ```bash
+     nano apps/backend/.env-example
+     # Replace the comments with your values, if you want the default value, you can delete the line.
+     mv apps/backend/.env-example apps/backend/.env
+     yarn backend sequelize-cli db:create
+     yarn backend sequelize-cli db:migrate
+     yarn backend sequelize-cli db:seed:all
+     ```
+
+6. Start Heimdall:
+   
+   - ```bash
+     yarn start:dev
+     ```
+
+
+This will start both the frontend and backend in development mode, meaning any changes you make to the source code will take effect immediately. Please note we already have a Visual Studio Code workspace file you can use to organize your workspace.
 
 ### Developing Heimdall Lite Standalone
 
