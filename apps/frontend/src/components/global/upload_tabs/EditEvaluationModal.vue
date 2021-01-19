@@ -114,6 +114,7 @@ import Modal from '@/components/global/Modal.vue'
 import {Prop} from 'vue-property-decorator';
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations';
+import { IEvaluationTag, IUpdateEvaluationTag } from '@heimdall/interfaces';
 
 @Component({
   components: {
@@ -127,7 +128,10 @@ export default class EditEvaluationModal extends Vue {
   deleteTagDialog: boolean = false;
   showSelf: boolean = this.visible;
   awaitingFinishTyping: boolean = false;
-  activeTag: any = {};
+  activeTag: IUpdateEvaluationTag = {
+    id: '-1',
+    value: ''
+  };
 
   headers: Object[] = [
     {
@@ -176,7 +180,10 @@ export default class EditEvaluationModal extends Vue {
     EvaluationModule.commitTag(this.activeTag).then((response) => {
       SnackbarModule.notify("Added tag successfully.");
       EvaluationModule.addTagToActiveEvaluation(response.data)
-      this.activeTag = {};
+      this.activeTag = {
+        id: '-1',
+        value: ''
+    };
     }).catch((error) => {
       SnackbarModule.HTTPFailure(error)
     });

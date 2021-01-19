@@ -35,14 +35,13 @@
         v-model="selectedFiles"
         dense
         :headers="headers"
-        :items="files"
+        :items="filteredFiles"
         :loading="loading"
         :sort-by.sync="sortBy"
         :item-key="fileKey"
         :search="search"
         show-select
         mobile-breakpoint="0"
-        class=""
       >
         <template #[`item.filename`]="{item}">
           <span
@@ -88,9 +87,10 @@ import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationM
 
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations'
-import {IEvaluation} from '@heimdall/interfaces';
+import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
-import {Samples} from 'aws-sdk/clients/devicefarm';
+import {Sample, Samples} from 'aws-sdk/clients/devicefarm';
+import { readSync } from 'fs';
 
 @Component({
   components: {
@@ -142,6 +142,31 @@ export default class LoadFileList extends Vue {
     }).catch((error) => {
       SnackbarModule.HTTPFailure(error)
     });
+  }
+
+  filterEvaluationTags(file: IEvaluation, search: string) {
+    let result = false;
+    file.evaluationTags?.forEach((tag) => {
+      if (tag.value.toLowerCase().includes(search.toLowerCase())) {
+        result = true;
+      };
+    })
+    return result
+  }
+
+  get filteredFiles() {
+    let matches: any[] = []
+    if (this.search != '') {
+      (this.files as Array<any>).forEach(async (item: any) => {
+        if (this.filterEvaluationTags(item, this.search) || item.filename.toLowerCase().includes(this.search)) {
+          matches.push(item)
+        }
+      })
+    } else {
+      return this.files;
+    }
+    console.log(matches)
+    return matches
   }
 
   async deleteItemConfirm(): Promise<void>{

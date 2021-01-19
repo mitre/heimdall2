@@ -1,6 +1,6 @@
 <template>
   <v-card class="elevation-0">
-    <v-container class="py-0 pl-0 ml-0 pr-0 ml-0">
+    <v-container class="ma-0 pa-0">
       <v-row>
         <v-col cols="9">
           <v-card-subtitle>
