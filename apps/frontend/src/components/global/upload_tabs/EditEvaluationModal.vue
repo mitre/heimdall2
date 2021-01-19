@@ -114,7 +114,7 @@ import Modal from '@/components/global/Modal.vue'
 import {Prop} from 'vue-property-decorator';
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations';
-import { IEvaluationTag, IUpdateEvaluationTag } from '@heimdall/interfaces';
+import {IUpdateEvaluationTag} from '@heimdall/interfaces';
 
 @Component({
   components: {

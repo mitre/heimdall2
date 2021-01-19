@@ -87,10 +87,9 @@ import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationM
 
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations'
-import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
+import {IEvaluation} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
-import {Sample, Samples} from 'aws-sdk/clients/devicefarm';
-import { readSync } from 'fs';
+import {Samples} from 'aws-sdk/clients/devicefarm';
 
 @Component({
   components: {
