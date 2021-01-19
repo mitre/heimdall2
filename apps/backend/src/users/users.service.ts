@@ -46,7 +46,7 @@ export class UsersService {
     user.lastName = createUserDto.lastName || undefined;
     user.title = createUserDto.title || undefined;
     user.organization = createUserDto.organization || undefined;
-    user.role = createUserDto.role;
+    user.role = createUserDto.role || 'user';
     try {
       user.encryptedPassword = await hash(createUserDto.password, 14);
     } catch {
