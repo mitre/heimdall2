@@ -36,10 +36,7 @@
                   <v-col cols="12" :class="detail.class">
                     <h3>{{ detail.name }}:</h3>
                     <!-- eslint-disable vue/no-v-html -->
-                    <h4
-                      class="mono preserve-whitespace"
-                      v-html="sanitize_html(detail.value)"
-                    />
+                    <h4 class="mono" v-html="sanitize_html(detail.value)" />
                     <!-- eslint-enable vue/no-v-html -->
                   </v-col>
                   <v-divider />
