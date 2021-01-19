@@ -39,7 +39,6 @@
         :loading="loading"
         :sort-by.sync="sortBy"
         :item-key="fileKey"
-        :search="search"
         show-select
         mobile-breakpoint="0"
       >
