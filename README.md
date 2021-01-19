@@ -72,7 +72,7 @@ Heimdall Lite is published to npmjs.org and is available [here](https://www.npmj
 
 #### Running via npm
 
-To run Heimdall Lite locally, just use the `npm` built-in utility `npx`: 
+To run Heimdall Lite locally, just use the `npm` built-in utility `npx`:
 
 ```bash
 npx heimdall-lite
@@ -146,65 +146,6 @@ From the source directory you started from run:
 ```bash
 docker-compose down
 ```
-
----
-
-### Heimdall Server - Native (Advanced)
-
-If you have your own database service, and would like to run Heimdall on your own server, you can do that as well. Instructions are only provided for a distributions with apt as a package manager (such as [Ubuntu Server](https://ubuntu.com/download/server)), however, the steps are the same for other distributions after installing dependencies.  
-
-1. Install system dependencies:
-
-   - ```bash
-     sudo apt install postgresql nodejs wget nano
-     sudo npm install -g yarn
-     ```
-
-2. Download and extract the most recent release from our [releases page](https://github.com/mitre/heimdall2/releases) using wget:
-
-   - ```bash
-     wget <latest release>
-     unzip <file name>
-     ```
-
-3. Create the Postgres role:
-
-   - ```sql
-     # Start the Postgres terminal
-     psql postgres
-     
-     # Create the user
-     CREATE USER <username> with encrypted password '<password>';
-     ALTER USER <username> CREATEDB;
-     \q
-     ```
-
-4. Install project dependencies:
-
-   - ```bash
-     cd <directory>
-     yarn install
-     ```
-
-5. Edit your .env file and create the database:
-
-   - ```bash
-     nano apps/backend/.env-example
-     # Replace the comments with your values, if you want the default value, you can delete the line.
-     mv apps/backend/.env-example apps/backend/.env
-     yarn backend sequelize-cli db:create
-     yarn backend sequelize-cli db:migrate
-     yarn backend sequelize-cli db:seed:all
-     ```
-
-6. Build  and start the app:
-
-   - ```
-     yarn build
-     yarn start
-     ```
-
-7. Heimdall server is now running. You can visit Heimdall on your server's IP on port 3000, unless you used a different port.
 
 
 
