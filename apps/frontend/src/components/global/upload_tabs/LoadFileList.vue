@@ -89,7 +89,8 @@ import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations'
 import {IEvaluation} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
-import {Samples} from 'aws-sdk/clients/devicefarm';
+import {Sample, Samples} from 'aws-sdk/clients/devicefarm';
+import { Evaluation } from '../../../types/models';
 
 @Component({
   components: {
@@ -105,7 +106,7 @@ export default class LoadFileList extends Vue {
 
   selectedFiles: IEvaluation[] | Samples[] = [];
   activeIndex: number = -1;
-  activeItem: any = {};
+  activeItem: Evaluation | Sample = {};
 
   editDialog: boolean = false;
   deleteDialog: boolean = false;
