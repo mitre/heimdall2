@@ -14,10 +14,10 @@ export default class ResultsPageVerifier {
       'Meta profile for Acme Inc'
     ];
     const correctCards: string[] = [
-      'Passed: 0',
-      'Failed: 3',
-      'Not Applicable: 0',
-      'Not Reviewed: 0'
+      'Passed: 5',
+      'Failed: 60',
+      'Not Applicable: 1',
+      'Not Reviewed: 35'
     ];
     cy.get('[data-cy=profileInfoFields]').then((result) => {
       expect(result[0].innerText).to.exist;
