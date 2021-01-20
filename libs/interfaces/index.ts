@@ -6,6 +6,8 @@ export * from './evaluation-tag/update-evaluation-tag.interface';
 export * from './evaluation/create-evaluation.interface';
 export * from './evaluation/evaluation.interface';
 export * from './evaluation/update-evaluation.interface';
+export * from './group/create-group.interface';
+export * from './group/group.interface';
 export * from './user/create-user.interface';
 export * from './user/delete-user.interface';
 export * from './user/update-user.interface';

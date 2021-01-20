@@ -7,6 +7,9 @@ export class UpdateEvaluationDto implements IUpdateEvaluation {
   readonly filename: string | undefined;
 
   @IsOptional()
+  readonly groups: string[] | undefined;
+
+  @IsOptional()
   @IsObject()
   readonly data: Record<string, any> | undefined;
 }
