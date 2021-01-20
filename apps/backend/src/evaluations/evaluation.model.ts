@@ -16,7 +16,7 @@ import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {User} from '../users/user.model';
 
 @Table
-export class Evaluation extends Model<Evaluation> {
+export class Evaluation extends Model {
   @PrimaryKey
   @AutoIncrement
   @AllowNull(false)
