@@ -88,7 +88,6 @@
                       <v-text-field
                         id="username_field"
                         v-model="username"
-                        :error-messages="requiredFieldError($v.username)"
                         name="username"
                         label="Username"
                         prepend-icon="mdi-account"
@@ -158,9 +157,6 @@ export interface LDAPLoginHash {
     email: {
       required,
       email
-    },
-    username: {
-      required
     },
     password: {
       required
