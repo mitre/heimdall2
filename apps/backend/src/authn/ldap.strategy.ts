@@ -8,8 +8,8 @@ import {AuthnService} from './authn.service';
 @Injectable()
 export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
   constructor(
-    private authnService: AuthnService,
-    private configService: ConfigService
+    private readonly authnService: AuthnService,
+    private readonly configService: ConfigService
   ) {
     super(
       {

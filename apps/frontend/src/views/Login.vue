@@ -13,7 +13,7 @@
               </v-toolbar>
               <v-tabs
                 active
-                :value="active_tab"
+                :value="activeTab"
                 background-color="primary darken-1"
                 color="primary-visible"
                 show-arrows
@@ -139,7 +139,7 @@ import {LocalStorageVal} from '@/utilities/helper_util';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
 
-const login_tab = new LocalStorageVal<string>('login_curr_tab');
+const lastLoginTab = new LocalStorageVal<string>('login_curr_tab');
 
 export interface LoginHash {
   email: string;
@@ -167,7 +167,7 @@ export default class Login extends Vue {
   email: string = '';
   username: string = '';
   password: string = '';
-  active_tab: string = login_tab.get_default('logintab-standard')
+  activeTab: string = lastLoginTab.get_default('logintab-standard')
 
   mounted() {
     if(!ServerModule.ldap){

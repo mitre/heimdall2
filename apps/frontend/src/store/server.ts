@@ -140,21 +140,24 @@ class Server extends VuexModule implements IServerState {
       });
   }
 
+  @Action
+  public async handleLogin(data: {userID: string; accessToken: string}) {
+    this.context.commit('SET_USERID', data.userID);
+    this.context.commit('SET_TOKEN', data.accessToken);
+    this.GetUserInfo();
+  }
+
   @Action({rawError: true})
   public async Login(userInfo: {email: string; password: string}) {
-    return axios.post('/authn/login', userInfo).then(({data}) => {
-      this.context.commit('SET_TOKEN', data.accessToken);
-      this.context.commit('SET_USERID', data.userID);
-      this.GetUserInfo();
+    return axios.post('/authn/login', userInfo).then((response) => {
+      this.handleLogin(response.data);
     });
   }
 
   @Action({rawError: true})
   public async LoginLDAP(userInfo: {username: string; password: string}) {
-    return axios.post('/authn/login/ldap', userInfo).then(({data}) => {
-      this.context.commit('SET_TOKEN', data.accessToken);
-      this.context.commit('SET_USERID', data.userID);
-      this.GetUserInfo();
+    return axios.post('/authn/login/ldap', userInfo).then((response) => {
+      this.handleLogin(response.data);
     });
   }
 

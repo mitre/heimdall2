@@ -11,7 +11,7 @@ import {UsersService} from '../users/users.service';
 export class AuthnService {
   constructor(
     private usersService: UsersService,
-    private configService: ConfigService,
+    private readonly configService: ConfigService,
     private jwtService: JwtService
   ) {}
 

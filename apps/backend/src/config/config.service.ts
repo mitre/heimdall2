@@ -33,7 +33,7 @@ export class ConfigService {
   frontendStartupSettings(): StartupSettingsDto {
     return new StartupSettingsDto({
       banner: this.get('WARNING_BANNER') || '',
-      ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() == 'true' || false
+      ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false
     });
   }
 
