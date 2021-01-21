@@ -16,7 +16,24 @@ async function bootstrap() {
   app.use(
     helmet.contentSecurityPolicy({
       directives: {
-        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        // These are the defaults from helmet, except upgrade-insecure-requests
+        // is removed since it causes issues for users trying to run over http
+        // https://github.com/mitre/heimdall2/issues/787
+        // This whole block can be changed back to
+        // ...helmet.contentSecurityPolicy.getDefaultDirectives()
+        // If heimdall begins providing users with an easy way to generate a SSL
+        // certificate as part of deployment.
+        'base-uri': ["'self'"],
+        'block-all-mixed-content': [],
+        'default-src': ["'self'"],
+        'font-src': ["'self'", 'https:', 'data:'],
+        'frame-ancestors': ["'self'"],
+        'img-src': ["'self'", 'data:'],
+        'object-src': ["'none'"],
+        'script-src': ["'self'"],
+        'script-src-attr': ["'none'"],
+        'style-src': ["'self'", 'https:', "'unsafe-inline'"],
+        // This is the only setting that is different from the defaults.
         'connect-src': ["'self'", 'https://api.github.com']
       }
     })
