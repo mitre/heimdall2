@@ -81,7 +81,7 @@ export default class LocalLogin extends Vue {
   }
 
   login() {
-    let creds: LoginHash = {
+    const creds: LoginHash = {
       email: this.email,
       password: this.password
     };
