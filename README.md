@@ -170,7 +170,7 @@ To run Heimdall Server, Postgresql must be installed and a user account must exi
 
     # Start the Postgres terminal
     psql postgres
-    
+
     # Create the user
     CREATE USER <username> with encrypted password '<password>';
     ALTER USER <username> CREATEDB;
@@ -180,7 +180,9 @@ Then, the following one-time steps must be performed:
 
     cp apps/backend/.env-example apps/backend/.env
     # Edit /apps/backend/.env to reflect the appropriate configuration for your system
-    
+    yarn backend sequelize-cli db:create
+    yarn backend sequelize-cli db:migrate
+    yarn backend sequelize-cli db:seed:all
 
 Once the above steps are completed it is possible to start heimdall-server using the following command
 
