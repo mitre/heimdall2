@@ -129,7 +129,7 @@ export default class LoadFileList extends Vue {
     this.editDialog = true;
   }
 
-  deleteItem(item: any) {
+  deleteItem(item: IEvaluation) {
     EvaluationModule.setActiveEvaluation(item);
     this.deleteDialog = true;
   }
