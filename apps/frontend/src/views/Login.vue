@@ -202,7 +202,7 @@ export default class Login extends Vue {
   }
 
   ldapLogin() {
-    let creds: LDAPLoginHash = {
+    const creds: LDAPLoginHash = {
       username: this.username,
       password: this.password
     };
