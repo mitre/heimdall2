@@ -12,7 +12,7 @@ import {
 import {Evaluation} from '../evaluations/evaluation.model';
 
 @Table
-export class EvaluationTag extends Model<EvaluationTag> {
+export class EvaluationTag extends Model {
   @PrimaryKey
   @AutoIncrement
   @AllowNull(false)
