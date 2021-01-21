@@ -13,7 +13,7 @@ services:
     expose:
       - "5432"
   server:
-    image: mitre/heimdall2
+    image: mitre/heimdall2:release-latest
     restart: unless-stopped
     environment:
       - NODE_ENV=production
