@@ -14,7 +14,7 @@ import {
 } from 'sequelize-typescript';
 
 @Table
-export class User extends Model<User> {
+export class User extends Model {
   @PrimaryKey
   @AutoIncrement
   @AllowNull(false)

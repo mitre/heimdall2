@@ -4,21 +4,6 @@ import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
 import {DatabaseService} from './database.service';
 
-function getDatabaseName(configService: ConfigService): string {
-  const databaseName = configService.get('DATABASE_NAME');
-  const nodeEnvironment = configService.get('NODE_ENV');
-
-  if (databaseName !== undefined) {
-    return databaseName;
-  } else if (nodeEnvironment !== undefined) {
-    return `heimdall-server-${nodeEnvironment.toLowerCase()}`;
-  } else {
-    throw new TypeError(
-      'NODE_ENV and DATABASE_NAME are undefined. Unable to set database or use the default based on environment.'
-    );
-  }
-}
-
 function getSynchronize(configService: ConfigService): boolean {
   const nodeEnvironment = configService.get('NODE_ENV');
   if (nodeEnvironment === undefined) {
@@ -34,12 +19,7 @@ function getSynchronize(configService: ConfigService): boolean {
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        dialect: 'postgres',
-        host: configService.get('DATABASE_HOST') || '127.0.0.1',
-        port: Number(configService.get('DATABASE_PORT')) || 5432,
-        username: configService.get('DATABASE_USERNAME') || 'postgres',
-        password: configService.get('DATABASE_PASSWORD') || '',
-        database: getDatabaseName(configService),
+        ...configService.getDbConfig(),
         autoLoadModels: true,
         synchronize: getSynchronize(configService),
         logging: false,
