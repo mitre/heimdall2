@@ -46,7 +46,7 @@ export class AuthnService {
         lastName: lastName,
         organization: '',
         title: '',
-        role: ''
+        role: 'user'
       };
       await this.usersService.create(createUser);
       user = await this.usersService.findByEmail(email);
