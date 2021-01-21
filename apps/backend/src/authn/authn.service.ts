@@ -32,7 +32,7 @@ export class AuthnService {
     email: string,
     firstName: string,
     lastName: string
-  ): Promise<any> {
+  ): Promise<User> {
     let user: User;
     try {
       user = await this.usersService.findByEmail(email);

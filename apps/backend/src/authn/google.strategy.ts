@@ -2,6 +2,7 @@ import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import {OAuth2Strategy} from 'passport-google-oauth';
 import {ConfigService} from '../config/config.service';
+import {User} from '../users/user.model';
 import {AuthnService} from './authn.service';
 
 @Injectable()
@@ -26,7 +27,7 @@ export class GoogleStrategy extends PassportStrategy(OAuth2Strategy, 'google') {
     profile: {
       [key: string]: any;
     }
-  ): Promise<any> {
+  ): Promise<User> {
     const {name, emails} = profile;
     const user = {
       email: emails[0],

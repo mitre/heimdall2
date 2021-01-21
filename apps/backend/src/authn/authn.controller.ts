@@ -11,32 +11,38 @@ export class AuthnController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Req() req: Request): Promise<any> {
+  async login(
+    @Req() req: Request
+  ): Promise<{userID: string; accessToken: string}> {
     return this.authnService.login(req.user as User);
   }
 
   @Get('github')
   @UseGuards(AuthGuard('github'))
-  async loginToGithub(@Req() req: Request): Promise<any> {
+  async loginToGithub(
+    @Req() req: Request
+  ): Promise<{userID: string; accessToken: string}> {
     return this.authnService.login(req.user as User);
   }
 
   @Get('github/callback')
   @UseGuards(AuthGuard('github'))
-  async getUserFromGithubLogin(@Req() req: Request): Promise<any> {
+  async getUserFromGithubLogin(@Req() req: Request): Promise<void> {
     const session = await this.authnService.login(req.user as User);
     await this.setSessionCookies(req, session);
   }
 
   @Get('gitlab')
   @UseGuards(AuthGuard('gitlab'))
-  async loginToGitlab(@Req() req: Request): Promise<any> {
+  async loginToGitlab(
+    @Req() req: Request
+  ): Promise<{userID: string; accessToken: string}> {
     return this.authnService.login(req.user as User);
   }
 
   @Get('gitlab/callback')
   @UseGuards(AuthGuard('gitlab'))
-  async getUserFromGitlabLogin(@Req() req: Request): Promise<any> {
+  async getUserFromGitlabLogin(@Req() req: Request): Promise<void> {
     const session = await this.authnService.login(req.user as User);
     await this.setSessionCookies(req, session);
   }
@@ -49,20 +55,22 @@ export class AuthnController {
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  async getUserFromGoogle(@Req() req: Request): Promise<any> {
+  async getUserFromGoogle(@Req() req: Request): Promise<void> {
     const session = await this.authnService.login(req.user as User);
     await this.setSessionCookies(req, session);
   }
 
   @Get('okta')
   @UseGuards(AuthGuard('okta'))
-  async loginToOkta(@Req() req: Request): Promise<any> {
+  async loginToOkta(
+    @Req() req: Request
+  ): Promise<{userID: string; accessToken: string}> {
     return this.authnService.login(req.user as User);
   }
 
   @Get('okta/callback')
   @UseGuards(AuthGuard('okta'))
-  async getUserFromOkta(@Req() req: Request): Promise<any> {
+  async getUserFromOkta(@Req() req: Request): Promise<void> {
     const session = await this.authnService.login(req.user as User);
     await this.setSessionCookies(req, session);
   }

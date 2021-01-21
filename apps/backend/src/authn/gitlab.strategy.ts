@@ -2,6 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import {Strategy} from 'passport-gitlab2';
 import {ConfigService} from '../config/config.service';
+import {User} from '../users/user.model';
 import {AuthnService} from './authn.service';
 
 @Injectable()
@@ -25,7 +26,7 @@ export class GitlabStrategy extends PassportStrategy(Strategy, 'gitlab') {
     profile: {
       [key: string]: any;
     }
-  ): Promise<any> {
+  ): Promise<User> {
     const email = profile.emails[0].value;
     const {firstName, lastName} = this.authnService.splitName(
       profile._json.name
