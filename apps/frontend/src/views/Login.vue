@@ -45,7 +45,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import {ServerModule} from '@/store/server';
 import LocalLogin from '@/components/global/login/LocalLogin.vue'
