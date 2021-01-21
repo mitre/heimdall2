@@ -156,7 +156,7 @@ export default class LoadFileList extends Vue {
   get filteredFiles() {
     let matches: any[] = []
     if (this.search != '') {
-      (this.files as Array<any>).forEach(async (item: any) => {
+      (this.files as Array<IEvaluation | Sample>).forEach(async (item: any) => {
         if (this.filterEvaluationTags(item, this.search) || item.filename.toLowerCase().includes(this.search)) {
           matches.push(item)
         }
@@ -164,7 +164,6 @@ export default class LoadFileList extends Vue {
     } else {
       return this.files;
     }
-    console.log(matches)
     return matches
   }
 

@@ -43,7 +43,7 @@ export class EvaluationTagsController {
   async update(
     @Param('id') id: string,
     @Body() updateEvaluationTagDto: UpdateEvaluationTagDto
-  ): Promise<any> {
+  ): Promise<EvaluationTagDto> {
     return this.evaluationTagsService.update(id, updateEvaluationTagDto);
   }
 
