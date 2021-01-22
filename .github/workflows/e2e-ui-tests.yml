@@ -28,9 +28,10 @@ jobs:
           - 5432:5432
       openldap:
         image: osixia/openldap
+        command: --copy-service
         volumes:
-          - ./.github/ldap/ldif/bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom.ldif
-          - ./.github/ldap/schema/bootstrap.schema:/container/service/slapd/assets/config/bootstrap/schema/custom.schema
+          - $(pwd)/.github/ldap/ldif/bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom.ldif
+          - $(pwd)/.github/ldap/schema/bootstrap.schema:/container/service/slapd/assets/config/bootstrap/schema/custom.schema
         env:
           LDAP_DOMAIN: example.com
           ADMIN_PASSWORD: ${{ secrets.LDAP_ADMIN_PASSWORD }}
