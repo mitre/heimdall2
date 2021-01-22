@@ -19,6 +19,16 @@ jobs:
           POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
+      openldap:
+        image: osixia/openldap
+        container_name: osixia/openldap
+        env:
+          - LDAP_DOMAIN=example.com
+          - ADMIN_PASSWORD=${{ secrets.LDAP_ADMIN_PASSWORD }}
+          - LDAP_READONLY_USER=true
+        ports:
+          - 389:389
+
 
     steps:
      - uses: actions/checkout@v2
@@ -62,6 +72,13 @@ jobs:
        uses: cypress-io/github-action@v2
        with:
          start: yarn start
+         env:
+          - LDAP_ENABLED=true 
+          - LDAP_HOST=openldap
+          - LDAP_BINDDN="cn=admin,dc=example,dc=com"
+          - LDAP_PASSWORd=${{ secrets.LDAP_ADMIN_PASSWORD }}
+          - LDAP_SEARCHFILTER=(cn={{username}})
+          - LDAP_NAMEFIELD=cn
          wait-on: http://127.0.0.1:3000
 
      - name: Upload test screenshots
