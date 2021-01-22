@@ -37,7 +37,7 @@
     }
   },
   "dependencies": {
-    "@casl/ability": "^4.1.6",
+    "@casl/ability": "^5.1.2",
     "@heimdall/interfaces": "^2.3.6",
     "@nestjs/cli": "^7.1.5",
     "@nestjs/common": "^7.0.13",
