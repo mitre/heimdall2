@@ -15,7 +15,8 @@ jobs:
       LDAP_ENABLED: true
       LDAP_HOST: openldap
       LDAP_BINDDN: cn=admin,dc=example,dc=com
-      LDAP_PASSWORd: ${{ secrets.LDAP_ADMIN_PASSWORD }}
+      LDAP_PASSWORD: ${{ secrets.LDAP_ADMIN_PASSWORD }}
+      LDAP_SEARCHBASE: dc=example,dc=com
       LDAP_SEARCHFILTER: (cn={{username}})
       LDAP_NAMEFIELD: cn
     services:
@@ -27,9 +28,13 @@ jobs:
           - 5432:5432
       openldap:
         image: osixia/openldap
+        volumes:
+          - ./.github/ldap/ldif/bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom.ldif
+          - ./.github/ldap/schema/bootstrap.schema:/container/service/slapd/assets/config/bootstrap/schema/custom.schema
         env:
           LDAP_DOMAIN: example.com
           ADMIN_PASSWORD: ${{ secrets.LDAP_ADMIN_PASSWORD }}
+          LDAP_SEED_INTERNAL_LDIF_PATH: 
           LDAP_READONLY_USER: true
         ports:
           - 389:389

@@ -1,0 +1,13 @@
+version: 1
+
+
+dn: uid=heimdall,dc=example,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+objectClass: top
+cn: Heimdall User
+sn: heimdall
+mail: heimdall@example.com
+uid: heimdall
+userPassword: 859wvXEG4TGgYyWZ
