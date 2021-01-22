@@ -21,7 +21,6 @@ jobs:
           - 5432:5432
       openldap:
         image: osixia/openldap
-        container_name: openldap
         env:
           - LDAP_DOMAIN=example.com
           - ADMIN_PASSWORD=${{ secrets.LDAP_ADMIN_PASSWORD }}
