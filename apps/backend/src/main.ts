@@ -42,8 +42,8 @@ async function bootstrap() {
   app.use(
     session({
       secret: configService.get('JWT_SECRET') || generateDefault(),
-      saveUninitialized: true,
-      resave: true
+      saveUninitialized: false,
+      resave: false
     })
   );
   app.use(passport.initialize());
