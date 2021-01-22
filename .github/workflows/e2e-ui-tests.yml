@@ -13,11 +13,12 @@ jobs:
       CYPRESS_TESTING: true
       NODE_ENV: test
       LDAP_ENABLED: true
-      LDAP_HOST: openldap
-      LDAP_BINDDN: cn=admin,dc=example,dc=com
-      LDAP_PASSWORD: ${{ secrets.LDAP_ADMIN_PASSWORD }}
-      LDAP_SEARCHBASE: dc=example,dc=com
-      LDAP_SEARCHFILTER: (cn={{username}})
+      LDAP_HOST: ldap
+      LDAP_PORT: 10389
+      LDAP_BINDDN: cn=admin,dc=planetexpress,dc=com
+      LDAP_PASSWORD: GoodNewsEveryone
+      LDAP_SEARCHBASE: ou=people,dc=planetexpress,dc=com
+      LDAP_SEARCHFILTER: (uid={{username}})
       LDAP_NAMEFIELD: cn
     services:
       postgres:
@@ -26,18 +27,10 @@ jobs:
           POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
-      openldap:
-        image: osixia/openldap
-        volumes:
-          - ${{ github.workspace }}/.github/ldap/ldif/bootstrap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom.ldif
-          - ${{ github.workspace }}/.github/ldap/schema/bootstrap.schema:/container/service/slapd/assets/config/bootstrap/schema/custom.schema
-        env:
-          LDAP_DOMAIN: example.com
-          ADMIN_PASSWORD: ${{ secrets.LDAP_ADMIN_PASSWORD }}
-          LDAP_SEED_INTERNAL_LDIF_PATH: 
-          LDAP_READONLY_USER: true
+      ldap:
+        image: rroemhild/test-openldap
         ports:
-          - 389:389
+          - 10389:10389
 
     steps:
       - uses: actions/checkout@v2
