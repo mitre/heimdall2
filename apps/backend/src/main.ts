@@ -34,7 +34,11 @@ async function bootstrap() {
         'script-src-attr': ["'none'"],
         'style-src': ["'self'", 'https:', "'unsafe-inline'"],
         // This is the only setting that is different from the defaults.
-        'connect-src': ["'self'", 'https://api.github.com']
+        'connect-src': [
+          "'self'",
+          'https://api.github.com',
+          'https://sts.amazonaws.com'
+        ]
       }
     })
   );
