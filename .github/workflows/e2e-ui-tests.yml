@@ -12,14 +12,6 @@ jobs:
     env:
       CYPRESS_TESTING: true
       NODE_ENV: test
-      LDAP_ENABLED: true
-      LDAP_HOST: ldap
-      LDAP_PORT: 10389
-      LDAP_BINDDN: cn=admin,dc=planetexpress,dc=com
-      LDAP_PASSWORD: GoodNewsEveryone
-      LDAP_SEARCHBASE: ou=people,dc=planetexpress,dc=com
-      LDAP_SEARCHFILTER: (uid={{username}})
-      LDAP_NAMEFIELD: cn
     services:
       postgres:
         image: postgres:latest

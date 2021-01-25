@@ -9,7 +9,6 @@ export default class AppConfig {
     console.log('Attempting to read configuration file `.env`!');
     try {
       this.envConfig = dotenv.parse(fs.readFileSync('.env'));
-      console.log(process.env.NODE_ENV);
       console.log('Read config!');
     } catch (error) {
       if (error.code === 'ENOENT') {
