@@ -15,6 +15,11 @@ export const LOGIN_AUTHENTICATION = {
   password: 'LETmeiN123$$$tP'
 };
 
+export const LDAP_AUTHENTICATION = {
+  username: 'fry',
+  password: 'fry'
+};
+
 export const ADMIN_LOGIN_AUTHENTICATION = {
   email: 'admin@yahoo.com',
   password: 'LETmeiN123$$$tP'
@@ -23,6 +28,11 @@ export const ADMIN_LOGIN_AUTHENTICATION = {
 export const BAD_LOGIN_AUTHENTICATION = {
   email: 'abc@yahoo.com',
   password: 'Invalid_password'
+};
+
+export const BAD_LDAP_AUTHENTICATION = {
+  username: 'fry',
+  password: 'zoiderg'
 };
 
 // @ts-ignore

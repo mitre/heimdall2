@@ -10,6 +10,7 @@
         prepend-icon="mdi-account"
         type="text"
         required
+        data-cy="ldapusername"
         @keyup.enter="$refs.password.focus"
         @blur="$v.username.$touch()"
       />
@@ -21,6 +22,7 @@
         type="password"
         name="password"
         label="Password"
+        data-cy="ldappassword"
         prepend-icon="mdi-lock"
         @keyup.enter="ldapLogin()"
         @blur="$v.password.$touch()"
@@ -29,6 +31,7 @@
         id="login_button"
         depressed
         large
+        data-cy="ldapLoginButton"
         color="primary"
         @click="ldapLogin()"
       >
