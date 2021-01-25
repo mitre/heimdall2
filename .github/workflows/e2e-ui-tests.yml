@@ -82,6 +82,3 @@ jobs:
         with:
           name: cypress-screenshots
           path: test/screenshots
-
-networks:
-  heimdallci:
