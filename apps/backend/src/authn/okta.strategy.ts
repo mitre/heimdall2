@@ -4,6 +4,17 @@ import {Strategy} from 'passport-openidconnect';
 import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
 
+interface OktaProfile {
+  [key: string]: any;
+  _json: {
+    given_name: string;
+    family_name: string;
+    email: string;
+    email_verified: boolean;
+    [key: string]: any;
+  };
+}
+
 @Injectable()
 export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
   constructor(
@@ -32,17 +43,20 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
         scope: 'openid email profile',
         passReqToCallback: true
       },
-      (req: any, token: any, tokenSecret: any, profile: any, done: any) => {
+      (
+        req: any,
+        token: string,
+        tokenSecret: string,
+        profile: OktaProfile,
+        done: any
+      ) => {
         const userData = profile._json;
-        const firstName = userData.given_name;
-        const lastName = userData.family_name;
-        const email = userData.email;
-        const emailVerified = userData.email_verified;
-        if (emailVerified) {
+        const {given_name, family_name, email, email_verified} = userData;
+        if (email_verified) {
           const user = this.authnService.oauthValidateUser(
             email,
-            firstName,
-            lastName
+            given_name,
+            family_name
           );
           return done(null, user);
         } else {

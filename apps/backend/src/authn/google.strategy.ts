@@ -5,6 +5,21 @@ import {ConfigService} from '../config/config.service';
 import {User} from '../users/user.model';
 import {AuthnService} from './authn.service';
 
+interface UserEmail {
+  value: string;
+  verified: boolean;
+}
+
+interface GoogleProfile {
+  name: {
+    familyName: string;
+    givenName: string;
+    [key: string]: any; // If for some reason google passes back an extra name field
+  };
+  emails: UserEmail[];
+  [key: string]: any;
+}
+
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(OAuth2Strategy, 'google') {
   constructor(
@@ -24,9 +39,7 @@ export class GoogleStrategy extends PassportStrategy(OAuth2Strategy, 'google') {
   async validate(
     accessToken: string,
     refreshToken: string,
-    profile: {
-      [key: string]: any;
-    }
+    profile: GoogleProfile
   ): Promise<User> {
     const {name, emails} = profile;
     const user = {
