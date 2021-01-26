@@ -11,13 +11,17 @@ export class AuthnController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Req() req: Request): Promise<any> {
+  async login(
+    @Req() req: Request
+  ): Promise<{userID: string; accessToken: string}> {
     return this.authnService.login(req.user as User);
   }
 
   @UseGuards(AuthGuard('ldap'))
   @Post('login/ldap')
-  async loginToLDAP(@Req() req: Request): Promise<any> {
+  async loginToLDAP(
+    @Req() req: Request
+  ): Promise<{userID: string; accessToken: string}> {
     return this.authnService.login(req.user as User);
   }
 }
