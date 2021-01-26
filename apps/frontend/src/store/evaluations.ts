@@ -1,6 +1,6 @@
 import Store from '@/store/store';
 import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
-import axios from 'axios';
+import axios, {AxiosResponse} from 'axios';
 import {
   Action,
   getModule,
@@ -17,6 +17,14 @@ import {
 })
 export class Evaluation extends VuexModule {
   allEvaluations: IEvaluation[] = [];
+
+  @Action
+  async getAllEvaluations(): Promise<AxiosResponse> {
+    return axios.get<IEvaluation[]>('/evaluations').then((response) => {
+      this.setAllEvaluations(response.data);
+      return response;
+    });
+  }
 
   @Action
   setAllEvaluations(evaluations: IEvaluation[]) {

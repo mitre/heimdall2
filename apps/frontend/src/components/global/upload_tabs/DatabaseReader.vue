@@ -84,18 +84,12 @@ export default class DatabaseReader extends mixins(ServerMixin) {
     this.get_all_results();
   }
 
-  get_all_results(): void {
-    axios
-      .get<IEvaluation[]>('/evaluations')
-      .then((response) => {
-        EvaluationModule.setAllEvaluations(response.data)
-      })
-      .catch((err) => {
-        SnackbarModule.failure(`${err}. Please reload the page and try again.`);
-      })
-      .finally(() => {
-        this.loading = false;
-      });
+  async get_all_results(): Promise<void> {
+    await EvaluationModule.getAllEvaluations().catch((err) => {
+      SnackbarModule.failure(`${err}. Please reload the page and try again.`);
+    }).finally(() => {
+      this.loading = false;
+    });
   }
 
   get files(){
