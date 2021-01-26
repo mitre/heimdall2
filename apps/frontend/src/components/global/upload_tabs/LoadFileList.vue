@@ -26,7 +26,9 @@
         </v-card>
       </v-dialog>
       <EditEvaluationModal
+        v-if="editDialog"
         :visible="editDialog"
+        :active="activeItem"
         @updateEvaluations="updateEvaluations"
         @closeEditModal="closeEditModal"
       />
@@ -102,7 +104,7 @@ export default class LoadFileList extends Vue {
   @Prop({required: true}) readonly files!: IEvaluation[] | Samples[];
 
   selectedFiles: IEvaluation[] | Samples[] = [];
-  activeIndex: number = -1;
+  activeItem!: IEvaluation;
 
   editDialog: boolean = false;
   deleteDialog: boolean = false;
@@ -121,13 +123,13 @@ export default class LoadFileList extends Vue {
     this.$emit('updateEvaluations')
   }
 
-  editItem (item: IEvaluation) {
-    EvaluationModule.setActiveEvaluation(item);
+  editItem(item: IEvaluation) {
+    this.activeItem = item;
     this.editDialog = true;
   }
 
   deleteItem(item: IEvaluation) {
-    EvaluationModule.setActiveEvaluation(item);
+    this.activeItem = item;
     this.deleteDialog = true;
   }
 
@@ -151,7 +153,7 @@ export default class LoadFileList extends Vue {
   }
 
   async deleteItemConfirm(): Promise<void>{
-    EvaluationModule.deleteEvaluation().then(() => {
+    EvaluationModule.deleteEvaluation(this.activeItem).then(() => {
       SnackbarModule.notify("Deleted evaluation successfully.")
     }).catch((error) => {
       SnackbarModule.HTTPFailure(error)

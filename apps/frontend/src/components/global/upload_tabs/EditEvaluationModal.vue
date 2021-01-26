@@ -2,12 +2,12 @@
   <Modal :visible="visible" width="50%">
     <v-card>
       <v-card-title>
-        <span class="headline">Edit "{{ filename }}"</span>
+        <span class="headline">Edit "{{ activeEvaluation.filename }}"</span>
       </v-card-title>
 
       <v-card-text>
         <v-container>
-          <v-text-field v-model="filename" label="File name" />
+          <v-text-field v-model="activeEvaluation.filename" label="File name" />
           <v-divider class="pb-2" />
           <v-dialog v-model="deleteTagDialog" max-width="500px">
             <v-card>
@@ -65,7 +65,11 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <v-data-table :headers="headers" :items="tags" disable-sort>
+          <v-data-table
+            :headers="headers"
+            :items="activeEvaluation.evaluationTags"
+            disable-sort
+          >
             <template #[`item.value`]="{item}">
               <v-edit-dialog
                 :return-value.sync="item.value"
@@ -114,7 +118,8 @@ import Modal from '@/components/global/Modal.vue'
 import {Prop} from 'vue-property-decorator';
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations';
-import {IUpdateEvaluationTag} from '@heimdall/interfaces';
+import {IEvaluation} from '@heimdall/interfaces';
+import axios from 'axios';
 
 @Component({
   components: {
@@ -123,15 +128,16 @@ import {IUpdateEvaluationTag} from '@heimdall/interfaces';
 })
 export default class EditEvaluationModal extends Vue {
   @Prop({default: false}) visible!: boolean;
+  @Prop({type: Object, required: true}) readonly active!: IEvaluation;
 
   newTagDialog: boolean = false;
   deleteTagDialog: boolean = false;
-  showSelf: boolean = this.visible;
   awaitingFinishTyping: boolean = false;
-  activeTag: IUpdateEvaluationTag = {
+  activeTag: any = {
     id: '-1',
     value: ''
   };
+  activeEvaluation: IEvaluation = {...this.active}
 
   headers: Object[] = [
     {
@@ -144,24 +150,13 @@ export default class EditEvaluationModal extends Vue {
     }
   ];
 
-  get filename() {
-    return EvaluationModule.activeFilename;
-  }
-
-  get tags() {
-    return EvaluationModule.activeTags;
-  }
-
-
-  set filename(filename: string) {
-    EvaluationModule.setActiveEvaluationFilename(filename)
-  }
-
-
   async deleteTag(tag: any) {
-    EvaluationModule.deleteTag(tag).then((response) => {
+    await axios.delete(`/evaluation-tags/${tag.id}`).then((response) => {
+      this.activeEvaluation.evaluationTags!.splice(
+        this.activeEvaluation.evaluationTags!.indexOf(tag),
+        1
+      )
       SnackbarModule.notify("Deleted tag successfully.")
-      this.$emit('updateEvaluations')
     }).catch((error) => {
       SnackbarModule.HTTPFailure(error)
     });
@@ -176,21 +171,15 @@ export default class EditEvaluationModal extends Vue {
   }
 
   async commitTag(): Promise<void> {
-    EvaluationModule.commitTag(this.activeTag).then((response) => {
-      SnackbarModule.notify("Added tag successfully.");
-      EvaluationModule.addTagToActiveEvaluation(response.data)
-      this.activeTag = {
-        id: '-1',
-        value: ''
-    };
-    }).catch((error) => {
-      SnackbarModule.HTTPFailure(error)
-    });
+    axios.post(`/evaluation-tags/${this.activeEvaluation.id}`, this.activeTag).then((response) => {
+      this.activeEvaluation.evaluationTags?.push(response.data)
+      SnackbarModule.notify("Created tag successfully.")
+    })
     this.newTagDialog = false
   }
 
   async updateEvaluation(): Promise<void> {
-    await EvaluationModule.updateEvaluation();
+    await EvaluationModule.updateEvaluation(this.activeEvaluation);
     this.$emit('closeEditModal')
     this.$emit('updateEvaluations')
   }
