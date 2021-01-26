@@ -1,7 +1,6 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {CreateEvaluationTagDto} from './dto/create-evaluation-tag.dto';
-import {EvaluationTagDto} from './dto/evaluation-tag.dto';
 import {UpdateEvaluationTagDto} from './dto/update-evaluation-tag.dto';
 import {EvaluationTag} from './evaluation-tag.model';
 
@@ -12,16 +11,12 @@ export class EvaluationTagsService {
     private evaluationTagModel: typeof EvaluationTag
   ) {}
 
-  async findAll(): Promise<EvaluationTagDto[]> {
-    const evaluationTags = await this.evaluationTagModel.findAll<EvaluationTag>();
-    return evaluationTags.map(
-      (evaluationTag) => new EvaluationTagDto(evaluationTag)
-    );
+  async findAll(): Promise<EvaluationTag[]> {
+    return this.evaluationTagModel.findAll<EvaluationTag>();
   }
 
-  async findById(id: string): Promise<EvaluationTagDto> {
-    const evaluationTag = await this.findByPkBang(id);
-    return new EvaluationTagDto(evaluationTag);
+  async findById(id: string): Promise<EvaluationTag> {
+    return this.findByPkBang(id);
   }
 
   async create(
@@ -43,10 +38,10 @@ export class EvaluationTagsService {
     return evaluationTag.update(updateEvaluationTagDto);
   }
 
-  async remove(id: string): Promise<EvaluationTagDto> {
+  async remove(id: string): Promise<EvaluationTag> {
     const evaluationTag = await this.findByPkBang(id);
     await evaluationTag.destroy();
-    return new EvaluationTagDto(evaluationTag);
+    return evaluationTag;
   }
 
   objectFromDto(createEvaluationTagDto: CreateEvaluationTagDto): EvaluationTag {

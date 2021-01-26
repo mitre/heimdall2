@@ -6,7 +6,6 @@ import {
   CreatedAt,
   DataType,
   Default,
-  IsEmail,
   Model,
   PrimaryKey,
   Table,

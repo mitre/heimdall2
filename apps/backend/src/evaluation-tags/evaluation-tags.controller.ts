@@ -20,12 +20,15 @@ export class EvaluationTagsController {
   constructor(private evaluationTagsService: EvaluationTagsService) {}
   @Get()
   async index(): Promise<EvaluationTagDto[]> {
-    return this.evaluationTagsService.findAll();
+    const evaluationTags = await this.evaluationTagsService.findAll();
+    return evaluationTags.map(
+      (evaluationTag) => new EvaluationTagDto(evaluationTag)
+    );
   }
 
   @Get(':id')
   async findById(@Param('id') id: string): Promise<EvaluationTagDto> {
-    return this.evaluationTagsService.findById(id);
+    return new EvaluationTagDto(await this.evaluationTagsService.findById(id));
   }
 
   @Post()
@@ -33,9 +36,11 @@ export class EvaluationTagsController {
     @Param('evaluationId') evaluationId: string,
     @Body() createEvaluationTagDto: CreateEvaluationTagDto
   ): Promise<EvaluationTagDto> {
-    return this.evaluationTagsService.create(
-      evaluationId,
-      createEvaluationTagDto
+    return new EvaluationTagDto(
+      await this.evaluationTagsService.create(
+        evaluationId,
+        createEvaluationTagDto
+      )
     );
   }
 
@@ -44,11 +49,13 @@ export class EvaluationTagsController {
     @Param('id') id: string,
     @Body() updateEvaluationTagDto: UpdateEvaluationTagDto
   ): Promise<EvaluationTagDto> {
-    return this.evaluationTagsService.update(id, updateEvaluationTagDto);
+    return new EvaluationTagDto(
+      await this.evaluationTagsService.update(id, updateEvaluationTagDto)
+    );
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<EvaluationTagDto> {
-    return this.evaluationTagsService.remove(id);
+    return new EvaluationTagDto(await this.evaluationTagsService.remove(id));
   }
 }

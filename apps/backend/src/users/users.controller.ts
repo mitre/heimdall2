@@ -53,14 +53,15 @@ export class UsersController {
     const abac = this.authz.abac.createForUser(request.user);
     ForbiddenError.from(abac).throwUnlessCan(Action.ReadAll, User);
 
-    return this.usersService.findAll();
+    const users = await this.usersService.findAll();
+    return users.map((user) => new UserDto(user));
   }
 
   @Post()
   @UsePipes(new PasswordsMatchPipe(), new PasswordComplexityPipe())
   @UseFilters(new UniqueConstraintErrorFilter())
   async create(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
-    return this.usersService.create(createUserDto);
+    return new UserDto(await this.usersService.create(createUserDto));
   }
 
   @UseGuards(JwtAuthGuard)
@@ -79,7 +80,9 @@ export class UsersController {
     const userToUpdate = await this.usersService.findByPkBang(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, userToUpdate);
 
-    return this.usersService.update(userToUpdate, updateUserDto, abac);
+    return new UserDto(
+      await this.usersService.update(userToUpdate, updateUserDto, abac)
+    );
   }
 
   @UseGuards(JwtAuthGuard)
@@ -93,7 +96,9 @@ export class UsersController {
     const userToDelete = await this.usersService.findByPkBang(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Delete, userToDelete);
 
-    return this.usersService.remove(userToDelete, deleteUserDto, abac);
+    return new UserDto(
+      await this.usersService.remove(userToDelete, deleteUserDto, abac)
+    );
   }
 
   @UseGuards(TestGuard)

@@ -3,6 +3,6 @@ import {SequelizeModule} from '@nestjs/sequelize';
 import {GroupEvaluation} from './group-evaluation.model';
 
 @Module({
-  imports: [SequelizeModule.forFeature([GroupEvaluation])],
+  imports: [SequelizeModule.forFeature([GroupEvaluation])]
 })
-export class GroupEvaluationsModule { }
+export class GroupEvaluationsModule {}

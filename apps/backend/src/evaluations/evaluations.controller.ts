@@ -20,19 +20,22 @@ export class EvaluationsController {
   constructor(private evaluationsService: EvaluationsService) {}
   @Get(':id')
   async findById(@Param('id') id: string): Promise<EvaluationDto> {
-    return this.evaluationsService.findById(id);
+    return new EvaluationDto(await this.evaluationsService.findById(id));
   }
 
   @Get()
   async findAll(): Promise<EvaluationDto[]> {
-    return this.evaluationsService.findAll();
+    const evaluations = await this.evaluationsService.findAll();
+    return evaluations.map((evaluation) => new EvaluationDto(evaluation));
   }
 
   @Post()
   async create(
     @Body() createEvaluationDto: CreateEvaluationDto
   ): Promise<EvaluationDto> {
-    return this.evaluationsService.create(createEvaluationDto);
+    return new EvaluationDto(
+      await this.evaluationsService.create(createEvaluationDto)
+    );
   }
 
   @Put(':id')
@@ -40,11 +43,13 @@ export class EvaluationsController {
     @Param('id') id: string,
     @Body() updateEvaluationDto: UpdateEvaluationDto
   ): Promise<EvaluationDto> {
-    return this.evaluationsService.update(id, updateEvaluationDto);
+    return new EvaluationDto(
+      await this.evaluationsService.update(id, updateEvaluationDto)
+    );
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<EvaluationDto> {
-    return this.evaluationsService.remove(id);
+    return new EvaluationDto(await this.evaluationsService.remove(id));
   }
 }

@@ -1,4 +1,4 @@
-import {Controller, Get, UseGuards, Request, Body, Post} from '@nestjs/common';
+import {Body, Controller, Get, Post, Request, UseGuards} from '@nestjs/common';
 import {AuthzService} from '../authz/authz.service';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {User} from '../users/user.model';
@@ -11,14 +11,15 @@ export class GroupsController {
   constructor(
     private readonly groupsService: GroupsService,
     private readonly authz: AuthzService
-  ) { }
+  ) {}
 
   @Get()
   @UseGuards(JwtAuthGuard)
   async findAll(@Request() request: {user: User}): Promise<GroupDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
 
-    return this.groupsService.findAll();
+    const groups = await this.groupsService.findAll();
+    return groups.map((group) => new GroupDto(group));
   }
 
   @Post()

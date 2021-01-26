@@ -12,7 +12,6 @@ import {Action} from '../casl/casl-ability.factory';
 import {CreateUserDto} from './dto/create-user.dto';
 import {DeleteUserDto} from './dto/delete-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
-import {UserDto} from './dto/user.dto';
 import {User} from './user.model';
 
 @Injectable()
@@ -22,9 +21,8 @@ export class UsersService {
     private userModel: typeof User
   ) {}
 
-  async findAll(): Promise<UserDto[]> {
-    const users = await this.userModel.findAll<User>();
-    return users.map((user) => new UserDto(user));
+  async findAll(): Promise<User[]> {
+    return this.userModel.findAll<User>();
   }
 
   async findById(id: string): Promise<User> {
@@ -39,7 +37,7 @@ export class UsersService {
     });
   }
 
-  async create(createUserDto: CreateUserDto): Promise<UserDto> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const user = new User();
     user.email = createUserDto.email;
     user.firstName = createUserDto.firstName || undefined;
@@ -52,15 +50,14 @@ export class UsersService {
     } catch {
       throw new BadRequestException();
     }
-    const userData = await user.save();
-    return new UserDto(userData);
+    return user.save();
   }
 
   async update(
     userToUpdate: User,
     updateUserDto: UpdateUserDto,
     abac: Ability
-  ): Promise<UserDto> {
+  ): Promise<User> {
     if (!abac.can('update-no-password', userToUpdate)) {
       await this.testPassword(updateUserDto, userToUpdate);
     }
@@ -87,8 +84,7 @@ export class UsersService {
     }
     userToUpdate.forcePasswordChange =
       updateUserDto.forcePasswordChange || userToUpdate.forcePasswordChange;
-    const userData = await userToUpdate.save();
-    return new UserDto(userData);
+    return userToUpdate.save();
   }
 
   async updateLoginMetadata(user: User): Promise<void> {
@@ -101,7 +97,7 @@ export class UsersService {
     userToDelete: User,
     deleteUserDto: DeleteUserDto,
     abac: Ability
-  ): Promise<UserDto> {
+  ): Promise<User> {
     if (abac.cannot(Action.DeleteNoPassword, userToDelete)) {
       try {
         if (
@@ -127,7 +123,7 @@ export class UsersService {
       );
     }
     await userToDelete.destroy();
-    return new UserDto(userToDelete);
+    return userToDelete;
   }
 
   async findByPkBang(

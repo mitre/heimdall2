@@ -3,6 +3,6 @@ import {SequelizeModule} from '@nestjs/sequelize';
 import {GroupUser} from './group-user.model';
 
 @Module({
-  imports: [SequelizeModule.forFeature([GroupUser])],
+  imports: [SequelizeModule.forFeature([GroupUser])]
 })
-export class GroupUsersModule { }
+export class GroupUsersModule {}

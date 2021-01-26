@@ -1,6 +1,6 @@
-import { Test } from '@nestjs/testing';
-import { GroupsController } from './groups.controller';
-import { GroupsService } from './groups.service';
+import {Test} from '@nestjs/testing';
+import {GroupsController} from './groups.controller';
+import {GroupsService} from './groups.service';
 
 describe('GroupsController', () => {
   let groupsController: GroupsController;
@@ -9,7 +9,7 @@ describe('GroupsController', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       controllers: [GroupsController],
-      providers: [GroupsService],
+      providers: [GroupsService]
     }).compile();
 
     groupsService = module.get<GroupsService>(GroupsService);
