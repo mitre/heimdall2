@@ -170,7 +170,6 @@ export default class EditEvaluationModal extends Vue {
   async updateTag(tag: any) {
     EvaluationModule.updateTag(tag).then((response) => {
       SnackbarModule.notify("Updated tag successfully.")
-      this.$emit('updateEvaluations')
     }).catch((error) => {
       SnackbarModule.HTTPFailure(error)
     });

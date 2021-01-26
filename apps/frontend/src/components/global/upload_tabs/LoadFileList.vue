@@ -27,7 +27,6 @@
       </v-dialog>
       <EditEvaluationModal
         :visible="editDialog"
-        :active-index="activeIndex"
         @updateEvaluations="updateEvaluations"
         @closeEditModal="closeEditModal"
       />
@@ -105,7 +104,6 @@ export default class LoadFileList extends Vue {
 
   selectedFiles: IEvaluation[] | Samples[] = [];
   activeIndex: number = -1;
-  activeItem: Evaluation | Sample = {};
 
   editDialog: boolean = false;
   deleteDialog: boolean = false;
@@ -134,7 +132,7 @@ export default class LoadFileList extends Vue {
     this.deleteDialog = true;
   }
 
-  deleteTag(tag: any, evaluation: any) {
+  deleteTag(tag: any) {
     EvaluationModule.deleteTag(tag).then((response) => {
       SnackbarModule.notify("Deleted tag successfully.")
       this.updateEvaluations()
@@ -153,6 +151,15 @@ export default class LoadFileList extends Vue {
     return result
   }
 
+  async deleteItemConfirm(): Promise<void>{
+    EvaluationModule.deleteEvaluation().then(() => {
+      SnackbarModule.notify("Deleted evaluation successfully.")
+    }).catch((error) => {
+      SnackbarModule.HTTPFailure(error)
+    });
+    this.deleteDialog = false;
+  }
+
   get filteredFiles() {
     let matches: any[] = []
     if (this.search != '') {
@@ -165,15 +172,6 @@ export default class LoadFileList extends Vue {
       return this.files;
     }
     return matches
-  }
-
-  async deleteItemConfirm(): Promise<void>{
-    EvaluationModule.deleteEvaluation().then(() => {
-      SnackbarModule.notify("Deleted evaluation successfully.")
-    }).catch((error) => {
-      SnackbarModule.HTTPFailure(error)
-    });
-    this.deleteDialog = false;
   }
 }
 </script>
