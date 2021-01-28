@@ -52,7 +52,7 @@ export class GoogleStrategy extends PassportStrategy(OAuth2Strategy, 'google') {
         user.email.value,
         user.firstName,
         user.lastName,
-        'oauth'
+        'google'
       );
     } else {
       throw new UnauthorizedException(

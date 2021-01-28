@@ -75,7 +75,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
         primaryEmail.email,
         firstName,
         lastName,
-        'oauth'
+        'github'
       );
     } else {
       throw new UnauthorizedException(

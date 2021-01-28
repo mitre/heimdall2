@@ -57,7 +57,7 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
             email,
             given_name,
             family_name,
-            'oauth'
+            'okta'
           );
           return done(null, user);
         } else {

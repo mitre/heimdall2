@@ -43,7 +43,7 @@ export class GitlabStrategy extends PassportStrategy(Strategy, 'gitlab') {
       email,
       firstName,
       lastName,
-      'oauth'
+      'gitlab'
     );
   }
 }

@@ -156,7 +156,7 @@ import {Prop} from 'vue-property-decorator';
     },
     currentPassword: {
       required: requiredIf(function(userInfo){
-        	return (userInfo.role == 'admin')
+        return (userInfo.user.role == 'admin') || !(ServerModule.enabledOAuth.includes(userInfo.user.creationMethod))
         })
     },
     newPassword: {
