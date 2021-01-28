@@ -5,9 +5,13 @@
   "description": "",
   "scripts": {
     "lint": "eslint \"**/*.ts\" --fix",
-    "lint:ci": "eslint \"**/*.ts\" --max-warnings 0"
+    "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
+    "mock-oauth": "json-server --port 3001 --watch support/server/oauth.json"
   },
   "devDependencies": {
     "eslint-plugin-cypress": "^2.11.2"
+  },
+  "dependencies": {
+    "json-server": "^0.16.3"
   }
 }

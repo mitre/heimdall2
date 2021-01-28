@@ -37,17 +37,27 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
   ): Promise<User> {
     // Get user's linked emails from Github
     const githubEmails = await axios
-      .get('https://api.github.com/user/emails', {
-        headers: {Authorization: `token ${accessToken}`}
-      })
+      .get(
+        this.configService.get('CYPRESS_TESTING') === 'true'
+          ? 'http://127.0.0.1:3001/emails'
+          : 'https://api.github.com/user/emails',
+        {
+          headers: {Authorization: `token ${accessToken}`}
+        }
+      )
       .then((response): GithubEmail[] => {
         return response.data;
       });
     // Get user's info
     const userInfoResponse = await axios
-      .get('https://api.github.com/user', {
-        headers: {Authorization: `token ${accessToken}`}
-      })
+      .get(
+        this.configService.get('CYPRESS_TESTING') === 'true'
+          ? 'http://127.0.0.1:3001/user'
+          : 'https://api.github.com/user',
+        {
+          headers: {Authorization: `token ${accessToken}`}
+        }
+      )
       .then(
         (response): GithubProfile => {
           return response.data;
