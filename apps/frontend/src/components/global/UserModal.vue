@@ -159,7 +159,6 @@ import {Prop} from 'vue-property-decorator';
     },
     currentPassword: {
       required: requiredIf(function(userInfo){
-        console.log(userInfo)
         	return (userInfo.role == 'admin')
         })
     },
