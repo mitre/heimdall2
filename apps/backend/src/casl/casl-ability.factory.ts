@@ -33,9 +33,6 @@ export class CaslAbilityFactory {
       // Force admins to supply their password when editing their own user.
       cannot(Action.Manage, User, {id: user.id});
     }
-    if (user.creationMethod === 'ldap' || user.creationMethod === 'oauth') {
-      can(Action.UpdateNoPassword, User, {id: user.id});
-    }
     can([Action.Read, Action.Update, Action.Delete], User, {id: user.id});
 
     return build();
