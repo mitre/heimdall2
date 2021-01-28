@@ -187,7 +187,6 @@ export default class UserModal extends Vue {
 
   async updateUserInfo(): Promise<void> {
     this.$v.$touch()
-    console.log(this.$v)
     if (this.userInfo != null && !this.$v.$invalid) {
       var updateUserInfo: IUpdateUser = {
         ...this.userInfo,
