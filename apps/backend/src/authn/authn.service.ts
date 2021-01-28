@@ -59,7 +59,7 @@ export class AuthnService {
     if (user) {
       // If the users info has changed since they last logged in it will be reflected here.
       // Because we find the user by their email, we can't detect a change in email.
-      if (user.firstName != firstName || user.lastName !== lastName) {
+      if (user.firstName !== firstName || user.lastName !== lastName) {
         user.firstName = firstName;
         user.lastName = lastName;
         user.save();
