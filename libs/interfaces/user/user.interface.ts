@@ -8,6 +8,7 @@ export interface IUser {
   readonly organization: string | undefined;
   readonly loginCount: number;
   readonly lastLogin: Date | undefined;
+  readonly creationMethod: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }

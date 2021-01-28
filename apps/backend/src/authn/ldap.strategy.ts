@@ -37,7 +37,8 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
         req.user = this.authnService.validateOrCreateUser(
           email,
           firstName,
-          lastName
+          lastName,
+          'ldap'
         );
         return done(null, req.user);
       }

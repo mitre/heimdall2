@@ -64,7 +64,7 @@
             </v-col>
           </v-row>
 
-          <div v-if="!admin">
+          <div v-if="!admin && userInfo.creationMethod === 'local'">
             <v-divider />
             <v-text-field
               id="password_field"
@@ -78,7 +78,10 @@
               @blur="$v.currentPassword.$touch()"
             />
           </div>
-          <v-btn id="toggleChangePassword" @click="changePasswordDialog"
+          <v-btn
+            v-if="userInfo.creationMethod === 'local'"
+            id="toggleChangePassword"
+            @click="changePasswordDialog"
             >Change Password</v-btn
           >
           <div v-show="changePassword">
@@ -142,7 +145,7 @@ import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
 import {IUser, IUpdateUser} from '@heimdall/interfaces';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
-import {required, email, requiredIf, requiredUnless} from 'vuelidate/lib/validators';
+import {required, email, requiredIf} from 'vuelidate/lib/validators';
 import {Prop} from 'vue-property-decorator';
 
 @Component({
@@ -155,7 +158,10 @@ import {Prop} from 'vue-property-decorator';
       }
     },
     currentPassword: {
-      required: requiredUnless('admin')
+      required: requiredIf(function(userInfo){
+        console.log(userInfo)
+        	return (userInfo.role == 'admin')
+        })
     },
     newPassword: {
       required: requiredIf('changePassword')
@@ -182,6 +188,7 @@ export default class UserModal extends Vue {
 
   async updateUserInfo(): Promise<void> {
     this.$v.$touch()
+    console.log(this.$v)
     if (this.userInfo != null && !this.$v.$invalid) {
       var updateUserInfo: IUpdateUser = {
         ...this.userInfo,

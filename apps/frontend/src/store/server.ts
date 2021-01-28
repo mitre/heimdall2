@@ -48,6 +48,7 @@ class Server extends VuexModule implements IServerState {
     organization: '',
     loginCount: -1,
     lastLogin: undefined,
+    creationMethod: '',
     createdAt: new Date(),
     updatedAt: new Date()
   };
@@ -166,6 +167,7 @@ class Server extends VuexModule implements IServerState {
     email: string;
     password: string;
     passwordConfirmation: string;
+    creationMethod: string;
   }) {
     return axios.post('/users', userInfo);
   }

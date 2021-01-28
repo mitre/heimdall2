@@ -59,7 +59,6 @@ const lastLoginTab = new LocalStorageVal<string>('login_curr_tab');
   }
 })
 export default class Login extends Vue {
-  username: string = '';
   activeTab: string = lastLoginTab.get_default('logintab-standard')
 
   mounted() {

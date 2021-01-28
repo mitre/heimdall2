@@ -15,7 +15,7 @@ export class AuthnService {
     private jwtService: JwtService
   ) {}
 
-  async validateUser(email: string, password: string): Promise<any> {
+  async validateUser(email: string, password: string): Promise<User | null> {
     let user: User;
     try {
       user = await this.usersService.findByEmail(email);
@@ -33,8 +33,9 @@ export class AuthnService {
   async validateOrCreateUser(
     email: string,
     firstName: string,
-    lastName: string
-  ): Promise<any> {
+    lastName: string,
+    creationMethod: string
+  ): Promise<User> {
     let user: User;
     try {
       user = await this.usersService.findByEmail(email);
@@ -48,7 +49,8 @@ export class AuthnService {
         lastName: lastName,
         organization: '',
         title: '',
-        role: ''
+        role: 'user',
+        creationMethod: creationMethod
       };
       await this.usersService.create(createUser);
       user = await this.usersService.findByEmail(email);
