@@ -39,6 +39,11 @@ export class GitlabStrategy extends PassportStrategy(Strategy, 'gitlab') {
     const {firstName, lastName} = this.authnService.splitName(
       profile.displayName
     );
-    return this.authnService.oauthValidateUser(email, firstName, lastName);
+    return this.authnService.validateOrCreateUser(
+      email,
+      firstName,
+      lastName,
+      'oauth'
+    );
   }
 }

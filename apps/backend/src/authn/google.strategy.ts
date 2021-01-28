@@ -48,10 +48,11 @@ export class GoogleStrategy extends PassportStrategy(OAuth2Strategy, 'google') {
       lastName: name.familyName
     };
     if (user.email.verified) {
-      return this.authnService.oauthValidateUser(
+      return this.authnService.validateOrCreateUser(
         user.email.value,
         user.firstName,
-        user.lastName
+        user.lastName,
+        'oauth'
       );
     } else {
       throw new UnauthorizedException(

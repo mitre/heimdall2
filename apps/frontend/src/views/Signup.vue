@@ -113,6 +113,7 @@ export interface SignupHash {
   password: string;
   passwordConfirmation: string;
   role: string;
+  creationMethod: string;
 }
 
 @Component({
@@ -148,7 +149,8 @@ export default class Signup extends Vue {
         email: this.email,
         password: this.password,
         passwordConfirmation: this.passwordConfirmation,
-        role: 'user'
+        role: 'user',
+        creationMethod: 'local'
       };
 
       ServerModule.Register(creds)

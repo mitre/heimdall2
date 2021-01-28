@@ -71,10 +71,11 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     // Only validate if the user has verified their email with Github
     if (primaryEmail.verified) {
       // Check if the user already exists, if not they will be created
-      return this.authnService.oauthValidateUser(
+      return this.authnService.validateOrCreateUser(
         primaryEmail.email,
         firstName,
-        lastName
+        lastName,
+        'oauth'
       );
     } else {
       throw new UnauthorizedException(

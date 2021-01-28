@@ -64,7 +64,7 @@
             </v-col>
           </v-row>
 
-          <div v-if="!admin">
+          <div v-if="!admin && userInfo.creationMethod === 'local'">
             <v-divider />
             <v-text-field
               id="password_field"
@@ -155,7 +155,9 @@ import {Prop} from 'vue-property-decorator';
       }
     },
     currentPassword: {
-      required: requiredUnless('admin')
+      required: requiredIf(function(userInfo){
+        	return (userInfo.role == 'admin')
+        })
     },
     newPassword: {
       required: requiredIf('changePassword')

@@ -53,10 +53,11 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
         const userData = profile._json;
         const {given_name, family_name, email, email_verified} = userData;
         if (email_verified) {
-          const user = this.authnService.oauthValidateUser(
+          const user = this.authnService.validateOrCreateUser(
             email,
             given_name,
-            family_name
+            family_name,
+            'oauth'
           );
           return done(null, user);
         } else {

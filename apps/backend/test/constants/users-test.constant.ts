@@ -201,7 +201,8 @@ export const CREATE_USER_DTO_TEST_OBJ: CreateUserDto = {
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
-  role: 'user'
+  role: 'user',
+  creationMethod: 'local'
 };
 
 export const CREATE_ADMIN_DTO: CreateUserDto = {
@@ -212,7 +213,8 @@ export const CREATE_ADMIN_DTO: CreateUserDto = {
   lastName: 'Dummy',
   title: 'Admin',
   organization: 'Fake Org',
-  role: 'admin'
+  role: 'admin',
+  creationMethod: 'local'
 };
 
 export const CREATE_SECOND_ADMIN_DTO: CreateUserDto = {
@@ -228,7 +230,8 @@ export const CREATE_USER_DTO_TEST_OBJ_2: CreateUserDto = {
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
-  role: 'user'
+  role: 'user',
+  creationMethod: 'local'
 };
 
 export const CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS: CreateUserDto = {
@@ -239,7 +242,8 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS: CreateUserDto =
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
-  role: 'user'
+  role: 'user',
+  creationMethod: 'local'
 };
 
 // @ts-ignore
@@ -250,7 +254,8 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_FIRST_NAME: CreateUserDto = {
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
-  role: 'user'
+  role: 'user',
+  creationMethod: 'local'
 };
 
 // @ts-ignore
@@ -261,7 +266,8 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_LAST_NAME: CreateUserDto = {
   firstName: 'Test',
   title: 'fake title',
   organization: 'Fake Org',
-  role: 'user'
+  role: 'user',
+  creationMethod: 'local'
 };
 
 // @ts-ignore
@@ -272,7 +278,8 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ORGANIZATION: CreateUserDto =
   firstName: 'Test',
   lastName: 'Dummy',
   title: 'fake title',
-  role: 'user'
+  role: 'user',
+  creationMethod: 'local'
 };
 
 // @ts-ignore
@@ -283,7 +290,8 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_TITLE: CreateUserDto = {
   firstName: 'Test',
   lastName: 'Dummy',
   organization: 'Fake Org',
-  role: 'user'
+  role: 'user',
+  creationMethod: 'local'
 };
 
 // @ts-ignore
@@ -294,7 +302,8 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD: CreateUserDto = 
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
-  role: 'user'
+  role: 'user',
+  creationMethod: 'local'
 };
 
 // @ts-ignore
@@ -317,7 +326,8 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD: CreateUserDto
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
-  role: 'user'
+  role: 'user',
+  creationMethod: 'local'
 };
 
 // @ts-ignore
@@ -328,7 +338,8 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD: 
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
-  role: 'user'
+  role: 'user',
+  creationMethod: 'local'
 };
 
 // @ts-ignore
@@ -339,7 +350,8 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE: CreateUserDto = {
   firstName: 'Test',
   lastName: 'Dummy',
   title: 'fake title',
-  organization: 'Fake Org'
+  organization: 'Fake Org',
+  creationMethod: 'local'
 };
 
 // @ts-ignore
@@ -351,7 +363,8 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD: CreateUserDto = {
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
-  role: 'user'
+  role: 'user',
+  creationMethod: 'local'
 };
 
 export const UPDATE_USER_DTO_TEST_OBJ: UpdateUserDto = {
