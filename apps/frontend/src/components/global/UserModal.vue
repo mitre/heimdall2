@@ -142,7 +142,7 @@ import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
 import {IUser, IUpdateUser} from '@heimdall/interfaces';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
-import {required, email, requiredIf, requiredUnless} from 'vuelidate/lib/validators';
+import {required, email, requiredIf} from 'vuelidate/lib/validators';
 import {Prop} from 'vue-property-decorator';
 
 @Component({
