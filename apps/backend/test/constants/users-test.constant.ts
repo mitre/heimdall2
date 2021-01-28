@@ -211,7 +211,8 @@ export const CREATE_USER_DTO_TEST_OBJ: CreateUserDto = {
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
-  role: 'user'
+  role: 'user',
+  creationMethod: 'local'
 };
 
 export const CREATE_ADMIN_DTO: CreateUserDto = {
@@ -222,7 +223,8 @@ export const CREATE_ADMIN_DTO: CreateUserDto = {
   lastName: 'Dummy',
   title: 'Admin',
   organization: 'Fake Org',
-  role: 'admin'
+  role: 'admin',
+  creationMethod: 'local'
 };
 
 export const CREATE_SECOND_ADMIN_DTO: CreateUserDto = {
@@ -238,7 +240,8 @@ export const CREATE_USER_DTO_TEST_OBJ_2: CreateUserDto = {
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
-  role: 'user'
+  role: 'user',
+  creationMethod: 'local'
 };
 
 export const CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS: CreateUserDto = {
@@ -249,7 +252,8 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS: CreateUserDto =
   lastName: 'Dummy',
   title: 'fake title',
   organization: 'Fake Org',
-  role: 'user'
+  role: 'user',
+  creationMethod: 'local'
 };
 
 // @ts-ignore
