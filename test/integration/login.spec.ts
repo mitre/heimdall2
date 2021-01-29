@@ -38,6 +38,7 @@ context('Login', () => {
     });
     it('authenticates a github oauth user', () => {
       loginPageVerifier.loginFormPresent();
+      cy.reload();
       loginPage.loginOauth('github');
       // Load first sample
       uploadModal.loadFirstSample();
