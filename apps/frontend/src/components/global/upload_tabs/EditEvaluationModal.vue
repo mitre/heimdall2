@@ -171,7 +171,7 @@ export default class EditEvaluationModal extends Vue {
 
   async commitTag(): Promise<void> {
     axios.post(`/evaluation-tags/${this.activeEvaluation.id}`, this.activeTag).then((response) => {
-      this.activeEvaluation.evaluationTags?.push(response.data)
+      this.activeEvaluation.evaluationTags.push(response.data)
       SnackbarModule.notify("Created tag successfully.")
     })
     this.newTagDialog = false
