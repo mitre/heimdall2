@@ -89,7 +89,7 @@ import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations'
 import {IEvaluation} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
-import {Sample, Samples} from 'aws-sdk/clients/devicefarm';
+import {Sample} from '@/utilities/sample_util';
 
 @Component({
   components: {
@@ -101,9 +101,9 @@ export default class LoadFileList extends Vue {
   @Prop({type: Boolean, default: false}) readonly loading!: boolean;
   @Prop({type: String, default: 'id'}) readonly fileKey!: string;
   @Prop({type: String, default: 'filename'}) readonly sortBy!: string;
-  @Prop({required: true}) readonly files!: IEvaluation[] | Samples[];
+  @Prop({required: true}) readonly files!: IEvaluation[] | Sample[];
 
-  selectedFiles: IEvaluation[] | Samples[] = [];
+  selectedFiles: IEvaluation[] | Sample[] = [];
   activeItem!: IEvaluation;
 
   editDialog: boolean = false;
@@ -168,10 +168,9 @@ export default class LoadFileList extends Vue {
     let matches: Array<IEvaluation | Sample> = []
     if (this.search != '') {
       (this.files as Array<IEvaluation | Sample>).forEach(async (item: IEvaluation | Sample) => {
-        if('filename' in item){
           if (this.filterEvaluationTags(item, this.search) || item.filename.toLowerCase().includes(this.search)) {
           matches.push(item)
-        }}
+        }
       })
     } else {
       return this.files;
