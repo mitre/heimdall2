@@ -75,6 +75,7 @@
                       <v-col cols="auto">
                         <v-btn
                           v-if="authStrategySupported('google')"
+                          id="oauth-google"
                           plain
                           @click="oauthLogin('google')"
                         >
@@ -85,6 +86,7 @@
                       <v-col cols="auto">
                         <v-btn
                           v-if="authStrategySupported('github')"
+                          id="oauth-github"
                           plain
                           @click="oauthLogin('github')"
                         >
@@ -95,6 +97,7 @@
                       <v-col cols="auto"
                         ><v-btn
                           v-if="authStrategySupported('gitlab')"
+                          id="oauth-gitlab"
                           plain
                           @click="oauthLogin('gitlab')"
                         >
@@ -108,6 +111,7 @@
                       <v-col cols="auto"
                         ><v-btn
                           v-if="authStrategySupported('okta')"
+                          id="oauth-okta"
                           plain
                           @click="oauthLogin('okta')"
                         >

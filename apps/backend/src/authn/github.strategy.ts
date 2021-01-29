@@ -24,6 +24,9 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     super({
       clientID: configService.get('GITHUB_CLIENTID') || 'disabled',
       clientSecret: configService.get('GITHUB_CLIENTSECRET') || 'disabled',
+      authorizationURL: configService.get('GITHUB_ENTERPRISE_INSTANCE_URL') || "https://github.com/login/oauth/authorize",
+      tokenURL: configService.get('GITHUB_ENTERPRISE_TOKEN_URL') || "https://github.com/login/oauth/access_token",
+      userProfileURL: configService.get('GITHUB_ENTERPRISE_PROFILE_URL') || "https://github.com/api/v3/user",
       scope: 'user:email',
       passReqToCallback: true
     });

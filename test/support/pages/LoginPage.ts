@@ -4,4 +4,8 @@ export default class LoginPage {
     cy.get('input[name=password]').clear().type(user.password);
     cy.get('#login_button').click();
   }
+
+  loginOauth(oauthStrategy: string): void {
+    cy.get(`#oauth-${oauthStrategy}`).click();
+  }
 }
