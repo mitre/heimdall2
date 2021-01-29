@@ -6,6 +6,6 @@ export default class LoginPage {
   }
 
   loginOauth(oauthStrategy: string): void {
-    cy.get(`#oauth-${oauthStrategy}`).click();
+    cy.get(`#oauth-${oauthStrategy}`).click({force: true});
   }
 }
