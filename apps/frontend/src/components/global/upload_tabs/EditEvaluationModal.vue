@@ -47,6 +47,7 @@
                   <v-col>
                     <v-text-field
                       v-model="activeTag.value"
+                      autofocus
                       label="Tag Name"
                       @keyup.enter="commitTag()"
                     />
@@ -118,7 +119,7 @@ import Modal from '@/components/global/Modal.vue'
 import {Prop} from 'vue-property-decorator';
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations';
-import {IEvaluation} from '@heimdall/interfaces';
+import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
 import axios from 'axios';
 
 @Component({
@@ -132,9 +133,12 @@ export default class EditEvaluationModal extends Vue {
 
   newTagDialog: boolean = false;
   deleteTagDialog: boolean = false;
-  activeTag: any = {
+  activeTag: IEvaluationTag = {
+    evaluationId: '-1',
     id: '-1',
-    value: ''
+    value: '',
+    createdAt: new Date(),
+    updatedAt: new Date()
   };
   activeEvaluation: IEvaluation = {...this.active}
 
@@ -149,7 +153,7 @@ export default class EditEvaluationModal extends Vue {
     }
   ];
 
-  async deleteTag(tag: any) {
+  async deleteTag(tag: IEvaluationTag) {
     await axios.delete(`/evaluation-tags/${tag.id}`).then((response) => {
       this.activeEvaluation.evaluationTags.splice(
         this.activeEvaluation.evaluationTags.indexOf(tag),
@@ -161,7 +165,7 @@ export default class EditEvaluationModal extends Vue {
     });
   }
 
-  async updateTag(tag: any) {
+  async updateTag(tag: IEvaluationTag) {
     EvaluationModule.updateTag(tag).then((response) => {
       SnackbarModule.notify("Updated tag successfully.")
     }).catch((error) => {
@@ -173,6 +177,13 @@ export default class EditEvaluationModal extends Vue {
     axios.post(`/evaluation-tags/${this.activeEvaluation.id}`, this.activeTag).then((response) => {
       this.activeEvaluation.evaluationTags.push(response.data)
       SnackbarModule.notify("Created tag successfully.")
+      this.activeTag = {
+        evaluationId: '-1',
+        id: '-1',
+        value: '',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
     })
     this.newTagDialog = false
   }
