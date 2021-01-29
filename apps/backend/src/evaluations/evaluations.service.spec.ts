@@ -141,7 +141,7 @@ describe('EvaluationsService', () => {
       expect(evaluation.filename).toEqual(
         CREATE_EVALUATION_DTO_WITHOUT_TAGS.filename
       );
-      expect(evaluation.evaluationTags).toBeNull();
+      expect(evaluation.evaluationTags).toEqual([]);
       expect((await evaluationTagsService.findAll()).length).toBe(0);
     });
 
