@@ -142,13 +142,16 @@ export default class LoadFileList extends Vue {
     });
   }
 
-  filterEvaluationTags(file: IEvaluation, search: string) {
+ filterEvaluationTags(file: IEvaluation | Sample, search: string) {
     let result = false;
-    file.evaluationTags?.forEach((tag) => {
-      if (tag.value.toLowerCase().includes(search.toLowerCase())) {
-        result = true;
-      };
-    })
+    if('evaluationTags' in file)
+    {
+      file.evaluationTags?.forEach((tag) => {
+        if (tag.value.toLowerCase().includes(search.toLowerCase())) {
+          result = true;
+        };
+      })
+    }
     return result
   }
 
@@ -162,12 +165,13 @@ export default class LoadFileList extends Vue {
   }
 
   get filteredFiles() {
-    let matches: any[] = []
+    let matches: Array<IEvaluation | Sample> = []
     if (this.search != '') {
-      (this.files as Array<IEvaluation | Sample>).forEach(async (item: any) => {
-        if (this.filterEvaluationTags(item, this.search) || item.filename.toLowerCase().includes(this.search)) {
+      (this.files as Array<IEvaluation | Sample>).forEach(async (item: IEvaluation | Sample) => {
+        if('filename' in item){
+          if (this.filterEvaluationTags(item, this.search) || item.filename.toLowerCase().includes(this.search)) {
           matches.push(item)
-        }
+        }}
       })
     } else {
       return this.files;
