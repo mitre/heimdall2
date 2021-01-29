@@ -132,7 +132,6 @@ export default class EditEvaluationModal extends Vue {
 
   newTagDialog: boolean = false;
   deleteTagDialog: boolean = false;
-  awaitingFinishTyping: boolean = false;
   activeTag: any = {
     id: '-1',
     value: ''
@@ -152,8 +151,8 @@ export default class EditEvaluationModal extends Vue {
 
   async deleteTag(tag: any) {
     await axios.delete(`/evaluation-tags/${tag.id}`).then((response) => {
-      this.activeEvaluation.evaluationTags!.splice(
-        this.activeEvaluation.evaluationTags!.indexOf(tag),
+      this.activeEvaluation.evaluationTags.splice(
+        this.activeEvaluation.evaluationTags.indexOf(tag),
         1
       )
       SnackbarModule.notify("Deleted tag successfully.")
