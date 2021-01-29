@@ -74,7 +74,7 @@
                     <v-row justify="space-between">
                       <v-col cols="auto">
                         <v-btn
-                          v-if="authStrategySupported('google')"
+                          v-show="authStrategySupported('google')"
                           id="oauth-google"
                           plain
                           @click="oauthLogin('google')"
@@ -85,7 +85,7 @@
                       >
                       <v-col cols="auto">
                         <v-btn
-                          v-if="authStrategySupported('github')"
+                          v-show="authStrategySupported('github')"
                           id="oauth-github"
                           plain
                           @click="oauthLogin('github')"
@@ -96,7 +96,7 @@
                       >
                       <v-col cols="auto"
                         ><v-btn
-                          v-if="authStrategySupported('gitlab')"
+                          v-show="authStrategySupported('gitlab')"
                           id="oauth-gitlab"
                           plain
                           @click="oauthLogin('gitlab')"
@@ -110,7 +110,7 @@
                       >
                       <v-col cols="auto"
                         ><v-btn
-                          v-if="authStrategySupported('okta')"
+                          v-show="authStrategySupported('okta')"
                           id="oauth-okta"
                           plain
                           @click="oauthLogin('okta')"
