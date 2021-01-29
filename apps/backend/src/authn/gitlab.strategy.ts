@@ -12,7 +12,7 @@ interface UserEmail {
 interface GitlabProfile {
   username: string;
   emails: UserEmail[];
-  [key: string]: any;
+  displayName: string;
 }
 
 @Injectable()

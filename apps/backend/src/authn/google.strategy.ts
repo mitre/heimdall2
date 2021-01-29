@@ -14,10 +14,8 @@ interface GoogleProfile {
   name: {
     familyName: string;
     givenName: string;
-    [key: string]: any; // If for some reason google passes back an extra name field
   };
   emails: UserEmail[];
-  [key: string]: any;
 }
 
 @Injectable()

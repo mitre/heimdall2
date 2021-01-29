@@ -8,13 +8,11 @@ import {AuthnService} from './authn.service';
 
 interface GithubProfile {
   name: string;
-  [key: string]: any;
 }
 
 interface GithubEmail {
   email: string;
   verified: boolean;
-  [key: string]: any;
 }
 
 @Injectable()

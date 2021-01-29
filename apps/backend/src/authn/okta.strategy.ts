@@ -5,13 +5,11 @@ import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
 
 interface OktaProfile {
-  [key: string]: any;
   _json: {
     given_name: string;
     family_name: string;
     email: string;
     email_verified: boolean;
-    [key: string]: any;
   };
 }
 
