@@ -7,14 +7,12 @@ import {EvaluationTag} from '../../src/evaluation-tags/evaluation-tag.model';
 
 // @ts-ignore
 export const EVALUATION_TAG_1: EvaluationTag = {
-  key: 'key string',
   value: 'value string',
   evaluationId: '1'
 };
 
 export const EVALUATION_TAG_DTO: EvaluationTagDto = {
   id: '10001',
-  key: 'key string',
   value: 'value string',
   evaluationId: '1',
   createdAt: new Date(),
@@ -22,7 +20,6 @@ export const EVALUATION_TAG_DTO: EvaluationTagDto = {
 };
 
 export const CREATE_EVALUATION_TAG_DTO: CreateEvaluationTagDto = {
-  key: 'key string',
   value: 'value string'
 };
 
@@ -32,13 +29,10 @@ export const CREATE_EVALUATION_TAG_DTO_MISSING_KEY: CreateEvaluationTagDto = {
 };
 
 // @ts-ignore
-export const CREATE_EVALUATION_TAG_DTO_MISSING_VALUE: CreateEvaluationTagDto = {
-  key: 'key string'
-};
+export const CREATE_EVALUATION_TAG_DTO_MISSING_VALUE: CreateEvaluationTagDto = {};
 
 // @ts-ignore
 export const UPDATE_EVALUATION_TAG_DTO: UpdateEvaluationTagDto = {
-  key: 'new key string',
   value: 'new value string'
 };
 
@@ -48,8 +42,6 @@ export const UPDATE_EVALUATION_TAG_DTO_MISSING_KEY: UpdateEvaluationTagDto = {
 };
 
 // @ts-ignore
-export const UPDATE_EVALUATION_TAG_DTO_MISSING_VALUE: UpdateEvaluationTagDto = {
-  key: 'new key string'
-};
+export const UPDATE_EVALUATION_TAG_DTO_MISSING_VALUE: UpdateEvaluationTagDto = {};
 
 /* eslint-enable @typescript-eslint/ban-ts-comment */
