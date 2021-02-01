@@ -47,6 +47,7 @@ context('Login', () => {
       dropdown.openUserModal();
       // Make sure all the fields exist
       userModalVerifier.verifyFieldsExist();
+    });
     it('authenticates an ldap user with valid credentials', () => {
       loginPage.switchToLDAPAuth();
       loginPageVerifier.ldapLoginFormPresent();
