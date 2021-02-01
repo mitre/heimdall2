@@ -6,7 +6,7 @@
       <slot name="clickable" :on="on" :attrs="attrs" />
     </template>
     <v-banner v-if="update_unavailable" icon="mdi-alert" color="warning">
-      Some of the settings are managed by your idenity provider.
+      Some of the settings are managed by your identity provider.
     </v-banner>
     <v-card class="rounded-t-0">
       <v-card-title
