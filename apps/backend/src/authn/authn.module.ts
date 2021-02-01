@@ -10,6 +10,7 @@ import {GitlabStrategy} from './gitlab.strategy';
 import {GoogleStrategy} from './google.strategy';
 import {JwtStrategy} from './jwt.strategy';
 import {LocalStrategy} from './local.strategy';
+import {OidcStrategy} from './oidc.strategy';
 import {OktaStrategy} from './okta.strategy';
 
 @Module({
@@ -21,7 +22,8 @@ import {OktaStrategy} from './okta.strategy';
     GithubStrategy,
     GitlabStrategy,
     GoogleStrategy,
-    OktaStrategy
+    OktaStrategy,
+    OidcStrategy
   ],
   controllers: [AuthnController]
 })

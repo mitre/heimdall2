@@ -37,9 +37,7 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
         }/oauth2/default/v1/userinfo`,
         clientID: configService.get('OKTA_CLIENTID') || 'disabled',
         clientSecret: configService.get('OKTA_CLIENTSECRET') || 'disabled',
-        callbackURL:
-          `${configService.get('EXTERNAL_URL')}/authn/okta/callback` ||
-          'disabled',
+        callbackURL: `${configService.get('EXTERNAL_URL')}/authn/okta/callback`,
         scope: 'openid email profile',
         passReqToCallback: true
       },
