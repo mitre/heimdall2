@@ -5,17 +5,27 @@ const middlewares = jsonServer.defaults();
 // Set default middlewares (logger, static, cors and no-cache)
 server.use(middlewares);
 
-// Add custom routes before JSON Server router
-server.get('/echo', (req, res) => {
-  res.jsonp(req.query);
-});
-
 // To handle POST, PUT and PATCH you need to use a body-parser
 // You can use the one used by JSON Server
 server.use(jsonServer.bodyParser);
 server.use((req, res, next) => {
-  if (req.originalUrl.startsWith('/authorize')) {
+  if (req.originalUrl.startsWith('/login/oauth/authorize')) {
     res.redirect('http://127.0.0.1:3000/authn/github/callback?code=1234');
+  } else if (req.originalUrl.startsWith('/user/emails')) {
+    res.send([
+      {
+        email: 'example@mitre.org',
+        primary: true,
+        verified: true,
+        visibility: 'private'
+      },
+      {
+        email: '66680985+example@users.noreply.github.com',
+        primary: false,
+        verified: true,
+        visibility: null
+      }
+    ]);
   } else if (req.originalUrl.startsWith('/user')) {
     res.send({
       login: 'example',
@@ -54,24 +64,9 @@ server.use((req, res, next) => {
       created_at: '2020-06-09T13:04:43Z',
       updated_at: '2021-01-03T15:33:05Z'
     });
-  } else if (req.originalUrl.startsWith('/emails')) {
-    res.send([
-      {
-        email: 'example@mitre.org',
-        primary: true,
-        verified: true,
-        visibility: 'private'
-      },
-      {
-        email: '66680985+example@users.noreply.github.com',
-        primary: false,
-        verified: true,
-        visibility: null
-      }
-    ]);
   } else if (
     req.method === 'POST' &&
-    req.originalUrl.startsWith('/access_token')
+    req.originalUrl.startsWith('/login/oauth/access_token')
   ) {
     res.send({
       access_token: 'e72e16c7e42f292c6912e7710c838347ae178b4a',
@@ -79,7 +74,6 @@ server.use((req, res, next) => {
       token_type: 'bearer'
     });
   } else {
-    console.log('hit');
     next();
   }
 });

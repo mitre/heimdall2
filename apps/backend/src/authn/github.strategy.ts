@@ -24,15 +24,19 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     super({
       clientID: configService.get('GITHUB_CLIENTID') || 'disabled',
       clientSecret: configService.get('GITHUB_CLIENTSECRET') || 'disabled',
-      authorizationURL:
-        configService.get('GITHUB_ENTERPRISE_INSTANCE_URL') ||
-        'https://github.com/login/oauth/authorize',
-      tokenURL:
-        configService.get('GITHUB_ENTERPRISE_TOKEN_URL') ||
-        'https://github.com/login/oauth/access_token',
-      userProfileURL:
-        configService.get('GITHUB_ENTERPRISE_PROFILE_URL') ||
-        'https://api.github.com/user',
+      authorizationURL: `
+        ${
+          configService.get('GITHUB_ENERPRISE_INSTANCE_BASE_URL') ||
+          'https://github.com/'
+        }login/oauth/authorize`,
+      tokenURL: `${
+        configService.get('GITHUB_ENERPRISE_INSTANCE_BASE_URL') ||
+        'https://github.com/'
+      }login/oauth/access_token`,
+      userProfileURL: `${
+        configService.get('GITHUB_ENERPRISE_INSTANCE_API_URL') ||
+        'https://api.github.com/'
+      }user`,
       scope: 'user:email',
       passReqToCallback: true
     });
@@ -45,8 +49,10 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     // Get user's linked emails from Github
     const githubEmails = await axios
       .get(
-        this.configService.get('GITHUB_ENTERPRISE_EMAIL_URL') ||
-          'https://api.github.com/user/emails',
+        `${
+          this.configService.get('GITHUB_ENERPRISE_INSTANCE_API_URL') ||
+          'https://api.github.com/'
+        }user/emails`,
         {
           headers: {Authorization: `token ${accessToken}`}
         }
@@ -57,8 +63,10 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     // Get user's info
     const userInfoResponse = await axios
       .get(
-        this.configService.get('GITHUB_ENTERPRISE_PROFILE_URL') ||
-          'https://api.github.com/user',
+        `${
+          this.configService.get('GITHUB_ENERPRISE_INSTANCE_API_URL') ||
+          'https://api.github.com/'
+        }user`,
         {
           headers: {Authorization: `token ${accessToken}`}
         }
