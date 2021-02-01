@@ -1,5 +1,5 @@
 <template>
-  <Modal :visible="visible" width="50%">
+  <Modal :visible="visible" max-width="1000px">
     <v-card>
       <v-card-title>
         <span class="headline">Edit "{{ activeEvaluation.filename }}"</span>
