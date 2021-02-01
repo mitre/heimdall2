@@ -18,7 +18,8 @@ export class ConfigService {
     });
     return new StartupSettingsDto({
       banner: this.get('WARNING_BANNER') || '',
-      enabledOAuth: enabledOauth
+      enabledOAuth: enabledOauth,
+      ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false
     });
   }
 

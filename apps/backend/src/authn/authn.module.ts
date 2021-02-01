@@ -9,6 +9,7 @@ import {GithubStrategy} from './github.strategy';
 import {GitlabStrategy} from './gitlab.strategy';
 import {GoogleStrategy} from './google.strategy';
 import {JwtStrategy} from './jwt.strategy';
+import {LDAPStrategy} from './ldap.strategy';
 import {LocalStrategy} from './local.strategy';
 import {OktaStrategy} from './okta.strategy';
 
@@ -21,7 +22,8 @@ import {OktaStrategy} from './okta.strategy';
     GithubStrategy,
     GitlabStrategy,
     GoogleStrategy,
-    OktaStrategy
+    LDAPStrategy,
+    OktaStrategy,
   ],
   controllers: [AuthnController]
 })

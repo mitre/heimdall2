@@ -2,7 +2,8 @@ import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
 import {compare} from 'bcrypt';
 import * as crypto from 'crypto';
-import {CreateUserDto} from 'src/users/dto/create-user.dto';
+import {ConfigService} from '../config/config.service';
+import {CreateUserDto} from '../users/dto/create-user.dto';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 
@@ -10,6 +11,7 @@ import {UsersService} from '../users/users.service';
 export class AuthnService {
   constructor(
     private usersService: UsersService,
+    private readonly configService: ConfigService,
     private jwtService: JwtService
   ) {}
 

@@ -1,8 +1,10 @@
 /// <reference types="cypress" />
 
 import {
+  BAD_LDAP_AUTHENTICATION,
   BAD_LOGIN_AUTHENTICATION,
   CREATE_USER_DTO_TEST_OBJ,
+  LDAP_AUTHENTICATION,
   LOGIN_AUTHENTICATION
 } from '../../apps/backend/test/constants/users-test.constant';
 import Dropdown from '../support/components/Dropdown';
@@ -45,10 +47,20 @@ context('Login', () => {
       dropdown.openUserModal();
       // Make sure all the fields exist
       userModalVerifier.verifyFieldsExist();
+    it('authenticates an ldap user with valid credentials', () => {
+      loginPage.switchToLDAPAuth();
+      loginPageVerifier.ldapLoginFormPresent();
+      loginPage.ldapLogin(LDAP_AUTHENTICATION);
+      toastVerifier.toastTextContains('You have successfully signed in.');
     });
     it('fails to authenticate a user with invalid credentials', () => {
       loginPage.login(BAD_LOGIN_AUTHENTICATION);
       toastVerifier.toastTextContains('Incorrect Username or Password');
+    });
+    it('fails to authenticate an ldap user with invalid credentials', () => {
+      loginPage.switchToLDAPAuth();
+      loginPage.ldapLogin(BAD_LDAP_AUTHENTICATION);
+      toastVerifier.toastTextContains('Unauthorized');
     });
   });
 });

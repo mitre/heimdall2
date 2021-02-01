@@ -37,6 +37,6 @@ export class CreateUserDto implements ICreateUser {
 
   @IsNotEmpty()
   @IsString()
-  @IsIn(['local', 'ldap', 'github', 'gitlab', 'google', 'okta'])
+  @IsIn(['local', 'ldap', 'github', 'gitlab', 'google', 'okta', 'ldap'])
   readonly creationMethod!: string;
 }

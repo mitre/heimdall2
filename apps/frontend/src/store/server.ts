@@ -21,6 +21,7 @@ export interface IServerState {
   token: string;
   banner: string;
   enabledOAuth: string[];
+  ldap: boolean;
   userInfo: IUser;
 }
 
@@ -32,6 +33,7 @@ export interface IServerState {
 })
 class Server extends VuexModule implements IServerState {
   banner = '';
+  ldap = false;
   serverUrl = '';
   serverMode = false;
   loading = true;
@@ -71,6 +73,7 @@ class Server extends VuexModule implements IServerState {
   SET_STARTUP_SETTINGS(settings: IStartupSettings) {
     this.banner = settings.banner;
     this.enabledOAuth = settings.enabledOAuth;
+    this.ldap = settings.ldap;
   }
 
   @Mutation
@@ -150,9 +153,23 @@ class Server extends VuexModule implements IServerState {
     this.GetUserInfo();
   }
 
+  @Action
+  public async handleLogin(data: {userID: string; accessToken: string}) {
+    this.context.commit('SET_USERID', data.userID);
+    this.context.commit('SET_TOKEN', data.accessToken);
+    this.GetUserInfo();
+  }
+
   @Action({rawError: true})
   public async Login(userInfo: {email: string; password: string}) {
     return axios.post('/authn/login', userInfo).then((response) => {
+      this.handleLogin(response.data);
+    });
+  }
+
+  @Action({rawError: true})
+  public async LoginLDAP(userInfo: {username: string; password: string}) {
+    return axios.post('/authn/login/ldap', userInfo).then((response) => {
       this.handleLogin(response.data);
     });
   }
