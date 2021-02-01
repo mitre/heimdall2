@@ -26,16 +26,16 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
       clientSecret: configService.get('GITHUB_CLIENTSECRET') || 'disabled',
       authorizationURL: `
         ${
-          configService.get('GITHUB_ENERPRISE_INSTANCE_BASE_URL') ||
-          'https://github.com/'
+          configService.get('GITHUB_ENTERPRISE_INSTANCE_BASE_URL') ||
+          configService.defaultGithubBaseURL
         }login/oauth/authorize`,
       tokenURL: `${
-        configService.get('GITHUB_ENERPRISE_INSTANCE_BASE_URL') ||
-        'https://github.com/'
+        configService.get('GITHUB_ENTERPRISE_INSTANCE_BASE_URL') ||
+        configService.defaultGithubBaseURL
       }login/oauth/access_token`,
       userProfileURL: `${
-        configService.get('GITHUB_ENERPRISE_INSTANCE_API_URL') ||
-        'https://api.github.com/'
+        configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL') ||
+        configService.defaultGithubAPIURL
       }user`,
       scope: 'user:email',
       passReqToCallback: true
@@ -50,8 +50,8 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     const githubEmails = await axios
       .get(
         `${
-          this.configService.get('GITHUB_ENERPRISE_INSTANCE_API_URL') ||
-          'https://api.github.com/'
+          this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL') ||
+          this.configService.defaultGithubAPIURL
         }user/emails`,
         {
           headers: {Authorization: `token ${accessToken}`}
@@ -64,8 +64,8 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     const userInfoResponse = await axios
       .get(
         `${
-          this.configService.get('GITHUB_ENERPRISE_INSTANCE_API_URL') ||
-          'https://api.github.com/'
+          this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL') ||
+          this.configService.defaultGithubAPIURL
         }user`,
         {
           headers: {Authorization: `token ${accessToken}`}

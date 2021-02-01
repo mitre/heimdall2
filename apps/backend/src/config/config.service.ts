@@ -4,6 +4,8 @@ import {StartupSettingsDto} from './dto/startup-settings.dto';
 
 export class ConfigService {
   private readonly appConfig: AppConfig;
+  public defaultGithubBaseURL = 'https://github.com/';
+  public defaultGithubAPIURL = 'https://api.github.com/';
 
   constructor() {
     this.appConfig = new AppConfig();
