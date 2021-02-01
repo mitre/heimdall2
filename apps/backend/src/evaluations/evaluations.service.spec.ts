@@ -114,9 +114,9 @@ describe('EvaluationsService', () => {
       expect(evaluation.createdAt).toBeDefined();
       expect(evaluation.data).toEqual(EVALUATION_WITH_TAGS_1.data);
       expect(evaluation.filename).toEqual(EVALUATION_WITH_TAGS_1.filename);
-      expect(evaluation.evaluationTags?.[0].evaluationId).toBeDefined();
-      expect(evaluation.evaluationTags?.[0].updatedAt).toBeDefined();
-      expect(evaluation.evaluationTags?.[0].createdAt).toBeDefined();
+      expect(evaluation.evaluationTags[0].evaluationId).toBeDefined();
+      expect(evaluation.evaluationTags[0].updatedAt).toBeDefined();
+      expect(evaluation.evaluationTags[0].createdAt).toBeDefined();
 
       if (EVALUATION_WITH_TAGS_1.evaluationTags === undefined) {
         throw new TypeError(
@@ -126,9 +126,6 @@ describe('EvaluationsService', () => {
 
       expect(evaluation.evaluationTags?.[0].value).toEqual(
         EVALUATION_WITH_TAGS_1.evaluationTags[0].value
-      );
-      expect(evaluation.evaluationTags?.[0].key).toEqual(
-        EVALUATION_WITH_TAGS_1.evaluationTags[0].key
       );
     });
 
@@ -144,7 +141,7 @@ describe('EvaluationsService', () => {
       expect(evaluation.filename).toEqual(
         CREATE_EVALUATION_DTO_WITHOUT_TAGS.filename
       );
-      expect(evaluation.evaluationTags).toBeNull();
+      expect(evaluation.evaluationTags).toEqual([]);
       expect((await evaluationTagsService.findAll()).length).toBe(0);
     });
 

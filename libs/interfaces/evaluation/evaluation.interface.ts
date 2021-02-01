@@ -2,9 +2,9 @@ import {IEvaluationTag} from '..';
 
 export interface IEvaluation {
   id: string;
-  readonly filename: string;
+  filename: string;
   readonly data: Record<string, any> | undefined;
-  readonly evaluationTags: IEvaluationTag[] | null;
+  evaluationTags: IEvaluationTag[];
   readonly userId: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;

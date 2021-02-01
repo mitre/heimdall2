@@ -4,9 +4,9 @@ import {Evaluation} from '../evaluation.model';
 
 export class EvaluationDto implements IEvaluation {
   readonly id: string;
-  readonly filename: string;
+  filename: string;
   readonly data: Record<string, any> | undefined;
-  readonly evaluationTags: EvaluationTagDto[] | null;
+  readonly evaluationTags: EvaluationTagDto[];
   readonly userId: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -19,7 +19,7 @@ export class EvaluationDto implements IEvaluation {
       evaluation.evaluationTags === null ||
       evaluation.evaluationTags === undefined
     ) {
-      this.evaluationTags = null;
+      this.evaluationTags = [];
     } else {
       this.evaluationTags = evaluation.evaluationTags.map(
         (tag) => new EvaluationTagDto(tag)

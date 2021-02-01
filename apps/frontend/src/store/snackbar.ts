@@ -23,22 +23,41 @@ export class Snackbar extends VuexModule {
   message = '';
   error = false;
   show = false;
+
   @Action
   notify(message: string) {
     this.context.commit('SET_ERROR', false);
     this.context.commit('SET_MESSAGE', message);
     this.context.commit('SET_VISIBILITY', true);
   }
+
   @Action
   failure(message: string) {
     this.context.commit('SET_ERROR', true);
     this.context.commit('SET_MESSAGE', message);
     this.context.commit('SET_VISIBILITY', true);
   }
+
+  @Action
+  HTTPFailure(error: any) {
+    if (typeof error.response.data.message === 'object') {
+      this.notify(
+        error.response.data.message
+          .map(function capitalize(c: string) {
+            return c.charAt(0).toUpperCase() + c.slice(1);
+          })
+          .join(', ')
+      );
+    } else {
+      this.failure(error.response.data.message);
+    }
+  }
+
   @Action
   visibility(visibility: boolean) {
     this.context.commit('SET_VISIBILITY', visibility);
   }
+
   @Mutation
   SET_ERROR(error: boolean) {
     this.error = error;

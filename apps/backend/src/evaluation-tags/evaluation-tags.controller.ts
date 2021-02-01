@@ -28,7 +28,7 @@ export class EvaluationTagsController {
     return this.evaluationTagsService.findById(id);
   }
 
-  @Post()
+  @Post(':evaluationId')
   async create(
     @Param('evaluationId') evaluationId: string,
     @Body() createEvaluationTagDto: CreateEvaluationTagDto

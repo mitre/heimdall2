@@ -145,9 +145,6 @@ describe('/evaluations', () => {
                 'Test fixture for Evaluation is set up improperly and has an undefined value for Evaluation Tags'
               );
             } else {
-              expect(response.body.evaluationTags[0].key).toEqual(
-                EVALUATION_WITH_TAGS_1.evaluationTags[0].key
-              );
               expect(response.body.evaluationTags[0].value).toEqual(
                 EVALUATION_WITH_TAGS_1.evaluationTags[0].value
               );

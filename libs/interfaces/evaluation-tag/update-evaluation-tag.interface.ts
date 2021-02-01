@@ -1,4 +1,4 @@
 export interface IUpdateEvaluationTag {
-  readonly key: string;
+  readonly id: string;
   readonly value: string;
 }
