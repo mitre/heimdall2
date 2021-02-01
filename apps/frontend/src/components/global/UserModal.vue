@@ -5,8 +5,10 @@
     <template #activator="{on, attrs}">
       <slot name="clickable" :on="on" :attrs="attrs" />
     </template>
-
-    <v-card>
+    <v-banner v-if="update_unavailable" icon="mdi-alert" color="warning">
+      Some of the settings are managed by your identity provider.
+    </v-banner>
+    <v-card class="rounded-t-0">
       <v-card-title
         data-cy="userModalTitle"
         class="headline grey"
@@ -24,6 +26,7 @@
               <v-text-field
                 id="firstName"
                 v-model="userInfo.firstName"
+                :disabled="update_unavailable"
                 label="First Name"
               />
             </v-col>
@@ -31,6 +34,7 @@
               <v-text-field
                 id="lastName"
                 v-model="userInfo.lastName"
+                :disabled="update_unavailable"
                 label="Last Name"
               />
             </v-col>
@@ -40,6 +44,7 @@
               <v-text-field
                 id="email_field"
                 v-model="userInfo.email"
+                :disabled="update_unavailable"
                 :error-messages="emailErrors($v.userInfo.email)"
                 label="Email"
                 type="text"
@@ -53,23 +58,30 @@
           </v-row>
           <v-row>
             <v-col>
-              <v-text-field id="title" v-model="userInfo.title" label="Title" />
+              <v-text-field
+                id="title"
+                v-model="userInfo.title"
+                :disabled="update_unavailable"
+                label="Title"
+              />
             </v-col>
             <v-col>
               <v-text-field
                 id="organization"
                 v-model="userInfo.organization"
+                :disabled="update_unavailable"
                 label="Organization"
               />
             </v-col>
           </v-row>
 
-          <div v-if="!admin">
+          <div v-if="!admin && userInfo.creationMethod === 'local'">
             <v-divider />
             <v-text-field
               id="password_field"
               ref="password"
               v-model="currentPassword"
+              :disabled="update_unavailable"
               :error-messages="
                 requiredFieldError($v.currentPassword, 'Current Password')
               "
@@ -78,7 +90,11 @@
               @blur="$v.currentPassword.$touch()"
             />
           </div>
-          <v-btn id="toggleChangePassword" @click="changePasswordDialog"
+          <v-btn
+            v-if="userInfo.creationMethod === 'local'"
+            id="toggleChangePassword"
+            :disabled="update_unavailable"
+            @click="changePasswordDialog"
             >Change Password</v-btn
           >
           <div v-show="changePassword">
@@ -86,6 +102,7 @@
               id="new_password_field"
               ref="newPassword"
               v-model="newPassword"
+              :disabled="update_unavailable"
               :error-messages="
                 requiredFieldError($v.newPassword, 'New Password')
               "
@@ -98,6 +115,7 @@
               id="repeat_password_field"
               ref="repeatPassword"
               v-model="passwordConfirmation"
+              :disabled="update_unavailable"
               :error-messages="
                 requiredFieldError($v.passwordConfirmation, 'Repeat Password')
               "
@@ -126,6 +144,7 @@
             id="closeAndSaveChanges"
             color="primary"
             text
+            :disabled="update_unavailable"
             @click="updateUserInfo"
             >Save Changes</v-btn
           >
@@ -142,7 +161,7 @@ import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
 import {IUser, IUpdateUser} from '@heimdall/interfaces';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
-import {required, email, requiredIf, requiredUnless} from 'vuelidate/lib/validators';
+import {required, email, requiredIf} from 'vuelidate/lib/validators';
 import {Prop} from 'vue-property-decorator';
 
 @Component({
@@ -155,7 +174,9 @@ import {Prop} from 'vue-property-decorator';
       }
     },
     currentPassword: {
-      required: requiredUnless('admin')
+      required: requiredIf(function(userInfo){
+        	return (userInfo.user.role == 'admin')
+        })
     },
     newPassword: {
       required: requiredIf('changePassword')
@@ -227,6 +248,10 @@ export default class UserModal extends Vue {
 
   changePasswordDialog() {
     this.changePassword = !this.changePassword
+  }
+
+  get update_unavailable() {
+    return this.userInfo.creationMethod == 'ldap';
   }
 
   get title(): string {

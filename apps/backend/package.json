@@ -68,6 +68,7 @@
     "js-levenshtein": "^1.1.6",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
+    "passport-ldapauth": "^3.0.1",
     "passport-local": "^1.0.0",
     "pg": "^8.2.1",
     "reflect-metadata": "^0.1.13",

@@ -10,7 +10,10 @@ export class ConfigService {
   }
 
   frontendStartupSettings(): StartupSettingsDto {
-    return new StartupSettingsDto({banner: this.get('WARNING_BANNER') || ''});
+    return new StartupSettingsDto({
+      banner: this.get('WARNING_BANNER') || '',
+      ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false
+    });
   }
 
   getDbConfig(): SequelizeOptions {
