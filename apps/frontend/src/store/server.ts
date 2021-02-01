@@ -153,13 +153,6 @@ class Server extends VuexModule implements IServerState {
     this.GetUserInfo();
   }
 
-  @Action
-  public async handleLogin(data: {userID: string; accessToken: string}) {
-    this.context.commit('SET_USERID', data.userID);
-    this.context.commit('SET_TOKEN', data.accessToken);
-    this.GetUserInfo();
-  }
-
   @Action({rawError: true})
   public async Login(userInfo: {email: string; password: string}) {
     return axios.post('/authn/login', userInfo).then((response) => {

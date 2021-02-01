@@ -40,11 +40,58 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer />
-      <div class="my-2">
-        <v-btn id="sign_up_button" depressed small @click="signup">
-          Sign Up
-        </v-btn>
-      </div>
+
+      <v-container fluid>
+        <v-row align="center"> <v-divider />OR<v-divider /> </v-row>
+        <div class="container d-flex flex-column">
+          <v-row justify="space-between">
+            <v-col cols="auto">
+              <v-btn
+                v-show="authStrategySupported('google')"
+                id="oauth-google"
+                plain
+                @click="oauthLogin('google')"
+              >
+                <v-img :src="require('@/assets/google_mark.png')" />
+                <div class="pl-2">Login with Google</div>
+              </v-btn></v-col
+            >
+            <v-col cols="auto">
+              <v-btn
+                v-show="authStrategySupported('github')"
+                id="oauth-github"
+                plain
+                @click="oauthLogin('github')"
+              >
+                <v-img :src="require('@/assets/github_mark.png')" />
+                <div class="pl-2">Login with GitHub</div>
+              </v-btn></v-col
+            >
+            <v-col cols="auto"
+              ><v-btn
+                v-show="authStrategySupported('gitlab')"
+                id="oauth-gitlab"
+                plain
+                @click="oauthLogin('gitlab')"
+              >
+                <v-img height="42" :src="require('@/assets/gitlab_mark.png')" />
+                <div class="pl-2">Login with GitLab</div>
+              </v-btn></v-col
+            >
+            <v-col cols="auto"
+              ><v-btn
+                v-show="authStrategySupported('okta')"
+                id="oauth-okta"
+                plain
+                @click="oauthLogin('okta')"
+              >
+                <v-img height="32" :src="require('@/assets/okta_mark.png')" />
+                <div class="pl-2">Login with Okta</div>
+              </v-btn></v-col
+            >
+          </v-row>
+        </div>
+      </v-container>
     </v-card-actions>
   </v-card>
 </template>
@@ -93,6 +140,13 @@ export default class LocalLogin extends Vue {
       .catch((error) => {
         SnackbarModule.notify(error.response.data.message);
       });
+  }
+
+  authStrategySupported(strategy: string) {
+    return ServerModule.enabledOAuth.includes(strategy)
+  }
+  oauthLogin(site: string){
+    window.location.href = `/authn/${site}`;
   }
 }
 </script>

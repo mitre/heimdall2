@@ -32,7 +32,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
         'https://github.com/login/oauth/access_token',
       userProfileURL:
         configService.get('GITHUB_ENTERPRISE_PROFILE_URL') ||
-        'https://github.com/api/v3/user',
+        'https://api.github.com/user',
       scope: 'user:email',
       passReqToCallback: true
     });
