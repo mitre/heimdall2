@@ -61,8 +61,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
-          start: yarn start
-          run: yarn run cypress-test mock-oauth
+          start: yarn start, yarn run cypress-test mock-oauth
           wait-on: http://127.0.0.1:3000
 
       - name: Upload test screenshots
