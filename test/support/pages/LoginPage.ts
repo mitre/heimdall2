@@ -5,6 +5,10 @@ export default class LoginPage {
     cy.get('#login_button').click();
   }
 
+  loginOauth(oauthStrategy: string): void {
+    cy.get(`#oauth-${oauthStrategy}`).click({force: true});
+  }
+
   ldapLogin(user: {username: string; password: string}): void {
     cy.get('[data-cy=ldapusername]').clear().type(user.username);
     cy.get('[data-cy=ldappassword]').clear().type(user.password);

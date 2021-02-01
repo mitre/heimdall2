@@ -361,7 +361,8 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE: CreateUserDto = {
   firstName: 'Test',
   lastName: 'Dummy',
   title: 'fake title',
-  organization: 'Fake Org'
+  organization: 'Fake Org',
+  creationMethod: 'local'
 };
 
 // @ts-ignore

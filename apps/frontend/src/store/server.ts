@@ -2,6 +2,7 @@ import Store from '@/store/store';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import {IStartupSettings, IUpdateUser, IUser} from '@heimdall/interfaces';
 import axios from 'axios';
+import Vue from 'vue';
 import {
   Action,
   getModule,
@@ -19,6 +20,7 @@ export interface IServerState {
   loading: boolean;
   token: string;
   banner: string;
+  enabledOAuth: string[];
   ldap: boolean;
   userInfo: IUser;
 }
@@ -35,6 +37,7 @@ class Server extends VuexModule implements IServerState {
   serverUrl = '';
   serverMode = false;
   loading = true;
+  enabledOAuth: string[] = [];
   /** Our currently granted JWT token */
   token = '';
   /** Provide a sane default for userInfo in order to avoid having to null check it all the time */
@@ -69,6 +72,7 @@ class Server extends VuexModule implements IServerState {
   @Mutation
   SET_STARTUP_SETTINGS(settings: IStartupSettings) {
     this.banner = settings.banner;
+    this.enabledOAuth = settings.enabledOAuth;
     this.ldap = settings.ldap;
   }
 
@@ -121,8 +125,10 @@ class Server extends VuexModule implements IServerState {
           // This means the server successfully responded and we are therefore in server mode
           this.context.commit('SET_SERVER', potentialUrl);
           this.context.commit('SET_STARTUP_SETTINGS', response.data);
-          const token = local_token.get();
-          const userID = localUserID.get();
+          const token = local_token.get() || Vue.$cookies.get('accessToken');
+          const userID = localUserID.get() || Vue.$cookies.get('userID');
+          Vue.$cookies.remove('accessToken');
+          Vue.$cookies.remove('userID');
           if (token !== null) {
             this.context.commit('SET_TOKEN', token);
           }
@@ -140,7 +146,6 @@ class Server extends VuexModule implements IServerState {
         this.context.commit('SET_LOADING', false);
       });
   }
-
   @Action
   public async handleLogin(data: {userID: string; accessToken: string}) {
     this.context.commit('SET_USERID', data.userID);
@@ -160,6 +165,19 @@ class Server extends VuexModule implements IServerState {
     return axios.post('/authn/login/ldap', userInfo).then((response) => {
       this.handleLogin(response.data);
     });
+  }
+
+  @Action({rawError: true})
+  public async LoginGithub(callbackCode: string | null) {
+    return axios
+      .get(`/authn/github/callback`, {
+        params: {
+          code: callbackCode
+        }
+      })
+      .then((response) => {
+        this.handleLogin(response.data);
+      });
   }
 
   @Action({rawError: true})

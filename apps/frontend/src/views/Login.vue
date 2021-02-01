@@ -71,6 +71,10 @@ export default class Login extends Vue {
     }
   }
 
+  signup() {
+    this.$router.push('/signup');
+  }
+
   get ldapenabled() {
     return ServerModule.ldap
   }

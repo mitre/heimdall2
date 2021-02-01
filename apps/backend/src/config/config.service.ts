@@ -4,14 +4,23 @@ import {StartupSettingsDto} from './dto/startup-settings.dto';
 
 export class ConfigService {
   private readonly appConfig: AppConfig;
+  public defaultGithubBaseURL = 'https://github.com/';
+  public defaultGithubAPIURL = 'https://api.github.com/';
 
   constructor() {
     this.appConfig = new AppConfig();
   }
 
   frontendStartupSettings(): StartupSettingsDto {
+    const enabledOauth: string[] = [];
+    supportedOauth.forEach((oauthStrategy) => {
+      if (this.get(`${oauthStrategy.toUpperCase()}_CLIENTID`)) {
+        enabledOauth.push(oauthStrategy);
+      }
+    });
     return new StartupSettingsDto({
       banner: this.get('WARNING_BANNER') || '',
+      enabledOAuth: enabledOauth,
       ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false
     });
   }
@@ -28,3 +37,4 @@ export class ConfigService {
     return this.appConfig.get(key);
   }
 }
+export const supportedOauth: string[] = ['github', 'gitlab', 'google', 'okta'];

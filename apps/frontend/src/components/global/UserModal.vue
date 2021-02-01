@@ -251,7 +251,7 @@ export default class UserModal extends Vue {
   }
 
   get update_unavailable() {
-    return this.userInfo.creationMethod == 'ldap';
+    return this.userInfo.creationMethod == 'ldap' || ServerModule.enabledOAuth.includes(this.userInfo.creationMethod);
   }
 
   get title(): string {
