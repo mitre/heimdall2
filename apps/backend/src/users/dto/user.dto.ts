@@ -11,6 +11,7 @@ export class UserDto implements IUser {
   readonly organization: string | undefined;
   readonly loginCount: number;
   readonly lastLogin: Date | undefined;
+  readonly creationMethod: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -24,6 +25,7 @@ export class UserDto implements IUser {
     this.organization = user.organization;
     this.loginCount = user.loginCount;
     this.lastLogin = user.lastLogin;
+    this.creationMethod = user.creationMethod;
     this.createdAt = user.createdAt;
     this.updatedAt = user.updatedAt;
   }

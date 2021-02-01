@@ -19,6 +19,7 @@ export interface IServerState {
   loading: boolean;
   token: string;
   banner: string;
+  ldap: boolean;
   userInfo: IUser;
 }
 
@@ -30,6 +31,7 @@ export interface IServerState {
 })
 class Server extends VuexModule implements IServerState {
   banner = '';
+  ldap = false;
   serverUrl = '';
   serverMode = false;
   loading = true;
@@ -46,6 +48,7 @@ class Server extends VuexModule implements IServerState {
     organization: '',
     loginCount: -1,
     lastLogin: undefined,
+    creationMethod: '',
     createdAt: new Date(),
     updatedAt: new Date()
   };
@@ -66,6 +69,7 @@ class Server extends VuexModule implements IServerState {
   @Mutation
   SET_STARTUP_SETTINGS(settings: IStartupSettings) {
     this.banner = settings.banner;
+    this.ldap = settings.ldap;
   }
 
   @Mutation
@@ -137,12 +141,24 @@ class Server extends VuexModule implements IServerState {
       });
   }
 
+  @Action
+  public async handleLogin(data: {userID: string; accessToken: string}) {
+    this.context.commit('SET_USERID', data.userID);
+    this.context.commit('SET_TOKEN', data.accessToken);
+    this.GetUserInfo();
+  }
+
   @Action({rawError: true})
   public async Login(userInfo: {email: string; password: string}) {
-    return axios.post('/authn/login', userInfo).then(({data}) => {
-      this.context.commit('SET_TOKEN', data.accessToken);
-      this.context.commit('SET_USERID', data.userID);
-      this.GetUserInfo();
+    return axios.post('/authn/login', userInfo).then((response) => {
+      this.handleLogin(response.data);
+    });
+  }
+
+  @Action({rawError: true})
+  public async LoginLDAP(userInfo: {username: string; password: string}) {
+    return axios.post('/authn/login/ldap', userInfo).then((response) => {
+      this.handleLogin(response.data);
     });
   }
 
@@ -151,6 +167,7 @@ class Server extends VuexModule implements IServerState {
     email: string;
     password: string;
     passwordConfirmation: string;
+    creationMethod: string;
   }) {
     return axios.post('/users', userInfo);
   }

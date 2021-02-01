@@ -157,7 +157,7 @@ Proper API documentation does not exist yet. In the meantime here are quick inst
 
 ```sh
 # Create a user (only needs to be done once)
-curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "password", "passwordConfirmation": "password", "role": "user" }' http://localhost:3000/users
+curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "password", "passwordConfirmation": "password", "role": "user", "creationMethod": "local" }' http://localhost:3000/users
 # Log in
 curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "password" }' http://localhost:3000/authn/login
 # The previous command returns a Bearer Token that needs to get placed in the following command

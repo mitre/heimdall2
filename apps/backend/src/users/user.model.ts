@@ -69,6 +69,10 @@ export class User extends Model {
   @Column(DataType.STRING)
   role!: string;
 
+  @AllowNull(false)
+  @Column(DataType.STRING)
+  creationMethod!: string;
+
   @CreatedAt
   @AllowNull(false)
   @Column(DataType.DATE)
