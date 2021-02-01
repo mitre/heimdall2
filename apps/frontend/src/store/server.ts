@@ -21,6 +21,7 @@ export interface IServerState {
   token: string;
   banner: string;
   enabledOAuth: string[];
+  OIDCName: string;
   userInfo: IUser;
 }
 
@@ -36,6 +37,7 @@ class Server extends VuexModule implements IServerState {
   serverMode = false;
   loading = true;
   enabledOAuth: string[] = [];
+  OIDCName = '';
   /** Our currently granted JWT token */
   token = '';
   /** Provide a sane default for userInfo in order to avoid having to null check it all the time */
@@ -70,6 +72,7 @@ class Server extends VuexModule implements IServerState {
   SET_STARTUP_SETTINGS(settings: IStartupSettings) {
     this.banner = settings.banner;
     this.enabledOAuth = settings.enabledOAuth;
+    this.OIDCName = settings.OIDCName;
   }
 
   @Mutation

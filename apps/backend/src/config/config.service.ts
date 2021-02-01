@@ -10,7 +10,13 @@ export class ConfigService {
   }
 
   frontendStartupSettings(): StartupSettingsDto {
-    const supportedOauth: string[] = ['github', 'gitlab', 'google', 'okta'];
+    const supportedOauth: string[] = [
+      'github',
+      'gitlab',
+      'google',
+      'okta',
+      'OIDC'
+    ];
     const enabledOauth: string[] = [];
     supportedOauth.forEach((oauthStrategy) => {
       if (this.get(`${oauthStrategy.toUpperCase()}_CLIENTID`)) {
@@ -19,7 +25,8 @@ export class ConfigService {
     });
     return new StartupSettingsDto({
       banner: this.get('WARNING_BANNER') || '',
-      enabledOAuth: enabledOauth
+      enabledOAuth: enabledOauth,
+      OIDCName: this.get('OIDC_NAME') || ''
     });
   }
 
