@@ -42,7 +42,7 @@
     </v-card-text>
     <v-card-actions>
       <v-container fluid>
-        <div class="mt-0 mb-2" align="right">
+        <div class="d-flex align-end flex-column mb-2">
           <router-link to="/signup">
             <v-btn id="sign_up_button" depressed small> Sign Up </v-btn>
           </router-link>
