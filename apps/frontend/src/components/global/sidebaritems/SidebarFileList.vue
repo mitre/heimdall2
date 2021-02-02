@@ -42,6 +42,7 @@ import {ServerModule} from '@/store/server';
 @Component
 export default class FileItem extends mixins(ServerMixin) {
   @Prop({type: Object}) readonly file!: EvaluationFile | ProfileFile;
+  clickToConfirm: boolean = false;
 
   select_file() {
     if (this.file.hasOwnProperty('evaluation')) {
@@ -74,12 +75,14 @@ export default class FileItem extends mixins(ServerMixin) {
     let file = InspecDataModule.allFiles.find(
       (f) => f.unique_id === this.file.unique_id
     );
-    if (file?.database_id){
-      SnackbarModule.failure('This evaluation is already in the databse.')
+    if (file?.database_id && !this.clickToConfirm){
+      SnackbarModule.failure('This evaluation is already in the databse. Save again to confirm.')
+      this.clickToConfirm = true;
     }
     else if (file) {
       if (file.hasOwnProperty('evaluation')) {
         this.save_evaluation(file as EvaluationFile);
+        this.clickToConfirm = false;
       }
     }
   }
