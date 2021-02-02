@@ -26,10 +26,11 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         const userData = profile._json;
         const {given_name, family_name, email, email_verified} = userData;
         if (email_verified) {
-          const user = authnService.oauthValidateUser(
+          const user = authnService.validateOrCreateUser(
             email,
             given_name,
-            family_name
+            family_name,
+            'oidc'
           );
           return done(null, user);
         } else {
