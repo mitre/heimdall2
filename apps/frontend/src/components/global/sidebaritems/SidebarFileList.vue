@@ -74,7 +74,10 @@ export default class FileItem extends mixins(ServerMixin) {
     let file = InspecDataModule.allFiles.find(
       (f) => f.unique_id === this.file.unique_id
     );
-    if (file) {
+    if (file?.database_id){
+      SnackbarModule.failure('This evaluation is already in the databse.')
+    }
+    else if (file) {
       if (file.hasOwnProperty('evaluation')) {
         this.save_evaluation(file as EvaluationFile);
       }
@@ -91,8 +94,9 @@ export default class FileItem extends mixins(ServerMixin) {
 
     axios
       .post('/evaluations', evaluationDTO)
-      .then(() => {
+      .then((response) => {
         SnackbarModule.notify('Result saved successfully');
+        file.database_id = parseInt(response.data.id);
       })
       .catch((error) => {
         SnackbarModule.failure(error.response.data.message);
