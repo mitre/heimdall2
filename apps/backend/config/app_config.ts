@@ -64,8 +64,8 @@ export default class AppConfig {
       dialectOptions: {
         ssl: Boolean(this.get('DATABASE_SSL'))
           ? {
-            rejectUnauthorized: false
-          }
+              rejectUnauthorized: false
+            }
           : false
       },
       ssl: Boolean(this.get('DATABASE_SSL')) || false

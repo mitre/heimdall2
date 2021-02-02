@@ -8,13 +8,11 @@ import {AuthnService} from './authn.service';
 
 interface GithubProfile {
   name: string;
-  [key: string]: any;
 }
 
 interface GithubEmail {
   email: string;
   verified: boolean;
-  [key: string]: any;
 }
 
 @Injectable()
@@ -26,6 +24,19 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     super({
       clientID: configService.get('GITHUB_CLIENTID') || 'disabled',
       clientSecret: configService.get('GITHUB_CLIENTSECRET') || 'disabled',
+      authorizationURL: `
+        ${
+          configService.get('GITHUB_ENTERPRISE_INSTANCE_BASE_URL') ||
+          configService.defaultGithubBaseURL
+        }login/oauth/authorize`,
+      tokenURL: `${
+        configService.get('GITHUB_ENTERPRISE_INSTANCE_BASE_URL') ||
+        configService.defaultGithubBaseURL
+      }login/oauth/access_token`,
+      userProfileURL: `${
+        configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL') ||
+        configService.defaultGithubAPIURL
+      }user`,
       scope: 'user:email',
       passReqToCallback: true
     });
@@ -37,17 +48,29 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
   ): Promise<User> {
     // Get user's linked emails from Github
     const githubEmails = await axios
-      .get('https://api.github.com/user/emails', {
-        headers: {Authorization: `token ${accessToken}`}
-      })
+      .get(
+        `${
+          this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL') ||
+          this.configService.defaultGithubAPIURL
+        }user/emails`,
+        {
+          headers: {Authorization: `token ${accessToken}`}
+        }
+      )
       .then((response): GithubEmail[] => {
         return response.data;
       });
     // Get user's info
     const userInfoResponse = await axios
-      .get('https://api.github.com/user', {
-        headers: {Authorization: `token ${accessToken}`}
-      })
+      .get(
+        `${
+          this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL') ||
+          this.configService.defaultGithubAPIURL
+        }user`,
+        {
+          headers: {Authorization: `token ${accessToken}`}
+        }
+      )
       .then(
         (response): GithubProfile => {
           return response.data;
@@ -61,10 +84,11 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     // Only validate if the user has verified their email with Github
     if (primaryEmail.verified) {
       // Check if the user already exists, if not they will be created
-      return this.authnService.oauthValidateUser(
+      return this.authnService.validateOrCreateUser(
         primaryEmail.email,
         firstName,
-        lastName
+        lastName,
+        'github'
       );
     } else {
       throw new UnauthorizedException(

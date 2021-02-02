@@ -21,10 +21,6 @@ export class EvaluationTag extends Model {
 
   @AllowNull(false)
   @Column
-  key!: string;
-
-  @AllowNull(false)
-  @Column
   value!: string;
 
   @AllowNull(false)

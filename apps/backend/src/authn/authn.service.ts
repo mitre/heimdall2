@@ -2,7 +2,8 @@ import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
 import {compare} from 'bcrypt';
 import * as crypto from 'crypto';
-import {CreateUserDto} from 'src/users/dto/create-user.dto';
+import {ConfigService} from '../config/config.service';
+import {CreateUserDto} from '../users/dto/create-user.dto';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 
@@ -10,10 +11,11 @@ import {UsersService} from '../users/users.service';
 export class AuthnService {
   constructor(
     private usersService: UsersService,
+    private readonly configService: ConfigService,
     private jwtService: JwtService
   ) {}
 
-  async validateUser(email: string, password: string): Promise<any> {
+  async validateUser(email: string, password: string): Promise<User | null> {
     let user: User;
     try {
       user = await this.usersService.findByEmail(email);
@@ -28,10 +30,11 @@ export class AuthnService {
     }
   }
 
-  async oauthValidateUser(
+  async validateOrCreateUser(
     email: string,
     firstName: string,
-    lastName: string
+    lastName: string,
+    creationMethod: string
   ): Promise<User> {
     let user: User;
     try {
@@ -46,13 +49,21 @@ export class AuthnService {
         lastName: lastName,
         organization: '',
         title: '',
-        role: 'user'
+        role: 'user',
+        creationMethod: creationMethod
       };
       await this.usersService.create(createUser);
       user = await this.usersService.findByEmail(email);
     }
 
     if (user) {
+      // If the users info has changed since they last logged in it will be reflected here.
+      // Because we find the user by their email, we can't detect a change in email.
+      if (user.firstName !== firstName || user.lastName !== lastName) {
+        user.firstName = firstName;
+        user.lastName = lastName;
+        user.save();
+      }
       this.usersService.updateLoginMetadata(user);
     }
 

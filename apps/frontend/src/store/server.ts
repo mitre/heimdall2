@@ -22,6 +22,7 @@ export interface IServerState {
   banner: string;
   enabledOAuth: string[];
   OIDCName: string;
+  ldap: boolean;
   userInfo: IUser;
 }
 
@@ -33,6 +34,7 @@ export interface IServerState {
 })
 class Server extends VuexModule implements IServerState {
   banner = '';
+  ldap = false;
   serverUrl = '';
   serverMode = false;
   loading = true;
@@ -51,6 +53,7 @@ class Server extends VuexModule implements IServerState {
     organization: '',
     loginCount: -1,
     lastLogin: undefined,
+    creationMethod: '',
     createdAt: new Date(),
     updatedAt: new Date()
   };
@@ -73,6 +76,7 @@ class Server extends VuexModule implements IServerState {
     this.banner = settings.banner;
     this.enabledOAuth = settings.enabledOAuth;
     this.OIDCName = settings.OIDCName;
+    this.ldap = settings.ldap;
   }
 
   @Mutation
@@ -160,6 +164,13 @@ class Server extends VuexModule implements IServerState {
   }
 
   @Action({rawError: true})
+  public async LoginLDAP(userInfo: {username: string; password: string}) {
+    return axios.post('/authn/login/ldap', userInfo).then((response) => {
+      this.handleLogin(response.data);
+    });
+  }
+
+  @Action({rawError: true})
   public async LoginGithub(callbackCode: string | null) {
     return axios
       .get(`/authn/github/callback`, {
@@ -177,6 +188,7 @@ class Server extends VuexModule implements IServerState {
     email: string;
     password: string;
     passwordConfirmation: string;
+    creationMethod: string;
   }) {
     return axios.post('/users', userInfo);
   }

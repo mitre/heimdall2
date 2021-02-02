@@ -5,13 +5,11 @@ import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
 
 interface OktaProfile {
-  [key: string]: any;
   _json: {
     given_name: string;
     family_name: string;
     email: string;
     email_verified: boolean;
-    [key: string]: any;
   };
 }
 
@@ -37,7 +35,9 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
         }/oauth2/default/v1/userinfo`,
         clientID: configService.get('OKTA_CLIENTID') || 'disabled',
         clientSecret: configService.get('OKTA_CLIENTSECRET') || 'disabled',
-        callbackURL: `${configService.get('EXTERNAL_URL')}/authn/okta/callback`,
+        callbackURL:
+          `${configService.get('EXTERNAL_URL')}authn/okta/callback` ||
+          'disabled',
         scope: 'openid email profile',
         passReqToCallback: true
       },
@@ -51,10 +51,11 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
         const userData = profile._json;
         const {given_name, family_name, email, email_verified} = userData;
         if (email_verified) {
-          const user = this.authnService.oauthValidateUser(
+          const user = this.authnService.validateOrCreateUser(
             email,
             given_name,
-            family_name
+            family_name,
+            'okta'
           );
           return done(null, user);
         } else {

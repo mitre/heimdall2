@@ -3,11 +3,8 @@ import {Test} from '@nestjs/testing';
 import {EvaluationDto} from 'src/evaluations/dto/evaluation.dto';
 import {
   CREATE_EVALUATION_TAG_DTO,
-  CREATE_EVALUATION_TAG_DTO_MISSING_KEY,
   CREATE_EVALUATION_TAG_DTO_MISSING_VALUE,
-  UPDATE_EVALUATION_TAG_DTO,
-  UPDATE_EVALUATION_TAG_DTO_MISSING_KEY,
-  UPDATE_EVALUATION_TAG_DTO_MISSING_VALUE
+  UPDATE_EVALUATION_TAG_DTO
 } from '../../test/constants/evaluation-tags-test.constant';
 import {EVALUATION_1} from '../../test/constants/evaluations-test.constant';
 import {CREATE_USER_DTO_TEST_OBJ} from '../../test/constants/users-test.constant';
@@ -75,23 +72,10 @@ describe('EvaluationTagsService', () => {
       expect(evaluationTag.evaluationId).toEqual(evaluation.id);
       expect(evaluationTag.createdAt).toBeDefined();
       expect(evaluationTag.updatedAt).toBeDefined();
-      expect(evaluationTag.key).toEqual(CREATE_EVALUATION_TAG_DTO.key);
       expect(evaluationTag.value).toEqual(CREATE_EVALUATION_TAG_DTO.value);
     });
 
     describe('With missing fields', () => {
-      it('should throw an error with key', async () => {
-        expect.assertions(1);
-        await expect(
-          evaluationTagsService.create(
-            evaluation.id,
-            CREATE_EVALUATION_TAG_DTO_MISSING_KEY
-          )
-        ).rejects.toThrow(
-          'notNull Violation: EvaluationTag.key cannot be null'
-        );
-      });
-
       it('should throw an error with value', async () => {
         expect.assertions(1);
         await expect(
@@ -139,44 +123,9 @@ describe('EvaluationTagsService', () => {
         evaluationTag.id,
         UPDATE_EVALUATION_TAG_DTO
       );
-      expect(updatedEvaluationTag.key).toEqual(UPDATE_EVALUATION_TAG_DTO.key);
       expect(updatedEvaluationTag.value).toEqual(
         UPDATE_EVALUATION_TAG_DTO.value
       );
-      expect(updatedEvaluationTag.updatedAt.valueOf()).not.toEqual(
-        evaluationTag.updatedAt.valueOf()
-      );
-    });
-
-    it('should update only key', async () => {
-      const evaluationTag = await evaluationTagsService.create(
-        evaluation.id,
-        CREATE_EVALUATION_TAG_DTO
-      );
-      const updatedEvaluationTag = await evaluationTagsService.update(
-        evaluationTag.id,
-        UPDATE_EVALUATION_TAG_DTO_MISSING_VALUE
-      );
-      expect(updatedEvaluationTag.key).toEqual(UPDATE_EVALUATION_TAG_DTO.key);
-      expect(updatedEvaluationTag.value).toEqual(evaluationTag.value);
-      expect(updatedEvaluationTag.updatedAt.valueOf()).not.toEqual(
-        evaluationTag.updatedAt.valueOf()
-      );
-    });
-
-    it('should update only value', async () => {
-      const evaluationTag = await evaluationTagsService.create(
-        evaluation.id,
-        CREATE_EVALUATION_TAG_DTO
-      );
-      const updatedEvaluationTag = await evaluationTagsService.update(
-        evaluationTag.id,
-        UPDATE_EVALUATION_TAG_DTO_MISSING_KEY
-      );
-      expect(updatedEvaluationTag.value).toEqual(
-        UPDATE_EVALUATION_TAG_DTO.value
-      );
-      expect(updatedEvaluationTag.key).toEqual(evaluationTag.key);
       expect(updatedEvaluationTag.updatedAt.valueOf()).not.toEqual(
         evaluationTag.updatedAt.valueOf()
       );
@@ -193,7 +142,6 @@ describe('EvaluationTagsService', () => {
       const removedEvaluationTag = await evaluationTagsService.remove(
         evaluationTag.id
       );
-      expect(removedEvaluationTag.key).toEqual(evaluationTag.key);
       expect(removedEvaluationTag.value).toEqual(evaluationTag.value);
       const foundEvaluationTag = await EvaluationTag.findByPk<EvaluationTag>(
         evaluationTag.id

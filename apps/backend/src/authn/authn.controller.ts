@@ -17,6 +17,14 @@ export class AuthnController {
     return this.authnService.login(req.user as User);
   }
 
+  @UseGuards(AuthGuard('ldap'))
+  @Post('login/ldap')
+  async loginToLDAP(
+    @Req() req: Request
+  ): Promise<{userID: string; accessToken: string}> {
+    return this.authnService.login(req.user as User);
+  }
+
   @Get('github')
   @UseGuards(AuthGuard('github'))
   async loginToGithub(

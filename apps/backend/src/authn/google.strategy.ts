@@ -14,10 +14,8 @@ interface GoogleProfile {
   name: {
     familyName: string;
     givenName: string;
-    [key: string]: any; // If for some reason google passes back an extra name field
   };
   emails: UserEmail[];
-  [key: string]: any;
 }
 
 @Injectable()
@@ -48,10 +46,11 @@ export class GoogleStrategy extends PassportStrategy(OAuth2Strategy, 'google') {
       lastName: name.familyName
     };
     if (user.email.verified) {
-      return this.authnService.oauthValidateUser(
+      return this.authnService.validateOrCreateUser(
         user.email.value,
         user.firstName,
-        user.lastName
+        user.lastName,
+        'google'
       );
     } else {
       throw new UnauthorizedException(
