@@ -26,22 +26,29 @@
           @keyup.enter="login"
           @blur="$v.password.$touch()"
         />
-        <v-btn
-          id="login_button"
-          depressed
-          large
-          color="primary"
-          :disabled="$v.$invalid"
-          @click="login"
-        >
-          Login
-        </v-btn>
+        <v-container fluid class="mb-0">
+          <v-btn
+            id="login_button"
+            depressed
+            large
+            color="primary"
+            :disabled="$v.$invalid"
+            @click="login"
+          >
+            Login
+          </v-btn>
+        </v-container>
       </v-form>
     </v-card-text>
     <v-card-actions>
-      <v-spacer />
-
       <v-container fluid>
+        <div class="mt-0 mb-2" align="right">
+          <router-link to="/signup">
+            <v-btn id="sign_up_button" depressed small> Sign Up </v-btn>
+          </router-link>
+        </div>
+        <v-spacer />
+
         <v-row align="center"> <v-divider />OR<v-divider /> </v-row>
         <div class="container d-flex flex-column">
           <v-row justify="space-between">
@@ -122,10 +129,6 @@ interface LoginHash {
 export default class LocalLogin extends Vue {
     email: string = '';
     password: string = '';
-
-  signup() {
-    this.$router.push('/signup');
-  }
 
   login() {
     const creds: LoginHash = {
