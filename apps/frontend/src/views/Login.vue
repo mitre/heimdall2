@@ -61,10 +61,6 @@ const lastLoginTab = new LocalStorageVal<string>('login_curr_tab');
 export default class Login extends Vue {
   activeTab: string = lastLoginTab.get_default('logintab-standard')
 
-  get OIDCName() {
-    return ServerModule.OIDCName;
-  }
-
   mounted() {
     this.checkLoggedIn();
   }
@@ -78,13 +74,12 @@ export default class Login extends Vue {
   signup() {
     this.$router.push('/signup');
   }
+  oauthLogin(site: string){
+    window.location.href = `/authn/${site}`;
+  }
 
   get ldapenabled() {
     return ServerModule.ldap
-  }
-
-  oauthLogin(site: string){
-    window.location.href = `/authn/${site}`;
   }
 }
 </script>
