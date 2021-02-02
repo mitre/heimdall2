@@ -24,7 +24,7 @@ import {OktaStrategy} from './okta.strategy';
     GitlabStrategy,
     GoogleStrategy,
     OktaStrategy,
-    OidcStrategy
+    OidcStrategy,
     LDAPStrategy
   ],
   controllers: [AuthnController]
