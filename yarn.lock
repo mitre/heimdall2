@@ -2432,9 +2432,9 @@
     path-to-regexp "0.1.7"
 
 "@nestjs/testing@^7.0.13":
-  version "7.6.8"
-  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-7.6.8.tgz#2276b84449cf823d7e343a674614fbda936dc12e"
-  integrity sha512-Jz9LNbgEMDLvijlBfWJnbAfWxj8I838Uk2EKwsDMjOl7plDvaYxmvu2B2QFQyAR7wK7VBZsAv7KiojvvFbHz+g==
+  version "7.6.10"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-7.6.10.tgz#ca85ac0f25bab932a6a79d22b70f0caa255e9af4"
+  integrity sha512-xDRU7bdkg9nA0AiO16RMQe1gvj13QVhOdcLzdgudVdhSeK7XWHraBUgS5XE9UABA8o33P2uFCM93fZ/DbFChYg==
   dependencies:
     optional "0.1.4"
     tslib "2.1.0"
