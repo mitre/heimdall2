@@ -78,7 +78,7 @@ To run Heimdall Lite locally, just use the `npm` built-in utility `npx`:
 npx heimdall-lite
 ```
 
-If you use this tool often and want to have it installed locally, use the following command: 
+If you use this tool often and want to have it installed locally, use the following command:
 
 ```bash
 npm install -g heimdall-lite
@@ -180,18 +180,18 @@ If you would like to change Heimdall to your needs, Heimdall has 'Development Mo
      sudo npm install -g yarn
      ```
 
-2. Download and extract the most recent release from our [releases page](https://github.com/mitre/heimdall2/releases) using wget:
+2. Clone this repository:
 
    - ```bash
      git clone https://github.com/mitre/heimdall2
      ```
-   
+
 3. Create the Postgres role:
 
    - ```sql
      # Start the Postgres terminal
      psql postgres
-     
+
      # Create the user
      CREATE USER <username> with encrypted password '<password>';
      ALTER USER <username> CREATEDB;
@@ -217,13 +217,22 @@ If you would like to change Heimdall to your needs, Heimdall has 'Development Mo
      ```
 
 6. Start Heimdall:
-   
+
    - ```bash
      yarn start:dev
      ```
 
-
 This will start both the frontend and backend in development mode, meaning any changes you make to the source code will take effect immediately. Please note we already have a Visual Studio Code workspace file you can use to organize your workspace.
+
+### Debugging Heimdall Server
+
+If you are using Visual Studio Code, it is very simple to debug this application locally. First open up the Visual Studio Code workspace and ensure the [Node debuger Auto Attach](https://code.visualstudio.com/docs/nodejs/nodejs-debugging#_auto-attach) feature in Visual Studio Code is enabled. Next, open the integrated Visual Studio Code terminal and run:
+
+```
+yarn backend start:debug
+```
+
+Visual Studio Code will then automatically attach a debugger and stop and any breakpoints you place in the application.
 
 ### Developing Heimdall Lite Standalone
 
