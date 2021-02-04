@@ -48,7 +48,7 @@
           </router-link>
         </div>
         <v-spacer />
-        <div v-if="showAlternateAuth">
+        <div v-show="showAlternateAuth">
           <v-row align="center"> <v-divider />OR<v-divider /> </v-row>
           <div class="container d-flex flex-column">
             <v-row justify="space-between">
