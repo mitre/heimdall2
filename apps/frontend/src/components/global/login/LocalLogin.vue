@@ -49,7 +49,9 @@
         </div>
         <v-spacer />
 
-        <v-row align="center"> <v-divider />OR<v-divider /> </v-row>
+        <v-row v-if="showAlternateAuth" align="center">
+          <v-divider />OR<v-divider />
+        </v-row>
         <div class="container d-flex flex-column">
           <v-row justify="space-between">
             <v-col cols="auto">
@@ -143,6 +145,10 @@ export default class LocalLogin extends Vue {
       .catch((error) => {
         SnackbarModule.notify(error.response.data.message);
       });
+  }
+
+  get showAlternateAuth() {
+    return ServerModule.enabledOAuth.length !== 0;
   }
 
   authStrategySupported(strategy: string) {
