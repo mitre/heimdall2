@@ -13,7 +13,7 @@
     </v-list-item-content>
 
     <v-list-item-action v-if="serverMode" @click.stop="save_file">
-      <v-btn icon small>
+      <v-btn icon small :disabled="disable_saving">
         <v-icon> mdi-content-save </v-icon>
       </v-btn>
     </v-list-item-action>
@@ -82,6 +82,14 @@ export default class FileItem extends mixins(ServerMixin) {
         this.save_evaluation(file as EvaluationFile);
       }
     }
+  }
+
+  //determines if the use can save the file
+  get disable_saving() {
+    let file = InspecDataModule.allFiles.find(
+      (f) => f.unique_id === this.file.unique_id
+    );
+    return (typeof file?.database_id !== 'undefined')
   }
 
   save_evaluation(file: EvaluationFile) {
