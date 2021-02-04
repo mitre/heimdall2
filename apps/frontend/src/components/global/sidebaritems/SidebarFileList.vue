@@ -71,25 +71,19 @@ export default class FileItem extends mixins(ServerMixin) {
 
   //saves file to database
   save_file() {
-    let file = InspecDataModule.allFiles.find(
-      (f) => f.unique_id === this.file.unique_id
-    );
-    if (file?.database_id){
+    if (this.file?.database_id){
       SnackbarModule.failure('This evaluation is already in the databse.')
     }
-    else if (file) {
-      if (file.hasOwnProperty('evaluation')) {
-        this.save_evaluation(file as EvaluationFile);
+    else if (this.file) {
+      if (this.file.hasOwnProperty('evaluation')) {
+        this.save_evaluation(this.file as EvaluationFile);
       }
     }
   }
 
   //determines if the use can save the file
   get disable_saving() {
-    let file = InspecDataModule.allFiles.find(
-      (f) => f.unique_id === this.file.unique_id
-    );
-    return (typeof file?.database_id !== 'undefined')
+    return (typeof this.file?.database_id !== 'undefined')
   }
 
   save_evaluation(file: EvaluationFile) {
