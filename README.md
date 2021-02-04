@@ -112,12 +112,13 @@ Given that Heimdall requires at least a database service, we use Docker and Dock
 
 3. Navigate to the base folder where `docker-compose.yml` is located
 
-4. Run the following commands in a terminal window from the Heimdall source directory:
+4. Run the following commands in a terminal window from the Heimdall source directory. For more information on the .env file, visit [Environment Variables Configuration.](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration)
    - ```bash
      ./setup-docker-secrets.sh
+     # If you would like to further configure your Heimdall instance, edit the .env file generated after running the previous line
      docker-compose up -d
-     ```
-
+  ```
+   
 6. Navigate to  [`http://127.0.0.1:3000`](http://127.0.0.1:3000).
 
 #### Running Docker Container
@@ -205,7 +206,7 @@ If you would like to change Heimdall to your needs, Heimdall has 'Development Mo
      yarn install
      ```
 
-5. Edit your .env file and create the database:
+5. Edit your .env file and create the database. For more info on configuration values see [Enviroment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration):
 
    - ```bash
      nano apps/backend/.env-example
