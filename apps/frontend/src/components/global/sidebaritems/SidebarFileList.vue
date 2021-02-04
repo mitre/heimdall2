@@ -43,6 +43,8 @@ import {ServerModule} from '@/store/server';
 export default class FileItem extends mixins(ServerMixin) {
   @Prop({type: Object}) readonly file!: EvaluationFile | ProfileFile;
 
+  saving: boolean = false;
+
   select_file() {
     if (this.file.hasOwnProperty('evaluation')) {
       FilteredDataModule.toggle_evaluation(this.file.unique_id);
@@ -72,7 +74,7 @@ export default class FileItem extends mixins(ServerMixin) {
   //saves file to database
   save_file() {
     if (this.file?.database_id){
-      SnackbarModule.failure('This evaluation is already in the databse.')
+      SnackbarModule.failure('This evaluation is already in the database.')
     }
     else if (this.file) {
       if (this.file.hasOwnProperty('evaluation')) {
@@ -83,10 +85,12 @@ export default class FileItem extends mixins(ServerMixin) {
 
   //determines if the use can save the file
   get disable_saving() {
-    return (typeof this.file?.database_id !== 'undefined')
+    return (typeof this.file?.database_id !== 'undefined') || this.saving
   }
 
   save_evaluation(file: EvaluationFile) {
+    this.saving = true;
+
     let evaluationDTO: ICreateEvaluation = {
       data: file.evaluation.data,
       filename: file.filename,
@@ -102,6 +106,8 @@ export default class FileItem extends mixins(ServerMixin) {
       })
       .catch((error) => {
         SnackbarModule.failure(error.response.data.message);
+      }).finally(() => {
+        this.saving = false;
       });
   }
 
