@@ -5,7 +5,8 @@ import {
   BAD_LOGIN_AUTHENTICATION,
   CREATE_USER_DTO_TEST_OBJ,
   LDAP_AUTHENTICATION,
-  LOGIN_AUTHENTICATION
+  LOGIN_AUTHENTICATION,
+  KEYCLOAK_AUTHENTICATION
 } from '../../apps/backend/test/constants/users-test.constant';
 import Dropdown from '../support/components/Dropdown';
 import UploadModal from '../support/components/UploadModal';
@@ -49,11 +50,25 @@ context('Login', () => {
       userModalVerifier.verifyFieldsExist();
     });
     it('authenticates an ldap user with valid credentials', () => {
+      cy.get('body').then(body$ => {
+        const appWindow = body$[0].ownerDocument.defaultView;
+        appWindow.location = '/'
+      })
       loginPage.switchToLDAPAuth();
       loginPageVerifier.ldapLoginFormPresent();
       loginPage.ldapLogin(LDAP_AUTHENTICATION);
       toastVerifier.toastTextContains('You have successfully signed in.');
     });
+    it.only('authenticates an oidc user', () => {
+      loginPage.loginOauth('oidc');
+      
+      loginPage.keyCloakLogin(KEYCLOAK_AUTHENTICATION);
+      uploadModal.loadFirstSample();
+      // Open the user modal
+      dropdown.openUserModal();
+      // Make sure all the fields exist
+      userModalVerifier.verifyFieldsExist();
+    })
     it('fails to authenticate a user with invalid credentials', () => {
       loginPage.login(BAD_LOGIN_AUTHENTICATION);
       toastVerifier.toastTextContains('Incorrect Username or Password');
@@ -62,6 +77,21 @@ context('Login', () => {
       loginPage.switchToLDAPAuth();
       loginPage.ldapLogin(BAD_LDAP_AUTHENTICATION);
       toastVerifier.toastTextContains('Unauthorized');
+    });
+
+    Cypress.Commands.add('forceVisit', url => {
+      cy.get('body').then(body$ => {
+        const appWindow = body$[0].ownerDocument.defaultView;
+        const appIframe = appWindow.parent.document.querySelector('iframe');
+    
+        // We return a promise here because we don't want to
+        // continue from this command until the new page is
+        // loaded.
+        return new Promise(resolve => {
+          appIframe.onload = () => resolve(null);
+          appWindow.location = url;
+        });
+      });
     });
   });
 });

@@ -35,6 +35,11 @@ export const BAD_LDAP_AUTHENTICATION = {
   password: 'zoiderg'
 };
 
+export const KEYCLOAK_AUTHENTICATION = {
+  username: 'example@example.com',
+  password: 'test'
+}
+
 // @ts-ignore
 export const TEST_USER: User = {
   email: 'abc@yahoo.com',

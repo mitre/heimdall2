@@ -4,7 +4,9 @@
   const fs = require('fs');
 
   // By default expects keycloak to run on localhost:8080
-  const kcAdminClient = new KcAdminClient();
+  const kcAdminClient = new KcAdminClient({
+    baseUrl: 'http://127.0.0.1:8081/auth'
+  });
 
   await kcAdminClient.auth({
     username: 'admin',
@@ -45,6 +47,6 @@
 
   fs.appendFile(filePath, `\nOIDC_CLIENT_SECRET=${newCredential.value}`, function (err) {
     if (err) throw err;
-    console.log(`Saved OIDC_CLIENT_SECRET to ${filepath}`);
+    console.log(`Saved OIDC_CLIENT_SECRET`);
   });
 })();

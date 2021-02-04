@@ -55,6 +55,7 @@
             <v-col cols="auto">
               <v-btn
                 v-if="authStrategySupported('OIDC')"
+                id="oauth-oidc"
                 plain
                 @click="oauthLogin('oidc')"
               >
