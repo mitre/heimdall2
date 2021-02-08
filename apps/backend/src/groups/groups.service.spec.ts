@@ -17,6 +17,7 @@ import {Evaluation} from '../evaluations/evaluation.model';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {EVALUATION_1, EVALUATION_WITH_TAGS_1} from '../../test/constants/evaluations-test.constant';
 import {EvaluationTagDto} from '../evaluation-tags/dto/evaluation-tag.dto';
+import {NotFoundException} from '@nestjs/common';
 
 describe('GroupsService', () => {
   let groupsService: GroupsService;
@@ -57,18 +58,27 @@ describe('GroupsService', () => {
 
   });
 
-
   describe('findByPkBang', () => {
     it('should throw a not found exception when the given id is not found', async () => {
-
+      expect(async () => {
+        await groupsService.findByPkBang('0');
+      }).rejects.toThrowError(NotFoundException)
     });
 
     it('should include the group users', async () => {
-
+      const group = await groupsService.create(GROUP_1);
+      const user = await usersService.findByEmail(CREATE_USER_DTO_TEST_OBJ.email);
+      await groupsService.addUserToGroup(group, user, 'owner');
+      const foundGroup = await groupsService.findByPkBang(group.id)
+      expect(new UserDto(foundGroup.users[0])).toEqual(new UserDto(user));
     });
 
     it('should not include the group evaluations', async () => {
-
+      const group = await groupsService.create(GROUP_1);
+      const evaluation = await evaluationsService.create(EVALUATION_1)
+      await groupsService.addEvaluationToGroup(group, evaluation);
+      const foundGroup = await groupsService.findByPkBang(group.id);
+      expect(foundGroup.evaluations).not.toBeDefined();
     });
   });
 
