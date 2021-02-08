@@ -69,6 +69,7 @@
     "express-session": "^1.17.1",
     "helmet": "^4.1.1",
     "js-levenshtein": "^1.1.6",
+    "oauth2-mock-server": "^3.1.0",
     "passport": "^0.4.1",
     "passport-github": "^1.1.0",
     "passport-gitlab2": "^5.0.0",

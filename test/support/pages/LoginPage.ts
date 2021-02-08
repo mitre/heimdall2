@@ -15,7 +15,10 @@ export default class LoginPage {
     cy.get('[data-cy=ldapLoginButton]').click();
   }
 
-  keyCloakLogin(user: {username: string; password: string}): void {
+  async keyCloakLogin(user: {
+    username: string;
+    password: string;
+  }): Promise<void> {
     cy.get('input[name=username]').clear().type(user.username);
     cy.get('input[name=password]').clear().type(user.password);
     cy.get('#kc-login').click();

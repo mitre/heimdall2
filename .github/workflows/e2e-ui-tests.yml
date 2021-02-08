@@ -66,13 +66,10 @@ jobs:
         env:
           NODE_ENV: production
 
-      - name: Seed Keycloak with testing data
-        run: yarn cypress-test seed-keycloak-test $PWD/apps/backend/.env
-
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
-          start: yarn start, yarn run cypress-test mock-oauth
+          start: yarn start, yarn run cypress-test mock-oauth, yarn run cypress-test mock-openid
           wait-on: 'http://127.0.0.1:3000, http://127.0.0.1:3001'
 
       - name: Upload test screenshots
