@@ -17,7 +17,7 @@ import {Evaluation} from '../evaluations/evaluation.model';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {EVALUATION_1, EVALUATION_WITH_TAGS_1} from '../../test/constants/evaluations-test.constant';
 import {EvaluationTagDto} from '../evaluation-tags/dto/evaluation-tag.dto';
-import {NotFoundException} from '@nestjs/common';
+import {ForbiddenException, NotFoundException} from '@nestjs/common';
 
 describe('GroupsService', () => {
   let groupsService: GroupsService;
@@ -60,9 +60,8 @@ describe('GroupsService', () => {
 
   describe('findByPkBang', () => {
     it('should throw a not found exception when the given id is not found', async () => {
-      expect(async () => {
-        await groupsService.findByPkBang('0');
-      }).rejects.toThrowError(NotFoundException)
+      expect.assertions(1);
+      await expect(groupsService.findByPkBang('0')).rejects.toBeInstanceOf(NotFoundException)
     });
 
     it('should include the group users', async () => {
@@ -113,7 +112,11 @@ describe('GroupsService', () => {
     });
 
     it('should not remove the last owner from a group', async () => {
-
+      expect.assertions(1);
+      const group = await groupsService.create(GROUP_1);
+      const groupOwner = await usersService.findByEmail(CREATE_USER_DTO_TEST_OBJ.email);
+      await groupsService.addUserToGroup(group, groupOwner, 'owner');
+      await expect(groupsService.removeUserFromGroup(group, groupOwner)).rejects.toBeInstanceOf(ForbiddenException);
     });
   });
 
