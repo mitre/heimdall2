@@ -14,8 +14,11 @@ import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {User} from '../users/user.model';
+import {AddUserToGroupDto} from './dto/add-user-to-group.dto';
 import {CreateGroupDto} from './dto/create-group.dto';
+import {EvaluationGroupDto} from './dto/evaluation-group.dto';
 import {GroupDto} from './dto/group.dto';
+import {RemoveUserFromGroupDto} from './dto/remove-user-from-group.dto';
 import {GroupsService} from './groups.service';
 
 @Controller('groups')
@@ -51,7 +54,7 @@ export class GroupsController {
   async addUserToGroup(
     @Param('id') id: string,
     @Request() request: {user: User},
-    @Body() addUserToGroupDto: {userId: string, role: string} // AddUserToGroupDto
+    @Body() addUserToGroupDto: AddUserToGroupDto
   ): Promise<GroupDto> {
     return new GroupDto(await this.groupsService.findByPkBang(id));
   }
@@ -60,7 +63,7 @@ export class GroupsController {
   async removeUserFromGroup(
     @Param('id') id: string,
     @Request() request: {user: User},
-    @Body() removeUserFromGroupDto: {userId: string} // RemoveUserFromGroupDto
+    @Body() removeUserFromGroupDto: RemoveUserFromGroupDto
   ): Promise<GroupDto> {
     // This must perform validation checks to ensure the user performing the action is an owner of this group.
     // This should remove a user as long as it is not the only owner in the group
@@ -72,7 +75,7 @@ export class GroupsController {
   async addEvaluationToGroup(
     @Param('id') id: string,
     @Request() request: {user: User},
-    @Body() groupEvaluationUpdateDto: {evaluationId: string} // groupEvaluationUpdateDto
+    @Body() evaluationGroupDto: EvaluationGroupDto
   ): Promise<GroupDto> {
     return new GroupDto(await this.groupsService.findByPkBang(id));
   }
@@ -81,7 +84,7 @@ export class GroupsController {
   async removeEvaluationFromGroup(
     @Param('id') id: string,
     @Request() request: {user: User},
-    @Body() groupEvaluationUpdateDto: {evaluationId: string} // groupEvaluationUpdateDto
+    @Body() evaluationGroupDto: EvaluationGroupDto
   ): Promise<GroupDto> {
     // This must perform validation checks to ensure the user performing the action has permission to remove evaluations from a group.
     return new GroupDto(await this.groupsService.findByPkBang(id));
