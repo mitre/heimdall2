@@ -54,13 +54,13 @@
             <v-row justify="space-between">
               <v-col cols="auto">
                 <v-btn
-                  v-if="authStrategySupported('OIDC')"
+                  v-if="authStrategySupported('oidc')"
                   id="oauth-oidc"
                   plain
                   @click="oauthLogin('oidc')"
                 >
                   <v-img :src="require('@/assets/openid_mark.png')" />
-                  <div class="pl-2">Login with {{ OIDCName }}</div>
+                  <div class="pl-2">Login with {{ oidcName }}</div>
                 </v-btn></v-col
               >
               <v-col cols="auto">
@@ -171,8 +171,8 @@ export default class LocalLogin extends Vue {
     window.location.href = `/authn/${site}`;
   }
 
-  get OIDCName() {
-    return ServerModule.OIDCName;
+  get oidcName() {
+    return ServerModule.oidcName;
   }
 }
 </script>

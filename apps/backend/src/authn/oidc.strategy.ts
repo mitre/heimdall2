@@ -34,7 +34,9 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
           );
           return done(null, user);
         } else {
-          throw new UnauthorizedException('Incorrect Username or Password');
+          throw new UnauthorizedException(
+            'Please verify your email with your identity provider before logging into Heimdall.'
+          );
         }
       }
     );

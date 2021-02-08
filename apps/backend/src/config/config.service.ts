@@ -21,7 +21,7 @@ export class ConfigService {
     return new StartupSettingsDto({
       banner: this.get('WARNING_BANNER') || '',
       enabledOAuth: enabledOauth,
-      OIDCName: this.get('OIDC_NAME') || '',
+      oidcName: this.get('OIDC_NAME') || '',
       ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false
     });
   }
@@ -43,5 +43,5 @@ export const supportedOauth: string[] = [
   'gitlab',
   'google',
   'okta',
-  'OIDC'
+  'oidc'
 ];
