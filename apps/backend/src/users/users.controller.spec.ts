@@ -44,7 +44,16 @@ describe('UsersController Unit Tests', () => {
   beforeAll(async () => {
     module = await Test.createTestingModule({
       controllers: [UsersController],
-      imports: [DatabaseModule, SequelizeModule.forFeature([User, GroupUser, Group, GroupEvaluation, Evaluation])],
+      imports: [
+        DatabaseModule,
+        SequelizeModule.forFeature([
+          User,
+          GroupUser,
+          Group,
+          GroupEvaluation,
+          Evaluation
+        ])
+      ],
       providers: [AuthzService, DatabaseService, UsersService]
     }).compile();
 

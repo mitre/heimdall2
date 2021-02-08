@@ -12,16 +12,16 @@ import {
 } from '@nestjs/common';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
+import {EvaluationsService} from '../evaluations/evaluations.service';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {User} from '../users/user.model';
+import {UsersService} from '../users/users.service';
 import {AddUserToGroupDto} from './dto/add-user-to-group.dto';
 import {CreateGroupDto} from './dto/create-group.dto';
 import {EvaluationGroupDto} from './dto/evaluation-group.dto';
 import {GroupDto} from './dto/group.dto';
 import {RemoveUserFromGroupDto} from './dto/remove-user-from-group.dto';
 import {GroupsService} from './groups.service';
-import {UsersService} from '../users/users.service';
-import {EvaluationsService} from '../evaluations/evaluations.service';
 
 @Controller('groups')
 @UseGuards(JwtAuthGuard)
@@ -61,10 +61,16 @@ export class GroupsController {
     @Body() addUserToGroupDto: AddUserToGroupDto
   ): Promise<GroupDto> {
     const abac = this.authz.abac.createForUser(request.user);
-    const group = await this.groupsService.findByPkBang(id)
+    const group = await this.groupsService.findByPkBang(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Manage, group);
-    const userToAdd = await this.usersService.findById(addUserToGroupDto.userId);
-    this.groupsService.addUserToGroup(group, userToAdd, addUserToGroupDto.groupRole);
+    const userToAdd = await this.usersService.findById(
+      addUserToGroupDto.userId
+    );
+    this.groupsService.addUserToGroup(
+      group,
+      userToAdd,
+      addUserToGroupDto.groupRole
+    );
     return new GroupDto(group);
   }
 
@@ -77,8 +83,12 @@ export class GroupsController {
     const abac = this.authz.abac.createForUser(request.user);
     const group = await this.groupsService.findByPkBang(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Manage, group);
-    const userToRemove = await this.usersService.findById(removeUserFromGroupDto.userId)
-    return new GroupDto(await this.groupsService.removeUserFromGroup(group, userToRemove));
+    const userToRemove = await this.usersService.findById(
+      removeUserFromGroupDto.userId
+    );
+    return new GroupDto(
+      await this.groupsService.removeUserFromGroup(group, userToRemove)
+    );
   }
 
   @Post()
@@ -90,7 +100,9 @@ export class GroupsController {
     const abac = this.authz.abac.createForUser(request.user);
     const group = await this.groupsService.findByPkBang(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.AddEvaluation, group);
-    const evaluationToAdd = await this.evaluationsService.findById(evaluationGroupDto.id);
+    const evaluationToAdd = await this.evaluationsService.findById(
+      evaluationGroupDto.id
+    );
     this.groupsService.addEvaluationToGroup(group, evaluationToAdd);
     return new GroupDto(group);
   }
@@ -105,8 +117,15 @@ export class GroupsController {
     const abac = this.authz.abac.createForUser(request.user);
     const group = await this.groupsService.findByPkBang(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.RemoveEvaluation, group);
-    const evaluationToRemove = await this.evaluationsService.findById(evaluationGroupDto.id);
-    return new GroupDto(await this.groupsService.removeEvaluationFromGroup(group, evaluationToRemove));
+    const evaluationToRemove = await this.evaluationsService.findById(
+      evaluationGroupDto.id
+    );
+    return new GroupDto(
+      await this.groupsService.removeEvaluationFromGroup(
+        group,
+        evaluationToRemove
+      )
+    );
   }
 
   @Put(':id')

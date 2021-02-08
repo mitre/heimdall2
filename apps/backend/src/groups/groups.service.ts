@@ -39,13 +39,19 @@ export class GroupsService {
     // after removing.
   }
 
-  async addEvaluationToGroup(group: Group, evaluation: Evaluation): Promise<void> {
+  async addEvaluationToGroup(
+    group: Group,
+    evaluation: Evaluation
+  ): Promise<void> {
     await group.$add('evaluation', evaluation, {
       through: {createdAt: new Date(), updatedAt: new Date()}
     });
   }
 
-  async removeEvaluationFromGroup(group: Group, evaluation: Evaluation): Promise<Group> {
+  async removeEvaluationFromGroup(
+    group: Group,
+    evaluation: Evaluation
+  ): Promise<Group> {
     return group.$remove('evaluation', evaluation);
   }
 

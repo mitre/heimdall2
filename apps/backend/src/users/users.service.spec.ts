@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test} from '@nestjs/testing';
-import {use} from 'passport';
 import {
   CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
@@ -56,7 +55,14 @@ describe('UsersService', () => {
     const module = await Test.createTestingModule({
       imports: [
         DatabaseModule,
-        SequelizeModule.forFeature([User, GroupUser, Group, GroupEvaluation, Evaluation, EvaluationTag]),
+        SequelizeModule.forFeature([
+          User,
+          GroupUser,
+          Group,
+          GroupEvaluation,
+          Evaluation,
+          EvaluationTag
+        ]),
         AuthzModule
       ],
       providers: [UsersService, DatabaseService, AuthzService]
@@ -128,7 +134,9 @@ describe('UsersService', () => {
       expect.assertions(2);
       const userOne = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const userTwo = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
-      const userDtoArray = (await usersService.findAll()).map((user) => new UserDto(user));
+      const userDtoArray = (await usersService.findAll()).map(
+        (user) => new UserDto(user)
+      );
       expect(userDtoArray).toContainEqual(new UserDto(userOne));
       expect(userDtoArray).toContainEqual(new UserDto(userTwo));
     });

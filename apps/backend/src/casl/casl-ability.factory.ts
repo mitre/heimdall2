@@ -51,7 +51,9 @@ export class CaslAbilityFactory {
     // Trying to compare the whole object here doesn't work since the
     // user object includes `GroupUser` and therefore the passed in user
     // is not equal to the user on the Group
-    can([Action.Read, Action.AddEvaluation, Action.RemoveEvaluation], Group, {'users.id': user.id});
+    can([Action.Read, Action.AddEvaluation, Action.RemoveEvaluation], Group, {
+      'users.id': user.id
+    });
     can([Action.Update, Action.Delete], Group, {
       'users.id': user.id,
       'users.GroupUser.role': 'owner'
@@ -70,7 +72,6 @@ export class CaslAbilityFactory {
       'groups.users.id': user.id,
       'groups.users.GroupEvaluation.role': 'owner'
     });
-
 
     return build();
   }
