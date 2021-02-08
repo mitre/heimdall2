@@ -4,5 +4,5 @@ import {IsNotEmpty, IsString} from 'class-validator';
 export class EvaluationGroupDto implements IEvaluationGroup {
   @IsNotEmpty()
   @IsString()
-  readonly evaluationid!: string;
+  readonly id!: string;
 }

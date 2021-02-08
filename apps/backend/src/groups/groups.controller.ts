@@ -20,12 +20,16 @@ import {EvaluationGroupDto} from './dto/evaluation-group.dto';
 import {GroupDto} from './dto/group.dto';
 import {RemoveUserFromGroupDto} from './dto/remove-user-from-group.dto';
 import {GroupsService} from './groups.service';
+import {UsersService} from '../users/users.service';
+import {EvaluationsService} from '../evaluations/evaluations.service';
 
 @Controller('groups')
 @UseGuards(JwtAuthGuard)
 export class GroupsController {
   constructor(
     private readonly groupsService: GroupsService,
+    private readonly usersService: UsersService,
+    private readonly evaluationsService: EvaluationsService,
     private readonly authz: AuthzService
   ) {}
 
@@ -56,7 +60,12 @@ export class GroupsController {
     @Request() request: {user: User},
     @Body() addUserToGroupDto: AddUserToGroupDto
   ): Promise<GroupDto> {
-    return new GroupDto(await this.groupsService.findByPkBang(id));
+    const abac = this.authz.abac.createForUser(request.user);
+    const group = await this.groupsService.findByPkBang(id)
+    ForbiddenError.from(abac).throwUnlessCan(Action.Manage, group);
+    const userToAdd = await this.usersService.findById(addUserToGroupDto.userId);
+    this.groupsService.addUserToGroup(group, userToAdd, addUserToGroupDto.groupRole);
+    return new GroupDto(group);
   }
 
   @Delete(':id')
@@ -65,10 +74,11 @@ export class GroupsController {
     @Request() request: {user: User},
     @Body() removeUserFromGroupDto: RemoveUserFromGroupDto
   ): Promise<GroupDto> {
-    // This must perform validation checks to ensure the user performing the action is an owner of this group.
-    // This should remove a user as long as it is not the only owner in the group
-
-    return new GroupDto(await this.groupsService.findByPkBang(id));
+    const abac = this.authz.abac.createForUser(request.user);
+    const group = await this.groupsService.findByPkBang(id);
+    ForbiddenError.from(abac).throwUnlessCan(Action.Manage, group);
+    const userToRemove = await this.usersService.findById(removeUserFromGroupDto.userId)
+    return new GroupDto(await this.groupsService.removeUserFromGroup(group, userToRemove));
   }
 
   @Post()
@@ -77,7 +87,12 @@ export class GroupsController {
     @Request() request: {user: User},
     @Body() evaluationGroupDto: EvaluationGroupDto
   ): Promise<GroupDto> {
-    return new GroupDto(await this.groupsService.findByPkBang(id));
+    const abac = this.authz.abac.createForUser(request.user);
+    const group = await this.groupsService.findByPkBang(id);
+    ForbiddenError.from(abac).throwUnlessCan(Action.AddEvaluation, group);
+    const evaluationToAdd = await this.evaluationsService.findById(evaluationGroupDto.id);
+    this.groupsService.addEvaluationToGroup(group, evaluationToAdd);
+    return new GroupDto(group);
   }
 
   @Delete(':id')
@@ -87,7 +102,11 @@ export class GroupsController {
     @Body() evaluationGroupDto: EvaluationGroupDto
   ): Promise<GroupDto> {
     // This must perform validation checks to ensure the user performing the action has permission to remove evaluations from a group.
-    return new GroupDto(await this.groupsService.findByPkBang(id));
+    const abac = this.authz.abac.createForUser(request.user);
+    const group = await this.groupsService.findByPkBang(id);
+    ForbiddenError.from(abac).throwUnlessCan(Action.RemoveEvaluation, group);
+    const evaluationToRemove = await this.evaluationsService.findById(evaluationGroupDto.id);
+    return new GroupDto(await this.groupsService.removeEvaluationFromGroup(group, evaluationToRemove));
   }
 
   @Put(':id')

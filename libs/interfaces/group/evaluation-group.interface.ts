@@ -1,3 +1,3 @@
 export interface IEvaluationGroup {
-  readonly evaluationid: string;
+  readonly id: string;
 }
