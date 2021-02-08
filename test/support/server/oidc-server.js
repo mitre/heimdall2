@@ -1,7 +1,6 @@
 (async () => {
   const {OAuth2Server} = require('oauth2-mock-server');
-
-  let server = new OAuth2Server();
+  const server = new OAuth2Server();
 
   // Generate a new RSA key and add it to the keystore
   await server.issuer.keys.generateRSA();
