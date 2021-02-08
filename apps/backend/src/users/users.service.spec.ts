@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test} from '@nestjs/testing';
+import {use} from 'passport';
 import {
   CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
@@ -35,6 +36,11 @@ import {AuthzModule} from '../authz/authz.module';
 import {AuthzService} from '../authz/authz.service';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
+import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
+import {Evaluation} from '../evaluations/evaluation.model';
+import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
+import {GroupUser} from '../group-users/group-user.model';
+import {Group} from '../groups/group.model';
 import {UserDto} from './dto/user.dto';
 import {User} from './user.model';
 import {UsersService} from './users.service';
@@ -50,7 +56,7 @@ describe('UsersService', () => {
     const module = await Test.createTestingModule({
       imports: [
         DatabaseModule,
-        SequelizeModule.forFeature([User]),
+        SequelizeModule.forFeature([User, GroupUser, Group, GroupEvaluation, Evaluation, EvaluationTag]),
         AuthzModule
       ],
       providers: [UsersService, DatabaseService, AuthzService]
@@ -63,6 +69,11 @@ describe('UsersService', () => {
 
   beforeEach(() => {
     return databaseService.cleanAll();
+  });
+
+  afterAll((done) => {
+    databaseService.closeConnection();
+    done();
   });
 
   describe('Create', () => {
@@ -117,9 +128,9 @@ describe('UsersService', () => {
       expect.assertions(2);
       const userOne = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const userTwo = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
-      const userDtoArray = await usersService.findAll();
-      expect(userDtoArray).toContainEqual(userOne);
-      expect(userDtoArray).toContainEqual(userTwo);
+      const userDtoArray = (await usersService.findAll()).map((user) => new UserDto(user));
+      expect(userDtoArray).toContainEqual(new UserDto(userOne));
+      expect(userDtoArray).toContainEqual(new UserDto(userTwo));
     });
   });
 

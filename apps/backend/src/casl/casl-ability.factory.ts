@@ -1,9 +1,17 @@
 import {Ability, AbilityBuilder, AbilityClass} from '@casl/ability';
 import {Injectable} from '@nestjs/common';
 import {Evaluation} from '../evaluations/evaluation.model';
+import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
 
-type Subjects = typeof User | User | typeof Evaluation | Evaluation | 'all';
+type Subjects =
+  | typeof User
+  | User
+  | typeof Evaluation
+  | Evaluation
+  | typeof Group
+  | Group
+  | 'all';
 
 export enum Action {
   Manage = 'manage', // manage is a special keyword in CASL which represents "any" action.
@@ -34,6 +42,33 @@ export class CaslAbilityFactory {
       cannot(Action.Manage, User, {id: user.id});
     }
     can([Action.Read, Action.Update, Action.Delete], User, {id: user.id});
+
+    can([Action.Create], Group);
+
+    can([Action.Read], Group, {public: true});
+    // Trying to compare the whole object here doesn't work since the
+    // user object includes `GroupUser` and therefore the passed in user
+    // is not equal to the user on the Group
+    can([Action.Read], Group, {'users.id': user.id});
+
+    can([Action.Update, Action.Delete], Group, {
+      'users.id': user.id,
+      'users.GroupUser.role': 'owner'
+    });
+
+    // TODO: The Actions below here are UNTESTED and may not work
+    // This really isn't the best method to do this since
+    // it requires every evaluation to have a join on Groups and then another join on Users
+    can([Action.Create], Evaluation);
+
+    can([Action.Read], Evaluation, {public: true});
+
+    can([Action.Read], Evaluation, {'groups.users.id': user.id});
+
+    can([Action.Update, Action.Delete], Evaluation, {
+      'groups.users.id': user.id,
+      'groups.users.GroupEvaluation.role': 'owner'
+    });
 
     return build();
   }

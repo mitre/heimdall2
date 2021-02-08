@@ -22,6 +22,10 @@ import {
 import {AuthzService} from '../authz/authz.service';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
+import {Evaluation} from '../evaluations/evaluation.model';
+import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
+import {GroupUser} from '../group-users/group-user.model';
+import {Group} from '../groups/group.model';
 import {UserDto} from './dto/user.dto';
 import {User} from './user.model';
 import {UsersController} from './users.controller';
@@ -40,7 +44,7 @@ describe('UsersController Unit Tests', () => {
   beforeAll(async () => {
     module = await Test.createTestingModule({
       controllers: [UsersController],
-      imports: [DatabaseModule, SequelizeModule.forFeature([User])],
+      imports: [DatabaseModule, SequelizeModule.forFeature([User, GroupUser, Group, GroupEvaluation, Evaluation])],
       providers: [AuthzService, DatabaseService, UsersService]
     }).compile();
 

@@ -9,7 +9,12 @@ module.exports = {
         allowNull: false,
         defaultValue: false
       }, { transaction: t }),
-      ])
+      ]).then(() => {
+        // Update all existing evaluations in the database to be public
+        // since we have no way of tracking who uploaded them.
+        // All evaluations going forward will be private.
+        queryInterface.bulkUpdate('Evaluations', { public: true })
+      })
     })
   },
 
