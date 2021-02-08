@@ -54,7 +54,7 @@ context('Login', () => {
       loginPage.ldapLogin(LDAP_AUTHENTICATION);
       toastVerifier.toastTextContains('You have successfully signed in.');
     });
-    it.only('authenticates an oidc user', () => {
+    it('authenticates an oidc user', () => {
       loginPage.loginOauth('oidc');
       uploadModal.loadFirstSample();
       // Open the user modal
