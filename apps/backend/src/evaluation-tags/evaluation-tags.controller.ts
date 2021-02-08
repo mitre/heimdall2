@@ -31,7 +31,7 @@ export class EvaluationTagsController {
     return new EvaluationTagDto(await this.evaluationTagsService.findById(id));
   }
 
-  @Post()
+  @Post(':evaluationId')
   async create(
     @Param('evaluationId') evaluationId: string,
     @Body() createEvaluationTagDto: CreateEvaluationTagDto

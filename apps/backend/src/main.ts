@@ -4,7 +4,10 @@ import {json} from 'express';
 import rateLimit from 'express-rate-limit';
 import {AppModule} from './app.module';
 import {ConfigService} from './config/config.service';
+import {generateDefault} from './token/token.providers';
+import session = require('express-session');
 import helmet = require('helmet');
+import passport = require('passport');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -31,11 +34,24 @@ async function bootstrap() {
         'script-src-attr': ["'none'"],
         'style-src': ["'self'", 'https:', "'unsafe-inline'"],
         // This is the only setting that is different from the defaults.
-        'connect-src': ["'self'", 'https://api.github.com']
+        'connect-src': [
+          "'self'",
+          'https://api.github.com',
+          'https://sts.amazonaws.com'
+        ]
       }
     })
   );
   app.use(json({limit: '50mb'}));
+  app.use(
+    session({
+      secret: configService.get('JWT_SECRET') || generateDefault(),
+      saveUninitialized: false,
+      resave: false
+    })
+  );
+  app.use(passport.initialize());
+  app.use(passport.session());
   app.use(
     '/authn/login',
     rateLimit({

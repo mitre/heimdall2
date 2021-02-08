@@ -1,9 +1,9 @@
 <template>
   <v-card class="elevation-0">
-    <v-container class="py-0 pl-0">
+    <v-container class="ma-0 pa-0">
       <v-row>
         <v-col cols="9">
-          <v-card-subtitle class="py-0">
+          <v-card-subtitle>
             View files loaded into your organizations Heimdall Server instance.
           </v-card-subtitle>
         </v-col>
@@ -16,6 +16,7 @@
       :headers="headers"
       :files="files"
       :loading="loading"
+      @updateEvaluations="get_all_results"
       @load-results="load_results($event)"
     />
   </v-card>
@@ -26,6 +27,7 @@ import Component, {mixins} from 'vue-class-component';
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
 import LogoutButton from '@/components/generic/LogoutButton.vue';
 import {SnackbarModule} from '@/store/snackbar';
+import {EvaluationModule} from '@/store/evaluations'
 
 import axios from 'axios';
 
@@ -48,7 +50,6 @@ import {Prop, Watch} from 'vue-property-decorator';
 export default class DatabaseReader extends mixins(ServerMixin) {
   @Prop({default: false}) readonly refresh!: Boolean;
 
-  files: IEvaluation[] = [];
   loading: boolean = true;
 
   headers: Object[] = [
@@ -58,7 +59,17 @@ export default class DatabaseReader extends mixins(ServerMixin) {
       sortable: true,
       value: 'filename'
     },
-    {text: 'Uploaded', value: 'createdAt', sortable: true}
+    {
+      text: 'Tags',
+      value: 'evaluationTags',
+      sortable: true
+    },
+    {text: 'Uploaded', value: 'createdAt', sortable: true},
+    {
+      text: 'Actions',
+      value: 'actions',
+      align: 'right'
+    }
   ];
 
   @Watch('refresh')
@@ -73,18 +84,16 @@ export default class DatabaseReader extends mixins(ServerMixin) {
     this.get_all_results();
   }
 
-  get_all_results(): void {
-    axios
-      .get<IEvaluation[]>('/evaluations')
-      .then((response) => {
-        this.files = response.data;
-      })
-      .catch((err) => {
-        SnackbarModule.failure(`${err}. Please reload the page and try again.`);
-      })
-      .finally(() => {
-        this.loading = false;
-      });
+  async get_all_results(): Promise<void> {
+    await EvaluationModule.getAllEvaluations().catch((err) => {
+      SnackbarModule.failure(`${err}. Please reload the page and try again.`);
+    }).finally(() => {
+      this.loading = false;
+    });
+  }
+
+  get files(){
+    return EvaluationModule.allEvaluations;
   }
 
   load_results(evaluations: IEvaluation[]): void {

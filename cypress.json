@@ -1,9 +1,10 @@
 {
-  "baseUrl": "http://localhost:3000",
+  "baseUrl": "http://127.0.0.1:3000",
   "pluginsFile": false,
   "supportFile": "test/support/index.ts",
   "fixturesFolder": false,
   "integrationFolder": "test/integration",
   "screenshotsFolder": "test/screenshots",
-  "videosFolder": "test/videos"
+  "videosFolder": "test/videos",
+  "chromeWebSecurity": false
 }

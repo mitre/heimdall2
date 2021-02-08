@@ -13,7 +13,7 @@
     </v-list-item-content>
 
     <v-list-item-action v-if="serverMode" @click.stop="save_file">
-      <v-btn icon small>
+      <v-btn icon small :disabled="disable_saving">
         <v-icon> mdi-content-save </v-icon>
       </v-btn>
     </v-list-item-action>
@@ -43,6 +43,8 @@ import {ServerModule} from '@/store/server';
 export default class FileItem extends mixins(ServerMixin) {
   @Prop({type: Object}) readonly file!: EvaluationFile | ProfileFile;
 
+  saving: boolean = false;
+
   select_file() {
     if (this.file.hasOwnProperty('evaluation')) {
       FilteredDataModule.toggle_evaluation(this.file.unique_id);
@@ -71,17 +73,24 @@ export default class FileItem extends mixins(ServerMixin) {
 
   //saves file to database
   save_file() {
-    let file = InspecDataModule.allFiles.find(
-      (f) => f.unique_id === this.file.unique_id
-    );
-    if (file) {
-      if (file.hasOwnProperty('evaluation')) {
-        this.save_evaluation(file as EvaluationFile);
+    if (this.file?.database_id){
+      SnackbarModule.failure('This evaluation is already in the database.')
+    }
+    else if (this.file) {
+      if (this.file.hasOwnProperty('evaluation')) {
+        this.save_evaluation(this.file as EvaluationFile);
       }
     }
   }
 
+  //determines if the use can save the file
+  get disable_saving() {
+    return (typeof this.file?.database_id !== 'undefined') || this.saving
+  }
+
   save_evaluation(file: EvaluationFile) {
+    this.saving = true;
+
     let evaluationDTO: ICreateEvaluation = {
       data: file.evaluation.data,
       filename: file.filename,
@@ -91,11 +100,14 @@ export default class FileItem extends mixins(ServerMixin) {
 
     axios
       .post('/evaluations', evaluationDTO)
-      .then(() => {
+      .then((response) => {
         SnackbarModule.notify('Result saved successfully');
+        file.database_id = parseInt(response.data.id);
       })
       .catch((error) => {
         SnackbarModule.failure(error.response.data.message);
+      }).finally(() => {
+        this.saving = false;
       });
   }
 
