@@ -6,7 +6,8 @@
   "scripts": {
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
-    "mock-oauth": "node support/server/json-server.js"
+    "mock-oauth": "node support/server/json-server.js",
+    "mock-openid": "node support/server/oidc-server.js"
   },
   "devDependencies": {
     "eslint-plugin-cypress": "^2.11.2"

@@ -99,6 +99,21 @@ export class AuthnController {
     await this.setSessionCookies(req, session);
   }
 
+  @Get('oidc')
+  @UseGuards(AuthGuard('oidc'))
+  async loginToOIDC(
+    @Req() req: Request
+  ): Promise<{userID: string; accessToken: string}> {
+    return this.authnService.login(req.user as User);
+  }
+
+  @Get('oidc/callback')
+  @UseGuards(AuthGuard('oidc'))
+  async getUserFromOIDC(@Req() req: Request): Promise<void> {
+    const session = await this.authnService.login(req.user as User);
+    await this.setSessionCookies(req, session);
+  }
+
   async setSessionCookies(
     req: Request,
     session: {
