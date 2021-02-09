@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Req,
   Request,
   UseGuards
 } from '@nestjs/common';
@@ -17,6 +18,7 @@ import {CreateEvaluationDto} from './dto/create-evaluation.dto';
 import {EvaluationDto} from './dto/evaluation.dto';
 import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 import {EvaluationsService} from './evaluations.service';
+import {ForbiddenError} from '@casl/ability';
 
 @Controller('evaluations')
 @UseGuards(JwtAuthGuard)
@@ -26,8 +28,14 @@ export class EvaluationsController {
     private readonly authz: AuthzService
   ) {}
   @Get(':id')
-  async findById(@Param('id') id: string): Promise<EvaluationDto> {
-    return new EvaluationDto(await this.evaluationsService.findById(id));
+  async findById(
+    @Param('id') id: string,
+    @Request() request: {user: User},
+  ): Promise<EvaluationDto> {
+    const abac = this.authz.abac.createForUser(request.user);
+    const evaluation = await this.evaluationsService.findById(id)
+    ForbiddenError.from(abac).throwUnlessCan(Action.Read, evaluation);
+    return new EvaluationDto(evaluation);
   }
 
   @Get()
@@ -54,15 +62,26 @@ export class EvaluationsController {
   @Put(':id')
   async update(
     @Param('id') id: string,
+    @Request() request: {user: User},
     @Body() updateEvaluationDto: UpdateEvaluationDto
   ): Promise<EvaluationDto> {
+    const abac = this.authz.abac.createForUser(request.user);
+    const evaluationToUpdate = await this.evaluationsService.findById(id);
+    ForbiddenError.from(abac).throwUnlessCan(Action.Update, evaluationToUpdate);
+
     return new EvaluationDto(
       await this.evaluationsService.update(id, updateEvaluationDto)
     );
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<EvaluationDto> {
+  async remove(
+    @Param('id') id: string,
+    @Request() request: {user: User}
+  ): Promise<EvaluationDto> {
+    const abac = this.authz.abac.createForUser(request.user);
+    const evaluationToDelete = this.evaluationsService.findById(id);
+    ForbiddenError.from(abac).throwUnlessCan(Action.Delete, evaluationToDelete);
     return new EvaluationDto(await this.evaluationsService.remove(id));
   }
 }
