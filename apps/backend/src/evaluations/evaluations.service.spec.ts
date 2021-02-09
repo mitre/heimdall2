@@ -13,19 +13,19 @@ import {
 import {CREATE_USER_DTO_TEST_OBJ} from '../../test/constants/users-test.constant';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
-import {EvaluationTagDto} from '../evaluation-tags/dto/evaluation-tag.dto';
 import {EvaluationTagsModule} from '../evaluation-tags/evaluation-tags.module';
 import {EvaluationTagsService} from '../evaluation-tags/evaluation-tags.service';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
 import {UserDto} from '../users/dto/user.dto';
-import {User} from '../users/user.model';
 import {UsersModule} from '../users/users.module';
 import {UsersService} from '../users/users.service';
 import {EvaluationDto} from './dto/evaluation.dto';
 import {Evaluation} from './evaluation.model';
 import {EvaluationsService} from './evaluations.service';
+import {GroupsService} from '../groups/groups.service';
+import {GROUP_1} from '../../test/constants/groups-test.constant';
 
 describe('EvaluationsService', () => {
   let evaluationsService: EvaluationsService;
@@ -33,16 +33,22 @@ describe('EvaluationsService', () => {
   let databaseService: DatabaseService;
   let usersService: UsersService;
   let user: UserDto;
+  let groupsService: GroupsService;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       imports: [
         DatabaseModule,
-        SequelizeModule.forFeature([Evaluation, GroupUser, Group, GroupEvaluation]),
+        SequelizeModule.forFeature([
+          Evaluation,
+          GroupUser,
+          Group,
+          GroupEvaluation
+        ]),
         EvaluationTagsModule,
         UsersModule
       ],
-      providers: [EvaluationsService, DatabaseService, UsersService]
+      providers: [EvaluationsService, DatabaseService, UsersService, GroupsService]
     }).compile();
 
     evaluationsService = module.get<EvaluationsService>(EvaluationsService);
@@ -51,6 +57,7 @@ describe('EvaluationsService', () => {
     );
     databaseService = module.get<DatabaseService>(DatabaseService);
     usersService = module.get<UsersService>(UsersService);
+    groupsService = module.get<GroupsService>(GroupsService);
   });
 
   beforeEach(async () => {
@@ -100,8 +107,27 @@ describe('EvaluationsService', () => {
       expect(new UserDto(evaluations[0].user)).toEqual(user);
     });
 
-    it('should include the evaluation group and group users', () => {
+    it('should include the evaluation group and group users', async () => {
+      const group = await groupsService.create(GROUP_1);
+      const owner = await usersService.findById(user.id);
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        userId: user.id
+      });
 
+      let evaluations = await evaluationsService.findAll();
+      expect(evaluations[0].groups[0]).not.toBeDefined();
+
+      await groupsService.addEvaluationToGroup(group, evaluation);
+      await groupsService.addUserToGroup(group, owner, 'owner');
+
+      evaluations = await evaluationsService.findAll();
+      const foundGroup = evaluations[0].groups[0]
+      expect(foundGroup).toBeDefined();
+      expect(foundGroup.id).toEqual(group.id);
+      expect(foundGroup.users.length).toEqual(1)
+      expect(foundGroup.users[0].id).toEqual(owner.id);
+      expect(foundGroup.users[0].GroupUser.role).toEqual('owner');
     });
   });
 
@@ -112,7 +138,9 @@ describe('EvaluationsService', () => {
         userId: user.id
       });
       const foundEvaluation = await evaluationsService.findById(evaluation.id);
-      expect(new EvaluationDto(evaluation)).toEqual(new EvaluationDto(foundEvaluation));
+      expect(new EvaluationDto(evaluation)).toEqual(
+        new EvaluationDto(foundEvaluation)
+      );
     });
 
     it('should throw an error if an evaluation does not exist', async () => {
@@ -226,7 +254,7 @@ describe('EvaluationsService', () => {
     });
 
     it('should only update filename if provided', async () => {
-      let evaluation = await evaluationsService.create({
+      const evaluation = await evaluationsService.create({
         ...EVALUATION_WITH_TAGS_1,
         userId: user.id
       });
@@ -255,7 +283,9 @@ describe('EvaluationsService', () => {
       const removedEvaluation = await evaluationsService.remove(evaluation.id);
       const foundEvaluationTags = await evaluationTagsService.findAll();
       expect(foundEvaluationTags.length).toEqual(0);
-      expect(new EvaluationDto(removedEvaluation)).toEqual(new EvaluationDto(evaluation));
+      expect(new EvaluationDto(removedEvaluation)).toEqual(
+        new EvaluationDto(evaluation)
+      );
 
       await expect(
         evaluationsService.findById(removedEvaluation.id)

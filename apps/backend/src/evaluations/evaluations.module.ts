@@ -12,7 +12,14 @@ import {EvaluationsController} from './evaluations.controller';
 import {EvaluationsService} from './evaluations.service';
 @Module({
   imports: [
-    SequelizeModule.forFeature([Evaluation, EvaluationTag, User, Group, GroupUser, GroupEvaluation]),
+    SequelizeModule.forFeature([
+      Evaluation,
+      EvaluationTag,
+      User,
+      Group,
+      GroupUser,
+      GroupEvaluation
+    ]),
     DatabaseModule
   ],
   providers: [EvaluationsService, UsersService],
