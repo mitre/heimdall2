@@ -32,7 +32,7 @@
           >
           <v-card-actions>
             <v-spacer />
-            <v-btn color="blue darken-1" text @click="deleteItemDialog = false"
+            <v-btn color="blue darken-1" text @click="deleteTagDialog = false"
               >Cancel</v-btn
             >
             <v-btn color="blue darken-1" text @click="deleteTagConfirm()"
