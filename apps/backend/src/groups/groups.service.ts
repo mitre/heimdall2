@@ -1,4 +1,4 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import {ForbiddenException, Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {User} from '../users/user.model';
@@ -34,9 +34,11 @@ export class GroupsService {
   }
 
   async removeUserFromGroup(group: Group, user: User): Promise<Group> {
+    const owners = (await group.$get('users')).filter((userOnGroup) => userOnGroup.GroupUser.role === 'owner')
+    if (owners.length < 2 && owners.some((owner) => owner.id === user.id)) {
+      throw new ForbiddenException('Cannot remove only group owner, please promote another user to owner first');
+    }
     return group.$remove('user', user);
-    // TODO check if this user is an owner. If so, check that there will be at least 1 owner
-    // after removing.
   }
 
   async addEvaluationToGroup(
