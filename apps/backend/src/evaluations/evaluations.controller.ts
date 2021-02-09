@@ -33,7 +33,6 @@ export class EvaluationsController {
   @Get()
   async findAll(@Request() request: {user: User}): Promise<EvaluationDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
-    // TODO: This needs to return groups and nested users to work properly
     let evaluations = await this.evaluationsService.findAll();
 
     evaluations = evaluations.filter((evaluation) =>

@@ -3,6 +3,8 @@ import {InjectModel} from '@nestjs/sequelize';
 import {FindOptions} from 'sequelize/types';
 import {DatabaseService} from '../database/database.service';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
+import {Group} from '../groups/group.model';
+import {User} from '../users/user.model';
 import {CreateEvaluationDto} from './dto/create-evaluation.dto';
 import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 import {Evaluation} from './evaluation.model';
@@ -18,7 +20,7 @@ export class EvaluationsService {
   async findAll(): Promise<Evaluation[]> {
     return this.evaluationModel.findAll<Evaluation>({
       attributes: {exclude: ['data']},
-      include: [EvaluationTag]
+      include: [EvaluationTag, User, {model: Group, include: [User]}]
     });
   }
 

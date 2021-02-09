@@ -66,6 +66,10 @@ export class CaslAbilityFactory {
 
     can([Action.Read], Evaluation, {public: true});
 
+    can([Action.Read, Action.Update, Action.Delete], Evaluation, {
+      'user.id': user.id
+    });
+
     can([Action.Read], Evaluation, {'groups.users.id': user.id});
 
     can([Action.Update, Action.Delete], Evaluation, {
