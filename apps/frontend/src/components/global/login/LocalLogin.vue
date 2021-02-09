@@ -52,6 +52,20 @@
           <v-row align="center"> <v-divider />OR<v-divider /> </v-row>
           <div class="d-flex justify-content-center flex-wrap">
             <v-btn
+              v-if="authStrategySupported('oidc')"
+              id="oauth-oidc"
+              class="mt-5 flex-fill"
+              plain
+              @click="oauthLogin('oidc')"
+            >
+              <v-img
+                max-width="32"
+                max-height="32"
+                :src="require('@/assets/openid_mark.png')"
+              />
+              <div class="pl-2">Login with {{ oidcName }}</div>
+            </v-btn>
+            <v-btn
               v-show="authStrategySupported('google')"
               id="oauth-google"
               class="mt-5 flex-fill"
@@ -164,6 +178,10 @@ export default class LocalLogin extends Vue {
   }
   oauthLogin(site: string){
     window.location.href = `/authn/${site}`;
+  }
+
+  get oidcName() {
+    return ServerModule.oidcName;
   }
 }
 </script>

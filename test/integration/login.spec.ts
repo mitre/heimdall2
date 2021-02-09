@@ -54,6 +54,14 @@ context('Login', () => {
       loginPage.ldapLogin(LDAP_AUTHENTICATION);
       toastVerifier.toastTextContains('You have successfully signed in.');
     });
+    it('authenticates an oidc user', () => {
+      loginPage.loginOauth('oidc');
+      uploadModal.loadFirstSample();
+      // Open the user modal
+      dropdown.openUserModal();
+      // Make sure all the fields exist
+      userModalVerifier.verifyFieldsExist();
+    });
     it('fails to authenticate a user with invalid credentials', () => {
       loginPage.login(BAD_LOGIN_AUTHENTICATION);
       toastVerifier.toastTextContains('Incorrect Username or Password');
