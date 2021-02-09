@@ -154,15 +154,21 @@ export default class EditEvaluationModal extends Vue {
   ];
 
   async deleteTag(tag: IEvaluationTag) {
-    await axios.delete(`/evaluation-tags/${tag.id}`).then((response) => {
+    this.activeTag = tag;
+    this.deleteTagDialog = true;
+  }
+
+  async deleteTagConfirm() {
+    await axios.delete(`/evaluation-tags/${this.activeTag.id}`).then((response) => {
       this.activeEvaluation.evaluationTags.splice(
-        this.activeEvaluation.evaluationTags.indexOf(tag),
+        this.activeEvaluation.evaluationTags.indexOf(this.activeTag),
         1
       )
       SnackbarModule.notify("Deleted tag successfully.")
     }).catch((error) => {
       SnackbarModule.HTTPFailure(error)
     });
+    this.deleteTagDialog = false;
   }
 
   async updateTag(tag: IEvaluationTag) {
