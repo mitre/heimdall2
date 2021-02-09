@@ -117,7 +117,7 @@ Given that Heimdall requires at least a database service, we use Docker and Dock
      ./setup-docker-secrets.sh
      # If you would like to further configure your Heimdall instance, edit the .env file generated after running the previous line
      docker-compose up -d
-  ```
+     ```
    
 6. Navigate to  [`http://127.0.0.1:3000`](http://127.0.0.1:3000).
 
