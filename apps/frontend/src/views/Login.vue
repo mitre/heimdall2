@@ -74,9 +74,6 @@ export default class Login extends Vue {
   signup() {
     this.$router.push('/signup');
   }
-  oauthLogin(site: string){
-    window.location.href = `/authn/${site}`;
-  }
 
   get ldapenabled() {
     return ServerModule.ldap
