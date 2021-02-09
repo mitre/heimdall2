@@ -8,17 +8,34 @@
         label="Search"
         hide-details
       />
-      <v-dialog v-model="deleteDialog" max-width="500px">
+      <v-dialog v-model="deleteItemDialog" max-width="500px">
         <v-card>
           <v-card-title class="headline"
             >Are you sure you want to delete this item?</v-card-title
           >
           <v-card-actions>
             <v-spacer />
-            <v-btn color="blue darken-1" text @click="deleteDialog = false"
+            <v-btn color="blue darken-1" text @click="deleteItemDialog = false"
               >Cancel</v-btn
             >
             <v-btn color="blue darken-1" text @click="deleteItemConfirm()"
+              >OK</v-btn
+            >
+            <v-spacer />
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="deleteTagDialog" max-width="500px">
+        <v-card>
+          <v-card-title class="headline"
+            >Are you sure you want to delete this tag?</v-card-title
+          >
+          <v-card-actions>
+            <v-spacer />
+            <v-btn color="blue darken-1" text @click="deleteTagDialog = false"
+              >Cancel</v-btn
+            >
+            <v-btn color="blue darken-1" text @click="deleteTagConfirm()"
               >OK</v-btn
             >
             <v-spacer />
@@ -57,7 +74,7 @@
               :key="tag.id + '_'"
               small
               close
-              @click:close="deleteTag(tag, item)"
+              @click:close="deleteTag(tag)"
               >{{ tag.value }}</v-chip
             >
           </template>
@@ -87,7 +104,7 @@ import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationM
 
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations'
-import {IEvaluation} from '@heimdall/interfaces';
+import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
 import {Sample} from '@/utilities/sample_util';
 
@@ -105,9 +122,11 @@ export default class LoadFileList extends Vue {
 
   selectedFiles: IEvaluation[] | Sample[] = [];
   activeItem!: IEvaluation;
+  activeTag!: IEvaluationTag;
 
   editDialog: boolean = false;
-  deleteDialog: boolean = false;
+  deleteItemDialog: boolean = false;
+  deleteTagDialog: boolean = false;
   search: string = '';
 
   load_results(evaluations: IEvaluation[]) {
@@ -130,16 +149,22 @@ export default class LoadFileList extends Vue {
 
   deleteItem(item: IEvaluation) {
     this.activeItem = item;
-    this.deleteDialog = true;
+    this.deleteItemDialog = true;
   }
 
-  deleteTag(tag: any) {
-    EvaluationModule.deleteTag(tag).then(() => {
+  deleteTag(tag: IEvaluationTag) {
+    this.activeTag = tag;
+    this.deleteTagDialog = true;
+  }
+
+  deleteTagConfirm(): void {
+    EvaluationModule.deleteTag(this.activeTag).then(() => {
       SnackbarModule.notify("Deleted tag successfully.")
       this.updateEvaluations()
     }).catch((error) => {
       SnackbarModule.HTTPFailure(error)
     });
+    this.deleteTagDialog = false;
   }
 
  filterEvaluationTags(file: IEvaluation | Sample, search: string) {
@@ -161,7 +186,7 @@ export default class LoadFileList extends Vue {
     }).catch((error) => {
       SnackbarModule.HTTPFailure(error)
     });
-    this.deleteDialog = false;
+    this.deleteItemDialog = false;
   }
 
   get filteredFiles() {
