@@ -8,6 +8,7 @@ import {IServerState} from '@/store/server';
 import {SeverityCount} from '@/store/severity_counts';
 import {ISidebarState} from '@/store/sidebar_state';
 import {StatusCount} from '@/store/status_counts';
+import {IGroupState} from '@/store/groups';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
@@ -37,6 +38,7 @@ export interface StoreType {
   info: IAppInfoState;
   server: IServerState;
   sidebar: ISidebarState;
+  groups: IGroupState;
 }
 const store = new Vuex.Store<StoreType>({});
 

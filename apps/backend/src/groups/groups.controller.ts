@@ -43,6 +43,12 @@ export class GroupsController {
     return groups.map((group) => new GroupDto(group));
   }
 
+  @Get('/my')
+  async findForUser(@Request() request: {user: User}): Promise<GroupDto[]> {
+    const groups = await request.user.$get('groups');
+    return groups.map((group) => new GroupDto(group));
+  }
+
   @Post()
   async create(
     @Request() request: {user: User},
@@ -54,7 +60,7 @@ export class GroupsController {
     return new GroupDto(group);
   }
 
-  @Post()
+  @Post('/user')
   async addUserToGroup(
     @Param('id') id: string,
     @Request() request: {user: User},
@@ -74,7 +80,7 @@ export class GroupsController {
     return new GroupDto(group);
   }
 
-  @Delete(':id')
+  @Delete('/user/:id')
   async removeUserFromGroup(
     @Param('id') id: string,
     @Request() request: {user: User},
@@ -91,7 +97,7 @@ export class GroupsController {
     );
   }
 
-  @Post()
+  @Post('/evaluation')
   async addEvaluationToGroup(
     @Param('id') id: string,
     @Request() request: {user: User},
@@ -107,7 +113,7 @@ export class GroupsController {
     return new GroupDto(group);
   }
 
-  @Delete(':id')
+  @Delete('/evaluation/:id')
   async removeEvaluationFromGroup(
     @Param('id') id: string,
     @Request() request: {user: User},

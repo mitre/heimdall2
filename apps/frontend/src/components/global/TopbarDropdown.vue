@@ -33,6 +33,14 @@
             >
             <v-divider />
           </div>
+          <LinkItem
+            key="groups"
+            text="My Groups"
+            icon="mdi-account-group"
+            link="groups"
+            >My Groups</LinkItem
+          >
+          <v-divider />
           <UserModal id="userModal" :user="userInfo">
             <template #clickable="{on}"
               ><LinkItem

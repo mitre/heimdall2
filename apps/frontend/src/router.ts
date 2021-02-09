@@ -6,6 +6,7 @@ import Landing from '@/views/Landing.vue';
 import Login from '@/views/Login.vue';
 import Results from '@/views/Results.vue';
 import Signup from '@/views/Signup.vue';
+import Groups from '@/views/Groups.vue';
 import Vue from 'vue';
 import Router from 'vue-router';
 
@@ -31,6 +32,12 @@ const router = new Router({
       path: '/',
       name: 'home',
       component: Landing,
+      meta: {requiresAuth: true}
+    },
+    {
+      path: '/groups',
+      name: 'groups',
+      component: Groups,
       meta: {requiresAuth: true}
     },
     {
