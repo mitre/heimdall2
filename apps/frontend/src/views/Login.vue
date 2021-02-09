@@ -49,6 +49,7 @@ import {LocalStorageVal} from '@/utilities/helper_util';
 import {ServerModule} from '@/store/server';
 import LocalLogin from '@/components/global/login/LocalLogin.vue'
 import LDAPLogin from '@/components/global/login/LDAPLogin.vue'
+import { SnackbarModule } from '../store/snackbar';
 
 const lastLoginTab = new LocalStorageVal<string>('login_curr_tab');
 
@@ -63,11 +64,19 @@ export default class Login extends Vue {
 
   mounted() {
     this.checkLoggedIn();
+    this.checkForAuthenticationError();
   }
 
   checkLoggedIn() {
     if (ServerModule.token) {
       this.$router.push('/');
+    }
+  }
+
+  checkForAuthenticationError() {
+    if (this.$cookies.get('authenticationError')) {
+      SnackbarModule.failure(`Sorry, an problem occurred while signing you in. The reason given was: ${this.$cookies.get('authenticationError')}`)
+      this.$cookies.remove('authenticationError')
     }
   }
 
