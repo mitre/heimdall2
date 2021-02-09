@@ -1,13 +1,13 @@
 import {HttpStatus, INestApplication, ValidationPipe} from '@nestjs/common';
 import {Test, TestingModule} from '@nestjs/testing';
-import {AppModule} from './../src/app.module';
-import {DatabaseService} from './../src/database/database.service';
 import {
   BAD_LOGIN_AUTHENTICATION,
   CREATE_USER_DTO_TEST_OBJ,
   LOGIN_AUTHENTICATION
-} from './constants/users-test.constant';
-import {login, register} from './helpers/users.helper';
+} from '../../test/constants/users-test.constant';
+import {login, register} from '../../test/helpers/users.helper';
+import {AppModule} from '../app.module';
+import {DatabaseService} from '../database/database.service';
 
 describe('/authn', () => {
   let app: INestApplication;
@@ -35,7 +35,7 @@ describe('/authn', () => {
     await databaseService.cleanAll();
   });
 
-  describe('/login', () => {
+  describe('login', () => {
     it('should successfully return access token', async () => {
       await register(app, CREATE_USER_DTO_TEST_OBJ).expect(HttpStatus.CREATED);
       return login(app, LOGIN_AUTHENTICATION)
