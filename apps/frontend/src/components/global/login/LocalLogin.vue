@@ -54,6 +54,17 @@
             <v-row justify="space-between">
               <v-col cols="auto">
                 <v-btn
+                  v-if="authStrategySupported('oidc')"
+                  id="oauth-oidc"
+                  plain
+                  @click="oauthLogin('oidc')"
+                >
+                  <v-img :src="require('@/assets/openid_mark.png')" />
+                  <div class="pl-2">Login with {{ oidcName }}</div>
+                </v-btn></v-col
+              >
+              <v-col cols="auto">
+                <v-btn
                   v-show="authStrategySupported('google')"
                   id="oauth-google"
                   plain
@@ -158,6 +169,10 @@ export default class LocalLogin extends Vue {
   }
   oauthLogin(site: string){
     window.location.href = `/authn/${site}`;
+  }
+
+  get oidcName() {
+    return ServerModule.oidcName;
   }
 }
 </script>
