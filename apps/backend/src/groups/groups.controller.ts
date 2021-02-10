@@ -68,11 +68,11 @@ export class GroupsController {
   ): Promise<GroupDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const group = await this.groupsService.findByPkBang(id);
-    ForbiddenError.from(abac).throwUnlessCan(Action.Manage, group);
+    ForbiddenError.from(abac).throwUnlessCan(Action.Update, group);
     const userToAdd = await this.usersService.findById(
       addUserToGroupDto.userId
     );
-    this.groupsService.addUserToGroup(
+    await this.groupsService.addUserToGroup(
       group,
       userToAdd,
       addUserToGroupDto.groupRole
@@ -88,7 +88,7 @@ export class GroupsController {
   ): Promise<GroupDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const group = await this.groupsService.findByPkBang(id);
-    ForbiddenError.from(abac).throwUnlessCan(Action.Manage, group);
+    ForbiddenError.from(abac).throwUnlessCan(Action.Update, group);
     const userToRemove = await this.usersService.findById(
       removeUserFromGroupDto.userId
     );
@@ -105,11 +105,14 @@ export class GroupsController {
   ): Promise<GroupDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const group = await this.groupsService.findByPkBang(id);
+    // Group Permissions
     ForbiddenError.from(abac).throwUnlessCan(Action.AddEvaluation, group);
     const evaluationToAdd = await this.evaluationsService.findById(
       evaluationGroupDto.id
     );
-    this.groupsService.addEvaluationToGroup(group, evaluationToAdd);
+    // Evaluation Permissions
+    ForbiddenError.from(abac).throwUnlessCan(Action.Read, evaluationToAdd);
+    await this.groupsService.addEvaluationToGroup(group, evaluationToAdd);
     return new GroupDto(group);
   }
 

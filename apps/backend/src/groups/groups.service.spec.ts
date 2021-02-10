@@ -86,12 +86,23 @@ describe('GroupsService', () => {
       expect(new UserDto(foundGroup.users[0])).toEqual(new UserDto(user));
     });
 
-    it('should not include the group evaluations', async () => {
+    it('should not include the group evaluations by default', async () => {
       const group = await groupsService.create(GROUP_1);
       const evaluation = await evaluationsService.create(EVALUATION_1);
       await groupsService.addEvaluationToGroup(group, evaluation);
       const foundGroup = await groupsService.findByPkBang(group.id);
       expect(foundGroup.evaluations).not.toBeDefined();
+    });
+
+    it('should include the group evaluations when requested', async () => {
+      const group = await groupsService.create(GROUP_1);
+      const evaluation = await evaluationsService.create(EVALUATION_1);
+      await groupsService.addEvaluationToGroup(group, evaluation);
+      const foundGroup = await groupsService.findByPkBang(group.id, true);
+      expect(foundGroup.evaluations).toBeDefined();
+      expect(foundGroup.evaluations.length).toBe(1);
+      expect(foundGroup.evaluations[0].GroupEvaluation).toBeDefined();
+      expect(foundGroup.evaluations[0].userId).toEqual(evaluation.userId);
     });
   });
 

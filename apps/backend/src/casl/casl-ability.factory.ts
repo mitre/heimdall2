@@ -54,7 +54,8 @@ export class CaslAbilityFactory {
     can([Action.Read, Action.AddEvaluation, Action.RemoveEvaluation], Group, {
       'users.id': user.id
     });
-    can([Action.Update, Action.Delete], Group, {
+
+    can([Action.Manage], Group, {
       'users.id': user.id,
       'users.GroupUser.role': 'owner'
     });
@@ -66,13 +67,13 @@ export class CaslAbilityFactory {
 
     can([Action.Read], Evaluation, {public: true});
 
-    can([Action.Read, Action.Update, Action.Delete], Evaluation, {
+    can([Action.Manage], Evaluation, {
       'user.id': user.id
     });
 
     can([Action.Read], Evaluation, {'groups.users.id': user.id});
 
-    can([Action.Update, Action.Delete], Evaluation, {
+    can([Action.Manage], Evaluation, {
       'groups.users.id': user.id,
       'groups.users.GroupEvaluation.role': 'owner'
     });

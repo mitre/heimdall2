@@ -59,7 +59,7 @@ export class EvaluationsService {
 
   async findById(id: string): Promise<Evaluation> {
     return this.findByPkBang(id, {
-      include: [EvaluationTag]
+      include: [EvaluationTag, User]
     });
   }
 
