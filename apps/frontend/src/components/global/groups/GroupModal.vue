@@ -23,16 +23,20 @@
                 label="Group Name"
               />
               <v-tooltip bottom>
-                <template v-slot:activator="{ on }">
+                <template #activator="{on}">
                   <span v-on="on">
-                  <v-checkbox
-                    id="public"
-                    v-model="groupInfo.public"
-                    label="Make Publicly Visible?"
-                  />
+                    <v-checkbox
+                      id="public"
+                      v-model="groupInfo.public"
+                      label="Make Publicly Visible?"
+                    />
                   </span>
                 </template>
-                <span>This will make the group name visible to all logged in users. It will not expose any results or profiles added to the group.</span>
+                <span
+                  >This will make the group name visible to all logged in users.
+                  It will not expose any results or profiles added to the
+                  group.</span
+                >
               </v-tooltip>
             </v-col>
           </v-row>
@@ -50,11 +54,7 @@
             @click="dialog = false"
             >Cancel</v-btn
           >
-          <v-btn
-            id="closeAndSaveChanges"
-            color="primary"
-            text
-            @click="updateGroupInfo"
+          <v-btn id="closeAndSaveChanges" color="primary" text @click="save"
             >Save</v-btn
           >
         </v-col>
@@ -66,30 +66,33 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
 import {ICreateGroup, IGroup} from '@heimdall/interfaces';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 import {Prop} from 'vue-property-decorator';
-import axios from 'axios';
+import axios, {AxiosResponse} from 'axios';
+import {GroupsModule} from '@/store/groups';
+
+function newGroup(): IGroup {
+  return {
+    id: '-1',
+    name: '',
+    public: false,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }
+}
 
 @Component({
   mixins: [UserValidatorMixin],
   validations: {}
 })
-
 export default class GroupModal extends Vue {
   @Prop({
     type: Object,
     required: false,
     default: function() {
-      return {
-        id: '-1',
-        name: '',
-        public: false,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
+      newGroup()
     }
     }) readonly group!: IGroup;
   @Prop({type: Boolean, default: false}) readonly admin!: boolean;
@@ -114,15 +117,34 @@ export default class GroupModal extends Vue {
     }
   }
 
-  async updateGroupInfo(): Promise<void> {
+  async save(): Promise<void> {
     let groupInfo: ICreateGroup = {
       ...this.groupInfo,
     };
 
-    axios.post<IGroup>('/groups', groupInfo).then((group) =>
-    {
-      debugger;
-    });
+    const response = this.create ? this.createGroup(groupInfo) : this.updateExistingGroup(groupInfo);
+    response.then(({data}) => {
+      GroupsModule.UpdateGroup(data).then(() => {
+        SnackbarModule.notify(`Group Successfully Saved`);
+        // This clears when creating a new Group.
+        // Calling clear on edit makes it impossible to edit the same group twice.
+        if(this.create) {
+          this.groupInfo = newGroup();
+        }
+        this.dialog = false;
+      });
+    }).catch((err) => {
+      // If the backend provided an error then show it, otherwise fallback to printing the client side error
+      SnackbarModule.failure(err?.response?.data?.message || `${err}. Please reload the page and try again.`);
+    })
+  }
+
+  async createGroup(createGroup: ICreateGroup): Promise<AxiosResponse<IGroup>> {
+    return axios.post<IGroup>('/groups', createGroup)
+  }
+
+  async updateExistingGroup(groupToUpdate: ICreateGroup): Promise<AxiosResponse<IGroup>> {
+    return axios.put<IGroup>(`/groups/${this.groupInfo.id}`, groupToUpdate);
   }
 }
 </script>

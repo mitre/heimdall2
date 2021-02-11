@@ -11,7 +11,7 @@
       <v-dialog v-model="deleteDialog" max-width="500px">
         <v-card>
           <v-card-title class="headline"
-            >Are you sure you want to delete this item?</v-card-title
+            >Are you sure you want to delete this file?</v-card-title
           >
           <v-card-actions>
             <v-spacer />
@@ -52,15 +52,7 @@
           >
         </template>
         <template #[`item.evaluationTags`]="{item}">
-          <template v-for="tag in item.evaluationTags">
-            <v-chip
-              :key="tag.id + '_'"
-              small
-              close
-              @click:close="deleteTag(tag, item)"
-              >{{ tag.value }}</v-chip
-            >
-          </template>
+          <TagRow :evaluation="item" />
         </template>
         <template #[`item.createdAt`]="{item}">
           <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
@@ -83,8 +75,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue'
-
+import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
+import TagRow from '@/components/global/tags/TagRow.vue';
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations'
 import {IEvaluation} from '@heimdall/interfaces';
@@ -93,7 +85,8 @@ import {Sample} from '@/utilities/sample_util';
 
 @Component({
   components: {
-    EditEvaluationModal
+    EditEvaluationModal,
+    TagRow
   }
 })
 export default class LoadFileList extends Vue {
@@ -120,7 +113,7 @@ export default class LoadFileList extends Vue {
   }
 
   updateEvaluations() {
-    this.$emit('updateEvaluations')
+    EvaluationModule.getAllEvaluations();
   }
 
   editItem(item: IEvaluation) {
@@ -131,15 +124,6 @@ export default class LoadFileList extends Vue {
   deleteItem(item: IEvaluation) {
     this.activeItem = item;
     this.deleteDialog = true;
-  }
-
-  deleteTag(tag: any) {
-    EvaluationModule.deleteTag(tag).then(() => {
-      SnackbarModule.notify("Deleted tag successfully.")
-      this.updateEvaluations()
-    }).catch((error) => {
-      SnackbarModule.HTTPFailure(error)
-    });
   }
 
  filterEvaluationTags(file: IEvaluation | Sample, search: string) {

@@ -10,6 +10,7 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
+import {GroupsModule} from './groups';
 
 const local_token = new LocalStorageVal<string | null>('auth_token');
 const localUserID = new LocalStorageVal<string | null>('localUserID');
@@ -213,7 +214,8 @@ class Server extends VuexModule implements IServerState {
           // If an error occurs fetching the users profile
           // then clear their token and refresh the page
           this.Logout()
-        );
+        )
+        .then(() => GroupsModule.FetchGroupData());
     }
   }
 

@@ -11,10 +11,10 @@
             <v-card>
               <v-tabs-items v-model="activeTab">
                 <v-tab-item key="my-groups">
-                  <GroupManagement :all-groups="false"/>
+                  <GroupManagement :all-groups="false" />
                 </v-tab-item>
                 <v-tab-item key="all-groups">
-                  <GroupManagement :all-groups="true"/>
+                  <GroupManagement :all-groups="true" />
                 </v-tab-item>
               </v-tabs-items>
             </v-card>

@@ -1,46 +1,45 @@
 <template>
   <v-card>
-    <v-card-title class="pb-0" v-if="!allGroups">
-
-          <GroupModal id="groupModal" :create="true">
-            <template #clickable="{on, attrs}"
-              ><v-btn
-            color="primary"
-            class="mb-2"
-            v-bind="attrs"
-            v-on="on"
-          >
+    <v-card-title v-if="!allGroups" class="pb-0">
+      <GroupModal id="groupModal" :create="true">
+        <template #clickable="{on, attrs}"
+          ><v-btn color="primary" class="mb-2" v-bind="attrs" v-on="on">
             Create New Group
           </v-btn>
-            </template>
-          </GroupModal>
+        </template>
+      </GroupModal>
     </v-card-title>
     <v-data-table
-      :headers="allGroups? allGroupsHeaders: myGroupsHeaders"
+      :headers="allGroups ? allGroupsHeaders : myGroupsHeaders"
       :items="allGroups ? allGroupData : myGroupData"
       class="elevation-0"
       :loading="loading"
       :search="search"
     >
-      <template v-slot:top>
+      <template #top>
         <v-container>
-        <v-text-field
-          v-model="search"
-          append-icon="mdi-magnify"
-          label="Search"
-          single-line
-          hide-details
-        />
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+          />
         </v-container>
       </template>
       <template #[`item.actions`]="{item}">
+        <GroupModal id="editGroupModal" :create="false" :group="item">
+          <template #clickable="{on}"
+            ><v-icon small title="Edit" class="mr-2" v-on="on">
+              mdi-pencil
+            </v-icon>
+          </template>
+        </GroupModal>
         <v-icon small title="Delete" @click="deleteGroupDialog(item)">
           mdi-delete
         </v-icon>
       </template>
-      <template #no-data>
-        No groups match current selection.
-      </template>
+      <template #no-data> No groups match current selection. </template>
     </v-data-table>
     <v-dialog v-model="dialogDelete" max-width="550px">
       <v-card>
@@ -90,16 +89,17 @@ export default class GroupManagement extends Vue {
       sortable: true,
       value: 'name'
     },
+    {
+    text: 'Public',
+      sortable: true,
+      value: 'public'
+    }
   ];
   myGroupsHeaders: Object[] = [
     ...this.allGroupsHeaders,
     {text: 'Your Role', value: 'role', sortable: true},
     {text: 'Actions', value: 'actions', sortable: false},
   ];
-
-  mounted() {
-    GroupsModule.FetchGroupData();
-  }
 
   deleteGroupDialog(group: IGroup): void {
     this.editedGroup = group;
@@ -108,13 +108,12 @@ export default class GroupManagement extends Vue {
 
   deleteGroupConfirm(): void {
     if (this.editedGroup) {
-      axios.delete<IGroup>(`/groups/${this.editedGroup.id}`).then((response) => {
-        SnackbarModule.notify(`Successfully deleted group ${response.data.name}`);
+      GroupsModule.DeleteGroup(this.editedGroup).then((data) => {
+        SnackbarModule.notify(`Successfully deleted group ${data.name}`);
       }).catch((err) => {
         // If the backend provided an error then show it, otherwise fallback to printing the client side error
         SnackbarModule.failure(err?.response?.data?.message || `${err}. Please reload the page and try again.`);
       }).finally(() => {
-        GroupsModule.FetchGroupData();
         this.closeDeleteDialog();
       });
     }
