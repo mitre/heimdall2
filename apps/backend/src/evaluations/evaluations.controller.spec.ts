@@ -4,7 +4,9 @@ import {SequelizeModule} from '@nestjs/sequelize';
 import {Test, TestingModule} from '@nestjs/testing';
 import {
   CREATE_EVALUATION_DTO_WITHOUT_TAGS,
-  EVALUATION_1, EVALUATION_WITH_TAGS_1, UPDATE_EVALUATION
+  EVALUATION_1,
+  EVALUATION_WITH_TAGS_1,
+  UPDATE_EVALUATION
 } from '../../test/constants/evaluations-test.constant';
 import {CREATE_USER_DTO_TEST_OBJ} from '../../test/constants/users-test.constant';
 import {AuthzService} from '../authz/authz.service';
@@ -89,17 +91,16 @@ describe('EvaluationsController', () => {
         evaluation.id,
         {user: user}
       );
-      expect(foundEvaluation.evaluationTags).toEqual(new EvaluationDto(evaluation).evaluationTags);
+      expect(foundEvaluation.evaluationTags).toEqual(
+        new EvaluationDto(evaluation).evaluationTags
+      );
     });
 
     it('should throw a not found exeception when given an invalid id', async () => {
       expect.assertions(1);
 
       await expect(
-        evaluationsController.findById(
-          '0',
-          {user: user}
-        )
+        evaluationsController.findById('0', {user: user})
       ).rejects.toBeInstanceOf(NotFoundException);
     });
 
@@ -107,11 +108,8 @@ describe('EvaluationsController', () => {
       expect.assertions(1);
       const evaluation = await evaluationsService.create(EVALUATION_1);
       await expect(
-        evaluationsController.findById(
-          evaluation.id,
-          {user: user}
-        )
-      ).rejects.toBeInstanceOf(ForbiddenError)
+        evaluationsController.findById(evaluation.id, {user: user})
+      ).rejects.toBeInstanceOf(ForbiddenError);
     });
   });
 
@@ -133,20 +131,26 @@ describe('EvaluationsController', () => {
         ...EVALUATION_WITH_TAGS_1,
         userId: user.id
       });
-      const foundEvaluations = await evaluationsController.findAll({user: user})
+      const foundEvaluations = await evaluationsController.findAll({
+        user: user
+      });
       expect(foundEvaluations[0].evaluationTags.length).toEqual(1);
     });
   });
 
   describe('create', () => {
     it('should allow a user to create an evaluation', async () => {
-      const evaluation = await evaluationsController.create(EVALUATION_WITH_TAGS_1);
+      const evaluation = await evaluationsController.create(
+        EVALUATION_WITH_TAGS_1
+      );
       expect(evaluation).toBeDefined();
       expect(evaluation.evaluationTags.length).toEqual(1);
     });
 
     it('should create an evaluation without tags', async () => {
-      const evaluation = await evaluationsController.create(CREATE_EVALUATION_DTO_WITHOUT_TAGS);
+      const evaluation = await evaluationsController.create(
+        CREATE_EVALUATION_DTO_WITHOUT_TAGS
+      );
       expect(evaluation).toBeDefined();
       expect(evaluation.evaluationTags.length).toEqual(0);
     });
@@ -197,12 +201,9 @@ describe('EvaluationsController', () => {
       expect.assertions(1);
       const evaluation = await evaluationsService.create(EVALUATION_1);
       await expect(
-        evaluationsController.remove(
-          evaluation.id,
-          {user: user}
-        )
+        evaluationsController.remove(evaluation.id, {user: user})
       ).rejects.toBeInstanceOf(ForbiddenError);
-    })
+    });
   });
 
   afterAll(async () => {

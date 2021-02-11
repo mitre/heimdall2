@@ -49,7 +49,13 @@ describe('GroupsController', () => {
           User
         ])
       ],
-      providers: [AuthzService, DatabaseService, GroupsService, UsersService, EvaluationsService]
+      providers: [
+        AuthzService,
+        DatabaseService,
+        GroupsService,
+        UsersService,
+        EvaluationsService
+      ]
     }).compile();
 
     groupsService = module.get<GroupsService>(GroupsService);
@@ -168,7 +174,7 @@ describe('GroupsController', () => {
       const owner = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
       await groupsService.addUserToGroup(privateGroup, owner, 'owner');
 
-      const response = await groupsController.addUserToGroup(
+      await groupsController.addUserToGroup(
         privateGroup.id,
         {user: owner},
         {userId: basicUser.id, groupRole: 'member'}
@@ -331,7 +337,7 @@ describe('GroupsController', () => {
         {userId: user.id}
       );
       expect((await privateGroup.$get('users')).length).toEqual(1);
-    })
+    });
 
     it('should prevent non-owners from removing members', async () => {
       expect.assertions(1);

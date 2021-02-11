@@ -10,6 +10,7 @@ import {
   UPDATE_EVALUATION_DATA_ONLY,
   UPDATE_EVALUATION_FILENAME_ONLY
 } from '../../test/constants/evaluations-test.constant';
+import {GROUP_1} from '../../test/constants/groups-test.constant';
 import {CREATE_USER_DTO_TEST_OBJ} from '../../test/constants/users-test.constant';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
@@ -18,14 +19,13 @@ import {EvaluationTagsService} from '../evaluation-tags/evaluation-tags.service'
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
+import {GroupsService} from '../groups/groups.service';
 import {UserDto} from '../users/dto/user.dto';
 import {UsersModule} from '../users/users.module';
 import {UsersService} from '../users/users.service';
 import {EvaluationDto} from './dto/evaluation.dto';
 import {Evaluation} from './evaluation.model';
 import {EvaluationsService} from './evaluations.service';
-import {GroupsService} from '../groups/groups.service';
-import {GROUP_1} from '../../test/constants/groups-test.constant';
 
 describe('EvaluationsService', () => {
   let evaluationsService: EvaluationsService;
@@ -48,7 +48,12 @@ describe('EvaluationsService', () => {
         EvaluationTagsModule,
         UsersModule
       ],
-      providers: [EvaluationsService, DatabaseService, UsersService, GroupsService]
+      providers: [
+        EvaluationsService,
+        DatabaseService,
+        UsersService,
+        GroupsService
+      ]
     }).compile();
 
     evaluationsService = module.get<EvaluationsService>(EvaluationsService);
@@ -122,10 +127,10 @@ describe('EvaluationsService', () => {
       await groupsService.addUserToGroup(group, owner, 'owner');
 
       evaluations = await evaluationsService.findAll();
-      const foundGroup = evaluations[0].groups[0]
+      const foundGroup = evaluations[0].groups[0];
       expect(foundGroup).toBeDefined();
       expect(foundGroup.id).toEqual(group.id);
-      expect(foundGroup.users.length).toEqual(1)
+      expect(foundGroup.users.length).toEqual(1);
       expect(foundGroup.users[0].id).toEqual(owner.id);
       expect(foundGroup.users[0].GroupUser.role).toEqual('owner');
     });

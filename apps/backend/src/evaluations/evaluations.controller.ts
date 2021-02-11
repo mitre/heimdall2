@@ -1,3 +1,4 @@
+import {ForbiddenError} from '@casl/ability';
 import {
   Body,
   Controller,
@@ -6,7 +7,6 @@ import {
   Param,
   Post,
   Put,
-  Req,
   Request,
   UseGuards
 } from '@nestjs/common';
@@ -18,7 +18,6 @@ import {CreateEvaluationDto} from './dto/create-evaluation.dto';
 import {EvaluationDto} from './dto/evaluation.dto';
 import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 import {EvaluationsService} from './evaluations.service';
-import {ForbiddenError} from '@casl/ability';
 
 @Controller('evaluations')
 @UseGuards(JwtAuthGuard)
@@ -30,10 +29,10 @@ export class EvaluationsController {
   @Get(':id')
   async findById(
     @Param('id') id: string,
-    @Request() request: {user: User},
+    @Request() request: {user: User}
   ): Promise<EvaluationDto> {
     const abac = this.authz.abac.createForUser(request.user);
-    const evaluation = await this.evaluationsService.findById(id)
+    const evaluation = await this.evaluationsService.findById(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Read, evaluation);
     return new EvaluationDto(evaluation);
   }
