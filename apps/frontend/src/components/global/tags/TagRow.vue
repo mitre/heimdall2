@@ -2,13 +2,9 @@
   <div>
     <v-edit-dialog large @save="save" @cancel="syncEvaluationTags">
       <template v-for="tag in evaluation.evaluationTags">
-        <v-chip
-          :key="tag.id + '_'"
-          small
-          close
-          @click:close="deleteTag(tag, evaluation)"
-          >{{ tag.value }}</v-chip
-        >
+        <v-chip :key="tag.id + '_'" small close @click:close="deleteTag(tag)">{{
+          tag.value
+        }}</v-chip>
       </template>
       <v-icon small class="ma-2"> mdi-tag-plus </v-icon>
       <template #input>
@@ -38,6 +34,23 @@
         </v-combobox>
       </template>
     </v-edit-dialog>
+    <v-dialog v-model="deleteTagDialog" max-width="550px">
+      <v-card>
+        <v-card-title class="headline"
+          >Are you sure you want to delete this tag?</v-card-title
+        >
+        <v-card-actions>
+          <v-spacer />
+          <v-btn color="blue darken-1" text @click="deleteTagDialog = false"
+            >Cancel</v-btn
+          >
+          <v-btn color="blue darken-1" text @click="deleteTagConfirm()"
+            >OK</v-btn
+          >
+          <v-spacer />
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -58,6 +71,14 @@ export default class TagRow extends Vue {
 
   tags: string[] = [];
   search: string = '';
+  deleteTagDialog: boolean = false;
+  activeTag: IEvaluationTag = {
+    evaluationId: '-1',
+    id: '-1',
+    value: '',
+    createdAt: new Date(),
+    updatedAt: new Date()
+  };
 
   mounted() {
     this.syncEvaluationTags();
@@ -96,8 +117,13 @@ export default class TagRow extends Vue {
     return this.evaluation.evaluationTags.map((tag) => tag.value);
   }
 
-  deleteTag(tag: any) {
-    EvaluationModule.deleteTag(tag).then(() => {
+  async deleteTag(tag: IEvaluationTag) {
+    this.activeTag = tag;
+    this.deleteTagDialog = true;
+  }
+
+  deleteTagConfirm() {
+    EvaluationModule.deleteTag(this.activeTag).then(() => {
       SnackbarModule.notify("Deleted tag successfully.")
       EvaluationModule.getAllEvaluations().then(() => {
         this.syncEvaluationTags();
@@ -105,6 +131,7 @@ export default class TagRow extends Vue {
     }).catch((error) => {
       SnackbarModule.HTTPFailure(error)
     });
+    this.deleteTagDialog = false;
   }
 
   get allEvaluationTags(): string[] {
