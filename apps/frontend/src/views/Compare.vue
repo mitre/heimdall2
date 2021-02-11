@@ -19,7 +19,7 @@
       <v-container fluid grid-list-md pa-2>
         <v-row>
           <v-col cols="12">
-            <div style="position: relative;">
+            <div style="position: relative">
               <h1>Results Comparison</h1>
             </div>
           </v-col>
