@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   ForbiddenException,
   HttpStatus,
   INestApplication,
@@ -145,9 +144,12 @@ describe('UsersController Unit Tests', () => {
     it('should test the create function with already existing email', async () => {
       expect.assertions(1);
 
-      await expect(async () => {
-        await usersController.create(CREATE_USER_DTO_TEST_OBJ);
-      }).rejects.toThrow(ValidationError);
+      await register(app, CREATE_USER_DTO_TEST_OBJ);
+      return register(app, CREATE_USER_DTO_TEST_OBJ)
+        .expect(HttpStatus.INTERNAL_SERVER_ERROR)
+        .then((response) => {
+          expect(response.body.message).toEqual(['email must be unique']);
+        });
     });
 
     // Tests the create function with dto that is missing email
@@ -165,36 +167,41 @@ describe('UsersController Unit Tests', () => {
     it('should test the create function with missing password field', async () => {
       expect.assertions(1);
 
-      await expect(async () => {
-        await usersController.create(
-          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD
-        );
-      }).rejects.toThrow(BadRequestException);
+      return register(app, CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD)
+        .expect(HttpStatus.BAD_REQUEST)
+        .then((response) => {
+          expect(response.body.message).toEqual('Passwords do not match');
+        });
     });
 
     // Tests the create function with dto that is missing passwordConfirmation
     it('should test the create function with missing password confirmation field', async () => {
       expect.assertions(1);
 
-      await expect(async () => {
-        await usersController.create(
-          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD
-        );
-      }).rejects.toThrow(ValidationError);
+      return register(
+        app,
+        CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD
+      )
+        .expect(HttpStatus.BAD_REQUEST)
+        .then((response) => {
+          expect(response.body.message).toEqual('Passwords do not match');
+        });
     });
 
     it('should test the create function with mis-matching passwords', async () => {
       expect.assertions(1);
 
-      await expect(async () => {
-        await usersController.create(
-          CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
-        );
-      }).rejects.toThrow(ValidationError);
+      return register(app, CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS)
+        .expect(HttpStatus.BAD_REQUEST)
+        .then((response) => {
+          expect(response.body.message).toEqual('Passwords do not match');
+        });
     });
 
     it('should test the create function with a password that does not meet the complexity requirements', async () => {
-      await register(app, CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD)
+      expect.assertions(1);
+
+      return register(app, CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD)
         .expect(HttpStatus.BAD_REQUEST)
         .then((response) => {
           expect(response.body.message).toEqual(
@@ -202,11 +209,10 @@ describe('UsersController Unit Tests', () => {
               'must contain at least one special character, number, upper-case letter, and lower-case letter. Passwords cannot contain more than three consecutive repeating ' +
               'characters. Passwords cannot contain more than four repeating characters from the same character class.'
           );
-          expect(response.body.error).toEqual('Bad Request');
         });
     });
 
-    it('should test the create function with no provided role', async () => {
+    it('should return 400 status if no role is provided', async () => {
       expect(async () => {
         await usersController.create(
           CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE
@@ -218,7 +224,7 @@ describe('UsersController Unit Tests', () => {
   describe('Update function', () => {
     // Tests the update function with valid dto (basic positive test)
     it('should test the update function with a valid update dto', async () => {
-      expect.assertions(1);
+      expect.assertions(2);
 
       const userDto = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       basicUser = await usersService.findByPkBang(userDto.id);
