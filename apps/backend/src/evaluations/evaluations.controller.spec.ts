@@ -1,9 +1,10 @@
 import {ForbiddenError} from '@casl/ability';
-import {BadRequestException, NotFoundException} from '@nestjs/common';
+import {NotFoundException} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test, TestingModule} from '@nestjs/testing';
 import {
-  EVALUATION_1
+  CREATE_EVALUATION_DTO_WITHOUT_TAGS,
+  EVALUATION_1, EVALUATION_WITH_TAGS_1, UPDATE_EVALUATION
 } from '../../test/constants/evaluations-test.constant';
 import {CREATE_USER_DTO_TEST_OBJ} from '../../test/constants/users-test.constant';
 import {AuthzService} from '../authz/authz.service';
@@ -14,8 +15,6 @@ import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
-import {UsersController} from '../users/users.controller';
-import {UsersModule} from '../users/users.module';
 import {UsersService} from '../users/users.service';
 import {EvaluationDto} from './dto/evaluation.dto';
 import {Evaluation} from './evaluation.model';
@@ -81,7 +80,16 @@ describe('EvaluationsController', () => {
     });
 
     it('should return an evaluations tags', async () => {
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        userId: user.id
+      });
 
+      const foundEvaluation = await evaluationsController.findById(
+        evaluation.id,
+        {user: user}
+      );
+      expect(foundEvaluation.evaluationTags).toEqual(new EvaluationDto(evaluation).evaluationTags);
     });
 
     it('should throw a not found exeception when given an invalid id', async () => {
@@ -121,37 +129,79 @@ describe('EvaluationsController', () => {
     });
 
     it('should return all evaluations and their associated tags', async () => {
-
+      await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        userId: user.id
+      });
+      const foundEvaluations = await evaluationsController.findAll({user: user})
+      expect(foundEvaluations[0].evaluationTags.length).toEqual(1);
     });
   });
 
   describe('create', () => {
     it('should allow a user to create an evaluation', async () => {
-
+      const evaluation = await evaluationsController.create(EVALUATION_WITH_TAGS_1);
+      expect(evaluation).toBeDefined();
+      expect(evaluation.evaluationTags.length).toEqual(1);
     });
 
     it('should create an evaluation without tags', async () => {
-
+      const evaluation = await evaluationsController.create(CREATE_EVALUATION_DTO_WITHOUT_TAGS);
+      expect(evaluation).toBeDefined();
+      expect(evaluation.evaluationTags.length).toEqual(0);
     });
   });
 
   describe('update', () => {
     it('should allow an evaluation owner to update', async () => {
-
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_1,
+        userId: user.id
+      });
+      const updatedEvaluation = await evaluationsController.update(
+        evaluation.id,
+        {user: user},
+        UPDATE_EVALUATION
+      );
+      expect(evaluation.filename).not.toEqual(updatedEvaluation.filename);
+      expect(evaluation.data).not.toEqual(updatedEvaluation.data);
     });
 
     it('should prevent unauthorized users from updating', async () => {
-
+      expect.assertions(1);
+      const evaluation = await evaluationsService.create(EVALUATION_1);
+      await expect(
+        evaluationsController.update(
+          evaluation.id,
+          {user: user},
+          UPDATE_EVALUATION
+        )
+      ).rejects.toBeInstanceOf(ForbiddenError);
     });
   });
 
   describe('remove', () => {
     it('should remove an evaluation', async () => {
-
+      expect.assertions(1);
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_1,
+        userId: user.id
+      });
+      await evaluationsController.remove(evaluation.id, {user: user});
+      await expect(
+        evaluationsController.findById(evaluation.id, {user: user})
+      ).rejects.toBeInstanceOf(NotFoundException);
     });
 
     it('should prevent unauthorized users removing an evaluation', async () => {
-
+      expect.assertions(1);
+      const evaluation = await evaluationsService.create(EVALUATION_1);
+      await expect(
+        evaluationsController.remove(
+          evaluation.id,
+          {user: user}
+        )
+      ).rejects.toBeInstanceOf(ForbiddenError);
     })
   });
 

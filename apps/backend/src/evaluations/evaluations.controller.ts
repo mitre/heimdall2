@@ -80,7 +80,7 @@ export class EvaluationsController {
     @Request() request: {user: User}
   ): Promise<EvaluationDto> {
     const abac = this.authz.abac.createForUser(request.user);
-    const evaluationToDelete = this.evaluationsService.findById(id);
+    const evaluationToDelete = await this.evaluationsService.findById(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Delete, evaluationToDelete);
     return new EvaluationDto(await this.evaluationsService.remove(id));
   }
