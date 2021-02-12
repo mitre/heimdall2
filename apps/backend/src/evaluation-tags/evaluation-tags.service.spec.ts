@@ -12,6 +12,9 @@ import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {EvaluationsService} from '../evaluations/evaluations.service';
+import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
+import {GroupUser} from '../group-users/group-user.model';
+import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {EvaluationTag} from './evaluation-tag.model';
@@ -29,7 +32,14 @@ describe('EvaluationTagsService', () => {
     const module = await Test.createTestingModule({
       imports: [
         DatabaseModule,
-        SequelizeModule.forFeature([EvaluationTag, Evaluation, User])
+        SequelizeModule.forFeature([
+          EvaluationTag,
+          Evaluation,
+          User,
+          GroupEvaluation,
+          Group,
+          GroupUser
+        ])
       ],
       providers: [
         DatabaseService,
