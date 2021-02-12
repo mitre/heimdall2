@@ -8,6 +8,7 @@ export class EvaluationDto implements IEvaluation {
   readonly data: Record<string, any> | undefined;
   readonly evaluationTags: EvaluationTagDto[];
   readonly userId: string;
+  readonly public: boolean;
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -26,6 +27,7 @@ export class EvaluationDto implements IEvaluation {
       );
     }
     this.userId = evaluation.userId;
+    this.public = evaluation.public;
     this.createdAt = evaluation.createdAt;
     this.updatedAt = evaluation.updatedAt;
   }
