@@ -45,3 +45,13 @@ export function destroy(
     .set('Authorization', 'bearer ' + authorizationJWT)
     .send(user);
 }
+
+export function getUser(
+  app: INestApplication,
+  userId: string,
+  authorizationJWT: string
+): Test {
+  return request(app.getHttpServer())
+    .get('/users/' + userId)
+    .set('Authorization', 'bearer ' + authorizationJWT);
+}
