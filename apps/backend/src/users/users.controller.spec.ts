@@ -274,7 +274,7 @@ describe('UsersController Unit Tests', () => {
       describe('Update', () => {
         // Tests the update function with valid dto (basic positive test)
         it('should test the update function with a valid update dto', async () => {
-          expect.assertions(1);
+          expect.assertions(6);
 
           const updatedUser = await usersController.update(
             basicUser.id,
@@ -534,7 +534,7 @@ describe('UsersController Unit Tests', () => {
         // Admins should be able to remove other users without their password
         it('should test remove function with admin user and a dto that has no password', async () => {
           expect(
-            await usersController.remove(basicUser.id, {user: basicUser}, {})
+            await usersController.remove(basicUser.id, {user: adminUser}, {})
           ).toEqual(new UserDto(basicUser));
         });
 

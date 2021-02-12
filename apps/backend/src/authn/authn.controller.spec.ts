@@ -5,13 +5,15 @@ import {
   CREATE_USER_DTO_TEST_OBJ,
   LOGIN_AUTHENTICATION
 } from '../../test/constants/users-test.constant';
-import {login, register} from '../../test/helpers/users.helper';
+import {login} from '../../test/helpers/users.helper';
 import {AppModule} from '../app.module';
 import {DatabaseService} from '../database/database.service';
+import {UsersController} from '../users/users.controller';
 
 describe('/authn', () => {
   let app: INestApplication;
   let databaseService: DatabaseService;
+  let usersController: UsersController;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -20,6 +22,7 @@ describe('/authn', () => {
     }).compile();
 
     databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
+    usersController = moduleFixture.get<UsersController>(UsersController);
 
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(
@@ -33,11 +36,13 @@ describe('/authn', () => {
 
   beforeEach(async () => {
     await databaseService.cleanAll();
+    await usersController.create(CREATE_USER_DTO_TEST_OBJ);
   });
 
   describe('login', () => {
     it('should successfully return access token', async () => {
-      await register(app, CREATE_USER_DTO_TEST_OBJ).expect(HttpStatus.CREATED);
+      expect.assertions(1);
+
       return login(app, LOGIN_AUTHENTICATION)
         .expect(HttpStatus.CREATED)
         .then((response) => {
@@ -46,7 +51,8 @@ describe('/authn', () => {
     });
 
     it('should return 401 status when bad login info is supplied', async () => {
-      await register(app, CREATE_USER_DTO_TEST_OBJ).expect(HttpStatus.CREATED);
+      expect.assertions(1);
+
       return login(app, BAD_LOGIN_AUTHENTICATION).expect(
         HttpStatus.UNAUTHORIZED
       );
