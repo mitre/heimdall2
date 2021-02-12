@@ -27,7 +27,7 @@ describe('EvaluationTagsController', () => {
   describe('index', () => {
     it('should return EvaluationTags', async () => {
       const evaluationTags = await evaluationTagsController.index();
-      expect(evaluationTags).toContain(EVALUATION_TAG_DTO);
+      expect(evaluationTags).toContainEqual(EVALUATION_TAG_DTO);
     });
   });
 });
