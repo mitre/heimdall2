@@ -73,7 +73,7 @@
     "axios": "^0.21.0",
     "babel-plugin-prismjs": "^2.0.1",
     "chroma-js": "^2.1.0",
-    "class-transformer": "^0.3.1",
+    "class-transformer": "^0.4.0",
     "concat-stream": "^2.0.0",
     "connect": "^3.7.0",
     "core-js": "^3.4.1",
