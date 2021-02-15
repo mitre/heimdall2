@@ -26,6 +26,7 @@ import {DeleteUserDto} from './dto/delete-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
 import {UserDto} from './dto/user.dto';
 import {UsersService} from './users.service';
+import {SlimUserDto} from './dto/slim-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -49,12 +50,19 @@ export class UsersController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async findAll(@Request() request: {user: User}): Promise<UserDto[]> {
+  async adminFindAll(@Request() request: {user: User}): Promise<UserDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
     ForbiddenError.from(abac).throwUnlessCan(Action.ReadAll, User);
 
-    const users = await this.usersService.findAll();
+    const users = await this.usersService.adminFindAll();
     return users.map((user) => new UserDto(user));
+  }
+
+  @Get('user-find-all')
+  @UseGuards(JwtAuthGuard)
+  async userFindAll(): Promise<SlimUserDto[]> {
+    const users = await this.usersService.userFindAll();
+    return users.map((user) => new SlimUserDto(user));
   }
 
   @Post()

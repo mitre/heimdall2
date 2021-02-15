@@ -13,6 +13,7 @@ import {CreateUserDto} from './dto/create-user.dto';
 import {DeleteUserDto} from './dto/delete-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
 import {User} from './user.model';
+import {SlimUserDto} from './dto/slim-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -21,8 +22,19 @@ export class UsersService {
     private userModel: typeof User
   ) {}
 
-  async findAll(): Promise<User[]> {
+  async adminFindAll(): Promise<User[]> {
     return this.userModel.findAll<User>();
+  }
+
+  async userFindAll(): Promise<User[]> {
+    return this.userModel.findAll<User>({
+      attributes: [
+        'id',
+        'email',
+        'firstName',
+        'lastName'
+      ]
+    });
   }
 
   async findById(id: string): Promise<User> {
