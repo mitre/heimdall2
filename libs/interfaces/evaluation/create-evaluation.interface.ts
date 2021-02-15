@@ -3,6 +3,6 @@ import {ICreateEvaluationTag} from '..';
 export interface ICreateEvaluation {
   readonly filename: string;
   readonly data: Record<string, any>;
-  readonly userId: string;
+  readonly public: boolean;
   readonly evaluationTags: ICreateEvaluationTag[] | undefined;
 }

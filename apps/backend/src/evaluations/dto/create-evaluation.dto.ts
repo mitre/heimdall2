@@ -1,8 +1,8 @@
 import {ICreateEvaluation} from '@heimdall/interfaces';
 import {
   IsArray,
+  IsBoolean,
   IsNotEmpty,
-  IsNumberString,
   IsObject,
   IsOptional,
   IsString
@@ -19,8 +19,8 @@ export class CreateEvaluationDto implements ICreateEvaluation {
   readonly data!: Record<string, any>;
 
   @IsNotEmpty()
-  @IsNumberString()
-  readonly userId!: string;
+  @IsBoolean()
+  readonly public!: boolean;
 
   @IsOptional()
   @IsArray()

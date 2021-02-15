@@ -24,8 +24,8 @@ export class EvaluationsService {
     });
   }
 
-  async create(createEvaluationDto: CreateEvaluationDto): Promise<Evaluation> {
-    return Evaluation.create<Evaluation>(createEvaluationDto, {
+  async create(createEvaluationDto: CreateEvaluationDto, id: string): Promise<Evaluation> {
+    return Evaluation.create<Evaluation>({...createEvaluationDto, userId: id}, {
       include: [EvaluationTag]
     });
   }

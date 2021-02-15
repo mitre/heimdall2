@@ -75,38 +75,23 @@ describe('EvaluationsService', () => {
       let evaluationsDtoArray = await evaluationsService.findAll();
       expect(evaluationsDtoArray).toEqual([]);
 
-      const evaluationOne = await evaluationsService.create({
-        ...EVALUATION_WITH_TAGS_1,
-        userId: user.id
-      });
-      const evaluationTwo = await evaluationsService.create({
-        ...EVALUATION_WITH_TAGS_1,
-        userId: user.id
-      });
+      await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1,
+        user.id
+      );
+      await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1,
+        user.id
+      );
       evaluationsDtoArray = await evaluationsService.findAll();
-
-      expect(evaluationsDtoArray[0].id).toEqual(evaluationOne.id);
-      expect(evaluationsDtoArray[0].filename).toEqual(evaluationOne.filename);
-      expect(evaluationsDtoArray[0].createdAt).toEqual(evaluationOne.createdAt);
-      expect(evaluationsDtoArray[0].updatedAt).toEqual(evaluationOne.updatedAt);
-      expect(evaluationsDtoArray[0].evaluationTags.length).toEqual(
-        evaluationOne.evaluationTags.length
-      );
-
-      expect(evaluationsDtoArray[1].id).toEqual(evaluationTwo.id);
-      expect(evaluationsDtoArray[1].filename).toEqual(evaluationTwo.filename);
-      expect(evaluationsDtoArray[1].createdAt).toEqual(evaluationTwo.createdAt);
-      expect(evaluationsDtoArray[1].updatedAt).toEqual(evaluationTwo.updatedAt);
-      expect(evaluationsDtoArray[1].evaluationTags.length).toEqual(
-        evaluationTwo.evaluationTags.length
-      );
+      expect(evaluationsDtoArray.length).toEqual(2);
     });
 
     it('should include the evaluation user', async () => {
-      await evaluationsService.create({
-        ...EVALUATION_WITH_TAGS_1,
-        userId: user.id
-      });
+      await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1,
+        user.id
+      );
 
       const evaluations = await evaluationsService.findAll();
       expect(new UserDto(evaluations[0].user)).toEqual(user);
@@ -115,10 +100,10 @@ describe('EvaluationsService', () => {
     it('should include the evaluation group and group users', async () => {
       const group = await groupsService.create(GROUP_1);
       const owner = await usersService.findById(user.id);
-      const evaluation = await evaluationsService.create({
-        ...EVALUATION_WITH_TAGS_1,
-        userId: user.id
-      });
+      const evaluation = await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1,
+        user.id
+      );
 
       let evaluations = await evaluationsService.findAll();
       expect(evaluations[0].groups[0]).not.toBeDefined();
@@ -138,10 +123,10 @@ describe('EvaluationsService', () => {
 
   describe('findById', () => {
     it('should find evaluations by id', async () => {
-      const evaluation = await evaluationsService.create({
-        ...EVALUATION_WITH_TAGS_1,
-        userId: user.id
-      });
+      const evaluation = await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1,
+        user.id
+      );
       const foundEvaluation = await evaluationsService.findById(evaluation.id);
       expect(new EvaluationDto(evaluation)).toEqual(
         new EvaluationDto(foundEvaluation)
@@ -158,10 +143,10 @@ describe('EvaluationsService', () => {
 
   describe('create', () => {
     it('should create a new evaluation with evaluation tags', async () => {
-      const evaluation = await evaluationsService.create({
-        ...EVALUATION_WITH_TAGS_1,
-        userId: user.id
-      });
+      const evaluation = await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1,
+        user.id
+      );
       expect(evaluation.id).toBeDefined();
       expect(evaluation.updatedAt).toBeDefined();
       expect(evaluation.createdAt).toBeDefined();
@@ -183,10 +168,10 @@ describe('EvaluationsService', () => {
     });
 
     it('should create a new evaluation without evaluation tags', async () => {
-      const evaluation = await evaluationsService.create({
-        ...CREATE_EVALUATION_DTO_WITHOUT_TAGS,
-        userId: user.id
-      });
+      const evaluation = await evaluationsService.create(
+        CREATE_EVALUATION_DTO_WITHOUT_TAGS,
+        user.id
+      );
       expect(evaluation.id).toBeDefined();
       expect(evaluation.updatedAt).toBeDefined();
       expect(evaluation.createdAt).toBeDefined();
@@ -201,14 +186,14 @@ describe('EvaluationsService', () => {
     it('should throw an error when missing the data field', async () => {
       expect.assertions(1);
       await expect(
-        evaluationsService.create(CREATE_EVALUATION_DTO_WITHOUT_DATA)
+        evaluationsService.create(CREATE_EVALUATION_DTO_WITHOUT_DATA, user.id)
       ).rejects.toThrow('notNull Violation: Evaluation.data cannot be null');
     });
 
     it('should throw an error when missing the filename field', async () => {
       expect.assertions(1);
       await expect(
-        evaluationsService.create(CREATE_EVALUATION_DTO_WITHOUT_FILENAME)
+        evaluationsService.create(CREATE_EVALUATION_DTO_WITHOUT_FILENAME, user.id)
       ).rejects.toThrow(
         'notNull Violation: Evaluation.filename cannot be null'
       );
@@ -224,10 +209,10 @@ describe('EvaluationsService', () => {
     });
 
     it('should update all fields of an evaluation', async () => {
-      const evaluation = await evaluationsService.create({
-        ...EVALUATION_WITH_TAGS_1,
-        userId: user.id
-      });
+      const evaluation = await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1,
+        user.id
+      );
       const updatedEvaluation = await evaluationsService.update(
         evaluation.id,
         UPDATE_EVALUATION
@@ -240,10 +225,10 @@ describe('EvaluationsService', () => {
     });
 
     it('should only update data if provided', async () => {
-      const evaluation = await evaluationsService.create({
-        ...EVALUATION_WITH_TAGS_1,
-        userId: user.id
-      });
+      const evaluation = await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1,
+        user.id
+      );
       const updatedEvaluation = await evaluationsService.update(
         evaluation.id,
         UPDATE_EVALUATION_DATA_ONLY
@@ -259,10 +244,10 @@ describe('EvaluationsService', () => {
     });
 
     it('should only update filename if provided', async () => {
-      const evaluation = await evaluationsService.create({
-        ...EVALUATION_WITH_TAGS_1,
-        userId: user.id
-      });
+      const evaluation = await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1,
+        user.id
+      );
 
       const updatedEvaluation = await evaluationsService.update(
         evaluation.id,
@@ -281,10 +266,10 @@ describe('EvaluationsService', () => {
 
   describe('remove', () => {
     it('should remove an evaluation and its evaluation tags given an id', async () => {
-      const evaluation = await evaluationsService.create({
-        ...EVALUATION_WITH_TAGS_1,
-        userId: user.id
-      });
+      const evaluation = await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1,
+        user.id
+      );
       const removedEvaluation = await evaluationsService.remove(evaluation.id);
       const foundEvaluationTags = await evaluationTagsService.findAll();
       expect(foundEvaluationTags.length).toEqual(0);

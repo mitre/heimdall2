@@ -25,7 +25,6 @@ describe('EvaluationTagsService', () => {
   let evaluationsService: EvaluationsService;
   let databaseService: DatabaseService;
   let usersService: UsersService;
-  let user: User;
   let evaluation: EvaluationDto;
 
   beforeAll(async () => {
@@ -64,12 +63,11 @@ describe('EvaluationTagsService', () => {
 
   beforeEach(async () => {
     await databaseService.cleanAll();
-    const userDto = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-    user = await usersService.findById(userDto.id);
-    evaluation = await evaluationsService.create({
-      ...EVALUATION_1,
-      userId: user.id
-    });
+    const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+    evaluation = await evaluationsService.create(
+      EVALUATION_1,
+      user.id
+    );
   });
 
   describe('Create', () => {

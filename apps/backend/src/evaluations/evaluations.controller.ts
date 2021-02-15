@@ -51,10 +51,12 @@ export class EvaluationsController {
 
   @Post()
   async create(
-    @Body() createEvaluationDto: CreateEvaluationDto
+    @Body() createEvaluationDto: CreateEvaluationDto,
+    @Request() request: {user: User}
   ): Promise<EvaluationDto> {
     return new EvaluationDto(
-      await this.evaluationsService.create(createEvaluationDto)
+      // Do not include userId on the DTO so we can set it automatically to the uploader's id.
+      await this.evaluationsService.create(createEvaluationDto, request.user.id)
     );
   }
 

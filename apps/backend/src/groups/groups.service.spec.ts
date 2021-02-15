@@ -57,7 +57,6 @@ describe('GroupsService', () => {
 
   beforeEach(async () => {
     await databaseService.cleanAll();
-    await usersService.create(CREATE_USER_DTO_TEST_OBJ);
   });
 
   describe('findAll', () => {
@@ -77,6 +76,7 @@ describe('GroupsService', () => {
 
     it('should include the group users', async () => {
       const group = await groupsService.create(GROUP_1);
+      await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const user = await usersService.findByEmail(
         CREATE_USER_DTO_TEST_OBJ.email
       );
@@ -87,7 +87,8 @@ describe('GroupsService', () => {
 
     it('should not include the group evaluations by default', async () => {
       const group = await groupsService.create(GROUP_1);
-      const evaluation = await evaluationsService.create(EVALUATION_1);
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const evaluation = await evaluationsService.create(EVALUATION_1, user.id);
       await groupsService.addEvaluationToGroup(group, evaluation);
       const foundGroup = await groupsService.findByPkBang(group.id);
       expect(foundGroup.evaluations).not.toBeDefined();
@@ -97,6 +98,7 @@ describe('GroupsService', () => {
   describe('addUserToGroup', () => {
     it('should add a user to a group', async () => {
       const group = await groupsService.create(GROUP_1);
+      await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const user = await usersService.findByEmail(
         CREATE_USER_DTO_TEST_OBJ.email
       );
@@ -112,6 +114,7 @@ describe('GroupsService', () => {
   describe('removeUserFromGroup', () => {
     it('should remove a user from a group', async () => {
       const group = await groupsService.create(GROUP_1);
+      await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const groupOwner = await usersService.findByEmail(
         CREATE_USER_DTO_TEST_OBJ.email
       );
@@ -129,6 +132,7 @@ describe('GroupsService', () => {
     it('should not remove the last owner from a group', async () => {
       expect.assertions(1);
       const group = await groupsService.create(GROUP_1);
+      await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const groupOwner = await usersService.findByEmail(
         CREATE_USER_DTO_TEST_OBJ.email
       );
@@ -142,8 +146,10 @@ describe('GroupsService', () => {
   describe('addEvaluationToGroup', () => {
     it('should add an evaluation to a group', async () => {
       const group = await groupsService.create(GROUP_1);
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const evaluation = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1
+        EVALUATION_WITH_TAGS_1,
+        user.id
       );
       await groupsService.addEvaluationToGroup(group, evaluation);
       const groupEvaluations = await group.$get('evaluations', {
@@ -162,9 +168,11 @@ describe('GroupsService', () => {
   describe('removeEvaluationFromGroup', () => {
     it('should remove an evaluation from a group', async () => {
       const group = await groupsService.create(GROUP_1);
-      const evaluationOne = await evaluationsService.create(EVALUATION_1);
+      const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const evaluationOne = await evaluationsService.create(EVALUATION_1, user.id);
       const evaluationTwo = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1
+        EVALUATION_WITH_TAGS_1,
+        user.id
       );
       await groupsService.addEvaluationToGroup(group, evaluationOne);
       await groupsService.addEvaluationToGroup(group, evaluationTwo);
