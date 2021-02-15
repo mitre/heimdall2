@@ -20,6 +20,7 @@ export enum Action {
   Update = 'update',
   Delete = 'delete',
   ReadAll = 'read-all',
+  ReadSlim = 'read-slim',
   DeleteNoPassword = 'delete-no-password',
   UpdateNoPassword = 'update-no-password',
   SkipForcePasswordChange = 'skip-force-password-change',
@@ -43,6 +44,8 @@ export class CaslAbilityFactory {
       // Force admins to supply their password when editing their own user.
       cannot(Action.Manage, User, {id: user.id});
     }
+    can([Action.ReadSlim], User);
+
     can([Action.Read, Action.Update, Action.Delete], User, {id: user.id});
 
     can([Action.Create], Group);
@@ -60,7 +63,6 @@ export class CaslAbilityFactory {
       'users.GroupUser.role': 'owner'
     });
 
-    // TODO: The Actions below here are UNTESTED and may not work
     // This really isn't the best method to do this since
     // it requires every evaluation to have a join on Groups and then another join on Users
     can([Action.Create], Evaluation);

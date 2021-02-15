@@ -60,7 +60,9 @@ export class UsersController {
 
   @Get('user-find-all')
   @UseGuards(JwtAuthGuard)
-  async userFindAll(): Promise<SlimUserDto[]> {
+  async userFindAll(@Request() request: {user: User}): Promise<SlimUserDto[]> {
+    const abac = this.authz.abac.createForUser(request.user);
+    ForbiddenError.from(abac).throwUnlessCan(Action.ReadSlim, User);
     const users = await this.usersService.userFindAll();
     return users.map((user) => new SlimUserDto(user));
   }
