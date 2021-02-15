@@ -50,56 +50,76 @@
         <v-spacer />
         <div v-show="showAlternateAuth">
           <v-row align="center"> <v-divider />OR<v-divider /> </v-row>
-          <div class="container d-flex flex-column">
-            <v-row justify="space-between">
-              <v-col cols="auto">
-                <v-btn
-                  v-show="authStrategySupported('google')"
-                  id="oauth-google"
-                  plain
-                  @click="oauthLogin('google')"
-                >
-                  <v-img :src="require('@/assets/google_mark.png')" />
-                  <div class="pl-2">Login with Google</div>
-                </v-btn></v-col
-              >
-              <v-col cols="auto">
-                <v-btn
-                  v-show="authStrategySupported('github')"
-                  id="oauth-github"
-                  plain
-                  @click="oauthLogin('github')"
-                >
-                  <v-img :src="require('@/assets/github_mark.png')" />
-                  <div class="pl-2">Login with GitHub</div>
-                </v-btn></v-col
-              >
-              <v-col cols="auto"
-                ><v-btn
-                  v-show="authStrategySupported('gitlab')"
-                  id="oauth-gitlab"
-                  plain
-                  @click="oauthLogin('gitlab')"
-                >
-                  <v-img
-                    height="42"
-                    :src="require('@/assets/gitlab_mark.png')"
-                  />
-                  <div class="pl-2">Login with GitLab</div>
-                </v-btn></v-col
-              >
-              <v-col cols="auto"
-                ><v-btn
-                  v-show="authStrategySupported('okta')"
-                  id="oauth-okta"
-                  plain
-                  @click="oauthLogin('okta')"
-                >
-                  <v-img height="32" :src="require('@/assets/okta_mark.png')" />
-                  <div class="pl-2">Login with Okta</div>
-                </v-btn></v-col
-              >
-            </v-row>
+          <div class="d-flex justify-content-center flex-wrap">
+            <v-btn
+              v-if="authStrategySupported('oidc')"
+              id="oauth-oidc"
+              class="mt-5 flex-fill"
+              plain
+              @click="oauthLogin('oidc')"
+            >
+              <v-img
+                max-width="32"
+                max-height="32"
+                :src="require('@/assets/openid_mark.png')"
+              />
+              <div class="pl-2">Login with {{ oidcName }}</div>
+            </v-btn>
+            <v-btn
+              v-show="authStrategySupported('google')"
+              id="oauth-google"
+              class="mt-5 flex-fill"
+              plain
+              @click="oauthLogin('google')"
+            >
+              <v-img
+                max-width="32"
+                max-height="32"
+                :src="require('@/assets/google_mark.png')"
+              />
+              <div class="pl-2">Login with Google</div>
+            </v-btn>
+            <v-btn
+              v-show="authStrategySupported('github')"
+              id="oauth-github"
+              class="mt-5 flex-fill"
+              plain
+              @click="oauthLogin('github')"
+            >
+              <v-img
+                max-width="32"
+                max-height="32"
+                :src="require('@/assets/github_mark.png')"
+              />
+              <div class="pl-2">Login with GitHub</div> </v-btn
+            ><v-btn
+              v-show="authStrategySupported('gitlab')"
+              id="oauth-gitlab"
+              class="mt-5 flex-fill"
+              plain
+              @click="oauthLogin('gitlab')"
+            >
+              <v-img
+                max-width="32"
+                max-height="32"
+                :src="require('@/assets/gitlab_mark.png')"
+              />
+              <div class="pl-2">Login with GitLab</div>
+            </v-btn>
+            <v-btn
+              v-show="authStrategySupported('okta')"
+              id="oauth-okta"
+              class="mt-5 flex-fill"
+              plain
+              @click="oauthLogin('okta')"
+            >
+              <v-img
+                max-width="32"
+                max-height="32"
+                :src="require('@/assets/okta_mark.png')"
+              />
+              <div class="pl-2">Login with Okta</div>
+            </v-btn>
           </div>
         </div>
       </v-container>
@@ -158,6 +178,10 @@ export default class LocalLogin extends Vue {
   }
   oauthLogin(site: string){
     window.location.href = `/authn/${site}`;
+  }
+
+  get oidcName() {
+    return ServerModule.oidcName;
   }
 }
 </script>
