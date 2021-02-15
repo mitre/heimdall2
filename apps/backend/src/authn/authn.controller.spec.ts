@@ -53,9 +53,13 @@ describe('/authn', () => {
     it('should return 401 status when bad login info is supplied', async () => {
       expect.assertions(1);
 
-      return login(app, BAD_LOGIN_AUTHENTICATION).expect(
-        HttpStatus.UNAUTHORIZED
-      );
+      return login(app, BAD_LOGIN_AUTHENTICATION)
+        .expect(HttpStatus.UNAUTHORIZED)
+        .then((response) => {
+          expect(response.body.message).toEqual(
+            'Incorrect Username or Password'
+          );
+        });
     });
   });
 
