@@ -344,19 +344,19 @@ describe('UsersController Unit Tests', () => {
 
           await login(app, LOGIN_AUTHENTICATION)
             .expect(HttpStatus.CREATED)
-            .then(async (response) => {
+            .then(async (loginResponse) => {
               return update(
                 app,
                 basicUser.id,
                 UPDATE_USER_DTO_TEST_OBJ_WITH_MISSMATCHING_PASSWORDS,
-                response.body.accessToken
+                loginResponse.body.accessToken
               )
                 .expect(HttpStatus.BAD_REQUEST)
-                .then((response) => {
-                  expect(response.body.message).toEqual(
+                .then((updateResponse) => {
+                  expect(updateResponse.body.message).toEqual(
                     'Passwords do not match'
                   );
-                  expect(response.body.error).toEqual('Bad Request');
+                  expect(updateResponse.body.error).toEqual('Bad Request');
                 });
             });
         });
