@@ -91,15 +91,14 @@ export default class FileItem extends mixins(ServerMixin) {
   save_evaluation(file: EvaluationFile) {
     this.saving = true;
 
-    let evaluationDTO: ICreateEvaluation = {
-      data: file.evaluation.data,
-      filename: file.filename,
-      userId: ServerModule.userInfo.id,
-      evaluationTags: []
-    };
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(file.evaluation.data));
+    formData.append("filename", file.filename);
+    // Seems that publicty hasn't been setup yet
+    //formData.append("public", "true")
 
     axios
-      .post('/evaluations', evaluationDTO)
+      .post('/evaluations', formData)
       .then((response) => {
         SnackbarModule.notify('Result saved successfully');
         file.database_id = parseInt(response.data.id);

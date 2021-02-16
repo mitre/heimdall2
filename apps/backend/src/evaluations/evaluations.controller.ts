@@ -8,13 +8,14 @@ import {
   Post,
   Put,
   Request,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
+import {FileInterceptor} from '@nestjs/platform-express';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {User} from '../users/user.model';
-import {CreateEvaluationDto} from './dto/create-evaluation.dto';
 import {EvaluationDto} from './dto/evaluation.dto';
 import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 import {EvaluationsService} from './evaluations.service';
@@ -53,8 +54,9 @@ export class EvaluationsController {
   }
 
   @Post()
+  @UseInterceptors(FileInterceptor('data'))
   async create(
-    @Body() createEvaluationDto: CreateEvaluationDto,
+    @Body() createEvaluationDto: any,
     @Request() request: {user: User}
   ): Promise<EvaluationDto> {
     return new EvaluationDto(
