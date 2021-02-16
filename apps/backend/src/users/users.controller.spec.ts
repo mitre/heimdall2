@@ -402,8 +402,8 @@ describe('UsersController Unit Tests', () => {
               .then((response) => {
                 expect(response.body.message).toEqual(
                   'Password does not meet complexity requirements. Passwords are a minimum of 15 characters in length. Passwords ' +
-                    'must contain at least one special character, number, upper-case letter, and lower-case letter. Passwords cannot contain more than three consecutive repeating ' +
-                    'characters. Passwords cannot contain more than four repeating characters from the same character class.'
+                    'must contain at least one special character, number, upper-case letter, and lower-case letter. Passwords cannot contain more than three consecutive ' +
+                    'repeating characters. Passwords cannot contain more than four repeating characters from the same character class.'
                 );
                 expect(response.body.error).toEqual('Bad Request');
               });
