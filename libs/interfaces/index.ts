@@ -13,6 +13,6 @@ export * from './group/group.interface';
 export * from './group/remove-user-from-group.interface';
 export * from './user/create-user.interface';
 export * from './user/delete-user.interface';
+export * from './user/slim-user.interface';
 export * from './user/update-user.interface';
 export * from './user/user.interface';
-export * from './user/slim-user.interface';
