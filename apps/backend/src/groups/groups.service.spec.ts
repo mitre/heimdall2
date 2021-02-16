@@ -169,7 +169,10 @@ describe('GroupsService', () => {
     it('should remove an evaluation from a group', async () => {
       const group = await groupsService.create(GROUP_1);
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      const evaluationOne = await evaluationsService.create(EVALUATION_1, user.id);
+      const evaluationOne = await evaluationsService.create(
+        EVALUATION_1,
+        user.id
+      );
       const evaluationTwo = await evaluationsService.create(
         EVALUATION_WITH_TAGS_1,
         user.id

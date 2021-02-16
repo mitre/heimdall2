@@ -11,8 +11,9 @@ export class EvaluationDto implements IEvaluation {
   readonly public: boolean;
   readonly createdAt: Date;
   readonly updatedAt: Date;
+  readonly editable: boolean;
 
-  constructor(evaluation: Evaluation) {
+  constructor(evaluation: Evaluation, editable?: boolean) {
     this.id = evaluation.id;
     this.filename = evaluation.filename;
     this.data = evaluation.data;
@@ -30,5 +31,6 @@ export class EvaluationDto implements IEvaluation {
     this.public = evaluation.public;
     this.createdAt = evaluation.createdAt;
     this.updatedAt = evaluation.updatedAt;
+    this.editable = editable || false;
   }
 }

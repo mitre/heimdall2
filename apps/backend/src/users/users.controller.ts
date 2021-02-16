@@ -23,10 +23,10 @@ import {PasswordsMatchPipe} from '../pipes/passwords-match.pipe';
 import {User} from '../users/user.model';
 import {CreateUserDto} from './dto/create-user.dto';
 import {DeleteUserDto} from './dto/delete-user.dto';
+import {SlimUserDto} from './dto/slim-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
 import {UserDto} from './dto/user.dto';
 import {UsersService} from './users.service';
-import {SlimUserDto} from './dto/slim-user.dto';
 
 @Controller('users')
 export class UsersController {

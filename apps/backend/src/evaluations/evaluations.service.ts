@@ -24,10 +24,16 @@ export class EvaluationsService {
     });
   }
 
-  async create(createEvaluationDto: CreateEvaluationDto, id: string): Promise<Evaluation> {
-    return Evaluation.create<Evaluation>({...createEvaluationDto, userId: id}, {
-      include: [EvaluationTag]
-    });
+  async create(
+    createEvaluationDto: CreateEvaluationDto,
+    id: string
+  ): Promise<Evaluation> {
+    return Evaluation.create<Evaluation>(
+      {...createEvaluationDto, userId: id},
+      {
+        include: [EvaluationTag]
+      }
+    );
   }
 
   async update(

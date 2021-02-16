@@ -39,6 +39,7 @@ export const CREATE_EVALUATION_DTO_WITHOUT_DATA: CreateEvaluationDto = {
   evaluationTags: [CREATE_EVALUATION_TAG_DTO]
 };
 
+// @ts-ignore
 export const UPDATE_EVALUATION: UpdateEvaluationDto = {
   data: {
     filename: DEFAULT_FILE_NAME

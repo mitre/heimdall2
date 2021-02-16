@@ -200,7 +200,10 @@ describe('GroupsController', () => {
 
     it('should allow members to add an evaluation to a group', async () => {
       expect.assertions(1);
-      const evaluation = await evaluationsService.create(EVALUATION_1, basicUser.id);
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        basicUser.id
+      );
       await groupsService.addUserToGroup(privateGroup, basicUser, 'member');
 
       await groupsController.addEvaluationToGroup(
@@ -215,7 +218,10 @@ describe('GroupsController', () => {
 
     it('should stop non-members from adding an evaluation to a group', async () => {
       expect.assertions(1);
-      const evaluation = await evaluationsService.create(EVALUATION_1, basicUser.id);
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        basicUser.id
+      );
 
       await expect(
         groupsController.addEvaluationToGroup(
@@ -228,8 +234,13 @@ describe('GroupsController', () => {
 
     it('should stop members from adding an evaluation they do not have access to', async () => {
       expect.assertions(1);
-      const evaluationOwner = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
-      const evaluation = await evaluationsService.create(EVALUATION_1, evaluationOwner.id);
+      const evaluationOwner = await usersService.create(
+        CREATE_USER_DTO_TEST_OBJ_2
+      );
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        evaluationOwner.id
+      );
       await groupsService.addUserToGroup(privateGroup, basicUser, 'member');
 
       await expect(
@@ -283,7 +294,10 @@ describe('GroupsController', () => {
 
     it('should allow members to remove an evaluation', async () => {
       expect.assertions(2);
-      const evaluation = await evaluationsService.create(EVALUATION_1, basicUser.id);
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        basicUser.id
+      );
       await groupsService.addEvaluationToGroup(privateGroup, evaluation);
       await groupsService.addUserToGroup(privateGroup, basicUser, 'member');
       expect((await privateGroup.$get('evaluations')).length).toEqual(1);
@@ -297,8 +311,13 @@ describe('GroupsController', () => {
 
     it('should prevent non-members from removing an evaluation', async () => {
       expect.assertions(1);
-      const evaluationOwner = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
-      const evaluation = await evaluationsService.create(EVALUATION_1, evaluationOwner.id);
+      const evaluationOwner = await usersService.create(
+        CREATE_USER_DTO_TEST_OBJ_2
+      );
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        evaluationOwner.id
+      );
       await groupsService.addEvaluationToGroup(privateGroup, evaluation);
 
       await expect(

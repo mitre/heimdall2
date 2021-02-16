@@ -46,7 +46,10 @@ export class EvaluationsController {
       abac.can(Action.Read, evaluation)
     );
 
-    return evaluations.map((evaluation) => new EvaluationDto(evaluation));
+    return evaluations.map(
+      (evaluation) =>
+        new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
+    );
   }
 
   @Post()

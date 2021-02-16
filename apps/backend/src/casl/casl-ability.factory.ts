@@ -77,7 +77,7 @@ export class CaslAbilityFactory {
 
     can([Action.Manage], Evaluation, {
       'groups.users.id': user.id,
-      'groups.users.GroupEvaluation.role': 'owner'
+      'groups.users.GroupUser.role': 'owner'
     });
 
     return build();

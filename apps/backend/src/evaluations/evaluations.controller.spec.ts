@@ -8,7 +8,14 @@ import {
   EVALUATION_WITH_TAGS_1,
   UPDATE_EVALUATION
 } from '../../test/constants/evaluations-test.constant';
-import {CREATE_USER_DTO_TEST_OBJ, CREATE_USER_DTO_TEST_OBJ_2} from '../../test/constants/users-test.constant';
+import {
+  GROUP_1,
+  PRIVATE_GROUP
+} from '../../test/constants/groups-test.constant';
+import {
+  CREATE_USER_DTO_TEST_OBJ,
+  CREATE_USER_DTO_TEST_OBJ_2
+} from '../../test/constants/users-test.constant';
 import {AuthzService} from '../authz/authz.service';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
@@ -16,6 +23,7 @@ import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
+import {GroupsService} from '../groups/groups.service';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {EvaluationDto} from './dto/evaluation.dto';
@@ -29,6 +37,7 @@ describe('EvaluationsController', () => {
   let module: TestingModule;
   let databaseService: DatabaseService;
   let usersService: UsersService;
+  let groupsService: GroupsService;
 
   let user: User;
 
@@ -50,7 +59,8 @@ describe('EvaluationsController', () => {
         AuthzService,
         DatabaseService,
         UsersService,
-        EvaluationsService
+        EvaluationsService,
+        GroupsService
       ]
     }).compile();
 
@@ -60,6 +70,7 @@ describe('EvaluationsController', () => {
       EvaluationsController
     );
     usersService = module.get<UsersService>(UsersService);
+    groupsService = module.get<GroupsService>(GroupsService);
   });
 
   beforeEach(async () => {
@@ -79,7 +90,10 @@ describe('EvaluationsController', () => {
     });
 
     it('should return an evaluations tags', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_WITH_TAGS_1, user.id);
+      const evaluation = await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1,
+        user.id
+      );
 
       const foundEvaluation = await evaluationsController.findById(
         evaluation.id,
@@ -100,8 +114,13 @@ describe('EvaluationsController', () => {
 
     it('should prevent non-owners from viewing an evaluation', async () => {
       expect.assertions(1);
-      const evaluationOwner = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
-      const evaluation = await evaluationsService.create(EVALUATION_1, evaluationOwner.id);
+      const evaluationOwner = await usersService.create(
+        CREATE_USER_DTO_TEST_OBJ_2
+      );
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        evaluationOwner.id
+      );
       await expect(
         evaluationsController.findById(evaluation.id, {user: user})
       ).rejects.toBeInstanceOf(ForbiddenError);
@@ -110,10 +129,12 @@ describe('EvaluationsController', () => {
 
   describe('findAll', () => {
     it('should return all evaluations a user has permissions to read', async () => {
-      await evaluationsService.create(EVALUATION_1,user.id);
+      await evaluationsService.create(EVALUATION_1, user.id);
       let foundEvaluations = await evaluationsController.findAll({user: user});
       expect(foundEvaluations.length).toEqual(1);
-      const evaluationOwner = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2)
+      const evaluationOwner = await usersService.create(
+        CREATE_USER_DTO_TEST_OBJ_2
+      );
       await evaluationsService.create(EVALUATION_1, evaluationOwner.id);
       foundEvaluations = await evaluationsController.findAll({user: user});
       expect(foundEvaluations.length).toEqual(1);
@@ -125,6 +146,33 @@ describe('EvaluationsController', () => {
         user: user
       });
       expect(foundEvaluations[0].evaluationTags.length).toEqual(1);
+    });
+
+    it('should return editable true if the user is the owner of an evaluation', async () => {
+      await evaluationsService.create(EVALUATION_1, user.id);
+      const foundEvaluations = await evaluationsController.findAll({
+        user: user
+      });
+      expect(foundEvaluations[0].editable).toBeTruthy();
+    });
+
+    it('should return editable true if the user is the owner of a group that an evaluation belongs to', async () => {
+      const evaluationOwner = await usersService.create(
+        CREATE_USER_DTO_TEST_OBJ_2
+      );
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        evaluationOwner.id
+      );
+      const group = await groupsService.create(GROUP_1);
+      const group2 = await groupsService.create(PRIVATE_GROUP);
+      await groupsService.addUserToGroup(group, user, 'user');
+      await groupsService.addUserToGroup(group2, user, 'owner');
+      await groupsService.addEvaluationToGroup(group, evaluation);
+      const foundEvaluations = await evaluationsController.findAll({
+        user: user
+      });
+      expect(foundEvaluations[0].editable).toBeTruthy();
     });
   });
 
@@ -162,8 +210,13 @@ describe('EvaluationsController', () => {
 
     it('should prevent unauthorized users from updating', async () => {
       expect.assertions(1);
-      const evaluationOwner = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
-      const evaluation = await evaluationsService.create(EVALUATION_1, evaluationOwner.id);
+      const evaluationOwner = await usersService.create(
+        CREATE_USER_DTO_TEST_OBJ_2
+      );
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        evaluationOwner.id
+      );
       await expect(
         evaluationsController.update(
           evaluation.id,
@@ -186,8 +239,13 @@ describe('EvaluationsController', () => {
 
     it('should prevent unauthorized users removing an evaluation', async () => {
       expect.assertions(1);
-      const evaluationOwner = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
-      const evaluation = await evaluationsService.create(EVALUATION_1, evaluationOwner.id);
+      const evaluationOwner = await usersService.create(
+        CREATE_USER_DTO_TEST_OBJ_2
+      );
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        evaluationOwner.id
+      );
       await expect(
         evaluationsController.remove(evaluation.id, {user: user})
       ).rejects.toBeInstanceOf(ForbiddenError);

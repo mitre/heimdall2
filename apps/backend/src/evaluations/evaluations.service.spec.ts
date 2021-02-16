@@ -75,23 +75,14 @@ describe('EvaluationsService', () => {
       let evaluationsDtoArray = await evaluationsService.findAll();
       expect(evaluationsDtoArray).toEqual([]);
 
-      await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1,
-        user.id
-      );
-      await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1,
-        user.id
-      );
+      await evaluationsService.create(EVALUATION_WITH_TAGS_1, user.id);
+      await evaluationsService.create(EVALUATION_WITH_TAGS_1, user.id);
       evaluationsDtoArray = await evaluationsService.findAll();
       expect(evaluationsDtoArray.length).toEqual(2);
     });
 
     it('should include the evaluation user', async () => {
-      await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1,
-        user.id
-      );
+      await evaluationsService.create(EVALUATION_WITH_TAGS_1, user.id);
 
       const evaluations = await evaluationsService.findAll();
       expect(new UserDto(evaluations[0].user)).toEqual(user);
@@ -193,7 +184,10 @@ describe('EvaluationsService', () => {
     it('should throw an error when missing the filename field', async () => {
       expect.assertions(1);
       await expect(
-        evaluationsService.create(CREATE_EVALUATION_DTO_WITHOUT_FILENAME, user.id)
+        evaluationsService.create(
+          CREATE_EVALUATION_DTO_WITHOUT_FILENAME,
+          user.id
+        )
       ).rejects.toThrow(
         'notNull Violation: Evaluation.filename cannot be null'
       );
