@@ -117,6 +117,7 @@ describe('UsersController Unit Tests', () => {
         expect(createdUser.title).toEqual(CREATE_USER_DTO_TEST_OBJ_2.title);
       });
 
+      // Users shouldn't be able to make accounts with a non-email email field
       it('should test the create function with invalid email field', async () => {
         expect.assertions(1);
 
@@ -127,6 +128,7 @@ describe('UsersController Unit Tests', () => {
         }).rejects.toThrow(ValidationError);
       });
 
+      // Only one account per email should exist
       it('should test the create function with already existing email', async () => {
         expect.assertions(1);
 
@@ -183,6 +185,7 @@ describe('UsersController Unit Tests', () => {
           });
       });
 
+      // Users should not be able to create accounts if their passwords do not match
       it('should test the create function with mis-matching passwords', async () => {
         expect.assertions(1);
 
@@ -193,6 +196,7 @@ describe('UsersController Unit Tests', () => {
           });
       });
 
+      // Users should not be able to create an account if their password does not meet complexity standards
       it('should test the create function with a password that does not meet the complexity requirements', async () => {
         expect.assertions(1);
 
@@ -207,6 +211,7 @@ describe('UsersController Unit Tests', () => {
           });
       });
 
+      // The role field should be defined as 'user' as currently that's the only account you can sign up as
       it('should return 400 status if no role is provided', async () => {
         expect(async () => {
           await usersController.create(
@@ -386,12 +391,12 @@ describe('UsersController Unit Tests', () => {
 
         await login(app, LOGIN_AUTHENTICATION)
           .expect(HttpStatus.CREATED)
-          .then(async (response) => {
+          .then(async (loginResponse) => {
             return update(
               app,
               basicUser.id,
               UPDATE_USER_DTO_TEST_WITH_NOT_COMPLEX_PASSWORD,
-              response.body.accessToken
+              loginResponse.body.accessToken
             )
               .expect(HttpStatus.BAD_REQUEST)
               .then((response) => {

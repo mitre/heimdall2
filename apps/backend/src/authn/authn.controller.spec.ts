@@ -40,6 +40,7 @@ describe('/authn', () => {
   });
 
   describe('login', () => {
+    // Tests the login method using valid credentials
     it('should successfully return access token', async () => {
       expect.assertions(1);
 
@@ -50,6 +51,7 @@ describe('/authn', () => {
         });
     });
 
+    // Tests the login method using invalid credentials
     it('should return 401 status when bad login info is supplied', async () => {
       expect.assertions(1);
 
