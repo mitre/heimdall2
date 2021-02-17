@@ -252,6 +252,44 @@ describe('EvaluationsController', () => {
     });
   });
 
+  describe('groups for evaluation', () => {
+    it('should return groups the evaluation belongs to that the requesting user can add and remove the evaluation from', async () => {
+      const evaluationOwner = await usersService.create(
+        CREATE_USER_DTO_TEST_OBJ_2
+      );
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        evaluationOwner.id
+      );
+      const group = await groupsService.create(GROUP_1);
+      await groupsService.addUserToGroup(group, user, 'member');
+      await groupsService.addEvaluationToGroup(group, evaluation);
+      const foundGroups = await evaluationsController.groupsForEvaluation(
+        evaluation.id,
+        {user: user}
+      );
+      expect(foundGroups[0].id).toEqual(group.id);
+    });
+
+    it('should not return groups the user has no access to', async () => {
+      // GROUP_1 is a public group and still should not show up.
+      const evaluationOwner = await usersService.create(
+        CREATE_USER_DTO_TEST_OBJ_2
+      );
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        evaluationOwner.id
+      );
+      const group = await groupsService.create(GROUP_1);
+      await groupsService.addEvaluationToGroup(group, evaluation);
+      const foundGroups = await evaluationsController.groupsForEvaluation(
+        evaluation.id,
+        {user: user}
+      );
+      expect(foundGroups.length).toEqual(0);
+    });
+  });
+
   afterAll(async () => {
     await databaseService.cleanAll();
     await databaseService.closeConnection();
