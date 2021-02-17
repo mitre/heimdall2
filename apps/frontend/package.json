@@ -87,7 +87,7 @@
     "highlight.js": "^10.0.3",
     "html-loader": "^0.5.5",
     "html-webpack-inline-source-plugin": "0.0.10",
-    "html-webpack-plugin": "^4.5.0",
+    "html-webpack-plugin": "^5.1.0",
     "inspecjs": "0.12.2",
     "lru-cache": "^6.0.0",
     "node-sass": "^5.0.0",
