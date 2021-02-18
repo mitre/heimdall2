@@ -8,7 +8,6 @@ import {SequelizeModule} from '@nestjs/sequelize';
 import {Test} from '@nestjs/testing';
 import {
   CREATE_ADMIN_DTO,
-  CREATE_SECOND_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_2,
   CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD,
@@ -435,7 +434,6 @@ describe('UsersService', () => {
 
   describe('Remove', () => {
     let user: User;
-    let adminUser: User;
     let abacPolicy: Ability;
     let adminAbacPolicy: Ability;
 
@@ -449,7 +447,6 @@ describe('UsersService', () => {
         throw new TypeError(errorString);
       } else {
         user = userResponse;
-        adminUser = adminResponse;
       }
 
       abacPolicy = authzService.abac.createForUser(user);
@@ -508,43 +505,6 @@ describe('UsersService', () => {
       expect(removedUser.role).toEqual(user.role);
       await expect(usersService.findByEmail(user.email)).rejects.toThrow(
         NotFoundException
-      );
-    });
-
-    // Admins should be able to remove their account if there is another administrator
-    it('should test remove function with admin user and there is another admin', async () => {
-      expect.assertions(1);
-      // Create a second user so we can delete the first
-      await usersService.create(CREATE_SECOND_ADMIN_DTO);
-      // Delete the existing user
-      await usersService.remove(
-        adminUser,
-        DELETE_USER_DTO_TEST_OBJ,
-        adminAbacPolicy
-      );
-      // Make sure the existing admin has been deleted
-      await expect(async () => {
-        await usersService.findById(adminUser.id);
-      }).rejects.toThrow(NotFoundException);
-    });
-
-    // Admins should not be able to remove their account if they are the only administrator
-    it('should test remove function with admin user that is the only admin', async () => {
-      expect.assertions(1);
-
-      await expect(async () => {
-        await usersService.remove(
-          adminUser,
-          DELETE_USER_DTO_TEST_OBJ,
-          adminAbacPolicy
-        );
-      }).rejects.toThrow(ForbiddenException);
-    });
-
-    // Admins should be able to remove other users without their password
-    it('should test remove function with admin user and a dto that has no password', async () => {
-      expect(await usersService.remove(user, {}, adminAbacPolicy)).toEqual(
-        new UserDto(user)
       );
     });
   });
