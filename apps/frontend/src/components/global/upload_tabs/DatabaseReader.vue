@@ -7,9 +7,12 @@
             View files loaded into your organizations Heimdall Server instance.
           </v-card-subtitle>
         </v-col>
-        <v-col cols="3" class="text-right">
+        <v-col cols="2" class="text-right">
           <LogoutButton />
         </v-col>
+        <v-col cols="1" class="text-right">
+          <RefreshButton @updateEvaluations="get_all_results"
+        /></v-col>
       </v-row>
     </v-container>
     <LoadFileList
@@ -28,6 +31,7 @@ import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
 import LogoutButton from '@/components/generic/LogoutButton.vue';
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations'
+import RefreshButton from '@/components/generic/RefreshButton.vue'
 
 import axios from 'axios';
 
@@ -44,7 +48,8 @@ import {Prop, Watch} from 'vue-property-decorator';
 @Component({
   components: {
     LoadFileList,
-    LogoutButton
+    LogoutButton,
+    RefreshButton
   }
 })
 export default class DatabaseReader extends mixins(ServerMixin) {
