@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import Component, {mixins} from 'vue-class-component';
+import Component from 'vue-class-component';
 import Vue from 'vue';
 
 @Component({
