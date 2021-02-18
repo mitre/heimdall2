@@ -163,7 +163,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com
 curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "password" }' http://localhost:3000/authn/login
 # The previous command returns a Bearer Token that needs to get placed in the following command
 # Upload evaluation
-curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer bearertokengoeshere" -d "@/home/example/Desktop/test.json" http://localhost:8000/evaluations
+curl -F "data=@/Full/Path/To/Your/Evaluation.json" -F "filename=Your Filename" -F "public=true/false" -H "Authorization: Bearer bearertokengoeshere" "http://localhost:3000/evaluations"
 ```
 
 
@@ -258,7 +258,6 @@ To test your code to make sure everything still works:
     # Run Frontend Vue Tests
     yarn frontend test
     # Run Backend Nest Tests
-    yarn backend test:e2e
     yarn backend test:ci-cov
 
 #### Run Cypress End to End Tests

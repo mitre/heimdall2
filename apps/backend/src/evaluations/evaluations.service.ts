@@ -28,6 +28,12 @@ export class EvaluationsService {
     createEvaluationDto: CreateEvaluationDto,
     id: string
   ): Promise<Evaluation> {
+    if (createEvaluationDto.public == 'true') {
+      createEvaluationDto.public = true;
+    }
+    if (createEvaluationDto.public == 'false') {
+      createEvaluationDto.public = false;
+    }
     return Evaluation.create<Evaluation>(
       {...createEvaluationDto, userId: id},
       {

@@ -92,10 +92,12 @@ export default class FileItem extends mixins(ServerMixin) {
     this.saving = true;
 
     const formData = new FormData();
-    formData.append("data", JSON.stringify(file.evaluation.data));
     formData.append("filename", file.filename);
+    var blob = new Blob([JSON.stringify(file.evaluation.data)], {type: 'text/plain'});
+    console.log(blob);
+    formData.append("data", blob);
     // Seems that publicty hasn't been setup yet
-    //formData.append("public", "true")
+    formData.append("public", "true")
 
     axios
       .post('/evaluations', formData)
