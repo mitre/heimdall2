@@ -33,25 +33,3 @@ export function login(
     .set('Content-Type', 'application/json')
     .send(user);
 }
-
-export function destroy(
-  app: INestApplication,
-  userId: string,
-  user: {password?: string},
-  authorizationJWT: string
-): Test {
-  return request(app.getHttpServer())
-    .delete('/users/' + userId)
-    .set('Authorization', 'bearer ' + authorizationJWT)
-    .send(user);
-}
-
-export function getUser(
-  app: INestApplication,
-  userId: string,
-  authorizationJWT: string
-): Test {
-  return request(app.getHttpServer())
-    .get('/users/' + userId)
-    .set('Authorization', 'bearer ' + authorizationJWT);
-}

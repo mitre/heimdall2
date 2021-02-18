@@ -18,27 +18,6 @@
       "internalConsoleOptions": "neverOpen",
       "port": 9229,
       "smartStep": true
-    },
-    {
-      "name": "Debug Jest e2e Tests",
-      "cwd": "${workspaceRoot}/apps/backend",
-      "type": "node",
-      "request": "launch",
-      "runtimeArgs": [
-        "--inspect-brk",
-        "${workspaceRoot}/node_modules/.bin/jest",
-        "--runInBand",
-        "--silent",
-        "--config=./test/jest-e2e.json"
-      ],
-      "skipFiles": [
-        "<node_internals>/**/*.js",
-        "${workspaceFolder}/node_modules/**/*.js"
-      ],
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "port": 9229,
-      "smartStep": true
     }, {
       "name": "Debug Jest Integration Tests",
       "cwd": "${workspaceRoot}/apps/backend",
