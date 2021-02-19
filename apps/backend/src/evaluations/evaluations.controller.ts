@@ -13,17 +13,15 @@ import {
   UseInterceptors
 } from '@nestjs/common';
 import {FileInterceptor} from '@nestjs/platform-express';
-import {Express} from 'express';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
+import {PublicBooleanPipe} from '../pipes/public-boolean.pipe';
 import {User} from '../users/user.model';
 import {CreateEvaluationDto} from './dto/create-evaluation.dto';
 import {EvaluationDto} from './dto/evaluation.dto';
 import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 import {EvaluationsService} from './evaluations.service';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import Multer = require('multer');
 
 @Controller('evaluations')
 @UseGuards(JwtAuthGuard)
@@ -61,7 +59,8 @@ export class EvaluationsController {
   @Post()
   @UseInterceptors(FileInterceptor('data'))
   async create(
-    @Body() createEvaluationDto: CreateEvaluationDto,
+    @Body(new PublicBooleanPipe())
+    createEvaluationDto: CreateEvaluationDto,
     @UploadedFile() data: Express.Multer.File,
     @Request() request: {user: User}
   ): Promise<EvaluationDto> {

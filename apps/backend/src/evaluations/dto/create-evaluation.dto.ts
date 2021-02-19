@@ -1,5 +1,5 @@
 import {ICreateEvaluation} from '@heimdall/interfaces';
-import {IsArray, IsIn, IsNotEmpty, IsOptional, IsString} from 'class-validator';
+import {IsArray, IsNotEmpty, IsOptional, IsString} from 'class-validator';
 import {CreateEvaluationTagDto} from '../../evaluation-tags/dto/create-evaluation-tag.dto';
 
 export class CreateEvaluationDto implements ICreateEvaluation {
@@ -10,8 +10,7 @@ export class CreateEvaluationDto implements ICreateEvaluation {
   readonly data!: Record<string, any>;
 
   @IsNotEmpty()
-  @IsIn([true, false, 'true', 'false'])
-  public!: boolean | string;
+  public!: boolean;
 
   @IsOptional()
   @IsArray()
