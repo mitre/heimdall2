@@ -52,9 +52,6 @@ jobs:
         yarn backend sequelize-cli db:create
         yarn backend sequelize-cli db:migrate
 
-     - name: Run e2e tests
-       run: yarn backend test:e2e
-
      - name: Run unit tests
        run: yarn backend test:ci-cov
 
