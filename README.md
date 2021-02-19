@@ -163,7 +163,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com
 curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "password" }' http://localhost:3000/authn/login
 # The previous command returns a Bearer Token that needs to get placed in the following command
 # Upload evaluation
-curl -F "data=@/Full/Path/To/Your/Evaluation.json" -F "filename=Your Filename" -F "public=true/false" -H "Authorization: Bearer bearertokengoeshere" "http://localhost:3000/evaluations"
+curl -F "data=@Evaluation.json" -F "filename=Your Filename" -F "public=true/false" -H "Authorization: Bearer bearertokengoeshere" "http://localhost:3000/evaluations"
 ```
 
 
