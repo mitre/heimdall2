@@ -65,9 +65,14 @@ async function bootstrap() {
       }
     })
   );
-  // Allow for file uploads up to 1024 mb
+  // Allow for file uploads up to 50 mb
   multer({
-    limits: {fieldSize: 1024 * 1024 * 1024}
+    limits: {
+      fieldSize:
+        parseInt(configService.get('MAX_FILE_UPLOAD_SIZE') || '50') *
+        1024 *
+        1024
+    }
   });
 
   app.useGlobalPipes(
