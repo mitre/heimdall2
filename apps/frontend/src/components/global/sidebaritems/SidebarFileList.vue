@@ -29,7 +29,6 @@
 <script lang="ts">
 import Component, {mixins} from 'vue-class-component';
 import axios from 'axios';
-import {ICreateEvaluation} from '@heimdall/interfaces';
 import {InspecDataModule} from '@/store/data_store';
 import {FilteredDataModule} from '@/store/data_filters';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
@@ -37,7 +36,6 @@ import {SnackbarModule} from '@/store/snackbar';
 
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop} from 'vue-property-decorator';
-import {ServerModule} from '@/store/server';
 
 @Component
 export default class FileItem extends mixins(ServerMixin) {
