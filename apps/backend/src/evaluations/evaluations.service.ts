@@ -26,10 +26,11 @@ export class EvaluationsService {
 
   async create(
     createEvaluationDto: CreateEvaluationDto,
+    data: JSON,
     id: string
   ): Promise<Evaluation> {
     return Evaluation.create<Evaluation>(
-      {...createEvaluationDto, userId: id},
+      {...createEvaluationDto, data: data, userId: id},
       {
         include: [EvaluationTag]
       }

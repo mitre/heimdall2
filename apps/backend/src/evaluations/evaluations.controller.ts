@@ -16,6 +16,7 @@ import {FileInterceptor} from '@nestjs/platform-express';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
+import {UpdateICreateEvaluationInterceptor} from '../interceptors/convert-public-to-boolean.interceptor';
 import {PublicBooleanPipe} from '../pipes/public-boolean.pipe';
 import {User} from '../users/user.model';
 import {CreateEvaluationDto} from './dto/create-evaluation.dto';
@@ -57,23 +58,24 @@ export class EvaluationsController {
   }
 
   @Post()
-  @UseInterceptors(FileInterceptor('data'))
+  @UseInterceptors(UpdateICreateEvaluationInterceptor, FileInterceptor('data'))
   async create(
     @Body(new PublicBooleanPipe())
     createEvaluationDto: CreateEvaluationDto,
     @UploadedFile() data: Express.Multer.File,
     @Request() request: {user: User}
   ): Promise<EvaluationDto> {
+    const serializedDta: JSON = JSON.parse(data.buffer.toString('utf8'));
     const updatedEvaluationDto: CreateEvaluationDto = {
       filename: createEvaluationDto.filename,
       evaluationTags: createEvaluationDto.evaluationTags || [],
-      data: JSON.parse(data.buffer.toString('utf8')),
       public: createEvaluationDto.public
     };
     return new EvaluationDto(
       // Do not include userId on the DTO so we can set it automatically to the uploader's id.
       await this.evaluationsService.create(
         updatedEvaluationDto,
+        serializedDta,
         request.user.id
       )
     );

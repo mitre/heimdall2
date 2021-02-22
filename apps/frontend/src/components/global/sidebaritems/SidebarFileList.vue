@@ -36,6 +36,7 @@ import {SnackbarModule} from '@/store/snackbar';
 
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop} from 'vue-property-decorator';
+import { ICreateEvaluation } from '@heimdall/interfaces';
 
 @Component
 export default class FileItem extends mixins(ServerMixin) {
@@ -89,11 +90,19 @@ export default class FileItem extends mixins(ServerMixin) {
   save_evaluation(file: EvaluationFile) {
     this.saving = true;
 
+    let createEvaluationDto: ICreateEvaluation = {
+      filename: file.filename,
+      public: false
+    };
+
+    // Create a multipart form to upload our data
     const formData = new FormData();
-    formData.append("filename", file.filename);
-    var blob = new Blob([JSON.stringify(file.evaluation.data)], {type: 'text/plain'});
-    formData.append("data", blob);
-    formData.append("public", "true")
+    // Add the DTO objects to form data
+    for (const [key, value] of Object.entries(createEvaluationDto)) {
+      formData.append(key, value);
+    }
+    // Add evaluation data to the form
+    formData.append("data", new Blob([JSON.stringify(file.evaluation.data)], {type: 'text/plain'}));
 
     axios
       .post('/evaluations', formData)

@@ -7,8 +7,6 @@ export class CreateEvaluationDto implements ICreateEvaluation {
   @IsString()
   readonly filename!: string;
 
-  readonly data!: Record<string, any>;
-
   @IsNotEmpty()
   public!: boolean;
 
