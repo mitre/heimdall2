@@ -49,7 +49,7 @@ import {LocalStorageVal} from '@/utilities/helper_util';
 import {ServerModule} from '@/store/server';
 import LocalLogin from '@/components/global/login/LocalLogin.vue'
 import LDAPLogin from '@/components/global/login/LDAPLogin.vue'
-import { SnackbarModule } from '../store/snackbar';
+import {SnackbarModule} from '../store/snackbar';
 
 const lastLoginTab = new LocalStorageVal<string>('login_curr_tab');
 
