@@ -117,7 +117,7 @@ import {EvaluationModule} from '@/store/evaluations'
 import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
 import {Sample} from '@/utilities/sample_util';
-import { ServerModule } from '../../../store/server';
+import {ServerModule} from '../../../store/server';
 
 @Component({
   components: {
