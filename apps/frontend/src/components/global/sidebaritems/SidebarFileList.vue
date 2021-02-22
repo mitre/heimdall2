@@ -92,7 +92,8 @@ export default class FileItem extends mixins(ServerMixin) {
 
     let createEvaluationDto: ICreateEvaluation = {
       filename: file.filename,
-      public: false
+      public: false,
+      evaluationTags: []
     };
 
     // Create a multipart form to upload our data
