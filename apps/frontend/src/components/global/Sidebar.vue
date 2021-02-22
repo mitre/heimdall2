@@ -41,7 +41,7 @@ import RouteMixin from '@/mixins/RouteMixin';
 import DropdownContent from '@/components/global/sidebaritems/DropdownContent.vue';
 import {Prop} from 'vue-property-decorator';
 
-import { Trinary } from '@/enums/Trinary';
+import {Trinary} from '@/enums/Trinary';
 
 @Component({
   components: {
