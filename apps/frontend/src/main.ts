@@ -11,11 +11,12 @@ import VueCookies from 'vue-cookies';
 import Vuetify from 'vuetify/lib';
 import {ServerModule} from './store/server';
 
+Vue.config.productionTip = false;
+VueClipboard.config.autoSetContainer = true;
+
 Vue.use(VueClipboard);
 Vue.use(VueCookies);
 Vue.use(Vuetify);
-
-Vue.config.productionTip = false;
 
 new Vue({
   router,

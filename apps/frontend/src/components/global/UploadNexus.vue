@@ -78,6 +78,7 @@ import RouteMixin from '@/mixins/RouteMixin';
 import {Prop} from 'vue-property-decorator';
 import {ServerModule} from '@/store/server';
 import {FilteredDataModule} from '@/store/data_filters';
+import Vue from 'vue';
 
 const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
 
@@ -101,6 +102,12 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
   @Prop({default: false}) readonly persistent!: boolean;
 
   active_tab: string = local_tab.get_default('uploadtab-local');
+
+  async mounted() {
+    if(Vue.$cookies.get('loadEvaluation') !== null){
+      this.selected_tab('uploadtab-database')
+    }
+  }
 
   // Handles change in tab
   selected_tab(new_tab: string) {

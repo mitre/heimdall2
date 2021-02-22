@@ -83,7 +83,16 @@
           <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
         </template>
         <template #[`item.actions`]="{item}">
-          <button type="button" @click="shareItem(item)">Copy!</button>
+          <v-icon
+            v-clipboard:copy="shareItems(item)"
+            v-clipboard:success="onCopy"
+            v-clipboard:error="onCopyFailure"
+            small
+            class="mr-2"
+            type="button"
+            >mdi-share</v-icon
+          >
+          <button />
           <v-icon small class="mr-2" @click="editItem(item)">
             mdi-pencil
           </v-icon>
@@ -154,21 +163,32 @@ export default class LoadFileList extends Vue {
     this.deleteItemDialog = true;
   }
 
-  clipboardSuccessHandler() {
-    SnackbarModule.notify('Successfully copied to clipboard.')
+  onCopy() {
+    SnackbarModule.notify('Successfully copied share link');
   }
 
-  clipboardErrorHandler() {
-    SnackbarModule.failure('Failed to copy to clipboard.')
+  onCopyFailure() {
+    SnackbarModule.failure('Failed to copy to your clipboard');
   }
 
-  shareItem(item: IEvaluation) {
-    this.$copyText(`${ServerModule.externalURL}/share/${item.id}`).then((success) => {
-      SnackbarModule.notify('Successfully copied share link.');
-    }, (error) => {
-      SnackbarModule.failure("Failed to copy share link.");
-    })
+  joinEvaluationsByIds(evaluations: IEvaluation[] | Sample[]): string {
+    let stringresult = '';
+    evaluations.forEach((evaluation) => {
+      if((evaluation as IEvaluation).id){
+        stringresult += `${(evaluation as IEvaluation).id},`;
+      }
+    });
+    return stringresult.slice(0, -1);
   }
+
+  shareItems(evaluations: IEvaluation): string {
+    if (this.selectedFiles.length >= 1){
+      let shareList = this.joinEvaluationsByIds(this.selectedFiles)
+      return `${ServerModule.externalURL || window.location.origin}/share/${shareList}`;
+    } else {
+      return `${ServerModule.externalURL || window.location.origin}/share/${evaluations.id}`;
+    }
+}
 
   deleteTag(tag: IEvaluationTag) {
     this.activeTag = tag;
@@ -187,8 +207,7 @@ export default class LoadFileList extends Vue {
 
  filterEvaluationTags(file: IEvaluation | Sample, search: string) {
     let result = false;
-    if('evaluationTags' in file)
-    {
+    if('evaluationTags' in file) {
       file.evaluationTags?.forEach((tag) => {
         if (tag.value.toLowerCase().includes(search)) {
           result = true;
