@@ -9,7 +9,6 @@ module.exports = {
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'prettier',
-    'prettier/@typescript-eslint',
     'plugin:prettier/recommended',
   ],
   root: true,
@@ -28,6 +27,7 @@ module.exports = {
         }
       }
     ],
+    'object-curly-spacing': 'warn',
     '@typescript-eslint/no-explicit-any': 'off',
   },
 };

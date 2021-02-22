@@ -2,14 +2,14 @@
   <v-card class="elevation-0">
     <v-container class="ma-0 pa-0">
       <v-row>
-        <v-col cols="9">
+        <v-col cols="11">
           <v-card-subtitle>
             View files loaded into your organizations Heimdall Server instance.
           </v-card-subtitle>
         </v-col>
-        <v-col cols="3" class="text-right">
-          <LogoutButton />
-        </v-col>
+        <v-col cols="1" class="text-right">
+          <RefreshButton @updateEvaluations="get_all_results"
+        /></v-col>
       </v-row>
     </v-container>
     <LoadFileList
@@ -25,7 +25,6 @@
 <script lang="ts">
 import Component, {mixins} from 'vue-class-component';
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
-import LogoutButton from '@/components/generic/LogoutButton.vue';
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations'
 import RefreshButton from '@/components/generic/RefreshButton.vue'
@@ -46,7 +45,7 @@ import {Prop, Watch} from 'vue-property-decorator';
 @Component({
   components: {
     LoadFileList,
-    LogoutButton
+    RefreshButton
   }
 })
 export default class DatabaseReader extends mixins(ServerMixin) {

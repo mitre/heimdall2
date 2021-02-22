@@ -15,6 +15,7 @@ module.exports = {
     'no-throw-literal': 'warn',
     'vue/require-default-prop': 'off',
     'vue/prop-name-casing': 'off',
+    'object-curly-spacing': 'warn',
     'vue/html-self-closing': [
       'warn',
       {
