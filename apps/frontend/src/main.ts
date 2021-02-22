@@ -6,10 +6,12 @@ import axios from 'axios';
 import 'core-js/stable';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import Vue from 'vue';
+import VueClipboard from 'vue-clipboard2';
 import VueCookies from 'vue-cookies';
 import Vuetify from 'vuetify/lib';
 import {ServerModule} from './store/server';
 
+Vue.use(VueClipboard);
 Vue.use(VueCookies);
 Vue.use(Vuetify);
 

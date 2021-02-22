@@ -28,6 +28,8 @@ import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
 import LogoutButton from '@/components/generic/LogoutButton.vue';
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations'
+import RefreshButton from '@/components/generic/RefreshButton.vue'
+import Vue from 'vue';
 
 import axios from 'axios';
 
@@ -80,8 +82,9 @@ export default class DatabaseReader extends mixins(ServerMixin) {
     }
   }
 
-  mounted() {
-    this.get_all_results();
+  async mounted() {
+    await this.get_all_results();
+    this.check_shared_evaluations();
   }
 
   async get_all_results(): Promise<void> {
@@ -90,6 +93,20 @@ export default class DatabaseReader extends mixins(ServerMixin) {
     }).finally(() => {
       this.loading = false;
     });
+  }
+
+  async check_shared_evaluations(): Promise<void> {
+    const evaluationsToLoad: string = Vue.$cookies.get('loadEvaluation');
+    if(evaluationsToLoad){
+      const evaluationsToLoadArray: IEvaluation[] = await EvaluationModule.findEvaluationsByIds(evaluationsToLoad.split(','));
+      if (evaluationsToLoadArray.length !== 0) {
+        this.load_results(evaluationsToLoadArray);
+        Vue.$cookies.remove('loadEvaluation');
+      } else {
+        SnackbarModule.failure(`Heimdall was passed the following evaluations to open, but couldn't find any of them: ${evaluationsToLoad}`);
+        Vue.$cookies.remove('loadEvaluation');
+      }
+    }
   }
 
   get files(){

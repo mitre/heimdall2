@@ -27,6 +27,17 @@ export class Evaluation extends VuexModule {
   }
 
   @Action
+  findEvaluationsByIds(evaluationIds: string[]): IEvaluation[] {
+    const foundEvaluations: IEvaluation[] = [];
+    this.allEvaluations.forEach((evaluation) => {
+      if (evaluationIds.includes(evaluation.id)) {
+        foundEvaluations.push(evaluation);
+      }
+    });
+    return foundEvaluations;
+  }
+
+  @Action
   setAllEvaluations(evaluations: IEvaluation[]) {
     this.context.commit('SET_ALL_EVALUATION', evaluations);
   }

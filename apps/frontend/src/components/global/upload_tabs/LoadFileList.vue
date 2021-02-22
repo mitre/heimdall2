@@ -83,6 +83,7 @@
           <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
         </template>
         <template #[`item.actions`]="{item}">
+          <button type="button" @click="shareItem(item)">Copy!</button>
           <v-icon small class="mr-2" @click="editItem(item)">
             mdi-pencil
           </v-icon>
@@ -107,6 +108,7 @@ import {EvaluationModule} from '@/store/evaluations'
 import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
 import {Sample} from '@/utilities/sample_util';
+import { ServerModule } from '../../../store/server';
 
 @Component({
   components: {
@@ -150,6 +152,22 @@ export default class LoadFileList extends Vue {
   deleteItem(item: IEvaluation) {
     this.activeItem = item;
     this.deleteItemDialog = true;
+  }
+
+  clipboardSuccessHandler() {
+    SnackbarModule.notify('Successfully copied to clipboard.')
+  }
+
+  clipboardErrorHandler() {
+    SnackbarModule.failure('Failed to copy to clipboard.')
+  }
+
+  shareItem(item: IEvaluation) {
+    this.$copyText(`${ServerModule.externalURL}/share/${item.id}`).then((success) => {
+      SnackbarModule.notify('Successfully copied share link.');
+    }, (error) => {
+      SnackbarModule.failure("Failed to copy share link.");
+    })
   }
 
   deleteTag(tag: IEvaluationTag) {
