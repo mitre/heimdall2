@@ -6,10 +6,8 @@ import {
   Param,
   Post,
   Put,
-  Req,
   UseGuards
 } from '@nestjs/common';
-import {Request} from 'express';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {CreateEvaluationDto} from './dto/create-evaluation.dto';
 import {EvaluationDto} from './dto/evaluation.dto';
@@ -23,14 +21,6 @@ export class EvaluationsController {
   @Get(':id')
   async findById(@Param('id') id: string): Promise<EvaluationDto> {
     return this.evaluationsService.findById(id);
-  }
-
-  @Get('/share/:id')
-  async loadSharedEvaluation(
-    @Req() req: Request,
-    @Param('id') id: string
-  ): Promise<void> {
-    this.setEvaluationCookies(req, id);
   }
 
   @Get()
@@ -56,13 +46,5 @@ export class EvaluationsController {
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<EvaluationDto> {
     return this.evaluationsService.remove(id);
-  }
-
-  async setEvaluationCookies(
-    req: Request,
-    evaluationId: string
-  ): Promise<void> {
-    req.res?.cookie('loadEvaluation', evaluationId);
-    req.res?.redirect('/');
   }
 }
