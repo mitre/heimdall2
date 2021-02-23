@@ -222,7 +222,7 @@ import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 
 import {FilteredDataModule, Filter, TreeMapState} from '@/store/data_filters';
 import {ControlStatus, Severity} from 'inspecjs';
-import {FileID, SourcedContextualizedEvaluation} from '@/store/report_intake';
+import {FileID, InspecIntakeModule, SourcedContextualizedEvaluation} from '@/store/report_intake';
 import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
 
 import ProfileData from '@/components/cards/ProfileData.vue';
@@ -230,6 +230,10 @@ import {context} from 'inspecjs';
 
 import {ServerModule} from '@/store/server';
 import {capitalize} from 'lodash';
+import {EvaluationModule} from '../store/evaluations';
+import {IEvaluation} from '@heimdall/interfaces';
+import axios from 'axios';
+import {SnackbarModule} from '../store/snackbar';
 
 @Component({
   components: {
@@ -282,6 +286,62 @@ export default class Results extends Vue {
 
   /** Determines if we should make the search bar colapseable */
   show_search_mobile: boolean = false;
+
+  /**
+   * On mount, check if we have been passed an evaluation
+   * to load from Vue router
+   */
+
+  async mounted() {
+    if(this.$route.params.id){
+      await this.get_all_results()
+      const evaluationsToLoadArray: IEvaluation[] = await EvaluationModule.findEvaluationsByIds(this.$route.params.id.split(','));
+      if (evaluationsToLoadArray.length !== 0) {
+        this.load_results(evaluationsToLoadArray);
+      } else {
+        SnackbarModule.failure(`Heimdall was passed the following evaluations to open, but couldn't find any of them: ${this.$route.params.id}`);
+      }
+    }
+  }
+
+  /**
+   * Get evaluations from the database
+   */
+
+  async get_all_results(): Promise<void> {
+    await EvaluationModule.getAllEvaluations().catch((err) => {
+      SnackbarModule.failure(`${err}. Please reload the page and try again.`);
+    });
+  }
+  /**
+   * Loads evaluation IDs passed
+   */
+  load_results(evaluations: IEvaluation[]): void {
+    Promise.all(
+      evaluations.map(async (evaluation) => {
+        return axios
+          .get<IEvaluation>(`/evaluations/${evaluation.id}`)
+          .then((response) => {
+            return InspecIntakeModule.loadText({
+              text: JSON.stringify(response.data.data),
+              filename: evaluation.filename,
+              database_id: evaluation.id,
+              createdAt: evaluation.createdAt,
+              updatedAt: evaluation.updatedAt,
+              tags: [] // Tags are not yet implemented, so for now the value is passed in empty
+            }).catch((err) => {
+              SnackbarModule.failure(err);
+            });
+          })
+          .catch((err) => {
+            SnackbarModule.failure(err);
+          });
+      })
+    ).finally(() => {
+      this.$router.push('/results')
+    })
+  }
+
   /**
    * The currently selected file, if one exists.
    * Controlled by router.
@@ -298,7 +358,7 @@ export default class Results extends Vue {
    */
 
   get is_result_view(): boolean {
-    return this.current_route_name === 'results';
+    return this.current_route_name.indexOf('results') !== -1;
   }
 
   // Returns true if no files are uploaded

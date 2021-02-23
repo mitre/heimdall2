@@ -83,7 +83,6 @@ export default class DatabaseReader extends mixins(ServerMixin) {
 
   async mounted() {
     await this.get_all_results();
-    this.check_shared_evaluations();
   }
 
   async get_all_results(): Promise<void> {
@@ -92,20 +91,6 @@ export default class DatabaseReader extends mixins(ServerMixin) {
     }).finally(() => {
       this.loading = false;
     });
-  }
-
-  async check_shared_evaluations(): Promise<void> {
-    const evaluationsToLoad: string = Vue.$cookies.get('loadEvaluation');
-    if(evaluationsToLoad){
-      const evaluationsToLoadArray: IEvaluation[] = await EvaluationModule.findEvaluationsByIds(evaluationsToLoad.split(','));
-      if (evaluationsToLoadArray.length !== 0) {
-        this.load_results(evaluationsToLoadArray);
-        Vue.$cookies.remove('loadEvaluation');
-      } else {
-        SnackbarModule.failure(`Heimdall was passed the following evaluations to open, but couldn't find any of them: ${evaluationsToLoad}`);
-        Vue.$cookies.remove('loadEvaluation');
-      }
-    }
   }
 
   get files(){

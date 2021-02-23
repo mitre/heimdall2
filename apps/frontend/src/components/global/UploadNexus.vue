@@ -103,12 +103,6 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
 
   active_tab: string = local_tab.get_default('uploadtab-local');
 
-  async mounted() {
-    if(Vue.$cookies.get('loadEvaluation') !== null){
-      this.selected_tab('uploadtab-database')
-    }
-  }
-
   // Handles change in tab
   selected_tab(new_tab: string) {
     this.active_tab = new_tab;

@@ -184,9 +184,9 @@ export default class LoadFileList extends Vue {
   shareItems(evaluations: IEvaluation): string {
     if (this.selectedFiles.length >= 1){
       const shareList = this.joinEvaluationsByIds(this.selectedFiles)
-      return `${ServerModule.externalURL || window.location.origin}/share/${shareList}`;
+      return `${ServerModule.externalURL || window.location.origin}/results/${shareList}`;
     } else {
-      return `${ServerModule.externalURL || window.location.origin}/share/${evaluations.id}`;
+      return `${ServerModule.externalURL || window.location.origin}/results/${evaluations.id}`;
     }
 }
 
