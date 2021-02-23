@@ -70,6 +70,10 @@ export default class Login extends Vue {
   checkLoggedIn() {
     if (ServerModule.token) {
       this.$router.push('/');
+    } else {
+      if(Vue.$cookies.get('loadEvaluation') !== null) {
+        SnackbarModule.notify("Please login to view this evaluation.")
+      }
     }
   }
 

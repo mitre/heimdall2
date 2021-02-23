@@ -174,7 +174,7 @@ export default class LoadFileList extends Vue {
   joinEvaluationsByIds(evaluations: IEvaluation[] | Sample[]): string {
     let stringresult = '';
     evaluations.forEach((evaluation) => {
-      if((evaluation as IEvaluation).id){
+      if(evaluation.hasOwnProperty('id')){
         stringresult += `${(evaluation as IEvaluation).id},`;
       }
     });
@@ -183,7 +183,7 @@ export default class LoadFileList extends Vue {
 
   shareItems(evaluations: IEvaluation): string {
     if (this.selectedFiles.length >= 1){
-      let shareList = this.joinEvaluationsByIds(this.selectedFiles)
+      const shareList = this.joinEvaluationsByIds(this.selectedFiles)
       return `${ServerModule.externalURL || window.location.origin}/share/${shareList}`;
     } else {
       return `${ServerModule.externalURL || window.location.origin}/share/${evaluations.id}`;
