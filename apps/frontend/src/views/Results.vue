@@ -299,7 +299,7 @@ export default class Results extends Vue {
   show_search_mobile: boolean = false;
 
   /** Determines if we should show the expand all button */
-  show_expand_all_button: boolean = false;
+  show_expand_all_button = false;
   /**
    * The currently selected file, if one exists.
    * Controlled by router.
@@ -480,7 +480,7 @@ export default class Results extends Vue {
   }
 
   // Toggles whether or not to show expand all button
-  set_show_expand_all(single_expand: any) {
+  set_show_expand_all(single_expand: boolean) {
     this.show_expand_all_button = !single_expand;
   }
 }
