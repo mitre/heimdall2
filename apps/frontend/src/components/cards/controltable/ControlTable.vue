@@ -3,11 +3,7 @@
     <!-- Toolbar -->
     <v-row>
       <v-col cols="12">
-        <v-switch
-          v-model="single_expand"
-          :label="single_expand ? 'Single Expand' : 'Multiple Expand'"
-          class="mt-2"
-        />
+        <v-switch v-model="single_expand" label="Single Expand" class="mt-2" />
       </v-col>
     </v-row>
 
