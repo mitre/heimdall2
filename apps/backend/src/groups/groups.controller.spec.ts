@@ -261,20 +261,17 @@ describe('GroupsController', () => {
     });
 
     it('should allow owners of a group to delete a group', async () => {
-      expect.assertions(3);
-
       const owner = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
       await groupsService.addUserToGroup(privateGroup, owner, 'owner');
       await groupsService.addUserToGroup(privateGroup, basicUser, 'user');
 
-      const response = await groupsController.update(
+      const response = await groupsController.remove(
         {user: basicUser},
-        privateGroup.id,
-        UPDATE_GROUP
+        privateGroup.id
       );
       expect(response.id).toEqual(privateGroup.id);
-      expect(response.name).toEqual(UPDATE_GROUP.name);
-      expect(response.public).toEqual(UPDATE_GROUP.public);
+      expect(response.name).toEqual(privateGroup.name);
+      expect(response.public).toEqual(privateGroup.public);
     });
 
     it('should stop users and others from deleting a group', async () => {
