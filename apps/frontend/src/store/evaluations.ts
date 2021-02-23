@@ -30,13 +30,9 @@ export class Evaluation extends VuexModule {
 
   @Action
   findEvaluationsByIds(evaluationIds: string[]): IEvaluation[] {
-    const foundEvaluations: IEvaluation[] = [];
-    this.allEvaluations.forEach((evaluation) => {
-      if (evaluationIds.includes(evaluation.id)) {
-        foundEvaluations.push(evaluation);
-      }
-    });
-    return foundEvaluations;
+    return this.allEvaluations.filter((evaluation) =>
+      evaluationIds.includes(evaluation.id)
+    );
   }
 
   @Action
