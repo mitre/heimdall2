@@ -73,11 +73,15 @@ export default class DatabaseReader extends mixins(ServerMixin) {
   onChildChanged(newRefreshValue: boolean, _oldValue: boolean) {
     if (newRefreshValue === true) {
       // Whenever refresh is set to true, call refresh on the database results
-      EvaluationModule.getAllEvaluations();
+      this.get_all_results();
     }
   }
 
   mounted() {
+    this.get_all_results();
+  }
+
+  async get_all_results(): Promise<void> {
     EvaluationModule.getAllEvaluations();
   }
 

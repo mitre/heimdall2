@@ -97,7 +97,7 @@ export class GroupsController {
     );
   }
 
-  @Post('/evaluation')
+  @Post('/:id/evaluation')
   async addEvaluationToGroup(
     @Param('id') id: string,
     @Request() request: {user: User},
@@ -116,7 +116,7 @@ export class GroupsController {
     return new GroupDto(group);
   }
 
-  @Delete('/evaluation/:id')
+  @Delete('/:id/evaluation')
   async removeEvaluationFromGroup(
     @Param('id') id: string,
     @Request() request: {user: User},

@@ -1,5 +1,9 @@
 <template>
-  <Modal :visible="visible" max-width="1000px">
+  <v-dialog v-model="visible" max-width="1000px">
+    <template #activator="{on, attrs}">
+      <slot name="clickable" :on="on" :attrs="attrs" />
+    </template>
+
     <v-card>
       <v-card-title>
         <span class="headline">Edit "{{ activeEvaluation.filename }}"</span>
@@ -26,11 +30,13 @@
           <v-row>
             <v-col cols="12" sm="7" md="9">
               <v-autocomplete
+                v-model="groups"
                 label="Groups"
                 multiple
                 deletable-chips
                 :items="myGroups"
                 :search-input.sync="groupSearch"
+                return-object
               >
                 <template #no-data>
                   <v-list-item>
@@ -65,13 +71,11 @@
 
       <v-card-actions>
         <v-spacer />
-        <v-btn text color="primary" @click.native="$emit('closeEditModal')">
-          Cancel
-        </v-btn>
-        <v-btn text color="primary" @click="updateEvaluation()">Save</v-btn>
+        <v-btn text color="primary" @click="cancel()"> Cancel </v-btn>
+        <v-btn text color="primary" @click="update()">Save</v-btn>
       </v-card-actions>
     </v-card>
-  </Modal>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -80,9 +84,11 @@ import Component from 'vue-class-component';
 import Modal from '@/components/global/Modal.vue'
 import {Prop} from 'vue-property-decorator';
 import {EvaluationModule} from '@/store/evaluations';
-import {IEvaluation} from '@heimdall/interfaces';
+import {IEvaluation, IEvaluationGroup, IGroup} from '@heimdall/interfaces';
 import {GroupsModule} from '@/store/groups';
 import GroupModal from '@/components/global/groups/GroupModal.vue';
+import axios from 'axios';
+import {SnackbarModule} from '@/store/snackbar';
 
 interface IVuetifyItems {
   text: string | number,
@@ -97,24 +103,31 @@ interface IVuetifyItems {
   }
 })
 export default class EditEvaluationModal extends Vue {
-  @Prop({default: false}) visible!: boolean;
   @Prop({type: Object, required: true}) readonly active!: IEvaluation;
 
   activeEvaluation: IEvaluation = {...this.active};
+  originalGroups: IVuetifyItems[] = [];
+  groups: IVuetifyItems[] = [];
   groupSearch = '';
+  visible = false;
 
-  visibilityOptions: IVuetifyItems[] = [{
-    text: "Public",
-    value: true
-  },
-  {
-    text: "Private",
-    value: false
-  }
+  visibilityOptions: IVuetifyItems[] = [
+    {
+      text: "Public",
+      value: true
+    },
+    {
+      text: "Private",
+      value: false
+    }
   ]
 
-  get myGroups(): IVuetifyItems[] {
-    return GroupsModule.myGroups.map((group) => {
+  mounted() {
+    this.getGroupsForEvaluation();
+  }
+
+  convertGroupsToIVuetifyItems(groups: IGroup[]): IVuetifyItems[] {
+    return groups.map((group) => {
       return {
         text: group.name,
         value: group.id
@@ -122,10 +135,48 @@ export default class EditEvaluationModal extends Vue {
     })
   }
 
-  async updateEvaluation(): Promise<void> {
-    await EvaluationModule.updateEvaluation(this.activeEvaluation);
-    this.$emit('closeEditModal')
+  get myGroups(): IVuetifyItems[] {
+    return this.convertGroupsToIVuetifyItems(GroupsModule.myGroups);
+  }
+
+  async getGroupsForEvaluation(): Promise<void> {
+    return axios.get<IGroup[]>(`/evaluations/${this.active.id}/groups`).then(({data}) => {
+      this.originalGroups = this.groups = this.convertGroupsToIVuetifyItems(data);
+    });
+  }
+
+  async update(): Promise<void> {
+    Promise.all([EvaluationModule.updateEvaluation(this.activeEvaluation), this.updateGroups()]).then(() => {
+      SnackbarModule.notify('Evaluation Updated Successfully');
+    })
+    this.visible = false;
     this.$emit('updateEvaluations')
+  }
+
+  cancel(): void {
+    this.visible = false;
+    this.groups = this.originalGroups;
+    this.activeEvaluation = {...this.active};
+  }
+
+  async updateGroups(): Promise<void> {
+    const toAdd: IVuetifyItems[] = this.groups.filter(group => !this.originalGroups.includes(group));
+    const toRemove: IVuetifyItems[] = this.originalGroups.filter(group => !this.groups.includes(group));
+    const evaluationGroup: IEvaluationGroup = {
+      id: this.active.id
+    }
+
+    const addedGroupPromises = toAdd.map((group) => {
+      return axios.post(`/groups/${group.value}/evaluation`, evaluationGroup)
+    });
+
+    const removeGroupPromises = toRemove.map((group) => {
+      return axios.delete(`/groups/${group.value}/evaluation`, {data: evaluationGroup})
+    });
+
+    Promise.all(addedGroupPromises.concat(removeGroupPromises)).catch((err) => {
+      SnackbarModule.failure(`Error modifying groups: ${err}.`);
+    })
   }
 }
 </script>

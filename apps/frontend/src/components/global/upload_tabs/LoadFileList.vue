@@ -25,13 +25,6 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      <EditEvaluationModal
-        v-if="editDialog"
-        :visible="editDialog"
-        :active="activeItem"
-        @updateEvaluations="updateEvaluations"
-        @closeEditModal="closeEditModal"
-      />
       <v-data-table
         v-model="selectedFiles"
         dense
@@ -59,9 +52,13 @@
         </template>
         <template #[`item.actions`]="{item}">
           <div v-if="item.editable">
-            <v-icon small class="mr-2" @click="editItem(item)">
-              mdi-pencil
-            </v-icon>
+            <EditEvaluationModal id="editEvaluationModal" :active="item">
+              <template #clickable="{on}"
+                ><v-icon small title="Edit" class="mr-2" v-on="on">
+                  mdi-pencil
+                </v-icon>
+              </template>
+            </EditEvaluationModal>
             <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
           </div>
         </template>
@@ -102,7 +99,6 @@ export default class LoadFileList extends Vue {
   activeItem!: IEvaluation;
   activeTag!: IEvaluationTag;
 
-  editDialog = false;
   deleteItemDialog = false;
   deleteTagDialog = false;
   search = '';
@@ -112,17 +108,12 @@ export default class LoadFileList extends Vue {
     this.$emit('load-results', evaluations);
   }
 
-  closeEditModal() {
-    this.editDialog = false;
-  }
-
   updateEvaluations() {
     EvaluationModule.getAllEvaluations();
   }
 
   editItem(item: IEvaluation) {
     this.activeItem = item;
-    this.editDialog = true;
   }
 
   deleteItem(item: IEvaluation) {
