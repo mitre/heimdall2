@@ -8,6 +8,8 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
+import {FileID, InspecIntakeModule} from './report_intake';
+import {SnackbarModule} from './snackbar';
 
 @Module({
   namespaced: true,
@@ -35,6 +37,31 @@ export class Evaluation extends VuexModule {
       }
     });
     return foundEvaluations;
+  }
+
+  @Action
+  async load_results(evaluations: IEvaluation[]): Promise<(FileID | void)[]> {
+    return Promise.all(
+      evaluations.map(async (evaluation) => {
+        return axios
+          .get<IEvaluation>(`/evaluations/${evaluation.id}`)
+          .then((response) => {
+            return InspecIntakeModule.loadText({
+              text: JSON.stringify(response.data.data),
+              filename: evaluation.filename,
+              database_id: evaluation.id,
+              createdAt: evaluation.createdAt,
+              updatedAt: evaluation.updatedAt,
+              tags: [] // Tags are not yet implemented, so for now the value is passed in empty
+            }).catch((err) => {
+              SnackbarModule.failure(err);
+            });
+          })
+          .catch((err) => {
+            SnackbarModule.failure(err);
+          });
+      })
+    );
   }
 
   @Action

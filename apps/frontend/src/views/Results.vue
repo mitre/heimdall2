@@ -291,55 +291,19 @@ export default class Results extends Vue {
    * On mount, check if we have been passed an evaluation
    * to load from Vue router
    */
-
   async mounted() {
     if(this.$route.params.id){
-      await this.get_all_results()
+      await EvaluationModule.getAllEvaluations();
       const evaluationsToLoadArray: IEvaluation[] = await EvaluationModule.findEvaluationsByIds(this.$route.params.id.split(','));
       if (evaluationsToLoadArray.length !== 0) {
-        this.load_results(evaluationsToLoadArray);
+        EvaluationModule.load_results(evaluationsToLoadArray).then(() => {
+          this.$router.push('/results');
+        });
       } else {
         SnackbarModule.failure(`Heimdall was passed the following evaluations to open, but couldn't find any of them: ${this.$route.params.id}`);
+        this.$router.push('/results');
       }
     }
-  }
-
-  /**
-   * Get evaluations from the database
-   */
-
-  async get_all_results(): Promise<void> {
-    await EvaluationModule.getAllEvaluations().catch((err) => {
-      SnackbarModule.failure(`${err}. Please reload the page and try again.`);
-    });
-  }
-  /**
-   * Loads evaluation IDs passed
-   */
-  load_results(evaluations: IEvaluation[]): void {
-    Promise.all(
-      evaluations.map(async (evaluation) => {
-        return axios
-          .get<IEvaluation>(`/evaluations/${evaluation.id}`)
-          .then((response) => {
-            return InspecIntakeModule.loadText({
-              text: JSON.stringify(response.data.data),
-              filename: evaluation.filename,
-              database_id: evaluation.id,
-              createdAt: evaluation.createdAt,
-              updatedAt: evaluation.updatedAt,
-              tags: [] // Tags are not yet implemented, so for now the value is passed in empty
-            }).catch((err) => {
-              SnackbarModule.failure(err);
-            });
-          })
-          .catch((err) => {
-            SnackbarModule.failure(err);
-          });
-      })
-    ).finally(() => {
-      this.$router.push('/results')
-    })
   }
 
   /**

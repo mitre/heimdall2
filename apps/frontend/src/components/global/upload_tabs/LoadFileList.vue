@@ -111,6 +111,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue'
+import ShareEvaluationButton from '@/components/generic/ShareEvaluationButton.vue'
 
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations'
@@ -121,7 +122,8 @@ import {ServerModule} from '../../../store/server';
 
 @Component({
   components: {
-    EditEvaluationModal
+    EditEvaluationModal,
+    ShareEvaluationButton
   }
 })
 export default class LoadFileList extends Vue {

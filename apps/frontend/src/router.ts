@@ -25,7 +25,7 @@ const router = new Router({
       path: '/results/:id',
       name: 'sharedResults',
       component: Results,
-      alias: '/profiles',
+      alias: '/profiles/:id',
       meta: {requiresAuth: true}
     },
     {
