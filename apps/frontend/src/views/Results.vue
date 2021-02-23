@@ -314,7 +314,7 @@ export default class Results extends Vue {
     });
   }
   /**
-   * Loads evaluation IDs passed
+   * Loads evaluations passed
    */
   load_results(evaluations: IEvaluation[]): void {
     Promise.all(
