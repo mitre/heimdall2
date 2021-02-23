@@ -94,7 +94,7 @@ export default class FileItem extends mixins(ServerMixin) {
     let evaluationDTO: ICreateEvaluation = {
       data: file.evaluation.data,
       filename: file.filename,
-      userId: ServerModule.userInfo.id,
+      public: false,
       evaluationTags: []
     };
 

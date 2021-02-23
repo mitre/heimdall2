@@ -57,10 +57,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { EvaluationModule } from '@/store/evaluations';
-import { SnackbarModule } from '../../../store/snackbar';
-import { IEvaluation, IEvaluationTag } from '@heimdall/interfaces';
-import { Prop } from 'vue-property-decorator';
+import {EvaluationModule} from '@/store/evaluations';
+import {SnackbarModule} from '../../../store/snackbar';
+import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
+import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {

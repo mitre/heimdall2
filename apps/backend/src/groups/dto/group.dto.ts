@@ -10,10 +10,10 @@ export class GroupDto implements IGroup {
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
-  constructor(group: Group & {GroupUser?: GroupUser}) {
+  constructor(group: Group & {GroupUser?: GroupUser}, role?: string) {
     this.id = group.id;
     this.name = group.name;
-    this.role = group?.GroupUser?.role;
+    this.role = role || group?.GroupUser?.role;
     this.public = group.public;
     this.createdAt = group.createdAt;
     this.updatedAt = group.updatedAt;
