@@ -2,8 +2,7 @@ import {SequelizeModule} from '@nestjs/sequelize';
 import {Test} from '@nestjs/testing';
 import {
   CREATE_EVALUATION_TAG_DTO,
-  CREATE_EVALUATION_TAG_DTO_MISSING_VALUE,
-  UPDATE_EVALUATION_TAG_DTO
+  CREATE_EVALUATION_TAG_DTO_MISSING_VALUE
 } from '../../test/constants/evaluation-tags-test.constant';
 import {EVALUATION_1} from '../../test/constants/evaluations-test.constant';
 import {CREATE_USER_DTO_TEST_OBJ} from '../../test/constants/users-test.constant';
@@ -117,25 +116,6 @@ describe('EvaluationTagsService', () => {
       );
       foundEvaluationTags = await evaluationTagsService.findAll();
       expect(foundEvaluationTags.length).toBeGreaterThan(1);
-    });
-  });
-
-  describe('Update', () => {
-    it('should update given a valid dto', async () => {
-      const evaluationTag = await evaluationTagsService.create(
-        evaluation.id,
-        CREATE_EVALUATION_TAG_DTO
-      );
-      const updatedEvaluationTag = await evaluationTagsService.update(
-        evaluationTag.id,
-        UPDATE_EVALUATION_TAG_DTO
-      );
-      expect(updatedEvaluationTag.value).toEqual(
-        UPDATE_EVALUATION_TAG_DTO.value
-      );
-      expect(updatedEvaluationTag.updatedAt.valueOf()).not.toEqual(
-        evaluationTag.updatedAt.valueOf()
-      );
     });
   });
 

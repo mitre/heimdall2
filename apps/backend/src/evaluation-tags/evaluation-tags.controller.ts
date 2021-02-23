@@ -5,13 +5,11 @@ import {
   Get,
   Param,
   Post,
-  Put,
   UseGuards
 } from '@nestjs/common';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {CreateEvaluationTagDto} from './dto/create-evaluation-tag.dto';
 import {EvaluationTagDto} from './dto/evaluation-tag.dto';
-import {UpdateEvaluationTagDto} from './dto/update-evaluation-tag.dto';
 import {EvaluationTagsService} from './evaluation-tags.service';
 
 @Controller('evaluation-tags')
@@ -41,16 +39,6 @@ export class EvaluationTagsController {
         evaluationId,
         createEvaluationTagDto
       )
-    );
-  }
-
-  @Put(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateEvaluationTagDto: UpdateEvaluationTagDto
-  ): Promise<EvaluationTagDto> {
-    return new EvaluationTagDto(
-      await this.evaluationTagsService.update(id, updateEvaluationTagDto)
     );
   }
 

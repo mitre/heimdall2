@@ -1,7 +1,6 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {CreateEvaluationTagDto} from './dto/create-evaluation-tag.dto';
-import {UpdateEvaluationTagDto} from './dto/update-evaluation-tag.dto';
 import {EvaluationTag} from './evaluation-tag.model';
 
 @Injectable()
@@ -27,14 +26,6 @@ export class EvaluationTagsService {
     evaluationTag.value = createEvaluationTagDto.value;
     evaluationTag.evaluationId = evaluationId;
     return evaluationTag.save();
-  }
-
-  async update(
-    id: string,
-    updateEvaluationTagDto: UpdateEvaluationTagDto
-  ): Promise<EvaluationTag> {
-    const evaluationTag = await this.findByPkBang(id);
-    return evaluationTag.update(updateEvaluationTagDto);
   }
 
   async remove(id: string): Promise<EvaluationTag> {
