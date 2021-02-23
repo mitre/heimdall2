@@ -101,13 +101,13 @@ export default class GroupModal extends Vue {
 
   roles: string[] = ['user', 'admin'];
 
-  dialog: boolean = false;
-  changePassword: boolean = false;
+  dialog = false;
+  changePassword = false;
 
   groupInfo: IGroup = {...this.group};
-  currentPassword: string = '';
-  newPassword: string = '';
-  passwordConfirmation: string = '';
+  currentPassword = '';
+  newPassword = '';
+  passwordConfirmation = '';
 
   get title(): string {
     if(this.create) {
