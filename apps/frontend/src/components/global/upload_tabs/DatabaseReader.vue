@@ -26,9 +26,8 @@
 import Component, {mixins} from 'vue-class-component';
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
 import {SnackbarModule} from '@/store/snackbar';
-import {EvaluationModule} from '@/store/evaluations'
-import RefreshButton from '@/components/generic/RefreshButton.vue'
-import Vue from 'vue';
+import {EvaluationModule} from '@/store/evaluations';
+import RefreshButton from '@/components/generic/RefreshButton.vue';
 
 import axios from 'axios';
 
@@ -81,8 +80,8 @@ export default class DatabaseReader extends mixins(ServerMixin) {
     }
   }
 
-  async mounted() {
-    await this.get_all_results();
+  mounted() {
+    this.get_all_results();
   }
 
   async get_all_results(): Promise<void> {
