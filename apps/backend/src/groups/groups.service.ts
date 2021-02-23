@@ -13,7 +13,7 @@ import {Group} from './group.model';
 export class GroupsService {
   constructor(
     @InjectModel(Group)
-    private groupModel: typeof Group
+    private readonly groupModel: typeof Group
   ) {}
 
   async findAll(): Promise<Group[]> {

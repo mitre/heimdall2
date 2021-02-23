@@ -24,7 +24,7 @@ import {EvaluationsService} from './evaluations.service';
 @UseGuards(JwtAuthGuard)
 export class EvaluationsController {
   constructor(
-    private evaluationsService: EvaluationsService,
+    private readonly evaluationsService: EvaluationsService,
     private readonly authz: AuthzService
   ) {}
   @Get(':id')

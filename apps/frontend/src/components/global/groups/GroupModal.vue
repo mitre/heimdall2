@@ -119,7 +119,7 @@ export default class GroupModal extends Vue {
   }
 
   async save(): Promise<void> {
-    let groupInfo: ICreateGroup = {
+    const groupInfo: ICreateGroup = {
       ...this.groupInfo,
     };
 

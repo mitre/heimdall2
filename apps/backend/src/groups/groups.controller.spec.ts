@@ -264,7 +264,6 @@ describe('GroupsController', () => {
       expect.assertions(3);
 
       const owner = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
-      const privateGroup = await groupsService.create(PRIVATE_GROUP);
       await groupsService.addUserToGroup(privateGroup, owner, 'owner');
       await groupsService.addUserToGroup(privateGroup, basicUser, 'user');
 

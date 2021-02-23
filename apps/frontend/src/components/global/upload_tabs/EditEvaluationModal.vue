@@ -85,8 +85,8 @@ import {GroupsModule} from '@/store/groups';
 import GroupModal from '@/components/global/groups/GroupModal.vue';
 
 interface IVuetifyItems {
-  text: string | number | object,
-  value: string | number | object | boolean,
+  text: string | number,
+  value: string | number | boolean,
   disabled?: boolean,
 }
 
@@ -101,7 +101,7 @@ export default class EditEvaluationModal extends Vue {
   @Prop({type: Object, required: true}) readonly active!: IEvaluation;
 
   activeEvaluation: IEvaluation = {...this.active};
-  groupSearch: string = '';
+  groupSearch = '';
 
   visibilityOptions: IVuetifyItems[] = [{
     text: "Public",

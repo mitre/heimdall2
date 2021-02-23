@@ -155,7 +155,6 @@ describe('GroupsService', () => {
       const groupEvaluations = await group.$get('evaluations', {
         include: [{model: EvaluationTag}]
       });
-      evaluation.reload;
       expect(groupEvaluations).toHaveLength(1);
       expect(groupEvaluations[0].filename).toEqual(evaluation.filename);
       expect(groupEvaluations[0].data).toEqual(evaluation.data);

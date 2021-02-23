@@ -576,9 +576,9 @@ describe('UsersService', () => {
 
     // Admins should be able to remove other users without their password
     it('should test remove function with admin user and a dto that has no password', async () => {
-      expect(await usersService.remove(user, {}, adminAbacPolicy)).toEqual(
-        new UserDto(user)
-      );
+      expect(
+        new UserDto(await usersService.remove(user, {}, adminAbacPolicy))
+      ).toEqual(new UserDto(user));
     });
   });
 

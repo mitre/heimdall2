@@ -102,10 +102,10 @@ export default class LoadFileList extends Vue {
   activeItem!: IEvaluation;
   activeTag!: IEvaluationTag;
 
-  editDialog: boolean = false;
-  deleteItemDialog: boolean = false;
-  deleteTagDialog: boolean = false;
-  search: string = '';
+  editDialog = false;
+  deleteItemDialog = false;
+  deleteTagDialog = false;
+  search = '';
 
   load_results(evaluations: IEvaluation[]) {
     this.selectedFiles = [];

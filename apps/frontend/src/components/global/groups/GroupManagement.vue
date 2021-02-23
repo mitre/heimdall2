@@ -65,7 +65,6 @@
 import {SnackbarModule} from '@/store/snackbar';
 import {IGroup} from '@heimdall/interfaces';
 import GroupModal from '@/components/global/groups/GroupModal.vue';
-import axios from 'axios';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
@@ -80,8 +79,8 @@ export default class GroupManagement extends Vue {
   @Prop({type: Boolean, default: false}) readonly allGroups!: boolean;
 
   editedGroup: IGroup | null = null;
-  dialogDelete: boolean = false;
-  search: string = '';
+  dialogDelete = false;
+  search = '';
   allGroupsHeaders: Object[] = [
     {
       text: 'Group Name',
