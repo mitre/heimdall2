@@ -222,7 +222,7 @@ import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 
 import {FilteredDataModule, Filter, TreeMapState} from '@/store/data_filters';
 import {ControlStatus, Severity} from 'inspecjs';
-import {FileID, InspecIntakeModule, SourcedContextualizedEvaluation} from '@/store/report_intake';
+import {FileID, SourcedContextualizedEvaluation} from '@/store/report_intake';
 import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
 
 import ProfileData from '@/components/cards/ProfileData.vue';
@@ -232,7 +232,6 @@ import {ServerModule} from '@/store/server';
 import {capitalize} from 'lodash';
 import {EvaluationModule} from '../store/evaluations';
 import {IEvaluation} from '@heimdall/interfaces';
-import axios from 'axios';
 import {SnackbarModule} from '../store/snackbar';
 
 @Component({

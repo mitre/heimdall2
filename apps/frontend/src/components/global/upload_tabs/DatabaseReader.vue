@@ -29,9 +29,7 @@ import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations';
 import RefreshButton from '@/components/generic/RefreshButton.vue';
 
-import axios from 'axios';
-
-import {FileID, InspecIntakeModule} from '@/store/report_intake';
+import {FileID} from '@/store/report_intake';
 
 import {IEvaluation} from '@heimdall/interfaces';
 import ServerMixin from '@/mixins/ServerMixin';
