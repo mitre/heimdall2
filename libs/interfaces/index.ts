@@ -2,7 +2,6 @@ export * from './config/startup-settings.interface';
 export * from './evaluation-tag/create-evaluation-tag.interface';
 export * from './evaluation-tag/delete-evaluation-tag.interface';
 export * from './evaluation-tag/evaluation-tag.interface';
-export * from './evaluation-tag/update-evaluation-tag.interface';
 export * from './evaluation/create-evaluation.interface';
 export * from './evaluation/evaluation.interface';
 export * from './evaluation/update-evaluation.interface';
