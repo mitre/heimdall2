@@ -70,6 +70,12 @@ export class EvaluationsService {
     });
   }
 
+  async groups(id: string): Promise<Group[]> {
+    return (
+      await this.findByPkBang(id, {include: {model: Group, include: [User]}})
+    ).groups;
+  }
+
   async findByPkBang(
     identifier: string | number | Buffer | undefined,
     options: Pick<FindOptions, 'include'>

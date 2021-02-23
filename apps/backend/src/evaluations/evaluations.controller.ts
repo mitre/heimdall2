@@ -18,6 +18,7 @@ import {Action} from '../casl/casl-ability.factory';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {CreateEvaluationInterceptor} from '../interceptors/create-evaluation-interceptor';
 import {PublicBooleanPipe} from '../pipes/public-boolean.pipe';
+import {GroupDto} from '../groups/dto/group.dto';
 import {User} from '../users/user.model';
 import {CreateEvaluationDto} from './dto/create-evaluation.dto';
 import {EvaluationDto} from './dto/evaluation.dto';
@@ -28,7 +29,7 @@ import {EvaluationsService} from './evaluations.service';
 @UseGuards(JwtAuthGuard)
 export class EvaluationsController {
   constructor(
-    private evaluationsService: EvaluationsService,
+    private readonly evaluationsService: EvaluationsService,
     private readonly authz: AuthzService
   ) {}
   @Get(':id')
@@ -40,6 +41,21 @@ export class EvaluationsController {
     const evaluation = await this.evaluationsService.findById(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Read, evaluation);
     return new EvaluationDto(evaluation);
+  }
+
+  @Get(':id/groups')
+  async groupsForEvaluation(
+    @Param('id') id: string,
+    @Request() request: {user: User}
+  ): Promise<GroupDto[]> {
+    const abac = this.authz.abac.createForUser(request.user);
+    let evaluationGroups = await this.evaluationsService.groups(id);
+    evaluationGroups = evaluationGroups.filter(
+      (group) =>
+        abac.can(Action.AddEvaluation, group) &&
+        abac.can(Action.RemoveEvaluation, group)
+    );
+    return evaluationGroups.map((group) => new GroupDto(group));
   }
 
   @Get()

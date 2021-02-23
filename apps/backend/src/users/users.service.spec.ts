@@ -8,6 +8,7 @@ import {SequelizeModule} from '@nestjs/sequelize';
 import {Test} from '@nestjs/testing';
 import {
   CREATE_ADMIN_DTO,
+  CREATE_SECOND_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_2,
   CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD,
@@ -228,6 +229,7 @@ describe('UsersService', () => {
 
     // Tests the update function (Successful update)
     it('should update a user', async () => {
+      expect.assertions(14);
       const updatedUser = await usersService.update(
         user,
         UPDATE_USER_DTO_TEST_OBJ,
@@ -264,7 +266,9 @@ describe('UsersService', () => {
       );
     });
 
+    // Users should be able to update their account without updating their email
     it('should update a user without updating email', async () => {
+      expect.assertions(2);
       const updatedUser = await usersService.update(
         user,
         UPDATE_USER_DTO_TEST_WITHOUT_EMAIL,
@@ -277,7 +281,9 @@ describe('UsersService', () => {
       );
     });
 
+    // Users should be able to update their account without updating their first name
     it('should update a user without updating firstName', async () => {
+      expect.assertions(2);
       const updatedUser = await usersService.update(
         user,
         UPDATE_USER_DTO_TEST_WITHOUT_FIRST_NAME,
@@ -290,7 +296,9 @@ describe('UsersService', () => {
       );
     });
 
+    // Users should be able to update their account without updating their last name
     it('should update a user without updating lastName', async () => {
+      expect.assertions(2);
       const updatedUser = await usersService.update(
         user,
         UPDATE_USER_DTO_TEST_WITHOUT_LAST_NAME,
@@ -303,7 +311,9 @@ describe('UsersService', () => {
       );
     });
 
+    // Users should be able to update their account without updating their organization
     it('should update a user without updating organization', async () => {
+      expect.assertions(2);
       const updatedUser = await usersService.update(
         user,
         UPDATE_USER_DTO_TEST_WITHOUT_ORGANIZATION,
@@ -316,7 +326,9 @@ describe('UsersService', () => {
       );
     });
 
+    // Users should be able to update their account without updating their title
     it('should update a user without updating title', async () => {
+      expect.assertions(2);
       const updatedUser = await usersService.update(
         user,
         UPDATE_USER_DTO_TEST_WITHOUT_TITLE,
@@ -329,7 +341,9 @@ describe('UsersService', () => {
       );
     });
 
+    // If role is not provided, then the users role should stay the same
     it('should update a user without updating role', async () => {
+      expect.assertions(2);
       const updatedUser = await usersService.update(
         user,
         UPDATE_USER_DTO_TEST_WITHOUT_ROLE,
@@ -342,19 +356,24 @@ describe('UsersService', () => {
       );
     });
 
+    // Changing user information should not require the user to change their password
     it('should update a user without updating forcePasswordChange', async () => {
-      const updateUser = await usersService.update(
+      expect.assertions(2);
+      const updateUserDto = await usersService.update(
         user,
         UPDATE_USER_DTO_TEST_WITHOUT_FORCE_PASSWORD_CHANGE,
         abacPolicy
       );
+      const updateUser = await usersService.findByPkBang(updateUserDto.id);
 
-      expect(updateUser.updatedAt.valueOf()).not.toEqual(
+      expect(updateUserDto.updatedAt.valueOf()).not.toEqual(
         userCreatedAt.valueOf()
       );
+      expect(updateUser.forcePasswordChange).toEqual(user.forcePasswordChange);
     });
 
     it('should update a user without updating password', async () => {
+      expect.assertions(8);
       const {encryptedPassword} = user;
 
       await usersService.update(
@@ -380,6 +399,7 @@ describe('UsersService', () => {
     });
 
     it('should update a user without matching password when admin', async () => {
+      expect.assertions(2);
       const {encryptedPassword} = user;
 
       const updateUser = await usersService.update(
@@ -435,6 +455,7 @@ describe('UsersService', () => {
 
     describe('UpdateLoginMetadata', () => {
       it('should update user lastLogin and loginCount', async () => {
+        expect.assertions(2);
         const {lastLogin} = user;
 
         await usersService.updateLoginMetadata(user);
@@ -447,6 +468,7 @@ describe('UsersService', () => {
 
   describe('Remove', () => {
     let user: User;
+    let adminUser: User;
     let abacPolicy: Ability;
     let adminAbacPolicy: Ability;
 
@@ -460,6 +482,7 @@ describe('UsersService', () => {
         throw new TypeError(errorString);
       } else {
         user = userResponse;
+        adminUser = adminResponse;
       }
 
       abacPolicy = authzService.abac.createForUser(user);
@@ -519,6 +542,43 @@ describe('UsersService', () => {
       await expect(usersService.findByEmail(user.email)).rejects.toThrow(
         NotFoundException
       );
+    });
+
+    // Admins should be able to remove their account if there is another administrator
+    it('should test remove function with admin user and there is another admin', async () => {
+      expect.assertions(1);
+      // Create a second user so we can delete the first
+      await usersService.create(CREATE_SECOND_ADMIN_DTO);
+      // Delete the existing user
+      await usersService.remove(
+        adminUser,
+        DELETE_USER_DTO_TEST_OBJ,
+        adminAbacPolicy
+      );
+      // Make sure the existing admin has been deleted
+      await expect(async () => {
+        await usersService.findById(adminUser.id);
+      }).rejects.toThrow(NotFoundException);
+    });
+
+    // Admins should not be able to remove their account if they are the only administrator
+    it('should test remove function with admin user that is the only admin', async () => {
+      expect.assertions(1);
+
+      await expect(async () => {
+        await usersService.remove(
+          adminUser,
+          DELETE_USER_DTO_TEST_OBJ,
+          adminAbacPolicy
+        );
+      }).rejects.toThrow(ForbiddenException);
+    });
+
+    // Admins should be able to remove other users without their password
+    it('should test remove function with admin user and a dto that has no password', async () => {
+      expect(
+        new UserDto(await usersService.remove(user, {}, adminAbacPolicy))
+      ).toEqual(new UserDto(user));
     });
   });
 

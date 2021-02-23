@@ -193,13 +193,13 @@ export default class UserModal extends Vue {
 
   roles: string[] = ['user', 'admin'];
 
-  dialog: boolean = false;
-  changePassword: boolean = false;
+  dialog = false;
+  changePassword = false;
 
   userInfo: IUser = {...this.user};
-  currentPassword: string = '';
-  newPassword: string = '';
-  passwordConfirmation: string = '';
+  currentPassword = '';
+  newPassword = '';
+  passwordConfirmation = '';
 
   async updateUserInfo(): Promise<void> {
     this.$v.$touch()

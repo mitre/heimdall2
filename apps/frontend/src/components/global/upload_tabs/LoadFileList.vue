@@ -58,10 +58,12 @@
           <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
         </template>
         <template #[`item.actions`]="{item}">
-          <v-icon small class="mr-2" @click="editItem(item)">
-            mdi-pencil
-          </v-icon>
-          <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+          <div v-if="item.editable">
+            <v-icon small class="mr-2" @click="editItem(item)">
+              mdi-pencil
+            </v-icon>
+            <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+          </div>
         </template>
       </v-data-table>
     </v-container>
@@ -100,10 +102,10 @@ export default class LoadFileList extends Vue {
   activeItem!: IEvaluation;
   activeTag!: IEvaluationTag;
 
-  editDialog: boolean = false;
-  deleteItemDialog: boolean = false;
-  deleteTagDialog: boolean = false;
-  search: string = '';
+  editDialog = false;
+  deleteItemDialog = false;
+  deleteTagDialog = false;
+  search = '';
 
   load_results(evaluations: IEvaluation[]) {
     this.selectedFiles = [];

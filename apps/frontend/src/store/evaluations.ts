@@ -22,7 +22,7 @@ import {SnackbarModule} from './snackbar';
 })
 export class Evaluation extends VuexModule {
   allEvaluations: IEvaluation[] = [];
-  loading: boolean = true;
+  loading = true;
 
   @Action
   async getAllEvaluations(): Promise<void> {

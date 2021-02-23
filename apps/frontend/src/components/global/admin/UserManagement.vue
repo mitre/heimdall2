@@ -73,8 +73,8 @@ import UserModal from '@/components/global/UserModal.vue';
 export default class UserManagement extends Vue {
   loading: boolean = true;
   editedUser: IUser | null = null;
-  dialogDelete: boolean = false;
-  search: string = '';
+  dialogDelete = false;
+  search = '';
   users: IUser[] = [];
   headers: Object[] = [
     {

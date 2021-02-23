@@ -14,13 +14,14 @@
       >
       <v-card-text>
         <br />
-        <v-form data-cy="updateGroupForm">
+        <v-form data-cy="updateGroupForm" @submit.prevent>
           <v-row>
             <v-col>
               <v-text-field
                 id="name"
                 v-model="groupInfo.name"
                 label="Group Name"
+                @keyup.enter="save"
               />
               <v-tooltip bottom>
                 <template #activator="{on}">
@@ -103,7 +104,7 @@ export default class GroupModal extends Vue {
   dialog: boolean = false;
   changePassword: boolean = false;
 
-  groupInfo: IGroup = { ...this.group };
+  groupInfo: IGroup = {...this.group};
   currentPassword: string = '';
   newPassword: string = '';
   passwordConfirmation: string = '';
@@ -118,7 +119,7 @@ export default class GroupModal extends Vue {
   }
 
   async save(): Promise<void> {
-    let groupInfo: ICreateGroup = {
+    const groupInfo: ICreateGroup = {
       ...this.groupInfo,
     };
 

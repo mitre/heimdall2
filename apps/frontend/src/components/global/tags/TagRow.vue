@@ -57,10 +57,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { EvaluationModule } from '@/store/evaluations';
-import { SnackbarModule } from '../../../store/snackbar';
-import { IEvaluation, IEvaluationTag } from '@heimdall/interfaces';
-import { Prop } from 'vue-property-decorator';
+import {EvaluationModule} from '@/store/evaluations';
+import {SnackbarModule} from '../../../store/snackbar';
+import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
+import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -70,8 +70,8 @@ export default class TagRow extends Vue {
   @Prop({required: true, type: Object}) readonly evaluation!: IEvaluation;
 
   tags: string[] = [];
-  search: string = '';
-  deleteTagDialog: boolean = false;
+  search = '';
+  deleteTagDialog = false;
   activeTag: IEvaluationTag = {
     evaluationId: '-1',
     id: '-1',
@@ -89,14 +89,14 @@ export default class TagRow extends Vue {
   }
 
   save() {
-    let original = this.evaluationTagsToStrings();
-    let toAdd: string[] = this.tags.filter(tag => !original.includes(tag));
-    let toRemove: IEvaluationTag[] = this.evaluation.evaluationTags.filter(tag => !this.tags.includes(tag.value));
-    let addedTagPromises = toAdd.map((tag) => {
+    const original = this.evaluationTagsToStrings();
+    const toAdd: string[] = this.tags.filter(tag => !original.includes(tag));
+    const toRemove: IEvaluationTag[] = this.evaluation.evaluationTags.filter(tag => !this.tags.includes(tag.value));
+    const addedTagPromises = toAdd.map((tag) => {
       return EvaluationModule.addTag({evaluation: this.evaluation, tag: {value: tag}})
     });
 
-    let removedTagPromises = toRemove.map((tag) => {
+    const removedTagPromises = toRemove.map((tag) => {
       return EvaluationModule.deleteTag(tag);
     });
 
