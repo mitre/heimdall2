@@ -3,7 +3,12 @@
     <!-- Toolbar -->
     <v-row>
       <v-col cols="12">
-        <v-switch v-model="single_expand" label="Single Expand" class="mt-2" />
+        <v-switch
+          v-model="single_expand"
+          label="Single Expand"
+          class="mt-2"
+          @change="$emit('toggleExpandAll', single_expand)"
+        />
       </v-col>
     </v-row>
 
@@ -101,6 +106,7 @@ interface ListElt {
 export default class ControlTable extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
   @Prop({type: Boolean, required: true}) readonly showImpact!: boolean;
+  @Prop({type: Boolean, required: false, default: false}) readonly expandAll!: boolean;
   // Whether to allow multiple expansions
   single_expand: boolean = true;
 
@@ -131,6 +137,16 @@ export default class ControlTable extends Vue {
         this.sort_severity = new_sort;
         break;
     }
+  }
+
+ /** Expands all elements within items asynchronously */
+  async expandAllEvaluations(): Promise<void> {
+    this.items.forEach(async (item) => {
+      let i = this.expanded.indexOf(item.key);
+      if (i < 0) {
+        this.expanded.push(item.key);
+      }
+    })
   }
 
   /** Toggles the given expansion of a control details panel */
