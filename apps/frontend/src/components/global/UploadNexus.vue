@@ -78,7 +78,6 @@ import RouteMixin from '@/mixins/RouteMixin';
 import {Prop} from 'vue-property-decorator';
 import {ServerModule} from '@/store/server';
 import {FilteredDataModule} from '@/store/data_filters';
-import Vue from 'vue';
 
 const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
 
