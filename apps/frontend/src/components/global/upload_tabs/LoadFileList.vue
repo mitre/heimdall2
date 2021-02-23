@@ -83,16 +83,10 @@
           <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
         </template>
         <template #[`item.actions`]="{item}">
-          <v-icon
-            v-clipboard:copy="shareItems(item)"
-            v-clipboard:success="onCopy"
-            v-clipboard:error="onCopyFailure"
-            small
-            class="mr-2"
-            type="button"
-            >mdi-share</v-icon
-          >
-          <button />
+          <ShareEvaluationButton
+            :evaluation="item"
+            :selected-files="selectedFiles"
+          />
           <v-icon small class="mr-2" @click="editItem(item)">
             mdi-pencil
           </v-icon>
@@ -118,7 +112,6 @@ import {EvaluationModule} from '@/store/evaluations'
 import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
 import {Sample} from '@/utilities/sample_util';
-import {ServerModule} from '../../../store/server';
 
 @Component({
   components: {
@@ -164,33 +157,6 @@ export default class LoadFileList extends Vue {
     this.activeItem = item;
     this.deleteItemDialog = true;
   }
-
-  onCopy() {
-    SnackbarModule.notify('Successfully copied share link');
-  }
-
-  onCopyFailure() {
-    SnackbarModule.failure('Failed to copy to your clipboard');
-  }
-
-  joinEvaluationsByIds(evaluations: IEvaluation[] | Sample[]): string {
-    let stringresult = '';
-    evaluations.forEach((evaluation) => {
-      if(evaluation.hasOwnProperty('id')){
-        stringresult += `${(evaluation as IEvaluation).id},`;
-      }
-    });
-    return stringresult.slice(0, -1);
-  }
-
-  shareItems(evaluations: IEvaluation): string {
-    if (this.selectedFiles.length >= 1){
-      const shareList = this.joinEvaluationsByIds(this.selectedFiles)
-      return `${ServerModule.externalURL || window.location.origin}/results/${shareList}`;
-    } else {
-      return `${ServerModule.externalURL || window.location.origin}/results/${evaluations.id}`;
-    }
-}
 
   deleteTag(tag: IEvaluationTag) {
     this.activeTag = tag;
