@@ -19,6 +19,7 @@ import {Evaluation} from '../evaluations/evaluation.model';
 import {EvaluationsService} from '../evaluations/evaluations.service';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
+import {SlimUserDto} from '../users/dto/slim-user.dto';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {Group} from './group.model';
@@ -119,6 +120,15 @@ describe('GroupsController', () => {
       await groupsService.addUserToGroup(privateGroup, basicUser, 'member');
       const groups = await groupsController.findForUser({user: basicUser});
       expect(groups.length).toEqual(1);
+    });
+
+    it('findForUser should return users in groups the user is a member of', async () => {
+      const otherUser = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
+      await groupsService.addUserToGroup(privateGroup, basicUser, 'member');
+      await groupsService.addUserToGroup(privateGroup, otherUser, 'member');
+      const groups = await groupsController.findForUser({user: basicUser})
+
+      expect(groups[0].users).toContainEqual(new SlimUserDto(otherUser));
     });
   });
 
