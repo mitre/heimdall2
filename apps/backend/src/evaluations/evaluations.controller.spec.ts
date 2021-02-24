@@ -164,6 +164,24 @@ describe('EvaluationsController', () => {
         EVALUATION_1,
         evaluationOwner.id
       );
+      const group = await groupsService.create(PRIVATE_GROUP);
+      await groupsService.addUserToGroup(group, user, 'owner');
+      await groupsService.addEvaluationToGroup(group, evaluation);
+      const foundEvaluations = await evaluationsController.findAll({
+        user: user
+      });
+
+      expect(foundEvaluations[0].editable).toBeTruthy();
+    });
+
+    it('should return editable false if the user is not owner of a group that an evaluation belongs to', async () => {
+      const evaluationOwner = await usersService.create(
+        CREATE_USER_DTO_TEST_OBJ_2
+      );
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        evaluationOwner.id
+      );
       const group = await groupsService.create(GROUP_1);
       const group2 = await groupsService.create(PRIVATE_GROUP);
       await groupsService.addUserToGroup(group, user, 'user');
@@ -172,7 +190,7 @@ describe('EvaluationsController', () => {
       const foundEvaluations = await evaluationsController.findAll({
         user: user
       });
-      expect(foundEvaluations[0].editable).toBeTruthy();
+      expect(foundEvaluations[0].editable).toBeFalsy();
     });
   });
 

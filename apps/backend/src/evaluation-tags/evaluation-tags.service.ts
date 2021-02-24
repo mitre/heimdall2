@@ -1,5 +1,9 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
+import {FindOptions} from 'sequelize/types';
+import {Evaluation} from '../evaluations/evaluation.model';
+import {Group} from '../groups/group.model';
+import {User} from '../users/user.model';
 import {CreateEvaluationTagDto} from './dto/create-evaluation-tag.dto';
 import {EvaluationTag} from './evaluation-tag.model';
 
@@ -11,11 +15,35 @@ export class EvaluationTagsService {
   ) {}
 
   async findAll(): Promise<EvaluationTag[]> {
-    return this.evaluationTagModel.findAll<EvaluationTag>();
+    return this.evaluationTagModel.findAll<EvaluationTag>({
+      include: [
+        {
+          model: Evaluation,
+          include: [
+            {
+              model: Group,
+              include: [User]
+            }
+          ]
+        }
+      ]
+    });
   }
 
   async findById(id: string): Promise<EvaluationTag> {
-    return this.findByPkBang(id);
+    return this.findByPkBang(id, {
+      include: [
+        {
+          model: Evaluation,
+          include: [
+            {
+              model: Group,
+              include: [User]
+            }
+          ]
+        }
+      ]
+    });
   }
 
   async create(
@@ -29,20 +57,30 @@ export class EvaluationTagsService {
   }
 
   async remove(id: string): Promise<EvaluationTag> {
-    const evaluationTag = await this.findByPkBang(id);
+    const evaluationTag = await this.findByPkBang(id, {
+      include: [
+        {
+          model: Evaluation,
+          include: [
+            {
+              model: Group,
+              include: [User]
+            }
+          ]
+        }
+      ]
+    });
     await evaluationTag.destroy();
     return evaluationTag;
   }
 
-  objectFromDto(createEvaluationTagDto: CreateEvaluationTagDto): EvaluationTag {
-    return new EvaluationTag(createEvaluationTagDto);
-  }
-
   async findByPkBang(
-    identifier: string | number | Buffer | undefined
+    identifier: string | number | Buffer | undefined,
+    options: Pick<FindOptions, 'include'>
   ): Promise<EvaluationTag> {
-    const evaluationTag = await EvaluationTag.findByPk<EvaluationTag>(
-      identifier
+    const evaluationTag = await this.evaluationTagModel.findByPk<EvaluationTag>(
+      identifier,
+      options
     );
     if (evaluationTag === null) {
       throw new NotFoundException('EvaluationTag with given id not found');

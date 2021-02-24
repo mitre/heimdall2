@@ -70,7 +70,7 @@ export class CaslAbilityFactory {
     can([Action.Read], Evaluation, {public: true});
 
     can([Action.Manage], Evaluation, {
-      'user.id': user.id
+      userId: user.id
     });
 
     can([Action.Read], Evaluation, {'groups.users.id': user.id});

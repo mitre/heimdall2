@@ -45,7 +45,7 @@ export class GroupsController {
 
   @Get('/my')
   async findForUser(@Request() request: {user: User}): Promise<GroupDto[]> {
-    const groups = await request.user.$get('groups');
+    const groups = await request.user.$get('groups', {include: [User]});
     return groups.map((group) => new GroupDto(group));
   }
 
