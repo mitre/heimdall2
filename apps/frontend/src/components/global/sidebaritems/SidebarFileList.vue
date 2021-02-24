@@ -13,13 +13,13 @@
     </v-list-item-content>
 
     <v-list-item-action v-if="serverMode" @click.stop="save_file">
-      <v-btn icon small :disabled="disable_saving">
+      <v-btn data-cy="saveFile" icon small :disabled="disable_saving">
         <v-icon> mdi-content-save </v-icon>
       </v-btn>
     </v-list-item-action>
 
     <v-list-item-action @click.stop="remove_file">
-      <v-btn icon small>
+      <v-btn data-cy="closeFile" icon small>
         <v-icon> mdi-close </v-icon>
       </v-btn>
     </v-list-item-action>

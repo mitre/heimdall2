@@ -3,7 +3,13 @@
     <v-card-title v-if="!allGroups" class="pb-0">
       <GroupModal id="groupModal" :create="true">
         <template #clickable="{on, attrs}"
-          ><v-btn color="primary" class="mb-2" v-bind="attrs" v-on="on">
+          ><v-btn
+            color="primary"
+            data-cy="createNewGroupBtn"
+            class="mb-2"
+            v-bind="attrs"
+            v-on="on"
+          >
             Create New Group
           </v-btn>
         </template>
@@ -30,12 +36,17 @@
       <template #[`item.actions`]="{item}">
         <GroupModal id="editGroupModal" :create="false" :group="item">
           <template #clickable="{on}"
-            ><v-icon small title="Edit" class="mr-2" v-on="on">
+            ><v-icon small title="Edit" data-cy="edit" class="mr-2" v-on="on">
               mdi-pencil
             </v-icon>
           </template>
         </GroupModal>
-        <v-icon small title="Delete" @click="deleteGroupDialog(item)">
+        <v-icon
+          small
+          title="Delete"
+          data-cy="delete"
+          @click="deleteGroupDialog(item)"
+        >
           mdi-delete
         </v-icon>
       </template>
@@ -51,7 +62,11 @@
           <v-btn color="blue darken-1" text @click="closeDeleteDialog"
             >Cancel</v-btn
           >
-          <v-btn color="blue darken-1" text @click="deleteGroupConfirm"
+          <v-btn
+            color="blue darken-1"
+            text
+            data-cy="deleteGroupModalConfirm"
+            @click="deleteGroupConfirm"
             >OK</v-btn
           >
           <v-spacer />

@@ -4,7 +4,7 @@
       <slot name="clickable" :on="on" :attrs="attrs" />
     </template>
 
-    <v-card>
+    <v-card data-cy="editEvaluationModal">
       <v-card-title>
         <span class="headline">Edit "{{ activeEvaluation.filename }}"</span>
       </v-card-title>
@@ -15,6 +15,7 @@
             <v-col cols="12" sm="7">
               <v-text-field
                 v-model="activeEvaluation.filename"
+                data-cy="filename"
                 label="File name"
               />
             </v-col>
@@ -71,8 +72,21 @@
 
       <v-card-actions>
         <v-spacer />
-        <v-btn text color="primary" @click="cancel()"> Cancel </v-btn>
-        <v-btn text color="primary" @click="update()">Save</v-btn>
+        <v-btn
+          text
+          color="primary"
+          data-cy="closeAndDiscardChanges"
+          @click="cancel()"
+        >
+          Cancel
+        </v-btn>
+        <v-btn
+          text
+          color="primary"
+          data-cy="closeAndSaveChanges"
+          @click="update()"
+          >Save</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>

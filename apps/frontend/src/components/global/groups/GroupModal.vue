@@ -5,7 +5,10 @@
     <template #activator="{on, attrs}">
       <slot name="clickable" :on="on" :attrs="attrs" />
     </template>
-    <v-card class="rounded-t-0">
+    <v-card
+      class="rounded-t-0"
+      :data-cy="create ? 'createGroupForm' : 'updateGroupForm'"
+    >
       <v-card-title
         data-cy="groupModalTitle"
         class="headline mitreSecondaryBlue"
@@ -14,12 +17,12 @@
       >
       <v-card-text>
         <br />
-        <v-form data-cy="updateGroupForm" @submit.prevent>
+        <v-form @submit.prevent>
           <v-row>
             <v-col>
               <v-text-field
-                id="name"
                 v-model="groupInfo.name"
+                data-cy="name"
                 label="Group Name"
                 @keyup.enter="save"
               />
@@ -27,8 +30,8 @@
                 <template #activator="{on}">
                   <span v-on="on">
                     <v-checkbox
-                      id="public"
                       v-model="groupInfo.public"
+                      data-cy="public"
                       label="Make Publicly Visible?"
                     />
                   </span>
@@ -49,13 +52,17 @@
       <v-card-actions>
         <v-col class="text-right">
           <v-btn
-            id="closeAndDiscardChanges"
+            data-cy="closeAndDiscardChanges"
             color="primary"
             text
             @click="dialog = false"
             >Cancel</v-btn
           >
-          <v-btn id="closeAndSaveChanges" color="primary" text @click="save"
+          <v-btn
+            data-cy="closeAndSaveChanges"
+            color="primary"
+            text
+            @click="save"
             >Save</v-btn
           >
         </v-col>

@@ -18,7 +18,11 @@
             <v-btn color="blue darken-1" text @click="deleteItemDialog = false"
               >Cancel</v-btn
             >
-            <v-btn color="blue darken-1" text @click="deleteItemConfirm()"
+            <v-btn
+              color="blue darken-1"
+              data-cy="deleteResultConfirm"
+              text
+              @click="deleteItemConfirm()"
               >OK</v-btn
             >
             <v-spacer />
@@ -27,6 +31,7 @@
       </v-dialog>
       <v-data-table
         v-model="selectedFiles"
+        data-cy="loadFileList"
         dense
         :headers="headers"
         :items="filteredFiles"
@@ -37,12 +42,9 @@
         mobile-breakpoint="0"
       >
         <template #[`item.filename`]="{item}">
-          <span
-            id="sampleItem"
-            class="cursor-pointer"
-            @click="load_results([item])"
-            >{{ item.filename }}</span
-          >
+          <span class="cursor-pointer" @click="load_results([item])">{{
+            item.filename
+          }}</span>
         </template>
         <template #[`item.evaluationTags`]="{item}">
           <TagRow :evaluation="item" />
@@ -52,14 +54,26 @@
         </template>
         <template #[`item.actions`]="{item}">
           <div v-if="item.editable">
-            <EditEvaluationModal id="editEvaluationModal" :active="item">
+            <EditEvaluationModal
+              id="editEvaluationModal"
+              :active="item"
+              @updateEvaluations="updateEvaluations"
+            >
               <template #clickable="{on}"
-                ><v-icon small title="Edit" class="mr-2" v-on="on">
+                ><v-icon
+                  data-cy="edit"
+                  small
+                  title="Edit"
+                  class="mr-2"
+                  v-on="on"
+                >
                   mdi-pencil
                 </v-icon>
               </template>
             </EditEvaluationModal>
-            <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+            <v-icon data-cy="delete" small @click="deleteItem(item)"
+              >mdi-delete</v-icon
+            >
           </div>
         </template>
       </v-data-table>
