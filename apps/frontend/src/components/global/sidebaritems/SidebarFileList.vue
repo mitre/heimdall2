@@ -36,7 +36,7 @@ import {SnackbarModule} from '@/store/snackbar';
 
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop} from 'vue-property-decorator';
-import { ICreateEvaluation } from '@heimdall/interfaces';
+import {ICreateEvaluation} from '@heimdall/interfaces';
 
 @Component
 export default class FileItem extends mixins(ServerMixin) {
@@ -90,7 +90,7 @@ export default class FileItem extends mixins(ServerMixin) {
   save_evaluation(file: EvaluationFile) {
     this.saving = true;
 
-    let createEvaluationDto: ICreateEvaluation = {
+    const createEvaluationDto: ICreateEvaluation = {
       filename: file.filename,
       public: false,
       evaluationTags: []
