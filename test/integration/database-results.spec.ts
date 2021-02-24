@@ -16,6 +16,7 @@ context('Database results', () => {
   const dataTableVerifier = new DataTableVerifier();
   const resultsPageVerifier = new ResultsPageVerifier();
   const databasePage = new DatabasePage();
+  const sampleToLoad = 'Acme Overlay Example';
 
   // Run before each test
   beforeEach(() => {
@@ -26,7 +27,6 @@ context('Database results', () => {
 
   describe('CRUD', () => {
     it('allows a user to save a result', () => {
-      const sampleToLoad = 'Acme Overlay Example';
       uploadModal.loadSample(sampleToLoad);
       sidebar.open();
       sidebar.save(sampleToLoad);
@@ -37,7 +37,6 @@ context('Database results', () => {
     });
 
     it('allows a user to load a result', () => {
-      const sampleToLoad = 'Acme Overlay Example';
       uploadModal.loadSample(sampleToLoad);
       sidebar.open();
       sidebar.save(sampleToLoad);
@@ -48,7 +47,6 @@ context('Database results', () => {
     });
 
     it('allows a user to update a result', () => {
-      const sampleToLoad = 'Acme Overlay Example';
       const updatedName = 'Updated Filename';
       uploadModal.loadSample(sampleToLoad);
       sidebar.open();
@@ -61,7 +59,6 @@ context('Database results', () => {
     });
 
     it('allows a user to delete a result', () => {
-      const sampleToLoad = 'Acme Overlay Example';
       uploadModal.loadSample(sampleToLoad);
       sidebar.open();
       sidebar.save(sampleToLoad);
