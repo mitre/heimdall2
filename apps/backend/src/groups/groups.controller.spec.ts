@@ -126,7 +126,7 @@ describe('GroupsController', () => {
       const otherUser = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
       await groupsService.addUserToGroup(privateGroup, basicUser, 'member');
       await groupsService.addUserToGroup(privateGroup, otherUser, 'member');
-      const groups = await groupsController.findForUser({user: basicUser})
+      const groups = await groupsController.findForUser({user: basicUser});
 
       expect(groups[0].users).toContainEqual(new SlimUserDto(otherUser));
     });
