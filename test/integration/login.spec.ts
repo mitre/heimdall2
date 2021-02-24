@@ -66,6 +66,7 @@ context('Login', () => {
 
   describe('Logout Button', () => {
     it('sucessfully logs a user out', () => {
+      cy.login(LOGIN_AUTHENTICATION);
       dropdown.logout();
       loginPageVerifier.loginFormPresent();
     });
