@@ -22,8 +22,8 @@ import {EvaluationTagsService} from './evaluation-tags.service';
 @UseGuards(JwtAuthGuard)
 export class EvaluationTagsController {
   constructor(
-    private evaluationTagsService: EvaluationTagsService,
-    private evaluationsService: EvaluationsService,
+    private readonly evaluationTagsService: EvaluationTagsService,
+    private readonly evaluationsService: EvaluationsService,
     private readonly authz: AuthzService
   ) {}
 
