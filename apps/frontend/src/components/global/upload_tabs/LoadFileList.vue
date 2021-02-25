@@ -156,9 +156,7 @@ export default class LoadFileList extends Vue {
   async deleteItemConfirm(): Promise<void>{
     EvaluationModule.deleteEvaluation(this.activeItem).then(() => {
       SnackbarModule.notify("Deleted evaluation successfully.")
-    }).catch((error) => {
-      SnackbarModule.HTTPFailure(error)
-    });
+    })
     this.deleteItemDialog = false;
   }
 

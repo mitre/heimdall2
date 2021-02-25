@@ -159,20 +159,6 @@ export default class Signup extends Vue {
           SnackbarModule.notify(
             'You have successfully registered, please sign in'
           );
-        })
-        .catch((error) => {
-          SnackbarModule.notify(error.response.data.message);
-          if (typeof error.response.data.message === 'object') {
-            SnackbarModule.notify(
-              error.response.data.message
-                .map(function capitalize(c: string) {
-                  return c.charAt(0).toUpperCase() + c.slice(1);
-                })
-                .join(', ')
-            );
-          } else {
-            SnackbarModule.notify(error.response.data.message);
-          }
         });
     }
   }

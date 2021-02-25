@@ -8,7 +8,6 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
-import {SnackbarModule} from './snackbar';
 
 export interface IGroupState {
   allGroups: IGroup[];
@@ -88,7 +87,7 @@ export class Groups extends VuexModule implements IGroupState {
     }
   }
 
-  @Action({rawError: true})
+  @Action
   public async DeleteGroup(group: IGroup): Promise<IGroup> {
     return axios.delete<IGroup>(`/groups/${group.id}`).then(({data}) => {
       this.DELETE_FROM_ALL_GROUPS(group);
@@ -106,27 +105,19 @@ export class Groups extends VuexModule implements IGroupState {
 
   @Action
   public async FetchAllGroups() {
-    this.FetchEndpoint('/groups')
-      .then(({data}) => {
-        this.context.commit('SET_ALL_GROUPS', data);
-      })
-      .catch((err) => {
-        SnackbarModule.failure(`${err}. Please reload the page and try again.`);
-      });
+    this.FetchEndpoint('/groups').then(({data}) => {
+      this.context.commit('SET_ALL_GROUPS', data);
+    });
   }
 
   @Action
   public async FetchMyGroups() {
-    this.FetchEndpoint('/groups/my')
-      .then(({data}) => {
-        this.context.commit('SET_MY_GROUPS', data);
-      })
-      .catch((err) => {
-        SnackbarModule.failure(`${err}. Please reload the page and try again.`);
-      });
+    this.FetchEndpoint('/groups/my').then(({data}) => {
+      this.context.commit('SET_MY_GROUPS', data);
+    });
   }
 
-  @Action({rawError: true})
+  @Action
   async FetchEndpoint(endpoint: string): Promise<AxiosResponse<IGroup[]>> {
     return axios.get<IGroup[]>(endpoint);
   }

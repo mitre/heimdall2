@@ -103,9 +103,6 @@ export default class UserManagement extends Vue {
     if (this.editedUser) {
       axios.delete<IUser>(`/users/${this.editedUser.id}`).then((response) => {
         SnackbarModule.notify(`Successfully deleted user ${response.data.email}`);
-      }).catch((err) => {
-        // If the backend provided an error then show it, otherwise fallback to printing the client side error
-        SnackbarModule.failure(err?.response?.data?.message || `${err}. Please reload the page and try again.`);
       }).finally(() => {
         this.getUsers();
         this.closeDeleteDialog();
@@ -130,9 +127,6 @@ export default class UserManagement extends Vue {
       .get<IUser[]>('/users')
       .then((response) => {
         this.users = response.data;
-      })
-      .catch((err) => {
-        SnackbarModule.failure(`${err}. Please reload the page and try again.`);
       })
       .finally(() => {
         this.loading = false;

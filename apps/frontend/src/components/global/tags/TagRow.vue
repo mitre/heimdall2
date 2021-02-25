@@ -102,8 +102,6 @@ export default class TagRow extends Vue {
 
     Promise.all(addedTagPromises.concat(removedTagPromises)).then(() => {
       SnackbarModule.notify("Successfully updated tags.")
-    }).catch((err) => {
-      SnackbarModule.failure(`${err}. Please reload the page and try again.`);
     }).finally(() => {
       EvaluationModule.getAllEvaluations();
     });

@@ -141,9 +141,6 @@ export default class GroupModal extends Vue {
         }
         this.dialog = false;
       });
-    }).catch((err) => {
-      // If the backend provided an error then show it, otherwise fallback to printing the client side error
-      SnackbarModule.failure(err?.response?.data?.message || `${err}. Please reload the page and try again.`);
     })
   }
 

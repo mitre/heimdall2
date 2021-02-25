@@ -12,7 +12,6 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
-import {SnackbarModule} from './snackbar';
 
 @Module({
   namespaced: true,
@@ -31,31 +30,28 @@ export class Evaluation extends VuexModule {
       .then(({data}) => {
         this.context.commit('SET_ALL_EVALUATION', data);
       })
-      .catch((err) => {
-        SnackbarModule.failure(`${err}. Please reload the page and try again.`);
-      })
       .finally(() => {
         this.context.commit('SET_LOADING', false);
       });
   }
 
-  @Action({rawError: true})
+  @Action
   async updateEvaluation(evaluation: IEvaluation) {
     return axios.put(`/evaluations/${evaluation.id}`, evaluation);
   }
 
-  @Action({rawError: true})
+  @Action
   async deleteEvaluation(evaluation: IEvaluation) {
     this.context.commit('REMOVE_EVALUATION', evaluation);
     return axios.delete(`/evaluations/${evaluation.id}`);
   }
 
-  @Action({rawError: true})
+  @Action
   async deleteTag(tag: IEvaluationTag) {
     return axios.delete(`/evaluation-tags/${tag.id}`);
   }
 
-  @Action({rawError: true})
+  @Action
   async addTag({
     evaluation,
     tag

@@ -229,20 +229,6 @@ export default class UserModal extends Vue {
           this.$emit('update-user', data);
           this.dialog = false;
         })
-        .catch((error) => {
-          SnackbarModule.notify(error.response.data.message);
-          if (typeof error.response.data.message === 'object') {
-            SnackbarModule.notify(
-              error.response.data.message
-                .map(function capitalize(c: string) {
-                  return c.charAt(0).toUpperCase() + c.slice(1);
-                })
-                .join(', ')
-            );
-          } else {
-            SnackbarModule.notify(error.response.data.message);
-          }
-        });
     }
   }
 

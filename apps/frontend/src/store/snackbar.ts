@@ -40,8 +40,8 @@ export class Snackbar extends VuexModule {
 
   @Action
   HTTPFailure(error: any) {
-    if (typeof error.response.data.message === 'object') {
-      this.notify(
+    if (typeof error?.response?.data?.message === 'object') {
+      this.failure(
         error.response.data.message
           .map(function capitalize(c: string) {
             return c.charAt(0).toUpperCase() + c.slice(1);
@@ -49,7 +49,7 @@ export class Snackbar extends VuexModule {
           .join(', ')
       );
     } else {
-      this.failure(error.response.data.message);
+      this.failure(error?.response?.data?.message || error);
     }
   }
 
