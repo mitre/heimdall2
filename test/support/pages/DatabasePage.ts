@@ -9,6 +9,6 @@ export default class DatabasePage {
 
   deleteResult(name: string): void {
     cy.contains('td', name).parent().get('[data-cy=delete]').click();
-    cy.get('[data-cy=deleteResultConfirm]').click();
+    cy.get('[data-cy=deleteConfirm]').click();
   }
 }
