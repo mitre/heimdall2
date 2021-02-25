@@ -8,27 +8,12 @@
         label="Search"
         hide-details
       />
-      <v-dialog v-model="deleteItemDialog" max-width="500px">
-        <v-card>
-          <v-card-title class="headline"
-            >Are you sure you want to delete this file?</v-card-title
-          >
-          <v-card-actions>
-            <v-spacer />
-            <v-btn color="blue darken-1" text @click="deleteItemDialog = false"
-              >Cancel</v-btn
-            >
-            <v-btn
-              color="blue darken-1"
-              data-cy="deleteResultConfirm"
-              text
-              @click="deleteItemConfirm()"
-              >OK</v-btn
-            >
-            <v-spacer />
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+      <DeleteDialog
+        v-model="deleteItemDialog"
+        type="file"
+        @cancel="deleteItemDialog = false"
+        @confirm="deleteItemConfirm"
+      />
       <v-data-table
         v-model="selectedFiles"
         data-cy="loadFileList"
@@ -95,9 +80,11 @@ import {EvaluationModule} from '@/store/evaluations'
 import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
 import {Sample} from '@/utilities/sample_util';
+import DeleteDialog from '@/components/generic/DeleteDialog.vue';
 
 @Component({
   components: {
+    DeleteDialog,
     EditEvaluationModal,
     TagRow
   }

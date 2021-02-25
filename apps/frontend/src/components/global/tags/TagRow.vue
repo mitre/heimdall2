@@ -34,23 +34,12 @@
         </v-combobox>
       </template>
     </v-edit-dialog>
-    <v-dialog v-model="deleteTagDialog" max-width="550px">
-      <v-card>
-        <v-card-title class="headline"
-          >Are you sure you want to delete this tag?</v-card-title
-        >
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="blue darken-1" text @click="deleteTagDialog = false"
-            >Cancel</v-btn
-          >
-          <v-btn color="blue darken-1" text @click="deleteTagConfirm()"
-            >OK</v-btn
-          >
-          <v-spacer />
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <DeleteDialog
+      v-model="deleteTagDialog"
+      type="tag"
+      @cancel="deleteTagDialog = false"
+      @confirm="deleteTagConfirm"
+    />
   </div>
 </template>
 
@@ -61,9 +50,11 @@ import {EvaluationModule} from '@/store/evaluations';
 import {SnackbarModule} from '../../../store/snackbar';
 import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
+import DeleteDialog from '@/components/generic/DeleteDialog.vue';
 
 @Component({
   components: {
+    DeleteDialog
   }
 })
 export default class TagRow extends Vue {
@@ -126,8 +117,6 @@ export default class TagRow extends Vue {
       EvaluationModule.getAllEvaluations().then(() => {
         this.syncEvaluationTags();
       });
-    }).catch((error) => {
-      SnackbarModule.HTTPFailure(error)
     });
     this.deleteTagDialog = false;
   }
