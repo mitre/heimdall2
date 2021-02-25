@@ -18038,10 +18038,17 @@ rw@1:
   resolved "https://registry.yarnpkg.com/rw/-/rw-1.3.3.tgz#3f862dfa91ab766b14885ef4d01124bfda074fb4"
   integrity sha1-P4Yt+pGrdmsUiF700BEkv9oHT7Q=
 
-rxjs@6.6.3, rxjs@^6.3.3, rxjs@^6.4.0, rxjs@^6.5.4, rxjs@^6.6.0:
+rxjs@6.6.3:
   version "6.6.3"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.6.3.tgz#8ca84635c4daa900c0d3967a6ee7ac60271ee552"
   integrity sha512-trsQc+xYYXZ3urjOiJOuCOa5N3jAZ3eiSpQB5hIT8zGlL2QfnHLJ2r7GMkBGuIausdJN1OneaI6gQlsqNHHmZQ==
+  dependencies:
+    tslib "^1.9.0"
+
+rxjs@^6.3.3, rxjs@^6.4.0, rxjs@^6.5.4, rxjs@^6.6.0:
+  version "6.6.4"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.6.4.tgz#e17ba67077055793e54a5a088a19425bcfd34f44"
+  integrity sha512-LeiFeAIlq7Zlx3j6hhofVQvAwElxMiInFOmr4vyKbZtWM5TDBSdtox46YQSAvS8jfy7izc8hwzbuA/uI1ITxXQ==
   dependencies:
     tslib "^1.9.0"
 
