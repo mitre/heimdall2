@@ -142,7 +142,7 @@ export default class ControlTable extends Vue {
  /** Expands all elements within items asynchronously */
   async expandAllEvaluations(): Promise<void> {
     this.items.forEach(async (item) => {
-      let i = this.expanded.indexOf(item.key);
+      const i = this.expanded.indexOf(item.key);
       if (i < 0) {
         this.expanded.push(item.key);
       }
