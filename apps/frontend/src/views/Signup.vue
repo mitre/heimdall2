@@ -144,7 +144,7 @@ export default class Signup extends Vue {
 
   async register(): Promise<void> {
     // checking if the input is valid
-    if ((this.$refs.form as any).validate()) {
+    if ((this.$refs.form as HTMLFormElement).validate()) {
       let creds: SignupHash = {
         email: this.email,
         password: this.password,

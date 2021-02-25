@@ -16,7 +16,8 @@ import acme_overlay from '../assets/samples/wrapper-acme-run.json';
 
 export interface Sample {
   filename: string;
-  data: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  data: Record<string, any>;
 }
 
 export const samples: Sample[] = [

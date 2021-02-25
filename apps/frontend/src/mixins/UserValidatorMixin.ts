@@ -6,6 +6,7 @@ import {validationMixin} from 'vuelidate';
   mixins: [validationMixin]
 })
 export default class UserValidatorMixin extends Vue {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   emailErrors(field: ValidationProperties<any>) {
     const errors: Array<string> = [];
     if (!field.$dirty) {
@@ -16,6 +17,7 @@ export default class UserValidatorMixin extends Vue {
     return errors;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   requiredFieldError(field: ValidationProperties<any>, name: string) {
     const errors: Array<string> = [];
     if (!field.$dirty) {

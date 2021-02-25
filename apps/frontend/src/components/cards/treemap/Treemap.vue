@@ -195,6 +195,7 @@ export default class Treemap extends Vue {
   }
 
   /** Called on resize */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   on_resize(elt: any) {
     if (elt.clientWidth !== undefined && elt.clientWidth > 1) {
       this.width = elt.clientWidth - 24;

@@ -61,6 +61,7 @@ export interface ControlMetaInfo extends AbsMetaInfo {
 export interface ExecutionPayload {
   meta: ExecutionMetaInfo;
   profiles: ProfilePayload[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [x: string]: any;
 }
 
@@ -70,12 +71,14 @@ export interface ExecutionPayload {
 export interface ProfilePayload {
   meta: ProfileMetaInfo;
   controls: ControlPayload[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [x: string]: any;
 }
 
 /** This is what we expect to find in every parsed event representing a Control */
 export interface ControlPayload {
   meta: ControlMetaInfo;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [x: string]: any;
 }
 
@@ -322,6 +325,7 @@ export class SplunkEndpoint {
         // We basically can't, and really shouldn't, do typescript here. Output is 50% guaranteed to be wonk
         // Get all the raws
         const raws: Array<string> = data['results'].map(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (datum: any) => datum._raw
         );
 

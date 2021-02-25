@@ -90,6 +90,7 @@ import {profile_unique_key} from '@/utilities/format_util';
 import {InspecFile, ProfileFile} from '@/store/report_intake';
 import {context} from 'inspecjs';
 import {Prop} from 'vue-property-decorator';
+import {ExecJSONProfile} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
 
 /**
  * Makes a ContextualizedProfile work as a TreeView item
@@ -157,7 +158,7 @@ export default class ProfileData extends Vue {
 
     output.push({
       label: 'Version',
-      text: (this.selected.data as any).version //Todo: fix
+      text: (this.selected.data as ExecJSONProfile).version || ''
     });
 
     // Deduce filename, start time

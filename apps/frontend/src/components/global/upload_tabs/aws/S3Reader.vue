@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 <template>
   <v-stepper v-model="step" vertical class="elevation-0">
     <v-stepper-step :complete="!!assumed_role" step="1">
@@ -205,7 +206,7 @@ export default class S3Reader extends Vue {
   /** Callback to handle an AWS error.
    * Sets shown error.
    */
-  handle_error(error: any): void {
+  handle_error(error: AWSError): void {
     let t_error = error as AWSError;
     let formatted_error = transcribe_error(t_error);
     // Toast whatever error we got

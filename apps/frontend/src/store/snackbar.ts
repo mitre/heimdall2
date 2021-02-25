@@ -39,6 +39,9 @@ export class Snackbar extends VuexModule {
   }
 
   @Action
+  // Axios doesn't seem to have a defined type for errors outside of Axios which
+  // is possibly undefined, this is also being remo
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   HTTPFailure(error: any) {
     if (typeof error.response.data.message === 'object') {
       this.notify(
