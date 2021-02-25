@@ -29,7 +29,6 @@
 <script lang="ts">
 import Component, {mixins} from 'vue-class-component';
 import axios from 'axios';
-import {ICreateEvaluation} from '@heimdall/interfaces';
 import {InspecDataModule} from '@/store/data_store';
 import {FilteredDataModule} from '@/store/data_filters';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
@@ -37,6 +36,7 @@ import {SnackbarModule} from '@/store/snackbar';
 
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop} from 'vue-property-decorator';
+import {ICreateEvaluation} from '@heimdall/interfaces';
 
 @Component
 export default class FileItem extends mixins(ServerMixin) {
@@ -90,15 +90,23 @@ export default class FileItem extends mixins(ServerMixin) {
   save_evaluation(file: EvaluationFile) {
     this.saving = true;
 
-    let evaluationDTO: ICreateEvaluation = {
-      data: file.evaluation.data,
+    const createEvaluationDto: ICreateEvaluation = {
       filename: file.filename,
       public: false,
       evaluationTags: []
     };
 
+    // Create a multipart form to upload our data
+    const formData = new FormData();
+    // Add the DTO objects to form data
+    for (const [key, value] of Object.entries(createEvaluationDto)) {
+      formData.append(key, value);
+    }
+    // Add evaluation data to the form
+    formData.append("data", new Blob([JSON.stringify(file.evaluation.data)], {type: 'text/plain'}));
+
     axios
-      .post('/evaluations', evaluationDTO)
+      .post('/evaluations', formData)
       .then((response) => {
         SnackbarModule.notify('Result saved successfully');
         file.database_id = parseInt(response.data.id);
