@@ -29,7 +29,7 @@ export class Evaluation extends Model {
 
   @AllowNull(false)
   @Column(DataType.JSON)
-  data!: Record<string, any>;
+  data!: Record<string, unknown>;
 
   @ForeignKey(() => User)
   @Column(DataType.BIGINT)

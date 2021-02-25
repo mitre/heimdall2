@@ -27,6 +27,7 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
           passReqToCallback: true
         }
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       async (req: Request, user: any, done: any) => {
         const {firstName, lastName} = this.authnService.splitName(
           user[configService.get('LDAP_NAMEFIELD') || 'name']

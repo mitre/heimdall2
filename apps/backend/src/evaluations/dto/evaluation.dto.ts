@@ -5,7 +5,7 @@ import {Evaluation} from '../evaluation.model';
 export class EvaluationDto implements IEvaluation {
   readonly id: string;
   filename: string;
-  readonly data: Record<string, any> | undefined;
+  readonly data: Record<string, unknown> | undefined;
   readonly evaluationTags: EvaluationTagDto[];
   readonly userId: string;
   readonly createdAt: Date;
