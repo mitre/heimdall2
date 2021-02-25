@@ -3,7 +3,6 @@ import {
   IsArray,
   IsBoolean,
   IsNotEmpty,
-  IsObject,
   IsOptional,
   IsString
 } from 'class-validator';
@@ -13,10 +12,6 @@ export class CreateEvaluationDto implements ICreateEvaluation {
   @IsNotEmpty()
   @IsString()
   readonly filename!: string;
-
-  @IsNotEmpty()
-  @IsObject()
-  readonly data!: Record<string, any>;
 
   @IsNotEmpty()
   @IsBoolean()

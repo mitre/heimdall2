@@ -63,9 +63,7 @@ describe('EvaluationTagsService', () => {
   beforeEach(async () => {
     await databaseService.cleanAll();
     const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-    evaluation = new EvaluationDto(
-      await evaluationsService.create(EVALUATION_1, user.id)
-    );
+    evaluation = await evaluationsService.create(EVALUATION_1, user.id);
   });
 
   describe('Create', () => {
