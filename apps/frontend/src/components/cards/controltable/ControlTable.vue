@@ -2,14 +2,26 @@
   <v-container fluid class="font-weight-bold">
     <!-- Toolbar -->
     <v-row>
-      <v-col cols="12">
-        <v-switch
-          v-model="single_expand"
-          label="Single Expand"
-          class="mt-2"
-          @change="$emit('toggleExpandAll', single_expand)"
-        />
-      </v-col>
+      <v-row>
+        <v-col>
+          <v-card-title>Results View Data</v-card-title>
+        </v-col>
+        <v-col cols="auto" class="text-right">
+          <v-switch
+            v-model="single_expand"
+            label="Single Expand"
+            @change="handleToggleSingleExpand(single_expand)"
+          />
+        </v-col>
+        <v-col cols="auto" class="text-right">
+          <v-switch
+            v-model="expand_all"
+            label="Expand All"
+            class="mr-2"
+            @change="toggleExpandAllEvaluations()"
+          />
+        </v-col>
+      </v-row>
     </v-row>
 
     <!-- Header. This should mirror the structure of ControlRowHeader -->
@@ -110,6 +122,9 @@ export default class ControlTable extends Vue {
   // Whether to allow multiple expansions
   single_expand: boolean = true;
 
+  // Whether to expand all evaluations
+  expand_all = false;
+
   // List of currently expanded options. If unique id is in here, it is expanded
   expanded: Array<string> = [];
 
@@ -139,14 +154,22 @@ export default class ControlTable extends Vue {
     }
   }
 
- /** Expands all elements within items asynchronously */
-  async expandAllEvaluations(): Promise<void> {
-    this.items.forEach(async (item) => {
-      const i = this.expanded.indexOf(item.key);
-      if (i < 0) {
-        this.expanded.push(item.key);
-      }
-    })
+  /** Expands all evaluations */
+  async handleToggleSingleExpand(single_expand: boolean): Promise<void> {
+    if(single_expand){
+      this.expand_all = false;
+      this.toggleExpandAllEvaluations()
+    }
+  }
+
+  /** Expands all evaluations */
+  async toggleExpandAllEvaluations(): Promise<void> {
+    if(this.expand_all){
+      this.single_expand = false;
+      this.expanded = this.items.map((items) => items.key);
+    } else {
+      this.expanded = []
+    }
   }
 
   /** Toggles the given expansion of a control details panel */

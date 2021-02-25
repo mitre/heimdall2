@@ -162,25 +162,10 @@
         <v-row>
           <v-col xs-12>
             <v-card elevation="2">
-              <v-row>
-                <v-col>
-                  <v-card-title>Results View Data</v-card-title>
-                </v-col>
-                <v-col
-                  v-if="show_expand_all_button"
-                  cols="auto"
-                  class="text-right"
-                >
-                  <v-btn color="primary" text @click="expand_all"
-                    >Expand All</v-btn
-                  ></v-col
-                >
-              </v-row>
               <ControlTable
                 ref="controlTable"
                 :filter="all_filter"
                 :show-impact="is_result_view"
-                @toggleExpandAll="set_show_expand_all"
               />
             </v-card>
           </v-col>
@@ -298,8 +283,6 @@ export default class Results extends Vue {
   /** Determines if we should make the search bar colapseable */
   show_search_mobile: boolean = false;
 
-  /** Determines if we should show the expand all button */
-  show_expand_all_button = false;
   /**
    * The currently selected file, if one exists.
    * Controlled by router.
@@ -472,16 +455,6 @@ export default class Results extends Vue {
     } else {
       this.eval_info = index;
     }
-  }
-
-  // Expand all visible controls
-  expand_all() {
-    (this.$refs.controlTable as Vue & { expandAllEvaluations: () => void }).expandAllEvaluations();
-  }
-
-  // Toggles whether or not to show expand all button
-  set_show_expand_all(single_expand: boolean) {
-    this.show_expand_all_button = !single_expand;
   }
 }
 </script>
