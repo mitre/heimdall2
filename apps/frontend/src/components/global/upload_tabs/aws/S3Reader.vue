@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 <template>
   <v-stepper v-model="step" vertical class="elevation-0">
     <v-stepper-step :complete="!!assumed_role" step="1">

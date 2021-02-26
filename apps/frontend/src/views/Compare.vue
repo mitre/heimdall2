@@ -230,6 +230,7 @@ import ApexLineChart, {
 //@ts-ignore
 import resize from 'vue-resize-directive';
 import {get_eval_start_time} from '@/utilities/delta_util';
+import _ from 'lodash';
 
 @Component({
   components: {
@@ -540,15 +541,13 @@ export default class Compare extends Vue {
     return this.files.length;
   }
 
-  // Vue.resize (vue-resize-directive) doesn't have any types that it will return
-  // other than Event
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  on_resize(elt: any) {
+  on_resize(elt: unknown) {
+    const newClientWidth: number = _.get(elt, 'clientWidth');
     if (this.start_index > this.files.length - this.num_shown_files) {
       this.start_index = this.files.length - this.num_shown_files;
     }
-    if (elt.clientWidth !== undefined && elt.clientWidth > 1) {
-      this.width = elt.clientWidth - 24;
+    if (newClientWidth !== undefined && newClientWidth > 1) {
+      this.width = newClientWidth - 24;
     }
   }
 

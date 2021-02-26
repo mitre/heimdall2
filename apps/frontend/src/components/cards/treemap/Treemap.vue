@@ -50,6 +50,7 @@ import resize from 'vue-resize-directive';
 import {ColorHackModule} from '@/store/color_hack';
 import {compare_arrays} from '@/utilities/helper_util';
 import {Prop, PropSync} from 'vue-property-decorator';
+import _ from 'lodash';
 
 // Respects a v-model of type TreeMapState
 @Component({
@@ -195,10 +196,10 @@ export default class Treemap extends Vue {
   }
 
   /** Called on resize */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  on_resize(elt: any) {
-    if (elt.clientWidth !== undefined && elt.clientWidth > 1) {
-      this.width = elt.clientWidth - 24;
+  on_resize(elt: unknown) {
+    const newClientWidth = _.get(elt, 'clientWidth');
+    if (newClientWidth !== undefined && newClientWidth > 1) {
+      this.width = newClientWidth - 24;
     }
   }
 }

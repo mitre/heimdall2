@@ -61,8 +61,6 @@ export interface ControlMetaInfo extends AbsMetaInfo {
 export interface ExecutionPayload {
   meta: ExecutionMetaInfo;
   profiles: ProfilePayload[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [x: string]: any;
 }
 
 /** This is what we expect to find in every parsed event representing a Profile.
@@ -71,15 +69,11 @@ export interface ExecutionPayload {
 export interface ProfilePayload {
   meta: ProfileMetaInfo;
   controls: ControlPayload[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [x: string]: any;
 }
 
 /** This is what we expect to find in every parsed event representing a Control */
 export interface ControlPayload {
   meta: ControlMetaInfo;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [x: string]: any;
 }
 
 // Could be any!

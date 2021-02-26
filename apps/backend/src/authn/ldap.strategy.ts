@@ -1,6 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import {Request} from 'express';
+import _ from 'lodash';
 import Strategy from 'passport-ldapauth';
 import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
@@ -28,13 +29,14 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
         }
       },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      async (req: Request, user: any, done: any) => {
+      async (req: Request, user: unknown, done: any) => {
         const {firstName, lastName} = this.authnService.splitName(
-          user[configService.get('LDAP_NAMEFIELD') || 'name']
+          _.get(user, configService.get('LDAP_NAMEFIELD') || 'name')
         );
-        const email: string =
-          user[configService.get('LDAP_MAILFIELD') || 'mail'];
-
+        const email: string = _.get(
+          user,
+          configService.get('LDAP_MAILFIELD') || 'mail'
+        );
         req.user = this.authnService.validateOrCreateUser(
           email,
           firstName,
