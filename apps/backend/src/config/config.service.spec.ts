@@ -34,9 +34,6 @@ describe('Config Service', () => {
         'Unable to read configuration file `.env`!'
       );
       expect(consoleSpy).toHaveBeenCalledWith(
-        'Does the file exist and is it readable by the current user?'
-      );
-      expect(consoleSpy).toHaveBeenCalledWith(
         'Falling back to environment or undefined values!'
       );
     });

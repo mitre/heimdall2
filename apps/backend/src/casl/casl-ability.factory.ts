@@ -59,8 +59,9 @@ export class CaslAbilityFactory {
     });
 
     can([Action.Manage], Group, {
-      'users.id': user.id,
-      'users.GroupUser.role': 'owner'
+      users: {
+        $elemMatch: {id: user.id, 'GroupUser.role': 'owner'}
+      }
     });
 
     // This really isn't the best method to do this since
@@ -76,8 +77,9 @@ export class CaslAbilityFactory {
     can([Action.Read], Evaluation, {'groups.users.id': user.id});
 
     can([Action.Manage], Evaluation, {
-      'groups.users.id': user.id,
-      'groups.users.GroupUser.role': 'owner'
+      'groups.users': {
+        $elemMatch: {id: user.id, 'GroupUser.role': 'owner'}
+      }
     });
 
     return build();

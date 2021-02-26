@@ -8,7 +8,7 @@ export class GroupDto implements IGroup {
   readonly name: string;
   readonly public: boolean;
   readonly role?: string;
-  readonly users?: SlimUserDto[];
+  readonly users: SlimUserDto[];
   readonly createdAt: Date;
   readonly updatedAt: Date;
 
@@ -19,7 +19,7 @@ export class GroupDto implements IGroup {
     this.public = group.public;
     this.users =
       group.users === undefined
-        ? undefined
+        ? []
         : group.users.map((user) => new SlimUserDto(user));
     this.createdAt = group.createdAt;
     this.updatedAt = group.updatedAt;

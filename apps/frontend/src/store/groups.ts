@@ -88,6 +88,13 @@ export class Groups extends VuexModule implements IGroupState {
   }
 
   @Action
+  public async GetGroupById(id: string) {
+    axios.get<IGroup>(`/groups/${id}`).then(({data}) => {
+      this.UpdateGroup(data);
+    });
+  }
+
+  @Action
   public async DeleteGroup(group: IGroup): Promise<IGroup> {
     return axios.delete<IGroup>(`/groups/${group.id}`).then(({data}) => {
       this.DELETE_FROM_ALL_GROUPS(group);

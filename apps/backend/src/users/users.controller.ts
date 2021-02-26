@@ -34,6 +34,16 @@ export class UsersController {
     private readonly usersService: UsersService,
     private readonly authz: AuthzService
   ) {}
+
+  @Get('/user-find-all')
+  @UseGuards(JwtAuthGuard)
+  async userFindAll(@Request() request: {user: User}): Promise<SlimUserDto[]> {
+    const abac = this.authz.abac.createForUser(request.user);
+    ForbiddenError.from(abac).throwUnlessCan(Action.ReadSlim, User);
+    const users = await this.usersService.userFindAll();
+    return users.map((user) => new SlimUserDto(user));
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findById(
@@ -56,15 +66,6 @@ export class UsersController {
 
     const users = await this.usersService.adminFindAll();
     return users.map((user) => new UserDto(user));
-  }
-
-  @Get('user-find-all')
-  @UseGuards(JwtAuthGuard)
-  async userFindAll(@Request() request: {user: User}): Promise<SlimUserDto[]> {
-    const abac = this.authz.abac.createForUser(request.user);
-    ForbiddenError.from(abac).throwUnlessCan(Action.ReadSlim, User);
-    const users = await this.usersService.userFindAll();
-    return users.map((user) => new SlimUserDto(user));
   }
 
   @Post()

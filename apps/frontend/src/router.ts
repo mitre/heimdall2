@@ -35,7 +35,7 @@ const router = new Router({
       meta: {requiresAuth: true}
     },
     {
-      path: '/groups',
+      path: '/manage-groups',
       name: 'groups',
       component: Groups,
       meta: {requiresAuth: true}

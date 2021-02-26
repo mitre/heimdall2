@@ -60,7 +60,7 @@ export class GroupsController {
     return new GroupDto(group, 'owner');
   }
 
-  @Post('/user')
+  @Post('/:id/user')
   async addUserToGroup(
     @Param('id') id: string,
     @Request() request: {user: User},
@@ -80,7 +80,7 @@ export class GroupsController {
     return new GroupDto(group);
   }
 
-  @Delete('/user/:id')
+  @Delete('/:id/user')
   async removeUserFromGroup(
     @Param('id') id: string,
     @Request() request: {user: User},
@@ -135,6 +135,18 @@ export class GroupsController {
         evaluationToRemove
       )
     );
+  }
+
+  @Get(':id')
+  async findById(
+    @Request() request: {user: User},
+    @Param('id') id: string
+  ): Promise<GroupDto> {
+    const abac = this.authz.abac.createForUser(request.user);
+    const group = await this.groupsService.findByPkBang(id);
+    ForbiddenError.from(abac).throwUnlessCan(Action.Read, group);
+
+    return new GroupDto(group, 'owner');
   }
 
   @Put(':id')

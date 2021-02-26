@@ -103,12 +103,8 @@ import {GroupsModule} from '@/store/groups';
 import GroupModal from '@/components/global/groups/GroupModal.vue';
 import axios from 'axios';
 import {SnackbarModule} from '@/store/snackbar';
+import {IVuetifyItems} from '@/utilities/helper_util';
 
-interface IVuetifyItems {
-  text: string | number,
-  value: string | number | boolean,
-  disabled?: boolean,
-}
 
 @Component({
   components: {
@@ -127,11 +123,11 @@ export default class EditEvaluationModal extends Vue {
 
   visibilityOptions: IVuetifyItems[] = [
     {
-      text: "Public",
+      text: "Public (all authenticated users on this server)",
       value: true
     },
     {
-      text: "Private",
+      text: "Private (owners & groups)",
       value: false
     }
   ]
@@ -188,9 +184,7 @@ export default class EditEvaluationModal extends Vue {
       return axios.delete(`/groups/${group.value}/evaluation`, {data: evaluationGroup})
     });
 
-    Promise.all(addedGroupPromises.concat(removeGroupPromises)).catch((err) => {
-      SnackbarModule.failure(`Error modifying groups: ${err}.`);
-    })
+    Promise.all(addedGroupPromises.concat(removeGroupPromises))
   }
 }
 </script>

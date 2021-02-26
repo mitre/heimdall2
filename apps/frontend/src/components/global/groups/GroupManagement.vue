@@ -34,21 +34,23 @@
         </v-container>
       </template>
       <template #[`item.actions`]="{item}">
-        <GroupModal id="editGroupModal" :create="false" :group="item">
-          <template #clickable="{on}"
-            ><v-icon small title="Edit" data-cy="edit" class="mr-2" v-on="on">
-              mdi-pencil
-            </v-icon>
-          </template>
-        </GroupModal>
-        <v-icon
-          small
-          title="Delete"
-          data-cy="delete"
-          @click="deleteGroupDialog(item)"
-        >
-          mdi-delete
-        </v-icon>
+        <div v-if="item.role == 'owner'">
+          <GroupModal id="editGroupModal" :create="false" :group="item">
+            <template #clickable="{on}"
+              ><v-icon small title="Edit" data-cy="edit" class="mr-2" v-on="on">
+                mdi-pencil
+              </v-icon>
+            </template>
+          </GroupModal>
+          <v-icon
+            small
+            title="Delete"
+            data-cy="delete"
+            @click="deleteGroupDialog(item)"
+          >
+            mdi-delete
+          </v-icon>
+        </div>
       </template>
       <template #no-data> No groups match current selection. </template>
     </v-data-table>

@@ -17,6 +17,6 @@ export default class GroupPage {
 
   deleteGroup(name: string): void {
     cy.contains('td', name).parent().get('[data-cy=delete]').click();
-    cy.get('[data-cy=deleteGroupModalConfirm]').click();
+    cy.get('[data-cy=deleteConfirm]').click();
   }
 }

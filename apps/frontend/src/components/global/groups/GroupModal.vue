@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" max-width="500px">
+  <v-dialog v-model="dialog" max-width="700px">
     <!-- clickable slot passes the activator prop up to parent
         This allows the parent to pass in a clickable icon -->
     <template #activator="{on, attrs}">
@@ -19,13 +19,15 @@
         <br />
         <v-form @submit.prevent>
           <v-row>
-            <v-col>
+            <v-col cols="8">
               <v-text-field
                 v-model="groupInfo.name"
                 data-cy="name"
                 label="Group Name"
                 @keyup.enter="save"
               />
+            </v-col>
+            <v-col>
               <v-tooltip bottom>
                 <template #activator="{on}">
                   <span v-on="on">
@@ -44,6 +46,7 @@
               </v-tooltip>
             </v-col>
           </v-row>
+          <Users v-model="groupInfo.users" />
         </v-form>
       </v-card-text>
 
@@ -75,11 +78,13 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {SnackbarModule} from '@/store/snackbar';
-import {ICreateGroup, IGroup} from '@heimdall/interfaces';
-import UserValidatorMixin from '@/mixins/UserValidatorMixin';
+import {IAddUserToGroup, ICreateGroup, IGroup, IRemoveUserFromGroup, ISlimUser} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
 import axios, {AxiosResponse} from 'axios';
 import {GroupsModule} from '@/store/groups';
+import Users from '@/components/global/groups/Users.vue';
+import DeleteDialog from '@/components/generic/DeleteDialog.vue';
+import _ from 'lodash';
 
 function newGroup(): IGroup {
   return {
@@ -87,31 +92,33 @@ function newGroup(): IGroup {
     name: '',
     public: false,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
+    users: []
   }
 }
 
 @Component({
-  mixins: [UserValidatorMixin],
-  validations: {}
+  validations: {},
+  components: {
+    DeleteDialog,
+    Users
+  }
 })
 export default class GroupModal extends Vue {
   @Prop({
     type: Object,
     required: false,
-    default: function() {
-      newGroup()
+    default: () => {
+      return newGroup()
     }
     }) readonly group!: IGroup;
   @Prop({type: Boolean, default: false}) readonly admin!: boolean;
   @Prop({type: Boolean, default: false}) readonly create!: boolean;
 
-  roles: string[] = ['user', 'admin'];
-
   dialog = false;
   changePassword = false;
 
-  groupInfo: IGroup = {...this.group};
+  groupInfo: IGroup = _.cloneDeep(this.group);
   currentPassword = '';
   newPassword = '';
   passwordConfirmation = '';
@@ -132,7 +139,8 @@ export default class GroupModal extends Vue {
 
     const response = this.create ? this.createGroup(groupInfo) : this.updateExistingGroup(groupInfo);
     response.then(({data}) => {
-      GroupsModule.UpdateGroup(data).then(() => {
+      this.syncUsersWithGroup(data).then(() => {
+        GroupsModule.GetGroupById(data.id);
         SnackbarModule.notify(`Group Successfully Saved`);
         // This clears when creating a new Group.
         // Calling clear on edit makes it impossible to edit the same group twice.
@@ -150,6 +158,29 @@ export default class GroupModal extends Vue {
 
   async updateExistingGroup(groupToUpdate: ICreateGroup): Promise<AxiosResponse<IGroup>> {
     return axios.put<IGroup>(`/groups/${this.groupInfo.id}`, groupToUpdate);
+  }
+
+  async syncUsersWithGroup(group: IGroup) {
+    const originalIds = this.group.users.map((user) => user.id);
+    const changedIds = this.groupInfo.users.map((user) => user.id);
+    const toAdd: ISlimUser[] = this.groupInfo.users.filter(user => !originalIds.includes(user.id));
+    const toRemove: ISlimUser[] = this.group.users.filter(user => !changedIds.includes(user.id));
+    const addedUserPromises = toAdd.map((user) => {
+      const addUserDto: IAddUserToGroup = {
+        userId: user.id,
+        groupRole: 'member'
+      }
+      return axios.post(`/groups/${group.id}/user`, addUserDto);
+    });
+
+    const removedUserPromises = toRemove.map((user) => {
+      const removeUserDto: IRemoveUserFromGroup = {
+        userId: user.id
+      }
+      return axios.delete(`/groups/${group.id}/user`, {data: removeUserDto});
+    });
+
+    return Promise.all(addedUserPromises.concat(removedUserPromises))
   }
 }
 </script>

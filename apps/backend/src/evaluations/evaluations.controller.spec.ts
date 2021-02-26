@@ -13,6 +13,7 @@ import {
   PRIVATE_GROUP
 } from '../../test/constants/groups-test.constant';
 import {
+  CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_2
 } from '../../test/constants/users-test.constant';
@@ -255,6 +256,56 @@ describe('EvaluationsController', () => {
       );
       expect(evaluation.filename).not.toEqual(updatedEvaluation.filename);
       expect(evaluation.data).not.toEqual(updatedEvaluation.data);
+    });
+
+    it('should allow a group owner to update', async () => {
+      const privateGroup = await groupsService.create(PRIVATE_GROUP);
+      const owner = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
+
+      await groupsService.addUserToGroup(privateGroup, owner, 'owner');
+
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        mockFile,
+        user.id
+      );
+
+      await groupsService.addEvaluationToGroup(privateGroup, evaluation);
+
+      const updatedEvaluation = await evaluationsController.update(
+        evaluation.id,
+        {user: owner},
+        UPDATE_EVALUATION
+      );
+      expect(evaluation.filename).not.toEqual(updatedEvaluation.filename);
+      expect(evaluation.data).not.toEqual(updatedEvaluation.data);
+    });
+
+    it('should prevent unauthorized group users from updating an evalution in a group they belong to', async () => {
+      expect.assertions(1);
+
+      const privateGroup = await groupsService.create(PRIVATE_GROUP);
+      const owner = await usersService.create(CREATE_ADMIN_DTO);
+      const basicUser = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
+
+      await groupsService.addUserToGroup(privateGroup, owner, 'owner');
+      await groupsService.addUserToGroup(privateGroup, basicUser, 'user');
+
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        mockFile,
+        user.id
+      );
+
+      await groupsService.addEvaluationToGroup(privateGroup, evaluation);
+
+      await expect(
+        evaluationsController.update(
+          evaluation.id,
+          {user: basicUser},
+          UPDATE_EVALUATION
+        )
+      ).rejects.toBeInstanceOf(ForbiddenError);
     });
 
     it('should prevent unauthorized users from updating', async () => {

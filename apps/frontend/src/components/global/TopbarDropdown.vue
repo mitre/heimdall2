@@ -38,7 +38,7 @@
             key="groups"
             text="My Groups"
             icon="mdi-account-group"
-            link="groups"
+            link="manage-groups"
             >My Groups</LinkItem
           >
           <v-divider />
