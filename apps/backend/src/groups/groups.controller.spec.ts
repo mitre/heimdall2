@@ -212,6 +212,7 @@ describe('GroupsController', () => {
       expect.assertions(1);
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        {},
         basicUser.id
       );
       await groupsService.addUserToGroup(privateGroup, basicUser, 'member');
@@ -230,6 +231,7 @@ describe('GroupsController', () => {
       expect.assertions(1);
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        {},
         basicUser.id
       );
 
@@ -249,6 +251,7 @@ describe('GroupsController', () => {
       );
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        {},
         evaluationOwner.id
       );
       await groupsService.addUserToGroup(privateGroup, basicUser, 'member');
@@ -302,6 +305,7 @@ describe('GroupsController', () => {
       expect.assertions(2);
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        {},
         basicUser.id
       );
       await groupsService.addEvaluationToGroup(privateGroup, evaluation);
@@ -322,6 +326,7 @@ describe('GroupsController', () => {
       );
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        {},
         evaluationOwner.id
       );
       await groupsService.addEvaluationToGroup(privateGroup, evaluation);

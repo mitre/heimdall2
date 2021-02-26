@@ -82,7 +82,11 @@ describe('EvaluationTagsController', () => {
   describe('index', () => {
     it('should return EvaluationTags a User has ownership of', async () => {
       // Evaluation 1 has no tags so a tag needs to be added manually
-      const evaluation = await evaluationsService.create(EVALUATION_1, user.id);
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        {},
+        user.id
+      );
       await evaluationTagsService.create(
         evaluation.id,
         CREATE_EVALUATION_TAG_DTO
@@ -102,6 +106,7 @@ describe('EvaluationTagsController', () => {
       );
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        {},
         evaluationOwner.id
       );
       const group = await groupsService.create(PRIVATE_GROUP);
@@ -127,6 +132,7 @@ describe('EvaluationTagsController', () => {
       );
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        {},
         evaluationOwner.id
       );
       await evaluationTagsService.create(
@@ -142,7 +148,11 @@ describe('EvaluationTagsController', () => {
 
   describe('findById', () => {
     it('should return an EvaluationTag a User has ownership of', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_1, user.id);
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        {},
+        user.id
+      );
       const evaluationTag = await evaluationTagsService.create(
         evaluation.id,
         CREATE_EVALUATION_TAG_DTO
@@ -160,6 +170,7 @@ describe('EvaluationTagsController', () => {
       );
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        {},
         evaluationOwner.id
       );
       const group = await groupsService.create(PRIVATE_GROUP);
@@ -185,6 +196,7 @@ describe('EvaluationTagsController', () => {
       );
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        {},
         evaluationOwner.id
       );
       const evaluationTag = await evaluationTagsService.create(
@@ -200,7 +212,11 @@ describe('EvaluationTagsController', () => {
 
   describe('create', () => {
     it('should create EvaluationTags on an Evaluation a User has ownership of', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_1, user.id);
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        {},
+        user.id
+      );
       const evaluationTag = await evaluationTagsController.create(
         evaluation.id,
         CREATE_EVALUATION_TAG_DTO,
@@ -215,6 +231,7 @@ describe('EvaluationTagsController', () => {
       );
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        {},
         evaluationOwner.id
       );
       const group = await groupsService.create(PRIVATE_GROUP);
@@ -237,6 +254,7 @@ describe('EvaluationTagsController', () => {
       );
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        {},
         evaluationOwner.id
       );
 
@@ -252,7 +270,11 @@ describe('EvaluationTagsController', () => {
 
   describe('remove', () => {
     it('should remove EvaluationTags from Evaluations a User has ownership of', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_1, user.id);
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        {},
+        user.id
+      );
       const evaluationTag = await evaluationTagsService.create(
         evaluation.id,
         CREATE_EVALUATION_TAG_DTO
@@ -270,6 +292,7 @@ describe('EvaluationTagsController', () => {
       );
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        {},
         evaluationOwner.id
       );
       const group = await groupsService.create(PRIVATE_GROUP);
@@ -295,6 +318,7 @@ describe('EvaluationTagsController', () => {
       );
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        {},
         evaluationOwner.id
       );
       const evaluationTag = await evaluationTagsService.create(

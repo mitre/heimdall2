@@ -88,7 +88,11 @@ describe('GroupsService', () => {
     it('should not include the group evaluations by default', async () => {
       const group = await groupsService.create(GROUP_1);
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      const evaluation = await evaluationsService.create(EVALUATION_1, user.id);
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        {},
+        user.id
+      );
       await groupsService.addEvaluationToGroup(group, evaluation);
       const foundGroup = await groupsService.findByPkBang(group.id);
       expect(foundGroup.evaluations).not.toBeDefined();
@@ -149,6 +153,7 @@ describe('GroupsService', () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const evaluation = await evaluationsService.create(
         EVALUATION_WITH_TAGS_1,
+        {},
         user.id
       );
       await groupsService.addEvaluationToGroup(group, evaluation);
@@ -170,10 +175,12 @@ describe('GroupsService', () => {
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const evaluationOne = await evaluationsService.create(
         EVALUATION_1,
+        {},
         user.id
       );
       const evaluationTwo = await evaluationsService.create(
         EVALUATION_WITH_TAGS_1,
+        {},
         user.id
       );
       await groupsService.addEvaluationToGroup(group, evaluationOne);

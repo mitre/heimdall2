@@ -26,7 +26,7 @@ export class EvaluationsService {
 
   async create(
     createEvaluationDto: CreateEvaluationDto,
-    data: JSON,
+    data: unknown,
     id: string
   ): Promise<Evaluation> {
     return Evaluation.create<Evaluation>(

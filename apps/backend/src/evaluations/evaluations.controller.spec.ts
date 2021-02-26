@@ -31,6 +31,15 @@ import {Evaluation} from './evaluation.model';
 import {EvaluationsController} from './evaluations.controller';
 import {EvaluationsService} from './evaluations.service';
 
+// This allows basic testing of the evaluations controller
+// interface without having to construct a full File object
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+//@ts-ignore
+const mockFile: Express.Multer.File = {
+  buffer: Buffer.from('{}')
+};
+/* eslint-enable @typescript-eslint/ban-ts-comment */
+
 describe('EvaluationsController', () => {
   let evaluationsController: EvaluationsController;
   let evaluationsService: EvaluationsService;
@@ -80,7 +89,11 @@ describe('EvaluationsController', () => {
 
   describe('findById', () => {
     it('should return an evaluation', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_1, user.id);
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        mockFile,
+        user.id
+      );
 
       const foundEvaluation = await evaluationsController.findById(
         evaluation.id,
@@ -92,6 +105,7 @@ describe('EvaluationsController', () => {
     it('should return an evaluations tags', async () => {
       const evaluation = await evaluationsService.create(
         EVALUATION_WITH_TAGS_1,
+        mockFile,
         user.id
       );
 
@@ -119,6 +133,7 @@ describe('EvaluationsController', () => {
       );
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        mockFile,
         evaluationOwner.id
       );
       await expect(
@@ -129,19 +144,27 @@ describe('EvaluationsController', () => {
 
   describe('findAll', () => {
     it('should return all evaluations a user has permissions to read', async () => {
-      await evaluationsService.create(EVALUATION_1, user.id);
+      await evaluationsService.create(EVALUATION_1, mockFile, user.id);
       let foundEvaluations = await evaluationsController.findAll({user: user});
       expect(foundEvaluations.length).toEqual(1);
       const evaluationOwner = await usersService.create(
         CREATE_USER_DTO_TEST_OBJ_2
       );
-      await evaluationsService.create(EVALUATION_1, evaluationOwner.id);
+      await evaluationsService.create(
+        EVALUATION_1,
+        mockFile,
+        evaluationOwner.id
+      );
       foundEvaluations = await evaluationsController.findAll({user: user});
       expect(foundEvaluations.length).toEqual(1);
     });
 
     it('should return all evaluations and their associated tags', async () => {
-      await evaluationsService.create(EVALUATION_WITH_TAGS_1, user.id);
+      await evaluationsService.create(
+        EVALUATION_WITH_TAGS_1,
+        mockFile,
+        user.id
+      );
       const foundEvaluations = await evaluationsController.findAll({
         user: user
       });
@@ -149,7 +172,7 @@ describe('EvaluationsController', () => {
     });
 
     it('should return editable true if the user is the owner of an evaluation', async () => {
-      await evaluationsService.create(EVALUATION_1, user.id);
+      await evaluationsService.create(EVALUATION_1, mockFile, user.id);
       const foundEvaluations = await evaluationsController.findAll({
         user: user
       });
@@ -162,6 +185,7 @@ describe('EvaluationsController', () => {
       );
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        mockFile,
         evaluationOwner.id
       );
       const group = await groupsService.create(PRIVATE_GROUP);
@@ -180,6 +204,7 @@ describe('EvaluationsController', () => {
       );
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        mockFile,
         evaluationOwner.id
       );
       const group = await groupsService.create(GROUP_1);
@@ -198,6 +223,7 @@ describe('EvaluationsController', () => {
     it('should allow a user to create an evaluation', async () => {
       const evaluation = await evaluationsController.create(
         EVALUATION_WITH_TAGS_1,
+        mockFile,
         {user: user}
       );
       expect(evaluation).toBeDefined();
@@ -207,6 +233,7 @@ describe('EvaluationsController', () => {
     it('should create an evaluation without tags', async () => {
       const evaluation = await evaluationsController.create(
         CREATE_EVALUATION_DTO_WITHOUT_TAGS,
+        mockFile,
         {user: user}
       );
       expect(evaluation).toBeDefined();
@@ -216,7 +243,11 @@ describe('EvaluationsController', () => {
 
   describe('update', () => {
     it('should allow an evaluation owner to update', async () => {
-      const evaluation = await evaluationsService.create(EVALUATION_1, user.id);
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        mockFile,
+        user.id
+      );
       const updatedEvaluation = await evaluationsController.update(
         evaluation.id,
         {user: user},
@@ -233,6 +264,7 @@ describe('EvaluationsController', () => {
       );
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        mockFile,
         evaluationOwner.id
       );
       await expect(
@@ -248,7 +280,11 @@ describe('EvaluationsController', () => {
   describe('remove', () => {
     it('should remove an evaluation', async () => {
       expect.assertions(1);
-      const evaluation = await evaluationsService.create(EVALUATION_1, user.id);
+      const evaluation = await evaluationsService.create(
+        EVALUATION_1,
+        {},
+        user.id
+      );
       await evaluationsController.remove(evaluation.id, {user: user});
       await expect(
         evaluationsController.findById(evaluation.id, {user: user})
@@ -262,6 +298,7 @@ describe('EvaluationsController', () => {
       );
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        mockFile,
         evaluationOwner.id
       );
       await expect(
@@ -277,6 +314,7 @@ describe('EvaluationsController', () => {
       );
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        mockFile,
         evaluationOwner.id
       );
       const group = await groupsService.create(GROUP_1);
@@ -296,6 +334,7 @@ describe('EvaluationsController', () => {
       );
       const evaluation = await evaluationsService.create(
         EVALUATION_1,
+        mockFile,
         evaluationOwner.id
       );
       const group = await groupsService.create(GROUP_1);

@@ -2,7 +2,6 @@ import {NotFoundException} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test} from '@nestjs/testing';
 import {
-  CREATE_EVALUATION_DTO_WITHOUT_DATA,
   CREATE_EVALUATION_DTO_WITHOUT_FILENAME,
   CREATE_EVALUATION_DTO_WITHOUT_TAGS,
   EVALUATION_WITH_TAGS_1,
@@ -75,14 +74,14 @@ describe('EvaluationsService', () => {
       let evaluationsDtoArray = await evaluationsService.findAll();
       expect(evaluationsDtoArray).toEqual([]);
 
-      await evaluationsService.create(EVALUATION_WITH_TAGS_1, user.id);
-      await evaluationsService.create(EVALUATION_WITH_TAGS_1, user.id);
+      await evaluationsService.create(EVALUATION_WITH_TAGS_1, {}, user.id);
+      await evaluationsService.create(EVALUATION_WITH_TAGS_1, {}, user.id);
       evaluationsDtoArray = await evaluationsService.findAll();
       expect(evaluationsDtoArray.length).toEqual(2);
     });
 
     it('should include the evaluation user', async () => {
-      await evaluationsService.create(EVALUATION_WITH_TAGS_1, user.id);
+      await evaluationsService.create(EVALUATION_WITH_TAGS_1, {}, user.id);
 
       const evaluations = await evaluationsService.findAll();
       expect(new UserDto(evaluations[0].user)).toEqual(user);
@@ -93,6 +92,7 @@ describe('EvaluationsService', () => {
       const owner = await usersService.findById(user.id);
       const evaluation = await evaluationsService.create(
         EVALUATION_WITH_TAGS_1,
+        {},
         user.id
       );
 
@@ -114,8 +114,10 @@ describe('EvaluationsService', () => {
 
   describe('findById', () => {
     it('should find evaluations by id', async () => {
+      expect.assertions(1);
       const evaluation = await evaluationsService.create(
         EVALUATION_WITH_TAGS_1,
+        {},
         user.id
       );
       const foundEvaluation = await evaluationsService.findById(evaluation.id);
@@ -136,12 +138,13 @@ describe('EvaluationsService', () => {
     it('should create a new evaluation with evaluation tags', async () => {
       const evaluation = await evaluationsService.create(
         EVALUATION_WITH_TAGS_1,
+        {},
         user.id
       );
       expect(evaluation.id).toBeDefined();
       expect(evaluation.updatedAt).toBeDefined();
       expect(evaluation.createdAt).toBeDefined();
-      expect(evaluation.data).toEqual(EVALUATION_WITH_TAGS_1.data);
+      expect(evaluation.data).toEqual({});
       expect(evaluation.filename).toEqual(EVALUATION_WITH_TAGS_1.filename);
       expect(evaluation.evaluationTags[0].evaluationId).toBeDefined();
       expect(evaluation.evaluationTags[0].updatedAt).toBeDefined();
@@ -149,7 +152,7 @@ describe('EvaluationsService', () => {
 
       if (EVALUATION_WITH_TAGS_1.evaluationTags === undefined) {
         throw new TypeError(
-          'Evaluation fixture does not have any assocaited tags.'
+          'Evaluation fixture does not have any associated tags.'
         );
       }
 
@@ -161,12 +164,13 @@ describe('EvaluationsService', () => {
     it('should create a new evaluation without evaluation tags', async () => {
       const evaluation = await evaluationsService.create(
         CREATE_EVALUATION_DTO_WITHOUT_TAGS,
+        {},
         user.id
       );
       expect(evaluation.id).toBeDefined();
       expect(evaluation.updatedAt).toBeDefined();
       expect(evaluation.createdAt).toBeDefined();
-      expect(evaluation.data).toEqual(CREATE_EVALUATION_DTO_WITHOUT_TAGS.data);
+      expect(evaluation.data).toEqual({});
       expect(evaluation.filename).toEqual(
         CREATE_EVALUATION_DTO_WITHOUT_TAGS.filename
       );
@@ -174,18 +178,12 @@ describe('EvaluationsService', () => {
       expect((await evaluationTagsService.findAll()).length).toBe(0);
     });
 
-    it('should throw an error when missing the data field', async () => {
-      expect.assertions(1);
-      await expect(
-        evaluationsService.create(CREATE_EVALUATION_DTO_WITHOUT_DATA, user.id)
-      ).rejects.toThrow('notNull Violation: Evaluation.data cannot be null');
-    });
-
     it('should throw an error when missing the filename field', async () => {
       expect.assertions(1);
       await expect(
         evaluationsService.create(
           CREATE_EVALUATION_DTO_WITHOUT_FILENAME,
+          {},
           user.id
         )
       ).rejects.toThrow(
@@ -205,6 +203,7 @@ describe('EvaluationsService', () => {
     it('should update all fields of an evaluation', async () => {
       const evaluation = await evaluationsService.create(
         EVALUATION_WITH_TAGS_1,
+        {},
         user.id
       );
       const updatedEvaluation = await evaluationsService.update(
@@ -221,6 +220,7 @@ describe('EvaluationsService', () => {
     it('should only update data if provided', async () => {
       const evaluation = await evaluationsService.create(
         EVALUATION_WITH_TAGS_1,
+        {},
         user.id
       );
       const updatedEvaluation = await evaluationsService.update(
@@ -240,6 +240,7 @@ describe('EvaluationsService', () => {
     it('should only update filename if provided', async () => {
       const evaluation = await evaluationsService.create(
         EVALUATION_WITH_TAGS_1,
+        {},
         user.id
       );
 
@@ -262,6 +263,7 @@ describe('EvaluationsService', () => {
     it('should remove an evaluation and its evaluation tags given an id', async () => {
       const evaluation = await evaluationsService.create(
         EVALUATION_WITH_TAGS_1,
+        {},
         user.id
       );
       const removedEvaluation = await evaluationsService.remove(evaluation.id);
