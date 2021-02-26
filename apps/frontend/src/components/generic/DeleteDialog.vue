@@ -13,7 +13,13 @@
         <v-btn color="blue darken-1" text @click="$emit('cancel')"
           >Cancel</v-btn
         >
-        <v-btn color="blue darken-1" data-cy="deleteConfirm" text @click="$emit('confirm')">OK</v-btn>
+        <v-btn
+          color="blue darken-1"
+          data-cy="deleteConfirm"
+          text
+          @click="$emit('confirm')"
+          >OK</v-btn
+        >
         <v-spacer />
       </v-card-actions>
     </v-card>
