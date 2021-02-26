@@ -18050,9 +18050,9 @@ rxjs@6.6.3:
     tslib "^1.9.0"
 
 rxjs@^6.3.3, rxjs@^6.4.0, rxjs@^6.5.4, rxjs@^6.6.0:
-  version "6.6.4"
-  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.6.4.tgz#e17ba67077055793e54a5a088a19425bcfd34f44"
-  integrity sha512-LeiFeAIlq7Zlx3j6hhofVQvAwElxMiInFOmr4vyKbZtWM5TDBSdtox46YQSAvS8jfy7izc8hwzbuA/uI1ITxXQ==
+  version "6.6.6"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.6.6.tgz#14d8417aa5a07c5e633995b525e1e3c0dec03b70"
+  integrity sha512-/oTwee4N4iWzAMAL9xdGKjkEHmIwupR3oXbQjCKywF1BeFohswF3vZdogbmEF6pZkOsXTzWkrZszrWpQTByYVg==
   dependencies:
     tslib "^1.9.0"
 
