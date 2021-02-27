@@ -282,7 +282,7 @@ describe('GroupsController', () => {
       await groupsService.addUserToGroup(privateGroup, basicUser, 'user');
 
       const response = await groupsController.remove(
-        {user: basicUser},
+        {user: owner},
         privateGroup.id
       );
       expect(response.id).toEqual(privateGroup.id);

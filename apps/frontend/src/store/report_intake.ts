@@ -4,7 +4,7 @@
 
 import {InspecDataModule} from '@/store/data_store';
 import Store from '@/store/store';
-import {Tag} from '@/types/models.ts';
+import {Tag} from '@/types/models';
 import {read_file_async} from '@/utilities/async_util';
 import {context, parse} from 'inspecjs';
 import {v4 as uuid} from 'uuid';
