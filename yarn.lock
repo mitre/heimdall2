@@ -20650,9 +20650,9 @@ vue-cli-plugin-apollo@^0.21.3:
     ts-node "^8.4.1"
 
 vue-cli-plugin-vuetify@~2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify/-/vue-cli-plugin-vuetify-2.1.0.tgz#1261d5866bca8f5c256f1b13abad2568fbcd6bb2"
-  integrity sha512-cvJR2+6U1PS4UUP7NnuylWfxM3LrzKnusOgrCZUyzr5abyDxf/t0TZy5EqfJwAa9/TsIO0W4gOoaoy/f4Yw0aQ==
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify/-/vue-cli-plugin-vuetify-2.1.1.tgz#9328cf730ba220a8ce564cc04cacec3c8605ca9d"
+  integrity sha512-JM4KpH+CNAmDWpxgzPkOfcXYSv6O3dFvnZdS7e6JmuOi8xpuTic5qzvaewOFnEa9BEAragyqiSPh5/L1PyJ1Rg==
   dependencies:
     null-loader "^3.0.0"
     semver "^7.1.2"
