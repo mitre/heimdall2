@@ -12,8 +12,13 @@ export class EvaluationDto implements IEvaluation {
   readonly createdAt: Date;
   readonly updatedAt: Date;
   readonly editable: boolean;
+  readonly shareURL: string | undefined;
 
-  constructor(evaluation: Evaluation, editable = false) {
+  constructor(
+    evaluation: Evaluation,
+    editable = false,
+    shareURL: string | undefined = undefined
+  ) {
     this.id = evaluation.id;
     this.filename = evaluation.filename;
     this.data = evaluation.data;
@@ -32,5 +37,6 @@ export class EvaluationDto implements IEvaluation {
     this.createdAt = evaluation.createdAt;
     this.updatedAt = evaluation.updatedAt;
     this.editable = editable;
+    this.shareURL = shareURL;
   }
 }

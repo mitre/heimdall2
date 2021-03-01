@@ -25,12 +25,12 @@
 import Component, {mixins} from 'vue-class-component';
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
 import {SnackbarModule} from '@/store/snackbar';
-import {EvaluationModule} from '@/store/evaluations'
-import RefreshButton from '@/components/generic/RefreshButton.vue'
+import {EvaluationModule} from '@/store/evaluations';
+import RefreshButton from '@/components/generic/RefreshButton.vue';
 
 import axios from 'axios';
 
-import {FileID, InspecIntakeModule} from '@/store/report_intake';
+import {FileID} from '@/store/report_intake';
 
 import {IEvaluation} from '@heimdall/interfaces';
 import ServerMixin from '@/mixins/ServerMixin';
@@ -94,27 +94,7 @@ export default class DatabaseReader extends mixins(ServerMixin) {
   }
 
   load_results(evaluations: IEvaluation[]): void {
-    Promise.all(
-      evaluations.map(async (evaluation) => {
-        return axios
-          .get<IEvaluation>(`/evaluations/${evaluation.id}`)
-          .then(({data}) => {
-            return InspecIntakeModule.loadText({
-              text: JSON.stringify(data.data),
-              filename: evaluation.filename,
-              database_id: evaluation.id,
-              createdAt: evaluation.createdAt,
-              updatedAt: evaluation.updatedAt,
-              tags: [] // Tags are not yet implemented, so for now the value is passed in empty
-            }).catch((err) => {
-              SnackbarModule.failure(err);
-            });
-          })
-          .catch((err) => {
-            SnackbarModule.failure(err);
-          });
-      })
-    ).then((fileIds: (FileID | void)[]) => {
+    EvaluationModule.load_results(evaluations).then((fileIds: (FileID | void)[]) => {
       this.$emit('got-files', fileIds.filter(Boolean));
     });
   }

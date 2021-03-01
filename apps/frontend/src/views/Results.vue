@@ -230,6 +230,9 @@ import {context} from 'inspecjs';
 
 import {ServerModule} from '@/store/server';
 import {capitalize} from 'lodash';
+import {EvaluationModule} from '../store/evaluations';
+import {IEvaluation} from '@heimdall/interfaces';
+import {SnackbarModule} from '../store/snackbar';
 
 @Component({
   components: {
@@ -282,6 +285,26 @@ export default class Results extends Vue {
 
   /** Determines if we should make the search bar colapseable */
   show_search_mobile: boolean = false;
+
+  /**
+   * On mount, check if we have been passed an evaluation
+   * to load from Vue router
+   */
+  async mounted() {
+    if(this.$route.params.id){
+      await EvaluationModule.getAllEvaluations();
+      const evaluationsToLoadArray: IEvaluation[] = await EvaluationModule.findEvaluationsByIds(this.$route.params.id.split(','));
+      if (evaluationsToLoadArray.length !== 0) {
+        EvaluationModule.load_results(evaluationsToLoadArray).then(() => {
+          this.$router.push('/results');
+        });
+      } else {
+        SnackbarModule.failure(`Heimdall was passed the following evaluations to open, but couldn't find any of them: ${this.$route.params.id}`);
+        this.$router.push('/results');
+      }
+    }
+  }
+
   /**
    * The currently selected file, if one exists.
    * Controlled by router.
@@ -298,7 +321,7 @@ export default class Results extends Vue {
    */
 
   get is_result_view(): boolean {
-    return this.current_route_name === 'results';
+    return this.current_route_name.indexOf('results') !== -1;
   }
 
   // Returns true if no files are uploaded

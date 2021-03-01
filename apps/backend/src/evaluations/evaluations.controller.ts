@@ -15,6 +15,7 @@ import {
 import {FileInterceptor} from '@nestjs/platform-express';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
+import {ConfigService} from '../config/config.service';
 import {GroupDto} from '../groups/dto/group.dto';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {CreateEvaluationInterceptor} from '../interceptors/create-evaluation-interceptor';
@@ -29,6 +30,7 @@ import {EvaluationsService} from './evaluations.service';
 export class EvaluationsController {
   constructor(
     private readonly evaluationsService: EvaluationsService,
+    private readonly configService: ConfigService,
     private readonly authz: AuthzService
   ) {}
   @Get(':id')
@@ -85,13 +87,18 @@ export class EvaluationsController {
       evaluationTags: createEvaluationDto.evaluationTags || [],
       public: createEvaluationDto.public
     };
+    // Do not include userId on the DTO so we can set it automatically to the uploader's id.
+    const createdDto = await this.evaluationsService.create(
+      updatedEvaluationDto,
+      serializedDta,
+      request.user.id
+    );
     return new EvaluationDto(
-      // Do not include userId on the DTO so we can set it automatically to the uploader's id.
-      await this.evaluationsService.create(
-        updatedEvaluationDto,
-        serializedDta,
-        request.user.id
-      )
+      createdDto,
+      false,
+      `${this.configService.get('EXTERNAL_URL') || 'disabled'}/results/${
+        createdDto.id
+      }`
     );
   }
 

@@ -1,5 +1,6 @@
 import {Module} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
+import {ConfigModule} from '../config/config.module';
 import {DatabaseModule} from '../database/database.module';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
@@ -20,6 +21,7 @@ import {EvaluationsService} from './evaluations.service';
       GroupUser,
       GroupEvaluation
     ]),
+    ConfigModule,
     DatabaseModule
   ],
   providers: [EvaluationsService, UsersService],

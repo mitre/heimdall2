@@ -23,6 +23,13 @@ const router = new Router({
       meta: {requiresAuth: true}
     },
     {
+      path: '/results/:id',
+      name: 'sharedResults',
+      component: Results,
+      alias: '/profiles/:id',
+      meta: {requiresAuth: true}
+    },
+    {
       path: '/compare',
       name: 'compare',
       component: Compare,
