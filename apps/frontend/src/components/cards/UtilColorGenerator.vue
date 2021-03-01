@@ -58,8 +58,8 @@ function colorVariants(cmod: ColorHack, base: string): Color {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const l: Record<string, any> = {};
   suffixes.forEach((suffix) => {
-    const full_name: string = `var(--v-${base}-${suffix})`;
-    const color = cmod.lookupColor(full_name);
+    const fullName = `var(--v-${base}-${suffix})`;
+    const color = cmod.lookupColor(fullName);
     l[suffix] = color;
   });
   return l as Color;
