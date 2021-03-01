@@ -56,10 +56,10 @@ function colorVariants(cmod: ColorHack, base: string): Color {
   // Generate
   // l cannot be typed Color as all fields in vuetify are typed as readonly
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let l: Record<string, any> = {};
+  const l: Record<string, any> = {};
   suffixes.forEach((suffix) => {
-    let full_name: string = `var(--v-${base}-${suffix})`;
-    let color = cmod.lookupColor(full_name);
+    const full_name: string = `var(--v-${base}-${suffix})`;
+    const color = cmod.lookupColor(full_name);
     l[suffix] = color;
   });
   return l as Color;
