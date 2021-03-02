@@ -24,11 +24,8 @@
 <script lang="ts">
 import Component, {mixins} from 'vue-class-component';
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
-import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations';
 import RefreshButton from '@/components/generic/RefreshButton.vue';
-
-import axios from 'axios';
 
 import {FileID} from '@/store/report_intake';
 
