@@ -22,6 +22,7 @@ import {saveAs} from 'file-saver';
 import {HDFControl} from 'inspecjs';
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {Prop} from 'vue-property-decorator';
+import _ from 'lodash';
 
 const MAX_CELL_SIZE = 32000; // Rounding a bit here.
 type CAATRow = string[];
@@ -53,54 +54,55 @@ export default class ExportCaat extends Vue {
         continue;
       }
 
-      // If it's impact is not 0 and it's gid (if one is provided) hasn't been seen, build the row. Else return null
-      if (control.wraps.impact === 0) {
-        continue;
+      // Designate a helper to deal with null/undefined
+      let fix = (x: string | null | undefined) =>
+        (x || '').replace(/(\r\n|\n|\r)/gm, "\r\n").slice(0, MAX_CELL_SIZE);
+
+      // Build up the row
+      row.push(formatted); // Control Number
+      row.push(
+        'Test ' + fix(control.wraps.id) + ' - ' + fix(control.wraps.title)
+      ); // Finding Title
+      if (control.start_time) {
+        row.push(this.convertDate(new Date(control.start_time), '/')); // Date Identified
       } else {
-        // Designate a helper to deal with null/undefined
-        let fix = (x: string | null | undefined) =>
-          (x || '').replace(/(\r\n|\n|\r)/gm, ' ').slice(0, MAX_CELL_SIZE);
-
-        // Build up the row
-        row.push(formatted); // Control Number
-        row.push(
-          'Test ' + fix(control.wraps.id) + ' - ' + fix(control.wraps.title)
-        ); // Finding Title
-        if (control.start_time) {
-          row.push(this.convertDate(new Date(control.start_time), '/')); // Date Identified
-        } else {
-          row.push('');
-        }
-        row.push(''); //row.push(fix(control.wraps.tags.stig_id)); // Finding ID
-        row.push(''); // Information System or Program Name
-        row.push(''); // Repeat Findings
-        row.push(''); // Repeat Finding CFACTS Weakness ID
-        row.push(fix(control.wraps.title)); // Finding Description
-        // Prepend the caveat to the Weakness Description if there is one
-        let caveat = control.descriptions.caveat ? '(Caveat: ' + fix(control.descriptions.caveat) + ')\n' : '';
-        row.push(caveat + fix(control.wraps.desc)); // Weakness Description
-        row.push('Security'); // Control Weakness Type
-        row.push('Self-Assessment '); // Source
-        row.push(''); //row.push("InSpec"); // Assessment/Audit Company
-        row.push('Test'); // Test Method
-        row.push(fix(control.descriptions.check || control.wraps.tags.check)); // Test Objective
-        let test_result = `${control.status}: ${control.message}`;
-        row.push(fix(test_result)); // Test Result Description
-        if (control.status === 'Passed') {
-          row.push('Satisfied');
-        } else {
-          row.push('Other Than Satisfied');
-        }
-        row.push(fix(control.descriptions.fix || control.wraps.tags.fix)); // Recommended Corrective Action(s)
-        row.push(''); // Effect on Business
-        row.push(''); // Likelihood
-        row.push(fix(control.severity)); // Impact
-
-        if (row.length !== this.header().length) {
-          throw new Error('Row of wrong size');
-        }
-        all_rows.push(row);
+        row.push('');
       }
+      row.push(''); //row.push(fix(control.wraps.tags.stig_id)); // Finding ID
+      row.push(''); // Information System or Program Name
+      row.push(''); // Repeat Findings
+      row.push(''); // Repeat Finding CFACTS Weakness ID
+      row.push(fix(control.wraps.title)); // Finding Description
+      // Prepend the caveat to the Weakness Description if there is one
+      let caveat = control.descriptions.caveat ? '(Caveat: ' + fix(control.descriptions.caveat) + ')\n' : '';
+      row.push(caveat + fix(control.wraps.desc)); // Weakness Description
+      row.push('Security'); // Control Weakness Type
+      row.push('Self-Assessment '); // Source
+      row.push(''); //row.push("InSpec"); // Assessment/Audit Company
+      row.push('Test'); // Test Method
+      row.push(fix(control.descriptions.check || control.wraps.tags.check)); // Test Objective
+      let test_result = `${control.status}: ${control.message}`;
+      if(_.get(control, 'wraps.attestation.explanation')){
+        test_result += ` -- ${_.get(control, 'wraps.attestation.explanation')}`
+      }
+      row.push(fix(test_result)); // Test Result Description
+      if (control.status === 'Passed') {
+        row.push('Satisfied');
+      }
+      else if (_.get(control, 'wraps.results[0].status') === 'skipped'){
+        row.push(`Skipped: ${_.get(control, 'wraps.results[0].skip_message')}`);
+      } else {
+        row.push('Other Than Satisfied');
+      }
+      row.push(fix(control.descriptions.fix || control.wraps.tags.fix)); // Recommended Corrective Action(s)
+      row.push(''); // Effect on Business
+      row.push(''); // Likelihood
+      row.push(fix(control.wraps.impact === 0 ? 'none' : (control.severity === 'medium' ? 'moderate' : control.severity))); // Impact
+
+      if (row.length !== this.header().length) {
+        throw new Error('Row of wrong size');
+      }
+      all_rows.push(row);
     }
     return all_rows;
   }
