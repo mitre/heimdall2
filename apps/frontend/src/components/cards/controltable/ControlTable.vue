@@ -7,7 +7,7 @@
           <v-card-title>Results View Data</v-card-title>
         </v-col>
         <v-col cols="auto" class="text-right">
-          <v-switch v-model="sync_tabs" label="Sync Tabs" />
+          <v-switch v-model="syncTabs" label="Sync Tabs" />
         </v-col>
         <v-col cols="auto" class="text-right">
           <v-switch
@@ -131,7 +131,7 @@ export default class ControlTable extends Vue {
   expand_all = false;
 
   // If the currently selected tab should sync
-  sync_tabs = false;
+  syncTabs = false;
   tab = 'tab-test';
 
   // List of currently expanded options. If unique id is in here, it is expanded
@@ -182,7 +182,7 @@ export default class ControlTable extends Vue {
   }
 
   async updateTab(tab: string){
-    if(this.sync_tabs){
+    if(this.syncTabs){
       this.tab = tab
     }
   }
