@@ -31,6 +31,6 @@
   "devDependencies": {
     "cypress": "6.6.0",
     "dotenv-cli": "^4.0.0",
-    "lerna": "^3.22.1"
+    "lerna": "^4.0.0"
   }
 }
