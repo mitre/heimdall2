@@ -2,11 +2,18 @@
  * Provides utlities for comparing executions
  */
 
-import {EvaluationFile} from '@/store/report_intake';
+import {SourcedContextualizedEvaluation} from '@/store/report_intake';
 import {context} from 'inspecjs';
 import {ContextualizedEvaluation} from 'inspecjs/dist/context';
 
 export const NOT_SELECTED = 'not selected';
+
+// Unique ID is the unique ID of a file
+// Controls is a list of controls
+interface ResultControls {
+  unique_id: string;
+  controls: context.ContextualizedControl[];
+}
 
 /**
  * Represents a change in a property.
@@ -156,49 +163,25 @@ export function get_eval_start_time(
   return null;
 }
 
-export function sorted_evals(
-  input_evals: Readonly<context.ContextualizedEvaluation[]>
-): Readonly<context.ContextualizedEvaluation[]> {
-  let evals = [...input_evals];
-  evals = evals.sort((a, b) => {
-    const a_date = new Date(get_eval_start_time(a) || 0);
-    const b_date = new Date(get_eval_start_time(b) || 0);
-    return a_date.valueOf() - b_date.valueOf();
-  });
-  return evals;
-}
-
-export function sorted_eval_files(
-  files: Readonly<EvaluationFile[]>
-): Readonly<EvaluationFile[]> {
-  let fileArr = [...files];
-  fileArr = fileArr.sort((a, b) => {
-    const a_date = new Date(get_eval_start_time(a.evaluation) || 0);
-    const b_date = new Date(get_eval_start_time(b.evaluation) || 0);
-    return a_date.valueOf() - b_date.valueOf();
-  });
-  return fileArr;
-}
-
 /**
  * Grabs the "top" (IE non-overlayed/end of overlay chain) controls from the execution.
  *
  * @param exec The execution to grab controls from
  */
 function extract_top_level_controls(
-  exec: context.ContextualizedEvaluation
-): context.ContextualizedControl[] {
+  exec: SourcedContextualizedEvaluation
+): ResultControls {
   // Get all controls
   const allControls = exec.contains.flatMap((p) => p.contains);
 
   // Filter to controls that aren't overlayed further
   const top = allControls.filter((control) => control.extended_by.length === 0);
-  return top;
+  return {unique_id: exec.from_file.unique_id, controls: top};
 }
-/** An array of contextualized controls with the same ID, sorted by time */
-export type ControlSeries = Array<context.ContextualizedControl | null>;
+/** An object of contextualized controls with the same V-ID */
+export type ControlSeries = {[key: string]: context.ContextualizedControl};
 
-/** Matches ControlID keys to Arrays of Controls, sorted by time */
+/** Matches ControlID keys to Arrays of Controls */
 export type ControlSeriesLookup = {[key: string]: ControlSeries};
 
 /** Helps manage comparing change(s) between one or more profile executions */
@@ -206,40 +189,28 @@ export class ComparisonContext {
   /** A list of old-new control pairings */
   pairings: ControlSeriesLookup;
 
-  constructor(executions: readonly context.ContextualizedEvaluation[]) {
+  constructor(executions: readonly SourcedContextualizedEvaluation[]) {
     // Get all of the "top level" controls from each execution, IE those that actually ran
-    const allControls = executions.flatMap(extract_top_level_controls);
-
-    // Organize them by ID
-    const matched: ControlSeriesLookup = {};
-    for (const ctrl of allControls) {
-      const id = ctrl.data.id;
-      if (!(id in matched)) {
-        matched[id] = [];
-      }
-    }
-    const sortedEval: Readonly<
-      context.ContextualizedEvaluation[]
-    > = sorted_evals(executions);
-    for (const ev of sortedEval) {
-      const evControlsById: {
-        [k: string]: context.ContextualizedControl;
-      } = {};
-      for (const prof of ev.contains) {
-        for (const ctrl of prof.contains) {
-          if (ctrl.root == ctrl) {
-            evControlsById[ctrl.data.id] = ctrl;
+    // grouped by their files unique id.
+    const allControls = executions.map(extract_top_level_controls);
+    // Organize the controls by ID
+    // The structure this returns is as follows:
+    // {{"V-XXX": {"unique_file_id_1": control, "unique_file_id_2": control, ...}}}
+    const matched = allControls.reduce(
+      (acc: ControlSeriesLookup, evaluation: ResultControls) => {
+        evaluation.controls.forEach((control) => {
+          // Group initialization
+          if (!acc[control.data.id]) {
+            acc[control.data.id] = {};
           }
-        }
-      }
-      for (const id of Object.keys(matched)) {
-        if (id in evControlsById) {
-          matched[id].push(evControlsById[id]);
-        } else {
-          matched[id].push(null);
-        }
-      }
-    }
+          // Grouping
+          acc[control.data.id][evaluation.unique_id] = control;
+        });
+
+        return acc;
+      },
+      {}
+    );
     // Store
     this.pairings = matched;
   }
