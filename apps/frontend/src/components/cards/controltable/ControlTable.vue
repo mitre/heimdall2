@@ -17,7 +17,7 @@
           <v-switch
             v-model="expand_all"
             label="Expand All"
-            class="mr-2"
+            class="mr-5"
             @change="toggleExpandAllEvaluations()"
           />
         </v-col>
