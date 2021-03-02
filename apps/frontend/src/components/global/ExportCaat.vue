@@ -97,7 +97,8 @@ export default class ExportCaat extends Vue {
       row.push(fix(control.descriptions.fix || control.wraps.tags.fix)); // Recommended Corrective Action(s)
       row.push(''); // Effect on Business
       row.push(''); // Likelihood
-      row.push(fix(control.wraps.impact === 0 ? 'none' : (control.severity === 'medium' ? 'moderate' : control.severity))); // Impact
+      const controlSeverity = control.severity === 'medium' ? 'moderate' : control.severity
+      row.push(fix(control.wraps.impact === 0 ? 'none' : controlSeverity)); // Impact
 
       if (row.length !== this.header().length) {
         throw new Error('Row of wrong size');
