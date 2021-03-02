@@ -7,6 +7,9 @@
           <v-card-title>Results View Data</v-card-title>
         </v-col>
         <v-col cols="auto" class="text-right">
+          <v-switch v-model="sync_tabs" label="Sync Tabs" />
+        </v-col>
+        <v-col cols="auto" class="text-right">
           <v-switch
             v-model="single_expand"
             label="Single Expand"
@@ -76,6 +79,8 @@
         <ControlRowDetails
           v-if="expanded.includes(item.key)"
           :control="item.control"
+          :tab="tab"
+          @update:tab="updateTab"
         />
       </div>
     </v-lazy>
@@ -125,6 +130,10 @@ export default class ControlTable extends Vue {
   // Whether to expand all evaluations
   expand_all = false;
 
+  // If the currently selected tab should sync
+  sync_tabs = false;
+  tab = 'tab-test';
+
   // List of currently expanded options. If unique id is in here, it is expanded
   expanded: Array<string> = [];
 
@@ -169,6 +178,12 @@ export default class ControlTable extends Vue {
       this.expanded = this.items.map((items) => items.key);
     } else {
       this.expanded = []
+    }
+  }
+
+  async updateTab(tab: string){
+    if(this.sync_tabs){
+      this.tab = tab
     }
   }
 
