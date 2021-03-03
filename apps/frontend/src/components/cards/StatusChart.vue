@@ -26,7 +26,7 @@ import {Filter} from '@/store/data_filters';
   }
 })
 export default class StatusChart extends Vue {
-  @Prop({type: String}) readonly value!: string | null;
+  @Prop({type: String, default: null}) readonly value!: string | null;
   @Prop({type: Object, required: true}) readonly filter!: Filter;
   @Prop({type: Boolean, default: false}) show_compliance!: boolean;
 
