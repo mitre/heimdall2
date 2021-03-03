@@ -1,75 +1,40 @@
 <template>
-  <div :watcher="file_num_watch">
-    <v-row @click="viewAll">
+  <div>
+    <v-row @click="expanded = !expanded">
       <!-- Control ID -->
       <v-col cols="3" xs="3" sm="2" md="1" class="pt-0">
         <div style="text-align: center; padding: 19px">
-          {{ control_id }}
+          {{ controlId }}
         </div>
       </v-col>
-
-      <!-- Various Statuses -->
-      <v-col
-        v-for="index in shown_files"
-        :key="index - 1"
-        cols="4"
-        xs="4"
-        md="5"
-        filter
-        :value="index - 1"
-      >
+      <v-col v-for="fileId in fileIds" :key="fileId" cols="4" md="5" filter>
         <v-btn
-          v-if="hdf_controls[index - 1 + shift] != null"
+          v-if="controls[fileId]"
           width="100%"
-          :color="`status${hdf_controls[index - 1 + shift].status.replace(
-            ' ',
-            ''
-          )}`"
+          :color="`status${status_class_for(controls[fileId])}`"
+          :depressed="expanded"
+          :outlined="expanded"
           centered
-          :depressed="selection[index - 1 + shift]"
-          :outlined="selection[index - 1 + shift]"
-          @click="view(index - 1 + shift)"
         >
-          <template
-            v-if="hdf_controls[index - 1 + shift].status == 'Not Applicable'"
-          >
-            Not <br />
-            Applicable
-          </template>
-          <template
-            v-else-if="hdf_controls[index - 1 + shift].status == 'Not Reviewed'"
-          >
-            Not <br />
-            Reviewed
-          </template>
-          <template v-else>
-            {{ hdf_controls[index - 1 + shift].status }}
-          </template>
+          {{ hdf_for_control(controls[fileId]).status }}
         </v-btn>
       </v-col>
     </v-row>
-    <div v-if="num_selected > 0">
+    <div v-if="expanded">
       <v-row>
         <v-col key="delta" cols="12">
-          <DeltaView :delta="delta" :shift="shift" />
+          <DeltaView :delta="delta" />
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="3" xs="3" sm="2" md="1" />
-        <v-col
-          v-for="index in shown_files"
-          :key="index - 1"
-          cols="4"
-          xs="4"
-          md="5"
-        >
+        <v-col cols="3" sm="2" md="1" />
+        <v-col v-for="fileId in fileIds" :key="fileId" cols="4" md="5">
           <ControlRowDetails
-            v-if="selection[index - 1 + shift]"
+            v-if="controls[fileId]"
             :tab.sync="tab"
-            :control="controls[index - 1 + shift]"
+            :control="controls[fileId]"
           />
         </v-col>
-        <!-- </transition-group> -->
       </v-row>
     </div>
     <v-divider dark />
@@ -81,11 +46,11 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {context} from 'inspecjs';
 import {HDFControl} from 'inspecjs';
-import {ControlDelta} from '@/utilities/delta_util';
+import {ControlDelta, ControlSeries} from '@/utilities/delta_util';
 import DeltaView from '@/components/cards/comparison/DeltaView.vue';
 import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails.vue';
-import {FilteredDataModule} from '@/store/data_filters';
 import {Prop} from 'vue-property-decorator';
+import {FileID} from '@/store/report_intake';
 
 @Component({
   components: {
@@ -94,112 +59,39 @@ import {Prop} from 'vue-property-decorator';
   }
 })
 export default class CompareRow extends Vue {
-  @Prop({type: Array, required: true})
-  readonly controls!: context.ContextualizedControl[];
-  @Prop({type: Number, required: true}) readonly shown_files!: number;
-  @Prop({type: Number, required: true}) readonly shift!: number;
+  @Prop({type: String, required: true}) readonly controlId!: string;
+  @Prop({type: Array, required: true}) readonly fileIds!: FileID[];
+  @Prop({type: Object, required: true}) readonly controls!: ControlSeries;
 
-  /** Models the currently selected chips. If it's a number */
-  selection: boolean[] = [];
-  tab: string = 'tab-test';
+  expanded = false;
+  tab = 'tab-test';
 
-  /** Initialize our selection */
-  mounted() {
-    // Pick the first and last control, or as close as we can get to that
-    if (this.controls.length === 0) {
-      this.selection.splice(0);
-    } else if (this.controls.length === 1) {
-      this.selection.push(false);
-    } else {
-      this.selection = [];
-      this.controls.forEach(() => {
-        this.selection.push(false);
-      });
-    }
-  }
-
-  get control_id(): string {
-    for (let ctrl of this.hdf_controls) {
-      if (ctrl != null) {
-        return ctrl.wraps.id;
+  status_class_for(control: ControlSeries | undefined): string {
+    if (control !== undefined) {
+      const hdfControl = this.hdf_for_control(control);
+      if (hdfControl !== undefined) {
+        return hdfControl.status.replace(
+            ' ',
+            ''
+          )
       }
     }
-    return 'Error';
+    return '';
   }
 
-  /** Provides actual data about which controls we have selected */
-  get selected_controls(): context.ContextualizedControl[] {
-    // Multiple selected
-    var selected = [];
-    var i;
-    for (i = 0; i < this.selection.length; i++) {
-      if (this.selection[i]) {
-        selected.push(this.controls[i]);
-      }
-    }
-    return selected;
+  hdf_for_control(control: ControlSeries): HDFControl | undefined {
+    return control?.root?.hdf || undefined;
   }
 
-  /** Just maps controls to hdf. Makes our template a bit less verbose */
-  get hdf_controls(): Array<HDFControl | null> {
-    return this.controls.map((c) => {
-      if (c == null) {
-        return null;
-      }
-      return c.root.hdf;
-    });
-  }
-
-  /** If exactly two controls selected, provides a delta. Elsewise gives null */
+  /** Extracts relevant controls for currently visible fileIds and passes those to ControlDelta */
   get delta(): ControlDelta | null {
-    let delt_data = [];
-    let parse = 0;
-    for (let i = 0; i < this.selection.length; i++) {
-      if (this.selection[i]) {
-        delt_data.push(this.selected_controls[parse]);
-        parse++;
-      } else {
-        delt_data.push(null);
+    const deltaData: context.ContextualizedControl[] = [];
+    Object.entries(this.controls).forEach(([fileId, controls]) => {
+      if(this.fileIds.includes(fileId)) {
+        deltaData.push(controls);
       }
-    }
-    return new ControlDelta(delt_data);
+    });
+    return new ControlDelta(deltaData);
   }
-
-  //This is used to SELECT controls to view their data
-  view(index: number) {
-    Vue.set(this.selection, index, !this.selection[index]);
-  }
-
-  viewAll() {
-    let allTrue = true;
-    for (let i = 0; i < this.selection.length; i++) {
-      if (!this.selection[i]) {
-        allTrue = false;
-        break;
-      }
-    }
-    for (let i = 0; i < this.selection.length; i++) {
-      Vue.set(this.selection, i, !allTrue);
-    }
-  }
-
-  //returns the number of selected controls in a row, used to determine what to show
-  get num_selected(): number {
-    var selected = 0;
-    var i;
-    for (i = 0; i < this.selection.length; i++) {
-      if (this.selection[i]) {
-        selected += 1;
-      }
-    }
-    return selected;
-  }
-
-  //Updates selection array to match file count
-  get file_num_watch(): string {
-    this.selection = FilteredDataModule.selected_file_ids.map(() => false);
-    return FilteredDataModule.selected_file_ids.length + '';
-  }
-  /** If more than one row selected */
 }
 </script>

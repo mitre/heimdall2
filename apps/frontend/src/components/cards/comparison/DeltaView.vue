@@ -1,7 +1,6 @@
 <!-- Visualizes a delta between two controls -->
 <template>
   <v-container fluid>
-    <!-- Header stuff -->
     <v-row v-if="head_changes" justify="center">
       <v-col cols="12">
         <span class="font-weight-black"> Metadata changes: </span>
@@ -12,7 +11,6 @@
       v-for="change in header_changes.changes"
       :key="change.name"
       :change="change"
-      :shift="shift"
     />
   </v-container>
 </template>
@@ -30,25 +28,16 @@ import {
 import ChangeItem from '@/components/cards/comparison/ChangeItem.vue';
 import TruncatedText from '@/components/generic/TruncatedText.vue';
 
-//TODO: add line numbers
-import 'prismjs';
-import 'prismjs/components/prism-makefile.js';
-import 'prismjs/components/prism-ruby.js';
-//@ts-ignore
-import Prism from 'vue-prism-component';
 import {Prop} from 'vue-property-decorator';
-Vue.component('Prism', Prism);
 
 @Component({
   components: {
     ChangeItem,
     TruncatedText,
-    Prism
   }
 })
 export default class DeltaView extends Vue {
   @Prop({required: true}) readonly delta!: ControlDelta;
-  @Prop({required: true}) readonly shift!: number;
 
   get head_changes(): boolean {
     for (let change of this.header_changes.changes) {
