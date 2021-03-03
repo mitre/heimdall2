@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="valueSync" max-width="550px">
+  <v-dialog v-model="vSync" max-width="550px">
     <template #activator="{on, attrs}">
       <slot name="clickable" :on="on" :attrs="attrs" />
     </template>
@@ -29,7 +29,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
+import {Prop, VModel} from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -38,16 +38,8 @@ import {Prop} from 'vue-property-decorator';
 export default class DeleteDialog extends Vue {
   @Prop({required: true, type: String}) readonly type!: string;
   @Prop({required: true, type: Boolean}) readonly value!: boolean;
-
   // This passes through the v-model input to the child v-dialog and back up to
   // the parent component.
-  get valueSync() {
-    return this.value;
-  }
-
-  set valueSync(value: boolean) {
-    this.$emit('input', value);
-  }
-
+  @VModel({type: Boolean}) vSync!: boolean;
 }
 </script>
