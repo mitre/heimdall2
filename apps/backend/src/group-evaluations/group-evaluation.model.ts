@@ -38,8 +38,4 @@ export class GroupEvaluation extends Model {
   @AllowNull(false)
   @Column(DataType.DATE)
   updatedAt!: Date;
-
-  get modelName(): string {
-    return 'GroupEvaluation';
-  }
 }

@@ -50,8 +50,4 @@ export class Group extends Model {
 
   @BelongsToMany(() => Evaluation, () => GroupEvaluation)
   evaluations!: Array<Evaluation & {GroupEvaluation: GroupEvaluation}>;
-
-  get modelName(): string {
-    return 'Group';
-  }
 }

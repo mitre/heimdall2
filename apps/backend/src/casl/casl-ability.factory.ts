@@ -1,17 +1,13 @@
-import {Ability, AbilityBuilder, AbilityClass} from '@casl/ability';
+import {Ability, AbilityBuilder, AbilityClass, ExtractSubjectType, InferSubjects} from '@casl/ability';
 import {Injectable} from '@nestjs/common';
 import {Evaluation} from '../evaluations/evaluation.model';
+import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
 
-type Subjects =
-  | typeof User
-  | User
-  | typeof Evaluation
-  | Evaluation
-  | typeof Group
-  | Group
-  | 'all';
+type AllTypes = typeof User | typeof Evaluation | typeof Group
+
+type Subjects = InferSubjects<AllTypes> | 'all';
 
 export enum Action {
   Manage = 'manage', // manage is a special keyword in CASL which represents "any" action.
@@ -27,6 +23,22 @@ export enum Action {
   UpdateRole = 'update-role',
   AddEvaluation = 'add-evaluation',
   RemoveEvaluation = 'remove-evaluation'
+}
+
+interface UserQuery extends User {
+  id: User['id'],
+  'GroupUser.role': GroupUser['role']
+  GroupUser: GroupUser
+}
+
+interface GroupQuery extends Group {
+  'users': UserQuery[],
+  'users.id': User['id']
+}
+
+interface EvaluationQuery extends Evaluation {
+  'groups.users': UserQuery[],
+  'groups.users.id': User['id']
 }
 
 export type AppAbility = Ability<[Action, Subjects]>;
@@ -54,11 +66,11 @@ export class CaslAbilityFactory {
     // Trying to compare the whole object here doesn't work since the
     // user object includes `GroupUser` and therefore the passed in user
     // is not equal to the user on the Group
-    can([Action.Read, Action.AddEvaluation, Action.RemoveEvaluation], Group, {
+    can<GroupQuery>([Action.Read, Action.AddEvaluation, Action.RemoveEvaluation], Group, {
       'users.id': user.id
     });
 
-    can([Action.Manage], Group, {
+    can<GroupQuery>([Action.Manage], Group, {
       users: {
         $elemMatch: {id: user.id, 'GroupUser.role': 'owner'}
       }
@@ -74,14 +86,16 @@ export class CaslAbilityFactory {
       userId: user.id
     });
 
-    can([Action.Read], Evaluation, {'groups.users.id': user.id});
+    can<EvaluationQuery>([Action.Read], Evaluation, {'groups.users.id': user.id});
 
-    can([Action.Manage], Evaluation, {
+    can<EvaluationQuery>([Action.Manage], Evaluation, {
       'groups.users': {
         $elemMatch: {id: user.id, 'GroupUser.role': 'owner'}
       }
     });
 
-    return build();
+    return build({
+      detectSubjectType: object => object.constructor as ExtractSubjectType<Subjects>
+    });
   }
 }

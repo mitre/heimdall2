@@ -88,8 +88,4 @@ export class User extends Model {
 
   @BelongsToMany(() => Group, () => GroupUser)
   groups!: Array<Group & {GroupUser: GroupUser}>;
-
-  get modelName(): string {
-    return 'User';
-  }
 }

@@ -44,8 +44,4 @@ export class GroupUser extends Model {
   @AllowNull(false)
   @Column(DataType.DATE)
   updatedAt!: Date;
-
-  get modelName(): string {
-    return 'GroupUser';
-  }
 }
