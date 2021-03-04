@@ -19,13 +19,22 @@ describe('CaslAbilityFactory', () => {
 
   it('should allow users to get, put and delete their own user', () => {
     expect(
-      userAbility.can(Action.Read, Object.assign(User.prototype, TEST_USER_WITH_ID))
+      userAbility.can(
+        Action.Read,
+        Object.assign(User.prototype, TEST_USER_WITH_ID)
+      )
     ).toBeTruthy();
     expect(
-      userAbility.can(Action.Update, Object.assign(User.prototype, TEST_USER_WITH_ID))
+      userAbility.can(
+        Action.Update,
+        Object.assign(User.prototype, TEST_USER_WITH_ID)
+      )
     ).toBeTruthy();
     expect(
-      userAbility.can(Action.Delete, Object.assign(User.prototype, TEST_USER_WITH_ID))
+      userAbility.can(
+        Action.Delete,
+        Object.assign(User.prototype, TEST_USER_WITH_ID)
+      )
     ).toBeTruthy();
   });
 
@@ -49,7 +58,10 @@ describe('CaslAbilityFactory', () => {
       )
     ).toBeFalsy();
     expect(
-      userAbility.can(Action.UpdateRole, Object.assign(User.prototype, TEST_USER_WITH_ID))
+      userAbility.can(
+        Action.UpdateRole,
+        Object.assign(User.prototype, TEST_USER_WITH_ID)
+      )
     ).toBeFalsy();
   });
 
@@ -59,7 +71,10 @@ describe('CaslAbilityFactory', () => {
 
   it('should allow administrators to delete users without providing password except themselves', () => {
     expect(
-      adminAbility.can(Action.Delete, Object.assign(User.prototype, TEST_USER_WITH_ID))
+      adminAbility.can(
+        Action.Delete,
+        Object.assign(User.prototype, TEST_USER_WITH_ID)
+      )
     ).toBeTruthy();
     expect(
       adminAbility.can(
@@ -68,16 +83,25 @@ describe('CaslAbilityFactory', () => {
       )
     ).toBeTruthy();
     expect(
-      adminAbility.can(Action.DeleteNoPassword, Object.assign(User.prototype, ADMIN_WITH_ID))
+      adminAbility.can(
+        Action.DeleteNoPassword,
+        Object.assign(User.prototype, ADMIN_WITH_ID)
+      )
     ).toBeFalsy();
   });
 
   it('should allow administrators to update users', () => {
     expect(
-      adminAbility.can(Action.Update, Object.assign(User.prototype, TEST_USER_WITH_ID))
+      adminAbility.can(
+        Action.Update,
+        Object.assign(User.prototype, TEST_USER_WITH_ID)
+      )
     ).toBeTruthy();
     expect(
-      adminAbility.can(Action.Update, Object.assign(User.prototype, ADMIN_WITH_ID))
+      adminAbility.can(
+        Action.Update,
+        Object.assign(User.prototype, ADMIN_WITH_ID)
+      )
     ).toBeTruthy();
   });
 
@@ -89,7 +113,10 @@ describe('CaslAbilityFactory', () => {
       )
     ).toBeTruthy();
     expect(
-      adminAbility.can(Action.UpdateNoPassword, Object.assign(User.prototype, ADMIN_WITH_ID))
+      adminAbility.can(
+        Action.UpdateNoPassword,
+        Object.assign(User.prototype, ADMIN_WITH_ID)
+      )
     ).toBeFalsy();
   });
 
@@ -104,7 +131,10 @@ describe('CaslAbilityFactory', () => {
 
   it('should allow administrators to update role', () => {
     expect(
-      adminAbility.can(Action.UpdateRole, Object.assign(User.prototype, TEST_USER_WITH_ID))
+      adminAbility.can(
+        Action.UpdateRole,
+        Object.assign(User.prototype, TEST_USER_WITH_ID)
+      )
     ).toBeTruthy();
   });
 });

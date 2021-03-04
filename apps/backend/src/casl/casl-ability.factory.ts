@@ -1,11 +1,17 @@
-import {Ability, AbilityBuilder, AbilityClass, ExtractSubjectType, InferSubjects} from '@casl/ability';
+import {
+  Ability,
+  AbilityBuilder,
+  AbilityClass,
+  ExtractSubjectType,
+  InferSubjects
+} from '@casl/ability';
 import {Injectable} from '@nestjs/common';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
 
-type AllTypes = typeof User | typeof Evaluation | typeof Group
+type AllTypes = typeof User | typeof Evaluation | typeof Group;
 
 type Subjects = InferSubjects<AllTypes> | 'all';
 
@@ -26,19 +32,19 @@ export enum Action {
 }
 
 interface UserQuery extends User {
-  id: User['id'],
-  'GroupUser.role': GroupUser['role']
-  GroupUser: GroupUser
+  id: User['id'];
+  'GroupUser.role': GroupUser['role'];
+  GroupUser: GroupUser;
 }
 
 interface GroupQuery extends Group {
-  'users': UserQuery[],
-  'users.id': User['id']
+  users: UserQuery[];
+  'users.id': User['id'];
 }
 
 interface EvaluationQuery extends Evaluation {
-  'groups.users': UserQuery[],
-  'groups.users.id': User['id']
+  'groups.users': UserQuery[];
+  'groups.users.id': User['id'];
 }
 
 export type AppAbility = Ability<[Action, Subjects]>;
@@ -66,9 +72,13 @@ export class CaslAbilityFactory {
     // Trying to compare the whole object here doesn't work since the
     // user object includes `GroupUser` and therefore the passed in user
     // is not equal to the user on the Group
-    can<GroupQuery>([Action.Read, Action.AddEvaluation, Action.RemoveEvaluation], Group, {
-      'users.id': user.id
-    });
+    can<GroupQuery>(
+      [Action.Read, Action.AddEvaluation, Action.RemoveEvaluation],
+      Group,
+      {
+        'users.id': user.id
+      }
+    );
 
     can<GroupQuery>([Action.Manage], Group, {
       users: {
@@ -86,7 +96,9 @@ export class CaslAbilityFactory {
       userId: user.id
     });
 
-    can<EvaluationQuery>([Action.Read], Evaluation, {'groups.users.id': user.id});
+    can<EvaluationQuery>([Action.Read], Evaluation, {
+      'groups.users.id': user.id
+    });
 
     can<EvaluationQuery>([Action.Manage], Evaluation, {
       'groups.users': {
@@ -95,7 +107,8 @@ export class CaslAbilityFactory {
     });
 
     return build({
-      detectSubjectType: object => object.constructor as ExtractSubjectType<Subjects>
+      detectSubjectType: (object) =>
+        object.constructor as ExtractSubjectType<Subjects>
     });
   }
 }
