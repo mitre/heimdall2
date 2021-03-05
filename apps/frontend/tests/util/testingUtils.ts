@@ -9,18 +9,16 @@ import {AllRaw} from '../util/fs';
 export function createTestingVue() {}
 
 export function loadSample(sampleName: string) {
-  let sample: Sample = {filename: '', data: ''};
-  for (const samp of samples) {
-    if (samp.filename === sampleName) {
-      sample = samp;
-    }
-  }
-  if (sample.filename === '') {
+  const sample: Sample | undefined = samples.find(
+    (samp) => samp.filename === sampleName
+  );
+  if (sample === undefined) {
     return;
   }
+  const data: string = require(`../../public${sample.path}`);
   return InspecIntakeModule.loadText({
     filename: sampleName,
-    text: JSON.stringify(sample.data)
+    text: JSON.stringify(data)
   });
 }
 
