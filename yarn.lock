@@ -5724,9 +5724,9 @@ await-to-js@^2.0.1:
   integrity sha512-CHBC6gQGCIzjZ09tJ+XmpQoZOn4GdWePB4qUweCaKNJ0D3f115YdhmYVTZ4rMVpiJ3cFzZcTYK1VMYEICV4YXw==
 
 aws-sdk@^2.573.0:
-  version "2.856.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.856.0.tgz#a82719952949bdfda73832b465321a49577cf784"
-  integrity sha512-B9uRDhIxlmaz5GIDC2Q+OgVMnsPFzuu1HknWedpTre6ARG+Ukm8KQ3VA5MhsBtSm61X5u1Uwk5AlEv+feLaShA==
+  version "2.857.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.857.0.tgz#830fdabb716ca1b4b621053749e89119b77899cf"
+  integrity sha512-GIdknKB08AKe4tL6T9kMWv2RZUAI044Z/PkJ0bd5thqDnct8AhEusIO0bpoQdM8RBWgjlB0AUBHroI7AdEnX8g==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -8445,9 +8445,9 @@ date-fns@^1.27.2:
   integrity sha512-hBSVCvSmWC+QypYObzwGOd9wqdDpOt+0wl0KbU+R+uuZBS1jN8VsD1ss3irQDknRj5NvxiTF6oj/nDRnN/UQNw==
 
 date-fns@^2.6.0:
-  version "2.18.0"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.18.0.tgz#08e50aee300ad0d2c5e054e3f0d10d8f9cdfe09e"
-  integrity sha512-NYyAg4wRmGVU4miKq5ivRACOODdZRY3q5WLmOJSq8djyzftYphU7dTHLcEtLqEvfqMKQ0jVv91P4BAwIjsXIcw==
+  version "2.19.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.19.0.tgz#65193348635a28d5d916c43ec7ce6fbd145059e1"
+  integrity sha512-X3bf2iTPgCAQp9wvjOQytnf5vO5rESYRXlPIVcgSbtT5OTScPcsf9eZU+B/YIkKAtYr5WeCii58BgATrNitlWg==
 
 dateformat@^3.0.0:
   version "3.0.3"
@@ -8830,9 +8830,9 @@ diff-sequences@^26.6.2:
   integrity sha512-Mv/TDa3nZ9sbc5soK+OoA74BsS3mL37yixCvUAQkiuA4Wz6YtwP/K47n2rv2ovzHZvoiQeA5FTQOschKkEwB0Q==
 
 diff2html@^3.1.7:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/diff2html/-/diff2html-3.2.0.tgz#93fda2cd06ae2c7847e1380d6f0afb1cb9fea30e"
-  integrity sha512-XbiY9AuQNuGKq107b4PlimQJsC8f1qomPqRbvuZ/ShCJaPVkn5rvE2I62ZwQSJotoGmqQ0pdvMhQx5Fd76IrCg==
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/diff2html/-/diff2html-3.3.0.tgz#b9965b36a2fbb35f362cbc4076741e0fbf905758"
+  integrity sha512-gkMggUi5U/QOhPuIi7d7mugP1tFyZucvvbJNX4R2v0K1EQHpwRe/EWM2YUpU2icgX5VPFcG+5Yq0maN3ILnq0w==
   dependencies:
     diff "4.0.2"
     hogan.js "3.0.2"
@@ -20235,9 +20235,9 @@ typescript@4.1.5:
   integrity sha512-6OSu9PTIzmn9TCDiovULTnET6BgXtDYL4Gg4szY+cGsc3JP1dQL8qvE8kShTRx1NIw4Q9IBHlwODjkjWEtMUyA==
 
 typescript@^4.0.5:
-  version "4.2.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.2.tgz#1450f020618f872db0ea17317d16d8da8ddb8c4c"
-  integrity sha512-tbb+NVrLfnsJy3M59lsDgrzWIflR4d4TIUjz+heUnHZwdF7YsrMTKoRERiIvI2lvBG95dfpLxB21WZhys1bgaQ==
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.3.tgz#39062d8019912d43726298f09493d598048c1ce3"
+  integrity sha512-qOcYwxaByStAWrBf4x0fibwZvMRG+r4cQoTjbPtUlrWjBHbmCAww1i448U0GJ+3cNNEtebDteo/cHOR3xJ4wEw==
 
 typescript@~3.9.3:
   version "3.9.7"
