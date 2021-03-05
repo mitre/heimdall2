@@ -6,11 +6,9 @@ This repository contains the source code for the Heimdall 2 Backend and Frontend
 
 ## Demos
 
-### Images
+### Video
 
-| Loading Files                                                | Video                                                        |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| ![Heimdall Lite 2.0 Demo GIF](https://github.com/mitre/heimdall2/raw/master/apps/frontend/public/heimdall-lite-2.0-demo-5fps.gif) | [![Heimdall Lite 2.0 Demo YouTube](https://github.com/mitre/heimdall2/raw/master/apps/frontend/public/heimdall-preview.jpg)](https://www.youtube.com/watch?v=1jXHWZ0gHQg) |
+[![Heimdall Lite 2.0 Demo YouTube](https://github.com/mitre/heimdall2/raw/master/apps/frontend/public/heimdall-preview.jpg)](https://www.youtube.com/watch?v=1jXHWZ0gHQg)
 
 ### Hosted
 
@@ -118,7 +116,7 @@ Given that Heimdall requires at least a database service, we use Docker and Dock
      # If you would like to further configure your Heimdall instance, edit the .env file generated after running the previous line
      docker-compose up -d
      ```
-   
+
 6. Navigate to  [`http://127.0.0.1:3000`](http://127.0.0.1:3000).
 
 #### Running Docker Container
