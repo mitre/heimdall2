@@ -3,8 +3,9 @@ import {InjectModel} from '@nestjs/sequelize';
 import {FindOptions} from 'sequelize/types';
 import {DatabaseService} from '../database/database.service';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
+import {Group} from '../groups/group.model';
+import {User} from '../users/user.model';
 import {CreateEvaluationDto} from './dto/create-evaluation.dto';
-import {EvaluationDto} from './dto/evaluation.dto';
 import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 import {Evaluation} from './evaluation.model';
 
@@ -16,35 +17,37 @@ export class EvaluationsService {
     private databaseService: DatabaseService
   ) {}
 
-  async findAll(): Promise<EvaluationDto[]> {
-    const evaluations = await this.evaluationModel.findAll<Evaluation>({
+  async findAll(): Promise<Evaluation[]> {
+    return this.evaluationModel.findAll<Evaluation>({
       attributes: {exclude: ['data']},
-      include: [EvaluationTag]
+      include: [EvaluationTag, User, {model: Group, include: [User]}]
     });
-    return evaluations.map((evaluation) => new EvaluationDto(evaluation));
   }
 
   async create(
-    createEvaluationDto: CreateEvaluationDto
-  ): Promise<EvaluationDto> {
-    return new EvaluationDto(
-      await Evaluation.create<Evaluation>(createEvaluationDto, {
+    createEvaluationDto: CreateEvaluationDto,
+    data: unknown,
+    id: string
+  ): Promise<Evaluation> {
+    return Evaluation.create<Evaluation>(
+      {...createEvaluationDto, data: data, userId: id},
+      {
         include: [EvaluationTag]
-      })
+      }
     );
   }
 
   async update(
     id: string,
     updateEvaluationDto: UpdateEvaluationDto
-  ): Promise<EvaluationDto> {
+  ): Promise<Evaluation> {
     const evaluation = await this.findByPkBang(id, {
       include: [EvaluationTag]
     });
-    return new EvaluationDto(await evaluation.update(updateEvaluationDto));
+    return evaluation.update(updateEvaluationDto);
   }
 
-  async remove(id: string): Promise<EvaluationDto> {
+  async remove(id: string): Promise<Evaluation> {
     const evaluation = await this.findByPkBang(id, {
       include: [EvaluationTag]
     });
@@ -58,14 +61,19 @@ export class EvaluationsService {
       }
       return evaluation.destroy({transaction});
     });
-    return new EvaluationDto(evaluation);
+    return evaluation;
   }
 
-  async findById(id: string): Promise<EvaluationDto> {
-    const evaluation = await this.findByPkBang(id, {
-      include: [EvaluationTag]
+  async findById(id: string): Promise<Evaluation> {
+    return this.findByPkBang(id, {
+      include: [EvaluationTag, User, {model: Group, include: [User]}]
     });
-    return new EvaluationDto(evaluation);
+  }
+
+  async groups(id: string): Promise<Group[]> {
+    return (
+      await this.findByPkBang(id, {include: {model: Group, include: [User]}})
+    ).groups;
   }
 
   async findByPkBang(

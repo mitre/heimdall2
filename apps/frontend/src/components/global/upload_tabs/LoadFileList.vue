@@ -8,49 +8,15 @@
         label="Search"
         hide-details
       />
-      <v-dialog v-model="deleteItemDialog" max-width="500px">
-        <v-card>
-          <v-card-title class="headline"
-            >Are you sure you want to delete this item?</v-card-title
-          >
-          <v-card-actions>
-            <v-spacer />
-            <v-btn color="blue darken-1" text @click="deleteItemDialog = false"
-              >Cancel</v-btn
-            >
-            <v-btn color="blue darken-1" text @click="deleteItemConfirm()"
-              >OK</v-btn
-            >
-            <v-spacer />
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <v-dialog v-model="deleteTagDialog" max-width="500px">
-        <v-card>
-          <v-card-title class="headline"
-            >Are you sure you want to delete this tag?</v-card-title
-          >
-          <v-card-actions>
-            <v-spacer />
-            <v-btn color="blue darken-1" text @click="deleteTagDialog = false"
-              >Cancel</v-btn
-            >
-            <v-btn color="blue darken-1" text @click="deleteTagConfirm()"
-              >OK</v-btn
-            >
-            <v-spacer />
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <EditEvaluationModal
-        v-if="editDialog"
-        :visible="editDialog"
-        :active="activeItem"
-        @updateEvaluations="updateEvaluations"
-        @closeEditModal="closeEditModal"
+      <DeleteDialog
+        v-model="deleteItemDialog"
+        type="file"
+        @cancel="deleteItemDialog = false"
+        @confirm="deleteItemConfirm"
       />
       <v-data-table
         v-model="selectedFiles"
+        data-cy="loadFileList"
         dense
         :headers="headers"
         :items="filteredFiles"
@@ -61,32 +27,39 @@
         mobile-breakpoint="0"
       >
         <template #[`item.filename`]="{item}">
-          <span
-            id="sampleItem"
-            class="cursor-pointer"
-            @click="load_results([item])"
-            >{{ item.filename }}</span
-          >
+          <span class="cursor-pointer" @click="load_results([item])">{{
+            item.filename
+          }}</span>
         </template>
         <template #[`item.evaluationTags`]="{item}">
-          <template v-for="tag in item.evaluationTags">
-            <v-chip
-              :key="tag.id + '_'"
-              small
-              close
-              @click:close="deleteTag(tag)"
-              >{{ tag.value }}</v-chip
-            >
-          </template>
+          <TagRow :evaluation="item" />
         </template>
         <template #[`item.createdAt`]="{item}">
           <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
         </template>
         <template #[`item.actions`]="{item}">
-          <v-icon small class="mr-2" @click="editItem(item)">
-            mdi-pencil
-          </v-icon>
-          <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+          <div v-if="item.editable">
+            <EditEvaluationModal
+              id="editEvaluationModal"
+              :active="item"
+              @updateEvaluations="updateEvaluations"
+            >
+              <template #clickable="{on}"
+                ><v-icon
+                  data-cy="edit"
+                  small
+                  title="Edit"
+                  class="mr-2"
+                  v-on="on"
+                >
+                  mdi-pencil
+                </v-icon>
+              </template>
+            </EditEvaluationModal>
+            <v-icon data-cy="delete" small @click="deleteItem(item)"
+              >mdi-delete</v-icon
+            >
+          </div>
         </template>
       </v-data-table>
     </v-container>
@@ -100,17 +73,20 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue'
-
+import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
+import TagRow from '@/components/global/tags/TagRow.vue';
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations'
 import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
 import {Sample} from '@/utilities/sample_util';
+import DeleteDialog from '@/components/generic/DeleteDialog.vue';
 
 @Component({
   components: {
-    EditEvaluationModal
+    DeleteDialog,
+    EditEvaluationModal,
+    TagRow
   }
 })
 export default class LoadFileList extends Vue {
@@ -124,27 +100,21 @@ export default class LoadFileList extends Vue {
   activeItem!: IEvaluation;
   activeTag!: IEvaluationTag;
 
-  editDialog: boolean = false;
-  deleteItemDialog: boolean = false;
-  deleteTagDialog: boolean = false;
-  search: string = '';
+  deleteItemDialog = false;
+  deleteTagDialog = false;
+  search = '';
 
   load_results(evaluations: IEvaluation[]) {
     this.selectedFiles = [];
     this.$emit('load-results', evaluations);
   }
 
-  closeEditModal() {
-    this.editDialog = false;
-  }
-
   updateEvaluations() {
-    this.$emit('updateEvaluations')
+    EvaluationModule.getAllEvaluations();
   }
 
   editItem(item: IEvaluation) {
     this.activeItem = item;
-    this.editDialog = true;
   }
 
   deleteItem(item: IEvaluation) {
@@ -155,16 +125,6 @@ export default class LoadFileList extends Vue {
   deleteTag(tag: IEvaluationTag) {
     this.activeTag = tag;
     this.deleteTagDialog = true;
-  }
-
-  deleteTagConfirm(): void {
-    EvaluationModule.deleteTag(this.activeTag).then(() => {
-      SnackbarModule.notify("Deleted tag successfully.")
-      this.updateEvaluations()
-    }).catch((error) => {
-      SnackbarModule.HTTPFailure(error)
-    });
-    this.deleteTagDialog = false;
   }
 
  filterEvaluationTags(file: IEvaluation | Sample, search: string) {
@@ -183,9 +143,7 @@ export default class LoadFileList extends Vue {
   async deleteItemConfirm(): Promise<void>{
     EvaluationModule.deleteEvaluation(this.activeItem).then(() => {
       SnackbarModule.notify("Deleted evaluation successfully.")
-    }).catch((error) => {
-      SnackbarModule.HTTPFailure(error)
-    });
+    })
     this.deleteItemDialog = false;
   }
 

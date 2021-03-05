@@ -2,6 +2,7 @@ import {AppInfoModule} from '@/store/app_info';
 import {ServerModule} from '@/store/server';
 import Admin from '@/views/Admin.vue';
 import Compare from '@/views/Compare.vue';
+import Groups from '@/views/Groups.vue';
 import Landing from '@/views/Landing.vue';
 import Login from '@/views/Login.vue';
 import Results from '@/views/Results.vue';
@@ -31,6 +32,12 @@ const router = new Router({
       path: '/',
       name: 'home',
       component: Landing,
+      meta: {requiresAuth: true}
+    },
+    {
+      path: '/manage-groups',
+      name: 'groups',
+      component: Groups,
       meta: {requiresAuth: true}
     },
     {

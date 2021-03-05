@@ -1,17 +1,19 @@
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test} from '@nestjs/testing';
-import {EvaluationDto} from 'src/evaluations/dto/evaluation.dto';
 import {
   CREATE_EVALUATION_TAG_DTO,
-  CREATE_EVALUATION_TAG_DTO_MISSING_VALUE,
-  UPDATE_EVALUATION_TAG_DTO
+  CREATE_EVALUATION_TAG_DTO_MISSING_VALUE
 } from '../../test/constants/evaluation-tags-test.constant';
 import {EVALUATION_1} from '../../test/constants/evaluations-test.constant';
 import {CREATE_USER_DTO_TEST_OBJ} from '../../test/constants/users-test.constant';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
+import {EvaluationDto} from '../evaluations/dto/evaluation.dto';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {EvaluationsService} from '../evaluations/evaluations.service';
+import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
+import {GroupUser} from '../group-users/group-user.model';
+import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {EvaluationTag} from './evaluation-tag.model';
@@ -22,14 +24,20 @@ describe('EvaluationTagsService', () => {
   let evaluationsService: EvaluationsService;
   let databaseService: DatabaseService;
   let usersService: UsersService;
-  let user: User;
   let evaluation: EvaluationDto;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       imports: [
         DatabaseModule,
-        SequelizeModule.forFeature([EvaluationTag, Evaluation, User])
+        SequelizeModule.forFeature([
+          EvaluationTag,
+          Evaluation,
+          User,
+          GroupEvaluation,
+          Group,
+          GroupUser
+        ])
       ],
       providers: [
         DatabaseService,
@@ -54,12 +62,10 @@ describe('EvaluationTagsService', () => {
 
   beforeEach(async () => {
     await databaseService.cleanAll();
-    const userDto = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-    user = await usersService.findById(userDto.id);
-    evaluation = await evaluationsService.create({
-      ...EVALUATION_1,
-      userId: user.id
-    });
+    const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+    evaluation = new EvaluationDto(
+      await evaluationsService.create(EVALUATION_1, {}, user.id)
+    );
   });
 
   describe('Create', () => {
@@ -110,25 +116,6 @@ describe('EvaluationTagsService', () => {
       );
       foundEvaluationTags = await evaluationTagsService.findAll();
       expect(foundEvaluationTags.length).toBeGreaterThan(1);
-    });
-  });
-
-  describe('Update', () => {
-    it('should update given a valid dto', async () => {
-      const evaluationTag = await evaluationTagsService.create(
-        evaluation.id,
-        CREATE_EVALUATION_TAG_DTO
-      );
-      const updatedEvaluationTag = await evaluationTagsService.update(
-        evaluationTag.id,
-        UPDATE_EVALUATION_TAG_DTO
-      );
-      expect(updatedEvaluationTag.value).toEqual(
-        UPDATE_EVALUATION_TAG_DTO.value
-      );
-      expect(updatedEvaluationTag.updatedAt.valueOf()).not.toEqual(
-        evaluationTag.updatedAt.valueOf()
-      );
     });
   });
 

@@ -15,9 +15,6 @@ export default class AppConfig {
         this.envConfig = {};
         // File probably does not exist
         console.log('Unable to read configuration file `.env`!');
-        console.log(
-          'Does the file exist and is it readable by the current user?'
-        );
         console.log('Falling back to environment or undefined values!');
       } else {
         throw error;

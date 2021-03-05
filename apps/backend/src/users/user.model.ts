@@ -1,6 +1,7 @@
 import {
   AllowNull,
   AutoIncrement,
+  BelongsToMany,
   Column,
   CreatedAt,
   DataType,
@@ -12,6 +13,8 @@ import {
   Unique,
   UpdatedAt
 } from 'sequelize-typescript';
+import {GroupUser} from '../group-users/group-user.model';
+import {Group} from '../groups/group.model';
 
 @Table
 export class User extends Model {
@@ -83,7 +86,6 @@ export class User extends Model {
   @Column(DataType.DATE)
   updatedAt!: Date;
 
-  get modelName(): string {
-    return 'User';
-  }
+  @BelongsToMany(() => Group, () => GroupUser)
+  groups!: Array<Group & {GroupUser: GroupUser}>;
 }

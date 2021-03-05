@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 import {
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD,

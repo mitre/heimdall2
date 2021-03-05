@@ -6,6 +6,8 @@ export interface IEvaluation {
   readonly data: Record<string, any> | undefined;
   evaluationTags: IEvaluationTag[];
   readonly userId: string;
+  readonly public: boolean;
   readonly createdAt: Date;
   readonly updatedAt: Date;
+  readonly editable: boolean;
 }

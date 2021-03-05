@@ -1,4 +1,5 @@
 import Store from '@/store/store';
+import _ from 'lodash';
 import {
   Action,
   getModule,
@@ -39,17 +40,18 @@ export class Snackbar extends VuexModule {
   }
 
   @Action
-  HTTPFailure(error: any) {
-    if (typeof error.response.data.message === 'object') {
-      this.notify(
-        error.response.data.message
+  HTTPFailure(error: unknown) {
+    const nestedError = _.get(error, 'response.data.message');
+    if (typeof nestedError === 'object') {
+      this.failure(
+        nestedError
           .map(function capitalize(c: string) {
             return c.charAt(0).toUpperCase() + c.slice(1);
           })
           .join(', ')
       );
     } else {
-      this.failure(error.response.data.message);
+      this.failure(nestedError || error);
     }
   }
 

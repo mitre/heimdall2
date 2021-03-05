@@ -36,6 +36,12 @@ import {AuthzModule} from '../authz/authz.module';
 import {AuthzService} from '../authz/authz.service';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
+import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
+import {Evaluation} from '../evaluations/evaluation.model';
+import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
+import {GroupUser} from '../group-users/group-user.model';
+import {Group} from '../groups/group.model';
+import {SlimUserDto} from './dto/slim-user.dto';
 import {UserDto} from './dto/user.dto';
 import {User} from './user.model';
 import {UsersService} from './users.service';
@@ -51,7 +57,14 @@ describe('UsersService', () => {
     const module = await Test.createTestingModule({
       imports: [
         DatabaseModule,
-        SequelizeModule.forFeature([User]),
+        SequelizeModule.forFeature([
+          User,
+          GroupUser,
+          Group,
+          GroupEvaluation,
+          Evaluation,
+          EvaluationTag
+        ]),
         AuthzModule
       ],
       providers: [UsersService, DatabaseService, AuthzService]
@@ -64,6 +77,11 @@ describe('UsersService', () => {
 
   beforeEach(() => {
     return databaseService.cleanAll();
+  });
+
+  afterAll((done) => {
+    databaseService.closeConnection();
+    done();
   });
 
   describe('Create', () => {
@@ -113,14 +131,29 @@ describe('UsersService', () => {
     });
   });
 
-  describe('FindAll', () => {
+  describe('AdminFindAll', () => {
     it('should find all users', async () => {
       expect.assertions(2);
       const userOne = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const userTwo = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
-      const userDtoArray = await usersService.findAll();
-      expect(userDtoArray).toContainEqual(userOne);
-      expect(userDtoArray).toContainEqual(userTwo);
+      const userDtoArray = (await usersService.adminFindAll()).map(
+        (user) => new UserDto(user)
+      );
+      expect(userDtoArray).toContainEqual(new UserDto(userOne));
+      expect(userDtoArray).toContainEqual(new UserDto(userTwo));
+    });
+  });
+
+  describe('UserFindAll', () => {
+    it('should find all users id, email, firstName, lastName only', async () => {
+      expect.assertions(2);
+      const userOne = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+      const userTwo = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
+      const slimUserDtoArray = (await usersService.userFindAll()).map(
+        (user) => new SlimUserDto(user)
+      );
+      expect(slimUserDtoArray).toContainEqual(new SlimUserDto(userOne));
+      expect(slimUserDtoArray).toContainEqual(new SlimUserDto(userTwo));
     });
   });
 
@@ -543,9 +576,9 @@ describe('UsersService', () => {
 
     // Admins should be able to remove other users without their password
     it('should test remove function with admin user and a dto that has no password', async () => {
-      expect(await usersService.remove(user, {}, adminAbacPolicy)).toEqual(
-        new UserDto(user)
-      );
+      expect(
+        new UserDto(await usersService.remove(user, {}, adminAbacPolicy))
+      ).toEqual(new UserDto(user));
     });
   });
 

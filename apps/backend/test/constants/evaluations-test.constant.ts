@@ -9,27 +9,23 @@ const DEFAULT_FILE_NAME = 'example-result.json';
 
 // @ts-ignore
 export const EVALUATION_1: CreateEvaluationDto = {
-  data: {},
   filename: DEFAULT_FILE_NAME,
   evaluationTags: []
 };
 
 // @ts-ignore
 export const EVALUATION_WITH_TAGS_1: CreateEvaluationDto = {
-  data: {},
   filename: DEFAULT_FILE_NAME,
   evaluationTags: [CREATE_EVALUATION_TAG_DTO]
 };
 
 // @ts-ignore
 export const CREATE_EVALUATION_DTO_WITHOUT_TAGS: CreateEvaluationDto = {
-  data: {},
   filename: DEFAULT_FILE_NAME
 };
 
 // @ts-ignore
 export const CREATE_EVALUATION_DTO_WITHOUT_FILENAME: CreateEvaluationDto = {
-  data: {},
   evaluationTags: [CREATE_EVALUATION_TAG_DTO]
 };
 
@@ -39,6 +35,7 @@ export const CREATE_EVALUATION_DTO_WITHOUT_DATA: CreateEvaluationDto = {
   evaluationTags: [CREATE_EVALUATION_TAG_DTO]
 };
 
+// @ts-ignore
 export const UPDATE_EVALUATION: UpdateEvaluationDto = {
   data: {
     filename: DEFAULT_FILE_NAME
@@ -61,7 +58,6 @@ export const UPDATE_EVALUATION_DATA_ONLY: UpdateEvaluationDto = {
 // @ts-ignore
 export const EVALUATION_DTO: EvaluationDto = {
   id: '9999',
-  data: {},
   filename: DEFAULT_FILE_NAME,
   evaluationTags: [],
   createdAt: new Date(),
@@ -71,7 +67,6 @@ export const EVALUATION_DTO: EvaluationDto = {
 // @ts-ignore
 export const EVALUATION: Evaluation = {
   id: '9999',
-  data: {},
   filename: DEFAULT_FILE_NAME,
   evaluationTags: [],
   createdAt: new Date(),
