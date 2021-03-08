@@ -4,7 +4,7 @@
     v-clipboard:success="onCopy"
     v-clipboard:error="onCopyFailure"
     small
-    class="mr-2"
+    class="mr-5"
     type="button"
     >mdi-share</v-icon
   >

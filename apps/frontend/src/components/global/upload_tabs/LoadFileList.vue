@@ -38,32 +38,38 @@
           <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
         </template>
         <template #[`item.actions`]="{item}">
-          <ShareEvaluationButton
-            :evaluation="item"
-            :selected-files="selectedFiles"
-          />
-          <div v-if="item.editable">
-            <EditEvaluationModal
-              id="editEvaluationModal"
-              :active="item"
-              @updateEvaluations="updateEvaluations"
-            >
-              <template #clickable="{on}"
-                ><v-icon
-                  data-cy="edit"
-                  small
-                  title="Edit"
-                  class="mr-2"
-                  v-on="on"
-                >
-                  mdi-pencil
-                </v-icon>
-              </template>
-            </EditEvaluationModal>
-            <v-icon data-cy="delete" small @click="deleteItem(item)"
-              >mdi-delete</v-icon
-            >
-          </div>
+          <v-row class="d-flex flex-row-reverse">
+            <ShareEvaluationButton
+              :evaluation="item"
+              :selected-files="selectedFiles"
+            />
+            <div v-if="item.editable">
+              <EditEvaluationModal
+                id="editEvaluationModal"
+                :active="item"
+                @updateEvaluations="updateEvaluations"
+              >
+                <template #clickable="{on}"
+                  ><v-icon
+                    data-cy="edit"
+                    small
+                    title="Edit"
+                    class="mr-2"
+                    v-on="on"
+                  >
+                    mdi-pencil
+                  </v-icon>
+                </template>
+              </EditEvaluationModal>
+              <v-icon
+                data-cy="delete"
+                class="mr-2"
+                small
+                @click="deleteItem(item)"
+                >mdi-delete</v-icon
+              >
+            </div>
+          </v-row>
         </template>
       </v-data-table>
     </v-container>
