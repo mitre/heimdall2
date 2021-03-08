@@ -125,7 +125,7 @@ export default class ControlTable extends Vue {
   @Prop({type: Boolean, required: true}) readonly showImpact!: boolean;
 
   // Whether to allow multiple expansions
-  singleExpand: boolean = true;
+  singleExpand = true;
 
   // Whether to expand all evaluations
   expandAll = false;
