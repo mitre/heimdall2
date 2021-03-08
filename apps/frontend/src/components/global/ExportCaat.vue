@@ -82,7 +82,9 @@ export default class ExportCaat extends Vue {
       row.push('Test'); // Test Method
       row.push(fix(control.descriptions.check || control.wraps.tags.check)); // Test Objective
       let test_result = `${control.status}: ${control.message}`;
-      if(_.get(control, 'wraps.attestation.explanation')){
+      if(_.get(control, 'wraps.results[0].message')){
+        test_result += ` -- ${_.get(control, 'wraps.results[0].message')}`
+      } else if(_.get(control, 'wraps.attestation.explanation')){
         test_result += ` -- ${_.get(control, 'wraps.attestation.explanation')}`
       }
       row.push(fix(test_result)); // Test Result Description
@@ -90,7 +92,7 @@ export default class ExportCaat extends Vue {
         row.push('Satisfied');
       }
       else if (_.get(control, 'wraps.results[0].status') === 'skipped'){
-        row.push(`Skipped: ${_.get(control, 'wraps.results[0].skip_message')}`);
+        row.push(`Other Than Satisfied: Skipped -- ${_.get(control, 'wraps.results[0].skip_message')}`);
       } else {
         row.push('Other Than Satisfied');
       }
