@@ -14,17 +14,15 @@
               <v-card-text>
                 <v-form ref="form" name="signup_form">
                   <v-text-field
-                    id="firstName_field"
-                    v-model="firstName"
-                    :error-messages="
-                      requiredFieldError($v.firstName, 'First name')
-                    "
-                    name="firstName"
-                    label="First Name"
+                    id="name_field"
+                    v-model="name"
+                    :error-messages="requiredFieldError($v.name, 'Name')"
+                    name="name"
+                    label="Name"
                     prepend-icon="mdi-account"
                     type="text"
                     @keyup.enter="$refs.email.focus"
-                    @blur="$v.firstName.$touch()"
+                    @blur="$v.name.$touch()"
                   />
                   <v-text-field
                     id="email_field"
@@ -124,6 +122,7 @@ import {SnackbarModule} from '@/store/snackbar';
 
 export interface SignupHash {
   firstName: string;
+  lastName: string;
   email: string;
   password: string;
   passwordConfirmation: string;
@@ -134,7 +133,7 @@ export interface SignupHash {
 @Component({
   mixins: [UserValidatorMixin],
   validations: {
-    firstName: {
+    name: {
       required
     },
     email: {
@@ -151,7 +150,7 @@ export interface SignupHash {
   }
 })
 export default class Signup extends Vue {
-  firstName = '';
+  name = '';
   email = '';
   password = '';
   passwordConfirmation = '';
@@ -164,8 +163,10 @@ export default class Signup extends Vue {
   async register(): Promise<void> {
     // checking if the input is valid
     if ((this.$refs.form as any).validate()) {
+      const {firstName, lastName} = this.splitName(this.name)
       let creds: SignupHash = {
-        firstName: this.firstName,
+        firstName: firstName,
+        lastName: lastName,
         email: this.email,
         password: this.password,
         passwordConfirmation: this.passwordConfirmation,
@@ -181,6 +182,14 @@ export default class Signup extends Vue {
           );
         });
     }
+  }
+
+  splitName(fullName: string): {firstName: string; lastName: string} {
+    const nameArray = fullName.split(' ');
+    return {
+      firstName: nameArray.slice(0, -1).join(' '),
+      lastName: nameArray[nameArray.length - 1]
+    };
   }
 
   // zxcvbn returns 0-4, and the progress bar expects a percentage
