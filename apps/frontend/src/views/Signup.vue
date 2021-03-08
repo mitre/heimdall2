@@ -151,11 +151,11 @@ export interface SignupHash {
   }
 })
 export default class Signup extends Vue {
-  firstName: string = '';
-  email: string = '';
-  password: string = '';
-  passwordConfirmation: string = '';
-  showPassword: boolean = false;
+  firstName = '';
+  email = '';
+  password = '';
+  passwordConfirmation = '';
+  showPassword = false;
 
   login() {
     this.$router.push('/login');
