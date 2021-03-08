@@ -118,6 +118,8 @@ export default class TopbarDropdown extends mixins(ServerMixin) {
         this.userInfo.firstName.charAt(0) +
         this.userInfo.lastName.charAt(0)
       );
+    } else if (this.userInfo.firstName){
+      return this.userInfo.firstName.charAt(0);
     } else {
       return this.userInfo.email.substring(0, 2);
     }

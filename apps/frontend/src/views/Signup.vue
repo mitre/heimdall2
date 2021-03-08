@@ -14,12 +14,26 @@
               <v-card-text>
                 <v-form ref="form" name="signup_form">
                   <v-text-field
+                    id="firstName_field"
+                    v-model="firstName"
+                    :error-messages="
+                      requiredFieldError($v.firstName, 'First name')
+                    "
+                    name="firstName"
+                    label="First Name"
+                    prepend-icon="mdi-account"
+                    type="text"
+                    @keyup.enter="$refs.email.focus"
+                    @blur="$v.firstName.$touch()"
+                  />
+                  <v-text-field
                     id="email_field"
+                    ref="email"
                     v-model="email"
                     :error-messages="emailErrors($v.email)"
                     name="email"
                     label="Email"
-                    prepend-icon="mdi-account"
+                    prepend-icon="mdi-at"
                     type="text"
                     @keyup.enter="$refs.password.focus"
                     @blur="$v.email.$touch()"
@@ -109,6 +123,7 @@ import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 import {SnackbarModule} from '@/store/snackbar';
 
 export interface SignupHash {
+  firstName: string;
   email: string;
   password: string;
   passwordConfirmation: string;
@@ -119,6 +134,9 @@ export interface SignupHash {
 @Component({
   mixins: [UserValidatorMixin],
   validations: {
+    firstName: {
+      required
+    },
     email: {
       required,
       email
@@ -133,6 +151,7 @@ export interface SignupHash {
   }
 })
 export default class Signup extends Vue {
+  firstName: string = '';
   email: string = '';
   password: string = '';
   passwordConfirmation: string = '';
@@ -146,6 +165,7 @@ export default class Signup extends Vue {
     // checking if the input is valid
     if ((this.$refs.form as any).validate()) {
       let creds: SignupHash = {
+        firstName: this.firstName,
         email: this.email,
         password: this.password,
         passwordConfirmation: this.passwordConfirmation,
