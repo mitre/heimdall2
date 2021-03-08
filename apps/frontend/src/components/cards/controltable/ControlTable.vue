@@ -11,14 +11,14 @@
         </v-col>
         <v-col cols="auto" class="text-right">
           <v-switch
-            v-model="single_expand"
+            v-model="singleExpand"
             label="Single Expand"
-            @change="handleToggleSingleExpand(single_expand)"
+            @change="handleToggleSingleExpand(singleExpand)"
           />
         </v-col>
         <v-col cols="auto" class="text-right">
           <v-switch
-            v-model="expand_all"
+            v-model="expandAll"
             label="Expand All"
             class="mr-5"
             @change="toggleExpandAllEvaluations()"
@@ -123,12 +123,12 @@ interface ListElt {
 export default class ControlTable extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
   @Prop({type: Boolean, required: true}) readonly showImpact!: boolean;
-  @Prop({type: Boolean, required: false, default: false}) readonly expandAll!: boolean;
+
   // Whether to allow multiple expansions
-  single_expand: boolean = true;
+  singleExpand: boolean = true;
 
   // Whether to expand all evaluations
-  expand_all = false;
+  expandAll = false;
 
   // If the currently selected tab should sync
   syncTabs = false;
@@ -164,17 +164,17 @@ export default class ControlTable extends Vue {
   }
 
   /** Expands all evaluations */
-  async handleToggleSingleExpand(single_expand: boolean): Promise<void> {
-    if(single_expand){
-      this.expand_all = false;
+  async handleToggleSingleExpand(singleExpand: boolean): Promise<void> {
+    if(singleExpand){
+      this.expandAll = false;
       this.toggleExpandAllEvaluations()
     }
   }
 
   /** Expands all evaluations */
   async toggleExpandAllEvaluations(): Promise<void> {
-    if(this.expand_all){
-      this.single_expand = false;
+    if(this.expandAll){
+      this.singleExpand = false;
       this.expanded = this.items.map((items) => items.key);
     } else {
       this.expanded = []
@@ -189,7 +189,7 @@ export default class ControlTable extends Vue {
 
   /** Toggles the given expansion of a control details panel */
   toggle(key: string) {
-    if (this.single_expand) {
+    if (this.singleExpand) {
       // Check if key already there
       let had = this.expanded.includes(key);
 
