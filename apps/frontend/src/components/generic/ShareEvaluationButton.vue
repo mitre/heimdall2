@@ -34,7 +34,7 @@ export default class ShareEvaluationButton extends Vue {
 
   joinEvaluationsByIds(evaluations: IEvaluation[] | Sample[]): string {
     let stringresult = '';
-    evaluations.forEach((evaluation) => {
+    evaluations.forEach((evaluation: IEvaluation | Sample) => {
       if(evaluation.hasOwnProperty('id')){
         stringresult += `${(evaluation as IEvaluation).id},`;
       }
