@@ -206,7 +206,7 @@ import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {ControlStatus} from 'inspecjs';
 import {SeverityCountModule} from '@/store/severity_counts';
 
-import {ComparisonContext, ControlSeries} from '@/utilities/delta_util';
+import {compare_times, ComparisonContext, ControlSeries} from '@/utilities/delta_util';
 import {Category} from '@/components/generic/ApexPieChart.vue';
 import {StatusCountModule} from '@/store/status_counts';
 import ProfileRow from '@/components/cards/comparison/ProfileRow.vue';
@@ -334,13 +334,7 @@ export default class Compare extends Vue {
   get files(): EvaluationFile[] {
     const fileList = Array.from(FilteredDataModule.evaluations(FilteredDataModule.selected_file_ids));
 
-    fileList.sort((a, b) => {
-      const aDate = new Date(get_eval_start_time(a) || 0);
-      const bDate = new Date(get_eval_start_time(b) || 0);
-
-      return aDate.valueOf() - bDate.valueOf();
-    });
-
+    fileList.sort(compare_times);
     return fileList.map((evaluation) => evaluation.from_file);
   }
 
@@ -488,7 +482,7 @@ export default class Compare extends Vue {
   }
 
   get file_filter(): FileID[] {
-    return FilteredDataModule.selected_evaluations;
+    return FilteredDataModule.selectedEvaluationIds;
   }
 }
 </script>

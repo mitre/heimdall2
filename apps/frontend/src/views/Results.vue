@@ -289,8 +289,8 @@ export default class Results extends Vue {
 
   get file_filter(): FileID[] {
     if (this.is_result_view)
-      return FilteredDataModule.selected_evaluations;
-    else return FilteredDataModule.selected_profiles;
+      return FilteredDataModule.selectedEvaluationIds;
+    else return FilteredDataModule.selectedProfileIds;
   }
 
   /**

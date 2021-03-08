@@ -5,6 +5,7 @@
 import {SourcedContextualizedEvaluation} from '@/store/report_intake';
 import {context} from 'inspecjs';
 import {ContextualizedEvaluation} from 'inspecjs/dist/context';
+import {DateTime} from 'luxon';
 
 export const NOT_SELECTED = 'not selected';
 
@@ -214,4 +215,45 @@ export class ComparisonContext {
     // Store
     this.pairings = matched;
   }
+}
+
+/*
+  DateTime parsing in Chrome works very different than Safari and Firefox
+  Using luxon provides consistent timestamp information with a fallback to
+  using the native browser date parsing.
+
+  Chrome already supports parsing all of these formats natively, however it
+  is the only browser that does so.
+*/
+export function parse_datetime(dateString: string): DateTime {
+  let result: DateTime;
+
+  result = DateTime.fromRFC2822(dateString);
+  if (result.isValid) {
+    return result;
+  }
+  result = DateTime.fromISO(dateString);
+  if (result.isValid) {
+    return result;
+  }
+  result = DateTime.fromHTTP(dateString);
+  if (result.isValid) {
+    return result;
+  }
+  result = DateTime.fromSQL(dateString);
+  if (result.isValid) {
+    return result;
+  }
+
+  return DateTime.fromJSDate(new Date(dateString));
+}
+
+export function compare_times(
+  a: SourcedContextualizedEvaluation,
+  b: SourcedContextualizedEvaluation
+) {
+  const aDate = parse_datetime(get_eval_start_time(a) || '');
+  const bDate = parse_datetime(get_eval_start_time(b) || '');
+
+  return aDate.valueOf() - bDate.valueOf();
 }
