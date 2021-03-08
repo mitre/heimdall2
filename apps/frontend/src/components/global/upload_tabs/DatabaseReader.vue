@@ -16,7 +16,6 @@
       :headers="headers"
       :files="files"
       :loading="loading"
-      @updateEvaluations="get_all_results"
       @load-results="load_results($event)"
     />
   </v-card>
@@ -49,8 +48,6 @@ import {Prop, Watch} from 'vue-property-decorator';
 })
 export default class DatabaseReader extends mixins(ServerMixin) {
   @Prop({default: false}) readonly refresh!: Boolean;
-
-  loading: boolean = true;
 
   headers: Object[] = [
     {
@@ -85,11 +82,11 @@ export default class DatabaseReader extends mixins(ServerMixin) {
   }
 
   async get_all_results(): Promise<void> {
-    await EvaluationModule.getAllEvaluations().catch((err) => {
-      SnackbarModule.failure(`${err}. Please reload the page and try again.`);
-    }).finally(() => {
-      this.loading = false;
-    });
+    EvaluationModule.getAllEvaluations();
+  }
+
+  get loading() {
+    return EvaluationModule.loading;
   }
 
   get files(){
@@ -101,9 +98,9 @@ export default class DatabaseReader extends mixins(ServerMixin) {
       evaluations.map(async (evaluation) => {
         return axios
           .get<IEvaluation>(`/evaluations/${evaluation.id}`)
-          .then((response) => {
+          .then(({data}) => {
             return InspecIntakeModule.loadText({
-              text: JSON.stringify(response.data.data),
+              text: JSON.stringify(data.data),
               filename: evaluation.filename,
               database_id: evaluation.id,
               createdAt: evaluation.createdAt,

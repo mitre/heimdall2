@@ -3,17 +3,6 @@
     {{ message }}
 
     <template #action="{attrs}">
-      <v-btn
-        v-if="error"
-        id="report-error"
-        color="red"
-        text
-        href="https://github.com/mitre/heimdall2/issues/new/choose"
-        target="_blank"
-        @click="show = false"
-      >
-        Report Error
-      </v-btn>
       <v-btn id="hide-snackbar" text v-bind="attrs" @click="show = false">
         Close
       </v-btn>

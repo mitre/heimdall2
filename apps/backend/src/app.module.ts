@@ -10,6 +10,9 @@ import {ConfigModule} from './config/config.module';
 import {DatabaseModule} from './database/database.module';
 import {EvaluationTagsModule} from './evaluation-tags/evaluation-tags.module';
 import {EvaluationsModule} from './evaluations/evaluations.module';
+import {GroupEvaluationsModule} from './group-evaluations/group-evaluations.module';
+import {GroupUsersModule} from './group-users/group-users.module';
+import {GroupsModule} from './groups/groups.module';
 import {UsersModule} from './users/users.module';
 
 @Module({
@@ -24,7 +27,10 @@ import {UsersModule} from './users/users.module';
     AuthzModule,
     AuthnModule,
     EvaluationTagsModule,
-    EvaluationsModule
+    EvaluationsModule,
+    GroupEvaluationsModule,
+    GroupsModule,
+    GroupUsersModule
   ],
   providers: [
     {

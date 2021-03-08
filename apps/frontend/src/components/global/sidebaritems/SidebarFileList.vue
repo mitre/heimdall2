@@ -13,13 +13,13 @@
     </v-list-item-content>
 
     <v-list-item-action v-if="serverMode" @click.stop="save_file">
-      <v-btn icon small :disabled="disable_saving">
+      <v-btn data-cy="saveFile" icon small :disabled="disable_saving">
         <v-icon> mdi-content-save </v-icon>
       </v-btn>
     </v-list-item-action>
 
     <v-list-item-action @click.stop="remove_file">
-      <v-btn icon small>
+      <v-btn data-cy="closeFile" icon small>
         <v-icon> mdi-close </v-icon>
       </v-btn>
     </v-list-item-action>
@@ -29,7 +29,6 @@
 <script lang="ts">
 import Component, {mixins} from 'vue-class-component';
 import axios from 'axios';
-import {ICreateEvaluation} from '@heimdall/interfaces';
 import {InspecDataModule} from '@/store/data_store';
 import {FilteredDataModule} from '@/store/data_filters';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
@@ -37,7 +36,7 @@ import {SnackbarModule} from '@/store/snackbar';
 
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop} from 'vue-property-decorator';
-import {ServerModule} from '@/store/server';
+import {ICreateEvaluation} from '@heimdall/interfaces';
 
 @Component
 export default class FileItem extends mixins(ServerMixin) {
@@ -91,15 +90,23 @@ export default class FileItem extends mixins(ServerMixin) {
   save_evaluation(file: EvaluationFile) {
     this.saving = true;
 
-    let evaluationDTO: ICreateEvaluation = {
-      data: file.evaluation.data,
+    const createEvaluationDto: ICreateEvaluation = {
       filename: file.filename,
-      userId: ServerModule.userInfo.id,
+      public: false,
       evaluationTags: []
     };
 
+    // Create a multipart form to upload our data
+    const formData = new FormData();
+    // Add the DTO objects to form data
+    for (const [key, value] of Object.entries(createEvaluationDto)) {
+      formData.append(key, value);
+    }
+    // Add evaluation data to the form
+    formData.append("data", new Blob([JSON.stringify(file.evaluation.data)], {type: 'text/plain'}));
+
     axios
-      .post('/evaluations', evaluationDTO)
+      .post('/evaluations', formData)
       .then((response) => {
         SnackbarModule.notify('Result saved successfully');
         file.database_id = parseInt(response.data.id);

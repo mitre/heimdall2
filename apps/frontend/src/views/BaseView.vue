@@ -17,9 +17,7 @@
     </Topbar>
 
     <!-- Sidebar to navigate between different views -->
-    <Sidebar v-model="drawer">
-      <slot name="sidebar-content-tools" />
-    </Sidebar>
+    <Sidebar v-model="drawer" />
 
     <!-- The actual content. Slotted by our "descendants" -->
     <v-main>

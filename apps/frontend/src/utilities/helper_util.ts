@@ -134,3 +134,9 @@ export function to_uri_params(params: Hash<string | number | boolean>) {
 export function basic_auth(username: string, password: string): string {
   return 'Basic ' + Buffer.from(`${username}:${password}`).toString('base64');
 }
+
+export interface IVuetifyItems {
+  text: string | number;
+  value: string | number | boolean;
+  disabled?: boolean;
+}
