@@ -86,7 +86,7 @@ export class InspecIntake extends VuexModule {
   /**
    * Load a file with the specified options. Promises an error message on failure
    */
-  @Action({rawError: true})
+  @Action
   async loadFile(options: FileLoadOptions): Promise<FileID> {
     const read = read_file_async(options.file);
     return read.then((text) =>
@@ -97,7 +97,7 @@ export class InspecIntake extends VuexModule {
     );
   }
 
-  @Action({rawError: true})
+  @Action
   async loadText(options: TextLoadOptions): Promise<FileID> {
     // Convert it
     const fileID: FileID = uuid();

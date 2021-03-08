@@ -1,4 +1,8 @@
 export default class ResultsPageVerifier {
+  resultsFilenameCorrect(name: string): void {
+    cy.get('[data-cy=fileinfo]').contains(`Filename: ${name}`);
+  }
+
   resultsDataCorrect(): void {
     const correctFileInfo: string[] = [
       'Acme Overlay Example',

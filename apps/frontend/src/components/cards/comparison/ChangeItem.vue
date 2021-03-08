@@ -30,7 +30,6 @@ import {Prop} from 'vue-property-decorator';
 })
 export default class ChangeItem extends Vue {
   @Prop({type: Object, required: true}) readonly change!: ControlChange;
-  @Prop({type: Number, required: true}) readonly shift!: number;
 
   color(status: string): string {
     if (this.change.name.toLowerCase() == 'status') {
@@ -40,15 +39,7 @@ export default class ChangeItem extends Vue {
   }
 
   get values(): string[] {
-    let values = [];
-    for (
-      let i = this.shift;
-      i < this.change.values.length && i < this.shift + 2;
-      i++
-    ) {
-      values.push(this.change.values[i]);
-    }
-    return values;
+    return this.change.values;
   }
 }
 </script>

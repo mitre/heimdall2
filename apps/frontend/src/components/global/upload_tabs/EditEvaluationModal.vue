@@ -1,115 +1,95 @@
 <template>
-  <Modal :visible="visible" max-width="1000px">
-    <v-card>
+  <v-dialog v-model="visible" max-width="1000px">
+    <template #activator="{on, attrs}">
+      <slot name="clickable" :on="on" :attrs="attrs" />
+    </template>
+
+    <v-card data-cy="editEvaluationModal">
       <v-card-title>
         <span class="headline">Edit "{{ activeEvaluation.filename }}"</span>
       </v-card-title>
 
       <v-card-text>
         <v-container>
-          <v-text-field v-model="activeEvaluation.filename" label="File name" />
-          <v-divider class="pb-2" />
-          <v-dialog v-model="deleteTagDialog" max-width="500px">
-            <v-card>
-              <v-card-title class="headline"
-                >Are you sure you want to delete this tag?</v-card-title
-              >
-              <v-card-actions>
-                <v-spacer />
-                <v-btn
-                  color="blue darken-1"
-                  text
-                  @click="deleteTagDialog = false"
-                  >Cancel</v-btn
-                >
-                <v-btn color="blue darken-1" text @click="deleteTagConfirm()"
-                  >OK</v-btn
-                >
-                <v-spacer />
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-          <v-dialog v-model="newTagDialog" max-width="500px">
-            <template #activator="{on, attrs}">
-              <v-row class="d-flex flex-row-reverse">
-                <v-btn color="primary" v-bind="attrs" v-on="on">
-                  New Tag
-                </v-btn>
-              </v-row>
-            </template>
-            <v-card>
-              <v-card-title>
-                <span class="headline">Add a tag</span>
-              </v-card-title>
+          <v-row>
+            <v-col cols="12" sm="7">
+              <v-text-field
+                v-model="activeEvaluation.filename"
+                data-cy="filename"
+                label="File name"
+              />
+            </v-col>
+            <v-col cols="12" sm="5">
+              <v-select
+                v-model="activeEvaluation.public"
+                :items="visibilityOptions"
+                label="Visibility"
+              />
+            </v-col>
+          </v-row>
 
-              <v-card-text>
-                <v-container>
-                  <v-col>
-                    <v-text-field
-                      v-model="activeTag.value"
-                      autofocus
-                      label="Tag Name"
-                      @keyup.enter="commitTag()"
-                    />
-                  </v-col>
-                </v-container>
-              </v-card-text>
-
-              <v-card-actions>
-                <v-spacer />
-                <v-btn color="blue darken-1" text @click="newTagDialog = false">
-                  Cancel
-                </v-btn>
-                <v-btn color="blue darken-1" text @click="commitTag()">
-                  Save
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-          <v-data-table
-            :headers="headers"
-            :items="activeEvaluation.evaluationTags"
-            disable-sort
-          >
-            <template #[`item.value`]="{item}">
-              <v-edit-dialog
-                :return-value.sync="item.value"
-                large
-                @save="updateTag(item)"
+          <v-row>
+            <v-col cols="12" sm="7" md="9">
+              <v-autocomplete
+                v-model="groups"
+                label="Groups"
+                multiple
+                deletable-chips
+                :items="myGroups"
+                :search-input.sync="groupSearch"
+                return-object
               >
-                <div>{{ item.value }}</div>
-                <template #input>
-                  <div class="mt-4 title">Update {{ item.value }}</div>
-                  <v-text-field
-                    v-model="item.value"
-                    label="Edit"
-                    single-line
-                    autofocus
-                  />
+                <template #no-data>
+                  <v-list-item>
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        No results matching "<strong>{{ groupSearch }}</strong
+                        >". Press <kbd>Create New Group</kbd> to create one.
+                      </v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
                 </template>
-              </v-edit-dialog>
-            </template>
-            <template #[`item.actions`]="{item}">
-              <v-icon small @click="deleteTag(item)">mdi-delete</v-icon>
-            </template>
-          </v-data-table>
+              </v-autocomplete>
+            </v-col>
+            <v-col cols="12" sm="5" md="3">
+              <GroupModal id="groupModal" :create="true">
+                <template #clickable="{on, attrs}"
+                  ><v-btn
+                    block
+                    color="primary"
+                    class="mt-3"
+                    v-bind="attrs"
+                    v-on="on"
+                  >
+                    Create New Group
+                  </v-btn>
+                </template>
+              </GroupModal>
+            </v-col>
+          </v-row>
         </v-container>
       </v-card-text>
 
       <v-card-actions>
         <v-spacer />
         <v-btn
-          color="blue darken-1"
           text
-          blue
-          @click.native="$emit('closeEditModal')"
+          color="primary"
+          data-cy="closeAndDiscardChanges"
+          @click="cancel()"
         >
           Cancel
         </v-btn>
-        <v-btn color="darken-1" text @click="updateEvaluation()">Save</v-btn>
+        <v-btn
+          text
+          color="primary"
+          data-cy="closeAndSaveChanges"
+          @click="update()"
+          >Save</v-btn
+        >
       </v-card-actions>
     </v-card>
-  </Modal>
+  </v-dialog>
 </template>
 
 <script lang="ts">
@@ -117,87 +97,94 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import Modal from '@/components/global/Modal.vue'
 import {Prop} from 'vue-property-decorator';
-import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations';
-import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
+import {IEvaluation, IEvaluationGroup, IGroup} from '@heimdall/interfaces';
+import {GroupsModule} from '@/store/groups';
+import GroupModal from '@/components/global/groups/GroupModal.vue';
 import axios from 'axios';
+import {SnackbarModule} from '@/store/snackbar';
+import {IVuetifyItems} from '@/utilities/helper_util';
+
 
 @Component({
   components: {
-    Modal
+    Modal,
+    GroupModal
   }
 })
 export default class EditEvaluationModal extends Vue {
-  @Prop({default: false}) visible!: boolean;
   @Prop({type: Object, required: true}) readonly active!: IEvaluation;
 
-  newTagDialog: boolean = false;
-  deleteTagDialog: boolean = false;
-  activeTag: IEvaluationTag = {
-    evaluationId: '-1',
-    id: '-1',
-    value: '',
-    createdAt: new Date(),
-    updatedAt: new Date()
-  };
-  activeEvaluation: IEvaluation = {...this.active}
+  activeEvaluation: IEvaluation = {...this.active};
+  originalGroups: IVuetifyItems[] = [];
+  groups: IVuetifyItems[] = [];
+  groupSearch = '';
+  visible = false;
 
-  headers: Object[] = [
+  visibilityOptions: IVuetifyItems[] = [
     {
-      text: 'Tag',
-      value: 'value'
+      text: "Public (all authenticated users on this server)",
+      value: true
     },
     {
-      text: 'Actions',
-      value: 'actions'
+      text: "Private (owners & groups)",
+      value: false
     }
-  ];
+  ]
 
-  async deleteTag(tag: IEvaluationTag) {
-    this.activeTag = tag;
-    this.deleteTagDialog = true;
+  mounted() {
+    this.getGroupsForEvaluation();
   }
 
-  async deleteTagConfirm() {
-    await axios.delete(`/evaluation-tags/${this.activeTag.id}`).then((response) => {
-      this.activeEvaluation.evaluationTags.splice(
-        this.activeEvaluation.evaluationTags.indexOf(this.activeTag),
-        1
-      )
-      SnackbarModule.notify("Deleted tag successfully.")
-    }).catch((error) => {
-      SnackbarModule.HTTPFailure(error)
-    });
-    this.deleteTagDialog = false;
-  }
-
-  async updateTag(tag: IEvaluationTag) {
-    EvaluationModule.updateTag(tag).then((response) => {
-      SnackbarModule.notify("Updated tag successfully.")
-    }).catch((error) => {
-      SnackbarModule.HTTPFailure(error)
-    });
-  }
-
-  async commitTag(): Promise<void> {
-    axios.post(`/evaluation-tags/${this.activeEvaluation.id}`, this.activeTag).then((response) => {
-      this.activeEvaluation.evaluationTags.push(response.data)
-      SnackbarModule.notify("Created tag successfully.")
-      this.activeTag = {
-        evaluationId: '-1',
-        id: '-1',
-        value: '',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      };
+  convertGroupsToIVuetifyItems(groups: IGroup[]): IVuetifyItems[] {
+    return groups.map((group) => {
+      return {
+        text: group.name,
+        value: group.id
+      }
     })
-    this.newTagDialog = false
   }
 
-  async updateEvaluation(): Promise<void> {
-    await EvaluationModule.updateEvaluation(this.activeEvaluation);
-    this.$emit('closeEditModal')
-    this.$emit('updateEvaluations')
+  get myGroups(): IVuetifyItems[] {
+    return this.convertGroupsToIVuetifyItems(GroupsModule.myGroups);
+  }
+
+  async getGroupsForEvaluation(): Promise<void> {
+    return axios.get<IGroup[]>(`/evaluations/${this.active.id}/groups`).then(({data}) => {
+      this.originalGroups = this.groups = this.convertGroupsToIVuetifyItems(data);
+    });
+  }
+
+  async update(): Promise<void> {
+    Promise.all([EvaluationModule.updateEvaluation(this.activeEvaluation), this.updateGroups()]).then(() => {
+      SnackbarModule.notify('Evaluation Updated Successfully');
+      this.$emit('updateEvaluations')
+    })
+    this.visible = false;
+  }
+
+  cancel(): void {
+    this.visible = false;
+    this.groups = this.originalGroups;
+    this.activeEvaluation = {...this.active};
+  }
+
+  async updateGroups(): Promise<void> {
+    const toAdd: IVuetifyItems[] = this.groups.filter(group => !this.originalGroups.includes(group));
+    const toRemove: IVuetifyItems[] = this.originalGroups.filter(group => !this.groups.includes(group));
+    const evaluationGroup: IEvaluationGroup = {
+      id: this.active.id
+    }
+
+    const addedGroupPromises = toAdd.map((group) => {
+      return axios.post(`/groups/${group.value}/evaluation`, evaluationGroup)
+    });
+
+    const removeGroupPromises = toRemove.map((group) => {
+      return axios.delete(`/groups/${group.value}/evaluation`, {data: evaluationGroup})
+    });
+
+    Promise.all(addedGroupPromises.concat(removeGroupPromises))
   }
 }
 </script>

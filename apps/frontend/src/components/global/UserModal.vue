@@ -193,13 +193,13 @@ export default class UserModal extends Vue {
 
   roles: string[] = ['user', 'admin'];
 
-  dialog: boolean = false;
-  changePassword: boolean = false;
+  dialog = false;
+  changePassword = false;
 
   userInfo: IUser = {...this.user};
-  currentPassword: string = '';
-  newPassword: string = '';
-  passwordConfirmation: string = '';
+  currentPassword = '';
+  newPassword = '';
+  passwordConfirmation = '';
 
   async updateUserInfo(): Promise<void> {
     this.$v.$touch()
@@ -229,20 +229,6 @@ export default class UserModal extends Vue {
           this.$emit('update-user', data);
           this.dialog = false;
         })
-        .catch((error) => {
-          SnackbarModule.notify(error.response.data.message);
-          if (typeof error.response.data.message === 'object') {
-            SnackbarModule.notify(
-              error.response.data.message
-                .map(function capitalize(c: string) {
-                  return c.charAt(0).toUpperCase() + c.slice(1);
-                })
-                .join(', ')
-            );
-          } else {
-            SnackbarModule.notify(error.response.data.message);
-          }
-        });
     }
   }
 

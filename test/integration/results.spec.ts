@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 import {
   CREATE_USER_DTO_TEST_OBJ,
   LOGIN_AUTHENTICATION,
@@ -7,10 +5,7 @@ import {
 } from '../../apps/backend/test/constants/users-test.constant';
 import Dropdown from '../support/components/Dropdown';
 import UploadModal from '../support/components/UploadModal';
-import LoginPage from '../support/pages/LoginPage';
-import RegistrationPage from '../support/pages/RegistrationPage';
 import ResultsPage from '../support/pages/ResultsPage';
-import LoginPageVerifier from '../support/verifiers/LoginPageVerifier';
 import ResultsPageVerifier from '../support/verifiers/ResultsPageVerifier';
 import ToastVerifier from '../support/verifiers/ToastVerifier';
 import UserModalVerifier from '../support/verifiers/UserModalVerifier';
@@ -18,9 +13,6 @@ import UserModalVerifier from '../support/verifiers/UserModalVerifier';
 context('Results', () => {
   // Pages, verifiers, and modules
   const dropdown = new Dropdown();
-  const loginPage = new LoginPage();
-  const loginPageVerifier = new LoginPageVerifier();
-  const registrationPage = new RegistrationPage();
   const resultsPageVerifier = new ResultsPageVerifier();
   const resultsPage = new ResultsPage();
   const toastVerifier = new ToastVerifier();
@@ -29,17 +21,17 @@ context('Results', () => {
 
   // Run before each test
   beforeEach(() => {
-    registrationPage.register(CREATE_USER_DTO_TEST_OBJ);
+    cy.register(CREATE_USER_DTO_TEST_OBJ);
     cy.visit('/login');
-    loginPage.login(LOGIN_AUTHENTICATION);
+    cy.login(LOGIN_AUTHENTICATION);
     toastVerifier.toastTextContains('You have successfully signed in.');
   });
 
   // The test
   describe('Results', () => {
-    it('displays correct data for the first sample', () => {
+    it('displays correct data for the Acme Overlay Example sample', () => {
       // Load first sample
-      uploadModal.loadFirstSample();
+      uploadModal.loadSample('Acme Overlay Example');
       // Open profile info
       resultsPage.openProfileInfo();
       // Make results data is correct
@@ -51,8 +43,6 @@ context('Results', () => {
 
   describe('User Modal', () => {
     it('successfully opens and displays the user modal and allows users to change their data', () => {
-      // Load first sample (typically "Sonarqube Java Heimdall_tools Sample")
-      uploadModal.loadFirstSample();
       // Open the user modal
       dropdown.openUserModal();
       // Make sure all the fields exist
@@ -61,13 +51,6 @@ context('Results', () => {
       dropdown.changeUserData(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD);
       // Check for success toast
       toastVerifier.toastTextContains('User updated successfully.');
-    });
-  });
-
-  describe('Logout Button', () => {
-    it('sucessfully logs a user out', () => {
-      dropdown.logout();
-      loginPageVerifier.loginFormPresent();
     });
   });
 });

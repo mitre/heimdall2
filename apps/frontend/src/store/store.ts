@@ -2,6 +2,7 @@ import {IAppInfoState} from '@/store/app_info';
 import {ColorHack} from '@/store/color_hack';
 import {FilteredData} from '@/store/data_filters';
 import {InspecData} from '@/store/data_store';
+import {IGroupState} from '@/store/groups';
 import {HashLookup} from '@/store/lookup_hashes';
 import {InspecIntake} from '@/store/report_intake';
 import {IServerState} from '@/store/server';
@@ -10,6 +11,9 @@ import {ISidebarState} from '@/store/sidebar_state';
 import {StatusCount} from '@/store/status_counts';
 import Vue from 'vue';
 import Vuex from 'vuex';
+import {config} from 'vuex-module-decorators';
+
+config.rawError = true;
 
 Vue.use(Vuex);
 
@@ -37,6 +41,7 @@ export interface StoreType {
   info: IAppInfoState;
   server: IServerState;
   sidebar: ISidebarState;
+  groups: IGroupState;
 }
 const store = new Vuex.Store<StoreType>({});
 

@@ -1,6 +1,11 @@
 import Store from '@/store/store';
 import {LocalStorageVal} from '@/utilities/helper_util';
-import {IStartupSettings, IUpdateUser, IUser} from '@heimdall/interfaces';
+import {
+  ISlimUser,
+  IStartupSettings,
+  IUpdateUser,
+  IUser
+} from '@heimdall/interfaces';
 import axios from 'axios';
 import Vue from 'vue';
 import {
@@ -10,6 +15,7 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
+import {GroupsModule} from './groups';
 
 const local_token = new LocalStorageVal<string | null>('auth_token');
 const localUserID = new LocalStorageVal<string | null>('localUserID');
@@ -39,6 +45,7 @@ class Server extends VuexModule implements IServerState {
   serverMode = false;
   loading = true;
   enabledOAuth: string[] = [];
+  allUsers: ISlimUser[] = [];
   oidcName = '';
   /** Our currently granted JWT token */
   token = '';
@@ -85,14 +92,18 @@ class Server extends VuexModule implements IServerState {
   }
 
   @Mutation
-  SET_SERVER(server: string) {
-    this.serverUrl = server;
+  SET_SERVER() {
     this.serverMode = true;
   }
 
   @Mutation
   SET_LOADING(loading: boolean) {
     this.loading = loading;
+  }
+
+  @Mutation
+  SET_ALL_USERS(users: ISlimUser[]) {
+    this.allUsers = users;
   }
 
   @Mutation
@@ -119,14 +130,12 @@ class Server extends VuexModule implements IServerState {
       return null;
     }
 
-    const potentialUrl = window.location.origin;
-
     return axios
-      .get(`${potentialUrl}/server`)
+      .get(`/server`)
       .then((response) => {
         if (response.status === 200) {
           // This means the server successfully responded and we are therefore in server mode
-          this.context.commit('SET_SERVER', potentialUrl);
+          this.context.commit('SET_SERVER');
           this.context.commit('SET_STARTUP_SETTINGS', response.data);
           const token = local_token.get() || Vue.$cookies.get('accessToken');
           const userID = localUserID.get() || Vue.$cookies.get('userID');
@@ -156,21 +165,21 @@ class Server extends VuexModule implements IServerState {
     this.GetUserInfo();
   }
 
-  @Action({rawError: true})
+  @Action
   public async Login(userInfo: {email: string; password: string}) {
     return axios.post('/authn/login', userInfo).then((response) => {
       this.handleLogin(response.data);
     });
   }
 
-  @Action({rawError: true})
+  @Action
   public async LoginLDAP(userInfo: {username: string; password: string}) {
     return axios.post('/authn/login/ldap', userInfo).then((response) => {
       this.handleLogin(response.data);
     });
   }
 
-  @Action({rawError: true})
+  @Action
   public async LoginGithub(callbackCode: string | null) {
     return axios
       .get(`/authn/github/callback`, {
@@ -183,7 +192,7 @@ class Server extends VuexModule implements IServerState {
       });
   }
 
-  @Action({rawError: true})
+  @Action
   public async Register(userInfo: {
     email: string;
     password: string;
@@ -193,7 +202,7 @@ class Server extends VuexModule implements IServerState {
     return axios.post('/users', userInfo);
   }
 
-  @Action({rawError: true})
+  @Action
   public async updateUserInfo(user: {
     id: string;
     info: IUpdateUser;
@@ -206,7 +215,7 @@ class Server extends VuexModule implements IServerState {
     });
   }
 
-  @Action({rawError: true})
+  @Action
   public async GetUserInfo(): Promise<void> {
     if (this.userInfo.id) {
       return axios
@@ -216,8 +225,19 @@ class Server extends VuexModule implements IServerState {
           // If an error occurs fetching the users profile
           // then clear their token and refresh the page
           this.Logout()
-        );
+        )
+        .then(() => {
+          this.FetchAllUsers();
+          GroupsModule.FetchGroupData();
+        });
     }
+  }
+
+  @Action
+  public FetchAllUsers() {
+    return axios.get<ISlimUser[]>(`/users/user-find-all`).then(({data}) => {
+      this.context.commit('SET_ALL_USERS', data);
+    });
   }
 
   @Action

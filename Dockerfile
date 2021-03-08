@@ -1,4 +1,4 @@
-FROM node:lts as builder
+FROM node:lts-alpine as builder
 
 WORKDIR /src
 USER 0
@@ -13,7 +13,7 @@ RUN yarn run build
 
 ### Production image
 
-FROM node:lts-slim as app
+FROM node:lts-alpine as app
 
 WORKDIR /app
 

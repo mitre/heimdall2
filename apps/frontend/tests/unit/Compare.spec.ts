@@ -23,21 +23,23 @@ const nginxDelta = 3;
 describe('Compare table data', () => {
   loadSample('NGINX With Failing Tests');
   it('correctly counts controls with 1 file', () => {
-    expect((wrapper.vm as any).control_sets.length).toBe(nginxControlCount);
+    (wrapper.vm as any).checkbox = false;
+    expect((wrapper.vm as any).show_sets.length).toBe(nginxControlCount);
   });
 
   it('does not recount same controls with 2 files', () => {
     loadSample('NGINX With Failing Tests');
-    expect((wrapper.vm as any).control_sets.length).toBe(nginxControlCount);
-  });
-
-  it('does not show any changed between two of the same', () => {
-    expect((wrapper.vm as any).show_sets.length).toBe(0);
+    expect((wrapper.vm as any).show_sets.length).toBe(nginxControlCount);
   });
 
   it('does not recount same controls with 3 files', () => {
     loadSample('NGINX With Failing Tests');
-    expect((wrapper.vm as any).control_sets.length).toBe(nginxControlCount);
+    expect((wrapper.vm as any).show_sets.length).toBe(nginxControlCount);
+  });
+
+  it('does not show any changed between two of the same', () => {
+    (wrapper.vm as any).checkbox = true;
+    expect((wrapper.vm as any).show_sets.length).toBe(0);
   });
 
   it('search works when nothing fits criteria', () => {
@@ -51,14 +53,10 @@ describe('Compare table data', () => {
     expect((wrapper.vm as any).show_sets.length).toBe(1);
   });
 
-  it('does not recount same control with different data', () => {
+  it('shows differing delta data when "show only changed"', () => {
     (wrapper.vm as any).search_term = '';
     (wrapper.vm as any).checkbox = true;
     loadSample('NGINX Clean Sample');
-    expect((wrapper.vm as any).control_sets.length).toBe(nginxControlCount);
-  });
-
-  it('shows differing delta data when "show only changed"', () => {
     expect((wrapper.vm as any).show_sets.length).toBe(nginxDelta);
   });
 
@@ -72,18 +70,16 @@ describe('Compare table data', () => {
     loadSample('Red Hat With Failing Tests');
     (wrapper.vm as any).search_term = '';
     (wrapper.vm as any).checkbox = true;
-    expect((wrapper.vm as any).control_sets.length).toBe(
+    expect((wrapper.vm as any).show_sets.length).toBe(
       nginxControlCount + redHatControlCount
     );
   });
 
-  it('doesnt show data of controls with one instance when "show only changed"', () => {
-    expect((wrapper.vm as any).show_sets.length).toBe(nginxDelta);
-  });
-
   it('shows all delta data of controls with multiple occurances when "show only changed"', () => {
     loadSample('Red Hat Clean Sample');
-    expect((wrapper.vm as any).show_sets.length).toBe(nginxDelta + redHatDelta);
+    expect((wrapper.vm as any).show_sets.length).toBe(
+      nginxControlCount + redHatControlCount
+    );
   });
 
   it('ComparisonContext counts status correctly', () => {
@@ -97,7 +93,7 @@ describe('Compare table data', () => {
     );
     const currDelta = new ComparisonContext(selectedData);
     for (const pairing of Object.values(currDelta.pairings)) {
-      for (const ctrl of pairing) {
+      for (const ctrl of Object.values(pairing)) {
         if (ctrl === null) {
           continue;
         } else if (ctrl!.root.hdf.status == 'Passed') {
