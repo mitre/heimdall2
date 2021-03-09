@@ -295,9 +295,7 @@ export default class Results extends Vue {
       await EvaluationModule.getAllEvaluations();
       const evaluationsToLoadArray: IEvaluation[] = await EvaluationModule.findEvaluationsByIds(this.$route.params.id.split(','));
       if (evaluationsToLoadArray.length !== 0) {
-        EvaluationModule.load_results(evaluationsToLoadArray).then(() => {
-          this.$router.push('/results');
-        });
+        EvaluationModule.load_results(evaluationsToLoadArray)
       } else {
         SnackbarModule.failure(`Heimdall was passed the following evaluations to open, but couldn't find any of them: ${this.$route.params.id}`);
         this.$router.push('/results');
@@ -431,7 +429,7 @@ export default class Results extends Vue {
   }
 
   get current_route_name(): string {
-    return this.$router.currentRoute.path.substring(1);
+    return this.$router.currentRoute.path.replace(/[^a-z]/gi, '')
   }
 
   //changes width of eval info if it is in server mode and needs more room for tags

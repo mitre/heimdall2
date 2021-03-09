@@ -96,9 +96,7 @@ export class EvaluationsController {
     return new EvaluationDto(
       createdDto,
       false,
-      `${this.configService.get('EXTERNAL_URL') || 'disabled'}/results/${
-        createdDto.id
-      }`
+      `${this.configService.get('EXTERNAL_URL') || ''}/results/${createdDto.id}`
     );
   }
 

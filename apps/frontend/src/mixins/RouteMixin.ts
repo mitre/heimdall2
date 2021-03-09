@@ -4,7 +4,7 @@ import {Component, Vue} from 'vue-property-decorator';
 export default class RouteMixin extends Vue {
   // get the value of the current route
   get current_route() {
-    return this.$router.currentRoute.path;
+    return '/' + this.$router.currentRoute.path.replace(/[^a-z]/gi, '');
   }
 
   // Ignore errors caused by navigating to the

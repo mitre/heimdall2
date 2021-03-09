@@ -32,6 +32,7 @@ import {FileID} from '@/store/report_intake';
 import {IEvaluation} from '@heimdall/interfaces';
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop, Watch} from 'vue-property-decorator';
+import {Sample} from '../../../utilities/sample_util';
 
 /**
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
@@ -90,10 +91,18 @@ export default class DatabaseReader extends mixins(ServerMixin) {
     return EvaluationModule.allEvaluations;
   }
 
-  load_results(evaluations: IEvaluation[]): void {
-    EvaluationModule.load_results(evaluations).then((fileIds: (FileID | void)[]) => {
-      this.$emit('got-files', fileIds.filter(Boolean));
+  joinEvaluationsByIds(evaluations: IEvaluation[] | Sample[]): string {
+    let stringresult = '';
+    evaluations.forEach((evaluation: IEvaluation | Sample) => {
+      if(evaluation.hasOwnProperty('id')){
+        stringresult += `${(evaluation as IEvaluation).id},`;
+      }
     });
+    return stringresult.slice(0, -1);
+  }
+
+  load_results(evaluations: IEvaluation[]): void {
+    this.$router.push(`/results/${this.joinEvaluationsByIds(evaluations)}`);
   }
 }
 </script>
