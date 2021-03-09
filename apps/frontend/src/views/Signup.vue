@@ -13,17 +13,37 @@
               </v-toolbar>
               <v-card-text>
                 <v-form ref="form" name="signup_form">
-                  <v-text-field
-                    id="name_field"
-                    v-model="name"
-                    :error-messages="requiredFieldError($v.name, 'Name')"
-                    name="name"
-                    label="Name"
-                    prepend-icon="mdi-account"
-                    type="text"
-                    @keyup.enter="$refs.email.focus"
-                    @blur="$v.name.$touch()"
-                  />
+                  <v-row>
+                    <v-col>
+                      <v-text-field
+                        id="firstName_field"
+                        v-model="firstName"
+                        :error-messages="
+                          requiredFieldError($v.firstName, 'First Name')
+                        "
+                        name="firstName"
+                        label="First Name"
+                        prepend-icon="mdi-account"
+                        type="text"
+                        @keyup.enter="$refs.email.focus"
+                        @blur="$v.firstName.$touch()"
+                      />
+                      <v-text-field
+                        id="lastName_field"
+                        ref="lastName"
+                        v-model="lastName"
+                        :error-messages="
+                          requiredFieldError($v.lastName, 'Last Name')
+                        "
+                        name="lastName"
+                        label="Last Name"
+                        prepend-icon="mdi-none"
+                        type="text"
+                        @keyup.enter="$refs.email.focus"
+                        @blur="$v.lastName.$touch()"
+                      />
+                    </v-col>
+                  </v-row>
                   <v-text-field
                     id="email_field"
                     ref="email"
@@ -133,7 +153,10 @@ export interface SignupHash {
 @Component({
   mixins: [UserValidatorMixin],
   validations: {
-    name: {
+    firstName: {
+      required
+    },
+    lastName: {
       required
     },
     email: {
@@ -150,7 +173,8 @@ export interface SignupHash {
   }
 })
 export default class Signup extends Vue {
-  name = '';
+  firstName = '';
+  lastName = '';
   email = '';
   password = '';
   passwordConfirmation = '';
@@ -163,10 +187,9 @@ export default class Signup extends Vue {
   async register(): Promise<void> {
     // checking if the input is valid
     if ((this.$refs.form as any).validate()) {
-      const {firstName, lastName} = this.splitName(this.name)
       let creds: SignupHash = {
-        firstName: firstName,
-        lastName: lastName,
+        firstName: this.firstName,
+        lastName: this.lastName,
         email: this.email,
         password: this.password,
         passwordConfirmation: this.passwordConfirmation,
