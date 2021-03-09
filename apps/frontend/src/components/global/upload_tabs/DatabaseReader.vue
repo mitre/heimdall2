@@ -26,9 +26,6 @@ import Component, {mixins} from 'vue-class-component';
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
 import {EvaluationModule} from '@/store/evaluations';
 import RefreshButton from '@/components/generic/RefreshButton.vue';
-
-import {FileID} from '@/store/report_intake';
-
 import {IEvaluation} from '@heimdall/interfaces';
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop, Watch} from 'vue-property-decorator';
