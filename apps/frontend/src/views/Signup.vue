@@ -28,6 +28,8 @@
                         @keyup.enter="$refs.email.focus"
                         @blur="$v.firstName.$touch()"
                       />
+                    </v-col>
+                    <v-col>
                       <v-text-field
                         id="lastName_field"
                         ref="lastName"
@@ -37,7 +39,6 @@
                         "
                         name="lastName"
                         label="Last Name"
-                        prepend-icon="mdi-none"
                         type="text"
                         @keyup.enter="$refs.email.focus"
                         @blur="$v.lastName.$touch()"
