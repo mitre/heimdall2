@@ -208,14 +208,6 @@ export default class Signup extends Vue {
     }
   }
 
-  splitName(fullName: string): {firstName: string; lastName: string} {
-    const nameArray = fullName.split(' ');
-    return {
-      firstName: nameArray.slice(0, -1).join(' '),
-      lastName: nameArray[nameArray.length - 1]
-    };
-  }
-
   // zxcvbn returns 0-4, and the progress bar expects a percentage
   // 25 is used since 25 * 0 = 0 and 25 * 4 = 100
   get passwordStrengthPercent() {
