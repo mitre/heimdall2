@@ -282,7 +282,7 @@ export default class Compare extends Vue {
   /** Yields the control pairings that have changed*/
   get delta_sets(): [string, ControlSeries][] {
     return this.searched_sets.filter(([_id, series]) => {
-      const controls = Object.values(series).map((control) => control.hdf.status);
+      const controls = Object.values(series).map((control) => control.root.hdf.status);
       // If some of the controls are not equal to the first one then it is changed and should be displayed
       // If the number of controls with information loaded about them is different than the number of files
       // loaded then something has been added/removed and should be displayed.
