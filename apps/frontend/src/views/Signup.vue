@@ -12,7 +12,11 @@
                 <v-spacer />
               </v-toolbar>
               <v-card-text>
-                <v-form ref="form" name="signup_form">
+                <v-form
+                  ref="form"
+                  name="signup_form"
+                  @submit.prevent="register"
+                >
                   <v-row>
                     <v-col>
                       <v-text-field
@@ -25,14 +29,13 @@
                         label="First Name"
                         prepend-icon="mdi-account"
                         type="text"
-                        @keyup.enter="$refs.email.focus"
+                        tabindex="1"
                         @blur="$v.firstName.$touch()"
                       />
                     </v-col>
                     <v-col>
                       <v-text-field
                         id="lastName_field"
-                        ref="lastName"
                         v-model="lastName"
                         :error-messages="
                           requiredFieldError($v.lastName, 'Last Name')
@@ -40,27 +43,25 @@
                         name="lastName"
                         label="Last Name"
                         type="text"
-                        @keyup.enter="$refs.email.focus"
+                        tabindex="2"
                         @blur="$v.lastName.$touch()"
                       />
                     </v-col>
                   </v-row>
                   <v-text-field
                     id="email_field"
-                    ref="email"
                     v-model="email"
                     :error-messages="emailErrors($v.email)"
                     name="email"
                     label="Email"
                     prepend-icon="mdi-at"
                     type="text"
-                    @keyup.enter="$refs.password.focus"
+                    tabindex="3"
                     @blur="$v.email.$touch()"
                   />
                   <br />
                   <v-text-field
                     id="password"
-                    ref="password"
                     v-model="password"
                     :error-messages="
                       requiredFieldError($v.password, 'Password')
@@ -68,11 +69,9 @@
                     prepend-icon="mdi-lock"
                     name="password"
                     label="Password"
-                    :type="showPassword ? 'text' : 'password'"
-                    :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                     loading
-                    @keyup.enter="$refs.passwordConfirmation.focus"
-                    @click:append="showPassword = !showPassword"
+                    :type="showPassword ? 'text' : 'password'"
+                    tabindex="4"
                     @blur="$v.password.$touch()"
                   >
                     <template #progress>
@@ -83,11 +82,15 @@
                         height="7"
                       />
                     </template>
+                    <template #append>
+                      <v-icon @click="showPassword = !showPassword">{{
+                        showPassword ? 'mdi-eye' : 'mdi-eye-off'
+                      }}</v-icon>
+                    </template>
                   </v-text-field>
                   <br />
                   <v-text-field
                     id="passwordConfirmation"
-                    ref="passwordConfirmation"
                     v-model="passwordConfirmation"
                     name="passwordConfirmation"
                     :error-messages="
@@ -99,7 +102,6 @@
                     label="Confirm Password"
                     prepend-icon="mdi-lock-alert"
                     type="password"
-                    @keyup.enter="register"
                     @blur="$v.passwordConfirmation.$touch()"
                   />
                   <br />
@@ -109,7 +111,7 @@
                     large
                     :disabled="$v.$invalid"
                     color="primary"
-                    @click="register"
+                    type="submit"
                   >
                     Register
                   </v-btn>
@@ -135,7 +137,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
-import zxcvbn from 'zxcvbn';
 import {ServerModule} from '@/store/server';
 import {required, email, sameAs} from 'vuelidate/lib/validators';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
@@ -208,10 +209,10 @@ export default class Signup extends Vue {
     }
   }
 
-  // zxcvbn returns 0-4, and the progress bar expects a percentage
-  // 25 is used since 25 * 0 = 0 and 25 * 4 = 100
+  // password strength bar expects a percentage
   get passwordStrengthPercent() {
-    return zxcvbn(this.password).score * 25;
+    // Minimum length is 15. 100/15 = 6.67 so each char is 6.67% of the way to acceptable
+    return this.password.length * 6.67;
   }
 
   // Since there are 3 colors available, 0-49% displays red, 50% displays yellow, and 51-100% displays green

@@ -121,8 +121,7 @@
     "vuex-module-decorators": "^1.0.1",
     "xlsx": "^0.16.8",
     "xml-js": "^1.6.11",
-    "yazl": "^2.5.1",
-    "zxcvbn": "^4.4.2"
+    "yazl": "^2.5.1"
   },
   "devDependencies": {
     "@types/chai": "^4.2.5",
