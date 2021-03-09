@@ -7,19 +7,10 @@
           <v-card-title>Results View Data</v-card-title>
         </v-col>
         <v-col cols="auto" class="text-right">
-          <v-switch
-            v-model="single_expand"
-            label="Single Expand"
-            @change="handleToggleSingleExpand(single_expand)"
-          />
+          <v-switch v-model="single_expand" label="Single Expand" />
         </v-col>
         <v-col cols="auto" class="text-right">
-          <v-switch
-            v-model="expand_all"
-            label="Expand All"
-            class="mr-5"
-            @change="toggleExpandAllEvaluations()"
-          />
+          <v-switch v-model="expand_all" label="Expand All" class="mr-5" />
         </v-col>
       </v-row>
     </v-row>
@@ -118,18 +109,12 @@ interface ListElt {
 export default class ControlTable extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
   @Prop({type: Boolean, required: true}) readonly showImpact!: boolean;
-  @Prop({type: Boolean, required: false, default: false}) readonly expandAll!: boolean;
+
   // Whether to allow multiple expansions
   single_expand: boolean = true;
 
-  // Whether to expand all evaluations
-  expand_all = false;
-
   // List of currently expanded options. If unique id is in here, it is expanded
   expanded: Array<string> = [];
-
-  /** Identifier for infinite scroller tracking */
-  infinite_scroller_id: number = 1;
 
   // Sorts
   sort_id: Sort = 'none';
@@ -154,21 +139,16 @@ export default class ControlTable extends Vue {
     }
   }
 
-  /** Expands all evaluations */
-  async handleToggleSingleExpand(single_expand: boolean): Promise<void> {
-    if(single_expand){
-      this.expand_all = false;
-      this.toggleExpandAllEvaluations()
-    }
+  get expand_all() {
+    return this.expanded.length === this.items.length;
   }
 
-  /** Expands all evaluations */
-  async toggleExpandAllEvaluations(): Promise<void> {
-    if(this.expand_all){
+  set expand_all(value: boolean) {
+    if(value) {
       this.single_expand = false;
       this.expanded = this.items.map((items) => items.key);
     } else {
-      this.expanded = []
+      this.expanded = [];
     }
   }
 
@@ -191,7 +171,7 @@ export default class ControlTable extends Vue {
       if (i < 0) {
         this.expanded.push(key);
       } else {
-        this.expanded.splice(i);
+        this.expanded.splice(i, 1);
       }
     }
   }
