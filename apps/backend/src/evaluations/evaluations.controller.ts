@@ -13,6 +13,7 @@ import {
   UseInterceptors
 } from '@nestjs/common';
 import {FileInterceptor} from '@nestjs/platform-express';
+import _ from 'lodash';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {GroupDto} from '../groups/dto/group.dto';
@@ -85,7 +86,7 @@ export class EvaluationsController {
       evaluationTags: createEvaluationDto.evaluationTags || [],
       public: createEvaluationDto.public
     };
-    return new EvaluationDto(
+    const evaluation = new EvaluationDto(
       // Do not include userId on the DTO so we can set it automatically to the uploader's id.
       await this.evaluationsService.create(
         updatedEvaluationDto,
@@ -93,6 +94,7 @@ export class EvaluationsController {
         request.user.id
       )
     );
+    return _.omit(evaluation, 'data');
   }
 
   @Put(':id')
