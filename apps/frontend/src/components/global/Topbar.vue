@@ -1,5 +1,10 @@
 <template>
-  <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app color="bar">
+  <v-app-bar
+    :clipped-left="$vuetify.breakpoint.lgAndUp"
+    app
+    color="bar"
+    class="d-print-none"
+  >
     <!-- The title and nav bar -->
     <v-toolbar-title v-if="!minimalTopbar" id="toolbar_title" class="pr-2">
       <v-app-bar-nav-icon @click.stop="$emit('toggle-drawer')">

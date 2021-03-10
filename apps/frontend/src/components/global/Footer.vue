@@ -1,5 +1,5 @@
 <template>
-  <v-footer app title="footer" class="bar font-weight-light">
+  <v-footer app title="footer" class="bar font-weight-light d-print-none">
     <span class="bar-visible--text">
       The MITRE Corporation &copy; 2018-{{ new Date().getFullYear() }}
     </span>

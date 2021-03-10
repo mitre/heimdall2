@@ -1,6 +1,8 @@
 <template>
   <v-container fluid class="font-weight-bold">
-    <!-- Toolbar -->
+    <v-overlay class="d-print-none" :value="print">
+      <v-progress-circular ref="loadingSpinner" indeterminate color="primary" />
+    </v-overlay>
     <v-row>
       <v-row>
         <v-col>
@@ -49,27 +51,41 @@
         <ColumnHeader text="800-53 Controls & CCIs" sort="disabled" />
       </template>
     </ResponsiveRowSwitch>
-
     <!-- Body -->
-    <v-lazy
-      v-for="item in items"
-      :key="item.key"
-      min-height="50"
-      transition="fade-transition"
-    >
-      <div>
-        <ControlRowHeader
-          :control="item.control"
-          :expanded="expanded.includes(item.key)"
-          :show-impact="showImpact"
-          @toggle="toggle(item.key)"
-        />
-        <ControlRowDetails
-          v-if="expanded.includes(item.key)"
-          :control="item.control"
-        />
+    <div v-show="!print">
+      <v-lazy
+        v-for="item in items"
+        :key="item.key"
+        min-height="50"
+        transition="fade-transition"
+      >
+        <div>
+          <ControlRowHeader
+            :control="Object.freeze(item.control)"
+            :expanded="expanded.includes(item.key)"
+            :show-impact="showImpact"
+            @toggle="toggle(item.key)"
+          />
+          <ControlRowDetails
+            v-if="expanded.includes(item.key)"
+            :control="Object.freeze(item.control)"
+          />
+        </div>
+      </v-lazy>
+    </div>
+    <div v-if="print">
+      <div v-for="item in Object.freeze(items)" :key="item.key">
+        <div>
+          <ControlRowHeader
+            :control="Object.freeze(item.control)"
+            :expanded="true"
+            :show-impact="showImpact"
+            @toggle="toggle(item.key)"
+          />
+          <ControlRowDetails :control="Object.freeze(item.control)" />
+        </div>
       </div>
-    </v-lazy>
+    </div>
   </v-container>
 </template>
 
@@ -120,6 +136,21 @@ export default class ControlTable extends Vue {
   sort_id: Sort = 'none';
   sort_status: Sort = 'none';
   sort_severity: Sort = 'none';
+
+  print = false;
+
+  mounted() {
+    window.addEventListener('beforeprint', this.prepare_print);
+    window.addEventListener('afterprint', this.close_print);
+  }
+
+  prepare_print() {
+    this.print = true;
+  }
+
+  close_print() {
+    this.print = false;
+  }
 
   /** Callback to handle setting a new sort */
   set_sort(column: 'id' | 'status' | 'severity', new_sort: Sort) {
