@@ -23,6 +23,10 @@
             class="mr-5"
             @change="toggleExpandAllEvaluations()"
           />
+          <v-switch v-model="single_expand" label="Single Expand" />
+        </v-col>
+        <v-col cols="auto" class="text-right">
+          <v-switch v-model="expand_all" label="Expand All" class="mr-5" />
         </v-col>
       </v-row>
     </v-row>
@@ -137,9 +141,6 @@ export default class ControlTable extends Vue {
   // List of currently expanded options. If unique id is in here, it is expanded
   expanded: Array<string> = [];
 
-  /** Identifier for infinite scroller tracking */
-  infinite_scroller_id: number = 1;
-
   // Sorts
   sort_id: Sort = 'none';
   sort_status: Sort = 'none';
@@ -163,27 +164,16 @@ export default class ControlTable extends Vue {
     }
   }
 
-  /** Expands all evaluations */
-  async handleToggleSingleExpand(singleExpand: boolean): Promise<void> {
-    if(singleExpand){
-      this.expandAll = false;
-      this.toggleExpandAllEvaluations()
-    }
+  get expand_all() {
+    return this.expanded.length === this.items.length;
   }
 
-  /** Expands all evaluations */
-  async toggleExpandAllEvaluations(): Promise<void> {
-    if(this.expandAll){
-      this.singleExpand = false;
+  set expand_all(value: boolean) {
+    if(value) {
+      this.single_expand = false;
       this.expanded = this.items.map((items) => items.key);
     } else {
-      this.expanded = []
-    }
-  }
-
-  async updateTab(tab: string){
-    if(this.syncTabs){
-      this.tab = tab
+      this.expanded = [];
     }
   }
 
@@ -206,7 +196,7 @@ export default class ControlTable extends Vue {
       if (i < 0) {
         this.expanded.push(key);
       } else {
-        this.expanded.splice(i);
+        this.expanded.splice(i, 1);
       }
     }
   }

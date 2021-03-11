@@ -288,15 +288,17 @@ export default class Results extends Vue {
    * Controlled by router.
    */
   get file_filter(): FileID[] {
-    if (this.is_result_view)
-      return FilteredDataModule.selected_evaluations;
-    else return FilteredDataModule.selected_profiles;
+    if (this.is_result_view) {
+      return FilteredDataModule.selectedEvaluationIds;
+    }
+    else {
+      return FilteredDataModule.selectedProfileIds;
+    }
   }
 
   /**
    * Returns true if we're showing results
    */
-
   get is_result_view(): boolean {
     return this.current_route_name === 'results';
   }

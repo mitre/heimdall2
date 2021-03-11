@@ -229,6 +229,8 @@ describe('EvaluationsController', () => {
       );
       expect(evaluation).toBeDefined();
       expect(evaluation.evaluationTags.length).toEqual(1);
+      // Creating an evaluation should return a DTO without data.
+      expect(evaluation.data).not.toBeDefined();
     });
 
     it('should create an evaluation without tags', async () => {

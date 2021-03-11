@@ -1,17 +1,22 @@
 <template>
   <v-card class="elevation-12 rounded-t-0">
     <v-card-text>
-      <v-form id="login_form" ref="form" name="login_form">
+      <v-form
+        id="login_form"
+        ref="form"
+        name="login_form"
+        @submit.prevent="login"
+      >
         <v-text-field
           id="email_field"
           v-model="email"
           :error-messages="emailErrors($v.email)"
           name="email"
           label="Email"
-          prepend-icon="mdi-account"
+          prepend-icon="mdi-at"
           type="text"
           required
-          @keyup.enter="$refs.password.focus"
+          tabindex="1"
           @blur="$v.email.$touch()"
         />
         <v-text-field
@@ -23,7 +28,7 @@
           name="password"
           label="Password"
           prepend-icon="mdi-lock"
-          @keyup.enter="login"
+          tabindex="2"
           @blur="$v.password.$touch()"
         />
         <v-container fluid class="mb-0">
@@ -33,7 +38,8 @@
             large
             color="primary"
             :disabled="$v.$invalid"
-            @click="login"
+            type="submit"
+            tabindex="3"
           >
             Login
           </v-btn>

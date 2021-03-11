@@ -69,46 +69,43 @@ export default class StatusCardRow extends Vue {
       {
         icon: 'check-circle',
         title: 'Passed',
-        subtitle: `Has ${StatusCountModule.countOf(
+        subtitle: `${StatusCountModule.countOf(
           this.filter,
           'PassedTests'
-        )} tests passed out of ${StatusCountModule.countOf(
-          this.filter,
-          'TotalTests'
-        )}`,
+        )} individual checks passed`,
         color: 'statusPassed',
         number: StatusCountModule.countOf(this.filter, 'Passed')
       },
       {
         icon: 'close-circle',
         title: 'Failed',
-        subtitle: `Has ${StatusCountModule.countOf(
+        subtitle: `${StatusCountModule.countOf(
+          this.filter,
+          'PassingTestsFailedControl'
+        )} individual checks passed, ${StatusCountModule.countOf(
           this.filter,
           'FailedTests'
-        )} of ${StatusCountModule.countOf(
+        )} failed out of ${StatusCountModule.countOf(
           this.filter,
-          'TotalTests'
-        )} tests that failed`,
+          'PassingTestsFailedControl'
+        ) + StatusCountModule.countOf(
+          this.filter,
+          'FailedTests'
+        )} total checks`,
         color: 'statusFailed',
         number: StatusCountModule.countOf(this.filter, 'Failed')
       },
       {
         icon: 'minus-circle',
         title: 'Not Applicable',
-        subtitle: `System exception or absent component (${StatusCountModule.countOf(
-          this.filter,
-          'NotApplicableTests'
-        )} tests)`,
+        subtitle: `System exception or absent component`,
         color: 'statusNotApplicable',
         number: StatusCountModule.countOf(this.filter, 'Not Applicable')
       },
       {
         icon: 'alert-circle',
         title: 'Not Reviewed',
-        subtitle: `Can only be tested manually at this time (${StatusCountModule.countOf(
-          this.filter,
-          'NotReviewedTests'
-        )} tests)`,
+        subtitle: `Can only be tested manually at this time`,
         color: 'statusNotReviewed',
         number: StatusCountModule.countOf(this.filter, 'Not Reviewed')
       }
@@ -124,12 +121,9 @@ export default class StatusCardRow extends Vue {
     return {
       icon: 'alert-circle',
       title: 'Profile Errors',
-      subtitle: `Errors running test - check profile run privileges or check with the author of profile (${StatusCountModule.countOf(
-        filter,
-        'ErroredTests'
-      )} tests)`,
+      subtitle: `Errors running test - check profile run privileges or check with the author of profile`,
       color: 'statusProfileError',
-      number: StatusCountModule.countOf(this.filter, 'Profile Error')
+      number: StatusCountModule.countOf(filter, 'Profile Error')
     };
   }
 }
