@@ -89,10 +89,8 @@ export default class ExportCaat extends Vue {
           test_result += `${result.status.toUpperCase()} -- Test: ${result.code_desc}\r\n\r\n`
         }
       })
-      if(_.get(control, 'wraps.attestation.explanation')){
-        test_result += `${this.removeTrailingQuotations(_.get(control, 'wraps.attestation.explanation'))}`
-      }
       row.push(fix(test_result)); // Test Result Description
+      // Test Result
       if (control.status === 'Passed') {
         row.push('Satisfied');
       }
