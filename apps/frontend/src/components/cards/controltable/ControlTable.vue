@@ -128,9 +128,6 @@ export default class ControlTable extends Vue {
   // List of currently expanded options. If unique id is in here, it is expanded
   expanded: Array<string> = [];
 
-  /** Identifier for infinite scroller tracking */
-  infinite_scroller_id: number = 1;
-
   // Sorts
   sort_id: Sort = 'none';
   sort_status: Sort = 'none';
