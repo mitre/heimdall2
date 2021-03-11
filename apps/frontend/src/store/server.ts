@@ -197,6 +197,8 @@ class Server extends VuexModule implements IServerState {
 
   @Action
   public async Register(userInfo: {
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
     passwordConfirmation: string;

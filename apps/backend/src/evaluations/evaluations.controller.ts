@@ -13,6 +13,7 @@ import {
   UseInterceptors
 } from '@nestjs/common';
 import {FileInterceptor} from '@nestjs/platform-express';
+import _ from 'lodash';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {ConfigService} from '../config/config.service';
@@ -98,6 +99,7 @@ export class EvaluationsController {
       false,
       `${this.configService.get('EXTERNAL_URL') || ''}/results/${createdDto.id}`
     );
+    return _.omit(evaluation, 'data');
   }
 
   @Put(':id')
