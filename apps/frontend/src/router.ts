@@ -20,14 +20,15 @@ const router = new Router({
       name: 'results',
       component: Results,
       alias: '/profiles',
-      meta: {requiresAuth: true}
-    },
-    {
-      path: '/results/:id',
-      name: 'sharedResults',
-      component: Results,
-      alias: '/profiles/:id',
-      meta: {requiresAuth: true}
+      meta: {requiresAuth: true},
+      children: [
+        {
+          path: ':id',
+          component: Results,
+          alias: ':id',
+          meta: {requiresAuth: true}
+        }
+      ]
     },
     {
       path: '/compare',
