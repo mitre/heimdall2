@@ -10,20 +10,7 @@
           <v-switch v-model="syncTabs" label="Sync Tabs" />
         </v-col>
         <v-col cols="auto" class="text-right">
-          <v-switch
-            v-model="singleExpand"
-            label="Single Expand"
-            @change="handleToggleSingleExpand(singleExpand)"
-          />
-        </v-col>
-        <v-col cols="auto" class="text-right">
-          <v-switch
-            v-model="expandAll"
-            label="Expand All"
-            class="mr-5"
-            @change="toggleExpandAllEvaluations()"
-          />
-          <v-switch v-model="single_expand" label="Single Expand" />
+          <v-switch v-model="singleExpand" label="Single Expand" />
         </v-col>
         <v-col cols="auto" class="text-right">
           <v-switch v-model="expand_all" label="Expand All" class="mr-5" />
@@ -141,6 +128,9 @@ export default class ControlTable extends Vue {
   // List of currently expanded options. If unique id is in here, it is expanded
   expanded: Array<string> = [];
 
+  /** Identifier for infinite scroller tracking */
+  infinite_scroller_id: number = 1;
+
   // Sorts
   sort_id: Sort = 'none';
   sort_status: Sort = 'none';
@@ -167,13 +157,36 @@ export default class ControlTable extends Vue {
   get expand_all() {
     return this.expanded.length === this.items.length;
   }
-
   set expand_all(value: boolean) {
     if(value) {
-      this.single_expand = false;
+      this.singleExpand = false;
       this.expanded = this.items.map((items) => items.key);
     } else {
       this.expanded = [];
+    }
+  }
+
+  /** Expands all evaluations */
+  async handleToggleSingleExpand(singleExpand: boolean): Promise<void> {
+    if(singleExpand){
+      this.expandAll = false;
+      this.toggleExpandAllEvaluations()
+    }
+  }
+
+  /** Expands all evaluations */
+  async toggleExpandAllEvaluations(): Promise<void> {
+    if(this.expandAll){
+      this.singleExpand = false;
+      this.expanded = this.items.map((items) => items.key);
+    } else {
+      this.expanded = []
+    }
+  }
+
+  async updateTab(tab: string){
+    if(this.syncTabs){
+      this.tab = tab
     }
   }
 
