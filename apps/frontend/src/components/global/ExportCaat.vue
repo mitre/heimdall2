@@ -2,10 +2,10 @@
   <v-tooltip top>
     <template #activator="{on}">
       <LinkItem
-        key="export_caat"
+        key="exportCaat"
         text="CAAT Spreadsheet"
         icon="mdi-file-excel"
-        @click="export_caat()"
+        @click="exportCaat()"
         v-on="on"
       />
     </template>
@@ -37,9 +37,9 @@ export default class ExportCaat extends Vue {
   /** Turns a control into a CAAT row.
    *  Checks vuln_list first to see if this gid is already included
    */
-  to_rows(control: HDFControl): CAATRow[] {
+  toRows(control: HDFControl): CAATRow[] {
     // init rows
-    let all_rows: CAATRow[] = [];
+    let allRows: CAATRow[] = [];
 
     for (let formatted of control.canonized_nist({
       max_specifiers: 3,
@@ -80,8 +80,7 @@ export default class ExportCaat extends Vue {
       row.push('Self-Assessment '); // Source
       row.push(''); //row.push("InSpec"); // Assessment/Audit Company
       row.push('Test'); // Test Method
-      row.push(fix(control.descriptions.check || control.wraps.tags.check)); // Test Objective
-      let foundDescription = false;
+      row.push(fix(control.descriptions.check || control.wraps.tags.check)); // Test Objective\
       let test_result = `${control.status}:\r\n\r\n`;
       _.get(control, 'wraps.results').forEach((result: any) => {
         if(result.message) {
@@ -111,9 +110,9 @@ export default class ExportCaat extends Vue {
       if (row.length !== this.header().length) {
         throw new Error('Row of wrong size');
       }
-      all_rows.push(row);
+      allRows.push(row);
     }
-    return all_rows;
+    return allRows;
   }
 
   /** Gets the standardized CAAT header */
@@ -142,7 +141,7 @@ export default class ExportCaat extends Vue {
     ];
   }
 
-  export_caat() {
+  exportCaat() {
     // Get our data
     let controls = FilteredDataModule.controls(this.filter);
 
@@ -150,42 +149,42 @@ export default class ExportCaat extends Vue {
     let caat: CAATRow[] = [this.header()];
 
     // Turn controls into rows
-    let non_deduped_rows: Array<CAATRow> = [];
-    let hit_ids = new Set();
+    let nonDedupedRows: Array<CAATRow> = [];
+    let hitIds = new Set();
     for (let ctrl of controls) {
       let root = ctrl.root.hdf;
-      if (hit_ids.has(root.wraps.id)) {
+      if (hitIds.has(root.wraps.id)) {
         continue;
       } else {
-        hit_ids.add(root.wraps.id);
-        non_deduped_rows.push(...this.to_rows(root));
+        hitIds.add(root.wraps.id);
+        nonDedupedRows.push(...this.toRows(root));
       }
     }
 
     // Deduplicate controls
-    let hit_controls = new Set();
+    let hitControls = new Set();
     let rows = [];
-    for (let r of non_deduped_rows) {
+    for (let r of nonDedupedRows) {
       let ctrl = r[0];
-      if (!hit_controls.has(ctrl)) {
-        hit_controls.add(ctrl);
+      if (!hitControls.has(ctrl)) {
+        hitControls.add(ctrl);
         rows.push(r);
       }
     }
     // DEBUG
-    rows = non_deduped_rows;
+    rows = nonDedupedRows;
 
     // Sort them by id
     rows = rows.sort((a, b) => {
       // We sort by control (index 0), then by severity within
-      let a_fam = a[0];
-      let a_imp = a[19];
-      let b_fam = b[0];
-      let b_imp = b[19];
-      if (a_fam !== b_fam) {
-        return a_fam.localeCompare(b_fam);
+      let aFam = a[0];
+      let aImp = a[19];
+      let bFam = b[0];
+      let bImp = b[19];
+      if (aFam !== bFam) {
+        return aFam.localeCompare(bFam);
       } else {
-        return a_imp.localeCompare(b_imp);
+        return aImp.localeCompare(bImp);
       }
     });
 
@@ -215,7 +214,7 @@ export default class ExportCaat extends Vue {
   }
 
   /** Outputs the given number as a 2-digit string. Brittle **/
-  pad_two_digits(s: number): string {
+  padTwoDigits(s: number): string {
     return s < 10 ? `0${s}` : `${s}`;
   }
 
@@ -232,8 +231,8 @@ export default class ExportCaat extends Vue {
 
   convertDate(d: Date, delimiter: string): string {
     return [
-      this.pad_two_digits(d.getMonth() + 1),
-      this.pad_two_digits(d.getDate()),
+      this.padTwoDigits(d.getMonth() + 1),
+      this.padTwoDigits(d.getDate()),
       d.getFullYear()
     ].join(delimiter);
   }
