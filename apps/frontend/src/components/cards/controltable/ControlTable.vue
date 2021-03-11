@@ -2,9 +2,17 @@
   <v-container fluid class="font-weight-bold">
     <!-- Toolbar -->
     <v-row>
-      <v-col cols="12">
-        <v-switch v-model="single_expand" label="Single Expand" class="mt-2" />
-      </v-col>
+      <v-row>
+        <v-col>
+          <v-card-title>Results View Data</v-card-title>
+        </v-col>
+        <v-col cols="auto" class="text-right">
+          <v-switch v-model="single_expand" label="Single Expand" />
+        </v-col>
+        <v-col cols="auto" class="text-right">
+          <v-switch v-model="expand_all" label="Expand All" class="mr-5" />
+        </v-col>
+      </v-row>
     </v-row>
 
     <!-- Header. This should mirror the structure of ControlRowHeader -->
@@ -101,14 +109,12 @@ interface ListElt {
 export default class ControlTable extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
   @Prop({type: Boolean, required: true}) readonly showImpact!: boolean;
+
   // Whether to allow multiple expansions
   single_expand: boolean = true;
 
   // List of currently expanded options. If unique id is in here, it is expanded
   expanded: Array<string> = [];
-
-  /** Identifier for infinite scroller tracking */
-  infinite_scroller_id: number = 1;
 
   // Sorts
   sort_id: Sort = 'none';
@@ -133,6 +139,19 @@ export default class ControlTable extends Vue {
     }
   }
 
+  get expand_all() {
+    return this.expanded.length === this.items.length;
+  }
+
+  set expand_all(value: boolean) {
+    if(value) {
+      this.single_expand = false;
+      this.expanded = this.items.map((items) => items.key);
+    } else {
+      this.expanded = [];
+    }
+  }
+
   /** Toggles the given expansion of a control details panel */
   toggle(key: string) {
     if (this.single_expand) {
@@ -152,7 +171,7 @@ export default class ControlTable extends Vue {
       if (i < 0) {
         this.expanded.push(key);
       } else {
-        this.expanded.splice(i);
+        this.expanded.splice(i, 1);
       }
     }
   }

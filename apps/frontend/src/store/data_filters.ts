@@ -229,33 +229,13 @@ export class FilteredData extends VuexModule {
     };
   }
 
-  /* get the currently select evaluations */
-  get selected_evaluations(): string[] {
-    const fileIds = [...this.selectedEvaluationIds];
-    const files = InspecDataModule.allProfileFiles;
-
-    return fileIds.filter((fileId) =>
-      files.every((file) => fileId !== file.unique_id)
-    );
-  }
-
-  /* get the currently selected profiles */
-  get selected_profiles(): string[] {
-    const fileIds = [...this.selectedProfileIds];
-    const files = InspecDataModule.allEvaluationFiles;
-
-    return fileIds.filter((fileId) =>
-      files.every((file) => fileId !== file.unique_id)
-    );
-  }
-
   get selected_file_ids(): FileID[] {
     return [...this.selectedEvaluationIds, ...this.selectedProfileIds];
   }
 
   // check to see if all profiles are selected
   get all_profiles_selected(): Trinary {
-    switch (this.selected_profiles.length) {
+    switch (this.selectedProfileIds.length) {
       case 0:
         return Trinary.Off;
       case InspecDataModule.allProfileFiles.length:
@@ -267,7 +247,7 @@ export class FilteredData extends VuexModule {
 
   // check to see if all evaluations are selected
   get all_evaluations_selected(): Trinary {
-    switch (this.selected_evaluations.length) {
+    switch (this.selectedEvaluationIds.length) {
       case 0:
         return Trinary.Off;
       case InspecDataModule.allEvaluationFiles.length:

@@ -55,7 +55,9 @@ export class AppInfo extends VuexModule implements IAppInfoState {
   @Action
   public async CheckForUpdates() {
     if (this.checkedForUpdates === false) {
+      // Call axios.create() to skip the default interceptors setup in main.ts
       axios
+        .create()
         .get('https://api.github.com/repos/mitre/heimdall2/tags', {
           // Null out the request headers for this request
           // in order to avoid sending the local app authorization
