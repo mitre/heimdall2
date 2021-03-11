@@ -25,7 +25,6 @@ const router = new Router({
         {
           path: ':id',
           component: Results,
-          alias: ':id',
           meta: {requiresAuth: true}
         }
       ]
