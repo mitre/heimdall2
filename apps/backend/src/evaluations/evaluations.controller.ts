@@ -16,7 +16,6 @@ import {FileInterceptor} from '@nestjs/platform-express';
 import _ from 'lodash';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
-import {ConfigService} from '../config/config.service';
 import {GroupDto} from '../groups/dto/group.dto';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {CreateEvaluationInterceptor} from '../interceptors/create-evaluation-interceptor';
@@ -31,7 +30,6 @@ import {EvaluationsService} from './evaluations.service';
 export class EvaluationsController {
   constructor(
     private readonly evaluationsService: EvaluationsService,
-    private readonly configService: ConfigService,
     private readonly authz: AuthzService
   ) {}
   @Get(':id')
@@ -97,9 +95,7 @@ export class EvaluationsController {
     const createdDto: EvaluationDto = new EvaluationDto(
       createdEvaluation,
       true,
-      `${this.configService.get('EXTERNAL_URL') || ''}/results/${
-        createdEvaluation.id
-      }`
+      `${process.env.EXTERNAL_URL || ''}/results/${createdEvaluation.id}`
     );
     return _.omit(createdDto, 'data');
   }
