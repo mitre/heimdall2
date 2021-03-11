@@ -81,10 +81,16 @@ export default class ExportCaat extends Vue {
       row.push(''); //row.push("InSpec"); // Assessment/Audit Company
       row.push('Test'); // Test Method
       row.push(fix(control.descriptions.check || control.wraps.tags.check)); // Test Objective
-      let test_result = `${control.status}:\r\n\r\n${this.removeTrailingQuotations(control.message)}\r\n`;
-      if(_.get(control, 'wraps.results[0].message')){
-        test_result += `${this.removeTrailingQuotations(_.get(control, 'wraps.results[0].message'))}`
-      } else if(_.get(control, 'wraps.attestation.explanation')){
+      let foundDescription = false;
+      let test_result = `${control.status}:\r\n\r\n`;
+      _.get(control, 'wraps.results').forEach((result: any) => {
+        if(result.message) {
+          test_result += `${result.status.toUpperCase()} -- Test: ${result.code_desc}\r\nMessage: ${result.message}\r\n\r\n`
+        } else {
+          test_result += `${result.status.toUpperCase()} -- Test: ${result.code_desc}\r\n\r\n`
+        }
+      })
+      if(_.get(control, 'wraps.attestation.explanation')){
         test_result += `${this.removeTrailingQuotations(_.get(control, 'wraps.attestation.explanation'))}`
       }
       row.push(fix(test_result)); // Test Result Description
