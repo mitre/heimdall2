@@ -81,18 +81,18 @@ export default class ExportCaat extends Vue {
       row.push(''); //row.push("InSpec"); // Assessment/Audit Company
       row.push('Test'); // Test Method
       row.push(fix(control.descriptions.check || control.wraps.tags.check)); // Test Objective
-      let test_result = `${control.status}: ${control.message}`;
+      let test_result = `${control.status}:\r\n\r\n${this.removeTrailingQuotations(control.message)}\r\n`;
       if(_.get(control, 'wraps.results[0].message')){
-        test_result += ` -- ${_.get(control, 'wraps.results[0].message')}`
+        test_result += `${this.removeTrailingQuotations(_.get(control, 'wraps.results[0].message'))}`
       } else if(_.get(control, 'wraps.attestation.explanation')){
-        test_result += ` -- ${_.get(control, 'wraps.attestation.explanation')}`
+        test_result += `${this.removeTrailingQuotations(_.get(control, 'wraps.attestation.explanation'))}`
       }
       row.push(fix(test_result)); // Test Result Description
       if (control.status === 'Passed') {
         row.push('Satisfied');
       }
       else if (_.get(control, 'wraps.results[0].status') === 'skipped'){
-        row.push(`Other Than Satisfied: Skipped -- ${_.get(control, 'wraps.results[0].skip_message')}`);
+        row.push('Other Than Satisfied');
       } else {
         row.push('Other Than Satisfied');
       }
@@ -211,6 +211,17 @@ export default class ExportCaat extends Vue {
   /** Outputs the given number as a 2-digit string. Brittle **/
   pad_two_digits(s: number): string {
     return s < 10 ? `0${s}` : `${s}`;
+  }
+
+  removeTrailingQuotations(input: string): string {
+    let output = input;
+    if(input.endsWith('"')) {
+      output = output.slice(0, -1)
+    }
+    if(input.startsWith('"')) {
+      output = output.slice(1)
+    }
+    return output
   }
 
   convertDate(d: Date, delimiter: string): string {
