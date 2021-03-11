@@ -89,17 +89,19 @@ export class EvaluationsController {
       public: createEvaluationDto.public
     };
     // Do not include userId on the DTO so we can set it automatically to the uploader's id.
-    const createdDto = await this.evaluationsService.create(
+    const createdEvaluation = await this.evaluationsService.create(
       updatedEvaluationDto,
       serializedDta,
       request.user.id
     );
-    return new EvaluationDto(
-      createdDto,
-      false,
-      `${this.configService.get('EXTERNAL_URL') || ''}/results/${createdDto.id}`
+    const createdDto: EvaluationDto = new EvaluationDto(
+      createdEvaluation,
+      true,
+      `${this.configService.get('EXTERNAL_URL') || ''}/results/${
+        createdEvaluation.id
+      }`
     );
-    return _.omit(evaluation, 'data');
+    return _.omit(createdDto, 'data');
   }
 
   @Put(':id')
