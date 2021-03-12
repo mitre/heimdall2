@@ -8,7 +8,7 @@
       :headers="headers"
       :files="samples"
       file-key="filename"
-      :loading="false"
+      :loading="loading"
       @load-results="load_samples($event)"
     />
   </v-card>
@@ -39,7 +39,10 @@ export default class SampleList extends Vue {
     }
   ];
 
+  loading = false;
+
   load_samples(samples: Sample[]) {
+    this.loading = true;
     Promise.all(
       samples.map((sample) => {
         return sample.data().then((data: JSON) => {
@@ -52,9 +55,11 @@ export default class SampleList extends Vue {
     )
       .then((fileIds: FileID[]) => {
         this.$emit('got-files', fileIds);
+        this.loading = false;
       })
       .catch((err) => {
         SnackbarModule.failure(String(err));
+        this.loading = false;
       });
   }
 }
