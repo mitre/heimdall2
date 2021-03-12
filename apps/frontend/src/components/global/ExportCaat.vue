@@ -39,7 +39,7 @@ export default class ExportCaat extends Vue {
    */
   toRows(control: HDFControl): CAATRow[] {
     // init rows
-    let allRows: CAATRow[] = [];
+    const allRows: CAATRow[] = [];
 
     for (let formatted of control.canonized_nist({
       max_specifiers: 3,
@@ -81,15 +81,15 @@ export default class ExportCaat extends Vue {
       row.push(''); //row.push("InSpec"); // Assessment/Audit Company
       row.push('Test'); // Test Method
       row.push(fix(control.descriptions.check || control.wraps.tags.check)); // Test Objective\
-      let test_result = `${control.status}:\r\n\r\n`;
+      let testResult = `${control.status}:\r\n\r\n`;
       _.get(control, 'wraps.results').forEach((result: any) => {
         if(result.message) {
-          test_result += `${result.status.toUpperCase()} -- Test: ${result.code_desc}\r\nMessage: ${result.message}\r\n\r\n`
+          testResult += `${result.status.toUpperCase()} -- Test: ${result.code_desc}\r\nMessage: ${result.message}\r\n\r\n`
         } else {
-          test_result += `${result.status.toUpperCase()} -- Test: ${result.code_desc}\r\n\r\n`
+          testResult += `${result.status.toUpperCase()} -- Test: ${result.code_desc}\r\n\r\n`
         }
       })
-      row.push(fix(test_result)); // Test Result Description
+      row.push(fix(testResult)); // Test Result Description
       // Test Result
       if (control.status === 'Passed') {
         row.push('Satisfied');
@@ -147,9 +147,9 @@ export default class ExportCaat extends Vue {
     let caat: CAATRow[] = [this.header()];
 
     // Turn controls into rows
-    let nonDedupedRows: Array<CAATRow> = [];
-    let hitIds = new Set();
-    for (let ctrl of controls) {
+    const nonDedupedRows: Array<CAATRow> = [];
+    const hitIds = new Set();
+    for (const ctrl of controls) {
       let root = ctrl.root.hdf;
       if (hitIds.has(root.wraps.id)) {
         continue;
@@ -160,9 +160,9 @@ export default class ExportCaat extends Vue {
     }
 
     // Deduplicate controls
-    let hitControls = new Set();
+    const hitControls = new Set();
     let rows = [];
-    for (let r of nonDedupedRows) {
+    for (const r of nonDedupedRows) {
       let ctrl = r[0];
       if (!hitControls.has(ctrl)) {
         hitControls.add(ctrl);
@@ -175,10 +175,10 @@ export default class ExportCaat extends Vue {
     // Sort them by id
     rows = rows.sort((a, b) => {
       // We sort by control (index 0), then by severity within
-      let aFam = a[0];
-      let aImp = a[19];
-      let bFam = b[0];
-      let bImp = b[19];
+      const aFam = a[0];
+      const aImp = a[19];
+      const bFam = b[0];
+      const bImp = b[19];
       if (aFam !== bFam) {
         return aFam.localeCompare(bFam);
       } else {
