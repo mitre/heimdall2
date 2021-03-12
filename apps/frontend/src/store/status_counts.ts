@@ -18,12 +18,7 @@ export type ControlStatusHash = {[key in ControlStatus]: number};
 export type StatusHash = ControlStatusHash & {
   PassedTests: number; // from passed controls
   FailedTests: number;
-  FailedOutOf: number; // total tests from failed controls
-  NotApplicableTests: number;
-  NotReviewedTests: number;
-  ErroredOutOf: number;
-  ErroredTests: number;
-  TotalTests: number;
+  PassingTestsFailedControl: number; // number of passing tests from failed controls
 };
 
 // Helper function for counting a status in a list of controls
@@ -47,37 +42,23 @@ function count_statuses(data: FilteredData, filter: Filter): StatusHash {
     'Profile Error': 0,
     PassedTests: 0,
     FailedTests: 0,
-    FailedOutOf: 0,
-    NotApplicableTests: 0,
-    NotReviewedTests: 0,
-    ErroredOutOf: 0,
-    ErroredTests: 0,
-    TotalTests: 0
+    PassingTestsFailedControl: 0
   };
   controls.forEach((c) => {
     c = c.root;
     const status: ControlStatus = c.hdf.status;
-    hash[status] += 1;
-    hash.TotalTests += (c.hdf.segments || []).length;
-    if (status == 'Passed') {
+    ++hash[status];
+    if (status === 'Passed') {
       hash.PassedTests += (c.hdf.segments || []).length;
-    } else if (status == 'Failed') {
-      hash.FailedOutOf += (c.hdf.segments || []).length;
-      hash.FailedTests += (c.hdf.segments || []).filter(
-        (s) => s.status == 'failed'
+    } else if (status === 'Failed') {
+      hash.PassingTestsFailedControl += (c.hdf.segments || []).filter(
+        (s) => s.status === 'passed'
       ).length;
-    } else if (status == 'Not Applicable') {
-      hash.NotApplicableTests += (c.hdf.segments || []).length;
-    } else if (status == 'Not Reviewed') {
-      hash.NotReviewedTests += (c.hdf.segments || []).length;
-    } else if (status == 'Profile Error') {
-      hash.ErroredOutOf += (c.hdf.segments || []).length;
-      hash.ErroredTests += (c.hdf.segments || []).filter(
-        (s) => s.status == 'error'
+      hash.FailedTests += (c.hdf.segments || []).filter(
+        (s) => s.status === 'failed'
       ).length;
     }
   });
-
   // And we're done
   return hash;
 }
