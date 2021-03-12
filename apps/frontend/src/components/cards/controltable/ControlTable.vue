@@ -7,10 +7,18 @@
           <v-card-title>Results View Data</v-card-title>
         </v-col>
         <v-col cols="auto" class="text-right">
-          <v-switch v-model="syncTabs" label="Sync Tabs" />
+          <v-switch
+            v-model="syncTabs"
+            label="Sync Tabs"
+            @click="handleToggleSyncTabs"
+          />
         </v-col>
         <v-col cols="auto" class="text-right">
-          <v-switch v-model="singleExpand" label="Single Expand" />
+          <v-switch
+            v-model="singleExpand"
+            label="Single Expand"
+            @click="handleToggleSingleExpand"
+          />
         </v-col>
         <v-col cols="auto" class="text-right">
           <v-switch v-model="expand_all" label="Expand All" class="mr-5" />
@@ -163,7 +171,7 @@ export default class ControlTable extends Vue {
     }
   }
 
-  /** Expands all evaluations */
+  /** Closes all open controls when single-expand is re-enabled */
   async handleToggleSingleExpand(singleExpand: boolean): Promise<void> {
     if(singleExpand){
       this.expandAll = false;
@@ -171,7 +179,14 @@ export default class ControlTable extends Vue {
     }
   }
 
-  /** Expands all evaluations */
+  /** Closes all open controls when single-expand is re-enabled */
+  async handleToggleSyncTabs(syncTabs: boolean): Promise<void> {
+    if(!this.syncTabs){
+      this.tab = 'test';
+    }
+  }
+
+  /** Expands/closes all controls */
   async toggleExpandAllEvaluations(): Promise<void> {
     if(this.expandAll){
       this.singleExpand = false;
