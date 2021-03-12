@@ -8,10 +8,10 @@ import {StatisticsDTO} from './dto/statistics.dto';
 @Injectable()
 export class StatisticsService {
   constructor(
-    private evaluationsService: EvaluationsService,
-    private evaluationTagsService: EvaluationTagsService,
-    private groupsService: GroupsService,
-    private usersService: UsersService
+    private readonly evaluationsService: EvaluationsService,
+    private readonly evaluationTagsService: EvaluationTagsService,
+    private readonly groupsService: GroupsService,
+    private readonly usersService: UsersService
   ) {}
 
   async getHeimdallStatistics(): Promise<StatisticsDTO> {
