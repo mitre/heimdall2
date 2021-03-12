@@ -10,18 +10,11 @@ import {GroupsService} from '../groups/groups.service';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {StatisticsController} from './statistics.controller';
-import {Statistics} from './statistics.model';
 import {StatisticsService} from './statistics.service';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([
-      Evaluation,
-      EvaluationTag,
-      User,
-      Group,
-      Statistics
-    ])
+    SequelizeModule.forFeature([Evaluation, EvaluationTag, User, Group])
   ],
   providers: [
     StatisticsService,

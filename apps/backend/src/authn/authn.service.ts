@@ -3,7 +3,6 @@ import {JwtService} from '@nestjs/jwt';
 import {compare} from 'bcrypt';
 import * as crypto from 'crypto';
 import {ConfigService} from '../config/config.service';
-import {StatisticsService} from '../statistics/statistics.service';
 import {CreateUserDto} from '../users/dto/create-user.dto';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
@@ -12,7 +11,6 @@ import {UsersService} from '../users/users.service';
 export class AuthnService {
   constructor(
     private usersService: UsersService,
-    private readonly statisticsService: StatisticsService,
     private readonly configService: ConfigService,
     private jwtService: JwtService
   ) {}
@@ -26,7 +24,6 @@ export class AuthnService {
     }
     if (user && (await compare(password, user.encryptedPassword))) {
       this.usersService.updateLoginMetadata(user);
-      this.statisticsService.incrementLoginCount();
       return user;
     } else {
       return null;

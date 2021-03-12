@@ -57,6 +57,7 @@ export class EvaluationTagsService {
     const evaluationTag = new EvaluationTag();
     evaluationTag.value = createEvaluationTagDto.value;
     evaluationTag.evaluationId = evaluationId;
+
     return evaluationTag.save();
   }
 

@@ -3,5 +3,4 @@ export interface IStatistics {
   readonly evaluationCount: number;
   readonly evaluationTagCount: number;
   readonly userGroupCount: number;
-  readonly loginCount: number;
 }

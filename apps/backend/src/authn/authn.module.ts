@@ -7,9 +7,6 @@ import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {EvaluationTagsService} from '../evaluation-tags/evaluation-tags.service';
 import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
-import {Statistics} from '../statistics/statistics.model';
-import {StatisticsModule} from '../statistics/statistics.module';
-import {StatisticsService} from '../statistics/statistics.service';
 import {TokenModule} from '../token/token.module';
 import {UsersModule} from '../users/users.module';
 import {AuthnController} from './authn.controller';
@@ -25,12 +22,11 @@ import {OktaStrategy} from './okta.strategy';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([Statistics, EvaluationTag, Group]),
+    SequelizeModule.forFeature([EvaluationTag, Group]),
     UsersModule,
     PassportModule,
     TokenModule,
     ConfigModule,
-    StatisticsModule,
     ConfigModule
   ],
   providers: [
@@ -45,7 +41,6 @@ import {OktaStrategy} from './okta.strategy';
     OidcStrategy,
     LDAPStrategy,
     EvaluationTagsService,
-    StatisticsService,
     GroupsService
   ],
   controllers: [AuthnController]
