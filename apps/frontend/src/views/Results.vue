@@ -291,7 +291,9 @@ export default class Results extends Vue {
    */
   async mounted() {
     if(this.$route.params.id){
-      if(this.$route.params.id === 'results') {return}
+      if(this.$route.params.id === 'results') {
+        return
+      }
       await EvaluationModule.getAllEvaluations();
       const evaluationsToLoadArray: IEvaluation[] = await EvaluationModule.findEvaluationsByIds(this.$route.params.id.split(','));
       if (evaluationsToLoadArray.length !== 0) {
