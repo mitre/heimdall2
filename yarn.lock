@@ -18400,9 +18400,9 @@ sequelize-typescript@^2.0.0:
     glob "7.1.6"
 
 sequelize@^6.4.0:
-  version "6.5.0"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-6.5.0.tgz#c968a03f6fbbcda40717f73edb39fadf27b85e96"
-  integrity sha512-owBt8fnzVy8E1OvyCyfCdVk7OOLyPVrBCMEf+CvRReC5oCyo+UqeXCtwaex9L6LM9ifZ1i3TG3sFeM5MgLK0CQ==
+  version "6.5.1"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-6.5.1.tgz#bb08c001515afe159f9efe8c1d59b7a07c43a608"
+  integrity sha512-DWgaF+Vw+gWpxomyyYppUOCWzP0ReoMol8EEaDMA+cbSUevyMb74BEwSAd0c8GKgDYiOjpq4DmKBQLHtLAgS1g==
   dependencies:
     debug "^4.1.1"
     dottie "^2.0.0"
