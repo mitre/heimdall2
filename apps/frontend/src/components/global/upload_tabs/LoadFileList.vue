@@ -63,7 +63,12 @@
         </template>
       </v-data-table>
     </v-container>
-    <v-btn block class="px-2" @click="load_results(selectedFiles)">
+    <v-btn
+      block
+      class="px-2"
+      :disabled="loading"
+      @click="load_results(selectedFiles)"
+    >
       Load Selected
       <v-icon class="pl-2"> mdi-file-download</v-icon>
     </v-btn>
