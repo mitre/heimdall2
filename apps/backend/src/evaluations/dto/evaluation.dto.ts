@@ -12,7 +12,7 @@ export class EvaluationDto implements IEvaluation {
   readonly createdAt: Date;
   readonly updatedAt: Date;
   readonly editable: boolean;
-  readonly shareURL: string | undefined;
+  readonly shareURL?: string;
 
   constructor(
     evaluation: Evaluation,
