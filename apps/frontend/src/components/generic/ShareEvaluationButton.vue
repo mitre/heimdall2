@@ -45,9 +45,9 @@ export default class ShareEvaluationButton extends Vue {
   shareItems(evaluation: IEvaluation): string {
     if (this.selectedFiles.length >= 1){
       const shareList = this.joinEvaluationsByIds(this.selectedFiles)
-      return `${ServerModule.externalURL || window.location.origin}/results/${shareList}`;
+      return `${window.location.origin}/results/${shareList}`;
     } else {
-      return `${ServerModule.externalURL || window.location.origin}/results/${evaluation.id}`;
+      return `${window.location.origin}/results/${evaluation.id}`;
     }
   }
 }

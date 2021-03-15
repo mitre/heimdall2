@@ -22,8 +22,7 @@ export class ConfigService {
       banner: this.get('WARNING_BANNER') || '',
       enabledOAuth: enabledOauth,
       oidcName: this.get('OIDC_NAME') || '',
-      ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false,
-      externalURL: this.get('EXTERNAL_URL') || ''
+      ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false
     });
   }
 

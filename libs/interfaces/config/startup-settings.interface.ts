@@ -3,5 +3,4 @@ export interface IStartupSettings {
   readonly enabledOAuth: string[];
   readonly oidcName: string;
   readonly ldap: boolean;
-  readonly externalURL: string;
 }
