@@ -84,6 +84,7 @@ export class EvaluationsController {
     const updatedEvaluationDto: CreateEvaluationDto = {
       filename: createEvaluationDto.filename,
       evaluationTags: createEvaluationDto.evaluationTags || [],
+      groups: createEvaluationDto.groups || [],
       public: createEvaluationDto.public
     };
     const evaluation = new EvaluationDto(

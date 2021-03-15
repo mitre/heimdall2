@@ -7,9 +7,15 @@ import {
 } from '@nestjs/common';
 import {Observable} from 'rxjs';
 import {CreateEvaluationTagDto} from '../evaluation-tags/dto/create-evaluation-tag.dto';
+import {GroupsService} from '../groups/groups.service';
 
 @Injectable()
 export class CreateEvaluationInterceptor implements NestInterceptor {
+  private readonly groupsService: GroupsService;
+  constructor(groupsService: GroupsService) {
+    this.groupsService = groupsService;
+  }
+
   public intercept(
     _context: ExecutionContext,
     next: CallHandler
@@ -27,6 +33,11 @@ export class CreateEvaluationInterceptor implements NestInterceptor {
         );
     } else {
       request.body.evaluationTags = [];
+    }
+    if (request.body.groups !== undefined) {
+      request.body.groups = request.body.groups
+        .split(',')
+        .map((group: string) => this.groupsService.findByPkBang(group));
     }
 
     return next.handle();

@@ -20,4 +20,8 @@ export class CreateEvaluationDto implements ICreateEvaluation {
   @IsOptional()
   @IsArray()
   readonly evaluationTags: CreateEvaluationTagDto[] | undefined;
+
+  @IsOptional()
+  @IsArray()
+  readonly groups: number[] | undefined;
 }
