@@ -22,6 +22,7 @@
         :items="filteredFiles"
         :loading="loading"
         :sort-by.sync="sortBy"
+        :sort-desc="sortDesc"
         :item-key="fileKey"
         show-select
         mobile-breakpoint="0"
@@ -94,6 +95,7 @@ export default class LoadFileList extends Vue {
   @Prop({type: Boolean, default: false}) readonly loading!: boolean;
   @Prop({type: String, default: 'id'}) readonly fileKey!: string;
   @Prop({type: String, default: 'createdAt'}) readonly sortBy!: string;
+  @Prop({type: Boolean, default: true}) readonly sortDesc!: boolean;
   @Prop({required: true}) readonly files!: IEvaluation[] | Sample[];
 
   selectedFiles: IEvaluation[] | Sample[] = [];
