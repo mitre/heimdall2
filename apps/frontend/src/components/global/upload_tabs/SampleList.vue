@@ -8,6 +8,8 @@
       :headers="headers"
       :files="samples"
       file-key="filename"
+      sort-by="filename"
+      :sort-desc="false"
       :loading="false"
       @load-results="load_samples($event)"
     />
