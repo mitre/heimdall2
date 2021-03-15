@@ -30,7 +30,7 @@ context('Database results', () => {
       uploadModal.loadSample(sampleToLoad);
       sidebar.open();
       sidebar.save(sampleToLoad);
-      toastVerifier.toastTextContains('Result saved successfully');
+      toastVerifier.toastTextContains('File saved successfully');
       uploadModal.activate();
       uploadModal.switchToTab('database');
       dataTableVerifier.verifyTextPresent(sampleToLoad);
