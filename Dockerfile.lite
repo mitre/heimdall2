@@ -1,5 +1,8 @@
 FROM node:lts-alpine as builder
 
+ARG YARNREPO_MIRROR=https://registry.yarnpkg.com
+ENV YARNREPO=$YARNREPO_MIRROR
+
 WORKDIR /src
 USER 0
 
@@ -7,6 +10,7 @@ COPY package.json yarn.lock lerna.json tsconfig.json .prettierrc ./
 COPY apps/frontend ./apps/frontend
 COPY libs ./libs
 
+RUN sed -i s^https://registry.yarnpkg.com^$YARNREPO^g yarn.lock
 RUN yarn --frozen-lockfile --production
 
 RUN yarn frontend build

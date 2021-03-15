@@ -1,5 +1,8 @@
 FROM node:lts-alpine as builder
 
+ARG YARNREPO_MIRROR=https://registry.yarnpkg.com
+ENV YARNREPO=$YARNREPO_MIRROR
+
 WORKDIR /src
 USER 0
 
@@ -13,6 +16,7 @@ COPY libs ./libs
 ENV npm_config_build_from_source true
 RUN apk --no-cache add --virtual builds-deps build-base python
 
+RUN sed -i s^https://registry.yarnpkg.com^$YARNREPO^g yarn.lock
 RUN yarn --frozen-lockfile --production
 
 RUN yarn run build
