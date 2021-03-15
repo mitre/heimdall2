@@ -93,7 +93,7 @@ export default class LoadFileList extends Vue {
   @Prop({required: true}) readonly headers!: Object[];
   @Prop({type: Boolean, default: false}) readonly loading!: boolean;
   @Prop({type: String, default: 'id'}) readonly fileKey!: string;
-  @Prop({type: String, default: 'filename'}) readonly sortBy!: string;
+  @Prop({type: String, default: 'createdAt'}) readonly sortBy!: string;
   @Prop({required: true}) readonly files!: IEvaluation[] | Sample[];
 
   selectedFiles: IEvaluation[] | Sample[] = [];
