@@ -73,12 +73,9 @@ export default class FileItem extends mixins(ServerMixin) {
   //saves file to database
   save_file() {
     if (this.file?.database_id){
-      SnackbarModule.failure('This evaluation is already in the database.')
-    }
-    else if (this.file) {
-      if (this.file.hasOwnProperty('evaluation') || this.file.hasOwnProperty('profile')) {
-        this.save_evaluation(this.file);
-      }
+      SnackbarModule.failure('This file is already in the database.')
+    } else if (this.file) {
+      this.save_to_database(this.file);
     }
   }
 
@@ -87,7 +84,7 @@ export default class FileItem extends mixins(ServerMixin) {
     return (typeof this.file?.database_id !== 'undefined') || this.saving
   }
 
-  save_evaluation(file: EvaluationFile | ProfileFile) {
+  save_to_database(file: EvaluationFile | ProfileFile) {
     this.saving = true;
 
     const createEvaluationDto: ICreateEvaluation = {
@@ -112,7 +109,7 @@ export default class FileItem extends mixins(ServerMixin) {
     axios
       .post('/evaluations', formData)
       .then((response) => {
-        SnackbarModule.notify('Result saved successfully');
+        SnackbarModule.notify('File saved successfully');
         file.database_id = parseInt(response.data.id);
       })
       .catch((error) => {
