@@ -55,10 +55,10 @@ export default class SampleList extends Vue {
     )
       .then((fileIds: FileID[]) => {
         this.$emit('got-files', fileIds);
-        this.loading = false;
       })
       .catch((err) => {
         SnackbarModule.failure(String(err));
+      }).finally(() => {
         this.loading = false;
       });
   }
