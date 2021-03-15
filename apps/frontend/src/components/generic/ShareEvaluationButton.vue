@@ -15,7 +15,6 @@ import {IEvaluation} from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {ServerModule} from '../../store/server';
 import {SnackbarModule} from '../../store/snackbar';
 import {Sample} from '../../utilities/sample_util';
 
