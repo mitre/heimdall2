@@ -230,7 +230,6 @@ import {context} from 'inspecjs';
 import {ServerModule} from '@/store/server';
 import {capitalize} from 'lodash';
 import {EvaluationModule} from '../store/evaluations';
-import {IEvaluation} from '@heimdall/interfaces';
 import {SnackbarModule} from '../store/snackbar';
 
 @Component({
