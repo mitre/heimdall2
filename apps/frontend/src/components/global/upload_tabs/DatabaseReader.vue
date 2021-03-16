@@ -30,6 +30,7 @@ import {IEvaluation} from '@heimdall/interfaces';
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop, Watch} from 'vue-property-decorator';
 import {Sample} from '../../../utilities/sample_util';
+import RouteMixin from '../../../mixins/RouteMixin';
 
 /**
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
@@ -41,7 +42,7 @@ import {Sample} from '../../../utilities/sample_util';
     RefreshButton
   }
 })
-export default class DatabaseReader extends mixins(ServerMixin) {
+export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
   @Prop({default: false}) readonly refresh!: Boolean;
 
   headers: Object[] = [
@@ -88,18 +89,25 @@ export default class DatabaseReader extends mixins(ServerMixin) {
     return EvaluationModule.allEvaluations;
   }
 
-  joinEvaluationsByIds(evaluations: IEvaluation[] | Sample[]): string {
-    let stringresult = '';
+  joinEvaluationsByIds(evaluations: IEvaluation[] | Sample[]): string[] {
+    let result: string[] = [];
     evaluations.forEach((evaluation: IEvaluation | Sample) => {
       if(evaluation.hasOwnProperty('id')){
-        stringresult += `${(evaluation as IEvaluation).id},`;
+        result.push(`${(evaluation as IEvaluation).id}`);
       }
     });
-    return stringresult.slice(0, -1);
+    return result;
   }
 
   load_results(evaluations: IEvaluation[]): void {
-    this.$router.push(`/results/${this.joinEvaluationsByIds(evaluations)}`);
+    // Combine newly added evaluations with existing evaluations
+    const toLoadAllArray: string[] = this.loadedRouterProfiles
+      .concat(this.joinEvaluationsByIds(evaluations)) // Combine evaluations to load with already loaded evaluations
+      .sort((one, two) => (one > two ? 1 : -1)); // Sort them
+    const toLoad: string = toLoadAllArray
+      .filter((item, index) => toLoadAllArray.indexOf(item) == index) // Remove duplicates
+      .join(','); // Join with a comma
+    this.$router.push(`/results/${toLoad}`);
   }
 }
 </script>

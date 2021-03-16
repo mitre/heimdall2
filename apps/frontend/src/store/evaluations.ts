@@ -12,6 +12,7 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
+import {InspecDataModule} from './data_store';
 import {FileID, InspecIntakeModule} from './report_intake';
 import {SnackbarModule} from './snackbar';
 
@@ -39,13 +40,25 @@ export class Evaluation extends VuexModule {
 
   @Action
   findEvaluationsByIds(evaluationIds: string[]): IEvaluation[] {
-    return this.allEvaluations.filter((evaluation) =>
-      evaluationIds.includes(evaluation.id)
+    const loadedFiles = InspecDataModule.allFiles.map((file) =>
+      file.database_id?.toString()
+    );
+    return this.allEvaluations.filter(
+      (evaluation) =>
+        evaluationIds.includes(evaluation.id) &&
+        !loadedFiles.includes(evaluation.id)
     );
   }
 
   @Action
-  async load_results(evaluations: IEvaluation[]): Promise<(FileID | void)[]> {
+  async load_results(
+    evaluations: {
+      id: string;
+      filename: string;
+      createdAt: Date;
+      updatedAt: Date;
+    }[]
+  ): Promise<(FileID | void)[]> {
     return Promise.all(
       evaluations.map(async (evaluation) => {
         return axios

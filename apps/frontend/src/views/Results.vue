@@ -300,7 +300,6 @@ export default class Results extends Vue {
         EvaluationModule.load_results(evaluationsToLoadArray)
       } else {
         SnackbarModule.failure(`Heimdall was passed the following evaluations to open, but couldn't find any of them: ${this.$route.params.id}`);
-        this.$router.push('/results');
       }
     }
   }
