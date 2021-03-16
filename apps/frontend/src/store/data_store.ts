@@ -34,6 +34,9 @@ export class InspecData extends VuexModule {
   /** State var containing all profile files that have been added */
   profileFiles: ProfileFile[] = [];
 
+  /** All database_ids currently loaded */
+  loadedDatabaseFiles: string[] = [];
+
   /** Return all of the files that we currently have. */
   get allFiles(): (EvaluationFile | ProfileFile)[] {
     const result: (EvaluationFile | ProfileFile)[] = [];
@@ -104,6 +107,16 @@ export class InspecData extends VuexModule {
    */
   get contextualControls(): readonly context.ContextualizedControl[] {
     return this.contextStore[2];
+  }
+
+  /** Returns all the database IDs of currently loaded files. */
+  get databaseIds(): string[] {
+    return this.loadedDatabaseFiles;
+  }
+
+  @Mutation
+  addDatabaseId(id: string) {
+    this.loadedDatabaseFiles.push(id);
   }
 
   /**

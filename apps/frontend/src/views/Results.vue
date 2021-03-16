@@ -294,8 +294,7 @@ export default class Results extends Vue {
       if(this.$route.params.id === 'results') {
         return
       }
-      await EvaluationModule.getAllEvaluations();
-      const evaluationsToLoadArray: IEvaluation[] = await EvaluationModule.findEvaluationsByIds(this.$route.params.id.split(','));
+      const evaluationsToLoadArray: {id: string}[] = await EvaluationModule.findEvaluationsByIds(this.$route.params.id.split(','));
       if (evaluationsToLoadArray.length !== 0) {
         EvaluationModule.load_results(evaluationsToLoadArray)
       } else {

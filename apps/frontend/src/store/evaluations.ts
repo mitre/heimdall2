@@ -39,15 +39,14 @@ export class Evaluation extends VuexModule {
   }
 
   @Action
-  findEvaluationsByIds(evaluationIds: string[]): IEvaluation[] {
-    const loadedFiles = InspecDataModule.allFiles.map((file) =>
-      file.database_id?.toString()
-    );
-    return this.allEvaluations.filter(
-      (evaluation) =>
-        evaluationIds.includes(evaluation.id) &&
-        !loadedFiles.includes(evaluation.id)
-    );
+  findEvaluationsByIds(evaluationIds: string[]): {id: string}[] {
+    const result: {id: string}[] = [];
+    evaluationIds.forEach((id) => {
+      if (!InspecDataModule.databaseIds.includes(id)) {
+        result.push({id: id});
+      }
+    });
+    return result;
   }
 
   @Action
@@ -58,6 +57,7 @@ export class Evaluation extends VuexModule {
   ): Promise<(FileID | void)[]> {
     return Promise.all(
       evaluations.map(async (evaluation) => {
+        InspecDataModule.addDatabaseId(evaluation.id);
         return axios
           .get<IEvaluation>(`/evaluations/${evaluation.id}`)
           .then(async ({data}) => {

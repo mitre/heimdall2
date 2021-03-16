@@ -31,6 +31,7 @@ import ServerMixin from '@/mixins/ServerMixin';
 import {Prop, Watch} from 'vue-property-decorator';
 import {Sample} from '../../../utilities/sample_util';
 import RouteMixin from '../../../mixins/RouteMixin';
+import {InspecDataModule} from '../../../store/data_store';
 
 /**
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
@@ -101,7 +102,7 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
 
   load_results(evaluations: IEvaluation[]): void {
     // Combine newly added evaluations with existing evaluations
-    const toLoadAllArray: string[] = this.loadedRouterProfiles
+    const toLoadAllArray: string[] = InspecDataModule.databaseIds
       .concat(this.joinEvaluationsByIds(evaluations)) // Combine evaluations to load with already loaded evaluations
       .sort((one, two) => (one > two ? 1 : -1)); // Sort them
     const toLoad: string = toLoadAllArray
