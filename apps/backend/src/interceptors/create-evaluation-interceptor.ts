@@ -35,9 +35,7 @@ export class CreateEvaluationInterceptor implements NestInterceptor {
       request.body.evaluationTags = [];
     }
     if (request.body.groups !== undefined) {
-      request.body.groups = request.body.groups
-        .split(',')
-        .map((group: string) => this.groupsService.findByPkBang(group));
+      request.body.groups = request.body.groups.split(',');
     }
 
     return next.handle();

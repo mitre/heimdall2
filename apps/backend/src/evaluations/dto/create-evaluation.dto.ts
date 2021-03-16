@@ -23,5 +23,5 @@ export class CreateEvaluationDto implements ICreateEvaluation {
 
   @IsOptional()
   @IsArray()
-  readonly groups: number[] | undefined;
+  readonly groups: string[] | undefined;
 }
