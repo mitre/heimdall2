@@ -91,7 +91,7 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
   }
 
   joinEvaluationsByIds(evaluations: IEvaluation[] | Sample[]): string[] {
-    let result: string[] = [];
+    const result: string[] = [];
     evaluations.forEach((evaluation: IEvaluation | Sample) => {
       if(evaluation.hasOwnProperty('id')){
         result.push(`${(evaluation as IEvaluation).id}`);
@@ -106,7 +106,7 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
       .concat(this.joinEvaluationsByIds(evaluations)) // Combine evaluations to load with already loaded evaluations
       .sort((one, two) => (one > two ? 1 : -1)); // Sort them
     const toLoad: string = toLoadAllArray
-      .filter((item, index) => toLoadAllArray.indexOf(item) == index) // Remove duplicates
+      .filter((item, index) => toLoadAllArray.indexOf(item) === index) // Remove duplicates
       .join(','); // Join with a comma
     this.$router.push(`/results/${toLoad}`);
   }
