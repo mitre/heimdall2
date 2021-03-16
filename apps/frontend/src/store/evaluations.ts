@@ -54,22 +54,19 @@ export class Evaluation extends VuexModule {
   async load_results(
     evaluations: {
       id: string;
-      filename: string;
-      createdAt: Date;
-      updatedAt: Date;
     }[]
   ): Promise<(FileID | void)[]> {
     return Promise.all(
       evaluations.map(async (evaluation) => {
         return axios
           .get<IEvaluation>(`/evaluations/${evaluation.id}`)
-          .then((response) => {
+          .then(async ({data}) => {
             return InspecIntakeModule.loadText({
-              text: JSON.stringify(response.data.data),
-              filename: evaluation.filename,
-              database_id: evaluation.id,
-              createdAt: evaluation.createdAt,
-              updatedAt: evaluation.updatedAt,
+              text: JSON.stringify(data.data),
+              filename: data.filename,
+              database_id: data.id,
+              createdAt: data.createdAt,
+              updatedAt: data.updatedAt,
               tags: [] // Tags are not yet implemented, so for now the value is passed in empty
             }).catch((err) => {
               SnackbarModule.failure(err);
