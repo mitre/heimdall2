@@ -10,14 +10,14 @@
           <v-switch
             v-model="syncTabs"
             label="Sync Tabs"
-            @click="handleToggleSyncTabs"
+            @change="handleToggleSyncTabs"
           />
         </v-col>
         <v-col cols="auto" class="text-right">
           <v-switch
             v-model="singleExpand"
             label="Single Expand"
-            @click="handleToggleSingleExpand"
+            @change="handleToggleSingleExpand"
           />
         </v-col>
         <v-col cols="auto" class="text-right">
@@ -126,9 +126,6 @@ export default class ControlTable extends Vue {
   // Whether to allow multiple expansions
   singleExpand = true;
 
-  // Whether to expand all evaluations
-  expandAll = false;
-
   // If the currently selected tab should sync
   syncTabs = false;
   tab = 'tab-test';
@@ -174,21 +171,21 @@ export default class ControlTable extends Vue {
   /** Closes all open controls when single-expand is re-enabled */
   async handleToggleSingleExpand(singleExpand: boolean): Promise<void> {
     if(singleExpand){
-      this.expandAll = false;
+      this.expand_all = false;
       this.toggleExpandAllEvaluations()
     }
   }
 
   /** Closes all open controls when single-expand is re-enabled */
   async handleToggleSyncTabs(syncTabs: boolean): Promise<void> {
-    if(!this.syncTabs){
+    if(!syncTabs){
       this.tab = 'test';
     }
   }
 
   /** Expands/closes all controls */
   async toggleExpandAllEvaluations(): Promise<void> {
-    if(this.expandAll){
+    if(this.expand_all){
       this.singleExpand = false;
       this.expanded = this.items.map((items) => items.key);
     } else {
