@@ -5740,9 +5740,9 @@ await-to-js@^2.0.1:
   integrity sha512-CHBC6gQGCIzjZ09tJ+XmpQoZOn4GdWePB4qUweCaKNJ0D3f115YdhmYVTZ4rMVpiJ3cFzZcTYK1VMYEICV4YXw==
 
 aws-sdk@^2.573.0:
-  version "2.863.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.863.0.tgz#602d244a947ce31c8d84de73f9a5b74e7cb95f5b"
-  integrity sha512-krr0047EOl9qpRdhPoyYxI7+viVUpX+t+Vjbf+alXdOE172DC+hFi8y6egIM1xVV4KkMFm0y0EykBWgA93XNNA==
+  version "2.864.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.864.0.tgz#934d526e6de5d6e5f7c4aa9258e3be60ee149e22"
+  integrity sha512-QbxIFgJLHP/v2snYC0udrQHQcRRPZjALv2pTvdVP78BBmM4YGuuI3U6YRMfHb/a41m2JDriXaqUA5+HSYmCm3w==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -8131,10 +8131,10 @@ cyclist@^1.0.1:
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-1.0.1.tgz#596e9698fd0c80e12038c2b82d6eb1b35b6224d9"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
 
-cypress@6.6.0:
-  version "6.6.0"
-  resolved "https://registry.yarnpkg.com/cypress/-/cypress-6.6.0.tgz#659c64cdb06e51b6be18fdac39d8f192deb54fa0"
-  integrity sha512-+Xx3Zn653LJHUsCb9h1Keql2jlazbr1ROmbY6DFJMmXKLgXP4ez9cE403W93JNGRbZK0Tng3R/oP8mvd9XAPVg==
+cypress@6.7.0:
+  version "6.7.0"
+  resolved "https://registry.yarnpkg.com/cypress/-/cypress-6.7.0.tgz#06e5bec43bd1e6f277532f29f8fe9bcccbb372e7"
+  integrity sha512-d1tEF7W4O2Hs68/OxFt5BpnQJVfix8Kjm1kgTIQHxdbtowjiU9ltVRfSPrMfvK/1SGttCUj+3I+o1EuxSo5Asg==
   dependencies:
     "@cypress/listr-verbose-renderer" "^0.4.1"
     "@cypress/request" "^2.88.5"
@@ -8846,9 +8846,9 @@ diff-sequences@^26.6.2:
   integrity sha512-Mv/TDa3nZ9sbc5soK+OoA74BsS3mL37yixCvUAQkiuA4Wz6YtwP/K47n2rv2ovzHZvoiQeA5FTQOschKkEwB0Q==
 
 diff2html@^3.1.7:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/diff2html/-/diff2html-3.3.1.tgz#5d2dc09ca86c3f85633d4f177183f9985d2d6254"
-  integrity sha512-rpk2H3pAvNXj6Hu43pHhsFdos/G/2QewyPyipsKl+vIVHRarWI5wlof4qvGnuhD+tpVkNicC+ZetkE4XkVEQjA==
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/diff2html/-/diff2html-3.4.0.tgz#71061552c4455c1e2020938807ac51aca09fd549"
+  integrity sha512-FiBWKwaDK7Sro3RkH1OcBLZ9qcTMvnZqhw/M4imvPLtlcNGdf5HM7S9e16Xf9X6n40LN0bUOU5iQjY3g6jF+2Q==
   dependencies:
     diff "4.0.2"
     hogan.js "3.0.2"
