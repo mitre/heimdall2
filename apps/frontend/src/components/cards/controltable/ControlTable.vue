@@ -7,11 +7,7 @@
           <v-card-title>Results View Data</v-card-title>
         </v-col>
         <v-col cols="auto" class="text-right">
-          <v-switch
-            v-model="syncTabs"
-            label="Sync Tabs"
-            @change="handleToggleSyncTabs"
-          />
+          <v-switch v-model="syncTabs" label="Sync Tabs" />
         </v-col>
         <v-col cols="auto" class="text-right">
           <v-switch
@@ -21,7 +17,7 @@
           />
         </v-col>
         <v-col cols="auto" class="text-right">
-          <v-switch v-model="expand_all" label="Expand All" class="mr-5" />
+          <v-switch v-model="expandAll" label="Expand All" class="mr-5" />
         </v-col>
       </v-row>
     </v-row>
@@ -78,7 +74,7 @@
         <ControlRowDetails
           v-if="expanded.includes(item.key)"
           :control="item.control"
-          :tab="tab"
+          :tab="syncTabs ? syncTab : undefined"
           @update:tab="updateTab"
         />
       </div>
@@ -128,7 +124,7 @@ export default class ControlTable extends Vue {
 
   // If the currently selected tab should sync
   syncTabs = false;
-  tab = 'tab-test';
+  syncTab = 'tab-test';
 
   // List of currently expanded options. If unique id is in here, it is expanded
   expanded: Array<string> = [];
@@ -156,10 +152,11 @@ export default class ControlTable extends Vue {
     }
   }
 
-  get expand_all() {
+  get expandAll() {
     return this.expanded.length === this.items.length;
   }
-  set expand_all(value: boolean) {
+
+  set expandAll(value: boolean) {
     if(value) {
       this.singleExpand = false;
       this.expanded = this.items.map((items) => items.key);
@@ -171,32 +168,12 @@ export default class ControlTable extends Vue {
   /** Closes all open controls when single-expand is re-enabled */
   async handleToggleSingleExpand(singleExpand: boolean): Promise<void> {
     if(singleExpand){
-      this.expand_all = false;
-      this.toggleExpandAllEvaluations()
-    }
-  }
-
-  /** Closes all open controls when single-expand is re-enabled */
-  async handleToggleSyncTabs(syncTabs: boolean): Promise<void> {
-    if(!syncTabs){
-      this.tab = 'test';
-    }
-  }
-
-  /** Expands/closes all controls */
-  async toggleExpandAllEvaluations(): Promise<void> {
-    if(this.expand_all){
-      this.singleExpand = false;
-      this.expanded = this.items.map((items) => items.key);
-    } else {
-      this.expanded = []
+      this.expandAll = false;
     }
   }
 
   async updateTab(tab: string){
-    if(this.syncTabs){
-      this.tab = tab
-    }
+    this.syncTab = tab
   }
 
   /** Toggles the given expansion of a control details panel */

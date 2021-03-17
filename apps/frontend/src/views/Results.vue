@@ -163,7 +163,6 @@
           <v-col xs-12>
             <v-card elevation="2">
               <ControlTable
-                ref="controlTable"
                 :filter="all_filter"
                 :show-impact="is_result_view"
               />
