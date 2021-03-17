@@ -1,15 +1,6 @@
 pull_request_rules:
   - name: automatic merge for master when reviewed and CI passes
     conditions:
-      - check-success=Run E2E Backend + Frontend Tests
-      - check-success=Build in production mode
-      - check-success=Lint Heimdall
-      - check-success=Run Backend Tests
-      - check-success=Run Frontend Tests
-      - check-success=security/snyk (rbclark)
-      - check-success=netlify/heimdall-lite/deploy-preview
-      - "check-success=LGTM analysis: JavaScript"
-      - check-success=SonarCloud Code Analysis
       - "#approved-reviews-by>=1"
       - base=master
       - label=ready-to-merge
