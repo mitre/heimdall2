@@ -5,6 +5,7 @@ import {
   IEvaluationTag
 } from '@heimdall/interfaces';
 import axios from 'axios';
+import _ from 'lodash';
 import {
   Action,
   getModule,
@@ -39,27 +40,15 @@ export class Evaluation extends VuexModule {
   }
 
   @Action
-  findEvaluationsByIds(evaluationIds: string[]): {id: string}[] {
-    const result: {id: string}[] = [];
-    evaluationIds.forEach((id) => {
-      if (!InspecDataModule.databaseIds.includes(id)) {
-        result.push({id: id});
-      }
-    });
-    return result;
-  }
-
-  @Action
-  async load_results(
-    evaluations: {
-      id: string;
-    }[]
-  ): Promise<(FileID | void)[]> {
+  async load_results(evaluationIds: string[]): Promise<(FileID | void)[]> {
+    const unloadedIds = _.difference(
+      evaluationIds,
+      InspecDataModule.allLoadedDatabaseIds
+    );
     return Promise.all(
-      evaluations.map(async (evaluation) => {
-        InspecDataModule.addDatabaseId(evaluation.id);
+      unloadedIds.map(async (id) => {
         return axios
-          .get<IEvaluation>(`/evaluations/${evaluation.id}`)
+          .get<IEvaluation>(`/evaluations/${id}`)
           .then(async ({data}) => {
             return InspecIntakeModule.loadText({
               text: JSON.stringify(data.data),

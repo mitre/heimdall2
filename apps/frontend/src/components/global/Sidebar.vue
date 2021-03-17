@@ -53,10 +53,10 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   // open the appropriate v-expansion-panel based on current route
   get active_path() {
-    if (this.current_route === '/profiles') return 1;
+    if (this.current_route === 'profiles') return 1;
     else if (
-      this.current_route === '/results' ||
-      this.current_route === '/compare'
+      this.current_route === 'results' ||
+      this.current_route === 'compare'
     )
       return 0;
     else return -1;
@@ -66,8 +66,8 @@ export default class Sidebar extends mixins(RouteMixin) {
     // There are currently 2 available values that the v-modal can have,
     // 0 -> results view
     // 1 -> profile view
-    if (id === 0) this.navigateUnlessActive('/results');
-    else if (id === 1) this.navigateUnlessActive('/profiles');
+    if (id === 0) this.navigateWithNoErrors(`/results`);
+    else if (id === 1) this.navigateWithNoErrors(`/profiles`);
   }
 
   // get all visible (uploaded) evaluation files
@@ -91,7 +91,7 @@ export default class Sidebar extends mixins(RouteMixin) {
   }
 
   get compareViewActive(): boolean {
-    return this.current_route === '/compare';
+    return this.current_route === 'compare';
   }
 
   // toggle the "select all" for profiles
@@ -106,10 +106,10 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   // toggle between the comparison view and the results view
   compareView(): void {
-    if (this.current_route === '/results')
-      this.navigateUnlessActive('/compare');
-    if (this.current_route === '/compare')
-      this.navigateUnlessActive('/results');
+    if (this.current_route === 'results')
+      this.navigateWithNoErrors(`/compare`);
+    if (this.current_route === 'compare')
+      this.navigateWithNoErrors(`/results`);
   }
 }
 </script>

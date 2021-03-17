@@ -124,13 +124,16 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
       files.includes(prof)
     ).length;
 
-    if (numEvaluations > numProfiles) {
+    if (numEvaluations >= numProfiles) {
       // Only navigate the user to the results page if they are not
       // already on the compare page.
-      if ('/compare' !== this.current_route)
-        this.navigateUnlessActive('/results');
+      if (this.current_route === 'compare') {
+        this.navigateWithNoErrors(`/compare`);
+      } else {
+        this.navigateWithNoErrors(`/results`);
+      }
     } else {
-      this.navigateUnlessActive('/profiles');
+      this.navigateWithNoErrors(`/profiles`);
     }
   }
 }

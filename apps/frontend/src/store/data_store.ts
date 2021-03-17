@@ -11,7 +11,13 @@ import {
 } from '@/store/report_intake';
 import Store from '@/store/store';
 import {context} from 'inspecjs';
-import {getModule, Module, Mutation, VuexModule} from 'vuex-module-decorators';
+import {
+  Action,
+  getModule,
+  Module,
+  Mutation,
+  VuexModule
+} from 'vuex-module-decorators';
 import {FilteredDataModule} from './data_filters';
 
 /** We make some new variant types of the Contextual types, to include their files*/
@@ -33,9 +39,6 @@ export class InspecData extends VuexModule {
 
   /** State var containing all profile files that have been added */
   profileFiles: ProfileFile[] = [];
-
-  /** All database_ids currently loaded */
-  loadedDatabaseFiles: string[] = [];
 
   /** Return all of the files that we currently have. */
   get allFiles(): (EvaluationFile | ProfileFile)[] {
@@ -93,6 +96,16 @@ export class InspecData extends VuexModule {
     return this.contextStore[0];
   }
 
+  get allLoadedDatabaseIds(): string[] {
+    const ids: string[] = [];
+    this.allFiles.forEach((file) => {
+      if (file.database_id) {
+        ids.push(file.database_id.toString());
+      }
+    });
+    return ids;
+  }
+
   /**
    * Returns a readonly list of all profiles currently held in the data store
    * including associated context
@@ -107,16 +120,6 @@ export class InspecData extends VuexModule {
    */
   get contextualControls(): readonly context.ContextualizedControl[] {
     return this.contextStore[2];
-  }
-
-  /** Returns all the database IDs of currently loaded files. */
-  get databaseIds(): string[] {
-    return this.loadedDatabaseFiles;
-  }
-
-  @Mutation
-  addDatabaseId(id: string) {
-    this.loadedDatabaseFiles.push(id);
   }
 
   /**
@@ -140,15 +143,25 @@ export class InspecData extends VuexModule {
   /**
    * Unloads the file with the given id
    */
+  @Action
+  removeFile(fileId: FileID) {
+    FilteredDataModule.clear_file(fileId);
+    this.context.commit('REMOVE_PROFILE', fileId);
+    this.context.commit('REMOVE_RESULT', fileId);
+  }
+
   @Mutation
-  removeFile(file_id: FileID) {
+  REMOVE_PROFILE(fileId: FileID) {
     this.profileFiles = this.profileFiles.filter(
-      (pf) => pf.unique_id !== file_id
+      (pf) => pf.unique_id !== fileId
     );
+  }
+
+  @Mutation
+  REMOVE_RESULT(fileId: FileID) {
     this.executionFiles = this.executionFiles.filter(
-      (ef) => ef.unique_id !== file_id
+      (ef) => ef.unique_id !== fileId
     );
-    FilteredDataModule.clear_file(file_id);
   }
 
   /**

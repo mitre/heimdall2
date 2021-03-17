@@ -40,10 +40,7 @@
         </template>
         <template #[`item.actions`]="{item}">
           <v-row class="d-flex flex-row-reverse">
-            <ShareEvaluationButton
-              :evaluation="item"
-              :selected-files="selectedFiles"
-            />
+            <ShareEvaluationButton title="Share Result" :evaluation="item" />
             <div v-if="item.editable">
               <EditEvaluationModal
                 id="editEvaluationModal"

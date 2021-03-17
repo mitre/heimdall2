@@ -15,39 +15,27 @@ import {IEvaluation} from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {SnackbarModule} from '../../store/snackbar';
-import {Sample} from '../../utilities/sample_util';
+import {SnackbarModule} from '@/store/snackbar';
+import VueClipboard from 'vue-clipboard2';
+
+VueClipboard.config.autoSetContainer = true;
+
+Vue.use(VueClipboard);
 
 @Component({})
 export default class ShareEvaluationButton extends Vue {
   @Prop({required: true}) readonly evaluation!: IEvaluation;
-  @Prop({required: true}) readonly selectedFiles!: IEvaluation[] | Sample[];
 
   onCopy() {
-    SnackbarModule.notify('Successfully copied share link');
+    SnackbarModule.notify('Link copied to clipboard');
   }
 
   onCopyFailure() {
     SnackbarModule.failure('Failed to copy to your clipboard');
   }
 
-  joinEvaluationsByIds(evaluations: IEvaluation[] | Sample[]): string {
-    let stringresult = '';
-    evaluations.forEach((evaluation: IEvaluation | Sample) => {
-      if(evaluation.hasOwnProperty('id')){
-        stringresult += `${(evaluation as IEvaluation).id},`;
-      }
-    });
-    return stringresult.slice(0, -1);
-  }
-
   shareItems(evaluation: IEvaluation): string {
-    if (this.selectedFiles.length >= 1){
-      const shareList = this.joinEvaluationsByIds(this.selectedFiles)
-      return `${window.location.origin}/results/${shareList}`;
-    } else {
-      return `${window.location.origin}/results/${evaluation.id}`;
-    }
+    return `${window.location.origin}/results/${evaluation.id}`;
   }
 }
 </script>

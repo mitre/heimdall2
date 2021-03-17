@@ -4,16 +4,12 @@ import {Component, Vue} from 'vue-property-decorator';
 export default class RouteMixin extends Vue {
   // get the value of the current route
   get current_route() {
-    return '/' + this.$router.currentRoute.path.replace(/[^a-z]/gi, '');
+    return this.$router.currentRoute.path.split('/')[1];
   }
 
-  // Ignore errors caused by navigating to the
-  // already active path
-  navigateUnlessActive(route: string): void {
-    this.$router.push(route).catch((err) => {
-      if (err.name !== 'NavigationDuplicated') {
-        throw err;
-      }
+  navigateWithNoErrors(route: string): void {
+    this.$router.push(route).catch(() => {
+      // Ignore errors caused by navigation
     });
   }
 }
