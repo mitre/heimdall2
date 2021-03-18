@@ -95,6 +95,7 @@ export class ColorHack extends VuexModule {
         case 'Empty':
           return 'black';
         default:
+          // eslint-disable-next-line no-console
           console.warn(`No color defined for ${status}`);
           return 'rgb(187, 187, 187)';
       }
