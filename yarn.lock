@@ -19414,13 +19414,6 @@ vue-cli-plugin-vuetify@~2.2.0:
     semver "^7.1.2"
     shelljs "^0.8.3"
 
-vue-clipboard2@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/vue-clipboard2/-/vue-clipboard2-0.3.1.tgz#6e551fb7bd384889b28b0da3b12289ed6bca4894"
-  integrity sha512-H5S/agEDj0kXjUb5GP2c0hCzIXWRBygaWLN3NEFsaI9I3uWin778SFEMt8QRXiPG+7anyjqWiw2lqcxWUSfkYg==
-  dependencies:
-    clipboard "^2.0.0"
-
 vue-codemod@^0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/vue-codemod/-/vue-codemod-0.0.5.tgz#679b3a7f5b053feba1abde907fd70f961a398470"
