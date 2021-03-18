@@ -22,6 +22,11 @@ import {
 import {AuthzService} from '../authz/authz.service';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
+import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
+import {Evaluation} from '../evaluations/evaluation.model';
+import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
+import {GroupUser} from '../group-users/group-user.model';
+import {Group} from '../groups/group.model';
 import {UserDto} from './dto/user.dto';
 import {User} from './user.model';
 import {UsersController} from './users.controller';
@@ -40,7 +45,17 @@ describe('UsersController Unit Tests', () => {
   beforeAll(async () => {
     module = await Test.createTestingModule({
       controllers: [UsersController],
-      imports: [DatabaseModule, SequelizeModule.forFeature([User])],
+      imports: [
+        DatabaseModule,
+        SequelizeModule.forFeature([
+          User,
+          GroupUser,
+          Group,
+          GroupEvaluation,
+          Evaluation,
+          EvaluationTag
+        ])
+      ],
       providers: [AuthzService, DatabaseService, UsersService]
     }).compile();
 
@@ -79,12 +94,16 @@ describe('UsersController Unit Tests', () => {
 
   describe('findAll function', () => {
     // Tests the findAll function with valid ID (basic positive test)
-    it('should list all users', async () => {
+    it('should list all users for an admin', async () => {
       expect.assertions(1);
-
-      expect(await usersController.findAll({user: adminUser})).toEqual(
-        await usersService.findAll()
+      const serviceFoundUsers = (await usersService.adminFindAll()).map(
+        (user) => new UserDto(user)
       );
+      const controllerFoundUsers = await usersController.adminFindAll({
+        user: adminUser
+      });
+      // In the case of admin, they should be equal becuase admin can see all
+      expect(controllerFoundUsers).toEqual(serviceFoundUsers);
     });
   });
 

@@ -48,11 +48,6 @@ import {Prop} from 'vue-property-decorator';
 import {HDFControlSegment} from 'inspecjs';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
 
-interface CollapsableElement extends Element {
-  offsetHeight: Number;
-  offsetWidth: Number;
-}
-
 @Component({})
 export default class ControlRowCol extends mixins(HtmlSanitizeMixin) {
   @Prop({type: String, required: true}) readonly statusCode!: string;

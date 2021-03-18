@@ -19,6 +19,7 @@ export interface SeriesItem {
   name: string;
   data: number[];
 }
+
 const redHatControlCount = 247;
 const redHatDelta = 27;
 const nginxControlCount = 41;
@@ -27,35 +28,42 @@ const nginxDelta = 3;
 describe('Compare table data', () => {
   loadSample('NGINX With Failing Tests');
   it('correctly counts controls with 1 file', () => {
+    (wrapper.vm as Vue & {checkbox: boolean}).checkbox = false;
     expect(
-      (wrapper.vm as Vue & {control_sets: ControlSeries[]}).control_sets.length
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
     ).toBe(nginxControlCount);
   });
 
   it('does not recount same controls with 2 files', () => {
     loadSample('NGINX With Failing Tests');
     expect(
-      (wrapper.vm as Vue & {control_sets: ControlSeries[]}).control_sets.length
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
     ).toBe(nginxControlCount);
-  });
-
-  it('does not show any changed between two of the same', () => {
-    expect(
-      (wrapper.vm as Vue & {show_sets: ControlSeries[]}).show_sets.length
-    ).toBe(0);
   });
 
   it('does not recount same controls with 3 files', () => {
     loadSample('NGINX With Failing Tests');
     expect(
-      (wrapper.vm as Vue & {control_sets: ControlSeries[]}).control_sets.length
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
     ).toBe(nginxControlCount);
+  });
+
+  it('does not show any changed between two of the same', () => {
+    (wrapper.vm as Vue & {checkbox: boolean}).checkbox = true;
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(0);
   });
 
   it('search works when nothing fits criteria', () => {
     (wrapper.vm as Vue & {search_term: string}).search_term = 'failed';
     expect(
-      (wrapper.vm as Vue & {show_sets: ControlSeries[]}).show_sets.length
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
     ).toBe(0);
   });
 
@@ -63,22 +71,18 @@ describe('Compare table data', () => {
     (wrapper.vm as Vue & {checkbox: boolean}).checkbox = false;
     (wrapper.vm as Vue & {search_term: string}).search_term = 'v-13613';
     expect(
-      (wrapper.vm as Vue & {show_sets: ControlSeries[]}).show_sets.length
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
     ).toBe(1);
   });
 
-  it('does not recount same control with different data', () => {
+  it('shows differing delta data when "show only changed"', () => {
     (wrapper.vm as Vue & {search_term: string}).search_term = '';
     (wrapper.vm as Vue & {checkbox: boolean}).checkbox = true;
     loadSample('NGINX Clean Sample');
     expect(
-      (wrapper.vm as Vue & {control_sets: ControlSeries[]}).control_sets.length
-    ).toBe(nginxControlCount);
-  });
-
-  it('shows differing delta data when "show only changed"', () => {
-    expect(
-      (wrapper.vm as Vue & {show_sets: ControlSeries[]}).show_sets.length
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
     ).toBe(nginxDelta);
   });
 
@@ -86,7 +90,8 @@ describe('Compare table data', () => {
     (wrapper.vm as Vue & {checkbox: boolean}).checkbox = false;
     (wrapper.vm as Vue & {search_term: string}).search_term = 'failed';
     expect(
-      (wrapper.vm as Vue & {show_sets: ControlSeries[]}).show_sets.length
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
     ).toBe(nginxDelta);
   });
 
@@ -95,21 +100,17 @@ describe('Compare table data', () => {
     (wrapper.vm as Vue & {search_term: string}).search_term = '';
     (wrapper.vm as Vue & {checkbox: boolean}).checkbox = true;
     expect(
-      (wrapper.vm as Vue & {control_sets: ControlSeries[]}).control_sets.length
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
     ).toBe(nginxControlCount + redHatControlCount);
-  });
-
-  it('doesnt show data of controls with one instance when "show only changed"', () => {
-    expect(
-      (wrapper.vm as Vue & {show_sets: ControlSeries[]}).show_sets.length
-    ).toBe(nginxDelta);
   });
 
   it('shows all delta data of controls with multiple occurances when "show only changed"', () => {
     loadSample('Red Hat Clean Sample');
     expect(
-      (wrapper.vm as Vue & {show_sets: ControlSeries[]}).show_sets.length
-    ).toBe(nginxDelta + redHatDelta);
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(nginxControlCount + redHatControlCount);
   });
 
   it('ComparisonContext counts status correctly', () => {
@@ -123,7 +124,7 @@ describe('Compare table data', () => {
     );
     const currDelta = new ComparisonContext(selectedData);
     for (const pairing of Object.values(currDelta.pairings)) {
-      for (const ctrl of pairing) {
+      for (const ctrl of Object.values(pairing)) {
         if (ctrl === null) {
           continue;
         } else if (ctrl!.root.hdf.status == 'Passed') {

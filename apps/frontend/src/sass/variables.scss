@@ -20,3 +20,5 @@ $material-dark: (
   'surface': map_get($material-dark-elevation-colors, '0'),
   'bg-color': map_get($material-dark-elevation-colors, '1'),
 );
+
+$snackbar-z-index: 1999;

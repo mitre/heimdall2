@@ -13,13 +13,13 @@
     </v-list-item-content>
 
     <v-list-item-action v-if="serverMode" @click.stop="save_file">
-      <v-btn icon small :disabled="disable_saving">
+      <v-btn data-cy="saveFile" icon small :disabled="disable_saving">
         <v-icon> mdi-content-save </v-icon>
       </v-btn>
     </v-list-item-action>
 
     <v-list-item-action @click.stop="remove_file">
-      <v-btn icon small>
+      <v-btn data-cy="closeFile" icon small>
         <v-icon> mdi-close </v-icon>
       </v-btn>
     </v-list-item-action>
@@ -29,7 +29,6 @@
 <script lang="ts">
 import Component, {mixins} from 'vue-class-component';
 import axios from 'axios';
-import {ICreateEvaluation} from '@heimdall/interfaces';
 import {InspecDataModule} from '@/store/data_store';
 import {FilteredDataModule} from '@/store/data_filters';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
@@ -37,7 +36,7 @@ import {SnackbarModule} from '@/store/snackbar';
 
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop} from 'vue-property-decorator';
-import {ServerModule} from '@/store/server';
+import {ICreateEvaluation} from '@heimdall/interfaces';
 
 @Component
 export default class FileItem extends mixins(ServerMixin) {
@@ -74,12 +73,9 @@ export default class FileItem extends mixins(ServerMixin) {
   //saves file to database
   save_file() {
     if (this.file?.database_id){
-      SnackbarModule.failure('This evaluation is already in the database.')
-    }
-    else if (this.file) {
-      if (this.file.hasOwnProperty('evaluation')) {
-        this.save_evaluation(this.file as EvaluationFile);
-      }
+      SnackbarModule.failure('This file is already in the database.')
+    } else if (this.file) {
+      this.save_to_database(this.file);
     }
   }
 
@@ -88,20 +84,32 @@ export default class FileItem extends mixins(ServerMixin) {
     return (typeof this.file?.database_id !== 'undefined') || this.saving
   }
 
-  save_evaluation(file: EvaluationFile) {
+  save_to_database(file: EvaluationFile | ProfileFile) {
     this.saving = true;
 
-    let evaluationDTO: ICreateEvaluation = {
-      data: file.evaluation.data,
+    const createEvaluationDto: ICreateEvaluation = {
       filename: file.filename,
-      userId: ServerModule.userInfo.id,
+      public: false,
       evaluationTags: []
     };
 
+    // Create a multipart form to upload our data
+    const formData = new FormData();
+    // Add the DTO objects to form data
+    for (const [key, value] of Object.entries(createEvaluationDto)) {
+      formData.append(key, value);
+    }
+    // Add evaluation data to the form
+    if (file.hasOwnProperty('evaluation')){ // If this is an evaluation
+      formData.append("data", new Blob([JSON.stringify((file as EvaluationFile).evaluation.data)], {type: 'text/plain'}));
+    } else { // Or if it is a profile
+     formData.append("data", new Blob([JSON.stringify((file as ProfileFile).profile.data)], {type: 'text/plain'}));
+    }
+
     axios
-      .post('/evaluations', evaluationDTO)
+      .post('/evaluations', formData)
       .then((response) => {
-        SnackbarModule.notify('Result saved successfully');
+        SnackbarModule.notify('File saved successfully');
         file.database_id = parseInt(response.data.id);
       })
       .catch((error) => {

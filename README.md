@@ -6,11 +6,9 @@ This repository contains the source code for the Heimdall 2 Backend and Frontend
 
 ## Demos
 
-### Images
+### Video
 
-| Loading Files                                                | Video                                                        |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| ![Heimdall Lite 2.0 Demo GIF](https://github.com/mitre/heimdall2/raw/master/apps/frontend/public/heimdall-lite-2.0-demo-5fps.gif) | [![Heimdall Lite 2.0 Demo YouTube](https://github.com/mitre/heimdall2/raw/master/apps/frontend/public/heimdall-preview.jpg)](https://www.youtube.com/watch?v=1jXHWZ0gHQg) |
+[![Heimdall Lite 2.0 Demo YouTube](https://github.com/mitre/heimdall2/raw/master/apps/frontend/public/heimdall-preview.jpg)](https://www.youtube.com/watch?v=1jXHWZ0gHQg)
 
 ### Hosted
 
@@ -118,7 +116,7 @@ Given that Heimdall requires at least a database service, we use Docker and Dock
      # If you would like to further configure your Heimdall instance, edit the .env file generated after running the previous line
      docker-compose up -d
      ```
-   
+
 6. Navigate to  [`http://127.0.0.1:3000`](http://127.0.0.1:3000).
 
 #### Running Docker Container
@@ -163,7 +161,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com
 curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "password" }' http://localhost:3000/authn/login
 # The previous command returns a Bearer Token that needs to get placed in the following command
 # Upload evaluation
-curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer bearertokengoeshere" -d "@/home/example/Desktop/test.json" http://localhost:8000/evaluations
+curl -F "data=@Evaluation.json" -F "filename=Your Filename" -F "public=true/false" -H "Authorization: Bearer bearertokengoeshere" "http://localhost:3000/evaluations"
 ```
 
 
@@ -258,7 +256,6 @@ To test your code to make sure everything still works:
     # Run Frontend Vue Tests
     yarn frontend test
     # Run Backend Nest Tests
-    yarn backend test:e2e
     yarn backend test:ci-cov
 
 #### Run Cypress End to End Tests

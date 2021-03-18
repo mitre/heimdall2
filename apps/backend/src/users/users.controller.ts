@@ -23,6 +23,7 @@ import {PasswordsMatchPipe} from '../pipes/passwords-match.pipe';
 import {User} from '../users/user.model';
 import {CreateUserDto} from './dto/create-user.dto';
 import {DeleteUserDto} from './dto/delete-user.dto';
+import {SlimUserDto} from './dto/slim-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
 import {UserDto} from './dto/user.dto';
 import {UsersService} from './users.service';
@@ -33,6 +34,16 @@ export class UsersController {
     private readonly usersService: UsersService,
     private readonly authz: AuthzService
   ) {}
+
+  @Get('/user-find-all')
+  @UseGuards(JwtAuthGuard)
+  async userFindAll(@Request() request: {user: User}): Promise<SlimUserDto[]> {
+    const abac = this.authz.abac.createForUser(request.user);
+    ForbiddenError.from(abac).throwUnlessCan(Action.ReadSlim, User);
+    const users = await this.usersService.userFindAll();
+    return users.map((user) => new SlimUserDto(user));
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findById(
@@ -49,18 +60,19 @@ export class UsersController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async findAll(@Request() request: {user: User}): Promise<UserDto[]> {
+  async adminFindAll(@Request() request: {user: User}): Promise<UserDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
     ForbiddenError.from(abac).throwUnlessCan(Action.ReadAll, User);
 
-    return this.usersService.findAll();
+    const users = await this.usersService.adminFindAll();
+    return users.map((user) => new UserDto(user));
   }
 
   @Post()
   @UsePipes(new PasswordsMatchPipe(), new PasswordComplexityPipe())
   @UseFilters(new UniqueConstraintErrorFilter())
   async create(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
-    return this.usersService.create(createUserDto);
+    return new UserDto(await this.usersService.create(createUserDto));
   }
 
   @UseGuards(JwtAuthGuard)
@@ -79,7 +91,9 @@ export class UsersController {
     const userToUpdate = await this.usersService.findByPkBang(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, userToUpdate);
 
-    return this.usersService.update(userToUpdate, updateUserDto, abac);
+    return new UserDto(
+      await this.usersService.update(userToUpdate, updateUserDto, abac)
+    );
   }
 
   @UseGuards(JwtAuthGuard)
@@ -93,7 +107,9 @@ export class UsersController {
     const userToDelete = await this.usersService.findByPkBang(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Delete, userToDelete);
 
-    return this.usersService.remove(userToDelete, deleteUserDto, abac);
+    return new UserDto(
+      await this.usersService.remove(userToDelete, deleteUserDto, abac)
+    );
   }
 
   @UseGuards(TestGuard)

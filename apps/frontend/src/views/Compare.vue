@@ -1,5 +1,5 @@
 <template>
-  <BaseView v-resize="on_resize" :title="curr_title">
+  <BaseView :title="curr_title">
     <!-- Topbar config - give it a search bar -->
     <template #topbar-content>
       <v-text-field
@@ -14,7 +14,6 @@
       <UploadButton />
     </template>
 
-    <!-- The main content: comparisons of each set of controls in control_sets, etc -->
     <template #main-content>
       <v-container fluid grid-list-md pa-2>
         <v-row>
@@ -73,7 +72,6 @@
                                   fromFile: [file.unique_id],
                                   omit_overlayed_controls: true
                                 }"
-                                :value="null"
                                 :show_compliance="true"
                               />
                             </v-card-actions>
@@ -116,13 +114,13 @@
               <v-checkbox
                 v-model="checkbox"
                 color="blue"
-                :label="'Display Only Changed Results'"
+                label="Display Only Changed Results"
               />
             </v-col>
           </v-row>
           <hr />
           <v-row>
-            <v-col cols="3" xs="3" sm="2" md="1" lg="1" xl="1">
+            <v-col cols="3" sm="2" md="1">
               <br />
               <v-row>
                 <v-col cols="8">
@@ -140,16 +138,7 @@
                       <v-icon v-if="ascending">mdi-sort-descending</v-icon>
                       <v-icon v-else>mdi-sort-ascending</v-icon>
                     </v-btn>
-                    <strong
-                      v-if="
-                        (width > 960 &&
-                          $vuetify.breakpoint.name != 'md' &&
-                          $vuetify.breakpoint.name != 'lg') ||
-                        width > 1800
-                      "
-                      >Test ID</strong
-                    >
-                    <strong v-else>ID</strong>
+                    <strong>Test ID</strong>
                   </div>
                 </v-col>
                 <v-col cols="4">
@@ -190,10 +179,11 @@
           </v-row>
           <v-divider dark />
           <CompareRow
-            v-for="(control_set, i) in show_sets"
-            :key="i"
+            v-for="[control_id, control_set] in show_sets"
+            :key="control_id"
+            :file-ids="visible_row_ids"
+            :control-id="control_id"
             :controls="control_set"
-            :shown_files="num_shown_files"
             class="my-4"
             :shift="start_index"
             :expanded="expanded_view"
@@ -212,11 +202,11 @@ import Modal from '@/components/global/Modal.vue';
 import CompareRow from '@/components/cards/comparison/CompareRow.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
 
-import {FilteredDataModule} from '@/store/data_filters';
-import {ControlStatus, context} from 'inspecjs';
+import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {ControlStatus} from 'inspecjs';
 import {SeverityCountModule} from '@/store/severity_counts';
 
-import {ComparisonContext, ControlSeries} from '@/utilities/delta_util';
+import {compare_times, ComparisonContext, ControlSeries} from '@/utilities/delta_util';
 import {Category} from '@/components/generic/ApexPieChart.vue';
 import {StatusCountModule} from '@/store/status_counts';
 import ProfileRow from '@/components/cards/comparison/ProfileRow.vue';
@@ -227,8 +217,6 @@ import {InspecDataModule} from '@/store/data_store';
 import ApexLineChart, {
   SeriesItem
 } from '@/components/generic/ApexLineChart.vue';
-//@ts-ignore
-import resize from 'vue-resize-directive';
 import {get_eval_start_time} from '@/utilities/delta_util';
 import _ from 'lodash';
 
@@ -241,9 +229,6 @@ import _ from 'lodash';
     StatusChart,
     ApexLineChart,
     UploadButton
-  },
-  directives: {
-    resize
   }
 })
 export default class Compare extends Vue {
@@ -294,94 +279,41 @@ export default class Compare extends Vue {
     return new ComparisonContext(selected_data);
   }
 
-  /** Yields the control pairings in a more easily consumable list form */
-  get control_sets(): ControlSeries[] {
-    return Object.values(this.curr_delta.pairings);
-  }
-
   /** Yields the control pairings that have changed*/
-  get delta_sets(): ControlSeries[] {
-    function get_status_safe(ctrl: null | context.ContextualizedControl) {
-      if (ctrl == null) {
-        return 'No Data';
-      }
-      return ctrl.hdf.status;
-    }
-    return this.searched_sets.filter((series) => {
-      // Get the first status. If no change, all should equal this
-      let first;
-      for (let i = 0; i < series.length; i++) {
-        if (get_status_safe(series[i]) !== 'No Data') {
-          first = get_status_safe(series[i]);
-          break;
-        }
-      }
-      for (let i = 1; i < series.length; i++) {
-        // Check if the status has changed. If so, keep
-        if (
-          get_status_safe(series[i]) !== first &&
-          get_status_safe(series[i]) !== 'No Data'
-        ) {
-          return true;
-        }
-      }
-      return false;
+  get delta_sets(): [string, ControlSeries][] {
+    return this.searched_sets.filter(([_id, series]) => {
+      const controls = Object.values(series).map((control) => control.root.hdf.status);
+      // If some of the controls are not equal to the first one then it is changed and should be displayed
+      // If the number of controls with information loaded about them is different than the number of files
+      // loaded then something has been added/removed and should be displayed.
+      return (controls.some((control) => control !== controls[0]) || controls.length !== FilteredDataModule.selected_file_ids.length);
     });
   }
 
-  get searched_sets(): ControlSeries[] {
-    let term = (this.search_term || '').toLowerCase().trim();
-    if (term == '') {
-      return this.control_sets;
-    }
-    function contains_term(
-      context_control: context.ContextualizedControl,
-      term: string
-    ): boolean {
-      let as_hdf = context_control.root.hdf;
-      // Get our (non-null) searchable data
-      let searchables: string[] = [
-        as_hdf.wraps.id,
-        as_hdf.wraps.title,
-        as_hdf.wraps.code,
-        as_hdf.severity,
-        as_hdf.status,
-        as_hdf.finding_details
-      ].filter((s) => s !== null) as string[];
-
-      // See if any contain term
-      return searchables.some((s) => s.toLowerCase().includes(term));
-    }
-    let searched: ControlSeries[] = [];
-    for (let series of this.control_sets) {
-      for (let ctrl of series) {
-        if (ctrl == null) {
-          continue;
-        } else if (contains_term(ctrl!, this.search_term)) {
-          searched.push(series);
-          break;
-        }
-      }
-    }
-    return searched;
+  get filter(): Filter {
+    return {
+      fromFile: this.file_filter,
+      search_term: this.search_term || '',
+      omit_overlayed_controls: true
+    };
   }
 
-  get show_sets(): ControlSeries[] {
-    let sorted = [];
-    if (this.checkbox) {
-      if (this.ascending) {
-        return this.delta_sets;
-      }
-      sorted = [...this.delta_sets];
-      sorted.reverse();
-      return sorted;
+    // Use the FilteredDataModule to search and filter out keys that do not match
+  get searched_sets(): [string, ControlSeries][] {
+    const found = FilteredDataModule.controls(this.filter).map((value) => value.data.id);
+    // Cross-reference the list of keys found above with the keys in the ControlSeriesLookup object
+    // Then convert to a list of entries (destructured objects) for ease of use.
+    return Object.entries(_.pickBy(this.curr_delta.pairings, (_id, key) => found.includes(key)));
+  }
+
+  get show_sets(): [string, ControlSeries][] {
+    const sets: [string, ControlSeries][] = Array.from(this.checkbox ? this.delta_sets : this.searched_sets);
+    let searchModifier = -1;
+
+    if(this.ascending) {
+      searchModifier = 1;
     }
-    if (this.ascending) {
-      return this.searched_sets;
-    }
-    sorted = [...this.searched_sets];
-    sorted.reverse();
-    return sorted;
+    return sets.sort(([a, _seriesA], [b, _seriesB]) => a.localeCompare(b) * searchModifier );
   }
 
   changeSort(): void {
@@ -392,10 +324,6 @@ export default class Compare extends Vue {
     this.chartsOpen = !this.chartsOpen;
   }
 
-  get control_sort(): boolean {
-    return this.ascending;
-  }
-
   get statusCols(): number {
     if (this.width < 600) {
       return 12;
@@ -404,26 +332,16 @@ export default class Compare extends Vue {
   }
 
   get files(): EvaluationFile[] {
-    let fileArr = [];
-    let fileList = FilteredDataModule.evaluations(
-      FilteredDataModule.selected_file_ids
-    );
-    for (let i = 0; i < fileList.length; i++) {
-      fileArr.push(fileList[i].from_file);
-    }
+    const fileList = Array.from(FilteredDataModule.evaluations(FilteredDataModule.selected_file_ids));
 
-    fileArr = fileArr.sort((a, b) => {
-      let a_date = new Date(
-        FilteredDataModule.controls({fromFile: [a.unique_id]})[0].root.hdf
-          .start_time || 0
-      );
-      let b_date = new Date(
-        FilteredDataModule.controls({fromFile: [b.unique_id]})[0].root.hdf
-          .start_time || 0
-      );
-      return a_date.valueOf() - b_date.valueOf();
-    });
-    return fileArr;
+    fileList.sort(compare_times);
+    return fileList.map((evaluation) => evaluation.from_file);
+  }
+
+  // Return the fileIDs for the visible rows in the correct order, so that the CompareRow
+  // shows data matching the file headers.
+  get visible_row_ids(): FileID[] {
+    return this.files.map((file) => file.unique_id).slice(this.start_index, this.start_index + this.num_shown_files);
   }
 
   get sev_series(): number[][] {
@@ -470,11 +388,11 @@ export default class Compare extends Vue {
   }
 
   get line_sev_series(): SeriesItem[] {
-    var series = [];
-    var low = {name: 'Failed Low Severity', data: this.sev_series[0]};
-    var med = {name: 'Failed Medium Severity', data: this.sev_series[1]};
-    var high = {name: 'Failed High Severity', data: this.sev_series[2]};
-    var crit = {name: 'Failed Critical Severity', data: this.sev_series[3]};
+    const series = [];
+    const low = {name: 'Failed Low Severity', data: this.sev_series[0]};
+    const med = {name: 'Failed Medium Severity', data: this.sev_series[1]};
+    const high = {name: 'Failed High Severity', data: this.sev_series[2]};
+    const crit = {name: 'Failed Critical Severity', data: this.sev_series[3]};
     series.push(low);
     series.push(med);
     series.push(high);
@@ -502,12 +420,7 @@ export default class Compare extends Vue {
   }
 
   get fileTimes(): (string | undefined)[] {
-    var names = [];
-    for (let file of this.files) {
-      let time = get_eval_start_time(file.evaluation) || undefined;
-      names.push(time);
-    }
-    return names;
+    return this.files.map((file) => get_eval_start_time(file.evaluation) || undefined );
   }
 
   get total_failed(): number {
@@ -526,29 +439,10 @@ export default class Compare extends Vue {
   }
 
   get num_shown_files(): number {
-    if (this.$vuetify.breakpoint.name == 'xs') {
-      if (this.files.length > 2) {
-        return 2;
-      }
-      return this.files.length;
-    } else if (this.$vuetify.breakpoint.name == 'sm') {
-      if (this.files.length > 2) {
-        return 2;
-      }
-    } else if (this.files.length > 2) {
+    if (this.files.length > 2) {
       return 2;
     }
     return this.files.length;
-  }
-
-  on_resize(elt: unknown) {
-    const newClientWidth: number = _.get(elt, 'clientWidth');
-    if (this.start_index > this.files.length - this.num_shown_files) {
-      this.start_index = this.files.length - this.num_shown_files;
-    }
-    if (newClientWidth !== undefined && newClientWidth > 1) {
-      this.width = newClientWidth - 24;
-    }
   }
 
   scroll_left() {
@@ -588,7 +482,7 @@ export default class Compare extends Vue {
   }
 
   get file_filter(): FileID[] {
-    return FilteredDataModule.selected_evaluations;
+    return FilteredDataModule.selectedEvaluationIds;
   }
 }
 </script>

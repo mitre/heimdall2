@@ -1,8 +1,10 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
+import {FindOptions} from 'sequelize/types';
+import {Evaluation} from '../evaluations/evaluation.model';
+import {Group} from '../groups/group.model';
+import {User} from '../users/user.model';
 import {CreateEvaluationTagDto} from './dto/create-evaluation-tag.dto';
-import {EvaluationTagDto} from './dto/evaluation-tag.dto';
-import {UpdateEvaluationTagDto} from './dto/update-evaluation-tag.dto';
 import {EvaluationTag} from './evaluation-tag.model';
 
 @Injectable()
@@ -12,16 +14,36 @@ export class EvaluationTagsService {
     private evaluationTagModel: typeof EvaluationTag
   ) {}
 
-  async findAll(): Promise<EvaluationTagDto[]> {
-    const evaluationTags = await this.evaluationTagModel.findAll<EvaluationTag>();
-    return evaluationTags.map(
-      (evaluationTag) => new EvaluationTagDto(evaluationTag)
-    );
+  async findAll(): Promise<EvaluationTag[]> {
+    return this.evaluationTagModel.findAll<EvaluationTag>({
+      include: [
+        {
+          model: Evaluation,
+          include: [
+            {
+              model: Group,
+              include: [User]
+            }
+          ]
+        }
+      ]
+    });
   }
 
-  async findById(id: string): Promise<EvaluationTagDto> {
-    const evaluationTag = await this.findByPkBang(id);
-    return new EvaluationTagDto(evaluationTag);
+  async findById(id: string): Promise<EvaluationTag> {
+    return this.findByPkBang(id, {
+      include: [
+        {
+          model: Evaluation,
+          include: [
+            {
+              model: Group,
+              include: [User]
+            }
+          ]
+        }
+      ]
+    });
   }
 
   async create(
@@ -34,29 +56,31 @@ export class EvaluationTagsService {
     return evaluationTag.save();
   }
 
-  async update(
-    id: string,
-    updateEvaluationTagDto: UpdateEvaluationTagDto
-  ): Promise<EvaluationTag> {
-    const evaluationTag = await this.findByPkBang(id);
-    return evaluationTag.update(updateEvaluationTagDto);
-  }
-
-  async remove(id: string): Promise<EvaluationTagDto> {
-    const evaluationTag = await this.findByPkBang(id);
+  async remove(id: string): Promise<EvaluationTag> {
+    const evaluationTag = await this.findByPkBang(id, {
+      include: [
+        {
+          model: Evaluation,
+          include: [
+            {
+              model: Group,
+              include: [User]
+            }
+          ]
+        }
+      ]
+    });
     await evaluationTag.destroy();
-    return new EvaluationTagDto(evaluationTag);
-  }
-
-  objectFromDto(createEvaluationTagDto: CreateEvaluationTagDto): EvaluationTag {
-    return new EvaluationTag(createEvaluationTagDto);
+    return evaluationTag;
   }
 
   async findByPkBang(
-    identifier: string | number | Buffer | undefined
+    identifier: string | number | Buffer | undefined,
+    options: Pick<FindOptions, 'include'>
   ): Promise<EvaluationTag> {
-    const evaluationTag = await EvaluationTag.findByPk<EvaluationTag>(
-      identifier
+    const evaluationTag = await this.evaluationTagModel.findByPk<EvaluationTag>(
+      identifier,
+      options
     );
     if (evaluationTag === null) {
       throw new NotFoundException('EvaluationTag with given id not found');

@@ -1,84 +1,110 @@
-import aws_s3_baseline from '../assets/samples/aws-s3-baseline.json';
-import bad_nginx from '../assets/samples/bad_nginx.json';
-import cis_aws_foundations_baseline from '../assets/samples/cis-aws-foundations-baseline.json';
-import fortify_h_tools_conv_webgoat from '../assets/samples/fortify_h_tools_conv_webgoat.json';
-import good_nginxresults from '../assets/samples/good_nginxresults.json';
-import owasp_zap_webgoat from '../assets/samples/owasp_zap_webgoat.json';
-import owasp_zap_zero from '../assets/samples/owasp_zap_zero.webappsecurity.json';
-import red_hat_bad from '../assets/samples/red_hat_bad.json';
-import red_hat_good from '../assets/samples/red_hat_good.json';
-import rhel7_results from '../assets/samples/rhel7-results.json';
-import rhel_cve_vulnerability_scan_baseline_with_failures from '../assets/samples/rhel_cve_vulnerability_scan_baseline_with_failures.json';
-import sonarqube_java_sample from '../assets/samples/sonarqube_java_sample.json';
-import triple_overlay_profile from '../assets/samples/triple_overlay_profile_example.json';
-import ubuntu_1604_baseline_results from '../assets/samples/ubuntu-16.04-baseline-results.json';
-import acme_overlay from '../assets/samples/wrapper-acme-run.json';
+const awsS3BaselinePath = '/static/samples/aws-s3-baseline.json';
+const badNginxPath = '/static/samples/bad_nginx.json';
+const cisAwsFoundationsBaselinePath =
+  '/static/samples/cis-aws-foundations-baseline.json';
+const fortifyHToolsConvWebgoatPath =
+  '/static/samples/fortify_h_tools_conv_webgoat.json';
+const goodNginxResultsPath = '/static/samples/good_nginxresults.json';
+const owaspZapWebgoatPath = '/static/samples/owasp_zap_webgoat.json';
+const owaspZapZeroPath = '/static/samples/owasp_zap_zero.webappsecurity.json';
+const redhatBadPath = '/static/samples/red_hat_bad.json';
+const redhatGoodPath = '/static/samples/red_hat_good.json';
+const rhel7ResultsPath = '/static/samples/rhel7-results.json';
+const rhelCveVulnerabilityScanBaselineWithFailuresPath =
+  '/static/samples/rhel_cve_vulnerability_scan_baseline_with_failures.json';
+const sonarqubeJavaSamplePath = '/static/samples/sonarqube_java_sample.json';
+const tripleOverlayProfilePath =
+  '/static/samples/triple_overlay_profile_example.json';
+const ubuntu1604BaselineResultsPath =
+  '/static/samples/ubuntu-16.04-baseline-results.json';
+const acmeOverlayPath = '/static/samples/wrapper-acme-run.json';
+
+import axios from 'axios';
 
 export interface Sample {
   filename: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: any;
+  data: Function;
+  path: string;
+}
+
+function fetch(sample: string) {
+  return axios.get(sample).then(({data}) => data);
 }
 
 export const samples: Sample[] = [
   {
     filename: 'Sonarqube Java Heimdall_tools Sample',
-    data: sonarqube_java_sample
+    data: () => fetch(sonarqubeJavaSamplePath),
+    path: sonarqubeJavaSamplePath
   },
   {
     filename: 'OWASP ZAP Webgoat Heimdall_tools Sample',
-    data: owasp_zap_webgoat
+    data: () => fetch(owaspZapWebgoatPath),
+    path: owaspZapWebgoatPath
   },
   {
     filename: 'OWASP ZAP Zero_WebAppSecurity Heimdall_tools Sample',
-    data: owasp_zap_zero
+    data: () => fetch(owaspZapZeroPath),
+    path: owaspZapZeroPath
   },
   {
     filename: 'Fortify Heimdall_tools Sample',
-    data: fortify_h_tools_conv_webgoat
+    data: () => fetch(fortifyHToolsConvWebgoatPath),
+    path: fortifyHToolsConvWebgoatPath
   },
   {
     filename: 'AWS S3 Permissions Check',
-    data: aws_s3_baseline
+    data: () => fetch(awsS3BaselinePath),
+    path: awsS3BaselinePath
   },
   {
     filename: 'AWS CIS Foundations Baseline',
-    data: cis_aws_foundations_baseline
+    data: () => fetch(cisAwsFoundationsBaselinePath),
+    path: cisAwsFoundationsBaselinePath
   },
   {
     filename: 'NGINX Clean Sample',
-    data: good_nginxresults
+    data: () => fetch(goodNginxResultsPath),
+    path: goodNginxResultsPath
   },
   {
     filename: 'NGINX With Failing Tests',
-    data: bad_nginx
+    data: () => fetch(badNginxPath),
+    path: badNginxPath
   },
   {
     filename: 'Red Hat CVE Vulnerability Scan',
-    data: rhel_cve_vulnerability_scan_baseline_with_failures
+    data: () => fetch(rhelCveVulnerabilityScanBaselineWithFailuresPath),
+    path: rhelCveVulnerabilityScanBaselineWithFailuresPath
   },
   {
     filename: 'Red Hat 7 STIG Baseline',
-    data: rhel7_results
+    data: () => fetch(rhel7ResultsPath),
+    path: rhel7ResultsPath
   },
   {
     filename: 'Ubuntu STIG Baseline',
-    data: ubuntu_1604_baseline_results
+    data: () => fetch(ubuntu1604BaselineResultsPath),
+    path: ubuntu1604BaselineResultsPath
   },
   {
     filename: 'Red Hat With Failing Tests',
-    data: red_hat_bad
+    data: () => fetch(redhatBadPath),
+    path: redhatBadPath
   },
   {
     filename: 'Red Hat Clean Sample',
-    data: red_hat_good
+    data: () => fetch(redhatGoodPath),
+    path: redhatGoodPath
   },
   {
     filename: 'Triple Overlay Example',
-    data: triple_overlay_profile
+    data: () => fetch(tripleOverlayProfilePath),
+    path: tripleOverlayProfilePath
   },
   {
     filename: 'Acme Overlay Example',
-    data: acme_overlay
+    data: () => fetch(acmeOverlayPath),
+    path: acmeOverlayPath
   }
 ];

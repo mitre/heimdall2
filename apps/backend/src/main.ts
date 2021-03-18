@@ -2,6 +2,7 @@ import {ValidationPipe} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
 import {json} from 'express';
 import rateLimit from 'express-rate-limit';
+import multer from 'multer';
 import {AppModule} from './app.module';
 import {ConfigService} from './config/config.service';
 import {generateDefault} from './token/token.providers';
@@ -64,6 +65,16 @@ async function bootstrap() {
       }
     })
   );
+  // Allow for file uploads up to 50 mb
+  multer({
+    limits: {
+      fieldSize:
+        parseInt(configService.get('MAX_FILE_UPLOAD_SIZE') || '50') *
+        1024 *
+        1024
+    }
+  });
+
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

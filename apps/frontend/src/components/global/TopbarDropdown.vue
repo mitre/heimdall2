@@ -33,9 +33,19 @@
             >
             <v-divider />
           </div>
+          <LinkItem
+            id="groups-link"
+            key="groups"
+            text="My Groups"
+            icon="mdi-account-group"
+            link="manage-groups"
+            >My Groups</LinkItem
+          >
+          <v-divider />
           <UserModal id="userModal" :user="userInfo">
             <template #clickable="{on}"
               ><LinkItem
+                id="user-link"
                 key="user"
                 text="User Info"
                 icon="mdi-account"
@@ -108,6 +118,8 @@ export default class TopbarDropdown extends mixins(ServerMixin) {
         this.userInfo.firstName.charAt(0) +
         this.userInfo.lastName.charAt(0)
       );
+    } else if (this.userInfo.firstName){
+      return this.userInfo.firstName.substring(0, 2);
     } else {
       return this.userInfo.email.substring(0, 2);
     }

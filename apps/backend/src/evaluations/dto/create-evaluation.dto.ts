@@ -1,9 +1,8 @@
 import {ICreateEvaluation} from '@heimdall/interfaces';
 import {
   IsArray,
+  IsBoolean,
   IsNotEmpty,
-  IsNumberString,
-  IsObject,
   IsOptional,
   IsString
 } from 'class-validator';
@@ -15,12 +14,8 @@ export class CreateEvaluationDto implements ICreateEvaluation {
   readonly filename!: string;
 
   @IsNotEmpty()
-  @IsObject()
-  readonly data!: Record<string, unknown>;
-
-  @IsNotEmpty()
-  @IsNumberString()
-  readonly userId!: string;
+  @IsBoolean()
+  readonly public!: boolean;
 
   @IsOptional()
   @IsArray()

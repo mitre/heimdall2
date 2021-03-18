@@ -2,9 +2,24 @@
   <v-container fluid class="font-weight-bold">
     <!-- Toolbar -->
     <v-row>
-      <v-col cols="12">
-        <v-switch v-model="single_expand" label="Single Expand" class="mt-2" />
-      </v-col>
+      <v-row>
+        <v-col>
+          <v-card-title>Results View Data</v-card-title>
+        </v-col>
+        <v-col cols="auto" class="text-right">
+          <v-switch v-model="syncTabs" label="Sync Tabs" />
+        </v-col>
+        <v-col cols="auto" class="text-right">
+          <v-switch
+            v-model="singleExpand"
+            label="Single Expand"
+            @change="handleToggleSingleExpand"
+          />
+        </v-col>
+        <v-col cols="auto" class="text-right">
+          <v-switch v-model="expandAll" label="Expand All" class="mr-5" />
+        </v-col>
+      </v-row>
     </v-row>
 
     <!-- Header. This should mirror the structure of ControlRowHeader -->
@@ -59,6 +74,8 @@
         <ControlRowDetails
           v-if="expanded.includes(item.key)"
           :control="item.control"
+          :tab="syncTabs ? syncTab : undefined"
+          @update:tab="updateTab"
         />
       </div>
     </v-lazy>
@@ -101,14 +118,16 @@ interface ListElt {
 export default class ControlTable extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
   @Prop({type: Boolean, required: true}) readonly showImpact!: boolean;
+
   // Whether to allow multiple expansions
-  single_expand: boolean = true;
+  singleExpand = true;
+
+  // If the currently selected tab should sync
+  syncTabs = false;
+  syncTab = 'tab-test';
 
   // List of currently expanded options. If unique id is in here, it is expanded
   expanded: Array<string> = [];
-
-  /** Identifier for infinite scroller tracking */
-  infinite_scroller_id: number = 1;
 
   // Sorts
   sort_id: Sort = 'none';
@@ -133,9 +152,33 @@ export default class ControlTable extends Vue {
     }
   }
 
+  get expandAll() {
+    return this.expanded.length === this.items.length;
+  }
+
+  set expandAll(value: boolean) {
+    if(value) {
+      this.singleExpand = false;
+      this.expanded = this.items.map((items) => items.key);
+    } else {
+      this.expanded = [];
+    }
+  }
+
+  /** Closes all open controls when single-expand is re-enabled */
+  async handleToggleSingleExpand(singleExpand: boolean): Promise<void> {
+    if(singleExpand){
+      this.expandAll = false;
+    }
+  }
+
+  async updateTab(tab: string){
+    this.syncTab = tab
+  }
+
   /** Toggles the given expansion of a control details panel */
   toggle(key: string) {
-    if (this.single_expand) {
+    if (this.singleExpand) {
       // Check if key already there
       let had = this.expanded.includes(key);
 
@@ -152,7 +195,7 @@ export default class ControlTable extends Vue {
       if (i < 0) {
         this.expanded.push(key);
       } else {
-        this.expanded.splice(i);
+        this.expanded.splice(i, 1);
       }
     }
   }

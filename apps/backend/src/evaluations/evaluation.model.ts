@@ -2,9 +2,11 @@ import {
   AllowNull,
   AutoIncrement,
   BelongsTo,
+  BelongsToMany,
   Column,
   CreatedAt,
   DataType,
+  Default,
   ForeignKey,
   HasMany,
   Model,
@@ -13,6 +15,8 @@ import {
   UpdatedAt
 } from 'sequelize-typescript';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
+import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
+import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
 
 @Table
@@ -30,6 +34,11 @@ export class Evaluation extends Model {
   @AllowNull(false)
   @Column(DataType.JSON)
   data!: Record<string, unknown>;
+
+  @AllowNull(false)
+  @Default(false)
+  @Column(DataType.BOOLEAN)
+  public!: boolean;
 
   @ForeignKey(() => User)
   @Column(DataType.BIGINT)
@@ -50,4 +59,7 @@ export class Evaluation extends Model {
 
   @HasMany(() => EvaluationTag)
   evaluationTags!: EvaluationTag[];
+
+  @BelongsToMany(() => Group, () => GroupEvaluation)
+  groups!: Array<Group & {GroupEvaluation: GroupEvaluation}>;
 }

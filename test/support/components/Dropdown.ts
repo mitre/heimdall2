@@ -1,10 +1,16 @@
 import {UpdateUserDto} from '../../../apps/backend/src/users/dto/update-user.dto';
 
 export default class Dropdown {
+  openGroupsPage(): void {
+    cy.get('#dropdown').click();
+    cy.get('#dropdownList').get('#groups-link').click();
+  }
+
   openUserModal(): void {
     cy.get('#dropdown').click();
-    cy.get('#dropdownList').get('div[role="menuitem"]').first().click();
+    cy.get('#dropdownList').get('#user-link').click();
   }
+
   changeUserData(user: UpdateUserDto): void {
     cy.get('#firstName').clear().type(user.firstName);
     cy.get('#lastName').clear().type(user.lastName);

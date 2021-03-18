@@ -65,14 +65,9 @@ describe('Parsing', () => {
 
       const strippedActualWithFilename = _.omit(
         actualWithFilename,
-        'ErroredOutOf',
-        'FailedOutOf',
         'PassedTests',
         'FailedTests',
-        'NotApplicableTests',
-        'TotalTests',
-        'ErroredTests',
-        'NotReviewedTests'
+        'PassingTestsFailedControl'
       );
 
       // Compare 'em

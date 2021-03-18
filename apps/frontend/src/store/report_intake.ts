@@ -4,7 +4,7 @@
 
 import {InspecDataModule} from '@/store/data_store';
 import Store from '@/store/store';
-import {Tag} from '@/types/models.ts';
+import {Tag} from '@/types/models';
 import {read_file_async} from '@/utilities/async_util';
 import {context, parse} from 'inspecjs';
 import {v4 as uuid} from 'uuid';
@@ -86,7 +86,7 @@ export class InspecIntake extends VuexModule {
   /**
    * Load a file with the specified options. Promises an error message on failure
    */
-  @Action({rawError: true})
+  @Action
   async loadFile(options: FileLoadOptions): Promise<FileID> {
     const read = read_file_async(options.file);
     return read.then((text) =>
@@ -97,7 +97,7 @@ export class InspecIntake extends VuexModule {
     );
   }
 
-  @Action({rawError: true})
+  @Action
   async loadText(options: TextLoadOptions): Promise<FileID> {
     // Convert it
     const fileID: FileID = uuid();
