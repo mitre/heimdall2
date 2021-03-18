@@ -30,7 +30,7 @@ export class EvaluationsService {
 
   async create(evaluation: {
     filename: string;
-    evaluationTags: CreateEvaluationTagDto[];
+    evaluationTags: CreateEvaluationTagDto[] | undefined;
     public: boolean;
     data: unknown;
     userId: string;
