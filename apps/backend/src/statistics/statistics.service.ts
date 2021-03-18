@@ -19,7 +19,7 @@ export class StatisticsService {
       userCount: await this.usersService.count(),
       evaluationCount: await this.evaluationsService.count(),
       evaluationTagCount: await this.evaluationTagsService.count(),
-      userGroupCount: await this.groupsService.count()
+      groupCount: await this.groupsService.count()
     });
   }
 }

@@ -31,7 +31,7 @@ export default class Statistics extends Vue {
         userCount: 0,
         evaluationCount: 0,
         evaluationTagCount: 0,
-        userGroupCount: 0
+        groupCount: 0
     };
     loading = true;
 
