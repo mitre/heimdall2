@@ -329,6 +329,7 @@ export class SplunkEndpoint {
           try {
             parsed.push(JSON.parse(v) as UnknownPayload);
           } catch (err) {
+            // eslint-disable-next-line no-console
             console.warn(err);
           }
         }
@@ -413,17 +414,13 @@ export enum SplunkErrorCode {
 export function process_error(
   r: Response | SplunkErrorCode | TypeError
 ): SplunkErrorCode {
-  console.warn('Got error in splunk operations');
-  console.warn(r);
   if (r instanceof TypeError) {
-    console.warn('Typeerror');
     if (r.message.includes('NetworkError')) {
       return SplunkErrorCode.BadNetwork;
     } else if (r.message.includes('not a valid URL')) {
       return SplunkErrorCode.BadUrl;
     }
   } else if (r instanceof Response) {
-    console.warn('Bad Response');
     // Based on the network code, guess
     const response = r as Response;
     switch (response.status) {
@@ -436,7 +433,6 @@ export function process_error(
     }
   } else if (typeof r === typeof SplunkErrorCode.UnknownError) {
     // It's already an error code - pass along
-    console.warn('SplunkErrorCode');
     return r;
   }
   // idk lol
