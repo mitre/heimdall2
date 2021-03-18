@@ -13,6 +13,7 @@ found at https://github.com/tschaub/mock-fs/issues/234).
 If you run the test with --silent (which we do by default), you don't need the log statement. */
 describe('Config Service', () => {
   beforeAll(async () => {
+    // eslint-disable-next-line no-console
     console.log();
     // Used as an empty file system
     mock({
