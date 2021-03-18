@@ -22,6 +22,7 @@
         :items="filteredFiles"
         :loading="loading"
         :sort-by.sync="sortBy"
+        :sort-desc="sortDesc"
         :item-key="fileKey"
         show-select
         mobile-breakpoint="0"
@@ -63,7 +64,12 @@
         </template>
       </v-data-table>
     </v-container>
-    <v-btn block class="px-2" @click="load_results(selectedFiles)">
+    <v-btn
+      block
+      class="px-2"
+      :disabled="loading"
+      @click="load_results(selectedFiles)"
+    >
       Load Selected
       <v-icon class="pl-2"> mdi-file-download</v-icon>
     </v-btn>
@@ -93,7 +99,8 @@ export default class LoadFileList extends Vue {
   @Prop({required: true}) readonly headers!: Object[];
   @Prop({type: Boolean, default: false}) readonly loading!: boolean;
   @Prop({type: String, default: 'id'}) readonly fileKey!: string;
-  @Prop({type: String, default: 'filename'}) readonly sortBy!: string;
+  @Prop({type: String, default: 'createdAt'}) readonly sortBy!: string;
+  @Prop({type: Boolean, default: true}) readonly sortDesc!: boolean;
   @Prop({required: true}) readonly files!: IEvaluation[] | Sample[];
 
   selectedFiles: IEvaluation[] | Sample[] = [];
