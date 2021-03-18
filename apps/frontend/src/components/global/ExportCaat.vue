@@ -19,7 +19,7 @@ import Component from 'vue-class-component';
 import {FilteredDataModule, Filter} from '@/store/data_filters';
 import XLSX from 'xlsx';
 import {saveAs} from 'file-saver';
-import {HDFControl} from 'inspecjs';
+import {HDFControl, HDFControlSegment} from 'inspecjs';
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {Prop} from 'vue-property-decorator';
 import _ from 'lodash';
@@ -82,7 +82,8 @@ export default class ExportCaat extends Vue {
       row.push('Test'); // Test Method
       row.push(fix(control.descriptions.check || control.wraps.tags.check)); // Test Objective\
       let testResult = `${control.status}:\r\n\r\n`;
-      _.get(control, 'wraps.results').forEach((result: any) => {
+      _.get(control, 'wraps.results').forEach((result: HDFControlSegment) => {
+        console.log(result)
         if(result.message) {
           testResult += `${result.status.toUpperCase()} -- Test: ${result.code_desc}\r\nMessage: ${result.message}\r\n\r\n`
         } else {
