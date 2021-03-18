@@ -70,7 +70,9 @@ export class AuthnController {
   @Get('google')
   @UseGuards(AuthGuard('google'))
   @UseFilters(new AuthenticationExceptionFilter())
-  async loginToGoogle(@Req() req: Request): Promise<any> {
+  async loginToGoogle(
+    @Req() req: Request
+  ): Promise<{userID: string; accessToken: string}> {
     return this.authnService.login(req.user as User);
   }
 

@@ -61,7 +61,6 @@ export interface ControlMetaInfo extends AbsMetaInfo {
 export interface ExecutionPayload {
   meta: ExecutionMetaInfo;
   profiles: ProfilePayload[];
-  [x: string]: any;
 }
 
 /** This is what we expect to find in every parsed event representing a Profile.
@@ -70,13 +69,11 @@ export interface ExecutionPayload {
 export interface ProfilePayload {
   meta: ProfileMetaInfo;
   controls: ControlPayload[];
-  [x: string]: any;
 }
 
 /** This is what we expect to find in every parsed event representing a Control */
 export interface ControlPayload {
   meta: ControlMetaInfo;
-  [x: string]: any;
 }
 
 // Could be any!
@@ -322,6 +319,7 @@ export class SplunkEndpoint {
         // We basically can't, and really shouldn't, do typescript here. Output is 50% guaranteed to be wonk
         // Get all the raws
         const raws: Array<string> = data['results'].map(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (datum: any) => datum._raw
         );
 
@@ -331,6 +329,7 @@ export class SplunkEndpoint {
           try {
             parsed.push(JSON.parse(v) as UnknownPayload);
           } catch (err) {
+            // eslint-disable-next-line no-console
             console.warn(err);
           }
         }
@@ -415,17 +414,13 @@ export enum SplunkErrorCode {
 export function process_error(
   r: Response | SplunkErrorCode | TypeError
 ): SplunkErrorCode {
-  console.warn('Got error in splunk operations');
-  console.warn(r);
   if (r instanceof TypeError) {
-    console.warn('Typeerror');
     if (r.message.includes('NetworkError')) {
       return SplunkErrorCode.BadNetwork;
     } else if (r.message.includes('not a valid URL')) {
       return SplunkErrorCode.BadUrl;
     }
   } else if (r instanceof Response) {
-    console.warn('Bad Response');
     // Based on the network code, guess
     const response = r as Response;
     switch (response.status) {
@@ -438,7 +433,6 @@ export function process_error(
     }
   } else if (typeof r === typeof SplunkErrorCode.UnknownError) {
     // It's already an error code - pass along
-    console.warn('SplunkErrorCode');
     return r;
   }
   // idk lol

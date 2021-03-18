@@ -15,7 +15,7 @@ export class PasswordChangePipe implements PipeTransform {
       passwordConfirmation: string | undefined;
     },
     _metadata: ArgumentMetadata
-  ): any {
+  ): Record<string, unknown> {
     if (
       (!value.password && !value.passwordConfirmation) ||
       !value.currentPassword

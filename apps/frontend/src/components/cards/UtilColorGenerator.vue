@@ -23,6 +23,7 @@ export default class UtilColorGenerator extends Vue {
     let color = colorVariants(ColorHackModule, this.color);
     let br = '\n';
     let rows = Object.keys(color)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .map((key) => `\t${key}: "${(color as any)[key]}"`)
       .join(`,${br}`);
     let output = `{${br}${rows}${br}}`;
@@ -53,10 +54,12 @@ function colorVariants(cmod: ColorHack, base: string): Color {
   ];
 
   // Generate
-  let l: any = {};
+  // l cannot be typed Color as all fields in vuetify are typed as readonly
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const l: Record<string, any> = {};
   suffixes.forEach((suffix) => {
-    let full_name: string = `var(--v-${base}-${suffix})`;
-    let color = cmod.lookupColor(full_name);
+    const fullName = `var(--v-${base}-${suffix})`;
+    const color = cmod.lookupColor(fullName);
     l[suffix] = color;
   });
   return l as Color;

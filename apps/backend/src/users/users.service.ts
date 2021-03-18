@@ -31,6 +31,10 @@ export class UsersService {
     });
   }
 
+  async count(): Promise<number> {
+    return this.userModel.count();
+  }
+
   async findById(id: string): Promise<User> {
     return this.findByPkBang(id);
   }
