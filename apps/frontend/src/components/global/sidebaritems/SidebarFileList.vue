@@ -91,14 +91,16 @@ export default class FileItem extends mixins(ServerMixin) {
       filename: file.filename,
       public: false,
       evaluationTags: [],
-      groups: []
+      groups: undefined
     };
 
     // Create a multipart form to upload our data
     const formData = new FormData();
     // Add the DTO objects to form data
     for (const [key, value] of Object.entries(createEvaluationDto)) {
-      formData.append(key, value);
+      if(typeof value !== 'undefined') {
+        formData.append(key, value);
+      }
     }
     // Add evaluation data to the form
     if (file.hasOwnProperty('evaluation')){ // If this is an evaluation

@@ -84,12 +84,12 @@ export class EvaluationsController {
     @Request() request: {user: User}
   ): Promise<EvaluationDto> {
     const serializedDta: JSON = JSON.parse(data.buffer.toString('utf8'));
-    const groups: Group[] = createEvaluationDto.groups
+    let groups: Group[] = createEvaluationDto.groups
       ? await this.groupsService.findByIds(createEvaluationDto.groups)
       : [];
     // Make sure the user can add evaluations to each group
     const abac = this.authz.abac.createForUser(request.user);
-    groups.filter((group) => {
+    groups = groups.filter((group) => {
       abac.can(Action.AddEvaluation, group);
     });
     const evaluation = new EvaluationDto(
