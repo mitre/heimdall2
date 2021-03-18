@@ -6,7 +6,7 @@
     small
     class="mr-5"
     type="button"
-    >mdi-share</v-icon
+    >mdi-share-variant</v-icon
   >
 </template>
 
