@@ -40,6 +40,7 @@
         </template>
         <template #[`item.actions`]="{item}">
           <v-row class="d-flex flex-row-reverse">
+            <ShareEvaluationButton title="Share Result" :evaluation="item" />
             <div v-if="item.editable">
               <EditEvaluationModal
                 id="editEvaluationModal"
@@ -86,6 +87,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
+import ShareEvaluationButton from '@/components/generic/ShareEvaluationButton.vue'
 import TagRow from '@/components/global/tags/TagRow.vue';
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations'
@@ -98,6 +100,7 @@ import DeleteDialog from '@/components/generic/DeleteDialog.vue';
   components: {
     DeleteDialog,
     EditEvaluationModal,
+    ShareEvaluationButton,
     TagRow
   }
 })
