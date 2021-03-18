@@ -2,7 +2,7 @@
   <v-row no-gutters>
     <v-col cols="12" class="font-weight-bold">
       <v-card>
-        <v-tabs :value="actual_tab" fixed-tabs show-arrows @change="tab_change">
+        <v-tabs v-model="localTab" fixed-tabs show-arrows @change="tab_change">
           <v-tabs-slider />
           <!-- Declare our tabs -->
           <v-tab href="#tab-test"> Test </v-tab>
@@ -76,17 +76,12 @@ import 'prismjs/themes/prism-tomorrow.css';
 Vue.component('Prism', Prism);
 
 import {context} from 'inspecjs';
-import {Prop} from 'vue-property-decorator';
+import {Prop, Watch} from 'vue-property-decorator';
 
 interface Detail {
   name: string;
   value: string;
   class?: string;
-}
-
-interface CollapsableElement extends Element {
-  offsetHeight: Number;
-  offsetWidth: Number;
 }
 
 @Component({
@@ -96,11 +91,18 @@ interface CollapsableElement extends Element {
   }
 })
 export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
-  @Prop({type: String}) readonly tab!: string;
+  @Prop({type: String, default: 'tab-test'}) readonly tab!: string;
   @Prop({type: Object, required: true})
   readonly control!: context.ContextualizedControl;
 
-  local_tab: string = 'tab-test';
+  localTab = this.tab;
+
+  @Watch('tab')
+  onTabChanged(newTab?: string, _oldVal?: string) {
+    if(newTab) {
+      this.localTab = newTab;
+    }
+  }
 
   get cciControlString(): string | null {
     let cci = this.control.hdf.wraps.tags.cci;
@@ -122,16 +124,7 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
   }
 
   tab_change(tab: string) {
-    this.local_tab = tab;
     this.$emit('update:tab', tab);
-  }
-
-  get actual_tab(): string {
-    if (this.tab === null) {
-      return this.local_tab;
-    } else {
-      return this.tab;
-    }
   }
 
   /** Shown above the description */
