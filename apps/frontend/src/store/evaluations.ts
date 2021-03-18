@@ -43,7 +43,7 @@ export class Evaluation extends VuexModule {
   async load_results(evaluationIds: string[]): Promise<(FileID | void)[]> {
     const unloadedIds = _.difference(
       evaluationIds,
-      InspecDataModule.allLoadedDatabaseIds
+      InspecDataModule.loadedDatabaseIds
     );
     return Promise.all(
       unloadedIds.map(async (id) => {

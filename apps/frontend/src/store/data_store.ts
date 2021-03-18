@@ -96,7 +96,7 @@ export class InspecData extends VuexModule {
     return this.contextStore[0];
   }
 
-  get allLoadedDatabaseIds(): string[] {
+  get loadedDatabaseIds(): string[] {
     const ids: string[] = [];
     this.allFiles.forEach((file) => {
       if (file.database_id) {

@@ -78,6 +78,7 @@ import RouteMixin from '@/mixins/RouteMixin';
 import {Prop} from 'vue-property-decorator';
 import {ServerModule} from '@/store/server';
 import {FilteredDataModule} from '@/store/data_filters';
+import {InspecDataModule} from '@/store/data_store';
 
 const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
 
@@ -124,16 +125,17 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
       files.includes(prof)
     ).length;
 
+    const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
     if (numEvaluations >= numProfiles) {
       // Only navigate the user to the results page if they are not
       // already on the compare page.
       if (this.current_route === 'compare') {
-        this.navigateWithNoErrors(`/compare`);
+        this.navigateWithNoErrors(`/compare/${loadedDatabaseIds}`);
       } else {
-        this.navigateWithNoErrors(`/results`);
+        this.navigateWithNoErrors(`/results/${loadedDatabaseIds}`);
       }
     } else {
-      this.navigateWithNoErrors(`/profiles`);
+      this.navigateWithNoErrors(`/profiles/${loadedDatabaseIds}`);
     }
   }
 }

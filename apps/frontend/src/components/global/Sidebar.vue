@@ -107,9 +107,9 @@ export default class Sidebar extends mixins(RouteMixin) {
   // toggle between the comparison view and the results view
   compareView(): void {
     if (this.current_route === 'results')
-      this.navigateWithNoErrors(`/compare`);
+      this.navigateWithNoErrors('/compare');
     if (this.current_route === 'compare')
-      this.navigateWithNoErrors(`/results`);
+      this.navigateWithNoErrors('/results');
   }
 }
 </script>

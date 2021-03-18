@@ -95,10 +95,10 @@ router.beforeEach((to, _, next) => {
         return;
       }
     }
-    if (to.params.id) {
+    if (to.params.id && to.params.id !== 'all') {
       EvaluationModule.load_results(to.params.id.split(','));
     }
-    const loadedDatabaseIds = InspecDataModule.allLoadedDatabaseIds.join(',');
+    const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
     // For any URL that displays IDs of the currently loaded database files at the end of it
     // ensure that the URL bar is up to date with what files are currently loaded into the database
     // Don't try to add IDs to the URL when there are no files loaded from the database (for example: samples or local files)
@@ -107,7 +107,10 @@ router.beforeEach((to, _, next) => {
       loadedDatabaseIds &&
       to.params.id !== loadedDatabaseIds
     ) {
-      next({path: `${to.path}/${loadedDatabaseIds}`, replace: true});
+      next({
+        path: `/${to.path.split('/')[1]}/${loadedDatabaseIds}`,
+        replace: true
+      });
       return;
     }
     next();
