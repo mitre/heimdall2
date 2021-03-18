@@ -1,6 +1,6 @@
 import ControlTable from '@/components/cards/controltable/ControlTable.vue';
 import ProfData from '@/components/cards/ProfileData.vue';
-import {FilteredDataModule} from '@/store/data_filters';
+import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {profile_unique_key} from '@/utilities/format_util';
 import Results from '@/views/Results.vue';
 import {shallowMount, Wrapper} from '@vue/test-utils';
@@ -8,6 +8,7 @@ import {context} from 'inspecjs';
 import 'jest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
+import {FileID} from '../../src/store/report_intake';
 import {
   expectedCount,
   loadAll,
@@ -54,7 +55,7 @@ loadSample('Acme Overlay Example');
 describe('Profile Info', () => {
   it('shows correct number of files', () => {
     loadAll();
-    expect((wrapper.vm as any).file_filter.length).toBe(
+    expect((wrapper.vm as Vue & {file_filter: FileID}).file_filter.length).toBe(
       FilteredDataModule.selected_file_ids.length
     );
   });
@@ -69,11 +70,15 @@ describe('Profile Info', () => {
         $router
       },
       propsData: {
-        selected_prof: (wrapper.vm as any).root_profiles[0]
+        selected_prof: (wrapper.vm as Vue & {
+          root_profiles: context.ContextualizedProfile[];
+        }).root_profiles[0]
       }
     });
 
-    expect((profInfoWrapper.vm as any).items.length).toBe(0);
+    expect((profInfoWrapper.vm as Vue & {items: ListElt[]}).items.length).toBe(
+      0
+    );
   });
 
   it('2 children', () => {
@@ -86,13 +91,21 @@ describe('Profile Info', () => {
         $router
       },
       propsData: {
-        selected_prof: (wrapper.vm as any).root_profiles[0]
+        selected_prof: (wrapper.vm as Vue & {
+          root_profiles: context.ContextualizedProfile[];
+        }).root_profiles[0]
       }
     });
 
     const actual = [
-      (profInfoWrapper.vm as any).items[0].name,
-      (profInfoWrapper.vm as any).items[1].name
+      (profInfoWrapper.vm as Vue & {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        items: Array<any>;
+      }).items[0].name,
+      (profInfoWrapper.vm as Vue & {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        items: Array<any>;
+      }).items[1].name
     ];
     const expected = ['ssh-baseline', 'ssl-baseline'];
 
@@ -109,13 +122,18 @@ describe('Profile Info', () => {
         $router
       },
       propsData: {
-        selected_prof: (wrapper.vm as any).root_profiles[0]
+        selected_prof: (wrapper.vm as Vue & {
+          root_profiles: context.ContextualizedProfile[];
+        }).root_profiles[0]
       }
     });
 
-    expect((profInfoWrapper.vm as any).items[0].children[0].name).toBe(
-      'Oracle Database 12c Security Technical Implementation Guide'
-    );
+    expect(
+      (profInfoWrapper.vm as Vue & {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        items: Array<any>;
+      }).items[0].children[0].name
+    ).toBe('Oracle Database 12c Security Technical Implementation Guide');
   });
 
   it('parent has correct data', () => {
@@ -132,7 +150,9 @@ describe('Profile Info', () => {
       {label: 'Copyright', text: '.'},
       {label: 'Controls', text: '200'}
     ];
-    expect((profInfoWrapper.vm as any).selected_info).toEqual(expected);
+    expect(
+      (profInfoWrapper.vm as Vue & {selected_info: InfoItem[]}).selected_info
+    ).toEqual(expected);
   });
 
   it('children have correct data', () => {
@@ -150,11 +170,17 @@ describe('Profile Info', () => {
       {label: 'Copyright Email', text: 'you@example.com'},
       {label: 'Controls', text: '200'}
     ];
-    (profInfoWrapper.vm as any).active = [];
-    (profInfoWrapper.vm as any).child_active = [
-      profile_unique_key((wrapper.vm as any).visible_profiles[1])
+    (profInfoWrapper.vm as Vue & {active: string[]}).active = [];
+    (profInfoWrapper.vm as Vue & {child_active: string[]}).child_active = [
+      profile_unique_key(
+        (wrapper.vm as Vue & {
+          visible_profiles: Readonly<context.ContextualizedProfile[]>;
+        }).visible_profiles[1]
+      )
     ];
-    expect((profInfoWrapper.vm as any).selected_info).toEqual(expected);
+    expect(
+      (profInfoWrapper.vm as Vue & {selected_info: InfoItem[]}).selected_info
+    ).toEqual(expected);
   });
 });
 
@@ -168,7 +194,7 @@ describe('Datatable', () => {
         $router
       },
       propsData: {
-        filter: (wrapper.vm as any).all_filter,
+        filter: (wrapper.vm as Vue & {all_filter: Filter}).all_filter,
         showImpact: true
       }
     });
@@ -178,12 +204,20 @@ describe('Datatable', () => {
       expectedCount('notReviewed') +
       expectedCount('notApplicable') +
       expectedCount('profileError');
-    expect((controlTableWrapper.vm as any).items.length).toBe(expected);
+    expect(
+      (controlTableWrapper.vm as Vue & {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        items: Array<any>;
+      }).items.length
+    ).toBe(expected);
   });
 
   it('control row and table data is correct', () => {
     expect(
-      (controlTableWrapper.vm as any).items
+      (controlTableWrapper.vm as Vue & {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        items: Array<any>;
+      }).items
         .map((item: ListElt) => item.control.data.id)
         .sort()
     ).toEqual(

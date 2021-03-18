@@ -4,6 +4,15 @@ import {Strategy} from 'passport-openidconnect';
 import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
 
+interface OIDCProfile {
+  _json: {
+    given_name: string;
+    family_name: string;
+    email: string;
+    email_verified: boolean;
+  };
+}
+
 @Injectable()
 export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
   constructor(
@@ -22,7 +31,13 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         callbackURL: `${configService.get('EXTERNAL_URL')}/authn/oidc/callback`,
         scope: 'openid profile email'
       },
-      function (accessToken: any, refreshToken: any, profile: any, done: any) {
+      function (
+        _accessToken: string,
+        _refreshToken: string,
+        profile: OIDCProfile,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        done: any
+      ) {
         const userData = profile._json;
         const {given_name, family_name, email, email_verified} = userData;
         if (email_verified) {

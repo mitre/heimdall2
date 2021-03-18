@@ -42,10 +42,11 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
         passReqToCallback: true
       },
       (
-        req: any,
-        token: string,
-        tokenSecret: string,
+        _req: Request,
+        _token: string,
+        _tokenSecret: string,
         profile: OktaProfile,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         done: any
       ) => {
         const userData = profile._json;
