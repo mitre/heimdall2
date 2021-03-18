@@ -2,6 +2,7 @@ import {HttpStatus, INestApplication, ValidationPipe} from '@nestjs/common';
 import {Test, TestingModule} from '@nestjs/testing';
 import request from 'supertest';
 import {DatabaseService} from '../src/database/database.service';
+import {EvaluationDto} from '../src/evaluations/dto/evaluation.dto';
 import {AppModule} from './../src/app.module';
 import {
   EVALUATION_1,
@@ -158,7 +159,7 @@ describe('/evaluations', () => {
     });
 
     describe('With an existing evaluation', () => {
-      let evaluation: any;
+      let evaluation: EvaluationDto;
 
       beforeEach(async () => {
         await request(app.getHttpServer())

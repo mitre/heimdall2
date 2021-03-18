@@ -1,6 +1,6 @@
 import {FilteredDataModule} from '@/store/data_filters';
 import {StatusCountModule} from '@/store/status_counts';
-import {ComparisonContext} from '@/utilities/delta_util';
+import {ComparisonContext, ControlSeries} from '@/utilities/delta_util';
 import Compare from '@/views/Compare.vue';
 import {shallowMount, Wrapper} from '@vue/test-utils';
 import 'jest';
@@ -15,6 +15,11 @@ const wrapper: Wrapper<Vue> = shallowMount(Compare, {
   propsData: {}
 });
 
+export interface SeriesItem {
+  name: string;
+  data: number[];
+}
+
 const redHatControlCount = 247;
 const redHatDelta = 27;
 const nginxControlCount = 41;
@@ -23,63 +28,89 @@ const nginxDelta = 3;
 describe('Compare table data', () => {
   loadSample('NGINX With Failing Tests');
   it('correctly counts controls with 1 file', () => {
-    (wrapper.vm as any).checkbox = false;
-    expect((wrapper.vm as any).show_sets.length).toBe(nginxControlCount);
+    (wrapper.vm as Vue & {checkbox: boolean}).checkbox = false;
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(nginxControlCount);
   });
 
   it('does not recount same controls with 2 files', () => {
     loadSample('NGINX With Failing Tests');
-    expect((wrapper.vm as any).show_sets.length).toBe(nginxControlCount);
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(nginxControlCount);
   });
 
   it('does not recount same controls with 3 files', () => {
     loadSample('NGINX With Failing Tests');
-    expect((wrapper.vm as any).show_sets.length).toBe(nginxControlCount);
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(nginxControlCount);
   });
 
   it('does not show any changed between two of the same', () => {
-    (wrapper.vm as any).checkbox = true;
-    expect((wrapper.vm as any).show_sets.length).toBe(0);
+    (wrapper.vm as Vue & {checkbox: boolean}).checkbox = true;
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(0);
   });
 
   it('search works when nothing fits criteria', () => {
-    (wrapper.vm as any).search_term = 'failed';
-    expect((wrapper.vm as any).show_sets.length).toBe(0);
+    (wrapper.vm as Vue & {search_term: string}).search_term = 'failed';
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(0);
   });
 
   it('search id works', () => {
-    (wrapper.vm as any).checkbox = false;
-    (wrapper.vm as any).search_term = 'v-13613';
-    expect((wrapper.vm as any).show_sets.length).toBe(1);
+    (wrapper.vm as Vue & {checkbox: boolean}).checkbox = false;
+    (wrapper.vm as Vue & {search_term: string}).search_term = 'v-13613';
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(1);
   });
 
   it('shows differing delta data when "show only changed"', () => {
-    (wrapper.vm as any).search_term = '';
-    (wrapper.vm as any).checkbox = true;
+    (wrapper.vm as Vue & {search_term: string}).search_term = '';
+    (wrapper.vm as Vue & {checkbox: boolean}).checkbox = true;
     loadSample('NGINX Clean Sample');
-    expect((wrapper.vm as any).show_sets.length).toBe(nginxDelta);
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(nginxDelta);
   });
 
   it('search status works', () => {
-    (wrapper.vm as any).checkbox = false;
-    (wrapper.vm as any).search_term = 'failed';
-    expect((wrapper.vm as any).show_sets.length).toBe(nginxDelta);
+    (wrapper.vm as Vue & {checkbox: boolean}).checkbox = false;
+    (wrapper.vm as Vue & {search_term: string}).search_term = 'failed';
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(nginxDelta);
   });
 
   it('counts every unique control', () => {
     loadSample('Red Hat With Failing Tests');
-    (wrapper.vm as any).search_term = '';
-    (wrapper.vm as any).checkbox = true;
-    expect((wrapper.vm as any).show_sets.length).toBe(
-      nginxControlCount + redHatControlCount
-    );
+    (wrapper.vm as Vue & {search_term: string}).search_term = '';
+    (wrapper.vm as Vue & {checkbox: boolean}).checkbox = true;
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(nginxControlCount + redHatControlCount);
   });
 
   it('shows all delta data of controls with multiple occurances when "show only changed"', () => {
     loadSample('Red Hat Clean Sample');
-    expect((wrapper.vm as any).show_sets.length).toBe(
-      nginxControlCount + redHatControlCount
-    );
+    expect(
+      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+        .length
+    ).toBe(nginxControlCount + redHatControlCount);
   });
 
   it('ComparisonContext counts status correctly', () => {
@@ -150,7 +181,7 @@ describe('compare charts', () => {
     loadSample('NGINX With Failing Tests');
     loadSample('NGINX Clean Sample');
     //the values in expected are the correct data
-    expect((wrapper.vm as any).sev_series).toEqual([
+    expect((wrapper.vm as Vue & {sev_series: number[][]}).sev_series).toEqual([
       [0, 0],
       [3, 0],
       [0, 0],
@@ -163,7 +194,7 @@ describe('compare charts', () => {
     loadSample('NGINX With Failing Tests');
     loadSample('Red Hat With Failing Tests');
     //the values in expected are the correct data
-    expect((wrapper.vm as any).sev_series).toEqual([
+    expect((wrapper.vm as Vue & {sev_series: number[][]}).sev_series).toEqual([
       [0, 6],
       [3, 18],
       [0, 3],
@@ -176,7 +207,7 @@ describe('compare charts', () => {
     loadSample('Triple Overlay Example');
     loadSample('Acme Overlay Example');
     //the values in expected are the correct data
-    expect((wrapper.vm as any).sev_series).toEqual([
+    expect((wrapper.vm as Vue & {sev_series: number[][]}).sev_series).toEqual([
       [3, 0],
       [51, 0],
       [1, 0],
@@ -188,7 +219,13 @@ describe('compare charts', () => {
     removeAllFiles();
     loadSample('NGINX With Failing Tests');
     loadSample('NGINX Clean Sample');
-    expect(new Set((wrapper.vm as any).compliance_series[0].data)).toEqual(
+    expect(
+      new Set(
+        (wrapper.vm as Vue & {
+          compliance_series: SeriesItem[];
+        }).compliance_series[0].data
+      )
+    ).toEqual(
       new Set([
         fileCompliance(FilteredDataModule.selected_file_ids[0]),
         fileCompliance(FilteredDataModule.selected_file_ids[1])
@@ -200,7 +237,13 @@ describe('compare charts', () => {
     removeAllFiles();
     loadSample('NGINX With Failing Tests');
     loadSample('Red Hat With Failing Tests');
-    expect(new Set((wrapper.vm as any).compliance_series[0].data)).toEqual(
+    expect(
+      new Set(
+        (wrapper.vm as Vue & {
+          compliance_series: SeriesItem[];
+        }).compliance_series[0].data
+      )
+    ).toEqual(
       new Set([
         fileCompliance(FilteredDataModule.selected_file_ids[0]),
         fileCompliance(FilteredDataModule.selected_file_ids[1])
@@ -212,7 +255,13 @@ describe('compare charts', () => {
     removeAllFiles();
     loadSample('Triple Overlay Example');
     loadSample('Acme Overlay Example');
-    expect(new Set((wrapper.vm as any).compliance_series[0].data)).toEqual(
+    expect(
+      new Set(
+        (wrapper.vm as Vue & {
+          compliance_series: SeriesItem[];
+        }).compliance_series[0].data
+      )
+    ).toEqual(
       new Set([
         fileCompliance(FilteredDataModule.selected_file_ids[0]),
         fileCompliance(FilteredDataModule.selected_file_ids[1])

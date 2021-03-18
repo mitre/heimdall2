@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {Component, Vue} from 'vue-property-decorator';
 import {ValidationProperties} from 'vue/types/vue';
 import {validationMixin} from 'vuelidate';
@@ -6,22 +7,27 @@ import {validationMixin} from 'vuelidate';
   mixins: [validationMixin]
 })
 export default class UserValidatorMixin extends Vue {
-  emailErrors(field: ValidationProperties<any>) {
+  emailErrors(field: ValidationProperties<unknown>) {
     const errors: Array<string> = [];
-    if (!field.$dirty) {
+    const dirty = _.get(field, '$dirty');
+    const required = _.get(field, 'required');
+    const email = _.get(field, 'email');
+    if (!dirty) {
       return [];
     }
-    !field.required && errors.push('Email is required.');
-    !field.email && errors.push('Must be valid email');
+    !required && errors.push('Email is required.');
+    !email && errors.push('Must be valid email');
     return errors;
   }
 
-  requiredFieldError(field: ValidationProperties<any>, name: string) {
+  requiredFieldError(field: ValidationProperties<unknown>, name: string) {
     const errors: Array<string> = [];
-    if (!field.$dirty) {
+    const dirty = _.get(field, '$dirty');
+    const required = _.get(field, 'required');
+    if (!dirty) {
       return [];
     }
-    !field.required && errors.push(`${name} is required.`);
+    !required && errors.push(`${name} is required.`);
     return errors;
   }
 }

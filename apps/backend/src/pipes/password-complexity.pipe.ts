@@ -13,7 +13,7 @@ export class PasswordComplexityPipe implements PipeTransform {
       passwordConfirmation: string | undefined;
     },
     _metadata: ArgumentMetadata
-  ): any {
+  ): Record<string, unknown> {
     if (!value.password && !value.passwordConfirmation) {
       return value;
     }

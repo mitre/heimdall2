@@ -14,7 +14,7 @@ export class PasswordsMatchPipe implements PipeTransform {
       passwordConfirmation: string | undefined;
     },
     _metadata: ArgumentMetadata
-  ): any {
+  ): Record<string, unknown> {
     if (
       value.currentPassword != null &&
       value.password == null &&
