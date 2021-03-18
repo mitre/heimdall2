@@ -24,6 +24,10 @@ export class EvaluationsService {
     });
   }
 
+  async count(): Promise<number> {
+    return this.evaluationModel.count();
+  }
+
   async create(
     createEvaluationDto: CreateEvaluationDto,
     data: unknown,

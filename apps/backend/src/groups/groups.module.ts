@@ -1,6 +1,7 @@
 import {Module} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {AuthzModule} from '../authz/authz.module';
+import {EvaluationTagsModule} from '../evaluation-tags/evaluation-tags.module';
 import {EvaluationsModule} from '../evaluations/evaluations.module';
 import {UsersModule} from '../users/users.module';
 import {Group} from './group.model';
@@ -12,7 +13,8 @@ import {GroupsService} from './groups.service';
     SequelizeModule.forFeature([Group]),
     AuthzModule,
     UsersModule,
-    EvaluationsModule
+    EvaluationsModule,
+    EvaluationTagsModule
   ],
   providers: [GroupsService],
   controllers: [GroupsController],

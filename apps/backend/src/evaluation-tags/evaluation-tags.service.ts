@@ -30,6 +30,10 @@ export class EvaluationTagsService {
     });
   }
 
+  async count(): Promise<number> {
+    return this.evaluationTagModel.count();
+  }
+
   async findById(id: string): Promise<EvaluationTag> {
     return this.findByPkBang(id, {
       include: [

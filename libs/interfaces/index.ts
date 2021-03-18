@@ -10,6 +10,7 @@ export * from './group/create-group.interface';
 export * from './group/evaluation-group.interface';
 export * from './group/group.interface';
 export * from './group/remove-user-from-group.interface';
+export * from './statistics/statistics.interface';
 export * from './user/create-user.interface';
 export * from './user/delete-user.interface';
 export * from './user/slim-user.interface';
