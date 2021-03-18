@@ -83,7 +83,6 @@ export default class ExportCaat extends Vue {
       row.push(fix(control.descriptions.check || control.wraps.tags.check)); // Test Objective\
       let testResult = `${control.status}:\r\n\r\n`;
       _.get(control, 'wraps.results').forEach((result: HDFControlSegment) => {
-        console.log(result)
         if(result.message) {
           testResult += `${result.status.toUpperCase()} -- Test: ${result.code_desc}\r\nMessage: ${result.message}\r\n\r\n`
         } else {
