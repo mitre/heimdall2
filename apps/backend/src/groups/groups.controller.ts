@@ -56,7 +56,6 @@ export class GroupsController {
   ): Promise<GroupDto> {
     const group = await this.groupsService.create(createGroupDto);
     await this.groupsService.addUserToGroup(group, request.user, 'owner');
-
     return new GroupDto(group, 'owner');
   }
 

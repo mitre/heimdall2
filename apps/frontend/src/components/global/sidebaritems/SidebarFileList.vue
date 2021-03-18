@@ -73,12 +73,9 @@ export default class FileItem extends mixins(ServerMixin) {
   //saves file to database
   save_file() {
     if (this.file?.database_id){
-      SnackbarModule.failure('This evaluation is already in the database.')
-    }
-    else if (this.file) {
-      if (this.file.hasOwnProperty('evaluation')) {
-        this.save_evaluation(this.file as EvaluationFile);
-      }
+      SnackbarModule.failure('This file is already in the database.')
+    } else if (this.file) {
+      this.save_to_database(this.file);
     }
   }
 
@@ -87,7 +84,7 @@ export default class FileItem extends mixins(ServerMixin) {
     return (typeof this.file?.database_id !== 'undefined') || this.saving
   }
 
-  save_evaluation(file: EvaluationFile) {
+  save_to_database(file: EvaluationFile | ProfileFile) {
     this.saving = true;
 
     const createEvaluationDto: ICreateEvaluation = {
@@ -104,12 +101,16 @@ export default class FileItem extends mixins(ServerMixin) {
       formData.append(key, value);
     }
     // Add evaluation data to the form
-    formData.append("data", new Blob([JSON.stringify(file.evaluation.data)], {type: 'text/plain'}));
+    if (file.hasOwnProperty('evaluation')){ // If this is an evaluation
+      formData.append("data", new Blob([JSON.stringify((file as EvaluationFile).evaluation.data)], {type: 'text/plain'}));
+    } else { // Or if it is a profile
+     formData.append("data", new Blob([JSON.stringify((file as ProfileFile).profile.data)], {type: 'text/plain'}));
+    }
 
     axios
       .post('/evaluations', formData)
       .then((response) => {
-        SnackbarModule.notify('Result saved successfully');
+        SnackbarModule.notify('File saved successfully');
         file.database_id = parseInt(response.data.id);
       })
       .catch((error) => {

@@ -21,6 +21,10 @@ export class GroupsService {
     return this.groupModel.findAll<Group>({include: 'users'});
   }
 
+  async count(): Promise<number> {
+    return this.groupModel.count();
+  }
+
   async findByPkBang(id: string): Promise<Group> {
     // Users must be included for determining permissions on the group.
     // Other assocations should be called by their ID separately and not eagerly loaded.
