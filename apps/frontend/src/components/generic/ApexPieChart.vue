@@ -33,6 +33,8 @@ type ApexTotalType = {
   fontSize?: string;
   label?: string;
   color?: string;
+  // Formatter can take any parameter as defined by ApexCharts
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   formatter?(w: any): string;
 };
 
