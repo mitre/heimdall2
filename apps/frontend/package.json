@@ -101,7 +101,7 @@
     "uuid": "^8.3.0",
     "vue": "~2.6.10",
     "vue-apexcharts": "^1.5.1",
-    "vue-class-component": "^7.0.2",\
+    "vue-class-component": "^7.0.2",
     "vue-clipboard2": "^0.3.1",
     "vue-cli-plugin-vuetify": "~2.3.0",
     "vue-cookies": "^1.7.4",
