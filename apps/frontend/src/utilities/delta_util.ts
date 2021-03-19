@@ -2,10 +2,11 @@
  * Provides utlities for comparing executions
  */
 
-import {SourcedContextualizedEvaluation} from '@/store/report_intake';
+import {FileID, SourcedContextualizedEvaluation} from '@/store/report_intake';
 import {context} from 'inspecjs';
 import {ContextualizedEvaluation} from 'inspecjs/dist/context';
 import {DateTime} from 'luxon';
+import {FilteredDataModule} from '../store/data_filters';
 
 export const NOT_SELECTED = 'not selected';
 
@@ -254,6 +255,15 @@ export function compare_times(
 ) {
   const aDate = parse_datetime(get_eval_start_time(a) || '');
   const bDate = parse_datetime(get_eval_start_time(b) || '');
+
+  return aDate.valueOf() - bDate.valueOf();
+}
+
+export function compare_file_times(a: FileID, b: FileID) {
+  const aEvaluation = FilteredDataModule.evaluations([a])[0];
+  const aDate = parse_datetime(get_eval_start_time(aEvaluation) || '');
+  const bEvaluation = FilteredDataModule.evaluations([b])[0];
+  const bDate = parse_datetime(get_eval_start_time(bEvaluation) || '');
 
   return aDate.valueOf() - bDate.valueOf();
 }

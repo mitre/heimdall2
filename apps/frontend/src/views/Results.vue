@@ -226,6 +226,7 @@ import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
 
 import ProfileData from '@/components/cards/ProfileData.vue';
 import {context} from 'inspecjs';
+import {compare_file_times, get_eval_start_time} from '@/utilities/delta_util';
 
 import {ServerModule} from '@/store/server';
 import {capitalize} from 'lodash';
@@ -288,7 +289,7 @@ export default class Results extends Vue {
    */
   get file_filter(): FileID[] {
     if (this.is_result_view) {
-      return FilteredDataModule.selectedEvaluationIds;
+      return FilteredDataModule.selectedEvaluationIds.sort(compare_file_times);
     }
     else {
       return FilteredDataModule.selectedProfileIds;
