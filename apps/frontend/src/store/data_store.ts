@@ -12,6 +12,7 @@ import {
 import Store from '@/store/store';
 import {context} from 'inspecjs';
 import {getModule, Module, Mutation, VuexModule} from 'vuex-module-decorators';
+import {get_eval_start_time, parse_datetime} from '../utilities/delta_util';
 import {FilteredDataModule} from './data_filters';
 
 /** We make some new variant types of the Contextual types, to include their files*/
@@ -149,3 +150,16 @@ export class InspecData extends VuexModule {
 }
 
 export const InspecDataModule = getModule(InspecData);
+
+export function compareFileTimes(a: FileID, b: FileID) {
+  const aEvaluation = InspecDataModule.contextualExecutions.find(
+    (e) => e.from_file.unique_id === a
+  );
+  const bEvaluation = InspecDataModule.contextualExecutions.find(
+    (e) => e.from_file.unique_id === b
+  );
+  const aDate = parse_datetime(get_eval_start_time(aEvaluation) || '');
+  const bDate = parse_datetime(get_eval_start_time(bEvaluation) || '');
+
+  return aDate.valueOf() - bDate.valueOf();
+}
