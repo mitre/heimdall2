@@ -226,7 +226,7 @@ import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
 
 import ProfileData from '@/components/cards/ProfileData.vue';
 import {context} from 'inspecjs';
-import {compare_file_times, get_eval_start_time} from '@/utilities/delta_util';
+import {compare_file_times} from '@/utilities/delta_util';
 
 import {ServerModule} from '@/store/server';
 import {capitalize} from 'lodash';
