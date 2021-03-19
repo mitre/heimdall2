@@ -1,4 +1,7 @@
-FROM node:lts-alpine as builder
+ARG BUILD_CONTAINER=node:lts-alpine
+ARG BASE_CONTAINER=nginx:stable-alpine
+
+FROM $BUILD_CONTAINER as builder
 
 ARG YARNREPO_MIRROR=https://registry.yarnpkg.com
 ENV YARNREPO=$YARNREPO_MIRROR
@@ -16,7 +19,7 @@ RUN yarn --frozen-lockfile --production
 RUN yarn frontend build
 
 # production stage
-FROM nginx:stable-alpine as production-stage
+FROM $BASE_CONTAINER as production-stage
 COPY --from=builder /src/dist/frontend /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

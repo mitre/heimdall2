@@ -1,4 +1,6 @@
-FROM node:lts-alpine as builder
+ARG BASE_CONTAINER=node:lts-alpine
+
+FROM $BASE_CONTAINER as builder
 
 ARG YARNREPO_MIRROR=https://registry.yarnpkg.com
 ENV YARNREPO=$YARNREPO_MIRROR
@@ -14,7 +16,7 @@ COPY libs ./libs
 # This allows for building in offline environments, and according to the
 # documentation fixes some segfaults with alpine and node-bcrypt.
 ENV npm_config_build_from_source true
-RUN apk --no-cache add --virtual builds-deps build-base python
+RUN if [ -x "$(command -v apk)" ] ; then apk --no-cache add --virtual builds-deps build-base python ; fi
 
 RUN sed -i s^https://registry.yarnpkg.com^$YARNREPO^g yarn.lock
 RUN yarn --frozen-lockfile --production
@@ -23,7 +25,7 @@ RUN yarn run build
 
 ### Production image
 
-FROM node:lts-alpine as app
+FROM $BASE_CONTAINER as app
 
 WORKDIR /app
 
