@@ -21,7 +21,6 @@ export interface SeriesItem {
 }
 
 const redHatControlCount = 247;
-const redHatDelta = 27;
 const nginxControlCount = 41;
 const nginxDelta = 3;
 
