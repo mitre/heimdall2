@@ -68,11 +68,6 @@
         </v-tooltip>
       </v-chip-group>
     </template>
-    <template #foundAt>
-      <v-card-text class="pa-2 title font-weight-bold">
-        {{ formatDate(control.hdf.start_time) }}
-      </v-card-text>
-    </template>
   </ResponsiveRowSwitch>
 </template>
 
@@ -87,7 +82,6 @@ import CircleRating from '@/components/generic/CircleRating.vue';
 import {is_control} from 'inspecjs/dist/nist';
 import {Prop} from 'vue-property-decorator';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
-import {parse_datetime} from '@/utilities/delta_util';
 
 interface Tag {
   label: string;
@@ -138,14 +132,6 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
         return 3;
       case 'critical':
         return 4;
-    }
-  }
-
-  formatDate(time: string | undefined) {
-    if(time) {
-      return parse_datetime(time);
-    } else {
-      return ''
     }
   }
 
