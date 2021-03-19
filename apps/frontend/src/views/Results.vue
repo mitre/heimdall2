@@ -55,17 +55,18 @@
           <v-col v-if="file_filter.length > 3">
             <v-slide-group v-model="eval_info" show-arrows>
               <v-slide-item
-                v-for="(file, i) in file_filter"
+                v-for="(file, i) in files"
                 :key="i"
                 v-slot="{toggle}"
                 class="mx-2"
               >
                 <v-card
                   :width="info_width"
+                  style="max-height: 10px"
                   data-cy="profileInfo"
                   @click="toggle"
                 >
-                  <EvaluationInfo :file_filter="file" />
+                  <EvaluationInfo :file="file" />
                   <v-card-subtitle style="text-align: right">
                     Profile Info ↓
                   </v-card-subtitle>
@@ -81,13 +82,13 @@
             />
           </v-col>
           <v-col
-            v-for="(file, i) in file_filter"
+            v-for="(file, i) in files"
             v-else
             :key="i"
             :cols="12 / file_filter.length"
           >
             <v-card data-cy="profileInfo" @click="toggle_prof(i)">
-              <EvaluationInfo :file_filter="file" />
+              <EvaluationInfo :file="file" />
               <v-card-subtitle style="text-align: right">
                 Profile Info ↓
               </v-card-subtitle>
@@ -221,7 +222,7 @@ import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 
 import {FilteredDataModule, Filter, TreeMapState} from '@/store/data_filters';
 import {ControlStatus, Severity} from 'inspecjs';
-import {FileID, SourcedContextualizedEvaluation} from '@/store/report_intake';
+import {EvaluationFile, FileID, SourcedContextualizedEvaluation} from '@/store/report_intake';
 import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
 
 import ProfileData from '@/components/cards/ProfileData.vue';
@@ -229,6 +230,8 @@ import {context} from 'inspecjs';
 
 import {ServerModule} from '@/store/server';
 import {capitalize} from 'lodash';
+import {compare_times} from '../utilities/delta_util';
+import {EvaluationModule} from '../store/evaluations';
 
 @Component({
   components: {
@@ -295,6 +298,10 @@ export default class Results extends Vue {
     }
   }
 
+  get files(): EvaluationFile[] {
+    return Array.from(FilteredDataModule.evaluations(this.file_filter)).sort(compare_times).map((evaluation) => evaluation.from_file);
+  }
+
   /**
    * Returns true if we're showing results
    */
@@ -359,6 +366,10 @@ export default class Results extends Vue {
 
   clear_search() {
     this.search_term = '';
+  }
+
+  mounted() {
+    EvaluationModule.getAllEvaluations()
   }
 
   /**
