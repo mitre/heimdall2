@@ -7,6 +7,8 @@
         <slot name="severity" />
         <v-divider />
         <slot name="tags" />
+        <v-divider />
+        <slot name="foundAt" />
       </v-card>
     </v-col>
 

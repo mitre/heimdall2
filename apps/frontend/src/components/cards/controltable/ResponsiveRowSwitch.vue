@@ -21,6 +21,9 @@
           <template #tags>
             <slot name="tags" />
           </template>
+          <template #foundAt>
+            <slot name="foundAt" />
+          </template>
         </ResponsiveRowSmall>
 
         <ResponsiveRowMedium v-else-if="$vuetify.breakpoint.mdAndDown">
@@ -39,6 +42,9 @@
           <template #tags>
             <slot name="tags" />
           </template>
+          <template #foundAt>
+            <slot name="foundAt" />
+          </template>
         </ResponsiveRowMedium>
 
         <ResponsiveRowLarge v-else>
@@ -56,6 +62,9 @@
           </template>
           <template #tags>
             <slot name="tags" />
+          </template>
+          <template #foundAt>
+            <slot name="foundAt" />
           </template>
         </ResponsiveRowLarge>
       </v-card>

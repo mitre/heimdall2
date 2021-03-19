@@ -55,6 +55,14 @@
       <template #tags>
         <ColumnHeader text="800-53 Controls & CCIs" sort="disabled" />
       </template>
+
+      <template #foundAt>
+        <ColumnHeader
+          text="Start Time"
+          :sort="sort_date"
+          @input="set_sort('date', $event)"
+        />
+      </template>
     </ResponsiveRowSwitch>
 
     <!-- Body -->
@@ -133,12 +141,14 @@ export default class ControlTable extends Vue {
   sort_id: Sort = 'none';
   sort_status: Sort = 'none';
   sort_severity: Sort = 'none';
+  sort_date: Sort = 'descending';
 
   /** Callback to handle setting a new sort */
-  set_sort(column: 'id' | 'status' | 'severity', new_sort: Sort) {
+  set_sort(column: 'id' | 'status' | 'severity' | 'date', new_sort: Sort) {
     this.sort_id = 'none';
     this.sort_status = 'none';
     this.sort_severity = 'none';
+    this.sort_date = 'none';
     switch (column) {
       case 'id':
         this.sort_id = new_sort;
@@ -148,6 +158,9 @@ export default class ControlTable extends Vue {
         break;
       case 'severity':
         this.sort_severity = new_sort;
+        break;
+      case 'date':
+        this.sort_date = new_sort;
         break;
     }
   }
@@ -254,7 +267,16 @@ export default class ControlTable extends Vue {
       if (this.sort_severity === 'ascending') {
         factor = -1;
       }
-    } else {
+    } else if(
+      this.sort_date === 'ascending' || this.sort_date === 'descending'
+    ) {
+      cmp = (a: ListElt, b: ListElt) => (Date.parse(a.control.hdf.start_time!) - Date.parse(b.control.hdf.start_time!));
+      if (this.sort_date === 'ascending') {
+        factor = -1;
+      }
+    }
+
+    else {
       return this.raw_items;
     }
     return this.raw_items.sort((a, b) => cmp(a, b) * factor);
