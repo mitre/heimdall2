@@ -4,6 +4,7 @@ import {
   NotFoundException
 } from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
+import {Op} from 'sequelize';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {User} from '../users/user.model';
 import {CreateGroupDto} from './dto/create-group.dto';
@@ -33,6 +34,13 @@ export class GroupsService {
     } else {
       return group;
     }
+  }
+
+  async findByIds(id: string[]): Promise<Group[]> {
+    return this.groupModel.findAll({
+      where: {id: {[Op.in]: id}},
+      include: 'users'
+    });
   }
 
   async addUserToGroup(group: Group, user: User, role: string): Promise<void> {

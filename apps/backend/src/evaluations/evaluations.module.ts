@@ -5,6 +5,7 @@ import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
+import {GroupsService} from '../groups/groups.service';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {Evaluation} from './evaluation.model';
@@ -22,7 +23,7 @@ import {EvaluationsService} from './evaluations.service';
     ]),
     DatabaseModule
   ],
-  providers: [EvaluationsService, UsersService],
+  providers: [EvaluationsService, UsersService, GroupsService],
   controllers: [EvaluationsController],
   exports: [EvaluationsService]
 })
