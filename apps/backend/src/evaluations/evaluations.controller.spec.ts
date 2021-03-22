@@ -18,6 +18,7 @@ import {
   CREATE_USER_DTO_TEST_OBJ_2
 } from '../../test/constants/users-test.constant';
 import {AuthzService} from '../authz/authz.service';
+import {ConfigService} from '../config/config.service';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
@@ -67,6 +68,7 @@ describe('EvaluationsController', () => {
       ],
       providers: [
         AuthzService,
+        ConfigService,
         DatabaseService,
         UsersService,
         EvaluationsService,
