@@ -37,6 +37,7 @@ import {SnackbarModule} from '@/store/snackbar';
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop} from 'vue-property-decorator';
 import {ICreateEvaluation} from '@heimdall/interfaces';
+import _ from 'lodash';
 
 @Component
 export default class FileItem extends mixins(ServerMixin) {
@@ -76,9 +77,7 @@ export default class FileItem extends mixins(ServerMixin) {
       SnackbarModule.failure('This evaluation is already in the database.')
     }
     else if (this.file) {
-      if (this.file.hasOwnProperty('evaluation')) {
-        this.save_evaluation(this.file as EvaluationFile);
-      }
+      this.save_evaluation(this.file);
     }
   }
 
@@ -87,7 +86,7 @@ export default class FileItem extends mixins(ServerMixin) {
     return (typeof this.file?.database_id !== 'undefined') || this.saving
   }
 
-  save_evaluation(file: EvaluationFile) {
+  save_evaluation(file: EvaluationFile | ProfileFile) {
     this.saving = true;
 
     const createEvaluationDto: ICreateEvaluation = {
@@ -103,8 +102,11 @@ export default class FileItem extends mixins(ServerMixin) {
       formData.append(key, value);
     }
     // Add evaluation data to the form
-    formData.append("data", new Blob([JSON.stringify(file.evaluation.data)], {type: 'text/plain'}));
-
+    if(file.hasOwnProperty('evaluation')) {
+      formData.append("data", new Blob([JSON.stringify(_.get(file, 'evaluation.data'))], {type: 'text/plain'}));
+    } else {
+      formData.append("data", new Blob([JSON.stringify(_.get(file, 'profile.data'))], {type: 'text/plain'}));
+    }
     axios
       .post('/evaluations', formData)
       .then((response) => {

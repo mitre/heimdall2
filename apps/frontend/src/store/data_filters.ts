@@ -4,7 +4,11 @@
 
 import {Trinary} from '@/enums/Trinary';
 import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
-import {FileID, SourcedContextualizedEvaluation} from '@/store/report_intake';
+import {
+  FileID,
+  ProfileFile,
+  SourcedContextualizedEvaluation
+} from '@/store/report_intake';
 import Store from '@/store/store';
 import {context, ControlStatus, nist, Severity} from 'inspecjs';
 import LRUCache from 'lru-cache';
@@ -203,24 +207,16 @@ export class FilteredData extends VuexModule {
    * Get all profiles from the specified file ids.
    * Filters only based on the file ID
    */
-  get profiles(): (
-    files: FileID[]
-  ) => readonly context.ContextualizedProfile[] {
+  get profiles(): (files: FileID[]) => readonly ProfileFile[] {
     return (files: FileID[]) => {
       // Initialize our list to add valid profiles to
-      const profiles: context.ContextualizedProfile[] = [];
+      const profiles: ProfileFile[] = [];
 
       // Filter to those that match our filter. In this case that just means come from the right file id
       InspecDataModule.contextualProfiles.forEach((prof) => {
         if (isFromProfileFile(prof)) {
           if (files.includes(prof.from_file.unique_id)) {
-            profiles.push(prof);
-          }
-        } else {
-          // Its a report; go two levels up to get its file
-          const ev = prof.sourced_from as SourcedContextualizedEvaluation;
-          if (files.includes(ev.from_file.unique_id)) {
-            profiles.push(prof);
+            profiles.push(prof.from_file);
           }
         }
       });

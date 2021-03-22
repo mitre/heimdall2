@@ -49,59 +49,60 @@
 
     <!-- The main content: cards, etc -->
     <template #main-content>
-      <v-container fluid grid-list-md pa-2>
-        <!-- Evaluation Info -->
-        <v-row>
-          <v-col v-if="file_filter.length > 3">
-            <v-slide-group v-model="eval_info" show-arrows>
-              <v-slide-item
-                v-for="(file, i) in files"
-                :key="i"
-                v-slot="{toggle}"
-                class="mx-2"
-              >
-                <v-card
-                  :width="info_width"
-                  style="max-height: 10px"
-                  data-cy="profileInfo"
-                  @click="toggle"
+      <v-container fluid grid-list-md pt-0 pa-2>
+        <v-container id="fileCards" mx-0 px-0 fluid>
+          <!-- Evaluation Info -->
+          <v-row no-gutters class="mx-n3 mb-3">
+            <v-col v-if="is_result_view">
+              <v-slide-group v-model="eval_info" show-arrows>
+                <v-slide-item v-for="(file, i) in evaluationFiles" :key="i">
+                  <v-card
+                    width="100%"
+                    max-width="100%"
+                    class="mx-3"
+                    data-cy="profileInfo"
+                    @click="toggle_prof(i)"
+                  >
+                    <EvaluationInfo :file="file" />
+                    <v-card-subtitle
+                      style="position: absolute; bottom: 0; right: 0"
+                    >
+                      Evaluation Info ↓
+                    </v-card-subtitle>
+                  </v-card>
+                </v-slide-item>
+              </v-slide-group>
+            </v-col>
+            <v-col v-else>
+              <v-slide-group v-model="eval_info" show-arrows>
+                <v-slide-item
+                  v-for="(file, i) in profiles"
+                  :key="i"
+                  width="100%"
+                  max-width="100%"
+                  class="ma-2"
+                  cols="4"
                 >
-                  <EvaluationInfo :file="file" />
-                  <v-card-subtitle style="text-align: right">
-                    Profile Info ↓
-                  </v-card-subtitle>
-                </v-card>
-              </v-slide-item>
-            </v-slide-group>
-            <ProfileData
-              v-if="eval_info != null"
-              class="my-4 mx-10"
-              :selected_prof="
-                root_profiles[prof_ids.indexOf(file_filter[eval_info])]
-              "
-            />
-          </v-col>
-          <v-col
-            v-for="(file, i) in files"
-            v-else
-            :key="i"
-            :cols="12 / file_filter.length"
-          >
-            <v-card data-cy="profileInfo" @click="toggle_prof(i)">
-              <EvaluationInfo :file="file" />
-              <v-card-subtitle style="text-align: right">
-                Profile Info ↓
-              </v-card-subtitle>
-            </v-card>
-          </v-col>
+                  <v-card
+                    :width="info_width"
+                    data-cy="profileInfo"
+                    @click="toggle_prof(i)"
+                  >
+                    <ProfileInfo :file="file" />
+                    <v-card-subtitle style="text-align: right">
+                      Profile Info ↓
+                    </v-card-subtitle>
+                  </v-card>
+                </v-slide-item>
+              </v-slide-group>
+            </v-col>
+          </v-row>
           <ProfileData
-            v-if="eval_info != null && file_filter.length <= 3"
-            class="my-4 mx-10"
-            :selected_prof="
-              root_profiles[prof_ids.indexOf(file_filter[eval_info])]
-            "
+            v-if="eval_info != null"
+            class="my-4 mx-2"
+            :selected_prof="eval_info"
           />
-        </v-row>
+        </v-container>
         <!-- Count Cards -->
         <StatusCardRow
           :filter="all_filter"
@@ -219,10 +220,11 @@ import ExportCaat from '@/components/global/ExportCaat.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
 import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
+import ProfileInfo from '@/components/cards/ProfileInfo.vue'
 
 import {FilteredDataModule, Filter, TreeMapState} from '@/store/data_filters';
 import {ControlStatus, Severity} from 'inspecjs';
-import {EvaluationFile, FileID, SourcedContextualizedEvaluation} from '@/store/report_intake';
+import {EvaluationFile, FileID, SourcedContextualizedEvaluation, SourcedContextualizedProfile} from '@/store/report_intake';
 import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
 
 import ProfileData from '@/components/cards/ProfileData.vue';
@@ -232,6 +234,7 @@ import {ServerModule} from '@/store/server';
 import {capitalize} from 'lodash';
 import {compare_times} from '../utilities/delta_util';
 import {EvaluationModule} from '../store/evaluations';
+import {ContextualizedProfile} from 'inspecjs/dist/context';
 
 @Component({
   components: {
@@ -246,6 +249,7 @@ import {EvaluationModule} from '../store/evaluations';
     ExportNist,
     ExportJson,
     EvaluationInfo,
+    ProfileInfo,
     ProfileData,
     UploadButton
   }
@@ -280,7 +284,7 @@ export default class Results extends Vue {
   /** Model for if all-filtered snackbar should be showing */
   filter_snackbar: boolean = false;
 
-  eval_info: number | null = null;
+  eval_info: ContextualizedProfile | undefined | null = null;
 
   /** Determines if we should make the search bar colapseable */
   show_search_mobile: boolean = false;
@@ -298,8 +302,12 @@ export default class Results extends Vue {
     }
   }
 
-  get files(): EvaluationFile[] {
+  get evaluationFiles(): EvaluationFile[] {
     return Array.from(FilteredDataModule.evaluations(this.file_filter)).sort(compare_times).map((evaluation) => evaluation.from_file);
+  }
+
+  get profiles(): ContextualizedProfile[] {
+    return Array.from(FilteredDataModule.profiles(this.file_filter));
   }
 
   /**
@@ -462,10 +470,14 @@ export default class Results extends Vue {
 
   //basically a v-model for the eval info cards when there is no slide group
   toggle_prof(index: number) {
-    if (index == this.eval_info) {
+    const newProf = this.profiles.find((profile) => {
+      return profile.sourced_from === this.evaluationFiles[index].evaluation
+    })
+    console.log(newProf)
+    if (newProf == this.eval_info) {
       this.eval_info = null;
     } else {
-      this.eval_info = index;
+      this.eval_info = newProf;
     }
   }
 }
@@ -481,5 +493,8 @@ export default class Results extends Vue {
   left: 0px;
   top: 4px;
   z-index: 5;
+}
+span + span {
+  margin-left: 10px;
 }
 </style>
