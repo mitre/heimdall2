@@ -90,7 +90,7 @@ export class EvaluationsController {
     // Make sure the user can add evaluations to each group
     const abac = this.authz.abac.createForUser(request.user);
     groups = groups.filter((group) => {
-      abac.can(Action.AddEvaluation, group);
+      return abac.can(Action.AddEvaluation, group);
     });
     const evaluation = await this.evaluationsService
       .create({

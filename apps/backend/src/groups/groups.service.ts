@@ -38,7 +38,8 @@ export class GroupsService {
 
   async findByIds(id: string[]): Promise<Group[]> {
     return this.groupModel.findAll({
-      where: {id: {[Op.in]: id}}
+      where: {id: {[Op.in]: id}},
+      include: 'users'
     });
   }
 
