@@ -37,9 +37,10 @@ import {SnackbarModule} from '@/store/snackbar';
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop} from 'vue-property-decorator';
 import {ICreateEvaluation} from '@heimdall/interfaces';
+import RouteMixin from '@/mixins/RouteMixin';
 
 @Component
-export default class FileItem extends mixins(ServerMixin) {
+export default class FileItem extends mixins(ServerMixin, RouteMixin) {
   @Prop({type: Object}) readonly file!: EvaluationFile | ProfileFile;
 
   saving: boolean = false;
@@ -68,6 +69,10 @@ export default class FileItem extends mixins(ServerMixin) {
   //removes uploaded file from the currently observed files
   remove_file() {
     InspecDataModule.removeFile(this.file.unique_id);
+    // Remove any database files that may have been in the URL
+    // by calling the router and causing it to write the appropriate
+    // route to the URL bar
+    this.navigateWithNoErrors(`/${this.current_route}`);
   }
 
   //saves file to database

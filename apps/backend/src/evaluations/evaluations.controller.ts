@@ -92,24 +92,26 @@ export class EvaluationsController {
     groups = groups.filter((group) => {
       abac.can(Action.AddEvaluation, group);
     });
-    const evaluation = new EvaluationDto(
-      // Do not include userId on the DTO so we can set it automatically to the uploader's id.
-      await this.evaluationsService
-        .create({
-          filename: createEvaluationDto.filename,
-          evaluationTags: createEvaluationDto.evaluationTags || [],
-          public: createEvaluationDto.public,
-          data: serializedDta,
-          userId: request.user.id
-        })
-        .then((createdEvaluation) => {
-          groups.forEach((group) =>
-            this.groupsService.addEvaluationToGroup(group, createdEvaluation)
-          );
-          return createdEvaluation;
-        })
+    const evaluation = await this.evaluationsService
+      .create({
+        filename: createEvaluationDto.filename,
+        evaluationTags: createEvaluationDto.evaluationTags || [],
+        public: createEvaluationDto.public,
+        data: serializedDta,
+        userId: request.user.id // Do not include userId on the DTO so we can set it automatically to the uploader's id.
+      })
+      .then((createdEvaluation) => {
+        groups.forEach((group) =>
+          this.groupsService.addEvaluationToGroup(group, createdEvaluation)
+        );
+        return createdEvaluation;
+      });
+    const createdDto: EvaluationDto = new EvaluationDto(
+      evaluation,
+      true,
+      `/results/${evaluation.id}`
     );
-    return _.omit(evaluation, 'data');
+    return _.omit(createdDto, 'data');
   }
 
   @Put(':id')

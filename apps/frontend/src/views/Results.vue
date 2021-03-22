@@ -203,7 +203,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 import BaseView from '@/views/BaseView.vue';
 
 import StatusCardRow from '@/components/cards/StatusCardRow.vue';
@@ -229,6 +229,7 @@ import {context} from 'inspecjs';
 
 import {ServerModule} from '@/store/server';
 import {capitalize} from 'lodash';
+import RouteMixin from '@/mixins/RouteMixin';
 
 @Component({
   components: {
@@ -247,7 +248,7 @@ import {capitalize} from 'lodash';
     UploadButton
   }
 })
-export default class Results extends Vue {
+export default class Results extends mixins(RouteMixin) {
   $refs!: Vue['$refs'] & {
     search: HTMLInputElement;
   };
@@ -299,7 +300,7 @@ export default class Results extends Vue {
    * Returns true if we're showing results
    */
   get is_result_view(): boolean {
-    return this.current_route_name === 'results';
+    return this.current_route === 'results';
   }
 
   // Returns true if no files are uploaded
@@ -409,7 +410,7 @@ export default class Results extends Vue {
   }
 
   get current_route_name(): string {
-    return this.$router.currentRoute.path.substring(1);
+    return this.$router.currentRoute.path.replace(/[^a-z]/gi, '');
   }
 
   //changes width of eval info if it is in server mode and needs more room for tags

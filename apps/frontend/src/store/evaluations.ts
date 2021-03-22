@@ -5,6 +5,7 @@ import {
   IEvaluationTag
 } from '@heimdall/interfaces';
 import axios from 'axios';
+import _ from 'lodash';
 import {
   Action,
   getModule,
@@ -12,6 +13,9 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
+import {InspecDataModule} from './data_store';
+import {FileID, InspecIntakeModule} from './report_intake';
+import {SnackbarModule} from './snackbar';
 
 @Module({
   namespaced: true,
@@ -33,6 +37,35 @@ export class Evaluation extends VuexModule {
       .finally(() => {
         this.context.commit('SET_LOADING', false);
       });
+  }
+
+  @Action
+  async load_results(evaluationIds: string[]): Promise<(FileID | void)[]> {
+    const unloadedIds = _.difference(
+      evaluationIds,
+      InspecDataModule.loadedDatabaseIds
+    );
+    return Promise.all(
+      unloadedIds.map(async (id) => {
+        return axios
+          .get<IEvaluation>(`/evaluations/${id}`)
+          .then(async ({data}) => {
+            return InspecIntakeModule.loadText({
+              text: JSON.stringify(data.data),
+              filename: data.filename,
+              database_id: data.id,
+              createdAt: data.createdAt,
+              updatedAt: data.updatedAt,
+              tags: [] // Tags are not yet implemented, so for now the value is passed in empty
+            }).catch((err) => {
+              SnackbarModule.failure(err);
+            });
+          })
+          .catch((err) => {
+            SnackbarModule.failure(err);
+          });
+      })
+    );
   }
 
   @Action

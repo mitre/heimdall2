@@ -11,10 +11,10 @@ import Vue from 'vue';
 import VueCookies from 'vue-cookies';
 import Vuetify from 'vuetify/lib';
 
+Vue.config.productionTip = false;
+
 Vue.use(VueCookies);
 Vue.use(Vuetify);
-
-Vue.config.productionTip = false;
 
 new Vue({
   router,

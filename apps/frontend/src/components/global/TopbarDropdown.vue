@@ -28,7 +28,7 @@
               key="admin"
               text="Admin Panel"
               icon="mdi-shield-account"
-              link="admin"
+              link="/admin"
               >Admin Panel</LinkItem
             >
             <v-divider />
@@ -38,7 +38,7 @@
             key="groups"
             text="My Groups"
             icon="mdi-account-group"
-            link="manage-groups"
+            link="/manage-groups"
             >My Groups</LinkItem
           >
           <v-divider />
