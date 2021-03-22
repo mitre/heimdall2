@@ -16,6 +16,7 @@ import {FileInterceptor} from '@nestjs/platform-express';
 import _ from 'lodash';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
+import {ConfigService} from '../config/config.service';
 import {GroupDto} from '../groups/dto/group.dto';
 import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
@@ -33,6 +34,7 @@ export class EvaluationsController {
   constructor(
     private readonly evaluationsService: EvaluationsService,
     private readonly groupsService: GroupsService,
+    private readonly configService: ConfigService,
     private readonly authz: AuthzService
   ) {}
   @Get(':id')
@@ -109,7 +111,7 @@ export class EvaluationsController {
     const createdDto: EvaluationDto = new EvaluationDto(
       evaluation,
       true,
-      `/results/${evaluation.id}`
+      `${this.configService.get('EXTERNAL_URL') || ''}/results/${evaluation.id}`
     );
     return _.omit(createdDto, 'data');
   }
