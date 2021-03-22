@@ -2265,9 +2265,9 @@
     webpack-node-externals "2.5.2"
 
 "@nestjs/common@^7.0.13":
-  version "7.6.14"
-  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-7.6.14.tgz#abdad360ef107482345b111eeee74fbef00620c9"
-  integrity sha512-XJrGoGttCsIOvG2+EXl09pl9iCmYXnhPjx3ndPPigMRdXQGLVpF38OdzroWTD7aYU5rHo3Co21G9cYl8aqdt2Q==
+  version "7.6.15"
+  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-7.6.15.tgz#ae96f18cb6209a21724ffa7ed1a182be1e4fd0af"
+  integrity sha512-H/3Nk7M02Fc4YN9St05i34gZKVuzE54gd5eXAX6WwisqU5fQ00kss1pYGbltjb2QGu3A/fpO1MdYEwOA18Z/VQ==
   dependencies:
     axios "0.21.1"
     iterare "1.2.1"
@@ -2275,9 +2275,9 @@
     uuid "8.3.2"
 
 "@nestjs/core@^7.0.13":
-  version "7.6.14"
-  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-7.6.14.tgz#b3be15506aee33b847abce993a7371439b292dd9"
-  integrity sha512-iAeQIsC79xcLTpga3he48ROX4g561VFsfbksicqotrFy0k9czKxVtHxevsnwo8KzFsYXQqOCO6XYI8MsuAjMcg==
+  version "7.6.15"
+  resolved "https://registry.yarnpkg.com/@nestjs/core/-/core-7.6.15.tgz#dfcc5a7804c10d07f81dde514804b484b909d08a"
+  integrity sha512-8CrL/iY5Gt4HJfyDg1PgPalhT7tVRT643f2mGMgPum/P/e94uuwEYBNIgsMEVOJUrOAWZkNIN60uEf8JkH6GWw==
   dependencies:
     "@nuxtjs/opencollective" "0.3.2"
     fast-safe-stringify "2.0.7"
@@ -2301,9 +2301,9 @@
   integrity sha512-Hu9hPxTdBZA0C4GrWTsSflzwsJ99oAk9jqAwpcszdFNqfjMjkPGuCM9QsVZbBP2bE8fxrVrPsNOILS6puY8e/A==
 
 "@nestjs/platform-express@^7.0.13":
-  version "7.6.14"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-7.6.14.tgz#b16de114421492b719d924a8abf408071c75898e"
-  integrity sha512-0e+byDx6Ak3avSkhMlZfs65vqzjqn/kdpR6EdtifIpIsJWYo0ZapbCNBqyQ2RLFq/IBjP6Y9nWO6HNSOOM60Kw==
+  version "7.6.15"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-7.6.15.tgz#816db6999bf65284d5e1292092ec71acd812fbbb"
+  integrity sha512-XpoHtai7UlUvm6rLo0u2xtkABhC6YbxNuNYqpv/L+mT1xzKJtPV2jWYxJnsE4WNZAddsnKsAcDjj2nCQgiJ52Q==
   dependencies:
     body-parser "1.19.0"
     cors "2.8.5"
@@ -2337,9 +2337,9 @@
     path-to-regexp "0.1.7"
 
 "@nestjs/testing@^7.0.13":
-  version "7.6.14"
-  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-7.6.14.tgz#b1093250157a54fe6b27ec164bdbdc0d26dcd841"
-  integrity sha512-sHOPsmzCPQUlQtfpH5WK+eILk8lRMdr/k3MrkuprS9Y1O4wmPt81ohspvsCXxLQ4U65i6cYR9y/C2uefvnx4rg==
+  version "7.6.15"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-7.6.15.tgz#eed34846a8b2b5ddb0ff6bd74cdcb4344c364c40"
+  integrity sha512-AWr8stnRoS0yCU/EotAJKveYXm1XSB4ZT+ReqFDXhPyqC1ppOfU+zZuCjQlQHorMzidsVHsAstK5/rUsXnrZUQ==
   dependencies:
     optional "0.1.4"
     tslib "2.1.0"
@@ -5250,9 +5250,9 @@ autoprefixer@^9.8.6:
     postcss-value-parser "^4.1.0"
 
 aws-sdk@^2.573.0:
-  version "2.867.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.867.0.tgz#3fae9a583bfd89f6098dc9bca6553b5b85e2a2fc"
-  integrity sha512-6iXRTW6dlCU4UwMivDGHoRyMCvX9Ch1G2gIZZl5yKwzVNaBNpJiAyByWFuxrcBqQsSIFKBEbxeRjePE6QiBbkw==
+  version "2.868.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.868.0.tgz#2c31f5d788e4487ac29f51498e46cc91b0d1de6a"
+  integrity sha512-ZayPsA/ycaAXqqa2oDyf8iUpl1WOLODZS8ZdvYj77L5owMQm0XC7yqiD+WHj9nToUECF9VAD+AKQMIN6695tVQ==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -8828,9 +8828,9 @@ eslint-plugin-prettier@^3.1.4:
     prettier-linter-helpers "^1.0.0"
 
 eslint-plugin-vue@^7.0.1:
-  version "7.7.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-vue/-/eslint-plugin-vue-7.7.0.tgz#a90df4595e670821bf243bd2750ededdb74948b8"
-  integrity sha512-mYz4bpLGv5jx6YG/GvKkqbGSfV7uma2u1P3mLA41Q5vQl8W1MeuTneB8tfsLq6xxxesFubcrOC0BZBJ5R+eaCQ==
+  version "7.8.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-vue/-/eslint-plugin-vue-7.8.0.tgz#cb0e85d65b65fa8d15e783fbb03c049d2c4cfdae"
+  integrity sha512-OGrnPz+PuYL2HmVyBHxm4mRjxW2kfFCQE6Hw9G6qOHs/Pcu0srOlCCW0FMa8SLzIEqxl8WuKoBSPcMnrjUG2vw==
   dependencies:
     eslint-utils "^2.1.0"
     natural-compare "^1.4.0"
@@ -10522,9 +10522,9 @@ hex-color-regex@^1.1.0:
   integrity sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==
 
 highlight.js@*, highlight.js@^10.0.3:
-  version "10.6.0"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.6.0.tgz#0073aa71d566906965ba6e1b7be7b2682f5e18b6"
-  integrity sha512-8mlRcn5vk/r4+QcqerapwBYTe+iPL5ih6xrNylxrnBdHQiijDETfXX7VIxC3UiCRiINBJfANBAsPzAvRQj8RpQ==
+  version "10.7.1"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.7.1.tgz#a8ec4152db24ea630c90927d6cae2a45f8ecb955"
+  integrity sha512-S6G97tHGqJ/U8DsXcEdnACbirtbx58Bx9CzIVeYli8OuswCfYI/LsXH2EiGcoGio1KAC3x4mmUwulOllJ2ZyRA==
 
 highlight.js@10.4.1:
   version "10.4.1"
@@ -17084,9 +17084,9 @@ sane@^4.0.3:
     walker "~1.0.5"
 
 sanitize-html@^2.1.2:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/sanitize-html/-/sanitize-html-2.3.2.tgz#a1954aea877a096c408aca7b0c260bef6e4fc402"
-  integrity sha512-p7neuskvC8pSurUjdVmbWPXmc9A4+QpOXIL+4gwFC+av5h+lYCXFT8uEneqsFQg/wEA1IH+cKQA60AaQI6p3cg==
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/sanitize-html/-/sanitize-html-2.3.3.tgz#3db382c9a621cce4c46d90f10c64f1e9da9e8353"
+  integrity sha512-DCFXPt7Di0c6JUnlT90eIgrjs6TsJl/8HYU3KLdmrVclFN4O0heTcVbJiMa23OKVr6aR051XYtsgd8EWwEBwUA==
   dependencies:
     deepmerge "^4.2.2"
     escape-string-regexp "^4.0.0"
@@ -17282,9 +17282,9 @@ sequelize-typescript@^2.0.0:
     glob "7.1.6"
 
 sequelize@^6.4.0:
-  version "6.5.1"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-6.5.1.tgz#bb08c001515afe159f9efe8c1d59b7a07c43a608"
-  integrity sha512-DWgaF+Vw+gWpxomyyYppUOCWzP0ReoMol8EEaDMA+cbSUevyMb74BEwSAd0c8GKgDYiOjpq4DmKBQLHtLAgS1g==
+  version "6.6.1"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-6.6.1.tgz#57579e06b167287150e0e372e51787e6862d5a93"
+  integrity sha512-dhu25X8L084YyQ9E7iTvleb+g7t9THeI13PV1tKERNCax1W0+sObtSQw0fphMiAr/BeAP2kELyY33s4Bh5tA4Q==
   dependencies:
     debug "^4.1.1"
     dottie "^2.0.0"
@@ -19406,9 +19406,9 @@ vue-class-component@^7.0.2:
   integrity sha512-+eaQXVrAm/LldalI272PpDe3+i4mPis0ORiMYxF6Ae4hyuCh15W8Idet7wPUEs4N4YptgFHGys4UrgNQOMyO6w==
 
 vue-cli-plugin-vuetify@~2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify/-/vue-cli-plugin-vuetify-2.3.0.tgz#97ae8679e709b023e51a3135797dab59c5505d89"
-  integrity sha512-Cx6DmOC/awbtzRJtIZM+Dn13QGndhKmNbEYEhgZmcA0sZVyxYZCVBpcVdHky4LeTCj6vQA6AypLrWKTlnljhhg==
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify/-/vue-cli-plugin-vuetify-2.3.1.tgz#9e45a686902351320e876881d057eb69c646a22b"
+  integrity sha512-96NLmCE12FalyWSxbfFerbOKSwuPq5b4zYRei5BRLbdCBq+YgmCMv8zgZl8Rx/kR/91T4i8XZDCNgfQ78mpQ3A==
   dependencies:
     null-loader "^3.0.0"
     semver "^7.1.2"
