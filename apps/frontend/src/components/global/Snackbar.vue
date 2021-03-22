@@ -1,5 +1,13 @@
 <template>
-  <v-snackbar v-if="show" id="info-snackbar" v-model="show" timeout="10000" top>
+  <v-snackbar
+    v-if="show"
+    id="info-snackbar"
+    v-model="show"
+    :color="error ? 'error' : 'success'"
+    elevation="24"
+    timeout="10000"
+    top
+  >
     {{ message }}
 
     <template #action="{attrs}">

@@ -86,15 +86,18 @@ export class EvaluationsController {
       evaluationTags: createEvaluationDto.evaluationTags || [],
       public: createEvaluationDto.public
     };
-    const evaluation = new EvaluationDto(
-      // Do not include userId on the DTO so we can set it automatically to the uploader's id.
-      await this.evaluationsService.create(
-        updatedEvaluationDto,
-        serializedDta,
-        request.user.id
-      )
+    // Do not include userId on the DTO so we can set it automatically to the uploader's id.
+    const createdEvaluation = await this.evaluationsService.create(
+      updatedEvaluationDto,
+      serializedDta,
+      request.user.id
     );
-    return _.omit(evaluation, 'data');
+    const createdDto: EvaluationDto = new EvaluationDto(
+      createdEvaluation,
+      true,
+      `/results/${createdEvaluation.id}`
+    );
+    return _.omit(createdDto, 'data');
   }
 
   @Put(':id')

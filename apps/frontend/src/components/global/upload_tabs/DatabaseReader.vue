@@ -24,17 +24,13 @@
 <script lang="ts">
 import Component, {mixins} from 'vue-class-component';
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
-import {SnackbarModule} from '@/store/snackbar';
-import {EvaluationModule} from '@/store/evaluations'
-import RefreshButton from '@/components/generic/RefreshButton.vue'
-
-import axios from 'axios';
-
-import {FileID, InspecIntakeModule} from '@/store/report_intake';
-
+import {EvaluationModule} from '@/store/evaluations';
+import RefreshButton from '@/components/generic/RefreshButton.vue';
 import {IEvaluation} from '@heimdall/interfaces';
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop, Watch} from 'vue-property-decorator';
+import RouteMixin from '@/mixins/RouteMixin';
+import {FileID} from '@/store/report_intake';
 
 /**
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
@@ -46,7 +42,7 @@ import {Prop, Watch} from 'vue-property-decorator';
     RefreshButton
   }
 })
-export default class DatabaseReader extends mixins(ServerMixin) {
+export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
   @Prop({default: false}) readonly refresh!: Boolean;
 
   headers: Object[] = [
@@ -94,26 +90,8 @@ export default class DatabaseReader extends mixins(ServerMixin) {
   }
 
   load_results(evaluations: IEvaluation[]): void {
-    Promise.all(
-      evaluations.map(async (evaluation) => {
-        return axios
-          .get<IEvaluation>(`/evaluations/${evaluation.id}`)
-          .then(({data}) => {
-            return InspecIntakeModule.loadText({
-              text: JSON.stringify(data.data),
-              filename: evaluation.filename,
-              database_id: evaluation.id,
-              createdAt: evaluation.createdAt,
-              updatedAt: evaluation.updatedAt,
-              tags: [] // Tags are not yet implemented, so for now the value is passed in empty
-            }).catch((err) => {
-              SnackbarModule.failure(err);
-            });
-          })
-          .catch((err) => {
-            SnackbarModule.failure(err);
-          });
-      })
+    EvaluationModule.load_results(
+      evaluations.map((evaluation) => evaluation.id)
     ).then((fileIds: (FileID | void)[]) => {
       this.$emit('got-files', fileIds.filter(Boolean));
     });
