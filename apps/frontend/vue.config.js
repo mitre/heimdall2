@@ -14,7 +14,7 @@ const branch = parsed.branch || '';
 const issues = parsed.issues || '';
 
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+  publicPath: '/',
   transpileDependencies: [/(\/|\\)vuetify(\/|\\)/],
   devServer: {
     // JWT_SECRET is a required secret for the backend. If it is sourced
