@@ -225,7 +225,7 @@ describe('EvaluationsController', () => {
       const evaluation = await evaluationsController.create(
         EVALUATION_WITH_TAGS_1,
         mockFile,
-        {user: user, headers: {origin: 'http://localhost'}}
+        {user: user}
       );
       expect(evaluation).toBeDefined();
       expect(evaluation.evaluationTags.length).toEqual(1);
@@ -237,7 +237,7 @@ describe('EvaluationsController', () => {
       const evaluation = await evaluationsController.create(
         CREATE_EVALUATION_DTO_WITHOUT_TAGS,
         mockFile,
-        {user: user, headers: {origin: 'http://localhost'}}
+        {user: user}
       );
       expect(evaluation).toBeDefined();
       expect(evaluation.evaluationTags.length).toEqual(0);

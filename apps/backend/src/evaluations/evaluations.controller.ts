@@ -78,7 +78,7 @@ export class EvaluationsController {
   async create(
     @Body() createEvaluationDto: CreateEvaluationDto,
     @UploadedFile() data: Express.Multer.File,
-    @Request() request: {user: User; headers: {origin: string}}
+    @Request() request: {user: User}
   ): Promise<EvaluationDto> {
     const serializedDta: JSON = JSON.parse(data.buffer.toString('utf8'));
     const updatedEvaluationDto: CreateEvaluationDto = {
@@ -95,7 +95,7 @@ export class EvaluationsController {
     const createdDto: EvaluationDto = new EvaluationDto(
       createdEvaluation,
       true,
-      `${request.headers.origin}/results/${createdEvaluation.id}`
+      `/results/${createdEvaluation.id}`
     );
     return _.omit(createdDto, 'data');
   }
