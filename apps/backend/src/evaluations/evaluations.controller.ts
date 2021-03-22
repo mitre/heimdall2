@@ -17,6 +17,8 @@ import _ from 'lodash';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {GroupDto} from '../groups/dto/group.dto';
+import {Group} from '../groups/group.model';
+import {GroupsService} from '../groups/groups.service';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {CreateEvaluationInterceptor} from '../interceptors/create-evaluation-interceptor';
 import {User} from '../users/user.model';
@@ -30,6 +32,7 @@ import {EvaluationsService} from './evaluations.service';
 export class EvaluationsController {
   constructor(
     private readonly evaluationsService: EvaluationsService,
+    private readonly groupsService: GroupsService,
     private readonly authz: AuthzService
   ) {}
   @Get(':id')
@@ -81,21 +84,32 @@ export class EvaluationsController {
     @Request() request: {user: User}
   ): Promise<EvaluationDto> {
     const serializedDta: JSON = JSON.parse(data.buffer.toString('utf8'));
-    const updatedEvaluationDto: CreateEvaluationDto = {
-      filename: createEvaluationDto.filename,
-      evaluationTags: createEvaluationDto.evaluationTags || [],
-      public: createEvaluationDto.public
-    };
-    // Do not include userId on the DTO so we can set it automatically to the uploader's id.
-    const createdEvaluation = await this.evaluationsService.create(
-      updatedEvaluationDto,
-      serializedDta,
-      request.user.id
-    );
+    let groups: Group[] = createEvaluationDto.groups
+      ? await this.groupsService.findByIds(createEvaluationDto.groups)
+      : [];
+    // Make sure the user can add evaluations to each group
+    const abac = this.authz.abac.createForUser(request.user);
+    groups = groups.filter((group) => {
+      return abac.can(Action.AddEvaluation, group);
+    });
+    const evaluation = await this.evaluationsService
+      .create({
+        filename: createEvaluationDto.filename,
+        evaluationTags: createEvaluationDto.evaluationTags || [],
+        public: createEvaluationDto.public,
+        data: serializedDta,
+        userId: request.user.id // Do not include userId on the DTO so we can set it automatically to the uploader's id.
+      })
+      .then((createdEvaluation) => {
+        groups.forEach((group) =>
+          this.groupsService.addEvaluationToGroup(group, createdEvaluation)
+        );
+        return createdEvaluation;
+      });
     const createdDto: EvaluationDto = new EvaluationDto(
-      createdEvaluation,
+      evaluation,
       true,
-      `/results/${createdEvaluation.id}`
+      `/results/${evaluation.id}`
     );
     return _.omit(createdDto, 'data');
   }
