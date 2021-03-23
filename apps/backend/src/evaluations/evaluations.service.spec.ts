@@ -74,14 +74,26 @@ describe('EvaluationsService', () => {
       let evaluationsDtoArray = await evaluationsService.findAll();
       expect(evaluationsDtoArray).toEqual([]);
 
-      await evaluationsService.create(EVALUATION_WITH_TAGS_1, {}, user.id);
-      await evaluationsService.create(EVALUATION_WITH_TAGS_1, {}, user.id);
+      await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        data: {},
+        userId: user.id
+      });
+      await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        data: {},
+        userId: user.id
+      });
       evaluationsDtoArray = await evaluationsService.findAll();
       expect(evaluationsDtoArray.length).toEqual(2);
     });
 
     it('should include the evaluation user', async () => {
-      await evaluationsService.create(EVALUATION_WITH_TAGS_1, {}, user.id);
+      await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        data: {},
+        userId: user.id
+      });
 
       const evaluations = await evaluationsService.findAll();
       expect(new UserDto(evaluations[0].user)).toEqual(user);
@@ -90,11 +102,11 @@ describe('EvaluationsService', () => {
     it('should include the evaluation group and group users', async () => {
       const group = await groupsService.create(GROUP_1);
       const owner = await usersService.findById(user.id);
-      const evaluation = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1,
-        {},
-        user.id
-      );
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        data: {},
+        userId: user.id
+      });
 
       let evaluations = await evaluationsService.findAll();
       expect(evaluations[0].groups[0]).not.toBeDefined();
@@ -115,11 +127,11 @@ describe('EvaluationsService', () => {
   describe('findById', () => {
     it('should find evaluations by id', async () => {
       expect.assertions(1);
-      const evaluation = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1,
-        {},
-        user.id
-      );
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        data: {},
+        userId: user.id
+      });
       const foundEvaluation = await evaluationsService.findById(evaluation.id);
       expect(new EvaluationDto(evaluation)).toEqual(
         new EvaluationDto(foundEvaluation)
@@ -136,11 +148,11 @@ describe('EvaluationsService', () => {
 
   describe('create', () => {
     it('should create a new evaluation with evaluation tags', async () => {
-      const evaluation = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1,
-        {},
-        user.id
-      );
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        data: {},
+        userId: user.id
+      });
       expect(evaluation.id).toBeDefined();
       expect(evaluation.updatedAt).toBeDefined();
       expect(evaluation.createdAt).toBeDefined();
@@ -162,11 +174,11 @@ describe('EvaluationsService', () => {
     });
 
     it('should create a new evaluation without evaluation tags', async () => {
-      const evaluation = await evaluationsService.create(
-        CREATE_EVALUATION_DTO_WITHOUT_TAGS,
-        {},
-        user.id
-      );
+      const evaluation = await evaluationsService.create({
+        ...CREATE_EVALUATION_DTO_WITHOUT_TAGS,
+        data: {},
+        userId: user.id
+      });
       expect(evaluation.id).toBeDefined();
       expect(evaluation.updatedAt).toBeDefined();
       expect(evaluation.createdAt).toBeDefined();
@@ -181,11 +193,11 @@ describe('EvaluationsService', () => {
     it('should throw an error when missing the filename field', async () => {
       expect.assertions(1);
       await expect(
-        evaluationsService.create(
-          CREATE_EVALUATION_DTO_WITHOUT_FILENAME,
-          {},
-          user.id
-        )
+        evaluationsService.create({
+          ...CREATE_EVALUATION_DTO_WITHOUT_FILENAME,
+          data: {},
+          userId: user.id
+        })
       ).rejects.toThrow(
         'notNull Violation: Evaluation.filename cannot be null'
       );
@@ -201,11 +213,11 @@ describe('EvaluationsService', () => {
     });
 
     it('should update all fields of an evaluation', async () => {
-      const evaluation = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1,
-        {},
-        user.id
-      );
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        data: {},
+        userId: user.id
+      });
       const updatedEvaluation = await evaluationsService.update(
         evaluation.id,
         UPDATE_EVALUATION
@@ -218,11 +230,11 @@ describe('EvaluationsService', () => {
     });
 
     it('should only update data if provided', async () => {
-      const evaluation = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1,
-        {},
-        user.id
-      );
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        data: {},
+        userId: user.id
+      });
       const updatedEvaluation = await evaluationsService.update(
         evaluation.id,
         UPDATE_EVALUATION_DATA_ONLY
@@ -238,11 +250,11 @@ describe('EvaluationsService', () => {
     });
 
     it('should only update filename if provided', async () => {
-      const evaluation = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1,
-        {},
-        user.id
-      );
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        data: {},
+        userId: user.id
+      });
 
       const updatedEvaluation = await evaluationsService.update(
         evaluation.id,
@@ -261,11 +273,11 @@ describe('EvaluationsService', () => {
 
   describe('remove', () => {
     it('should remove an evaluation and its evaluation tags given an id', async () => {
-      const evaluation = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1,
-        {},
-        user.id
-      );
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        data: {},
+        userId: user.id
+      });
       const removedEvaluation = await evaluationsService.remove(evaluation.id);
       const foundEvaluationTags = await evaluationTagsService.findAll();
       expect(foundEvaluationTags.length).toEqual(0);

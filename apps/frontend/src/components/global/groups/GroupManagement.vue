@@ -101,9 +101,15 @@ export default class GroupManagement extends Vue {
     }
   ];
   myGroupsHeaders: Object[] = [
+    {
+      text: 'ID',
+      sortable: true,
+      value: 'id'
+    },
     ...this.allGroupsHeaders,
     {text: 'Your Role', value: 'role', sortable: true},
     {text: 'Actions', value: 'actions', sortable: false},
+
   ];
 
   deleteGroupDialog(group: IGroup): void {
