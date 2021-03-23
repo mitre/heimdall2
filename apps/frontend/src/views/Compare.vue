@@ -259,7 +259,7 @@ export default class Compare extends Vue {
     }
   ];
 
-  changedOnly: boolean = true;
+  changedOnly = true;
   expanded_view: boolean = true;
   tab: number = 0;
   width: number = window.innerWidth;
