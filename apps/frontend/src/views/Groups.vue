@@ -1,5 +1,6 @@
 <template>
   <BaseView title="Heimdall - Groups">
+    <template #topbar-content> <v-spacer /> </template>
     <template #main-content>
       <v-tabs v-model="activeTab" fixed-tabs dark>
         <v-tab key="my-groups"> My Groups </v-tab>

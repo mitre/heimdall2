@@ -1,5 +1,5 @@
 <template>
-  <div class="fill-height px-2">
+  <div class="fill-height px-1">
     <span> {{ text }} </span>
     <!-- Note: always have button for spacing consistency. Just disable and invis -->
     <v-btn :disabled="!allow_sort" text icon @click="toggle_sort">

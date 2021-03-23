@@ -76,18 +76,6 @@ const veautiful = new Vuetify({
         'bar-visible': gen_visibilities(darkBackground),
         secondary: darkBackground,
         'secondary-visible': gen_visibilities(darkBackground)
-      },
-      light: {
-        ...statuses,
-        ...severities,
-        ...compliances,
-        ...branding,
-        primary: mitrePrimaryBlue,
-        'primary-visible': gen_visibilities(mitrePrimaryBlue),
-        bar: mitrePrimaryBlue,
-        'bar-visible': gen_visibilities(mitrePrimaryBlue),
-        secondary: lightBackground,
-        'secondary-visible': gen_visibilities(lightBackground)
       }
     },
     options: {

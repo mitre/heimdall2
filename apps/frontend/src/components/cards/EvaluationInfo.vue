@@ -1,5 +1,5 @@
 <template>
-  <v-row class="pa-4" justify="space-between">
+  <v-row class="px-4 pt-4" dense justify="space-between">
     <v-col data-cy="fileinfo" cols="12">
       <strong>Filename:</strong> {{ filename }}<br />
       <strong>Tool Version:</strong> {{ inspec_version }}<br />

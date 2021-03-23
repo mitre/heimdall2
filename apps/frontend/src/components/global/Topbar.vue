@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app color="bar">
+  <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app color="bar" dense>
     <!-- The title and nav bar -->
     <v-toolbar-title v-if="!minimalTopbar" id="toolbar_title" class="pr-2">
       <v-app-bar-nav-icon @click.stop="$emit('toggle-drawer')">
@@ -7,7 +7,6 @@
       </v-app-bar-nav-icon>
       <span class="hidden-sm-and-down bar-visible--text">{{ title }}</span>
     </v-toolbar-title>
-    <v-spacer />
 
     <slot name="content" />
 

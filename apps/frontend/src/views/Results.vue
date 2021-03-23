@@ -8,6 +8,7 @@
         v-model="search_term"
         flat
         hide-details
+        dense
         solo
         prepend-inner-icon="mdi-magnify"
         label="Search"

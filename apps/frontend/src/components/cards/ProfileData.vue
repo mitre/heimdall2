@@ -62,6 +62,7 @@
             <v-row
               class="text-left py-2"
               tag="v-card-text"
+              dense
               data-cy="profileInfoFields"
             >
               <template v-for="info in selected_info">
