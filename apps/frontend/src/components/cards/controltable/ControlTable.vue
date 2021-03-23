@@ -141,7 +141,7 @@ export default class ControlTable extends Vue {
     // While window.parent is a Window, Scrollmagic takes an Element, and these types are not compatible with eachother
     // However, Scrollmagic still works with a Window, so we have to tell it that we don't know the type
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let windowContext: any = window.parent;
+    const windowContext: any = window.parent;
     const scrollMagicController = new Scrollmagic.Controller({
       container: windowContext
     });
