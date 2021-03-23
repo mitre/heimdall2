@@ -23,7 +23,7 @@
     </v-row>
 
     <!-- Header. This should mirror the structure of ControlRowHeader -->
-    <ResponsiveRowSwitch id="scrollMagicTrigger" style="z-index: 1999">
+    <ResponsiveRowSwitch id="scrollMagicTrigger" style="z-index: 10">
       <template #id>
         <ColumnHeader
           text="ID"
@@ -95,6 +95,7 @@ import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {control_unique_key} from '@/utilities/format_util';
 import {context} from 'inspecjs';
 import {Prop} from 'vue-property-decorator';
+import Scrollmagic from 'scrollmagic'
 
 // Tracks the visibility of an HDF control
 interface ListElt {
@@ -136,16 +137,23 @@ export default class ControlTable extends Vue {
   sort_severity: Sort = 'none';
 
   mounted (){
-    const floatingResponsiveRowSwitch = Vue.prototype.$scrollmagic.scene({
-    // ID of element where animation starts
-    triggerElement: '#scrollMagicTrigger',
-  })
-    // Declaration of animation and attaching to element
-    .setPin('#scrollMagicTrigger')
-    // Helpful tags for orientation on the screen
-    .addIndicators({name: '2 (duration: 300)'})
-    .offset(440)
-    Vue.prototype.$scrollmagic.addScene(floatingResponsiveRowSwitch)
+    // This sets up the pinned ResponsiveRowSwitch (row titles) for the control table
+    // While window.parent is a Window, Scrollmagic takes an Element, and these types are not compatible with eachother
+    // However, Scrollmagic still works with a Window, so we have to tell it that we don't know the type
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let windowContext: any = window.parent;
+    const scrollMagicController = new Scrollmagic.Controller({
+      container: windowContext
+    });
+    scrollMagicController.addScene(
+      new Scrollmagic.Scene({
+        // ID of element where animation starts
+        triggerElement: '#scrollMagicTrigger'
+      })
+      .setPin('#scrollMagicTrigger')
+      // How far offset the trigger should be, typically this is in the middle of the screen
+      .offset(455)
+    )
   }
 
   /** Callback to handle setting a new sort */
