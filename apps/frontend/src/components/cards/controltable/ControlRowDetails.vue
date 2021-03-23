@@ -1,5 +1,5 @@
 <template>
-  <v-row no-gutters>
+  <v-row no-gutters dense class="pb-1">
     <v-col cols="12" class="font-weight-bold">
       <v-card>
         <v-tabs v-model="localTab" fixed-tabs show-arrows @change="tab_change">

@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="font-weight-bold">
     <!-- Toolbar -->
-    <v-row>
+    <v-row class="mb-n7">
       <v-row>
         <v-col>
           <v-card-title>Results View Data</v-card-title>
@@ -24,19 +24,19 @@
 
     <!-- Header. This should mirror the structure of ControlRowHeader -->
     <ResponsiveRowSwitch id="scrollMagicTrigger" style="z-index: 10">
-      <template #id>
-        <ColumnHeader
-          text="ID"
-          :sort="sort_id"
-          @input="set_sort('id', $event)"
-        />
-      </template>
-
       <template #status>
         <ColumnHeader
           text="Status"
           :sort="sort_status"
           @input="set_sort('status', $event)"
+        />
+      </template>
+
+      <template #id>
+        <ColumnHeader
+          text="ID"
+          :sort="sort_id"
+          @input="set_sort('id', $event)"
         />
       </template>
 
