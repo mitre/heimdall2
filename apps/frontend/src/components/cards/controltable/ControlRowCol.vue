@@ -14,6 +14,7 @@
       </v-layout>
     </v-col>
     <v-col
+      class="py-0"
       cols="12"
       :sm="result.message ? 6 : 12"
       :lg="result.message ? 5 : 10"

@@ -5,8 +5,11 @@
       <v-app-bar-nav-icon @click.stop="$emit('toggle-drawer')">
         <v-icon color="bar-visible">mdi-menu</v-icon>
       </v-app-bar-nav-icon>
-      <span class="hidden-sm-and-down bar-visible--text">{{ title }}</span>
+      <span class="hidden-sm-and-down bar-visible--text">{{
+        elipsisTitle
+      }}</span>
     </v-toolbar-title>
+    <v-spacer />
 
     <slot name="content" />
 
@@ -35,6 +38,10 @@ export default class Topbar extends mixins(ServerMixin) {
   /** Submits an event to clear all filters */
   clear(): void {
     this.$emit('clear');
+  }
+
+  get elipsisTitle() {
+    return this.title.length > 50 ? `${this.title.substring(0, 50)}...` : this.title;
   }
 }
 </script>

@@ -99,7 +99,6 @@
     "sanitize-html": "^2.1.2",
     "sass": "^1.23.6",
     "sass-loader": "^10.0.3",
-    "scrollmagic": "^2.0.8",
     "uuid": "^8.3.0",
     "vue": "~2.6.10",
     "vue-apexcharts": "^1.5.1",
