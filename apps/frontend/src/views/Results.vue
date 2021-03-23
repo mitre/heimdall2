@@ -147,7 +147,7 @@
         <v-row>
           <v-col xs-12>
             <v-card elevation="2">
-              <v-card-title>TreeMap</v-card-title>
+              <v-card-title>Tree Map</v-card-title>
               <v-card-text>
                 <Treemap
                   v-model="tree_filters"
