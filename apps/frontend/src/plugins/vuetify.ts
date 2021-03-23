@@ -29,7 +29,6 @@ const mitrePrimaryGrey = gen_variants('#5f636a');
 const mitreSecondaryGrey = gen_variants('#cfdeea');
 const mitreSecondaryBlue = gen_variants('#00b3dc');
 const darkBackground = gen_variants('#303030');
-const lightBackground = gen_variants('#e0e0e0', 2); // Want more extreme variations
 
 const branding = {
   mitrePrimaryBlue,

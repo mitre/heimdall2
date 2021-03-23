@@ -12,8 +12,8 @@
       @toggle-drawer="drawer = !drawer"
     >
       <template #content>
-        <slot name="topbar-content" />
-      </template>
+        <slot name="topbar-content"><v-spacer /></slot
+      ></template>
     </Topbar>
 
     <!-- Sidebar to navigate between different views -->
