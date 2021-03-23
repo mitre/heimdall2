@@ -23,7 +23,7 @@
     </v-row>
 
     <!-- Header. This should mirror the structure of ControlRowHeader -->
-    <ResponsiveRowSwitch>
+    <ResponsiveRowSwitch id="scrollMagicTrigger" style="z-index: 1999">
       <template #id>
         <ColumnHeader
           text="ID"
@@ -79,6 +79,7 @@
         />
       </div>
     </v-lazy>
+    <div id="scrollMagicTriggerEnd" />
   </v-container>
 </template>
 
@@ -133,6 +134,19 @@ export default class ControlTable extends Vue {
   sort_id: Sort = 'none';
   sort_status: Sort = 'none';
   sort_severity: Sort = 'none';
+
+  mounted (){
+    const floatingResponsiveRowSwitch = Vue.prototype.$scrollmagic.scene({
+    // ID of element where animation starts
+    triggerElement: '#scrollMagicTrigger',
+  })
+    // Declaration of animation and attaching to element
+    .setPin('#scrollMagicTrigger')
+    // Helpful tags for orientation on the screen
+    .addIndicators({name: '2 (duration: 300)'})
+    .offset(440)
+    Vue.prototype.$scrollmagic.addScene(floatingResponsiveRowSwitch)
+  }
 
   /** Callback to handle setting a new sort */
   set_sort(column: 'id' | 'status' | 'severity', new_sort: Sort) {

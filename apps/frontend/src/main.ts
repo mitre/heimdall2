@@ -9,12 +9,14 @@ import 'core-js/stable';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import Vue from 'vue';
 import VueCookies from 'vue-cookies';
+import VueScrollmagic from 'vue-scrollmagic';
 import Vuetify from 'vuetify/lib';
 
 Vue.config.productionTip = false;
 
 Vue.use(VueCookies);
 Vue.use(Vuetify);
+Vue.use(VueScrollmagic);
 
 new Vue({
   router,
