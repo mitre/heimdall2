@@ -3,7 +3,7 @@
     :value="value"
     :clipped="$vuetify.breakpoint.lgAndUp"
     app
-    style="margin-top: 50px; z-index: 11"
+    style="margin-top: 48px; z-index: 11"
     disable-resize-watcher
     disable-route-watcher
     fixed
