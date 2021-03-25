@@ -60,6 +60,7 @@
     <!-- Body -->
     <v-lazy
       v-for="item in items"
+      :id="item.key"
       :key="item.key"
       min-height="50"
       transition="fade-transition"
@@ -79,7 +80,6 @@
         />
       </div>
     </v-lazy>
-    <div id="scrollMagicTriggerEnd" />
   </v-container>
 </template>
 
@@ -166,6 +166,22 @@ export default class ControlTable extends Vue {
     }
   }
 
+  get scrollOptions() {
+    if(this.$vuetify.breakpoint.lgAndUp) {
+      return {
+        offset: 40
+      }
+    } else if (this.$vuetify.breakpoint.md) {
+      return {
+        offset: 95
+      }
+    } else if (this.$vuetify.breakpoint.smAndDown) {
+      return {
+        offset: 115
+      }
+    }
+  }
+
   /** Closes all open controls when single-expand is re-enabled */
   async handleToggleSingleExpand(singleExpand: boolean): Promise<void> {
     if(singleExpand){
@@ -189,12 +205,14 @@ export default class ControlTable extends Vue {
       // If key is new, add it
       if (!had) {
         this.expanded.push(key);
+        this.$vuetify.goTo(`#${key}`, this.scrollOptions);
       }
     } else {
       // Add or remove it from the set, as appropriate. Shortcut this by only adding if delete fails
       let i = this.expanded.indexOf(key);
       if (i < 0) {
         this.expanded.push(key);
+        this.$vuetify.goTo(`#${key}`, this.scrollOptions);
       } else {
         this.expanded.splice(i, 1);
       }
