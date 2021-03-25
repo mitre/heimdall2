@@ -175,7 +175,7 @@ export default class ControlTable extends Vue {
       return {
         offset: 95
       }
-    } else if (this.$vuetify.breakpoint.smAndDown) {
+    } else {
       return {
         offset: 115
       }
