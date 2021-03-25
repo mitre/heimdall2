@@ -67,6 +67,7 @@
     >
       <div>
         <ControlRowHeader
+          class="pinned-header"
           :control="item.control"
           :expanded="expanded.includes(item.key)"
           :show-impact="showImpact"
@@ -280,3 +281,27 @@ export default class ControlTable extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.pinned-header {
+  position: sticky;
+  z-index: 2;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+@media only screen and (min-width: 960px) and (max-width: 1215px) {
+  .pinned-header {
+    top: 138px;
+  }
+}
+@media only screen and (min-width: 1215px) and (max-width: 1263px) {
+  .pinned-header {
+    top: 120px;
+  }
+}
+@media only screen and (min-width: 1263px) {
+  .pinned-header {
+    top: 80px;
+  }
+}
+</style>
