@@ -421,7 +421,9 @@ export default class Results extends mixins(RouteMixin) {
   }
 
   mounted() {
-    EvaluationModule.getAllEvaluations()
+    if(ServerModule.serverMode){
+      EvaluationModule.getAllEvaluations()
+    }
   }
 
   /**
