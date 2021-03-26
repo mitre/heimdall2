@@ -62,11 +62,29 @@
               >
                 <v-card
                   :width="info_width"
-                  style="max-height: 10px"
                   data-cy="profileInfo"
                   @click="toggle"
                 >
                   <EvaluationInfo :file="file" />
+                  <div v-if="file.database_id" class="top-right">
+                    <EditEvaluationModal
+                      id="editEvaluationModal"
+                      class="top-right"
+                      :active="getEvaluation(file)"
+                    >
+                      <template #clickable="{on}"
+                        ><v-icon
+                          data-cy="edit"
+                          small
+                          title="Edit"
+                          class="mr-2"
+                          v-on="on"
+                        >
+                          mdi-pencil
+                        </v-icon>
+                      </template>
+                    </EditEvaluationModal>
+                  </div>
                   <v-card-subtitle style="text-align: right">
                     Profile Info ↓
                   </v-card-subtitle>
@@ -89,6 +107,26 @@
           >
             <v-card data-cy="profileInfo" @click="toggle_prof(i)">
               <EvaluationInfo :file="file" />
+              <v-card-actions @click.stop.prevent="openEdit(file)">
+                <div v-if="file.database_id" class="top-right">
+                  <EditEvaluationModal
+                    id="editEvaluationModal"
+                    class="top-right"
+                    :active="getEvaluation(file)"
+                  >
+                    <template #clickable="{on}"
+                      ><v-icon
+                        data-cy="edit"
+                        title="Edit"
+                        class="mr-2"
+                        v-on="on"
+                      >
+                        mdi-pencil
+                      </v-icon>
+                    </template>
+                  </EditEvaluationModal>
+                </div>
+              </v-card-actions>
               <v-card-subtitle style="text-align: right">
                 Profile Info ↓
               </v-card-subtitle>
@@ -219,6 +257,7 @@ import ExportCaat from '@/components/global/ExportCaat.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
 import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
+import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue'
 
 import {FilteredDataModule, Filter, TreeMapState} from '@/store/data_filters';
 import {ControlStatus, Severity} from 'inspecjs';
@@ -233,12 +272,14 @@ import {capitalize} from 'lodash';
 import {compare_times} from '../utilities/delta_util';
 import {EvaluationModule} from '../store/evaluations';
 import RouteMixin from '@/mixins/RouteMixin';
+import {IEvaluation} from '@heimdall/interfaces';
 
 @Component({
   components: {
     BaseView,
     StatusCardRow,
     Treemap,
+    EditEvaluationModal,
     ControlTable,
     StatusChart,
     SeverityChart,
@@ -323,6 +364,16 @@ export default class Results extends mixins(RouteMixin) {
     this.$nextTick(() => {
       this.$refs.search.focus();
     });
+  }
+
+  getEvaluation(file: EvaluationFile): IEvaluation | undefined {
+    let result: IEvaluation | undefined;
+    EvaluationModule.allEvaluations.forEach((e) => {
+      if(e.id === file.database_id?.toString()) {
+        result = e
+      }
+    })
+    return result
   }
 
   /**
@@ -482,5 +533,10 @@ export default class Results extends mixins(RouteMixin) {
   left: 0px;
   top: 4px;
   z-index: 5;
+}
+.top-right {
+  position: absolute;
+  top: 6%;
+  right: 2%;
 }
 </style>

@@ -22,7 +22,7 @@ import {Prop} from 'vue-property-decorator';
 import _ from 'lodash';
 import {EvaluationModule} from '../../store/evaluations';
 import TagRow from '@/components/global/tags/TagRow.vue'
-import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
+import {IEvaluation} from '@heimdall/interfaces';
 
 @Component({
   components: {
