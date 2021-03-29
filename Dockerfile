@@ -12,12 +12,6 @@ COPY package.json yarn.lock lerna.json tsconfig.json .prettierrc ./
 COPY apps ./apps
 COPY libs ./libs
 
-# https://github.com/kelektiv/node.bcrypt.js/wiki/Installation-Instructions
-# This allows for building in offline environments, and according to the
-# documentation fixes some segfaults with alpine and node-bcrypt.
-ENV npm_config_build_from_source true
-RUN if [ -x "$(command -v apk)" ] ; then apk --no-cache add --virtual builds-deps build-base python ; fi
-
 RUN sed -i s^https://registry.yarnpkg.com^$YARNREPO^g yarn.lock
 RUN yarn --frozen-lockfile --production
 

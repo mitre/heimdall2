@@ -6,7 +6,7 @@ import {
   NotFoundException
 } from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
-import {compare, hash} from 'bcrypt';
+import {compare, hash} from 'bcryptjs';
 import {FindOptions} from 'sequelize/types';
 import {Action} from '../casl/casl-ability.factory';
 import {CreateUserDto} from './dto/create-user.dto';
@@ -113,7 +113,7 @@ export class UsersService {
       try {
         if (
           !(await compare(
-            deleteUserDto.password,
+            deleteUserDto.password || '',
             userToDelete.encryptedPassword
           ))
         ) {
@@ -160,7 +160,10 @@ export class UsersService {
   async testPassword(updateUserDto: UpdateUserDto, user: User): Promise<void> {
     try {
       if (
-        !(await compare(updateUserDto.currentPassword, user.encryptedPassword))
+        !(await compare(
+          updateUserDto.currentPassword || '',
+          user.encryptedPassword
+        ))
       ) {
         throw new ForbiddenException('Current password is incorrect');
       }
