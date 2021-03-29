@@ -60,7 +60,6 @@
     <!-- Body -->
     <v-lazy
       v-for="item in items"
-      :id="item.key"
       :key="item.key"
       min-height="50"
       transition="fade-transition"
@@ -74,7 +73,8 @@
           @toggle="toggle(item.key)"
         />
         <ControlRowDetails
-          v-if="expanded.includes(item.key)"
+          v-show="expanded.includes(item.key)"
+          :id="item.key"
           :control="item.control"
           :tab="syncTabs ? syncTab : undefined"
           @update:tab="updateTab"
@@ -170,15 +170,15 @@ export default class ControlTable extends Vue {
   get scrollOptions() {
     if(this.$vuetify.breakpoint.lgAndUp) {
       return {
-        offset: 40
+        offset: 110
       }
     } else if (this.$vuetify.breakpoint.md) {
       return {
-        offset: 95
+        offset: 200
       }
     } else {
       return {
-        offset: 115
+        offset: 250
       }
     }
   }
@@ -206,14 +206,18 @@ export default class ControlTable extends Vue {
       // If key is new, add it
       if (!had) {
         this.expanded.push(key);
-        this.$vuetify.goTo(`#${key}`, this.scrollOptions);
+        this.$nextTick(() => {
+          this.$vuetify.goTo(`#${key}`, {...this.scrollOptions, duration: 300});
+        });
       }
     } else {
       // Add or remove it from the set, as appropriate. Shortcut this by only adding if delete fails
       let i = this.expanded.indexOf(key);
       if (i < 0) {
         this.expanded.push(key);
-        this.$vuetify.goTo(`#${key}`, this.scrollOptions);
+        this.$nextTick(() => {
+          this.$vuetify.goTo(`#${key}`, {...this.scrollOptions, duration: 300});
+        });
       } else {
         this.expanded.splice(i, 1);
       }
