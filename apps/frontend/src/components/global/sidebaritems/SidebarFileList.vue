@@ -44,6 +44,7 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
   @Prop({type: Object}) readonly file!: EvaluationFile | ProfileFile;
 
   saving: boolean = false;
+  saved: boolean = (typeof this.file.database_id !== 'undefined')
 
   select_file() {
     if (this.file.hasOwnProperty('evaluation')) {
@@ -86,7 +87,7 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
 
   //determines if the use can save the file
   get disable_saving() {
-    return (typeof this.file?.database_id !== 'undefined') || this.saving
+    return this.saved || this.saving
   }
 
   save_to_database(file: EvaluationFile | ProfileFile) {
@@ -116,14 +117,14 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
 
     axios
       .post('/evaluations', formData)
-      .then((response) => {
+      .then(() => {
         SnackbarModule.notify('File saved successfully');
-        file.database_id = parseInt(response.data.id);
       })
       .catch((error) => {
         SnackbarModule.failure(error.response.data.message);
       }).finally(() => {
         this.saving = false;
+        this.saved = true;
       });
   }
 
