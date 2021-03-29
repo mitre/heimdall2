@@ -3510,11 +3510,6 @@
   dependencies:
     htmlparser2 "^4.1.0"
 
-"@types/scrollmagic@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@types/scrollmagic/-/scrollmagic-2.0.1.tgz#b04c5c59b3071c42bedadf3375f9dcb36990b0d6"
-  integrity sha512-28SKWD1VFs48coDq31mo1ixkN9cStm2krGP3jIxx50loWPfz2Ub0OTcalWdXGBQfLmZ68bjQxd6CvLI6O8foag==
-
 "@types/sequelize@^4.28.9":
   version "4.28.9"
   resolved "https://registry.yarnpkg.com/@types/sequelize/-/sequelize-4.28.9.tgz#64d0fad07de2f30ef11003a8c2ef5ac0321de115"
