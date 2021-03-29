@@ -1,24 +1,12 @@
 <template>
-  <v-card class="elevation-0">
-    <v-container class="ma-0 pa-0">
-      <v-row>
-        <v-col cols="11">
-          <v-card-subtitle>
-            View files loaded into your organizations Heimdall Server instance.
-          </v-card-subtitle>
-        </v-col>
-        <v-col cols="1" class="text-right">
-          <RefreshButton @updateEvaluations="get_all_results"
-        /></v-col>
-      </v-row>
-    </v-container>
+  <v-container class="mx-0 px-0" fluid style="height: 85vh">
     <LoadFileList
       :headers="headers"
       :files="files"
       :loading="loading"
       @load-results="load_results($event)"
     />
-  </v-card>
+  </v-container>
 </template>
 
 <script lang="ts">

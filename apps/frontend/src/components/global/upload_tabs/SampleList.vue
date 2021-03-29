@@ -1,18 +1,16 @@
 <template>
   <v-card class="elevation-0">
-    <v-card-subtitle>
-      Samples to show the power of the Heimdall application and supported HDF
-      formats
-    </v-card-subtitle>
-    <LoadFileList
-      :headers="headers"
-      :files="samples"
-      file-key="filename"
-      sort-by="filename"
-      :sort-desc="false"
-      :loading="loading"
-      @load-results="load_samples($event)"
-    />
+    <v-container class="mx-0 px-0" fluid style="height: 85vh">
+      <LoadFileList
+        :headers="headers"
+        :files="samples"
+        file-key="filename"
+        sort-by="filename"
+        :sort-desc="false"
+        :loading="loading"
+        @load-results="load_samples($event)"
+      />
+    </v-container>
   </v-card>
 </template>
 

@@ -23,6 +23,7 @@ context('Database results', () => {
     cy.register(CREATE_USER_DTO_TEST_OBJ);
     cy.visit('/login');
     cy.login(LOGIN_AUTHENTICATION);
+    cy.get('#hide-snackbar').click();
   });
 
   describe('CRUD', () => {

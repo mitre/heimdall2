@@ -1,6 +1,6 @@
 export default class Sidebar {
   open(): void {
-    cy.get('.v-app-bar__nav-icon').click();
+    cy.get('[data-cy=openSidebar]').click({force: true});
   }
 
   save(name: string): void {

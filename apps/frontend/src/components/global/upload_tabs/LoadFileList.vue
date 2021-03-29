@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-container class="ma-0 pa-0">
+    <div class="ma-0 pa-0">
       <v-text-field
         v-model="search"
-        class="px-3 pb-1 elevation-1"
+        class="px-3 pb-1"
         append-icon="mdi-magnify"
         label="Search"
         hide-details
@@ -14,63 +14,66 @@
         @cancel="deleteItemDialog = false"
         @confirm="deleteItemConfirm"
       />
-      <v-data-table
-        v-model="selectedFiles"
-        data-cy="loadFileList"
-        dense
-        :headers="headers"
-        :items="filteredFiles"
-        :loading="loading"
-        :sort-by.sync="sortBy"
-        :sort-desc="sortDesc"
-        :item-key="fileKey"
-        show-select
-        mobile-breakpoint="0"
-      >
-        <template #[`item.filename`]="{item}">
-          <span class="cursor-pointer" @click="load_results([item])">{{
-            item.filename
-          }}</span>
-        </template>
-        <template #[`item.evaluationTags`]="{item}">
-          <TagRow :evaluation="item" />
-        </template>
-        <template #[`item.createdAt`]="{item}">
-          <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
-        </template>
-        <template #[`item.actions`]="{item}">
-          <v-row class="d-flex flex-row-reverse">
-            <ShareEvaluationButton title="Share Result" :evaluation="item" />
-            <div v-if="item.editable">
-              <EditEvaluationModal
-                id="editEvaluationModal"
-                :active="item"
-                @updateEvaluations="updateEvaluations"
-              >
-                <template #clickable="{on}"
-                  ><v-icon
-                    data-cy="edit"
-                    small
-                    title="Edit"
-                    class="mr-2"
-                    v-on="on"
-                  >
-                    mdi-pencil
-                  </v-icon>
-                </template>
-              </EditEvaluationModal>
-              <v-icon
-                data-cy="delete"
-                class="mr-2"
-                small
-                @click="deleteItem(item)"
-                >mdi-delete</v-icon
-              >
-            </div>
-          </v-row>
-        </template>
-      </v-data-table>
-    </v-container>
+      <div style="height: 74vh; overflow: auto">
+        <v-data-table
+          v-model="selectedFiles"
+          data-cy="loadFileList"
+          dense
+          :items-per-page="15"
+          :headers="headers"
+          :items="filteredFiles"
+          :loading="loading"
+          :sort-by.sync="sortBy"
+          :sort-desc="sortDesc"
+          :item-key="fileKey"
+          show-select
+          mobile-breakpoint="0"
+        >
+          <template #[`item.filename`]="{item}">
+            <span class="cursor-pointer" @click="load_results([item])">{{
+              item.filename
+            }}</span>
+          </template>
+          <template #[`item.evaluationTags`]="{item}">
+            <TagRow :evaluation="item" />
+          </template>
+          <template #[`item.createdAt`]="{item}">
+            <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
+          </template>
+          <template #[`item.actions`]="{item}">
+            <v-row class="d-flex flex-row-reverse">
+              <ShareEvaluationButton title="Share Result" :evaluation="item" />
+              <div v-if="item.editable">
+                <EditEvaluationModal
+                  id="editEvaluationModal"
+                  :active="item"
+                  @updateEvaluations="updateEvaluations"
+                >
+                  <template #clickable="{on}"
+                    ><v-icon
+                      data-cy="edit"
+                      small
+                      title="Edit"
+                      class="mr-2"
+                      v-on="on"
+                    >
+                      mdi-pencil
+                    </v-icon>
+                  </template>
+                </EditEvaluationModal>
+                <v-icon
+                  data-cy="delete"
+                  class="mr-2"
+                  small
+                  @click="deleteItem(item)"
+                  >mdi-delete</v-icon
+                >
+              </div>
+            </v-row>
+          </template>
+        </v-data-table>
+      </div>
+    </div>
     <v-btn
       block
       class="px-2"
