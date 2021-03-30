@@ -1,30 +1,52 @@
 <template>
-  <v-row class="pa-4" justify="space-between">
-    <v-col data-cy="fileinfo" cols="12">
-      <strong>Filename:</strong> {{ filename }}<br />
-      <br />
-      <div v-if="evaluation" class="d-flex flex-nowrap">
-        <strong class="pt-1 pr-1">Tags:</strong>
-        <TagRow :evaluation="evaluation" />
-      </div>
-    </v-col>
-  </v-row>
+  <v-scroll-y-transition mode="out-in">
+    <div
+      v-if="!profile"
+      class="title grey--text text--lighten-1 font-weight-light"
+      style="align-self: center"
+    >
+      Select a Profile
+    </div>
+    <v-card v-else :key="profile.id" flat>
+      <v-card-title>
+        <div class="mb-2">{{ profile.data.title }}</div>
+      </v-card-title>
+      <v-divider />
+      <v-row class="text-left pa-4" data-cy="profileInfoFields">
+        <v-col cols="12">
+          <div v-if="from_file">
+            <strong>From File:</strong> {{ from_file }}
+          </div>
+          <div v-if="version"><strong>Version:</strong> {{ version }}</div>
+          <div v-if="sha256_hash">
+            <strong>SHA256 Hash:</strong> {{ sha256_hash }}
+          </div>
+          <div v-if="maintainer">
+            <strong>Maintainer:</strong> {{ maintainer }}
+          </div>
+          <div v-if="copyright">
+            <strong>Copyright:</strong> {{ copyright }}
+          </div>
+          <div v-if="copyright_email">
+            <strong>Copyright Email:</strong> {{ copyright_email }}
+          </div>
+          <div v-if="control_count">
+            <strong>Control Count:</strong> {{ control_count }}
+          </div>
+        </v-col>
+      </v-row>
+    </v-card>
+  </v-scroll-y-transition>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {InspecFile, ProfileFile} from '@/store/report_intake';
+import {SourcedContextualizedProfile} from '@/store/report_intake';
 
 import {Prop} from 'vue-property-decorator';
 import _ from 'lodash';
 import TagRow from '@/components/global/tags/TagRow.vue';
-import {profile_unique_key} from '@/utilities/format_util';
-import {ContextualizedProfile} from 'inspecjs/dist/context';
-import {InspecDataModule, isFromProfileFile} from '../../store/data_store';
-import {context} from 'inspecjs';
-import {IEvaluation} from '@heimdall/interfaces';
-import {EvaluationModule} from '../../store/evaluations';
 
 @Component({
   components: {
@@ -32,47 +54,34 @@ import {EvaluationModule} from '../../store/evaluations';
   }
 })
 export default class ProfileInfo extends Vue {
-  @Prop({required: true}) readonly file!: ContextualizedProfile;
+  @Prop({required: false}) readonly profile: SourcedContextualizedProfile | undefined;
 
-  //auto select the root prof
-  mounted() {
-    this.active = [profile_unique_key(this.file)];
-    if (isFromProfileFile(this.selected!)) {
-      this.from_file = this.selected.from_file as ProfileFile;
-    }
+  get from_file(): string | undefined {
+    return _.get(this.profile, 'sourced_from.from_file.filename');
   }
 
-  from_file: InspecFile = {
-    'unique_id': '',
-    'filename': ''
-  }
-  active: string[] = [];
-
-
-  /** Get the most recently selected */
-  get selected(): context.ContextualizedProfile | undefined {
-    return InspecDataModule.contextualProfiles.find(
-      (p) => profile_unique_key(p) === this.active[0]
-    );
+  get version(): string | undefined {
+    return _.get(this.profile, 'data.version');
   }
 
-
-  get filename(): string | undefined {
-    return (this.file as unknown as ProfileFile).filename
+  get sha256_hash(): string | undefined {
+    return _.get(this.profile, 'data.sha256');
   }
 
-  get duration(): string {
-    return _.get(this.file, 'evaluation.data.statistics.duration') + '';
+  get maintainer(): string | undefined {
+    return _.get(this.profile, 'data.maintainer');
   }
 
-  get evaluation(): IEvaluation | undefined {
-    let result: IEvaluation | undefined;
-    EvaluationModule.allEvaluations.forEach((e) => {
-      if(e.id === (this.from_file.database_id?.toString())){
-        result = e
-      }
-    })
-    return result
+  get copyright(): string | undefined {
+    return _.get(this.profile, 'data.copyright');
+  }
+
+  get copyright_email(): string | undefined {
+    return _.get(this.profile, 'data.copyright_email');
+  }
+
+  get control_count(): string | undefined {
+    return _.get(this.profile, 'data.controls').length;
   }
 }
 </script>

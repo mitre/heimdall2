@@ -3,11 +3,11 @@
  */
 
 import {Trinary} from '@/enums/Trinary';
-import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
+import {InspecDataModule} from '@/store/data_store';
 import {
   FileID,
-  ProfileFile,
-  SourcedContextualizedEvaluation
+  SourcedContextualizedEvaluation,
+  SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
 import {context, ControlStatus, nist, Severity} from 'inspecjs';
@@ -202,26 +202,26 @@ export class FilteredData extends VuexModule {
     };
   }
 
+  get profiles_for_evaluations(): (
+    files: FileID[]
+  ) => readonly context.ContextualizedProfile[] {
+    return (files: FileID[]) => {
+      // Filter to those that match our filter. In this case that just means come from the right file id
+      return this.evaluations(files).flatMap(
+        (evaluation) => evaluation.contains
+      );
+    };
+  }
+
   /**
    * Parameterized getter.
    * Get all profiles from the specified file ids.
-   * Filters only based on the file ID
    */
-  get profiles(): (files: FileID[]) => readonly ProfileFile[] {
+  get profiles(): (files: FileID[]) => readonly SourcedContextualizedProfile[] {
     return (files: FileID[]) => {
-      // Initialize our list to add valid profiles to
-      const profiles: ProfileFile[] = [];
-
-      // Filter to those that match our filter. In this case that just means come from the right file id
-      InspecDataModule.contextualProfiles.forEach((prof) => {
-        if (isFromProfileFile(prof)) {
-          if (files.includes(prof.from_file.unique_id)) {
-            profiles.push(prof.from_file);
-          }
-        }
+      return InspecDataModule.contextualProfiles.filter((e) => {
+        return files.includes(e.from_file.unique_id);
       });
-
-      return profiles;
     };
   }
 
@@ -276,15 +276,18 @@ export class FilteredData extends VuexModule {
         return cached;
       }
 
-      // First get all of the profiles using the same filter
-      let controls: readonly context.ContextualizedControl[];
-      // Get profiles
-      const profiles: readonly context.ContextualizedProfile[] = this.profiles(
+      // Get profiles from loaded Results
+      let profiles: readonly context.ContextualizedProfile[] = this.profiles_for_evaluations(
         filter.fromFile
       );
-      // And all the controls they contain
-      controls = profiles.flatMap((profile) => profile.contains);
 
+      // Get profiles from loaded Profiles
+      profiles = profiles.concat(this.profiles(filter.fromFile));
+
+      // And all the controls they contain
+      let controls: readonly context.ContextualizedControl[] = profiles.flatMap(
+        (profile) => profile.contains
+      );
       // Filter by control id
       if (filter.control_id !== undefined) {
         controls = controls.filter((c) => c.data.id === filter.control_id);
