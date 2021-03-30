@@ -1,5 +1,6 @@
 # compiled output
 /dist
+apps/frontend/dist
 node_modules
 
 # Logs
