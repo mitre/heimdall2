@@ -13,7 +13,7 @@ export default class ResultsPageVerifier {
     const correctProfileInfo: string[] = [
       'Acme Overlay Example',
       '0.2.0',
-      '6414f43b3c6ff3106c96b2e75067a9ed6144a728373b864f4de8b3fb3c6c528f',
+      '6414f43b3c6ff3106c96b2e75067a9ed6144a728373b864f4de8b3fb3c6c528f'
     ];
     const correctCards: string[] = [
       'Passed: 5',

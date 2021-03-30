@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-row class="pa-4" justify="space-between">
-      <v-col cols="3">
+      <v-col md="3" cols="12">
         <v-card-text> Parent Profile </v-card-text>
         <!-- literally of just the one root item -->
         <v-treeview
@@ -58,7 +58,6 @@ import {profile_unique_key} from '@/utilities/format_util';
 import ProfileInfo from '@/components/cards/ProfileInfo.vue';
 import {Prop, Watch} from 'vue-property-decorator';
 import {ContextualizedProfile} from 'inspecjs/dist/context';
-import _ from 'lodash';
 import {InspecDataModule} from '../../store/data_store';
 
 /**
@@ -107,8 +106,7 @@ export default class ProfileData extends Vue {
   stopActivePropagation = false;
   /** Models all loaded profiles */
   get children(): TreeItem[] {
-    let root_tree = new TreeItem(this.file_root_profile);
-    return root_tree.children;
+    return new TreeItem(this.file_root_profile).children;
   }
 
   get selected(): SourcedContextualizedProfile | undefined {
@@ -129,7 +127,7 @@ export default class ProfileData extends Vue {
 
   //the single root tree item
   get root_tree(): TreeItem[] {
-    let tree = new TreeItem(this.file_root_profile);
+    const tree = new TreeItem(this.file_root_profile);
     tree.children = [];
     return [tree];
   }

@@ -10,7 +10,6 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import {context} from 'inspecjs';
 import {
   Action,
   getModule,

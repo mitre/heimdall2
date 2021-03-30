@@ -1,14 +1,11 @@
 import ControlTable from '@/components/cards/controltable/ControlTable.vue';
-import ProfData from '@/components/cards/ProfileData.vue';
 import {Filter, FilteredDataModule} from '@/store/data_filters';
-import {profile_unique_key} from '@/utilities/format_util';
 import Results from '@/views/Results.vue';
 import {shallowMount, Wrapper} from '@vue/test-utils';
 import {context} from 'inspecjs';
 import 'jest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
-import {FileID} from '../../src/store/report_intake';
 import {
   expectedCount,
   loadAll,
@@ -27,19 +24,12 @@ interface ListElt {
   control: context.ContextualizedControl;
 }
 
-interface InfoItem {
-  label: string;
-  text: string;
-  info?: string;
-}
-
 const $router = {
   currentRoute: {
     path: '/results'
   }
 };
 const vuetify = new Vuetify();
-let profInfoWrapper: Wrapper<Vue>;
 let controlTableWrapper: Wrapper<Vue>;
 
 const wrapper: Wrapper<Vue> = shallowMount(Results, {

@@ -54,7 +54,7 @@
           <!-- Evaluation Info -->
           <v-row no-gutters class="mx-n3 mb-3">
             <v-col>
-              <v-slide-group v-model="eval_info" show-arrows>
+              <v-slide-group v-model="evalInfo" show-arrows>
                 <v-slide-item v-for="(file, i) in activeFiles" :key="i">
                   <v-card
                     width="100%"
@@ -75,9 +75,9 @@
             </v-col>
           </v-row>
           <ProfileData
-            v-if="eval_info != null"
+            v-if="evalInfo != null"
             class="my-4 mx-2"
-            :file="eval_info"
+            :file="evalInfo"
           />
         </v-container>
         <!-- Count Cards -->
@@ -258,9 +258,9 @@ export default class Results extends mixins(RouteMixin) {
   /** Model for if all-filtered snackbar should be showing */
   filter_snackbar: boolean = false;
 
-  eval_info: SourcedContextualizedEvaluation | SourcedContextualizedProfile | undefined | null = null;
+  evalInfo: SourcedContextualizedEvaluation | SourcedContextualizedProfile | null = null;
 
-  /** Determines if we should make the search bar colapseable */
+  /** Determines if we should make the search bar collapse-able */
   show_search_mobile: boolean = false;
 
   /**
@@ -419,10 +419,10 @@ export default class Results extends mixins(RouteMixin) {
 
   //basically a v-model for the eval info cards when there is no slide group
   toggle_profile(file: SourcedContextualizedEvaluation | SourcedContextualizedProfile) {
-    if (file == this.eval_info) {
-      this.eval_info = null;
+    if (file === this.evalInfo) {
+      this.evalInfo = null;
     } else {
-      this.eval_info = file;
+      this.evalInfo = file;
     }
   }
 }
