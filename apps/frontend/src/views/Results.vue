@@ -210,6 +210,7 @@ import {capitalize} from 'lodash';
 import {compare_times} from '../utilities/delta_util';
 import {EvaluationModule} from '../store/evaluations';
 import RouteMixin from '@/mixins/RouteMixin';
+import ServerMixin from '../mixins/ServerMixin';
 
 @Component({
   components: {
@@ -228,7 +229,7 @@ import RouteMixin from '@/mixins/RouteMixin';
     UploadButton
   }
 })
-export default class Results extends mixins(RouteMixin) {
+export default class Results extends mixins(RouteMixin, ServerMixin) {
   $refs!: Vue['$refs'] & {
     search: HTMLInputElement;
   };
@@ -355,7 +356,9 @@ export default class Results extends mixins(RouteMixin) {
   }
 
   mounted() {
-    EvaluationModule.getAllEvaluations()
+    if(this.serverMode) {
+      EvaluationModule.getAllEvaluations()
+    }
   }
 
   /**
@@ -438,8 +441,5 @@ export default class Results extends mixins(RouteMixin) {
   left: 0px;
   top: 4px;
   z-index: 5;
-}
-span + span {
-  margin-left: 10px;
 }
 </style>
