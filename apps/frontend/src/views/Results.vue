@@ -64,6 +64,32 @@
                     @click="toggle_profile(file)"
                   >
                     <EvaluationInfo :file="file" />
+                    <v-card-actions>
+                      <div
+                        v-if="
+                          file.from_file.database_id &&
+                          getEvaluation(file).editable
+                        "
+                        class="top-right"
+                      >
+                        <EditEvaluationModal
+                          id="editEvaluationModal"
+                          class="top-right"
+                          :active="getEvaluation(file)"
+                        >
+                          <template #clickable="{on}"
+                            ><v-icon
+                              data-cy="edit"
+                              title="Edit"
+                              class="mr-2"
+                              v-on="on"
+                            >
+                              mdi-pencil
+                            </v-icon>
+                          </template>
+                        </EditEvaluationModal>
+                      </div>
+                    </v-card-actions>
                     <v-card-subtitle
                       style="position: absolute; bottom: 0; right: 0"
                     >
@@ -192,6 +218,7 @@ import StatusChart from '@/components/cards/StatusChart.vue';
 import SeverityChart from '@/components/cards/SeverityChart.vue';
 import ComplianceChart from '@/components/cards/ComplianceChart.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
+import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
 
 import ExportCaat from '@/components/global/ExportCaat.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
@@ -211,6 +238,7 @@ import {compare_times} from '../utilities/delta_util';
 import {EvaluationModule} from '../store/evaluations';
 import RouteMixin from '@/mixins/RouteMixin';
 import ServerMixin from '../mixins/ServerMixin';
+import {IEvaluation} from '@heimdall/interfaces';
 
 @Component({
   components: {
@@ -226,7 +254,8 @@ import ServerMixin from '../mixins/ServerMixin';
     ExportJson,
     EvaluationInfo,
     ProfileData,
-    UploadButton
+    UploadButton,
+    EditEvaluationModal
   }
 })
 export default class Results extends mixins(RouteMixin, ServerMixin) {
@@ -287,6 +316,16 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 
   get activeFiles(): (SourcedContextualizedEvaluation | SourcedContextualizedProfile)[] {
     return this.is_result_view ? this.evaluationFiles : this.profiles;
+  }
+
+  getEvaluation(file: SourcedContextualizedEvaluation): IEvaluation | undefined {
+    let result: IEvaluation | undefined;
+    EvaluationModule.allEvaluations.forEach((e) => {
+      if(e.id === file.from_file.database_id?.toString()) {
+        result = e
+      }
+    })
+    return result
   }
 
   /**
@@ -441,5 +480,10 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   left: 0px;
   top: 4px;
   z-index: 5;
+}
+.top-right {
+  position: absolute;
+  top: 6%;
+  right: 2%;
 }
 </style>

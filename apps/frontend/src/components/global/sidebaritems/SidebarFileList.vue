@@ -37,14 +37,15 @@ import {SnackbarModule} from '@/store/snackbar';
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop} from 'vue-property-decorator';
 import {ICreateEvaluation} from '@heimdall/interfaces';
-import _ from 'lodash';
 import RouteMixin from '@/mixins/RouteMixin';
 
 @Component
 export default class FileItem extends mixins(ServerMixin, RouteMixin) {
   @Prop({type: Object}) readonly file!: EvaluationFile | ProfileFile;
 
-  saving: boolean = false;
+  saving = false;
+  saved = (typeof this.file.database_id !== 'undefined')
+
 
   select_file() {
     if (this.file.hasOwnProperty('evaluation')) {
@@ -87,7 +88,7 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
 
   //determines if the use can save the file
   get disable_saving() {
-    return (typeof this.file?.database_id !== 'undefined') || this.saving
+    return (typeof this.file?.database_id !== 'undefined') || this.saved || this.saving
   }
 
   save_to_database(file: EvaluationFile | ProfileFile) {
@@ -109,24 +110,24 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
       }
     }
     // Add evaluation data to the form
-    if(file.hasOwnProperty('evaluation')) {
-      formData.append("data", new Blob([JSON.stringify(_.get(file, 'evaluation.data'))], {type: 'text/plain'}));
-    } else {
-      formData.append("data", new Blob([JSON.stringify(_.get(file, 'profile.data'))], {type: 'text/plain'}));
+    if (file.hasOwnProperty('evaluation')){ // If this is an evaluation
+      formData.append("data", new Blob([JSON.stringify((file as EvaluationFile).evaluation.data)], {type: 'text/plain'}));
+    } else { // Or if it is a profile
+     formData.append("data", new Blob([JSON.stringify((file as ProfileFile).profile.data)], {type: 'text/plain'}));
     }
+
     axios
       .post('/evaluations', formData)
-      .then((response) => {
+      .then(() => {
         SnackbarModule.notify('File saved successfully');
-        file.database_id = parseInt(response.data.id);
       })
       .catch((error) => {
         SnackbarModule.failure(error.response.data.message);
       }).finally(() => {
         this.saving = false;
+        this.saved = true;
       });
   }
-
   //gives different icons for a file if it is just a profile
   get icon(): string {
     if (this.file.hasOwnProperty('profile')) {

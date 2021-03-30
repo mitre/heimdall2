@@ -133,6 +133,7 @@ export default class EditEvaluationModal extends Vue {
   ]
 
   mounted() {
+    console.log(this.active)
     this.getGroupsForEvaluation();
   }
 
