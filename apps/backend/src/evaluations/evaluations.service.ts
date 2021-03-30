@@ -2,10 +2,10 @@ import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {FindOptions} from 'sequelize/types';
 import {DatabaseService} from '../database/database.service';
+import {CreateEvaluationTagDto} from '../evaluation-tags/dto/create-evaluation-tag.dto';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
-import {CreateEvaluationDto} from './dto/create-evaluation.dto';
 import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 import {Evaluation} from './evaluation.model';
 
@@ -24,13 +24,21 @@ export class EvaluationsService {
     });
   }
 
-  async create(
-    createEvaluationDto: CreateEvaluationDto,
-    data: unknown,
-    id: string
-  ): Promise<Evaluation> {
+  async count(): Promise<number> {
+    return this.evaluationModel.count();
+  }
+
+  async create(evaluation: {
+    filename: string;
+    evaluationTags: CreateEvaluationTagDto[] | undefined;
+    public: boolean;
+    data: unknown;
+    userId: string;
+  }): Promise<Evaluation> {
     return Evaluation.create<Evaluation>(
-      {...createEvaluationDto, data: data, userId: id},
+      {
+        ...evaluation
+      },
       {
         include: [EvaluationTag]
       }

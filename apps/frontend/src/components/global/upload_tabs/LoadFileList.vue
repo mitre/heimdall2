@@ -22,6 +22,7 @@
         :items="filteredFiles"
         :loading="loading"
         :sort-by.sync="sortBy"
+        :sort-desc="sortDesc"
         :item-key="fileKey"
         show-select
         mobile-breakpoint="0"
@@ -38,32 +39,44 @@
           <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
         </template>
         <template #[`item.actions`]="{item}">
-          <div v-if="item.editable">
-            <EditEvaluationModal
-              id="editEvaluationModal"
-              :active="item"
-              @updateEvaluations="updateEvaluations"
-            >
-              <template #clickable="{on}"
-                ><v-icon
-                  data-cy="edit"
-                  small
-                  title="Edit"
-                  class="mr-2"
-                  v-on="on"
-                >
-                  mdi-pencil
-                </v-icon>
-              </template>
-            </EditEvaluationModal>
-            <v-icon data-cy="delete" small @click="deleteItem(item)"
-              >mdi-delete</v-icon
-            >
-          </div>
+          <v-row class="d-flex flex-row-reverse">
+            <ShareEvaluationButton title="Share Result" :evaluation="item" />
+            <div v-if="item.editable">
+              <EditEvaluationModal
+                id="editEvaluationModal"
+                :active="item"
+                @updateEvaluations="updateEvaluations"
+              >
+                <template #clickable="{on}"
+                  ><v-icon
+                    data-cy="edit"
+                    small
+                    title="Edit"
+                    class="mr-2"
+                    v-on="on"
+                  >
+                    mdi-pencil
+                  </v-icon>
+                </template>
+              </EditEvaluationModal>
+              <v-icon
+                data-cy="delete"
+                class="mr-2"
+                small
+                @click="deleteItem(item)"
+                >mdi-delete</v-icon
+              >
+            </div>
+          </v-row>
         </template>
       </v-data-table>
     </v-container>
-    <v-btn block class="px-2" @click="load_results(selectedFiles)">
+    <v-btn
+      block
+      class="px-2"
+      :disabled="loading"
+      @click="load_results(selectedFiles)"
+    >
       Load Selected
       <v-icon class="pl-2"> mdi-file-download</v-icon>
     </v-btn>
@@ -74,6 +87,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
+import ShareEvaluationButton from '@/components/generic/ShareEvaluationButton.vue'
 import TagRow from '@/components/global/tags/TagRow.vue';
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations'
@@ -86,6 +100,7 @@ import DeleteDialog from '@/components/generic/DeleteDialog.vue';
   components: {
     DeleteDialog,
     EditEvaluationModal,
+    ShareEvaluationButton,
     TagRow
   }
 })
@@ -93,7 +108,8 @@ export default class LoadFileList extends Vue {
   @Prop({required: true}) readonly headers!: Object[];
   @Prop({type: Boolean, default: false}) readonly loading!: boolean;
   @Prop({type: String, default: 'id'}) readonly fileKey!: string;
-  @Prop({type: String, default: 'filename'}) readonly sortBy!: string;
+  @Prop({type: String, default: 'createdAt'}) readonly sortBy!: string;
+  @Prop({type: Boolean, default: true}) readonly sortDesc!: boolean;
   @Prop({required: true}) readonly files!: IEvaluation[] | Sample[];
 
   selectedFiles: IEvaluation[] | Sample[] = [];

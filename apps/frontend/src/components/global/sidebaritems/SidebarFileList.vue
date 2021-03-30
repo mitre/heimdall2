@@ -38,9 +38,10 @@ import ServerMixin from '@/mixins/ServerMixin';
 import {Prop} from 'vue-property-decorator';
 import {ICreateEvaluation} from '@heimdall/interfaces';
 import _ from 'lodash';
+import RouteMixin from '@/mixins/RouteMixin';
 
 @Component
-export default class FileItem extends mixins(ServerMixin) {
+export default class FileItem extends mixins(ServerMixin, RouteMixin) {
   @Prop({type: Object}) readonly file!: EvaluationFile | ProfileFile;
 
   saving: boolean = false;
@@ -69,15 +70,18 @@ export default class FileItem extends mixins(ServerMixin) {
   //removes uploaded file from the currently observed files
   remove_file() {
     InspecDataModule.removeFile(this.file.unique_id);
+    // Remove any database files that may have been in the URL
+    // by calling the router and causing it to write the appropriate
+    // route to the URL bar
+    this.navigateWithNoErrors(`/${this.current_route}`);
   }
 
   //saves file to database
   save_file() {
     if (this.file?.database_id){
-      SnackbarModule.failure('This evaluation is already in the database.')
-    }
-    else if (this.file) {
-      this.save_evaluation(this.file);
+      SnackbarModule.failure('This file is already in the database.')
+    } else if (this.file) {
+      this.save_to_database(this.file);
     }
   }
 
@@ -86,20 +90,23 @@ export default class FileItem extends mixins(ServerMixin) {
     return (typeof this.file?.database_id !== 'undefined') || this.saving
   }
 
-  save_evaluation(file: EvaluationFile | ProfileFile) {
+  save_to_database(file: EvaluationFile | ProfileFile) {
     this.saving = true;
 
     const createEvaluationDto: ICreateEvaluation = {
       filename: file.filename,
       public: false,
-      evaluationTags: []
+      evaluationTags: [],
+      groups: undefined
     };
 
     // Create a multipart form to upload our data
     const formData = new FormData();
     // Add the DTO objects to form data
     for (const [key, value] of Object.entries(createEvaluationDto)) {
-      formData.append(key, value);
+      if(typeof value !== 'undefined') {
+        formData.append(key, value);
+      }
     }
     // Add evaluation data to the form
     if(file.hasOwnProperty('evaluation')) {
@@ -110,7 +117,7 @@ export default class FileItem extends mixins(ServerMixin) {
     axios
       .post('/evaluations', formData)
       .then((response) => {
-        SnackbarModule.notify('Result saved successfully');
+        SnackbarModule.notify('File saved successfully');
         file.database_id = parseInt(response.data.id);
       })
       .catch((error) => {

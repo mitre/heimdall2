@@ -88,11 +88,11 @@ describe('GroupsService', () => {
     it('should not include the group evaluations by default', async () => {
       const group = await groupsService.create(GROUP_1);
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      const evaluation = await evaluationsService.create(
-        EVALUATION_1,
-        {},
-        user.id
-      );
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_1,
+        data: {},
+        userId: user.id
+      });
       await groupsService.addEvaluationToGroup(group, evaluation);
       const foundGroup = await groupsService.findByPkBang(group.id);
       expect(foundGroup.evaluations).not.toBeDefined();
@@ -151,11 +151,11 @@ describe('GroupsService', () => {
     it('should add an evaluation to a group', async () => {
       const group = await groupsService.create(GROUP_1);
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      const evaluation = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1,
-        {},
-        user.id
-      );
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        data: {},
+        userId: user.id
+      });
       await groupsService.addEvaluationToGroup(group, evaluation);
       const groupEvaluations = await group.$get('evaluations', {
         include: [{model: EvaluationTag}]
@@ -173,16 +173,16 @@ describe('GroupsService', () => {
     it('should remove an evaluation from a group', async () => {
       const group = await groupsService.create(GROUP_1);
       const user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
-      const evaluationOne = await evaluationsService.create(
-        EVALUATION_1,
-        {},
-        user.id
-      );
-      const evaluationTwo = await evaluationsService.create(
-        EVALUATION_WITH_TAGS_1,
-        {},
-        user.id
-      );
+      const evaluationOne = await evaluationsService.create({
+        ...EVALUATION_1,
+        data: {},
+        userId: user.id
+      });
+      const evaluationTwo = await evaluationsService.create({
+        ...EVALUATION_WITH_TAGS_1,
+        data: {},
+        userId: user.id
+      });
       await groupsService.addEvaluationToGroup(group, evaluationOne);
       await groupsService.addEvaluationToGroup(group, evaluationTwo);
       expect(await group.$get('evaluations')).toHaveLength(2);

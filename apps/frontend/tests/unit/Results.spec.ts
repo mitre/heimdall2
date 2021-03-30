@@ -1,6 +1,6 @@
 import ControlTable from '@/components/cards/controltable/ControlTable.vue';
 import ProfData from '@/components/cards/ProfileData.vue';
-import {FilteredDataModule} from '@/store/data_filters';
+import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {profile_unique_key} from '@/utilities/format_util';
 import Results from '@/views/Results.vue';
 import {shallowMount, Wrapper} from '@vue/test-utils';
@@ -8,6 +8,7 @@ import {context} from 'inspecjs';
 import 'jest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
+import {FileID} from '../../src/store/report_intake';
 import {
   expectedCount,
   loadAll,
@@ -61,7 +62,7 @@ describe('Datatable', () => {
         $router
       },
       propsData: {
-        filter: (wrapper.vm as any).all_filter,
+        filter: (wrapper.vm as Vue & {all_filter: Filter}).all_filter,
         showImpact: true
       }
     });
@@ -71,12 +72,20 @@ describe('Datatable', () => {
       expectedCount('notReviewed') +
       expectedCount('notApplicable') +
       expectedCount('profileError');
-    expect((controlTableWrapper.vm as any).items.length).toBe(expected);
+    expect(
+      (controlTableWrapper.vm as Vue & {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        items: Array<any>;
+      }).items.length
+    ).toBe(expected);
   });
 
   it('control row and table data is correct', () => {
     expect(
-      (controlTableWrapper.vm as any).items
+      (controlTableWrapper.vm as Vue & {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        items: Array<any>;
+      }).items
         .map((item: ListElt) => item.control.data.id)
         .sort()
     ).toEqual(

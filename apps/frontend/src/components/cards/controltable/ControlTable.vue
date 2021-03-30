@@ -7,10 +7,17 @@
           <v-card-title>Results View Data</v-card-title>
         </v-col>
         <v-col cols="auto" class="text-right">
-          <v-switch v-model="single_expand" label="Single Expand" />
+          <v-switch v-model="syncTabs" label="Sync Tabs" />
         </v-col>
         <v-col cols="auto" class="text-right">
-          <v-switch v-model="expand_all" label="Expand All" class="mr-5" />
+          <v-switch
+            v-model="singleExpand"
+            label="Single Expand"
+            @change="handleToggleSingleExpand"
+          />
+        </v-col>
+        <v-col cols="auto" class="text-right">
+          <v-switch v-model="expandAll" label="Expand All" class="mr-5" />
         </v-col>
       </v-row>
     </v-row>
@@ -67,6 +74,8 @@
         <ControlRowDetails
           v-if="expanded.includes(item.key)"
           :control="item.control"
+          :tab="syncTabs ? syncTab : undefined"
+          @update:tab="updateTab"
         />
       </div>
     </v-lazy>
@@ -111,7 +120,11 @@ export default class ControlTable extends Vue {
   @Prop({type: Boolean, required: true}) readonly showImpact!: boolean;
 
   // Whether to allow multiple expansions
-  single_expand: boolean = true;
+  singleExpand = true;
+
+  // If the currently selected tab should sync
+  syncTabs = false;
+  syncTab = 'tab-test';
 
   // List of currently expanded options. If unique id is in here, it is expanded
   expanded: Array<string> = [];
@@ -139,22 +152,33 @@ export default class ControlTable extends Vue {
     }
   }
 
-  get expand_all() {
+  get expandAll() {
     return this.expanded.length === this.items.length;
   }
 
-  set expand_all(value: boolean) {
+  set expandAll(value: boolean) {
     if(value) {
-      this.single_expand = false;
+      this.singleExpand = false;
       this.expanded = this.items.map((items) => items.key);
     } else {
       this.expanded = [];
     }
   }
 
+  /** Closes all open controls when single-expand is re-enabled */
+  async handleToggleSingleExpand(singleExpand: boolean): Promise<void> {
+    if(singleExpand){
+      this.expandAll = false;
+    }
+  }
+
+  async updateTab(tab: string){
+    this.syncTab = tab
+  }
+
   /** Toggles the given expansion of a control details panel */
   toggle(key: string) {
-    if (this.single_expand) {
+    if (this.singleExpand) {
       // Check if key already there
       let had = this.expanded.includes(key);
 

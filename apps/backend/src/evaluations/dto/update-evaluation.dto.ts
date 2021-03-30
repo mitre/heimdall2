@@ -8,7 +8,7 @@ export class UpdateEvaluationDto implements IUpdateEvaluation {
 
   @IsOptional()
   @IsObject()
-  readonly data: Record<string, any> | undefined;
+  readonly data: Record<string, unknown> | undefined;
 
   @IsOptional()
   @IsBoolean()

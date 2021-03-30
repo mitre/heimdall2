@@ -15,7 +15,7 @@ export default class UploadModal {
 
   loadFile(name: string): void {
     cy.get('[data-cy=loadFileList]').within(() => {
-      cy.contains(name).click();
+      cy.contains(name).click({force: true});
     });
   }
 

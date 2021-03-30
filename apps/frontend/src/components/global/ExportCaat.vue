@@ -2,10 +2,10 @@
   <v-tooltip top>
     <template #activator="{on}">
       <LinkItem
-        key="export_caat"
+        key="exportCaat"
         text="CAAT Spreadsheet"
         icon="mdi-file-excel"
-        @click="export_caat()"
+        @click="exportCaat()"
         v-on="on"
       />
     </template>
@@ -19,9 +19,10 @@ import Component from 'vue-class-component';
 import {FilteredDataModule, Filter} from '@/store/data_filters';
 import XLSX from 'xlsx';
 import {saveAs} from 'file-saver';
-import {HDFControl} from 'inspecjs';
+import {HDFControl, HDFControlSegment} from 'inspecjs';
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {Prop} from 'vue-property-decorator';
+import _ from 'lodash';
 
 const MAX_CELL_SIZE = 32000; // Rounding a bit here.
 type CAATRow = string[];
@@ -36,9 +37,9 @@ export default class ExportCaat extends Vue {
   /** Turns a control into a CAAT row.
    *  Checks vuln_list first to see if this gid is already included
    */
-  to_rows(control: HDFControl): CAATRow[] {
+  toRows(control: HDFControl): CAATRow[] {
     // init rows
-    let all_rows: CAATRow[] = [];
+    const allRows: CAATRow[] = [];
 
     for (let formatted of control.canonized_nist({
       max_specifiers: 3,
@@ -53,56 +54,63 @@ export default class ExportCaat extends Vue {
         continue;
       }
 
-      // If it's impact is not 0 and it's gid (if one is provided) hasn't been seen, build the row. Else return null
-      if (control.wraps.impact === 0) {
-        continue;
+      // Designate a helper to deal with null/undefined
+      let fix = (x: string | null | undefined) =>
+        (x || '').replace(/(\r\n|\n|\r)/gm, "\r\n").slice(0, MAX_CELL_SIZE);
+
+      // Build up the row
+      row.push(formatted); // Control Number
+      row.push(
+        'Test ' + fix(control.wraps.id) + ' - ' + fix(control.wraps.title)
+      ); // Finding Title
+      if (control.start_time) {
+        row.push(this.convertDate(new Date(control.start_time), '/')); // Date Identified
       } else {
-        // Designate a helper to deal with null/undefined
-        let fix = (x: string | null | undefined) =>
-          (x || '').replace(/(\r\n|\n|\r)/gm, ' ').slice(0, MAX_CELL_SIZE);
-
-        // Build up the row
-        row.push(formatted); // Control Number
-        row.push(
-          'Test ' + fix(control.wraps.id) + ' - ' + fix(control.wraps.title)
-        ); // Finding Title
-        if (control.start_time) {
-          row.push(this.convertDate(new Date(control.start_time), '/')); // Date Identified
-        } else {
-          row.push('');
-        }
-        row.push(''); //row.push(fix(control.wraps.tags.stig_id)); // Finding ID
-        row.push(''); // Information System or Program Name
-        row.push(''); // Repeat Findings
-        row.push(''); // Repeat Finding CFACTS Weakness ID
-        row.push(fix(control.wraps.title)); // Finding Description
-        // Prepend the caveat to the Weakness Description if there is one
-        let caveat = control.descriptions.caveat ? '(Caveat: ' + fix(control.descriptions.caveat) + ')\n' : '';
-        row.push(caveat + fix(control.wraps.desc)); // Weakness Description
-        row.push('Security'); // Control Weakness Type
-        row.push('Self-Assessment '); // Source
-        row.push(''); //row.push("InSpec"); // Assessment/Audit Company
-        row.push('Test'); // Test Method
-        row.push(fix(control.descriptions.check || control.wraps.tags.check)); // Test Objective
-        let test_result = `${control.status}: ${control.message}`;
-        row.push(fix(test_result)); // Test Result Description
-        if (control.status === 'Passed') {
-          row.push('Satisfied');
-        } else {
-          row.push('Other Than Satisfied');
-        }
-        row.push(fix(control.descriptions.fix || control.wraps.tags.fix)); // Recommended Corrective Action(s)
-        row.push(''); // Effect on Business
-        row.push(''); // Likelihood
-        row.push(fix(control.severity)); // Impact
-
-        if (row.length !== this.header().length) {
-          throw new Error('Row of wrong size');
-        }
-        all_rows.push(row);
+        row.push('');
       }
+      row.push(''); //row.push(fix(control.wraps.tags.stig_id)); // Finding ID
+      row.push(''); // Information System or Program Name
+      row.push(''); // Repeat Findings
+      row.push(''); // Repeat Finding CFACTS Weakness ID
+      row.push(fix(control.wraps.title)); // Finding Description
+      // Prepend the caveat to the Weakness Description if there is one
+      let caveat = control.descriptions.caveat ? '(Caveat: ' + fix(control.descriptions.caveat) + ')\n' : '';
+      row.push(caveat + fix(control.wraps.desc)); // Weakness Description
+      row.push('Security'); // Control Weakness Type
+      row.push('Self-Assessment '); // Source
+      row.push(''); //row.push("InSpec"); // Assessment/Audit Company
+      row.push('Test'); // Test Method
+      row.push(fix(control.descriptions.check || control.wraps.tags.check)); // Test Objective\
+      let testResult = `${control.status}:\r\n\r\n`;
+      _.get(control, 'wraps.results').forEach((result: HDFControlSegment) => {
+        if(result.message) {
+          testResult += `${result.status.toUpperCase()} -- Test: ${result.code_desc}\r\nMessage: ${result.message}\r\n\r\n`
+        } else {
+          testResult += `${result.status.toUpperCase()} -- Test: ${result.code_desc}\r\n\r\n`
+        }
+      })
+      row.push(fix(testResult)); // Test Result Description
+      // Test Result
+      if (control.status === 'Passed') {
+        row.push('Satisfied');
+      }
+      else if (_.get(control, 'wraps.results[0].status') === 'skipped'){
+        row.push('Other Than Satisfied');
+      } else {
+        row.push('Other Than Satisfied');
+      }
+      row.push(fix(control.descriptions.fix || control.wraps.tags.fix)); // Recommended Corrective Action(s)
+      row.push(''); // Effect on Business
+      row.push(''); // Likelihood
+      const controlSeverity = control.severity === 'medium' ? 'moderate' : control.severity
+      row.push(fix(control.wraps.impact === 0 ? 'none' : controlSeverity)); // Impact
+
+      if (row.length !== this.header().length) {
+        throw new Error('Row of wrong size');
+      }
+      allRows.push(row);
     }
-    return all_rows;
+    return allRows;
   }
 
   /** Gets the standardized CAAT header */
@@ -131,7 +139,7 @@ export default class ExportCaat extends Vue {
     ];
   }
 
-  export_caat() {
+  exportCaat() {
     // Get our data
     let controls = FilteredDataModule.controls(this.filter);
 
@@ -139,42 +147,42 @@ export default class ExportCaat extends Vue {
     let caat: CAATRow[] = [this.header()];
 
     // Turn controls into rows
-    let non_deduped_rows: Array<CAATRow> = [];
-    let hit_ids = new Set();
-    for (let ctrl of controls) {
+    const nonDedupedRows: Array<CAATRow> = [];
+    const hitIds = new Set();
+    for (const ctrl of controls) {
       let root = ctrl.root.hdf;
-      if (hit_ids.has(root.wraps.id)) {
+      if (hitIds.has(root.wraps.id)) {
         continue;
       } else {
-        hit_ids.add(root.wraps.id);
-        non_deduped_rows.push(...this.to_rows(root));
+        hitIds.add(root.wraps.id);
+        nonDedupedRows.push(...this.toRows(root));
       }
     }
 
     // Deduplicate controls
-    let hit_controls = new Set();
+    const hitControls = new Set();
     let rows = [];
-    for (let r of non_deduped_rows) {
+    for (const r of nonDedupedRows) {
       let ctrl = r[0];
-      if (!hit_controls.has(ctrl)) {
-        hit_controls.add(ctrl);
+      if (!hitControls.has(ctrl)) {
+        hitControls.add(ctrl);
         rows.push(r);
       }
     }
     // DEBUG
-    rows = non_deduped_rows;
+    rows = nonDedupedRows;
 
     // Sort them by id
     rows = rows.sort((a, b) => {
       // We sort by control (index 0), then by severity within
-      let a_fam = a[0];
-      let a_imp = a[19];
-      let b_fam = b[0];
-      let b_imp = b[19];
-      if (a_fam !== b_fam) {
-        return a_fam.localeCompare(b_fam);
+      const aFam = a[0];
+      const aImp = a[19];
+      const bFam = b[0];
+      const bImp = b[19];
+      if (aFam !== bFam) {
+        return aFam.localeCompare(bFam);
       } else {
-        return a_imp.localeCompare(b_imp);
+        return aImp.localeCompare(bImp);
       }
     });
 
@@ -204,14 +212,25 @@ export default class ExportCaat extends Vue {
   }
 
   /** Outputs the given number as a 2-digit string. Brittle **/
-  pad_two_digits(s: number): string {
+  padTwoDigits(s: number): string {
     return s < 10 ? `0${s}` : `${s}`;
+  }
+
+  removeTrailingQuotations(input: string): string {
+    let output = input;
+    if(input.endsWith('"')) {
+      output = output.slice(0, -1)
+    }
+    if(input.startsWith('"')) {
+      output = output.slice(1)
+    }
+    return output
   }
 
   convertDate(d: Date, delimiter: string): string {
     return [
-      this.pad_two_digits(d.getMonth() + 1),
-      this.pad_two_digits(d.getDate()),
+      this.padTwoDigits(d.getMonth() + 1),
+      this.padTwoDigits(d.getDate()),
       d.getFullYear()
     ].join(delimiter);
   }

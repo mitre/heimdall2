@@ -1,6 +1,7 @@
 import {Test} from '@nestjs/testing';
 import {DatabaseModule} from './database.module';
 import {DatabaseService} from './database.service';
+import {DeltaArgs} from './interfaces/delta-args.interface';
 
 describe('DatabaseSerivce', () => {
   let databaseService: DatabaseService;
@@ -21,8 +22,8 @@ describe('DatabaseSerivce', () => {
 
   describe('getDelta', () => {
     it('returns the correct value when no items are given', async () => {
-      const source: any = [];
-      const updated: any = [];
+      const source: DeltaArgs[] = [];
+      const updated: DeltaArgs[] = [];
 
       const delta = databaseService.getDelta(source, updated);
       expect(delta.added.length).toEqual(0);
@@ -66,8 +67,8 @@ describe('DatabaseSerivce', () => {
     });
 
     it('returns the correct value when all items are added', async () => {
-      const source: any = [];
-      const updated = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
+      const source: DeltaArgs[] = [];
+      const updated: DeltaArgs[] = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
 
       const delta = databaseService.getDelta(source, updated);
 
@@ -89,7 +90,7 @@ describe('DatabaseSerivce', () => {
 
     it('returns the correct value when all items are deleted', async () => {
       const source = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
-      const updated: any = [];
+      const updated: DeltaArgs[] = [];
 
       const delta = databaseService.getDelta(source, updated);
 

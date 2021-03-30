@@ -28,7 +28,8 @@ export enum Action {
   SkipForcePasswordChange = 'skip-force-password-change',
   UpdateRole = 'update-role',
   AddEvaluation = 'add-evaluation',
-  RemoveEvaluation = 'remove-evaluation'
+  RemoveEvaluation = 'remove-evaluation',
+  ViewStatistics = 'view-statistics'
 }
 
 interface UserQuery extends User {
@@ -59,6 +60,8 @@ export class CaslAbilityFactory {
     if (user.role === 'admin') {
       // read-write access to everything
       can(Action.Manage, 'all');
+      // Read statistics about this heimdall deployment
+      can(Action.ViewStatistics, 'all');
       // Force admins to supply their password when editing their own user.
       cannot(Action.Manage, User, {id: user.id});
     }
