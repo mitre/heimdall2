@@ -22,8 +22,8 @@
     "make:layout": "vue-cli-service make:layout",
     "make:mixin": "vue-cli-service make:mixin",
     "make:view": "vue-cli-service make:view",
-    "prepack": "vue-cli-service build --dest dist && cp package.json package.json.orig && cat package.json.orig | jq '.dependencies = (.dependencies | with_entries(select(.key | contains(\"express\"))))' > package.json",
-    "postpack": "mv package.json.orig package.json",
+    "prepack": "vue-cli-service build --dest dist && cp ../../README.md README.md && cp package.json package.json.orig && cat package.json.orig | jq '.dependencies = (.dependencies | with_entries(select(.key | contains(\"express\"))))' > package.json",
+    "postpack": "mv package.json.orig package.json && rm README.md",
     "start:dev": "vue-cli-service serve",
     "test": "jest"
   },
