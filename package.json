@@ -10,7 +10,7 @@
     "backend": "yarn workspace heimdall-server",
     "build": "lerna run build",
     "cypress-test": "yarn workspace @heimdall/cypress-tests",
-    "frontend": "yarn workspace heimdall-lite",
+    "frontend": "yarn workspace @mitre/heimdall-lite",
     "lint": "lerna run lint",
     "lint:ci": "lerna run lint:ci",
     "start": "yarn backend start",

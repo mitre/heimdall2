@@ -72,16 +72,16 @@ Heimdall Lite is published to npmjs.org and is available [here](https://www.npmj
 To run Heimdall Lite locally, just use the `npm` built-in utility `npx`:
 
 ```bash
-npx heimdall-lite
+npx @mitre/heimdall-lite
 ```
 
 If you use this tool often and want to have it installed locally, use the following command:
 
 ```bash
-npm install -g heimdall-lite
+npm install -g @mitre/heimdall-lite
 ```
 
-Then, any subsequent `npx heimdall-lite` will use the local version and load much more quickly.
+Then, any subsequent `npx @mitre/heimdall-lite` will use the local version and load much more quickly.
 
 #### Running via Docker
 

@@ -1,0 +1,37 @@
+name: Push to NPM and GitHub Packages
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@master
+
+      - name: setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install project dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build tarball for publishing
+        run: yarn frontend pack
+
+      - name: Publish Heimdall Lite to NPM
+        run: npm publish --access public apps/frontend/mitre-heimdall-lite*.tgz
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Setup .npmrc file to publish to GitHub Packages
+      - uses: actions/setup-node@v1
+        with:
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Publish to GitHub Packages
+        run: npm publish --access public apps/frontend/mitre-heimdall-lite*.tgz
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

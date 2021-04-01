@@ -1,4 +1,3 @@
-let HtmlWebpackPlugin = require('html-webpack-plugin');
 var webpack = require('webpack');
 
 // Lookup constants
@@ -39,10 +38,6 @@ module.exports = {
           BRANCH: '"' + branch + '"',
           ISSUES: '"' + issues + '"'
         }
-      }),
-      new HtmlWebpackPlugin({
-        template: 'public/index.html',
-        inlineSource: '.(js|css)$'
       })
     ]
   },
