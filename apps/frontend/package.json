@@ -86,8 +86,6 @@
     "file-saver": "^2.0.2",
     "highlight.js": "^10.0.3",
     "html-loader": "^2.1.0",
-    "html-webpack-inline-source-plugin": "0.0.10",
-    "html-webpack-plugin": "^4.5.0",
     "inspecjs": "0.12.2",
     "lodash": "4.17.21",
     "lru-cache": "^6.0.0",
