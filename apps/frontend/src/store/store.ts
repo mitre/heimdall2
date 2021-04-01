@@ -12,6 +12,7 @@ import {StatusCount} from '@/store/status_counts';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {config} from 'vuex-module-decorators';
+import {IHeightsState} from './heights';
 
 config.rawError = true;
 
@@ -33,6 +34,7 @@ Vue.use(Vuex);
 export interface StoreType {
   data: InspecData;
   filteredData: FilteredData;
+  heights: IHeightsState;
   statusCounts: StatusCount;
   severityCounts: SeverityCount;
   lookup: HashLookup;

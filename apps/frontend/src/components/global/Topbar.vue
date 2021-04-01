@@ -24,6 +24,7 @@ import TopbarDropdown from '@/components/global/TopbarDropdown.vue';
 import UploadNexus from '@/components/global/UploadNexus.vue';
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop} from 'vue-property-decorator';
+import {HeightsModule} from '@/store/heights';
 
 @Component({
   components: {
@@ -34,6 +35,12 @@ import {Prop} from 'vue-property-decorator';
 export default class Topbar extends mixins(ServerMixin) {
   @Prop({type: String, required: true}) readonly title!: string;
   @Prop({default: false}) readonly minimalTopbar!: boolean;
+
+  mounted() {
+    this.$nextTick(function () {
+      HeightsModule.setTopbarHeight(this.$el.clientHeight);
+    })
+  }
 
   /** Submits an event to clear all filters */
   clear(): void {

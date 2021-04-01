@@ -1,69 +1,67 @@
 <template>
   <v-container fluid class="font-weight-bold">
-    <!-- Toolbar -->
-    <v-row
-      class="mb-n7"
-      style="
-        position: sticky;
-        background-color: #3e3e3e;
-        top: 48px;
-        z-index: 10;
-      "
+    <div
+      ref="controlTableTitle"
+      class="pinned-header control-table-title"
+      :style="controlTableTitleStyle"
     >
+      <!-- Toolbar -->
       <v-row>
-        <v-col>
-          <v-card-title>Results View Data</v-card-title>
-        </v-col>
-        <v-col cols="auto" class="text-right">
-          <v-switch v-model="syncTabs" label="Sync Tabs" />
-        </v-col>
-        <v-col cols="auto" class="text-right">
-          <v-switch
-            v-model="singleExpand"
-            label="Single Expand"
-            @change="handleToggleSingleExpand"
-          />
-        </v-col>
-        <v-col cols="auto" class="text-right">
-          <v-switch v-model="expandAll" label="Expand All" class="mr-5" />
-        </v-col>
+        <v-row>
+          <v-col>
+            <v-card-title>Results View Data</v-card-title>
+          </v-col>
+          <v-col cols="auto" class="text-right">
+            <v-switch v-model="syncTabs" label="Sync Tabs" />
+          </v-col>
+          <v-col cols="auto" class="text-right">
+            <v-switch
+              v-model="singleExpand"
+              label="Single Expand"
+              @change="handleToggleSingleExpand"
+            />
+          </v-col>
+          <v-col cols="auto" class="text-right">
+            <v-switch v-model="expandAll" label="Expand All" class="mr-5" />
+          </v-col>
+        </v-row>
       </v-row>
-    </v-row>
 
-    <!-- Header. This should mirror the structure of ControlRowHeader -->
-    <ResponsiveRowSwitch style="position: sticky; top: 90px; z-index: 10">
-      <template #status>
-        <ColumnHeader
-          text="Status"
-          :sort="sort_status"
-          @input="set_sort('status', $event)"
-        />
-      </template>
+      <!-- Header. This should mirror the structure of ControlRowHeader -->
+      <ResponsiveRowSwitch>
+        <template #status>
+          <ColumnHeader
+            text="Status"
+            :sort="sort_status"
+            @input="set_sort('status', $event)"
+          />
+        </template>
 
-      <template #id>
-        <ColumnHeader
-          text="ID"
-          :sort="sort_id"
-          @input="set_sort('id', $event)"
-        />
-      </template>
+        <template #id>
+          <ColumnHeader
+            text="ID"
+            :sort="sort_id"
+            @input="set_sort('id', $event)"
+          />
+        </template>
 
-      <template #severity>
-        <ColumnHeader
-          :text="showImpact ? 'Impact' : 'Severity'"
-          :sort="sort_severity"
-          @input="set_sort('severity', $event)"
-        />
-      </template>
+        <template #severity>
+          <ColumnHeader
+            :text="showImpact ? 'Impact' : 'Severity'"
+            :sort="sort_severity"
+            @input="set_sort('severity', $event)"
+          />
+        </template>
 
-      <template #title>
-        <ColumnHeader text="Title" sort="disabled" />
-      </template>
+        <template #title>
+          <ColumnHeader text="Title" sort="disabled" />
+        </template>
 
-      <template #tags>
-        <ColumnHeader text="800-53 Controls & CCIs" sort="disabled" />
-      </template>
-    </ResponsiveRowSwitch>
+        <template #tags>
+          <ColumnHeader text="800-53 Controls & CCIs" sort="disabled" />
+        </template>
+      </ResponsiveRowSwitch>
+    </div>
 
     <!-- Body -->
     <v-lazy
@@ -75,6 +73,7 @@
       <div>
         <ControlRowHeader
           class="pinned-header"
+          :style="controlRowPinOffset"
           :control="item.control"
           :expanded="expanded.includes(item.key)"
           :show-impact="showImpact"
@@ -103,7 +102,8 @@ import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSw
 import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {control_unique_key} from '@/utilities/format_util';
 import {context} from 'inspecjs';
-import {Prop} from 'vue-property-decorator';
+import {Prop, Ref} from 'vue-property-decorator';
+import {HeightsModule} from '../../../store/heights';
 
 // Tracks the visibility of an HDF control
 interface ListElt {
@@ -126,6 +126,7 @@ interface ListElt {
   }
 })
 export default class ControlTable extends Vue {
+  @Ref('controlTableTitle') readonly controlTableTitle!: Element;
   @Prop({type: Object, required: true}) readonly filter!: Filter;
   @Prop({type: Boolean, required: true}) readonly showImpact!: boolean;
 
@@ -143,6 +144,12 @@ export default class ControlTable extends Vue {
   sort_id: Sort = 'none';
   sort_status: Sort = 'none';
   sort_severity: Sort = 'none';
+
+  mounted() {
+    this.$nextTick(function () {
+      HeightsModule.setControlTableHeaderHeight(this.controlTableTitle.clientHeight);
+    })
+  }
 
   /** Callback to handle setting a new sort */
   set_sort(column: 'id' | 'status' | 'severity', new_sort: Sort) {
@@ -175,20 +182,18 @@ export default class ControlTable extends Vue {
     }
   }
 
-  get scrollOptions() {
-    if(this.$vuetify.breakpoint.lgAndUp) {
-      return {
-        offset: 160
-      }
-    } else if (this.$vuetify.breakpoint.md) {
-      return {
-        offset: 200
-      }
-    } else {
-      return {
-        offset: 360
-      }
-    }
+  get controlTableTitleStyle() {
+    return {top: `${HeightsModule.topbarHeight}px`};
+  }
+
+  get controlRowPinOffset() {
+    debugger;
+    return {top: `${this.topOfPage}px`};
+  }
+
+  // The top of the page, relative to the topbar and the title bar
+  get topOfPage() {
+    return HeightsModule.topbarHeight + HeightsModule.controlTableHeaderHeight;
   }
 
   /** Closes all open controls when single-expand is re-enabled */
@@ -214,22 +219,24 @@ export default class ControlTable extends Vue {
       // If key is new, add it
       if (!had) {
         this.expanded.push(key);
-        this.$nextTick(() => {
-          this.$vuetify.goTo(`#${key}`, {...this.scrollOptions, duration: 300});
-        });
+        this.jump_to_key(key);
       }
     } else {
       // Add or remove it from the set, as appropriate. Shortcut this by only adding if delete fails
       let i = this.expanded.indexOf(key);
       if (i < 0) {
         this.expanded.push(key);
-        this.$nextTick(() => {
-          this.$vuetify.goTo(`#${key}`, {...this.scrollOptions, duration: 300});
-        });
+        this.jump_to_key(key);
       } else {
         this.expanded.splice(i, 1);
       }
     }
+  }
+
+  jump_to_key(key: string) {
+    this.$nextTick(() => {
+      this.$vuetify.goTo(`#${key}`, {offset: this.topOfPage, duration: 300});
+    });
   }
 
   /** Return items as key, value pairs */
@@ -301,19 +308,9 @@ export default class ControlTable extends Vue {
   padding-top: 2px;
   padding-bottom: 2px;
 }
-@media only screen and (min-width: 960px) and (max-width: 1215px) {
-  .pinned-header {
-    top: 138px;
-  }
-}
-@media only screen and (min-width: 1215px) and (max-width: 1263px) {
-  .pinned-header {
-    top: 120px;
-  }
-}
-@media only screen and (min-width: 1263px) {
-  .pinned-header {
-    top: 80px;
-  }
+
+.control-table-title {
+  background-color: var(--v-secondary-lighten1);
+  z-index: 10;
 }
 </style>
