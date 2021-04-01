@@ -40,7 +40,6 @@ As a single-page javascript app - you can run Heimdall-Lite from any web-server,
 | Data Table / Control Summary                                 |                            x                             |                              x                               |
 | InSpec Code / Control Viewer                                 |                            x                             |                              x                               |
 | SSP Content Generator                                        |                                                          |                              x                               |
-| PDF Report and Print View                                    |                            x                             |                              x                               |
 | Users & Roles & multi-team support                           |                                                          |                              x                               |
 | Authentication & Authorization                               |                    Hosting Webserver                     | Hosting Webserver<br />LDAP<br />OAuth Support for:<br /> GitHub, GitLab, Google, and Okta. |
 | Advanced Data / Filters for Reports and Viewing              |                                                          |                              x                               |
