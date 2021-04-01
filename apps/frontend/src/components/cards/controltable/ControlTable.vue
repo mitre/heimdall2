@@ -1,7 +1,15 @@
 <template>
   <v-container fluid class="font-weight-bold">
     <!-- Toolbar -->
-    <v-row class="mb-n7">
+    <v-row
+      class="mb-n7"
+      style="
+        position: sticky;
+        background-color: #3e3e3e;
+        top: 48px;
+        z-index: 10;
+      "
+    >
       <v-row>
         <v-col>
           <v-card-title>Results View Data</v-card-title>
@@ -23,7 +31,7 @@
     </v-row>
 
     <!-- Header. This should mirror the structure of ControlRowHeader -->
-    <ResponsiveRowSwitch style="position: sticky; top: 36px; z-index: 10">
+    <ResponsiveRowSwitch style="position: sticky; top: 90px; z-index: 10">
       <template #status>
         <ColumnHeader
           text="Status"
@@ -170,7 +178,7 @@ export default class ControlTable extends Vue {
   get scrollOptions() {
     if(this.$vuetify.breakpoint.lgAndUp) {
       return {
-        offset: 110
+        offset: 160
       }
     } else if (this.$vuetify.breakpoint.md) {
       return {
@@ -178,7 +186,7 @@ export default class ControlTable extends Vue {
       }
     } else {
       return {
-        offset: 250
+        offset: 360
       }
     }
   }
