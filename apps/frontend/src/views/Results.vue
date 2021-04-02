@@ -105,6 +105,7 @@
         <StatusCardRow
           :filter="all_filter"
           @show-errors="status_filter = 'Profile Error'"
+          @show-waived="status_filter = 'Waived'"
         />
         <!-- Compliance Cards -->
         <v-row justify="space-around">
@@ -135,8 +136,11 @@
                 <ComplianceChart :filter="all_filter" />
               </v-card-actions>
               <v-card-text style="text-align: center"
-                >[Passed/(Passed + Failed + Not Reviewed + Profile Error) *
-                100]</v-card-text
+                >[Passed/(Passed + Failed + Not Reviewed + Profile Error<span
+                  v-if="waivedProfilesExist"
+                >
+                  + Waived</span
+                >) * 100]</v-card-text
               >
             </v-card>
           </v-col>
@@ -230,6 +234,7 @@ import {context} from 'inspecjs';
 import {ServerModule} from '@/store/server';
 import {capitalize} from 'lodash';
 import RouteMixin from '@/mixins/RouteMixin';
+import {StatusCountModule} from '../store/status_counts';
 
 @Component({
   components: {
@@ -260,7 +265,7 @@ export default class Results extends mixins(RouteMixin) {
   /**
    * The currently selected status, as modeled by the status chart
    */
-  status_filter: ControlStatus | null = null;
+  status_filter: ControlStatus | "Waived" | null = null;
 
   /**
    * The current state of the treemap as modeled by the treemap (duh).
@@ -389,6 +394,10 @@ export default class Results extends mixins(RouteMixin) {
 
     // Finally, return our result
     return result;
+  }
+
+  get waivedProfilesExist(): boolean {
+    return StatusCountModule.countOf(this.all_filter, 'Waived') >= 1
   }
 
   /**

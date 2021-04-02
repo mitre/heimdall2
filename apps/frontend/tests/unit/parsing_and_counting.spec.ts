@@ -46,7 +46,8 @@ describe('Parsing', () => {
         'From Profile': 0,
         'Profile Error': counts.error.total,
         'Not Reviewed': counts.skipped.total,
-        'Not Applicable': counts.no_impact.total
+        'Not Applicable': counts.no_impact.total,
+        Waived: 0
       };
 
       const expectedWithFilename = {

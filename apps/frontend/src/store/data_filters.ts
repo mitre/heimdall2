@@ -26,7 +26,7 @@ export interface Filter {
 
   // Control specific
   /** What status the controls can have. Undefined => any */
-  status?: ControlStatus;
+  status?: ControlStatus | 'Waived';
 
   /** What severity the controls can have. Undefined => any */
   severity?: Severity;
@@ -296,9 +296,13 @@ export class FilteredData extends VuexModule {
 
       // Filter by status, if necessary
       if (filter.status !== undefined) {
-        controls = controls.filter(
-          (control) => control.root.hdf.status === filter.status
-        );
+        if (filter.status === 'Waived') {
+          controls = controls.filter((control) => control.hdf.waived);
+        } else {
+          controls = controls.filter(
+            (control) => control.root.hdf.status === filter.status
+          );
+        }
       }
 
       // Filter by severity, if necessary

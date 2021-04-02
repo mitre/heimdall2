@@ -15,9 +15,9 @@
     </v-col>
     <v-col
       cols="12"
-      :sm="result.message ? 6 : 12"
-      :lg="result.message ? 5 : 10"
-      :class="result.message ? 'left' : 'right'"
+      :sm="resultMessage ? 6 : 12"
+      :lg="resultMessage ? 5 : 10"
+      :class="resultMessage ? 'left' : 'right'"
     >
       <h3 class="pa-2">Test</h3>
       <v-divider />
@@ -29,13 +29,13 @@
       />
       <!-- eslint-enable vue/no-v-html -->
     </v-col>
-    <v-col v-if="result.message" cols="12" sm="6" lg="5" class="left">
+    <v-col v-if="resultMessage" cols="12" sm="6" lg="5" class="left">
       <h3 class="pa-2">Result</h3>
       <v-divider />
       <!-- eslint-disable vue/no-v-html -->
       <div
         class="pa-2 mono pre-formatted"
-        v-html="sanitize_html(result.message.trim())"
+        v-html="sanitize_html(resultMessage.trim())"
       />
       <!-- eslint-enable vue/no-v-html -->
     </v-col>
@@ -56,6 +56,10 @@ export default class ControlRowCol extends mixins(HtmlSanitizeMixin) {
   get status_color(): string {
     // maps stuff like "not applicable" -> "statusnotapplicable", which is a defined color name
     return `status${this.statusCode.replace(' ', '')}`;
+  }
+
+  get resultMessage(): string | undefined {
+    return this.result.message || this.result.skip_message
   }
 }
 </script>
