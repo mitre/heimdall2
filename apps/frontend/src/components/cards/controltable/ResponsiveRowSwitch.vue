@@ -79,7 +79,7 @@ import {Prop} from 'vue-property-decorator';
     ResponsiveRowSmall
   }
 })
-export default class ControlRowHeader extends Vue {
+export default class ResponsiveRowSwitch extends Vue {
   @Prop({type: Boolean, required: false, default: false}) dense!: boolean;
 }
 </script>

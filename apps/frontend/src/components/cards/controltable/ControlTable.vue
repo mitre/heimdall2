@@ -8,20 +8,20 @@
       <!-- Toolbar -->
       <v-row>
         <v-row>
-          <v-col>
-            <v-card-title>Results View Data</v-card-title>
+          <v-col class="pb-0">
+            <v-card-title class="pb-0">Results View Data</v-card-title>
           </v-col>
-          <v-col cols="auto" class="text-right">
+          <v-col cols="auto" class="text-right pb-0">
             <v-switch v-model="syncTabs" label="Sync Tabs" />
           </v-col>
-          <v-col cols="auto" class="text-right">
+          <v-col cols="auto" class="text-right pb-0">
             <v-switch
               v-model="singleExpand"
               label="Single Expand"
               @change="handleToggleSingleExpand"
             />
           </v-col>
-          <v-col cols="auto" class="text-right">
+          <v-col cols="auto" class="text-right pb-0">
             <v-switch v-model="expandAll" label="Expand All" class="mr-5" />
           </v-col>
         </v-row>
@@ -81,7 +81,7 @@
         />
         <ControlRowDetails
           v-show="expanded.includes(item.key)"
-          :id="item.key"
+          :id="stripSpaces(item.key)"
           :control="item.control"
           :tab="syncTabs ? syncTab : undefined"
           @update:tab="updateTab"
@@ -103,7 +103,7 @@ import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {control_unique_key} from '@/utilities/format_util';
 import {context} from 'inspecjs';
 import {Prop, Ref} from 'vue-property-decorator';
-import {HeightsModule} from '../../../store/heights';
+import {HeightsModule} from '@/store/heights';
 
 // Tracks the visibility of an HDF control
 interface ListElt {
@@ -187,8 +187,8 @@ export default class ControlTable extends Vue {
   }
 
   get controlRowPinOffset() {
-    debugger;
-    return {top: `${this.topOfPage}px`};
+    // There is ~10px of padding being added which makes the ControlRowHeader look out of place
+    return {top: `${this.topOfPage - 10}px`};
   }
 
   // The top of the page, relative to the topbar and the title bar
@@ -235,8 +235,14 @@ export default class ControlTable extends Vue {
 
   jump_to_key(key: string) {
     this.$nextTick(() => {
-      this.$vuetify.goTo(`#${key}`, {offset: this.topOfPage, duration: 300});
+      // Add 20px to the top of the page to stop the Test | Details | Code bars from being
+      // hidden underneath when the page scrolls.
+      this.$vuetify.goTo(`#${this.stripSpaces(key)}`, {offset: this.topOfPage + 20, duration: 300});
     });
+  }
+
+  stripSpaces(key: string) {
+    return key.replace(/\s/g, '');
   }
 
   /** Return items as key, value pairs */
