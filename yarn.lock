@@ -8189,24 +8189,24 @@ diff-sequences@^26.6.2:
   integrity sha512-Mv/TDa3nZ9sbc5soK+OoA74BsS3mL37yixCvUAQkiuA4Wz6YtwP/K47n2rv2ovzHZvoiQeA5FTQOschKkEwB0Q==
 
 diff2html@^3.1.7:
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/diff2html/-/diff2html-3.4.1.tgz#397616cddd75c1d6a3b9de2ecf8c9a5c887c974c"
-  integrity sha512-vvNtMknDOiDPNMhsgZnGzW79FhTM0Sz4DaFYJIrNnFVpRz+Z9YVh1t7pg2vdK66ppjMIq5rLtQen09m/QgT7Rg==
+  version "3.4.2"
+  resolved "https://registry.yarnpkg.com/diff2html/-/diff2html-3.4.2.tgz#f5eaa1a19b430e8e1bb21058c6ab4d61b9b9baa3"
+  integrity sha512-3H4gFSnyf+TI6hM+AIF1Y2Hk3RZ5/Rb+/IpafgDDX0loc/klLS8iQxbx7+ByfRccb09E+pTVt+g9UEM2L9ebPw==
   dependencies:
-    diff "4.0.2"
+    diff "5.0.0"
     hogan.js "3.0.2"
   optionalDependencies:
-    highlight.js "10.4.1"
+    highlight.js "10.7.1"
 
-diff@4.0.2, diff@^4.0.1, diff@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/diff/-/diff-4.0.2.tgz#60f3aecb89d5fae520c11aa19efc2bb982aade7d"
-  integrity sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==
-
-diff@^5.0.0:
+diff@5.0.0, diff@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/diff/-/diff-5.0.0.tgz#7ed6ad76d859d030787ec35855f5b1daf31d852b"
   integrity sha512-/VTCrvm5Z0JGty/BWHljh+BAiw3IK+2j87NGMu8Nwc/f48WoDAC395uomO9ZD117ZOBaHmkX1oyLvkVM/aIT3w==
+
+diff@^4.0.1, diff@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/diff/-/diff-4.0.2.tgz#60f3aecb89d5fae520c11aa19efc2bb982aade7d"
+  integrity sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==
 
 diffie-hellman@^5.0.0:
   version "5.0.3"
@@ -10553,15 +10553,10 @@ hex-color-regex@^1.1.0:
   resolved "https://registry.yarnpkg.com/hex-color-regex/-/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
   integrity sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==
 
-highlight.js@*, highlight.js@^10.0.3:
+highlight.js@*, highlight.js@10.7.1, highlight.js@^10.0.3:
   version "10.7.1"
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.7.1.tgz#a8ec4152db24ea630c90927d6cae2a45f8ecb955"
   integrity sha512-S6G97tHGqJ/U8DsXcEdnACbirtbx58Bx9CzIVeYli8OuswCfYI/LsXH2EiGcoGio1KAC3x4mmUwulOllJ2ZyRA==
-
-highlight.js@10.4.1:
-  version "10.4.1"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.4.1.tgz#d48fbcf4a9971c4361b3f95f302747afe19dbad0"
-  integrity sha512-yR5lWvNz7c85OhVAEAeFhVCc/GV4C30Fjzc/rCP0aCWzc1UUOPUk55dK/qdwTZHBvMZo+eZ2jpk62ndX/xMFlg==
 
 highlight.js@^9.6.0:
   version "9.18.3"
