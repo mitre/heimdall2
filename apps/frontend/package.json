@@ -1,5 +1,5 @@
 {
-  "name": "heimdall-lite",
+  "name": "@mitre/heimdall-lite",
   "version": "2.4.3",
   "description": "Heimdall Lite 2.0 is a JavaScript based security results viewer and review tool supporting multiple security results formats, such as: InSpec, SonarQube, OWASP-Zap and Fortify which you can load locally, from S3 and other data sources.",
   "repository": {
@@ -9,11 +9,8 @@
   "license": "Apache-2.0",
   "bin": "./src/server.js",
   "files": [
-    "src/",
-    "dist/",
-    "*.json",
-    "*.config.js",
-    "Dockerfile"
+    "dist",
+    "src/server.js"
   ],
   "scripts": {
     "prebuild": "rimraf ../../dist/frontend",
@@ -25,7 +22,8 @@
     "make:layout": "vue-cli-service make:layout",
     "make:mixin": "vue-cli-service make:mixin",
     "make:view": "vue-cli-service make:view",
-    "prepack": "vue-cli-service build",
+    "prepack": "vue-cli-service build --dest dist && cp ../../README.md README.md && cp package.json package.json.orig && cat package.json.orig | jq '.dependencies = (.dependencies | with_entries(select(.key | contains(\"express\"))))' > package.json",
+    "postpack": "mv package.json.orig package.json && rm README.md",
     "start:dev": "vue-cli-service serve",
     "test": "jest"
   },
@@ -83,12 +81,11 @@
     "diff": "^5.0.0",
     "diff2html": "^3.1.7",
     "eslint-plugin-vue": "^7.0.1",
+    "express": "^4.17.1",
     "fibers": "^5.0.0",
     "file-saver": "^2.0.2",
     "highlight.js": "^10.0.3",
     "html-loader": "^2.1.0",
-    "html-webpack-inline-source-plugin": "0.0.10",
-    "html-webpack-plugin": "^4.5.0",
     "inspecjs": "0.12.2",
     "lodash": "4.17.21",
     "lru-cache": "^6.0.0",

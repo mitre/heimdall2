@@ -8,14 +8,10 @@
 
 // Node internals
 const process = require('process');
-const fs = require('fs');
 const path = require('path');
-const http = require('http');
+var express = require('express');
 
-const connect = require('connect');
-
-// Initialize
-const app = connect();
+// Figure out port number
 var port = 8000;
 if (process.argv.length > 2) {
   port = Number.parseInt(process.argv[2]);
@@ -26,13 +22,9 @@ if (process.argv.length > 2) {
   }
 }
 
-// Get index
-var txt = fs.readFileSync(path.join(__dirname, '../dist/index.html'));
+// eslint-disable-next-line no-console
+console.log(`Serving Heimdall on port ${port}`);
 
-// respond to all requests with index.html
-app.use(function (req, res) {
-  res.end(txt);
-});
-
-//create node.js http server and listen on port
-http.createServer(app).listen(port);
+express()
+  .use(express.static(path.join(__dirname, '../dist')))
+  .listen(port);
