@@ -1,5 +1,11 @@
 <template>
-  <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app color="bar" dense>
+  <v-app-bar
+    v-resize="onResize"
+    :clipped-left="$vuetify.breakpoint.lgAndUp"
+    app
+    color="bar"
+    dense
+  >
     <!-- The title and nav bar -->
     <v-toolbar-title v-if="!minimalTopbar" id="toolbar_title" class="pr-2">
       <v-app-bar-nav-icon @click.stop="$emit('toggle-drawer')">
@@ -37,9 +43,17 @@ export default class Topbar extends mixins(ServerMixin) {
   @Prop({default: false}) readonly minimalTopbar!: boolean;
 
   mounted() {
-    this.$nextTick(function () {
-      HeightsModule.setTopbarHeight(this.$el.clientHeight);
-    })
+    this.onResize();
+  }
+
+  onResize() {
+    this.$nextTick(() => {
+      // Allow the page to settle before checking the topbar height
+    // (this is what $nextTick is supposed to do but it's firing too quickly)
+      setTimeout(() => {
+        HeightsModule.setTopbarHeight(this.$el.clientHeight);
+      }, 2000);
+    });
   }
 
   /** Submits an event to clear all filters */

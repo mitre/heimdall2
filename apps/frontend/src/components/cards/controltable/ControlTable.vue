@@ -6,7 +6,7 @@
       :style="controlTableTitleStyle"
     >
       <!-- Toolbar -->
-      <v-row>
+      <v-row v-resize="onResize">
         <v-row>
           <v-col class="pb-0">
             <v-card-title class="pb-0">Results View Data</v-card-title>
@@ -70,7 +70,7 @@
       min-height="50"
       transition="fade-transition"
     >
-      <div>
+      <div :id="striptoChars(item.key)">
         <ControlRowHeader
           class="pinned-header"
           :style="controlRowPinOffset"
@@ -81,7 +81,6 @@
         />
         <ControlRowDetails
           v-if="expanded.includes(item.key)"
-          :id="striptoChars(item.key)"
           :control="item.control"
           :tab="syncTabs ? syncTab : undefined"
           @update:tab="updateTab"
@@ -146,9 +145,15 @@ export default class ControlTable extends Vue {
   sort_severity: Sort = 'none';
 
   mounted() {
-    this.$nextTick(() => {
+    this.onResize();
+  }
+
+  onResize() {
+    // Allow the page to settle before checking the controlTableHeader height
+    // (this is what $nextTick is supposed to do but it's firing too quickly)
+    setTimeout(() => {
       HeightsModule.setControlTableHeaderHeight(this.controlTableTitle.clientHeight);
-    })
+    }, 2000);
   }
 
   /** Callback to handle setting a new sort */
@@ -235,9 +240,7 @@ export default class ControlTable extends Vue {
 
   jump_to_key(key: string) {
     this.$nextTick(() => {
-      // Add 20px to the top of the page to stop the Test | Details | Code bars from being
-      // hidden underneath when the page scrolls.
-      this.$vuetify.goTo(`#${this.striptoChars(key)}`, {offset: this.topOfPage + 20, duration: 300});
+      this.$vuetify.goTo(`#${this.striptoChars(key)}`, {offset: this.topOfPage, duration: 300});
     });
   }
 
