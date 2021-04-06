@@ -49,58 +49,37 @@
 
     <!-- The main content: cards, etc -->
     <template #main-content>
-      <v-container fluid grid-list-md pa-2>
-        <!-- Evaluation Info -->
-        <v-row>
-          <v-col v-if="file_filter.length > 3">
-            <v-slide-group v-model="eval_info" show-arrows>
-              <v-slide-item
-                v-for="(file, i) in file_filter"
-                :key="i"
-                v-slot="{toggle}"
-                class="mx-2"
-              >
-                <v-card
-                  :width="info_width"
-                  data-cy="profileInfo"
-                  @click="toggle"
-                >
-                  <EvaluationInfo :file_filter="file" />
-                  <v-card-subtitle style="text-align: right">
-                    Profile Info ↓
-                  </v-card-subtitle>
-                </v-card>
-              </v-slide-item>
-            </v-slide-group>
-            <ProfileData
-              v-if="eval_info != null"
-              class="my-4 mx-10"
-              :selected_prof="
-                root_profiles[prof_ids.indexOf(file_filter[eval_info])]
-              "
-            />
-          </v-col>
-          <v-col
-            v-for="(file, i) in file_filter"
-            v-else
-            :key="i"
-            :cols="12 / file_filter.length"
-          >
-            <v-card data-cy="profileInfo" @click="toggle_prof(i)">
-              <EvaluationInfo :file_filter="file" />
-              <v-card-subtitle style="text-align: right">
-                Profile Info ↓
-              </v-card-subtitle>
-            </v-card>
-          </v-col>
+      <v-container fluid grid-list-md pt-0 pa-2>
+        <v-container id="fileCards" mx-0 px-0 fluid>
+          <!-- Evaluation Info -->
+          <v-row no-gutters class="mx-n3 mb-3">
+            <v-col>
+              <v-slide-group v-model="evalInfo" show-arrows>
+                <v-slide-item v-for="(file, i) in activeFiles" :key="i">
+                  <v-card
+                    width="100%"
+                    max-width="100%"
+                    class="mx-3"
+                    data-cy="profileInfo"
+                    @click="toggle_profile(file)"
+                  >
+                    <EvaluationInfo :file="file" />
+                    <v-card-subtitle
+                      style="position: absolute; bottom: 0; right: 0"
+                    >
+                      File Info ↓
+                    </v-card-subtitle>
+                  </v-card>
+                </v-slide-item>
+              </v-slide-group>
+            </v-col>
+          </v-row>
           <ProfileData
-            v-if="eval_info != null && file_filter.length <= 3"
-            class="my-4 mx-10"
-            :selected_prof="
-              root_profiles[prof_ids.indexOf(file_filter[eval_info])]
-            "
+            v-if="evalInfo != null"
+            class="my-4 mx-2"
+            :file="evalInfo"
           />
-        </v-row>
+        </v-container>
         <!-- Count Cards -->
         <StatusCardRow
           :filter="all_filter"
@@ -221,15 +200,16 @@ import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 
 import {FilteredDataModule, Filter, TreeMapState} from '@/store/data_filters';
 import {ControlStatus, Severity} from 'inspecjs';
-import {FileID, SourcedContextualizedEvaluation} from '@/store/report_intake';
-import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
+import {FileID, SourcedContextualizedEvaluation, SourcedContextualizedProfile} from '@/store/report_intake';
+import {InspecDataModule} from '@/store/data_store';
 
 import ProfileData from '@/components/cards/ProfileData.vue';
-import {context} from 'inspecjs';
 
 import {ServerModule} from '@/store/server';
 import {capitalize} from 'lodash';
+import {compare_times} from '../utilities/delta_util';
 import RouteMixin from '@/mixins/RouteMixin';
+import ServerMixin from '../mixins/ServerMixin';
 
 @Component({
   components: {
@@ -248,7 +228,7 @@ import RouteMixin from '@/mixins/RouteMixin';
     UploadButton
   }
 })
-export default class Results extends mixins(RouteMixin) {
+export default class Results extends mixins(RouteMixin, ServerMixin) {
   $refs!: Vue['$refs'] & {
     search: HTMLInputElement;
   };
@@ -278,9 +258,9 @@ export default class Results extends mixins(RouteMixin) {
   /** Model for if all-filtered snackbar should be showing */
   filter_snackbar: boolean = false;
 
-  eval_info: number | null = null;
+  evalInfo: SourcedContextualizedEvaluation | SourcedContextualizedProfile | null = null;
 
-  /** Determines if we should make the search bar colapseable */
+  /** Determines if we should make the search bar collapse-able */
   show_search_mobile: boolean = false;
 
   /**
@@ -294,6 +274,18 @@ export default class Results extends mixins(RouteMixin) {
     else {
       return FilteredDataModule.selectedProfileIds;
     }
+  }
+
+  get evaluationFiles(): SourcedContextualizedEvaluation[] {
+    return Array.from(FilteredDataModule.evaluations(this.file_filter)).sort(compare_times);
+  }
+
+  get profiles(): SourcedContextualizedProfile[] {
+    return Array.from(FilteredDataModule.profiles(this.file_filter));
+  }
+
+  get activeFiles(): (SourcedContextualizedEvaluation | SourcedContextualizedProfile)[] {
+    return this.is_result_view ? this.evaluationFiles : this.profiles;
   }
 
   /**
@@ -421,41 +413,12 @@ export default class Results extends mixins(RouteMixin) {
     return 300;
   }
 
-  /** Flat representation of all profiles that ought to be visible  */
-  get visible_profiles(): Readonly<context.ContextualizedProfile[]> {
-    return FilteredDataModule.profiles(this.all_filter.fromFile);
-  }
-
-  get root_profiles(): context.ContextualizedProfile[] {
-    // Strip to roots
-    let profiles = this.visible_profiles.filter(
-      (p) => p.extended_by.length === 0
-    );
-    return profiles;
-  }
-
-  //gets profile ids for the profData component to display corresponding info
-  get prof_ids(): FileID[] {
-    let ids = [];
-    for (let prof of this.root_profiles) {
-      if (!isFromProfileFile(prof)) {
-        ids.push(
-          (prof.sourced_from as SourcedContextualizedEvaluation).from_file
-            .unique_id
-        );
-      } else {
-        ids.push(prof.from_file.unique_id);
-      }
-    }
-    return ids;
-  }
-
   //basically a v-model for the eval info cards when there is no slide group
-  toggle_prof(index: number) {
-    if (index == this.eval_info) {
-      this.eval_info = null;
+  toggle_profile(file: SourcedContextualizedEvaluation | SourcedContextualizedProfile) {
+    if (file === this.evalInfo) {
+      this.evalInfo = null;
     } else {
-      this.eval_info = index;
+      this.evalInfo = file;
     }
   }
 }

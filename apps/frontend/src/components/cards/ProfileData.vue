@@ -1,7 +1,7 @@
 <template>
-  <v-card :watcher="selected_watch">
+  <v-card>
     <v-row class="pa-4" justify="space-between">
-      <v-col cols="3">
+      <v-col md="3" cols="12">
         <v-card-text> Parent Profile </v-card-text>
         <!-- literally of just the one root item -->
         <v-treeview
@@ -19,19 +19,19 @@
             <v-icon>mdi-note</v-icon>
           </template>
         </v-treeview>
-        <div v-if="items.length > 0">
+        <div v-if="children.length > 0">
           <v-card-text> Depends On These Profiles: </v-card-text>
           <!-- for the children of the root -->
           <v-treeview
-            :items="items"
-            :active="child_active"
+            :items="children"
+            :active="active"
             hoverable
             dense
             activatable
             color="info"
             selection-type="independent"
             transition
-            @update:active="setChildActive"
+            @update:active="setActive"
           >
             <template #prepend="{}">
               <v-icon>mdi-note</v-icon>
@@ -42,39 +42,8 @@
 
       <v-divider vertical />
 
-      <v-col class="d-flex text-center">
-        <v-scroll-y-transition mode="out-in">
-          <div
-            v-if="!selected"
-            class="title grey--text text--lighten-1 font-weight-light"
-            style="align-self: center"
-          >
-            Select a Profile
-          </div>
-          <v-card v-else :key="selected.id" class="mx-auto" flat>
-            <v-card-title>
-              <h3>
-                {{ selected.name }}
-              </h3>
-              <div class="mb-2">{{ selected.data.title }}</div>
-            </v-card-title>
-            <v-divider />
-            <v-row
-              class="text-left py-2"
-              tag="v-card-text"
-              data-cy="profileInfoFields"
-            >
-              <template v-for="info in selected_info">
-                <v-col :key="info.label" tag="strong" md="4" sm="12">
-                  {{ info.label }}:
-                </v-col>
-                <v-col :key="info.label + '_'" md="8" sm="12">
-                  {{ info.text }}
-                </v-col>
-              </template>
-            </v-row>
-          </v-card>
-        </v-scroll-y-transition>
+      <v-col class="text-center">
+        <ProfileInfo :profile="selected" />
       </v-col>
     </v-row>
   </v-card>
@@ -83,14 +52,13 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
-import {SourcedContextualizedEvaluation} from '@/store/report_intake';
+import {SourcedContextualizedEvaluation, SourcedContextualizedProfile} from '@/store/report_intake';
 
 import {profile_unique_key} from '@/utilities/format_util';
-import {InspecFile, ProfileFile} from '@/store/report_intake';
-import {context} from 'inspecjs';
-import {Prop} from 'vue-property-decorator';
-import {ExecJSONProfile} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+import ProfileInfo from '@/components/cards/ProfileInfo.vue';
+import {Prop, Watch} from 'vue-property-decorator';
+import {ContextualizedProfile} from 'inspecjs/dist/context';
+import {InspecDataModule} from '../../store/data_store';
 
 /**
  * Makes a ContextualizedProfile work as a TreeView item
@@ -105,180 +73,87 @@ class TreeItem {
   /** The children on the treeview */
   children: TreeItem[];
 
-  constructor(profile: context.ContextualizedProfile) {
+  constructor(profile: SourcedContextualizedProfile) {
     // Base information
     this.id = profile_unique_key(profile);
     this.name = profile.data.name;
-    this.children = profile.extends_from.map((p) => new TreeItem(p));
+    this.children = profile.extends_from.map((p) => new TreeItem(p as SourcedContextualizedProfile));
   }
 }
 
-@Component
+@Component({
+  components: {
+    ProfileInfo
+  }
+})
 export default class ProfileData extends Vue {
   @Prop({type: Object, required: true})
-  readonly selected_prof!: context.ContextualizedProfile;
+  readonly file!: SourcedContextualizedEvaluation | SourcedContextualizedProfile;
 
-  //auto select the root prof
-  mounted() {
-    this.active = [profile_unique_key(this.selected_prof)];
+  // auto select the root profile on file change
+  @Watch('file')
+  onFileChanged(_newValue: boolean, _oldValue: boolean) {
+    this.setDefault();
   }
 
-  //auto select the root prof when data changes
-  get selected_watch(): string {
-    this.active = [profile_unique_key(this.selected_prof)];
-    return profile_unique_key(this.selected_prof);
+  // auto select the root profile on load
+  mounted() {
+    this.setDefault();
   }
 
   /** Models selected item ids */
   active: string[] = [];
-  child_active: string[] = [];
+  stopActivePropagation = false;
   /** Models all loaded profiles */
-  get items(): TreeItem[] {
-    let root_tree = new TreeItem(this.selected_prof);
-    return root_tree.children;
+  get children(): TreeItem[] {
+    return new TreeItem(this.file_root_profile).children;
   }
 
-  /** Get the most recently selected */
-  get selected(): context.ContextualizedProfile | undefined {
-    if (this.true_active == undefined) {
-      return this.selected_prof;
-    }
-    let selected_profile = InspecDataModule.contextualProfiles.find(
-      (p) => profile_unique_key(p) == this.true_active
+  get selected(): SourcedContextualizedProfile | undefined {
+    return InspecDataModule.allProfiles.find(
+      (p) => this.active.includes(profile_unique_key(p))
     );
-    return selected_profile;
   }
 
-  /** Produces the actual info data that is shown in the right box, based on the selected item */
-  get selected_info(): InfoItem[] {
-    if (this.selected === undefined) {
-      return [];
+  get file_root_profile(): SourcedContextualizedProfile {
+    let result: ContextualizedProfile | undefined;
+    if(this.file.from_file.hasOwnProperty('evaluation')) {
+      result = (this.file as SourcedContextualizedEvaluation).from_file.evaluation.contains.find(
+        (p) => p.extended_by.length === 0
+      );
     }
-    let output: InfoItem[] = [];
-
-    output.push({
-      label: 'Version',
-      text: (this.selected.data as ExecJSONProfile).version || ''
-    });
-
-    // Deduce filename, start time
-    let from_file: InspecFile;
-    let start_time: string | null;
-    if (isFromProfileFile(this.selected)) {
-      from_file = this.selected.from_file as ProfileFile;
-      start_time = null;
-    } else {
-      let exec = (this.selected
-        .sourced_from as unknown) as SourcedContextualizedEvaluation;
-      from_file = exec.from_file;
-      let with_time = this.selected.contains.find((x) => x.root.hdf.start_time);
-      start_time = (with_time && with_time.root.hdf.start_time) || null;
-    }
-
-    // And put the filename
-    output.push({
-      label: 'From file',
-      text: from_file.filename
-    });
-
-    if (start_time) {
-      output.push({
-        label: 'Start time',
-        text: start_time
-      });
-    }
-
-    if (this.selected.data.sha256) {
-      output.push({
-        label: 'Sha256 Hash',
-        text: this.selected.data.sha256
-      });
-    }
-
-    if (this.selected.data.title) {
-      output.push({
-        label: 'Title',
-        text: this.selected.data.title
-      });
-    }
-
-    if (this.selected.data.maintainer) {
-      output.push({
-        label: 'Maintainer',
-        text: this.selected.data.maintainer
-      });
-    }
-
-    if (this.selected.data.copyright) {
-      output.push({
-        label: 'Copyright',
-        text: this.selected.data.copyright
-      });
-    }
-
-    if (this.selected.data.copyright_email) {
-      output.push({
-        label: 'Copyright Email',
-        text: this.selected.data.copyright_email
-      });
-    }
-
-    output.push({
-      label: 'Controls',
-      text: this.selected.data.controls.length.toString()
-    });
-
-    return output;
+    return (result || this.file) as SourcedContextualizedProfile;
   }
 
   //the single root tree item
   get root_tree(): TreeItem[] {
-    let tree = new TreeItem(this.selected_prof);
+    const tree = new TreeItem(this.file_root_profile);
     tree.children = [];
     return [tree];
   }
 
-  //acts as sort of v-model for root
+  // stopActivePropagation is to stop the two v-treeviews from infinitely toggling
+  // between calling each others `update:active` methods.
   setActive(active: string[]) {
-    if (active.length == 0) {
-      //unselects root prof when looking at other prof bu does not let the user just unselect the root prof
-      if (this.active.length != 1) {
-        this.active = [];
+    if(this.stopActivePropagation) {
+      this.stopActivePropagation = false;
+    } else {
+      // There are only 2 treeviews when the parent profile has children
+      // Do not enable stopActivePropagagation when there are no children
+      if(this.children.length > 0) {
+        this.stopActivePropagation = true;
+      }
+
+      if(active.length === 0) {
+        this.setDefault();
       } else {
-        this.active = [profile_unique_key(this.selected_prof)];
+        this.active = active;
       }
-    } else {
-      //clears other synced array to make sure one prof is selected at a time
-      if (this.child_active.length > 0) {
-        this.child_active = [];
-      }
-      this.active = [active[0]];
     }
   }
 
-  //acts as sort of v-model for children
-  setChildActive(active: string[]) {
-    if (active.length == 0) {
-      this.child_active = [];
-      //default to root prof when unselected
-      this.active = [profile_unique_key(this.selected_prof)];
-    } else {
-      if (this.active.length > 0) {
-        this.active = [];
-      }
-      this.child_active = [active[0]];
-    }
+  setDefault() {
+    this.active = [profile_unique_key(this.file_root_profile)];
   }
-
-  //combines synced items
-  get true_active(): string | undefined {
-    return this.active[0] || this.child_active[0];
-  }
-}
-
-interface InfoItem {
-  label: string;
-  text: string;
-  info?: string;
 }
 </script>
