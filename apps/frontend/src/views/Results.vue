@@ -355,12 +355,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     this.search_term = '';
   }
 
-  mounted() {
-    if(this.serverMode) {
-      EvaluationModule.getAllEvaluations()
-    }
-  }
-
   /**
    * Returns true if we can currently clear.
    * Essentially, just controls whether the button is available
