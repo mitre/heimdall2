@@ -24,21 +24,21 @@
             </div>
           </v-col>
         </v-row>
-        <v-tabs v-model="tab" fixed-tabs icons-and-text show-arrows>
+        <v-tabs v-model="tab" fixed-tabs show-arrows>
           <v-tab key="status" @click="changeTab(0)">
-            <v-flex style="padding-top: 16px">
+            <v-flex>
               Status by Results File
               <v-icon small>mdi-unfold-more-horizontal</v-icon>
             </v-flex>
           </v-tab>
           <v-tab key="compliance" @click="changeTab(1)">
-            <v-flex style="padding-top: 16px">
+            <v-flex>
               % Compliance
               <v-icon small>mdi-unfold-more-horizontal</v-icon>
             </v-flex>
           </v-tab>
           <v-tab key="severity" @click="changeTab(2)">
-            <v-flex style="padding-top: 16px">
+            <v-flex>
               Failed Tests by Severity
               <v-icon small>mdi-unfold-more-horizontal</v-icon>
             </v-flex>

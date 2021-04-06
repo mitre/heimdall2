@@ -80,8 +80,8 @@
           @toggle="toggle(item.key)"
         />
         <ControlRowDetails
-          v-show="expanded.includes(item.key)"
-          :id="stripSpaces(item.key)"
+          v-if="expanded.includes(item.key)"
+          :id="striptoChars(item.key)"
           :control="item.control"
           :tab="syncTabs ? syncTab : undefined"
           @update:tab="updateTab"
@@ -146,7 +146,7 @@ export default class ControlTable extends Vue {
   sort_severity: Sort = 'none';
 
   mounted() {
-    this.$nextTick(function () {
+    this.$nextTick(() => {
       HeightsModule.setControlTableHeaderHeight(this.controlTableTitle.clientHeight);
     })
   }
@@ -237,12 +237,12 @@ export default class ControlTable extends Vue {
     this.$nextTick(() => {
       // Add 20px to the top of the page to stop the Test | Details | Code bars from being
       // hidden underneath when the page scrolls.
-      this.$vuetify.goTo(`#${this.stripSpaces(key)}`, {offset: this.topOfPage + 20, duration: 300});
+      this.$vuetify.goTo(`#${this.striptoChars(key)}`, {offset: this.topOfPage + 20, duration: 300});
     });
   }
 
-  stripSpaces(key: string) {
-    return key.replace(/\s/g, '');
+  striptoChars(key: string) {
+    return key.replace(/[^a-z0-9]/gi,'');
   }
 
   /** Return items as key, value pairs */
