@@ -8,20 +8,21 @@
       <!-- Toolbar -->
       <v-row v-resize="onResize">
         <v-row>
-          <v-col class="pb-0">
+          <v-col cols="12" md="5" class="pb-0">
             <v-card-title class="pb-0">Results View Data</v-card-title>
           </v-col>
-          <v-col cols="auto" class="text-right pb-0">
+          <v-spacer />
+          <v-col cols="4" sm="auto" class="text-right pl-6 pb-0">
             <v-switch v-model="syncTabs" label="Sync Tabs" />
           </v-col>
-          <v-col cols="auto" class="text-right pb-0">
+          <v-col cols="4" sm="auto" class="text-right pb-0">
             <v-switch
               v-model="singleExpand"
               label="Single Expand"
               @change="handleToggleSingleExpand"
             />
           </v-col>
-          <v-col cols="auto" class="text-right pb-0">
+          <v-col cols="4" sm="auto" class="text-right pb-0">
             <v-switch v-model="expandAll" label="Expand All" class="mr-5" />
           </v-col>
         </v-row>
