@@ -208,7 +208,6 @@ import ProfileData from '@/components/cards/ProfileData.vue';
 import {ServerModule} from '@/store/server';
 import {capitalize} from 'lodash';
 import {compare_times} from '../utilities/delta_util';
-import {EvaluationModule} from '../store/evaluations';
 import RouteMixin from '@/mixins/RouteMixin';
 import ServerMixin from '../mixins/ServerMixin';
 
