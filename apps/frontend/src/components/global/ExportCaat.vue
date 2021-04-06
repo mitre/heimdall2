@@ -18,29 +18,16 @@ import Vue from 'vue'
 import XLSX from 'xlsx';
 import Component from 'vue-class-component';
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {HDFControlSegment} from 'inspecjs';
+import {HDFControl, HDFControlSegment} from 'inspecjs';
 import {Filter, FilteredDataModule} from '../../store/data_filters';
 import {Prop} from 'vue-property-decorator';
 import {ContextualizedControl} from 'inspecjs/dist/context';
 import _ from 'lodash';
+import {InspecDataModule} from '../../store/data_store';
 
 type CAATRow = {
-  [key: string]: string;
+  [key: string]: string | undefined;
 };
-type ContextualizedControlImp = ContextualizedControl & {
-  sourced_from: {
-    from_file: {
-      filename: string;
-      unique_id: string;
-    }
-  }
-}
-type Files = {
-  [key: string]: {
-    filename: string;
-    rows: CAATRow[]
-  }
-}
 
 @Component({
   components: {
@@ -66,7 +53,7 @@ export default class ExportCaat extends Vue {
     CreatedDate: new Date()
   }
 
-  getRow(control: ContextualizedControlImp): CAATRow[] {
+  getRow(control: ContextualizedControl): CAATRow[] {
     const hdf = control.hdf;
     const allRows: CAATRow[] = [];
     for (const formatted of hdf.canonized_nist({
@@ -81,113 +68,90 @@ export default class ExportCaat extends Vue {
       }
       const row: CAATRow = {};
       row['Control Number'] = formatted
-      row['Finding Title'] = 'Test ' + this.fix(hdf.wraps.id) + ' - ' + this.fix(hdf.wraps.title)
-
+      row['Finding Title'] = `Test ${this.fix(hdf.wraps.id)} - ${this.fix(hdf.wraps.title)}`
       if (hdf.start_time) {
         row['Date Identified'] = this.convertDate(new Date(hdf.start_time), '/')
-      } else {
-        row['Date Identified'] = '';
       }
-
-      row['Finding ID'] = '';
-      row['Information System or Program Name'] = '';
-      row['Repeat Findings'] = '';
-      row['Repeat Finding Weakness ID'] = '';
       row['Finding Description'] = this.fix(hdf.wraps.title)
-
-      // Prepend the caveat to the Weakness Description if there is one
-      let caveat = hdf.descriptions.caveat ? '(Caveat: ' + this.fix(hdf.descriptions.caveat) + ')\n' : '';
-      row['Weakness Description'] = caveat + this.fix(hdf.wraps.desc);
-
+      row['Weakness Description'] = this.createCaveat(hdf)
       row['Control Weakness Type'] = 'Security';
       row['Source'] = 'Self-Assessment';
-      row['Assessment/Audit Company'] = '';
       row['Test Method'] = 'Test';
       row['Test Objective'] = this.fix(hdf.descriptions.check || hdf.wraps.tags.check)
-
-      // Get the result description of the test
-      let testResult = `${hdf.status}:\r\n\r\n`;
-      _.get(hdf, 'wraps.results').forEach((result: HDFControlSegment) => {
-        if(result.message) {
-          testResult += `${result.status.toUpperCase()} -- Test: ${result.code_desc}\r\nMessage: ${result.message}\r\n\r\n`
-        } else {
-          testResult += `${result.status.toUpperCase()} -- Test: ${result.code_desc}\r\n\r\n`
-        }
-      })
-      row['Test Result Description'] = this.fix(testResult); // Test Result Description
-
-      // Test Result
-      if (hdf.status === 'Passed') {
-        row['Test Result'] = 'Satisfied';
-      } else {
-        row['Test Result'] =  'Other Than Satisfied';
-      }
-      row['Recommended Corrective Action(s)'] = this.fix(hdf.descriptions.fix || hdf.wraps.tags.fix); // Recommended Corrective Action(s)
-      row['Effect on Business'] = '';
-      row['Likelihood'] = '';
-      const controlSeverity = hdf.severity === 'medium' ? 'moderate' : hdf.severity
-      row['Impact'] = this.fix(hdf.wraps.impact === 0 ? 'none' : controlSeverity); // Impact
-
-      // if (row.length !== ((this.header.length - (this.header.length / 2)))) {
-      //   console.log(row.length)
-      //   console.log(this.header.length)
-      //   throw new Error('Row of wrong size');
-      // }
+      row['Test Result Description'] = this.fix(this.createTestResultDescription(hdf));
+      row['Test Result'] = this.createTestResult(hdf)
+      row['Recommended Corrective Action(s)'] = this.fix(hdf.descriptions.fix || hdf.wraps.tags.fix);
+      row['Impact'] = this.createImpact(hdf);
       allRows.push(row);
     }
     return allRows;
   }
 
   exportCaat() {
-    // Create the workbook
+    // Define our workbook
     const wb = XLSX.utils.book_new();
-    wb.Props = this.fileSettings;
-    // Get all of our controls
-    const controls = FilteredDataModule.controls(this.filter);
-    const files: Files = {}
-
-    // Gets list of files
-    const foundFiles = new Set();
-    for (const ctrl of controls) {
-      const root = ctrl.root;
-      const file = (root.sourced_from as unknown as ContextualizedControlImp).sourced_from?.from_file
-      const fileId = file.unique_id
-      if (foundFiles.has(fileId)) {
-        continue;
-      } else {
-        foundFiles.add(fileId);
-        files[fileId] = {
-          'filename': file.filename,
-          'rows': []
-        }
-      }
-    }
-    // Find controls for each file
-    Object.keys(files).forEach((fileId: string): void => {
-      wb.SheetNames.push(`${files[fileId].filename} - ${fileId}`.substr(0, 30));
+    // For each file in our filter
+    this.filter.fromFile.forEach((fileId) => {
+      // Find our file within InspecDataModule
+      const file = InspecDataModule.allFiles.find(
+        (f) => f.unique_id === fileId
+      );
+      const sheetName = `${file?.filename} - ${fileId}`.substr(0, 30)
+      // Create a new Sheet
+      wb.SheetNames.push(sheetName);
+      wb.Props = this.fileSettings;
+      // Get the controls for the current file
+      const controls = FilteredDataModule.controls({fromFile: [fileId]});
       const hitIds = new Set();
-      // Get controls from each file
+      const rows: CAATRow[] = []
+      // Convert them into rows
       for (const ctrl of controls) {
-        const root = (ctrl.root as unknown as ContextualizedControlImp);
-        const ctrlFileId = (root.sourced_from as unknown as ContextualizedControlImp).sourced_from?.from_file.unique_id
+        const root = ctrl.root
         if (hitIds.has(root.hdf.wraps.id)) {
           continue;
         } else {
-          if(ctrlFileId === fileId){
-            hitIds.add(root.hdf.wraps.id);
-            files[fileId].rows.push(...this.getRow(root));
-          }
+          hitIds.add(root.hdf.wraps.id);
+          rows.push(...this.getRow(root));
         }
       }
-      const ws = XLSX.utils.json_to_sheet(files[fileId].rows, {header: this.header});
-      wb.Sheets[`${files[fileId].filename} - ${fileId}`.substr(0, 30)] = ws;
-    });
+      // Add rows to sheet
+      const ws = XLSX.utils.json_to_sheet(rows, {header: this.header});
+      wb.Sheets[sheetName] = ws;
+    })
 
     const wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
     saveAs(
       new Blob([this.s2ab(wbout)], {type: 'application/octet-stream'}),
         'CAAT-' + this.convertDate(new Date(), '-') + '.xlsx'
     );
+  }
+
+  createCaveat(hdf: HDFControl): string {
+    const caveat = hdf.descriptions.caveat ? '(Caveat: ' + this.fix(hdf.descriptions.caveat) + ')\n' : '';
+    return caveat + this.fix(hdf.wraps.desc);
+  }
+
+  // Create Test Result Description
+  createTestResult(hdf: HDFControl): string {
+    return hdf.status === 'Passed' ?  'Satisfied' : 'Other Than Satisfied';
+  }
+
+  // Create Test Result Description
+  createTestResultDescription(hdf: HDFControl): string {
+    let testResult = `${hdf.status}:\r\n\r\n`;
+    _.get(hdf, 'wraps.results').forEach((result: HDFControlSegment) => {
+      if(result.message) {
+        testResult += `${result.status.toUpperCase()} -- Test: ${result.code_desc}\r\nMessage: ${result.message}\r\n\r\n`
+      } else {
+        testResult += `${result.status.toUpperCase()} -- Test: ${result.code_desc}\r\n\r\n`
+      }
+    })
+    return testResult
+  }
+
+  createImpact(hdf: HDFControl): string {
+    const controlSeverity = hdf.severity === 'medium' ? 'moderate' : hdf.severity
+    return this.fix(hdf.wraps.impact === 0 ? 'none' : controlSeverity);
   }
 
   fix(x: string | null | undefined) {
