@@ -127,7 +127,7 @@ export default class ExportCaat extends Vue {
   }
 
   createCaveat(hdf: HDFControl): string {
-    const caveat = hdf.descriptions.caveat ? '(Caveat: ' + this.fix(hdf.descriptions.caveat) + ')\n' : '';
+    const caveat = hdf.descriptions.caveat ? `(Caveat: ${this.fix(hdf.descriptions.caveat)})\n` : '';
     return caveat + this.fix(hdf.wraps.desc);
   }
 
