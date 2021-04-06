@@ -19,7 +19,6 @@ import Component from 'vue-class-component';
 import {saveAs} from 'file-saver';
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 
-import {isFromProfileFile} from '@/store/data_store';
 import {FilteredDataModule} from '@/store/data_filters';
 import {ZipFile} from 'yazl';
 import concat from 'concat-stream';
@@ -45,12 +44,10 @@ export default class ExportJSON extends Vue {
       });
     }
     for (let prof of FilteredDataModule.profiles(ids)) {
-      if (isFromProfileFile(prof)) {
-        fileData.push({
-          name: prof.from_file.filename,
-          contents: JSON.stringify(prof.data)
-        });
-      }
+      fileData.push({
+        name: prof.from_file.filename,
+        contents: JSON.stringify(prof.from_file.profile.data)
+      });
     }
     return fileData;
   }

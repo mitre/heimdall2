@@ -1,10 +1,16 @@
 <template>
-  <v-row class="px-4 pt-4" dense justify="space-between">
+  <v-row class="pa-4" dense justify="space-between">
     <v-col data-cy="fileinfo" cols="12">
       <strong>Filename:</strong> {{ filename }}<br />
-      <strong>Tool Version:</strong> {{ inspec_version }}<br />
-      <strong>Platform:</strong> {{ platform }}<br />
-      <strong>Duration:</strong> {{ get_duration }}<br />
+      <div v-if="inspec_version">
+        <strong>Tool Version:</strong> {{ inspec_version }}
+      </div>
+      <div v-if="platform"><strong>Platform:</strong> {{ platform }}</div>
+      <div v-if="duration"><strong>Duration:</strong> {{ duration }}</div>
+      <div v-if="evaluation" class="d-flex flex-nowrap">
+        <strong class="pt-1 pr-1">Tags:</strong>
+        <TagRow :evaluation="evaluation" />
+      </div>
     </v-col>
   </v-row>
 </template>
@@ -12,75 +18,50 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {InspecDataModule} from '@/store/data_store';
-import {FilteredDataModule} from '@/store/data_filters';
-import {FileID, EvaluationFile} from '@/store/report_intake';
+import {EvaluationFile, ProfileFile, SourcedContextualizedEvaluation, SourcedContextualizedProfile} from '@/store/report_intake';
 
 import {Prop} from 'vue-property-decorator';
+import _ from 'lodash';
+import {EvaluationModule} from '../../store/evaluations';
+import TagRow from '@/components/global/tags/TagRow.vue'
+import {IEvaluation} from '@heimdall/interfaces';
 
-@Component
-export default class EvaluationInfo extends Vue {
-  @Prop({required: true}) readonly file_filter!: FileID;
-
-  version: string | null = null;
-  platform_name: string | null = null;
-  platform_release: string | null = null;
-  duration: number | null | undefined = null;
-  database_id: number | null = null;
-
-  created() {
-    this.load_file();
+@Component({
+  components: {
+    TagRow
   }
+})
+export default class EvaluationInfo extends Vue {
+  @Prop({required: true}) readonly file!: SourcedContextualizedEvaluation | SourcedContextualizedProfile;
 
-  updated() {
-    let file = InspecDataModule.allFiles.find(
-      (f) => f.unique_id === this.file_filter
-    );
-    if (file && file.hasOwnProperty('evaluation')) {
-      let eva = file as EvaluationFile;
-      this.version = eva.evaluation.data.version;
-      this.platform_name = eva.evaluation.data.platform.name;
-      this.platform_release = eva.evaluation.data.platform.release;
-      this.duration = eva.evaluation.data.statistics.duration;
-      this.database_id = eva.database_id || null;
-    }
+  get file_object(): EvaluationFile | ProfileFile {
+    return this.file.from_file
   }
 
   get filename(): string {
-    return this.file.filename;
+    return this.file_object.filename;
   }
 
-  get inspec_version(): string {
-    return this.file.evaluation.data.version;
+  get inspec_version(): string | undefined {
+    return _.get(this.file_object, 'evaluation.data.version');
   }
 
-  get platform(): string {
-    return (
-      this.file.evaluation.data.platform.name +
-      this.file.evaluation.data.platform.release
-    );
+  get platform(): string | undefined {
+    return _.get(this.file_object, 'evaluation.data.platform.name') + _.get(this.file_object, 'evaluation.data.platform.release');
   }
 
-  get get_duration(): string {
-    return this.file.evaluation.data.statistics.duration + '';
+  get duration(): string | undefined {
+    return _.get(this.file_object, 'evaluation.data.statistics.duration');
   }
 
-  //gets file to retrieve corresponding data
-  get file(): EvaluationFile {
-    return FilteredDataModule.evaluations([this.file_filter])[0].from_file;
-  }
-
-  load_file() {
-    let file = InspecDataModule.allFiles.find(
-      (f) => f.unique_id === this.file_filter
-    );
-    if (file && file.hasOwnProperty('evaluation')) {
-      let eva = file as EvaluationFile;
-      this.version = eva.evaluation.data.version;
-      this.platform_name = eva.evaluation.data.platform.name;
-      this.platform_release = eva.evaluation.data.platform.release;
-      this.duration = eva.evaluation.data.statistics.duration;
-    }
+  get evaluation(): IEvaluation | undefined {
+    let result: IEvaluation | undefined;
+    EvaluationModule.allEvaluations.forEach((e) => {
+      if(e.id === this.file_object.database_id?.toString()) {
+        result = e
+      }
+    })
+    return result
   }
 }
 </script>

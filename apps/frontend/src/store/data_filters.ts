@@ -3,8 +3,12 @@
  */
 
 import {Trinary} from '@/enums/Trinary';
-import {InspecDataModule, isFromProfileFile} from '@/store/data_store';
-import {FileID, SourcedContextualizedEvaluation} from '@/store/report_intake';
+import {InspecDataModule} from '@/store/data_store';
+import {
+  FileID,
+  SourcedContextualizedEvaluation,
+  SourcedContextualizedProfile
+} from '@/store/report_intake';
 import Store from '@/store/store';
 import {context, ControlStatus, nist, Severity} from 'inspecjs';
 import LRUCache from 'lru-cache';
@@ -198,34 +202,26 @@ export class FilteredData extends VuexModule {
     };
   }
 
-  /**
-   * Parameterized getter.
-   * Get all profiles from the specified file ids.
-   * Filters only based on the file ID
-   */
-  get profiles(): (
+  get profiles_for_evaluations(): (
     files: FileID[]
   ) => readonly context.ContextualizedProfile[] {
     return (files: FileID[]) => {
-      // Initialize our list to add valid profiles to
-      const profiles: context.ContextualizedProfile[] = [];
-
       // Filter to those that match our filter. In this case that just means come from the right file id
-      InspecDataModule.contextualProfiles.forEach((prof) => {
-        if (isFromProfileFile(prof)) {
-          if (files.includes(prof.from_file.unique_id)) {
-            profiles.push(prof);
-          }
-        } else {
-          // Its a report; go two levels up to get its file
-          const ev = prof.sourced_from as SourcedContextualizedEvaluation;
-          if (files.includes(ev.from_file.unique_id)) {
-            profiles.push(prof);
-          }
-        }
-      });
+      return this.evaluations(files).flatMap(
+        (evaluation) => evaluation.contains
+      );
+    };
+  }
 
-      return profiles;
+  /**
+   * Parameterized getter.
+   * Get all profiles from the specified file ids.
+   */
+  get profiles(): (files: FileID[]) => readonly SourcedContextualizedProfile[] {
+    return (files: FileID[]) => {
+      return InspecDataModule.contextualProfiles.filter((e) => {
+        return files.includes(e.from_file.unique_id);
+      });
     };
   }
 
@@ -280,15 +276,18 @@ export class FilteredData extends VuexModule {
         return cached;
       }
 
-      // First get all of the profiles using the same filter
-      let controls: readonly context.ContextualizedControl[];
-      // Get profiles
-      const profiles: readonly context.ContextualizedProfile[] = this.profiles(
+      // Get profiles from loaded Results
+      let profiles: readonly context.ContextualizedProfile[] = this.profiles_for_evaluations(
         filter.fromFile
       );
-      // And all the controls they contain
-      controls = profiles.flatMap((profile) => profile.contains);
 
+      // Get profiles from loaded Profiles
+      profiles = profiles.concat(this.profiles(filter.fromFile));
+
+      // And all the controls they contain
+      let controls: readonly context.ContextualizedControl[] = profiles.flatMap(
+        (profile) => profile.contains
+      );
       // Filter by control id
       if (filter.control_id !== undefined) {
         controls = controls.filter((c) => c.data.id === filter.control_id);

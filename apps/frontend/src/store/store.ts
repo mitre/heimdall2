@@ -3,7 +3,6 @@ import {ColorHack} from '@/store/color_hack';
 import {FilteredData} from '@/store/data_filters';
 import {InspecData} from '@/store/data_store';
 import {IGroupState} from '@/store/groups';
-import {HashLookup} from '@/store/lookup_hashes';
 import {InspecIntake} from '@/store/report_intake';
 import {IServerState} from '@/store/server';
 import {SeverityCount} from '@/store/severity_counts';
@@ -37,7 +36,6 @@ export interface StoreType {
   heights: IHeightsState;
   statusCounts: StatusCount;
   severityCounts: SeverityCount;
-  lookup: HashLookup;
   intake: InspecIntake;
   colors: ColorHack;
   info: IAppInfoState;
