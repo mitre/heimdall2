@@ -104,8 +104,8 @@
         <!-- Count Cards -->
         <StatusCardRow
           :filter="all_filter"
-          @show-errors="status_filter = 'Profile Error'"
-          @show-waived="status_filter = 'Waived'"
+          @show-errors="statusFilter = 'Profile Error'"
+          @show-waived="statusFilter = 'Waived'"
         />
         <!-- Compliance Cards -->
         <v-row justify="space-around">
@@ -113,7 +113,7 @@
             <v-card class="fill-height">
               <v-card-title class="justify-center">Status Counts</v-card-title>
               <v-card-actions class="justify-center">
-                <StatusChart v-model="status_filter" :filter="all_filter" />
+                <StatusChart v-model="statusFilter" :filter="all_filter" />
               </v-card-actions>
             </v-card>
           </v-col>
@@ -265,7 +265,7 @@ export default class Results extends mixins(RouteMixin) {
   /**
    * The currently selected status, as modeled by the status chart
    */
-  status_filter: ControlStatus | "Waived" | null = null;
+  statusFilter: ControlStatus | "Waived" | null = null;
 
   /**
    * The current state of the treemap as modeled by the treemap (duh).
@@ -328,7 +328,7 @@ export default class Results extends mixins(RouteMixin) {
    */
   get all_filter(): Filter {
     return {
-      status: this.status_filter || undefined,
+      status: this.statusFilter || undefined,
       severity: this.severity_filter || undefined,
       fromFile: this.file_filter,
       tree_filters: this.tree_filters,
@@ -343,7 +343,7 @@ export default class Results extends mixins(RouteMixin) {
    */
   get treemap_full_filter(): Filter {
     return {
-      status: this.status_filter || undefined,
+      status: this.statusFilter || undefined,
       severity: this.severity_filter || undefined,
       fromFile: this.file_filter,
       search_term: this.search_term || '',
@@ -357,7 +357,7 @@ export default class Results extends mixins(RouteMixin) {
   clear() {
     this.filter_snackbar = false;
     this.severity_filter = null;
-    this.status_filter = null;
+    this.statusFilter = null;
     this.control_selection = null;
     this.search_term = '';
     this.tree_filters = [];
@@ -376,7 +376,7 @@ export default class Results extends mixins(RouteMixin) {
     let result: boolean;
     if (
       this.severity_filter ||
-      this.status_filter ||
+      this.statusFilter ||
       this.search_term !== '' ||
       this.tree_filters.length
     ) {
