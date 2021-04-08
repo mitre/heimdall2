@@ -19,7 +19,7 @@
     </v-col>
     <v-col v-if="profileErrorProps.number" cols="12">
       <v-card
-        :color="card.color"
+        :color="profileErrorProps.color"
         class="d-flex flex-no-wrap justify-space-between"
         elevation="12"
       >
