@@ -17,6 +17,14 @@ beforeEach(function () {
   databaseHelper.clear();
 });
 
+// There seems to be an issue with v-slide-group that causes it to throw
+// "Uncaught TypeError: Cannot read property 'getBoundingClientRect' of undefined"
+// On a null-obj
+Cypress.on('uncaught:exception', (err) => {
+  // Return false if the error messaage includes `getBoundingClientRect`
+  return !err.message.includes('getBoundingClientRect');
+});
+
 Cypress.Commands.add('login', ({email, password}) => {
   cy.get('input[name=email]').clear().type(email);
   cy.get('input[name=password]').clear().type(password);
