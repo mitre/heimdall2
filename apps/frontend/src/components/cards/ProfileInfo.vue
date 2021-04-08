@@ -12,7 +12,7 @@
         <div class="mb-2">{{ profile.data.title }}</div>
       </v-card-title>
       <v-divider />
-      <v-row class="text-left pa-4" data-cy="profileInfoFields">
+      <v-row class="text-left pa-4" dense data-cy="profileInfoFields">
         <v-col cols="12">
           <div v-if="from_file">
             <strong>From File:</strong> {{ from_file }}

@@ -27,7 +27,7 @@ const nginxDelta = 3;
 describe('Compare table data', () => {
   loadSample('NGINX With Failing Tests');
   it('correctly counts controls with 1 file', () => {
-    (wrapper.vm as Vue & {checkbox: boolean}).checkbox = false;
+    (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = false;
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length
@@ -51,7 +51,7 @@ describe('Compare table data', () => {
   });
 
   it('does not show any changed between two of the same', () => {
-    (wrapper.vm as Vue & {checkbox: boolean}).checkbox = true;
+    (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = true;
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length
@@ -67,7 +67,7 @@ describe('Compare table data', () => {
   });
 
   it('search id works', () => {
-    (wrapper.vm as Vue & {checkbox: boolean}).checkbox = false;
+    (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = false;
     (wrapper.vm as Vue & {search_term: string}).search_term = 'v-13613';
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
@@ -77,7 +77,7 @@ describe('Compare table data', () => {
 
   it('shows differing delta data when "show only changed"', () => {
     (wrapper.vm as Vue & {search_term: string}).search_term = '';
-    (wrapper.vm as Vue & {checkbox: boolean}).checkbox = true;
+    (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = true;
     loadSample('NGINX Clean Sample');
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
@@ -86,7 +86,7 @@ describe('Compare table data', () => {
   });
 
   it('search status works', () => {
-    (wrapper.vm as Vue & {checkbox: boolean}).checkbox = false;
+    (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = false;
     (wrapper.vm as Vue & {search_term: string}).search_term = 'failed';
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
@@ -97,7 +97,7 @@ describe('Compare table data', () => {
   it('counts every unique control', () => {
     loadSample('Red Hat With Failing Tests');
     (wrapper.vm as Vue & {search_term: string}).search_term = '';
-    (wrapper.vm as Vue & {checkbox: boolean}).checkbox = true;
+    (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = true;
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length

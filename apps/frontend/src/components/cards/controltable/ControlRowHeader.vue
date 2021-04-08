@@ -1,6 +1,6 @@
 <template>
   <!-- Need to catch for ResponsiveRowSwitch @toggle events for small view -->
-  <ResponsiveRowSwitch>
+  <ResponsiveRowSwitch :dense="true">
     <template #status>
       <v-card
         :color="status_color"
