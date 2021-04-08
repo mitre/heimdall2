@@ -1,9 +1,8 @@
 <template>
-  <v-row no-gutters>
+  <v-row no-gutters dense class="pb-1">
     <v-col cols="12" class="font-weight-bold">
       <v-card>
         <v-tabs v-model="localTab" fixed-tabs show-arrows @change="tab_change">
-          <v-tabs-slider />
           <!-- Declare our tabs -->
           <v-tab href="#tab-test"> Test </v-tab>
           <v-tab href="#tab-details"> Details </v-tab>
@@ -92,8 +91,7 @@ interface Detail {
 })
 export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
   @Prop({type: String, default: 'tab-test'}) readonly tab!: string;
-  @Prop({type: Object, required: true})
-  readonly control!: context.ContextualizedControl;
+  @Prop({type: Object, required: true}) readonly control!: context.ContextualizedControl;
 
   localTab = this.tab;
 

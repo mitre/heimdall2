@@ -37,6 +37,7 @@ import {SnackbarModule} from '@/store/snackbar';
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop} from 'vue-property-decorator';
 import {ICreateEvaluation} from '@heimdall/interfaces';
+import _ from 'lodash';
 import RouteMixin from '@/mixins/RouteMixin';
 
 @Component
@@ -108,12 +109,11 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
       }
     }
     // Add evaluation data to the form
-    if (file.hasOwnProperty('evaluation')){ // If this is an evaluation
-      formData.append("data", new Blob([JSON.stringify((file as EvaluationFile).evaluation.data)], {type: 'text/plain'}));
-    } else { // Or if it is a profile
-     formData.append("data", new Blob([JSON.stringify((file as ProfileFile).profile.data)], {type: 'text/plain'}));
+    if(file.hasOwnProperty('evaluation')) {
+      formData.append("data", new Blob([JSON.stringify(_.get(file, 'evaluation.data'))], {type: 'text/plain'}));
+    } else {
+      formData.append("data", new Blob([JSON.stringify(_.get(file, 'profile.data'))], {type: 'text/plain'}));
     }
-
     axios
       .post('/evaluations', formData)
       .then((response) => {

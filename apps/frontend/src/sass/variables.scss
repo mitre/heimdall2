@@ -22,3 +22,22 @@ $material-dark: (
 );
 
 $snackbar-z-index: 1999;
+
+// The following SCSS variables are for virtical slimming
+
+// v-card
+$card-actions-padding: 4px 8px;
+$card-subtitle-padding: 8px 16px;
+$card-btn-padding: 0px 4px;
+
+// v-app-bar
+$app-bar-scrolled-title-padding-bottom: 6px;
+
+// v-dialog (Modal)
+$dialog-card-subtitle-padding: 0px 12px 10px !default;
+$dialog-card-actions-padding: 4px 16px !default;
+$dialog-card-text-padding: 0px 24px 10px !default;
+$dialog-card-title-padding: 8px 24px 5px !default;
+
+// v-tabs
+$tabs-icons-and-text-bar-height: 50px !default;
