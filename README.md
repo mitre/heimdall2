@@ -40,7 +40,6 @@ As a single-page javascript app - you can run Heimdall-Lite from any web-server,
 | Data Table / Control Summary                                 |                            x                             |                              x                               |
 | InSpec Code / Control Viewer                                 |                            x                             |                              x                               |
 | SSP Content Generator                                        |                                                          |                              x                               |
-| PDF Report and Print View                                    |                            x                             |                              x                               |
 | Users & Roles & multi-team support                           |                                                          |                              x                               |
 | Authentication & Authorization                               |                    Hosting Webserver                     | Hosting Webserver<br />LDAP<br />OAuth Support for:<br /> GitHub, GitLab, Google, and Okta. |
 | Advanced Data / Filters for Reports and Viewing              |                                                          |                              x                               |
@@ -73,16 +72,16 @@ Heimdall Lite is published to npmjs.org and is available [here](https://www.npmj
 To run Heimdall Lite locally, just use the `npm` built-in utility `npx`:
 
 ```bash
-npx heimdall-lite
+npx @mitre/heimdall-lite
 ```
 
 If you use this tool often and want to have it installed locally, use the following command:
 
 ```bash
-npm install -g heimdall-lite
+npm install -g @mitre/heimdall-lite
 ```
 
-Then, any subsequent `npx heimdall-lite` will use the local version and load much more quickly.
+Then, any subsequent `npx @mitre/heimdall-lite` will use the local version and load much more quickly.
 
 #### Running via Docker
 

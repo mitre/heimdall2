@@ -4,7 +4,7 @@
       {{ headerText }}
     </v-expansion-panel-header>
     <v-expansion-panel-content v-if="files.length > 0">
-      <v-list>
+      <v-list dense>
         <FileList v-for="(file, i) in files" :key="i" :file="file" />
 
         <v-list-item

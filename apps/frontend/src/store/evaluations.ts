@@ -50,6 +50,7 @@ export class Evaluation extends VuexModule {
         return axios
           .get<IEvaluation>(`/evaluations/${id}`)
           .then(async ({data}) => {
+            this.addEvaluation(data);
             return InspecIntakeModule.loadText({
               text: JSON.stringify(data.data),
               filename: data.filename,
@@ -66,6 +67,11 @@ export class Evaluation extends VuexModule {
           });
       })
     );
+  }
+
+  @Action
+  async addEvaluation(evaluation: IEvaluation) {
+    this.context.commit('ADD_EVALUATION', evaluation);
   }
 
   @Action
@@ -98,6 +104,11 @@ export class Evaluation extends VuexModule {
   @Mutation
   SET_ALL_EVALUATION(evaluations: IEvaluation[]) {
     this.allEvaluations = evaluations;
+  }
+
+  @Mutation
+  ADD_EVALUATION(evaluation: IEvaluation) {
+    this.allEvaluations.push(evaluation);
   }
 
   @Mutation

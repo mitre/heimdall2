@@ -25,7 +25,10 @@ export class CreateEvaluationInterceptor implements NestInterceptor {
     if (request.body.public) {
       request.body.public = [true, 'true'].includes(request.body.public);
     }
-    if (request.body.evaluationTags !== undefined) {
+    if (
+      request.body.evaluationTags !== undefined &&
+      request.body.evaluationTags !== ''
+    ) {
       request.body.evaluationTags = request.body.evaluationTags
         .split(',')
         .map(

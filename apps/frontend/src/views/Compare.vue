@@ -6,6 +6,7 @@
         v-model="search_term"
         flat
         solo
+        dense
         hide-details
         prepend-inner-icon="mdi-magnify"
         label="Search"
@@ -23,21 +24,21 @@
             </div>
           </v-col>
         </v-row>
-        <v-tabs v-model="tab" fixed-tabs icons-and-text show-arrows>
+        <v-tabs v-model="tab" fixed-tabs show-arrows>
           <v-tab key="status" @click="changeTab(0)">
-            <v-flex style="padding-top: 28px">
+            <v-flex>
               Status by Results File
               <v-icon small>mdi-unfold-more-horizontal</v-icon>
             </v-flex>
           </v-tab>
           <v-tab key="compliance" @click="changeTab(1)">
-            <v-flex style="padding-top: 28px">
+            <v-flex>
               % Compliance
               <v-icon small>mdi-unfold-more-horizontal</v-icon>
             </v-flex>
           </v-tab>
           <v-tab key="severity" @click="changeTab(2)">
-            <v-flex style="padding-top: 28px">
+            <v-flex>
               Failed Tests by Severity
               <v-icon small>mdi-unfold-more-horizontal</v-icon>
             </v-flex>
@@ -48,7 +49,7 @@
             <transition>
               <keep-alive>
                 <v-col v-if="tab == 0 && ableTab" cols="12">
-                  <v-row>
+                  <v-row dense>
                     <v-sheet color="#303030" class="mx-auto" max-width="100%">
                       <v-slide-group :show-arrows="true" :elevation="0">
                         <v-slide-item
@@ -106,20 +107,18 @@
           </v-col>
         </v-row>
         <v-card>
-          <v-row>
-            <v-col cols="4" xs="4" sm="3" md="2" lg="2" xl="2">
-              <v-card-title>Test Results</v-card-title>
-            </v-col>
-            <v-col>
-              <v-checkbox
-                v-model="checkbox"
-                color="blue"
-                label="Display Only Changed Results"
-              />
-            </v-col>
+          <v-row no-gutters dense>
+            <v-card-title class="mr-auto">Test Results</v-card-title>
+            <v-checkbox
+              v-model="changedOnly"
+              dense
+              color="blue"
+              class="mr-3"
+              label="Display Only Changed Results"
+            />
           </v-row>
           <hr />
-          <v-row>
+          <v-row dense>
             <v-col cols="3" sm="2" md="1">
               <br />
               <v-row>
@@ -260,7 +259,7 @@ export default class Compare extends Vue {
     }
   ];
 
-  checkbox: boolean = true;
+  changedOnly = true;
   expanded_view: boolean = true;
   tab: number = 0;
   width: number = window.innerWidth;
@@ -307,7 +306,7 @@ export default class Compare extends Vue {
   }
 
   get show_sets(): [string, ControlSeries][] {
-    const sets: [string, ControlSeries][] = Array.from(this.checkbox ? this.delta_sets : this.searched_sets);
+    const sets: [string, ControlSeries][] = Array.from(this.changedOnly ? this.delta_sets : this.searched_sets);
     let searchModifier = -1;
 
     if(this.ascending) {
