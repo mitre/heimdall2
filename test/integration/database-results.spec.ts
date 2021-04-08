@@ -13,9 +13,11 @@ import ToastVerifier from '../support/verifiers/ToastVerifier';
 // "Uncaught TypeError: Cannot read property 'getBoundingClientRect' of undefined"
 // On a null-obj
 Cypress.on('uncaught:exception', (err, _runnable) => {
-  console.log(err);
-  // Returning false here prevents Cypress from failing the test
-  return false;
+  if (err.message.includes('getBoundingClientRect')) {
+    // Returning false here prevents Cypress from failing the test
+    return false;
+  }
+  return true;
 });
 
 context('Database results', () => {

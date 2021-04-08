@@ -39,13 +39,13 @@ import {Prop} from 'vue-property-decorator';
 import {ICreateEvaluation} from '@heimdall/interfaces';
 import _ from 'lodash';
 import RouteMixin from '@/mixins/RouteMixin';
+import {EvaluationModule} from '../../../store/evaluations';
 
 @Component
 export default class FileItem extends mixins(ServerMixin, RouteMixin) {
   @Prop({type: Object}) readonly file!: EvaluationFile | ProfileFile;
 
   saving = false;
-  saved = (typeof this.file.database_id !== 'undefined')
 
 
   select_file() {
@@ -89,7 +89,7 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
 
   //determines if the use can save the file
   get disable_saving() {
-    return (typeof this.file?.database_id !== 'undefined') || this.saved || this.saving
+    return (typeof this.file?.database_id !== 'undefined') || this.saving
   }
 
   save_to_database(file: EvaluationFile | ProfileFile) {
@@ -118,14 +118,15 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
     }
     axios
       .post('/evaluations', formData)
-      .then(() => {
+      .then((response) => {
         SnackbarModule.notify('File saved successfully');
+        file.database_id = parseInt(response.data.id);
+        EvaluationModule.addEvaluation(response.data);
       })
       .catch((error) => {
         SnackbarModule.failure(error.response.data.message);
       }).finally(() => {
         this.saving = false;
-        this.saved = true;
       });
   }
   //gives different icons for a file if it is just a profile
