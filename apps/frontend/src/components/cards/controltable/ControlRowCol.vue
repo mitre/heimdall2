@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row dense>
     <v-col cols="12" sm="12" lg="2">
       <v-layout class="pl-2" fill-height justify-center align-center>
         <v-btn
@@ -14,6 +14,7 @@
       </v-layout>
     </v-col>
     <v-col
+      class="py-0"
       cols="12"
       :sm="result.message ? 6 : 12"
       :lg="result.message ? 5 : 10"

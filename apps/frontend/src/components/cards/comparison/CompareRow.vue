@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-row @click="expanded = !expanded">
+    <v-row dense @click="expanded = !expanded">
       <!-- Control ID -->
       <v-col cols="3" xs="3" sm="2" md="1" class="pt-0">
         <div style="text-align: center; padding: 19px">
@@ -20,13 +20,13 @@
         </v-btn>
       </v-col>
     </v-row>
-    <div v-if="expanded">
-      <v-row>
+    <div v-if="expanded" dense>
+      <v-row dense>
         <v-col key="delta" cols="12">
           <DeltaView :delta="delta" />
         </v-col>
       </v-row>
-      <v-row>
+      <v-row dense>
         <v-col cols="3" sm="2" md="1" />
         <v-col v-for="fileId in fileIds" :key="fileId" cols="4" md="5">
           <ControlRowDetails
