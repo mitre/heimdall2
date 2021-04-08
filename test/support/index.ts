@@ -6,6 +6,14 @@ import DatabaseHelper from './helpers/DatabaseHelper';
 const databaseHelper = new DatabaseHelper();
 
 beforeEach(function () {
+  // This mocks the 'check for updates' functionality to avoid
+  // 403 errors on testing
+  cy.intercept('https://api.github.com/repos/mitre/heimdall2/tags', [
+    {
+      name: 'v9.9.9'
+    }
+  ]);
+
   databaseHelper.clear();
 });
 
