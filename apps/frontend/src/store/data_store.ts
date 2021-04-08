@@ -10,7 +10,6 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import {context} from 'inspecjs';
 import {
   Action,
   getModule,
@@ -21,9 +20,7 @@ import {
 import {FilteredDataModule} from './data_filters';
 
 /** We make some new variant types of the Contextual types, to include their files*/
-export function isFromProfileFile(
-  p: context.ContextualizedProfile
-): p is SourcedContextualizedProfile {
+export function isFromProfileFile(p: SourcedContextualizedProfile) {
   return p.sourced_from === null;
 }
 
@@ -59,41 +56,11 @@ export class InspecData extends VuexModule {
   }
 
   /**
-   * Recompute all contextual data
-   */
-  get contextStore(): [
-    readonly SourcedContextualizedEvaluation[],
-    readonly context.ContextualizedProfile[],
-    readonly context.ContextualizedControl[]
-  ] {
-    // Initialize all our arrays
-    const evaluations: SourcedContextualizedEvaluation[] = [];
-    const profiles: context.ContextualizedProfile[] = [];
-    const controls: context.ContextualizedControl[] = [];
-
-    // Process our data
-    for (const f of this.executionFiles) {
-      evaluations.push(f.evaluation);
-      profiles.push(...f.evaluation.contains);
-    }
-
-    for (const f of this.profileFiles) {
-      profiles.push(f.profile);
-    }
-
-    for (const p of profiles) {
-      controls.push(...p.contains);
-    }
-
-    return [evaluations, profiles, controls];
-  }
-
-  /**
    * Returns a readonly list of all executions currently held in the data store
    * including associated context
    */
   get contextualExecutions(): readonly SourcedContextualizedEvaluation[] {
-    return this.contextStore[0];
+    return this.executionFiles.map((file) => file.evaluation);
   }
 
   get loadedDatabaseIds(): string[] {
@@ -107,19 +74,25 @@ export class InspecData extends VuexModule {
   }
 
   /**
-   * Returns a readonly list of all profiles currently held in the data store
-   * including associated context
+   * Returns a readonly list of all profiles belonging to executions currently
+   * held in the data store
    */
-  get contextualProfiles(): readonly context.ContextualizedProfile[] {
-    return this.contextStore[1];
+  get contextualExecutionProfiles(): readonly SourcedContextualizedProfile[] {
+    return this.contextualExecutions.flatMap(
+      (evaluation) => evaluation.contains
+    ) as SourcedContextualizedProfile[];
   }
 
   /**
-   * Returns a readonly list of all controls currently held in the data store
+   * Returns a readonly list of all profiles currently held in the data store
    * including associated context
    */
-  get contextualControls(): readonly context.ContextualizedControl[] {
-    return this.contextStore[2];
+  get contextualProfiles(): readonly SourcedContextualizedProfile[] {
+    return this.profileFiles.map((file) => file.profile);
+  }
+
+  get allProfiles(): readonly SourcedContextualizedProfile[] {
+    return this.contextualProfiles.concat(this.contextualExecutionProfiles);
   }
 
   /**

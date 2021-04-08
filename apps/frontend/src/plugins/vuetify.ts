@@ -29,7 +29,6 @@ const mitrePrimaryGrey = gen_variants('#5f636a');
 const mitreSecondaryGrey = gen_variants('#cfdeea');
 const mitreSecondaryBlue = gen_variants('#00b3dc');
 const darkBackground = gen_variants('#303030');
-const lightBackground = gen_variants('#e0e0e0', 2); // Want more extreme variations
 
 const branding = {
   mitrePrimaryBlue,
@@ -76,18 +75,6 @@ const veautiful = new Vuetify({
         'bar-visible': gen_visibilities(darkBackground),
         secondary: darkBackground,
         'secondary-visible': gen_visibilities(darkBackground)
-      },
-      light: {
-        ...statuses,
-        ...severities,
-        ...compliances,
-        ...branding,
-        primary: mitrePrimaryBlue,
-        'primary-visible': gen_visibilities(mitrePrimaryBlue),
-        bar: mitrePrimaryBlue,
-        'bar-visible': gen_visibilities(mitrePrimaryBlue),
-        secondary: lightBackground,
-        'secondary-visible': gen_visibilities(lightBackground)
       }
     },
     options: {

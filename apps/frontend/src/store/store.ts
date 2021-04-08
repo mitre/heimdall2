@@ -3,7 +3,6 @@ import {ColorHack} from '@/store/color_hack';
 import {FilteredData} from '@/store/data_filters';
 import {InspecData} from '@/store/data_store';
 import {IGroupState} from '@/store/groups';
-import {HashLookup} from '@/store/lookup_hashes';
 import {InspecIntake} from '@/store/report_intake';
 import {IServerState} from '@/store/server';
 import {SeverityCount} from '@/store/severity_counts';
@@ -12,6 +11,7 @@ import {StatusCount} from '@/store/status_counts';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {config} from 'vuex-module-decorators';
+import {IHeightsState} from './heights';
 
 config.rawError = true;
 
@@ -33,9 +33,9 @@ Vue.use(Vuex);
 export interface StoreType {
   data: InspecData;
   filteredData: FilteredData;
+  heights: IHeightsState;
   statusCounts: StatusCount;
   severityCounts: SeverityCount;
-  lookup: HashLookup;
   intake: InspecIntake;
   colors: ColorHack;
   info: IAppInfoState;

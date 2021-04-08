@@ -19,6 +19,7 @@
       :headers="allGroups ? allGroupsHeaders : myGroupsHeaders"
       :items="allGroups ? allGroupData : myGroupData"
       class="elevation-0"
+      dense
       :loading="loading"
       :search="search"
     >
@@ -29,6 +30,7 @@
             append-icon="mdi-magnify"
             label="Search"
             single-line
+            dense
             hide-details
           />
         </v-container>

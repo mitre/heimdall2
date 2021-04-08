@@ -1,5 +1,5 @@
 <template>
-  <v-row class="foreground">
+  <v-row class="foreground" :dense="dense">
     <v-col cols="12">
       <v-card color="grey darken-3" data-cy="controlRow" elevation="3">
         <ResponsiveRowSmall
@@ -70,6 +70,7 @@ import Component from 'vue-class-component';
 import ResponsiveRowLarge from '@/components/cards/controltable/ResponsiveRowLarge.vue';
 import ResponsiveRowMedium from '@/components/cards/controltable/ResponsiveRowMedium.vue';
 import ResponsiveRowSmall from '@/components/cards/controltable/ResponsiveRowSmall.vue';
+import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -78,5 +79,7 @@ import ResponsiveRowSmall from '@/components/cards/controltable/ResponsiveRowSma
     ResponsiveRowSmall
   }
 })
-export default class ControlRowHeader extends Vue {}
+export default class ResponsiveRowSwitch extends Vue {
+  @Prop({type: Boolean, required: false, default: false}) dense!: boolean;
+}
 </script>

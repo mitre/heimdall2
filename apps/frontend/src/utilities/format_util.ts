@@ -3,7 +3,10 @@
  */
 
 import {isFromProfileFile} from '@/store/data_store';
-import {SourcedContextualizedEvaluation} from '@/store/report_intake';
+import {
+  SourcedContextualizedEvaluation,
+  SourcedContextualizedProfile
+} from '@/store/report_intake';
 import {context} from 'inspecjs';
 
 export function execution_unique_key(
@@ -17,7 +20,7 @@ export function execution_unique_key(
  * @param profile
  */
 export function profile_unique_key(
-  profile: Readonly<context.ContextualizedProfile>
+  profile: Readonly<SourcedContextualizedProfile>
 ): string {
   if (isFromProfileFile(profile)) {
     return `profile_${profile.from_file.unique_id}`;
@@ -37,7 +40,7 @@ export function control_unique_key(
 ): string {
   return (
     profile_unique_key(
-      ctrl.sourced_from as Readonly<context.ContextualizedProfile>
+      ctrl.sourced_from as Readonly<SourcedContextualizedProfile>
     ) +
     '-' +
     ctrl.data.id

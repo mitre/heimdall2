@@ -49,7 +49,7 @@ import {SidebarModule} from '@/store/sidebar_state';
 })
 export default class Base extends Vue {
   @Prop({default: 'Heimdall'}) readonly title!: string;
-  @Prop({default: 5}) readonly topbarZIndex!: number;
+  @Prop({default: 11}) readonly topbarZIndex!: number;
   @Prop({default: false}) readonly minimalTopbar!: boolean;
   @Prop({default: true}) readonly showTopbar!: boolean;
   /** Models if the drawer is open */
