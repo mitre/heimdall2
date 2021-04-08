@@ -38,8 +38,10 @@ export class Heights extends VuexModule implements IHeightsState {
   }
 
   @Action
-  public setControlTableHeaderHeight(value: number) {
-    this.context.commit('SET_CONTROL_TABLE_HEADER_HEIGHT', value);
+  public setControlTableHeaderHeight(value: number | undefined) {
+    if (value) {
+      this.context.commit('SET_CONTROL_TABLE_HEADER_HEIGHT', value);
+    }
   }
 }
 
