@@ -35,6 +35,14 @@ context('Registration', () => {
     });
 
     it('rejects a weak password', () => {
+      cy.on('uncaught:exception', (err) => {
+        expect(err.response.status).to.equal(400);
+
+        // return false to prevent the error from
+        // failing this test
+        return false;
+      });
+
       registrationPage.register(CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD);
       toastVerifier.toastTextContains(
         'Password does not meet complexity requirements'

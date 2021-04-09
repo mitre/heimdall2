@@ -14,7 +14,6 @@ const issues = parsed.issues || '';
 
 module.exports = {
   publicPath: '/',
-  transpileDependencies: [/(\/|\\)vuetify(\/|\\)/],
   devServer: {
     // JWT_SECRET is a required secret for the backend. If it is sourced
     // then it is safe to assume the app is in server mode in development.
