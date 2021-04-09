@@ -53,14 +53,28 @@ context('Login', () => {
       // Make sure all the fields exist
       userModalVerifier.verifyFieldsExist();
     });
-    it('fails to authenticate a user with invalid credentials', () => {
-      cy.login(BAD_LOGIN_AUTHENTICATION);
-      toastVerifier.toastTextContains('Incorrect Username or Password');
-    });
-    it('fails to authenticate an ldap user with invalid credentials', () => {
-      loginPage.switchToLDAPAuth();
-      loginPage.ldapLogin(BAD_LDAP_AUTHENTICATION);
-      toastVerifier.toastTextContains('Unauthorized');
+
+    describe('Authentication Failures', () => {
+      // Ignore 401 errors on authentication failure tests
+      beforeEach(() => {
+        cy.on('uncaught:exception', (err) => {
+          expect(err.response.status).to.equal(401);
+
+          // return false to prevent the error from
+          // failing this test
+          return false;
+        });
+      });
+
+      it('fails to authenticate a user with invalid credentials', () => {
+        cy.login(BAD_LOGIN_AUTHENTICATION);
+        toastVerifier.toastTextContains('Incorrect Username or Password');
+      });
+      it('fails to authenticate an ldap user with invalid credentials', () => {
+        loginPage.switchToLDAPAuth();
+        loginPage.ldapLogin(BAD_LDAP_AUTHENTICATION);
+        toastVerifier.toastTextContains('Unauthorized');
+      });
     });
   });
 
