@@ -153,7 +153,7 @@ export default class ControlTable extends Vue {
     // Allow the page to settle before checking the controlTableHeader height
     // (this is what $nextTick is supposed to do but it's firing too quickly)
     setTimeout(() => {
-      HeightsModule.setControlTableHeaderHeight(this.controlTableTitle.clientHeight);
+      HeightsModule.setControlTableHeaderHeight(this.controlTableTitle?.clientHeight);
     }, 2000);
   }
 
