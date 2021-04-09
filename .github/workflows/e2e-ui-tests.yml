@@ -68,9 +68,11 @@ jobs:
           start: yarn start, yarn run cypress-test mock-oauth, yarn run cypress-test mock-openid
           wait-on: 'http://127.0.0.1:3000, http://127.0.0.1:3001'
 
-      - name: Upload test screenshots
+      - name: Upload test screenshots and videos
         if: failure()
         uses: actions/upload-artifact@master
         with:
-          name: cypress-screenshots
-          path: test/screenshots
+          name: cypress-recording
+          path: |
+            test/screenshots
+            test/videos
