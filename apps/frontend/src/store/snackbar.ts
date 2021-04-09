@@ -27,6 +27,7 @@ export class Snackbar extends VuexModule {
 
   @Action
   notify(message: string) {
+    this.context.commit('SET_VISIBILITY', false);
     this.context.commit('SET_ERROR', false);
     this.context.commit('SET_MESSAGE', message);
     this.context.commit('SET_VISIBILITY', true);
@@ -34,6 +35,7 @@ export class Snackbar extends VuexModule {
 
   @Action
   failure(message: string) {
+    this.context.commit('SET_VISIBILITY', false);
     this.context.commit('SET_ERROR', true);
     this.context.commit('SET_MESSAGE', message);
     this.context.commit('SET_VISIBILITY', true);
