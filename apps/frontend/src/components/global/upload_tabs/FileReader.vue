@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid style="height: 85vh">
+  <v-container fluid>
     <v-card style="position: relative" class="elevation-0">
       <v-container style="margin-top: 5%">
         <v-row>

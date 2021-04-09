@@ -1,6 +1,6 @@
 <template>
   <v-card class="elevation-0">
-    <v-container class="mx-0 px-0" fluid style="height: 85vh">
+    <v-container class="mx-0 px-0">
       <LoadFileList
         :headers="headers"
         :files="samples"

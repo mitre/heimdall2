@@ -14,12 +14,11 @@
         @cancel="deleteItemDialog = false"
         @confirm="deleteItemConfirm"
       />
-      <div style="height: 74vh; overflow: auto">
+      <div class="d-flex flex-column">
         <v-data-table
           v-model="selectedFiles"
           data-cy="loadFileList"
           dense
-          :items-per-page="15"
           :headers="headers"
           :items="filteredFiles"
           :loading="loading"
@@ -72,17 +71,17 @@
             </v-row>
           </template>
         </v-data-table>
+        <v-btn
+          block
+          class="card-outter"
+          :disabled="loading"
+          @click="load_results(selectedFiles)"
+        >
+          Load Selected
+          <v-icon class="pl-2"> mdi-file-download</v-icon>
+        </v-btn>
       </div>
     </div>
-    <v-btn
-      block
-      class="px-2"
-      :disabled="loading"
-      @click="load_results(selectedFiles)"
-    >
-      Load Selected
-      <v-icon class="pl-2"> mdi-file-download</v-icon>
-    </v-btn>
   </div>
 </template>
 
@@ -186,5 +185,9 @@ export default class LoadFileList extends Vue {
 <style scoped>
 .cursor-pointer {
   cursor: pointer;
+}
+.card-outter {
+  position: absolute;
+  bottom: 0;
 }
 </style>
