@@ -3422,9 +3422,9 @@
   integrity sha512-hiYA88aHiEIgDmeKlsyVsuQdcFn3Z2VuFd/Xm/HCnGnPD8UFU5BM128uzzRVVGEzKDKYUrRsRH9S2o+NUy/3IA==
 
 "@types/prismjs@^1.16.1":
-  version "1.16.4"
-  resolved "https://registry.yarnpkg.com/@types/prismjs/-/prismjs-1.16.4.tgz#2e61e9ade543a6091b9aa70f740197a754ab43e0"
-  integrity sha512-9B+DlSSelvKZMKkAgm1SjBV19XbPIL113GIKl18XgJV+06QvnbykeqeizZrr14b4TWf1deWLu9XZivPD8zMoHA==
+  version "1.16.5"
+  resolved "https://registry.yarnpkg.com/@types/prismjs/-/prismjs-1.16.5.tgz#378f491ff02304ce50924b05283111d4a286ecba"
+  integrity sha512-nSU7U6FQDJJCraFNwaHmH5YDsd/VA9rTnJ7B7AGFdn+m+VSt3FjLWN7+AbqxZ67dbFazqtrDFUto3HK4ljrHIg==
 
 "@types/puppeteer@*", "@types/puppeteer@^5.4.0":
   version "5.4.3"
