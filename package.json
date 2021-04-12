@@ -9,25 +9,18 @@
   "types": "./dist/inspecjs.d.ts",
   "dependencies": {},
   "devDependencies": {
-    "@types/jest": "^24.0.18",
-    "@types/node": "^12.12.26",
-    "@typescript-eslint/eslint-plugin": "^2.16.0",
-    "@typescript-eslint/parser": "^2.16.0",
-    "chai": "^4.2.0",
+    "@types/node": "^12.20.7",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
     "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.9.0",
-    "eslint-plugin-prettier": "^3.1.2",
-    "jest": "^24.9.0",
-    "lite-server": "^2.5.4",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-prettier": "^3.3.1",
     "prettier": "^1.19.1",
-    "quicktype": "^15.0.201",
-    "ts-jest": "^24.0.2",
-    "typedoc": "^0.15.0",
-    "typescript": "^3.6.2"
+    "typedoc": "^0.20.35",
+    "typescript": "^3.9.9"
   },
   "scripts": {
     "build": "rm -r ./dist; tsc --strict",
-    "test": "jest --watch",
     "docs": "typedoc --out docs ./src",
     "gen-types": "bash scripts/update_schema.sh",
     "lint": "eslint --ext .ts src; exit 0"

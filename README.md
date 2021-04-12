@@ -1,5 +1,7 @@
 # InSpecJS
 
+To update schemas install `quicktype` with `npm install -g quicktype` and use `npm run gen-types`
+
 ### NOTICE
 
 This software is currently in EARLY ALPHA DEVELOPMENT. No guarantees whatsoever are made to its safety, reliability, or accuracy with regards to the parsing and analyzing of inspec files. Do NOT use in production, and do NOT expect current API to remain stable. Use at your own risk.
@@ -10,7 +12,7 @@ This software is currently in EARLY ALPHA DEVELOPMENT. No guarantees whatsoever 
 
 Approved for Public Release; Distribution Unlimited. Case Number 18-3678.
 
-### NOTICE  
+### NOTICE
 
 MITRE hereby grants express written permission to use, reproduce, distribute, modify, and otherwise leverage this software to the extent permitted by the licensed terms provided in the LICENSE.md file included with this project.
 
