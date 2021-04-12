@@ -10799,10 +10799,10 @@ inquirer@7.3.3, inquirer@^7.0.3, inquirer@^7.1.0, inquirer@^7.3.3:
     strip-ansi "^6.0.0"
     through "^2.3.6"
 
-inspecjs@0.12.3:
-  version "0.12.3"
-  resolved "https://registry.yarnpkg.com/inspecjs/-/inspecjs-0.12.3.tgz#48d232b6586d7a7dbddffb74c21f2f397d1b514e"
-  integrity sha512-n2heSIJjhJUA4+KRwlTCrciO/wriWUpeA9tmG87I2UpdafA425KJDbcS2jYtD6zj4HUbKjhmNTm7KVLlSpAUaw==
+inspecjs@0.12.4:
+  version "0.12.4"
+  resolved "https://registry.yarnpkg.com/inspecjs/-/inspecjs-0.12.4.tgz#8d440aefef8d2ab2c6e98b79a95796f052d73326"
+  integrity sha512-L+IjpF2Pfdlz3ot1WlZUidVPwB5OWZ0qWd4XFXtBbT7+BeIxxbxRIDXta4VBMts02suPo9HLEVizd2XkigiNaw==
 
 internal-ip@^4.3.0:
   version "4.3.0"
