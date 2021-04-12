@@ -1,5 +1,9 @@
 <template>
   <v-card class="elevation-0">
+    <v-card-subtitle>
+      Samples to show the power of the Heimdall application and supported HDF
+      formats
+    </v-card-subtitle>
     <v-container class="mx-0 px-0">
       <LoadFileList
         :headers="headers"

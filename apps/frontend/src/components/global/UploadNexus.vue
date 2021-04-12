@@ -99,8 +99,8 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
   @Prop({default: true}) readonly visible!: boolean;
   @Prop({default: false}) readonly persistent!: boolean;
   active_tab: string = local_tab.get_default('uploadtab-local');
-  fullscreen = (this.active_tab == 'uploadtab-database' || this.$vuetify.breakpoint.mobile)
-  fullscreenTopStyling = {'margin-top': '5vh', 'bottom': '0'}
+  fullscreen = (this.active_tab === 'uploadtab-database' || this.$vuetify.breakpoint.mobile)
+  fullscreenTopStyling = {'margin-top': '5vh'}
 
   // Handles change in tab
   selected_tab(new_tab: string) {
@@ -135,8 +135,8 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
   }
 
   @Watch('active_tab')
-  onTabChange(new_tab: string){
-    if(new_tab == 'uploadtab-database' || this.$vuetify.breakpoint.mobile) {
+  onTabChange(newTab: string){
+    if(newTab === 'uploadtab-database' || this.$vuetify.breakpoint.mobile) {
       this.fullscreen = true;
     } else {
       this.fullscreen = false;

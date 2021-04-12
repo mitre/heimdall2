@@ -1,6 +1,9 @@
 <template>
   <v-container fluid>
     <v-card style="position: relative" class="elevation-0">
+      <v-card-subtitle
+        >Easily load any supported Heimdall Data Format file</v-card-subtitle
+      >
       <v-container style="margin-top: 5%">
         <v-row>
           <v-col cols="12" align="center">

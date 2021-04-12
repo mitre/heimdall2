@@ -18,6 +18,7 @@
         <v-data-table
           v-model="selectedFiles"
           data-cy="loadFileList"
+          class="pb-8"
           dense
           :headers="headers"
           :items="filteredFiles"

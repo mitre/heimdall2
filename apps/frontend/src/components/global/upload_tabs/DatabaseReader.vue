@@ -1,5 +1,8 @@
 <template>
   <v-container class="mx-0 px-0" fluid style="height: 80vh">
+    <v-card-subtitle>
+      View files loaded into your organizations Heimdall Server instance.
+    </v-card-subtitle>
     <LoadFileList
       :headers="headers"
       :files="files"

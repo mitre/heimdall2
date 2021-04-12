@@ -22,11 +22,13 @@
 import Component from 'vue-class-component';
 import UploadNexus from '@/components/global/UploadNexus.vue';
 import Vue from 'vue';
+
 @Component({
   components: {
     UploadNexus
   }
 })
+
 export default class UploadButton extends Vue {
   showModal: boolean = false;
   /**

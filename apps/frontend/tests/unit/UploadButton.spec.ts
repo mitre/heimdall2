@@ -1,4 +1,6 @@
 import UploadButton from '@/components/generic/UploadButton.vue';
+import Modal from '@/components/global/Modal.vue';
+import UploadNexus from '@/components/global/UploadNexus.vue';
 import {mount, Wrapper} from '@vue/test-utils';
 import Vuetify from 'vuetify';
 import {addElemWithDataAppToBody} from '../util/testingUtils';
@@ -8,28 +10,22 @@ addElemWithDataAppToBody();
 describe('The Upload Button', () => {
   const vuetify = new Vuetify();
   let wrapper: Wrapper<Vue>;
-  const $router = {
-    currentRoute: {
-      path: '/results'
-    },
-    push: function (newPath: string) {
-      this.currentRoute.path = newPath;
-    }
-  };
 
   beforeEach(() => {
     wrapper = mount(UploadButton, {
-      vuetify,
-      mocks: {
-        $router
-      }
+      vuetify
     });
   });
 
-  it('Displays the UploadNexus', async () => {
+  it('Displays the UploadNexus and closes it when the close action is emitted', async () => {
     const uploadBtn = wrapper.find('#upload-btn');
-    expect($router.currentRoute.path).toEqual('/results');
+    expect(wrapper.findComponent(UploadNexus).props('visible')).toBeFalsy();
     await uploadBtn.trigger('click');
-    expect($router.currentRoute.path).toEqual('/');
+    expect(wrapper.findComponent(UploadNexus).props('visible')).toBeTruthy();
+    expect(uploadBtn.attributes('disabled')).toBeTruthy();
+    wrapper.findComponent(Modal).vm.$emit('close-modal');
+    await wrapper.vm.$nextTick();
+    expect(wrapper.findComponent(UploadNexus).props('visible')).toBeFalsy();
+    expect(uploadBtn.attributes('disabled')).toBeFalsy();
   });
 });
