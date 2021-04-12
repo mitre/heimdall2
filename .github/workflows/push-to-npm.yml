@@ -21,7 +21,7 @@ jobs:
       - name: Build tarball for publishing
         run: npm run build
 
-      - name: Publish Heimdall Lite to NPM
+      - name: Publish inspecJS to NPM
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -31,7 +31,7 @@ jobs:
         with:
           registry-url: 'https://npm.pkg.github.com'
 
-      - name: Publish to GitHub Packages
+      - name: Publish inspecJS to GitHub Packages
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
