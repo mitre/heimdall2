@@ -55,7 +55,7 @@ export default class ExportCaat extends Vue {
     CreatedDate: new Date()
   }
 
-  getRow(control: ContextualizedControl): CAATRow[] {
+  getRow(control: ContextualizedControl, filename: string | undefined): CAATRow[] {
     const hdf = control.hdf;
     const allRows: CAATRow[] = [];
     for (const formatted of hdf.canonized_nist({
@@ -74,6 +74,7 @@ export default class ExportCaat extends Vue {
       if (hdf.start_time) {
         row['Date Identified'] = this.convertDate(new Date(hdf.start_time), '/')
       }
+      row['Finding ID'] = `${filename} - ${formatted}`
       row['Finding Description'] = this.fix(hdf.wraps.title)
       row['Weakness Description'] = this.createCaveat(hdf)
       row['Control Weakness Type'] = 'Security';
@@ -119,7 +120,7 @@ export default class ExportCaat extends Vue {
           continue;
         } else {
           hitIds.add(root.hdf.wraps.id);
-          rows.push(...this.getRow(root));
+          rows.push(...this.getRow(root, file?.filename));
         }
       }
       // Add rows to sheet
