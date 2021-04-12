@@ -40,11 +40,13 @@ export default class ExportCaat extends Vue {
   MAX_CELL_SIZE = 32000;
 
   header = [
-      'Control Number', 'Finding Title', 'Date Identified', 'Finding ID', 'Information System or Program Name',
-      'Repeat Findings', 'Repeat Finding Weakness ID', 'Finding Description', 'Weakness Description', 'Control Weakness Type',
-      'Source', 'Assessment/Audit Company', 'Test Method', 'Test Objective', 'Test Result Description',
-      'Test Result', 'Recommended Corrective Action(s)', 'Effect on Business', 'Likelihood', 'Impact'
-    ]
+    'Control Number', 'Finding Title', 'Date Identified', 'Finding ID', 'Information System or Program Name',
+    'Repeat Findings', 'Repeat Finding Weakness ID', 'Finding Description', 'Weakness Description', 'Control Weakness Type',
+    'Source', 'Assessment/Audit Company', 'Test Method', 'Test Objective', 'Test Result Description',
+    'Test Result', 'Recommended Corrective Action(s)', 'Effect on Business', 'Likelihood', 'Impact'
+  ]
+
+  takenFilenames: string[] = []
 
   fileSettings = {
     Title: 'Compliance Assessment/Audit Tracking (CAAT) Spreadsheet',
@@ -96,7 +98,13 @@ export default class ExportCaat extends Vue {
       const file = InspecDataModule.allFiles.find(
         (f) => f.unique_id === fileId
       );
-      const sheetName = `${file?.filename} - ${fileId}`.substr(0, 30)
+      let renameCount = 2;
+      let sheetName: string = `${file?.filename || fileId}`.substring(0, 31)
+      while (this.takenFilenames.includes(sheetName)) {
+        sheetName = `${file?.filename || fileId} `.substring(0, 28) + renameCount
+        renameCount++
+      }
+      this.takenFilenames.push(sheetName);
       // Create a new Sheet
       wb.SheetNames.push(sheetName);
       wb.Props = this.fileSettings;
