@@ -41,6 +41,9 @@ module.exports = {
     ]
   },
   chainWebpack: (config) => {
+    // Disable resolve symlinks to silence eslint when using `npm link`
+    // (when developing inspecjs locally): https://stackoverflow.com/a/57518476/1670307
+    config.resolve.symlinks(false);
     config.module
       .rule('vue')
       .use('vue-svg-inline-loader')
