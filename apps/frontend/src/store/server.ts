@@ -27,6 +27,7 @@ export interface IServerState {
   token: string;
   banner: string;
   enabledOAuth: string[];
+  registrationEnabled: boolean;
   oidcName: string;
   ldap: boolean;
   userInfo: IUser;
@@ -43,6 +44,7 @@ class Server extends VuexModule implements IServerState {
   ldap = false;
   serverUrl = '';
   serverMode = false;
+  registrationEnabled = true;
   loading = true;
   enabledOAuth: string[] = [];
   allUsers: ISlimUser[] = [];
@@ -82,6 +84,7 @@ class Server extends VuexModule implements IServerState {
   SET_STARTUP_SETTINGS(settings: IStartupSettings) {
     this.banner = settings.banner;
     this.enabledOAuth = settings.enabledOAuth;
+    this.registrationEnabled = settings.registrationEnabled;
     this.oidcName = settings.oidcName;
     this.ldap = settings.ldap;
   }
@@ -193,15 +196,18 @@ class Server extends VuexModule implements IServerState {
   }
 
   @Action
-  public async Register(userInfo: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-    passwordConfirmation: string;
-    creationMethod: string;
+  public async Register(loginPayload: {
+    endpoint: string;
+    userInfo: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      password: string;
+      passwordConfirmation: string;
+      creationMethod: string;
+    };
   }) {
-    return axios.post('/users', userInfo);
+    return axios.post(loginPayload.endpoint, loginPayload.userInfo);
   }
 
   @Action

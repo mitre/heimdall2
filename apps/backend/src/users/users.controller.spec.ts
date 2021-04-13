@@ -113,7 +113,8 @@ describe('UsersController Unit Tests', () => {
       expect.assertions(1);
 
       const createdUser = await usersController.create(
-        CREATE_USER_DTO_TEST_OBJ_2
+        CREATE_USER_DTO_TEST_OBJ_2,
+        {user: adminUser}
       );
       expect(createdUser).toEqual(
         new UserDto(await usersService.findById(createdUser.id))
@@ -126,7 +127,8 @@ describe('UsersController Unit Tests', () => {
 
       await expect(async () => {
         await usersController.create(
-          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD
+          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD,
+          {user: adminUser}
         );
       }).rejects.toThrow(ValidationError);
     });
@@ -137,7 +139,8 @@ describe('UsersController Unit Tests', () => {
 
       await expect(async () => {
         await usersController.create(
-          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD
+          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
+          {user: adminUser}
         );
       }).rejects.toThrow(BadRequestException);
     });
@@ -148,7 +151,8 @@ describe('UsersController Unit Tests', () => {
 
       await expect(async () => {
         await usersController.create(
-          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD
+          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD,
+          {user: adminUser}
         );
       }).rejects.toThrow(ValidationError);
     });

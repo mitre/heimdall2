@@ -11,6 +11,10 @@ export class ConfigService {
     this.appConfig = new AppConfig();
   }
 
+  isRegistrationAllowed(): boolean {
+    return this.get('REGISTRATION_DISABLED')?.toLowerCase() != 'true';
+  }
+
   frontendStartupSettings(): StartupSettingsDto {
     const enabledOauth: string[] = [];
     supportedOauth.forEach((oauthStrategy) => {
@@ -22,7 +26,8 @@ export class ConfigService {
       banner: this.get('WARNING_BANNER') || '',
       enabledOAuth: enabledOauth,
       oidcName: this.get('OIDC_NAME') || '',
-      ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false
+      ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false,
+      registrationEnabled: this.isRegistrationAllowed()
     });
   }
 
