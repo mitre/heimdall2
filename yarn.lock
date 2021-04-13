@@ -7532,9 +7532,9 @@ date-fns@^1.27.2:
   integrity sha512-hBSVCvSmWC+QypYObzwGOd9wqdDpOt+0wl0KbU+R+uuZBS1jN8VsD1ss3irQDknRj5NvxiTF6oj/nDRnN/UQNw==
 
 date-fns@^2.6.0:
-  version "2.20.2"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.20.2.tgz#7f05d1275e1e43c3bdde5998201920098e19c6a1"
-  integrity sha512-QS0Z8SD/ALhKFvhtU4Fhz+1crsI7fPzBquXmdWay33KJPEU7btro2hnmmErpQRmt2D624B1lbjXQKDUMLnQTmQ==
+  version "2.20.3"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.20.3.tgz#5a28718edb95a80db96187b25340959867d36bc8"
+  integrity sha512-BbiJSlfmr1Fnfi1OHY8arklKdwtZ9n3NkjCeK8G9gtEe0ZSUwJuwHc6gYBl0uoC0Oa5RdpJV1gBBdXcZi8Efdw==
 
 dateformat@^3.0.0:
   version "3.0.3"
@@ -10799,10 +10799,10 @@ inquirer@7.3.3, inquirer@^7.0.3, inquirer@^7.1.0, inquirer@^7.3.3:
     strip-ansi "^6.0.0"
     through "^2.3.6"
 
-inspecjs@0.12.3:
-  version "0.12.3"
-  resolved "https://registry.yarnpkg.com/inspecjs/-/inspecjs-0.12.3.tgz#48d232b6586d7a7dbddffb74c21f2f397d1b514e"
-  integrity sha512-n2heSIJjhJUA4+KRwlTCrciO/wriWUpeA9tmG87I2UpdafA425KJDbcS2jYtD6zj4HUbKjhmNTm7KVLlSpAUaw==
+inspecjs@0.12.4:
+  version "0.12.4"
+  resolved "https://registry.yarnpkg.com/inspecjs/-/inspecjs-0.12.4.tgz#8d440aefef8d2ab2c6e98b79a95796f052d73326"
+  integrity sha512-L+IjpF2Pfdlz3ot1WlZUidVPwB5OWZ0qWd4XFXtBbT7+BeIxxbxRIDXta4VBMts02suPo9HLEVizd2XkigiNaw==
 
 internal-ip@^4.3.0:
   version "4.3.0"
