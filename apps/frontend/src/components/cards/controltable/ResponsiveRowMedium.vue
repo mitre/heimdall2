@@ -2,6 +2,8 @@
   <v-row no-gutters>
     <v-col class="pa-0" :cols="3">
       <v-card tile flat class="d-flex flex-column fill-height">
+        <slot name="set" />
+        <v-divider />
         <slot name="status" />
         <v-divider />
         <slot name="severity" />

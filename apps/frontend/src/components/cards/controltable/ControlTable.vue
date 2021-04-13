@@ -30,6 +30,14 @@
 
       <!-- Header. This should mirror the structure of ControlRowHeader -->
       <ResponsiveRowSwitch>
+        <template #set>
+          <ColumnHeader
+            text="Result Set"
+            :sort="sort_status"
+            @input="set_sort('status', $event)"
+          />
+        </template>
+
         <template #status>
           <ColumnHeader
             text="Status"

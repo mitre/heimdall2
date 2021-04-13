@@ -6,6 +6,9 @@
           v-if="$vuetify.breakpoint.xsOnly"
           @toggle="$emit('toggle')"
         >
+          <template #set>
+            <slot name="set" />
+          </template>
           <template #status>
             <slot name="status" />
           </template>
@@ -24,6 +27,9 @@
         </ResponsiveRowSmall>
 
         <ResponsiveRowMedium v-else-if="$vuetify.breakpoint.mdAndDown">
+          <template #set>
+            <slot name="set" />
+          </template>
           <template #status>
             <slot name="status" />
           </template>
@@ -42,6 +48,9 @@
         </ResponsiveRowMedium>
 
         <ResponsiveRowLarge v-else>
+          <template #set>
+            <slot name="set" />
+          </template>
           <template #status>
             <slot name="status" />
           </template>
