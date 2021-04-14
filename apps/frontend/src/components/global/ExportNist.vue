@@ -3,7 +3,7 @@
     <template #activator="{on}">
       <LinkItem
         key="export_nist"
-        text="NIST SP 800-53 Security Control Coverage"
+        text="NIST SP 800-53 Security and Privacy Control Coverage"
         icon="mdi-file-excel"
         @click="export_nist()"
         v-on="on"
@@ -79,7 +79,7 @@ export default class ExportNIST extends Vue {
 
     // Initialize our data structures
     let sheet: NISTList = [
-      [`${filename} NIST SP 800-53 Security Control Coverage`]
+      [`${filename} NIST SP 800-53 Security and Privacy Control Coverage`]
     ];
 
     // Get them all
@@ -131,7 +131,7 @@ export default class ExportNIST extends Vue {
     let wb = XLSX.utils.book_new();
 
     wb.Props = {
-      Title: 'NIST SP 800-53 Security Control Coverage',
+      Title: 'NIST SP 800-53 Security and Privacy Control Coverage',
       Subject: 'Controls',
       Author: 'Heimdall',
       CreatedDate: new Date()
@@ -156,7 +156,7 @@ export default class ExportNIST extends Vue {
     let wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
     saveAs(
       new Blob([this.s2ab(wbout)], {type: 'application/octet-stream'}),
-      'NIST-SP-800-53-Security-Control-Coverage-' +
+      'NIST-SP-800-53-Security-and-Privacy-Control-Coverage-' +
         this.convertDate(new Date(), '-') +
         '.xlsx'
     );
