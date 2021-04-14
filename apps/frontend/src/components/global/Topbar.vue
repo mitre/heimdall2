@@ -7,8 +7,12 @@
     dense
   >
     <!-- The title and nav bar -->
-    <v-toolbar-title v-if="!minimalTopbar" id="toolbar_title" class="pr-2">
-      <v-app-bar-nav-icon @click.stop="$emit('toggle-drawer')">
+    <v-toolbar-title id="toolbar_title" class="pr-2">
+      <v-app-bar-nav-icon
+        v-if="!minimalTopbar"
+        data-cy="openSidebar"
+        @click.stop="$emit('toggle-drawer')"
+      >
         <v-icon color="bar-visible">mdi-menu</v-icon>
       </v-app-bar-nav-icon>
       <span class="hidden-sm-and-down bar-visible--text">{{
@@ -27,14 +31,12 @@
 import Component, {mixins} from 'vue-class-component';
 import TopbarDropdown from '@/components/global/TopbarDropdown.vue';
 
-import UploadNexus from '@/components/global/UploadNexus.vue';
 import ServerMixin from '@/mixins/ServerMixin';
 import {Prop} from 'vue-property-decorator';
 import {HeightsModule} from '@/store/heights';
 
 @Component({
   components: {
-    UploadNexus,
     TopbarDropdown
   }
 })

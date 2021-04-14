@@ -1,10 +1,11 @@
 <template>
-  <div>
-    <Modal
-      :visible="visible"
-      :persistent="persistent"
-      @close-modal="$emit('close-modal')"
-    >
+  <Modal
+    :visible="visible"
+    :persistent="persistent"
+    :fullscreen="fullscreen"
+    @close-modal="$emit('close-modal')"
+  >
+    <div class="elevation-24">
       <v-banner v-if="warning_banner" icon="mdi-alert" color="warning">
         {{ warning_banner }}
       </v-banner>
@@ -16,7 +17,6 @@
         show-arrows
         @change="selected_tab"
       >
-        <v-tabs-slider />
         <!-- Define our tabs -->
         <v-tab id="select-tab-local" href="#uploadtab-local">Local Files</v-tab>
 
@@ -57,8 +57,8 @@
         </v-tab-item>
       </v-tabs>
       <HelpFooter />
-    </Modal>
-  </div>
+    </div>
+  </Modal>
 </template>
 
 <script lang="ts">
@@ -79,9 +79,7 @@ import {Prop} from 'vue-property-decorator';
 import {ServerModule} from '@/store/server';
 import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
-
 const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
-
 /**
  * Multiplexes all of our file upload components
  * Emits "got-files" with a list of the unique_ids of the loaded files, wherever they come from
@@ -100,8 +98,11 @@ const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
 export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
   @Prop({default: true}) readonly visible!: boolean;
   @Prop({default: false}) readonly persistent!: boolean;
-
   active_tab: string = local_tab.get_default('uploadtab-local');
+
+  get fullscreen() {
+    return this.active_tab === 'uploadtab-database' || this.$vuetify.breakpoint.mobile;
+  }
 
   // Handles change in tab
   selected_tab(new_tab: string) {
@@ -109,22 +110,18 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
     SnackbarModule.visibility(false);
     local_tab.set(new_tab);
   }
-
   get warning_banner(): string {
     return ServerModule.banner;
   }
-
   // Event passthrough
   got_files(files: FileID[]) {
     this.$emit('got-files', files);
-
     let numEvaluations = FilteredDataModule.selectedEvaluationIds.filter(
       (eva) => files.includes(eva)
     ).length;
     let numProfiles = FilteredDataModule.selectedProfileIds.filter((prof) =>
       files.includes(prof)
     ).length;
-
     const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
     if (numEvaluations >= numProfiles) {
       // Only navigate the user to the results page if they are not

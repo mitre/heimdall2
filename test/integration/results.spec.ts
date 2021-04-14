@@ -25,6 +25,7 @@ context('Results', () => {
     cy.visit('/login');
     cy.login(LOGIN_AUTHENTICATION);
     toastVerifier.toastTextContains('You have successfully signed in.');
+    cy.get('#hide-snackbar').click();
   });
 
   // The test
