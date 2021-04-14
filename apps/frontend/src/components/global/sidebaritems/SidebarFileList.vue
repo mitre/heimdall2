@@ -39,7 +39,7 @@ import {Prop} from 'vue-property-decorator';
 import {ICreateEvaluation} from '@heimdall/interfaces';
 import _ from 'lodash';
 import RouteMixin from '@/mixins/RouteMixin';
-import {EvaluationModule} from '../../../store/evaluations';
+import {EvaluationModule} from '@/store/evaluations';
 
 @Component
 export default class FileItem extends mixins(ServerMixin, RouteMixin) {
@@ -122,6 +122,8 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
         SnackbarModule.notify('File saved successfully');
         file.database_id = parseInt(response.data.id);
         EvaluationModule.addEvaluation(response.data);
+        const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
+        this.navigateWithNoErrors(`/${this.current_route}/${loadedDatabaseIds}`);
       })
       .catch((error) => {
         SnackbarModule.failure(error.response.data.message);

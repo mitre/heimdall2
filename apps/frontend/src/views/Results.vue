@@ -75,14 +75,13 @@
                       >
                         <EditEvaluationModal
                           id="editEvaluationModal"
-                          class="top-right"
                           :active="getEvaluation(file)"
                         >
                           <template #clickable="{on}"
                             ><v-icon
                               data-cy="edit"
                               title="Edit"
-                              class="mr-2"
+                              class="mr-3 mt-3"
                               v-on="on"
                             >
                               mdi-pencil
@@ -91,9 +90,7 @@
                         </EditEvaluationModal>
                       </div>
                     </v-card-actions>
-                    <v-card-subtitle
-                      style="position: absolute; bottom: 0; right: 0"
-                    >
+                    <v-card-subtitle class="bottom-right">
                       File Info ↓
                     </v-card-subtitle>
                   </v-card>
@@ -320,13 +317,9 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   getEvaluation(file: SourcedContextualizedEvaluation): IEvaluation | undefined {
-    let result: IEvaluation | undefined;
-    EvaluationModule.allEvaluations.forEach((e) => {
-      if(e.id === file.from_file.database_id?.toString()) {
-        result = e
-      }
+    return EvaluationModule.allEvaluations.find((e) => {
+      return e.id === file.from_file.database_id?.toString()
     })
-    return result
   }
 
   /**
@@ -393,12 +386,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 
   clear_search() {
     this.search_term = '';
-  }
-
-  mounted() {
-    if(this.serverMode) {
-      EvaluationModule.getAllEvaluations()
-    }
   }
 
   /**
@@ -482,9 +469,14 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   top: 4px;
   z-index: 5;
 }
+.bottom-right {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
 .top-right {
   position: absolute;
-  top: 6%;
-  right: 2%;
+  top: 0;
+  right: 0;
 }
 </style>

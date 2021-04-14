@@ -9,17 +9,6 @@ import DataTableVerifier from '../support/verifiers/DataTableVerifier';
 import ResultsPageVerifier from '../support/verifiers/ResultsPageVerifier';
 import ToastVerifier from '../support/verifiers/ToastVerifier';
 
-// There seems to be an issue with v-slide-group that causes it to throw
-// "Uncaught TypeError: Cannot read property 'getBoundingClientRect' of undefined"
-// On a null-obj
-Cypress.on('uncaught:exception', (err, _runnable) => {
-  if (err.message.includes('getBoundingClientRect')) {
-    // Returning false here prevents Cypress from failing the test
-    return false;
-  }
-  return true;
-});
-
 context('Database results', () => {
   const uploadModal = new UploadModal();
   const sidebar = new Sidebar();

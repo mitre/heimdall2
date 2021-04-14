@@ -45,7 +45,7 @@ export class EvaluationsController {
     const abac = this.authz.abac.createForUser(request.user);
     const evaluation = await this.evaluationsService.findById(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Read, evaluation);
-    return new EvaluationDto(evaluation);
+    return new EvaluationDto(evaluation, abac.can(Action.Update, evaluation));
   }
 
   @Get(':id/groups')
