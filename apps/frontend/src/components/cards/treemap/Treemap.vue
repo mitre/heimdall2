@@ -1,7 +1,9 @@
 <template>
   <v-container fluid>
     <v-row dense>
-      <v-col :cols="4"> NIST SP 800-53 Security Control Coverage </v-col>
+      <v-col :cols="4">
+        NIST SP 800-53 Security and Privacy Control Coverage
+      </v-col>
       <v-col :cols="8">
         <v-btn :disabled="!allow_up" block x-small @click="up">
           <v-icon v-if="allow_up"> mdi-arrow-left </v-icon>
