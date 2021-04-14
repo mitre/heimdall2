@@ -38,6 +38,14 @@
           />
         </template>
 
+        <template #set>
+          <ColumnHeader
+            text="Result Set"
+            :sort="sort_status"
+            @input="set_sort('status', $event)"
+          />
+        </template>
+
         <template #id>
           <ColumnHeader
             text="ID"
