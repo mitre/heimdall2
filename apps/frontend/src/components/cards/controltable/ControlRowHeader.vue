@@ -17,6 +17,10 @@
       </v-card>
     </template>
 
+    <template #set>
+      <div class="pa-2 title" v-text="filename" />
+    </template>
+
     <template #severity>
       <v-card-text class="pa-2">
         <div v-if="showImpact">
@@ -82,6 +86,7 @@ import CircleRating from '@/components/generic/CircleRating.vue';
 import {is_control} from 'inspecjs/dist/nist';
 import {Prop} from 'vue-property-decorator';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
+import _ from 'lodash';
 
 interface Tag {
   label: string;
@@ -101,6 +106,9 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   @Prop({type: Boolean, default: false}) readonly controlExpanded!: boolean;
   @Prop({type: Boolean, default: false}) readonly showImpact!: boolean;
 
+  get filename(): string | undefined {
+    return _.get(this.control, 'sourced_from.sourced_from.from_file.filename')
+  }
   /** Typed getter for control */
   get _control(): context.ContextualizedControl {
     return this.control;

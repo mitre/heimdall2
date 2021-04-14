@@ -9,6 +9,9 @@
           <template #status>
             <slot name="status" />
           </template>
+          <template #set>
+            <slot name="set" />
+          </template>
           <template #severity>
             <slot name="severity" />
           </template>
@@ -27,6 +30,9 @@
           <template #status>
             <slot name="status" />
           </template>
+          <template #set>
+            <slot name="set" />
+          </template>
           <template #severity>
             <slot name="severity" />
           </template>
@@ -44,6 +50,9 @@
         <ResponsiveRowLarge v-else>
           <template #status>
             <slot name="status" />
+          </template>
+          <template #set>
+            <slot name="set" />
           </template>
           <template #severity>
             <slot name="severity" />

@@ -4,6 +4,8 @@
       <v-card tile flat class="d-flex flex-column fill-height">
         <slot name="status" />
         <v-divider />
+        <slot name="set" />
+        <v-divider />
         <slot name="severity" />
       </v-card>
     </v-col>
