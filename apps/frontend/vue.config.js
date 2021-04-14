@@ -13,6 +13,7 @@ const branch = parsed.branch || '';
 const issues = parsed.issues || '';
 
 module.exports = {
+  lintOnSave: 'warning',
   publicPath: '/',
   devServer: {
     // JWT_SECRET is a required secret for the backend. If it is sourced
