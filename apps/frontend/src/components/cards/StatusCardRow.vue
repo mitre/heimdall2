@@ -25,7 +25,7 @@
       >
         <div>
           <v-card-title>
-            <v-icon class="pr-3" large>mdi-alert</v-icon>
+            <v-icon class="pr-3" large>mdi-{{ profileErrorProps.icon }}</v-icon>
             <span class="title">{{
               `ALERT: ${profileErrorProps.number} ${profileErrorProps.title}`
             }}</span>
@@ -49,7 +49,7 @@
       >
         <div>
           <v-card-title>
-            <v-icon class="pr-3" large>mdi-alert-circle</v-icon>
+            <v-icon class="pr-3" large>mdi-{{ waivedProfiles.icon }}</v-icon>
             <span class="title">{{
               `INFO: ${waivedProfiles.number} ${waivedProfiles.title}`
             }}</span>
@@ -76,7 +76,7 @@ import {Filter} from '@/store/data_filters';
 import {Prop} from 'vue-property-decorator';
 
 interface CardProps {
-  icon?: string;
+  icon: string;
   title: string;
   number: number;
   subtitle: string;
@@ -143,6 +143,7 @@ export default class StatusCardRow extends Vue {
       status: undefined
     };
     return {
+      icon: 'alert',
       title: 'Profile Errors',
       subtitle: `Errors running test - check profile run privileges or check with the author of profile.`,
       color: 'statusProfileError',
@@ -154,6 +155,7 @@ export default class StatusCardRow extends Vue {
     // Want to ignore existing status filter
     const count = StatusCountModule.countOf(this.filter, 'Waived');
     return {
+      icon: 'alert-circle',
       title: 'Waived Tests',
       subtitle: `Consider using an overlay or manual attestation to properly address this control.`,
       color: 'statusNotApplicable',
