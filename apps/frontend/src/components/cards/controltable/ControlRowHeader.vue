@@ -107,7 +107,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   @Prop({type: Boolean, default: false}) readonly showImpact!: boolean;
 
   get filename(): string | undefined {
-    return _.get(this.control.sourced_from.sourced_from, 'from_file.filename')
+    return _.get(this.control, 'sourced_from.sourced_from.from_file.filename')
   }
   /** Typed getter for control */
   get _control(): context.ContextualizedControl {
