@@ -1,11 +1,11 @@
 <template>
   <v-row no-gutters>
-    <v-col class="pa-0" :cols="1.5">
-      <slot name="set" />
-    </v-col>
-
     <v-col class="pa-0" :cols="2">
       <slot name="status" />
+    </v-col>
+
+    <v-col class="pa-0" :cols="1.5">
+      <slot name="set" />
     </v-col>
 
     <v-col class="pa-0" :cols="1">

@@ -1,10 +1,6 @@
 <template>
   <!-- Need to catch for ResponsiveRowSwitch @toggle events for small view -->
   <ResponsiveRowSwitch :dense="true">
-    <template #set>
-      <div class="pa-2 title" v-text="filename" />
-    </template>
-
     <template #status>
       <v-card
         :color="status_color"
@@ -19,6 +15,10 @@
           </v-icon>
         </v-card-text>
       </v-card>
+    </template>
+
+    <template #set>
+      <div class="pa-2 title" v-text="filename" />
     </template>
 
     <template #severity>
