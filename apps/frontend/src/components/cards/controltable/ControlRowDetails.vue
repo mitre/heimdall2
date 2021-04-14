@@ -60,7 +60,6 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
 import Component, {mixins} from 'vue-class-component';
 import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
@@ -72,7 +71,6 @@ import 'prismjs/components/prism-ruby.js';
 //@ts-ignore
 import Prism from 'vue-prism-component';
 import 'prismjs/themes/prism-tomorrow.css';
-Vue.component('Prism', Prism);
 
 import {context} from 'inspecjs';
 import {Prop, Watch} from 'vue-property-decorator';
