@@ -5,7 +5,7 @@
     :fullscreen="fullscreen"
     @close-modal="$emit('close-modal')"
   >
-    <div class="elevation-24" :style="fullscreen && fullscreenTopStyling">
+    <div class="elevation-24">
       <v-banner v-if="warning_banner" icon="mdi-alert" color="warning">
         {{ warning_banner }}
       </v-banner>
@@ -75,7 +75,7 @@ import {LocalStorageVal} from '@/utilities/helper_util';
 import {SnackbarModule} from '@/store/snackbar';
 import ServerMixin from '@/mixins/ServerMixin';
 import RouteMixin from '@/mixins/RouteMixin';
-import {Prop, Watch} from 'vue-property-decorator';
+import {Prop} from 'vue-property-decorator';
 import {ServerModule} from '@/store/server';
 import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
@@ -99,8 +99,10 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
   @Prop({default: true}) readonly visible!: boolean;
   @Prop({default: false}) readonly persistent!: boolean;
   active_tab: string = local_tab.get_default('uploadtab-local');
-  fullscreen = (this.active_tab === 'uploadtab-database' || this.$vuetify.breakpoint.mobile)
-  fullscreenTopStyling = {'margin-top': '5vh'}
+
+  get fullscreen() {
+    return this.active_tab === 'uploadtab-database' || this.$vuetify.breakpoint.mobile;
+  }
 
   // Handles change in tab
   selected_tab(new_tab: string) {
@@ -131,15 +133,6 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
       }
     } else {
       this.navigateWithNoErrors(`/profiles/${loadedDatabaseIds}`);
-    }
-  }
-
-  @Watch('active_tab')
-  onTabChange(newTab: string){
-    if(newTab === 'uploadtab-database' || this.$vuetify.breakpoint.mobile) {
-      this.fullscreen = true;
-    } else {
-      this.fullscreen = false;
     }
   }
 }

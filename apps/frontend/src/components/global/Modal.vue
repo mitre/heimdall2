@@ -3,8 +3,7 @@
     id="modal"
     :value="visible"
     :persistent="persistent"
-    :max-width="maxWidth"
-    :fullscreen="fullscreen"
+    :max-width="fullscreen ? '100%' : maxWidth"
     content-class="v-card"
     @click:outside="$emit('close-modal')"
     @keydown.esc="$emit('close-modal')"
@@ -28,3 +27,9 @@ export default class Modal extends Vue {
   @Prop({default: "1200px"}) readonly maxWidth!: string;
 }
 </script>
+
+<style lang="scss">
+.v-dialog {
+  transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+</style>

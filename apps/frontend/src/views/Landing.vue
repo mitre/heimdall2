@@ -1,6 +1,5 @@
 <template>
   <BaseView
-    title="Load File"
     :show-toolbar="false"
     :show-topbar="serverMode"
     :minimal-topbar="true"
