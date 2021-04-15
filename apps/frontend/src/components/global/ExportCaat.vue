@@ -74,7 +74,7 @@ export default class ExportCaat extends Vue {
       if (hdf.start_time) {
         row['Date Identified'] = this.convertDate(new Date(hdf.start_time), '/')
       }
-      row['Finding ID'] = `${filename} - ${formatted}`
+      row['Finding ID'] = `${filename} - ${this.fix(hdf.wraps.id)}`
       row['Finding Description'] = this.fix(hdf.wraps.title)
       row['Weakness Description'] = this.createCaveat(hdf)
       row['Control Weakness Type'] = 'Security';
