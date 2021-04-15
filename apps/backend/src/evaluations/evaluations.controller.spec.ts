@@ -109,7 +109,9 @@ describe('EvaluationsController', () => {
       const abac = authzService.abac.createForUser(user);
       ForbiddenError.from(abac).throwUnlessCan(Action.Read, evaluation);
 
-      expect(foundEvaluation).toEqual(new EvaluationDto(evaluation, abac.can(Action.Update, evaluation)));
+      expect(foundEvaluation).toEqual(
+        new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
+      );
     });
 
     it('should return an evaluations tags', async () => {
