@@ -4,6 +4,10 @@
       <slot name="status" />
     </v-col>
 
+    <v-col class="pa-0" :cols="1.5">
+      <slot name="set" />
+    </v-col>
+
     <v-col class="pa-0" :cols="1">
       <v-card tile flat class="fill-height">
         <slot name="id" />
@@ -16,7 +20,7 @@
       </v-card>
     </v-col>
 
-    <v-col class="pa-0" :cols="6">
+    <v-col class="pa-0" :cols="4">
       <v-card tile flat class="fill-height">
         <slot name="title" />
       </v-card>

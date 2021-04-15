@@ -10,6 +10,7 @@
     temporary
     width="600px"
     @input="$emit('input', $event)"
+    @blur="value = false"
   >
     <v-expansion-panels v-model="active_path" accordion>
       <DropdownContent
