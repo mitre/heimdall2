@@ -13,6 +13,7 @@ const branch = parsed.branch || '';
 const issues = parsed.issues || '';
 
 module.exports = {
+  lintOnSave: 'warning',
   publicPath: '/',
   devServer: {
     // JWT_SECRET is a required secret for the backend. If it is sourced
@@ -41,6 +42,9 @@ module.exports = {
     ]
   },
   chainWebpack: (config) => {
+    // Disable resolve symlinks to silence eslint when using `npm link`
+    // (when developing inspecjs locally): https://stackoverflow.com/a/57518476/1670307
+    config.resolve.symlinks(false);
     config.module
       .rule('vue')
       .use('vue-svg-inline-loader')
