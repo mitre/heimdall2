@@ -17,7 +17,10 @@
         <v-card-text v-text="card.subtitle" />
       </v-card>
     </v-col>
-    <v-col v-if="profileErrorProps.number" cols="12">
+    <v-col
+      v-if="profileErrorProps.number && currentStatusFilter !== 'Waived'"
+      cols="12"
+    >
       <v-card
         :color="profileErrorProps.color"
         class="d-flex flex-no-wrap justify-space-between"
@@ -41,7 +44,10 @@
         </v-card-actions>
       </v-card>
     </v-col>
-    <v-col v-if="waivedProfiles.number" cols="12">
+    <v-col
+      v-if="waivedProfiles.number && currentStatusFilter !== 'Profile Error'"
+      cols="12"
+    >
       <v-card
         :color="waivedProfiles.color"
         class="d-flex flex-no-wrap justify-space-between"
@@ -58,7 +64,7 @@
         </div>
         <v-card-actions>
           <v-btn
-            :disabled="filter.status === 'Not Applicable'"
+            :disabled="filter.status === 'Waived'"
             @click="$emit('show-waived')"
             >Filter to Waived</v-btn
           >
@@ -86,6 +92,7 @@ interface CardProps {
 @Component
 export default class StatusCardRow extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({type: String, required: false}) readonly currentStatusFilter!: Filter;
 
   // Cards
   get standardCardProps(): CardProps[] {
@@ -152,14 +159,12 @@ export default class StatusCardRow extends Vue {
   }
 
   get waivedProfiles(): CardProps | null {
-    // Want to ignore existing status filter
-    const count = StatusCountModule.countOf(this.filter, 'Waived');
     return {
       icon: 'alert-circle',
       title: 'Waived Tests',
       subtitle: `Consider using an overlay or manual attestation to properly address this control.`,
       color: 'statusNotApplicable',
-      number: count
+      number: StatusCountModule.countOf(this.filter, 'Waived')
     };
   }
 }

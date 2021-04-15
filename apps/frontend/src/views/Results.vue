@@ -84,6 +84,7 @@
         <!-- Count Cards -->
         <StatusCardRow
           :filter="all_filter"
+          :current-status-filter="statusFilter"
           @show-errors="statusFilter = 'Profile Error'"
           @show-waived="statusFilter = 'Waived'"
         />
