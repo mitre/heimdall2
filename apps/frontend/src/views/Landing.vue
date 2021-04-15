@@ -1,6 +1,5 @@
 <template>
   <BaseView
-    title="Load Sample"
     :show-toolbar="false"
     :show-topbar="serverMode"
     :minimal-topbar="true"
@@ -19,8 +18,6 @@ import Component, {mixins} from 'vue-class-component';
 import ServerMixin from '@/mixins/ServerMixin';
 import UploadNexus from '@/components/global/UploadNexus.vue';
 import BaseView from '@/views/BaseView.vue';
-
-
 @Component({
   components: {
     UploadNexus,

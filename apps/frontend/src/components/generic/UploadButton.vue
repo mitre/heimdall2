@@ -28,16 +28,15 @@ import Vue from 'vue';
     UploadNexus
   }
 })
+
 export default class UploadButton extends Vue {
   showModal: boolean = false;
-
   /**
    * Invoked when file(s) are loaded.
    */
   close_modal() {
     this.showModal = false;
   }
-
   show_modal() {
     this.showModal = true;
   }
