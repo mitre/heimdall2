@@ -74,7 +74,7 @@ export default class ExportCaat extends Vue {
       if (hdf.start_time) {
         row['Date Identified'] = this.convertDate(new Date(hdf.start_time), '/')
       }
-      row['Finding ID'] = `${filename} - ${this.fix(hdf.wraps.id)}`
+      row['Finding ID'] = `${filename} - Test ${this.fix(hdf.wraps.id)}`
       row['Finding Description'] = this.fix(hdf.wraps.title)
       row['Weakness Description'] = this.createCaveat(hdf)
       row['Control Weakness Type'] = 'Security';
@@ -102,7 +102,7 @@ export default class ExportCaat extends Vue {
       let renameCount = 2;
       let sheetName: string = `${file?.filename || fileId}`.substring(0, 31)
       while (this.takenFilenames.includes(sheetName)) {
-        sheetName = `${file?.filename || fileId} `.substring(0, 28) + renameCount
+        sheetName = `${file?.filename || fileId} `.substring(0, 26) + ` (${renameCount})`
         renameCount++
       }
       this.takenFilenames.push(sheetName);
