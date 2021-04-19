@@ -84,6 +84,14 @@ export default class Users extends Vue {
       value: 'email'
     },
     {
+      text: 'Title',
+      value: 'title'
+    },
+    {
+      text: 'Role',
+      value: 'role'
+    },
+    {
       text: 'Actions',
       value: 'actions',
       sortable: false
@@ -123,8 +131,9 @@ export default class Users extends Vue {
 
     ServerModule.allUsers.forEach((user) => {
       if(!currentUserIds.includes(user.id)) {
+        let text = user.title !== null ? `${user.firstName || ''} ${user.lastName || ''} (${user.email}, ${user.title})` : `${user.firstName || ''} ${user.lastName || ''} (${user.email})`
         users.push({
-          text: `${user.firstName || ''} ${user.lastName || ''} (${user.email})`,
+          text: text,
           value: user.id
         });
       }
