@@ -42,7 +42,10 @@ jobs:
        run: rm -rf apps/backend
 
      - name: Install project dependencies
-       run: yarn install --frozen-lockfile
+       run: yarn install --frozen-lockfile --production
+
+     - name: Install frontend dev dependencies
+       run: yarn frontend install --frozen-lock
 
      - name: Run frontend tests
        run: yarn frontend test
