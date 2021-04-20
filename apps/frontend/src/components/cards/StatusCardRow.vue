@@ -17,26 +17,56 @@
         <v-card-text v-text="card.subtitle" />
       </v-card>
     </v-col>
-    <v-col v-if="errorProps.number" cols="12">
+    <v-col
+      v-if="profileErrorProps.number && currentStatusFilter !== 'Waived'"
+      cols="12"
+    >
       <v-card
-        color="statusProfileError"
+        :color="profileErrorProps.color"
         class="d-flex flex-no-wrap justify-space-between"
         elevation="12"
       >
         <div>
           <v-card-title>
-            <v-icon class="pr-3" large>mdi-{{ errorProps.icon }}</v-icon>
+            <v-icon class="pr-3" large>mdi-{{ profileErrorProps.icon }}</v-icon>
             <span class="title">{{
-              `ALERT: ${errorProps.number} ${errorProps.title}`
+              `ALERT: ${profileErrorProps.number} ${profileErrorProps.title}`
             }}</span>
           </v-card-title>
-          <v-card-text v-text="errorProps.subtitle" />
+          <v-card-text v-text="profileErrorProps.subtitle" />
         </div>
         <v-card-actions>
           <v-btn
             :disabled="filter.status === 'Profile Error'"
             @click="$emit('show-errors')"
             >Filter to Errors</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-col>
+    <v-col
+      v-if="waivedProfiles.number && currentStatusFilter !== 'Profile Error'"
+      cols="12"
+    >
+      <v-card
+        :color="waivedProfiles.color"
+        class="d-flex flex-no-wrap justify-space-between"
+        elevation="12"
+      >
+        <div>
+          <v-card-title>
+            <v-icon class="pr-3" large>mdi-{{ waivedProfiles.icon }}</v-icon>
+            <span class="title">{{
+              `INFO: ${waivedProfiles.number} ${waivedProfiles.title}`
+            }}</span>
+          </v-card-title>
+          <v-card-text v-text="waivedProfiles.subtitle" />
+        </div>
+        <v-card-actions>
+          <v-btn
+            :disabled="filter.status === 'Waived'"
+            @click="$emit('show-waived')"
+            >Filter to Waived</v-btn
           >
         </v-card-actions>
       </v-card>
@@ -62,6 +92,7 @@ interface CardProps {
 @Component
 export default class StatusCardRow extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({type: String, required: false}) readonly currentStatusFilter!: Filter;
 
   // Cards
   get standardCardProps(): CardProps[] {
@@ -112,18 +143,28 @@ export default class StatusCardRow extends Vue {
     ];
   }
 
-  get errorProps(): CardProps | null {
+  get profileErrorProps(): CardProps | null {
     // Want to ignore existing status filter
-    let filter = {
+    const filter = {
       ...this.filter,
       status: undefined
     };
     return {
-      icon: 'alert-circle',
+      icon: 'alert',
       title: 'Profile Errors',
-      subtitle: `Errors running test - check profile run privileges or check with the author of profile`,
+      subtitle: `Errors running test - check profile run privileges or check with the author of profile.`,
       color: 'statusProfileError',
       number: StatusCountModule.countOf(filter, 'Profile Error')
+    };
+  }
+
+  get waivedProfiles(): CardProps | null {
+    return {
+      icon: 'alert-circle',
+      title: 'Waived Tests',
+      subtitle: `Consider using an overlay or manual attestation to properly address this control.`,
+      color: 'statusNotApplicable',
+      number: StatusCountModule.countOf(this.filter, 'Waived')
     };
   }
 }

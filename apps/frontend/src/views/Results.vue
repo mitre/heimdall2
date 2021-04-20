@@ -84,7 +84,9 @@
         <!-- Count Cards -->
         <StatusCardRow
           :filter="all_filter"
-          @show-errors="status_filter = 'Profile Error'"
+          :current-status-filter="statusFilter"
+          @show-errors="statusFilter = 'Profile Error'"
+          @show-waived="statusFilter = 'Waived'"
         />
         <!-- Compliance Cards -->
         <v-row justify="space-around">
@@ -92,7 +94,7 @@
             <v-card class="fill-height">
               <v-card-title class="justify-center">Status Counts</v-card-title>
               <v-card-actions class="justify-center">
-                <StatusChart v-model="status_filter" :filter="all_filter" />
+                <StatusChart v-model="statusFilter" :filter="all_filter" />
               </v-card-actions>
             </v-card>
           </v-col>
@@ -115,8 +117,11 @@
                 <ComplianceChart :filter="all_filter" />
               </v-card-actions>
               <v-card-text style="text-align: center"
-                >[Passed/(Passed + Failed + Not Reviewed + Profile Error) *
-                100]</v-card-text
+                >[Passed/(Passed + Failed + Not Reviewed + Profile Error<span
+                  v-if="waivedProfilesExist"
+                >
+                  + Waived</span
+                >) * 100]</v-card-text
               >
             </v-card>
           </v-col>
@@ -210,6 +215,7 @@ import {ServerModule} from '@/store/server';
 import {capitalize} from 'lodash';
 import {compare_times} from '../utilities/delta_util';
 import RouteMixin from '@/mixins/RouteMixin';
+import {StatusCountModule} from '../store/status_counts';
 import ServerMixin from '../mixins/ServerMixin';
 
 @Component({
@@ -241,7 +247,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /**
    * The currently selected status, as modeled by the status chart
    */
-  status_filter: ControlStatus | null = null;
+  statusFilter: ControlStatus | "Waived" | null = null;
 
   /**
    * The current state of the treemap as modeled by the treemap (duh).
@@ -316,7 +322,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    */
   get all_filter(): Filter {
     return {
-      status: this.status_filter || undefined,
+      status: this.statusFilter || undefined,
       severity: this.severity_filter || undefined,
       fromFile: this.file_filter,
       tree_filters: this.tree_filters,
@@ -331,7 +337,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    */
   get treemap_full_filter(): Filter {
     return {
-      status: this.status_filter || undefined,
+      status: this.statusFilter || undefined,
       severity: this.severity_filter || undefined,
       fromFile: this.file_filter,
       search_term: this.search_term || '',
@@ -345,7 +351,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   clear() {
     this.filter_snackbar = false;
     this.severity_filter = null;
-    this.status_filter = null;
+    this.statusFilter = null;
     this.control_selection = null;
     this.search_term = '';
     this.tree_filters = [];
@@ -364,7 +370,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     let result: boolean;
     if (
       this.severity_filter ||
-      this.status_filter ||
+      this.statusFilter ||
       this.search_term !== '' ||
       this.tree_filters.length
     ) {
@@ -382,6 +388,10 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 
     // Finally, return our result
     return result;
+  }
+
+  get waivedProfilesExist(): boolean {
+    return StatusCountModule.countOf(this.all_filter, 'Waived') >= 1
   }
 
   /**
