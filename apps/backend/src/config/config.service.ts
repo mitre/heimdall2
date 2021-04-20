@@ -12,7 +12,7 @@ export class ConfigService {
   }
 
   isRegistrationAllowed(): boolean {
-    return this.get('REGISTRATION_DISABLED')?.toLowerCase() != 'true';
+    return this.get('REGISTRATION_DISABLED')?.toLowerCase() !== 'true';
   }
 
   frontendStartupSettings(): StartupSettingsDto {

@@ -15,7 +15,6 @@ import {
 } from '@nestjs/common';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
-import {ConfigService} from '../config/config.service';
 import {UniqueConstraintErrorFilter} from '../filters/unique-constraint-error.filter';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {TestGuard} from '../guards/test.guard';
@@ -34,7 +33,6 @@ import {UsersService} from './users.service';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly configService: ConfigService,
     private readonly authz: AuthzService
   ) {}
 
@@ -79,16 +77,12 @@ export class UsersController {
     @Body() createUserDto: CreateUserDto,
     @Request() request: {user: User}
   ): Promise<UserDto> {
-    if (!this.configService.isRegistrationAllowed()) {
-      if (request.user?.role === 'admin') {
-        return new UserDto(await this.usersService.create(createUserDto));
-      } else {
-        throw new UnauthorizedException(
-          'User registration is disabled. Please ask your system administrator to create the account.'
-        );
-      }
-    } else {
+    if (request.user?.role === 'admin') {
       return new UserDto(await this.usersService.create(createUserDto));
+    } else {
+      throw new UnauthorizedException(
+        'Please ask your system administrator to create the account.'
+      );
     }
   }
 
