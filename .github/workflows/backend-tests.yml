@@ -55,10 +55,5 @@ jobs:
      - name: Run unit tests
        run: yarn backend test:ci-cov
 
-     - name: Test that user registration is disabled when explicitly set
-       run: yarn backend test:ci-cov apps/backend/src/authn/authn.controller.spec.ts
-       env:
-         REGISTRATION_DISABLED: true
-
      - name: Ensure the app builds cleanly without frontend dependencies
        run: yarn backend build

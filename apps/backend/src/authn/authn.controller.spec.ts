@@ -1,6 +1,8 @@
 import {UnauthorizedException} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test, TestingModule} from '@nestjs/testing';
+import mock from 'mock-fs';
+import {REGISTRATION_DISABLED} from '../../test/constants/env-test.constant';
 import {
   CREATE_USER_DTO_TEST_OBJ,
   USER_ONE_DTO
@@ -53,29 +55,34 @@ describe('UsersController Unit Tests', () => {
     await databaseService.cleanAll();
   });
 
-  describe('Signup function', () => {
-    it('Should follow the registration enabled ENV variable', async () => {
-      if (
-        configService.get('REGISTRATION_DISABLED')?.toLocaleLowerCase() ===
-        'true'
-      ) {
-        expect.assertions(1);
+  describe('Signup function with enabled registration', () => {
+    it('Should allow users to create an account', async () => {
+      expect.assertions(7);
 
-        await expect(
-          authnController.signup(CREATE_USER_DTO_TEST_OBJ)
-        ).rejects.toBeInstanceOf(UnauthorizedException);
-      } else {
-        expect.assertions(7);
+      const user = await authnController.signup(CREATE_USER_DTO_TEST_OBJ);
+      expect(user).toBeDefined();
+      expect(user.id).toBeDefined();
+      expect(user.email).toEqual(USER_ONE_DTO.email);
+      expect(user.organization).toEqual(USER_ONE_DTO.organization);
+      expect(user.firstName).toEqual(USER_ONE_DTO.firstName);
+      expect(user.lastName).toEqual(USER_ONE_DTO.lastName);
+      expect(user.role).toEqual(USER_ONE_DTO.role);
+    });
+  });
 
-        const user = await authnController.signup(CREATE_USER_DTO_TEST_OBJ);
-        expect(user).toBeDefined();
-        expect(user.id).toBeDefined();
-        expect(user.email).toEqual(USER_ONE_DTO.email);
-        expect(user.organization).toEqual(USER_ONE_DTO.organization);
-        expect(user.firstName).toEqual(USER_ONE_DTO.firstName);
-        expect(user.lastName).toEqual(USER_ONE_DTO.lastName);
-        expect(user.role).toEqual(USER_ONE_DTO.role);
-      }
+  describe('Signup function with disabled registration', () => {
+    beforeAll(() => {
+      mock({
+        '.env': REGISTRATION_DISABLED
+      });
+    });
+
+    it('Should not allow users to create an account', async () => {
+      expect.assertions(1);
+
+      await expect(
+        authnController.signup(CREATE_USER_DTO_TEST_OBJ)
+      ).rejects.toBeInstanceOf(UnauthorizedException);
     });
   });
 
