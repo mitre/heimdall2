@@ -89,7 +89,7 @@ export default class Users extends Vue {
     },
     {
       text: 'Role',
-      value: 'role'
+      value: 'groupRole'
     },
     {
       text: 'Actions',
@@ -131,7 +131,9 @@ export default class Users extends Vue {
 
     ServerModule.allUsers.forEach((user) => {
       if(!currentUserIds.includes(user.id)) {
-        let text = user.title !== null ? `${user.firstName || ''} ${user.lastName || ''} (${user.email}, ${user.title})` : `${user.firstName || ''} ${user.lastName || ''} (${user.email})`
+        const text = user.title !== null
+          ? `${user.firstName || ''} ${user.lastName || ''} (${user.email}, ${user.title})`
+          : `${user.firstName || ''} ${user.lastName || ''} (${user.email})`
         users.push({
           text: text,
           value: user.id
