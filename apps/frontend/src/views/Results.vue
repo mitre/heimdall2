@@ -323,7 +323,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   getDbFile(file: EvaluationFile | ProfileFile): IEvaluation | undefined {
-    debugger;
     return EvaluationModule.allEvaluations.find((e) => {
       return e.id === file.database_id?.toString()
     })
