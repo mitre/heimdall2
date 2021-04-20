@@ -18,7 +18,6 @@ import {
   CREATE_USER_DTO_TEST_OBJ_2
 } from '../../test/constants/users-test.constant';
 import {AuthzService} from '../authz/authz.service';
-import {Action} from '../casl/casl-ability.factory';
 import {ConfigService} from '../config/config.service';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
@@ -44,7 +43,6 @@ const mockFile: Express.Multer.File = {
 /* eslint-enable @typescript-eslint/ban-ts-comment */
 
 describe('EvaluationsController', () => {
-  let authzService: AuthzService;
   let evaluationsController: EvaluationsController;
   let evaluationsService: EvaluationsService;
   let module: TestingModule;
@@ -78,7 +76,6 @@ describe('EvaluationsController', () => {
       ]
     }).compile();
 
-    authzService = module.get<AuthzService>(AuthzService);
     databaseService = module.get<DatabaseService>(DatabaseService);
     evaluationsService = module.get<EvaluationsService>(EvaluationsService);
     evaluationsController = module.get<EvaluationsController>(
@@ -106,11 +103,11 @@ describe('EvaluationsController', () => {
         {user: user}
       );
 
-      const abac = authzService.abac.createForUser(user);
-      ForbiddenError.from(abac).throwUnlessCan(Action.Read, evaluation);
-
       expect(foundEvaluation).toEqual(
-        new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
+        // The evaluation is created with the current user ID above
+        // so the expectation is that user should be able to edit
+        // which is the 2nd parameter to EvaluationDto.
+        new EvaluationDto(evaluation, true)
       );
     });
 
