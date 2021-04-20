@@ -39,7 +39,7 @@ jobs:
         node-version: '14.x'
 
      - name: Install project dependencies
-       run: yarn install --frozen-lockfile
+       run: yarn install --frozen-lockfile --production
 
      - name: Run lint
        run: yarn run lint:ci
