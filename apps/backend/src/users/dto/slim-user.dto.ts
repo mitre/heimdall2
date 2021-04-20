@@ -15,7 +15,7 @@ export class SlimUserDto implements ISlimUser {
 
   @IsOptional()
   @IsString()
-  readonly groupRole?: string | undefined;
+  readonly groupRole?: string;
 
   @IsOptional()
   @IsString()
