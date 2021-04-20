@@ -65,18 +65,15 @@ describe('UsersController Unit Tests', () => {
           authnController.signup(CREATE_USER_DTO_TEST_OBJ)
         ).rejects.toBeInstanceOf(UnauthorizedException);
       } else {
-        expect.assertions(8);
+        expect.assertions(7);
 
         const user = await authnController.signup(CREATE_USER_DTO_TEST_OBJ);
+        expect(user).toBeDefined();
         expect(user.id).toBeDefined();
         expect(user.email).toEqual(USER_ONE_DTO.email);
+        expect(user.organization).toEqual(USER_ONE_DTO.organization);
         expect(user.firstName).toEqual(USER_ONE_DTO.firstName);
         expect(user.lastName).toEqual(USER_ONE_DTO.lastName);
-        expect(user.title).toEqual(USER_ONE_DTO.title);
-        expect(user.organization).toEqual(USER_ONE_DTO.organization);
-        expect(user.updatedAt.valueOf()).not.toBe(
-          USER_ONE_DTO.updatedAt.valueOf()
-        );
         expect(user.role).toEqual(USER_ONE_DTO.role);
       }
     });

@@ -42,7 +42,7 @@ jobs:
        run: rm -rf apps/frontend
 
      - name: Install project dependencies
-       run: yarn install --frozen-lockfile
+       run: yarn backend install --frozen-lockfile
 
      - name: Copy .env-ci to .env
        run: cp apps/backend/test/.env-ci apps/backend/.env
