@@ -121,7 +121,7 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
       .then((response) => {
         SnackbarModule.notify('File saved successfully');
         file.database_id = parseInt(response.data.id);
-        EvaluationModule.addEvaluation(response.data);
+        EvaluationModule.loadEvaluation(response.data.id);
         const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
         this.navigateWithNoErrors(`/${this.current_route}/${loadedDatabaseIds}`);
       })

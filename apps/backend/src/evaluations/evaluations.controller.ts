@@ -126,8 +126,14 @@ export class EvaluationsController {
     const evaluationToUpdate = await this.evaluationsService.findById(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, evaluationToUpdate);
 
+    const updatedEvaluation = await this.evaluationsService.update(
+      id,
+      updateEvaluationDto
+    );
+
     return new EvaluationDto(
-      await this.evaluationsService.update(id, updateEvaluationDto)
+      updatedEvaluation,
+      abac.can(Action.Update, updatedEvaluation)
     );
   }
 

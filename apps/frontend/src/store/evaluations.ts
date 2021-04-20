@@ -47,16 +47,14 @@ export class Evaluation extends VuexModule {
     );
     return Promise.all(
       unloadedIds.map(async (id) => {
-        return axios
-          .get<IEvaluation>(`/evaluations/${id}`)
-          .then(async ({data}) => {
-            this.addEvaluation(data);
+        return this.loadEvaluation(id)
+          .then(async (evaluation) => {
             return InspecIntakeModule.loadText({
-              text: JSON.stringify(data.data),
-              filename: data.filename,
-              database_id: data.id,
-              createdAt: data.createdAt,
-              updatedAt: data.updatedAt,
+              text: JSON.stringify(evaluation.data),
+              filename: evaluation.filename,
+              database_id: evaluation.id,
+              createdAt: evaluation.createdAt,
+              updatedAt: evaluation.updatedAt,
               tags: [] // Tags are not yet implemented, so for now the value is passed in empty
             }).catch((err) => {
               SnackbarModule.failure(err);
@@ -70,13 +68,21 @@ export class Evaluation extends VuexModule {
   }
 
   @Action
-  async addEvaluation(evaluation: IEvaluation) {
-    this.context.commit('ADD_EVALUATION', evaluation);
+  async loadEvaluation(id: string) {
+    return axios.get<IEvaluation>(`/evaluations/${id}`).then(({data}) => {
+      this.context.commit('SAVE_EVALUTION', data);
+      return data;
+    });
   }
 
   @Action
   async updateEvaluation(evaluation: IEvaluation) {
-    return axios.put(`/evaluations/${evaluation.id}`, evaluation);
+    return axios
+      .put<IEvaluation>(`/evaluations/${evaluation.id}`, evaluation)
+      .then(({data}) => {
+        this.context.commit('SAVE_EVALUTION', data);
+        return data;
+      });
   }
 
   @Action
@@ -106,9 +112,20 @@ export class Evaluation extends VuexModule {
     this.allEvaluations = evaluations;
   }
 
+  // Save an evaluation or update it if it is already saved.
   @Mutation
-  ADD_EVALUATION(evaluation: IEvaluation) {
-    this.allEvaluations.push(evaluation);
+  SAVE_EVALUTION(evaluationToSave: IEvaluation) {
+    let found = false;
+    for (const [index, evaluation] of this.allEvaluations.entries()) {
+      if (evaluationToSave.id === evaluation.id) {
+        this.allEvaluations.splice(index, 1, evaluationToSave);
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      this.allEvaluations.push(evaluationToSave);
+    }
   }
 
   @Mutation

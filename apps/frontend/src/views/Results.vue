@@ -69,13 +69,13 @@
                       <div
                         v-if="
                           file.from_file.database_id &&
-                          getEvaluation(file).editable
+                          getDbFile(file.from_file).editable
                         "
                         class="top-right"
                       >
                         <EditEvaluationModal
                           id="editEvaluationModal"
-                          :active="getEvaluation(file)"
+                          :active="getDbFile(file.from_file)"
                         >
                           <template #clickable="{on}"
                             ><v-icon
@@ -225,7 +225,7 @@ import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 
 import {FilteredDataModule, Filter, TreeMapState} from '@/store/data_filters';
 import {ControlStatus, Severity} from 'inspecjs';
-import {FileID, SourcedContextualizedEvaluation, SourcedContextualizedProfile} from '@/store/report_intake';
+import {EvaluationFile, FileID, ProfileFile, SourcedContextualizedEvaluation, SourcedContextualizedProfile} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
 
 import ProfileData from '@/components/cards/ProfileData.vue';
@@ -316,9 +316,16 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     return this.is_result_view ? this.evaluationFiles : this.profiles;
   }
 
-  getEvaluation(file: SourcedContextualizedEvaluation): IEvaluation | undefined {
+  getFile(fileID: FileID) {
+    return InspecDataModule.allFiles.find(
+      (f) => f.unique_id === fileID
+    );
+  }
+
+  getDbFile(file: EvaluationFile | ProfileFile): IEvaluation | undefined {
+    debugger;
     return EvaluationModule.allEvaluations.find((e) => {
-      return e.id === file.from_file.database_id?.toString()
+      return e.id === file.database_id?.toString()
     })
   }
 
@@ -423,11 +430,10 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   get curr_title(): string {
     let returnText = `${capitalize(this.current_route_name.slice(0, -1))} View`;
     if (this.file_filter.length == 1) {
-      let file = InspecDataModule.allFiles.find(
-        (f) => f.unique_id === this.file_filter[0]
-      );
+      const file = this.getFile(this.file_filter[0])
       if (file) {
-        returnText += ` (${file.filename} selected)`;
+        const dbFile = this.getDbFile(file);
+        returnText += ` (${dbFile?.filename || file.filename} selected)`;
       }
     } else {
       returnText += ` (${this.file_filter.length} ${this.current_route_name} selected)`;
