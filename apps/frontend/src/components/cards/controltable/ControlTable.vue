@@ -328,6 +328,14 @@ export default class ControlTable extends Vue {
       if (this.sortSet === 'ascending') {
         factor = -1;
       }
+    } else if (
+      this.sortSet === 'ascending' ||
+      this.sortSet === 'descending'
+    ) {
+      cmp = (a: ListElt, b: ListElt) => a.filename.localeCompare(b.filename);
+      if (this.sortSet === 'ascending') {
+        factor = -1;
+      }
     } else {
       return this.raw_items;
     }
