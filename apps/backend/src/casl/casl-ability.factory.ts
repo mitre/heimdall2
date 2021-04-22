@@ -29,7 +29,8 @@ export enum Action {
   UpdateRole = 'update-role',
   AddEvaluation = 'add-evaluation',
   RemoveEvaluation = 'remove-evaluation',
-  ViewStatistics = 'view-statistics'
+  ViewStatistics = 'view-statistics',
+  ForceRegistration = 'force-registration'
 }
 
 interface UserQuery extends User {

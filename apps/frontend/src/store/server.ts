@@ -196,18 +196,15 @@ class Server extends VuexModule implements IServerState {
   }
 
   @Action
-  public async Register(loginPayload: {
-    endpoint: string;
-    userInfo: {
-      firstName: string;
-      lastName: string;
-      email: string;
-      password: string;
-      passwordConfirmation: string;
-      creationMethod: string;
-    };
+  public async Register(userInfo: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    passwordConfirmation: string;
+    creationMethod: string;
   }) {
-    return axios.post(loginPayload.endpoint, loginPayload.userInfo);
+    return axios.post('/users', userInfo);
   }
 
   @Action

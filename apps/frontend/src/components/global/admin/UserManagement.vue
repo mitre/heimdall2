@@ -21,7 +21,6 @@
             <LinkItem
               id="add_user"
               key="user"
-              text="New User"
               icon="mdi-plus"
               @click="createUserDialog = true"
             >

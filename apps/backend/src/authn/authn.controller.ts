@@ -1,35 +1,21 @@
 import {
-  Body,
   Controller,
   Get,
   Post,
   Req,
-  UnauthorizedException,
   UseFilters,
-  UseGuards,
-  UsePipes
+  UseGuards
 } from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
 import {Request} from 'express';
-import {ConfigService} from '../config/config.service';
 import {AuthenticationExceptionFilter} from '../filters/authentication-exception.filter';
-import {UniqueConstraintErrorFilter} from '../filters/unique-constraint-error.filter';
 import {LocalAuthGuard} from '../guards/local-auth.guard';
-import {PasswordComplexityPipe} from '../pipes/password-complexity.pipe';
-import {PasswordsMatchPipe} from '../pipes/passwords-match.pipe';
-import {CreateUserDto} from '../users/dto/create-user.dto';
-import {UserDto} from '../users/dto/user.dto';
 import {User} from '../users/user.model';
-import {UsersService} from '../users/users.service';
 import {AuthnService} from './authn.service';
 
 @Controller('authn')
 export class AuthnController {
-  constructor(
-    private readonly authnService: AuthnService,
-    private readonly configService: ConfigService,
-    private readonly usersService: UsersService
-  ) {}
+  constructor(private authnService: AuthnService) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -37,18 +23,6 @@ export class AuthnController {
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
     return this.authnService.login(req.user as User);
-  }
-
-  @Post('signup')
-  @UsePipes(new PasswordsMatchPipe(), new PasswordComplexityPipe())
-  @UseFilters(new UniqueConstraintErrorFilter())
-  async signup(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
-    if (!this.configService.isRegistrationAllowed()) {
-      throw new UnauthorizedException(
-        'User registration is disabled. Please ask your system administrator to create the account.'
-      );
-    }
-    return new UserDto(await this.usersService.create(createUserDto));
   }
 
   @UseGuards(AuthGuard('ldap'))

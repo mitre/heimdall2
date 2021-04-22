@@ -193,7 +193,7 @@ export default class RegistrationModal extends Vue {
         creationMethod: 'local'
       };
 
-      ServerModule.Register({endpoint: this.adminRegisterMode ? '/users' : '/authn/signup', userInfo: creds})
+      ServerModule.Register(creds)
         .then(() => {
             if(this.adminRegisterMode) {
                 SnackbarModule.notify(

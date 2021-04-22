@@ -8,14 +8,15 @@ import {
   Post,
   Put,
   Request,
-  UnauthorizedException,
   UseFilters,
   UseGuards,
   UsePipes
 } from '@nestjs/common';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
+import {ConfigService} from '../config/config.service';
 import {UniqueConstraintErrorFilter} from '../filters/unique-constraint-error.filter';
+import {ImplicitAllowJwtAuthGuard} from '../guards/implicit-allow-jwt-auth.guard';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {TestGuard} from '../guards/test.guard';
 import {PasswordChangePipe} from '../pipes/password-change.pipe';
@@ -33,6 +34,7 @@ import {UsersService} from './users.service';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
+    private readonly configService: ConfigService,
     private readonly authz: AuthzService
   ) {}
 
@@ -72,17 +74,21 @@ export class UsersController {
   @Post()
   @UsePipes(new PasswordsMatchPipe(), new PasswordComplexityPipe())
   @UseFilters(new UniqueConstraintErrorFilter())
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(ImplicitAllowJwtAuthGuard)
   async create(
     @Body() createUserDto: CreateUserDto,
     @Request() request: {user: User}
   ): Promise<UserDto> {
-    if (request.user?.role === 'admin') {
+    if (this.configService.isRegistrationAllowed()) {
       return new UserDto(await this.usersService.create(createUserDto));
     } else {
-      throw new UnauthorizedException(
-        'Please ask your system administrator to create the account.'
-      );
+      const abac = this.authz.abac.createForUser(request.user);
+      ForbiddenError.from(abac)
+        .setMessage(
+          'User registration is disabled. Please ask your system administrator to create the account.'
+        )
+        .throwUnlessCan(Action.ReadAll, User);
+      return new UserDto(await this.usersService.create(createUserDto));
     }
   }
 
