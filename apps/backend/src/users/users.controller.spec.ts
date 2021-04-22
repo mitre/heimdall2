@@ -1,11 +1,14 @@
 import {
   BadRequestException,
   ForbiddenException,
-  NotFoundException
+  NotFoundException,
+  UnauthorizedException
 } from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test, TestingModule} from '@nestjs/testing';
+import mock from 'mock-fs';
 import {ValidationError} from 'sequelize';
+import {REGISTRATION_DISABLED} from '../../test/constants/env-test.constant';
 import {
   CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
@@ -20,6 +23,7 @@ import {
   UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD
 } from '../../test/constants/users-test.constant';
 import {AuthzService} from '../authz/authz.service';
+import {ConfigModule} from '../config/config.module';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
@@ -46,6 +50,7 @@ describe('UsersController Unit Tests', () => {
     module = await Test.createTestingModule({
       controllers: [UsersController],
       imports: [
+        ConfigModule,
         DatabaseModule,
         SequelizeModule.forFeature([
           User,
@@ -107,14 +112,14 @@ describe('UsersController Unit Tests', () => {
     });
   });
 
-  describe('Create function', () => {
+  describe('Create function with registration enabled', () => {
     // Tests the create function with valid dto (basic positive test)
     it('should test the create function with valid dto', async () => {
       expect.assertions(1);
 
       const createdUser = await usersController.create(
         CREATE_USER_DTO_TEST_OBJ_2,
-        {user: adminUser}
+        {}
       );
       expect(createdUser).toEqual(
         new UserDto(await usersService.findById(createdUser.id))
@@ -128,7 +133,7 @@ describe('UsersController Unit Tests', () => {
       await expect(async () => {
         await usersController.create(
           CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD,
-          {user: adminUser}
+          {}
         );
       }).rejects.toThrow(ValidationError);
     });
@@ -140,7 +145,7 @@ describe('UsersController Unit Tests', () => {
       await expect(async () => {
         await usersController.create(
           CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
-          {user: adminUser}
+          {}
         );
       }).rejects.toThrow(BadRequestException);
     });
@@ -152,9 +157,25 @@ describe('UsersController Unit Tests', () => {
       await expect(async () => {
         await usersController.create(
           CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD,
-          {user: adminUser}
+          {}
         );
       }).rejects.toThrow(ValidationError);
+    });
+  });
+
+  describe('Create function with registration disabled', () => {
+    beforeAll(() => {
+      mock({
+        '.env': REGISTRATION_DISABLED
+      });
+    });
+
+    it('should test the create function with valid dto', async () => {
+      expect.assertions(1);
+
+      await expect(
+        usersController.create(CREATE_USER_DTO_TEST_OBJ_2, {})
+      ).rejects.toBeInstanceOf(UnauthorizedException);
     });
   });
 
