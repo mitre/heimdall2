@@ -13,7 +13,7 @@ COPY apps ./apps
 COPY libs ./libs
 
 RUN sed -i s^https://registry.yarnpkg.com^$YARNREPO^g yarn.lock
-RUN yarn --frozen-lockfile --production
+RUN yarn --frozen-lockfile --production --network-timeout 600000
 
 RUN yarn run build
 

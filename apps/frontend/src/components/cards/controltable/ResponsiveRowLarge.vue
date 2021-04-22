@@ -4,7 +4,7 @@
       <slot name="status" />
     </v-col>
 
-    <v-col class="pa-0" :cols="1.5">
+    <v-col class="pa-0" :cols="2">
       <slot name="set" />
     </v-col>
 
