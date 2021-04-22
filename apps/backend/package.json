@@ -87,7 +87,7 @@
     "sequelize": "^6.4.0",
     "sequelize-cli": "^6.2.0",
     "sequelize-typescript": "^2.0.0",
-    "ts-loader": "^8.0.4",
+    "ts-loader": "^9.1.0",
     "ts-node": "^9.0.0",
     "tsconfig-paths": "^3.9.0"
   },
