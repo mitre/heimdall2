@@ -33,7 +33,7 @@
         <template #status>
           <ColumnHeader
             text="Status"
-            :sort="sort_status"
+            :sort="sortStatus"
             @input="set_sort('status', $event)"
           />
         </template>
@@ -41,15 +41,15 @@
         <template #set>
           <ColumnHeader
             text="Result Set"
-            :sort="sort_status"
-            @input="set_sort('status', $event)"
+            :sort="sortSet"
+            @input="set_sort('set', $event)"
           />
         </template>
 
         <template #id>
           <ColumnHeader
             text="ID"
-            :sort="sort_id"
+            :sort="sortId"
             @input="set_sort('id', $event)"
           />
         </template>
@@ -57,7 +57,7 @@
         <template #severity>
           <ColumnHeader
             :text="showImpact ? 'Impact' : 'Severity'"
-            :sort="sort_severity"
+            :sort="sortSeverity"
             @input="set_sort('severity', $event)"
           />
         </template>
@@ -112,11 +112,14 @@ import {control_unique_key} from '@/utilities/format_util';
 import {context} from 'inspecjs';
 import {Prop, Ref} from 'vue-property-decorator';
 import {HeightsModule} from '@/store/heights';
+import _ from 'lodash';
 
 // Tracks the visibility of an HDF control
 interface ListElt {
   // A unique id to be used as a key.
   key: string;
+
+  filename: string;
 
   // Computed values for status and severity "value", for sorting
   status_val: number;
@@ -149,9 +152,10 @@ export default class ControlTable extends Vue {
   expanded: Array<string> = [];
 
   // Sorts
-  sort_id: Sort = 'none';
-  sort_status: Sort = 'none';
-  sort_severity: Sort = 'none';
+  sortId: Sort = 'none';
+  sortStatus: Sort = 'none';
+  sortSet: Sort = 'none';
+  sortSeverity: Sort = 'none';
 
   mounted() {
     this.onResize();
@@ -166,19 +170,23 @@ export default class ControlTable extends Vue {
   }
 
   /** Callback to handle setting a new sort */
-  set_sort(column: 'id' | 'status' | 'severity', new_sort: Sort) {
-    this.sort_id = 'none';
-    this.sort_status = 'none';
-    this.sort_severity = 'none';
+  set_sort(column: 'id' | 'status' | 'severity' | 'set', newSort: Sort) {
+    this.sortId = 'none';
+    this.sortSet = 'none';
+    this.sortStatus = 'none';
+    this.sortSeverity = 'none';
     switch (column) {
       case 'id':
-        this.sort_id = new_sort;
+        this.sortId = newSort;
         break;
       case 'status':
-        this.sort_status = new_sort;
+        this.sortStatus = newSort;
+        break;
+      case 'set':
+        this.sortSet = newSort;
         break;
       case 'severity':
-        this.sort_severity = new_sort;
+        this.sortSeverity = newSort;
         break;
     }
   }
@@ -276,7 +284,8 @@ export default class ControlTable extends Vue {
         ].indexOf(d.root.hdf.status),
         severity_val: ['none', 'low', 'medium', 'high', 'critical'].indexOf(
           d.root.hdf.severity
-        )
+        ),
+        filename: _.get(d, 'sourced_from.sourced_from.from_file.filename')
       };
       return with_id;
     });
@@ -289,26 +298,34 @@ export default class ControlTable extends Vue {
     // Our comparator function
     let cmp: (a: ListElt, b: ListElt) => number;
 
-    if (this.sort_id === 'ascending' || this.sort_id === 'descending') {
+    if (this.sortId === 'ascending' || this.sortId === 'descending') {
       cmp = (a: ListElt, b: ListElt) =>
         a.control.data.id.localeCompare(b.control.data.id);
-      if (this.sort_id === 'ascending') {
+      if (this.sortId === 'ascending') {
         factor = -1;
       }
     } else if (
-      this.sort_status === 'ascending' ||
-      this.sort_status === 'descending'
+      this.sortStatus === 'ascending' ||
+      this.sortStatus === 'descending'
     ) {
       cmp = (a: ListElt, b: ListElt) => a.status_val - b.status_val;
-      if (this.sort_status === 'ascending') {
+      if (this.sortStatus === 'ascending') {
         factor = -1;
       }
     } else if (
-      this.sort_severity === 'ascending' ||
-      this.sort_severity === 'descending'
+      this.sortSeverity === 'ascending' ||
+      this.sortSeverity === 'descending'
     ) {
       cmp = (a: ListElt, b: ListElt) => a.severity_val - b.severity_val;
-      if (this.sort_severity === 'ascending') {
+      if (this.sortSeverity === 'ascending') {
+        factor = -1;
+      }
+    } else if (
+      this.sortSet === 'ascending' ||
+      this.sortSet === 'descending'
+    ) {
+      cmp = (a: ListElt, b: ListElt) => a.filename.localeCompare(b.filename);
+      if (this.sortSet === 'ascending') {
         factor = -1;
       }
     } else {

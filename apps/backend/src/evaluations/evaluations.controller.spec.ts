@@ -102,7 +102,13 @@ describe('EvaluationsController', () => {
         evaluation.id,
         {user: user}
       );
-      expect(foundEvaluation).toEqual(new EvaluationDto(evaluation));
+
+      expect(foundEvaluation).toEqual(
+        // The evaluation is created with the current user ID above
+        // so the expectation is that user should be able to edit
+        // which is the 2nd parameter to EvaluationDto.
+        new EvaluationDto(evaluation, true)
+      );
     });
 
     it('should return an evaluations tags', async () => {

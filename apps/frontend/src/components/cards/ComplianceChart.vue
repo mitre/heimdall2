@@ -84,7 +84,7 @@ export default class ComplianceChart extends Vue {
   }
 
   /**
-   * We actuall generate our series ourself! This is what shows up in the chart. It should be a single value
+   * We actually generate our series ourself! This is what shows up in the chart. It should be a single value
    */
   get series(): number[] {
     // Get access to the status counts, to compute compliance percentages
@@ -93,7 +93,8 @@ export default class ComplianceChart extends Vue {
       passed +
       StatusCountModule.countOf(this.filter, 'Failed') +
       StatusCountModule.countOf(this.filter, 'Profile Error') +
-      StatusCountModule.countOf(this.filter, 'Not Reviewed');
+      StatusCountModule.countOf(this.filter, 'Not Reviewed') +
+      StatusCountModule.countOf(this.filter,  'Waived');
     if (total == 0) {
       return [0];
     } else {
