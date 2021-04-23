@@ -1,17 +1,17 @@
 export default class Sidebar {
-  open(): void {
+  openClose(): void {
     cy.get('[data-cy=openSidebar]').click({force: true});
   }
 
   save(name: string): void {
-    cy.get(`[title="${name}"]`).within(() => {
-      cy.get('[data-cy=saveFile]').click();
-    });
+    this.openClose();
+    cy.get(`[title="${name}"] [data-cy=saveFile]`).click();
+    this.openClose();
   }
 
   close(name: string): void {
-    cy.get(`[title="${name}"]`).within(() => {
-      cy.get('[data-cy=closeFile]').click();
-    });
+    this.openClose();
+    cy.get(`[title="${name}"] [data-cy=closeFile]`).click();
+    this.openClose();
   }
 }

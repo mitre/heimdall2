@@ -109,10 +109,6 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   get filename(): string | undefined {
     return _.get(this.control, 'sourced_from.sourced_from.from_file.filename')
   }
-  /** Typed getter for control */
-  get _control(): context.ContextualizedControl {
-    return this.control;
-  }
 
   get truncated_title(): string {
     if (this.control.data.title && this.control.data.title.length > 80) {

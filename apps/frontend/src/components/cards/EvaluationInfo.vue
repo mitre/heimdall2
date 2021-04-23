@@ -39,7 +39,9 @@ export default class EvaluationInfo extends Vue {
   }
 
   get filename(): string {
-    return this.file_object.filename;
+    // Filename can be updated by a user when filename is loaded from the database. This causes any changes
+    // to the name to show up right away.
+    return this.evaluation?.filename || this.file_object.filename;
   }
 
   get inspec_version(): string | undefined {
@@ -55,13 +57,9 @@ export default class EvaluationInfo extends Vue {
   }
 
   get evaluation(): IEvaluation | undefined {
-    let result: IEvaluation | undefined;
-    EvaluationModule.allEvaluations.forEach((e) => {
-      if(e.id === this.file_object.database_id?.toString()) {
-        result = e
-      }
+    return EvaluationModule.allEvaluations.find((e) => {
+      return e.id === this.file_object.database_id?.toString()
     })
-    return result
   }
 }
 </script>
