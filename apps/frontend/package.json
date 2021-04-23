@@ -90,7 +90,7 @@
     "luxon": "^1.26.0",
     "prismjs": "^1.21.0",
     "roboto-fontface": "*",
-    "sanitize-html": "^2.1.2",
+    "sanitize-html": "^2.3.3",
     "sass": "^1.23.6",
     "sass-loader": "^10.0.3",
     "uuid": "^8.3.0",
