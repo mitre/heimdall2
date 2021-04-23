@@ -29,7 +29,6 @@ context('Database results', () => {
   describe('CRUD', () => {
     it('allows a user to save a result', () => {
       uploadModal.loadSample(sampleToLoad);
-      sidebar.open();
       sidebar.save(sampleToLoad);
       toastVerifier.toastTextContains('File saved successfully');
       uploadModal.activate();
@@ -39,7 +38,6 @@ context('Database results', () => {
 
     it('allows a user to load a result', () => {
       uploadModal.loadSample(sampleToLoad);
-      sidebar.open();
       sidebar.save(sampleToLoad);
       sidebar.close(sampleToLoad);
       uploadModal.activate();
@@ -50,7 +48,6 @@ context('Database results', () => {
     it('allows a user to update a result', () => {
       const updatedName = 'Updated Filename';
       uploadModal.loadSample(sampleToLoad);
-      sidebar.open();
       sidebar.save(sampleToLoad);
       sidebar.close(sampleToLoad);
       uploadModal.activate();
@@ -61,7 +58,6 @@ context('Database results', () => {
 
     it('allows a user to delete a result', () => {
       uploadModal.loadSample(sampleToLoad);
-      sidebar.open();
       sidebar.save(sampleToLoad);
       sidebar.close(sampleToLoad);
       uploadModal.activate();

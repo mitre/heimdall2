@@ -14,11 +14,14 @@ import LRUCache from 'lru-cache';
 import {getModule, Module, VuexModule} from 'vuex-module-decorators';
 
 // The hash that we will generally be working with herein
-export type ControlStatusHash = {[key in ControlStatus]: number};
+export type ControlStatusHash = {
+  [key in ControlStatus | 'Waived']: number;
+};
 export type StatusHash = ControlStatusHash & {
   PassedTests: number; // from passed controls
   FailedTests: number;
   PassingTestsFailedControl: number; // number of passing tests from failed controls
+  Waived: number;
 };
 
 // Helper function for counting a status in a list of controls
@@ -42,7 +45,8 @@ function count_statuses(data: FilteredData, filter: Filter): StatusHash {
     'Profile Error': 0,
     PassedTests: 0,
     FailedTests: 0,
-    PassingTestsFailedControl: 0
+    PassingTestsFailedControl: 0,
+    Waived: 0
   };
   controls.forEach((c) => {
     c = c.root;
@@ -57,6 +61,8 @@ function count_statuses(data: FilteredData, filter: Filter): StatusHash {
       hash.FailedTests += (c.hdf.segments || []).filter(
         (s) => s.status === 'failed'
       ).length;
+    } else if (status === 'Not Applicable' && c.hdf.waived) {
+      hash.Waived += c.hdf.segments?.length || 0;
     }
   });
   // And we're done

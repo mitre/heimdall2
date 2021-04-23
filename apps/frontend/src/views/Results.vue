@@ -65,9 +65,32 @@
                     @click="toggle_profile(file)"
                   >
                     <EvaluationInfo :file="file" />
-                    <v-card-subtitle
-                      style="position: absolute; bottom: 0; right: 0"
-                    >
+                    <v-card-actions>
+                      <div
+                        v-if="
+                          file.from_file.database_id &&
+                          getDbFile(file.from_file).editable
+                        "
+                        class="top-right"
+                      >
+                        <EditEvaluationModal
+                          id="editEvaluationModal"
+                          :active="getDbFile(file.from_file)"
+                        >
+                          <template #clickable="{on}"
+                            ><v-icon
+                              data-cy="edit"
+                              title="Edit"
+                              class="mr-3 mt-3"
+                              v-on="on"
+                            >
+                              mdi-pencil
+                            </v-icon>
+                          </template>
+                        </EditEvaluationModal>
+                      </div>
+                    </v-card-actions>
+                    <v-card-subtitle class="bottom-right">
                       File Info ↓
                     </v-card-subtitle>
                   </v-card>
@@ -84,7 +107,9 @@
         <!-- Count Cards -->
         <StatusCardRow
           :filter="all_filter"
-          @show-errors="status_filter = 'Profile Error'"
+          :current-status-filter="statusFilter"
+          @show-errors="statusFilter = 'Profile Error'"
+          @show-waived="statusFilter = 'Waived'"
         />
         <!-- Compliance Cards -->
         <v-row justify="space-around">
@@ -92,7 +117,7 @@
             <v-card class="fill-height">
               <v-card-title class="justify-center">Status Counts</v-card-title>
               <v-card-actions class="justify-center">
-                <StatusChart v-model="status_filter" :filter="all_filter" />
+                <StatusChart v-model="statusFilter" :filter="all_filter" />
               </v-card-actions>
             </v-card>
           </v-col>
@@ -115,8 +140,11 @@
                 <ComplianceChart :filter="all_filter" />
               </v-card-actions>
               <v-card-text style="text-align: center"
-                >[Passed/(Passed + Failed + Not Reviewed + Profile Error) *
-                100]</v-card-text
+                >[Passed/(Passed + Failed + Not Reviewed + Profile Error<span
+                  v-if="waivedProfilesExist"
+                >
+                  + Waived</span
+                >) * 100]</v-card-text
               >
             </v-card>
           </v-col>
@@ -193,6 +221,7 @@ import StatusChart from '@/components/cards/StatusChart.vue';
 import SeverityChart from '@/components/cards/SeverityChart.vue';
 import ComplianceChart from '@/components/cards/ComplianceChart.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
+import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
 
 import ExportCaat from '@/components/global/ExportCaat.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
@@ -201,7 +230,7 @@ import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 
 import {FilteredDataModule, Filter, TreeMapState} from '@/store/data_filters';
 import {ControlStatus, Severity} from 'inspecjs';
-import {FileID, SourcedContextualizedEvaluation, SourcedContextualizedProfile} from '@/store/report_intake';
+import {EvaluationFile, FileID, ProfileFile, SourcedContextualizedEvaluation, SourcedContextualizedProfile} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
 
 import ProfileData from '@/components/cards/ProfileData.vue';
@@ -209,8 +238,11 @@ import ProfileData from '@/components/cards/ProfileData.vue';
 import {ServerModule} from '@/store/server';
 import {capitalize} from 'lodash';
 import {compare_times} from '../utilities/delta_util';
+import {EvaluationModule} from '../store/evaluations';
 import RouteMixin from '@/mixins/RouteMixin';
+import {StatusCountModule} from '../store/status_counts';
 import ServerMixin from '../mixins/ServerMixin';
+import {IEvaluation} from '@heimdall/interfaces';
 
 @Component({
   components: {
@@ -226,7 +258,8 @@ import ServerMixin from '../mixins/ServerMixin';
     ExportJson,
     EvaluationInfo,
     ProfileData,
-    UploadButton
+    UploadButton,
+    EditEvaluationModal
   }
 })
 export default class Results extends mixins(RouteMixin, ServerMixin) {
@@ -241,7 +274,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /**
    * The currently selected status, as modeled by the status chart
    */
-  status_filter: ControlStatus | null = null;
+  statusFilter: ControlStatus | "Waived" | null = null;
 
   /**
    * The current state of the treemap as modeled by the treemap (duh).
@@ -289,6 +322,18 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     return this.is_result_view ? this.evaluationFiles : this.profiles;
   }
 
+  getFile(fileID: FileID) {
+    return InspecDataModule.allFiles.find(
+      (f) => f.unique_id === fileID
+    );
+  }
+
+  getDbFile(file: EvaluationFile | ProfileFile): IEvaluation | undefined {
+    return EvaluationModule.allEvaluations.find((e) => {
+      return e.id === file.database_id?.toString()
+    })
+  }
+
   /**
    * Returns true if we're showing results
    */
@@ -316,7 +361,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    */
   get all_filter(): Filter {
     return {
-      status: this.status_filter || undefined,
+      status: this.statusFilter || undefined,
       severity: this.severity_filter || undefined,
       fromFile: this.file_filter,
       tree_filters: this.tree_filters,
@@ -331,7 +376,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    */
   get treemap_full_filter(): Filter {
     return {
-      status: this.status_filter || undefined,
+      status: this.statusFilter || undefined,
       severity: this.severity_filter || undefined,
       fromFile: this.file_filter,
       search_term: this.search_term || '',
@@ -345,7 +390,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   clear() {
     this.filter_snackbar = false;
     this.severity_filter = null;
-    this.status_filter = null;
+    this.statusFilter = null;
     this.control_selection = null;
     this.search_term = '';
     this.tree_filters = [];
@@ -364,7 +409,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     let result: boolean;
     if (
       this.severity_filter ||
-      this.status_filter ||
+      this.statusFilter ||
       this.search_term !== '' ||
       this.tree_filters.length
     ) {
@@ -384,17 +429,20 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     return result;
   }
 
+  get waivedProfilesExist(): boolean {
+    return StatusCountModule.countOf(this.all_filter, 'Waived') >= 1
+  }
+
   /**
    * The title to override with
    */
   get curr_title(): string {
     let returnText = `${capitalize(this.current_route_name.slice(0, -1))} View`;
     if (this.file_filter.length == 1) {
-      let file = InspecDataModule.allFiles.find(
-        (f) => f.unique_id === this.file_filter[0]
-      );
+      const file = this.getFile(this.file_filter[0])
       if (file) {
-        returnText += ` (${file.filename} selected)`;
+        const dbFile = this.getDbFile(file);
+        returnText += ` (${dbFile?.filename || file.filename} selected)`;
       }
     } else {
       returnText += ` (${this.file_filter.length} ${this.current_route_name} selected)`;
@@ -435,5 +483,15 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   left: 0px;
   top: 4px;
   z-index: 5;
+}
+.bottom-right {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+.top-right {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 </style>

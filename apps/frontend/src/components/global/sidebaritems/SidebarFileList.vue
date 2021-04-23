@@ -39,12 +39,14 @@ import {Prop} from 'vue-property-decorator';
 import {ICreateEvaluation} from '@heimdall/interfaces';
 import _ from 'lodash';
 import RouteMixin from '@/mixins/RouteMixin';
+import {EvaluationModule} from '@/store/evaluations';
 
 @Component
 export default class FileItem extends mixins(ServerMixin, RouteMixin) {
   @Prop({type: Object}) readonly file!: EvaluationFile | ProfileFile;
 
-  saving: boolean = false;
+  saving = false;
+
 
   select_file() {
     if (this.file.hasOwnProperty('evaluation')) {
@@ -119,6 +121,9 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
       .then((response) => {
         SnackbarModule.notify('File saved successfully');
         file.database_id = parseInt(response.data.id);
+        EvaluationModule.loadEvaluation(response.data.id);
+        const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
+        this.navigateWithNoErrors(`/${this.current_route}/${loadedDatabaseIds}`);
       })
       .catch((error) => {
         SnackbarModule.failure(error.response.data.message);
@@ -126,7 +131,6 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
         this.saving = false;
       });
   }
-
   //gives different icons for a file if it is just a profile
   get icon(): string {
     if (this.file.hasOwnProperty('profile')) {
