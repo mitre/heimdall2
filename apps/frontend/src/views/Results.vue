@@ -43,6 +43,9 @@
             <v-list-item class="px-0">
               <ExportJson />
             </v-list-item>
+            <v-list-item class="px-0">
+              <ExportHTML :filter="all_filter" />
+            </v-list-item>
           </v-list>
         </v-menu>
       </div>
@@ -112,7 +115,7 @@
           @show-waived="statusFilter = 'Waived'"
         />
         <!-- Compliance Cards -->
-        <v-row justify="space-around">
+        <v-row id="complianceCards" justify="space-around">
           <v-col xs="4">
             <v-card class="fill-height">
               <v-card-title class="justify-center">Status Counts</v-card-title>
@@ -226,6 +229,7 @@ import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationM
 import ExportCaat from '@/components/global/ExportCaat.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
+import ExportHTML from '@/components/global/ExportHTML.vue';
 import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 
 import {FilteredDataModule, Filter, TreeMapState} from '@/store/data_filters';
@@ -256,12 +260,14 @@ import {IEvaluation} from '@heimdall/interfaces';
     ExportCaat,
     ExportNist,
     ExportJson,
+    ExportHTML,
     EvaluationInfo,
     ProfileData,
     UploadButton,
     EditEvaluationModal
   }
 })
+
 export default class Results extends mixins(RouteMixin, ServerMixin) {
   $refs!: Vue['$refs'] & {
     search: HTMLInputElement;

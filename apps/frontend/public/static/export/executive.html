@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Executive Report</title>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+<style type="text/css">
+            .bg-success {
+            background-color: #4cb04f !important
+            }
+            .bg-danger {
+            background-color: #f34335 !important
+            }
+            .bg-info {
+            background-color: #03a9f4 !important
+            }
+            .bg-warning {
+            background-color: #fe9900 !important
+            }
+            .results-set {
+              min-width: 40vh;
+              padding-bottom: 10px;
+            }
+            @media (min-width: 1101px) and (max-width: 1446px) {
+            .tall-card {
+            height: 200px;
+            }
+            }
+            @media (min-width: 1446px) and (max-width: 1886px) {
+            .tall-card {
+            height: 190px;
+            }
+            }
+            @media (min-width: 1886px) {
+            .tall-card {
+            height: 130px;
+            }
+            }
+        </style>
+        <style type="text/css" media="print">
+          @page { size: landscape; }
+        </style>
+        <script>
+          /** Saves the current page **/
+          function savePage(){
+            const pageBlob = new Blob([this.s2ab(document.documentElement.outerHTML)], {type: 'application/html'})
+            saveFile(pageBlob, 'Executive Report -' + new Date().toTimeString() + '.html')
+          }
+
+          /** Downloads a blob as a specified filename **/
+          function saveFile(blob, filename) {
+            if (window.navigator.msSaveOrOpenBlob) {
+              window.navigator.msSaveOrOpenBlob(blob, filename);
+            } else {
+              const a = document.createElement('a');
+              document.body.appendChild(a);
+              const url = window.URL.createObjectURL(blob);
+              a.href = url;
+              a.download = filename;
+              a.click();
+              setTimeout(() => {
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+              }, 0)
+            }
+          }
+
+          /** Converts a string to an array buffer */
+          function s2ab(s) {
+            const buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+            const view = new Uint8Array(buf); //create uint8array as viewer
+            for (let i = 0; i < s.length; i++) {
+              view[i] = s.charCodeAt(i) & 0xff; //convert to octet
+            }
+            return buf;
+          }
+        </script>
+</head>
+<body>
+<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid"> <a class="navbar-brand" href="#">Heimdall Report</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"> <a class="nav-link active" aria-current="page" href="#">Profile Info</a> </li>
+      </ul>
+      <div class="d-flex">
+        <a id="generate" onclick="$(this).attr('href', 'data:text/plain;base64,' + utf8_to_b64($('html').clone().find('#generate').remove().end()[0].outerHTML));" download="report.html" id="generate">
+          <svg style="width:24px;height:24px" viewBox="0 0 24 24" onclick="savePage()">
+            <path fill="currentColor" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="container-fluid" id="profileInfo" style="margin-top: 10vh;">
+  <div class="card bg-light">
+    <div class="card-body">
+      <h5 class="card-title">Profile info</h5>
+      <div id="resultsSets" class="row">
+        <template>
+          <div class="col-xl results-set">
+          </div>
+        </template>
+    </div>
+  </div>
+</div>
+<div class="container-fluid pt-4" id="statusCards">
+  <div class="row">
+    <div class="col-md">
+      <div class="card bg-success tall-card">
+        <div class="card-body">
+          <div class="card-title">
+            <div class="h4">
+              <svg style="width:24px; height:24px" viewBox="0 0 24 24">
+                <path fill="white" d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M10 17L5 12L6.41 10.59L10 14.17L17.59 6.58L19 8L10 17Z" />
+              </svg>
+              <span id="passedCount">Passed: {{}}</span></div>
+            <p id="passedCountSubtitle" class="card-text"> {{}} individual checks passed. </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md">
+      <div class="card bg-danger">
+        <div class="card-body tall-card">
+          <div class="card-title">
+            <div class="h4">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path fill="white" d="M12,2C17.53,2 22,6.47 22,12C22,17.53 17.53,22 12,22C6.47,22 2,17.53 2,12C2,6.47 6.47,2 12,2M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z" />
+              </svg>
+              <span id="failedCount">Failed: {{}}</span></div>
+            <p class="card-text" id="failedCountSubtitle"> {{}} individual checks passed, {{}} failed out of {{}} total checks </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md">
+      <div class="card bg-info tall-card">
+        <div class="card-body">
+          <div class="card-title">
+            <div class="h4">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path fill="white" d="M17,13H7V11H17M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+              </svg>
+              <span id="naCount">Not Applicable: {{}}</span></div>
+            <p class="card-text" id="naCountSubtitle"> System exception or absent component </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md">
+      <div class="card bg-warning tall-card">
+        <div class="card-body">
+          <div class="card-title">
+            <div class="h4">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path fill="white" d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+              </svg>
+              <span id="nrCount">Not Reviewed: {{}}</span></div>
+            <p class="card-text"> Can only be tested manually at this time </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--  Bootstrap Bundle --> 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+</body>
+</html>
