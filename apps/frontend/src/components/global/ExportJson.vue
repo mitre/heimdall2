@@ -4,7 +4,7 @@
       <LinkItem
         key="export_json"
         text="Export as JSON"
-        icon="mdi-json"
+        icon="mdi-code-json"
         @click="export_json()"
         v-on="on"
       />

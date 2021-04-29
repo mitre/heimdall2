@@ -117,7 +117,7 @@
         <!-- Compliance Cards -->
         <v-row id="complianceCards" justify="space-around">
           <v-col xs="4">
-            <v-card class="fill-height">
+            <v-card id="statusCounts" class="fill-height">
               <v-card-title class="justify-center">Status Counts</v-card-title>
               <v-card-actions class="justify-center">
                 <StatusChart v-model="statusFilter" :filter="all_filter" />
@@ -125,7 +125,7 @@
             </v-card>
           </v-col>
           <v-col xs="4">
-            <v-card class="fill-height">
+            <v-card id="severityCounts" class="fill-height">
               <v-card-title class="justify-center"
                 >Severity Counts</v-card-title
               >
@@ -135,7 +135,7 @@
             </v-card>
           </v-col>
           <v-col xs="4">
-            <v-card class="fill-height">
+            <v-card id="complianceLevel" class="fill-height">
               <v-card-title class="justify-center"
                 >Compliance Level</v-card-title
               >
