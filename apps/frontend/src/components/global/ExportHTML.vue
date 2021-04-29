@@ -129,7 +129,8 @@ export default class ExportHTML extends Vue {
     // Download the template
     axios.get('/static/export/executive.html').then(({data}) => {
       // Create a new window where we will build the template
-      const exportWindow = window.open('', '', 'height=650,width=1080,top=100,left=150');
+      const exportWindow = window.open('', '_blank');
+      exportWindow?.focus()
       // If we successfully created the window
       if (exportWindow) {
         // Write the initial template
