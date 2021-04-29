@@ -1,0 +1,98 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "20:00"
+    timezone: America/New_York
+  open-pull-requests-limit: 99
+  ignore:
+  - dependency-name: aws-sdk
+    versions:
+    - 2.837.0
+    - 2.889.0
+    - 2.890.0
+    - 2.893.0
+    - 2.894.0
+  - dependency-name: "@types/node"
+    versions:
+    - 14.14.41
+    - 15.0.0
+  - dependency-name: ts-loader
+    versions:
+    - 9.0.0
+    - 9.1.0
+  - dependency-name: mock-fs
+    versions:
+    - 4.14.0
+  - dependency-name: apexcharts
+    versions:
+    - 3.26.1
+  - dependency-name: d3
+    versions:
+    - 6.7.0
+  - dependency-name: sass
+    versions:
+    - 1.32.11
+  - dependency-name: "@types/luxon"
+    versions:
+    - 1.26.4
+  - dependency-name: helmet
+    versions:
+    - 4.5.0
+  - dependency-name: vuetify
+    versions:
+    - 2.4.10
+    - 2.4.11
+  - dependency-name: core-js
+    versions:
+    - 3.10.2
+  - dependency-name: ts-jest
+    versions:
+    - 26.5.5
+  - dependency-name: cypress
+    versions:
+    - 7.0.0
+    - 7.0.1
+    - 7.1.0
+  - dependency-name: sass-loader
+    versions:
+    - 11.0.0
+    - 11.0.1
+  - dependency-name: "@nestjs/schematics"
+    versions:
+    - 7.3.1
+  - dependency-name: html-webpack-plugin
+    versions:
+    - 5.0.0
+    - 5.1.0
+    - 5.2.0
+    - 5.3.0
+    - 5.3.1
+  - dependency-name: "@casl/ability"
+    versions:
+    - 5.2.2
+  - dependency-name: chai
+    versions:
+    - 4.3.2
+  - dependency-name: "@typescript-eslint/eslint-plugin"
+    versions:
+    - 4.16.0
+  - dependency-name: puppeteer
+    versions:
+    - 7.0.1
+    - 7.0.2
+    - 7.0.4
+  - dependency-name: "@nestjs/platform-express"
+    versions:
+    - 7.6.10
+  - dependency-name: "@nestjs/core"
+    versions:
+    - 7.6.10
+  - dependency-name: "@nestjs/testing"
+    versions:
+    - 7.6.10
+  - dependency-name: "@typescript-eslint/parser"
+    versions:
+    - 4.14.1
