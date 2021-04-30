@@ -49,7 +49,7 @@ async function bootstrap() {
     session({
       secret: configService.get('JWT_SECRET') || generateDefault(),
       store: new (postgresSessionStore(session))({
-        conString: configService.getDbUrl(),
+        conObject: configService.getDbConfig(),
         tableName: 'session'
       }),
       cookie: {maxAge: 30 * 24 * 60 * 60 * 1000},

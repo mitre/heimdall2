@@ -53,6 +53,8 @@ export default class AppConfig {
   getDbConfig() {
     return {
       username: this.get('DATABASE_USERNAME') || 'postgres',
+      user: this.get('DATABASE_USERNAME') || 'postgres',
+      role: this.get('DATABASE_USERNAME') || 'postgres',
       password: this.get('DATABASE_PASSWORD') || '',
       database: this.getDatabaseName(),
       host: this.get('DATABASE_HOST') || '127.0.0.1',
