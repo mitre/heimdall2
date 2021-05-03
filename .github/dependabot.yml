@@ -53,9 +53,7 @@ updates:
     - 26.5.5
   - dependency-name: cypress
     versions:
-    - 7.0.0
-    - 7.0.1
-    - 7.1.0
+    - 7.x
   - dependency-name: sass-loader
     versions:
     - 11.0.0
