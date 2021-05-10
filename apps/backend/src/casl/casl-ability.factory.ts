@@ -121,7 +121,7 @@ export class CaslAbilityFactory {
   // few anonymous endpoints we have.
   createForAnonymous(): Ability {
     const {cannot, build} = new AbilityBuilder<Ability<[Action, Subjects]>>(
-      Ability as AbilityClass<AppAbility>
+      Ability
     );
 
     cannot(Action.Manage, 'all');
