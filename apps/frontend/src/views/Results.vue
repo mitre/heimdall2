@@ -44,7 +44,7 @@
               <ExportJson />
             </v-list-item>
             <v-list-item class="px-0">
-              <ExportHTML :filter="all_filter" />
+              <ExportHTMLModal :filter="all_filter" />
             </v-list-item>
           </v-list>
         </v-menu>
@@ -229,7 +229,7 @@ import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationM
 import ExportCaat from '@/components/global/ExportCaat.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
-import ExportHTML from '@/components/global/ExportHTML.vue';
+import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
 import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 
 import {FilteredDataModule, Filter, TreeMapState} from '@/store/data_filters';
@@ -260,7 +260,7 @@ import {IEvaluation} from '@heimdall/interfaces';
     ExportCaat,
     ExportNist,
     ExportJson,
-    ExportHTML,
+    ExportHTMLModal,
     EvaluationInfo,
     ProfileData,
     UploadButton,
