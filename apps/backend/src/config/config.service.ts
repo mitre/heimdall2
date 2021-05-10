@@ -30,10 +30,6 @@ export class ConfigService {
     return this.appConfig.getDbConfig();
   }
 
-  getDbUrl(): string {
-    return this.appConfig.getDbURL();
-  }
-
   set(key: string, value: string | undefined): void {
     this.appConfig.set(key, value);
   }

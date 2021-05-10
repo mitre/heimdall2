@@ -71,15 +71,6 @@ export default class AppConfig {
     };
   }
 
-  getDbURL() {
-    let url = this.get('DATABASE_URL');
-    if (url === undefined) {
-      const dbConfig = this.getDbConfig();
-      url = `pg://${dbConfig.username}:${dbConfig.password}@${dbConfig.host}:${dbConfig.port}/${dbConfig.database}`
-    }
-    return url
-  }
-
   parseDatabaseUrl() {
     const url = this.get('DATABASE_URL');
     if (url === undefined) {
