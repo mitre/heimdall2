@@ -3,7 +3,6 @@ import {
   Body,
   Controller,
   Delete,
-  ForbiddenException,
   Get,
   Param,
   Post,
@@ -80,22 +79,18 @@ export class UsersController {
     @Body() createUserDto: CreateUserDto,
     @Request() request: {user?: User}
   ): Promise<UserDto> {
-    if (this.configService.isRegistrationAllowed()) {
-      return new UserDto(await this.usersService.create(createUserDto));
-    } else {
-      if (request.user) {
-        const abac = this.authz.abac.createForUser(request.user);
-        ForbiddenError.from(abac)
-          .setMessage(
-            'User registration is disabled. Please ask your system administrator to create the account.'
-          )
-          .throwUnlessCan(Action.ReadAll, User);
-        return new UserDto(await this.usersService.create(createUserDto));
-      }
-      throw new ForbiddenException(
-        'User registration is disabled. Please ask your system administrator to create the account.'
-      );
+    const abac = request.user
+      ? this.authz.abac.createForUser(request.user)
+      : this.authz.abac.createForAnonymous();
+    // If registration is not allowed then validate the current user has the permission to bypass this check
+    if (!this.configService.isRegistrationAllowed()) {
+      ForbiddenError.from(abac)
+        .setMessage(
+          'User registration is disabled. Please ask your system administrator to create the account.'
+        )
+        .throwUnlessCan(Action.ForceRegistration, User);
     }
+    return new UserDto(await this.usersService.create(createUserDto));
   }
 
   @UseGuards(JwtAuthGuard)

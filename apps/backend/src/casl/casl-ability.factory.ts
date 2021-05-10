@@ -115,4 +115,17 @@ export class CaslAbilityFactory {
         object.constructor as ExtractSubjectType<Subjects>
     });
   }
+
+  // This provides the ability to use the same codepath for validating
+  // user abilities and non-registered user abilities. Useful for the
+  // few anonymous endpoints we have.
+  createForAnonymous(): Ability {
+    const {cannot, build} = new AbilityBuilder<Ability<[Action, Subjects]>>(
+      Ability as AbilityClass<AppAbility>
+    );
+
+    cannot(Action.Manage, 'all');
+
+    return build();
+  }
 }

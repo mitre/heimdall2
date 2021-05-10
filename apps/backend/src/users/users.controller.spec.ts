@@ -1,8 +1,8 @@
+import {ForbiddenError} from '@casl/ability';
 import {
   BadRequestException,
   ForbiddenException,
-  NotFoundException,
-  UnauthorizedException
+  NotFoundException
 } from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test, TestingModule} from '@nestjs/testing';
@@ -172,7 +172,7 @@ describe('UsersController Unit Tests', () => {
 
       await expect(
         usersController.create(CREATE_USER_DTO_TEST_OBJ_2, {})
-      ).rejects.toBeInstanceOf(ForbiddenException);
+      ).rejects.toBeInstanceOf(ForbiddenError);
     });
   });
 
