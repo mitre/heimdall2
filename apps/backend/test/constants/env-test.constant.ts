@@ -12,5 +12,3 @@ export const SIMPLE_ENV_MOCK_FILE = 'PORT=8001\n';
 
 export const DATABASE_URL_MOCK_ENV =
   'DATABASE_URL=postgres://abcdefghijk123456:000011112222333344455556666777778889999aaaabbbbccccddddeeeffff@ec2-00-000-11-123.compute-1.amazonaws.com:5432/database01';
-
-export const REGISTRATION_DISABLED = 'REGISTRATION_DISABLED=true';

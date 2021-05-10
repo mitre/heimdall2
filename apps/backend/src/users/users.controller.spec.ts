@@ -6,9 +6,7 @@ import {
 } from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test, TestingModule} from '@nestjs/testing';
-import mock from 'mock-fs';
 import {ValidationError} from 'sequelize';
-import {REGISTRATION_DISABLED} from '../../test/constants/env-test.constant';
 import {
   CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
@@ -24,6 +22,7 @@ import {
 } from '../../test/constants/users-test.constant';
 import {AuthzService} from '../authz/authz.service';
 import {ConfigModule} from '../config/config.module';
+import {ConfigService} from '../config/config.service';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
@@ -42,6 +41,7 @@ describe('UsersController Unit Tests', () => {
   let usersService: UsersService;
   let module: TestingModule;
   let databaseService: DatabaseService;
+  let configService: ConfigService;
 
   let basicUser: User;
   let adminUser: User;
@@ -67,6 +67,7 @@ describe('UsersController Unit Tests', () => {
     usersService = module.get<UsersService>(UsersService);
     usersController = module.get<UsersController>(UsersController);
     databaseService = module.get<DatabaseService>(DatabaseService);
+    configService = module.get<ConfigService>(ConfigService);
   });
 
   beforeEach(async () => {
@@ -164,18 +165,14 @@ describe('UsersController Unit Tests', () => {
   });
 
   describe('Create function with registration disabled', () => {
-    beforeAll(() => {
-      mock({
-        '.env': REGISTRATION_DISABLED
-      });
-    });
-
     it('should test the create function with valid dto', async () => {
       expect.assertions(1);
 
+      configService.set('REGISTRATION_DISABLED', 'true');
+
       await expect(
         usersController.create(CREATE_USER_DTO_TEST_OBJ_2, {})
-      ).rejects.toBeInstanceOf(UnauthorizedException);
+      ).rejects.toBeInstanceOf(ForbiddenException);
     });
   });
 
