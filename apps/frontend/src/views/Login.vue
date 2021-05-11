@@ -60,7 +60,7 @@ const lastLoginTab = new LocalStorageVal<string>('login_curr_tab');
   }
 })
 export default class Login extends Vue {
-  activeTab: string = lastLoginTab.get_default('logintab-standard')
+  activeTab: string = lastLoginTab.get_default('logintab-standard');
 
   mounted() {
     this.checkLoggedIn();
@@ -75,8 +75,8 @@ export default class Login extends Vue {
 
   checkForAuthenticationError() {
     if (this.$cookies.get('authenticationError')) {
-      SnackbarModule.failure(`Sorry, an problem occurred while signing you in. The reason given was: ${this.$cookies.get('authenticationError')}`)
-      this.$cookies.remove('authenticationError')
+      SnackbarModule.failure(`Sorry, an problem occurred while signing you in. The reason given was: ${this.$cookies.get('authenticationError')}`);
+      this.$cookies.remove('authenticationError');
     }
   }
 
@@ -85,7 +85,7 @@ export default class Login extends Vue {
   }
 
   get ldapenabled() {
-    return ServerModule.ldap
+    return ServerModule.ldap;
   }
 }
 </script>

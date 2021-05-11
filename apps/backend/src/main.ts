@@ -7,6 +7,7 @@ import {AppModule} from './app.module';
 import {ConfigService} from './config/config.service';
 import {generateDefault} from './token/token.providers';
 import session = require('express-session');
+import postgresSessionStore = require('connect-pg-simple');
 import helmet = require('helmet');
 import passport = require('passport');
 
@@ -47,7 +48,12 @@ async function bootstrap() {
   app.use(
     session({
       secret: configService.get('JWT_SECRET') || generateDefault(),
-      saveUninitialized: false,
+      store: new (postgresSessionStore(session))({
+        conObject: configService.getDbConfig(),
+        tableName: 'session'
+      }),
+      cookie: {maxAge: 30 * 24 * 60 * 60 * 1000},
+      saveUninitialized: true,
       resave: false
     })
   );

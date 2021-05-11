@@ -48,7 +48,10 @@
     </v-card-text>
     <v-card-actions>
       <v-container fluid>
-        <div class="d-flex align-end flex-column mb-2">
+        <div
+          v-if="registrationEnabled"
+          class="d-flex align-end flex-column mb-2"
+        >
           <router-link to="/signup">
             <v-btn id="sign_up_button" depressed small> Sign Up </v-btn>
           </router-link>
@@ -185,6 +188,10 @@ export default class LocalLogin extends Vue {
 
   get oidcName() {
     return ServerModule.oidcName;
+  }
+
+  get registrationEnabled() {
+    return ServerModule.registrationEnabled;
   }
 }
 </script>
