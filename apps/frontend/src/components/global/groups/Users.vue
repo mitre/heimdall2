@@ -131,12 +131,8 @@ export default class Users extends Vue {
 
     ServerModule.allUsers.forEach(async (user) => {
       if(!currentUserIds.includes(user.id)) {
-        let text = `${user.firstName || ''} ${user.lastName || ''} (${user.email})`
-        if (user.title !== null) {
-          text = text.slice(0, -1) + `, ${user.title})`;
-        }
         users.push({
-          text: text,
+          text: `${user.firstName || ''} ${user.lastName || ''} (${user.email}${user.title ? ', ' + user.title : ''})`,
           value: user.id
         });
       }
