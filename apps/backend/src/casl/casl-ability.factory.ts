@@ -29,7 +29,8 @@ export enum Action {
   UpdateRole = 'update-role',
   AddEvaluation = 'add-evaluation',
   RemoveEvaluation = 'remove-evaluation',
-  ViewStatistics = 'view-statistics'
+  ViewStatistics = 'view-statistics',
+  ForceRegistration = 'force-registration'
 }
 
 interface UserQuery extends User {
@@ -113,5 +114,18 @@ export class CaslAbilityFactory {
       detectSubjectType: (object) =>
         object.constructor as ExtractSubjectType<Subjects>
     });
+  }
+
+  // This provides the ability to use the same codepath for validating
+  // user abilities and non-registered user abilities. Useful for the
+  // few anonymous endpoints we have.
+  createForAnonymous(): Ability {
+    const {cannot, build} = new AbilityBuilder<Ability<[Action, Subjects]>>(
+      Ability
+    );
+
+    cannot(Action.Manage, 'all');
+
+    return build();
   }
 }

@@ -14,7 +14,9 @@ import {
 } from '@nestjs/common';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
+import {ConfigService} from '../config/config.service';
 import {UniqueConstraintErrorFilter} from '../filters/unique-constraint-error.filter';
+import {ImplicitAllowJwtAuthGuard} from '../guards/implicit-allow-jwt-auth.guard';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {TestGuard} from '../guards/test.guard';
 import {PasswordChangePipe} from '../pipes/password-change.pipe';
@@ -32,6 +34,7 @@ import {UsersService} from './users.service';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
+    private readonly configService: ConfigService,
     private readonly authz: AuthzService
   ) {}
 
@@ -71,7 +74,22 @@ export class UsersController {
   @Post()
   @UsePipes(new PasswordsMatchPipe(), new PasswordComplexityPipe())
   @UseFilters(new UniqueConstraintErrorFilter())
-  async create(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
+  @UseGuards(ImplicitAllowJwtAuthGuard)
+  async create(
+    @Body() createUserDto: CreateUserDto,
+    @Request() request: {user?: User}
+  ): Promise<UserDto> {
+    const abac = request.user
+      ? this.authz.abac.createForUser(request.user)
+      : this.authz.abac.createForAnonymous();
+    // If registration is not allowed then validate the current user has the permission to bypass this check
+    if (!this.configService.isRegistrationAllowed()) {
+      ForbiddenError.from(abac)
+        .setMessage(
+          'User registration is disabled. Please ask your system administrator to create the account.'
+        )
+        .throwUnlessCan(Action.ForceRegistration, User);
+    }
     return new UserDto(await this.usersService.create(createUserDto));
   }
 
