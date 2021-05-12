@@ -364,6 +364,10 @@ export default class ExportHTMLModal extends Vue {
       if (exportWindow) {
         // Write the initial template
         exportWindow.document.write(data);
+        // Add the bootstrap framework
+        axios.get(`/static/export/style.css`).then(({data}) => {
+          exportWindow.document.head.insertAdjacentHTML("beforeend", `<style>${data}</style>`)
+        })
         // Get the template for results sets
         const profileInfos = exportWindow.document.getElementById('profileInfos');
         const profileInfoTemplate = exportWindow.document.getElementsByTagName('template')[0];
