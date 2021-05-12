@@ -44,10 +44,7 @@
               <ExportJson />
             </v-list-item>
             <v-list-item class="px-0">
-              <ExportHTMLModal
-                :filter="all_filter"
-                :file-type="current_route_name"
-              />
+              <ExportHTMLModal :filter="all_filter" />
             </v-list-item>
           </v-list>
         </v-menu>
