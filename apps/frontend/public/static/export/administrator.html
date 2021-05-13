@@ -228,12 +228,12 @@
               {{ controlDescription }}
               <div class="row pt-2">
                 <div class="col-8">
-                  <table class="table table-striped table-hover">
+                  <table class="table table-striped table-hover" aria-describedby="Control test description and result">
                     <thead>
                       <tr>
-                        <th scope="col" style="width: 20%">Status</th>
-                        <th scope="col">Test</th>
-                        <th scope="col">Result</th>
+                        <th style="width: 20%">Status</th>
+                        <th>Test</th>
+                        <th>Result</th>
                       </tr>
                     </thead>
                     <tbody id="controlTestResultTableBody">
@@ -241,11 +241,11 @@
                   </table>
                 </div>
                 <div class="col">
-                  <table class="table table-striped table-hover">
+                  <table class="table table-striped table-hover" aria-describedby="Control details">
                     <thead>
                       <tr>
-                        <th scope="col" style="width: 20%">Name</th>
-                        <th scope="col">Value</th>
+                        <th style="width: 20%">Name</th>
+                        <th>Value</th>
                       </tr>
                     </thead>
                     <tbody id="controlDetailsTableBody">
@@ -265,7 +265,7 @@
       </template>
       <template>
         <tr>
-          <td scope="row">{{ controlStatus }}</td>
+          <td>{{ controlStatus }}</td>
           <td>{{ controlTest }}</td>
           <td>{{ controlResult }}</td>
         </tr>

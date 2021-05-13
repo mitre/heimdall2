@@ -90,6 +90,7 @@ import _ from 'lodash';
 import {StatusCountModule} from '../../store/status_counts';
 import {EvaluationFile, ProfileFile} from '../../store/report_intake';
 import {ContextualizedControl} from 'inspecjs/dist/context';
+import {HDFControlSegment} from 'inspecjs';
 
 interface Detail {
   name: string;
@@ -211,12 +212,50 @@ export default class ExportHTMLModal extends Vue {
       while(elements[0]) {
         const element = elements[0];
         element?.parentNode?.removeChild(element);
-      }​
+      }
     }
   }
 
+  /* Creates a table row row for the control results table */
+  createControlResultRow(result: HDFControlSegment): HTMLTableRowElement {
+    const controlTestResultElement = document.createElement("tr")
+    // Create TD elements for each status, test description, and result
+    const controlStatusTableDataElement = document.createElement("td");
+    const controlStatusTableNode = document.createTextNode(result.status);
+    const controlTestTableDataElement = document.createElement("td");
+    const controlTestTableNode = document.createTextNode(result.code_desc);
+    const controlResultTableDataElement = document.createElement("td");
+    const controlResultTableNode = document.createTextNode((result.message || result.skip_message || ''))
+    // Append the text nodes to their respective TR
+    controlStatusTableDataElement.appendChild(controlStatusTableNode)
+    controlTestTableDataElement.appendChild(controlTestTableNode)
+    controlResultTableDataElement.appendChild(controlResultTableNode)
+    // Put each TD inside the TR
+    controlTestResultElement.appendChild(controlStatusTableDataElement)
+    controlTestResultElement.appendChild(controlTestTableDataElement)
+    controlTestResultElement.appendChild(controlResultTableDataElement)
+    return controlTestResultElement
+  }
+
+  createDetailRow(detail: Detail): HTMLTableRowElement {
+    // Create a table row for each detail
+    const detailRow = document.createElement("tr")
+    // Create the detail name column
+    const detailNameTableDataElement = document.createElement("td");
+    const detailNameTableNode = document.createTextNode(detail.name)
+    detailNameTableDataElement.appendChild(detailNameTableNode)
+    // Create the detail value column
+    const detailValueTableDataElement = document.createElement("td")
+    const detailValueTableNode = document.createTextNode(detail.value)
+    detailValueTableDataElement.appendChild(detailValueTableNode)
+    // Put the columns into the table row
+    detailRow.appendChild(detailNameTableDataElement)
+    detailRow.appendChild(detailValueTableDataElement)
+    return detailRow
+  }
+
   /* Adds control sets and controls */
-  createControlSet(controlSetTemplate: HTMLTemplateElement, controlTemplate: HTMLTemplateElement, detailTemplate: HTMLTemplateElement, file: EvaluationFile | ProfileFile): Node {
+  createControlSet(controlSetTemplate: HTMLTemplateElement, controlTemplate: HTMLTemplateElement, file: EvaluationFile | ProfileFile): Node {
     const templateNode: Node = controlSetTemplate.content.cloneNode(true);
     const templateHTML = controlSetTemplate.innerHTML
     const controlSetElement = document.createElement("div")
@@ -230,9 +269,7 @@ export default class ExportHTMLModal extends Vue {
     // Convert them into rows
     for (const ctrl of controls) {
       const root = ctrl.root;
-      if (hitIds.has(root.hdf.wraps.id)) {
-        continue;
-      } else {
+      if (!hitIds.has(root.hdf.wraps.id)) {
         hitIds.add(root.hdf.wraps.id);
         const controlTemplateNode = controlTemplate.content.cloneNode();
         const controlTemplateHTML = controlTemplate.innerHTML;
@@ -246,27 +283,12 @@ export default class ExportHTMLModal extends Vue {
             .replace(/{{ controlTitle }}/g, root.hdf.wraps.title || '')
             .replace(/{{ controlDescription }}/g, (root.data.desc || 'No description').trim())
         let deleteControlTestResultTable = false;
-        if(controlresults && this.fileType === 'results') {
-          controlresults.forEach(async (result) => {
+        if(this.fileType === 'results') {
+          controlresults?.forEach(async (result) => {
             // Create a table row for each result
-            const controlTestResultElement = document.createElement("tr")
-            // Create TD elements for each status, test description, and result
-            const controlStatusTableDataElement = document.createElement("td");
-            const controlStatusTableNode = document.createTextNode(result.status);
-            const controlTestTableDataElement = document.createElement("td");
-            const controlTestTableNode = document.createTextNode(result.code_desc);
-            const controlResultTableDataElement = document.createElement("td");
-            const controlResultTableNode = document.createTextNode((result.message || result.skip_message || ''))
-            // Append the text nodes to their respective TR
-            controlStatusTableDataElement.appendChild(controlStatusTableNode)
-            controlTestTableDataElement.appendChild(controlTestTableNode)
-            controlResultTableDataElement.appendChild(controlResultTableNode)
-            // Put each TD inside the TR
-            controlTestResultElement.appendChild(controlStatusTableDataElement)
-            controlTestResultElement.appendChild(controlTestTableDataElement)
-            controlTestResultElement.appendChild(controlResultTableDataElement)
+            const controlTableResultRow = this.createControlResultRow(result)
             // Append the new row to to the control test result table
-            controlElement.childNodes[1].childNodes[3].childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[3].appendChild(controlTestResultElement)
+            controlElement.childNodes[1].childNodes[3].childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[3].appendChild(controlTableResultRow)
           })
         } else {
           // Handle controls without any results (e.g exporting a profile or a run error)
@@ -274,19 +296,9 @@ export default class ExportHTMLModal extends Vue {
           deleteControlTestResultTable = true;
         }
         this.getDetails(root).forEach((detail) => {
-          // Create a table row for each detail
-          const detailRow = document.createElement("tr")
-          // Create the detail name column
-          const detailNameTableDataElement = document.createElement("td");
-          const detailNameTableNode = document.createTextNode(detail.name)
-          detailNameTableDataElement.appendChild(detailNameTableNode)
-          // Create the detail value column
-          const detailValueTableDataElement = document.createElement("td")
-          const detailValueTableNode = document.createTextNode(detail.value)
-          detailValueTableDataElement.appendChild(detailValueTableNode)
-          // Put the columns into the table row
-          detailRow.appendChild(detailNameTableDataElement)
-          detailRow.appendChild(detailValueTableDataElement)
+          // Create the HTML row for the detail
+          const detailRow = this.createDetailRow(detail)
+          // Append that to the details table
           controlElement.childNodes[1].childNodes[3].childNodes[1].childNodes[1].childNodes[3].childNodes[1].appendChild(detailRow)
         })
         // Add control code if were are making an administrator report
@@ -351,8 +363,8 @@ export default class ExportHTMLModal extends Vue {
     ].filter((v) => v.value); // Get rid of nulls
   }
 
-  exportHTML() {
-    if(this.filter.fromFile.length == 0){
+  exportHTML(): void {
+    if(this.filter.fromFile.length === 0){
       return SnackbarModule.failure('No files have been loaded.')
     }
     // Download the template
@@ -365,8 +377,8 @@ export default class ExportHTMLModal extends Vue {
         // Write the initial template
         exportWindow.document.write(data);
         // Add the bootstrap framework
-        axios.get(`/static/export/style.css`).then(({data}) => {
-          exportWindow.document.head.insertAdjacentHTML("beforeend", `<style>${data}</style>`)
+        axios.get(`/static/export/style.css`).then((response) => {
+          exportWindow.document.head.insertAdjacentHTML("beforeend", `<style>${response.data}</style>`)
         })
         // Get the template for results sets
         const profileInfos = exportWindow.document.getElementById('profileInfos');
@@ -375,7 +387,6 @@ export default class ExportHTMLModal extends Vue {
         const resultsSetContainer = exportWindow.document.getElementById('resultSetsContainer');
         const resultsSetAccordionTemplate = exportWindow.document.getElementsByTagName('template')[1];
         const controlTemplate = exportWindow.document.getElementsByTagName('template')[2];
-        const detailTemplate = exportWindow.document.getElementsByTagName('template')[3];
         let copiedComplianceCards = false;
 
         // For each result set, add to
@@ -383,7 +394,7 @@ export default class ExportHTMLModal extends Vue {
           const file = InspecDataModule.allFiles.find(
             (f) => f.unique_id === fileId
           );
-          if (file && exportWindow) {
+          if (file) {
             profileInfos?.appendChild(this.createResultsSetElement(profileInfoTemplate, file));
             this.createStatusCardsTemplate(exportWindow)
             // Only copy compliance cards once
@@ -391,14 +402,14 @@ export default class ExportHTMLModal extends Vue {
               this.copyComplianceCards(exportWindow)
               copiedComplianceCards = true
             }
-            resultsSetContainer?.appendChild(this.createControlSet(resultsSetAccordionTemplate, controlTemplate, detailTemplate, file))
+            resultsSetContainer?.appendChild(this.createControlSet(resultsSetAccordionTemplate, controlTemplate, file))
           }
         })
         exportWindow.document.close();
         exportWindow.focus();
       } // User has popups disabled
       else {
-      SnackbarModule.failure('Please allow pop-up tabs to export to HTML.')
+        SnackbarModule.failure('Please allow pop-up tabs to export to HTML.')
       }
     })
     this.closeModal()
