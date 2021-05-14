@@ -12,58 +12,18 @@
     <v-card>
       <v-card-title class="headline"> Export as HTML </v-card-title>
       <v-card-text>
-        <v-radio-group v-model="exportType" row>
-          <v-tooltip top>
-            <template #activator="{ on, attrs }">
-              <v-radio
-                v-bind="attrs"
-                label="Executive Report"
-                value="executive"
-                v-on="on"
-              />
-            </template>
-            <span
-              ><ul>
-                <li>Profile Info</li>
-                <li>Statuses</li>
-                <li>Compliance Donuts</li>
-              </ul></span
-            >
-          </v-tooltip>
-          <v-tooltip top>
-            <template #activator="{ on, attrs }">
-              <v-radio
-                v-bind="attrs"
-                label="Manager Report"
-                value="manager"
-                v-on="on"
-              />
-            </template>
-            <span
-              ><ul>
-                <li>Everything from Executive Report</li>
-                <li>Test Results</li>
-                <li>Test Details</li>
-              </ul></span
-            >
-          </v-tooltip>
-          <v-tooltip top>
-            <template #activator="{ on, attrs }">
-              <v-radio
-                v-bind="attrs"
-                label="Administrator Report"
-                value="administrator"
-                v-on="on"
-              />
-            </template>
-            <span
-              ><ul>
-                <li>Everything from Manager Report</li>
-                <li>Test Code</li>
-              </ul></span
-            >
-          </v-tooltip>
-        </v-radio-group>
+        <v-row>
+          <v-col>
+            <v-radio-group v-model="exportType">
+              <v-radio label="Executive Report" value="executive" />
+              <v-radio label="Manager Report" value="manager" />
+              <v-radio label="Administrator Report" value="administrator" />
+            </v-radio-group>
+          </v-col>
+          <v-col>
+            <pre class="pt-5" v-text="description" />
+          </v-col>
+        </v-row>
       </v-card-text>
       <v-divider />
       <v-card-actions>
@@ -82,7 +42,7 @@ import Component from 'vue-class-component';
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import Vue from 'vue';
 import {Filter, FilteredDataModule} from '../../store/data_filters';
-import {Prop} from 'vue-property-decorator';
+import {Prop, Watch} from 'vue-property-decorator';
 import {SnackbarModule} from '../../store/snackbar';
 import {InspecDataModule} from '../../store/data_store';
 import axios from 'axios';
@@ -109,7 +69,23 @@ export default class ExportHTMLModal extends Vue {
   @Prop({type: String, required: true}) readonly fileType!: string;
 
   showingModal = false;
-  exportType = '';
+  exportType = 'executive';
+  description = 'Profile Info\nStatuses\nCompliance Donuts';
+
+  @Watch('exportType')
+  onFileChanged(newValue: string, _oldValue: string) {
+    switch (newValue) {
+      case 'executive':
+        this.description = "Profile Info\nStatuses\nCompliance Donuts";
+        break;
+      case 'manager':
+        this.description = "Profile Info\nStatuses\nCompliance Donuts\nTest Results and Details";
+        break;
+      case 'administrator':
+        this.description = "Profile Info\nStatuses\nCompliance Donuts\nTest Results and Details\nTest Code";
+        break
+    }
+  }
 
   /**
    * Invoked when file(s) are loaded.
@@ -299,7 +275,7 @@ export default class ExportHTMLModal extends Vue {
           // Create the HTML row for the detail
           const detailRow = this.createDetailRow(detail)
           // Append that to the details table
-          controlElement.childNodes[1].childNodes[3].childNodes[1].childNodes[1].childNodes[3].childNodes[1].appendChild(detailRow)
+          controlElement.childNodes[1].childNodes[3].childNodes[1].childNodes[1].childNodes[5].childNodes[1].appendChild(detailRow)
         })
         // Add control code if were are making an administrator report
         const controlCode = this.exportType === 'administrator' ? root.full_code : ''
