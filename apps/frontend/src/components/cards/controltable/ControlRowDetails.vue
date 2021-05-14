@@ -139,7 +139,7 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
 
   get details(): Detail[] {
     let c = this.control;
-    return [
+    const details: Detail[] = [
       {
         name: 'Control',
         value: c.data.id
@@ -187,8 +187,15 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
       {
         name: 'Fix Text',
         value: c.hdf.descriptions.fix || c.data.tags.fix
-      }
+      },
     ].filter((v) => v.value); // Get rid of nulls
+    for (const prop in c.hdf.descriptions) {
+      details.push({
+        name: `Custom Description (${prop})`,
+        value: c.hdf.descriptions[prop]
+      })
+    }
+    return details
   }
 
   //for zebra background
