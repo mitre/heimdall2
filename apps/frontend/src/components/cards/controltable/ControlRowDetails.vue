@@ -74,6 +74,7 @@ import 'prismjs/themes/prism-tomorrow.css';
 
 import {context} from 'inspecjs';
 import {Prop, Watch} from 'vue-property-decorator';
+import _ from 'lodash';
 
 interface Detail {
   name: string;
@@ -187,6 +188,10 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
       {
         name: 'Fix Text',
         value: c.hdf.descriptions.fix || c.data.tags.fix
+      },
+      {
+        name: 'CWE ID',
+        value: _.get(c, 'hdf.wraps.tags.cweid')
       }
     ].filter((v) => v.value); // Get rid of nulls
   }
