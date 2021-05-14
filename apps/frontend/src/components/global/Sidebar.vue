@@ -21,6 +21,7 @@
         :compare-view-active="compareViewActive"
         @toggle-all="toggle_all_evaluations"
         @toggle-compare-view="compareView"
+        @changed-files="$emit('changed-files')"
       />
       <DropdownContent
         header-text="Profiles"

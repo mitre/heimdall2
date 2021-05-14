@@ -5,7 +5,12 @@
     </v-expansion-panel-header>
     <v-expansion-panel-content v-if="files.length > 0">
       <v-list dense>
-        <FileList v-for="(file, i) in files" :key="i" :file="file" />
+        <FileList
+          v-for="(file, i) in files"
+          :key="i"
+          :file="file"
+          @changed-files="$emit('changed-files')"
+        />
 
         <v-list-item
           :title="`${selectAllText} all ${headerText.toLowerCase()}`"

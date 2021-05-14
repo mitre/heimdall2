@@ -54,6 +54,7 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
     } else if (this.file.hasOwnProperty('profile')) {
       FilteredDataModule.toggle_profile(this.file.unique_id);
     }
+    this.$emit('changed-files')
   }
 
   select_file_exclusive() {
@@ -61,6 +62,7 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
       FilteredDataModule.select_exclusive_evaluation(this.file.unique_id);
     } else if (this.file.hasOwnProperty('profile')) {
       FilteredDataModule.select_exclusive_profile(this.file.unique_id);
+      this.$emit('changed-files')
     }
   }
 
@@ -76,6 +78,7 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
     // by calling the router and causing it to write the appropriate
     // route to the URL bar
     this.navigateWithNoErrors(`/${this.current_route}`);
+    this.$emit('changed-files')
   }
 
   //saves file to database
