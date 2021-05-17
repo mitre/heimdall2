@@ -74,6 +74,7 @@ import 'prismjs/themes/prism-tomorrow.css';
 
 import {context} from 'inspecjs';
 import {Prop, Watch} from 'vue-property-decorator';
+import _ from 'lodash';
 
 interface Detail {
   name: string;
@@ -123,10 +124,6 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     this.$emit('update:tab', tab);
   }
 
-  capitalize(value: string) {
-    return value.charAt(0).toUpperCase() + value.slice(1)
-  }
-
   /** Shown above the description */
   get header(): string {
     let msg_split = this.control.root.hdf.finding_details.split(':');
@@ -158,8 +155,8 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     detailsMap.set('Fix', c.hdf.descriptions.fix || c.data.tags.fix)
 
     for (const prop in c.hdf.descriptions) {
-      if (!detailsMap.has(this.capitalize(prop)) && !Array.from(detailsMap.values()).includes(c.hdf.descriptions[prop])){
-        detailsMap.set(this.capitalize(prop), c.hdf.descriptions[prop])
+      if (!detailsMap.has(_.capitalize(prop))){
+        detailsMap.set(_.capitalize(prop), c.hdf.descriptions[prop])
       }
     }
     return Array.from(detailsMap, ([name, value]) => ({name, value})).filter((v) => v.value);
