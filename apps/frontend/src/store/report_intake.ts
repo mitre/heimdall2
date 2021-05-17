@@ -101,8 +101,10 @@ export class InspecIntake extends VuexModule {
   async loadText(options: TextLoadOptions): Promise<FileID> {
     // Convert it
     const fileID: FileID = uuid();
-    const result: parse.ConversionResult = parse.convertFile(options.text);
-
+    const result: parse.ConversionResult = parse.convertFile(
+      options.text,
+      true
+    );
     // Determine what sort of file we (hopefully) have, then add it
     if (result['1_0_ExecJson']) {
       // A bit of chicken and egg here
@@ -117,9 +119,9 @@ export class InspecIntake extends VuexModule {
       } as EvaluationFile;
 
       // Fixup the evaluation to be Sourced from a file. Requires a temporary type break
-      const evaluation = (context.contextualizeEvaluation(
+      const evaluation = context.contextualizeEvaluation(
         result['1_0_ExecJson']
-      ) as unknown) as SourcedContextualizedEvaluation;
+      ) as unknown as SourcedContextualizedEvaluation;
       evaluation.from_file = eval_file;
 
       // Set and freeze
@@ -135,9 +137,9 @@ export class InspecIntake extends VuexModule {
       } as ProfileFile;
 
       // Fixup the evaluation to be Sourced from a file. Requires a temporary type break
-      const profile = (context.contextualizeProfile(
+      const profile = context.contextualizeProfile(
         result['1_0_ProfileJson']
-      ) as unknown) as SourcedContextualizedProfile;
+      ) as unknown as SourcedContextualizedProfile;
       profile.from_file = profile_file;
 
       // Set and freeze
@@ -146,7 +148,11 @@ export class InspecIntake extends VuexModule {
       InspecDataModule.addProfile(profile_file);
       FilteredDataModule.toggle_profile(profile_file.unique_id);
     } else {
-      throw new Error("Couldn't parse data");
+      // eslint-disable-next-line no-console
+      console.error(result.errors);
+      throw new Error(
+        "Couldn't parse data. See developer's tools for more details."
+      );
     }
     return fileID;
   }
