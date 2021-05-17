@@ -138,6 +138,7 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
   }
 
   get details(): Detail[] {
+    const hiddenDescriptions = ["default", "check", "fix"]
     let c = this.control;
     const details: Detail[] = [
       {
@@ -190,10 +191,12 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
       },
     ].filter((v) => v.value); // Get rid of nulls
     for (const prop in c.hdf.descriptions) {
-      details.push({
-        name: `Custom Description (${prop})`,
-        value: c.hdf.descriptions[prop]
-      })
+      if (!hiddenDescriptions.includes(prop)){
+        details.push({
+          name: `Custom Description (${prop})`,
+          value: c.hdf.descriptions[prop]
+        })
+      }
     }
     return details
   }
