@@ -153,6 +153,7 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     detailsMap.set('CCI controls', this.cciControlString)
     detailsMap.set('Check', c.hdf.descriptions.check || c.data.tags.check)
     detailsMap.set('Fix', c.hdf.descriptions.fix || c.data.tags.fix)
+    detailsMap.set('CWE ID', _.get(c, 'hdf.wraps.tags.cweid'))
 
     for (const prop in c.hdf.descriptions) {
       if (!detailsMap.has(_.capitalize(prop))){
