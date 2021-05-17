@@ -244,17 +244,18 @@ export const CREATE_USER_DTO_TEST_OBJ_2: CreateUserDto = {
   creationMethod: 'local'
 };
 
-export const CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS: CreateUserDto = {
-  email: 'abc@yahoo.com',
-  password: 'LETmeiN123$$$tP',
-  passwordConfirmation: 'LETmeiN123%%%tP',
-  firstName: 'Test',
-  lastName: 'Dummy',
-  title: 'fake title',
-  organization: 'Fake Org',
-  role: 'user',
-  creationMethod: 'local'
-};
+export const CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS: CreateUserDto =
+  {
+    email: 'abc@yahoo.com',
+    password: 'LETmeiN123$$$tP',
+    passwordConfirmation: 'LETmeiN123%%%tP',
+    firstName: 'Test',
+    lastName: 'Dummy',
+    title: 'fake title',
+    organization: 'Fake Org',
+    role: 'user',
+    creationMethod: 'local'
+  };
 
 // @ts-ignore
 export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_FIRST_NAME: CreateUserDto = {
@@ -281,16 +282,17 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_LAST_NAME: CreateUserDto = {
 };
 
 // @ts-ignore
-export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ORGANIZATION: CreateUserDto = {
-  email: 'abc@yahoo.com',
-  password: 'LETmeiN123$$$tP',
-  passwordConfirmation: 'LETmeiN123$$$tP',
-  firstName: 'Test',
-  lastName: 'Dummy',
-  title: 'fake title',
-  role: 'user',
-  creationMethod: 'local'
-};
+export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ORGANIZATION: CreateUserDto =
+  {
+    email: 'abc@yahoo.com',
+    password: 'LETmeiN123$$$tP',
+    passwordConfirmation: 'LETmeiN123$$$tP',
+    firstName: 'Test',
+    lastName: 'Dummy',
+    title: 'fake title',
+    role: 'user',
+    creationMethod: 'local'
+  };
 
 // @ts-ignore
 export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_TITLE: CreateUserDto = {
@@ -305,53 +307,57 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_TITLE: CreateUserDto = {
 };
 
 // @ts-ignore
-export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD: CreateUserDto = {
-  password: 'LETmeiN123$$$tP',
-  passwordConfirmation: 'LETmeiN123$$$tP',
-  firstName: 'Test',
-  lastName: 'Dummy',
-  title: 'fake title',
-  organization: 'Fake Org',
-  role: 'user',
-  creationMethod: 'local'
-};
+export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD: CreateUserDto =
+  {
+    password: 'LETmeiN123$$$tP',
+    passwordConfirmation: 'LETmeiN123$$$tP',
+    firstName: 'Test',
+    lastName: 'Dummy',
+    title: 'fake title',
+    organization: 'Fake Org',
+    role: 'user',
+    creationMethod: 'local'
+  };
 
 // @ts-ignore
-export const CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD: CreateUserDto = {
-  email: 'NotAValidEmail',
-  password: 'LETmeiN123$$$tP',
-  passwordConfirmation: 'LETmeiN123$$$tP',
-  firstName: 'Test',
-  lastName: 'Dummy',
-  title: 'fake title',
-  organization: 'Fake Org',
-  role: 'user',
-  creationMethod: 'local'
-};
+export const CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD: CreateUserDto =
+  {
+    email: 'NotAValidEmail',
+    password: 'LETmeiN123$$$tP',
+    passwordConfirmation: 'LETmeiN123$$$tP',
+    firstName: 'Test',
+    lastName: 'Dummy',
+    title: 'fake title',
+    organization: 'Fake Org',
+    role: 'user',
+    creationMethod: 'local'
+  };
 
 // @ts-ignore
-export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD: CreateUserDto = {
-  email: 'abc@yahoo.com',
-  passwordConfirmation: 'LETmeiN123$$$tP',
-  firstName: 'Test',
-  lastName: 'Dummy',
-  title: 'fake title',
-  organization: 'Fake Org',
-  role: 'user',
-  creationMethod: 'local'
-};
+export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD: CreateUserDto =
+  {
+    email: 'abc@yahoo.com',
+    passwordConfirmation: 'LETmeiN123$$$tP',
+    firstName: 'Test',
+    lastName: 'Dummy',
+    title: 'fake title',
+    organization: 'Fake Org',
+    role: 'user',
+    creationMethod: 'local'
+  };
 
 // @ts-ignore
-export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD: CreateUserDto = {
-  email: 'abc@yahoo.com',
-  password: 'LETmeiN123$$$tP',
-  firstName: 'Test',
-  lastName: 'Dummy',
-  title: 'fake title',
-  organization: 'Fake Org',
-  role: 'user',
-  creationMethod: 'local'
-};
+export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD: CreateUserDto =
+  {
+    email: 'abc@yahoo.com',
+    password: 'LETmeiN123$$$tP',
+    firstName: 'Test',
+    lastName: 'Dummy',
+    title: 'fake title',
+    organization: 'Fake Org',
+    role: 'user',
+    creationMethod: 'local'
+  };
 
 // @ts-ignore
 export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE: CreateUserDto = {
@@ -525,16 +531,17 @@ export const UPDATE_USER_DTO_WITH_ADMIN_ROLE: UpdateUserDto = {
 };
 
 // @ts-ignore
-export const UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD_CONFIRMATION: UpdateUserDto = {
-  email: 'abc@yahoo.com',
-  firstName: 'Test',
-  lastName: 'Dummy',
-  organization: 'Fake Org',
-  title: 'fake title',
-  role: 'user',
-  password: 'ABCdefG456!@#pT',
-  currentPassword: 'LETmeiN123$$$tP'
-};
+export const UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD_CONFIRMATION: UpdateUserDto =
+  {
+    email: 'abc@yahoo.com',
+    firstName: 'Test',
+    lastName: 'Dummy',
+    organization: 'Fake Org',
+    title: 'fake title',
+    role: 'user',
+    password: 'ABCdefG456!@#pT',
+    currentPassword: 'LETmeiN123$$$tP'
+  };
 
 // @ts-ignore
 export const UPDATE_USER_DTO_TEST_WITHOUT_ROLE: UpdateUserDto = {
@@ -549,10 +556,11 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_ROLE: UpdateUserDto = {
 };
 
 // @ts-ignore
-export const UPDATE_USER_DTO_TEST_WITHOUT_FORCE_PASSWORD_CHANGE: UpdateUserDto = {
-  email: 'changed@yahoo.com',
-  currentPassword: 'LETmeiN123$$$tP'
-};
+export const UPDATE_USER_DTO_TEST_WITHOUT_FORCE_PASSWORD_CHANGE: UpdateUserDto =
+  {
+    email: 'changed@yahoo.com',
+    currentPassword: 'LETmeiN123$$$tP'
+  };
 
 // @ts-ignore
 export const UPDATE_USER_DTO_SETUP_FORCE_PASSWORD_CHANGE: UpdateUserDto = {
@@ -572,30 +580,32 @@ export const UPDATE_USER_DTO_TEST_WITH_NOT_COMPLEX_PASSWORD: UpdateUserDto = {
   currentPassword: 'LETmeiN123$$$tP'
 };
 
-export const UPDATE_USER_DTO_TEST_OBJ_WITH_MISSMATCHING_PASSWORDS: UpdateUserDto = {
-  email: 'updatedemail@yahoo.com',
-  firstName: 'Updated',
-  lastName: 'Name',
-  organization: 'Updated Org',
-  title: 'updated title',
-  role: 'user',
-  password: 'ABCdefG456!@#pT',
-  passwordConfirmation: 'defABCg789*(%Pt',
-  currentPassword: 'LETmeiN123$$$tP',
-  forcePasswordChange: false
-};
+export const UPDATE_USER_DTO_TEST_OBJ_WITH_MISSMATCHING_PASSWORDS: UpdateUserDto =
+  {
+    email: 'updatedemail@yahoo.com',
+    firstName: 'Updated',
+    lastName: 'Name',
+    organization: 'Updated Org',
+    title: 'updated title',
+    role: 'user',
+    password: 'ABCdefG456!@#pT',
+    passwordConfirmation: 'defABCg789*(%Pt',
+    currentPassword: 'LETmeiN123$$$tP',
+    forcePasswordChange: false
+  };
 
 // @ts-ignore
-export const UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD: UpdateUserDto = {
-  email: 'abc@yahoo.com',
-  firstName: 'Test',
-  lastName: 'Dummy',
-  organization: 'Fake Org',
-  title: 'fake title',
-  role: 'user',
-  password: 'ABCdefG456!@#pT',
-  passwordConfirmation: 'ABCdefG456!@#pT'
-};
+export const UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD: UpdateUserDto =
+  {
+    email: 'abc@yahoo.com',
+    firstName: 'Test',
+    lastName: 'Dummy',
+    organization: 'Fake Org',
+    title: 'fake title',
+    role: 'user',
+    password: 'ABCdefG456!@#pT',
+    passwordConfirmation: 'ABCdefG456!@#pT'
+  };
 
 export const DELETE_USER_DTO_TEST_OBJ: DeleteUserDto = {
   password: 'LETmeiN123$$$tP'
