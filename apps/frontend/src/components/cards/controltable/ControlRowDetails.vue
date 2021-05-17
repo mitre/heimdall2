@@ -74,6 +74,7 @@ import 'prismjs/themes/prism-tomorrow.css';
 
 import {context} from 'inspecjs';
 import {Prop, Watch} from 'vue-property-decorator';
+import _ from 'lodash';
 
 interface Detail {
   name: string;
@@ -139,56 +140,27 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
 
   get details(): Detail[] {
     let c = this.control;
-    return [
-      {
-        name: 'Control',
-        value: c.data.id
-      },
-      {
-        name: 'Title',
-        value: c.data.title
-      },
-      {
-        name: 'Caveat',
-        value: c.hdf.descriptions.caveat
-      },
-      {
-        name: 'Desc',
-        value: c.data.desc
-      },
-      {
-        name: 'Rationale',
-        value: c.hdf.descriptions.rationale
-      },
-      {
-        name: 'Justification',
-        value: c.hdf.descriptions.justification
-      },
-      {
-        name: 'Severity',
-        value: c.root.hdf.severity
-      },
-      {
-        name: 'Impact',
-        value: c.data.impact
-      },
-      {
-        name: 'Nist controls',
-        value: c.hdf.raw_nist_tags.join(', ')
-      },
-      {
-        name: 'CCI controls',
-        value: this.cciControlString
-      },
-      {
-        name: 'Check Text',
-        value: c.hdf.descriptions.check || c.data.tags.check
-      },
-      {
-        name: 'Fix Text',
-        value: c.hdf.descriptions.fix || c.data.tags.fix
+    const detailsMap = new Map();
+
+    detailsMap.set('Control', c.data.id)
+    detailsMap.set('Title', c.data.title)
+    detailsMap.set('Caveat', c.hdf.descriptions.caveat)
+    detailsMap.set('Desc', c.data.desc)
+    detailsMap.set('Rationale', c.hdf.descriptions.rationale)
+    detailsMap.set('Severity', c.root.hdf.severity)
+    detailsMap.set('Impact', c.data.impact)
+    detailsMap.set('Nist controls', c.hdf.raw_nist_tags.join(', '))
+    detailsMap.set('CCI controls', this.cciControlString)
+    detailsMap.set('Check', c.hdf.descriptions.check || c.data.tags.check)
+    detailsMap.set('Fix', c.hdf.descriptions.fix || c.data.tags.fix)
+    detailsMap.set('CWE ID', _.get(c, 'hdf.wraps.tags.cweid'))
+
+    for (const prop in c.hdf.descriptions) {
+      if (!detailsMap.has(_.capitalize(prop))){
+        detailsMap.set(_.capitalize(prop), c.hdf.descriptions[prop])
       }
-    ].filter((v) => v.value); // Get rid of nulls
+    }
+    return Array.from(detailsMap, ([name, value]) => ({name, value})).filter((v) => v.value);
   }
 
   //for zebra background
