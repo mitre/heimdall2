@@ -4,6 +4,7 @@
 
 import {SourcedContextualizedEvaluation} from '@/store/report_intake';
 import {context} from 'inspecjs';
+import {ContextualizedEvaluation} from 'inspecjs/dist/context';
 import {DateTime} from 'luxon';
 
 export const NOT_SELECTED = 'not selected';
@@ -150,9 +151,9 @@ export class ControlDelta {
   }
 }
 
-// EvaluationInfo keeps files as a Profile when they are really an Evaluation
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function get_eval_start_time(ev: any): string | null {
+export function get_eval_start_time(
+  ev: ContextualizedEvaluation
+): string | null {
   for (const prof of ev.contains) {
     for (const ctrl of prof.contains) {
       if (ctrl.hdf.segments!.length) {
