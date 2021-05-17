@@ -277,9 +277,8 @@ export class FilteredData extends VuexModule {
       }
 
       // Get profiles from loaded Results
-      let profiles: readonly context.ContextualizedProfile[] = this.profiles_for_evaluations(
-        filter.fromFile
-      );
+      let profiles: readonly context.ContextualizedProfile[] =
+        this.profiles_for_evaluations(filter.fromFile);
 
       // Get profiles from loaded Profiles
       profiles = profiles.concat(this.profiles(filter.fromFile));

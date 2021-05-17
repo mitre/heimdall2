@@ -63,19 +63,23 @@ describe('Datatable', () => {
       expectedCount('notApplicable') +
       expectedCount('profileError');
     expect(
-      (controlTableWrapper.vm as Vue & {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        items: Array<any>;
-      }).items.length
+      (
+        controlTableWrapper.vm as Vue & {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          items: Array<any>;
+        }
+      ).items.length
     ).toBe(expected);
   });
 
   it('control row and table data is correct', () => {
     expect(
-      (controlTableWrapper.vm as Vue & {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        items: Array<any>;
-      }).items
+      (
+        controlTableWrapper.vm as Vue & {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          items: Array<any>;
+        }
+      ).items
         .map((item: ListElt) => item.control.data.id)
         .sort()
     ).toEqual(

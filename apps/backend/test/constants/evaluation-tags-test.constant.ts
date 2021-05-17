@@ -28,6 +28,7 @@ export const CREATE_EVALUATION_TAG_DTO_MISSING_KEY: CreateEvaluationTagDto = {
 };
 
 // @ts-ignore
-export const CREATE_EVALUATION_TAG_DTO_MISSING_VALUE: CreateEvaluationTagDto = {};
+export const CREATE_EVALUATION_TAG_DTO_MISSING_VALUE: CreateEvaluationTagDto =
+  {};
 
 /* eslint-enable @typescript-eslint/ban-ts-comment */

@@ -117,9 +117,9 @@ export class InspecIntake extends VuexModule {
       } as EvaluationFile;
 
       // Fixup the evaluation to be Sourced from a file. Requires a temporary type break
-      const evaluation = (context.contextualizeEvaluation(
+      const evaluation = context.contextualizeEvaluation(
         result['1_0_ExecJson']
-      ) as unknown) as SourcedContextualizedEvaluation;
+      ) as unknown as SourcedContextualizedEvaluation;
       evaluation.from_file = eval_file;
 
       // Set and freeze
@@ -135,9 +135,9 @@ export class InspecIntake extends VuexModule {
       } as ProfileFile;
 
       // Fixup the evaluation to be Sourced from a file. Requires a temporary type break
-      const profile = (context.contextualizeProfile(
+      const profile = context.contextualizeProfile(
         result['1_0_ProfileJson']
-      ) as unknown) as SourcedContextualizedProfile;
+      ) as unknown as SourcedContextualizedProfile;
       profile.from_file = profile_file;
 
       // Set and freeze
