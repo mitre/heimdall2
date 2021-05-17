@@ -123,6 +123,10 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     this.$emit('update:tab', tab);
   }
 
+  capitalize(value: string) {
+    return value.charAt(0).toUpperCase() + value.slice(1)
+  }
+
   /** Shown above the description */
   get header(): string {
     let msg_split = this.control.root.hdf.finding_details.split(':');
@@ -138,67 +142,27 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
   }
 
   get details(): Detail[] {
-    const hiddenDescriptions = ["default", "check", "fix"]
     let c = this.control;
-    const details: Detail[] = [
-      {
-        name: 'Control',
-        value: c.data.id
-      },
-      {
-        name: 'Title',
-        value: c.data.title
-      },
-      {
-        name: 'Caveat',
-        value: c.hdf.descriptions.caveat
-      },
-      {
-        name: 'Desc',
-        value: c.data.desc
-      },
-      {
-        name: 'Rationale',
-        value: c.hdf.descriptions.rationale
-      },
-      {
-        name: 'Justification',
-        value: c.hdf.descriptions.justification
-      },
-      {
-        name: 'Severity',
-        value: c.root.hdf.severity
-      },
-      {
-        name: 'Impact',
-        value: c.data.impact
-      },
-      {
-        name: 'Nist controls',
-        value: c.hdf.raw_nist_tags.join(', ')
-      },
-      {
-        name: 'CCI controls',
-        value: this.cciControlString
-      },
-      {
-        name: 'Check Text',
-        value: c.hdf.descriptions.check || c.data.tags.check
-      },
-      {
-        name: 'Fix Text',
-        value: c.hdf.descriptions.fix || c.data.tags.fix
-      },
-    ].filter((v) => v.value); // Get rid of nulls
+    const detailsMap = new Map();
+
+    detailsMap.set('Control', c.data.id)
+    detailsMap.set('Title', c.data.title)
+    detailsMap.set('Caveat', c.hdf.descriptions.caveat)
+    detailsMap.set('Desc', c.data.desc)
+    detailsMap.set('Rationale', c.hdf.descriptions.rationale)
+    detailsMap.set('Severity', c.root.hdf.severity)
+    detailsMap.set('Impact', c.data.impact)
+    detailsMap.set('Nist controls', c.hdf.raw_nist_tags.join(', '))
+    detailsMap.set('CCI controls', this.cciControlString)
+    detailsMap.set('Check', c.hdf.descriptions.check || c.data.tags.check)
+    detailsMap.set('Fix', c.hdf.descriptions.fix || c.data.tags.fix)
+
     for (const prop in c.hdf.descriptions) {
-      if (!hiddenDescriptions.includes(prop)){
-        details.push({
-          name: `Custom Description (${prop})`,
-          value: c.hdf.descriptions[prop]
-        })
+      if (!detailsMap.has(this.capitalize(prop)) && !Array.from(detailsMap.values()).includes(c.hdf.descriptions[prop])){
+        detailsMap.set(this.capitalize(prop), c.hdf.descriptions[prop])
       }
     }
-    return details
+    return Array.from(detailsMap, ([name, value]) => ({name, value})).filter((v) => v.value);
   }
 
   //for zebra background
