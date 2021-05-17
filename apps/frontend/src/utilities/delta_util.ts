@@ -153,14 +153,10 @@ export class ControlDelta {
 // EvaluationInfo keeps files as a Profile when they are really an Evaluation
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function get_eval_start_time(ev: any): string | null {
-  if (ev) {
-    for (const prof of ev.contains) {
-      if (prof.contains) {
-        for (const ctrl of prof.contains) {
-          if (ctrl.hdf.segments!.length) {
-            return ctrl.hdf.segments![0].start_time;
-          }
-        }
+  for (const prof of ev.contains) {
+    for (const ctrl of prof.contains) {
+      if (ctrl.hdf.segments!.length) {
+        return ctrl.hdf.segments![0].start_time;
       }
     }
   }

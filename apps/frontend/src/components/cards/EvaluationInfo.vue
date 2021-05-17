@@ -27,6 +27,7 @@ import {EvaluationModule} from '../../store/evaluations';
 import TagRow from '@/components/global/tags/TagRow.vue'
 import {IEvaluation} from '@heimdall/interfaces';
 import {get_eval_start_time} from '../../utilities/delta_util';
+import {ContextualizedEvaluation} from 'inspecjs/dist/context';
 
 @Component({
   components: {
@@ -65,7 +66,7 @@ export default class EvaluationInfo extends Vue {
   }
 
   get start_time(): string | null {
-    return get_eval_start_time(this.file)
+    return get_eval_start_time(this.file as ContextualizedEvaluation)
   }
 }
 </script>
