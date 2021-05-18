@@ -104,6 +104,7 @@ export default class Sidebar extends mixins(RouteMixin) {
   // toggle the "select all" for evaluations
   toggle_all_evaluations(): void {
     FilteredDataModule.toggle_all_evaluations();
+    this.$emit('changed-files')
   }
 
   // toggle between the comparison view and the results view
