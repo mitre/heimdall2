@@ -5025,9 +5025,9 @@ autoprefixer@^9.8.6:
     postcss-value-parser "^4.1.0"
 
 aws-sdk@^2.573.0:
-  version "2.908.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.908.0.tgz#7c1772919f2840d322a678b27625ef16a0047949"
-  integrity sha512-+UtrKOlwjFhGRRrtf3zl5iwFcAnvuh9m63gBnFj9aA+scbP4K2qOukJxPqXCBDeFPqLGH+ojmMJE/54oSlOfmQ==
+  version "2.909.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.909.0.tgz#f78b8e593a69f2cc5746cd04163a42647376e11c"
+  integrity sha512-aRr61EoW8FOLKwrPpfobyO4VuYVp0SmPXgZ1O4IOlN01k9cTdRmgZSbfhB3iECge9NMHoO5AqGPGS8dXY1BYLg==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -18562,11 +18562,6 @@ tsconfig@^7.0.0:
     "@types/strip-json-comments" "0.0.30"
     strip-bom "^3.0.0"
     strip-json-comments "^2.0.0"
-
-tslib@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.1.0.tgz#da60860f1c2ecaa5703ab7d39bc05b6bf988b97a"
-  integrity sha512-hcVC3wYEziELGGmEEXue7D75zbwIIVUMWAVbHItGPx0ziyXxrOMQx4rQEVEV45Ut/1IotuEvwqPopzIOkDMf0A==
 
 tslib@2.2.0, tslib@^2.0.1, tslib@^2.0.3:
   version "2.2.0"
