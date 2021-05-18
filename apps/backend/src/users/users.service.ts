@@ -27,7 +27,7 @@ export class UsersService {
 
   async userFindAll(): Promise<User[]> {
     return this.userModel.findAll<User>({
-      attributes: ['id', 'email', 'firstName', 'lastName']
+      attributes: ['id', 'email', 'title', 'firstName', 'lastName']
     });
   }
 
