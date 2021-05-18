@@ -260,11 +260,11 @@ export default class ExportHTMLModal extends Vue {
             .replace(/{{ controlDescription }}/g, (root.data.desc || 'No description').trim())
         let deleteControlTestResultTable = false;
         if(this.fileType === 'results') {
-          controlresults?.forEach(async (result) => {
+          controlresults?.forEach((result) => {
             // Create a table row for each result
             const controlTableResultRow = this.createControlResultRow(result)
             // Append the new row to to the control test result table
-            controlElement.childNodes[1].childNodes[3].childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[3].appendChild(controlTableResultRow)
+            controlElement.childNodes[1].childNodes[3].childNodes[1].parentElement?.querySelector("#testResultsTable")?.appendChild(controlTableResultRow)
           })
         } else {
           // Handle controls without any results (e.g exporting a profile or a run error)
@@ -275,7 +275,7 @@ export default class ExportHTMLModal extends Vue {
           // Create the HTML row for the detail
           const detailRow = this.createDetailRow(detail)
           // Append that to the details table
-          controlElement.childNodes[1].childNodes[3].childNodes[1].childNodes[1].childNodes[5].childNodes[1].appendChild(detailRow)
+          controlElement.childNodes[1].childNodes[3].childNodes[1].parentElement?.querySelector('#controlDetailsTable')?.appendChild(detailRow)
         })
         // Add control code if were are making an administrator report
         const controlCode = this.exportType === 'administrator' ? root.full_code : ''

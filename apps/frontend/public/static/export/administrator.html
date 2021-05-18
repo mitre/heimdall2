@@ -54,7 +54,7 @@
       /** Saves the current page **/
       function savePage(){
         const pageBlob = new Blob([this.s2ab(document.documentElement.outerHTML)], {type: 'application/html'})
-        saveFile(pageBlob, 'Executive Report -' + new Date().toTimeString() + '.html')
+        saveFile(pageBlob, `Executive_Report_${new Date().toString()}.html`.replace(/[ :]/g, '_'))
       }
       
       /** Downloads a blob as a specified filename **/
@@ -227,8 +227,10 @@
             <div class="accordion-body">
               {{ controlDescription }}
               <div class="pt-2">
+                <hr />
                 <div class="col">
-                  <table class="table table-striped table-hover" aria-describedby="Control test description and result">
+                  <h5>Test Results</h5>
+                  <table class="table table-striped table-hover" id="testResultsTable" aria-describedby="Control test description and result">
                     <thead>
                       <tr>
                         <th scope="col" style="width: 20%">Status</th>
@@ -242,7 +244,8 @@
                 </div>
                 <hr />
                 <div class="col">
-                  <table class="table table-striped table-hover" aria-describedby="Control details">
+                  <h5>Control Details</h5>
+                  <table class="table table-striped table-hover" id="controlDetailsTable" aria-describedby="Control details">
                     <thead>
                       <tr>
                         <th scope="col" style="width: 20%">Name</th>

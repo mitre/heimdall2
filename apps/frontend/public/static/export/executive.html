@@ -61,7 +61,7 @@
       /** Saves the current page **/
       function savePage(){
         const pageBlob = new Blob([this.s2ab(document.documentElement.outerHTML)], {type: 'application/html'})
-        saveFile(pageBlob, 'Executive Report -' + new Date().toTimeString() + '.html')
+        saveFile(pageBlob, `Executive_Report_${new Date().toString()}.html`.replace(/[ :]/g, '_'))
       }
       
       /** Downloads a blob as a specified filename **/
