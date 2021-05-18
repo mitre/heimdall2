@@ -18508,9 +18508,9 @@ ts-loader@^6.2.2:
     semver "^6.0.0"
 
 ts-loader@^9.1.0:
-  version "9.1.2"
-  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-9.1.2.tgz#ba9b9abb05a514e8ff825791a3f6fcf793272728"
-  integrity sha512-ryMgATvLLl+z8zQvdlm6Pep0slmwxFWIEnq/5VdiLVjqQXnFJgO+qNLGIIP+d2N2jsFZ9MibZCVDb2bSp7OmEA==
+  version "9.2.0"
+  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-9.2.0.tgz#0d9feeef60081729ab999af7c322651158de2a0c"
+  integrity sha512-9MlaeNNEk5juw5YL3Xfkvz2gGTsRcXMqfTEAW2mLFWNVsuQEa4jZc4lFB1UZjmA5cyPriCRmOFx+XKV47p5OZg==
   dependencies:
     chalk "^4.1.0"
     enhanced-resolve "^5.0.0"
@@ -18562,11 +18562,6 @@ tsconfig@^7.0.0:
     "@types/strip-json-comments" "0.0.30"
     strip-bom "^3.0.0"
     strip-json-comments "^2.0.0"
-
-tslib@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.1.0.tgz#da60860f1c2ecaa5703ab7d39bc05b6bf988b97a"
-  integrity sha512-hcVC3wYEziELGGmEEXue7D75zbwIIVUMWAVbHItGPx0ziyXxrOMQx4rQEVEV45Ut/1IotuEvwqPopzIOkDMf0A==
 
 tslib@2.2.0, tslib@^2.0.1, tslib@^2.0.3:
   version "2.2.0"
