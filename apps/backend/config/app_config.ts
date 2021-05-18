@@ -50,6 +50,14 @@ export default class AppConfig {
     }
   }
 
+  getSSLConfig() {
+    return Boolean(this.get('DATABASE_SSL'))
+      ? {
+        rejectUnauthorized: false
+      }
+      : false
+  }
+
   getDbConfig() {
     return {
       username: this.get('DATABASE_USERNAME') || 'postgres',
@@ -61,11 +69,7 @@ export default class AppConfig {
       port: Number(this.get('DATABASE_PORT')) || 5432,
       dialect: 'postgres' as Dialect,
       dialectOptions: {
-        ssl: Boolean(this.get('DATABASE_SSL'))
-          ? {
-              rejectUnauthorized: false
-            }
-          : false
+        ssl: this.getSSLConfig()
       },
       ssl: Boolean(this.get('DATABASE_SSL')) || false
     };
