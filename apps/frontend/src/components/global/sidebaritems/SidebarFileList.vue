@@ -1,7 +1,7 @@
 <template>
   <v-list-item
     :title="file.filename"
-    @change="$emit('change')"
+    @change="$emit('changed-files')"
     @click.stop="select_file_exclusive"
   >
     <v-list-item-action @click.stop="select_file">

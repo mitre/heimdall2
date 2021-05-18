@@ -9,12 +9,12 @@
           v-for="(file, i) in files"
           :key="i"
           :file="file"
-          @change="$emit('change')"
+          @changed-files="$emit('changed-files')"
         />
 
         <v-list-item
           :title="`${selectAllText} all ${headerText.toLowerCase()}`"
-          @change="$emit('change')"
+          @change="$emit('changed-files')"
           @click.stop="$emit('toggle-all')"
         >
           <v-list-item-action>
