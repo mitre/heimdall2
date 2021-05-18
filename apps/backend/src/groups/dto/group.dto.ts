@@ -20,7 +20,9 @@ export class GroupDto implements IGroup {
     this.users =
       group.users === undefined
         ? []
-        : group.users.map((user) => new SlimUserDto(user));
+        : group.users.map((user) => {
+            return new SlimUserDto(user, user.GroupUser.role);
+          });
     this.createdAt = group.createdAt;
     this.updatedAt = group.updatedAt;
   }

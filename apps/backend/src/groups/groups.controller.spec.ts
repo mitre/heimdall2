@@ -128,7 +128,9 @@ describe('GroupsController', () => {
       await groupsService.addUserToGroup(privateGroup, otherUser, 'member');
       const groups = await groupsController.findForUser({user: basicUser});
 
-      expect(groups[0].users).toContainEqual(new SlimUserDto(otherUser));
+      expect(groups[0].users).toContainEqual(
+        new SlimUserDto(otherUser, 'member')
+      );
     });
   });
 
