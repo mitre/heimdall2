@@ -7,6 +7,7 @@
       </div>
       <div v-if="platform"><strong>Platform:</strong> {{ platform }}</div>
       <div v-if="duration"><strong>Duration:</strong> {{ duration }}</div>
+      <div v-if="start_time"><strong>Start Time:</strong> {{ start_time }}</div>
       <div v-if="evaluation" class="d-flex flex-nowrap">
         <strong class="pt-1 pr-1">Tags:</strong>
         <TagRow :evaluation="evaluation" />
@@ -25,6 +26,8 @@ import _ from 'lodash';
 import {EvaluationModule} from '../../store/evaluations';
 import TagRow from '@/components/global/tags/TagRow.vue'
 import {IEvaluation} from '@heimdall/interfaces';
+import {get_eval_start_time} from '../../utilities/delta_util';
+import {ContextualizedEvaluation} from 'inspecjs/dist/context';
 
 @Component({
   components: {
@@ -60,6 +63,10 @@ export default class EvaluationInfo extends Vue {
     return EvaluationModule.allEvaluations.find((e) => {
       return e.id === this.file_object.database_id?.toString()
     })
+  }
+
+  get start_time(): string | null {
+    return get_eval_start_time(this.file as ContextualizedEvaluation)
   }
 }
 </script>

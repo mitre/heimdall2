@@ -130,8 +130,10 @@ describe('/evaluations', () => {
           .send({...EVALUATION_WITH_TAGS_1, userId: userId})
           .expect(HttpStatus.CREATED)
           .then((response) => {
-            const createdAt = response.body.evaluationTags[0].createdAt.valueOf();
-            const updatedAt = response.body.evaluationTags[0].updatedAt.valueOf();
+            const createdAt =
+              response.body.evaluationTags[0].createdAt.valueOf();
+            const updatedAt =
+              response.body.evaluationTags[0].updatedAt.valueOf();
 
             const createdDelta =
               new Date().getTime() - new Date(createdAt).getTime();
