@@ -1,5 +1,9 @@
 <template>
-  <v-list-item :title="file.filename" @click.stop="select_file_exclusive">
+  <v-list-item
+    :title="file.filename"
+    @change="$emit('change')"
+    @click.stop="select_file_exclusive"
+  >
     <v-list-item-action @click.stop="select_file">
       <v-checkbox :input-value="selected" color="blue" />
     </v-list-item-action>
@@ -54,7 +58,6 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
     } else if (this.file.hasOwnProperty('profile')) {
       FilteredDataModule.toggle_profile(this.file.unique_id);
     }
-    this.emitChange()
   }
 
   select_file_exclusive() {
@@ -62,12 +65,7 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
       FilteredDataModule.select_exclusive_evaluation(this.file.unique_id);
     } else if (this.file.hasOwnProperty('profile')) {
       FilteredDataModule.select_exclusive_profile(this.file.unique_id);
-      this.emitChange()
     }
-  }
-
-  emitChange() {
-    this.$emit('changed-files')
   }
 
   //checks if file is selected
@@ -82,7 +80,6 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
     // by calling the router and causing it to write the appropriate
     // route to the URL bar
     this.navigateWithNoErrors(`/${this.current_route}`);
-    this.emitChange()
   }
 
   //saves file to database
