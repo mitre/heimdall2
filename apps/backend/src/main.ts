@@ -49,7 +49,12 @@ async function bootstrap() {
     session({
       secret: configService.get('JWT_SECRET') || generateDefault(),
       store: new (postgresSessionStore(session))({
-        conObject: configService.getDbConfig(),
+        conObject: {
+          ...configService.getDbConfig(),
+          /* The pg conObject takes mostly the same parameters as Sequelize, except the ssl options,
+          those are equal to the dialectOptions passed to sequelize */
+          ssl: configService.getSSLConfig()
+        },
         tableName: 'session'
       }),
       cookie: {maxAge: 30 * 24 * 60 * 60 * 1000},
