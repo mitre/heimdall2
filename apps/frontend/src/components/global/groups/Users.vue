@@ -84,6 +84,14 @@ export default class Users extends Vue {
       value: 'email'
     },
     {
+      text: 'Title',
+      value: 'title'
+    },
+    {
+      text: 'Role',
+      value: 'groupRole'
+    },
+    {
       text: 'Actions',
       value: 'actions',
       sortable: false
@@ -121,7 +129,7 @@ export default class Users extends Vue {
     const currentUserIds: string[] = this.currentUsers.map((user) => user.id);
     const users: IVuetifyItems[] = [];
 
-    ServerModule.allUsers.forEach((user) => {
+    ServerModule.allUsers.forEach(async (user) => {
       if(!currentUserIds.includes(user.id)) {
         users.push({
           text: `${user.firstName || ''} ${user.lastName || ''} (${user.email})`,
