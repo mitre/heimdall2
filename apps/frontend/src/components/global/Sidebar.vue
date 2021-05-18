@@ -21,12 +21,14 @@
         :compare-view-active="compareViewActive"
         @toggle-all="toggle_all_evaluations"
         @toggle-compare-view="compareView"
+        @changed-files="$emit('changed-files')"
       />
       <DropdownContent
         header-text="Profiles"
         :files="visible_profile_files"
         :all-selected="all_profiles_selected"
         @toggle-all="toggle_all_profiles"
+        @changed-files="$emit('changed-files')"
       />
     </v-expansion-panels>
   </v-navigation-drawer>

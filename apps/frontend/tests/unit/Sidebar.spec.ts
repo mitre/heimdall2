@@ -25,53 +25,71 @@ describe('Sidebar tests', () => {
   it('has the correct number of sidebar links', () => {
     loadAll();
     expect(
-      (wrapper.vm as Vue & {
-        visible_evaluation_files: EvaluationFile[];
-      }).visible_evaluation_files.length
+      (
+        wrapper.vm as Vue & {
+          visible_evaluation_files: EvaluationFile[];
+        }
+      ).visible_evaluation_files.length
     ).toBe(InspecDataModule.allEvaluationFiles.length);
     expect(
-      (wrapper.vm as Vue & {
-        visible_profile_files: ProfileFile[];
-      }).visible_profile_files.length
+      (
+        wrapper.vm as Vue & {
+          visible_profile_files: ProfileFile[];
+        }
+      ).visible_profile_files.length
     ).toBe(InspecDataModule.allProfileFiles.length);
   });
 
   it('displays properly when select/deselect is clicked', () => {
     // deselect all profiles and evaluations
-    (wrapper.vm as Vue & {
-      toggle_all_profiles: () => void;
-    }).toggle_all_profiles();
-    (wrapper.vm as Vue & {
-      toggle_all_evaluations: () => void;
-    }).toggle_all_evaluations();
+    (
+      wrapper.vm as Vue & {
+        toggle_all_profiles: () => void;
+      }
+    ).toggle_all_profiles();
+    (
+      wrapper.vm as Vue & {
+        toggle_all_evaluations: () => void;
+      }
+    ).toggle_all_evaluations();
     expect(FilteredDataModule.selected_file_ids).toEqual([]);
 
     // select all profiles and evaluations
-    (wrapper.vm as Vue & {
-      toggle_all_profiles: () => void;
-    }).toggle_all_profiles();
-    (wrapper.vm as Vue & {
-      toggle_all_evaluations: () => void;
-    }).toggle_all_evaluations();
+    (
+      wrapper.vm as Vue & {
+        toggle_all_profiles: () => void;
+      }
+    ).toggle_all_profiles();
+    (
+      wrapper.vm as Vue & {
+        toggle_all_evaluations: () => void;
+      }
+    ).toggle_all_evaluations();
     expect(FilteredDataModule.selected_file_ids.length).toEqual(
       InspecDataModule.allFiles.length
     );
 
     // select profiles only
-    (wrapper.vm as Vue & {
-      toggle_all_evaluations: () => void;
-    }).toggle_all_evaluations();
+    (
+      wrapper.vm as Vue & {
+        toggle_all_evaluations: () => void;
+      }
+    ).toggle_all_evaluations();
     expect(FilteredDataModule.selected_file_ids.length).toEqual(
       InspecDataModule.allProfileFiles.length
     );
 
     // select evaluations only
-    (wrapper.vm as Vue & {
-      toggle_all_profiles: () => void;
-    }).toggle_all_profiles();
-    (wrapper.vm as Vue & {
-      toggle_all_evaluations: () => void;
-    }).toggle_all_evaluations();
+    (
+      wrapper.vm as Vue & {
+        toggle_all_profiles: () => void;
+      }
+    ).toggle_all_profiles();
+    (
+      wrapper.vm as Vue & {
+        toggle_all_evaluations: () => void;
+      }
+    ).toggle_all_evaluations();
     expect(FilteredDataModule.selected_file_ids.length).toEqual(
       InspecDataModule.allEvaluationFiles.length
     );

@@ -1,5 +1,5 @@
 <template>
-  <BaseView :title="curr_title">
+  <BaseView :title="curr_title" @changed-files="evalInfo = null">
     <!-- Topbar content - give it a search bar -->
     <template #topbar-content>
       <v-text-field
