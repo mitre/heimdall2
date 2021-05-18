@@ -1,5 +1,9 @@
 <template>
-  <v-list-item :title="file.filename" @click.stop="select_file_exclusive">
+  <v-list-item
+    :title="file.filename"
+    @change="$emit('changed-files')"
+    @click.stop="select_file_exclusive"
+  >
     <v-list-item-action @click.stop="select_file">
       <v-checkbox :input-value="selected" color="blue" />
     </v-list-item-action>
