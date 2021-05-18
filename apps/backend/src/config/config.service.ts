@@ -35,6 +35,10 @@ export class ConfigService {
     return this.appConfig.getDbConfig();
   }
 
+  getSSLConfig(): false | {rejectUnauthorized: boolean} {
+    return this.appConfig.getSSLConfig();
+  }
+
   set(key: string, value: string | undefined): void {
     this.appConfig.set(key, value);
   }
