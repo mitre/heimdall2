@@ -62,8 +62,8 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
       FilteredDataModule.select_exclusive_evaluation(this.file.unique_id);
     } else if (this.file.hasOwnProperty('profile')) {
       FilteredDataModule.select_exclusive_profile(this.file.unique_id);
-      this.emitChange()
     }
+    this.emitChange()
   }
 
   emitChange() {
