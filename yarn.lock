@@ -2935,9 +2935,9 @@
     "@types/d3-selection" "*"
 
 "@types/d3@^6.1.0":
-  version "6.3.0"
-  resolved "https://registry.yarnpkg.com/@types/d3/-/d3-6.3.0.tgz#28d1bfd4e5ef6a38535d8ef0884d452192719528"
-  integrity sha512-YILdGsjNTbvkWZKsBasB4cVDwNPnni7ILMJg9keMErQHyuII2yO2jyFdUy5E+7k/HTNP/AucrPddQuu27udbeA==
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/@types/d3/-/d3-6.4.0.tgz#50c1a30e07265357cebbd0c951bc7c1c403a3951"
+  integrity sha512-Np+Q9PuGBAFsjeVSZC1JlnczfOrLNNqDVuwgl2RJV1hmwsOMM8Q7XaVk+tFcJBHKARzwPd5u4K8n9lu8juWN2w==
   dependencies:
     "@types/d3-array" "*"
     "@types/d3-axis" "*"
