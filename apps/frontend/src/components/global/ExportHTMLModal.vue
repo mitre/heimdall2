@@ -194,6 +194,8 @@ export default class ExportHTMLModal extends Vue {
 
   /* Creates a table row row for the control results table */
   createControlResultRow(result: HDFControlSegment): HTMLTableRowElement {
+    const maxWidth = "50px" // This max width isn't actually represented in the final version, but it is needed to enforce line breaking
+    const wordWrap = "break-word";
     const controlTestResultElement = document.createElement("tr")
     // Create TD elements for each status, test description, and result
     const controlStatusTableDataElement = document.createElement("td");
@@ -206,6 +208,13 @@ export default class ExportHTMLModal extends Vue {
     controlStatusTableDataElement.appendChild(controlStatusTableNode)
     controlTestTableDataElement.appendChild(controlTestTableNode)
     controlResultTableDataElement.appendChild(controlResultTableNode)
+    // Apply a css fix to ensure long strings don't overlap other text
+    controlStatusTableDataElement.style.maxWidth = maxWidth;
+    controlStatusTableDataElement.style.wordWrap = wordWrap;
+    controlTestTableDataElement.style.maxWidth = maxWidth;
+    controlTestTableDataElement.style.wordWrap = wordWrap;
+    controlResultTableDataElement.style.maxWidth = maxWidth;
+    controlResultTableDataElement.style.wordWrap = wordWrap;
     // Put each TD inside the TR
     controlTestResultElement.appendChild(controlStatusTableDataElement)
     controlTestResultElement.appendChild(controlTestTableDataElement)
@@ -214,15 +223,21 @@ export default class ExportHTMLModal extends Vue {
   }
 
   createDetailRow(detail: Detail): HTMLTableRowElement {
+    const maxWidth = "50px" // This max width isn't actually represented in the final version, but it is needed to enforce line breaking
+    const wordWrap = "break-word";
     // Create a table row for each detail
     const detailRow = document.createElement("tr")
     // Create the detail name column
     const detailNameTableDataElement = document.createElement("td");
     const detailNameTableNode = document.createTextNode(detail.name)
-    detailNameTableDataElement.appendChild(detailNameTableNode)
+    detailNameTableDataElement.style.maxWidth = maxWidth;
+    detailNameTableDataElement.style.wordWrap = wordWrap;
+    detailNameTableDataElement.appendChild(detailNameTableNode);
     // Create the detail value column
     const detailValueTableDataElement = document.createElement("td")
     const detailValueTableNode = document.createTextNode(detail.value)
+    detailValueTableDataElement.style.maxWidth = maxWidth;
+    detailValueTableDataElement.style.wordWrap = wordWrap;
     detailValueTableDataElement.appendChild(detailValueTableNode)
     // Put the columns into the table row
     detailRow.appendChild(detailNameTableDataElement)
