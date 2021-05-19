@@ -3,12 +3,12 @@
     <RegistrationModal
       :admin-register-mode="true"
       :visible="createUserDialog"
-      @close-modal="createUserDialog = false"
+      @close-modal="createUserDialog = false; getUsers()"
     />
     <v-card>
       <v-card-title>
         <v-row>
-          <v-col cols="11">
+          <v-col cols="10">
             <v-text-field
               v-model="search"
               append-icon="mdi-magnify"
@@ -17,15 +17,14 @@
               hide-details
             />
           </v-col>
-          <v-col cols="1" class="text-right">
-            <LinkItem
-              id="add_user"
-              key="user"
-              icon="mdi-plus"
-              @click="createUserDialog = true"
+          <v-col cols="2" class="text-center mt-3">
+            <v-btn 
+              color="primary"
+              @click="createUserDialog = true" 
+              max-width="100%"
             >
-              Refresh
-            </LinkItem>
+              Add New User
+            </v-btn>
           </v-col>
         </v-row>
       </v-card-title>
@@ -76,9 +75,7 @@ import Component from 'vue-class-component';
 import UserModal from '@/components/global/UserModal.vue';
 import DeleteDialog from '@/components/generic/DeleteDialog.vue';
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import RegistrationModal from '@/components/global/RegistrationModal.vue'
-
-
+import RegistrationModal from '@/components/global/RegistrationModal.vue';
 
 @Component({
   components: {
