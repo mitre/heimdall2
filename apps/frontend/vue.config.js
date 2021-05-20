@@ -12,6 +12,16 @@ const changelog = parsed.changelog || '';
 const branch = parsed.branch || '';
 const issues = parsed.issues || '';
 
+fs.copyFile(
+  require.resolve('bootstrap/dist/css/bootstrap.css'),
+  'public/static/export/style.css',
+  (err) => {
+    if (err) {
+      throw err;
+    }
+  }
+);
+
 module.exports = {
   lintOnSave: 'warning',
   publicPath: '/',

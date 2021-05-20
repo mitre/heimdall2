@@ -369,7 +369,12 @@ export default class ExportHTMLModal extends Vue {
         exportWindow.document.write(data);
         // Add the bootstrap framework
         axios.get(`/static/export/style.css`).then((response) => {
-          exportWindow.document.head.insertAdjacentHTML("beforeend", `<style>${response.data}</style>`)
+          const modifiedStyle = response.data
+            .replace(/\#dc3545/g, "#f34335") // bg-danger
+            .replace(/\#198754/g, "#4cb04f") // bg-success
+            .replace(/\#0dcaf0/g, "#03a9f4") // bg-info
+            .replace(/\#ffc107/g, "#fe9900") // bg-warning
+          exportWindow.document.head.insertAdjacentHTML("beforeend", `<style>${modifiedStyle}</style>`)
         })
         // Get the template for results sets
         const profileInfos = exportWindow.document.getElementById('profileInfos');
