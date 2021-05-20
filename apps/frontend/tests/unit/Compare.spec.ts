@@ -220,11 +220,9 @@ describe('compare charts', () => {
     loadSample('NGINX Clean Sample');
     expect(
       new Set(
-        (
-          wrapper.vm as Vue & {
-            compliance_series: SeriesItem[];
-          }
-        ).compliance_series[0].data
+        (wrapper.vm as Vue & {
+          compliance_series: SeriesItem[];
+        }).compliance_series[0].data
       )
     ).toEqual(
       new Set([
@@ -240,11 +238,9 @@ describe('compare charts', () => {
     loadSample('Red Hat With Failing Tests');
     expect(
       new Set(
-        (
-          wrapper.vm as Vue & {
-            compliance_series: SeriesItem[];
-          }
-        ).compliance_series[0].data
+        (wrapper.vm as Vue & {
+          compliance_series: SeriesItem[];
+        }).compliance_series[0].data
       )
     ).toEqual(
       new Set([
@@ -260,11 +256,9 @@ describe('compare charts', () => {
     loadSample('Acme Overlay Example');
     expect(
       new Set(
-        (
-          wrapper.vm as Vue & {
-            compliance_series: SeriesItem[];
-          }
-        ).compliance_series[0].data
+        (wrapper.vm as Vue & {
+          compliance_series: SeriesItem[];
+        }).compliance_series[0].data
       )
     ).toEqual(
       new Set([

@@ -43,5 +43,4 @@ new Vue({
 // places to edit Prism variables, but could not locate them. Namely this is
 // the Prism library variables, and not the Prism component variables
 //@ts-ignore
-Prism.languages.rb.string[1].pattern =
-  /("|')(\1|(?:(?![^\\]\1)[\s\S])*[^\\]\1)/g;
+Prism.languages.rb.string[1].pattern = /("|')(\1|(?:(?![^\\]\1)[\s\S])*[^\\]\1)/g;

@@ -3,7 +3,10 @@
     <RegistrationModal
       :admin-register-mode="true"
       :visible="createUserDialog"
-      @close-modal="createUserDialog = false; getUsers()"
+      @close-modal="
+        createUserDialog = false;
+        getUsers();
+      "
     />
     <v-card>
       <v-card-title>
@@ -18,10 +21,10 @@
             />
           </v-col>
           <v-col sm="6" md="2" lg="2" class="text-center mt-3">
-            <v-btn 
+            <v-btn
               color="primary"
-              @click="createUserDialog = true" 
               max-width="100%"
+              @click="createUserDialog = true"
             >
               Add New User
             </v-btn>

@@ -71,9 +71,11 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
           headers: {Authorization: `token ${accessToken}`}
         }
       )
-      .then((response): GithubProfile => {
-        return response.data;
-      });
+      .then(
+        (response): GithubProfile => {
+          return response.data;
+        }
+      );
     const {firstName, lastName} = this.authnService.splitName(
       userInfoResponse.name
     );
