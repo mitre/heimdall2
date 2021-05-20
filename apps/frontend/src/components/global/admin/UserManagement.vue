@@ -3,15 +3,13 @@
     <RegistrationModal
       :admin-register-mode="true"
       :visible="createUserDialog"
-      @close-modal="
-        createUserDialog = false;
-        getUsers();
-      "
+      @close-modal="createUserDialog = false"
+      @update-user-table="getUsers"
     />
     <v-card>
       <v-card-title>
         <v-row>
-          <v-col sm="6" md="10" lg="10">
+          <v-col sm="6" md="10">
             <v-text-field
               v-model="search"
               append-icon="mdi-magnify"
@@ -20,7 +18,7 @@
               hide-details
             />
           </v-col>
-          <v-col sm="6" md="2" lg="2" class="text-center mt-3">
+          <v-col sm="6" md="2" class="text-center mt-3">
             <v-btn
               color="primary"
               max-width="100%"
