@@ -1,0 +1,64 @@
+# Step 1: Setup a cloud.gov account, follow instructions to install the cf-cli, and login on the command line:
+# Go to https://cloud.gov/docs/getting-started/accounts/
+# Go to https://cloud.gov/docs/getting-started/setup/
+# Step 2: git clone this repo and cd to it, then login 
+# $ cf login -a api.fr.cloud.gov  --sso
+# Copy and Paste the Temporary Authentication Code when prompted
+# Step 3: Setup a demo application space
+# $ cf target -o sandbox-gsa create-space heimdall2-db-test
+# Step 4: Create a postgresql database
+# Update manifest.yml file to rename applications: - name:
+# $ cf marketplace
+# $ cf create-service aws-rds medium-psql heimdall2-db-test
+# $ cf create-service-key heimdall2-db-test heimdall2-db-test-key
+# $ cf push
+
+applications:
+- name: heimdall2-docker-test
+  memory: 512m
+  disk_quota: 2g
+  instances: 1
+  stack: cflinuxfs3
+  timeout: 120
+  command: |
+    export DATABASE_HOST=$( echo $VCAP_SERVICES | jq -r '.system_env_json.VCAP_SERVICES["aws-rds"][].credentials.host') && \
+    export DATABASE_NAME=$( echo $VCAP_SERVICES | jq -r '.system_env_json.VCAP_SERVICES["aws-rds"][].credentials.db_name') && \
+    export DATABASE_PASSWORD=$( echo $VCAP_SERVICES | jq -r '.system_env_json.VCAP_SERVICES["aws-rds"][].credentials.password') && \
+    export DATABASE_PORT=$( echo $VCAP_SERVICES | jq -r '.system_env_json.VCAP_SERVICES["aws-rds"][].credentials.port') && \
+    export DATABASE_USERNAME=$( echo $VCAP_SERVICES | jq -r '.system_env_json.VCAP_SERVICES["aws-rds"][].credentials.username') && \
+    export JWT_SECRET=$(echo $RANDOM) && \
+    /usr/local/bin/cmd.sh
+  docker:
+    image: mitre/heimdall2:release-latest
+  services:
+    - heimdall2-db
+  env:
+    NODE_ENV: production
+    ADMIN_PASSWORD: ChangeMe@123
+    # See /apps/backend/.env-example for use of the following
+    #GITHUB_CLIENTID:
+    #GITHUB_CLIENTSECRET:
+    #GITLAB_CLIENTID:
+    #GITLAB_CLIENTSECRET:
+    #GOOGLE_CLIENTID:
+    #GOOGLE_CLIENTSECRET:
+    #OKTA_DOMAIN:
+    #OKTA_CLIENTID:
+    #OKTA_CLIENTSECRET:
+    #OIDC_NAME:
+    #OIDC_ISSUER:
+    #OIDC_AUTHORIZATION_URL:
+    #OIDC_TOKEN_URL:
+    #OIDC_USER_INFO_URL:
+    #OIDC_CLIENTID:
+    #OIDC_CLIENT_SECRET:
+    LDAP_ENABLED: false
+    #LDAP_HOST:
+    #LDAP_PORT:
+    #LDAP_BINDDN:
+    #LDAP_PASSWORD:
+    #LDAP_SEARCHBASE:
+    #LDAP_SEARCHFILTER:
+    #LDAP_NAMEFIELD:
+    #LDAP_MAILFIELD:
+
