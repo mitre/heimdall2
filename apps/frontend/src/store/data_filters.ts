@@ -47,8 +47,11 @@ export interface Filter {
   /** Whether or not to allow/include overlayed controls */
   omit_overlayed_controls?: boolean;
 
-  /** Search for controls containing a Control ID */
+  /** Control IDs to search for */
   ids?: string[];
+
+  /** Titles to search for */
+  title_search_terms?: string[];
 
   /** A search term string, case insensitive
    * We look for this in
@@ -352,6 +355,21 @@ export class FilteredData extends VuexModule {
           foundControls.push(
             ...controls.filter((control) => {
               return control.hdf.wraps.id.indexOf(filter) !== -1;
+            })
+          );
+        });
+        controls = foundControls.filter((c, index) => {
+          return foundControls.indexOf(c) === index;
+        });
+      }
+
+      // Filter by title
+      if (filter.title_search_terms?.length !== 0) {
+        const foundControls: context.ContextualizedControl[] = [];
+        filter.title_search_terms?.forEach((term) => {
+          foundControls.push(
+            ...controls.filter((control) => {
+              return control.hdf.wraps.title?.toLowerCase().includes(term);
             })
           );
         });

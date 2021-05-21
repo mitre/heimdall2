@@ -300,11 +300,11 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   control_selection: string | null = null;
 
   /**
-   * The current search term, as modeled by the search bar
-   * Never empty - should in that case be null
+   * The current search terms, as modeled by the search bar
    */
   search_term: string = '';
   free_search: string | undefined = '';
+  title_search_terms: string[] = [];
 
   /**
    * If the user is currently typing in the search bar
@@ -339,10 +339,14 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
         else if(prop === 'severity') {
           this.severity_filter.push(result[prop].include as Severity)
         }
+        else if(prop === 'id' && result[prop].include) {
+          this.controlIdFilter.push(result[prop].include || '')
+        }
+        else if (prop === 'title' && result[prop].include) {
+          this.title_search_terms.push(result[prop].include || '')
+        }
         else if(prop === 'freetext') {
           this.free_search = result[prop].include
-        } else if(prop === 'id' && typeof(result[prop].include)) {
-          this.controlIdFilter.push(result[prop].include || '')
         }
       }
     })
@@ -428,6 +432,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       severity: this.severity_filter || undefined,
       fromFile: this.file_filter,
       ids: this.controlIdFilter,
+      title_search_terms: this.title_search_terms,
       search_term: this.free_search || '',
       tree_filters: this.tree_filters,
       omit_overlayed_controls: true,
@@ -457,6 +462,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     this.severity_filter = [];
     this.statusFilter = [];
     this.controlIdFilter = [];
+    this.title_search_terms = [];
     this.control_selection = null;
     this.free_search = '';
     this.tree_filters = [];
