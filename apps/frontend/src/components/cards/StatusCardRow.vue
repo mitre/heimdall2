@@ -39,7 +39,7 @@
         </div>
         <v-card-actions>
           <v-btn
-            :disabled="filter.status === 'Profile Error'"
+            :disabled="filter.status.indexOf('Profile Error') !== -1"
             @click="$emit('show-errors')"
             >Filter to Errors</v-btn
           >

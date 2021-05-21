@@ -109,8 +109,8 @@
         <StatusCardRow
           :filter="all_filter"
           :current-status-filter="statusFilter"
-          @show-errors="statusFilter = ['Profile Error']"
-          @show-waived="statusFilter = ['Waived']"
+          @show-errors="search_term = 'status:Profile Error'"
+          @show-waived="search_term = 'status:Waived'"
         />
         <!-- Compliance Cards -->
         <v-row justify="space-around">
@@ -288,6 +288,11 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   statusFilter: ExtendedControlStatus[] = [];
 
   /**
+   * The control IDs to search for
+   */
+  controlIdFilter: string[] = [];
+
+  /**
    * The current state of the treemap as modeled by the treemap (duh).
    * Once can reliably expect that if a "deep" selection is not null, then its parent should also be not-null.
    */
@@ -336,6 +341,8 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
         }
         else if(prop === 'freetext') {
           this.free_search = result[prop].include
+        } else if(prop === 'id' && typeof(result[prop].include)) {
+          this.controlIdFilter.push(result[prop].include || '')
         }
       }
     })
@@ -420,6 +427,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       status: this.statusFilter || [],
       severity: this.severity_filter || undefined,
       fromFile: this.file_filter,
+      ids: this.controlIdFilter,
       search_term: this.free_search || '',
       tree_filters: this.tree_filters,
       omit_overlayed_controls: true,
@@ -434,6 +442,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     return {
       status: this.statusFilter || [],
       severity: this.severity_filter || undefined,
+      ids: this.controlIdFilter,
       fromFile: this.file_filter,
       search_term: this.free_search || '',
       omit_overlayed_controls: true
@@ -447,6 +456,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     this.filter_snackbar = false;
     this.severity_filter = [];
     this.statusFilter = [];
+    this.controlIdFilter = [];
     this.control_selection = null;
     this.free_search = '';
     this.tree_filters = [];
@@ -467,9 +477,10 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     // Return if any params not null/empty
     let result: boolean;
     if (
-      this.severity_filter ||
+      this.severity_filter == [] ||
       this.statusFilter == [] ||
       this.file_filter == [] ||
+      this.controlIdFilter == [] ||
       this.search_term !== '' ||
       this.tree_filters.length
     ) {

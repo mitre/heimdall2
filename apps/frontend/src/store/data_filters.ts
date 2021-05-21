@@ -47,6 +47,9 @@ export interface Filter {
   /** Whether or not to allow/include overlayed controls */
   omit_overlayed_controls?: boolean;
 
+  /** Search for controls containing a Control ID */
+  ids?: string[];
+
   /** A search term string, case insensitive
    * We look for this in
    * - control ID
@@ -313,7 +316,7 @@ export class FilteredData extends VuexModule {
         controls = controls.filter((c) => c.data.id === filter.control_id);
       }
 
-      // Filter by status, if necessary
+      // Filter by status
       if (filter.status?.length !== 0) {
         const foundControls: context.ContextualizedControl[] = [];
         filter.status?.forEach(async (statusFilter) => {
@@ -334,15 +337,24 @@ export class FilteredData extends VuexModule {
         });
       }
 
-      // Filter by severity, if necessary
+      // Filter by severity
       if (filter.severity?.length !== 0) {
-        const foundControls: context.ContextualizedControl[] = [];
-        foundControls.push(
-          ...controls.filter(
-            (control) =>
-              filter.severity?.indexOf(control.root.hdf.severity) !== -1
-          )
+        controls = controls.filter(
+          (control) =>
+            filter.severity?.indexOf(control.root.hdf.severity) !== -1
         );
+      }
+
+      // Filter by control ID
+      if (filter.ids?.length !== 0) {
+        const foundControls: context.ContextualizedControl[] = [];
+        filter.ids?.forEach((filter) => {
+          foundControls.push(
+            ...controls.filter((control) => {
+              return control.hdf.wraps.id.indexOf(filter) !== -1;
+            })
+          );
+        });
         controls = foundControls.filter((c, index) => {
           return foundControls.indexOf(c) === index;
         });
