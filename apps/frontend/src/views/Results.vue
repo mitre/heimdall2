@@ -11,12 +11,18 @@
         dense
         solo
         prepend-inner-icon="mdi-magnify"
+        append-icon="mdi-help-circle-outline"
         label="Search"
         clearable
         :class="$vuetify.breakpoint.xs ? 'overtake-bar mx-2' : 'mx-2'"
         @input="isTyping = true"
         @click:clear="clear_search()"
+        @click:append="showSearchHelp = true"
         @blur="show_search_mobile = false"
+      />
+      <SearchHelpModal
+        :visible="showSearchHelp"
+        @close-modal="showSearchHelp = false"
       />
       <v-btn v-if="$vuetify.breakpoint.xs" class="mr-2" @click="showSearch">
         <v-icon>mdi-magnify</v-icon>
@@ -223,6 +229,7 @@ import SeverityChart from '@/components/cards/SeverityChart.vue';
 import ComplianceChart from '@/components/cards/ComplianceChart.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
 import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
+import SearchHelpModal from '@/components/global/SearchHelpModal.vue'
 
 import ExportCaat from '@/components/global/ExportCaat.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
@@ -269,6 +276,7 @@ interface SearchQuery {
     ExportJson,
     EvaluationInfo,
     ProfileData,
+    SearchHelpModal,
     UploadButton,
     EditEvaluationModal
   }
@@ -318,6 +326,9 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 
   /** Determines if we should make the search bar collapse-able */
   show_search_mobile: boolean = false;
+
+  /** If we are currently showing the search help modal */
+  showSearchHelp: boolean = false;
 
   @Watch('search_term')
   onUpdateSearch(_newValue: string) {
