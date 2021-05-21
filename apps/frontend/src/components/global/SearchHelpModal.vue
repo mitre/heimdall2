@@ -1,9 +1,5 @@
 <template>
-  <Modal
-    :visible="visible"
-    :fullscreen="fullscreen"
-    @close-modal="$emit('close-modal')"
-  >
+  <Modal :visible="visible" @close-modal="$emit('close-modal')">
     <v-card>
       <v-card-title>Search Help </v-card-title>
 
@@ -24,6 +20,9 @@
           </li>
           <li class="pb-1">
             <h3>Status: <code>status:Passed</code></h3>
+          </li>
+          <li class="pb-1">
+            <h3>Control Correlation Identifier: <code>nist:UM-1</code></h3>
           </li>
         </ul>
         <br />

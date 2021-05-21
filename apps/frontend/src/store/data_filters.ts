@@ -51,7 +51,10 @@ export interface Filter {
   ids?: string[];
 
   /** Titles to search for */
-  title_search_terms?: string[];
+  titleSearchTerms?: string[];
+
+  /** CCIs to search for */
+  cciIdFilter?: string[];
 
   /** A search term string, case insensitive
    * We look for this in
@@ -364,14 +367,33 @@ export class FilteredData extends VuexModule {
       }
 
       // Filter by title
-      if (filter.title_search_terms?.length !== 0) {
+      if (filter.titleSearchTerms?.length !== 0) {
         const foundControls: context.ContextualizedControl[] = [];
-        filter.title_search_terms?.forEach((term) => {
+        filter.titleSearchTerms?.forEach((term) => {
           foundControls.push(
             ...controls.filter((control) => {
               return control.hdf.wraps.title?.toLowerCase().includes(term);
             })
           );
+        });
+        controls = foundControls.filter((c, index) => {
+          return foundControls.indexOf(c) === index;
+        });
+      }
+
+      // Filter by CCI ID
+      if (filter.cciIdFilter?.length !== 0) {
+        const foundControls: context.ContextualizedControl[] = [];
+        filter.cciIdFilter?.forEach((cciID) => {
+          controls.forEach((control) => {
+            if (
+              control.hdf.raw_nist_tags.some((tag) => {
+                return tag.toLowerCase().indexOf(cciID) !== -1;
+              })
+            ) {
+              foundControls.push(control);
+            }
+          });
         });
         controls = foundControls.filter((c, index) => {
           return foundControls.indexOf(c) === index;
