@@ -93,6 +93,7 @@
     "sanitize-html": "^2.3.3",
     "sass": "^1.23.6",
     "sass-loader": "^10.0.3",
+    "search-parser": "^0.1.19",
     "uuid": "^8.3.0",
     "vue": "~2.6.10",
     "vue-apexcharts": "^1.5.1",

@@ -25,7 +25,7 @@ import {Prop} from 'vue-property-decorator';
   }
 })
 export default class SeverityChart extends Vue {
-  @Prop({type: String}) readonly value!: string | null;
+  @Prop({type: Array}) readonly value!: Severity[];
   @Prop({type: Object, required: true}) readonly filter!: Filter;
 
   categories: Category<Severity>[] = [
@@ -59,10 +59,10 @@ export default class SeverityChart extends Vue {
 
   onSelect(severity: Category<Severity>) {
     // In the case that the values are the same, we want to instead emit null
-    if (severity.value === this.value) {
-      this.$emit('input', null);
+    if (this.value && this.value?.indexOf(severity.value) !== -1) {
+      this.$emit('input', []);
     } else {
-      this.$emit('input', severity.value);
+      this.$emit('input', [severity.value]);
     }
   }
 }

@@ -28,7 +28,7 @@ export type StatusHash = ControlStatusHash & {
 function count_statuses(data: FilteredData, filter: Filter): StatusHash {
   // Remove the status filter from the control filter
   const new_filter: Filter = {
-    status: undefined,
+    status: [],
     ...filter
   };
 

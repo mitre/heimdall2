@@ -18,7 +18,9 @@
       </v-card>
     </v-col>
     <v-col
-      v-if="profileErrorProps.number && currentStatusFilter !== 'Waived'"
+      v-if="
+        profileErrorProps.number && currentStatusFilter.indexOf('Waived') == -1
+      "
       cols="12"
     >
       <v-card
@@ -45,7 +47,10 @@
       </v-card>
     </v-col>
     <v-col
-      v-if="waivedProfiles.number && currentStatusFilter !== 'Profile Error'"
+      v-if="
+        waivedProfiles.number &&
+        currentStatusFilter.indexOf('Profile Error') == -1
+      "
       cols="12"
     >
       <v-card
@@ -64,7 +69,7 @@
         </div>
         <v-card-actions>
           <v-btn
-            :disabled="filter.status === 'Waived'"
+            :disabled="filter.status.indexOf('Waived') !== -1"
             @click="$emit('show-waived')"
             >Filter to Waived</v-btn
           >
@@ -92,7 +97,7 @@ interface CardProps {
 @Component
 export default class StatusCardRow extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
-  @Prop({type: String, required: false}) readonly currentStatusFilter!: Filter;
+  @Prop({type: Array, required: false}) readonly currentStatusFilter!: Filter;
 
   // Cards
   get standardCardProps(): CardProps[] {
@@ -147,7 +152,7 @@ export default class StatusCardRow extends Vue {
     // Want to ignore existing status filter
     const filter = {
       ...this.filter,
-      status: undefined
+      status: []
     };
     return {
       icon: 'alert',

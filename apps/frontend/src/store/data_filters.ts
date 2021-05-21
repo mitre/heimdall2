@@ -10,7 +10,7 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import {context, ControlStatus, nist, Severity} from 'inspecjs';
+import {context, nist, Severity} from 'inspecjs';
 import LRUCache from 'lru-cache';
 import {
   Action,
@@ -22,6 +22,15 @@ import {
 
 const MAX_CACHE_ENTRIES = 20;
 
+export declare type ExtendedControlStatus =
+  | 'Not Applicable'
+  | 'From Profile'
+  | 'Profile Error'
+  | 'Passed'
+  | 'Failed'
+  | 'Not Reviewed'
+  | 'Waived';
+
 /** Contains common filters on data from the store. */
 export interface Filter {
   // General
@@ -30,10 +39,10 @@ export interface Filter {
 
   // Control specific
   /** What status the controls can have. Undefined => any */
-  status?: ControlStatus | 'Waived';
+  status?: ExtendedControlStatus[];
 
   /** What severity the controls can have. Undefined => any */
-  severity?: Severity;
+  severity?: Severity[];
 
   /** Whether or not to allow/include overlayed controls */
   omit_overlayed_controls?: boolean;
@@ -159,9 +168,21 @@ export class FilteredData extends VuexModule {
   }
 
   @Action
+  public select_exclusive_evaluations(fileIDs: FileID[]): void {
+    this.CLEAR_ALL_EVALUATIONS();
+    this.SELECT_EVALUATIONS(fileIDs);
+  }
+
+  @Action
   public select_exclusive_profile(fileID: FileID): void {
     this.CLEAR_ALL_PROFILES();
     this.SELECT_PROFILES([fileID]);
+  }
+
+  @Action
+  public select_exclusive_profiles(fileIDs: FileID[]): void {
+    this.CLEAR_ALL_PROFILES();
+    this.SELECT_PROFILES(fileIDs);
   }
 
   @Action
@@ -293,21 +314,38 @@ export class FilteredData extends VuexModule {
       }
 
       // Filter by status, if necessary
-      if (filter.status !== undefined) {
-        if (filter.status === 'Waived') {
-          controls = controls.filter((control) => control.hdf.waived);
-        } else {
-          controls = controls.filter(
-            (control) => control.root.hdf.status === filter.status
-          );
-        }
+      if (filter.status?.length !== 0) {
+        const foundControls: context.ContextualizedControl[] = [];
+        filter.status?.forEach(async (statusFilter) => {
+          if (statusFilter === 'Waived') {
+            foundControls.push(
+              ...controls.filter((control) => control.hdf.waived)
+            );
+          } else {
+            foundControls.push(
+              ...controls.filter((control) =>
+                filter.status?.includes(control.root.hdf.status)
+              )
+            );
+          }
+        });
+        controls = foundControls.filter((c, index) => {
+          return foundControls.indexOf(c) === index;
+        });
       }
 
       // Filter by severity, if necessary
-      if (filter.severity !== undefined) {
-        controls = controls.filter(
-          (control) => control.root.hdf.severity === filter.severity
+      if (filter.severity?.length !== 0) {
+        const foundControls: context.ContextualizedControl[] = [];
+        foundControls.push(
+          ...controls.filter(
+            (control) =>
+              filter.severity?.indexOf(control.root.hdf.severity) !== -1
+          )
         );
+        controls = foundControls.filter((c, index) => {
+          return foundControls.indexOf(c) === index;
+        });
       }
 
       // Filter by overlay

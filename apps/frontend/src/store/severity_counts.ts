@@ -20,7 +20,7 @@ type SeverityHash = {[key in Severity]: number};
 function count_severities(data: FilteredData, filter: Filter): SeverityHash {
   // Remove the status filter from the control filter
   const new_filter: Filter = {
-    status: undefined,
+    status: [],
     ...filter
   };
 
