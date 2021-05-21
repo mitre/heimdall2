@@ -110,7 +110,7 @@ export default class ExportCaat extends Vue {
       wb.SheetNames.push(sheetName);
       wb.Props = this.fileSettings;
       // Get the controls for the current file
-      const controls = FilteredDataModule.controls({fromFile: [fileId]});
+      const controls = FilteredDataModule.controls({...this.filter, fromFile: [fileId]});
       const hitIds = new Set();
       const rows: CAATRow[] = []
       // Convert them into rows

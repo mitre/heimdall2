@@ -3,6 +3,7 @@
     :visible="visible"
     :max-width="'500px'"
     @close-modal="$emit('close-modal')"
+    @update-user-table="$emit('update-user-table')"
   >
     <v-card class="elevation-12">
       <v-toolbar color="primary" dark flat>
@@ -200,6 +201,7 @@ export default class RegistrationModal extends Vue {
                     'You have successfully registered a new user'
                 );
                 this.$emit('close-modal')
+                this.$emit('update-user-table')
             } else {
                 this.$router.push('/login');
                 SnackbarModule.notify(
