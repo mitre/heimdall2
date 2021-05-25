@@ -130,7 +130,7 @@ export default class Users extends Vue {
     const users: IVuetifyItems[] = [];
 
     ServerModule.allUsers.forEach(async (user) => {
-      if(!currentUserIds.includes(user.id)) {
+      if(!currentUserIds.includes(user.id) && user.id !== ServerModule.userInfo.id) {
         users.push({
           text: `${user.firstName || ''} ${user.lastName || ''} (${user.email})`,
           value: user.id
