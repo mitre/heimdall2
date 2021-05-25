@@ -7,6 +7,7 @@
         <h3>Filter your controls via advanced search.</h3>
         <br />
         <h2>Supported Query Examples</h2>
+        <h4>Queries are not case-sensitive</h4>
         <br />
         <ul>
           <li class="pb-1">
@@ -23,6 +24,9 @@
           </li>
           <li class="pb-1">
             <h3>Control Correlation Identifier: <code>nist:UM-1</code></h3>
+          </li>
+          <li class="pb-1">
+            <h3>Description: <code>desc:Status groups</code></h3>
           </li>
         </ul>
         <br />

@@ -53,6 +53,9 @@ export interface Filter {
   /** Titles to search for */
   titleSearchTerms?: string[];
 
+  /** Descriptions to search for */
+  descriptionSearchTerms?: string[];
+
   /** CCIs to search for */
   cciIdFilter?: string[];
 
@@ -373,6 +376,21 @@ export class FilteredData extends VuexModule {
           foundControls.push(
             ...controls.filter((control) => {
               return control.hdf.wraps.title?.toLowerCase().includes(term);
+            })
+          );
+        });
+        controls = foundControls.filter((c, index) => {
+          return foundControls.indexOf(c) === index;
+        });
+      }
+
+      // Filter by description
+      if (filter.descriptionSearchTerms?.length !== 0) {
+        const foundControls: context.ContextualizedControl[] = [];
+        filter.descriptionSearchTerms?.forEach((term) => {
+          foundControls.push(
+            ...controls.filter((control) => {
+              return control.hdf.wraps.desc?.toLowerCase().includes(term);
             })
           );
         });

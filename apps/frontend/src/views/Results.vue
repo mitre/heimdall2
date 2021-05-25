@@ -306,10 +306,12 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    * The current search terms, as modeled by the search bar
    */
   search_term: string = '';
-  free_search: string | undefined = '';
+  freeSearch: string | undefined = '';
   // Control titles to search for
   titleSearchTerms: string[] = [];
-  //The control IDs to search for
+  // Control descriptions to search for
+  descriptionSearchTerms: string[] = [];
+  // Control IDs to search for
   controlIdFilter: string[] = [];
   // CCI Ids to search for
   cciIdFilter: string[] = [];
@@ -359,8 +361,11 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
         else if (prop === 'nist') {
           this.cciIdFilter.push(result[prop].include || '')
         }
+        else if(prop === 'desc' || prop === 'description') {
+          this.descriptionSearchTerms.push(result[prop].include || '')
+        }
         else if(prop === 'freetext') {
-          this.free_search = result[prop].include
+          this.freeSearch = result[prop].include
         }
       }
     })
@@ -376,7 +381,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     }
     return words.join(' ')
   }
-
 
   /**
    * The currently selected file, if one exists.
@@ -447,8 +451,9 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       fromFile: this.file_filter,
       ids: this.controlIdFilter,
       titleSearchTerms: this.titleSearchTerms,
+      descriptionSearchTerms: this.descriptionSearchTerms,
       cciIdFilter: this.cciIdFilter,
-      search_term: this.free_search || '',
+      search_term: this.freeSearch || '',
       tree_filters: this.tree_filters,
       omit_overlayed_controls: true,
       control_id: this.control_selection || undefined
@@ -464,7 +469,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       severity: this.severity_filter || undefined,
       ids: this.controlIdFilter,
       fromFile: this.file_filter,
-      search_term: this.free_search || '',
+      search_term: this.freeSearch || '',
       omit_overlayed_controls: true
     };
   }
@@ -478,9 +483,10 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     this.statusFilter = [];
     this.controlIdFilter = [];
     this.titleSearchTerms = [];
+    this.descriptionSearchTerms = [];
     this.cciIdFilter = [];
     this.control_selection = null;
-    this.free_search = '';
+    this.freeSearch = '';
     this.tree_filters = [];
     if(clearSearchBar) {
       this.search_term = '';
