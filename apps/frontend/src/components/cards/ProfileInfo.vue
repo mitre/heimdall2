@@ -134,7 +134,11 @@ export default class ProfileInfo extends Vue {
   }
 
   get inputs(): Attribute[] {
-    return _.get(this.profile, 'data.attributes');
+    if(this.profile?.data.hasOwnProperty('attributes')) {
+      return _.get(this.profile, 'data.attributes');
+    } else {
+      return _.get(this.profile, 'data.inputs');
+    }
   }
 }
 </script>
