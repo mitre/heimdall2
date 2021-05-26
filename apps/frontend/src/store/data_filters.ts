@@ -460,7 +460,7 @@ export function filterByControlID(
   filter.ids?.forEach((id) => {
     foundControls.push(
       ...controls.filter((control) => {
-        return control.hdf.wraps.id.indexOf(id) !== -1;
+        return control.hdf.wraps.id.toLowerCase().indexOf(id) !== -1;
       })
     );
   });
@@ -529,13 +529,9 @@ export function filterByCode(
   controls: readonly context.ContextualizedControl[]
 ): context.ContextualizedControl[] {
   const foundControls: context.ContextualizedControl[] = [];
-  filter.cciIdFilter?.forEach((cciID) => {
+  filter.codeSearchTerms?.forEach((term) => {
     controls.forEach((control) => {
-      if (
-        control.hdf.raw_nist_tags.some((tag) => {
-          return tag.toLowerCase().indexOf(cciID) !== -1;
-        })
-      ) {
+      if (control.full_code.toLowerCase().indexOf(term.toLowerCase()) !== -1) {
         foundControls.push(control);
       }
     });

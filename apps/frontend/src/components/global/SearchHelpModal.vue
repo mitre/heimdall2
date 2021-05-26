@@ -1,7 +1,7 @@
 <template>
   <Modal :visible="visible" @close-modal="$emit('close-modal')">
     <v-card>
-      <v-card-title>Search Help </v-card-title>
+      <v-card-title>Search Help</v-card-title>
 
       <v-card-text>
         <h3>Filter your controls via advanced search.</h3>
@@ -27,6 +27,14 @@
           </li>
           <li class="pb-1">
             <h3>Description: <code>desc:Status groups</code></h3>
+          </li>
+          <li class="pb-1">
+            <h3>
+              Code: <code>code:Ensure enable log file validation is set</code>
+            </h3>
+          </li>
+          <li class="pb-1">
+            <h3>Inputs: <code>input:disable_slow_controls</code></h3>
           </li>
         </ul>
         <br />
