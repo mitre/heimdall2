@@ -460,7 +460,7 @@ export function filterByControlID(
   filter.ids?.forEach((id) => {
     foundControls.push(
       ...controls.filter((control) => {
-        return control.hdf.wraps.id.indexOf(id) !== -1;
+        return control.hdf.wraps.id.toLowerCase().indexOf(id) !== -1;
       })
     );
   });
