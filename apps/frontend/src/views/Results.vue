@@ -304,7 +304,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /**
    * The current search terms, as modeled by the search bar
    */
-  searchTerm: string = '';
+  searchTerm = '';
   freeSearch: string | undefined = '';
   // Control titles to search for
   titleSearchTerms: string[] = [];
@@ -347,24 +347,25 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     const searchResult: SearchQuery[] = parse(this.searchTerm)[0];
     searchResult.forEach((result) => {
       for (const prop in result) {
+        const include = result[prop].include || ''
         if(prop === 'status') {
-          this.statusFilter.push(this.capitalizeMultiple(result[prop].include) as ControlStatus & 'Waived')
+          this.statusFilter.push(this.capitalizeMultiple(include) as ControlStatus & 'Waived')
         } else if(prop === 'severity') {
-          this.severityFilter.push(result[prop].include as Severity)
+          this.severityFilter.push(include as Severity)
         } else if(prop === 'id') {
-          this.controlIdFilter.push(result[prop].include || '')
+          this.controlIdFilter.push(include)
         } else if (prop === 'title') {
-          this.titleSearchTerms.push(result[prop].include || '')
+          this.titleSearchTerms.push(include)
         } else if (prop === 'nist') {
-          this.cciIdFilter.push(result[prop].include || '')
+          this.cciIdFilter.push(include)
         } else if(prop === 'desc' || prop === 'description') {
-          this.descriptionSearchTerms.push(result[prop].include || '')
+          this.descriptionSearchTerms.push(include)
         } else if(prop === 'code') {
-          this.codeSearchTerms.push(result[prop].include || '')
+          this.codeSearchTerms.push(include)
         } else if (prop === 'input') {
-          this.codeSearchTerms.push(`input('${result[prop].include}')`)
+          this.codeSearchTerms.push(`input('${include}')`)
         } else if(prop === 'freetext') {
-          this.freeSearch = result[prop].include
+          this.freeSearch = include
         }
       }
     })
@@ -467,9 +468,13 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     return {
       status: this.statusFilter || [],
       severity: this.severityFilter || undefined,
+      titleSearchTerms: this.titleSearchTerms || [],
+      descriptionSearchTerms: this.descriptionSearchTerms || [],
+      codeSearchTerms: this.codeSearchTerms || [],
+      cciIdFilter: this.cciIdFilter || [],
       ids: this.controlIdFilter,
       fromFile: this.file_filter,
-      searchTerm: this.freeSearch || '',
+      searchTerm: this.freeSearch || undefined,
       omit_overlayed_controls: true
     };
   }
@@ -477,7 +482,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /**
    * Clear all filters
    */
-  clear(clearSearchBar: boolean = false) {
+  clear(clearSearchBar = false) {
     this.filter_snackbar = false;
     this.severityFilter = [];
     this.statusFilter = [];
@@ -506,11 +511,11 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     // Return if any params not null/empty
     let result: boolean;
     if (
-      this.severityFilter === [] ||
-      this.statusFilter === [] ||
-      this.file_filter === [] ||
-      this.controlIdFilter === [] ||
-      this.codeSearchTerms === [] ||
+      this.severityFilter.length !== 0 ||
+      this.statusFilter.length !== 0 ||
+      this.file_filter.length !== 0 ||
+      this.controlIdFilter.length !== 0 ||
+      this.codeSearchTerms.length !== 0 ||
       this.searchTerm !== '' ||
       this.tree_filters.length
     ) {

@@ -144,7 +144,7 @@ export default class Treemap extends Vue {
   /** Generates a d3 heirarchy structure, with appropriate bounds to our width
    *  detailing all of the controls in the nist hash */
   get treemap_layout(): d3.HierarchyRectangularNode<TreemapNode> {
-    // Get the currejnt filtered data
+    // Get the current filtered data
     let controls = FilteredDataModule.controls(this.filter);
 
     // Build the map

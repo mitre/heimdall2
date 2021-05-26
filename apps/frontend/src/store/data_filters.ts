@@ -323,45 +323,32 @@ export class FilteredData extends VuexModule {
       let controls: readonly context.ContextualizedControl[] = profiles.flatMap(
         (profile) => profile.contains
       );
+
       // Filter by control id
       if (filter.control_id !== undefined) {
         controls = controls.filter((c) => c.data.id === filter.control_id);
       }
 
       // Filter by status
-      if (filter.status?.length !== 0) {
-        controls = filterByStatus(filter, controls);
-      }
+      controls = filterByStatus(filter, controls);
 
       // Filter by severity
-      if (filter.severity?.length !== 0) {
-        controls = filterBySeverity(filter, controls);
-      }
+      controls = filterBySeverity(filter, controls);
 
       // Filter by control ID
-      if (filter.ids?.length !== 0) {
-        controls = filterByControlID(filter, controls);
-      }
+      controls = filterByControlID(filter, controls);
 
       // Filter by title
-      if (filter.titleSearchTerms?.length !== 0) {
-        controls = filterByTitle(filter, controls);
-      }
+      controls = filterByTitle(filter, controls);
 
       // Filter by description
-      if (filter.descriptionSearchTerms?.length !== 0) {
-        controls = filterByDescription(filter, controls);
-      }
+      controls = filterByDescription(filter, controls);
 
       // Filter by CCI ID
-      if (filter.cciIdFilter?.length !== 0) {
-        controls = filterByCCI(filter, controls);
-      }
+      controls = filterByCCI(filter, controls);
 
       // Filter by code
-      if (filter.codeSearchTerms?.length !== 0) {
-        controls = filterByCode(filter, controls);
-      }
+      controls = filterByCode(filter, controls);
 
       // Filter by overlay
       if (filter.omit_overlayed_controls) {
@@ -426,117 +413,150 @@ export function filterByStatus(
   filter: Filter,
   controls: readonly context.ContextualizedControl[]
 ): context.ContextualizedControl[] {
-  const foundControls: context.ContextualizedControl[] = [];
-  filter.status?.forEach(async (statusFilter) => {
-    if (statusFilter === 'Waived') {
-      foundControls.push(...controls.filter((control) => control.hdf.waived));
-    } else {
-      foundControls.push(
-        ...controls.filter((control) =>
-          filter.status?.includes(control.root.hdf.status)
-        )
-      );
-    }
-  });
-  return foundControls.filter((c, index) => {
-    return foundControls.indexOf(c) === index;
-  });
+  if (filter.status && filter.status?.length !== 0) {
+    const foundControls: context.ContextualizedControl[] = [];
+    filter.status?.forEach(async (statusFilter) => {
+      if (statusFilter === 'Waived') {
+        foundControls.push(...controls.filter((control) => control.hdf.waived));
+      } else {
+        foundControls.push(
+          ...controls.filter((control) =>
+            filter.status?.includes(control.root.hdf.status)
+          )
+        );
+      }
+    });
+    return foundControls.filter((c, index) => {
+      return foundControls.indexOf(c) === index;
+    });
+  } else {
+    return [...controls];
+  }
 }
 
 export function filterBySeverity(
   filter: Filter,
   controls: readonly context.ContextualizedControl[]
 ): context.ContextualizedControl[] {
-  return controls.filter(
-    (control) => filter.severity?.indexOf(control.root.hdf.severity) !== -1
-  );
+  if (filter.severity) {
+    return controls.filter(
+      (control) => filter.severity?.indexOf(control.root.hdf.severity) !== -1
+    );
+  } else {
+    return [...controls];
+  }
 }
 
 export function filterByControlID(
   filter: Filter,
   controls: readonly context.ContextualizedControl[]
 ): context.ContextualizedControl[] {
-  const foundControls: context.ContextualizedControl[] = [];
-  filter.ids?.forEach((id) => {
-    foundControls.push(
-      ...controls.filter((control) => {
-        return control.hdf.wraps.id.toLowerCase().indexOf(id) !== -1;
-      })
-    );
-  });
-  return foundControls.filter((c, index) => {
-    return foundControls.indexOf(c) === index;
-  });
+  if (filter.ids && filter.ids?.length !== 0) {
+    const foundControls: context.ContextualizedControl[] = [];
+    filter.ids?.forEach((id) => {
+      foundControls.push(
+        ...controls.filter((control) => {
+          return control.hdf.wraps.id.toLowerCase().indexOf(id) !== -1;
+        })
+      );
+    });
+    return foundControls.filter((c, index) => {
+      return foundControls.indexOf(c) === index;
+    });
+  } else {
+    return [...controls];
+  }
 }
 
 export function filterByTitle(
   filter: Filter,
   controls: readonly context.ContextualizedControl[]
 ): context.ContextualizedControl[] {
-  const foundControls: context.ContextualizedControl[] = [];
-  filter.titleSearchTerms?.forEach((term) => {
-    foundControls.push(
-      ...controls.filter((control) => {
-        return control.hdf.wraps.title?.toLowerCase().includes(term);
-      })
-    );
-  });
-  return foundControls.filter((c, index) => {
-    return foundControls.indexOf(c) === index;
-  });
+  if (filter.titleSearchTerms && filter.titleSearchTerms?.length !== 0) {
+    const foundControls: context.ContextualizedControl[] = [];
+    filter.titleSearchTerms?.forEach((term) => {
+      foundControls.push(
+        ...controls.filter((control) => {
+          return control.hdf.wraps.title?.toLowerCase().includes(term);
+        })
+      );
+    });
+    return foundControls.filter((c, index) => {
+      return foundControls.indexOf(c) === index;
+    });
+  } else {
+    return [...controls];
+  }
 }
 
 export function filterByDescription(
   filter: Filter,
   controls: readonly context.ContextualizedControl[]
 ): context.ContextualizedControl[] {
-  const foundControls: context.ContextualizedControl[] = [];
-  filter.descriptionSearchTerms?.forEach((term) => {
-    foundControls.push(
-      ...controls.filter((control) => {
-        return control.hdf.wraps.desc?.toLowerCase().includes(term);
-      })
-    );
-  });
-  return foundControls.filter((c, index) => {
-    return foundControls.indexOf(c) === index;
-  });
+  if (
+    filter.descriptionSearchTerms &&
+    filter.descriptionSearchTerms?.length !== 0
+  ) {
+    const foundControls: context.ContextualizedControl[] = [];
+    filter.descriptionSearchTerms?.forEach((term) => {
+      foundControls.push(
+        ...controls.filter((control) => {
+          return control.hdf.wraps.desc?.toLowerCase().includes(term);
+        })
+      );
+    });
+    return foundControls.filter((c, index) => {
+      return foundControls.indexOf(c) === index;
+    });
+  } else {
+    return [...controls];
+  }
 }
 
 export function filterByCCI(
   filter: Filter,
   controls: readonly context.ContextualizedControl[]
 ): context.ContextualizedControl[] {
-  const foundControls: context.ContextualizedControl[] = [];
-  filter.cciIdFilter?.forEach((cciID) => {
-    controls.forEach((control) => {
-      if (
-        control.hdf.raw_nist_tags.some((tag) => {
-          return tag.toLowerCase().indexOf(cciID) !== -1;
-        })
-      ) {
-        foundControls.push(control);
-      }
+  if (filter.cciIdFilter && filter.cciIdFilter?.length !== 0) {
+    const foundControls: context.ContextualizedControl[] = [];
+    filter.cciIdFilter?.forEach((cciID) => {
+      controls.forEach((control) => {
+        if (
+          control.hdf.raw_nist_tags.some((tag) => {
+            return tag.toLowerCase().indexOf(cciID) !== -1;
+          })
+        ) {
+          foundControls.push(control);
+        }
+      });
     });
-  });
-  return foundControls.filter((c, index) => {
-    return foundControls.indexOf(c) === index;
-  });
+    return foundControls.filter((c, index) => {
+      return foundControls.indexOf(c) === index;
+    });
+  } else {
+    return [...controls];
+  }
 }
 
 export function filterByCode(
   filter: Filter,
   controls: readonly context.ContextualizedControl[]
 ): context.ContextualizedControl[] {
-  const foundControls: context.ContextualizedControl[] = [];
-  filter.codeSearchTerms?.forEach((term) => {
-    controls.forEach((control) => {
-      if (control.full_code.toLowerCase().indexOf(term.toLowerCase()) !== -1) {
-        foundControls.push(control);
-      }
+  if (filter.codeSearchTerms && filter.codeSearchTerms?.length !== 0) {
+    const foundControls: context.ContextualizedControl[] = [];
+    filter.codeSearchTerms?.forEach((term) => {
+      controls.forEach((control) => {
+        if (
+          control.full_code.toLowerCase().indexOf(term.toLowerCase()) !== -1
+        ) {
+          foundControls.push(control);
+        }
+      });
     });
-  });
-  return foundControls.filter((c, index) => {
-    return foundControls.indexOf(c) === index;
-  });
+    return foundControls.filter((c, index) => {
+      return foundControls.indexOf(c) === index;
+    });
+  } else {
+    return [...controls];
+  }
 }
