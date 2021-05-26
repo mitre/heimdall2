@@ -5,7 +5,7 @@
       <v-text-field
         v-show="show_search_mobile || !$vuetify.breakpoint.xs"
         ref="search"
-        v-model="search_term"
+        v-model="searchTerm"
         flat
         hide-details
         dense
@@ -115,8 +115,8 @@
         <StatusCardRow
           :filter="all_filter"
           :current-status-filter="statusFilter"
-          @show-errors="search_term = 'status:Profile Error'"
-          @show-waived="search_term = 'status:Waived'"
+          @show-errors="searchTerm = 'status:Profile Error'"
+          @show-waived="searchTerm = 'status:Waived'"
         />
         <!-- Compliance Cards -->
         <v-row justify="space-around">
@@ -253,7 +253,6 @@ import ServerMixin from '../mixins/ServerMixin';
 import {IEvaluation} from '@heimdall/interfaces';
 import {Watch} from 'vue-property-decorator';
 import {parse} from 'search-parser';
-import _ from 'lodash';
 
 interface SearchQuery {
   [key: string]: {
@@ -305,7 +304,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /**
    * The current search terms, as modeled by the search bar
    */
-  search_term: string = '';
+  searchTerm: string = '';
   freeSearch: string | undefined = '';
   // Control titles to search for
   titleSearchTerms: string[] = [];
@@ -315,6 +314,8 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   controlIdFilter: string[] = [];
   // CCI Ids to search for
   cciIdFilter: string[] = [];
+  // Text to search for in the code
+  codeSearchTerms: string[] = [];
 
   /**
    * If the user is currently typing in the search bar
@@ -332,7 +333,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /** If we are currently showing the search help modal */
   showSearchHelp: boolean = false;
 
-  @Watch('search_term')
+  @Watch('searchTerm')
   onUpdateSearch(_newValue: string) {
     if (this.typingTimer) {
       clearTimeout(this.typingTimer);
@@ -343,28 +344,26 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   @Watch('isTyping')
   onDoneTyping() {
     this.clear()
-    const searchResult: SearchQuery[] = parse(this.search_term)[0];
+    const searchResult: SearchQuery[] = parse(this.searchTerm)[0];
     searchResult.forEach((result) => {
       for (const prop in result) {
         if(prop === 'status') {
           this.statusFilter.push(this.capitalizeMultiple(result[prop].include) as ControlStatus & 'Waived')
-        }
-        else if(prop === 'severity') {
+        } else if(prop === 'severity') {
           this.severity_filter.push(result[prop].include as Severity)
-        }
-        else if(prop === 'id') {
+        } else if(prop === 'id') {
           this.controlIdFilter.push(result[prop].include || '')
-        }
-        else if (prop === 'title') {
+        } else if (prop === 'title') {
           this.titleSearchTerms.push(result[prop].include || '')
-        }
-        else if (prop === 'nist') {
+        } else if (prop === 'nist') {
           this.cciIdFilter.push(result[prop].include || '')
-        }
-        else if(prop === 'desc' || prop === 'description') {
+        } else if(prop === 'desc' || prop === 'description') {
           this.descriptionSearchTerms.push(result[prop].include || '')
-        }
-        else if(prop === 'freetext') {
+        } else if(prop === 'code') {
+          this.codeSearchTerms.push(result[prop].include || '')
+        } else if (prop === 'input') {
+          this.codeSearchTerms.push(`input('${result[prop].include}')`)
+        } else if(prop === 'freetext') {
           this.freeSearch = result[prop].include
         }
       }
@@ -453,7 +452,8 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       titleSearchTerms: this.titleSearchTerms,
       descriptionSearchTerms: this.descriptionSearchTerms,
       cciIdFilter: this.cciIdFilter,
-      search_term: this.freeSearch || '',
+      searchTerm: this.freeSearch || '',
+      codeSearchTerms: this.codeSearchTerms,
       tree_filters: this.tree_filters,
       omit_overlayed_controls: true,
       control_id: this.control_selection || undefined
@@ -469,7 +469,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       severity: this.severity_filter || undefined,
       ids: this.controlIdFilter,
       fromFile: this.file_filter,
-      search_term: this.freeSearch || '',
+      searchTerm: this.freeSearch || '',
       omit_overlayed_controls: true
     };
   }
@@ -484,17 +484,18 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     this.controlIdFilter = [];
     this.titleSearchTerms = [];
     this.descriptionSearchTerms = [];
+    this.codeSearchTerms = [];
     this.cciIdFilter = [];
     this.control_selection = null;
     this.freeSearch = '';
     this.tree_filters = [];
     if(clearSearchBar) {
-      this.search_term = '';
+      this.searchTerm = '';
     }
   }
 
   clear_search() {
-    this.search_term = '';
+    this.searchTerm = '';
   }
 
   /**
@@ -505,11 +506,12 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     // Return if any params not null/empty
     let result: boolean;
     if (
-      this.severity_filter == [] ||
-      this.statusFilter == [] ||
-      this.file_filter == [] ||
-      this.controlIdFilter == [] ||
-      this.search_term !== '' ||
+      this.severity_filter === [] ||
+      this.statusFilter === [] ||
+      this.file_filter === [] ||
+      this.controlIdFilter === [] ||
+      this.codeSearchTerms === [] ||
+      this.searchTerm !== '' ||
       this.tree_filters.length
     ) {
       result = true;
@@ -537,7 +539,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    */
   get curr_title(): string {
     let returnText = `${capitalize(this.current_route_name.slice(0, -1))} View`;
-    if (this.file_filter.length == 1) {
+    if (this.file_filter.length === 1) {
       const file = this.getFile(this.file_filter[0])
       if (file) {
         const dbFile = this.getDbFile(file);

@@ -59,7 +59,7 @@ describe('Compare table data', () => {
   });
 
   it('search works when nothing fits criteria', () => {
-    (wrapper.vm as Vue & {search_term: string}).search_term = 'failed';
+    (wrapper.vm as Vue & {searchTerm: string}).searchTerm = 'failed';
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length
@@ -68,7 +68,7 @@ describe('Compare table data', () => {
 
   it('search id works', () => {
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = false;
-    (wrapper.vm as Vue & {search_term: string}).search_term = 'v-13613';
+    (wrapper.vm as Vue & {searchTerm: string}).searchTerm = 'v-13613';
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length
@@ -76,7 +76,7 @@ describe('Compare table data', () => {
   });
 
   it('shows differing delta data when "show only changed"', () => {
-    (wrapper.vm as Vue & {search_term: string}).search_term = '';
+    (wrapper.vm as Vue & {searchTerm: string}).searchTerm = '';
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = true;
     loadSample('NGINX Clean Sample');
     expect(
@@ -87,7 +87,7 @@ describe('Compare table data', () => {
 
   it('search status works', () => {
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = false;
-    (wrapper.vm as Vue & {search_term: string}).search_term = 'failed';
+    (wrapper.vm as Vue & {searchTerm: string}).searchTerm = 'failed';
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length
@@ -96,7 +96,7 @@ describe('Compare table data', () => {
 
   it('counts every unique control', () => {
     loadSample('Red Hat With Failing Tests');
-    (wrapper.vm as Vue & {search_term: string}).search_term = '';
+    (wrapper.vm as Vue & {searchTerm: string}).searchTerm = '';
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = true;
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets

@@ -3,7 +3,7 @@
     <!-- Topbar config - give it a search bar -->
     <template #topbar-content>
       <v-text-field
-        v-model="search_term"
+        v-model="searchTerm"
         flat
         solo
         dense
@@ -266,7 +266,7 @@ export default class Compare extends Vue {
   start_index: number = 0;
   ascending: boolean = true;
   chartsOpen: boolean = true;
-  search_term: string = '';
+  searchTerm: string = '';
   ableTab: boolean = true;
   expansion: number = 0;
 
@@ -292,7 +292,7 @@ export default class Compare extends Vue {
   get filter(): Filter {
     return {
       fromFile: this.file_filter,
-      search_term: this.search_term || '',
+      searchTerm: this.searchTerm || '',
       omit_overlayed_controls: true
     };
   }

@@ -56,6 +56,9 @@ export interface Filter {
   /** Descriptions to search for */
   descriptionSearchTerms?: string[];
 
+  /** Code to search for */
+  codeSearchTerms?: string[];
+
   /** CCIs to search for */
   cciIdFilter?: string[];
 
@@ -68,7 +71,7 @@ export interface Filter {
    * - finding details (from HDF)
    * - code
    */
-  search_term?: string;
+  searchTerm?: string;
 
   /** The current state of the Nist Treemap. Used to further filter by nist categories etc. */
   tree_filters?: TreeMapState;
@@ -300,7 +303,7 @@ export class FilteredData extends VuexModule {
 
     return (filter: Filter) => {
       // Generate a hash for cache purposes.
-      // If the "search_term" string is not null, we don't cache - no need to pollute
+      // If the "searchTerm" string is not null, we don't cache - no need to pollute
       const id: string = filter_cache_key(filter);
 
       // Check if we have this cached:
@@ -426,11 +429,28 @@ export class FilteredData extends VuexModule {
       }
 
       // Filter by search term
-      if (filter.search_term !== undefined) {
-        const term = filter.search_term.toLowerCase();
+      if (filter.searchTerm !== undefined) {
+        const term = filter.searchTerm.toLowerCase();
 
         // Filter controls to those that contain search term
         controls = controls.filter((c) => contains_term(c, term));
+      }
+
+      // Filter by code
+      if (filter.codeSearchTerms?.length !== 0) {
+        const foundControls: context.ContextualizedControl[] = [];
+        filter.codeSearchTerms?.forEach((term) => {
+          controls.forEach((control) => {
+            if (
+              control.full_code.toLowerCase().indexOf(term.toLowerCase()) !== -1
+            ) {
+              foundControls.push(control);
+            }
+          });
+        });
+        controls = foundControls.filter((c, index) => {
+          return foundControls.indexOf(c) === index;
+        });
       }
 
       // Filter by nist stuff
@@ -463,14 +483,14 @@ export const FilteredDataModule = getModule(FilteredData);
 export function filter_cache_key(f: Filter) {
   // fix the search term
   let new_search: string;
-  if (f.search_term !== undefined) {
-    new_search = f.search_term.trim();
+  if (f.searchTerm !== undefined) {
+    new_search = f.searchTerm.trim();
   } else {
     new_search = '';
   }
 
   const newFilter: Filter = {
-    search_term: new_search,
+    searchTerm: new_search,
     omit_overlayed_controls: f.omit_overlayed_controls || false,
     ...f
   };
