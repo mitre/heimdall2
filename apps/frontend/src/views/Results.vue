@@ -134,7 +134,7 @@
                 >Severity Counts</v-card-title
               >
               <v-card-actions class="justify-center">
-                <SeverityChart v-model="severity_filter" :filter="all_filter" />
+                <SeverityChart v-model="severityFilter" :filter="all_filter" />
               </v-card-actions>
             </v-card>
           </v-col>
@@ -287,7 +287,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /**
    * The currently selected severity, as modeled by the severity chart and search bar
    */
-  severity_filter: Severity[] = [];
+  severityFilter: Severity[] = [];
 
   /**
    * The currently selected status, as modeled by the status chart and search bar
@@ -320,7 +320,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /**
    * If the user is currently typing in the search bar
    */
-  typingTimer = setTimeout(() => {}, 0);
+  typingTimer = setTimeout(() => {return}, 0);
 
   /** Model for if all-filtered snackbar should be showing */
   filter_snackbar: boolean = false;
@@ -331,7 +331,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   show_search_mobile: boolean = false;
 
   /** If we are currently showing the search help modal */
-  showSearchHelp: boolean = false;
+  showSearchHelp = false;
 
   @Watch('searchTerm')
   onUpdateSearch(_newValue: string) {
@@ -350,7 +350,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
         if(prop === 'status') {
           this.statusFilter.push(this.capitalizeMultiple(result[prop].include) as ControlStatus & 'Waived')
         } else if(prop === 'severity') {
-          this.severity_filter.push(result[prop].include as Severity)
+          this.severityFilter.push(result[prop].include as Severity)
         } else if(prop === 'id') {
           this.controlIdFilter.push(result[prop].include || '')
         } else if (prop === 'title') {
@@ -446,7 +446,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   get all_filter(): Filter {
     return {
       status: this.statusFilter || [],
-      severity: this.severity_filter || undefined,
+      severity: this.severityFilter || undefined,
       fromFile: this.file_filter,
       ids: this.controlIdFilter,
       titleSearchTerms: this.titleSearchTerms,
@@ -466,7 +466,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   get treemap_full_filter(): Filter {
     return {
       status: this.statusFilter || [],
-      severity: this.severity_filter || undefined,
+      severity: this.severityFilter || undefined,
       ids: this.controlIdFilter,
       fromFile: this.file_filter,
       searchTerm: this.freeSearch || '',
@@ -477,9 +477,9 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /**
    * Clear all filters
    */
-  clear(clearSearchBar?: boolean | undefined) {
+  clear(clearSearchBar: boolean = false) {
     this.filter_snackbar = false;
-    this.severity_filter = [];
+    this.severityFilter = [];
     this.statusFilter = [];
     this.controlIdFilter = [];
     this.titleSearchTerms = [];
@@ -506,7 +506,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     // Return if any params not null/empty
     let result: boolean;
     if (
-      this.severity_filter === [] ||
+      this.severityFilter === [] ||
       this.statusFilter === [] ||
       this.file_filter === [] ||
       this.controlIdFilter === [] ||

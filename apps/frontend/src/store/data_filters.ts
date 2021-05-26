@@ -330,95 +330,37 @@ export class FilteredData extends VuexModule {
 
       // Filter by status
       if (filter.status?.length !== 0) {
-        const foundControls: context.ContextualizedControl[] = [];
-        filter.status?.forEach(async (statusFilter) => {
-          if (statusFilter === 'Waived') {
-            foundControls.push(
-              ...controls.filter((control) => control.hdf.waived)
-            );
-          } else {
-            foundControls.push(
-              ...controls.filter((control) =>
-                filter.status?.includes(control.root.hdf.status)
-              )
-            );
-          }
-        });
-        controls = foundControls.filter((c, index) => {
-          return foundControls.indexOf(c) === index;
-        });
+        controls = filterByStatus(filter, controls);
       }
 
       // Filter by severity
       if (filter.severity?.length !== 0) {
-        controls = controls.filter(
-          (control) =>
-            filter.severity?.indexOf(control.root.hdf.severity) !== -1
-        );
+        controls = filterBySeverity(filter, controls);
       }
 
       // Filter by control ID
       if (filter.ids?.length !== 0) {
-        const foundControls: context.ContextualizedControl[] = [];
-        filter.ids?.forEach((filter) => {
-          foundControls.push(
-            ...controls.filter((control) => {
-              return control.hdf.wraps.id.indexOf(filter) !== -1;
-            })
-          );
-        });
-        controls = foundControls.filter((c, index) => {
-          return foundControls.indexOf(c) === index;
-        });
+        controls = filterByControlID(filter, controls);
       }
 
       // Filter by title
       if (filter.titleSearchTerms?.length !== 0) {
-        const foundControls: context.ContextualizedControl[] = [];
-        filter.titleSearchTerms?.forEach((term) => {
-          foundControls.push(
-            ...controls.filter((control) => {
-              return control.hdf.wraps.title?.toLowerCase().includes(term);
-            })
-          );
-        });
-        controls = foundControls.filter((c, index) => {
-          return foundControls.indexOf(c) === index;
-        });
+        controls = filterByTitle(filter, controls);
       }
 
       // Filter by description
       if (filter.descriptionSearchTerms?.length !== 0) {
-        const foundControls: context.ContextualizedControl[] = [];
-        filter.descriptionSearchTerms?.forEach((term) => {
-          foundControls.push(
-            ...controls.filter((control) => {
-              return control.hdf.wraps.desc?.toLowerCase().includes(term);
-            })
-          );
-        });
-        controls = foundControls.filter((c, index) => {
-          return foundControls.indexOf(c) === index;
-        });
+        controls = filterByDescription(filter, controls);
       }
 
       // Filter by CCI ID
       if (filter.cciIdFilter?.length !== 0) {
-        const foundControls: context.ContextualizedControl[] = [];
-        filter.cciIdFilter?.forEach((cciID) => {
-          controls.forEach((control) => {
-            if (
-              control.hdf.raw_nist_tags.some((tag) => {
-                return tag.toLowerCase().indexOf(cciID) !== -1;
-              })
-            ) {
-              foundControls.push(control);
-            }
-          });
-        });
-        controls = foundControls.filter((c, index) => {
-          return foundControls.indexOf(c) === index;
-        });
+        controls = filterByCCI(filter, controls);
+      }
+
+      // Filter by code
+      if (filter.codeSearchTerms?.length !== 0) {
+        controls = filterByCode(filter, controls);
       }
 
       // Filter by overlay
@@ -428,29 +370,12 @@ export class FilteredData extends VuexModule {
         );
       }
 
-      // Filter by search term
+      // Freeform search
       if (filter.searchTerm !== undefined) {
         const term = filter.searchTerm.toLowerCase();
 
         // Filter controls to those that contain search term
         controls = controls.filter((c) => contains_term(c, term));
-      }
-
-      // Filter by code
-      if (filter.codeSearchTerms?.length !== 0) {
-        const foundControls: context.ContextualizedControl[] = [];
-        filter.codeSearchTerms?.forEach((term) => {
-          controls.forEach((control) => {
-            if (
-              control.full_code.toLowerCase().indexOf(term.toLowerCase()) !== -1
-            ) {
-              foundControls.push(control);
-            }
-          });
-        });
-        controls = foundControls.filter((c, index) => {
-          return foundControls.indexOf(c) === index;
-        });
       }
 
       // Filter by nist stuff
@@ -495,4 +420,127 @@ export function filter_cache_key(f: Filter) {
     ...f
   };
   return JSON.stringify(newFilter);
+}
+
+export function filterByStatus(
+  filter: Filter,
+  controls: readonly context.ContextualizedControl[]
+): context.ContextualizedControl[] {
+  const foundControls: context.ContextualizedControl[] = [];
+  filter.status?.forEach(async (statusFilter) => {
+    if (statusFilter === 'Waived') {
+      foundControls.push(...controls.filter((control) => control.hdf.waived));
+    } else {
+      foundControls.push(
+        ...controls.filter((control) =>
+          filter.status?.includes(control.root.hdf.status)
+        )
+      );
+    }
+  });
+  return foundControls.filter((c, index) => {
+    return foundControls.indexOf(c) === index;
+  });
+}
+
+export function filterBySeverity(
+  filter: Filter,
+  controls: readonly context.ContextualizedControl[]
+): context.ContextualizedControl[] {
+  return controls.filter(
+    (control) => filter.severity?.indexOf(control.root.hdf.severity) !== -1
+  );
+}
+
+export function filterByControlID(
+  filter: Filter,
+  controls: readonly context.ContextualizedControl[]
+): context.ContextualizedControl[] {
+  const foundControls: context.ContextualizedControl[] = [];
+  filter.ids?.forEach((id) => {
+    foundControls.push(
+      ...controls.filter((control) => {
+        return control.hdf.wraps.id.indexOf(id) !== -1;
+      })
+    );
+  });
+  return foundControls.filter((c, index) => {
+    return foundControls.indexOf(c) === index;
+  });
+}
+
+export function filterByTitle(
+  filter: Filter,
+  controls: readonly context.ContextualizedControl[]
+): context.ContextualizedControl[] {
+  const foundControls: context.ContextualizedControl[] = [];
+  filter.titleSearchTerms?.forEach((term) => {
+    foundControls.push(
+      ...controls.filter((control) => {
+        return control.hdf.wraps.title?.toLowerCase().includes(term);
+      })
+    );
+  });
+  return foundControls.filter((c, index) => {
+    return foundControls.indexOf(c) === index;
+  });
+}
+
+export function filterByDescription(
+  filter: Filter,
+  controls: readonly context.ContextualizedControl[]
+): context.ContextualizedControl[] {
+  const foundControls: context.ContextualizedControl[] = [];
+  filter.descriptionSearchTerms?.forEach((term) => {
+    foundControls.push(
+      ...controls.filter((control) => {
+        return control.hdf.wraps.desc?.toLowerCase().includes(term);
+      })
+    );
+  });
+  return foundControls.filter((c, index) => {
+    return foundControls.indexOf(c) === index;
+  });
+}
+
+export function filterByCCI(
+  filter: Filter,
+  controls: readonly context.ContextualizedControl[]
+): context.ContextualizedControl[] {
+  const foundControls: context.ContextualizedControl[] = [];
+  filter.cciIdFilter?.forEach((cciID) => {
+    controls.forEach((control) => {
+      if (
+        control.hdf.raw_nist_tags.some((tag) => {
+          return tag.toLowerCase().indexOf(cciID) !== -1;
+        })
+      ) {
+        foundControls.push(control);
+      }
+    });
+  });
+  return foundControls.filter((c, index) => {
+    return foundControls.indexOf(c) === index;
+  });
+}
+
+export function filterByCode(
+  filter: Filter,
+  controls: readonly context.ContextualizedControl[]
+): context.ContextualizedControl[] {
+  const foundControls: context.ContextualizedControl[] = [];
+  filter.cciIdFilter?.forEach((cciID) => {
+    controls.forEach((control) => {
+      if (
+        control.hdf.raw_nist_tags.some((tag) => {
+          return tag.toLowerCase().indexOf(cciID) !== -1;
+        })
+      ) {
+        foundControls.push(control);
+      }
+    });
+  });
+  return foundControls.filter((c, index) => {
+    return foundControls.indexOf(c) === index;
+  });
 }
