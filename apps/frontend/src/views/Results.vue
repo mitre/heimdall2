@@ -513,10 +513,9 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     if (
       this.severityFilter.length !== 0 ||
       this.statusFilter.length !== 0 ||
-      this.file_filter.length !== 0 ||
       this.controlIdFilter.length !== 0 ||
       this.codeSearchTerms.length !== 0 ||
-      this.searchTerm !== '' ||
+      this.searchTerm ||
       this.tree_filters.length
     ) {
       result = true;
