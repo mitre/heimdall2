@@ -148,7 +148,8 @@ docker-compose down
 
 #### Running via Cloud.gov
 
-Cloud.gov is a [FEDRAMP moderate Platform-as-a-Service (PaaS)](https://marketplace.fedramp.gov/#!/product/18f-cloudgov?sort=productName). This repository includes a sample [manifest.yml](manifest.yml) file ready to be pushed and run the latest version of Heimdall2 as a container. 
+Cloud.gov is a [FEDRAMP moderate Platform-as-a-Service (PaaS)](https://marketplace.fedramp.gov/#!/product/18f-cloudgov?sort=productName). This repository includes a sample [manifest.yml.example](manifest.yml.example) file ready to be pushed and run the latest version of Heimdall2 as a container. Make a copy of the example file and update the key values as appropriate.
+`$ cp manifest.yml.example manifest.yml`
 
 1. Setup a cloud.gov account - https://cloud.gov/docs/getting-started/accounts/ 
 
@@ -163,7 +164,7 @@ $ cf login -a api.fr.cloud.gov  --sso
 
 4. Setup a demo application space
 ```
-$ cf target -o sandbox-gsa create-space heimdall2-rename
+$ cf target -o sandbox-rename create-space heimdall2-rename
 ```
 
 5. Create a postgresql database

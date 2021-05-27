@@ -1,4 +1,5 @@
 # See `Deploy via Cloud.gov` section in README.md for instructions on using this file
+# https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html
 
 applications:
 - name: heimdall2 # Rename for your deployment
