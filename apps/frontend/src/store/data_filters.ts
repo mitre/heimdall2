@@ -438,7 +438,7 @@ export function filterBySeverity(
   filter: Filter,
   controls: readonly context.ContextualizedControl[]
 ): context.ContextualizedControl[] {
-  if (filter.severity) {
+  if (filter.severity && filter.severity?.length !== 0) {
     return controls.filter(
       (control) => filter.severity?.indexOf(control.root.hdf.severity) !== -1
     );
