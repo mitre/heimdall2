@@ -330,7 +330,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     if (this.typingTimer) {
       clearTimeout(this.typingTimer);
     }
-    this.typingTimer = setTimeout(this.onDoneTyping, 1000);
+    this.typingTimer = setTimeout(this.onDoneTyping, 500);
   }
 
   @Watch('isTyping')

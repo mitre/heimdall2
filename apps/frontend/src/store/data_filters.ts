@@ -10,7 +10,7 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import {context, nist, Severity} from 'inspecjs';
+import {context, ControlStatus, nist, Severity} from 'inspecjs';
 import LRUCache from 'lru-cache';
 import {
   Action,
@@ -22,14 +22,7 @@ import {
 
 const MAX_CACHE_ENTRIES = 20;
 
-export declare type ExtendedControlStatus =
-  | 'Not Applicable'
-  | 'From Profile'
-  | 'Profile Error'
-  | 'Passed'
-  | 'Failed'
-  | 'Not Reviewed'
-  | 'Waived';
+export declare type ExtendedControlStatus = ControlStatus | 'Waived';
 
 /** Contains common filters on data from the store. */
 export interface Filter {
