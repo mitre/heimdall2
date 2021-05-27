@@ -81,9 +81,9 @@ import _ from 'lodash';
 import TagRow from '@/components/global/tags/TagRow.vue';
 
 interface Attribute {
-  name?: string;
-  options?: {
-    value?: unknown;
+  name: string;
+  options: {
+    value: unknown;
   }
 }
 
