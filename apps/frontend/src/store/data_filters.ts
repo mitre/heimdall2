@@ -183,21 +183,9 @@ export class FilteredData extends VuexModule {
   }
 
   @Action
-  public select_exclusive_evaluations(fileIDs: FileID[]): void {
-    this.CLEAR_ALL_EVALUATIONS();
-    this.SELECT_EVALUATIONS(fileIDs);
-  }
-
-  @Action
   public select_exclusive_profile(fileID: FileID): void {
     this.CLEAR_ALL_PROFILES();
     this.SELECT_PROFILES([fileID]);
-  }
-
-  @Action
-  public select_exclusive_profiles(fileIDs: FileID[]): void {
-    this.CLEAR_ALL_PROFILES();
-    this.SELECT_PROFILES(fileIDs);
   }
 
   @Action
