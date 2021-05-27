@@ -1,20 +1,7 @@
-# Step 1: Setup a cloud.gov account, follow instructions to install the cf-cli, and login on the command line:
-# Go to https://cloud.gov/docs/getting-started/accounts/
-# Go to https://cloud.gov/docs/getting-started/setup/
-# Step 2: git clone this repo and cd to it, then login 
-# $ cf login -a api.fr.cloud.gov  --sso
-# Copy and Paste the Temporary Authentication Code when prompted
-# Step 3: Setup a demo application space
-# $ cf target -o sandbox-gsa create-space heimdall2-db-test
-# Step 4: Create a postgresql database
-# Update manifest.yml file to rename applications: - name:
-# $ cf marketplace
-# $ cf create-service aws-rds medium-psql heimdall2-db-test
-# $ cf create-service-key heimdall2-db-test heimdall2-db-test-key
-# $ cf push
+# See `Deploy via Cloud.gov` section in README.md for instructions on using this file
 
 applications:
-- name: heimdall2-docker-test
+- name: heimdall2 # Rename for your deployment
   memory: 512m
   disk_quota: 2g
   instances: 1
@@ -26,12 +13,12 @@ applications:
     export DATABASE_PASSWORD=$( echo $VCAP_SERVICES | jq -r '.system_env_json.VCAP_SERVICES["aws-rds"][].credentials.password') && \
     export DATABASE_PORT=$( echo $VCAP_SERVICES | jq -r '.system_env_json.VCAP_SERVICES["aws-rds"][].credentials.port') && \
     export DATABASE_USERNAME=$( echo $VCAP_SERVICES | jq -r '.system_env_json.VCAP_SERVICES["aws-rds"][].credentials.username') && \
-    export JWT_SECRET=$(echo $RANDOM) && \
+    export JWT_SECRET=$(node -p "crypto.randomBytes(64).toString('hex')") && \
     /usr/local/bin/cmd.sh
   docker:
     image: mitre/heimdall2:release-latest
   services:
-    - heimdall2-db
+    - heimdall2-db # Rename for your deployment
   env:
     NODE_ENV: production
     ADMIN_PASSWORD: ChangeMe@123

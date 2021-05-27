@@ -144,8 +144,33 @@ From the source directory you started from run:
 ```bash
 docker-compose down
 ```
+---
 
+#### Running via Cloud.gov
 
+Cloud.gov is a [FEDRAMP moderate Platform-as-a-Service (PaaS)](https://marketplace.fedramp.gov/#!/product/18f-cloudgov?sort=productName). This repository includes a sample [manifest.yml](manifest.yml) file ready to be pushed and run the latest version of Heimdall2 as a container. 
+
+```
+Step 1: Setup a cloud.gov account - https://cloud.gov/docs/getting-started/accounts/ 
+
+Step 2: Install the cf-cli - https://cloud.gov/docs/getting-started/setup/
+
+Step 3: git clone this repo and open it on command line, then login to cloud.gov using cf-cli (once you've created an account)
+$ cd ~/Documents/Github/Heimdall2
+$ cf login -a api.fr.cloud.gov  --sso 
+# Follow the link to copy the Temporary Authentication Code when prompted
+
+Step 4: Setup a demo application space
+$ cf target -o sandbox-gsa create-space heimdall2-rename
+
+Step 5: Create a postgresql database
+# Update manifest.yml file to rename application and database key name
+$ cf marketplace
+$ cf create-service aws-rds medium-psql heimdall2-rename
+$ cf create-service-key heimdall2-db-rename heimdall2-db-test-key
+$ cf push
+
+> You should be returned the URL for your new test instance to navigate to. This is only for demostration purposes, in order to run a production level federal/FISMA system. You will need to contact the cloud.gov program and consult your organizations CISO (or equilivent for risk assessment and an Authority to Operate).
 
 ## API Usage
 
@@ -162,8 +187,6 @@ curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com
 # Upload evaluation
 curl -F "data=@Evaluation.json" -F "filename=Your Filename" -F "public=true/false" -H "Authorization: Bearer bearertokengoeshere" "http://localhost:3000/evaluations"
 ```
-
-
 
 ## For Developers
 
