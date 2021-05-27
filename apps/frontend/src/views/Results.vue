@@ -237,7 +237,7 @@ import ExportJson from '@/components/global/ExportJson.vue';
 import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 
 import {FilteredDataModule, Filter, TreeMapState, ExtendedControlStatus} from '@/store/data_filters';
-import {ControlStatus, Severity} from 'inspecjs';
+import {Severity} from 'inspecjs';
 import {EvaluationFile, FileID, ProfileFile, SourcedContextualizedEvaluation, SourcedContextualizedProfile} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
 
@@ -252,14 +252,7 @@ import {StatusCountModule} from '../store/status_counts';
 import ServerMixin from '../mixins/ServerMixin';
 import {IEvaluation} from '@heimdall/interfaces';
 import {Watch} from 'vue-property-decorator';
-import {parse} from 'search-parser';
-
-interface SearchQuery {
-  [key: string]: {
-    include?: string
-    exclude?: string
-  }
-}
+import {SearchModule} from '@/store/search';
 
 @Component({
   components: {
@@ -284,15 +277,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   $refs!: Vue['$refs'] & {
     search: HTMLInputElement;
   };
-  /**
-   * The currently selected severity, as modeled by the severity chart and search bar
-   */
-  severityFilter: Severity[] = [];
-
-  /**
-   * The currently selected status, as modeled by the status chart and search bar
-   */
-  statusFilter: ExtendedControlStatus[] = [];
 
   /**
    * The current state of the treemap as modeled by the treemap (duh).
@@ -300,22 +284,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    */
   tree_filters: TreeMapState = [];
   control_selection: string | null = null;
-
-  /**
-   * The current search terms, as modeled by the search bar
-   */
-  searchTerm = '';
-  freeSearch: string | undefined = '';
-  // Control titles to search for
-  titleSearchTerms: string[] = [];
-  // Control descriptions to search for
-  descriptionSearchTerms: string[] = [];
-  // Control IDs to search for
-  controlIdFilter: string[] = [];
-  // CCI Ids to search for
-  cciIdFilter: string[] = [];
-  // Text to search for in the code
-  codeSearchTerms: string[] = [];
 
   /**
    * If the user is currently typing in the search bar
@@ -333,6 +301,30 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /** If we are currently showing the search help modal */
   showSearchHelp = false;
 
+  /**
+   * The current search terms, as modeled by the search bar
+   */
+  get searchTerm() {
+    return SearchModule.searchTerm;
+  }
+  set searchTerm(term: string) {
+    SearchModule.updateSearch(term);
+  }
+
+  get severityFilter(): Severity[] {
+    return SearchModule.severityFilter;
+  }
+  set severityFilter(severity: Severity[]) {
+    SearchModule.setSeverity(severity)
+  }
+
+  get statusFilter(): ExtendedControlStatus[] {
+    return SearchModule.statusFilter;
+  }
+  set statusFilter(status: ExtendedControlStatus[]) {
+    SearchModule.setStatusFilter(status);
+  }
+
   @Watch('searchTerm')
   onUpdateSearch(_newValue: string) {
     if (this.typingTimer) {
@@ -344,31 +336,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   @Watch('isTyping')
   onDoneTyping() {
     this.clear()
-    const searchResult: SearchQuery[] = parse(this.searchTerm)[0];
-    searchResult.forEach((result) => {
-      for (const prop in result) {
-        const include = result[prop].include || ''
-        if(prop === 'status') {
-          this.statusFilter.push(this.capitalizeMultiple(include) as ControlStatus & 'Waived')
-        } else if(prop === 'severity') {
-          this.severityFilter.push(include as Severity)
-        } else if(prop === 'id') {
-          this.controlIdFilter.push(include)
-        } else if (prop === 'title') {
-          this.titleSearchTerms.push(include)
-        } else if (prop === 'nist') {
-          this.cciIdFilter.push(include)
-        } else if(prop === 'desc' || prop === 'description') {
-          this.descriptionSearchTerms.push(include)
-        } else if(prop === 'code') {
-          this.codeSearchTerms.push(include)
-        } else if (prop === 'input') {
-          this.codeSearchTerms.push(`input('${include}')`)
-        } else if(prop === 'freetext') {
-          this.freeSearch = include
-        }
-      }
-    })
+    SearchModule.parseSearch();
   }
 
   capitalizeMultiple(string: string | undefined): string{
@@ -446,15 +414,15 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    */
   get all_filter(): Filter {
     return {
-      status: this.statusFilter || [],
-      severity: this.severityFilter || undefined,
+      status: SearchModule.statusFilter,
+      severity: SearchModule.severityFilter,
       fromFile: this.file_filter,
-      ids: this.controlIdFilter,
-      titleSearchTerms: this.titleSearchTerms,
-      descriptionSearchTerms: this.descriptionSearchTerms,
-      cciIdFilter: this.cciIdFilter,
-      searchTerm: this.freeSearch || '',
-      codeSearchTerms: this.codeSearchTerms,
+      ids: SearchModule.controlIdSearchTerms,
+      titleSearchTerms: SearchModule.titleSearchTerms,
+      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
+      cciIdFilter: SearchModule.cciIdFilter,
+      searchTerm: SearchModule.freeSearch || '',
+      codeSearchTerms: SearchModule.codeSearchTerms,
       tree_filters: this.tree_filters,
       omit_overlayed_controls: true,
       control_id: this.control_selection || undefined
@@ -466,15 +434,15 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    */
   get treemap_full_filter(): Filter {
     return {
-      status: this.statusFilter || [],
-      severity: this.severityFilter || undefined,
-      titleSearchTerms: this.titleSearchTerms || [],
-      descriptionSearchTerms: this.descriptionSearchTerms || [],
-      codeSearchTerms: this.codeSearchTerms || [],
-      cciIdFilter: this.cciIdFilter || [],
-      ids: this.controlIdFilter,
+      status: SearchModule.statusFilter || [],
+      severity: SearchModule.severityFilter,
+      titleSearchTerms: SearchModule.titleSearchTerms,
+      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
+      codeSearchTerms: SearchModule.codeSearchTerms,
+      cciIdFilter: SearchModule.cciIdFilter,
+      ids: SearchModule.controlIdSearchTerms,
       fromFile: this.file_filter,
-      searchTerm: this.freeSearch || undefined,
+      searchTerm: SearchModule.freeSearch,
       omit_overlayed_controls: true
     };
   }
@@ -483,16 +451,9 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    * Clear all filters
    */
   clear(clearSearchBar = false) {
+    SearchModule.clear();
     this.filter_snackbar = false;
-    this.severityFilter = [];
-    this.statusFilter = [];
-    this.controlIdFilter = [];
-    this.titleSearchTerms = [];
-    this.descriptionSearchTerms = [];
-    this.codeSearchTerms = [];
-    this.cciIdFilter = [];
     this.control_selection = null;
-    this.freeSearch = '';
     this.tree_filters = [];
     if(clearSearchBar) {
       this.searchTerm = '';
@@ -511,10 +472,10 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     // Return if any params not null/empty
     let result: boolean;
     if (
-      this.severityFilter.length !== 0 ||
-      this.statusFilter.length !== 0 ||
-      this.controlIdFilter.length !== 0 ||
-      this.codeSearchTerms.length !== 0 ||
+      SearchModule.severityFilter.length !== 0 ||
+      SearchModule.statusFilter.length !== 0 ||
+      SearchModule.controlIdSearchTerms.length !== 0 ||
+      SearchModule.codeSearchTerms.length !== 0 ||
       this.searchTerm ||
       this.tree_filters.length
     ) {
