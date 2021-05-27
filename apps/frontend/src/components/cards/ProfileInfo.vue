@@ -1,7 +1,7 @@
 <template>
-  <v-tabs>
+  <v-tabs grow>
     <v-tab href="#tab-profileInfo"> Profile Info </v-tab>
-    <v-tab href="#tab-inputs"> Profile Inputs </v-tab>
+    <v-tab href="#tab-inputs"> Inputs </v-tab>
     <v-tab-item value="tab-profileInfo">
       <v-scroll-y-transition mode="out-in">
         <div
