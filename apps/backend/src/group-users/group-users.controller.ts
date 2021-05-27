@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Request,
-  UseGuards
-} from '@nestjs/common';
+import {Controller, Get, Param, Request, UseGuards} from '@nestjs/common';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {User} from '../users/user.model';
 import {GroupUsersService} from './group-users.service';
@@ -12,15 +6,14 @@ import {GroupUsersService} from './group-users.service';
 @Controller('groupusers')
 @UseGuards(JwtAuthGuard)
 export class GroupUsersController {
-  constructor(
-    private readonly groupUsersService: GroupUsersService,
-  ) {}
+  constructor(private readonly groupUsersService: GroupUsersService) {}
 
   @Get(':id')
-  async findAllGroupUsers(@Request() request: {user: User},
-  @Param('id') groupId: string
+  async findAllGroupUsers(
+    @Request() request: {user: User},
+    @Param('id') groupId: string
   ): Promise<User[]> {
-    let userArray = await this.groupUsersService.findUsersInGroup(groupId);
+    const userArray = await this.groupUsersService.findUsersInGroup(groupId);
     return userArray;
   }
 }
