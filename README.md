@@ -176,7 +176,9 @@ $ cf create-service-key heimdall2-db-rename heimdall2-db-test-key
 $ cf push
 ```
 
-**You should be returned the URL for your new test instance to navigate to. This is only for demostration purposes, in order to run a production level federal/FISMA system. You will need to contact the cloud.gov program and consult your organizations CISO (or equilivent for risk assessment and an Authority to Operate).**
+**You should be returned the URL for your new test instance to navigate to.**
+
+> Note: This is only for demonstration purposes, in order to run a production level federal/FISMA system. You will need to contact the [cloud.gov program](https://cloud.gov) and consult your organization's security team (for risk assessment and an Authority to Operate).
 
 ## API Usage
 
