@@ -432,9 +432,21 @@ export function filterBySeverity(
   controls: readonly context.ContextualizedControl[]
 ): context.ContextualizedControl[] {
   if (filter.severity && filter.severity?.length !== 0) {
-    return controls.filter(
-      (control) => filter.severity?.indexOf(control.root.hdf.severity) !== -1
-    );
+    const foundControls: context.ContextualizedControl[] = [];
+    filter.severity?.forEach((severity) => {
+      foundControls.push(
+        ...controls.filter((control) => {
+          return (
+            control.root.hdf.severity
+              .toLowerCase()
+              .indexOf(severity.toLowerCase()) !== -1
+          );
+        })
+      );
+    });
+    return foundControls.filter((c, index) => {
+      return foundControls.indexOf(c) === index;
+    });
   } else {
     return [...controls];
   }

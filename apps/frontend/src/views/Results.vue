@@ -116,7 +116,9 @@
           :filter="all_filter"
           :current-status-filter="statusFilter"
           @show-errors="showErrors"
-          @show-waived="searchTerm = 'status:Waived'"
+          @show-waived="showWaived"
+          @add-filter="addStatusFilter"
+          @remove-filter="removeStatusFilter"
         />
         <!-- Compliance Cards -->
         <v-row justify="space-around">
@@ -304,7 +306,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /**
    * The current search terms, as modeled by the search bar
    */
-  get searchTerm() {
+  get searchTerm(): string {
     return SearchModule.searchTerm;
   }
   set searchTerm(term: string) {
@@ -528,6 +530,17 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 
   showErrors() {
     this.searchTerm = 'status:"Profile Error"'
+  }
+  showWaived() {
+    this.searchTerm = 'status:Waived'
+  }
+
+  addStatusFilter(status: ExtendedControlStatus) {
+    SearchModule.addStatusSearch(status);
+  }
+
+  removeStatusFilter(status: ExtendedControlStatus) {
+    SearchModule.removeStatusSearch(status);
   }
 }
 </script>

@@ -15,6 +15,7 @@ import {StatusCountModule} from '@/store/status_counts';
 import {ControlStatus} from 'inspecjs';
 import {Prop} from 'vue-property-decorator';
 import {ExtendedControlStatus, Filter} from '@/store/data_filters';
+import {SearchModule} from '../../store/search';
 
 /**
  * Categories property must be of type Category
@@ -85,11 +86,11 @@ export default class StatusChart extends Vue {
   }
 
   onSelect(status: Category<ControlStatus>) {
-    // In the case that the values are the same, we want to instead emit null
     if (this.value && this.value?.indexOf(status.value) !== -1) {
-      this.$emit('input', []);
+      SearchModule.removeStatusSearch(status.value)
     } else {
-      this.$emit('input', [status.value]);
+      // This removes any existing status filters as we did before advanced search.
+      SearchModule.addStatusSearch(status.value);
     }
   }
 }

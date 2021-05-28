@@ -61,7 +61,11 @@ class Search extends VuexModule implements ISearchState {
   /** Update the current search */
   @Action
   updateSearch(newValue: string) {
-    this.context.commit('SET_SEARCH', newValue);
+    if (newValue) {
+      this.context.commit('SET_SEARCH', newValue);
+    } else {
+      this.context.commit('SET_SEARCH', '');
+    }
   }
 
   @Action
@@ -94,7 +98,7 @@ class Search extends VuexModule implements ISearchState {
             );
             break;
           case 'severity':
-            this.addSeverity(lowercaseAll(include) as Severity | Severity[]);
+            this.addSeverity(include as Severity | Severity[]);
             break;
           case 'id':
             this.addIdFilter(lowercaseAll(include));
@@ -145,14 +149,40 @@ class Search extends VuexModule implements ISearchState {
 
   @Action
   addStatusSearch(status: ExtendedControlStatus) {
+    // If we already have search filtering
     if (this.searchTerm.trim() !== '') {
-      this.context.commit(
-        'SET_SEARCH',
-        `${this.searchTerm} AND status:${status}`
-      );
-    } else {
-      this.context.commit('SET_SEARCH', `status:${status}`);
+      // If our current filters include status
+      if (this.searchTerm.toLowerCase().indexOf('status:') !== -1) {
+        const newSearch = this.searchTerm.replace(
+          /status:"(.*?)"/gm,
+          `status:"${this.statusFilter.concat(status).join(',')}"`
+        );
+        console.log(newSearch);
+        this.context.commit('SET_SEARCH', newSearch);
+      } // We have a filter already, but it doesn't include status
+      else {
+        const newSearch = `${this.searchTerm} severity:"${this.statusFilter
+          .concat(status)
+          .join(',')}"`;
+        this.context.commit('SET_SEARCH', newSearch);
+      }
     }
+    // We don't have any search yet
+    else {
+      this.context.commit('SET_SEARCH', `status:"${status}"`);
+    }
+    this.parseSearch();
+  }
+
+  @Action
+  removeStatusSearch(status: ExtendedControlStatus) {
+    this.removeStatusFilter(status);
+    const newSearch = this.searchTerm.replace(
+      /status:"(.*?)"/gm,
+      `status:"${this.statusFilter.join(',')}"`
+    );
+    this.context.commit('SET_SEARCH', newSearch);
+    this.parseSearch();
   }
 
   @Action
@@ -160,6 +190,15 @@ class Search extends VuexModule implements ISearchState {
     this.context.commit('ADD_STATUS', status);
   }
 
+  @Action
+  removeStatusFilter(status: ExtendedControlStatus) {
+    this.context.commit('REMOVE_STATUS', status);
+  }
+
+  @Action
+  clearStatusFilter() {
+    this.context.commit('CLEAR_STATUS');
+  }
   @Action
   setStatusFilter(status: ExtendedControlStatus[]) {
     this.context.commit('SET_STATUS', status);
@@ -169,6 +208,14 @@ class Search extends VuexModule implements ISearchState {
   @Mutation
   ADD_STATUS(status: ExtendedControlStatus | ExtendedControlStatus[]) {
     this.statusFilter = this.statusFilter.concat(status);
+  }
+
+  /** Removes a status filter */
+  @Mutation
+  REMOVE_STATUS(status: ExtendedControlStatus) {
+    this.statusFilter = this.statusFilter.filter(
+      (filter) => filter.toLowerCase() !== status.toLowerCase()
+    );
   }
 
   @Mutation
@@ -186,15 +233,42 @@ class Search extends VuexModule implements ISearchState {
   /** Adds or replaces severity search in the search bar */
   @Action
   addSeveritySearch(severity: Severity) {
+    // If we already have search filtering
     if (this.searchTerm.trim() !== '') {
-      this.context.commit(
-        'SET_SEARCH',
-        `${this.searchTerm} AND severity:${severity}`
-      );
-    } else {
-      this.context.commit('SET_SEARCH', `severity:${severity}`);
+      // If our current filters include severity
+      if (this.searchTerm.toLowerCase().indexOf('severity:') !== -1) {
+        const newSearch = this.searchTerm.replace(
+          /severity:"(.*?)"/gm,
+          `severity:"${this.severityFilter.concat(severity).join(',')}"`
+        );
+        this.context.commit('SET_SEARCH', newSearch);
+      } // We have a filter already, but it doesn't include severity
+      else {
+        const newSearch = `${this.searchTerm} severity:"${this.severityFilter
+          .concat(severity)
+          .join(',')}"`;
+        this.context.commit('SET_SEARCH', newSearch);
+      }
     }
+    // We don't have any search yet
+    else {
+      this.context.commit('SET_SEARCH', `severity:"${severity}"`);
+    }
+    this.parseSearch();
   }
+
+  @Action
+  removeSeveritySearch(severity: Severity) {
+    this.removeSeverity(severity);
+    const newSearch = this.searchTerm.replace(
+      /severity:"(.*?)"/gm,
+      `severity:"${this.severityFilter.join(',')}"`
+    );
+    this.context.commit('SET_SEARCH', newSearch);
+    this.parseSearch();
+  }
+
+  @Action
 
   /** Adds severity to filter */
   @Action
@@ -203,13 +277,30 @@ class Search extends VuexModule implements ISearchState {
   }
 
   @Action
+  removeSeverity(severity: Severity) {
+    this.context.commit('REMOVE_SEVERITY', severity);
+  }
+
+  @Action
   setSeverity(severity: Severity[]) {
     this.context.commit('SET_SEVERITY', severity);
+  }
+
+  @Action
+  clearSeverityFilter() {
+    this.context.commit('CLEAR_SEVERITY');
   }
 
   @Mutation
   ADD_SEVERITY(severity: Severity | Severity[]) {
     this.severityFilter = this.severityFilter.concat(severity);
+  }
+
+  @Mutation
+  REMOVE_SEVERITY(severity: Severity) {
+    this.severityFilter = this.severityFilter.filter(
+      (filter) => filter.toLowerCase() !== severity.toLowerCase()
+    );
   }
 
   /** Sets the severity filter */

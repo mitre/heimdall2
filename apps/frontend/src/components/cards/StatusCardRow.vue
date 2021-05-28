@@ -7,7 +7,11 @@
       sm="6"
       md="3"
     >
-      <v-card height="100%" :color="card.color">
+      <v-card
+        height="100%"
+        :color="getCardColor(card)"
+        @click="toggleFilter(card.title)"
+      >
         <v-card-title>
           <v-icon large left>mdi-{{ card.icon }}</v-icon>
           <span class="title" data-cy="cardText">{{
@@ -83,12 +87,12 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {StatusCountModule} from '@/store/status_counts';
-import {Filter} from '@/store/data_filters';
+import {ExtendedControlStatus, Filter} from '@/store/data_filters';
 import {Prop} from 'vue-property-decorator';
 
 interface CardProps {
   icon: string;
-  title: string;
+  title: ExtendedControlStatus;
   number: number;
   subtitle: string;
   color: string;
@@ -106,44 +110,44 @@ export default class StatusCardRow extends Vue {
         icon: 'check-circle',
         title: 'Passed',
         subtitle: `${StatusCountModule.countOf(
-          this.filter,
+          {fromFile: this.filter.fromFile},
           'PassedTests'
         )} individual checks passed`,
         color: 'statusPassed',
-        number: StatusCountModule.countOf(this.filter, 'Passed')
+        number: StatusCountModule.countOf({fromFile: this.filter.fromFile}, 'Passed')
       },
       {
         icon: 'close-circle',
         title: 'Failed',
         subtitle: `${StatusCountModule.countOf(
-          this.filter,
+          {fromFile: this.filter.fromFile},
           'PassingTestsFailedControl'
         )} individual checks passed, ${StatusCountModule.countOf(
-          this.filter,
+          {fromFile: this.filter.fromFile},
           'FailedTests'
         )} failed out of ${StatusCountModule.countOf(
-          this.filter,
+          {fromFile: this.filter.fromFile},
           'PassingTestsFailedControl'
         ) + StatusCountModule.countOf(
-          this.filter,
+          {fromFile: this.filter.fromFile},
           'FailedTests'
         )} total checks`,
         color: 'statusFailed',
-        number: StatusCountModule.countOf(this.filter, 'Failed')
+        number: StatusCountModule.countOf({fromFile: this.filter.fromFile}, 'Failed')
       },
       {
         icon: 'minus-circle',
         title: 'Not Applicable',
         subtitle: `System exception or absent component`,
         color: 'statusNotApplicable',
-        number: StatusCountModule.countOf(this.filter, 'Not Applicable')
+        number: StatusCountModule.countOf({fromFile: this.filter.fromFile}, 'Not Applicable')
       },
       {
         icon: 'alert-circle',
         title: 'Not Reviewed',
         subtitle: `Can only be tested manually at this time`,
         color: 'statusNotReviewed',
-        number: StatusCountModule.countOf(this.filter, 'Not Reviewed')
+        number: StatusCountModule.countOf({fromFile: this.filter.fromFile}, 'Not Reviewed')
       }
     ];
   }
@@ -156,7 +160,7 @@ export default class StatusCardRow extends Vue {
     };
     return {
       icon: 'alert',
-      title: 'Profile Errors',
+      title: 'Profile Error',
       subtitle: `Errors running test - check profile run privileges or check with the author of profile.`,
       color: 'statusProfileError',
       number: StatusCountModule.countOf(filter, 'Profile Error')
@@ -166,11 +170,29 @@ export default class StatusCardRow extends Vue {
   get waivedProfiles(): CardProps | null {
     return {
       icon: 'alert-circle',
-      title: 'Waived Tests',
+      title: 'Waived',
       subtitle: `Consider using an overlay or manual attestation to properly address this control.`,
       color: 'statusNotApplicable',
-      number: StatusCountModule.countOf(this.filter, 'Waived')
+      number: StatusCountModule.countOf({fromFile: this.filter.fromFile}, 'Waived')
     };
+  }
+
+  getCardColor(card: CardProps): string {
+    if(this.filter.status?.length === 0){
+      return card.color;
+    }
+    if(this.filter.status?.some((statusFilter) => statusFilter.toLowerCase() === card.title.toLowerCase())){
+      return card.color;
+    }
+    return ''
+  }
+
+  toggleFilter(filter: ExtendedControlStatus) {
+    if(this.filter.status?.includes(filter)) {
+      this.$emit('remove-filter', filter)
+    } else {
+      this.$emit('add-filter', filter)
+    }
   }
 }
 </script>
