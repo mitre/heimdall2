@@ -5480,11 +5480,6 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
 
-boolean-parser@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/boolean-parser/-/boolean-parser-0.0.2.tgz#58721f1172e65fd132d6e6debbd00053deaffa12"
-  integrity sha1-WHIfEXLmX9Ey1ubeu9AAU96v+hI=
-
 boxen@^4.1.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/boxen/-/boxen-4.2.0.tgz#e411b62357d6d6d36587c8ac3d5d974daa070e64"
@@ -13024,11 +13019,6 @@ lodash.once@^4.0.0, lodash.once@^4.1.1:
   resolved "https://registry.yarnpkg.com/lodash.once/-/lodash.once-4.1.1.tgz#0dd3971213c7c56df880977d504c88fb471a97ac"
   integrity sha1-DdOXEhPHxW34gJd9UEyI+0cal6w=
 
-lodash.set@^4.3.2:
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/lodash.set/-/lodash.set-4.3.2.tgz#d8757b1da807dde24816b0d6a84bea1a76230b23"
-  integrity sha1-2HV7HagH3eJIFrDWqEvqGnYjCyM=
-
 lodash.sortby@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
@@ -16919,14 +16909,10 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
-search-parser@^0.1.19:
-  version "0.1.19"
-  resolved "https://registry.yarnpkg.com/search-parser/-/search-parser-0.1.19.tgz#4003dedd054077da8a82ca59e90c3d43436b6b9c"
-  integrity sha1-QAPe3QVAd9qKgspZ6Qw9Q0Nra5w=
-  dependencies:
-    boolean-parser "^0.0.2"
-    lodash.get "^4.4.2"
-    lodash.set "^4.3.2"
+search-query-parser@^1.5.5:
+  version "1.5.5"
+  resolved "https://registry.yarnpkg.com/search-query-parser/-/search-query-parser-1.5.5.tgz#dfd829f4fb567a9a3a5b70327576dff4d5be071d"
+  integrity sha512-8hKmRbHShAc+LJtUu7mu4L/oWVgICG1GCzWZtlR11Vl3T/v4aTGv+Ie2bPg+8ueJn+l8zMHCQhzrBNMoV/t2qw==
 
 sec@^1.0.0:
   version "1.0.0"

@@ -1,6 +1,6 @@
 import Store from '@/store/store';
 import {Severity} from 'inspecjs';
-import {parse} from 'search-parser';
+import {parse} from 'search-query-parser';
 import {
   Action,
   getModule,
@@ -8,7 +8,7 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
-import {ExtendedControlStatus} from './data_filters';
+import {ExtendedControlStatus, lowercaseAll} from './data_filters';
 
 export interface ISearchState {
   searchTerm: string;
@@ -41,17 +41,6 @@ export const statusTypes = [
 
 export const severityTypes = ['none', 'low', 'medium', 'high', 'critical'];
 
-export function capitalizeMultiple(string: string | undefined): string {
-  if (typeof string !== 'string') {
-    return '';
-  }
-  const words = string.split(' ');
-  for (let i = 0; i < words.length; i++) {
-    words[i] = words[i][0].toUpperCase() + words[i].substr(1);
-  }
-  return words.join(' ');
-}
-
 @Module({
   namespaced: true,
   dynamic: true,
@@ -78,35 +67,56 @@ class Search extends VuexModule implements ISearchState {
   @Action
   parseSearch() {
     this.clear();
-    const searchResult: SearchQuery[] = parse(this.searchTerm)[0];
-    searchResult.forEach((result) => {
-      for (const prop in result) {
-        const include = result[prop].include || '';
-        if (prop === 'status') {
-          this.addStatusFilter(
-            capitalizeMultiple(include) as ExtendedControlStatus
-          );
-        } else if (prop === 'severity') {
-          this.addSeverity(include as Severity);
-        } else if (prop === 'id') {
-          this.addIdFilter(include);
-        } else if (prop === 'title') {
-          this.addTitleFilter(include);
-        } else if (prop === 'nist') {
-          this.addCCIIdFilter(include);
-        } else if (prop === 'desc' || prop === 'description') {
-          this.addDescriptionFilter(include);
-        } else if (prop === 'code') {
-          this.addCodeFilter(include);
-        } else if (prop === 'input') {
-          this.addCodeFilter(`input('${include}')`);
-        } else if (prop === 'freetext') {
-          this.setFreesearch(include);
-        } else {
-          this.setFreesearch(`${prop}:${include}`);
+    const options = {
+      keywords: [
+        'status',
+        'severity',
+        'impact',
+        'id',
+        'title',
+        'nist',
+        'desc',
+        'description',
+        'code',
+        'input'
+      ]
+    };
+    const searchResult = parse(this.searchTerm, options);
+    if (typeof searchResult === 'string') {
+      this.setFreesearch(searchResult);
+    } else {
+      for (const prop in searchResult) {
+        const include: string | string[] = searchResult[prop] || '';
+        switch (prop) {
+          case 'status':
+            this.addStatusFilter(
+              include as ExtendedControlStatus | ExtendedControlStatus[]
+            );
+            break;
+          case 'severity':
+            this.addSeverity(lowercaseAll(include) as Severity | Severity[]);
+            break;
+          case 'id':
+            this.addIdFilter(lowercaseAll(include));
+            break;
+          case 'title':
+            this.addTitleFilter(lowercaseAll(include));
+            break;
+          case 'nist':
+            this.addCCIIdFilter(lowercaseAll(include));
+            break;
+          case 'desc':
+          case 'description':
+            this.addDescriptionFilter(lowercaseAll(include));
+          case 'code':
+            this.addCodeFilter(lowercaseAll(include));
+          case 'text':
+            if (typeof include === 'string') {
+              this.setFreesearch(include);
+            }
         }
       }
-    });
+    }
   }
 
   /** Sets the current search */
@@ -143,10 +153,8 @@ class Search extends VuexModule implements ISearchState {
   }
 
   @Action
-  addStatusFilter(status: ExtendedControlStatus) {
-    if (statusTypes.includes(status) && !this.statusFilter.includes(status)) {
-      this.context.commit('ADD_STATUS', status);
-    }
+  addStatusFilter(status: ExtendedControlStatus | ExtendedControlStatus[]) {
+    this.context.commit('ADD_STATUS', status);
   }
 
   @Action
@@ -156,8 +164,8 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds a status filter */
   @Mutation
-  ADD_STATUS(status: ExtendedControlStatus) {
-    this.statusFilter.push(status);
+  ADD_STATUS(status: ExtendedControlStatus | ExtendedControlStatus[]) {
+    this.statusFilter = this.statusFilter.concat(status);
   }
 
   @Mutation
@@ -187,13 +195,8 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds severity to filter */
   @Action
-  addSeverity(severity: Severity) {
-    if (
-      severityTypes.includes(severity) &&
-      !this.severityFilter.includes(severity)
-    ) {
-      this.context.commit('ADD_SEVERITY', severity);
-    }
+  addSeverity(severity: Severity | Severity[]) {
+    this.context.commit('ADD_SEVERITY', severity);
   }
 
   @Action
@@ -201,10 +204,9 @@ class Search extends VuexModule implements ISearchState {
     this.context.commit('SET_SEVERITY', severity);
   }
 
-  /** Adds a severity filter */
   @Mutation
-  ADD_SEVERITY(severity: Severity) {
-    this.severityFilter.push(severity);
+  ADD_SEVERITY(severity: Severity | Severity[]) {
+    this.severityFilter = this.severityFilter.concat(severity);
   }
 
   /** Sets the severity filter */
@@ -233,15 +235,13 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds control id to filter */
   @Action
-  addIdFilter(id: string) {
-    if (!this.controlIdSearchTerms.includes(id)) {
-      this.context.commit('ADD_ID', id);
-    }
+  addIdFilter(id: string | string[]) {
+    this.context.commit('ADD_ID', id);
   }
 
   @Mutation
-  ADD_ID(id: string) {
-    this.controlIdSearchTerms.push(id);
+  ADD_ID(id: string | string[]) {
+    this.controlIdSearchTerms = this.controlIdSearchTerms.concat(id);
   }
 
   /** Sets the control IDs filter */
@@ -273,15 +273,13 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds a title filter */
   @Action
-  addTitleFilter(title: string) {
-    if (!this.titleSearchTerms.includes(title)) {
-      this.context.commit('ADD_TITLE', title);
-    }
+  addTitleFilter(title: string | string[]) {
+    this.context.commit('ADD_TITLE', title);
   }
 
   @Mutation
-  ADD_TITLE(title: string) {
-    this.titleSearchTerms.push(title);
+  ADD_TITLE(title: string | string[]) {
+    this.titleSearchTerms = this.titleSearchTerms.concat(title);
   }
 
   /** Sets the title filters */
@@ -310,15 +308,13 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds CCI id to filter */
   @Action
-  addCCIIdFilter(cciId: string) {
-    if (!this.cciIdFilter.includes(cciId)) {
-      this.context.commit('ADD_CCI', cciId);
-    }
+  addCCIIdFilter(cciId: string | string[]) {
+    this.context.commit('ADD_CCI', cciId);
   }
 
   @Mutation
-  ADD_CCI(cciId: string) {
-    this.cciIdFilter.push(cciId);
+  ADD_CCI(cciId: string | string[]) {
+    this.cciIdFilter = this.cciIdFilter.concat(cciId);
   }
 
   /** Sets the CCI IDs filter */
@@ -350,16 +346,15 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds description to filter */
   @Action
-  addDescriptionFilter(description: string) {
-    if (!this.descriptionSearchTerms.includes(description)) {
-      this.context.commit('ADD_DESCRIPTION', description);
-    }
+  addDescriptionFilter(description: string | string[]) {
+    this.context.commit('ADD_DESCRIPTION', description);
   }
 
   /** Adds a description filter */
   @Mutation
-  ADD_DESCRIPTION(description: string) {
-    this.descriptionSearchTerms.push(description);
+  ADD_DESCRIPTION(description: string | string[]) {
+    this.descriptionSearchTerms =
+      this.descriptionSearchTerms.concat(description);
   }
 
   /** Sets the descriptions filter */
@@ -388,15 +383,13 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds code to filter */
   @Action
-  addCodeFilter(code: string) {
-    if (!this.codeSearchTerms.includes(code)) {
-      this.context.commit('ADD_CODE', code);
-    }
+  addCodeFilter(code: string | string[]) {
+    this.context.commit('ADD_CODE', code);
   }
 
   @Mutation
-  ADD_CODE(code: string) {
-    this.codeSearchTerms.push(code);
+  ADD_CODE(code: string | string[]) {
+    this.codeSearchTerms = this.codeSearchTerms.concat(code);
   }
 
   /** Sets the code filter */

@@ -26,11 +26,11 @@
             <h3>Control Correlation Identifier: <code>nist:UM-1</code></h3>
           </li>
           <li class="pb-1">
-            <h3>Description: <code>desc:Status groups</code></h3>
+            <h3>Description: <code>desc:"Status groups"</code></h3>
           </li>
           <li class="pb-1">
             <h3>
-              Code: <code>code:Ensure enable log file validation is set</code>
+              Code: <code>code:"Ensure enable log file validation is set"</code>
             </h3>
           </li>
           <li class="pb-1">
@@ -47,8 +47,7 @@
         <br />
         <h3>
           <code>
-            status:Failed AND status:Not reviewed AND severity:High AND
-            title:Ensure IAM</code
+            status:"Failed,Not reviewed" severity:High title:"Ensure IAM"</code
           >
         </h3>
       </v-card-text>

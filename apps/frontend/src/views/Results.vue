@@ -115,7 +115,7 @@
         <StatusCardRow
           :filter="all_filter"
           :current-status-filter="statusFilter"
-          @show-errors="searchTerm = 'status:Profile Error'"
+          @show-errors="showErrors"
           @show-waived="searchTerm = 'status:Waived'"
         />
         <!-- Compliance Cards -->
@@ -339,17 +339,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     SearchModule.parseSearch();
   }
 
-  capitalizeMultiple(string: string | undefined): string{
-    if (typeof string !== 'string') {
-      return ''
-    }
-    const words = string.split(" ");
-    for (let i = 0; i < words.length; i++) {
-      words[i] = words[i][0].toUpperCase() + words[i].substr(1);
-    }
-    return words.join(' ')
-  }
-
   /**
    * The currently selected file, if one exists.
    * Controlled by router.
@@ -535,6 +524,10 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     } else {
       this.evalInfo = file;
     }
+  }
+
+  showErrors() {
+    this.searchTerm = 'status:"Profile Error"'
   }
 }
 </script>

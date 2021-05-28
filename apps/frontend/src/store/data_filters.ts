@@ -390,6 +390,16 @@ export function filter_cache_key(f: Filter) {
   return JSON.stringify(newFilter);
 }
 
+export function lowercaseAll(input: string | string[]): string | string[] {
+  if (typeof input === 'string') {
+    return input.toLowerCase();
+  } else {
+    return input.map((string) => {
+      return string.toLowerCase();
+    });
+  }
+}
+
 export function filterByStatus(
   filter: Filter,
   controls: readonly context.ContextualizedControl[]
@@ -397,12 +407,14 @@ export function filterByStatus(
   if (filter.status && filter.status?.length !== 0) {
     const foundControls: context.ContextualizedControl[] = [];
     filter.status?.forEach(async (statusFilter) => {
-      if (statusFilter === 'Waived') {
+      if (statusFilter.toLowerCase() === 'waived') {
         foundControls.push(...controls.filter((control) => control.hdf.waived));
       } else {
         foundControls.push(
-          ...controls.filter((control) =>
-            filter.status?.includes(control.root.hdf.status)
+          ...controls.filter(
+            (control) =>
+              control.root.hdf.status.toLowerCase() ===
+              statusFilter.toLowerCase()
           )
         );
       }
