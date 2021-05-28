@@ -43,3 +43,6 @@ test/videos
 .env-dev
 
 data/
+
+# Ignore cloud.gov manifest
+manifest.yml
