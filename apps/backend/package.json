@@ -4,6 +4,12 @@
   "description": "",
   "license": "Apache-2.0",
   "author": "",
+  "private": true,
+  "workspaces": {
+    "nohoist": [
+      "**"
+    ]
+  },
   "scripts": {
     "prebuild": "rimraf ../../dist/server",
     "build": "nest build",
@@ -102,7 +108,6 @@
     "@types/puppeteer": "^5.4.0",
     "jest": "^26.4.2",
     "mock-fs": "^5.0.0",
-    "oauth2-mock-server": "^3.1.0",
     "puppeteer": "^10.0.0",
     "supertest": "^6.0.0",
     "ts-jest": "^26.1.3"
