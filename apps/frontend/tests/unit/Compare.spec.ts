@@ -6,6 +6,7 @@ import {shallowMount, Wrapper} from '@vue/test-utils';
 import 'jest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
+import {SearchModule} from '../../src/store/search';
 import {fileCompliance, loadSample, removeAllFiles} from '../util/testingUtils';
 
 const vuetify = new Vuetify();
@@ -60,6 +61,7 @@ describe('Compare table data', () => {
 
   it('search works when nothing fits criteria', () => {
     (wrapper.vm as Vue & {searchTerm: string}).searchTerm = 'failed';
+    SearchModule.parseSearch();
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length
@@ -69,6 +71,7 @@ describe('Compare table data', () => {
   it('search id works', () => {
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = false;
     (wrapper.vm as Vue & {searchTerm: string}).searchTerm = 'v-13613';
+    SearchModule.parseSearch();
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length
@@ -79,6 +82,7 @@ describe('Compare table data', () => {
     (wrapper.vm as Vue & {searchTerm: string}).searchTerm = '';
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = true;
     loadSample('NGINX Clean Sample');
+    SearchModule.parseSearch();
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length
@@ -88,6 +92,8 @@ describe('Compare table data', () => {
   it('search status works', () => {
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = false;
     (wrapper.vm as Vue & {searchTerm: string}).searchTerm = 'failed';
+    SearchModule.parseSearch();
+
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length
@@ -98,6 +104,7 @@ describe('Compare table data', () => {
     loadSample('Red Hat With Failing Tests');
     (wrapper.vm as Vue & {searchTerm: string}).searchTerm = '';
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = true;
+    SearchModule.parseSearch();
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length
