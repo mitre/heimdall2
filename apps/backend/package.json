@@ -1,6 +1,6 @@
 {
   "name": "heimdall-server",
-  "version": "2.4.6",
+  "version": "2.4.7",
   "description": "",
   "license": "Apache-2.0",
   "author": "",
@@ -103,7 +103,7 @@
     "jest": "^26.4.2",
     "mock-fs": "^5.0.0",
     "oauth2-mock-server": "^3.1.0",
-    "puppeteer": "^9.0.0",
+    "puppeteer": "^10.0.0",
     "supertest": "^6.0.0",
     "ts-jest": "^26.1.3"
   }
