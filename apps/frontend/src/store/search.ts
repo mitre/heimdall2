@@ -108,12 +108,15 @@ class Search extends VuexModule implements ISearchState {
           case 'desc':
           case 'description':
             this.addDescriptionFilter(lowercaseAll(include));
+            break;
           case 'code':
             this.addCodeFilter(lowercaseAll(include));
+            break;
           case 'text':
             if (typeof include === 'string') {
               this.setFreesearch(include);
             }
+            break;
         }
       }
     }
