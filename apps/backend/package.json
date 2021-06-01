@@ -11,12 +11,12 @@
     ]
   },
   "scripts": {
-    "prebuild": "rimraf ../../dist/server",
+    "prebuild": "rimraf dist",
     "build": "nest build",
     "lint": "eslint \"{src,migrations,seeders,test}/**/*.ts\" --fix",
     "lint:ci": "eslint \"{src,migrations,seeders,test}/**/*.ts\" --max-warnings 0",
     "sequelize-cli": "ts-node node_modules/.bin/sequelize",
-    "start": "node ../../dist/server/src/main",
+    "start": "node dist/src/main",
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --watch",
     "test": "jest --silent",
