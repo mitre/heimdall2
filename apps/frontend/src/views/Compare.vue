@@ -9,8 +9,15 @@
         dense
         hide-details
         prepend-inner-icon="mdi-magnify"
+        append-icon="mdi-help-circle-outline"
         label="Search"
         clearable
+        @input="isTyping = true"
+        @click:append="showSearchHelp = true"
+      />
+      <SearchHelpModal
+        :visible="showSearchHelp"
+        @close-modal="showSearchHelp = false"
       />
       <UploadButton />
     </template>
@@ -200,6 +207,7 @@ import BaseView from '@/views/BaseView.vue';
 import Modal from '@/components/global/Modal.vue';
 import CompareRow from '@/components/cards/comparison/CompareRow.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
+import SearchHelpModal from '@/components/global/SearchHelpModal.vue'
 
 import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {ControlStatus} from 'inspecjs';
@@ -218,6 +226,8 @@ import ApexLineChart, {
 } from '@/components/generic/ApexLineChart.vue';
 import {get_eval_start_time} from '@/utilities/delta_util';
 import _ from 'lodash';
+import {Watch} from 'vue-property-decorator';
+import {SearchModule} from '../store/search';
 
 @Component({
   components: {
@@ -227,7 +237,8 @@ import _ from 'lodash';
     ProfileRow,
     StatusChart,
     ApexLineChart,
-    UploadButton
+    UploadButton,
+    SearchHelpModal
   }
 })
 export default class Compare extends Vue {
@@ -266,9 +277,26 @@ export default class Compare extends Vue {
   start_index: number = 0;
   ascending: boolean = true;
   chartsOpen: boolean = true;
-  searchTerm: string = '';
   ableTab: boolean = true;
   expansion: number = 0;
+
+  /** If we are currently showing the search help modal */
+  showSearchHelp = false;
+
+  /**
+   * If the user is currently typing in the search bar
+   */
+  typingTimer = setTimeout(() => {return}, 0);
+
+  /**
+   * The current search terms, as modeled by the search bar
+   */
+  get searchTerm() {
+    return SearchModule.searchTerm;
+  }
+  set searchTerm(term: string) {
+    SearchModule.updateSearch(term);
+  }
 
   /** Yields the current two selected reports as an ExecDelta,  */
   get curr_delta(): ComparisonContext {
@@ -291,9 +319,16 @@ export default class Compare extends Vue {
 
   get filter(): Filter {
     return {
+      status: SearchModule.statusFilter,
+      severity: SearchModule.severityFilter,
       fromFile: this.file_filter,
-      searchTerm: this.searchTerm || '',
-      omit_overlayed_controls: true
+      ids: SearchModule.controlIdSearchTerms,
+      titleSearchTerms: SearchModule.titleSearchTerms,
+      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
+      cciIdFilter: SearchModule.cciIdFilter,
+      searchTerm: SearchModule.freeSearch || '',
+      codeSearchTerms: SearchModule.codeSearchTerms,
+      omit_overlayed_controls: true,
     };
   }
 
@@ -482,6 +517,19 @@ export default class Compare extends Vue {
 
   get file_filter(): FileID[] {
     return FilteredDataModule.selectedEvaluationIds;
+  }
+
+  @Watch('isTyping')
+  onDoneTyping() {
+    SearchModule.parseSearch();
+  }
+
+  @Watch('searchTerm')
+  onUpdateSearch(_newValue: string) {
+    if (this.typingTimer) {
+      clearTimeout(this.typingTimer);
+    }
+    this.typingTimer = setTimeout(this.onDoneTyping, 500);
   }
 }
 </script>
