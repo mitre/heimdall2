@@ -114,7 +114,7 @@ export default class StatusCardRow extends Vue {
           'PassedTests'
         )} individual checks passed`,
         color: 'statusPassed',
-        number: StatusCountModule.countOf({fromFile: this.filter.fromFile}, 'Passed')
+        number: StatusCountModule.countOf({fromFile: this.filter.fromFile, omit_overlayed_controls: this.filter.omit_overlayed_controls}, 'Passed')
       },
       {
         icon: 'close-circle',
@@ -133,21 +133,21 @@ export default class StatusCardRow extends Vue {
           'FailedTests'
         )} total checks`,
         color: 'statusFailed',
-        number: StatusCountModule.countOf({fromFile: this.filter.fromFile}, 'Failed')
+        number: StatusCountModule.countOf({fromFile: this.filter.fromFile, omit_overlayed_controls: this.filter.omit_overlayed_controls}, 'Failed')
       },
       {
         icon: 'minus-circle',
         title: 'Not Applicable',
         subtitle: `System exception or absent component`,
         color: 'statusNotApplicable',
-        number: StatusCountModule.countOf({fromFile: this.filter.fromFile}, 'Not Applicable')
+        number: StatusCountModule.countOf({fromFile: this.filter.fromFile, omit_overlayed_controls: this.filter.omit_overlayed_controls}, 'Not Applicable')
       },
       {
         icon: 'alert-circle',
         title: 'Not Reviewed',
         subtitle: `Can only be tested manually at this time`,
         color: 'statusNotReviewed',
-        number: StatusCountModule.countOf({fromFile: this.filter.fromFile}, 'Not Reviewed')
+        number: StatusCountModule.countOf({fromFile: this.filter.fromFile, omit_overlayed_controls: this.filter.omit_overlayed_controls}, 'Not Reviewed')
       }
     ];
   }

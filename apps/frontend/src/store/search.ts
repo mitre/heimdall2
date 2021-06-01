@@ -157,7 +157,6 @@ class Search extends VuexModule implements ISearchState {
           /status:"(.*?)"/gm,
           `status:"${this.statusFilter.concat(status).join(',')}"`
         );
-        console.log(newSearch);
         this.context.commit('SET_SEARCH', newSearch);
       } // We have a filter already, but it doesn't include status
       else {
