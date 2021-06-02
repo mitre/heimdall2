@@ -79,9 +79,9 @@ describe('UsersService', () => {
     return databaseService.cleanAll();
   });
 
-  afterAll((done) => {
-    databaseService.closeConnection();
-    done();
+  afterAll(async () => {
+    await databaseService.cleanAll();
+    await databaseService.closeConnection();
   });
 
   describe('Create', () => {
