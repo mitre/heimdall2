@@ -14,6 +14,7 @@ import {Severity} from 'inspecjs';
 import {SeverityCountModule} from '@/store/severity_counts';
 import {Filter} from '@/store/data_filters';
 import {Prop} from 'vue-property-decorator';
+import {SearchModule} from '../../store/search';
 
 /**
  * Categories property must be of type Category
@@ -59,10 +60,10 @@ export default class SeverityChart extends Vue {
 
   onSelect(severity: Category<Severity>) {
     // In the case that the values are the same, we want to instead emit null
-    if (this.value && this.value?.indexOf(severity.value) !== -1) {
-      this.$emit('input', []);
+    if (this.value && this.value?.indexOf(severity.label as Severity) !== -1) {
+      SearchModule.removeSeveritySearch(severity.label as Severity);
     } else {
-      this.$emit('input', [severity.value]);
+      SearchModule.addSeveritySearch(severity.label as Severity);
     }
   }
 }
