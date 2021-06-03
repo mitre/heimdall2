@@ -3364,6 +3364,11 @@
   dependencies:
     "@types/express" "*"
 
+"@types/mustache@^4.1.1":
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/@types/mustache/-/mustache-4.1.1.tgz#fcfa2db0cee6261e66f2437dc2fe71e26c7856b4"
+  integrity sha512-Sm0NWeLhS2QL7NNGsXvO+Fgp7e3JLHCO6RS3RCnfjAnkw6Y1bsji/AGfISdQZDIR/AeOyzkrxRk9jBkl55zdJw==
+
 "@types/node-jose@^1.1.5":
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/@types/node-jose/-/node-jose-1.1.6.tgz#b8d5bb9acb18177b501b347d9743f676e8a4d234"
@@ -3541,12 +3546,7 @@
   resolved "https://registry.yarnpkg.com/@types/sinonjs__fake-timers/-/sinonjs__fake-timers-6.0.2.tgz#3a84cf5ec3249439015e14049bd3161419bf9eae"
   integrity sha512-dIPoZ3g5gcx9zZEszaxLSVTvMReD3xxyyDnQUjA6IYDG9Ba2AV0otMPs+77sG9ojB4Qr2N2Vk5RnKeuA0X/0bg==
 
-"@types/sizzle@*":
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/@types/sizzle/-/sizzle-2.3.3.tgz#ff5e2f1902969d305225a047c8a0fd5c915cebef"
-  integrity sha512-JYM8x9EGF163bEyhdJBpR2QX1R5naCJHC8ucJylJ3w9/CVBaskdQ8WqBf8MmQrd1kRvp/a4TS8HJ+bxzR7ZJYQ==
-
-"@types/sizzle@^2.3.2":
+"@types/sizzle@*", "@types/sizzle@^2.3.2":
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/@types/sizzle/-/sizzle-2.3.3.tgz#ff5e2f1902969d305225a047c8a0fd5c915cebef"
   integrity sha512-JYM8x9EGF163bEyhdJBpR2QX1R5naCJHC8ucJylJ3w9/CVBaskdQ8WqBf8MmQrd1kRvp/a4TS8HJ+bxzR7ZJYQ==
@@ -3747,14 +3747,6 @@
     "@typescript-eslint/typescript-estree" "4.26.0"
     debug "^4.3.1"
 
-"@typescript-eslint/scope-manager@4.25.0":
-  version "4.25.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/scope-manager/-/scope-manager-4.25.0.tgz#9d86a5bcc46ef40acd03d85ad4e908e5aab8d4ca"
-  integrity sha512-2NElKxMb/0rya+NJG1U71BuNnp1TBd1JgzYsldsdA83h/20Tvnf/HrwhiSlNmuq6Vqa0EzidsvkTArwoq+tH6w==
-  dependencies:
-    "@typescript-eslint/types" "4.25.0"
-    "@typescript-eslint/visitor-keys" "4.25.0"
-
 "@typescript-eslint/scope-manager@4.26.0":
   version "4.26.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/scope-manager/-/scope-manager-4.26.0.tgz#60d1a71df162404e954b9d1c6343ff3bee496194"
@@ -3763,28 +3755,10 @@
     "@typescript-eslint/types" "4.26.0"
     "@typescript-eslint/visitor-keys" "4.26.0"
 
-"@typescript-eslint/types@4.25.0":
-  version "4.25.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-4.25.0.tgz#0e444a5c5e3c22d7ffa5e16e0e60510b3de5af87"
-  integrity sha512-+CNINNvl00OkW6wEsi32wU5MhHti2J25TJsJJqgQmJu3B3dYDBcmOxcE5w9cgoM13TrdE/5ND2HoEnBohasxRQ==
-
 "@typescript-eslint/types@4.26.0":
   version "4.26.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-4.26.0.tgz#7c6732c0414f0a69595f4f846ebe12616243d546"
   integrity sha512-rADNgXl1kS/EKnDr3G+m7fB9yeJNnR9kF7xMiXL6mSIWpr3Wg5MhxyfEXy/IlYthsqwBqHOr22boFbf/u6O88A==
-
-"@typescript-eslint/typescript-estree@4.25.0":
-  version "4.25.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/typescript-estree/-/typescript-estree-4.25.0.tgz#942e4e25888736bff5b360d9b0b61e013d0cfa25"
-  integrity sha512-1B8U07TGNAFMxZbSpF6jqiDs1cVGO0izVkf18Q/SPcUAc9LhHxzvSowXDTvkHMWUVuPpagupaW63gB6ahTXVlg==
-  dependencies:
-    "@typescript-eslint/types" "4.25.0"
-    "@typescript-eslint/visitor-keys" "4.25.0"
-    debug "^4.1.1"
-    globby "^11.0.1"
-    is-glob "^4.0.1"
-    semver "^7.3.2"
-    tsutils "^3.17.1"
 
 "@typescript-eslint/typescript-estree@4.26.0":
   version "4.26.0"
@@ -3798,14 +3772,6 @@
     is-glob "^4.0.1"
     semver "^7.3.5"
     tsutils "^3.21.0"
-
-"@typescript-eslint/visitor-keys@4.25.0":
-  version "4.25.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/visitor-keys/-/visitor-keys-4.25.0.tgz#863e7ed23da4287c5b469b13223255d0fde6aaa7"
-  integrity sha512-AmkqV9dDJVKP/TcZrbf6s6i1zYXt5Hl8qOLrRDTFfRNae4+LB8A4N3i+FLZPW85zIxRy39BgeWOfMS3HoH5ngg==
-  dependencies:
-    "@typescript-eslint/types" "4.25.0"
-    eslint-visitor-keys "^2.0.0"
 
 "@typescript-eslint/visitor-keys@4.26.0":
   version "4.26.0"
@@ -10066,7 +10032,7 @@ globals@^9.18.0:
   resolved "https://registry.yarnpkg.com/globals/-/globals-9.18.0.tgz#aa3896b3e69b487f17e31ed2143d69a8e30c2d8a"
   integrity sha512-S0nG3CLEQiY/ILxqtztTWH/3iRRdyBLw6KMDxnKMchrtbj2OFmehVh0WUCfW3DUrIgx/qFrJPICrq4Z4sTR9UQ==
 
-globby@^11.0.1, globby@^11.0.2, globby@^11.0.3:
+globby@^11.0.2, globby@^11.0.3:
   version "11.0.3"
   resolved "https://registry.yarnpkg.com/globby/-/globby-11.0.3.tgz#9b1f0cb523e171dd1ad8c7b2a9fb4b644b9593cb"
   integrity sha512-ffdmosjA807y7+lA1NM0jELARVmYul/715xiILEjo3hBLPTcirgQNnXECn5g3mtR8TOLCVbkfua1Hpen25/Xcg==
@@ -13886,6 +13852,11 @@ multimatch@^5.0.0:
     array-union "^2.1.0"
     arrify "^2.0.1"
     minimatch "^3.0.4"
+
+mustache@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/mustache/-/mustache-4.2.0.tgz#e5892324d60a12ec9c2a73359edca52972bf6f64"
+  integrity sha512-71ippSywq5Yb7/tVYyGbkBggbU8H3u5Rz56fH60jGFgr8uHwxs+aSKeqmluIVzM0m0kB7xQjKS6qPfd0b2ZoqQ==
 
 mute-stream@0.0.8, mute-stream@~0.0.4:
   version "0.0.8"
@@ -18735,7 +18706,7 @@ tsutils@^2.29.0:
   dependencies:
     tslib "^1.8.1"
 
-tsutils@^3.17.1, tsutils@^3.21.0:
+tsutils@^3.21.0:
   version "3.21.0"
   resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-3.21.0.tgz#b48717d394cea6c1e096983eed58e9d61715b623"
   integrity sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==
