@@ -12,6 +12,7 @@ const changelog = parsed.changelog || '';
 const branch = parsed.branch || '';
 const issues = parsed.issues || '';
 
+// This grabs the css for Bootstrap to allow for HTML export
 fs.copyFile(
   require.resolve('bootstrap/dist/css/bootstrap.css'),
   'public/static/export/style.css',

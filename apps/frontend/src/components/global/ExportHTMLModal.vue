@@ -50,6 +50,7 @@ import _ from 'lodash';
 import {StatusCountModule} from '../../store/status_counts';
 import {EvaluationFile, ProfileFile} from '../../store/report_intake';
 import {ContextualizedControl} from 'inspecjs/dist/context';
+import {mdiAlertCircle, mdiCheckCircle, mdiCloseCircle, mdiMinusCircle} from '@mdi/js'
 import Mustache from 'mustache';
 
 interface Detail {
@@ -82,6 +83,10 @@ interface Statistics {
   totalTests: number;
 }
 
+interface Icons {
+  [key: string]: string
+}
+
 interface OutputData {
   style: string;
   files: FileInfo[];
@@ -90,6 +95,7 @@ interface OutputData {
   showControlSets: boolean;
   showCode: boolean;
   exportType: string;
+  icons: Icons
 }
 
 @Component({
@@ -121,7 +127,13 @@ export default class ExportHTMLModal extends Vue {
     controlSets: [],
     showControlSets: false,
     showCode: false,
-    exportType: ''
+    exportType: '',
+    icons: {
+      circleCheck: mdiCheckCircle,
+      circleCross: mdiCloseCircle,
+      circleMinus: mdiMinusCircle,
+      circleAlert: mdiAlertCircle
+    }
   };
 
   @Watch('exportType')
@@ -196,7 +208,7 @@ export default class ExportHTMLModal extends Vue {
       complianceCardcontainer?.insertAdjacentHTML('afterbegin', complianceCardHTML)
       // There seems to be some sort of automatic formatting applied with .resize-triggers that doesn't apply here
       const elements = exportWindow.document.getElementsByClassName('resize-triggers');
-      while(elements[0]) {
+      while (elements[0]) {
         const element = elements[0];
         element?.parentNode?.removeChild(element);
       }
