@@ -53,6 +53,13 @@ export default class ExportEMASS extends Vue {
     'Tested By', 'Test Results', 'Compliance Status', 'Date Tested', 'Tested By',
     'Test Results']
 
+  complianceTypes = {
+    compliant: 'Compliant',
+    nonCompliant: 'Non-Compliant',
+    notApplicable: 'Not Applicable',
+    profileError: 'Profile Error'
+  }
+
   eMASSData: eMASSData = {}
 
   getStartTime(control: ContextualizedControl): string {
@@ -66,32 +73,32 @@ export default class ExportEMASS extends Vue {
     if(testResult) {
       const lines = testResult.split('\r\n\r\n')
       lines.pop()
-      if(lines.every((line) => line.startsWith('Not Applicable'))) {
-        return 'Not Applicable'
+      if(lines.every((line) => line.startsWith(this.complianceTypes.notApplicable))) {
+        return this.complianceTypes.notApplicable
       }
-      if(lines.every((line) => {return (line.startsWith('Compliant') || line.startsWith('Not Applicable') || line.startsWith('Profile Error'))})) {
-        return 'Compliant'
+      if(lines.every((line) => (line.startsWith(this.complianceTypes.compliant) || line.startsWith(this.complianceTypes.notApplicable) || line.startsWith(this.complianceTypes.profileError)))) {
+        return this.complianceTypes.compliant
       } else {
-        return 'Non-Compliant'
+        return this.complianceTypes.nonCompliant
       }
     }
-    return 'Non-Compliant'
+    return this.complianceTypes.nonCompliant
   }
 
   convertStatus(status: string) {
     switch (status){
       case 'Passed':
-        return 'Compliant'
+        return this.complianceTypes.compliant
       case 'Not Applicable':
-        return 'Not Applicable'
+        return this.complianceTypes.notApplicable
       case 'Not Reviewed':
-        return 'Non-Compliant'
+        return this.complianceTypes.nonCompliant
       case 'Failed':
-        return 'Non-Compliant'
+        return this.complianceTypes.nonCompliant
       case 'Profile Error':
-        return 'Profile Error'
+        return this.complianceTypes.profileError
     }
-    return 'Non-Compliant'
+    return this.complianceTypes.nonCompliant
   }
 
   createControlResultDescription(control: ContextualizedControl): string {
