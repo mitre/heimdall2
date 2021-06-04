@@ -20,7 +20,7 @@ import {UsersModule} from './users/users.module';
   controllers: [AppController],
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'frontend')
+      rootPath: join(__dirname, '..', '..', '..', '..', 'dist', 'frontend')
     }),
     UsersModule,
     DatabaseModule,
