@@ -135,6 +135,7 @@ export default class ExportEMASS extends Vue {
           const wb = XLSX.utils.book_new();
           const profileName = _.get(file, 'evaluation.data.profiles[0].title')
           const controls = FilteredDataModule.controls({...this.filter, fromFile: [fileId]});
+          this.eMASSData = {}
           const hitIds = new Set();
           // Convert controls into rows
           for (const ctrl of controls) {
@@ -153,7 +154,7 @@ export default class ExportEMASS extends Vue {
           const wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
           saveAs(
             new Blob([this.s2ab(wbout)], {type: 'application/octet-stream'}),
-              'eMASS-' + file.filename + '.xlsx'
+              `eMASS-${file.filename}.xlsx`
           );
         }
       })
