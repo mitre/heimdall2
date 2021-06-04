@@ -16,12 +16,10 @@ import VueApexCharts from 'vue-apexcharts';
 import {ApexOptions} from 'apexcharts';
 import {Prop} from 'vue-property-decorator';
 import {ColorHackModule} from '@/store/color_hack';
-import {Severity} from 'inspecjs';
-import {ExtendedControlStatus} from '../../store/data_filters';
 
 // Represents a slice of the pie.
 export interface Category<C extends string> {
-  label: Severity | ExtendedControlStatus | string;
+  label: string;
   value: C;
   color: string;
 }

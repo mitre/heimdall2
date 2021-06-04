@@ -30,7 +30,6 @@ export default class SeverityChart extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
 
   categories: Category<Severity>[] = [
-    // { label: "Low", value: "low", icon: "SquareIcon", color: "var(--v-success-base)" },
     {label: 'Low', value: 'low', color: 'severityLow'},
     {
       label: 'Medium',
@@ -58,12 +57,26 @@ export default class SeverityChart extends Vue {
     ];
   }
 
+  valueToSeverity(severity: string): Severity {
+    switch (severity) {
+      case 'low':
+        return 'low'
+      case 'medium':
+        return 'medium'
+      case 'high':
+        return 'high'
+      case 'critical':
+        return 'critical'
+    }
+    return 'none'
+  }
+
   onSelect(severity: Category<Severity>) {
     // In the case that the values are the same, we want to instead emit null
-    if (this.value && this.value?.indexOf(severity.label as Severity) !== -1) {
-      SearchModule.removeSeveritySearch(severity.label as Severity);
+    if (this.value && this.value?.indexOf(this.valueToSeverity(severity.value)) !== -1) {
+      SearchModule.removeSeveritySearch(this.valueToSeverity(severity.value));
     } else {
-      SearchModule.addSeveritySearch(severity.label as Severity);
+      SearchModule.addSeveritySearch(this.valueToSeverity(severity.value));
     }
   }
 }
