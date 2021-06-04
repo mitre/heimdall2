@@ -83,6 +83,7 @@ export default class ExportEMASS extends Vue {
       case 'Failed':
         return 'Non-Compliant'
     }
+    return 'Non-Compliant'
   }
 
   createControlResultDescription(control: ContextualizedControl): string {
