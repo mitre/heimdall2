@@ -12,6 +12,7 @@
       @toggle-drawer="drawer = !drawer"
     >
       <template #content>
+        <SearchBar />
         <slot name="topbar-content" />
       </template>
     </Topbar>
@@ -37,11 +38,15 @@ import Component from 'vue-class-component';
 import Sidebar from '@/components/global/Sidebar.vue';
 import Topbar from '@/components/global/Topbar.vue';
 import UpdateNotification from '@/components/global/UpdateNotification.vue';
+import SearchHelpModal from '@/components/global/SearchHelpModal.vue'
+import SearchBar from '@/components/global/SearchBar.vue'
 import {Prop} from 'vue-property-decorator';
 import {SidebarModule} from '@/store/sidebar_state';
 
 @Component({
   components: {
+    SearchBar,
+    SearchHelpModal,
     Sidebar,
     Topbar,
     UpdateNotification
@@ -52,6 +57,7 @@ export default class Base extends Vue {
   @Prop({default: 11}) readonly topbarZIndex!: number;
   @Prop({default: false}) readonly minimalTopbar!: boolean;
   @Prop({default: true}) readonly showTopbar!: boolean;
+
   /** Models if the drawer is open */
   get drawer(): boolean {
     return SidebarModule.active

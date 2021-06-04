@@ -176,11 +176,18 @@ class Search extends VuexModule implements ISearchState {
   @Action
   removeStatusSearch(status: ExtendedControlStatus) {
     this.removeStatusFilter(status);
-    const newSearch = this.searchTerm.replace(
-      /status:"(.*?)"/gm,
-      `status:"${this.statusFilter.join(',')}"`
-    );
-    this.context.commit('SET_SEARCH', newSearch);
+    // If we still have any status filters
+    if (this.statusFilter.length !== 0) {
+      const newSearch = this.searchTerm.replace(
+        /status:"(.*?)"/gm,
+        `status:"${this.statusFilter.join(',')}"`
+      );
+      this.context.commit('SET_SEARCH', newSearch);
+    } // Otherwise remove the status filter text from the search bar
+    else {
+      const newSearch = this.searchTerm.replace(/status:"(.*?)"/gm, '');
+      this.context.commit('SET_SEARCH', newSearch);
+    }
     this.parseSearch();
   }
 
@@ -259,15 +266,20 @@ class Search extends VuexModule implements ISearchState {
   @Action
   removeSeveritySearch(severity: Severity) {
     this.removeSeverity(severity);
-    const newSearch = this.searchTerm.replace(
-      /severity:"(.*?)"/gm,
-      `severity:"${this.severityFilter.join(',')}"`
-    );
-    this.context.commit('SET_SEARCH', newSearch);
+    if (this.severityFilter.length !== 0) {
+      // If we still have any severity filters
+      const newSearch = this.searchTerm.replace(
+        /severity:"(.*?)"/gm,
+        `severity:"${this.severityFilter.join(',')}"`
+      );
+      this.context.commit('SET_SEARCH', newSearch);
+    } // Otherwise just remove the severity text from the search bar
+    else {
+      const newSearch = this.searchTerm.replace(/severity:"(.*?)"/gm, '');
+      this.context.commit('SET_SEARCH', newSearch);
+    }
     this.parseSearch();
   }
-
-  @Action
 
   /** Adds severity to filter */
   @Action

@@ -2,31 +2,6 @@
   <BaseView :title="curr_title" @changed-files="evalInfo = null">
     <!-- Topbar content - give it a search bar -->
     <template #topbar-content>
-      <v-text-field
-        v-show="show_search_mobile || !$vuetify.breakpoint.xs"
-        ref="search"
-        v-model="searchTerm"
-        flat
-        hide-details
-        dense
-        solo
-        prepend-inner-icon="mdi-magnify"
-        append-icon="mdi-help-circle-outline"
-        label="Search"
-        clearable
-        :class="$vuetify.breakpoint.xs ? 'overtake-bar mx-2' : 'mx-2'"
-        @input="isTyping = true"
-        @click:clear="clear_search()"
-        @click:append="showSearchHelp = true"
-        @blur="show_search_mobile = false"
-      />
-      <SearchHelpModal
-        :visible="showSearchHelp"
-        @close-modal="showSearchHelp = false"
-      />
-      <v-btn v-if="$vuetify.breakpoint.xs" class="mr-2" @click="showSearch">
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
       <v-btn :disabled="!can_clear" @click="clear">
         <span class="d-none d-md-inline pr-2"> Clear </span>
         <v-icon>mdi-filter-remove</v-icon>
@@ -231,7 +206,6 @@ import SeverityChart from '@/components/cards/SeverityChart.vue';
 import ComplianceChart from '@/components/cards/ComplianceChart.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
 import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
-import SearchHelpModal from '@/components/global/SearchHelpModal.vue'
 
 import ExportCaat from '@/components/global/ExportCaat.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
@@ -253,7 +227,6 @@ import RouteMixin from '@/mixins/RouteMixin';
 import {StatusCountModule} from '../store/status_counts';
 import ServerMixin from '../mixins/ServerMixin';
 import {IEvaluation} from '@heimdall/interfaces';
-import {Watch} from 'vue-property-decorator';
 import {SearchModule} from '@/store/search';
 
 @Component({
@@ -270,7 +243,6 @@ import {SearchModule} from '@/store/search';
     ExportJson,
     EvaluationInfo,
     ProfileData,
-    SearchHelpModal,
     UploadButton,
     EditEvaluationModal
   }
@@ -287,21 +259,10 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   tree_filters: TreeMapState = [];
   control_selection: string | null = null;
 
-  /**
-   * If the user is currently typing in the search bar
-   */
-  typingTimer = setTimeout(() => {return}, 0);
-
   /** Model for if all-filtered snackbar should be showing */
   filter_snackbar: boolean = false;
 
   evalInfo: SourcedContextualizedEvaluation | SourcedContextualizedProfile | null = null;
-
-  /** Determines if we should make the search bar collapse-able */
-  show_search_mobile: boolean = false;
-
-  /** If we are currently showing the search help modal */
-  showSearchHelp = false;
 
   /**
    * The current search terms, as modeled by the search bar
@@ -325,20 +286,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
   set statusFilter(status: ExtendedControlStatus[]) {
     SearchModule.setStatusFilter(status);
-  }
-
-  @Watch('searchTerm')
-  onUpdateSearch(_newValue: string) {
-    if (this.typingTimer) {
-      clearTimeout(this.typingTimer);
-    }
-    this.typingTimer = setTimeout(this.onDoneTyping, 500);
-  }
-
-  @Watch('isTyping')
-  onDoneTyping() {
-    this.clear()
-    SearchModule.parseSearch();
   }
 
   /**
@@ -391,16 +338,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   /**
-   * Handles focusing on the search bar
-   */
-  showSearch(): void {
-    this.show_search_mobile = true;
-    this.$nextTick(() => {
-      this.$refs.search.focus();
-    });
-  }
-
-  /**
    * The filter for charts. Contains all of our filter stuff
    */
   get all_filter(): Filter {
@@ -449,10 +386,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     if(clearSearchBar) {
       this.searchTerm = '';
     }
-  }
-
-  clear_search() {
-    this.searchTerm = '';
   }
 
   /**
@@ -548,13 +481,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 <style scoped>
 .glow {
   box-shadow: 0px 0px 8px 6px #5a5;
-}
-.overtake-bar {
-  width: 96%;
-  position: absolute;
-  left: 0px;
-  top: 4px;
-  z-index: 5;
 }
 .bottom-right {
   position: absolute;

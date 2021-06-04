@@ -2,23 +2,6 @@
   <BaseView :title="curr_title">
     <!-- Topbar config - give it a search bar -->
     <template #topbar-content>
-      <v-text-field
-        v-model="searchTerm"
-        flat
-        solo
-        dense
-        hide-details
-        prepend-inner-icon="mdi-magnify"
-        append-icon="mdi-help-circle-outline"
-        label="Search"
-        clearable
-        @input="isTyping = true"
-        @click:append="showSearchHelp = true"
-      />
-      <SearchHelpModal
-        :visible="showSearchHelp"
-        @close-modal="showSearchHelp = false"
-      />
       <UploadButton />
     </template>
 
@@ -226,7 +209,6 @@ import ApexLineChart, {
 } from '@/components/generic/ApexLineChart.vue';
 import {get_eval_start_time} from '@/utilities/delta_util';
 import _ from 'lodash';
-import {Watch} from 'vue-property-decorator';
 import {SearchModule} from '../store/search';
 
 @Component({
@@ -279,24 +261,6 @@ export default class Compare extends Vue {
   chartsOpen: boolean = true;
   ableTab: boolean = true;
   expansion: number = 0;
-
-  /** If we are currently showing the search help modal */
-  showSearchHelp = false;
-
-  /**
-   * If the user is currently typing in the search bar
-   */
-  typingTimer = setTimeout(() => {return}, 0);
-
-  /**
-   * The current search terms, as modeled by the search bar
-   */
-  get searchTerm() {
-    return SearchModule.searchTerm;
-  }
-  set searchTerm(term: string) {
-    SearchModule.updateSearch(term);
-  }
 
   /** Yields the current two selected reports as an ExecDelta,  */
   get curr_delta(): ComparisonContext {
@@ -517,19 +481,6 @@ export default class Compare extends Vue {
 
   get file_filter(): FileID[] {
     return FilteredDataModule.selectedEvaluationIds;
-  }
-
-  @Watch('isTyping')
-  onDoneTyping() {
-    SearchModule.parseSearch();
-  }
-
-  @Watch('searchTerm')
-  onUpdateSearch(_newValue: string) {
-    if (this.typingTimer) {
-      clearTimeout(this.typingTimer);
-    }
-    this.typingTimer = setTimeout(this.onDoneTyping, 500);
   }
 }
 </script>
