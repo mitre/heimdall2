@@ -56,20 +56,26 @@ export default class ExportEMASS extends Vue {
   eMASSData: eMASSData = {}
 
   getStartTime(control: ContextualizedControl): string {
-    if (control.hdf.segments!.length) {
-      return moment(control.hdf.segments![0].start_time).format('DD-MM-YYYY')
+    if (control.hdf.segments?.length) {
+      return moment(control.hdf.segments[0].start_time).format('DD-MM-YYYY')
     }
     return ''
   }
 
-  calculateComplianceStatuses(testResult: string) {
-    const lines = testResult.split('\r\n\r\n')
-    lines.pop()
-    if(lines.every((line) => {return (line.startsWith('Compliant') || line.startsWith('Not Applicable'))})) {
-      return 'Compliant'
-    } else {
-      return 'Non-Compliant'
+  calculateComplianceStatuses(testResult: string | undefined) {
+    if(testResult) {
+      const lines = testResult.split('\r\n\r\n')
+      lines.pop()
+      if(lines.every((line) => line.startsWith('Not Applicable'))) {
+        return 'Not Applicable'
+      }
+      if(lines.every((line) => {return (line.startsWith('Compliant') || line.startsWith('Not Applicable') || line.startsWith('Profile Error'))})) {
+        return 'Compliant'
+      } else {
+        return 'Non-Compliant'
+      }
     }
+    return 'Non-Compliant'
   }
 
   convertStatus(status: string) {
@@ -82,13 +88,14 @@ export default class ExportEMASS extends Vue {
         return 'Non-Compliant'
       case 'Failed':
         return 'Non-Compliant'
+      case 'Profile Error':
+        return 'Profile Error'
     }
     return 'Non-Compliant'
   }
 
   createControlResultDescription(control: ContextualizedControl): string {
-    let testResult = `${this.convertStatus(control.hdf.status)} - "Test ${control.data.id} - ${control.data.title}"\r\n\r\n`;
-    return testResult
+    return `${this.convertStatus(control.hdf.status)} - "Test ${control.data.id} - ${control.data.title}"\r\n\r\n`;
   }
 
   addRow(file: EvaluationFile | ProfileFile | undefined, profileName: string, root: ContextualizedControl, nist: string, cciId: string) {
@@ -108,11 +115,11 @@ export default class ExportEMASS extends Vue {
   convertEMASSDataToArrayofArrays(): OutputRow[][] {
     const output: OutputRow[][] = []
     // Add 6 empty rows
-    _.times(5, () => {output.push([])})
+    _.times(5, () => output.push([]))
     // Add header rows
     output.push(this.EMASS_ROW_NAMES)
     for (const [key, value] of Object.entries(this.eMASSData)) {
-      output.push([key, '', '', '', '', '', value.cci?.replace('CCI-', ''), '', '', '', '', this.calculateComplianceStatuses(value.controlResult!), value.startTime, value.testedBy, value.controlResult])
+      output.push([key, '', '', '', '', '', value.cci?.replace('CCI-', ''), '', '', '', '', this.calculateComplianceStatuses(value.controlResult), value.startTime, value.testedBy, value.controlResult])
     }
     return output
   }
@@ -129,21 +136,20 @@ export default class ExportEMASS extends Vue {
           const profileName = _.get(file, 'evaluation.data.profiles[0].title')
           const controls = FilteredDataModule.controls({...this.filter, fromFile: [fileId]});
           const hitIds = new Set();
-          // Convert them into rows
+          // Convert controls into rows
           for (const ctrl of controls) {
             const root = ctrl.root
-            if (hitIds.has(root.hdf.wraps.id)) {
-              continue;
-            } else {
+            if (!hitIds.has(root.hdf.wraps.id)) {
+              hitIds.add(root.hdf.wraps.id);
               root.data.tags.cci.forEach((cciID: string) => {
-                if(cci2nistMap.hasOwnProperty(cciID)) {
+                if (cci2nistMap.hasOwnProperty(cciID)) {
                   this.addRow(file, profileName, root, cci2nistMap[cciID], cciID)
                 }
               })
             }
           }
           const ws = XLSX.utils.aoa_to_sheet(this.convertEMASSDataToArrayofArrays())
-          XLSX.utils.book_append_sheet(wb, ws, "No Header");
+          XLSX.utils.book_append_sheet(wb, ws, "Test Result Import");
           const wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
           saveAs(
             new Blob([this.s2ab(wbout)], {type: 'application/octet-stream'}),
