@@ -32,7 +32,7 @@ export class EvaluationsService {
   async create(evaluation: {
     filename: string;
     evaluationTags: CreateEvaluationTagDto[] | undefined;
-    groups: IGroup[] | undefined;
+    groups?: IGroup[] | undefined;
     public: boolean;
     data: unknown;
     userId: string;
