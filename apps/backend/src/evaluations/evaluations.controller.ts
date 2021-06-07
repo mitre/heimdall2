@@ -72,6 +72,15 @@ export class EvaluationsController {
       abac.can(Action.Read, evaluation)
     );
 
+    // Ensure user has the ability to read associated groups
+    evaluations.forEach((evaluation) => {
+      evaluation.groups = evaluation.groups.filter(
+        (group) =>
+          abac.can(Action.AddEvaluation, group) &&
+          abac.can(Action.RemoveEvaluation, group)
+      );
+    });
+
     return evaluations.map(
       (evaluation) =>
         new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))

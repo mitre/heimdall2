@@ -20,7 +20,7 @@ export class EvaluationsService {
   async findAll(): Promise<Evaluation[]> {
     return this.evaluationModel.findAll<Evaluation>({
       attributes: {exclude: ['data']},
-      include: [EvaluationTag, User, {model: Group, include: [User]}]
+      include: [EvaluationTag, User, Group, {model: Group, include: [User]}]
     });
   }
 

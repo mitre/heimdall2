@@ -35,7 +35,10 @@
             }}</span>
           </template>
           <template #[`item.evaluationTags`]="{item}">
-            <TagRow :evaluation="item" />
+            <TagRow :evaluation="item"
+          /></template>
+          <template #[`item.groups`]="{item}">
+            <GroupRow :groups="getGroups(item)" />
           </template>
           <template #[`item.createdAt`]="{item}">
             <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
@@ -90,20 +93,23 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
-import ShareEvaluationButton from '@/components/generic/ShareEvaluationButton.vue'
+import ShareEvaluationButton from '@/components/generic/ShareEvaluationButton.vue';
+import GroupRow from '@/components/global/groups/GroupRow.vue'
 import TagRow from '@/components/global/tags/TagRow.vue';
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations'
-import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
+import {IEvaluation, IEvaluationTag, IGroup} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
 import {Sample} from '@/utilities/sample_util';
 import DeleteDialog from '@/components/generic/DeleteDialog.vue';
+import {IVuetifyItems} from '../../../utilities/helper_util';
 
 @Component({
   components: {
     DeleteDialog,
     EditEvaluationModal,
     ShareEvaluationButton,
+    GroupRow,
     TagRow
   }
 })
@@ -146,7 +152,7 @@ export default class LoadFileList extends Vue {
     this.deleteTagDialog = true;
   }
 
- filterEvaluationTags(file: IEvaluation | Sample, search: string) {
+ filterEvaluationTags(file: IEvaluation | Sample, search: string): boolean {
     let result = false;
     if('evaluationTags' in file)
     {
@@ -157,6 +163,33 @@ export default class LoadFileList extends Vue {
       })
     }
     return result
+  }
+
+  filterGroups(file: IEvaluation | Sample, search: string): boolean {
+    let result = false;
+    if('evaluationTags' in file) {
+      file.groups?.forEach((group: IGroup) => {
+        if (group.name.toLowerCase().includes(search))
+        {result = true}
+      })
+    }
+    return result;
+  }
+
+  convertGroupsToIVuetifyItems(groups: IGroup[] | undefined): IVuetifyItems[] {
+    if (!groups) {
+      return []
+    }
+    return groups.map((group) => {
+      return {
+        text: group.name,
+        value: group.id
+      }
+    })
+  }
+
+  getGroups(file: IEvaluation): IVuetifyItems[] {
+    return this.convertGroupsToIVuetifyItems(file?.groups)
   }
 
   async deleteItemConfirm(): Promise<void>{
