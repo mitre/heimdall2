@@ -64,7 +64,10 @@
                     data-cy="profileInfo"
                     @click="toggle_profile(file)"
                   >
-                    <EvaluationInfo :file="file" />
+                    <EvaluationInfo
+                      :update-groups="updateGroups"
+                      :file="file"
+                    />
                     <v-card-actions>
                       <div
                         v-if="
@@ -76,6 +79,7 @@
                         <EditEvaluationModal
                           id="editEvaluationModal"
                           :active="getDbFile(file.from_file)"
+                          @update-groups="onUpdateGroups"
                         >
                           <template #clickable="{on}"
                             ><v-icon
@@ -297,6 +301,9 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /** Determines if we should make the search bar collapse-able */
   show_search_mobile: boolean = false;
 
+  /** Updates whenever we modify groups in server move */
+  updateGroups: string | boolean = false;
+
   /**
    * The currently selected file, if one exists.
    * Controlled by router.
@@ -469,6 +476,13 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     } else {
       this.evalInfo = file;
     }
+  }
+
+  onUpdateGroups(newValue: string) {
+    this.updateGroups = newValue;
+    this.$nextTick(() => {
+      this.updateGroups = false;
+    })
   }
 }
 </script>
