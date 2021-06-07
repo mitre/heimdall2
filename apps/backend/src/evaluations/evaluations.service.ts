@@ -1,3 +1,4 @@
+import {IGroup} from '@heimdall/interfaces';
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {FindOptions} from 'sequelize/types';
@@ -31,6 +32,7 @@ export class EvaluationsService {
   async create(evaluation: {
     filename: string;
     evaluationTags: CreateEvaluationTagDto[] | undefined;
+    groups: IGroup[] | undefined;
     public: boolean;
     data: unknown;
     userId: string;
@@ -40,7 +42,7 @@ export class EvaluationsService {
         ...evaluation
       },
       {
-        include: [EvaluationTag]
+        include: [EvaluationTag, Group]
       }
     );
   }

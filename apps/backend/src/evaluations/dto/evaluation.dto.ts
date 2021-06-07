@@ -35,7 +35,7 @@ export class EvaluationDto implements IEvaluation {
       );
     }
     if (evaluation.groups === undefined) {
-      this.evaluationTags = [];
+      this.groups = [];
     } else {
       this.groups = evaluation.groups.map((group) => new GroupDto(group));
     }
