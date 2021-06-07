@@ -21,6 +21,19 @@ services:
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
     env_file: .env-prod
     ports:
-      - "3000:3000"
+      - "3000"
     depends_on:
       - "database"
+  nginx:
+    image: nginx:latest
+    container_name: production_nginx
+    environment:
+      NGINX_HOST: ${NGINX_HOST}
+    volumes:
+      - ./nginx/conf:/etc/nginx/templates
+      - ./nginx/certs:/etc/nginx/cert/
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - "server"
