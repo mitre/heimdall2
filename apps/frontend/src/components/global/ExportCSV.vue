@@ -33,24 +33,23 @@ import concat from 'concat-stream';
 
 
 type ControlSetRow = {
-    resultsSet: string;
-    status: string;
-    id: string;
-    title?: string | null;
-    desc?: string | null;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    descriptions?: ControlDescription[] | { [key: string]: any; } | null,
-    message: string,
-    impact: number;
-    severity: Severity;
-    code: string;
-    check?: string;
-    fix: string;
-    nist?: string[];
-    cci?: string[];
-    segments?: HDFControlSegment[];
-    waived: boolean;
-    waiver_data?: WaiverData;
+    'Results Set': string;
+    'Status': string;
+    'ID': string;
+    'Title'?: string | null;
+    'Description'?: string | null;
+    'Descriptions'?: string,
+    'Message': string,
+    'Impact': number;
+    'Severity': Severity;
+    'Code': string;
+    'Check'?: string;
+    'Fix': string;
+    '800-53 Controls'?: string;
+    'CCI IDs'?: string;
+    'Segments'?: string;
+    'Waived': boolean;
+    'Waiver Data'?: WaiverData;
 }
 
 type File = {
@@ -68,25 +67,55 @@ type ControlSetRows = ControlSetRow[]
 export default class ExportCSV extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  descriptionsToString(descriptions: ControlDescription[] | { [key: string]: any; } | null | undefined): string {
+    if(descriptions) {
+      let result = '';
+      descriptions.forEach((description: ControlDescription) => {
+        result = result.concat(`${description.label}: ${description.data}\r\n\r\n`)
+      })
+      return result
+    }
+    else {
+      return ''
+    }
+  }
+
+  segmentsToString(segments: HDFControlSegment[] | undefined): string {
+    if (segments) {
+      let result = '';
+      segments.forEach((segment: HDFControlSegment) => {
+        if(segment.message){
+          result += `${segment.status.toUpperCase()} -- Test: ${segment.code_desc}\r\nMessage: ${segment.message}\r\n\r\n`
+        } else {
+          result += `${segment.status.toUpperCase()} -- Test: ${segment.code_desc}\r\n\r\n`
+        }
+      })
+      return result
+    } else {
+      return '';
+    }
+  }
+
   convertRow(file: ProfileFile | EvaluationFile, control: ContextualizedControl): ControlSetRow {
     return {
-      resultsSet: file.filename,
-      status: control.hdf.status,
-      id: control.data.id,
-      title: control.data.title,
-      desc: control.data.desc,
-      descriptions: control.data.descriptions,
-      message: control.hdf.message,
-      impact: control.data.impact,
-      severity: control.hdf.severity,
-      code: control.full_code,
-      check: control.data.tags.check,
-      fix: control.data.tags.fix,
-      nist: control.hdf.raw_nist_tags,
-      cci: control.data.tags.cci,
-      segments: control.hdf.segments,
-      waived: control.hdf.waived,
-      waiver_data: _.get(control, 'hdf.wraps.waiver_data')
+      'Results Set': file.filename,
+      'Status': control.hdf.status,
+      'ID': control.data.id,
+      'Title': control.data.title,
+      'Description': control.data.desc,
+      'Descriptions': this.descriptionsToString(control.data.descriptions),
+      'Message': control.hdf.message,
+      'Impact': control.data.impact,
+      'Severity': control.hdf.severity,
+      'Code': control.full_code,
+      'Check': control.data.tags.check || control.data.descriptions?.find((description: ControlDescription) => description.label.toLowerCase() === 'check').data,
+      'Fix': control.data.tags.fix || control.data.descriptions?.find((description: ControlDescription) => description.label.toLowerCase() === 'fix').data,
+      '800-53 Controls': control.hdf.raw_nist_tags.join(', '),
+      'CCI IDs': control.data.tags.cci.join(', '),
+      'Segments': this.segmentsToString(control.hdf.segments),
+      'Waived': control.hdf.waived,
+      'Waiver Data': _.get(control, 'hdf.wraps.waiver_data')
     }
   }
 
