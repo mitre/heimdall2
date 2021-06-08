@@ -8,12 +8,6 @@
         label="Search"
         hide-details
       />
-      <DeleteDialog
-        v-model="deleteItemDialog"
-        type="file"
-        @cancel="deleteItemDialog = false"
-        @confirm="deleteItemConfirm"
-      />
       <div class="d-flex flex-column">
         <v-data-table
           v-model="selectedFiles"
@@ -34,45 +28,8 @@
               item.filename
             }}</span>
           </template>
-          <template #[`item.evaluationTags`]="{item}">
-            <TagRow :evaluation="item"
-          /></template>
-          <template #[`item.groups`]="{item}">
-            <GroupRow :groups="getGroups(item)" />
-          </template>
           <template #[`item.createdAt`]="{item}">
             <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
-          </template>
-          <template #[`item.actions`]="{item}">
-            <v-row class="d-flex flex-row-reverse">
-              <ShareEvaluationButton title="Share Result" :evaluation="item" />
-              <div v-if="item.editable">
-                <EditEvaluationModal
-                  id="editEvaluationModal"
-                  :active="item"
-                  @updateEvaluations="updateEvaluations"
-                >
-                  <template #clickable="{on}"
-                    ><v-icon
-                      data-cy="edit"
-                      small
-                      title="Edit"
-                      class="mr-2"
-                      v-on="on"
-                    >
-                      mdi-pencil
-                    </v-icon>
-                  </template>
-                </EditEvaluationModal>
-                <v-icon
-                  data-cy="delete"
-                  class="mr-2"
-                  small
-                  @click="deleteItem(item)"
-                  >mdi-delete</v-icon
-                >
-              </div>
-            </v-row>
           </template>
         </v-data-table>
         <v-btn
@@ -96,13 +53,10 @@ import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationM
 import ShareEvaluationButton from '@/components/generic/ShareEvaluationButton.vue';
 import GroupRow from '@/components/global/groups/GroupRow.vue'
 import TagRow from '@/components/global/tags/TagRow.vue';
-import {SnackbarModule} from '@/store/snackbar';
-import {EvaluationModule} from '@/store/evaluations'
-import {IEvaluation, IEvaluationTag, IGroup} from '@heimdall/interfaces';
+import {IEvaluation} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
 import {Sample} from '@/utilities/sample_util';
 import DeleteDialog from '@/components/generic/DeleteDialog.vue';
-import {IVuetifyItems} from '../../../utilities/helper_util';
 
 @Component({
   components: {
@@ -123,7 +77,6 @@ export default class LoadFileList extends Vue {
 
   selectedFiles: IEvaluation[] | Sample[] = [];
   activeItem!: IEvaluation;
-  activeTag!: IEvaluationTag;
 
   deleteItemDialog = false;
   deleteTagDialog = false;
@@ -134,77 +87,12 @@ export default class LoadFileList extends Vue {
     this.$emit('load-results', evaluations);
   }
 
-  updateEvaluations() {
-    EvaluationModule.getAllEvaluations();
-  }
-
-  editItem(item: IEvaluation) {
-    this.activeItem = item;
-  }
-
-  deleteItem(item: IEvaluation) {
-    this.activeItem = item;
-    this.deleteItemDialog = true;
-  }
-
-  deleteTag(tag: IEvaluationTag) {
-    this.activeTag = tag;
-    this.deleteTagDialog = true;
-  }
-
- filterEvaluationTags(file: IEvaluation | Sample, search: string): boolean {
-    let result = false;
-    if('evaluationTags' in file)
-    {
-      file.evaluationTags?.forEach((tag) => {
-        if (tag.value.toLowerCase().includes(search)) {
-          result = true;
-        };
-      })
-    }
-    return result
-  }
-
-  filterGroups(file: IEvaluation | Sample, search: string): boolean {
-    let result = false;
-    if('evaluationTags' in file) {
-      file.groups?.forEach((group: IGroup) => {
-        if (group.name.toLowerCase().includes(search))
-        {result = true}
-      })
-    }
-    return result;
-  }
-
-  convertGroupsToIVuetifyItems(groups: IGroup[] | undefined): IVuetifyItems[] {
-    if (!groups) {
-      return []
-    }
-    return groups.map((group) => {
-      return {
-        text: group.name,
-        value: group.id
-      }
-    })
-  }
-
-  getGroups(file: IEvaluation): IVuetifyItems[] {
-    return this.convertGroupsToIVuetifyItems(file?.groups)
-  }
-
-  async deleteItemConfirm(): Promise<void>{
-    EvaluationModule.deleteEvaluation(this.activeItem).then(() => {
-      SnackbarModule.notify("Deleted evaluation successfully.")
-    })
-    this.deleteItemDialog = false;
-  }
-
   get filteredFiles() {
     let matches: Array<IEvaluation | Sample> = []
     if (this.search != '') {
       let searchToLower = this.search.toLowerCase();
       (this.files as Array<IEvaluation | Sample>).forEach(async (item: IEvaluation | Sample) => {
-          if (this.filterEvaluationTags(item, searchToLower) || item.filename.toLowerCase().includes(searchToLower)) {
+          if (item.filename.toLowerCase().includes(searchToLower)) {
           matches.push(item)
         }
       })

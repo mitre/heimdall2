@@ -3,8 +3,7 @@
     <v-card-subtitle>
       View files loaded into your organizations Heimdall Server instance.
     </v-card-subtitle>
-    <LoadFileList
-      :headers="headers"
+    <GroupFileList
       :files="files"
       :loading="loading"
       @load-results="load_results($event)"
@@ -14,7 +13,7 @@
 
 <script lang="ts">
 import Component, {mixins} from 'vue-class-component';
-import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
+import GroupFileList from '@/components/global/upload_tabs/GroupFileList.vue';
 import {EvaluationModule} from '@/store/evaluations';
 import RefreshButton from '@/components/generic/RefreshButton.vue';
 import {IEvaluation} from '@heimdall/interfaces';
@@ -29,37 +28,12 @@ import {FileID} from '@/store/report_intake';
  */
 @Component({
   components: {
-    LoadFileList,
+    GroupFileList,
     RefreshButton
   }
 })
 export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
   @Prop({default: false}) readonly refresh!: Boolean;
-
-  headers: Object[] = [
-    {
-      text: 'Filename',
-      align: 'start',
-      sortable: true,
-      value: 'filename'
-    },
-    {
-      text: 'Tags',
-      value: 'evaluationTags',
-      sortable: true
-    },
-    {
-      text: 'Groups',
-      value: 'groups',
-      sortable: true
-    },
-    {text: 'Uploaded', value: 'createdAt', sortable: true},
-    {
-      text: 'Actions',
-      value: 'actions',
-      align: 'right'
-    }
-  ];
 
   @Watch('refresh')
   onChildChanged(newRefreshValue: boolean, _oldValue: boolean) {

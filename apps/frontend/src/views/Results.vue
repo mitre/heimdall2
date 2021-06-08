@@ -79,7 +79,7 @@
                         <EditEvaluationModal
                           id="editEvaluationModal"
                           :active="getDbFile(file.from_file)"
-                          @update-groups="onUpdateGroups"
+                          @update="onUpdateGroups"
                         >
                           <template #clickable="{on}"
                             ><v-icon

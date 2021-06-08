@@ -158,7 +158,7 @@ export default class EditEvaluationModal extends Vue {
   async update(): Promise<void> {
     Promise.all([EvaluationModule.updateEvaluation(this.activeEvaluation), this.updateGroups()]).then(() => {
       SnackbarModule.notify('Evaluation Updated Successfully');
-      this.$emit('update-groups', this.active.id)
+      this.$emit('update', this.active.id)
     })
     this.visible = false;
   }
