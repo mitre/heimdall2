@@ -35,6 +35,27 @@
           />
         </v-container>
       </template>
+      <template #[`item.users`]="{item}">
+        <v-chip
+          pill
+          color="primary"
+          class="ma-1"
+          v-on="on"
+          @click="displayMembersDialog(item.users[0], -1)"
+        >
+          {{ getMemberNames(item.users)[0].identifier }}
+        </v-chip>
+        <v-chip
+          pill
+          color="primary"
+          outlined
+          class="ma-1"
+          v-on="on"
+          @click="displayMembersDialog(item.users, 1)"
+        >
+          + {{ getMemberNames(item.users).length - 1 }} others
+        </v-chip>
+      </template>
       <template #[`item.actions`]="{item}">
         <div v-if="item.role == 'owner'">
           <GroupModal id="editGroupModal" :create="false" :group="item">
@@ -62,40 +83,49 @@
       @cancel="closeDeleteDialog"
       @confirm="deleteGroupConfirm"
     />
+    <GroupUsers
+      :display="dialogDisplayUsers"
+      :members="selectedGroupUsers"
+      @close-users-display="dialogDisplayUsers = false"
+    />
   </v-card>
 </template>
 
 <script lang="ts">
 import {SnackbarModule} from '@/store/snackbar';
-import {IGroup} from '@heimdall/interfaces';
+import {IGroup, ISlimUser} from '@heimdall/interfaces';
 import GroupModal from '@/components/global/groups/GroupModal.vue';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {GroupsModule} from '@/store/groups';
 import DeleteDialog from '@/components/generic/DeleteDialog.vue';
+import GroupUsers from '@/components/global/groups/GroupUsers.vue';
 
 @Component({
   components: {
     DeleteDialog,
-    GroupModal
+    GroupModal,
+    GroupUsers
   }
 })
 export default class GroupManagement extends Vue {
   @Prop({type: Boolean, default: false}) readonly allGroups!: boolean;
 
   editedGroup: IGroup | null = null;
+  selectedGroupUsers: ISlimUser[] | null = [];
   dialogDelete = false;
+  dialogDisplayUsers = false;
   search = '';
   allGroupsHeaders: Object[] = [
     {
       text: 'Group Name',
       align: 'start',
       sortable: true,
-      value: 'name'
+      value: 'name',
     },
     {
-    text: 'Public',
+      text: 'Public',
       sortable: true,
       value: 'public'
     }
@@ -104,12 +134,12 @@ export default class GroupManagement extends Vue {
     {
       text: 'ID',
       sortable: true,
-      value: 'id'
+      value: 'id',
     },
     ...this.allGroupsHeaders,
     {text: 'Your Role', value: 'role', sortable: true},
+    {text: 'Members', value: 'users', sortable: true},
     {text: 'Actions', value: 'actions', sortable: false},
-
   ];
 
   deleteGroupDialog(group: IGroup): void {
@@ -130,6 +160,38 @@ export default class GroupManagement extends Vue {
   closeDeleteDialog() {
     this.dialogDelete = false
     this.editedGroup = null;
+  }
+
+  getMemberNames(users: ISlimUser[]): Object {
+    let result = [{}];
+
+    for(let i = 0; i < users.length; i++) {
+      if(!users[i].firstName && !users[i].lastName) {
+        result[i] = {identifier: users[i].email};
+      }
+      else {
+        result[i] = {identifier: users[i].firstName + " " + users[i].lastName};
+      }
+    }
+    return result;
+  }
+
+  displayMembersDialog(members: ISlimUser[], startingIndex: number) {
+    // If there is only one member, add it to a ISlimUser array.
+    if(!Array.isArray(members)) {
+      const singleMember: ISlimUser[] = [members];
+      this.selectedGroupUsers = [...singleMember];
+      this.dialogDisplayUsers = true;
+    }
+    else {
+      const modified: ISlimUser[] = [...members];
+      // Splices out the members already displayed as "pills"
+      for(let i = 0; i < startingIndex; i++) {
+        modified.splice(i, 1);
+      }
+      this.selectedGroupUsers = [...modified];
+      this.dialogDisplayUsers = true;
+    }
   }
 
   get loading(): boolean {
