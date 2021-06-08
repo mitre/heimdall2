@@ -20,7 +20,7 @@
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --watch",
     "test": "jest --silent",
-    "test:ci-cov": "jest --silent --coverage --runInBand",
+    "test:ci-cov": "jest --coverage --runInBand",
     "test:cov": "jest --silent --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --runInBand --silent --config test/jest-e2e.json",

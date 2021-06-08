@@ -396,8 +396,8 @@ describe('EvaluationsController', () => {
       expect(foundGroups[0].id).toEqual(group.id);
     });
 
-    it('should not return groups the user has no access to', async () => {
-      // GROUP_1 is a public group and still should not show up.
+    it('should return public groups', async () => {
+      // GROUP_1 is a public group and should show up.
       const evaluationOwner = await usersService.create(
         CREATE_USER_DTO_TEST_OBJ_2
       );
@@ -407,6 +407,24 @@ describe('EvaluationsController', () => {
         userId: evaluationOwner.id
       });
       const group = await groupsService.create(GROUP_1);
+      await groupsService.addEvaluationToGroup(group, evaluation);
+      const foundGroups = await evaluationsController.groupsForEvaluation(
+        evaluation.id,
+        {user: user}
+      );
+      expect(foundGroups.length).toEqual(1);
+    });
+
+    it('should not return groups the user has no access to', async () => {
+      const evaluationOwner = await usersService.create(
+        CREATE_USER_DTO_TEST_OBJ_2
+      );
+      const evaluation = await evaluationsService.create({
+        ...EVALUATION_1,
+        data: mockFile,
+        userId: evaluationOwner.id
+      });
+      const group = await groupsService.create(PRIVATE_GROUP);
       await groupsService.addEvaluationToGroup(group, evaluation);
       const foundGroups = await evaluationsController.groupsForEvaluation(
         evaluation.id,

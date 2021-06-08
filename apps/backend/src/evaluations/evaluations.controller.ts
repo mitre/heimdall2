@@ -55,10 +55,8 @@ export class EvaluationsController {
   ): Promise<GroupDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
     let evaluationGroups = await this.evaluationsService.groups(id);
-    evaluationGroups = evaluationGroups.filter(
-      (group) =>
-        abac.can(Action.AddEvaluation, group) &&
-        abac.can(Action.RemoveEvaluation, group)
+    evaluationGroups = evaluationGroups.filter((group) =>
+      abac.can(Action.Read, group)
     );
     return evaluationGroups.map((group) => new GroupDto(group));
   }
