@@ -30,7 +30,7 @@ if ! grep -qF "NGINX_HOST" .env; then
 fi
 
 if [ -f ./nginx/certs/ssl_certificate.crt ]; then
-	echo "SSL Certificate already exists. if you would like to regenerate your secrets, please delete this file and re-run the script."
+	echo "SSL Certificate already exists. if you would like to regenerate your certificates, please delete the files in ./nginx/certs/ and re-run this script."
 else
 	echo "SSL Certificate does not exist, creating self-signed certificate..."
 	echo "Do not use a self-signed certificate in a production environment."
