@@ -17,6 +17,8 @@ server {
     listen [::]:443 ssl http2;
     server_name ${NGINX_HOST};
 
+    client_max_body_size 100m;
+
     ssl_certificate /etc/nginx/cert/ssl_certificate.crt;
     ssl_certificate_key /etc/nginx/cert/ssl_certificate_key.key;
 
