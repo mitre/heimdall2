@@ -37,23 +37,47 @@
       </template>
       <template #[`item.users`]="{item}">
         <v-chip
+          :active="displayChip(0, 1, item.users)"
           pill
           color="primary"
           class="ma-1"
           v-on="on"
-          @click="displayMembersDialog(item.users[0], -1)"
+          @click="displayMembersDialog(item.users[0])"
         >
           {{ getMemberNames(item.users)[0].identifier }}
         </v-chip>
         <v-chip
+          v-if="item.users.length >= 2"
+          :active="displayChip(992, 2, item.users)"
+          pill
+          color="primary"
+          class="ma-1"
+          v-on="on"
+          @click="displayMembersDialog(item.users[1])"
+        >
+          {{ getMemberNames(item.users)[1].identifier }}
+        </v-chip>
+        <v-chip
+          v-if="item.users.length >= 3"
+          :active="displayChip(1200, 3, item.users)"
+          pill
+          color="primary"
+          class="ma-1"
+          v-on="on"
+          @click="displayMembersDialog(item.users[2])"
+        >
+          {{ getMemberNames(item.users)[2].identifier }}
+        </v-chip>
+        <v-chip
+          :active="displayTotalMembersChip(item.users.length)"
           pill
           color="primary"
           outlined
           class="ma-1"
           v-on="on"
-          @click="displayMembersDialog(item.users, 1)"
+          @click="displayMembersDialog(item.users)"
         >
-          + {{ getMemberNames(item.users).length - 1 }} others
+          + {{ getMemberNames(item.users).length }} total
         </v-chip>
       </template>
       <template #[`item.actions`]="{item}">
@@ -114,6 +138,7 @@ export default class GroupManagement extends Vue {
 
   editedGroup: IGroup | null = null;
   selectedGroupUsers: ISlimUser[] | null = [];
+  test: boolean[] = [];
   dialogDelete = false;
   dialogDisplayUsers = false;
   search = '';
@@ -162,21 +187,51 @@ export default class GroupManagement extends Vue {
     this.editedGroup = null;
   }
 
+  displayChip(width: number, numberOfDisplayedUsers: number, members: ISlimUser[]): boolean {
+    if(window.innerWidth >= width && numberOfDisplayedUsers <= members.length) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  displayTotalMembersChip(numberOfMembers: number): boolean {
+    // If the group has more than 3 members, than show the total chip.
+    if(numberOfMembers > 3) {
+      return true;
+    }
+    else {
+      if(window.innerWidth > 1200) {
+        return false;
+      }
+      else if(window.innerWidth >= 992 && numberOfMembers > 2) {
+        return true;
+      }
+      else if(window.innerWidth >= 0 && numberOfMembers > 1) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
+  }
+
   getMemberNames(users: ISlimUser[]): Object {
-    let result = [{}];
+    const result = [{}];
 
     for(let i = 0; i < users.length; i++) {
       if(!users[i].firstName && !users[i].lastName) {
         result[i] = {identifier: users[i].email};
       }
       else {
-        result[i] = {identifier: users[i].firstName + " " + users[i].lastName};
+        result[i] = {identifier: `${users[i].firstName} ${users[i].lastName}`};
       }
     }
     return result;
   }
 
-  displayMembersDialog(members: ISlimUser[], startingIndex: number) {
+  displayMembersDialog(members: ISlimUser[]) {
     // If there is only one member, add it to a ISlimUser array.
     if(!Array.isArray(members)) {
       const singleMember: ISlimUser[] = [members];
@@ -184,12 +239,7 @@ export default class GroupManagement extends Vue {
       this.dialogDisplayUsers = true;
     }
     else {
-      const modified: ISlimUser[] = [...members];
-      // Splices out the members already displayed as "pills"
-      for(let i = 0; i < startingIndex; i++) {
-        modified.splice(i, 1);
-      }
-      this.selectedGroupUsers = [...modified];
+      this.selectedGroupUsers = [...members];
       this.dialogDisplayUsers = true;
     }
   }
