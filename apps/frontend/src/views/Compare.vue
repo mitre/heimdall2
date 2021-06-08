@@ -493,9 +493,7 @@ export default class Compare extends Vue {
   }
 
   toIEvaluation(file: ProfileFile | EvaluationFile): IEvaluation | undefined {
-    return EvaluationModule.allEvaluations.find((e) => {
-      return e.id === file.database_id?.toString()
-    })
+    return EvaluationModule.evaluationForFile(file);
   }
 }
 </script>
