@@ -60,9 +60,7 @@ export default class EvaluationInfo extends Vue {
   }
 
   get evaluation(): IEvaluation | undefined {
-    return EvaluationModule.allEvaluations.find((e) => {
-      return e.id === this.file_object.database_id?.toString()
-    })
+    return EvaluationModule.evaluationForFile(this.file_object);
   }
 
   get start_time(): string | null {
