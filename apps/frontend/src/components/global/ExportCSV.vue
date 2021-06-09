@@ -48,7 +48,7 @@ type ControlSetRow = {
     '800-53 Controls'?: string;
     'CCI IDs'?: string;
     'Segments'?: string;
-    'Waived': boolean;
+    'Waived': string;
     'Waiver Data'?: WaiverData;
 }
 
@@ -98,6 +98,26 @@ export default class ExportCSV extends Vue {
   }
 
   convertRow(file: ProfileFile | EvaluationFile, control: ContextualizedControl): ControlSetRow {
+    let check = "";
+    let fix = "";
+
+    if(control.data.tags.check) {
+      check = control.data.tags.check;
+    } else if (typeof control.data.descriptions === 'object') {
+      const found = control.data.descriptions?.find((description: ControlDescription) => description.label.toLowerCase() === 'check')
+      if(found) {
+        check = found.data
+      }
+    }
+    if(control.data.tags.fix) {
+      fix = control.data.tags.fix;
+    } else if (typeof control.data.descriptions === 'object') {
+      const found = control.data.descriptions?.find((description: ControlDescription) => description.label.toLowerCase() === 'fix')
+      if(found) {
+        fix = found.data
+      }
+    }
+
     return {
       'Results Set': file.filename,
       'Status': control.hdf.status,
@@ -109,12 +129,12 @@ export default class ExportCSV extends Vue {
       'Impact': control.data.impact,
       'Severity': control.hdf.severity,
       'Code': control.full_code,
-      'Check': control.data.tags.check || control.data.descriptions?.find((description: ControlDescription) => description.label.toLowerCase() === 'check').data,
-      'Fix': control.data.tags.fix || control.data.descriptions?.find((description: ControlDescription) => description.label.toLowerCase() === 'fix').data,
+      'Check': check,
+      'Fix': fix,
       '800-53 Controls': control.hdf.raw_nist_tags.join(', '),
-      'CCI IDs': control.data.tags.cci.join(', '),
+      'CCI IDs': (control.data.tags.cci || []).join(', '),
       'Segments': this.segmentsToString(control.hdf.segments),
-      'Waived': control.hdf.waived,
+      'Waived': control.hdf.waived ? 'True' : 'False',
       'Waiver Data': _.get(control, 'hdf.wraps.waiver_data')
     }
   }
