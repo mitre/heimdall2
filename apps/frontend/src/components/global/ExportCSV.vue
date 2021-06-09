@@ -68,7 +68,7 @@ export default class ExportCSV extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  descriptionsToString(descriptions: ControlDescription[] | { [key: string]: any; } | null | undefined): string {
+  descriptionsToString(descriptions?: ControlDescription[] | { [key: string]: any; } | null): string {
     if(descriptions) {
       let result = '';
       descriptions.forEach((description: ControlDescription) => {
