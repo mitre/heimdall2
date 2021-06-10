@@ -50,7 +50,7 @@ import _ from 'lodash';
 import {StatusCountModule} from '../../store/status_counts';
 import {EvaluationFile, ProfileFile} from '../../store/report_intake';
 import {ContextualizedControl} from 'inspecjs/dist/context';
-import {mdiAlertCircle, mdiCheckCircle, mdiCloseCircle, mdiMinusCircle} from '@mdi/js'
+import {mdiAlertCircle, mdiCheckCircle, mdiCloseCircle, mdiMinusCircle, mdiDownload} from '@mdi/js'
 import Mustache from 'mustache';
 
 interface Detail {
@@ -129,10 +129,11 @@ export default class ExportHTMLModal extends Vue {
     showCode: false,
     exportType: '',
     icons: {
-      circleCheck: mdiCheckCircle,
-      circleCross: mdiCloseCircle,
-      circleMinus: mdiMinusCircle,
-      circleAlert: mdiAlertCircle
+      circleCheck: this.iconDatatoSVG(mdiCheckCircle, 'white'),
+      circleCross: this.iconDatatoSVG(mdiCloseCircle, 'white'),
+      circleMinus: this.iconDatatoSVG(mdiMinusCircle, 'white'),
+      circleAlert: this.iconDatatoSVG(mdiAlertCircle, 'white'),
+      download: this.iconDatatoSVG(mdiDownload, 'black')
     }
   };
 
@@ -155,6 +156,10 @@ export default class ExportHTMLModal extends Vue {
         this.outputData.showCode = true;
         break
     }
+  }
+
+  iconDatatoSVG(iconData: string, fill: string, widthPx = 24, heightPx = 24): string {
+    return `<svg style="width:${widthPx}px; height:${heightPx}px" viewBox="0 0 ${widthPx} ${heightPx}"><path fill="${fill}" d="${iconData}"/></svg>`
   }
 
   /**

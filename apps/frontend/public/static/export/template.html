@@ -91,10 +91,8 @@
             <li class="nav-item"> <a class="nav-link active" aria-current="page" href="#">Profile Info</a> </li>
           </ul>
           <div class="d-flex">
-            <a id="generate" onclick="$(this).attr('href', 'data:text/plain;base64,' + utf8_to_b64($('html').clone().find('#generate').remove().end()[0].outerHTML));" download="report.html">
-              <svg style="width:24px;height:24px" viewBox="0 0 24 24" onclick="savePage()">
-                <path fill="currentColor" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
-              </svg>
+            <a id="generate" onclick="savePage()" download="report.html">
+              {{{icons.download}}}
             </a>
           </div>
         </div>
@@ -124,9 +122,7 @@
             <div class="card-body">
               <div class="card-title">
                 <div class="h4">
-                  <svg style="width:24px; height:24px" viewBox="0 0 24 24">
-                    <path fill="white" d="{{icons.circleCheck}}" />
-                  </svg>
+                  {{{icons.circleCheck}}}
                   <span id="passedCount">Passed: {{statistics.passed}}</span>
                 </div>
                 <p id="passedCountSubtitle" class="card-text"> {{statistics.passedTests}} individual checks passed. </p>
@@ -139,9 +135,7 @@
             <div class="card-body tall-card">
               <div class="card-title">
                 <div class="h4">
-                  <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                    <path fill="white" d="{{icons.circleCross}}" />
-                  </svg>
+                  {{{icons.circleCross}}}
                   <span id="failedCount">Failed: {{statistics.failed}}</span>
                 </div>
                 <p class="card-text" id="failedCountSubtitle"> {{passingTestsFailedControl}} individual checks passed, {{failedTests}} failed out of {{totalTests}} total checks </p>
@@ -154,9 +148,7 @@
             <div class="card-body">
               <div class="card-title">
                 <div class="h4">
-                  <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                    <path fill="white" d="{{icons.circleMinus}}" />
-                  </svg>
+                  {{{icons.circleMinus}}}
                   <span id="naCount">Not Applicable: {{statistics.notApplicable}}</span>
                 </div>
                 <p class="card-text" id="naCountSubtitle"> System exception or absent component </p>
@@ -169,9 +161,7 @@
             <div class="card-body">
               <div class="card-title">
                 <div class="h4">
-                  <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                    <path fill="white" d="{{icons.circleAlert}}" />
-                  </svg>
+                  {{{icons.circleAlert}}}
                   <span id="nrCount">Not Reviewed: {{statistics.notReviewed}}</span>
                 </div>
                 <p class="card-text"> Can only be tested manually at this time </p>
