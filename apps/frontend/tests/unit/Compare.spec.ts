@@ -72,10 +72,12 @@ describe('Compare table data', () => {
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = false;
     (wrapper.vm as Vue & {searchTerm: string}).searchTerm = 'v-13613';
     SearchModule.parseSearch();
-    expect(
-      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
-        .length
-    ).toBe(1);
+    setTimeout(() => {
+      expect(
+        (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+          .length
+      ).toBe(1);
+    }, 1000);
   });
 
   it('shows differing delta data when "show only changed"', () => {
@@ -93,11 +95,12 @@ describe('Compare table data', () => {
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = false;
     (wrapper.vm as Vue & {searchTerm: string}).searchTerm = 'failed';
     SearchModule.parseSearch();
-
-    expect(
-      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
-        .length
-    ).toBe(nginxDelta);
+    setTimeout(() => {
+      expect(
+        (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+          .length
+      ).toBe(nginxDelta);
+    }, 1000);
   });
 
   it('counts every unique control', () => {
