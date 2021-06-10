@@ -14,7 +14,12 @@ import {
   VuexModule
 } from 'vuex-module-decorators';
 import {InspecDataModule} from './data_store';
-import {FileID, InspecIntakeModule} from './report_intake';
+import {
+  EvaluationFile,
+  FileID,
+  InspecIntakeModule,
+  ProfileFile
+} from './report_intake';
 import {SnackbarModule} from './snackbar';
 
 @Module({
@@ -26,6 +31,14 @@ import {SnackbarModule} from './snackbar';
 export class Evaluation extends VuexModule {
   allEvaluations: IEvaluation[] = [];
   loading = true;
+
+  get evaluationForFile(): Function {
+    return (file: EvaluationFile | ProfileFile) => {
+      return this.allEvaluations.find((e) => {
+        return e.id === file.database_id?.toString();
+      });
+    };
+  }
 
   @Action
   async getAllEvaluations(): Promise<void> {
