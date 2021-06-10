@@ -130,6 +130,8 @@ Make sure you have run the setup steps at least once before following these step
 
 #### Updating Docker Container
 
+> **Starting with version 2.5.0, Heimdall on Docker uses SSL by default. Place your certificate files in `./nginx/certs/` with the names `ssl_certificate.crt` and `ssl_certificate_key.key` respectively.**
+
 A new version of the docker container can be retrieved by running:
 
 ```bash
