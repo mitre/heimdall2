@@ -14,7 +14,7 @@ const issues = parsed.issues || '';
 
 // This grabs the css for Bootstrap to allow for HTML export
 fs.copyFile(
-  require.resolve('bootstrap/dist/css/bootstrap.css'),
+  require.resolve('bootstrap/dist/css/bootstrap.min.css'),
   'public/static/export/style.css',
   (err) => {
     if (err) {
