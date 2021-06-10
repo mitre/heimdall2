@@ -109,7 +109,7 @@ Given that Heimdall requires at least a database service, we use Docker and Dock
 
 3. Navigate to the base folder where `docker-compose.yml` is located
 
-4. By default Heimdall will generate self-signed certificates that will last for 7 days. Place your certificate files in `./nginx/certs/` with the names `ssl_certificate.crt` and `ssl_certificate_key.key` respectively. If you don't plan to use SSL, you can still access Heimdall on port 3000.
+4. By default Heimdall will generate self-signed certificates that will last for 7 days. Place your certificate files in `./nginx/certs/` with the names `ssl_certificate.crt` and `ssl_certificate_key.key` respectively.
 
 5. Run the following commands in a terminal window from the Heimdall source directory. For more information on the .env file, visit [Environment Variables Configuration.](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration)
    - ```bash
