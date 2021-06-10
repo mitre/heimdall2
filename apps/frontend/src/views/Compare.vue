@@ -55,6 +55,10 @@
                                 {{ file.filename }}
                                 <br />
                                 <span>{{ fileTimes[i] }}</span>
+                                <TagRow
+                                  style="max-width: 400px"
+                                  :evaluation="toIEvaluation(file)"
+                                />
                               </div>
                             </v-card-title>
                             <v-card-actions class="justify-center">
@@ -191,6 +195,7 @@ import Modal from '@/components/global/Modal.vue';
 import CompareRow from '@/components/cards/comparison/CompareRow.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
 import SearchHelpModal from '@/components/global/SearchHelpModal.vue'
+import TagRow from '@/components/global/tags/TagRow.vue'
 
 import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {ControlStatus} from 'inspecjs';
@@ -201,7 +206,7 @@ import {Category} from '@/components/generic/ApexPieChart.vue';
 import {StatusCountModule} from '@/store/status_counts';
 import ProfileRow from '@/components/cards/comparison/ProfileRow.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
-import {EvaluationFile, FileID} from '@/store/report_intake';
+import {EvaluationFile, FileID, ProfileFile} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
 
 import ApexLineChart, {
@@ -210,6 +215,8 @@ import ApexLineChart, {
 import {get_eval_start_time} from '@/utilities/delta_util';
 import _ from 'lodash';
 import {SearchModule} from '../store/search';
+import {IEvaluation} from '@heimdall/interfaces';
+import {EvaluationModule} from '../store/evaluations';
 
 @Component({
   components: {
@@ -218,6 +225,7 @@ import {SearchModule} from '../store/search';
     CompareRow,
     ProfileRow,
     StatusChart,
+    TagRow,
     ApexLineChart,
     UploadButton,
     SearchHelpModal
@@ -481,6 +489,10 @@ export default class Compare extends Vue {
 
   get file_filter(): FileID[] {
     return FilteredDataModule.selectedEvaluationIds;
+  }
+
+  toIEvaluation(file: ProfileFile | EvaluationFile): IEvaluation | undefined {
+    return EvaluationModule.evaluationForFile(file);
   }
 }
 </script>
