@@ -2,6 +2,7 @@
   <Modal
     :visible="visible"
     :max-width="'500px'"
+    :persistent="true"
     @close-modal="$emit('close-modal')"
     @update-user-table="$emit('update-user-table')"
   >
