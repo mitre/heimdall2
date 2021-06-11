@@ -27,7 +27,6 @@ services:
       - "database"
   nginx:
     image: nginx:alpine
-    container_name: production_nginx
     environment:
       NGINX_HOST: ${NGINX_HOST}
     volumes:
