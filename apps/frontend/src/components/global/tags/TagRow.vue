@@ -85,7 +85,11 @@ export default class TagRow extends Vue {
       const toAdd: string[] = this.tags.filter(tag => !original.includes(tag));
       const toRemove: IEvaluationTag[] = this.evaluation.evaluationTags.filter(tag => !this.tags.includes(tag.value));
       const addedTagPromises = toAdd.map((tag) => {
-        return EvaluationModule.addTag({evaluation: this.evaluation!, tag: {value: tag}})
+        if(this.evaluation){
+          return EvaluationModule.addTag({evaluation: this.evaluation, tag: {value: tag}});
+        } else {
+          return null;
+        }
       });
 
       const removedTagPromises = toRemove.map((tag) => {
