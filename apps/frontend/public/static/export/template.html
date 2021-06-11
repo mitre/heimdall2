@@ -1,284 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{exportType}} Report</title>
-    <style type="text/css">
-      .results-set {
-      min-width: 40vh;
-      padding-bottom: 10px;
-      }
-      .justify-center, .apexcharts-canvas {
-      display: block;
-      margin: auto;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      }
-      .compliance-card {
-      min-height: 300px;
-      }
-      .apexcharts-ycrosshairs {
-      display: none;
-      }
-      .apexcharts-tooltip-series-group .apexcharts-active {
-      display: none;
-      }
-      @media (min-width: 1101px) and (max-width: 1446px) {
-      .tall-card {
-      height: 200px;
-      }
-      }
-      @media (min-width: 1446px) and (max-width: 1886px) {
-      .tall-card {
-      height: 190px;
-      }
-      }
-      @media (min-width: 1886px) {
-      .tall-card {
-      height: 130px;
-      }
-      }
-    </style>
-    <style type="text/css" media="print">
-      @page { size: landscape; }
-    </style>
-    <script>
-      /** Saves the current page **/
-      function savePage(){
-        const pageBlob = new Blob([this.s2ab(document.documentElement.outerHTML)], {type: 'application/html'})
-        saveFile(pageBlob, `{{exportType}}_Report_${new Date().toString()}.html`.replace(/[ :]/g, '_'))
-      }
-      
-      /** Downloads a blob as a specified filename **/
-      function saveFile(blob, filename) {
-        if (window.navigator.msSaveOrOpenBlob) {
-          window.navigator.msSaveOrOpenBlob(blob, filename);
-        } else {
-          const a = document.createElement('a');
-          document.body.appendChild(a);
-          const url = window.URL.createObjectURL(blob);
-          a.href = url;
-          a.download = filename;
-          a.click();
-          setTimeout(() => {
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-          }, 0)
-        }
-      }
-      
-      /** Converts a string to an array buffer */
-      function s2ab(s) {
-        const buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
-        const view = new Uint8Array(buf); //create uint8array as viewer
-        for (let i = 0; i < s.length; i++) {
-          view[i] = s.charCodeAt(i) & 0xff; //convert to octet
-        }
-        return buf;
-      }
-    </script>
-  </head>
-  <body>
-    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Heimdall Report</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item"> <a class="nav-link active" aria-current="page" href="#">Profile Info</a> </li>
-          </ul>
-          <div class="d-flex">
-            <a id="generate" onclick="savePage()" download="report.html">
-              {{{icons.download}}}
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{{exportType}} Report</title>
+	<style type="text/css">
+	.results-set {
+		min-width: 40vh;
+		padding-bottom: 10px;
+	}
+	.justify-center,
+	.apexcharts-canvas {
+		display: block;
+		margin: auto;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+	}
+	.compliance-card {
+		min-height: 300px;
+	}
+	.apexcharts-ycrosshairs {
+		display: none;
+	}
+	.apexcharts-tooltip-series-group .apexcharts-active {
+		display: none;
+	}
+	#generate:hover {
+		cursor: pointer;
+	}
+	@media (min-width: 1101px) and (max-width: 1446px) {
+		.tall-card {
+			height: 200px;
+		}
+	}
+	@media (min-width: 1446px) and (max-width: 1886px) {
+		.tall-card {
+			height: 190px;
+		}
+	}
+	@media (min-width: 1886px) {
+		.tall-card {
+			height: 130px;
+		}
+	}
+	</style>
+	<style type="text/css" media="print">
+	@page {
+		size: landscape;
+	}
+	</style>
+	<script>
+	/** Saves the current page **/
+	function savePage() {
+		document.getElementById("generate").style.display = 'none';
+		const pageBlob = new Blob([this.s2ab(document.documentElement.outerHTML)], {
+			type: 'application/html'
+		})
+		saveFile(pageBlob, `{{exportType}}_Report_${new Date().toString()}.html`.replace(/[ :]/g, '_'))
+		document.getElementById("generate").style.display = 'block';
+	}
+	/** Downloads a blob as a specified filename **/
+	function saveFile(blob, filename) {
+		if(window.navigator.msSaveOrOpenBlob) {
+			window.navigator.msSaveOrOpenBlob(blob, filename);
+		} else {
+			const a = document.createElement('a');
+			document.body.appendChild(a);
+			const url = window.URL.createObjectURL(blob);
+			a.href = url;
+			a.download = filename;
+			a.click();
+			setTimeout(() => {
+				window.URL.revokeObjectURL(url);
+				document.body.removeChild(a);
+			}, 0)
+		}
+	}
+	/** Converts a string to an array buffer */
+	function s2ab(s) {
+		const buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+		const view = new Uint8Array(buf); //create uint8array as viewer
+		for(let i = 0; i < s.length; i++) {
+			view[i] = s.charCodeAt(i) & 0xff; //convert to octet
+		}
+		return buf;
+	}
+	</script>
+</head>
+<body>
+	<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+		<div class="container-fluid"> <a class="navbar-brand" href="#">Heimdall Report</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0"> {{#showControlSets}}
+					<li class="nav-item"> <a class="nav-link active" aria-current="page" href="#">Profile Info</a> </li>
+					<li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Control Sets
             </a>
-          </div>
-        </div>
-      </div>
-    </nav>
-    <div class="container-fluid" style="margin-top: 80px;">
-      <div class="card bg-light">
-        <div class="card-body">
-          <h5 class="card-title">Profile info</h5>
-          <div id="profileInfos" class="row">
-            {{#files}}
-            <div class="col-xl results-set">
-              <span>Filename: <strong>{{filename}}</strong></span><br />
-              <span>Tool Version: <strong>{{toolVersion}}</strong></span><br />
-              <span>Platform: <strong>{{platform}}</strong></span><br />
-              <span>Duration: <strong>{{duration}}</strong></span><br />
-            </div>
-            {{/files}}
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="container-fluid pt-4" id="statusCards">
-      <div class="row">
-        <div class="col-md">
-          <div class="card bg-success tall-card">
-            <div class="card-body">
-              <div class="card-title">
-                <div class="h4">
-                  {{{icons.circleCheck}}}
-                  <span id="passedCount">Passed: {{statistics.passed}}</span>
-                </div>
-                <p id="passedCountSubtitle" class="card-text"> {{statistics.passedTests}} individual checks passed. </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md">
-          <div class="card bg-danger">
-            <div class="card-body tall-card">
-              <div class="card-title">
-                <div class="h4">
-                  {{{icons.circleCross}}}
-                  <span id="failedCount">Failed: {{statistics.failed}}</span>
-                </div>
-                <p class="card-text" id="failedCountSubtitle"> {{passingTestsFailedControl}} individual checks passed, {{failedTests}} failed out of {{totalTests}} total checks </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md">
-          <div class="card bg-info tall-card">
-            <div class="card-body">
-              <div class="card-title">
-                <div class="h4">
-                  {{{icons.circleMinus}}}
-                  <span id="naCount">Not Applicable: {{statistics.notApplicable}}</span>
-                </div>
-                <p class="card-text" id="naCountSubtitle"> System exception or absent component </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md">
-          <div class="card bg-warning tall-card">
-            <div class="card-body">
-              <div class="card-title">
-                <div class="h4">
-                  {{{icons.circleAlert}}}
-                  <span id="nrCount">Not Reviewed: {{statistics.notReviewed}}</span>
-                </div>
-                <p class="card-text"> Can only be tested manually at this time </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="container-fluid pt-4" >
-      <div class="row">
-        <div class="col-md">
-          <div class="card compliance-card">
-            <div id="statusCountCard">
-            </div>
-          </div>
-        </div>
-        <div class="col-md">
-          <div class="card compliance-card">
-            <div id="severityCard">
-            </div>
-          </div>
-        </div>
-        <div class="col-md">
-          <div class="card compliance-card">
-            <div id="complianceCard">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    {{#showControlSets}}
-    {{#controlSets}}
-    <div class="container-fluid pt-4" id="resultSetsContainer">
-      <div>
-        <div class="accordion" id="resultSetsAccordion-{{fileID}}">
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="heading-{{fileID}}">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#{{fileID}}" aria-expanded="true" aria-controls="{{fileID}}"> {{filename}} </button>
-            </h2>
-            <div id="{{fileID}}" class="accordion-collapse collapse show" aria-labelledby="heading-{{fileID}}" data-bs-parent="#resultsSets">
-              <div class="accordion-body">
-                <div class="accordion" id="resultsSetAccordion">
-                  {{#controls}}
-                  <div class="accordion-item">
-                    <h2 class="accordion-header" id="controlHeadingOne">
-                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#controlColapseOne" aria-expanded="true" aria-controls="controlColapseOne"> {{hdf.wraps.id}} - {{hdf.wraps.title}}</button>
-                    </h2>
-                    <div id="controlColapseOne" class="accordion-collapse collapse show" aria-labelledby="controlColapseOne" data-bs-parent="#accordionExample">
-                      <div class="accordion-body">
-                        {{data.desc}}
-                        <div class="pt-2">
-                          <hr />
-                          <div class="col">
-                            <h5>Test Results</h5>
-                            <table class="table table-striped table-hover" id="testResultsTable" aria-describedby="Control test description and result">
-                              <thead>
-                                <tr>
-                                  <th scope="col" style="width: 20%">Status</th>
-                                  <th scope="col">Test</th>
-                                  <th scope="col">Result</th>
-                                </tr>
-                                <tbody>
-                                  {{#hdf.segments}}
-                                  <tr>
-                                    <td style="max-width: 50px; word-wrap: break-word;">{{status}}</td>
-                                    <td style="max-width: 50px; word-wrap: break-word;">{{code_desc}}</td>
-                                    <td style="max-width: 50px; word-wrap: break-word;">{{message}}</td>
-                                  </tr>
-                                  {{/hdf.segments}}
-                                </tbody>
-                              </thead>
-                              <tbody id="controlTestResultTableBody">
-                              </tbody>
-                            </table>
-                          </div>
-                          <hr />
-                          <div class="col">
-                            <h5>Control Details</h5>
-                            <table class="table table-striped table-hover" id="controlDetailsTable" aria-describedby="Control details">
-                              <thead>
-                                <tr>
-                                  <th scope="col" style="width: 20%">Name</th>
-                                  <th scope="col">Value</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {{#details}}
-                                <tr>
-                                  <td>{{name}}</td>
-                                  <td>{{value}}</td>
-                                </tr> 
-                                {{/details}}
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                        {{#showCode}}
-                        <hr />
-                        <div class="col">
-                          <pre>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown"> {{#controlSets}} <a class="dropdown-item" href="#resultSetAccordion-{{fileID}}">{{filename}}</a> {{/controlSets}} </div>
+					</li> {{/showControlSets}} </ul>
+				<div class="d-flex"> <a id="generate" onclick="savePage()">
+              {{{icons.download}}}
+            </a> </div>
+			</div>
+		</div>
+	</nav>
+	<div class="container-fluid" style="margin-top: 80px;">
+		<div class="card bg-light">
+			<div class="card-body">
+				<h5 class="card-title">Profile info</h5>
+				<div id="profileInfos" class="row"> {{#files}}
+					<div class="col-xl results-set"> <span>Filename: <strong>{{filename}}</strong></span>
+						<br /> <span>Tool Version: <strong>{{toolVersion}}</strong></span>
+						<br /> <span>Platform: <strong>{{platform}}</strong></span>
+						<br /> <span>Duration: <strong>{{duration}}</strong></span>
+						<br /> </div> {{/files}} </div>
+			</div>
+		</div>
+	</div>
+	<div class="container-fluid pt-4" id="statusCards">
+		<div class="row">
+			<div class="col-md">
+				<div class="card bg-success tall-card">
+					<div class="card-body">
+						<div class="card-title">
+							<div class="h4"> {{{icons.circleCheck}}} <span id="passedCount">Passed: {{statistics.passed}}</span> </div>
+							<p id="passedCountSubtitle" class="card-text"> {{statistics.passedTests}} individual checks passed. </p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md">
+				<div class="card bg-danger">
+					<div class="card-body tall-card">
+						<div class="card-title">
+							<div class="h4"> {{{icons.circleCross}}} <span id="failedCount">Failed: {{statistics.failed}}</span> </div>
+							<p class="card-text" id="failedCountSubtitle"> {{passingTestsFailedControl}} individual checks passed, {{failedTests}} failed out of {{totalTests}} total checks </p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md">
+				<div class="card bg-info tall-card">
+					<div class="card-body">
+						<div class="card-title">
+							<div class="h4"> {{{icons.circleMinus}}} <span id="naCount">Not Applicable: {{statistics.notApplicable}}</span> </div>
+							<p class="card-text" id="naCountSubtitle"> System exception or absent component </p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md">
+				<div class="card bg-warning tall-card">
+					<div class="card-body">
+						<div class="card-title">
+							<div class="h4"> {{{icons.circleAlert}}} <span id="nrCount">Not Reviewed: {{statistics.notReviewed}}</span> </div>
+							<p class="card-text"> Can only be tested manually at this time </p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container-fluid pt-4">
+		<div class="row">
+			<div class="col-md">
+				<div class="card compliance-card">
+					<div id="statusCountCard"> </div>
+				</div>
+			</div>
+			<div class="col-md">
+				<div class="card compliance-card">
+					<div id="severityCard"> </div>
+				</div>
+			</div>
+			<div class="col-md">
+				<div class="card compliance-card">
+					<div id="complianceCard"> </div>
+				</div>
+			</div>
+		</div>
+	</div> {{#showControlSets}} {{#controlSets}}
+	<div class="container-fluid pt-4" id="resultSetsContainer-{{fileId}}">
+		<div class="accordion" id="resultSetAccordion-{{fileID}}">
+			<div class="card">
+				<div class="card-header" id="{{fileId}}">
+					<h2 class="mb-0">
+				<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#file-accordion-body-{{fileId}}" aria-expanded="true" aria-controls="file-accordion-body-{{fileId}}">
+				{{filename}}
+				</button>
+			</h2> </div>
+				<div id="file-accordion-body-{{fileId}}" class="collapse show" aria-labelledby="headingOne" data-parent="#resultSetAccordion-{{fileID}}">
+					<div class="card-body">
+						<div class="accordion" id="resultsSetAccordion"> {{#controls}}
+							<div class="accordion-item">
+								<h2 class="accordion-header" id="controlHeadingOne">
+					<button class="btn btn-block text-left" type="button" data-toggle="collapse" data-target="#control-accordion-body-{{hdf.wraps.id}}" aria-expanded="true" aria-controls="control-accordion-body-{{hdf.wraps.id}}">
+						{{hdf.wraps.id}} - {{hdf.wraps.title}}
+					</button>
+					</h2>
+								<div id="control-accordion-body-{{hdf.wraps.id}}" class="accordion-collapse collapse show" aria-labelledby="control-accordion-body-{{hdf.wraps.id}}" data-bs-parent="#file-accordion-body-{{fileId}}">
+									<div class="control-accordion-body"> {{data.desc}}
+										<div class="pt-2">
+											<hr />
+											<div class="col">
+												<h5>Test Results</h5>
+												<table class="table table-striped table-hover" id="testResultsTable" aria-describedby="Control test description and result">
+													<thead>
+														<tr>
+															<th scope="col" style="width: 20%">Status</th>
+															<th scope="col">Test</th>
+															<th scope="col">Result</th>
+														</tr>
+														<tbody> {{#hdf.segments}}
+															<tr>
+																<td style="max-width: 50px; word-wrap: break-word;">{{status}}</td>
+																<td style="max-width: 50px; word-wrap: break-word;">{{code_desc}}</td>
+																<td style="max-width: 50px; word-wrap: break-word;">{{message}}</td>
+															</tr> {{/hdf.segments}} </tbody>
+													</thead>
+													<tbody id="controlTestResultTableBody"> </tbody>
+												</table>
+											</div>
+											<hr />
+											<div class="col">
+												<h5>Control Details</h5>
+												<table class="table table-striped table-hover" id="controlDetailsTable" aria-describedby="Control details">
+													<thead>
+														<tr>
+															<th scope="col" style="width: 20%">Name</th>
+															<th scope="col">Value</th>
+														</tr>
+													</thead>
+													<tbody> {{#details}}
+														<tr>
+															<td>{{name}}</td>
+															<td>{{value}}</td>
+														</tr> {{/details}} </tbody>
+												</table>
+											</div>
+										</div> {{#showCode}}
+										<hr />
+										<div class="col"> <pre>
 <code>{{full_code}}</code>
-                          </pre>
-                        </div>
-                        {{/showCode}}
-                      </div>
-                    </div>
-                  </div>
-                  {{/controls}}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    {{/controlSets}}
-    {{/showControlSets}}
-  </body>
+							</pre> </div> {{/showCode}} </div>
+								</div>
+							</div> {{/controls}} </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div> {{/controlSets}} {{/showControlSets}} </body>
 </html>

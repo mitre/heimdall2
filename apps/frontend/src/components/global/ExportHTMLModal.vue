@@ -198,6 +198,21 @@ export default class ExportHTMLModal extends Vue {
     })
   }
 
+  resetOutputData() {
+    this.outputData.statistics = {
+        passed: StatusCountModule.countOf(this.filter, 'Passed'),
+        failed: StatusCountModule.countOf(this.filter, 'Failed'),
+        notApplicable: StatusCountModule.countOf(this.filter, 'Not Applicable'),
+        notReviewed: StatusCountModule.countOf(this.filter, 'Not Reviewed'),
+        passedTests: StatusCountModule.countOf(this.filter, 'PassedTests'),
+        passingTestsFailedControl: StatusCountModule.countOf(this.filter, 'PassingTestsFailedControl'),
+        failedTests: StatusCountModule.countOf(this.filter, 'FailedTests'),
+        totalTests: StatusCountModule.countOf(this.filter, 'PassingTestsFailedControl') + StatusCountModule.countOf(this.filter, 'FailedTests')
+    }
+    this.outputData.files = []
+    this.outputData.controlSets = []
+  }
+
    copyComplianceCards(exportWindow: Window) {
     // Grab the html from Heimdall, and then grab the container that the html will be put into
     const statusCardHTML = document.getElementById('statusCounts')?.innerHTML
@@ -270,33 +285,40 @@ export default class ExportHTMLModal extends Vue {
   }
 
   exportHTML(): void {
+    this.resetOutputData();
     if(this.filter.fromFile.length === 0){
       return SnackbarModule.failure('No files have been loaded.')
     }
     // Download the template
     axios.get(`/static/export/template.html`).then(({data}) => {
-      this.filter.fromFile.forEach(async (fileId) => {
-        const file = InspecDataModule.allFiles.find(
-          (f) => f.unique_id === fileId
-        );
-        if (file) {
-          this.addFiledata(file)
-        }
-      })
-      axios.get(`/static/export/style.css`).then((response) => {
-        const modifiedStyle = response.data
-          .replace(/\#dc3545/g, "#f34335") // bg-danger
-          .replace(/\#198754/g, "#4cb04f") // bg-success
-          .replace(/\#0dcaf0/g, "#03a9f4") // bg-info
-          .replace(/\#ffc107/g, "#fe9900") // bg-warning
-        const exportWindow = window.open('', '_blank');
-        if(exportWindow) {
-          exportWindow.document.write(Mustache.render(data, this.outputData))
-          exportWindow.document.head.insertAdjacentHTML("beforeend", `<style>${modifiedStyle}</style>`)
-          this.copyComplianceCards(exportWindow)
-        } else {
-          SnackbarModule.failure('Please allow pop-up tabs to export to HTML.')
-        }
+      axios.get(`/static/export/style.css`).then((styleResponse) => {
+        axios.get(`/static/export/bootstrap.js`).then((bootstrapJsResponse) => {
+          axios.get(`/static/export/jquery.js`).then((jqueryResponse) => {
+              this.filter.fromFile.forEach(async (fileId) => {
+              const file = InspecDataModule.allFiles.find(
+                (f) => f.unique_id === fileId
+              );
+              if (file) {
+                this.addFiledata(file)
+              }
+            })
+            const modifiedStyle = styleResponse.data
+              .replace(/\#dc3545/g, "#f34335") // bg-danger
+              .replace(/\#198754/g, "#4cb04f") // bg-success
+              .replace(/\#17a2b8/g, "#03a9f4") // bg-info
+              .replace(/\#ffc107/g, "#fe9900") // bg-warning
+            const exportWindow = window.open('', '_blank');
+            if(exportWindow) {
+              exportWindow.document.write(Mustache.render(data, this.outputData))
+              exportWindow.document.head.insertAdjacentHTML("beforeend", `<style>${modifiedStyle}</style>`)
+              exportWindow.document.write(`<script>${jqueryResponse.data}<\/script>`);
+              exportWindow.document.write(`<script>${bootstrapJsResponse.data}<\/script>`);
+              this.copyComplianceCards(exportWindow)
+            } else {
+              SnackbarModule.failure('Please allow pop-up tabs to export to HTML.')
+            }
+          })
+        })
       })
     })
     this.closeModal()

@@ -12,10 +12,28 @@ const changelog = parsed.changelog || '';
 const branch = parsed.branch || '';
 const issues = parsed.issues || '';
 
-// This grabs the css for Bootstrap to allow for HTML export
+// This grabs the js/css to allow for HTML export
 fs.copyFile(
   require.resolve('bootstrap/dist/css/bootstrap.min.css'),
   'public/static/export/style.css',
+  (err) => {
+    if (err) {
+      throw err;
+    }
+  }
+);
+fs.copyFile(
+  require.resolve('bootstrap/dist/js/bootstrap.min.js'),
+  'public/static/export/bootstrap.js',
+  (err) => {
+    if (err) {
+      throw err;
+    }
+  }
+);
+fs.copyFile(
+  require.resolve('jquery/dist/jquery.min.js'),
+  'public/static/export/jquery.js',
   (err) => {
     if (err) {
       throw err;
