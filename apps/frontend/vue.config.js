@@ -1,7 +1,7 @@
 var webpack = require('webpack');
+const fs = require('fs');
 
 // Lookup constants
-const fs = require('fs');
 const packageJson = fs.readFileSync('./package.json');
 const parsed = JSON.parse(packageJson);
 const version = parsed.version || 0;
@@ -12,33 +12,24 @@ const changelog = parsed.changelog || '';
 const branch = parsed.branch || '';
 const issues = parsed.issues || '';
 
-// This grabs the js/css to allow for HTML export
-fs.copyFile(
-  require.resolve('bootstrap/dist/css/bootstrap.min.css'),
-  'public/static/export/style.css',
-  (err) => {
-    if (err) {
-      throw err;
-    }
-  }
-);
-fs.copyFile(
-  require.resolve('bootstrap/dist/js/bootstrap.min.js'),
-  'public/static/export/bootstrap.js',
-  (err) => {
-    if (err) {
-      throw err;
-    }
-  }
-);
-fs.copyFile(
-  require.resolve('jquery/dist/jquery.min.js'),
-  'public/static/export/jquery.js',
-  (err) => {
-    if (err) {
-      throw err;
-    }
-  }
+function copyFiles(files, destDir) {
+  files.map(async (file) => {
+    const filename = file.split('/').slice(-1)[0];
+    return fs.copyFile(file, `${destDir}/${filename}`, (err) => {
+      if (err) {
+        throw err;
+      }
+    });
+  });
+}
+
+copyFiles(
+  [
+    require.resolve('bootstrap/dist/css/bootstrap.min.css'),
+    require.resolve('bootstrap/dist/js/bootstrap.min.js'),
+    require.resolve('jquery/dist/jquery.min.js')
+  ],
+  './public/static/export'
 );
 
 module.exports = {
