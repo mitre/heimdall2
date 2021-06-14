@@ -65,7 +65,7 @@ import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {ZipFile} from 'yazl';
 import ObjectsToCsv from 'objects-to-csv';
-import {HDFControlSegment, Severity} from 'inspecjs';
+import {HDFControlSegment} from 'inspecjs';
 import {ContextualizedControl} from 'inspecjs/dist/context';
 import {EvaluationFile, ProfileFile} from '../../store/report_intake';
 import {Prop} from 'vue-property-decorator';
@@ -75,24 +75,29 @@ import _ from 'lodash';
 import concat from 'concat-stream';
 
 
+const fieldNames: {[key: string]: string} = {
+  resultsSet: 'Results Set',
+  status: 'Status',
+  id: 'ID',
+  title: 'Title',
+  description: 'Description',
+  descriptions: 'Descriptions',
+  message: 'Message',
+  impact: 'Impact',
+  severity: 'Severity',
+  code: 'Code',
+  check: 'Check',
+  fix: 'Fix',
+  nistIds: '800-53 Controls',
+  cciIds: 'CCI IDs',
+  segments: 'Segments',
+  waived: 'Waived',
+  waiverData: 'Waiver Data'
+}
+
+
 type ControlSetRow = {
-    'Results Set'?: string;
-    'Status'?: string;
-    'ID'?: string;
-    'Title'?: string | null;
-    'Description'?: string | null;
-    'Descriptions'?: string,
-    'Message'?: string,
-    'Impact'?: number;
-    'Severity'?: Severity;
-    'Code'?: string;
-    'Check'?: string;
-    'Fix'?: string;
-    '800-53 Controls'?: string;
-    'CCI IDs'?: string;
-    'Segments'?: string;
-    'Waived'?: string;
-    'Waiver Data'?: string;
+  [key: string]: unknown;
 }
 
 type File = {
@@ -111,8 +116,8 @@ export default class ExportCSVModal extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
 
   showingModal = false;
-  fields = ['Results Set', 'Status', 'ID', 'Title', 'Description', 'Descriptions', 'Message', 'Impact', 'Severity', 'Code', 'Check', 'Fix', '800-53 Controls', 'CCI IDs', 'Segments', 'Waived', 'Waiver Data'];
-  fieldsToAdd: string[] = _.clone(this.fields);
+  fields = Object.values(fieldNames);
+  fieldsToAdd: string[] = Object.values(fieldNames);
 
   closeModal() {
     this.showingModal = false;
@@ -184,56 +189,58 @@ export default class ExportCSVModal extends Vue {
     }
     this.fieldsToAdd.forEach((field) => {
       switch(field) {
-        case 'Results Set':
-          result['Results Set'] = file.filename
+        // Resulst Set
+        case fieldNames.resultsSet:
+          result[fieldNames.resultsSet] = file.filename
           break;
-        case 'Status':
-          result['Status'] = control.hdf.status
+        // Status
+        case fieldNames.status:
+          result[fieldNames.status] = control.hdf.status
           break;
-        case 'ID':
-          result['ID'] = control.data.id
+        case fieldNames.id:
+          result[fieldNames.id] = control.data.id
           break;
-        case 'Title':
-          result['Title'] = control.data.title
+        case fieldNames.title:
+          result[fieldNames.title] = control.data.title
           break;
-        case 'Description':
-          result['Description'] = control.data.desc
+        case fieldNames.description:
+          result[fieldNames.description] = control.data.desc
           break;
-        case 'Descriptions':
-          result['Descriptions'] = this.descriptionsToString(control.data.descriptions)
+        case fieldNames.descriptions:
+          result[fieldNames.descriptions] = this.descriptionsToString(control.data.descriptions)
           break;
-        case 'Message':
-          result['Message'] = control.hdf.message
+        case fieldNames.message:
+          result[fieldNames.message] = control.hdf.message
           break;
-        case 'Impact':
-          result['Impact'] = control.data.impact
+        case fieldNames.impact:
+          result[fieldNames.impact] = control.data.impact
           break;
-        case 'Severity':
-          result['Severity'] = control.hdf.severity
+        case fieldNames.severity:
+          result[fieldNames.severity] = control.hdf.severity
           break;
-        case 'Code':
-          result['Code'] = control.full_code
+        case fieldNames.code:
+          result[fieldNames.code] = control.full_code
           break;
-        case 'Check':
-          result['Check'] = check
+        case fieldNames.check:
+          result[fieldNames.check] = check
           break;
-        case 'Fix':
-          result['Fix'] = fix
+        case fieldNames.fix:
+          result[fieldNames.fix] = fix
           break;
-        case '800-53 Controls':
-          result['800-53 Controls'] = control.hdf.raw_nist_tags.join(', ')
+        case fieldNames.nistIds:
+          result[fieldNames.nistIds] = control.hdf.raw_nist_tags.join(', ')
           break;
-        case 'CCI IDs':
-          result['CCI IDs'] = (control.data.tags.cci || []).join(', ')
+        case fieldNames.cciIds:
+          result[fieldNames.cciIds] = (control.data.tags.cci || []).join(', ')
           break;
-        case 'Segments':
-          result['Segments'] = this.segmentsToString(control.hdf.segments)
+        case fieldNames.segments:
+          result[fieldNames.segments] = this.segmentsToString(control.hdf.segments)
           break;
-        case 'Waived':
-          result['Waived'] = control.hdf.waived ? 'True' : 'False'
+        case fieldNames.waived:
+          result[fieldNames.waived] = control.hdf.waived ? 'True' : 'False'
           break;
-        case 'Waiver Data':
-          result['Waiver Data'] = JSON.stringify(_.get(control, 'hdf.wraps.waiver_data'))
+        case fieldNames.waiverData:
+          result[fieldNames.waiverData] = JSON.stringify(_.get(control, 'hdf.wraps.waiver_data'))
           break;
       }
     })
