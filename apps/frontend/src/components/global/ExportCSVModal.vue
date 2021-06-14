@@ -122,6 +122,7 @@ export default class ExportCSVModal extends Vue {
   closeModal() {
     this.showingModal = false;
   }
+
   showModal() {
     this.generateCSVPreview();
     this.showingModal = true;
@@ -263,7 +264,7 @@ export default class ExportCSVModal extends Vue {
     const file = InspecDataModule.allFiles.find(
         (f) => f.unique_id === this.filter.fromFile[0]
       );
-    if(file){
+    if (file){
       this.rows = this.convertRows(file);
     }
   }
@@ -273,6 +274,7 @@ export default class ExportCSVModal extends Vue {
   }
 
   exportCSV() {
+    this.files = [];
     // In case we have multiple files, make an array to store them
     this.filter.fromFile.forEach(async (fileId) => {
       let rows: ControlSetRows = [];
@@ -313,6 +315,7 @@ export default class ExportCSVModal extends Vue {
         }
       }
     })
+    this.closeModal();
   }
   cleanUpFilename(filename: string): string {
     return filename.replace(/\s+/g, '_');
