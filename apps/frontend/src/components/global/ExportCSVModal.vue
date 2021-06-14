@@ -107,12 +107,12 @@ type ControlSetRows = ControlSetRow[]
     LinkItem
   }
 })
-export default class ExportCSV extends Vue {
+export default class ExportCSVModal extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
 
   showingModal = false;
   fields = ['Results Set', 'Status', 'ID', 'Title', 'Description', 'Descriptions', 'Message', 'Impact', 'Severity', 'Code', 'Check', 'Fix', '800-53 Controls', 'CCI IDs', 'Segments', 'Waived', 'Waiver Data'];
-  fieldsToAdd: string[] = ['Results Set', 'Status', 'ID', 'Title', 'Description', 'Descriptions', 'Message', 'Impact', 'Severity', 'Code', 'Check', 'Fix', '800-53 Controls', 'CCI IDs', 'Segments', 'Waived', 'Waiver Data'];
+  fieldsToAdd: string[] = _.clone(this.fields);
 
   closeModal() {
     this.showingModal = false;
@@ -243,15 +243,8 @@ export default class ExportCSV extends Vue {
   convertRows(file: ProfileFile | EvaluationFile): ControlSetRows {
     const rows: ControlSetRows = [];
     const controls = FilteredDataModule.controls({...this.filter, fromFile: [file.unique_id]});
-    const hitIds = new Set();
     for (const ctrl of controls) {
-      const root = ctrl.root;
-      if (hitIds.has(root.hdf.wraps.id)) {
-          continue;
-        } else {
-          hitIds.add(root.hdf.wraps.id);
-          rows.push(this.convertRow(file, root));
-        }
+      rows.push(this.convertRow(file, ctrl));
     }
     return rows;
   }
