@@ -38,7 +38,7 @@
               <ExportCaat :filter="all_filter" />
             </v-list-item>
             <v-list-item class="px-0">
-              <ExportCSV :filter="all_filter" />
+              <ExportCSVModal :filter="all_filter" />
             </v-list-item>
             <v-list-item class="px-0">
               <ExportNist :filter="all_filter" />
@@ -227,7 +227,7 @@ import UploadButton from '@/components/generic/UploadButton.vue';
 import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
 
 import ExportCaat from '@/components/global/ExportCaat.vue';
-import ExportCSV from '@/components/global/ExportCSV.vue';
+import ExportCSVModal from '@/components/global/ExportCSVModal.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
 import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
@@ -258,7 +258,7 @@ import {IEvaluation} from '@heimdall/interfaces';
     SeverityChart,
     ComplianceChart,
     ExportCaat,
-    ExportCSV,
+    ExportCSVModal,
     ExportNist,
     ExportJson,
     EvaluationInfo,
