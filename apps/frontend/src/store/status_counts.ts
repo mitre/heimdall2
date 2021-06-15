@@ -27,13 +27,13 @@ export type StatusHash = ControlStatusHash & {
 // Helper function for counting a status in a list of controls
 function count_statuses(data: FilteredData, filter: Filter): StatusHash {
   // Remove the status filter from the control filter
-  const new_filter: Filter = {
+  const newFilter: Filter = {
     status: undefined,
     ...filter
   };
 
   // Get the controls
-  const controls = data.controls(new_filter);
+  const controls = data.controls(newFilter);
 
   // Count 'em out
   const hash: StatusHash = {

@@ -66,10 +66,10 @@ server.use((req, res, next) => {
     });
   } else if (
     req.method === 'POST' &&
-    req.originalUrl.startsWith('/login/oauth/access_token')
+    req.originalUrl.startsWith('/login/oauth/accessToken')
   ) {
     res.send({
-      access_token: 'e72e16c7e42f292c6912e7710c838347ae178b4a',
+      accessToken: 'e72e16c7e42f292c6912e7710c838347ae178b4a',
       scope: 'name:user',
       token_type: 'bearer'
     });

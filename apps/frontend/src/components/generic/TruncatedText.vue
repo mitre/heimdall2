@@ -3,8 +3,8 @@
     <template #activator="{on}">
       <span
         ref="text"
-        :style="span_style"
-        :class="['overflow'] + span_class"
+        :style="spanStyle"
+        :class="['overflow'] + spanClass"
         v-on="on"
       >
         {{ text }}
@@ -26,28 +26,28 @@ import {Prop} from 'vue-property-decorator';
 // if necessary.
 function check_overflow(el: HTMLElement): boolean {
   // Get the current overflow
-  let curr_overflow: string | null = el.style.overflow;
+  const currOverflow: string | null = el.style.overflow;
 
   // Change to disallow overflow to see if it's happening
-  if (curr_overflow === null || curr_overflow === 'visible') {
+  if (currOverflow === null || currOverflow === 'visible') {
     el.style.overflow = 'hidden';
   }
 
   // Determine if overflowing by widths/heights
-  let inner_width = parseInt(window.getComputedStyle(el).width || '0');
-  let is_overflowing = inner_width < el.scrollWidth;
+  const innerWidth = parseInt(window.getComputedStyle(el).width || '0');
+  const isOverflowing = innerWidth < el.scrollWidth;
 
   // Put back the old overflow
-  el.style.overflow = curr_overflow;
+  el.style.overflow = currOverflow;
 
-  return is_overflowing;
+  return isOverflowing;
 }
 
 @Component
 export default class TruncatedText extends Vue {
   @Prop({type: String, required: true}) readonly text!: string;
-  @Prop({type: Array, default: () => []}) readonly span_class!: string[];
-  @Prop({type: String, default: ''}) readonly span_style!: string;
+  @Prop({type: Array, default: () => []}) readonly spanClass!: string[];
+  @Prop({type: String, default: ''}) readonly spanStyle!: string;
 
   get is_truncated(): boolean {
     if (this.$refs['text'] !== undefined) {

@@ -1,9 +1,9 @@
 <template>
-  <BaseView :title="curr_title">
+  <Base :title="curr_title">
     <!-- Topbar config - give it a search bar -->
     <template #topbar-content>
       <v-text-field
-        v-model="search_term"
+        v-model="searchTerm"
         flat
         solo
         dense
@@ -74,10 +74,10 @@
                             <v-card-actions class="justify-center">
                               <StatusChart
                                 :filter="{
-                                  fromFile: [file.unique_id],
+                                  fromFile: [file.uniqueId],
                                   omit_overlayed_controls: true
                                 }"
-                                :show_compliance="true"
+                                :show-compliance="true"
                               />
                             </v-card-actions>
                           </v-card>
@@ -90,19 +90,19 @@
                   <ApexLineChart
                     :series="compliance_series"
                     :categories="fileTimes"
-                    :upper_range="100"
+                    :upper-range="100"
                     :title="'Total Compliance'"
-                    :y_title="'% Compliance'"
+                    :y-title="'% Compliance'"
                   />
                 </v-col>
                 <v-col v-else-if="tab == 2 && ableTab" cols="12">
                   <ApexLineChart
                     :series="line_sev_series"
                     :categories="fileTimes"
-                    :upper_range="total_failed + 1"
-                    :sev_chart="true"
+                    :upper-range="total_failed + 1"
+                    :sev-chart="true"
                     :title="'Failed Tests by Severity'"
-                    :y_title="'Tests Failed'"
+                    :y-title="'Tests Failed'"
                   />
                 </v-col>
                 <v-col v-else cols="12" />
@@ -148,7 +148,7 @@
                   <v-btn icon small style="float: right">
                     <v-icon
                       v-if="files.length > num_shown_files"
-                      :disabled="start_index == 0"
+                      :disabled="startIndex == 0"
                       @click="scroll_left"
                       >mdi-arrow-left</v-icon
                     >
@@ -158,11 +158,11 @@
             </v-col>
             <ProfileRow
               v-for="i in num_shown_files"
-              :key="i - 1 + start_index"
-              :name="files[i - 1 + start_index].filename"
-              :start_time="fileTimes[i - 1]"
-              :index="i + start_index"
-              :show_index="files.length > num_shown_files"
+              :key="i - 1 + startIndex"
+              :name="files[i - 1 + startIndex].filename"
+              :start-time="fileTimes[i - 1]"
+              :index="i + startIndex"
+              :show-index="files.length > num_shown_files"
             />
             <v-col cols="1">
               <br />
@@ -171,7 +171,7 @@
                   <v-btn icon small>
                     <v-icon
                       v-if="files.length > num_shown_files"
-                      :disabled="start_index >= files.length - num_shown_files"
+                      :disabled="startIndex >= files.length - num_shown_files"
                       @click="scroll_right"
                       >mdi-arrow-right</v-icon
                     >
@@ -188,19 +188,19 @@
             :control-id="control_id"
             :controls="control_set"
             class="my-4"
-            :shift="start_index"
-            :expanded="expanded_view"
+            :shift="startIndex"
+            :expanded="expandedView"
           />
         </v-card>
       </v-container>
     </template>
-  </BaseView>
+  </Base>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import BaseView from '@/views/BaseView.vue';
+import Base from '@/views/Base.vue';
 import Modal from '@/components/global/Modal.vue';
 import CompareRow from '@/components/cards/comparison/CompareRow.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
@@ -210,7 +210,7 @@ import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {ControlStatus} from 'inspecjs';
 import {SeverityCountModule} from '@/store/severity_counts';
 
-import {compare_times, ComparisonContext, ControlSeries} from '@/utilities/delta_util';
+import {compare_times, ComparisonContext, ControlSeries, get_eval_start_time} from '@/utilities/delta_util';
 import {Category} from '@/components/generic/ApexPieChart.vue';
 import {StatusCountModule} from '@/store/status_counts';
 import ProfileRow from '@/components/cards/comparison/ProfileRow.vue';
@@ -221,14 +221,13 @@ import {InspecDataModule} from '@/store/data_store';
 import ApexLineChart, {
   SeriesItem
 } from '@/components/generic/ApexLineChart.vue';
-import {get_eval_start_time} from '@/utilities/delta_util';
 import _ from 'lodash';
 import {IEvaluation} from '@heimdall/interfaces';
 import {EvaluationModule} from '../store/evaluations';
 
 @Component({
   components: {
-    BaseView,
+    Base,
     Modal,
     CompareRow,
     ProfileRow,
@@ -268,22 +267,22 @@ export default class Compare extends Vue {
   ];
 
   changedOnly = true;
-  expanded_view: boolean = true;
-  tab: number = 0;
+  expandedView = true;
+  tab = 0;
   width: number = window.innerWidth;
-  start_index: number = 0;
-  ascending: boolean = true;
-  chartsOpen: boolean = true;
-  search_term: string = '';
-  ableTab: boolean = true;
-  expansion: number = 0;
+  startIndex = 0;
+  ascending = true;
+  chartsOpen = true;
+  searchTerm = '';
+  ableTab = true;
+  expansion = 0;
 
   /** Yields the current two selected reports as an ExecDelta,  */
   get curr_delta(): ComparisonContext {
-    let selected_data = FilteredDataModule.evaluations(
+    const selectedData = FilteredDataModule.evaluations(
       FilteredDataModule.selected_file_ids
     );
-    return new ComparisonContext(selected_data);
+    return new ComparisonContext(selectedData);
   }
 
   /** Yields the control pairings that have changed*/
@@ -300,7 +299,7 @@ export default class Compare extends Vue {
   get filter(): Filter {
     return {
       fromFile: this.file_filter,
-      search_term: this.search_term || '',
+      searchTerm: this.searchTerm || '',
       omit_overlayed_controls: true
     };
   }
@@ -348,7 +347,7 @@ export default class Compare extends Vue {
   // Return the fileIDs for the visible rows in the correct order, so that the CompareRow
   // shows data matching the file headers.
   get visible_row_ids(): FileID[] {
-    return this.files.map((file) => file.unique_id).slice(this.start_index, this.start_index + this.num_shown_files);
+    return this.files.map((file) => file.uniqueId).slice(this.startIndex, this.startIndex + this.num_shown_files);
   }
 
   get sev_series(): number[][] {
@@ -357,31 +356,31 @@ export default class Compare extends Vue {
     var medCounts = [];
     var highCounts = [];
     var critCounts = [];
-    for (let file of this.files) {
+    for (const file of this.files) {
       lowCounts.push(
         SeverityCountModule.low({
-          fromFile: [file.unique_id],
+          fromFile: [file.uniqueId],
           status: 'Failed',
           omit_overlayed_controls: true
         })
       );
       medCounts.push(
         SeverityCountModule.medium({
-          fromFile: [file.unique_id],
+          fromFile: [file.uniqueId],
           status: 'Failed',
           omit_overlayed_controls: true
         })
       );
       highCounts.push(
         SeverityCountModule.high({
-          fromFile: [file.unique_id],
+          fromFile: [file.uniqueId],
           status: 'Failed',
           omit_overlayed_controls: true
         })
       );
       critCounts.push(
         SeverityCountModule.critical({
-          fromFile: [file.unique_id],
+          fromFile: [file.uniqueId],
           status: 'Failed',
           omit_overlayed_controls: true
         })
@@ -409,15 +408,15 @@ export default class Compare extends Vue {
 
   get compliance_series(): SeriesItem[] {
     var series = [];
-    for (let file of this.files) {
-      let filter = {fromFile: [file.unique_id]};
-      let passed = StatusCountModule.countOf(filter, 'Passed');
-      let total =
+    for (const file of this.files) {
+      const filter = {fromFile: [file.uniqueId]};
+      const passed = StatusCountModule.countOf(filter, 'Passed');
+      const total =
         passed +
         StatusCountModule.countOf(filter, 'Failed') +
         StatusCountModule.countOf(filter, 'Profile Error') +
         StatusCountModule.countOf(filter, 'Not Reviewed');
-      if (total == 0) {
+      if (total === 0) {
         series.push(0);
       } else {
         series.push(Math.round((100.0 * passed) / total));
@@ -434,15 +433,15 @@ export default class Compare extends Vue {
     if (this.files.length < 1) {
       return 0;
     }
-    let highest_failed = 0;
-    for (let file of this.files) {
-      let filter = {fromFile: [file.unique_id]};
-      let failed = StatusCountModule.countOf(filter, 'Failed');
-      if (failed > highest_failed) {
-        highest_failed = failed;
+    let highestFailed = 0;
+    for (const file of this.files) {
+      const filter = {fromFile: [file.uniqueId]};
+      const failed = StatusCountModule.countOf(filter, 'Failed');
+      if (failed > highestFailed) {
+        highestFailed = failed;
       }
     }
-    return highest_failed;
+    return highestFailed;
   }
 
   get num_shown_files(): number {
@@ -453,15 +452,15 @@ export default class Compare extends Vue {
   }
 
   scroll_left() {
-    this.start_index -= 1;
+    this.startIndex -= 1;
   }
 
   scroll_right() {
-    this.start_index += 1;
+    this.startIndex += 1;
   }
 
   changeTab(x: number) {
-    if (this.tab == x) {
+    if (this.tab === x) {
       this.ableTab = !this.ableTab;
     } else {
       this.ableTab = true;
@@ -475,9 +474,9 @@ export default class Compare extends Vue {
 
   get curr_title(): string {
     let returnText = 'Comparison View';
-    if (this.file_filter.length == 1) {
-      let file = InspecDataModule.allEvaluationFiles.find(
-        (f) => f.unique_id === this.file_filter[0]
+    if (this.file_filter.length === 1) {
+      const file = InspecDataModule.allEvaluationFiles.find(
+        (f) => f.uniqueId === this.file_filter[0]
       );
       if (file) {
         returnText += ` (${file.filename} selected)`;

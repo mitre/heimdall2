@@ -17,10 +17,10 @@ import {ApexOptions} from 'apexcharts';
 import {Category} from './ApexPieChart.vue';
 import {Prop} from 'vue-property-decorator';
 
-let id_counter = 0;
+let idCounter = 0;
 function next_id(): number {
-  id_counter += 1;
-  return id_counter;
+  idCounter += 1;
+  return idCounter;
 }
 
 export interface SeriesItem {
@@ -39,15 +39,15 @@ export interface SeriesItem {
 export default class ApexLineChart extends Vue {
   @Prop({required: true, type: Array}) readonly categories!: Category<string>[];
   @Prop({required: true, type: Array}) readonly series!: number[];
-  @Prop({type: Number}) readonly upper_range!: number; //upper bound of y axis
-  @Prop({type: Boolean}) readonly sev_chart!: boolean; //identifies chart as severity chart
+  @Prop({type: Number}) readonly upperRange!: number; //upper bound of y axis
+  @Prop({type: Boolean}) readonly sevChart!: boolean; //identifies chart as severity chart
   @Prop({type: String}) readonly title!: string;
-  @Prop({type: String}) readonly y_title!: string;
+  @Prop({type: String}) readonly yTitle!: string;
 
-  chart_id: string = `line_chart_${next_id}`;
+  chartId= `line_chart_${next_id}`;
 
   get label_colors(): string[] {
-    let colors = [];
+    const colors = [];
     for (let i = 0; i < this.categories.length; i++) {
       colors.push('#FFFFFF');
     }
@@ -56,22 +56,22 @@ export default class ApexLineChart extends Vue {
 
   //creates differing number of ticks based on number of controls
   get y_axis_tick(): number {
-    if (this.upper_range < 15) {
-      return this.upper_range;
-    } else if (this.upper_range < 50) {
-      return Math.floor(this.upper_range / 5);
+    if (this.upperRange < 15) {
+      return this.upperRange;
+    } else if (this.upperRange < 50) {
+      return Math.floor(this.upperRange / 5);
     } else {
-      return Math.floor(this.upper_range / 10);
+      return Math.floor(this.upperRange / 10);
     }
   }
 
   //gives apex charts the severity colors
   get sev_colors(): string[] {
-    return new Array('#FFEB3B', '#FF9800', '#FF5722', '#F44336');
+    return ['#FFEB3B', '#FF9800', '#FF5722', '#F44336'];
   }
 
   get line_colors(): string[] | undefined {
-    if (this.sev_chart) {
+    if (this.sevChart) {
       return this.sev_colors;
     }
     return undefined;
@@ -120,7 +120,7 @@ export default class ApexLineChart extends Vue {
       },
       yaxis: {
         min: 0,
-        max: this.upper_range,
+        max: this.upperRange,
         tickAmount: this.y_axis_tick,
         axisTicks: {
           color: '#FF0000'
@@ -132,7 +132,7 @@ export default class ApexLineChart extends Vue {
           offsetY: 0
         },
         title: {
-          text: this.y_title,
+          text: this.yTitle,
           style: {
             color: '#FFFFFF'
           }

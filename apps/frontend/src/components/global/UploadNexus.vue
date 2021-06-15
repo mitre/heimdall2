@@ -12,7 +12,7 @@
       <v-tabs
         :vertical="$vuetify.breakpoint.mdAndUp"
         active
-        :value="active_tab"
+        :value="activeTab"
         color="primary-visible"
         show-arrows
         @change="selected_tab"
@@ -79,7 +79,7 @@ import {Prop} from 'vue-property-decorator';
 import {ServerModule} from '@/store/server';
 import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
-const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
+const localTab = new LocalStorageVal<string>('nexus_curr_tab');
 /**
  * Multiplexes all of our file upload components
  * Emits "got-files" with a list of the unique_ids of the loaded files, wherever they come from
@@ -98,17 +98,17 @@ const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
 export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
   @Prop({default: true}) readonly visible!: boolean;
   @Prop({default: false}) readonly persistent!: boolean;
-  active_tab: string = local_tab.get_default('uploadtab-local');
+  activeTab: string = localTab.get_default('uploadtab-local');
 
   get fullscreen() {
-    return this.active_tab === 'uploadtab-database' || this.$vuetify.breakpoint.mobile;
+    return this.activeTab === 'uploadtab-database' || this.$vuetify.breakpoint.mobile;
   }
 
   // Handles change in tab
-  selected_tab(new_tab: string) {
-    this.active_tab = new_tab;
+  selected_tab(newTab: string) {
+    this.activeTab = newTab;
     SnackbarModule.visibility(false);
-    local_tab.set(new_tab);
+    localTab.set(newTab);
   }
   get warning_banner(): string {
     return ServerModule.banner;
@@ -116,10 +116,10 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
   // Event passthrough
   got_files(files: FileID[]) {
     this.$emit('got-files', files);
-    let numEvaluations = FilteredDataModule.selectedEvaluationIds.filter(
+    const numEvaluations = FilteredDataModule.selectedEvaluationIds.filter(
       (eva) => files.includes(eva)
     ).length;
-    let numProfiles = FilteredDataModule.selectedProfileIds.filter((prof) =>
+    const numProfiles = FilteredDataModule.selectedProfileIds.filter((prof) =>
       files.includes(prof)
     ).length;
     const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');

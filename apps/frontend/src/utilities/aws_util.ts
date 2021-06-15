@@ -34,21 +34,18 @@ export interface Auth {
  */
 export async function fetch_s3_file(
   creds: AuthCreds,
-  file_key: string,
-  bucket_name: string
+  fileKey: string,
+  bucketName: string
 ): Promise<string> {
   // Fetch it from s3, and promise to submit it to be loaded afterwards
   return new S3({...creds})
     .getObject({
-      Key: file_key,
-      Bucket: bucket_name
+      Key: fileKey,
+      Bucket: bucketName
     })
     .promise()
     .then((success) => {
-      const content: string = new TextDecoder('utf-8').decode(
-        success.Body! as Uint8Array
-      );
-      return content;
+      return new TextDecoder('utf-8').decode(success.Body! as Uint8Array);
     });
 }
 
@@ -69,15 +66,15 @@ export async function list_buckets(creds: AuthCreds) {
 }
 
 /** Represents the bundle of parameters required for creating a session key using MFA */
-export interface MFA_Info {
+export interface MFAInfo {
   SerialNumber: string | null; // If null, use deduced token
   TokenCode: string;
 }
 
 /** Attempts to deduce the virtual mfa device serial code from the provided */
-export function derive_mfa_serial(user_access_token: string): string | null {
-  if (user_access_token) {
-    return user_access_token.replace(':user', ':mfa');
+export function derive_mfa_serial(userAccessToken: string): string | null {
+  if (userAccessToken) {
+    return userAccessToken.replace(':user', ':mfa');
   } else {
     return null;
   }
@@ -88,43 +85,43 @@ export function derive_mfa_serial(user_access_token: string): string | null {
  * Yields the AWS error on failure.
  */
 export async function get_session_token(
-  access_token: string,
-  secret_key: string,
+  accessToken: string,
+  secretKey: string,
   duration: number,
-  mfa_info?: MFA_Info
+  mfaInfo?: MFAInfo
 ): Promise<Auth> {
   // Instanciate STS with our base and secret token
   const sts = new STS({
-    accessKeyId: access_token,
-    secretAccessKey: secret_key
+    accessKeyId: accessToken,
+    secretAccessKey: secretKey
   });
 
   // Get the user info
-  const wip_info: Partial<AuthInfo> = {};
+  const wipInfo: Partial<AuthInfo> = {};
   await sts
     .getCallerIdentity({})
     .promise()
     .then((success) => {
-      wip_info.user_account = success.Account!;
-      wip_info.user_arn = success.Arn!;
-      wip_info.user_id = success.UserId;
+      wipInfo.user_account = success.Account!;
+      wipInfo.user_arn = success.Arn!;
+      wipInfo.user_id = success.UserId!;
       // Guess at mfa
-      wip_info.probable_user_mfa_device = derive_mfa_serial(wip_info.user_arn!);
+      wipInfo.probable_user_mfa_device = derive_mfa_serial(wipInfo.user_arn!);
     });
 
   // It's built - mark as such
-  const info = wip_info as AuthInfo;
+  const info = wipInfo as AuthInfo;
 
   // Make our request to be the role
   let result: Promise<PromiseResult<STS.GetSessionTokenResponse, AWSError>>;
-  if (mfa_info) {
-    mfa_info.SerialNumber =
-      mfa_info.SerialNumber || info.probable_user_mfa_device!; // We cannot get to this stage if
+  if (mfaInfo) {
+    mfaInfo.SerialNumber =
+      mfaInfo.SerialNumber || info.probable_user_mfa_device!; // We cannot get to this stage if
     result = sts
       .getSessionToken({
         DurationSeconds: duration,
-        SerialNumber: mfa_info.SerialNumber,
-        TokenCode: mfa_info.TokenCode
+        SerialNumber: mfaInfo.SerialNumber,
+        TokenCode: mfaInfo.TokenCode
       })
       .promise();
   } else {
@@ -142,7 +139,7 @@ export async function get_session_token(
     return {
       creds,
       info,
-      from_mfa: !!mfa_info
+      from_mfa: !!mfaInfo
     };
   });
 }

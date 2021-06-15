@@ -17,17 +17,16 @@ import {Color} from 'vuetify/lib/util/colors';
  */
 @Component
 export default class UtilColorGenerator extends Vue {
-  color: string = 'background';
+  color = 'background';
 
   get body(): string {
-    let color = colorVariants(ColorHackModule, this.color);
-    let br = '\n';
-    let rows = Object.keys(color)
+    const color = colorVariants(ColorHackModule, this.color);
+    const br = '\n';
+    const rows = Object.keys(color)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .map((key) => `\t${key}: "${(color as any)[key]}"`)
       .join(`,${br}`);
-    let output = `{${br}${rows}${br}}`;
-    return output;
+    return `{${br}${rows}${br}}`;
   }
 }
 
@@ -36,7 +35,7 @@ export default class UtilColorGenerator extends Vue {
  */
 function colorVariants(cmod: ColorHack, base: string): Color {
   // List all of our suffixes
-  let suffixes: Array<keyof Color> = [
+  const suffixes: Array<keyof Color> = [
     'darken4',
     'darken3',
     'darken2',

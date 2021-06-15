@@ -70,13 +70,13 @@ Vue.use(vueFileAgent);
  */
 @Component
 export default class FileReader extends mixins(ServerMixin) {
-  fileRecords = new Array();
+  fileRecords: Array<any> = [];
   loading = false;
 
   filesSelected() {
     this.loading = true;
     this.commit_files(this.fileRecords.map((record) => record.file));
-    this.fileRecords = new Array();
+    this.fileRecords = [];
   }
 
   /** Callback for our file reader */
