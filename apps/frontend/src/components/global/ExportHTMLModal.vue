@@ -181,20 +181,11 @@ export default class ExportHTMLModal extends Vue {
     })
     this.outputData.exportType = _.capitalize(this.exportType)
     const controls = FilteredDataModule.controls({...this.filter, fromFile: [file.unique_id]});
-    const controlRoots: ContextualizedControl[] = []
-    const hitIds = new Set();
     // Convert them into rows
-    for (const ctrl of controls) {
-      const root = ctrl.root;
-      if (!hitIds.has(root.hdf.wraps.id)) {
-        hitIds.add(root.hdf.wraps.id);
-        controlRoots.push(root);
-      }
-    }
     this.outputData.controlSets.push({
       filename: file.filename,
       fileID: file.unique_id,
-      controls: controlRoots.map((control) => this.addDetails(control))
+      controls: controls.map((control) => this.addDetails(control))
     })
   }
 
