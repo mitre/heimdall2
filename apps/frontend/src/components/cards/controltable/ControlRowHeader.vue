@@ -168,7 +168,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   get nistTags(): Tag[] {
     let nist_tags = this.control.hdf.raw_nist_tags;
     nist_tags = nist_tags.filter((tag) => tag.search(/Rev.*\d/i) == -1);
-    let nist_tag_objects = nist_tags.map((tag) => {
+    return nist_tags.map((tag) => {
       let nisted = nist.parse_nist(tag);
       let url = '';
       if (nist.is_control(nisted)) {
@@ -182,7 +182,6 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
       }
       return {label: tag, url: url, description: this.descriptionForTag(tag)};
     });
-    return nist_tag_objects
   }
 
   get cciTags(): Tag[] {
@@ -192,10 +191,9 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     } else if (typeof cci_tags == 'string') {
       cci_tags = cci_tags.split(' ');
     }
-    let cci_tag_objects = cci_tags.map((cci) => {
+    return cci_tags.map((cci) => {
       return {label: cci, url: '', description: this.descriptionForTag(cci)};
     });
-    return cci_tag_objects
   }
 }
 </script>
