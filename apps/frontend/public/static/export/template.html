@@ -52,43 +52,6 @@
 		size: landscape;
 	}
 	</style>
-	<script>
-	/** Saves the current page **/
-	function savePage() {
-		document.getElementById("generate").style.display = 'none';
-		const pageBlob = new Blob([this.s2ab(document.documentElement.outerHTML)], {
-			type: 'application/html'
-		})
-		saveFile(pageBlob, `{{exportType}}_Report_${new Date().toString()}.html`.replace(/[ :]/g, '_'))
-		document.getElementById("generate").style.display = 'block';
-	}
-	/** Downloads a blob as a specified filename **/
-	function saveFile(blob, filename) {
-		if(window.navigator.msSaveOrOpenBlob) {
-			window.navigator.msSaveOrOpenBlob(blob, filename);
-		} else {
-			const a = document.createElement('a');
-			document.body.appendChild(a);
-			const url = window.URL.createObjectURL(blob);
-			a.href = url;
-			a.download = filename;
-			a.click();
-			setTimeout(() => {
-				window.URL.revokeObjectURL(url);
-				document.body.removeChild(a);
-			}, 0)
-		}
-	}
-	/** Converts a string to an array buffer */
-	function s2ab(s) {
-		const buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
-		const view = new Uint8Array(buf); //create uint8array as viewer
-		for(let i = 0; i < s.length; i++) {
-			view[i] = s.charCodeAt(i) & 0xff; //convert to octet
-		}
-		return buf;
-	}
-	</script>
 </head>
 <body>
 	<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
