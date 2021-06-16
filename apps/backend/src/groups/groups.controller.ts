@@ -13,6 +13,7 @@ import {
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {EvaluationsService} from '../evaluations/evaluations.service';
+import {GroupUser} from '../group-users/group-user.model';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
@@ -161,6 +162,19 @@ export class GroupsController {
     return new GroupDto(
       await this.groupsService.update(groupToUpdate, updateGroup)
     );
+  }
+
+  @Put(':id/updateUserGroupRole')
+  async updateGroupUserRole(
+    @Request() request: {user: User},
+    @Param('id') id: string,
+    @Body() updateGroupUser: AddUserToGroupDto
+  ): Promise<GroupUser | undefined> {
+    const abac = this.authz.abac.createForUser(request.user);
+    const group = await this.groupsService.findByPkBang(id);
+    ForbiddenError.from(abac).throwUnlessCan(Action.Update, group);
+
+    return this.groupsService.updateUserGroupRole(group, updateGroupUser);
   }
 
   @Delete(':id')

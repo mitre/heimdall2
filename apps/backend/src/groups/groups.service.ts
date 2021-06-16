@@ -6,7 +6,9 @@ import {
 import {InjectModel} from '@nestjs/sequelize';
 import {Op} from 'sequelize';
 import {Evaluation} from '../evaluations/evaluation.model';
+import {GroupUser} from '../group-users/group-user.model';
 import {User} from '../users/user.model';
+import {AddUserToGroupDto} from './dto/add-user-to-group.dto';
 import {CreateGroupDto} from './dto/create-group.dto';
 import {Group} from './group.model';
 
@@ -47,6 +49,18 @@ export class GroupsService {
     await group.$add('user', user, {
       through: {role: role, createdAt: new Date(), updatedAt: new Date()}
     });
+  }
+
+  async updateUserGroupRole(
+    group: Group,
+    updateGroupUser: AddUserToGroupDto
+  ): Promise<GroupUser | undefined> {
+    return group.users
+      .find((userToUpdate) => updateGroupUser.userId === userToUpdate.id)
+      ?.GroupUser.update({
+        role: updateGroupUser.groupRole,
+        updatedAt: new Date()
+      });
   }
 
   async removeUserFromGroup(group: Group, user: User): Promise<Group> {

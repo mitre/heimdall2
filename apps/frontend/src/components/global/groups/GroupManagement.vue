@@ -37,7 +37,12 @@
       </template>
       <template #[`item.actions`]="{item}">
         <div v-if="item.role == 'owner'">
-          <GroupModal id="editGroupModal" :create="false" :group="item">
+          <GroupModal
+            id="editGroupModal"
+            :create="false"
+            :group="item"
+            :group-id="item.id"
+          >
             <template #clickable="{on}"
               ><v-icon small title="Edit" data-cy="edit" class="mr-2" v-on="on">
                 mdi-pencil

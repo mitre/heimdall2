@@ -46,7 +46,7 @@
               </v-tooltip>
             </v-col>
           </v-row>
-          <Users v-model="groupInfo.users" />
+          <Users v-model="groupInfo.users" :group-id="groupId" @edit-user-group-role="addEditedUser"/>
         </v-form>
       </v-card-text>
 
@@ -114,11 +114,13 @@ export default class GroupModal extends Vue {
     }) readonly group!: IGroup;
   @Prop({type: Boolean, default: false}) readonly admin!: boolean;
   @Prop({type: Boolean, default: false}) readonly create!: boolean;
+  @Prop({type: String, required: false}) readonly groupId!: string;
 
   dialog = false;
   changePassword = false;
 
   groupInfo: IGroup = _.cloneDeep(this.group);
+  editedUsers: ISlimUser[] = [];
   currentPassword = '';
   newPassword = '';
   passwordConfirmation = '';
@@ -133,6 +135,15 @@ export default class GroupModal extends Vue {
   }
 
   async save(): Promise<void> {
+    while(this.editedUsers.length > 0) {
+      const userId = this.editedUsers[0].id;
+      const role = this.editedUsers[0].groupRole!;
+      const index = this.groupInfo.users.findIndex((user) => user.id === userId);
+      this.groupInfo.users[index] = this.editedUsers.splice(0, 1)[0];
+      this.editUserRole(this.groupInfo.id, userId, role);
+    }
+    this.$emit('update-group-users');
+
     const groupInfo: ICreateGroup = {
       ...this.groupInfo,
     };
@@ -160,6 +171,14 @@ export default class GroupModal extends Vue {
     return axios.put<IGroup>(`/groups/${this.groupInfo.id}`, groupToUpdate);
   }
 
+  async editUserRole(groupId: string, userId: string, updatedRole: string) {
+    const updateUserGroupRole: IAddUserToGroup = {
+      userId: userId,
+      groupRole: updatedRole
+    }
+    return axios.put(`/groups/${groupId}/updateUserGroupRole`, updateUserGroupRole);
+  }
+
   async syncUsersWithGroup(group: IGroup) {
     const originalIds = this.group.users.map((user) => user.id);
     const changedIds = this.groupInfo.users.map((user) => user.id);
@@ -181,6 +200,10 @@ export default class GroupModal extends Vue {
     });
 
     return Promise.all(addedUserPromises.concat(removedUserPromises))
+  }
+
+  addEditedUser(editedUser: ISlimUser) {
+    this.editedUsers.push(editedUser);
   }
 }
 </script>
