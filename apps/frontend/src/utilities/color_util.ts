@@ -37,7 +37,7 @@ function lum_sigmoid(t: number, move: number) {
 }
 
 /** Shifts a colors luminance by the specified amount */
-export function move(baseColor: string, amount: number): string {
+export function shift(baseColor: string, amount: number): string {
   const c = Chroma.hex(baseColor);
   const baseL = c.luminance();
   const newL = lum_sigmoid(baseL, amount);
@@ -55,16 +55,16 @@ export function gen_variants(
   spread = spread * BASE_SPREAD;
 
   return {
-    darken4: move(baseColor, -4 * spread),
-    darken3: move(baseColor, -3 * spread),
-    darken2: move(baseColor, -2 * spread),
-    darken1: move(baseColor, -1 * spread),
+    darken4: shift(baseColor, -4 * spread),
+    darken3: shift(baseColor, -3 * spread),
+    darken2: shift(baseColor, -2 * spread),
+    darken1: shift(baseColor, -1 * spread),
     base: baseColor,
-    lighten1: move(baseColor, 1 * spread),
-    lighten2: move(baseColor, 2 * spread),
-    lighten3: move(baseColor, 3 * spread),
-    lighten4: move(baseColor, 4 * spread),
-    lighten5: move(baseColor, 5 * spread)
+    lighten1: shift(baseColor, 1 * spread),
+    lighten2: shift(baseColor, 2 * spread),
+    lighten3: shift(baseColor, 3 * spread),
+    lighten4: shift(baseColor, 4 * spread),
+    lighten5: shift(baseColor, 5 * spread)
   };
 }
 

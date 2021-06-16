@@ -9,7 +9,7 @@ import {context, nist} from 'inspecjs';
 import {control_unique_key} from './format_util';
 
 // How deep into nist trees we allow
-const maxDepth = 2;
+const depthMax = 2;
 
 /** A simple wrapper type representing what any node's data might be in our treemap */
 interface AbsTreemapNode {
@@ -176,12 +176,12 @@ function build_populated_nist_map(data: TreemapNodeLeaf[]): TreemapNodeParent {
 
   // Fill out children, recursively
   nist.FULL_NIST_HIERARCHY.forEach((n) => {
-    const child = recursive_nist_map(root, n, lookup, maxDepth);
+    const child = recursive_nist_map(root, n, lookup, depthMax);
     rootChildren.push(child);
   });
 
   // Populate them with leaves
-  populate_tree_map(lookup, data, maxDepth);
+  populate_tree_map(lookup, data, depthMax);
 
   // Colorize it
   colorize_tree_map(root);
