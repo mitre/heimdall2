@@ -57,7 +57,7 @@
     </template>
     <template #tags>
       <v-chip-group column active-class="NONE">
-        <v-tooltip v-for="(tag, i) in all_tags" :key="'chip' + i" bottom>
+        <v-tooltip v-for="(tag, i) in nistTags" :key="'nist-chip' + i" bottom>
           <template #activator="{on}">
             <v-chip
               :href="tag.url"
@@ -65,6 +65,16 @@
               active-class="NONE"
               v-on="on"
             >
+              {{ tag.label }}
+            </v-chip>
+          </template>
+          <span>{{ tag.description }}</span>
+        </v-tooltip>
+      </v-chip-group>
+      <v-chip-group column active-class="NONE">
+        <v-tooltip v-for="(tag, i) in cciTags" :key="'cci-chip' + i" bottom>
+          <template #activator="{on}">
+            <v-chip style="cursor: help" active-class="NONE" v-on="on">
               {{ tag.label }}
             </v-chip>
           </template>
@@ -153,10 +163,10 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     return 'Unrecognized Tag';
   }
 
-  get all_tags(): Tag[] {
-    let nistTags = this.control.hdf.raw_nist_tags;
-    nistTags = nistTags.filter((tag) => tag.search(/Rev.*\d/i) === -1);
-    const nistTagObjects = nistTags.map((tag) => {
+  get nistTags(): Tag[] {
+    let nist_tags = this.control.hdf.raw_nist_tags;
+    nist_tags = nist_tags.filter((tag) => tag.search(/Rev.*\d/i) == -1);
+    return nist_tags.map((tag) => {
       const nisted = nist.parse_nist(tag);
       let url = '';
       if (nist.is_control(nisted)) {
@@ -170,16 +180,18 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
       }
       return {label: tag, url: url, description: this.descriptionForTag(tag)};
     });
-    let cciTags: string | string[] = this.control.data.tags.cci || '';
-    if (!cciTags) {
-      return nistTagObjects;
-    } else if (typeof cciTags == 'string') {
-      cciTags = cciTags.split(' ');
+  }
+
+  get cciTags(): Tag[] {
+    let cci_tags: string | string[] = this.control.data.tags.cci || '';
+    if (!cci_tags) {
+      return [];
+    } else if (typeof cci_tags == 'string') {
+      cci_tags = cci_tags.split(' ');
     }
-    const cciTagObjects = cciTags.map((cci) => {
+    return cci_tags.map((cci) => {
       return {label: cci, url: '', description: this.descriptionForTag(cci)};
     });
-    return [...nistTagObjects, ...cciTagObjects];
   }
 }
 </script>
