@@ -289,43 +289,46 @@ export default class ExportHTMLModal extends Vue {
     if(this.filter.fromFile.length === 0){
       return SnackbarModule.failure('No files have been loaded.')
     }
-    // Download the template
-    axios.get(`/static/export/template.html`).then(({data}) => {
-      axios.get(`/static/export/style.css`).then((styleResponse) => {
-        axios.get(`/static/export/bootstrap.js`).then((bootstrapJsResponse) => {
-          axios.get(`/static/export/jquery.js`).then((jqueryResponse) => {
-              this.filter.fromFile.forEach(async (fileId) => {
-              const file = InspecDataModule.allFiles.find(
-                (f) => f.unique_id === fileId
-              );
-              if (file) {
-                this.addFiledata(file)
-              }
-            })
-            const modifiedStyle = styleResponse.data
-              .replace(/\#dc3545/g, "#f34335") // bg-danger
-              .replace(/\#198754/g, "#4cb04f") // bg-success
-              .replace(/\#17a2b8/g, "#03a9f4") // bg-info
-              .replace(/\#ffc107/g, "#fe9900") // bg-warning
-            const exportWindow = window.open('', '_blank');
-            if(exportWindow) {
-              exportWindow.document.write(Mustache.render(data, this.outputData))
-              exportWindow.document.head.insertAdjacentHTML("beforeend", `<style>${modifiedStyle}</style>`)
-              exportWindow.document.write(`<script>${jqueryResponse.data}<\/script>`);
-              exportWindow.document.write(`<script>${bootstrapJsResponse.data}<\/script>`);
-              this.copyComplianceCards(exportWindow)
-              saveAs(
-                new Blob([this.s2ab(exportWindow.document.documentElement.outerHTML)], {type: 'application/octet-stream'}),
-                  `${_.capitalize(this.exportType)}_Report_${new Date().toString()}.html`.replace(/[ :]/g, '_')
-              );
-              exportWindow.close();
-            } else {
-              SnackbarModule.failure('Please allow pop-up tabs to export to HTML.')
-            }
-          })
-        })
+    const templateRequest = axios.get(`/static/export/template.html`)
+    const bootstrapCSSRequest = axios.get(`/static/export/style.css`)
+    const bootstrapJSRequest = axios.get(`/static/export/bootstrap.js`)
+    const jqueryRequest = axios.get(`/static/export/jquery.js`)
+
+    axios.all([templateRequest, bootstrapCSSRequest, bootstrapJSRequest, jqueryRequest]).then(axios.spread((...responses) => {
+      const template = responses[0].data
+      const bootstrapCSS = responses[1].data
+      const bootstrapJS = responses[2].data
+      const jquery = responses[3].data
+
+      this.filter.fromFile.forEach(async (fileId) => {
+        const file = InspecDataModule.allFiles.find(
+          (f) => f.unique_id === fileId
+        );
+        if (file) {
+          this.addFiledata(file)
+        }
       })
-    })
+      const modifiedStyle = bootstrapCSS
+        .replace(/\#dc3545/g, "#f34335") // bg-danger
+        .replace(/\#198754/g, "#4cb04f") // bg-success
+        .replace(/\#17a2b8/g, "#03a9f4") // bg-info
+        .replace(/\#ffc107/g, "#fe9900") // bg-warning
+      const exportWindow = window.open('', '_blank');
+      if(exportWindow) {
+        exportWindow.document.write(Mustache.render(template, this.outputData))
+        exportWindow.document.head.insertAdjacentHTML("beforeend", `<style>${modifiedStyle}</style>`)
+        exportWindow.document.write(`<script>${jquery}<\/script>`);
+        exportWindow.document.write(`<script>${bootstrapJS}<\/script>`);
+        this.copyComplianceCards(exportWindow)
+        saveAs(
+          new Blob([this.s2ab(exportWindow.document.documentElement.outerHTML)], {type: 'application/octet-stream'}),
+            `${_.capitalize(this.exportType)}_Report_${new Date().toString()}.html`.replace(/[ :]/g, '_')
+        );
+        exportWindow.close();
+      } else {
+        SnackbarModule.failure('Please allow pop-up tabs to export to HTML.')
+      }
+    }))
     this.closeModal()
   }
 }
