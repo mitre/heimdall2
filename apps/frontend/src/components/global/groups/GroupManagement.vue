@@ -36,27 +36,26 @@
         </v-container>
       </template>
       <template #[`item.users`]="{item}">
-        <span v-for="(user, index) in item.users.slice(0, 4)" :key="user.id">
+        <span v-for="user in item.users.slice(0, 3)" :key="user.id">
           <v-chip
-            v-if="index < 3"
             pill
             color="primary"
             class="ma-1"
             @click="displayMembersDialog(item.users)"
           >
-            {{ getMemberName(user, -1) }}
-          </v-chip>
-          <v-chip
-            v-else
-            pill
-            color="primary"
-            outlined
-            class="ma-1"
-            @click="displayMembersDialog(item.users)"
-          >
-            {{ `+${item.users.length} total` }}
+            {{ getMemberName(user) }}
           </v-chip>
         </span>
+        <v-chip
+          v-if="item.users.length > 3"
+          pill
+          color="primary"
+          outlined
+          class="ma-1"
+          @click="displayMembersDialog(item.users)"
+        >
+          {{ `+${item.users.length} total` }}
+        </v-chip>
       </template>
       <template #[`item.actions`]="{item}">
         <div v-if="item.role == 'owner'">
@@ -85,26 +84,10 @@
       @cancel="closeDeleteDialog"
       @confirm="deleteGroupConfirm"
     />
-    <v-dialog v-model="dialogDisplayUsers" max-width="700px">
-      <v-card class="rounded-t-0">
-        <v-card-title
-          data-cy="groupModalTitle"
-          class="headline mitreSecondaryBlue"
-          primary-title
-          >{{ 'Members' }}</v-card-title
-        >
-        <v-card-text>
-          <Users v-model="selectedGroupUsers" :editable="false" />
-        </v-card-text>
-        <v-card-actions>
-          <v-col class="text-right">
-            <v-btn color="primary" text @click="dialogDisplayUsers = false"
-              >Close</v-btn
-            >
-          </v-col>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <GroupUsers
+      v-model="selectedGroupUsers"
+      :dialog-display-users="dialogDisplayUsers"
+    />
   </v-card>
 </template>
 
@@ -118,12 +101,14 @@ import {Prop} from 'vue-property-decorator';
 import {GroupsModule} from '@/store/groups';
 import DeleteDialog from '@/components/generic/DeleteDialog.vue';
 import Users from '@/components/global/groups/Users.vue';
+import GroupUsers from '@/components/global/groups/GroupUsers.vue';
 
 @Component({
   components: {
     DeleteDialog,
     GroupModal,
-    Users
+    Users,
+    GroupUsers
   }
 })
 export default class GroupManagement extends Vue {
@@ -179,19 +164,12 @@ export default class GroupManagement extends Vue {
     this.editedGroup = null;
   }
 
-  getMemberName(users: ISlimUser, index: number): string {
-    // Index will be -1 for the first three users passed. If there's more than three,
-    // then display one last v-chip displaying the total number of members in the group.
-    if(index === -1) {
-      if(!users.firstName && !users.lastName) {
-        return users.email;
-      }
-      else {
-        return `${users.firstName} ${users.lastName}`;
-      }
+  getMemberName(users: ISlimUser): string {
+    if(!users.firstName && !users.lastName) {
+      return users.email;
     }
     else {
-      return `+${index} total`;
+      return `${users.firstName} ${users.lastName}`;
     }
   }
 
