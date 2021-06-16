@@ -22,9 +22,17 @@ pull_request_rules:
       - merged
     actions:
       delete_head_branch: {}
-  - name: ask to resolve conflict
+  - name: ask developers to resolve conflict
     conditions:
       - conflict
+      - -author~=^dependabot(|-preview)\[bot\]$
     actions:
         comment:
-          message: This pull request has conflict. Could you fix it @{{author}}?
+          message: This pull request has a conflict. Could you fix it @{{author}}?
+  - name: ask dependabot to recreate PRs with conflicts
+    conditions:
+      - conflict
+      - author~=^dependabot(|-preview)\[bot\]$
+    actions:
+        comment:
+          message: \@dependabot recreate
