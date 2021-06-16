@@ -6,8 +6,6 @@ import {readFileSync} from 'fs';
 import 'jest';
 import {AllRaw} from '../util/fs';
 
-//export function createTestingVue() {}
-
 export function loadSample(sampleName: string) {
   const sample: Sample | undefined = samples.find(
     (samp) => samp.filename === sampleName

@@ -45,7 +45,7 @@ export async function fetch_s3_file(
     })
     .promise()
     .then((success) => {
-      return new TextDecoder('utf-8').decode(success.Body! as Uint8Array);
+      return new TextDecoder('utf-8').decode(success.Body as Uint8Array);
     });
 }
 
@@ -106,7 +106,7 @@ export async function get_session_token(
       wipInfo.user_arn = success.Arn!;
       wipInfo.user_id = success.UserId!;
       // Guess at mfa
-      wipInfo.probable_user_mfa_device = derive_mfa_serial(wipInfo.user_arn!);
+      wipInfo.probable_user_mfa_device = derive_mfa_serial(wipInfo.user_arn);
     });
 
   // It's built - mark as such
