@@ -41,6 +41,13 @@ export const statusTypes = [
 
 export const severityTypes = ['none', 'low', 'medium', 'high', 'critical'];
 
+export function valueToSeverity(severity: string): Severity {
+  if (severity.toLowerCase() in severityTypes) {
+    return severity as Severity;
+  } else {
+    return 'none';
+  }
+}
 @Module({
   namespaced: true,
   dynamic: true,

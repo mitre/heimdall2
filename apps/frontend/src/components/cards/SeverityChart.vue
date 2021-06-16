@@ -14,7 +14,7 @@ import {Severity} from 'inspecjs';
 import {SeverityCountModule} from '@/store/severity_counts';
 import {Filter} from '@/store/data_filters';
 import {Prop} from 'vue-property-decorator';
-import {SearchModule} from '../../store/search';
+import {SearchModule, valueToSeverity} from '../../store/search';
 
 /**
  * Categories property must be of type Category
@@ -57,26 +57,12 @@ export default class SeverityChart extends Vue {
     ];
   }
 
-  valueToSeverity(severity: string): Severity {
-    switch (severity) {
-      case 'low':
-        return 'low'
-      case 'medium':
-        return 'medium'
-      case 'high':
-        return 'high'
-      case 'critical':
-        return 'critical'
-    }
-    return 'none'
-  }
-
   onSelect(severity: Category<Severity>) {
     // In the case that the values are the same, we want to instead emit null
-    if (this.value && this.value?.indexOf(this.valueToSeverity(severity.value)) !== -1) {
-      SearchModule.removeSeveritySearch(this.valueToSeverity(severity.value));
+    if (this.value && this.value?.indexOf(valueToSeverity(severity.value)) !== -1) {
+      SearchModule.removeSeveritySearch(valueToSeverity(severity.value));
     } else {
-      SearchModule.addSeveritySearch(this.valueToSeverity(severity.value));
+      SearchModule.addSeveritySearch(valueToSeverity(severity.value));
     }
   }
 }
