@@ -57,7 +57,7 @@
     </template>
     <template #tags>
       <v-chip-group column active-class="NONE">
-        <v-tooltip v-for="(tag, i) in nistTags" :key="'chip' + i" bottom>
+        <v-tooltip v-for="(tag, i) in nistTags" :key="'nist-chip' + i" bottom>
           <template #activator="{on}">
             <v-chip
               :href="tag.url"
@@ -72,7 +72,7 @@
         </v-tooltip>
       </v-chip-group>
       <v-chip-group column active-class="NONE">
-        <v-tooltip v-for="(tag, i) in cciTags" :key="'chip' + i" bottom>
+        <v-tooltip v-for="(tag, i) in cciTags" :key="'cci-chip' + i" bottom>
           <template #activator="{on}">
             <v-chip style="cursor: help" active-class="NONE" v-on="on">
               {{ tag.label }}
