@@ -104,11 +104,8 @@ export default class Users extends Vue {
         value: 'actions',
         sortable: false,
       });
-      return this.headers;
     }
-    else {
-      return this.headers;
-    }
+    return this.headers;
   }
 
   addUsers() {
