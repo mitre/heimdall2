@@ -50,7 +50,7 @@ import _ from 'lodash';
 import {StatusCountModule} from '../../store/status_counts';
 import {EvaluationFile, ProfileFile} from '../../store/report_intake';
 import {ContextualizedControl} from 'inspecjs/dist/context';
-import {mdiAlertCircle, mdiCheckCircle, mdiCloseCircle, mdiMinusCircle, mdiDownload} from '@mdi/js'
+import {mdiAlertCircle, mdiCheckCircle, mdiCloseCircle, mdiMinusCircle} from '@mdi/js'
 import Mustache from 'mustache';
 
 interface Detail {
@@ -132,8 +132,7 @@ export default class ExportHTMLModal extends Vue {
       circleCheck: this.iconDatatoSVG(mdiCheckCircle, 'white'),
       circleCross: this.iconDatatoSVG(mdiCloseCircle, 'white'),
       circleMinus: this.iconDatatoSVG(mdiMinusCircle, 'white'),
-      circleAlert: this.iconDatatoSVG(mdiAlertCircle, 'white'),
-      download: this.iconDatatoSVG(mdiDownload, 'black')
+      circleAlert: this.iconDatatoSVG(mdiAlertCircle, 'white')
     }
   };
 
