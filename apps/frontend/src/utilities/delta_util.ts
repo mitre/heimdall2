@@ -92,10 +92,10 @@ export class ControlDelta {
   constructor(controls: (context.ContextualizedControl | null)[]) {
     this.controlsandnull = controls;
     for (const value of controls) {
-      if (value === null) {
-        this.numNull += 1;
-      } else if (value !== null) {
+      if (value !== null) {
         this.controls.push(value);
+      } else {
+        this.numNull += 1;
       }
     }
   }
