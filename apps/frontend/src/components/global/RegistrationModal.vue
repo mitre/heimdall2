@@ -57,13 +57,17 @@
           <v-text-field
             id="password"
             v-model="password"
-            :error-messages="requiredFieldError($v.password, 'Password')"
+            :error-messages="[
+              ...requiredFieldError($v.password, 'Password'),
+              ...passwordErrorMessages
+            ]"
             prepend-icon="mdi-lock"
             name="password"
             label="Password"
             loading
             :type="showPassword ? 'text' : 'password'"
             tabindex="4"
+            @change="checkPasswordComplexity"
             @blur="$v.password.$touch()"
           >
             <template #progress>
@@ -174,6 +178,7 @@ export default class RegistrationModal extends Vue {
   password = '';
   passwordConfirmation = '';
   showPassword = false;
+  passwordErrorMessages: string[] = [];
 
   @Prop({type: Boolean, default: false}) readonly adminRegisterMode!: boolean;
   @Prop({default: false}) readonly visible!: boolean;
@@ -212,6 +217,12 @@ export default class RegistrationModal extends Vue {
 
         });
     }
+  }
+
+  async checkPasswordComplexity() {
+    ServerModule.CheckPasswordComplexity(this.password).then((passwordErrors) => {
+      this.passwordErrorMessages = passwordErrors
+    })
   }
 
   // password strength bar expects a percentage

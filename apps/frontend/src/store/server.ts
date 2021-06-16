@@ -208,6 +208,17 @@ class Server extends VuexModule implements IServerState {
   }
 
   @Action
+  public async CheckPasswordComplexity(password: string): Promise<string[]> {
+    return axios
+      .post(`/users/check-password-complexity`, {
+        password: password
+      })
+      .then(({data}) => {
+        return data;
+      });
+  }
+
+  @Action
   public async updateUserInfo(user: {
     id: string;
     info: IUpdateUser;

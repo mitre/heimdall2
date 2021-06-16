@@ -20,7 +20,12 @@ import {ImplicitAllowJwtAuthGuard} from '../guards/implicit-allow-jwt-auth.guard
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {TestGuard} from '../guards/test.guard';
 import {PasswordChangePipe} from '../pipes/password-change.pipe';
-import {PasswordComplexityPipe} from '../pipes/password-complexity.pipe';
+import {
+  checkLength,
+  hasClasses,
+  noRepeats,
+  PasswordComplexityPipe
+} from '../pipes/password-complexity.pipe';
 import {PasswordsMatchPipe} from '../pipes/passwords-match.pipe';
 import {User} from '../users/user.model';
 import {CreateUserDto} from './dto/create-user.dto';
@@ -69,6 +74,27 @@ export class UsersController {
 
     const users = await this.usersService.adminFindAll();
     return users.map((user) => new UserDto(user));
+  }
+
+  @Post('check-password-complexity')
+  async checkPasswordComplexity(
+    @Body() passwordData: {password: string}
+  ): Promise<string[]> {
+    if (typeof passwordData.password !== 'string') {
+      return ['Password must be of type string'];
+    }
+    const errors: string[] = [];
+    checkLength(passwordData.password) &&
+      errors.push('Password must be at least 15 characters');
+    !hasClasses(passwordData.password) &&
+      errors.push(
+        'Password must contain a combination of lowercase letters, uppercase letters, numbers, and special characters'
+      );
+    !noRepeats(passwordData.password) &&
+      errors.push(
+        'Password must not contain 4 consecutive characters of the same character class'
+      );
+    return errors;
   }
 
   @Post()

@@ -5,6 +5,33 @@ import {
   PipeTransform
 } from '@nestjs/common';
 
+export function checkLength(password: string): boolean {
+  return password.length < 15;
+}
+
+export function hasClasses(password: string): boolean {
+  const validators = [
+    RegExp('[a-z]'),
+    RegExp('[A-Z]'),
+    RegExp('[0-9]'),
+    RegExp(/[^\w\s]/)
+  ];
+  return (
+    validators.filter((expr) => expr.test(password)).length == validators.length
+  );
+}
+
+export function noRepeats(password: string): boolean {
+  const validators = [
+    RegExp(/(.)\1{3,}/),
+    RegExp('[a-z]{4,}'),
+    RegExp('[A-Z]{4,}'),
+    RegExp('[0-9]{4,}'),
+    RegExp(/[^\w\s]{4,}/)
+  ];
+  return validators.filter((expr) => expr.test(password)).length === 0;
+}
+
 @Injectable()
 export class PasswordComplexityPipe implements PipeTransform {
   transform(
@@ -19,8 +46,9 @@ export class PasswordComplexityPipe implements PipeTransform {
     }
     if (
       typeof value.password == 'string' &&
-      this.hasClasses(value.password) &&
-      this.noRepeats(value.password)
+      hasClasses(value.password) &&
+      noRepeats(value.password) &&
+      checkLength(value.password)
     ) {
       return value;
     } else {
@@ -31,30 +59,5 @@ export class PasswordComplexityPipe implements PipeTransform {
           ' Passwords cannot contain more than four repeating characters from the same character class.'
       );
     }
-  }
-
-  hasClasses(password: string): boolean {
-    const validators = [
-      RegExp('[a-z]'),
-      RegExp('[A-Z]'),
-      RegExp('[0-9]'),
-      RegExp(/[^\w\s]/),
-      RegExp('.{15,}')
-    ];
-    return (
-      validators.filter((expr) => expr.test(password)).length ==
-      validators.length
-    );
-  }
-
-  noRepeats(password: string): boolean {
-    const validators = [
-      RegExp(/(.)\1{3,}/),
-      RegExp('[a-z]{4,}'),
-      RegExp('[A-Z]{4,}'),
-      RegExp('[0-9]{4,}'),
-      RegExp(/[^\w\s]{4,}/)
-    ];
-    return validators.filter((expr) => expr.test(password)).length === 0;
   }
 }
