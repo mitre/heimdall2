@@ -24,6 +24,8 @@ import {Prop} from 'vue-property-decorator';
 import {ContextualizedControl} from 'inspecjs/dist/context';
 import _ from 'lodash';
 import {InspecDataModule} from '../../store/data_store';
+import {s2ab} from '@/utilities/export_util'
+
 
 type CAATRow = {
   [key: string]: string | undefined;
@@ -130,7 +132,7 @@ export default class ExportCaat extends Vue {
 
     const wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
     saveAs(
-      new Blob([this.s2ab(wbout)], {type: 'application/octet-stream'}),
+      new Blob([s2ab(wbout)], {type: 'application/octet-stream'}),
         'CAAT-' + this.convertDate(new Date(), '-') + '.xlsx'
     );
   }
@@ -178,16 +180,6 @@ export default class ExportCaat extends Vue {
       this.padTwoDigits(d.getDate()),
       d.getFullYear()
     ].join(delimiter);
-  }
-
-  /** Converts a string to an array buffer */
-  s2ab(s: string): ArrayBuffer {
-    const buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
-    const view = new Uint8Array(buf); //create uint8array as viewer
-    for (let i = 0; i < s.length; i++) {
-      view[i] = s.charCodeAt(i) & 0xff; //convert to octet
-    }
-    return buf;
   }
 }
 </script>

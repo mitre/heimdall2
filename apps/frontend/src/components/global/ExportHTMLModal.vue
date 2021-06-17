@@ -45,6 +45,7 @@ import {Filter, FilteredDataModule} from '../../store/data_filters';
 import {Prop, Watch} from 'vue-property-decorator';
 import {SnackbarModule} from '../../store/snackbar';
 import {InspecDataModule} from '../../store/data_store';
+import {s2ab} from '@/utilities/export_util'
 import axios from 'axios';
 import _ from 'lodash';
 import {StatusCountModule} from '../../store/status_counts';
@@ -97,6 +98,7 @@ interface OutputData {
   exportType: string;
   icons: Icons
 }
+
 
 @Component({
   components: {
@@ -274,16 +276,6 @@ export default class ExportHTMLModal extends Vue {
     ].filter((v) => v.value)}
   }
 
-  /** Converts a string to an array buffer */
-  s2ab(s: string) {
-		const buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
-		const view = new Uint8Array(buf); //create uint8array as viewer
-		for(let i = 0; i < s.length; i++) {
-			view[i] = s.charCodeAt(i) & 0xff; //convert to octet
-		}
-		return buf;
-	}
-
   exportHTML(): void {
     this.resetOutputData();
     if(this.filter.fromFile.length === 0){
@@ -321,7 +313,7 @@ export default class ExportHTMLModal extends Vue {
         exportWindow.document.write(`<script>${bootstrapJS}<\/script>`);
         this.copyComplianceCards(exportWindow)
         saveAs(
-          new Blob([this.s2ab(exportWindow.document.documentElement.outerHTML)], {type: 'application/octet-stream'}),
+          new Blob([s2ab(exportWindow.document.documentElement.outerHTML)], {type: 'application/octet-stream'}),
             `${_.capitalize(this.exportType)}_Report_${new Date().toString()}.html`.replace(/[ :]/g, '_')
         );
         exportWindow.close();
