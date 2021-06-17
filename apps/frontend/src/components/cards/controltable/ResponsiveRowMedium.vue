@@ -16,7 +16,7 @@
       </v-card>
     </v-col>
 
-    <v-col class="pa-0" :cols="2.5">
+    <v-col class="pa-0" :cols="2">
       <v-card tile flat class="d-flex flex-column fill-height">
         <slot name="id" />
         <v-divider />

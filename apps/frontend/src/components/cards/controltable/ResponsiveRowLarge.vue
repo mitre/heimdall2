@@ -1,6 +1,6 @@
 <template>
   <v-row no-gutters>
-    <v-col class="pa-0" :cols="1.5">
+    <v-col class="pa-0" :cols="1">
       <slot name="status" />
     </v-col>
 
@@ -32,7 +32,7 @@
       </v-card>
     </v-col>
 
-    <v-col class="pa-0" :cols="0.5">
+    <v-col class="pa-0" :cols="1">
       <v-card tile flat class="fill-height">
         <slot name="runTime" />
       </v-card>
