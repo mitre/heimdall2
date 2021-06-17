@@ -5117,9 +5117,9 @@ autoprefixer@^9.8.6:
     postcss-value-parser "^4.1.0"
 
 aws-sdk@^2.573.0:
-  version "2.929.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.929.0.tgz#fa0bfc0e97f0b38b2086f83eb1546d946b6215c9"
-  integrity sha512-rJ36UbkGhB8qhR4eH0D+TgNPA6wwwKh4885fN/v9uToNd8/Fz8HdgNLw9uy0QYOFOgqK99eWfpMGQyOR6DL+Bg==
+  version "2.930.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.930.0.tgz#f98871a790ffdbfae5439e50db99f6d4635afe19"
+  integrity sha512-g8fPOy7Skh2Pqpz2SaDI+M9re2rjTWBQUirAMgtUD/6I/Lf6CR1Q0amsjtQU8WqRQH06kNGwuLtc8Tt6wAux3Q==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -18950,9 +18950,9 @@ typescript@4.2.3:
   integrity sha512-qOcYwxaByStAWrBf4x0fibwZvMRG+r4cQoTjbPtUlrWjBHbmCAww1i448U0GJ+3cNNEtebDteo/cHOR3xJ4wEw==
 
 typescript@^4.0.5:
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.2.tgz#399ab18aac45802d6f2498de5054fcbbe716a805"
-  integrity sha512-zZ4hShnmnoVnAHpVHWpTcxdv7dWP60S2FsydQLV8V5PbS3FifjWFFRiHSWpDJahly88PRyV5teTSLoq4eG7mKw==
+  version "4.3.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.3.tgz#5401db69bd3203daf1851a1a74d199cb3112c11a"
+  integrity sha512-rUvLW0WtF7PF2b9yenwWUi9Da9euvDRhmH7BLyBG4DCFfOJ850LGNknmRpp8Z8kXNUPObdZQEfKOiHtXuQHHKA==
 
 typescript@~4.1.5:
   version "4.1.5"
