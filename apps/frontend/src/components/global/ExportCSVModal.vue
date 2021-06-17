@@ -295,6 +295,7 @@ export default class ExportCSVModal extends Vue {
       if(file) {
         return this.convertData(file)
       }
+      return null;
     })
     Promise.all(fileConvertPromises).then(() => {
       if(this.files.length === 1) {
