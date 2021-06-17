@@ -374,16 +374,8 @@ export const FilteredDataModule = getModule(FilteredData);
  * - defaulting "omit_overlayed_controls"
  */
 export function filter_cache_key(f: Filter) {
-  // fix the search term
-  let new_search: string;
-  if (f.searchTerm !== undefined) {
-    new_search = f.searchTerm.trim();
-  } else {
-    new_search = '';
-  }
-
   const newFilter: Filter = {
-    searchTerm: new_search,
+    searchTerm: f.searchTerm?.trim() || '',
     omit_overlayed_controls: f.omit_overlayed_controls || false,
     ...f
   };
