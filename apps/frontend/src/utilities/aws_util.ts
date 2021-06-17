@@ -102,9 +102,9 @@ export async function get_session_token(
     .getCallerIdentity({})
     .promise()
     .then((success) => {
-      wipInfo.user_account = success.Account!;
+      wipInfo.user_account = success.Account;
       wipInfo.user_arn = success.Arn || 'Unknown Resource Name';
-      wipInfo.user_id = success.UserId!;
+      wipInfo.user_id = success.UserId;
       // Guess at mfa
       wipInfo.probable_user_mfa_device = derive_mfa_serial(wipInfo.user_arn);
     });
@@ -116,14 +116,18 @@ export async function get_session_token(
   let result: Promise<PromiseResult<STS.GetSessionTokenResponse, AWSError>>;
   if (mfaInfo) {
     mfaInfo.SerialNumber =
-      mfaInfo.SerialNumber || info.probable_user_mfa_device!;
-    result = sts
-      .getSessionToken({
-        DurationSeconds: duration,
-        SerialNumber: mfaInfo.SerialNumber,
-        TokenCode: mfaInfo.TokenCode
-      })
-      .promise();
+      mfaInfo.SerialNumber || info.probable_user_mfa_device; // We cannot get to this stage if
+    if (mfaInfo.SerialNumber) {
+      result = sts
+        .getSessionToken({
+          DurationSeconds: duration,
+          SerialNumber: mfaInfo.SerialNumber,
+          TokenCode: mfaInfo.TokenCode
+        })
+        .promise();
+    } else {
+      result = sts.getSessionToken().promise();
+    }
   } else {
     // Not strictly necessary but why not!
     result = sts.getSessionToken().promise();
@@ -131,16 +135,20 @@ export async function get_session_token(
 
   // Handle the response. On Success, save the creds. On error, throw that stuff back!
   return result.then((success) => {
-    const creds: AuthCreds = {
-      accessKeyId: success.Credentials!.AccessKeyId,
-      secretAccessKey: success.Credentials!.SecretAccessKey,
-      sessionToken: success.Credentials!.SessionToken
-    };
-    return {
-      creds,
-      info,
-      from_mfa: !!mfaInfo
-    };
+    if (success.Credentials) {
+      const creds: AuthCreds = {
+        accessKeyId: success.Credentials.AccessKeyId,
+        secretAccessKey: success.Credentials.SecretAccessKey,
+        sessionToken: success.Credentials.SessionToken
+      };
+      return {
+        creds,
+        info,
+        from_mfa: !!mfaInfo
+      };
+    } else {
+      return null;
+    }
   });
 }
 
