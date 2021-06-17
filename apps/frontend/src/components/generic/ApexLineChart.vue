@@ -19,8 +19,7 @@ import {Prop} from 'vue-property-decorator';
 
 let idCounter = 0;
 function next_id(): number {
-  idCounter += 1;
-  return idCounter;
+  return idCounter += 1;
 }
 
 export interface SeriesItem {
@@ -46,6 +45,9 @@ export default class ApexLineChart extends Vue {
 
   chartId= `line_chart_${next_id}`;
 
+  //gives apex charts the severity colors
+  sev_colors: string[] = ['#FFEB3B', '#FF9800', '#FF5722', '#F44336'];
+
   get label_colors(): string[] {
     const colors = [];
     for (let i = 0; i < this.categories.length; i++) {
@@ -63,11 +65,6 @@ export default class ApexLineChart extends Vue {
     } else {
       return Math.floor(this.upperRange / 10);
     }
-  }
-
-  //gives apex charts the severity colors
-  get sev_colors(): string[] {
-    return ['#FFEB3B', '#FF9800', '#FF5722', '#F44336'];
   }
 
   get line_colors(): string[] | undefined {

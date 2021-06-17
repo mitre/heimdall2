@@ -5,8 +5,8 @@
     </v-stepper-step>
 
     <AuthStepBasic
-      :access_token.sync="accessToken"
-      :secret_token.sync="secretToken"
+      :access-token.sync="accessToken"
+      :secret-token.sync="secretToken"
       @auth-basic="handle_basic"
       @goto-mfa="handle_goto_mfa"
     />
@@ -16,8 +16,8 @@
     </v-stepper-step>
 
     <AuthStepMFA
-      :mfa_token.sync="mfaToken"
-      :mfa_serial.sync="mfaSerial"
+      :mfa-token.sync="mfaToken"
+      :mfa-serial.sync="mfaSerial"
       @auth-mfa="handle_proceed_mfa"
       @exit-mfa="handle_cancel_mfa"
     />

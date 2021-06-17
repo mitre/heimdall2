@@ -26,14 +26,11 @@ import {
 } from '@/utilities/delta_util';
 
 import ChangeItem from '@/components/cards/comparison/ChangeItem.vue';
-import TruncatedText from '@/components/generic/TruncatedText.vue';
-
 import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {
-    ChangeItem,
-    TruncatedText,
+    ChangeItem
   }
 })
 export default class DeltaView extends Vue {

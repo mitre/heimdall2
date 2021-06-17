@@ -89,7 +89,7 @@ export async function get_session_token(
   secretKey: string,
   duration: number,
   mfaInfo?: MFAInfo
-): Promise<Auth> {
+): Promise<Auth | null> {
   // Instanciate STS with our base and secret token
   const sts = new STS({
     accessKeyId: accessToken,
@@ -103,7 +103,7 @@ export async function get_session_token(
     .promise()
     .then((success) => {
       wipInfo.user_account = success.Account!;
-      wipInfo.user_arn = success.Arn!;
+      wipInfo.user_arn = success.Arn || 'Unknown Resource Name';
       wipInfo.user_id = success.UserId!;
       // Guess at mfa
       wipInfo.probable_user_mfa_device = derive_mfa_serial(wipInfo.user_arn);
@@ -116,7 +116,7 @@ export async function get_session_token(
   let result: Promise<PromiseResult<STS.GetSessionTokenResponse, AWSError>>;
   if (mfaInfo) {
     mfaInfo.SerialNumber =
-      mfaInfo.SerialNumber || info.probable_user_mfa_device!; // We cannot get to this stage if
+      mfaInfo.SerialNumber || info.probable_user_mfa_device!;
     result = sts
       .getSessionToken({
         DurationSeconds: duration,

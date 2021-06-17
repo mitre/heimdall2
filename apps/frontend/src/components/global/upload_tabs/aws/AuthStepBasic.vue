@@ -72,15 +72,15 @@ export default class S3Reader extends Vue {
     (v || '').trim().length > 0 || 'Field is Required';
 
   // Callback for change in access token
-  change_access_token(newValue: string) {
-    localAccessToken.set(newValue);
-    this.$emit('update:accessToken', newValue);
+  change_access_token(token: string) {
+    localAccessToken.set(token);
+    this.$emit('update:accessToken', token);
   }
 
   // Callback for change in secret token
-  change_secret_token(newValue: string) {
-    localSecretToken.set(newValue);
-    this.$emit('update:secretToken', newValue);
+  change_secret_token(token: string) {
+    localSecretToken.set(token);
+    this.$emit('update:secretToken', token);
   }
 
   /** On mount, try to look up stored auth info */
