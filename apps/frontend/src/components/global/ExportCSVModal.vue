@@ -273,49 +273,52 @@ export default class ExportCSVModal extends Vue {
     return _.truncate(string, {length: 100})
   }
 
+  async convertData(file: EvaluationFile | ProfileFile) {
+    // Convert all controls from a file to ControlSetRows
+      let rows: ControlSetRows = [];
+      rows = this.convertRows(file);
+        // Convert our rows to CSV
+        const csvString = await new ObjectsToCsv(rows).toString()
+        // If we only have one file we can save just one csv file
+        this.files.push({
+          filename: this.cleanUpFilename(`${file.filename}.csv`),
+          data: csvString
+        })
+  }
+
   exportCSV() {
     this.files = [];
-    // In case we have multiple files, make an array to store them
-    this.filter.fromFile.forEach(async (fileId) => {
-      let rows: ControlSetRows = [];
+    const fileConvertPromises = this.filter.fromFile.map((fileId) => {
       const file = InspecDataModule.allFiles.find(
         (f) => f.unique_id === fileId
       );
       if(file) {
-        // Convert all controls from a file to ControlSetRows
-        rows = this.convertRows(file);
-        // Convert our rows to CSV
-        const csvString = await new ObjectsToCsv(rows).toString()
-        // If we only have one file we can save just one csv file
-        if(this.filter.fromFile.length === 1) {
-          const blob = new Blob([csvString], {
-            type: 'application/csv'
-          });
-          saveAs(blob, this.cleanUpFilename(`${file.filename}.csv`));
-        } else {
-          // Otherwise add to our files list
-          this.files.push({
-            filename: this.cleanUpFilename(`${file.filename}.csv`),
-            data: csvString
-          })
-        }
-        // If we have all of our files converted we can save them as a .zip file
-        if(this.filter.fromFile.length !== 1 && this.files.length === this.filter.fromFile.length){
-          const zipfile = new ZipFile();
-          this.files.forEach((csvFile) => {
-            const buffer = Buffer.from(csvFile.data);
-            zipfile.addBuffer(buffer, csvFile.filename);
-          })
-          zipfile.outputStream.pipe(
-            concat({encoding: 'uint8array'}, (b: Uint8Array) => {
-              saveAs(new Blob([b]), 'exported_csvs.zip');
-            })
-          );
-          zipfile.end();
-        }
+        return this.convertData(file)
       }
     })
-    this.closeModal();
+    Promise.all(fileConvertPromises).then(() => {
+      if(this.files.length === 1) {
+        const blob = new Blob([this.files[0].data], {
+          type: 'application/csv'
+        });
+        saveAs(blob, this.cleanUpFilename(`${this.files[0]?.filename}.csv`));
+      }
+      else {
+        const zipfile = new ZipFile();
+        this.files.forEach((file) => {
+          const buffer = Buffer.from(file.data);
+          zipfile.addBuffer(buffer, file.filename);
+        })
+        zipfile.outputStream.pipe(
+          concat({encoding: 'uint8array'}, (b: Uint8Array) => {
+            saveAs(new Blob([b]), 'exported_csvs.zip');
+          })
+        );
+        zipfile.end();
+      }
+    }).finally(() => {
+      this.closeModal();
+    })
   }
   cleanUpFilename(filename: string): string {
     return filename.replace(/\s+/g, '_');
