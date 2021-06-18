@@ -131,7 +131,7 @@ describe('PasswordComplexityPipe', () => {
   /* Tests that when a password does not meet all the minimum requirements,
     a BadRequestException is thrown */
   describe('Test Invalid Password', () => {
-    it('should throw a BadRequestException for CreateUserDto', () => {
+    it('should throw a BadRequestException for CreateUserDto with missing password', () => {
       expect(() =>
         passwordComplexityPipe.transform(
           CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
@@ -143,15 +143,10 @@ describe('PasswordComplexityPipe', () => {
           CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
           metaData
         )
-      ).toThrowError(
-        'Password does not meet complexity requirements. Passwords are a minimum of 15' +
-          ' characters in length. Passwords must contain at least one special character, number, upper-case letter, and' +
-          ' lower-case letter. Passwords cannot contain more than three consecutive repeating characters.' +
-          ' Passwords cannot contain more than four repeating characters from the same character class.'
-      );
+      ).toThrowError('Password must be of type string');
     });
 
-    it('should throw a BadRequestException for UpdateUserDto', () => {
+    it('should throw a BadRequestException for UpdateUserDto with missing password', () => {
       expect(() =>
         passwordComplexityPipe.transform(
           UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD,
@@ -163,12 +158,7 @@ describe('PasswordComplexityPipe', () => {
           UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD,
           metaData
         )
-      ).toThrowError(
-        'Password does not meet complexity requirements. Passwords are a minimum of 15' +
-          ' characters in length. Passwords must contain at least one special character, number, upper-case letter, and' +
-          ' lower-case letter. Passwords cannot contain more than three consecutive repeating characters.' +
-          ' Passwords cannot contain more than four repeating characters from the same character class.'
-      );
+      ).toThrowError('Password must be of type string');
     });
   });
 });

@@ -1,6 +1,7 @@
 import Store from '@/store/store';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import {
+  IPasswordValidationResult,
   ISlimUser,
   IStartupSettings,
   IUpdateUser,
@@ -208,7 +209,9 @@ class Server extends VuexModule implements IServerState {
   }
 
   @Action
-  public async CheckPasswordComplexity(password: string): Promise<string[]> {
+  public async CheckPasswordComplexity(
+    password: string
+  ): Promise<IPasswordValidationResult> {
     return axios
       .post(`/users/check-password-complexity`, {
         password: password

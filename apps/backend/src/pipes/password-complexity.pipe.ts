@@ -1,3 +1,4 @@
+import {IPasswordValidationResult} from '@heimdall/interfaces';
 import {
   ArgumentMetadata,
   BadRequestException,
@@ -6,7 +7,7 @@ import {
 } from '@nestjs/common';
 
 export function checkLength(password: string): boolean {
-  return password.length < 15;
+  return password.length >= 15;
 }
 
 export function hasClasses(password: string): boolean {
@@ -32,6 +33,41 @@ export function noRepeats(password: string): boolean {
   return validators.filter((expr) => expr.test(password)).length === 0;
 }
 
+export function validatePassword(password?: string): IPasswordValidationResult {
+  const validationResult: IPasswordValidationResult = {
+    errors: [],
+    isString: false,
+    meetsCharRequirement: false,
+    meetsClassRequirement: false,
+    meetsNoRepeatsRequirement: false
+  };
+  if (typeof password !== 'string') {
+    validationResult.errors.push('Password must be of type string');
+  } else {
+    if (!checkLength(password)) {
+      validationResult.errors.push('Password must be at least 15 characters');
+    } else {
+      validationResult.meetsCharRequirement = true;
+    }
+    if (!hasClasses(password)) {
+      validationResult.errors.push(
+        'Password must contain a combination of lowercase letters, uppercase letters, numbers, and special characters'
+      );
+    } else {
+      validationResult.meetsClassRequirement = true;
+    }
+    if (!noRepeats(password)) {
+      validationResult.errors.push(
+        'Password must not contain 4 consecutive characters of the same character class'
+      );
+    } else {
+      validationResult.meetsNoRepeatsRequirement = true;
+    }
+  }
+
+  return validationResult;
+}
+
 @Injectable()
 export class PasswordComplexityPipe implements PipeTransform {
   transform(
@@ -46,17 +82,12 @@ export class PasswordComplexityPipe implements PipeTransform {
     }
     if (
       typeof value.password == 'string' &&
-      hasClasses(value.password) &&
-      noRepeats(value.password) &&
-      checkLength(value.password)
+      validatePassword(value.password).errors.length === 0
     ) {
       return value;
     } else {
       throw new BadRequestException(
-        'Password does not meet complexity requirements. Passwords are a minimum of 15' +
-          ' characters in length. Passwords must contain at least one special character, number, upper-case letter, and' +
-          ' lower-case letter. Passwords cannot contain more than three consecutive repeating characters.' +
-          ' Passwords cannot contain more than four repeating characters from the same character class.'
+        validatePassword(value.password).errors.join(', ')
       );
     }
   }

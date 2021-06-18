@@ -57,33 +57,92 @@
           <v-text-field
             id="password"
             v-model="password"
-            :error-messages="[
-              ...requiredFieldError($v.password, 'Password'),
-              ...passwordErrorMessages
-            ]"
             prepend-icon="mdi-lock"
             name="password"
             label="Password"
-            loading
             :type="showPassword ? 'text' : 'password'"
             tabindex="4"
-            @change="checkPasswordComplexity"
             @blur="$v.password.$touch()"
           >
-            <template #progress>
-              <v-progress-linear
-                :value="passwordStrengthPercent"
-                :color="passwordStrengthColor"
-                absolute
-                height="7"
-              />
-            </template>
             <template #append>
               <v-icon @click="showPassword = !showPassword">{{
                 showPassword ? 'mdi-eye' : 'mdi-eye-off'
               }}</v-icon>
             </template>
           </v-text-field>
+          <v-row
+            :class="
+              passwordValidation.meetsCharRequirement
+                ? 'd-flex success--text'
+                : 'd-flex error--text'
+            "
+          >
+            <v-icon
+              class="pl-9"
+              :color="
+                passwordValidation.meetsCharRequirement ? 'success' : 'error'
+              "
+              small
+              >{{
+                passwordValidation.meetsCharRequirement
+                  ? 'mdi-check'
+                  : 'mdi-close'
+              }}</v-icon
+            >
+            <small class="pl-1" color="red"
+              >Password must be at least 15 characters</small
+            >
+          </v-row>
+          <v-row
+            :class="
+              passwordValidation.meetsClassRequirement
+                ? 'd-flex success--text'
+                : 'd-flex error--text'
+            "
+          >
+            <v-icon
+              class="pl-9"
+              :color="
+                passwordValidation.meetsClassRequirement ? 'success' : 'error'
+              "
+              small
+              >{{
+                passwordValidation.meetsClassRequirement
+                  ? 'mdi-check'
+                  : 'mdi-close'
+              }}</v-icon
+            >
+            <small class="pl-1" color="red"
+              >Password must contain lowercase letters, uppercase letters,
+              numbers, and special characters</small
+            >
+          </v-row>
+          <v-row
+            :class="
+              passwordValidation.meetsNoRepeatsRequirement
+                ? 'd-flex success--text'
+                : 'd-flex error--text'
+            "
+          >
+            <v-icon
+              class="pl-9"
+              :color="
+                passwordValidation.meetsNoRepeatsRequirement
+                  ? 'success'
+                  : 'error'
+              "
+              small
+              >{{
+                passwordValidation.meetsNoRepeatsRequirement
+                  ? 'mdi-check'
+                  : 'mdi-close'
+              }}</v-icon
+            >
+            <small class="pl-1" color="red"
+              >Password must not contain 4 consecutive characters of the same
+              character class</small
+            >
+          </v-row>
           <br />
           <v-text-field
             id="passwordConfirmation"
@@ -105,7 +164,7 @@
             id="register"
             depressed
             large
-            :disabled="$v.$invalid"
+            :disabled="$v.$invalid || passwordValidation.errors.length !== 0"
             color="primary"
             type="submit"
           >
@@ -136,7 +195,8 @@ import {required, email, sameAs} from 'vuelidate/lib/validators';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 import Modal from '@/components/global/Modal.vue';
 import {SnackbarModule} from '@/store/snackbar';
-import {Prop} from 'vue-property-decorator';
+import {Prop, Watch} from 'vue-property-decorator';
+import {IPasswordValidationResult} from '@heimdall/interfaces';
 
 export interface SignupHash {
   firstName: string;
@@ -178,7 +238,13 @@ export default class RegistrationModal extends Vue {
   password = '';
   passwordConfirmation = '';
   showPassword = false;
-  passwordErrorMessages: string[] = [];
+  passwordValidation: IPasswordValidationResult = {
+    errors: [],
+    isString: true,
+    meetsCharRequirement: false,
+    meetsClassRequirement: false,
+    meetsNoRepeatsRequirement: false
+  };
 
   @Prop({type: Boolean, default: false}) readonly adminRegisterMode!: boolean;
   @Prop({default: false}) readonly visible!: boolean;
@@ -202,27 +268,35 @@ export default class RegistrationModal extends Vue {
 
       ServerModule.Register(creds)
         .then(() => {
-            if(this.adminRegisterMode) {
-                SnackbarModule.notify(
-                    'You have successfully registered a new user'
-                );
-                this.$emit('close-modal')
-                this.$emit('update-user-table')
-            } else {
-                this.$router.push('/login');
-                SnackbarModule.notify(
-                    'You have successfully registered, please sign in'
-                );
-            }
-
-        });
+          if(this.adminRegisterMode) {
+            SnackbarModule.notify(
+              'You have successfully registered a new user'
+            );
+            this.$emit('close-modal')
+            this.$emit('update-user-table')
+          } else {
+            this.$router.push('/login');
+            SnackbarModule.notify(
+              'You have successfully registered, please sign in'
+            );
+          }
+      });
     }
+  }
+
+  @Watch('password')
+  onUpdatePassword() {
+    this.checkPasswordComplexity();
   }
 
   async checkPasswordComplexity() {
     ServerModule.CheckPasswordComplexity(this.password).then((passwordErrors) => {
-      this.passwordErrorMessages = passwordErrors
+      this.passwordValidation = passwordErrors
     })
+  }
+
+  passwordValidationStyle(passedTest: boolean) {
+    return passedTest ? {} : {'color': '#ff5252'}
   }
 
   // password strength bar expects a percentage
