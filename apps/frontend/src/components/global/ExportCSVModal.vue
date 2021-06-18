@@ -59,11 +59,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {saveAs} from 'file-saver';
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 
 import {Filter, FilteredDataModule} from '@/store/data_filters';
-import {ZipFile} from 'yazl';
 import ObjectsToCsv from 'objects-to-csv';
 import {HDFControlSegment} from 'inspecjs';
 import {ContextualizedControl} from 'inspecjs/dist/context';
@@ -72,7 +70,7 @@ import {Prop} from 'vue-property-decorator';
 import {InspecDataModule} from '../../store/data_store';
 import {ControlDescription} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
-import concat from 'concat-stream';
+import {saveSingleOrMultipleFiles} from '@/utilities/export_util'
 
 
 const fieldNames: {[key: string]: string} = {
@@ -297,27 +295,7 @@ export default class ExportCSVModal extends Vue {
       }
       return null;
     })
-    Promise.all(fileConvertPromises).then(() => {
-      if(this.files.length === 1) {
-        const blob = new Blob([this.files[0].data], {
-          type: 'application/csv'
-        });
-        saveAs(blob, this.cleanUpFilename(`${this.files[0]?.filename}.csv`));
-      }
-      else {
-        const zipfile = new ZipFile();
-        this.files.forEach((file) => {
-          const buffer = Buffer.from(file.data);
-          zipfile.addBuffer(buffer, file.filename);
-        })
-        zipfile.outputStream.pipe(
-          concat({encoding: 'uint8array'}, (b: Uint8Array) => {
-            saveAs(new Blob([b]), 'exported_csvs.zip');
-          })
-        );
-        zipfile.end();
-      }
-    }).finally(() => {
+    Promise.all(fileConvertPromises).then(() => saveSingleOrMultipleFiles(this.files, 'csv')).finally(() => {
       this.closeModal();
     })
   }
