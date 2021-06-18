@@ -2302,9 +2302,9 @@
   integrity sha512-Hu9hPxTdBZA0C4GrWTsSflzwsJ99oAk9jqAwpcszdFNqfjMjkPGuCM9QsVZbBP2bE8fxrVrPsNOILS6puY8e/A==
 
 "@nestjs/platform-express@^7.0.13":
-  version "7.6.17"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-7.6.17.tgz#80b6dc2ac3636af19b5d70573926b5b09da35810"
-  integrity sha512-lyMwx8X/zTXZzxrd6Xn8BEcS/wuFyEgRVk9f15Z29hSaWHd78mUlBXvSnKJpzsN7wTjU8YWbAy/Ig9kIBS6efg==
+  version "7.6.18"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-7.6.18.tgz#cdf442dfd85948fc7b67bbc4007dddef83cdd4b9"
+  integrity sha512-Dty2bBhsW7EInMRPS1pkXKJ3GBBusEj6fnEpb0UfkaT3E7asay9c64kCmZE+8hU430qQjY+fhBb1RNWWPnUiwQ==
   dependencies:
     body-parser "1.19.0"
     cors "2.8.5"
@@ -17057,10 +17057,10 @@ sass-loader@^10.0.3:
     schema-utils "^3.0.0"
     semver "^7.3.2"
 
-sass@~1.32.6:
-  version "1.32.13"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.32.13.tgz#8d29c849e625a415bce71609c7cf95e15f74ed00"
-  integrity sha512-dEgI9nShraqP7cXQH+lEXVf73WOPCse0QlFzSD8k+1TcOxCMwVXfQlr0jtoluZysQOyJGnfr21dLvYKDJq8HkA==
+sass@~1.35.1:
+  version "1.35.1"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.35.1.tgz#90ecf774dfe68f07b6193077e3b42fb154b9e1cd"
+  integrity sha512-oCisuQJstxMcacOPmxLNiLlj4cUyN2+8xJnG7VanRoh2GOLr9RqkvI4AxA4a6LHVg/rsu+PmxXeGhrdSF9jCiQ==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
 
