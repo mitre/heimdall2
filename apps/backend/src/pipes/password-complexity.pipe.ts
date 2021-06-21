@@ -18,7 +18,8 @@ export function hasClasses(password: string): boolean {
     RegExp(/[^\w\s]/)
   ];
   return (
-    validators.filter((expr) => expr.test(password)).length == validators.length
+    validators.filter((expr) => expr.test(password)).length ===
+    validators.length
   );
 }
 
@@ -81,7 +82,7 @@ export class PasswordComplexityPipe implements PipeTransform {
       return value;
     }
     if (
-      typeof value.password == 'string' &&
+      typeof value.password === 'string' &&
       validatePassword(value.password).errors.length === 0
     ) {
       return value;

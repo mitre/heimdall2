@@ -3,7 +3,10 @@ import {CreateUserDto} from '../../../apps/backend/src/users/dto/create-user.dto
 export default class RegistrationPage {
   register(user: CreateUserDto): void {
     this.registerNoSubmit(user);
-    cy.get('#register').click();
+    /*
+     * We have to force click the button here since the password complexity pipe hasn't always returned yet
+     */
+    cy.get('#register').click({force: true});
   }
   registerNoSubmit(user: CreateUserDto): void {
     cy.visit('/signup');
