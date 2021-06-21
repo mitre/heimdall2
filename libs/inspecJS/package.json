@@ -1,0 +1,39 @@
+{
+  "name": "inspecjs",
+  "version": "0.12.4",
+  "description": "© 2018 The MITRE Corporation.",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/inspecjs",
+  "types": "./dist/inspecjs.d.ts",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^12.20.7",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "prettier": "^1.19.1",
+    "typedoc": "^0.20.35",
+    "typescript": "^3.9.9"
+  },
+  "scripts": {
+    "build": "rm -r ./dist; tsc --strict",
+    "docs": "typedoc --out docs ./src",
+    "gen-types": "bash scripts/update_schema.sh",
+    "lint": "eslint --ext .ts src; exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mitre/inspecjs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/mitre/inspecjs/issues"
+  },
+  "homepage": "https://github.com/mitre/inspecjs#readme"
+}

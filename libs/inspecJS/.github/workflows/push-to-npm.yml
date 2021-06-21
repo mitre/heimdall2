@@ -1,0 +1,27 @@
+name: Push to NPM and GitHub Packages
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@master
+
+      - name: setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install project dependencies
+        run: npm install --frozen-lockfile
+
+      - name: Build tarball for publishing
+        run: npm run build
+
+      - name: Publish inspecJS to NPM
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
