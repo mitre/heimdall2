@@ -46,12 +46,10 @@
               </v-tooltip>
             </v-col>
           </v-row>
-          <Users v-model="groupInfo.users" :group-id="groupId" @edit-user-group-role="addEditedUser"/>
+          <Users v-model="groupInfo.users" />
         </v-form>
       </v-card-text>
-
       <v-divider />
-
       <v-card-actions>
         <v-col class="text-right">
           <v-btn
@@ -73,7 +71,6 @@
     </v-card>
   </v-dialog>
 </template>
-
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
@@ -85,7 +82,6 @@ import {GroupsModule} from '@/store/groups';
 import Users from '@/components/global/groups/Users.vue';
 import DeleteDialog from '@/components/generic/DeleteDialog.vue';
 import _ from 'lodash';
-
 function newGroup(): IGroup {
   return {
     id: '-1',
@@ -96,7 +92,6 @@ function newGroup(): IGroup {
     users: []
   }
 }
-
 @Component({
   validations: {},
   components: {
@@ -114,17 +109,12 @@ export default class GroupModal extends Vue {
     }) readonly group!: IGroup;
   @Prop({type: Boolean, default: false}) readonly admin!: boolean;
   @Prop({type: Boolean, default: false}) readonly create!: boolean;
-  @Prop({type: String, required: false}) readonly groupId!: string;
-
   dialog = false;
   changePassword = false;
-
   groupInfo: IGroup = _.cloneDeep(this.group);
-  editedUsers: ISlimUser[] = [];
   currentPassword = '';
   newPassword = '';
   passwordConfirmation = '';
-
   get title(): string {
     if(this.create) {
       return 'Create a New Group'
@@ -133,21 +123,10 @@ export default class GroupModal extends Vue {
       return 'Update Group'
     }
   }
-
   async save(): Promise<void> {
-    while(this.editedUsers.length > 0) {
-      const userId = this.editedUsers[0].id;
-      const role = this.editedUsers[0].groupRole!;
-      const index = this.groupInfo.users.findIndex((user) => user.id === userId);
-      this.groupInfo.users[index] = this.editedUsers.splice(0, 1)[0];
-      this.editUserRole(this.groupInfo.id, userId, role);
-    }
-    this.$emit('update-group-users');
-
     const groupInfo: ICreateGroup = {
       ...this.groupInfo,
     };
-
     const response = this.create ? this.createGroup(groupInfo) : this.updateExistingGroup(groupInfo);
     response.then(({data}) => {
       this.syncUsersWithGroup(data).then(() => {
@@ -162,28 +141,18 @@ export default class GroupModal extends Vue {
       });
     })
   }
-
   async createGroup(createGroup: ICreateGroup): Promise<AxiosResponse<IGroup>> {
     return axios.post<IGroup>('/groups', createGroup)
   }
-
   async updateExistingGroup(groupToUpdate: ICreateGroup): Promise<AxiosResponse<IGroup>> {
     return axios.put<IGroup>(`/groups/${this.groupInfo.id}`, groupToUpdate);
   }
-
-  async editUserRole(groupId: string, userId: string, updatedRole: string) {
-    const updateUserGroupRole: IAddUserToGroup = {
-      userId: userId,
-      groupRole: updatedRole
-    }
-    return axios.put(`/groups/${groupId}/updateUserGroupRole`, updateUserGroupRole);
-  }
-
   async syncUsersWithGroup(group: IGroup) {
     const originalIds = this.group.users.map((user) => user.id);
     const changedIds = this.groupInfo.users.map((user) => user.id);
     const toAdd: ISlimUser[] = this.groupInfo.users.filter(user => !originalIds.includes(user.id));
     const toRemove: ISlimUser[] = this.group.users.filter(user => !changedIds.includes(user.id));
+    const toUpdate = this.groupInfo.users.filter((newUser) => this.group.users.some((user) =>(user.id === newUser.id && user.groupRole !== newUser.groupRole)))
     const addedUserPromises = toAdd.map((user) => {
       const addUserDto: IAddUserToGroup = {
         userId: user.id,
@@ -191,19 +160,20 @@ export default class GroupModal extends Vue {
       }
       return axios.post(`/groups/${group.id}/user`, addUserDto);
     });
-
     const removedUserPromises = toRemove.map((user) => {
       const removeUserDto: IRemoveUserFromGroup = {
         userId: user.id
       }
       return axios.delete(`/groups/${group.id}/user`, {data: removeUserDto});
     });
-
-    return Promise.all(addedUserPromises.concat(removedUserPromises))
-  }
-
-  addEditedUser(editedUser: ISlimUser) {
-    this.editedUsers.push(editedUser);
+    const updateUserPromises = toUpdate.map((user) => {
+      const updateUserGroupRole: IAddUserToGroup = {
+        userId: user.id,
+        groupRole: user.groupRole || 'member'
+      }
+      return axios.put(`/groups/${group.id}/updateUserGroupRole`, updateUserGroupRole);
+    })
+    return Promise.all(addedUserPromises.concat(removedUserPromises, updateUserPromises))
   }
 }
 </script>

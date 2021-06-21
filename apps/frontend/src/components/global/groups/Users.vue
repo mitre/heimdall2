@@ -33,35 +33,12 @@
             >{{ item.firstName }} {{ item.lastName }}</template
           >
           <template #[`item.groupRole`]="{item}">
-            {{ item.groupRole }}
-            <v-menu offset-x>
-              <template #activator="{on}">
-                <v-icon
-                  small
-                  title="Edit Role"
-                  v-on="on"
-                  @click="getUsersCurrentRole(item.groupRole)"
-                >
-                  mdi-pencil
-                </v-icon>
-              </template>
-              <v-list>
-                <v-list-item-group
-                  v-model="currentRole"
-                  active-class="bg-active"
-                >
-                  <v-list-item
-                    v-for="(role, index) in roles"
-                    :key="index"
-                    ripple
-                    @click="editUserRole(item, groupId, role.value)"
-                  >
-                    <v-list-item-title>{{ role.text }}</v-list-item-title>
-                  </v-list-item>
-                </v-list-item-group>
-              </v-list>
-            </v-menu>
-          </template>
+            <v-select
+              :items="['owner', 'member']"
+              :value="item.groupRole"
+              @click="editedUser = item"
+              @change="onUpdateUserGroupRole"
+          /></template>
           <template #[`item.actions`]="{item}">
             <v-icon small title="Delete" @click="deleteUserDialog(item)">
               mdi-delete
@@ -81,16 +58,14 @@
     />
   </div>
 </template>
-
 <script lang="ts">
 import {ISlimUser} from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop, VModel} from 'vue-property-decorator';
+import {VModel} from 'vue-property-decorator';
 import {ServerModule} from '@/store/server';
 import {IVuetifyItems} from '@/utilities/helper_util';
 import DeleteDialog from '@/components/generic/DeleteDialog.vue';
-
 @Component({
   components: {
     DeleteDialog,
@@ -98,15 +73,9 @@ import DeleteDialog from '@/components/generic/DeleteDialog.vue';
 })
 export default class Users extends Vue {
   @VModel({type: Array, required: false, default() {return []}}) currentUsers!: ISlimUser[];
-  @Prop({type: String, required: false}) readonly groupId!: string;
-
   usersToAdd: string[] = [];
-
-  deletedUser: ISlimUser | null = null;
-  editUser: ISlimUser | null = null;
+  editedUser: ISlimUser = {id: '0', email: ''};
   dialogDelete = false;
-  currentRole = 0;
-
   headers: Object[] = [
     {
       text: 'Name',
@@ -122,7 +91,8 @@ export default class Users extends Vue {
     },
     {
       text: 'Role',
-      value: 'groupRole'
+      value: 'groupRole',
+      width: '20%'
     },
     {
       text: 'Actions',
@@ -130,18 +100,6 @@ export default class Users extends Vue {
       sortable: false
     }
   ];
-
-  roles: Object[] = [
-    {
-      text: 'Owner',
-      value: 'owner'
-    },
-    {
-      text: 'Member',
-      value: 'member'
-    }
-  ];
-
   addUsers() {
     ServerModule.allUsers.forEach((user) => {
       if(this.usersToAdd.includes(user.id)) {
@@ -150,55 +108,29 @@ export default class Users extends Vue {
     });
     this.usersToAdd = [];
   }
-
+  onUpdateUserGroupRole(newValue: string) {
+    const userToUpdate = this.currentUsers.indexOf(this.editedUser)
+    this.editedUser.groupRole = newValue
+    this.currentUsers[userToUpdate] = this.editedUser
+  }
   deleteUserDialog(user: ISlimUser): void {
-    this.deletedUser = user;
+    this.editedUser = user;
     this.dialogDelete = true
   }
-
   closeDeleteDialog () {
     this.dialogDelete = false
-    this.deletedUser = null;
+    this.editedUser = {id: '0', email: ''};
   }
-
   deleteUserConfirm(): void {
-    if (this.deletedUser) {
-      this.currentUsers.splice(this.currentUsers.indexOf(this.deletedUser), 1);
+    if (this.editedUser) {
+      this.currentUsers.splice(this.currentUsers.indexOf(this.editedUser), 1);
     }
     this.closeDeleteDialog();
   }
-
-  getUsersCurrentRole(currentRole: string) {
-    if(currentRole === 'owner') {
-      this.currentRole = 0;
-    }
-    else {
-      this.currentRole = 1;
-    }
-  }
-
-  test(test: ISlimUser[]) {
-    for(let i = 0; i < test.length; i++) {
-      console.log("User: " + this.currentUsers[i].email + " Role: " + this.currentUsers[i].groupRole);
-    }
-  }
-
-  editUserRole(user: ISlimUser, groupId: string, updatedRole: string,) {
-    if(user.groupRole !== updatedRole) {
-      const updatedUser: ISlimUser = {
-        ...user,
-        groupRole: updatedRole
-      }
-      this.$emit('edit-user-group-role', updatedUser);
-      this.currentUsers[this.currentUsers.indexOf(user)] = updatedUser;
-    }
-  }
-
   // Filter out users that are already in the group from the user search
   get availableUsers(): IVuetifyItems[] {
     const currentUserIds: string[] = this.currentUsers.map((user) => user.id);
     const users: IVuetifyItems[] = [];
-
     ServerModule.allUsers.forEach(async (user) => {
       if(!currentUserIds.includes(user.id) && user.id !== ServerModule.userInfo.id) {
         users.push({
