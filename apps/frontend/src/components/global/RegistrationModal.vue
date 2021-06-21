@@ -285,7 +285,7 @@ export default class RegistrationModal extends Vue {
   }
 
   @Watch('password')
-  onUpdatePassword() {
+  async onUpdatePassword() {
     this.checkPasswordComplexity();
   }
 
