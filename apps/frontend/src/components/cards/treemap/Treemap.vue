@@ -34,7 +34,6 @@
 </template>
 
 <script lang="ts">
-// preserveAspectRatio="xMidYMid meet"
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
