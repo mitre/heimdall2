@@ -167,6 +167,7 @@
             :disabled="$v.$invalid || passwordValidation.errors.length !== 0"
             color="primary"
             type="submit"
+            :loading="buttonLoading"
           >
             Register
           </v-btn>
@@ -245,6 +246,7 @@ export default class RegistrationModal extends Vue {
     meetsClassRequirement: false,
     meetsNoRepeatsRequirement: false
   };
+  buttonLoading = false;
 
   @Prop({type: Boolean, default: false}) readonly adminRegisterMode!: boolean;
   @Prop({default: false}) readonly visible!: boolean;
@@ -254,6 +256,7 @@ export default class RegistrationModal extends Vue {
   }
 
   async register(): Promise<void> {
+    this.buttonLoading = true;
     // checking if the input is valid
     if ((this.$refs.form as HTMLFormElement).validate()) {
       const creds: SignupHash = {
@@ -280,7 +283,9 @@ export default class RegistrationModal extends Vue {
               'You have successfully registered, please sign in'
             );
           }
-      });
+      }).finally(() => {
+          this.buttonLoading = false;
+      })
     }
   }
 
