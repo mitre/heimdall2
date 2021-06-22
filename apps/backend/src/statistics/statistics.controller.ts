@@ -1,8 +1,10 @@
 import {ForbiddenError} from '@casl/ability';
 import {Controller, Get, Request, UseGuards} from '@nestjs/common';
+import {Request as ExpressRequest} from 'express';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
+import {LoggingService} from '../logging/logging.service';
 import {User} from '../users/user.model';
 import {StatisticsDTO} from './dto/statistics.dto';
 import {StatisticsService} from './statistics.service';
@@ -11,14 +13,18 @@ import {StatisticsService} from './statistics.service';
 export class StatisticsController {
   constructor(
     private readonly statisticsService: StatisticsService,
-    private readonly authz: AuthzService
+    private readonly authz: AuthzService,
+    private readonly loggingService: LoggingService
   ) {}
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async userFindAll(@Request() request: {user: User}): Promise<StatisticsDTO> {
+  async userFindAll(
+    @Request() request: ExpressRequest & {user: User}
+  ): Promise<StatisticsDTO> {
     const abac = this.authz.abac.createForUser(request.user);
     ForbiddenError.from(abac).throwUnlessCan(Action.ViewStatistics, User);
+    this.loggingService.logAction(request, 'Accessed Deployment Statistics');
     return this.statisticsService.getHeimdallStatistics();
   }
 }

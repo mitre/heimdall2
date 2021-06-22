@@ -10,10 +10,12 @@ import {
   Request,
   UseGuards
 } from '@nestjs/common';
+import {Request as ExpressRequest} from 'express';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {EvaluationsService} from '../evaluations/evaluations.service';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
+import {LoggingService} from '../logging/logging.service';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {AddUserToGroupDto} from './dto/add-user-to-group.dto';
@@ -30,7 +32,8 @@ export class GroupsController {
     private readonly groupsService: GroupsService,
     private readonly usersService: UsersService,
     private readonly evaluationsService: EvaluationsService,
-    private readonly authz: AuthzService
+    private readonly authz: AuthzService,
+    private readonly loggingService: LoggingService
   ) {}
 
   @Get()
@@ -62,7 +65,7 @@ export class GroupsController {
   @Post('/:id/user')
   async addUserToGroup(
     @Param('id') id: string,
-    @Request() request: {user: User},
+    @Request() request: ExpressRequest & {user: User},
     @Body() addUserToGroupDto: AddUserToGroupDto
   ): Promise<GroupDto> {
     const abac = this.authz.abac.createForUser(request.user);
@@ -76,7 +79,14 @@ export class GroupsController {
       userToAdd,
       addUserToGroupDto.groupRole
     );
-    return new GroupDto(group);
+    const updatedGroupDto = new GroupDto(group);
+    this.loggingService.logGroupActionWithUserSubject(
+      request,
+      'Add',
+      userToAdd,
+      updatedGroupDto
+    );
+    return updatedGroupDto;
   }
 
   @Delete('/:id/user')
@@ -99,7 +109,7 @@ export class GroupsController {
   @Post('/:id/evaluation')
   async addEvaluationToGroup(
     @Param('id') id: string,
-    @Request() request: {user: User},
+    @Request() request: ExpressRequest & {user: User},
     @Body() evaluationGroupDto: EvaluationGroupDto
   ): Promise<GroupDto> {
     const abac = this.authz.abac.createForUser(request.user);
@@ -112,13 +122,20 @@ export class GroupsController {
     // Evaluation Permissions
     ForbiddenError.from(abac).throwUnlessCan(Action.Read, evaluationToAdd);
     await this.groupsService.addEvaluationToGroup(group, evaluationToAdd);
-    return new GroupDto(group);
+    const updatedGroupDto = new GroupDto(group);
+    this.loggingService.logGroupActionWithEvaluationSubject(
+      request,
+      'Add',
+      evaluationToAdd,
+      updatedGroupDto
+    );
+    return updatedGroupDto;
   }
 
   @Delete('/:id/evaluation')
   async removeEvaluationFromGroup(
     @Param('id') id: string,
-    @Request() request: {user: User},
+    @Request() request: ExpressRequest & {user: User},
     @Body() evaluationGroupDto: EvaluationGroupDto
   ): Promise<GroupDto> {
     // This must perform validation checks to ensure the user performing the action has permission to remove evaluations from a group.
@@ -128,12 +145,19 @@ export class GroupsController {
     const evaluationToRemove = await this.evaluationsService.findById(
       evaluationGroupDto.id
     );
-    return new GroupDto(
+    const updatedGroupDto = new GroupDto(
       await this.groupsService.removeEvaluationFromGroup(
         group,
         evaluationToRemove
       )
     );
+    this.loggingService.logGroupActionWithEvaluationSubject(
+      request,
+      'Remove',
+      evaluationToRemove,
+      updatedGroupDto
+    );
+    return updatedGroupDto;
   }
 
   @Get(':id')
@@ -150,28 +174,32 @@ export class GroupsController {
 
   @Put(':id')
   async update(
-    @Request() request: {user: User},
+    @Request() request: ExpressRequest & {user: User},
     @Param('id') id: string,
     @Body() updateGroup: CreateGroupDto
   ): Promise<GroupDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const groupToUpdate = await this.groupsService.findByPkBang(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, groupToUpdate);
-
-    return new GroupDto(
+    const updatedGroupDto = new GroupDto(
       await this.groupsService.update(groupToUpdate, updateGroup)
     );
+    this.loggingService.logGroupAction(request, 'Update', updatedGroupDto);
+    return updatedGroupDto;
   }
 
   @Delete(':id')
   async remove(
-    @Request() request: {user: User},
+    @Request() request: ExpressRequest & {user: User},
     @Param('id') id: string
   ): Promise<GroupDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const groupToDelete = await this.groupsService.findByPkBang(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Delete, groupToDelete);
-
-    return new GroupDto(await this.groupsService.remove(groupToDelete));
+    const deletedGroupDto = new GroupDto(
+      await this.groupsService.remove(groupToDelete)
+    );
+    this.loggingService.logGroupAction(request, 'Delete', deletedGroupDto);
+    return deletedGroupDto;
   }
 }

@@ -3,6 +3,8 @@ import {SequelizeModule} from '@nestjs/sequelize';
 import {AuthzModule} from '../authz/authz.module';
 import {EvaluationTagsModule} from '../evaluation-tags/evaluation-tags.module';
 import {EvaluationsModule} from '../evaluations/evaluations.module';
+import {LoggingModule} from '../logging/logging.module';
+import {LoggingService} from '../logging/logging.service';
 import {UsersModule} from '../users/users.module';
 import {Group} from './group.model';
 import {GroupsController} from './groups.controller';
@@ -14,9 +16,10 @@ import {GroupsService} from './groups.service';
     AuthzModule,
     UsersModule,
     EvaluationsModule,
-    EvaluationTagsModule
+    EvaluationTagsModule,
+    LoggingModule
   ],
-  providers: [GroupsService],
+  providers: [GroupsService, LoggingService],
   controllers: [GroupsController],
   exports: [GroupsService]
 })

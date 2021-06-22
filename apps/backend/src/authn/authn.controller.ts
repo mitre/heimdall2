@@ -10,18 +10,27 @@ import {AuthGuard} from '@nestjs/passport';
 import {Request} from 'express';
 import {AuthenticationExceptionFilter} from '../filters/authentication-exception.filter';
 import {LocalAuthGuard} from '../guards/local-auth.guard';
+import {LoggingService} from '../logging/logging.service';
 import {User} from '../users/user.model';
 import {AuthnService} from './authn.service';
 
 @Controller('authn')
 export class AuthnController {
-  constructor(private authnService: AuthnService) {}
+  constructor(
+    private authnService: AuthnService,
+    private loggingService: LoggingService
+  ) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
+    this.loggingService.logAuthenticationAction(
+      req,
+      'Succeded Login As',
+      req.user as User
+    );
     return this.authnService.login(req.user as User);
   }
 
@@ -30,6 +39,11 @@ export class AuthnController {
   async loginToLDAP(
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
+    this.loggingService.logAuthenticationAction(
+      req,
+      'Succeded LDAP Login As',
+      req.user as User
+    );
     return this.authnService.login(req.user as User);
   }
 
@@ -47,6 +61,11 @@ export class AuthnController {
   @UseFilters(new AuthenticationExceptionFilter())
   async getUserFromGithubLogin(@Req() req: Request): Promise<void> {
     const session = await this.authnService.login(req.user as User);
+    this.loggingService.logAuthenticationAction(
+      req,
+      'Succeded Github Oauth Login As',
+      req.user as User
+    );
     await this.setSessionCookies(req, session);
   }
 
@@ -64,6 +83,11 @@ export class AuthnController {
   @UseFilters(new AuthenticationExceptionFilter())
   async getUserFromGitlabLogin(@Req() req: Request): Promise<void> {
     const session = await this.authnService.login(req.user as User);
+    this.loggingService.logAuthenticationAction(
+      req,
+      'Succeded Github Oauth Login As',
+      req.user as User
+    );
     await this.setSessionCookies(req, session);
   }
 
@@ -81,6 +105,11 @@ export class AuthnController {
   @UseFilters(new AuthenticationExceptionFilter())
   async getUserFromGoogle(@Req() req: Request): Promise<void> {
     const session = await this.authnService.login(req.user as User);
+    this.loggingService.logAuthenticationAction(
+      req,
+      'Succeded Google Oauth Login As',
+      req.user as User
+    );
     await this.setSessionCookies(req, session);
   }
 
@@ -98,6 +127,11 @@ export class AuthnController {
   @UseFilters(new AuthenticationExceptionFilter())
   async getUserFromOkta(@Req() req: Request): Promise<void> {
     const session = await this.authnService.login(req.user as User);
+    this.loggingService.logAuthenticationAction(
+      req,
+      'Succeded Okta Oauth Login As',
+      req.user as User
+    );
     await this.setSessionCookies(req, session);
   }
 
@@ -113,6 +147,11 @@ export class AuthnController {
   @UseGuards(AuthGuard('oidc'))
   async getUserFromOIDC(@Req() req: Request): Promise<void> {
     const session = await this.authnService.login(req.user as User);
+    this.loggingService.logAuthenticationAction(
+      req,
+      'Succeded OIDC Login As',
+      req.user as User
+    );
     await this.setSessionCookies(req, session);
   }
 
