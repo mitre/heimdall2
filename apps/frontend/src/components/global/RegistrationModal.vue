@@ -62,6 +62,7 @@
             label="Password"
             :type="showPassword ? 'text' : 'password'"
             tabindex="4"
+            @keyup="checkPasswordComplexity"
             @blur="$v.password.$touch()"
           >
             <template #append>
@@ -196,7 +197,7 @@ import {required, email, sameAs} from 'vuelidate/lib/validators';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 import Modal from '@/components/global/Modal.vue';
 import {SnackbarModule} from '@/store/snackbar';
-import {Prop, Watch} from 'vue-property-decorator';
+import {Prop} from 'vue-property-decorator';
 import {IPasswordValidationResult} from '@heimdall/interfaces';
 
 export interface SignupHash {
@@ -287,11 +288,6 @@ export default class RegistrationModal extends Vue {
           this.buttonLoading = false;
       })
     }
-  }
-
-  @Watch('password')
-  async onUpdatePassword() {
-    this.checkPasswordComplexity();
   }
 
   async checkPasswordComplexity() {
