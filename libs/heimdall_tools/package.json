@@ -1,0 +1,12 @@
+{
+  "name": "@heimdall/heimdall_tools",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Converter util library used to transform various scan results into HDF format",
+  "main": "index.ts",
+  "scripts": {
+    "lint": "eslint \"**/*.ts\" --fix",
+    "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
+    "test": ""
+  }
+}
