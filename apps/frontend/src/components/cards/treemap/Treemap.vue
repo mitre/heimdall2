@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container ref="treemapContainer" fluid>
     <v-row dense>
       <v-col :cols="4">
         NIST SP 800-53 Security and Privacy Control Coverage
@@ -12,7 +12,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col v-resize:debounce="on_resize" :cols="12">
+      <v-col v-resize="on_resize" :cols="12">
         <svg id="chartBody" :width="width" :height="height">
           <g
             style="shape-rendering: crispEdges"
@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-//               preserveAspectRatio="xMidYMid meet"
+// preserveAspectRatio="xMidYMid meet"
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
@@ -47,23 +47,18 @@ import {
   is_parent
 } from '@/utilities/treemap_util';
 import Cell, {XYScale} from '@/components/cards/treemap/Cell.vue';
-//@ts-ignore
-import resize from 'vue-resize-directive';
 import {ColorHackModule} from '@/store/color_hack';
 import {compare_arrays} from '@/utilities/helper_util';
-import {Prop, PropSync} from 'vue-property-decorator';
-import _ from 'lodash';
+import {Prop, PropSync, Ref} from 'vue-property-decorator';
 
 // Respects a v-model of type TreeMapState
 @Component({
   components: {
     Cell
-  },
-  directives: {
-    resize
   }
 })
 export default class Treemap extends Vue {
+  @Ref('treemapContainer') readonly treemapContainer!: Element;
   @Prop({type: Array, required: true}) readonly value!: TreeMapState;
   @Prop({type: Object, required: true}) readonly filter!: Filter;
   @PropSync('selected_control', {type: String}) synced_selected_control!:
@@ -198,11 +193,8 @@ export default class Treemap extends Vue {
   }
 
   /** Called on resize */
-  on_resize(elt: unknown) {
-    const newClientWidth = _.get(elt, 'clientWidth');
-    if (newClientWidth !== undefined && newClientWidth > 1) {
-      this.width = newClientWidth - 24;
-    }
+  on_resize() {
+    this.width = this.treemapContainer.clientWidth;
   }
 }
 </script>
