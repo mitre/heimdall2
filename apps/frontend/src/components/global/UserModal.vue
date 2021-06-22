@@ -145,6 +145,7 @@
             color="primary"
             text
             :disabled="update_unavailable"
+            :loading="buttonLoading"
             @click="updateUserInfo"
             >Save Changes</v-btn
           >
@@ -200,8 +201,10 @@ export default class UserModal extends Vue {
   currentPassword = '';
   newPassword = '';
   passwordConfirmation = '';
+  buttonLoading = false;
 
   async updateUserInfo(): Promise<void> {
+    this.buttonLoading = true;
     this.$v.$touch()
     if (this.userInfo != null && !this.$v.$invalid) {
       var updateUserInfo: IUpdateUser = {
@@ -228,6 +231,8 @@ export default class UserModal extends Vue {
           SnackbarModule.notify('User updated successfully.');
           this.$emit('update-user', data);
           this.dialog = false;
+        }).finally(() => {
+          this.buttonLoading = false;
         })
     }
   }
