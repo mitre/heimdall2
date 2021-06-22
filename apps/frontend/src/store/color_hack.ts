@@ -1,5 +1,5 @@
 import Store from '@/store/store';
-import {nist} from 'inspecjs';
+import {ControlGroupStatus} from 'inspecjs';
 import {getModule, Module, VuexModule} from 'vuex-module-decorators';
 
 /**
@@ -77,8 +77,8 @@ export class ColorHack extends VuexModule {
   /**
    * Parameterized getter that returns an appropriate rgb color code for a given control (group) status
    */
-  get colorForStatus(): (status: nist.ControlGroupStatus) => string {
-    return (status: nist.ControlGroupStatus) => {
+  get colorForStatus(): (status: ControlGroupStatus) => string {
+    return (status: ControlGroupStatus) => {
       switch (status) {
         case 'Passed':
           return this.lookupColor('statusPassed');

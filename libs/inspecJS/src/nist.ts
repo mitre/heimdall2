@@ -1,5 +1,5 @@
-import { ControlStatus } from "./compat_wrappers";
-import { ALL_NIST_CONTROL_NUMBERS, ALL_NIST_FAMILIES } from "./raw_nist";
+import {ControlStatus} from './compat_wrappers';
+import {ALL_NIST_CONTROL_NUMBERS, ALL_NIST_FAMILIES} from './raw_nist';
 
 // Regexes.
 const NIST_FAMILY_RE = /^[A-Z]{2}$/;
@@ -95,7 +95,7 @@ export class NistControl {
       const b_i = b_chain[i];
 
       // Return only if significant
-      const lc = a_i.localeCompare(b_i, "en", { numeric: true });
+      const lc = a_i.localeCompare(b_i, 'en', {numeric: true});
       if (lc) {
         return lc;
       }
@@ -126,9 +126,9 @@ export class NistControl {
     const ss = this.sub_specifiers;
 
     // Build our string. Start with family
-    let s = this.family || "";
+    let s = this.family || '';
     if (ss.length > 1) {
-      s += "-";
+      s += '-';
     }
 
     for (let i = 1; i < ss.length && i < config.max_specifiers; i++) {
@@ -138,18 +138,18 @@ export class NistControl {
       if (!Number.isNaN(Number.parseInt(spec))) {
         // If we need to, pad zeros
         if (config.pad_zeros && spec.length < 2) {
-          spec = "0" + spec;
+          spec = '0' + spec;
         }
 
         // If index past 1, wrap in parens
         if (i > 1) {
           if (config.add_parens) {
-            spec = "(" + spec + ")";
+            spec = '(' + spec + ')';
           }
 
           // If space, add space
           if (config.add_spaces) {
-            spec = " " + spec;
+            spec = ' ' + spec;
           }
         }
 
@@ -158,11 +158,11 @@ export class NistControl {
       } else if (config.allow_letters) {
         // It's a letter. Add a .
         if (config.add_spaces) {
-          s += " ";
+          s += ' ';
         }
         s += spec;
         if (config.add_periods) {
-          s += ".";
+          s += '.';
         }
       }
     }
@@ -202,14 +202,14 @@ export function parse_nist(
   // Parse sub-elements
   const family = full_match[1];
   const control_num = full_match[2];
-  const subspecs_raw = (full_match[3] || "").trim();
+  const subspecs_raw = (full_match[3] || '').trim();
 
   // Init sub-specs
   const sub_specs: string[] = [family, control_num];
 
   // Filter garbage from subspecs_raw
   let subspecs_split = subspecs_raw.split(SPEC_SPLITTER);
-  subspecs_split = subspecs_split.filter(s => s != "");
+  subspecs_split = subspecs_split.filter((s) => s != '');
   return new NistControl(sub_specs.concat(subspecs_split), raw_nist);
 }
 
@@ -240,7 +240,7 @@ export interface CategoryItemRequirements {
 
 // Represents the status of a group of controsl. Typically holds the value of the "worst" control amongst the group
 // Empty means no controls are in the given group
-export type ControlGroupStatus = ControlStatus | "Empty";
+export type ControlGroupStatus = ControlStatus | 'Empty';
 
 /**
  * Computes the groups status having added control.
@@ -264,13 +264,13 @@ export function compare_statuses(
   b: ControlGroupStatus
 ): number {
   const precedence: ControlGroupStatus[] = [
-    "Empty",
-    "From Profile",
-    "Not Applicable",
-    "Not Reviewed",
-    "Passed",
-    "Failed",
-    "Profile Error"
+    'Empty',
+    'From Profile',
+    'Not Applicable',
+    'Not Reviewed',
+    'Passed',
+    'Failed',
+    'Profile Error'
   ];
   const a_i = precedence.indexOf(a);
   const b_i = precedence.indexOf(b);
@@ -307,12 +307,12 @@ function _control_parent(c: NistControl): NistControl | null {
 }
 
 function _key_for(c: NistControl): string {
-  return c.sub_specifiers.join("-");
+  return c.sub_specifiers.join('-');
 }
 
 function _generate_full_nist_hierarchy(): NistHierarchy {
   // Initialize our roots
-  const roots: NistHierarchy = ALL_NIST_FAMILIES.map(family => {
+  const roots: NistHierarchy = ALL_NIST_FAMILIES.map((family) => {
     return {
       control: new NistControl([family], family),
       children: []
@@ -320,15 +320,15 @@ function _generate_full_nist_hierarchy(): NistHierarchy {
   });
 
   // Init our map, which maps _key_for of controls to their corresponding hierarchy nodes
-  const map: { [key: string]: NistHierarchyNode } = {};
+  const map: {[key: string]: NistHierarchyNode} = {};
 
   // Add roots to the map
-  roots.forEach(r => {
+  roots.forEach((r) => {
     map[_key_for(r.control)] = r;
   });
 
   // Iterate over all controls
-  ALL_NIST_CONTROL_NUMBERS.forEach(n => {
+  ALL_NIST_CONTROL_NUMBERS.forEach((n) => {
     const as_control = parse_nist(n) as NistControl | null; // We know there are no revs in our file
     if (!as_control) {
       throw `Invalid nist control constant ${n}`;
@@ -381,4 +381,5 @@ function _generate_full_nist_hierarchy(): NistHierarchy {
   return roots;
 }
 
-export const FULL_NIST_HIERARCHY: Readonly<NistHierarchy> = _generate_full_nist_hierarchy();
+export const FULL_NIST_HIERARCHY: Readonly<NistHierarchy> =
+  _generate_full_nist_hierarchy();

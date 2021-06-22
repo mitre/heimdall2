@@ -57,7 +57,7 @@ import {SourcedContextualizedEvaluation, SourcedContextualizedProfile} from '@/s
 import {profile_unique_key} from '@/utilities/format_util';
 import ProfileInfo from '@/components/cards/ProfileInfo.vue';
 import {Prop, Watch} from 'vue-property-decorator';
-import {ContextualizedProfile} from 'inspecjs/dist/context';
+import {ContextualizedProfile} from 'inspecjs';
 import {InspecDataModule} from '../../store/data_store';
 
 /**

@@ -3,14 +3,14 @@
  * Especially useful for handling overlay/wrapper profiles.
  */
 
-import { HDFControl, hdfWrapControl } from "./compat_wrappers";
+import {HDFControl, hdfWrapControl} from './compat_wrappers';
 import {
-  AnyEval,
-  AnyProfile,
   AnyControl,
+  AnyEval,
+  AnyEvalControl,
   AnyEvalProfile,
-  AnyEvalControl
-} from "./fileparse";
+  AnyProfile
+} from './fileparse';
 
 /**
  * Mixin type to express that this type wraps another data type to add additional fields,
@@ -119,7 +119,7 @@ class ContextualizedControlImp implements ContextualizedControl {
   get is_redundant(): boolean {
     return (
       !this.data.code ||
-      this.data.code.trim() === "" ||
+      this.data.code.trim() === '' ||
       (this.extends_from.length > 0 && this.data.code === this.root.data.code)
     );
   }
@@ -183,7 +183,7 @@ export function contextualizeEvaluation(
     if (as_exec.parent_profile !== undefined) {
       // Look it up
       const parent = eval_context.contains.find(
-        p => p.data.name === as_exec.parent_profile
+        (p) => p.data.name === as_exec.parent_profile
       );
 
       // Link it up
@@ -200,7 +200,7 @@ export function contextualizeEvaluation(
   const all_controls: ContextualizedControl[] = [];
   for (const profile of eval_context.contains) {
     const p_controls = profile.data.controls as AnyEvalControl[];
-    profile.contains = p_controls.map(c => {
+    profile.contains = p_controls.map((c) => {
       return new ContextualizedControlImp(c, profile, [], []);
     });
     all_controls.push(...profile.contains);
@@ -225,7 +225,7 @@ export function contextualizeEvaluation(
       for (const extended_profile of cc.sourced_from.extends_from) {
         // Hunt for its ancestor in the extended profile
         const ancestor = extended_profile.contains.find(
-          c => c.data.id === cc.data.id
+          (c) => c.data.id === cc.data.id
         );
         // First one we find with a matching id we assume is the root (or at least, closer to root)
         if (ancestor) {
@@ -240,10 +240,10 @@ export function contextualizeEvaluation(
       // Unfortunately, if theres more than 2 profiles there's ultimately no way to figure out which one was applied "last".
       // This method leaves them as siblings. However, as a fallback method that is perhaps the best we can hope for
       // First, hunt out all controls from this file that have the same id as cc
-      const same_id = all_controls.filter(c => c.data.id === cc.data.id);
+      const same_id = all_controls.filter((c) => c.data.id === cc.data.id);
       // Find which of them, if any, is populated with results.
       let same_id_populated = same_id.find(
-        c => c.hdf.segments && c.hdf.segments.length
+        (c) => c.hdf.segments && c.hdf.segments.length
       );
 
       // If found a populated base, use that. If not, we substitute in the first found element in same_id. This is arbitrary.

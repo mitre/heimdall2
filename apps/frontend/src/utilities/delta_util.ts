@@ -3,8 +3,7 @@
  */
 
 import {SourcedContextualizedEvaluation} from '@/store/report_intake';
-import {context} from 'inspecjs';
-import {ContextualizedEvaluation} from 'inspecjs/dist/context';
+import {ContextualizedControl, ContextualizedEvaluation} from 'inspecjs';
 import {DateTime} from 'luxon';
 
 export const NOT_SELECTED = 'not selected';
@@ -13,7 +12,7 @@ export const NOT_SELECTED = 'not selected';
 // Controls is a list of controls
 interface ResultControls {
   unique_id: string;
-  controls: context.ContextualizedControl[];
+  controls: ContextualizedControl[];
 }
 
 /**
@@ -85,11 +84,11 @@ export class ControlChangeGroup {
  * Holds/computes the differences between two runs of the same control.
  */
 export class ControlDelta {
-  controls: context.ContextualizedControl[] = [];
-  controlsandnull: (context.ContextualizedControl | null)[] = [];
+  controls: ContextualizedControl[] = [];
+  controlsandnull: (ContextualizedControl | null)[] = [];
   numNull: number = 0;
 
-  constructor(controls: (context.ContextualizedControl | null)[]) {
+  constructor(controls: (ContextualizedControl | null)[]) {
     this.controlsandnull = controls;
     for (let i = 0; i < controls.length; i++) {
       if (controls[i] === null) {
@@ -180,7 +179,7 @@ function extract_top_level_controls(
   return {unique_id: exec.from_file.unique_id, controls: top};
 }
 /** An object of contextualized controls with the same V-ID */
-export type ControlSeries = {[key: string]: context.ContextualizedControl};
+export type ControlSeries = {[key: string]: ContextualizedControl};
 
 /** Matches ControlID keys to Arrays of Controls */
 export type ControlSeriesLookup = {[key: string]: ControlSeries};

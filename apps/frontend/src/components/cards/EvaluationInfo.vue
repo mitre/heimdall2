@@ -27,7 +27,7 @@ import {EvaluationModule} from '../../store/evaluations';
 import TagRow from '@/components/global/tags/TagRow.vue'
 import {IEvaluation} from '@heimdall/interfaces';
 import {get_eval_start_time} from '../../utilities/delta_util';
-import {ContextualizedEvaluation} from 'inspecjs/dist/context';
+import {ContextualizedEvaluation} from 'inspecjs';
 
 @Component({
   components: {

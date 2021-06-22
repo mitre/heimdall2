@@ -1,12 +1,11 @@
 {
   "name": "inspecjs",
-  "version": "0.12.4",
+  "version": "2.4.6",
   "description": "© 2018 The MITRE Corporation.",
   "files": [
     "dist"
   ],
-  "main": "./dist/inspecjs",
-  "types": "./dist/inspecjs.d.ts",
+  "main": "./src/inspecjs.ts",
   "dependencies": {},
   "devDependencies": {
     "@types/node": "^12.20.7",

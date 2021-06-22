@@ -10,7 +10,13 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import {context, ControlStatus, nist, Severity} from 'inspecjs';
+import {
+  ContextualizedControl,
+  ContextualizedProfile,
+  ControlStatus,
+  NistControl,
+  Severity
+} from 'inspecjs';
 import LRUCache from 'lru-cache';
 import {
   Action,
@@ -64,7 +70,7 @@ export type TreeMapState = string[]; // Representing the current path spec, from
  * @param context_control The control to search for term in
  */
 function contains_term(
-  context_control: context.ContextualizedControl,
+  context_control: ContextualizedControl,
   term: string
 ): boolean {
   const as_hdf = context_control.root.hdf;
@@ -204,7 +210,7 @@ export class FilteredData extends VuexModule {
 
   get profiles_for_evaluations(): (
     files: FileID[]
-  ) => readonly context.ContextualizedProfile[] {
+  ) => readonly ContextualizedProfile[] {
     return (files: FileID[]) => {
       // Filter to those that match our filter. In this case that just means come from the right file id
       return this.evaluations(files).flatMap(
@@ -258,12 +264,10 @@ export class FilteredData extends VuexModule {
    * Get all controls from all profiles from the specified file id.
    * Utlizes the profiles getter to accelerate the file filter.
    */
-  get controls(): (filter: Filter) => readonly context.ContextualizedControl[] {
+  get controls(): (filter: Filter) => readonly ContextualizedControl[] {
     /** Cache by filter */
-    const localCache: LRUCache<
-      string,
-      readonly context.ContextualizedControl[]
-    > = new LRUCache(MAX_CACHE_ENTRIES);
+    const localCache: LRUCache<string, readonly ContextualizedControl[]> =
+      new LRUCache(MAX_CACHE_ENTRIES);
 
     return (filter: Filter) => {
       // Generate a hash for cache purposes.
@@ -277,14 +281,14 @@ export class FilteredData extends VuexModule {
       }
 
       // Get profiles from loaded Results
-      let profiles: readonly context.ContextualizedProfile[] =
+      let profiles: readonly ContextualizedProfile[] =
         this.profiles_for_evaluations(filter.fromFile);
 
       // Get profiles from loaded Profiles
       profiles = profiles.concat(this.profiles(filter.fromFile));
 
       // And all the controls they contain
-      let controls: readonly context.ContextualizedControl[] = profiles.flatMap(
+      let controls: readonly ContextualizedControl[] = profiles.flatMap(
         (profile) => profile.contains
       );
       // Filter by control id
@@ -328,7 +332,7 @@ export class FilteredData extends VuexModule {
       // Filter by nist stuff
       if (filter.tree_filters && filter.tree_filters.length > 0) {
         // Construct a nist control to represent the filter
-        const control = new nist.NistControl(filter.tree_filters);
+        const control = new NistControl(filter.tree_filters);
 
         controls = controls.filter((c) => {
           // Get an hdf version so we have the fixed nist tags

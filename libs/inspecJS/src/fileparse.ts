@@ -1,14 +1,14 @@
 // Import all of our parsers
 // V 1.0
-import * as EXEC_JSON_1_0 from "./generated_parsers/v_1_0/exec-json";
-import * as EXEC_JSON_MIN_1_0 from "./generated_parsers/v_1_0/exec-jsonmin";
-import * as PROFILE_JSON_1_0 from "./generated_parsers/v_1_0/profile-json";
 import {
   ContextualizedEvaluation,
   ContextualizedProfile,
   contextualizeEvaluation,
   contextualizeProfile
-} from "./context";
+} from './context';
+import * as EXEC_JSON_1_0 from './generated_parsers/v_1_0/exec-json';
+import * as EXEC_JSON_MIN_1_0 from './generated_parsers/v_1_0/exec-jsonmin';
+import * as PROFILE_JSON_1_0 from './generated_parsers/v_1_0/profile-json';
 
 // TODO: Any future versions
 
@@ -16,12 +16,12 @@ import {
 // In case of schema version ambiguity we will use the 1.0 schema
 interface _ConversionResult {
   // 1.0 types
-  "1_0_ExecJson"?: EXEC_JSON_1_0.ExecJSON;
-  "1_0_ExecJsonMin"?: EXEC_JSON_MIN_1_0.ExecJsonmin;
-  "1_0_ProfileJson"?: PROFILE_JSON_1_0.ProfileJSON;
+  '1_0_ExecJson'?: EXEC_JSON_1_0.ExecJSON;
+  '1_0_ExecJsonMin'?: EXEC_JSON_MIN_1_0.ExecJsonmin;
+  '1_0_ProfileJson'?: PROFILE_JSON_1_0.ProfileJSON;
 }
 
-export type ConversionErrors = { [K in keyof _ConversionResult]?: any };
+export type ConversionErrors = {[K in keyof _ConversionResult]?: any};
 export interface ConversionResult extends _ConversionResult {
   errors?: ConversionErrors;
 }
@@ -41,28 +41,26 @@ export function convertFile(
   // 1.0
   const errors: ConversionErrors = {};
   try {
-    result["1_0_ExecJson"] = EXEC_JSON_1_0.Convert.toExecJSON(json_text);
+    result['1_0_ExecJson'] = EXEC_JSON_1_0.Convert.toExecJSON(json_text);
     return result;
   } catch (e) {
-    errors["1_0_ExecJson"] = e;
+    errors['1_0_ExecJson'] = e;
   }
 
   try {
-    result["1_0_ExecJsonMin"] = EXEC_JSON_MIN_1_0.Convert.toExecJsonmin(
-      json_text
-    );
+    result['1_0_ExecJsonMin'] =
+      EXEC_JSON_MIN_1_0.Convert.toExecJsonmin(json_text);
     return result;
   } catch (e) {
-    errors["1_0_ExecJsonMin"] = e;
+    errors['1_0_ExecJsonMin'] = e;
   }
 
   try {
-    result["1_0_ProfileJson"] = PROFILE_JSON_1_0.Convert.toProfileJSON(
-      json_text
-    );
+    result['1_0_ProfileJson'] =
+      PROFILE_JSON_1_0.Convert.toProfileJSON(json_text);
     return result;
   } catch (e) {
-    errors["1_0_ProfileJson"] = e;
+    errors['1_0_ProfileJson'] = e;
   }
 
   // errors.forEach(e => console.warn(e));
@@ -73,9 +71,9 @@ export function convertFile(
     };
   }
   throw new Error(
-    "Unable to convert input json. " +
-      "This usually means the file is malformed - please check that the software that generated it is up to date, " +
-      "and, failing that, file an issue with the inspecjs project on github"
+    'Unable to convert input json. ' +
+      'This usually means the file is malformed - please check that the software that generated it is up to date, ' +
+      'and, failing that, file an issue with the inspecjs project on github'
   );
 }
 
@@ -104,17 +102,17 @@ export function convertFileContextual(
   const result = convertFile(json_text, true);
 
   // Determine what sort of file we (hopefully) have, then add it
-  if (result["1_0_ExecJson"]) {
+  if (result['1_0_ExecJson']) {
     // Handle as exec
-    const evaluation = result["1_0_ExecJson"];
+    const evaluation = result['1_0_ExecJson'];
     return contextualizeEvaluation(evaluation);
-  } else if (result["1_0_ProfileJson"]) {
+  } else if (result['1_0_ProfileJson']) {
     // Handle as profile
-    const profile = result["1_0_ProfileJson"];
+    const profile = result['1_0_ProfileJson'];
     return contextualizeProfile(profile);
   } else {
     const err = new Error(
-      "Failed to convert file ${options.filename} due to possible errors"
+      'Failed to convert file ${options.filename} due to possible errors'
     );
     (err as any).json_errors = result;
     throw err;

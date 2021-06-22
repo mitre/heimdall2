@@ -44,7 +44,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {context} from 'inspecjs';
+import {ContextualizedControl} from 'inspecjs';
 import {HDFControl} from 'inspecjs';
 import {ControlDelta, ControlSeries} from '@/utilities/delta_util';
 import DeltaView from '@/components/cards/comparison/DeltaView.vue';
@@ -85,7 +85,7 @@ export default class CompareRow extends Vue {
 
   /** Extracts relevant controls for currently visible fileIds and passes those to ControlDelta */
   get delta(): ControlDelta | null {
-    const deltaData: context.ContextualizedControl[] = [];
+    const deltaData: ContextualizedControl[] = [];
     Object.entries(this.controls).forEach(([fileId, controls]) => {
       if(this.fileIds.includes(fileId)) {
         deltaData.push(controls);

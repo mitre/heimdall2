@@ -1,4 +1,4 @@
-import {parse, schemas_1_0} from 'inspecjs';
+import {ConversionResult, convertFile, schemas_1_0} from 'inspecjs';
 import {ElementCompact, xml2js} from 'xml-js';
 import {delay} from './async_util';
 import {basic_auth, group_by, map_hash} from './helper_util';
@@ -169,9 +169,9 @@ export class SplunkEndpoint {
       })
       .then((full_event) => {
         // This is dumb and we should make the inspecjs layer more accepting of many file types
-        let result: parse.ConversionResult;
+        let result: ConversionResult;
         try {
-          result = parse.convertFile(JSON.stringify(full_event));
+          result = convertFile(JSON.stringify(full_event));
         } catch (e) {
           throw SplunkErrorCode.SchemaViolation;
         }

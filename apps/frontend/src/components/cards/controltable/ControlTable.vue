@@ -109,7 +109,7 @@ import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSw
 
 import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {control_unique_key} from '@/utilities/format_util';
-import {context} from 'inspecjs';
+import {ContextualizedControl} from 'inspecjs';
 import {Prop, Ref} from 'vue-property-decorator';
 import {HeightsModule} from '@/store/heights';
 import _ from 'lodash';
@@ -125,7 +125,7 @@ interface ListElt {
   status_val: number;
   severity_val: number;
 
-  control: context.ContextualizedControl;
+  control: ContextualizedControl;
 }
 
 @Component({

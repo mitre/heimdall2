@@ -21,7 +21,7 @@ import XLSX from 'xlsx';
 import {saveAs} from 'file-saver';
 
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {NistControl} from 'inspecjs/dist/nist';
+import {NistControl} from 'inspecjs';
 import {FileID} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
 import {Prop} from 'vue-property-decorator';

@@ -72,7 +72,7 @@ import 'prismjs/components/prism-ruby.js';
 import Prism from 'vue-prism-component';
 import 'prismjs/themes/prism-tomorrow.css';
 
-import {context} from 'inspecjs';
+import {ContextualizedControl} from 'inspecjs';
 import {Prop, Watch} from 'vue-property-decorator';
 import _ from 'lodash';
 
@@ -90,7 +90,7 @@ interface Detail {
 })
 export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
   @Prop({type: String, default: 'tab-test'}) readonly tab!: string;
-  @Prop({type: Object, required: true}) readonly control!: context.ContextualizedControl;
+  @Prop({type: Object, required: true}) readonly control!: ContextualizedControl;
 
   localTab = this.tab;
 

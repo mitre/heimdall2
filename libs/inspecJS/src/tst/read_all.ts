@@ -1,15 +1,15 @@
 // Get filesystem
-import * as fs from "fs";
-import { ConversionResult, convertFile } from "../fileparse";
-import { ControlStatus, hdfWrapControl, HDFControl } from "../inspecjs";
-import { ExecJSON } from "../versions/v_1_0";
+import * as fs from 'fs';
+import {ConversionResult, convertFile} from '../fileparse';
+import {ControlStatus, HDFControl, hdfWrapControl} from '../inspecjs';
+import {ExecJSON} from '../versions/v_1_0';
 
 /** Reads the contents of the given files into an array of strings. */
 function readFiles(
   dirname: string,
   onFileContent: (filename: string, content: string) => void
 ): void {
-  fs.readdir(dirname, function(err, filenames) {
+  fs.readdir(dirname, function (err, filenames) {
     if (err) {
       console.log(`Error reading dir ${dirname}`);
       console.log(err);
@@ -18,9 +18,9 @@ function readFiles(
     // Sort the filenames
     filenames = filenames.sort();
 
-    filenames.forEach(function(filename) {
+    filenames.forEach(function (filename) {
       try {
-        const content = fs.readFileSync(dirname + filename, "utf-8");
+        const content = fs.readFileSync(dirname + filename, 'utf-8');
         onFileContent(filename, content);
       } catch (err) {
         console.log(`Error reading file ${filename}`);
@@ -30,14 +30,14 @@ function readFiles(
   });
 }
 
-type Counts = { [key in ControlStatus]: number };
+type Counts = {[key in ControlStatus]: number};
 /** Instantiates a counts object with all keys set to 0 */
 function new_count(): Counts {
   return {
-    "From Profile": 0,
-    "Not Applicable": 0,
-    "Not Reviewed": 0,
-    "Profile Error": 0,
+    'From Profile': 0,
+    'Not Applicable': 0,
+    'Not Reviewed': 0,
+    'Profile Error': 0,
     Failed: 0,
     Passed: 0
   };
@@ -46,7 +46,7 @@ function new_count(): Counts {
 /** Counts all of the statuses in a list of hdf controls */
 function count_hdf(controls: HDFControl[]): Counts {
   const result = new_count();
-  controls.forEach(c => {
+  controls.forEach((c) => {
     result[c.status] += 1;
   });
   return result;
@@ -54,8 +54,8 @@ function count_hdf(controls: HDFControl[]): Counts {
 
 /** Trivial overlay filter that just takes the version of the control that has results from amongst all identical ids */
 function filter_overlays(controls: HDFControl[]): HDFControl[] {
-  const id_hash: { [key: string]: HDFControl } = {};
-  controls.forEach(c => {
+  const id_hash: {[key: string]: HDFControl} = {};
+  controls.forEach((c) => {
     const id = c.wraps.id;
     const old: HDFControl | undefined = id_hash[id];
     // If old, gotta check if our new status list "better than" old
@@ -78,8 +78,8 @@ function filter_overlays(controls: HDFControl[]): HDFControl[] {
 function count_exec_1_0(x: ExecJSON.Execution): Counts {
   let controls: HDFControl[] = [];
   // Get all controls
-  x.profiles.forEach(p =>
-    controls.push(...p.controls.map(c => hdfWrapControl(c)))
+  x.profiles.forEach((p) =>
+    controls.push(...p.controls.map((c) => hdfWrapControl(c)))
   );
   // Filter overlays
   controls = filter_overlays(controls);
@@ -87,8 +87,8 @@ function count_exec_1_0(x: ExecJSON.Execution): Counts {
   // Count
   console.log(
     controls
-      .filter(c => c.status === "Profile Error")
-      .map(c => c.wraps.id)
+      .filter((c) => c.status === 'Profile Error')
+      .map((c) => c.wraps.id)
       .sort()
   );
   return count_hdf(controls);
@@ -98,12 +98,12 @@ function format_count(c: Counts): string {
   return `\
     Passed          : ${c.Passed}\n\
     Failed          : ${c.Failed}\n\
-    Not Applicable  : ${c["Not Applicable"]}\n\
-    Not Reviewed    : ${c["Not Reviewed"]}\n\
-    Profile Error   : ${c["Profile Error"]}`;
+    Not Applicable  : ${c['Not Applicable']}\n\
+    Not Reviewed    : ${c['Not Reviewed']}\n\
+    Profile Error   : ${c['Profile Error']}`;
 }
 
-readFiles("parse_testbed/", (fn, content) => {
+readFiles('parse_testbed/', (fn, content) => {
   console.log(`Reading file ${fn}`);
 
   // Convert it
@@ -118,15 +118,15 @@ readFiles("parse_testbed/", (fn, content) => {
   }
 
   // See if any success
-  if (result["1_0_ExecJson"]) {
+  if (result['1_0_ExecJson']) {
     console.log(`File ${fn} is an execution`);
-    console.log(format_count(count_exec_1_0(result["1_0_ExecJson"])));
-  } else if (result["1_0_ExecJsonMin"]) {
+    console.log(format_count(count_exec_1_0(result['1_0_ExecJson'])));
+  } else if (result['1_0_ExecJsonMin']) {
     console.log(`File ${fn} is a minimized execution`);
-  } else if (result["1_0_ProfileJson"]) {
+  } else if (result['1_0_ProfileJson']) {
     console.log(`File ${fn} is a profile.`);
   } else {
     console.log(`File ${fn} did not produce a valid output`);
   }
-  console.log("--------------------------------------------");
+  console.log('--------------------------------------------');
 });

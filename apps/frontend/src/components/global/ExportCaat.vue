@@ -21,7 +21,7 @@ import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {HDFControl, HDFControlSegment} from 'inspecjs';
 import {Filter, FilteredDataModule} from '../../store/data_filters';
 import {Prop} from 'vue-property-decorator';
-import {ContextualizedControl} from 'inspecjs/dist/context';
+import {ContextualizedControl} from 'inspecjs';
 import _ from 'lodash';
 import {InspecDataModule} from '../../store/data_store';
 

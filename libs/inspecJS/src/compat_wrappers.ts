@@ -1,11 +1,11 @@
-import { ExecJSONControl as ResultControl_1_0 } from "./generated_parsers/v_1_0/exec-json";
-import { ProfileJSONControl as ProfileControl_1_0 } from "./generated_parsers/v_1_0/profile-json";
 import {
-  ProfileControl as HDFProfileControl_1_0,
-  ExecControl as HDFExecControl_1_0
-} from "./compat_impl/compat_inspec_1_0";
-import * as parse from "./fileparse";
-import { NistControl, NistRevision, CanonizationConfig } from "./nist";
+  ExecControl as HDFExecControl_1_0,
+  ProfileControl as HDFProfileControl_1_0
+} from './compat_impl/compat_inspec_1_0';
+import * as parse from './fileparse';
+import {ExecJSONControl as ResultControl_1_0} from './generated_parsers/v_1_0/exec-json';
+import {ProfileJSONControl as ProfileControl_1_0} from './generated_parsers/v_1_0/profile-json';
+import {CanonizationConfig, NistControl, NistRevision} from './nist';
 
 // These types are used throughout for control/result status and impact
 
@@ -24,12 +24,12 @@ import { NistControl, NistRevision, CanonizationConfig } from "./nist";
  * These cases are in theory comprehensive, but if somehow no apply, it is still Profile Error
  */
 export type ControlStatus =
-  | "Not Applicable"
-  | "From Profile"
-  | "Profile Error"
-  | "Passed"
-  | "Failed"
-  | "Not Reviewed";
+  | 'Not Applicable'
+  | 'From Profile'
+  | 'Profile Error'
+  | 'Passed'
+  | 'Failed'
+  | 'Not Reviewed';
 
 /** The severities a control can have. These map numeric impact values to No/Low/Medium/High/Crtiical impact
  * [0, 0.01) => No impact
@@ -38,15 +38,15 @@ export type ControlStatus =
  * [0.7, 0.9) => High impact
  * [0.9, 1.0] => Critical impact
  */
-export type Severity = "none" | "low" | "medium" | "high" | "critical";
+export type Severity = 'none' | 'low' | 'medium' | 'high' | 'critical';
 
 /** The statuses that a segment of a control (IE a describe block) might have. */
 export type SegmentStatus =
-  | "passed"
-  | "failed"
-  | "skipped"
-  | "error"
-  | "no_status";
+  | 'passed'
+  | 'failed'
+  | 'skipped'
+  | 'error'
+  | 'no_status';
 
 /**
  * This interface acts as a polyfill on controls for our HDF "guaranteed" derived types, to provide a stable
@@ -130,7 +130,7 @@ export interface HDFControl {
   is_profile: boolean;
 
   /** Maps string labels to description items. */
-  descriptions: { [key: string]: string };
+  descriptions: {[key: string]: string};
 
   /** Returns whether this control was waived. */
   waived: boolean;
@@ -194,5 +194,5 @@ export function hdfWrapControl(ctrl: parse.AnyControl): HDFControl {
   }
 
   // In theory future schemas will be easier to decipher because of a version tag
-  throw new Error("Control did not match any expected schema");
+  throw new Error('Control did not match any expected schema');
 }
