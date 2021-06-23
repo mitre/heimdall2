@@ -1,10 +1,10 @@
 <template>
-  <div class="fill-height px-1">
-    <span> {{ text }} </span>
-    <!-- Note: always have button for spacing consistency. Just disable and invis -->
-    <v-btn :disabled="!allow_sort" text icon @click="toggle_sort">
-      <v-icon class="pa-0"> {{ icon }} </v-icon>
-    </v-btn>
+  <div class="fill-height my-3 px-1">
+    <span v-if="!viewedHeader"> {{ text }} </span>
+    <span v-else>
+      {{ numberOfViewedControls + '/' + numberOfAllControls + ' ' + text }}
+    </span>
+    <v-icon class="pa-0"> {{ icon }} </v-icon>
   </div>
 </template>
 
@@ -19,6 +19,9 @@ export type Sort = 'ascending' | 'descending' | 'none' | 'disabled';
 export default class ColumnHeader extends Vue {
   @Prop({type: String, required: true}) readonly text!: string;
   @Prop({type: String, required: true}) readonly sort!: Sort;
+  @Prop({type: Boolean, required: false, default: false}) readonly viewedHeader!: Sort;
+  @Prop({type: Number, required: false}) readonly numberOfViewedControls!: number;
+  @Prop({type: Number, required: false}) readonly numberOfAllControls!: number;
   /**
    * Simple boolean deciding whether or not to actually show/allow sorting
    */
