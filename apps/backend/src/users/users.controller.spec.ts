@@ -113,7 +113,7 @@ describe('UsersController Unit Tests', () => {
         {
           user: adminUser
         },
-        '127.0.0.1'
+        LOCAL_IP
       );
       // In the case of admin, they should be equal becuase admin can see all
       expect(controllerFoundUsers).toEqual(serviceFoundUsers);
