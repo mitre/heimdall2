@@ -163,7 +163,7 @@ function transform(val: any, typ: any, getProps: any): any {
   }
 
   function transformEnum(cases: string[], val: any): any {
-    (cases.indexOf(val) !== -1)? val: invalidValue(cases, val);
+    return (cases.indexOf(val) !== -1)? val: invalidValue(cases, val);
   }
 
   function transformArray(typ: any, val: any): any {

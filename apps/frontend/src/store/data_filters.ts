@@ -73,15 +73,15 @@ function contains_term(
   contextControl: ContextualizedControl,
   term: string
 ): boolean {
-  const as_hdf = contextControl.root.hdf;
+  const asHDF = contextControl.root.hdf;
   // Get our (non-null) searchable data
   const searchables: string[] = [
-    as_hdf.wraps.id,
-    as_hdf.wraps.title,
-    as_hdf.wraps.code,
-    as_hdf.severity,
-    as_hdf.status,
-    as_hdf.finding_details
+    asHDF.wraps.id,
+    asHDF.wraps.title,
+    asHDF.wraps.code,
+    asHDF.severity,
+    asHDF.status,
+    asHDF.finding_details
   ].filter((s) => s !== null) as string[];
 
   // See if any contain term

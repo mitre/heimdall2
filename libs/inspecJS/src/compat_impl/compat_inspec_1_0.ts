@@ -20,6 +20,8 @@ import {
   CanonizationConfig
 } from "../nist";
 
+const profileError = "Profile Error"
+
 abstract class HDFControl10 implements HDFControl {
   // Declare all properties expected
   readonly rawNistTags: string[];
@@ -66,7 +68,7 @@ abstract class HDFControl10 implements HDFControl {
         return `Automated test skipped due to known accepted condition in the control:\n\n${this.message}\n`;
       case "Not Applicable":
         return `Justification:\n\n${this.message}\n`;
-      case "Profile Error":
+      case profileError:
         if (!this.status_list || this.status_list.length === 0) {
           return "No describe blocks were run in this control";
         } else if (this.message !== undefined) {
@@ -215,12 +217,12 @@ export class ExecControl extends HDFControl10 implements HDFControl {
   // Just do it last
   private compute_status(): ControlStatus {
     if (!this.status_list || this.status_list.includes("error")) {
-      return "Profile Error";
+      return profileError;
     } else if (this.waived || this.wraps.impact === 0) {
       // We interject this between profile error conditions because an empty-result waived control is still NA
       return "Not Applicable";
     } else if (this.status_list.length === 0) {
-      return "Profile Error";
+      return profileError;
     } else if (this.status_list.includes("failed")) {
       return "Failed";
     } else if (this.status_list.includes("passed")) {
@@ -228,7 +230,7 @@ export class ExecControl extends HDFControl10 implements HDFControl {
     } else if (this.status_list.includes("skipped")) {
       return "Not Reviewed";
     } else {
-      return "Profile Error"; // Shouldn't get here, but might as well have fallback
+      return profileError; // Shouldn't get here, but might as well have fallback
     }
   }
 

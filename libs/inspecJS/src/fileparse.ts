@@ -14,15 +14,15 @@ import * as PROFILE_JSON_1_0 from './generated_parsers/v_1_0/profile-json';
 
 // Define our type. This is the result of trying to parse the file. The appropriate field (exactly one) will be filled
 // In case of schema version ambiguity we will use the 1.0 schema
-interface ConversionResult_ {
+interface ConversionResults {
   // 1.0 types
   '1_0_ExecJson'?: EXEC_JSON_1_0.ExecJSON;
   '1_0_ExecJsonMin'?: EXEC_JSON_MIN_1_0.ExecJsonmin;
   '1_0_ProfileJson'?: PROFILE_JSON_1_0.ProfileJSON;
 }
 
-export type ConversionErrors = {[K in keyof ConversionResult_]?: any};
-export interface ConversionResult extends ConversionResult_ {
+export type ConversionErrors = {[K in keyof ConversionResults]?: any};
+export interface ConversionResult extends ConversionResults {
   errors?: ConversionErrors;
 }
 
@@ -110,9 +110,7 @@ export function convertFileContextual(
     const profile = result['1_0_ProfileJson'];
     return contextualizeProfile(profile);
   } else {
-    const err = new Error(
-      'Failed to convert file ${options.filename} due to possible errors'
-    );
+    const err = new Error(`Failed to convert file due to possible errors`);
     (err as any).json_errors = result;
     throw err;
   }

@@ -188,11 +188,11 @@ export function hdfWrapControl(ctrl: parse.AnyControl): HDFControl {
   if ((ctrl as ResultControl_1_0).results !== undefined) {
     const rctrl = ctrl as ResultControl_1_0;
     return new HDFExecControl_1_0(rctrl);
-  } else {
+  } else if ((ctrl as ResultControl_1_0).results === undefined) {
     const rctrl = ctrl as ProfileControl_1_0;
     return new HDFProfileControl_1_0(rctrl);
+  } else {
+    // In theory future schemas will be easier to decipher because of a version tag
+    throw new Error('Control did not match any expected schema');
   }
-
-  // In theory future schemas will be easier to decipher because of a version tag
-  throw new Error('Control did not match any expected schema');
 }

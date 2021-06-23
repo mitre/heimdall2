@@ -138,7 +138,7 @@ export class ControlDelta {
           if (c === null) {
             return NOT_SELECTED;
           }
-          return c!.hdf.rawNistTags.join(', ');
+          return c.hdf.rawNistTags.join(', ');
         })
       )
     );
