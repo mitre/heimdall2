@@ -32,13 +32,10 @@ export default class ColumnHeader extends Vue {
    */
   toggle_sort(): void {
     let newSort: string;
-    switch (this.sort) {
-      case 'descending':
-        newSort = 'ascending';
-        break;
-      default: // Shouldn't happen but whatever
-        newSort = 'descending';
-        break;
+    if (this.sort === 'descending') {
+      newSort = 'ascending';
+    } else {
+      newSort = 'descending';
     }
     this.$emit('input', newSort);
   }
