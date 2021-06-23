@@ -7,6 +7,7 @@ import {
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test, TestingModule} from '@nestjs/testing';
 import {ValidationError} from 'sequelize';
+import {LOCAL_IP} from '../../test/constants/networking.constant';
 import {
   CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
@@ -30,6 +31,8 @@ import {Evaluation} from '../evaluations/evaluation.model';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
+import {LoggingModule} from '../logging/logging.module';
+import {LoggingService} from '../logging/logging.service';
 import {UserDto} from './dto/user.dto';
 import {User} from './user.model';
 import {UsersController} from './users.controller';
@@ -52,6 +55,7 @@ describe('UsersController Unit Tests', () => {
       imports: [
         ConfigModule,
         DatabaseModule,
+        LoggingModule,
         SequelizeModule.forFeature([
           User,
           GroupUser,
@@ -61,7 +65,7 @@ describe('UsersController Unit Tests', () => {
           EvaluationTag
         ])
       ],
-      providers: [AuthzService, DatabaseService, UsersService]
+      providers: [AuthzService, DatabaseService, UsersService, LoggingService]
     }).compile();
 
     usersService = module.get<UsersService>(UsersService);
@@ -105,9 +109,12 @@ describe('UsersController Unit Tests', () => {
       const serviceFoundUsers = (await usersService.adminFindAll()).map(
         (user) => new UserDto(user)
       );
-      const controllerFoundUsers = await usersController.adminFindAll({
-        user: adminUser
-      });
+      const controllerFoundUsers = await usersController.adminFindAll(
+        {
+          user: adminUser
+        },
+        '127.0.0.1'
+      );
       // In the case of admin, they should be equal becuase admin can see all
       expect(controllerFoundUsers).toEqual(serviceFoundUsers);
     });
@@ -120,7 +127,8 @@ describe('UsersController Unit Tests', () => {
 
       const createdUser = await usersController.create(
         CREATE_USER_DTO_TEST_OBJ_2,
-        {}
+        {},
+        LOCAL_IP
       );
       expect(createdUser).toEqual(
         new UserDto(await usersService.findById(createdUser.id))
@@ -134,7 +142,8 @@ describe('UsersController Unit Tests', () => {
       await expect(async () => {
         await usersController.create(
           CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD,
-          {}
+          {},
+          LOCAL_IP
         );
       }).rejects.toThrow(ValidationError);
     });
@@ -146,7 +155,8 @@ describe('UsersController Unit Tests', () => {
       await expect(async () => {
         await usersController.create(
           CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
-          {}
+          {},
+          LOCAL_IP
         );
       }).rejects.toThrow(BadRequestException);
     });
@@ -158,7 +168,8 @@ describe('UsersController Unit Tests', () => {
       await expect(async () => {
         await usersController.create(
           CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD,
-          {}
+          {},
+          LOCAL_IP
         );
       }).rejects.toThrow(ValidationError);
     });
@@ -171,7 +182,7 @@ describe('UsersController Unit Tests', () => {
       configService.set('REGISTRATION_DISABLED', 'true');
 
       await expect(
-        usersController.create(CREATE_USER_DTO_TEST_OBJ_2, {})
+        usersController.create(CREATE_USER_DTO_TEST_OBJ_2, {}, LOCAL_IP)
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
   });
@@ -185,6 +196,7 @@ describe('UsersController Unit Tests', () => {
         await usersController.update(
           basicUser.id,
           {user: basicUser},
+          LOCAL_IP,
           UPDATE_USER_DTO_TEST_OBJ
         )
       ).toEqual(new UserDto(await usersService.findById(basicUser.id)));
@@ -198,6 +210,7 @@ describe('UsersController Unit Tests', () => {
         await usersController.update(
           ID,
           {user: basicUser},
+          LOCAL_IP,
           UPDATE_USER_DTO_TEST_OBJ
         );
       }).rejects.toThrow(NotFoundException);
@@ -211,6 +224,7 @@ describe('UsersController Unit Tests', () => {
         await usersController.update(
           basicUser.id,
           {user: basicUser},
+          LOCAL_IP,
           UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD
         );
       }).rejects.toThrow(ForbiddenException);
@@ -226,6 +240,7 @@ describe('UsersController Unit Tests', () => {
         await usersController.remove(
           basicUser.id,
           {user: basicUser},
+          LOCAL_IP,
           DELETE_USER_DTO_TEST_OBJ
         )
       ).toEqual(new UserDto(basicUser));
@@ -239,6 +254,7 @@ describe('UsersController Unit Tests', () => {
         await usersController.remove(
           ID,
           {user: adminUser},
+          LOCAL_IP,
           DELETE_USER_DTO_TEST_OBJ
         );
       }).rejects.toThrow(NotFoundException);
@@ -252,6 +268,7 @@ describe('UsersController Unit Tests', () => {
         await usersController.remove(
           basicUser.id,
           {user: basicUser},
+          LOCAL_IP,
           DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD
         );
       }).rejects.toThrow(ForbiddenException);

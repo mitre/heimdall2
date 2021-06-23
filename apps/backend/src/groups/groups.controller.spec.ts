@@ -7,6 +7,7 @@ import {
   PRIVATE_GROUP,
   UPDATE_GROUP
 } from '../../test/constants/groups-test.constant';
+import {LOCAL_IP} from '../../test/constants/networking.constant';
 import {
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_2
@@ -19,6 +20,8 @@ import {Evaluation} from '../evaluations/evaluation.model';
 import {EvaluationsService} from '../evaluations/evaluations.service';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
+import {LoggingModule} from '../logging/logging.module';
+import {LoggingService} from '../logging/logging.service';
 import {SlimUserDto} from '../users/dto/slim-user.dto';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
@@ -41,6 +44,7 @@ describe('GroupsController', () => {
       controllers: [GroupsController],
       imports: [
         DatabaseModule,
+        LoggingModule,
         SequelizeModule.forFeature([
           Group,
           GroupUser,
@@ -55,7 +59,8 @@ describe('GroupsController', () => {
         DatabaseService,
         GroupsService,
         UsersService,
-        EvaluationsService
+        EvaluationsService,
+        LoggingService
       ]
     }).compile();
 
@@ -150,6 +155,7 @@ describe('GroupsController', () => {
 
       const response = await groupsController.update(
         {user: owner},
+        LOCAL_IP,
         privateGroup.id,
         UPDATE_GROUP
       );
@@ -167,6 +173,7 @@ describe('GroupsController', () => {
       await expect(
         groupsController.update(
           {user: basicUser},
+          LOCAL_IP,
           privateGroup.id,
           UPDATE_GROUP
         )
@@ -177,6 +184,7 @@ describe('GroupsController', () => {
       await expect(
         groupsController.update(
           {user: basicUser},
+          LOCAL_IP,
           privateGroup.id,
           UPDATE_GROUP
         )
@@ -192,6 +200,7 @@ describe('GroupsController', () => {
       await groupsController.addUserToGroup(
         privateGroup.id,
         {user: owner},
+        LOCAL_IP,
         {userId: basicUser.id, groupRole: 'member'}
       );
 
@@ -208,6 +217,7 @@ describe('GroupsController', () => {
         groupsController.addUserToGroup(
           privateGroup.id,
           {user: basicUser},
+          LOCAL_IP,
           {userId: user.id, groupRole: 'member'}
         )
       ).rejects.toBeInstanceOf(ForbiddenError);
@@ -224,8 +234,9 @@ describe('GroupsController', () => {
 
       await groupsController.addEvaluationToGroup(
         privateGroup.id,
-        {user: basicUser}, // Request
-        {id: evaluation.id} // Dto
+        {user: basicUser},
+        LOCAL_IP,
+        {id: evaluation.id}
       );
 
       const groupEvaluations = await privateGroup.$get('evaluations');
@@ -244,6 +255,7 @@ describe('GroupsController', () => {
         groupsController.addEvaluationToGroup(
           privateGroup.id,
           {user: basicUser},
+          LOCAL_IP,
           {id: evaluation.id}
         )
       ).rejects.toBeInstanceOf(ForbiddenError);
@@ -265,6 +277,7 @@ describe('GroupsController', () => {
         groupsController.addEvaluationToGroup(
           privateGroup.id,
           {user: basicUser},
+          LOCAL_IP,
           {id: evaluation.id}
         )
       ).rejects.toBeInstanceOf(ForbiddenError);
@@ -285,6 +298,7 @@ describe('GroupsController', () => {
 
       const response = await groupsController.remove(
         {user: owner},
+        LOCAL_IP,
         privateGroup.id
       );
       expect(response.id).toEqual(privateGroup.id);
@@ -296,13 +310,13 @@ describe('GroupsController', () => {
       expect.assertions(2);
 
       await expect(
-        groupsController.remove({user: basicUser}, privateGroup.id)
+        groupsController.remove({user: basicUser}, LOCAL_IP, privateGroup.id)
       ).rejects.toBeInstanceOf(ForbiddenError);
 
       await groupsService.addUserToGroup(privateGroup, basicUser, 'user');
 
       await expect(
-        groupsController.remove({user: basicUser}, privateGroup.id)
+        groupsController.remove({user: basicUser}, LOCAL_IP, privateGroup.id)
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
 
@@ -319,6 +333,7 @@ describe('GroupsController', () => {
       await groupsController.removeEvaluationFromGroup(
         privateGroup.id,
         {user: basicUser},
+        LOCAL_IP,
         {id: evaluation.id}
       );
       expect((await privateGroup.$get('evaluations')).length).toEqual(0);
@@ -340,6 +355,7 @@ describe('GroupsController', () => {
         groupsController.removeEvaluationFromGroup(
           privateGroup.id,
           {user: basicUser},
+          LOCAL_IP,
           {id: evaluation.id}
         )
       ).rejects.toBeInstanceOf(ForbiddenError);

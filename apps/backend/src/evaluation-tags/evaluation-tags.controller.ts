@@ -4,12 +4,12 @@ import {
   Controller,
   Delete,
   Get,
+  Ip,
   Param,
   Post,
   Request,
   UseGuards
 } from '@nestjs/common';
-import {Request as ExpressRequest} from 'express';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {EvaluationsService} from '../evaluations/evaluations.service';
@@ -60,7 +60,8 @@ export class EvaluationTagsController {
   async create(
     @Param('evaluationId') evaluationId: string,
     @Body() createEvaluationTagDto: CreateEvaluationTagDto,
-    @Request() request: ExpressRequest & {user: User}
+    @Request() request: {user: User},
+    @Ip() ip: string
   ): Promise<EvaluationTagDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const evaluation = await this.evaluationsService.findById(evaluationId);
@@ -76,6 +77,7 @@ export class EvaluationTagsController {
     );
     this.loggingService.logEvaluationTagAction(
       request,
+      ip,
       'Create',
       createdEvaluationTagDto
     );
@@ -85,7 +87,8 @@ export class EvaluationTagsController {
   @Delete(':id')
   async remove(
     @Param('id') id: string,
-    @Request() request: ExpressRequest & {user: User}
+    @Request() request: {user: User},
+    @Ip() ip: string
   ): Promise<EvaluationTagDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const evaluationTag = await this.evaluationTagsService.findById(id);
@@ -98,6 +101,7 @@ export class EvaluationTagsController {
     );
     this.loggingService.logEvaluationTagAction(
       request,
+      ip,
       'Delete',
       deletedTagDto
     );

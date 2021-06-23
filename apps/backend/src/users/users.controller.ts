@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Ip,
   Param,
   Post,
   Put,
@@ -12,7 +13,6 @@ import {
   UseGuards,
   UsePipes
 } from '@nestjs/common';
-import {Request as ExpressRequest} from 'express';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {ConfigService} from '../config/config.service';
@@ -67,13 +67,14 @@ export class UsersController {
   @Get()
   @UseGuards(JwtAuthGuard)
   async adminFindAll(
-    @Request() request: ExpressRequest & {user: User}
+    @Request() request: {user: User},
+    @Ip() ip: string
   ): Promise<UserDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
     ForbiddenError.from(abac).throwUnlessCan(Action.ReadAll, User);
 
     const users = await this.usersService.adminFindAll();
-    this.loggingService.logAction(request, 'Admin Read All Users');
+    this.loggingService.logAction(request, ip, 'Admin Read All Users');
     return users.map((user) => new UserDto(user));
   }
 
@@ -83,7 +84,8 @@ export class UsersController {
   @UseGuards(ImplicitAllowJwtAuthGuard)
   async create(
     @Body() createUserDto: CreateUserDto,
-    @Request() request: ExpressRequest & {user?: User}
+    @Request() request: {user?: User},
+    @Ip() ip: string
   ): Promise<UserDto> {
     const abac = request.user
       ? this.authz.abac.createForUser(request.user)
@@ -99,7 +101,7 @@ export class UsersController {
     const createdUserDto = new UserDto(
       await this.usersService.create(createUserDto)
     );
-    this.loggingService.logUserAction(request, 'Create', createdUserDto);
+    this.loggingService.logUserAction(request, ip, 'Create', createdUserDto);
     return createdUserDto;
   }
 
@@ -107,7 +109,8 @@ export class UsersController {
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Request() request: ExpressRequest & {user: User},
+    @Request() request: {user: User},
+    @Ip() ip: string,
     @Body(
       new PasswordsMatchPipe(),
       new PasswordChangePipe(),
@@ -122,7 +125,7 @@ export class UsersController {
     const updatedUserDto = new UserDto(
       await this.usersService.update(userToUpdate, updateUserDto, abac)
     );
-    this.loggingService.logUserAction(request, 'Update', updatedUserDto);
+    this.loggingService.logUserAction(request, ip, 'Update', updatedUserDto);
     return updatedUserDto;
   }
 
@@ -130,7 +133,8 @@ export class UsersController {
   @Delete(':id')
   async remove(
     @Param('id') id: string,
-    @Request() request: ExpressRequest & {user: User},
+    @Request() request: {user: User},
+    @Ip() ip: string,
     @Body() deleteUserDto: DeleteUserDto
   ): Promise<UserDto> {
     const abac = this.authz.abac.createForUser(request.user);
@@ -140,7 +144,7 @@ export class UsersController {
     const deletedUserDto = new UserDto(
       await this.usersService.remove(userToDelete, deleteUserDto, abac)
     );
-    this.loggingService.logUserAction(request, 'Delete', deletedUserDto);
+    this.loggingService.logUserAction(request, ip, 'Delete', deletedUserDto);
     return deletedUserDto;
   }
 

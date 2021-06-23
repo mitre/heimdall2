@@ -23,12 +23,13 @@ export class LoggingService {
 
   // Actions involving evaluations
   logEvaluationAction(
-    request: Request & {user: User},
+    request: {user: User},
+    ip: string,
     action: string,
     evaluation: EvaluationDto
   ): void {
     this.logger.info({
-      ip: request.ip,
+      ip: ip,
       message: `${this.userToString(
         request.user
       )}: ${action}: ${this.evaluationToString(evaluation)}`
@@ -41,12 +42,13 @@ export class LoggingService {
 
   // Actions involving evaluation tags
   logEvaluationTagAction(
-    request: Request & {user: User},
+    request: {user: User},
+    ip: string,
     action: string,
     tag: EvaluationTagDto
   ): void {
     this.logger.info({
-      ip: request.ip,
+      ip: ip,
       message: `${this.userToString(
         request.user
       )}: ${action}: ${this.evaluationTagToString(tag)}`
@@ -65,12 +67,13 @@ export class LoggingService {
 
   // Actions involving groups
   logGroupAction(
-    request: Request & {user: User},
+    request: {user: User},
+    ip: string,
     action: string,
     group: GroupDto
   ): void {
     this.logger.info({
-      ip: request.ip,
+      ip: ip,
       message: `${this.userToString(
         request.user
       )}: ${action}: ${this.groupToStringWithUsers(group)}`
@@ -78,13 +81,14 @@ export class LoggingService {
   }
 
   logGroupActionWithEvaluationSubject(
-    request: Request & {user: User},
+    request: {user: User},
+    ip: string,
     action: string,
     subject: Evaluation | EvaluationDto,
     group: GroupDto
   ): void {
     this.logger.info({
-      ip: request.ip,
+      ip: ip,
       message: `${this.userToString(
         request.user
       )}: ${action} ${this.evaluationToString(subject)} -> ${this.groupToString(
@@ -94,13 +98,14 @@ export class LoggingService {
   }
 
   logGroupActionWithUserSubject(
-    request: Request & {user: User},
+    request: {user: User},
+    ip: string,
     action: string,
     subject: User,
     group: GroupDto
   ): void {
     this.logger.info({
-      ip: request.ip,
+      ip: ip,
       message: `${this.userToString(
         request.user
       )}: ${action} ${this.userToString(subject)} -> ${this.groupToString(
@@ -129,25 +134,13 @@ export class LoggingService {
 
   // Actions involving users
   logUserAction(
-    request: Request & {user?: User},
+    request: {user?: User},
+    ip: string,
     action: string,
     subject: User | UserDto
   ): void {
     this.logger.info({
-      ip: request.ip,
-      message: `${this.userToString(
-        request.user
-      )}: ${action}: ${this.userToString(subject)}`
-    });
-  }
-
-  logAuthenticatedUserAction(
-    request: Request & {user: User},
-    action: string,
-    subject: User | UserDto
-  ): void {
-    this.logger.info({
-      ip: request.ip,
+      ip: ip,
       message: `${this.userToString(
         request.user
       )}: ${action}: ${this.userToString(subject)}`
@@ -168,9 +161,9 @@ export class LoggingService {
 
   // Actions that don't pertain to any specific controller
 
-  logAction(request: Request & {user: User}, action: string): void {
+  logAction(request: {user: User}, ip: string, action: string): void {
     this.logger.info({
-      ip: request.ip,
+      ip: ip,
       message: `${this.userToString(request.user)}: ${action}`
     });
   }

@@ -17,8 +17,8 @@ import {AuthnService} from './authn.service';
 @Controller('authn')
 export class AuthnController {
   constructor(
-    private authnService: AuthnService,
-    private loggingService: LoggingService
+    private readonly authnService: AuthnService,
+    private readonly loggingService: LoggingService
   ) {}
 
   @UseGuards(LocalAuthGuard)
@@ -85,7 +85,7 @@ export class AuthnController {
     const session = await this.authnService.login(req.user as User);
     this.loggingService.logAuthenticationAction(
       req,
-      'Succeded Github Oauth Login As',
+      'Succeded Gitlab Oauth Login As',
       req.user as User
     );
     await this.setSessionCookies(req, session);

@@ -4,13 +4,13 @@ import {
   Controller,
   Delete,
   Get,
+  Ip,
   Param,
   Post,
   Put,
   Request,
   UseGuards
 } from '@nestjs/common';
-import {Request as ExpressRequest} from 'express';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {EvaluationsService} from '../evaluations/evaluations.service';
@@ -65,7 +65,8 @@ export class GroupsController {
   @Post('/:id/user')
   async addUserToGroup(
     @Param('id') id: string,
-    @Request() request: ExpressRequest & {user: User},
+    @Request() request: {user: User},
+    @Ip() ip: string,
     @Body() addUserToGroupDto: AddUserToGroupDto
   ): Promise<GroupDto> {
     const abac = this.authz.abac.createForUser(request.user);
@@ -82,6 +83,7 @@ export class GroupsController {
     const updatedGroupDto = new GroupDto(group);
     this.loggingService.logGroupActionWithUserSubject(
       request,
+      ip,
       'Add',
       userToAdd,
       updatedGroupDto
@@ -109,7 +111,8 @@ export class GroupsController {
   @Post('/:id/evaluation')
   async addEvaluationToGroup(
     @Param('id') id: string,
-    @Request() request: ExpressRequest & {user: User},
+    @Request() request: {user: User},
+    @Ip() ip: string,
     @Body() evaluationGroupDto: EvaluationGroupDto
   ): Promise<GroupDto> {
     const abac = this.authz.abac.createForUser(request.user);
@@ -125,6 +128,7 @@ export class GroupsController {
     const updatedGroupDto = new GroupDto(group);
     this.loggingService.logGroupActionWithEvaluationSubject(
       request,
+      ip,
       'Add',
       evaluationToAdd,
       updatedGroupDto
@@ -135,7 +139,8 @@ export class GroupsController {
   @Delete('/:id/evaluation')
   async removeEvaluationFromGroup(
     @Param('id') id: string,
-    @Request() request: ExpressRequest & {user: User},
+    @Request() request: {user: User},
+    @Ip() ip: string,
     @Body() evaluationGroupDto: EvaluationGroupDto
   ): Promise<GroupDto> {
     // This must perform validation checks to ensure the user performing the action has permission to remove evaluations from a group.
@@ -153,6 +158,7 @@ export class GroupsController {
     );
     this.loggingService.logGroupActionWithEvaluationSubject(
       request,
+      ip,
       'Remove',
       evaluationToRemove,
       updatedGroupDto
@@ -174,7 +180,8 @@ export class GroupsController {
 
   @Put(':id')
   async update(
-    @Request() request: ExpressRequest & {user: User},
+    @Request() request: {user: User},
+    @Ip() ip: string,
     @Param('id') id: string,
     @Body() updateGroup: CreateGroupDto
   ): Promise<GroupDto> {
@@ -184,13 +191,14 @@ export class GroupsController {
     const updatedGroupDto = new GroupDto(
       await this.groupsService.update(groupToUpdate, updateGroup)
     );
-    this.loggingService.logGroupAction(request, 'Update', updatedGroupDto);
+    this.loggingService.logGroupAction(request, ip, 'Update', updatedGroupDto);
     return updatedGroupDto;
   }
 
   @Delete(':id')
   async remove(
-    @Request() request: ExpressRequest & {user: User},
+    @Request() request: {user: User},
+    @Ip() ip: string,
     @Param('id') id: string
   ): Promise<GroupDto> {
     const abac = this.authz.abac.createForUser(request.user);
@@ -199,7 +207,7 @@ export class GroupsController {
     const deletedGroupDto = new GroupDto(
       await this.groupsService.remove(groupToDelete)
     );
-    this.loggingService.logGroupAction(request, 'Delete', deletedGroupDto);
+    this.loggingService.logGroupAction(request, ip, 'Delete', deletedGroupDto);
     return deletedGroupDto;
   }
 }

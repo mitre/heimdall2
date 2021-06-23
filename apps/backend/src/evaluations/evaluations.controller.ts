@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Ip,
   Param,
   Post,
   Put,
@@ -13,7 +14,6 @@ import {
   UseInterceptors
 } from '@nestjs/common';
 import {FileInterceptor} from '@nestjs/platform-express';
-import {Request as ExpressRequest} from 'express';
 import _ from 'lodash';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
@@ -43,22 +43,18 @@ export class EvaluationsController {
   @Get(':id')
   async findById(
     @Param('id') id: string,
-    @Request() request: ExpressRequest & {user: User}
+    @Request() request: {user: User}
   ): Promise<EvaluationDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const evaluation = await this.evaluationsService.findById(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Read, evaluation);
-    const evaluationDTO = new EvaluationDto(
-      evaluation,
-      abac.can(Action.Update, evaluation)
-    );
-    return evaluationDTO;
+    return new EvaluationDto(evaluation, abac.can(Action.Update, evaluation));
   }
 
   @Get(':id/groups')
   async groupsForEvaluation(
     @Param('id') id: string,
-    @Request() request: ExpressRequest & {user: User}
+    @Request() request: {user: User}
   ): Promise<GroupDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
     let evaluationGroups = await this.evaluationsService.groups(id);
@@ -71,9 +67,7 @@ export class EvaluationsController {
   }
 
   @Get()
-  async findAll(
-    @Request() request: ExpressRequest & {user: User}
-  ): Promise<EvaluationDto[]> {
+  async findAll(@Request() request: {user: User}): Promise<EvaluationDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
     let evaluations = await this.evaluationsService.findAll();
 
@@ -92,7 +86,8 @@ export class EvaluationsController {
   async create(
     @Body() createEvaluationDto: CreateEvaluationDto,
     @UploadedFile() data: Express.Multer.File,
-    @Request() request: ExpressRequest & {user: User}
+    @Request() request: {user: User},
+    @Ip() ip: string
   ): Promise<EvaluationDto> {
     const serializedDta: JSON = JSON.parse(data.buffer.toString('utf8'));
     let groups: Group[] = createEvaluationDto.groups
@@ -122,14 +117,15 @@ export class EvaluationsController {
       true,
       `${this.configService.get('EXTERNAL_URL') || ''}/results/${evaluation.id}`
     );
-    this.loggingService.logEvaluationAction(request, 'Create', createdDto);
+    this.loggingService.logEvaluationAction(request, ip, 'Create', createdDto);
     return _.omit(createdDto, 'data');
   }
 
   @Put(':id')
   async update(
     @Param('id') id: string,
-    @Request() request: ExpressRequest & {user: User},
+    @Request() request: {user: User},
+    @Ip() ip: string,
     @Body() updateEvaluationDto: UpdateEvaluationDto
   ): Promise<EvaluationDto> {
     const abac = this.authz.abac.createForUser(request.user);
@@ -148,6 +144,7 @@ export class EvaluationsController {
 
     this.loggingService.logEvaluationAction(
       request,
+      ip,
       'Update',
       updatedEvaluationDto
     );
@@ -158,7 +155,8 @@ export class EvaluationsController {
   @Delete(':id')
   async remove(
     @Param('id') id: string,
-    @Request() request: ExpressRequest & {user: User}
+    @Request() request: {user: User},
+    @Ip() ip: string
   ): Promise<EvaluationDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const evaluationToDelete = await this.evaluationsService.findById(id);
@@ -168,6 +166,7 @@ export class EvaluationsController {
     );
     this.loggingService.logEvaluationAction(
       request,
+      ip,
       'Delete',
       deletedEvaluation
     );
