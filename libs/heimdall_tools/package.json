@@ -11,7 +11,8 @@
     "test": ""
   },
   "dependencies": {
-    "csv-parse": "^4.16.0"
+    "csv-parse": "^4.16.0",
+    "inspecjs": "^0.12.4"
   },
   "devDependencies": {
     "ts-node": "^10.0.0"
