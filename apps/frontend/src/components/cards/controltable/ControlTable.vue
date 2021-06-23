@@ -2,7 +2,11 @@
   <v-container fluid class="font-weight-bold">
     <div
       ref="controlTableTitle"
-      class="pinned-header control-table-title"
+      :class="
+        $vuetify.breakpoint.smAndDown
+          ? 'control-table-title'
+          : 'pinned-header control-table-title'
+      "
       :style="controlTableTitleStyle"
     >
       <!-- Toolbar -->
@@ -81,7 +85,7 @@
     >
       <div :id="striptoChars(item.key)">
         <ControlRowHeader
-          class="pinned-header"
+          :class="$vuetify.breakpoint.smAndDown ? '' : 'pinned-header'"
           :style="controlRowPinOffset"
           :control="item.control"
           :expanded="expanded.includes(item.key)"
@@ -256,9 +260,11 @@ export default class ControlTable extends Vue {
   }
 
   jump_to_key(key: string) {
-    this.$nextTick(() => {
-      this.$vuetify.goTo(`#${this.striptoChars(key)}`, {offset: this.topOfPage, duration: 300});
-    });
+    if(!this.$vuetify.breakpoint.smAndDown){
+      this.$nextTick(() => {
+        this.$vuetify.goTo(`#${this.striptoChars(key)}`, {offset: this.topOfPage, duration: 300});
+      });
+    }
   }
 
   striptoChars(key: string) {
