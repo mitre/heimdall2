@@ -36,9 +36,6 @@ export default class ColumnHeader extends Vue {
       case 'descending':
         newSort = 'ascending';
         break;
-      case 'ascending':
-        newSort = 'descending';
-        break;
       default: // Shouldn't happen but whatever
         newSort = 'descending';
         break;

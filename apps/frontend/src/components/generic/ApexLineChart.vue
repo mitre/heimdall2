@@ -17,11 +17,6 @@ import {ApexOptions} from 'apexcharts';
 import {Category} from './ApexPieChart.vue';
 import {Prop} from 'vue-property-decorator';
 
-let idCounter = 0;
-function next_id(): number {
-  return idCounter++;
-}
-
 export interface SeriesItem {
   name: string;
   data: number[];
@@ -42,8 +37,6 @@ export default class ApexLineChart extends Vue {
   @Prop({type: Boolean}) readonly sevChart!: boolean; //identifies chart as severity chart
   @Prop({type: String}) readonly title!: string;
   @Prop({type: String}) readonly yTitle!: string;
-
-  chartId= `line_chart_${next_id}`;
 
   //gives apex charts the severity colors
   sevColors: string[] = ['#FFEB3B', '#FF9800', '#FF5722', '#F44336'];
