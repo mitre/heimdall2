@@ -6,6 +6,7 @@
     "**/*.ts"
   ],
   "compilerOptions": {
-    "strict": true
+    "strict": true,
+    "resolveJsonModule": true
   }
 }
