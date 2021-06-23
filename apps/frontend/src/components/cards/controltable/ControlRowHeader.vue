@@ -15,7 +15,6 @@
           </v-icon>
         </v-card-text>
       </v-card>
-      <v-checkbox color="primary" label="Viewed" />
     </template>
 
     <template #set>
