@@ -117,7 +117,7 @@ function colorize_tree_map(root: TreemapNodeParent) {
   // We decide this node's color as a composite of all underlying node colors
   const childColors = root.children
     .map((c) => c.color)
-    .filter((c) => c !== undefined) as Chroma.Color[];
+    .filter((c): c is Chroma.Color => !!c);
   // If we have any, then set our color
   if (childColors.length) {
     // Set the color
