@@ -42,8 +42,6 @@ test/videos
 .env-prod
 .env-dev
 
-data/
-
 # Ignore cloud.gov manifest
 manifest.yml
 
