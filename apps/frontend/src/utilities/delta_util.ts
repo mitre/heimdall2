@@ -6,6 +6,8 @@ import {SourcedContextualizedEvaluation} from '@/store/report_intake';
 import {context} from 'inspecjs';
 import {ContextualizedEvaluation} from 'inspecjs/dist/context';
 import {DateTime} from 'luxon';
+import {Filter} from '../store/data_filters';
+import {StatusCountModule} from '../store/status_counts';
 
 export const NOT_SELECTED = 'not selected';
 
@@ -164,6 +166,68 @@ export function get_eval_start_time(
   return null;
 }
 
+export function getResultsSetExecutionTime(
+  resultsSet: SourcedContextualizedEvaluation
+): number {
+  let time = 0;
+  resultsSet.contains.forEach((value) => {
+    value.contains.forEach((control) => {
+      control.hdf.segments?.forEach((segment) => {
+        time += segment.run_time || 0;
+      });
+    });
+  });
+  return time;
+}
+
+export function getControlCount(
+  resultsSet: SourcedContextualizedEvaluation
+): number {
+  let count = 0;
+  resultsSet.contains.forEach((value) => {
+    count += value.contains.length;
+  });
+  return count;
+}
+
+export function getCompletedControlCount(
+  resultsSet: SourcedContextualizedEvaluation
+): number {
+  let count = 0;
+  resultsSet.contains.forEach((value) => {
+    value.contains.forEach((control) => {
+      if (
+        ![
+          'Not Applicable',
+          'Not Reviewed',
+          'Profile Error',
+          'From Profile'
+        ].includes(control.hdf.status)
+      ) {
+        count += 1;
+      }
+    });
+  });
+  return count;
+}
+
+export function calculateCompliance(
+  resultsSet: SourcedContextualizedEvaluation
+): number {
+  const filter: Filter = {fromFile: [resultsSet.from_file.unique_id]};
+  const passed = StatusCountModule.countOf(filter, 'Passed');
+  const total =
+    passed +
+    StatusCountModule.countOf(filter, 'Failed') +
+    StatusCountModule.countOf(filter, 'Profile Error') +
+    StatusCountModule.countOf(filter, 'Not Reviewed');
+  if (total == 0) {
+    return 0;
+  } else {
+    return Math.round((100.0 * passed) / total);
+  }
+}
+
 /**
  * Grabs the "top" (IE non-overlayed/end of overlay chain) controls from the execution.
  *
@@ -256,4 +320,46 @@ export function compare_times(
   const bDate = parse_datetime(get_eval_start_time(b) || '');
 
   return aDate.valueOf() - bDate.valueOf();
+}
+
+export function compareExecutionTimes(
+  a: SourcedContextualizedEvaluation,
+  b: SourcedContextualizedEvaluation
+) {
+  const aExecutionTime = getResultsSetExecutionTime(a);
+  const bExecutionTime = getResultsSetExecutionTime(b);
+  return aExecutionTime - bExecutionTime;
+}
+
+export function compareControlCount(
+  a: SourcedContextualizedEvaluation,
+  b: SourcedContextualizedEvaluation
+) {
+  const aControlCount = getControlCount(a);
+  const bControlCount = getControlCount(b);
+  return aControlCount - bControlCount;
+}
+
+export function compareCompletedControlCount(
+  a: SourcedContextualizedEvaluation,
+  b: SourcedContextualizedEvaluation
+) {
+  return getCompletedControlCount(a) - getCompletedControlCount(b);
+}
+
+export function compareCompletedControlPercent(
+  a: SourcedContextualizedEvaluation,
+  b: SourcedContextualizedEvaluation
+) {
+  return (
+    getCompletedControlCount(a) / getControlCount(a) -
+    getCompletedControlCount(b) / getControlCount(b)
+  );
+}
+
+export function compareCompliance(
+  a: SourcedContextualizedEvaluation,
+  b: SourcedContextualizedEvaluation
+) {
+  return calculateCompliance(a) - calculateCompliance(b);
 }

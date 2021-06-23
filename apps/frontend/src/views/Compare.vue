@@ -7,10 +7,27 @@
 
     <template #main-content>
       <v-container fluid grid-list-md pa-2>
-        <v-row>
-          <v-col cols="12">
+        <v-row justify="space-between">
+          <v-col cols="8">
             <div style="position: relative">
               <h1>Results Comparison</h1>
+            </div>
+          </v-col>
+          <v-col cols="4">
+            <div class="d-flex flex-nowrap">
+              <h4 class="pt-5 pr-1">Sort Results Sets By:</h4>
+              <v-select
+                v-model="sortControlSetsBy"
+                :items="[
+                  'Run Time',
+                  'Execution Length',
+                  'Control Count',
+                  'Completed Control Count',
+                  'Completed Control %',
+                  'Passed Control Count',
+                  'Compliance (Passed Control %)'
+                ]"
+              />
             </div>
           </v-col>
         </v-row>
@@ -201,7 +218,7 @@ import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {ControlStatus} from 'inspecjs';
 import {SeverityCountModule} from '@/store/severity_counts';
 
-import {compare_times, ComparisonContext, ControlSeries} from '@/utilities/delta_util';
+import {compareCompletedControlCount, compareCompletedControlPercent, compareCompliance, compareControlCount, compareExecutionTimes, compare_times, ComparisonContext, ControlSeries} from '@/utilities/delta_util';
 import {Category} from '@/components/generic/ApexPieChart.vue';
 import {StatusCountModule} from '@/store/status_counts';
 import ProfileRow from '@/components/cards/comparison/ProfileRow.vue';
@@ -259,7 +276,7 @@ export default class Compare extends Vue {
       color: 'statusProfileError'
     }
   ];
-
+  sortControlSetsBy = 'Run Time';
   changedOnly = true;
   expanded_view: boolean = true;
   tab: number = 0;
@@ -340,7 +357,26 @@ export default class Compare extends Vue {
   get files(): EvaluationFile[] {
     const fileList = Array.from(FilteredDataModule.evaluations(FilteredDataModule.selected_file_ids));
 
-    fileList.sort(compare_times);
+    switch (this.sortControlSetsBy) {
+      case 'Run Time':
+        fileList.sort(compare_times)
+        break;
+      case 'Execution Time':
+        fileList.sort(compareExecutionTimes)
+        break;
+      case 'Control Count':
+        fileList.sort(compareControlCount)
+        break;
+      case 'Completed Control Count':
+        fileList.sort(compareCompletedControlCount)
+        break;
+      case 'Completed Control %':
+        fileList.sort(compareCompletedControlPercent)
+        break;
+      case 'Compliance (Passed Control %)':
+        fileList.sort(compareCompliance)
+        break;
+    };
     return fileList.map((evaluation) => evaluation.from_file);
   }
 
