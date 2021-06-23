@@ -18,10 +18,9 @@ import Vue from 'vue'
 import XLSX from 'xlsx';
 import Component from 'vue-class-component';
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {HDFControl, HDFControlSegment} from 'inspecjs';
+import {HDFControl, HDFControlSegment, ContextualizedControl} from 'inspecjs';
 import {Filter, FilteredDataModule} from '../../store/data_filters';
 import {Prop} from 'vue-property-decorator';
-import {ContextualizedControl} from 'inspecjs';
 import _ from 'lodash';
 import {InspecDataModule} from '../../store/data_store';
 

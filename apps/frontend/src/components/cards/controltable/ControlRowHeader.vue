@@ -116,7 +116,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   @Prop({type: Boolean, default: false}) readonly showImpact!: boolean;
 
   get filename(): string | undefined {
-    return _.get(this.control, 'sourced_from.sourced_from.from_file.filename')
+    return _.get(this.control, 'sourcedFrom.sourcedFrom.from_file.filename')
   }
 
   get truncated_title(): string {
@@ -151,7 +151,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   // Get NIST tag description for NIST tag, this is pulled from the 800-53 xml
   // and relies on a script not contained in the project
   descriptionForTag(tag: string): string {
-    let nisted = parse_nist(tag);
+    const nisted = parse_nist(tag);
     if (is_control(nisted)) {
       let canon = nisted.canonize(nist_canon_config);
       let found = NIST_DESCRIPTIONS[canon];
@@ -165,10 +165,10 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   }
 
   get nistTags(): Tag[] {
-    let nist_tags = this.control.hdf.raw_nist_tags;
+    let nist_tags = this.control.hdf.rawNistTags;
     nist_tags = nist_tags.filter((tag) => tag.search(/Rev.*\d/i) == -1);
     return nist_tags.map((tag) => {
-      let nisted = parse_nist(tag);
+      const nisted = parse_nist(tag);
       let url = '';
       if (is_control(nisted)) {
         url = nisted.canonize({

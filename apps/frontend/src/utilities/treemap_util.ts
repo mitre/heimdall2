@@ -52,19 +52,19 @@ export type D3TreemapNode = d3.HierarchyNode<TreemapNode>;
  * @param controls The controls to build into a nist node map
  */
 function controls_to_nist_node_data(
-  contextualized_controls: Readonly<ContextualizedControl[]>,
+  contextualizedControls: Readonly<ContextualizedControl[]>,
   colors: ColorHack
 ): TreemapNodeLeaf[] {
-  return contextualized_controls.flatMap((cc) => {
+  return contextualizedControls.flatMap((cc) => {
     // Get the status color
     const color = Chroma.hex(colors.colorForStatus(cc.root.hdf.status));
     // Now make leaves for each nist control
-    return cc.root.hdf.parsed_nist_tags.map((nc) => {
+    return cc.root.hdf.parsedNistTags.map((nc) => {
       const leaf: TreemapNodeLeaf = {
         title: cc.data.id,
         subtitle: cc.data.title || undefined,
         hovertext: cc.data.desc || undefined,
-        key: control_unique_key(cc) + nc.raw_text,
+        key: control_unique_key(cc) + nc.rawText,
         control: cc,
         nist_control: nc,
         color,
@@ -77,36 +77,36 @@ function controls_to_nist_node_data(
 
 /** Builds a scaffolding for the nist items using the given root.
  * Also constructs a lookup table of control nodes.
- * Only goes max_depth deep.
+ * Only goes maxDepth deep.
  */
 function recursive_nist_map(
   parent: TreemapNodeParent | null,
   node: Readonly<NistHierarchyNode>,
   control_lookup: {[key: string]: TreemapNodeParent},
-  max_depth: number
+  maxDepth: number
 ): TreemapNodeParent {
   // Init child list
   const children: TreemapNode[] = [];
 
   // Make our final value
   const ret: TreemapNodeParent = {
-    key: node.control.raw_text!,
-    title: node.control.raw_text!, // TODO: Make this like, suck less. IE give more descriptive stuff
+    key: node.control.rawText!,
+    title: node.control.rawText!, // TODO: Make this like, suck less. IE give more descriptive stuff
     nist_control: node.control,
     parent,
     children
   };
 
   // Fill our children
-  if (node.control.sub_specifiers.length < max_depth) {
+  if (node.control.subSpecifiers.length < maxDepth) {
     node.children.forEach((child) => {
       // Assign it, recursively computing the rest
-      children.push(recursive_nist_map(ret, child, control_lookup, max_depth));
+      children.push(recursive_nist_map(ret, child, control_lookup, maxDepth));
     });
   }
 
   // Save to lookup
-  control_lookup[lookup_key_for(node.control, max_depth)] = ret;
+  control_lookup[lookup_key_for(node.control, maxDepth)] = ret;
   return ret;
 }
 
@@ -133,11 +133,11 @@ function colorize_tree_map(root: TreemapNodeParent) {
 }
 
 /** Generates a lookup key for the given control */
-function lookup_key_for(x: NistControl, max_depth: number): string {
-  if (max_depth) {
-    return x.sub_specifiers.slice(0, max_depth).join('-');
+function lookup_key_for(x: NistControl, maxDepth: number): string {
+  if (maxDepth) {
+    return x.subSpecifiers.slice(0, maxDepth).join('-');
   } else {
-    return x.sub_specifiers.join('-');
+    return x.subSpecifiers.join('-');
   }
 }
 
@@ -145,11 +145,11 @@ function lookup_key_for(x: NistControl, max_depth: number): string {
 function populate_tree_map(
   lookup: {[key: string]: TreemapNodeParent},
   leaves: TreemapNodeLeaf[],
-  max_depth: number
+  maxDepth: number
 ) {
   // Populate it
   leaves.forEach((leaf) => {
-    const parent = lookup[lookup_key_for(leaf.nist_control, max_depth)];
+    const parent = lookup[lookup_key_for(leaf.nist_control, maxDepth)];
     if (parent) {
       // We found a node that will accept it (matches its control)
       // We can do this as because we know we constructed these to only have empty children
@@ -158,7 +158,7 @@ function populate_tree_map(
     } else {
       // eslint-disable-next-line no-console
       console.warn(
-        `Warning: unable to assign control ${leaf.nist_control.raw_text} to valid treemap leaf`
+        `Warning: unable to assign control ${leaf.nist_control.rawText} to valid treemap leaf`
       );
     }
   });

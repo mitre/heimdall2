@@ -149,7 +149,7 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     detailsMap.set('Rationale', c.hdf.descriptions.rationale)
     detailsMap.set('Severity', c.root.hdf.severity)
     detailsMap.set('Impact', c.data.impact)
-    detailsMap.set('Nist controls', c.hdf.raw_nist_tags.join(', '))
+    detailsMap.set('Nist controls', c.hdf.rawNistTags.join(', '))
     detailsMap.set('CCI controls', this.cciControlString)
     detailsMap.set('Check', c.hdf.descriptions.check || c.data.tags.check)
     detailsMap.set('Fix', c.hdf.descriptions.fix || c.data.tags.fix)

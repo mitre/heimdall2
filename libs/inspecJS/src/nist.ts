@@ -6,6 +6,7 @@ const NIST_FAMILY_RE = /^[A-Z]{2}$/;
 const NIST_CONTROL_RE = /^([A-Z]{2})-([0-9]+)(.*)$/;
 const SPEC_SPLITTER = /[\s|\(|\)|\.]+/; // Includes all whitespace, periods, and parenthesis
 const REV_RE = /^rev[\s_.]+(\d+)$/i; // Matches Rev_5 etc
+type ParseNist = NistControl | NistRevision | null;
 
 export interface CanonizationConfig {
   max_specifiers: number;
@@ -37,15 +38,15 @@ export class NistControl {
    * First element is guaranteed to be a 2-letter family
    * Note that we strip punctuation
    */
-  sub_specifiers: string[]; // Guaranteed to be of length at least one on a "real" control
+  subSpecifiers: string[]; // Guaranteed to be of length at least one on a "real" control
 
   /** Holds the string from which this control was generated. */
-  raw_text?: string;
+  rawText?: string;
 
   /** Trivial constructor */
-  constructor(sub_specs: string[], raw_rext?: string) {
-    this.sub_specifiers = sub_specs;
-    this.raw_text = raw_rext;
+  constructor(subSpecs: string[], rawRext?: string) {
+    this.subSpecifiers = subSpecs;
+    this.rawText = rawRext;
   }
 
   /** This function checks if the given control is contained by or equivalent to this control.
@@ -66,20 +67,20 @@ export class NistControl {
    */
   compare_lineage(other: NistControl): number {
     // Can't contain if we're more specific
-    if (this.sub_specifiers.length > other.sub_specifiers.length) {
+    if (this.subSpecifiers.length > other.subSpecifiers.length) {
       return -1;
     }
 
     // After that we just need to iterate
-    for (let i = 0; i < this.sub_specifiers.length; i++) {
+    for (let i = 0; i < this.subSpecifiers.length; i++) {
       // If our subspec differentiate at any point, then we do not match
-      if (this.sub_specifiers[i] !== other.sub_specifiers[i]) {
+      if (this.subSpecifiers[i] !== other.subSpecifiers[i]) {
         return -1;
       }
     }
 
     // We survived! The change in # sub specs is thus the # of changes to enhancements
-    return other.sub_specifiers.length - this.sub_specifiers.length;
+    return other.subSpecifiers.length - this.subSpecifiers.length;
   }
 
   /** Gives a numeric value indicating how these controls compare, lexicographically.
@@ -87,30 +88,30 @@ export class NistControl {
    */
   localCompare(other: NistControl): number {
     // Convert into a chain of directives
-    const a_chain = this.sub_specifiers;
-    const b_chain = other.sub_specifiers;
-    for (let i = 0; i < a_chain.length && i < b_chain.length; i++) {
+    const aChain = this.subSpecifiers;
+    const bChain = other.subSpecifiers;
+    for (let i = 0; i < aChain.length && i < bChain.length; i++) {
       // Compare corresponding elements of the chain
-      const a_i = a_chain[i];
-      const b_i = b_chain[i];
+      const idA = aChain[i];
+      const idB = bChain[i];
 
       // Return only if significant
-      const lc = a_i.localeCompare(b_i, 'en', {numeric: true});
+      const lc = idA.localeCompare(idB, 'en', {numeric: true});
       if (lc) {
         return lc;
       }
     }
 
     // Fall back to length comparison. We want shorter first, so ascending's good
-    return a_chain.length - b_chain.length;
+    return aChain.length - bChain.length;
   }
 
   /**
    * Quick accessor to the leading family letters for the nsit control
    */
   get family(): string | undefined {
-    if (this.sub_specifiers.length) {
-      return this.sub_specifiers[0];
+    if (this.subSpecifiers.length) {
+      return this.subSpecifiers[0];
     } else {
       return undefined;
     }
@@ -123,7 +124,7 @@ export class NistControl {
    */
   canonize(config: CanonizationConfig): string {
     config = default_partial_config(config);
-    const ss = this.sub_specifiers;
+    const ss = this.subSpecifiers;
 
     // Build our string. Start with family
     let s = this.family || '';
@@ -144,7 +145,7 @@ export class NistControl {
         // If index past 1, wrap in parens
         if (i > 1) {
           if (config.add_parens) {
-            spec = '(' + spec + ')';
+            spec = `(${spec})`;
           }
 
           // If space, add space
@@ -172,52 +173,50 @@ export class NistControl {
 
 /** Wrapper around a revision number. Currently has no additional functionality, but this may change. */
 export class NistRevision {
-  rev_num: number;
-  constructor(rev_num: number) {
-    this.rev_num = rev_num;
+  revNum: number;
+  constructor(revNum: number) {
+    this.revNum = revNum;
   }
 }
 
-export function parse_nist(
-  raw_nist: string
-): NistControl | NistRevision | null {
+export function parse_nist(rawNist: string): ParseNist {
   // Is it a revision? Get the match, continuing if none
-  const rev_match = raw_nist.match(REV_RE);
-  if (rev_match) {
-    return new NistRevision(Number.parseInt(rev_match[1]));
+  const revMatch = rawNist.match(REV_RE);
+  if (revMatch) {
+    return new NistRevision(Number.parseInt(revMatch[1]));
   }
   // Is it just a family?
   // Get the match, failing out if we can't
-  const fam_match = raw_nist.match(NIST_FAMILY_RE);
-  if (fam_match) {
-    return new NistControl([fam_match[0]], fam_match[0]);
+  const famMatch = rawNist.match(NIST_FAMILY_RE);
+  if (famMatch) {
+    return new NistControl([famMatch[0]], famMatch[0]);
   }
 
   // Next try it as a full control
-  const full_match = raw_nist.match(NIST_CONTROL_RE);
-  if (!full_match) {
+  const fullMatch = rawNist.match(NIST_CONTROL_RE);
+  if (!fullMatch) {
     return null;
   }
 
   // Parse sub-elements
-  const family = full_match[1];
-  const control_num = full_match[2];
-  const subspecs_raw = (full_match[3] || '').trim();
+  const family = fullMatch[1];
+  const controlNum = fullMatch[2];
+  const subspecsRaw = (fullMatch[3] || '').trim();
 
   // Init sub-specs
-  const sub_specs: string[] = [family, control_num];
+  const subSpecs: string[] = [family, controlNum];
 
-  // Filter garbage from subspecs_raw
-  let subspecs_split = subspecs_raw.split(SPEC_SPLITTER);
-  subspecs_split = subspecs_split.filter((s) => s != '');
-  return new NistControl(sub_specs.concat(subspecs_split), raw_nist);
+  // Filter garbage from subspecsRaw
+  let subspecsSplit = subspecsRaw.split(SPEC_SPLITTER);
+  subspecsSplit = subspecsSplit.filter((s) => s !== '');
+  return new NistControl(subSpecs.concat(subspecsSplit), rawNist);
 }
 
 /** Simple discriminators */
 export function is_control(
   x: NistControl | NistRevision | null
 ): x is NistControl {
-  if (x && (x as NistControl).sub_specifiers !== undefined) {
+  if (x && (x as NistControl).subSpecifiers !== undefined) {
     return true;
   }
   return false;
@@ -227,7 +226,7 @@ export function is_control(
 export function is_revision(
   x: NistControl | NistRevision | null
 ): x is NistRevision {
-  if (x && (x as NistRevision).rev_num !== undefined) {
+  if (x && (x as NistRevision).revNum !== undefined) {
     return true;
   }
   return false;
@@ -272,9 +271,9 @@ export function compare_statuses(
     'Failed',
     'Profile Error'
   ];
-  const a_i = precedence.indexOf(a);
-  const b_i = precedence.indexOf(b);
-  return a_i - b_i;
+  const idA = precedence.indexOf(a);
+  const idB = precedence.indexOf(b);
+  return idA - idB;
 }
 
 export function updateStatus(
@@ -297,9 +296,9 @@ export interface NistHierarchyNode {
 export type NistHierarchy = NistHierarchyNode[];
 
 function _control_parent(c: NistControl): NistControl | null {
-  if (c.sub_specifiers.length) {
+  if (c.subSpecifiers.length) {
     return new NistControl(
-      c.sub_specifiers.slice(0, c.sub_specifiers.length - 1)
+      c.subSpecifiers.slice(0, c.subSpecifiers.length - 1)
     );
   } else {
     return null; // Can't get any shorter
@@ -307,7 +306,7 @@ function _control_parent(c: NistControl): NistControl | null {
 }
 
 function _key_for(c: NistControl): string {
-  return c.sub_specifiers.join('-');
+  return c.subSpecifiers.join('-');
 }
 
 function _generate_full_nist_hierarchy(): NistHierarchy {
@@ -329,49 +328,49 @@ function _generate_full_nist_hierarchy(): NistHierarchy {
 
   // Iterate over all controls
   ALL_NIST_CONTROL_NUMBERS.forEach((n) => {
-    const as_control = parse_nist(n) as NistControl | null; // We know there are no revs in our file
-    if (!as_control) {
-      throw `Invalid nist control constant ${n}`;
+    const asControl = parse_nist(n) as NistControl | null; // We know there are no revs in our file
+    if (!asControl) {
+      throw new Error(`Invalid nist control constant ${n}`);
     }
 
     // If our node has already been created, replace the temporary control with the "real" one
-    const key = _key_for(as_control);
-    let as_node: NistHierarchyNode;
+    const key = _key_for(asControl);
+    let asNode: NistHierarchyNode;
     if (map[key]) {
-      as_node = map[key];
-      as_node.control = as_control;
+      asNode = map[key];
+      asNode.control = asControl;
     } else {
       //Make it fresh
-      as_node = {
-        control: as_control,
+      asNode = {
+        control: asControl,
         children: []
       };
 
       // Register in map
-      map[key] = as_node;
+      map[key] = asNode;
     }
 
-    const parent = _control_parent(as_control);
+    const parent = _control_parent(asControl);
 
     // If parent is null, add to roots.
     if (!parent) {
       roots.push({
-        control: as_control,
+        control: asControl,
         children: []
       });
     } else {
       // Valid parent; look it up and append us to it
-      const parent_key = _key_for(parent);
-      const parent_node = map[parent_key];
+      const parentKey = _key_for(parent);
+      const parentNode = map[parentKey];
 
       // If parent has been explored already, simply append this node to that
-      if (parent_node) {
-        parent_node.children.push(as_node);
+      if (parentNode) {
+        parentNode.children.push(asNode);
       } else {
         // It's not? make a stub
-        map[parent_key] = {
+        map[parentKey] = {
           control: parent,
-          children: [as_node] // "Us"
+          children: [asNode] // "Us"
         };
       }
     }

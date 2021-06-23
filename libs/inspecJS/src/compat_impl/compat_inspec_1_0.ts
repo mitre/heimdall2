@@ -2,9 +2,8 @@
  * A lot of information/behaviour is shared between the profile and result version so we use a single abstract superclass
  */
 
-import { ExecJSONControl as ResultControl_1_0 } from "../generated_parsers/v_1_0/exec-json";
+import { ExecJSONControl as ResultControl_1_0, ControlResult as ControlResult_1_0  } from "../generated_parsers/v_1_0/exec-json";
 import { ProfileJSONControl as ProfileControl_1_0 } from "../generated_parsers/v_1_0/profile-json";
-import { ControlResult as ControlResult_1_0 } from "../generated_parsers/v_1_0/exec-json";
 
 import {
   HDFControl,
@@ -21,15 +20,15 @@ import {
   CanonizationConfig
 } from "../nist";
 
-abstract class HDFControl_1_0 implements HDFControl {
+abstract class HDFControl10 implements HDFControl {
   // Declare all properties expected
-  readonly raw_nist_tags: string[];
-  readonly parsed_nist_tags: NistControl[];
-  readonly parsed_nist_revision: NistRevision | null;
+  readonly rawNistTags: string[];
+  readonly parsedNistTags: NistControl[];
+  readonly parsedNistRevision: NistRevision | null;
   readonly severity: Severity;
   readonly waived: boolean;
   readonly descriptions: { [key: string]: string } = {};
-  readonly is_profile: boolean;
+  readonly isProfile: boolean;
 
   // We use this as a reference
   wraps: ResultControl_1_0 | ProfileControl_1_0;
@@ -37,18 +36,18 @@ abstract class HDFControl_1_0 implements HDFControl {
   // We ask that the child compute waived for us, to ease discrimination thereof
   constructor(
     forControl: ResultControl_1_0 | ProfileControl_1_0,
-    is_profile: boolean,
+    isProfile: boolean,
     waived: boolean
   ) {
     this.wraps = forControl;
     this.waived = waived;
-    this.is_profile = is_profile;
+    this.isProfile = isProfile;
 
-    this.raw_nist_tags = HDFControl_1_0.compute_raw_nist_tags(this.wraps);
-    const tmp = HDFControl_1_0.compute_proper_nist_tags(this.raw_nist_tags);
-    this.parsed_nist_tags = tmp[0];
-    this.parsed_nist_revision = tmp[1];
-    this.severity = HDFControl_1_0.compute_severity(this.wraps);
+    this.rawNistTags = HDFControl10.compute_raw_nist_tags(this.wraps);
+    const tmp = HDFControl10.compute_proper_nist_tags(this.rawNistTags);
+    this.parsedNistTags = tmp[0];
+    this.parsedNistRevision = tmp[1];
+    this.severity = HDFControl10.compute_severity(this.wraps);
   }
 
   // Abstracts - implemented more specifically below
@@ -107,39 +106,39 @@ abstract class HDFControl_1_0 implements HDFControl {
     raw: string[]
   ): [NistControl[], NistRevision | null] {
     // Initialize
-    let parsed_nist_tags: NistControl[] = [];
-    let parsed_nist_revision: NistRevision | null = null;
-    const seen_specs = new Set<string>(); // Used to track duplication
+    let parsedNistTags: NistControl[] = [];
+    let parsedNistRevision: NistRevision | null = null;
+    const seenSpecs = new Set<string>(); // Used to track duplication
 
     // Process item by item
     raw.map(parse_nist).forEach(x => {
       if (!x) {
         return;
       } else if (is_control(x)) {
-        const spec_chain = x.sub_specifiers.join("-");
-        if (!seen_specs.has(spec_chain)) {
-          seen_specs.add(spec_chain);
-          parsed_nist_tags.push(x);
+        const specChain = x.subSpecifiers.join("-");
+        if (!seenSpecs.has(specChain)) {
+          seenSpecs.add(specChain);
+          parsedNistTags.push(x);
         }
       } else {
-        parsed_nist_revision = x;
+        parsedNistRevision = x;
       }
     });
 
     // Sort the tags
-    parsed_nist_tags = parsed_nist_tags.sort((a, b) => a.localCompare(b));
+    parsedNistTags = parsedNistTags.sort((a, b) => a.localCompare(b));
 
     // Stub if necessary
-    if (parsed_nist_tags.length === 0) {
-      parsed_nist_tags.push(parse_nist("UM-1") as NistControl);
+    if (parsedNistTags.length === 0) {
+      parsedNistTags.push(parse_nist("UM-1") as NistControl);
     }
 
-    return [parsed_nist_tags, parsed_nist_revision];
+    return [parsedNistTags, parsedNistRevision];
   }
 
   canonized_nist(config: CanonizationConfig): string[] {
     const result: string[] = [];
-    for (const v of this.parsed_nist_tags) {
+    for (const v of this.parsedNistTags) {
       const s = v.canonize(config);
       if (!result.includes(s)) {
         result.push(s);
@@ -165,7 +164,7 @@ abstract class HDFControl_1_0 implements HDFControl {
   }
 }
 
-export class ExecControl extends HDFControl_1_0 implements HDFControl {
+export class ExecControl extends HDFControl10 implements HDFControl {
   // Store message - it duplicates data but is very expensive to make,
   // and in general we can afford ram more than anything else
   readonly message: string;
@@ -203,7 +202,7 @@ export class ExecControl extends HDFControl_1_0 implements HDFControl {
   }
 
   private static compute_message(control: ResultControl_1_0): string {
-    if (control.impact != 0) {
+    if (control.impact !== 0) {
       // If it has any impact, convert each result to a message line and chain them all together
       return control.results.map(ExecControl.to_message_line).join("");
     } else {
@@ -271,7 +270,7 @@ export class ExecControl extends HDFControl_1_0 implements HDFControl {
   }
 }
 
-export class ProfileControl extends HDFControl_1_0 implements HDFControl {
+export class ProfileControl extends HDFControl10 implements HDFControl {
   // Establish our data
   readonly segments = undefined;
   readonly status = "From Profile";

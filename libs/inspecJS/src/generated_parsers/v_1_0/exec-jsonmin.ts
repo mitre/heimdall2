@@ -88,8 +88,7 @@ function jsToJSONProps(typ: any): any {
 
 function transform(val: any, typ: any, getProps: any): any {
   function transformPrimitive(typ: string, val: any): any {
-    if (typeof typ === typeof val) return val;
-    return invalidValue(typ, val);
+    return (typeof typ === typeof val)? val: invalidValue(typ, val);
   }
 
   function transformUnion(typs: any[], val: any): any {
@@ -105,17 +104,15 @@ function transform(val: any, typ: any, getProps: any): any {
   }
 
   function transformEnum(cases: string[], val: any): any {
-    if (cases.indexOf(val) !== -1) return val;
-    return invalidValue(cases, val);
+    return (cases.indexOf(val) !== -1)? val: invalidValue(cases, val);
   }
 
   function transformArray(typ: any, val: any): any {
     // val must be an array with no invalid elements
-    if (!Array.isArray(val)) return invalidValue('array', val);
-    return val.map((el) => transform(el, typ, getProps));
+    return (!Array.isArray(val))? invalidValue('array', val): val.map((el) => transform(el, typ, getProps));
   }
 
-  function transformDate(typ: any, val: any): any {
+  function transformDate(val: any): any {
     if (val === null) {
       return null;
     }
@@ -137,9 +134,7 @@ function transform(val: any, typ: any, getProps: any): any {
     const result: any = {};
     Object.getOwnPropertyNames(props).forEach((key) => {
       const prop = props[key];
-      const v = Object.prototype.hasOwnProperty.call(val, key)
-        ? val[key]
-        : undefined;
+      const v = Object.prototype.hasOwnProperty.call(val, key)? val[key]: undefined;
       result[prop.key] = transform(v, prop.typ, getProps);
     });
     Object.getOwnPropertyNames(val).forEach((key) => {
@@ -150,16 +145,21 @@ function transform(val: any, typ: any, getProps: any): any {
     return result;
   }
 
-  if (typ === 'any') return val;
+  if (typ === 'any') {
+    return val;
+  }
   if (typ === null) {
-    if (val === null) return val;
+    return (val === null)? val: invalidValue(typ, val);
+  }
+  if (typ === false) {
     return invalidValue(typ, val);
   }
-  if (typ === false) return invalidValue(typ, val);
   while (typeof typ === 'object' && typ.ref !== undefined) {
     typ = typeMap[typ.ref];
   }
-  if (Array.isArray(typ)) return transformEnum(typ, val);
+  if (Array.isArray(typ)) {
+    return transformEnum(typ, val);
+  }
   if (typeof typ === 'object') {
     return typ.hasOwnProperty('unionMembers')
       ? transformUnion(typ.unionMembers, val)
@@ -170,8 +170,7 @@ function transform(val: any, typ: any, getProps: any): any {
       : invalidValue(typ, val);
   }
   // Numbers can be parsed by Date but shouldn't be.
-  if (typ === Date && typeof val !== 'number') return transformDate(typ, val);
-  return transformPrimitive(typ, val);
+  return (typ === Date && typeof val !== 'number')? transformDate(val): transformPrimitive(typ, val);
 }
 
 function cast<T>(val: any, typ: any): T {

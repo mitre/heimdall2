@@ -67,13 +67,13 @@ export type TreeMapState = string[]; // Representing the current path spec, from
 /**
  * Facillitates the search functionality
  * @param term The string to search with
- * @param context_control The control to search for term in
+ * @param contextControl The control to search for term in
  */
 function contains_term(
-  context_control: ContextualizedControl,
+  contextControl: ContextualizedControl,
   term: string
 ): boolean {
-  const as_hdf = context_control.root.hdf;
+  const as_hdf = contextControl.root.hdf;
   // Get our (non-null) searchable data
   const searchables: string[] = [
     as_hdf.wraps.id,
@@ -317,7 +317,7 @@ export class FilteredData extends VuexModule {
       // Filter by overlay
       if (filter.omit_overlayed_controls) {
         controls = controls.filter(
-          (control) => control.extended_by.length === 0
+          (control) => control.extendedBy.length === 0
         );
       }
 
@@ -336,7 +336,7 @@ export class FilteredData extends VuexModule {
 
         controls = controls.filter((c) => {
           // Get an hdf version so we have the fixed nist tags
-          return c.root.hdf.parsed_nist_tags.some((t) => control.contains(t));
+          return c.root.hdf.parsedNistTags.some((t) => control.contains(t));
         });
       }
 

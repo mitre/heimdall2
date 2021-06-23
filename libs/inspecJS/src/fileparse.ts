@@ -14,26 +14,26 @@ import * as PROFILE_JSON_1_0 from './generated_parsers/v_1_0/profile-json';
 
 // Define our type. This is the result of trying to parse the file. The appropriate field (exactly one) will be filled
 // In case of schema version ambiguity we will use the 1.0 schema
-interface _ConversionResult {
+interface ConversionResult_ {
   // 1.0 types
   '1_0_ExecJson'?: EXEC_JSON_1_0.ExecJSON;
   '1_0_ExecJsonMin'?: EXEC_JSON_MIN_1_0.ExecJsonmin;
   '1_0_ProfileJson'?: PROFILE_JSON_1_0.ProfileJSON;
 }
 
-export type ConversionErrors = {[K in keyof _ConversionResult]?: any};
-export interface ConversionResult extends _ConversionResult {
+export type ConversionErrors = {[K in keyof ConversionResult_]?: any};
+export interface ConversionResult extends ConversionResult_ {
   errors?: ConversionErrors;
 }
 
 /**
  * Try to convert the given json text into a valid profile.
  *
- * @param json_text The json file contents
+ * @param jsonText The json file contents
  */
 export function convertFile(
-  json_text: string,
-  keep_errors = false
+  jsonText: string,
+  keepErrors = false
 ): ConversionResult {
   // Establish result
   const result: ConversionResult = {};
@@ -41,7 +41,7 @@ export function convertFile(
   // 1.0
   const errors: ConversionErrors = {};
   try {
-    result['1_0_ExecJson'] = EXEC_JSON_1_0.Convert.toExecJSON(json_text);
+    result['1_0_ExecJson'] = EXEC_JSON_1_0.Convert.toExecJSON(jsonText);
     return result;
   } catch (e) {
     errors['1_0_ExecJson'] = e;
@@ -49,7 +49,7 @@ export function convertFile(
 
   try {
     result['1_0_ExecJsonMin'] =
-      EXEC_JSON_MIN_1_0.Convert.toExecJsonmin(json_text);
+      EXEC_JSON_MIN_1_0.Convert.toExecJsonmin(jsonText);
     return result;
   } catch (e) {
     errors['1_0_ExecJsonMin'] = e;
@@ -57,14 +57,13 @@ export function convertFile(
 
   try {
     result['1_0_ProfileJson'] =
-      PROFILE_JSON_1_0.Convert.toProfileJSON(json_text);
+      PROFILE_JSON_1_0.Convert.toProfileJSON(jsonText);
     return result;
   } catch (e) {
     errors['1_0_ProfileJson'] = e;
   }
 
-  // errors.forEach(e => console.warn(e));
-  if (keep_errors) {
+  if (keepErrors) {
     return {
       ...result,
       errors
@@ -96,10 +95,10 @@ export type AnyEvalControl = EXEC_JSON_1_0.ExecJSONControl;
  * Converts a file and makes a contextual datum of it
  */
 export function convertFileContextual(
-  json_text: string
+  jsonText: string
 ): ContextualizedEvaluation | ContextualizedProfile {
   // Convert it
-  const result = convertFile(json_text, true);
+  const result = convertFile(jsonText, true);
 
   // Determine what sort of file we (hopefully) have, then add it
   if (result['1_0_ExecJson']) {
@@ -122,7 +121,7 @@ export function convertFileContextual(
 export function isContextualizedEvaluation(
   v: ContextualizedEvaluation | ContextualizedProfile
 ): v is ContextualizedEvaluation {
-  return (v as ContextualizedProfile).sourced_from === undefined;
+  return (v as ContextualizedProfile).sourcedFrom === undefined;
 }
 
 export function isContextualizedProfile(

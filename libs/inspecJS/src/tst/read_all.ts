@@ -22,9 +22,9 @@ function readFiles(
       try {
         const content = fs.readFileSync(dirname + filename, 'utf-8');
         onFileContent(filename, content);
-      } catch (err) {
+      } catch (error) {
         console.log(`Error reading file ${filename}`);
-        console.log(err);
+        console.log(error);
       }
     });
   });
@@ -54,25 +54,25 @@ function count_hdf(controls: HDFControl[]): Counts {
 
 /** Trivial overlay filter that just takes the version of the control that has results from amongst all identical ids */
 function filter_overlays(controls: HDFControl[]): HDFControl[] {
-  const id_hash: {[key: string]: HDFControl} = {};
+  const idHash: {[key: string]: HDFControl} = {};
   controls.forEach((c) => {
     const id = c.wraps.id;
-    const old: HDFControl | undefined = id_hash[id];
+    const old: HDFControl | undefined = idHash[id];
     // If old, gotta check if our new status list "better than" old
     if (old) {
-      const new_significant = c.status_list && c.status_list.length > 0;
-      if (new_significant) {
+      const newSignificant = c.status_list && c.status_list.length > 0;
+      if (newSignificant) {
         // Overwrite
-        id_hash[id] = c;
+        idHash[id] = c;
       }
     } else {
       // First time seeing this id
-      id_hash[id] = c;
+      idHash[id] = c;
     }
   });
 
   // Return the set keys
-  return Array.from(Object.values(id_hash));
+  return Array.from(Object.values(idHash));
 }
 
 function count_exec_1_0(x: ExecJSON.Execution): Counts {

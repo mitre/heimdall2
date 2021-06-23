@@ -7,6 +7,9 @@
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
 
+const platformFamily = 'platform-family';
+const platformName = 'platform-name';
+
 export interface ExecJSON {
   platform: Platform;
   profiles: ExecJSONProfile[];
@@ -158,8 +161,8 @@ export interface SupportedPlatform {
   'os-family'?: null | string;
   'os-name'?: null | string;
   platform?: null | string;
-  'platform-family'?: null | string;
-  'platform-name'?: null | string;
+  platformFamily?: null | string;
+  platformName?: null | string;
   release?: null | string;
 }
 
@@ -225,15 +228,13 @@ function jsToJSONProps(typ: any): any {
 
 function transform(val: any, typ: any, getProps: any): any {
   function transformPrimitive(typ: string, val: any): any {
-    if (typeof typ === typeof val) return val;
-    return invalidValue(typ, val);
+    return (typeof typ === typeof val)? val: invalidValue(typ, val);
   }
 
   function transformUnion(typs: any[], val: any): any {
     // val must validate against one typ in typs
-    const l = typs.length;
-    for (let i = 0; i < l; i++) {
-      const typ = typs[i];
+    for (let value of typs) {
+      const typ = value;
       try {
         return transform(val, typ, getProps);
       } catch (_) {}
@@ -242,25 +243,20 @@ function transform(val: any, typ: any, getProps: any): any {
   }
 
   function transformEnum(cases: string[], val: any): any {
-    if (cases.indexOf(val) !== -1) return val;
-    return invalidValue(cases, val);
+    return (cases.indexOf(val) !== -1)? val: invalidValue(cases, val);
   }
 
   function transformArray(typ: any, val: any): any {
     // val must be an array with no invalid elements
-    if (!Array.isArray(val)) return invalidValue('array', val);
-    return val.map((el) => transform(el, typ, getProps));
+    return (!Array.isArray(val))? invalidValue('array', val): val.map((el) => transform(el, typ, getProps));
   }
 
-  function transformDate(typ: any, val: any): any {
+  function transformDate(val: any): any {
     if (val === null) {
       return null;
     }
     const d = new Date(val);
-    if (isNaN(d.valueOf())) {
-      return invalidValue('Date', val);
-    }
-    return d;
+    return (isNaN(d.valueOf()))? invalidValue('Date', val): d;
   }
 
   function transformObject(
@@ -274,9 +270,7 @@ function transform(val: any, typ: any, getProps: any): any {
     const result: any = {};
     Object.getOwnPropertyNames(props).forEach((key) => {
       const prop = props[key];
-      const v = Object.prototype.hasOwnProperty.call(val, key)
-        ? val[key]
-        : undefined;
+      const v = Object.prototype.hasOwnProperty.call(val, key)? val[key]: undefined;
       result[prop.key] = transform(v, prop.typ, getProps);
     });
     Object.getOwnPropertyNames(val).forEach((key) => {
@@ -287,16 +281,21 @@ function transform(val: any, typ: any, getProps: any): any {
     return result;
   }
 
-  if (typ === 'any') return val;
+  if (typ === 'any') {
+    return val;
+  }
   if (typ === null) {
-    if (val === null) return val;
+    return (val === null)? val: invalidValue(typ, val);
+  }
+  if (typ === false) {
     return invalidValue(typ, val);
   }
-  if (typ === false) return invalidValue(typ, val);
   while (typeof typ === 'object' && typ.ref !== undefined) {
     typ = typeMap[typ.ref];
   }
-  if (Array.isArray(typ)) return transformEnum(typ, val);
+  if (Array.isArray(typ)) {
+    return transformEnum(typ, val);
+  }
   if (typeof typ === 'object') {
     return typ.hasOwnProperty('unionMembers')
       ? transformUnion(typ.unionMembers, val)
@@ -307,8 +306,7 @@ function transform(val: any, typ: any, getProps: any): any {
       : invalidValue(typ, val);
   }
   // Numbers can be parsed by Date but shouldn't be.
-  if (typ === Date && typeof val !== 'number') return transformDate(typ, val);
-  return transformPrimitive(typ, val);
+  return (typ === Date && typeof val !== 'number')? transformDate(val): transformPrimitive(typ, val);
 }
 
 function cast<T>(val: any, typ: any): T {
@@ -527,13 +525,13 @@ const typeMap: any = {
       {json: 'os-name', js: 'os-name', typ: u(undefined, u(null, ''))},
       {json: 'platform', js: 'platform', typ: u(undefined, u(null, ''))},
       {
-        json: 'platform-family',
-        js: 'platform-family',
+        json: platformFamily,
+        js: platformFamily,
         typ: u(undefined, u(null, ''))
       },
       {
-        json: 'platform-name',
-        js: 'platform-name',
+        json: platformName,
+        js: platformName,
         typ: u(undefined, u(null, ''))
       },
       {json: 'release', js: 'release', typ: u(undefined, u(null, ''))}

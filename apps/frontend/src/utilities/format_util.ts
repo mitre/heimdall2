@@ -26,7 +26,7 @@ export function profile_unique_key(
     return `profile_${profile.from_file.unique_id}`;
   } else {
     return `${execution_unique_key(
-      profile.sourced_from as SourcedContextualizedEvaluation
+      profile.sourcedFrom as SourcedContextualizedEvaluation
     )}-${profile.data.name}`;
   }
 }
@@ -40,7 +40,7 @@ export function control_unique_key(
 ): string {
   return (
     profile_unique_key(
-      ctrl.sourced_from as Readonly<SourcedContextualizedProfile>
+      ctrl.sourcedFrom as Readonly<SourcedContextualizedProfile>
     ) +
     '-' +
     ctrl.data.id

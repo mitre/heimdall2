@@ -93,7 +93,7 @@ export default class Treemap extends Vue {
 
         let new_curr = curr.children.find((child) => {
           if (is_parent(child.data)) {
-            let ss_a = child.data.nist_control.sub_specifiers;
+            let ss_a = child.data.nist_control.subSpecifiers;
             return (
               compare_arrays(ss_a, next_specifiers, (a, b) =>
                 a.localeCompare(b)
@@ -171,7 +171,7 @@ export default class Treemap extends Vue {
       // Otherwise, dive away. Set course for the leading title
       let cntrl = n.data.nist_control;
       if (cntrl) {
-        this.set_path(cntrl.sub_specifiers);
+        this.set_path(cntrl.subSpecifiers);
       }
     }
   }

@@ -81,7 +81,7 @@ export interface HDFControl {
    * If they don't, simply returns empty array.
    * If you want auto resolving, use fixed_nist_tags
    */
-  raw_nist_tags: string[];
+  rawNistTags: string[];
 
   /**
    * Returns a user-facing representation of the result of this status, consisting of a message explaining
@@ -94,11 +94,11 @@ export interface HDFControl {
    * If unmapped, will be effectively UM-1.
    * Sorted lexicographically, first by family, then by corresponding sub-specifiers.
    */
-  parsed_nist_tags: NistControl[];
+  parsedNistTags: NistControl[];
 
   /**
    * Processes all of this controls nist tags to the given spec.
-   * Since this is derived from parsed_nist_tags, this will also be
+   * Since this is derived from parsedNistTags, this will also be
    * lexicographically sorted.
    * It is also deduplicated!
    */
@@ -107,7 +107,7 @@ export interface HDFControl {
   /**
    * Returns the revision of the nist tags, if it was found.
    */
-  parsed_nist_revision: NistRevision | null;
+  parsedNistRevision: NistRevision | null;
 
   /** Get the start time of this control's run, as determiend by the time of the first test.
    * If no tests were run, (it is a profile-json or has no tests) returns undefined
@@ -127,7 +127,7 @@ export interface HDFControl {
   segments?: HDFControlSegment[];
 
   /** Easy check if this is a profile */
-  is_profile: boolean;
+  isProfile: boolean;
 
   /** Maps string labels to description items. */
   descriptions: {[key: string]: string};

@@ -138,7 +138,7 @@ export class ControlDelta {
           if (c === null) {
             return NOT_SELECTED;
           }
-          return c!.hdf.raw_nist_tags.join(', ');
+          return c!.hdf.rawNistTags.join(', ');
         })
       )
     );
@@ -175,7 +175,7 @@ function extract_top_level_controls(
   const allControls = exec.contains.flatMap((p) => p.contains);
 
   // Filter to controls that aren't overlayed further
-  const top = allControls.filter((control) => control.extended_by.length === 0);
+  const top = allControls.filter((control) => control.extendedBy.length === 0);
   return {unique_id: exec.from_file.unique_id, controls: top};
 }
 /** An object of contextualized controls with the same V-ID */

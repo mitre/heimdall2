@@ -73,10 +73,10 @@ Our type signature for a list of these things would end up looking like `Array<[
 As our solution, we introduce the concept of a `ContextualizedItem` (see typing in data_store).
 Essentially, a contextualized item is a simplified graph node wrapper around a type of data with the following elements:
  - `data` is, self-evidently, the wrapped data.
- - `sourced_from` is the object or resource from which a piece of data originates. A control is sourced from a Profile, a Profile an Execution or a File, etc.
- - `contains` is the inverse edge of `sourced_from`. It is what a resource contains as its contextual descendants.
- - `extends_from` is the set of objects that this data builds on. This is more explicitly used to relate Profiles by which overlays which. An overlay profile "extends_from" the base profile. Any controls modified by an overlay have an "extends" relationship with the base profile's corresponding control.
- - `extended_by` is the inverse edge of `extends_from`. A base profile is "extended_by" its overlay.
+ - `sourcedFrom` is the object or resource from which a piece of data originates. A control is sourced from a Profile, a Profile an Execution or a File, etc.
+ - `contains` is the inverse edge of `sourcedFrom`. It is what a resource contains as its contextual descendants.
+ - `extendsFrom` is the set of objects that this data builds on. This is more explicitly used to relate Profiles by which overlays which. An overlay profile "extendsFrom" the base profile. Any controls modified by an overlay have an "extends" relationship with the base profile's corresponding control.
+ - `extendedBy` is the inverse edge of `extendsFrom`. A base profile is "extendedBy" its overlay.
 
 Contextualized Controls, Profiles, and Executions are accessible in three interconnected array getters in the data_store module.
 They can be accessed as a group by the (private) method `getContextStore`, but are better accessed individually via getters `contextualExecutions`, `contextualProfiles`, and `contextualControls`.
@@ -89,8 +89,8 @@ See the `Filter` type for possible filter values.
 > I have a control; how do I know if another control overrides it in an overlay?
 
 Given a ContextualControl `ctrl`, you can check
-    if(ctrl.extended_by.length) {}
-        // It has been overridden! Access ctrl.extended_by to see which control has done so.
+    if(ctrl.extendedBy.length) {}
+        // It has been overridden! Access ctrl.extendedBy to see which control has done so.
     }
 
 > I plan on accessing \[data\] frequently, using some lookup criteria \[criteria\] and I need to be able to quickly access it! Add this to data_store please!
