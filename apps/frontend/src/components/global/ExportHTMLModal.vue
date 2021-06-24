@@ -282,9 +282,9 @@ export default class ExportHTMLModal extends Vue {
       return SnackbarModule.failure('No files have been loaded.')
     }
     const templateRequest = axios.get(`/static/export/template.html`)
-    const bootstrapCSSRequest = axios.get(`/static/export/style.css`)
-    const bootstrapJSRequest = axios.get(`/static/export/bootstrap.js`)
-    const jqueryRequest = axios.get(`/static/export/jquery.js`)
+    const bootstrapCSSRequest = axios.get(`/static/export/bootstrap.min.css`)
+    const bootstrapJSRequest = axios.get(`/static/export/bootstrap.min.js`)
+    const jqueryRequest = axios.get(`/static/export/jquery.min.js`)
 
     axios.all([templateRequest, bootstrapCSSRequest, bootstrapJSRequest, jqueryRequest]).then(axios.spread((...responses) => {
       const template = responses[0].data
@@ -305,21 +305,28 @@ export default class ExportHTMLModal extends Vue {
         .replace(/\#198754/g, "#4cb04f") // bg-success
         .replace(/\#17a2b8/g, "#03a9f4") // bg-info
         .replace(/\#ffc107/g, "#fe9900") // bg-warning
-      const exportWindow = window.open('', '_blank');
-      if(exportWindow) {
-        exportWindow.document.write(Mustache.render(template, this.outputData))
-        exportWindow.document.head.insertAdjacentHTML("beforeend", `<style>${modifiedStyle}</style>`)
-        exportWindow.document.write(`<script>${jquery}<\/script>`);
-        exportWindow.document.write(`<script>${bootstrapJS}<\/script>`);
-        this.copyComplianceCards(exportWindow)
-        saveAs(
-          new Blob([s2ab(exportWindow.document.documentElement.outerHTML)], {type: 'application/octet-stream'}),
-            `${_.capitalize(this.exportType)}_Report_${new Date().toString()}.html`.replace(/[ :]/g, '_')
-        );
-        exportWindow.close();
+
+      const testWindow = window.open('/static/export/popup-test.html', '_blank')
+      if(testWindow) {
+        const exportWindow = window.open('', '_blank');
+        if(exportWindow) {
+          exportWindow.document.write(Mustache.render(template, this.outputData))
+          exportWindow.document.head.insertAdjacentHTML("beforeend", `<style>${modifiedStyle}</style>`)
+          exportWindow.document.write(`<script>${jquery}<\/script>`);
+          exportWindow.document.write(`<script>${bootstrapJS}<\/script>`);
+          this.copyComplianceCards(exportWindow)
+          saveAs(
+            new Blob([s2ab(exportWindow.document.documentElement.outerHTML)], {type: 'application/octet-stream'}),
+              `${_.capitalize(this.exportType)}_Report_${new Date().toString()}.html`.replace(/[ :]/g, '_')
+          );
+          exportWindow.close();
+        } else {
+          SnackbarModule.failure('Please allow pop-up tabs to export to HTML and try again.')
+        }
       } else {
-        SnackbarModule.failure('Please allow pop-up tabs to export to HTML.')
+        SnackbarModule.failure('Please allow pop-up tabs to export to HTML and try again.')
       }
+
     }))
     this.closeModal()
   }
