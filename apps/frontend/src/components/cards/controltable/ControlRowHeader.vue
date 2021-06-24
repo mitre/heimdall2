@@ -87,9 +87,8 @@
 
 <script lang="ts">
 import Component, {mixins} from 'vue-class-component';
-import {parse_nist, is_control} from 'inspecjs';
+import {parse_nist, is_control, ContextualizedControl} from 'inspecjs';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
-import {ContextualizedControl} from 'inspecjs';
 import {NIST_DESCRIPTIONS, nist_canon_config} from '@/utilities/nist_util';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import CircleRating from '@/components/generic/CircleRating.vue';
