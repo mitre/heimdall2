@@ -1,4 +1,4 @@
-name: Push to NPM and GitHub Packages
+name: Push Heimdall-Lite to NPM and GitHub Packages
 on:
   release:
     types: [published]
