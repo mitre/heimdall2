@@ -11,6 +11,6 @@ class HeimdallDataFormat implements ExecJSON {
     this.platform = platform
     this.profiles = profiles
     this.statistics = statistics
-    this.version = HeimdallToolsVersion
+    this.version = version
   }
 }
