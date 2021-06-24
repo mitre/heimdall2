@@ -110,6 +110,14 @@ export class SplunkEndpoint {
    *
    * Will error if we aren't
    */
+
+  process_response(response: Response) {
+    if (!response.ok) {
+      throw process_error(response);
+    }
+    return response.text();
+  }
+
   async check_auth(): Promise<void> {
     return fetch(`${this.host}/services/search/jobs`, {
       headers: {
@@ -215,12 +223,7 @@ export class SplunkEndpoint {
       }),
       body: `search=search index="hdf" | ${searchString}`
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw process_error(response);
-        }
-        return response.text();
-      })
+      .then(this.process_response)
       .then((text) => {
         // Parse the xml
         const xml = xml2js(text, {
@@ -238,12 +241,7 @@ export class SplunkEndpoint {
         Authorization: this.authString
       })
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw process_error(response);
-        }
-        return response.text();
-      })
+      .then(this.process_response)
       .then((text) => {
         // Parse the xml
         const xml = xml2js(text, {
