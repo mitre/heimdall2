@@ -16,13 +16,13 @@ jobs:
           node-version: "14.x"
           registry-url: 'https://registry.npmjs.org'
       
-      - name: Remove frontend and backend code to ensure the proper dependencies are declared in the inspecjs package.json
+      - name: Remove frontend code to ensure the proper dependencies are declared in the inspecjs package.json
         run: |
-        rm -rf apps/frontend
-        rm -rf apps/backend
+          rm -rf apps/frontend
+          rm -rf apps/backend
 
       - name: Install project dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn inspedjs install --frozen-lockfile
 
       - name: Build InSpecJS package files
         run: yarn inspecjs build
@@ -31,6 +31,6 @@ jobs:
         run: yarn inspecjs pack
 
       - name: Publish InSpecJS to NPM
-        run: npm publish --access public apps/frontend/inspecjs*.tgz
+        run: yarn publish --access public apps/frontend/inspecjs*.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
