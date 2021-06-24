@@ -19,6 +19,7 @@
     "typescript": "^3.9.9"
   },
   "scripts": {
+    "build": "rm -r ./dist; tsc",
     "docs": "typedoc --out docs ./src",
     "gen-types": "bash scripts/update_schema.sh",
     "lint": "eslint --ext .ts src; exit 0"

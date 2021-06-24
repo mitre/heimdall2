@@ -1,15 +1,9 @@
 {
-    "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
-        "rootDir": "src",
-        "outDir": "dist",
-        "strict": true,
-        "sourceMap": true,
-        "baseUrl": ".",
-        "lib": [
-            "es7"
-        ],
-        "declaration": true
-    }
+  "extends": "../../tsconfig.json",
+  "baseUrl": ".",
+  "include": ["*.ts", "**/*.ts"],
+  "compilerOptions": {
+    "outDir": "./dist",
+    "strict": true
+  }
 }
