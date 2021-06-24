@@ -144,16 +144,16 @@
             </div>
         </div>
     </div> {{#showControlSets}} {{#controlSets}}
-    <div class="container-fluid pt-4" id="resultSetsContainer-{{fileId}}">
+    <div class="container-fluid pt-4" id="resultSetsContainer-{{fileID}}">
         <div class="accordion" id="resultSetAccordion-{{fileID}}">
             <div class="card">
-                <div class="card-header" id="{{fileId}}">
+                <div class="card-header" id="{{fileID}}">
                     <h2 class="mb-0">
-                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#file-accordion-body-{{fileId}}" aria-expanded="true" aria-controls="file-accordion-body-{{fileId}}">
+                <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#file-accordion-body-{{fileID}}" aria-expanded="true" aria-controls="file-accordion-body-{{fileID}}">
                 {{filename}}
                 </button>
             </h2> </div>
-                <div id="file-accordion-body-{{fileId}}" class="collapse show" aria-labelledby="headingOne" data-parent="#resultSetAccordion-{{fileID}}">
+                <div id="file-accordion-body-{{fileID}}" class="collapse show" aria-labelledby="headingOne" data-parent="#resultSetAccordion-{{fileID}}">
                     <div class="card-body">
                         <div class="accordion" id="resultsSetAccordion"> {{#controls}}
                             <div class="accordion-item">
@@ -162,7 +162,7 @@
                         {{hdf.wraps.id}} - {{hdf.wraps.title}}
                     </button>
                     </h2>
-                                <div id="control-accordion-body-{{hdf.wraps.id}}" class="accordion-collapse collapse show" aria-labelledby="control-accordion-body-{{hdf.wraps.id}}" data-bs-parent="#file-accordion-body-{{fileId}}">
+                                <div id="control-accordion-body-{{hdf.wraps.id}}" class="accordion-collapse collapse show" aria-labelledby="control-accordion-body-{{hdf.wraps.id}}" data-bs-parent="#file-accordion-body-{{fileID}}">
                                     <div class="control-accordion-body"> {{data.desc}}
                                         <div class="pt-2">
                                             <hr />
