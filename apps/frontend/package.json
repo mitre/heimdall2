@@ -104,7 +104,6 @@
     "vue-highlightjs": "^1.3.3",
     "vue-prism-component": "~1.2.0",
     "vue-property-decorator": "^9.0.0",
-    "vue-resize-directive": "^1.2.0",
     "vue-router": "^3.1.3",
     "vue-svg-inline-loader": "^2.0.0",
     "vue-svg-loader": "^0.16.0",
