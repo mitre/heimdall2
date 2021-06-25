@@ -149,12 +149,7 @@ export class LoggingService {
 
   userToString(user?: User | UserDto | SlimUserDto): string {
     if (user) {
-      if ('organization' in user && user.organization && user.title) {
-        return `User<ID: ${user.id} | Name: ${user.lastName}, ${user?.firstName} | Organization: ${user.organization} (${user.title})>`;
-      } else if ('organization' in user && user.organization) {
-        return `User<ID: ${user.id} | Name: ${user.lastName}, ${user?.firstName} | Organization: ${user.organization}>`;
-      }
-      return `User<ID: ${user.id} | Name: ${user.lastName}, ${user?.firstName}>`;
+      return `User<ID: ${user.id}>`;
     }
     return `User<Unknown>`;
   }
