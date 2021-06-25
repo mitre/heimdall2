@@ -61,6 +61,7 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import Component, {mixins} from 'vue-class-component';
 import {FileID} from '@/store/report_intake';
 import Modal from '@/components/global/Modal.vue';
@@ -78,7 +79,12 @@ import {Prop} from 'vue-property-decorator';
 import {ServerModule} from '@/store/server';
 import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
+import 'shepherd.js/dist/css/shepherd.css'
+import VueShepherd from 'vue-shepherd'
 const local_tab = new LocalStorageVal<string>('nexus_curr_tab');
+
+Vue.use(VueShepherd);
+
 /**
  * Multiplexes all of our file upload components
  * Emits "got-files" with a list of the unique_ids of the loaded files, wherever they come from
@@ -102,6 +108,21 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
   get fullscreen() {
     return this.active_tab === 'uploadtab-database' || this.$vuetify.breakpoint.mobile;
   }
+
+  mounted() {
+      this.$nextTick(() => {
+        const tour = Vue.prototype.$shepherd({
+        });
+
+        tour.addStep({
+          attachTo: {element: document.getElementById('select-tab-local'), on: 'top'},
+          text: 'Here is where you upload your own files into Heimdall'
+        });
+
+        tour.start();
+      });
+    }
+
 
   // Handles change in tab
   selected_tab(new_tab: string) {
