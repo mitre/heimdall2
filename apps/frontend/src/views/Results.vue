@@ -65,31 +65,6 @@
                     @click="toggle_profile(file)"
                   >
                     <EvaluationInfo :file="file" />
-                    <v-card-actions>
-                      <div
-                        v-if="
-                          file.from_file.database_id &&
-                          getDbFile(file.from_file).editable
-                        "
-                        class="top-right"
-                      >
-                        <EditEvaluationModal
-                          id="editEvaluationModal"
-                          :active="getDbFile(file.from_file)"
-                        >
-                          <template #clickable="{on}"
-                            ><v-icon
-                              data-cy="edit"
-                              title="Edit"
-                              class="mr-3 mt-3"
-                              v-on="on"
-                            >
-                              mdi-pencil
-                            </v-icon>
-                          </template>
-                        </EditEvaluationModal>
-                      </div>
-                    </v-card-actions>
                     <v-card-subtitle class="bottom-right">
                       File Info ↓
                     </v-card-subtitle>
@@ -221,7 +196,6 @@ import StatusChart from '@/components/cards/StatusChart.vue';
 import SeverityChart from '@/components/cards/SeverityChart.vue';
 import ComplianceChart from '@/components/cards/ComplianceChart.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
-import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
 
 import ExportCaat from '@/components/global/ExportCaat.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
@@ -258,8 +232,7 @@ import {IEvaluation} from '@heimdall/interfaces';
     ExportJson,
     EvaluationInfo,
     ProfileData,
-    UploadButton,
-    EditEvaluationModal
+    UploadButton
   }
 })
 export default class Results extends mixins(RouteMixin, ServerMixin) {
