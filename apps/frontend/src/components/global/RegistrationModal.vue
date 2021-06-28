@@ -2,6 +2,7 @@
   <Modal
     :visible="visible"
     :max-width="'500px'"
+    :persistent="true"
     @close-modal="$emit('close-modal')"
     @update-user-table="$emit('update-user-table')"
   >
@@ -103,6 +104,7 @@
             :disabled="$v.$invalid"
             color="primary"
             type="submit"
+            :loading="buttonLoading"
           >
             Register
           </v-btn>
@@ -173,6 +175,7 @@ export default class RegistrationModal extends Vue {
   password = '';
   passwordConfirmation = '';
   showPassword = false;
+  buttonLoading = false;
 
   @Prop({type: Boolean, default: false}) readonly adminRegisterMode!: boolean;
   @Prop({default: false}) readonly visible!: boolean;
@@ -182,6 +185,7 @@ export default class RegistrationModal extends Vue {
   }
 
   async register(): Promise<void> {
+    this.buttonLoading = true;
     // checking if the input is valid
     if ((this.$refs.form as HTMLFormElement).validate()) {
       const creds: SignupHash = {
@@ -209,7 +213,9 @@ export default class RegistrationModal extends Vue {
                 );
             }
 
-        });
+        }).finally(() => {
+          this.buttonLoading = false;
+        })
     }
   }
 
