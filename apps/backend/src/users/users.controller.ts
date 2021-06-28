@@ -4,13 +4,13 @@ import {
   Controller,
   Delete,
   Get,
-  Ip,
   Param,
   Post,
   Put,
   Request,
   UseFilters,
   UseGuards,
+  UseInterceptors,
   UsePipes
 } from '@nestjs/common';
 import {AuthzService} from '../authz/authz.service';
@@ -20,7 +20,7 @@ import {UniqueConstraintErrorFilter} from '../filters/unique-constraint-error.fi
 import {ImplicitAllowJwtAuthGuard} from '../guards/implicit-allow-jwt-auth.guard';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {TestGuard} from '../guards/test.guard';
-import {LoggingService} from '../logging/logging.service';
+import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {PasswordChangePipe} from '../pipes/password-change.pipe';
 import {PasswordComplexityPipe} from '../pipes/password-complexity.pipe';
 import {PasswordsMatchPipe} from '../pipes/passwords-match.pipe';
@@ -32,27 +32,27 @@ import {UpdateUserDto} from './dto/update-user.dto';
 import {UserDto} from './dto/user.dto';
 import {UsersService} from './users.service';
 
+@UseInterceptors(LoggingInterceptor)
 @Controller('users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly configService: ConfigService,
-    private readonly authz: AuthzService,
-    private readonly loggingService: LoggingService
+    private readonly authz: AuthzService
   ) {}
 
   @Get('/user-find-all')
   @UseGuards(JwtAuthGuard)
-  async userFindAll(@Request() request: {user: User}): Promise<SlimUserDto[]> {
+  async findAllUsers(@Request() request: {user: User}): Promise<SlimUserDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
     ForbiddenError.from(abac).throwUnlessCan(Action.ReadSlim, User);
-    const users = await this.usersService.userFindAll();
+    const users = await this.usersService.findAllUsers();
     return users.map((user) => new SlimUserDto(user));
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async findById(
+  async findUserById(
     @Param('id') id: string,
     @Request() request: {user: User}
   ): Promise<UserDto> {
@@ -66,15 +66,13 @@ export class UsersController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async adminFindAll(
-    @Request() request: {user: User},
-    @Ip() ip: string
+  async adminFindAllUsers(
+    @Request() request: {user: User}
   ): Promise<UserDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
     ForbiddenError.from(abac).throwUnlessCan(Action.ReadAll, User);
 
-    const users = await this.usersService.adminFindAll();
-    this.loggingService.logAction(request, ip, 'Admin Read All Users');
+    const users = await this.usersService.adminFindAllUsers();
     return users.map((user) => new UserDto(user));
   }
 
@@ -84,8 +82,7 @@ export class UsersController {
   @UseGuards(ImplicitAllowJwtAuthGuard)
   async create(
     @Body() createUserDto: CreateUserDto,
-    @Request() request: {user?: User},
-    @Ip() ip: string
+    @Request() request: {user?: User}
   ): Promise<UserDto> {
     const abac = request.user
       ? this.authz.abac.createForUser(request.user)
@@ -101,7 +98,6 @@ export class UsersController {
     const createdUserDto = new UserDto(
       await this.usersService.create(createUserDto)
     );
-    this.loggingService.logUserAction(request, ip, 'Create', createdUserDto);
     return createdUserDto;
   }
 
@@ -110,7 +106,6 @@ export class UsersController {
   async update(
     @Param('id') id: string,
     @Request() request: {user: User},
-    @Ip() ip: string,
     @Body(
       new PasswordsMatchPipe(),
       new PasswordChangePipe(),
@@ -125,7 +120,6 @@ export class UsersController {
     const updatedUserDto = new UserDto(
       await this.usersService.update(userToUpdate, updateUserDto, abac)
     );
-    this.loggingService.logUserAction(request, ip, 'Update', updatedUserDto);
     return updatedUserDto;
   }
 
@@ -134,7 +128,6 @@ export class UsersController {
   async remove(
     @Param('id') id: string,
     @Request() request: {user: User},
-    @Ip() ip: string,
     @Body() deleteUserDto: DeleteUserDto
   ): Promise<UserDto> {
     const abac = this.authz.abac.createForUser(request.user);
@@ -144,7 +137,6 @@ export class UsersController {
     const deletedUserDto = new UserDto(
       await this.usersService.remove(userToDelete, deleteUserDto, abac)
     );
-    this.loggingService.logUserAction(request, ip, 'Delete', deletedUserDto);
     return deletedUserDto;
   }
 

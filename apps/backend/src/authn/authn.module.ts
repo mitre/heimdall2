@@ -1,8 +1,6 @@
 import {Module} from '@nestjs/common';
 import {PassportModule} from '@nestjs/passport';
 import {ConfigModule} from '../config/config.module';
-import {LoggingModule} from '../logging/logging.module';
-import {LoggingService} from '../logging/logging.service';
 import {TokenModule} from '../token/token.module';
 import {UsersModule} from '../users/users.module';
 import {AuthnController} from './authn.controller';
@@ -17,13 +15,7 @@ import {OidcStrategy} from './oidc.strategy';
 import {OktaStrategy} from './okta.strategy';
 
 @Module({
-  imports: [
-    UsersModule,
-    PassportModule,
-    TokenModule,
-    ConfigModule,
-    LoggingModule
-  ],
+  imports: [UsersModule, PassportModule, TokenModule, ConfigModule],
   providers: [
     AuthnService,
     LocalStrategy,
@@ -33,8 +25,7 @@ import {OktaStrategy} from './okta.strategy';
     GoogleStrategy,
     OktaStrategy,
     OidcStrategy,
-    LDAPStrategy,
-    LoggingService
+    LDAPStrategy
   ],
   controllers: [AuthnController]
 })

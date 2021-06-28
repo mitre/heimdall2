@@ -7,8 +7,6 @@ import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
-import {LoggingModule} from '../logging/logging.module';
-import {LoggingService} from '../logging/logging.service';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {Evaluation} from './evaluation.model';
@@ -25,10 +23,9 @@ import {EvaluationsService} from './evaluations.service';
       GroupEvaluation
     ]),
     ConfigModule,
-    DatabaseModule,
-    LoggingModule
+    DatabaseModule
   ],
-  providers: [EvaluationsService, UsersService, GroupsService, LoggingService],
+  providers: [EvaluationsService, UsersService, GroupsService],
   controllers: [EvaluationsController],
   exports: [EvaluationsService]
 })

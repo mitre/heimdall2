@@ -12,7 +12,6 @@ import {
   GROUP_1,
   PRIVATE_GROUP
 } from '../../test/constants/groups-test.constant';
-import {LOCAL_IP} from '../../test/constants/networking.constant';
 import {
   CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
@@ -27,8 +26,6 @@ import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
-import {LoggingModule} from '../logging/logging.module';
-import {LoggingService} from '../logging/logging.service';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {EvaluationDto} from './dto/evaluation.dto';
@@ -60,7 +57,6 @@ describe('EvaluationsController', () => {
       controllers: [EvaluationsController],
       imports: [
         DatabaseModule,
-        LoggingModule,
         SequelizeModule.forFeature([
           EvaluationTag,
           Evaluation,
@@ -76,8 +72,7 @@ describe('EvaluationsController', () => {
         DatabaseService,
         UsersService,
         EvaluationsService,
-        GroupsService,
-        LoggingService
+        GroupsService
       ]
     }).compile();
 
@@ -246,8 +241,7 @@ describe('EvaluationsController', () => {
       const evaluation = await evaluationsController.create(
         EVALUATION_WITH_TAGS_1,
         mockFile,
-        {user: user},
-        LOCAL_IP
+        {user: user}
       );
       expect(evaluation).toBeDefined();
       expect(evaluation.evaluationTags.length).toEqual(1);
@@ -259,8 +253,7 @@ describe('EvaluationsController', () => {
       const evaluation = await evaluationsController.create(
         CREATE_EVALUATION_DTO_WITHOUT_TAGS,
         mockFile,
-        {user: user},
-        LOCAL_IP
+        {user: user}
       );
       expect(evaluation).toBeDefined();
       expect(evaluation.evaluationTags.length).toEqual(0);
@@ -277,7 +270,6 @@ describe('EvaluationsController', () => {
       const updatedEvaluation = await evaluationsController.update(
         evaluation.id,
         {user: user},
-        LOCAL_IP,
         UPDATE_EVALUATION
       );
       expect(evaluation.filename).not.toEqual(updatedEvaluation.filename);
@@ -301,7 +293,6 @@ describe('EvaluationsController', () => {
       const updatedEvaluation = await evaluationsController.update(
         evaluation.id,
         {user: owner},
-        LOCAL_IP,
         UPDATE_EVALUATION
       );
       expect(evaluation.filename).not.toEqual(updatedEvaluation.filename);
@@ -330,7 +321,6 @@ describe('EvaluationsController', () => {
         evaluationsController.update(
           evaluation.id,
           {user: basicUser},
-          LOCAL_IP,
           UPDATE_EVALUATION
         )
       ).rejects.toBeInstanceOf(ForbiddenError);
@@ -350,7 +340,6 @@ describe('EvaluationsController', () => {
         evaluationsController.update(
           evaluation.id,
           {user: user},
-          LOCAL_IP,
           UPDATE_EVALUATION
         )
       ).rejects.toBeInstanceOf(ForbiddenError);
@@ -365,7 +354,7 @@ describe('EvaluationsController', () => {
         data: {},
         userId: user.id
       });
-      await evaluationsController.remove(evaluation.id, {user: user}, LOCAL_IP);
+      await evaluationsController.remove(evaluation.id, {user: user});
       await expect(
         evaluationsController.findById(evaluation.id, {user: user})
       ).rejects.toBeInstanceOf(NotFoundException);
@@ -382,7 +371,7 @@ describe('EvaluationsController', () => {
         userId: evaluationOwner.id
       });
       await expect(
-        evaluationsController.remove(evaluation.id, {user: user}, LOCAL_IP)
+        evaluationsController.remove(evaluation.id, {user: user})
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
   });

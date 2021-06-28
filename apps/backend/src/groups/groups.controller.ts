@@ -4,18 +4,18 @@ import {
   Controller,
   Delete,
   Get,
-  Ip,
   Param,
   Post,
   Put,
   Request,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {EvaluationsService} from '../evaluations/evaluations.service';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
-import {LoggingService} from '../logging/logging.service';
+import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {AddUserToGroupDto} from './dto/add-user-to-group.dto';
@@ -27,13 +27,13 @@ import {GroupsService} from './groups.service';
 
 @Controller('groups')
 @UseGuards(JwtAuthGuard)
+@UseInterceptors(LoggingInterceptor)
 export class GroupsController {
   constructor(
     private readonly groupsService: GroupsService,
     private readonly usersService: UsersService,
     private readonly evaluationsService: EvaluationsService,
-    private readonly authz: AuthzService,
-    private readonly loggingService: LoggingService
+    private readonly authz: AuthzService
   ) {}
 
   @Get()
@@ -66,7 +66,6 @@ export class GroupsController {
   async addUserToGroup(
     @Param('id') id: string,
     @Request() request: {user: User},
-    @Ip() ip: string,
     @Body() addUserToGroupDto: AddUserToGroupDto
   ): Promise<GroupDto> {
     const abac = this.authz.abac.createForUser(request.user);
@@ -81,13 +80,6 @@ export class GroupsController {
       addUserToGroupDto.groupRole
     );
     const updatedGroupDto = new GroupDto(group);
-    this.loggingService.logGroupActionWithUserSubject(
-      request,
-      ip,
-      'Add',
-      userToAdd,
-      updatedGroupDto
-    );
     return updatedGroupDto;
   }
 
@@ -112,7 +104,6 @@ export class GroupsController {
   async addEvaluationToGroup(
     @Param('id') id: string,
     @Request() request: {user: User},
-    @Ip() ip: string,
     @Body() evaluationGroupDto: EvaluationGroupDto
   ): Promise<GroupDto> {
     const abac = this.authz.abac.createForUser(request.user);
@@ -126,13 +117,6 @@ export class GroupsController {
     ForbiddenError.from(abac).throwUnlessCan(Action.Read, evaluationToAdd);
     await this.groupsService.addEvaluationToGroup(group, evaluationToAdd);
     const updatedGroupDto = new GroupDto(group);
-    this.loggingService.logGroupActionWithEvaluationSubject(
-      request,
-      ip,
-      'Add',
-      evaluationToAdd,
-      updatedGroupDto
-    );
     return updatedGroupDto;
   }
 
@@ -140,7 +124,6 @@ export class GroupsController {
   async removeEvaluationFromGroup(
     @Param('id') id: string,
     @Request() request: {user: User},
-    @Ip() ip: string,
     @Body() evaluationGroupDto: EvaluationGroupDto
   ): Promise<GroupDto> {
     // This must perform validation checks to ensure the user performing the action has permission to remove evaluations from a group.
@@ -155,13 +138,6 @@ export class GroupsController {
         group,
         evaluationToRemove
       )
-    );
-    this.loggingService.logGroupActionWithEvaluationSubject(
-      request,
-      ip,
-      'Remove',
-      evaluationToRemove,
-      updatedGroupDto
     );
     return updatedGroupDto;
   }
@@ -181,7 +157,6 @@ export class GroupsController {
   @Put(':id')
   async update(
     @Request() request: {user: User},
-    @Ip() ip: string,
     @Param('id') id: string,
     @Body() updateGroup: CreateGroupDto
   ): Promise<GroupDto> {
@@ -191,14 +166,12 @@ export class GroupsController {
     const updatedGroupDto = new GroupDto(
       await this.groupsService.update(groupToUpdate, updateGroup)
     );
-    this.loggingService.logGroupAction(request, ip, 'Update', updatedGroupDto);
     return updatedGroupDto;
   }
 
   @Delete(':id')
   async remove(
     @Request() request: {user: User},
-    @Ip() ip: string,
     @Param('id') id: string
   ): Promise<GroupDto> {
     const abac = this.authz.abac.createForUser(request.user);
@@ -207,7 +180,6 @@ export class GroupsController {
     const deletedGroupDto = new GroupDto(
       await this.groupsService.remove(groupToDelete)
     );
-    this.loggingService.logGroupAction(request, ip, 'Delete', deletedGroupDto);
     return deletedGroupDto;
   }
 }

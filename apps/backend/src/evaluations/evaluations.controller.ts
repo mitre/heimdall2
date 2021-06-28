@@ -4,7 +4,6 @@ import {
   Controller,
   Delete,
   Get,
-  Ip,
   Param,
   Post,
   Put,
@@ -23,7 +22,7 @@ import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {CreateEvaluationInterceptor} from '../interceptors/create-evaluation-interceptor';
-import {LoggingService} from '../logging/logging.service';
+import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
 import {CreateEvaluationDto} from './dto/create-evaluation.dto';
 import {EvaluationDto} from './dto/evaluation.dto';
@@ -32,9 +31,9 @@ import {EvaluationsService} from './evaluations.service';
 
 @Controller('evaluations')
 @UseGuards(JwtAuthGuard)
+@UseInterceptors(LoggingInterceptor)
 export class EvaluationsController {
   constructor(
-    private readonly loggingService: LoggingService,
     private readonly evaluationsService: EvaluationsService,
     private readonly groupsService: GroupsService,
     private readonly configService: ConfigService,
@@ -86,8 +85,7 @@ export class EvaluationsController {
   async create(
     @Body() createEvaluationDto: CreateEvaluationDto,
     @UploadedFile() data: Express.Multer.File,
-    @Request() request: {user: User},
-    @Ip() ip: string
+    @Request() request: {user: User}
   ): Promise<EvaluationDto> {
     const serializedDta: JSON = JSON.parse(data.buffer.toString('utf8'));
     let groups: Group[] = createEvaluationDto.groups
@@ -117,7 +115,6 @@ export class EvaluationsController {
       true,
       `${this.configService.get('EXTERNAL_URL') || ''}/results/${evaluation.id}`
     );
-    this.loggingService.logEvaluationAction(request, ip, 'Create', createdDto);
     return _.omit(createdDto, 'data');
   }
 
@@ -125,7 +122,6 @@ export class EvaluationsController {
   async update(
     @Param('id') id: string,
     @Request() request: {user: User},
-    @Ip() ip: string,
     @Body() updateEvaluationDto: UpdateEvaluationDto
   ): Promise<EvaluationDto> {
     const abac = this.authz.abac.createForUser(request.user);
@@ -142,33 +138,19 @@ export class EvaluationsController {
       abac.can(Action.Update, updatedEvaluation)
     );
 
-    this.loggingService.logEvaluationAction(
-      request,
-      ip,
-      'Update',
-      updatedEvaluationDto
-    );
-
     return updatedEvaluationDto;
   }
 
   @Delete(':id')
   async remove(
     @Param('id') id: string,
-    @Request() request: {user: User},
-    @Ip() ip: string
+    @Request() request: {user: User}
   ): Promise<EvaluationDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const evaluationToDelete = await this.evaluationsService.findById(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Delete, evaluationToDelete);
     const deletedEvaluation = new EvaluationDto(
       await this.evaluationsService.remove(id)
-    );
-    this.loggingService.logEvaluationAction(
-      request,
-      ip,
-      'Delete',
-      deletedEvaluation
     );
     return deletedEvaluation;
   }

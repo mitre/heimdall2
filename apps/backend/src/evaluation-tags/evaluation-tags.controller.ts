@@ -4,17 +4,17 @@ import {
   Controller,
   Delete,
   Get,
-  Ip,
   Param,
   Post,
   Request,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {EvaluationsService} from '../evaluations/evaluations.service';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
-import {LoggingService} from '../logging/logging.service';
+import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
 import {CreateEvaluationTagDto} from './dto/create-evaluation-tag.dto';
 import {EvaluationTagDto} from './dto/evaluation-tag.dto';
@@ -22,12 +22,12 @@ import {EvaluationTagsService} from './evaluation-tags.service';
 
 @Controller('evaluation-tags')
 @UseGuards(JwtAuthGuard)
+@UseInterceptors(LoggingInterceptor)
 export class EvaluationTagsController {
   constructor(
     private readonly evaluationTagsService: EvaluationTagsService,
     private readonly evaluationsService: EvaluationsService,
-    private readonly authz: AuthzService,
-    private readonly loggingService: LoggingService
+    private readonly authz: AuthzService
   ) {}
 
   @Get()
@@ -60,8 +60,7 @@ export class EvaluationTagsController {
   async create(
     @Param('evaluationId') evaluationId: string,
     @Body() createEvaluationTagDto: CreateEvaluationTagDto,
-    @Request() request: {user: User},
-    @Ip() ip: string
+    @Request() request: {user: User}
   ): Promise<EvaluationTagDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const evaluation = await this.evaluationsService.findById(evaluationId);
@@ -75,20 +74,13 @@ export class EvaluationTagsController {
         createEvaluationTagDto
       )
     );
-    this.loggingService.logEvaluationTagAction(
-      request,
-      ip,
-      'Create',
-      createdEvaluationTagDto
-    );
     return createdEvaluationTagDto;
   }
 
   @Delete(':id')
   async remove(
     @Param('id') id: string,
-    @Request() request: {user: User},
-    @Ip() ip: string
+    @Request() request: {user: User}
   ): Promise<EvaluationTagDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const evaluationTag = await this.evaluationTagsService.findById(id);
@@ -98,12 +90,6 @@ export class EvaluationTagsController {
     );
     const deletedTagDto = new EvaluationTagDto(
       await this.evaluationTagsService.remove(id)
-    );
-    this.loggingService.logEvaluationTagAction(
-      request,
-      ip,
-      'Delete',
-      deletedTagDto
     );
     return deletedTagDto;
   }

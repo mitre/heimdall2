@@ -4,7 +4,6 @@ import {Test, TestingModule} from '@nestjs/testing';
 import {CREATE_EVALUATION_TAG_DTO} from '../../test/constants/evaluation-tags-test.constant';
 import {EVALUATION_1} from '../../test/constants/evaluations-test.constant';
 import {PRIVATE_GROUP} from '../../test/constants/groups-test.constant';
-import {LOCAL_IP} from '../../test/constants/networking.constant';
 import {
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_2
@@ -18,8 +17,6 @@ import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
-import {LoggingModule} from '../logging/logging.module';
-import {LoggingService} from '../logging/logging.service';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {EvaluationTag} from './evaluation-tag.model';
@@ -41,7 +38,6 @@ describe('EvaluationTagsController', () => {
       controllers: [EvaluationTagsController],
       imports: [
         DatabaseModule,
-        LoggingModule,
         SequelizeModule.forFeature([
           Evaluation,
           EvaluationTag,
@@ -57,8 +53,7 @@ describe('EvaluationTagsController', () => {
         EvaluationTagsService,
         UsersService,
         EvaluationsService,
-        GroupsService,
-        LoggingService
+        GroupsService
       ]
     }).compile();
 
@@ -225,8 +220,7 @@ describe('EvaluationTagsController', () => {
       const evaluationTag = await evaluationTagsController.create(
         evaluation.id,
         CREATE_EVALUATION_TAG_DTO,
-        {user: user},
-        LOCAL_IP
+        {user: user}
       );
       expect(evaluationTag).toBeDefined();
     });
@@ -246,8 +240,7 @@ describe('EvaluationTagsController', () => {
       const evaluationTag = await evaluationTagsController.create(
         evaluation.id,
         CREATE_EVALUATION_TAG_DTO,
-        {user: user},
-        LOCAL_IP
+        {user: user}
       );
 
       expect(evaluationTag).toBeDefined();
@@ -269,8 +262,7 @@ describe('EvaluationTagsController', () => {
         evaluationTagsController.create(
           evaluation.id,
           CREATE_EVALUATION_TAG_DTO,
-          {user: user},
-          LOCAL_IP
+          {user: user}
         )
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
@@ -289,8 +281,7 @@ describe('EvaluationTagsController', () => {
       );
       const removedTag = await evaluationTagsController.remove(
         evaluationTag.id,
-        {user: user},
-        LOCAL_IP
+        {user: user}
       );
       expect(removedTag.value).toEqual(CREATE_EVALUATION_TAG_DTO.value);
     });
@@ -313,8 +304,7 @@ describe('EvaluationTagsController', () => {
       );
       const removedTag = await evaluationTagsController.remove(
         evaluationTag.id,
-        {user: user},
-        LOCAL_IP
+        {user: user}
       );
 
       expect(removedTag.value).toEqual(CREATE_EVALUATION_TAG_DTO.value);
@@ -337,11 +327,7 @@ describe('EvaluationTagsController', () => {
       );
 
       await expect(
-        evaluationTagsController.remove(
-          evaluationTag.id,
-          {user: user},
-          LOCAL_IP
-        )
+        evaluationTagsController.remove(evaluationTag.id, {user: user})
       ).rejects.toBeInstanceOf(ForbiddenError);
     });
   });
