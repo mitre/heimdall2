@@ -150,7 +150,6 @@ describe('GroupsController', () => {
 
       const response = await groupsController.update(
         {user: owner},
-
         privateGroup.id,
         UPDATE_GROUP
       );
@@ -168,7 +167,6 @@ describe('GroupsController', () => {
       await expect(
         groupsController.update(
           {user: basicUser},
-
           privateGroup.id,
           UPDATE_GROUP
         )
@@ -179,7 +177,6 @@ describe('GroupsController', () => {
       await expect(
         groupsController.update(
           {user: basicUser},
-
           privateGroup.id,
           UPDATE_GROUP
         )
@@ -195,7 +192,6 @@ describe('GroupsController', () => {
       await groupsController.addUserToGroup(
         privateGroup.id,
         {user: owner},
-
         {userId: basicUser.id, groupRole: 'member'}
       );
 
@@ -212,7 +208,6 @@ describe('GroupsController', () => {
         groupsController.addUserToGroup(
           privateGroup.id,
           {user: basicUser},
-
           {userId: user.id, groupRole: 'member'}
         )
       ).rejects.toBeInstanceOf(ForbiddenError);
@@ -230,7 +225,6 @@ describe('GroupsController', () => {
       await groupsController.addEvaluationToGroup(
         privateGroup.id,
         {user: basicUser},
-
         {id: evaluation.id}
       );
 
@@ -250,7 +244,6 @@ describe('GroupsController', () => {
         groupsController.addEvaluationToGroup(
           privateGroup.id,
           {user: basicUser},
-
           {id: evaluation.id}
         )
       ).rejects.toBeInstanceOf(ForbiddenError);
@@ -272,7 +265,6 @@ describe('GroupsController', () => {
         groupsController.addEvaluationToGroup(
           privateGroup.id,
           {user: basicUser},
-
           {id: evaluation.id}
         )
       ).rejects.toBeInstanceOf(ForbiddenError);
@@ -293,7 +285,6 @@ describe('GroupsController', () => {
 
       const response = await groupsController.remove(
         {user: owner},
-
         privateGroup.id
       );
       expect(response.id).toEqual(privateGroup.id);
@@ -328,7 +319,6 @@ describe('GroupsController', () => {
       await groupsController.removeEvaluationFromGroup(
         privateGroup.id,
         {user: basicUser},
-
         {id: evaluation.id}
       );
       expect((await privateGroup.$get('evaluations')).length).toEqual(0);
@@ -350,7 +340,6 @@ describe('GroupsController', () => {
         groupsController.removeEvaluationFromGroup(
           privateGroup.id,
           {user: basicUser},
-
           {id: evaluation.id}
         )
       ).rejects.toBeInstanceOf(ForbiddenError);

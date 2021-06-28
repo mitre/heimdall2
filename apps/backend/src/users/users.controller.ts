@@ -95,10 +95,7 @@ export class UsersController {
         )
         .throwUnlessCan(Action.ForceRegistration, User);
     }
-    const createdUserDto = new UserDto(
-      await this.usersService.create(createUserDto)
-    );
-    return createdUserDto;
+    return new UserDto(await this.usersService.create(createUserDto));
   }
 
   @UseGuards(JwtAuthGuard)
@@ -117,10 +114,9 @@ export class UsersController {
     const userToUpdate = await this.usersService.findByPkBang(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, userToUpdate);
 
-    const updatedUserDto = new UserDto(
+    return new UserDto(
       await this.usersService.update(userToUpdate, updateUserDto, abac)
     );
-    return updatedUserDto;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -134,10 +130,9 @@ export class UsersController {
     const userToDelete = await this.usersService.findByPkBang(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Delete, userToDelete);
 
-    const deletedUserDto = new UserDto(
+    return new UserDto(
       await this.usersService.remove(userToDelete, deleteUserDto, abac)
     );
-    return deletedUserDto;
   }
 
   @UseGuards(TestGuard)

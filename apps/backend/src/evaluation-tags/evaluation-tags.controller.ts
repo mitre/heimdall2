@@ -68,13 +68,12 @@ export class EvaluationTagsController {
     // and we wouldn't want anyone to be able to add any tag to any evaluation.
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, evaluation);
 
-    const createdEvaluationTagDto = new EvaluationTagDto(
+    return new EvaluationTagDto(
       await this.evaluationTagsService.create(
         evaluationId,
         createEvaluationTagDto
       )
     );
-    return createdEvaluationTagDto;
   }
 
   @Delete(':id')
@@ -88,9 +87,6 @@ export class EvaluationTagsController {
       Action.Delete,
       evaluationTag.evaluation
     );
-    const deletedTagDto = new EvaluationTagDto(
-      await this.evaluationTagsService.remove(id)
-    );
-    return deletedTagDto;
+    return new EvaluationTagDto(await this.evaluationTagsService.remove(id));
   }
 }

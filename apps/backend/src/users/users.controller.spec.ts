@@ -185,7 +185,6 @@ describe('UsersController Unit Tests', () => {
         await usersController.update(
           basicUser.id,
           {user: basicUser},
-
           UPDATE_USER_DTO_TEST_OBJ
         )
       ).toEqual(new UserDto(await usersService.findById(basicUser.id)));
@@ -199,7 +198,6 @@ describe('UsersController Unit Tests', () => {
         await usersController.update(
           ID,
           {user: basicUser},
-
           UPDATE_USER_DTO_TEST_OBJ
         );
       }).rejects.toThrow(NotFoundException);
@@ -213,7 +211,6 @@ describe('UsersController Unit Tests', () => {
         await usersController.update(
           basicUser.id,
           {user: basicUser},
-
           UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD
         );
       }).rejects.toThrow(ForbiddenException);
@@ -229,7 +226,6 @@ describe('UsersController Unit Tests', () => {
         await usersController.remove(
           basicUser.id,
           {user: basicUser},
-
           DELETE_USER_DTO_TEST_OBJ
         )
       ).toEqual(new UserDto(basicUser));
@@ -243,7 +239,6 @@ describe('UsersController Unit Tests', () => {
         await usersController.remove(
           ID,
           {user: adminUser},
-
           DELETE_USER_DTO_TEST_OBJ
         );
       }).rejects.toThrow(NotFoundException);
@@ -257,7 +252,6 @@ describe('UsersController Unit Tests', () => {
         await usersController.remove(
           basicUser.id,
           {user: basicUser},
-
           DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD
         );
       }).rejects.toThrow(ForbiddenException);

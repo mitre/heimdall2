@@ -79,8 +79,7 @@ export class GroupsController {
       userToAdd,
       addUserToGroupDto.groupRole
     );
-    const updatedGroupDto = new GroupDto(group);
-    return updatedGroupDto;
+    return new GroupDto(group);
   }
 
   @Delete('/:id/user')
@@ -116,8 +115,7 @@ export class GroupsController {
     // Evaluation Permissions
     ForbiddenError.from(abac).throwUnlessCan(Action.Read, evaluationToAdd);
     await this.groupsService.addEvaluationToGroup(group, evaluationToAdd);
-    const updatedGroupDto = new GroupDto(group);
-    return updatedGroupDto;
+    return new GroupDto(group);
   }
 
   @Delete('/:id/evaluation')
@@ -133,13 +131,12 @@ export class GroupsController {
     const evaluationToRemove = await this.evaluationsService.findById(
       evaluationGroupDto.id
     );
-    const updatedGroupDto = new GroupDto(
+    return new GroupDto(
       await this.groupsService.removeEvaluationFromGroup(
         group,
         evaluationToRemove
       )
     );
-    return updatedGroupDto;
   }
 
   @Get(':id')
@@ -163,10 +160,9 @@ export class GroupsController {
     const abac = this.authz.abac.createForUser(request.user);
     const groupToUpdate = await this.groupsService.findByPkBang(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, groupToUpdate);
-    const updatedGroupDto = new GroupDto(
+    return new GroupDto(
       await this.groupsService.update(groupToUpdate, updateGroup)
     );
-    return updatedGroupDto;
   }
 
   @Delete(':id')
@@ -177,9 +173,6 @@ export class GroupsController {
     const abac = this.authz.abac.createForUser(request.user);
     const groupToDelete = await this.groupsService.findByPkBang(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Delete, groupToDelete);
-    const deletedGroupDto = new GroupDto(
-      await this.groupsService.remove(groupToDelete)
-    );
-    return deletedGroupDto;
+    return new GroupDto(await this.groupsService.remove(groupToDelete));
   }
 }

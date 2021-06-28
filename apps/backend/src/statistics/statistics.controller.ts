@@ -24,7 +24,9 @@ export class StatisticsController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async findAllUsers(@Request() request: {user: User}): Promise<StatisticsDTO> {
+  async getHeimdallStatistics(
+    @Request() request: {user: User}
+  ): Promise<StatisticsDTO> {
     const abac = this.authz.abac.createForUser(request.user);
     ForbiddenError.from(abac).throwUnlessCan(Action.ViewStatistics, User);
     return this.statisticsService.getHeimdallStatistics();

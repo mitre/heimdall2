@@ -133,12 +133,10 @@ export class EvaluationsController {
       updateEvaluationDto
     );
 
-    const updatedEvaluationDto = new EvaluationDto(
+    return new EvaluationDto(
       updatedEvaluation,
       abac.can(Action.Update, updatedEvaluation)
     );
-
-    return updatedEvaluationDto;
   }
 
   @Delete(':id')
@@ -149,9 +147,6 @@ export class EvaluationsController {
     const abac = this.authz.abac.createForUser(request.user);
     const evaluationToDelete = await this.evaluationsService.findById(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Delete, evaluationToDelete);
-    const deletedEvaluation = new EvaluationDto(
-      await this.evaluationsService.remove(id)
-    );
-    return deletedEvaluation;
+    return new EvaluationDto(await this.evaluationsService.remove(id));
   }
 }
