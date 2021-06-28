@@ -460,9 +460,4 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   bottom: 0;
   right: 0;
 }
-.top-right {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
 </style>

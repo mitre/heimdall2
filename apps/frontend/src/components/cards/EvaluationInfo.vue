@@ -104,3 +104,10 @@ export default class EvaluationInfo extends Vue {
   }
 }
 </script>
+<style scoped>
+.top-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+</style>
