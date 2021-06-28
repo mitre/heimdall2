@@ -12,6 +12,8 @@ import {
   UseGuards,
   UsePipes
 } from '@nestjs/common';
+import {ApiKeyService} from '../apikeys/apikey.service';
+import {CreateApiKeyDto} from '../apikeys/dto/create-apikey.dto';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {ConfigService} from '../config/config.service';
@@ -35,6 +37,7 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly configService: ConfigService,
+    private readonly apiKeyService: ApiKeyService,
     private readonly authz: AuthzService
   ) {}
 
@@ -91,6 +94,30 @@ export class UsersController {
         .throwUnlessCan(Action.ForceRegistration, User);
     }
     return new UserDto(await this.usersService.create(createUserDto));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/apikey')
+  async createAPIKey(
+    @Request() request: {user: User},
+    @Body() createApiKeyDto: CreateApiKeyDto
+  ): Promise<{key: string}> {
+    return {
+      key: await this.apiKeyService.create(request.user, createApiKeyDto)
+    };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/apikey/:id')
+  async updateAPIKey(
+    @Request() request: {user: User},
+    @Param('id') id: string
+  ): Promise<{key: string}> {
+    const apiKeyToUpdate = await this.apiKeyService.findByPkBang(id);
+    const apiKeyOwner = await this.usersService.findById(apiKeyToUpdate.userId);
+    const abac = this.authz.abac.createForUser(request.user);
+    ForbiddenError.from(abac).throwUnlessCan(Action.Update, apiKeyOwner);
+    return {key: await this.apiKeyService.update(apiKeyToUpdate.id)};
   }
 
   @UseGuards(JwtAuthGuard)

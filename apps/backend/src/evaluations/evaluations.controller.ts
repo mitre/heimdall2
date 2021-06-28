@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Request,
+  UnauthorizedException,
   UploadedFile,
   UseGuards,
   UseInterceptors
@@ -20,6 +21,7 @@ import {ConfigService} from '../config/config.service';
 import {GroupDto} from '../groups/dto/group.dto';
 import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
+import {APIKeyOrJwtAuthGuard} from '../guards/api-key-or-jwt-auth.guard';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {CreateEvaluationInterceptor} from '../interceptors/create-evaluation-interceptor';
 import {User} from '../users/user.model';
@@ -29,7 +31,6 @@ import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 import {EvaluationsService} from './evaluations.service';
 
 @Controller('evaluations')
-@UseGuards(JwtAuthGuard)
 export class EvaluationsController {
   constructor(
     private readonly evaluationsService: EvaluationsService,
@@ -37,6 +38,7 @@ export class EvaluationsController {
     private readonly configService: ConfigService,
     private readonly authz: AuthzService
   ) {}
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findById(
     @Param('id') id: string,
@@ -48,6 +50,7 @@ export class EvaluationsController {
     return new EvaluationDto(evaluation, abac.can(Action.Update, evaluation));
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id/groups')
   async groupsForEvaluation(
     @Param('id') id: string,
@@ -63,6 +66,7 @@ export class EvaluationsController {
     return evaluationGroups.map((group) => new GroupDto(group));
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll(@Request() request: {user: User}): Promise<EvaluationDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
@@ -78,6 +82,7 @@ export class EvaluationsController {
     );
   }
 
+  @UseGuards(APIKeyOrJwtAuthGuard)
   @Post()
   @UseInterceptors(FileInterceptor('data'), CreateEvaluationInterceptor)
   async create(
@@ -85,6 +90,9 @@ export class EvaluationsController {
     @UploadedFile() data: Express.Multer.File,
     @Request() request: {user: User}
   ): Promise<EvaluationDto> {
+    if (!request.user) {
+      throw new UnauthorizedException();
+    }
     const serializedDta: JSON = JSON.parse(data.buffer.toString('utf8'));
     let groups: Group[] = createEvaluationDto.groups
       ? await this.groupsService.findByIds(createEvaluationDto.groups)
@@ -116,6 +124,7 @@ export class EvaluationsController {
     return _.omit(createdDto, 'data');
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   async update(
     @Param('id') id: string,
@@ -137,6 +146,7 @@ export class EvaluationsController {
     );
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(
     @Param('id') id: string,

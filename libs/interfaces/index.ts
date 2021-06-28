@@ -1,3 +1,4 @@
+export * from './apikey/create-apikey.interface';
 export * from './config/startup-settings.interface';
 export * from './evaluation-tag/create-evaluation-tag.interface';
 export * from './evaluation-tag/delete-evaluation-tag.interface';
