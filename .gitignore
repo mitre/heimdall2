@@ -46,3 +46,7 @@ data/
 
 # Ignore cloud.gov manifest
 manifest.yml
+
+# Ignore nginx SSL certificate and key
+nginx/certs/ssl_certificate.crt
+nginx/certs/ssl_certificate_key.key

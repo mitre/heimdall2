@@ -11,7 +11,6 @@
       </v-banner>
       <v-tabs
         :vertical="$vuetify.breakpoint.mdAndUp"
-        active
         :value="active_tab"
         color="primary-visible"
         show-arrows
@@ -109,6 +108,8 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
     this.active_tab = new_tab;
     SnackbarModule.visibility(false);
     local_tab.set(new_tab);
+    // Forces the v-group-slider to recalculate its position to prevent getting stuck between Splunk and Samples
+    setTimeout(() => window.dispatchEvent(new Event('resize')), 250)
   }
   get warning_banner(): string {
     return ServerModule.banner;
