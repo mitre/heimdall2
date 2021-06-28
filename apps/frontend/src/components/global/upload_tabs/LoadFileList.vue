@@ -8,7 +8,7 @@
         label="Search"
         hide-details
       />
-      <DeleteDialog
+      <ActionDialog
         v-model="deleteItemDialog"
         type="file"
         @cancel="deleteItemDialog = false"
@@ -97,11 +97,11 @@ import {EvaluationModule} from '@/store/evaluations'
 import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
 import {Sample} from '@/utilities/sample_util';
-import DeleteDialog from '@/components/generic/DeleteDialog.vue';
+import ActionDialog from '@/components/generic/ActionDialog.vue';
 
 @Component({
   components: {
-    DeleteDialog,
+    ActionDialog,
     EditEvaluationModal,
     ShareEvaluationButton,
     TagRow

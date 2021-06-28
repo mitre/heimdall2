@@ -83,7 +83,7 @@ import {Prop} from 'vue-property-decorator';
 import axios, {AxiosResponse} from 'axios';
 import {GroupsModule} from '@/store/groups';
 import Users from '@/components/global/groups/Users.vue';
-import DeleteDialog from '@/components/generic/DeleteDialog.vue';
+import ActionDialog from '@/components/generic/ActionDialog.vue';
 import _ from 'lodash';
 
 function newGroup(): IGroup {
@@ -100,7 +100,7 @@ function newGroup(): IGroup {
 @Component({
   validations: {},
   components: {
-    DeleteDialog,
+    ActionDialog,
     Users
   }
 })

@@ -56,10 +56,10 @@
       </template>
       <template #no-data> No groups match current selection. </template>
     </v-data-table>
-    <DeleteDialog
+    <ActionDialog
       v-model="dialogDelete"
       type="group"
-      @cancel="closeDeleteDialog"
+      @cancel="closeActionDialog"
       @confirm="deleteGroupConfirm"
     />
   </v-card>
@@ -73,11 +73,11 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {GroupsModule} from '@/store/groups';
-import DeleteDialog from '@/components/generic/DeleteDialog.vue';
+import ActionDialog from '@/components/generic/ActionDialog.vue';
 
 @Component({
   components: {
-    DeleteDialog,
+    ActionDialog,
     GroupModal
   }
 })
@@ -122,12 +122,12 @@ export default class GroupManagement extends Vue {
       GroupsModule.DeleteGroup(this.editedGroup).then((data) => {
         SnackbarModule.notify(`Successfully deleted group ${data.name}`);
       }).finally(() => {
-        this.closeDeleteDialog();
+        this.closeActionDialog();
       });
     }
   }
 
-  closeDeleteDialog() {
+  closeActionDialog() {
     this.dialogDelete = false
     this.editedGroup = null;
   }

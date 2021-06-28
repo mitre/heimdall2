@@ -112,4 +112,9 @@ export class ApiKeyService {
       return apiKey;
     }
   }
+
+  async findAllForUser(user: User): Promise<APIKeyDto[]> {
+    const apiKeys = await this.apiKeyModel.findAll({where: {userId: user.id}});
+    return apiKeys.map((key) => new APIKeyDto(key));
+  }
 }

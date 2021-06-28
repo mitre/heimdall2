@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Patch,
   Post,
@@ -29,6 +30,12 @@ export class ApiKeyController {
   ) {}
 
   @UseGuards(JwtAuthGuard)
+  @Get()
+  async findAPIKeys(@Request() request: {user: User}): Promise<APIKeyDto[]> {
+    return this.apiKeyService.findAllForUser(request.user);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post()
   async createAPIKey(
     @Request() request: {user: User},
@@ -51,7 +58,7 @@ export class ApiKeyController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch('/apikey/:id')
+  @Patch('/:id')
   async updateAPIKey(
     @Request() request: {user: User},
     @Param('id') id: string,
@@ -65,7 +72,7 @@ export class ApiKeyController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put('/apikey/:id')
+  @Put('/:id')
   async regenerateAPIKey(
     @Request() request: {user: User},
     @Param('id') id: string

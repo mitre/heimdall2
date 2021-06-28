@@ -97,6 +97,13 @@
             @click="changePasswordDialog"
             >Change Password</v-btn
           >
+          <v-btn
+            v-if="!admin"
+            id="toggleAPIKeys"
+            class="ml-2"
+            @click="toggleShowAPIKeys"
+            >Show API Keys</v-btn
+          >
           <div v-show="changePassword">
             <v-text-field
               id="new_password_field"
@@ -123,6 +130,48 @@
               label="Repeat Password"
               @blur="$v.passwordConfirmation.$touch()"
             />
+          </div>
+
+          <div v-show="showAPIKeys">
+            <div class="d-flex flex-row-reverse" @click="addAPIKey">
+              <v-icon>mdi-plus</v-icon>
+            </div>
+            <ActionDialog
+              v-model="deleteAPIKeyDialog"
+              type="API Key"
+              @cancel="deleteAPIKeyDialog = false"
+              @confirm="deleteAPIKeyConfirm"
+            />
+            <ActionDialog
+              v-model="refreshAPIKeyDialog"
+              action="refresh"
+              type="API Key"
+              @cancel="refreshAPIKeyDialog = false"
+              @confirm="refreshAPIKeyConfirm"
+            />
+            <v-data-table
+              :headers="apiKeyHeaders"
+              :items="apiKeys"
+              dense
+              style="max-height: 300px"
+              class="overflow-y-auto"
+            >
+              <template #[`item.name`]="{item}"
+                ><v-text-field v-model="item.name" @change="updateAPIKey(item)"
+              /></template>
+              <template #[`item.apiKey`]="{item}">{{
+                truncate(item.apiKey) || 'Only Shown on Creation'
+              }}</template>
+              <template #[`item.action`]="{item}"
+                ><CopyButton v-if="item.apiKey" :text="item.apiKey" />
+                <v-icon class="mr-2" small @click="refreshAPIKey(item)"
+                  >mdi-refresh</v-icon
+                >
+                <v-icon class="mr-2" small @click="deleteAPIKey(item)"
+                  >mdi-delete</v-icon
+                ></template
+              >
+            </v-data-table>
           </div>
         </v-form>
       </v-card-text>
@@ -159,12 +208,18 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
-import {IUser, IUpdateUser} from '@heimdall/interfaces';
+import {IUser, IUpdateUser, IApiKey} from '@heimdall/interfaces';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 import {required, email, requiredIf} from 'vuelidate/lib/validators';
 import {Prop} from 'vue-property-decorator';
+import axios from 'axios';
+import ActionDialog from '@/components/generic/ActionDialog.vue';
+import _ from 'lodash';
+import CopyButton from '@/components/generic/CopyButton.vue'
+
 
 @Component({
+  components: {ActionDialog, CopyButton},
   mixins: [UserValidatorMixin],
   validations: {
     userInfo: {
@@ -193,6 +248,31 @@ export default class UserModal extends Vue {
 
   roles: string[] = ['user', 'admin'];
 
+  showAPIKeys = false
+  apiKeyHeaders = [{
+      text: 'Name',
+      value: 'name',
+      filterable: true,
+      width: '20%',
+      align: 'start'
+    },
+    {
+      text: 'Value',
+      value: 'apiKey',
+      sortable: false
+    },
+    {
+      text: 'Action',
+      value: 'action',
+      sortable: false
+    }
+  ]
+
+  apiKeys: IApiKey[] = [];
+  activeAPIKey: IApiKey | null = null
+  deleteAPIKeyDialog = false;
+  refreshAPIKeyDialog = false;
+
   dialog = false;
   changePassword = false;
 
@@ -200,6 +280,12 @@ export default class UserModal extends Vue {
   currentPassword = '';
   newPassword = '';
   passwordConfirmation = '';
+
+  mounted() {
+    if(!this.admin) {
+      this.getAPIKeys()
+    }
+  }
 
   async updateUserInfo(): Promise<void> {
     this.$v.$touch()
@@ -232,8 +318,62 @@ export default class UserModal extends Vue {
     }
   }
 
+  truncate(str: string) {
+    return _.truncate(str, {length: 80})
+  }
+
   changePasswordDialog() {
     this.changePassword = !this.changePassword
+  }
+
+  toggleShowAPIKeys() {
+    this.showAPIKeys = !this.showAPIKeys
+  }
+
+  getAPIKeys() {
+    axios.get<IApiKey[]>(`/apikeys`).then(({data}) => {
+      this.apiKeys = data
+    })
+  }
+
+  addAPIKey() {
+    axios.post<IApiKey>(`/apikeys`, {name: ''}).then(({data}) => this.apiKeys.push(data))
+  }
+
+  refreshAPIKey(keyToRefresh: IApiKey) {
+    this.activeAPIKey = keyToRefresh;
+    this.refreshAPIKeyDialog = true
+  }
+
+  deleteAPIKey(keyToDelete: IApiKey) {
+    this.activeAPIKey = keyToDelete;
+    this.deleteAPIKeyDialog = true
+  }
+
+  deleteAPIKeyConfirm() {
+    if(this.activeAPIKey) {
+      axios.delete<IApiKey>(`/apikeys/${this.activeAPIKey.id}`).then(({data}) => {
+        this.apiKeys = this.apiKeys.filter((key) => key.id !== data.id)
+      })
+    }
+    this.deleteAPIKeyDialog = false;
+  }
+
+  updateAPIKey(item: IApiKey) {
+    axios.patch(`/apikeys/${item.id}`, item)
+  }
+
+  refreshAPIKeyConfirm() {
+    axios.put(`/apikeys/${this.activeAPIKey?.id}`).then(({data}) => {
+      this.apiKeys = this.apiKeys.map((key) => {
+        if(key.id === this.activeAPIKey?.id) {
+          return {...key, apiKey: data.key}
+        } else {
+          return key
+        }
+      })
+    })
+    this.refreshAPIKeyDialog = false;
   }
 
   get update_unavailable() {

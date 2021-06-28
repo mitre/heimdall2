@@ -34,7 +34,7 @@
         </v-combobox>
       </template>
     </v-edit-dialog>
-    <DeleteDialog
+    <ActionDialog
       v-model="deleteTagDialog"
       type="tag"
       @cancel="deleteTagDialog = false"
@@ -50,11 +50,11 @@ import {EvaluationModule} from '@/store/evaluations';
 import {SnackbarModule} from '../../../store/snackbar';
 import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
-import DeleteDialog from '@/components/generic/DeleteDialog.vue';
+import ActionDialog from '@/components/generic/ActionDialog.vue';
 
 @Component({
   components: {
-    DeleteDialog
+    ActionDialog
   }
 })
 export default class TagRow extends Vue {
