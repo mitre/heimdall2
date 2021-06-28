@@ -133,7 +133,11 @@
           </div>
 
           <div v-show="showAPIKeys">
-            <div class="d-flex flex-row-reverse" @click="addAPIKey">
+            <div
+              class="d-flex flex-row-reverse"
+              style="cursor: pointer"
+              @click="addAPIKey"
+            >
               <v-icon>mdi-plus</v-icon>
             </div>
             <ActionDialog
