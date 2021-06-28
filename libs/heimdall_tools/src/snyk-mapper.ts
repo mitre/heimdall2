@@ -29,26 +29,32 @@ async function generateHash(data: string): Promise<string> {
 const mappings: MappedTransform<ExecJSON, LookupPath> = {
   platform: {
     name: 'Heimdall Tools',
+    target_id: { path: 'projectName' },
     release: HeimdallToolsVersion,
-    target_id: 'Static Analysis Results Interchange Format'
   },
   profiles: [{
-    name: 'SARIF',
-    title: 'Static Analysis Results Interchange Format',
-    version: { path: 'version' },
-    summary: '',
+    name: { path: 'policy' },
+    version: 'version',
+    title: `Snyk Project: ${{ path: 'projectName' }}`,
     attributes: [],
     controls: [
-      // A little confusing, will get back to it later
-      // {
-      //   tags: {}, // TODO
-      //   descriptions: [],
-      //   refs: [],
-      //   source_location:
-
-      // }
+      {
+        tags: {
+          // Waiting for processing functions
+        },
+        descriptions: [],
+        refs: [],
+        source_location: {},
+        title: { path: '[INDEX].vulnerabilities[INDEX].title' },
+        id: { path: '[INDEX].vulnerabilities[INDEX].id' },
+        desc: { path: '[INDEX].vulnerabilities[INDEX].description' },
+        impact: { path: '[INDEX].vulnerabilities[INDEX].severity' },
+        code: '',
+        results: []
+      }
     ],
     groups: [],
+    summary: `Snyk Summary: ${{ path: 'summary' }}`,
     supports: [],
     sha256: ''
   }],
@@ -56,19 +62,10 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
   version: HeimdallToolsVersion
 }
 
-class SarifMapper {
-  sarifJson: Object
+class SnykMapper {
+  snykJson: JSON;
 
-  constructor(sarifJson: Object) {
-    this.sarifJson = sarifJson
-  }
-
-  convert() {
-    let data = convert(mappings, this.sarifJson)
-    for (var profile in data.profiles) {
-      var { sha256, ...profileObject } = profile
-      profile.sha256 = generateHash(JSON.stringify(profile))
-    }
-    return data
+  constructor(snykJson: string) {
+    this.snykJson = JSON.parse(snykJson.split('\n', 1)[1]);
   }
 }

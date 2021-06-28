@@ -8,5 +8,8 @@
   "compilerOptions": {
     "strict": true,
     "resolveJsonModule": true
+  },
+  "ts-node": {
+    "resolveJsonModule": true
   }
 }

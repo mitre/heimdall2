@@ -30,45 +30,47 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
   platform: {
     name: 'Heimdall Tools',
     release: HeimdallToolsVersion,
-    target_id: 'Static Analysis Results Interchange Format'
   },
   profiles: [{
-    name: 'SARIF',
-    title: 'Static Analysis Results Interchange Format',
-    version: { path: 'version' },
-    summary: '',
-    attributes: [],
+    name: 'OWASP ZAP Scan',
+    version: '', //TODO
+    title: "OWASP ZAP Scan of Host: #{@host}", //TODO
+    attributes: [], //TODO
     controls: [
-      // A little confusing, will get back to it later
-      // {
-      //   tags: {}, // TODO
-      //   descriptions: [],
-      //   refs: [],
-      //   source_location:
+      {
+        id: '',
+        impact: 0,
+        refs: [],
+        results: [
+          {
+            code_desc: '',
+            start_time: ''
+          }
+        ],
+        source_location: {
+          line: null,
+          ref: ''
+        },
+        tags: {
 
-      // }
+        },
+      }
     ],
     groups: [],
+    summary: "OWASP ZAP Scan of Host: #{@host}",
     supports: [],
     sha256: ''
   }],
-  statistics: {},
-  version: HeimdallToolsVersion
+  statistics: {
+    duration: 0.0
+  },
+  version: { path: ".version" } // There's two different 'version's, one in profile and one outside, so which?
 }
 
-class SarifMapper {
-  sarifJson: Object
+class ScoutsuiteMapper {
+  zapJson: JSON;
 
-  constructor(sarifJson: Object) {
-    this.sarifJson = sarifJson
-  }
-
-  convert() {
-    let data = convert(mappings, this.sarifJson)
-    for (var profile in data.profiles) {
-      var { sha256, ...profileObject } = profile
-      profile.sha256 = generateHash(JSON.stringify(profile))
-    }
-    return data
+  constructor(zapJson: string) {
+    this.zapJson = JSON.parse(zapJson);
   }
 }

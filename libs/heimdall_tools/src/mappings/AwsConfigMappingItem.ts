@@ -23,7 +23,4 @@ class AwsConfigMappingItem {
     // Could possibly be NaN, which is a 'number'
     this.nistRevision = parseInt(values[3])
   }
-  }
-
-
 }

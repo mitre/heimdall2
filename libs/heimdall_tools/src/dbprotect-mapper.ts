@@ -12,7 +12,8 @@ type MappedTransform<T, U> = {
   [K in keyof T]: T[K] extends object ? MappedTransform<T[K], U> : T[K] | U;
 };
 interface LookupPath {
-  path: string;
+  path: string | string[];
+
 }
 function convert(fields: typeof mappings, file: Object) {
   const result = objectMap(fields, (v: { path: string }) => _.get(file, v.path))
@@ -30,45 +31,26 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
   platform: {
     name: 'Heimdall Tools',
     release: HeimdallToolsVersion,
-    target_id: 'Static Analysis Results Interchange Format'
   },
   profiles: [{
-    name: 'SARIF',
-    title: 'Static Analysis Results Interchange Format',
-    version: { path: 'version' },
-    summary: '',
+    name: '',
+    title: '',
+    version: '',
     attributes: [],
-    controls: [
-      // A little confusing, will get back to it later
-      // {
-      //   tags: {}, // TODO
-      //   descriptions: [],
-      //   refs: [],
-      //   source_location:
-
-      // }
-    ],
+    controls: [],
     groups: [],
+    summary: '',
     supports: [],
     sha256: ''
   }],
   statistics: {},
-  version: HeimdallToolsVersion
+  version: ''
 }
 
-class SarifMapper {
-  sarifJson: Object
+class DBProtectMapper {
+  xml: Object
 
-  constructor(sarifJson: Object) {
-    this.sarifJson = sarifJson
-  }
-
-  convert() {
-    let data = convert(mappings, this.sarifJson)
-    for (var profile in data.profiles) {
-      var { sha256, ...profileObject } = profile
-      profile.sha256 = generateHash(JSON.stringify(profile))
-    }
-    return data
+  constructor(xml: Object) {
+    this.xml = xml
   }
 }

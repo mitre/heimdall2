@@ -1,6 +1,7 @@
 import { ExecJSON } from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
 import { version as HeimdallToolsVersion } from '../package.json'
 import _ from 'lodash'
+import parser from 'fast-xml-parser'
 
 const objectMap = (obj: Object, fn: Function) =>
   Object.fromEntries(
@@ -30,25 +31,41 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
   platform: {
     name: 'Heimdall Tools',
     release: HeimdallToolsVersion,
-    target_id: 'Static Analysis Results Interchange Format'
   },
   profiles: [{
-    name: 'SARIF',
-    title: 'Static Analysis Results Interchange Format',
-    version: { path: 'version' },
-    summary: '',
+    name: 'BurpSuite Pro Scan',
+    version: { path: 'issues.burpVersion' },
+    title: 'BurpSuite Pro Scan',
     attributes: [],
     controls: [
-      // A little confusing, will get back to it later
-      // {
-      //   tags: {}, // TODO
-      //   descriptions: [],
-      //   refs: [],
-      //   source_location:
-
-      // }
+      {
+        // Needs to parse HTML for some of them
+        id: { path: 'issues.issue[INDEX].type' },
+        title: { path: 'issues.issue[INDEX].name' },
+        desc: { path: 'issues.issue.[INDEX].issueBackground' },
+        impact: { path: 'issues.issue[INDEX].remediationBackground' },
+        tags: {
+          nist: { path: 'issues.issue[INDEX].vulnerabilityClassifications' },
+          cweid: { path: 'issues.issue[INDEX].vulnerabilityClassifications' },
+          confidence: { path: 'issues.issue[INDEX].confidence' }
+        },
+        descriptions: [
+          { data: { path: 'issues.issue.[INDEX].issueBackground' }, label: 'check' },
+          { data: { path: 'issues.issue[INDEX].remediationBackground' }, label: 'fix' }
+        ],
+        refs: [],
+        source_location: {},
+        code: '',
+        results: [
+          {
+            code_desc: '',
+            start_time: ''
+          }
+        ]
+      }
     ],
     groups: [],
+    summary: 'BurpSuite Pro Scan',
     supports: [],
     sha256: ''
   }],
@@ -56,19 +73,10 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
   version: HeimdallToolsVersion
 }
 
-class SarifMapper {
-  sarifJson: Object
+class BurpSuiteMapper {
+  burpsJson: any
 
-  constructor(sarifJson: Object) {
-    this.sarifJson = sarifJson
-  }
-
-  convert() {
-    let data = convert(mappings, this.sarifJson)
-    for (var profile in data.profiles) {
-      var { sha256, ...profileObject } = profile
-      profile.sha256 = generateHash(JSON.stringify(profile))
-    }
-    return data
+  constructor(burpsXml: string) {
+    this.burpsJson = parser.parse(burpsXml)
   }
 }

@@ -30,45 +30,42 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
   platform: {
     name: 'Heimdall Tools',
     release: HeimdallToolsVersion,
-    target_id: 'Static Analysis Results Interchange Format'
   },
   profiles: [{
-    name: 'SARIF',
-    title: 'Static Analysis Results Interchange Format',
-    version: { path: 'version' },
-    summary: '',
+    name: 'OWASP ZAP Scan',
+    version: '',
+    title: `Nikto Target: ${{ path: 'host' }}}`, //Need to add port
     attributes: [],
     controls: [
-      // A little confusing, will get back to it later
-      // {
-      //   tags: {}, // TODO
-      //   descriptions: [],
-      //   refs: [],
-      //   source_location:
-
-      // }
+      {
+        tags: {
+          nist: { path: 'vulnerabilities[INDEX].id' },
+          ösvdb: { path: 'vulnerabilities[INDEX].OSVDB' }
+        },
+        descriptions: [],
+        refs: [],
+        source_location: {},
+        title: { path: 'vulnerabilities[INDEX].msg' },
+        id: { path: 'vulnerabilities[INDEX].id' },
+        desc: { path: 'vulnerabilities[INDEX].msg' },
+        impact: 0.5,
+        code: '',
+        results: [] //TODO
+      }
     ],
     groups: [],
+    summary: `Banner: ${{ path: 'banner' }}`,
     supports: [],
     sha256: ''
   }],
   statistics: {},
-  version: HeimdallToolsVersion
+  version: { path: ".version" }
 }
 
-class SarifMapper {
-  sarifJson: Object
+class NikitoMapper {
+  xrayJson: JSON
 
-  constructor(sarifJson: Object) {
-    this.sarifJson = sarifJson
-  }
-
-  convert() {
-    let data = convert(mappings, this.sarifJson)
-    for (var profile in data.profiles) {
-      var { sha256, ...profileObject } = profile
-      profile.sha256 = generateHash(JSON.stringify(profile))
-    }
-    return data
+  constructor(xrayJson: string) {
+    this.xrayJson = JSON.parse(xrayJson.split('\n', 1)[1]);
   }
 }

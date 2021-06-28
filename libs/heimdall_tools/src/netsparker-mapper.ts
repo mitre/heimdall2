@@ -30,23 +30,31 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
   platform: {
     name: 'Heimdall Tools',
     release: HeimdallToolsVersion,
-    target_id: 'Static Analysis Results Interchange Format'
+    target_id: { path: 'netsparker-enterprise.target.url' }
   },
   profiles: [{
-    name: 'SARIF',
-    title: 'Static Analysis Results Interchange Format',
-    version: { path: 'version' },
-    summary: '',
+    name: 'Netsparker Enterprise Scan',
+    title: `Netsparker Enterprise Scan ID: ${{ path: 'netsparker-enterprise.target.scan-id' }} URL: ${{ path: 'netsparker-enterprise.target.url' }}`, //TODO
+    summary: 'Netsparker Enterprise Scan',
     attributes: [],
     controls: [
-      // A little confusing, will get back to it later
-      // {
-      //   tags: {}, // TODO
-      //   descriptions: [],
-      //   refs: [],
-      //   source_location:
-
-      // }
+      {
+        id: { path: 'netsparker-enterprise.vulnerabilities.vulnerability[INDEX].LookupId' },
+        title: { path: 'netsparker-enterprise.vulnerabilities.vulnerability[INDEX].name' },
+        desc: '',
+        impact: { path: 'netsparker-enterprise.vulnerabilities.vulnerability[INDEX].severity' },
+        tags: {
+          nist: { path: 'netsparker-enterprise.vulnerabilities.vulnerability[INDEX].classification' }
+        },
+        descriptions: [
+          { data: 'netsparker-enterprise.vulnerabilities.vulnerability[INDEX]', label: 'check' },
+          { data: 'netsparker-enterprise.vulnerabilities.vulnerability[INDEX]', label: 'fix' }
+        ],
+        refs: [],
+        source_location: {},
+        code: '',
+        results: [] // TODO
+      }
     ],
     groups: [],
     supports: [],
@@ -56,19 +64,10 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
   version: HeimdallToolsVersion
 }
 
-class SarifMapper {
-  sarifJson: Object
+class NetsparkerMapper {
+  xml: Object
 
-  constructor(sarifJson: Object) {
-    this.sarifJson = sarifJson
-  }
-
-  convert() {
-    let data = convert(mappings, this.sarifJson)
-    for (var profile in data.profiles) {
-      var { sha256, ...profileObject } = profile
-      profile.sha256 = generateHash(JSON.stringify(profile))
-    }
-    return data
+  constructor(xml: Object) {
+    this.xml = xml
   }
 }

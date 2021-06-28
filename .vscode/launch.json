@@ -18,6 +18,18 @@
       "internalConsoleOptions": "neverOpen",
       "port": 9229,
       "smartStep": true
+    },
+    {
+      "name": "Launch index.ts",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": [
+        "-r",
+        "ts-node/register"
+      ],
+      "args": [
+        "${workspaceRoot}/libs/heimdall_tools/src/xccdf-results-mapper.ts"
+      ]
     }
   ]
 }

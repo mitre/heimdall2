@@ -12,10 +12,22 @@ type MappedTransform<T, U> = {
   [K in keyof T]: T[K] extends object ? MappedTransform<T[K], U> : T[K] | U;
 };
 interface LookupPath {
-  path: string;
+  path: string | string[];
 }
 function convert(fields: typeof mappings, file: Object) {
-  const result = objectMap(fields, (v: { path: string }) => _.get(file, v.path))
+  const result = objectMap(fields, (v: { path: string | string[] }) => {
+    if (typeof v.path === 'string') {
+      return _.get(file, v.path)
+    } else {
+      var total: string = ''
+      v.path.forEach(function (value) {
+        if (typeof _.get(file, value) != "undefined") {
+          total += _.get(file, value)
+        }
+      })
+      return total
+    }
+  })
   return result
 }
 async function generateHash(data: string): Promise<string> {
@@ -30,25 +42,29 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
   platform: {
     name: 'Heimdall Tools',
     release: HeimdallToolsVersion,
-    target_id: 'Static Analysis Results Interchange Format'
   },
   profiles: [{
-    name: 'SARIF',
-    title: 'Static Analysis Results Interchange Format',
-    version: { path: 'version' },
-    summary: '',
+    name: 'Fortify Static Analyzer Scan',
+    version: { path: 'FVDL.EngineData.EngineVersion' },
     attributes: [],
     controls: [
-      // A little confusing, will get back to it later
-      // {
-      //   tags: {}, // TODO
-      //   descriptions: [],
-      //   refs: [],
-      //   source_location:
-
-      // }
+      {
+        id: { path: 'FVDL.Description[INDEX].classID' },
+        desc: { path: 'FVDL.Description[INDEX].Explanation' },
+        title: { path: 'FVDL.Description[INDEX].Abstract' },
+        impact: { path: 'FVDL.Description[INDEX].classID' },
+        descriptions: [],
+        refs: [],
+        source_location: {},
+        code: '',
+        results: [],
+        tags: {
+          nist: ''
+        }
+      }
     ],
     groups: [],
+    summary: { path: ['Fortify Static Analyzer Scan of UUID:', 'FVDL.UUID'] }, //TODO
     supports: [],
     sha256: ''
   }],
@@ -56,19 +72,10 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
   version: HeimdallToolsVersion
 }
 
-class SarifMapper {
-  sarifJson: Object
+class FortifyMapper {
+  fvdl: Object
 
-  constructor(sarifJson: Object) {
-    this.sarifJson = sarifJson
-  }
-
-  convert() {
-    let data = convert(mappings, this.sarifJson)
-    for (var profile in data.profiles) {
-      var { sha256, ...profileObject } = profile
-      profile.sha256 = generateHash(JSON.stringify(profile))
-    }
-    return data
+  constructor(fvdl: Object) {
+    this.fvdl = fvdl
   }
 }

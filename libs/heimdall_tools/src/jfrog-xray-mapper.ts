@@ -30,25 +30,31 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
   platform: {
     name: 'Heimdall Tools',
     release: HeimdallToolsVersion,
-    target_id: 'Static Analysis Results Interchange Format'
   },
   profiles: [{
-    name: 'SARIF',
-    title: 'Static Analysis Results Interchange Format',
-    version: { path: 'version' },
-    summary: '',
+    name: 'JFrog Xray Scan',
+    title: 'JFrog Xray Scan',
+    version: '',
     attributes: [],
     controls: [
-      // A little confusing, will get back to it later
-      // {
-      //   tags: {}, // TODO
-      //   descriptions: [],
-      //   refs: [],
-      //   source_location:
-
-      // }
+      {
+        id: { path: 'data[INDEX].id' },
+        title: { path: 'data[INDEX].summary' },
+        desc: { path: 'data[INDEX]' },
+        impact: { path: 'data[INDEX].severity' },
+        code: '',
+        results: [],
+        tags: {
+          nist: '',
+          cweid: ''
+        },
+        descriptions: [],
+        refs: [],
+        source_location: {},
+      }
     ],
     groups: [],
+    summary: 'Continuous Security and Universal Artifact Analysis',
     supports: [],
     sha256: ''
   }],
@@ -56,19 +62,10 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
   version: HeimdallToolsVersion
 }
 
-class SarifMapper {
-  sarifJson: Object
+class JfrongXrayMapper {
+  xrayJson: Object
 
-  constructor(sarifJson: Object) {
-    this.sarifJson = sarifJson
-  }
-
-  convert() {
-    let data = convert(mappings, this.sarifJson)
-    for (var profile in data.profiles) {
-      var { sha256, ...profileObject } = profile
-      profile.sha256 = generateHash(JSON.stringify(profile))
-    }
-    return data
+  constructor(xrayJson: Object) {
+    this.xrayJson = xrayJson
   }
 }
