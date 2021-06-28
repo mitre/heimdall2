@@ -1,7 +1,5 @@
 'use strict';
 
-const sequelize = require('sequelize');
-
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     return queryInterface.createTable('ApiKeys', {

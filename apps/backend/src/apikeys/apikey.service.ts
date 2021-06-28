@@ -8,13 +8,15 @@ import {generateDefault} from '../token/token.providers';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {ApiKey} from './apikey.model';
+import {APIKeyDto} from './dto/apikey.dto';
+import {UpdateAPIKeyDto} from './dto/update-apikey.dto';
 
 @Injectable()
 export class ApiKeyService {
   constructor(
     @InjectModel(ApiKey)
-    private apiKeyModel: typeof ApiKey,
-    private configService: ConfigService,
+    private readonly apiKeyModel: typeof ApiKey,
+    private readonly configService: ConfigService,
     private readonly usersService: UsersService
   ) {}
 
@@ -33,7 +35,7 @@ export class ApiKeyService {
         typeof jwtPayload === 'object' &&
         jwtPayload.hasOwnProperty('userId')
       ) {
-        const user: Promise<User | null> = ApiKey.findAll<ApiKey>({
+        return ApiKey.findAll<ApiKey>({
           where: {
             userId: jwtPayload.userId
           }
@@ -42,7 +44,6 @@ export class ApiKeyService {
             keys.find((key) => compare(apikey, key.apiKey))?.userId as string
           );
         });
-        return user;
       }
     } catch {
       return null;
@@ -50,7 +51,10 @@ export class ApiKeyService {
     return null;
   }
 
-  async create(user: User, createApiKeyDto: CreateApiKeyDto): Promise<string> {
+  async create(
+    user: User,
+    createApiKeyDto: CreateApiKeyDto
+  ): Promise<{id: string; apiKey: string}> {
     const newJWT = jwt.sign(
       {userId: user.id, createdAt: new Date()},
       this.configService.get('JWT_SECRET') || generateDefault()
@@ -61,10 +65,29 @@ export class ApiKeyService {
       apiKey: await hash(newJWT, 14)
     });
     newApiKey.save();
-    return newJWT;
+    return {id: newApiKey.id, apiKey: newJWT};
   }
 
-  async update(id: string): Promise<string> {
+  async delete(id: string): Promise<APIKeyDto> {
+    const apiKey = await this.apiKeyModel.findByPk<ApiKey>(id);
+    if (apiKey === null) {
+      throw new NotFoundException('API key with given id not found');
+    } else {
+      apiKey.destroy();
+      return new APIKeyDto(apiKey);
+    }
+  }
+
+  async update(
+    id: string,
+    updateAPIKeyDto: UpdateAPIKeyDto
+  ): Promise<APIKeyDto> {
+    const apiKey = await this.findByPkBang(id);
+    apiKey.name = updateAPIKeyDto.name;
+    return new APIKeyDto(await apiKey.save());
+  }
+
+  async regenerate(id: string): Promise<string> {
     const apiKey = await this.findByPkBang(id);
     const newJWT = jwt.sign(
       {userId: apiKey.userId, createdAt: new Date()},
@@ -75,15 +98,13 @@ export class ApiKeyService {
     return newJWT;
   }
 
-  async remove(id: string): Promise<ApiKey> {
+  async remove(id: string): Promise<APIKeyDto> {
     const apiKeyToDestroy = await this.findByPkBang(id);
     apiKeyToDestroy.destroy();
-    return apiKeyToDestroy;
+    return new APIKeyDto(apiKeyToDestroy);
   }
 
-  async findByPkBang(
-    identifier: string | number | Buffer | undefined
-  ): Promise<ApiKey> {
+  async findByPkBang(identifier: string): Promise<ApiKey> {
     const apiKey = await this.apiKeyModel.findByPk<ApiKey>(identifier);
     if (apiKey === null) {
       throw new NotFoundException('API key with given id not found');
