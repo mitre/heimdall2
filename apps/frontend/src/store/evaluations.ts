@@ -112,7 +112,7 @@ export class Evaluation extends VuexModule {
     this.allEvaluations = evaluations;
   }
 
-  // Save an evaluation or update it if it is already saved.
+  // Save an evaluation or update it if is already saved.
   @Mutation
   SAVE_EVALUTION(evaluationToSave: IEvaluation) {
     let found = false;
