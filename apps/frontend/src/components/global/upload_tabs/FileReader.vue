@@ -5,23 +5,25 @@
         >Easily load any supported Heimdall Data Format file</v-card-subtitle
       >
       <v-container style="margin-top: 5%">
-        <v-row>
-          <v-col cols="12" align="center">
-            <v-img
-              src="@/assets/logo-orange-tsp.svg"
-              svg-inline
-              style="max-width: 164px; max-height: 164px"
-            />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" align="center">
-            <div class="d-flex flex-column justify-center">
-              <span :class="title_class">Heimdall</span>
-              <span v-if="!serverMode" :class="title_class">Lite</span>
-            </div>
-          </v-col>
-        </v-row>
+        <span id="heimdall-welcome">
+          <v-row>
+            <v-col cols="12" align="center">
+              <v-img
+                src="@/assets/logo-orange-tsp.svg"
+                svg-inline
+                style="max-width: 164px; max-height: 164px"
+              />
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" align="center">
+              <div class="d-flex flex-column justify-center">
+                <span :class="title_class">Heimdall</span>
+                <span v-if="!serverMode" :class="title_class">Lite</span>
+              </div>
+            </v-col>
+          </v-row>
+        </span>
         <v-row>
           <v-col align="center" cols="12">
             <div class="caption font-weight-medium">

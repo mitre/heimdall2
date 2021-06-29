@@ -15,7 +15,7 @@
       >
         <v-icon color="bar-visible">mdi-menu</v-icon>
       </v-app-bar-nav-icon>
-      <span class="hidden-sm-and-down bar-visible--text">{{
+      <span id="page-title" class="hidden-sm-and-down bar-visible--text">{{
         elipsisTitle
       }}</span>
     </v-toolbar-title>

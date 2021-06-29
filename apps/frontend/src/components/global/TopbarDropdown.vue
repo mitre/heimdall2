@@ -2,7 +2,12 @@
   <div class="text-center">
     <v-menu offset-y offset-overflow :close-on-content-click="false">
       <template #activator="{on, attrs}">
-        <div class="clickable-icon text-no-wrap" v-bind="attrs" v-on="on">
+        <div
+          id="user-icon"
+          class="clickable-icon text-no-wrap"
+          v-bind="attrs"
+          v-on="on"
+        >
           <v-btn icon large>
             <template v-if="!serverMode">
               <v-avatar size="32px" item>

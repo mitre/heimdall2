@@ -10,7 +10,7 @@
       :style="controlTableTitleStyle"
     >
       <!-- Toolbar -->
-      <v-row v-resize="onResize">
+      <v-row id="data-table" v-resize="onResize">
         <v-row>
           <v-col cols="12" md="5" class="pb-0">
             <v-card-title class="pb-0">Results View Data</v-card-title>

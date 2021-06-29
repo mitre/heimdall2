@@ -4,6 +4,7 @@
     <template #topbar-content>
       <v-text-field
         v-show="show_search_mobile || !$vuetify.breakpoint.xs"
+        id="results-search"
         ref="search"
         v-model="search_term"
         flat
@@ -20,7 +21,7 @@
       <v-btn v-if="$vuetify.breakpoint.xs" class="mr-2" @click="showSearch">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
-      <v-btn :disabled="!can_clear" @click="clear">
+      <v-btn id="clear-filters" :disabled="!can_clear" @click="clear">
         <span class="d-none d-md-inline pr-2"> Clear </span>
         <v-icon>mdi-filter-remove</v-icon>
       </v-btn>
@@ -28,7 +29,7 @@
       <div class="text-center">
         <v-menu>
           <template #activator="{on, attrs}">
-            <v-btn v-bind="attrs" class="mr-2" v-on="on">
+            <v-btn id="file-export" v-bind="attrs" class="mr-2" v-on="on">
               <span class="d-none d-md-inline mr-2"> Export </span>
               <v-icon> mdi-file-export </v-icon>
             </v-btn>
@@ -51,7 +52,7 @@
     <!-- The main content: cards, etc -->
     <template #main-content>
       <v-container fluid grid-list-md pt-0 pa-2>
-        <v-container id="fileCards" mx-0 px-0 fluid>
+        <v-container id="file-cards" mx-0 px-0 fluid>
           <!-- Evaluation Info -->
           <v-row no-gutters class="mx-n3 mb-3">
             <v-col>
@@ -106,13 +107,14 @@
         </v-container>
         <!-- Count Cards -->
         <StatusCardRow
+          id="status-card-row"
           :filter="all_filter"
           :current-status-filter="statusFilter"
           @show-errors="statusFilter = 'Profile Error'"
           @show-waived="statusFilter = 'Waived'"
         />
         <!-- Compliance Cards -->
-        <v-row justify="space-around">
+        <v-row id="compliance-cards" justify="space-around">
           <v-col xs="4">
             <v-card class="fill-height">
               <v-card-title class="justify-center">Status Counts</v-card-title>
@@ -151,7 +153,7 @@
         </v-row>
 
         <!-- TreeMap and Partition Map -->
-        <v-row>
+        <v-row id="treemap">
           <v-col xs-12>
             <v-card elevation="2">
               <v-card-title>Tree Map</v-card-title>
@@ -243,6 +245,10 @@ import RouteMixin from '@/mixins/RouteMixin';
 import {StatusCountModule} from '../store/status_counts';
 import ServerMixin from '../mixins/ServerMixin';
 import {IEvaluation} from '@heimdall/interfaces';
+import VueShepherd from 'vue-shepherd';
+import '@/assets/onboarding_tour.css';
+
+Vue.use(VueShepherd);
 
 @Component({
   components: {
@@ -467,6 +473,122 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     } else {
       this.evalInfo = file;
     }
+  }
+
+  mounted() {
+    this.resultsViewTour()
+  }
+
+  resultsViewTour() {
+    this.$nextTick(() => {
+      const tour = Vue.prototype.$shepherd({
+        defaultStepOptions:{
+          cancelIcon: {
+            enabled: true
+          },
+          scrollTo: {behavior: 'smooth', block: 'center'}
+        },
+        useModalOverlay: true
+      });
+
+      const buttonsStart = [
+        {
+          text: 'YES',
+          action: tour.next
+        },
+        {
+          text: 'NO',
+          action: tour.cancel
+        }
+      ]
+
+      const defaultButtons = [
+        {
+          text: 'BACK',
+          action: tour.back
+        },
+        {
+          text: 'NEXT',
+          action: tour.next
+        }
+      ]
+
+      tour.addSteps([
+        {
+          title: "Welcome to the Results View Page",
+          attachTo: {element: '#page-title', on: 'bottom'},
+          text: "Would you like to take a quick tour of Heimdall's Results View?",
+          buttons: buttonsStart
+        },
+        {
+          title: "Search Bar",
+          attachTo: {element: '#results-search', on: 'bottom'},
+          text: "The search bar allows you to filter the reuslts found by Heimdall's scan",
+          buttons: defaultButtons
+        },
+        {
+          title: "Clear Filters",
+          attachTo: {element: '#clear-filters', on: 'bottom'},
+          text: "Click to clear filters on scan",
+          buttons: defaultButtons
+        },
+        {
+          title: "Upload Button",
+          attachTo: {element: '#upload-btn', on: 'bottom'},
+          text: "Click to load additional files into Heimdall to be scanned",
+          buttons: defaultButtons
+        },
+        {
+          title: "Export Files Scan",
+          attachTo: {element: '#file-export', on: 'bottom'},
+          text: "Click to export file scan into a downloadable spreadsheet",
+          buttons: defaultButtons
+        },
+        {
+          title: "File Cards",
+          attachTo: {element: '#file-cards', on: 'bottom'},
+          text: "View the loaded files along with additional info",
+          buttons: defaultButtons
+        },
+        {
+          title: "Status Cards",
+          attachTo: {element: '#status-card-row', on: 'top'},
+          text: "View file status of your scan",
+          buttons: defaultButtons
+        },
+        {
+          title: "Compliance Cards",
+          attachTo: {element: '#compliance-cards', on: 'top'},
+          text: "View file statuses, severity, and compliance level <strong>(To filter by status or severity click on the donut charts)",
+          buttons: defaultButtons
+        },
+        {
+          title: "Treemap",
+          attachTo: {element: '#treemap', on: 'top'},
+          text: "Use the treemap to navigate through your controls by NIST family classifications",
+          buttons: defaultButtons
+        },
+        {
+          title: "Data Table",
+          attachTo: {element: '#data-table', on: 'top'},
+          text: "Use the data table to  to sort your controls and see more details. You can also click on a control to detect which tests passed or failed, or see its details and code.",
+          buttons: [
+            {
+              text: 'BACK',
+              action: tour.back
+            },
+            {
+              text: 'FINISH',
+              action: tour.complete
+            }
+          ]
+        }
+      ])
+      if(!localStorage.getItem('result-view-tour')) {
+        tour.start();
+        localStorage.setItem('result-view-tour', 'yes')
+      }
+    })
   }
 }
 </script>
