@@ -10,7 +10,13 @@ module.exports = {
         type: Sequelize.BIGINT
       },
       userId: {
-        type: Sequelize.STRING
+        type: Sequelize.BIGINT,
+        references: {
+          model: 'Users',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
       },
       name: {
         type: Sequelize.STRING
