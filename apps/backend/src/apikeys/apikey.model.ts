@@ -31,7 +31,6 @@ export class ApiKey extends Model {
   @Column(DataType.STRING)
   name!: string;
 
-  @AllowNull(false)
   @Column(DataType.STRING)
   apiKey!: string;
 

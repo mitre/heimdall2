@@ -29,29 +29,20 @@ export class ApiKeyService {
       const jwtPayload = jwt.verify(
         apikey,
         this.configService.get('JWT_SECRET') || generateDefault()
-      ) as {token: string; userId: string; createdAt: Date};
+      ) as {token: string; keyId: string; createdAt: Date};
       const JWTSignature = apikey.split('.')[2];
       if (
         jwtPayload &&
         typeof jwtPayload === 'object' &&
-        jwtPayload.hasOwnProperty('userId')
+        jwtPayload.hasOwnProperty('keyId')
       ) {
-        const keysForUser = ApiKey.findAll<ApiKey>({
-          where: {
-            userId: jwtPayload.userId
-          }
-        });
-        const matchingIndex = await Promise.all(
-          (
-            await keysForUser
-          ).map(async (key) => compare(JWTSignature, key.apiKey))
-        ).then((matchingKeysResult) => matchingKeysResult.indexOf(true));
-
-        const user = this.usersService.findById(
-          (await keysForUser)[matchingIndex].userId
-        );
-
-        return user || null;
+        const matchingKey = await this.findByPkBang(jwtPayload.keyId);
+        const user = this.usersService.findById(matchingKey.userId);
+        if (await compare(JWTSignature, matchingKey.apiKey)) {
+          return user;
+        } else {
+          return null;
+        }
       }
     } catch {
       return null;
@@ -63,18 +54,19 @@ export class ApiKeyService {
     user: User,
     createApiKeyDto: CreateApiKeyDto
   ): Promise<{id: string; apiKey: string}> {
+    const newApiKey = new ApiKey({
+      userId: user.id,
+      name: createApiKeyDto.name
+    });
+    await newApiKey.save();
     const newJWT = jwt.sign(
-      {userId: user.id, createdAt: new Date()},
+      {keyId: newApiKey.id, createdAt: new Date()},
       this.configService.get('JWT_SECRET') || generateDefault()
     );
     // Since BCrypt has a 72 byte limit only hash the JWT signature
     const JWTSignature = newJWT.split('.')[2];
-    const newApiKey = new ApiKey({
-      userId: user.id,
-      name: createApiKeyDto.name,
-      apiKey: await hash(JWTSignature, 14)
-    });
-    await newApiKey.save();
+    newApiKey.apiKey = await hash(JWTSignature, 14);
+    newApiKey.save();
     return {id: newApiKey.id, apiKey: newJWT};
   }
 
@@ -100,7 +92,7 @@ export class ApiKeyService {
   async regenerate(id: string): Promise<string> {
     const apiKey = await this.findByPkBang(id);
     const newJWT = jwt.sign(
-      {userId: apiKey.userId, createdAt: new Date()},
+      {keyId: id, createdAt: new Date()},
       this.configService.get('JWT_SECRET') || generateDefault()
     );
     const JWTSignature = newJWT.split('.')[2];
