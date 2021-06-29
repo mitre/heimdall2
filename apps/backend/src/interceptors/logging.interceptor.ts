@@ -18,7 +18,7 @@ export class LoggingInterceptor implements NestInterceptor {
     transports: [new winston.transports.Console()],
     format: winston.format.combine(
       winston.format.timestamp({
-        format: 'MMM-DD-YYYY HH:mm:ss'
+        format: 'MMM-DD-YYYY HH:mm:ss Z'
       }),
       winston.format.printf(
         (info) =>
