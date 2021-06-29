@@ -221,7 +221,7 @@ export function calculateCompliance(
     StatusCountModule.countOf(filter, 'Failed') +
     StatusCountModule.countOf(filter, 'Profile Error') +
     StatusCountModule.countOf(filter, 'Not Reviewed');
-  if (total == 0) {
+  if (total === 0) {
     return 0;
   } else {
     return Math.round((100.0 * passed) / total);

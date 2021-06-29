@@ -16,18 +16,7 @@
           <v-col cols="4">
             <div class="d-flex flex-nowrap">
               <h4 class="pt-5 pr-1">Sort Results Sets By:</h4>
-              <v-select
-                v-model="sortControlSetsBy"
-                :items="[
-                  'Run Time',
-                  'Execution Length',
-                  'Control Count',
-                  'Completed Control Count',
-                  'Completed Control %',
-                  'Passed Control Count',
-                  'Compliance (Passed Control %)'
-                ]"
-              />
+              <v-select v-model="sortControlSetsBy" :items="compareItems" />
             </div>
           </v-col>
         </v-row>
@@ -223,7 +212,7 @@ import {Category} from '@/components/generic/ApexPieChart.vue';
 import {StatusCountModule} from '@/store/status_counts';
 import ProfileRow from '@/components/cards/comparison/ProfileRow.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
-import {EvaluationFile, FileID, ProfileFile} from '@/store/report_intake';
+import {EvaluationFile, FileID, ProfileFile, SourcedContextualizedEvaluation} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
 
 import ApexLineChart, {
@@ -234,6 +223,7 @@ import _ from 'lodash';
 import {SearchModule} from '../store/search';
 import {IEvaluation} from '@heimdall/interfaces';
 import {EvaluationModule} from '../store/evaluations';
+import {Watch} from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -276,6 +266,15 @@ export default class Compare extends Vue {
       color: 'statusProfileError'
     }
   ];
+  compareItems = [
+    'Run Time',
+    'Execution Length',
+    'Control Count',
+    'Completed Control Count',
+    'Completed Control %',
+    'Passed Control Count',
+    'Compliance (Passed Control %)'
+  ]
   sortControlSetsBy = 'Run Time';
   changedOnly = true;
   expanded_view: boolean = true;
@@ -286,6 +285,12 @@ export default class Compare extends Vue {
   chartsOpen: boolean = true;
   ableTab: boolean = true;
   expansion: number = 0;
+
+
+  @Watch('files')
+  onChangeFiles() {
+    this.getPassthroughFields()
+  }
 
   /** Yields the current two selected reports as an ExecDelta,  */
   get curr_delta(): ComparisonContext {
@@ -339,6 +344,21 @@ export default class Compare extends Vue {
     return sets.sort(([a, _seriesA], [b, _seriesB]) => a.localeCompare(b) * searchModifier );
   }
 
+  getPassthroughFields() {
+    this.files.forEach((file) => {
+      if('passthrough' in file.evaluation.data){
+        const passthroughData =  _.get(file.evaluation.data, 'passthrough')
+        if (typeof passthroughData === 'object') {
+          this.compareItems = this.compareItems
+            .concat(Object.keys(passthroughData)
+            .filter((key) => this.compareItems.indexOf(`Passthrough Field: ${key}`) === -1)
+            .map((key) => `Passthrough Field: ${key}`)
+          )
+        }
+      }
+    })
+  }
+
   changeSort(): void {
     this.ascending = !this.ascending;
   }
@@ -346,6 +366,27 @@ export default class Compare extends Vue {
   changeChartState(): void {
     this.chartsOpen = !this.chartsOpen;
   }
+
+  comparePassthrough(
+    a: SourcedContextualizedEvaluation,
+    b: SourcedContextualizedEvaluation
+  ) {
+    const field = this.sortControlSetsBy.split('Passthrough Field: ')[1]
+    const aPassthroughField = _.get(a.data, `passthrough.${field}`);
+    const bPassthroughField = _.get(b.data, `passthrough.${field}`);
+    if(typeof aPassthroughField === typeof bPassthroughField) {
+      if(typeof aPassthroughField === 'string') {
+        return aPassthroughField.localeCompare(bPassthroughField)
+      } else if(typeof aPassthroughField === 'number') {
+        return aPassthroughField - bPassthroughField
+      } else if(typeof aPassthroughField === 'boolean') {
+        return Number(aPassthroughField) - Number(bPassthroughField)
+      }
+    }
+
+    return 0;
+  }
+
 
   get statusCols(): number {
     if (this.width < 600) {
@@ -376,7 +417,12 @@ export default class Compare extends Vue {
       case 'Compliance (Passed Control %)':
         fileList.sort(compareCompliance)
         break;
-    };
+      default:
+        if(this.sortControlSetsBy.startsWith('Passthrough Field')) {
+          fileList.sort(this.comparePassthrough)
+        }
+        break;
+    }
     return fileList.map((evaluation) => evaluation.from_file);
   }
 
