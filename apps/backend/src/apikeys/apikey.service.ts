@@ -64,7 +64,7 @@ export class ApiKeyService {
       name: createApiKeyDto.name,
       apiKey: await hash(newJWT, 14)
     });
-    newApiKey.save();
+    await newApiKey.save();
     return {id: newApiKey.id, apiKey: newJWT};
   }
 
