@@ -83,7 +83,11 @@
       </v-chip-group>
     </template>
     <!-- Control Run Time -->
-    <template #runTime>{{ runTime }}</template>
+    <template #runTime>
+      <v-card-text class="pa-2 title font-weight-bold">{{
+        runTime
+      }}</v-card-text></template
+    >
   </ResponsiveRowSwitch>
 </template>
 
@@ -101,11 +105,7 @@ import _ from 'lodash';
 import {context} from 'inspecjs';
 
 export function getControlRunTime(control: context.ContextualizedControl): number {
-  let time = 0;
-  control.hdf.segments?.forEach((segment) => {
-    time += segment.run_time || 0
-  })
-  return time
+  return control.hdf.segments?.reduce((total, segment) => segment.run_time || 0 + total, 0) || 0
 }
 
 interface Tag {
