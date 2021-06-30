@@ -204,7 +204,8 @@ export default class Tour extends Vue {
             }
             break
           default:
-            return null;
+            tour.complete()
+            break
           }
         }, 200)
     });
