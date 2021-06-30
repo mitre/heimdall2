@@ -93,7 +93,7 @@
 
 <script lang="ts">
 import Component, {mixins} from 'vue-class-component';
-import {nist} from 'inspecjs';
+import {nist, context} from 'inspecjs';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 import {NIST_DESCRIPTIONS, nist_canon_config} from '@/utilities/nist_util';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
@@ -102,7 +102,6 @@ import {is_control} from 'inspecjs/dist/nist';
 import {Prop} from 'vue-property-decorator';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
 import _ from 'lodash';
-import {context} from 'inspecjs';
 
 export function getControlRunTime(control: context.ContextualizedControl): number {
   return control.hdf.segments?.reduce((total, segment) => segment.run_time || 0 + total, 0) || 0
