@@ -17,7 +17,7 @@ import {ApiKeyService} from './apikey.service';
     ApiKeyModule
   ],
   providers: [ConfigService, UsersService, ApiKeyService],
-  exports: [SequelizeModule],
+  exports: [SequelizeModule, ApiKeyService],
   controllers: [ApiKeyController]
 })
 export class ApiKeyModule {}

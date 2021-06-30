@@ -1,5 +1,7 @@
 export * from './apikey/apikey.interface';
 export * from './apikey/create-apikey.interface';
+export * from './apikey/delete-apikey.interface';
+export * from './apikey/regenerate-apikey.interface';
 export * from './apikey/update-apikey.interface';
 export * from './config/startup-settings.interface';
 export * from './evaluation-tag/create-evaluation-tag.interface';

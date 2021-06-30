@@ -157,7 +157,10 @@ export class UsersService {
     }
   }
 
-  async testPassword(updateUserDto: UpdateUserDto, user: User): Promise<void> {
+  async testPassword(
+    updateUserDto: {currentPassword?: string},
+    user: User
+  ): Promise<void> {
     try {
       if (
         !(await compare(

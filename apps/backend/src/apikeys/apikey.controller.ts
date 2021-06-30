@@ -19,6 +19,8 @@ import {UsersService} from '../users/users.service';
 import {ApiKeyService} from './apikey.service';
 import {APIKeyDto} from './dto/apikey.dto';
 import {CreateApiKeyDto} from './dto/create-apikey.dto';
+import {DeleteAPIKeyDto} from './dto/delete-apikey.dto';
+import {RegenerateAPIKeyDto} from './dto/regenerate-apikey.dto';
 import {UpdateAPIKeyDto} from './dto/update-apikey.dto';
 
 @Controller('apikeys')
@@ -41,6 +43,7 @@ export class ApiKeyController {
     @Request() request: {user: User},
     @Body() createApiKeyDto: CreateApiKeyDto
   ): Promise<{id: string; apiKey: string}> {
+    await this.usersService.testPassword(createApiKeyDto, request.user);
     return this.apiKeyService.create(request.user, createApiKeyDto);
   }
 
@@ -48,12 +51,14 @@ export class ApiKeyController {
   @Delete(':id')
   async deleteAPIKey(
     @Request() request: {user: User},
-    @Param('id') id: string
+    @Param('id') id: string,
+    @Body() deleteApiKeyDto: DeleteAPIKeyDto
   ): Promise<APIKeyDto> {
     const apiKeyToDelete = await this.apiKeyService.findByPkBang(id);
     const apiKeyOwner = await this.usersService.findById(apiKeyToDelete.userId);
     const abac = this.authz.abac.createForUser(request.user);
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, apiKeyOwner);
+    await this.usersService.testPassword(deleteApiKeyDto, request.user);
     return this.apiKeyService.delete(id);
   }
 
@@ -68,6 +73,7 @@ export class ApiKeyController {
     const apiKeyOwner = await this.usersService.findById(apiKeyToUpdate.userId);
     const abac = this.authz.abac.createForUser(request.user);
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, apiKeyOwner);
+    await this.usersService.testPassword(updateApiKeyDto, request.user);
     return this.apiKeyService.update(apiKeyToUpdate.id, updateApiKeyDto);
   }
 
@@ -75,12 +81,14 @@ export class ApiKeyController {
   @Put('/:id')
   async regenerateAPIKey(
     @Request() request: {user: User},
-    @Param('id') id: string
+    @Param('id') id: string,
+    @Body() regenerateApiKeyDto: RegenerateAPIKeyDto
   ): Promise<{key: string}> {
     const apiKeyToUpdate = await this.apiKeyService.findByPkBang(id);
     const apiKeyOwner = await this.usersService.findById(apiKeyToUpdate.userId);
     const abac = this.authz.abac.createForUser(request.user);
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, apiKeyOwner);
+    await this.usersService.testPassword(regenerateApiKeyDto, request.user);
     return {key: await this.apiKeyService.regenerate(apiKeyToUpdate.id)};
   }
 }

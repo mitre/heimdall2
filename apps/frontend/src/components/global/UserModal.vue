@@ -75,63 +75,6 @@
             </v-col>
           </v-row>
 
-          <div v-if="!admin && userInfo.creationMethod === 'local'">
-            <v-divider />
-            <v-text-field
-              id="password_field"
-              ref="password"
-              v-model="currentPassword"
-              :disabled="update_unavailable"
-              :error-messages="
-                requiredFieldError($v.currentPassword, 'Current Password')
-              "
-              type="password"
-              label="Please provide your current password to save changes to your profile"
-              @blur="$v.currentPassword.$touch()"
-            />
-          </div>
-          <v-btn
-            v-if="userInfo.creationMethod === 'local'"
-            id="toggleChangePassword"
-            :disabled="update_unavailable"
-            @click="changePasswordDialog"
-            >Change Password</v-btn
-          >
-          <v-btn
-            v-if="!admin"
-            id="toggleAPIKeys"
-            class="ml-2"
-            @click="toggleShowAPIKeys"
-            >Show API Keys</v-btn
-          >
-          <div v-show="changePassword">
-            <v-text-field
-              id="new_password_field"
-              ref="newPassword"
-              v-model="newPassword"
-              :disabled="update_unavailable"
-              :error-messages="
-                requiredFieldError($v.newPassword, 'New Password')
-              "
-              type="password"
-              label="New Password"
-              @blur="$v.newPassword.$touch()"
-            />
-
-            <v-text-field
-              id="repeat_password_field"
-              ref="repeatPassword"
-              v-model="passwordConfirmation"
-              :disabled="update_unavailable"
-              :error-messages="
-                requiredFieldError($v.passwordConfirmation, 'Repeat Password')
-              "
-              type="password"
-              label="Repeat Password"
-              @blur="$v.passwordConfirmation.$touch()"
-            />
-          </div>
-
           <div v-show="showAPIKeys">
             <div
               class="d-flex flex-row-reverse"
@@ -176,6 +119,64 @@
                 ></template
               >
             </v-data-table>
+          </div>
+
+          <div v-if="!admin && userInfo.creationMethod === 'local'">
+            <v-divider />
+            <v-text-field
+              id="password_field"
+              ref="password"
+              v-model="currentPassword"
+              :disabled="update_unavailable"
+              :error-messages="
+                requiredFieldError($v.currentPassword, 'Current Password')
+              "
+              type="password"
+              label="Please provide your current password to make changes to your profile"
+              @blur="$v.currentPassword.$touch()"
+            />
+          </div>
+          <v-btn
+            v-if="userInfo.creationMethod === 'local'"
+            id="toggleChangePassword"
+            :disabled="update_unavailable"
+            @click="changePasswordDialog"
+            >Change Password</v-btn
+          >
+          <v-btn
+            v-if="!admin"
+            id="toggleAPIKeys"
+            class="ml-2"
+            :disabled="currentPassword === ''"
+            @click="toggleShowAPIKeys"
+            >Show API Keys</v-btn
+          >
+          <div v-show="changePassword">
+            <v-text-field
+              id="new_password_field"
+              ref="newPassword"
+              v-model="newPassword"
+              :disabled="update_unavailable"
+              :error-messages="
+                requiredFieldError($v.newPassword, 'New Password')
+              "
+              type="password"
+              label="New Password"
+              @blur="$v.newPassword.$touch()"
+            />
+
+            <v-text-field
+              id="repeat_password_field"
+              ref="repeatPassword"
+              v-model="passwordConfirmation"
+              :disabled="update_unavailable"
+              :error-messages="
+                requiredFieldError($v.passwordConfirmation, 'Repeat Password')
+              "
+              type="password"
+              label="Repeat Password"
+              @blur="$v.passwordConfirmation.$touch()"
+            />
           </div>
         </v-form>
       </v-card-text>
@@ -346,7 +347,7 @@ export default class UserModal extends Vue {
   }
 
   addAPIKey() {
-    axios.post<IApiKey>(`/apikeys`, {name: ''}).then(({data}) => this.apiKeys.push(data))
+    axios.post<IApiKey>(`/apikeys`, {name: '', currentPassword: this.currentPassword}).then(({data}) => this.apiKeys.push(data))
   }
 
   refreshAPIKey(keyToRefresh: IApiKey) {
@@ -361,7 +362,11 @@ export default class UserModal extends Vue {
 
   deleteAPIKeyConfirm() {
     if(this.activeAPIKey) {
-      axios.delete<IApiKey>(`/apikeys/${this.activeAPIKey.id}`).then(({data}) => {
+      axios.delete<IApiKey>(`/apikeys/${this.activeAPIKey.id}`, {
+        data: {
+          currentPassword: this.currentPassword
+        }
+      }).then(({data}) => {
         this.apiKeys = this.apiKeys.filter((key) => key.id !== data.id)
       })
     }
@@ -369,11 +374,11 @@ export default class UserModal extends Vue {
   }
 
   updateAPIKey(item: IApiKey) {
-    axios.patch(`/apikeys/${item.id}`, item)
+    axios.patch(`/apikeys/${item.id}`, {...item, currentPassword: this.currentPassword})
   }
 
   refreshAPIKeyConfirm() {
-    axios.put(`/apikeys/${this.activeAPIKey?.id}`).then(({data}) => {
+    axios.put(`/apikeys/${this.activeAPIKey?.id}`, {currentPassword: this.currentPassword}).then(({data}) => {
       this.apiKeys = this.apiKeys.map((key) => {
         if(key.id === this.activeAPIKey?.id) {
           return {...key, apiKey: data.key}

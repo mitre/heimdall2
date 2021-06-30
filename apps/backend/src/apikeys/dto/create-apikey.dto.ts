@@ -1,7 +1,10 @@
 import {ICreateApiKey} from '@heimdall/interfaces';
-import {IsString} from 'class-validator';
+import {IsOptional, IsString} from 'class-validator';
 
 export class CreateApiKeyDto implements ICreateApiKey {
-  @IsString()
   readonly name!: string;
+
+  @IsOptional()
+  @IsString()
+  readonly currentPassword!: string;
 }
