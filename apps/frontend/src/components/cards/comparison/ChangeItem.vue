@@ -32,7 +32,7 @@ export default class ChangeItem extends Vue {
   @Prop({type: Object, required: true}) readonly change!: ControlChange;
 
   color(status: string): string {
-    if (this.change.name.toLowerCase() == 'status') {
+    if (this.change.name.toLowerCase() === 'status') {
       return `status${status.replace(' ', '')}`;
     }
     return '';

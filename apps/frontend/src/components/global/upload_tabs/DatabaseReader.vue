@@ -34,7 +34,7 @@ import {FileID} from '@/store/report_intake';
   }
 })
 export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
-  @Prop({default: false}) readonly refresh!: Boolean;
+  @Prop({default: false}) readonly refresh!: boolean;
 
   headers: Object[] = [
     {

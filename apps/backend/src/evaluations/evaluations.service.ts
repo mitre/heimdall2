@@ -13,8 +13,8 @@ import {Evaluation} from './evaluation.model';
 export class EvaluationsService {
   constructor(
     @InjectModel(Evaluation)
-    private evaluationModel: typeof Evaluation,
-    private databaseService: DatabaseService
+    private readonly evaluationModel: typeof Evaluation,
+    private readonly databaseService: DatabaseService
   ) {}
 
   async findAll(): Promise<Evaluation[]> {

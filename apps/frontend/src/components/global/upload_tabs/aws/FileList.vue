@@ -3,13 +3,13 @@
     <div class="d-flex flex-column">
       <div class="d-flex justify-space-between">
         <v-text-field
-          v-model="form_bucket_name"
+          v-model="formBucketName"
           label="Bucket name"
           @keyup.enter="load"
         />
         <v-btn
           title="Load"
-          :disabled="form_bucket_name.length < 1"
+          :disabled="formBucketName.length < 1"
           class="fill-height pa-0"
           @click="load"
         >
@@ -56,7 +56,7 @@ import {LocalStorageVal} from '@/utilities/helper_util';
 import {Prop} from 'vue-property-decorator';
 
 // Caches the bucket name
-const local_bucket_name = new LocalStorageVal<string>('aws_bucket_name');
+const localBucketName = new LocalStorageVal<string>('aws_bucket_name');
 
 @Component({
   components: {}
@@ -66,7 +66,7 @@ export default class FileList extends Vue {
   @Prop({type: Array}) readonly files!: S3.Object[];
 
   /** The name written in the form */
-  form_bucket_name: string = '';
+  formBucketName = '';
 
   /** On mount, try to look up stored auth info */
   /** Callback for when user selects a file.
@@ -74,28 +74,28 @@ export default class FileList extends Vue {
    */
   async load_file(index: number): Promise<void> {
     // Get it out of the list
-    let file = this.files[index];
+    const file = this.files[index];
 
     // Fetch it from s3, and promise to submit it to be loaded afterwards
-    await fetch_s3_file(this.auth.creds, file.Key!, this.form_bucket_name).then(
+    await fetch_s3_file(this.auth.creds, file.Key!, this.formBucketName).then(
       (content) => {
         InspecIntakeModule.loadText({
           text: content,
           filename: file.Key!
-        }).then((unique_id) => this.$emit('got-files', [unique_id]));
+        }).then((uniqueId) => this.$emit('got-files', [uniqueId]));
       }
     );
   }
 
   /** Recalls the last entered bucket name.  */
   mounted() {
-    this.form_bucket_name = local_bucket_name.get_default('');
+    this.formBucketName = localBucketName.get_default('');
   }
 
   /** Handles when load button clicked */
   load() {
-    local_bucket_name.set(this.form_bucket_name);
-    this.$emit('load-bucket', this.form_bucket_name);
+    localBucketName.set(this.formBucketName);
+    this.$emit('load-bucket', this.formBucketName);
   }
 }
 </script>

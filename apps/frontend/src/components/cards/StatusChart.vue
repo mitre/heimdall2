@@ -28,7 +28,7 @@ import {Filter} from '@/store/data_filters';
 export default class StatusChart extends Vue {
   @Prop({type: String, default: null}) readonly value!: string | null;
   @Prop({type: Object, required: true}) readonly filter!: Filter;
-  @Prop({type: Boolean, default: false}) show_compliance!: boolean;
+  @Prop({type: Boolean, default: false}) showCompliance!: boolean;
 
   categories: Category<ControlStatus>[] = [
     {
@@ -59,19 +59,21 @@ export default class StatusChart extends Vue {
   ];
 
   get centerValue(): string {
-    if (this.show_compliance) {
-      let passed = StatusCountModule.countOf(this.filter, 'Passed');
-      let total =
+    if (this.showCompliance) {
+      const passed = StatusCountModule.countOf(this.filter, 'Passed');
+      const total =
         passed +
         StatusCountModule.countOf(this.filter, 'Failed') +
         StatusCountModule.countOf(this.filter, 'Profile Error') +
         StatusCountModule.countOf(this.filter, 'Not Reviewed');
-      if (total == 0) {
+      if (total === 0) {
         return '0%';
       } else {
-        return '' + Math.round((100.0 * passed) / total) + '%';
+        return `${Math.round((100.0 * passed) / total)}%`;
       }
-    } else return '';
+    } else {
+      return '';
+    }
   }
 
   get series(): number[] {
