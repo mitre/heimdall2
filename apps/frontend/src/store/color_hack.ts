@@ -16,7 +16,7 @@ function calculateColor(colorName: string): string {
   const style = window.getComputedStyle(document.body.appendChild(elt));
 
   // Parse out the colors
-  const rawColors = (style.color as string).match(/\d+/g) as RegExpExecArray; // We know this will succeed - we've already given the colors
+  const rawColors = style.color.match(/\d+/g) as RegExpExecArray; // We know this will succeed - we've already given the colors
   const colors = rawColors.map((a: string) => parseInt(a, 10));
 
   // Cleanup
@@ -25,8 +25,7 @@ function calculateColor(colorName: string): string {
     // Make a (padded) integer representing the hex code
     const value = (1 << 24) + (colors[0] << 16) + (colors[1] << 8) + colors[2];
     // Parse it as hex, and replace the leading 1 with a #
-    const value_string = '#' + value.toString(16).substr(1);
-    return value_string;
+    return `#${value.toString(16).substr(1)}`;
   } else {
     throw new Error(`Error generating color ${colorName}`);
   }

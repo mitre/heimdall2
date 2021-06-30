@@ -1,7 +1,25 @@
 <template>
-  <BaseView :title="curr_title" @changed-files="evalInfo = null">
+  <Base :title="curr_title" @changed-files="evalInfo = null">
     <!-- Topbar content - give it a search bar -->
     <template #topbar-content>
+      <v-text-field
+        v-show="showSearchMobile || !$vuetify.breakpoint.xs"
+        ref="search"
+        v-model="searchTerm"
+        flat
+        hide-details
+        dense
+        solo
+        prepend-inner-icon="mdi-magnify"
+        label="Search"
+        clearable
+        :class="$vuetify.breakpoint.xs ? 'overtake-bar mx-2' : 'mx-2'"
+        @click:clear="clear_search()"
+        @blur="showSearchMobile = false"
+      />
+      <v-btn v-if="$vuetify.breakpoint.xs" class="mr-2" @click="showSearch">
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn>
       <v-btn :disabled="!can_clear" @click="clear">
         <span class="d-none d-md-inline pr-2"> Clear </span>
         <v-icon>mdi-filter-remove</v-icon>
@@ -141,9 +159,9 @@
               <v-card-title>Tree Map</v-card-title>
               <v-card-text>
                 <Treemap
-                  v-model="tree_filters"
+                  v-model="treeFilters"
                   :filter="treemap_full_filter"
-                  :selected_control.sync="control_selection"
+                  :selected_control.sync="controlSelection"
                 />
               </v-card-text>
             </v-card>
@@ -166,7 +184,7 @@
 
     <!-- Everything-is-filtered snackbar -->
     <v-snackbar
-      v-model="filter_snackbar"
+      v-model="filterSnackbar"
       class="mt-11"
       style="z-index: 2"
       :timeout="-1"
@@ -190,13 +208,13 @@
         <v-icon class="mx-1">mdi-checkbox-marked</v-icon> checked.
       </span>
     </v-snackbar>
-  </BaseView>
+  </Base>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Component, {mixins} from 'vue-class-component';
-import BaseView from '@/views/BaseView.vue';
+import Base from '@/views/Base.vue';
 
 import StatusCardRow from '@/components/cards/StatusCardRow.vue';
 import ControlTable from '@/components/cards/controltable/ControlTable.vue';
@@ -231,7 +249,7 @@ import {SearchModule} from '@/store/search';
 
 @Component({
   components: {
-    BaseView,
+    Base,
     StatusCardRow,
     Treemap,
     ControlTable,
@@ -256,11 +274,11 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    * The current state of the treemap as modeled by the treemap (duh).
    * Once can reliably expect that if a "deep" selection is not null, then its parent should also be not-null.
    */
-  tree_filters: TreeMapState = [];
-  control_selection: string | null = null;
+  treeFilters: TreeMapState = [];
+  controlSelection: string | null = null;
 
   /** Model for if all-filtered snackbar should be showing */
-  filter_snackbar: boolean = false;
+  filterSnackbar = false;
 
   evalInfo: SourcedContextualizedEvaluation | SourcedContextualizedProfile | null = null;
 
@@ -287,6 +305,9 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   set statusFilter(status: ExtendedControlStatus[]) {
     SearchModule.setStatusFilter(status);
   }
+
+  /** Determines if we should make the search bar collapse-able */
+  showSearchMobile = false;
 
   /**
    * The currently selected file, if one exists.
@@ -315,7 +336,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 
   getFile(fileID: FileID) {
     return InspecDataModule.allFiles.find(
-      (f) => f.unique_id === fileID
+      (f) => f.uniqueId === fileID
     );
   }
 
@@ -336,6 +357,16 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   /**
+   * Handles focusing on the search bar
+   */
+  showSearch(): void {
+    this.showSearchMobile = true;
+    this.$nextTick(() => {
+      this.$refs.search.focus();
+    });
+  }
+
+  /**
    * The filter for charts. Contains all of our filter stuff
    */
   get all_filter(): Filter {
@@ -349,9 +380,9 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       cciIdFilter: SearchModule.cciIdFilter,
       searchTerm: SearchModule.freeSearch || '',
       codeSearchTerms: SearchModule.codeSearchTerms,
-      tree_filters: this.tree_filters,
+      treeFilters: this.treeFilters,
       omit_overlayed_controls: true,
-      control_id: this.control_selection || undefined
+      control_id: this.controlSelection || undefined
     };
   }
 
@@ -378,9 +409,9 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    */
   clear(clearSearchBar = false) {
     SearchModule.clear();
-    this.filter_snackbar = false;
-    this.control_selection = null;
-    this.tree_filters = [];
+    this.filterSnackbar = false;
+    this.controlSelection = null;
+    this.treeFilters = [];
     if(clearSearchBar) {
       this.searchTerm = '';
     }
@@ -399,7 +430,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       SearchModule.controlIdSearchTerms.length !== 0 ||
       SearchModule.codeSearchTerms.length !== 0 ||
       this.searchTerm ||
-      this.tree_filters.length
+      this.treeFilters.length
     ) {
       result = true;
     } else {
@@ -408,9 +439,9 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 
     // Logic to check: are any files actually visible?
     if (FilteredDataModule.controls(this.all_filter).length === 0) {
-      this.filter_snackbar = true;
+      this.filterSnackbar = true;
     } else {
-      this.filter_snackbar = false;
+      this.filterSnackbar = false;
     }
 
     // Finally, return our result

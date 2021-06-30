@@ -56,7 +56,7 @@ const SEARCH_INTERVAL = 10000;
 export default class FileList extends Vue {
   @Prop({type: Object}) readonly endpoint!: SplunkEndpoint;
   /** The name written in the form */
-  search: string = '';
+  search = '';
 
   /** Table info */
   headers = [
@@ -68,7 +68,7 @@ export default class FileList extends Vue {
     },
     {
       text: 'Time',
-      value: 'start_time'
+      value: 'startTime'
     },
     {
       text: 'Action',
@@ -92,13 +92,13 @@ export default class FileList extends Vue {
     return this.endpoint
       .get_execution(event.guid)
       .then((exec) => {
-        let unique_id = uuid();
-        let file = {
-          unique_id,
+        const uniqueId = uuid();
+        const file = {
+          uniqueId,
           filename: `${event.filename} (Splunk)`
           // execution: contextualized
         } as EvaluationFile;
-        let contextualized: SourcedContextualizedEvaluation = {
+        const contextualized: SourcedContextualizedEvaluation = {
           ...contextualizeEvaluation(exec),
           from_file: file
         };
@@ -106,7 +106,7 @@ export default class FileList extends Vue {
         Object.freeze(contextualized);
 
         InspecDataModule.addExecution(file);
-        this.$emit('got-files', [unique_id]);
+        this.$emit('got-files', [uniqueId]);
       })
       .catch((fail) => {
         this.$emit('error', fail);
@@ -117,10 +117,10 @@ export default class FileList extends Vue {
   searcher!: NodeJS.Timeout;
 
   /** When we should next search. If curr time > this, then search*/
-  next_search_time: number = 0;
+  nextSearchTime = 0;
 
   /** Are we already searching? Track here */
-  already_searching: boolean = false;
+  alreadySearching = false;
 
   /** Updates search results, if it is appropriate to do so */
   search_poller() {
@@ -128,13 +128,13 @@ export default class FileList extends Vue {
       return;
     }
 
-    let curr_time = new Date().getTime();
-    if (curr_time > this.next_search_time && !this.already_searching) {
+    const currTime = new Date().getTime();
+    if (currTime > this.nextSearchTime && !this.alreadySearching) {
       // As an initial venture, try again in 60 seconds. See below for our actual expected search
-      this.next_search_time = curr_time + 60000;
+      this.nextSearchTime = currTime + 60000;
 
       // Then do the search
-      this.already_searching = true;
+      this.alreadySearching = true;
       this.endpoint
         .fetch_execution_list()
         .then((l) => {
@@ -142,17 +142,17 @@ export default class FileList extends Vue {
           this.items = l;
 
           // Mark search done
-          this.already_searching = false;
+          this.alreadySearching = false;
 
           // And make the next try sometime sooner than the previous attempt
-          this.next_search_time = Math.min(
-            curr_time + SEARCH_INTERVAL,
-            this.next_search_time
+          this.nextSearchTime = Math.min(
+            currTime + SEARCH_INTERVAL,
+            this.nextSearchTime
           );
         })
         .catch((error) => {
           this.items = [];
-          this.already_searching = false;
+          this.alreadySearching = false;
           this.$emit('error', error);
         });
     }
@@ -164,7 +164,7 @@ export default class FileList extends Vue {
   }
 
   /** Used for timer functions */
-  last_search_time: number = 0;
+  lastSearchTime = 0;
   time_since_last_search(): number {
     return new Date().getTime();
   }

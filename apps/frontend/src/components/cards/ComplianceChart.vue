@@ -32,7 +32,7 @@ export default class ComplianceChart extends Vue {
 
   get chartOptions(): ApexOptions {
     // Produce our options
-    let result: ApexOptions = {
+    return {
       plotOptions: {
         radialBar: {
           startAngle: -150,
@@ -80,7 +80,6 @@ export default class ComplianceChart extends Vue {
       },
       labels: ['Compliance Level']
     };
-    return result;
   }
 
   /**
@@ -88,14 +87,14 @@ export default class ComplianceChart extends Vue {
    */
   get series(): number[] {
     // Get access to the status counts, to compute compliance percentages
-    let passed = StatusCountModule.countOf(this.filter, 'Passed');
-    let total =
+    const passed = StatusCountModule.countOf(this.filter, 'Passed');
+    const total =
       passed +
       StatusCountModule.countOf(this.filter, 'Failed') +
       StatusCountModule.countOf(this.filter, 'Profile Error') +
       StatusCountModule.countOf(this.filter, 'Not Reviewed') +
       StatusCountModule.countOf(this.filter,  'Waived');
-    if (total == 0) {
+    if (total === 0) {
       return [0];
     } else {
       return [Math.round((100.0 * passed) / total)];

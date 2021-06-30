@@ -1,22 +1,22 @@
 <template>
-  <LinkItem
+  <IconLinkItem
     id="refresh_button"
     key="user"
     text="Refresh"
     icon="mdi-refresh"
     @click="refreshEvaluations"
-    >Refresh</LinkItem
+    >Refresh</IconLinkItem
   >
 </template>
 
 <script lang="ts">
-import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import Component from 'vue-class-component';
 import Vue from 'vue';
 
 @Component({
   components: {
-    LinkItem
+    IconLinkItem
   }
 })
 export default class RefreshButton extends Vue {
