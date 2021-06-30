@@ -5,7 +5,7 @@
     :minimal-topbar="true"
     :topbar-z-index="1000"
   >
-    <Tour tourName="Landing" />
+    <Tour name="Landing" />
     <v-row>
       <v-col center xl="8" md="8" sm="12" xs="12">
         <UploadNexus retain-focus :persistent="true" />
@@ -29,8 +29,5 @@ import Tour from '@/components/generic/Tour.vue';
     Tour
   }
 })
-export default class Landing extends mixins(ServerMixin) {
-  mounted() {
-  }
-}
+export default class Landing extends mixins(ServerMixin) {}
 </script>

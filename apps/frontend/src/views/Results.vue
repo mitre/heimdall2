@@ -1,7 +1,7 @@
 <template>
   <Base :title="curr_title" @changed-files="evalInfo = null">
     <!-- Topbar content - give it a search bar -->
-    <Tour tourName="Results" />
+    <Tour name="Results" />
     <template #topbar-content>
       <v-text-field
         v-show="showSearchMobile || !$vuetify.breakpoint.xs"
@@ -471,9 +471,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     } else {
       this.evalInfo = file;
     }
-  }
-
-  mounted() {
   }
 }
 </script>

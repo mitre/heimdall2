@@ -6,16 +6,14 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import VueShepherd from 'vue-shepherd';
-import 'shepherd.js/dist/css/shepherd.css';
-import '@/assets/tour.css';
 import {Prop} from 'vue-property-decorator';
+import 'shepherd.js/dist/css/shepherd.css';
 
 Vue.use(VueShepherd);
 
 @Component({})
 export default class Tour extends Vue {
-  @Prop({type: String, required: true}) readonly tourName!: string;
-  
+  @Prop({type: String, required: true}) readonly name!: string;
   mounted() {
     // Mounts appropriate tour after real DOM has generated
     this.tours()
@@ -57,7 +55,7 @@ export default class Tour extends Vue {
           }
         ]
 
-        switch(this.tourName){
+        switch(this.name){
           // Builds tour for the onboarding user interface
           case('Landing'):
             tour.addSteps([
@@ -206,10 +204,36 @@ export default class Tour extends Vue {
             }
             break
           default:
-            null
+            return null;
           }
         }, 200)
     });
   }
 }
 </script>
+
+<style lang="css">
+.shepherd-button {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: bold;
+}
+
+.shepherd-title {
+  color: rgba(255, 255, 255, 0.75);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: bold;
+}
+
+.shepherd-has-title .shepherd-content .shepherd-header {
+  background: #3c3c3c;
+}
+
+.shepherd-text {
+  color: rgba(60, 60, 60, 0.75);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 1.1rem;
+}
+</style>
