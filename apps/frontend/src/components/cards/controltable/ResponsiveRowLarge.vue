@@ -39,7 +39,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 
 @Component
-export default class Row extends Vue {}
+export default class ResponsiveRowLarge extends Vue {}
 </script>
 
 <style scoped>

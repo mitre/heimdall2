@@ -1,7 +1,7 @@
 <template>
   <v-tooltip top>
     <template #activator="{on}">
-      <LinkItem
+      <IconLinkItem
         key="export_json"
         text="Export as JSON"
         icon="mdi-json"
@@ -33,15 +33,15 @@ type FileData = {
 })
 export default class ExportJSON extends Vue {
   populate_files(): FileData[] {
-    let ids = FilteredDataModule.selected_file_ids;
-    let fileData = new Array<FileData>();
-    for (let evaluation of FilteredDataModule.evaluations(ids)) {
+    const ids = FilteredDataModule.selected_file_ids;
+    const fileData: FileData[] = [];
+    for (const evaluation of FilteredDataModule.evaluations(ids)) {
       fileData.push({
         filename: this.cleanup_filename(evaluation.from_file.filename),
         data: JSON.stringify(evaluation.data)
       });
     }
-    for (let prof of FilteredDataModule.profiles(ids)) {
+    for (const prof of FilteredDataModule.profiles(ids)) {
       fileData.push({
         filename: prof.from_file.filename,
         data: JSON.stringify(prof.from_file.profile.data)
@@ -58,7 +58,7 @@ export default class ExportJSON extends Vue {
 
   cleanup_filename(filename: string): string {
     filename = filename.replace(/\s+/g, '_');
-    if (filename.substring(filename.length - 6) != '.json') {
+    if (filename.substring(filename.length - 6) !== '.json') {
       filename = filename + '.json';
     }
     return filename;

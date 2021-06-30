@@ -63,6 +63,10 @@ import 'vue-file-agent/dist/vue-file-agent.css';
 
 Vue.use(vueFileAgent);
 
+interface VueFileAgentRecord {
+  file: File
+}
+
 /**
  * File reader component for taking in inspec JSON data.
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
@@ -70,13 +74,13 @@ Vue.use(vueFileAgent);
  */
 @Component
 export default class FileReader extends mixins(ServerMixin) {
-  fileRecords = new Array();
+  fileRecords: Array<VueFileAgentRecord> = [];
   loading = false;
 
   filesSelected() {
     this.loading = true;
     this.commit_files(this.fileRecords.map((record) => record.file));
-    this.fileRecords = new Array();
+    this.fileRecords = [];
   }
 
   /** Callback for our file reader */

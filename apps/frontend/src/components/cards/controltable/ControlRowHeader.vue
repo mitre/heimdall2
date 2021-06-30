@@ -87,10 +87,9 @@
 
 <script lang="ts">
 import Component, {mixins} from 'vue-class-component';
-import {nist} from 'inspecjs';
+import {nist, context} from 'inspecjs';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
-import {context} from 'inspecjs';
-import {NIST_DESCRIPTIONS, nist_canon_config} from '@/utilities/nist_util';
+import {NIST_DESCRIPTIONS, nistCanonConfig} from '@/utilities/nist_util';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import CircleRating from '@/components/generic/CircleRating.vue';
 import {is_control} from 'inspecjs/dist/nist';
@@ -135,9 +134,6 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
 
   severity_arrow_count(severity: string): number {
     switch (severity) {
-      default:
-      case 'none':
-        return 0;
       case 'low':
         return 1;
       case 'medium':
@@ -146,16 +142,18 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
         return 3;
       case 'critical':
         return 4;
+      default:
+        return 0;
     }
   }
 
   // Get NIST tag description for NIST tag, this is pulled from the 800-53 xml
   // and relies on a script not contained in the project
   descriptionForTag(tag: string): string {
-    let nisted = nist.parse_nist(tag);
+    const nisted = nist.parse_nist(tag);
     if (is_control(nisted)) {
-      let canon = nisted.canonize(nist_canon_config);
-      let found = NIST_DESCRIPTIONS[canon];
+      const canon = nisted.canonize(nistCanonConfig);
+      const found = NIST_DESCRIPTIONS[canon];
       if (found) {
         return found;
       }
@@ -169,7 +167,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     let nist_tags = this.control.hdf.raw_nist_tags;
     nist_tags = nist_tags.filter((tag) => tag.search(/Rev.*\d/i) == -1);
     return nist_tags.map((tag) => {
-      let nisted = nist.parse_nist(tag);
+      const nisted = nist.parse_nist(tag);
       let url = '';
       if (nist.is_control(nisted)) {
         url = nisted.canonize({

@@ -46,7 +46,7 @@ import RouteMixin from '@/mixins/RouteMixin';
 import {EvaluationModule} from '@/store/evaluations';
 
 @Component
-export default class FileItem extends mixins(ServerMixin, RouteMixin) {
+export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
   @Prop({type: Object}) readonly file!: EvaluationFile | ProfileFile;
 
   saving = false;
@@ -54,28 +54,28 @@ export default class FileItem extends mixins(ServerMixin, RouteMixin) {
 
   select_file() {
     if (this.file.hasOwnProperty('evaluation')) {
-      FilteredDataModule.toggle_evaluation(this.file.unique_id);
+      FilteredDataModule.toggle_evaluation(this.file.uniqueId);
     } else if (this.file.hasOwnProperty('profile')) {
-      FilteredDataModule.toggle_profile(this.file.unique_id);
+      FilteredDataModule.toggle_profile(this.file.uniqueId);
     }
   }
 
   select_file_exclusive() {
     if (this.file.hasOwnProperty('evaluation')) {
-      FilteredDataModule.select_exclusive_evaluation(this.file.unique_id);
+      FilteredDataModule.select_exclusive_evaluation(this.file.uniqueId);
     } else if (this.file.hasOwnProperty('profile')) {
-      FilteredDataModule.select_exclusive_profile(this.file.unique_id);
+      FilteredDataModule.select_exclusive_profile(this.file.uniqueId);
     }
   }
 
   //checks if file is selected
   get selected(): boolean {
-    return FilteredDataModule.selected_file_ids.includes(this.file.unique_id);
+    return FilteredDataModule.selected_file_ids.includes(this.file.uniqueId);
   }
 
   //removes uploaded file from the currently observed files
   remove_file() {
-    InspecDataModule.removeFile(this.file.unique_id);
+    InspecDataModule.removeFile(this.file.uniqueId);
     // Remove any database files that may have been in the URL
     // by calling the router and causing it to write the appropriate
     // route to the URL bar

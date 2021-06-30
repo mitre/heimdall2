@@ -44,8 +44,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {context} from 'inspecjs';
-import {HDFControl} from 'inspecjs';
+import {context, HDFControl} from 'inspecjs';
 import {ControlDelta, ControlSeries} from '@/utilities/delta_util';
 import DeltaView from '@/components/cards/comparison/DeltaView.vue';
 import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails.vue';

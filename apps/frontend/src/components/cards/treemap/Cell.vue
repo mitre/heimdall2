@@ -6,7 +6,7 @@
       <Cell
         v-for="child in node.children"
         :key="child.data.key"
-        :selected_control_id="selected_control_id"
+        :selected-control-id="selectedControlId"
         :depth="depth + 1"
         :node="child"
         :scales="scales"
@@ -59,13 +59,13 @@ export interface XYScale {
   name: 'Cell'
 })
 export default class Cell extends Vue {
-  @Prop({type: String}) readonly selected_control_id!: string;
+  @Prop({type: String}) readonly selectedControlId!: string;
   @Prop({type: Object, required: true})
   readonly node!: d3.HierarchyRectangularNode<TreemapNode>;
   @Prop({type: Number, default: 0}) readonly depth!: number;
   @Prop({type: Object, default: 0}) readonly scales!: XYScale;
 
-  scale: number = 1.0;
+  scale = 1.0;
 
   /** Are we a control? Use treemap util type checker */
   get is_control(): boolean {
@@ -77,12 +77,12 @@ export default class Cell extends Vue {
     return !this.is_control;
   }
 
-  /** Are we selected? True if selected_control_id matches our id, and we are in selected hierarchy */
+  /** Are we selected? True if selectedControlId matches our id, and we are in selected hierarchy */
   get is_selected(): boolean {
     return (
       this.is_control && // We are a control
       (this.node.data as TreemapNodeLeaf).control.data.id ===
-        this.selected_control_id // Our control id matches
+        this.selectedControlId // Our control id matches
     );
   }
 
@@ -114,7 +114,7 @@ export default class Cell extends Vue {
    * These are contextual based on type of data, and depth within the tree
    */
   get cell_classes(): string[] {
-    let s: string[] = [];
+    const s: string[] = [];
     if (this.is_parent) {
       s.push('parent');
       if (!this.node.children || !this.node.children.length) {
