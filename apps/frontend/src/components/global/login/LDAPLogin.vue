@@ -66,8 +66,8 @@ export interface LDAPLoginHash {
     }
 })
 export default class LDAPLogin extends Vue {
-    username: string = '';
-    password: string = '';
+    username = '';
+    password = '';
 
     ldapLogin() {
         const creds: LDAPLoginHash = {

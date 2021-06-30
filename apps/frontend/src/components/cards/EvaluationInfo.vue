@@ -7,7 +7,7 @@
       </div>
       <div v-if="platform"><strong>Platform:</strong> {{ platform }}</div>
       <div v-if="duration"><strong>Duration:</strong> {{ duration }}</div>
-      <div v-if="start_time"><strong>Start Time:</strong> {{ start_time }}</div>
+      <div v-if="startTime"><strong>Start Time:</strong> {{ startTime }}</div>
       <div v-if="evaluation" class="d-flex flex-nowrap">
         <strong class="pt-1 pr-1">Tags:</strong>
         <TagRow :evaluation="evaluation" />
@@ -63,7 +63,7 @@ export default class EvaluationInfo extends Vue {
     return EvaluationModule.evaluationForFile(this.file_object);
   }
 
-  get start_time(): string | null {
+  get startTime(): string | null {
     return get_eval_start_time(this.file as ContextualizedEvaluation)
   }
 }

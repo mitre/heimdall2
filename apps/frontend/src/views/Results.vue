@@ -1,11 +1,11 @@
 <template>
-  <BaseView :title="curr_title" @changed-files="evalInfo = null">
+  <Base :title="curr_title" @changed-files="evalInfo = null">
     <!-- Topbar content - give it a search bar -->
     <template #topbar-content>
       <v-text-field
-        v-show="show_search_mobile || !$vuetify.breakpoint.xs"
+        v-show="showSearchMobile || !$vuetify.breakpoint.xs"
         ref="search"
-        v-model="search_term"
+        v-model="searchTerm"
         flat
         hide-details
         dense
@@ -15,7 +15,7 @@
         clearable
         :class="$vuetify.breakpoint.xs ? 'overtake-bar mx-2' : 'mx-2'"
         @click:clear="clear_search()"
-        @blur="show_search_mobile = false"
+        @blur="showSearchMobile = false"
       />
       <v-btn v-if="$vuetify.breakpoint.xs" class="mr-2" @click="showSearch">
         <v-icon>mdi-magnify</v-icon>
@@ -127,7 +127,7 @@
                 >Severity Counts</v-card-title
               >
               <v-card-actions class="justify-center">
-                <SeverityChart v-model="severity_filter" :filter="all_filter" />
+                <SeverityChart v-model="severityFilter" :filter="all_filter" />
               </v-card-actions>
             </v-card>
           </v-col>
@@ -157,9 +157,9 @@
               <v-card-title>Tree Map</v-card-title>
               <v-card-text>
                 <Treemap
-                  v-model="tree_filters"
+                  v-model="treeFilters"
                   :filter="treemap_full_filter"
-                  :selected_control.sync="control_selection"
+                  :selected_control.sync="controlSelection"
                 />
               </v-card-text>
             </v-card>
@@ -182,7 +182,7 @@
 
     <!-- Everything-is-filtered snackbar -->
     <v-snackbar
-      v-model="filter_snackbar"
+      v-model="filterSnackbar"
       class="mt-11"
       style="z-index: 2"
       :timeout="-1"
@@ -206,13 +206,13 @@
         <v-icon class="mx-1">mdi-checkbox-marked</v-icon> checked.
       </span>
     </v-snackbar>
-  </BaseView>
+  </Base>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Component, {mixins} from 'vue-class-component';
-import BaseView from '@/views/BaseView.vue';
+import Base from '@/views/Base.vue';
 
 import StatusCardRow from '@/components/cards/StatusCardRow.vue';
 import ControlTable from '@/components/cards/controltable/ControlTable.vue';
@@ -246,7 +246,7 @@ import {IEvaluation} from '@heimdall/interfaces';
 
 @Component({
   components: {
-    BaseView,
+    Base,
     StatusCardRow,
     Treemap,
     ControlTable,
@@ -269,7 +269,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /**
    * The currently selected severity, as modeled by the severity chart
    */
-  severity_filter: Severity | null = null;
+  severityFilter: Severity | null = null;
 
   /**
    * The currently selected status, as modeled by the status chart
@@ -280,22 +280,22 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    * The current state of the treemap as modeled by the treemap (duh).
    * Once can reliably expect that if a "deep" selection is not null, then its parent should also be not-null.
    */
-  tree_filters: TreeMapState = [];
-  control_selection: string | null = null;
+  treeFilters: TreeMapState = [];
+  controlSelection: string | null = null;
 
   /**
    * The current search term, as modeled by the search bar
    * Never empty - should in that case be null
    */
-  search_term: string = '';
+  searchTerm = '';
 
   /** Model for if all-filtered snackbar should be showing */
-  filter_snackbar: boolean = false;
+  filterSnackbar = false;
 
   evalInfo: SourcedContextualizedEvaluation | SourcedContextualizedProfile | null = null;
 
   /** Determines if we should make the search bar collapse-able */
-  show_search_mobile: boolean = false;
+  showSearchMobile = false;
 
   /**
    * The currently selected file, if one exists.
@@ -324,7 +324,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 
   getFile(fileID: FileID) {
     return InspecDataModule.allFiles.find(
-      (f) => f.unique_id === fileID
+      (f) => f.uniqueId === fileID
     );
   }
 
@@ -348,7 +348,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    * Handles focusing on the search bar
    */
   showSearch(): void {
-    this.show_search_mobile = true;
+    this.showSearchMobile = true;
     this.$nextTick(() => {
       this.$refs.search.focus();
     });
@@ -360,12 +360,12 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   get all_filter(): Filter {
     return {
       status: this.statusFilter || undefined,
-      severity: this.severity_filter || undefined,
+      severity: this.severityFilter || undefined,
       fromFile: this.file_filter,
-      tree_filters: this.tree_filters,
-      search_term: this.search_term || '',
+      treeFilters: this.treeFilters,
+      searchTerm: this.searchTerm || '',
       omit_overlayed_controls: true,
-      control_id: this.control_selection || undefined
+      control_id: this.controlSelection || undefined
     };
   }
 
@@ -375,9 +375,9 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   get treemap_full_filter(): Filter {
     return {
       status: this.statusFilter || undefined,
-      severity: this.severity_filter || undefined,
+      severity: this.severityFilter || undefined,
       fromFile: this.file_filter,
-      search_term: this.search_term || '',
+      searchTerm: this.searchTerm || '',
       omit_overlayed_controls: true
     };
   }
@@ -386,16 +386,16 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    * Clear all filters
    */
   clear() {
-    this.filter_snackbar = false;
-    this.severity_filter = null;
+    this.filterSnackbar = false;
+    this.severityFilter = null;
     this.statusFilter = null;
-    this.control_selection = null;
-    this.search_term = '';
-    this.tree_filters = [];
+    this.controlSelection = null;
+    this.searchTerm = '';
+    this.treeFilters = [];
   }
 
   clear_search() {
-    this.search_term = '';
+    this.searchTerm = '';
   }
 
   /**
@@ -406,10 +406,10 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     // Return if any params not null/empty
     let result: boolean;
     if (
-      this.severity_filter ||
+      this.severityFilter ||
       this.statusFilter ||
-      this.search_term !== '' ||
-      this.tree_filters.length
+      this.searchTerm !== '' ||
+      this.treeFilters.length
     ) {
       result = true;
     } else {
@@ -418,9 +418,9 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 
     // Logic to check: are any files actually visible?
     if (FilteredDataModule.controls(this.all_filter).length === 0) {
-      this.filter_snackbar = true;
+      this.filterSnackbar = true;
     } else {
-      this.filter_snackbar = false;
+      this.filterSnackbar = false;
     }
 
     // Finally, return our result
@@ -436,7 +436,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    */
   get curr_title(): string {
     let returnText = `${capitalize(this.current_route_name.slice(0, -1))} View`;
-    if (this.file_filter.length == 1) {
+    if (this.file_filter.length === 1) {
       const file = this.getFile(this.file_filter[0])
       if (file) {
         const dbFile = this.getDbFile(file);

@@ -2,7 +2,11 @@
   <v-container fluid class="font-weight-bold">
     <div
       ref="controlTableTitle"
-      class="pinned-header control-table-title"
+      :class="
+        $vuetify.breakpoint.smAndDown
+          ? 'control-table-title'
+          : 'pinned-header control-table-title'
+      "
       :style="controlTableTitleStyle"
     >
       <!-- Toolbar -->
@@ -89,7 +93,7 @@
     >
       <div :id="striptoChars(item.key)">
         <ControlRowHeader
-          class="pinned-header"
+          :class="$vuetify.breakpoint.smAndDown ? '' : 'pinned-header'"
           :style="controlRowPinOffset"
           :control="item.control"
           :expanded="expanded.includes(item.key)"
@@ -246,7 +250,7 @@ export default class ControlTable extends Vue {
   toggle(key: string) {
     if (this.singleExpand) {
       // Check if key already there
-      let had = this.expanded.includes(key);
+      const had = this.expanded.includes(key);
 
       // Clear
       this.expanded = [];
@@ -258,7 +262,7 @@ export default class ControlTable extends Vue {
       }
     } else {
       // Add or remove it from the set, as appropriate. Shortcut this by only adding if delete fails
-      let i = this.expanded.indexOf(key);
+      const i = this.expanded.indexOf(key);
       if (i < 0) {
         this.expanded.push(key);
         this.jump_to_key(key);
@@ -269,9 +273,11 @@ export default class ControlTable extends Vue {
   }
 
   jump_to_key(key: string) {
-    this.$nextTick(() => {
-      this.$vuetify.goTo(`#${this.striptoChars(key)}`, {offset: this.topOfPage, duration: 300});
-    });
+    if(!this.$vuetify.breakpoint.smAndDown){
+      this.$nextTick(() => {
+        this.$vuetify.goTo(`#${this.striptoChars(key)}`, {offset: this.topOfPage, duration: 300});
+      });
+    }
   }
 
   striptoChars(key: string) {
@@ -281,10 +287,10 @@ export default class ControlTable extends Vue {
   /** Return items as key, value pairs */
   get raw_items(): ListElt[] {
     return FilteredDataModule.controls(this.filter).map((d) => {
-      let key = control_unique_key(d);
+      const key = control_unique_key(d);
 
       // File, hdf wrapper
-      let with_id: ListElt = {
+      return {
         key,
         control: d,
         status_val: [
@@ -300,14 +306,13 @@ export default class ControlTable extends Vue {
         ),
         filename: _.get(d, 'sourced_from.sourced_from.from_file.filename')
       };
-      return with_id;
     });
   }
 
   /** Return items sorted */
   get items(): ListElt[] {
     // Controls ascending/descending
-    let factor: number = 1;
+    let factor = 1;
     // Our comparator function
     let cmp: (a: ListElt, b: ListElt) => number;
 

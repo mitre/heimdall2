@@ -11,7 +11,7 @@ import {EvaluationTag} from './evaluation-tag.model';
 export class EvaluationTagsService {
   constructor(
     @InjectModel(EvaluationTag)
-    private evaluationTagModel: typeof EvaluationTag
+    private readonly evaluationTagModel: typeof EvaluationTag
   ) {}
 
   async findAll(): Promise<EvaluationTag[]> {
