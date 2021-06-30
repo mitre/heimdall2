@@ -181,11 +181,11 @@ export default class ExportHTMLModal extends Vue {
       duration: _.get(file, 'evaluation.data.statistics.duration')
     })
     this.outputData.exportType = _.capitalize(this.exportType)
-    const controls = FilteredDataModule.controls({...this.filter, fromFile: [file.unique_id]});
+    const controls = FilteredDataModule.controls({...this.filter, fromFile: [file.uniqueId]});
     // Convert them into rows
     this.outputData.controlSets.push({
       filename: file.filename,
-      fileID: file.unique_id,
+      fileID: file.uniqueId,
       controls: controls.map((control) => this.addDetails(control))
     })
   }
@@ -294,7 +294,7 @@ export default class ExportHTMLModal extends Vue {
 
       this.filter.fromFile.forEach(async (fileId) => {
         const file = InspecDataModule.allFiles.find(
-          (f) => f.unique_id === fileId
+          (f) => f.uniqueId === fileId
         );
         if (file) {
           this.addFiledata(file)

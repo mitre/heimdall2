@@ -132,7 +132,7 @@ export default class ExportCaat extends Vue {
 
     const wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
     saveAs(
-      new Blob([this.s2ab(wbout)], {type: 'application/octet-stream'}),
+      new Blob([s2ab(wbout)], {type: 'application/octet-stream'}),
         `CAAT-${this.convertDate(new Date(), '-')}.xlsx`
     );
   }
