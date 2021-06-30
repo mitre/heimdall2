@@ -136,15 +136,15 @@ describe('Compare table data', () => {
       for (const ctrl of Object.values(pairing)) {
         if (ctrl === null) {
           continue;
-        } else if (ctrl!.root.hdf.status == 'Passed') {
+        } else if (ctrl.root.hdf.status === 'Passed') {
           passed++;
-        } else if (ctrl!.root.hdf.status == 'Failed') {
+        } else if (ctrl.root.hdf.status === 'Failed') {
           failed++;
-        } else if (ctrl!.root.hdf.status == 'Not Applicable') {
+        } else if (ctrl.root.hdf.status === 'Not Applicable') {
           na++;
-        } else if (ctrl!.root.hdf.status == 'Not Reviewed') {
+        } else if (ctrl.root.hdf.status === 'Not Reviewed') {
           nr++;
-        } else if (ctrl!.root.hdf.status == 'Profile Error') {
+        } else if (ctrl.root.hdf.status === 'Profile Error') {
           pe++;
         }
       }

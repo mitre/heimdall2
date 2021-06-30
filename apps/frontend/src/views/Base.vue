@@ -12,7 +12,7 @@
       @toggle-drawer="drawer = !drawer"
     >
       <template #content>
-        <SearchBar />
+        <SearchBar v-if="showSearch" />
         <slot name="topbar-content" />
       </template>
     </Topbar>
@@ -57,6 +57,7 @@ export default class Base extends Vue {
   @Prop({default: 11}) readonly topbarZIndex!: number;
   @Prop({default: false}) readonly minimalTopbar!: boolean;
   @Prop({default: true}) readonly showTopbar!: boolean;
+  @Prop({default: false}) readonly showSearch!: boolean;
 
   /** Models if the drawer is open */
   get drawer(): boolean {

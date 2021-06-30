@@ -23,7 +23,7 @@ export type InspecFile = {
    * A.unique_id > B.unique_id.
    * Using this property, one might order files by order in which they were added.
    */
-  unique_id: FileID;
+  uniqueId: FileID;
   /** The filename that this file was uploaded under. */
   filename: string;
 
@@ -108,8 +108,8 @@ export class InspecIntake extends VuexModule {
     // Determine what sort of file we (hopefully) have, then add it
     if (result['1_0_ExecJson']) {
       // A bit of chicken and egg here
-      const eval_file = {
-        unique_id: fileID,
+      const evalFile = {
+        uniqueId: fileID,
         filename: options.filename,
         database_id: options.database_id,
         createdAt: options.createdAt,
@@ -122,17 +122,17 @@ export class InspecIntake extends VuexModule {
       const evaluation = context.contextualizeEvaluation(
         result['1_0_ExecJson']
       ) as unknown as SourcedContextualizedEvaluation;
-      evaluation.from_file = eval_file;
+      evaluation.from_file = evalFile;
 
       // Set and freeze
-      eval_file.evaluation = evaluation;
+      evalFile.evaluation = evaluation;
       Object.freeze(evaluation);
-      InspecDataModule.addExecution(eval_file);
-      FilteredDataModule.toggle_evaluation(eval_file.unique_id);
+      InspecDataModule.addExecution(evalFile);
+      FilteredDataModule.toggle_evaluation(evalFile.uniqueId);
     } else if (result['1_0_ProfileJson']) {
       // Handle as profile
-      const profile_file = {
-        unique_id: fileID,
+      const profileFile = {
+        uniqueId: fileID,
         filename: options.filename
       } as ProfileFile;
 
@@ -140,13 +140,13 @@ export class InspecIntake extends VuexModule {
       const profile = context.contextualizeProfile(
         result['1_0_ProfileJson']
       ) as unknown as SourcedContextualizedProfile;
-      profile.from_file = profile_file;
+      profile.from_file = profileFile;
 
       // Set and freeze
-      profile_file.profile = profile;
+      profileFile.profile = profile;
       Object.freeze(profile);
-      InspecDataModule.addProfile(profile_file);
-      FilteredDataModule.toggle_profile(profile_file.unique_id);
+      InspecDataModule.addProfile(profileFile);
+      FilteredDataModule.toggle_profile(profileFile.uniqueId);
     } else {
       // eslint-disable-next-line no-console
       console.error(result.errors);

@@ -126,14 +126,14 @@ export class InspecData extends VuexModule {
   @Mutation
   REMOVE_PROFILE(fileId: FileID) {
     this.profileFiles = this.profileFiles.filter(
-      (pf) => pf.unique_id !== fileId
+      (pf) => pf.uniqueId !== fileId
     );
   }
 
   @Mutation
   REMOVE_RESULT(fileId: FileID) {
     this.executionFiles = this.executionFiles.filter(
-      (ef) => ef.unique_id !== fileId
+      (ef) => ef.uniqueId !== fileId
     );
   }
 

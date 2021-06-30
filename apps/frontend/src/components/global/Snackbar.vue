@@ -25,7 +25,7 @@ import Vue from 'vue';
 
 @Component
 export default class Snackbar extends Vue {
-  messageContent: string = '';
+  messageContent = '';
 
   get show(): boolean {
     return SnackbarModule.show;

@@ -30,7 +30,7 @@ import Vue from 'vue';
 })
 
 export default class UploadButton extends Vue {
-  showModal: boolean = false;
+  showModal = false;
   /**
    * Invoked when file(s) are loaded.
    */
