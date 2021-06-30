@@ -214,7 +214,7 @@ export function getCompletedControlCount(
 export function calculateCompliance(
   resultsSet: SourcedContextualizedEvaluation
 ): number {
-  const filter: Filter = {fromFile: [resultsSet.from_file.unique_id]};
+  const filter: Filter = {fromFile: [resultsSet.from_file.uniqueId]};
   const passed = StatusCountModule.countOf(filter, 'Passed');
   const total =
     passed +
