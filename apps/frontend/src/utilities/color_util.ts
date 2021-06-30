@@ -7,9 +7,9 @@ import Chroma from 'chroma-js';
 import {VuetifyParsedThemeItem} from 'vuetify/types/services/theme';
 
 /** Makes a color that is visible against the provided color */
-export function visible_against(color_hex: string): string {
+export function visible_against(colorHex: string): string {
   // Get the color
-  let color = Chroma.hex(color_hex);
+  let color = Chroma.hex(colorHex);
 
   // Rotate 50 degrees in hue (arbitrary # but seems nice)
   color = color.set('hsl.h', '+180');
@@ -25,48 +25,46 @@ export function visible_against(color_hex: string): string {
 }
 
 /** Bounds luminance so it never quite reaches 0 or 1 */
-function lum_sigmoid(t: number, shift: number) {
+function lum_sigmoid(t: number, move: number) {
   // The base sigmoid maps [-infinity, infinity] to [0, 1]
   // return 1/(1+Math.pow(Math.E, -t));
   // First compute inverse sigmoid to find our starting place
-  const logit_t = -Math.log(1 / t - 1);
+  const logitT = -Math.log(1 / t - 1);
 
-  // Then shift in domain and recompute using sigmoid
-  const shifted_logit = logit_t + shift;
-  const shifted_sigmoid = 1 / (1 + Math.pow(Math.E, -shifted_logit));
-
-  return shifted_sigmoid;
+  // Then move in domain and recompute using sigmoid
+  const shiftedLogit = logitT + move;
+  return 1 / (1 + Math.pow(Math.E, -shiftedLogit));
 }
 
 /** Shifts a colors luminance by the specified amount */
-export function shift(base_color: string, amount: number): string {
-  const c = Chroma.hex(base_color);
-  const base_l = c.luminance();
-  const new_l = lum_sigmoid(base_l, amount);
-  const new_c = c.luminance(new_l);
-  return new_c.hex();
+export function shift(baseColor: string, amount: number): string {
+  const c = Chroma.hex(baseColor);
+  const baseL = c.luminance();
+  const newL = lum_sigmoid(baseL, amount);
+  const newC = c.luminance(newL);
+  return newC.hex();
 }
 
 /** Gen variations on a color */
 const BASE_SPREAD = 0.5;
 export function gen_variants(
-  base_color: string,
-  spread: number = 1.0
+  baseColor: string,
+  spread = 1.0
 ): VuetifyParsedThemeItem {
   // Re-scale
   spread = spread * BASE_SPREAD;
 
   return {
-    darken4: shift(base_color, -4 * spread),
-    darken3: shift(base_color, -3 * spread),
-    darken2: shift(base_color, -2 * spread),
-    darken1: shift(base_color, -1 * spread),
-    base: base_color,
-    lighten1: shift(base_color, 1 * spread),
-    lighten2: shift(base_color, 2 * spread),
-    lighten3: shift(base_color, 3 * spread),
-    lighten4: shift(base_color, 4 * spread),
-    lighten5: shift(base_color, 5 * spread)
+    darken4: shift(baseColor, -4 * spread),
+    darken3: shift(baseColor, -3 * spread),
+    darken2: shift(baseColor, -2 * spread),
+    darken1: shift(baseColor, -1 * spread),
+    base: baseColor,
+    lighten1: shift(baseColor, 1 * spread),
+    lighten2: shift(baseColor, 2 * spread),
+    lighten3: shift(baseColor, 3 * spread),
+    lighten4: shift(baseColor, 4 * spread),
+    lighten5: shift(baseColor, 5 * spread)
   };
 }
 

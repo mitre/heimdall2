@@ -1,25 +1,25 @@
 <template>
   <v-stepper-content step="1">
     <v-form v-model="valid">
-      <v-text-field v-model="username" label="Username" :rules="[req_rule]" />
+      <v-text-field v-model="username" label="Username" :rules="[reqRule]" />
       <v-text-field
         v-model="password"
         label="Password"
         type="password"
-        :rules="[req_rule]"
+        :rules="[reqRule]"
       />
       <v-text-field
         v-model="hostname"
         label="Hostname"
-        :rules="[req_rule]"
+        :rules="[reqRule]"
         hint="Ex: https://my.website.com:8089"
       />
     </v-form>
     <v-row class="mx-1">
       <v-btn
         color="primary"
-        :disabled="!valid || logging_in"
-        :loading="logging_in"
+        :disabled="!valid || loggingIn"
+        :loading="loggingIn"
         class="my-2"
         @click="try_login"
       >
@@ -43,9 +43,9 @@ import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
 import {SplunkEndpoint} from '@/utilities/splunk_util';
 
 // Our saved fields
-const local_username = new LocalStorageVal<string>('splunk_username');
-const local_password = new LocalStorageVal<string>('splunk_password');
-const local_hostname = new LocalStorageVal<string>('splunk_hostname');
+const localUsername = new LocalStorageVal<string>('splunk_username');
+const localPassword = new LocalStorageVal<string>('splunk_password');
+const localHostname = new LocalStorageVal<string>('splunk_hostname');
 
 /**
  *
@@ -55,50 +55,50 @@ const local_hostname = new LocalStorageVal<string>('splunk_hostname');
     FileList
   }
 })
-export default class SplunkAuth extends Vue {
+export default class AuthStep extends Vue {
   /** Models if currently displayed form is valid.
    * Shouldn't be used to interpret literally anything else as valid - just checks fields filled
    */
-  valid: boolean = false;
+  valid = false;
 
   /** State of input fields */
-  username: string = '';
-  password: string = '';
-  hostname: string = '';
+  username = '';
+  password = '';
+  hostname = '';
 
   /** Whether we are currently authenticating */
-  logging_in = false;
+  loggingIn = false;
   try_login() {
     // Save credentials
-    local_username.set(this.username);
-    local_password.set(this.password);
-    local_hostname.set(this.hostname);
+    localUsername.set(this.username);
+    localPassword.set(this.password);
+    localHostname.set(this.hostname);
 
     // Check splunk
-    let s = new SplunkEndpoint(this.hostname, this.username, this.password);
+    const s = new SplunkEndpoint(this.hostname, this.username, this.password);
 
-    this.logging_in = true;
+    this.loggingIn = true;
     s.check_auth()
       .then(() => {
         // all goes well, proceed
         this.$emit('authenticated', s);
-        this.logging_in = false;
+        this.loggingIn = false;
       })
       .catch((err) => {
-        this.logging_in = false;
+        this.loggingIn = false;
         this.$emit('error', err);
       });
   }
 
   /** Form required field rules. Maybe eventually expand to other stuff */
-  req_rule = (v: string | null | undefined) =>
+  reqRule = (v: string | null | undefined) =>
     (v || '').trim().length > 0 || 'Field is Required';
 
   /** Init our fields */
   mounted() {
-    this.username = local_username.get_default('');
-    this.password = local_password.get_default('');
-    this.hostname = local_hostname.get_default('');
+    this.username = localUsername.get_default('');
+    this.password = localPassword.get_default('');
+    this.hostname = localHostname.get_default('');
   }
 }
 </script>

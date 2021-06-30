@@ -9,7 +9,7 @@ import {context, nist} from 'inspecjs';
 import {control_unique_key} from './format_util';
 
 // How deep into nist trees we allow
-const MAX_DEPTH = 2;
+const depthMax = 2;
 
 /** A simple wrapper type representing what any node's data might be in our treemap */
 interface AbsTreemapNode {
@@ -47,15 +47,15 @@ export type D3TreemapNode = d3.HierarchyNode<TreemapNode>;
  * @param controls The controls to build into a nist node map
  */
 function controls_to_nist_node_data(
-  contextualized_controls: Readonly<context.ContextualizedControl[]>,
+  contextualizedControls: Readonly<context.ContextualizedControl[]>,
   colors: ColorHack
 ): TreemapNodeLeaf[] {
-  return contextualized_controls.flatMap((cc) => {
+  return contextualizedControls.flatMap((cc) => {
     // Get the status color
     const color = Chroma.hex(colors.colorForStatus(cc.root.hdf.status));
     // Now make leaves for each nist control
     return cc.root.hdf.parsed_nist_tags.map((nc) => {
-      const leaf: TreemapNodeLeaf = {
+      return {
         title: cc.data.id,
         subtitle: cc.data.title || undefined,
         hovertext: cc.data.desc || undefined,
@@ -65,43 +65,42 @@ function controls_to_nist_node_data(
         color,
         parent: null // We set this later
       };
-      return leaf;
     });
   });
 }
 
 /** Builds a scaffolding for the nist items using the given root.
  * Also constructs a lookup table of control nodes.
- * Only goes max_depth deep.
+ * Only goes maxDepth deep.
  */
 function recursive_nist_map(
   parent: TreemapNodeParent | null,
   node: Readonly<nist.NistHierarchyNode>,
-  control_lookup: {[key: string]: TreemapNodeParent},
-  max_depth: number
+  controlLookup: {[key: string]: TreemapNodeParent},
+  maxDepth: number
 ): TreemapNodeParent {
   // Init child list
   const children: TreemapNode[] = [];
 
   // Make our final value
   const ret: TreemapNodeParent = {
-    key: node.control.raw_text!,
-    title: node.control.raw_text!, // TODO: Make this like, suck less. IE give more descriptive stuff
+    key: node.control.raw_text || '',
+    title: node.control.raw_text || '', // TODO: Make this like, suck less. IE give more descriptive stuff
     nist_control: node.control,
     parent,
     children
   };
 
   // Fill our children
-  if (node.control.sub_specifiers.length < max_depth) {
+  if (node.control.sub_specifiers.length < maxDepth) {
     node.children.forEach((child) => {
       // Assign it, recursively computing the rest
-      children.push(recursive_nist_map(ret, child, control_lookup, max_depth));
+      children.push(recursive_nist_map(ret, child, controlLookup, maxDepth));
     });
   }
 
   // Save to lookup
-  control_lookup[lookup_key_for(node.control, max_depth)] = ret;
+  controlLookup[lookup_key_for(node.control, maxDepth)] = ret;
   return ret;
 }
 
@@ -116,21 +115,21 @@ function colorize_tree_map(root: TreemapNodeParent) {
 
   // Now all children should have valid colors
   // We decide this node's color as a composite of all underlying node colors
-  const child_colors = root.children
+  const childColors = root.children
     .map((c) => c.color)
-    .filter((c) => c !== undefined) as Chroma.Color[];
+    .filter((c): c is Chroma.Color => !!c);
   // If we have any, then set our color
-  if (child_colors.length) {
+  if (childColors.length) {
     // Set the color
-    const avg_color = Chroma.average(child_colors);
-    root.color = avg_color;
+    const avgColor = Chroma.average(childColors);
+    root.color = avgColor;
   }
 }
 
 /** Generates a lookup key for the given control */
-function lookup_key_for(x: nist.NistControl, max_depth: number): string {
-  if (max_depth) {
-    return x.sub_specifiers.slice(0, max_depth).join('-');
+function lookup_key_for(x: nist.NistControl, maxDepth: number): string {
+  if (maxDepth) {
+    return x.sub_specifiers.slice(0, maxDepth).join('-');
   } else {
     return x.sub_specifiers.join('-');
   }
@@ -140,11 +139,11 @@ function lookup_key_for(x: nist.NistControl, max_depth: number): string {
 function populate_tree_map(
   lookup: {[key: string]: TreemapNodeParent},
   leaves: TreemapNodeLeaf[],
-  max_depth: number
+  maxDepth: number
 ) {
   // Populate it
   leaves.forEach((leaf) => {
-    const parent = lookup[lookup_key_for(leaf.nist_control, max_depth)];
+    const parent = lookup[lookup_key_for(leaf.nist_control, maxDepth)];
     if (parent) {
       // We found a node that will accept it (matches its control)
       // We can do this as because we know we constructed these to only have empty children
@@ -166,23 +165,23 @@ function populate_tree_map(
 function build_populated_nist_map(data: TreemapNodeLeaf[]): TreemapNodeParent {
   // Build our scaffold
   const lookup: {[key: string]: TreemapNodeParent} = {};
-  const root_children: TreemapNodeParent[] = [];
+  const rootChildren: TreemapNodeParent[] = [];
   const root: TreemapNodeParent = {
     key: 'tree_root',
     title: 'NIST-853 Controls',
-    children: root_children,
+    children: rootChildren,
     parent: null,
     nist_control: new nist.NistControl([], 'NIST-853')
   };
 
   // Fill out children, recursively
   nist.FULL_NIST_HIERARCHY.forEach((n) => {
-    const child = recursive_nist_map(root, n, lookup, MAX_DEPTH);
-    root_children.push(child);
+    const child = recursive_nist_map(root, n, lookup, depthMax);
+    rootChildren.push(child);
   });
 
   // Populate them with leaves
-  populate_tree_map(lookup, data, MAX_DEPTH);
+  populate_tree_map(lookup, data, depthMax);
 
   // Colorize it
   colorize_tree_map(root);
@@ -201,26 +200,24 @@ function build_populated_nist_map(data: TreemapNodeLeaf[]): TreemapNodeParent {
 function node_data_to_tree_map(
   data: Readonly<TreemapNodeParent>
 ): D3TreemapNode {
-  const ret = d3
+  return d3
     .hierarchy<TreemapNode>(data, (d: TreemapNode) => {
       if (is_parent(d)) {
         return d.children;
       }
+      return null;
     })
     .sort((a, b) => a.data.title.localeCompare(b.data.title))
     .sum((root) => {
       if (is_parent(root)) {
         if (root.children.length === 0) {
           return 1;
-        } else {
-          // Children will make up the weight
-          return 0;
         }
-      } else {
+      } else if (root.parent !== null) {
         return 1.0 / root.parent!.children.length;
       }
+      return 0;
     });
-  return ret;
 }
 
 /** Does all the steps */
