@@ -25,6 +25,7 @@ context('Results', () => {
     cy.visit('/login');
     cy.login(LOGIN_AUTHENTICATION);
     toastVerifier.toastTextContains('You have successfully signed in.');
+    cy.get('*[class^="shepherd-cancel-icon"]').click();
     cy.get('#hide-snackbar').click();
   });
 
@@ -34,6 +35,7 @@ context('Results', () => {
       // Load first sample
       uploadModal.loadSample('Acme Overlay Example');
       // Open profile info
+      cy.get('*[class^="shepherd-cancel-icon"]').click({force: true});
       resultsPage.openProfileInfo();
       // Make results data is correct
       resultsPageVerifier.resultsDataCorrect();

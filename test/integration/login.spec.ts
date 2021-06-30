@@ -81,6 +81,7 @@ context('Login', () => {
   describe('Logout Button', () => {
     it('sucessfully logs a user out', () => {
       cy.login(LOGIN_AUTHENTICATION);
+      cy.get('*[class^="shepherd-cancel-icon"]').click();
       dropdown.logout();
       loginPageVerifier.loginFormPresent();
     });

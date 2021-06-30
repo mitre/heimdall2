@@ -19,6 +19,7 @@ context('Groups', () => {
     cy.register(CREATE_USER_DTO_TEST_OBJ);
     cy.visit('/login');
     cy.login(LOGIN_AUTHENTICATION);
+    cy.get('*[class^="shepherd-cancel-icon"]').click();
   });
 
   describe('CRUD', () => {

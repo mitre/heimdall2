@@ -23,12 +23,14 @@ context('Database results', () => {
     cy.register(CREATE_USER_DTO_TEST_OBJ);
     cy.visit('/login');
     cy.login(LOGIN_AUTHENTICATION);
+    cy.get('*[class^="shepherd-cancel-icon"]').click();
     cy.get('#hide-snackbar').click();
   });
 
   describe('CRUD', () => {
     it('allows a user to save a result', () => {
       uploadModal.loadSample(sampleToLoad);
+      cy.get('*[class^="shepherd-cancel-icon"]').click({force: true});
       sidebar.save(sampleToLoad);
       toastVerifier.toastTextContains('File saved successfully');
       uploadModal.activate();
@@ -38,6 +40,7 @@ context('Database results', () => {
 
     it('allows a user to load a result', () => {
       uploadModal.loadSample(sampleToLoad);
+      cy.get('*[class^="shepherd-cancel-icon"]').click({force: true});
       sidebar.save(sampleToLoad);
       sidebar.close(sampleToLoad);
       uploadModal.activate();
@@ -48,6 +51,7 @@ context('Database results', () => {
     it('allows a user to update a result', () => {
       const updatedName = 'Updated Filename';
       uploadModal.loadSample(sampleToLoad);
+      cy.get('*[class^="shepherd-cancel-icon"]').click({force: true});
       sidebar.save(sampleToLoad);
       sidebar.close(sampleToLoad);
       uploadModal.activate();
@@ -58,6 +62,7 @@ context('Database results', () => {
 
     it('allows a user to delete a result', () => {
       uploadModal.loadSample(sampleToLoad);
+      cy.get('*[class^="shepherd-cancel-icon"]').click({force: true});
       sidebar.save(sampleToLoad);
       sidebar.close(sampleToLoad);
       uploadModal.activate();
