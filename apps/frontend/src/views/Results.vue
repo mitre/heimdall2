@@ -1,6 +1,7 @@
 <template>
   <Base :title="curr_title" @changed-files="evalInfo = null">
     <!-- Topbar content - give it a search bar -->
+    <Tour tourName="Results" />
     <template #topbar-content>
       <v-text-field
         v-show="showSearchMobile || !$vuetify.breakpoint.xs"
@@ -223,6 +224,7 @@ import SeverityChart from '@/components/cards/SeverityChart.vue';
 import ComplianceChart from '@/components/cards/ComplianceChart.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
 import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
+import Tour from '@/components/generic/Tour.vue';
 
 import ExportCaat from '@/components/global/ExportCaat.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
@@ -244,10 +246,6 @@ import RouteMixin from '@/mixins/RouteMixin';
 import {StatusCountModule} from '../store/status_counts';
 import ServerMixin from '../mixins/ServerMixin';
 import {IEvaluation} from '@heimdall/interfaces';
-import VueShepherd from 'vue-shepherd';
-import '@/assets/onboarding_tour.css';
-
-Vue.use(VueShepherd);
 
 @Component({
   components: {
@@ -264,7 +262,8 @@ Vue.use(VueShepherd);
     EvaluationInfo,
     ProfileData,
     UploadButton,
-    EditEvaluationModal
+    EditEvaluationModal,
+    Tour
   }
 })
 export default class Results extends mixins(RouteMixin, ServerMixin) {
@@ -475,119 +474,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   mounted() {
-    this.resultsViewTour()
-  }
-
-  resultsViewTour() {
-    this.$nextTick(() => {
-      const tour = Vue.prototype.$shepherd({
-        defaultStepOptions:{
-          cancelIcon: {
-            enabled: true
-          },
-          scrollTo: {behavior: 'smooth', block: 'center'}
-        },
-        useModalOverlay: true
-      });
-
-      const buttonsStart = [
-        {
-          text: 'YES',
-          action: tour.next
-        },
-        {
-          text: 'NO',
-          action: tour.cancel
-        }
-      ]
-
-      const defaultButtons = [
-        {
-          text: 'BACK',
-          action: tour.back
-        },
-        {
-          text: 'NEXT',
-          action: tour.next
-        }
-      ]
-
-      tour.addSteps([
-        {
-          title: "Welcome to the Results View Page",
-          attachTo: {element: '#page-title', on: 'bottom'},
-          text: "Would you like to take a quick tour of Heimdall's Results View?",
-          buttons: buttonsStart
-        },
-        {
-          title: "Search Bar",
-          attachTo: {element: '#results-search', on: 'bottom'},
-          text: "The search bar allows you to filter the reuslts found by Heimdall's scan",
-          buttons: defaultButtons
-        },
-        {
-          title: "Clear Filters",
-          attachTo: {element: '#clear-filters', on: 'bottom'},
-          text: "Click to clear filters on scan",
-          buttons: defaultButtons
-        },
-        {
-          title: "Upload Button",
-          attachTo: {element: '#upload-btn', on: 'bottom'},
-          text: "Click to load additional files into Heimdall to be scanned",
-          buttons: defaultButtons
-        },
-        {
-          title: "Export Files Scan",
-          attachTo: {element: '#file-export', on: 'bottom'},
-          text: "Click to export file scan into a downloadable spreadsheet",
-          buttons: defaultButtons
-        },
-        {
-          title: "File Cards",
-          attachTo: {element: '#file-cards', on: 'bottom'},
-          text: "View the loaded files along with additional info",
-          buttons: defaultButtons
-        },
-        {
-          title: "Status Cards",
-          attachTo: {element: '#status-card-row', on: 'top'},
-          text: "View file status of your scan",
-          buttons: defaultButtons
-        },
-        {
-          title: "Compliance Cards",
-          attachTo: {element: '#compliance-cards', on: 'top'},
-          text: "View file statuses, severity, and compliance level <strong>(To filter by status or severity click on the donut charts)",
-          buttons: defaultButtons
-        },
-        {
-          title: "Treemap",
-          attachTo: {element: '#treemap', on: 'top'},
-          text: "Use the treemap to navigate through your controls by NIST family classifications",
-          buttons: defaultButtons
-        },
-        {
-          title: "Data Table",
-          attachTo: {element: '#data-table', on: 'top'},
-          text: "Use the data table to  to sort your controls and see more details. You can also click on a control to detect which tests passed or failed, or see its details and code.",
-          buttons: [
-            {
-              text: 'BACK',
-              action: tour.back
-            },
-            {
-              text: 'FINISH',
-              action: tour.complete
-            }
-          ]
-        }
-      ])
-      if(!localStorage.getItem('result-view-tour')) {
-        tour.start();
-        localStorage.setItem('result-view-tour', 'yes')
-      }
-    })
   }
 }
 </script>

@@ -17,20 +17,21 @@ context('Database results', () => {
   const resultsPageVerifier = new ResultsPageVerifier();
   const databasePage = new DatabasePage();
   const sampleToLoad = 'Acme Overlay Example';
+  const cancelIconClass = '*[class^="shepherd-cancel-icon"]';
 
   // Run before each test
   beforeEach(() => {
     cy.register(CREATE_USER_DTO_TEST_OBJ);
     cy.visit('/login');
     cy.login(LOGIN_AUTHENTICATION);
-    cy.get('*[class^="shepherd-cancel-icon"]').click();
+    cy.get(cancelIconClass).click();
     cy.get('#hide-snackbar').click();
   });
 
   describe('CRUD', () => {
     it('allows a user to save a result', () => {
       uploadModal.loadSample(sampleToLoad);
-      cy.get('*[class^="shepherd-cancel-icon"]').click({force: true});
+      cy.get(cancelIconClass).click({force: true});
       sidebar.save(sampleToLoad);
       toastVerifier.toastTextContains('File saved successfully');
       uploadModal.activate();
@@ -40,7 +41,7 @@ context('Database results', () => {
 
     it('allows a user to load a result', () => {
       uploadModal.loadSample(sampleToLoad);
-      cy.get('*[class^="shepherd-cancel-icon"]').click({force: true});
+      cy.get(cancelIconClass).click({force: true});
       sidebar.save(sampleToLoad);
       sidebar.close(sampleToLoad);
       uploadModal.activate();
@@ -51,7 +52,7 @@ context('Database results', () => {
     it('allows a user to update a result', () => {
       const updatedName = 'Updated Filename';
       uploadModal.loadSample(sampleToLoad);
-      cy.get('*[class^="shepherd-cancel-icon"]').click({force: true});
+      cy.get(cancelIconClass).click({force: true});
       sidebar.save(sampleToLoad);
       sidebar.close(sampleToLoad);
       uploadModal.activate();
@@ -62,7 +63,7 @@ context('Database results', () => {
 
     it('allows a user to delete a result', () => {
       uploadModal.loadSample(sampleToLoad);
-      cy.get('*[class^="shepherd-cancel-icon"]').click({force: true});
+      cy.get(cancelIconClass).click({force: true});
       sidebar.save(sampleToLoad);
       sidebar.close(sampleToLoad);
       uploadModal.activate();
