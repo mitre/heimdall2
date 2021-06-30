@@ -42,7 +42,7 @@ export class PasswordComplexityPipe implements PipeTransform {
       RegExp('.{15,}')
     ];
     return (
-      validators.filter((expr) => expr.test(password)).length ==
+      validators.filter((expr) => expr.test(password)).length ===
       validators.length
     );
   }

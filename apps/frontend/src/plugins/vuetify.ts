@@ -2,7 +2,6 @@ import {gen_variants, gen_visibilities} from '@/utilities/color_util';
 import '@mdi/font/css/materialdesignicons.css';
 import Vuetify, {colors} from 'vuetify/lib';
 
-// "Not Applicable" | "Not Reviewed" | "Profile Error";
 const statuses = {
   statusPassed: colors.green.base,
   statusFailed: colors.red.base,
@@ -57,7 +56,7 @@ const compliances = {
   complianceHigh: colors.green.base
 };
 
-const veautiful = new Vuetify({
+const vuetify = new Vuetify({
   icons: {
     iconfont: 'mdi'
   },
@@ -82,7 +81,7 @@ const veautiful = new Vuetify({
     }
   }
 });
-export default veautiful;
+export default vuetify;
 
 /*** colors from new MII homepage ***/
 /*

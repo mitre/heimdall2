@@ -24,33 +24,33 @@
       <v-list id="dropdownList" class="pt-0 pb-0">
         <div v-if="serverMode">
           <div v-if="isAdmin">
-            <LinkItem
+            <IconLinkItem
               key="admin"
               text="Admin Panel"
               icon="mdi-shield-account"
               link="/admin"
-              >Admin Panel</LinkItem
+              >Admin Panel</IconLinkItem
             >
             <v-divider />
           </div>
-          <LinkItem
+          <IconLinkItem
             id="groups-link"
             key="groups"
             text="My Groups"
             icon="mdi-account-group"
             link="/manage-groups"
-            >My Groups</LinkItem
+            >My Groups</IconLinkItem
           >
           <v-divider />
           <UserModal id="userModal" :user="userInfo">
             <template #clickable="{on}"
-              ><LinkItem
+              ><IconLinkItem
                 id="user-link"
                 key="user"
                 text="User Info"
                 icon="mdi-account"
                 v-on="on"
-                >My Profile</LinkItem
+                >My Profile</IconLinkItem
               >
             </template>
           </UserModal>
@@ -59,25 +59,25 @@
         </div>
         <HelpModal>
           <template #clickable="{on}">
-            <LinkItem
+            <IconLinkItem
               id="helpModal"
               key="help"
               text="Help"
               icon="mdi-help-circle"
               v-on="on"
-              >Help</LinkItem
+              >Help</IconLinkItem
             >
           </template>
         </HelpModal>
         <AboutModal>
           <template #clickable="{on}">
-            <LinkItem
+            <IconLinkItem
               id="aboutModal"
               key="about"
               text="About"
               icon="mdi-information"
               v-on="on"
-              >About</LinkItem
+              >About</IconLinkItem
             >
           </template>
         </AboutModal>
@@ -87,7 +87,7 @@
 </template>
 
 <script lang="ts">
-import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
 import HelpModal from '@/components/global/HelpModal.vue';
 import UserModal from '@/components/global/UserModal.vue';
@@ -103,7 +103,7 @@ import {IUser} from '@heimdall/interfaces';
     HelpModal,
     AboutModal,
     UserModal,
-    LinkItem,
+    IconLinkItem,
     LogoutButton
   }
 })
