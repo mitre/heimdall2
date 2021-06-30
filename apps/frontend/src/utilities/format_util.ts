@@ -39,6 +39,6 @@ export function control_unique_key(
   ctrl: Readonly<ContextualizedControl>
 ): string {
   return `${profile_unique_key(
-    ctrl.sourced_from as Readonly<SourcedContextualizedProfile>
+    ctrl.sourcedFrom as Readonly<SourcedContextualizedProfile>
   )}-${ctrl.data.id}`;
 }

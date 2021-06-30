@@ -19,7 +19,7 @@ import Component from 'vue-class-component';
 import {FilteredDataModule, Filter} from '@/store/data_filters';
 import XLSX from 'xlsx';
 import {saveAs} from 'file-saver';
-import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {NistControl} from 'inspecjs';
 import {FileID} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
@@ -52,9 +52,9 @@ export default class ExportNIST extends Vue {
       return null;
     } else {
       // Just construct as best we can
-      let base = `${control.sub_specifiers[0]}-${control.sub_specifiers[1]}`;
-      for (let i = 2; i < control.sub_specifiers.length; i++) {
-        base += control.sub_specifiers[i];
+      let base = `${control.subSpecifiers[0]}-${control.subSpecifiers[1]}`;
+      for (let i = 2; i < control.subSpecifiers.length; i++) {
+        base += control.subSpecifiers[i];
       }
       return base;
     }
