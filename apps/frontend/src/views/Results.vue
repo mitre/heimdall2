@@ -1,25 +1,11 @@
 <template>
-  <Base :title="curr_title" @changed-files="evalInfo = null">
+  <Base
+    :show-search="true"
+    :title="curr_title"
+    @changed-files="evalInfo = null"
+  >
     <!-- Topbar content - give it a search bar -->
     <template #topbar-content>
-      <v-text-field
-        v-show="showSearchMobile || !$vuetify.breakpoint.xs"
-        ref="search"
-        v-model="searchTerm"
-        flat
-        hide-details
-        dense
-        solo
-        prepend-inner-icon="mdi-magnify"
-        label="Search"
-        clearable
-        :class="$vuetify.breakpoint.xs ? 'overtake-bar mx-2' : 'mx-2'"
-        @click:clear="clear_search()"
-        @blur="showSearchMobile = false"
-      />
-      <v-btn v-if="$vuetify.breakpoint.xs" class="mr-2" @click="showSearch">
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
       <v-btn :disabled="!can_clear" @click="clear">
         <span class="d-none d-md-inline pr-2"> Clear </span>
         <v-icon>mdi-filter-remove</v-icon>
@@ -306,9 +292,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     SearchModule.setStatusFilter(status);
   }
 
-  /** Determines if we should make the search bar collapse-able */
-  showSearchMobile = false;
-
   /**
    * The currently selected file, if one exists.
    * Controlled by router.
@@ -354,16 +337,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   // Returns true if no files are uploaded
   get no_files(): boolean {
     return InspecDataModule.allFiles.length === 0;
-  }
-
-  /**
-   * Handles focusing on the search bar
-   */
-  showSearch(): void {
-    this.showSearchMobile = true;
-    this.$nextTick(() => {
-      this.$refs.search.focus();
-    });
   }
 
   /**

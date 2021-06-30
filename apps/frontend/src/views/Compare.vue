@@ -1,17 +1,7 @@
 <template>
-  <Base :title="curr_title">
+  <Base :show-search="true" :title="curr_title">
     <!-- Topbar config - give it a search bar -->
     <template #topbar-content>
-      <v-text-field
-        v-model="searchTerm"
-        flat
-        solo
-        dense
-        hide-details
-        prepend-inner-icon="mdi-magnify"
-        label="Search"
-        clearable
-      />
       <UploadButton />
     </template>
 
