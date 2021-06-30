@@ -13,11 +13,11 @@ describe('Parsing', () => {
   it('Report intake can read every raw file in hdf_data', function () {
     const raw = AllRaw();
 
-    const promises = Object.values(raw).map((file_result) => {
+    const promises = Object.values(raw).map((fileResult) => {
       // Do intake
       return InspecIntakeModule.loadText({
-        filename: file_result.name,
-        text: file_result.content
+        filename: fileResult.name,
+        text: fileResult.content
       });
     });
 
@@ -29,10 +29,10 @@ describe('Parsing', () => {
 
   it('Counts statuses correctly', function () {
     // Get the exec files
-    const exec_files = InspecDataModule.executionFiles;
+    const execFiles = InspecDataModule.executionFiles;
 
     // For each, we will filter then count
-    exec_files.forEach((file) => {
+    execFiles.forEach((file) => {
       // Get the corresponding count file
       const countFilename = `tests/hdf_data/counts/${file.filename}.info.counts`;
       const countFileContent = readFileSync(countFilename, 'utf-8');
@@ -60,7 +60,7 @@ describe('Parsing', () => {
         filename: file.filename,
         ...StatusCountModule.hash({
           omit_overlayed_controls: true,
-          fromFile: [file.unique_id]
+          fromFile: [file.uniqueId]
         })
       };
 

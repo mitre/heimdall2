@@ -161,8 +161,8 @@ interface LoginHash {
   }
 })
 export default class LocalLogin extends Vue {
-  email: string = '';
-  password: string = '';
+  email = '';
+  password = '';
   buttonLoading = false
 
   login() {

@@ -1,5 +1,5 @@
 <template>
-  <BaseView
+  <Base
     :show-toolbar="false"
     :show-topbar="serverMode"
     :minimal-topbar="true"
@@ -10,7 +10,7 @@
         <UploadNexus retain-focus :persistent="true" />
       </v-col>
     </v-row>
-  </BaseView>
+  </Base>
 </template>
 
 <script lang="ts">
@@ -18,7 +18,7 @@ import Vue from 'vue';
 import Component, {mixins} from 'vue-class-component';
 import ServerMixin from '@/mixins/ServerMixin';
 import UploadNexus from '@/components/global/UploadNexus.vue';
-import BaseView from '@/views/BaseView.vue';
+import Base from '@/views/Base.vue';
 import VueShepherd from 'vue-shepherd';
 import '@/assets/onboarding_tour.css';
 
@@ -27,7 +27,7 @@ Vue.use(VueShepherd);
 @Component({
   components: {
     UploadNexus,
-    BaseView
+    Base
   }
 })
 export default class Landing extends mixins(ServerMixin) {
