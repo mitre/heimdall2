@@ -102,7 +102,7 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
   }
 
   get cciControlString(): string | null {
-    let cci = this.control.hdf.wraps.tags.cci;
+    const cci = this.control.hdf.wraps.tags.cci;
     if (!cci) {
       return null;
     } else if (Array.isArray(cci)) {
@@ -126,11 +126,11 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
 
   /** Shown above the description */
   get header(): string {
-    let msg_split = this.control.root.hdf.finding_details.split(':');
-    if (msg_split.length === 1) {
-      return msg_split[0] + '.';
+    const msgSplit = this.control.root.hdf.finding_details.split(':');
+    if (msgSplit.length === 1) {
+      return msgSplit[0] + '.';
     } else {
-      return msg_split[0] + ':';
+      return msgSplit[0] + ':';
     }
   }
 
@@ -139,7 +139,7 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
   }
 
   get details(): Detail[] {
-    let c = this.control;
+    const c = this.control;
     const detailsMap = new Map();
 
     detailsMap.set('Control', c.data.id)
@@ -165,7 +165,7 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
 
   //for zebra background
   zebra(ix: number): string {
-    if (ix % 2 == 0) {
+    if (ix % 2 === 0) {
       return 'zebra-table';
     }
     return 'non-zebra-table';

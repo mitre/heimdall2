@@ -89,7 +89,7 @@
 import Component, {mixins} from 'vue-class-component';
 import {parse_nist, is_control, ContextualizedControl} from 'inspecjs';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
-import {NIST_DESCRIPTIONS, nist_canon_config} from '@/utilities/nist_util';
+import {NIST_DESCRIPTIONS, nistCanonConfig} from '@/utilities/nist_util';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import CircleRating from '@/components/generic/CircleRating.vue';
 import {Prop} from 'vue-property-decorator';
@@ -133,9 +133,6 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
 
   severity_arrow_count(severity: string): number {
     switch (severity) {
-      default:
-      case 'none':
-        return 0;
       case 'low':
         return 1;
       case 'medium':
@@ -144,6 +141,8 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
         return 3;
       case 'critical':
         return 4;
+      default:
+        return 0;
     }
   }
 
@@ -152,8 +151,8 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   descriptionForTag(tag: string): string {
     const nisted = parse_nist(tag);
     if (is_control(nisted)) {
-      let canon = nisted.canonize(nist_canon_config);
-      let found = NIST_DESCRIPTIONS[canon];
+      const canon = nisted.canonize(nistCanonConfig);
+      const found = NIST_DESCRIPTIONS[canon];
       if (found) {
         return found;
       }

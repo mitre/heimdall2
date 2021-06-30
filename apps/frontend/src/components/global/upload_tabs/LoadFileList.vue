@@ -153,7 +153,7 @@ export default class LoadFileList extends Vue {
       file.evaluationTags?.forEach((tag) => {
         if (tag.value.toLowerCase().includes(search)) {
           result = true;
-        };
+        }
       })
     }
     return result
@@ -167,9 +167,9 @@ export default class LoadFileList extends Vue {
   }
 
   get filteredFiles() {
-    let matches: Array<IEvaluation | Sample> = []
-    if (this.search != '') {
-      let searchToLower = this.search.toLowerCase();
+    const matches: Array<IEvaluation | Sample> = []
+    if (this.search !== '') {
+      const searchToLower = this.search.toLowerCase();
       (this.files as Array<IEvaluation | Sample>).forEach(async (item: IEvaluation | Sample) => {
           if (this.filterEvaluationTags(item, searchToLower) || item.filename.toLowerCase().includes(searchToLower)) {
           matches.push(item)

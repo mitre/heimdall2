@@ -58,8 +58,8 @@ import Component from 'vue-class-component';
 import {AppInfoModule} from '@/store/app_info';
 
 @Component
-export default class HelpModal extends Vue {
-  dialog: boolean = false;
+export default class AboutModal extends Vue {
+  dialog = false;
 
   get version(): string {
     return AppInfoModule.version;

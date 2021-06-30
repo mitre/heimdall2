@@ -237,7 +237,7 @@ export default class ControlTable extends Vue {
   toggle(key: string) {
     if (this.singleExpand) {
       // Check if key already there
-      let had = this.expanded.includes(key);
+      const had = this.expanded.includes(key);
 
       // Clear
       this.expanded = [];
@@ -249,7 +249,7 @@ export default class ControlTable extends Vue {
       }
     } else {
       // Add or remove it from the set, as appropriate. Shortcut this by only adding if delete fails
-      let i = this.expanded.indexOf(key);
+      const i = this.expanded.indexOf(key);
       if (i < 0) {
         this.expanded.push(key);
         this.jump_to_key(key);
@@ -274,10 +274,10 @@ export default class ControlTable extends Vue {
   /** Return items as key, value pairs */
   get raw_items(): ListElt[] {
     return FilteredDataModule.controls(this.filter).map((d) => {
-      let key = control_unique_key(d);
+      const key = control_unique_key(d);
 
       // File, hdf wrapper
-      let with_id: ListElt = {
+      return {
         key,
         control: d,
         status_val: [
@@ -293,14 +293,13 @@ export default class ControlTable extends Vue {
         ),
         filename: _.get(d, 'sourcedFrom.sourcedFrom.from_file.filename')
       };
-      return with_id;
     });
   }
 
   /** Return items sorted */
   get items(): ListElt[] {
     // Controls ascending/descending
-    let factor: number = 1;
+    let factor = 1;
     // Our comparator function
     let cmp: (a: ListElt, b: ListElt) => number;
 

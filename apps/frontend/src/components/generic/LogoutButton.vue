@@ -1,23 +1,23 @@
 <template>
-  <LinkItem
+  <IconLinkItem
     id="logout_button"
     key="user"
     text="Logout"
     icon="mdi-logout"
     @click="logOut"
-    >Logout</LinkItem
+    >Logout</IconLinkItem
   >
 </template>
 
 <script lang="ts">
-import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import ServerMixin from '@/mixins/ServerMixin';
 import {ServerModule} from '@/store/server';
 import Component, {mixins} from 'vue-class-component';
 
 @Component({
   components: {
-    LinkItem
+    IconLinkItem
   }
 })
 export default class LogoutButton extends mixins(ServerMixin) {

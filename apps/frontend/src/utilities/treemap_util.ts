@@ -14,7 +14,7 @@ import {
 import {control_unique_key} from './format_util';
 
 // How deep into nist trees we allow
-const MAX_DEPTH = 2;
+const depthMax = 2;
 
 /** A simple wrapper type representing what any node's data might be in our treemap */
 interface AbsTreemapNode {
@@ -60,7 +60,7 @@ function controls_to_nist_node_data(
     const color = Chroma.hex(colors.colorForStatus(cc.root.hdf.status));
     // Now make leaves for each nist control
     return cc.root.hdf.parsedNistTags.map((nc) => {
-      const leaf: TreemapNodeLeaf = {
+      return {
         title: cc.data.id,
         subtitle: cc.data.title || undefined,
         hovertext: cc.data.desc || undefined,
@@ -70,7 +70,6 @@ function controls_to_nist_node_data(
         color,
         parent: null // We set this later
       };
-      return leaf;
     });
   });
 }
@@ -82,7 +81,7 @@ function controls_to_nist_node_data(
 function recursive_nist_map(
   parent: TreemapNodeParent | null,
   node: Readonly<NistHierarchyNode>,
-  control_lookup: {[key: string]: TreemapNodeParent},
+  controlLookup: {[key: string]: TreemapNodeParent},
   maxDepth: number
 ): TreemapNodeParent {
   // Init child list
@@ -101,12 +100,12 @@ function recursive_nist_map(
   if (node.control.subSpecifiers.length < maxDepth) {
     node.children.forEach((child) => {
       // Assign it, recursively computing the rest
-      children.push(recursive_nist_map(ret, child, control_lookup, maxDepth));
+      children.push(recursive_nist_map(ret, child, controlLookup, maxDepth));
     });
   }
 
   // Save to lookup
-  control_lookup[lookup_key_for(node.control, maxDepth)] = ret;
+  controlLookup[lookup_key_for(node.control, maxDepth)] = ret;
   return ret;
 }
 
@@ -121,14 +120,14 @@ function colorize_tree_map(root: TreemapNodeParent) {
 
   // Now all children should have valid colors
   // We decide this node's color as a composite of all underlying node colors
-  const child_colors = root.children
+  const childColors = root.children
     .map((c) => c.color)
-    .filter((c) => c !== undefined) as Chroma.Color[];
+    .filter((c): c is Chroma.Color => !!c);
   // If we have any, then set our color
-  if (child_colors.length) {
+  if (childColors.length) {
     // Set the color
-    const avg_color = Chroma.average(child_colors);
-    root.color = avg_color;
+    const avgColor = Chroma.average(childColors);
+    root.color = avgColor;
   }
 }
 
@@ -171,23 +170,23 @@ function populate_tree_map(
 function build_populated_nist_map(data: TreemapNodeLeaf[]): TreemapNodeParent {
   // Build our scaffold
   const lookup: {[key: string]: TreemapNodeParent} = {};
-  const root_children: TreemapNodeParent[] = [];
+  const rootChildren: TreemapNodeParent[] = [];
   const root: TreemapNodeParent = {
     key: 'tree_root',
     title: 'NIST-853 Controls',
-    children: root_children,
+    children: rootChildren,
     parent: null,
     nist_control: new NistControl([], 'NIST-853')
   };
 
   // Fill out children, recursively
   FULL_NIST_HIERARCHY.forEach((n) => {
-    const child = recursive_nist_map(root, n, lookup, MAX_DEPTH);
-    root_children.push(child);
+    const child = recursive_nist_map(root, n, lookup, depthMax);
+    rootChildren.push(child);
   });
 
   // Populate them with leaves
-  populate_tree_map(lookup, data, MAX_DEPTH);
+  populate_tree_map(lookup, data, depthMax);
 
   // Colorize it
   colorize_tree_map(root);
@@ -206,26 +205,24 @@ function build_populated_nist_map(data: TreemapNodeLeaf[]): TreemapNodeParent {
 function node_data_to_tree_map(
   data: Readonly<TreemapNodeParent>
 ): D3TreemapNode {
-  const ret = d3
+  return d3
     .hierarchy<TreemapNode>(data, (d: TreemapNode) => {
       if (is_parent(d)) {
         return d.children;
       }
+      return null;
     })
     .sort((a, b) => a.data.title.localeCompare(b.data.title))
     .sum((root) => {
       if (is_parent(root)) {
         if (root.children.length === 0) {
           return 1;
-        } else {
-          // Children will make up the weight
-          return 0;
         }
-      } else {
+      } else if (root.parent !== null) {
         return 1.0 / root.parent!.children.length;
       }
+      return 0;
     });
-  return ret;
 }
 
 /** Does all the steps */

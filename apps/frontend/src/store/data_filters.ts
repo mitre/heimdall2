@@ -53,10 +53,10 @@ export interface Filter {
    * - finding details (from HDF)
    * - code
    */
-  search_term?: string;
+  searchTerm?: string;
 
   /** The current state of the Nist Treemap. Used to further filter by nist categories etc. */
-  tree_filters?: TreeMapState;
+  treeFilters?: TreeMapState;
 
   /** A specific control id */
   control_id?: string;
@@ -142,7 +142,7 @@ export class FilteredData extends VuexModule {
       this.CLEAR_ALL_EVALUATIONS();
     } else {
       this.SELECT_EVALUATIONS(
-        InspecDataModule.allEvaluationFiles.map((v) => v.unique_id)
+        InspecDataModule.allEvaluationFiles.map((v) => v.uniqueId)
       );
     }
   }
@@ -153,7 +153,7 @@ export class FilteredData extends VuexModule {
       this.CLEAR_ALL_PROFILES();
     } else {
       this.SELECT_PROFILES(
-        InspecDataModule.allProfileFiles.map((v) => v.unique_id)
+        InspecDataModule.allProfileFiles.map((v) => v.uniqueId)
       );
     }
   }
@@ -203,7 +203,7 @@ export class FilteredData extends VuexModule {
   ) => readonly SourcedContextualizedEvaluation[] {
     return (files: FileID[]) => {
       return InspecDataModule.contextualExecutions.filter((e) =>
-        files.includes(e.from_file.unique_id)
+        files.includes(e.from_file.uniqueId)
       );
     };
   }
@@ -226,7 +226,7 @@ export class FilteredData extends VuexModule {
   get profiles(): (files: FileID[]) => readonly SourcedContextualizedProfile[] {
     return (files: FileID[]) => {
       return InspecDataModule.contextualProfiles.filter((e) => {
-        return files.includes(e.from_file.unique_id);
+        return files.includes(e.from_file.uniqueId);
       });
     };
   }
@@ -271,7 +271,7 @@ export class FilteredData extends VuexModule {
 
     return (filter: Filter) => {
       // Generate a hash for cache purposes.
-      // If the "search_term" string is not null, we don't cache - no need to pollute
+      // If the "searchTerm" string is not null, we don't cache - no need to pollute
       const id: string = filter_cache_key(filter);
 
       // Check if we have this cached:
@@ -322,17 +322,17 @@ export class FilteredData extends VuexModule {
       }
 
       // Filter by search term
-      if (filter.search_term !== undefined) {
-        const term = filter.search_term.toLowerCase();
+      if (filter.searchTerm !== undefined) {
+        const term = filter.searchTerm.toLowerCase();
 
         // Filter controls to those that contain search term
         controls = controls.filter((c) => contains_term(c, term));
       }
 
       // Filter by nist stuff
-      if (filter.tree_filters && filter.tree_filters.length > 0) {
+      if (filter.treeFilters && filter.treeFilters.length > 0) {
         // Construct a nist control to represent the filter
-        const control = new NistControl(filter.tree_filters);
+        const control = new NistControl(filter.treeFilters);
 
         controls = controls.filter((c) => {
           // Get an hdf version so we have the fixed nist tags
@@ -358,15 +358,15 @@ export const FilteredDataModule = getModule(FilteredData);
  */
 export function filter_cache_key(f: Filter) {
   // fix the search term
-  let new_search: string;
-  if (f.search_term !== undefined) {
-    new_search = f.search_term.trim();
+  let newSearch: string;
+  if (f.searchTerm !== undefined) {
+    newSearch = f.searchTerm.trim();
   } else {
-    new_search = '';
+    newSearch = '';
   }
 
   const newFilter: Filter = {
-    search_term: new_search,
+    searchTerm: newSearch,
     omit_overlayed_controls: f.omit_overlayed_controls || false,
     ...f
   };
