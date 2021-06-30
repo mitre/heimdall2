@@ -248,7 +248,7 @@ export default class ExportCSVModal extends Vue {
 
   convertRows(file: ProfileFile | EvaluationFile): ControlSetRows {
     const rows: ControlSetRows = [];
-    const controls = FilteredDataModule.controls({...this.filter, fromFile: [file.unique_id]});
+    const controls = FilteredDataModule.controls({...this.filter, fromFile: [file.uniqueId]});
     for (const ctrl of controls) {
       rows.push(this.convertRow(file, ctrl));
     }
@@ -260,7 +260,7 @@ export default class ExportCSVModal extends Vue {
    */
   generateCSVPreview() {
     const file = InspecDataModule.allFiles.find(
-        (f) => f.unique_id === this.filter.fromFile[0]
+        (f) => f.uniqueId === this.filter.fromFile[0]
       );
     if (file){
       this.rows = this.convertRows(file);
@@ -288,7 +288,7 @@ export default class ExportCSVModal extends Vue {
     this.files = [];
     const fileConvertPromises = this.filter.fromFile.map((fileId) => {
       const file = InspecDataModule.allFiles.find(
-        (f) => f.unique_id === fileId
+        (f) => f.uniqueId === fileId
       );
       if(file) {
         return this.convertData(file)
