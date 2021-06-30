@@ -1,8 +1,8 @@
-export interface CCI_Item {
+export interface CCIItem {
   def: string;
   nist: string[];
 }
-export const CCI_DESCRIPTIONS: {[tag: string]: CCI_Item} = {
+export const CCI_DESCRIPTIONS: {[tag: string]: CCIItem} = {
   'CCI-001545': {
     def: 'The organization defines a frequency for reviewing and updating the access control policy.',
     nist: ['AC-1 a', 'AC-1.2 (i)', 'AC-1 b 1']

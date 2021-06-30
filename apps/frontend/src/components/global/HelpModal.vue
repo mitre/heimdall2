@@ -76,7 +76,7 @@ import {AppInfoModule} from '@/store/app_info';
 
 @Component
 export default class HelpModal extends Vue {
-  dialog: boolean = false;
+  dialog = false;
   get version(): string {
     return AppInfoModule.version;
   }

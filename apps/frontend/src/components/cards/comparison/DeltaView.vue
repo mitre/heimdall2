@@ -8,7 +8,7 @@
     </v-row>
 
     <ChangeItem
-      v-for="change in header_changes.changes"
+      v-for="change in headerChanges.changes"
       :key="change.name"
       :change="change"
     />
@@ -26,23 +26,20 @@ import {
 } from '@/utilities/delta_util';
 
 import ChangeItem from '@/components/cards/comparison/ChangeItem.vue';
-import TruncatedText from '@/components/generic/TruncatedText.vue';
-
 import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {
-    ChangeItem,
-    TruncatedText,
+    ChangeItem
   }
 })
 export default class DeltaView extends Vue {
   @Prop({required: true}) readonly delta!: ControlDelta;
 
   get head_changes(): boolean {
-    for (let change of this.header_changes.changes) {
-      for (let value of change.values) {
-        if (value != NOT_SELECTED) {
+    for (const change of this.headerChanges.changes) {
+      for (const value of change.values) {
+        if (value !== NOT_SELECTED) {
           return true;
         }
       }
@@ -53,8 +50,8 @@ export default class DeltaView extends Vue {
   /**
    * Wrapped getters to utilize vue caching, and also just make things easier in the template.
    */
-  get header_changes(): ControlChangeGroup {
-    return this.delta.header_changes;
+  get headerChanges(): ControlChangeGroup {
+    return this.delta.headerChanges;
   }
 }
 </script>
