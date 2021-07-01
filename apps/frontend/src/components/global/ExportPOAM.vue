@@ -110,7 +110,7 @@ export default class ExportPOAM extends Vue {
       this.filter.fromFile.forEach((fileId) => {
         // Find our file within InspecDataModule
         const file = InspecDataModule.allFiles.find(
-          (f) => f.unique_id === fileId
+          (f) => f.uniqueId === fileId
         );
         if (file) {
           const profileName = _.get(file, 'evaluation.data.profiles[0].title')
