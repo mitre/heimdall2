@@ -4,6 +4,19 @@ import _ from 'lodash'
 import fs from 'fs'
 import { MappedTransform, LookupPath, BaseConverter } from './base-converter'
 
+// Constants
+const IMPACT_MAPPING: Map<string, number> = new Map([
+  ['high', 0.7],
+  ['medium', 0.5],
+  ['low', 0.3]
+]);
+
+// Transformation Functions
+function impactMapping(severity: string | number): number {
+  return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0
+}
+
+// Mappings
 const mappings: MappedTransform<ExecJSON, LookupPath> = {
   platform: {
     name: 'Heimdall Tools',
@@ -20,7 +33,7 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
         id: { path: 'id' },
         title: { path: 'summary' },
         desc: { path: '' },
-        impact: { path: 'severity' },
+        impact: { path: 'severity', transformer: impactMapping },
         code: '',
         results: [],
         tags: {

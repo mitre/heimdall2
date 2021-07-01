@@ -12,22 +12,17 @@ export type MappedReform<T, U> = {
 };
 export interface LookupPath {
   path?: string | string[];
-  transformer?: Function;
+  // Parameter will be the return type of handlePath, which can either be a string or a number
+  transformer?: ((value: string) => string | number) | ((value: number) => string | number);
 }
 
 export class BaseConverter {
   data: object
   mappings: MappedTransform<ExecJSON, LookupPath>
+
   constructor(data: object, mappings: MappedTransform<ExecJSON, LookupPath>) {
     this.data = data
     this.mappings = mappings
-  }
-  objectMap<T, V>(obj: T, fn: (v: ObjectEntries<T>) => V): { [K in keyof T]: V } {
-    return Object.fromEntries(
-      Object.entries(obj).map(
-        ([k, v]) => [k, fn(v)]
-      )
-    ) as Record<keyof T, V>
   }
 
   toHdf(): ExecJSON {
@@ -37,6 +32,14 @@ export class BaseConverter {
     // })
     //set the sha-256 to the hash(_.omit(v.profiles, ['sha256']), map the controls
     return v
+  }
+
+  objectMap<T, V>(obj: T, fn: (v: ObjectEntries<T>) => V): { [K in keyof T]: V } {
+    return Object.fromEntries(
+      Object.entries(obj).map(
+        ([k, v]) => [k, fn(v)]
+      )
+    ) as Record<keyof T, V>
   }
   convertInternal<T>(file: object, fields: T): MappedReform<T, LookupPath> {
     const result = this.objectMap(fields, (v: ObjectEntries<T>) => this.evaluate(file, v)) //TODO
@@ -49,18 +52,22 @@ export class BaseConverter {
   //   const byteArray = await crypto.subtle.digest('SHA-256', encdata)
   //   return Array.prototype.map.call(new Uint8Array(byteArray), x => (('00' + x.toString(16)).slice(-2))).join('');
   // }
-  evaluate<T>(file: object, v: T | Array<T>): string | T | Array<T> | MappedReform<T, LookupPath> {
+  evaluate<T>(file: object, v: T | Array<T>): number | string | T | Array<T> | MappedReform<T, LookupPath> {
     if (Array.isArray(v)) {
       return this.handleArray(file, v)
     } else if (typeof v === 'string') {
       return v
     } else if (_.has(v, 'path')) {
-      return this.handlePath(file, _.get(v, 'path'))
+      // Need to figure out how to pass argument into transformer function
+      if (_.has(v, 'transformer')) {
+        return (_.get(v, 'transformer'))(this.handlePath(file, _.get(v, 'path')))
+      } else {
+        return this.handlePath(file, _.get(v, 'path'))
+      }
     } else {
       return this.convertInternal(file, v)
     }
   }
-
   handleArray<T>(file: object, v: Array<T & LookupPath>): Array<T> {
     if (v.length === 0) {
       return new Array<T>()
@@ -82,8 +89,7 @@ export class BaseConverter {
       return v
     }
   }
-
-  handlePath(file: object, path: string | string[]): string {
+  handlePath(file: object, path: string | string[]): string | number {
     if (typeof path === 'string') {
       return _.get(file, path) || ''
     } else {
