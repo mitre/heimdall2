@@ -37,12 +37,22 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
           user,
           configService.get('LDAP_MAILFIELD') || 'mail'
         );
-        req.user = this.authnService.validateOrCreateUser(
-          email,
-          firstName,
-          lastName,
-          'ldap'
-        );
+        // If user has multiple emails
+        if (typeof email === 'object') {
+          req.user = this.authnService.validateOrCreateUser(
+            email[0],
+            firstName,
+            lastName,
+            'ldap'
+          );
+        } else {
+          req.user = this.authnService.validateOrCreateUser(
+            email,
+            firstName,
+            lastName,
+            'ldap'
+          );
+        }
         return done(null, req.user);
       }
     );
