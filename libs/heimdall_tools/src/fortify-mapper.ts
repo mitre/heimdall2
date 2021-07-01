@@ -19,17 +19,20 @@ function convert(fields: typeof mappings, file: Object) {
     if (typeof v.path === 'string') {
       return _.get(file, v.path)
     } else {
-      var total: string = ''
-      v.path.forEach(function (value) {
-        if (typeof _.get(file, value) != "undefined") {
-          total += _.get(file, value)
+      var value: string = ''
+      v.path.forEach(function (item) {
+        if (typeof _.get(file, item) != 'undefined') {
+          value += _.get(file, item) + ' '
+        } else {
+          value += item + ' '
         }
       })
-      return total
+      return value
     }
   })
   return result
 }
+
 async function generateHash(data: string): Promise<string> {
   const encoder = new TextEncoder();
   const encdata = encoder.encode(data);
@@ -79,3 +82,4 @@ class FortifyMapper {
     this.fvdl = fvdl
   }
 }
+

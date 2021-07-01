@@ -1,0 +1,400 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "0.1.0"
+  },
+  "profiles": [
+    {
+      "name": "JFrog Xray Scan",
+      "title": "JFrog Xray Scan",
+      "version": "",
+      "attributes": [],
+      "controls": [
+        {
+          "id": "",
+          "title": "Acorn regexp.js Regular Expression Validation UTF-16 Surrogate Handling Infinite Loop DoS",
+          "impact": "High",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "Acorn regexp.js Regular Expression Validation UTF-16 Surrogate Handling Infinite Loop DoS",
+          "impact": "High",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "Lodash Package for Node.js .internal/baseZipObject.js baseZipObject() Function Property Manipulation Resource Exhaustion DoS",
+          "impact": "High",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "Lodash Package for Node.js .internal/baseZipObject.js baseZipObject() Function Property Manipulation Resource Exhaustion DoS",
+          "impact": "High",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "node-handlebars Template Handling Prototype Manipulation Remote Code Execution",
+          "impact": "High",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "node-handlebars Template Handling Prototype Manipulation Remote Code Execution",
+          "impact": "High",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "Handlebars.js lib/handlebars/helpers/lookup.js Template Handling Prototype Manipulation Arbitrary Code Execution",
+          "impact": "High",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "Handlebars.js lib/handlebars/helpers/lookup.js Template Handling Prototype Manipulation Arbitrary Code Execution",
+          "impact": "High",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "Arbitrary Code Execution",
+          "impact": "High",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "Arbitrary Code Execution",
+          "impact": "High",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "Versions of handlebars prior to 4.3.0 are vulnerable to Prototype Pollution leading to Remote Code Execution. Templates may alter an Object's __proto__ and __defineGetter__ properties, which may allow an attacker to execute arbitrary code through crafted payloads.",
+          "impact": "High",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "Versions of handlebars prior to 4.3.0 are vulnerable to Prototype Pollution leading to Remote Code Execution. Templates may alter an Object's __proto__ and __defineGetter__ properties, which may allow an attacker to execute arbitrary code through crafted payloads.",
+          "impact": "High",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "Lodash Package for Node.js lodash.js baseSet() Function Prototype Pollution DoS",
+          "impact": "High",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "Lodash Package for Node.js lodash.js baseSet() Function Prototype Pollution DoS",
+          "impact": "High",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "Handlebars before 4.4.5 allows Regular Expression Denial of Service (ReDoS) because of eager matching. The parser may be forced into an endless loop while processing crafted templates. This may allow attackers to exhaust system resources.",
+          "impact": "High",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "Handlebars before 4.4.5 allows Regular Expression Denial of Service (ReDoS) because of eager matching. The parser may be forced into an endless loop while processing crafted templates. This may allow attackers to exhaust system resources.",
+          "impact": "High",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "Lodash Package for Node.js lodash.js safeGet() Function Object Prototype Manipulation Unspecified Issue",
+          "impact": "High",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "ctorName in index.js in kind-of v6.0.2 allows external user input to overwrite certain internal attributes via a conflicting name, as demonstrated by 'constructor': {'name':'Symbol'}. Hence, a crafted payload can overwrite this builtin attribute to manipulate the type detection result.",
+          "impact": "Medium",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "An issue was discovered in ajv.validate() in Ajv (aka Another JSON Schema Validator) 6.12.2. A carefully crafted JSON schema could be provided that allows execution of other code by prototype pollution. (While untrusted schemas are recommended against, the worst case of an untrusted schema should be a denial of service, not execution of code.)",
+          "impact": "Medium",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "minimist before 1.2.2 could be tricked into adding or modifying properties of Object.prototype using a \"constructor\" or \"__proto__\" payload.",
+          "impact": "Medium",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "braces Package for Node.js lib/parsers.js Regular Expression Handling DoS",
+          "impact": "Medium",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "yargs-parser could be tricked into adding or modifying properties of Object.prototype using a \"__proto__\" payload.",
+          "impact": "Medium",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "yargs-parser could be tricked into adding or modifying properties of Object.prototype using a \"__proto__\" payload.",
+          "impact": "Medium",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "yargs-parser could be tricked into adding or modifying properties of Object.prototype using a \"__proto__\" payload.",
+          "impact": "Medium",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "mem Package for Node.js index.js Cache Handling Memory Exhaustion Remote DoS Weakness",
+          "impact": "Medium",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "Handlebars before 3.0.8 and 4.x before 4.5.3 is vulnerable to Arbitrary Code Execution. The lookup helper fails to properly validate templates, allowing attackers to submit templates that execute arbitrary JavaScript. This can be used to run arbitrary code on a server processing Handlebars templates or in a victim's browser (effectively serving as XSS).",
+          "impact": "Medium",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        },
+        {
+          "id": "",
+          "title": "Prototype Pollution",
+          "impact": "Low",
+          "code": "",
+          "results": [],
+          "tags": {
+            "nist": "",
+            "cweid": ""
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {}
+        }
+      ],
+      "groups": [],
+      "summary": "Continuous Security and Universal Artifact Analysis",
+      "supports": [],
+      "sha256": ""
+    }
+  ],
+  "statistics": {},
+  "version": "0.1.0"
+}
