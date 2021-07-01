@@ -8,15 +8,8 @@
   "main": "./src/inspecjs.ts",
   "dependencies": {},
   "devDependencies": {
-    "@types/node": "^12.20.7",
-    "@typescript-eslint/eslint-plugin": "^2.34.0",
-    "@typescript-eslint/parser": "^2.34.0",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.15.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "prettier": "^1.19.1",
-    "typedoc": "^0.20.35",
-    "typescript": "^3.9.9"
+    "@types/node": "^15.0.1",
+    "typedoc": "^0.20.35"
   },
   "scripts": {
     "prebuild": "rimraf ./dist",
