@@ -26,13 +26,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mitre/inspecjs.git"
+    "url": "git+https://github.com/mitre/heimdall2.git"
   },
   "keywords": [],
   "author": "",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/mitre/inspecjs/issues"
+    "url": "https://github.com/mitre/heimdall2/issues"
   },
-  "homepage": "https://github.com/mitre/inspecjs#readme"
+  "homepage": "http://inspecjs.mitre.org/"
 }

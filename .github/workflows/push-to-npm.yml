@@ -53,7 +53,7 @@ jobs:
         run: yarn inspecjs pack
 
       - name: Publish InSpecJS to NPM
-        run: yarn publish --access public apps/frontend/inspecjs*.tgz
+        run: yarn publish --access public libs/inspecjs/inspecjs*.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
