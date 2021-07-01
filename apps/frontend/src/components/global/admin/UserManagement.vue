@@ -75,19 +75,19 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import UserModal from '@/components/global/UserModal.vue';
 import ActionDialog from '@/components/generic/ActionDialog.vue';
-import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import RegistrationModal from '@/components/global/RegistrationModal.vue';
 
 @Component({
   components: {
     ActionDialog,
     UserModal,
-    LinkItem,
+    IconLinkItem,
     RegistrationModal
   }
 })
 export default class UserManagement extends Vue {
-  loading: boolean = true;
+  loading = true;
   editedUser: IUser | null = null;
   dialogDelete = false;
   createUserDialog = false;

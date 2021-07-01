@@ -236,7 +236,7 @@ import CopyButton from '@/components/generic/CopyButton.vue'
     },
     currentPassword: {
       required: requiredIf(function(userInfo){
-        	return (userInfo.user.role == 'admin')
+        	return (userInfo.user.role === 'admin')
         })
     },
     newPassword: {
@@ -391,7 +391,7 @@ export default class UserModal extends Vue {
   }
 
   get update_unavailable() {
-    return this.userInfo.creationMethod == 'ldap' || ServerModule.enabledOAuth.includes(this.userInfo.creationMethod);
+    return this.userInfo.creationMethod === 'ldap' || ServerModule.enabledOAuth.includes(this.userInfo.creationMethod);
   }
 
   get title(): string {

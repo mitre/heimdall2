@@ -23,7 +23,6 @@ export default class ColumnHeader extends Vue {
    * Simple boolean deciding whether or not to actually show/allow sorting
    */
   get allow_sort(): boolean {
-    // return true;
     return this.sort !== 'disabled';
   }
 
@@ -32,20 +31,13 @@ export default class ColumnHeader extends Vue {
    * Toggles between the sort modes, and emits them as an "input" event.
    */
   toggle_sort(): void {
-    let new_sort: string;
-    switch (this.sort) {
-      default: // Shouldn't happen but whatever
-      case 'none':
-        new_sort = 'descending';
-        break;
-      case 'descending':
-        new_sort = 'ascending';
-        break;
-      case 'ascending':
-        new_sort = 'descending';
-        break;
+    let newSort: string;
+    if (this.sort === 'descending') {
+      newSort = 'ascending';
+    } else {
+      newSort = 'descending';
     }
-    this.$emit('input', new_sort);
+    this.$emit('input', newSort);
   }
 
   /**
@@ -53,15 +45,14 @@ export default class ColumnHeader extends Vue {
    */
   get icon(): string {
     switch (this.sort) {
-      default:
-      case 'none':
-        return 'mdi-sort-variant';
       case 'ascending':
         return 'mdi-sort-ascending';
       case 'descending':
         return 'mdi-sort-descending';
       case 'disabled':
         return '';
+      default:
+        return 'mdi-sort-variant';
     }
   }
 }

@@ -6,13 +6,11 @@
     <AuthStep
       @authenticated="handle_login"
       @error="handle_error"
-      @show-help="error_count = -1"
+      @show-help="errorCount = -1"
     />
 
-    <!-- :complete="!!assumed_role && assumed_role.from_mfa" -->
-
     <FileList
-      :endpoint="splunk_state"
+      :endpoint="splunkState"
       @exit-list="handle_logout"
       @got-files="got_files"
       @error="handle_error"
@@ -21,11 +19,11 @@
     <v-overlay
       :opacity="50"
       absolute="absolute"
-      :value="error_count >= 3 || error_count < 0"
+      :value="errorCount >= 3 || errorCount < 0"
     >
       <div class="text-center">
         <p>
-          <span v-if="error_count > 0">
+          <span v-if="errorCount > 0">
             It seems you may be having trouble using the Splunk toolkit. Are you
             sure that you have configured it properly?
           </span>
@@ -44,7 +42,7 @@
             Splunk HDF Plugin
           </v-btn>
         </p>
-        <v-btn color="info" @click="error_count = 0"> Ok </v-btn>
+        <v-btn color="info" @click="errorCount = 0"> Ok </v-btn>
       </div>
     </v-overlay>
   </v-stepper>
@@ -72,18 +70,18 @@ import {SplunkEndpoint, SplunkErrorCode} from '@/utilities/splunk_util';
 })
 export default class SplunkReader extends Vue {
   /** Our session information, saved iff valid */
-  splunk_state: SplunkEndpoint | null = null;
+  splunkState: SplunkEndpoint | null = null;
 
   /** Current step. 1 for login, 2 for search */
-  step: number = 1;
+  step = 1;
 
   /** Count errors to know if we should show overlay */
-  error_count = 0;
+  errorCount = 0;
 
   /** When login is clicked - save credentials, verify that they work, then proceed if they do*/
-  handle_login(new_endpoint: SplunkEndpoint) {
+  handle_login(newEndpoint: SplunkEndpoint) {
     // Store the state
-    this.splunk_state = new_endpoint;
+    this.splunkState = newEndpoint;
 
     // Move the carousel
     this.step = 2;
@@ -92,7 +90,7 @@ export default class SplunkReader extends Vue {
   /** When cancel/logout is clicked from the search window */
   handle_logout() {
     this.step = 1;
-    this.splunk_state = null;
+    this.splunkState = null;
   }
 
   /** Callback to handle a splunk error.
@@ -102,14 +100,14 @@ export default class SplunkReader extends Vue {
     this.step = 1;
     switch (error) {
       case SplunkErrorCode.BadNetwork:
-        this.error_count += 1;
+        this.errorCount += 1;
         // https://docs.splunk.com/Documentation/Splunk/8.0.1/Admin/Serverconf
         this.show_error_message(
           'Connection to host failed. Please ensure that the hostname is correct, and that your splunk server has been properly configured to allow CORS requests. Please see https://docs.splunk.com/Documentation/Splunk/8.0.1/Admin/Serverconf for information on how to enable CORS.'
         );
         break;
       case SplunkErrorCode.PageNotFound:
-        this.error_count += 1;
+        this.errorCount += 1;
         this.show_error_message(
           'Connection made with errors. Please ensure your hostname is formatted as shown in the example.'
         );
@@ -122,7 +120,7 @@ export default class SplunkReader extends Vue {
         break;
       case SplunkErrorCode.ConsolidationFailed:
       case SplunkErrorCode.SchemaViolation:
-        this.error_count += 1;
+        this.errorCount += 1;
         this.show_error_message('Error creating execution from splunk events.');
         break;
       case SplunkErrorCode.InvalidGUID:
