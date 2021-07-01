@@ -17,7 +17,7 @@ if (process.argv.length > 2) {
   port = Number.parseInt(process.argv[2]);
   if (Number.isNaN(port) || port < 1 || port >= 65536) {
     // eslint-disable-next-line no-console
-    console.error('Error: ' + process.argv[2] + ' is not a valid port.');
+    console.error(`Error: ${process.argv[2]} is not a valid port.`);
     return;
   }
 }

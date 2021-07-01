@@ -17,7 +17,7 @@ import {
 } from 'vuex-module-decorators';
 import {GroupsModule} from './groups';
 
-const local_token = new LocalStorageVal<string | null>('auth_token');
+const localToken = new LocalStorageVal<string | null>('auth_token');
 const localUserID = new LocalStorageVal<string | null>('localUserID');
 
 export interface IServerState {
@@ -70,7 +70,7 @@ class Server extends VuexModule implements IServerState {
   @Mutation
   SET_TOKEN(newToken: string) {
     this.token = newToken;
-    local_token.set(newToken);
+    localToken.set(newToken);
     axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
   }
 
@@ -111,7 +111,7 @@ class Server extends VuexModule implements IServerState {
 
   @Mutation
   CLEAR_TOKEN() {
-    local_token.clear();
+    localToken.clear();
   }
 
   @Mutation
@@ -140,7 +140,7 @@ class Server extends VuexModule implements IServerState {
           // This means the server successfully responded and we are therefore in server mode
           this.context.commit('SET_SERVER');
           this.context.commit('SET_STARTUP_SETTINGS', response.data);
-          const token = local_token.get() || Vue.$cookies.get('accessToken');
+          const token = localToken.get() || Vue.$cookies.get('accessToken');
           const userID = localUserID.get() || Vue.$cookies.get('userID');
           Vue.$cookies.remove('accessToken');
           Vue.$cookies.remove('userID');

@@ -37,24 +37,23 @@ export function compare_arrays<T>(
  * Will not store/retrieve methods - be advised! It won't work with class types!
  */
 export class LocalStorageVal<T> {
-  private storage_key: string;
+  private readonly storageKey: string;
 
-  constructor(storage_key: string) {
-    this.storage_key = storage_key;
+  constructor(storageKey: string) {
+    this.storageKey = storageKey;
   }
 
   /** Retrieves the currently held item, as resolved by JSON.parse */
   get(): T | null {
     // Fetch the string, failing early if not set
-    const s = window.localStorage.getItem(this.storage_key);
+    const s = window.localStorage.getItem(this.storageKey);
     if (!s) {
       return null;
     }
 
     // Then try parsing. On fail, clear and go null
     try {
-      const v = JSON.parse(s);
-      return v;
+      return JSON.parse(s);
     } catch (error) {
       this.clear();
       return null;
@@ -74,12 +73,12 @@ export class LocalStorageVal<T> {
   /** Sets the local storage value to the given value, stringified */
   set(val: T): void {
     const nv = JSON.stringify(val);
-    window.localStorage.setItem(this.storage_key, nv);
+    window.localStorage.setItem(this.storageKey, nv);
   }
 
   /** Clears the local storage value */
   clear(): void {
-    window.localStorage.removeItem(this.storage_key);
+    window.localStorage.removeItem(this.storageKey);
   }
 }
 
@@ -89,18 +88,18 @@ export type Hash<T> = {[key: string]: T};
 /** Groups items by using the provided key function */
 export function group_by<T>(
   items: Array<T>,
-  key_getter: (v: T) => string
+  keyGetter: (v: T) => string
 ): Hash<Array<T>> {
   const result: Hash<Array<T>> = {};
   for (const i of items) {
     // Get the items key
-    const key = key_getter(i);
+    const key = keyGetter(i);
 
     // Get the list it should go in
-    const corr_list = result[key];
-    if (corr_list) {
+    const corrList = result[key];
+    if (corrList) {
       // If list exists, place
-      corr_list.push(i);
+      corrList.push(i);
     } else {
       // List does not exist; create and put
       result[key] = [i];
@@ -112,11 +111,11 @@ export function group_by<T>(
 /** Maps a hash to a new hash, with the same keys but each value replaced with a new (mapped) value */
 export function map_hash<T, G>(
   old: Hash<T>,
-  map_function: (v: T) => G
+  mapFunction: (v: T) => G
 ): Hash<G> {
   const result: Hash<G> = {};
   for (const key in old) {
-    result[key] = map_function(old[key]);
+    result[key] = mapFunction(old[key]);
   }
   return result;
 }
@@ -124,10 +123,9 @@ export function map_hash<T, G>(
 /** Converts a simple, single level json dict into uri params */
 export function to_uri_params(params: Hash<string | number | boolean>) {
   const esc = encodeURIComponent;
-  const query = Object.keys(params)
-    .map((k) => esc(k) + '=' + esc(params[k]))
+  return Object.keys(params)
+    .map((k) => `${esc(k)}=${esc(params[k])}`)
     .join('&');
-  return query;
 }
 
 /** Generate a basic authentication string for http requests */
