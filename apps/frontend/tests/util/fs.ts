@@ -1,9 +1,9 @@
 import * as fs from 'fs';
 
 /** Returns sorted list of files in a directory */
-export function list_files(dir_path: string) {
+export function list_files(dirPath: string) {
   // Init result array
-  const result = fs.readdirSync(dir_path);
+  const result = fs.readdirSync(dirPath);
 
   // Sort by filename
   return result.sort();
@@ -17,20 +17,18 @@ export interface FileResult {
   content: string;
 }
 
-export function read_files(dir_name: string): FileResult[] {
+export function read_files(dirName: string): FileResult[] {
   // List the files
-  const files = list_files(dir_name);
+  const files = list_files(dirName);
 
   // Read them all
-  const result = files.map((filename) => {
-    const content = fs.readFileSync(dir_name + filename, 'utf-8');
-    const result: FileResult = {
+  return files.map((filename) => {
+    const content = fs.readFileSync(dirName + filename, 'utf-8');
+    return {
       name: filename,
       content
     };
-    return result;
   });
-  return result;
 }
 
 export type FileHash = {[key: string]: FileResult};

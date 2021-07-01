@@ -1,7 +1,7 @@
 <template>
   <v-tooltip top>
     <template #activator="{on}">
-      <LinkItem
+      <IconLinkItem
         key="export_nist"
         text="NIST SP 800-53 Security and Privacy Control Coverage"
         icon="mdi-file-excel"
@@ -20,7 +20,7 @@ import {FilteredDataModule, Filter} from '@/store/data_filters';
 import XLSX from 'xlsx';
 import {saveAs} from 'file-saver';
 
-import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {NistControl} from 'inspecjs/dist/nist';
 import {FileID} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
@@ -37,7 +37,7 @@ export interface Sheet {
 
 @Component({
   components: {
-    LinkItem
+    IconLinkItem
   }
 })
 export default class ExportNIST extends Vue {
@@ -53,7 +53,7 @@ export default class ExportNIST extends Vue {
       return null;
     } else {
       // Just construct as best we can
-      let base = control.sub_specifiers[0] + '-' + control.sub_specifiers[1];
+      let base = `${control.sub_specifiers[0]}-${control.sub_specifiers[1]}`;
       for (let i = 2; i < control.sub_specifiers.length; i++) {
         base += control.sub_specifiers[i];
       }
@@ -64,52 +64,52 @@ export default class ExportNIST extends Vue {
   /** Makes a sheet for the given file id */
   sheet_for(file?: FileID): Sheet {
     // If file not provided
-    let filename: string = 'All files';
+    let filename = 'All files';
     let id: FileID[] = FilteredDataModule.selected_file_ids;
     if (file) {
       id = [file];
-      filename = InspecDataModule.allFiles.find((x) => x.unique_id == file)!
+      filename = InspecDataModule.allFiles.find((x) => x.uniqueId === file)!
         .filename;
     }
 
     // Get our data
-    let base_filter = this.filter;
-    let modified_filter: Filter = {...base_filter, fromFile: id};
-    let controls = FilteredDataModule.controls(modified_filter);
+    const baseFilter = this.filter;
+    const modifiedFilter: Filter = {...baseFilter, fromFile: id};
+    const controls = FilteredDataModule.controls(modifiedFilter);
 
     // Initialize our data structures
-    let sheet: NISTList = [
+    const sheet: NISTList = [
       [`${filename} NIST SP 800-53 Security and Privacy Control Coverage`]
     ];
 
     // Get them all
-    let nist_controls: NistControl[] = [];
+    let nistControls: NistControl[] = [];
     controls.forEach((c) => {
-      let tags = c.root.hdf.parsed_nist_tags;
+      const tags = c.root.hdf.parsed_nist_tags;
       tags.forEach((t) => {
         if (
-          !nist_controls.some(
-            (other_tag) => this.format_tag(other_tag) === this.format_tag(t)
+          !nistControls.some(
+            (otherTag) => this.format_tag(otherTag) === this.format_tag(t)
           )
         ) {
-          nist_controls.push(t);
+          nistControls.push(t);
         }
       });
     });
 
     // Sort them
-    nist_controls = nist_controls.sort((a, b) => a.localCompare(b));
+    nistControls = nistControls.sort((a, b) => a.localCompare(b));
 
     // Turn to strings
-    let as_strings_mostly = nist_controls.map((c) => this.format_tag(c));
+    const asStringsMostly = nistControls.map((c) => this.format_tag(c));
 
     // Filter out nulls, bind into rows
-    let as_rows = as_strings_mostly
+    const asRows = asStringsMostly
       .filter((v) => v !== null)
       .map((v) => [v]) as NISTList;
 
     // Append to caat
-    sheet.push(...as_rows);
+    sheet.push(...asRows);
 
     return {
       name: filename.slice(0, MAX_SHEET_NAME_SIZE),
@@ -119,16 +119,16 @@ export default class ExportNIST extends Vue {
 
   export_nist() {
     // Get files we plan on exporting
-    let files: Array<FileID | undefined> = [
+    const files: Array<FileID | undefined> = [
       undefined,
       ...FilteredDataModule.selected_file_ids
     ];
 
     // Convert to sheets
-    let sheets = files.map((file) => this.sheet_for(file));
+    const sheets = files.map((file) => this.sheet_for(file));
 
     // Handle XLSX exporting
-    let wb = XLSX.utils.book_new();
+    const wb = XLSX.utils.book_new();
 
     wb.Props = {
       Title: 'NIST SP 800-53 Security and Privacy Control Coverage',
@@ -140,25 +140,23 @@ export default class ExportNIST extends Vue {
     // Push all sheets
     sheets.forEach((sheet) => {
       // Avoid name duplication
-      let i = 2;
-      let new_name = sheet.name;
-      while (wb.SheetNames.includes(new_name)) {
-        let appendage = ` (${i})`;
-        new_name = sheet.name.slice(0, MAX_SHEET_NAME_SIZE - appendage.length);
-        new_name += appendage;
+      const i = 2;
+      let newName = sheet.name;
+      while (wb.SheetNames.includes(newName)) {
+        const appendage = ` (${i})`;
+        newName = sheet.name.slice(0, MAX_SHEET_NAME_SIZE - appendage.length);
+        newName += appendage;
       }
-      wb.SheetNames.push(new_name);
+      wb.SheetNames.push(newName);
 
-      let ws = XLSX.utils.aoa_to_sheet(sheet.data);
-      wb.Sheets[new_name] = ws;
+      const ws = XLSX.utils.aoa_to_sheet(sheet.data);
+      wb.Sheets[newName] = ws;
     });
 
-    let wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
+    const wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
     saveAs(
       new Blob([this.s2ab(wbout)], {type: 'application/octet-stream'}),
-      'NIST-SP-800-53-Security-and-Privacy-Control-Coverage-' +
-        this.convertDate(new Date(), '-') +
-        '.xlsx'
+      `NIST-SP-800-53-Security-and-Privacy-Control-Coverage-${this.convertDate(new Date(), '-')}.xlsx`
     );
   }
 
@@ -177,8 +175,8 @@ export default class ExportNIST extends Vue {
 
   /** Converts a string to an array buffer */
   s2ab(s: string): ArrayBuffer {
-    let buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
-    let view = new Uint8Array(buf); //create uint8array as viewer
+    const buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+    const view = new Uint8Array(buf); //create uint8array as viewer
     for (let i = 0; i < s.length; i++) {
       view[i] = s.charCodeAt(i) & 0xff; //convert to octet
     }

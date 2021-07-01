@@ -22,7 +22,7 @@ export class PasswordsMatchPipe implements PipeTransform {
     ) {
       return value;
     }
-    if (value.password == value.passwordConfirmation) {
+    if (value.password === value.passwordConfirmation) {
       return value;
     } else {
       throw new BadRequestException('Passwords do not match');
