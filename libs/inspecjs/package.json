@@ -23,7 +23,8 @@
     "build": "tsc",
     "docs": "typedoc --out docs ./src",
     "gen-types": "bash scripts/update_schema.sh",
-    "lint": "eslint --ext .ts src"
+    "lint": "eslint --ext .ts src --fix",
+    "lint:ci": "eslint \"**/*.ts\" --max-warnings 0"
   },
   "repository": {
     "type": "git",

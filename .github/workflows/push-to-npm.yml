@@ -56,4 +56,3 @@ jobs:
         run: yarn publish --access public libs/inspecjs/inspecjs*.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
