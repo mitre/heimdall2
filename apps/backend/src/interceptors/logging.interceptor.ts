@@ -48,7 +48,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const calledMethod = context.getHandler().name;
     const requestParams = JSON.stringify(this.redact(request.body));
     this.logger.info({
-      ip: request.ip,
+      ip: this.getRealIP(request),
       user: this.userToString(callingUser),
       message: `${_.startCase(
         calledMethod
@@ -62,6 +62,19 @@ export class LoggingInterceptor implements NestInterceptor {
       return `User<ID: ${user.id}>`;
     }
     return `User<Unknown>`;
+  }
+
+  getRealIP(request: Request): string {
+    const realIP = Object.keys(request.headers).find(
+      (header) =>
+        header.toLowerCase() === 'x-forwarded-for' ||
+        header.toLowerCase() === 'x-real-ip'
+    );
+    if (realIP) {
+      return `${request.headers[realIP]} -> ${request.ip}`;
+    } else {
+      return request.ip;
+    }
   }
 
   redact(obj: Record<string, unknown>): Record<string, unknown> {
