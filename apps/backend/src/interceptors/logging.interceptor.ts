@@ -12,6 +12,17 @@ import {SlimUserDto} from '../users/dto/slim-user.dto';
 import {UserDto} from '../users/dto/user.dto';
 import {User} from '../users/user.model';
 
+const sensitiveKeys = [
+  /cookie/i,
+  /passw(or)?d/i,
+  /^pw$/,
+  /^pass$/i,
+  /secret/i,
+  /token/i,
+  /api[-._]?key/i,
+  /data/i
+];
+
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   public logger = winston.createLogger({
@@ -35,10 +46,13 @@ export class LoggingInterceptor implements NestInterceptor {
     const endpoint = request.originalUrl;
     const callingUser: User | undefined = request.user;
     const calledMethod = context.getHandler().name;
+    const requestParams = JSON.stringify(this.redact(request.body));
     this.logger.info({
       ip: request.ip,
       user: this.userToString(callingUser),
-      message: `${_.startCase(calledMethod)} (${method}) ${endpoint}`
+      message: `${_.startCase(
+        calledMethod
+      )} (${method}) ${requestParams} ${endpoint}`
     });
     return next.handle();
   }
@@ -48,5 +62,18 @@ export class LoggingInterceptor implements NestInterceptor {
       return `User<ID: ${user.id}>`;
     }
     return `User<Unknown>`;
+  }
+
+  redact(obj: Record<string, unknown>): Record<string, unknown> {
+    return this.redactObject(_.cloneDeep(obj));
+  }
+
+  redactObject(obj: Record<string, unknown>): Record<string, unknown> {
+    Object.keys(obj).forEach((key) => {
+      if (sensitiveKeys.some((regex) => regex.test(key))) {
+        obj[key] = '[REDACTED]';
+      }
+    });
+    return obj;
   }
 }
