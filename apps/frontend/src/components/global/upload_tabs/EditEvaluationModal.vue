@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="visible" max-width="1000px">
+  <v-dialog v-model="visible" persistent max-width="1000px">
     <template #activator="{on, attrs}">
       <slot name="clickable" :on="on" :attrs="attrs" />
     </template>
@@ -93,17 +93,17 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 import Modal from '@/components/global/Modal.vue'
 import {Prop} from 'vue-property-decorator';
 import {EvaluationModule} from '@/store/evaluations';
-import {IEvaluation, IEvaluationGroup, IGroup} from '@heimdall/interfaces';
+import {IEvaluation, IEvaluationGroup} from '@heimdall/interfaces';
 import {GroupsModule} from '@/store/groups';
 import GroupModal from '@/components/global/groups/GroupModal.vue';
 import axios from 'axios';
 import {SnackbarModule} from '@/store/snackbar';
 import {IVuetifyItems} from '@/utilities/helper_util';
+import EvaluationMixin from '../../../mixins/EvaluationMixin';
 
 
 @Component({
@@ -112,14 +112,14 @@ import {IVuetifyItems} from '@/utilities/helper_util';
     GroupModal
   }
 })
-export default class EditEvaluationModal extends Vue {
+export default class EditEvaluationModal extends mixins(EvaluationMixin) {
   @Prop({type: Object, required: true}) readonly active!: IEvaluation;
+  @Prop({default: true}) readonly visible!: boolean;
 
   activeEvaluation: IEvaluation = {...this.active};
   originalGroups: IVuetifyItems[] = [];
   groups: IVuetifyItems[] = [];
   groupSearch = '';
-  visible = false;
 
   visibilityOptions: IVuetifyItems[] = [
     {
@@ -136,34 +136,24 @@ export default class EditEvaluationModal extends Vue {
     this.getGroupsForEvaluation();
   }
 
-  convertGroupsToIVuetifyItems(groups: IGroup[]): IVuetifyItems[] {
-    return groups.map((group) => {
-      return {
-        text: group.name,
-        value: group.id
-      }
-    })
-  }
-
   get myGroups(): IVuetifyItems[] {
     return this.convertGroupsToIVuetifyItems(GroupsModule.myGroups);
   }
 
   async getGroupsForEvaluation(): Promise<void> {
-    return axios.get<IGroup[]>(`/evaluations/${this.active.id}/groups`).then(({data}) => {
-      this.originalGroups = this.groups = this.convertGroupsToIVuetifyItems(data);
-    });
+    this.originalGroups = this.groups = this.convertGroupsToIVuetifyItems(this.active.groups);
   }
 
   async update(): Promise<void> {
     Promise.all([EvaluationModule.updateEvaluation(this.activeEvaluation), this.updateGroups()]).then(() => {
       SnackbarModule.notify('Evaluation Updated Successfully');
+      EvaluationModule.loadEvaluation(this.active.id)
     })
-    this.visible = false;
+    this.$emit('close')
   }
 
   cancel(): void {
-    this.visible = false;
+    this.$emit('close')
     this.groups = this.originalGroups;
     this.activeEvaluation = {...this.active};
   }
