@@ -1,29 +1,33 @@
 <template>
-  <v-text-field
-    v-show="showSearchMobile || !$vuetify.breakpoint.xs"
-    ref="search"
-    v-model="searchTerm"
-    flat
-    hide-details
-    dense
-    solo
-    prepend-inner-icon="mdi-magnify"
-    append-icon="mdi-help-circle-outline"
-    label="Search"
-    clearable
-    :class="$vuetify.breakpoint.xs ? 'overtake-bar mx-2' : 'mx-2'"
-    @input="isTyping = true"
-    @click:clear="searchTerm = ''"
-    @click:append="showSearchHelp = true"
-    @blur="showSearchMobile = false"
-    ><SearchHelpModal
+  <span class="d-flex flex-nowrap">
+    <v-text-field
+      v-show="showSearchMobile || !$vuetify.breakpoint.xs"
+      ref="search"
+      v-model="searchTerm"
+      flat
+      hide-details
+      dense
+      solo
+      prepend-inner-icon="mdi-magnify"
+      append-icon="mdi-help-circle-outline"
+      label="Search"
+      clearable
+      :class="$vuetify.breakpoint.xs ? 'overtake-bar mx-2' : 'regular-bar mx-2'"
+      @input="isTyping = true"
+      @click:clear="searchTerm = ''"
+      @click:append="showSearchHelp = true"
+      @blur="showSearchMobile = false"
+    >
+      <v-btn v-if="$vuetify.breakpoint.xs" class="mr-2" @click="showSearch">
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn></v-text-field
+    >
+    <SearchHelpModal
       :visible="showSearchHelp"
+      style="display: none"
       @close-modal="showSearchHelp = false"
     />
-    <v-btn v-if="$vuetify.breakpoint.xs" class="mr-2" @click="showSearch">
-      <v-icon>mdi-magnify</v-icon>
-    </v-btn></v-text-field
-  >
+  </span>
 </template>
 
 <script lang="ts">
@@ -88,6 +92,10 @@ export default class SearchBar extends Vue {
 </script>
 
 <style scoped>
+.regular-bar {
+  width: 40vw;
+}
+
 .overtake-bar {
   width: 96%;
   position: absolute;
