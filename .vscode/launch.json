@@ -31,7 +31,7 @@
         "ts-node/register"
       ],
       "args": [
-        "${workspaceRoot}/libs/heimdall_tools/src/jfrog-xray-mapper.ts"
+        "${workspaceRoot}/libs/heimdall_tools/src/test.ts"
       ]
     }
   ]

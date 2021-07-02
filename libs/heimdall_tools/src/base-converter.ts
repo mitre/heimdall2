@@ -1,7 +1,6 @@
 import { ExecJSON } from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
-import { version as HeimdallToolsVersion } from '../package.json'
 import _ from 'lodash'
-import fs from 'fs'
+import { createHash } from 'crypto';
 
 export type ObjectEntries<T> = { [K in keyof T]: readonly [K, T[K]] }[keyof T];
 export type MappedTransform<T, U> = {
@@ -13,7 +12,41 @@ export type MappedReform<T, U> = {
 export interface LookupPath {
   path?: string | string[];
   // Parameter will be the return type of handlePath, which can either be a string or a number
-  transformer?: ((value: string) => string | number) | ((value: number) => string | number);
+  transformer?: (((value: string) => string | number) | ((value: number) => string | number) | ((value: object) => string | number | object));
+  key?: string;
+}
+
+// Hashing Function
+export function generateHash(data: string, algorithm: string): string {
+  var hash = createHash(algorithm)
+  var output = hash.update(data).digest('hex')
+  return output
+}
+
+function collapseDuplicates<T extends Object>(array: Array<T>, key: string): Array<T> {
+  let seen = new Map<string, number>()
+  let newArray = new Array<T>()
+  let counter = 0
+  array.forEach((item: T) => {
+    var propertyValue = _.get(item, 'id')
+    var index = seen.get(propertyValue) || 0
+    var test = _.get(newArray[index], 'results[?(code_desc)]')
+    if (!seen.has(propertyValue)) {
+      newArray.push(item)
+      seen.set(propertyValue, counter)
+      counter++
+    } else {
+      let descriptions = new Array<string>()
+      let length = _.get(newArray[index], 'results').length
+      for (let i = 0; i < length; i++) {
+        descriptions.push(_.get(newArray[index], `results[${i.toString()}].code_desc`))
+      }
+      if (descriptions.indexOf(_.get(item, 'results[0].code_desc')) === -1) {
+        _.set(newArray[index], 'results', (_.get(newArray[index], 'results').concat(_.get(item, 'results'))))
+      }
+    }
+  })
+  return newArray
 }
 
 export class BaseConverter {
@@ -27,10 +60,9 @@ export class BaseConverter {
 
   toHdf(): ExecJSON {
     let v = this.convertInternal(this.data, this.mappings)
-    // v.profiles.forEach((element) => {
-    //   element.sha256 = generateHash(_.omit(v.profiles, ['sha256']).toString())
-    // })
-    //set the sha-256 to the hash(_.omit(v.profiles, ['sha256']), map the controls
+    v.profiles.forEach((element) => {
+      element.sha256 = generateHash(_.omit(element, ['sha256']).toString(), 'sha256')
+    })
     return v
   }
 
@@ -45,25 +77,19 @@ export class BaseConverter {
     const result = this.objectMap(fields, (v: ObjectEntries<T>) => this.evaluate(file, v)) //TODO
     return result as MappedReform<T, LookupPath>
   }
-  // async function generateHash(data: string): string {
-  //   const encoder = new TextEncoder();
-  //   const encdata = encoder.encode(data);
-
-  //   const byteArray = await crypto.subtle.digest('SHA-256', encdata)
-  //   return Array.prototype.map.call(new Uint8Array(byteArray), x => (('00' + x.toString(16)).slice(-2))).join('');
-  // }
   evaluate<T>(file: object, v: T | Array<T>): number | string | T | Array<T> | MappedReform<T, LookupPath> {
     if (Array.isArray(v)) {
       return this.handleArray(file, v)
-    } else if (typeof v === 'string') {
+    } else if ((typeof v === 'string') || (typeof v === 'number') || (v === null)) {
       return v
     } else if (_.has(v, 'path')) {
-      // Need to figure out how to pass argument into transformer function
       if (_.has(v, 'transformer')) {
         return (_.get(v, 'transformer'))(this.handlePath(file, _.get(v, 'path')))
       } else {
         return this.handlePath(file, _.get(v, 'path'))
       }
+    } if (_.has(v, 'transformer')) {
+      return (_.get(v, 'transformer'))(file)
     } else {
       return this.convertInternal(file, v)
     }
@@ -76,17 +102,26 @@ export class BaseConverter {
       return [this.evaluate(file, v[0]) as T]
     } else {
       let path = v[0].path
-      let length = _.get(file, path).length
-      v[0] = _.omit(v[0], ['path']) as T
-      for (let i = 1; i < length; i++) {
-        v.push({ ...v[0] })
+      let key = v[0].key
+      if (_.has(file, path)) {
+        let length = _.get(file, path).length
+        v[0] = _.omit(v[0], ['path', 'key']) as T
+        for (let i = 1; i < length; i++) {
+          v.push({ ...v[0] })
+        }
+        var counter = 0
+        _.get(file, path).forEach((element: object) => {
+          v[counter] = this.convertInternal(element, v[counter]) as T
+          counter++
+        })
+        if (key !== undefined) {
+          return collapseDuplicates(v, key)
+        } else {
+          return v
+        }
+      } else {
+        return []
       }
-      var counter = 0
-      _.get(file, path).forEach((element: object) => {
-        v[counter] = this.convertInternal(element, v[counter]) as T
-        counter++
-      })
-      return v
     }
   }
   handlePath(file: object, path: string | string[]): string | number {
