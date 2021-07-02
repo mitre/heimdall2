@@ -8,13 +8,15 @@ import {
   Post,
   Put,
   Request,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {EvaluationsService} from '../evaluations/evaluations.service';
 import {GroupUser} from '../group-users/group-user.model';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
+import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {AddUserToGroupDto} from './dto/add-user-to-group.dto';
@@ -26,6 +28,7 @@ import {GroupsService} from './groups.service';
 
 @Controller('groups')
 @UseGuards(JwtAuthGuard)
+@UseInterceptors(LoggingInterceptor)
 export class GroupsController {
   constructor(
     private readonly groupsService: GroupsService,
@@ -158,7 +161,6 @@ export class GroupsController {
     const abac = this.authz.abac.createForUser(request.user);
     const groupToUpdate = await this.groupsService.findByPkBang(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, groupToUpdate);
-
     return new GroupDto(
       await this.groupsService.update(groupToUpdate, updateGroup)
     );
@@ -185,7 +187,6 @@ export class GroupsController {
     const abac = this.authz.abac.createForUser(request.user);
     const groupToDelete = await this.groupsService.findByPkBang(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Delete, groupToDelete);
-
     return new GroupDto(await this.groupsService.remove(groupToDelete));
   }
 }
