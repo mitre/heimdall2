@@ -83,7 +83,7 @@ export default class Tour extends Vue {
               {
                 attachTo: {element: '#select-tab-s3', on: 'auto'},
                 title: 'S3 Bucket',
-                text: 'Here you can access the S3 buckett',
+                text: 'Here you can access an S3 bucket',
                 buttons: defaultButtons
               },
               {
