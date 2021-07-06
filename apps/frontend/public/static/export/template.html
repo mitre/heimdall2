@@ -25,8 +25,8 @@
     .apexcharts-ycrosshairs {
         display: none;
     }
-    .apexcharts-tooltip-series-group .apexcharts-active {
-        display: none;
+    .apexcharts-active {
+        display: none !important;
     }
     #generate:hover {
         cursor: pointer;
@@ -52,6 +52,11 @@
         size: landscape;
     }
     </style>
+    <script>
+        window.addEventListener("hashchange", function () {
+            window.scrollTo(window.scrollX, window.scrollY - 70);
+        });
+    </script>
 </head>
 <body>
     <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
@@ -63,7 +68,7 @@
                     <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Control Sets
             </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown"> {{#controlSets}} <a class="dropdown-item" href="#resultSetAccordion-{{fileID}}">{{filename}}</a> {{/controlSets}} </div>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown"> {{#controlSets}} <a class="dropdown-item" href="#{{fileID}}">{{filename}}</a> {{/controlSets}} </div>
                     </li> {{/showControlSets}} </ul>
             </div>
         </div>
