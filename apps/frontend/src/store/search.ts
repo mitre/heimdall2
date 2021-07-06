@@ -338,11 +338,51 @@ class Search extends VuexModule implements ISearchState {
   /** Adds or replaces ID search in the search bar */
   @Action
   addIdSearch(id: string) {
+    // If we already have search filtering
     if (this.searchTerm.trim() !== '') {
-      this.context.commit('SET_SEARCH', `${this.searchTerm} AND id:${id}`);
-    } else {
-      this.context.commit('SET_SEARCH', `id:${id}`);
+      // If our current filters include control IDs
+      if (this.searchTerm.toLowerCase().indexOf('id:') !== -1) {
+        const newSearch = this.searchTerm.replace(
+          /id:"(.*?)"/gm,
+          `id:"${this.controlIdSearchTerms.concat(id).join(',')}"`
+        );
+        this.context.commit('SET_SEARCH', newSearch);
+      } // We have a filter already, but it doesn't include control ID
+      else {
+        const newSearch = `${this.searchTerm} id:"${this.controlIdSearchTerms
+          .concat(id)
+          .join(',')}"`;
+        this.context.commit('SET_SEARCH', newSearch);
+      }
     }
+    // We don't have any search yet
+    else {
+      this.context.commit('SET_SEARCH', `id:"${id}"`);
+    }
+    this.parseSearch();
+  }
+
+  @Action
+  removeIdSearch(id: string) {
+    this.removeIdFilter(id);
+    if (this.controlIdSearchTerms.length !== 0) {
+      // If we still have any control ID filters
+      const newSearch = this.searchTerm.replace(
+        /id:"(.*?)"/gm,
+        `id:"${this.controlIdSearchTerms.join(',')}"`
+      );
+      this.context.commit('SET_SEARCH', newSearch);
+    } // Otherwise just remove the severity text from the search bar
+    else {
+      const newSearch = this.searchTerm.replace(/id:"(.*?)"/gm, '');
+      this.context.commit('SET_SEARCH', newSearch);
+    }
+    this.parseSearch();
+  }
+
+  @Action
+  removeIdFilter(id: string) {
+    this.context.commit('REMOVE_ID', id);
   }
 
   /** Adds control id to filter */
@@ -354,6 +394,13 @@ class Search extends VuexModule implements ISearchState {
   @Mutation
   ADD_ID(id: string | string[]) {
     this.controlIdSearchTerms = this.controlIdSearchTerms.concat(id);
+  }
+
+  @Mutation
+  REMOVE_ID(id: string) {
+    this.controlIdSearchTerms = this.controlIdSearchTerms.filter(
+      (filter) => filter.toLowerCase() !== id.toLowerCase()
+    );
   }
 
   /** Sets the control IDs filter */

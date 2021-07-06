@@ -69,6 +69,9 @@ export interface Filter {
   /** The current state of the Nist Treemap. Used to further filter by nist categories etc. */
   treeFilters?: TreeMapState;
 
+  /** A specific NIST ID to filter by */
+  nistFilter?: string;
+
   /** A specific control id */
   control_id?: string;
 }
@@ -355,6 +358,15 @@ export class FilteredData extends VuexModule {
           // Get an hdf version so we have the fixed nist tags
           return c.root.hdf.parsed_nist_tags.some((t) => control.contains(t));
         });
+      }
+
+      // Filter by NIST ID
+      if (filter.nistFilter) {
+        controls = controls.filter((c) =>
+          c.root.hdf.parsed_nist_tags.some(
+            (tag) => tag.raw_text?.indexOf(filter.nistFilter || 'UM-1') !== -1
+          )
+        );
       }
 
       // Freeze and save to cache

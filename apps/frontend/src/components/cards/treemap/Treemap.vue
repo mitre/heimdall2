@@ -5,203 +5,210 @@
         NIST SP 800-53 Security and Privacy Control Coverage
       </v-col>
       <v-col :cols="8">
-        <v-btn :disabled="!allow_up" block x-small @click="up">
-          <v-icon v-if="allow_up"> mdi-arrow-left </v-icon>
-          {{ 'NIST-SP-800-53 -> ' + value.join(' -> ') }}
+        <v-btn
+          :disabled="currentSelectedLeaf === null"
+          block
+          x-small
+          @click="
+            currentSelectedLeaf = null;
+            syncedSelectedControl = null;
+            onSubcategoryPage = false;
+          "
+        >
+          <v-icon v-if="!currentSelectedLeaf === null"> mdi-arrow-left </v-icon>
+          {{
+            'NIST-SP-800-53 ' +
+            (currentSelectedLeaf ? '-> ' + currentSelectedLeaf : '')
+          }}
         </v-btn>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col v-resize="on_resize" :cols="12">
-        <svg id="chartBody" :width="width" :height="height">
-          <g
-            style="shape-rendering: crispEdges"
-            preserveAspectRatio="xMidYMid meet"
-          >
-            <!-- The body -->
-            <Cell
-              :selected_control_id="selected_control"
-              :node="selected_node"
-              :scales="scales"
-              :depth="0"
-              @select-node="select_node"
-            />
-          </g>
-        </svg>
-      </v-col>
-    </v-row>
+    <vue-apex-charts
+      id="chart"
+      :options="chartOptions"
+      :series="series"
+      height="650"
+    />
   </v-container>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-
-import * as d3 from 'd3';
-import {Filter, FilteredDataModule, TreeMapState} from '@/store/data_filters';
-import {
-  TreemapNode,
-  build_nist_tree_map,
-  is_leaf,
-  is_parent
-} from '@/utilities/treemap_util';
-import Cell, {XYScale} from '@/components/cards/treemap/Cell.vue';
+import VueApexCharts from 'vue-apexcharts';
+import {ApexOptions} from 'apexcharts';
+import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {ColorHackModule} from '@/store/color_hack';
-import {compare_arrays} from '@/utilities/helper_util';
-import {Prop, PropSync, Ref} from 'vue-property-decorator';
+import {Prop} from 'vue-property-decorator';
+import {context} from 'inspecjs';
+import {StatusCountModule} from '../../../store/status_counts';
+import {SearchModule} from '../../../store/search';
+
+export interface LeafData {
+  x: string,
+  y: number;
+  color: string;
+}
 
 // Respects a v-model of type TreeMapState
 @Component({
-  components: {
-    Cell
-  }
+  components: {VueApexCharts}
 })
 export default class Treemap extends Vue {
-  @Ref('treemapContainer') readonly treemapContainer!: Element;
-  @Prop({type: Array, required: true}) readonly value!: TreeMapState;
   @Prop({type: Object, required: true}) readonly filter!: Filter;
-  @PropSync('selected_control', {type: String}) syncedSelectedControl!:
-    | string
-    | null;
 
-  /** The svg internal coordinate space */
-  width = 1600;
-  height = 530;
+  currentSelectedLeaf: string | null = null;
+  onSubcategoryPage = false;
 
-  /** The currently selected treemap node. Wrapped to avoid initialization woes */
-  get selected_node(): d3.HierarchyRectangularNode<TreemapNode> {
-    // Get typed versions of the curr state
-    // Set curr to root
-    let curr = this.treemap_layout;
-    let depth = 0;
-
-    try {
-      for (; depth < this.value.length; depth++) {
-        // If the current has no children, then just bail here
-        if (curr.children === undefined) {
-          throw Error('no children to go into');
+  get series(): ApexAxisChartSeries {
+    // If we don't have any files currently loaded, show all NIST categories
+    if (this.filter.fromFile.length === 0) {
+      return ['AC', 'AU', 'AT', 'CM', 'CP', 'IA', 'IR', 'MA', 'MP', 'PS', 'PE', 'PL', 'PM', 'RA', 'CA', 'SC', 'SI', 'SA', 'UM'].map((nistControl) => {
+        return {
+          name: nistControl,
+          color: 'black',
+          data: [
+            {x: nistControl, y: 1, compliance: 0}
+          ]
         }
-
-        // Fetch the next path spec
-        const nextSpecifiers = this.value.slice(0, depth + 1);
-
-        const newCurr = curr.children.find((child) => {
-          if (is_parent(child.data)) {
-            const ssA = child.data.nist_control.sub_specifiers;
-            return (
-              compare_arrays(ssA, nextSpecifiers, (a, b) =>
-                a.localeCompare(b)
-              ) === 0
-            );
-          } else {
-            return false; // We cannot go into a leaf (OR CAN WE? MUST DECIDE, AT SOME POINT)
-          }
-        });
-        if (newCurr) {
-          if (newCurr.children && newCurr.children.length) {
-            curr = newCurr;
-          } else {
-            throw Error('empty');
-          }
-        } else {
-          throw Error('truncate');
-        }
-      }
-    } catch (someTraversalError) {
-      // Slice to last successful depth. Slice is non inclusive so this works
-      this.set_path(this.value.slice(0, depth));
-    }
-
-    // Return as deep as we travelled
-    return curr;
-  }
-
-  /** Get our viewbox */
-  get view_box(): string {
-    return `0 0 ${this.width} ${this.height}`;
-  }
-
-  /** Get our scales */
-  get scales(): XYScale {
-    return {
-      scale_x: d3
-        .scaleLinear()
-        .domain([this.selected_node.x0, this.selected_node.x1])
-        .range([0, this.width]),
-      scale_y: d3
-        .scaleLinear()
-        .domain([this.selected_node.y0, this.selected_node.y1])
-        .range([0, this.height])
-    };
-  }
-
-  /** Generates a d3 heirarchy structure, with appropriate bounds to our width
-   *  detailing all of the controls in the nist hash */
-  get treemap_layout(): d3.HierarchyRectangularNode<TreemapNode> {
-    // Get the current filtered data
-    const controls = FilteredDataModule.controls(this.filter);
-
-    // Build the map
-    const hierarchy = build_nist_tree_map(controls, ColorHackModule);
-    return d3
-      .treemap<TreemapNode>()
-      .size([this.width, this.height])
-      .round(false)
-      .paddingInner(0)(hierarchy);
-  }
-
-  // Callbacks for our tree
-  select_node(n: d3.HierarchyRectangularNode<TreemapNode>): void {
-    // If it is a leaf, then select it
-    if (is_leaf(n.data)) {
-      const id = n.data.control.data.id;
-      this.syncedSelectedControl = (id !== this.syncedSelectedControl) ? id : null;
+      })
     } else {
-      // Otherwise, dive away. Set course for the leading title
-      const cntrl = n.data.nist_control;
-      if (cntrl) {
-        this.set_path(cntrl.sub_specifiers);
+      // If we have a selected value and are on the subcategory page
+      if(this.onSubcategoryPage && this.currentSelectedLeaf) {
+        const controls = FilteredDataModule.controls({fromFile: this.filter.fromFile, nistFilter: this.currentSelectedLeaf});
+        return this.controlsToNISTSeries(controls, true, this.currentSelectedLeaf)
+      } // If we have selected both a category and subcategory
+      else if (this.currentSelectedLeaf && !this.onSubcategoryPage) {
+        const controls = FilteredDataModule.controls({fromFile: this.filter.fromFile, nistFilter: this.currentSelectedLeaf});
+        return this.controlsFromNISTSeries(controls)
+      } // If we have no selection on the treemap
+      else {
+        const controls = FilteredDataModule.controls({fromFile: this.filter.fromFile});
+        return this.controlsToNISTSeries(controls, false)
       }
     }
   }
 
-  /** Submits an event to go up one node */
-  up(): void {
-    if (this.value.length) {
-      // Slice and dice, baybee
-      this.set_path(this.value.slice(0, this.value.length - 1));
+  controlsToNISTSeries(contextualizedControls: Readonly<context.ContextualizedControl[]>, showSubcategory: boolean, exactMatch?: string): ApexAxisChartSeries {
+    const series: ApexAxisChartSeries = []
+    contextualizedControls.forEach((cc) => {
+      for (const tag of cc.root.hdf.parsed_nist_tags) {
+        // Changes if we're showing the sub-category, e.g for "AC-4 (a)": showSubcategory ? 'AC-4' : 'AC'
+        const nistID = showSubcategory ? tag.raw_text?.substring(0, 5).replace(/\s/, '') : tag.raw_text?.substring(0, 2)
+        if(exactMatch && nistID?.indexOf(exactMatch) === -1) {
+          continue;
+        }
+        if (nistID && !series.some((value) => value.name === nistID)){
+          const complianceScore = this.calculateComplianceForNISTSeries(nistID)
+          series.push({name: nistID, data: [
+            {
+              x: nistID,
+              y: 1,
+              fillColor: this.calculateComplianceColor(complianceScore),
+              strokeColor: 'white'
+            }
+          ]})
+        }
+      }
+    })
+    return series
+  }
 
-      // Also clear selected
-      this.syncedSelectedControl = null;
+  controlsFromNISTSeries(
+    contextualizedControls: Readonly<context.ContextualizedControl[]>
+  ) {
+    const series: ApexAxisChartSeries = []
+    contextualizedControls.flatMap((cc) => {
+      series.push({
+        name: cc.data.id,
+        data: [
+          {
+            x: cc.data.id,
+            y: 1,
+            fillColor: ColorHackModule.colorForStatus(cc.hdf.status),
+            strokeColor: 'white'
+          }
+        ]
+      })
+    })
+    return series;
+  }
+
+  get chartOptions(): ApexOptions {
+    return {
+      legend: {
+        show: false
+      },
+      tooltip: {
+        enabled: false
+      },
+      chart: {
+        toolbar: {
+          show: false
+        },
+        animations: {
+          easing: 'linear',
+          speed: 4
+        },
+        type: 'treemap',
+        events: {
+          dataPointSelection: (_event, _chartContext, config) => {
+            const selectedValue = this.series[config.seriesIndex].name
+            if(!this.currentSelectedLeaf && !this.onSubcategoryPage) {
+              this.currentSelectedLeaf = selectedValue || 'UM'
+              this.onSubcategoryPage = true;
+            } else if (this.onSubcategoryPage) {
+              this.currentSelectedLeaf = selectedValue || 'UM'
+              this.onSubcategoryPage = false
+            }
+            else {
+              if(selectedValue) {
+                if (SearchModule.controlIdSearchTerms.indexOf(selectedValue.toLowerCase()) === -1){
+                  SearchModule.addIdSearch(selectedValue)
+                } else {
+                  SearchModule.removeIdSearch(selectedValue)
+                }
+              }
+            }
+          }
+        }
+      },
+      stroke: {
+        colors: [
+          'black'
+        ]
+      }
     }
   }
 
-  /** Typed method to wrap changes in the depth */
-  set_path(pathSpec: TreeMapState) {
-    this.$emit('input', pathSpec);
+  calculateComplianceColor(compliance: number): string {
+    const hue = Math.round(compliance);
+    return ["hsl(", hue, ", 80%, 50%, 75%)"].join("");
   }
 
-  /** Controls whether we should allow up */
-  get allow_up(): boolean {
-    return this.value.length > 0;
-  }
-
-  /** Called on resize */
-  on_resize() {
-    this.width = this.treemapContainer.clientWidth;
+  calculateComplianceForNISTSeries(series: string) {
+    const passed = StatusCountModule.countOf({fromFile: this.filter.fromFile, nistFilter: series}, 'Passed');
+    const total =
+      passed +
+      StatusCountModule.countOf({fromFile: this.filter.fromFile, nistFilter: series}, 'Failed') +
+      StatusCountModule.countOf({fromFile: this.filter.fromFile, nistFilter: series}, 'Profile Error') +
+      StatusCountModule.countOf({fromFile: this.filter.fromFile, nistFilter: series}, 'Not Reviewed') +
+      StatusCountModule.countOf({fromFile: this.filter.fromFile, nistFilter: series}, 'Waived');
+    if(total === 0) {
+      return 0
+    } else {
+      return Math.round((100.0 * passed) / total);
+    }
   }
 }
 </script>
 
-<style scoped>
-text {
-  pointer-events: none;
-  font-weight: bold;
-  font-size: 1.1em;
-  fill: 'primary';
+<style>
+.apexcharts-data-labels {
+  inline-size: 150px;
+  overflow-wrap: break-word;
 }
-
-rect {
-  fill: none;
+.apexcharts-datalabel {
+  fill: white !important;
 }
 </style>
