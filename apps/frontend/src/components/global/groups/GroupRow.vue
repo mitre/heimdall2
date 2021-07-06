@@ -17,15 +17,10 @@
 <script lang="ts">
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import DeleteDialog from '@/components/generic/DeleteDialog.vue';
 import EvaluationMixin from '../../../mixins/EvaluationMixin';
 import {IEvaluation} from '@heimdall/interfaces';
 
-@Component({
-  components: {
-    DeleteDialog
-  }
-})
+@Component({})
 export default class GroupRow extends mixins(EvaluationMixin) {
   @Prop({required: true}) readonly evaluation!: IEvaluation;
 
