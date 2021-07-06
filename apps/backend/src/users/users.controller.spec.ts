@@ -84,7 +84,7 @@ describe('UsersController Unit Tests', () => {
       expect.assertions(1);
 
       expect(
-        await usersController.findById(basicUser.id, {user: basicUser})
+        await usersController.findUserById(basicUser.id, {user: basicUser})
       ).toEqual(new UserDto(await usersService.findById(basicUser.id)));
     });
 
@@ -93,7 +93,7 @@ describe('UsersController Unit Tests', () => {
       expect.assertions(1);
 
       await expect(async () => {
-        await usersController.findById(ID, {user: basicUser});
+        await usersController.findUserById(ID, {user: basicUser});
       }).rejects.toThrow(NotFoundException);
     });
   });
@@ -102,10 +102,10 @@ describe('UsersController Unit Tests', () => {
     // Tests the findAll function with valid ID (basic positive test)
     it('should list all users for an admin', async () => {
       expect.assertions(1);
-      const serviceFoundUsers = (await usersService.adminFindAll()).map(
+      const serviceFoundUsers = (await usersService.adminFindAllUsers()).map(
         (user) => new UserDto(user)
       );
-      const controllerFoundUsers = await usersController.adminFindAll({
+      const controllerFoundUsers = await usersController.adminFindAllUsers({
         user: adminUser
       });
       // In the case of admin, they should be equal becuase admin can see all
