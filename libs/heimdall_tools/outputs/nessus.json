@@ -1,0 +1,30 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "0.1.0",
+    "target_id": ""
+  },
+  "version": "0.1.0",
+  "statistics": {
+    "duration": null
+  },
+  "profiles": [
+    {
+      "name": "BurpSuite Pro Scan",
+      "version": "",
+      "title": "BurpSuite Pro Scan",
+      "maintainer": null,
+      "summary": "BurpSuite Pro Scan",
+      "license": null,
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [],
+      "sha256": "90514450b3220874cdd58a934e1eb8f8e47c556617325af52700c2388552dc57"
+    }
+  ]
+}

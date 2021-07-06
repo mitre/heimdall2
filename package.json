@@ -11,6 +11,7 @@
     "build": "lerna run build",
     "cypress-test": "yarn workspace @heimdall/cypress-tests",
     "frontend": "yarn workspace @mitre/heimdall-lite",
+    "heimdall-tools": "yarn workspace @mitre/heimdall_tools",
     "lint": "lerna run lint",
     "lint:ci": "lerna run lint:ci",
     "start": "yarn backend start",

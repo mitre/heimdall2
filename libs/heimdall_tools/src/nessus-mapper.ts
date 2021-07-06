@@ -1,14 +1,22 @@
-import { ControlResultStatus, ExecJSON } from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
-import { version as HeimdallToolsVersion } from '../package.json'
-import _ from 'lodash'
+import parser from 'fast-xml-parser';
+import {
+  ControlResultStatus,
+  ExecJSON
+} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+import _ from 'lodash';
+import { version as HeimdallToolsVersion } from '../package.json';
 import { MappedTransform, LookupPath, BaseConverter, generateHash } from './base-converter'
-import fs from 'fs'
-
 // Constants
 const IMPACT_MAPPING: Map<string, number> = new Map([
-  ['high', 0.7],
-  ['medium', 0.5],
-  ['low', 0.3]
+  ['4', 0.9],
+  ['IV', 0.9],
+  ['3', 0.7],
+  ['III', 0.7],
+  ['2', 0.5],
+  ['II', 0.5],
+  ['1', 0.3],
+  ['I', 0.3],
+  ['0', 0.0]
 ]);
 // const CWE_NIST_MAPPING_FILE = '../../data/cwe-nist-mapping.csv'
 // const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE)
@@ -40,7 +48,7 @@ function formatDesc(vulnerability: object): string {
   return text.join('<br>');
 }
 function impactMapping(severity: string | number): number {
-  return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
+  return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || -1;
 }
 function formatCodeDesc(vulnerability: object): string {
   let codeDescArray = new Array<string>();
@@ -171,8 +179,15 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
   ]
 };
 
-export class JfrogXrayMapper extends BaseConverter {
-  constructor(xrayJson: string) {
-    super(JSON.parse(xrayJson), mappings);
+export class NessusMapper extends BaseConverter {
+  constructor(nessusXml: string) {
+    const options = {
+      attributeNamePrefix: "",
+      textNodeName: "text",
+      ignoreAttributes: false
+
+    }
+    let burpsJson = parser.parse(nessusXml, options);
+    super(burpsJson, mappings, 'issues.exportTime');
   }
 }

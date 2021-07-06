@@ -1,8 +1,7 @@
 // import { ExecJSON } from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
 // import { version as HeimdallToolsVersion } from '../package.json'
-import _ from 'lodash'
-import parser from 'fast-xml-parser'
-import fs from 'fs'
+import parser from 'fast-xml-parser';
+import fs from 'fs';
 
 // const objectMap = (obj: Object, fn: Function) =>
 //   Object.fromEntries(
@@ -90,12 +89,14 @@ class XCCDFResultsMapper {
   scapJson: any;
 
   constructor(scapXml: string) {
-    this.scapJson = parser.parse(scapXml)
-
+    this.scapJson = parser.parse(scapXml);
   }
 }
 
-let file: string = fs.readFileSync('/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/burpsuite_mapper/sample_input_report/zero.webappsecurity.com.min', { encoding: "utf-8" })
-let mapper: XCCDFResultsMapper = new XCCDFResultsMapper(file)
-console.log('hi')
-console.log('debug bad')
+const file: string = fs.readFileSync(
+  '/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/burpsuite_mapper/sample_input_report/zero.webappsecurity.com.min',
+  {encoding: 'utf-8'}
+);
+const mapper: XCCDFResultsMapper = new XCCDFResultsMapper(file);
+console.log('hi');
+console.log('debug bad');

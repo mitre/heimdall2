@@ -4,139 +4,180 @@ import { createHash } from 'crypto';
 
 export type ObjectEntries<T> = { [K in keyof T]: readonly [K, T[K]] }[keyof T];
 export type MappedTransform<T, U> = {
-  [K in keyof T]: T[K] extends Array<any> ? MappedTransform<T[K], U> : T[K] extends object ? MappedTransform<T[K] & U, U> : T[K] | U;
+  [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
+  ? MappedTransform<T[K], U>
+  : T[K] extends object
+  ? MappedTransform<T[K] & U, U>
+  : T[K] | U;
 };
 export type MappedReform<T, U> = {
-  [K in keyof T]: T[K] extends Array<any> ? MappedReform<T[K], U> : T[K] extends object ? MappedReform<T[K] & U, U> : Exclude<T[K], U>;
+  [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
+  ? MappedReform<T[K], U>
+  : T[K] extends object
+  ? MappedReform<T[K] & U, U>
+  : Exclude<T[K], U>;
 };
 export interface LookupPath {
   path?: string | string[];
   // Parameter will be the return type of handlePath, which can either be a string or a number
-  transformer?: (((value: string) => string | number) | ((value: number) => string | number) | ((value: object) => string | number | object));
+  transformer?:
+  | ((value: string) => string | number)
+  | ((value: number) => string | number)
+  | ((value: object) => string | number | object | Array<any>);
   key?: string;
 }
 
 // Hashing Function
 export function generateHash(data: string, algorithm: string): string {
-  var hash = createHash(algorithm)
-  var output = hash.update(data).digest('hex')
-  return output
+  const hash = createHash(algorithm);
+  const output = hash.update(data).digest('hex');
+  return output;
 }
 
-function collapseDuplicates<T extends Object>(array: Array<T>, key: string): Array<T> {
-  let seen = new Map<string, number>()
-  let newArray = new Array<T>()
-  let counter = 0
+function collapseDuplicates<T extends Object>(
+  array: Array<T>,
+  key: string
+): Array<T> {
+  const seen = new Map<string, number>();
+  const newArray = new Array<T>();
+  let counter = 0;
   array.forEach((item: T) => {
-    var propertyValue = _.get(item, 'id')
-    var index = seen.get(propertyValue) || 0
-    var test = _.get(newArray[index], 'results[?(code_desc)]')
+    const propertyValue = _.get(item, 'id');
+    const index = seen.get(propertyValue) || 0;
+    const test = _.get(newArray[index], 'results[?(code_desc)]');
     if (!seen.has(propertyValue)) {
-      newArray.push(item)
-      seen.set(propertyValue, counter)
-      counter++
+      newArray.push(item);
+      seen.set(propertyValue, counter);
+      counter++;
     } else {
-      let descriptions = new Array<string>()
-      let length = _.get(newArray[index], 'results').length
+      const descriptions = new Array<string>();
+      const length = _.get(newArray[index], 'results').length;
       for (let i = 0; i < length; i++) {
-        descriptions.push(_.get(newArray[index], `results[${i.toString()}].code_desc`))
+        descriptions.push(
+          _.get(newArray[index], `results[${i.toString()}].code_desc`)
+        );
       }
       if (descriptions.indexOf(_.get(item, 'results[0].code_desc')) === -1) {
-        _.set(newArray[index], 'results', (_.get(newArray[index], 'results').concat(_.get(item, 'results'))))
+        _.set(
+          newArray[index],
+          'results',
+          _.get(newArray[index], 'results').concat(_.get(item, 'results'))
+        );
       }
     }
-  })
-  return newArray
+  });
+  return newArray;
 }
 
 export class BaseConverter {
-  data: object
-  mappings: MappedTransform<ExecJSON, LookupPath>
+  data: object;
+  mappings: MappedTransform<ExecJSON, LookupPath>;
+  static startTime = '';
 
-  constructor(data: object, mappings: MappedTransform<ExecJSON, LookupPath>) {
-    this.data = data
-    this.mappings = mappings
+  constructor(
+    data: object,
+    mappings: MappedTransform<ExecJSON, LookupPath>,
+    startTimePath?: string
+  ) {
+    this.data = data;
+    this.mappings = mappings;
+    if (startTimePath !== undefined) {
+      BaseConverter.startTime = _.get(data, startTimePath);
+    }
   }
 
   toHdf(): ExecJSON {
-    let v = this.convertInternal(this.data, this.mappings)
+    const v = this.convertInternal(this.data, this.mappings);
     v.profiles.forEach((element) => {
-      element.sha256 = generateHash(_.omit(element, ['sha256']).toString(), 'sha256')
-    })
-    return v
+      element.sha256 = generateHash(
+        JSON.stringify(_.omit(element, ['sha256'])),
+        'sha256'
+      );
+    });
+    return v;
   }
 
   objectMap<T, V>(obj: T, fn: (v: ObjectEntries<T>) => V): { [K in keyof T]: V } {
     return Object.fromEntries(
-      Object.entries(obj).map(
-        ([k, v]) => [k, fn(v)]
-      )
-    ) as Record<keyof T, V>
+      Object.entries(obj).map(([k, v]) => [k, fn(v)])
+    ) as Record<keyof T, V>;
   }
   convertInternal<T>(file: object, fields: T): MappedReform<T, LookupPath> {
-    const result = this.objectMap(fields, (v: ObjectEntries<T>) => this.evaluate(file, v)) //TODO
-    return result as MappedReform<T, LookupPath>
+    const result = this.objectMap(fields, (v: ObjectEntries<T>) =>
+      this.evaluate(file, v)
+    ); //TODO
+    return result as MappedReform<T, LookupPath>;
   }
-  evaluate<T>(file: object, v: T | Array<T>): number | string | T | Array<T> | MappedReform<T, LookupPath> {
+  evaluate<T>(
+    file: object,
+    v: T | Array<T>
+  ): number | string | T | Array<T> | MappedReform<T, LookupPath> {
     if (Array.isArray(v)) {
-      return this.handleArray(file, v)
-    } else if ((typeof v === 'string') || (typeof v === 'number') || (v === null)) {
-      return v
+      return this.handleArray(file, v);
+    } else if (typeof v === 'string' || typeof v === 'number' || v === null) {
+      return v;
     } else if (_.has(v, 'path')) {
       if (_.has(v, 'transformer')) {
-        return (_.get(v, 'transformer'))(this.handlePath(file, _.get(v, 'path')))
+        return _.get(v, 'transformer')(this.handlePath(file, _.get(v, 'path')));
       } else {
-        return this.handlePath(file, _.get(v, 'path'))
+        return this.handlePath(file, _.get(v, 'path'));
       }
-    } if (_.has(v, 'transformer')) {
-      return (_.get(v, 'transformer'))(file)
+    }
+    if (_.has(v, 'transformer')) {
+      return _.get(v, 'transformer')(file);
     } else {
-      return this.convertInternal(file, v)
+      return this.convertInternal(file, v);
     }
   }
   handleArray<T>(file: object, v: Array<T & LookupPath>): Array<T> {
     if (v.length === 0) {
-      return new Array<T>()
+      return new Array<T>();
     }
     if (v[0].path === undefined) {
-      return [this.evaluate(file, v[0]) as T]
+      const output: Array<T> = [];
+      v.forEach((element) => {
+        output.push(this.evaluate(file, element) as T);
+      });
+      return output;
     } else {
-      let path = v[0].path
-      let key = v[0].key
+      const path = v[0].path;
+      const key = v[0].key;
       if (_.has(file, path)) {
-        let length = _.get(file, path).length
-        v[0] = _.omit(v[0], ['path', 'key']) as T
+        const length = _.get(file, path).length;
         for (let i = 1; i < length; i++) {
-          v.push({ ...v[0] })
+          v.push({ ...v[0] });
         }
-        var counter = 0
+        let counter = 0;
         _.get(file, path).forEach((element: object) => {
-          v[counter] = this.convertInternal(element, v[counter]) as T
-          counter++
-        })
+          v[counter] = _.omit(this.convertInternal(element, v[counter]), [
+            'path',
+            'key'
+          ]) as T;
+          counter++;
+        });
         if (key !== undefined) {
-          return collapseDuplicates(v, key)
+          return collapseDuplicates(v, key);
         } else {
-          return v
+          return v;
         }
       } else {
-        return []
+        return [];
       }
     }
   }
   handlePath(file: object, path: string | string[]): string | number {
     if (typeof path === 'string') {
-      return _.get(file, path) || ''
+      return _.get(file, path) || '';
     } else {
-      var value: string = ''
+      let value = '';
       path.forEach(function (item) {
         if (typeof _.get(file, item) === undefined) {
-          value += item + ' '
+          value += item + ' ';
         } else {
-          value += _.get(file, item) + ' '
+          value += _.get(file, item) + ' ';
         }
-      })
-      return value
+      });
+      return value;
     }
   }
 }

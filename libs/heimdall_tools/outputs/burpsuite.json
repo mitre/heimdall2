@@ -1,0 +1,755 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "0.1.0",
+    "target_id": ""
+  },
+  "version": "0.1.0",
+  "statistics": {
+    "duration": null
+  },
+  "profiles": [
+    {
+      "name": "BurpSuite Pro Scan",
+      "version": "2020.1",
+      "title": "BurpSuite Pro Scan",
+      "maintainer": null,
+      "summary": "BurpSuite Pro Scan",
+      "license": null,
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "id": "2098688",
+          "title": "Cross-origin resource sharing",
+          "desc": "An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request. If another domain is allowed by the policy, then that domain can potentially attack users of the application. If a user is logged in to the application, and visits a domain allowed by the policy, then any malicious content running on that domain can potentially retrieve content from the application, and sometimes carry out actions within the security context of the logged in user. \n Even if an allowed domain is not overtly malicious in itself, security vulnerabilities within that domain could potentially be leveraged by an attacker to exploit the trust relationship and attack the application that allows access. CORS policies on pages containing sensitive information should be reviewed to determine whether it is appropriate for the application to trust both the intentions and security posture of any domains granted access.",
+          "impact": 0.3,
+          "tags": {
+            "nist": "",
+            "cweid": "CWE-942: Overly Permissive Cross-domain Whitelist",
+            "confidence": "Certain"
+          },
+          "descriptions": [
+            {
+              "data": "An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request. If another domain is allowed by the policy, then that domain can potentially attack users of the application. If a user is logged in to the application, and visits a domain allowed by the policy, then any malicious content running on that domain can potentially retrieve content from the application, and sometimes carry out actions within the security context of the logged in user. \n Even if an allowed domain is not overtly malicious in itself, security vulnerabilities within that domain could potentially be leveraged by an attacker to exploit the trust relationship and attack the application that allows access. CORS policies on pages containing sensitive information should be reviewed to determine whether it is appropriate for the application to trust both the intentions and security posture of any domains granted access.",
+              "label": "check"
+            },
+            {
+              "data": "Any inappropriate domains should be removed from the CORS policy.",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/js/jquery-1.8.2.min.js\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request. If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/css/bootstrap.min.css\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request. If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/js/bootstrap.min.js\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request. If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/css/main.css\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request. If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/js/placeholders.min.js\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request. If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/css/font-awesome.css\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request. If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: https://zero.webappsecurity.com\nLocation: /robots.txt\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request. If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /search.html\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request. If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /index.html\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request. If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /robots.txt\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request. If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: https://zero.webappsecurity.com\nLocation: /\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request. If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request. If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            }
+          ]
+        },
+        {
+          "id": "2098689",
+          "title": "Cross-origin resource sharing: arbitrary origin trusted",
+          "desc": "An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request. \nTrusting arbitrary origins effectively disables the same-origin policy, allowing two-way interaction by third-party web sites. Unless the response consists only of unprotected public content, this policy is likely to present a security risk. \n If the site  specifies the header Access-Control-Allow-Credentials: true, third-party sites may be able to carry out privileged actions and retrieve sensitive information. Even if it does not, attackers may be able to  bypass any IP-based access controls by proxying through users'  browsers.",
+          "impact": 0.3,
+          "tags": {
+            "nist": "",
+            "cweid": "CWE-942: Overly Permissive Cross-domain Whitelist",
+            "confidence": "Certain"
+          },
+          "descriptions": [
+            {
+              "data": "An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request. \nTrusting arbitrary origins effectively disables the same-origin policy, allowing two-way interaction by third-party web sites. Unless the response consists only of unprotected public content, this policy is likely to present a security risk. \n If the site  specifies the header Access-Control-Allow-Credentials: true, third-party sites may be able to carry out privileged actions and retrieve sensitive information. Even if it does not, attackers may be able to  bypass any IP-based access controls by proxying through users'  browsers.",
+              "label": "check"
+            },
+            {
+              "data": "Rather than using a wildcard or programmatically verifying supplied origins, use a whitelist of trusted domains.",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/js/jquery-1.8.2.min.js\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain. The application allowed access from the requested origin  http://hbofkpelsehu.com If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/css/bootstrap.min.css\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain. The application allowed access from the requested origin  http://mtpmzyfhccgq.com If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/js/bootstrap.min.js\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain. The application allowed access from the requested origin  http://fhizssbvwxlc.com If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/css/main.css\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain. The application allowed access from the requested origin  http://ysbwjdnoydae.com If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/js/placeholders.min.js\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain. The application allowed access from the requested origin  http://hgclyudnynwg.com If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/css/font-awesome.css\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain. The application allowed access from the requested origin  http://yxmzuemojsjs.com If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: https://zero.webappsecurity.com\nLocation: /robots.txt\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain. The application allowed access from the requested origin  https://odbifgfzjwxk.com If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /search.html\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain. The application allowed access from the requested origin  http://pllqapnqhuaw.com If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /index.html\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain. The application allowed access from the requested origin  http://yoejfhjmiyhp.com If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /robots.txt\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain. The application allowed access from the requested origin  http://ociuvmolpgqd.com If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: https://zero.webappsecurity.com\nLocation: /\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain. The application allowed access from the requested origin  https://rjjtexnikcnt.com If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /\nissueDetail: The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain. The application allowed access from the requested origin  http://wxzbifgnpfpf.com If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk. Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            }
+          ]
+        },
+        {
+          "id": "4197376",
+          "title": "Input returned in response (reflected)",
+          "desc": "Reflection of input arises when data is copied from a request and echoed into the application's immediate response. Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. ",
+          "impact": 0.3,
+          "tags": {
+            "nist": "",
+            "cweid": "CWE-20: Improper Input Validation \n CWE-116: Improper Encoding or Escaping of Output",
+            "confidence": "Certain"
+          },
+          "descriptions": [
+            {
+              "data": "Reflection of input arises when data is copied from a request and echoed into the application's immediate response. Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. ",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/js/jquery-1.8.2.min.js [URL path folder 2]\nissueDetail: The value of the URL path folder 2 is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/css/bootstrap.min.css [URL path filename]\nissueDetail: The value of the URL path filename is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/js/jquery-1.8.2.min.js [URL path folder 1]\nissueDetail: The value of the URL path folder 1 is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/js/bootstrap.min.js [URL path filename]\nissueDetail: The value of the URL path filename is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/css/main.css [URL path filename]\nissueDetail: The value of the URL path filename is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: https://zero.webappsecurity.com\nLocation: /robots.txt [URL path filename]\nissueDetail: The value of the URL path filename is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/css/bootstrap.min.css [URL path folder 2]\nissueDetail: The value of the URL path folder 2 is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/js/placeholders.min.js [URL path filename]\nissueDetail: The value of the URL path filename is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/css/font-awesome.css [URL path filename]\nissueDetail: The value of the URL path filename is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/js/bootstrap.min.js [URL path folder 2]\nissueDetail: The value of the URL path folder 2 is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/css/main.css [URL path folder 2]\nissueDetail: The value of the URL path folder 2 is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/css/bootstrap.min.css [URL path folder 1]\nissueDetail: The value of the URL path folder 1 is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/js/placeholders.min.js [URL path folder 2]\nissueDetail: The value of the URL path folder 2 is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/css/font-awesome.css [URL path folder 2]\nissueDetail: The value of the URL path folder 2 is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/js/bootstrap.min.js [URL path folder 1]\nissueDetail: The value of the URL path folder 1 is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /index.html [URL path filename]\nissueDetail: The value of the URL path filename is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/css/main.css [URL path folder 1]\nissueDetail: The value of the URL path folder 1 is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/js/placeholders.min.js [URL path folder 1]\nissueDetail: The value of the URL path folder 1 is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /robots.txt [URL path filename]\nissueDetail: The value of the URL path filename is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/css/font-awesome.css [URL path folder 1]\nissueDetail: The value of the URL path folder 1 is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /search.html [searchTerm parameter]\nissueDetail: The value of the  searchTerm  request parameter is copied into the application's response.\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            }
+          ]
+        },
+        {
+          "id": "6291672",
+          "title": "Backup file",
+          "desc": "Publicly accessible backups and outdated copies of files can provide attackers with extra attack surface. Depending on the server configuration and file type, they may also expose source code, configuration details, and other information intended to remain secret.",
+          "impact": 0.3,
+          "tags": {
+            "nist": "",
+            "cweid": "    CWE-530: Exposure of Backup File to an Unauthorized Control Sphere",
+            "confidence": "Certain"
+          },
+          "descriptions": [
+            {
+              "data": "Publicly accessible backups and outdated copies of files can provide attackers with extra attack surface. Depending on the server configuration and file type, they may also expose source code, configuration details, and other information intended to remain secret.",
+              "label": "check"
+            },
+            {
+              "data": "Review the file to identify whether it's intended to be publicly accessible, and remove it from the server's web root if it isn't. It may also be worth auditing the server contents to find other outdated files, and taking measures to prevent the problem from recurring.",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /index.old\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /index.html.old\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            }
+          ]
+        },
+        {
+          "id": "5245440",
+          "title": "HTTP TRACE method is enabled",
+          "desc": "The HTTP TRACE  method is designed for diagnostic purposes. If enabled, the web server will respond to requests that use the TRACE method by echoing in its response the exact request that was received. \n This behavior is often harmless, but occasionally leads to the disclosure of sensitive information such as internal authentication headers appended by reverse proxies. This functionality could historically be used to bypass the HttpOnly cookie flag on cookies, but this is no longer possible in modern web browsers. ",
+          "impact": 0.3,
+          "tags": {
+            "nist": "",
+            "cweid": "CWE-16: Configuration",
+            "confidence": "Certain"
+          },
+          "descriptions": [
+            {
+              "data": "The HTTP TRACE  method is designed for diagnostic purposes. If enabled, the web server will respond to requests that use the TRACE method by echoing in its response the exact request that was received. \n This behavior is often harmless, but occasionally leads to the disclosure of sensitive information such as internal authentication headers appended by reverse proxies. This functionality could historically be used to bypass the HttpOnly cookie flag on cookies, but this is no longer possible in modern web browsers. ",
+              "label": "check"
+            },
+            {
+              "data": "The TRACE method should be disabled on production web servers.",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: https://zero.webappsecurity.com\nLocation: /\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            }
+          ]
+        },
+        {
+          "id": "16777472",
+          "title": "TLS certificate",
+          "desc": "TLS (or SSL) helps to protect the confidentiality and integrity of information in transit between the browser and server, and to provide authentication of the server's identity. To serve this purpose, the server must present an TLS certificate that is valid for the server's hostname, is issued by a trusted authority and is valid for the current date. If any one of these requirements is not met, TLS connections to the server will not provide the full protection for which TLS is designed. \n It should be noted that various attacks exist against TLS in general, and in the context of HTTPS web connections in particular. It may be possible for a determined and suitably-positioned attacker to compromise TLS connections without user detection even when a valid TLS certificate is used. ",
+          "impact": 0.5,
+          "tags": {
+            "nist": "",
+            "cweid": "CWE-295: Improper Certificate Validation \n CWE-326: Inadequate Encryption Strength \n CWE-327: Use of a Broken or Risky Cryptographic Algorithm",
+            "confidence": "Certain"
+          },
+          "descriptions": [
+            {
+              "data": "TLS (or SSL) helps to protect the confidentiality and integrity of information in transit between the browser and server, and to provide authentication of the server's identity. To serve this purpose, the server must present an TLS certificate that is valid for the server's hostname, is issued by a trusted authority and is valid for the current date. If any one of these requirements is not met, TLS connections to the server will not provide the full protection for which TLS is designed. \n It should be noted that various attacks exist against TLS in general, and in the context of HTTPS web connections in particular. It may be possible for a determined and suitably-positioned attacker to compromise TLS connections without user detection even when a valid TLS certificate is used. ",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: https://zero.webappsecurity.com\nLocation: /\nissueDetail: The following problem was identified with the server's TLS certificate: The server's certificate is not trusted. Note:  Burp relies on the Java trust store to determine whether certificates are trusted. The Java trust store does not include every root CA certificate that is included within browser trust stores. Burp might incorrectly report that a certificate is not trusted, if a valid root CA certificate is being used that is not included in the Java trust store. The server presented the following certificate: Issued to:     zero.webappsecurity.com Issued by:     DigiCert SHA2 Secure Server CA Valid from:     Tue Jan 14 19:00:00 EST 2020 Valid to:     Thu Jan 21 07:00:00 EST 2021\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            }
+          ]
+        },
+        {
+          "id": "8389120",
+          "title": "HTML does not specify charset",
+          "desc": "If a  response states that it contains HTML content but does not specify a character set, then the browser may analyze the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters. \n In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of affected responses, and the context in which they appear, to determine whether any vulnerability exists. ",
+          "impact": 0.3,
+          "tags": {
+            "nist": "",
+            "cweid": "CWE-16: Configuration \n CWE-436: Interpretation Conflict",
+            "confidence": "Certain"
+          },
+          "descriptions": [
+            {
+              "data": "If a  response states that it contains HTML content but does not specify a character set, then the browser may analyze the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters. \n In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of affected responses, and the context in which they appear, to determine whether any vulnerability exists. ",
+              "label": "check"
+            },
+            {
+              "data": "For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognized character set, for example  charset=ISO-8859-1 .\n",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: https://zero.webappsecurity.com\nLocation: /\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            }
+          ]
+        },
+        {
+          "id": "7340288",
+          "title": "Cacheable HTTPS response",
+          "desc": "Unless directed otherwise, browsers may store a local cached copy of content received from web servers. Some browsers, including Internet Explorer, cache content accessed via HTTPS. If sensitive information in application responses is stored in the local cache, then this may be retrieved by other users who have access to the same computer at a future time.",
+          "impact": 0.3,
+          "tags": {
+            "nist": "",
+            "cweid": "CWE-524: Information Exposure Through Caching \n CWE-525: Information Exposure Through Browser Caching",
+            "confidence": "Certain"
+          },
+          "descriptions": [
+            {
+              "data": "Unless directed otherwise, browsers may store a local cached copy of content received from web servers. Some browsers, including Internet Explorer, cache content accessed via HTTPS. If sensitive information in application responses is stored in the local cache, then this may be retrieved by other users who have access to the same computer at a future time.",
+              "label": "check"
+            },
+            {
+              "data": "Applications should return caching directives instructing browsers not to store local copies of any sensitive data. Often, this can be achieved by configuring the web server to prevent caching for relevant paths within the web root. Alternatively, most web development platforms allow you to control the server's caching directives from within individual scripts. Ideally, the web server should return the following HTTP headers in all responses containing sensitive content: \n \n Cache-control: no-store Pragma: no-cache",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: https://zero.webappsecurity.com\nLocation: /\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            }
+          ]
+        },
+        {
+          "id": "5243904",
+          "title": "Cross-domain Referer leakage",
+          "desc": "When a web browser makes a request for a resource, it typically adds an HTTP header, called the \"Referer\" header, indicating the URL of the resource from which the request originated. This occurs in numerous situations, for example when a web page loads an image or script, or when a user clicks on a link or submits a form. \n If the resource being requested resides on a different domain, then the Referer header is still generally included in the cross-domain request. If the originating URL contains any sensitive information within its query string, such as a session token, then this information will be transmitted to the other domain. If the other domain is not fully trusted by the application, then this may lead to a security compromise. \n You should review the contents of the information being transmitted to other domains, and also determine whether those domains are fully trusted by the originating application. \n Today's browsers may withhold the Referer header in some situations (for example, when loading a non-HTTPS resource from a page that was loaded over HTTPS, or when a Refresh directive is issued), but this behavior should not be relied upon to protect the originating URL from disclosure. \n Note also that if users can author content within the application then an attacker may be able to inject links referring to a domain they control in order to capture data from URLs used within the application. ",
+          "impact": 0.3,
+          "tags": {
+            "nist": "",
+            "cweid": "CWE-200: Information Exposure",
+            "confidence": "Certain"
+          },
+          "descriptions": [
+            {
+              "data": "When a web browser makes a request for a resource, it typically adds an HTTP header, called the \"Referer\" header, indicating the URL of the resource from which the request originated. This occurs in numerous situations, for example when a web page loads an image or script, or when a user clicks on a link or submits a form. \n If the resource being requested resides on a different domain, then the Referer header is still generally included in the cross-domain request. If the originating URL contains any sensitive information within its query string, such as a session token, then this information will be transmitted to the other domain. If the other domain is not fully trusted by the application, then this may lead to a security compromise. \n You should review the contents of the information being transmitted to other domains, and also determine whether those domains are fully trusted by the originating application. \n Today's browsers may withhold the Referer header in some situations (for example, when loading a non-HTTPS resource from a page that was loaded over HTTPS, or when a Refresh directive is issued), but this behavior should not be relied upon to protect the originating URL from disclosure. \n Note also that if users can author content within the application then an attacker may be able to inject links referring to a domain they control in order to capture data from URLs used within the application. ",
+              "label": "check"
+            },
+            {
+              "data": "Applications should never transmit any sensitive information within the URL query string. In addition to being leaked in the Referer header, such information may be logged in various locations and may be visible on-screen to untrusted parties. If placing sensitive information in the URL is unavoidable, consider using the Referer-Policy HTTP header to reduce the chance of it being disclosed to third parties.\n",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /search.html\nissueDetail: The page was loaded from a URL containing a query string: http://zero.webappsecurity.com/search.html The response contains the following link to another domain: https://www.microfocus.com/about/legal/\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            }
+          ]
+        },
+        {
+          "id": "16777984",
+          "title": "Strict transport security not enforced",
+          "desc": " The application fails to prevent users from connecting  to it over unencrypted connections.  An attacker able to modify a legitimate user's network traffic could bypass the application's use of SSL/TLS encryption, and use the application as a platform for attacks against its users. This attack is performed by rewriting HTTPS links as HTTP, so that if a targeted user follows a link to the site from an HTTP page, their browser never attempts to use an encrypted connection. The sslstrip tool  automates this process.  \n \nTo exploit this vulnerability, an attacker must be suitably positioned to intercept and modify the victim's network traffic.This scenario typically occurs when a client communicates with the server over an insecure connection such as public Wi-Fi, or a corporate or home network that is shared with a compromised computer. Common defenses such as switched networks are not sufficient to prevent this. An attacker situated in the user's ISP or the application's hosting infrastructure could also perform this attack. Note that an advanced adversary could potentially target any connection made over the Internet's core infrastructure. ",
+          "impact": 0.3,
+          "tags": {
+            "nist": "",
+            "cweid": "CWE-523: Unprotected Transport of Credentials",
+            "confidence": "Certain"
+          },
+          "descriptions": [
+            {
+              "data": " The application fails to prevent users from connecting  to it over unencrypted connections.  An attacker able to modify a legitimate user's network traffic could bypass the application's use of SSL/TLS encryption, and use the application as a platform for attacks against its users. This attack is performed by rewriting HTTPS links as HTTP, so that if a targeted user follows a link to the site from an HTTP page, their browser never attempts to use an encrypted connection. The sslstrip tool  automates this process.  \n \nTo exploit this vulnerability, an attacker must be suitably positioned to intercept and modify the victim's network traffic.This scenario typically occurs when a client communicates with the server over an insecure connection such as public Wi-Fi, or a corporate or home network that is shared with a compromised computer. Common defenses such as switched networks are not sufficient to prevent this. An attacker situated in the user's ISP or the application's hosting infrastructure could also perform this attack. Note that an advanced adversary could potentially target any connection made over the Internet's core infrastructure. ",
+              "label": "check"
+            },
+            {
+              "data": "The application should instruct web browsers to only access the application using HTTPS. To do this, enable HTTP Strict Transport Security (HSTS) by adding a response header with the name 'Strict-Transport-Security' and the value 'max-age=expireTime', where expireTime is the time in seconds that browsers should remember that the site should only be accessed using HTTPS. Consider adding the 'includeSubDomains' flag if appropriate. \n Note that because HSTS is a  \" trust on first use \"  (TOFU) protocol, a user who has never accessed the application will never have seen the HSTS header, and will therefore still be vulnerable to SSL stripping attacks. To mitigate this risk, you can optionally add the 'preload' flag to the HSTS header, and submit the domain for review by browser vendors.",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: https://zero.webappsecurity.com\nLocation: /\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: https://zero.webappsecurity.com\nLocation: /robots.txt\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            }
+          ]
+        },
+        {
+          "id": "6291968",
+          "title": "Email addresses disclosed",
+          "desc": "The presence of email addresses within application responses does not necessarily constitute a security vulnerability. Email addresses may appear intentionally within contact information, and many applications (such as web mail) include arbitrary third-party email addresses within their core content. \n However, email addresses of developers and other individuals (whether appearing on-screen or hidden within page source) may disclose information that is useful to an attacker; for example, they may represent usernames that can be used at the application's login, and they may be used in social engineering attacks against the organization's personnel. Unnecessary or excessive disclosure of email addresses may also lead to an increase in the volume of spam email received.",
+          "impact": 0.3,
+          "tags": {
+            "nist": "",
+            "cweid": "CWE-200: Information Exposure",
+            "confidence": "Certain"
+          },
+          "descriptions": [
+            {
+              "data": "The presence of email addresses within application responses does not necessarily constitute a security vulnerability. Email addresses may appear intentionally within contact information, and many applications (such as web mail) include arbitrary third-party email addresses within their core content. \n However, email addresses of developers and other individuals (whether appearing on-screen or hidden within page source) may disclose information that is useful to an attacker; for example, they may represent usernames that can be used at the application's login, and they may be used in social engineering attacks against the organization's personnel. Unnecessary or excessive disclosure of email addresses may also lead to an increase in the volume of spam email received.",
+              "label": "check"
+            },
+            {
+              "data": "Consider removing any email addresses that are unnecessary, or replacing personal addresses with anonymous mailbox addresses (such as helpdesk@example.com). \n To reduce the quantity of spam sent to anonymous mailbox addresses, consider hiding the email address and instead providing a form that generates the email server-side, protected by a CAPTCHA if necessary. ",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/css/font-awesome.css\nissueDetail: The following email address was disclosed in the response: dave@davegandy.com\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            }
+          ]
+        },
+        {
+          "id": "5245344",
+          "title": "Frameable response (potential Clickjacking)",
+          "desc": "If a page fails to set an appropriate X-Frame-Options or Content-Security-Policy HTTP header, it might be possible for a page controlled by an attacker to load it within an iframe. This may enable a clickjacking attack, in which the attacker's page overlays the target application's interface with a different interface provided by the attacker. By inducing victim users to perform actions such as mouse clicks and keystrokes, the attacker can cause them to unwittingly carry out actions within the application that is being targeted. This technique allows the attacker to circumvent defenses against cross-site request forgery, and may result in unauthorized actions. \n Note that some applications attempt to prevent these attacks from within the HTML page itself, using \"framebusting\" code. However, this type of defense is normally ineffective and can usually be circumvented by a skilled attacker. \n You should determine whether any functions accessible within frameable pages can be used by application users to perform any sensitive actions within the application. ",
+          "impact": 0.3,
+          "tags": {
+            "nist": "",
+            "cweid": "CWE-693: Protection Mechanism Failure",
+            "confidence": "Firm"
+          },
+          "descriptions": [
+            {
+              "data": "If a page fails to set an appropriate X-Frame-Options or Content-Security-Policy HTTP header, it might be possible for a page controlled by an attacker to load it within an iframe. This may enable a clickjacking attack, in which the attacker's page overlays the target application's interface with a different interface provided by the attacker. By inducing victim users to perform actions such as mouse clicks and keystrokes, the attacker can cause them to unwittingly carry out actions within the application that is being targeted. This technique allows the attacker to circumvent defenses against cross-site request forgery, and may result in unauthorized actions. \n Note that some applications attempt to prevent these attacks from within the HTML page itself, using \"framebusting\" code. However, this type of defense is normally ineffective and can usually be circumvented by a skilled attacker. \n You should determine whether any functions accessible within frameable pages can be used by application users to perform any sensitive actions within the application. ",
+              "label": "check"
+            },
+            {
+              "data": "To effectively prevent framing attacks, the application should return a response header with the name  X-Frame-Options  and the value  DENY  to prevent framing altogether, or the value  SAMEORIGIN  to allow framing only by pages on the same origin as the response itself. Note that the SAMEORIGIN header can be partially bypassed if the application itself can be made to frame untrusted websites.",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /index.html\nconfidence: Firm\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /search.html\nconfidence: Firm\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /\nconfidence: Firm\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            }
+          ]
+        },
+        {
+          "id": "6292736",
+          "title": "Credit card numbers disclosed",
+          "desc": "Applications sometimes disclose sensitive financial information such as credit card numbers. Responses containing credit card numbers may not represent any security vulnerability - for example, a number may belong to the logged-in user to whom it is displayed. If a credit card number is identified during a security assessment it should be verified, then application logic reviewed to identify whether its disclosure within the application is necessary and appropriate.",
+          "impact": 0.3,
+          "tags": {
+            "nist": "",
+            "cweid": "CWE-200: Information Exposure \n CWE-388: Error Handling",
+            "confidence": "Certain"
+          },
+          "descriptions": [
+            {
+              "data": "Applications sometimes disclose sensitive financial information such as credit card numbers. Responses containing credit card numbers may not represent any security vulnerability - for example, a number may belong to the logged-in user to whom it is displayed. If a credit card number is identified during a security assessment it should be verified, then application logic reviewed to identify whether its disclosure within the application is necessary and appropriate.",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /resources/css/bootstrap.min.css\nissueDetail: The following credit card number was disclosed in the response: 36370249136206\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            }
+          ]
+        },
+        {
+          "id": "16777728",
+          "title": "Unencrypted communications",
+          "desc": "The application allows users to connect to it over unencrypted connections.  An attacker suitably positioned to view a legitimate user's network traffic could record and monitor their interactions with the application and obtain any information the user supplies. Furthermore, an attacker able to modify traffic could use the application as a platform for attacks against its users and third-party websites. Unencrypted connections have been exploited by ISPs and governments to track users, and to inject adverts and malicious JavaScript. Due to these concerns, web browser vendors are planning to visually flag unencrypted connections as hazardous. \n \nTo exploit this vulnerability, an attacker must be suitably positioned to eavesdrop on the victim's network traffic. This scenario typically occurs when a client communicates with the server over an insecure connection such as public Wi-Fi, or a corporate or home network that is shared with a compromised computer. Common defenses such as switched networks are not sufficient to prevent this. An attacker situated in the user's ISP or the application's hosting infrastructure could also perform this attack. Note that an advanced adversary could potentially target any connection made over the Internet's core infrastructure.\n \n Please note that using a mixture of encrypted and unencrypted communications is an ineffective defense against active attackers, because they can easily remove references to encrypted resources when these references are transmitted over an unencrypted connection.",
+          "impact": 0.3,
+          "tags": {
+            "nist": "",
+            "cweid": "CWE-326: Inadequate Encryption Strength",
+            "confidence": "Certain"
+          },
+          "descriptions": [
+            {
+              "data": "The application allows users to connect to it over unencrypted connections.  An attacker suitably positioned to view a legitimate user's network traffic could record and monitor their interactions with the application and obtain any information the user supplies. Furthermore, an attacker able to modify traffic could use the application as a platform for attacks against its users and third-party websites. Unencrypted connections have been exploited by ISPs and governments to track users, and to inject adverts and malicious JavaScript. Due to these concerns, web browser vendors are planning to visually flag unencrypted connections as hazardous. \n \nTo exploit this vulnerability, an attacker must be suitably positioned to eavesdrop on the victim's network traffic. This scenario typically occurs when a client communicates with the server over an insecure connection such as public Wi-Fi, or a corporate or home network that is shared with a compromised computer. Common defenses such as switched networks are not sufficient to prevent this. An attacker situated in the user's ISP or the application's hosting infrastructure could also perform this attack. Note that an advanced adversary could potentially target any connection made over the Internet's core infrastructure.\n \n Please note that using a mixture of encrypted and unencrypted communications is an ineffective defense against active attackers, because they can easily remove references to encrypted resources when these references are transmitted over an unencrypted connection.",
+              "label": "check"
+            },
+            {
+              "data": "Applications should use transport-level encryption (SSL/TLS) to protect all communications passing between the client and the server. The Strict-Transport-Security HTTP header should be used to ensure that clients refuse to access the server over an insecure connection.",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Host: ip: 54.82.22.214, url: http://zero.webappsecurity.com\nLocation: /\nconfidence: Certain\n",
+              "run_time": 0,
+              "start_time": "Thu Feb 27 09:28:17 EST 2020"
+            }
+          ]
+        }
+      ],
+      "sha256": "7049dc2791608df9b0ef56e19a7bffec69a2cea045c122582aca3b403931433f"
+    }
+  ]
+}
