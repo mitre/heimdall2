@@ -24,6 +24,7 @@ import {GroupsService} from '../groups/groups.service';
 import {APIKeyOrJwtAuthGuard} from '../guards/api-key-or-jwt-auth.guard';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {CreateEvaluationInterceptor} from '../interceptors/create-evaluation-interceptor';
+import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
 import {CreateEvaluationDto} from './dto/create-evaluation.dto';
 import {EvaluationDto} from './dto/evaluation.dto';
@@ -31,6 +32,8 @@ import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 import {EvaluationsService} from './evaluations.service';
 
 @Controller('evaluations')
+@UseGuards(JwtAuthGuard)
+@UseInterceptors(LoggingInterceptor)
 export class EvaluationsController {
   constructor(
     private readonly evaluationsService: EvaluationsService,
