@@ -3133,9 +3133,9 @@
   integrity sha512-laIjwTQaD+5DukBZaygQ79K1Z0jb1bPEMRrkXSLjtCcZm+abyp5YbrqpSLzD42FwWW6gK/aS4NYpJ804nG2brg==
 
 "@types/expect-puppeteer@^4.4.3":
-  version "4.4.5"
-  resolved "https://registry.yarnpkg.com/@types/expect-puppeteer/-/expect-puppeteer-4.4.5.tgz#832d0a1e74dbfd1bff9787ed99645d568130d5fb"
-  integrity sha512-vxPaumA8Fj6xlm3llKCR9V8L936HX4PyipaNMxDbWQIOWZoCl99jabD/6xuxXnCptOWUdUhXwDuX5cAJgCHsLg==
+  version "4.4.6"
+  resolved "https://registry.yarnpkg.com/@types/expect-puppeteer/-/expect-puppeteer-4.4.6.tgz#a7a9d1503a5416fe12bbe5e40123fdbaa461e04c"
+  integrity sha512-RgQND/7RvcJm4NL2qoQbvVHTcfDh3h3yYe0Em0roczXY+MOIBkcgv5WRzVKeQJKO1nyhc4bEAbxpwykjDUMdqg==
   dependencies:
     "@types/jest" "*"
     "@types/puppeteer" "*"
