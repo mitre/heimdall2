@@ -28,6 +28,9 @@
     .apexcharts-active {
         display: none !important;
     }
+    .resize-triggers {
+        display: none !important;
+    }
     #generate:hover {
         cursor: pointer;
     }
@@ -52,6 +55,7 @@
         size: landscape;
     }
     </style>
+    <style>{{{bootstrapCSS}}}</style>
     <script>
         window.addEventListener("hashchange", function () {
             window.scrollTo(window.scrollX, window.scrollY - 70);
@@ -132,21 +136,13 @@
     </div>
     <div class="container-fluid pt-4">
         <div class="row">
+            {{#complianceCards}}
             <div class="col-md">
                 <div class="card compliance-card">
-                    <div id="statusCountCard"> </div>
+                    {{{html}}}
                 </div>
             </div>
-            <div class="col-md">
-                <div class="card compliance-card">
-                    <div id="severityCard"> </div>
-                </div>
-            </div>
-            <div class="col-md">
-                <div class="card compliance-card">
-                    <div id="complianceCard"> </div>
-                </div>
-            </div>
+            {{/complianceCards}}
         </div>
     </div> {{#showControlSets}} {{#controlSets}}
     <div class="container-fluid pt-4" id="resultSetsContainer-{{fileID}}">
@@ -219,5 +215,8 @@
             </div>
         </div>
     </div>
-    </div> {{/controlSets}} {{/showControlSets}} </body>
+    </div> {{/controlSets}} {{/showControlSets}}
+    <script>{{{jquery}}}</script>
+    <script>{{{bootstrapJS}}}</script>
+</body>
 </html>

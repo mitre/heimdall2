@@ -89,13 +89,16 @@ interface Icons {
 }
 
 interface OutputData {
-  style: string;
+  bootstrapCSS: string;
+  bootstrapJS: string;
+  jquery: string;
   files: FileInfo[];
   statistics: Statistics;
   controlSets: ControlSet[];
   showControlSets: boolean;
   showCode: boolean;
   exportType: string;
+  complianceCards: {html: string | undefined}[];
   icons: Icons
 }
 
@@ -114,7 +117,9 @@ export default class ExportHTMLModal extends Vue {
   exportType = 'executive';
   description = 'Profile Info\nStatuses\nCompliance Donuts';
   outputData: OutputData = {
-    style: '',
+    bootstrapCSS: '',
+    bootstrapJS: '',
+    jquery: '',
     statistics: {
       passed: StatusCountModule.countOf(this.filter, 'Passed'),
       failed: StatusCountModule.countOf(this.filter, 'Failed'),
@@ -130,6 +135,7 @@ export default class ExportHTMLModal extends Vue {
     showControlSets: false,
     showCode: false,
     exportType: '',
+    complianceCards: [],
     icons: {
       circleCheck: this.iconDatatoSVG(mdiCheckCircle, 'white'),
       circleCross: this.iconDatatoSVG(mdiCloseCircle, 'white'),
@@ -205,30 +211,8 @@ export default class ExportHTMLModal extends Vue {
     this.outputData.controlSets = []
   }
 
-   copyComplianceCards(exportWindow: Window) {
-    // Grab the html from Heimdall, and then grab the container that the html will be put into
-    const statusCardHTML = document.getElementById('statusCounts')?.innerHTML
-    const statusCountCardContainer = exportWindow.document.getElementById('statusCountCard')
-    const severityCardHTML = document.getElementById('severityCounts')?.innerHTML
-    const severityCardContainer = exportWindow.document.getElementById('severityCard')
-    const complianceCardHTML = document.getElementById('complianceLevel')?.innerHTML
-    const complianceCardcontainer = exportWindow.document.getElementById('complianceCard')
-    if(statusCardHTML && severityCardHTML && complianceCardHTML) {
-      // Append the HTML to each container
-      statusCountCardContainer?.insertAdjacentHTML('afterbegin', statusCardHTML)
-      severityCardContainer?.insertAdjacentHTML('afterbegin', severityCardHTML)
-      complianceCardcontainer?.insertAdjacentHTML('afterbegin', complianceCardHTML)
-      // There seems to be some sort of automatic formatting applied with .resize-triggers that doesn't apply here
-      const elements = exportWindow.document.getElementsByClassName('resize-triggers');
-      while (elements[0]) {
-        const element = elements[0];
-        element?.parentNode?.removeChild(element);
-      }
-    }
-  }
-
-    addDetails(control: ContextualizedControl): ContextualizedControl & {details: Detail[]} {
-      return {...control, full_code: control.full_code, details: [
+  addDetails(control: ContextualizedControl): ContextualizedControl & {details: Detail[]} {
+    return {...control, full_code: control.full_code, details: [
       {
         name: 'Control',
         value: control.data.id
@@ -288,9 +272,19 @@ export default class ExportHTMLModal extends Vue {
 
     axios.all([templateRequest, bootstrapCSSRequest, bootstrapJSRequest, jqueryRequest]).then(axios.spread((...responses) => {
       const template = responses[0].data
-      const bootstrapCSS = responses[1].data
-      const bootstrapJS = responses[2].data
-      const jquery = responses[3].data
+      this.outputData.bootstrapCSS = responses[1].data
+          .replace(/\#dc3545/g, "#f34335") // bg-danger
+          .replace(/\#198754/g, "#4cb04f") // bg-success
+          .replace(/\#17a2b8/g, "#03a9f4") // bg-info
+          .replace(/\#ffc107/g, "#fe9900") // bg-warning
+
+      this.outputData.bootstrapJS = responses[2].data
+      this.outputData.jquery = responses[3].data
+      this.outputData.complianceCards = [
+        {html: document.getElementById('statusCounts')?.innerHTML},
+        {html: document.getElementById('severityCounts')?.innerHTML},
+        {html: document.getElementById('complianceLevel')?.innerHTML}
+      ]
 
       this.filter.fromFile.forEach(async (fileId) => {
         const file = InspecDataModule.allFiles.find(
@@ -300,33 +294,11 @@ export default class ExportHTMLModal extends Vue {
           this.addFiledata(file)
         }
       })
-      const modifiedStyle = bootstrapCSS
-        .replace(/\#dc3545/g, "#f34335") // bg-danger
-        .replace(/\#198754/g, "#4cb04f") // bg-success
-        .replace(/\#17a2b8/g, "#03a9f4") // bg-info
-        .replace(/\#ffc107/g, "#fe9900") // bg-warning
-
-      const testWindow = window.open('/static/export/popup-test.html', '_blank')
-      if(testWindow) {
-        const exportWindow = window.open('', '_blank');
-        if(exportWindow) {
-          exportWindow.document.write(Mustache.render(template, this.outputData))
-          exportWindow.document.head.insertAdjacentHTML("beforeend", `<style>${modifiedStyle}</style>`)
-          exportWindow.document.write(`<script>${jquery}<\/script>`);
-          exportWindow.document.write(`<script>${bootstrapJS}<\/script>`);
-          this.copyComplianceCards(exportWindow)
-          saveAs(
-            new Blob([s2ab(exportWindow.document.documentElement.outerHTML)], {type: 'application/octet-stream'}),
-              `${_.capitalize(this.exportType)}_Report_${new Date().toString()}.html`.replace(/[ :]/g, '_')
-          );
-          exportWindow.close();
-        } else {
-          SnackbarModule.failure('Please allow pop-up tabs to export to HTML and try again.')
-        }
-      } else {
-        SnackbarModule.failure('Please allow pop-up tabs to export to HTML and try again.')
-      }
-
+      const body = Mustache.render(template, this.outputData)
+      saveAs(
+        new Blob([s2ab(body)], {type: 'application/octet-stream'}),
+          `${_.capitalize(this.exportType)}_Report_${new Date().toString()}.html`.replace(/[ :]/g, '_')
+      );
     }))
     this.closeModal()
   }
