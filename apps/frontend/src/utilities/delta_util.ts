@@ -12,7 +12,7 @@ export const NOT_SELECTED = 'not selected';
 // Unique ID is the unique ID of a file
 // Controls is a list of controls
 interface ResultControls {
-  unique_id: string;
+  uniqueId: string;
   controls: context.ContextualizedControl[];
 }
 
@@ -35,20 +35,20 @@ export class ControlChange {
    * Returns true iff old !== new
    */
   get valid(): boolean {
-    let first_selected = -1;
+    let firstSelected = -1;
     for (let i = 0; i < this.values.length; i++) {
-      if (this.values[i] != NOT_SELECTED) {
-        first_selected = i;
+      if (this.values[i] !== NOT_SELECTED) {
+        firstSelected = i;
         break;
       }
     }
-    if (first_selected == -1) {
+    if (firstSelected === -1) {
       return false;
     }
-    for (let i = first_selected + 1; i < this.values.length; i++) {
+    for (let i = firstSelected + 1; i < this.values.length; i++) {
       if (
-        this.values[i] != this.values[first_selected] &&
-        this.values[i] != NOT_SELECTED
+        this.values[i] !== this.values[firstSelected] &&
+        this.values[i] !== NOT_SELECTED
       ) {
         return true;
       }
@@ -87,65 +87,65 @@ export class ControlChangeGroup {
 export class ControlDelta {
   controls: context.ContextualizedControl[] = [];
   controlsandnull: (context.ContextualizedControl | null)[] = [];
-  numNull: number = 0;
+  numNull = 0;
 
   constructor(controls: (context.ContextualizedControl | null)[]) {
     this.controlsandnull = controls;
-    for (let i = 0; i < controls.length; i++) {
-      if (controls[i] === null) {
-        this.numNull += 1;
+    for (const value of controls) {
+      if (value !== null) {
+        this.controls.push(value);
       } else {
-        this.controls.push(controls[i]!);
+        this.numNull += 1;
       }
     }
   }
 
   /** Returns the changes in "header" elements of a control. E.g. name, status, etc. */
-  get header_changes(): ControlChangeGroup {
+  get headerChanges(): ControlChangeGroup {
     // Init the list
-    const header_changes: ControlChange[] = [];
+    const headerChanges: ControlChange[] = [];
 
     // Change in... ID? Theoretically possible!
-    header_changes.push(
+    headerChanges.push(
       new ControlChange(
         'ID',
         this.controlsandnull.map((c) => {
           if (c === null) {
             return NOT_SELECTED;
           }
-          return c!.data.id;
+          return c.data.id;
         })
       )
     );
 
     // And severity! Why not
-    header_changes.push(
+    headerChanges.push(
       new ControlChange(
         'Severity',
         this.controlsandnull.map((c) => {
           if (c === null) {
             return NOT_SELECTED;
           }
-          return c!.hdf.severity;
+          return c.hdf.severity;
         })
       )
     );
 
     // Change in nist tags!
-    header_changes.push(
+    headerChanges.push(
       new ControlChange(
         'NIST Tags',
         this.controlsandnull.map((c) => {
           if (c === null) {
             return NOT_SELECTED;
           }
-          return c!.hdf.raw_nist_tags.join(', ');
+          return c.hdf.raw_nist_tags.join(', ');
         })
       )
     );
 
     // Make the group and clean it
-    const result = new ControlChangeGroup('Control Details', header_changes);
+    const result = new ControlChangeGroup('Control Details', headerChanges);
     result.clean();
     return result;
   }
@@ -177,7 +177,7 @@ function extract_top_level_controls(
 
   // Filter to controls that aren't overlayed further
   const top = allControls.filter((control) => control.extended_by.length === 0);
-  return {unique_id: exec.from_file.unique_id, controls: top};
+  return {uniqueId: exec.from_file.uniqueId, controls: top};
 }
 /** An object of contextualized controls with the same V-ID */
 export type ControlSeries = {[key: string]: context.ContextualizedControl};
@@ -205,7 +205,7 @@ export class ComparisonContext {
             acc[control.data.id] = {};
           }
           // Grouping
-          acc[control.data.id][evaluation.unique_id] = control;
+          acc[control.data.id][evaluation.uniqueId] = control;
         });
 
         return acc;

@@ -6,14 +6,12 @@ import {readFileSync} from 'fs';
 import 'jest';
 import {AllRaw} from '../util/fs';
 
-export function createTestingVue() {}
-
 export function loadSample(sampleName: string) {
   const sample: Sample | undefined = samples.find(
     (samp) => samp.filename === sampleName
   );
   if (sample === undefined) {
-    return;
+    return null;
   }
   const data: string = require(`../../public${sample.path}`);
   return InspecIntakeModule.loadText({
@@ -24,17 +22,17 @@ export function loadSample(sampleName: string) {
 
 export function loadAll(): void {
   const data = AllRaw();
-  Object.values(data).forEach((file_result) => {
+  Object.values(data).forEach((fileResult) => {
     // Do intake
     InspecIntakeModule.loadText({
-      filename: file_result.name,
-      text: file_result.content
+      filename: fileResult.name,
+      text: fileResult.content
     });
   });
 }
 
 export function removeAllFiles(): void {
-  const ids = InspecDataModule.allFiles.map((f) => f.unique_id);
+  const ids = InspecDataModule.allFiles.map((f) => f.uniqueId);
   for (const id of ids) {
     InspecDataModule.removeFile(id);
   }
@@ -56,7 +54,7 @@ export function fileCompliance(fileId: string) {
     StatusCountModule.countOf(filter, 'Failed') +
     StatusCountModule.countOf(filter, 'Profile Error') +
     StatusCountModule.countOf(filter, 'Not Reviewed');
-  if (total == 0) {
+  if (total === 0) {
     return 0;
   }
   return Math.round((100.0 * passed) / total);
@@ -76,10 +74,10 @@ export function expectedCount(
   // For each, we will filter then count
   InspecDataModule.executionFiles.forEach((file) => {
     // Get the corresponding count file
-    const count_filename = `tests/hdf_data/counts/${file.filename}.info.counts`;
-    const count_file_content = readFileSync(count_filename, 'utf-8');
+    const countFilename = `tests/hdf_data/counts/${file.filename}.info.counts`;
+    const countFileContent = readFileSync(countFilename, 'utf-8');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const counts: Record<string, any> = JSON.parse(count_file_content);
+    const counts: Record<string, any> = JSON.parse(countFileContent);
 
     statuses['failed'] += counts.failed.total;
     statuses['passed'] += counts.passed.total;

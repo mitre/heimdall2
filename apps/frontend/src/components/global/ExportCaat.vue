@@ -1,7 +1,7 @@
 <template>
   <v-tooltip top>
     <template #activator="{on}">
-      <LinkItem
+      <IconLinkItem
         key="exportCaat"
         text="CAAT Spreadsheet"
         icon="mdi-file-excel"
@@ -17,7 +17,7 @@
 import Vue from 'vue'
 import XLSX from 'xlsx';
 import Component from 'vue-class-component';
-import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {HDFControl, HDFControlSegment} from 'inspecjs';
 import {Filter, FilteredDataModule} from '../../store/data_filters';
 import {Prop} from 'vue-property-decorator';
@@ -31,7 +31,7 @@ type CAATRow = {
 
 @Component({
   components: {
-    LinkItem
+    IconLinkItem
   }
 })
 export default class ExportCaat extends Vue {
@@ -97,7 +97,7 @@ export default class ExportCaat extends Vue {
     this.filter.fromFile.forEach((fileId) => {
       // Find our file within InspecDataModule
       const file = InspecDataModule.allFiles.find(
-        (f) => f.unique_id === fileId
+        (f) => f.uniqueId === fileId
       );
       let renameCount = 2;
       let sheetName: string = `${file?.filename || fileId}`.substring(0, 31)
@@ -131,7 +131,7 @@ export default class ExportCaat extends Vue {
     const wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
     saveAs(
       new Blob([this.s2ab(wbout)], {type: 'application/octet-stream'}),
-        'CAAT-' + this.convertDate(new Date(), '-') + '.xlsx'
+        `CAAT-${this.convertDate(new Date(), '-')}.xlsx`
     );
   }
 

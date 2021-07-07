@@ -4,18 +4,21 @@ import {
   Post,
   Req,
   UseFilters,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
 import {Request} from 'express';
 import {AuthenticationExceptionFilter} from '../filters/authentication-exception.filter';
 import {LocalAuthGuard} from '../guards/local-auth.guard';
+import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
 import {AuthnService} from './authn.service';
 
+@UseInterceptors(LoggingInterceptor)
 @Controller('authn')
 export class AuthnController {
-  constructor(private authnService: AuthnService) {}
+  constructor(private readonly authnService: AuthnService) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('login')

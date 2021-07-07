@@ -1,5 +1,5 @@
 <template>
-  <BaseView title="Heimdall - Admin Panel">
+  <Base title="Heimdall - Admin Panel">
     <template #main-content>
       <v-tabs v-model="activeTab" fixed-tabs dark>
         <v-tab key="users"> User Management </v-tab>
@@ -22,19 +22,19 @@
         </v-row>
       </v-container>
     </template>
-  </BaseView>
+  </Base>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import BaseView from '@/views/BaseView.vue';
+import Base from '@/views/Base.vue';
 import UserManagement from '@/components/global/admin/UserManagement.vue'
 import Statistics from '@/components/global/admin/Statistics.vue'
 import {Component} from 'vue-property-decorator';
 
 @Component({
   components: {
-    BaseView,
+    Base,
     UserManagement,
     Statistics
   }

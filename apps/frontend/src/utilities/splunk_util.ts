@@ -3,8 +3,6 @@ import {ElementCompact, xml2js} from 'xml-js';
 import {delay} from './async_util';
 import {basic_auth, group_by, map_hash} from './helper_util';
 
-// env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
 export type JobID = string;
 
 // Interfaces
@@ -32,7 +30,7 @@ interface AbsMetaInfo {
   profile_sha256: string;
 
   /** The start time of the control in ISO format */
-  start_time: string;
+  startTime: string;
 
   /** The control ID, repeated for convenience in splunk searches */
   control_id: string;
@@ -40,13 +38,13 @@ interface AbsMetaInfo {
 
 /** The meta information for an event with the "evaluation" subtype */
 export interface ExecutionMetaInfo
-  extends Omit<AbsMetaInfo, 'control_id' | 'start_time' | 'profile_sha256'> {
+  extends Omit<AbsMetaInfo, 'control_id' | 'startTime' | 'profile_sha256'> {
   subtype: 'header';
 }
 
 /** The meta information for an event with the "profile" subtype */
 export interface ProfileMetaInfo
-  extends Omit<AbsMetaInfo, 'control_id' | 'start_time'> {
+  extends Omit<AbsMetaInfo, 'control_id' | 'startTime'> {
   subtype: 'profile';
 }
 
@@ -85,7 +83,7 @@ type PendingJobStatus = 'pending'; // There are others, but we don't handle them
 type JobStatus = CompleteJobStatus | PendingJobStatus;
 interface JobState {
   status: JobStatus;
-  job_id: JobID;
+  jobId: JobID;
 }
 
 /** This info is used to negotiate splunk connections */
@@ -112,10 +110,18 @@ export class SplunkEndpoint {
    *
    * Will error if we aren't
    */
+
+  process_response(response: Response) {
+    if (!response.ok) {
+      throw process_error(response);
+    }
+    return response.text();
+  }
+
   async check_auth(): Promise<void> {
     return fetch(`${this.host}/services/search/jobs`, {
       headers: {
-        Authorization: this.auth_string
+        Authorization: this.authString
       },
       method: 'GET'
     }).then(
@@ -135,43 +141,41 @@ export class SplunkEndpoint {
    */
   async fetch_execution_list(): Promise<ExecutionMetaInfo[]> {
     // This search lists evaluation headers
-    const get_executions_search =
+    const getExecutionsSearch =
       'spath "meta.subtype" | search "meta.subtype"=header';
 
-    return this.hdf_event_search(get_executions_search).then((events) => {
+    return this.hdf_event_search(getExecutionsSearch).then((events) => {
       // Because we only searched for headers, we can assume these to be eval events
-      const eval_events = events as ExecutionPayload[];
+      const evalEvents = events as ExecutionPayload[];
 
       // Could perhaps just return e but I'd rather people didn't screw themselves
-      return eval_events.map((e) => e.meta);
+      return evalEvents.map((e) => e.meta);
     });
   }
 
-  async get_execution_events(
-    execution_guid: string
-  ): Promise<UnknownPayload[]> {
+  async get_execution_events(executionGuid: string): Promise<UnknownPayload[]> {
     // This search, provided a guid, returns all headers for that guid
-    const specific_evaluation = `spath "meta.guid" | search "meta.guid"=${execution_guid}`;
-    return this.hdf_event_search(specific_evaluation);
+    const specificEvaluation = `spath "meta.guid" | search "meta.guid"=${executionGuid}`;
+    return this.hdf_event_search(specificEvaluation);
   }
 
   async get_execution(
-    execution_guid: string
+    executionGuid: string
   ): Promise<schemas_1_0.ExecJSON.Execution> {
-    return this.get_execution_events(execution_guid)
+    return this.get_execution_events(executionGuid)
       .then((events) => consolidate_payloads(events))
       .then((execs) => {
-        if (execs.length != 1) {
+        if (execs.length !== 1) {
           throw SplunkErrorCode.InvalidGUID;
         } else {
           return execs[0];
         }
       })
-      .then((full_event) => {
+      .then((fullEvent) => {
         // This is dumb and we should make the inspecjs layer more accepting of many file types
         let result: parse.ConversionResult;
         try {
-          result = parse.convertFile(JSON.stringify(full_event));
+          result = parse.convertFile(JSON.stringify(fullEvent));
         } catch (e) {
           throw SplunkErrorCode.SchemaViolation;
         }
@@ -179,8 +183,7 @@ export class SplunkEndpoint {
         // Determine what sort of file we (hopefully) have, then add it
         if (result['1_0_ExecJson']) {
           // Handle as exec
-          const execution = result['1_0_ExecJson'];
-          return execution;
+          return result['1_0_ExecJson'];
         } else {
           throw SplunkErrorCode.SchemaViolation;
         }
@@ -188,24 +191,23 @@ export class SplunkEndpoint {
   }
 
   /** Creates a proper base64 encoded auth string, using this objects credentials. */
-  private get auth_string(): string {
-    const auth_string = basic_auth(this.username, this.password);
-    return auth_string;
+  private get authString(): string {
+    return basic_auth(this.username, this.password);
   }
 
   /** Performs the entire process of search string -> results array
    *  Performs no consolidation.
    *  Assumes your search string is properly constrained to the hdf index
    */
-  async hdf_event_search(search_string: string): Promise<UnknownPayload[]> {
-    return this.create_search(search_string)
-      .then((job_id) => this.pend_job(job_id, 500))
-      .then((job_state) => {
-        if (job_state.status === 'failed') {
+  async hdf_event_search(searchString: string): Promise<UnknownPayload[]> {
+    return this.create_search(searchString)
+      .then((jobId) => this.pend_job(jobId, 500))
+      .then((jobState) => {
+        if (jobState.status === 'failed') {
           throw SplunkErrorCode.SearchFailed;
         }
 
-        return this.get_search_results(job_state.job_id);
+        return this.get_search_results(jobState.jobId);
       })
       .catch((error) => {
         throw process_error(error);
@@ -213,18 +215,15 @@ export class SplunkEndpoint {
   }
 
   /** Returns the job id */
-  private async create_search(search_string: string): Promise<JobID> {
+  private async create_search(searchString: string): Promise<JobID> {
     return fetch(`${this.host}/services/search/jobs`, {
       method: 'POST',
       headers: new Headers({
-        Authorization: this.auth_string
+        Authorization: this.authString
       }),
-      body: `search=search index="hdf" | ${search_string}`
+      body: `search=search index="hdf" | ${searchString}`
     })
-      .then((response) => {
-        if (!response.ok) throw process_error(response);
-        return response.text();
-      })
+      .then(this.process_response)
       .then((text) => {
         // Parse the xml
         const xml = xml2js(text, {
@@ -235,17 +234,14 @@ export class SplunkEndpoint {
   }
 
   /** Returns the current state of the job */
-  private async check_job(job_id: JobID): Promise<JobState> {
-    return fetch(`${this.host}/services/search/jobs/${job_id}`, {
+  private async check_job(jobId: JobID): Promise<JobState> {
+    return fetch(`${this.host}/services/search/jobs/${jobId}`, {
       method: 'GET',
       headers: new Headers({
-        Authorization: this.auth_string
+        Authorization: this.authString
       })
     })
-      .then((response) => {
-        if (!response.ok) throw process_error(response);
-        return response.text();
-      })
+      .then(this.process_response)
       .then((text) => {
         // Parse the xml
         const xml = xml2js(text, {
@@ -269,9 +265,9 @@ export class SplunkEndpoint {
 
         // Decide result based on state
         let status: JobStatus;
-        if (state == 'DONE') {
+        if (state === 'DONE') {
           status = 'succeeded';
-        } else if (state == 'FAILED') {
+        } else if (state === 'FAILED') {
           status = 'failed';
         } else {
           status = 'pending';
@@ -280,20 +276,19 @@ export class SplunkEndpoint {
         // Construct the state
         return {
           status,
-          job_id
+          jobId
         };
       });
   }
 
   /** Continually checks the job until resolution */
-  private async pend_job(job_id: JobID, interval: number): Promise<JobState> {
+  private async pend_job(jobId: JobID, interval: number): Promise<JobState> {
     /* eslint-disable */
         while (true) {
             /* eslint-enable */
-      const state = await this.check_job(job_id);
+      const state = await this.check_job(jobId);
       if (state.status === 'pending') {
         await delay(interval);
-        continue;
       } else {
         return state;
       }
@@ -301,18 +296,20 @@ export class SplunkEndpoint {
   }
 
   /** Gets the search results for a given job id, if it is done */
-  private async get_search_results(job_id: JobID): Promise<UnknownPayload[]> {
+  private async get_search_results(jobId: JobID): Promise<UnknownPayload[]> {
     return fetch(
-      `${this.host}/services/search/jobs/${job_id}/results/?output_mode=json&count=0`,
+      `${this.host}/services/search/jobs/${jobId}/results/?output_mode=json&count=0`,
       {
         headers: {
-          Authorization: this.auth_string
+          Authorization: this.authString
         },
         method: 'GET'
       }
     )
       .then((response) => {
-        if (!response.ok) throw process_error(response);
+        if (!response.ok) {
+          throw process_error(response);
+        }
         return response.json();
       })
       .then((data) => {
@@ -360,38 +357,38 @@ export function consolidate_payloads(
  * Produce: A single EvaluationPayload containing all of these payloads reconstructed into the expected HDF heirarchy
  */
 function consolidate_file_payloads(
-  file_payloads: UnknownPayload[]
+  filePayloads: UnknownPayload[]
 ): ExecutionPayload {
   // In the end we wish to produce a single evaluation EventPayload which in fact contains all data for the guid
   // Group by subtype
-  const subtypes = group_by(file_payloads, (event) => event.meta.subtype);
-  const exec_events = (subtypes['header'] || []) as ExecutionPayload[];
-  const profile_events = (subtypes['profile'] || []) as ProfilePayload[];
-  const control_events = (subtypes['control'] || []) as ControlPayload[];
+  const subtypes = group_by(filePayloads, (event) => event.meta.subtype);
+  const execEvents = (subtypes['header'] || []) as ExecutionPayload[];
+  const profileEvents = (subtypes['profile'] || []) as ProfilePayload[];
+  const controlEvents = (subtypes['control'] || []) as ControlPayload[];
 
   // Verify we only have one exec event
-  if (exec_events.length !== 1) {
+  if (execEvents.length !== 1) {
     throw new Error(
-      `Incorrect # of Evaluation events. Expected 1, got ${exec_events.length}`
+      `Incorrect # of Evaluation events. Expected 1, got ${execEvents.length}`
     );
   }
 
   // Pull it out
-  const exec = exec_events[0];
+  const exec = execEvents[0];
 
   // Put all the profiles into the exec
-  exec.profiles.push(...profile_events);
+  exec.profiles.push(...profileEvents);
 
   // Group controls, and then put them into the profiles
-  const sha_grouped_controls = group_by(
-    control_events,
+  const shaGroupedControls = group_by(
+    controlEvents,
     (ctrl) => ctrl.meta.profile_sha256
   );
-  for (const profile of profile_events) {
+  for (const profile of profileEvents) {
     // Get the corresponding controls, and put them into the profile
     const sha = profile.meta.profile_sha256;
-    const corr_controls = sha_grouped_controls[sha] || [];
-    profile.controls.push(...corr_controls);
+    const corrControls = shaGroupedControls[sha] || [];
+    profile.controls.push(...corrControls);
   }
 
   // Spit it back out
@@ -422,7 +419,7 @@ export function process_error(
     }
   } else if (r instanceof Response) {
     // Based on the network code, guess
-    const response = r as Response;
+    const response = r;
     switch (response.status) {
       case 401: // Bad username/password
         return SplunkErrorCode.BadAuth;
