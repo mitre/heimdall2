@@ -7,12 +7,14 @@ import {
   Param,
   Post,
   Request,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {EvaluationsService} from '../evaluations/evaluations.service';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
+import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
 import {CreateEvaluationTagDto} from './dto/create-evaluation-tag.dto';
 import {EvaluationTagDto} from './dto/evaluation-tag.dto';
@@ -20,6 +22,7 @@ import {EvaluationTagsService} from './evaluation-tags.service';
 
 @Controller('evaluation-tags')
 @UseGuards(JwtAuthGuard)
+@UseInterceptors(LoggingInterceptor)
 export class EvaluationTagsController {
   constructor(
     private readonly evaluationTagsService: EvaluationTagsService,
