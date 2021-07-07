@@ -224,8 +224,8 @@ describe('GroupsController', () => {
 
       await groupsController.addEvaluationToGroup(
         privateGroup.id,
-        {user: basicUser}, // Request
-        {id: evaluation.id} // Dto
+        {user: basicUser},
+        {id: evaluation.id}
       );
 
       const groupEvaluations = await privateGroup.$get('evaluations');

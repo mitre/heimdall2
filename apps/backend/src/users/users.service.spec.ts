@@ -131,12 +131,12 @@ describe('UsersService', () => {
     });
   });
 
-  describe('AdminFindAll', () => {
+  describe('adminFindAllUsers', () => {
     it('should find all users', async () => {
       expect.assertions(2);
       const userOne = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const userTwo = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
-      const userDtoArray = (await usersService.adminFindAll()).map(
+      const userDtoArray = (await usersService.adminFindAllUsers()).map(
         (user) => new UserDto(user)
       );
       expect(userDtoArray).toContainEqual(new UserDto(userOne));
@@ -144,12 +144,12 @@ describe('UsersService', () => {
     });
   });
 
-  describe('UserFindAll', () => {
+  describe('findAllUsers', () => {
     it('should find all users id, email, firstName, lastName only', async () => {
       expect.assertions(2);
       const userOne = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
       const userTwo = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
-      const slimUserDtoArray = (await usersService.userFindAll()).map(
+      const slimUserDtoArray = (await usersService.findAllUsers()).map(
         (user) => new SlimUserDto(user)
       );
       expect(slimUserDtoArray).toContainEqual(new SlimUserDto(userOne));
