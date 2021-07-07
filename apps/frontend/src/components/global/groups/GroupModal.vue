@@ -82,6 +82,7 @@ import {GroupsModule} from '@/store/groups';
 import Users from '@/components/global/groups/Users.vue';
 import DeleteDialog from '@/components/generic/DeleteDialog.vue';
 import _ from 'lodash';
+
 function newGroup(): IGroup {
   return {
     id: '-1',
@@ -92,6 +93,7 @@ function newGroup(): IGroup {
     users: []
   }
 }
+
 @Component({
   validations: {},
   components: {
@@ -107,6 +109,7 @@ export default class GroupModal extends Vue {
       return newGroup()
     }
     }) readonly group!: IGroup;
+
   @Prop({type: Boolean, default: false}) readonly admin!: boolean;
   @Prop({type: Boolean, default: false}) readonly create!: boolean;
   dialog = false;
@@ -123,6 +126,7 @@ export default class GroupModal extends Vue {
       return 'Update Group'
     }
   }
+
   async save(): Promise<void> {
     const groupInfo: ICreateGroup = {
       ...this.groupInfo,
@@ -141,12 +145,15 @@ export default class GroupModal extends Vue {
       });
     })
   }
+
   async createGroup(createGroup: ICreateGroup): Promise<AxiosResponse<IGroup>> {
     return axios.post<IGroup>('/groups', createGroup)
   }
+
   async updateExistingGroup(groupToUpdate: ICreateGroup): Promise<AxiosResponse<IGroup>> {
     return axios.put<IGroup>(`/groups/${this.groupInfo.id}`, groupToUpdate);
   }
+
   async syncUsersWithGroup(group: IGroup) {
     const originalIds = this.group.users.map((user) => user.id);
     const changedIds = this.groupInfo.users.map((user) => user.id);
