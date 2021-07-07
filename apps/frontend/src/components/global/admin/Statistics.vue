@@ -33,6 +33,7 @@ export default class Statistics extends Vue {
         evaluationTagCount: 0,
         groupCount: 0
     };
+
     loading = true;
 
     mounted() {

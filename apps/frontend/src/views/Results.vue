@@ -239,6 +239,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   $refs!: Vue['$refs'] & {
     search: HTMLInputElement;
   };
+
   /**
    * The currently selected severity, as modeled by the severity chart
    */
