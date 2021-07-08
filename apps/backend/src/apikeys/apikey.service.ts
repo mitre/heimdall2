@@ -49,7 +49,7 @@ export class ApiKeyService {
   async create(
     user: User,
     createApiKeyDto: CreateApiKeyDto
-  ): Promise<{id: string; apiKey: string}> {
+  ): Promise<{id: string; name: string; apiKey: string}> {
     const newApiKey = new ApiKey({
       userId: user.id,
       name: createApiKeyDto.name
@@ -63,7 +63,7 @@ export class ApiKeyService {
     const JWTSignature = newJWT.split('.')[2];
     newApiKey.apiKey = await hash(JWTSignature, 14);
     newApiKey.save();
-    return {id: newApiKey.id, apiKey: newJWT};
+    return {id: newApiKey.id, name: newApiKey.name, apiKey: newJWT};
   }
 
   async update(
