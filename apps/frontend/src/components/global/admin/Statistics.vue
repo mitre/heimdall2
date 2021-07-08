@@ -28,10 +28,11 @@ import {Component} from 'vue-property-decorator';
 @Component({})
 export default class Statistics extends Vue {
     statistics: IStatistics = {
-        userCount: 0,
-        evaluationCount: 0,
-        evaluationTagCount: 0,
-        groupCount: 0
+      apiKeyCount: 0,
+      userCount: 0,
+      evaluationCount: 0,
+      evaluationTagCount: 0,
+      groupCount: 0
     };
     loading = true;
 
