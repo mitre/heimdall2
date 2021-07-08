@@ -8,7 +8,6 @@ import {
   Post,
   Put,
   Request,
-  UnauthorizedException,
   UploadedFile,
   UseGuards,
   UseInterceptors
@@ -32,7 +31,6 @@ import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 import {EvaluationsService} from './evaluations.service';
 
 @Controller('evaluations')
-@UseGuards(JwtAuthGuard)
 @UseInterceptors(LoggingInterceptor)
 export class EvaluationsController {
   constructor(
@@ -93,9 +91,6 @@ export class EvaluationsController {
     @UploadedFile() data: Express.Multer.File,
     @Request() request: {user: User}
   ): Promise<EvaluationDto> {
-    if (!request.user) {
-      throw new UnauthorizedException();
-    }
     const serializedDta: JSON = JSON.parse(data.buffer.toString('utf8'));
     let groups: Group[] = createEvaluationDto.groups
       ? await this.groupsService.findByIds(createEvaluationDto.groups)

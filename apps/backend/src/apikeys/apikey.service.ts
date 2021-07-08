@@ -2,6 +2,7 @@ import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {compare, hash} from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import _ from 'lodash';
 import {CreateApiKeyDto} from '../apikeys/dto/create-apikey.dto';
 import {ConfigService} from '../config/config.service';
 import {generateDefault} from '../token/token.providers';
@@ -31,15 +32,10 @@ export class ApiKeyService {
         this.configService.get('JWT_SECRET') || generateDefault()
       ) as {token: string; keyId: string; createdAt: Date};
       const JWTSignature = apikey.split('.')[2];
-      if (
-        jwtPayload &&
-        typeof jwtPayload === 'object' &&
-        jwtPayload.hasOwnProperty('keyId')
-      ) {
-        const matchingKey = await this.findByPkBang(jwtPayload.keyId);
-        const user = this.usersService.findById(matchingKey.userId);
+      if (_.has(jwtPayload, 'keyId')) {
+        const matchingKey = await this.findById(jwtPayload.keyId);
         if (await compare(JWTSignature, matchingKey.apiKey)) {
-          return user;
+          return matchingKey.user;
         } else {
           return null;
         }
@@ -70,27 +66,17 @@ export class ApiKeyService {
     return {id: newApiKey.id, apiKey: newJWT};
   }
 
-  async delete(id: string): Promise<APIKeyDto> {
-    const apiKey = await this.apiKeyModel.findByPk<ApiKey>(id);
-    if (apiKey === null) {
-      throw new NotFoundException('API key with given id not found');
-    } else {
-      apiKey.destroy();
-      return new APIKeyDto(apiKey);
-    }
-  }
-
   async update(
     id: string,
     updateAPIKeyDto: UpdateAPIKeyDto
   ): Promise<APIKeyDto> {
-    const apiKey = await this.findByPkBang(id);
+    const apiKey = await this.findById(id);
     apiKey.name = updateAPIKeyDto.name;
     return new APIKeyDto(await apiKey.save());
   }
 
   async regenerate(id: string): Promise<string> {
-    const apiKey = await this.findByPkBang(id);
+    const apiKey = await this.findById(id);
     const newJWT = jwt.sign(
       {keyId: id, createdAt: new Date()},
       this.configService.get('JWT_SECRET') || generateDefault()
@@ -102,13 +88,15 @@ export class ApiKeyService {
   }
 
   async remove(id: string): Promise<APIKeyDto> {
-    const apiKeyToDestroy = await this.findByPkBang(id);
+    const apiKeyToDestroy = await this.findById(id);
     await apiKeyToDestroy.destroy();
     return new APIKeyDto(apiKeyToDestroy);
   }
 
-  async findByPkBang(identifier: string): Promise<ApiKey> {
-    const apiKey = await this.apiKeyModel.findByPk<ApiKey>(identifier);
+  async findById(id: string): Promise<ApiKey> {
+    const apiKey = await this.apiKeyModel.findByPk<ApiKey>(id, {
+      include: [User]
+    });
     if (apiKey === null) {
       throw new NotFoundException('API key with given id not found');
     } else {

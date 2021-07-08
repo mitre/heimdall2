@@ -4,8 +4,8 @@ import {ApiKey} from '../apikey.model';
 export class APIKeyDto implements IApiKey {
   readonly id!: string;
   readonly name!: string;
-  createdAt!: Date;
-  updatedAt!: Date;
+  readonly createdAt!: Date;
+  readonly updatedAt!: Date;
 
   constructor(apiKey: ApiKey) {
     this.id = apiKey.id;

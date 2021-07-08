@@ -5,7 +5,6 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
   Put,
   Request,
@@ -20,7 +19,6 @@ import {ApiKeyService} from './apikey.service';
 import {APIKeyDto} from './dto/apikey.dto';
 import {CreateApiKeyDto} from './dto/create-apikey.dto';
 import {DeleteAPIKeyDto} from './dto/delete-apikey.dto';
-import {RegenerateAPIKeyDto} from './dto/regenerate-apikey.dto';
 import {UpdateAPIKeyDto} from './dto/update-apikey.dto';
 
 @Controller('apikeys')
@@ -34,6 +32,8 @@ export class ApiKeyController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async findAPIKeys(@Request() request: {user: User}): Promise<APIKeyDto[]> {
+    const abac = this.authz.abac.createForUser(request.user);
+    ForbiddenError.from(abac).throwUnlessCan(Action.Read, request.user);
     return this.apiKeyService.findAllForUser(request.user);
   }
 
@@ -43,6 +43,8 @@ export class ApiKeyController {
     @Request() request: {user: User},
     @Body() createApiKeyDto: CreateApiKeyDto
   ): Promise<{id: string; apiKey: string}> {
+    const abac = this.authz.abac.createForUser(request.user);
+    ForbiddenError.from(abac).throwUnlessCan(Action.Update, request.user);
     await this.usersService.testPassword(createApiKeyDto, request.user);
     return this.apiKeyService.create(request.user, createApiKeyDto);
   }
@@ -54,41 +56,30 @@ export class ApiKeyController {
     @Param('id') id: string,
     @Body() deleteApiKeyDto: DeleteAPIKeyDto
   ): Promise<APIKeyDto> {
-    const apiKeyToDelete = await this.apiKeyService.findByPkBang(id);
-    const apiKeyOwner = await this.usersService.findById(apiKeyToDelete.userId);
+    const apiKeyToDelete = await this.apiKeyService.findById(id);
     const abac = this.authz.abac.createForUser(request.user);
-    ForbiddenError.from(abac).throwUnlessCan(Action.Update, apiKeyOwner);
+    ForbiddenError.from(abac).throwUnlessCan(
+      Action.Update,
+      apiKeyToDelete.user
+    );
     await this.usersService.testPassword(deleteApiKeyDto, request.user);
-    return this.apiKeyService.delete(id);
+    return this.apiKeyService.remove(id);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch('/:id')
+  @Put('/:id')
   async updateAPIKey(
     @Request() request: {user: User},
     @Param('id') id: string,
     @Body() updateApiKeyDto: UpdateAPIKeyDto
   ): Promise<APIKeyDto> {
-    const apiKeyToUpdate = await this.apiKeyService.findByPkBang(id);
-    const apiKeyOwner = await this.usersService.findById(apiKeyToUpdate.userId);
+    const apiKeyToUpdate = await this.apiKeyService.findById(id);
     const abac = this.authz.abac.createForUser(request.user);
-    ForbiddenError.from(abac).throwUnlessCan(Action.Update, apiKeyOwner);
+    ForbiddenError.from(abac).throwUnlessCan(
+      Action.Update,
+      apiKeyToUpdate.user
+    );
     await this.usersService.testPassword(updateApiKeyDto, request.user);
     return this.apiKeyService.update(apiKeyToUpdate.id, updateApiKeyDto);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Put('/:id')
-  async regenerateAPIKey(
-    @Request() request: {user: User},
-    @Param('id') id: string,
-    @Body() regenerateApiKeyDto: RegenerateAPIKeyDto
-  ): Promise<{key: string}> {
-    const apiKeyToUpdate = await this.apiKeyService.findByPkBang(id);
-    const apiKeyOwner = await this.usersService.findById(apiKeyToUpdate.userId);
-    const abac = this.authz.abac.createForUser(request.user);
-    ForbiddenError.from(abac).throwUnlessCan(Action.Update, apiKeyOwner);
-    await this.usersService.testPassword(regenerateApiKeyDto, request.user);
-    return {key: await this.apiKeyService.regenerate(apiKeyToUpdate.id)};
   }
 }
