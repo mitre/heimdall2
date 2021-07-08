@@ -176,7 +176,7 @@
             >Change Password</v-btn
           >
           <v-btn
-            v-if="!admin"
+            v-if="!admin && !apiKeysDisabled"
             id="toggleAPIKeys"
             class="ml-2"
             @click="toggleShowAPIKeys"
@@ -307,6 +307,7 @@ export default class UserModal extends Vue {
   ]
 
   apiKeys: IApiKey[] = [];
+  apiKeysDisabled = false;
   activeAPIKey: IApiKey | null = null
   inputPasswordDialog = false;
   deleteAPIKeyDialog = false;
@@ -375,9 +376,18 @@ export default class UserModal extends Vue {
   }
 
   getAPIKeys() {
-    axios.get<IApiKey[]>(`/apikeys`).then(({data}) => {
-      this.apiKeys = data
-    })
+    axios
+      .create()
+      .get<IApiKey[]>(`/apikeys`).then(({data}) => {
+        this.apiKeys = data
+      }).catch((error) => {
+        if (error.response) {
+            if(error.response.status === 403) {
+              this.apiKeysDisabled = true
+              return
+            }
+        }
+      })
   }
 
   addAPIKey() {

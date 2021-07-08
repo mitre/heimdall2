@@ -5,7 +5,6 @@ import jwt from 'jsonwebtoken';
 import _ from 'lodash';
 import {CreateApiKeyDto} from '../apikeys/dto/create-apikey.dto';
 import {ConfigService} from '../config/config.service';
-import {generateDefault} from '../token/token.providers';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {ApiKey} from './apikey.model';
@@ -29,7 +28,7 @@ export class ApiKeyService {
     try {
       const jwtPayload = jwt.verify(
         apikey,
-        this.configService.get('JWT_SECRET') || generateDefault()
+        this.configService.get('JWT_SECRET') || 'disabled'
       ) as {token: string; keyId: string; createdAt: Date};
       const JWTSignature = apikey.split('.')[2];
       if (_.has(jwtPayload, 'keyId')) {
@@ -57,7 +56,7 @@ export class ApiKeyService {
     await newApiKey.save();
     const newJWT = jwt.sign(
       {keyId: newApiKey.id, createdAt: new Date()},
-      this.configService.get('JWT_SECRET') || generateDefault()
+      this.configService.get('JWT_SECRET') || 'disabled'
     );
     // Since BCrypt has a 72 byte limit only hash the JWT signature
     const JWTSignature = newJWT.split('.')[2];
@@ -79,7 +78,7 @@ export class ApiKeyService {
     const apiKey = await this.findById(id);
     const newJWT = jwt.sign(
       {keyId: id, createdAt: new Date()},
-      this.configService.get('JWT_SECRET') || generateDefault()
+      this.configService.get('JWT_SECRET') || 'disabled'
     );
     const JWTSignature = newJWT.split('.')[2];
     apiKey.apiKey = await hash(JWTSignature, 14);
