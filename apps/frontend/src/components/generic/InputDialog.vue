@@ -16,7 +16,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn color="blue darken-1" text @change="$emit('cancel')"
+        <v-btn color="blue darken-1" text @click="$emit('cancel')"
           >Cancel</v-btn
         >
         <v-btn

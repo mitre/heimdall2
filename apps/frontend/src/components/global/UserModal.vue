@@ -98,7 +98,10 @@
               text-field-label="Current Password"
               :is-password="true"
               @update-value="updateCurrentPassword"
-              @cancel="deleteAPIKeyDialog = false"
+              @cancel="
+                activeAPIKey = null;
+                deleteAPIKeyDialog = false;
+              "
               @confirm="deleteAPIKeyConfirm"
             />
             <InputDialog
@@ -107,7 +110,10 @@
               text-field-label="Current Password"
               :is-password="true"
               @update-value="updateCurrentPassword"
-              @cancel="updateAPIKeyDialog = false"
+              @cancel="
+                activeAPIKey = null;
+                updateAPIKeyDialog = false;
+              "
               @confirm="updateAPIKey"
             />
             <InputDialog
@@ -116,7 +122,10 @@
               text-field-label="Current Password"
               :is-password="true"
               @update-value="updateCurrentPassword"
-              @cancel="refreshAPIKeyDialog = false"
+              @cancel="
+                activeAPIKey = null;
+                refreshAPIKeyDialog = false;
+              "
               @confirm="refreshAPIKeyConfirm"
             />
             <v-data-table
@@ -379,10 +388,7 @@ export default class UserModal extends Vue {
       .catch((error) => {
         if (error.response) {
           if(error.response.status === 403) {
-            if(this.currentPassword !== '') {
-              SnackbarModule.failure('Incorrect Password')
-            }
-            return this.inputPasswordDialog = true;
+            this.inputPasswordDialog = true;
           }
         }
         throw error
@@ -404,10 +410,7 @@ export default class UserModal extends Vue {
       .catch((error) => {
         if (error.response) {
           if(error.response.status === 403) {
-            if(this.currentPassword !== '') {
-              SnackbarModule.failure('Incorrect Password')
-            }
-            return this.deleteAPIKeyDialog = true;
+            this.deleteAPIKeyDialog = true;
           }
         }
         throw error
@@ -424,10 +427,7 @@ export default class UserModal extends Vue {
       .catch((error) => {
         if (error.response) {
           if(error.response.status === 403) {
-            if(this.currentPassword !== '') {
-              SnackbarModule.failure('Incorrect Password')
-            }
-            return this.updateAPIKeyDialog = true;
+            this.updateAPIKeyDialog = true;
           }
         }
         throw error
