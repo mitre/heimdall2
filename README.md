@@ -8,7 +8,7 @@ This repository contains the source code for the Heimdall 2 Backend and Frontend
 
 ### Video
 
-[![Heimdall Lite 2.0 Demo YouTube](https://user-images.githubusercontent.com/66680985/122113013-8c521700-cdef-11eb-8b98-a11cc64aaf58.png)](https://www.youtube.com/watch?v=sFWXRXYpY8E)
+![](https://github.com/mitre/docs-mitre-inspec/raw/master/images/Heimdall_demo.gif)
 
 ### Hosted
 
