@@ -42,25 +42,25 @@
           </template>
           <template #[`item.actions`]="{item}">
             <v-row class="d-flex flex-row-reverse">
+              <EditEvaluationModal
+                v-if="editEvaluationDialog"
+                id="editEvaluationModal"
+                :active="activeItem"
+                :visible="editEvaluationDialog && activeItem.id === item.id"
+                @updateEvaluations="updateEvaluations"
+                @close="editEvaluationDialog = false"
+              />
               <ShareEvaluationButton title="Share Result" :evaluation="item" />
               <div v-if="item.editable">
-                <EditEvaluationModal
-                  id="editEvaluationModal"
-                  :active="item"
-                  @updateEvaluations="updateEvaluations"
+                <v-icon
+                  data-cy="edit"
+                  small
+                  title="Edit"
+                  class="mr-2"
+                  @click="editItem(item)"
                 >
-                  <template #clickable="{on}"
-                    ><v-icon
-                      data-cy="edit"
-                      small
-                      title="Edit"
-                      class="mr-2"
-                      v-on="on"
-                    >
-                      mdi-pencil
-                    </v-icon>
-                  </template>
-                </EditEvaluationModal>
+                  mdi-pencil
+                </v-icon>
                 <v-icon
                   data-cy="delete"
                   class="mr-2"
@@ -119,6 +119,7 @@ export default class LoadFileList extends Vue {
   activeItem!: IEvaluation;
   activeTag!: IEvaluationTag;
 
+  editEvaluationDialog = false;
   deleteItemDialog = false;
   deleteTagDialog = false;
   search = '';
@@ -134,6 +135,7 @@ export default class LoadFileList extends Vue {
 
   editItem(item: IEvaluation) {
     this.activeItem = item;
+    this.editEvaluationDialog = true;
   }
 
   deleteItem(item: IEvaluation) {
@@ -153,7 +155,7 @@ export default class LoadFileList extends Vue {
       file.evaluationTags?.forEach((tag) => {
         if (tag.value.toLowerCase().includes(search)) {
           result = true;
-        };
+        }
       })
     }
     return result
@@ -167,9 +169,9 @@ export default class LoadFileList extends Vue {
   }
 
   get filteredFiles() {
-    let matches: Array<IEvaluation | Sample> = []
-    if (this.search != '') {
-      let searchToLower = this.search.toLowerCase();
+    const matches: Array<IEvaluation | Sample> = []
+    if (this.search !== '') {
+      const searchToLower = this.search.toLowerCase();
       (this.files as Array<IEvaluation | Sample>).forEach(async (item: IEvaluation | Sample) => {
           if (this.filterEvaluationTags(item, searchToLower) || item.filename.toLowerCase().includes(searchToLower)) {
           matches.push(item)
