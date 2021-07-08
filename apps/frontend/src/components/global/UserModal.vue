@@ -420,7 +420,7 @@ export default class UserModal extends Vue {
     }
     this.updateAPIKeyDialog = false;
     axios
-      .post<IApiKey>(`/apikeys`, {name: this.activeAPIKey?.name, currentPassword: this.currentPassword})
+      .put<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {name: this.activeAPIKey?.name, currentPassword: this.currentPassword})
       .catch((error) => {
         if (error.response) {
           if(error.response.status === 403) {
