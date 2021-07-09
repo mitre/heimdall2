@@ -45,13 +45,13 @@
   "dependencies": {
     "@casl/ability": "^5.2.2",
     "@heimdall/interfaces": "^2.4.6",
-    "@nestjs/cli": "^7.1.5",
+    "@nestjs/cli": "^8.0.2",
     "@nestjs/common": "^7.0.13",
     "@nestjs/core": "^7.0.13",
-    "@nestjs/jwt": "^7.0.0",
-    "@nestjs/passport": "^7.0.0",
+    "@nestjs/jwt": "^8.0.0",
+    "@nestjs/passport": "^8.0.0",
     "@nestjs/platform-express": "^7.0.13",
-    "@nestjs/schematics": "^7.0.0",
+    "@nestjs/schematics": "^8.0.0",
     "@nestjs/sequelize": "^0.2.0",
     "@nestjs/serve-static": "^2.1.3",
     "@types/bcryptjs": "^2.4.2",
@@ -97,7 +97,8 @@
     "sequelize-typescript": "^2.0.0",
     "ts-loader": "^9.1.0",
     "ts-node": "^10.0.0",
-    "tsconfig-paths": "^3.9.0"
+    "tsconfig-paths": "^3.9.0",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@nestjs/testing": "^7.0.13",
