@@ -51,6 +51,7 @@ export default class ExportJSON extends Vue {
     }
     return fileData;
   }
+
   //exports .zip of jsons if multiple are selected, if one is selected it will export that .json file
   export_json() {
     const files = this.populate_files();
@@ -80,6 +81,7 @@ export default class ExportJSON extends Vue {
       zipfile.end();
     }
   }
+
   cleanup_filename(filename: string): string {
     filename = filename.replace(/\s+/g, '_');
     if (filename.substring(filename.length - 6) !== '.json') {
