@@ -1,8 +1,7 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
-import {compare, hash} from 'bcryptjs';
+import {hash} from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import _ from 'lodash';
 import {CreateApiKeyDto} from '../apikeys/dto/create-apikey.dto';
 import {ConfigService} from '../config/config.service';
 import {User} from '../users/user.model';
@@ -22,27 +21,6 @@ export class ApiKeyService {
 
   async count(): Promise<number> {
     return this.apiKeyModel.count();
-  }
-
-  async checkKey(apikey: string): Promise<User | null> {
-    try {
-      const jwtPayload = jwt.verify(
-        apikey,
-        this.configService.get('JWT_SECRET') || 'disabled'
-      ) as {token: string; keyId: string; createdAt: Date};
-      const JWTSignature = apikey.split('.')[2];
-      if (_.has(jwtPayload, 'keyId')) {
-        const matchingKey = await this.findById(jwtPayload.keyId);
-        if (await compare(JWTSignature, matchingKey.apiKey)) {
-          return matchingKey.user;
-        } else {
-          return null;
-        }
-      }
-    } catch {
-      return null;
-    }
-    return null;
   }
 
   async create(
@@ -72,18 +50,6 @@ export class ApiKeyService {
     const apiKey = await this.findById(id);
     apiKey.name = updateAPIKeyDto.name;
     return new APIKeyDto(await apiKey.save());
-  }
-
-  async regenerate(id: string): Promise<string> {
-    const apiKey = await this.findById(id);
-    const newJWT = jwt.sign(
-      {keyId: id, createdAt: new Date()},
-      this.configService.get('JWT_SECRET') || 'disabled'
-    );
-    const JWTSignature = newJWT.split('.')[2];
-    apiKey.apiKey = await hash(JWTSignature, 14);
-    await apiKey.save();
-    return newJWT;
   }
 
   async remove(id: string): Promise<APIKeyDto> {

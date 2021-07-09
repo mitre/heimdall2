@@ -19,6 +19,7 @@ import {OktaStrategy} from './okta.strategy';
 
 @Module({
   imports: [
+    ApiKeyModule,
     UsersModule,
     PassportModule,
     TokenModule,

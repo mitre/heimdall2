@@ -15,8 +15,11 @@ export class ApiKeysAllowedInterceptor implements NestInterceptor {
     this.configService = configService;
   }
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<void> {
-    if (this.configService.get('API_KEYS_DISABLED')?.toLowerCase() === 'true' || !this.configService.get('JWT_SECRET')) {
+  intercept(_context: ExecutionContext, next: CallHandler): Observable<void> {
+    if (
+      this.configService.get('API_KEYS_DISABLED')?.toLowerCase() === 'true' ||
+      !this.configService.get('JWT_SECRET')
+    ) {
       throw new ForbiddenException('API Keys have been disabled');
     }
     return next.handle();

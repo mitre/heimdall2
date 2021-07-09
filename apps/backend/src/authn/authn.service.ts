@@ -2,6 +2,10 @@ import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
 import {compare} from 'bcryptjs';
 import * as crypto from 'crypto';
+import jwt from 'jsonwebtoken';
+import _ from 'lodash';
+import {ApiKeyService} from '../apikeys/apikey.service';
+import {ConfigService} from '../config/config.service';
 import {CreateUserDto} from '../users/dto/create-user.dto';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
@@ -9,6 +13,8 @@ import {UsersService} from '../users/users.service';
 @Injectable()
 export class AuthnService {
   constructor(
+    private readonly apiKeyService: ApiKeyService,
+    private readonly configService: ConfigService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService
   ) {}
@@ -26,6 +32,27 @@ export class AuthnService {
     } else {
       return null;
     }
+  }
+
+  async validateApiKey(apikey: string): Promise<User | null> {
+    try {
+      const jwtPayload = jwt.verify(
+        apikey,
+        this.configService.get('JWT_SECRET') || 'disabled'
+      ) as {token: string; keyId: string; createdAt: Date};
+      const JWTSignature = apikey.split('.')[2];
+      if (_.has(jwtPayload, 'keyId')) {
+        const matchingKey = await this.apiKeyService.findById(jwtPayload.keyId);
+        if (await compare(JWTSignature, matchingKey.apiKey)) {
+          return matchingKey.user;
+        } else {
+          throw new UnauthorizedException('Unknown API-Key');
+        }
+      }
+    } catch {
+      throw new UnauthorizedException('Invalid API-Key Signature');
+    }
+    throw new UnauthorizedException('Bad API-Key');
   }
 
   async validateOrCreateUser(
