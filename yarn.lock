@@ -3441,9 +3441,9 @@
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
 
 "@types/passport-github@^1.1.5":
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@types/passport-github/-/passport-github-1.1.5.tgz#57ea20d1de0789b98a7157603d76d87c271de6b2"
-  integrity sha512-BeWDdLRWfPpJcmT1XofY5r1Av//TcxBEgllY4LnArcYdGqbIIVLyHwR+8bIG+ZC4PwJ6W1trnVEG3EQ+5J+Jmw==
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@types/passport-github/-/passport-github-1.1.6.tgz#57dda1df256307688124fff6f9d5d087eaca6182"
+  integrity sha512-3ar0TARm9Y7rQ6KIOH5N7tYneKzz6JQdK1pQMCYLM3EnNsEKWxGNiibvKe9B8tq0OJTxDVoRxUx4o4YA26fDzw==
   dependencies:
     "@types/express" "*"
     "@types/passport" "*"
