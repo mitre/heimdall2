@@ -179,6 +179,7 @@ function extract_top_level_controls(
   const top = allControls.filter((control) => control.extended_by.length === 0);
   return {uniqueId: exec.from_file.uniqueId, controls: top};
 }
+
 /** An object of contextualized controls with the same V-ID */
 export type ControlSeries = {[key: string]: context.ContextualizedControl};
 

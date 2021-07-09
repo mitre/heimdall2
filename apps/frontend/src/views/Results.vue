@@ -230,6 +230,16 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   };
 
   /**
+   * The currently selected severity, as modeled by the severity chart
+   */
+  severityFilter: Severity | null = null;
+
+  /**
+   * The currently selected status, as modeled by the status chart
+   */
+  statusFilter: ControlStatus | "Waived" | null = null;
+
+  /**
    * The current state of the treemap as modeled by the treemap (duh).
    * Once can reliably expect that if a "deep" selection is not null, then its parent should also be not-null.
    */
