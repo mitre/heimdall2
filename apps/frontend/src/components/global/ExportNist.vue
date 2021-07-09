@@ -84,7 +84,7 @@ export default class ExportNIST extends Vue {
     // Get them all
     let nistControls: NistControl[] = [];
     controls.forEach((c) => {
-      let tags = c.root.hdf.parsedNistTags;
+      const tags = c.root.hdf.parsedNistTags;
       tags.forEach((t) => {
         if (
           !nistControls.some(

@@ -9,6 +9,7 @@
   "dependencies": {},
   "devDependencies": {
     "@types/node": "^15.0.1",
+    "jest": "^27.0.6",
     "typedoc": "^0.20.35"
   },
   "scripts": {
@@ -17,7 +18,8 @@
     "docs": "typedoc --out docs ./src",
     "gen-types": "bash scripts/update_schema.sh",
     "lint": "eslint --ext .ts src --fix",
-    "lint:ci": "eslint \"**/*.ts\" --max-warnings 0"
+    "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
