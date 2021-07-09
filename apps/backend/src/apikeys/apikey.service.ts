@@ -1,4 +1,8 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {hash} from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -27,20 +31,27 @@ export class ApiKeyService {
     user: User,
     createApiKeyDto: CreateApiKeyDto
   ): Promise<{id: string; name: string; apiKey: string}> {
-    const newApiKey = new ApiKey({
-      userId: user.id,
-      name: createApiKeyDto.name
-    });
-    await newApiKey.save();
-    const newJWT = jwt.sign(
-      {keyId: newApiKey.id, createdAt: new Date()},
-      this.configService.get('JWT_SECRET') || 'disabled'
-    );
-    // Since BCrypt has a 72 byte limit only hash the JWT signature
-    const JWTSignature = newJWT.split('.')[2];
-    newApiKey.apiKey = await hash(JWTSignature, 14);
-    newApiKey.save();
-    return {id: newApiKey.id, name: newApiKey.name, apiKey: newJWT};
+    const JWTSecret = this.configService.get('JWT_SECRET');
+    const apiKeysAllowed =
+      this.configService.get('API_KEYS_DISABLED')?.toLowerCase() !== 'true';
+    if (apiKeysAllowed && JWTSecret) {
+      const newApiKey = new ApiKey({
+        userId: user.id,
+        name: createApiKeyDto.name
+      });
+      await newApiKey.save();
+      const newJWT = jwt.sign(
+        {keyId: newApiKey.id, createdAt: new Date()},
+        JWTSecret
+      );
+      // Since BCrypt has a 72 byte limit only hash the JWT signature
+      const JWTSignature = newJWT.split('.')[2];
+      newApiKey.apiKey = await hash(JWTSignature, 14);
+      newApiKey.save();
+      return {id: newApiKey.id, name: newApiKey.name, apiKey: newJWT};
+    } else {
+      throw new ForbiddenException('API Keys have been disabled');
+    }
   }
 
   async update(
