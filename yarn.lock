@@ -2332,10 +2332,10 @@
     "@types/jsonwebtoken" "8.5.4"
     jsonwebtoken "8.5.1"
 
-"@nestjs/passport@^7.0.0":
-  version "7.1.6"
-  resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-7.1.6.tgz#608bb265dfd85602aa74bbceacc012ffb2e9d25d"
-  integrity sha512-iHD/4D01CsKKWg7kUzo4yGNS4m90z1an0eUz+6nBlE5VeEOuCzhGFoBKAt0OKLJLOTEsJKuj4C2b5QfjqXVTyQ==
+"@nestjs/passport@^8.0.0":
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-8.0.0.tgz#dda83945ad5ee75bf81f0d0bded0aaff48fb0536"
+  integrity sha512-pIuOA+dEgOW0hg/qVV9uegitUHN1dKY8nEZhOtwj9FErJfCVZpQce8OH06n7yngqGTzvkkjjr/TzfuA1o8/A5A==
 
 "@nestjs/platform-express@^7.0.13":
   version "7.6.18"
@@ -2798,9 +2798,9 @@
     "@types/chai" "*"
 
 "@types/chai@*", "@types/chai@^4.2.5":
-  version "4.2.20"
-  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.2.20.tgz#bb02e7d02b6c452f6bbb8fe575b56e180644de67"
-  integrity sha512-E121rHk/4BlcEwANZOwcHl8L/Sl0zyIFXJoyggXkl7FCT/4MTf5u25f+qiphe0V5ELaFIkCptgvbf4whCJUVMA==
+  version "4.2.21"
+  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.2.21.tgz#9f35a5643129df132cf3b5c1ec64046ea1af0650"
+  integrity sha512-yd+9qKmJxm496BOV9CMNaey8TWsikaZOwMRwPHQIjcOJM9oV+fi9ZMNw3JsVnbEEbo2gRTDnGEBv8pjyn67hNg==
 
 "@types/chroma-js@^2.1.0":
   version "2.1.3"
@@ -2823,9 +2823,9 @@
     "@types/node" "*"
 
 "@types/connect-pg-simple@^4.2.2":
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/@types/connect-pg-simple/-/connect-pg-simple-4.2.3.tgz#a0780af1be5bb1cca379e3ea925565330452441e"
-  integrity sha512-lMcgA2B4XI91emY7PERCvNlfVkwV/74c9484NEZxAyQJq2dgWnmRwzYOkC26ND4JBQf9Z7ZmslZ9C0cOJKLriA==
+  version "4.2.4"
+  resolved "https://registry.yarnpkg.com/@types/connect-pg-simple/-/connect-pg-simple-4.2.4.tgz#2a677098fb2da7e5b2bb87c261d08255402b4950"
+  integrity sha512-WzpKF3utq5iWK5k9ZSQ9edR8Y/HUhq4Nrz4cFSXdo6EJgv13RfLMbhDQCf8Xef4JbyhYmJSUovXmAp2oQzvj3w==
   dependencies:
     "@types/express" "*"
     "@types/express-session" "*"
@@ -3441,9 +3441,9 @@
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
 
 "@types/passport-github@^1.1.5":
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/@types/passport-github/-/passport-github-1.1.5.tgz#57ea20d1de0789b98a7157603d76d87c271de6b2"
-  integrity sha512-BeWDdLRWfPpJcmT1XofY5r1Av//TcxBEgllY4LnArcYdGqbIIVLyHwR+8bIG+ZC4PwJ6W1trnVEG3EQ+5J+Jmw==
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@types/passport-github/-/passport-github-1.1.6.tgz#57dda1df256307688124fff6f9d5d087eaca6182"
+  integrity sha512-3ar0TARm9Y7rQ6KIOH5N7tYneKzz6JQdK1pQMCYLM3EnNsEKWxGNiibvKe9B8tq0OJTxDVoRxUx4o4YA26fDzw==
   dependencies:
     "@types/express" "*"
     "@types/passport" "*"
@@ -5186,9 +5186,9 @@ autoprefixer@^9.8.6:
     postcss-value-parser "^4.1.0"
 
 aws-sdk@^2.573.0:
-  version "2.941.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.941.0.tgz#7172cc719737028a7bf06ebde93dfa8e3cdfb645"
-  integrity sha512-MzVYHaZNtWy7UgFnCBg8rXFfSd4svjUVkLpQnPb/XJb3Qq4082SN5ZjaDITFFAQs/xttV3jm5jtbbcc5dpICYg==
+  version "2.942.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.942.0.tgz#594d2e629ab4a2286eaf69c54658cea3acce4ec7"
+  integrity sha512-9Y+DWSTvolTJe0nl55sKnsPgtfBCV8WKDE8cAUhgn9MIb4tAGpwejS14AUmqeZ12J58AsgPT3PffdI7Hq9IEtQ==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -10484,9 +10484,9 @@ hex-color-regex@^1.1.0:
   integrity sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==
 
 highlight.js@*, highlight.js@^11.0.0:
-  version "11.0.1"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.0.1.tgz#a78bafccd9aa297978799fe5eed9beb7ee1ef887"
-  integrity sha512-EqYpWyTF2s8nMfttfBA2yLKPNoZCO33pLS4MnbXQ4hECf1TKujCt1Kq7QAdrio7roL4+CqsfjqwYj4tYgq0pJQ==
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.1.0.tgz#0198f7326e64ddfbea5f76b00e84ab542cf24ae8"
+  integrity sha512-X9VVhYKHQPPuwffO8jk4bP/FVj+ibNCy3HxZZNDXFtJrq4O5FdcdCDRIkDis5MiMnjh7UwEdHgRZJcHFYdzDdA==
 
 highlight.js@10.7.2, highlight.js@^10.7.1:
   version "10.7.2"
