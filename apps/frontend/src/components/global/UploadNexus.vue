@@ -111,9 +111,11 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
     // Forces the v-group-slider to recalculate its position to prevent getting stuck between Splunk and Samples
     setTimeout(() => window.dispatchEvent(new Event('resize')), 250)
   }
+
   get warning_banner(): string {
     return ServerModule.banner;
   }
+
   // Event passthrough
   got_files(files: FileID[]) {
     this.$emit('got-files', files);
