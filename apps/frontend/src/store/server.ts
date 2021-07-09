@@ -161,6 +161,7 @@ class Server extends VuexModule implements IServerState {
         this.context.commit('SET_LOADING', false);
       });
   }
+
   @Action
   public async handleLogin(data: {userID: string; accessToken: string}) {
     this.context.commit('SET_USERID', data.userID);

@@ -55,6 +55,7 @@ export default class S3Reader extends Vue {
   /** Form required field rules. Maybe eventually expand to other stuff */
   reqRule = (v: string | null | undefined) =>
     (v || '').trim().length > 0 || 'Field is Required';
+
   mfaRule = (v: string | null | undefined) =>
     (v || '').trim().match('^\\d{6}$') !== null ||
     'Field must be the 6 number code from a valid authenticator device';
