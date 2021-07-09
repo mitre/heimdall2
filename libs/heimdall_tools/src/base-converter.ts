@@ -23,7 +23,7 @@ export interface LookupPath {
   transformer?:
   | ((value: string) => string | number)
   | ((value: number) => string | number)
-  | ((value: object) => string | number | object | Array<any>);
+  | ((value: object) => string | number | object | Array<any> | null);
   key?: string;
 }
 
@@ -36,13 +36,14 @@ export function generateHash(data: string, algorithm: string): string {
 
 function collapseDuplicates<T extends Object>(
   array: Array<T>,
-  key: string
+  key: string,
+  collapseResults: boolean
 ): Array<T> {
   const seen = new Map<string, number>();
   const newArray = new Array<T>();
   let counter = 0;
   array.forEach((item: T) => {
-    const propertyValue = _.get(item, 'id');
+    const propertyValue = _.get(item, key);
     const index = seen.get(propertyValue) || 0;
     const test = _.get(newArray[index], 'results[?(code_desc)]');
     if (!seen.has(propertyValue)) {
@@ -57,7 +58,15 @@ function collapseDuplicates<T extends Object>(
           _.get(newArray[index], `results[${i.toString()}].code_desc`)
         );
       }
-      if (descriptions.indexOf(_.get(item, 'results[0].code_desc')) === -1) {
+      if (collapseResults) {
+        if (descriptions.indexOf(_.get(item, 'results[0].code_desc')) === -1) {
+          _.set(
+            newArray[index],
+            'results',
+            _.get(newArray[index], 'results').concat(_.get(item, 'results'))
+          );
+        }
+      } else {
         _.set(
           newArray[index],
           'results',
@@ -72,25 +81,23 @@ function collapseDuplicates<T extends Object>(
 export class BaseConverter {
   data: object;
   mappings: MappedTransform<ExecJSON, LookupPath>;
-  static startTime = '';
+  collapseResults: boolean
 
   constructor(
     data: object,
     mappings: MappedTransform<ExecJSON, LookupPath>,
-    startTimePath?: string
+    collapseResults = false
   ) {
     this.data = data;
     this.mappings = mappings;
-    if (startTimePath !== undefined) {
-      BaseConverter.startTime = _.get(data, startTimePath);
-    }
+    this.collapseResults = collapseResults
   }
 
   toHdf(): ExecJSON {
     const v = this.convertInternal(this.data, this.mappings);
     v.profiles.forEach((element) => {
       element.sha256 = generateHash(
-        JSON.stringify(_.omit(element, ['sha256'])),
+        JSON.stringify(element),
         'sha256'
       );
     });
@@ -111,10 +118,10 @@ export class BaseConverter {
   evaluate<T>(
     file: object,
     v: T | Array<T>
-  ): number | string | T | Array<T> | MappedReform<T, LookupPath> {
+  ): number | string | boolean | T | Array<T> | MappedReform<T, LookupPath> {
     if (Array.isArray(v)) {
       return this.handleArray(file, v);
-    } else if (typeof v === 'string' || typeof v === 'number' || v === null) {
+    } else if (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean' || v === null) {
       return v;
     } else if (_.has(v, 'path')) {
       if (_.has(v, 'transformer')) {
@@ -156,7 +163,7 @@ export class BaseConverter {
           counter++;
         });
         if (key !== undefined) {
-          return collapseDuplicates(v, key);
+          return collapseDuplicates(v, key, this.collapseResults);
         } else {
           return v;
         }
@@ -166,7 +173,9 @@ export class BaseConverter {
     }
   }
   handlePath(file: object, path: string | string[]): string | number {
-    if (typeof path === 'string') {
+    if (typeof path === 'string' && path.startsWith('$.')) {
+      return _.get(this.data, path.slice(2)) || '';
+    } else if (typeof path === 'string') {
       return _.get(file, path) || '';
     } else {
       let value = '';

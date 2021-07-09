@@ -1,24 +1,36 @@
-import parse from 'csv-parse/';
+import parse from 'csv-parse/lib/sync';
 import fs from 'fs';
+import { CweNistMappingItem } from './CweNistMappingItem';
 
 export class CweNistMapping {
   data: CweNistMappingItem[];
 
   constructor(csvDataPath: string) {
-    this.data = new Array<CweNistMappingItem>();
-    // parse({ from_line: 2 }, fs.readFileSync(csvDataPath, { encoding: 'utf-8' }), { skip_empty_lines: true }, function (err, line) {
-    // if (!err === undefined) {
-    //   throw err
-    // } else {
-    //   data.push(new CweNistMappingItem(line))
-    // }
-    // })
-    fs.createReadStream(csvDataPath).pipe(
-      parse({from_line: 2}, (error, row) => {
-        if (error === undefined) {
-          this.data.push(new CweNistMappingItem(row));
+    this.data = []
+    const contents = parse(fs.readFileSync(csvDataPath, { encoding: 'utf-8' }), { skip_empty_lines: true })
+    if (Array.isArray(contents)) {
+      contents.slice(1).forEach((line: string[]) => {
+        this.data.push(new CweNistMappingItem(line))
+      })
+    }
+  }
+  nistFilter(identifiers: string[], defaultNist: string[]) {
+    const DEFAULT_NIST_TAG = defaultNist
+    if (identifiers.length === 0) {
+      return DEFAULT_NIST_TAG
+    } else {
+      let matches = new Array<string>()
+      identifiers.forEach(id => {
+        let key = parseInt(id)
+        let item = this.data.find((element) => element.id === key)
+        if (item !== null && item !== undefined && item.nistId !== '' && matches.indexOf(item.nistId) === -1) {
+          matches.push(item.nistId)
         }
       })
-    );
+      if (matches.length === 0) {
+        return DEFAULT_NIST_TAG
+      }
+      return matches
+    }
   }
 }

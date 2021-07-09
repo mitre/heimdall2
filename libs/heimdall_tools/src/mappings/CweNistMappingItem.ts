@@ -1,11 +1,11 @@
-class CweNistMappingItem {
+export class CweNistMappingItem {
   id: number;
   name: string;
   nistId: string;
   rev: number;
   nistName: string;
 
-  constructor(values: string) {
+  constructor(values: string[]) {
     if (values[0] === undefined) {
       throw new Error('CWE Nist Mapping Data must contain an ID.');
     } else {

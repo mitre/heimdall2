@@ -1,22 +1,17 @@
-import parse from 'csv-parse/';
+import parse from 'csv-parse/lib/sync';
 import fs from 'fs';
+import { NessusPluginsNistMappingItem } from './NessusPluginsNistMappingItem';
 
-class NessusPluginsNistMapping {
+export class NessusPluginsNistMapping {
   data: NessusPluginsNistMappingItem[];
 
   constructor(csvDataPath: string) {
-    const data = [];
-    parse(
-      fs.readFileSync(csvDataPath, {encoding: 'utf-8'}),
-      {skip_empty_lines: true},
-      function (err, line) {
-        if (!err === undefined) {
-          throw err;
-        } else {
-          data.push(new NessusPluginsNistMappingItem(line));
-        }
-      }
-    );
-    this.data = data;
+    this.data = []
+    const contents = parse(fs.readFileSync(csvDataPath, { encoding: 'utf-8' }), { skip_empty_lines: true })
+    if (Array.isArray(contents)) {
+      contents.slice(1).forEach((line: string[]) => {
+        this.data.push(new NessusPluginsNistMappingItem(line))
+      })
+    }
   }
 }

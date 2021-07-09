@@ -2,7 +2,7 @@ import { ControlResultStatus, ExecJSON } from 'inspecjs/dist/generated_parsers/v
 import { version as HeimdallToolsVersion } from '../package.json'
 import _ from 'lodash'
 import { MappedTransform, LookupPath, BaseConverter, generateHash } from './base-converter'
-import fs from 'fs'
+import { CweNistMapping } from './mappings/CweNistMapping';
 
 // Constants
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -10,9 +10,9 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['medium', 0.5],
   ['low', 0.3]
 ]);
-// const CWE_NIST_MAPPING_FILE = '../../data/cwe-nist-mapping.csv'
-// const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE)
-// const DEFAULT_NIST_TAG = ['SA-11', 'RA-5']
+const CWE_NIST_MAPPING_FILE = 'libs/heimdall_tools/data/cwe-nist-mapping.csv'
+const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE)
+const DEFAULT_NIST_TAG = ['SA-11', 'RA-5']
 
 // Transformation Functions
 function hashId(vulnerability: object): string {
@@ -24,7 +24,7 @@ function hashId(vulnerability: object): string {
   }
 }
 function formatDesc(vulnerability: object): string {
-  const text = []
+  let text = []
   if (_.has(vulnerability, 'description')) {
     text.push(_.get(vulnerability, 'description').toString());
   }
@@ -82,31 +82,21 @@ function formatCodeDesc(vulnerability: object): string {
   }
   return codeDescArray.join('\n').replace(re, ', ');
 }
-function parseIdentifier(identifier: string): Array<string> {
-  if (identifier.split('CWE-')[1]) {
-    return [identifier.split('CWE-')[1]];
-  } else {
-    return [];
+function parseIdentifier(identifier: object): Array<string> {
+  let output = new Array<string>()
+  if (Array.isArray(identifier)) {
+    identifier.forEach(element => {
+      if (element.split('CWE-')[1]) {
+        output.push(element.split('CWE-')[1])
+      }
+    })
   }
+  return output
 }
-// function nistTag(identifier: string): Array<string> {
-//   let identifiers = parseIdentifier(identifier)
-//   if (identifiers === []) {
-//     return DEFAULT_NIST_TAG
-//   } else {
-//     // let matches = new Array<string>()
-//     // identifiers.forEach(element => {
-//     //   let key = parseInt(element)
-//     //   matches.push(CWE_NIST_MAPPING.data.filter((element, index) => {
-//     //     if (element.id = key) {
-//     //       return true
-//     //     }
-//     //   })[0].nistId)
-//     // })
-//     // return matches
-//     return DEFAULT_NIST_TAG
-//   }
-// }
+function nistTag(identifier: object): Array<string> {
+  let identifiers = parseIdentifier(identifier)
+  return CWE_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG)
+}
 
 // Mappings
 const mappings: MappedTransform<ExecJSON, LookupPath> = {
@@ -139,9 +129,9 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
           path: 'data',
           key: 'id',
           tags: {
-            nist: { path: 'component_versions.more_details.cves[0].cwe[0]' },
+            nist: { path: 'component_versions.more_details.cves[0].cwe', transformer: nistTag },
             cweid: {
-              path: 'component_versions.more_details.cves[0].cwe[0]',
+              path: 'component_versions.more_details.cves[0].cwe',
               transformer: parseIdentifier
             }
           },
@@ -173,6 +163,6 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
 
 export class JfrogXrayMapper extends BaseConverter {
   constructor(xrayJson: string) {
-    super(JSON.parse(xrayJson), mappings);
+    super(JSON.parse(xrayJson), mappings, true);
   }
 }

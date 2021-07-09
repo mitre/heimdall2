@@ -1,4 +1,4 @@
-class NiktoNistMappingItem {
+export class NiktoNistMappingItem {
   id: number;
   pluginCategory: string;
   nistId: string;

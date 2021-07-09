@@ -1,4 +1,4 @@
-class NessusPluginsNistMappingItem {
+export class NessusPluginsNistMappingItem {
   pluginFamily: string;
   pluginId: number;
   nistId: string;

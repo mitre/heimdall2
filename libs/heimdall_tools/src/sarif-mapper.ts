@@ -1,27 +1,40 @@
-import {ExecJSON} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+import { ControlResultStatus, ExecJSON } from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
-import {version as HeimdallToolsVersion} from '../package.json';
+import { version as HeimdallToolsVersion } from '../package.json';
+import { MappedTransform, LookupPath, BaseConverter } from './base-converter'
+import { CweNistMapping } from './mappings/CweNistMapping';
 
-const objectMap = (obj: Object, fn: Function) =>
-  Object.fromEntries(Object.entries(obj).map(([k, v], i) => [k, fn(v, k, i)]));
-type MappedTransform<T, U> = {
-  [K in keyof T]: T[K] extends object ? MappedTransform<T[K], U> : T[K] | U;
-};
-interface LookupPath {
-  path: string;
-}
-function convert(fields: typeof mappings, file: Object) {
-  const result = objectMap(fields, (v: {path: string}) => _.get(file, v.path));
-  return result;
-}
-async function generateHash(data: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const encdata = encoder.encode(data);
+const IMPACT_MAPPING: Map<string, number> = new Map([
+  ['error', 0.7],
+  ['warning', 0.5],
+  ['note', 0.3]
+]);
 
-  const byteArray = await crypto.subtle.digest('SHA-256', encdata);
-  return Array.prototype.map
-    .call(new Uint8Array(byteArray), (x) => ('00' + x.toString(16)).slice(-2))
-    .join('');
+const CWE_NIST_MAPPING_FILE = 'libs/heimdall_tools/data/cwe-nist-mapping.csv'
+const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE)
+const DEFAULT_NIST_TAG = ['SA-11', 'RA-5']
+
+function extractCwe(text: string): string[] {
+  let output = text.split('(').slice(-1)[0].slice(0, -2).split(', ')
+  if (output.length === 1) {
+    output = text.split('(').slice(-1)[0].slice(0, -2).split('!/')
+  }
+  return output
+}
+function impactMapping(severity: string | number): number {
+  return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0.1
+}
+function formatCodeDesc(input: object): string {
+  let output = []
+  output.push(`URL : ${_.get(input, 'artifactLocation.uri')}`)
+  output.push(`LINE : ${_.get(input, 'region.startLine')}`)
+  output.push(`COLUMN : ${_.get(input, 'region.startColumn')}`)
+  return output.join(' ')
+}
+function nistTag(text: string): string[] {
+  let identifiers = extractCwe(text)
+  identifiers = identifiers.map(element => element.split('-')[1])
+  return CWE_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG)
 }
 
 const mappings: MappedTransform<ExecJSON, LookupPath> = {
@@ -30,44 +43,76 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
     release: HeimdallToolsVersion,
     target_id: 'Static Analysis Results Interchange Format'
   },
+  version: HeimdallToolsVersion,
+  statistics: {
+    duration: null
+  },
   profiles: [
     {
+      path: 'runs',
       name: 'SARIF',
+      version: { path: '$.version' },
       title: 'Static Analysis Results Interchange Format',
-      version: {path: 'version'},
+      maintainer: null,
       summary: '',
-      attributes: [],
-      controls: [
-        // A little confusing, will get back to it later
-        // {
-        //   tags: {}, // TODO
-        //   descriptions: [],
-        //   refs: [],
-        //   source_location:
-        // }
-      ],
-      groups: [],
+      license: null,
+      copyright: null,
+      copyright_email: null,
       supports: [],
+      attributes: [],
+      depends: [],
+      groups: [],
+      status: 'loaded',
+      controls: [
+        {
+          path: 'results',
+          key: 'id',
+          tags: {
+            cwe: {
+              path: 'message.text',
+              transformer: extractCwe
+            },
+            nist: { path: 'message.text', transformer: nistTag }
+          },
+          descriptions: [],
+          refs: [],
+          source_location: {
+            ref: { path: 'locations[0].physicalLocation.artifactLocation.uri' },
+            line: { path: 'locations[0].physicalLocation.region.startLine' }
+          },
+          title: {
+            path: 'message.text', transformer: (text: string) => {
+              return text.split(': ')[0]
+            }
+          },
+          id: { path: 'ruleId' },
+          desc: {
+            path: 'message.text', transformer: (text: string) => {
+              return text.split(': ')[1]
+            }
+          },
+          impact: { path: 'level', transformer: impactMapping },
+          code: '',
+          results: [
+            {
+              status: ControlResultStatus.Failed,
+              code_desc: {
+                path: 'locations[0].physicalLocation',
+                transformer: formatCodeDesc
+              },
+              run_time: 0,
+              start_time: ''
+            }
+          ]
+        }
+      ],
       sha256: ''
     }
-  ],
-  statistics: {},
-  version: HeimdallToolsVersion
+  ]
 };
 
-class SarifMapper {
-  sarifJson: Object;
-
-  constructor(sarifJson: Object) {
-    this.sarifJson = sarifJson;
-  }
-
-  convert() {
-    const data = convert(mappings, this.sarifJson);
-    for (const profile in data.profiles) {
-      const {sha256, ...profileObject} = profile;
-      profile.sha256 = generateHash(JSON.stringify(profile));
-    }
-    return data;
+export class SarifMapper extends BaseConverter {
+  constructor(sarifJson: string) {
+    super(JSON.parse(sarifJson), mappings);
   }
 }

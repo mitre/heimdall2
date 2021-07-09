@@ -1,4 +1,4 @@
-class ScoutsuiteNistMappingItem {
+export class ScoutsuiteNistMappingItem {
   rule: string;
   nistId: string;
 

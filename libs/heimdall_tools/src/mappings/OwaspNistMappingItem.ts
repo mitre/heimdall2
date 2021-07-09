@@ -1,4 +1,4 @@
-class OwaspNistMappingItem {
+export class OwaspNistMappingItem {
   id: string;
   name: string;
   nistId: string;

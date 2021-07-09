@@ -1,4 +1,4 @@
-class AwsConfigMappingItem {
+export class AwsConfigMappingItem {
   configRuleSourceIdentifier: string;
   configRuleName: string;
   nistId: string;

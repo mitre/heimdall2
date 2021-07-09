@@ -179,7 +179,7 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
   ]
 };
 
-export class NessusMapper extends BaseConverter {
+export class NessusHdf extends BaseConverter {
   constructor(nessusXml: string) {
     const options = {
       attributeNamePrefix: "",
@@ -187,7 +187,23 @@ export class NessusMapper extends BaseConverter {
       ignoreAttributes: false
 
     }
-    let burpsJson = parser.parse(nessusXml, options);
-    super(burpsJson, mappings, 'issues.exportTime');
+    let nessusJson = parser.parse(nessusXml, options);
+    super(nessusJson, mappings);
+  }
+}
+export class NessusDriver {
+  data: object
+  //reports: object
+  constructor(nessusXml: string) {
+    const options = {
+      attributeNamePrefix: "",
+      textNodeName: "text",
+      ignoreAttributes: false
+
+    }
+    this.data = parser.parse(nessusXml, options)
+  }
+  toHdf() {
+
   }
 }

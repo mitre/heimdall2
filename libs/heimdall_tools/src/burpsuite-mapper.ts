@@ -6,8 +6,9 @@ import {
   ExecJSON
 } from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
-import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, LookupPath, MappedTransform} from './base-converter';
+import { version as HeimdallToolsVersion } from '../package.json';
+import { BaseConverter, LookupPath, MappedTransform } from './base-converter';
+import { CweNistMapping } from './mappings/CweNistMapping';
 
 // Constant
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -16,11 +17,10 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['low', 0.3],
   ['information', 0.3]
 ]);
-const startTime = '';
 
-// const CWE_NIST_MAPPING_FILE = '../../data/cwe-nist-mapping.csv'
-// const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE)
-// const DEFAULT_NIST_TAG = ['SA-11', 'RA-5']
+const CWE_NIST_MAPPING_FILE = 'libs/heimdall_tools/data/cwe-nist-mapping.csv'
+const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE)
+const DEFAULT_NIST_TAG = ['SA-11', 'RA-5']
 
 // Transformation Functions
 function formatCodeDesc(issue: object): string {
@@ -61,45 +61,19 @@ function parseHtml(input: string) {
 function impactMapping(severity: string | number): number {
   return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
 }
-function formatDesc(input: object): Array<ControlDescription> {
-  // let output = []
-  // output.push({
-  //   data: _.get(input, 'issueBackground'),
-  //   label: 'check'
-  // })
-  // output.push({
-  //   data: _.get(input, 'remediationBackground'),
-  //   label: 'fix'
-  // })
-  return [];
-}
-function getStartTime(_input: string) {
-  return BaseConverter.startTime;
-}
 function idToString(id: number): string {
   return id.toString();
 }
 function formatCweId(input: string) {
-  return parseHtml(input).slice(2, -2);
+  return parseHtml(input).slice(2, -2).trimLeft();
 }
-// function nistTag(identifier: string): Array<string> {
-//   let identifiers = parseIdentifier(identifier)
-//   if (identifiers === []) {
-//     return DEFAULT_NIST_TAG
-//   } else {
-//     // let matches = new Array<string>()
-//     // identifiers.forEach(element => {
-//     //   let key = parseInt(element)
-//     //   matches.push(CWE_NIST_MAPPING.data.filter((element, index) => {
-//     //     if (element.id = key) {
-//     //       return true
-//     //     }
-//     //   })[0].nistId)
-//     // })
-//     // return matches
-//     return DEFAULT_NIST_TAG
-//   }
-// }
+function nistTag(input: string) {
+  let cwe = formatCweId(input).split('CWE-')
+  cwe.shift()
+  cwe = cwe.map(x => x.split(':')[0])
+  return CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG).concat(['Rev_4'])
+}
+
 
 // Mappings
 const mappings: MappedTransform<ExecJSON, LookupPath> = {
@@ -115,7 +89,7 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
   profiles: [
     {
       name: 'BurpSuite Pro Scan',
-      version: {path: 'issues.burpVersion'},
+      version: { path: 'issues.burpVersion' },
       title: 'BurpSuite Pro Scan',
       maintainer: null,
       summary: 'BurpSuite Pro Scan',
@@ -131,25 +105,25 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
         {
           path: 'issues.issue',
           key: 'id',
-          id: {path: 'type', transformer: idToString},
-          title: {path: 'name'},
-          desc: {path: 'issueBackground', transformer: parseHtml},
-          impact: {path: 'severity', transformer: impactMapping},
+          id: { path: 'type', transformer: idToString },
+          title: { path: 'name' },
+          desc: { path: 'issueBackground', transformer: parseHtml },
+          impact: { path: 'severity', transformer: impactMapping },
           tags: {
-            nist: {path: 'vulnerabilityClassification'},
+            nist: { path: 'vulnerabilityClassifications', transformer: nistTag },
             cweid: {
               path: 'vulnerabilityClassifications',
               transformer: formatCweId
             },
-            confidence: {path: 'confidence'}
+            confidence: { path: 'confidence' }
           },
           descriptions: [
             {
-              data: {path: 'issueBackground', transformer: parseHtml},
+              data: { path: 'issueBackground', transformer: parseHtml },
               label: 'check'
             },
             {
-              data: {path: 'remediationBackground', transformer: parseHtml},
+              data: { path: 'remediationBackground', transformer: parseHtml },
               label: 'fix'
             }
           ],
@@ -159,9 +133,9 @@ const mappings: MappedTransform<ExecJSON, LookupPath> = {
           results: [
             {
               status: ControlResultStatus.Failed,
-              code_desc: {transformer: formatCodeDesc},
+              code_desc: { transformer: formatCodeDesc },
               run_time: 0,
-              start_time: {transformer: getStartTime}
+              start_time: { path: '$.issues.exportTime' }
             }
           ]
         }
@@ -179,6 +153,6 @@ export class BurpSuiteMapper extends BaseConverter {
       ignoreAttributes: false
     };
     const burpsJson = parser.parse(burpsXml, options);
-    super(burpsJson, mappings, 'issues.exportTime');
+    super(burpsJson, mappings);
   }
 }
