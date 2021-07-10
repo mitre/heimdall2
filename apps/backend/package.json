@@ -50,7 +50,7 @@
     "@nestjs/core": "^7.0.13",
     "@nestjs/jwt": "^8.0.0",
     "@nestjs/passport": "^8.0.0",
-    "@nestjs/platform-express": "^7.0.13",
+    "@nestjs/platform-express": "^8.0.1",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/sequelize": "^0.2.0",
     "@nestjs/serve-static": "^2.1.3",
