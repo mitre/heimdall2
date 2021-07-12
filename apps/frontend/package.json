@@ -92,7 +92,7 @@
     "jquery": "^3.6.0",
     "lodash": "4.17.21",
     "lru-cache": "^6.0.0",
-    "luxon": "^1.26.0",
+    "luxon": "^2.0.1",
     "mustache": "^4.2.0",
     "prismjs": "^1.21.0",
     "roboto-fontface": "*",
