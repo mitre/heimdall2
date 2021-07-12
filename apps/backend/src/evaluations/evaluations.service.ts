@@ -13,8 +13,8 @@ import {Evaluation} from './evaluation.model';
 export class EvaluationsService {
   constructor(
     @InjectModel(Evaluation)
-    private evaluationModel: typeof Evaluation,
-    private databaseService: DatabaseService
+    private readonly evaluationModel: typeof Evaluation,
+    private readonly databaseService: DatabaseService
   ) {}
 
   async findAll(): Promise<Evaluation[]> {
@@ -74,7 +74,7 @@ export class EvaluationsService {
 
   async findById(id: string): Promise<Evaluation> {
     return this.findByPkBang(id, {
-      include: [EvaluationTag, User, {model: Group, include: [User]}]
+      include: [EvaluationTag, User, Group, {model: Group, include: [User]}]
     });
   }
 

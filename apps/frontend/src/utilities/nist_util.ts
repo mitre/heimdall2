@@ -1,4 +1,4 @@
-export const nist_canon_config = {
+export const nistCanonConfig = {
   add_spaces: true,
   allow_letters: true,
   max_specifiers: 5,

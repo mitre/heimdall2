@@ -1,6 +1,6 @@
 # compiled output
 /dist
-apps/frontend/dist
+apps/backend/dist
 node_modules
 
 # Logs
@@ -43,3 +43,15 @@ test/videos
 .env-dev
 
 data/
+
+# Ignore cloud.gov manifest
+manifest.yml
+
+# Ignore nginx SSL certificate and key
+nginx/certs/ssl_certificate.crt
+nginx/certs/ssl_certificate_key.key
+
+# HTML Export Dependencies
+apps/frontend/public/static/export/bootstrap.min.css
+apps/frontend/public/static/export/bootstrap.min.js
+apps/frontend/public/static/export/jquery.min.js

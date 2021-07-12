@@ -8,7 +8,7 @@ This repository contains the source code for the Heimdall 2 Backend and Frontend
 
 ### Video
 
-[![Heimdall Lite 2.0 Demo YouTube](https://github.com/mitre/heimdall2/raw/master/apps/frontend/public/heimdall-preview.jpg)](https://www.youtube.com/watch?v=1jXHWZ0gHQg)
+![](https://github.com/mitre/docs-mitre-inspec/raw/master/images/Heimdall_demo.gif)
 
 ### Hosted
 
@@ -109,7 +109,9 @@ Given that Heimdall requires at least a database service, we use Docker and Dock
 
 3. Navigate to the base folder where `docker-compose.yml` is located
 
-4. Run the following commands in a terminal window from the Heimdall source directory. For more information on the .env file, visit [Environment Variables Configuration.](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration)
+4. By default Heimdall will generate self-signed certificates that will last for 7 days. Place your certificate files in `./nginx/certs/` with the names `ssl_certificate.crt` and `ssl_certificate_key.key` respectively.
+
+5. Run the following commands in a terminal window from the Heimdall source directory. For more information on the .env file, visit [Environment Variables Configuration.](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration)
    - ```bash
      ./setup-docker-secrets.sh
      # If you would like to further configure your Heimdall instance, edit the .env file generated after running the previous line
@@ -128,6 +130,8 @@ Make sure you have run the setup steps at least once before following these step
 
 #### Updating Docker Container
 
+> **Starting with version 2.5.0, Heimdall on Docker uses SSL by default. Place your certificate files in `./nginx/certs/` with the names `ssl_certificate.crt` and `ssl_certificate_key.key` respectively.**
+
 A new version of the docker container can be retrieved by running:
 
 ```bash
@@ -144,8 +148,41 @@ From the source directory you started from run:
 ```bash
 docker-compose down
 ```
+---
 
+#### Running via Cloud.gov
 
+Cloud.gov is a [FEDRAMP moderate Platform-as-a-Service (PaaS)](https://marketplace.fedramp.gov/#!/product/18f-cloudgov?sort=productName). This repository includes a sample [manifest.yml.example](manifest.yml.example) file ready to be pushed and run the latest version of Heimdall2 as a container. Make a copy of the example file and update the key values as appropriate.
+`$ cp manifest.yml.example manifest.yml`
+
+1. Setup a cloud.gov account - https://cloud.gov/docs/getting-started/accounts/ 
+
+2. Install the cf-cli - https://cloud.gov/docs/getting-started/setup/
+
+3. Run the following commands in a terminal window from the Heimdall source directory.
+```
+$ cd ~/Documents/Github/Heimdall2
+$ cf login -a api.fr.cloud.gov  --sso 
+# Follow the link to copy the Temporary Authentication Code when prompted
+```
+
+4. Setup a demo application space
+```
+$ cf target -o sandbox-rename create-space heimdall2-rename
+```
+
+5. Create a postgresql database
+```
+# Update manifest.yml file to rename application and database key name
+$ cf marketplace
+$ cf create-service aws-rds medium-psql heimdall2-rename
+$ cf create-service-key heimdall2-db-rename heimdall2-db-test-key
+$ cf push
+```
+
+**You should be returned the URL for your new test instance to navigate to.**
+
+> Note: This is only for demonstration purposes, in order to run a production level federal/FISMA system. You will need to contact the [cloud.gov program](https://cloud.gov) and consult your organization's security team (for risk assessment and an Authority to Operate).
 
 ## API Usage
 
@@ -162,8 +199,6 @@ curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com
 # Upload evaluation
 curl -F "data=@Evaluation.json" -F "filename=Your Filename" -F "public=true/false" -H "Authorization: Bearer bearertokengoeshere" "http://localhost:3000/evaluations"
 ```
-
-
 
 ## For Developers
 

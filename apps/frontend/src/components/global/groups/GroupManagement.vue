@@ -132,6 +132,7 @@ export default class GroupManagement extends Vue {
       value: 'public'
     }
   ];
+
   myGroupsHeaders: Object[] = [
     {
       text: 'ID',

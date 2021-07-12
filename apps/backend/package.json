@@ -1,16 +1,22 @@
 {
   "name": "heimdall-server",
-  "version": "2.4.6",
+  "version": "2.4.8",
   "description": "",
   "license": "Apache-2.0",
   "author": "",
+  "private": true,
+  "workspaces": {
+    "nohoist": [
+      "**"
+    ]
+  },
   "scripts": {
-    "prebuild": "rimraf ../../dist/server",
+    "prebuild": "rimraf dist",
     "build": "nest build",
     "lint": "eslint \"{src,migrations,seeders,test}/**/*.ts\" --fix",
     "lint:ci": "eslint \"{src,migrations,seeders,test}/**/*.ts\" --max-warnings 0",
     "sequelize-cli": "ts-node node_modules/.bin/sequelize",
-    "start": "node ../../dist/server/src/main",
+    "start": "node dist/src/main",
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --watch",
     "test": "jest --silent",
@@ -39,15 +45,15 @@
   "dependencies": {
     "@casl/ability": "^5.2.2",
     "@heimdall/interfaces": "^2.4.6",
-    "@nestjs/cli": "^7.1.5",
-    "@nestjs/common": "^7.0.13",
-    "@nestjs/core": "^7.0.13",
-    "@nestjs/jwt": "^7.0.0",
-    "@nestjs/passport": "^7.0.0",
-    "@nestjs/platform-express": "^7.0.13",
-    "@nestjs/schematics": "^7.0.0",
-    "@nestjs/sequelize": "^0.2.0",
-    "@nestjs/serve-static": "^2.1.3",
+    "@nestjs/cli": "^8.0.2",
+    "@nestjs/common": "^8.0.2",
+    "@nestjs/core": "^8.0.2",
+    "@nestjs/jwt": "^8.0.0",
+    "@nestjs/passport": "^8.0.0",
+    "@nestjs/platform-express": "^8.0.2",
+    "@nestjs/schematics": "^8.0.1",
+    "@nestjs/sequelize": "^8.0.0",
+    "@nestjs/serve-static": "^2.2.2",
     "@types/bcryptjs": "^2.4.2",
     "@types/connect-pg-simple": "^4.2.2",
     "@types/express": "^4.17.6",
@@ -85,26 +91,26 @@
     "pg": "^8.2.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^6.5.4",
+    "rxjs": "^7.2.0",
     "sequelize": "^6.4.0",
     "sequelize-cli": "^6.2.0",
     "sequelize-typescript": "^2.0.0",
     "ts-loader": "^9.1.0",
     "ts-node": "^10.0.0",
-    "tsconfig-paths": "^3.9.0"
+    "tsconfig-paths": "^3.9.0",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
-    "@nestjs/testing": "^7.0.13",
+    "@nestjs/testing": "^8.0.2",
     "@types/expect-puppeteer": "^4.4.3",
     "@types/jest": "^26.0.7",
     "@types/jest-environment-puppeteer": "^4.3.2",
     "@types/mock-fs": "^4.10.0",
     "@types/puppeteer": "^5.4.0",
-    "jest": "^26.4.2",
+    "jest": "^27.0.3",
     "mock-fs": "^5.0.0",
-    "oauth2-mock-server": "^3.1.0",
-    "puppeteer": "^9.0.0",
+    "puppeteer": "^10.0.0",
     "supertest": "^6.0.0",
-    "ts-jest": "^26.1.3"
+    "ts-jest": "^27.0.2"
   }
 }

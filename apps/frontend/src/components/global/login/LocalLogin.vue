@@ -40,6 +40,7 @@
             :disabled="$v.$invalid"
             type="submit"
             tabindex="3"
+            :loading="buttonLoading"
           >
             Login
           </v-btn>
@@ -160,10 +161,12 @@ interface LoginHash {
   }
 })
 export default class LocalLogin extends Vue {
-    email: string = '';
-    password: string = '';
+  email = '';
+  password = '';
+  buttonLoading = false
 
   login() {
+    this.buttonLoading = true;
     const creds: LoginHash = {
       email: this.email,
       password: this.password
@@ -172,7 +175,9 @@ export default class LocalLogin extends Vue {
       .then(() => {
         this.$router.push('/');
         SnackbarModule.notify('You have successfully signed in.');
-      });
+      }).finally(() => {
+        this.buttonLoading = false;
+      })
   }
 
   get showAlternateAuth() {
@@ -182,7 +187,8 @@ export default class LocalLogin extends Vue {
   authStrategySupported(strategy: string) {
     return ServerModule.enabledOAuth.includes(strategy)
   }
-  oauthLogin(site: string){
+
+  oauthLogin(site: string) {
     window.location.href = `/authn/${site}`;
   }
 

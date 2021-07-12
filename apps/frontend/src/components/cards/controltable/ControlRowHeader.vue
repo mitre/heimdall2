@@ -57,7 +57,7 @@
     </template>
     <template #tags>
       <v-chip-group column active-class="NONE">
-        <v-tooltip v-for="(tag, i) in all_tags" :key="'chip' + i" bottom>
+        <v-tooltip v-for="(tag, i) in nistTags" :key="'nist-chip' + i" bottom>
           <template #activator="{on}">
             <v-chip
               :href="tag.url"
@@ -71,16 +71,25 @@
           <span>{{ tag.description }}</span>
         </v-tooltip>
       </v-chip-group>
+      <v-chip-group column active-class="NONE">
+        <v-tooltip v-for="(tag, i) in cciTags" :key="'cci-chip' + i" bottom>
+          <template #activator="{on}">
+            <v-chip style="cursor: help" active-class="NONE" v-on="on">
+              {{ tag.label }}
+            </v-chip>
+          </template>
+          <span>{{ tag.description }}</span>
+        </v-tooltip>
+      </v-chip-group>
     </template>
   </ResponsiveRowSwitch>
 </template>
 
 <script lang="ts">
 import Component, {mixins} from 'vue-class-component';
-import {nist} from 'inspecjs';
+import {nist, context} from 'inspecjs';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
-import {context} from 'inspecjs';
-import {NIST_DESCRIPTIONS, nist_canon_config} from '@/utilities/nist_util';
+import {NIST_DESCRIPTIONS, nistCanonConfig} from '@/utilities/nist_util';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import CircleRating from '@/components/generic/CircleRating.vue';
 import {is_control} from 'inspecjs/dist/nist';
@@ -103,6 +112,7 @@ interface Tag {
 export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   @Prop({type: Object, required: true})
   readonly control!: context.ContextualizedControl;
+
   @Prop({type: Boolean, default: false}) readonly controlExpanded!: boolean;
   @Prop({type: Boolean, default: false}) readonly showImpact!: boolean;
 
@@ -125,9 +135,6 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
 
   severity_arrow_count(severity: string): number {
     switch (severity) {
-      default:
-      case 'none':
-        return 0;
       case 'low':
         return 1;
       case 'medium':
@@ -136,16 +143,18 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
         return 3;
       case 'critical':
         return 4;
+      default:
+        return 0;
     }
   }
 
   // Get NIST tag description for NIST tag, this is pulled from the 800-53 xml
   // and relies on a script not contained in the project
   descriptionForTag(tag: string): string {
-    let nisted = nist.parse_nist(tag);
+    const nisted = nist.parse_nist(tag);
     if (is_control(nisted)) {
-      let canon = nisted.canonize(nist_canon_config);
-      let found = NIST_DESCRIPTIONS[canon];
+      const canon = nisted.canonize(nistCanonConfig);
+      const found = NIST_DESCRIPTIONS[canon];
       if (found) {
         return found;
       }
@@ -155,11 +164,11 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     return 'Unrecognized Tag';
   }
 
-  get all_tags(): Tag[] {
+  get nistTags(): Tag[] {
     let nist_tags = this.control.hdf.raw_nist_tags;
     nist_tags = nist_tags.filter((tag) => tag.search(/Rev.*\d/i) == -1);
-    let nist_tag_objects = nist_tags.map((tag) => {
-      let nisted = nist.parse_nist(tag);
+    return nist_tags.map((tag) => {
+      const nisted = nist.parse_nist(tag);
       let url = '';
       if (nist.is_control(nisted)) {
         url = nisted.canonize({
@@ -172,16 +181,18 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
       }
       return {label: tag, url: url, description: this.descriptionForTag(tag)};
     });
+  }
+
+  get cciTags(): Tag[] {
     let cci_tags: string | string[] = this.control.data.tags.cci || '';
     if (!cci_tags) {
-      return nist_tag_objects;
+      return [];
     } else if (typeof cci_tags == 'string') {
       cci_tags = cci_tags.split(' ');
     }
-    let cci_tag_objects = cci_tags.map((cci) => {
+    return cci_tags.map((cci) => {
       return {label: cci, url: '', description: this.descriptionForTag(cci)};
     });
-    return [...nist_tag_objects, ...cci_tag_objects];
   }
 }
 </script>

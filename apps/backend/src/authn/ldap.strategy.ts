@@ -38,7 +38,7 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
           configService.get('LDAP_MAILFIELD') || 'mail'
         );
         req.user = this.authnService.validateOrCreateUser(
-          email,
+          Array.isArray(email) ? email[0] : email,
           firstName,
           lastName,
           'ldap'
