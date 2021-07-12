@@ -8,7 +8,7 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
-import {ExtendedControlStatus, lowercaseAll} from './data_filters';
+import {ExtendedControlStatus} from './data_filters';
 
 export interface ISearchState {
   searchTerm: string;
@@ -40,6 +40,16 @@ export const statusTypes = [
 ];
 
 export const severityTypes = ['none', 'low', 'medium', 'high', 'critical'];
+
+export function lowercaseAll(input: string | string[]): string | string[] {
+  if (typeof input === 'string') {
+    return input.toLowerCase();
+  } else {
+    return input.map((string) => {
+      return string.toLowerCase();
+    });
+  }
+}
 
 export function valueToSeverity(severity: string): Severity {
   if (severityTypes.includes(severity.toLowerCase())) {
@@ -167,7 +177,7 @@ class Search extends VuexModule implements ISearchState {
         this.context.commit('SET_SEARCH', newSearch);
       } // We have a filter already, but it doesn't include status
       else {
-        const newSearch = `${this.searchTerm} severity:"${this.statusFilter
+        const newSearch = `${this.searchTerm} status:"${this.statusFilter
           .concat(status)
           .join(',')}"`;
         this.context.commit('SET_SEARCH', newSearch);

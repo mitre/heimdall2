@@ -23,7 +23,7 @@
             <h3>Status: <code>status:Passed</code></h3>
           </li>
           <li class="pb-1">
-            <h3>Control Correlation Identifier: <code>nist:UM-1</code></h3>
+            <h3>NIST 800-53: <code>nist:UM-1</code></h3>
           </li>
           <li class="pb-1">
             <h3>Description: <code>desc:"Status groups"</code></h3>

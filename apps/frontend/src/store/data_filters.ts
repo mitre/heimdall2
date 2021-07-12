@@ -325,8 +325,8 @@ export class FilteredData extends VuexModule {
       // Filter by description
       controls = filterByDescription(filter, controls);
 
-      // Filter by CCI ID
-      controls = filterByCCI(filter, controls);
+      // Filter by NIST ID
+      controls = filterByNIST(filter, controls);
 
       // Filter by code
       controls = filterByCode(filter, controls);
@@ -382,178 +382,118 @@ export function filter_cache_key(f: Filter) {
   return JSON.stringify(newFilter);
 }
 
-export function lowercaseAll(input: string | string[]): string | string[] {
-  if (typeof input === 'string') {
-    return input.toLowerCase();
-  } else {
-    return input.map((string) => {
-      return string.toLowerCase();
-    });
-  }
-}
-
 export function filterByStatus(
   filter: Filter,
   controls: readonly context.ContextualizedControl[]
-): context.ContextualizedControl[] {
+): readonly context.ContextualizedControl[] {
   if (filter.status && filter.status?.length !== 0) {
-    const foundControls: context.ContextualizedControl[] = [];
-    filter.status?.forEach(async (statusFilter) => {
-      if (statusFilter.toLowerCase() === 'waived') {
-        foundControls.push(...controls.filter((control) => control.hdf.waived));
-      } else {
-        foundControls.push(
-          ...controls.filter(
-            (control) =>
-              control.root.hdf.status.toLowerCase() ===
-              statusFilter.toLowerCase()
-          )
-        );
-      }
-    });
-    return foundControls.filter((c, index) => {
-      return foundControls.indexOf(c) === index;
-    });
+    return controls.filter((control) =>
+      filter.status?.some((term) => {
+        if (term.toLowerCase() === 'waived') {
+          return control.hdf.waived;
+        } else {
+          return control.root.hdf.status
+            .toLowerCase()
+            .includes(term.toLowerCase());
+        }
+      })
+    );
   } else {
-    return [...controls];
+    return controls;
   }
 }
 
 export function filterBySeverity(
   filter: Filter,
   controls: readonly context.ContextualizedControl[]
-): context.ContextualizedControl[] {
+): readonly context.ContextualizedControl[] {
   if (filter.severity && filter.severity?.length !== 0) {
-    const foundControls: context.ContextualizedControl[] = [];
-    filter.severity?.forEach((severity) => {
-      foundControls.push(
-        ...controls.filter((control) => {
-          return (
-            control.root.hdf.severity
-              .toLowerCase()
-              .indexOf(severity.toLowerCase()) !== -1
-          );
-        })
-      );
-    });
-    return foundControls.filter((c, index) => {
-      return foundControls.indexOf(c) === index;
-    });
+    return controls.filter((control) =>
+      filter.severity?.some((term) =>
+        control.root.hdf.severity.toLowerCase().includes(term.toLowerCase())
+      )
+    );
   } else {
-    return [...controls];
+    return controls;
   }
 }
 
 export function filterByControlID(
   filter: Filter,
   controls: readonly context.ContextualizedControl[]
-): context.ContextualizedControl[] {
+): readonly context.ContextualizedControl[] {
   if (filter.ids && filter.ids?.length !== 0) {
-    const foundControls: context.ContextualizedControl[] = [];
-    filter.ids?.forEach((id) => {
-      foundControls.push(
-        ...controls.filter((control) => {
-          return control.hdf.wraps.id.toLowerCase().indexOf(id) !== -1;
-        })
-      );
-    });
-    return foundControls.filter((c, index) => {
-      return foundControls.indexOf(c) === index;
-    });
+    return controls.filter((control) =>
+      filter.ids?.some((term) =>
+        control.hdf.wraps.id.toLowerCase().includes(term.toLowerCase())
+      )
+    );
   } else {
-    return [...controls];
+    return controls;
   }
 }
 
 export function filterByTitle(
   filter: Filter,
   controls: readonly context.ContextualizedControl[]
-): context.ContextualizedControl[] {
+): readonly context.ContextualizedControl[] {
   if (filter.titleSearchTerms && filter.titleSearchTerms?.length !== 0) {
-    const foundControls: context.ContextualizedControl[] = [];
-    filter.titleSearchTerms?.forEach((term) => {
-      foundControls.push(
-        ...controls.filter((control) => {
-          return control.hdf.wraps.title?.toLowerCase().includes(term);
-        })
-      );
-    });
-    return foundControls.filter((c, index) => {
-      return foundControls.indexOf(c) === index;
-    });
+    return controls.filter((control) =>
+      filter.titleSearchTerms?.some((term) =>
+        control.hdf.wraps.title?.toLowerCase().includes(term.toLowerCase())
+      )
+    );
   } else {
-    return [...controls];
+    return controls;
   }
 }
 
 export function filterByDescription(
   filter: Filter,
   controls: readonly context.ContextualizedControl[]
-): context.ContextualizedControl[] {
+): readonly context.ContextualizedControl[] {
   if (
     filter.descriptionSearchTerms &&
     filter.descriptionSearchTerms?.length !== 0
   ) {
-    const foundControls: context.ContextualizedControl[] = [];
-    filter.descriptionSearchTerms?.forEach((term) => {
-      foundControls.push(
-        ...controls.filter((control) => {
-          return control.hdf.wraps.desc?.toLowerCase().includes(term);
-        })
-      );
-    });
-    return foundControls.filter((c, index) => {
-      return foundControls.indexOf(c) === index;
-    });
+    return controls.filter((control) =>
+      filter.descriptionSearchTerms?.some((term) =>
+        control.hdf.wraps.desc?.toLowerCase().includes(term.toLowerCase())
+      )
+    );
   } else {
-    return [...controls];
+    return controls;
   }
 }
 
-export function filterByCCI(
+export function filterByNIST(
   filter: Filter,
   controls: readonly context.ContextualizedControl[]
-): context.ContextualizedControl[] {
+): readonly context.ContextualizedControl[] {
   if (filter.cciIdFilter && filter.cciIdFilter?.length !== 0) {
-    const foundControls: context.ContextualizedControl[] = [];
-    filter.cciIdFilter?.forEach((cciID) => {
-      controls.forEach((control) => {
-        if (
-          control.hdf.raw_nist_tags.some((tag) => {
-            return tag.toLowerCase().indexOf(cciID) !== -1;
-          })
-        ) {
-          foundControls.push(control);
-        }
-      });
-    });
-    return foundControls.filter((c, index) => {
-      return foundControls.indexOf(c) === index;
+    return controls.filter((control) => {
+      return control.hdf.raw_nist_tags?.some((tag) =>
+        filter.cciIdFilter?.some((term) =>
+          tag.toLowerCase().includes(term.toLowerCase())
+        )
+      );
     });
   } else {
-    return [...controls];
+    return controls;
   }
 }
 
 export function filterByCode(
   filter: Filter,
   controls: readonly context.ContextualizedControl[]
-): context.ContextualizedControl[] {
+): readonly context.ContextualizedControl[] {
   if (filter.codeSearchTerms && filter.codeSearchTerms?.length !== 0) {
-    const foundControls: context.ContextualizedControl[] = [];
-    filter.codeSearchTerms?.forEach((term) => {
-      controls.forEach((control) => {
-        if (
-          control.full_code.toLowerCase().indexOf(term.toLowerCase()) !== -1
-        ) {
-          foundControls.push(control);
-        }
-      });
-    });
-    return foundControls.filter((c, index) => {
-      return foundControls.indexOf(c) === index;
+    return controls.filter((control) => {
+      return filter.codeSearchTerms?.some((term) =>
+        control.full_code.toLowerCase().includes(term.toLowerCase())
+      );
     });
   } else {
-    return [...controls];
+    return controls;
   }
 }

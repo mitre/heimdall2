@@ -444,7 +444,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   showWaived() {
-    this.searchTerm = 'status:Waived'
+    this.searchTerm = 'status:"Waived"'
   }
 
   addStatusFilter(status: ExtendedControlStatus) {
