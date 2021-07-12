@@ -75,6 +75,84 @@
             </v-col>
           </v-row>
 
+          <div v-show="showAPIKeys">
+            <div
+              class="d-flex flex-row-reverse"
+              style="cursor: pointer"
+              @click="addAPIKey"
+            >
+              <v-icon>mdi-plus</v-icon>
+            </div>
+            <InputDialog
+              :show-modal="inputPasswordDialog"
+              title="Please enter your current password to add an API key"
+              text-field-label="Current Password"
+              :is-password="true"
+              @update-value="updateCurrentPassword"
+              @cancel="inputPasswordDialog = false"
+              @confirm="addAPIKey"
+            />
+            <InputDialog
+              :show-modal="deleteAPIKeyDialog"
+              title="Please enter your current password to delete an API key"
+              text-field-label="Current Password"
+              :is-password="true"
+              @update-value="updateCurrentPassword"
+              @cancel="
+                activeAPIKey = null;
+                deleteAPIKeyDialog = false;
+              "
+              @confirm="deleteAPIKeyConfirm"
+            />
+            <InputDialog
+              :show-modal="updateAPIKeyDialog"
+              title="Please enter your current password to update an API key"
+              text-field-label="Current Password"
+              :is-password="true"
+              @update-value="updateCurrentPassword"
+              @cancel="
+                activeAPIKey = null;
+                updateAPIKeyDialog = false;
+              "
+              @confirm="updateAPIKey"
+            />
+            <InputDialog
+              :show-modal="refreshAPIKeyDialog"
+              title="Please enter your current password to refresh an API key"
+              text-field-label="Current Password"
+              :is-password="true"
+              @update-value="updateCurrentPassword"
+              @cancel="
+                activeAPIKey = null;
+                refreshAPIKeyDialog = false;
+              "
+              @confirm="refreshAPIKeyConfirm"
+            />
+            <v-data-table
+              :headers="apiKeyHeaders"
+              :items="apiKeys"
+              dense
+              style="max-height: 300px"
+              class="overflow-y-auto"
+            >
+              <template #[`item.name`]="{item}"
+                ><v-text-field v-model="item.name" @change="updateAPIKey(item)"
+              /></template>
+              <template #[`item.apiKey`]="{item}">{{
+                truncate(item.apiKey) || 'Only Shown on Creation'
+              }}</template>
+              <template #[`item.action`]="{item}"
+                ><CopyButton v-if="item.apiKey" :text="item.apiKey" />
+                <v-icon class="mr-2" small @click="refreshAPIKey(item)"
+                  >mdi-refresh</v-icon
+                >
+                <v-icon class="mr-2" small @click="deleteAPIKey(item)"
+                  >mdi-delete</v-icon
+                ></template
+              >
+            </v-data-table>
+          </div>
+
           <div v-if="!admin && userInfo.creationMethod === 'local'">
             <v-divider />
             <v-text-field
@@ -86,7 +164,7 @@
                 requiredFieldError($v.currentPassword, 'Current Password')
               "
               type="password"
-              label="Please provide your current password to save changes to your profile"
+              label="Please provide your current password to make changes to your profile"
               @blur="$v.currentPassword.$touch()"
             />
           </div>
@@ -96,6 +174,13 @@
             :disabled="update_unavailable"
             @click="changePasswordDialog"
             >Change Password</v-btn
+          >
+          <v-btn
+            v-if="!admin && !apiKeysDisabled"
+            id="toggleAPIKeys"
+            class="ml-2"
+            @click="toggleShowAPIKeys"
+            >Show API Keys</v-btn
           >
           <div v-show="changePassword">
             <v-text-field
@@ -160,12 +245,19 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
-import {IUser, IUpdateUser} from '@heimdall/interfaces';
+import {IUser, IUpdateUser, IApiKey} from '@heimdall/interfaces';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 import {required, email, requiredIf} from 'vuelidate/lib/validators';
 import {Prop} from 'vue-property-decorator';
+import axios from 'axios';
+import ActionDialog from '@/components/generic/ActionDialog.vue';
+import InputDialog from '@/components/generic/InputDialog.vue';
+import _ from 'lodash';
+import CopyButton from '@/components/generic/CopyButton.vue'
+
 
 @Component({
+  components: {ActionDialog, CopyButton, InputDialog},
   mixins: [UserValidatorMixin],
   validations: {
     userInfo: {
@@ -194,6 +286,34 @@ export default class UserModal extends Vue {
 
   roles: string[] = ['user', 'admin'];
 
+  showAPIKeys = false
+  apiKeyHeaders = [{
+      text: 'Name',
+      value: 'name',
+      filterable: true,
+      width: '20%',
+      align: 'start'
+    },
+    {
+      text: 'Value',
+      value: 'apiKey',
+      sortable: false
+    },
+    {
+      text: 'Action',
+      value: 'action',
+      sortable: false
+    }
+  ]
+
+  apiKeys: IApiKey[] = [];
+  apiKeysDisabled = false;
+  activeAPIKey: IApiKey | null = null
+  inputPasswordDialog = false;
+  deleteAPIKeyDialog = false;
+  refreshAPIKeyDialog = false;
+  updateAPIKeyDialog = false;
+
   dialog = false;
   changePassword = false;
 
@@ -202,6 +322,12 @@ export default class UserModal extends Vue {
   newPassword = '';
   passwordConfirmation = '';
   buttonLoading = false;
+
+  mounted() {
+    if(!this.admin) {
+      this.getAPIKeys()
+    }
+  }
 
   async updateUserInfo(): Promise<void> {
     this.buttonLoading = true;
@@ -237,8 +363,101 @@ export default class UserModal extends Vue {
     }
   }
 
+  truncate(str: string) {
+    return _.truncate(str, {length: 80})
+  }
+
   changePasswordDialog() {
     this.changePassword = !this.changePassword
+  }
+
+  toggleShowAPIKeys() {
+    this.showAPIKeys = !this.showAPIKeys
+  }
+
+  getAPIKeys() {
+    axios
+      .create()
+      .get<IApiKey[]>(`/apikeys`).then(({data}) => {
+        this.apiKeys = data
+      }).catch((error) => {
+        if (error.response) {
+            if(error.response.status === 403) {
+              this.apiKeysDisabled = true
+              return
+            }
+        }
+      })
+  }
+
+  addAPIKey() {
+    this.inputPasswordDialog = false;
+    axios
+      .post<IApiKey>(`/apikeys`, {name: this.activeAPIKey?.name, currentPassword: this.currentPassword})
+      .then(({data}) => this.apiKeys.push(data))
+      .catch((error) => {
+        if (error.response) {
+          if(error.response.status === 403) {
+            this.inputPasswordDialog = true;
+          }
+        }
+        throw error
+      }).finally(() => this.activeAPIKey = null)
+  }
+
+  deleteAPIKey(keyToDelete: IApiKey) {
+    this.activeAPIKey = keyToDelete;
+    this.deleteAPIKeyDialog = true
+  }
+
+  deleteAPIKeyConfirm() {
+    this.deleteAPIKeyDialog = false;
+    axios
+      .delete(`/apikeys/${this.activeAPIKey?.id}`, {data: {...this.activeAPIKey, currentPassword: this.currentPassword}})
+      .then(({data}) => {
+        this.apiKeys = this.apiKeys.filter((key) => key.id !== data.id)
+      })
+      .catch((error) => {
+        if (error.response) {
+          if(error.response.status === 403) {
+            this.deleteAPIKeyDialog = true;
+          }
+        }
+        throw error
+      })
+  }
+
+  updateAPIKey(item?: IApiKey) {
+    if(typeof item === 'object') {
+      this.activeAPIKey = item
+    }
+    this.updateAPIKeyDialog = false;
+    axios
+      .put<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {name: this.activeAPIKey?.name, currentPassword: this.currentPassword})
+      .catch((error) => {
+        if (error.response) {
+          if(error.response.status === 403) {
+            this.updateAPIKeyDialog = true;
+          }
+        }
+        throw error
+      })
+    this.activeAPIKey = null
+  }
+
+  refreshAPIKey(keyToRefresh: IApiKey) {
+    this.activeAPIKey = keyToRefresh;
+    this.refreshAPIKeyDialog = true
+  }
+
+  refreshAPIKeyConfirm() {
+    this.deleteAPIKeyConfirm()
+    this.addAPIKey()
+    this.refreshAPIKeyDialog = false;
+  }
+
+  updateCurrentPassword(password: string): void {
+    this.currentPassword = password
   }
 
   get update_unavailable() {

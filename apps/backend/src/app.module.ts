@@ -2,6 +2,7 @@ import {Module} from '@nestjs/common';
 import {APP_FILTER} from '@nestjs/core';
 import {ServeStaticModule} from '@nestjs/serve-static';
 import {join} from 'path';
+import {ApiKeyModule} from './apikeys/apikeys.module';
 import {AppController} from './app.controller';
 import {AuthnModule} from './authn/authn.module';
 import {AuthzModule} from './authz/authz.module';
@@ -22,6 +23,7 @@ import {UsersModule} from './users/users.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', '..', '..', 'dist', 'frontend')
     }),
+    ApiKeyModule,
     UsersModule,
     DatabaseModule,
     ConfigModule,

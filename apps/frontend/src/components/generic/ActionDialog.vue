@@ -6,7 +6,7 @@
 
     <v-card>
       <v-card-title class="headline"
-        >Are you sure you want to delete this {{ type }}?</v-card-title
+        >Are you sure you want to {{ action }} this {{ type }}?</v-card-title
       >
       <v-card-actions>
         <v-spacer />
@@ -35,7 +35,8 @@ import {Prop, VModel} from 'vue-property-decorator';
   components: {
   }
 })
-export default class DeleteDialog extends Vue {
+export default class ActionDialog extends Vue {
+  @Prop({required: false, type: String, default: 'delete'}) readonly action!: string;
   @Prop({required: true, type: String}) readonly type!: string;
   @Prop({required: true, type: Boolean}) readonly value!: boolean;
   // This passes through the v-model input to the child v-dialog and back up to

@@ -57,10 +57,10 @@
           <v-btn color="primary" @click="initialize"> Reset </v-btn>
         </template>
       </v-data-table>
-      <DeleteDialog
+      <ActionDialog
         v-model="dialogDelete"
         type="user"
-        @cancel="closeDeleteDialog"
+        @cancel="closeActionDialog"
         @confirm="deleteUserConfirm"
       />
     </v-card>
@@ -74,13 +74,13 @@ import axios from 'axios';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import UserModal from '@/components/global/UserModal.vue';
-import DeleteDialog from '@/components/generic/DeleteDialog.vue';
+import ActionDialog from '@/components/generic/ActionDialog.vue';
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import RegistrationModal from '@/components/global/RegistrationModal.vue';
 
 @Component({
   components: {
-    DeleteDialog,
+    ActionDialog,
     UserModal,
     IconLinkItem,
     RegistrationModal
@@ -122,12 +122,12 @@ export default class UserManagement extends Vue {
         SnackbarModule.notify(`Successfully deleted user ${response.data.email}`);
       }).finally(() => {
         this.getUsers();
-        this.closeDeleteDialog();
+        this.closeActionDialog();
       });
     }
   }
 
-  closeDeleteDialog () {
+  closeActionDialog () {
     this.dialogDelete = false
     this.editedUser = null;
   }
