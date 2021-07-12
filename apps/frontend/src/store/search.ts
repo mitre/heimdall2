@@ -212,6 +212,7 @@ class Search extends VuexModule implements ISearchState {
   clearStatusFilter() {
     this.context.commit('CLEAR_STATUS');
   }
+
   @Action
   setStatusFilter(status: ExtendedControlStatus[]) {
     this.context.commit('SET_STATUS', status);

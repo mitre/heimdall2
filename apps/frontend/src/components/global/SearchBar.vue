@@ -50,6 +50,7 @@ export default class SearchBar extends Vue {
   get searchTerm(): string {
     return SearchModule.searchTerm;
   }
+
   set searchTerm(term: string) {
     SearchModule.updateSearch(term);
   }
