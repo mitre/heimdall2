@@ -87,7 +87,7 @@
     "inspecjs": "0.12.4",
     "lodash": "4.17.21",
     "lru-cache": "^6.0.0",
-    "luxon": "^1.26.0",
+    "luxon": "^2.0.1",
     "prismjs": "^1.21.0",
     "roboto-fontface": "*",
     "sanitize-html": "^2.3.3",
