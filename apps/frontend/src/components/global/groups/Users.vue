@@ -58,6 +58,7 @@
     />
   </div>
 </template>
+
 <script lang="ts">
 import {ISlimUser} from '@heimdall/interfaces';
 import Vue from 'vue';
@@ -66,6 +67,8 @@ import {VModel} from 'vue-property-decorator';
 import {ServerModule} from '@/store/server';
 import {IVuetifyItems} from '@/utilities/helper_util';
 import DeleteDialog from '@/components/generic/DeleteDialog.vue';
+import {SnackbarModule} from '../../../store/snackbar';
+
 @Component({
   components: {
     DeleteDialog,
@@ -100,33 +103,57 @@ export default class Users extends Vue {
       sortable: false
     }
   ];
+
   addUsers() {
     ServerModule.allUsers.forEach((user) => {
       if(this.usersToAdd.includes(user.id)) {
+        user.groupRole = 'member';
         this.currentUsers.push(user);
       }
     });
     this.usersToAdd = [];
   }
+
   onUpdateUserGroupRole(newValue: string) {
+    // If a role is being changed to member, check that there is at least 1 owner.
+    if(newValue === 'member') {
+      if(this.numberOfOwners() <= 1) {
+        SnackbarModule.failure(`Must have at least 1 owner`);
+        return;
+      }
+    }
     const userToUpdate = this.currentUsers.indexOf(this.editedUser)
     this.editedUser.groupRole = newValue
     this.currentUsers[userToUpdate] = this.editedUser
   }
+
+  numberOfOwners(): number {
+    let numberOfOwners = 0;
+    this.currentUsers.forEach((user) => {
+      if(user.groupRole === 'owner') {
+        ++numberOfOwners;
+      }
+    });
+    return numberOfOwners;
+  }
+
   deleteUserDialog(user: ISlimUser): void {
     this.editedUser = user;
     this.dialogDelete = true
   }
+
   closeDeleteDialog () {
     this.dialogDelete = false
     this.editedUser = {id: '0', email: ''};
   }
+
   deleteUserConfirm(): void {
     if (this.editedUser) {
       this.currentUsers.splice(this.currentUsers.indexOf(this.editedUser), 1);
     }
     this.closeDeleteDialog();
   }
+
   // Filter out users that are already in the group from the user search
   get availableUsers(): IVuetifyItems[] {
     const currentUserIds: string[] = this.currentUsers.map((user) => user.id);
