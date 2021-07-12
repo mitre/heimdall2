@@ -21,6 +21,8 @@
         <slot name="id" />
         <v-divider />
         <slot name="tags" />
+        <v-divider />
+        <slot name="runTime" />
       </v-card>
     </v-col>
   </v-row>
