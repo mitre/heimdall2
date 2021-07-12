@@ -135,6 +135,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
         this.saving = false;
       });
   }
+
   //gives different icons for a file if it is just a profile
   get icon(): string {
     if (this.file.hasOwnProperty('profile')) {
