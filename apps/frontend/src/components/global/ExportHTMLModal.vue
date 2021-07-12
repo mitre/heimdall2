@@ -175,6 +175,7 @@ export default class ExportHTMLModal extends Vue {
   closeModal() {
     this.showingModal = false;
   }
+
   showModal() {
     this.showingModal = true;
   }
