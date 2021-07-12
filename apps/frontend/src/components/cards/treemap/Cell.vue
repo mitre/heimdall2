@@ -62,6 +62,7 @@ export default class Cell extends Vue {
   @Prop({type: String}) readonly selectedControlId!: string;
   @Prop({type: Object, required: true})
   readonly node!: d3.HierarchyRectangularNode<TreemapNode>;
+
   @Prop({type: Number, default: 0}) readonly depth!: number;
   @Prop({type: Object, default: 0}) readonly scales!: XYScale;
 

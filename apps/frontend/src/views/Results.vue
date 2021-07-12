@@ -43,6 +43,12 @@
             <v-list-item class="px-0">
               <ExportJson />
             </v-list-item>
+            <v-list-item class="px-0">
+              <ExportHTMLModal
+                :filter="all_filter"
+                :file-type="current_route_name"
+              />
+            </v-list-item>
           </v-list>
         </v-menu>
       </div>
@@ -65,31 +71,6 @@
                     @click="toggle_profile(file)"
                   >
                     <EvaluationInfo :file="file" />
-                    <v-card-actions>
-                      <div
-                        v-if="
-                          file.from_file.database_id &&
-                          getDbFile(file.from_file).editable
-                        "
-                        class="top-right"
-                      >
-                        <EditEvaluationModal
-                          id="editEvaluationModal"
-                          :active="getDbFile(file.from_file)"
-                        >
-                          <template #clickable="{on}"
-                            ><v-icon
-                              data-cy="edit"
-                              title="Edit"
-                              class="mr-3 mt-3"
-                              v-on="on"
-                            >
-                              mdi-pencil
-                            </v-icon>
-                          </template>
-                        </EditEvaluationModal>
-                      </div>
-                    </v-card-actions>
                     <v-card-subtitle class="bottom-right">
                       File Info ↓
                     </v-card-subtitle>
@@ -112,9 +93,9 @@
           @show-waived="statusFilter = 'Waived'"
         />
         <!-- Compliance Cards -->
-        <v-row justify="space-around">
+        <v-row id="complianceCards" justify="space-around">
           <v-col xs="4">
-            <v-card class="fill-height">
+            <v-card id="statusCounts" class="fill-height">
               <v-card-title class="justify-center">Status Counts</v-card-title>
               <v-card-actions class="justify-center">
                 <StatusChart v-model="statusFilter" :filter="all_filter" />
@@ -122,7 +103,7 @@
             </v-card>
           </v-col>
           <v-col xs="4">
-            <v-card class="fill-height">
+            <v-card id="severityCounts" class="fill-height">
               <v-card-title class="justify-center"
                 >Severity Counts</v-card-title
               >
@@ -132,7 +113,7 @@
             </v-card>
           </v-col>
           <v-col xs="4">
-            <v-card class="fill-height">
+            <v-card id="complianceLevel" class="fill-height">
               <v-card-title class="justify-center"
                 >Compliance Level</v-card-title
               >
@@ -221,11 +202,11 @@ import StatusChart from '@/components/cards/StatusChart.vue';
 import SeverityChart from '@/components/cards/SeverityChart.vue';
 import ComplianceChart from '@/components/cards/ComplianceChart.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
-import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
 
 import ExportCaat from '@/components/global/ExportCaat.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
+import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
 import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 
 import {FilteredDataModule, Filter, TreeMapState} from '@/store/data_filters';
@@ -256,16 +237,18 @@ import {IEvaluation} from '@heimdall/interfaces';
     ExportCaat,
     ExportNist,
     ExportJson,
+    ExportHTMLModal,
     EvaluationInfo,
     ProfileData,
-    UploadButton,
-    EditEvaluationModal
+    UploadButton
   }
 })
+
 export default class Results extends mixins(RouteMixin, ServerMixin) {
   $refs!: Vue['$refs'] & {
     search: HTMLInputElement;
   };
+
   /**
    * The currently selected severity, as modeled by the severity chart
    */
@@ -485,11 +468,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 .bottom-right {
   position: absolute;
   bottom: 0;
-  right: 0;
-}
-.top-right {
-  position: absolute;
-  top: 0;
   right: 0;
 }
 </style>
