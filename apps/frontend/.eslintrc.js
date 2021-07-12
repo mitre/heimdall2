@@ -18,6 +18,16 @@ module.exports = {
     'vue/prop-name-casing': 'off',
     '@typescript-eslint/no-unused-vars': ['warn', {argsIgnorePattern: '^_'}],
     'object-curly-spacing': 'warn',
+    'lines-between-class-members': [
+      'warn',
+      'always',
+      {exceptAfterSingleLine: true}
+    ],
+    'padding-line-between-statements': [
+      'warn',
+      {blankLine: 'always', prev: 'function', next: '*'},
+      {blankLine: 'always', prev: 'import', next: ['class', 'function']}
+    ],
     'vue/html-self-closing': [
       'warn',
       {

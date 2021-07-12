@@ -4,8 +4,8 @@ export class Content {
 }
 export class Tag {
   id!: number;
-  tagger_id!: number;
-  tagger_type!: string;
+  taggerId!: number;
+  taggerType!: string;
   content!: Content;
   createdAt!: Date;
   updatedAt!: Date;
@@ -23,14 +23,14 @@ export class Tags {
 }
 export class UserProfile {
   id!: number;
-  first_name!: string;
-  last_name!: string;
+  firstName!: string;
+  lastName!: string;
   email!: string;
   image!: string;
-  phone_number!: string;
+  phoneNumber!: string;
   createdAt!: Date;
   updatedAt!: Date;
-  personal_group!: Usergroup;
+  personalGroup!: Usergroup;
   usergroups!: Usergroup[];
 }
 export class Usergroup {

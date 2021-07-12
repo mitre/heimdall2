@@ -18,14 +18,14 @@ import {User} from './user.model';
 export class UsersService {
   constructor(
     @InjectModel(User)
-    private userModel: typeof User
+    private readonly userModel: typeof User
   ) {}
 
-  async adminFindAll(): Promise<User[]> {
+  async adminFindAllUsers(): Promise<User[]> {
     return this.userModel.findAll<User>();
   }
 
-  async userFindAll(): Promise<User[]> {
+  async findAllUsers(): Promise<User[]> {
     return this.userModel.findAll<User>({
       attributes: ['id', 'email', 'title', 'firstName', 'lastName']
     });

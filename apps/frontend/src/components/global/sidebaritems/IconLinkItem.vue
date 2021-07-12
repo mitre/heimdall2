@@ -16,7 +16,7 @@ import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 
 @Component
-export default class LinkItem extends Vue {
+export default class IconLinkItem extends Vue {
   @Prop({type: String, required: true}) readonly text!: string;
   @Prop({type: String}) readonly icon!: string;
   @Prop({type: String}) readonly link!: string;

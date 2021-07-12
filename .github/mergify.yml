@@ -1,22 +1,17 @@
+queue_rules:
+  - name: default
+    conditions:
+      - "#approved-reviews-by>=1"
+      - base=master
+
 pull_request_rules:
   - name: automatic merge for master when reviewed and CI passes
     conditions:
-      - "#approved-reviews-by>=1"
-      - base=master
       - label=ready-to-merge
     actions:
-        merge:
-          strict: true
-          method: squash
-  - name: automatic merge for updates when CI passes
-    conditions:
-      - "#approved-reviews-by>=1"
-      - base=master
-      - label=dependencies
-    actions:
-        merge:
-          strict: true
-          method: squash
+      queue:
+        name: default
+        method: squash
   - name: delete head branch after merge
     conditions:
       - merged
@@ -29,10 +24,3 @@ pull_request_rules:
     actions:
         comment:
           message: This pull request has a conflict. Could you fix it @{{author}}?
-  - name: ask dependabot to recreate PRs with conflicts
-    conditions:
-      - conflict
-      - author~=^dependabot(|-preview)\[bot\]$
-    actions:
-        comment:
-          message: \@dependabot recreate

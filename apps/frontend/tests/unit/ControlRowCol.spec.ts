@@ -18,7 +18,7 @@ describe('The Topbar', () => {
           status: 'passed',
           message: 'This is the message',
           code_desc: 'This is the code description',
-          start_time: '2020-01-01T12:12:12+05:00'
+          startTime: '2020-01-01T12:12:12+05:00'
         }
       }
     });
