@@ -311,16 +311,21 @@ export class FilteredData extends VuexModule {
         controls = controls.filter((c) => c.data.id === filter.control_id);
       }
 
-      // Filter by status
-      controls = filterByStatus(filter, controls);
-
-      const controlFilters: Record<string, Array<string> | undefined> = {
+      const controlFilters: Record<
+        string,
+        boolean | Array<string> | undefined
+      > = {
         'root.hdf.severity': filter.severity,
         'hdf.wraps.id': filter.ids,
         'hdf.wraps.title': filter.titleSearchTerms,
         'hdf.wraps.desc': filter.descriptionSearchTerms,
         'hdf.raw_nist_tags': filter.nistIdFilter,
-        full_code: filter.codeSearchTerms
+        full_code: filter.codeSearchTerms,
+        'hdf.waived': filter.status?.includes('Waived'),
+        'root.hdf.status': _.filter(
+          filter.status,
+          (status) => status !== 'Waived'
+        )
       };
 
       controls = filterControlsBy(controls, controlFilters);
@@ -378,57 +383,38 @@ export function filter_cache_key(f: Filter) {
 
 export function filterControlsBy(
   controls: readonly context.ContextualizedControl[],
-  filters: Record<string, Array<string> | undefined>
+  filters: Record<string, boolean | Array<string> | undefined>
 ): readonly context.ContextualizedControl[] {
-  if (
-    Object.keys(filters).every(
-      (filter) => !filters[filter] || filters[filter]?.length === 0
-    )
-  ) {
-    return controls;
-  } else {
-    const newFilters: Record<string, Array<string> | undefined> = {};
-    Object.keys(filters).forEach((filter) => {
-      if (filters[filter] && filters[filter]?.length !== 0) {
-        newFilters[filter] = filters[filter];
+  const activeFilters: typeof filters = _.pickBy(
+    filters,
+    (value, _key) =>
+      (Array.isArray(value) && value.length > 0) ||
+      (typeof value === 'boolean' && value)
+  );
+  return controls.filter((control) => {
+    return Object.entries(activeFilters).every(([filter, value]) => {
+      const item: string | string[] | boolean = _.get(control, filter);
+      if (Array.isArray(value)) {
+        return value?.some((term) => {
+          return arrayOrStringIncludes(item, (compareValue) =>
+            compareValue.toLowerCase().includes(term.toLowerCase())
+          );
+        });
+      } else {
+        return item === value;
       }
     });
-    return controls.filter((control) => {
-      return Object.keys(newFilters).every((filter) => {
-        const item: string | string[] = _.get(control, filter);
-        if (typeof item === 'string') {
-          return newFilters[filter]?.some((term) =>
-            item.toLowerCase().includes(term.toLowerCase())
-          );
-        } else {
-          return newFilters[filter]?.some((term) =>
-            item.some((value) =>
-              value.toLowerCase().includes(term.toLowerCase())
-            )
-          );
-        }
-      });
-    });
-  }
+  });
 }
 
-export function filterByStatus(
-  filter: Filter,
-  controls: readonly context.ContextualizedControl[]
-): readonly context.ContextualizedControl[] {
-  if (filter.status && filter.status?.length !== 0) {
-    return controls.filter((control) =>
-      filter.status?.some((term) => {
-        if (term.toLowerCase() === 'waived') {
-          return control.hdf.waived;
-        } else {
-          return control.root.hdf.status
-            .toLowerCase()
-            .includes(term.toLowerCase());
-        }
-      })
-    );
-  } else {
-    return controls;
+/** Iterate over a string or array of strings and call the string compare function provided on every element **/
+function arrayOrStringIncludes(
+  arrayOrString: string | string[] | boolean,
+  comparator: (compareValue: string) => boolean
+) {
+  if (typeof arrayOrString === 'string') {
+    return comparator(arrayOrString);
+  } else if (Array.isArray(arrayOrString)) {
+    return arrayOrString.some((value) => comparator(value));
   }
 }
