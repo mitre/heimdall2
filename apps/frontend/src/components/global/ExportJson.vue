@@ -16,7 +16,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 
 import {FilteredDataModule} from '@/store/data_filters';
 import {saveSingleOrMultipleFiles} from '../../utilities/export_util';
@@ -28,7 +28,7 @@ type FileData = {
 
 @Component({
   components: {
-    LinkItem
+    IconLinkItem
   }
 })
 export default class ExportJSON extends Vue {

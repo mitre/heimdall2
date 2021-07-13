@@ -33,7 +33,7 @@ export async function saveSingleOrMultipleFiles(
 export function cleanUpFilename(filename: string): string {
   return filename.replace(/\s+/g, '_');
 }
-  
+
 /** Converts a string to an array buffer */
 export function s2ab(s: string) {
   const buf = new ArrayBuffer(s.length); //convert s to arrayBuffer

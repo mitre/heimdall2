@@ -13,15 +13,16 @@
       <v-card-title class="headline"> Export as CSV </v-card-title>
       <v-card-text>
         <v-select
-          v-model="fieldsToAdd"
+          v-click-outside="commitItems"
           :items="fields"
-          :menu-props="{maxHeight: '400'}"
-          label="Select"
+          label="Select Fields"
+          dense
           multiple
           hint="Pick the fields to export"
-          persistent-hint
+          @keyup.esc="commitItems"
+          @change="updateItems"
         />
-        <v-data-table :headers="headers" :items="rows" :items-per-page="4"
+        <v-data-table :headers="headers" :items="rows" :items-per-page="1"
           ><template #[`item.Title`]="{item}">{{
             truncate(item.Title)
           }}</template>
@@ -116,7 +117,7 @@ export default class ExportCSVModal extends Vue {
   showingModal = false;
   fields = Object.values(fieldNames);
   fieldsToAdd: string[] = Object.values(fieldNames);
-
+  fieldsToCommit: string[] = Object.values(fieldNames);
   closeModal() {
     this.showingModal = false;
   }
@@ -124,6 +125,14 @@ export default class ExportCSVModal extends Vue {
   showModal() {
     this.generateCSVPreview();
     this.showingModal = true;
+  }
+
+  updateItems(items: string[]) {
+    this.fieldsToCommit = items
+  }
+
+  commitItems() {
+    this.fieldsToAdd = this.fieldsToCommit
   }
 
   get headers() {
@@ -140,7 +149,7 @@ export default class ExportCSVModal extends Vue {
     if(descriptions) {
       let result = '';
       descriptions.forEach((description: ControlDescription) => {
-        result = result.concat(`${description.label}: ${description.data}\r\n\r\n`)
+        result += `${description.label}: ${description.data}\r\n\r\n`
       })
       return result
     }
@@ -188,11 +197,9 @@ export default class ExportCSVModal extends Vue {
     }
     this.fieldsToAdd.forEach((field) => {
       switch(field) {
-        // Resulst Set
         case fieldNames.resultsSet:
           result[fieldNames.resultsSet] = file.filename
           break;
-        // Status
         case fieldNames.status:
           result[fieldNames.status] = control.hdf.status
           break;
