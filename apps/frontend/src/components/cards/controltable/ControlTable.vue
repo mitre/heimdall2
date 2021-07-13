@@ -73,6 +73,14 @@
         <template #tags>
           <ColumnHeader text="800-53 Controls & CCIs" sort="disabled" />
         </template>
+
+        <template #runTime>
+          <ColumnHeader
+            text="Run Time"
+            :sort="sortRunTime"
+            @input="set_sort('runTime', $event)"
+          />
+        </template>
       </ResponsiveRowSwitch>
     </div>
 
@@ -106,7 +114,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import ControlRowHeader from '@/components/cards/controltable/ControlRowHeader.vue';
+import ControlRowHeader, {getControlRunTime} from '@/components/cards/controltable/ControlRowHeader.vue';
 import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails.vue';
 import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
@@ -160,6 +168,7 @@ export default class ControlTable extends Vue {
   sortStatus: Sort = 'none';
   sortSet: Sort = 'none';
   sortSeverity: Sort = 'none';
+  sortRunTime: Sort = 'none';
 
   mounted() {
     this.onResize();
@@ -174,11 +183,12 @@ export default class ControlTable extends Vue {
   }
 
   /** Callback to handle setting a new sort */
-  set_sort(column: 'id' | 'status' | 'severity' | 'set', newSort: Sort) {
+  set_sort(column: string, newSort: Sort) {
     this.sortId = 'none';
     this.sortSet = 'none';
     this.sortStatus = 'none';
     this.sortSeverity = 'none';
+    this.sortRunTime = 'none';
     switch (column) {
       case 'id':
         this.sortId = newSort;
@@ -191,6 +201,9 @@ export default class ControlTable extends Vue {
         break;
       case 'severity':
         this.sortSeverity = newSort;
+        break;
+      case 'runTime':
+        this.sortRunTime = newSort;
         break;
     }
   }
@@ -333,7 +346,15 @@ export default class ControlTable extends Vue {
       if (this.sortSet === 'ascending') {
         factor = -1;
       }
-    } else {
+    } else if(this.sortRunTime === 'ascending' || this.sortRunTime === 'descending') {
+      cmp = (a: ListElt, b: ListElt) =>
+        (getControlRunTime(b.control) - getControlRunTime(a.control));
+      if (this.sortRunTime === 'ascending') {
+        factor = -1;
+      }
+    }
+
+    else {
       return this.raw_items;
     }
     return this.raw_items.sort((a, b) => cmp(a, b) * factor);
