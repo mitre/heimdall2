@@ -396,17 +396,16 @@ export function filterControlsBy(
     return controls.filter((control) => {
       return Object.keys(newFilters).every((filter) => {
         const item: string | string[] = _.get(control, filter);
-        if (typeof item === 'string') {
-          return newFilters[filter]?.some((term) =>
-            item.toLowerCase().includes(term.toLowerCase())
-          );
-        } else {
-          return newFilters[filter]?.some((term) =>
-            item.some((value) =>
+
+        return newFilters[filter]?.some((term) => {
+          if (typeof item === 'string') {
+            return item.toLowerCase().includes(term.toLowerCase());
+          } else {
+            return item.some((value) =>
               value.toLowerCase().includes(term.toLowerCase())
-            )
-          );
-        }
+            );
+          }
+        });
       });
     });
   }
