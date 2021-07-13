@@ -102,7 +102,10 @@ export default class Tour extends Vue {
                 attachTo: {element: '#user-icon', on: 'auto'},
                 title: 'Your Account',
                 text: 'Here you can access more user information and group information',
-                buttons: defaultButtons
+                buttons: defaultButtons,
+                showOn() {
+                  return ServerModule.serverMode;
+                }
               },
               {
                 title: 'Further Information',
