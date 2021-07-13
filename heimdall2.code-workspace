@@ -16,6 +16,10 @@
   "settings": {
     "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
     "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
-    "typescript.preferences.importModuleSpecifier": "relative"
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "search.exclude": {
+      "**/dist": true,
+      "**/samples": true
+    }
   }
 }
