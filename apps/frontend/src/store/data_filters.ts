@@ -11,6 +11,7 @@ import {
 } from '@/store/report_intake';
 import Store from '@/store/store';
 import {context, ControlStatus, nist, Severity} from 'inspecjs';
+import _ from 'lodash';
 import LRUCache from 'lru-cache';
 import {
   Action,
@@ -53,7 +54,7 @@ export interface Filter {
   codeSearchTerms?: string[];
 
   /** CCIs to search for */
-  cciIdFilter?: string[];
+  nistIdFilter?: string[];
 
   /** A search term string, case insensitive
    * We look for this in
@@ -305,7 +306,7 @@ export class FilteredData extends VuexModule {
         (profile) => profile.contains
       );
 
-      // Filter by control id
+      // Filter by single control id
       if (filter.control_id !== undefined) {
         controls = controls.filter((c) => c.data.id === filter.control_id);
       }
@@ -313,23 +314,16 @@ export class FilteredData extends VuexModule {
       // Filter by status
       controls = filterByStatus(filter, controls);
 
-      // Filter by severity
-      controls = filterBySeverity(filter, controls);
+      const controlFilters: Record<string, Array<string> | undefined> = {
+        'root.hdf.severity': filter.severity,
+        'hdf.wraps.id': filter.ids,
+        'hdf.wraps.title': filter.titleSearchTerms,
+        'hdf.wraps.desc': filter.descriptionSearchTerms,
+        'hdf.raw_nist_tags': filter.nistIdFilter,
+        full_code: filter.codeSearchTerms
+      };
 
-      // Filter by control ID
-      controls = filterByControlID(filter, controls);
-
-      // Filter by title
-      controls = filterByTitle(filter, controls);
-
-      // Filter by description
-      controls = filterByDescription(filter, controls);
-
-      // Filter by NIST ID
-      controls = filterByNIST(filter, controls);
-
-      // Filter by code
-      controls = filterByCode(filter, controls);
+      controls = filterControlsBy(controls, controlFilters);
 
       // Filter by overlay
       if (filter.omit_overlayed_controls) {
@@ -382,6 +376,42 @@ export function filter_cache_key(f: Filter) {
   return JSON.stringify(newFilter);
 }
 
+export function filterControlsBy(
+  controls: readonly context.ContextualizedControl[],
+  filters: Record<string, Array<string> | undefined>
+): readonly context.ContextualizedControl[] {
+  if (
+    Object.keys(filters).every(
+      (filter) => !filters[filter] || filters[filter]?.length === 0
+    )
+  ) {
+    return controls;
+  } else {
+    const newFilters: Record<string, Array<string> | undefined> = {};
+    Object.keys(filters).forEach((filter) => {
+      if (filters[filter] && filters[filter]?.length !== 0) {
+        newFilters[filter] = filters[filter];
+      }
+    });
+    return controls.filter((control) => {
+      return Object.keys(newFilters).every((filter) => {
+        const item: string | string[] = _.get(control, filter);
+        if (typeof item === 'string') {
+          return newFilters[filter]?.some((term) =>
+            item.toLowerCase().includes(term.toLowerCase())
+          );
+        } else {
+          return newFilters[filter]?.some((term) =>
+            item.some((value) =>
+              value.toLowerCase().includes(term.toLowerCase())
+            )
+          );
+        }
+      });
+    });
+  }
+}
+
 export function filterByStatus(
   filter: Filter,
   controls: readonly context.ContextualizedControl[]
@@ -398,101 +428,6 @@ export function filterByStatus(
         }
       })
     );
-  } else {
-    return controls;
-  }
-}
-
-export function filterBySeverity(
-  filter: Filter,
-  controls: readonly context.ContextualizedControl[]
-): readonly context.ContextualizedControl[] {
-  if (filter.severity && filter.severity?.length !== 0) {
-    return controls.filter((control) =>
-      filter.severity?.some((term) =>
-        control.root.hdf.severity.toLowerCase().includes(term.toLowerCase())
-      )
-    );
-  } else {
-    return controls;
-  }
-}
-
-export function filterByControlID(
-  filter: Filter,
-  controls: readonly context.ContextualizedControl[]
-): readonly context.ContextualizedControl[] {
-  if (filter.ids && filter.ids?.length !== 0) {
-    return controls.filter((control) =>
-      filter.ids?.some((term) =>
-        control.hdf.wraps.id.toLowerCase().includes(term.toLowerCase())
-      )
-    );
-  } else {
-    return controls;
-  }
-}
-
-export function filterByTitle(
-  filter: Filter,
-  controls: readonly context.ContextualizedControl[]
-): readonly context.ContextualizedControl[] {
-  if (filter.titleSearchTerms && filter.titleSearchTerms?.length !== 0) {
-    return controls.filter((control) =>
-      filter.titleSearchTerms?.some((term) =>
-        control.hdf.wraps.title?.toLowerCase().includes(term.toLowerCase())
-      )
-    );
-  } else {
-    return controls;
-  }
-}
-
-export function filterByDescription(
-  filter: Filter,
-  controls: readonly context.ContextualizedControl[]
-): readonly context.ContextualizedControl[] {
-  if (
-    filter.descriptionSearchTerms &&
-    filter.descriptionSearchTerms?.length !== 0
-  ) {
-    return controls.filter((control) =>
-      filter.descriptionSearchTerms?.some((term) =>
-        control.hdf.wraps.desc?.toLowerCase().includes(term.toLowerCase())
-      )
-    );
-  } else {
-    return controls;
-  }
-}
-
-export function filterByNIST(
-  filter: Filter,
-  controls: readonly context.ContextualizedControl[]
-): readonly context.ContextualizedControl[] {
-  if (filter.cciIdFilter && filter.cciIdFilter?.length !== 0) {
-    return controls.filter((control) => {
-      return control.hdf.raw_nist_tags?.some((tag) =>
-        filter.cciIdFilter?.some((term) =>
-          tag.toLowerCase().includes(term.toLowerCase())
-        )
-      );
-    });
-  } else {
-    return controls;
-  }
-}
-
-export function filterByCode(
-  filter: Filter,
-  controls: readonly context.ContextualizedControl[]
-): readonly context.ContextualizedControl[] {
-  if (filter.codeSearchTerms && filter.codeSearchTerms?.length !== 0) {
-    return controls.filter((control) => {
-      return filter.codeSearchTerms?.some((term) =>
-        control.full_code.toLowerCase().includes(term.toLowerCase())
-      );
-    });
   } else {
     return controls;
   }
