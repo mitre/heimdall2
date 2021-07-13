@@ -82,6 +82,12 @@
         </v-tooltip>
       </v-chip-group>
     </template>
+    <!-- Control Run Time -->
+    <template #runTime>
+      <v-card-text class="pa-2 title font-weight-bold">{{
+        runTime
+      }}</v-card-text></template
+    >
   </ResponsiveRowSwitch>
 </template>
 
@@ -95,6 +101,10 @@ import CircleRating from '@/components/generic/CircleRating.vue';
 import {Prop} from 'vue-property-decorator';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
 import _ from 'lodash';
+
+export function getControlRunTime(control: context.ContextualizedControl): number {
+  return control.hdf.segments?.reduce((total, segment) => segment.run_time || 0 + total, 0) || 0
+}
 
 interface Tag {
   label: string;
@@ -113,6 +123,10 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   readonly control!: ContextualizedControl;
   @Prop({type: Boolean, default: false}) readonly controlExpanded!: boolean;
   @Prop({type: Boolean, default: false}) readonly showImpact!: boolean;
+
+  get runTime(): string {
+    return `${_.truncate(getControlRunTime(this.control).toString(), {length: 5, omission: ''})}ms`
+  }
 
   get filename(): string | undefined {
     return _.get(this.control, 'sourcedFrom.sourcedFrom.from_file.filename')
