@@ -394,7 +394,7 @@ export function filterControlsBy(
   return controls.filter((control) => {
     return Object.entries(activeFilters).every(([filter, value]) => {
       const item: string | string[] | boolean = _.get(control, filter);
-      if (Array.isArray(value)) {
+      if (Array.isArray(value) && typeof item !== 'boolean') {
         return value?.some((term) => {
           return arrayOrStringIncludes(item, (compareValue) =>
             compareValue.toLowerCase().includes(term.toLowerCase())
@@ -409,12 +409,12 @@ export function filterControlsBy(
 
 /** Iterate over a string or array of strings and call the string compare function provided on every element **/
 function arrayOrStringIncludes(
-  arrayOrString: string | string[] | boolean,
+  arrayOrString: string | string[],
   comparator: (compareValue: string) => boolean
 ) {
   if (typeof arrayOrString === 'string') {
     return comparator(arrayOrString);
-  } else if (Array.isArray(arrayOrString)) {
+  } else {
     return arrayOrString.some((value) => comparator(value));
   }
 }
