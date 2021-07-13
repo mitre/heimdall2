@@ -12,7 +12,7 @@
       </v-card-text>
       <v-card-actions>
         <v-col class="text-right">
-          <v-btn color="primary" text @click="dialogDisplayUsers = false"
+          <v-btn color="primary" text @click="$emit('close-group-users-dialog')"
             >Close</v-btn
           >
         </v-col>
@@ -37,6 +37,5 @@ import Users from '@/components/global/groups/Users.vue';
 export default class GroupUsers extends Vue {
   @VModel({type: Array, required: true}) selectedGroupUsers!: ISlimUser[];
   @Prop({type: Boolean, default: false}) readonly dialogDisplayUsers!: boolean;
-
 }
 </script>
