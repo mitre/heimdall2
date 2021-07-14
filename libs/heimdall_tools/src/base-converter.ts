@@ -6,6 +6,8 @@ export type ObjectEntries<T> = { [K in keyof T]: readonly [K, T[K]] }[keyof T];
 export type MappedTransform<T, U> = {
   [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
   ? MappedTransform<T[K], U>
+  : T[K] extends Function
+  ? T[K]
   : T[K] extends object
   ? MappedTransform<T[K] & U, U>
   : T[K] | U;
@@ -18,12 +20,13 @@ export type MappedReform<T, U> = {
   : Exclude<T[K], U>;
 };
 export interface LookupPath {
-  path?: string | string[];
+  path?: string;
   // Parameter will be the return type of handlePath, which can either be a string or a number
   transformer?:
   | ((value: string) => string | number)
   | ((value: number) => string | number)
   | ((value: object) => string | number | object | Array<any> | null);
+  arrayTransformer?: (<T extends object>(value: T[], file: object) => T[]);
   key?: string;
 }
 
@@ -77,31 +80,36 @@ function collapseDuplicates<T extends Object>(
   });
   return newArray;
 }
-
 export class BaseConverter {
   data: object;
-  mappings: MappedTransform<ExecJSON, LookupPath>;
+  mappings?: MappedTransform<ExecJSON, LookupPath>;
   collapseResults: boolean
 
   constructor(
     data: object,
-    mappings: MappedTransform<ExecJSON, LookupPath>,
     collapseResults = false
   ) {
     this.data = data;
-    this.mappings = mappings;
     this.collapseResults = collapseResults
+  }
+  setMappings(mappings: MappedTransform<ExecJSON, LookupPath>) {
+    this.mappings = mappings
   }
 
   toHdf(): ExecJSON {
-    const v = this.convertInternal(this.data, this.mappings);
-    v.profiles.forEach((element) => {
-      element.sha256 = generateHash(
-        JSON.stringify(element),
-        'sha256'
-      );
-    });
-    return v;
+    if (this.mappings === undefined) {
+      throw new Error('Mappings must be provided')
+    } else {
+      const v = this.convertInternal(this.data, this.mappings);
+      v.profiles.forEach((element) => {
+        element.sha256 = generateHash(
+          JSON.stringify(element),
+          'sha256'
+        );
+      });
+      return v;
+    }
+
   }
 
   objectMap<T, V>(obj: T, fn: (v: ObjectEntries<T>) => V): { [K in keyof T]: V } {
@@ -112,7 +120,7 @@ export class BaseConverter {
   convertInternal<T>(file: object, fields: T): MappedReform<T, LookupPath> {
     const result = this.objectMap(fields, (v: ObjectEntries<T>) =>
       this.evaluate(file, v)
-    ); //TODO
+    );
     return result as MappedReform<T, LookupPath>;
   }
   evaluate<T>(
@@ -149,44 +157,40 @@ export class BaseConverter {
     } else {
       const path = v[0].path;
       const key = v[0].key;
-      if (_.has(file, path)) {
-        const length = _.get(file, path).length;
-        for (let i = 1; i < length; i++) {
-          v.push({ ...v[0] });
-        }
-        let counter = 0;
-        _.get(file, path).forEach((element: object) => {
-          v[counter] = _.omit(this.convertInternal(element, v[counter]), [
+      const arrayTransformer = v[0].arrayTransformer
+      if (this.hasPath(file, path)) {
+        v = this.handlePath(file, path).map((element: object) => {
+          return _.omit(this.convertInternal(element, v[0]), [
             'path',
+            'transformer',
+            'arrayTransformer',
             'key'
-          ]) as T;
-          counter++;
+          ]);
         });
         if (key !== undefined) {
-          return collapseDuplicates(v, key, this.collapseResults);
-        } else {
-          return v;
+          v = collapseDuplicates(v, key, this.collapseResults);
         }
+        if (arrayTransformer !== undefined) {
+          v = arrayTransformer(v, this.data)
+        }
+        return v
       } else {
         return [];
       }
     }
   }
-  handlePath(file: object, path: string | string[]): string | number {
-    if (typeof path === 'string' && path.startsWith('$.')) {
+  handlePath(file: object, path: string) {
+    if (path.startsWith('$.')) {
       return _.get(this.data, path.slice(2)) || '';
-    } else if (typeof path === 'string') {
-      return _.get(file, path) || '';
     } else {
-      let value = '';
-      path.forEach(function (item) {
-        if (typeof _.get(file, item) === undefined) {
-          value += item + ' ';
-        } else {
-          value += _.get(file, item) + ' ';
-        }
-      });
-      return value;
+      return _.get(file, path) || '';
+    }
+  }
+  hasPath(file: object, path: string): boolean {
+    if (path.startsWith('$.')) {
+      return _.has(this.data, path.slice(2));
+    } else {
+      return _.has(file, path);
     }
   }
 }

@@ -1,6 +1,6 @@
 export class NessusPluginsNistMappingItem {
   pluginFamily: string;
-  pluginId: number;
+  pluginId: string;
   nistId: string;
   rev: number;
 
@@ -12,7 +12,7 @@ export class NessusPluginsNistMappingItem {
     } else {
       this.pluginFamily = values[0];
     }
-    this.pluginId = parseInt(values[1]);
+    this.pluginId = values[1];
     if (values[2] === undefined) {
       this.nistId = '';
     } else {

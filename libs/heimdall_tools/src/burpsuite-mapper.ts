@@ -76,83 +76,87 @@ function nistTag(input: string) {
 
 
 // Mappings
-const mappings: MappedTransform<ExecJSON, LookupPath> = {
-  platform: {
-    name: 'Heimdall Tools',
-    release: HeimdallToolsVersion,
-    target_id: ''
-  },
-  version: HeimdallToolsVersion,
-  statistics: {
-    duration: null
-  },
-  profiles: [
-    {
-      name: 'BurpSuite Pro Scan',
-      version: { path: 'issues.burpVersion' },
-      title: 'BurpSuite Pro Scan',
-      maintainer: null,
-      summary: 'BurpSuite Pro Scan',
-      license: null,
-      copyright: null,
-      copyright_email: null,
-      supports: [],
-      attributes: [],
-      depends: [],
-      groups: [],
-      status: 'loaded',
-      controls: [
-        {
-          path: 'issues.issue',
-          key: 'id',
-          id: { path: 'type', transformer: idToString },
-          title: { path: 'name' },
-          desc: { path: 'issueBackground', transformer: parseHtml },
-          impact: { path: 'severity', transformer: impactMapping },
-          tags: {
-            nist: { path: 'vulnerabilityClassifications', transformer: nistTag },
-            cweid: {
-              path: 'vulnerabilityClassifications',
-              transformer: formatCweId
-            },
-            confidence: { path: 'confidence' }
-          },
-          descriptions: [
-            {
-              data: { path: 'issueBackground', transformer: parseHtml },
-              label: 'check'
-            },
-            {
-              data: { path: 'remediationBackground', transformer: parseHtml },
-              label: 'fix'
-            }
-          ],
-          refs: [],
-          source_location: {},
-          code: '',
-          results: [
-            {
-              status: ControlResultStatus.Failed,
-              code_desc: { transformer: formatCodeDesc },
-              run_time: 0,
-              start_time: { path: '$.issues.exportTime' }
-            }
-          ]
-        }
-      ],
-      sha256: ''
-    }
-  ]
-};
-
+function parseXml(xml: string) {
+  const options = {
+    attributeNamePrefix: '',
+    textNodeName: 'text',
+    ignoreAttributes: false
+  };
+  return parser.parse(xml, options)
+}
 export class BurpSuiteMapper extends BaseConverter {
+  mappings: MappedTransform<ExecJSON, LookupPath> = {
+    platform: {
+      name: 'Heimdall Tools',
+      release: HeimdallToolsVersion,
+      target_id: ''
+    },
+    version: HeimdallToolsVersion,
+    statistics: {
+      duration: null
+    },
+    profiles: [
+      {
+        name: 'BurpSuite Pro Scan',
+        version: { path: 'issues.burpVersion' },
+        title: 'BurpSuite Pro Scan',
+        maintainer: null,
+        summary: 'BurpSuite Pro Scan',
+        license: null,
+        copyright: null,
+        copyright_email: null,
+        supports: [],
+        attributes: [],
+        depends: [],
+        groups: [],
+        status: 'loaded',
+        controls: [
+          {
+            path: 'issues.issue',
+            key: 'id',
+            id: { path: 'type', transformer: idToString },
+            title: { path: 'name' },
+            desc: { path: 'issueBackground', transformer: parseHtml },
+            impact: { path: 'severity', transformer: impactMapping },
+            tags: {
+              nist: { path: 'vulnerabilityClassifications', transformer: nistTag },
+              cweid: {
+                path: 'vulnerabilityClassifications',
+                transformer: formatCweId
+              },
+              confidence: { path: 'confidence' }
+            },
+            descriptions: [
+              {
+                data: { path: 'issueBackground', transformer: parseHtml },
+                label: 'check'
+              },
+              {
+                data: { path: 'remediationBackground', transformer: parseHtml },
+                label: 'fix'
+              }
+            ],
+            refs: [],
+            source_location: {},
+            code: '',
+            results: [
+              {
+                status: ControlResultStatus.Failed,
+                code_desc: { transformer: formatCodeDesc },
+                run_time: 0,
+                start_time: { path: '$.issues.exportTime' }
+              }
+            ]
+          }
+        ],
+        sha256: ''
+      }
+    ]
+  };
   constructor(burpsXml: string) {
-    const options = {
-      attributeNamePrefix: '',
-      textNodeName: 'text',
-      ignoreAttributes: false
-    };
-    const burpsJson = parser.parse(burpsXml, options);
-    super(burpsJson, mappings);
+    super(parseXml(burpsXml))
+  }
+  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
+    super.setMappings(customMappings)
   }
 }

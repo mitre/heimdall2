@@ -74,140 +74,6 @@ function nistTag(rule: string) {
   return SCOUTSUITE_NIST_MAPPING.nistTag(rule)
 }
 
-const mappings: MappedTransform<ExecJSON, LookupPath> = {
-  platform: {
-    name: 'Heimdall Tools',
-    release: HeimdallToolsVersion,
-    target_id: { transformer: formatTargetId }
-  },
-  version: HeimdallToolsVersion,
-  statistics: {
-    duration: null
-  },
-  profiles: [
-    {
-      name: 'Scout Suite Multi-Cloud Security Auditing Tool',
-      version: { path: 'last_run.version' },
-      title: { transformer: formatTitle },
-      maintainer: null,
-      summary: { path: 'last_run.ruleset_about' },
-      license: null,
-      copyright: null,
-      copyright_email: null,
-      supports: [],
-      attributes: [
-        {
-          name: 'account_id',
-          options: {
-            value: { path: 'account_id' },
-            required: true,
-            sensitive: false,
-            type: INSPEC_INPUTS_MAPPING.string
-          }
-        },
-        {
-          name: 'environment',
-          options: {
-            value: { path: 'environment' }
-          }
-        },
-        {
-          name: 'ruleset',
-          options: {
-            value: { path: 'last_run.ruleset_name' }
-          }
-        },
-        {
-          name: 'run_parameters_excluded_regions',
-          options: {
-            value: { path: 'last_run.run_parameters.excluded_region', transformer: joinArray }
-          }
-        },
-        {
-          name: 'run_parameters_regions',
-          options: {
-            value: { path: 'last_run.run_parameters.regions', transformer: joinArray }
-          }
-        },
-        {
-          name: 'run_parameters_services',
-          options: {
-            value: { path: 'last_run.run_parameters.services', transformer: joinArray }
-          }
-        },
-        {
-          name: 'run_parameters_skipped_services',
-          options: {
-            value: { path: 'last_run.run_parameters.skipped_services', transformer: joinArray }
-          }
-        },
-        {
-          name: 'time',
-          options: {
-            value: { path: 'last_run.time' }
-          }
-        },
-        {
-          name: 'partition',
-          options: {
-            value: { path: 'partition' }
-          }
-        },
-        {
-          name: 'provider_code',
-          options: {
-            value: { path: 'provider_code' }
-          }
-        },
-        {
-          name: 'provider_name',
-          options: {
-            value: { path: 'provider_name' }
-          }
-        }
-      ],
-      depends: [],
-      groups: [],
-      status: 'loaded',
-      controls: [
-        {
-          path: 'services',
-          key: 'id',
-          id: { path: '[0]' },
-          title: { path: '[1].description' },
-          tags: {
-            nist: { path: '[0]', transformer: nistTag }
-          },
-          impact: { path: '[1].level', transformer: impactMapping },
-          desc: { path: '[1].rationale' },
-          descriptions: [
-            { data: { path: '[1].remediation' }, label: 'fix' },
-            { data: { path: '[1].service' }, label: 'service' },
-            { data: { path: '[1].path' }, label: 'path' },
-            { data: { path: '[1].id_suffix' }, label: 'id_suffix' }
-          ],
-          refs: [
-            { url: { path: '[1].references[0]' } },
-            { ref: { path: '[1].compliance', transformer: compliance } }
-          ],
-          source_location: {},
-          code: '',
-          results: [
-            {
-              status: { path: '[1]', transformer: getStatus },
-              skip_message: { path: '[1]', transformer: checkSkip },
-              message: { path: '[1]', transformer: getMessage },
-              code_desc: { path: '[1].description' },
-              start_time: { path: '$.last_run.time' }
-            }
-          ]
-        }
-      ],
-      sha256: ''
-    }
-  ]
-};
-
 function collapseServices(file: object): object {
   let services = Object.values(_.get(file, 'services'))
   let findings = new Array<object>()
@@ -224,7 +90,143 @@ function collapseServices(file: object): object {
   return file
 }
 export class ScoutsuiteMapper extends BaseConverter {
+  mappings: MappedTransform<ExecJSON, LookupPath> = {
+    platform: {
+      name: 'Heimdall Tools',
+      release: HeimdallToolsVersion,
+      target_id: { transformer: formatTargetId }
+    },
+    version: HeimdallToolsVersion,
+    statistics: {
+      duration: null
+    },
+    profiles: [
+      {
+        name: 'Scout Suite Multi-Cloud Security Auditing Tool',
+        version: { path: 'last_run.version' },
+        title: { transformer: formatTitle },
+        maintainer: null,
+        summary: { path: 'last_run.ruleset_about' },
+        license: null,
+        copyright: null,
+        copyright_email: null,
+        supports: [],
+        attributes: [
+          {
+            name: 'account_id',
+            options: {
+              value: { path: 'account_id' },
+              required: true,
+              sensitive: false,
+              type: INSPEC_INPUTS_MAPPING.string
+            }
+          },
+          {
+            name: 'environment',
+            options: {
+              value: { path: 'environment' }
+            }
+          },
+          {
+            name: 'ruleset',
+            options: {
+              value: { path: 'last_run.ruleset_name' }
+            }
+          },
+          {
+            name: 'run_parameters_excluded_regions',
+            options: {
+              value: { path: 'last_run.run_parameters.excluded_region', transformer: joinArray }
+            }
+          },
+          {
+            name: 'run_parameters_regions',
+            options: {
+              value: { path: 'last_run.run_parameters.regions', transformer: joinArray }
+            }
+          },
+          {
+            name: 'run_parameters_services',
+            options: {
+              value: { path: 'last_run.run_parameters.services', transformer: joinArray }
+            }
+          },
+          {
+            name: 'run_parameters_skipped_services',
+            options: {
+              value: { path: 'last_run.run_parameters.skipped_services', transformer: joinArray }
+            }
+          },
+          {
+            name: 'time',
+            options: {
+              value: { path: 'last_run.time' }
+            }
+          },
+          {
+            name: 'partition',
+            options: {
+              value: { path: 'partition' }
+            }
+          },
+          {
+            name: 'provider_code',
+            options: {
+              value: { path: 'provider_code' }
+            }
+          },
+          {
+            name: 'provider_name',
+            options: {
+              value: { path: 'provider_name' }
+            }
+          }
+        ],
+        depends: [],
+        groups: [],
+        status: 'loaded',
+        controls: [
+          {
+            path: 'services',
+            key: 'id',
+            id: { path: '[0]' },
+            title: { path: '[1].description' },
+            tags: {
+              nist: { path: '[0]', transformer: nistTag }
+            },
+            impact: { path: '[1].level', transformer: impactMapping },
+            desc: { path: '[1].rationale' },
+            descriptions: [
+              { data: { path: '[1].remediation' }, label: 'fix' },
+              { data: { path: '[1].service' }, label: 'service' },
+              { data: { path: '[1].path' }, label: 'path' },
+              { data: { path: '[1].id_suffix' }, label: 'id_suffix' }
+            ],
+            refs: [
+              { url: { path: '[1].references[0]' } },
+              { ref: { path: '[1].compliance', transformer: compliance } }
+            ],
+            source_location: {},
+            code: '',
+            results: [
+              {
+                status: { path: '[1]', transformer: getStatus },
+                skip_message: { path: '[1]', transformer: checkSkip },
+                message: { path: '[1]', transformer: getMessage },
+                code_desc: { path: '[1].description' },
+                start_time: { path: '$.last_run.time' }
+              }
+            ]
+          }
+        ],
+        sha256: ''
+      }
+    ]
+  };
   constructor(scoutsuiteJson: string) {
-    super(collapseServices(JSON.parse(scoutsuiteJson.split('\n', 2)[1])), mappings)
+    super(collapseServices(JSON.parse(scoutsuiteJson.split('\n', 2)[1])))
+  }
+  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
+    super.setMappings(customMappings)
   }
 }

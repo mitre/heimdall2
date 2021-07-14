@@ -99,70 +99,73 @@ function nistTag(identifier: object): Array<string> {
 }
 
 // Mappings
-const mappings: MappedTransform<ExecJSON, LookupPath> = {
-  platform: {
-    name: 'Heimdall Tools',
-    release: HeimdallToolsVersion,
-    target_id: ''
-  },
-  version: HeimdallToolsVersion,
-  statistics: {
-    duration: null
-  },
-  profiles: [
-    {
-      name: 'JFrog Xray Scan',
-      version: '',
-      title: 'JFrog Xray Scan',
-      maintainer: null,
-      summary: 'Continuous Security and Universal Artifact Analysis',
-      license: null,
-      copyright: null,
-      copyright_email: null,
-      supports: [],
-      attributes: [],
-      depends: [],
-      groups: [],
-      status: 'loaded',
-      controls: [
-        {
-          path: 'data',
-          key: 'id',
-          tags: {
-            nist: { path: 'component_versions.more_details.cves[0].cwe', transformer: nistTag },
-            cweid: {
-              path: 'component_versions.more_details.cves[0].cwe',
-              transformer: parseIdentifier
-            }
-          },
-          descriptions: [],
-          refs: [],
-          source_location: {},
-          id: { transformer: hashId },
-          title: { path: 'summary' },
-          desc: {
-            path: 'component_versions.more_details',
-            transformer: formatDesc
-          },
-          impact: { path: 'severity', transformer: impactMapping },
-          code: '',
-          results: [
-            {
-              status: ControlResultStatus.Failed,
-              code_desc: { transformer: formatCodeDesc },
-              run_time: 0,
-              start_time: ''
-            }
-          ]
-        }
-      ],
-      sha256: ''
-    }
-  ]
-};
 
 export class JfrogXrayMapper extends BaseConverter {
+  mappings: MappedTransform<ExecJSON, LookupPath> = {
+    platform: {
+      name: 'Heimdall Tools',
+      release: HeimdallToolsVersion,
+      target_id: ''
+    },
+    version: HeimdallToolsVersion,
+    statistics: {
+      duration: null
+    },
+    profiles: [
+      {
+        name: 'JFrog Xray Scan',
+        version: '',
+        title: 'JFrog Xray Scan',
+        maintainer: null,
+        summary: 'Continuous Security and Universal Artifact Analysis',
+        license: null,
+        copyright: null,
+        copyright_email: null,
+        supports: [],
+        attributes: [],
+        depends: [],
+        groups: [],
+        status: 'loaded',
+        controls: [
+          {
+            path: 'data',
+            key: 'id',
+            tags: {
+              nist: { path: 'component_versions.more_details.cves[0].cwe', transformer: nistTag },
+              cweid: {
+                path: 'component_versions.more_details.cves[0].cwe',
+                transformer: parseIdentifier
+              }
+            },
+            descriptions: [],
+            refs: [],
+            source_location: {},
+            id: { transformer: hashId },
+            title: { path: 'summary' },
+            desc: {
+              path: 'component_versions.more_details',
+              transformer: formatDesc
+            },
+            impact: { path: 'severity', transformer: impactMapping },
+            code: '',
+            results: [
+              {
+                status: ControlResultStatus.Failed,
+                code_desc: { transformer: formatCodeDesc },
+                run_time: 0,
+                start_time: ''
+              }
+            ]
+          }
+        ],
+        sha256: ''
+      }
+    ]
+  };
   constructor(xrayJson: string) {
-    super(JSON.parse(xrayJson), mappings, true);
+    super(JSON.parse(xrayJson), true);
+  }
+  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
+    super.setMappings(customMappings)
   }
 }

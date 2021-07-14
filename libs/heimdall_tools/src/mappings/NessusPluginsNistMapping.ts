@@ -14,4 +14,18 @@ export class NessusPluginsNistMapping {
       })
     }
   }
+  nistFilter(family: string, id: string, defaultNist: string[]) {
+    const DEFAULT_NIST_TAG = defaultNist
+    let matches = new Array<string>()
+    let item = this.data.find((element) => { return (element.pluginId === id) && (element.pluginFamily === family) })
+    if (item !== null && item !== undefined && item.nistId !== '' && matches.indexOf(item.nistId) === -1) {
+      matches.push(item.nistId)
+    }
+    if (matches.length === 0) {
+      return DEFAULT_NIST_TAG
+    } else {
+      matches.push('Rev_4')
+    }
+    return matches
+  }
 }

@@ -37,82 +37,84 @@ function nistTag(text: string): string[] {
   return CWE_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG)
 }
 
-const mappings: MappedTransform<ExecJSON, LookupPath> = {
-  platform: {
-    name: 'Heimdall Tools',
-    release: HeimdallToolsVersion,
-    target_id: 'Static Analysis Results Interchange Format'
-  },
-  version: HeimdallToolsVersion,
-  statistics: {
-    duration: null
-  },
-  profiles: [
-    {
-      path: 'runs',
-      name: 'SARIF',
-      version: { path: '$.version' },
-      title: 'Static Analysis Results Interchange Format',
-      maintainer: null,
-      summary: '',
-      license: null,
-      copyright: null,
-      copyright_email: null,
-      supports: [],
-      attributes: [],
-      depends: [],
-      groups: [],
-      status: 'loaded',
-      controls: [
-        {
-          path: 'results',
-          key: 'id',
-          tags: {
-            cwe: {
-              path: 'message.text',
-              transformer: extractCwe
-            },
-            nist: { path: 'message.text', transformer: nistTag }
-          },
-          descriptions: [],
-          refs: [],
-          source_location: {
-            ref: { path: 'locations[0].physicalLocation.artifactLocation.uri' },
-            line: { path: 'locations[0].physicalLocation.region.startLine' }
-          },
-          title: {
-            path: 'message.text', transformer: (text: string) => {
-              return text.split(': ')[0]
-            }
-          },
-          id: { path: 'ruleId' },
-          desc: {
-            path: 'message.text', transformer: (text: string) => {
-              return text.split(': ')[1]
-            }
-          },
-          impact: { path: 'level', transformer: impactMapping },
-          code: '',
-          results: [
-            {
-              status: ControlResultStatus.Failed,
-              code_desc: {
-                path: 'locations[0].physicalLocation',
-                transformer: formatCodeDesc
-              },
-              run_time: 0,
-              start_time: ''
-            }
-          ]
-        }
-      ],
-      sha256: ''
-    }
-  ]
-};
-
 export class SarifMapper extends BaseConverter {
+  mappings: MappedTransform<ExecJSON, LookupPath> = {
+    platform: {
+      name: 'Heimdall Tools',
+      release: HeimdallToolsVersion,
+      target_id: 'Static Analysis Results Interchange Format'
+    },
+    version: HeimdallToolsVersion,
+    statistics: {
+      duration: null
+    },
+    profiles: [
+      {
+        path: 'runs',
+        name: 'SARIF',
+        version: { path: '$.version' },
+        title: 'Static Analysis Results Interchange Format',
+        maintainer: null,
+        summary: '',
+        license: null,
+        copyright: null,
+        copyright_email: null,
+        supports: [],
+        attributes: [],
+        depends: [],
+        groups: [],
+        status: 'loaded',
+        controls: [
+          {
+            path: 'results',
+            key: 'id',
+            tags: {
+              cwe: {
+                path: 'message.text',
+                transformer: extractCwe
+              },
+              nist: { path: 'message.text', transformer: nistTag }
+            },
+            descriptions: [],
+            refs: [],
+            source_location: {
+              ref: { path: 'locations[0].physicalLocation.artifactLocation.uri' },
+              line: { path: 'locations[0].physicalLocation.region.startLine' }
+            },
+            title: {
+              path: 'message.text', transformer: (text: string) => {
+                return text.split(': ')[0]
+              }
+            },
+            id: { path: 'ruleId' },
+            desc: {
+              path: 'message.text', transformer: (text: string) => {
+                return text.split(': ')[1]
+              }
+            },
+            impact: { path: 'level', transformer: impactMapping },
+            code: '',
+            results: [
+              {
+                status: ControlResultStatus.Failed,
+                code_desc: {
+                  path: 'locations[0].physicalLocation',
+                  transformer: formatCodeDesc
+                },
+                run_time: 0,
+                start_time: ''
+              }
+            ]
+          }
+        ],
+        sha256: ''
+      }
+    ]
+  };
   constructor(sarifJson: string) {
-    super(JSON.parse(sarifJson), mappings);
+    super(JSON.parse(sarifJson));
+  }
+  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
+    super.setMappings(customMappings)
   }
 }

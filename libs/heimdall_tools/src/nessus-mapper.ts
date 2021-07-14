@@ -6,6 +6,7 @@ import {
 import _ from 'lodash';
 import { version as HeimdallToolsVersion } from '../package.json';
 import { MappedTransform, LookupPath, BaseConverter, generateHash } from './base-converter'
+import { NessusPluginsNistMapping } from './mappings/NessusPluginsNistMapping';
 // Constants
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['4', 0.9],
@@ -18,192 +19,161 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['I', 0.3],
   ['0', 0.0]
 ]);
-// const CWE_NIST_MAPPING_FILE = '../../data/cwe-nist-mapping.csv'
-// const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE)
-// const DEFAULT_NIST_TAG = ['SA-11', 'RA-5']
+const NA_PLUGIN_OUTPUT = 'This Nessus Plugin does not provide output message.'
+const NESSUS_PLUGINS_NIST_MAPPING_FILE = 'libs/heimdall_tools/data/nessus-plugins-nist-mapping.csv'
+const NESSUS_PLUGINS_NIST_MAPPING = new NessusPluginsNistMapping(NESSUS_PLUGINS_NIST_MAPPING_FILE)
+const DEFAULT_NIST_TAG = ['unmapped']
 
-// Transformation Functions
-function hashId(vulnerability: object): string {
-  if (_.get(vulnerability, 'id') === '') {
-    const hash = generateHash(_.get(vulnerability, 'summary').toString(), 'md5')
-    return hash;
-  } else {
-    return _.get(vulnerability, 'id') as string;
-  }
-}
-function formatDesc(vulnerability: object): string {
-  const text = []
-  if (_.has(vulnerability, 'description')) {
-    text.push(_.get(vulnerability, 'description').toString());
-  }
-  if (_.has(vulnerability, 'cves')) {
-    let re1 = /":/gi;
-    let re2 = /,/gi;
-    text.push(
-      `cves: ${JSON.stringify(_.get(vulnerability, 'cves'))
-        .replace(re1, '"=>')
-        .replace(re2, ', ')}`
-    );
-  }
-  return text.join('<br>');
-}
-function impactMapping(severity: string | number): number {
-  return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || -1;
-}
-function formatCodeDesc(vulnerability: object): string {
-  let codeDescArray = new Array<string>();
-  let re = /,/gi;
-  if (_.has(vulnerability, 'source_comp_id')) {
-    codeDescArray.push(
-      `source_comp_id : ${_.get(vulnerability, 'source_comp_id')}`
-    );
-  } else {
-    codeDescArray.push('source_comp_id : ');
-  }
-  if (_.has(vulnerability, 'component_versions.vulnerable_versions')) {
-    codeDescArray.push(
-      `vulnerable_versions : ${JSON.stringify(
-        _.get(vulnerability, 'component_versions.vulnerable_versions')
-      )}`
-    );
-  } else {
-    codeDescArray.push('vulnerable_versions : ');
-  }
-  if (_.has(vulnerability, 'component_versions.fixed_versions')) {
-    codeDescArray.push(
-      `fixed_versions : ${JSON.stringify(
-        _.get(vulnerability, 'component_versions.fixed_versions')
-      )}`
-    );
-  } else {
-    codeDescArray.push('fixed_versions : ');
-  }
-  if (_.has(vulnerability, 'issue_type')) {
-    codeDescArray.push(`issue_type : ${_.get(vulnerability, 'issue_type')}`);
-  } else {
-    codeDescArray.push('issue_type : ');
-  }
-  if (_.has(vulnerability, 'provider')) {
-    codeDescArray.push(`provider : ${_.get(vulnerability, 'provider')}`);
-  } else {
-    codeDescArray.push('provider : ');
-  }
-  return codeDescArray.join('\n').replace(re, ', ');
-}
-function parseIdentifier(identifier: string): Array<string> {
-  if (identifier.split('CWE-')[1]) {
-    return [identifier.split('CWE-')[1]];
-  } else {
-    return [];
-  }
-}
-// function nistTag(identifier: string): Array<string> {
-//   let identifiers = parseIdentifier(identifier)
-//   if (identifiers === []) {
-//     return DEFAULT_NIST_TAG
-//   } else {
-//     // let matches = new Array<string>()
-//     // identifiers.forEach(element => {
-//     //   let key = parseInt(element)
-//     //   matches.push(CWE_NIST_MAPPING.data.filter((element, index) => {
-//     //     if (element.id = key) {
-//     //       return true
-//     //     }
-//     //   })[0].nistId)
-//     // })
-//     // return matches
-//     return DEFAULT_NIST_TAG
-//   }
-// }
+function parseXml(xml: string) {
+  const options = {
+    attributeNamePrefix: "",
+    textNodeName: "text",
+    ignoreAttributes: false
 
-// Mappings
-const mappings: MappedTransform<ExecJSON, LookupPath> = {
-  platform: {
-    name: 'Heimdall Tools',
-    release: HeimdallToolsVersion,
-    target_id: ''
-  },
-  version: HeimdallToolsVersion,
-  statistics: {
-    duration: null
-  },
-  profiles: [
-    {
-      name: 'JFrog Xray Scan',
-      version: '',
-      title: 'JFrog Xray Scan',
-      maintainer: null,
-      summary: 'Continuous Security and Universal Artifact Analysis',
-      license: null,
-      copyright: null,
-      copyright_email: null,
-      supports: [],
-      attributes: [],
-      depends: [],
-      groups: [],
-      status: 'loaded',
-      controls: [
-        {
-          path: 'data',
-          key: 'id',
-          tags: {
-            nist: { path: 'component_versions.more_details.cves[0].cwe[0]' },
-            cweid: {
-              path: 'component_versions.more_details.cves[0].cwe[0]',
-              transformer: parseIdentifier
-            }
-          },
-          descriptions: [],
-          refs: [],
-          source_location: {},
-          id: { transformer: hashId },
-          title: { path: 'summary' },
-          desc: {
-            path: 'component_versions.more_details',
-            transformer: formatDesc
-          },
-          impact: { path: 'severity', transformer: impactMapping },
-          code: '',
-          results: [
-            {
-              status: ControlResultStatus.Failed,
-              code_desc: { transformer: formatCodeDesc },
-              run_time: 0,
-              start_time: ''
-            }
-          ]
-        }
-      ],
-      sha256: ''
+  }
+  return parser.parse(xml, options);
+}
+
+var policyName: string
+var version: string
+
+function getPolicyName(_input: object) {
+  return 'Nessus ' + policyName
+}
+function getVersion(_input: object) {
+  return version
+}
+function formatDesc(issue: object) {
+  let desc = []
+  desc.push(`Plugin Family: ${_.get(issue, 'pluginFamily')}`)
+  desc.push(`Port: ${_.get(issue, 'port')}`)
+  desc.push(`Protocol: ${_.get(issue, 'protocol')}`)
+  return desc.join('; ') + ';'
+}
+function nistTag(item: object) {
+  let family = _.get(item, 'pluginFamily')
+  let id = _.get(item, 'pluginID')
+  return NESSUS_PLUGINS_NIST_MAPPING.nistFilter(family, id, DEFAULT_NIST_TAG)
+}
+function impactMapping(severity: string) {
+  return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
+}
+function getStatus(item: object) {
+  if (_.has(item, 'cm:compliance-result')) {
+    if (_.get(item, 'cm:compliance-result') === 'PASSED') {
+      return ControlResultStatus.Passed
+    } else {
+      return ControlResultStatus.Failed
     }
-  ]
-};
-
-export class NessusHdf extends BaseConverter {
-  constructor(nessusXml: string) {
-    const options = {
-      attributeNamePrefix: "",
-      textNodeName: "text",
-      ignoreAttributes: false
-
-    }
-    let nessusJson = parser.parse(nessusXml, options);
-    super(nessusJson, mappings);
+  } else {
+    return ControlResultStatus.Failed
   }
 }
-export class NessusDriver {
+function formatCodeDesc(item: object) {
+  if (_.has(item, 'description')) {
+    return _.get(item, 'description') || NA_PLUGIN_OUTPUT
+  } else {
+    return _.get(item, 'plugin_output') || NA_PLUGIN_OUTPUT
+  }
+}
+function getStartTime(tag: object) {
+  if (Array.isArray(tag)) {
+    return _.get(tag.find(element => { return _.get(element, 'name') === 'HOST_START' }), 'text')
+  } else {
+    return _.get(tag, 'text')
+  }
+}
+
+export class NessusResults {
   data: object
-  //reports: object
+  customMapping?: MappedTransform<ExecJSON, LookupPath>
   constructor(nessusXml: string) {
-    const options = {
-      attributeNamePrefix: "",
-      textNodeName: "text",
-      ignoreAttributes: false
-
-    }
-    this.data = parser.parse(nessusXml, options)
+    this.data = parseXml(nessusXml)
   }
-  toHdf() {
 
+  toHdf() {
+    let results: ExecJSON[] = []
+    policyName = _.get(this.data, 'NessusClientData_v2.Policy.policyName')
+    version = _.get(_.get(this.data, 'NessusClientData_v2.Policy.Preferences.ServerPreferences.preference').find((element: object) => { return _.get(element, 'name') === 'sc_version' }), 'value') || ''
+    if (Array.isArray(_.get(this.data, 'NessusClientData_v2.Report.ReportHost'))) {
+      _.get(this.data, 'NessusClientData_v2.Report.ReportHost').forEach((element: object) => {
+        let entry = new NessusMapper(element)
+        if (this.customMapping !== undefined) {
+          entry.setMappings(this.customMapping)
+        }
+        results.push(entry.toHdf())
+      })
+      return results
+    } else {
+      let result = new NessusMapper(_.get(this.data, 'NessusClientData_v2.Report.ReportHost'))
+      if (this.customMapping !== undefined) {
+        result.setMappings(this.customMapping)
+      }
+      return result.toHdf()
+    }
+  }
+  setMappings(customMapping: MappedTransform<ExecJSON, LookupPath>) {
+    this.customMapping = customMapping
+  }
+}
+
+export class NessusMapper extends BaseConverter {
+  mappings: MappedTransform<ExecJSON, LookupPath> = {
+    platform: {
+      name: 'Heimdall Tools',
+      release: HeimdallToolsVersion,
+      target_id: { path: 'name' }
+    },
+    version: HeimdallToolsVersion,
+    statistics: {
+      duration: null
+    },
+    profiles: [
+      {
+        name: { transformer: getPolicyName },
+        version: { transformer: getVersion },
+        title: { transformer: getPolicyName },
+        maintainer: null,
+        summary: { transformer: getPolicyName },
+        license: null,
+        copyright: null,
+        copyright_email: null,
+        supports: [],
+        attributes: [],
+        depends: [],
+        groups: [],
+        status: 'loaded',
+        controls: [
+          {
+            path: 'ReportItem',
+            key: 'id',
+            tags: {
+              nist: { transformer: nistTag },
+              rid: { path: 'pluginID' }
+            },
+            descriptions: [],
+            refs: [],
+            source_location: {},
+            id: { path: 'pluginID' },
+            title: { path: 'pluginName' },
+            desc: { transformer: formatDesc },
+            impact: { path: 'severity', transformer: impactMapping },
+            code: '',
+            results: [
+              {
+                status: { transformer: getStatus },
+                code_desc: { transformer: formatCodeDesc },
+                run_time: 0,
+                start_time: { path: '$.HostProperties.tag', transformer: getStartTime }
+              }
+            ]
+          }
+        ],
+        sha256: ''
+      }
+    ]
+  };
+  constructor(nessusJson: object) {
+    super(nessusJson);
   }
 }

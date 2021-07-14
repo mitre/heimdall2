@@ -33,4 +33,29 @@ export class CweNistMapping {
       return matches
     }
   }
+  nistFilterNoDefault(identifiers: string[] | string) {
+    if (Array.isArray(identifiers)) {
+      if (identifiers.length === 0) {
+        return []
+      } else {
+        let matches = new Array<string>()
+        identifiers.forEach(id => {
+          let key = parseInt(id)
+          let item = this.data.find((element) => element.id === key)
+          if (item !== null && item !== undefined && item.nistId !== '' && matches.indexOf(item.nistId) === -1) {
+            matches.push(item.nistId)
+          }
+        })
+        return matches
+      }
+    } else {
+      let key = parseInt(identifiers)
+      let matches = new Array<string>()
+      let item = this.data.find((element) => element.id === key)
+      if (item !== null && item !== undefined && item.nistId !== '' && matches.indexOf(item.nistId) === -1) {
+        matches.push(item.nistId)
+      }
+      return matches
+    }
+  }
 }
