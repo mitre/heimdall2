@@ -87,6 +87,7 @@
     <GroupUsers
       v-model="selectedGroupUsers"
       :dialog-display-users="dialogDisplayUsers"
+      @close-group-users-dialog="dialogDisplayUsers = false"
     />
   </v-card>
 </template>
