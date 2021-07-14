@@ -54,7 +54,7 @@
           class="ma-1"
           @click="displayMembersDialog(item.users)"
         >
-          {{ `+${item.users.length} total` }}
+          {{ `+${item.users.length - 3} total` }}
         </v-chip>
       </template>
       <template #[`item.actions`]="{item}">
@@ -176,7 +176,7 @@ export default class GroupManagement extends Vue {
       return users.email;
     }
     else {
-      return `${users.firstName} ${users.lastName}`;
+      return `${users.firstName}${users.lastName ? ` ${users.lastName}` : ''}`;
     }
   }
 
