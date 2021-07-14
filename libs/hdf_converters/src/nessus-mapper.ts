@@ -6,7 +6,9 @@ import {
 import _ from 'lodash';
 import { version as HeimdallToolsVersion } from '../package.json';
 import { MappedTransform, LookupPath, BaseConverter, generateHash } from './base-converter'
-import { NessusPluginsNistMapping } from './mappings/NessusPluginsNistMapping';
+import { NessusPluginsNistMapping } from './mappings/NessusPluginsNistMapping'
+import path from 'path'
+
 // Constants
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['4', 0.9],
@@ -20,7 +22,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['0', 0.0]
 ]);
 const NA_PLUGIN_OUTPUT = 'This Nessus Plugin does not provide output message.'
-const NESSUS_PLUGINS_NIST_MAPPING_FILE = 'libs/heimdall_tools/data/nessus-plugins-nist-mapping.csv'
+const NESSUS_PLUGINS_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/nessus-plugins-nist-mapping.csv')
 const NESSUS_PLUGINS_NIST_MAPPING = new NessusPluginsNistMapping(NESSUS_PLUGINS_NIST_MAPPING_FILE)
 const DEFAULT_NIST_TAG = ['unmapped']
 

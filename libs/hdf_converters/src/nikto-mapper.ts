@@ -3,8 +3,9 @@ import { version as HeimdallToolsVersion } from '../package.json'
 import _ from 'lodash'
 import { MappedTransform, LookupPath, BaseConverter, generateHash } from './base-converter'
 import { NiktoNistMapping } from './mappings/NiktoNistMapping'
+import path from 'path'
 
-const NIKTO_NIST_MAPPING_FILE = 'libs/heimdall_tools/data/nikto-nist-mapping.csv'
+const NIKTO_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/nikto-nist-mapping.csv')
 const NIKTO_NIST_MAPPING = new NiktoNistMapping(NIKTO_NIST_MAPPING_FILE)
 
 function formatTitle(file: object) {

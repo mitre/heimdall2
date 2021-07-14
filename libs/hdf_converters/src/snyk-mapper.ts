@@ -2,17 +2,17 @@ import { ControlResultStatus, ExecJSON } from 'inspecjs/dist/generated_parsers/v
 import { version as HeimdallToolsVersion } from '../package.json'
 import _ from 'lodash'
 import { MappedTransform, LookupPath, BaseConverter, generateHash } from './base-converter'
-import { CweNistMapping } from './mappings/CweNistMapping';
+import { CweNistMapping } from './mappings/CweNistMapping'
+import path from 'path'
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['high', 0.7],
   ['medium', 0.5],
   ['low', 0.3]
 ]);
-const CWE_NIST_MAPPING_FILE = 'libs/heimdall_tools/data/cwe-nist-mapping.csv'
+const CWE_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/cwe-nist-mapping.csv')
 const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE)
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5']
-
 
 function impactMapping(severity: string) {
   return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;

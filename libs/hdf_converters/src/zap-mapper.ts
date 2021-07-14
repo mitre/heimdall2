@@ -4,8 +4,9 @@ import _ from 'lodash'
 import { MappedTransform, LookupPath, BaseConverter, generateHash } from './base-converter'
 import { CweNistMapping } from './mappings/CweNistMapping';
 import * as htmlparser from 'htmlparser2';
+import path from 'path'
 
-const CWE_NIST_MAPPING_FILE = 'libs/heimdall_tools/data/cwe-nist-mapping.csv'
+const CWE_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/cwe-nist-mapping.csv')
 const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE)
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5']
 
@@ -53,6 +54,19 @@ function formatCodeDesc(input: object) {
   })
   return text.join('\n') + '\n'
 }
+function deduplicateId<T extends object>(input: T[], _file: object): T[] {
+  let controlId = input.map(element => { return _.get(element, 'id') })
+  let dupId = _(controlId).groupBy().pickBy(value => value.length > 1).keys().value()
+  dupId.forEach(id => {
+    let index = 1
+    input.filter(element => _.get(element, 'id') === id).forEach(element => {
+      _.set(element, 'id', `${id}.${index.toString()}`)
+      index++
+    })
+  })
+  return input
+}
+
 export class ZapMapper extends BaseConverter {
   mappings: MappedTransform<ExecJSON, LookupPath> = {
     platform: {
@@ -90,7 +104,7 @@ export class ZapMapper extends BaseConverter {
         controls: [
           {
             path: 'site.alerts',
-            key: 'id',
+            arrayTransformer: deduplicateId,
             id: { path: 'pluginid' },
             title: { path: 'name' },
             desc: { path: 'desc', transformer: parseHtml },
@@ -124,7 +138,7 @@ export class ZapMapper extends BaseConverter {
     ]
   };
   constructor(zapJson: string, name: string) {
-    super(_.set(JSON.parse(zapJson), 'site', filterSite(_.get(JSON.parse(zapJson), 'site'), name)), true);
+    super(_.set(JSON.parse(zapJson), 'site', filterSite(_.get(JSON.parse(zapJson), 'site'), name)), false);
   }
   setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
     super.setMappings(customMappings)

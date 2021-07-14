@@ -1,14 +1,12 @@
-import parser from 'fast-xml-parser';
-import * as htmlparser from 'htmlparser2';
+import parser from 'fast-xml-parser'
 import {
   ControlDescription,
   ControlResultStatus,
   ExecJSON
-} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
 import _ from 'lodash';
 import { version as HeimdallToolsVersion } from '../package.json';
-import { BaseConverter, LookupPath, MappedTransform } from './base-converter';
-import { CweNistMapping } from './mappings/CweNistMapping';
+import { BaseConverter, LookupPath, MappedTransform } from './base-converter'
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['high', 0.7],
@@ -59,13 +57,22 @@ function getStatus(input: string): string {
     case 'Fact':
       return 'skipped'
     case 'Failed':
-      return 'failed'
+      return 'backtrace-failed'
     case 'Finding':
       return 'failed'
     case 'Not A Finding':
       return 'passed'
   }
   return 'skipped'
+}
+function handleBacktrace<T extends object>(input: T[], _file: object) {
+  input.forEach(element => {
+    if (_.get(element, 'status').startsWith('backtrace-')) {
+      _.set(element, 'status', _.get(element, 'status').split('backtrace-')[1])
+      _.set(element, 'backtrace', ['DB Protect Failed Check'])
+    }
+  })
+  return input
 }
 
 export class DBProtectMapper extends BaseConverter {
@@ -109,6 +116,7 @@ export class DBProtectMapper extends BaseConverter {
             code: '',
             results: [
               {
+                arrayTransformer: handleBacktrace,
                 status: { path: 'Result Status', transformer: getStatus },
                 code_desc: { path: 'Details' },
                 run_time: 0,

@@ -8,7 +8,7 @@ import {
 } from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
 import { version as HeimdallToolsVersion } from '../package.json';
-import { BaseConverter, LookupPath, MappedTransform } from './base-converter';
+import { BaseConverter, LookupPath, MappedTransform } from './base-converter'
 
 const NIST_REFERENCE_NAME = 'Standards Mapping - NIST Special Publication 800-53 Revision 4'
 const DEFAULT_NIST_TAG = ['unmapped', 'Rev_4']
@@ -44,24 +44,6 @@ function nistTag(rule: object) {
     return _.get(tag, 'Title').match(/[a-zA-Z][a-zA-Z]-\d{1,2}/).concat(['Rev_4'])
   }
 }
-// function getCodeDesc(input: object) {
-//   let output: any[] = []
-//   //let matches = input.find((element) => { return _.get(element, 'ClassInfo.ClassID') === currentId })
-
-//   let traces = _.get(matches, 'AnalysisInfo.Unified.Trace')
-//   if (!Array.isArray(traces)) {
-//     traces = [traces]
-//   }
-//   traces.forEach((trace: object) => {
-//     let entries = _.get(trace, 'Primary.Entry')
-//     if (!Array.isArray(entries)) {
-//       entries = [entries]
-//     }
-//     entries = entries.find((element: object) => _.has(element, 'Node.SourceLocation.snippet'))
-//     output.push(entries.map((element: object) => processEntry(element)))
-//   })
-//   return output
-// }
 
 function processEntry(input: object) {
   let output = []

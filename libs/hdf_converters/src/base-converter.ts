@@ -1,6 +1,6 @@
 import { ExecJSON } from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
 import _ from 'lodash'
-import { createHash } from 'crypto';
+import { createHash } from 'crypto'
 
 export type ObjectEntries<T> = { [K in keyof T]: readonly [K, T[K]] }[keyof T];
 export type MappedTransform<T, U> = {
@@ -48,7 +48,6 @@ function collapseDuplicates<T extends Object>(
   array.forEach((item: T) => {
     const propertyValue = _.get(item, key);
     const index = seen.get(propertyValue) || 0;
-    const test = _.get(newArray[index], 'results[?(code_desc)]');
     if (!seen.has(propertyValue)) {
       newArray.push(item);
       seen.set(propertyValue, counter);
@@ -123,7 +122,7 @@ export class BaseConverter {
     );
     return result as MappedReform<T, LookupPath>;
   }
-  evaluate<T>(
+  evaluate<T extends object>(
     file: object,
     v: T | Array<T>
   ): number | string | boolean | T | Array<T> | MappedReform<T, LookupPath> {
@@ -144,15 +143,19 @@ export class BaseConverter {
       return this.convertInternal(file, v);
     }
   }
-  handleArray<T>(file: object, v: Array<T & LookupPath>): Array<T> {
+  handleArray<T extends object>(file: object, v: Array<T & LookupPath>): Array<T> {
     if (v.length === 0) {
       return new Array<T>();
     }
     if (v[0].path === undefined) {
-      const output: Array<T> = [];
+      let arrayTransformer = v[0].arrayTransformer
+      let output: Array<T> = [];
       v.forEach((element) => {
         output.push(this.evaluate(file, element) as T);
       });
+      if (arrayTransformer !== undefined) {
+        output = arrayTransformer(output, this.data)
+      }
       return output;
     } else {
       const path = v[0].path;

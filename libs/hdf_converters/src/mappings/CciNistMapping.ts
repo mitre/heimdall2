@@ -15,7 +15,7 @@ export class CciNistMapping {
 
   constructor(xmlDataPath: string) {
     this.data = []
-    fs.writeFileSync('libs/heimdall_tools/converted_jsons/UCCI.json', JSON.stringify(parser.parse(fs.readFileSync(xmlDataPath, { encoding: 'utf-8' }), options)));
+    fs.writeFileSync('libs/hdf_converters/converted_jsons/UCCI.json', JSON.stringify(parser.parse(fs.readFileSync(xmlDataPath, { encoding: 'utf-8' }), options)));
     let tags = _.get(parser.parse(fs.readFileSync(xmlDataPath, { encoding: 'utf-8' }), options), 'cci_list.cci_items.cci_item')
     if (Array.isArray(tags)) {
       tags.forEach(element => {

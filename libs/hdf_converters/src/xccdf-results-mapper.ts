@@ -9,6 +9,7 @@ import _ from 'lodash';
 import { version as HeimdallToolsVersion } from '../package.json';
 import { BaseConverter, LookupPath, MappedTransform } from './base-converter';
 import { CciNistMapping } from './mappings/CciNistMapping';
+import path from 'path'
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
@@ -16,8 +17,9 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['medium', 0.5],
   ['low', 0.3]
 ]);
+
 const CCI_REGEX = /CCI-(\d*)/
-const CCI_NIST_MAPPING_FILE = 'libs/heimdall_tools/data/U_CCI_List.xml'
+const CCI_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/U_CCI_List.xml')
 const CCI_NIST_MAPPING = new CciNistMapping(CCI_NIST_MAPPING_FILE)
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5', 'Rev_4']
 

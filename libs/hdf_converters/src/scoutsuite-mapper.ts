@@ -2,7 +2,8 @@ import { ControlResultStatus, ExecJSON } from 'inspecjs/dist/generated_parsers/v
 import _ from 'lodash';
 import { version as HeimdallToolsVersion } from '../package.json';
 import { MappedTransform, LookupPath, BaseConverter } from './base-converter'
-import { ScoutsuiteNistMapping } from './mappings/ScoutsuiteNistMapping';
+import { ScoutsuiteNistMapping } from './mappings/ScoutsuiteNistMapping'
+import path from 'path'
 
 const INSPEC_INPUTS_MAPPING = {
   string: 'String',
@@ -18,7 +19,8 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['warning', 0.5],
 ]);
 
-const SCOUTSUITE_NIST_MAPPING_FILE = 'libs/heimdall_tools/data/scoutsuite-nist-mapping.csv'
+const SCOUTSUITE_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/scoutsuite-nist-mapping.csv')
+
 const SCOUTSUITE_NIST_MAPPING = new ScoutsuiteNistMapping(SCOUTSUITE_NIST_MAPPING_FILE)
 
 function formatTargetId(file: object): string {
