@@ -46,7 +46,7 @@
               </v-tooltip>
             </v-col>
           </v-row>
-          <Users v-model="groupInfo.users" />
+          <Users v-model="groupInfo.users" :editable="true" />
         </v-form>
       </v-card-text>
       <v-divider />
