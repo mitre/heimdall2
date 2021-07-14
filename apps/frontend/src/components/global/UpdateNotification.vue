@@ -31,9 +31,11 @@ export default class UpdateNotification extends mixins(AppInfoMixin) {
   get updateAvailable(): boolean {
     return (!ServerModule.serverMode || ServerModule.userInfo.role === 'admin') && AppInfoModule.updateNotification;
   }
+
   set updateAvailable(visible: boolean) {
     AppInfoModule.SetUpdateVisibility(visible);
   }
+
   get latestVersion(): string {
     return AppInfoModule.latestVersion;
   }
