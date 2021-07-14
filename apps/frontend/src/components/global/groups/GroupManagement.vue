@@ -176,7 +176,7 @@ export default class GroupManagement extends Vue {
       return users.email;
     }
     else {
-      return `${users.firstName}${users.lastName ? ` ${users.lastName}` : ''}`;
+      return `${users.firstName}${users.lastName ? ' ' + users.lastName : ''}`;
     }
   }
 
