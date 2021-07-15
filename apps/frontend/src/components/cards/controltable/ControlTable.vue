@@ -132,6 +132,8 @@ interface ListElt {
   control: context.ContextualizedControl;
 }
 
+type ColumnTypes = 'id' | 'status' | 'severity' | 'set';
+
 @Component({
   components: {
     ControlRowHeader,
@@ -174,7 +176,7 @@ export default class ControlTable extends Vue {
   }
 
   /** Callback to handle setting a new sort */
-  set_sort(column: 'id' | 'status' | 'severity' | 'set', newSort: Sort) {
+  set_sort(column: ColumnTypes, newSort: Sort) {
     this.sortId = 'none';
     this.sortSet = 'none';
     this.sortStatus = 'none';
