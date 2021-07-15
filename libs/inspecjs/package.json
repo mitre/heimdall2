@@ -19,7 +19,7 @@
     "gen-types": "bash scripts/update_schema.sh",
     "lint": "eslint --ext .ts src --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
-    "test": "jest"
+    "test": "jest --silent"
   },
   "repository": {
     "type": "git",
