@@ -18,6 +18,21 @@
       "internalConsoleOptions": "neverOpen",
       "port": 9229,
       "smartStep": true
+    },
+    {
+      "name": "Launch index.ts",
+      "env": {
+        "TS_NODE_COMPILER_OPTIONS": "{\"resolveJsonModule\": true}"
+      },
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": [
+        "-r",
+        "ts-node/register"
+      ],
+      "args": [
+        "${workspaceRoot}/libs/heimdall_tools/src/test.ts"
+      ]
     }
   ]
 }

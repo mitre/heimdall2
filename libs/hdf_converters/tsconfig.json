@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "baseUrl": ".",
+  "include": [
+    "*.ts",
+    "**/*.ts"
+  ],
+  "compilerOptions": {
+    "strict": true,
+    "resolveJsonModule": true
+  },
+  "ts-node": {
+    "resolveJsonModule": true
+  }
+}
