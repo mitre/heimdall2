@@ -6,7 +6,14 @@ import {InspecDataModule} from '@/store/data_store';
 import Store from '@/store/store';
 import {Tag} from '@/types/models';
 import {read_file_async} from '@/utilities/async_util';
-import {context, parse} from 'inspecjs';
+import {
+  ContextualizedEvaluation,
+  ContextualizedProfile,
+  contextualizeEvaluation,
+  contextualizeProfile,
+  ConversionResult,
+  convertFile
+} from 'inspecjs';
 import {v4 as uuid} from 'uuid';
 import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
 import {FilteredDataModule} from './data_filters';
@@ -37,12 +44,11 @@ export type InspecFile = {
 
 /** Modify our contextual types to sort of have back-linking to sourced from files */
 export interface SourcedContextualizedEvaluation
-  extends context.ContextualizedEvaluation {
+  extends ContextualizedEvaluation {
   from_file: EvaluationFile;
 }
 
-export interface SourcedContextualizedProfile
-  extends context.ContextualizedProfile {
+export interface SourcedContextualizedProfile extends ContextualizedProfile {
   from_file: ProfileFile;
 }
 
@@ -101,10 +107,7 @@ export class InspecIntake extends VuexModule {
   async loadText(options: TextLoadOptions): Promise<FileID> {
     // Convert it
     const fileID: FileID = uuid();
-    const result: parse.ConversionResult = parse.convertFile(
-      options.text,
-      true
-    );
+    const result: ConversionResult = convertFile(options.text, true);
     // Determine what sort of file we (hopefully) have, then add it
     if (result['1_0_ExecJson']) {
       // A bit of chicken and egg here
@@ -119,7 +122,7 @@ export class InspecIntake extends VuexModule {
       } as EvaluationFile;
 
       // Fixup the evaluation to be Sourced from a file. Requires a temporary type break
-      const evaluation = context.contextualizeEvaluation(
+      const evaluation = contextualizeEvaluation(
         result['1_0_ExecJson']
       ) as unknown as SourcedContextualizedEvaluation;
       evaluation.from_file = evalFile;
@@ -137,7 +140,7 @@ export class InspecIntake extends VuexModule {
       } as ProfileFile;
 
       // Fixup the evaluation to be Sourced from a file. Requires a temporary type break
-      const profile = context.contextualizeProfile(
+      const profile = contextualizeProfile(
         result['1_0_ProfileJson']
       ) as unknown as SourcedContextualizedProfile;
       profile.from_file = profileFile;

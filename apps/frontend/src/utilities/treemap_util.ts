@@ -5,7 +5,12 @@
 import {ColorHack} from '@/store/color_hack';
 import Chroma from 'chroma-js';
 import * as d3 from 'd3';
-import {context, nist} from 'inspecjs';
+import {
+  ContextualizedControl,
+  FULL_NIST_HIERARCHY,
+  NistControl,
+  NistHierarchyNode
+} from 'inspecjs';
 import {control_unique_key} from './format_util';
 
 // How deep into nist trees we allow
@@ -19,14 +24,14 @@ interface AbsTreemapNode {
   key: string;
   color?: Chroma.Color;
   parent: TreemapNodeParent | null; // The parent of this node.
-  nist_control: nist.NistControl; // The nist control which this node is associated with. Not necessarily unique (e.g. leaves)
+  nist_control: NistControl; // The nist control which this node is associated with. Not necessarily unique (e.g. leaves)
 }
 export interface TreemapNodeParent extends AbsTreemapNode {
   children: TreemapNode[]; // Maps the next sub-specifier to children
 }
 
 export interface TreemapNodeLeaf extends AbsTreemapNode {
-  control: context.ContextualizedControl;
+  control: ContextualizedControl;
 }
 
 export function is_leaf(n: TreemapNode): n is TreemapNodeLeaf {
@@ -47,19 +52,19 @@ export type D3TreemapNode = d3.HierarchyNode<TreemapNode>;
  * @param controls The controls to build into a nist node map
  */
 function controls_to_nist_node_data(
-  contextualizedControls: Readonly<context.ContextualizedControl[]>,
+  contextualizedControls: Readonly<ContextualizedControl[]>,
   colors: ColorHack
 ): TreemapNodeLeaf[] {
   return contextualizedControls.flatMap((cc) => {
     // Get the status color
     const color = Chroma.hex(colors.colorForStatus(cc.root.hdf.status));
     // Now make leaves for each nist control
-    return cc.root.hdf.parsed_nist_tags.map((nc) => {
+    return cc.root.hdf.parsedNistTags.map((nc) => {
       return {
         title: cc.data.id,
         subtitle: cc.data.title || undefined,
         hovertext: cc.data.desc || undefined,
-        key: control_unique_key(cc) + nc.raw_text,
+        key: control_unique_key(cc) + nc.rawText,
         control: cc,
         nist_control: nc,
         color,
@@ -75,7 +80,7 @@ function controls_to_nist_node_data(
  */
 function recursive_nist_map(
   parent: TreemapNodeParent | null,
-  node: Readonly<nist.NistHierarchyNode>,
+  node: Readonly<NistHierarchyNode>,
   controlLookup: {[key: string]: TreemapNodeParent},
   maxDepth: number
 ): TreemapNodeParent {
@@ -84,15 +89,15 @@ function recursive_nist_map(
 
   // Make our final value
   const ret: TreemapNodeParent = {
-    key: node.control.raw_text || '',
-    title: node.control.raw_text || '', // TODO: Make this like, suck less. IE give more descriptive stuff
+    key: node.control.rawText || '',
+    title: node.control.rawText || '', // TODO: Make this like, suck less. IE give more descriptive stuff
     nist_control: node.control,
     parent,
     children
   };
 
   // Fill our children
-  if (node.control.sub_specifiers.length < maxDepth) {
+  if (node.control.subSpecifiers.length < maxDepth) {
     node.children.forEach((child) => {
       // Assign it, recursively computing the rest
       children.push(recursive_nist_map(ret, child, controlLookup, maxDepth));
@@ -127,11 +132,11 @@ function colorize_tree_map(root: TreemapNodeParent) {
 }
 
 /** Generates a lookup key for the given control */
-function lookup_key_for(x: nist.NistControl, maxDepth: number): string {
+function lookup_key_for(x: NistControl, maxDepth: number): string {
   if (maxDepth) {
-    return x.sub_specifiers.slice(0, maxDepth).join('-');
+    return x.subSpecifiers.slice(0, maxDepth).join('-');
   } else {
-    return x.sub_specifiers.join('-');
+    return x.subSpecifiers.join('-');
   }
 }
 
@@ -152,7 +157,7 @@ function populate_tree_map(
     } else {
       // eslint-disable-next-line no-console
       console.warn(
-        `Warning: unable to assign control ${leaf.nist_control.raw_text} to valid treemap leaf`
+        `Warning: unable to assign control ${leaf.nist_control.rawText} to valid treemap leaf`
       );
     }
   });
@@ -171,11 +176,11 @@ function build_populated_nist_map(data: TreemapNodeLeaf[]): TreemapNodeParent {
     title: 'NIST-853 Controls',
     children: rootChildren,
     parent: null,
-    nist_control: new nist.NistControl([], 'NIST-853')
+    nist_control: new NistControl([], 'NIST-853')
   };
 
   // Fill out children, recursively
-  nist.FULL_NIST_HIERARCHY.forEach((n) => {
+  FULL_NIST_HIERARCHY.forEach((n) => {
     const child = recursive_nist_map(root, n, lookup, depthMax);
     rootChildren.push(child);
   });
@@ -222,7 +227,7 @@ function node_data_to_tree_map(
 
 /** Does all the steps */
 export function build_nist_tree_map(
-  data: Readonly<context.ContextualizedControl[]>,
+  data: Readonly<ContextualizedControl[]>,
   colors: ColorHack
 ): D3TreemapNode {
   const leaves = controls_to_nist_node_data(data, colors);

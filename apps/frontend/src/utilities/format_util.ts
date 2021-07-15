@@ -7,7 +7,7 @@ import {
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
-import {context} from 'inspecjs';
+import {ContextualizedControl} from 'inspecjs';
 
 export function execution_unique_key(
   exec: Readonly<SourcedContextualizedEvaluation>
@@ -26,7 +26,7 @@ export function profile_unique_key(
     return `profile_${profile.from_file.uniqueId}`;
   } else {
     return `${execution_unique_key(
-      profile.sourced_from as SourcedContextualizedEvaluation
+      profile.sourcedFrom as SourcedContextualizedEvaluation
     )}-${profile.data.name}`;
   }
 }
@@ -36,9 +36,9 @@ export function profile_unique_key(
  * @param ctrl The control to generate the key for
  */
 export function control_unique_key(
-  ctrl: Readonly<context.ContextualizedControl>
+  ctrl: Readonly<ContextualizedControl>
 ): string {
   return `${profile_unique_key(
-    ctrl.sourced_from as Readonly<SourcedContextualizedProfile>
+    ctrl.sourcedFrom as Readonly<SourcedContextualizedProfile>
   )}-${ctrl.data.id}`;
 }

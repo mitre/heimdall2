@@ -53,9 +53,9 @@ export default class AppConfig {
   getSSLConfig() {
     return Boolean(this.get('DATABASE_SSL'))
       ? {
-        rejectUnauthorized: false
-      }
-      : false
+          rejectUnauthorized: false
+        }
+      : false;
   }
 
   getDbConfig() {
@@ -80,7 +80,8 @@ export default class AppConfig {
     if (url === undefined) {
       return false;
     } else {
-      const pattern = /^(?:([^:\/?#\s]+):\/{2})?(?:([^@\/?#\s]+)@)?([^\/?#\s]+)?(?:\/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$/;
+      const pattern =
+        /^(?:([^:\/?#\s]+):\/{2})?(?:([^@\/?#\s]+)@)?([^\/?#\s]+)?(?:\/([^?#\s]*))?(?:[?]([^#\s]+))?\S*$/;
       const matches = url.match(pattern);
 
       if (matches === null) {

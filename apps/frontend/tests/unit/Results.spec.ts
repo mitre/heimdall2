@@ -2,7 +2,7 @@ import ControlTable from '@/components/cards/controltable/ControlTable.vue';
 import {Filter, FilteredDataModule} from '@/store/data_filters';
 import Results from '@/views/Results.vue';
 import {shallowMount, Wrapper} from '@vue/test-utils';
-import {context} from 'inspecjs';
+import {ContextualizedControl} from 'inspecjs';
 import 'jest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
@@ -21,7 +21,7 @@ interface ListElt {
   status_val: number;
   severity_val: number;
 
-  control: context.ContextualizedControl;
+  control: ContextualizedControl;
 }
 
 const $router = {

@@ -1,0 +1,1 @@
+This is simply a prettier way of establishing our final package output structure, so different versions can be easily accessed.

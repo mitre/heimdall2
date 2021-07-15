@@ -1,4 +1,4 @@
-name: Push to NPM and GitHub Packages
+name: Push Heimdall-Lite to NPM and GitHub Packages and Push InspecJs to NPM
 on:
   release:
     types: [published]
@@ -35,3 +35,24 @@ jobs:
         run: npm publish --access public apps/frontend/mitre-heimdall-lite*.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      # Push of InSpecJS to NPM
+
+      - name: Remove frontend code to ensure the proper dependencies are declared in the inspecjs package.json
+        run: |
+          rm -rf apps/frontend
+          rm -rf apps/backend
+
+      - name: Install project dependencies
+        run: yarn inspecjs install --frozen-lockfile
+
+      - name: Build InSpecJS package files
+        run: yarn inspecjs build
+
+      - name: Build tarball for publishing
+        run: yarn inspecjs pack
+
+      - name: Publish InSpecJS to NPM
+        run: yarn publish --access public libs/inspecjs/inspecjs*.tgz
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

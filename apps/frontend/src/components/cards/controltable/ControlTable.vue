@@ -121,7 +121,7 @@ import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSw
 
 import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {control_unique_key} from '@/utilities/format_util';
-import {context} from 'inspecjs';
+import {ContextualizedControl} from 'inspecjs';
 import {Prop, Ref} from 'vue-property-decorator';
 import {HeightsModule} from '@/store/heights';
 import _ from 'lodash';
@@ -137,7 +137,7 @@ interface ListElt {
   status_val: number;
   severity_val: number;
 
-  control: context.ContextualizedControl;
+  control: ContextualizedControl;
 }
 
 @Component({
@@ -304,7 +304,7 @@ export default class ControlTable extends Vue {
         severity_val: ['none', 'low', 'medium', 'high', 'critical'].indexOf(
           d.root.hdf.severity
         ),
-        filename: _.get(d, 'sourced_from.sourced_from.from_file.filename')
+        filename: _.get(d, 'sourcedFrom.sourcedFrom.from_file.filename')
       };
     });
   }

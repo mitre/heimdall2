@@ -45,7 +45,7 @@ import {
 import {v4 as uuid} from 'uuid';
 import {SplunkEndpoint, ExecutionMetaInfo} from '@/utilities/splunk_util';
 import {InspecDataModule} from '@/store/data_store';
-import {contextualizeEvaluation} from 'inspecjs/dist/context';
+import {contextualizeEvaluation} from 'inspecjs';
 import {Prop} from 'vue-property-decorator';
 
 const SEARCH_INTERVAL = 10000;

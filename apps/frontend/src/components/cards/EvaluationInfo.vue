@@ -57,9 +57,8 @@ import GroupRow from '@/components/global/groups/GroupRow.vue'
 import TagRow from '@/components/global/tags/TagRow.vue'
 import {IEvaluation} from '@heimdall/interfaces';
 import {get_eval_start_time} from '../../utilities/delta_util';
-import {ContextualizedEvaluation} from 'inspecjs/dist/context';
+import {ContextualizedEvaluation} from 'inspecjs';
 import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
-
 
 @Component({
   components: {

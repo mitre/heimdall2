@@ -1,0 +1,50 @@
+{
+  "name": "inspecjs",
+  "version": "2.4.6",
+  "description": "© 2018 The MITRE Corporation.",
+  "files": [
+    "dist"
+  ],
+  "main": "./src/inspecjs.ts",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^15.0.1",
+    "jest": "^27.0.6",
+    "typedoc": "^0.20.35"
+  },
+  "jest": {
+    "coverageDirectory": "./coverage",
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testEnvironment": "node",
+    "testRegex": ".spec.ts$",
+    "testTimeout": 10000,
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    }
+  },
+  "scripts": {
+    "prebuild": "rimraf ./dist",
+    "build": "tsc",
+    "docs": "typedoc --out docs ./src",
+    "gen-types": "bash scripts/update_schema.sh",
+    "lint": "eslint --ext .ts src --fix",
+    "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
+    "test": "jest --silent"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mitre/heimdall2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/mitre/heimdall2/issues"
+  },
+  "homepage": "http://inspecjs.mitre.org/"
+}

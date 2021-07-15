@@ -50,7 +50,7 @@ import axios from 'axios';
 import _ from 'lodash';
 import {StatusCountModule} from '../../store/status_counts';
 import {EvaluationFile, ProfileFile} from '../../store/report_intake';
-import {ContextualizedControl} from 'inspecjs/dist/context';
+import {ContextualizedControl} from 'inspecjs';
 import {mdiAlertCircle, mdiCheckCircle, mdiCloseCircle, mdiMinusCircle} from '@mdi/js'
 import Mustache from 'mustache';
 
@@ -248,7 +248,7 @@ export default class ExportHTMLModal extends Vue {
       },
       {
         name: 'Nist controls',
-        value: control.hdf.raw_nist_tags.join(', ')
+        value: control.hdf.rawNistTags.join(', ')
       },
       {
         name: 'Check Text',

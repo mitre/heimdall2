@@ -21,7 +21,7 @@ import {FilteredDataModule} from './data_filters';
 
 /** We make some new variant types of the Contextual types, to include their files*/
 export function isFromProfileFile(p: SourcedContextualizedProfile) {
-  return p.sourced_from === null;
+  return p.sourcedFrom === null;
 }
 
 @Module({
