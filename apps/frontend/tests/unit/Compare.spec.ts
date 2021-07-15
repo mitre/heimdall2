@@ -6,6 +6,7 @@ import {shallowMount, Wrapper} from '@vue/test-utils';
 import 'jest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
+import {SearchModule} from '../../src/store/search';
 import {fileCompliance, loadSample, removeAllFiles} from '../util/testingUtils';
 
 const vuetify = new Vuetify();
@@ -60,6 +61,7 @@ describe('Compare table data', () => {
 
   it('search works when nothing fits criteria', () => {
     (wrapper.vm as Vue & {searchTerm: string}).searchTerm = 'failed';
+    SearchModule.parseSearch();
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length
@@ -69,16 +71,20 @@ describe('Compare table data', () => {
   it('search id works', () => {
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = false;
     (wrapper.vm as Vue & {searchTerm: string}).searchTerm = 'v-13613';
-    expect(
-      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
-        .length
-    ).toBe(1);
+    SearchModule.parseSearch();
+    setTimeout(() => {
+      expect(
+        (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+          .length
+      ).toBe(1);
+    }, 1000);
   });
 
   it('shows differing delta data when "show only changed"', () => {
     (wrapper.vm as Vue & {searchTerm: string}).searchTerm = '';
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = true;
     loadSample('NGINX Clean Sample');
+    SearchModule.parseSearch();
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length
@@ -88,16 +94,20 @@ describe('Compare table data', () => {
   it('search status works', () => {
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = false;
     (wrapper.vm as Vue & {searchTerm: string}).searchTerm = 'failed';
-    expect(
-      (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
-        .length
-    ).toBe(nginxDelta);
+    SearchModule.parseSearch();
+    setTimeout(() => {
+      expect(
+        (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
+          .length
+      ).toBe(nginxDelta);
+    }, 1000);
   });
 
   it('counts every unique control', () => {
     loadSample('Red Hat With Failing Tests');
     (wrapper.vm as Vue & {searchTerm: string}).searchTerm = '';
     (wrapper.vm as Vue & {changedOnly: boolean}).changedOnly = true;
+    SearchModule.parseSearch();
     expect(
       (wrapper.vm as Vue & {show_sets: [string, ControlSeries][]}).show_sets
         .length

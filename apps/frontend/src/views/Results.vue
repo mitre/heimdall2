@@ -1,25 +1,11 @@
 <template>
-  <Base :title="curr_title" @changed-files="evalInfo = null">
+  <Base
+    :show-search="true"
+    :title="curr_title"
+    @changed-files="evalInfo = null"
+  >
     <!-- Topbar content - give it a search bar -->
     <template #topbar-content>
-      <v-text-field
-        v-show="showSearchMobile || !$vuetify.breakpoint.xs"
-        ref="search"
-        v-model="searchTerm"
-        flat
-        hide-details
-        dense
-        solo
-        prepend-inner-icon="mdi-magnify"
-        label="Search"
-        clearable
-        :class="$vuetify.breakpoint.xs ? 'overtake-bar mx-2' : 'mx-2'"
-        @click:clear="clear_search()"
-        @blur="showSearchMobile = false"
-      />
-      <v-btn v-if="$vuetify.breakpoint.xs" class="mr-2" @click="showSearch">
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
       <v-btn :disabled="!can_clear" @click="clear">
         <span class="d-none d-md-inline pr-2"> Clear </span>
         <v-icon>mdi-filter-remove</v-icon>
@@ -89,8 +75,10 @@
         <StatusCardRow
           :filter="all_filter"
           :current-status-filter="statusFilter"
-          @show-errors="statusFilter = 'Profile Error'"
-          @show-waived="statusFilter = 'Waived'"
+          @show-errors="showErrors"
+          @show-waived="showWaived"
+          @add-filter="addStatusFilter"
+          @remove-filter="removeStatusFilter"
         />
         <!-- Compliance Cards -->
         <v-row id="complianceCards" justify="space-around">
@@ -209,8 +197,8 @@ import ExportJson from '@/components/global/ExportJson.vue';
 import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
 import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 
-import {FilteredDataModule, Filter, TreeMapState} from '@/store/data_filters';
-import {ControlStatus, Severity} from 'inspecjs';
+import {FilteredDataModule, Filter, TreeMapState, ExtendedControlStatus} from '@/store/data_filters';
+import {Severity} from 'inspecjs';
 import {EvaluationFile, FileID, ProfileFile, SourcedContextualizedEvaluation, SourcedContextualizedProfile} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
 
@@ -224,6 +212,7 @@ import RouteMixin from '@/mixins/RouteMixin';
 import {StatusCountModule} from '../store/status_counts';
 import ServerMixin from '../mixins/ServerMixin';
 import {IEvaluation} from '@heimdall/interfaces';
+import {SearchModule} from '@/store/search';
 
 @Component({
   components: {
@@ -250,35 +239,43 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   };
 
   /**
-   * The currently selected severity, as modeled by the severity chart
-   */
-  severityFilter: Severity | null = null;
-
-  /**
-   * The currently selected status, as modeled by the status chart
-   */
-  statusFilter: ControlStatus | "Waived" | null = null;
-
-  /**
    * The current state of the treemap as modeled by the treemap (duh).
    * Once can reliably expect that if a "deep" selection is not null, then its parent should also be not-null.
    */
   treeFilters: TreeMapState = [];
   controlSelection: string | null = null;
 
-  /**
-   * The current search term, as modeled by the search bar
-   * Never empty - should in that case be null
-   */
-  searchTerm = '';
-
   /** Model for if all-filtered snackbar should be showing */
   filterSnackbar = false;
 
   evalInfo: SourcedContextualizedEvaluation | SourcedContextualizedProfile | null = null;
 
-  /** Determines if we should make the search bar collapse-able */
-  showSearchMobile = false;
+  /**
+   * The current search terms, as modeled by the search bar
+   */
+  get searchTerm(): string {
+    return SearchModule.searchTerm;
+  }
+
+  set searchTerm(term: string) {
+    SearchModule.updateSearch(term);
+  }
+
+  get severityFilter(): Severity[] {
+    return SearchModule.severityFilter;
+  }
+
+  set severityFilter(severity: Severity[]) {
+    SearchModule.setSeverity(severity)
+  }
+
+  get statusFilter(): ExtendedControlStatus[] {
+    return SearchModule.statusFilter;
+  }
+
+  set statusFilter(status: ExtendedControlStatus[]) {
+    SearchModule.setStatusFilter(status);
+  }
 
   /**
    * The currently selected file, if one exists.
@@ -328,25 +325,20 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   /**
-   * Handles focusing on the search bar
-   */
-  showSearch(): void {
-    this.showSearchMobile = true;
-    this.$nextTick(() => {
-      this.$refs.search.focus();
-    });
-  }
-
-  /**
    * The filter for charts. Contains all of our filter stuff
    */
   get all_filter(): Filter {
     return {
-      status: this.statusFilter || undefined,
-      severity: this.severityFilter || undefined,
+      status: SearchModule.statusFilter,
+      severity: SearchModule.severityFilter,
       fromFile: this.file_filter,
+      ids: SearchModule.controlIdSearchTerms,
+      titleSearchTerms: SearchModule.titleSearchTerms,
+      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
+      nistIdFilter: SearchModule.nistIdFilter,
+      searchTerm: SearchModule.freeSearch || '',
+      codeSearchTerms: SearchModule.codeSearchTerms,
       treeFilters: this.treeFilters,
-      searchTerm: this.searchTerm || '',
       omit_overlayed_controls: true,
       control_id: this.controlSelection || undefined
     };
@@ -357,10 +349,15 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    */
   get treemap_full_filter(): Filter {
     return {
-      status: this.statusFilter || undefined,
-      severity: this.severityFilter || undefined,
+      status: SearchModule.statusFilter || [],
+      severity: SearchModule.severityFilter,
+      titleSearchTerms: SearchModule.titleSearchTerms,
+      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
+      codeSearchTerms: SearchModule.codeSearchTerms,
+      nistIdFilter: SearchModule.nistIdFilter,
+      ids: SearchModule.controlIdSearchTerms,
       fromFile: this.file_filter,
-      searchTerm: this.searchTerm || '',
+      searchTerm: SearchModule.freeSearch,
       omit_overlayed_controls: true
     };
   }
@@ -368,17 +365,14 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /**
    * Clear all filters
    */
-  clear() {
+  clear(clearSearchBar = false) {
+    SearchModule.clear();
     this.filterSnackbar = false;
-    this.severityFilter = null;
-    this.statusFilter = null;
     this.controlSelection = null;
-    this.searchTerm = '';
     this.treeFilters = [];
-  }
-
-  clear_search() {
-    this.searchTerm = '';
+    if(clearSearchBar) {
+      this.searchTerm = '';
+    }
   }
 
   /**
@@ -389,9 +383,11 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     // Return if any params not null/empty
     let result: boolean;
     if (
-      this.severityFilter ||
-      this.statusFilter ||
-      this.searchTerm !== '' ||
+      SearchModule.severityFilter.length !== 0 ||
+      SearchModule.statusFilter.length !== 0 ||
+      SearchModule.controlIdSearchTerms.length !== 0 ||
+      SearchModule.codeSearchTerms.length !== 0 ||
+      this.searchTerm ||
       this.treeFilters.length
     ) {
       result = true;
@@ -451,19 +447,28 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       this.evalInfo = file;
     }
   }
+
+  showErrors() {
+    this.searchTerm = 'status:"Profile Error"'
+  }
+
+  showWaived() {
+    this.searchTerm = 'status:"Waived"'
+  }
+
+  addStatusFilter(status: ExtendedControlStatus) {
+    SearchModule.addStatusSearch(status);
+  }
+
+  removeStatusFilter(status: ExtendedControlStatus) {
+    SearchModule.removeStatusSearch(status);
+  }
 }
 </script>
 
 <style scoped>
 .glow {
   box-shadow: 0px 0px 8px 6px #5a5;
-}
-.overtake-bar {
-  width: 96%;
-  position: absolute;
-  left: 0px;
-  top: 4px;
-  z-index: 5;
 }
 .bottom-right {
   position: absolute;
