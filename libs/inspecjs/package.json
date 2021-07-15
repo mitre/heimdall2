@@ -13,18 +13,15 @@
     "typedoc": "^0.20.35"
   },
   "jest": {
-    "coverageDirectory": "./coverage",
     "moduleFileExtensions": [
+      "vue",
+      "ts",
       "js",
-      "json",
-      "ts"
+      "json"
     ],
-    "rootDir": "src",
-    "testEnvironment": "node",
-    "testRegex": ".spec.ts$",
-    "testTimeout": 10000,
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
     "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
+      "^.+\\.tsx?$": "ts-jest"
     }
   },
   "scripts": {
