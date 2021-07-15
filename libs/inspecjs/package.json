@@ -12,6 +12,21 @@
     "jest": "^27.0.6",
     "typedoc": "^0.20.35"
   },
+  "jest": {
+    "coverageDirectory": "./coverage",
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testEnvironment": "node",
+    "testRegex": ".spec.ts$",
+    "testTimeout": 10000,
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    }
+  },
   "scripts": {
     "prebuild": "rimraf ./dist",
     "build": "tsc",

@@ -49,5 +49,5 @@ jobs:
      - name: Run unit tests
        run: yarn inspecjs test
 
-     - name: Ensure the app builds cleanly without frontend dependencies
+     - name: Ensure the app builds cleanly without frontend and backend dependencies
        run: yarn inspecjs build
