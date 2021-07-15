@@ -38,6 +38,9 @@
               <ExportCaat :filter="all_filter" />
             </v-list-item>
             <v-list-item class="px-0">
+              <ExportCSVModal :filter="all_filter" />
+            </v-list-item>
+            <v-list-item class="px-0">
               <ExportNist :filter="all_filter" />
             </v-list-item>
             <v-list-item class="px-0">
@@ -204,6 +207,7 @@ import ComplianceChart from '@/components/cards/ComplianceChart.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
 
 import ExportCaat from '@/components/global/ExportCaat.vue';
+import ExportCSVModal from '@/components/global/ExportCSVModal.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
 import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
@@ -235,6 +239,7 @@ import {IEvaluation} from '@heimdall/interfaces';
     SeverityChart,
     ComplianceChart,
     ExportCaat,
+    ExportCSVModal,
     ExportNist,
     ExportJson,
     ExportHTMLModal,
