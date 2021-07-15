@@ -43,10 +43,10 @@ context('Registration', () => {
         return false;
       });
 
-      registrationPage.register(CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD);
-      toastVerifier.toastTextContains(
-        'Password does not meet complexity requirements'
+      registrationPage.registerNoSubmit(
+        CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD
       );
+      registrationVerifier.registerButtonDisabled();
     });
 
     it('rejects mismatching passwords', () => {
