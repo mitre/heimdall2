@@ -102,7 +102,7 @@ import {Prop} from 'vue-property-decorator';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
 import _ from 'lodash';
 
-export function getControlRunTime(control: context.ContextualizedControl): number {
+export function getControlRunTime(control: ContextualizedControl): number {
   return control.hdf.segments?.reduce((total, segment) => segment.run_time || 0 + total, 0) || 0
 }
 
@@ -121,6 +121,7 @@ interface Tag {
 export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   @Prop({type: Object, required: true})
   readonly control!: ContextualizedControl;
+
   @Prop({type: Boolean, default: false}) readonly controlExpanded!: boolean;
   @Prop({type: Boolean, default: false}) readonly showImpact!: boolean;
 
