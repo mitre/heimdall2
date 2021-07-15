@@ -54,12 +54,17 @@
           class="ma-1"
           @click="displayMembersDialog(item.users)"
         >
-          {{ `+${item.users.length} total` }}
+          {{ `+${item.users.length - 3} more` }}
         </v-chip>
       </template>
       <template #[`item.actions`]="{item}">
         <div v-if="item.role == 'owner'">
-          <GroupModal id="editGroupModal" :create="false" :group="item">
+          <GroupModal
+            id="editGroupModal"
+            :create="false"
+            :group="item"
+            :group-id="item.id"
+          >
             <template #clickable="{on}"
               ><v-icon small title="Edit" data-cy="edit" class="mr-2" v-on="on">
                 mdi-pencil
@@ -171,7 +176,7 @@ export default class GroupManagement extends Vue {
       return users.email;
     }
     else {
-      return `${users.firstName} ${users.lastName}`;
+      return `${users.firstName}${users.lastName ? ' ' + users.lastName : ''}`;
     }
   }
 

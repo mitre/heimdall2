@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="editable">
+    <div>
       <v-row class="mt-0">
         <v-col>
           <v-autocomplete
@@ -27,14 +27,24 @@
     <v-row>
       <v-col>
         <v-data-table
-          :headers="displayedHeaders"
+          :headers="headers"
           :items="currentUsers"
           :items-per-page="5"
         >
           <template #[`item.full-name`]="{item}"
             >{{ item.firstName }} {{ item.lastName }}</template
           >
-          <template v-if="editable" #[`item.actions`]="{item}">
+          <template #[`item.groupRole`]="{item}">
+            <v-select
+              v-if="editable"
+              :items="['owner', 'member']"
+              :value="item.groupRole"
+              @click="editedUser = item"
+              @change="onUpdateUserGroupRole"
+            />
+            <span v-else> {{ item.groupRole }} </span>
+          </template>
+          <template #[`item.actions`]="{item}">
             <v-icon small title="Delete" @click="deleteUserDialog(item)">
               mdi-delete
             </v-icon>
@@ -62,6 +72,7 @@ import {Prop, VModel} from 'vue-property-decorator';
 import {ServerModule} from '@/store/server';
 import {IVuetifyItems} from '@/utilities/helper_util';
 import DeleteDialog from '@/components/generic/DeleteDialog.vue';
+import {SnackbarModule} from '../../../store/snackbar';
 
 @Component({
   components: {
@@ -70,13 +81,11 @@ import DeleteDialog from '@/components/generic/DeleteDialog.vue';
 })
 export default class Users extends Vue {
   @VModel({type: Array, required: false, default() {return []}}) currentUsers!: ISlimUser[];
-  @Prop({type: Boolean, required: false, default: true}) readonly editable!: boolean;
+  @Prop({type: Boolean, default: false}) readonly editable!: boolean;
 
   usersToAdd: string[] = [];
-
-  editedUser: ISlimUser | null = null;
+  editedUser: ISlimUser = {id: '0', email: ''};
   dialogDelete = false;
-
   headers: Object[] = [
     {
       text: 'Name',
@@ -92,29 +101,47 @@ export default class Users extends Vue {
     },
     {
       text: 'Role',
-      value: 'groupRole'
+      value: 'groupRole',
+      width: '20%'
+    },
+    {
+      text: 'Actions',
+      value: 'actions',
+      sortable: false
     }
   ];
-
-  get displayedHeaders() {
-    // If the user is editing the group, then display the actions column.
-    if(this.editable) {
-      this.headers.push({
-        text: 'Actions',
-        value: 'actions',
-        sortable: false,
-      });
-    }
-    return this.headers;
-  }
 
   addUsers() {
     ServerModule.allUsers.forEach((user) => {
       if(this.usersToAdd.includes(user.id)) {
+        user.groupRole = 'member';
         this.currentUsers.push(user);
       }
     });
     this.usersToAdd = [];
+  }
+
+  onUpdateUserGroupRole(newValue: string) {
+    // If a role is being changed to member, check that there is at least 1 owner.
+    if(newValue === 'member') {
+      if(this.numberOfOwners() <= 1) {
+        SnackbarModule.failure(`Must have at least 1 owner`);
+        return;
+      }
+    }
+    const userToUpdate = this.currentUsers.indexOf(this.editedUser)
+    this.editedUser.groupRole = newValue
+    this.currentUsers[userToUpdate] = this.editedUser
+  }
+
+  numberOfOwners(): number {
+    let numberOfOwners = 0;
+    this.currentUsers.forEach((user) => {
+      if(user.groupRole === 'owner') {
+        ++numberOfOwners;
+      }
+    });
+    return numberOfOwners;
   }
 
   deleteUserDialog(user: ISlimUser): void {
@@ -124,7 +151,7 @@ export default class Users extends Vue {
 
   closeDeleteDialog () {
     this.dialogDelete = false
-    this.editedUser = null;
+    this.editedUser = {id: '0', email: ''};
   }
 
   deleteUserConfirm(): void {
@@ -138,7 +165,6 @@ export default class Users extends Vue {
   get availableUsers(): IVuetifyItems[] {
     const currentUserIds: string[] = this.currentUsers.map((user) => user.id);
     const users: IVuetifyItems[] = [];
-
     ServerModule.allUsers.forEach(async (user) => {
       if(!currentUserIds.includes(user.id) && user.id !== ServerModule.userInfo.id) {
         users.push({

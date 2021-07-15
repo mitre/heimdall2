@@ -46,12 +46,10 @@
               </v-tooltip>
             </v-col>
           </v-row>
-          <Users v-model="groupInfo.users" />
+          <Users v-model="groupInfo.users" :editable="true" />
         </v-form>
       </v-card-text>
-
       <v-divider />
-
       <v-card-actions>
         <v-col class="text-right">
           <v-btn
@@ -115,15 +113,12 @@ export default class GroupModal extends Vue {
 
   @Prop({type: Boolean, default: false}) readonly admin!: boolean;
   @Prop({type: Boolean, default: false}) readonly create!: boolean;
-
   dialog = false;
   changePassword = false;
-
   groupInfo: IGroup = _.cloneDeep(this.group);
   currentPassword = '';
   newPassword = '';
   passwordConfirmation = '';
-
   get title(): string {
     if(this.create) {
       return 'Create a New Group'
@@ -137,7 +132,6 @@ export default class GroupModal extends Vue {
     const groupInfo: ICreateGroup = {
       ...this.groupInfo,
     };
-
     const response = this.create ? this.createGroup(groupInfo) : this.updateExistingGroup(groupInfo);
     response.then(({data}) => {
       this.syncUsersWithGroup(data).then(() => {
@@ -166,6 +160,7 @@ export default class GroupModal extends Vue {
     const changedIds = this.groupInfo.users.map((user) => user.id);
     const toAdd: ISlimUser[] = this.groupInfo.users.filter(user => !originalIds.includes(user.id));
     const toRemove: ISlimUser[] = this.group.users.filter(user => !changedIds.includes(user.id));
+    const toUpdate = this.groupInfo.users.filter((newUser) => this.group.users.some((user) =>(user.id === newUser.id && user.groupRole !== newUser.groupRole)))
     const addedUserPromises = toAdd.map((user) => {
       const addUserDto: IAddUserToGroup = {
         userId: user.id,
@@ -173,15 +168,20 @@ export default class GroupModal extends Vue {
       }
       return axios.post(`/groups/${group.id}/user`, addUserDto);
     });
-
     const removedUserPromises = toRemove.map((user) => {
       const removeUserDto: IRemoveUserFromGroup = {
         userId: user.id
       }
       return axios.delete(`/groups/${group.id}/user`, {data: removeUserDto});
     });
-
-    return Promise.all(addedUserPromises.concat(removedUserPromises))
+    const updateUserPromises = toUpdate.map((user) => {
+      const updateUserGroupRole: IAddUserToGroup = {
+        userId: user.id,
+        groupRole: user.groupRole || 'member'
+      }
+      return axios.put(`/groups/${group.id}/updateUserGroupRole`, updateUserGroupRole);
+    })
+    return Promise.all(addedUserPromises.concat(removedUserPromises, updateUserPromises))
   }
 }
 </script>
