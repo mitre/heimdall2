@@ -24,7 +24,7 @@
     "testRegex": ".spec.ts$",
     "testTimeout": 10000,
     "transform": {
-      "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+      "^.+\\.(t|j)s$": "ts-jest"
     }
   },
   "scripts": {

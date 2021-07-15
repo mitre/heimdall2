@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import {ConversionResult, convertFile} from '../fileparse';
-import {status_counts} from './status_counts';
+import {statusCounts} from './status_counts';
 
 test('Returns proper status counts for sample file in parse_testbed', () => {
   const content = fs.readFileSync(
@@ -9,7 +9,7 @@ test('Returns proper status counts for sample file in parse_testbed', () => {
   );
   const result: ConversionResult = convertFile(content);
   if (result['1_0_ExecJson'] !== undefined) {
-    expect(status_counts.count_exec_1_0(result['1_0_ExecJson'])).toEqual({
+    expect(statusCounts.count_exec_1_0(result['1_0_ExecJson'])).toEqual({
       'From Profile': 0,
       'Not Applicable': 0,
       'Not Reviewed': 6,

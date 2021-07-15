@@ -4,7 +4,7 @@ import {ExecJSON} from '../versions/v_1_0';
 
 type Counts = {[key in ControlStatus]: number};
 
-export const status_counts = {
+export const statusCounts = {
   /** Instantiates a counts objects with all keys set to 0 */
   new_count: (): Counts => {
     return {
@@ -19,7 +19,7 @@ export const status_counts = {
 
   /** Counts all of the statuses in a list of hdf controls */
   count_hdf: (controls: HDFControl[]): Counts => {
-    const result = status_counts.new_count();
+    const result = statusCounts.new_count();
     controls.forEach((c) => {
       result[c.status] += 1;
     });
@@ -56,7 +56,7 @@ export const status_counts = {
       controls.push(...p.controls.map((c) => hdfWrapControl(c)))
     );
     // Filter overlays
-    controls = status_counts.filter_overlays(controls);
-    return status_counts.count_hdf(controls);
+    controls = statusCounts.filter_overlays(controls);
+    return statusCounts.count_hdf(controls);
   }
 };
