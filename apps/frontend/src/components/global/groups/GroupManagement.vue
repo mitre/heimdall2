@@ -54,7 +54,7 @@
           class="ma-1"
           @click="displayMembersDialog(item.users)"
         >
-          {{ `+${item.users.length - 3} total` }}
+          {{ `+${item.users.length - 3} more` }}
         </v-chip>
       </template>
       <template #[`item.actions`]="{item}">
