@@ -8,6 +8,7 @@ import Component from 'vue-class-component';
 import VueShepherd from 'vue-shepherd';
 import {Prop} from 'vue-property-decorator';
 import 'shepherd.js/dist/css/shepherd.css';
+import {ServerModule} from '../../store/server';
 
 Vue.use(VueShepherd);
 

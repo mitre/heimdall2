@@ -4,6 +4,7 @@
     <Tour name="Results" />
     <template #topbar-content>
       <v-text-field
+        id="results-search"
         v-show="showSearchMobile || !$vuetify.breakpoint.xs"
         ref="search"
         v-model="searchTerm"
