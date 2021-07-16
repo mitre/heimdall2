@@ -8,20 +8,16 @@
   "main": "./src/inspecjs.ts",
   "dependencies": {},
   "devDependencies": {
+    "@types/jest": "^26.0.7",
     "@types/node": "^15.0.1",
     "jest": "^27.0.6",
-    "typedoc": "^0.20.35"
+    "ts-jest": "^27.0.3",
+    "typedoc": "^0.21.4"
   },
   "jest": {
-    "moduleFileExtensions": [
-      "vue",
-      "ts",
-      "js",
-      "json"
-    ],
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "rootDir": ".",
     "transform": {
-      "^.+\\.tsx?$": "ts-jest"
+      "^.+\\.ts$": "ts-jest"
     }
   },
   "scripts": {
@@ -29,7 +25,7 @@
     "build": "tsc",
     "docs": "typedoc --out docs ./src",
     "gen-types": "bash scripts/update_schema.sh",
-    "lint": "eslint --ext .ts src --fix",
+    "lint": "eslint --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
     "test": "jest --silent"
   },

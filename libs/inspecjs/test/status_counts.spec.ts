@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import {ConversionResult, convertFile} from '../fileparse';
+import {ConversionResult, convertFile} from '../src/fileparse';
 import {statusCounts} from './status_counts';
 
 test('Returns proper status counts for sample file in parse_testbed', () => {
