@@ -1,20 +1,20 @@
-import { ExecJSON } from 'inspecjs'
-import { version as HeimdallToolsVersion } from '../package.json'
+import {ControlResultStatus, ExecJSON} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
+import {version as HeimdallToolsVersion} from '../package.json'
 import _ from 'lodash'
-import { MappedTransform, LookupPath, BaseConverter, generateHash } from './base-converter'
-import { NiktoNistMapping } from './mappings/NiktoNistMapping'
+import {MappedTransform, LookupPath, BaseConverter, generateHash} from './base-converter'
+import {NiktoNistMapping} from './mappings/NiktoNistMapping'
 import path from 'path'
 
 const NIKTO_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/nikto-nist-mapping.csv')
 const NIKTO_NIST_MAPPING = new NiktoNistMapping(NIKTO_NIST_MAPPING_FILE)
 
-function formatTitle(file: object) {
+function formatTitle(file: unknown) {
   return `Nikto Target: ${projectName(file)}`
 }
-function projectName(file: object) {
+function projectName(file: unknown) {
   return `Host: ${_.get(file, 'host')} Port: ${_.get(file, 'port')}`
 }
-function formatCodeDesc(vulnerability: object) {
+function formatCodeDesc(vulnerability: unknown) {
   return `URL : ${_.get(vulnerability, 'url')} Method: ${_.get(vulnerability, 'method')}`
 }
 function nistTag(id: string) {
@@ -22,11 +22,11 @@ function nistTag(id: string) {
 }
 
 export class NiktoMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
-      target_id: { transformer: projectName }
+      target_id: {transformer: projectName}
     },
     version: HeimdallToolsVersion,
     statistics: {
@@ -36,11 +36,11 @@ export class NiktoMapper extends BaseConverter {
       {
         name: 'Nikto Website Scanner',
         version: '',
-        title: { transformer: formatTitle },
+        title: {transformer: formatTitle},
         maintainer: null,
         summary: {
           path: 'banner',
-          transformer: (input: string) => {
+          transformer: (input: unknown) => {
             return `Banner: ${input}`
           }
         },
@@ -57,21 +57,21 @@ export class NiktoMapper extends BaseConverter {
             path: 'vulnerabilities',
             key: 'id',
             tags: {
-              nist: { path: 'id', transformer: nistTag },
-              ösvdb: { path: 'OSVDB' }
+              nist: {path: 'id', transformer: nistTag},
+              ösvdb: {path: 'OSVDB'}
             },
             descriptions: [],
             refs: [],
             source_location: {},
-            title: { path: 'msg' },
-            id: { path: 'id' },
-            desc: { path: 'msg' },
+            title: {path: 'msg'},
+            id: {path: 'id'},
+            desc: {path: 'msg'},
             impact: 0.5,
             code: '',
             results: [
               {
-                status: ExecJSON.ControlResultStatus.Failed,
-                code_desc: { transformer: formatCodeDesc },
+                status: ControlResultStatus.Failed,
+                code_desc: {transformer: formatCodeDesc},
                 run_time: 0,
                 start_time: ''
               }
@@ -85,7 +85,7 @@ export class NiktoMapper extends BaseConverter {
   constructor(xrayJson: string) {
     super(JSON.parse(xrayJson));
   }
-  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
     super.setMappings(customMappings)
   }
 }

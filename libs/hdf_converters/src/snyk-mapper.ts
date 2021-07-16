@@ -1,8 +1,13 @@
+<<<<<<< HEAD
 import { ExecJSON } from 'inspecjs'
 import { version as HeimdallToolsVersion } from '../package.json'
+=======
+import {ControlResultStatus, ExecJSON} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
+import {version as HeimdallToolsVersion} from '../package.json'
+>>>>>>> 1eb6f954 (Fixed transformation functions to incorporate the new typing of arrayTransform and transform in MappedTransform)
 import _ from 'lodash'
-import { MappedTransform, LookupPath, BaseConverter, generateHash } from './base-converter'
-import { CweNistMapping } from './mappings/CweNistMapping'
+import {MappedTransform, LookupPath, BaseConverter, generateHash} from './base-converter'
+import {CweNistMapping} from './mappings/CweNistMapping'
 import path from 'path'
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -14,12 +19,16 @@ const CWE_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/cwe-nist-mapping.
 const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE)
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5']
 
-function impactMapping(severity: string) {
-  return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
+function impactMapping(severity: unknown) {
+  if (typeof severity === 'string' || typeof severity === 'number') {
+    return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
+  } else {
+    return 0
+  }
 }
-function parseIdentifier(identifiers: string[] | string) {
+function parseIdentifier(identifiers: unknown[] | unknown) {
   let output: string[] = []
-  if (identifiers !== undefined && typeof identifiers !== 'string') {
+  if (identifiers !== undefined && Array.isArray(identifiers)) {
     identifiers.forEach(element => {
       let numbers = element.split('-')
       numbers.shift()
@@ -30,7 +39,7 @@ function parseIdentifier(identifiers: string[] | string) {
     return []
   }
 }
-function nistTag(identifiers: string[]) {
+function nistTag(identifiers: unknown[]) {
   return CWE_NIST_MAPPING.nistFilter(parseIdentifier(identifiers), DEFAULT_NIST_TAG)
 }
 
@@ -70,7 +79,7 @@ export class SnykMapper extends BaseConverter {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
-      target_id: { path: 'projectName' }
+      target_id: {path: 'projectName'}
     },
     version: HeimdallToolsVersion,
     statistics: {
@@ -78,20 +87,24 @@ export class SnykMapper extends BaseConverter {
     },
     profiles: [
       {
-        name: { path: 'policy' },
+        name: {path: 'policy'},
         version: {
-          path: 'policy', transformer: (policy: string) => {
-            return policy.split('version: ')[1].split('\n')[0]
+          path: 'policy', transformer: (policy: unknown) => {
+            if (typeof policy === 'string') {
+              return policy.split('version: ')[1].split('\n')[0]
+            } else {
+              return ''
+            }
           }
         },
         title: {
-          path: 'projectName', transformer: (projectName: string) => {
+          path: 'projectName', transformer: (projectName: unknown) => {
             return `Snyk Project: ${projectName}`
           }
         },
         maintainer: null,
         summary: {
-          path: 'summary', transformer: (summary: string) => {
+          path: 'summary', transformer: (summary: unknown) => {
             return `Snyk Summary: ${summary}`
           }
         },
@@ -108,28 +121,28 @@ export class SnykMapper extends BaseConverter {
             path: 'vulnerabilities',
             key: 'id',
             tags: {
-              nist: { path: 'identifiers.CWE', transformer: nistTag },
-              cweid: { path: 'identifiers.CWE', transformer: parseIdentifier },
-              cveid: { path: 'identifiers.CVE', transformer: parseIdentifier },
-              ghsaid: { path: 'identifiers.GHSA', transformer: parseIdentifier }
+              nist: {path: 'identifiers.CWE', transformer: nistTag},
+              cweid: {path: 'identifiers.CWE', transformer: parseIdentifier},
+              cveid: {path: 'identifiers.CVE', transformer: parseIdentifier},
+              ghsaid: {path: 'identifiers.GHSA', transformer: parseIdentifier}
             },
             descriptions: [],
             refs: [],
             source_location: {},
-            title: { path: 'title' },
-            id: { path: 'id' },
-            desc: { path: 'description' },
-            impact: { path: 'severity', transformer: impactMapping },
+            title: {path: 'title'},
+            id: {path: 'id'},
+            desc: {path: 'description'},
+            impact: {path: 'severity', transformer: impactMapping},
             code: '',
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {
-                  path: 'from', transformer: (input: object) => {
+                  path: 'from', transformer: (input: unknown) => {
                     if (Array.isArray(input)) {
                       return `From : [ ${input.join(' , ')} ]`
                     } else {
-                      return input
+                      return ''
                     }
                   }
                 },

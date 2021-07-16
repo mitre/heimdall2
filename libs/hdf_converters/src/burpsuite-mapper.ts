@@ -1,12 +1,13 @@
 import parser from 'fast-xml-parser'
 import * as htmlparser from 'htmlparser2'
 import {
-  ExecJSON
-} from 'inspecjs'
+  ExecJSON,
+  ControlResultStatus
+} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
 import _ from 'lodash';
-import { version as HeimdallToolsVersion } from '../package.json'
-import { BaseConverter, LookupPath, MappedTransform } from './base-converter'
-import { CweNistMapping } from './mappings/CweNistMapping';
+import {version as HeimdallToolsVersion} from '../package.json'
+import {BaseConverter, LookupPath, MappedTransform} from './base-converter'
+import {CweNistMapping} from './mappings/CweNistMapping';
 import path from 'path'
 
 // Constant
@@ -54,7 +55,7 @@ function parseHtml(input: unknown): string {
       textData.push(text);
     }
   });
-  if(typeof input === 'string') {
+  if (typeof input === 'string') {
     myParser.write(input);
   }
   return textData.join(' ');
@@ -67,7 +68,7 @@ function impactMapping(severity: unknown): number {
   }
 }
 function idToString(id: unknown): string {
-  if(typeof id === 'string' || typeof id === 'number') {
+  if (typeof id === 'string' || typeof id === 'number') {
     return id.toString();
   } else {
     return '';
@@ -94,7 +95,7 @@ function parseXml(xml: string) {
   return parser.parse(xml, options)
 }
 export class BurpSuiteMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -107,7 +108,7 @@ export class BurpSuiteMapper extends BaseConverter {
     profiles: [
       {
         name: 'BurpSuite Pro Scan',
-        version: { path: 'issues.burpVersion' },
+        version: {path: 'issues.burpVersion'},
         title: 'BurpSuite Pro Scan',
         maintainer: null,
         summary: 'BurpSuite Pro Scan',
@@ -123,25 +124,25 @@ export class BurpSuiteMapper extends BaseConverter {
           {
             path: 'issues.issue',
             key: 'id',
-            id: { path: 'type', transformer: idToString },
-            title: { path: 'name' },
-            desc: { path: 'issueBackground', transformer: parseHtml },
-            impact: { path: 'severity', transformer: impactMapping },
+            id: {path: 'type', transformer: idToString},
+            title: {path: 'name'},
+            desc: {path: 'issueBackground', transformer: parseHtml},
+            impact: {path: 'severity', transformer: impactMapping},
             tags: {
-              nist: { path: 'vulnerabilityClassifications', transformer: nistTag },
+              nist: {path: 'vulnerabilityClassifications', transformer: nistTag},
               cweid: {
                 path: 'vulnerabilityClassifications',
                 transformer: formatCweId
               },
-              confidence: { path: 'confidence' }
+              confidence: {path: 'confidence'}
             },
             descriptions: [
               {
-                data: { path: 'issueBackground', transformer: parseHtml },
+                data: {path: 'issueBackground', transformer: parseHtml},
                 label: 'check'
               },
               {
-                data: { path: 'remediationBackground', transformer: parseHtml },
+                data: {path: 'remediationBackground', transformer: parseHtml},
                 label: 'fix'
               }
             ],
@@ -150,10 +151,10 @@ export class BurpSuiteMapper extends BaseConverter {
             code: '',
             results: [
               {
-                status: ExecJSON.ControlResultStatus.Failed,
-                code_desc: { transformer: formatCodeDesc },
+                status: ControlResultStatus.Failed,
+                code_desc: {transformer: formatCodeDesc},
                 run_time: 0,
-                start_time: { path: '$.issues.exportTime' }
+                start_time: {path: '$.issues.exportTime'}
               }
             ]
           }
@@ -165,7 +166,7 @@ export class BurpSuiteMapper extends BaseConverter {
   constructor(burpsXml: string) {
     super(parseXml(burpsXml))
   }
-  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
     super.setMappings(customMappings)
   }
 }

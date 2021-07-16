@@ -1,10 +1,11 @@
-import { ExecJSON } from 'inspecjs';
+import {ExecJSON, ControlResultStatus} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
 import parser from 'fast-xml-parser';
-import { version as HeimdallToolsVersion } from '../package.json';
-import { MappedTransform, LookupPath, BaseConverter, generateHash } from './base-converter';
-import { CweNistMapping } from './mappings/CweNistMapping'
+import {version as HeimdallToolsVersion} from '../package.json';
+import {MappedTransform, LookupPath, BaseConverter, generateHash} from './base-converter';
+import {CweNistMapping} from './mappings/CweNistMapping'
 import path from 'path'
+import {OwaspNistMapping} from './mappings/OwaspNistMapping';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 1.0],
@@ -17,7 +18,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 const CWE_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/cwe-nist-mapping.csv')
 const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE)
 const OWASP_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/owasp-nist-mapping.csv')
-const OWASP_NIST_MAPPING = new CweNistMapping(OWASP_NIST_MAPPING_FILE)
+const OWASP_NIST_MAPPING = new OwaspNistMapping(OWASP_NIST_MAPPING_FILE)
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5']
 
 function parseXml(xml: string) {
@@ -29,52 +30,58 @@ function parseXml(xml: string) {
   return parser.parse(xml, options)
 }
 
-function impactMapping(severity: string) {
-  return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
+function impactMapping(severity: unknown) {
+  if (typeof severity === 'string' || typeof severity === 'number') {
+    return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
+  } else {
+    return 0
+  }
 }
 function nistTag(classification: object) {
-  let result = CWE_NIST_MAPPING.nistFilterNoDefault(_.get(classification, 'cwe')).concat(OWASP_NIST_MAPPING.nistFilterNoDefault(_.get(classification, 'owasp')))
-  if (result.length === 0) {
+  let cwe = CWE_NIST_MAPPING.nistFilterNoDefault(_.get(classification, 'cwe'))
+  let owasp = OWASP_NIST_MAPPING.nistFilterNoDefault(_.get(classification, 'owasp'))
+  let result = cwe.concat(owasp)
+  if (result.length !== 0) {
     return result
   } else {
     return DEFAULT_NIST_TAG
   }
 }
-function formatControlDesc(vulnerability: object) {
+function formatControlDesc(vulnerability: unknown) {
   let text: string[] = []
   if (_.has(vulnerability, 'description')) {
     text.push(_.get(vulnerability, 'description'))
   }
-  if (_.has(vulnerability, 'exploitation-skills')) {
+  if (_.has(vulnerability, 'exploitation-skills') && _.get(vulnerability, 'exploitation-skills') !== '') {
     text.push(`Exploitation-skills: ${_.get(vulnerability, 'exploitation-skills')}`)
   }
-  if (_.has(vulnerability, 'extra-information')) {
-    text.push(`Extra-information: ${_.get(vulnerability, 'extra-information')}`)
+  if (_.has(vulnerability, 'extra-information') && _.get(vulnerability, 'extra-information') !== '') {
+    text.push(`Extra-information: ${JSON.stringify(_.get(vulnerability, 'extra-information')).replace(/:/gi, '=>')}`)
   }
-  if (_.has(vulnerability, 'classification')) {
-    text.push(`Classification: ${_.get(vulnerability, 'classification')}`)
+  if (_.has(vulnerability, 'classification') && _.get(vulnerability, 'classification') !== '') {
+    text.push(`Classification: ${JSON.stringify(_.get(vulnerability, 'classification')).replace(/:/gi, '=>')}`)
   }
-  if (_.has(vulnerability, 'impact')) {
+  if (_.has(vulnerability, 'impact') && _.get(vulnerability, 'impact') !== '') {
     text.push(`Impact: ${_.get(vulnerability, 'impact')}`)
   }
-  if (_.has(vulnerability, 'FirstSeenDate')) {
+  if (_.has(vulnerability, 'FirstSeenDate') && _.get(vulnerability, 'FirstSeenDate') !== '') {
     text.push(`FirstSeenDate: ${_.get(vulnerability, 'FirstSeenDate')}`)
   }
-  if (_.has(vulnerability, 'LastSeenDate')) {
+  if (_.has(vulnerability, 'LastSeenDate') && _.get(vulnerability, 'LastSeenDate') !== '') {
     text.push(`LastSeenDate: ${_.get(vulnerability, 'LastSeenDate')}`)
   }
-  if (_.has(vulnerability, 'certainty')) {
+  if (_.has(vulnerability, 'certainty') && _.get(vulnerability, 'certainty') !== '') {
     text.push(`Certainty: ${_.get(vulnerability, 'certainty')}`)
   }
-  if (_.has(vulnerability, 'type')) {
+  if (_.has(vulnerability, 'type') && _.get(vulnerability, 'type') !== '') {
     text.push(`Type: ${_.get(vulnerability, 'type')}`)
   }
-  if (_.has(vulnerability, 'confirmed')) {
+  if (_.has(vulnerability, 'confirmed') && _.get(vulnerability, 'confirmed') !== '') {
     text.push(`Confirmed: ${_.get(vulnerability, 'confirmed')}`)
   }
   return text.join('<br>')
 }
-function formatCheck(vulnerability: object) {
+function formatCheck(vulnerability: unknown) {
   let text: string[] = []
   if (_.has(vulnerability, 'exploitation-skills')) {
     text.push(`Exploitation-skills: ${_.get(vulnerability, 'exploitation-skills')}`)
@@ -84,7 +91,7 @@ function formatCheck(vulnerability: object) {
   }
   return text.join('<br>')
 }
-function formatFix(vulnerability: object) {
+function formatFix(vulnerability: unknown) {
   let text: string[] = []
   if (_.has(vulnerability, 'remedial-actions')) {
     text.push(`Remedial-actions: ${_.get(vulnerability, 'remedial-actions')}`)
@@ -97,13 +104,13 @@ function formatFix(vulnerability: object) {
   }
   return text.join('<br>')
 }
-function formatCodeDesc(request: object) {
+function formatCodeDesc(request: unknown) {
   let text: string[] = []
   text.push(`http-request : ${_.get(request, 'content')}`)
   text.push(`method : ${_.get(request, 'method')}`)
   return text.join('\n')
 }
-function formatMessage(response: object) {
+function formatMessage(response: unknown) {
   let text: string[] = []
   text.push(`http-response : ${_.get(response, 'content')}`)
   text.push(`duration : ${_.get(response, 'duration')}`)
@@ -111,11 +118,11 @@ function formatMessage(response: object) {
   return text.join('\n')
 }
 export class NetsparkerMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
-      target_id: { path: 'netsparker-enterprise.target.url' }
+      target_id: {path: 'netsparker-enterprise.target.url'}
     },
     version: HeimdallToolsVersion,
     statistics: {
@@ -126,7 +133,7 @@ export class NetsparkerMapper extends BaseConverter {
         name: 'Netsparker Enterprise Scan',
         version: '',
         title: {
-          path: 'netsparker-enterprise.target', transformer: (input: object) => {
+          path: 'netsparker-enterprise.target', transformer: (input: unknown) => {
             return `Netsparker Enterprise Scan ID: ${_.get(input, 'scan-id')} URL: ${_.get(input, 'url')}`
           }
         },
@@ -144,20 +151,20 @@ export class NetsparkerMapper extends BaseConverter {
           {
             path: 'netsparker-enterprise.vulnerabilities.vulnerability',
             key: 'id',
-            id: { path: 'LookupId' },
-            title: { path: 'name' },
-            desc: { transformer: formatControlDesc },
-            impact: { path: 'severity', transformer: impactMapping },
+            id: {path: 'LookupId'},
+            title: {path: 'name'},
+            desc: {transformer: formatControlDesc},
+            impact: {path: 'severity', transformer: impactMapping},
             tags: {
-              nist: { path: 'classification', transformer: nistTag },
+              nist: {path: 'classification', transformer: nistTag},
             },
             descriptions: [
               {
-                data: { transformer: formatCheck },
+                data: {transformer: formatCheck},
                 label: 'check'
               },
               {
-                data: { transformer: formatFix },
+                data: {transformer: formatFix},
                 label: 'fix'
               }
             ],
@@ -167,10 +174,10 @@ export class NetsparkerMapper extends BaseConverter {
             results: [
               {
                 status: ControlResultStatus.Failed,
-                code_desc: { path: 'http-request', transformer: formatCodeDesc },
-                message: { path: 'http-response', transformer: formatMessage },
+                code_desc: {path: 'http-request', transformer: formatCodeDesc},
+                message: {path: 'http-response', transformer: formatMessage},
                 run_time: 0,
-                start_time: { path: '$.netsparker-enterprise.target.initiated' }
+                start_time: {path: '$.netsparker-enterprise.target.initiated'}
               }
             ]
           }
@@ -182,7 +189,7 @@ export class NetsparkerMapper extends BaseConverter {
   constructor(burpsXml: string) {
     super(parseXml(burpsXml))
   }
-  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
     super.setMappings(customMappings)
   }
 }

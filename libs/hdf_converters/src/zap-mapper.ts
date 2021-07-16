@@ -1,8 +1,8 @@
-import { ExecJSON } from 'inspecjs'
-import { version as HeimdallToolsVersion } from '../package.json'
+import {ControlResultStatus, ExecJSON, ExecJSONControl} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
+import {version as HeimdallToolsVersion} from '../package.json'
 import _ from 'lodash'
-import { MappedTransform, LookupPath, BaseConverter, generateHash } from './base-converter'
-import { CweNistMapping } from './mappings/CweNistMapping';
+import {MappedTransform, LookupPath, BaseConverter, generateHash} from './base-converter'
+import {CweNistMapping} from './mappings/CweNistMapping';
 import * as htmlparser from 'htmlparser2';
 import path from 'path'
 
@@ -14,31 +14,41 @@ function filterSite<T>(input: Array<T>, name: string) {
   let match = input.find(element => _.get(element, '@name') === name)
   return match
 }
-function impactMapping(input: string): number {
-  let impact = parseInt(input)
-  if (0 <= impact && impact <= 1) {
-    return 0.3
-  } else if (impact === 2) {
-    return 0.5
-  } else if (impact >= 3) {
-    return 0.7
+function impactMapping(input: unknown): number {
+  if (typeof input === 'string') {
+    let impact = parseInt(input)
+    if (0 <= impact && impact <= 1) {
+      return 0.3
+    } else if (impact === 2) {
+      return 0.5
+    } else if (impact >= 3) {
+      return 0.7
+    } else {
+      return 0
+    }
   } else {
     return 0
   }
 }
-function parseHtml(input: string) {
+function parseHtml(input: unknown) {
   const textData = new Array<string>();
   const myParser = new htmlparser.Parser({
     ontext(text: string) {
       textData.push(text);
     }
   });
-  myParser.write(input);
+  if (typeof input === 'string') {
+    myParser.write(input);
+  }
   return textData.join(' ');
 }
 function nistTag(cweid: string) {
   let result = CWE_NIST_MAPPING.nistFilter([cweid], DEFAULT_NIST_TAG)
-  return result.concat(['Rev_4'])
+  if (result === DEFAULT_NIST_TAG) {
+    return result
+  } else {
+    return result.concat('Rev_4')
+  }
 }
 function checkText(input: object) {
   let text = []
@@ -47,28 +57,32 @@ function checkText(input: object) {
   text.push(_.get(input, 'otherinfo'))
   return text.join('\n')
 }
-function formatCodeDesc(input: object) {
+function formatCodeDesc(input: unknown) {
   let text: string[] = []
-  Object.keys(input).forEach(key => {
-    text.push(`${key.charAt(0).toUpperCase() + key.slice(1)}: ${_.get(input, key)}`)
-  })
+  if (input instanceof Object) {
+    Object.keys(input).forEach(key => {
+      text.push(`${key.charAt(0).toUpperCase() + key.slice(1)}: ${_.get(input, key)}`)
+    })
+  }
   return text.join('\n') + '\n'
 }
-function deduplicateId<T extends object>(input: T[], _file: object): T[] {
-  let controlId = input.map(element => { return _.get(element, 'id') })
+function deduplicateId(input: unknown[], _file: unknown): ExecJSONControl[] {
+  let controlId = input.map(element => {return _.get(element, 'id')})
   let dupId = _(controlId).groupBy().pickBy(value => value.length > 1).keys().value()
   dupId.forEach(id => {
     let index = 1
     input.filter(element => _.get(element, 'id') === id).forEach(element => {
-      _.set(element, 'id', `${id}.${index.toString()}`)
+      if (element instanceof Object) {
+        _.set(element, 'id', `${id}.${index.toString()}`)
+      }
       index++
     })
   })
-  return input
+  return input as ExecJSONControl[]
 }
 
 export class ZapMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -81,15 +95,15 @@ export class ZapMapper extends BaseConverter {
     profiles: [
       {
         name: 'OWASP ZAP Scan',
-        version: { path: '@version' },
+        version: {path: '@version'},
         title: {
-          path: 'site.@host', transformer: (input: string) => {
+          path: 'site.@host', transformer: (input: unknown) => {
             return `OWASP ZAP Scan of Host: ${input}`
           }
         },
         maintainer: null,
         summary: {
-          path: 'site.@host', transformer: (input: string) => {
+          path: 'site.@host', transformer: (input: unknown) => {
             return `OWASP ZAP Scan of Host: ${input}`
           }
         },
@@ -105,18 +119,18 @@ export class ZapMapper extends BaseConverter {
           {
             path: 'site.alerts',
             arrayTransformer: deduplicateId,
-            id: { path: 'pluginid' },
-            title: { path: 'name' },
-            desc: { path: 'desc', transformer: parseHtml },
-            impact: { path: 'riskcode', transformer: impactMapping },
+            id: {path: 'pluginid'},
+            title: {path: 'name'},
+            desc: {path: 'desc', transformer: parseHtml},
+            impact: {path: 'riskcode', transformer: impactMapping},
             tags: {
-              nist: { path: 'cweid', transformer: nistTag },
-              cweid: { path: 'cweid', },
-              wascid: { path: 'wascid', },
-              sourceid: { path: 'sourceid', },
-              confidence: { path: 'confidence', },
-              riskdesc: { path: 'riskdesc', },
-              check: { transformer: checkText }
+              nist: {path: 'cweid', transformer: nistTag},
+              cweid: {path: 'cweid', },
+              wascid: {path: 'wascid', },
+              sourceid: {path: 'sourceid', },
+              confidence: {path: 'confidence', },
+              riskdesc: {path: 'riskdesc', },
+              check: {transformer: checkText}
             },
             descriptions: [],
             refs: [],
@@ -126,9 +140,9 @@ export class ZapMapper extends BaseConverter {
               {
                 path: 'instances',
                 status: ControlResultStatus.Failed,
-                code_desc: { transformer: formatCodeDesc },
+                code_desc: {transformer: formatCodeDesc},
                 run_time: 0,
-                start_time: { path: '$.@generated' }
+                start_time: {path: '$.@generated'}
               }
             ]
           }
@@ -140,7 +154,7 @@ export class ZapMapper extends BaseConverter {
   constructor(zapJson: string, name: string) {
     super(_.set(JSON.parse(zapJson), 'site', filterSite(_.get(JSON.parse(zapJson), 'site'), name)), false);
   }
-  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
     super.setMappings(customMappings)
   }
   toHdf() {

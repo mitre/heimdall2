@@ -1,8 +1,8 @@
-import { ExecJSON } from 'inspecjs'
-import { version as HeimdallToolsVersion } from '../package.json'
+import {ControlResultStatus, ExecJSON} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
+import {version as HeimdallToolsVersion} from '../package.json'
 import _ from 'lodash'
-import { MappedTransform, LookupPath, BaseConverter, generateHash } from './base-converter'
-import { CweNistMapping } from './mappings/CweNistMapping'
+import {MappedTransform, LookupPath, BaseConverter, generateHash} from './base-converter'
+import {CweNistMapping} from './mappings/CweNistMapping'
 import path from 'path';
 
 // Constants
@@ -40,10 +40,14 @@ function formatDesc(vulnerability: unknown): string {
   }
   return text.join('<br>');
 }
-function impactMapping(severity: string | number): number {
-  return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
+function impactMapping(severity: unknown): number {
+  if (typeof severity === 'string' || typeof severity === 'number') {
+    return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
+  } else {
+    return 0
+  }
 }
-function formatCodeDesc(vulnerability: object): string {
+function formatCodeDesc(vulnerability: unknown): string {
   let codeDescArray = new Array<string>();
   let re = /,/gi;
   if (_.has(vulnerability, 'source_comp_id')) {
@@ -102,7 +106,7 @@ function nistTag(identifier: object): Array<string> {
 // Mappings
 
 export class JfrogXrayMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -132,7 +136,7 @@ export class JfrogXrayMapper extends BaseConverter {
             path: 'data',
             key: 'id',
             tags: {
-              nist: { path: 'component_versions.more_details.cves[0].cwe', transformer: nistTag },
+              nist: {path: 'component_versions.more_details.cves[0].cwe', transformer: nistTag},
               cweid: {
                 path: 'component_versions.more_details.cves[0].cwe',
                 transformer: parseIdentifier
@@ -141,18 +145,18 @@ export class JfrogXrayMapper extends BaseConverter {
             descriptions: [],
             refs: [],
             source_location: {},
-            id: { transformer: hashId },
-            title: { path: 'summary' },
+            id: {transformer: hashId},
+            title: {path: 'summary'},
             desc: {
               path: 'component_versions.more_details',
               transformer: formatDesc
             },
-            impact: { path: 'severity', transformer: impactMapping },
+            impact: {path: 'severity', transformer: impactMapping},
             code: '',
             results: [
               {
-                status: ExecJSON.ControlResultStatus.Failed,
-                code_desc: { transformer: formatCodeDesc },
+                status: ControlResultStatus.Failed,
+                code_desc: {transformer: formatCodeDesc},
                 run_time: 0,
                 start_time: ''
               }
@@ -166,7 +170,7 @@ export class JfrogXrayMapper extends BaseConverter {
   constructor(xrayJson: string) {
     super(JSON.parse(xrayJson), true);
   }
-  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
     super.setMappings(customMappings)
   }
 }

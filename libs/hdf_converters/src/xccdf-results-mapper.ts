@@ -1,11 +1,12 @@
 import parser from 'fast-xml-parser';
 import {
-  ExecJSON
-} from 'inspecjs';
+  ExecJSON,
+  ControlResultStatus
+} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
-import { version as HeimdallToolsVersion } from '../package.json';
-import { BaseConverter, LookupPath, MappedTransform } from './base-converter';
-import { CciNistMapping } from './mappings/CciNistMapping';
+import {version as HeimdallToolsVersion} from '../package.json';
+import {BaseConverter, LookupPath, MappedTransform} from './base-converter';
+import {CciNistMapping} from './mappings/CciNistMapping';
 import path from 'path'
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -22,18 +23,22 @@ const DEFAULT_NIST_TAG = ['SA-11', 'RA-5', 'Rev_4']
 
 var counter: string = ''
 
-function impactMapping(severity: string | number): number {
-  return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
-}
-function getStatus(file: object) {
-  let match = _.get(file, 'cdf:rule-result').find((element: object) => _.get(element, 'idref') === counter)
-  if (_.get(match, 'cdf:result') === 'pass') {
-    return 'passed'
+function impactMapping(severity: unknown): number {
+  if (typeof severity === 'string' || typeof severity === 'number') {
+    return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
   } else {
-    return 'failed'
+    return 0
   }
 }
-function extractCci(input: string[]): string[] {
+function getStatus(file: unknown) {
+  let match = _.get(file, 'cdf:rule-result').find((element: object) => _.get(element, 'idref') === counter)
+  if (_.get(match, 'cdf:result') === 'pass') {
+    return ControlResultStatus.Passed
+  } else {
+    return ControlResultStatus.Failed
+  }
+}
+function extractCci(input: unknown[]): string[] {
   let output: string[] = []
   input.forEach(element => {
     if (_.get(element, 'text').match(CCI_REGEX)) {
@@ -42,7 +47,7 @@ function extractCci(input: string[]): string[] {
   })
   return output
 }
-function nistTag(input: string[]): string[] {
+function nistTag(input: unknown[]): string[] {
   let identifiers: string[] = extractCci(input)
   return CCI_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG)
 }
@@ -55,7 +60,7 @@ function parseXml(xml: string) {
   return parser.parse(xml, options);
 }
 export class XCCDFResultsMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -67,13 +72,13 @@ export class XCCDFResultsMapper extends BaseConverter {
     },
     profiles: [
       {
-        name: { path: 'cdf:Benchmark.id' },
-        version: { path: 'cdf:Benchmark.style' },
-        title: { path: 'cdf:Benchmark.cdf:title' },
-        maintainer: { path: 'cdf:Benchmark.cdf:reference.dc:publisher' },
-        summary: { path: 'cdf:Benchmark.cdf:description' },
-        license: { path: 'cdf:Benchmark.cdf:notice.id' },
-        copyright: { path: 'cdf:Benchmark.cdf:metadata.dc:creator' },
+        name: {path: 'cdf:Benchmark.id'},
+        version: {path: 'cdf:Benchmark.style'},
+        title: {path: 'cdf:Benchmark.cdf:title'},
+        maintainer: {path: 'cdf:Benchmark.cdf:reference.dc:publisher'},
+        summary: {path: 'cdf:Benchmark.cdf:description'},
+        license: {path: 'cdf:Benchmark.cdf:notice.id'},
+        copyright: {path: 'cdf:Benchmark.cdf:metadata.dc:creator'},
         copyright_email: 'disa.stig_spt@mail.mil',
         supports: [],
         attributes: [],
@@ -85,22 +90,34 @@ export class XCCDFResultsMapper extends BaseConverter {
             path: 'cdf:Benchmark.cdf:Group',
             key: 'id',
             id: {
-              path: 'cdf:Rule.id', transformer: (input: string) => {
-                counter = input
-                return input.split('_S')[1].split('r')[0]
+              path: 'cdf:Rule.id', transformer: (input: unknown) => {
+                if (typeof input === 'string') {
+                  counter = input
+                  return input.split('_S')[1].split('r')[0]
+                } else {
+                  return ''
+                }
               }
             },
-            title: { path: 'cdf:Rule.cdf:title' },
+            title: {path: 'cdf:Rule.cdf:title'},
             desc: {
-              path: 'cdf:Rule.cdf:description', transformer: (input: string) => {
-                return input.split('Satisfies')[0].replace(/&lt;/gi, '<').replace(/&gt;/gi, '>',)
+              path: 'cdf:Rule.cdf:description', transformer: (input: unknown) => {
+                if (typeof input === 'string') {
+                  return input.split('Satisfies')[0].replace(/&lt;/gi, '<').replace(/&gt;/gi, '>',)
+                } else {
+                  return ''
+                }
               }
             },
             descriptions: [
               {
                 data: {
-                  path: 'cdf:Rule.cdf:description', transformer: (input: string) => {
-                    return input.replace(/&lt;/gi, '<').replace(/&gt;/gi, '>')
+                  path: 'cdf:Rule.cdf:description', transformer: (input: unknown) => {
+                    if (typeof input === 'string') {
+                      return input.replace(/&lt;/gi, '<').replace(/&gt;/gi, '>')
+                    } else {
+                      return ''
+                    }
                   }
                 },
                 label: 'default'
@@ -110,19 +127,19 @@ export class XCCDFResultsMapper extends BaseConverter {
                 label: 'rationale'
               },
               {
-                data: { path: 'cdf:Rule.cdf:check.cdf:check-content-ref.name' },
+                data: {path: 'cdf:Rule.cdf:check.cdf:check-content-ref.name'},
                 label: 'check'
               },
               {
-                data: { path: 'cdf:Rule.cdf:fixtext.text' },
+                data: {path: 'cdf:Rule.cdf:fixtext.text'},
                 label: 'fix'
               }
             ],
-            impact: { path: 'cdf:Rule.severity', transformer: impactMapping },
+            impact: {path: 'cdf:Rule.severity', transformer: impactMapping},
             refs: [],
             tags: {
               severity: null,
-              gtitle: { path: 'cdf:title' },
+              gtitle: {path: 'cdf:title'},
               satisfies: {
                 path: 'cdf:Rule.cdf:description', transformer: (input: string) => {
                   if (input.split('Satisfies: ')[1] !== undefined) {
@@ -137,21 +154,21 @@ export class XCCDFResultsMapper extends BaseConverter {
                   return input.split('_').slice(-2, -1)[0].split('r')[0]
                 }
               },
-              legacy_id: { path: 'cdf:Rule.cdf:ident[2].text' },
-              rid: { path: 'cdf:Rule.cdf:ident[1].text' },
-              stig_id: { path: '$.id' },
-              fix_id: { path: 'cdf:Rule.cdf:fix.id' },
-              cci: { path: 'cdf:Rule.cdf:ident', transformer: extractCci },
-              nist: { path: 'cdf:Rule.cdf:ident', transformer: nistTag }
+              legacy_id: {path: 'cdf:Rule.cdf:ident[2].text'},
+              rid: {path: 'cdf:Rule.cdf:ident[1].text'},
+              stig_id: {path: '$.id'},
+              fix_id: {path: 'cdf:Rule.cdf:fix.id'},
+              cci: {path: 'cdf:Rule.cdf:ident', transformer: extractCci},
+              nist: {path: 'cdf:Rule.cdf:ident', transformer: nistTag}
             },
             code: '',
             source_location: {},
             results: [
               {
-                status: { path: '$.cdf:Benchmark.cdf:TestResult', transformer: getStatus },
+                status: {path: '$.cdf:Benchmark.cdf:TestResult', transformer: getStatus},
                 code_desc: '',
                 run_time: 0,
-                start_time: { path: '$.cdf:Benchmark.cdf:TestResult.start-time' },
+                start_time: {path: '$.cdf:Benchmark.cdf:TestResult.start-time'},
                 message: '',
                 resource: ''
               }

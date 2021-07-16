@@ -1,10 +1,13 @@
 import parser from 'fast-xml-parser'
 import {
+  ControlDescription,
+  ControlResult,
+  ControlResultStatus,
   ExecJSON
-} from 'inspecjs'
+} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
 import _ from 'lodash';
-import { version as HDFConvertersVersion } from '../package.json';
-import { BaseConverter, LookupPath, MappedTransform } from './base-converter'
+import {version as HeimdallToolsVersion} from '../package.json';
+import {BaseConverter, LookupPath, MappedTransform} from './base-converter'
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['high', 0.7],
@@ -41,56 +44,77 @@ function formatSummary(entry: unknown) {
   text.push(`IP Address, Port, Instance : ${_.get(entry, 'IP Address, Port, Instance')} `)
   return text.join('\n')
 }
-function formatDesc(entry: object) {
+function formatDesc(entry: unknown) {
   let text = []
   text.push(`Task : ${_.get(entry, 'Task')}`)
   text.push(`Check Category : ${_.get(entry, 'Check Category')}`)
   return text.join('; ')
 }
-function impactMapping(severity: string | number): number {
-  return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
+function impactMapping(severity: unknown): number {
+  if (typeof severity === 'string' || typeof severity === 'number') {
+    return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
+  } else {
+    return 0
+  }
 }
-function getStatus(input: string): string {
+function getStatus(input: unknown): ControlResultStatus {
   switch (input) {
     case 'Fact':
-      return 'skipped'
+      return ControlResultStatus.Skipped
     case 'Failed':
-      return 'backtrace-failed'
+      return ControlResultStatus.Failed
     case 'Finding':
-      return 'failed'
+      return ControlResultStatus.Failed
     case 'Not A Finding':
-      return 'passed'
+      return ControlResultStatus.Passed
   }
-  return 'skipped'
+  return ControlResultStatus.Skipped
 }
-function handleBacktrace<T extends object>(input: T[], _file: object) {
-  input.forEach(element => {
-    if (_.get(element, 'status').startsWith('backtrace-')) {
-      _.set(element, 'status', _.get(element, 'status').split('backtrace-')[1])
-      _.set(element, 'backtrace', ['DB Protect Failed Check'])
-    }
-  })
-  return input
+function getBacktrace(input: unknown): string {
+  if (input === 'Failed') {
+    return 'DB Protect Failed Check'
+  } else {
+    return ''
+  }
+}
+function handleBacktrace(input: unknown, _file: unknown): ControlResult[] {
+  if (Array.isArray(input)) {
+    input = input.map((element) => {
+      if (_.get(element, 'backtrace')[0] === '') {
+        return _.omit(element, 'backtrace')
+      } else {
+        return element
+      }
+    })
+  }
+  return input as ControlResult[]
+}
+function idToString(id: unknown): string {
+  if (typeof id === 'string' || typeof id === 'number') {
+    return id.toString();
+  } else {
+    return '';
+  }
 }
 
 export class DBProtectMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
-      release: HDFConvertersVersion,
+      release: HeimdallToolsVersion,
       target_id: ''
     },
-    version: HDFConvertersVersion,
+    version: HeimdallToolsVersion,
     statistics: {
       duration: null
     },
     profiles: [
       {
-        name: { path: 'data.[0].Policy' },
+        name: {path: 'data.[0].Policy'},
         version: '',
-        title: { path: 'data.[0].Job Name' },
+        title: {path: 'data.[0].Job Name'},
         maintainer: null,
-        summary: { path: 'data.[0]', transformer: formatSummary },
+        summary: {path: 'data.[0]', transformer: formatSummary},
         license: null,
         copyright: null,
         copyright_email: null,
@@ -103,10 +127,10 @@ export class DBProtectMapper extends BaseConverter {
           {
             path: 'data',
             key: 'id',
-            id: { path: 'Check ID', transformer: (input: number) => { return input.toString() } },
-            title: { path: 'Check' },
-            desc: { transformer: formatDesc },
-            impact: { path: 'Risk DV', transformer: impactMapping },
+            id: {path: 'Check ID', transformer: idToString},
+            title: {path: 'Check'},
+            desc: {transformer: formatDesc},
+            impact: {path: 'Risk DV', transformer: impactMapping},
             tags: {},
             descriptions: [],
             refs: [],
@@ -115,10 +139,11 @@ export class DBProtectMapper extends BaseConverter {
             results: [
               {
                 arrayTransformer: handleBacktrace,
-                status: { path: 'Result Status', transformer: getStatus },
-                code_desc: { path: 'Details' },
+                status: {path: 'Result Status', transformer: getStatus},
+                code_desc: {path: 'Details'},
                 run_time: 0,
-                start_time: { path: 'Date' },
+                start_time: {path: 'Date'},
+                backtrace: [{path: 'Result Status', transformer: getBacktrace}]
               }
             ]
           }
@@ -130,7 +155,7 @@ export class DBProtectMapper extends BaseConverter {
   constructor(dbProtectXml: string) {
     super(compileFindings(parseXml(dbProtectXml)))
   }
-  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
     super.setMappings(customMappings)
   }
 }

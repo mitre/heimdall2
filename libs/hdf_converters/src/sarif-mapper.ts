@@ -1,8 +1,8 @@
-import { ExecJSON } from 'inspecjs';
+import {ControlResultStatus, ExecJSON} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
-import { version as HeimdallToolsVersion } from '../package.json';
-import { MappedTransform, LookupPath, BaseConverter } from './base-converter'
-import { CweNistMapping } from './mappings/CweNistMapping'
+import {version as HeimdallToolsVersion} from '../package.json';
+import {MappedTransform, LookupPath, BaseConverter} from './base-converter'
+import {CweNistMapping} from './mappings/CweNistMapping'
 import path from 'path'
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -22,10 +22,14 @@ function extractCwe(text: string): string[] {
   }
   return output
 }
-function impactMapping(severity: string | number): number {
-  return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0.1
+function impactMapping(severity: unknown): number {
+  if (typeof severity === 'string' || typeof severity === 'number') {
+    return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0.1
+  } else {
+    return 0.1
+  }
 }
-function formatCodeDesc(input: object): string {
+function formatCodeDesc(input: unknown): string {
   let output = []
   output.push(`URL : ${_.get(input, 'artifactLocation.uri')}`)
   output.push(`LINE : ${_.get(input, 'region.startLine')}`)
@@ -39,7 +43,7 @@ function nistTag(text: string): string[] {
 }
 
 export class SarifMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -53,7 +57,7 @@ export class SarifMapper extends BaseConverter {
       {
         path: 'runs',
         name: 'SARIF',
-        version: { path: '$.version' },
+        version: {path: '$.version'},
         title: 'Static Analysis Results Interchange Format',
         maintainer: null,
         summary: '',
@@ -74,30 +78,38 @@ export class SarifMapper extends BaseConverter {
                 path: 'message.text',
                 transformer: extractCwe
               },
-              nist: { path: 'message.text', transformer: nistTag }
+              nist: {path: 'message.text', transformer: nistTag}
             },
             descriptions: [],
             refs: [],
             source_location: {
-              ref: { path: 'locations[0].physicalLocation.artifactLocation.uri' },
-              line: { path: 'locations[0].physicalLocation.region.startLine' }
+              ref: {path: 'locations[0].physicalLocation.artifactLocation.uri'},
+              line: {path: 'locations[0].physicalLocation.region.startLine'}
             },
             title: {
-              path: 'message.text', transformer: (text: string) => {
-                return text.split(': ')[0]
+              path: 'message.text', transformer: (text: unknown) => {
+                if (typeof text === 'string') {
+                  return text.split(': ')[0]
+                } else {
+                  return ''
+                }
               }
             },
-            id: { path: 'ruleId' },
+            id: {path: 'ruleId'},
             desc: {
-              path: 'message.text', transformer: (text: string) => {
-                return text.split(': ')[1]
+              path: 'message.text', transformer: (text: unknown) => {
+                if (typeof text === 'string') {
+                  return text.split(': ')[1]
+                } else {
+                  return ''
+                }
               }
             },
-            impact: { path: 'level', transformer: impactMapping },
+            impact: {path: 'level', transformer: impactMapping},
             code: '',
             results: [
               {
-                status: ExecJSON.ControlResultStatus.Failed,
+                status: ControlResultStatus.Failed,
                 code_desc: {
                   path: 'locations[0].physicalLocation',
                   transformer: formatCodeDesc
@@ -115,7 +127,7 @@ export class SarifMapper extends BaseConverter {
   constructor(sarifJson: string) {
     super(JSON.parse(sarifJson));
   }
-  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
     super.setMappings(customMappings)
   }
 }

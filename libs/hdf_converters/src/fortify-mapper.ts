@@ -1,10 +1,9 @@
 import parser from 'fast-xml-parser';
-import {
-  ExecJSON,
-} from 'inspecjs';
+import * as htmlparser from 'htmlparser2';
+import {ControlResult, ExecJSONControl, ControlResultStatus, ExecJSON} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
-import { version as HeimdallToolsVersion } from '../package.json';
-import { BaseConverter, LookupPath, MappedTransform } from './base-converter'
+import {version as HeimdallToolsVersion} from '../package.json';
+import {BaseConverter, LookupPath, MappedTransform} from './base-converter'
 
 const NIST_REFERENCE_NAME = 'Standards Mapping - NIST Special Publication 800-53 Revision 4'
 const DEFAULT_NIST_TAG = ['unmapped', 'Rev_4']
@@ -19,21 +18,25 @@ function parseXml(xml: string) {
 }
 function impactMapping(input: object, id: string) {
   if (Array.isArray(input)) {
-    let matches = input.find((element) => { return _.get(element, 'ClassInfo.ClassID') === id })
+    let matches = input.find((element) => {return _.get(element, 'ClassInfo.ClassID') === id})
     return parseFloat(_.get(matches, 'ClassInfo.DefaultSeverity')) / 5
   } else {
     return parseFloat(_.get(input, 'ClassInfo.DefaultSeverity')) / 5
   }
 }
 function replaceBrackets(input: unknown) {
-  return input.replace(/&lt;/gi, '<').replace(/&gt;/gi, '>',)
+  if (typeof input === 'string') {
+    return input.replace(/&lt;/gi, '<').replace(/&gt;/gi, '>',)
+  } else {
+    return ''
+  }
 }
 function nistTag(rule: object) {
   let references = _.get(rule, 'References.Reference')
   if (!Array.isArray(references)) {
     references = [references]
   }
-  let tag = references.find((element: object) => { return _.get(element, 'Author') === NIST_REFERENCE_NAME })
+  let tag = references.find((element: object) => {return _.get(element, 'Author') === NIST_REFERENCE_NAME})
   if (tag === null || tag === undefined) {
     return DEFAULT_NIST_TAG
   } else {
@@ -41,7 +44,7 @@ function nistTag(rule: object) {
   }
 }
 
-function processEntry(input: object) {
+function processEntry(input: unknown) {
   let output = []
   output.push(`${_.get(input, 'id')}<=SNIPPET`)
   output.push(`\nPath: ${_.get(input, 'File')}\n`)
@@ -51,46 +54,50 @@ function processEntry(input: object) {
 
   return output.join("")
 }
-function filterVuln(input: unknown[], file: object): ExecJSON.Control[] {
+function filterVuln(input: unknown[], file: unknown): ExecJSONControl[] {
   input.forEach(element => {
-    _.set(element, 'results', _.get(element, 'results').filter((result: ExecJSON.ControlResult) => {
-      const code_desc = _.get(result, 'code_desc').split('<=SNIPPET')
-      const snippetid = code_desc[0]
-      const classid = _.get(element, 'id')
-      _.set(result, 'code_desc', code_desc[1])
+    if (element instanceof Object) {
+      _.set(element, 'results', _.get(element, 'results').filter((result: ControlResult) => {
+        const code_desc = _.get(result, 'code_desc').split('<=SNIPPET')
+        const snippetid = code_desc[0]
+        const classid = _.get(element, 'id')
+        _.set(result, 'code_desc', code_desc[1])
 
-      let isMatch = false
-      let matches = _.get(file, 'FVDL.Vulnerabilities.Vulnerability').filter((element: object) => { return _.get(element, 'ClassInfo.ClassID') === classid })
-      matches.forEach((match: object) => {
-        let traces = _.get(match, 'AnalysisInfo.Unified.Trace')
-        if (!Array.isArray(traces)) {
-          traces = [traces]
-        }
-        traces.forEach((trace: object) => {
-          let entries = _.get(trace, 'Primary.Entry')
-          if (!Array.isArray(entries)) {
-            entries = [entries]
+        let isMatch = false
+        let matches = _.get(file, 'FVDL.Vulnerabilities.Vulnerability').filter((element: object) => {return _.get(element, 'ClassInfo.ClassID') === classid})
+        matches.forEach((match: object) => {
+          let traces = _.get(match, 'AnalysisInfo.Unified.Trace')
+          if (!Array.isArray(traces)) {
+            traces = [traces]
           }
-          entries = entries.filter((entry: object) => {
-            return _.has(entry, 'Node.SourceLocation.snippet')
-          })
-          entries.forEach((entry: object) => {
-            if (_.get(entry, 'Node.SourceLocation.snippet') === snippetid) {
-              isMatch = true
+          traces.forEach((trace: object) => {
+            let entries = _.get(trace, 'Primary.Entry')
+            if (!Array.isArray(entries)) {
+              entries = [entries]
             }
+            entries = entries.filter((entry: object) => {
+              return _.has(entry, 'Node.SourceLocation.snippet')
+            })
+            entries.forEach((entry: object) => {
+              if (_.get(entry, 'Node.SourceLocation.snippet') === snippetid) {
+                isMatch = true
+              }
+            })
           })
         })
-      })
-      return isMatch
-    }))
-    _.set(element, 'impact', impactMapping(_.get(element, 'impact'), _.get(element, 'id')))
+        return isMatch
+      }))
+      _.set(element, 'impact', impactMapping(_.get(element, 'impact'), _.get(element, 'id')))
+    } else {
+      return element
+    }
   })
-  return input
+  return input as ExecJSONControl[]
 }
 
 export class FortifyMapper extends BaseConverter {
   startTime: string
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -103,11 +110,11 @@ export class FortifyMapper extends BaseConverter {
     profiles: [
       {
         name: 'Fortify Static Analyzer Scan',
-        version: { path: 'FVDL.EngineData.EngineVersion' },
+        version: {path: 'FVDL.EngineData.EngineVersion'},
         title: 'Fortify Static Analyzer Scan',
         maintainer: null,
         summary: {
-          path: 'FVDL.UUID', transformer: (uuid: string) => {
+          path: 'FVDL.UUID', transformer: (uuid: unknown) => {
             return `Fortify Static Analyzer Scan of UUID: ${uuid}`
           }
         },
@@ -124,12 +131,12 @@ export class FortifyMapper extends BaseConverter {
             arrayTransformer: filterVuln,
             path: 'FVDL.Description',
             key: 'id',
-            id: { path: 'classID' },
-            title: { path: 'Abstract', transformer: replaceBrackets },
-            desc: { path: 'Explanation', transformer: replaceBrackets },
-            impact: { path: '$.FVDL.Vulnerabilities.Vulnerability' },
+            id: {path: 'classID'},
+            title: {path: 'Abstract', transformer: replaceBrackets},
+            desc: {path: 'Explanation', transformer: replaceBrackets},
+            impact: {path: '$.FVDL.Vulnerabilities.Vulnerability'},
             tags: {
-              nist: { transformer: nistTag },
+              nist: {transformer: nistTag},
             },
             descriptions: [],
             refs: [],
@@ -139,10 +146,10 @@ export class FortifyMapper extends BaseConverter {
               {
                 path: '$.FVDL.Snippets.Snippet',
                 status: ControlResultStatus.Failed,
-                code_desc: { transformer: processEntry },
+                code_desc: {transformer: processEntry},
                 run_time: 0,
                 start_time: {
-                  path: '$.FVDL.CreatedTS', transformer: (input: object) => {
+                  path: '$.FVDL.CreatedTS', transformer: (input: unknown) => {
                     return _.get(input, 'date') + ' ' + _.get(input, 'time')
                   }
                 },
@@ -158,7 +165,7 @@ export class FortifyMapper extends BaseConverter {
     super(parseXml(fvdl))
     this.startTime = _.get(this.data, 'FVDL.CreatedTS.date') + ' ' + _.get(this.data, 'FVDL.CreatedTS.time')
   }
-  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
     super.setMappings(customMappings)
   }
 }
