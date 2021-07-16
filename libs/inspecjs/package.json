@@ -22,7 +22,7 @@
   },
   "scripts": {
     "prebuild": "rimraf ./dist",
-    "build": "tsc",
+    "build": "tsc -p ./tsconfig.build.json",
     "docs": "typedoc --out docs ./src",
     "gen-types": "bash scripts/update_schema.sh",
     "lint": "eslint --fix",
