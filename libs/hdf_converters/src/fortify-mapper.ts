@@ -1,6 +1,6 @@
 import parser from 'fast-xml-parser';
 import * as htmlparser from 'htmlparser2';
-import { ControlResult } from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+import { ControlResult, ExecJSONControl } from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
 import {
   ControlDescription,
   ControlResultStatus,
@@ -29,7 +29,7 @@ function impactMapping(input: object, id: string) {
     return parseFloat(_.get(input, 'ClassInfo.DefaultSeverity')) / 5
   }
 }
-function replaceBrackets(input: string) {
+function replaceBrackets(input: unknown) {
   return input.replace(/&lt;/gi, '<').replace(/&gt;/gi, '>',)
 }
 function nistTag(rule: object) {
@@ -55,7 +55,7 @@ function processEntry(input: object) {
 
   return output.join("")
 }
-function filterVuln<T extends object>(input: T[], file: object): T[] {
+function filterVuln(input: unknown[], file: object): ExecJSONControl[] {
   input.forEach(element => {
     _.set(element, 'results', _.get(element, 'results').filter((result: ControlResult) => {
       const code_desc = _.get(result, 'code_desc').split('<=SNIPPET')

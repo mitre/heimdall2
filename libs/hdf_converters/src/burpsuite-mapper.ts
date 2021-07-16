@@ -24,7 +24,7 @@ const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE)
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5']
 
 // Transformation Functions
-function formatCodeDesc(issue: object): string {
+function formatCodeDesc(issue: unknown): string {
   //TODO: Ask if we can put "NOT_PROVIDED" instead of leaving fields blank
   const text = [];
   if (_.has(issue, 'host.ip') && _.has(issue, 'host.text')) {
@@ -49,21 +49,31 @@ function formatCodeDesc(issue: object): string {
   }
   return text.join('\n') + '\n';
 }
-function parseHtml(input: string) {
+function parseHtml(input: unknown): string {
   const textData = new Array<string>();
   const myParser = new htmlparser.Parser({
     ontext(text: string) {
       textData.push(text);
     }
   });
-  myParser.write(input);
+  if(typeof input === 'string') {
+    myParser.write(input);
+  }
   return textData.join(' ');
 }
-function impactMapping(severity: string | number): number {
-  return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
+function impactMapping(severity: unknown): number {
+  if (typeof severity === 'string' || typeof severity === 'number') {
+    return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
+  } else {
+    return 0
+  }
 }
-function idToString(id: number): string {
-  return id.toString();
+function idToString(id: unknown): string {
+  if(typeof id === 'string' || typeof id === 'number') {
+    return id.toString();
+  } else {
+    return '';
+  }
 }
 function formatCweId(input: string) {
   return parseHtml(input).slice(2, -2).trimLeft();

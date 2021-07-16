@@ -34,7 +34,7 @@ function compileFindings(input: object) {
   })
   return Object.fromEntries([['data', findings]])
 }
-function formatSummary(entry: object) {
+function formatSummary(entry: unknown) {
   let text = []
   text.push(`Organization : ${_.get(entry, 'Organization')}`)
   text.push(`Asset : ${_.get(entry, 'Check Asset')}`)
