@@ -1,13 +1,13 @@
 import parser from 'fast-xml-parser';
 import {
   ExecJSON,
-  ControlResultStatus
-} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {MappedTransform, LookupPath, BaseConverter, generateHash} from './base-converter'
 import {NessusPluginsNistMapping} from './mappings/NessusPluginsNistMapping'
 import path from 'path'
+import {CciNistMapping} from './mappings/CciNistMapping';
 
 // Constants
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -24,6 +24,8 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 const NA_PLUGIN_OUTPUT = 'This Nessus Plugin does not provide output message.'
 const NESSUS_PLUGINS_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/nessus-plugins-nist-mapping.csv')
 const NESSUS_PLUGINS_NIST_MAPPING = new NessusPluginsNistMapping(NESSUS_PLUGINS_NIST_MAPPING_FILE)
+const CCI_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/U_CCI_List.xml')
+const CCI_NIST_MAPPING = new CciNistMapping(CCI_NIST_MAPPING_FILE)
 const DEFAULT_NIST_TAG = ['unmapped']
 
 function parseXml(xml: string) {
@@ -45,6 +47,28 @@ function getPolicyName(_input: unknown) {
 function getVersion(_input: unknown) {
   return version
 }
+
+function getId(item: unknown): string {
+  if (_.has(item, 'compliance-reference')) {
+    return parseRef(_.get(item, 'compliance-reference'), 'Vuln-ID')[0]
+  } else {
+    return _.get(item, 'pluginID')
+  }
+}
+function getTitle(item: unknown): string {
+  if (_.has(item, 'compliance-check-name')) {
+    return _.get(item, 'compliance-check-name')
+  } else {
+    return _.get(item, 'pluginName')
+  }
+}
+function getDesc(item: unknown): string {
+  if (_.has(item, 'compliance-info')) {
+    return _.get(item, 'compliance-info')
+  } else {
+    return formatDesc(item)
+  }
+}
 function formatDesc(issue: unknown) {
   let desc = []
   desc.push(`Plugin Family: ${_.get(issue, 'pluginFamily')}`)
@@ -52,16 +76,68 @@ function formatDesc(issue: unknown) {
   desc.push(`Protocol: ${_.get(issue, 'protocol')}`)
   return desc.join('; ') + ';'
 }
-function nistTag(item: unknown) {
+function pluginNistTag(item: unknown) {
   let family = _.get(item, 'pluginFamily')
   let id = _.get(item, 'pluginID')
   return NESSUS_PLUGINS_NIST_MAPPING.nistFilter(family, id, DEFAULT_NIST_TAG)
+}
+function cciNistTag(input: string): string[] {
+  let identifiers: string[] = parseRef(input, 'CCI')
+  return CCI_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG)
+}
+
+function parseRef(input: string, key: string): string[] {
+  let matches = input.split(', ').filter(element => element.startsWith(key))
+  matches = matches.map(element => element.split('|')[1])
+  return matches
+}
+function getImpact(item: unknown): number {
+  if (_.has(item, 'compliance-reference')) {
+    return impactMapping(parseRef(_.get(item, 'compliance-reference'), 'CAT').join(''))
+  } else {
+    return impactMapping(_.get(item, 'severity'))
+  }
+}
+function getCheck(item: unknown) {
+  if (_.has(item, 'compliance-solution')) {
+    return _.get(item, 'compliance-solution')
+  } else {
+    return ''
+  }
 }
 function impactMapping(severity: unknown) {
   if (typeof severity === 'string' || typeof severity === 'number') {
     return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
   } else {
     return 0
+  }
+}
+function getNist(item: unknown): string[] {
+  if (_.has(item, 'compliance-reference')) {
+    return cciNistTag(_.get(item, 'compliance-reference'))
+  } else {
+    return pluginNistTag(item)
+  }
+}
+function getCci(item: unknown): string[] {
+  if (_.has(item, 'compliance-reference')) {
+    return parseRef(_.get(item, 'compliance-reference'), 'CCI')
+  } else {
+    return []
+  }
+}
+function getRid(item: unknown): string {
+  if (_.has(item, 'compliance-reference')) {
+    return parseRef(_.get(item, 'compliance-reference'), 'Rule-ID').join(',')
+  } else {
+    return _.get(item, 'pluginID')
+  }
+}
+function getStig(item: unknown): string {
+  if (_.has(item, 'compliance-reference')) {
+    return parseRef(_.get(item, 'compliance-reference'), 'STIG-ID').join(',')
+  } else {
+    return ''
   }
 }
 function getStatus(item: unknown) {
@@ -89,7 +165,28 @@ function getStartTime(tag: unknown) {
     return _.get(tag, 'text')
   }
 }
-
+function cleanData(control: unknown[]): ExecJSONControl[] {
+  let filteredControl = control as ExecJSONControl[]
+  filteredControl.forEach(element => {
+    if (element instanceof Object) {
+      if (_.get(element.tags, 'cci').length === 0) {
+        element.tags = _.omit(element.tags, 'cci')
+      }
+      if (_.get(element.tags, 'rid') === '') {
+        element.tags = _.omit(element.tags, 'rid')
+      }
+      if (_.get(element.tags, 'stig_id') === '') {
+        element.tags = _.omit(element.tags, 'stig_id')
+      }
+      if (element.descriptions !== undefined && element.descriptions !== null) {
+        if (_.get(element.descriptions[0], 'data') === '') {
+          element.descriptions = []
+        }
+      }
+    }
+  })
+  return filteredControl
+}
 export class NessusResults {
   data: object
   customMapping?: MappedTransform<ExecJSON, LookupPath>
@@ -151,19 +248,25 @@ export class NessusMapper extends BaseConverter {
         status: 'loaded',
         controls: [
           {
+            arrayTransformer: cleanData,
             path: 'ReportItem',
             key: 'id',
             tags: {
-              nist: {transformer: nistTag},
-              rid: {path: 'pluginID'}
+              nist: {transformer: getNist},
+              cci: {transformer: getCci},
+              rid: {transformer: getRid},
+              stig_id: {transformer: getStig}
             },
-            descriptions: [],
+            descriptions: [{
+              data: {transformer: getCheck},
+              label: 'check'
+            }],
             refs: [],
             source_location: {},
-            id: {path: 'pluginID'},
-            title: {path: 'pluginName'},
-            desc: {transformer: formatDesc},
-            impact: {path: 'severity', transformer: impactMapping},
+            id: {transformer: getId},
+            title: {transformer: getTitle},
+            desc: {transformer: getDesc},
+            impact: {transformer: getImpact},
             code: '',
             results: [
               {

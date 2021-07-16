@@ -1,9 +1,5 @@
 import fs from 'fs';
-<<<<<<< HEAD
-import { ExecJSON } from 'inspecjs'
-=======
-import {ExecJSON} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
->>>>>>> 1eb6f954 (Fixed transformation functions to incorporate the new typing of arrayTransform and transform in MappedTransform)
+import {ExecJSON} from 'inspecjs'
 import _ from 'lodash';
 import {BurpSuiteMapper} from './burpsuite-mapper';
 import {DBProtectMapper} from './dbprotect-mapper';
@@ -39,16 +35,16 @@ import {ZapMapper} from './zap-mapper';
 // fs.writeFileSync('libs/hdf_converters/outputs/jfrog.json', JSON.stringify(mapper.toHdf()))
 
 // Nessus Test
-// var mapper = new NessusResults(fs.readFileSync('/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/nessus_mapper/sample_input_report/nessus_sample.nessus', {encoding: 'utf-8'}))
-// // fs.writeFileSync('libs/hdf_converters/converted_jsons/nessusJson.json', JSON.stringify(mapper.data))
-// let result = mapper.toHdf()
-// if (Array.isArray(result)) {
-//   result.forEach(element => {
-//     fs.writeFileSync(`libs/hdf_converters/outputs/nessus-${_.get(element, 'platform.target_id')}.json`, JSON.stringify(element))
-//   })
-// } else {
-//   fs.writeFileSync('libs/hdf_converters/outputs/nessus.json', JSON.stringify(result))
-// }
+var mapper = new NessusResults(fs.readFileSync('/Users/rlin/Desktop/Samples/sensitive_nessus_samples_using_v1.3.48/sensitive_268009_vuln.nessus', {encoding: 'utf-8'}))
+// fs.writeFileSync('libs/hdf_converters/converted_jsons/nessusJson.json', JSON.stringify(mapper.data))
+let result = mapper.toHdf()
+if (Array.isArray(result)) {
+  result.forEach(element => {
+    fs.writeFileSync(`libs/hdf_converters/outputs/nessus-${_.get(element, 'platform.target_id')}.json`, JSON.stringify(element))
+  })
+} else {
+  fs.writeFileSync('libs/hdf_converters/outputs/nessus.json', JSON.stringify(result))
+}
 
 // Netsparker Test - Complete!
 // var mapper = new NetsparkerMapper(fs.readFileSync('/Users/rlin/Desktop/Samples/scan-report-www.example.com-vulnerabilities-01_10_2020_11_23_AM.xml', {encoding: 'utf-8'}))
@@ -84,13 +80,5 @@ import {ZapMapper} from './zap-mapper';
 // fs.writeFileSync('libs/hdf_converters/outputs/xccdf.json', JSON.stringify(mapper.toHdf()));
 
 // ZapMapper Test - Complete!
-<<<<<<< HEAD
 // var mapper = new ZapMapper(fs.readFileSync('/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/zap_mapper/sample_input_jsons/webgoat.json', { encoding: 'utf-8' }), 'http://mymac.com:8191')
 // fs.writeFileSync('libs/hdf_converters/outputs/zapmapper.json', JSON.stringify(mapper.toHdf()))
-=======
-var mapper = new ZapMapper(fs.readFileSync('/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/zap_mapper/sample_input_jsons/webgoat.json', {encoding: 'utf-8'}), 'http://mymac.com:8191')
-fs.writeFileSync('libs/hdf_converters/outputs/zapmapper.json', JSON.stringify(mapper.toHdf()))
-
-
-
->>>>>>> 1eb6f954 (Fixed transformation functions to incorporate the new typing of arrayTransform and transform in MappedTransform)
