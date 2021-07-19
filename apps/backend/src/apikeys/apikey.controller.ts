@@ -15,7 +15,6 @@ import {AuthnService} from '../authn/authn.service';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
-import {ApiKeysAllowedInterceptor} from '../interceptors/api-keys-allowed-interceptor';
 import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
 import {ApiKeyService} from './apikey.service';
@@ -24,7 +23,7 @@ import {CreateApiKeyDto} from './dto/create-apikey.dto';
 import {DeleteAPIKeyDto} from './dto/delete-apikey.dto';
 import {UpdateAPIKeyDto} from './dto/update-apikey.dto';
 
-@UseInterceptors(LoggingInterceptor, ApiKeysAllowedInterceptor)
+@UseInterceptors(LoggingInterceptor)
 @Controller('apikeys')
 export class ApiKeyController {
   constructor(

@@ -29,10 +29,8 @@ export class ApiKeyService {
     user: User,
     createApiKeyDto: CreateApiKeyDto
   ): Promise<{id: string; name: string; apiKey: string}> {
-    const JWTSecret = this.configService.get('JWT_SECRET');
-    const apiKeysAllowed =
-      this.configService.get('API_KEYS_DISABLED')?.toLowerCase() !== 'true';
-    if (apiKeysAllowed && JWTSecret) {
+    const APIKeySecret = this.configService.get('API_KEY_SECRET');
+    if (APIKeySecret) {
       const newApiKey = new ApiKey({
         userId: user.id,
         name: createApiKeyDto.name
@@ -40,7 +38,7 @@ export class ApiKeyService {
       await newApiKey.save();
       const newJWT = jwt.sign(
         {keyId: newApiKey.id, createdAt: new Date()},
-        JWTSecret
+        APIKeySecret
       );
       // Since BCrypt has a 72 byte limit only hash the JWT signature
       const JWTSignature = newJWT.split('.')[2];
@@ -48,7 +46,9 @@ export class ApiKeyService {
       newApiKey.save();
       return {id: newApiKey.id, name: newApiKey.name, apiKey: newJWT};
     } else {
-      throw new ForbiddenException('API Keys have been disabled');
+      throw new ForbiddenException(
+        'API Keys have been disabled as the API-Key secret is not set'
+      );
     }
   }
 
@@ -56,30 +56,56 @@ export class ApiKeyService {
     id: string,
     updateAPIKeyDto: UpdateAPIKeyDto
   ): Promise<APIKeyDto> {
-    const apiKey = await this.findById(id);
-    apiKey.name = updateAPIKeyDto.name;
-    return new APIKeyDto(await apiKey.save());
+    if (this.configService.get('API_KEY_SECRET')) {
+      const apiKey = await this.findById(id);
+      apiKey.name = updateAPIKeyDto.name;
+      return new APIKeyDto(await apiKey.save());
+    } else {
+      throw new ForbiddenException(
+        'API Keys have been disabled as the API-Key secret is not set'
+      );
+    }
   }
 
   async remove(id: string): Promise<APIKeyDto> {
-    const apiKeyToDestroy = await this.findById(id);
-    await apiKeyToDestroy.destroy();
-    return new APIKeyDto(apiKeyToDestroy);
+    if (this.configService.get('API_KEY_SECRET')) {
+      const apiKeyToDestroy = await this.findById(id);
+      await apiKeyToDestroy.destroy();
+      return new APIKeyDto(apiKeyToDestroy);
+    } else {
+      throw new ForbiddenException(
+        'API Keys have been disabled as the API-Key secret is not set'
+      );
+    }
   }
 
   async findById(id: string): Promise<ApiKey> {
-    const apiKey = await this.apiKeyModel.findByPk<ApiKey>(id, {
-      include: [User]
-    });
-    if (apiKey === null) {
-      throw new NotFoundException('API key with given id not found');
+    if (this.configService.get('API_KEY_SECRET')) {
+      const apiKey = await this.apiKeyModel.findByPk<ApiKey>(id, {
+        include: [User]
+      });
+      if (apiKey === null) {
+        throw new NotFoundException('API key with given id not found');
+      } else {
+        return apiKey;
+      }
     } else {
-      return apiKey;
+      throw new ForbiddenException(
+        'API Keys have been disabled as the API-Key secret is not set'
+      );
     }
   }
 
   async findAllForUser(user: User): Promise<APIKeyDto[]> {
-    const apiKeys = await this.apiKeyModel.findAll({where: {userId: user.id}});
-    return apiKeys.map((key) => new APIKeyDto(key));
+    if (this.configService.get('API_KEY_SECRET')) {
+      const apiKeys = await this.apiKeyModel.findAll({
+        where: {userId: user.id}
+      });
+      return apiKeys.map((key) => new APIKeyDto(key));
+    } else {
+      throw new ForbiddenException(
+        'API Keys have been disabled as the API-Key secret is not set'
+      );
+    }
   }
 }

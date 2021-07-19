@@ -42,12 +42,10 @@ export class AuthnService {
   }
 
   async validateApiKey(apikey: string): Promise<User | null> {
-    const JWTSecret = this.configService.get('JWT_SECRET');
-    const apiKeysAllowed =
-      this.configService.get('API_KEYS_DISABLED')?.toLowerCase() !== 'true';
-    if (apiKeysAllowed && JWTSecret) {
+    const APIKeySecret = this.configService.get('API_KEY_SECRET');
+    if (APIKeySecret) {
       try {
-        const jwtPayload = jwt.verify(apikey, JWTSecret) as {
+        const jwtPayload = jwt.verify(apikey, APIKeySecret) as {
           token: string;
           keyId: string;
           createdAt: Date;
@@ -67,7 +65,9 @@ export class AuthnService {
         throw new UnauthorizedException('Invalid API-Key Signature');
       }
     } else {
-      throw new ForbiddenException('API Keys have been disabled');
+      throw new ForbiddenException(
+        'API Keys have been disabled as the API-Key secret is not set'
+      );
     }
     throw new UnauthorizedException('Bad API-Key');
   }
