@@ -112,6 +112,7 @@ export default class GroupModal extends Vue {
       return newGroup()
     }
     }) readonly group!: IGroup;
+
   @Prop({type: Boolean, default: false}) readonly admin!: boolean;
   @Prop({type: Boolean, default: false}) readonly create!: boolean;
 

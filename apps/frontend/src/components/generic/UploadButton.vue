@@ -37,6 +37,7 @@ export default class UploadButton extends Vue {
   close_modal() {
     this.showModal = false;
   }
+
   show_modal() {
     this.showModal = true;
   }

@@ -43,6 +43,12 @@
             <v-list-item class="px-0">
               <ExportJson />
             </v-list-item>
+            <v-list-item class="px-0">
+              <ExportHTMLModal
+                :filter="all_filter"
+                :file-type="current_route_name"
+              />
+            </v-list-item>
           </v-list>
         </v-menu>
       </div>
@@ -87,9 +93,9 @@
           @show-waived="statusFilter = 'Waived'"
         />
         <!-- Compliance Cards -->
-        <v-row justify="space-around">
+        <v-row id="complianceCards" justify="space-around">
           <v-col xs="4">
-            <v-card class="fill-height">
+            <v-card id="statusCounts" class="fill-height">
               <v-card-title class="justify-center">Status Counts</v-card-title>
               <v-card-actions class="justify-center">
                 <StatusChart v-model="statusFilter" :filter="all_filter" />
@@ -97,7 +103,7 @@
             </v-card>
           </v-col>
           <v-col xs="4">
-            <v-card class="fill-height">
+            <v-card id="severityCounts" class="fill-height">
               <v-card-title class="justify-center"
                 >Severity Counts</v-card-title
               >
@@ -107,7 +113,7 @@
             </v-card>
           </v-col>
           <v-col xs="4">
-            <v-card class="fill-height">
+            <v-card id="complianceLevel" class="fill-height">
               <v-card-title class="justify-center"
                 >Compliance Level</v-card-title
               >
@@ -200,6 +206,7 @@ import UploadButton from '@/components/generic/UploadButton.vue';
 import ExportCaat from '@/components/global/ExportCaat.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
+import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
 import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 
 import {FilteredDataModule, Filter, TreeMapState} from '@/store/data_filters';
@@ -230,15 +237,18 @@ import {IEvaluation} from '@heimdall/interfaces';
     ExportCaat,
     ExportNist,
     ExportJson,
+    ExportHTMLModal,
     EvaluationInfo,
     ProfileData,
     UploadButton
   }
 })
+
 export default class Results extends mixins(RouteMixin, ServerMixin) {
   $refs!: Vue['$refs'] & {
     search: HTMLInputElement;
   };
+
   /**
    * The currently selected severity, as modeled by the severity chart
    */

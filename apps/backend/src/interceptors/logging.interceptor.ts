@@ -33,7 +33,9 @@ export class LoggingInterceptor implements NestInterceptor {
       }),
       winston.format.printf(
         (info) =>
-          `[${[info.timestamp]} ${info.ip}] ${info.user} ${info.message}`
+          `[${[info.timestamp]} ${info.ip} ${info.referer} ${info.userAgent}] ${
+            info.user
+          } ${info.message}`
       )
     )
   });
@@ -47,9 +49,13 @@ export class LoggingInterceptor implements NestInterceptor {
     const callingUser: User | undefined = request.user;
     const calledMethod = context.getHandler().name;
     const requestParams = JSON.stringify(this.redact(request.body));
+    const referer = request.headers['referer'];
+    const userAgent = request.headers['user-agent'];
     this.logger.info({
       ip: this.getRealIP(request),
       user: this.userToString(callingUser),
+      referer: referer,
+      userAgent: userAgent,
       message: `${_.startCase(
         calledMethod
       )} (${method}) ${requestParams} ${endpoint}`

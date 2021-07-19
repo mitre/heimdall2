@@ -75,9 +75,11 @@ export default class DropdownContent extends Vue {
   @Prop({type: Array, required: true}) readonly files!:
     | EvaluationFile[]
     | ProfileFile[];
+
   @Prop({type: String, required: false}) readonly route!: string;
   @Prop({default: false, type: Boolean, required: false})
   readonly compareViewActive!: boolean;
+
   @Prop({default: false, type: Boolean, required: false})
   readonly enableCompareView!: boolean;
 

@@ -1,38 +1,40 @@
 <template>
   <div>
-    <v-row class="mt-0">
-      <v-col>
-        <v-autocomplete
-          v-model="usersToAdd"
-          :items="availableUsers"
-          chips
-          label="Add Users"
-          full-width
-          hide-selected
-          deletable-chips
-          multiple
-          single-line
-        >
-          <template slot="append-outer">
-            <v-btn @click="addUsers">
-              <v-icon left>mdi-plus</v-icon>
-              Add
-            </v-btn>
-          </template>
-        </v-autocomplete>
-      </v-col>
-    </v-row>
+    <div v-if="editable">
+      <v-row class="mt-0">
+        <v-col>
+          <v-autocomplete
+            v-model="usersToAdd"
+            :items="availableUsers"
+            chips
+            label="Add Users"
+            full-width
+            hide-selected
+            deletable-chips
+            multiple
+            single-line
+          >
+            <template slot="append-outer">
+              <v-btn @click="addUsers">
+                <v-icon left>mdi-plus</v-icon>
+                Add
+              </v-btn>
+            </template>
+          </v-autocomplete>
+        </v-col>
+      </v-row>
+    </div>
     <v-row>
       <v-col>
         <v-data-table
-          :headers="headers"
+          :headers="displayedHeaders"
           :items="currentUsers"
           :items-per-page="5"
         >
           <template #[`item.full-name`]="{item}"
             >{{ item.firstName }} {{ item.lastName }}</template
           >
-          <template #[`item.actions`]="{item}">
+          <template v-if="editable" #[`item.actions`]="{item}">
             <v-icon small title="Delete" @click="deleteUserDialog(item)">
               mdi-delete
             </v-icon>
@@ -56,7 +58,7 @@
 import {ISlimUser} from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {VModel} from 'vue-property-decorator';
+import {Prop, VModel} from 'vue-property-decorator';
 import {ServerModule} from '@/store/server';
 import {IVuetifyItems} from '@/utilities/helper_util';
 import ActionDialog from '@/components/generic/ActionDialog.vue';
@@ -68,6 +70,7 @@ import ActionDialog from '@/components/generic/ActionDialog.vue';
 })
 export default class Users extends Vue {
   @VModel({type: Array, required: false, default() {return []}}) currentUsers!: ISlimUser[];
+  @Prop({type: Boolean, required: false, default: true}) readonly editable!: boolean;
 
   usersToAdd: string[] = [];
 
@@ -90,13 +93,20 @@ export default class Users extends Vue {
     {
       text: 'Role',
       value: 'groupRole'
-    },
-    {
-      text: 'Actions',
-      value: 'actions',
-      sortable: false
     }
   ];
+
+  get displayedHeaders() {
+    // If the user is editing the group, then display the actions column.
+    if(this.editable) {
+      this.headers.push({
+        text: 'Actions',
+        value: 'actions',
+        sortable: false,
+      });
+    }
+    return this.headers;
+  }
 
   addUsers() {
     ServerModule.allUsers.forEach((user) => {

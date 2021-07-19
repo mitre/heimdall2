@@ -9,6 +9,8 @@
         <slot name="severity" />
         <v-divider />
         <slot name="tags" />
+        <v-divider />
+        <slot name="runTime" />
       </v-card>
     </v-col>
 

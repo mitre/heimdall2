@@ -66,6 +66,7 @@
                                 <br />
                                 <span>{{ fileTimes[i] }}</span>
                                 <TagRow
+                                  v-if="file.database_id"
                                   style="max-width: 400px"
                                   :evaluation="toIEvaluation(file)"
                                 />
