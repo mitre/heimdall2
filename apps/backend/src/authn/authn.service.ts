@@ -1,5 +1,7 @@
 import {
   ForbiddenException,
+  forwardRef,
+  Inject,
   Injectable,
   UnauthorizedException
 } from '@nestjs/common';
@@ -19,6 +21,7 @@ export class AuthnService {
   constructor(
     private readonly apiKeyService: ApiKeyService,
     private readonly configService: ConfigService,
+    @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService
   ) {}
@@ -141,5 +144,23 @@ export class AuthnService {
       firstName: nameArray.slice(0, -1).join(' '),
       lastName: nameArray[nameArray.length - 1]
     };
+  }
+
+  async testPassword(
+    updateUserDto: {currentPassword?: string},
+    user: User
+  ): Promise<void> {
+    try {
+      if (
+        !(await compare(
+          updateUserDto.currentPassword || '',
+          user.encryptedPassword
+        ))
+      ) {
+        throw new ForbiddenException('Current password is incorrect');
+      }
+    } catch {
+      throw new ForbiddenException('Current password is incorrect');
+    }
   }
 }

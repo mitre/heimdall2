@@ -11,13 +11,13 @@ import {
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
+import {AuthnService} from '../authn/authn.service';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {ApiKeysAllowedInterceptor} from '../interceptors/api-keys-allowed-interceptor';
 import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
-import {UsersService} from '../users/users.service';
 import {ApiKeyService} from './apikey.service';
 import {APIKeyDto} from './dto/apikey.dto';
 import {CreateApiKeyDto} from './dto/create-apikey.dto';
@@ -28,7 +28,7 @@ import {UpdateAPIKeyDto} from './dto/update-apikey.dto';
 @Controller('apikeys')
 export class ApiKeyController {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly authnService: AuthnService,
     private readonly apiKeyService: ApiKeyService,
     private readonly authz: AuthzService
   ) {}
@@ -49,7 +49,7 @@ export class ApiKeyController {
   ): Promise<{id: string; apiKey: string}> {
     const abac = this.authz.abac.createForUser(request.user);
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, request.user);
-    await this.usersService.testPassword(createApiKeyDto, request.user);
+    await this.authnService.testPassword(createApiKeyDto, request.user);
     return this.apiKeyService.create(request.user, createApiKeyDto);
   }
 
@@ -66,7 +66,7 @@ export class ApiKeyController {
       Action.Update,
       apiKeyToDelete.user
     );
-    await this.usersService.testPassword(deleteApiKeyDto, request.user);
+    await this.authnService.testPassword(deleteApiKeyDto, request.user);
     return this.apiKeyService.remove(id);
   }
 
@@ -83,7 +83,7 @@ export class ApiKeyController {
       Action.Update,
       apiKeyToUpdate.user
     );
-    await this.usersService.testPassword(updateApiKeyDto, request.user);
+    await this.authnService.testPassword(updateApiKeyDto, request.user);
     return this.apiKeyService.update(apiKeyToUpdate.id, updateApiKeyDto);
   }
 }

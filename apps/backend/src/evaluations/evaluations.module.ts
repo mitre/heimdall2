@@ -1,5 +1,9 @@
 import {Module} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
+import {ApiKeyService} from '../apikeys/apikey.service';
+import {ApiKeyModule} from '../apikeys/apikeys.module';
+import {AuthnModule} from '../authn/authn.module';
+import {AuthnService} from '../authn/authn.service';
 import {ConfigModule} from '../config/config.module';
 import {DatabaseModule} from '../database/database.module';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
@@ -7,6 +11,7 @@ import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
+import {TokenModule} from '../token/token.module';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {Evaluation} from './evaluation.model';
@@ -22,10 +27,19 @@ import {EvaluationsService} from './evaluations.service';
       GroupUser,
       GroupEvaluation
     ]),
+    ApiKeyModule,
+    AuthnModule,
     ConfigModule,
-    DatabaseModule
+    DatabaseModule,
+    TokenModule
   ],
-  providers: [EvaluationsService, UsersService, GroupsService],
+  providers: [
+    ApiKeyService,
+    AuthnService,
+    EvaluationsService,
+    UsersService,
+    GroupsService
+  ],
   controllers: [EvaluationsController],
   exports: [EvaluationsService]
 })
