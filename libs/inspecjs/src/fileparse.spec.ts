@@ -8,12 +8,14 @@ import {
   isContextualizedProfile
 } from './fileparse';
 
+const testbed = 'parse_testbed/'
+
 it('correctly reads the contents of the given files', () => {
   expect.assertions(26);
-  const filenames = fs.readdirSync('parse_testbed/');
+  const filenames = fs.readdirSync(testbed);
   expect(() => {
     filenames.forEach((filename) => {
-      const content = fs.readFileSync('parse_testbed/' + filename, 'utf-8');
+      const content = fs.readFileSync(testbed + filename, 'utf-8');
       const result: ConversionResult = convertFile(content);
       expect(result).toHaveProperty('1_0_ExecJson');
     });
@@ -22,10 +24,10 @@ it('correctly reads the contents of the given files', () => {
 
 it('checks file files are contextualized evaluations', () => {
   expect.assertions(26);
-  const filenames = fs.readdirSync('parse_testbed/');
+  const filenames = fs.readdirSync(testbed);
   expect(() => {
     filenames.forEach((filename) => {
-      const content = fs.readFileSync('parse_testbed/' + filename, 'utf-8');
+      const content = fs.readFileSync(testbed + filename, 'utf-8');
       const result: ContextualizedEvaluation | ContextualizedProfile =
         convertFileContextual(content);
       const isContextEval = isContextualizedEvaluation(result);
@@ -36,10 +38,10 @@ it('checks file files are contextualized evaluations', () => {
 
 it('checks file files are not contextualized evaluations', () => {
   expect.assertions(26);
-  const filenames = fs.readdirSync('parse_testbed/');
+  const filenames = fs.readdirSync(testbed);
   expect(() => {
     filenames.forEach((filename) => {
-      const content = fs.readFileSync('parse_testbed/' + filename, 'utf-8');
+      const content = fs.readFileSync(testbed + filename, 'utf-8');
       const result: ContextualizedEvaluation | ContextualizedProfile =
         convertFileContextual(content);
       const isContextEval = isContextualizedProfile(result);
