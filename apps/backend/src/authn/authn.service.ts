@@ -142,4 +142,22 @@ export class AuthnService {
       lastName: nameArray[nameArray.length - 1]
     };
   }
+
+  async testPassword(
+    updateUserDto: {currentPassword?: string},
+    user: User
+  ): Promise<void> {
+    try {
+      if (
+        !(await compare(
+          updateUserDto.currentPassword || '',
+          user.encryptedPassword
+        ))
+      ) {
+        throw new ForbiddenException('Current password is incorrect');
+      }
+    } catch {
+      throw new ForbiddenException('Current password is incorrect');
+    }
+  }
 }

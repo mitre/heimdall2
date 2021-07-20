@@ -23,8 +23,7 @@ import {OktaStrategy} from './okta.strategy';
     UsersModule,
     PassportModule,
     TokenModule,
-    ConfigModule,
-    ApiKeyModule
+    ConfigModule
   ],
   providers: [
     AuthnService,

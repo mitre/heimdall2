@@ -1,8 +1,10 @@
 import {Module} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
+import {AuthnService} from '../authn/authn.service';
 import {AuthzModule} from '../authz/authz.module';
 import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
+import {TokenModule} from '../token/token.module';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {ApiKeyController} from './apikey.controller';
@@ -14,9 +16,10 @@ import {ApiKeyService} from './apikey.service';
     SequelizeModule.forFeature([ApiKey, User]),
     AuthzModule,
     ConfigModule,
-    ApiKeyModule
+    ApiKeyModule,
+    TokenModule
   ],
-  providers: [ConfigService, UsersService, ApiKeyService],
+  providers: [ConfigService, AuthnService, UsersService, ApiKeyService],
   exports: [SequelizeModule, ApiKeyService],
   controllers: [ApiKeyController]
 })

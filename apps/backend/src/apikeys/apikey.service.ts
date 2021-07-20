@@ -9,7 +9,6 @@ import jwt from 'jsonwebtoken';
 import {CreateApiKeyDto} from '../apikeys/dto/create-apikey.dto';
 import {ConfigService} from '../config/config.service';
 import {User} from '../users/user.model';
-import {UsersService} from '../users/users.service';
 import {ApiKey} from './apikey.model';
 import {APIKeyDto} from './dto/apikey.dto';
 import {UpdateAPIKeyDto} from './dto/update-apikey.dto';
@@ -19,8 +18,7 @@ export class ApiKeyService {
   constructor(
     @InjectModel(ApiKey)
     private readonly apiKeyModel: typeof ApiKey,
-    private readonly configService: ConfigService,
-    private readonly usersService: UsersService
+    private readonly configService: ConfigService
   ) {}
 
   async count(): Promise<number> {
@@ -49,7 +47,7 @@ export class ApiKeyService {
       return {id: newApiKey.id, name: newApiKey.name, apiKey: newJWT};
     } else {
       throw new ForbiddenException(
-        'API Keys have been disabled as the API-Key secret is not set'
+        'Creating API Keys has been disabled as the API-Key secret is not set'
       );
     }
   }
@@ -64,7 +62,7 @@ export class ApiKeyService {
       return new APIKeyDto(await apiKey.save());
     } else {
       throw new ForbiddenException(
-        'API Keys have been disabled as the API-Key secret is not set'
+        'Updating API Keys have been disabled as the API-Key secret is not set'
       );
     }
   }
@@ -76,7 +74,7 @@ export class ApiKeyService {
       return new APIKeyDto(apiKeyToDestroy);
     } else {
       throw new ForbiddenException(
-        'API Keys have been disabled as the API-Key secret is not set'
+        'Removing API Keys have been disabled as the API-Key secret is not set'
       );
     }
   }
