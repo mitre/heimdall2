@@ -8,13 +8,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
 import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
+import {Filter} from '@/store/data_filters';
 import {StatusCountModule} from '@/store/status_counts';
 import {ControlStatus} from 'inspecjs';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {Filter} from '@/store/data_filters';
 
 /**
  * Categories property must be of type Category

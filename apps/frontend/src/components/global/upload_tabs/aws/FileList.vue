@@ -46,13 +46,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import S3 from 'aws-sdk/clients/s3';
 import {InspecIntakeModule} from '@/store/report_intake';
-
 import {Auth, fetch_s3_file} from '@/utilities/aws_util';
 import {LocalStorageVal} from '@/utilities/helper_util';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 
 // Caches the bucket name

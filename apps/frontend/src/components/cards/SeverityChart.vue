@@ -7,12 +7,12 @@
 </template>
 
 <script lang="ts">
+import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
+import {Filter} from '@/store/data_filters';
+import {SeverityCountModule} from '@/store/severity_counts';
+import {Severity} from 'inspecjs';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
-import {Severity} from 'inspecjs';
-import {SeverityCountModule} from '@/store/severity_counts';
-import {Filter} from '@/store/data_filters';
 import {Prop} from 'vue-property-decorator';
 
 /**

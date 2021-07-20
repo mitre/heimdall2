@@ -75,10 +75,10 @@
 </template>
 
 <script lang="ts">
+import {Filter} from '@/store/data_filters';
+import {StatusCountModule} from '@/store/status_counts';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {StatusCountModule} from '@/store/status_counts';
-import {Filter} from '@/store/data_filters';
 import {Prop} from 'vue-property-decorator';
 
 interface CardProps {
@@ -116,13 +116,10 @@ export default class StatusCardRow extends Vue {
         )} individual checks passed, ${StatusCountModule.countOf(
           this.filter,
           'FailedTests'
-        )} failed out of ${StatusCountModule.countOf(
-          this.filter,
-          'PassingTestsFailedControl'
-        ) + StatusCountModule.countOf(
-          this.filter,
-          'FailedTests'
-        )} total checks`,
+        )} failed out of ${
+          StatusCountModule.countOf(this.filter, 'PassingTestsFailedControl') +
+          StatusCountModule.countOf(this.filter, 'FailedTests')
+        } total checks`,
         color: 'statusFailed',
         number: StatusCountModule.countOf(this.filter, 'Failed')
       },

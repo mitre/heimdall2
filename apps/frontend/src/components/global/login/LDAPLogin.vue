@@ -42,12 +42,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import {required} from 'vuelidate/lib/validators';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {required} from 'vuelidate/lib/validators';
 
 export interface LDAPLoginHash {
   username: string;
@@ -55,30 +55,29 @@ export interface LDAPLoginHash {
 }
 
 @Component({
-    mixins: [UserValidatorMixin],
-    validations: {
-        username: {
-            required
-        },
-        password: {
-            required
-        }
+  mixins: [UserValidatorMixin],
+  validations: {
+    username: {
+      required
+    },
+    password: {
+      required
     }
+  }
 })
 export default class LDAPLogin extends Vue {
-    username = '';
-    password = '';
+  username = '';
+  password = '';
 
-    ldapLogin() {
-        const creds: LDAPLoginHash = {
-        username: this.username,
-        password: this.password
-        };
-        ServerModule.LoginLDAP(creds)
-        .then(() => {
-            this.$router.push('/');
-            SnackbarModule.notify('You have successfully signed in.');
-        });
-    }
+  ldapLogin() {
+    const creds: LDAPLoginHash = {
+      username: this.username,
+      password: this.password
+    };
+    ServerModule.LoginLDAP(creds).then(() => {
+      this.$router.push('/');
+      SnackbarModule.notify('You have successfully signed in.');
+    });
+  }
 }
 </script>

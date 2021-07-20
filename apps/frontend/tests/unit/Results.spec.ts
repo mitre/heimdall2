@@ -4,7 +4,6 @@ import Results from '@/views/Results.vue';
 import {shallowMount, Wrapper} from '@vue/test-utils';
 import {context} from 'inspecjs';
 import 'jest';
-import Vue from 'vue';
 import Vuetify from 'vuetify';
 import {
   expectedCount,

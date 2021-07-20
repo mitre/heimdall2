@@ -32,13 +32,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
 import Sidebar from '@/components/global/Sidebar.vue';
 import Topbar from '@/components/global/Topbar.vue';
 import UpdateNotification from '@/components/global/UpdateNotification.vue';
-import {Prop} from 'vue-property-decorator';
 import {SidebarModule} from '@/store/sidebar_state';
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -54,7 +54,7 @@ export default class Base extends Vue {
   @Prop({default: true}) readonly showTopbar!: boolean;
   /** Models if the drawer is open */
   get drawer(): boolean {
-    return SidebarModule.active
+    return SidebarModule.active;
   }
 
   set drawer(state: boolean) {

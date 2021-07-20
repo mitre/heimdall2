@@ -199,31 +199,33 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import Base from '@/views/Base.vue';
-import Modal from '@/components/global/Modal.vue';
 import CompareRow from '@/components/cards/comparison/CompareRow.vue';
-import UploadButton from '@/components/generic/UploadButton.vue';
-import TagRow from '@/components/global/tags/TagRow.vue'
-
-import {Filter, FilteredDataModule} from '@/store/data_filters';
-import {ControlStatus} from 'inspecjs';
-import {SeverityCountModule} from '@/store/severity_counts';
-
-import {compare_times, ComparisonContext, ControlSeries, get_eval_start_time} from '@/utilities/delta_util';
-import {Category} from '@/components/generic/ApexPieChart.vue';
-import {StatusCountModule} from '@/store/status_counts';
 import ProfileRow from '@/components/cards/comparison/ProfileRow.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
-import {EvaluationFile, FileID, ProfileFile} from '@/store/report_intake';
-import {InspecDataModule} from '@/store/data_store';
-
 import ApexLineChart, {
   SeriesItem
 } from '@/components/generic/ApexLineChart.vue';
-import _ from 'lodash';
+import {Category} from '@/components/generic/ApexPieChart.vue';
+import UploadButton from '@/components/generic/UploadButton.vue';
+import Modal from '@/components/global/Modal.vue';
+import TagRow from '@/components/global/tags/TagRow.vue';
+import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {InspecDataModule} from '@/store/data_store';
+import {EvaluationFile, FileID, ProfileFile} from '@/store/report_intake';
+import {SeverityCountModule} from '@/store/severity_counts';
+import {StatusCountModule} from '@/store/status_counts';
+import {
+  compare_times,
+  ComparisonContext,
+  ControlSeries,
+  get_eval_start_time
+} from '@/utilities/delta_util';
+import Base from '@/views/Base.vue';
 import {IEvaluation} from '@heimdall/interfaces';
+import {ControlStatus} from 'inspecjs';
+import _ from 'lodash';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import {EvaluationModule} from '../store/evaluations';
 
 @Component({
@@ -289,11 +291,16 @@ export default class Compare extends Vue {
   /** Yields the control pairings that have changed*/
   get delta_sets(): [string, ControlSeries][] {
     return this.searched_sets.filter(([_id, series]) => {
-      const controls = Object.values(series).map((control) => control.root.hdf.status);
+      const controls = Object.values(series).map(
+        (control) => control.root.hdf.status
+      );
       // If some of the controls are not equal to the first one then it is changed and should be displayed
       // If the number of controls with information loaded about them is different than the number of files
       // loaded then something has been added/removed and should be displayed.
-      return (controls.some((control) => control !== controls[0]) || controls.length !== FilteredDataModule.selected_file_ids.length);
+      return (
+        controls.some((control) => control !== controls[0]) ||
+        controls.length !== FilteredDataModule.selected_file_ids.length
+      );
     });
   }
 
@@ -305,22 +312,30 @@ export default class Compare extends Vue {
     };
   }
 
-    // Use the FilteredDataModule to search and filter out keys that do not match
+  // Use the FilteredDataModule to search and filter out keys that do not match
   get searched_sets(): [string, ControlSeries][] {
-    const found = FilteredDataModule.controls(this.filter).map((value) => value.data.id);
+    const found = FilteredDataModule.controls(this.filter).map(
+      (value) => value.data.id
+    );
     // Cross-reference the list of keys found above with the keys in the ControlSeriesLookup object
     // Then convert to a list of entries (destructured objects) for ease of use.
-    return Object.entries(_.pickBy(this.curr_delta.pairings, (_id, key) => found.includes(key)));
+    return Object.entries(
+      _.pickBy(this.curr_delta.pairings, (_id, key) => found.includes(key))
+    );
   }
 
   get show_sets(): [string, ControlSeries][] {
-    const sets: [string, ControlSeries][] = Array.from(this.changedOnly ? this.delta_sets : this.searched_sets);
+    const sets: [string, ControlSeries][] = Array.from(
+      this.changedOnly ? this.delta_sets : this.searched_sets
+    );
     let searchModifier = -1;
 
-    if(this.ascending) {
+    if (this.ascending) {
       searchModifier = 1;
     }
-    return sets.sort(([a, _seriesA], [b, _seriesB]) => a.localeCompare(b) * searchModifier );
+    return sets.sort(
+      ([a, _seriesA], [b, _seriesB]) => a.localeCompare(b) * searchModifier
+    );
   }
 
   changeSort(): void {
@@ -339,7 +354,9 @@ export default class Compare extends Vue {
   }
 
   get files(): EvaluationFile[] {
-    const fileList = Array.from(FilteredDataModule.evaluations(FilteredDataModule.selected_file_ids));
+    const fileList = Array.from(
+      FilteredDataModule.evaluations(FilteredDataModule.selected_file_ids)
+    );
 
     fileList.sort(compare_times);
     return fileList.map((evaluation) => evaluation.from_file);
@@ -348,7 +365,9 @@ export default class Compare extends Vue {
   // Return the fileIDs for the visible rows in the correct order, so that the CompareRow
   // shows data matching the file headers.
   get visible_row_ids(): FileID[] {
-    return this.files.map((file) => file.uniqueId).slice(this.startIndex, this.startIndex + this.num_shown_files);
+    return this.files
+      .map((file) => file.uniqueId)
+      .slice(this.startIndex, this.startIndex + this.num_shown_files);
   }
 
   get sev_series(): number[][] {
@@ -427,7 +446,9 @@ export default class Compare extends Vue {
   }
 
   get fileTimes(): (string | undefined)[] {
-    return this.files.map((file) => get_eval_start_time(file.evaluation) || undefined );
+    return this.files.map(
+      (file) => get_eval_start_time(file.evaluation) || undefined
+    );
   }
 
   get total_failed(): number {

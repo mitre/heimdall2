@@ -3,7 +3,6 @@ import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {createLocalVue, shallowMount, Wrapper} from '@vue/test-utils';
 import 'jest';
-import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuetify from 'vuetify';
 import {EvaluationFile, ProfileFile} from '../../src/store/report_intake';
