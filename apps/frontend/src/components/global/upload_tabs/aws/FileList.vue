@@ -52,6 +52,7 @@ import {LocalStorageVal} from '@/utilities/helper_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
+import S3 = require('aws-sdk/clients/s3');
 
 // Caches the bucket name
 const localBucketName = new LocalStorageVal<string>('aws_bucket_name');
