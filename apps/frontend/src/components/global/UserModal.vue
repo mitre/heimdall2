@@ -197,7 +197,7 @@
             id="closeAndSaveChanges"
             color="primary"
             text
-            :disabled="update_unavailable"
+            :disabled="!admin && update_unavailable"
             :loading="buttonLoading"
             @click="updateUserInfo"
             >Save Changes</v-btn
@@ -298,7 +298,7 @@ export default class UserModal extends Vue {
   async updateUserInfo(): Promise<void> {
     this.buttonLoading = true;
     this.$v.$touch()
-    if (this.userInfo != null && !this.$v.$invalid) {
+    if (this.userInfo != null && (this.admin || !this.$v.$invalid)) {
       var updateUserInfo: IUpdateUser = {
         ...this.userInfo,
         password: undefined,
