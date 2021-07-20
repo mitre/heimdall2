@@ -276,7 +276,7 @@ export default class ExportHTMLModal extends Vue {
       this.outputData.bootstrapCSS = responses[1].data
           .replace(/\#dc3545/g, "#f34335") // bg-danger
           .replace(/\#198754/g, "#4cb04f") // bg-success
-          .replace(/\#17a2b8/g, "#03a9f4") // bg-info
+          .replace(/\#0dcaf0/g, "#03a9f4") // bg-info
           .replace(/\#ffc107/g, "#fe9900") // bg-warning
 
       this.outputData.bootstrapJS = responses[2].data
