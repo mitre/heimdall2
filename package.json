@@ -14,6 +14,7 @@
     "inspecjs": "yarn workspace inspecjs",
     "lint": "lerna run lint",
     "lint:ci": "lerna run lint:ci",
+    "pack:all": "lerna exec yarn pack --scope inspecjs --scope @mitre/heimdall-lite --parallel",
     "start": "yarn backend start",
     "start:dev": "dotenv -e apps/backend/.env -- lerna exec yarn run start:dev --ignore @heimdall/interfaces --ignore @heimdall/cypress-tests --ignore inspecjs",
     "test:ui": "cypress run",

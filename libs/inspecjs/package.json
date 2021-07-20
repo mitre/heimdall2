@@ -22,6 +22,7 @@
   },
   "scripts": {
     "prebuild": "rimraf ./dist",
+    "prepack": "yarn build",
     "build": "tsc -p ./tsconfig.build.json",
     "docs": "typedoc --out docs ./src",
     "gen-types": "bash scripts/update_schema.sh",
