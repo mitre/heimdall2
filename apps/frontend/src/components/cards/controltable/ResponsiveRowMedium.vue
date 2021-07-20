@@ -21,6 +21,8 @@
         <slot name="id" />
         <v-divider />
         <slot name="tags" />
+        <v-divider />
+        <slot name="runTime" />
       </v-card>
     </v-col>
   </v-row>
@@ -31,7 +33,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 
 @Component
-export default class Row extends Vue {}
+export default class ResponsiveRowMedium extends Vue {}
 </script>
 
 <style scoped>

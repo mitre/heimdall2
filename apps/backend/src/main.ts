@@ -45,9 +45,10 @@ async function bootstrap() {
     })
   );
   app.use(json({limit: '50mb'}));
+  // Sessions are only used for oauth callbacks
   app.use(
     session({
-      secret: configService.get('JWT_SECRET') || generateDefault(),
+      secret: generateDefault(),
       store: new (postgresSessionStore(session))({
         conObject: {
           ...configService.getDbConfig(),
@@ -57,7 +58,7 @@ async function bootstrap() {
         },
         tableName: 'session'
       }),
-      cookie: {maxAge: 30 * 24 * 60 * 60 * 1000},
+      cookie: {maxAge: 60 * 60}, // 1 hour
       saveUninitialized: true,
       resave: false
     })

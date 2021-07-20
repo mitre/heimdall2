@@ -45,14 +45,14 @@ export default class SampleList extends Vue {
 
   loading = false;
 
-  load_samples(samples: Sample[]) {
+  load_samples(sampleArray: Sample[]) {
     this.loading = true;
     Promise.all(
-      samples.map((sample) => {
-        return sample.data().then((data: JSON) => {
+      sampleArray.map((arrayItem) => {
+        return arrayItem.data().then((data: JSON) => {
           return InspecIntakeModule.loadText({
             text: JSON.stringify(data),
-            filename: sample.filename
+            filename: arrayItem.filename
           });
         });
       })

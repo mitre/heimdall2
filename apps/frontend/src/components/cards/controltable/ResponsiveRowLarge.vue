@@ -1,6 +1,6 @@
 <template>
   <v-row no-gutters>
-    <v-col class="pa-0" :cols="2">
+    <v-col class="pa-0" :cols="1">
       <slot name="status" />
     </v-col>
 
@@ -31,6 +31,12 @@
         <slot name="tags" />
       </v-card>
     </v-col>
+
+    <v-col class="pa-0" :cols="1">
+      <v-card tile flat class="fill-height">
+        <slot name="runTime" />
+      </v-card>
+    </v-col>
   </v-row>
 </template>
 
@@ -39,7 +45,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 
 @Component
-export default class Row extends Vue {}
+export default class ResponsiveRowLarge extends Vue {}
 </script>
 
 <style scoped>

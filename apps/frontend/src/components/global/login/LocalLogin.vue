@@ -161,8 +161,8 @@ interface LoginHash {
   }
 })
 export default class LocalLogin extends Vue {
-  email: string = '';
-  password: string = '';
+  email = '';
+  password = '';
   buttonLoading = false
 
   login() {
@@ -187,6 +187,7 @@ export default class LocalLogin extends Vue {
   authStrategySupported(strategy: string) {
     return ServerModule.enabledOAuth.includes(strategy)
   }
+
   oauthLogin(site: string) {
     window.location.href = `/authn/${site}`;
   }
