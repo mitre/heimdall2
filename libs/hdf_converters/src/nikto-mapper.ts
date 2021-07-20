@@ -1,24 +1,33 @@
-import {ControlResultStatus, ExecJSON} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
-import {version as HeimdallToolsVersion} from '../package.json'
-import _ from 'lodash'
-import {MappedTransform, LookupPath, BaseConverter, generateHash} from './base-converter'
-import {NiktoNistMapping} from './mappings/NiktoNistMapping'
-import path from 'path'
+import {
+  ControlResultStatus,
+  ExecJSON
+} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+import _ from 'lodash';
+import path from 'path';
+import {version as HeimdallToolsVersion} from '../package.json';
+import {BaseConverter, LookupPath, MappedTransform} from './base-converter';
+import {NiktoNistMapping} from './mappings/NiktoNistMapping';
 
-const NIKTO_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/nikto-nist-mapping.csv')
-const NIKTO_NIST_MAPPING = new NiktoNistMapping(NIKTO_NIST_MAPPING_FILE)
+const NIKTO_NIST_MAPPING_FILE = path.resolve(
+  __dirname,
+  '../data/nikto-nist-mapping.csv'
+);
+const NIKTO_NIST_MAPPING = new NiktoNistMapping(NIKTO_NIST_MAPPING_FILE);
 
-function formatTitle(file: unknown) {
-  return `Nikto Target: ${projectName(file)}`
+function formatTitle(file: unknown): string {
+  return `Nikto Target: ${projectName(file)}`;
 }
-function projectName(file: unknown) {
-  return `Host: ${_.get(file, 'host')} Port: ${_.get(file, 'port')}`
+function projectName(file: unknown): string {
+  return `Host: ${_.get(file, 'host')} Port: ${_.get(file, 'port')}`;
 }
-function formatCodeDesc(vulnerability: unknown) {
-  return `URL : ${_.get(vulnerability, 'url')} Method: ${_.get(vulnerability, 'method')}`
+function formatCodeDesc(vulnerability: unknown): string {
+  return `URL : ${_.get(vulnerability, 'url')} Method: ${_.get(
+    vulnerability,
+    'method'
+  )}`;
 }
-function nistTag(id: string) {
-  return NIKTO_NIST_MAPPING.nistTag(id)
+function nistTag(id: string): string[] {
+  return NIKTO_NIST_MAPPING.nistTag(id);
 }
 
 export class NiktoMapper extends BaseConverter {
@@ -41,7 +50,7 @@ export class NiktoMapper extends BaseConverter {
         summary: {
           path: 'banner',
           transformer: (input: unknown) => {
-            return `Banner: ${input}`
+            return `Banner: ${input}`;
           }
         },
         license: null,
@@ -86,6 +95,6 @@ export class NiktoMapper extends BaseConverter {
     super(JSON.parse(xrayJson));
   }
   setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
-    super.setMappings(customMappings)
+    super.setMappings(customMappings);
   }
 }

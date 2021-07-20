@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-import { ExecJSON } from 'inspecjs'
-import { version as HeimdallToolsVersion } from '../package.json'
-=======
-import {ControlResultStatus, ExecJSON} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
+
+import {ExecJSON} from 'inspecjs'
 import {version as HeimdallToolsVersion} from '../package.json'
->>>>>>> 1eb6f954 (Fixed transformation functions to incorporate the new typing of arrayTransform and transform in MappedTransform)
 import _ from 'lodash'
 import {MappedTransform, LookupPath, BaseConverter, generateHash} from './base-converter'
 import {CweNistMapping} from './mappings/CweNistMapping'
@@ -15,58 +11,64 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['medium', 0.5],
   ['low', 0.3]
 ]);
-const CWE_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/cwe-nist-mapping.csv')
-const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE)
-const DEFAULT_NIST_TAG = ['SA-11', 'RA-5']
+const CWE_NIST_MAPPING_FILE = path.resolve(
+  __dirname,
+  '../data/cwe-nist-mapping.csv'
+);
+const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE);
+const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
-function impactMapping(severity: unknown) {
+function impactMapping(severity: unknown): number {
   if (typeof severity === 'string' || typeof severity === 'number') {
     return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
   } else {
-    return 0
+    return 0;
   }
 }
-function parseIdentifier(identifiers: unknown[] | unknown) {
-  let output: string[] = []
+function parseIdentifier(identifiers: unknown[] | unknown): string[] {
+  const output: string[] = [];
   if (identifiers !== undefined && Array.isArray(identifiers)) {
-    identifiers.forEach(element => {
-      let numbers = element.split('-')
-      numbers.shift()
-      output.push(numbers.join('-'))
-    })
-    return output
+    identifiers.forEach((element) => {
+      const numbers = element.split('-');
+      numbers.shift();
+      output.push(numbers.join('-'));
+    });
+    return output;
   } else {
-    return []
+    return [];
   }
 }
-function nistTag(identifiers: unknown[]) {
-  return CWE_NIST_MAPPING.nistFilter(parseIdentifier(identifiers), DEFAULT_NIST_TAG)
+function nistTag(identifiers: unknown[]): string[] {
+  return CWE_NIST_MAPPING.nistFilter(
+    parseIdentifier(identifiers),
+    DEFAULT_NIST_TAG
+  );
 }
 
 export class SnykResults {
   data: object
   customMapping?: MappedTransform<ExecJSON.Execution, LookupPath>
   constructor(snykJson: string) {
-    this.data = JSON.parse(snykJson)
+    this.data = JSON.parse(snykJson);
   }
 
   toHdf() {
     let results: ExecJSON.Execution[] = []
     if (Array.isArray(this.data)) {
-      this.data.forEach(element => {
-        let entry = new SnykMapper(element)
+      this.data.forEach((element) => {
+        const entry = new SnykMapper(element);
         if (this.customMapping !== undefined) {
-          entry.setMappings(this.customMapping)
+          entry.setMappings(this.customMapping);
         }
-        results.push(entry.toHdf())
-      })
-      return results
+        results.push(entry.toHdf());
+      });
+      return results;
     } else {
-      let result = new SnykMapper(this.data)
+      const result = new SnykMapper(this.data);
       if (this.customMapping !== undefined) {
-        result.setMappings(this.customMapping)
+        result.setMappings(this.customMapping);
       }
-      return result.toHdf()
+      return result.toHdf();
     }
   }
   setMappings(customMapping: MappedTransform<ExecJSON.Execution, LookupPath>) {
@@ -89,23 +91,26 @@ export class SnykMapper extends BaseConverter {
       {
         name: {path: 'policy'},
         version: {
-          path: 'policy', transformer: (policy: unknown) => {
+          path: 'policy',
+          transformer: (policy: unknown) => {
             if (typeof policy === 'string') {
-              return policy.split('version: ')[1].split('\n')[0]
+              return policy.split('version: ')[1].split('\n')[0];
             } else {
-              return ''
+              return '';
             }
           }
         },
         title: {
-          path: 'projectName', transformer: (projectName: unknown) => {
-            return `Snyk Project: ${projectName}`
+          path: 'projectName',
+          transformer: (projectName: unknown) => {
+            return `Snyk Project: ${projectName}`;
           }
         },
         maintainer: null,
         summary: {
-          path: 'summary', transformer: (summary: unknown) => {
-            return `Snyk Summary: ${summary}`
+          path: 'summary',
+          transformer: (summary: unknown) => {
+            return `Snyk Summary: ${summary}`;
           }
         },
         license: null,
@@ -138,11 +143,12 @@ export class SnykMapper extends BaseConverter {
               {
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {
-                  path: 'from', transformer: (input: unknown) => {
+                  path: 'from',
+                  transformer: (input: unknown) => {
                     if (Array.isArray(input)) {
-                      return `From : [ ${input.join(' , ')} ]`
+                      return `From : [ ${input.join(' , ')} ]`;
                     } else {
-                      return ''
+                      return '';
                     }
                   }
                 },
@@ -156,7 +162,7 @@ export class SnykMapper extends BaseConverter {
       }
     ]
   };
-  constructor(snykJson: object) {
+  constructor(snykJson: Record<string, unknown>) {
     super(snykJson);
   }
   setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {

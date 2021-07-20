@@ -1,13 +1,12 @@
-import parser from 'fast-xml-parser'
+import parser from 'fast-xml-parser';
 import {
-  ControlDescription,
   ControlResult,
   ControlResultStatus,
   ExecJSON
-} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
+} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, LookupPath, MappedTransform} from './base-converter'
+import {BaseConverter, LookupPath, MappedTransform} from './base-converter';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['high', 0.7],
@@ -16,78 +15,94 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['informational', 0]
 ]);
 
-function parseXml(xml: string) {
+function parseXml(xml: string): Record<string, unknown> {
   const options = {
     attributeNamePrefix: '',
     textNodeName: 'text',
     ignoreAttributes: false
   };
-  return parser.parse(xml, options)
+  return parser.parse(xml, options);
 }
-function compileFindings(input: object) {
-  let keys = _.get(input, 'dataset.metadata.item').map((element: object) => {
-    return _.get(element, 'name')
-  })
-  let findings = _.get(input, 'dataset.data.row').map((element: object) => {
-    return Object.fromEntries(keys.map(function (key: string, i: number) {
-      return [key, _.get(element, `value[${i}]`)]
-    }))
-  })
-  return Object.fromEntries([['data', findings]])
+function compileFindings(
+  input: Record<string, unknown>
+): Record<string, unknown> {
+  const keys = _.get(input, 'dataset.metadata.item');
+  const findings = _.get(input, 'dataset.data.row');
+
+  let output: unknown[] = [];
+
+  if (Array.isArray(keys) && Array.isArray(findings)) {
+    const keyNames = keys.map((element: Record<string, unknown>): string => {
+      return _.get(element, 'name') as string;
+    });
+    output = findings.map((element: Record<string, unknown>) => {
+      return Object.fromEntries(
+        keyNames.map(function (name: string, i: number) {
+          return [name, _.get(element, `value[${i}]`)];
+        })
+      );
+    });
+  }
+  return Object.fromEntries([['data', output]]);
 }
-function formatSummary(entry: unknown) {
-  let text = []
-  text.push(`Organization : ${_.get(entry, 'Organization')}`)
-  text.push(`Asset : ${_.get(entry, 'Check Asset')}`)
-  text.push(`Asset Type : ${_.get(entry, 'Asset Type')}`)
-  text.push(`IP Address, Port, Instance : ${_.get(entry, 'Asset Type')}`)
-  text.push(`IP Address, Port, Instance : ${_.get(entry, 'IP Address, Port, Instance')} `)
-  return text.join('\n')
+function formatSummary(entry: unknown): string {
+  const text = [];
+  text.push(`Organization : ${_.get(entry, 'Organization')}`);
+  text.push(`Asset : ${_.get(entry, 'Check Asset')}`);
+  text.push(`Asset Type : ${_.get(entry, 'Asset Type')}`);
+  text.push(`IP Address, Port, Instance : ${_.get(entry, 'Asset Type')}`);
+  text.push(
+    `IP Address, Port, Instance : ${_.get(
+      entry,
+      'IP Address, Port, Instance'
+    )} `
+  );
+  return text.join('\n');
 }
-function formatDesc(entry: unknown) {
-  let text = []
-  text.push(`Task : ${_.get(entry, 'Task')}`)
-  text.push(`Check Category : ${_.get(entry, 'Check Category')}`)
-  return text.join('; ')
+function formatDesc(entry: unknown): string {
+  const text = [];
+  text.push(`Task : ${_.get(entry, 'Task')}`);
+  text.push(`Check Category : ${_.get(entry, 'Check Category')}`);
+  return text.join('; ');
 }
 function impactMapping(severity: unknown): number {
   if (typeof severity === 'string' || typeof severity === 'number') {
     return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
   } else {
-    return 0
+    return 0;
   }
 }
 function getStatus(input: unknown): ControlResultStatus {
   switch (input) {
     case 'Fact':
-      return ControlResultStatus.Skipped
+      return ControlResultStatus.Skipped;
     case 'Failed':
-      return ControlResultStatus.Failed
+      return ControlResultStatus.Failed;
     case 'Finding':
-      return ControlResultStatus.Failed
+      return ControlResultStatus.Failed;
     case 'Not A Finding':
-      return ControlResultStatus.Passed
+      return ControlResultStatus.Passed;
   }
-  return ControlResultStatus.Skipped
+  return ControlResultStatus.Skipped;
 }
 function getBacktrace(input: unknown): string {
   if (input === 'Failed') {
-    return 'DB Protect Failed Check'
+    return 'DB Protect Failed Check';
   } else {
-    return ''
+    return '';
   }
 }
 function handleBacktrace(input: unknown, _file: unknown): ControlResult[] {
   if (Array.isArray(input)) {
     input = input.map((element) => {
       if (_.get(element, 'backtrace')[0] === '') {
-        return _.omit(element, 'backtrace')
+        return _.omit(element, 'backtrace');
       } else {
-        return element
+        return element;
       }
-    })
+    });
   }
-  return input as ControlResult[]
+  return input as ControlResult[];
 }
 function idToString(id: unknown): string {
   if (typeof id === 'string' || typeof id === 'number') {
@@ -153,9 +168,9 @@ export class DBProtectMapper extends BaseConverter {
     ]
   };
   constructor(dbProtectXml: string) {
-    super(compileFindings(parseXml(dbProtectXml)))
+    super(compileFindings(parseXml(dbProtectXml)));
   }
   setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
-    super.setMappings(customMappings)
+    super.setMappings(customMappings);
   }
 }

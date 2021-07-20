@@ -1,9 +1,8 @@
-import parser from 'fast-xml-parser'
-import * as htmlparser from 'htmlparser2'
+import parser from 'fast-xml-parser';
+import * as htmlparser from 'htmlparser2';
 import {
   ExecJSON,
-  ControlResultStatus
-} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
+} from 'inspecjs'
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json'
 import {BaseConverter, LookupPath, MappedTransform} from './base-converter'
@@ -18,9 +17,12 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['information', 0.3]
 ]);
 
-const CWE_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/cwe-nist-mapping.csv')
-const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE)
-const DEFAULT_NIST_TAG = ['SA-11', 'RA-5']
+const CWE_NIST_MAPPING_FILE = path.resolve(
+  __dirname,
+  '../data/cwe-nist-mapping.csv'
+);
+const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE);
+const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
 // Transformation Functions
 function formatCodeDesc(issue: unknown): string {
@@ -58,13 +60,13 @@ function parseHtml(input: unknown): string {
   if (typeof input === 'string') {
     myParser.write(input);
   }
-  return textData.join(' ');
+  return textData.join('');
 }
 function impactMapping(severity: unknown): number {
   if (typeof severity === 'string' || typeof severity === 'number') {
     return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
   } else {
-    return 0
+    return 0;
   }
 }
 function idToString(id: unknown): string {
@@ -74,25 +76,24 @@ function idToString(id: unknown): string {
     return '';
   }
 }
-function formatCweId(input: string) {
+function formatCweId(input: string): string {
   return parseHtml(input).slice(2, -2).trimLeft();
 }
-function nistTag(input: string) {
-  let cwe = formatCweId(input).split('CWE-')
-  cwe.shift()
-  cwe = cwe.map(x => x.split(':')[0])
-  return CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG).concat(['Rev_4'])
+function nistTag(input: string): string[] {
+  let cwe = formatCweId(input).split('CWE-');
+  cwe.shift();
+  cwe = cwe.map((x) => x.split(':')[0]);
+  return CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG).concat(['Rev_4']);
 }
 
-
 // Mappings
-function parseXml(xml: string) {
+function parseXml(xml: string): Record<string, unknown> {
   const options = {
     attributeNamePrefix: '',
     textNodeName: 'text',
     ignoreAttributes: false
   };
-  return parser.parse(xml, options)
+  return parser.parse(xml, options);
 }
 export class BurpSuiteMapper extends BaseConverter {
   mappings: MappedTransform<ExecJSON, LookupPath> = {
@@ -129,7 +130,10 @@ export class BurpSuiteMapper extends BaseConverter {
             desc: {path: 'issueBackground', transformer: parseHtml},
             impact: {path: 'severity', transformer: impactMapping},
             tags: {
-              nist: {path: 'vulnerabilityClassifications', transformer: nistTag},
+              nist: {
+                path: 'vulnerabilityClassifications',
+                transformer: nistTag
+              },
               cweid: {
                 path: 'vulnerabilityClassifications',
                 transformer: formatCweId
@@ -164,9 +168,9 @@ export class BurpSuiteMapper extends BaseConverter {
     ]
   };
   constructor(burpsXml: string) {
-    super(parseXml(burpsXml))
+    super(parseXml(burpsXml));
   }
   setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
-    super.setMappings(customMappings)
+    super.setMappings(customMappings);
   }
 }

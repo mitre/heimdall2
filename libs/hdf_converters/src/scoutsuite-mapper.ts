@@ -1,9 +1,12 @@
-import {ControlResultStatus, ExecJSON} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+import {
+  ControlResultStatus,
+  ExecJSON
+} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
+import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {MappedTransform, LookupPath, BaseConverter} from './base-converter'
-import {ScoutsuiteNistMapping} from './mappings/ScoutsuiteNistMapping'
-import path from 'path'
+import {BaseConverter, LookupPath, MappedTransform} from './base-converter';
+import {ScoutsuiteNistMapping} from './mappings/ScoutsuiteNistMapping';
 
 const INSPEC_INPUTS_MAPPING = {
   string: 'String',
@@ -13,75 +16,96 @@ const INSPEC_INPUTS_MAPPING = {
   hash: 'Hash',
   boolean: 'Boolean',
   any: 'Any'
-}
+};
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['danger', 0.7],
-  ['warning', 0.5],
+  ['warning', 0.5]
 ]);
 
-const SCOUTSUITE_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/scoutsuite-nist-mapping.csv')
+const SCOUTSUITE_NIST_MAPPING_FILE = path.resolve(
+  __dirname,
+  '../data/scoutsuite-nist-mapping.csv'
+);
 
-const SCOUTSUITE_NIST_MAPPING = new ScoutsuiteNistMapping(SCOUTSUITE_NIST_MAPPING_FILE)
+const SCOUTSUITE_NIST_MAPPING = new ScoutsuiteNistMapping(
+  SCOUTSUITE_NIST_MAPPING_FILE
+);
 
 function formatTargetId(file: unknown): string {
-  return `${_.get(file, 'last_run.ruleset_name')} ruleset:${_.get(file, 'provider_name')}:${_.get(file, 'account_id')}`
+  return `${_.get(file, 'last_run.ruleset_name')} ruleset:${_.get(
+    file,
+    'provider_name'
+  )}:${_.get(file, 'account_id')}`;
 }
 function formatTitle(file: unknown): string {
-  return `Scout Suite Report using ${_.get(file, 'last_run.ruleset_name')} ruleset on ${_.get(file, 'provider_name')} with account ${_.get(file, 'account_id')}}`
-}
-function joinArray(input: unknown) {
-  if (Array.isArray(input)) {
-    return input.join(', ')
-  } else {
-    return input
-  }
+  return `Scout Suite Report using ${_.get(
+    file,
+    'last_run.ruleset_name'
+  )} ruleset on ${_.get(file, 'provider_name')} with account ${_.get(
+    file,
+    'account_id'
+  )}`;
 }
 function impactMapping(severity: unknown): number {
   if (typeof severity === 'string' || typeof severity === 'number') {
     return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
   } else {
-    return 0
+    return 0;
   }
 }
 function compliance(input: unknown): string {
   if (Array.isArray(input)) {
-    let output = input.map(element => `Compliant with ${_.get(element, 'name')}, reference ${_.get(element, 'reference')}, version ${_.get(element, 'version')}`).join('\n')
-    return output
+    const output = input
+      .map(
+        (element) =>
+          `Compliant with ${_.get(element, 'name')}, reference ${_.get(
+            element,
+            'reference'
+          )}, version ${_.get(element, 'version')}`
+      )
+      .join('\n');
+    return output;
   } else {
-    return ''
+    return '';
   }
 }
 function getStatus(input: unknown): ControlResultStatus {
   if (_.get(input, 'checked_items') === 0) {
-    return ControlResultStatus.Skipped
+    return ControlResultStatus.Skipped;
   } else if (_.get(input, 'flagged_items') === 0) {
-    return ControlResultStatus.Passed
+    return ControlResultStatus.Passed;
   } else {
-    return ControlResultStatus.Failed
+    return ControlResultStatus.Failed;
   }
 }
 function checkSkip(input: unknown): string {
   if (_.get(input, 'checked_items') === 0) {
-    return 'Skipped because no items were checked'
+    return 'Skipped because no items were checked';
   } else {
-    return ''
+    return '';
   }
 }
 function getMessage(input: unknown): string {
   if (_.get(input, 'checked_items') === 0) {
-    return ''
+    return '';
   } else if (_.get(input, 'flagged_items') === 0) {
-    return `0 flagged items out of ${_.get(input, 'checked_items')} checked items`
+    return `0 flagged items out of ${_.get(
+      input,
+      'checked_items'
+    )} checked items`;
   } else {
-    return `${_.get(input, 'flagged_items')} flagged items out of ${_.get(input, 'checked_items')} checked items:\n${_.get(input, 'items').join("\n")}`
+    return `${_.get(input, 'flagged_items')} flagged items out of ${_.get(
+      input,
+      'checked_items'
+    )} checked items:\n${_.get(input, 'items').join('\n')}`;
   }
 }
-function nistTag(rule: string) {
-  return SCOUTSUITE_NIST_MAPPING.nistTag(rule)
+function nistTag(rule: string): string[] {
+  return SCOUTSUITE_NIST_MAPPING.nistTag(rule);
 }
 
-function collapseServices(file: object): object {
-  let services = Object.values(_.get(file, 'services'))
+function collapseServices(file: Record<string, unknown>): Record<string, unknown> {
+  let services = Object.values(_.get(file, 'services') as Record<string, unknown>)
   let findings = new Array<object>()
   services.forEach(element => {
     findings.push(_.get(element, 'findings'))
@@ -142,25 +166,57 @@ export class ScoutsuiteMapper extends BaseConverter {
           {
             name: 'run_parameters_excluded_regions',
             options: {
-              value: {path: 'last_run.run_parameters.excluded_region', transformer: joinArray}
+              value: {
+                path: 'last_run.run_parameters.excluded_region',
+                transformer: (input: unknown[] | string) => {
+                  if (typeof input === 'string') {
+                    return input
+                  }
+                  return input.join(', ');
+                }
+              }
             }
           },
           {
             name: 'run_parameters_regions',
             options: {
-              value: {path: 'last_run.run_parameters.regions', transformer: joinArray}
+              value: {
+                path: 'last_run.run_parameters.regions',
+                transformer: (input: unknown[] | string) => {
+                  if (typeof input === 'string') {
+                    return input
+                  }
+                  return input.join(', ');
+                }
+              }
             }
           },
           {
             name: 'run_parameters_services',
             options: {
-              value: {path: 'last_run.run_parameters.services', transformer: joinArray}
+              value: {
+                path: 'last_run.run_parameters.services',
+                transformer: (input: unknown[] | string) => {
+                  if (typeof input === 'string') {
+                    return input
+                  }
+                  return input.join(', ');
+                }
+              }
             }
           },
           {
             name: 'run_parameters_skipped_services',
             options: {
-              value: {path: 'last_run.run_parameters.skipped_services', transformer: joinArray}
+              value: {
+                path: 'last_run.run_parameters.skipped_services',
+                transformer: (input: unknown[] | string) => {
+                  if (typeof input === 'string') {
+                    return input
+                  }
+                  return input.join(', ');
+                }
+              }
             }
           },
           {
@@ -230,9 +286,9 @@ export class ScoutsuiteMapper extends BaseConverter {
     ]
   };
   constructor(scoutsuiteJson: string) {
-    super(collapseServices(JSON.parse(scoutsuiteJson.split('\n', 2)[1])))
+    super(collapseServices(JSON.parse(scoutsuiteJson.split('\n', 2)[1])));
   }
   setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
-    super.setMappings(customMappings)
+    super.setMappings(customMappings);
   }
 }

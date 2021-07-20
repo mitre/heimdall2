@@ -54,3 +54,6 @@ nginx/certs/ssl_certificate_key.key
 apps/frontend/public/static/export/bootstrap.min.css
 apps/frontend/public/static/export/bootstrap.min.js
 apps/frontend/public/static/export/jquery.min.js
+libs/hdf_converters/outputs
+libs/hdf_converters/converted_jsons
+

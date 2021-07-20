@@ -1,9 +1,12 @@
-import {ControlResultStatus, ExecJSON} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+import {
+  ControlResultStatus,
+  ExecJSON
+} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
+import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {MappedTransform, LookupPath, BaseConverter} from './base-converter'
-import {CweNistMapping} from './mappings/CweNistMapping'
-import path from 'path'
+import {BaseConverter, LookupPath, MappedTransform} from './base-converter';
+import {CweNistMapping} from './mappings/CweNistMapping';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['error', 0.7],
@@ -11,35 +14,38 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['note', 0.3]
 ]);
 
-const CWE_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/cwe-nist-mapping.csv')
-const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE)
-const DEFAULT_NIST_TAG = ['SA-11', 'RA-5']
+const CWE_NIST_MAPPING_FILE = path.resolve(
+  __dirname,
+  '../data/cwe-nist-mapping.csv'
+);
+const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE);
+const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
 function extractCwe(text: string): string[] {
-  let output = text.split('(').slice(-1)[0].slice(0, -2).split(', ')
+  let output = text.split('(').slice(-1)[0].slice(0, -2).split(', ');
   if (output.length === 1) {
-    output = text.split('(').slice(-1)[0].slice(0, -2).split('!/')
+    output = text.split('(').slice(-1)[0].slice(0, -2).split('!/');
   }
-  return output
+  return output;
 }
 function impactMapping(severity: unknown): number {
   if (typeof severity === 'string' || typeof severity === 'number') {
-    return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0.1
+    return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0.1;
   } else {
-    return 0.1
+    return 0.1;
   }
 }
 function formatCodeDesc(input: unknown): string {
-  let output = []
-  output.push(`URL : ${_.get(input, 'artifactLocation.uri')}`)
-  output.push(`LINE : ${_.get(input, 'region.startLine')}`)
-  output.push(`COLUMN : ${_.get(input, 'region.startColumn')}`)
-  return output.join(' ')
+  const output = [];
+  output.push(`URL : ${_.get(input, 'artifactLocation.uri')}`);
+  output.push(`LINE : ${_.get(input, 'region.startLine')}`);
+  output.push(`COLUMN : ${_.get(input, 'region.startColumn')}`);
+  return output.join(' ');
 }
 function nistTag(text: string): string[] {
-  let identifiers = extractCwe(text)
-  identifiers = identifiers.map(element => element.split('-')[1])
-  return CWE_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG)
+  let identifiers = extractCwe(text);
+  identifiers = identifiers.map((element) => element.split('-')[1]);
+  return CWE_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG);
 }
 
 export class SarifMapper extends BaseConverter {
@@ -87,21 +93,23 @@ export class SarifMapper extends BaseConverter {
               line: {path: 'locations[0].physicalLocation.region.startLine'}
             },
             title: {
-              path: 'message.text', transformer: (text: unknown) => {
+              path: 'message.text',
+              transformer: (text: unknown) => {
                 if (typeof text === 'string') {
-                  return text.split(': ')[0]
+                  return text.split(': ')[0];
                 } else {
-                  return ''
+                  return '';
                 }
               }
             },
             id: {path: 'ruleId'},
             desc: {
-              path: 'message.text', transformer: (text: unknown) => {
+              path: 'message.text',
+              transformer: (text: unknown) => {
                 if (typeof text === 'string') {
-                  return text.split(': ')[1]
+                  return text.split(': ')[1];
                 } else {
-                  return ''
+                  return '';
                 }
               }
             },
@@ -128,6 +136,6 @@ export class SarifMapper extends BaseConverter {
     super(JSON.parse(sarifJson));
   }
   setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
-    super.setMappings(customMappings)
+    super.setMappings(customMappings);
   }
 }

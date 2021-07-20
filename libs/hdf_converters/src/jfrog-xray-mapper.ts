@@ -1,9 +1,17 @@
-import {ControlResultStatus, ExecJSON} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
-import {version as HeimdallToolsVersion} from '../package.json'
-import _ from 'lodash'
-import {MappedTransform, LookupPath, BaseConverter, generateHash} from './base-converter'
-import {CweNistMapping} from './mappings/CweNistMapping'
+import {
+  ControlResultStatus,
+  ExecJSON
+} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+import _ from 'lodash';
 import path from 'path';
+import {version as HeimdallToolsVersion} from '../package.json';
+import {
+  BaseConverter,
+  generateHash,
+  LookupPath,
+  MappedTransform
+} from './base-converter';
+import {CweNistMapping} from './mappings/CweNistMapping';
 
 // Constants
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -11,27 +19,33 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['medium', 0.5],
   ['low', 0.3]
 ]);
-const CWE_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/cwe-nist-mapping.csv')
-const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE)
-const DEFAULT_NIST_TAG = ['SA-11', 'RA-5']
+const CWE_NIST_MAPPING_FILE = path.resolve(
+  __dirname,
+  '../data/cwe-nist-mapping.csv'
+);
+const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE);
+const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
 // Transformation Functions
 function hashId(vulnerability: unknown): string {
   if (_.get(vulnerability, 'id') === '') {
-    const hash = generateHash(_.get(vulnerability, 'summary').toString(), 'md5')
+    const hash = generateHash(
+      _.get(vulnerability, 'summary').toString(),
+      'md5'
+    );
     return hash;
   } else {
     return _.get(vulnerability, 'id') as string;
   }
 }
 function formatDesc(vulnerability: unknown): string {
-  let text = []
+  const text = [];
   if (_.has(vulnerability, 'description')) {
     text.push(_.get(vulnerability, 'description').toString());
   }
   if (_.has(vulnerability, 'cves')) {
-    let re1 = /":/gi;
-    let re2 = /,/gi;
+    const re1 = /":/gi;
+    const re2 = /,/gi;
     text.push(
       `cves: ${JSON.stringify(_.get(vulnerability, 'cves'))
         .replace(re1, '"=>')
@@ -44,12 +58,12 @@ function impactMapping(severity: unknown): number {
   if (typeof severity === 'string' || typeof severity === 'number') {
     return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
   } else {
-    return 0
+    return 0;
   }
 }
 function formatCodeDesc(vulnerability: unknown): string {
-  let codeDescArray = new Array<string>();
-  let re = /,/gi;
+  const codeDescArray = new Array<string>();
+  const re = /,/gi;
   if (_.has(vulnerability, 'source_comp_id')) {
     codeDescArray.push(
       `source_comp_id : ${_.get(vulnerability, 'source_comp_id')}`
@@ -87,20 +101,20 @@ function formatCodeDesc(vulnerability: unknown): string {
   }
   return codeDescArray.join('\n').replace(re, ', ');
 }
-function parseIdentifier(identifier: object): Array<string> {
-  let output = new Array<string>()
+function parseIdentifier(identifier: Record<string, unknown>): string[] {
+  const output = new Array<string>();
   if (Array.isArray(identifier)) {
-    identifier.forEach(element => {
+    identifier.forEach((element) => {
       if (element.split('CWE-')[1]) {
-        output.push(element.split('CWE-')[1])
+        output.push(element.split('CWE-')[1]);
       }
-    })
+    });
   }
-  return output
+  return output;
 }
-function nistTag(identifier: object): Array<string> {
-  let identifiers = parseIdentifier(identifier)
-  return CWE_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG)
+function nistTag(identifier: Record<string, unknown>): string[] {
+  const identifiers = parseIdentifier(identifier);
+  return CWE_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG);
 }
 
 // Mappings
@@ -136,7 +150,10 @@ export class JfrogXrayMapper extends BaseConverter {
             path: 'data',
             key: 'id',
             tags: {
-              nist: {path: 'component_versions.more_details.cves[0].cwe', transformer: nistTag},
+              nist: {
+                path: 'component_versions.more_details.cves[0].cwe',
+                transformer: nistTag
+              },
               cweid: {
                 path: 'component_versions.more_details.cves[0].cwe',
                 transformer: parseIdentifier
@@ -171,6 +188,6 @@ export class JfrogXrayMapper extends BaseConverter {
     super(JSON.parse(xrayJson), true);
   }
   setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
-    super.setMappings(customMappings)
+    super.setMappings(customMappings);
   }
 }
