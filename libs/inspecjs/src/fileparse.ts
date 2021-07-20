@@ -110,8 +110,7 @@ export function convertFileContextual(
     const profile = result['1_0_ProfileJson'];
     return contextualizeProfile(profile);
   } else {
-    const err = new Error(`Failed to convert file due to possible errors`);
-    throw err;
+    throw new Error(`Failed to convert file due to possible errors`);
   }
 }
 
