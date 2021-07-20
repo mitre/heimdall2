@@ -21,7 +21,7 @@ interface ConversionResults {
   '1_0_ProfileJson'?: PROFILE_JSON_1_0.ProfileJSON;
 }
 
-export type ConversionErrors = {[K in keyof ConversionResults]?: any};
+export type ConversionErrors = {[K in keyof ConversionResults]?: unknown};
 export interface ConversionResult extends ConversionResults {
   errors?: ConversionErrors;
 }
@@ -111,7 +111,6 @@ export function convertFileContextual(
     return contextualizeProfile(profile);
   } else {
     const err = new Error(`Failed to convert file due to possible errors`);
-    (err as any).json_errors = result;
     throw err;
   }
 }
