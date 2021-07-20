@@ -2,15 +2,12 @@ import {Ability} from '@casl/ability';
 import {
   BadRequestException,
   ForbiddenException,
-  forwardRef,
-  Inject,
   Injectable,
   NotFoundException
 } from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {compare, hash} from 'bcryptjs';
 import {FindOptions} from 'sequelize/types';
-import {AuthnService} from '../authn/authn.service';
 import {Action} from '../casl/casl-ability.factory';
 import {CreateUserDto} from './dto/create-user.dto';
 import {DeleteUserDto} from './dto/delete-user.dto';
@@ -21,9 +18,7 @@ import {User} from './user.model';
 export class UsersService {
   constructor(
     @InjectModel(User)
-    private readonly userModel: typeof User,
-    @Inject(forwardRef(() => AuthnService))
-    private readonly authnService: AuthnService
+    private readonly userModel: typeof User
   ) {}
 
   async adminFindAllUsers(): Promise<User[]> {
@@ -75,7 +70,7 @@ export class UsersService {
     abac: Ability
   ): Promise<User> {
     if (!abac.can('update-no-password', userToUpdate)) {
-      await this.authnService.testPassword(updateUserDto, userToUpdate);
+      await this.testPassword(updateUserDto, userToUpdate);
     }
     if (
       updateUserDto.password == null &&
@@ -159,6 +154,24 @@ export class UsersService {
       throw new NotFoundException('User with given id not found');
     } else {
       return user;
+    }
+  }
+
+  async testPassword(
+    updateUserDto: {currentPassword?: string},
+    user: User
+  ): Promise<void> {
+    try {
+      if (
+        !(await compare(
+          updateUserDto.currentPassword || '',
+          user.encryptedPassword
+        ))
+      ) {
+        throw new ForbiddenException('Current password is incorrect');
+      }
+    } catch {
+      throw new ForbiddenException('Current password is incorrect');
     }
   }
 }

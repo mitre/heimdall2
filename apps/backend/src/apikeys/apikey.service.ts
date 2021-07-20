@@ -9,6 +9,7 @@ import jwt from 'jsonwebtoken';
 import {CreateApiKeyDto} from '../apikeys/dto/create-apikey.dto';
 import {ConfigService} from '../config/config.service';
 import {User} from '../users/user.model';
+import {UsersService} from '../users/users.service';
 import {ApiKey} from './apikey.model';
 import {APIKeyDto} from './dto/apikey.dto';
 import {UpdateAPIKeyDto} from './dto/update-apikey.dto';
@@ -18,7 +19,8 @@ export class ApiKeyService {
   constructor(
     @InjectModel(ApiKey)
     private readonly apiKeyModel: typeof ApiKey,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly usersService: UsersService
   ) {}
 
   async count(): Promise<number> {
