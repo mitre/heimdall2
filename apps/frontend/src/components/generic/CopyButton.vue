@@ -6,7 +6,7 @@
     small
     class="mr-2"
     type="button"
-    >mdi-clipboard-outline</v-icon
+    >{{ icon }}</v-icon
   >
 </template>
 
@@ -23,6 +23,7 @@ Vue.use(VueClipboard);
 @Component({})
 export default class CopyButton extends Vue {
   @Prop({required: true}) readonly text!: string;
+  @Prop({required: false, default: 'mdi-clipboard-outline'}) readonly icon!: string;
 
   onCopy() {
     SnackbarModule.notify('Text copied to your clipboard');

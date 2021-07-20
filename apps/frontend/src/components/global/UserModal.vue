@@ -28,6 +28,8 @@
                 v-model="userInfo.firstName"
                 :disabled="update_unavailable"
                 label="First Name"
+                aria-autocomplete="both"
+                autocomplete="given-name"
               />
             </v-col>
             <v-col>
@@ -36,6 +38,8 @@
                 v-model="userInfo.lastName"
                 :disabled="update_unavailable"
                 label="Last Name"
+                aria-autocomplete="both"
+                autocomplete="family-name"
               />
             </v-col>
           </v-row>
@@ -47,7 +51,7 @@
                 :disabled="update_unavailable"
                 :error-messages="emailErrors($v.userInfo.email)"
                 label="Email"
-                type="text"
+                type="email"
                 required
                 @blur="$v.userInfo.email.$touch()"
               />
@@ -85,48 +89,12 @@
             </div>
             <InputDialog
               :show-modal="inputPasswordDialog"
-              title="Please enter your current password to add an API key"
+              title="Please enter your current password to update API keys"
               text-field-label="Current Password"
               :is-password="true"
               @update-value="updateCurrentPassword"
               @cancel="inputPasswordDialog = false"
-              @confirm="addAPIKey"
-            />
-            <InputDialog
-              :show-modal="deleteAPIKeyDialog"
-              title="Please enter your current password to delete an API key"
-              text-field-label="Current Password"
-              :is-password="true"
-              @update-value="updateCurrentPassword"
-              @cancel="
-                activeAPIKey = null;
-                deleteAPIKeyDialog = false;
-              "
-              @confirm="deleteAPIKeyConfirm"
-            />
-            <InputDialog
-              :show-modal="updateAPIKeyDialog"
-              title="Please enter your current password to update an API key"
-              text-field-label="Current Password"
-              :is-password="true"
-              @update-value="updateCurrentPassword"
-              @cancel="
-                activeAPIKey = null;
-                updateAPIKeyDialog = false;
-              "
-              @confirm="updateAPIKey"
-            />
-            <InputDialog
-              :show-modal="refreshAPIKeyDialog"
-              title="Please enter your current password to refresh an API key"
-              text-field-label="Current Password"
-              :is-password="true"
-              @update-value="updateCurrentPassword"
-              @cancel="
-                activeAPIKey = null;
-                refreshAPIKeyDialog = false;
-              "
-              @confirm="refreshAPIKeyConfirm"
+              @confirm="updateCallback"
             />
             <v-data-table
               :headers="apiKeyHeaders"
@@ -310,9 +278,6 @@ export default class UserModal extends Vue {
   apiKeysDisabled = false;
   activeAPIKey: IApiKey | null = null
   inputPasswordDialog = false;
-  deleteAPIKeyDialog = false;
-  refreshAPIKeyDialog = false;
-  updateAPIKeyDialog = false;
 
   dialog = false;
   changePassword = false;
@@ -322,6 +287,7 @@ export default class UserModal extends Vue {
   newPassword = '';
   passwordConfirmation = '';
   buttonLoading = false;
+  updateCallback = () => {return;}
 
   mounted() {
     if(!this.admin) {
@@ -398,6 +364,7 @@ export default class UserModal extends Vue {
       .catch((error) => {
         if (error.response) {
           if(error.response.status === 403) {
+            this.updateCallback = this.addAPIKey
             this.inputPasswordDialog = true;
           }
         }
@@ -407,11 +374,12 @@ export default class UserModal extends Vue {
 
   deleteAPIKey(keyToDelete: IApiKey) {
     this.activeAPIKey = keyToDelete;
-    this.deleteAPIKeyDialog = true
+    this.updateCallback = this.deleteAPIKeyConfirm
+    this.inputPasswordDialog = true
   }
 
   deleteAPIKeyConfirm() {
-    this.deleteAPIKeyDialog = false;
+    this.inputPasswordDialog = false;
     axios
       .delete(`/apikeys/${this.activeAPIKey?.id}`, {data: {...this.activeAPIKey, currentPassword: this.currentPassword}})
       .then(({data}) => {
@@ -420,7 +388,7 @@ export default class UserModal extends Vue {
       .catch((error) => {
         if (error.response) {
           if(error.response.status === 403) {
-            this.deleteAPIKeyDialog = true;
+            this.inputPasswordDialog = true;
           }
         }
         throw error
@@ -431,13 +399,14 @@ export default class UserModal extends Vue {
     if(typeof item === 'object') {
       this.activeAPIKey = item
     }
-    this.updateAPIKeyDialog = false;
+    this.inputPasswordDialog = false;
     axios
       .put<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {name: this.activeAPIKey?.name, currentPassword: this.currentPassword})
       .catch((error) => {
         if (error.response) {
           if(error.response.status === 403) {
-            this.updateAPIKeyDialog = true;
+            this.updateCallback = this.updateAPIKey
+            this.inputPasswordDialog = true;
           }
         }
         throw error
@@ -447,13 +416,13 @@ export default class UserModal extends Vue {
 
   refreshAPIKey(keyToRefresh: IApiKey) {
     this.activeAPIKey = keyToRefresh;
-    this.refreshAPIKeyDialog = true
+    this.updateCallback = this.refreshAPIKeyConfirm
+    this.inputPasswordDialog = true
   }
 
   refreshAPIKeyConfirm() {
     this.deleteAPIKeyConfirm()
     this.addAPIKey()
-    this.refreshAPIKeyDialog = false;
   }
 
   updateCurrentPassword(password: string): void {

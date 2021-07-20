@@ -50,7 +50,10 @@
                 @updateEvaluations="updateEvaluations"
                 @close="editEvaluationDialog = false"
               />
-              <ShareEvaluationButton title="Share Result" :evaluation="item" />
+              <CopyButton
+                :text="createShareLink(item)"
+                icon="mdi-share-variant"
+              />
               <div v-if="item.editable">
                 <v-icon
                   data-cy="edit"
@@ -90,7 +93,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
-import ShareEvaluationButton from '@/components/generic/ShareEvaluationButton.vue'
+import CopyButton from '@/components/generic/CopyButton.vue'
 import TagRow from '@/components/global/tags/TagRow.vue';
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations'
@@ -103,7 +106,7 @@ import ActionDialog from '@/components/generic/ActionDialog.vue';
   components: {
     ActionDialog,
     EditEvaluationModal,
-    ShareEvaluationButton,
+    CopyButton,
     TagRow
   }
 })
@@ -166,6 +169,10 @@ export default class LoadFileList extends Vue {
       SnackbarModule.notify("Deleted evaluation successfully.")
     })
     this.deleteItemDialog = false;
+  }
+
+  createShareLink(item: IEvaluation) {
+    return `${window.location.origin}/results/${item.id}`
   }
 
   get filteredFiles() {
