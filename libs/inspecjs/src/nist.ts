@@ -3,7 +3,7 @@ import {ALL_NIST_CONTROL_NUMBERS, ALL_NIST_FAMILIES} from './raw_nist';
 
 // Regexes.
 const NIST_FAMILY_RE = /^[A-Z]{2}$/;
-const NIST_CONTROL_RE = /^([A-Z]{2})-([0-9]+)(.*)$/;
+const NIST_CONTROL_RE = /^([A-Z]{2})-([0-9]+)([\(\)a-zA-Z0-9\.\s]*)$/;
 const SPEC_SPLITTER = /[\s|\(|\)|\.]+/; // Includes all whitespace, periods, and parenthesis
 const REV_RE = /^rev[\s_.]+(\d+)$/i; // Matches Rev_5 etc
 type ParseNist = NistControl | NistRevision | null;
