@@ -93,17 +93,16 @@
 
 <script lang="ts">
 import Component, {mixins} from 'vue-class-component';
-import {nist, context} from 'inspecjs';
+import {parse_nist, is_control, ContextualizedControl} from 'inspecjs';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 import {NIST_DESCRIPTIONS, nistCanonConfig} from '@/utilities/nist_util';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import CircleRating from '@/components/generic/CircleRating.vue';
-import {is_control} from 'inspecjs/dist/nist';
 import {Prop} from 'vue-property-decorator';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
 import _ from 'lodash';
 
-export function getControlRunTime(control: context.ContextualizedControl): number {
+export function getControlRunTime(control: ContextualizedControl): number {
   return control.hdf.segments?.reduce((total, segment) => segment.run_time || 0 + total, 0) || 0
 }
 
@@ -121,7 +120,7 @@ interface Tag {
 })
 export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   @Prop({type: Object, required: true})
-  readonly control!: context.ContextualizedControl;
+  readonly control!: ContextualizedControl;
 
   @Prop({type: Boolean, default: false}) readonly controlExpanded!: boolean;
   @Prop({type: Boolean, default: false}) readonly showImpact!: boolean;
@@ -131,7 +130,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   }
 
   get filename(): string | undefined {
-    return _.get(this.control, 'sourced_from.sourced_from.from_file.filename')
+    return _.get(this.control, 'sourcedFrom.sourcedFrom.from_file.filename')
   }
 
   get truncated_title(): string {
@@ -165,7 +164,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   // Get NIST tag description for NIST tag, this is pulled from the 800-53 xml
   // and relies on a script not contained in the project
   descriptionForTag(tag: string): string {
-    const nisted = nist.parse_nist(tag);
+    const nisted = parse_nist(tag);
     if (is_control(nisted)) {
       const canon = nisted.canonize(nistCanonConfig);
       const found = NIST_DESCRIPTIONS[canon];
@@ -179,12 +178,12 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   }
 
   get nistTags(): Tag[] {
-    let nist_tags = this.control.hdf.raw_nist_tags;
-    nist_tags = nist_tags.filter((tag) => tag.search(/Rev.*\d/i) == -1);
-    return nist_tags.map((tag) => {
-      const nisted = nist.parse_nist(tag);
+    let nistTags = this.control.hdf.rawNistTags;
+    nistTags = nistTags.filter((tag) => tag.search(/Rev.*\d/i) === -1);
+    return nistTags.map((tag) => {
+      const nisted = parse_nist(tag);
       let url = '';
-      if (nist.is_control(nisted)) {
+      if (is_control(nisted)) {
         url = nisted.canonize({
           max_specifiers: 2,
           pad_zeros: false,
