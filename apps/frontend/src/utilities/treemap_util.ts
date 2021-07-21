@@ -90,7 +90,7 @@ function recursive_nist_map(
   // Make our final value
   const ret: TreemapNodeParent = {
     key: node.control.rawText || '',
-    title: node.control.rawText || '', // TODO: Make this like, suck less. IE give more descriptive stuff
+    title: node.control.rawText || '',
     nist_control: node.control,
     parent,
     children
