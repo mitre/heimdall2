@@ -9,13 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-20.04
-    services:
-      postgres:
-        image: postgres:latest
-        env:
-          POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
 
     steps:
      - uses: actions/checkout@v2
