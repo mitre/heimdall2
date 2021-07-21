@@ -57,7 +57,7 @@ import {SourcedContextualizedEvaluation, SourcedContextualizedProfile} from '@/s
 import {profile_unique_key} from '@/utilities/format_util';
 import ProfileInfo from '@/components/cards/ProfileInfo.vue';
 import {Prop, Watch} from 'vue-property-decorator';
-import {ContextualizedProfile} from 'inspecjs/dist/context';
+import {ContextualizedProfile} from 'inspecjs';
 import {InspecDataModule} from '../../store/data_store';
 
 /**
@@ -77,7 +77,7 @@ class TreeItem {
     // Base information
     this.id = profile_unique_key(profile);
     this.name = profile.data.name;
-    this.children = profile.extends_from.map((p) => new TreeItem(p as SourcedContextualizedProfile));
+    this.children = profile.extendsFrom.map((p) => new TreeItem(p as SourcedContextualizedProfile));
   }
 }
 
@@ -119,7 +119,7 @@ export default class ProfileData extends Vue {
     let result: ContextualizedProfile | undefined;
     if(this.file.from_file.hasOwnProperty('evaluation')) {
       result = (this.file as SourcedContextualizedEvaluation).from_file.evaluation.contains.find(
-        (p) => p.extended_by.length === 0
+        (p) => p.extendedBy.length === 0
       );
     }
     return (result || this.file) as SourcedContextualizedProfile;
