@@ -107,12 +107,10 @@ class ContextualizedControlImp implements ContextualizedControl {
   }
 
   get root(): ContextualizedControl {
-    // eslint-disable-next-line
-    let curr: ContextualizedControl = this;
-    while (curr.extendsFrom.length) {
-      curr = curr.extendsFrom[0];
+    if(this.extendsFrom.length) {
+      return this.extendsFrom[0].root;
     }
-    return curr;
+    return this;
   }
 
   /** Returns whether this control is just a duplicate of base/root (but is not itself root) */
