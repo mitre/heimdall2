@@ -10,7 +10,13 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import {context, ControlStatus, nist, Severity} from 'inspecjs';
+import {
+  ContextualizedControl,
+  ContextualizedProfile,
+  ControlStatus,
+  NistControl,
+  Severity
+} from 'inspecjs';
 import _ from 'lodash';
 import LRUCache from 'lru-cache';
 import {
@@ -82,18 +88,18 @@ export type TreeMapState = string[]; // Representing the current path spec, from
  * @param contextControl The control to search for term in
  */
 function contains_term(
-  contextControl: context.ContextualizedControl,
+  contextControl: ContextualizedControl,
   term: string
 ): boolean {
-  const asHdf = contextControl.root.hdf;
+  const asHDF = contextControl.root.hdf;
   // Get our (non-null) searchable data
   const searchables: string[] = [
-    asHdf.wraps.id,
-    asHdf.wraps.title,
-    asHdf.wraps.code,
-    asHdf.severity,
-    asHdf.status,
-    asHdf.finding_details
+    asHDF.wraps.id,
+    asHDF.wraps.title,
+    asHDF.wraps.code,
+    asHDF.severity,
+    asHDF.status,
+    asHDF.finding_details
   ].filter((s) => s !== null) as string[];
 
   // See if any contain term
@@ -222,7 +228,7 @@ export class FilteredData extends VuexModule {
 
   get profiles_for_evaluations(): (
     files: FileID[]
-  ) => readonly context.ContextualizedProfile[] {
+  ) => readonly ContextualizedProfile[] {
     return (files: FileID[]) => {
       // Filter to those that match our filter. In this case that just means come from the right file id
       return this.evaluations(files).flatMap(
@@ -276,12 +282,10 @@ export class FilteredData extends VuexModule {
    * Get all controls from all profiles from the specified file id.
    * Utlizes the profiles getter to accelerate the file filter.
    */
-  get controls(): (filter: Filter) => readonly context.ContextualizedControl[] {
+  get controls(): (filter: Filter) => readonly ContextualizedControl[] {
     /** Cache by filter */
-    const localCache: LRUCache<
-      string,
-      readonly context.ContextualizedControl[]
-    > = new LRUCache(MAX_CACHE_ENTRIES);
+    const localCache: LRUCache<string, readonly ContextualizedControl[]> =
+      new LRUCache(MAX_CACHE_ENTRIES);
 
     return (filter: Filter) => {
       // Generate a hash for cache purposes.
@@ -295,14 +299,14 @@ export class FilteredData extends VuexModule {
       }
 
       // Get profiles from loaded Results
-      let profiles: readonly context.ContextualizedProfile[] =
+      let profiles: readonly ContextualizedProfile[] =
         this.profiles_for_evaluations(filter.fromFile);
 
       // Get profiles from loaded Profiles
       profiles = profiles.concat(this.profiles(filter.fromFile));
 
       // And all the controls they contain
-      let controls: readonly context.ContextualizedControl[] = profiles.flatMap(
+      let controls: readonly ContextualizedControl[] = profiles.flatMap(
         (profile) => profile.contains
       );
 
@@ -333,7 +337,7 @@ export class FilteredData extends VuexModule {
       // Filter by overlay
       if (filter.omit_overlayed_controls) {
         controls = controls.filter(
-          (control) => control.extended_by.length === 0
+          (control) => control.extendedBy.length === 0
         );
       }
 
@@ -348,11 +352,11 @@ export class FilteredData extends VuexModule {
       // Filter by nist stuff
       if (filter.treeFilters && filter.treeFilters.length > 0) {
         // Construct a nist control to represent the filter
-        const control = new nist.NistControl(filter.treeFilters);
+        const control = new NistControl(filter.treeFilters);
 
         controls = controls.filter((c) => {
           // Get an hdf version so we have the fixed nist tags
-          return c.root.hdf.parsed_nist_tags.some((t) => control.contains(t));
+          return c.root.hdf.parsedNistTags.some((t) => control.contains(t));
         });
       }
 
@@ -382,9 +386,9 @@ export function filter_cache_key(f: Filter) {
 }
 
 export function filterControlsBy(
-  controls: readonly context.ContextualizedControl[],
+  controls: readonly ContextualizedControl[],
   filters: Record<string, boolean | Array<string> | undefined>
-): readonly context.ContextualizedControl[] {
+): readonly ContextualizedControl[] {
   const activeFilters: typeof filters = _.pickBy(
     filters,
     (value, _key) =>
