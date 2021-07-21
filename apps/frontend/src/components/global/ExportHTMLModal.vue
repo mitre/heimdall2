@@ -121,14 +121,14 @@ export default class ExportHTMLModal extends Vue {
     bootstrapJS: '',
     jquery: '',
     statistics: {
-      passed: StatusCountModule.countOf(this.filter, 'Passed'),
-      failed: StatusCountModule.countOf(this.filter, 'Failed'),
-      notApplicable: StatusCountModule.countOf(this.filter, 'Not Applicable'),
-      notReviewed: StatusCountModule.countOf(this.filter, 'Not Reviewed'),
-      passedTests: StatusCountModule.countOf(this.filter, 'PassedTests'),
-      passingTestsFailedControl: StatusCountModule.countOf(this.filter, 'PassingTestsFailedControl'),
-      failedTests: StatusCountModule.countOf(this.filter, 'FailedTests'),
-      totalTests: StatusCountModule.countOf(this.filter, 'PassingTestsFailedControl') + StatusCountModule.countOf(this.filter, 'FailedTests')
+      passed: 0,
+      failed: 0,
+      notApplicable: 0,
+      notReviewed: 0,
+      passedTests: 0,
+      passingTestsFailedControl: 0,
+      failedTests: 0,
+      totalTests: 0
     },
     files: [],
     controlSets: [],

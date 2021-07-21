@@ -70,8 +70,9 @@ export default class ExportNIST extends Vue {
     let id: FileID[] = FilteredDataModule.selected_file_ids;
     if (file) {
       id = [file];
-      filename = InspecDataModule.allFiles.find((x) => x.uniqueId === file)!
-        .filename;
+      filename =
+        InspecDataModule.allFiles.find((x) => x.uniqueId === file)?.filename ||
+        'Unknown Filename';
     }
 
     // Get our data
