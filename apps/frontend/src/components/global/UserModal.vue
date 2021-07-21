@@ -144,7 +144,7 @@
             >Change Password</v-btn
           >
           <v-btn
-            v-if="!admin && !apiKeysDisabled"
+            v-if="!apiKeysDisabled"
             id="toggleAPIKeys"
             class="ml-2"
             @click="toggleShowAPIKeys"
@@ -290,9 +290,7 @@ export default class UserModal extends Vue {
   updateCallback = () => {return;}
 
   mounted() {
-    if(!this.admin) {
-      this.getAPIKeys()
-    }
+    this.getAPIKeys()
   }
 
   async updateUserInfo(): Promise<void> {
@@ -344,7 +342,7 @@ export default class UserModal extends Vue {
   getAPIKeys() {
     axios
       .create()
-      .get<IApiKey[]>(`/apikeys`).then(({data}) => {
+      .get<IApiKey[]>(`/apikeys`, {params: {userId: this.user.id}}).then(({data}) => {
         this.apiKeys = data
       }).catch((error) => {
         if (error.response) {
@@ -359,7 +357,7 @@ export default class UserModal extends Vue {
   addAPIKey() {
     this.inputPasswordDialog = false;
     axios
-      .post<IApiKey>(`/apikeys`, {name: this.activeAPIKey?.name, currentPassword: this.currentPassword})
+      .post<IApiKey>(`/apikeys`, {userId: this.user.id, name: this.activeAPIKey?.name, currentPassword: this.currentPassword})
       .then(({data}) => this.apiKeys.push(data))
       .catch((error) => {
         if (error.response) {

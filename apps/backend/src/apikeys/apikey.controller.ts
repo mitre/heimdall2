@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Request,
   UseGuards,
   UseInterceptors
@@ -17,6 +18,7 @@ import {Action} from '../casl/casl-ability.factory';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
+import {UsersService} from '../users/users.service';
 import {ApiKeyService} from './apikey.service';
 import {APIKeyDto} from './dto/apikey.dto';
 import {CreateApiKeyDto} from './dto/create-apikey.dto';
@@ -29,15 +31,22 @@ export class ApiKeyController {
   constructor(
     private readonly authnService: AuthnService,
     private readonly apiKeyService: ApiKeyService,
-    private readonly authz: AuthzService
+    private readonly authz: AuthzService,
+    private readonly usersService: UsersService
   ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async findAPIKeys(@Request() request: {user: User}): Promise<APIKeyDto[]> {
+  async findAPIKeys(
+    @Request() request: {user: User},
+    @Query('userId') userId: string
+  ): Promise<APIKeyDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
-    ForbiddenError.from(abac).throwUnlessCan(Action.Read, request.user);
-    return this.apiKeyService.findAllForUser(request.user);
+    const user = userId
+      ? await this.usersService.findById(userId)
+      : request.user;
+    ForbiddenError.from(abac).throwUnlessCan(Action.Read, user);
+    return this.apiKeyService.findAllForUser(user);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -47,9 +56,12 @@ export class ApiKeyController {
     @Body() createApiKeyDto: CreateApiKeyDto
   ): Promise<{id: string; apiKey: string}> {
     const abac = this.authz.abac.createForUser(request.user);
-    ForbiddenError.from(abac).throwUnlessCan(Action.Update, request.user);
+    const user = createApiKeyDto.userId
+      ? await this.usersService.findById(createApiKeyDto.userId)
+      : request.user;
+    ForbiddenError.from(abac).throwUnlessCan(Action.Update, user);
     await this.authnService.testPassword(createApiKeyDto, request.user);
-    return this.apiKeyService.create(request.user, createApiKeyDto);
+    return this.apiKeyService.create(user, createApiKeyDto);
   }
 
   @UseGuards(JwtAuthGuard)
