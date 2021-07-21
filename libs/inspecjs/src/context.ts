@@ -107,7 +107,7 @@ class ContextualizedControlImp implements ContextualizedControl {
   }
 
   get root(): ContextualizedControl {
-    if(this.extendsFrom.length) {
+    if (this.extendsFrom.length) {
       return this.extendsFrom[0].root;
     }
     return this;
