@@ -10,8 +10,6 @@ import * as EXEC_JSON_1_0 from './generated_parsers/v_1_0/exec-json';
 import * as EXEC_JSON_MIN_1_0 from './generated_parsers/v_1_0/exec-jsonmin';
 import * as PROFILE_JSON_1_0 from './generated_parsers/v_1_0/profile-json';
 
-// TODO: Any future versions
-
 // Define our type. This is the result of trying to parse the file. The appropriate field (exactly one) will be filled
 // In case of schema version ambiguity we will use the 1.0 schema
 interface ConversionResults {
