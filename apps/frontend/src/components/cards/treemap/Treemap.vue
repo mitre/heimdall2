@@ -40,7 +40,7 @@ import {ApexOptions} from 'apexcharts';
 import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {ColorHackModule} from '@/store/color_hack';
 import {Prop} from 'vue-property-decorator';
-import {context} from 'inspecjs';
+import {ContextualizedControl} from 'inspecjs';
 import {StatusCountModule} from '../../../store/status_counts';
 import {SearchModule} from '../../../store/search';
 
@@ -89,7 +89,7 @@ export default class Treemap extends Vue {
     }
   }
 
-  controlsToNISTSeries(contextualizedControls: Readonly<context.ContextualizedControl[]>, showSubcategory: boolean, exactMatch?: string): ApexAxisChartSeries {
+  controlsToNISTSeries(contextualizedControls: Readonly<ContextualizedControl[]>, showSubcategory: boolean, exactMatch?: string): ApexAxisChartSeries {
     const series: ApexAxisChartSeries = []
     contextualizedControls.forEach((cc) => {
       for (const tag of cc.root.hdf.parsed_nist_tags) {
@@ -115,7 +115,7 @@ export default class Treemap extends Vue {
   }
 
   controlsFromNISTSeries(
-    contextualizedControls: Readonly<context.ContextualizedControl[]>
+    contextualizedControls: Readonly<ContextualizedControl[]>
   ) {
     const series: ApexAxisChartSeries = []
     contextualizedControls.flatMap((cc) => {

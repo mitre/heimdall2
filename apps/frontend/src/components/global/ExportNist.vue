@@ -19,12 +19,13 @@ import Component from 'vue-class-component';
 import {FilteredDataModule, Filter} from '@/store/data_filters';
 import XLSX from 'xlsx';
 import {saveAs} from 'file-saver';
-
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {NistControl} from 'inspecjs/dist/nist';
+import {NistControl} from 'inspecjs';
 import {FileID} from '@/store/report_intake';
 import {InspecDataModule} from '@/store/data_store';
 import {Prop} from 'vue-property-decorator';
+import {s2ab} from '@/utilities/export_util'
+
 
 const MAX_SHEET_NAME_SIZE = 31;
 export type NISTRow = [string];
@@ -46,16 +47,16 @@ export default class ExportNIST extends Vue {
   /** Formats a tag into a well-structured nist string */
   format_tag(control: NistControl): string | null {
     // For now just do raw text. Once Mo's nist work is done we can make sure these are well formed
-    if (control.raw_text) {
-      return control.raw_text.replace(/\s/g, '');
-    } else if (control.sub_specifiers.length < 2) {
+    if (control.rawText) {
+      return control.rawText.replace(/\s/g, '');
+    } else if (control.subSpecifiers.length < 2) {
       // Too short: abort
       return null;
     } else {
       // Just construct as best we can
-      let base = `${control.sub_specifiers[0]}-${control.sub_specifiers[1]}`;
-      for (let i = 2; i < control.sub_specifiers.length; i++) {
-        base += control.sub_specifiers[i];
+      let base = `${control.subSpecifiers[0]}-${control.subSpecifiers[1]}`;
+      for (let i = 2; i < control.subSpecifiers.length; i++) {
+        base += control.subSpecifiers[i];
       }
       return base;
     }
@@ -85,7 +86,7 @@ export default class ExportNIST extends Vue {
     // Get them all
     let nistControls: NistControl[] = [];
     controls.forEach((c) => {
-      const tags = c.root.hdf.parsed_nist_tags;
+      const tags = c.root.hdf.parsedNistTags;
       tags.forEach((t) => {
         if (
           !nistControls.some(
@@ -155,7 +156,7 @@ export default class ExportNIST extends Vue {
 
     const wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
     saveAs(
-      new Blob([this.s2ab(wbout)], {type: 'application/octet-stream'}),
+      new Blob([s2ab(wbout)], {type: 'application/octet-stream'}),
       `NIST-SP-800-53-Security-and-Privacy-Control-Coverage-${this.convertDate(new Date(), '-')}.xlsx`
     );
   }
@@ -171,16 +172,6 @@ export default class ExportNIST extends Vue {
       this.pad_two_digits(d.getDate()),
       d.getFullYear()
     ].join(delimiter);
-  }
-
-  /** Converts a string to an array buffer */
-  s2ab(s: string): ArrayBuffer {
-    const buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
-    const view = new Uint8Array(buf); //create uint8array as viewer
-    for (let i = 0; i < s.length; i++) {
-      view[i] = s.charCodeAt(i) & 0xff; //convert to octet
-    }
-    return buf;
   }
 }
 </script>

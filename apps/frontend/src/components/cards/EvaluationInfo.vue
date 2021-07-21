@@ -10,7 +10,7 @@
       <div v-if="startTime"><strong>Start Time:</strong> {{ startTime }}</div>
       <div v-if="evaluation" class="d-flex flex-nowrap">
         <strong class="pt-2 pr-1">Tags:</strong>
-        <TagRow :evaluation="evaluation" />
+        <TagRow v-if="evaluation.id" :evaluation="evaluation" />
       </div>
       <div
         v-if="evaluation && evaluation.groups.length !== 0"
@@ -57,9 +57,8 @@ import GroupRow from '@/components/global/groups/GroupRow.vue'
 import TagRow from '@/components/global/tags/TagRow.vue'
 import {IEvaluation} from '@heimdall/interfaces';
 import {get_eval_start_time} from '../../utilities/delta_util';
-import {ContextualizedEvaluation} from 'inspecjs/dist/context';
+import {ContextualizedEvaluation} from 'inspecjs';
 import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
-
 
 @Component({
   components: {

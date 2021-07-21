@@ -8,7 +8,7 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
-import {ExtendedControlStatus, lowercaseAll} from './data_filters';
+import {ExtendedControlStatus} from './data_filters';
 
 export interface ISearchState {
   searchTerm: string;
@@ -17,7 +17,7 @@ export interface ISearchState {
   descriptionSearchTerms: string[];
   controlIdSearchTerms: string[];
   codeSearchTerms: string[];
-  cciIdFilter: string[];
+  nistIdFilter: string[];
   statusFilter: ExtendedControlStatus[];
   severityFilter: Severity[];
 }
@@ -41,6 +41,16 @@ export const statusTypes = [
 
 export const severityTypes = ['none', 'low', 'medium', 'high', 'critical'];
 
+export function lowercaseAll(input: string | string[]): string | string[] {
+  if (typeof input === 'string') {
+    return input.toLowerCase();
+  } else {
+    return input.map((string) => {
+      return string.toLowerCase();
+    });
+  }
+}
+
 export function valueToSeverity(severity: string): Severity {
   if (severityTypes.includes(severity.toLowerCase())) {
     return severity as Severity;
@@ -57,7 +67,7 @@ export function valueToSeverity(severity: string): Severity {
 class Search extends VuexModule implements ISearchState {
   controlIdSearchTerms: string[] = [];
   codeSearchTerms: string[] = [];
-  cciIdFilter: string[] = [];
+  nistIdFilter: string[] = [];
   descriptionSearchTerms: string[] = [];
   freeSearch = '';
   searchTerm = '';
@@ -114,7 +124,7 @@ class Search extends VuexModule implements ISearchState {
             this.addTitleFilter(lowercaseAll(include));
             break;
           case 'nist':
-            this.addCCIIdFilter(lowercaseAll(include));
+            this.addnistIdFilter(lowercaseAll(include));
             break;
           case 'desc':
           case 'description':
@@ -167,7 +177,7 @@ class Search extends VuexModule implements ISearchState {
         this.context.commit('SET_SEARCH', newSearch);
       } // We have a filter already, but it doesn't include status
       else {
-        const newSearch = `${this.searchTerm} severity:"${this.statusFilter
+        const newSearch = `${this.searchTerm} status:"${this.statusFilter
           .concat(status)
           .join(',')}"`;
         this.context.commit('SET_SEARCH', newSearch);
@@ -468,25 +478,25 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds CCI id to filter */
   @Action
-  addCCIIdFilter(cciId: string | string[]) {
+  addnistIdFilter(cciId: string | string[]) {
     this.context.commit('ADD_CCI', cciId);
   }
 
   @Mutation
   ADD_CCI(cciId: string | string[]) {
-    this.cciIdFilter = this.cciIdFilter.concat(cciId);
+    this.nistIdFilter = this.nistIdFilter.concat(cciId);
   }
 
   /** Sets the CCI IDs filter */
   @Mutation
   SET_CCI(cciIds: string[]) {
-    this.cciIdFilter = cciIds;
+    this.nistIdFilter = cciIds;
   }
 
   /** Clears all CCI ID filters */
   @Mutation
   CLEAR_CCI() {
-    this.cciIdFilter = [];
+    this.nistIdFilter = [];
   }
 
   // Description Filtering

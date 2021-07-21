@@ -66,7 +66,7 @@
           <v-card-title>
             <v-icon class="pr-3" large>mdi-{{ waivedProfiles.icon }}</v-icon>
             <span class="title">{{
-              `INFO: ${waivedProfiles.number} ${waivedProfiles.title}`
+              `INFO: ${waivedProfiles.number} ${waivedProfiles.title} Tests`
             }}</span>
           </v-card-title>
           <v-card-text v-text="waivedProfiles.subtitle" />
@@ -178,10 +178,7 @@ export default class StatusCardRow extends Vue {
   }
 
   getCardColor(card: CardProps): string {
-    if(this.filter.status?.length === 0){
-      return card.color;
-    }
-    if(this.filter.status?.some((statusFilter) => statusFilter.toLowerCase() === card.title.toLowerCase())){
+    if(this.filter.status?.length === 0 || this.filter.status?.some((statusFilter) => statusFilter.toLowerCase() === card.title.toLowerCase())){
       return card.color;
     }
     return ''

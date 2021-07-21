@@ -106,7 +106,7 @@ export default class ProfileInfo extends Vue {
   ];
 
   get from_file(): string | undefined {
-    return _.get(this.profile, 'sourced_from.from_file.filename');
+    return _.get(this.profile, 'sourcedFrom.from_file.filename');
   }
 
   get version(): string | undefined {

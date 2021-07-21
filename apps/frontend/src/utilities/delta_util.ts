@@ -3,8 +3,7 @@
  */
 
 import {SourcedContextualizedEvaluation} from '@/store/report_intake';
-import {context} from 'inspecjs';
-import {ContextualizedEvaluation} from 'inspecjs/dist/context';
+import {ContextualizedControl, ContextualizedEvaluation} from 'inspecjs';
 import {DateTime} from 'luxon';
 
 export const NOT_SELECTED = 'not selected';
@@ -13,7 +12,7 @@ export const NOT_SELECTED = 'not selected';
 // Controls is a list of controls
 interface ResultControls {
   uniqueId: string;
-  controls: context.ContextualizedControl[];
+  controls: ContextualizedControl[];
 }
 
 /**
@@ -85,11 +84,11 @@ export class ControlChangeGroup {
  * Holds/computes the differences between two runs of the same control.
  */
 export class ControlDelta {
-  controls: context.ContextualizedControl[] = [];
-  controlsandnull: (context.ContextualizedControl | null)[] = [];
+  controls: ContextualizedControl[] = [];
+  controlsandnull: (ContextualizedControl | null)[] = [];
   numNull = 0;
 
-  constructor(controls: (context.ContextualizedControl | null)[]) {
+  constructor(controls: (ContextualizedControl | null)[]) {
     this.controlsandnull = controls;
     for (const value of controls) {
       if (value !== null) {
@@ -139,7 +138,7 @@ export class ControlDelta {
           if (c === null) {
             return NOT_SELECTED;
           }
-          return c.hdf.raw_nist_tags.join(', ');
+          return c.hdf.rawNistTags.join(', ');
         })
       )
     );
@@ -176,12 +175,12 @@ function extract_top_level_controls(
   const allControls = exec.contains.flatMap((p) => p.contains);
 
   // Filter to controls that aren't overlayed further
-  const top = allControls.filter((control) => control.extended_by.length === 0);
+  const top = allControls.filter((control) => control.extendedBy.length === 0);
   return {uniqueId: exec.from_file.uniqueId, controls: top};
 }
 
 /** An object of contextualized controls with the same V-ID */
-export type ControlSeries = {[key: string]: context.ContextualizedControl};
+export type ControlSeries = {[key: string]: ContextualizedControl};
 
 /** Matches ControlID keys to Arrays of Controls */
 export type ControlSeriesLookup = {[key: string]: ControlSeries};
