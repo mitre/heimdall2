@@ -55,18 +55,18 @@ export class AuthnService {
           if (await compare(JWTSignature, matchingKey.apiKey)) {
             return matchingKey.user;
           } else {
-            throw new UnauthorizedException('Unknown API-Key');
+            return null;
           }
         }
       } catch {
-        throw new UnauthorizedException('Invalid API-Key Signature');
+        return null;
       }
     } else {
       throw new ForbiddenException(
         'API Keys have been disabled as the API-Key secret is not set'
       );
     }
-    throw new UnauthorizedException('Bad API-Key');
+    return null;
   }
 
   async validateOrCreateUser(
