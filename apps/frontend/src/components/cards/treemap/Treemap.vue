@@ -92,9 +92,9 @@ export default class Treemap extends Vue {
   controlsToNISTSeries(contextualizedControls: Readonly<ContextualizedControl[]>, showSubcategory: boolean, exactMatch?: string): ApexAxisChartSeries {
     const series: ApexAxisChartSeries = []
     contextualizedControls.forEach((cc) => {
-      for (const tag of cc.root.hdf.parsed_nist_tags) {
+      for (const tag of cc.root.hdf.parsedNistTags) {
         // Changes if we're showing the sub-category, e.g for "AC-4 (a)": showSubcategory ? 'AC-4' : 'AC'
-        const nistID = showSubcategory ? tag.raw_text?.substring(0, 5).replace(/\s|\(|\)/, '') : tag.raw_text?.substring(0, 2)
+        const nistID = showSubcategory ? tag.rawText?.substring(0, 5).replace(/\s|\(|\)/, '') : tag.rawText?.substring(0, 2)
         if(exactMatch && nistID?.indexOf(exactMatch) === -1) {
           continue;
         }

@@ -366,8 +366,8 @@ export class FilteredData extends VuexModule {
       // Filter by NIST ID
       if (filter.nistFilter) {
         controls = controls.filter((c) =>
-          c.root.hdf.parsed_nist_tags.some(
-            (tag) => tag.raw_text?.indexOf(filter.nistFilter || 'UM-1') !== -1
+          c.root.hdf.parsedNistTags.some(
+            (tag) => tag.rawText?.indexOf(filter.nistFilter || 'UM-1') !== -1
           )
         );
       }
