@@ -11,6 +11,7 @@
     "@types/jest": "^26.0.7",
     "@types/node": "^15.0.1",
     "jest": "^27.0.6",
+    "quicktype": "^15.0.260",
     "ts-jest": "^27.0.3",
     "typedoc": "^0.21.4"
   },
@@ -26,6 +27,7 @@
     "build": "tsc -p ./tsconfig.build.json",
     "docs": "typedoc --out docs ./src",
     "gen-types": "bash scripts/update_schema.sh",
+    "validates-types": "git diff --quiet HEAD master -- libs/inspecjs/schemas libs/inspecjs/src/generated_parsers/ || echo changed",
     "lint": "eslint --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
     "test": "jest --silent"

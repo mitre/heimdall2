@@ -9,7 +9,7 @@ set -e
 # Ensure we were given an argument
 # [[ -n $1 ]] || { echo "Must supply a version number" >&2; exit 1; }
 # set VERSION=$1
-VERSION="."
+VERSION="v_1_0"
 
 # Declare our schemas - those that we will ask inspec to generate
 declare -a SCHEMAS=('exec-json' 'exec-jsonmin' 'profile-json')
@@ -34,7 +34,7 @@ for SCHEMA in ${SCHEMAS[@]}
 do
     # Establish filenames
     OUTFILE="./src/generated_parsers/$VERSION/$SCHEMA.ts"
-    SCHEMAFILE="./work/schemas/$VERSION/$SCHEMA.json"
+    SCHEMAFILE="./work/schemas/$SCHEMA.json"
     MODIFIED_SCHEMAFILE="./work/tmp_$SCHEMA.json"
 
     # Loosen the schema
