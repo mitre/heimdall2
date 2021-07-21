@@ -144,18 +144,14 @@ export default class ExportCSVModal extends Vue {
   files: File[] = []
   rows: ControlSetRows = []
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  descriptionsToString(descriptions?: ControlDescription[] | { [key: string]: any; } | null): string {
-    if(descriptions) {
-      let result = '';
+  descriptionsToString(descriptions?: ControlDescription[] | { [key: string]: unknown; } | null): string {
+    let result = '';
+      if(Array.isArray(descriptions)) {
       descriptions.forEach((description: ControlDescription) => {
         result += `${description.label}: ${description.data}\r\n\r\n`
       })
-      return result
     }
-    else {
-      return ''
-    }
+    return result
   }
 
   segmentsToString(segments: HDFControlSegment[] | undefined): string {
