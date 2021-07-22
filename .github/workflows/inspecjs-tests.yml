@@ -47,9 +47,9 @@ jobs:
     
      - name: Validate there are no changes between the generated parsers
        run: |
-        gem install inspec-bin -v 4.38.3
+        gem install inspec-bin -v 4.38.3 --no-ri --no-rdoc
         yarn inspecjs gen-types
         yarn inspecjs validates-types
 
-     - name: Ensure the app builds cleanly without frontend and backend dependencies
+     - name: Ensure InspecJS builds cleanly
        run: yarn inspecjs build
