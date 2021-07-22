@@ -1,25 +1,16 @@
 #!/bin/bash
 # This script (will) automatically updates the parsers in "generated-parsers" based on the current inspec schema output.
-# Show every line as it executes
-# set -x
 # Halt immediately on error
 set -e
-# Ensure we were given an argument
-# [[ -n $1 ]] || { echo "Must supply a version number" >&2; exit 1; }
-# set VERSION=$1
 VERSION="v_1_0"
 
 # Declare our schemas - those that we will ask inspec to generate
 declare -a SCHEMAS=('exec-json' 'exec-jsonmin' 'profile-json')
 # Make the schemas for each version we want
-# mkdir -p './work/schemas'
 for SCHEMA in ${SCHEMAS[@]}
 do
     echo Generating $SCHEMA
-    # echo '(TEMPORARILY DISABLED)'
     inspec schema $SCHEMA > schemas/$SCHEMA.json --chef-license=accept-silent
-    # We just copy
-    # cp -R './schemas/' './work/schemas/'
 done
 # Quicktype each
 echo "Generating types"
@@ -41,4 +32,3 @@ do
 done
 # Remove work directory trash
 rm -r './work'
-# rm -r './work/schemas'

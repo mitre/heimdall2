@@ -45,7 +45,7 @@ jobs:
      - name: Run unit tests
        run: yarn inspecjs test
     
-     - name: Validate there are no changes between the generated parsers
+     - name: Validate there are no changes between the inspec schemas and generated parsers
        run: |
         gem install inspec-bin -v 4.38.3
         yarn inspecjs gen-types
