@@ -48,9 +48,6 @@ jobs:
      - name: Validate there are no changes between the generated parsers
        run: |
         gem install inspec-bin -v 4.38.3
-        inspec schema exec-json > libs/inspecjs/schemas/exec-json.json --chef-license=accept-silent
-        inspec schema exec-jsonmin > libs/inspecjs/schemas/exec-jsonmin.json
-        inspec schema profile-json > libs/inspecjs/schemas/profile-json.json
         yarn inspecjs gen-types
         yarn inspecjs validates-types
 
