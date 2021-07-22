@@ -51,5 +51,5 @@ jobs:
         yarn inspecjs gen-types
         yarn inspecjs validates-types
 
-     - name: Ensure the app builds cleanly without frontend and backend dependencies
+     - name: Ensure InspecJS builds cleanly
        run: yarn inspecjs build
