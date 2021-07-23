@@ -4149,9 +4149,9 @@
   integrity sha512-b+zB8A2so8eCE0JsxjL24J7vdGl8rzPQ09hZNhystm+KqSbKcAej1A+Hbva1rCMmTTqA+hFnUSDc5kouEo0JzA==
 
 "@vue/test-utils@^1.0.3":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@vue/test-utils/-/test-utils-1.2.1.tgz#4671fc8844e09ccddb6801ceedd7b7309ae11d06"
-  integrity sha512-WBRdWNJwWTodJlV9mjunTrhgfsTPI5tMuxsCxqSmQs+vyB3ccZIYixnBrkxpKRsXyah/RtEv6+kUPZhnLd9smA==
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@vue/test-utils/-/test-utils-1.2.2.tgz#0242ea4e202d4853541bb167fead3f2249140ab7"
+  integrity sha512-P+yiAsszoy8z1TqXiVUnAZaJj0WGGz5fCxm4bOSI6Cpwy1+PNYwYxDv0ROAA/SUtOPppV+aD8tp/QWwxf8ROJw==
   dependencies:
     dom-event-types "^1.0.0"
     lodash "^4.17.15"
@@ -4743,9 +4743,9 @@ anymatch@^3.0.0, anymatch@^3.0.3, anymatch@~3.1.2:
     picomatch "^2.0.4"
 
 apexcharts@^3.10.1:
-  version "3.27.2"
-  resolved "https://registry.yarnpkg.com/apexcharts/-/apexcharts-3.27.2.tgz#95598439158c7d2aa0ef3909606a935c891bb621"
-  integrity sha512-FjW0OW6Oq9kbWJiF6wIZEsMNNHme6WNv3eh+p4azuWVELNY/LigXU+01s4TP+Obplhy6byV9bw9x7GhrbN2YsQ==
+  version "3.27.3"
+  resolved "https://registry.yarnpkg.com/apexcharts/-/apexcharts-3.27.3.tgz#1b921ac64dea2f28a2b1aad4b396b38464223849"
+  integrity sha512-1ZrqiQT0VahkqW0kVjf5QVURYGaHMlGN08BoIZG2c2U/gY2AtnEoFN4r9q4d/pYYYKvI9AyLBHq0otzcVGrHAw==
   dependencies:
     svg.draggable.js "^2.2.2"
     svg.easing.js "^2.0.0"
@@ -5179,9 +5179,9 @@ autoprefixer@^9.8.6:
     postcss-value-parser "^4.1.0"
 
 aws-sdk@^2.573.0:
-  version "2.951.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.951.0.tgz#3cd8c0a4610407623ae8f1724f431fd328441033"
-  integrity sha512-YPqhdESUzd4+pSuGJcfMnG1qNVbmZjnmsa85Z9jofR1ilIpuV31onIiFHv8iubM59ETok/+zy3QOmxRSLYzFmQ==
+  version "2.952.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.952.0.tgz#cfbdf2c4685aed17165f4df8760759cd7659a597"
+  integrity sha512-FZkmOWAyDSQMeD8iioeoSW873ZjPXLfGejr0gNi8kQB7JrllOayPaexpq70aT+7n5bAzArjSIH8OAB+BoHYijA==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
