@@ -35,16 +35,20 @@ function getSynchronize(configService: ConfigService): boolean {
   }
 }
 
-function toObject(fields: string[], values: string[]) {
-  const result: Record<number, string> = {};
-  for (let i = 0; i < values.length; i++) {
-    if (!sensitiveKeys.some((regex) => regex.test(fields[i]))) {
-      result[i] = values[i];
-    } else {
-      result[i] = '[REDACTED]';
+function toObject(fields: string[], values?: string[]): Record<number, string> {
+  if (values) {
+    const result: Record<number, string> = {};
+    for (let i = 0; i < values.length; i++) {
+      if (!sensitiveKeys.some((regex) => regex.test(fields[i]))) {
+        result[i] = values[i];
+      } else {
+        result[i] = '[REDACTED]';
+      }
     }
+    return result;
+  } else {
+    return {};
   }
-  return result;
 }
 
 function logQuery(
