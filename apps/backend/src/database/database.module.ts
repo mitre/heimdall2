@@ -5,6 +5,17 @@ import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
 import {DatabaseService} from './database.service';
 
+const sensitiveKeys = [
+  /cookie/i,
+  /passw(or)?d/i,
+  /^pw$/,
+  /^pass$/i,
+  /secret/i,
+  /token/i,
+  /api[-._]?key/i,
+  /data/i
+];
+
 const logger = winston.createLogger({
   transports: [new winston.transports.Console()],
   format: winston.format.combine(
@@ -24,12 +35,29 @@ function getSynchronize(configService: ConfigService): boolean {
   }
 }
 
-function logQuery(sql: string, connection: any) {
+function toObject(fields: string[], values: string[]) {
+  const result: Record<number, string> = {};
+  for (let i = 0; i < values.length; i++) {
+    if (!sensitiveKeys.some((regex) => regex.test(fields[i]))) {
+      result[i] = values[i];
+    } else {
+      result[i] = '[REDACTED]';
+    }
+  }
+  return result;
+}
+
+function logQuery(
+  sql: string,
+  connection: {fields: string[]; bind: string[]; type: string}
+) {
   if (connection.type === 'INSERT' || connection.type === 'UPDATE') {
     const matches = sql.match(/\$\d/gm);
+    const values = toObject(connection.fields, connection.bind);
+
     if (matches) {
       matches.forEach((placeholder, index) => {
-        sql = sql.replace(placeholder, `"${connection.bind[index]}"`);
+        sql = sql.replace(placeholder, `"${values[index]}"`);
       });
     }
     logger.info({message: sql});
@@ -48,7 +76,15 @@ function logQuery(sql: string, connection: any) {
         autoLoadModels: true,
         synchronize: getSynchronize(configService),
         logging: (sql, connection) => {
-          logQuery(sql, connection);
+          logQuery(
+            sql,
+            // Connection is incorrectly typed as a number
+            connection as unknown as {
+              fields: string[];
+              bind: string[];
+              type: string;
+            }
+          );
         },
         pool: {
           max: 5,
