@@ -91,8 +91,8 @@ export class NiktoMapper extends BaseConverter {
       }
     ]
   };
-  constructor(xrayJson: string) {
-    super(JSON.parse(xrayJson));
+  constructor(niktoJson: string) {
+    super(JSON.parse(niktoJson));
   }
   setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
     super.setMappings(customMappings);

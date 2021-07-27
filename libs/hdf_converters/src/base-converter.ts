@@ -16,31 +16,31 @@ export interface LookupPath {
 export type ObjectEntries<T> = {[K in keyof T]: readonly [K, T[K]]}[keyof T];
 export type MappedTransform<T, U extends LookupPath> = {
   [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
-  ? MappedTransform<T[K], U>
-  : // eslint-disable-next-line @typescript-eslint/ban-types
-  T[K] extends Function
-  ? T[K]
-  : // eslint-disable-next-line @typescript-eslint/ban-types
-  T[K] extends object
-  ? MappedTransform<
-    T[K] &
-    (U & {
-      arrayTransformer?: (
-        value: unknown[],
-        file: Record<string, unknown>
-      ) => T[K][];
-    }),
-    U
-  >
-  : T[K] | (U & {transformer?: (value: unknown) => T[K]});
+    ? MappedTransform<T[K], U>
+    : // eslint-disable-next-line @typescript-eslint/ban-types
+    T[K] extends Function
+    ? T[K]
+    : // eslint-disable-next-line @typescript-eslint/ban-types
+    T[K] extends object
+    ? MappedTransform<
+        T[K] &
+          (U & {
+            arrayTransformer?: (
+              value: unknown[],
+              file: Record<string, unknown>
+            ) => T[K][];
+          }),
+        U
+      >
+    : T[K] | (U & {transformer?: (value: unknown) => T[K]});
 };
 export type MappedReform<T, U> = {
   [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
-  ? MappedReform<T[K], U>
-  : // eslint-disable-next-line @typescript-eslint/ban-types
-  T[K] extends object
-  ? MappedReform<T[K] & U, U>
-  : Exclude<T[K], U>;
+    ? MappedReform<T[K], U>
+    : // eslint-disable-next-line @typescript-eslint/ban-types
+    T[K] extends object
+    ? MappedReform<T[K] & U, U>
+    : Exclude<T[K], U>;
 };
 
 // Hashing Function

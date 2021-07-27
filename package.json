@@ -22,6 +22,7 @@
     "test:ui:open": "cypress open"
   },
   "dependencies": {
+    "@aws-sdk/client-config-service": "^3.23.0",
     "@typescript-eslint/eslint-plugin": "^4.8.0",
     "@typescript-eslint/parser": "^4.8.0",
     "eslint": "^7.13.0",

@@ -104,20 +104,24 @@ function nistTag(rule: string): string[] {
   return SCOUTSUITE_NIST_MAPPING.nistTag(rule);
 }
 
-function collapseServices(file: Record<string, unknown>): Record<string, unknown> {
-  let services = Object.values(_.get(file, 'services') as Record<string, unknown>)
-  let findings = new Array<object>()
-  services.forEach(element => {
-    findings.push(_.get(element, 'findings'))
-  })
-  let entries = new Array<object>()
-  Object.values(findings).forEach(element => {
-    Object.entries(element).forEach(subElement => {
-      entries.push(subElement)
-    })
-  })
-  _.set(file, 'services', entries)
-  return file
+function collapseServices(
+  file: Record<string, unknown>
+): Record<string, unknown> {
+  const services = Object.values(
+    _.get(file, 'services') as Record<string, unknown>
+  );
+  const findings: Record<string, unknown>[] = [];
+  services.forEach((element) => {
+    findings.push(_.get(element, 'findings'));
+  });
+  const entries: [string, unknown][] = new Array<[string, unknown]>();
+  Object.values(findings).forEach((element) => {
+    Object.entries(element).forEach((subElement) => {
+      entries.push(subElement);
+    });
+  });
+  _.set(file, 'services', entries);
+  return file;
 }
 export class ScoutsuiteMapper extends BaseConverter {
   mappings: MappedTransform<ExecJSON, LookupPath> = {
@@ -170,7 +174,7 @@ export class ScoutsuiteMapper extends BaseConverter {
                 path: 'last_run.run_parameters.excluded_region',
                 transformer: (input: unknown[] | string) => {
                   if (typeof input === 'string') {
-                    return input
+                    return input;
                   }
                   return input.join(', ');
                 }
@@ -184,7 +188,7 @@ export class ScoutsuiteMapper extends BaseConverter {
                 path: 'last_run.run_parameters.regions',
                 transformer: (input: unknown[] | string) => {
                   if (typeof input === 'string') {
-                    return input
+                    return input;
                   }
                   return input.join(', ');
                 }
@@ -198,7 +202,7 @@ export class ScoutsuiteMapper extends BaseConverter {
                 path: 'last_run.run_parameters.services',
                 transformer: (input: unknown[] | string) => {
                   if (typeof input === 'string') {
-                    return input
+                    return input;
                   }
                   return input.join(', ');
                 }
@@ -212,7 +216,7 @@ export class ScoutsuiteMapper extends BaseConverter {
                 path: 'last_run.run_parameters.skipped_services',
                 transformer: (input: unknown[] | string) => {
                   if (typeof input === 'string') {
-                    return input
+                    return input;
                   }
                   return input.join(', ');
                 }

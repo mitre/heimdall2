@@ -1,20 +1,22 @@
+import {ConfigServiceClientConfig} from '@aws-sdk/client-config-service';
+import * as AWS from 'aws-sdk'
 import fs from 'fs';
 import {ExecJSON} from 'inspecjs'
 import _ from 'lodash';
+import {AwsConfigMapper} from './aws-config-mapper';
 import {BurpSuiteMapper} from './burpsuite-mapper';
-import {DBProtectMapper} from './dbprotect-mapper';
-import {FortifyMapper} from './fortify-mapper';
-import {JfrogXrayMapper} from './jfrog-xray-mapper';
-import {NessusResults} from './nessus-mapper';
-import {NetsparkerMapper} from './netsparker-mapper';
-import {NiktoMapper} from './nikto-mapper';
-import {SarifMapper} from './sarif-mapper';
-import {ScoutsuiteMapper} from './scoutsuite-mapper';
-import {SnykResults} from './snyk-mapper';
-import {XCCDFResultsMapper} from './xccdf-results-mapper';
-import {ZapMapper} from './zap-mapper';
 
-// // Burpsuite Test - Complete!
+
+// AWS-Config Test
+var credentials = new AWS.SharedIniFileCredentials({profile: 'default'});
+const options: ConfigServiceClientConfig = {
+  region: 'us-east-1',
+  credentials: credentials
+};
+const awsmapper = new AwsConfigMapper(options);
+awsmapper.toHdf()
+
+// Burpsuite Test - Complete!
 // const mapper = new BurpSuiteMapper(
 //   fs.readFileSync(
 //     '/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/burpsuite_mapper/sample_input_report/zero.webappsecurity.com.min',
@@ -30,7 +32,7 @@ import {ZapMapper} from './zap-mapper';
 //   JSON.stringify(mapper.toHdf())
 // );
 
-// // DBProtect Test - Complete!
+// DBProtect Test - Complete!
 // const mapper2 = new DBProtectMapper(
 //   fs.readFileSync(
 //     '/Users/rlin/Desktop/Samples/DbProtectCheckResultsDetailsXML.xml',
@@ -55,7 +57,7 @@ import {ZapMapper} from './zap-mapper';
 //   JSON.stringify(mapper3.toHdf())
 // );
 
-// // JFrog Test - Complete!
+// JFrog Test - Complete!
 // const mapper4 = new JfrogXrayMapper(
 //   fs.readFileSync(
 //     '/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/jfrog_xray_mapper/sample_input_report/jfrog_xray_sample.json',
@@ -67,7 +69,7 @@ import {ZapMapper} from './zap-mapper';
 //   JSON.stringify(mapper4.toHdf())
 // );
 
-// // Nessus Test
+// Nessus Test
 // const mapper5 = new NessusResults(
 //   fs.readFileSync(
 //     '/Users/rlin/Desktop/Samples/sensitive_nessus_samples_using_v1.3.48/sensitive_273970_compliance.nessus',

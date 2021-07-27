@@ -86,7 +86,6 @@ function nistTag(input: string): string[] {
   return CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG).concat(['Rev_4']);
 }
 
-// Mappings
 function parseXml(xml: string): Record<string, unknown> {
   const options = {
     attributeNamePrefix: '',

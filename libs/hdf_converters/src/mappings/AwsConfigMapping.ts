@@ -16,4 +16,28 @@ export class AwsConfigMapping {
       });
     }
   }
+  nistFilter(identifiers: string[]) {
+    if (identifiers.length === 0) {
+      return null;
+    } else {
+      let matches = new Array<string>();
+      identifiers.forEach((sourceIdentifier) => {
+        const item = this.data.find(
+          (element) => element.configRuleSourceIdentifier === sourceIdentifier
+        );
+        if (
+          item !== null &&
+          item !== undefined &&
+          item.nistId !== '' &&
+          matches.indexOf(item.nistId) === -1
+        ) {
+          matches = matches.concat(item.nistId.split('|'));
+        }
+      });
+      if (matches.length === 0) {
+        return null;
+      }
+      return matches;
+    }
+  }
 }
