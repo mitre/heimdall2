@@ -344,12 +344,14 @@ export default class ControlTable extends Vue {
     });
   }
 
-  /** Return items sorted */
+  /** Return items sorted and filters out viewed controls */
   get items(): ListElt[] {
     // Controls ascending/descending
     let factor = 1;
     // Our comparator function
-    let cmp: (a: ListElt, b: ListElt) => number;
+    let cmp: ((a: ListElt, b: ListElt) => number) | undefined = undefined;
+
+    let items = this.raw_items;
 
     if (this.sortId === 'ascending' || this.sortId === 'descending') {
       cmp = (a: ListElt, b: ListElt) =>
@@ -388,25 +390,17 @@ export default class ControlTable extends Vue {
         factor = -1;
       }
     }
-    else {
-      // Displays only unviewed controls.
-      if(this.displayUnviewedControls) {
-        return this.raw_items.filter((val) => !this.viewedControlIds.includes(val.control.data.id));
-      }
-      // Displays unviewed and viewed controls.
-      else {
-        return this.raw_items;
-      }
+
+    // Displays only unviewed controls.
+    if(this.displayUnviewedControls) {
+      items = items.filter((val) => !this.viewedControlIds.includes(val.control.data.id));
     }
 
-    // Displays only unviewed sorted controls.
-    if(this.displayUnviewedControls) {
-      return this.raw_items.sort((a, b) => cmp(a, b) * factor).filter((val) => !this.viewedControlIds.includes(val.control.data.id))
+    if(cmp !== undefined) {
+      items = items.sort((a, b) => cmp(a, b) * factor)
     }
-    // Displays sorted unviewed and viewed controls.
-    else {
-      return this.raw_items.sort((a, b) => cmp(a, b) * factor);
-    }
+
+    return items;
   }
 }
 </script>
