@@ -16,7 +16,7 @@ export class OwaspNistMapping {
       });
     }
   }
-  nistFilterNoDefault(identifiers: string[]) {
+  nistFilterNoDefault(identifiers: string[]): string[] {
     if (Array.isArray(identifiers)) {
       if (identifiers.length === 0) {
         return [];

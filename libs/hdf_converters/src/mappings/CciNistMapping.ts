@@ -40,7 +40,11 @@ export class CciNistMapping {
     }
   }
 
-  nistFilter(identifiers: string[], defaultNist: string[], collapse = true) {
+  nistFilter(
+    identifiers: string[],
+    defaultNist: string[],
+    collapse = true
+  ): string[] {
     const DEFAULT_NIST_TAG = defaultNist;
     if (identifiers.length === 0) {
       return DEFAULT_NIST_TAG;

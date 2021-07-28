@@ -1,12 +1,10 @@
 import parser from 'fast-xml-parser';
 import * as htmlparser from 'htmlparser2';
-import {
-  ExecJSON
-} from 'inspecjs';
+import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, LookupPath, MappedTransform} from './base-converter';
+import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {OwaspNistMapping} from './mappings/OwaspNistMapping';
 
@@ -184,7 +182,7 @@ function formatMessage(response: unknown): string {
   return text.join('\n');
 }
 export class NetsparkerMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -200,7 +198,7 @@ export class NetsparkerMapper extends BaseConverter {
         version: '',
         title: {
           path: 'netsparker-enterprise.target',
-          transformer: (input: unknown) => {
+          transformer: (input: unknown): string => {
             return `Netsparker Enterprise Scan ID: ${_.get(
               input,
               'scan-id'
@@ -259,7 +257,9 @@ export class NetsparkerMapper extends BaseConverter {
   constructor(netsparkerXml: string) {
     super(parseXml(netsparkerXml));
   }
-  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
+  setMappings(
+    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
+  ): void {
     super.setMappings(customMappings);
   }
 }

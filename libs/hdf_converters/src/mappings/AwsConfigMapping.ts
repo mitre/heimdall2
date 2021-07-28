@@ -16,7 +16,7 @@ export class AwsConfigMapping {
       });
     }
   }
-  nistFilter(identifiers: string[]) {
+  nistFilter(identifiers: string[]): string[] | null {
     if (identifiers.length === 0) {
       return null;
     } else {

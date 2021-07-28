@@ -1,11 +1,9 @@
 import * as htmlparser from 'htmlparser2';
-import {
-  ExecJSON
-} from 'inspecjs';
+import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, LookupPath, MappedTransform} from './base-converter';
+import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 
 const CWE_NIST_MAPPING_FILE = path.resolve(
@@ -73,7 +71,7 @@ function formatCodeDesc(input: unknown): string {
   }
   return text.join('\n') + '\n';
 }
-function deduplicateId(input: unknown[], _file: unknown): ExecJSON.Control[] {
+function deduplicateId(input: unknown[]): ExecJSON.Control[] {
   const controlId = input.map((element) => {
     return _.get(element, 'id');
   });
@@ -97,7 +95,7 @@ function deduplicateId(input: unknown[], _file: unknown): ExecJSON.Control[] {
 }
 
 export class ZapMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -113,14 +111,14 @@ export class ZapMapper extends BaseConverter {
         version: {path: '@version'},
         title: {
           path: 'site.@host',
-          transformer: (input: unknown) => {
+          transformer: (input: unknown): string => {
             return `OWASP ZAP Scan of Host: ${input}`;
           }
         },
         maintainer: null,
         summary: {
           path: 'site.@host',
-          transformer: (input: unknown) => {
+          transformer: (input: unknown): string => {
             return `OWASP ZAP Scan of Host: ${input}`;
           }
         },
@@ -178,10 +176,12 @@ export class ZapMapper extends BaseConverter {
       false
     );
   }
-  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
+  setMappings(
+    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
+  ): void {
     super.setMappings(customMappings);
   }
-  toHdf() {
+  toHdf(): ExecJSON.Execution {
     const original = super.toHdf();
     _.get(original, 'profiles').forEach((profile) => {
       _.get(profile, 'controls').forEach((control) => {

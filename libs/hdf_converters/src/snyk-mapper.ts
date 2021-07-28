@@ -1,10 +1,8 @@
-
-import {ExecJSON} from 'inspecjs'
-import {version as HeimdallToolsVersion} from '../package.json'
-import _ from 'lodash'
-import {MappedTransform, LookupPath, BaseConverter, generateHash} from './base-converter'
-import {CweNistMapping} from './mappings/CweNistMapping'
-import path from 'path'
+import {ExecJSON} from 'inspecjs';
+import path from 'path';
+import {version as HeimdallToolsVersion} from '../package.json';
+import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import {CweNistMapping} from './mappings/CweNistMapping';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['high', 0.7],
@@ -46,14 +44,14 @@ function nistTag(identifiers: unknown[]): string[] {
 }
 
 export class SnykResults {
-  data: Record<string, unknown>
-  customMapping?: MappedTransform<ExecJSON.Execution, LookupPath>
+  data: Record<string, unknown>;
+  customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
   constructor(snykJson: string) {
     this.data = JSON.parse(snykJson);
   }
 
-  toHdf() {
-    let results: ExecJSON.Execution[] = []
+  toHdf(): ExecJSON.Execution[] | ExecJSON.Execution {
+    const results: ExecJSON.Execution[] = [];
     if (Array.isArray(this.data)) {
       this.data.forEach((element) => {
         const entry = new SnykMapper(element);
@@ -71,13 +69,15 @@ export class SnykResults {
       return result.toHdf();
     }
   }
-  setMappings(customMapping: MappedTransform<ExecJSON.Execution, LookupPath>) {
-    this.customMapping = customMapping
+  setMappings(
+    customMapping: MappedTransform<ExecJSON.Execution, ILookupPath>
+  ): void {
+    this.customMapping = customMapping;
   }
 }
 
 export class SnykMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -92,7 +92,7 @@ export class SnykMapper extends BaseConverter {
         name: {path: 'policy'},
         version: {
           path: 'policy',
-          transformer: (policy: unknown) => {
+          transformer: (policy: unknown): string => {
             if (typeof policy === 'string') {
               return policy.split('version: ')[1].split('\n')[0];
             } else {
@@ -102,14 +102,14 @@ export class SnykMapper extends BaseConverter {
         },
         title: {
           path: 'projectName',
-          transformer: (projectName: unknown) => {
+          transformer: (projectName: unknown): string => {
             return `Snyk Project: ${projectName}`;
           }
         },
         maintainer: null,
         summary: {
           path: 'summary',
-          transformer: (summary: unknown) => {
+          transformer: (summary: unknown): string => {
             return `Snyk Summary: ${summary}`;
           }
         },
@@ -144,7 +144,7 @@ export class SnykMapper extends BaseConverter {
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {
                   path: 'from',
-                  transformer: (input: unknown) => {
+                  transformer: (input: unknown): string => {
                     if (Array.isArray(input)) {
                       return `From : [ ${input.join(' , ')} ]`;
                     } else {
@@ -165,7 +165,9 @@ export class SnykMapper extends BaseConverter {
   constructor(snykJson: Record<string, unknown>) {
     super(snykJson);
   }
-  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
-    super.setMappings(customMappings)
+  setMappings(
+    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
+  ): void {
+    super.setMappings(customMappings);
   }
 }

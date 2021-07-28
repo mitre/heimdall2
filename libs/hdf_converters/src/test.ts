@@ -1,20 +1,15 @@
 import {ConfigServiceClientConfig} from '@aws-sdk/client-config-service';
-import * as AWS from 'aws-sdk'
-import fs from 'fs';
-import {ExecJSON} from 'inspecjs'
-import _ from 'lodash';
+import * as AWS from 'aws-sdk';
 import {AwsConfigMapper} from './aws-config-mapper';
-import {BurpSuiteMapper} from './burpsuite-mapper';
-
 
 // AWS-Config Test
-var credentials = new AWS.SharedIniFileCredentials({profile: 'default'});
+const credentials = new AWS.SharedIniFileCredentials({profile: 'default'});
 const options: ConfigServiceClientConfig = {
   region: 'us-east-1',
   credentials: credentials
 };
 const awsmapper = new AwsConfigMapper(options);
-awsmapper.toHdf()
+awsmapper.toHdf();
 
 // Burpsuite Test - Complete!
 // const mapper = new BurpSuiteMapper(

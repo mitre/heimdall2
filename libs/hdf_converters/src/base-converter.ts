@@ -1,10 +1,8 @@
 import {createHash} from 'crypto';
-import {
-  ExecJSON
-} from 'inspecjs';
+import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 
-export interface LookupPath {
+export interface ILookupPath {
   path?: string;
   // Parameter will be the return type of handlePath, which can either be a string or a number
   transformer?: (value: unknown) => unknown;
@@ -13,37 +11,36 @@ export interface LookupPath {
 }
 
 export type ObjectEntries<T> = {[K in keyof T]: readonly [K, T[K]]}[keyof T];
-export type MappedTransform<T, U extends LookupPath> = {
+/* eslint-disable @typescript-eslint/ban-types */
+export type MappedTransform<T, U extends ILookupPath> = {
   [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
-  ? MappedTransform<T[K], U>
-  : // eslint-disable-next-line @typescript-eslint/ban-types
-  T[K] extends Function
-  ? T[K]
-  : // eslint-disable-next-line @typescript-eslint/ban-types
-  T[K] extends object
-  ? MappedTransform<
-    T[K] &
-    (U & {
-      arrayTransformer?: (
-        value: unknown[],
-        file: Record<string, unknown>
-      ) => T[K][];
-    }),
-    U
-  >
-  : T[K] | (U & {transformer?: (value: unknown) => T[K]});
+    ? MappedTransform<T[K], U>
+    : T[K] extends Function
+    ? T[K]
+    : T[K] extends object
+    ? MappedTransform<
+        T[K] &
+          (U & {
+            arrayTransformer?: (
+              value: unknown[],
+              file: Record<string, unknown>
+            ) => T[K][];
+          }),
+        U
+      >
+    : T[K] | (U & {transformer?: (value: unknown) => T[K]});
 };
 export type MappedReform<T, U> = {
   [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
-  ? MappedReform<T[K], U>
-  : // eslint-disable-next-line @typescript-eslint/ban-types
-  T[K] extends object
-  ? MappedReform<T[K] & U, U>
-  : Exclude<T[K], U>;
+    ? MappedReform<T[K], U>
+    : T[K] extends object
+    ? MappedReform<T[K] & U, U>
+    : Exclude<T[K], U>;
 };
+/* eslint-enable @typescript-eslint/ban-types */
 
 // Hashing Function
-export function generateHash(data: string, algorithm: string = 'sha256'): string {
+export function generateHash(data: string, algorithm = 'sha256'): string {
   const hash = createHash(algorithm);
   return hash.update(data).digest('hex');
 }
@@ -66,7 +63,10 @@ function collapseDuplicates<T extends object>(
         seen.set(propertyValue, counter);
         counter++;
       } else {
-        const oldResult = _.get(newArray[index], 'results') as ExecJSON.ControlResult[];
+        const oldResult = _.get(
+          newArray[index],
+          'results'
+        ) as ExecJSON.ControlResult[];
         const descriptions = oldResult.map((element) =>
           _.get(element, 'code_desc')
         );
@@ -79,7 +79,9 @@ function collapseDuplicates<T extends object>(
             _.set(
               newArray[index],
               'results',
-              oldResult.concat(_.get(item, 'results') as ExecJSON.ControlResult[])
+              oldResult.concat(
+                _.get(item, 'results') as ExecJSON.ControlResult[]
+              )
             );
           }
         } else {
@@ -96,14 +98,16 @@ function collapseDuplicates<T extends object>(
 }
 export class BaseConverter {
   data: Record<string, unknown>;
-  mappings?: MappedTransform<ExecJSON.Execution, LookupPath>;
+  mappings?: MappedTransform<ExecJSON.Execution, ILookupPath>;
   collapseResults: boolean;
 
   constructor(data: Record<string, unknown>, collapseResults = false) {
     this.data = data;
     this.collapseResults = collapseResults;
   }
-  setMappings(mappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
+  setMappings(
+    mappings: MappedTransform<ExecJSON.Execution, ILookupPath>
+  ): void {
     this.mappings = mappings;
   }
 
@@ -113,9 +117,7 @@ export class BaseConverter {
     } else {
       const v = this.convertInternal(this.data, this.mappings);
       v.profiles.forEach((element) => {
-        element.sha256 = generateHash(
-          JSON.stringify(element)
-        );
+        element.sha256 = generateHash(JSON.stringify(element));
       });
       return v;
     }
@@ -129,17 +131,17 @@ export class BaseConverter {
   convertInternal<T>(
     file: Record<string, unknown>,
     fields: T
-  ): MappedReform<T, LookupPath> {
+  ): MappedReform<T, ILookupPath> {
     const result = this.objectMap(fields, (v: ObjectEntries<T>) =>
       this.evaluate(file, v)
     );
-    return result as MappedReform<T, LookupPath>;
+    return result as MappedReform<T, ILookupPath>;
   }
   // eslint-disable-next-line @typescript-eslint/ban-types
   evaluate<T extends object>(
     file: Record<string, unknown>,
     v: Array<T> | T
-  ): T | Array<T> | MappedReform<T, LookupPath> {
+  ): T | Array<T> | MappedReform<T, ILookupPath> {
     const transformer = _.get(v, 'transformer');
     if (Array.isArray(v)) {
       return this.handleArray(file, v);
@@ -169,7 +171,7 @@ export class BaseConverter {
   // eslint-disable-next-line @typescript-eslint/ban-types
   handleArray<T extends object>(
     file: Record<string, unknown>,
-    v: Array<T & LookupPath>
+    v: Array<T & ILookupPath>
   ): Array<T> {
     if (v.length === 0) {
       return new Array<T>();
@@ -177,7 +179,7 @@ export class BaseConverter {
     if (v[0].path === undefined) {
       const arrayTransformer = v[0].arrayTransformer;
       v = v.map((element) => {
-        return _.omit(element, ['arrayTransformer']) as T & LookupPath;
+        return _.omit(element, ['arrayTransformer']) as T & ILookupPath;
       });
       let output: Array<T> = [];
       v.forEach((element) => {
@@ -222,7 +224,7 @@ export class BaseConverter {
       }
     }
   }
-  handlePath(file: Record<string, unknown>, path: string) {
+  handlePath(file: Record<string, unknown>, path: string): unknown {
     if (path.startsWith('$.')) {
       return _.get(this.data, path.slice(2)) || '';
     } else {

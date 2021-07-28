@@ -1,10 +1,8 @@
-import {
-  ExecJSON
-} from 'inspecjs';
+import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, LookupPath, MappedTransform} from './base-converter';
+import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -48,7 +46,7 @@ function nistTag(text: string): string[] {
 }
 
 export class SarifMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -93,7 +91,7 @@ export class SarifMapper extends BaseConverter {
             },
             title: {
               path: 'message.text',
-              transformer: (text: unknown) => {
+              transformer: (text: unknown): string => {
                 if (typeof text === 'string') {
                   return text.split(': ')[0];
                 } else {
@@ -104,7 +102,7 @@ export class SarifMapper extends BaseConverter {
             id: {path: 'ruleId'},
             desc: {
               path: 'message.text',
-              transformer: (text: unknown) => {
+              transformer: (text: unknown): string => {
                 if (typeof text === 'string') {
                   return text.split(': ')[1];
                 } else {
@@ -134,7 +132,9 @@ export class SarifMapper extends BaseConverter {
   constructor(sarifJson: string) {
     super(JSON.parse(sarifJson));
   }
-  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
+  setMappings(
+    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
+  ): void {
     super.setMappings(customMappings);
   }
 }

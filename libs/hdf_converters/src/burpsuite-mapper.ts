@@ -1,13 +1,11 @@
 import parser from 'fast-xml-parser';
 import * as htmlparser from 'htmlparser2';
-import {
-  ExecJSON,
-} from 'inspecjs'
+import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
-import {version as HeimdallToolsVersion} from '../package.json'
-import {BaseConverter, LookupPath, MappedTransform} from './base-converter'
+import path from 'path';
+import {version as HeimdallToolsVersion} from '../package.json';
+import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import path from 'path'
 
 // Constant
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -95,7 +93,7 @@ function parseXml(xml: string): Record<string, unknown> {
   return parser.parse(xml, options);
 }
 export class BurpSuiteMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -169,7 +167,9 @@ export class BurpSuiteMapper extends BaseConverter {
   constructor(burpsXml: string) {
     super(parseXml(burpsXml));
   }
-  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
+  setMappings(
+    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
+  ): void {
     super.setMappings(customMappings);
   }
 }

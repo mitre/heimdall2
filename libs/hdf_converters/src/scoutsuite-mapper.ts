@@ -1,10 +1,8 @@
-import {
-  ExecJSON
-} from 'inspecjs';
+import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, LookupPath, MappedTransform} from './base-converter';
+import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {ScoutsuiteNistMapping} from './mappings/ScoutsuiteNistMapping';
 
 const INSPEC_INPUTS_MAPPING = {
@@ -123,7 +121,7 @@ function collapseServices(
   return file;
 }
 export class ScoutsuiteMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -171,7 +169,7 @@ export class ScoutsuiteMapper extends BaseConverter {
             options: {
               value: {
                 path: 'last_run.run_parameters.excluded_region',
-                transformer: (input: unknown[] | string) => {
+                transformer: (input: unknown[] | string): string => {
                   if (typeof input === 'string') {
                     return input;
                   }
@@ -185,7 +183,7 @@ export class ScoutsuiteMapper extends BaseConverter {
             options: {
               value: {
                 path: 'last_run.run_parameters.regions',
-                transformer: (input: unknown[] | string) => {
+                transformer: (input: unknown[] | string): string => {
                   if (typeof input === 'string') {
                     return input;
                   }
@@ -199,7 +197,7 @@ export class ScoutsuiteMapper extends BaseConverter {
             options: {
               value: {
                 path: 'last_run.run_parameters.services',
-                transformer: (input: unknown[] | string) => {
+                transformer: (input: unknown[] | string): string => {
                   if (typeof input === 'string') {
                     return input;
                   }
@@ -213,7 +211,7 @@ export class ScoutsuiteMapper extends BaseConverter {
             options: {
               value: {
                 path: 'last_run.run_parameters.skipped_services',
-                transformer: (input: unknown[] | string) => {
+                transformer: (input: unknown[] | string): string => {
                   if (typeof input === 'string') {
                     return input;
                   }
@@ -291,7 +289,9 @@ export class ScoutsuiteMapper extends BaseConverter {
   constructor(scoutsuiteJson: string) {
     super(collapseServices(JSON.parse(scoutsuiteJson.split('\n', 2)[1])));
   }
-  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
+  setMappings(
+    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
+  ): void {
     super.setMappings(customMappings);
   }
 }

@@ -1,11 +1,9 @@
 import parser from 'fast-xml-parser';
 import * as htmlparser from 'htmlparser2';
-import {
-  ExecJSON
-} from 'inspecjs';
+import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, LookupPath, MappedTransform} from './base-converter';
+import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 
 const NIST_REFERENCE_NAME =
   'Standards Mapping - NIST Special Publication 800-53 Revision 4';
@@ -135,7 +133,7 @@ function parseHtml(input: unknown): string {
 
 export class FortifyMapper extends BaseConverter {
   startTime: string;
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -153,7 +151,7 @@ export class FortifyMapper extends BaseConverter {
         maintainer: null,
         summary: {
           path: 'FVDL.UUID',
-          transformer: (uuid: unknown) => {
+          transformer: (uuid: unknown): string => {
             return `Fortify Static Analyzer Scan of UUID: ${uuid}`;
           }
         },
@@ -189,7 +187,7 @@ export class FortifyMapper extends BaseConverter {
                 run_time: 0,
                 start_time: {
                   path: '$.FVDL.CreatedTS',
-                  transformer: (input: unknown) => {
+                  transformer: (input: unknown): string => {
                     return _.get(input, 'date') + ' ' + _.get(input, 'time');
                   }
                 }
@@ -208,7 +206,9 @@ export class FortifyMapper extends BaseConverter {
       ' ' +
       _.get(this.data, 'FVDL.CreatedTS.time');
   }
-  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
+  setMappings(
+    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
+  ): void {
     super.setMappings(customMappings);
   }
 }

@@ -16,7 +16,7 @@ export class CweNistMapping {
       });
     }
   }
-  nistFilter(identifiers: string[], defaultNist: string[]) {
+  nistFilter(identifiers: string[], defaultNist: string[]): string[] {
     const DEFAULT_NIST_TAG = defaultNist;
     if (identifiers.length === 0) {
       return DEFAULT_NIST_TAG;
@@ -40,7 +40,7 @@ export class CweNistMapping {
       return matches;
     }
   }
-  nistFilterNoDefault(identifiers: string[] | string) {
+  nistFilterNoDefault(identifiers: string[] | string): string[] {
     if (Array.isArray(identifiers)) {
       if (identifiers.length === 0) {
         return [];

@@ -1,12 +1,10 @@
 import parser from 'fast-xml-parser';
 import * as htmlparser from 'htmlparser2';
-import {
-  ExecJSON,
-} from 'inspecjs';
+import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, LookupPath, MappedTransform} from './base-converter';
+import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CciNistMapping} from './mappings/CciNistMapping';
 import {NessusPluginsNistMapping} from './mappings/NessusPluginsNistMapping';
 
@@ -45,10 +43,10 @@ function parseXml(xml: string): Record<string, unknown> {
 let policyName: string;
 let version: string;
 
-function getPolicyName(_input: unknown): string {
+function getPolicyName(): string {
   return 'Nessus ' + policyName;
 }
-function getVersion(_input: unknown): string {
+function getVersion(): string {
   return version;
 }
 
@@ -217,12 +215,12 @@ function parseHtml(input: unknown): string {
 }
 export class NessusResults {
   data: Record<string, unknown>;
-  customMapping?: MappedTransform<ExecJSON.Execution, LookupPath>;
+  customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
   constructor(nessusXml: string) {
     this.data = parseXml(nessusXml);
   }
 
-  toHdf() {
+  toHdf(): ExecJSON.Execution[] | ExecJSON.Execution {
     const results: ExecJSON.Execution[] = [];
     policyName = _.get(
       this.data,
@@ -262,13 +260,15 @@ export class NessusResults {
       return result.toHdf();
     }
   }
-  setMappings(customMapping: MappedTransform<ExecJSON.Execution, LookupPath>) {
+  setMappings(
+    customMapping: MappedTransform<ExecJSON.Execution, ILookupPath>
+  ): void {
     this.customMapping = customMapping;
   }
 }
 
 export class NessusMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,

@@ -1,13 +1,11 @@
 import parser from 'fast-xml-parser';
-import {
-  ExecJSON,
-} from 'inspecjs';
+import * as htmlparser from 'htmlparser2';
+import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, LookupPath, MappedTransform} from './base-converter';
+import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CciNistMapping} from './mappings/CciNistMapping';
-import * as htmlparser from 'htmlparser2'
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
@@ -74,7 +72,7 @@ function parseHtml(input: unknown): string {
   return textData.join('');
 }
 export class XCCDFResultsMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -105,7 +103,7 @@ export class XCCDFResultsMapper extends BaseConverter {
             key: 'id',
             id: {
               path: 'cdf:Rule.id',
-              transformer: (input: unknown) => {
+              transformer: (input: unknown): string => {
                 if (typeof input === 'string') {
                   counter = input;
                   return input.split('_S')[1].split('r')[0];
@@ -117,7 +115,7 @@ export class XCCDFResultsMapper extends BaseConverter {
             title: {path: 'cdf:Rule.cdf:title'},
             desc: {
               path: 'cdf:Rule.cdf:description',
-              transformer: (input: unknown) => {
+              transformer: (input: unknown): string => {
                 if (typeof input === 'string') {
                   return parseHtml(input.split('Satisfies')[0]);
                 } else {
@@ -129,7 +127,7 @@ export class XCCDFResultsMapper extends BaseConverter {
               {
                 data: {
                   path: 'cdf:Rule.cdf:description',
-                  transformer: (input: unknown) => {
+                  transformer: (input: unknown): string => {
                     if (typeof input === 'string') {
                       return parseHtml(input);
                     } else {
@@ -165,7 +163,7 @@ export class XCCDFResultsMapper extends BaseConverter {
               gtitle: {path: 'cdf:title'},
               satisfies: {
                 path: 'cdf:Rule.cdf:description',
-                transformer: (input: string) => {
+                transformer: (input: string): string[] => {
                   if (input.split('Satisfies: ')[1] !== undefined) {
                     return input
                       .split('Satisfies: ')[1]
@@ -179,7 +177,7 @@ export class XCCDFResultsMapper extends BaseConverter {
               },
               gid: {
                 path: 'cdf:Rule.id',
-                transformer: (input: string) => {
+                transformer: (input: string): string => {
                   return input.split('_').slice(-2, -1)[0].split('r')[0];
                 }
               },

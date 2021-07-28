@@ -1,13 +1,11 @@
-import {
-  ExecJSON
-} from 'inspecjs';
+import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
   generateHash,
-  LookupPath,
+  ILookupPath,
   MappedTransform
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
@@ -119,7 +117,7 @@ function nistTag(identifier: Record<string, unknown>): string[] {
 // Mappings
 
 export class JfrogXrayMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -186,7 +184,9 @@ export class JfrogXrayMapper extends BaseConverter {
   constructor(xrayJson: string) {
     super(JSON.parse(xrayJson), true);
   }
-  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
+  setMappings(
+    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
+  ): void {
     super.setMappings(customMappings);
   }
 }

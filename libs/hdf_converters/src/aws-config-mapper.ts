@@ -7,14 +7,12 @@ import {
   DescribeConfigRulesCommandOutput,
   EvaluationResult
 } from '@aws-sdk/client-config-service';
-import {
-  ExecJSON
-} from 'inspecjs';
+import * as fs from 'fs';
+import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {AwsConfigMapping} from './mappings/AwsConfigMapping';
-import * as fs from 'fs'
 
 const NOT_APPLICABLE_MSG =
   'No AWS resources found to evaluate complaince for this rule';
@@ -35,7 +33,7 @@ export class AwsConfigMapper {
     this.configService = new ConfigService(options);
     this.issues = this.getAllConfigRules();
   }
-  private async getAllConfigRules() {
+  private async getAllConfigRules(): Promise<ConfigRule[]> {
     let params: DescribeConfigRulesCommandInput = {
       ConfigRuleNames: [],
       NextToken: ''
@@ -61,12 +59,12 @@ export class AwsConfigMapper {
       this.addComplianceToConfigRules(configRules)
     );
   }
-  private async getConfigRulePage(params: DescribeConfigRulesCommandInput) {
-    let result: DescribeConfigRulesCommandOutput | undefined
-    result = await this.configService.describeConfigRules(params);
-    return result
+  private async getConfigRulePage(
+    params: DescribeConfigRulesCommandInput
+  ): Promise<DescribeConfigRulesCommandOutput> {
+    return this.configService.describeConfigRules(params);
   }
-  private addResultsToConfigRules(configRules: ConfigRule[]) {
+  private addResultsToConfigRules(configRules: ConfigRule[]): ConfigRule[] {
     configRules.forEach(async (rule) => {
       let params = {
         ConfigRuleName: rule.ConfigRuleName,
@@ -82,7 +80,7 @@ export class AwsConfigMapper {
           params
         );
         ruleResults?.concat(response.EvaluationResults || []);
-      } while (response.NextToken !== undefined)
+      } while (response.NextToken !== undefined);
       rule = _.set(rule, 'results', []);
       ruleResults.forEach((result) => {
         const hdfResult: ExecJSON.ControlResult = {
@@ -143,7 +141,7 @@ export class AwsConfigMapper {
     }
     return output;
   }
-  private getRunTime(result: EvaluationResult) {
+  private getRunTime(result: EvaluationResult): number {
     let diff = 0;
     if (
       result.ResultRecordedTime !== undefined &&
@@ -155,7 +153,7 @@ export class AwsConfigMapper {
     }
     return diff;
   }
-  private getStatus(result: EvaluationResult) {
+  private getStatus(result: EvaluationResult): ExecJSON.ControlResultStatus {
     if (result.ComplianceType === 'COMPLIANT') {
       return ExecJSON.ControlResultStatus.Passed;
     } else if (result.ComplianceType === 'NON_COMPLIANT') {
@@ -164,18 +162,22 @@ export class AwsConfigMapper {
       return ExecJSON.ControlResultStatus.Skipped;
     }
   }
-  private getMessage(result: EvaluationResult, status: ExecJSON.ControlResultStatus) {
+  private getMessage(
+    result: EvaluationResult,
+    status: ExecJSON.ControlResultStatus
+  ): string {
     if (status === ExecJSON.ControlResultStatus.Failed) {
-      return `${result.EvaluationResultIdentifier}: ${result.EvaluationResultIdentifier?.EvaluationResultQualifier
-        }: ${result.Annotation || 'Rule does not pass rule compliance'}`;
+      return `${result.EvaluationResultIdentifier}: ${
+        result.EvaluationResultIdentifier?.EvaluationResultQualifier
+      }: ${result.Annotation || 'Rule does not pass rule compliance'}`;
     } else {
       return '';
     }
   }
-  private addComplianceToConfigRules(configRules: ConfigRule[]) {
+  private addComplianceToConfigRules(configRules: ConfigRule[]): ConfigRule[] {
     const mappedComplianceInfo = this.fetchAllComplianceInfo(configRules);
-    configRules.forEach((rule) => {
-      rule = _.set(
+    return configRules.map((rule) => {
+      return _.set(
         rule,
         'compliance',
         _.get(
@@ -184,9 +186,8 @@ export class AwsConfigMapper {
         )
       );
     });
-    return configRules;
   }
-  private fetchAllComplianceInfo(configRules: ConfigRule[]) {
+  private fetchAllComplianceInfo(configRules: ConfigRule[]): unknown[] {
     const complianceResults: ComplianceByConfigRule[] = [];
     _.chunk(configRules, 25).forEach(async (group) => {
       const configRuleNames = group.map(
@@ -195,9 +196,9 @@ export class AwsConfigMapper {
       const params = {
         ComplianceTypes: [
           'COMPLIANT' ||
-          'NON_COMPLIANT' ||
-          'NOT_APPLICABLE' ||
-          'INSUFFICIENT_DATA'
+            'NON_COMPLIANT' ||
+            'NOT_APPLICABLE' ||
+            'INSUFFICIENT_DATA'
         ],
         ConfigRuleNames: configRuleNames,
         NextToken: ''
@@ -214,7 +215,8 @@ export class AwsConfigMapper {
     );
     return output;
   }
-  private hdfTags(configRule: ConfigRule) {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  private hdfTags(configRule: ConfigRule): Record<string, unknown> {
     let result = {};
     const sourceIdentifier = configRule.Source?.SourceIdentifier;
     result = _.set(result, 'nist', []);
@@ -243,10 +245,15 @@ export class AwsConfigMapper {
     }
     return result;
   }
-  private checkText(configRule: ConfigRule) {
-    let params: any[] = []
-    if (configRule.InputParameters !== undefined && configRule.InputParameters !== '{}') {
-      params = configRule.InputParameters.replace(/{/gi, '').replace(/}/gi, '').split(',')
+  private checkText(configRule: ConfigRule): string {
+    let params: any[] = [];
+    if (
+      configRule.InputParameters !== undefined &&
+      configRule.InputParameters !== '{}'
+    ) {
+      params = configRule.InputParameters.replace(/{/gi, '')
+        .replace(/}/gi, '')
+        .split(',');
       //let newparam = params.map((key: any, value: any) => `${key}: ${value}`)
       // .join('<br/>');
     }
@@ -268,7 +275,7 @@ export class AwsConfigMapper {
       }
     ];
   }
-  private getAccountId(arn: string) {
+  private getAccountId(arn: string): string {
     const matches = arn.match(/:(\d{12}):config-rule/);
     if (matches === null) {
       return 'no-account-id';
@@ -277,11 +284,14 @@ export class AwsConfigMapper {
     }
   }
   private async getControls(): Promise<ExecJSON.Control[]> {
-    const controls = await (await this.issues).map((issue) => {
+    const controls = await (
+      await this.issues
+    ).map((issue) => {
       const item: ExecJSON.Control = {
         id: issue.ConfigRuleId || '',
-        title: `${this.getAccountId(issue.ConfigRuleArn || '')} - ${issue.ConfigRuleName
-          }`,
+        title: `${this.getAccountId(issue.ConfigRuleArn || '')} - ${
+          issue.ConfigRuleName
+        }`,
         desc: issue.Description,
         impact: 0.5,
         tags: this.hdfTags(issue),
@@ -296,8 +306,8 @@ export class AwsConfigMapper {
     });
     return controls;
   }
-  public async toHdf() {
-    let hdf: ExecJSON.Execution = {
+  public async toHdf(): Promise<ExecJSON.Execution> {
+    const hdf: ExecJSON.Execution = {
       platform: {
         name: 'Heimdall Tools',
         release: HeimdallToolsVersion,
@@ -331,7 +341,7 @@ export class AwsConfigMapper {
     fs.writeFileSync(
       'libs/hdf_converters/outputs/aws.json',
       JSON.stringify(hdf)
-    )
+    );
     return hdf;
   }
 }

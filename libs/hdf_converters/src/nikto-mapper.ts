@@ -1,10 +1,8 @@
-import {
-  ExecJSON
-} from 'inspecjs';
+import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, LookupPath, MappedTransform} from './base-converter';
+import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {NiktoNistMapping} from './mappings/NiktoNistMapping';
 
 const NIKTO_NIST_MAPPING_FILE = path.resolve(
@@ -30,7 +28,7 @@ function nistTag(id: string): string[] {
 }
 
 export class NiktoMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -48,7 +46,7 @@ export class NiktoMapper extends BaseConverter {
         maintainer: null,
         summary: {
           path: 'banner',
-          transformer: (input: unknown) => {
+          transformer: (input: unknown): string => {
             return `Banner: ${input}`;
           }
         },
@@ -93,7 +91,9 @@ export class NiktoMapper extends BaseConverter {
   constructor(niktoJson: string) {
     super(JSON.parse(niktoJson));
   }
-  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
+  setMappings(
+    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
+  ): void {
     super.setMappings(customMappings);
   }
 }
