@@ -16,15 +16,15 @@ const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE)
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5']
 
 // Transformation Functions
-function hashId(vulnerability: object): string {
+function hashId(vulnerability: unknown): string {
   if (_.get(vulnerability, 'id') === '') {
-    const hash = generateHash(_.get(vulnerability, 'summary').toString(), 'md5')
+    const hash = generateHash(_.get(vulnerability, 'summary').toString())
     return hash;
   } else {
     return _.get(vulnerability, 'id') as string;
   }
 }
-function formatDesc(vulnerability: object): string {
+function formatDesc(vulnerability: unknown): string {
   let text = []
   if (_.has(vulnerability, 'description')) {
     text.push(_.get(vulnerability, 'description').toString());

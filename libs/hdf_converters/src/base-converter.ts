@@ -29,10 +29,9 @@ export type MappedReform<T, U> = {
 };
 
 // Hashing Function
-export function generateHash(data: string, algorithm: string): string {
-  const hash = createHash(algorithm);
-  const output = hash.update(data).digest('hex');
-  return output;
+export function generateHash(data: string): string {
+  const hash = createHash('sha256');
+  return hash.update(data).digest('hex');
 }
 
 function collapseDuplicates<T extends Object>(
@@ -100,8 +99,7 @@ export class BaseConverter {
       const v = this.convertInternal(this.data, this.mappings);
       v.profiles.forEach((element) => {
         element.sha256 = generateHash(
-          JSON.stringify(element),
-          'sha256'
+          JSON.stringify(element)
         );
       });
       return v;
