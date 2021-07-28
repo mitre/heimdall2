@@ -349,7 +349,7 @@ export default class ControlTable extends Vue {
     // Controls ascending/descending
     let factor = 1;
     // Our comparator function
-    let cmp: ((a: ListElt, b: ListElt) => number) | undefined = undefined;
+    let cmp: ((a: ListElt, b: ListElt) => number) | null = null;
 
     let items = this.raw_items;
 
@@ -396,8 +396,8 @@ export default class ControlTable extends Vue {
       items = items.filter((val) => !this.viewedControlIds.includes(val.control.data.id));
     }
 
-    if(cmp !== undefined) {
-      items = items.sort((a, b) => cmp(a, b) * factor)
+    if(cmp !== null) {
+      items = items.sort((a, b) => cmp!(a, b) * factor)
     }
 
     return items;
