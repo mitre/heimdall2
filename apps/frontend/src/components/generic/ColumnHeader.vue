@@ -4,7 +4,9 @@
     <span v-else>
       {{ numberOfViewedControls + '/' + numberOfAllControls + ' ' + text }}
     </span>
-    <v-icon class="pa-0"> {{ icon }} </v-icon>
+    <v-icon :disabled="!allow_sort" class="pa-0" @click="toggle_sort">
+      {{ icon }}
+    </v-icon>
   </div>
 </template>
 
@@ -19,7 +21,7 @@ export type Sort = 'ascending' | 'descending' | 'none' | 'disabled';
 export default class ColumnHeader extends Vue {
   @Prop({type: String, required: true}) readonly text!: string;
   @Prop({type: String, required: true}) readonly sort!: Sort;
-  @Prop({type: Boolean, required: false, default: false}) readonly viewedHeader!: Sort;
+  @Prop({type: Boolean, required: false, default: false}) readonly viewedHeader!: boolean;
   @Prop({type: Number, required: false}) readonly numberOfViewedControls!: number;
   @Prop({type: Number, required: false}) readonly numberOfAllControls!: number;
   /**
