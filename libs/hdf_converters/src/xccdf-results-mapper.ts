@@ -7,6 +7,7 @@ import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, LookupPath, MappedTransform} from './base-converter';
 import {CciNistMapping} from './mappings/CciNistMapping';
+import * as htmlparser from 'htmlparser2'
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
@@ -29,14 +30,14 @@ function impactMapping(severity: unknown): number {
     return 0;
   }
 }
-function getStatus(file: unknown): ControlResultStatus {
+function getStatus(file: unknown): ExecJSON.ControlResultStatus {
   const match = _.get(file, 'cdf:rule-result').find(
     (element: Record<string, unknown>) => _.get(element, 'idref') === counter
   );
   if (_.get(match, 'cdf:result') === 'pass') {
-    return ControlResultStatus.Passed;
+    return ExecJSON.ControlResultStatus.Passed;
   } else {
-    return ControlResultStatus.Failed;
+    return ExecJSON.ControlResultStatus.Failed;
   }
 }
 function extractCci(input: unknown[]): string[] {
@@ -73,7 +74,7 @@ function parseHtml(input: unknown): string {
   return textData.join('');
 }
 export class XCCDFResultsMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,

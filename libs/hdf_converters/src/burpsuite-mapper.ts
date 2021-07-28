@@ -95,7 +95,7 @@ function parseXml(xml: string): Record<string, unknown> {
   return parser.parse(xml, options);
 }
 export class BurpSuiteMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -154,7 +154,7 @@ export class BurpSuiteMapper extends BaseConverter {
             code: '',
             results: [
               {
-                status: ControlResultStatus.Failed,
+                status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {transformer: formatCodeDesc},
                 run_time: 0,
                 start_time: {path: '$.issues.exportTime'}
@@ -169,7 +169,7 @@ export class BurpSuiteMapper extends BaseConverter {
   constructor(burpsXml: string) {
     super(parseXml(burpsXml));
   }
-  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
     super.setMappings(customMappings);
   }
 }

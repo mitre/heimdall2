@@ -59,13 +59,13 @@ function processEntry(input: unknown): string {
 
   return output.join('');
 }
-function filterVuln(input: unknown[], file: unknown): ExecJSONControl[] {
+function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
   input.forEach((element) => {
     if (element instanceof Object) {
       _.set(
         element,
         'results',
-        _.get(element, 'results').filter((result: ControlResult) => {
+        _.get(element, 'results').filter((result: ExecJSON.ControlResult) => {
           const code_desc = _.get(result, 'code_desc').split('<=SNIPPET');
           const snippetid = code_desc[0];
           const classid = _.get(element, 'id');
@@ -118,7 +118,7 @@ function filterVuln(input: unknown[], file: unknown): ExecJSONControl[] {
       return element;
     }
   });
-  return input as ExecJSONControl[];
+  return input as ExecJSON.Control[];
 }
 function parseHtml(input: unknown): string {
   const textData = new Array<string>();
@@ -135,7 +135,7 @@ function parseHtml(input: unknown): string {
 
 export class FortifyMapper extends BaseConverter {
   startTime: string;
-  mappings: MappedTransform<ExecJSON, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -184,7 +184,7 @@ export class FortifyMapper extends BaseConverter {
             results: [
               {
                 path: '$.FVDL.Snippets.Snippet',
-                status: ControlResultStatus.Failed,
+                status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {transformer: processEntry},
                 run_time: 0,
                 start_time: {
@@ -208,7 +208,7 @@ export class FortifyMapper extends BaseConverter {
       ' ' +
       _.get(this.data, 'FVDL.CreatedTS.time');
   }
-  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
     super.setMappings(customMappings);
   }
 }

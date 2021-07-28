@@ -1,7 +1,6 @@
 import {
-  ControlResultStatus,
   ExecJSON
-} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+} from 'inspecjs';
 import _ from 'lodash';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
@@ -49,7 +48,7 @@ function nistTag(text: string): string[] {
 }
 
 export class SarifMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -117,7 +116,7 @@ export class SarifMapper extends BaseConverter {
             code: '',
             results: [
               {
-                status: ControlResultStatus.Failed,
+                status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {
                   path: 'locations[0].physicalLocation',
                   transformer: formatCodeDesc
@@ -135,7 +134,7 @@ export class SarifMapper extends BaseConverter {
   constructor(sarifJson: string) {
     super(JSON.parse(sarifJson));
   }
-  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
     super.setMappings(customMappings);
   }
 }

@@ -8,11 +8,8 @@ import {
   EvaluationResult
 } from '@aws-sdk/client-config-service';
 import {
-  ControlResult,
-  ControlResultStatus,
-  ExecJSON,
-  ExecJSONControl
-} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+  ExecJSON
+} from 'inspecjs';
 import _ from 'lodash';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
@@ -88,7 +85,7 @@ export class AwsConfigMapper {
       } while (response.NextToken !== undefined)
       rule = _.set(rule, 'results', []);
       ruleResults.forEach((result) => {
-        const hdfResult: ControlResult = {
+        const hdfResult: ExecJSON.ControlResult = {
           code_desc: this.getCodeDesc(result),
           start_time: result.ConfigRuleInvokedTime?.toDateString() || '',
           run_time: this.getRunTime(result),
@@ -160,15 +157,15 @@ export class AwsConfigMapper {
   }
   private getStatus(result: EvaluationResult) {
     if (result.ComplianceType === 'COMPLIANT') {
-      return ControlResultStatus.Passed;
+      return ExecJSON.ControlResultStatus.Passed;
     } else if (result.ComplianceType === 'NON_COMPLIANT') {
-      return ControlResultStatus.Failed;
+      return ExecJSON.ControlResultStatus.Failed;
     } else {
-      return ControlResultStatus.Skipped;
+      return ExecJSON.ControlResultStatus.Skipped;
     }
   }
-  private getMessage(result: EvaluationResult, status: ControlResultStatus) {
-    if (status === ControlResultStatus.Failed) {
+  private getMessage(result: EvaluationResult, status: ExecJSON.ControlResultStatus) {
+    if (status === ExecJSON.ControlResultStatus.Failed) {
       return `${result.EvaluationResultIdentifier}: ${result.EvaluationResultIdentifier?.EvaluationResultQualifier
         }: ${result.Annotation || 'Rule does not pass rule compliance'}`;
     } else {
@@ -279,9 +276,9 @@ export class AwsConfigMapper {
       return matches[0];
     }
   }
-  private async getControls(): Promise<ExecJSONControl[]> {
+  private async getControls(): Promise<ExecJSON.Control[]> {
     const controls = await (await this.issues).map((issue) => {
-      const item: ExecJSONControl = {
+      const item: ExecJSON.Control = {
         id: issue.ConfigRuleId || '',
         title: `${this.getAccountId(issue.ConfigRuleArn || '')} - ${issue.ConfigRuleName
           }`,
@@ -300,7 +297,7 @@ export class AwsConfigMapper {
     return controls;
   }
   public async toHdf() {
-    let hdf: ExecJSON = {
+    let hdf: ExecJSON.Execution = {
       platform: {
         name: 'Heimdall Tools',
         release: HeimdallToolsVersion,

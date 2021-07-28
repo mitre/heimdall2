@@ -1,10 +1,7 @@
 import * as htmlparser from 'htmlparser2';
 import {
-  ControlResult,
-  ControlResultStatus,
-  ExecJSON,
-  ExecJSONControl
-} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+  ExecJSON
+} from 'inspecjs';
 import _ from 'lodash';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
@@ -76,7 +73,7 @@ function formatCodeDesc(input: unknown): string {
   }
   return text.join('\n') + '\n';
 }
-function deduplicateId(input: unknown[], _file: unknown): ExecJSONControl[] {
+function deduplicateId(input: unknown[], _file: unknown): ExecJSON.Control[] {
   const controlId = input.map((element) => {
     return _.get(element, 'id');
   });
@@ -96,11 +93,11 @@ function deduplicateId(input: unknown[], _file: unknown): ExecJSONControl[] {
         index++;
       });
   });
-  return input as ExecJSONControl[];
+  return input as ExecJSON.Control[];
 }
 
 export class ZapMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -159,7 +156,7 @@ export class ZapMapper extends BaseConverter {
             results: [
               {
                 path: 'instances',
-                status: ControlResultStatus.Failed,
+                status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {transformer: formatCodeDesc},
                 run_time: 0,
                 start_time: {path: '$.@generated'}
@@ -181,7 +178,7 @@ export class ZapMapper extends BaseConverter {
       false
     );
   }
-  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
     super.setMappings(customMappings);
   }
   toHdf() {
@@ -192,9 +189,9 @@ export class ZapMapper extends BaseConverter {
           control,
           'results',
           _.get(control, 'results').filter(function (
-            element: ControlResult,
+            element: ExecJSON.ControlResult,
             index: number,
-            self: ControlResult[]
+            self: ExecJSON.ControlResult[]
           ) {
             return index === self.indexOf(element);
           })

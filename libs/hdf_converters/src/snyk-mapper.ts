@@ -46,7 +46,7 @@ function nistTag(identifiers: unknown[]): string[] {
 }
 
 export class SnykResults {
-  data: object
+  data: Record<string, unknown>
   customMapping?: MappedTransform<ExecJSON.Execution, LookupPath>
   constructor(snykJson: string) {
     this.data = JSON.parse(snykJson);

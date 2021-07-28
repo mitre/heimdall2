@@ -1,9 +1,7 @@
 import parser from 'fast-xml-parser';
 import {
-  ControlResult,
-  ControlResultStatus,
   ExecJSON
-} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, LookupPath, MappedTransform} from './base-converter';
@@ -72,18 +70,18 @@ function impactMapping(severity: unknown): number {
     return 0;
   }
 }
-function getStatus(input: unknown): ControlResultStatus {
+function getStatus(input: unknown): ExecJSON.ControlResultStatus {
   switch (input) {
     case 'Fact':
-      return ControlResultStatus.Skipped;
+      return ExecJSON.ControlResultStatus.Skipped;
     case 'Failed':
-      return ControlResultStatus.Failed;
+      return ExecJSON.ControlResultStatus.Failed;
     case 'Finding':
-      return ControlResultStatus.Failed;
+      return ExecJSON.ControlResultStatus.Failed;
     case 'Not A Finding':
-      return ControlResultStatus.Passed;
+      return ExecJSON.ControlResultStatus.Passed;
   }
-  return ControlResultStatus.Skipped;
+  return ExecJSON.ControlResultStatus.Skipped;
 }
 function getBacktrace(input: unknown): string {
   if (input === 'Failed') {
@@ -92,7 +90,7 @@ function getBacktrace(input: unknown): string {
     return '';
   }
 }
-function handleBacktrace(input: unknown, _file: unknown): ControlResult[] {
+function handleBacktrace(input: unknown, _file: unknown): ExecJSON.ControlResult[] {
   if (Array.isArray(input)) {
     input = input.map((element) => {
       if (_.get(element, 'backtrace')[0] === '') {
@@ -102,7 +100,7 @@ function handleBacktrace(input: unknown, _file: unknown): ControlResult[] {
       }
     });
   }
-  return input as ControlResult[];
+  return input as ExecJSON.ControlResult[];
 }
 function idToString(id: unknown): string {
   if (typeof id === 'string' || typeof id === 'number') {
@@ -113,7 +111,7 @@ function idToString(id: unknown): string {
 }
 
 export class DBProtectMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -170,7 +168,7 @@ export class DBProtectMapper extends BaseConverter {
   constructor(dbProtectXml: string) {
     super(compileFindings(parseXml(dbProtectXml)));
   }
-  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
     super.setMappings(customMappings);
   }
 }

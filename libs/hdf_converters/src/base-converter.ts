@@ -1,8 +1,7 @@
 import {createHash} from 'crypto';
 import {
-  ControlResult,
   ExecJSON
-} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+} from 'inspecjs';
 import _ from 'lodash';
 
 export interface LookupPath {
@@ -16,31 +15,31 @@ export interface LookupPath {
 export type ObjectEntries<T> = {[K in keyof T]: readonly [K, T[K]]}[keyof T];
 export type MappedTransform<T, U extends LookupPath> = {
   [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
-    ? MappedTransform<T[K], U>
-    : // eslint-disable-next-line @typescript-eslint/ban-types
-    T[K] extends Function
-    ? T[K]
-    : // eslint-disable-next-line @typescript-eslint/ban-types
-    T[K] extends object
-    ? MappedTransform<
-        T[K] &
-          (U & {
-            arrayTransformer?: (
-              value: unknown[],
-              file: Record<string, unknown>
-            ) => T[K][];
-          }),
-        U
-      >
-    : T[K] | (U & {transformer?: (value: unknown) => T[K]});
+  ? MappedTransform<T[K], U>
+  : // eslint-disable-next-line @typescript-eslint/ban-types
+  T[K] extends Function
+  ? T[K]
+  : // eslint-disable-next-line @typescript-eslint/ban-types
+  T[K] extends object
+  ? MappedTransform<
+    T[K] &
+    (U & {
+      arrayTransformer?: (
+        value: unknown[],
+        file: Record<string, unknown>
+      ) => T[K][];
+    }),
+    U
+  >
+  : T[K] | (U & {transformer?: (value: unknown) => T[K]});
 };
 export type MappedReform<T, U> = {
   [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
-    ? MappedReform<T[K], U>
-    : // eslint-disable-next-line @typescript-eslint/ban-types
-    T[K] extends object
-    ? MappedReform<T[K] & U, U>
-    : Exclude<T[K], U>;
+  ? MappedReform<T[K], U>
+  : // eslint-disable-next-line @typescript-eslint/ban-types
+  T[K] extends object
+  ? MappedReform<T[K] & U, U>
+  : Exclude<T[K], U>;
 };
 
 // Hashing Function
@@ -67,7 +66,7 @@ function collapseDuplicates<T extends object>(
         seen.set(propertyValue, counter);
         counter++;
       } else {
-        const oldResult = _.get(newArray[index], 'results') as ControlResult[];
+        const oldResult = _.get(newArray[index], 'results') as ExecJSON.ControlResult[];
         const descriptions = oldResult.map((element) =>
           _.get(element, 'code_desc')
         );
@@ -80,14 +79,14 @@ function collapseDuplicates<T extends object>(
             _.set(
               newArray[index],
               'results',
-              oldResult.concat(_.get(item, 'results') as ControlResult[])
+              oldResult.concat(_.get(item, 'results') as ExecJSON.ControlResult[])
             );
           }
         } else {
           _.set(
             newArray[index],
             'results',
-            oldResult.concat(_.get(item, 'results') as ControlResult[])
+            oldResult.concat(_.get(item, 'results') as ExecJSON.ControlResult[])
           );
         }
       }
@@ -97,18 +96,18 @@ function collapseDuplicates<T extends object>(
 }
 export class BaseConverter {
   data: Record<string, unknown>;
-  mappings?: MappedTransform<ExecJSON, LookupPath>;
+  mappings?: MappedTransform<ExecJSON.Execution, LookupPath>;
   collapseResults: boolean;
 
   constructor(data: Record<string, unknown>, collapseResults = false) {
     this.data = data;
     this.collapseResults = collapseResults;
   }
-  setMappings(mappings: MappedTransform<ExecJSON, LookupPath>) {
+  setMappings(mappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
     this.mappings = mappings;
   }
 
-  toHdf(): ExecJSON {
+  toHdf(): ExecJSON.Execution {
     if (this.mappings === undefined) {
       throw new Error('Mappings must be provided');
     } else {

@@ -150,15 +150,15 @@ function getStig(item: unknown): string {
     return '';
   }
 }
-function getStatus(item: unknown): ControlResultStatus {
+function getStatus(item: unknown): ExecJSON.ControlResultStatus {
   if (_.has(item, 'cm:compliance-result')) {
     if (_.get(item, 'cm:compliance-result') === 'PASSED') {
-      return ControlResultStatus.Passed;
+      return ExecJSON.ControlResultStatus.Passed;
     } else {
-      return ControlResultStatus.Failed;
+      return ExecJSON.ControlResultStatus.Failed;
     }
   } else {
-    return ControlResultStatus.Failed;
+    return ExecJSON.ControlResultStatus.Failed;
   }
 }
 function formatCodeDesc(item: unknown): string {
@@ -180,8 +180,8 @@ function getStartTime(tag: unknown): string {
     return _.get(tag, 'text');
   }
 }
-function cleanData(control: unknown[]): ExecJSONControl[] {
-  const filteredControl = control as ExecJSONControl[];
+function cleanData(control: unknown[]): ExecJSON.Control[] {
+  const filteredControl = control as ExecJSON.Control[];
   filteredControl.forEach((element) => {
     if (element instanceof Object) {
       if (_.get(element.tags, 'cci').length === 0) {
@@ -217,13 +217,13 @@ function parseHtml(input: unknown): string {
 }
 export class NessusResults {
   data: Record<string, unknown>;
-  customMapping?: MappedTransform<ExecJSON, LookupPath>;
+  customMapping?: MappedTransform<ExecJSON.Execution, LookupPath>;
   constructor(nessusXml: string) {
     this.data = parseXml(nessusXml);
   }
 
   toHdf() {
-    const results: ExecJSON[] = [];
+    const results: ExecJSON.Execution[] = [];
     policyName = _.get(
       this.data,
       'NessusClientData_v2.Policy.policyName'
@@ -262,13 +262,13 @@ export class NessusResults {
       return result.toHdf();
     }
   }
-  setMappings(customMapping: MappedTransform<ExecJSON, LookupPath>) {
+  setMappings(customMapping: MappedTransform<ExecJSON.Execution, LookupPath>) {
     this.customMapping = customMapping;
   }
 }
 
 export class NessusMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,

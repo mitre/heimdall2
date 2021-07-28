@@ -1,7 +1,6 @@
 import {
-  ControlResultStatus,
   ExecJSON
-} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+} from 'inspecjs';
 import _ from 'lodash';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
@@ -120,7 +119,7 @@ function nistTag(identifier: Record<string, unknown>): string[] {
 // Mappings
 
 export class JfrogXrayMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -172,7 +171,7 @@ export class JfrogXrayMapper extends BaseConverter {
             code: '',
             results: [
               {
-                status: ControlResultStatus.Failed,
+                status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {transformer: formatCodeDesc},
                 run_time: 0,
                 start_time: ''
@@ -187,7 +186,7 @@ export class JfrogXrayMapper extends BaseConverter {
   constructor(xrayJson: string) {
     super(JSON.parse(xrayJson), true);
   }
-  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
     super.setMappings(customMappings);
   }
 }
