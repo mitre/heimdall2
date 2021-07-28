@@ -29,8 +29,8 @@ export type MappedReform<T, U> = {
 };
 
 // Hashing Function
-export function generateHash(data: string): string {
-  const hash = createHash('sha256');
+export function generateHash(data: string, algorithm: string = 'sha256'): string {
+  const hash = createHash(algorithm);
   return hash.update(data).digest('hex');
 }
 
