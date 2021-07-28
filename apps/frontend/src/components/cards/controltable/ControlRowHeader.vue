@@ -101,7 +101,6 @@
             class="align-center justify-center py-0 my-0 pl-0"
             hide-details
             :label="$vuetify.breakpoint.lgAndUp ? '' : 'Viewed'"
-            @click="$emit('control-viewed', control)"
           />
         </v-layout>
       </v-container>
@@ -146,8 +145,6 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   @Prop({type: Boolean, default: false}) readonly controlExpanded!: boolean;
   @Prop({type: Boolean, default: false}) readonly showImpact!: boolean;
 
-  controlWasViewed = false;
-
   get runTime(): string {
     return `${_.truncate(getControlRunTime(this.control).toString(), {length: 5, omission: ''})}ms`
   }
@@ -169,17 +166,12 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     return `status${this.control.root.hdf.status.replace(' ', '')}`;
   }
 
-  get viewed_color(): string {
-    return this.wasViewed ? 'blue' : '';
-  }
-
   get wasViewed(): boolean {
-    this.controlWasViewed = this.viewedControls.indexOf(this.control.data.id) !== -1;
-    return this.controlWasViewed;
+    return this.viewedControls.indexOf(this.control.data.id) !== -1;
   }
 
-  set wasViewed(value: boolean) {
-    this.controlWasViewed = value;
+  set wasViewed(_value: boolean) {
+    this.$emit('control-viewed', this.control);
   }
 
   severity_arrow_count(severity: string): number {

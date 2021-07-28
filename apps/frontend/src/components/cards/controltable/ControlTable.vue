@@ -191,7 +191,6 @@ export default class ControlTable extends Vue {
   // Used for viewed/unviewed controls.
   viewedControlIds: string[] = [];
   displayUnviewedControls = true;
-  viewed = false;
 
   toggleControlViewed(control: ContextualizedControl) {
     const alreadyViewed = this.viewedControlIds.indexOf(control.data.id)
@@ -348,8 +347,10 @@ export default class ControlTable extends Vue {
   get items(): ListElt[] {
     // Controls ascending/descending
     let factor = 1;
+    // Whether or not we need to sort
+    let sort = true;
     // Our comparator function
-    let cmp: ((a: ListElt, b: ListElt) => number) | null = null;
+    let cmp: ((a: ListElt, b: ListElt) => number);
 
     let items = this.raw_items;
 
@@ -389,6 +390,8 @@ export default class ControlTable extends Vue {
       if (this.sortRunTime === 'ascending') {
         factor = -1;
       }
+    } else {
+      sort = false;
     }
 
     // Displays only unviewed controls.
@@ -396,8 +399,8 @@ export default class ControlTable extends Vue {
       items = items.filter((val) => !this.viewedControlIds.includes(val.control.data.id));
     }
 
-    if(cmp !== null) {
-      items = items.sort((a, b) => cmp!(a, b) * factor)
+    if(sort === true) {
+      items = items.sort((a, b) => cmp(a, b) * factor)
     }
 
     return items;
