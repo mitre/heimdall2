@@ -1,4 +1,4 @@
-import { ExecJSON } from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
+import { ExecJSON } from 'inspecjs'
 import _ from 'lodash'
 import { createHash } from 'crypto'
 
@@ -78,7 +78,7 @@ function collapseDuplicates<T extends Object>(
 }
 export class BaseConverter {
   data: object;
-  mappings?: MappedTransform<ExecJSON, LookupPath>;
+  mappings?: MappedTransform<ExecJSON.Execution, LookupPath>;
   collapseResults: boolean
 
   constructor(
@@ -88,11 +88,11 @@ export class BaseConverter {
     this.data = data;
     this.collapseResults = collapseResults
   }
-  setMappings(mappings: MappedTransform<ExecJSON, LookupPath>) {
+  setMappings(mappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
     this.mappings = mappings
   }
 
-  toHdf(): ExecJSON {
+  toHdf(): ExecJSON.Execution {
     if (this.mappings === undefined) {
       throw new Error('Mappings must be provided')
     } else {

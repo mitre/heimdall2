@@ -1,11 +1,7 @@
 import parser from 'fast-xml-parser';
-import * as htmlparser from 'htmlparser2';
-import { ControlResult, ExecJSONControl } from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
 import {
-  ControlDescription,
-  ControlResultStatus,
-  ExecJSON
-} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+  ExecJSON,
+} from 'inspecjs';
 import _ from 'lodash';
 import { version as HeimdallToolsVersion } from '../package.json';
 import { BaseConverter, LookupPath, MappedTransform } from './base-converter'
@@ -55,9 +51,9 @@ function processEntry(input: object) {
 
   return output.join("")
 }
-function filterVuln(input: unknown[], file: object): ExecJSONControl[] {
+function filterVuln(input: unknown[], file: object): ExecJSON.Control[] {
   input.forEach(element => {
-    _.set(element, 'results', _.get(element, 'results').filter((result: ControlResult) => {
+    _.set(element, 'results', _.get(element, 'results').filter((result: ExecJSON.ControlResult) => {
       const code_desc = _.get(result, 'code_desc').split('<=SNIPPET')
       const snippetid = code_desc[0]
       const classid = _.get(element, 'id')
@@ -94,7 +90,7 @@ function filterVuln(input: unknown[], file: object): ExecJSONControl[] {
 
 export class FortifyMapper extends BaseConverter {
   startTime: string
-  mappings: MappedTransform<ExecJSON, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -162,7 +158,7 @@ export class FortifyMapper extends BaseConverter {
     super(parseXml(fvdl))
     this.startTime = _.get(this.data, 'FVDL.CreatedTS.date') + ' ' + _.get(this.data, 'FVDL.CreatedTS.time')
   }
-  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
     super.setMappings(customMappings)
   }
 }

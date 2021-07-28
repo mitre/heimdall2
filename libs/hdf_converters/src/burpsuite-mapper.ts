@@ -1,10 +1,8 @@
 import parser from 'fast-xml-parser'
 import * as htmlparser from 'htmlparser2'
 import {
-  ControlDescription,
-  ControlResultStatus,
   ExecJSON
-} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
+} from 'inspecjs'
 import _ from 'lodash';
 import { version as HeimdallToolsVersion } from '../package.json'
 import { BaseConverter, LookupPath, MappedTransform } from './base-converter'
@@ -96,7 +94,7 @@ function parseXml(xml: string) {
   return parser.parse(xml, options)
 }
 export class BurpSuiteMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -152,7 +150,7 @@ export class BurpSuiteMapper extends BaseConverter {
             code: '',
             results: [
               {
-                status: ControlResultStatus.Failed,
+                status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: { transformer: formatCodeDesc },
                 run_time: 0,
                 start_time: { path: '$.issues.exportTime' }
@@ -167,7 +165,7 @@ export class BurpSuiteMapper extends BaseConverter {
   constructor(burpsXml: string) {
     super(parseXml(burpsXml))
   }
-  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
     super.setMappings(customMappings)
   }
 }

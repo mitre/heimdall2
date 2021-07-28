@@ -1,4 +1,4 @@
-import { ControlResultStatus, ExecJSON } from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
+import { ExecJSON } from 'inspecjs'
 import { version as HeimdallToolsVersion } from '../package.json'
 import _ from 'lodash'
 import { MappedTransform, LookupPath, BaseConverter, generateHash } from './base-converter'
@@ -36,13 +36,13 @@ function nistTag(identifiers: string[]) {
 
 export class SnykResults {
   data: object
-  customMapping?: MappedTransform<ExecJSON, LookupPath>
+  customMapping?: MappedTransform<ExecJSON.Execution, LookupPath>
   constructor(snykJson: string) {
     this.data = JSON.parse(snykJson)
   }
 
   toHdf() {
-    let results: ExecJSON[] = []
+    let results: ExecJSON.Execution[] = []
     if (Array.isArray(this.data)) {
       this.data.forEach(element => {
         let entry = new SnykMapper(element)
@@ -60,13 +60,13 @@ export class SnykResults {
       return result.toHdf()
     }
   }
-  setMappings(customMapping: MappedTransform<ExecJSON, LookupPath>) {
+  setMappings(customMapping: MappedTransform<ExecJSON.Execution, LookupPath>) {
     this.customMapping = customMapping
   }
 }
 
 export class SnykMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -123,7 +123,7 @@ export class SnykMapper extends BaseConverter {
             code: '',
             results: [
               {
-                status: ControlResultStatus.Failed,
+                status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {
                   path: 'from', transformer: (input: object) => {
                     if (Array.isArray(input)) {
@@ -146,8 +146,7 @@ export class SnykMapper extends BaseConverter {
   constructor(snykJson: object) {
     super(snykJson);
   }
-  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
     super.setMappings(customMappings)
   }
 }
-

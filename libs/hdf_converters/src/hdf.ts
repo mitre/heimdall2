@@ -1,26 +1,23 @@
-import { version as HeimdallToolsVersion } from '../package.json'
+import { version as HDFConvertersVersion } from '../package.json'
 import {
-  ExecJSON,
-  ExecJSONProfile,
-  Platform,
-  Statistics
-} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+  ExecJSON
+} from 'inspecjs';
 
-class HeimdallDataFormat implements ExecJSON {
-  platform: Platform;
-  profiles: ExecJSONProfile[];
-  statistics: Statistics;
+class HeimdallDataFormat implements ExecJSON.Execution {
+  platform: ExecJSON.Platform;
+  profiles: ExecJSON.Profile[];
+  statistics: ExecJSON.Statistics;
   version: string;
 
   constructor(
-    platform: Platform,
-    profiles: ExecJSONProfile[],
-    statistics: Statistics,
+    platform: ExecJSON.Platform,
+    profiles: ExecJSON.Profile[],
+    statistics: ExecJSON.Statistics,
     version: string
   ) {
     this.platform = platform;
     this.profiles = profiles;
     this.statistics = statistics;
-    this.version = HeimdallToolsVersion;
+    this.version = HDFConvertersVersion;
   }
 }

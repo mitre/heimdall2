@@ -1,4 +1,4 @@
-import { ExecJSON, ControlResultStatus } from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+import { ExecJSON } from 'inspecjs';
 import _ from 'lodash';
 import parser from 'fast-xml-parser';
 import { version as HeimdallToolsVersion } from '../package.json';
@@ -111,7 +111,7 @@ function formatMessage(response: object) {
   return text.join('\n')
 }
 export class NetsparkerMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -182,7 +182,7 @@ export class NetsparkerMapper extends BaseConverter {
   constructor(burpsXml: string) {
     super(parseXml(burpsXml))
   }
-  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
     super.setMappings(customMappings)
   }
 }

@@ -1,4 +1,4 @@
-import { ControlResultStatus, ExecJSON } from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+import { ExecJSON } from 'inspecjs';
 import _ from 'lodash';
 import { version as HeimdallToolsVersion } from '../package.json';
 import { MappedTransform, LookupPath, BaseConverter } from './base-converter'
@@ -47,13 +47,13 @@ function compliance(input: object): string {
     return input.toString()
   }
 }
-function getStatus(input: object): ControlResultStatus {
+function getStatus(input: object): ExecJSON.ControlResultStatus {
   if (_.get(input, 'checked_items') === 0) {
-    return ControlResultStatus.Skipped
+    return ExecJSON.ControlResultStatus.Skipped
   } else if (_.get(input, 'flagged_items') === 0) {
-    return ControlResultStatus.Passed
+    return ExecJSON.ControlResultStatus.Passed
   } else {
-    return ControlResultStatus.Failed
+    return ExecJSON.ControlResultStatus.Failed
   }
 }
 function checkSkip(input: object): string {
@@ -92,7 +92,7 @@ function collapseServices(file: object): object {
   return file
 }
 export class ScoutsuiteMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -228,7 +228,7 @@ export class ScoutsuiteMapper extends BaseConverter {
   constructor(scoutsuiteJson: string) {
     super(collapseServices(JSON.parse(scoutsuiteJson.split('\n', 2)[1])))
   }
-  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
     super.setMappings(customMappings)
   }
 }

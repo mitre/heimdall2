@@ -1,10 +1,7 @@
 import parser from 'fast-xml-parser';
-import * as htmlparser from 'htmlparser2';
 import {
-  ControlDescription,
-  ControlResultStatus,
   ExecJSON
-} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+} from 'inspecjs';
 import _ from 'lodash';
 import { version as HeimdallToolsVersion } from '../package.json';
 import { BaseConverter, LookupPath, MappedTransform } from './base-converter';
@@ -58,7 +55,7 @@ function parseXml(xml: string) {
   return parser.parse(xml, options);
 }
 export class XCCDFResultsMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,

@@ -1,11 +1,9 @@
 import parser from 'fast-xml-parser'
 import {
-  ControlDescription,
-  ControlResultStatus,
   ExecJSON
-} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
+} from 'inspecjs'
 import _ from 'lodash';
-import { version as HeimdallToolsVersion } from '../package.json';
+import { version as HDFConvertersVersion } from '../package.json';
 import { BaseConverter, LookupPath, MappedTransform } from './base-converter'
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -76,13 +74,13 @@ function handleBacktrace<T extends object>(input: T[], _file: object) {
 }
 
 export class DBProtectMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
+      release: HDFConvertersVersion,
       target_id: ''
     },
-    version: HeimdallToolsVersion,
+    version: HDFConvertersVersion,
     statistics: {
       duration: null
     },
@@ -132,7 +130,7 @@ export class DBProtectMapper extends BaseConverter {
   constructor(dbProtectXml: string) {
     super(compileFindings(parseXml(dbProtectXml)))
   }
-  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
     super.setMappings(customMappings)
   }
 }

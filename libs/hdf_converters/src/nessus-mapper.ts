@@ -1,8 +1,7 @@
 import parser from 'fast-xml-parser';
 import {
-  ControlResultStatus,
   ExecJSON
-} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
+} from 'inspecjs';
 import _ from 'lodash';
 import { version as HeimdallToolsVersion } from '../package.json';
 import { MappedTransform, LookupPath, BaseConverter, generateHash } from './base-converter'
@@ -63,12 +62,12 @@ function impactMapping(severity: string) {
 function getStatus(item: object) {
   if (_.has(item, 'cm:compliance-result')) {
     if (_.get(item, 'cm:compliance-result') === 'PASSED') {
-      return ControlResultStatus.Passed
+      return ExecJSON.ControlResultStatus.Passed
     } else {
-      return ControlResultStatus.Failed
+      return ExecJSON.ControlResultStatus.Failed
     }
   } else {
-    return ControlResultStatus.Failed
+    return ExecJSON.ControlResultStatus.Failed
   }
 }
 function formatCodeDesc(item: object) {
@@ -88,13 +87,13 @@ function getStartTime(tag: object) {
 
 export class NessusResults {
   data: object
-  customMapping?: MappedTransform<ExecJSON, LookupPath>
+  customMapping?: MappedTransform<ExecJSON.Execution, LookupPath>
   constructor(nessusXml: string) {
     this.data = parseXml(nessusXml)
   }
 
   toHdf() {
-    let results: ExecJSON[] = []
+    let results: ExecJSON.Execution[] = []
     policyName = _.get(this.data, 'NessusClientData_v2.Policy.policyName')
     version = _.get(_.get(this.data, 'NessusClientData_v2.Policy.Preferences.ServerPreferences.preference').find((element: object) => { return _.get(element, 'name') === 'sc_version' }), 'value') || ''
     if (Array.isArray(_.get(this.data, 'NessusClientData_v2.Report.ReportHost'))) {
@@ -114,13 +113,13 @@ export class NessusResults {
       return result.toHdf()
     }
   }
-  setMappings(customMapping: MappedTransform<ExecJSON, LookupPath>) {
+  setMappings(customMapping: MappedTransform<ExecJSON.Execution, LookupPath>) {
     this.customMapping = customMapping
   }
 }
 
 export class NessusMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,

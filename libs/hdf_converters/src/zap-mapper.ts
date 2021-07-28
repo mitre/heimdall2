@@ -1,4 +1,4 @@
-import { ControlResultStatus, ExecJSON } from 'inspecjs/dist/generated_parsers/v_1_0/exec-json'
+import { ExecJSON } from 'inspecjs'
 import { version as HeimdallToolsVersion } from '../package.json'
 import _ from 'lodash'
 import { MappedTransform, LookupPath, BaseConverter, generateHash } from './base-converter'
@@ -68,7 +68,7 @@ function deduplicateId<T extends object>(input: T[], _file: object): T[] {
 }
 
 export class ZapMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON, LookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, LookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -140,7 +140,7 @@ export class ZapMapper extends BaseConverter {
   constructor(zapJson: string, name: string) {
     super(_.set(JSON.parse(zapJson), 'site', filterSite(_.get(JSON.parse(zapJson), 'site'), name)), false);
   }
-  setMappings(customMappings: MappedTransform<ExecJSON, LookupPath>) {
+  setMappings(customMappings: MappedTransform<ExecJSON.Execution, LookupPath>) {
     super.setMappings(customMappings)
   }
   toHdf() {
