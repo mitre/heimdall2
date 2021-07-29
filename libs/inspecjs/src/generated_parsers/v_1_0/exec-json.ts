@@ -42,7 +42,6 @@ export interface ExecJSONProfile {
     sha256:           string;
     skip_message?:    null | string;
     status?:          null | string;
-    status_message?:  null | string;
     summary?:         null | string;
     supports:         SupportedPlatform[];
     title?:           null | string;
@@ -129,15 +128,15 @@ export interface WaiverData {
 }
 
 export interface Dependency {
-    branch?:         null | string;
-    compliance?:     null | string;
-    git?:            null | string;
-    name?:           null | string;
-    path?:           null | string;
-    status?:         null | string;
-    status_message?: null | string;
-    supermarket?:    null | string;
-    url?:            null | string;
+    branch?:       null | string;
+    compliance?:   null | string;
+    git?:          null | string;
+    name?:         null | string;
+    path?:         null | string;
+    skip_message?: null | string;
+    status?:       null | string;
+    supermarket?:  null | string;
+    url?:          null | string;
 }
 
 export interface ControlGroup {
@@ -360,7 +359,6 @@ const typeMap: any = {
         { json: "sha256", js: "sha256", typ: "" },
         { json: "skip_message", js: "skip_message", typ: u(undefined, u(null, "")) },
         { json: "status", js: "status", typ: u(undefined, u(null, "")) },
-        { json: "status_message", js: "status_message", typ: u(undefined, u(null, "")) },
         { json: "summary", js: "summary", typ: u(undefined, u(null, "")) },
         { json: "supports", js: "supports", typ: a(r("SupportedPlatform")) },
         { json: "title", js: "title", typ: u(undefined, u(null, "")) },
@@ -416,8 +414,8 @@ const typeMap: any = {
         { json: "git", js: "git", typ: u(undefined, u(null, "")) },
         { json: "name", js: "name", typ: u(undefined, u(null, "")) },
         { json: "path", js: "path", typ: u(undefined, u(null, "")) },
+        { json: "skip_message", js: "skip_message", typ: u(undefined, u(null, "")) },
         { json: "status", js: "status", typ: u(undefined, u(null, "")) },
-        { json: "status_message", js: "status_message", typ: u(undefined, u(null, "")) },
         { json: "supermarket", js: "supermarket", typ: u(undefined, u(null, "")) },
         { json: "url", js: "url", typ: u(undefined, u(null, "")) },
     ], "any"),

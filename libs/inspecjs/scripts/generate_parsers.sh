@@ -6,13 +6,7 @@ VERSION="v_1_0"
 
 # Declare our schemas - those that we will ask inspec to generate
 declare -a SCHEMAS=('exec-json' 'exec-jsonmin' 'profile-json')
-# Make the schemas for each version we want
 
-for SCHEMA in ${SCHEMAS[@]}
-do
-    echo Generating $SCHEMA
-    inspec schema $SCHEMA --chef-license=accept-silent | jq > schemas/$SCHEMA.json
-done
 # Quicktype each
 echo "Generating types"
 mkdir -p "./work/interfaces"
