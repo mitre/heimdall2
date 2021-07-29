@@ -1,7 +1,5 @@
 // Our foreign package API.
 
-// Export all currently handled schema types
-export * from './versions/v_1_0';
 // Export types
 export {
   ControlStatus,
@@ -16,3 +14,5 @@ export * from './context';
 export * from './fileparse';
 // Export nist utilities
 export * from './nist';
+// Export all currently handled schema types
+export * from './versions/v_1_0';
