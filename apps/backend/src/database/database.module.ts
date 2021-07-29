@@ -35,39 +35,27 @@ function getSynchronize(configService: ConfigService): boolean {
   }
 }
 
-function toObject(fields: string[], values?: string[]): Record<number, string> {
-  if (values) {
-    const result: Record<number, string> = {};
-    for (let i = 0; i < values.length; i++) {
-      if (!sensitiveKeys.some((regex) => regex.test(fields[i]))) {
-        result[i] = values[i];
+function sanitize(fields: string[], values?: string[]): string[] {
+  return (
+    values?.map((value, index) => {
+      if (sensitiveKeys.some((regex) => regex.test(fields[index]))) {
+        return 'REDACTED';
       } else {
-        result[i] = '[REDACTED]';
+        return value;
       }
-    }
-    return result;
-  } else {
-    return {};
-  }
+    }) || []
+  );
 }
 
 function logQuery(
   sql: string,
   connection: {fields: string[]; bind: string[]; type: string}
 ) {
-  if (connection.type === 'INSERT' || connection.type === 'UPDATE') {
-    const matches = sql.match(/\$\d/gm);
-    const values = toObject(connection.fields, connection.bind);
-
-    if (matches) {
-      matches.forEach((placeholder, index) => {
-        sql = sql.replace(placeholder, `"${values[index]}"`);
-      });
-    }
-    logger.info({message: sql});
-  } else {
-    logger.info({message: sql});
-  }
+  logger.info({
+    message: `${sql} [${sanitize(connection.fields, connection.bind).join(
+      ', '
+    )}]`
+  });
 }
 
 @Module({
