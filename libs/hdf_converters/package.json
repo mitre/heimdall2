@@ -9,6 +9,7 @@
   ],
   "main": "index.ts",
   "scripts": {
+    "prebuild": "rimraf ./dist",
     "build": "tsc -p ./tsconfig.build.json",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
