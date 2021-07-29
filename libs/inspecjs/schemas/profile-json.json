@@ -116,7 +116,7 @@
         "path": {
           "type": "string"
         },
-        "skip_message": {
+        "status_message": {
           "type": "string"
         },
         "status": {

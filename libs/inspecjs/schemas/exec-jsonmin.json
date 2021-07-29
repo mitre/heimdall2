@@ -106,7 +106,9 @@
     "Statistics": {
       "type": "object",
       "additionalProperties": true,
-      "required": [],
+      "required": [
+        "duration"
+      ],
       "properties": {
         "duration": {
           "type": "number",

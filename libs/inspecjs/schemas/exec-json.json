@@ -148,7 +148,7 @@
         "path": {
           "type": "string"
         },
-        "skip_message": {
+        "status_message": {
           "type": "string"
         },
         "status": {
@@ -231,9 +231,6 @@
             "$ref": "#/definitions/Control_Result"
           },
           "description": "\n              A list of all results of the controls describe blocks.\n\n              For instance, if in the controls code we had the following:\n                describe sshd_config do\n                  its('Port') { should cmp 22 }\n                end\n              The result of this block as a ControlResult would be appended to the results list.\n              "
-        },
-        "waiver_data": {
-          "$ref": "#/definitions/Waiver_Data"
         }
       },
       "title": "Exec JSON Control"
@@ -299,6 +296,9 @@
           "type": "string"
         },
         "status": {
+          "type": "string"
+        },
+        "status_message": {
           "type": "string"
         },
         "skip_message": {
@@ -454,7 +454,9 @@
     "Statistics": {
       "type": "object",
       "additionalProperties": true,
-      "required": [],
+      "required": [
+        "duration"
+      ],
       "properties": {
         "duration": {
           "type": "number",
@@ -492,29 +494,6 @@
         }
       },
       "title": "Supported Platform"
-    },
-    "Waiver_Data": {
-      "type": "object",
-      "additionalProperties": true,
-      "required": [],
-      "properties": {
-        "skipped_due_to_waiver": {
-          "type": ["string", "boolean"]
-        },
-        "run": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        },
-        "expiration_date": {
-          "type": "string"
-        },
-        "justification": {
-          "type": "string"
-        }
-      },
-      "title": "Waiver Data"
     }
   }
 }

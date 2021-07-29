@@ -7,10 +7,11 @@ VERSION="v_1_0"
 # Declare our schemas - those that we will ask inspec to generate
 declare -a SCHEMAS=('exec-json' 'exec-jsonmin' 'profile-json')
 # Make the schemas for each version we want
+
 for SCHEMA in ${SCHEMAS[@]}
 do
     echo Generating $SCHEMA
-    inspec schema $SCHEMA > schemas/$SCHEMA.json --chef-license=accept-silent
+    inspec schema $SCHEMA --chef-license=accept-silent | jq > schemas/$SCHEMA.json
 done
 # Quicktype each
 echo "Generating types"
@@ -27,7 +28,7 @@ do
     COMPAT="./scripts/schema_compat_patches"
     cat $SCHEMAFILE | . "$COMPAT/generic.sh" | . "$COMPAT/$SCHEMA.sh" | . "./scripts/null_compat_schema.sh" > $MODIFIED_SCHEMAFILE
     # Generate the parser
-    npx quicktype -l ts -s schema --src $MODIFIED_SCHEMAFILE -o $OUTFILE --runtime-typecheck
+    quicktype -l ts -s schema --src $MODIFIED_SCHEMAFILE -o $OUTFILE --runtime-typecheck
     rm $MODIFIED_SCHEMAFILE
 done
 # Remove work directory trash
