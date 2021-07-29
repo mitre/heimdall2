@@ -14,7 +14,6 @@ export class CciNistMapping {
 
   constructor(xmlDataPath: string) {
     this.data = [];
-    //fs.writeFileSync('libs/hdf_converters/converted_jsons/UCCI.json', JSON.stringify(parser.parse(fs.readFileSync(xmlDataPath, {encoding: 'utf-8'}), options)));
     const tags = _.get(
       parser.parse(fs.readFileSync(xmlDataPath, {encoding: 'utf-8'}), options),
       'cci_list.cci_items.cci_item'
@@ -49,13 +48,13 @@ export class CciNistMapping {
     if (identifiers.length === 0) {
       return DEFAULT_NIST_TAG;
     } else {
-      const matches = new Array<string>();
+      const matches: string[] = [];
       identifiers.forEach((id) => {
         const item = this.data.find((element) => element.cci === id);
         if (item !== null && item !== undefined && item.nistId !== '') {
           if (collapse && matches.indexOf(item.nistId) === -1) {
             matches.push(item.nistId);
-          } else {
+          } else if (collapse === false) {
             matches.push(item.nistId);
           }
         }

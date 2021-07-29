@@ -14,6 +14,8 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['low', 0.3],
   ['information', 0.3]
 ]);
+const NAME =
+  'BurpSuite Pro Scan'
 
 const CWE_NIST_MAPPING_FILE = path.resolve(
   __dirname,
@@ -24,7 +26,6 @@ const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
 // Transformation Functions
 function formatCodeDesc(issue: unknown): string {
-  //TODO: Ask if we can put "NOT_PROVIDED" instead of leaving fields blank
   const text = [];
   if (_.has(issue, 'host.ip') && _.has(issue, 'host.text')) {
     text.push(
@@ -49,7 +50,7 @@ function formatCodeDesc(issue: unknown): string {
   return text.join('\n') + '\n';
 }
 function parseHtml(input: unknown): string {
-  const textData = new Array<string>();
+  const textData: string[] = [];
   const myParser = new htmlparser.Parser({
     ontext(text: string) {
       textData.push(text);

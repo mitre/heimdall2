@@ -14,8 +14,7 @@ const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE);
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
 function filterSite<T>(input: Array<T>, name: string) {
-  const match = input.find((element) => _.get(element, '@name') === name);
-  return match;
+  return input.find((element) => _.get(element, '@name') === name);
 }
 function impactMapping(input: unknown): number {
   if (typeof input === 'string') {
@@ -34,7 +33,7 @@ function impactMapping(input: unknown): number {
   }
 }
 function parseHtml(input: unknown): string {
-  const textData = new Array<string>();
+  const textData: string[] = [];
   const myParser = new htmlparser.Parser({
     ontext(text: string) {
       textData.push(text);

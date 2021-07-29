@@ -10,6 +10,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['warning', 0.5],
   ['note', 0.3]
 ]);
+const MESSAGE_TEXT = 'message.text'
 
 const CWE_NIST_MAPPING_FILE = path.resolve(
   __dirname,
@@ -78,10 +79,10 @@ export class SarifMapper extends BaseConverter {
             key: 'id',
             tags: {
               cwe: {
-                path: 'message.text',
+                path: MESSAGE_TEXT,
                 transformer: extractCwe
               },
-              nist: {path: 'message.text', transformer: nistTag}
+              nist: {path: MESSAGE_TEXT, transformer: nistTag}
             },
             descriptions: [],
             refs: [],
@@ -90,7 +91,7 @@ export class SarifMapper extends BaseConverter {
               line: {path: 'locations[0].physicalLocation.region.startLine'}
             },
             title: {
-              path: 'message.text',
+              path: MESSAGE_TEXT,
               transformer: (text: unknown): string => {
                 if (typeof text === 'string') {
                   return text.split(': ')[0];
@@ -101,7 +102,7 @@ export class SarifMapper extends BaseConverter {
             },
             id: {path: 'ruleId'},
             desc: {
-              path: 'message.text',
+              path: MESSAGE_TEXT,
               transformer: (text: unknown): string => {
                 if (typeof text === 'string') {
                   return text.split(': ')[1];

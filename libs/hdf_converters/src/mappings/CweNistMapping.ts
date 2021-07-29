@@ -16,12 +16,19 @@ export class CweNistMapping {
       });
     }
   }
-  nistFilter(identifiers: string[], defaultNist: string[]): string[] {
+  nistFilter(identifiers: string[] | string, defaultNist?: string[]): string[] {
     const DEFAULT_NIST_TAG = defaultNist;
+    if (!Array.isArray(identifiers)) {
+      identifiers = [identifiers]
+    }
     if (identifiers.length === 0) {
-      return DEFAULT_NIST_TAG;
+      if (DEFAULT_NIST_TAG !== undefined) {
+        return DEFAULT_NIST_TAG;
+      } else {
+        return []
+      }
     } else {
-      const matches = new Array<string>();
+      const matches: string[] = [];
       identifiers.forEach((id) => {
         const key = parseInt(id);
         const item = this.data.find((element) => element.id === key);
@@ -34,43 +41,8 @@ export class CweNistMapping {
           matches.push(item.nistId);
         }
       });
-      if (matches.length === 0) {
+      if (matches.length === 0 && DEFAULT_NIST_TAG !== undefined) {
         return DEFAULT_NIST_TAG;
-      }
-      return matches;
-    }
-  }
-  nistFilterNoDefault(identifiers: string[] | string): string[] {
-    if (Array.isArray(identifiers)) {
-      if (identifiers.length === 0) {
-        return [];
-      } else {
-        const matches = new Array<string>();
-        identifiers.forEach((id) => {
-          const key = parseInt(id);
-          const item = this.data.find((element) => element.id === key);
-          if (
-            item !== null &&
-            item !== undefined &&
-            item.nistId !== '' &&
-            matches.indexOf(item.nistId) === -1
-          ) {
-            matches.push(item.nistId);
-          }
-        });
-        return matches;
-      }
-    } else {
-      const key = parseInt(identifiers);
-      const matches = new Array<string>();
-      const item = this.data.find((element) => element.id === key);
-      if (
-        item !== null &&
-        item !== undefined &&
-        item.nistId !== '' &&
-        matches.indexOf(item.nistId) === -1
-      ) {
-        matches.push(item.nistId);
       }
       return matches;
     }

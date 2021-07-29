@@ -21,7 +21,7 @@ export class OwaspNistMapping {
       if (identifiers.length === 0) {
         return [];
       } else {
-        const matches = new Array<string>();
+        const matches: string[] = [];
         identifiers.forEach((id) => {
           const item = this.data.find((element) => element.id === id);
           if (
@@ -36,7 +36,7 @@ export class OwaspNistMapping {
         return matches;
       }
     } else {
-      const matches = new Array<string>();
+      const matches: string[] = [];
       const item = this.data.find((element) => element.id === identifiers);
       if (
         item !== null &&

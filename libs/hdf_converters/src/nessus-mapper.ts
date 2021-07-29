@@ -19,6 +19,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['iii', 0.3],
   ['0', 0.0]
 ]);
+const COMPLIANCE_PATH = 'cm:compliance-reference'
 const NA_PLUGIN_OUTPUT = 'This Nessus Plugin does not provide output message.';
 const NESSUS_PLUGINS_NIST_MAPPING_FILE = path.resolve(
   __dirname,
@@ -51,8 +52,8 @@ function getVersion(): string {
 }
 
 function getId(item: unknown): string {
-  if (_.has(item, 'cm:compliance-reference')) {
-    return parseRef(_.get(item, 'cm:compliance-reference'), 'Vuln-ID')[0];
+  if (_.has(item, COMPLIANCE_PATH)) {
+    return parseRef(_.get(item, COMPLIANCE_PATH), 'Vuln-ID')[0];
   } else {
     return _.get(item, 'pluginID');
   }
@@ -90,13 +91,12 @@ function cciNistTag(input: string): string[] {
 
 function parseRef(input: string, key: string): string[] {
   const matches = input.split(',').filter((element) => element.startsWith(key));
-  const result = matches.map((element) => element.split('|')[1]);
-  return result;
+  return matches.map((element) => element.split('|')[1]);
 }
 function getImpact(item: unknown): number {
-  if (_.has(item, 'cm:compliance-reference')) {
+  if (_.has(item, COMPLIANCE_PATH)) {
     return impactMapping(
-      parseRef(_.get(item, 'cm:compliance-reference'), 'CAT').join('')
+      parseRef(_.get(item, COMPLIANCE_PATH), 'CAT').join('')
     );
   } else {
     return impactMapping(_.get(item, 'severity'));
@@ -117,22 +117,22 @@ function impactMapping(severity: unknown): number {
   }
 }
 function getNist(item: unknown): string[] {
-  if (_.has(item, 'cm:compliance-reference')) {
-    return cciNistTag(_.get(item, 'cm:compliance-reference'));
+  if (_.has(item, COMPLIANCE_PATH)) {
+    return cciNistTag(_.get(item, COMPLIANCE_PATH));
   } else {
     return pluginNistTag(item);
   }
 }
 function getCci(item: unknown): string[] {
-  if (_.has(item, 'cm:compliance-reference')) {
-    return parseRef(_.get(item, 'cm:compliance-reference'), 'CCI');
+  if (_.has(item, COMPLIANCE_PATH)) {
+    return parseRef(_.get(item, COMPLIANCE_PATH), 'CCI');
   } else {
     return [];
   }
 }
 function getRid(item: unknown): string {
-  if (_.has(item, 'cm:compliance-reference')) {
-    return parseRef(_.get(item, 'cm:compliance-reference'), 'Rule-ID').join(
+  if (_.has(item, COMPLIANCE_PATH)) {
+    return parseRef(_.get(item, COMPLIANCE_PATH), 'Rule-ID').join(
       ','
     );
   } else {
@@ -140,8 +140,8 @@ function getRid(item: unknown): string {
   }
 }
 function getStig(item: unknown): string {
-  if (_.has(item, 'cm:compliance-reference')) {
-    return parseRef(_.get(item, 'cm:compliance-reference'), 'STIG-ID').join(
+  if (_.has(item, COMPLIANCE_PATH)) {
+    return parseRef(_.get(item, COMPLIANCE_PATH), 'STIG-ID').join(
       ','
     );
   } else {
@@ -202,7 +202,7 @@ function cleanData(control: unknown[]): ExecJSON.Control[] {
 }
 
 function parseHtml(input: unknown): string {
-  const textData = new Array<string>();
+  const textData: string[] = [];
   const myParser = new htmlparser.Parser({
     ontext(text: string) {
       textData.push(text);

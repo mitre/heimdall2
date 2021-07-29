@@ -37,7 +37,7 @@ function parseXml(xml: string): Record<string, unknown> {
   return parser.parse(xml, options);
 }
 function parseHtml(input: unknown): string {
-  const textData = new Array<string>();
+  const textData: string[] = [];
   const myParser = new htmlparser.Parser({
     ontext(text: string) {
       textData.push(text);
@@ -65,7 +65,7 @@ function nistTag(classification: Record<string, unknown>): string[] {
   if (!Array.isArray(owaspTag)) {
     owaspTag = [owaspTag];
   }
-  const cwe = CWE_NIST_MAPPING.nistFilterNoDefault(cweTag as string[]);
+  const cwe = CWE_NIST_MAPPING.nistFilter(cweTag as string[]);
   const owasp = OWASP_NIST_MAPPING.nistFilterNoDefault(owaspTag as string[]);
   const result = cwe.concat(owasp);
   if (result.length !== 0) {

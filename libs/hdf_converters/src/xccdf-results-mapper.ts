@@ -14,6 +14,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['low', 0.3]
 ]);
 
+const RULE_DESCRIPTION = 'cdf:Rule.cdf:description'
 const CCI_REGEX = /CCI-(\d*)/;
 const CCI_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/U_CCI_List.xml');
 const CCI_NIST_MAPPING = new CciNistMapping(CCI_NIST_MAPPING_FILE);
@@ -60,7 +61,7 @@ function parseXml(xml: string) {
   return parser.parse(xml, options);
 }
 function parseHtml(input: unknown): string {
-  const textData = new Array<string>();
+  const textData: string[] = [];
   const myParser = new htmlparser.Parser({
     ontext(text: string) {
       textData.push(text);
@@ -114,7 +115,7 @@ export class XCCDFResultsMapper extends BaseConverter {
             },
             title: {path: 'cdf:Rule.cdf:title'},
             desc: {
-              path: 'cdf:Rule.cdf:description',
+              path: RULE_DESCRIPTION,
               transformer: (input: unknown): string => {
                 if (typeof input === 'string') {
                   return parseHtml(input.split('Satisfies')[0]);
@@ -126,7 +127,7 @@ export class XCCDFResultsMapper extends BaseConverter {
             descriptions: [
               {
                 data: {
-                  path: 'cdf:Rule.cdf:description',
+                  path: RULE_DESCRIPTION,
                   transformer: (input: unknown): string => {
                     if (typeof input === 'string') {
                       return parseHtml(input);
@@ -162,7 +163,7 @@ export class XCCDFResultsMapper extends BaseConverter {
               severity: null,
               gtitle: {path: 'cdf:title'},
               satisfies: {
-                path: 'cdf:Rule.cdf:description',
+                path: RULE_DESCRIPTION,
                 transformer: (input: string): string[] => {
                   if (input.split('Satisfies: ')[1] !== undefined) {
                     return input

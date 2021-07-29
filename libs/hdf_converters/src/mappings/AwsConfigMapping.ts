@@ -20,7 +20,7 @@ export class AwsConfigMapping {
     if (identifiers.length === 0) {
       return null;
     } else {
-      let matches = new Array<string>();
+      let matches: string[] = [];
       identifiers.forEach((sourceIdentifier) => {
         const item = this.data.find(
           (element) => element.configRuleSourceIdentifier === sourceIdentifier

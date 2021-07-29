@@ -26,11 +26,10 @@ const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 // Transformation Functions
 function hashId(vulnerability: unknown): string {
   if (_.get(vulnerability, 'id') === '') {
-    const hash = generateHash(
+    return generateHash(
       _.get(vulnerability, 'summary').toString(),
       'md5'
     );
-    return hash;
   } else {
     return _.get(vulnerability, 'id') as string;
   }
@@ -59,7 +58,7 @@ function impactMapping(severity: unknown): number {
   }
 }
 function formatCodeDesc(vulnerability: unknown): string {
-  const codeDescArray = new Array<string>();
+  const codeDescArray: string[] = [];
   const re = /,/gi;
   if (_.has(vulnerability, 'source_comp_id')) {
     codeDescArray.push(
@@ -99,7 +98,7 @@ function formatCodeDesc(vulnerability: unknown): string {
   return codeDescArray.join('\n').replace(re, ', ');
 }
 function parseIdentifier(identifier: Record<string, unknown>): string[] {
-  const output = new Array<string>();
+  const output: string[] = [];
   if (Array.isArray(identifier)) {
     identifier.forEach((element) => {
       if (element.split('CWE-')[1]) {

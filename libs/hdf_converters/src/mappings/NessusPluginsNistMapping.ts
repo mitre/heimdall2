@@ -18,8 +18,7 @@ export class NessusPluginsNistMapping {
   }
   nistFilter(family: string, id: string, defaultNist: string[]): string[] {
     const DEFAULT_NIST_TAG = defaultNist;
-    const matches = new Array<string>();
-    // let item = this.data.find((element) => {return (element.pluginId === id) || (element.pluginFamily === family && element.pluginId === '*')})
+    const matches: string[] = [];
     const item = this.data.find((element) => {
       return (
         element.pluginFamily === family &&

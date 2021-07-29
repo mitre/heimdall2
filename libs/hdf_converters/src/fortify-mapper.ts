@@ -64,17 +64,17 @@ function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
         element,
         'results',
         _.get(element, 'results').filter((result: ExecJSON.ControlResult) => {
-          const code_desc = _.get(result, 'code_desc').split('<=SNIPPET');
-          const snippetid = code_desc[0];
+          const codedesc = _.get(result, 'code_desc').split('<=SNIPPET');
+          const snippetid = codedesc[0];
           const classid = _.get(element, 'id');
-          _.set(result, 'code_desc', code_desc[1]);
+          _.set(result, 'code_desc', codedesc[1]);
 
           let isMatch = false;
           const matches = _.get(
             file,
             'FVDL.Vulnerabilities.Vulnerability'
-          ).filter((element: Record<string, unknown>) => {
-            return _.get(element, 'ClassInfo.ClassID') === classid;
+          ).filter((subElement: Record<string, unknown>) => {
+            return _.get(subElement, 'ClassInfo.ClassID') === classid;
           });
           matches.forEach((match: Record<string, unknown>) => {
             let traces = _.get(match, 'AnalysisInfo.Unified.Trace');
@@ -112,14 +112,13 @@ function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
         'impact',
         impactMapping(_.get(element, 'impact'), _.get(element, 'id'))
       );
-    } else {
-      return element;
     }
+    return element;
   });
   return input as ExecJSON.Control[];
 }
 function parseHtml(input: unknown): string {
-  const textData = new Array<string>();
+  const textData: string[] = [];
   const myParser = new htmlparser.Parser({
     ontext(text: string) {
       textData.push(text);
@@ -188,7 +187,7 @@ export class FortifyMapper extends BaseConverter {
                 start_time: {
                   path: '$.FVDL.CreatedTS',
                   transformer: (input: unknown): string => {
-                    return _.get(input, 'date') + ' ' + _.get(input, 'time');
+                    return `${_.get(input, 'date')} ${_.get(input, 'time')}`;
                   }
                 }
               }
@@ -201,10 +200,7 @@ export class FortifyMapper extends BaseConverter {
   };
   constructor(fvdl: string) {
     super(parseXml(fvdl));
-    this.startTime =
-      _.get(this.data, 'FVDL.CreatedTS.date') +
-      ' ' +
-      _.get(this.data, 'FVDL.CreatedTS.time');
+    this.startTime = `${_.get(this.data, 'FVDL.CreatedTS.date')} ${_.get(this.data, 'FVDL.CreatedTS.time')}`;
   }
   setMappings(
     customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
