@@ -40,7 +40,7 @@
               :items="['owner', 'member']"
               :value="item.groupRole"
               @click="editedUser = item"
-              @change="onUpdateUserGroupRole"
+              @change="onUpdateGroupUserRole"
             />
             <span v-else> {{ item.groupRole }} </span>
           </template>
@@ -114,14 +114,14 @@ export default class Users extends Vue {
   addUsers() {
     ServerModule.allUsers.forEach((user) => {
       if(this.usersToAdd.includes(user.id)) {
-        user.groupRole = 'member';
-        this.currentUsers.push(user);
+        const addedUser: ISlimUser = {groupRole: 'member', ...user};
+        this.currentUsers.push(addedUser);
       }
     });
     this.usersToAdd = [];
   }
 
-  onUpdateUserGroupRole(newValue: string) {
+  onUpdateGroupUserRole(newValue: string) {
     // If a role is being changed to member, check that there is at least 1 owner.
     if(newValue === 'member') {
       if(this.numberOfOwners() <= 1) {
@@ -129,9 +129,9 @@ export default class Users extends Vue {
         return;
       }
     }
-    const userToUpdate = this.currentUsers.indexOf(this.editedUser)
-    this.editedUser.groupRole = newValue
-    this.currentUsers[userToUpdate] = this.editedUser
+    const userToUpdate = this.currentUsers.indexOf(this.editedUser);
+    const updatedGroupUser: ISlimUser = {...this.editedUser, groupRole: newValue};
+    this.currentUsers[userToUpdate] = updatedGroupUser;
   }
 
   numberOfOwners(): number {

@@ -24,6 +24,7 @@ import {CreateGroupDto} from './dto/create-group.dto';
 import {EvaluationGroupDto} from './dto/evaluation-group.dto';
 import {GroupDto} from './dto/group.dto';
 import {RemoveUserFromGroupDto} from './dto/remove-user-from-group.dto';
+import {UpdateGroupUserRoleDto} from './dto/update-group-user.dto';
 import {GroupsService} from './groups.service';
 
 @Controller('groups')
@@ -166,17 +167,17 @@ export class GroupsController {
     );
   }
 
-  @Put(':id/updateUserGroupRole')
+  @Put(':id/updateGroupUserRole')
   async updateGroupUserRole(
     @Request() request: {user: User},
     @Param('id') id: string,
-    @Body() updateGroupUser: AddUserToGroupDto
+    @Body() updateGroupUser: UpdateGroupUserRoleDto
   ): Promise<GroupUser | undefined> {
     const abac = this.authz.abac.createForUser(request.user);
     const group = await this.groupsService.findByPkBang(id);
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, group);
 
-    return this.groupsService.updateUserGroupRole(group, updateGroupUser);
+    return this.groupsService.updateGroupUserRole(group, updateGroupUser);
   }
 
   @Delete(':id')

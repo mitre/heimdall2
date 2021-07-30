@@ -8,8 +8,8 @@ import {Op} from 'sequelize';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {User} from '../users/user.model';
-import {AddUserToGroupDto} from './dto/add-user-to-group.dto';
 import {CreateGroupDto} from './dto/create-group.dto';
+import {UpdateGroupUserRoleDto} from './dto/update-group-user.dto';
 import {Group} from './group.model';
 
 @Injectable()
@@ -51,15 +51,14 @@ export class GroupsService {
     });
   }
 
-  async updateUserGroupRole(
+  async updateGroupUserRole(
     group: Group,
-    updateGroupUser: AddUserToGroupDto
+    updateGroupUser: UpdateGroupUserRoleDto
   ): Promise<GroupUser | undefined> {
     return group.users
       .find((userToUpdate) => updateGroupUser.userId === userToUpdate.id)
       ?.GroupUser.update({
-        role: updateGroupUser.groupRole,
-        updatedAt: new Date()
+        role: updateGroupUser.groupRole
       });
   }
 

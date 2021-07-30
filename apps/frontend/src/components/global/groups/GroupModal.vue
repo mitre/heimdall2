@@ -76,7 +76,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {SnackbarModule} from '@/store/snackbar';
-import {IAddUserToGroup, ICreateGroup, IGroup, IRemoveUserFromGroup, ISlimUser} from '@heimdall/interfaces';
+import {IAddUserToGroup, ICreateGroup, IGroup, IRemoveUserFromGroup, ISlimUser, IUpdateGroupUser} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
 import axios, {AxiosResponse} from 'axios';
 import {GroupsModule} from '@/store/groups';
@@ -175,11 +175,11 @@ export default class GroupModal extends Vue {
       return axios.delete(`/groups/${group.id}/user`, {data: removeUserDto});
     });
     const updateUserPromises = toUpdate.map((user) => {
-      const updateUserGroupRole: IAddUserToGroup = {
+      const updateGroupUserRole: IUpdateGroupUser = {
         userId: user.id,
         groupRole: user.groupRole || 'member'
       }
-      return axios.put(`/groups/${group.id}/updateUserGroupRole`, updateUserGroupRole);
+      return axios.put(`/groups/${group.id}/updateGroupUserRole`, updateGroupUserRole);
     })
     return Promise.all(addedUserPromises.concat(removedUserPromises, updateUserPromises))
   }
