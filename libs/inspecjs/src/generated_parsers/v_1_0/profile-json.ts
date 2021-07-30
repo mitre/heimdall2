@@ -61,15 +61,15 @@ export interface SourceLocation {
 }
 
 export interface Dependency {
-    branch?:       null | string;
-    compliance?:   null | string;
-    git?:          null | string;
-    name?:         null | string;
-    path?:         null | string;
-    skip_message?: null | string;
-    status?:       null | string;
-    supermarket?:  null | string;
-    url?:          null | string;
+    branch?:         null | string;
+    compliance?:     null | string;
+    git?:            null | string;
+    name?:           null | string;
+    path?:           null | string;
+    status?:         null | string;
+    status_message?: null | string;
+    supermarket?:    null | string;
+    url?:            null | string;
 }
 
 export interface Generator {
@@ -294,8 +294,8 @@ const typeMap: any = {
         { json: "git", js: "git", typ: u(undefined, u(null, "")) },
         { json: "name", js: "name", typ: u(undefined, u(null, "")) },
         { json: "path", js: "path", typ: u(undefined, u(null, "")) },
-        { json: "skip_message", js: "skip_message", typ: u(undefined, u(null, "")) },
         { json: "status", js: "status", typ: u(undefined, u(null, "")) },
+        { json: "status_message", js: "status_message", typ: u(undefined, u(null, "")) },
         { json: "supermarket", js: "supermarket", typ: u(undefined, u(null, "")) },
         { json: "url", js: "url", typ: u(undefined, u(null, "")) },
     ], "any"),

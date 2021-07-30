@@ -27,7 +27,6 @@
       "additionalProperties": true,
       "required": [
         "id",
-        "profile_id",
         "profile_sha256",
         "status",
         "code_desc"
@@ -38,8 +37,8 @@
         },
         "profile_id": {
           "type": [
-            "string",
-            "null"
+            "null",
+            "string"
           ]
         },
         "profile_sha256": {
@@ -52,19 +51,34 @@
           "type": "string"
         },
         "skip_message": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "resource": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "message": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "exception": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "backtrace": {
-          "type": "array",
+          "type": [
+            "array",
+            "null"
+          ],
           "items": {
             "type": "string"
           }
@@ -92,13 +106,34 @@
       "required": [],
       "properties": {
         "passed": {
-          "$ref": "#/definitions/Statistic_Block"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Block"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "skipped": {
-          "$ref": "#/definitions/Statistic_Block"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Block"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "failed": {
-          "$ref": "#/definitions/Statistic_Block"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Block"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "title": "Statistic Hash"
@@ -106,18 +141,30 @@
     "Statistics": {
       "type": "object",
       "additionalProperties": true,
-      "required": [],
+      "required": [
+        "duration"
+      ],
       "properties": {
         "duration": {
           "type": "number",
           "description": "How long (in seconds) this inspec exec ran for."
         },
         "controls": {
-          "$ref": "#/definitions/Statistic_Hash",
-          "description": "Breakdowns of control statistics by result"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Hash",
+              "description": "Breakdowns of control statistics by result"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "title": "Statistics"
+    },
+    "Source_Location": {
+      "required": []
     }
   }
 }

@@ -26,7 +26,7 @@
     "prepack": "yarn build",
     "build": "tsc -p ./tsconfig.build.json",
     "docs": "typedoc --out docs ./src",
-    "gen-types": "bash scripts/generate_parsers.sh",
+    "gen-types": "bash scripts/update_schema.sh",
     "validates-types": "git diff --quiet HEAD -- schemas/ src/generated_parsers/",
     "lint": "eslint --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",

@@ -8,22 +8,20 @@ VERSION="v_1_0"
 declare -a SCHEMAS=('exec-json' 'exec-jsonmin' 'profile-json')
 
 # Quicktype each
-echo "Generating types"
-mkdir -p "./work/interfaces"
+echo "Generating modified schemas and types"
 mkdir -p "./src/generated_parsers/$VERSION"
 for SCHEMA in ${SCHEMAS[@]}
 do
     # Establish filenames
     OUTFILE="./src/generated_parsers/$VERSION/$SCHEMA.ts"
     SCHEMAFILE="./schemas/$SCHEMA.json"
-    MODIFIED_SCHEMAFILE="./work/tmp_$SCHEMA.json"
 
     # Loosen the schema
     COMPAT="./scripts/schema_compat_patches"
-    cat $SCHEMAFILE | . "$COMPAT/generic.sh" | . "$COMPAT/$SCHEMA.sh" | . "./scripts/null_compat_schema.sh" > $MODIFIED_SCHEMAFILE
+    echo "Generating $SCHEMA"
+    inspec schema $SCHEMA --chef-license=accept-silent | . "$COMPAT/generic.sh" | . "$COMPAT/$SCHEMA.sh" | . "./scripts/null_compat_schema.sh" > $SCHEMAFILE
     # Generate the parser
-    quicktype -l ts -s schema --src $MODIFIED_SCHEMAFILE -o $OUTFILE --runtime-typecheck
-    rm $MODIFIED_SCHEMAFILE
+    echo "Generating types"
+    quicktype -l ts -s schema --src $SCHEMAFILE -o $OUTFILE --runtime-typecheck
 done
 # Remove work directory trash
-rm -r './work'
