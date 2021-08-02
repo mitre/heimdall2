@@ -1,5 +1,12 @@
 version: 2
 updates:
+- package-ecosystem: bundler
+  directory: "/libs/inspecjs"
+  schedule:
+    interval: daily
+    time: "20:00"
+    timezone: America/New_York
+  open-pull-requests-limit: 99
 - package-ecosystem: npm
   directory: "/"
   schedule:
