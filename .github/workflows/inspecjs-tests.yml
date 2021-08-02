@@ -44,10 +44,10 @@ jobs:
 
      - name: Run unit tests
        run: yarn inspecjs test
-    
+
      - name: Validate there are no changes between the inspec schemas and generated parsers
        run: |
-        bundle install
+        bundle install --gemfile libs/inspecjs/Gemfile
         yarn inspecjs gen-types
         yarn inspecjs validate-types
 
