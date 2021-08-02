@@ -24,4 +24,3 @@ do
     echo "Generating types"
     quicktype -l ts -s schema --src $SCHEMAFILE -o $OUTFILE --runtime-typecheck
 done
-# Remove work directory trash
