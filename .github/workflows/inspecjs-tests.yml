@@ -49,7 +49,7 @@ jobs:
        run: |
         bundle install
         yarn inspecjs gen-types
-        yarn inspecjs validates-types
+        yarn inspecjs validate-types
 
      - name: Ensure InspecJS builds cleanly
        run: yarn inspecjs build
