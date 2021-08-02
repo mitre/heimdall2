@@ -27,6 +27,9 @@
           <template #runTime>
             <slot name="runTime" />
           </template>
+          <template #viewed>
+            <slot name="viewed" />
+          </template>
         </ResponsiveRowSmall>
 
         <ResponsiveRowMedium v-else-if="$vuetify.breakpoint.mdAndDown">
@@ -51,6 +54,9 @@
           <template #runTime>
             <slot name="runTime" />
           </template>
+          <template #viewed>
+            <slot name="viewed" />
+          </template>
         </ResponsiveRowMedium>
 
         <ResponsiveRowLarge v-else>
@@ -74,6 +80,9 @@
           </template>
           <template #runTime>
             <slot name="runTime" />
+          </template>
+          <template #viewed>
+            <slot name="viewed" />
           </template>
         </ResponsiveRowLarge>
       </v-card>
