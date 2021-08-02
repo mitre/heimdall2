@@ -83,18 +83,16 @@ function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
           matches.forEach((match: Record<string, unknown>) => {
             let traces: unknown[];
             const inputTrace = _.get(match, 'AnalysisInfo.Unified.Trace');
+            traces = [inputTrace];
             if (Array.isArray(inputTrace)) {
               traces = inputTrace;
-            } else {
-              traces = [inputTrace];
             }
             traces.forEach((trace: unknown) => {
               let entries: unknown[];
               const inputEntry = _.get(trace, 'Primary.Entry');
+              entries = [inputEntry];
               if (Array.isArray(inputEntry)) {
                 entries = inputEntry;
-              } else {
-                entries = [inputEntry];
               }
               const filteredEntries = entries.filter((entry: unknown) => {
                 return _.has(entry, 'Node.SourceLocation.snippet');

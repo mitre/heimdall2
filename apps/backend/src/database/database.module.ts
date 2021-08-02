@@ -1,8 +1,30 @@
 import {Module} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
+import winston from 'winston';
 import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
 import {DatabaseService} from './database.service';
+
+const sensitiveKeys = [
+  /cookie/i,
+  /passw(or)?d/i,
+  /^pw$/,
+  /^pass$/i,
+  /secret/i,
+  /token/i,
+  /api[-._]?key/i,
+  /data/i
+];
+
+const logger = winston.createLogger({
+  transports: [new winston.transports.Console()],
+  format: winston.format.combine(
+    winston.format.timestamp({
+      format: 'MMM-DD-YYYY HH:mm:ss Z'
+    }),
+    winston.format.printf((info) => `[${[info.timestamp]}] ${info.message}`)
+  )
+});
 
 function getSynchronize(configService: ConfigService): boolean {
   const nodeEnvironment = configService.get('NODE_ENV');
@@ -11,6 +33,29 @@ function getSynchronize(configService: ConfigService): boolean {
   } else {
     return nodeEnvironment === 'test' ? false : true;
   }
+}
+
+function sanitize(fields: string[], values?: string[]): string[] {
+  return (
+    values?.map((value, index) => {
+      if (sensitiveKeys.some((regex) => regex.test(fields[index]))) {
+        return 'REDACTED';
+      } else {
+        return value;
+      }
+    }) || []
+  );
+}
+
+function logQuery(
+  sql: string,
+  connection: {fields: string[]; bind: string[]; type: string}
+) {
+  logger.info({
+    message: `${sql} [${sanitize(connection.fields, connection.bind).join(
+      ', '
+    )}]`
+  });
 }
 
 @Module({
@@ -22,7 +67,17 @@ function getSynchronize(configService: ConfigService): boolean {
         ...configService.getDbConfig(),
         autoLoadModels: true,
         synchronize: getSynchronize(configService),
-        logging: false,
+        logging: (sql, connection) => {
+          logQuery(
+            sql,
+            // Connection is incorrectly typed as a number
+            connection as unknown as {
+              fields: string[];
+              bind: string[];
+              type: string;
+            }
+          );
+        },
         pool: {
           max: 5,
           min: 0,

@@ -45,26 +45,22 @@ export class CciNistMapping {
     collapse = true
   ): string[] {
     const DEFAULT_NIST_TAG = defaultNist;
-    if (identifiers.length === 0) {
-      return DEFAULT_NIST_TAG;
-    } else {
-      const matches: string[] = [];
-      identifiers.forEach((id) => {
-        const item = this.data.find((element) => element.cci === id);
-        if (item !== null && item !== undefined && item.nistId !== '') {
-          if (collapse) {
-            if (matches.indexOf(item.nistId) === -1) {
-              matches.push(item.nistId);
-            }
-          } else {
+    const matches: string[] = [];
+    identifiers.forEach((id) => {
+      const item = this.data.find((element) => element.cci === id);
+      if (item && item.nistId) {
+        if (collapse) {
+          if (matches.indexOf(item.nistId) === -1) {
             matches.push(item.nistId);
           }
+        } else {
+          matches.push(item.nistId);
         }
-      });
-      if (matches.length === 0) {
-        return DEFAULT_NIST_TAG;
       }
-      return matches;
+    });
+    if (matches.length === 0) {
+      return DEFAULT_NIST_TAG;
     }
+    return matches;
   }
 }

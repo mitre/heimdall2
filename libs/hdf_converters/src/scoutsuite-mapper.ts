@@ -33,17 +33,17 @@ const SCOUTSUITE_NIST_MAPPING = new ScoutsuiteNistMapping(
   SCOUTSUITE_NIST_MAPPING_FILE
 );
 
+function getRulesetName(file: unknown) {
+  return _.get(file, 'last_run.ruleset_name')
+}
 function formatTargetId(file: unknown): string {
-  return `${_.get(file, 'last_run.ruleset_name')} ruleset:${_.get(
+  return `${getRulesetName(file)} ruleset:${_.get(
     file,
     'provider_name'
   )}:${_.get(file, 'account_id')}`;
 }
 function formatTitle(file: unknown): string {
-  return `Scout Suite Report using ${_.get(
-    file,
-    'last_run.ruleset_name'
-  )} ruleset on ${_.get(file, 'provider_name')} with account ${_.get(
+  return `Scout Suite Report using ${getRulesetName(file)} ruleset on ${_.get(file, 'provider_name')} with account ${_.get(
     file,
     'account_id'
   )}`;
