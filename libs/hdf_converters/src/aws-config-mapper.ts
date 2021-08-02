@@ -318,11 +318,11 @@ export class AwsConfigMapper {
       },
       profiles: [
         {
-          name: 'AWS Config',
+          name: NAME,
           version: '',
-          title: 'AWS Config',
+          title: NAME,
           maintainer: null,
-          summary: 'AWS Config',
+          summary: NAME,
           license: null,
           copyright: null,
           copyright_email: null,

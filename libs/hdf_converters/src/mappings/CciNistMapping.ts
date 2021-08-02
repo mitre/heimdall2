@@ -52,9 +52,11 @@ export class CciNistMapping {
       identifiers.forEach((id) => {
         const item = this.data.find((element) => element.cci === id);
         if (item !== null && item !== undefined && item.nistId !== '') {
-          if (collapse && matches.indexOf(item.nistId) === -1) {
-            matches.push(item.nistId);
-          } else if (collapse === false) {
+          if (collapse) {
+            if (matches.indexOf(item.nistId) === -1) {
+              matches.push(item.nistId);
+            }
+          } else {
             matches.push(item.nistId);
           }
         }

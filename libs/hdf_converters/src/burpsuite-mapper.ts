@@ -105,11 +105,11 @@ export class BurpSuiteMapper extends BaseConverter {
     },
     profiles: [
       {
-        name: 'BurpSuite Pro Scan',
+        name: NAME,
         version: {path: 'issues.burpVersion'},
-        title: 'BurpSuite Pro Scan',
+        title: NAME,
         maintainer: null,
-        summary: 'BurpSuite Pro Scan',
+        summary: NAME,
         license: null,
         copyright: null,
         copyright_email: null,
