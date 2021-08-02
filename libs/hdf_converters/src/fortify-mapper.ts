@@ -61,6 +61,13 @@ function processEntry(input: unknown): string {
 
   return output.join('');
 }
+function makeArray(input: unknown): unknown[] {
+  if (Array.isArray(input)) {
+    return input as unknown[]
+  } else {
+    return [input]
+  }
+}
 function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
   input.forEach((element) => {
     if (element instanceof Object) {
@@ -81,19 +88,9 @@ function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
             return _.get(subElement, 'ClassInfo.ClassID') === classid;
           });
           matches.forEach((match: Record<string, unknown>) => {
-            let traces: unknown[];
-            const inputTrace = _.get(match, 'AnalysisInfo.Unified.Trace');
-            traces = [inputTrace];
-            if (Array.isArray(inputTrace)) {
-              traces = inputTrace;
-            }
+            let traces: unknown[] = makeArray(_.get(match, 'AnalysisInfo.Unified.Trace'))
             traces.forEach((trace: unknown) => {
-              let entries: unknown[];
-              const inputEntry = _.get(trace, 'Primary.Entry');
-              entries = [inputEntry];
-              if (Array.isArray(inputEntry)) {
-                entries = inputEntry;
-              }
+              let entries: unknown[] = makeArray(_.get(trace, 'Primary.Entry'))
               const filteredEntries = entries.filter((entry: unknown) => {
                 return _.has(entry, 'Node.SourceLocation.snippet');
               });
