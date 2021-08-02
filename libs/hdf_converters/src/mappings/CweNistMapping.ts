@@ -19,13 +19,13 @@ export class CweNistMapping {
   nistFilter(identifiers: string[] | string, defaultNist?: string[]): string[] {
     const DEFAULT_NIST_TAG = defaultNist;
     if (!Array.isArray(identifiers)) {
-      identifiers = [identifiers]
+      identifiers = [identifiers];
     }
     if (identifiers.length === 0) {
       if (DEFAULT_NIST_TAG !== undefined) {
         return DEFAULT_NIST_TAG;
       } else {
-        return []
+        return [];
       }
     } else {
       const matches: string[] = [];

@@ -200,7 +200,10 @@ export class FortifyMapper extends BaseConverter {
   };
   constructor(fvdl: string) {
     super(parseXml(fvdl));
-    this.startTime = `${_.get(this.data, 'FVDL.CreatedTS.date')} ${_.get(this.data, 'FVDL.CreatedTS.time')}`;
+    this.startTime = `${_.get(this.data, 'FVDL.CreatedTS.date')} ${_.get(
+      this.data,
+      'FVDL.CreatedTS.time'
+    )}`;
   }
   setMappings(
     customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>

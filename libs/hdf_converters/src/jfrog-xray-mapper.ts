@@ -26,10 +26,7 @@ const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 // Transformation Functions
 function hashId(vulnerability: unknown): string {
   if (_.get(vulnerability, 'id') === '') {
-    return generateHash(
-      _.get(vulnerability, 'summary').toString(),
-      'md5'
-    );
+    return generateHash(_.get(vulnerability, 'summary').toString(), 'md5');
   } else {
     return _.get(vulnerability, 'id') as string;
   }

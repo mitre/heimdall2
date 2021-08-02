@@ -10,7 +10,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['warning', 0.5],
   ['note', 0.3]
 ]);
-const MESSAGE_TEXT = 'message.text'
+const MESSAGE_TEXT = 'message.text';
 
 const CWE_NIST_MAPPING_FILE = path.resolve(
   __dirname,

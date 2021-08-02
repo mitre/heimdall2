@@ -19,7 +19,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['iii', 0.3],
   ['0', 0.0]
 ]);
-const COMPLIANCE_PATH = 'cm:compliance-reference'
+const COMPLIANCE_PATH = 'cm:compliance-reference';
 const NA_PLUGIN_OUTPUT = 'This Nessus Plugin does not provide output message.';
 const NESSUS_PLUGINS_NIST_MAPPING_FILE = path.resolve(
   __dirname,
@@ -132,18 +132,14 @@ function getCci(item: unknown): string[] {
 }
 function getRid(item: unknown): string {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return parseRef(_.get(item, COMPLIANCE_PATH), 'Rule-ID').join(
-      ','
-    );
+    return parseRef(_.get(item, COMPLIANCE_PATH), 'Rule-ID').join(',');
   } else {
     return _.get(item, 'pluginID');
   }
 }
 function getStig(item: unknown): string {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return parseRef(_.get(item, COMPLIANCE_PATH), 'STIG-ID').join(
-      ','
-    );
+    return parseRef(_.get(item, COMPLIANCE_PATH), 'STIG-ID').join(',');
   } else {
     return '';
   }

@@ -14,8 +14,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['low', 0.3],
   ['information', 0.3]
 ]);
-const NAME =
-  'BurpSuite Pro Scan'
+const NAME = 'BurpSuite Pro Scan';
 
 const CWE_NIST_MAPPING_FILE = path.resolve(
   __dirname,

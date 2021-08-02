@@ -19,8 +19,7 @@ const NOT_APPLICABLE_MSG =
   'No AWS resources found to evaluate complaince for this rule';
 const INSUFFICIENT_DATA_MSG =
   'Not enough data has been collected to determine compliance yet.';
-const NAME =
-  'AWS Config'
+const NAME = 'AWS Config';
 
 const AWS_CONFIG_MAPPING_FILE = path.resolve(
   __dirname,
@@ -111,7 +110,7 @@ export class AwsConfigMapper {
               }
             ])
           );
-          break
+          break;
         }
         case 'INSUFFICIENT_DATA': {
           rule = _.set(rule, 'impact', 0);
@@ -128,7 +127,7 @@ export class AwsConfigMapper {
               }
             ])
           );
-          break
+          break;
         }
       }
     });
@@ -172,8 +171,9 @@ export class AwsConfigMapper {
     status: ExecJSON.ControlResultStatus
   ): string {
     if (status === ExecJSON.ControlResultStatus.Failed) {
-      return `${result.EvaluationResultIdentifier}: ${result.EvaluationResultIdentifier?.EvaluationResultQualifier
-        }: ${result.Annotation || 'Rule does not pass rule compliance'}`;
+      return `${result.EvaluationResultIdentifier}: ${
+        result.EvaluationResultIdentifier?.EvaluationResultQualifier
+      }: ${result.Annotation || 'Rule does not pass rule compliance'}`;
     } else {
       return '';
     }
@@ -211,7 +211,9 @@ export class AwsConfigMapper {
         params
       );
       if (response.ComplianceByConfigRules !== undefined) {
-        complianceResults = complianceResults.concat(response.ComplianceByConfigRules);
+        complianceResults = complianceResults.concat(
+          response.ComplianceByConfigRules
+        );
       }
     });
     return complianceResults.map((element) =>
@@ -288,8 +290,9 @@ export class AwsConfigMapper {
     return (await this.issues).map((issue) => {
       return {
         id: issue.ConfigRuleId || '',
-        title: `${this.getAccountId(issue.ConfigRuleArn || '')} - ${issue.ConfigRuleName
-          }`,
+        title: `${this.getAccountId(issue.ConfigRuleArn || '')} - ${
+          issue.ConfigRuleName
+        }`,
         desc: issue.Description,
         impact: 0.5,
         tags: this.hdfTags(issue),
