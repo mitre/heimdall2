@@ -2,7 +2,12 @@ import parser from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import {
+  BaseConverter,
+  ILookupPath,
+  impactMapping,
+  MappedTransform
+} from './base-converter';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['high', 0.7],
@@ -60,13 +65,6 @@ function formatDesc(entry: unknown): string {
   text.push(`Task : ${_.get(entry, 'Task')}`);
   text.push(`Check Category : ${_.get(entry, 'Check Category')}`);
   return text.join('; ');
-}
-function impactMapping(severity: unknown): number {
-  if (typeof severity === 'string' || typeof severity === 'number') {
-    return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
-  } else {
-    return 0;
-  }
 }
 function getStatus(input: unknown): ExecJSON.ControlResultStatus {
   switch (input) {
@@ -141,7 +139,10 @@ export class DBProtectMapper extends BaseConverter {
             id: {path: 'Check ID', transformer: idToString},
             title: {path: 'Check'},
             desc: {transformer: formatDesc},
-            impact: {path: 'Risk DV', transformer: impactMapping},
+            impact: {
+              path: 'Risk DV',
+              transformer: impactMapping(IMPACT_MAPPING)
+            },
             tags: {},
             descriptions: [],
             refs: [],

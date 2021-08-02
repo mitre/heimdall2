@@ -2,7 +2,12 @@ import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import {
+  BaseConverter,
+  ILookupPath,
+  impactMapping,
+  MappedTransform
+} from './base-converter';
 import {ScoutsuiteNistMapping} from './mappings/ScoutsuiteNistMapping';
 
 const INSPEC_INPUTS_MAPPING = {
@@ -42,13 +47,6 @@ function formatTitle(file: unknown): string {
     file,
     'account_id'
   )}`;
-}
-function impactMapping(severity: unknown): number {
-  if (typeof severity === 'string' || typeof severity === 'number') {
-    return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
-  } else {
-    return 0;
-  }
 }
 function compliance(input: unknown): string {
   if (Array.isArray(input)) {
@@ -242,7 +240,10 @@ export class ScoutsuiteMapper extends BaseConverter {
             tags: {
               nist: {path: '[0]', transformer: nistTag}
             },
-            impact: {path: '[1].level', transformer: impactMapping},
+            impact: {
+              path: '[1].level',
+              transformer: impactMapping(IMPACT_MAPPING)
+            },
             desc: {path: '[1].rationale'},
             descriptions: [
               {data: {path: '[1].remediation'}, label: 'fix'},

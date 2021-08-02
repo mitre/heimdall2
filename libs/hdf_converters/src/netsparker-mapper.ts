@@ -1,10 +1,15 @@
 import parser from 'fast-xml-parser';
-import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import {
+  BaseConverter,
+  ILookupPath,
+  impactMapping,
+  MappedTransform,
+  parseHtml
+} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {OwaspNistMapping} from './mappings/OwaspNistMapping';
 
@@ -36,26 +41,6 @@ function parseXml(xml: string): Record<string, unknown> {
   };
   return parser.parse(xml, options);
 }
-function parseHtml(input: unknown): string {
-  const textData: string[] = [];
-  const myParser = new htmlparser.Parser({
-    ontext(text: string) {
-      textData.push(text);
-    }
-  });
-  if (typeof input === 'string') {
-    myParser.write(input);
-  }
-  return textData.join('');
-}
-
-function impactMapping(severity: unknown): number {
-  if (typeof severity === 'string' || typeof severity === 'number') {
-    return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
-  } else {
-    return 0;
-  }
-}
 function nistTag(classification: Record<string, unknown>): string[] {
   let cweTag = _.get(classification, 'cwe');
   if (!Array.isArray(cweTag)) {
@@ -76,95 +61,80 @@ function nistTag(classification: Record<string, unknown>): string[] {
 }
 function formatControlDesc(vulnerability: unknown): string {
   const text: string[] = [];
-  if (_.has(vulnerability, 'description')) {
-    text.push(_.get(vulnerability, 'description'));
+  const description = _.get(vulnerability, 'description');
+  if (description) {
+    text.push(description);
   }
-  if (
-    _.has(vulnerability, 'exploitation-skills') &&
-    _.get(vulnerability, 'exploitation-skills') !== ''
-  ) {
+  const exploitationSkills = _.get(vulnerability, 'exploitation-skills');
+  if (exploitationSkills) {
+    text.push(`Exploitation-skills: ${exploitationSkills}`);
+  }
+  const extraInformation = _.get(vulnerability, 'extra-information');
+  if (extraInformation) {
     text.push(
-      `Exploitation-skills: ${_.get(vulnerability, 'exploitation-skills')}`
+      `Extra-information: ${JSON.stringify(extraInformation).replace(
+        /:/gi,
+        '=>'
+      )}`
     );
   }
-  if (
-    _.has(vulnerability, 'extra-information') &&
-    _.get(vulnerability, 'extra-information') !== ''
-  ) {
+  const classification = _.get(vulnerability, 'classification');
+  if (classification) {
     text.push(
-      `Extra-information: ${JSON.stringify(
-        _.get(vulnerability, 'extra-information')
-      ).replace(/:/gi, '=>')}`
+      `Classification: ${JSON.stringify(classification).replace(/:/gi, '=>')}`
     );
   }
-  if (
-    _.has(vulnerability, 'classification') &&
-    _.get(vulnerability, 'classification') !== ''
-  ) {
-    text.push(
-      `Classification: ${JSON.stringify(
-        _.get(vulnerability, 'classification')
-      ).replace(/:/gi, '=>')}`
-    );
+  const impact = _.get(vulnerability, 'impact');
+  if (impact) {
+    text.push(`Impact: ${impact}`);
   }
-  if (_.has(vulnerability, 'impact') && _.get(vulnerability, 'impact') !== '') {
-    text.push(`Impact: ${_.get(vulnerability, 'impact')}`);
+  const firstSeenDate = _.get(vulnerability, 'FirstSeenDate');
+  if (firstSeenDate) {
+    text.push(`FirstSeenDate: ${firstSeenDate}`);
   }
-  if (
-    _.has(vulnerability, 'FirstSeenDate') &&
-    _.get(vulnerability, 'FirstSeenDate') !== ''
-  ) {
-    text.push(`FirstSeenDate: ${_.get(vulnerability, 'FirstSeenDate')}`);
+  const lastSeenDate = _.get(vulnerability, 'LastSeenDate');
+  if (lastSeenDate) {
+    text.push(`LastSeenDate: ${lastSeenDate}`);
   }
-  if (
-    _.has(vulnerability, 'LastSeenDate') &&
-    _.get(vulnerability, 'LastSeenDate') !== ''
-  ) {
-    text.push(`LastSeenDate: ${_.get(vulnerability, 'LastSeenDate')}`);
+  const certainty = _.get(vulnerability, 'certainty');
+  if (certainty) {
+    text.push(`Certainty: ${certainty}`);
   }
-  if (
-    _.has(vulnerability, 'certainty') &&
-    _.get(vulnerability, 'certainty') !== ''
-  ) {
-    text.push(`Certainty: ${_.get(vulnerability, 'certainty')}`);
+  const type = _.get(vulnerability, 'type');
+  if (type) {
+    text.push(`Type: ${type}`);
   }
-  if (_.has(vulnerability, 'type') && _.get(vulnerability, 'type') !== '') {
-    text.push(`Type: ${_.get(vulnerability, 'type')}`);
-  }
-  if (
-    _.has(vulnerability, 'confirmed') &&
-    _.get(vulnerability, 'confirmed') !== ''
-  ) {
-    text.push(`Confirmed: ${_.get(vulnerability, 'confirmed')}`);
+  const confirmed = _.get(vulnerability, 'confirmed');
+  if (confirmed) {
+    text.push(`Confirmed: ${confirmed}`);
   }
   return text.join('<br>');
 }
 function formatCheck(vulnerability: unknown): string {
   const text: string[] = [];
-  if (_.has(vulnerability, 'exploitation-skills')) {
-    text.push(
-      `Exploitation-skills: ${_.get(vulnerability, 'exploitation-skills')}`
-    );
+  const exploitationSkills = _.get(vulnerability, 'exploitation-skills');
+  if (exploitationSkills) {
+    text.push(`Exploitation-skills: ${exploitationSkills}`);
   }
-  if (_.has(vulnerability, 'proof-of-concept')) {
-    text.push(`Proof-of-concept: ${_.get(vulnerability, 'proof-of-concept')}`);
+  const proofOfConcept = _.get(vulnerability, 'proof-of-concept');
+  if (proofOfConcept) {
+    text.push(`Proof-of-concept: ${proofOfConcept}`);
   }
   return parseHtml(text.join('<br>'));
 }
 function formatFix(vulnerability: unknown): string {
   const text: string[] = [];
-  if (_.has(vulnerability, 'remedial-actions')) {
-    text.push(`Remedial-actions: ${_.get(vulnerability, 'remedial-actions')}`);
+  const remedialActions = _.get(vulnerability, 'remedial-actions');
+  if (remedialActions) {
+    text.push(`Remedial-actions: ${remedialActions}`);
   }
-  if (_.has(vulnerability, 'remedial-procedure')) {
-    text.push(
-      `Remedial-procedure: ${_.get(vulnerability, 'remedial-procedure')}`
-    );
+  const remedialProcedure = _.get(vulnerability, 'remedial-procedure');
+  if (remedialProcedure) {
+    text.push(`Remedial-procedure: ${remedialProcedure}`);
   }
-  if (_.has(vulnerability, 'remedy-references')) {
-    text.push(
-      `Remedy-references: ${_.get(vulnerability, 'remedy-references')}`
-    );
+  const remedyReferences = _.get(vulnerability, 'remedy-references');
+  if (remedyReferences) {
+    text.push(`Remedy-references: ${remedyReferences}`);
   }
   return text.join('<br>');
 }
@@ -222,7 +192,10 @@ export class NetsparkerMapper extends BaseConverter {
             id: {path: 'LookupId'},
             title: {path: 'name'},
             desc: {transformer: formatControlDesc},
-            impact: {path: 'severity', transformer: impactMapping},
+            impact: {
+              path: 'severity',
+              transformer: impactMapping(IMPACT_MAPPING)
+            },
             tags: {
               nist: {path: 'classification', transformer: nistTag}
             },

@@ -1,10 +1,15 @@
 import parser from 'fast-xml-parser';
-import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import {
+  BaseConverter,
+  ILookupPath,
+  impactMapping,
+  MappedTransform,
+  parseHtml
+} from './base-converter';
 import {CciNistMapping} from './mappings/CciNistMapping';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -22,13 +27,6 @@ const DEFAULT_NIST_TAG = ['SA-11', 'RA-5', 'Rev_4'];
 
 let counter = '';
 
-function impactMapping(severity: unknown): number {
-  if (typeof severity === 'string' || typeof severity === 'number') {
-    return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
-  } else {
-    return 0;
-  }
-}
 function getStatus(file: unknown): ExecJSON.ControlResultStatus {
   const match = _.get(file, 'cdf:rule-result').find(
     (element: Record<string, unknown>) => _.get(element, 'idref') === counter
@@ -60,18 +58,7 @@ function parseXml(xml: string) {
   };
   return parser.parse(xml, options);
 }
-function parseHtml(input: unknown): string {
-  const textData: string[] = [];
-  const myParser = new htmlparser.Parser({
-    ontext(text: string) {
-      textData.push(text);
-    }
-  });
-  if (typeof input === 'string') {
-    myParser.write(input);
-  }
-  return textData.join('');
-}
+
 export class XCCDFResultsMapper extends BaseConverter {
   mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
@@ -157,7 +144,10 @@ export class XCCDFResultsMapper extends BaseConverter {
                 label: 'fix'
               }
             ],
-            impact: {path: 'cdf:Rule.severity', transformer: impactMapping},
+            impact: {
+              path: 'cdf:Rule.severity',
+              transformer: impactMapping(IMPACT_MAPPING)
+            },
             refs: [],
             tags: {
               severity: null,

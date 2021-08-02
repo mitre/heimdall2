@@ -1,10 +1,15 @@
 import parser from 'fast-xml-parser';
-import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import {
+  BaseConverter,
+  ILookupPath,
+  impactMapping,
+  MappedTransform,
+  parseHtml
+} from './base-converter';
 import {CciNistMapping} from './mappings/CciNistMapping';
 import {NessusPluginsNistMapping} from './mappings/NessusPluginsNistMapping';
 
@@ -95,11 +100,11 @@ function parseRef(input: string, key: string): string[] {
 }
 function getImpact(item: unknown): number {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return impactMapping(
+    return impactMapping(IMPACT_MAPPING)(
       parseRef(_.get(item, COMPLIANCE_PATH), 'CAT').join('')
     );
   } else {
-    return impactMapping(_.get(item, 'severity'));
+    return impactMapping(IMPACT_MAPPING)(_.get(item, 'severity'));
   }
 }
 function getCheck(item: unknown): string {
@@ -107,13 +112,6 @@ function getCheck(item: unknown): string {
     return parseHtml(_.get(item, 'cm:compliance-solution'));
   } else {
     return '';
-  }
-}
-function impactMapping(severity: unknown): number {
-  if (typeof severity === 'string' || typeof severity === 'number') {
-    return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
-  } else {
-    return 0;
   }
 }
 function getNist(item: unknown): string[] {
@@ -195,19 +193,6 @@ function cleanData(control: unknown[]): ExecJSON.Control[] {
     }
   });
   return filteredControl;
-}
-
-function parseHtml(input: unknown): string {
-  const textData: string[] = [];
-  const myParser = new htmlparser.Parser({
-    ontext(text: string) {
-      textData.push(text);
-    }
-  });
-  if (typeof input === 'string') {
-    myParser.write(input);
-  }
-  return textData.join('');
 }
 export class NessusResults {
   data: Record<string, unknown>;

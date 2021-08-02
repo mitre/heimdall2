@@ -1,9 +1,13 @@
 import parser from 'fast-xml-parser';
-import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import {
+  BaseConverter,
+  ILookupPath,
+  MappedTransform,
+  parseHtml
+} from './base-converter';
 
 const NIST_REFERENCE_NAME =
   'Standards Mapping - NIST Special Publication 800-53 Revision 4';
@@ -77,32 +81,30 @@ function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
             return _.get(subElement, 'ClassInfo.ClassID') === classid;
           });
           matches.forEach((match: Record<string, unknown>) => {
-            let traces = _.get(match, 'AnalysisInfo.Unified.Trace');
-            if (!Array.isArray(traces)) {
-              traces = [traces];
+            let traces: unknown[];
+            const inputTrace = _.get(match, 'AnalysisInfo.Unified.Trace');
+            if (Array.isArray(inputTrace)) {
+              traces = inputTrace;
+            } else {
+              traces = [inputTrace];
             }
-            if (Array.isArray(traces)) {
-              traces.forEach((trace: Record<string, unknown>) => {
-                let entries = _.get(trace, 'Primary.Entry');
-                if (!Array.isArray(entries)) {
-                  entries = [entries];
-                }
-                if (Array.isArray(entries)) {
-                  const filteredEntries = entries.filter(
-                    (entry: Record<string, unknown>) => {
-                      return _.has(entry, 'Node.SourceLocation.snippet');
-                    }
-                  );
-                  filteredEntries.forEach((entry: Record<string, unknown>) => {
-                    if (
-                      _.get(entry, 'Node.SourceLocation.snippet') === snippetid
-                    ) {
-                      isMatch = true;
-                    }
-                  });
+            traces.forEach((trace: unknown) => {
+              let entries: unknown[];
+              const inputEntry = _.get(trace, 'Primary.Entry');
+              if (Array.isArray(inputEntry)) {
+                entries = inputEntry;
+              } else {
+                entries = [inputEntry];
+              }
+              const filteredEntries = entries.filter((entry: unknown) => {
+                return _.has(entry, 'Node.SourceLocation.snippet');
+              });
+              filteredEntries.forEach((entry: unknown) => {
+                if (_.get(entry, 'Node.SourceLocation.snippet') === snippetid) {
+                  isMatch = true;
                 }
               });
-            }
+            });
           });
           return isMatch;
         })
@@ -116,18 +118,6 @@ function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
     return element;
   });
   return input as ExecJSON.Control[];
-}
-function parseHtml(input: unknown): string {
-  const textData: string[] = [];
-  const myParser = new htmlparser.Parser({
-    ontext(text: string) {
-      textData.push(text);
-    }
-  });
-  if (typeof input === 'string') {
-    myParser.write(input);
-  }
-  return textData.join('');
 }
 
 export class FortifyMapper extends BaseConverter {

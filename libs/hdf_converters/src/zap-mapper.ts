@@ -1,9 +1,13 @@
-import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import {
+  BaseConverter,
+  ILookupPath,
+  MappedTransform,
+  parseHtml
+} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 
 const CWE_NIST_MAPPING_FILE = path.resolve(
@@ -31,18 +35,6 @@ function impactMapping(input: unknown): number {
   } else {
     return 0;
   }
-}
-function parseHtml(input: unknown): string {
-  const textData: string[] = [];
-  const myParser = new htmlparser.Parser({
-    ontext(text: string) {
-      textData.push(text);
-    }
-  });
-  if (typeof input === 'string') {
-    myParser.write(input);
-  }
-  return textData.join('');
 }
 function nistTag(cweid: string): string[] {
   const result = CWE_NIST_MAPPING.nistFilter([cweid], DEFAULT_NIST_TAG);

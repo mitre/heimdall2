@@ -1,7 +1,12 @@
 import {ExecJSON} from 'inspecjs';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import {
+  BaseConverter,
+  ILookupPath,
+  impactMapping,
+  MappedTransform
+} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -16,13 +21,6 @@ const CWE_NIST_MAPPING_FILE = path.resolve(
 const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE);
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
-function impactMapping(severity: unknown): number {
-  if (typeof severity === 'string' || typeof severity === 'number') {
-    return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
-  } else {
-    return 0;
-  }
-}
 function parseIdentifier(identifiers: unknown[] | unknown): string[] {
   const output: string[] = [];
   if (identifiers !== undefined && Array.isArray(identifiers)) {
@@ -137,7 +135,10 @@ export class SnykMapper extends BaseConverter {
             title: {path: 'title'},
             id: {path: 'id'},
             desc: {path: 'description'},
-            impact: {path: 'severity', transformer: impactMapping},
+            impact: {
+              path: 'severity',
+              transformer: impactMapping(IMPACT_MAPPING)
+            },
             code: '',
             results: [
               {

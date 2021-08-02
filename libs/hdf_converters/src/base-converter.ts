@@ -1,4 +1,5 @@
 import {createHash} from 'crypto';
+import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 
@@ -43,6 +44,30 @@ export type MappedReform<T, U> = {
 export function generateHash(data: string, algorithm = 'sha256'): string {
   const hash = createHash(algorithm);
   return hash.update(data).digest('hex');
+}
+
+export function parseHtml(input: unknown): string {
+  const textData: string[] = [];
+  const myParser = new htmlparser.Parser({
+    ontext(text: string) {
+      textData.push(text);
+    }
+  });
+  if (typeof input === 'string') {
+    myParser.write(input);
+  }
+  return textData.join('');
+}
+export function impactMapping(
+  mapping: Map<string, number>
+): (severity: unknown) => number {
+  return (severity: unknown): number => {
+    if (typeof severity === 'string' || typeof severity === 'number') {
+      return mapping.get(severity.toString().toLowerCase()) || 0;
+    } else {
+      return 0;
+    }
+  };
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -110,7 +135,6 @@ export class BaseConverter {
   ): void {
     this.mappings = mappings;
   }
-
   toHdf(): ExecJSON.Execution {
     if (this.mappings === undefined) {
       throw new Error('Mappings must be provided');

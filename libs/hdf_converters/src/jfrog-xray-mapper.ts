@@ -6,6 +6,7 @@ import {
   BaseConverter,
   generateHash,
   ILookupPath,
+  impactMapping,
   MappedTransform
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
@@ -46,13 +47,6 @@ function formatDesc(vulnerability: unknown): string {
     );
   }
   return text.join('<br>');
-}
-function impactMapping(severity: unknown): number {
-  if (typeof severity === 'string' || typeof severity === 'number') {
-    return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
-  } else {
-    return 0;
-  }
 }
 function formatCodeDesc(vulnerability: unknown): string {
   const codeDescArray: string[] = [];
@@ -161,7 +155,10 @@ export class JfrogXrayMapper extends BaseConverter {
               path: 'component_versions.more_details',
               transformer: formatDesc
             },
-            impact: {path: 'severity', transformer: impactMapping},
+            impact: {
+              path: 'severity',
+              transformer: impactMapping(IMPACT_MAPPING)
+            },
             code: '',
             results: [
               {

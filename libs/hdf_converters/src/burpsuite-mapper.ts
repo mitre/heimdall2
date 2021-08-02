@@ -1,10 +1,15 @@
 import parser from 'fast-xml-parser';
-import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import {
+  BaseConverter,
+  ILookupPath,
+  impactMapping,
+  MappedTransform,
+  parseHtml
+} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 
 // Constant
@@ -47,25 +52,6 @@ function formatCodeDesc(issue: unknown): string {
     text.push('confidence: ');
   }
   return text.join('\n') + '\n';
-}
-function parseHtml(input: unknown): string {
-  const textData: string[] = [];
-  const myParser = new htmlparser.Parser({
-    ontext(text: string) {
-      textData.push(text);
-    }
-  });
-  if (typeof input === 'string') {
-    myParser.write(input);
-  }
-  return textData.join('');
-}
-function impactMapping(severity: unknown): number {
-  if (typeof severity === 'string' || typeof severity === 'number') {
-    return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
-  } else {
-    return 0;
-  }
 }
 function idToString(id: unknown): string {
   if (typeof id === 'string' || typeof id === 'number') {
@@ -125,7 +111,10 @@ export class BurpSuiteMapper extends BaseConverter {
             id: {path: 'type', transformer: idToString},
             title: {path: 'name'},
             desc: {path: 'issueBackground', transformer: parseHtml},
-            impact: {path: 'severity', transformer: impactMapping},
+            impact: {
+              path: 'severity',
+              transformer: impactMapping(IMPACT_MAPPING)
+            },
             tags: {
               nist: {
                 path: 'vulnerabilityClassifications',
