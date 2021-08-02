@@ -58,7 +58,7 @@ import DeleteDialog from '@/components/generic/DeleteDialog.vue';
   }
 })
 export default class TagRow extends Vue {
-  @Prop() readonly evaluation!: IEvaluation;
+  @Prop({required: true}) readonly evaluation!: IEvaluation;
 
   tags: string[] = [];
   search = '';
