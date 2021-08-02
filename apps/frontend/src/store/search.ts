@@ -175,7 +175,7 @@ class Search extends VuexModule implements ISearchState {
       if (
         this.searchTerm.toLowerCase().indexOf(`${searchPayload.field}:`) !== -1
       ) {
-        const replaceRegex = new RegExp(`${searchPayload.field}:(.*)`, 'gm');
+        const replaceRegex = new RegExp(`${searchPayload.field}:"(.*?)"`, 'gm');
         const newSearch = this.searchTerm.replace(
           replaceRegex,
           `${searchPayload.field}:"${searchPayload.previousValues
@@ -212,7 +212,7 @@ class Search extends VuexModule implements ISearchState {
     searchPayload.previousValues = searchPayload.previousValues.filter(
       (filter) => filter.toLowerCase() !== searchPayload.value.toLowerCase()
     );
-    const replaceRegex = new RegExp(`${searchPayload.field}:(.*)`, 'gm');
+    const replaceRegex = new RegExp(`${searchPayload.field}:"(.*?)"`, 'gm');
     if (searchPayload.previousValues.length !== 0) {
       // If we still have any filters
       const newSearch = this.searchTerm.replace(
