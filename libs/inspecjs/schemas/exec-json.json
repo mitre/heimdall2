@@ -57,8 +57,8 @@
         },
         "title": {
           "type": [
-            "string",
-            "null"
+            "null",
+            "string"
           ],
           "description": "The name of the group"
         },
@@ -77,33 +77,54 @@
       "additionalProperties": true,
       "required": [
         "code_desc",
-        "run_time",
         "start_time"
       ],
       "properties": {
         "status": {
-          "$ref": "#/definitions/Control_Result_Status"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Control_Result_Status"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "code_desc": {
           "type": "string"
         },
         "run_time": {
-          "type": "number"
+          "type": [
+            "number",
+            "null"
+          ]
         },
         "start_time": {
           "type": "string"
         },
         "resource": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "message": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "skip_message": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "exception": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "backtrace": {
           "anyOf": [
@@ -137,31 +158,58 @@
       "required": [],
       "properties": {
         "name": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "url": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "branch": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "path": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
-        "skip_message": {
-          "type": "string"
+        "status_message": {
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "status": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "git": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "supermarket": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "compliance": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         }
       },
       "title": "Dependency"
@@ -171,12 +219,9 @@
       "additionalProperties": true,
       "required": [
         "id",
-        "title",
-        "desc",
         "impact",
         "refs",
         "tags",
-        "code",
         "source_location",
         "results"
       ],
@@ -187,18 +232,21 @@
         },
         "title": {
           "type": [
-            "string",
-            "null"
+            "null",
+            "string"
           ]
         },
         "desc": {
           "type": [
-            "string",
-            "null"
+            "null",
+            "string"
           ]
         },
         "descriptions": {
-          "type": "array",
+          "type": [
+            "array",
+            "null"
+          ],
           "items": {
             "$ref": "#/definitions/Control_Description"
           }
@@ -219,7 +267,10 @@
           "additionalProperties": true
         },
         "code": {
-          "type": "string",
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "The raw source code of the control. Note that if this is an overlay control, it does not include the underlying source code"
         },
         "source_location": {
@@ -233,7 +284,14 @@
           "description": "\n              A list of all results of the controls describe blocks.\n\n              For instance, if in the controls code we had the following:\n                describe sshd_config do\n                  its('Port') { should cmp 22 }\n                end\n              The result of this block as a ControlResult would be appended to the results list.\n              "
         },
         "waiver_data": {
-          "$ref": "#/definitions/Waiver_Data"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Waiver_Data"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "title": "Exec JSON Control"
@@ -254,34 +312,61 @@
           "type": "string"
         },
         "title": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "maintainer": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "copyright": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "copyright_email": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "depends": {
-          "type": "array",
+          "type": [
+            "array",
+            "null"
+          ],
           "items": {
             "$ref": "#/definitions/Dependency"
           }
         },
         "parent_profile": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "license": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "summary": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "version": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "supports": {
           "type": "array",
@@ -290,19 +375,37 @@
           }
         },
         "description": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "inspec_version": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "sha256": {
           "type": "string"
         },
         "status": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status_message": {
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "skip_message": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "controls": {
           "type": "array",
@@ -343,7 +446,10 @@
           "description": "The version of the platform this was run on."
         },
         "target_id": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         }
       },
       "title": "Platform"
@@ -406,18 +512,21 @@
       "additionalProperties": true,
       "properties": {
         "ref": {
-          "type": "string",
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "Path to the file that this statement originates from"
         },
         "line": {
-          "type": "number",
+          "type": [
+            "number",
+            "null"
+          ],
           "description": "The line at which this statement is located in the file"
         }
       },
-      "required": [
-        "ref",
-        "line"
-      ],
+      "required": [],
       "title": "Source Location"
     },
     "Statistic_Block": {
@@ -440,13 +549,34 @@
       "required": [],
       "properties": {
         "passed": {
-          "$ref": "#/definitions/Statistic_Block"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Block"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "skipped": {
-          "$ref": "#/definitions/Statistic_Block"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Block"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "failed": {
-          "$ref": "#/definitions/Statistic_Block"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Block"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "title": "Statistic Hash"
@@ -457,12 +587,22 @@
       "required": [],
       "properties": {
         "duration": {
-          "type": "number",
+          "type": [
+            "number",
+            "null"
+          ],
           "description": "How long (in seconds) this inspec exec ran for."
         },
         "controls": {
-          "$ref": "#/definitions/Statistic_Hash",
-          "description": "Breakdowns of control statistics by result"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Hash",
+              "description": "Breakdowns of control statistics by result"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "title": "Statistics"
@@ -473,22 +613,40 @@
       "required": [],
       "properties": {
         "platform-family": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "platform-name": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "platform": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "release": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "os-family": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "os-name": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         }
       },
       "title": "Supported Platform"
@@ -498,23 +656,38 @@
       "additionalProperties": true,
       "required": [],
       "properties": {
-        "skipped_due_to_waiver": {
-          "type": ["string", "boolean"]
-        },
-        "run": {
-          "type": "boolean"
-        },
-        "message": {
-          "type": "string"
-        },
         "expiration_date": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "justification": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "run": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "skipped_due_to_waiver": {
+          "type": [
+            "boolean",
+            "null",
+            "string"
+          ]
         }
-      },
-      "title": "Waiver Data"
+      }
     }
   }
 }

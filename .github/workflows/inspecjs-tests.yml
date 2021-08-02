@@ -12,6 +12,9 @@ jobs:
 
     steps:
      - uses: actions/checkout@v2
+     - uses: ruby/setup-ruby@v1
+       with:
+         ruby-version: '2.7'
 
      - name: Cache node modules
        uses: actions/cache@v2
@@ -42,5 +45,11 @@ jobs:
      - name: Run unit tests
        run: yarn inspecjs test
 
-     - name: Ensure the app builds cleanly without frontend and backend dependencies
+     - name: Validate there are no changes between the inspec schemas and generated parsers
+       run: |
+        bundle install --gemfile libs/inspecjs/Gemfile
+        yarn inspecjs gen-types
+        yarn inspecjs validate-types
+
+     - name: Ensure InspecJS builds cleanly
        run: yarn inspecjs build
