@@ -234,10 +234,6 @@ import {SearchModule} from '@/store/search';
 })
 
 export default class Results extends mixins(RouteMixin, ServerMixin) {
-  $refs!: Vue['$refs'] & {
-    search: HTMLInputElement;
-  };
-
   /**
    * The current state of the treemap as modeled by the treemap (duh).
    * Once can reliably expect that if a "deep" selection is not null, then its parent should also be not-null.

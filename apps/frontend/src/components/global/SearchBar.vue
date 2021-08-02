@@ -1,5 +1,13 @@
 <template>
   <span class="d-flex flex-nowrap">
+    <v-btn
+      v-show="$vuetify.breakpoint.xs"
+      id="showSearch"
+      class="mr-2"
+      @click="showSearch"
+    >
+      <v-icon>mdi-magnify</v-icon>
+    </v-btn>
     <v-text-field
       v-show="showSearchMobile || !$vuetify.breakpoint.xs"
       ref="search"
@@ -17,11 +25,7 @@
       @click:clear="searchTerm = ''"
       @click:append="showSearchHelp = true"
       @blur="showSearchMobile = false"
-    >
-      <v-btn v-if="$vuetify.breakpoint.xs" class="mr-2" @click="showSearch">
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn></v-text-field
-    >
+    />
     <SearchHelpModal
       :visible="showSearchHelp"
       style="display: none"
@@ -44,6 +48,10 @@ import {Watch} from 'vue-property-decorator';
   }
 })
 export default class SearchBar extends Vue {
+  $refs!: {
+    search: HTMLInputElement
+  }
+
   /**
    * The current search terms, as modeled by the search bar
    */
@@ -72,8 +80,7 @@ export default class SearchBar extends Vue {
   showSearch(): void {
     this.showSearchMobile = true;
     this.$nextTick(() => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (this.$refs.search as any).focus();
+      this.$refs.search.focus();
     });
   }
 
