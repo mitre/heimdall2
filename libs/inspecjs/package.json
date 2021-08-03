@@ -9,7 +9,6 @@
   "publishConfig": {
     "main": "lib/index.js"
   },
-  "dependencies": {},
   "devDependencies": {
     "@types/jest": "^26.0.7",
     "@types/node": "^15.0.1",
