@@ -6,12 +6,13 @@
   "files": [
     "lib"
   ],
-  "main": "index.ts",
+  "main": "lib/index.js",
   "publishConfig": {
     "main": "lib/index.js"
   },
   "scripts": {
-    "prepack": "yarn build",
+    "prepack": "yarn build && cp package.json package.json.orig && cat package.json.orig | jq '.main = (.publishConfig.main)' > package.json",
+    "postpack": "mv package.json.orig package.json",
     "build": "tsc -p ./tsconfig.build.json",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",

@@ -1,9 +1,7 @@
 # compiled output
 /dist
 apps/backend/dist
-libs/hdf_converters/dist
 node_modules
-package.tgz
 
 # Logs
 logs
