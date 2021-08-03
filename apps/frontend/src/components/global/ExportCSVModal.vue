@@ -22,7 +22,7 @@
           @keyup.esc="commitItems"
           @change="updateItems"
         />
-        <v-data-table :headers="headers" :items="rows" :items-per-page="1"
+        <v-data-table :headers="headers" :items="rows" :items-per-page="5"
           ><template #[`item.Title`]="{item}">{{
             truncate(item.Title)
           }}</template>
