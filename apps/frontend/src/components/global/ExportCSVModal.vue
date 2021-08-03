@@ -62,14 +62,13 @@ import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 
 import {Filter, FilteredDataModule} from '@/store/data_filters';
 import ObjectsToCsv from 'objects-to-csv';
-import {HDFControlSegment} from 'inspecjs';
-import {ContextualizedControl} from 'inspecjs/dist/context';
 import {EvaluationFile, ProfileFile} from '../../store/report_intake';
 import {Prop} from 'vue-property-decorator';
 import {InspecDataModule} from '../../store/data_store';
-import {ControlDescription} from 'inspecjs/dist/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
 import {saveSingleOrMultipleFiles} from '@/utilities/export_util'
+import {HDFControlSegment, ContextualizedControl} from 'inspecjs';
+import {ControlDescription} from 'inspecjs/src/versions/v_1_0/exec_json';
 
 
 const fieldNames: {[key: string]: string} = {
@@ -220,7 +219,7 @@ export default class ExportCSVModal extends Vue {
           result[fieldNames.fix] = fix
           break;
         case fieldNames.nistIds:
-          result[fieldNames.nistIds] = control.hdf.raw_nist_tags.join(', ')
+          result[fieldNames.nistIds] = control.hdf.rawNistTags.join(', ')
           break;
         case fieldNames.cciIds:
           result[fieldNames.cciIds] = (control.data.tags.cci || []).join(', ')
