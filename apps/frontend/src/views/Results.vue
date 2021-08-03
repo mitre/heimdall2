@@ -77,7 +77,7 @@
           :current-status-filter="statusFilter"
           @show-errors="showErrors"
           @show-waived="showWaived"
-          @add-filter="addStatusFilter"
+          @add-filter="addStatusSearch"
           @remove-filter="removeStatusFilter"
         />
         <!-- Compliance Cards -->
@@ -175,7 +175,6 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
 import Component, {mixins} from 'vue-class-component';
 import Base from '@/views/Base.vue';
 
@@ -230,10 +229,6 @@ import {SearchModule} from '@/store/search';
 })
 
 export default class Results extends mixins(RouteMixin, ServerMixin) {
-  $refs!: Vue['$refs'] & {
-    search: HTMLInputElement;
-  };
-
   /**
    * The current state of the treemap as modeled by the treemap (duh).
    * Once can reliably expect that if a "deep" selection is not null, then its parent should also be not-null.
@@ -330,7 +325,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       ids: SearchModule.controlIdSearchTerms,
       titleSearchTerms: SearchModule.titleSearchTerms,
       descriptionSearchTerms: SearchModule.descriptionSearchTerms,
-      nistIdFilter: SearchModule.nistIdFilter,
+      nistIdFilter: SearchModule.NISTIdFilter,
       searchTerm: SearchModule.freeSearch || '',
       codeSearchTerms: SearchModule.codeSearchTerms,
       treeFilters: this.treeFilters,
@@ -348,7 +343,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       titleSearchTerms: SearchModule.titleSearchTerms,
       descriptionSearchTerms: SearchModule.descriptionSearchTerms,
       codeSearchTerms: SearchModule.codeSearchTerms,
-      nistIdFilter: SearchModule.nistIdFilter,
+      nistIdFilter: SearchModule.NISTIdFilter,
       ids: SearchModule.controlIdSearchTerms,
       fromFile: this.file_filter,
       searchTerm: SearchModule.freeSearch,
@@ -449,12 +444,12 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     this.searchTerm = 'status:"Waived"'
   }
 
-  addStatusFilter(status: ExtendedControlStatus) {
-    SearchModule.addStatusSearch(status);
+  addStatusSearch(status: ExtendedControlStatus) {
+    SearchModule.addSearchFilter({field: 'status', value: status, previousValues: this.statusFilter});
   }
 
   removeStatusFilter(status: ExtendedControlStatus) {
-    SearchModule.removeStatusSearch(status);
+    SearchModule.removeSearchFilter({field: 'status', value: status, previousValues: this.statusFilter})
   }
 }
 </script>

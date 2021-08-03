@@ -31,7 +31,10 @@
       }
     },
     "inputs": {
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "items": {
         "type": "object",
         "additionalProperties": true
@@ -41,28 +44,56 @@
       "type": "string"
     },
     "status": {
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "generator": {
-      "$ref": "#/definitions/Generator"
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Generator"
+        },
+        {
+          "type": "null"
+        }
+      ]
     },
     "version": {
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "title": {
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "maintainer": {
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "copyright": {
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "copyright_email": {
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "depends": {
-      "type": "array",
+      "type": [
+        "array",
+        "null"
+      ],
       "items": {
         "$ref": "#/definitions/Dependency"
       }
@@ -84,8 +115,8 @@
         },
         "title": {
           "type": [
-            "string",
-            "null"
+            "null",
+            "string"
           ],
           "description": "The name of the group"
         },
@@ -105,31 +136,58 @@
       "required": [],
       "properties": {
         "name": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "url": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "branch": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "path": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
-        "skip_message": {
-          "type": "string"
+        "status_message": {
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "status": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "git": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "supermarket": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "compliance": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         }
       },
       "title": "Dependency"
@@ -158,8 +216,6 @@
       "additionalProperties": true,
       "required": [
         "id",
-        "title",
-        "desc",
         "impact",
         "tags",
         "code"
@@ -171,18 +227,25 @@
         },
         "title": {
           "type": [
-            "string",
-            "null"
+            "null",
+            "string"
           ]
         },
         "desc": {
           "type": [
-            "string",
-            "null"
+            "null",
+            "string"
           ]
         },
         "descriptions": {
-          "$ref": "#/definitions/Profile_JSON_Control_Descriptions"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Profile_JSON_Control_Descriptions"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "impact": {
           "type": "number",
@@ -190,7 +253,10 @@
           "maximum": 1
         },
         "refs": {
-          "type": "array",
+          "type": [
+            "array",
+            "null"
+          ],
           "items": {
             "$ref": "#/definitions/Reference"
           }
@@ -204,7 +270,14 @@
           "description": "The raw source code of the control. Note that if this is an overlay control, it does not include the underlying source code"
         },
         "source_location": {
-          "$ref": "#/definitions/Source_Location"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Source_Location"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "title": "Profile JSON Control"
@@ -275,18 +348,21 @@
       "additionalProperties": true,
       "properties": {
         "ref": {
-          "type": "string",
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "Path to the file that this statement originates from"
         },
         "line": {
-          "type": "number",
+          "type": [
+            "number",
+            "null"
+          ],
           "description": "The line at which this statement is located in the file"
         }
       },
-      "required": [
-        "ref",
-        "line"
-      ],
+      "required": [],
       "title": "Source Location"
     },
     "Supported_Platform": {
@@ -295,22 +371,40 @@
       "required": [],
       "properties": {
         "platform-family": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "platform-name": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "platform": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "release": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "os-family": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "os-name": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         }
       },
       "title": "Supported Platform"

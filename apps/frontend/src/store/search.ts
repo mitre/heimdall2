@@ -17,7 +17,7 @@ export interface ISearchState {
   descriptionSearchTerms: string[];
   controlIdSearchTerms: string[];
   codeSearchTerms: string[];
-  nistIdFilter: string[];
+  NISTIdFilter: string[];
   statusFilter: ExtendedControlStatus[];
   severityFilter: Severity[];
 }
@@ -67,7 +67,7 @@ export function valueToSeverity(severity: string): Severity {
 class Search extends VuexModule implements ISearchState {
   controlIdSearchTerms: string[] = [];
   codeSearchTerms: string[] = [];
-  nistIdFilter: string[] = [];
+  NISTIdFilter: string[] = [];
   descriptionSearchTerms: string[] = [];
   freeSearch = '';
   searchTerm = '';
@@ -115,7 +115,7 @@ class Search extends VuexModule implements ISearchState {
             );
             break;
           case 'severity':
-            this.addSeverity(include as Severity | Severity[]);
+            this.addSeverityFilter(include as Severity | Severity[]);
             break;
           case 'id':
             this.addIdFilter(lowercaseAll(include));
@@ -124,7 +124,7 @@ class Search extends VuexModule implements ISearchState {
             this.addTitleFilter(lowercaseAll(include));
             break;
           case 'nist':
-            this.addnistIdFilter(lowercaseAll(include));
+            this.addNISTIdFilter(lowercaseAll(include));
             break;
           case 'desc':
           case 'description':
@@ -156,57 +156,79 @@ class Search extends VuexModule implements ISearchState {
     this.context.commit('CLEAR_STATUS');
     this.context.commit('CLEAR_ID');
     this.context.commit('CLEAR_TITLE');
-    this.context.commit('CLEAR_CCI');
+    this.context.commit('CLEAR_NIST');
     this.context.commit('CLEAR_DESCRIPTION');
     this.context.commit('CLEAR_CODE');
     this.context.commit('CLEAR_FREESEARCH');
   }
 
-  // Status filtering
-
+  // Generic filtering
   @Action
-  addStatusSearch(status: ExtendedControlStatus) {
+  addSearchFilter(searchPayload: {
+    field: string;
+    value: string;
+    previousValues: (string | ExtendedControlStatus)[];
+  }) {
     // If we already have search filtering
     if (this.searchTerm.trim() !== '') {
-      // If our current filters include status
-      if (this.searchTerm.toLowerCase().indexOf('status:') !== -1) {
+      // If our current filters include the field
+      if (
+        this.searchTerm.toLowerCase().indexOf(`${searchPayload.field}:`) !== -1
+      ) {
+        const replaceRegex = new RegExp(`${searchPayload.field}:"(.*?)"`, 'gm');
         const newSearch = this.searchTerm.replace(
-          /status:"(.*?)"/gm,
-          `status:"${this.statusFilter.concat(status).join(',')}"`
+          replaceRegex,
+          `${searchPayload.field}:"${searchPayload.previousValues
+            .concat(searchPayload.value)
+            .join(',')}"`
         );
         this.context.commit('SET_SEARCH', newSearch);
-      } // We have a filter already, but it doesn't include status
+      } // We have a filter already, but it doesn't include the field
       else {
-        const newSearch = `${this.searchTerm} status:"${this.statusFilter
-          .concat(status)
+        const newSearch = `${this.searchTerm} ${
+          searchPayload.field
+        }:"${searchPayload.previousValues
+          .concat(searchPayload.value)
           .join(',')}"`;
         this.context.commit('SET_SEARCH', newSearch);
       }
     }
     // We don't have any search yet
     else {
-      this.context.commit('SET_SEARCH', `status:"${status}"`);
+      this.context.commit(
+        'SET_SEARCH',
+        `${searchPayload.field}:"${searchPayload.value}"`
+      );
     }
     this.parseSearch();
   }
 
   @Action
-  removeStatusSearch(status: ExtendedControlStatus) {
-    this.removeStatusFilter(status);
-    // If we still have any status filters
-    if (this.statusFilter.length !== 0) {
+  removeSearchFilter(searchPayload: {
+    field: string;
+    value: string;
+    previousValues: (string | ExtendedControlStatus)[];
+  }) {
+    searchPayload.previousValues = searchPayload.previousValues.filter(
+      (filter) => filter.toLowerCase() !== searchPayload.value.toLowerCase()
+    );
+    const replaceRegex = new RegExp(`${searchPayload.field}:"(.*?)"`, 'gm');
+    if (searchPayload.previousValues.length !== 0) {
+      // If we still have any filters
       const newSearch = this.searchTerm.replace(
-        /status:"(.*?)"/gm,
-        `status:"${this.statusFilter.join(',')}"`
+        replaceRegex,
+        `${searchPayload.field}:"${searchPayload.previousValues.join(',')}"`
       );
       this.context.commit('SET_SEARCH', newSearch);
-    } // Otherwise remove the status filter text from the search bar
+    } // Otherwise just remove the text from the search bar
     else {
-      const newSearch = this.searchTerm.replace(/status:"(.*?)"/gm, '');
+      const newSearch = this.searchTerm.replace(replaceRegex, '');
       this.context.commit('SET_SEARCH', newSearch);
     }
     this.parseSearch();
   }
+
+  // Status filtering
 
   @Action
   addStatusFilter(status: ExtendedControlStatus | ExtendedControlStatus[]) {
@@ -216,11 +238,6 @@ class Search extends VuexModule implements ISearchState {
   @Action
   removeStatusFilter(status: ExtendedControlStatus) {
     this.context.commit('REMOVE_STATUS', status);
-  }
-
-  @Action
-  clearStatusFilter() {
-    this.context.commit('CLEAR_STATUS');
   }
 
   @Action
@@ -254,54 +271,9 @@ class Search extends VuexModule implements ISearchState {
 
   // Severity filtering
 
-  /** Adds or replaces severity search in the search bar */
-  @Action
-  addSeveritySearch(severity: Severity) {
-    // If we already have search filtering
-    if (this.searchTerm.trim() !== '') {
-      // If our current filters include severity
-      if (this.searchTerm.toLowerCase().indexOf('severity:') !== -1) {
-        const newSearch = this.searchTerm.replace(
-          /severity:"(.*?)"/gm,
-          `severity:"${this.severityFilter.concat(severity).join(',')}"`
-        );
-        this.context.commit('SET_SEARCH', newSearch);
-      } // We have a filter already, but it doesn't include severity
-      else {
-        const newSearch = `${this.searchTerm} severity:"${this.severityFilter
-          .concat(severity)
-          .join(',')}"`;
-        this.context.commit('SET_SEARCH', newSearch);
-      }
-    }
-    // We don't have any search yet
-    else {
-      this.context.commit('SET_SEARCH', `severity:"${severity}"`);
-    }
-    this.parseSearch();
-  }
-
-  @Action
-  removeSeveritySearch(severity: Severity) {
-    this.removeSeverity(severity);
-    if (this.severityFilter.length !== 0) {
-      // If we still have any severity filters
-      const newSearch = this.searchTerm.replace(
-        /severity:"(.*?)"/gm,
-        `severity:"${this.severityFilter.join(',')}"`
-      );
-      this.context.commit('SET_SEARCH', newSearch);
-    } // Otherwise just remove the severity text from the search bar
-    else {
-      const newSearch = this.searchTerm.replace(/severity:"(.*?)"/gm, '');
-      this.context.commit('SET_SEARCH', newSearch);
-    }
-    this.parseSearch();
-  }
-
   /** Adds severity to filter */
   @Action
-  addSeverity(severity: Severity | Severity[]) {
+  addSeverityFilter(severity: Severity | Severity[]) {
     this.context.commit('ADD_SEVERITY', severity);
   }
 
@@ -346,51 +318,6 @@ class Search extends VuexModule implements ISearchState {
 
   // Control ID Filtering
 
-  /** Adds or replaces ID search in the search bar */
-  @Action
-  addIdSearch(id: string) {
-    // If we already have search filtering
-    if (this.searchTerm.trim() !== '') {
-      // If our current filters include control IDs
-      if (this.searchTerm.toLowerCase().indexOf('id:') !== -1) {
-        const newSearch = this.searchTerm.replace(
-          /id:"(.*?)"/gm,
-          `id:"${this.controlIdSearchTerms.concat(id).join(',')}"`
-        );
-        this.context.commit('SET_SEARCH', newSearch);
-      } // We have a filter already, but it doesn't include control ID
-      else {
-        const newSearch = `${this.searchTerm} id:"${this.controlIdSearchTerms
-          .concat(id)
-          .join(',')}"`;
-        this.context.commit('SET_SEARCH', newSearch);
-      }
-    }
-    // We don't have any search yet
-    else {
-      this.context.commit('SET_SEARCH', `id:"${id}"`);
-    }
-    this.parseSearch();
-  }
-
-  @Action
-  removeIdSearch(id: string) {
-    this.removeIdFilter(id);
-    if (this.controlIdSearchTerms.length !== 0) {
-      // If we still have any control ID filters
-      const newSearch = this.searchTerm.replace(
-        /id:"(.*?)"/gm,
-        `id:"${this.controlIdSearchTerms.join(',')}"`
-      );
-      this.context.commit('SET_SEARCH', newSearch);
-    } // Otherwise just remove the severity text from the search bar
-    else {
-      const newSearch = this.searchTerm.replace(/id:"(.*?)"/gm, '');
-      this.context.commit('SET_SEARCH', newSearch);
-    }
-    this.parseSearch();
-  }
-
   @Action
   removeIdFilter(id: string) {
     this.context.commit('REMOVE_ID', id);
@@ -428,19 +355,6 @@ class Search extends VuexModule implements ISearchState {
 
   // Title filtering
 
-  /** Adds or replaces title in the search bar */
-  @Action
-  addTitleSearch(title: string) {
-    if (this.searchTerm.trim() !== '') {
-      this.context.commit(
-        'SET_SEARCH',
-        `${this.searchTerm} AND title:${title}`
-      );
-    } else {
-      this.context.commit('SET_SEARCH', `title:${title}`);
-    }
-  }
-
   /** Adds a title filter */
   @Action
   addTitleFilter(title: string | string[]) {
@@ -464,92 +378,47 @@ class Search extends VuexModule implements ISearchState {
     this.titleSearchTerms = [];
   }
 
-  // CCI ID Filtering
+  // NIST ID Filtering
 
-  /** Adds or replaces severity in the search bar */
+  /** Adds NIST ID to filter */
   @Action
-  addCCIIdSearch(cciId: string) {
-    if (this.searchTerm.trim() !== '') {
-      this.context.commit('SET_SEARCH', `${this.searchTerm} AND nist:${cciId}`);
-    } else {
-      this.context.commit('SET_SEARCH', `nist:${cciId}`);
-    }
-  }
-
-  /** Adds CCI id to filter */
-  @Action
-  addnistIdFilter(cciId: string | string[]) {
-    this.context.commit('ADD_CCI', cciId);
+  addNISTIdFilter(NISTId: string | string[]) {
+    this.context.commit('ADD_NIST', NISTId);
   }
 
   @Mutation
-  ADD_CCI(cciId: string | string[]) {
-    this.nistIdFilter = this.nistIdFilter.concat(cciId);
+  ADD_NIST(NISTId: string | string[]) {
+    this.NISTIdFilter = this.NISTIdFilter.concat(NISTId);
   }
 
-  /** Sets the CCI IDs filter */
+  /** Clears all NIST ID filters */
   @Mutation
-  SET_CCI(cciIds: string[]) {
-    this.nistIdFilter = cciIds;
-  }
-
-  /** Clears all CCI ID filters */
-  @Mutation
-  CLEAR_CCI() {
-    this.nistIdFilter = [];
+  CLEAR_NIST() {
+    this.NISTIdFilter = [];
   }
 
   // Description Filtering
 
-  /** Adds or replaces description filter in the search bar */
-  @Action
-  addDescriptionSearch(description: string) {
-    if (this.searchTerm.trim() !== '') {
-      this.context.commit(
-        'SET_SEARCH',
-        `${this.searchTerm} AND description:${description}`
-      );
-    } else {
-      this.context.commit('SET_SEARCH', `description:${description}`);
-    }
-  }
-
-  /** Adds description to filter */
+  /** Calls the description mutator to add a description to the filter */
   @Action
   addDescriptionFilter(description: string | string[]) {
     this.context.commit('ADD_DESCRIPTION', description);
   }
 
-  /** Adds a description filter */
+  /** Adds a description to the filter */
   @Mutation
   ADD_DESCRIPTION(description: string | string[]) {
     this.descriptionSearchTerms =
       this.descriptionSearchTerms.concat(description);
   }
 
-  /** Sets the descriptions filter */
-  @Mutation
-  SET_DESCRIPTION(descriptions: string[]) {
-    this.descriptionSearchTerms = descriptions;
-  }
-
-  /** Clears all description filters */
+  /** Clears all description from the filters */
   @Mutation
   CLEAR_DESCRIPTION() {
     this.descriptionSearchTerms = [];
   }
 
   // Code filtering
-
-  /** Adds or replaces code filter in the search bar */
-  @Action
-  addCodeSearch(code: string) {
-    if (this.searchTerm.trim() !== '') {
-      this.context.commit('SET_SEARCH', `${this.searchTerm} AND code:${code}`);
-    } else {
-      this.context.commit('SET_SEARCH', `code:${code}`);
-    }
-  }
 
   /** Adds code to filter */
   @Action
@@ -560,12 +429,6 @@ class Search extends VuexModule implements ISearchState {
   @Mutation
   ADD_CODE(code: string | string[]) {
     this.codeSearchTerms = this.codeSearchTerms.concat(code);
-  }
-
-  /** Sets the code filter */
-  @Mutation
-  SET_CODE(code: string[]) {
-    this.codeSearchTerms = code;
   }
 
   /** Clears all code filters */

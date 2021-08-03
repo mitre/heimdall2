@@ -9,6 +9,10 @@
       "path": "apps/backend"
     },
     {
+      "name": "InspecJS",
+      "path": "libs/inspecjs"
+    },
+    {
       "name": "Heimdall",
       "path": "."
     }
@@ -19,7 +23,8 @@
     "typescript.preferences.importModuleSpecifier": "relative",
     "search.exclude": {
       "**/dist": true,
-      "**/samples": true
+      "**/samples": true,
+      "**/parse_testbed": true
     }
   }
 }

@@ -89,10 +89,9 @@ export default class StatusChart extends Vue {
 
   onSelect(status: Category<ControlStatus>) {
     if (SearchModule.statusFilter?.indexOf(status.value) !== -1) {
-      SearchModule.removeStatusSearch(status.value)
+      SearchModule.removeSearchFilter({field: 'status', value: status.value, previousValues: this.value || []})
     } else {
-      // This removes any existing status filters as we did before advanced search.
-      SearchModule.addStatusSearch(status.value);
+      SearchModule.addSearchFilter({field: 'status', value: status.value, previousValues: this.value || []});
     }
   }
 }
