@@ -1,0 +1,413 @@
+{
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "name",
+    "supports",
+    "controls",
+    "groups",
+    "sha256"
+  ],
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "supports": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Supported_Platform"
+      }
+    },
+    "controls": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Profile_JSON_Control"
+      }
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Control_Group"
+      }
+    },
+    "inputs": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "sha256": {
+      "type": "string"
+    },
+    "status": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "generator": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Generator"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "version": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "title": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "maintainer": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "copyright": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "copyright_email": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "depends": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/definitions/Dependency"
+      }
+    }
+  },
+  "title": "Profile JSON Profile",
+  "definitions": {
+    "Control_Group": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "controls"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier of the group"
+        },
+        "title": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "The name of the group"
+        },
+        "controls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The control IDs in this group"
+        }
+      },
+      "title": "Control Group"
+    },
+    "Dependency": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [],
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "branch": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status_message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "git": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "supermarket": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "compliance": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "title": "Dependency"
+    },
+    "Generator": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the software that generated this report."
+        },
+        "version": {
+          "type": "string",
+          "description": "The version of the software that generated this report."
+        }
+      },
+      "title": "Generator"
+    },
+    "Profile_JSON_Control": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "impact",
+        "tags",
+        "code"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The ID of this control"
+        },
+        "title": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "desc": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "descriptions": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Profile_JSON_Control_Descriptions"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "impact": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "refs": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/Reference"
+          }
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "code": {
+          "type": "string",
+          "description": "The raw source code of the control. Note that if this is an overlay control, it does not include the underlying source code"
+        },
+        "source_location": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Source_Location"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "title": "Profile JSON Control"
+    },
+    "Profile_JSON_Control_Descriptions": {
+      "type": "object",
+      "aditionalProperties": {
+        "type": "string"
+      },
+      "required": [],
+      "title": "Profile JSON Control Descriptions"
+    },
+    "Reference": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "ref"
+          ],
+          "properties": {
+            "ref": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "url"
+          ],
+          "properties": {
+            "url": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "uri"
+          ],
+          "properties": {
+            "uri": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "ref"
+          ],
+          "properties": {
+            "ref": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      ],
+      "title": "Reference"
+    },
+    "Source_Location": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Path to the file that this statement originates from"
+        },
+        "line": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "The line at which this statement is located in the file"
+        }
+      },
+      "required": [],
+      "title": "Source Location"
+    },
+    "Supported_Platform": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [],
+      "properties": {
+        "platform-family": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "platform-name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "platform": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "release": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "os-family": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "os-name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "title": "Supported Platform"
+    }
+  }
+}

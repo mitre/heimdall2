@@ -1,0 +1,7 @@
+out/
+dist/
+docs/
+node_modules/
+work/
+src/test/parse_testbed/*
+**/.DS_Store
