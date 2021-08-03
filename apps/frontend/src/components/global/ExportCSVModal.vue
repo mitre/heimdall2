@@ -13,14 +13,12 @@
       <v-card-title class="headline"> Export as CSV </v-card-title>
       <v-card-text>
         <v-select
-          v-click-outside="commitItems"
+          v-model="fieldsToAdd"
           :items="fields"
           label="Select Fields"
           dense
           multiple
           hint="Pick the fields to export"
-          @keyup.esc="commitItems"
-          @change="updateItems"
         />
         <v-data-table :headers="headers" :items="rows" :items-per-page="5"
           ><template #[`item.Title`]="{item}">{{
@@ -117,7 +115,7 @@ export default class ExportCSVModal extends Vue {
   showingModal = false;
   fields = Object.values(fieldNames);
   fieldsToAdd: string[] = Object.values(fieldNames);
-  fieldsToCommit: string[] = Object.values(fieldNames);
+
   closeModal() {
     this.showingModal = false;
   }
@@ -125,14 +123,6 @@ export default class ExportCSVModal extends Vue {
   showModal() {
     this.generateCSVPreview();
     this.showingModal = true;
-  }
-
-  updateItems(items: string[]) {
-    this.fieldsToCommit = items
-  }
-
-  commitItems() {
-    this.fieldsToAdd = this.fieldsToCommit
   }
 
   get headers() {
