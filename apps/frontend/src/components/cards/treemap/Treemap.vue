@@ -164,9 +164,9 @@ export default class Treemap extends Vue {
             else {
               if(selectedValue) {
                 if (SearchModule.controlIdSearchTerms.indexOf(selectedValue.toLowerCase()) === -1){
-                  SearchModule.addIdSearch(selectedValue)
+                  SearchModule.addSearchFilter({field: 'id', value: selectedValue, previousValues: SearchModule.controlIdSearchTerms})
                 } else {
-                  SearchModule.removeIdSearch(selectedValue)
+                  SearchModule.removeSearchFilter({field: 'id', value: selectedValue, previousValues: SearchModule.controlIdSearchTerms})
                 }
               }
             }
