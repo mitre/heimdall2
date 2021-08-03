@@ -1,5 +1,5 @@
 out/
-dist/
+lib/
 docs/
 node_modules/
 work/

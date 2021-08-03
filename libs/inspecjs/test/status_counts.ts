@@ -1,5 +1,5 @@
 // Get filesystem
-import {ControlStatus, HDFControl, hdfWrapControl} from '../src/inspecjs';
+import {ControlStatus, HDFControl, hdfWrapControl} from '../src';
 import {ExecJSON} from '../src/versions/v_1_0';
 
 type Counts = {[key in ControlStatus]: number};

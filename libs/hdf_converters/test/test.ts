@@ -1,5 +1,5 @@
 import fs from 'fs';
-import {ExecJSON} from '../../inspecjs/src/inspecjs';
+import {ExecJSON} from 'inspecjs';
 import {BurpSuiteMapper} from '../src/burpsuite-mapper';
 import {JfrogXrayMapper} from '../src/jfrog-xray-mapper';
 import {NiktoMapper} from '../src/nikto-mapper';

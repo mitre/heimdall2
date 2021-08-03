@@ -3,6 +3,7 @@
 apps/backend/dist
 libs/hdf_converters/dist
 node_modules
+package.tgz
 
 # Logs
 logs
@@ -54,6 +55,12 @@ nginx/certs/ssl_certificate_key.key
 apps/frontend/public/static/export/bootstrap.min.css
 apps/frontend/public/static/export/bootstrap.min.js
 apps/frontend/public/static/export/jquery.min.js
-libs/hdf_converters/outputs
-libs/hdf_converters/converted_jsons
 
+# Ignore yarn 2 new files
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*

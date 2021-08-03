@@ -22,12 +22,17 @@ jobs:
         run: yarn pack:all
 
       - name: Publish Heimdall Lite to NPM
-        run: npm publish --access public apps/frontend/mitre-heimdall-lite*.tgz
+        run: npm publish --access public apps/frontend/package.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish InSpecJS to NPM
-        run: npm publish --access public libs/inspecjs/inspecjs*.tgz
+        run: npm publish --access public libs/inspecjs/package.tgz
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish HDF Converters to NPM
+        run: npm publish --access public libs/hdf_converters/package.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -37,11 +42,16 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
 
       - name: Publish Heimdall Lite to GitHub Packages
-        run: npm publish --access public apps/frontend/mitre-heimdall-lite*.tgz
+        run: npm publish --access public apps/frontend/package.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish InspecJS to GitHub Packages
-        run: npm publish --access public libs/inspecjs/inspecjs*.tgz
+        run: npm publish --access public libs/inspecjs/package.tgz
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish HDF Converters to GitHub Packages
+        run: npm publish --access public libs/hdf_converters/package.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
