@@ -1,5 +1,4 @@
 import fs from 'fs';
-import path from 'path'
 import {ExecJSON} from 'inspecjs';
 import {BurpSuiteMapper} from '../src/burpsuite-mapper';
 import {JfrogXrayMapper} from '../src/jfrog-xray-mapper';

@@ -25,6 +25,17 @@
   },
   "devDependencies": {
     "jest": "^27.0.6",
-    "ts-node": "^10.0.0"
+    "ts-node": "^10.0.0",
+    "@types/jest": "^26.0.7",
+    "@types/node": "^15.0.1",
+    "quicktype": "^15.0.260",
+    "ts-jest": "^27.0.3",
+    "typedoc": "^0.21.4"
+  },
+  "jest": {
+    "rootDir": ".",
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    }
   }
 }
