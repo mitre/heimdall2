@@ -35,7 +35,7 @@
             }}</span>
           </template>
           <template #[`item.evaluationTags`]="{item}">
-            <TagRow :evaluation="item" />
+            <TagRow v-if="item.id" :evaluation="item" />
           </template>
           <template #[`item.createdAt`]="{item}">
             <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
