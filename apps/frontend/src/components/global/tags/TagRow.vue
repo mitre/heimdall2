@@ -58,7 +58,7 @@ import DeleteDialog from '@/components/generic/DeleteDialog.vue';
   }
 })
 export default class TagRow extends Vue {
-  @Prop() readonly evaluation: IEvaluation | undefined;
+  @Prop({required: true}) readonly evaluation!: IEvaluation;
 
   tags: string[] = [];
   search = '';
@@ -80,28 +80,22 @@ export default class TagRow extends Vue {
   }
 
   save() {
-    if(this.evaluation){
-      const original = this.evaluationTagsToStrings();
-      const toAdd: string[] = this.tags.filter(tag => !original.includes(tag));
-      const toRemove: IEvaluationTag[] = this.evaluation.evaluationTags.filter(tag => !this.tags.includes(tag.value));
-      const addedTagPromises = toAdd.map((tag) => {
-        if(this.evaluation){
-          return EvaluationModule.addTag({evaluation: this.evaluation, tag: {value: tag}});
-        } else {
-          return null;
-        }
-      });
+    const original = this.evaluationTagsToStrings();
+    const toAdd: string[] = this.tags.filter(tag => !original.includes(tag));
+    const toRemove: IEvaluationTag[] = this.evaluation.evaluationTags.filter(tag => !this.tags.includes(tag.value));
+    const addedTagPromises = toAdd.map((tag) =>
+      EvaluationModule.addTag({evaluation: this.evaluation, tag: {value: tag}})
+    );
 
-      const removedTagPromises = toRemove.map((tag) => {
-        return EvaluationModule.deleteTag(tag);
-      });
+    const removedTagPromises = toRemove.map((tag) =>
+      EvaluationModule.deleteTag(tag)
+    );
 
-      Promise.all(addedTagPromises.concat(removedTagPromises)).then(() => {
-        SnackbarModule.notify("Successfully updated tags.")
-      }).finally(() => {
-        EvaluationModule.getAllEvaluations();
-      });
-    }
+    Promise.all(addedTagPromises.concat(removedTagPromises)).then(() =>
+      SnackbarModule.notify("Successfully updated tags.")
+    ).finally(() =>
+      EvaluationModule.getAllEvaluations()
+    );
   }
 
   syncEvaluationTags() {
@@ -109,7 +103,7 @@ export default class TagRow extends Vue {
   }
 
   evaluationTagsToStrings(): string[] {
-    return this.evaluation?.evaluationTags.map((tag) => tag.value) || [];
+    return this.evaluation.evaluationTags.map((tag) => tag.value) || [];
   }
 
   async deleteTag(tag: IEvaluationTag) {

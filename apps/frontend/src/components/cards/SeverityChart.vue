@@ -60,9 +60,9 @@ export default class SeverityChart extends Vue {
   onSelect(severity: Category<Severity>) {
     // In the case that the values are the same, we want to instead emit null
     if (this.value && this.value?.indexOf(valueToSeverity(severity.value)) !== -1) {
-      SearchModule.removeSeveritySearch(valueToSeverity(severity.value));
+      SearchModule.removeSearchFilter({field: 'severity', value: valueToSeverity(severity.value), previousValues: this.value});
     } else {
-      SearchModule.addSeveritySearch(valueToSeverity(severity.value));
+      SearchModule.addSearchFilter({field: 'severity', value: valueToSeverity(severity.value), previousValues: this.value});
     }
   }
 }

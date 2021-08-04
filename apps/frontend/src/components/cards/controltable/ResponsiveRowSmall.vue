@@ -9,10 +9,14 @@
         <slot name="severity" />
         <v-divider />
         <slot name="tags" />
+        <v-divider />
+        <slot name="runTime" />
+        <v-divider />
+        <slot name="viewed" />
       </v-card>
     </v-col>
 
-    <v-col class="pa-0" :cols="6">
+    <v-col class="pa-0" :cols="5">
       <v-card tile flat class="d-flex flex-column fill-height">
         <slot name="id" />
         <v-divider />

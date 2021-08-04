@@ -12,21 +12,27 @@
       <!-- Toolbar -->
       <v-row v-resize="onResize">
         <v-row>
-          <v-col cols="12" md="5" class="pb-0">
+          <v-col cols="12" md="3" class="pb-0">
             <v-card-title class="pb-0">Results View Data</v-card-title>
           </v-col>
           <v-spacer />
-          <v-col cols="4" sm="auto" class="text-right pl-6 pb-0">
+          <v-col cols="3" md="auto" class="text-right pl-6 pb-0">
+            <v-switch
+              v-model="displayUnviewedControls"
+              label="Show Only Unviewed"
+            />
+          </v-col>
+          <v-col cols="3" md="auto" class="text-right pb-0">
             <v-switch v-model="syncTabs" label="Sync Tabs" />
           </v-col>
-          <v-col cols="4" sm="auto" class="text-right pb-0">
+          <v-col cols="3" md="auto" class="text-right pb-0">
             <v-switch
               v-model="singleExpand"
               label="Single Expand"
               @change="handleToggleSingleExpand"
             />
           </v-col>
-          <v-col cols="4" sm="auto" class="text-right pb-0">
+          <v-col cols="3" md="auto" class="text-right pb-0">
             <v-switch v-model="expandAll" label="Expand All" class="mr-5" />
           </v-col>
         </v-row>
@@ -73,6 +79,24 @@
         <template #tags>
           <ColumnHeader text="800-53 Controls & CCIs" sort="disabled" />
         </template>
+
+        <template #runTime>
+          <ColumnHeader
+            text="Run Time"
+            :sort="sortRunTime"
+            @input="set_sort('runTime', $event)"
+          />
+        </template>
+
+        <template #viewed class="my-2 px-1">
+          <ColumnHeader
+            text="Controls Viewed"
+            sort="disabled"
+            :viewed-header="true"
+            :number-of-viewed-controls="viewedControlIds.length"
+            :number-of-all-controls="raw_items.length"
+          />
+        </template>
       </ResponsiveRowSwitch>
     </div>
 
@@ -90,7 +114,9 @@
           :control="item.control"
           :expanded="expanded.includes(item.key)"
           :show-impact="showImpact"
+          :viewed-controls="viewedControlIds"
           @toggle="toggle(item.key)"
+          @control-viewed="toggleControlViewed"
         />
         <ControlRowDetails
           v-if="expanded.includes(item.key)"
@@ -106,14 +132,14 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import ControlRowHeader from '@/components/cards/controltable/ControlRowHeader.vue';
+import ControlRowHeader, {getControlRunTime} from '@/components/cards/controltable/ControlRowHeader.vue';
 import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails.vue';
 import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 
 import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {control_unique_key} from '@/utilities/format_util';
-import {context} from 'inspecjs';
+import {ContextualizedControl} from 'inspecjs';
 import {Prop, Ref} from 'vue-property-decorator';
 import {HeightsModule} from '@/store/heights';
 import _ from 'lodash';
@@ -129,7 +155,7 @@ interface ListElt {
   status_val: number;
   severity_val: number;
 
-  control: context.ContextualizedControl;
+  control: ContextualizedControl;
 }
 
 @Component({
@@ -160,6 +186,23 @@ export default class ControlTable extends Vue {
   sortStatus: Sort = 'none';
   sortSet: Sort = 'none';
   sortSeverity: Sort = 'none';
+  sortRunTime: Sort = 'none';
+
+  // Used for viewed/unviewed controls.
+  viewedControlIds: string[] = [];
+  displayUnviewedControls = true;
+
+  toggleControlViewed(control: ContextualizedControl) {
+    const alreadyViewed = this.viewedControlIds.indexOf(control.data.id)
+    // If the control hasn't been marked as viewed yet, mark it as viewed.
+    if(alreadyViewed === -1) {
+      this.viewedControlIds.push(control.data.id);
+    }
+    // Else, remove it from the view controls array.
+    else {
+      this.viewedControlIds.splice(alreadyViewed, 1);
+    }
+  }
 
   mounted() {
     this.onResize();
@@ -174,11 +217,12 @@ export default class ControlTable extends Vue {
   }
 
   /** Callback to handle setting a new sort */
-  set_sort(column: 'id' | 'status' | 'severity' | 'set', newSort: Sort) {
+  set_sort(column: string, newSort: Sort) {
     this.sortId = 'none';
     this.sortSet = 'none';
     this.sortStatus = 'none';
     this.sortSeverity = 'none';
+    this.sortRunTime = 'none';
     switch (column) {
       case 'id':
         this.sortId = newSort;
@@ -191,6 +235,9 @@ export default class ControlTable extends Vue {
         break;
       case 'severity':
         this.sortSeverity = newSort;
+        break;
+      case 'runTime':
+        this.sortRunTime = newSort;
         break;
     }
   }
@@ -291,17 +338,21 @@ export default class ControlTable extends Vue {
         severity_val: ['none', 'low', 'medium', 'high', 'critical'].indexOf(
           d.root.hdf.severity
         ),
-        filename: _.get(d, 'sourced_from.sourced_from.from_file.filename')
+        filename: _.get(d, 'sourcedFrom.sourcedFrom.from_file.filename')
       };
     });
   }
 
-  /** Return items sorted */
+  /** Return items sorted and filters out viewed controls */
   get items(): ListElt[] {
     // Controls ascending/descending
     let factor = 1;
+    // Whether or not we need to sort
+    let sort = true;
     // Our comparator function
-    let cmp: (a: ListElt, b: ListElt) => number;
+    let cmp: ((a: ListElt, b: ListElt) => number);
+
+    let items = this.raw_items;
 
     if (this.sortId === 'ascending' || this.sortId === 'descending') {
       cmp = (a: ListElt, b: ListElt) =>
@@ -333,10 +384,26 @@ export default class ControlTable extends Vue {
       if (this.sortSet === 'ascending') {
         factor = -1;
       }
+    } else if(this.sortRunTime === 'ascending' || this.sortRunTime === 'descending') {
+      cmp = (a: ListElt, b: ListElt) =>
+        (getControlRunTime(b.control) - getControlRunTime(a.control));
+      if (this.sortRunTime === 'ascending') {
+        factor = -1;
+      }
     } else {
-      return this.raw_items;
+      sort = false;
     }
-    return this.raw_items.sort((a, b) => cmp(a, b) * factor);
+
+    // Displays only unviewed controls.
+    if(this.displayUnviewedControls) {
+      items = items.filter((val) => !this.viewedControlIds.includes(val.control.data.id));
+    }
+
+    if(sort === true) {
+      items = items.sort((a, b) => cmp(a, b) * factor)
+    }
+
+    return items;
   }
 }
 </script>

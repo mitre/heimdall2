@@ -35,32 +35,32 @@
             }}</span>
           </template>
           <template #[`item.evaluationTags`]="{item}">
-            <TagRow :evaluation="item" />
+            <TagRow v-if="item.id" :evaluation="item" />
           </template>
           <template #[`item.createdAt`]="{item}">
             <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
           </template>
           <template #[`item.actions`]="{item}">
             <v-row class="d-flex flex-row-reverse">
+              <EditEvaluationModal
+                v-if="editEvaluationDialog"
+                id="editEvaluationModal"
+                :active="activeItem"
+                :visible="editEvaluationDialog && activeItem.id === item.id"
+                @updateEvaluations="updateEvaluations"
+                @close="editEvaluationDialog = false"
+              />
               <ShareEvaluationButton title="Share Result" :evaluation="item" />
               <div v-if="item.editable">
-                <EditEvaluationModal
-                  id="editEvaluationModal"
-                  :active="item"
-                  @updateEvaluations="updateEvaluations"
+                <v-icon
+                  data-cy="edit"
+                  small
+                  title="Edit"
+                  class="mr-2"
+                  @click="editItem(item)"
                 >
-                  <template #clickable="{on}"
-                    ><v-icon
-                      data-cy="edit"
-                      small
-                      title="Edit"
-                      class="mr-2"
-                      v-on="on"
-                    >
-                      mdi-pencil
-                    </v-icon>
-                  </template>
-                </EditEvaluationModal>
+                  mdi-pencil
+                </v-icon>
                 <v-icon
                   data-cy="delete"
                   class="mr-2"
@@ -119,6 +119,7 @@ export default class LoadFileList extends Vue {
   activeItem!: IEvaluation;
   activeTag!: IEvaluationTag;
 
+  editEvaluationDialog = false;
   deleteItemDialog = false;
   deleteTagDialog = false;
   search = '';
@@ -134,6 +135,7 @@ export default class LoadFileList extends Vue {
 
   editItem(item: IEvaluation) {
     this.activeItem = item;
+    this.editEvaluationDialog = true;
   }
 
   deleteItem(item: IEvaluation) {

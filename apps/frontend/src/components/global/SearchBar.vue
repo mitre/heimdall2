@@ -1,36 +1,44 @@
 <template>
-  <v-text-field
-    v-show="showSearchMobile || !$vuetify.breakpoint.xs"
-    ref="search"
-    v-model="searchTerm"
-    flat
-    hide-details
-    dense
-    solo
-    prepend-inner-icon="mdi-magnify"
-    append-icon="mdi-help-circle-outline"
-    label="Search"
-    clearable
-    :class="$vuetify.breakpoint.xs ? 'overtake-bar mx-2' : 'mx-2'"
-    @input="isTyping = true"
-    @click:clear="searchTerm = ''"
-    @click:append="showSearchHelp = true"
-    @blur="showSearchMobile = false"
-    ><SearchHelpModal
+  <span class="d-flex flex-nowrap">
+    <v-btn
+      v-show="$vuetify.breakpoint.xs"
+      id="showSearch"
+      class="mr-2"
+      @click="showSearch"
+    >
+      <v-icon>mdi-magnify</v-icon>
+    </v-btn>
+    <v-text-field
+      v-show="showSearchMobile || !$vuetify.breakpoint.xs"
+      ref="search"
+      v-model="searchTerm"
+      flat
+      hide-details
+      dense
+      solo
+      prepend-inner-icon="mdi-magnify"
+      append-icon="mdi-help-circle-outline"
+      label="Search"
+      clearable
+      :class="$vuetify.breakpoint.xs ? 'overtake-bar mx-2' : 'regular-bar mx-2'"
+      @input="isTyping = true"
+      @click:clear="searchTerm = ''"
+      @click:append="showSearchHelp = true"
+      @blur="showSearchMobile = false"
+    />
+    <SearchHelpModal
       :visible="showSearchHelp"
+      style="display: none"
       @close-modal="showSearchHelp = false"
     />
-    <v-btn v-if="$vuetify.breakpoint.xs" class="mr-2" @click="showSearch">
-      <v-icon>mdi-magnify</v-icon>
-    </v-btn></v-text-field
-  >
+  </span>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import SearchHelpModal from '@/components/global/SearchHelpModal.vue'
-import {SearchModule} from '../../store/search';
+import {SearchModule} from '@/store/search';
 import {Watch} from 'vue-property-decorator';
 
 
@@ -40,12 +48,17 @@ import {Watch} from 'vue-property-decorator';
   }
 })
 export default class SearchBar extends Vue {
+  $refs!: {
+    search: HTMLInputElement
+  }
+
   /**
    * The current search terms, as modeled by the search bar
    */
   get searchTerm(): string {
     return SearchModule.searchTerm;
   }
+
   set searchTerm(term: string) {
     SearchModule.updateSearch(term);
   }
@@ -67,8 +80,7 @@ export default class SearchBar extends Vue {
   showSearch(): void {
     this.showSearchMobile = true;
     this.$nextTick(() => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (this.$refs.search as any).focus();
+      this.$refs.search.focus();
     });
   }
 
@@ -82,12 +94,16 @@ export default class SearchBar extends Vue {
     if (this.typingTimer) {
       clearTimeout(this.typingTimer);
     }
-    this.typingTimer = setTimeout(this.onDoneTyping, 250);
+    this.typingTimer = setTimeout(this.onDoneTyping, 100);
   }
 }
 </script>
 
 <style scoped>
+.regular-bar {
+  width: 40vw;
+}
+
 .overtake-bar {
   width: 96%;
   position: absolute;

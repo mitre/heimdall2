@@ -62,6 +62,7 @@
                                 <br />
                                 <span>{{ fileTimes[i] }}</span>
                                 <TagRow
+                                  v-if="file.database_id"
                                   style="max-width: 400px"
                                   :evaluation="toIEvaluation(file)"
                                 />
@@ -265,6 +266,7 @@ export default class Compare extends Vue {
       color: 'statusProfileError'
     }
   ];
+
   compareItems = [
     'Run Time',
     'Execution Length',
@@ -274,6 +276,7 @@ export default class Compare extends Vue {
     'Passed Control Count',
     'Compliance (Passed Control %)'
   ]
+
   sortControlSetsBy = 'Run Time';
   changedOnly = true;
   expandedView = true;
@@ -318,7 +321,7 @@ export default class Compare extends Vue {
       ids: SearchModule.controlIdSearchTerms,
       titleSearchTerms: SearchModule.titleSearchTerms,
       descriptionSearchTerms: SearchModule.descriptionSearchTerms,
-      cciIdFilter: SearchModule.cciIdFilter,
+      nistIdFilter: SearchModule.NISTIdFilter,
       searchTerm: SearchModule.freeSearch,
       codeSearchTerms: SearchModule.codeSearchTerms,
       omit_overlayed_controls: true,

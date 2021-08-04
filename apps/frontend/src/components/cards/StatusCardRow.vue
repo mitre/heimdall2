@@ -36,7 +36,7 @@
           <v-card-title>
             <v-icon class="pr-3" large>mdi-{{ profileErrorProps.icon }}</v-icon>
             <span class="title">{{
-              `ALERT: ${profileErrorProps.number} ${profileErrorProps.title}`
+              `ALERT: ${profileErrorProps.number} ${profileErrorProps.title}s`
             }}</span>
           </v-card-title>
           <v-card-text v-text="profileErrorProps.subtitle" />
@@ -66,7 +66,7 @@
           <v-card-title>
             <v-icon class="pr-3" large>mdi-{{ waivedProfiles.icon }}</v-icon>
             <span class="title">{{
-              `INFO: ${waivedProfiles.number} ${waivedProfiles.title}`
+              `INFO: ${waivedProfiles.number} ${waivedProfiles.title} Tests`
             }}</span>
           </v-card-title>
           <v-card-text v-text="waivedProfiles.subtitle" />
@@ -103,6 +103,13 @@ export default class StatusCardRow extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
   @Prop({type: Array, required: false}) readonly currentStatusFilter!: Filter;
 
+  get overlayRemovedFilter(): Filter {
+    return {
+      fromFile: this.filter.fromFile,
+      omit_overlayed_controls: this.filter.omit_overlayed_controls
+    }
+  }
+
   // Cards
   get standardCardProps(): CardProps[] {
     return [
@@ -110,44 +117,44 @@ export default class StatusCardRow extends Vue {
         icon: 'check-circle',
         title: 'Passed',
         subtitle: `${StatusCountModule.countOf(
-          {fromFile: this.filter.fromFile},
+          this.overlayRemovedFilter,
           'PassedTests'
         )} individual checks passed`,
         color: 'statusPassed',
-        number: StatusCountModule.countOf({fromFile: this.filter.fromFile, omit_overlayed_controls: this.filter.omit_overlayed_controls}, 'Passed')
+        number: StatusCountModule.countOf(this.overlayRemovedFilter, 'Passed')
       },
       {
         icon: 'close-circle',
         title: 'Failed',
         subtitle: `${StatusCountModule.countOf(
-          {fromFile: this.filter.fromFile},
+          this.overlayRemovedFilter,
           'PassingTestsFailedControl'
         )} individual checks passed, ${StatusCountModule.countOf(
-          {fromFile: this.filter.fromFile},
+          this.overlayRemovedFilter,
           'FailedTests'
         )} failed out of ${StatusCountModule.countOf(
-          {fromFile: this.filter.fromFile},
+          this.overlayRemovedFilter,
           'PassingTestsFailedControl'
         ) + StatusCountModule.countOf(
-          {fromFile: this.filter.fromFile},
+          this.overlayRemovedFilter,
           'FailedTests'
         )} total checks`,
         color: 'statusFailed',
-        number: StatusCountModule.countOf({fromFile: this.filter.fromFile, omit_overlayed_controls: this.filter.omit_overlayed_controls}, 'Failed')
+        number: StatusCountModule.countOf(this.overlayRemovedFilter, 'Failed')
       },
       {
         icon: 'minus-circle',
         title: 'Not Applicable',
         subtitle: `System exception or absent component`,
         color: 'statusNotApplicable',
-        number: StatusCountModule.countOf({fromFile: this.filter.fromFile, omit_overlayed_controls: this.filter.omit_overlayed_controls}, 'Not Applicable')
+        number: StatusCountModule.countOf(this.overlayRemovedFilter, 'Not Applicable')
       },
       {
         icon: 'alert-circle',
         title: 'Not Reviewed',
         subtitle: `Can only be tested manually at this time`,
         color: 'statusNotReviewed',
-        number: StatusCountModule.countOf({fromFile: this.filter.fromFile, omit_overlayed_controls: this.filter.omit_overlayed_controls}, 'Not Reviewed')
+        number: StatusCountModule.countOf(this.overlayRemovedFilter, 'Not Reviewed')
       }
     ];
   }
@@ -178,10 +185,7 @@ export default class StatusCardRow extends Vue {
   }
 
   getCardColor(card: CardProps): string {
-    if(this.filter.status?.length === 0){
-      return card.color;
-    }
-    if(this.filter.status?.some((statusFilter) => statusFilter.toLowerCase() === card.title.toLowerCase())){
+    if(this.filter.status?.length === 0 || this.filter.status?.some((statusFilter) => statusFilter.toLowerCase() === card.title.toLowerCase())){
       return card.color;
     }
     return ''

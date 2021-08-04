@@ -29,6 +29,12 @@
             <v-list-item class="px-0">
               <ExportJson />
             </v-list-item>
+            <v-list-item class="px-0">
+              <ExportHTMLModal
+                :filter="all_filter"
+                :file-type="current_route_name"
+              />
+            </v-list-item>
           </v-list>
         </v-menu>
       </div>
@@ -51,31 +57,6 @@
                     @click="toggle_profile(file)"
                   >
                     <EvaluationInfo :file="file" />
-                    <v-card-actions>
-                      <div
-                        v-if="
-                          file.from_file.database_id &&
-                          getDbFile(file.from_file).editable
-                        "
-                        class="top-right"
-                      >
-                        <EditEvaluationModal
-                          id="editEvaluationModal"
-                          :active="getDbFile(file.from_file)"
-                        >
-                          <template #clickable="{on}"
-                            ><v-icon
-                              data-cy="edit"
-                              title="Edit"
-                              class="mr-3 mt-3"
-                              v-on="on"
-                            >
-                              mdi-pencil
-                            </v-icon>
-                          </template>
-                        </EditEvaluationModal>
-                      </div>
-                    </v-card-actions>
                     <v-card-subtitle class="bottom-right">
                       File Info ↓
                     </v-card-subtitle>
@@ -96,13 +77,13 @@
           :current-status-filter="statusFilter"
           @show-errors="showErrors"
           @show-waived="showWaived"
-          @add-filter="addStatusFilter"
+          @add-filter="addStatusSearch"
           @remove-filter="removeStatusFilter"
         />
         <!-- Compliance Cards -->
-        <v-row justify="space-around">
+        <v-row id="complianceCards" justify="space-around">
           <v-col xs="4">
-            <v-card class="fill-height">
+            <v-card id="statusCounts" class="fill-height">
               <v-card-title class="justify-center">Status Counts</v-card-title>
               <v-card-actions class="justify-center">
                 <StatusChart v-model="statusFilter" :filter="all_filter" />
@@ -110,7 +91,7 @@
             </v-card>
           </v-col>
           <v-col xs="4">
-            <v-card class="fill-height">
+            <v-card id="severityCounts" class="fill-height">
               <v-card-title class="justify-center"
                 >Severity Counts</v-card-title
               >
@@ -120,7 +101,7 @@
             </v-card>
           </v-col>
           <v-col xs="4">
-            <v-card class="fill-height">
+            <v-card id="complianceLevel" class="fill-height">
               <v-card-title class="justify-center"
                 >Compliance Level</v-card-title
               >
@@ -198,7 +179,6 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
 import Component, {mixins} from 'vue-class-component';
 import Base from '@/views/Base.vue';
 
@@ -209,11 +189,11 @@ import StatusChart from '@/components/cards/StatusChart.vue';
 import SeverityChart from '@/components/cards/SeverityChart.vue';
 import ComplianceChart from '@/components/cards/ComplianceChart.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
-import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
 
 import ExportCaat from '@/components/global/ExportCaat.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
+import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
 import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 
 import {FilteredDataModule, Filter, TreeMapState, ExtendedControlStatus} from '@/store/data_filters';
@@ -245,17 +225,14 @@ import {SearchModule} from '@/store/search';
     ExportCaat,
     ExportNist,
     ExportJson,
+    ExportHTMLModal,
     EvaluationInfo,
     ProfileData,
-    UploadButton,
-    EditEvaluationModal
+    UploadButton
   }
 })
-export default class Results extends mixins(RouteMixin, ServerMixin) {
-  $refs!: Vue['$refs'] & {
-    search: HTMLInputElement;
-  };
 
+export default class Results extends mixins(RouteMixin, ServerMixin) {
   /**
    * The current state of the treemap as modeled by the treemap (duh).
    * Once can reliably expect that if a "deep" selection is not null, then its parent should also be not-null.
@@ -274,6 +251,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   get searchTerm(): string {
     return SearchModule.searchTerm;
   }
+
   set searchTerm(term: string) {
     SearchModule.updateSearch(term);
   }
@@ -281,6 +259,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   get severityFilter(): Severity[] {
     return SearchModule.severityFilter;
   }
+
   set severityFilter(severity: Severity[]) {
     SearchModule.setSeverity(severity)
   }
@@ -288,6 +267,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   get statusFilter(): ExtendedControlStatus[] {
     return SearchModule.statusFilter;
   }
+
   set statusFilter(status: ExtendedControlStatus[]) {
     SearchModule.setStatusFilter(status);
   }
@@ -350,7 +330,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       ids: SearchModule.controlIdSearchTerms,
       titleSearchTerms: SearchModule.titleSearchTerms,
       descriptionSearchTerms: SearchModule.descriptionSearchTerms,
-      cciIdFilter: SearchModule.cciIdFilter,
+      nistIdFilter: SearchModule.NISTIdFilter,
       searchTerm: SearchModule.freeSearch || '',
       codeSearchTerms: SearchModule.codeSearchTerms,
       treeFilters: this.treeFilters,
@@ -369,7 +349,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       titleSearchTerms: SearchModule.titleSearchTerms,
       descriptionSearchTerms: SearchModule.descriptionSearchTerms,
       codeSearchTerms: SearchModule.codeSearchTerms,
-      cciIdFilter: SearchModule.cciIdFilter,
+      nistIdFilter: SearchModule.NISTIdFilter,
       ids: SearchModule.controlIdSearchTerms,
       fromFile: this.file_filter,
       searchTerm: SearchModule.freeSearch,
@@ -466,16 +446,17 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   showErrors() {
     this.searchTerm = 'status:"Profile Error"'
   }
+
   showWaived() {
-    this.searchTerm = 'status:Waived'
+    this.searchTerm = 'status:"Waived"'
   }
 
-  addStatusFilter(status: ExtendedControlStatus) {
-    SearchModule.addStatusSearch(status);
+  addStatusSearch(status: ExtendedControlStatus) {
+    SearchModule.addSearchFilter({field: 'status', value: status, previousValues: this.statusFilter});
   }
 
   removeStatusFilter(status: ExtendedControlStatus) {
-    SearchModule.removeStatusSearch(status);
+    SearchModule.removeSearchFilter({field: 'status', value: status, previousValues: this.statusFilter})
   }
 }
 </script>
@@ -487,11 +468,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 .bottom-right {
   position: absolute;
   bottom: 0;
-  right: 0;
-}
-.top-right {
-  position: absolute;
-  top: 0;
   right: 0;
 }
 </style>

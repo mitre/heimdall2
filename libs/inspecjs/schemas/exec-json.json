@@ -1,0 +1,693 @@
+{
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "platform",
+    "profiles",
+    "statistics",
+    "version"
+  ],
+  "properties": {
+    "platform": {
+      "$ref": "#/definitions/Platform"
+    },
+    "profiles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Exec_JSON_Profile"
+      }
+    },
+    "statistics": {
+      "$ref": "#/definitions/Statistics"
+    },
+    "version": {
+      "type": "string"
+    }
+  },
+  "title": "Exec JSON Output",
+  "definitions": {
+    "Control_Description": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "label",
+        "data"
+      ],
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "data": {
+          "type": "string"
+        }
+      },
+      "title": "Control Description"
+    },
+    "Control_Group": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "controls"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier of the group"
+        },
+        "title": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "The name of the group"
+        },
+        "controls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The control IDs in this group"
+        }
+      },
+      "title": "Control Group"
+    },
+    "Control_Result": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "code_desc",
+        "start_time"
+      ],
+      "properties": {
+        "status": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Control_Result_Status"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "code_desc": {
+          "type": "string"
+        },
+        "run_time": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "start_time": {
+          "type": "string"
+        },
+        "resource": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "skip_message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "exception": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "backtrace": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "title": "Control Result"
+    },
+    "Control_Result_Status": {
+      "type": "string",
+      "enum": [
+        "passed",
+        "failed",
+        "skipped",
+        "error"
+      ],
+      "title": "Control Result Status"
+    },
+    "Dependency": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [],
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "branch": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status_message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "git": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "supermarket": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "compliance": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "title": "Dependency"
+    },
+    "Exec_JSON_Control": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "impact",
+        "refs",
+        "tags",
+        "source_location",
+        "results"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The ID of this control"
+        },
+        "title": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "desc": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "descriptions": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/Control_Description"
+          }
+        },
+        "impact": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Reference"
+          }
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "code": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The raw source code of the control. Note that if this is an overlay control, it does not include the underlying source code"
+        },
+        "source_location": {
+          "$ref": "#/definitions/Source_Location"
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Control_Result"
+          },
+          "description": "\n              A list of all results of the controls describe blocks.\n\n              For instance, if in the controls code we had the following:\n                describe sshd_config do\n                  its('Port') { should cmp 22 }\n                end\n              The result of this block as a ControlResult would be appended to the results list.\n              "
+        },
+        "waiver_data": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Waiver_Data"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "title": "Exec JSON Control"
+    },
+    "Exec_JSON_Profile": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "name",
+        "sha256",
+        "supports",
+        "attributes",
+        "groups",
+        "controls"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "maintainer": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "copyright": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "copyright_email": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "depends": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/definitions/Dependency"
+          }
+        },
+        "parent_profile": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "license": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "summary": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "supports": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Supported_Platform"
+          }
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "inspec_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sha256": {
+          "type": "string"
+        },
+        "status": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status_message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "skip_message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "controls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Exec_JSON_Control"
+          }
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Control_Group"
+          }
+        },
+        "attributes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "title": "Exec JSON Profile"
+    },
+    "Platform": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "name",
+        "release"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the platform this was run on."
+        },
+        "release": {
+          "type": "string",
+          "description": "The version of the platform this was run on."
+        },
+        "target_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "title": "Platform"
+    },
+    "Reference": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "ref"
+          ],
+          "properties": {
+            "ref": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "url"
+          ],
+          "properties": {
+            "url": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "uri"
+          ],
+          "properties": {
+            "uri": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "ref"
+          ],
+          "properties": {
+            "ref": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
+      ],
+      "title": "Reference"
+    },
+    "Source_Location": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Path to the file that this statement originates from"
+        },
+        "line": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "The line at which this statement is located in the file"
+        }
+      },
+      "required": [],
+      "title": "Source Location"
+    },
+    "Statistic_Block": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "total"
+      ],
+      "properties": {
+        "total": {
+          "type": "number",
+          "description": "Total number of controls (in this category) for this inspec execution."
+        }
+      },
+      "title": "Statistic Block"
+    },
+    "Statistic_Hash": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [],
+      "properties": {
+        "passed": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Block"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "skipped": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Block"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "failed": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Block"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "title": "Statistic Hash"
+    },
+    "Statistics": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [],
+      "properties": {
+        "duration": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "How long (in seconds) this inspec exec ran for."
+        },
+        "controls": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Hash",
+              "description": "Breakdowns of control statistics by result"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "title": "Statistics"
+    },
+    "Supported_Platform": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [],
+      "properties": {
+        "platform-family": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "platform-name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "platform": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "release": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "os-family": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "os-name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "title": "Supported Platform"
+    },
+    "Waiver_Data": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [],
+      "properties": {
+        "expiration_date": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "justification": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "run": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "skipped_due_to_waiver": {
+          "type": [
+            "boolean",
+            "null",
+            "string"
+          ]
+        }
+      }
+    }
+  }
+}

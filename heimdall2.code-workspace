@@ -9,6 +9,10 @@
       "path": "apps/backend"
     },
     {
+      "name": "InspecJS",
+      "path": "libs/inspecjs"
+    },
+    {
       "name": "Heimdall",
       "path": "."
     }
@@ -16,6 +20,11 @@
   "settings": {
     "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
     "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
-    "typescript.preferences.importModuleSpecifier": "relative"
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "search.exclude": {
+      "**/dist": true,
+      "**/samples": true,
+      "**/parse_testbed": true
+    }
   }
 }

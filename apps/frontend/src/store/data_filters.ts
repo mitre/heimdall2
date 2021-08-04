@@ -10,7 +10,14 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import {context, ControlStatus, nist, Severity} from 'inspecjs';
+import {
+  ContextualizedControl,
+  ContextualizedProfile,
+  ControlStatus,
+  NistControl,
+  Severity
+} from 'inspecjs';
+import _ from 'lodash';
 import LRUCache from 'lru-cache';
 import {
   Action,
@@ -53,7 +60,7 @@ export interface Filter {
   codeSearchTerms?: string[];
 
   /** CCIs to search for */
-  cciIdFilter?: string[];
+  nistIdFilter?: string[];
 
   /** A search term string, case insensitive
    * We look for this in
@@ -81,18 +88,18 @@ export type TreeMapState = string[]; // Representing the current path spec, from
  * @param contextControl The control to search for term in
  */
 function contains_term(
-  contextControl: context.ContextualizedControl,
+  contextControl: ContextualizedControl,
   term: string
 ): boolean {
-  const asHdf = contextControl.root.hdf;
+  const asHDF = contextControl.root.hdf;
   // Get our (non-null) searchable data
   const searchables: string[] = [
-    asHdf.wraps.id,
-    asHdf.wraps.title,
-    asHdf.wraps.code,
-    asHdf.severity,
-    asHdf.status,
-    asHdf.finding_details
+    asHDF.wraps.id,
+    asHDF.wraps.title,
+    asHDF.wraps.code,
+    asHDF.severity,
+    asHDF.status,
+    asHDF.finding_details
   ].filter((s) => s !== null) as string[];
 
   // See if any contain term
@@ -221,7 +228,7 @@ export class FilteredData extends VuexModule {
 
   get profiles_for_evaluations(): (
     files: FileID[]
-  ) => readonly context.ContextualizedProfile[] {
+  ) => readonly ContextualizedProfile[] {
     return (files: FileID[]) => {
       // Filter to those that match our filter. In this case that just means come from the right file id
       return this.evaluations(files).flatMap(
@@ -275,12 +282,10 @@ export class FilteredData extends VuexModule {
    * Get all controls from all profiles from the specified file id.
    * Utlizes the profiles getter to accelerate the file filter.
    */
-  get controls(): (filter: Filter) => readonly context.ContextualizedControl[] {
+  get controls(): (filter: Filter) => readonly ContextualizedControl[] {
     /** Cache by filter */
-    const localCache: LRUCache<
-      string,
-      readonly context.ContextualizedControl[]
-    > = new LRUCache(MAX_CACHE_ENTRIES);
+    const localCache: LRUCache<string, readonly ContextualizedControl[]> =
+      new LRUCache(MAX_CACHE_ENTRIES);
 
     return (filter: Filter) => {
       // Generate a hash for cache purposes.
@@ -294,47 +299,45 @@ export class FilteredData extends VuexModule {
       }
 
       // Get profiles from loaded Results
-      let profiles: readonly context.ContextualizedProfile[] =
+      let profiles: readonly ContextualizedProfile[] =
         this.profiles_for_evaluations(filter.fromFile);
 
       // Get profiles from loaded Profiles
       profiles = profiles.concat(this.profiles(filter.fromFile));
 
       // And all the controls they contain
-      let controls: readonly context.ContextualizedControl[] = profiles.flatMap(
+      let controls: readonly ContextualizedControl[] = profiles.flatMap(
         (profile) => profile.contains
       );
 
-      // Filter by control id
+      // Filter by single control id
       if (filter.control_id !== undefined) {
         controls = controls.filter((c) => c.data.id === filter.control_id);
       }
 
-      // Filter by status
-      controls = filterByStatus(filter, controls);
+      const controlFilters: Record<
+        string,
+        boolean | Array<string> | undefined
+      > = {
+        'root.hdf.severity': filter.severity,
+        'hdf.wraps.id': filter.ids,
+        'hdf.wraps.title': filter.titleSearchTerms,
+        'hdf.wraps.desc': filter.descriptionSearchTerms,
+        'hdf.raw_nist_tags': filter.nistIdFilter,
+        full_code: filter.codeSearchTerms,
+        'hdf.waived': filter.status?.includes('Waived'),
+        'root.hdf.status': _.filter(
+          filter.status,
+          (status) => status !== 'Waived'
+        )
+      };
 
-      // Filter by severity
-      controls = filterBySeverity(filter, controls);
-
-      // Filter by control ID
-      controls = filterByControlID(filter, controls);
-
-      // Filter by title
-      controls = filterByTitle(filter, controls);
-
-      // Filter by description
-      controls = filterByDescription(filter, controls);
-
-      // Filter by CCI ID
-      controls = filterByCCI(filter, controls);
-
-      // Filter by code
-      controls = filterByCode(filter, controls);
+      controls = filterControlsBy(controls, controlFilters);
 
       // Filter by overlay
       if (filter.omit_overlayed_controls) {
         controls = controls.filter(
-          (control) => control.extended_by.length === 0
+          (control) => control.extendedBy.length === 0
         );
       }
 
@@ -349,11 +352,11 @@ export class FilteredData extends VuexModule {
       // Filter by nist stuff
       if (filter.treeFilters && filter.treeFilters.length > 0) {
         // Construct a nist control to represent the filter
-        const control = new nist.NistControl(filter.treeFilters);
+        const control = new NistControl(filter.treeFilters);
 
         controls = controls.filter((c) => {
           // Get an hdf version so we have the fixed nist tags
-          return c.root.hdf.parsed_nist_tags.some((t) => control.contains(t));
+          return c.root.hdf.parsedNistTags.some((t) => control.contains(t));
         });
       }
 
@@ -382,178 +385,40 @@ export function filter_cache_key(f: Filter) {
   return JSON.stringify(newFilter);
 }
 
-export function lowercaseAll(input: string | string[]): string | string[] {
-  if (typeof input === 'string') {
-    return input.toLowerCase();
-  } else {
-    return input.map((string) => {
-      return string.toLowerCase();
-    });
-  }
-}
-
-export function filterByStatus(
-  filter: Filter,
-  controls: readonly context.ContextualizedControl[]
-): context.ContextualizedControl[] {
-  if (filter.status && filter.status?.length !== 0) {
-    const foundControls: context.ContextualizedControl[] = [];
-    filter.status?.forEach(async (statusFilter) => {
-      if (statusFilter.toLowerCase() === 'waived') {
-        foundControls.push(...controls.filter((control) => control.hdf.waived));
+export function filterControlsBy(
+  controls: readonly ContextualizedControl[],
+  filters: Record<string, boolean | Array<string> | undefined>
+): readonly ContextualizedControl[] {
+  const activeFilters: typeof filters = _.pickBy(
+    filters,
+    (value, _key) =>
+      (Array.isArray(value) && value.length > 0) ||
+      (typeof value === 'boolean' && value)
+  );
+  return controls.filter((control) => {
+    return Object.entries(activeFilters).every(([filter, value]) => {
+      const item: string | string[] | boolean = _.get(control, filter);
+      if (Array.isArray(value) && typeof item !== 'boolean') {
+        return value?.some((term) => {
+          return arrayOrStringIncludes(item, (compareValue) =>
+            compareValue.toLowerCase().includes(term.toLowerCase())
+          );
+        });
       } else {
-        foundControls.push(
-          ...controls.filter(
-            (control) =>
-              control.root.hdf.status.toLowerCase() ===
-              statusFilter.toLowerCase()
-          )
-        );
+        return item === value;
       }
     });
-    return foundControls.filter((c, index) => {
-      return foundControls.indexOf(c) === index;
-    });
-  } else {
-    return [...controls];
-  }
+  });
 }
 
-export function filterBySeverity(
-  filter: Filter,
-  controls: readonly context.ContextualizedControl[]
-): context.ContextualizedControl[] {
-  if (filter.severity && filter.severity?.length !== 0) {
-    const foundControls: context.ContextualizedControl[] = [];
-    filter.severity?.forEach((severity) => {
-      foundControls.push(
-        ...controls.filter((control) => {
-          return (
-            control.root.hdf.severity
-              .toLowerCase()
-              .indexOf(severity.toLowerCase()) !== -1
-          );
-        })
-      );
-    });
-    return foundControls.filter((c, index) => {
-      return foundControls.indexOf(c) === index;
-    });
+/** Iterate over a string or array of strings and call the string compare function provided on every element **/
+function arrayOrStringIncludes(
+  arrayOrString: string | string[],
+  comparator: (compareValue: string) => boolean
+) {
+  if (typeof arrayOrString === 'string') {
+    return comparator(arrayOrString);
   } else {
-    return [...controls];
-  }
-}
-
-export function filterByControlID(
-  filter: Filter,
-  controls: readonly context.ContextualizedControl[]
-): context.ContextualizedControl[] {
-  if (filter.ids && filter.ids?.length !== 0) {
-    const foundControls: context.ContextualizedControl[] = [];
-    filter.ids?.forEach((id) => {
-      foundControls.push(
-        ...controls.filter((control) => {
-          return control.hdf.wraps.id.toLowerCase().indexOf(id) !== -1;
-        })
-      );
-    });
-    return foundControls.filter((c, index) => {
-      return foundControls.indexOf(c) === index;
-    });
-  } else {
-    return [...controls];
-  }
-}
-
-export function filterByTitle(
-  filter: Filter,
-  controls: readonly context.ContextualizedControl[]
-): context.ContextualizedControl[] {
-  if (filter.titleSearchTerms && filter.titleSearchTerms?.length !== 0) {
-    const foundControls: context.ContextualizedControl[] = [];
-    filter.titleSearchTerms?.forEach((term) => {
-      foundControls.push(
-        ...controls.filter((control) => {
-          return control.hdf.wraps.title?.toLowerCase().includes(term);
-        })
-      );
-    });
-    return foundControls.filter((c, index) => {
-      return foundControls.indexOf(c) === index;
-    });
-  } else {
-    return [...controls];
-  }
-}
-
-export function filterByDescription(
-  filter: Filter,
-  controls: readonly context.ContextualizedControl[]
-): context.ContextualizedControl[] {
-  if (
-    filter.descriptionSearchTerms &&
-    filter.descriptionSearchTerms?.length !== 0
-  ) {
-    const foundControls: context.ContextualizedControl[] = [];
-    filter.descriptionSearchTerms?.forEach((term) => {
-      foundControls.push(
-        ...controls.filter((control) => {
-          return control.hdf.wraps.desc?.toLowerCase().includes(term);
-        })
-      );
-    });
-    return foundControls.filter((c, index) => {
-      return foundControls.indexOf(c) === index;
-    });
-  } else {
-    return [...controls];
-  }
-}
-
-export function filterByCCI(
-  filter: Filter,
-  controls: readonly context.ContextualizedControl[]
-): context.ContextualizedControl[] {
-  if (filter.cciIdFilter && filter.cciIdFilter?.length !== 0) {
-    const foundControls: context.ContextualizedControl[] = [];
-    filter.cciIdFilter?.forEach((cciID) => {
-      controls.forEach((control) => {
-        if (
-          control.hdf.raw_nist_tags.some((tag) => {
-            return tag.toLowerCase().indexOf(cciID) !== -1;
-          })
-        ) {
-          foundControls.push(control);
-        }
-      });
-    });
-    return foundControls.filter((c, index) => {
-      return foundControls.indexOf(c) === index;
-    });
-  } else {
-    return [...controls];
-  }
-}
-
-export function filterByCode(
-  filter: Filter,
-  controls: readonly context.ContextualizedControl[]
-): context.ContextualizedControl[] {
-  if (filter.codeSearchTerms && filter.codeSearchTerms?.length !== 0) {
-    const foundControls: context.ContextualizedControl[] = [];
-    filter.codeSearchTerms?.forEach((term) => {
-      controls.forEach((control) => {
-        if (
-          control.full_code.toLowerCase().indexOf(term.toLowerCase()) !== -1
-        ) {
-          foundControls.push(control);
-        }
-      });
-    });
-    return foundControls.filter((c, index) => {
-      return foundControls.indexOf(c) === index;
-    });
-  } else {
-    return [...controls];
+    return arrayOrString.some((value) => comparator(value));
   }
 }
