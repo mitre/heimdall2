@@ -13,7 +13,8 @@
   "scripts": {
     "prepack": "yarn build && cp package.json package.json.orig && cat package.json.orig | jq '.main = (.publishConfig.main)' > package.json",
     "postpack": "mv package.json.orig package.json",
-    "build": "tsc -p ./tsconfig.build.json",
+    "copy-files": "copyfiles data/* lib/",
+    "build": "tsc -p ./tsconfig.build.json && yarn copy-files",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
     "test": "jest --silent"
@@ -28,7 +29,11 @@
   "devDependencies": {
     "@types/jest": "^26.0.7",
     "@types/node": "^15.0.1",
+    "copyfiles": "^2.4.1",
+    "htmlparser2": "^6.1.0",
     "jest": "^27.0.6",
+    "quicktype": "^15.0.260",
+    "rimraf": "^3.0.2",
     "ts-jest": "^27.0.3",
     "ts-node": "^10.0.0",
     "typedoc": "^0.21.4",
