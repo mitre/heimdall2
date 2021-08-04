@@ -1,5 +1,6 @@
 import fs from 'fs';
 import {ExecJSON} from 'inspecjs';
+import _ from 'lodash';
 import {BurpSuiteMapper} from '../src/burpsuite-mapper';
 import {JfrogXrayMapper} from '../src/jfrog-xray-mapper';
 import {NiktoMapper} from '../src/nikto-mapper';
@@ -8,140 +9,170 @@ import {ScoutsuiteMapper} from '../src/scoutsuite-mapper';
 import {XCCDFResultsMapper} from '../src/xccdf-results-mapper';
 import {ZapMapper} from '../src/zap-mapper';
 
-test('Returns proper Hdf output from Burpsuite', () => {
+function omitVersions(input: ExecJSON.Execution): Partial<ExecJSON.Execution> {
+  return _.omit(input, ['version', 'platform.release', 'profiles[0].sha256']);
+}
+
+test('Test burpsuite_mapper', () => {
   const mapper = new BurpSuiteMapper(
     fs.readFileSync(
-      '../../../../heimdall_tools/sample_jsons/burpsuite_mapper/sample_input_report/zero.webappsecurity.com.min',
+      'sample_jsons/burpsuite_mapper/sample_input_report/zero.webappsecurity.com.min',
       {encoding: 'utf-8'}
     )
   );
   const result: ExecJSON.Execution = mapper.toHdf();
-  fs.writeFileSync(
-    'libs/hdf_converters/outputs/burpsuite.json',
-    JSON.stringify(mapper.toHdf())
-  );
   if (result !== undefined) {
-    expect(result).toEqual(
-      JSON.parse(
-        fs.readFileSync(
-          '/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/burpsuite_mapper/zero.webappsecurity.json',
-          {encoding: 'utf-8'}
+    expect(omitVersions(result)).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync('sample_jsons/burpsuite_mapper/burpsuite-hdf.json', {
+            encoding: 'utf-8'
+          })
         )
       )
     );
   }
 });
 
-test('Returns proper Hdf output from JFrog', () => {
+test('Test jfrog_xray_mapper', () => {
   const mapper = new JfrogXrayMapper(
     fs.readFileSync(
-      '/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/jfrog_xray_mapper/sample_input_report/jfrog_xray_sample.json',
+      'sample_jsons/jfrog_xray_mapper/sample_input_report/jfrog_xray_sample.json',
       {encoding: 'utf-8'}
     )
   );
   const result: ExecJSON.Execution = mapper.toHdf();
   if (result !== undefined) {
-    expect(result).toEqual(
-      JSON.parse(
-        fs.readFileSync(
-          '/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/jfrog_xray_mapper/jfrog_xray_hdf.json',
-          {encoding: 'utf-8'}
+    expect(omitVersions(result)).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync('sample_jsons/jfrog_xray_mapper/jfrog-hdf.json', {
+            encoding: 'utf-8'
+          })
         )
       )
     );
   }
 });
-test('Returns proper Hdf output from Nikto', () => {
+test('Test nikto_mapper', () => {
   const mapper = new NiktoMapper(
     fs.readFileSync(
-      '/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/nikto_mapper/sample_input_jsons/zero.webappsecurity.json',
+      'sample_jsons/nikto_mapper/sample_input_report/zero.webappsecurity.json',
       {encoding: 'utf-8'}
     )
   );
   const result: ExecJSON.Execution = mapper.toHdf();
   if (result !== undefined) {
-    expect(result).toEqual(
-      JSON.parse(
-        fs.readFileSync(
-          '/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/nikto_mapper/zero.webappsecurity.json',
-          {encoding: 'utf-8'}
+    expect(omitVersions(result)).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync('sample_jsons/nikto_mapper/nikto-hdf.json', {
+            encoding: 'utf-8'
+          })
         )
       )
     );
   }
 });
-test('Returns proper Hdf output from Sarif', () => {
+test('Test sarif_mapper', () => {
   const mapper = new SarifMapper(
     fs.readFileSync(
-      '/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/sarif_mapper/sample_input_jsons/sarif_input.sarif',
+      'sample_jsons/sarif_mapper/sample_input_report/sarif_input.sarif',
       {encoding: 'utf-8'}
     )
   );
   const result: ExecJSON.Execution = mapper.toHdf();
   if (result !== undefined) {
-    expect(result).toEqual(
-      JSON.parse(
-        fs.readFileSync(
-          '/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/sarif_mapper/sarif_output.json',
-          {encoding: 'utf-8'}
+    expect(omitVersions(result)).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync('sample_jsons/sarif_mapper/sarif-hdf.json', {
+            encoding: 'utf-8'
+          })
         )
       )
     );
   }
 });
-test('Returns proper Hdf output from Scoutsuite', () => {
+test('Test scoutsuite_mapper', () => {
   const mapper = new ScoutsuiteMapper(
     fs.readFileSync(
-      '/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/scoutsuite_mapper/sample_input_jsons/scoutsuite_sample.js',
+      'sample_jsons/scoutsuite_mapper/sample_input_report/scoutsuite_sample.js',
       {encoding: 'utf-8'}
     )
   );
   const result: ExecJSON.Execution = mapper.toHdf();
   if (result !== undefined) {
-    expect(result).toEqual(
-      JSON.parse(
-        fs.readFileSync(
-          '/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/scoutsuite_mapper/scoutsuite_hdf.json',
-          {encoding: 'utf-8'}
+    expect(omitVersions(result)).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/scoutsuite_mapper/scoutsuite-hdf.json',
+            {encoding: 'utf-8'}
+          )
         )
       )
     );
   }
 });
-test('Returns proper Hdf output from Xccdf Results', () => {
+test('Test xccdf_results_mapper', () => {
   const mapper = new XCCDFResultsMapper(
     fs.readFileSync(
-      '/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/xccdf_results_mapper/sample_input_report/xccdf-results.xml',
+      'sample_jsons/xccdf_results_mapper/sample_input_report/xccdf-results.xml',
       {encoding: 'utf-8'}
     )
   );
   const result: ExecJSON.Execution = mapper.toHdf();
   if (result !== undefined) {
-    expect(result).toEqual(
-      JSON.parse(
-        fs.readFileSync(
-          '/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/xccdf_results_mapper/xccdf-hdf.json',
-          {encoding: 'utf-8'}
+    expect(omitVersions(result)).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync('sample_jsons/xccdf_results_mapper/xccdf-hdf.json', {
+            encoding: 'utf-8'
+          })
         )
       )
     );
   }
 });
-test('Returns proper Hdf output from Zap', () => {
+test('Test zap_mapper webgoat.json', () => {
   const mapper = new ZapMapper(
     fs.readFileSync(
-      '/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/zap_mapper/sample_input_jsons/zero.webappsecurity.json',
+      'sample_jsons/zap_mapper/sample_input_report/webgoat.json',
       {encoding: 'utf-8'}
     ),
     'http://mymac.com:8191'
   );
   const result: ExecJSON.Execution = mapper.toHdf();
   if (result !== undefined) {
-    expect(result).toEqual(
-      JSON.parse(
-        fs.readFileSync(
-          '/Users/rlin/Desktop/Repositories/heimdall_tools/sample_jsons/zap_mapper/zero.webappsecurity.json',
-          {encoding: 'utf-8'}
+    expect(omitVersions(result)).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync('sample_jsons/zap_mapper/zap-webgoat-hdf.json', {
+            encoding: 'utf-8'
+          })
+        )
+      )
+    );
+  }
+});
+test('Test zap_mapper zero.webappsecurity.json', () => {
+  const mapper = new ZapMapper(
+    fs.readFileSync(
+      'sample_jsons/zap_mapper/sample_input_report/zero.webappsecurity.json',
+      {encoding: 'utf-8'}
+    ),
+    'http://zero.webappsecurity.com'
+  );
+  const result: ExecJSON.Execution = mapper.toHdf();
+  if (result !== undefined) {
+    expect(omitVersions(result)).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/zap_mapper/zap-webappsecurity-hdf.json',
+            {encoding: 'utf-8'}
+          )
         )
       )
     );

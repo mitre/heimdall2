@@ -48,7 +48,7 @@ function extractCci(input: unknown[]): string[] {
 }
 function nistTag(input: unknown[]): string[] {
   const identifiers: string[] = extractCci(input);
-  return CCI_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG);
+  return CCI_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG, false);
 }
 function parseXml(xml: string) {
   const options = {

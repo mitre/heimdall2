@@ -61,7 +61,7 @@ function idToString(id: unknown): string {
   }
 }
 function formatCweId(input: string): string {
-  return parseHtml(input).slice(2, -2).trimLeft();
+  return parseHtml(input).slice(1, -1).trimLeft();
 }
 function nistTag(input: string): string[] {
   let cwe = formatCweId(input).split('CWE-');

@@ -1,0 +1,1200 @@
+<?xml version="1.0"?>
+<!DOCTYPE issues [
+<!ELEMENT issues (issue*)>
+<!ATTLIST issues burpVersion CDATA "">
+<!ATTLIST issues exportTime CDATA "">
+<!ELEMENT issue (serialNumber, type, name, host, path, location, severity, confidence, issueBackground?, remediationBackground?, references?, vulnerabilityClassifications?, issueDetail?, issueDetailItems?, remediationDetail?, requestresponse*, collaboratorEvent*, infiltratorEvent*, staticAnalysis*, dynamicAnalysis*)>
+<!ELEMENT serialNumber (#PCDATA)>
+<!ELEMENT type (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT host (#PCDATA)>
+<!ATTLIST host ip CDATA "">
+<!ELEMENT path (#PCDATA)>
+<!ELEMENT location (#PCDATA)>
+<!ELEMENT severity (#PCDATA)>
+<!ELEMENT confidence (#PCDATA)>
+<!ELEMENT issueBackground (#PCDATA)>
+<!ELEMENT remediationBackground (#PCDATA)>
+<!ELEMENT references (#PCDATA)>
+<!ELEMENT vulnerabilityClassifications (#PCDATA)>
+<!ELEMENT issueDetail (#PCDATA)>
+<!ELEMENT issueDetailItems (issueDetailItem*)>
+<!ELEMENT issueDetailItem (#PCDATA)>
+<!ELEMENT remediationDetail (#PCDATA)>
+<!ELEMENT requestresponse (request?, response?, responseRedirected?)>
+<!ELEMENT request (#PCDATA)>
+<!ATTLIST request method CDATA "">
+<!ATTLIST request base64 (true|false) "false">
+<!ELEMENT response (#PCDATA)>
+<!ATTLIST response base64 (true|false) "false">
+<!ELEMENT responseRedirected (#PCDATA)>
+<!ELEMENT sender (#PCDATA)>
+<!ELEMENT message (#PCDATA)>
+<!ELEMENT conversation (#PCDATA)>
+<!ELEMENT recipient (#PCDATA)>
+<!ELEMENT recipients (recipient*)>
+<!ELEMENT smtp (sender, recipients, message, conversation)>
+<!ELEMENT collaboratorEvent (interactionType, originIp, time, lookupType?, lookupHost?, requestresponse?, smtp?)>
+<!ELEMENT interactionType (#PCDATA)>
+<!ELEMENT originIp (#PCDATA)>
+<!ELEMENT time (#PCDATA)>
+<!ELEMENT lookupType (#PCDATA)>
+<!ELEMENT lookupHost (#PCDATA)>
+<!ELEMENT infiltratorEvent (parameterName, platform, signature, stackTrace?, parameterValue?, collaboratorEvent)>
+<!ELEMENT parameterName (#PCDATA)>
+<!ELEMENT platform (#PCDATA)>
+<!ELEMENT signature (#PCDATA)>
+<!ELEMENT stackTrace (#PCDATA)>
+<!ELEMENT parameterValue (#PCDATA)>
+<!ELEMENT dynamicAnalysis (source, sink, sourceStackTrace, sinkStackTrace, eventListenerStackTrace, sourceValue, sinkValue, eventHandlerData, eventHandlerDataType, eventHandlerManipulatedData, poc, origin, isOriginChecked, sourceElementId, sourceElementName, eventFiredEventName, eventFiredElementId, eventFiredElementName, eventFiredOuterHtml)>
+<!ELEMENT staticAnalysis (source, sink, codeSnippets)>
+<!ELEMENT source (#PCDATA)>
+<!ELEMENT sink (#PCDATA)>
+<!ELEMENT sourceStackTrace (#PCDATA)>
+<!ELEMENT sinkStackTrace (#PCDATA)>
+<!ELEMENT eventListenerStackTrace (#PCDATA)>
+<!ELEMENT sourceValue (#PCDATA)>
+<!ELEMENT sinkValue (#PCDATA)>
+<!ELEMENT eventHandlerData (#PCDATA)>
+<!ELEMENT eventHandlerDataType (#PCDATA)>
+<!ELEMENT sourceElementId (#PCDATA)>
+<!ELEMENT sourceElementName (#PCDATA)>
+<!ELEMENT eventFiredEventName (#PCDATA)>
+<!ELEMENT eventFiredElementId (#PCDATA)>
+<!ELEMENT eventFiredElementName (#PCDATA)>
+<!ELEMENT eventFiredOuterHtml (#PCDATA)>
+<!ELEMENT eventHandlerManipulatedData (#PCDATA)>
+<!ELEMENT poc (#PCDATA)>
+<!ELEMENT origin (#PCDATA)>
+<!ELEMENT isOriginChecked (#PCDATA)>
+<!ELEMENT codeSnippets (codeSnippet*)>
+<!ELEMENT codeSnippet (#PCDATA)>
+]>
+<issues burpVersion="2020.1" exportTime="Thu Feb 27 09:28:17 EST 2020">
+  <issue>
+    <serialNumber>2940178995452886016</serialNumber>
+    <type>2098688</type>
+    <name><![CDATA[Cross-origin resource sharing]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/js/jquery-1.8.2.min.js]]></path>
+    <location><![CDATA[/resources/js/jquery-1.8.2.min.js]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>If another domain is allowed by the policy, then that domain can potentially attack users of the application. If a user is logged in to the application, and visits a domain allowed by the policy, then any malicious content running on that domain can potentially retrieve content from the application, and sometimes carry out actions within the security context of the logged in user.</p>
+<p>Even if an allowed domain is not overtly malicious in itself, security vulnerabilities within that domain could potentially be leveraged by an attacker to exploit the trust relationship and attack the application that allows access. CORS policies on pages containing sensitive information should be reviewed to determine whether it is appropriate for the application to trust both the intentions and security posture of any domains granted access.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Any inappropriate domains should be removed from the CORS policy.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request.<br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>73318757634646016</serialNumber>
+    <type>2098689</type>
+    <name><![CDATA[Cross-origin resource sharing: arbitrary origin trusted]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/js/jquery-1.8.2.min.js]]></path>
+    <location><![CDATA[/resources/js/jquery-1.8.2.min.js]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>
+Trusting arbitrary origins effectively disables the same-origin policy, allowing two-way interaction by third-party web sites. Unless the response consists only of unprotected public content, this policy is likely to present a security risk.</p>
+<p>If the site  specifies the header Access-Control-Allow-Credentials: true, third-party sites may be able to carry out privileged actions and retrieve sensitive information. Even if it does not, attackers may be able to  bypass any IP-based access controls by proxying through users'  browsers.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Rather than using a wildcard or programmatically verifying supplied origins, use a whitelist of trusted domains.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain.<br><br>The application allowed access from the requested origin <strong>http://hbofkpelsehu.com</strong><br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>2442711658753214464</serialNumber>
+    <type>2098688</type>
+    <name><![CDATA[Cross-origin resource sharing]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/css/bootstrap.min.css]]></path>
+    <location><![CDATA[/resources/css/bootstrap.min.css]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>If another domain is allowed by the policy, then that domain can potentially attack users of the application. If a user is logged in to the application, and visits a domain allowed by the policy, then any malicious content running on that domain can potentially retrieve content from the application, and sometimes carry out actions within the security context of the logged in user.</p>
+<p>Even if an allowed domain is not overtly malicious in itself, security vulnerabilities within that domain could potentially be leveraged by an attacker to exploit the trust relationship and attack the application that allows access. CORS policies on pages containing sensitive information should be reviewed to determine whether it is appropriate for the application to trust both the intentions and security posture of any domains granted access.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Any inappropriate domains should be removed from the CORS policy.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request.<br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>4745285924683321344</serialNumber>
+    <type>2098689</type>
+    <name><![CDATA[Cross-origin resource sharing: arbitrary origin trusted]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/css/bootstrap.min.css]]></path>
+    <location><![CDATA[/resources/css/bootstrap.min.css]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>
+Trusting arbitrary origins effectively disables the same-origin policy, allowing two-way interaction by third-party web sites. Unless the response consists only of unprotected public content, this policy is likely to present a security risk.</p>
+<p>If the site  specifies the header Access-Control-Allow-Credentials: true, third-party sites may be able to carry out privileged actions and retrieve sensitive information. Even if it does not, attackers may be able to  bypass any IP-based access controls by proxying through users'  browsers.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Rather than using a wildcard or programmatically verifying supplied origins, use a whitelist of trusted domains.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain.<br><br>The application allowed access from the requested origin <strong>http://mtpmzyfhccgq.com</strong><br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>3738867435242687488</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/js/jquery-1.8.2.min.js]]></path>
+    <location><![CDATA[/resources/js/jquery-1.8.2.min.js [URL path folder 2]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path folder 2 is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>5300842030998605824</serialNumber>
+    <type>2098688</type>
+    <name><![CDATA[Cross-origin resource sharing]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/js/bootstrap.min.js]]></path>
+    <location><![CDATA[/resources/js/bootstrap.min.js]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>If another domain is allowed by the policy, then that domain can potentially attack users of the application. If a user is logged in to the application, and visits a domain allowed by the policy, then any malicious content running on that domain can potentially retrieve content from the application, and sometimes carry out actions within the security context of the logged in user.</p>
+<p>Even if an allowed domain is not overtly malicious in itself, security vulnerabilities within that domain could potentially be leveraged by an attacker to exploit the trust relationship and attack the application that allows access. CORS policies on pages containing sensitive information should be reviewed to determine whether it is appropriate for the application to trust both the intentions and security posture of any domains granted access.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Any inappropriate domains should be removed from the CORS policy.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request.<br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>1147659541251509248</serialNumber>
+    <type>2098689</type>
+    <name><![CDATA[Cross-origin resource sharing: arbitrary origin trusted]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/js/bootstrap.min.js]]></path>
+    <location><![CDATA[/resources/js/bootstrap.min.js]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>
+Trusting arbitrary origins effectively disables the same-origin policy, allowing two-way interaction by third-party web sites. Unless the response consists only of unprotected public content, this policy is likely to present a security risk.</p>
+<p>If the site  specifies the header Access-Control-Allow-Credentials: true, third-party sites may be able to carry out privileged actions and retrieve sensitive information. Even if it does not, attackers may be able to  bypass any IP-based access controls by proxying through users'  browsers.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Rather than using a wildcard or programmatically verifying supplied origins, use a whitelist of trusted domains.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain.<br><br>The application allowed access from the requested origin <strong>http://fhizssbvwxlc.com</strong><br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>3354796224612840448</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/css/bootstrap.min.css]]></path>
+    <location><![CDATA[/resources/css/bootstrap.min.css [URL path filename]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path filename is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>5623766247314630656</serialNumber>
+    <type>2098688</type>
+    <name><![CDATA[Cross-origin resource sharing]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/css/main.css]]></path>
+    <location><![CDATA[/resources/css/main.css]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>If another domain is allowed by the policy, then that domain can potentially attack users of the application. If a user is logged in to the application, and visits a domain allowed by the policy, then any malicious content running on that domain can potentially retrieve content from the application, and sometimes carry out actions within the security context of the logged in user.</p>
+<p>Even if an allowed domain is not overtly malicious in itself, security vulnerabilities within that domain could potentially be leveraged by an attacker to exploit the trust relationship and attack the application that allows access. CORS policies on pages containing sensitive information should be reviewed to determine whether it is appropriate for the application to trust both the intentions and security posture of any domains granted access.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Any inappropriate domains should be removed from the CORS policy.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request.<br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>6190937006628923392</serialNumber>
+    <type>2098689</type>
+    <name><![CDATA[Cross-origin resource sharing: arbitrary origin trusted]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/css/main.css]]></path>
+    <location><![CDATA[/resources/css/main.css]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>
+Trusting arbitrary origins effectively disables the same-origin policy, allowing two-way interaction by third-party web sites. Unless the response consists only of unprotected public content, this policy is likely to present a security risk.</p>
+<p>If the site  specifies the header Access-Control-Allow-Credentials: true, third-party sites may be able to carry out privileged actions and retrieve sensitive information. Even if it does not, attackers may be able to  bypass any IP-based access controls by proxying through users'  browsers.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Rather than using a wildcard or programmatically verifying supplied origins, use a whitelist of trusted domains.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain.<br><br>The application allowed access from the requested origin <strong>http://ysbwjdnoydae.com</strong><br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>9100790078355865600</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/js/jquery-1.8.2.min.js]]></path>
+    <location><![CDATA[/resources/js/jquery-1.8.2.min.js [URL path folder 1]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path folder 1 is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>33899988560175104</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/js/bootstrap.min.js]]></path>
+    <location><![CDATA[/resources/js/bootstrap.min.js [URL path filename]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path filename is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>238448804500111360</serialNumber>
+    <type>2098688</type>
+    <name><![CDATA[Cross-origin resource sharing]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/js/placeholders.min.js]]></path>
+    <location><![CDATA[/resources/js/placeholders.min.js]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>If another domain is allowed by the policy, then that domain can potentially attack users of the application. If a user is logged in to the application, and visits a domain allowed by the policy, then any malicious content running on that domain can potentially retrieve content from the application, and sometimes carry out actions within the security context of the logged in user.</p>
+<p>Even if an allowed domain is not overtly malicious in itself, security vulnerabilities within that domain could potentially be leveraged by an attacker to exploit the trust relationship and attack the application that allows access. CORS policies on pages containing sensitive information should be reviewed to determine whether it is appropriate for the application to trust both the intentions and security posture of any domains granted access.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Any inappropriate domains should be removed from the CORS policy.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request.<br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>1366404713564922880</serialNumber>
+    <type>2098689</type>
+    <name><![CDATA[Cross-origin resource sharing: arbitrary origin trusted]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/js/placeholders.min.js]]></path>
+    <location><![CDATA[/resources/js/placeholders.min.js]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>
+Trusting arbitrary origins effectively disables the same-origin policy, allowing two-way interaction by third-party web sites. Unless the response consists only of unprotected public content, this policy is likely to present a security risk.</p>
+<p>If the site  specifies the header Access-Control-Allow-Credentials: true, third-party sites may be able to carry out privileged actions and retrieve sensitive information. Even if it does not, attackers may be able to  bypass any IP-based access controls by proxying through users'  browsers.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Rather than using a wildcard or programmatically verifying supplied origins, use a whitelist of trusted domains.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain.<br><br>The application allowed access from the requested origin <strong>http://hgclyudnynwg.com</strong><br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>3338101363203485696</serialNumber>
+    <type>2098688</type>
+    <name><![CDATA[Cross-origin resource sharing]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/css/font-awesome.css]]></path>
+    <location><![CDATA[/resources/css/font-awesome.css]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>If another domain is allowed by the policy, then that domain can potentially attack users of the application. If a user is logged in to the application, and visits a domain allowed by the policy, then any malicious content running on that domain can potentially retrieve content from the application, and sometimes carry out actions within the security context of the logged in user.</p>
+<p>Even if an allowed domain is not overtly malicious in itself, security vulnerabilities within that domain could potentially be leveraged by an attacker to exploit the trust relationship and attack the application that allows access. CORS policies on pages containing sensitive information should be reviewed to determine whether it is appropriate for the application to trust both the intentions and security posture of any domains granted access.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Any inappropriate domains should be removed from the CORS policy.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request.<br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>4551230416629878784</serialNumber>
+    <type>2098689</type>
+    <name><![CDATA[Cross-origin resource sharing: arbitrary origin trusted]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/css/font-awesome.css]]></path>
+    <location><![CDATA[/resources/css/font-awesome.css]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>
+Trusting arbitrary origins effectively disables the same-origin policy, allowing two-way interaction by third-party web sites. Unless the response consists only of unprotected public content, this policy is likely to present a security risk.</p>
+<p>If the site  specifies the header Access-Control-Allow-Credentials: true, third-party sites may be able to carry out privileged actions and retrieve sensitive information. Even if it does not, attackers may be able to  bypass any IP-based access controls by proxying through users'  browsers.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Rather than using a wildcard or programmatically verifying supplied origins, use a whitelist of trusted domains.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain.<br><br>The application allowed access from the requested origin <strong>http://yxmzuemojsjs.com</strong><br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>112368733979138048</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/css/main.css]]></path>
+    <location><![CDATA[/resources/css/main.css [URL path filename]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path filename is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>5584346772758687744</serialNumber>
+    <type>2098688</type>
+    <name><![CDATA[Cross-origin resource sharing]]></name>
+    <host ip="54.82.22.214">https://zero.webappsecurity.com</host>
+    <path><![CDATA[/robots.txt]]></path>
+    <location><![CDATA[/robots.txt]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>If another domain is allowed by the policy, then that domain can potentially attack users of the application. If a user is logged in to the application, and visits a domain allowed by the policy, then any malicious content running on that domain can potentially retrieve content from the application, and sometimes carry out actions within the security context of the logged in user.</p>
+<p>Even if an allowed domain is not overtly malicious in itself, security vulnerabilities within that domain could potentially be leveraged by an attacker to exploit the trust relationship and attack the application that allows access. CORS policies on pages containing sensitive information should be reviewed to determine whether it is appropriate for the application to trust both the intentions and security posture of any domains granted access.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Any inappropriate domains should be removed from the CORS policy.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request.<br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>2961783037719462912</serialNumber>
+    <type>2098689</type>
+    <name><![CDATA[Cross-origin resource sharing: arbitrary origin trusted]]></name>
+    <host ip="54.82.22.214">https://zero.webappsecurity.com</host>
+    <path><![CDATA[/robots.txt]]></path>
+    <location><![CDATA[/robots.txt]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>
+Trusting arbitrary origins effectively disables the same-origin policy, allowing two-way interaction by third-party web sites. Unless the response consists only of unprotected public content, this policy is likely to present a security risk.</p>
+<p>If the site  specifies the header Access-Control-Allow-Credentials: true, third-party sites may be able to carry out privileged actions and retrieve sensitive information. Even if it does not, attackers may be able to  bypass any IP-based access controls by proxying through users'  browsers.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Rather than using a wildcard or programmatically verifying supplied origins, use a whitelist of trusted domains.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain.<br><br>The application allowed access from the requested origin <strong>https://odbifgfzjwxk.com</strong><br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>1766511686590886912</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">https://zero.webappsecurity.com</host>
+    <path><![CDATA[/robots.txt]]></path>
+    <location><![CDATA[/robots.txt [URL path filename]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path filename is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>8145043936972713984</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/css/bootstrap.min.css]]></path>
+    <location><![CDATA[/resources/css/bootstrap.min.css [URL path folder 2]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path folder 2 is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>3527171805474259968</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/js/placeholders.min.js]]></path>
+    <location><![CDATA[/resources/js/placeholders.min.js [URL path filename]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path filename is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>3778037316999380992</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/css/font-awesome.css]]></path>
+    <location><![CDATA[/resources/css/font-awesome.css [URL path filename]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path filename is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>2086138921384538112</serialNumber>
+    <type>6291672</type>
+    <name><![CDATA[Backup file]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/index.html]]></path>
+    <location><![CDATA[/index.old]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Publicly accessible backups and outdated copies of files can provide attackers with extra attack surface. Depending on the server configuration and file type, they may also expose source code, configuration details, and other information intended to remain secret.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Review the file to identify whether it's intended to be publicly accessible, and remove it from the server's web root if it isn't. It may also be worth auditing the server contents to find other outdated files, and taking measures to prevent the problem from recurring.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+    <li><a href="https://www.owasp.org/index.php/Review_Old,_Backup_and_Unreferenced_Files_for_Sensitive_Information_(OTG-CONFIG-004)">Review Old, Backup and Unreferenced Files for Sensitive Information</a></li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+    <li><a href="https://cwe.mitre.org/data/definitions/530.html">CWE-530: Exposure of Backup File to an Unauthorized Control Sphere</a></li>
+</ul>]]></vulnerabilityClassifications>
+  </issue>
+  <issue>
+    <serialNumber>5561032861276991488</serialNumber>
+    <type>6291672</type>
+    <name><![CDATA[Backup file]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/index.html]]></path>
+    <location><![CDATA[/index.html.old]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Publicly accessible backups and outdated copies of files can provide attackers with extra attack surface. Depending on the server configuration and file type, they may also expose source code, configuration details, and other information intended to remain secret.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Review the file to identify whether it's intended to be publicly accessible, and remove it from the server's web root if it isn't. It may also be worth auditing the server contents to find other outdated files, and taking measures to prevent the problem from recurring.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+    <li><a href="https://www.owasp.org/index.php/Review_Old,_Backup_and_Unreferenced_Files_for_Sensitive_Information_(OTG-CONFIG-004)">Review Old, Backup and Unreferenced Files for Sensitive Information</a></li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+    <li><a href="https://cwe.mitre.org/data/definitions/530.html">CWE-530: Exposure of Backup File to an Unauthorized Control Sphere</a></li>
+</ul>]]></vulnerabilityClassifications>
+  </issue>
+  <issue>
+    <serialNumber>2926479322350655488</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/js/bootstrap.min.js]]></path>
+    <location><![CDATA[/resources/js/bootstrap.min.js [URL path folder 2]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path folder 2 is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>3754735938768996352</serialNumber>
+    <type>2098688</type>
+    <name><![CDATA[Cross-origin resource sharing]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/search.html]]></path>
+    <location><![CDATA[/search.html]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>If another domain is allowed by the policy, then that domain can potentially attack users of the application. If a user is logged in to the application, and visits a domain allowed by the policy, then any malicious content running on that domain can potentially retrieve content from the application, and sometimes carry out actions within the security context of the logged in user.</p>
+<p>Even if an allowed domain is not overtly malicious in itself, security vulnerabilities within that domain could potentially be leveraged by an attacker to exploit the trust relationship and attack the application that allows access. CORS policies on pages containing sensitive information should be reviewed to determine whether it is appropriate for the application to trust both the intentions and security posture of any domains granted access.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Any inappropriate domains should be removed from the CORS policy.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request.<br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>8663190234480773120</serialNumber>
+    <type>2098689</type>
+    <name><![CDATA[Cross-origin resource sharing: arbitrary origin trusted]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/search.html]]></path>
+    <location><![CDATA[/search.html]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>
+Trusting arbitrary origins effectively disables the same-origin policy, allowing two-way interaction by third-party web sites. Unless the response consists only of unprotected public content, this policy is likely to present a security risk.</p>
+<p>If the site  specifies the header Access-Control-Allow-Credentials: true, third-party sites may be able to carry out privileged actions and retrieve sensitive information. Even if it does not, attackers may be able to  bypass any IP-based access controls by proxying through users'  browsers.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Rather than using a wildcard or programmatically verifying supplied origins, use a whitelist of trusted domains.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain.<br><br>The application allowed access from the requested origin <strong>http://pllqapnqhuaw.com</strong><br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>8188856999390383104</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/css/main.css]]></path>
+    <location><![CDATA[/resources/css/main.css [URL path folder 2]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path folder 2 is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>6648484343887012864</serialNumber>
+    <type>2098688</type>
+    <name><![CDATA[Cross-origin resource sharing]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/index.html]]></path>
+    <location><![CDATA[/index.html]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>If another domain is allowed by the policy, then that domain can potentially attack users of the application. If a user is logged in to the application, and visits a domain allowed by the policy, then any malicious content running on that domain can potentially retrieve content from the application, and sometimes carry out actions within the security context of the logged in user.</p>
+<p>Even if an allowed domain is not overtly malicious in itself, security vulnerabilities within that domain could potentially be leveraged by an attacker to exploit the trust relationship and attack the application that allows access. CORS policies on pages containing sensitive information should be reviewed to determine whether it is appropriate for the application to trust both the intentions and security posture of any domains granted access.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Any inappropriate domains should be removed from the CORS policy.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request.<br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>6051823964003025920</serialNumber>
+    <type>2098689</type>
+    <name><![CDATA[Cross-origin resource sharing: arbitrary origin trusted]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/index.html]]></path>
+    <location><![CDATA[/index.html]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>
+Trusting arbitrary origins effectively disables the same-origin policy, allowing two-way interaction by third-party web sites. Unless the response consists only of unprotected public content, this policy is likely to present a security risk.</p>
+<p>If the site  specifies the header Access-Control-Allow-Credentials: true, third-party sites may be able to carry out privileged actions and retrieve sensitive information. Even if it does not, attackers may be able to  bypass any IP-based access controls by proxying through users'  browsers.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Rather than using a wildcard or programmatically verifying supplied origins, use a whitelist of trusted domains.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain.<br><br>The application allowed access from the requested origin <strong>http://yoejfhjmiyhp.com</strong><br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>3541760279623340032</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/css/bootstrap.min.css]]></path>
+    <location><![CDATA[/resources/css/bootstrap.min.css [URL path folder 1]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path folder 1 is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>4826284254894727168</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/js/placeholders.min.js]]></path>
+    <location><![CDATA[/resources/js/placeholders.min.js [URL path folder 2]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path folder 2 is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>1014155734636866560</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/css/font-awesome.css]]></path>
+    <location><![CDATA[/resources/css/font-awesome.css [URL path folder 2]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path folder 2 is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>6993732453229620224</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/js/bootstrap.min.js]]></path>
+    <location><![CDATA[/resources/js/bootstrap.min.js [URL path folder 1]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path folder 1 is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>896201266083430400</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/index.html]]></path>
+    <location><![CDATA[/index.html [URL path filename]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path filename is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>8632071190579211264</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/css/main.css]]></path>
+    <location><![CDATA[/resources/css/main.css [URL path folder 1]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path folder 1 is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>1042070090361299968</serialNumber>
+    <type>2098688</type>
+    <name><![CDATA[Cross-origin resource sharing]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/robots.txt]]></path>
+    <location><![CDATA[/robots.txt]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>If another domain is allowed by the policy, then that domain can potentially attack users of the application. If a user is logged in to the application, and visits a domain allowed by the policy, then any malicious content running on that domain can potentially retrieve content from the application, and sometimes carry out actions within the security context of the logged in user.</p>
+<p>Even if an allowed domain is not overtly malicious in itself, security vulnerabilities within that domain could potentially be leveraged by an attacker to exploit the trust relationship and attack the application that allows access. CORS policies on pages containing sensitive information should be reviewed to determine whether it is appropriate for the application to trust both the intentions and security posture of any domains granted access.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Any inappropriate domains should be removed from the CORS policy.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request.<br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>5193482920563265536</serialNumber>
+    <type>2098689</type>
+    <name><![CDATA[Cross-origin resource sharing: arbitrary origin trusted]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/robots.txt]]></path>
+    <location><![CDATA[/robots.txt]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>
+Trusting arbitrary origins effectively disables the same-origin policy, allowing two-way interaction by third-party web sites. Unless the response consists only of unprotected public content, this policy is likely to present a security risk.</p>
+<p>If the site  specifies the header Access-Control-Allow-Credentials: true, third-party sites may be able to carry out privileged actions and retrieve sensitive information. Even if it does not, attackers may be able to  bypass any IP-based access controls by proxying through users'  browsers.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Rather than using a wildcard or programmatically verifying supplied origins, use a whitelist of trusted domains.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain.<br><br>The application allowed access from the requested origin <strong>http://ociuvmolpgqd.com</strong><br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>8728787048225505280</serialNumber>
+    <type>2098688</type>
+    <name><![CDATA[Cross-origin resource sharing]]></name>
+    <host ip="54.82.22.214">https://zero.webappsecurity.com</host>
+    <path><![CDATA[/]]></path>
+    <location><![CDATA[/]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>If another domain is allowed by the policy, then that domain can potentially attack users of the application. If a user is logged in to the application, and visits a domain allowed by the policy, then any malicious content running on that domain can potentially retrieve content from the application, and sometimes carry out actions within the security context of the logged in user.</p>
+<p>Even if an allowed domain is not overtly malicious in itself, security vulnerabilities within that domain could potentially be leveraged by an attacker to exploit the trust relationship and attack the application that allows access. CORS policies on pages containing sensitive information should be reviewed to determine whether it is appropriate for the application to trust both the intentions and security posture of any domains granted access.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Any inappropriate domains should be removed from the CORS policy.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request.<br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>5522515541732094976</serialNumber>
+    <type>2098689</type>
+    <name><![CDATA[Cross-origin resource sharing: arbitrary origin trusted]]></name>
+    <host ip="54.82.22.214">https://zero.webappsecurity.com</host>
+    <path><![CDATA[/]]></path>
+    <location><![CDATA[/]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>
+Trusting arbitrary origins effectively disables the same-origin policy, allowing two-way interaction by third-party web sites. Unless the response consists only of unprotected public content, this policy is likely to present a security risk.</p>
+<p>If the site  specifies the header Access-Control-Allow-Credentials: true, third-party sites may be able to carry out privileged actions and retrieve sensitive information. Even if it does not, attackers may be able to  bypass any IP-based access controls by proxying through users'  browsers.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Rather than using a wildcard or programmatically verifying supplied origins, use a whitelist of trusted domains.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain.<br><br>The application allowed access from the requested origin <strong>https://rjjtexnikcnt.com</strong><br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>6472199652951183360</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/js/placeholders.min.js]]></path>
+    <location><![CDATA[/resources/js/placeholders.min.js [URL path folder 1]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path folder 1 is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>6947069679041048576</serialNumber>
+    <type>2098688</type>
+    <name><![CDATA[Cross-origin resource sharing]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/]]></path>
+    <location><![CDATA[/]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>If another domain is allowed by the policy, then that domain can potentially attack users of the application. If a user is logged in to the application, and visits a domain allowed by the policy, then any malicious content running on that domain can potentially retrieve content from the application, and sometimes carry out actions within the security context of the logged in user.</p>
+<p>Even if an allowed domain is not overtly malicious in itself, security vulnerabilities within that domain could potentially be leveraged by an attacker to exploit the trust relationship and attack the application that allows access. CORS policies on pages containing sensitive information should be reviewed to determine whether it is appropriate for the application to trust both the intentions and security posture of any domains granted access.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Any inappropriate domains should be removed from the CORS policy.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request.<br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>317548753529023488</serialNumber>
+    <type>2098689</type>
+    <name><![CDATA[Cross-origin resource sharing: arbitrary origin trusted]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/]]></path>
+    <location><![CDATA[/]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>An HTML5 cross-origin resource sharing (CORS) policy controls whether and how content running on other domains can perform two-way interaction with the domain that publishes the policy. The policy is fine-grained and can apply access controls per-request based on the URL and other features of the request.</p><p>
+Trusting arbitrary origins effectively disables the same-origin policy, allowing two-way interaction by third-party web sites. Unless the response consists only of unprotected public content, this policy is likely to present a security risk.</p>
+<p>If the site  specifies the header Access-Control-Allow-Credentials: true, third-party sites may be able to carry out privileged actions and retrieve sensitive information. Even if it does not, attackers may be able to  bypass any IP-based access controls by proxying through users'  browsers.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Rather than using a wildcard or programmatically verifying supplied origins, use a whitelist of trusted domains.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+  <li> <a href="http://blog.portswigger.net/2016/10/exploiting-cors-misconfigurations-for.html">Exploiting CORS Misconfigurations</a> </li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/942.html">CWE-942: Overly Permissive Cross-domain Whitelist</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The application implements an HTML5 cross-origin resource sharing (CORS) policy for this request that allows access from any domain.<br><br>The application allowed access from the requested origin <strong>http://wxzbifgnpfpf.com</strong><br><br>If the application relies on network firewalls or other IP-based access controls, this policy is likely to present a security risk.<br><br>Since the Vary: Origin header was not present in the response, reverse proxies and intermediate servers may cache it. This may enable an attacker to carry out cache poisoning attacks.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>8878171851535439872</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/robots.txt]]></path>
+    <location><![CDATA[/robots.txt [URL path filename]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path filename is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>4398094954162855936</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/css/font-awesome.css]]></path>
+    <location><![CDATA[/resources/css/font-awesome.css [URL path folder 1]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the URL path folder 1 is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>4136989263186441216</serialNumber>
+    <type>4197376</type>
+    <name><![CDATA[Input returned in response (reflected)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/search.html]]></path>
+    <location><![CDATA[/search.html [searchTerm parameter]]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Reflection of input arises when data is copied from a request and echoed into the application's immediate response.</p><p>Input being returned in application responses is not a vulnerability in its own right. However, it is a prerequisite for many client-side vulnerabilities, including cross-site scripting, open redirection, content spoofing, and response header injection. Additionally, some server-side vulnerabilities such as SQL injection are often easier to identify and exploit when input is returned in responses. In applications where input retrieval is rare and the environment is resistant to automated testing (for example, due to a web application firewall), it might be worth subjecting instances of it to focused manual testing. </p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/20.html">CWE-20: Improper Input Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/116.html">CWE-116: Improper Encoding or Escaping of Output</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The value of the <b>searchTerm</b> request parameter is copied into the application's response.]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>4072491561500551168</serialNumber>
+    <type>5245440</type>
+    <name><![CDATA[HTTP TRACE method is enabled]]></name>
+    <host ip="54.82.22.214">https://zero.webappsecurity.com</host>
+    <path><![CDATA[/]]></path>
+    <location><![CDATA[/]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>The HTTP TRACE  method is designed for diagnostic purposes. If enabled, the web server will respond to requests that use the TRACE method by echoing in its response the exact request that was received.</p>
+<p>This behavior is often harmless, but occasionally leads to the disclosure of sensitive information such as internal authentication headers appended by reverse proxies. This functionality could historically be used to bypass the HttpOnly cookie flag on cookies, but this is no longer possible in modern web browsers. </p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>The TRACE method should be disabled on production web servers.</p>]]></remediationBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/16.html">CWE-16: Configuration</a></li>
+</ul>]]></vulnerabilityClassifications>
+  </issue>
+  <issue>
+    <serialNumber>9081349603967592448</serialNumber>
+    <type>16777472</type>
+    <name><![CDATA[TLS certificate]]></name>
+    <host ip="54.82.22.214">https://zero.webappsecurity.com</host>
+    <path><![CDATA[/]]></path>
+    <location><![CDATA[/]]></location>
+    <severity>Medium</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>TLS (or SSL) helps to protect the confidentiality and integrity of information in transit between the browser and server, and to provide authentication of the server's identity. To serve this purpose, the server must present an TLS certificate that is valid for the server's hostname, is issued by a trusted authority and is valid for the current date. If any one of these requirements is not met, TLS connections to the server will not provide the full protection for which TLS is designed.</p>
+<p>It should be noted that various attacks exist against TLS in general, and in the context of HTTPS web connections in particular. It may be possible for a determined and suitably-positioned attacker to compromise TLS connections without user detection even when a valid TLS certificate is used. </p>]]></issueBackground>
+    <references><![CDATA[<ul><li><a href="https://wiki.mozilla.org/Security/Server_Side_TLS">SSL/TLS Configuration Guide</a></li></ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/295.html">CWE-295: Improper Certificate Validation</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/326.html">CWE-326: Inadequate Encryption Strength</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky Cryptographic Algorithm</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The following problem was identified with the server's TLS certificate:<ul><li>The server's certificate is not trusted.</li></ul><b>Note:</b> Burp relies on the Java trust store to determine whether certificates are trusted. The Java trust store does not include every root CA certificate that is included within browser trust stores. Burp might incorrectly report that a certificate is not trusted, if a valid root CA certificate is being used that is not included in the Java trust store.<br><br>The server presented the following certificate:<br><br><table><tr><td><b>Issued to:</b>&nbsp;&nbsp;</td><td>zero.webappsecurity.com</td></tr><tr><td><b>Issued by:</b>&nbsp;&nbsp;</td><td>DigiCert SHA2 Secure Server CA</td></tr><tr><td><b>Valid from:</b>&nbsp;&nbsp;</td><td>Tue Jan 14 19:00:00 EST 2020</td></tr><tr><td><b>Valid to:</b>&nbsp;&nbsp;</td><td>Thu Jan 21 07:00:00 EST 2021</td></tr></table>]]></issueDetail>
+  </issue>
+  <issue>
+    <serialNumber>8932774056862235648</serialNumber>
+    <type>8389120</type>
+    <name><![CDATA[HTML does not specify charset]]></name>
+    <host ip="54.82.22.214">https://zero.webappsecurity.com</host>
+    <path><![CDATA[/]]></path>
+    <location><![CDATA[/]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>If a  response states that it contains HTML content but does not specify a character set, then the browser may analyze the HTML and attempt to determine which character set it appears to be using. Even if the majority of the HTML actually employs a standard character set such as UTF-8, the presence of non-standard characters anywhere in the response may cause the browser to interpret the content using a different character set. This can have unexpected results, and can lead to cross-site scripting vulnerabilities in which non-standard encodings like UTF-7 can be used to bypass the application's defensive filters.</p>
+<p>In most cases, the absence of a charset directive does not constitute a security flaw, particularly if the response contains static content. You should review the contents of affected responses, and the context in which they appear, to determine whether any vulnerability exists. </p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>For every response containing HTML content, the application should include within the Content-type header a directive specifying a standard recognized character set, for example <b>charset=ISO-8859-1</b>.
+</p>]]></remediationBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/16.html">CWE-16: Configuration</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/436.html">CWE-436: Interpretation Conflict</a></li>
+</ul>]]></vulnerabilityClassifications>
+  </issue>
+  <issue>
+    <serialNumber>4805429072249862144</serialNumber>
+    <type>7340288</type>
+    <name><![CDATA[Cacheable HTTPS response]]></name>
+    <host ip="54.82.22.214">https://zero.webappsecurity.com</host>
+    <path><![CDATA[/]]></path>
+    <location><![CDATA[/]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Unless directed otherwise, browsers may store a local cached copy of content received from web servers. Some browsers, including Internet Explorer, cache content accessed via HTTPS. If sensitive information in application responses is stored in the local cache, then this may be retrieved by other users who have access to the same computer at a future time.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Applications should return caching directives instructing browsers not to store local copies of any sensitive data. Often, this can be achieved by configuring the web server to prevent caching for relevant paths within the web root. Alternatively, most web development platforms allow you to control the server's caching directives from within individual scripts. Ideally, the web server should return the following HTTP headers in all responses containing sensitive content:</p>
+<ul>
+<li>Cache-control: no-store</li><li>Pragma: no-cache</li></ul>]]></remediationBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/524.html">CWE-524: Information Exposure Through Caching</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/525.html">CWE-525: Information Exposure Through Browser Caching</a></li>
+</ul>]]></vulnerabilityClassifications>
+  </issue>
+  <issue>
+    <serialNumber>3412709707490384896</serialNumber>
+    <type>5243904</type>
+    <name><![CDATA[Cross-domain Referer leakage]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/search.html]]></path>
+    <location><![CDATA[/search.html]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>When a web browser makes a request for a resource, it typically adds an HTTP header, called the "Referer" header, indicating the URL of the resource from which the request originated. This occurs in numerous situations, for example when a web page loads an image or script, or when a user clicks on a link or submits a form.</p>
+<p>If the resource being requested resides on a different domain, then the Referer header is still generally included in the cross-domain request. If the originating URL contains any sensitive information within its query string, such as a session token, then this information will be transmitted to the other domain. If the other domain is not fully trusted by the application, then this may lead to a security compromise.</p>
+<p>You should review the contents of the information being transmitted to other domains, and also determine whether those domains are fully trusted by the originating application.</p>
+<p>Today's browsers may withhold the Referer header in some situations (for example, when loading a non-HTTPS resource from a page that was loaded over HTTPS, or when a Refresh directive is issued), but this behavior should not be relied upon to protect the originating URL from disclosure.</p>
+<p>Note also that if users can author content within the application then an attacker may be able to inject links referring to a domain they control in order to capture data from URLs used within the application. </p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Applications should never transmit any sensitive information within the URL query string. In addition to being leaked in the Referer header, such information may be logged in various locations and may be visible on-screen to untrusted parties. If placing sensitive information in the URL is unavoidable, consider using the Referer-Policy HTTP header to reduce the chance of it being disclosed to third parties.
+</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy">Referer Policy</a></li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/200.html">CWE-200: Information Exposure</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The page was loaded from a URL containing a query string:<ul><li>http://zero.webappsecurity.com/search.html</li></ul>The response contains the following link to another domain:<ul><li>https://www.microfocus.com/about/legal/</li></ul>]]></issueDetail>
+    <issueDetailItems>
+      <issueDetailItem><![CDATA[https://www.microfocus.com/about/legal/]]></issueDetailItem>
+    </issueDetailItems>
+  </issue>
+  <issue>
+    <serialNumber>3606840263549464576</serialNumber>
+    <type>16777984</type>
+    <name><![CDATA[Strict transport security not enforced]]></name>
+    <host ip="54.82.22.214">https://zero.webappsecurity.com</host>
+    <path><![CDATA[/]]></path>
+    <location><![CDATA[/]]></location>
+    <severity>Low</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p> The application fails to prevent users from connecting  to it over unencrypted connections.  An attacker able to modify a legitimate user's network traffic could bypass the application's use of SSL/TLS encryption, and use the application as a platform for attacks against its users. This attack is performed by rewriting HTTPS links as HTTP, so that if a targeted user follows a link to the site from an HTTP page, their browser never attempts to use an encrypted connection. The sslstrip tool  automates this process. </p>
+<p>
+To exploit this vulnerability, an attacker must be suitably positioned to intercept and modify the victim's network traffic.This scenario typically occurs when a client communicates with the server over an insecure connection such as public Wi-Fi, or a corporate or home network that is shared with a compromised computer. Common defenses such as switched networks are not sufficient to prevent this. An attacker situated in the user's ISP or the application's hosting infrastructure could also perform this attack. Note that an advanced adversary could potentially target any connection made over the Internet's core infrastructure. </p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>The application should instruct web browsers to only access the application using HTTPS. To do this, enable HTTP Strict Transport Security (HSTS) by adding a response header with the name 'Strict-Transport-Security' and the value 'max-age=expireTime', where expireTime is the time in seconds that browsers should remember that the site should only be accessed using HTTPS. Consider adding the 'includeSubDomains' flag if appropriate.</p>
+<p>Note that because HSTS is a &quot;trust on first use&quot; (TOFU) protocol, a user who has never accessed the application will never have seen the HSTS header, and will therefore still be vulnerable to SSL stripping attacks. To mitigate this risk, you can optionally add the 'preload' flag to the HSTS header, and submit the domain for review by browser vendors.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security">HTTP Strict Transport Security</a></li>
+<li><a href="http://www.thoughtcrime.org/software/sslstrip/">sslstrip</a></li>
+<li><a href="https://hstspreload.appspot.com/">HSTS Preload Form</a></li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/523.html">CWE-523: Unprotected Transport of Credentials</a></li>
+</ul>]]></vulnerabilityClassifications>
+  </issue>
+  <issue>
+    <serialNumber>1110068754573238272</serialNumber>
+    <type>6291968</type>
+    <name><![CDATA[Email addresses disclosed]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/css/font-awesome.css]]></path>
+    <location><![CDATA[/resources/css/font-awesome.css]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>The presence of email addresses within application responses does not necessarily constitute a security vulnerability. Email addresses may appear intentionally within contact information, and many applications (such as web mail) include arbitrary third-party email addresses within their core content.</p>
+<p>However, email addresses of developers and other individuals (whether appearing on-screen or hidden within page source) may disclose information that is useful to an attacker; for example, they may represent usernames that can be used at the application's login, and they may be used in social engineering attacks against the organization's personnel. Unnecessary or excessive disclosure of email addresses may also lead to an increase in the volume of spam email received.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Consider removing any email addresses that are unnecessary, or replacing personal addresses with anonymous mailbox addresses (such as helpdesk@example.com).</p>
+<p>To reduce the quantity of spam sent to anonymous mailbox addresses, consider hiding the email address and instead providing a form that generates the email server-side, protected by a CAPTCHA if necessary. </p>]]></remediationBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/200.html">CWE-200: Information Exposure</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The following email address was disclosed in the response:<ul><li>dave@davegandy.com</li></ul>]]></issueDetail>
+    <issueDetailItems>
+      <issueDetailItem><![CDATA[dave@davegandy.com]]></issueDetailItem>
+    </issueDetailItems>
+  </issue>
+  <issue>
+    <serialNumber>7117585126555197440</serialNumber>
+    <type>16777984</type>
+    <name><![CDATA[Strict transport security not enforced]]></name>
+    <host ip="54.82.22.214">https://zero.webappsecurity.com</host>
+    <path><![CDATA[/robots.txt]]></path>
+    <location><![CDATA[/robots.txt]]></location>
+    <severity>Low</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p> The application fails to prevent users from connecting  to it over unencrypted connections.  An attacker able to modify a legitimate user's network traffic could bypass the application's use of SSL/TLS encryption, and use the application as a platform for attacks against its users. This attack is performed by rewriting HTTPS links as HTTP, so that if a targeted user follows a link to the site from an HTTP page, their browser never attempts to use an encrypted connection. The sslstrip tool  automates this process. </p>
+<p>
+To exploit this vulnerability, an attacker must be suitably positioned to intercept and modify the victim's network traffic.This scenario typically occurs when a client communicates with the server over an insecure connection such as public Wi-Fi, or a corporate or home network that is shared with a compromised computer. Common defenses such as switched networks are not sufficient to prevent this. An attacker situated in the user's ISP or the application's hosting infrastructure could also perform this attack. Note that an advanced adversary could potentially target any connection made over the Internet's core infrastructure. </p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>The application should instruct web browsers to only access the application using HTTPS. To do this, enable HTTP Strict Transport Security (HSTS) by adding a response header with the name 'Strict-Transport-Security' and the value 'max-age=expireTime', where expireTime is the time in seconds that browsers should remember that the site should only be accessed using HTTPS. Consider adding the 'includeSubDomains' flag if appropriate.</p>
+<p>Note that because HSTS is a &quot;trust on first use&quot; (TOFU) protocol, a user who has never accessed the application will never have seen the HSTS header, and will therefore still be vulnerable to SSL stripping attacks. To mitigate this risk, you can optionally add the 'preload' flag to the HSTS header, and submit the domain for review by browser vendors.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security">HTTP Strict Transport Security</a></li>
+<li><a href="http://www.thoughtcrime.org/software/sslstrip/">sslstrip</a></li>
+<li><a href="https://hstspreload.appspot.com/">HSTS Preload Form</a></li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/523.html">CWE-523: Unprotected Transport of Credentials</a></li>
+</ul>]]></vulnerabilityClassifications>
+  </issue>
+  <issue>
+    <serialNumber>1025974633351801856</serialNumber>
+    <type>5245344</type>
+    <name><![CDATA[Frameable response (potential Clickjacking)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/index.html]]></path>
+    <location><![CDATA[/index.html]]></location>
+    <severity>Information</severity>
+    <confidence>Firm</confidence>
+    <issueBackground><![CDATA[<p>If a page fails to set an appropriate X-Frame-Options or Content-Security-Policy HTTP header, it might be possible for a page controlled by an attacker to load it within an iframe. This may enable a clickjacking attack, in which the attacker's page overlays the target application's interface with a different interface provided by the attacker. By inducing victim users to perform actions such as mouse clicks and keystrokes, the attacker can cause them to unwittingly carry out actions within the application that is being targeted. This technique allows the attacker to circumvent defenses against cross-site request forgery, and may result in unauthorized actions.</p>
+<p>Note that some applications attempt to prevent these attacks from within the HTML page itself, using "framebusting" code. However, this type of defense is normally ineffective and can usually be circumvented by a skilled attacker.</p>
+<p>You should determine whether any functions accessible within frameable pages can be used by application users to perform any sensitive actions within the application. </p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>To effectively prevent framing attacks, the application should return a response header with the name <b>X-Frame-Options</b> and the value <b>DENY</b> to prevent framing altogether, or the value <b>SAMEORIGIN</b> to allow framing only by pages on the same origin as the response itself. Note that the SAMEORIGIN header can be partially bypassed if the application itself can be made to frame untrusted websites.</p>]]></remediationBackground>
+    <references><![CDATA[<ul><li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/X-Frame-Options">X-Frame-Options</a></li></ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/693.html">CWE-693: Protection Mechanism Failure</a></li>
+</ul>]]></vulnerabilityClassifications>
+  </issue>
+  <issue>
+    <serialNumber>513463620804661248</serialNumber>
+    <type>5245344</type>
+    <name><![CDATA[Frameable response (potential Clickjacking)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/search.html]]></path>
+    <location><![CDATA[/search.html]]></location>
+    <severity>Information</severity>
+    <confidence>Firm</confidence>
+    <issueBackground><![CDATA[<p>If a page fails to set an appropriate X-Frame-Options or Content-Security-Policy HTTP header, it might be possible for a page controlled by an attacker to load it within an iframe. This may enable a clickjacking attack, in which the attacker's page overlays the target application's interface with a different interface provided by the attacker. By inducing victim users to perform actions such as mouse clicks and keystrokes, the attacker can cause them to unwittingly carry out actions within the application that is being targeted. This technique allows the attacker to circumvent defenses against cross-site request forgery, and may result in unauthorized actions.</p>
+<p>Note that some applications attempt to prevent these attacks from within the HTML page itself, using "framebusting" code. However, this type of defense is normally ineffective and can usually be circumvented by a skilled attacker.</p>
+<p>You should determine whether any functions accessible within frameable pages can be used by application users to perform any sensitive actions within the application. </p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>To effectively prevent framing attacks, the application should return a response header with the name <b>X-Frame-Options</b> and the value <b>DENY</b> to prevent framing altogether, or the value <b>SAMEORIGIN</b> to allow framing only by pages on the same origin as the response itself. Note that the SAMEORIGIN header can be partially bypassed if the application itself can be made to frame untrusted websites.</p>]]></remediationBackground>
+    <references><![CDATA[<ul><li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/X-Frame-Options">X-Frame-Options</a></li></ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/693.html">CWE-693: Protection Mechanism Failure</a></li>
+</ul>]]></vulnerabilityClassifications>
+  </issue>
+  <issue>
+    <serialNumber>1634316606940611584</serialNumber>
+    <type>5245344</type>
+    <name><![CDATA[Frameable response (potential Clickjacking)]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/]]></path>
+    <location><![CDATA[/]]></location>
+    <severity>Information</severity>
+    <confidence>Firm</confidence>
+    <issueBackground><![CDATA[<p>If a page fails to set an appropriate X-Frame-Options or Content-Security-Policy HTTP header, it might be possible for a page controlled by an attacker to load it within an iframe. This may enable a clickjacking attack, in which the attacker's page overlays the target application's interface with a different interface provided by the attacker. By inducing victim users to perform actions such as mouse clicks and keystrokes, the attacker can cause them to unwittingly carry out actions within the application that is being targeted. This technique allows the attacker to circumvent defenses against cross-site request forgery, and may result in unauthorized actions.</p>
+<p>Note that some applications attempt to prevent these attacks from within the HTML page itself, using "framebusting" code. However, this type of defense is normally ineffective and can usually be circumvented by a skilled attacker.</p>
+<p>You should determine whether any functions accessible within frameable pages can be used by application users to perform any sensitive actions within the application. </p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>To effectively prevent framing attacks, the application should return a response header with the name <b>X-Frame-Options</b> and the value <b>DENY</b> to prevent framing altogether, or the value <b>SAMEORIGIN</b> to allow framing only by pages on the same origin as the response itself. Note that the SAMEORIGIN header can be partially bypassed if the application itself can be made to frame untrusted websites.</p>]]></remediationBackground>
+    <references><![CDATA[<ul><li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/X-Frame-Options">X-Frame-Options</a></li></ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/693.html">CWE-693: Protection Mechanism Failure</a></li>
+</ul>]]></vulnerabilityClassifications>
+  </issue>
+  <issue>
+    <serialNumber>4688026072250441728</serialNumber>
+    <type>6292736</type>
+    <name><![CDATA[Credit card numbers disclosed]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/resources/css/bootstrap.min.css]]></path>
+    <location><![CDATA[/resources/css/bootstrap.min.css]]></location>
+    <severity>Information</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>Applications sometimes disclose sensitive financial information such as credit card numbers. Responses containing credit card numbers may not represent any security vulnerability - for example, a number may belong to the logged-in user to whom it is displayed. If a credit card number is identified during a security assessment it should be verified, then application logic reviewed to identify whether its disclosure within the application is necessary and appropriate.</p>]]></issueBackground>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/200.html">CWE-200: Information Exposure</a></li>
+<li><a href="https://cwe.mitre.org/data/definitions/312.html">CWE-388: Error Handling</a></li>
+</ul>]]></vulnerabilityClassifications>
+    <issueDetail><![CDATA[The following credit card number was disclosed in the response:<ul><li>36370249136206</li></ul>]]></issueDetail>
+    <issueDetailItems>
+      <issueDetailItem><![CDATA[36370249136206]]></issueDetailItem>
+    </issueDetailItems>
+  </issue>
+  <issue>
+    <serialNumber>3538900631563274240</serialNumber>
+    <type>16777728</type>
+    <name><![CDATA[Unencrypted communications]]></name>
+    <host ip="54.82.22.214">http://zero.webappsecurity.com</host>
+    <path><![CDATA[/]]></path>
+    <location><![CDATA[/]]></location>
+    <severity>Low</severity>
+    <confidence>Certain</confidence>
+    <issueBackground><![CDATA[<p>The application allows users to connect to it over unencrypted connections.  An attacker suitably positioned to view a legitimate user's network traffic could record and monitor their interactions with the application and obtain any information the user supplies. Furthermore, an attacker able to modify traffic could use the application as a platform for attacks against its users and third-party websites. Unencrypted connections have been exploited by ISPs and governments to track users, and to inject adverts and malicious JavaScript. Due to these concerns, web browser vendors are planning to visually flag unencrypted connections as hazardous.</p>
+<p>
+To exploit this vulnerability, an attacker must be suitably positioned to eavesdrop on the victim's network traffic. This scenario typically occurs when a client communicates with the server over an insecure connection such as public Wi-Fi, or a corporate or home network that is shared with a compromised computer. Common defenses such as switched networks are not sufficient to prevent this. An attacker situated in the user's ISP or the application's hosting infrastructure could also perform this attack. Note that an advanced adversary could potentially target any connection made over the Internet's core infrastructure.
+</p>
+<p>Please note that using a mixture of encrypted and unencrypted communications is an ineffective defense against active attackers, because they can easily remove references to encrypted resources when these references are transmitted over an unencrypted connection.</p>]]></issueBackground>
+    <remediationBackground><![CDATA[<p>Applications should use transport-level encryption (SSL/TLS) to protect all communications passing between the client and the server. The Strict-Transport-Security HTTP header should be used to ensure that clients refuse to access the server over an insecure connection.</p>]]></remediationBackground>
+    <references><![CDATA[<ul>
+<li><a href="https://www.chromium.org/Home/chromium-security/marking-http-as-non-secure">Marking HTTP as non-secure</a></li>
+<li><a href="https://wiki.mozilla.org/Security/Server_Side_TLS">Configuring Server-Side SSL/TLS</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Security/HTTP_strict_transport_security">HTTP Strict Transport Security</a></li>
+</ul>]]></references>
+    <vulnerabilityClassifications><![CDATA[<ul>
+<li><a href="https://cwe.mitre.org/data/definitions/326.html">CWE-326: Inadequate Encryption Strength</a></li>
+</ul>]]></vulnerabilityClassifications>
+  </issue>
+</issues>
