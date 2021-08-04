@@ -1,4 +1,4 @@
-name: Run InspecJS Tests
+name: Run HDF-Converters Tests
 
 on:
   push:
