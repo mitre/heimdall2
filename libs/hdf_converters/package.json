@@ -23,7 +23,8 @@
     "fast-xml-parser": "^3.19.0",
     "htmlparser2": "^6.1.0",
     "inspecjs": "^2.4.6",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "@types/lodash": "^4.14.161"
   },
   "devDependencies": {
     "@types/jest": "^26.0.7",
