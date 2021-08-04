@@ -15,7 +15,7 @@ import {StatusCountModule} from '@/store/status_counts';
 import {ControlStatus} from 'inspecjs';
 import {Prop} from 'vue-property-decorator';
 import {ExtendedControlStatus, Filter} from '@/store/data_filters';
-import {SearchModule} from '../../store/search';
+import {SearchModule} from '@/store/search';
 
 /**
  * Categories property must be of type Category
