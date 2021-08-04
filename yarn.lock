@@ -14791,9 +14791,9 @@ oauth-sign@~0.9.0:
   integrity sha512-fexhUFFPTGV8ybAtSIGbV6gOkSv8UtRbDBnAyLQw4QPKkgNlsH2ByPGtMUqdWkos6YCRmAqViwgZrJc/mRDzZQ==
 
 oauth2-mock-server@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-3.1.0.tgz#6ee8a3b061ca3c1ad67aa8f809e11077108ef7de"
-  integrity sha512-UW8x6QzPaklSnnDMDpw+8+636CnbfJTBkHBh0Ndb237DwqWcLaOIPW3lBhpNWZ89hS5EccQJAiH1NT51J3VT0g==
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-3.2.0.tgz#d35e9e94917b6dc19a88a89fd4520e7a3e810ead"
+  integrity sha512-L0GPEqsri4uW6pZSTS2CE4/T0dOvUkmoxpQCGhStqrGUs0VzgzLAqT5qGmMrDWsI0CzC+GK9dSaJsWh8kCEqxw==
   dependencies:
     "@types/node-jose" "^1.1.5"
     basic-auth "^2.0.1"
@@ -14803,7 +14803,7 @@ oauth2-mock-server@^3.1.0:
     jsonwebtoken "^8.5.1"
     lodash.isplainobject "^4.0.6"
     node-jose "^2.0.0"
-    uuid "^8.3.1"
+    uuid "^8.3.2"
 
 oauth@0.9.x:
   version "0.9.15"
@@ -19828,7 +19828,7 @@ uuid@3.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
   integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
 
-uuid@8.3.2, uuid@^8.0.0, uuid@^8.1.0, uuid@^8.3.0, uuid@^8.3.1:
+uuid@8.3.2, uuid@^8.0.0, uuid@^8.1.0, uuid@^8.3.0, uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
