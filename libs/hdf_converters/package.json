@@ -21,15 +21,14 @@
   "dependencies": {
     "csv-parse": "^4.16.0",
     "fast-xml-parser": "^3.19.0",
-    "inspecjs": "^2.4.6"
+    "htmlparser2": "^6.1.0",
+    "inspecjs": "^2.4.6",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@types/jest": "^26.0.7",
-    "@types/lodash": "^4.14.161",
     "@types/node": "^15.0.1",
-    "htmlparser2": "^6.1.0",
     "jest": "^27.0.6",
-    "quicktype": "^15.0.260",
     "ts-jest": "^27.0.3",
     "ts-node": "^10.0.0",
     "typedoc": "^0.21.4"
