@@ -24,14 +24,15 @@
     "inspecjs": "^2.4.6"
   },
   "devDependencies": {
-    "jest": "^27.0.6",
-    "ts-node": "^10.0.0",
     "@types/jest": "^26.0.7",
+    "@types/lodash": "^4.14.161",
     "@types/node": "^15.0.1",
+    "htmlparser2": "^6.1.0",
+    "jest": "^27.0.6",
     "quicktype": "^15.0.260",
     "ts-jest": "^27.0.3",
-    "typedoc": "^0.21.4",
-    "@types/lodash": "^4.14.161"
+    "ts-node": "^10.0.0",
+    "typedoc": "^0.21.4"
   },
   "jest": {
     "rootDir": ".",
