@@ -67,8 +67,7 @@ import {Prop} from 'vue-property-decorator';
 import {InspecDataModule} from '../../store/data_store';
 import _ from 'lodash';
 import {saveSingleOrMultipleFiles} from '@/utilities/export_util'
-import {HDFControlSegment, ContextualizedControl} from 'inspecjs';
-import {ControlDescription} from 'inspecjs/src/versions/v_1_0/exec_json';
+import {HDFControlSegment, ContextualizedControl, ExecJSON} from 'inspecjs';
 
 
 const fieldNames: {[key: string]: string} = {
@@ -133,10 +132,10 @@ export default class ExportCSVModal extends Vue {
   files: File[] = []
   rows: ControlSetRows = []
 
-  descriptionsToString(descriptions?: ControlDescription[] | { [key: string]: unknown; } | null): string {
+  descriptionsToString(descriptions?: ExecJSON.ControlDescription[] | { [key: string]: unknown; } | null): string {
     let result = '';
       if(Array.isArray(descriptions)) {
-      descriptions.forEach((description: ControlDescription) => {
+      descriptions.forEach((description: ExecJSON.ControlDescription) => {
         result += `${description.label}: ${description.data}\r\n\r\n`
       })
     }
@@ -167,7 +166,7 @@ export default class ExportCSVModal extends Vue {
     if(control.data.tags.check) {
       check = control.data.tags.check;
     } else if (typeof control.data.descriptions === 'object') {
-      const found = control.data.descriptions?.find((description: ControlDescription) => description.label.toLowerCase() === 'check')
+      const found = control.data.descriptions?.find((description: ExecJSON.ControlDescription) => description.label.toLowerCase() === 'check')
       if(found) {
         check = found.data
       }
@@ -175,7 +174,7 @@ export default class ExportCSVModal extends Vue {
     if(control.data.tags.fix) {
       fix = control.data.tags.fix;
     } else if (typeof control.data.descriptions === 'object') {
-      const found = control.data.descriptions?.find((description: ControlDescription) => description.label.toLowerCase() === 'fix')
+      const found = control.data.descriptions?.find((description: ExecJSON.ControlDescription) => description.label.toLowerCase() === 'fix')
       if(found) {
         fix = found.data
       }
