@@ -1,17 +1,7 @@
 <template>
-  <Base :title="curr_title">
+  <Base :show-search="true" :title="curr_title">
     <!-- Topbar config - give it a search bar -->
     <template #topbar-content>
-      <v-text-field
-        v-model="searchTerm"
-        flat
-        solo
-        dense
-        hide-details
-        prepend-inner-icon="mdi-magnify"
-        label="Search"
-        clearable
-      />
       <UploadButton />
     </template>
 
@@ -205,6 +195,7 @@ import Base from '@/views/Base.vue';
 import Modal from '@/components/global/Modal.vue';
 import CompareRow from '@/components/cards/comparison/CompareRow.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
+import SearchHelpModal from '@/components/global/SearchHelpModal.vue'
 import TagRow from '@/components/global/tags/TagRow.vue'
 
 import {Filter, FilteredDataModule} from '@/store/data_filters';
@@ -223,6 +214,7 @@ import ApexLineChart, {
   SeriesItem
 } from '@/components/generic/ApexLineChart.vue';
 import _ from 'lodash';
+import {SearchModule} from '../store/search';
 import {IEvaluation} from '@heimdall/interfaces';
 import {EvaluationModule} from '../store/evaluations';
 
@@ -235,7 +227,8 @@ import {EvaluationModule} from '../store/evaluations';
     StatusChart,
     TagRow,
     ApexLineChart,
-    UploadButton
+    UploadButton,
+    SearchHelpModal
   }
 })
 export default class Compare extends Vue {
@@ -274,7 +267,6 @@ export default class Compare extends Vue {
   startIndex = 0;
   ascending = true;
   chartsOpen = true;
-  searchTerm = '';
   ableTab = true;
   expansion = 0;
 
@@ -299,9 +291,16 @@ export default class Compare extends Vue {
 
   get filter(): Filter {
     return {
+      status: SearchModule.statusFilter,
+      severity: SearchModule.severityFilter,
       fromFile: this.file_filter,
-      searchTerm: this.searchTerm || '',
-      omit_overlayed_controls: true
+      ids: SearchModule.controlIdSearchTerms,
+      titleSearchTerms: SearchModule.titleSearchTerms,
+      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
+      nistIdFilter: SearchModule.NISTIdFilter,
+      searchTerm: SearchModule.freeSearch,
+      codeSearchTerms: SearchModule.codeSearchTerms,
+      omit_overlayed_controls: true,
     };
   }
 
@@ -361,28 +360,28 @@ export default class Compare extends Vue {
       lowCounts.push(
         SeverityCountModule.low({
           fromFile: [file.uniqueId],
-          status: 'Failed',
+          status: ['Failed'],
           omit_overlayed_controls: true
         })
       );
       medCounts.push(
         SeverityCountModule.medium({
           fromFile: [file.uniqueId],
-          status: 'Failed',
+          status: ['Failed'],
           omit_overlayed_controls: true
         })
       );
       highCounts.push(
         SeverityCountModule.high({
           fromFile: [file.uniqueId],
-          status: 'Failed',
+          status: ['Failed'],
           omit_overlayed_controls: true
         })
       );
       critCounts.push(
         SeverityCountModule.critical({
           fromFile: [file.uniqueId],
-          status: 'Failed',
+          status: ['Failed'],
           omit_overlayed_controls: true
         })
       );
