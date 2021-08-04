@@ -38,7 +38,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import SearchHelpModal from '@/components/global/SearchHelpModal.vue'
-import {SearchModule} from '../../store/search';
+import {SearchModule} from '@/store/search';
 import {Watch} from 'vue-property-decorator';
 
 

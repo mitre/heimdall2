@@ -318,11 +318,6 @@ class Search extends VuexModule implements ISearchState {
 
   // Control ID Filtering
 
-  @Action
-  removeIdFilter(id: string) {
-    this.context.commit('REMOVE_ID', id);
-  }
-
   /** Adds control id to filter */
   @Action
   addIdFilter(id: string | string[]) {
@@ -332,13 +327,6 @@ class Search extends VuexModule implements ISearchState {
   @Mutation
   ADD_ID(id: string | string[]) {
     this.controlIdSearchTerms = this.controlIdSearchTerms.concat(id);
-  }
-
-  @Mutation
-  REMOVE_ID(id: string) {
-    this.controlIdSearchTerms = this.controlIdSearchTerms.filter(
-      (filter) => filter.toLowerCase() !== id.toLowerCase()
-    );
   }
 
   /** Sets the control IDs filter */

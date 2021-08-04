@@ -1,4 +1,5 @@
 import {FilteredDataModule} from '@/store/data_filters';
+import {SearchModule} from '@/store/search';
 import {StatusCountModule} from '@/store/status_counts';
 import {ComparisonContext, ControlSeries} from '@/utilities/delta_util';
 import Compare from '@/views/Compare.vue';

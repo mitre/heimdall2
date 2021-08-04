@@ -234,6 +234,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    * Once can reliably expect that if a "deep" selection is not null, then its parent should also be not-null.
    */
   treeFilters: TreeMapState = [];
+  controlSelection: string | null = null;
 
   /** Model for if all-filtered snackbar should be showing */
   filterSnackbar = false;
@@ -329,7 +330,8 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       searchTerm: SearchModule.freeSearch || '',
       codeSearchTerms: SearchModule.codeSearchTerms,
       treeFilters: this.treeFilters,
-      omit_overlayed_controls: true
+      omit_overlayed_controls: true,
+      control_id: this.controlSelection || undefined
     };
   }
 
@@ -357,6 +359,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   clear(clearSearchBar = false) {
     SearchModule.clear();
     this.filterSnackbar = false;
+    this.controlSelection = null;
     this.treeFilters = [];
     if(clearSearchBar) {
       this.searchTerm = '';
