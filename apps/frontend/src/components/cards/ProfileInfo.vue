@@ -78,7 +78,6 @@ import {SourcedContextualizedProfile} from '@/store/report_intake';
 
 import {Prop} from 'vue-property-decorator';
 import _ from 'lodash';
-import TagRow from '@/components/global/tags/TagRow.vue';
 
 interface Attribute {
   name: string;
@@ -87,11 +86,7 @@ interface Attribute {
   }
 }
 
-@Component({
-  components: {
-    TagRow
-  }
-})
+@Component({})
 export default class ProfileInfo extends Vue {
   @Prop({required: false}) readonly profile: SourcedContextualizedProfile | undefined;
 

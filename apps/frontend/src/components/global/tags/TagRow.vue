@@ -58,7 +58,7 @@ import DeleteDialog from '@/components/generic/DeleteDialog.vue';
   }
 })
 export default class TagRow extends Vue {
-  @Prop({required: true, type: Object}) readonly evaluation!: IEvaluation;
+  @Prop({required: true}) readonly evaluation!: IEvaluation;
 
   tags: string[] = [];
   search = '';
@@ -83,19 +83,19 @@ export default class TagRow extends Vue {
     const original = this.evaluationTagsToStrings();
     const toAdd: string[] = this.tags.filter(tag => !original.includes(tag));
     const toRemove: IEvaluationTag[] = this.evaluation.evaluationTags.filter(tag => !this.tags.includes(tag.value));
-    const addedTagPromises = toAdd.map((tag) => {
-      return EvaluationModule.addTag({evaluation: this.evaluation, tag: {value: tag}})
-    });
+    const addedTagPromises = toAdd.map((tag) =>
+      EvaluationModule.addTag({evaluation: this.evaluation, tag: {value: tag}})
+    );
 
-    const removedTagPromises = toRemove.map((tag) => {
-      return EvaluationModule.deleteTag(tag);
-    });
+    const removedTagPromises = toRemove.map((tag) =>
+      EvaluationModule.deleteTag(tag)
+    );
 
-    Promise.all(addedTagPromises.concat(removedTagPromises)).then(() => {
+    Promise.all(addedTagPromises.concat(removedTagPromises)).then(() =>
       SnackbarModule.notify("Successfully updated tags.")
-    }).finally(() => {
-      EvaluationModule.getAllEvaluations();
-    });
+    ).finally(() =>
+      EvaluationModule.getAllEvaluations()
+    );
   }
 
   syncEvaluationTags() {
@@ -103,7 +103,7 @@ export default class TagRow extends Vue {
   }
 
   evaluationTagsToStrings(): string[] {
-    return this.evaluation.evaluationTags.map((tag) => tag.value);
+    return this.evaluation.evaluationTags.map((tag) => tag.value) || [];
   }
 
   async deleteTag(tag: IEvaluationTag) {
