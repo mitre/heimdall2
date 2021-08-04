@@ -16,7 +16,7 @@
     "build": "tsc -p ./tsconfig.build.json",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
-    "test": ""
+    "test": "jest --silent"
   },
   "dependencies": {
     "csv-parse": "^4.16.0",
@@ -24,6 +24,7 @@
     "inspecjs": "^2.4.6"
   },
   "devDependencies": {
+    "jest": "^27.0.6",
     "ts-node": "^10.0.0"
   }
 }
