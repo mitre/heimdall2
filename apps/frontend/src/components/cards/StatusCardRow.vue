@@ -36,7 +36,7 @@
           <v-card-title>
             <v-icon class="pr-3" large>mdi-{{ profileErrorProps.icon }}</v-icon>
             <span class="title">{{
-              `ALERT: ${profileErrorProps.number} ${profileErrorProps.title}`
+              `ALERT: ${profileErrorProps.number} ${profileErrorProps.title}s`
             }}</span>
           </v-card-title>
           <v-card-text v-text="profileErrorProps.subtitle" />

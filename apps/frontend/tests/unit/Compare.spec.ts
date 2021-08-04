@@ -1,4 +1,5 @@
 import {FilteredDataModule} from '@/store/data_filters';
+import {SearchModule} from '@/store/search';
 import {StatusCountModule} from '@/store/status_counts';
 import {ComparisonContext, ControlSeries} from '@/utilities/delta_util';
 import Compare from '@/views/Compare.vue';
@@ -6,7 +7,6 @@ import {shallowMount, Wrapper} from '@vue/test-utils';
 import 'jest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
-import {SearchModule} from '../../src/store/search';
 import {fileCompliance, loadSample, removeAllFiles} from '../util/testingUtils';
 
 const vuetify = new Vuetify();
