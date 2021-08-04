@@ -42,5 +42,5 @@ jobs:
      - name: Run unit tests
        run: yarn hdf-converters test
 
-     - name: Ensure InspecJS builds cleanly
+     - name: Ensure the hdf-converters builds cleanly
        run: yarn hdf-converters build
