@@ -30,7 +30,8 @@
     "@types/node": "^15.0.1",
     "quicktype": "^15.0.260",
     "ts-jest": "^27.0.3",
-    "typedoc": "^0.21.4"
+    "typedoc": "^0.21.4",
+    "@types/lodash": "^4.14.161"
   },
   "jest": {
     "rootDir": ".",
