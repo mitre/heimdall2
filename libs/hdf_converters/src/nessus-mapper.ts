@@ -151,8 +151,6 @@ function getStatus(item: unknown): ExecJSON.ControlResultStatus {
       return ExecJSON.ControlResultStatus.Skipped;
     case 'ERROR':
       return ExecJSON.ControlResultStatus.Error;
-    case 'FAILED':
-      return ExecJSON.ControlResultStatus.Failed;
     default:
       return ExecJSON.ControlResultStatus.Failed;
   }
