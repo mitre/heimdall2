@@ -137,12 +137,14 @@ import Modal from '@/components/global/Modal.vue';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
+import {
+  validatePasswordBoolean,
+  validators
+} from '@heimdall/password-complexity';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {email, required, sameAs} from 'vuelidate/lib/validators';
-
-import {validatePasswordBoolean, validators} from '@heimdall/password-complexity';
 
 export interface SignupHash {
   firstName: string;
@@ -184,7 +186,7 @@ export default class RegistrationModal extends Vue {
   password = '';
   passwordConfirmation = '';
   showPassword = false;
-  validatorList = validators
+  validatorList = validators;
   buttonLoading = false;
 
   @Prop({type: Boolean, default: false}) readonly adminRegisterMode!: boolean;
@@ -210,26 +212,27 @@ export default class RegistrationModal extends Vue {
 
       ServerModule.Register(creds)
         .then(() => {
-          if(this.adminRegisterMode) {
+          if (this.adminRegisterMode) {
             SnackbarModule.notify(
               'You have successfully registered a new user'
             );
-            this.$emit('close-modal')
-            this.$emit('update-user-table')
+            this.$emit('close-modal');
+            this.$emit('update-user-table');
           } else {
             this.$router.push('/login');
             SnackbarModule.notify(
               'You have successfully registered, please sign in'
             );
           }
-      }).finally(() => {
+        })
+        .finally(() => {
           this.buttonLoading = false;
-      })
+        });
     }
   }
 
   get registrationDisabled(): boolean {
-    return this.$v.$invalid || !validatePasswordBoolean(this.password)
+    return this.$v.$invalid || !validatePasswordBoolean(this.password);
   }
 
   get passwordConfirmationErrors() {
