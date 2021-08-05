@@ -11,8 +11,8 @@
 
 <script lang="ts">
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import Component from 'vue-class-component';
 import Vue from 'vue';
+import Component from 'vue-class-component';
 
 @Component({
   components: {
@@ -21,7 +21,7 @@ import Vue from 'vue';
 })
 export default class RefreshButton extends Vue {
   refreshEvaluations() {
-    this.$emit('updateEvaluations')
+    this.$emit('updateEvaluations');
   }
 }
 </script>

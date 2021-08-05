@@ -36,10 +36,10 @@
 </template>
 
 <script lang="ts">
-import Component, {mixins} from 'vue-class-component';
-import HelpModal from '@/components/global/HelpModal.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
-import AppInfoMixin from '@/mixins/AppInfoMixin'
+import HelpModal from '@/components/global/HelpModal.vue';
+import AppInfoMixin from '@/mixins/AppInfoMixin';
+import Component, {mixins} from 'vue-class-component';
 
 @Component({
   components: {

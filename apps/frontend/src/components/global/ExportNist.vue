@@ -14,18 +14,17 @@
 </template>
 
 <script lang="ts">
+import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {InspecDataModule} from '@/store/data_store';
+import {FileID} from '@/store/report_intake';
+import {s2ab} from '@/utilities/export_util';
+import {saveAs} from 'file-saver';
+import {NistControl} from 'inspecjs';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {FilteredDataModule, Filter} from '@/store/data_filters';
-import XLSX from 'xlsx';
-import {saveAs} from 'file-saver';
-import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {NistControl} from 'inspecjs';
-import {FileID} from '@/store/report_intake';
-import {InspecDataModule} from '@/store/data_store';
 import {Prop} from 'vue-property-decorator';
-import {s2ab} from '@/utilities/export_util'
-
+import XLSX from 'xlsx';
 
 const MAX_SHEET_NAME_SIZE = 31;
 export type NISTRow = [string];
@@ -158,7 +157,10 @@ export default class ExportNIST extends Vue {
     const wbout = XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
     saveAs(
       new Blob([s2ab(wbout)], {type: 'application/octet-stream'}),
-      `NIST-SP-800-53-Security-and-Privacy-Control-Coverage-${this.convertDate(new Date(), '-')}.xlsx`
+      `NIST-SP-800-53-Security-and-Privacy-Control-Coverage-${this.convertDate(
+        new Date(),
+        '-'
+      )}.xlsx`
     );
   }
 

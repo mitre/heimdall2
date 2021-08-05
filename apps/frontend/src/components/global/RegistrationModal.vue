@@ -133,16 +133,14 @@
 </template>
 
 <script lang="ts">
+import Modal from '@/components/global/Modal.vue';
+import UserValidatorMixin from '@/mixins/UserValidatorMixin';
+import {ServerModule} from '@/store/server';
+import {SnackbarModule} from '@/store/snackbar';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-
-import {ServerModule} from '@/store/server';
-import {required, email, sameAs} from 'vuelidate/lib/validators';
-
-import UserValidatorMixin from '@/mixins/UserValidatorMixin';
-import Modal from '@/components/global/Modal.vue';
-import {SnackbarModule} from '@/store/snackbar';
 import {Prop} from 'vue-property-decorator';
+import {email, required, sameAs} from 'vuelidate/lib/validators';
 
 import {validatePasswordBoolean, validators} from '@heimdall/password-complexity';
 
@@ -239,7 +237,7 @@ export default class RegistrationModal extends Vue {
     if (!this.$v.passwordConfirmation.$dirty) {
       return errors;
     }
-    if(!this.$v.passwordConfirmation.sameAsPassword) {
+    if (!this.$v.passwordConfirmation.sameAsPassword) {
       errors.push('Password and password confirmation must match.');
     }
     return errors;

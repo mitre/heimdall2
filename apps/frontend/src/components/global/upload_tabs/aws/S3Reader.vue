@@ -35,23 +35,23 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import S3 from 'aws-sdk/clients/s3';
-import {AWSError} from 'aws-sdk/lib/error';
-import {LocalStorageVal} from '@/utilities/helper_util';
-import {SnackbarModule} from '@/store/snackbar';
-import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
-import AuthStepMFA from '@/components/global/upload_tabs/aws/AuthStepMFA.vue';
 import AuthStepBasic from '@/components/global/upload_tabs/aws/AuthStepBasic.vue';
+import AuthStepMFA from '@/components/global/upload_tabs/aws/AuthStepMFA.vue';
+import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
+import {FileID} from '@/store/report_intake';
+import {SnackbarModule} from '@/store/snackbar';
 import {
   Auth,
-  transcribe_error,
+  AUTH_DURATION,
   get_session_token,
   MFAInfo,
-  AUTH_DURATION
+  transcribe_error
 } from '@/utilities/aws_util';
-import {FileID} from '@/store/report_intake';
+import {LocalStorageVal} from '@/utilities/helper_util';
+import S3 from 'aws-sdk/clients/s3';
+import {AWSError} from 'aws-sdk/lib/error';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 
 /** The cached session info */
 const localSessionInformation = new LocalStorageVal<Auth | null>(

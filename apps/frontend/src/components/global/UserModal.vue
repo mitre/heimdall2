@@ -156,14 +156,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
-import {IUser, IUpdateUser} from '@heimdall/interfaces';
-import UserValidatorMixin from '@/mixins/UserValidatorMixin';
-import {required, email, requiredIf} from 'vuelidate/lib/validators';
+import {IUpdateUser, IUser} from '@heimdall/interfaces';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
+import {email, required, requiredIf} from 'vuelidate/lib/validators';
 
 @Component({
   mixins: [UserValidatorMixin],
@@ -175,9 +175,9 @@ import {Prop} from 'vue-property-decorator';
       }
     },
     currentPassword: {
-      required: requiredIf(function(userInfo){
-        	return (userInfo.user.role === 'admin')
-        })
+      required: requiredIf(function (userInfo) {
+        return userInfo.user.role === 'admin';
+      })
     },
     newPassword: {
       required: requiredIf('changePassword')
@@ -187,7 +187,6 @@ import {Prop} from 'vue-property-decorator';
     }
   }
 })
-
 export default class UserModal extends Vue {
   @Prop({type: Object, required: true}) readonly user!: IUser;
   @Prop({type: Boolean, default: false}) readonly admin!: boolean;
@@ -205,51 +204,55 @@ export default class UserModal extends Vue {
 
   async updateUserInfo(): Promise<void> {
     this.buttonLoading = true;
-    this.$v.$touch()
+    this.$v.$touch();
     if (this.userInfo != null && (this.admin || !this.$v.$invalid)) {
       var updateUserInfo: IUpdateUser = {
         ...this.userInfo,
         password: undefined,
         passwordConfirmation: undefined,
-        forcePasswordChange: undefined,
+        forcePasswordChange: undefined
       };
-      if(!this.admin) {
+      if (!this.admin) {
         updateUserInfo = {
           ...updateUserInfo,
-          currentPassword: this.currentPassword,
-        }
+          currentPassword: this.currentPassword
+        };
       }
-      if(this.changePassword){
+      if (this.changePassword) {
         updateUserInfo = {
           ...updateUserInfo,
           password: this.newPassword,
-          passwordConfirmation: this.passwordConfirmation,
-        }
+          passwordConfirmation: this.passwordConfirmation
+        };
       }
       ServerModule.updateUserInfo({id: this.user.id, info: updateUserInfo})
         .then((data) => {
           SnackbarModule.notify('User updated successfully.');
           this.$emit('update-user', data);
           this.dialog = false;
-        }).finally(() => {
-          this.buttonLoading = false;
         })
+        .finally(() => {
+          this.buttonLoading = false;
+        });
     }
   }
 
   changePasswordDialog() {
-    this.changePassword = !this.changePassword
+    this.changePassword = !this.changePassword;
   }
 
   get update_unavailable() {
-    return this.userInfo.creationMethod === 'ldap' || ServerModule.enabledOAuth.includes(this.userInfo.creationMethod);
+    return (
+      this.userInfo.creationMethod === 'ldap' ||
+      ServerModule.enabledOAuth.includes(this.userInfo.creationMethod)
+    );
   }
 
   get title(): string {
-    if(this.admin) {
-      return `Update account information for ${this.user.email}`
+    if (this.admin) {
+      return `Update account information for ${this.user.email}`;
     } else {
-      return 'Update your account information'
+      return 'Update your account information';
     }
   }
 }
