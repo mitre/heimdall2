@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@heimdall/interfaces": "^2.4.6",
+    "@heimdall/password-complexity": "^2.4.6",
     "@mdi/font": "^5.6.55",
     "@mdi/js": "^5.9.55",
     "@types/bootstrap": "^5.0.15",

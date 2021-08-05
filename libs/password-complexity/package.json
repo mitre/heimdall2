@@ -1,0 +1,11 @@
+{
+  "name": "@heimdall/password-complexity",
+  "version": "2.4.6",
+  "private": true,
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint \"**/*.js\" --fix",
+    "lint:ci": "eslint \"**/*.js\" --max-warnings 0"
+  }
+}

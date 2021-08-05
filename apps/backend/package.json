@@ -45,6 +45,7 @@
   "dependencies": {
     "@casl/ability": "^5.2.2",
     "@heimdall/interfaces": "^2.4.6",
+    "@heimdall/password-complexity": "^2.4.6",
     "@nestjs/cli": "^8.0.2",
     "@nestjs/common": "^8.0.2",
     "@nestjs/core": "^8.0.2",
@@ -79,6 +80,7 @@
     "helmet": "^4.1.1",
     "js-levenshtein": "^1.1.6",
     "passport": "^0.4.1",
+    "inspecjs": "^2.4.6",
     "passport-github": "^1.1.0",
     "passport-gitlab2": "^5.0.0",
     "passport-google-oauth": "^2.0.0",

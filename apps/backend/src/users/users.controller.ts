@@ -1,5 +1,4 @@
 import {ForbiddenError} from '@casl/ability';
-import {IPasswordValidationResult} from '@heimdall/interfaces';
 import {
   Body,
   Controller,
@@ -23,10 +22,7 @@ import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {TestGuard} from '../guards/test.guard';
 import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {PasswordChangePipe} from '../pipes/password-change.pipe';
-import {
-  PasswordComplexityPipe,
-  validatePassword
-} from '../pipes/password-complexity.pipe';
+import {PasswordComplexityPipe} from '../pipes/password-complexity.pipe';
 import {PasswordsMatchPipe} from '../pipes/passwords-match.pipe';
 import {User} from '../users/user.model';
 import {CreateUserDto} from './dto/create-user.dto';
@@ -78,13 +74,6 @@ export class UsersController {
 
     const users = await this.usersService.adminFindAllUsers();
     return users.map((user) => new UserDto(user));
-  }
-
-  @Post('check-password-complexity')
-  async checkPasswordComplexity(
-    @Body() passwordData: {password: string}
-  ): Promise<IPasswordValidationResult> {
-    return validatePassword(passwordData.password);
   }
 
   @Post()

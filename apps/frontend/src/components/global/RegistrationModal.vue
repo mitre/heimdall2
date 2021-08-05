@@ -1,7 +1,7 @@
 <template>
   <Modal
     :visible="visible"
-    :max-width="'500px'"
+    :max-width="'600px'"
     :persistent="true"
     @close-modal="$emit('close-modal')"
     @update-user-table="$emit('update-user-table')"
@@ -62,7 +62,6 @@
             label="Password"
             :type="showPassword ? 'text' : 'password'"
             tabindex="4"
-            @keyup="checkPasswordComplexity"
             @blur="$v.password.$touch()"
           >
             <template #append>
@@ -72,77 +71,23 @@
             </template>
           </v-text-field>
           <v-row
+            v-for="(validator, i) in validatorList"
+            :key="i"
             :class="
-              passwordValidation.meetsCharRequirement
+              validator.check(password)
                 ? 'd-flex success--text'
                 : 'd-flex error--text'
             "
           >
             <v-icon
               class="pl-9"
-              :color="
-                passwordValidation.meetsCharRequirement ? 'success' : 'error'
-              "
+              :color="validator.check(password) ? 'success' : 'error'"
               small
               >{{
-                passwordValidation.meetsCharRequirement
-                  ? 'mdi-check'
-                  : 'mdi-close'
+                validator.check(password) ? 'mdi-check' : 'mdi-close'
               }}</v-icon
             >
-            <small class="pl-1" color="red"
-              >Password must be at least 15 characters</small
-            >
-          </v-row>
-          <v-row
-            :class="
-              passwordValidation.meetsClassRequirement
-                ? 'd-flex success--text'
-                : 'd-flex error--text'
-            "
-          >
-            <v-icon
-              class="pl-9"
-              :color="
-                passwordValidation.meetsClassRequirement ? 'success' : 'error'
-              "
-              small
-              >{{
-                passwordValidation.meetsClassRequirement
-                  ? 'mdi-check'
-                  : 'mdi-close'
-              }}</v-icon
-            >
-            <small class="pl-1" color="red"
-              >Password must contain lowercase letters, uppercase letters,
-              numbers, and special characters</small
-            >
-          </v-row>
-          <v-row
-            :class="
-              passwordValidation.meetsNoRepeatsRequirement
-                ? 'd-flex success--text'
-                : 'd-flex error--text'
-            "
-          >
-            <v-icon
-              class="pl-9"
-              :color="
-                passwordValidation.meetsNoRepeatsRequirement
-                  ? 'success'
-                  : 'error'
-              "
-              small
-              >{{
-                passwordValidation.meetsNoRepeatsRequirement
-                  ? 'mdi-check'
-                  : 'mdi-close'
-              }}</v-icon
-            >
-            <small class="pl-1" color="red"
-              >Password must not contain 4 consecutive characters of the same
-              character class</small
-            >
+            <small class="pl-1" color="red">{{ validator.name }}</small>
           </v-row>
           <br />
           <v-text-field
@@ -165,7 +110,7 @@
             id="register"
             depressed
             large
-            :disabled="$v.$invalid || passwordValidation.errors.length !== 0"
+            :disabled="registrationDisabled"
             color="primary"
             type="submit"
             :loading="buttonLoading"
@@ -198,7 +143,8 @@ import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 import Modal from '@/components/global/Modal.vue';
 import {SnackbarModule} from '@/store/snackbar';
 import {Prop} from 'vue-property-decorator';
-import {IPasswordValidationResult} from '@heimdall/interfaces';
+
+import {validatePasswordBoolean, validators} from '@heimdall/password-complexity';
 
 export interface SignupHash {
   firstName: string;
@@ -240,13 +186,7 @@ export default class RegistrationModal extends Vue {
   password = '';
   passwordConfirmation = '';
   showPassword = false;
-  passwordValidation: IPasswordValidationResult = {
-    errors: [],
-    isString: true,
-    meetsCharRequirement: false,
-    meetsClassRequirement: false,
-    meetsNoRepeatsRequirement: false
-  };
+  validatorList = validators
   buttonLoading = false;
 
   @Prop({type: Boolean, default: false}) readonly adminRegisterMode!: boolean;
@@ -290,27 +230,8 @@ export default class RegistrationModal extends Vue {
     }
   }
 
-  async checkPasswordComplexity() {
-    ServerModule.CheckPasswordComplexity(this.password).then((passwordErrors) => {
-      this.passwordValidation = passwordErrors
-    })
-  }
-
-  passwordValidationStyle(passedTest: boolean) {
-    return passedTest ? {} : {'color': '#ff5252'}
-  }
-
-  // password strength bar expects a percentage
-  get passwordStrengthPercent() {
-    // Minimum length is 15. 100/15 = 6.67 so each char is 6.67% of the way to acceptable
-    return this.password.length * 6.67;
-  }
-
-  // Since there are 3 colors available, 0-49% displays red, 50% displays yellow, and 51-100% displays green
-  get passwordStrengthColor() {
-    return ['error', 'warning', 'success'][
-      Math.floor(this.passwordStrengthPercent / 50)
-    ];
+  get registrationDisabled(): boolean {
+    return this.$v.$invalid || !validatePasswordBoolean(this.password)
   }
 
   get passwordConfirmationErrors() {
