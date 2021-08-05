@@ -21,8 +21,12 @@ export type Sort = 'ascending' | 'descending' | 'none' | 'disabled';
 export default class ColumnHeader extends Vue {
   @Prop({type: String, required: true}) readonly text!: string;
   @Prop({type: String, required: true}) readonly sort!: Sort;
-  @Prop({type: Boolean, required: false, default: false}) readonly viewedHeader!: boolean;
-  @Prop({type: Number, required: false}) readonly numberOfViewedControls!: number;
+  @Prop({type: Boolean, required: false, default: false})
+  readonly viewedHeader!: boolean;
+
+  @Prop({type: Number, required: false})
+  readonly numberOfViewedControls!: number;
+
   @Prop({type: Number, required: false}) readonly numberOfAllControls!: number;
   /**
    * Simple boolean deciding whether or not to actually show/allow sorting

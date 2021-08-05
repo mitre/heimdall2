@@ -11,16 +11,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import VueApexCharts from 'vue-apexcharts';
 import {ColorHackModule} from '@/store/color_hack';
-
-import {ApexOptions} from 'apexcharts';
-
-import {StatusCountModule} from '@/store/status_counts';
-import {Prop} from 'vue-property-decorator';
 import {Filter} from '@/store/data_filters';
+import {StatusCountModule} from '@/store/status_counts';
+import {ApexOptions} from 'apexcharts';
+import Vue from 'vue';
+import VueApexCharts from 'vue-apexcharts';
+import Component from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -93,7 +91,7 @@ export default class ComplianceChart extends Vue {
       StatusCountModule.countOf(this.filter, 'Failed') +
       StatusCountModule.countOf(this.filter, 'Profile Error') +
       StatusCountModule.countOf(this.filter, 'Not Reviewed') +
-      StatusCountModule.countOf(this.filter,  'Waived');
+      StatusCountModule.countOf(this.filter, 'Waived');
     if (total === 0) {
       return [0];
     } else {

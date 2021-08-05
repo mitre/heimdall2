@@ -61,23 +61,23 @@
 </template>
 
 <script lang="ts">
-import Component, {mixins} from 'vue-class-component';
-import {FileID} from '@/store/report_intake';
 import Modal from '@/components/global/Modal.vue';
+import S3Reader from '@/components/global/upload_tabs/aws/S3Reader.vue';
+import DatabaseReader from '@/components/global/upload_tabs/DatabaseReader.vue';
 import FileReader from '@/components/global/upload_tabs/FileReader.vue';
 import HelpFooter from '@/components/global/upload_tabs/HelpFooter.vue';
-import S3Reader from '@/components/global/upload_tabs/aws/S3Reader.vue';
-import SplunkReader from '@/components/global/upload_tabs/splunk/SplunkReader.vue';
-import DatabaseReader from '@/components/global/upload_tabs/DatabaseReader.vue';
 import SampleList from '@/components/global/upload_tabs/SampleList.vue';
-import {LocalStorageVal} from '@/utilities/helper_util';
-import {SnackbarModule} from '@/store/snackbar';
-import ServerMixin from '@/mixins/ServerMixin';
+import SplunkReader from '@/components/global/upload_tabs/splunk/SplunkReader.vue';
 import RouteMixin from '@/mixins/RouteMixin';
-import {Prop} from 'vue-property-decorator';
-import {ServerModule} from '@/store/server';
+import ServerMixin from '@/mixins/ServerMixin';
 import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
+import {FileID} from '@/store/report_intake';
+import {ServerModule} from '@/store/server';
+import {SnackbarModule} from '@/store/snackbar';
+import {LocalStorageVal} from '@/utilities/helper_util';
+import Component, {mixins} from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
 const localTab = new LocalStorageVal<string>('nexus_curr_tab');
 /**
  * Multiplexes all of our file upload components
@@ -100,7 +100,9 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
   activeTab: string = localTab.get_default('uploadtab-local');
 
   get fullscreen() {
-    return this.activeTab === 'uploadtab-database' || this.$vuetify.breakpoint.mobile;
+    return (
+      this.activeTab === 'uploadtab-database' || this.$vuetify.breakpoint.mobile
+    );
   }
 
   // Handles change in tab
@@ -109,7 +111,7 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
     SnackbarModule.visibility(false);
     localTab.set(newTab);
     // Forces the v-group-slider to recalculate its position to prevent getting stuck between Splunk and Samples
-    setTimeout(() => window.dispatchEvent(new Event('resize')), 250)
+    setTimeout(() => window.dispatchEvent(new Event('resize')), 250);
   }
 
   get warning_banner(): string {

@@ -93,16 +93,16 @@
 </template>
 
 <script lang="ts">
+import DeleteDialog from '@/components/generic/DeleteDialog.vue';
+import GroupModal from '@/components/global/groups/GroupModal.vue';
+import GroupUsers from '@/components/global/groups/GroupUsers.vue';
+import Users from '@/components/global/groups/Users.vue';
+import {GroupsModule} from '@/store/groups';
 import {SnackbarModule} from '@/store/snackbar';
 import {IGroup, ISlimUser} from '@heimdall/interfaces';
-import GroupModal from '@/components/global/groups/GroupModal.vue';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {GroupsModule} from '@/store/groups';
-import DeleteDialog from '@/components/generic/DeleteDialog.vue';
-import Users from '@/components/global/groups/Users.vue';
-import GroupUsers from '@/components/global/groups/GroupUsers.vue';
 
 @Component({
   components: {
@@ -125,7 +125,7 @@ export default class GroupManagement extends Vue {
       text: 'Group Name',
       align: 'start',
       sortable: true,
-      value: 'name',
+      value: 'name'
     },
     {
       text: 'Public',
@@ -138,39 +138,40 @@ export default class GroupManagement extends Vue {
     {
       text: 'ID',
       sortable: true,
-      value: 'id',
+      value: 'id'
     },
     ...this.allGroupsHeaders,
     {text: 'Your Role', value: 'role', sortable: true},
     {text: 'Members', value: 'users', sortable: true},
-    {text: 'Actions', value: 'actions', sortable: false},
+    {text: 'Actions', value: 'actions', sortable: false}
   ];
 
   deleteGroupDialog(group: IGroup): void {
     this.editedGroup = group;
-    this.dialogDelete = true
+    this.dialogDelete = true;
   }
 
   deleteGroupConfirm(): void {
     if (this.editedGroup) {
-      GroupsModule.DeleteGroup(this.editedGroup).then((data) => {
-        SnackbarModule.notify(`Successfully deleted group ${data.name}`);
-      }).finally(() => {
-        this.closeDeleteDialog();
-      });
+      GroupsModule.DeleteGroup(this.editedGroup)
+        .then((data) => {
+          SnackbarModule.notify(`Successfully deleted group ${data.name}`);
+        })
+        .finally(() => {
+          this.closeDeleteDialog();
+        });
     }
   }
 
   closeDeleteDialog() {
-    this.dialogDelete = false
+    this.dialogDelete = false;
     this.editedGroup = null;
   }
 
   getMemberName(users: ISlimUser): string {
-    if(!users.firstName && !users.lastName) {
+    if (!users.firstName && !users.lastName) {
       return users.email;
-    }
-    else {
+    } else {
       return `${users.firstName} ${users.lastName}`;
     }
   }

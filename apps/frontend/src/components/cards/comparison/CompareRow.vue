@@ -42,14 +42,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import {ContextualizedControl, HDFControl} from 'inspecjs';
-import {ControlDelta, ControlSeries} from '@/utilities/delta_util';
 import DeltaView from '@/components/cards/comparison/DeltaView.vue';
 import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails.vue';
-import {Prop} from 'vue-property-decorator';
 import {FileID} from '@/store/report_intake';
+import {ControlDelta, ControlSeries} from '@/utilities/delta_util';
+import {ContextualizedControl, HDFControl} from 'inspecjs';
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -69,10 +69,7 @@ export default class CompareRow extends Vue {
     if (control !== undefined) {
       const hdfControl = this.hdf_for_control(control);
       if (hdfControl !== undefined) {
-        return hdfControl.status.replace(
-            ' ',
-            ''
-          )
+        return hdfControl.status.replace(' ', '');
       }
     }
     return '';
@@ -86,7 +83,7 @@ export default class CompareRow extends Vue {
   get delta(): ControlDelta | null {
     const deltaData: ContextualizedControl[] = [];
     Object.entries(this.controls).forEach(([fileId, controls]) => {
-      if(this.fileIds.includes(fileId)) {
+      if (this.fileIds.includes(fileId)) {
         deltaData.push(controls);
       }
     });
