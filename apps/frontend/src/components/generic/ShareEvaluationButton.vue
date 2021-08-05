@@ -11,12 +11,12 @@
 </template>
 
 <script lang="ts">
+import {SnackbarModule} from '@/store/snackbar';
 import {IEvaluation} from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
-import {SnackbarModule} from '@/store/snackbar';
 import VueClipboard from 'vue-clipboard2';
+import {Prop} from 'vue-property-decorator';
 
 VueClipboard.config.autoSetContainer = true;
 

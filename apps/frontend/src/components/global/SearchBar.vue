@@ -35,22 +35,21 @@
 </template>
 
 <script lang="ts">
+import SearchHelpModal from '@/components/global/SearchHelpModal.vue';
+import {SearchModule} from '@/store/search';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import SearchHelpModal from '@/components/global/SearchHelpModal.vue'
-import {SearchModule} from '@/store/search';
 import {Watch} from 'vue-property-decorator';
-
 
 @Component({
   components: {
-      SearchHelpModal
+    SearchHelpModal
   }
 })
 export default class SearchBar extends Vue {
   $refs!: {
-    search: HTMLInputElement
-  }
+    search: HTMLInputElement;
+  };
 
   /**
    * The current search terms, as modeled by the search bar
@@ -66,13 +65,15 @@ export default class SearchBar extends Vue {
   /** If we are currently showing the search help modal */
   showSearchHelp = false;
 
-    /** Determines if we should make the search bar collapse-able */
+  /** Determines if we should make the search bar collapse-able */
   showSearchMobile = false;
 
   /**
    * If the user is currently typing in the search bar
    */
-  typingTimer = setTimeout(() => {return}, 0);
+  typingTimer = setTimeout(() => {
+    return;
+  }, 0);
 
   /**
    * Handles focusing on the search bar

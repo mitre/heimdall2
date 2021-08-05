@@ -50,14 +50,16 @@
 </template>
 
 <script lang="ts">
+import ProfileInfo from '@/components/cards/ProfileInfo.vue';
+import {
+  SourcedContextualizedEvaluation,
+  SourcedContextualizedProfile
+} from '@/store/report_intake';
+import {profile_unique_key} from '@/utilities/format_util';
+import {ContextualizedProfile} from 'inspecjs';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {SourcedContextualizedEvaluation, SourcedContextualizedProfile} from '@/store/report_intake';
-
-import {profile_unique_key} from '@/utilities/format_util';
-import ProfileInfo from '@/components/cards/ProfileInfo.vue';
 import {Prop, Watch} from 'vue-property-decorator';
-import {ContextualizedProfile} from 'inspecjs';
 import {InspecDataModule} from '../../store/data_store';
 
 /**
@@ -77,7 +79,9 @@ class TreeItem {
     // Base information
     this.id = profile_unique_key(profile);
     this.name = profile.data.name;
-    this.children = profile.extendsFrom.map((p) => new TreeItem(p as SourcedContextualizedProfile));
+    this.children = profile.extendsFrom.map(
+      (p) => new TreeItem(p as SourcedContextualizedProfile)
+    );
   }
 }
 
@@ -88,7 +92,9 @@ class TreeItem {
 })
 export default class ProfileData extends Vue {
   @Prop({type: Object, required: true})
-  readonly file!: SourcedContextualizedEvaluation | SourcedContextualizedProfile;
+  readonly file!:
+    | SourcedContextualizedEvaluation
+    | SourcedContextualizedProfile;
 
   // auto select the root profile on file change
   @Watch('file')
@@ -110,17 +116,17 @@ export default class ProfileData extends Vue {
   }
 
   get selected(): SourcedContextualizedProfile | undefined {
-    return InspecDataModule.allProfiles.find(
-      (p) => this.active.includes(profile_unique_key(p))
+    return InspecDataModule.allProfiles.find((p) =>
+      this.active.includes(profile_unique_key(p))
     );
   }
 
   get file_root_profile(): SourcedContextualizedProfile {
     let result: ContextualizedProfile | undefined;
-    if(this.file.from_file.hasOwnProperty('evaluation')) {
-      result = (this.file as SourcedContextualizedEvaluation).from_file.evaluation.contains.find(
-        (p) => p.extendedBy.length === 0
-      );
+    if (this.file.from_file.hasOwnProperty('evaluation')) {
+      result = (
+        this.file as SourcedContextualizedEvaluation
+      ).from_file.evaluation.contains.find((p) => p.extendedBy.length === 0);
     }
     return (result || this.file) as SourcedContextualizedProfile;
   }
@@ -135,16 +141,16 @@ export default class ProfileData extends Vue {
   // stopActivePropagation is to stop the two v-treeviews from infinitely toggling
   // between calling each others `update:active` methods.
   setActive(active: string[]) {
-    if(this.stopActivePropagation) {
+    if (this.stopActivePropagation) {
       this.stopActivePropagation = false;
     } else {
       // There are only 2 treeviews when the parent profile has children
       // Do not enable stopActivePropagagation when there are no children
-      if(this.children.length > 0) {
+      if (this.children.length > 0) {
         this.stopActivePropagation = true;
       }
 
-      if(active.length === 0) {
+      if (active.length === 0) {
         this.setDefault();
       } else {
         this.active = active;

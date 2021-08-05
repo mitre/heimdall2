@@ -13,15 +13,15 @@
 </template>
 
 <script lang="ts">
-import Component, {mixins} from 'vue-class-component';
-import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
-import {EvaluationModule} from '@/store/evaluations';
 import RefreshButton from '@/components/generic/RefreshButton.vue';
-import {IEvaluation} from '@heimdall/interfaces';
-import ServerMixin from '@/mixins/ServerMixin';
-import {Prop, Watch} from 'vue-property-decorator';
+import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
 import RouteMixin from '@/mixins/RouteMixin';
+import ServerMixin from '@/mixins/ServerMixin';
+import {EvaluationModule} from '@/store/evaluations';
 import {FileID} from '@/store/report_intake';
+import {IEvaluation} from '@heimdall/interfaces';
+import Component, {mixins} from 'vue-class-component';
+import {Prop, Watch} from 'vue-property-decorator';
 
 /**
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
@@ -76,7 +76,7 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
     return EvaluationModule.loading;
   }
 
-  get files(){
+  get files() {
     return EvaluationModule.allEvaluations;
   }
 
