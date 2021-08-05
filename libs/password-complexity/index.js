@@ -8,29 +8,29 @@ const validators = [
   {
     name: 'Password must contain a combination of lowercase letters, uppercase letters, numbers, and special characters',
     check: function hasClasses(password) {
-        const validators = [
+        const checks = [
           RegExp('[a-z]'),
           RegExp('[A-Z]'),
           RegExp('[0-9]'),
           RegExp(/[^\w\s]/)
         ];
         return (
-          validators.filter((expr) => expr.test(password)).length ===
-          validators.length
+          checks.filter((expr) => expr.test(password)).length ===
+          checks.length
         );
       }
   },
   {
     name: 'Password must not contain 4 consecutive characters of the same character class',
     check: function noRepeats(password) {
-        const validators = [
+        const checks = [
           RegExp(/(.)\1{3,}/),
           RegExp('[a-z]{4,}'),
           RegExp('[A-Z]{4,}'),
           RegExp('[0-9]{4,}'),
           RegExp(/[^\w\s]{4,}/)
         ];
-        return validators.filter((expr) => expr.test(password)).length === 0;
+        return checks.filter((expr) => expr.test(password)).length === 0;
       }
   }
 ]

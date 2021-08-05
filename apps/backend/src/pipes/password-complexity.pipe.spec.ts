@@ -7,10 +7,8 @@ import {
   UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS
 } from '../../test/constants/users-test.constant';
 import {
-  checkLength,
-  hasClasses,
-  noRepeats,
-  PasswordComplexityPipe
+  PasswordComplexityPipe,
+  validatePassword
 } from './password-complexity.pipe';
 
 describe('PasswordComplexityPipe', () => {
@@ -28,74 +26,108 @@ describe('PasswordComplexityPipe', () => {
   describe('Helper Function Tests', () => {
     describe('checkLength', () => {
       it('should fail because the password has less than 15 characters', () => {
-        expect(checkLength('ShortPassword')).toBeFalsy();
+        expect(validatePassword('ShortPassword')).toContain(
+          'Password must be at least 15 characters'
+        );
       });
       it('should pass because the password has more than 15 characters', () => {
-        expect(checkLength('LongerTestPassword')).toBeTruthy();
+        expect(validatePassword('NotAShortPassword')).not.toContain(
+          'Password must be at least 15 characters'
+        );
       });
     });
 
     describe('hasClasses', () => {
       it('should fail because the password does not contain a special character', () => {
-        expect(hasClasses('Testpasswordwithoutspecialchar7')).toBeFalsy();
+        expect(validatePassword('Testpasswordwithoutspecialchar7')).toContain(
+          'Password must contain a combination of lowercase letters, uppercase letters, numbers, and special characters'
+        );
       });
 
       it('should fail because the password does not contain a number', () => {
-        expect(hasClasses('Testpasswordwithoutnumber$')).toBeFalsy();
+        expect(validatePassword('Testpasswordwithoutspecialchar7')).toContain(
+          'Password must contain a combination of lowercase letters, uppercase letters, numbers, and special characters'
+        );
       });
 
       it('should fail because the password does not contain an uppercase letter', () => {
-        expect(hasClasses('testpasswordwithoutuppercase7$')).toBeFalsy();
+        expect(validatePassword('testpasswordwithoutuppercase7$')).toContain(
+          'Password must contain a combination of lowercase letters, uppercase letters, numbers, and special characters'
+        );
       });
 
       it('should fail because the password does not contain a lowercase letter', () => {
-        expect(hasClasses('TESTPASSWORDWITHOUTLOWERCASE7$')).toBeFalsy();
+        expect(validatePassword('TESTPASSWORDWITHOUTLOWERCASE7$')).toContain(
+          'Password must contain a combination of lowercase letters, uppercase letters, numbers, and special characters'
+        );
       });
 
       it('should pass because the password has all character classes and is at least 15 characters', () => {
-        expect(hasClasses('Atestpassword7$')).toBeTruthy();
+        expect(validatePassword('Atestpassword7$')).not.toContain(
+          'Password must contain a combination of lowercase letters, uppercase letters, numbers, and special characters'
+        );
       });
     });
 
     describe('noRepeats', () => {
       it('should fail because there is more than 3 consecutive repeating lowercase characters in the password', () => {
-        expect(noRepeats('aaaa')).toBeFalsy();
+        expect(validatePassword('aaaa')).toContain(
+          'Password must not contain 4 consecutive characters of the same character class'
+        );
       });
 
       it('should fail because there is more than 3 lowercase characters back-to-back in the password', () => {
-        expect(noRepeats('test')).toBeFalsy();
+        expect(validatePassword('test')).toContain(
+          'Password must not contain 4 consecutive characters of the same character class'
+        );
       });
 
       it('should fail because there is more than 3 consecutive repeating uppercase characters in the password', () => {
-        expect(noRepeats('AAAA')).toBeFalsy();
+        expect(validatePassword('AAAA')).toContain(
+          'Password must not contain 4 consecutive characters of the same character class'
+        );
       });
 
       it('should fail because there is more than 3 uppercase characters back-to-back in the password', () => {
-        expect(noRepeats('TEST')).toBeFalsy();
+        expect(validatePassword('TEST')).toContain(
+          'Password must not contain 4 consecutive characters of the same character class'
+        );
       });
 
       it('should fail because there is more than 3 consecutive repeating numbers in the password', () => {
-        expect(noRepeats('7777')).toBeFalsy();
+        expect(validatePassword('7777')).toContain(
+          'Password must not contain 4 consecutive characters of the same character class'
+        );
       });
 
       it('should fail because there is more than 3 numbers back-to-back in the password', () => {
-        expect(noRepeats('1078')).toBeFalsy();
+        expect(validatePassword('1078')).toContain(
+          'Password must not contain 4 consecutive characters of the same character class'
+        );
       });
 
       it('should fail because there is more than 3 consecutive repeating numbers in the password', () => {
-        expect(noRepeats('$$$$')).toBeFalsy();
+        expect(validatePassword('$$$$')).toContain(
+          'Password must not contain 4 consecutive characters of the same character class'
+        );
       });
 
       it('should fail because there is more than 3 special characters back-to-back in the password', () => {
-        expect(noRepeats('!@#$')).toBeFalsy();
+        expect(validatePassword('!@#$')).toContain(
+          'Password must not contain 4 consecutive characters of the same character class'
+        );
       });
 
       it('should fail because there is more than 3 consecutive white spaces in the password', () => {
-        expect(noRepeats('spa    ce')).toBeFalsy();
+        expect(validatePassword('spa    ce')).toContain(
+          'Password must not contain 4 consecutive characters of the same character class'
+        );
       });
 
       it('should pass because the password meets all the minimum requirements', () => {
-        expect(noRepeats('aaaBBB111$$$')).toBeTruthy();
+        expect(validatePassword('aaaBBB111$$$')).not.toContain(
+          'Password must not contain 4 consecutive characters of the same character class'
+        );
       });
     });
   });

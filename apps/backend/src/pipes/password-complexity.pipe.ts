@@ -1,4 +1,4 @@
-import packageMain from '@heimdall/password-complexity'; // Works
+import {validators} from '@heimdall/password-complexity'; // Works
 import {
   ArgumentMetadata,
   BadRequestException,
@@ -11,7 +11,7 @@ export function validatePassword(password?: string): string[] {
   if (typeof password !== 'string') {
     errors.push('Password must be of type string');
   } else {
-    packageMain.validators.forEach((validator) => {
+    validators.forEach((validator) => {
       if (!validator.check(password)) {
         errors.push(validator.name);
       }
