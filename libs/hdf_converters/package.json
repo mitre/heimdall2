@@ -13,8 +13,7 @@
   "scripts": {
     "prepack": "yarn build && cp package.json package.json.orig && cat package.json.orig | jq '.main = (.publishConfig.main)' > package.json",
     "postpack": "mv package.json.orig package.json",
-    "copy-files": "copyfiles data/* lib/",
-    "build": "tsc -p ./tsconfig.build.json && yarn copy-files",
+    "build": "tsc -p ./tsconfig.build.json && copyfiles data/* lib/",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
     "test": "jest --silent"
