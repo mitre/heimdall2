@@ -143,7 +143,7 @@ function getStig(item: unknown): string {
   }
 }
 function getStatus(item: unknown): ExecJSON.ControlResultStatus {
-  let result = _.get(item, 'cm:compliance-result')
+  const result = _.get(item, 'cm:compliance-result');
   switch (result) {
     case 'PASSED':
       return ExecJSON.ControlResultStatus.Passed;
