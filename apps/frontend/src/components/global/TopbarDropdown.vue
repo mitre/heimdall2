@@ -87,16 +87,15 @@
 </template>
 
 <script lang="ts">
-import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import LogoutButton from '@/components/generic/LogoutButton.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
 import HelpModal from '@/components/global/HelpModal.vue';
+import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import UserModal from '@/components/global/UserModal.vue';
-import LogoutButton from '@/components/generic/LogoutButton.vue';
 import ServerMixin from '@/mixins/ServerMixin';
 import {ServerModule} from '@/store/server';
-
-import Component, {mixins} from 'vue-class-component';
 import {IUser} from '@heimdall/interfaces';
+import Component, {mixins} from 'vue-class-component';
 
 @Component({
   components: {
@@ -115,10 +114,9 @@ export default class TopbarDropdown extends mixins(ServerMixin) {
   get userInitials(): string {
     if (this.userInfo.firstName && this.userInfo.lastName) {
       return (
-        this.userInfo.firstName.charAt(0) +
-        this.userInfo.lastName.charAt(0)
+        this.userInfo.firstName.charAt(0) + this.userInfo.lastName.charAt(0)
       );
-    } else if (this.userInfo.firstName){
+    } else if (this.userInfo.firstName) {
       return this.userInfo.firstName.substring(0, 2);
     } else {
       return this.userInfo.email.substring(0, 2);

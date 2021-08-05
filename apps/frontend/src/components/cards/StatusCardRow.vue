@@ -84,10 +84,10 @@
 </template>
 
 <script lang="ts">
+import {ExtendedControlStatus, Filter} from '@/store/data_filters';
+import {StatusCountModule} from '@/store/status_counts';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {StatusCountModule} from '@/store/status_counts';
-import {ExtendedControlStatus, Filter} from '@/store/data_filters';
 import {Prop} from 'vue-property-decorator';
 
 interface CardProps {
@@ -107,7 +107,7 @@ export default class StatusCardRow extends Vue {
     return {
       fromFile: this.filter.fromFile,
       omit_overlayed_controls: this.filter.omit_overlayed_controls
-    }
+    };
   }
 
   // Cards
@@ -132,13 +132,13 @@ export default class StatusCardRow extends Vue {
         )} individual checks passed, ${StatusCountModule.countOf(
           this.overlayRemovedFilter,
           'FailedTests'
-        )} failed out of ${StatusCountModule.countOf(
-          this.overlayRemovedFilter,
-          'PassingTestsFailedControl'
-        ) + StatusCountModule.countOf(
-          this.overlayRemovedFilter,
-          'FailedTests'
-        )} total checks`,
+        )} failed out of ${
+          StatusCountModule.countOf(
+            this.overlayRemovedFilter,
+            'PassingTestsFailedControl'
+          ) +
+          StatusCountModule.countOf(this.overlayRemovedFilter, 'FailedTests')
+        } total checks`,
         color: 'statusFailed',
         number: StatusCountModule.countOf(this.overlayRemovedFilter, 'Failed')
       },
@@ -147,14 +147,20 @@ export default class StatusCardRow extends Vue {
         title: 'Not Applicable',
         subtitle: `System exception or absent component`,
         color: 'statusNotApplicable',
-        number: StatusCountModule.countOf(this.overlayRemovedFilter, 'Not Applicable')
+        number: StatusCountModule.countOf(
+          this.overlayRemovedFilter,
+          'Not Applicable'
+        )
       },
       {
         icon: 'alert-circle',
         title: 'Not Reviewed',
         subtitle: `Can only be tested manually at this time`,
         color: 'statusNotReviewed',
-        number: StatusCountModule.countOf(this.overlayRemovedFilter, 'Not Reviewed')
+        number: StatusCountModule.countOf(
+          this.overlayRemovedFilter,
+          'Not Reviewed'
+        )
       }
     ];
   }
@@ -180,22 +186,31 @@ export default class StatusCardRow extends Vue {
       title: 'Waived',
       subtitle: `Consider using an overlay or manual attestation to properly address this control.`,
       color: 'statusNotApplicable',
-      number: StatusCountModule.countOf({fromFile: this.filter.fromFile}, 'Waived')
+      number: StatusCountModule.countOf(
+        {fromFile: this.filter.fromFile},
+        'Waived'
+      )
     };
   }
 
   getCardColor(card: CardProps): string {
-    if(this.filter.status?.length === 0 || this.filter.status?.some((statusFilter) => statusFilter.toLowerCase() === card.title.toLowerCase())){
+    if (
+      this.filter.status?.length === 0 ||
+      this.filter.status?.some(
+        (statusFilter) =>
+          statusFilter.toLowerCase() === card.title.toLowerCase()
+      )
+    ) {
       return card.color;
     }
-    return ''
+    return '';
   }
 
   toggleFilter(filter: ExtendedControlStatus) {
-    if(this.filter.status?.includes(filter)) {
-      this.$emit('remove-filter', filter)
+    if (this.filter.status?.includes(filter)) {
+      this.$emit('remove-filter', filter);
     } else {
-      this.$emit('add-filter', filter)
+      this.$emit('add-filter', filter);
     }
   }
 }

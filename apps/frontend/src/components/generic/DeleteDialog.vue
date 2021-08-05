@@ -32,8 +32,7 @@ import Component from 'vue-class-component';
 import {Prop, VModel} from 'vue-property-decorator';
 
 @Component({
-  components: {
-  }
+  components: {}
 })
 export default class DeleteDialog extends Vue {
   @Prop({required: true, type: String}) readonly type!: string;

@@ -137,20 +137,20 @@
   </v-card>
 </template>
 <script lang="ts">
+import UserValidatorMixin from '@/mixins/UserValidatorMixin';
+import {ServerModule} from '@/store/server';
+import {SnackbarModule} from '@/store/snackbar';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {ServerModule} from '@/store/server';
-import {required, email} from 'vuelidate/lib/validators';
-import UserValidatorMixin from '@/mixins/UserValidatorMixin';
-import {SnackbarModule} from '@/store/snackbar';
+import {email, required} from 'vuelidate/lib/validators';
 
 interface LoginHash {
   email: string;
   password: string;
 }
 @Component({
-    mixins: [UserValidatorMixin],
-    validations: {
+  mixins: [UserValidatorMixin],
+  validations: {
     email: {
       required,
       email
@@ -163,7 +163,7 @@ interface LoginHash {
 export default class LocalLogin extends Vue {
   email = '';
   password = '';
-  buttonLoading = false
+  buttonLoading = false;
 
   login() {
     this.buttonLoading = true;
@@ -175,9 +175,10 @@ export default class LocalLogin extends Vue {
       .then(() => {
         this.$router.push('/');
         SnackbarModule.notify('You have successfully signed in.');
-      }).finally(() => {
-        this.buttonLoading = false;
       })
+      .finally(() => {
+        this.buttonLoading = false;
+      });
   }
 
   get showAlternateAuth() {
@@ -185,7 +186,7 @@ export default class LocalLogin extends Vue {
   }
 
   authStrategySupported(strategy: string) {
-    return ServerModule.enabledOAuth.includes(strategy)
+    return ServerModule.enabledOAuth.includes(strategy);
   }
 
   oauthLogin(site: string) {

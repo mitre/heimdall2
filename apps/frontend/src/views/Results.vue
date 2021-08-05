@@ -179,39 +179,45 @@
 </template>
 
 <script lang="ts">
-import Component, {mixins} from 'vue-class-component';
-import Base from '@/views/Base.vue';
-
-import StatusCardRow from '@/components/cards/StatusCardRow.vue';
-import ControlTable from '@/components/cards/controltable/ControlTable.vue';
-import Treemap from '@/components/cards/treemap/Treemap.vue';
-import StatusChart from '@/components/cards/StatusChart.vue';
-import SeverityChart from '@/components/cards/SeverityChart.vue';
 import ComplianceChart from '@/components/cards/ComplianceChart.vue';
-import UploadButton from '@/components/generic/UploadButton.vue';
-
-import ExportCaat from '@/components/global/ExportCaat.vue';
-import ExportNist from '@/components/global/ExportNist.vue';
-import ExportJson from '@/components/global/ExportJson.vue';
-import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
+import ControlTable from '@/components/cards/controltable/ControlTable.vue';
 import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
-
-import {FilteredDataModule, Filter, TreeMapState, ExtendedControlStatus} from '@/store/data_filters';
-import {Severity} from 'inspecjs';
-import {EvaluationFile, FileID, ProfileFile, SourcedContextualizedEvaluation, SourcedContextualizedProfile} from '@/store/report_intake';
-import {InspecDataModule} from '@/store/data_store';
-
 import ProfileData from '@/components/cards/ProfileData.vue';
-
-import {ServerModule} from '@/store/server';
-import {capitalize} from 'lodash';
-import {compare_times} from '../utilities/delta_util';
-import {EvaluationModule} from '../store/evaluations';
+import SeverityChart from '@/components/cards/SeverityChart.vue';
+import StatusCardRow from '@/components/cards/StatusCardRow.vue';
+import StatusChart from '@/components/cards/StatusChart.vue';
+import Treemap from '@/components/cards/treemap/Treemap.vue';
+import UploadButton from '@/components/generic/UploadButton.vue';
+import ExportCaat from '@/components/global/ExportCaat.vue';
+import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
+import ExportJson from '@/components/global/ExportJson.vue';
+import ExportNist from '@/components/global/ExportNist.vue';
 import RouteMixin from '@/mixins/RouteMixin';
-import {StatusCountModule} from '../store/status_counts';
-import ServerMixin from '../mixins/ServerMixin';
-import {IEvaluation} from '@heimdall/interfaces';
+import {
+  ExtendedControlStatus,
+  Filter,
+  FilteredDataModule,
+  TreeMapState
+} from '@/store/data_filters';
+import {InspecDataModule} from '@/store/data_store';
+import {
+  EvaluationFile,
+  FileID,
+  ProfileFile,
+  SourcedContextualizedEvaluation,
+  SourcedContextualizedProfile
+} from '@/store/report_intake';
 import {SearchModule} from '@/store/search';
+import {ServerModule} from '@/store/server';
+import Base from '@/views/Base.vue';
+import {IEvaluation} from '@heimdall/interfaces';
+import {Severity} from 'inspecjs';
+import {capitalize} from 'lodash';
+import Component, {mixins} from 'vue-class-component';
+import ServerMixin from '../mixins/ServerMixin';
+import {EvaluationModule} from '../store/evaluations';
+import {StatusCountModule} from '../store/status_counts';
+import {compare_times} from '../utilities/delta_util';
 
 @Component({
   components: {
@@ -231,7 +237,6 @@ import {SearchModule} from '@/store/search';
     UploadButton
   }
 })
-
 export default class Results extends mixins(RouteMixin, ServerMixin) {
   /**
    * The current state of the treemap as modeled by the treemap (duh).
@@ -243,7 +248,10 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /** Model for if all-filtered snackbar should be showing */
   filterSnackbar = false;
 
-  evalInfo: SourcedContextualizedEvaluation | SourcedContextualizedProfile | null = null;
+  evalInfo:
+    | SourcedContextualizedEvaluation
+    | SourcedContextualizedProfile
+    | null = null;
 
   /**
    * The current search terms, as modeled by the search bar
@@ -261,7 +269,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   set severityFilter(severity: Severity[]) {
-    SearchModule.setSeverity(severity)
+    SearchModule.setSeverity(severity);
   }
 
   get statusFilter(): ExtendedControlStatus[] {
@@ -279,28 +287,30 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   get file_filter(): FileID[] {
     if (this.is_result_view) {
       return FilteredDataModule.selectedEvaluationIds;
-    }
-    else {
+    } else {
       return FilteredDataModule.selectedProfileIds;
     }
   }
 
   get evaluationFiles(): SourcedContextualizedEvaluation[] {
-    return Array.from(FilteredDataModule.evaluations(this.file_filter)).sort(compare_times);
+    return Array.from(FilteredDataModule.evaluations(this.file_filter)).sort(
+      compare_times
+    );
   }
 
   get profiles(): SourcedContextualizedProfile[] {
     return Array.from(FilteredDataModule.profiles(this.file_filter));
   }
 
-  get activeFiles(): (SourcedContextualizedEvaluation | SourcedContextualizedProfile)[] {
+  get activeFiles(): (
+    | SourcedContextualizedEvaluation
+    | SourcedContextualizedProfile
+  )[] {
     return this.is_result_view ? this.evaluationFiles : this.profiles;
   }
 
   getFile(fileID: FileID) {
-    return InspecDataModule.allFiles.find(
-      (f) => f.uniqueId === fileID
-    );
+    return InspecDataModule.allFiles.find((f) => f.uniqueId === fileID);
   }
 
   getDbFile(file: EvaluationFile | ProfileFile): IEvaluation | undefined {
@@ -365,7 +375,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     this.filterSnackbar = false;
     this.controlSelection = null;
     this.treeFilters = [];
-    if(clearSearchBar) {
+    if (clearSearchBar) {
       this.searchTerm = '';
     }
   }
@@ -402,7 +412,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   get waivedProfilesExist(): boolean {
-    return StatusCountModule.countOf(this.all_filter, 'Waived') >= 1
+    return StatusCountModule.countOf(this.all_filter, 'Waived') >= 1;
   }
 
   /**
@@ -411,7 +421,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   get curr_title(): string {
     let returnText = `${capitalize(this.current_route_name.slice(0, -1))} View`;
     if (this.file_filter.length === 1) {
-      const file = this.getFile(this.file_filter[0])
+      const file = this.getFile(this.file_filter[0]);
       if (file) {
         const dbFile = this.getDbFile(file);
         returnText += ` (${dbFile?.filename || file.filename} selected)`;
@@ -435,7 +445,9 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   //basically a v-model for the eval info cards when there is no slide group
-  toggle_profile(file: SourcedContextualizedEvaluation | SourcedContextualizedProfile) {
+  toggle_profile(
+    file: SourcedContextualizedEvaluation | SourcedContextualizedProfile
+  ) {
     if (file === this.evalInfo) {
       this.evalInfo = null;
     } else {
@@ -444,19 +456,27 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   showErrors() {
-    this.searchTerm = 'status:"Profile Error"'
+    this.searchTerm = 'status:"Profile Error"';
   }
 
   showWaived() {
-    this.searchTerm = 'status:"Waived"'
+    this.searchTerm = 'status:"Waived"';
   }
 
   addStatusSearch(status: ExtendedControlStatus) {
-    SearchModule.addSearchFilter({field: 'status', value: status, previousValues: this.statusFilter});
+    SearchModule.addSearchFilter({
+      field: 'status',
+      value: status,
+      previousValues: this.statusFilter
+    });
   }
 
   removeStatusFilter(status: ExtendedControlStatus) {
-    SearchModule.removeSearchFilter({field: 'status', value: status, previousValues: this.statusFilter})
+    SearchModule.removeSearchFilter({
+      field: 'status',
+      value: status,
+      previousValues: this.statusFilter
+    });
   }
 }
 </script>

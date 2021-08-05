@@ -28,12 +28,11 @@
 </template>
 
 <script lang="ts">
-import Component, {mixins} from 'vue-class-component';
 import TopbarDropdown from '@/components/global/TopbarDropdown.vue';
-
 import ServerMixin from '@/mixins/ServerMixin';
-import {Prop} from 'vue-property-decorator';
 import {HeightsModule} from '@/store/heights';
+import Component, {mixins} from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -51,7 +50,7 @@ export default class Topbar extends mixins(ServerMixin) {
   onResize() {
     this.$nextTick(() => {
       // Allow the page to settle before checking the topbar height
-    // (this is what $nextTick is supposed to do but it's firing too quickly)
+      // (this is what $nextTick is supposed to do but it's firing too quickly)
       setTimeout(() => {
         HeightsModule.setTopbarHeight(this.$el.clientHeight);
       }, 2000);
@@ -64,7 +63,9 @@ export default class Topbar extends mixins(ServerMixin) {
   }
 
   get elipsisTitle() {
-    return this.title.length > 50 ? `${this.title.substring(0, 50)}...` : this.title;
+    return this.title.length > 50
+      ? `${this.title.substring(0, 50)}...`
+      : this.title;
   }
 }
 </script>

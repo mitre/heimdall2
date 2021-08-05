@@ -7,12 +7,12 @@
 </template>
 
 <script lang="ts">
+import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
+import {Filter} from '@/store/data_filters';
+import {SeverityCountModule} from '@/store/severity_counts';
+import {Severity} from 'inspecjs';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
-import {Severity} from 'inspecjs';
-import {SeverityCountModule} from '@/store/severity_counts';
-import {Filter} from '@/store/data_filters';
 import {Prop} from 'vue-property-decorator';
 import {SearchModule, valueToSeverity} from '../../store/search';
 
@@ -59,10 +59,21 @@ export default class SeverityChart extends Vue {
 
   onSelect(severity: Category<Severity>) {
     // In the case that the values are the same, we want to instead emit null
-    if (this.value && this.value?.indexOf(valueToSeverity(severity.value)) !== -1) {
-      SearchModule.removeSearchFilter({field: 'severity', value: valueToSeverity(severity.value), previousValues: this.value});
+    if (
+      this.value &&
+      this.value?.indexOf(valueToSeverity(severity.value)) !== -1
+    ) {
+      SearchModule.removeSearchFilter({
+        field: 'severity',
+        value: valueToSeverity(severity.value),
+        previousValues: this.value
+      });
     } else {
-      SearchModule.addSearchFilter({field: 'severity', value: valueToSeverity(severity.value), previousValues: this.value});
+      SearchModule.addSearchFilter({
+        field: 'severity',
+        value: valueToSeverity(severity.value),
+        previousValues: this.value
+      });
     }
   }
 }
