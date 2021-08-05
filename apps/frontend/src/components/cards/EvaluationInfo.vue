@@ -10,7 +10,7 @@
       <div v-if="startTime"><strong>Start Time:</strong> {{ startTime }}</div>
       <div v-if="evaluation" class="d-flex flex-nowrap">
         <strong class="pt-2 pr-1">Tags:</strong>
-        <TagRow :evaluation="evaluation" />
+        <TagRow v-if="evaluation.id" :evaluation="evaluation" />
       </div>
       <div
         v-if="evaluation && evaluation.groups.length !== 0"

@@ -121,14 +121,14 @@ export default class ExportHTMLModal extends Vue {
     bootstrapJS: '',
     jquery: '',
     statistics: {
-      passed: StatusCountModule.countOf(this.filter, 'Passed'),
-      failed: StatusCountModule.countOf(this.filter, 'Failed'),
-      notApplicable: StatusCountModule.countOf(this.filter, 'Not Applicable'),
-      notReviewed: StatusCountModule.countOf(this.filter, 'Not Reviewed'),
-      passedTests: StatusCountModule.countOf(this.filter, 'PassedTests'),
-      passingTestsFailedControl: StatusCountModule.countOf(this.filter, 'PassingTestsFailedControl'),
-      failedTests: StatusCountModule.countOf(this.filter, 'FailedTests'),
-      totalTests: StatusCountModule.countOf(this.filter, 'PassingTestsFailedControl') + StatusCountModule.countOf(this.filter, 'FailedTests')
+      passed: 0,
+      failed: 0,
+      notApplicable: 0,
+      notReviewed: 0,
+      passedTests: 0,
+      passingTestsFailedControl: 0,
+      failedTests: 0,
+      totalTests: 0
     },
     files: [],
     controlSets: [],
@@ -274,10 +274,10 @@ export default class ExportHTMLModal extends Vue {
     axios.all([templateRequest, bootstrapCSSRequest, bootstrapJSRequest, jqueryRequest]).then(axios.spread((...responses) => {
       const template = responses[0].data
       this.outputData.bootstrapCSS = responses[1].data
-          .replace(/\#dc3545/g, "#f34335") // bg-danger
-          .replace(/\#198754/g, "#4cb04f") // bg-success
-          .replace(/\#0dcaf0/g, "#03a9f4") // bg-info
-          .replace(/\#ffc107/g, "#fe9900") // bg-warning
+          .replace("220,53,69", "243,67,53")  // bg-danger
+          .replace("25,135,84", "76,176,79")  // bg-success
+          .replace("13,202,240", "3,169,244") // bg-info
+          .replace("255,193,7", "254,153,0")  // bg-warning
 
       this.outputData.bootstrapJS = responses[2].data
       this.outputData.jquery = responses[3].data
