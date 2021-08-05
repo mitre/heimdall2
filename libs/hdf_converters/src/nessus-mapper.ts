@@ -143,14 +143,18 @@ function getStig(item: unknown): string {
   }
 }
 function getStatus(item: unknown): ExecJSON.ControlResultStatus {
-  if (_.has(item, 'cm:compliance-result')) {
-    if (_.get(item, 'cm:compliance-result') === 'PASSED') {
+  let result = _.get(item, 'cm:compliance-result')
+  switch (result) {
+    case 'PASSED':
       return ExecJSON.ControlResultStatus.Passed;
-    } else {
+    case 'WARNING':
+      return ExecJSON.ControlResultStatus.Skipped;
+    case 'ERROR':
+      return ExecJSON.ControlResultStatus.Error;
+    case 'FAILED':
       return ExecJSON.ControlResultStatus.Failed;
-    }
-  } else {
-    return ExecJSON.ControlResultStatus.Failed;
+    default:
+      return ExecJSON.ControlResultStatus.Failed;
   }
 }
 function formatCodeDesc(item: unknown): string {
