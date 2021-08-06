@@ -58,7 +58,11 @@ async function bootstrap() {
         },
         tableName: 'session'
       }),
-      cookie: {maxAge: 60 * 60}, // 1 hour
+      proxy: configService.get('NODE_ENV') === 'production',
+      cookie: {
+        maxAge: 60 * 60,
+        secure: configService.get('NODE_ENV') === 'production'
+      }, // 1 hour
       saveUninitialized: true,
       resave: false
     })

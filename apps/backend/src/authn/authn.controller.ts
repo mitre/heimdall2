@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
 import {Request} from 'express';
+import {ConfigService} from '../config/config.service';
 import {AuthenticationExceptionFilter} from '../filters/authentication-exception.filter';
 import {LocalAuthGuard} from '../guards/local-auth.guard';
 import {LoggingInterceptor} from '../interceptors/logging.interceptor';
@@ -18,7 +19,10 @@ import {AuthnService} from './authn.service';
 @UseInterceptors(LoggingInterceptor)
 @Controller('authn')
 export class AuthnController {
-  constructor(private readonly authnService: AuthnService) {}
+  constructor(
+    private readonly authnService: AuthnService,
+    private readonly configService: ConfigService
+  ) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -126,8 +130,12 @@ export class AuthnController {
       accessToken: string;
     }
   ): Promise<void> {
-    req.res?.cookie('userID', session.userID);
-    req.res?.cookie('accessToken', session.accessToken);
+    req.res?.cookie('userID', session.userID, {
+      secure: this.configService.get('NODE_ENV')?.toLowerCase() === 'production'
+    });
+    req.res?.cookie('accessToken', session.accessToken, {
+      secure: this.configService.get('NODE_ENV')?.toLowerCase() === 'production'
+    });
     req.res?.redirect('/');
   }
 }
