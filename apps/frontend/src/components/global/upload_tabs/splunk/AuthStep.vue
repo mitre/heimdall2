@@ -35,12 +35,11 @@
 </template>
 
 <script lang="ts">
+import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
+import {LocalStorageVal} from '@/utilities/helper_util';
+import {SplunkEndpoint} from '@/utilities/splunk_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {LocalStorageVal} from '@/utilities/helper_util';
-
-import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
-import {SplunkEndpoint} from '@/utilities/splunk_util';
 
 // Our saved fields
 const localUsername = new LocalStorageVal<string>('splunk_username');

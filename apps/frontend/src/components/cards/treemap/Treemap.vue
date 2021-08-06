@@ -34,20 +34,19 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-
-import * as d3 from 'd3';
-import {Filter, FilteredDataModule, TreeMapState} from '@/store/data_filters';
-import {
-  TreemapNode,
-  build_nist_tree_map,
-  is_leaf,
-  is_parent
-} from '@/utilities/treemap_util';
 import Cell, {XYScale} from '@/components/cards/treemap/Cell.vue';
 import {ColorHackModule} from '@/store/color_hack';
+import {Filter, FilteredDataModule, TreeMapState} from '@/store/data_filters';
 import {compare_arrays} from '@/utilities/helper_util';
+import {
+  build_nist_tree_map,
+  is_leaf,
+  is_parent,
+  TreemapNode
+} from '@/utilities/treemap_util';
+import * as d3 from 'd3';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import {Prop, PropSync, Ref} from 'vue-property-decorator';
 
 // Respects a v-model of type TreeMapState
@@ -138,7 +137,7 @@ export default class Treemap extends Vue {
   /** Generates a d3 heirarchy structure, with appropriate bounds to our width
    *  detailing all of the controls in the nist hash */
   get treemap_layout(): d3.HierarchyRectangularNode<TreemapNode> {
-    // Get the currejnt filtered data
+    // Get the current filtered data
     const controls = FilteredDataModule.controls(this.filter);
 
     // Build the map
@@ -155,7 +154,8 @@ export default class Treemap extends Vue {
     // If it is a leaf, then select it
     if (is_leaf(n.data)) {
       const id = n.data.control.data.id;
-      this.syncedSelectedControl = (id !== this.syncedSelectedControl) ? id : null;
+      this.syncedSelectedControl =
+        id !== this.syncedSelectedControl ? id : null;
     } else {
       // Otherwise, dive away. Set course for the leading title
       const cntrl = n.data.nist_control;

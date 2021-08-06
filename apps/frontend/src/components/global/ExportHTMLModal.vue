@@ -38,21 +38,26 @@
 </template>
 
 <script lang="ts">
-import Component from 'vue-class-component';
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import Vue from 'vue';
-import {Filter, FilteredDataModule} from '../../store/data_filters';
-import {Prop, Watch} from 'vue-property-decorator';
-import {SnackbarModule} from '../../store/snackbar';
-import {InspecDataModule} from '../../store/data_store';
-import {s2ab} from '@/utilities/export_util'
+import {s2ab} from '@/utilities/export_util';
+import {
+  mdiAlertCircle,
+  mdiCheckCircle,
+  mdiCloseCircle,
+  mdiMinusCircle
+} from '@mdi/js';
 import axios from 'axios';
-import _ from 'lodash';
-import {StatusCountModule} from '../../store/status_counts';
-import {EvaluationFile, ProfileFile} from '../../store/report_intake';
 import {ContextualizedControl} from 'inspecjs';
-import {mdiAlertCircle, mdiCheckCircle, mdiCloseCircle, mdiMinusCircle} from '@mdi/js'
+import _ from 'lodash';
 import Mustache from 'mustache';
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {Prop, Watch} from 'vue-property-decorator';
+import {Filter, FilteredDataModule} from '../../store/data_filters';
+import {InspecDataModule} from '../../store/data_store';
+import {EvaluationFile, ProfileFile} from '../../store/report_intake';
+import {SnackbarModule} from '../../store/snackbar';
+import {StatusCountModule} from '../../store/status_counts';
 
 interface Detail {
   name: string;
@@ -85,7 +90,7 @@ interface Statistics {
 }
 
 interface Icons {
-  [key: string]: string
+  [key: string]: string;
 }
 
 interface OutputData {
@@ -99,9 +104,8 @@ interface OutputData {
   showCode: boolean;
   exportType: string;
   complianceCards: {html: string | undefined}[];
-  icons: Icons
+  icons: Icons;
 }
-
 
 @Component({
   components: {
@@ -121,14 +125,14 @@ export default class ExportHTMLModal extends Vue {
     bootstrapJS: '',
     jquery: '',
     statistics: {
-      passed: StatusCountModule.countOf(this.filter, 'Passed'),
-      failed: StatusCountModule.countOf(this.filter, 'Failed'),
-      notApplicable: StatusCountModule.countOf(this.filter, 'Not Applicable'),
-      notReviewed: StatusCountModule.countOf(this.filter, 'Not Reviewed'),
-      passedTests: StatusCountModule.countOf(this.filter, 'PassedTests'),
-      passingTestsFailedControl: StatusCountModule.countOf(this.filter, 'PassingTestsFailedControl'),
-      failedTests: StatusCountModule.countOf(this.filter, 'FailedTests'),
-      totalTests: StatusCountModule.countOf(this.filter, 'PassingTestsFailedControl') + StatusCountModule.countOf(this.filter, 'FailedTests')
+      passed: 0,
+      failed: 0,
+      notApplicable: 0,
+      notReviewed: 0,
+      passedTests: 0,
+      passingTestsFailedControl: 0,
+      failedTests: 0,
+      totalTests: 0
     },
     files: [],
     controlSets: [],
@@ -148,25 +152,32 @@ export default class ExportHTMLModal extends Vue {
   onFileChanged(newValue: string, _oldValue: string) {
     switch (newValue) {
       case 'executive':
-        this.description = "Profile Info\nStatuses\nCompliance Donuts";
+        this.description = 'Profile Info\nStatuses\nCompliance Donuts';
         this.outputData.showControlSets = false;
         this.outputData.showCode = false;
         break;
       case 'manager':
-        this.description = "Profile Info\nStatuses\nCompliance Donuts\nTest Results and Details";
+        this.description =
+          'Profile Info\nStatuses\nCompliance Donuts\nTest Results and Details';
         this.outputData.showControlSets = true;
         this.outputData.showCode = false;
         break;
       case 'administrator':
-        this.description = "Profile Info\nStatuses\nCompliance Donuts\nTest Results and Details\nTest Code";
+        this.description =
+          'Profile Info\nStatuses\nCompliance Donuts\nTest Results and Details\nTest Code';
         this.outputData.showControlSets = true;
         this.outputData.showCode = true;
-        break
+        break;
     }
   }
 
-  iconDatatoSVG(iconData: string, fill: string, widthPx = 24, heightPx = 24): string {
-    return `<svg style="width:${widthPx}px; height:${heightPx}px" viewBox="0 0 ${widthPx} ${heightPx}"><path fill="${fill}" d="${iconData}"/></svg>`
+  iconDatatoSVG(
+    iconData: string,
+    fill: string,
+    widthPx = 24,
+    heightPx = 24
+  ): string {
+    return `<svg style="width:${widthPx}px; height:${heightPx}px" viewBox="0 0 ${widthPx} ${heightPx}"><path fill="${fill}" d="${iconData}"/></svg>`;
   }
 
   /**
@@ -186,122 +197,147 @@ export default class ExportHTMLModal extends Vue {
       toolVersion: _.get(file, 'evaluation.data.version'),
       platform: _.get(file, 'evaluation.data.platform.name'),
       duration: _.get(file, 'evaluation.data.statistics.duration')
-    })
-    this.outputData.exportType = _.capitalize(this.exportType)
-    const controls = FilteredDataModule.controls({...this.filter, fromFile: [file.uniqueId]});
+    });
+    this.outputData.exportType = _.capitalize(this.exportType);
+    const controls = FilteredDataModule.controls({
+      ...this.filter,
+      fromFile: [file.uniqueId]
+    });
     // Convert them into rows
     this.outputData.controlSets.push({
       filename: file.filename,
       fileID: file.uniqueId,
       controls: controls.map((control) => this.addDetails(control))
-    })
+    });
   }
 
   resetOutputData() {
     this.outputData.statistics = {
-        passed: StatusCountModule.countOf(this.filter, 'Passed'),
-        failed: StatusCountModule.countOf(this.filter, 'Failed'),
-        notApplicable: StatusCountModule.countOf(this.filter, 'Not Applicable'),
-        notReviewed: StatusCountModule.countOf(this.filter, 'Not Reviewed'),
-        passedTests: StatusCountModule.countOf(this.filter, 'PassedTests'),
-        passingTestsFailedControl: StatusCountModule.countOf(this.filter, 'PassingTestsFailedControl'),
-        failedTests: StatusCountModule.countOf(this.filter, 'FailedTests'),
-        totalTests: StatusCountModule.countOf(this.filter, 'PassingTestsFailedControl') + StatusCountModule.countOf(this.filter, 'FailedTests')
-    }
-    this.outputData.files = []
-    this.outputData.controlSets = []
+      passed: StatusCountModule.countOf(this.filter, 'Passed'),
+      failed: StatusCountModule.countOf(this.filter, 'Failed'),
+      notApplicable: StatusCountModule.countOf(this.filter, 'Not Applicable'),
+      notReviewed: StatusCountModule.countOf(this.filter, 'Not Reviewed'),
+      passedTests: StatusCountModule.countOf(this.filter, 'PassedTests'),
+      passingTestsFailedControl: StatusCountModule.countOf(
+        this.filter,
+        'PassingTestsFailedControl'
+      ),
+      failedTests: StatusCountModule.countOf(this.filter, 'FailedTests'),
+      totalTests:
+        StatusCountModule.countOf(this.filter, 'PassingTestsFailedControl') +
+        StatusCountModule.countOf(this.filter, 'FailedTests')
+    };
+    this.outputData.files = [];
+    this.outputData.controlSets = [];
   }
 
-  addDetails(control: ContextualizedControl): ContextualizedControl & {details: Detail[]} {
-    return {...control, full_code: control.full_code, details: [
-      {
-        name: 'Control',
-        value: control.data.id
-      },
-      {
-        name: 'Title',
-        value: control.data.title
-      },
-      {
-        name: 'Caveat',
-        value: control.hdf.descriptions.caveat
-      },
-      {
-        name: 'Desc',
-        value: control.data.desc
-      },
-      {
-        name: 'Rationale',
-        value: control.hdf.descriptions.rationale
-      },
-      {
-        name: 'Justification',
-        value: control.hdf.descriptions.justification
-      },
-      {
-        name: 'Severity',
-        value: control.root.hdf.severity
-      },
-      {
-        name: 'Impact',
-        value: control.data.impact
-      },
-      {
-        name: 'Nist controls',
-        value: control.hdf.rawNistTags.join(', ')
-      },
-      {
-        name: 'Check Text',
-        value: control.hdf.descriptions.check || control.data.tags.check
-      },
-      {
-        name: 'Fix Text',
-        value: control.hdf.descriptions.fix || control.data.tags.fix
-      }
-    ].filter((v) => v.value)}
+  addDetails(
+    control: ContextualizedControl
+  ): ContextualizedControl & {details: Detail[]} {
+    return {
+      ...control,
+      full_code: control.full_code,
+      details: [
+        {
+          name: 'Control',
+          value: control.data.id
+        },
+        {
+          name: 'Title',
+          value: control.data.title
+        },
+        {
+          name: 'Caveat',
+          value: control.hdf.descriptions.caveat
+        },
+        {
+          name: 'Desc',
+          value: control.data.desc
+        },
+        {
+          name: 'Rationale',
+          value: control.hdf.descriptions.rationale
+        },
+        {
+          name: 'Justification',
+          value: control.hdf.descriptions.justification
+        },
+        {
+          name: 'Severity',
+          value: control.root.hdf.severity
+        },
+        {
+          name: 'Impact',
+          value: control.data.impact
+        },
+        {
+          name: 'Nist controls',
+          value: control.hdf.rawNistTags.join(', ')
+        },
+        {
+          name: 'Check Text',
+          value: control.hdf.descriptions.check || control.data.tags.check
+        },
+        {
+          name: 'Fix Text',
+          value: control.hdf.descriptions.fix || control.data.tags.fix
+        }
+      ].filter((v) => v.value)
+    };
   }
 
   exportHTML(): void {
     this.resetOutputData();
-    if(this.filter.fromFile.length === 0){
-      return SnackbarModule.failure('No files have been loaded.')
+    if (this.filter.fromFile.length === 0) {
+      return SnackbarModule.failure('No files have been loaded.');
     }
-    const templateRequest = axios.get(`/static/export/template.html`)
-    const bootstrapCSSRequest = axios.get(`/static/export/bootstrap.min.css`)
-    const bootstrapJSRequest = axios.get(`/static/export/bootstrap.min.js`)
-    const jqueryRequest = axios.get(`/static/export/jquery.min.js`)
+    const templateRequest = axios.get(`/static/export/template.html`);
+    const bootstrapCSSRequest = axios.get(`/static/export/bootstrap.min.css`);
+    const bootstrapJSRequest = axios.get(`/static/export/bootstrap.min.js`);
+    const jqueryRequest = axios.get(`/static/export/jquery.min.js`);
 
-    axios.all([templateRequest, bootstrapCSSRequest, bootstrapJSRequest, jqueryRequest]).then(axios.spread((...responses) => {
-      const template = responses[0].data
-      this.outputData.bootstrapCSS = responses[1].data
-          .replace(/\#dc3545/g, "#f34335") // bg-danger
-          .replace(/\#198754/g, "#4cb04f") // bg-success
-          .replace(/\#0dcaf0/g, "#03a9f4") // bg-info
-          .replace(/\#ffc107/g, "#fe9900") // bg-warning
+    axios
+      .all([
+        templateRequest,
+        bootstrapCSSRequest,
+        bootstrapJSRequest,
+        jqueryRequest
+      ])
+      .then(
+        axios.spread((...responses) => {
+          const template = responses[0].data;
+          this.outputData.bootstrapCSS = responses[1].data
+            .replace('220,53,69', '243,67,53') // bg-danger
+            .replace('25,135,84', '76,176,79') // bg-success
+            .replace('13,202,240', '3,169,244') // bg-info
+            .replace('255,193,7', '254,153,0'); // bg-warning
 
-      this.outputData.bootstrapJS = responses[2].data
-      this.outputData.jquery = responses[3].data
-      this.outputData.complianceCards = [
-        {html: document.getElementById('statusCounts')?.innerHTML},
-        {html: document.getElementById('severityCounts')?.innerHTML},
-        {html: document.getElementById('complianceLevel')?.innerHTML}
-      ]
+          this.outputData.bootstrapJS = responses[2].data;
+          this.outputData.jquery = responses[3].data;
+          this.outputData.complianceCards = [
+            {html: document.getElementById('statusCounts')?.innerHTML},
+            {html: document.getElementById('severityCounts')?.innerHTML},
+            {html: document.getElementById('complianceLevel')?.innerHTML}
+          ];
 
-      this.filter.fromFile.forEach(async (fileId) => {
-        const file = InspecDataModule.allFiles.find(
-          (f) => f.uniqueId === fileId
-        );
-        if (file) {
-          this.addFiledata(file)
-        }
-      })
-      const body = Mustache.render(template, this.outputData)
-      saveAs(
-        new Blob([s2ab(body)], {type: 'application/octet-stream'}),
-          `${_.capitalize(this.exportType)}_Report_${new Date().toString()}.html`.replace(/[ :]/g, '_')
+          this.filter.fromFile.forEach(async (fileId) => {
+            const file = InspecDataModule.allFiles.find(
+              (f) => f.uniqueId === fileId
+            );
+            if (file) {
+              this.addFiledata(file);
+            }
+          });
+          const body = Mustache.render(template, this.outputData);
+          saveAs(
+            new Blob([s2ab(body)], {type: 'application/octet-stream'}),
+            `${_.capitalize(
+              this.exportType
+            )}_Report_${new Date().toString()}.html`.replace(/[ :]/g, '_')
+          );
+        })
       );
-    }))
-    this.closeModal()
+    this.closeModal();
   }
 }
 </script>

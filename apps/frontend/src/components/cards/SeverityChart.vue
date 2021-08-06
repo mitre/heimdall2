@@ -7,13 +7,14 @@
 </template>
 
 <script lang="ts">
+import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
+import {Filter} from '@/store/data_filters';
+import {SeverityCountModule} from '@/store/severity_counts';
+import {Severity} from 'inspecjs';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
-import {Severity} from 'inspecjs';
-import {SeverityCountModule} from '@/store/severity_counts';
-import {Filter} from '@/store/data_filters';
 import {Prop} from 'vue-property-decorator';
+import {SearchModule, valueToSeverity} from '../../store/search';
 
 /**
  * Categories property must be of type Category
@@ -25,11 +26,10 @@ import {Prop} from 'vue-property-decorator';
   }
 })
 export default class SeverityChart extends Vue {
-  @Prop({type: String}) readonly value!: string | null;
+  @Prop({type: Array}) readonly value!: Severity[];
   @Prop({type: Object, required: true}) readonly filter!: Filter;
 
   categories: Category<Severity>[] = [
-    // { label: "Low", value: "low", icon: "SquareIcon", color: "var(--v-success-base)" },
     {label: 'Low', value: 'low', color: 'severityLow'},
     {
       label: 'Medium',
@@ -59,10 +59,21 @@ export default class SeverityChart extends Vue {
 
   onSelect(severity: Category<Severity>) {
     // In the case that the values are the same, we want to instead emit null
-    if (severity.value === this.value) {
-      this.$emit('input', null);
+    if (
+      this.value &&
+      this.value?.indexOf(valueToSeverity(severity.value)) !== -1
+    ) {
+      SearchModule.removeSearchFilter({
+        field: 'severity',
+        value: valueToSeverity(severity.value),
+        previousValues: this.value
+      });
     } else {
-      this.$emit('input', severity.value);
+      SearchModule.addSearchFilter({
+        field: 'severity',
+        value: valueToSeverity(severity.value),
+        previousValues: this.value
+      });
     }
   }
 }

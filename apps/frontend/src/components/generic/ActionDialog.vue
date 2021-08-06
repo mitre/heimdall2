@@ -32,8 +32,7 @@ import Component from 'vue-class-component';
 import {Prop, VModel} from 'vue-property-decorator';
 
 @Component({
-  components: {
-  }
+  components: {}
 })
 export default class ActionDialog extends Vue {
   @Prop({required: false, type: String, default: 'delete'}) readonly action!: string;

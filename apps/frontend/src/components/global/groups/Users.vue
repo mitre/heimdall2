@@ -55,22 +55,31 @@
 </template>
 
 <script lang="ts">
+import ActionDialog from '@/components/generic/ActionDialog.vue';
+import {ServerModule} from '@/store/server';
+import {IVuetifyItems} from '@/utilities/helper_util';
 import {ISlimUser} from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, VModel} from 'vue-property-decorator';
-import {ServerModule} from '@/store/server';
-import {IVuetifyItems} from '@/utilities/helper_util';
-import ActionDialog from '@/components/generic/ActionDialog.vue';
 
 @Component({
   components: {
-    ActionDialog,
+    ActionDialog
   }
 })
 export default class Users extends Vue {
-  @VModel({type: Array, required: false, default() {return []}}) currentUsers!: ISlimUser[];
-  @Prop({type: Boolean, required: false, default: true}) readonly editable!: boolean;
+  @VModel({
+    type: Array,
+    required: false,
+    default() {
+      return [];
+    }
+  })
+  currentUsers!: ISlimUser[];
+
+  @Prop({type: Boolean, required: false, default: true})
+  readonly editable!: boolean;
 
   usersToAdd: string[] = [];
 
@@ -98,11 +107,11 @@ export default class Users extends Vue {
 
   get displayedHeaders() {
     // If the user is editing the group, then display the actions column.
-    if(this.editable) {
+    if (this.editable) {
       this.headers.push({
         text: 'Actions',
         value: 'actions',
-        sortable: false,
+        sortable: false
       });
     }
     return this.headers;
@@ -110,7 +119,7 @@ export default class Users extends Vue {
 
   addUsers() {
     ServerModule.allUsers.forEach((user) => {
-      if(this.usersToAdd.includes(user.id)) {
+      if (this.usersToAdd.includes(user.id)) {
         this.currentUsers.push(user);
       }
     });
@@ -119,11 +128,11 @@ export default class Users extends Vue {
 
   deleteUserDialog(user: ISlimUser): void {
     this.editedUser = user;
-    this.dialogDelete = true
+    this.dialogDelete = true;
   }
 
-  closeActionDialog () {
-    this.dialogDelete = false
+  closeActionDialog() {
+    this.dialogDelete = false;
     this.editedUser = null;
   }
 
@@ -140,13 +149,18 @@ export default class Users extends Vue {
     const users: IVuetifyItems[] = [];
 
     ServerModule.allUsers.forEach(async (user) => {
-      if(!currentUserIds.includes(user.id) && user.id !== ServerModule.userInfo.id) {
+      if (
+        !currentUserIds.includes(user.id) &&
+        user.id !== ServerModule.userInfo.id
+      ) {
         users.push({
-          text: `${user.firstName || ''} ${user.lastName || ''} (${user.email})`,
+          text: `${user.firstName || ''} ${user.lastName || ''} (${
+            user.email
+          })`,
           value: user.id
         });
       }
-    })
+    });
     return users;
   }
 }

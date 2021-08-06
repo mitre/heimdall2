@@ -11,11 +11,11 @@
 </template>
 
 <script lang="ts">
+import {SnackbarModule} from '@/store/snackbar';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
-import {SnackbarModule} from '@/store/snackbar';
 import VueClipboard from 'vue-clipboard2';
+import {Prop} from 'vue-property-decorator';
 
 VueClipboard.config.autoSetContainer = true;
 Vue.use(VueClipboard);
@@ -23,7 +23,8 @@ Vue.use(VueClipboard);
 @Component({})
 export default class CopyButton extends Vue {
   @Prop({required: true}) readonly text!: string;
-  @Prop({required: false, default: 'mdi-clipboard-outline'}) readonly icon!: string;
+  @Prop({required: false, default: 'mdi-clipboard-outline'})
+  readonly icon!: string;
 
   onCopy() {
     SnackbarModule.notify('Text copied to your clipboard');

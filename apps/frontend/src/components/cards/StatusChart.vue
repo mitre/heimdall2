@@ -8,13 +8,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
 import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
+import {ExtendedControlStatus, Filter} from '@/store/data_filters';
 import {StatusCountModule} from '@/store/status_counts';
 import {ControlStatus} from 'inspecjs';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {Filter} from '@/store/data_filters';
+import {SearchModule} from '../../store/search';
 
 /**
  * Categories property must be of type Category
@@ -26,7 +27,10 @@ import {Filter} from '@/store/data_filters';
   }
 })
 export default class StatusChart extends Vue {
-  @Prop({type: String, default: null}) readonly value!: string | null;
+  @Prop({type: Array, default: null}) readonly value!:
+    | ExtendedControlStatus[]
+    | null;
+
   @Prop({type: Object, required: true}) readonly filter!: Filter;
   @Prop({type: Boolean, default: false}) showCompliance!: boolean;
 
@@ -87,11 +91,18 @@ export default class StatusChart extends Vue {
   }
 
   onSelect(status: Category<ControlStatus>) {
-    // In the case that the values are the same, we want to instead emit null
-    if (status.value === this.value) {
-      this.$emit('input', null);
+    if (SearchModule.statusFilter?.indexOf(status.value) !== -1) {
+      SearchModule.removeSearchFilter({
+        field: 'status',
+        value: status.value,
+        previousValues: this.value || []
+      });
     } else {
-      this.$emit('input', status.value);
+      SearchModule.addSearchFilter({
+        field: 'status',
+        value: status.value,
+        previousValues: this.value || []
+      });
     }
   }
 }

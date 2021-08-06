@@ -88,22 +88,44 @@
         runTime
       }}</v-card-text></template
     >
+
+    <template #viewed>
+      <v-container class="py-0 my-0 fill-height">
+        <v-layout
+          class="py-0 my-0"
+          :justify-center="$vuetify.breakpoint.lgAndUp"
+          :align-center="$vuetify.breakpoint.lgAndUp"
+        >
+          <v-checkbox
+            v-model="wasViewed"
+            class="align-center justify-center py-0 my-0 pl-0"
+            hide-details
+            :label="$vuetify.breakpoint.lgAndUp ? '' : 'Viewed'"
+          />
+        </v-layout>
+      </v-container>
+    </template>
   </ResponsiveRowSwitch>
 </template>
 
 <script lang="ts">
-import Component, {mixins} from 'vue-class-component';
-import {parse_nist, is_control, ContextualizedControl} from 'inspecjs';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
-import {NIST_DESCRIPTIONS, nistCanonConfig} from '@/utilities/nist_util';
-import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import CircleRating from '@/components/generic/CircleRating.vue';
-import {Prop} from 'vue-property-decorator';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
+import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
+import {nistCanonConfig, NIST_DESCRIPTIONS} from '@/utilities/nist_util';
+import {ContextualizedControl, is_control, parse_nist} from 'inspecjs';
 import _ from 'lodash';
+import Component, {mixins} from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
 
 export function getControlRunTime(control: ContextualizedControl): number {
-  return control.hdf.segments?.reduce((total, segment) => segment.run_time || 0 + total, 0) || 0
+  return (
+    control.hdf.segments?.reduce(
+      (total, segment) => segment.run_time || 0 + total,
+      0
+    ) || 0
+  );
 }
 
 interface Tag {
@@ -122,15 +144,21 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   @Prop({type: Object, required: true})
   readonly control!: ContextualizedControl;
 
+  @Prop({type: Array, required: true})
+  readonly viewedControls!: string[];
+
   @Prop({type: Boolean, default: false}) readonly controlExpanded!: boolean;
   @Prop({type: Boolean, default: false}) readonly showImpact!: boolean;
 
   get runTime(): string {
-    return `${_.truncate(getControlRunTime(this.control).toString(), {length: 5, omission: ''})}ms`
+    return `${_.truncate(getControlRunTime(this.control).toString(), {
+      length: 5,
+      omission: ''
+    })}ms`;
   }
 
   get filename(): string | undefined {
-    return _.get(this.control, 'sourcedFrom.sourcedFrom.from_file.filename')
+    return _.get(this.control, 'sourcedFrom.sourcedFrom.from_file.filename');
   }
 
   get truncated_title(): string {
@@ -144,6 +172,14 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   get status_color(): string {
     // maps stuff like "not applicable" -> "statusnotapplicable", which is a defined color name
     return `status${this.control.root.hdf.status.replace(' ', '')}`;
+  }
+
+  get wasViewed(): boolean {
+    return this.viewedControls.indexOf(this.control.data.id) !== -1;
+  }
+
+  set wasViewed(_value: boolean) {
+    this.$emit('control-viewed', this.control);
   }
 
   severity_arrow_count(severity: string): number {

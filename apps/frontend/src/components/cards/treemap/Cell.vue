@@ -39,11 +39,10 @@
 </template>
 
 <script lang="ts">
+import {is_leaf, TreemapNode, TreemapNodeLeaf} from '@/utilities/treemap_util';
+import * as d3 from 'd3';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-
-import * as d3 from 'd3';
-import {TreemapNode, TreemapNodeLeaf, is_leaf} from '@/utilities/treemap_util';
 import {Prop} from 'vue-property-decorator';
 
 export interface XYScale {

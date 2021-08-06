@@ -72,28 +72,24 @@
 </template>
 
 <script lang="ts">
+import {SourcedContextualizedProfile} from '@/store/report_intake';
+import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {SourcedContextualizedProfile} from '@/store/report_intake';
-
 import {Prop} from 'vue-property-decorator';
-import _ from 'lodash';
-import TagRow from '@/components/global/tags/TagRow.vue';
 
 interface Attribute {
   name: string;
   options: {
     value: unknown;
-  }
+  };
 }
 
-@Component({
-  components: {
-    TagRow
-  }
-})
+@Component({})
 export default class ProfileInfo extends Vue {
-  @Prop({required: false}) readonly profile: SourcedContextualizedProfile | undefined;
+  @Prop({required: false}) readonly profile:
+    | SourcedContextualizedProfile
+    | undefined;
 
   headers: Object[] = [
     {
@@ -134,7 +130,7 @@ export default class ProfileInfo extends Vue {
   }
 
   get inputs(): Attribute[] {
-    if(this.profile?.data.hasOwnProperty('attributes')) {
+    if (this.profile?.data.hasOwnProperty('attributes')) {
       return _.get(this.profile, 'data.attributes');
     } else {
       return _.get(this.profile, 'data.inputs');

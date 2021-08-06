@@ -19,16 +19,15 @@
 </template>
 
 <script lang="ts">
-import Component from 'vue-class-component';
 import UploadNexus from '@/components/global/UploadNexus.vue';
 import Vue from 'vue';
+import Component from 'vue-class-component';
 
 @Component({
   components: {
     UploadNexus
   }
 })
-
 export default class UploadButton extends Vue {
   showModal = false;
   /**

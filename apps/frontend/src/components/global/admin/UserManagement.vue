@@ -68,15 +68,15 @@
 </template>
 
 <script lang="ts">
+import ActionDialog from '@/components/generic/ActionDialog.vue';
+import RegistrationModal from '@/components/global/RegistrationModal.vue';
+import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import UserModal from '@/components/global/UserModal.vue';
 import {SnackbarModule} from '@/store/snackbar';
 import {IUser} from '@heimdall/interfaces';
 import axios from 'axios';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import UserModal from '@/components/global/UserModal.vue';
-import ActionDialog from '@/components/generic/ActionDialog.vue';
-import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import RegistrationModal from '@/components/global/RegistrationModal.vue';
 
 @Component({
   components: {
@@ -104,7 +104,7 @@ export default class UserManagement extends Vue {
     {text: 'Last Name', value: 'lastName', sortable: true},
     {text: 'Role', value: 'role', sortable: true},
     {text: 'Last Login', value: 'lastLogin', sortable: true},
-    {text: 'Actions', value: 'actions', sortable: false},
+    {text: 'Actions', value: 'actions', sortable: false}
   ];
 
   mounted() {
@@ -113,27 +113,32 @@ export default class UserManagement extends Vue {
 
   deleteUserDialog(user: IUser): void {
     this.editedUser = user;
-    this.dialogDelete = true
+    this.dialogDelete = true;
   }
 
   deleteUserConfirm(): void {
     if (this.editedUser) {
-      axios.delete<IUser>(`/users/${this.editedUser.id}`).then((response) => {
-        SnackbarModule.notify(`Successfully deleted user ${response.data.email}`);
-      }).finally(() => {
-        this.getUsers();
-        this.closeActionDialog();
-      });
+      axios
+        .delete<IUser>(`/users/${this.editedUser.id}`)
+        .then((response) => {
+          SnackbarModule.notify(
+            `Successfully deleted user ${response.data.email}`
+          );
+        })
+        .finally(() => {
+          this.getUsers();
+          this.closeActionDialog();
+        });
     }
   }
 
-  closeActionDialog () {
-    this.dialogDelete = false
+  closeActionDialog() {
+    this.dialogDelete = false;
     this.editedUser = null;
   }
 
   updateUser(updatedUser: IUser) {
-    const id = this.users.findIndex(user => user.id === updatedUser.id);
+    const id = this.users.findIndex((user) => user.id === updatedUser.id);
     if (id !== -1) {
       this.$set(this.users, id, updatedUser);
     }

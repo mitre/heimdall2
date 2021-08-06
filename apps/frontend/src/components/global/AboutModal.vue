@@ -52,10 +52,9 @@
 </template>
 
 <script lang="ts">
+import {AppInfoModule} from '@/store/app_info';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-
-import {AppInfoModule} from '@/store/app_info';
 
 @Component
 export default class AboutModal extends Vue {

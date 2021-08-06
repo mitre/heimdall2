@@ -209,20 +209,19 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import ActionDialog from '@/components/generic/ActionDialog.vue';
+import CopyButton from '@/components/generic/CopyButton.vue';
+import InputDialog from '@/components/generic/InputDialog.vue';
+import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
-import {IUser, IUpdateUser, IApiKey} from '@heimdall/interfaces';
-import UserValidatorMixin from '@/mixins/UserValidatorMixin';
-import {required, email, requiredIf} from 'vuelidate/lib/validators';
-import {Prop} from 'vue-property-decorator';
+import {IApiKey, IUpdateUser, IUser} from '@heimdall/interfaces';
 import axios from 'axios';
-import ActionDialog from '@/components/generic/ActionDialog.vue';
-import InputDialog from '@/components/generic/InputDialog.vue';
 import _ from 'lodash';
-import CopyButton from '@/components/generic/CopyButton.vue'
-
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
+import {email, required, requiredIf} from 'vuelidate/lib/validators';
 
 @Component({
   components: {ActionDialog, CopyButton, InputDialog},
@@ -235,9 +234,9 @@ import CopyButton from '@/components/generic/CopyButton.vue'
       }
     },
     currentPassword: {
-      required: requiredIf(function(userInfo){
-        	return (userInfo.user.role === 'admin')
-        })
+      required: requiredIf(function (userInfo) {
+        return userInfo.user.role === 'admin';
+      })
     },
     newPassword: {
       required: requiredIf('changePassword')
@@ -247,15 +246,15 @@ import CopyButton from '@/components/generic/CopyButton.vue'
     }
   }
 })
-
 export default class UserModal extends Vue {
   @Prop({type: Object, required: true}) readonly user!: IUser;
   @Prop({type: Boolean, default: false}) readonly admin!: boolean;
 
   roles: string[] = ['user', 'admin'];
 
-  showAPIKeys = false
-  apiKeyHeaders = [{
+  showAPIKeys = false;
+  apiKeyHeaders = [
+    {
       text: 'Name',
       value: 'name',
       filterable: true,
@@ -272,11 +271,11 @@ export default class UserModal extends Vue {
       value: 'action',
       sortable: false
     }
-  ]
+  ];
 
   apiKeys: IApiKey[] = [];
   apiKeysDisabled = false;
-  activeAPIKey: IApiKey | null = null
+  activeAPIKey: IApiKey | null = null;
   inputPasswordDialog = false;
 
   dialog = false;
@@ -287,155 +286,173 @@ export default class UserModal extends Vue {
   newPassword = '';
   passwordConfirmation = '';
   buttonLoading = false;
-  updateCallback = () => {return;}
+  updateCallback = () => {
+    return;
+  };
 
   mounted() {
-    this.getAPIKeys()
+    this.getAPIKeys();
   }
 
   async updateUserInfo(): Promise<void> {
     this.buttonLoading = true;
-    this.$v.$touch()
+    this.$v.$touch();
     if (this.userInfo != null && (this.admin || !this.$v.$invalid)) {
       var updateUserInfo: IUpdateUser = {
         ...this.userInfo,
         password: undefined,
         passwordConfirmation: undefined,
-        forcePasswordChange: undefined,
+        forcePasswordChange: undefined
       };
-      if(!this.admin) {
+      if (!this.admin) {
         updateUserInfo = {
           ...updateUserInfo,
-          currentPassword: this.currentPassword,
-        }
+          currentPassword: this.currentPassword
+        };
       }
-      if(this.changePassword){
+      if (this.changePassword) {
         updateUserInfo = {
           ...updateUserInfo,
           password: this.newPassword,
-          passwordConfirmation: this.passwordConfirmation,
-        }
+          passwordConfirmation: this.passwordConfirmation
+        };
       }
       ServerModule.updateUserInfo({id: this.user.id, info: updateUserInfo})
         .then((data) => {
           SnackbarModule.notify('User updated successfully.');
           this.$emit('update-user', data);
           this.dialog = false;
-        }).finally(() => {
-          this.buttonLoading = false;
         })
+        .finally(() => {
+          this.buttonLoading = false;
+        });
     }
   }
 
   truncate(str: string) {
-    return _.truncate(str, {length: 80})
+    return _.truncate(str, {length: 80});
   }
 
   changePasswordDialog() {
-    this.changePassword = !this.changePassword
+    this.changePassword = !this.changePassword;
   }
 
   toggleShowAPIKeys() {
-    this.showAPIKeys = !this.showAPIKeys
+    this.showAPIKeys = !this.showAPIKeys;
   }
 
   getAPIKeys() {
     axios
       .create()
-      .get<IApiKey[]>(`/apikeys`, {params: {userId: this.user.id}}).then(({data}) => {
-        this.apiKeys = data
-      }).catch((error) => {
-        if (error.response) {
-            if(error.response.status === 403) {
-              this.apiKeysDisabled = true
-              return
-            }
-        }
+      .get<IApiKey[]>(`/apikeys`, {params: {userId: this.user.id}})
+      .then(({data}) => {
+        this.apiKeys = data;
       })
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 403) {
+            this.apiKeysDisabled = true;
+            return;
+          }
+        }
+      });
   }
 
   addAPIKey() {
     this.inputPasswordDialog = false;
     axios
-      .post<IApiKey>(`/apikeys`, {userId: this.user.id, name: this.activeAPIKey?.name, currentPassword: this.currentPassword})
+      .post<IApiKey>(`/apikeys`, {
+        userId: this.user.id,
+        name: this.activeAPIKey?.name,
+        currentPassword: this.currentPassword
+      })
       .then(({data}) => this.apiKeys.push(data))
       .catch((error) => {
         if (error.response) {
-          if(error.response.status === 403) {
-            this.updateCallback = this.addAPIKey
+          if (error.response.status === 403) {
+            this.updateCallback = this.addAPIKey;
             this.inputPasswordDialog = true;
           }
         }
-        throw error
-      }).finally(() => this.activeAPIKey = null)
+        throw error;
+      })
+      .finally(() => (this.activeAPIKey = null));
   }
 
   deleteAPIKey(keyToDelete: IApiKey) {
     this.activeAPIKey = keyToDelete;
-    this.updateCallback = this.deleteAPIKeyConfirm
-    this.inputPasswordDialog = true
+    this.updateCallback = this.deleteAPIKeyConfirm;
+    this.inputPasswordDialog = true;
   }
 
   deleteAPIKeyConfirm() {
     this.inputPasswordDialog = false;
     axios
-      .delete(`/apikeys/${this.activeAPIKey?.id}`, {data: {...this.activeAPIKey, currentPassword: this.currentPassword}})
+      .delete(`/apikeys/${this.activeAPIKey?.id}`, {
+        data: {...this.activeAPIKey, currentPassword: this.currentPassword}
+      })
       .then(({data}) => {
-        this.apiKeys = this.apiKeys.filter((key) => key.id !== data.id)
+        this.apiKeys = this.apiKeys.filter((key) => key.id !== data.id);
       })
       .catch((error) => {
         if (error.response) {
-          if(error.response.status === 403) {
+          if (error.response.status === 403) {
             this.inputPasswordDialog = true;
           }
         }
-        throw error
-      })
+        throw error;
+      });
   }
 
   updateAPIKey(item?: IApiKey) {
-    if(typeof item === 'object') {
-      this.activeAPIKey = item
+    if (typeof item === 'object') {
+      this.activeAPIKey = item;
     }
     this.inputPasswordDialog = false;
     axios
-      .put<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {name: this.activeAPIKey?.name, currentPassword: this.currentPassword})
+      .put<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {
+        name: this.activeAPIKey?.name,
+        currentPassword: this.currentPassword
+      })
       .catch((error) => {
         if (error.response) {
-          if(error.response.status === 403) {
-            this.updateCallback = this.updateAPIKey
+          if (error.response.status === 403) {
+            this.updateCallback = this.updateAPIKey;
             this.inputPasswordDialog = true;
           }
         }
-        throw error
-      })
-    this.activeAPIKey = null
+        throw error;
+      });
+    this.activeAPIKey = null;
   }
 
   refreshAPIKey(keyToRefresh: IApiKey) {
     this.activeAPIKey = keyToRefresh;
-    this.updateCallback = this.refreshAPIKeyConfirm
-    this.inputPasswordDialog = true
+    this.updateCallback = this.refreshAPIKeyConfirm;
+    this.inputPasswordDialog = true;
   }
 
   refreshAPIKeyConfirm() {
-    this.deleteAPIKeyConfirm()
-    this.addAPIKey()
+    this.deleteAPIKeyConfirm();
+    this.addAPIKey();
   }
 
   updateCurrentPassword(password: string): void {
-    this.currentPassword = password
+    this.currentPassword = password;
   }
 
   get update_unavailable() {
-    return this.userInfo.creationMethod === 'ldap' || ServerModule.enabledOAuth.includes(this.userInfo.creationMethod);
+    return (
+      this.userInfo.creationMethod === 'ldap' ||
+      ServerModule.enabledOAuth.includes(this.userInfo.creationMethod)
+    );
   }
 
   get title(): string {
-    if(this.admin) {
-      return `Update account information for ${this.user.email}`
+    if (this.admin) {
+      return `Update account information for ${this.user.email}`;
     } else {
-      return 'Update your account information'
+      return 'Update your account information';
     }
   }
 }
