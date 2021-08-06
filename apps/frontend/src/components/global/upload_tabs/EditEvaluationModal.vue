@@ -12,18 +12,25 @@
       <v-card-text>
         <v-container>
           <v-row>
-            <v-col cols="12" sm="7">
+            <v-col cols="12" sm="5">
               <v-text-field
                 v-model="activeEvaluation.filename"
                 data-cy="filename"
                 label="File name"
               />
             </v-col>
-            <v-col cols="12" sm="5">
+            <v-col cols="12" sm="4">
               <v-select
                 v-model="activeEvaluation.public"
                 :items="visibilityOptions"
                 label="Visibility"
+              />
+            </v-col>
+            <v-col cols="12" sm="3">
+              <v-combobox
+                v-model="activeEvaluation.classification"
+                :items="classifications"
+                label="Classification"
               />
             </v-col>
           </v-row>
@@ -51,6 +58,7 @@
                 </template>
               </v-autocomplete>
             </v-col>
+
             <v-col cols="12" sm="5" md="3">
               <GroupModal id="groupModal" :create="true">
                 <template #clickable="{on, attrs}"
@@ -119,6 +127,15 @@ export default class EditEvaluationModal extends mixins(EvaluationMixin) {
   originalGroups: IVuetifyItems[] = [];
   groups: IVuetifyItems[] = [];
   groupSearch = '';
+  classifications = [
+    'Top Secret',
+    'Secret',
+    'Confidential',
+    'Non-Confidential',
+    'CUI',
+    'Containing PII',
+    'Sensitive'
+  ];
 
   visibilityOptions: IVuetifyItems[] = [
     {

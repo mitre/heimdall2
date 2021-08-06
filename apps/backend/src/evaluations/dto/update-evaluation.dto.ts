@@ -13,4 +13,8 @@ export class UpdateEvaluationDto implements IUpdateEvaluation {
   @IsOptional()
   @IsBoolean()
   readonly public: boolean | undefined;
+
+  @IsOptional()
+  @IsString()
+  readonly classification: boolean | undefined;
 }

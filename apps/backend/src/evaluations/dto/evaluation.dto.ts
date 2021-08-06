@@ -11,6 +11,7 @@ export class EvaluationDto implements IEvaluation {
   readonly groups: GroupDto[];
   readonly userId: string;
   readonly public: boolean;
+  readonly classification?: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;
   readonly editable: boolean;
@@ -41,6 +42,7 @@ export class EvaluationDto implements IEvaluation {
     }
     this.userId = evaluation.userId;
     this.public = evaluation.public;
+    this.classification = evaluation.classification;
     this.createdAt = evaluation.createdAt;
     this.updatedAt = evaluation.updatedAt;
     this.editable = editable;

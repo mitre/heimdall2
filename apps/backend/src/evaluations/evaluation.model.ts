@@ -40,6 +40,11 @@ export class Evaluation extends Model {
   @Column(DataType.BOOLEAN)
   public!: boolean;
 
+  @AllowNull(true)
+  @Default(null)
+  @Column(DataType.TEXT)
+  classification!: string;
+
   @ForeignKey(() => User)
   @Column(DataType.BIGINT)
   userId!: string;
