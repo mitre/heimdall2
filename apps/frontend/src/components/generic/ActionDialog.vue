@@ -35,7 +35,9 @@ import {Prop, VModel} from 'vue-property-decorator';
   components: {}
 })
 export default class ActionDialog extends Vue {
-  @Prop({required: false, type: String, default: 'delete'}) readonly action!: string;
+  @Prop({required: false, type: String, default: 'delete'})
+  readonly action!: string;
+
   @Prop({required: true, type: String}) readonly type!: string;
   @Prop({required: true, type: Boolean}) readonly value!: boolean;
   // This passes through the v-model input to the child v-dialog and back up to

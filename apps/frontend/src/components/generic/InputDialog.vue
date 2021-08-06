@@ -39,8 +39,12 @@ import {Prop} from 'vue-property-decorator';
 
 @Component({})
 export default class InputDialog extends Vue {
-  @Prop({required: false, type: Boolean, default: false}) readonly isPassword!: boolean;
-  @Prop({required: false, type: String, default: 'delete'}) readonly action!: string;
+  @Prop({required: false, type: Boolean, default: false})
+  readonly isPassword!: boolean;
+
+  @Prop({required: false, type: String, default: 'delete'})
+  readonly action!: string;
+
   @Prop({required: true, type: String}) readonly title!: string;
   @Prop({required: true, type: String}) readonly textFieldLabel!: string;
   @Prop({type: Boolean, required: true, default: false}) showModal!: boolean;
