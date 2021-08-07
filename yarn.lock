@@ -3349,9 +3349,9 @@
     "@types/node" "*"
 
 "@types/bootstrap@^5.0.15":
-  version "5.0.17"
-  resolved "https://registry.yarnpkg.com/@types/bootstrap/-/bootstrap-5.0.17.tgz#cb0a558babae77d8b1202bf5867b3ddc5d92c7ec"
-  integrity sha512-uQQQ3p+zw10VjZLvtCuKWI6QgVCYEnK/yHnno3gyEhikfQdiZexS2XPxjWRboGmX135o470GkmCta9eAgQMVLQ==
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@types/bootstrap/-/bootstrap-5.1.0.tgz#0df3e430ab18b911e549a87bf7bb824bb958bfb2"
+  integrity sha512-cR+eQJ/IrgcJZheb7xkKPiPNOa48zkc6fLZ4U9lDNNQp3qiiq3tW1xgrd+VzVJCram/Bnh+DdBsdsPdXKIYClA==
   dependencies:
     "@popperjs/core" "^2.9.2"
     "@types/jquery" "*"
