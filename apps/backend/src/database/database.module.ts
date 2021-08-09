@@ -5,7 +5,7 @@ import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
 import {DatabaseService} from './database.service';
 
-const sensitiveKeys = [
+export const sensitiveKeys = [
   /cookie/i,
   /passw(or)?d/i,
   /^pw$/,

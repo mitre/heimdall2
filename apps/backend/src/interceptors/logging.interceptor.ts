@@ -8,20 +8,10 @@ import {Request} from 'express';
 import _ from 'lodash';
 import {Observable} from 'rxjs';
 import winston from 'winston';
+import {sensitiveKeys} from '../database/database.module';
 import {SlimUserDto} from '../users/dto/slim-user.dto';
 import {UserDto} from '../users/dto/user.dto';
 import {User} from '../users/user.model';
-
-const sensitiveKeys = [
-  /cookie/i,
-  /passw(or)?d/i,
-  /^pw$/,
-  /^pass$/i,
-  /secret/i,
-  /token/i,
-  /api[-._]?key/i,
-  /data/i
-];
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
