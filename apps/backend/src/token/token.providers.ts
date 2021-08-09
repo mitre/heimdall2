@@ -10,7 +10,14 @@ export function generateDefault(): string {
 
 function limitJWTTime(time: string) {
   const timeMs = ms(time);
-  return timeMs > 172800000 ? 172800000 : timeMs; // Limit to two days
+  const maxDays = ms('2d'); // limit to two days
+  if (timeMs > maxDays) {
+    // eslint-disable-next-line no-console
+    console.log('JWT Expire time has been limited to two days maximum.');
+    return maxDays;
+  } else {
+    return timeMs;
+  }
 }
 
 export const tokenProviders = [
