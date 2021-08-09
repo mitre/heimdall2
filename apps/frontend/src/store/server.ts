@@ -26,6 +26,7 @@ export interface IServerState {
   loading: boolean;
   token: string;
   banner: string;
+  classificationLevel: string;
   enabledOAuth: string[];
   registrationEnabled: boolean;
   oidcName: string;
@@ -41,6 +42,7 @@ export interface IServerState {
 })
 class Server extends VuexModule implements IServerState {
   banner = '';
+  classificationLevel = '';
   ldap = false;
   serverUrl = '';
   serverMode = false;
@@ -83,6 +85,7 @@ class Server extends VuexModule implements IServerState {
   @Mutation
   SET_STARTUP_SETTINGS(settings: IStartupSettings) {
     this.banner = settings.banner;
+    this.classificationLevel = settings.classificationLevel;
     this.enabledOAuth = settings.enabledOAuth;
     this.registrationEnabled = settings.registrationEnabled;
     this.oidcName = settings.oidcName;

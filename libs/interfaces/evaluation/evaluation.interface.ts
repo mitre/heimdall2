@@ -9,7 +9,6 @@ export interface IEvaluation {
   groups: IGroup[];
   readonly userId: string;
   readonly public: boolean;
-  readonly classification?: string;
   readonly createdAt: Date;
   readonly updatedAt: Date;
   readonly editable: boolean;

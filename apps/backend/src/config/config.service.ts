@@ -24,6 +24,7 @@ export class ConfigService {
     });
     return new StartupSettingsDto({
       banner: this.get('WARNING_BANNER') || '',
+      classificationLevel: this.get('CLASSIFICATION_LEVEL') || '',
       enabledOAuth: enabledOauth,
       oidcName: this.get('OIDC_NAME') || '',
       ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false,

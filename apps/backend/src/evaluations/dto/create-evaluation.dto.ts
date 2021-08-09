@@ -18,10 +18,6 @@ export class CreateEvaluationDto implements ICreateEvaluation {
   readonly public!: boolean;
 
   @IsOptional()
-  @IsString()
-  readonly classification!: string;
-
-  @IsOptional()
   @IsArray()
   readonly evaluationTags: CreateEvaluationTagDto[] | undefined;
 
