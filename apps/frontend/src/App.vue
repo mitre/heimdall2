@@ -11,10 +11,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
 import Footer from '@/components/global/Footer.vue';
 import Snackbar from '@/components/global/Snackbar.vue';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 
 @Component({
   components: {

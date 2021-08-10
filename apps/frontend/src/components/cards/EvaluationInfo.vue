@@ -46,19 +46,23 @@
 </template>
 
 <script lang="ts">
+import GroupRow from '@/components/global/groups/GroupRow.vue';
+import TagRow from '@/components/global/tags/TagRow.vue';
+import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
+import {
+  EvaluationFile,
+  ProfileFile,
+  SourcedContextualizedEvaluation,
+  SourcedContextualizedProfile
+} from '@/store/report_intake';
+import {IEvaluation} from '@heimdall/interfaces';
+import {ContextualizedEvaluation} from 'inspecjs';
+import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {EvaluationFile, ProfileFile, SourcedContextualizedEvaluation, SourcedContextualizedProfile} from '@/store/report_intake';
-
 import {Prop} from 'vue-property-decorator';
-import _ from 'lodash';
 import {EvaluationModule} from '../../store/evaluations';
-import GroupRow from '@/components/global/groups/GroupRow.vue'
-import TagRow from '@/components/global/tags/TagRow.vue'
-import {IEvaluation} from '@heimdall/interfaces';
 import {get_eval_start_time} from '../../utilities/delta_util';
-import {ContextualizedEvaluation} from 'inspecjs';
-import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
 
 @Component({
   components: {
@@ -68,12 +72,14 @@ import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationM
   }
 })
 export default class EvaluationInfo extends Vue {
-  @Prop({required: true}) readonly file!: SourcedContextualizedEvaluation | SourcedContextualizedProfile;
+  @Prop({required: true}) readonly file!:
+    | SourcedContextualizedEvaluation
+    | SourcedContextualizedProfile;
 
   showEditEvaluationModal = false;
 
   get file_object(): EvaluationFile | ProfileFile {
-    return this.file.from_file
+    return this.file.from_file;
   }
 
   get filename(): string {
@@ -87,7 +93,10 @@ export default class EvaluationInfo extends Vue {
   }
 
   get platform(): string | undefined {
-    return _.get(this.file_object, 'evaluation.data.platform.name') + _.get(this.file_object, 'evaluation.data.platform.release');
+    return (
+      _.get(this.file_object, 'evaluation.data.platform.name') +
+      _.get(this.file_object, 'evaluation.data.platform.release')
+    );
   }
 
   get duration(): string | undefined {
@@ -99,7 +108,7 @@ export default class EvaluationInfo extends Vue {
   }
 
   get startTime(): string | null {
-    return get_eval_start_time(this.file as ContextualizedEvaluation)
+    return get_eval_start_time(this.file as ContextualizedEvaluation);
   }
 }
 </script>

@@ -20,40 +20,40 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import {IStatistics} from '@heimdall/interfaces';
 import axios from 'axios';
-import {IStatistics} from '@heimdall/interfaces'
+import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
 
 @Component({})
 export default class Statistics extends Vue {
-    statistics: IStatistics = {
-        userCount: 0,
-        evaluationCount: 0,
-        evaluationTagCount: 0,
-        groupCount: 0
-    };
+  statistics: IStatistics = {
+    userCount: 0,
+    evaluationCount: 0,
+    evaluationTagCount: 0,
+    groupCount: 0
+  };
 
-    loading = true;
+  loading = true;
 
-    mounted() {
-        this.updateStatistics()
-    }
+  mounted() {
+    this.updateStatistics();
+  }
 
-    updateStatistics() {
-        return axios.get<IStatistics>(`/statistics`).then(({data}) => {
-            this.statistics = data;
-            this.loading = false;
-        });
-    }
+  updateStatistics() {
+    return axios.get<IStatistics>(`/statistics`).then(({data}) => {
+      this.statistics = data;
+      this.loading = false;
+    });
+  }
 
-    toCapitalizedWords(variable: string) {
-        var words = variable.match(/[A-Za-z][a-z]*/g) || [];
-        return words.map(this.capitalize).join(" ");
-    }
+  toCapitalizedWords(variable: string) {
+    var words = variable.match(/[A-Za-z][a-z]*/g) || [];
+    return words.map(this.capitalize).join(' ');
+  }
 
-    capitalize(word: string) {
-        return word.charAt(0).toUpperCase() + word.substring(1);
-    }
+  capitalize(word: string) {
+    return word.charAt(0).toUpperCase() + word.substring(1);
+  }
 }
 </script>

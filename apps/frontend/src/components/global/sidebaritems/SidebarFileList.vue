@@ -31,26 +31,24 @@
 </template>
 
 <script lang="ts">
-import Component, {mixins} from 'vue-class-component';
-import axios from 'axios';
-import {InspecDataModule} from '@/store/data_store';
+import RouteMixin from '@/mixins/RouteMixin';
+import ServerMixin from '@/mixins/ServerMixin';
 import {FilteredDataModule} from '@/store/data_filters';
+import {InspecDataModule} from '@/store/data_store';
+import {EvaluationModule} from '@/store/evaluations';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
-
-import ServerMixin from '@/mixins/ServerMixin';
-import {Prop} from 'vue-property-decorator';
 import {ICreateEvaluation} from '@heimdall/interfaces';
+import axios from 'axios';
 import _ from 'lodash';
-import RouteMixin from '@/mixins/RouteMixin';
-import {EvaluationModule} from '@/store/evaluations';
+import Component, {mixins} from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
 
 @Component
 export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
   @Prop({type: Object}) readonly file!: EvaluationFile | ProfileFile;
 
   saving = false;
-
 
   select_file() {
     if (this.file.hasOwnProperty('evaluation')) {
@@ -84,8 +82,8 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
 
   //saves file to database
   save_file() {
-    if (this.file?.database_id){
-      SnackbarModule.failure('This file is already in the database.')
+    if (this.file?.database_id) {
+      SnackbarModule.failure('This file is already in the database.');
     } else if (this.file) {
       this.save_to_database(this.file);
     }
@@ -93,7 +91,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
 
   //determines if the use can save the file
   get disable_saving() {
-    return (typeof this.file?.database_id !== 'undefined') || this.saving
+    return typeof this.file?.database_id !== 'undefined' || this.saving;
   }
 
   save_to_database(file: EvaluationFile | ProfileFile) {
@@ -110,15 +108,25 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     const formData = new FormData();
     // Add the DTO objects to form data
     for (const [key, value] of Object.entries(createEvaluationDto)) {
-      if(typeof value !== 'undefined') {
+      if (typeof value !== 'undefined') {
         formData.append(key, value);
       }
     }
     // Add evaluation data to the form
-    if(file.hasOwnProperty('evaluation')) {
-      formData.append("data", new Blob([JSON.stringify(_.get(file, 'evaluation.data'))], {type: 'text/plain'}));
+    if (file.hasOwnProperty('evaluation')) {
+      formData.append(
+        'data',
+        new Blob([JSON.stringify(_.get(file, 'evaluation.data'))], {
+          type: 'text/plain'
+        })
+      );
     } else {
-      formData.append("data", new Blob([JSON.stringify(_.get(file, 'profile.data'))], {type: 'text/plain'}));
+      formData.append(
+        'data',
+        new Blob([JSON.stringify(_.get(file, 'profile.data'))], {
+          type: 'text/plain'
+        })
+      );
     }
     axios
       .post('/evaluations', formData)
@@ -127,11 +135,14 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
         file.database_id = parseInt(response.data.id);
         EvaluationModule.loadEvaluation(response.data.id);
         const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
-        this.navigateWithNoErrors(`/${this.current_route}/${loadedDatabaseIds}`);
+        this.navigateWithNoErrors(
+          `/${this.current_route}/${loadedDatabaseIds}`
+        );
       })
       .catch((error) => {
         SnackbarModule.failure(error.response.data.message);
-      }).finally(() => {
+      })
+      .finally(() => {
         this.saving = false;
       });
   }

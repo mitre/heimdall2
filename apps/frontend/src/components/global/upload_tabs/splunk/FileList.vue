@@ -36,16 +36,16 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import {InspecDataModule} from '@/store/data_store';
 import {
   EvaluationFile,
   SourcedContextualizedEvaluation
 } from '@/store/report_intake';
-import {v4 as uuid} from 'uuid';
-import {SplunkEndpoint, ExecutionMetaInfo} from '@/utilities/splunk_util';
-import {InspecDataModule} from '@/store/data_store';
+import {ExecutionMetaInfo, SplunkEndpoint} from '@/utilities/splunk_util';
 import {contextualizeEvaluation} from 'inspecjs';
+import {v4 as uuid} from 'uuid';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 
 const SEARCH_INTERVAL = 10000;

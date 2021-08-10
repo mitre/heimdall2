@@ -26,9 +26,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import GroupManagement from '@/components/global/groups/GroupManagement.vue';
 import Base from '@/views/Base.vue';
-import GroupManagement from '@/components/global/groups/GroupManagement.vue'
+import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
 
 @Component({

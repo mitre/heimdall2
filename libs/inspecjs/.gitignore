@@ -1,7 +1,8 @@
 out/
-dist/
+lib/
 docs/
 node_modules/
 work/
 src/test/parse_testbed/*
 **/.DS_Store
+inspecjs-v*.tgz

@@ -10,12 +10,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import VueApexCharts from 'vue-apexcharts';
 import {ApexOptions} from 'apexcharts';
-import {Category} from './ApexPieChart.vue';
+import Vue from 'vue';
+import VueApexCharts from 'vue-apexcharts';
+import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
+import {Category} from './ApexPieChart.vue';
 
 export interface SeriesItem {
   name: string;

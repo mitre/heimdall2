@@ -35,16 +35,14 @@
 </template>
 
 <script lang="ts">
-import Component, {mixins} from 'vue-class-component';
-import {EvaluationFile, ProfileFile} from '@/store/report_intake';
-import {InspecDataModule} from '@/store/data_store';
-import {FilteredDataModule} from '@/store/data_filters';
-import RouteMixin from '@/mixins/RouteMixin';
-
 import DropdownContent from '@/components/global/sidebaritems/DropdownContent.vue';
-import {Prop} from 'vue-property-decorator';
-
 import {Trinary} from '@/enums/Trinary';
+import RouteMixin from '@/mixins/RouteMixin';
+import {FilteredDataModule} from '@/store/data_filters';
+import {InspecDataModule} from '@/store/data_store';
+import {EvaluationFile, ProfileFile} from '@/store/report_intake';
+import Component, {mixins} from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -58,14 +56,12 @@ export default class Sidebar extends mixins(RouteMixin) {
   get active_path() {
     if (this.current_route === 'profiles') {
       return 1;
-      }
-    else if (
+    } else if (
       this.current_route === 'results' ||
       this.current_route === 'compare'
     ) {
       return 0;
-    }
-    else {
+    } else {
       return -1;
     }
   }
@@ -76,8 +72,7 @@ export default class Sidebar extends mixins(RouteMixin) {
     // 1 -> profile view
     if (id === 0) {
       this.navigateWithNoErrors(`/results`);
-    }
-    else if (id === 1) {
+    } else if (id === 1) {
       this.navigateWithNoErrors(`/profiles`);
     }
   }

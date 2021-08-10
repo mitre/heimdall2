@@ -49,13 +49,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
 import {FileID} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
+import {SplunkEndpoint, SplunkErrorCode} from '@/utilities/splunk_util';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import AuthStep from './AuthStep.vue';
 import FileList from './FileList.vue';
-import {SplunkEndpoint, SplunkErrorCode} from '@/utilities/splunk_util';
 
 /**
  * File reader component for taking in inspec JSON data.

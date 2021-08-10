@@ -109,18 +109,23 @@
 </template>
 
 <script lang="ts">
-import Component, {mixins} from 'vue-class-component';
-import {parse_nist, is_control, ContextualizedControl} from 'inspecjs';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
-import {NIST_DESCRIPTIONS, nistCanonConfig} from '@/utilities/nist_util';
-import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import CircleRating from '@/components/generic/CircleRating.vue';
-import {Prop} from 'vue-property-decorator';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
+import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
+import {nistCanonConfig, NIST_DESCRIPTIONS} from '@/utilities/nist_util';
+import {ContextualizedControl, is_control, parse_nist} from 'inspecjs';
 import _ from 'lodash';
+import Component, {mixins} from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
 
 export function getControlRunTime(control: ContextualizedControl): number {
-  return control.hdf.segments?.reduce((total, segment) => segment.run_time || 0 + total, 0) || 0
+  return (
+    control.hdf.segments?.reduce(
+      (total, segment) => segment.run_time || 0 + total,
+      0
+    ) || 0
+  );
 }
 
 interface Tag {
@@ -146,11 +151,14 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   @Prop({type: Boolean, default: false}) readonly showImpact!: boolean;
 
   get runTime(): string {
-    return `${_.truncate(getControlRunTime(this.control).toString(), {length: 5, omission: ''})}ms`
+    return `${_.truncate(getControlRunTime(this.control).toString(), {
+      length: 5,
+      omission: ''
+    })}ms`;
   }
 
   get filename(): string | undefined {
-    return _.get(this.control, 'sourcedFrom.sourcedFrom.from_file.filename')
+    return _.get(this.control, 'sourcedFrom.sourcedFrom.from_file.filename');
   }
 
   get truncated_title(): string {
