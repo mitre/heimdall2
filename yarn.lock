@@ -3349,9 +3349,9 @@
     "@types/node" "*"
 
 "@types/bootstrap@^5.0.15":
-  version "5.0.17"
-  resolved "https://registry.yarnpkg.com/@types/bootstrap/-/bootstrap-5.0.17.tgz#cb0a558babae77d8b1202bf5867b3ddc5d92c7ec"
-  integrity sha512-uQQQ3p+zw10VjZLvtCuKWI6QgVCYEnK/yHnno3gyEhikfQdiZexS2XPxjWRboGmX135o470GkmCta9eAgQMVLQ==
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@types/bootstrap/-/bootstrap-5.1.0.tgz#0df3e430ab18b911e549a87bf7bb824bb958bfb2"
+  integrity sha512-cR+eQJ/IrgcJZheb7xkKPiPNOa48zkc6fLZ4U9lDNNQp3qiiq3tW1xgrd+VzVJCram/Bnh+DdBsdsPdXKIYClA==
   dependencies:
     "@popperjs/core" "^2.9.2"
     "@types/jquery" "*"
@@ -3971,6 +3971,11 @@
   integrity sha512-m6nFAJ3lBSnqbvDZioawRvpLXSaPyn52Srf7OfzjubYbYX8MTUdIgDxQl0wEapm4m/pNYSd9TXocpQ0TvZFlYA==
   dependencies:
     "@types/node" "*"
+
+"@types/ms@^0.7.31":
+  version "0.7.31"
+  resolved "https://registry.yarnpkg.com/@types/ms/-/ms-0.7.31.tgz#31b7ca6407128a3d2bbc27fe2d21b345397f6197"
+  integrity sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==
 
 "@types/multer@^1.4.5":
   version "1.4.7"
@@ -5768,9 +5773,9 @@ autoprefixer@^9.8.6:
     postcss-value-parser "^4.1.0"
 
 aws-sdk@^2.573.0:
-  version "2.962.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.962.0.tgz#cb9c5a4e52b7bb31c2906f91e280b39c6a1538b2"
-  integrity sha512-uY87X0bQ0tFjxt/AxJM9gZDxNzz8hD7uJG4azw7fgZibBqG2eYMAw2ythkQB/B8kLPenm/jr5+FsIG28qaC63Q==
+  version "2.963.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.963.0.tgz#9655743e69e9466c7aed5962a680c330a6cad212"
+  integrity sha512-EY7EPap1c/1RxPx+Py56t9btJug3Z3PJkCfplqzNuU1QlFGs+rN8yYm9xIn8J6gbJ5D8F4Qab0GCtTmGstlHfQ==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -14781,7 +14786,7 @@ ms@2.1.2:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-ms@^2.0.0, ms@^2.1.1:
+ms@^2.0.0, ms@^2.1.1, ms@^2.1.3:
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
