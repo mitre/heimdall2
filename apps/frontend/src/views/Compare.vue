@@ -215,10 +215,8 @@ import {
   SourcedContextualizedEvaluation
 } from '@/store/report_intake';
 import {SeverityCountModule} from '@/store/severity_counts';
-import {StatusCountModule} from '@/store/status_counts';
+import {calculateCompliance, StatusCountModule} from '@/store/status_counts';
 import {
-  compareCompletedControlCount,
-  compareCompletedControlPercent,
   compareCompliance,
   compareControlCount,
   compareExecutionTimes,
@@ -280,16 +278,14 @@ export default class Compare extends Vue {
   ];
 
   compareItems = [
+    'Scan Start Time',
     'Run Time',
-    'Execution Length',
-    'Control Count',
-    'Completed Control Count',
-    'Completed Control %',
+    'Total Number of Controls',
     'Passed Control Count',
     'Compliance (Passed Control %)'
   ];
 
-  sortControlSetsBy = 'Run Time';
+  sortControlSetsBy = '';
   changedOnly = true;
   expandedView = true;
   tab = 0;
@@ -429,20 +425,15 @@ export default class Compare extends Vue {
     );
 
     switch (this.sortControlSetsBy) {
-      case 'Run Time':
+      case '':
+      case 'Scan Start Time':
         fileList.sort(compare_times);
         break;
-      case 'Execution Time':
+      case 'Run Time':
         fileList.sort(compareExecutionTimes);
         break;
-      case 'Control Count':
+      case 'Total Number of Controls':
         fileList.sort(compareControlCount);
-        break;
-      case 'Completed Control Count':
-        fileList.sort(compareCompletedControlCount);
-        break;
-      case 'Completed Control %':
-        fileList.sort(compareCompletedControlPercent);
         break;
       case 'Compliance (Passed Control %)':
         fileList.sort(compareCompliance);
@@ -524,17 +515,7 @@ export default class Compare extends Vue {
     var series = [];
     for (const file of this.files) {
       const filter = {fromFile: [file.uniqueId]};
-      const passed = StatusCountModule.countOf(filter, 'Passed');
-      const total =
-        passed +
-        StatusCountModule.countOf(filter, 'Failed') +
-        StatusCountModule.countOf(filter, 'Profile Error') +
-        StatusCountModule.countOf(filter, 'Not Reviewed');
-      if (total === 0) {
-        series.push(0);
-      } else {
-        series.push(Math.round((100.0 * passed) / total));
-      }
+      series.push(calculateCompliance(filter));
     }
     return [{name: 'Compliance', data: series}];
   }

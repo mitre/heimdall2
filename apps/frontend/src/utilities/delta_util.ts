@@ -5,8 +5,7 @@
 import {SourcedContextualizedEvaluation} from '@/store/report_intake';
 import {ContextualizedControl, ContextualizedEvaluation} from 'inspecjs';
 import {DateTime} from 'luxon';
-import {Filter} from '../store/data_filters';
-import {StatusCountModule} from '../store/status_counts';
+import {calculateCompliance} from '../store/status_counts';
 
 export const NOT_SELECTED = 'not selected';
 
@@ -171,22 +170,25 @@ export function getResultsSetExecutionTime(
   let time = 0;
   resultsSet.contains.forEach((value) => {
     value.contains.forEach((control) => {
-      control.hdf.segments?.forEach((segment) => {
-        time += segment.run_time || 0;
-      });
+      time += getControlRunTime(control);
     });
   });
   return time;
 }
 
+export function getControlRunTime(control: ContextualizedControl): number {
+  return (
+    control.hdf.segments?.reduce(
+      (total, segment) => segment.run_time || 0 + total,
+      0
+    ) || 0
+  );
+}
+
 export function getControlCount(
   resultsSet: SourcedContextualizedEvaluation
 ): number {
-  let count = 0;
-  resultsSet.contains.forEach((value) => {
-    count += value.contains.length;
-  });
-  return count;
+  return resultsSet.contains.reduce((sum, li) => sum + li.contains.length, 0);
 }
 
 export function getCompletedControlCount(
@@ -208,23 +210,6 @@ export function getCompletedControlCount(
     });
   });
   return count;
-}
-
-export function calculateCompliance(
-  resultsSet: SourcedContextualizedEvaluation
-): number {
-  const filter: Filter = {fromFile: [resultsSet.from_file.uniqueId]};
-  const passed = StatusCountModule.countOf(filter, 'Passed');
-  const total =
-    passed +
-    StatusCountModule.countOf(filter, 'Failed') +
-    StatusCountModule.countOf(filter, 'Profile Error') +
-    StatusCountModule.countOf(filter, 'Not Reviewed');
-  if (total === 0) {
-    return 0;
-  } else {
-    return Math.round((100.0 * passed) / total);
-  }
 }
 
 /**
@@ -340,26 +325,12 @@ export function compareControlCount(
   return aControlCount - bControlCount;
 }
 
-export function compareCompletedControlCount(
-  a: SourcedContextualizedEvaluation,
-  b: SourcedContextualizedEvaluation
-) {
-  return getCompletedControlCount(a) - getCompletedControlCount(b);
-}
-
-export function compareCompletedControlPercent(
-  a: SourcedContextualizedEvaluation,
-  b: SourcedContextualizedEvaluation
-) {
-  return (
-    getCompletedControlCount(a) / getControlCount(a) -
-    getCompletedControlCount(b) / getControlCount(b)
-  );
-}
-
 export function compareCompliance(
   a: SourcedContextualizedEvaluation,
   b: SourcedContextualizedEvaluation
 ) {
-  return calculateCompliance(a) - calculateCompliance(b);
+  return (
+    calculateCompliance({fromFile: [a.from_file.uniqueId]}) -
+    calculateCompliance({fromFile: [b.from_file.uniqueId]})
+  );
 }
