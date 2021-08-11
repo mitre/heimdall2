@@ -26,7 +26,7 @@ export class AppService
 
   onApplicationBootstrap(): void {
     this.logger.info({
-      message: `Started Heimdall Enterprise Server 2.0 on ${os.hostname()} (${os.platform()} ${os.release()}) with PID ${
+      message: `Started Heimdall Enterprise Server on ${os.hostname()} (${os.platform()} ${os.release()}) with PID ${
         process.pid
       } and UID ${process.getuid()}`
     });
