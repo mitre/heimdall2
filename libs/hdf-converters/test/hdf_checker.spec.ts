@@ -1,5 +1,3 @@
-import {ConfigServiceClientConfig} from '@aws-sdk/client-config-service';
-import * as AWS from 'aws-sdk';
 import fs from 'fs';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
