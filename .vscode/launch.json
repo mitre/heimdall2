@@ -25,7 +25,7 @@
       "request": "launch",
       "runtimeArgs": [
         "--inspect-brk",
-        "${workspaceRoot}/libs/hdf_converters/node_modules/.bin/jest",
+        "${workspaceRoot}/libs/hdf-converters/node_modules/.bin/jest",
         "--runInBand"
       ],
       "console": "integratedTerminal",
