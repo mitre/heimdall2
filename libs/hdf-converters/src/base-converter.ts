@@ -14,28 +14,28 @@ export type ObjectEntries<T> = {[K in keyof T]: readonly [K, T[K]]}[keyof T];
 /* eslint-disable @typescript-eslint/ban-types */
 export type MappedTransform<T, U extends ILookupPath> = {
   [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
-    ? MappedTransform<T[K], U>
-    : T[K] extends Function
-    ? T[K]
-    : T[K] extends object
-    ? MappedTransform<
-        T[K] &
-          (U & {
-            arrayTransformer?: (
-              value: unknown[],
-              file: Record<string, unknown>
-            ) => T[K][];
-          }),
-        U
-      >
-    : T[K] | (U & {transformer?: (value: unknown) => T[K]});
+  ? MappedTransform<T[K], U>
+  : T[K] extends Function
+  ? T[K]
+  : T[K] extends object
+  ? MappedTransform<
+    T[K] &
+    (U & {
+      arrayTransformer?: (
+        value: unknown[],
+        file: Record<string, unknown>
+      ) => T[K][];
+    }),
+    U
+  >
+  : T[K] | (U & {transformer?: (value: unknown) => T[K]});
 };
 export type MappedReform<T, U> = {
   [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
-    ? MappedReform<T[K], U>
-    : T[K] extends object
-    ? MappedReform<T[K] & U, U>
-    : Exclude<T[K], U>;
+  ? MappedReform<T[K], U>
+  : T[K] extends object
+  ? MappedReform<T[K] & U, U>
+  : Exclude<T[K], U>;
 };
 /* eslint-enable @typescript-eslint/ban-types */
 
@@ -186,7 +186,7 @@ export class BaseConverter {
       return pathVal as T;
     }
     if (typeof transformer === 'function') {
-      return transformer(file);
+      return transformer.bind(this)(file);
     } else {
       return this.convertInternal(file, v);
     }
@@ -200,7 +200,7 @@ export class BaseConverter {
       return [];
     }
     if (v[0].path === undefined) {
-      const arrayTransformer = v[0].arrayTransformer;
+      const arrayTransformer = v[0].arrayTransformer?.bind(this);
       v = v.map((element) => {
         return _.omit(element, ['arrayTransformer']) as T & ILookupPath;
       });
@@ -215,8 +215,8 @@ export class BaseConverter {
     } else {
       const path = v[0].path;
       const key = v[0].key;
-      const arrayTransformer = v[0].arrayTransformer;
-      const transformer = v[0].transformer;
+      const arrayTransformer = v[0].arrayTransformer?.bind(this);
+      const transformer = v[0].transformer?.bind(this);
       if (this.hasPath(file, path)) {
         const pathVal = this.handlePath(file, path);
         if (Array.isArray(pathVal)) {
