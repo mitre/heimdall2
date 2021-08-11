@@ -8,6 +8,7 @@ import {AuthnService} from './authn.service';
 
 interface GithubProfile {
   name: string;
+  login: string;
 }
 
 interface GithubEmail {
@@ -74,9 +75,13 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
       .then((response): GithubProfile => {
         return response.data;
       });
-    const {firstName, lastName} = this.authnService.splitName(
-      userInfoResponse.name
-    );
+    let firstName = userInfoResponse.login;
+    let lastName = '';
+    if (typeof userInfoResponse.name === 'string') {
+      firstName = this.authnService.splitName(userInfoResponse.name).firstName;
+      lastName = this.authnService.splitName(userInfoResponse.name).lastName;
+    }
+
     // Get first email
     const primaryEmail = githubEmails[0];
     // Only validate if the user has verified their email with Github
