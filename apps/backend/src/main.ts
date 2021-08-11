@@ -58,10 +58,10 @@ async function bootstrap() {
         },
         tableName: 'session'
       }),
-      proxy: configService.isInProductionMode(),
+      proxy: configService.isInProductionMode() ? true : undefined,
       cookie: {
         maxAge: 60 * 60,
-        secure: configService.isInProductionMode() ? true : undefined
+        secure: configService.isInProductionMode()
       }, // 1 hour
       saveUninitialized: true,
       resave: false
