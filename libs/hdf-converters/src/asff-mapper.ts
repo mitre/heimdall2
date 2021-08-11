@@ -31,6 +31,12 @@ const PRODUCT_ARN_MAPPING: Map<RegExp, Record<string, Function>> = new Map([
   [PROWLER_REGEX, getProwler()]
 ]);
 
+type ExternalProductHandlerOutputs =
+  | (() => string | number)
+  | number
+  | string
+  | string[];
+
 function fixFileInput(asffJson: string) {
   let output = JSON.parse(asffJson);
   if (!_.has(output, 'Findings')) {
@@ -494,7 +500,7 @@ export class ASFFMapper extends BaseConverter {
     data: unknown,
     func: string,
     // eslint-disable-next-line @typescript-eslint/ban-types
-    defaultVal: string | number | Function | string[]
+    defaultVal: ExternalProductHandlerOutputs
   ): string | string[] | number {
     let arn = null;
     // eslint-disable-next-line @typescript-eslint/ban-types
