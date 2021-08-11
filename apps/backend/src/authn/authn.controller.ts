@@ -131,10 +131,10 @@ export class AuthnController {
     }
   ): Promise<void> {
     req.res?.cookie('userID', session.userID, {
-      secure: this.configService.get('NODE_ENV')?.toLowerCase() === 'production'
+      secure: this.configService.isInProductionMode()
     });
     req.res?.cookie('accessToken', session.accessToken, {
-      secure: this.configService.get('NODE_ENV')?.toLowerCase() === 'production'
+      secure: this.configService.isInProductionMode()
     });
     req.res?.redirect('/');
   }
