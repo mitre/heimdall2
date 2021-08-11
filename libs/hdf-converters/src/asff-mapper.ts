@@ -16,6 +16,8 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
+const SEVERITY_LABEL = 'Severity.Label';
+const COMPLIANCE_STATUS = 'Compliance.Status';
 
 const FIREWALL_MANAGER_REGEX =
   /arn:.+:securityhub:.+:.*:product\/aws\/firewall-manager/;
@@ -71,13 +73,13 @@ function getProwler(): Record<string, Function> {
 }
 // eslint-disable-next-line @typescript-eslint/ban-types
 function getSecurityHub(): Record<string, Function> {
-  const corresponding_control = (controls: unknown[], finding: unknown) => {
-    const out = controls.find(
+  const FINDING_STANDARDS_CONTROL_ARN = 'ProductFields.StandardsControlArn';
+  const correspondingControl = (controls: unknown[], finding: unknown) => {
+    return controls.find(
       (control) =>
         _.get(control, 'StandardsControlArn') ===
-        _.get(finding, 'ProductFields.StandardsControlArn')
+        _.get(finding, FINDING_STANDARDS_CONTROL_ARN)
     );
-    return out;
   };
   const supportingDocs = (standards: string[] | undefined) => {
     let controls: null | unknown[];
@@ -90,7 +92,9 @@ function getSecurityHub(): Record<string, Function> {
         controls = null;
       }
     } catch (error) {
-      throw `Invalid supporting docs for Security Hub:\nException: ${error}`;
+      throw new Error(
+        `Invalid supporting docs for Security Hub:\nException: ${error}`
+      );
     }
     const AWS_CONFIG_MAPPING_FILE = path.resolve(
       __dirname,
@@ -110,7 +114,7 @@ function getSecurityHub(): Record<string, Function> {
     let control;
     if (
       controls !== null &&
-      (control = corresponding_control(controls, finding)) !== null
+      (control = correspondingControl(controls, finding)) !== null
     ) {
       output = _.get(control, 'ControlId');
     } else if (_.has(finding, 'ProductFields.ControlId')) {
@@ -132,13 +136,13 @@ function getSecurityHub(): Record<string, Function> {
     let control;
     if (
       controls !== null &&
-      (control = corresponding_control(controls, finding)) !== null
+      (control = correspondingControl(controls, finding)) !== null
     ) {
       impact = _.get(control, 'SeverityRating');
     } else {
       // severity is required, but can be either 'label' or 'normalized' internally with 'label' being preferred.  other values can be in here too such as the original severity rating.
       impact =
-        _.get(finding, 'Severity.Label') ||
+        _.get(finding, SEVERITY_LABEL) ||
         _.get(finding, 'Severity.Normalized') / 100.0;
       // securityhub asff file does not contain accurate severity information by setting things that shouldn't be informational to informational: when additional context, i.e. standards, is not provided, set informational to medium.
       if (typeof impact === 'string' && impact === 'INFORMATIONAL') {
@@ -174,7 +178,7 @@ function getSecurityHub(): Record<string, Function> {
     let control;
     if (
       controls !== null &&
-      (control = corresponding_control(controls, finding)) !== null
+      (control = correspondingControl(controls, finding)) !== null
     ) {
       return encode(_.get(control, 'Title'));
     } else {
@@ -190,8 +194,8 @@ function getSecurityHub(): Record<string, Function> {
         .split('/')
         .slice(-1)[0]
         .replace(/-/gi, ' ')
-        .toLowerCase() ==
-      _.get(findings[0], 'ProductFields.StandardsControlArn')
+        .toLowerCase() ===
+      _.get(findings[0], FINDING_STANDARDS_CONTROL_ARN)
         .split('/')
         .slice(-4)[0]
         .replace(/-/gi, ' ')
@@ -202,7 +206,7 @@ function getSecurityHub(): Record<string, Function> {
         .slice(-1)[0]
         .replace(/-/gi, ' ');
     } else {
-      standardName = _.get(findings[0], 'ProductFields.StandardsControlArn')
+      standardName = _.get(findings[0], FINDING_STANDARDS_CONTROL_ARN)
         .split('/')
         .slice(-4)[0]
         .replace(/-/gi, ' ')
@@ -214,7 +218,7 @@ function getSecurityHub(): Record<string, Function> {
     }
     return encode(
       `${standardName} v${
-        _.get(findings[0], 'ProductFields.StandardsControlArn')
+        _.get(findings[0], FINDING_STANDARDS_CONTROL_ARN)
           .split('/')
           .slice(-2)[0]
       }`
@@ -306,8 +310,8 @@ export class ASFFMapper extends BaseConverter {
                 } else {
                   // Severity is required, but can be either 'label' or 'normalized' internally with 'label' being preferred.  other values can be in here too such as the original severity rating.
                   const defaultFunc = () =>
-                    _.get(finding, 'Severity.Label')
-                      ? _.get(finding, 'Severity.Label')
+                    _.get(finding, SEVERITY_LABEL)
+                      ? _.get(finding, SEVERITY_LABEL)
                       : _.get(finding, 'Severity.Normalized') / 100.0;
                   impact = this.externalProductHandler(
                     _.get(finding, 'ProductArn'),
@@ -369,8 +373,8 @@ export class ASFFMapper extends BaseConverter {
                   transformer: (
                     finding: unknown
                   ): ExecJSON.ControlResultStatus => {
-                    if (_.has(finding, 'Compliance.Status')) {
-                      switch (_.get(finding, 'Compliance.Status')) {
+                    if (_.has(finding, COMPLIANCE_STATUS)) {
+                      switch (_.get(finding, COMPLIANCE_STATUS)) {
                         case 'PASSED':
                           return ExecJSON.ControlResultStatus.Passed;
                         case 'WARNING':
@@ -401,7 +405,7 @@ export class ASFFMapper extends BaseConverter {
                     if (output !== '') {
                       output += '; ';
                     }
-                    output += `Resources: [${_.get(finding, 'Resources')
+                    const resources = _.get(finding, 'Resources')
                       .map((resource: unknown) => {
                         let hash = `Type: ${encode(
                           _.get(resource, 'Type')
@@ -418,14 +422,15 @@ export class ASFFMapper extends BaseConverter {
                         }
                         return hash;
                       })
-                      .join(', ')}]`;
+                      .join(', ');
+                    output += `Resources: [${resources}]`;
                     return output as string;
                   }
                 },
                 message: {
                   transformer: (finding: unknown): string | undefined => {
                     const statusReason = this.statusReason(finding);
-                    switch (_.get(finding, 'Compliance.Status')) {
+                    switch (_.get(finding, COMPLIANCE_STATUS)) {
                       case undefined: // Possible for Compliance.Status to not be there, in which case it's a skip_message
                         return undefined;
                       case 'PASSED':
@@ -444,7 +449,7 @@ export class ASFFMapper extends BaseConverter {
                 skip_message: {
                   transformer: (finding: unknown): string | undefined => {
                     const statusReason = this.statusReason(finding);
-                    switch (_.get(finding, 'Compliance.Status')) {
+                    switch (_.get(finding, COMPLIANCE_STATUS)) {
                       case undefined: // Possible for Compliance.Status to not be there, in which case it's a skip_message
                         return statusReason;
                       case 'PASSED':
@@ -576,7 +581,7 @@ export class ASFFMapper extends BaseConverter {
               new Map(
                 [...productGroups].filter(([pg]) => pg !== product) // Check case when running into dupe ID's
               ).values()
-            ).find((ig) => id in Array.from(ig.keys())) !== undefined
+            ).find((ig) => Array.from(ig.keys()).includes(id)) !== undefined
               ? `[${productName}] ${id}`
               : id,
           title: `${productName}: ${[
