@@ -17,6 +17,11 @@
             <div class="d-flex flex-nowrap">
               <h4 class="pt-5 pr-1">Sort Results Sets By:</h4>
               <v-select v-model="sortControlSetsBy" :items="compareItems" />
+              <v-btn class="mt-4" icon @click="reverseSort = !reverseSort"
+                ><v-icon>{{
+                  reverseSort ? 'mdi-sort-descending' : 'mdi-sort-ascending'
+                }}</v-icon></v-btn
+              >
             </div>
           </v-col>
         </v-row>
@@ -293,6 +298,7 @@ export default class Compare extends Vue {
   startIndex = 0;
   ascending = true;
   chartsOpen = true;
+  reverseSort = false;
   ableTab = true;
   expansion = 0;
 
@@ -443,6 +449,9 @@ export default class Compare extends Vue {
           fileList.sort(this.comparePassthrough);
         }
         break;
+    }
+    if (this.reverseSort) {
+      fileList.reverse();
     }
     return fileList.map((evaluation) => evaluation.from_file);
   }
