@@ -9,7 +9,7 @@ export interface ILookupPath {
   arrayTransformer?: (
     value: unknown[],
     file: unknown
-  ) => unknown[] | [(value: unknown[], file: unknown) => unknown[], unknown];
+  ) => unknown[];
   key?: string;
 }
 
@@ -17,19 +17,19 @@ export type ObjectEntries<T> = {[K in keyof T]: readonly [K, T[K]]}[keyof T];
 /* eslint-disable @typescript-eslint/ban-types */
 export type MappedTransform<T, U extends ILookupPath> = {
   [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
-    ? MappedTransform<T[K], U>
-    : T[K] extends Function
-    ? T[K]
-    : T[K] extends object
-    ? MappedTransform<T[K] & U, U>
-    : T[K] | U;
+  ? MappedTransform<T[K], U>
+  : T[K] extends Function
+  ? T[K]
+  : T[K] extends object
+  ? MappedTransform<T[K] & U, U>
+  : T[K] | U;
 };
 export type MappedReform<T, U> = {
   [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
-    ? MappedReform<T[K], U>
-    : T[K] extends object
-    ? MappedReform<T[K] & U, U>
-    : Exclude<T[K], U>;
+  ? MappedReform<T[K], U>
+  : T[K] extends object
+  ? MappedReform<T[K] & U, U>
+  : Exclude<T[K], U>;
 };
 /* eslint-enable @typescript-eslint/ban-types */
 
