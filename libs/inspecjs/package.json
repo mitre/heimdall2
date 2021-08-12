@@ -1,6 +1,6 @@
 {
   "name": "inspecjs",
-  "version": "2.4.6",
+  "version": "2.5.0",
   "description": "© 2018 The MITRE Corporation.",
   "files": [
     "lib"
@@ -10,7 +10,7 @@
     "main": "lib/index.js"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.7",
+    "@types/jest": "^27.0.0",
     "@types/node": "^15.0.1",
     "jest": "^27.0.6",
     "quicktype": "^15.0.260",
