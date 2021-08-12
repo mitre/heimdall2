@@ -223,10 +223,9 @@ function getSecurityHub(): Record<string, Function> {
         .join(' ');
     }
     return encode(
-      `${standardName} v${
-        _.get(findings[0], FINDING_STANDARDS_CONTROL_ARN)
-          .split('/')
-          .slice(-2)[0]
+      `${standardName} v${_.get(findings[0], FINDING_STANDARDS_CONTROL_ARN)
+        .split('/')
+        .slice(-2)[0]
       }`
     );
   };
@@ -241,7 +240,7 @@ function getSecurityHub(): Record<string, Function> {
 }
 
 export class ASFFMapper extends BaseConverter {
-  securityhubStandardsJsonArray: string[] | null;
+  securityhubStandardsJsonArray: string[] | undefined;
   meta: Record<string, unknown> | null;
   supportingDocs: Map<RegExp, Record<string, Record<string, unknown>>>;
   mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
@@ -511,7 +510,7 @@ export class ASFFMapper extends BaseConverter {
           regex.test(product)
         ))) &&
       (mapping = PRODUCT_ARN_MAPPING.get(arn || (product as RegExp))) !==
-        undefined &&
+      undefined &&
       func in mapping
     ) {
       let keywords: Record<string, unknown> = {};
@@ -546,8 +545,7 @@ export class ASFFMapper extends BaseConverter {
           .split(':')
           .slice(-1)[0];
         arn = new RegExp(
-          `arn:.+:securityhub:.+:.*:product/${productInfo.split('/')[1]}/${
-            productInfo.split('/')[2]
+          `arn:.+:securityhub:.+:.*:product/${productInfo.split('/')[1]}/${productInfo.split('/')[2]
           }`
         );
       }
@@ -636,7 +634,7 @@ export class ASFFMapper extends BaseConverter {
   }
   constructor(
     asffJson: string,
-    securityhubStandardsJsonArray: null | string[] = null,
+    securityhubStandardsJsonArray: undefined | string[] = undefined,
     meta: null | Record<string, unknown> = null
   ) {
     super(fixFileInput(asffJson));

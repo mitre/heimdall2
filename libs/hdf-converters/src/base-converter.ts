@@ -6,7 +6,7 @@ import _ from 'lodash';
 export interface ILookupPath {
   path?: string;
   transformer?: (value: unknown) => unknown;
-  arrayTransformer?: (value: unknown[], file: unknown) => unknown[];
+  arrayTransformer?: (value: unknown[], file: unknown) => unknown[] | [(value: unknown[], file: unknown) => unknown[], unknown];
   key?: string;
 }
 
@@ -14,28 +14,23 @@ export type ObjectEntries<T> = {[K in keyof T]: readonly [K, T[K]]}[keyof T];
 /* eslint-disable @typescript-eslint/ban-types */
 export type MappedTransform<T, U extends ILookupPath> = {
   [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
-    ? MappedTransform<T[K], U>
-    : T[K] extends Function
-    ? T[K]
-    : T[K] extends object
-    ? MappedTransform<
-        T[K] &
-          (U & {
-            arrayTransformer?: (
-              value: unknown[],
-              file: Record<string, unknown>
-            ) => T[K][];
-          }),
-        U
-      >
-    : T[K] | (U & {transformer?: (value: unknown) => T[K]});
+  ? MappedTransform<T[K], U>
+  : T[K] extends Function
+  ? T[K]
+  : T[K] extends object
+  ? MappedTransform<
+    T[K] &
+    U,
+    U
+  >
+  : T[K] | U;
 };
 export type MappedReform<T, U> = {
   [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
-    ? MappedReform<T[K], U>
-    : T[K] extends object
-    ? MappedReform<T[K] & U, U>
-    : Exclude<T[K], U>;
+  ? MappedReform<T[K], U>
+  : T[K] extends object
+  ? MappedReform<T[K] & U, U>
+  : Exclude<T[K], U>;
 };
 /* eslint-enable @typescript-eslint/ban-types */
 
@@ -209,7 +204,11 @@ export class BaseConverter {
         output.push(this.evaluate(file, element) as T);
       });
       if (arrayTransformer !== undefined) {
-        output = arrayTransformer(output, this.data) as T[];
+        if (Array.isArray(arrayTransformer)) {
+          output = arrayTransformer[0].apply(arrayTransformer[1], [v, this.data])
+        } else {
+          output = arrayTransformer.apply(null, [output, this.data]) as T[];
+        }
       }
       return output;
     } else {
@@ -232,7 +231,11 @@ export class BaseConverter {
             v = collapseDuplicates(v, key, this.collapseResults);
           }
           if (arrayTransformer !== undefined) {
-            v = arrayTransformer(v, this.data) as T[];
+            if (Array.isArray(arrayTransformer)) {
+              v = arrayTransformer[0].apply(arrayTransformer[1], [v, this.data])
+            } else {
+              v = arrayTransformer.apply(null, [v, this.data]) as T[];
+            }
           }
           return v;
         } else {
