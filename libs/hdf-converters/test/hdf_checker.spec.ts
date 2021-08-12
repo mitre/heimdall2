@@ -34,6 +34,18 @@ test('Test asff_mapper', () => {
     );
   }
 });
+test('Test prowler_mapper', () => {
+  const mapper = new ASFFMapper(
+    fs.readFileSync(
+      'sample_jsons/prowler_mapper/sample_input_report/prowler_sample.json',
+      {encoding: 'utf-8'}
+    )
+  );
+  fs.writeFileSync(
+    'sample_jsons/prowler_mapper/testouthdf.json',
+    JSON.stringify(mapper.toHdf())
+  );
+});
 
 test('Test burpsuite_mapper', () => {
   const mapper = new BurpSuiteMapper(

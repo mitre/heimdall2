@@ -69,12 +69,14 @@ function getProwler(): Record<string, Function> {
     const hyphenIndex = generatorId.indexOf('-');
     return encode(generatorId.slice(hyphenIndex + 1));
   };
-  const productname = (findings: unknown[]): string =>
+  const productName = (findings: unknown[]): string =>
     encode(_.get(findings[0], 'ProductFields.ProviderName'));
+  const desc = (): string => ' ';
   return {
     subfindingsCodeDesc,
     findingId,
-    productname
+    productName,
+    desc
   };
 }
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -353,9 +355,10 @@ export class ASFFMapper extends BaseConverter {
                 data: {
                   path: 'Remediation.Recommendation',
                   transformer: (input: unknown): string => {
-                    const data: string[] = [];
+                    let data: string[] = [];
                     data.push(_.get(input, 'Text'));
                     data.push(_.get(input, 'Url'));
+                    data = data.filter((element) => element !== undefined);
                     return data.join('\n');
                   }
                 },
@@ -610,7 +613,9 @@ export class ASFFMapper extends BaseConverter {
                 .flat()
                 .filter(
                   (element) =>
-                    element !== null && element !== undefined && element !== {}
+                    element.data !== null &&
+                    element.data !== undefined &&
+                    element.data !== ''
                 )
             )
           ],
@@ -619,10 +624,7 @@ export class ASFFMapper extends BaseConverter {
               group
                 .map((d) => _.get(d, 'refs'))
                 .flat()
-                .filter(
-                  (element) =>
-                    element !== null && element !== undefined && element !== {}
-                )
+                .filter((element) => _.get(element, 'url') !== undefined)
             )
           ],
           source_location: {},

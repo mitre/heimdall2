@@ -226,9 +226,6 @@ export class BaseConverter {
               'key'
             ]) as T;
           });
-          if (key !== undefined) {
-            v = collapseDuplicates(v, key, this.collapseResults);
-          }
           if (arrayTransformer !== undefined) {
             if (Array.isArray(arrayTransformer)) {
               v = arrayTransformer[0].apply(arrayTransformer[1], [
@@ -238,6 +235,9 @@ export class BaseConverter {
             } else {
               v = arrayTransformer.apply(null, [v, this.data]) as T[];
             }
+          }
+          if (key !== undefined) {
+            v = collapseDuplicates(v, key, this.collapseResults);
           }
           return v;
         } else {
