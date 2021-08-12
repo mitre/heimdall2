@@ -8,7 +8,7 @@ import {Request} from 'express';
 import _ from 'lodash';
 import {Observable} from 'rxjs';
 import winston from 'winston';
-import {sensitiveKeys} from '../database/database.module';
+import {sensitiveKeys} from '../config/config.service';
 import {SlimUserDto} from '../users/dto/slim-user.dto';
 import {UserDto} from '../users/dto/user.dto';
 import {User} from '../users/user.model';

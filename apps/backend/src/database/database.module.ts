@@ -2,19 +2,8 @@ import {Module} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import winston from 'winston';
 import {ConfigModule} from '../config/config.module';
-import {ConfigService} from '../config/config.service';
+import {ConfigService, sensitiveKeys} from '../config/config.service';
 import {DatabaseService} from './database.service';
-
-export const sensitiveKeys = [
-  /cookie/i,
-  /passw(or)?d/i,
-  /^pw$/,
-  /^pass$/i,
-  /secret/i,
-  /token/i,
-  /api[-._]?key/i,
-  /data/i
-];
 
 const logger = winston.createLogger({
   transports: [new winston.transports.Console()],

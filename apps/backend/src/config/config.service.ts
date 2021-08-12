@@ -2,6 +2,17 @@ import {SequelizeOptions} from 'sequelize-typescript';
 import AppConfig from '../../config/app_config';
 import {StartupSettingsDto} from './dto/startup-settings.dto';
 
+export const sensitiveKeys = [
+  /cookie/i,
+  /passw(or)?d/i,
+  /^pw$/,
+  /^pass$/i,
+  /secret/i,
+  /token/i,
+  /api[-._]?key/i,
+  /data/i
+];
+
 export class ConfigService {
   private readonly appConfig: AppConfig;
   public defaultGithubBaseURL = 'https://github.com/';
