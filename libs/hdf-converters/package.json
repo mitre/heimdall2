@@ -26,7 +26,7 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.7",
+    "@types/jest": "^27.0.0",
     "@types/lodash": "^4.14.161",
     "@types/node": "^15.0.1",
     "htmlparser2": "^6.1.0",
