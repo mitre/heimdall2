@@ -41,10 +41,18 @@ test('Test prowler_mapper', () => {
       {encoding: 'utf-8'}
     )
   );
-  fs.writeFileSync(
-    'sample_jsons/prowler_mapper/testouthdf.json',
-    JSON.stringify(mapper.toHdf())
-  );
+  const result: ExecJSON.Execution = mapper.toHdf();
+  if (result !== undefined) {
+    expect(omitVersions(result)).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync('sample_jsons/prowler_mapper/prowler_hdf.json', {
+            encoding: 'utf-8'
+          })
+        )
+      )
+    );
+  }
 });
 
 test('Test burpsuite_mapper', () => {
