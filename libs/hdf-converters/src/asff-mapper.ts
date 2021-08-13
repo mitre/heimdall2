@@ -170,7 +170,10 @@ function getSecurityHub(): Record<string, Function> {
       return [];
     }
     const matches = awsConfigMapping.data.filter(
-      (element: AwsConfigMappingItem) => _.get(finding, 'ProductFields.RelatedAWSResources:0/name')?.includes(element.configRuleName)
+      (element: AwsConfigMappingItem) =>
+        _.get(finding, 'ProductFields.RelatedAWSResources:0/name')?.includes(
+          element.configRuleName
+        )
     );
     return _.uniq(
       matches.map((rule: AwsConfigMappingItem) => rule.nistId.split('|')).flat()
@@ -352,11 +355,11 @@ export class ASFFMapper extends BaseConverter {
                 data: {
                   path: 'Remediation.Recommendation',
                   transformer: (input: unknown): string => {
-                    let data: string[] = [];
-                    if(_.has(input, 'Text')) {
+                    const data: string[] = [];
+                    if (_.has(input, 'Text')) {
                       data.push(_.get(input, 'Text'));
                     }
-                    if(_.has(input, 'Url')) {
+                    if (_.has(input, 'Url')) {
                       data.push(_.get(input, 'Url'));
                     }
                     return data.join('\n');
@@ -613,7 +616,8 @@ export class ASFFMapper extends BaseConverter {
                 .flat()
                 .filter(
                   (element, index, arr) =>
-                    element.data !== '' && index === arr.findIndex(e => e.data === element.data)
+                    element.data !== '' &&
+                    index === arr.findIndex((e) => e.data === element.data)
                 )
             )
           ],
