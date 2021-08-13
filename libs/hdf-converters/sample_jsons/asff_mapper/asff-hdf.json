@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "0.1.0",
+    "release": "2.5.0",
     "target_id": ""
   },
-  "version": "0.1.0",
+  "version": "2.5.0",
   "statistics": {
     "duration": null
   },
@@ -520,8 +520,12 @@
           "title": "AWS Foundational Security Best Practices v1.0.0: S3.2 S3 buckets should prohibit public read access",
           "tags": {
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AC-3",
+              "AC-4",
+              "AC-6",
+              "AC-21(b)",
+              "SC-7",
+              "SC-7(3)"
             ]
           },
           "impact": 0.5,
@@ -544,7 +548,7 @@
           ]
         }
       ],
-      "sha256": "f01ad9454810395100a0aa5eaa6f40ef0bd66001976025243a70874fade07309"
+      "sha256": "ab8131700a9c546dce35bb9456ad39aa401cd11701c3ae653fd5da08c36b242b"
     }
   ]
 }

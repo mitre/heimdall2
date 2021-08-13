@@ -596,42 +596,38 @@ export class ASFFMapper extends BaseConverter {
             ).find((ig) => Array.from(ig.keys()).includes(id)) !== undefined
               ? `[${productName}] ${id}`
               : id,
-          title: `${productName}: ${[
-            ...new Set(group.map((d) => _.get(d, 'title')))
-          ].join(';')}`,
+          title: `${productName}: ${_.uniq(
+            group.map((d) => _.get(d, 'title') as string)
+          ).join(';')}`,
           tags: {
-            nist: [...new Set(group.map((d) => _.get(d, 'tags.nist')).flat())]
+            nist: _.uniq(
+              group.map((d) => _.get(d, 'tags.nist') as string[]).flat()
+            )
           },
           impact: Math.max(...group.map((d) => _.get(d, 'impact'))),
           desc: this.externalProductHandler(
             product,
             group,
             'desc',
-            [...new Set(group.map((d) => _.get(d, 'desc')))].join('\n')
+            _.uniq(group.map((d) => _.get(d, 'desc') as string)).join('\n')
           ) as string,
-          descriptions: [
-            ...new Set(
-              group
-                .map((d) => _.get(d, 'descriptions'))
-                .flat()
-                .filter(
-                  (element, index, arr) =>
-                    element.data !== '' &&
-                    index === arr.findIndex((e) => e.data === element.data)
-                )
-            )
-          ],
-          refs: [
-            ...new Set(
-              group
-                .map((d) => _.get(d, 'refs'))
-                .flat()
-                .filter((element) => _.get(element, 'url') !== undefined)
-            )
-          ],
+          descriptions: group
+            .map((d) => _.get(d, 'descriptions') as ExecJSON.ControlDescription)
+            .flat()
+            .filter(
+              (element, index, arr) =>
+                element.data !== '' &&
+                index === arr.findIndex((e) => e.data === element.data) // https://stackoverflow.com/a/36744732/645647
+            ),
+          refs: group
+            .map((d) => _.get(d, 'refs') as ExecJSON.Reference)
+            .flat()
+            .filter((element) => _.get(element, 'url') !== undefined),
           source_location: {},
           code: JSON.stringify({Findings: findings}, null, 2),
-          results: [...new Set(group.map((d) => _.get(d, 'results')).flat())]
+          results: group
+            .map((d) => _.get(d, 'results') as ExecJSON.ControlResult)
+            .flat()
         };
         output.push(item);
       });

@@ -39,7 +39,9 @@ test('Test prowler_mapper', () => {
     fs.readFileSync(
       'sample_jsons/prowler_mapper/sample_input_report/prowler_sample.json',
       {encoding: 'utf-8'}
-    )
+    ),
+    undefined,
+    {name: 'Prowler', title: 'Prowler Findings'}
   );
   const result: ExecJSON.Execution = mapper.toHdf();
   if (result !== undefined) {

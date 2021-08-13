@@ -1,20 +1,20 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "1.3.45.13.gda065ed.1.dirty.20210804.225913",
+    "release": "2.5.0",
     "target_id": ""
   },
-  "version": "1.3.45.13.gda065ed.1.dirty.20210804.225913",
+  "version": "2.5.0",
   "statistics": {
     "duration": null
   },
   "profiles": [
     {
       "name": "Prowler",
-      "version": null,
-      "title": "Prowler findings",
+      "version": "",
+      "title": "Prowler Findings",
       "maintainer": null,
-      "summary": null,
+      "summary": "",
       "license": null,
       "copyright": null,
       "copyright_email": null,
@@ -111,7 +111,7 @@
           ]
         }
       ],
-      "sha256": "64be1644c383b809ae601ef8c247134317e09bf69836c64016f3b9b7a97f0f1b"
+      "sha256": "5f68c260cdec8711f2b611630bf10777278386ce6c65edd323a21e709cce8c66"
     }
   ]
 }
