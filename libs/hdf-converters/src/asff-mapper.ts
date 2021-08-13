@@ -612,22 +612,24 @@ export class ASFFMapper extends BaseConverter {
             _.uniq(group.map((d) => _.get(d, 'desc') as string)).join('\n')
           ) as string,
           descriptions: group
-            .map((d) => _.get(d, 'descriptions') as ExecJSON.ControlDescription)
+            .map((d) => _.get(d, 'descriptions'))
             .flat()
             .filter(
               (element, index, arr) =>
                 element.data !== '' &&
                 index === arr.findIndex((e) => e.data === element.data) // https://stackoverflow.com/a/36744732/645647
-            ),
+            ) as ExecJSON.ControlDescription[],
           refs: group
-            .map((d) => _.get(d, 'refs') as ExecJSON.Reference)
+            .map((d) => _.get(d, 'refs'))
             .flat()
-            .filter((element) => _.get(element, 'url') !== undefined),
+            .filter(
+              (element) => _.get(element, 'url') !== undefined
+            ) as ExecJSON.Reference[],
           source_location: {},
           code: JSON.stringify({Findings: findings}, null, 2),
           results: group
-            .map((d) => _.get(d, 'results') as ExecJSON.ControlResult)
-            .flat()
+            .map((d) => _.get(d, 'results'))
+            .flat() as ExecJSON.ControlResult[]
         };
         output.push(item);
       });
