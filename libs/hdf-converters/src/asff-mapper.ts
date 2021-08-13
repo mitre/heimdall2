@@ -106,7 +106,7 @@ function getSecurityHub(): Record<string, Function> {
     }
     const AWS_CONFIG_MAPPING_FILE = path.resolve(
       __dirname,
-      '../data/cwe-nist-mapping.csv'
+      '../data/aws-config-mapping.csv'
     );
     const AWS_CONFIG_MAPPING = new AwsConfigMapping(AWS_CONFIG_MAPPING_FILE);
     return {
@@ -170,10 +170,7 @@ function getSecurityHub(): Record<string, Function> {
       return [];
     }
     const matches = awsConfigMapping.data.filter(
-      (element: AwsConfigMappingItem) =>
-        _.get(finding, 'RelatedAWSResources:0/name')?.contains(
-          element.configRuleName
-        )
+      (element: AwsConfigMappingItem) => _.get(finding, 'ProductFields.RelatedAWSResources:0/name')?.includes(element.configRuleName)
     );
     return _.uniq(
       matches.map((rule: AwsConfigMappingItem) => rule.nistId.split('|')).flat()
@@ -356,9 +353,12 @@ export class ASFFMapper extends BaseConverter {
                   path: 'Remediation.Recommendation',
                   transformer: (input: unknown): string => {
                     let data: string[] = [];
-                    data.push(_.get(input, 'Text'));
-                    data.push(_.get(input, 'Url'));
-                    data = data.filter((element) => element !== undefined);
+                    if(_.has(input, 'Text')) {
+                      data.push(_.get(input, 'Text'));
+                    }
+                    if(_.has(input, 'Url')) {
+                      data.push(_.get(input, 'Url'));
+                    }
                     return data.join('\n');
                   }
                 },
@@ -612,10 +612,8 @@ export class ASFFMapper extends BaseConverter {
                 .map((d) => _.get(d, 'descriptions'))
                 .flat()
                 .filter(
-                  (element) =>
-                    element.data !== null &&
-                    element.data !== undefined &&
-                    element.data !== ''
+                  (element, index, arr) =>
+                    element.data !== '' && index === arr.findIndex(e => e.data === element.data)
                 )
             )
           ],
