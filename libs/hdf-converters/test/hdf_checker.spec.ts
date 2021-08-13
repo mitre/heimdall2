@@ -48,7 +48,7 @@ test('Test prowler_mapper', () => {
     expect(omitVersions(result)).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/prowler_mapper/prowler_hdf.json', {
+          fs.readFileSync('sample_jsons/prowler_mapper/prowler-hdf.json', {
             encoding: 'utf-8'
           })
         )
