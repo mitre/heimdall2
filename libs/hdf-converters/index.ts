@@ -8,5 +8,6 @@ export * from './src/nikto-mapper';
 export * from './src/sarif-mapper';
 export * from './src/scoutsuite-mapper';
 export * from './src/snyk-mapper';
+export * from './src/sonarqube-mappter';
 export * from './src/xccdf-results-mapper';
 export * from './src/zap-mapper';

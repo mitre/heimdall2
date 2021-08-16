@@ -19,6 +19,8 @@
     "test": "jest --silent"
   },
   "dependencies": {
+    "@types/axios": "^0.14.0",
+    "axios": "^0.21.1",
     "csv-parse": "^4.16.0",
     "fast-xml-parser": "^3.19.0",
     "htmlparser2": "^6.1.0",
