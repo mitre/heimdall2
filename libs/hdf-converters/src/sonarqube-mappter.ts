@@ -38,7 +38,7 @@ export interface IssueData {
   total?: number;
   p?: number;
   ps?: number;
-  paging?: Record<string, unknown>;
+  paging?: Record<string, number>;
   effortTotal?: number;
   issues?: Issue[];
   components?: Record<string, unknown>[];
@@ -86,17 +86,21 @@ export class SonarQubeResults {
 
   async getProjectData(): Promise<ExecJSON.Execution> {
     // Find issues for this project ID
-    await axios
-      .get<IssueData>(`${this.sonarQubeHost}/api/issues/search`, {
-        auth: {username: this.userToken, password: ''},
-        params: {
-          componentKeys: this.projectId,
-          types: 'CODE_SMELL,BUG,VULNERABILITY'
-        }
-      })
-      .then(({data}) => {
-        this.data.issues = data.issues;
-      });
+    let paging = true;
+    while (paging) {
+      await axios
+        .get<IssueData>(`${this.sonarQubeHost}/api/issues/search`, {
+          auth: {username: this.userToken, password: ''},
+          params: {
+            componentKeys: this.projectId,
+            types: 'CODE_SMELL,BUG,VULNERABILITY'
+          }
+        })
+        .then(({data}) => {
+          this.data.issues = data.issues;
+          paging = data.paging?.total === 100;
+        });
+    }
     // Get code snippets for each issue
     let requests: Promise<AxiosResponse>[] = [];
     this.data.issues?.forEach((issue) => {
@@ -157,7 +161,7 @@ export class SonarQubeResults {
 export class SonarQubeMapper extends BaseConverter {
   projectName = '';
   constructor(issuesJSON: IssueData, projectName: string) {
-    super(issuesJSON as Record<string, unknown>);
+    super(issuesJSON as Record<string, any>);
     this.projectName = projectName;
   }
   mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
