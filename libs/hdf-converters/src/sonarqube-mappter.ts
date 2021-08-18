@@ -87,18 +87,21 @@ export class SonarQubeResults {
   async getProjectData(): Promise<ExecJSON.Execution> {
     // Find issues for this project ID
     let paging = true;
+    let page = 1;
     while (paging) {
       await axios
         .get<IssueData>(`${this.sonarQubeHost}/api/issues/search`, {
           auth: {username: this.userToken, password: ''},
           params: {
             componentKeys: this.projectId,
-            types: 'CODE_SMELL,BUG,VULNERABILITY'
+            types: 'CODE_SMELL,BUG,VULNERABILITY',
+            p: page
           }
         })
         .then(({data}) => {
           this.data.issues = data.issues;
           paging = data.paging?.total === 100;
+          page += 1;
         });
     }
     // Get code snippets for each issue

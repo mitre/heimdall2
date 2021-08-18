@@ -6,6 +6,7 @@ import {JfrogXrayMapper} from '../src/jfrog-xray-mapper';
 import {NiktoMapper} from '../src/nikto-mapper';
 import {SarifMapper} from '../src/sarif-mapper';
 import {ScoutsuiteMapper} from '../src/scoutsuite-mapper';
+import {SonarQubeResults} from '../src/sonarqube-mappter';
 import {XCCDFResultsMapper} from '../src/xccdf-results-mapper';
 import {ZapMapper} from '../src/zap-mapper';
 
@@ -115,6 +116,24 @@ test('Test scoutsuite_mapper', () => {
     );
   }
 });
+test('Test sonarqube_mapper', async () => {
+  const mapper = new SonarQubeResults(
+    'http://127.0.0.1:3001',
+    'test',
+    'NotARealKey'
+  );
+  const result: ExecJSON.Execution = await mapper.toHdf();
+  expect(omitVersions(result)).toEqual(
+    omitVersions(
+      JSON.parse(
+        fs.readFileSync('sample_jsons/sonarqube_mapper/sonarqube-hdf.json', {
+          encoding: 'utf-8'
+        })
+      )
+    )
+  );
+});
+
 test('Test xccdf_results_mapper', () => {
   const mapper = new XCCDFResultsMapper(
     fs.readFileSync(

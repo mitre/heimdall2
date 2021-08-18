@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
-    "mock-oauth": "node support/server/json-server.js",
+    "mock-json": "node support/server/json-server.js",
     "mock-openid": "node support/server/oidc-server.js"
   },
   "devDependencies": {
