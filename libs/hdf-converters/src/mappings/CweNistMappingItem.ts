@@ -1,4 +1,4 @@
-import {ICWEJSONID} from "./CweNistMapping";
+import {ICWEJSONID} from './CweNistMapping';
 
 export class CweNistMappingItem {
   id: number;
@@ -7,28 +7,27 @@ export class CweNistMappingItem {
   rev: number;
   nistName: string;
 
-  constructor(values: ICWEJSONID) { 
- 
-    if (values["CWE-ID"] === undefined) {
+  constructor(values: ICWEJSONID) {
+    if (values['CWE-ID'] === undefined) {
       throw new Error('CWE Nist Mapping Data must contain an ID.');
     } else {
-      this.id = values["CWE-ID"];
+      this.id = values['CWE-ID'];
     }
-    if (values["CWE Name"] === undefined) {
+    if (values['CWE Name'] === undefined) {
       throw new Error('CWE Nist Mapping Data must contain a name.');
     } else {
-      this.name = values["CWE Name"];
+      this.name = values['CWE Name'];
     }
-    if (values["NIST-ID"] === undefined) {
+    if (values['NIST-ID'] === undefined) {
       this.nistId = '';
     } else {
-      this.nistId = values["NIST-ID"];
+      this.nistId = values['NIST-ID'];
     }
     if (values.Rev === undefined) {
       throw new Error('CWE Nist Mapping Data must contain a rev.');
     } else {
       this.rev = values.Rev;
     }
-    this.nistName = values["NIST Name"];
+    this.nistName = values['NIST Name'];
   }
 }
