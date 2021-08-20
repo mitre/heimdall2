@@ -12,7 +12,6 @@ export interface ICWEJSONID {
 export class CweNistMapping {
   data: CweNistMappingItem[];
 
-  //constructor(csvDataPath: string) {
   constructor() {
     this.data = [];
 

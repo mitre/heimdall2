@@ -21,11 +21,8 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['best_practice', 0.0],
   ['information', 0.0]
 ]);
-const CWE_NIST_MAPPING_FILE = path.resolve(
-  __dirname,
-  '../data/cwe-nist-mapping.csv'
-);
-const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE);
+
+const CWE_NIST_MAPPING = new CweNistMapping();
 const OWASP_NIST_MAPPING_FILE = path.resolve(
   __dirname,
   '../data/owasp-nist-mapping.csv'
