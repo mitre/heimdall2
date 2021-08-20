@@ -36,14 +36,13 @@ jobs:
         rm -rf apps/frontend
         rm -rf apps/backend
     
-     - name: Start Mock Sonarqube Server
-        uses: ./
-        with:
-          start: yarn run cypress-test mock-json
-          wait-on: 'http://localhost:3001'
-
      - name: Install project dependencies
-       run: yarn hdf-converters install --frozen-lockfile
+       run: |
+        yarn hdf-converters install --frozen-lockfile
+        yarn workspace @heimdall/cypress-tests install 
+    
+     - name: Start Mock Sonarqube Server
+       run: yarn run cypress-test mock-json &
 
      - name: Run unit tests
        run: yarn hdf-converters test
