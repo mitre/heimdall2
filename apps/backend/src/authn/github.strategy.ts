@@ -7,7 +7,7 @@ import {User} from '../users/user.model';
 import {AuthnService} from './authn.service';
 
 interface GithubProfile {
-  name: string;
+  name: string | null;
   login: string;
 }
 
