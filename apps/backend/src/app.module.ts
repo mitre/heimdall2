@@ -4,6 +4,7 @@ import {ServeStaticModule} from '@nestjs/serve-static';
 import {join} from 'path';
 import {ApiKeyModule} from './apikeys/apikeys.module';
 import {AppController} from './app.controller';
+import {AppService} from './app.service';
 import {AuthnModule} from './authn/authn.module';
 import {AuthzModule} from './authz/authz.module';
 import {CaslExceptionFilter} from './casl/casl-exception.filter';
@@ -37,6 +38,7 @@ import {UsersModule} from './users/users.module';
     StatisticsModule
   ],
   providers: [
+    AppService,
     {
       provide: APP_FILTER,
       useClass: CaslExceptionFilter

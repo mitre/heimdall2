@@ -32,7 +32,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish HDF Converters to NPM
-        run: npm publish --access public libs/hdf_converters/mitre-hdf_converters*.tgz
+        run: npm publish --access public libs/hdf-converters/mitre-hdf-converters*.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -43,15 +43,5 @@ jobs:
 
       - name: Publish Heimdall Lite to GitHub Packages
         run: npm publish --access public apps/frontend/mitre-heimdall-lite*.tgz
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Publish InspecJS to GitHub Packages
-        run: npm publish --access public libs/inspecjs/inspecjs*.tgz
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Publish HDF Converters to GitHub Packages
-        run: npm publish --access public libs/hdf_converters/mitre-hdf_converters*.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
