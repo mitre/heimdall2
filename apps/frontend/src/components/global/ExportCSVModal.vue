@@ -56,19 +56,17 @@
 </template>
 
 <script lang="ts">
+import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
+import {ContextualizedControl, ExecJSON, HDFControlSegment} from 'inspecjs';
+import _ from 'lodash';
+import ObjectsToCsv from 'objects-to-csv';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-
-import {Filter, FilteredDataModule} from '@/store/data_filters';
-import ObjectsToCsv from 'objects-to-csv';
-import {EvaluationFile, ProfileFile} from '../../store/report_intake';
 import {Prop} from 'vue-property-decorator';
 import {InspecDataModule} from '../../store/data_store';
-import _ from 'lodash';
-import {saveSingleOrMultipleFiles} from '@/utilities/export_util'
-import {HDFControlSegment, ContextualizedControl, ExecJSON} from 'inspecjs';
-
+import {EvaluationFile, ProfileFile} from '../../store/report_intake';
 
 const fieldNames: {[key: string]: string} = {
   resultsSet: 'Results Set',
@@ -88,19 +86,18 @@ const fieldNames: {[key: string]: string} = {
   segments: 'Segments',
   waived: 'Waived',
   waiverData: 'Waiver Data'
-}
-
+};
 
 type ControlSetRow = {
   [key: string]: unknown;
-}
+};
 
 type File = {
   filename: string;
   data: string;
-}
+};
 
-type ControlSetRows = ControlSetRow[]
+type ControlSetRows = ControlSetRow[];
 
 @Component({
   components: {
@@ -125,121 +122,148 @@ export default class ExportCSVModal extends Vue {
 
   get headers() {
     return this.fieldsToAdd.map((field) => {
-      return {text: field, sortable: false, value: field}
-    })
+      return {text: field, sortable: false, value: field};
+    });
   }
 
-  files: File[] = []
-  rows: ControlSetRows = []
+  files: File[] = [];
+  rows: ControlSetRows = [];
 
-  descriptionsToString(descriptions?: ExecJSON.ControlDescription[] | { [key: string]: unknown; } | null): string {
+  descriptionsToString(
+    descriptions?:
+      | ExecJSON.ControlDescription[]
+      | {[key: string]: unknown}
+      | null
+  ): string {
     let result = '';
-      if(Array.isArray(descriptions)) {
+    if (Array.isArray(descriptions)) {
       descriptions.forEach((description: ExecJSON.ControlDescription) => {
-        result += `${description.label}: ${description.data}\r\n\r\n`
-      })
+        result += `${description.label}: ${description.data}\r\n\r\n`;
+      });
     }
-    return result
+    return result;
   }
 
   segmentsToString(segments: HDFControlSegment[] | undefined): string {
     if (segments) {
       let result = '';
       segments.forEach((segment: HDFControlSegment) => {
-        if(segment.message){
-          result += `${segment.status.toUpperCase()} -- Test: ${segment.code_desc}\r\nMessage: ${segment.message}\r\n\r\n`
+        if (segment.message) {
+          result += `${segment.status.toUpperCase()} -- Test: ${
+            segment.code_desc
+          }\r\nMessage: ${segment.message}\r\n\r\n`;
         } else {
-          result += `${segment.status.toUpperCase()} -- Test: ${segment.code_desc}\r\n\r\n`
+          result += `${segment.status.toUpperCase()} -- Test: ${
+            segment.code_desc
+          }\r\n\r\n`;
         }
-      })
-      return result
+      });
+      return result;
     } else {
       return '';
     }
   }
 
-  convertRow(file: ProfileFile | EvaluationFile, control: ContextualizedControl): ControlSetRow {
-    let check = "";
-    let fix = "";
+  convertRow(
+    file: ProfileFile | EvaluationFile,
+    control: ContextualizedControl
+  ): ControlSetRow {
+    let check = '';
+    let fix = '';
     const result: ControlSetRow = {};
 
-    if(control.data.tags.check) {
+    if (control.data.tags.check) {
       check = control.data.tags.check;
     } else if (typeof control.data.descriptions === 'object') {
-      const found = control.data.descriptions?.find((description: ExecJSON.ControlDescription) => description.label.toLowerCase() === 'check')
-      if(found) {
-        check = found.data
+      const found = control.data.descriptions?.find(
+        (description: ExecJSON.ControlDescription) =>
+          description.label.toLowerCase() === 'check'
+      );
+      if (found) {
+        check = found.data;
       }
     }
-    if(control.data.tags.fix) {
+    if (control.data.tags.fix) {
       fix = control.data.tags.fix;
     } else if (typeof control.data.descriptions === 'object') {
-      const found = control.data.descriptions?.find((description: ExecJSON.ControlDescription) => description.label.toLowerCase() === 'fix')
-      if(found) {
-        fix = found.data
+      const found = control.data.descriptions?.find(
+        (description: ExecJSON.ControlDescription) =>
+          description.label.toLowerCase() === 'fix'
+      );
+      if (found) {
+        fix = found.data;
       }
     }
     this.fieldsToAdd.forEach((field) => {
-      switch(field) {
+      switch (field) {
         case fieldNames.resultsSet:
-          result[fieldNames.resultsSet] = file.filename
+          result[fieldNames.resultsSet] = file.filename;
           break;
         case fieldNames.status:
-          result[fieldNames.status] = control.hdf.status
+          result[fieldNames.status] = control.hdf.status;
           break;
         case fieldNames.id:
-          result[fieldNames.id] = control.data.id
+          result[fieldNames.id] = control.data.id;
           break;
         case fieldNames.title:
-          result[fieldNames.title] = control.data.title
+          result[fieldNames.title] = control.data.title;
           break;
         case fieldNames.description:
-          result[fieldNames.description] = control.data.desc
+          result[fieldNames.description] = control.data.desc;
           break;
         case fieldNames.descriptions:
-          result[fieldNames.descriptions] = this.descriptionsToString(control.data.descriptions)
+          result[fieldNames.descriptions] = this.descriptionsToString(
+            control.data.descriptions
+          );
           break;
         case fieldNames.message:
-          result[fieldNames.message] = control.hdf.message
+          result[fieldNames.message] = control.hdf.message;
           break;
         case fieldNames.impact:
-          result[fieldNames.impact] = control.data.impact
+          result[fieldNames.impact] = control.data.impact;
           break;
         case fieldNames.severity:
-          result[fieldNames.severity] = control.hdf.severity
+          result[fieldNames.severity] = control.hdf.severity;
           break;
         case fieldNames.code:
-          result[fieldNames.code] = control.full_code
+          result[fieldNames.code] = control.full_code;
           break;
         case fieldNames.check:
-          result[fieldNames.check] = check
+          result[fieldNames.check] = check;
           break;
         case fieldNames.fix:
-          result[fieldNames.fix] = fix
+          result[fieldNames.fix] = fix;
           break;
         case fieldNames.nistIds:
-          result[fieldNames.nistIds] = control.hdf.rawNistTags.join(', ')
+          result[fieldNames.nistIds] = control.hdf.rawNistTags.join(', ');
           break;
         case fieldNames.cciIds:
-          result[fieldNames.cciIds] = (control.data.tags.cci || []).join(', ')
+          result[fieldNames.cciIds] = (control.data.tags.cci || []).join(', ');
           break;
         case fieldNames.segments:
-          result[fieldNames.segments] = this.segmentsToString(control.hdf.segments)
+          result[fieldNames.segments] = this.segmentsToString(
+            control.hdf.segments
+          );
           break;
         case fieldNames.waived:
-          result[fieldNames.waived] = control.hdf.waived ? 'True' : 'False'
+          result[fieldNames.waived] = control.hdf.waived ? 'True' : 'False';
           break;
         case fieldNames.waiverData:
-          result[fieldNames.waiverData] = JSON.stringify(_.get(control, 'hdf.wraps.waiver_data'))
+          result[fieldNames.waiverData] = JSON.stringify(
+            _.get(control, 'hdf.wraps.waiver_data')
+          );
           break;
       }
-    })
-    return result
+    });
+    return result;
   }
 
   convertRows(file: ProfileFile | EvaluationFile): ControlSetRows {
     const rows: ControlSetRows = [];
-    const controls = FilteredDataModule.controls({...this.filter, fromFile: [file.uniqueId]});
+    const controls = FilteredDataModule.controls({
+      ...this.filter,
+      fromFile: [file.uniqueId]
+    });
     for (const ctrl of controls) {
       rows.push(this.convertRow(file, ctrl));
     }
@@ -251,44 +275,44 @@ export default class ExportCSVModal extends Vue {
    */
   generateCSVPreview() {
     const file = InspecDataModule.allFiles.find(
-        (f) => f.uniqueId === this.filter.fromFile[0]
-      );
-    if (file){
+      (f) => f.uniqueId === this.filter.fromFile[0]
+    );
+    if (file) {
       this.rows = this.convertRows(file);
     }
   }
 
   truncate(string: string): string {
-    return _.truncate(string, {length: 100})
+    return _.truncate(string, {length: 100});
   }
 
   async convertData(file: EvaluationFile | ProfileFile) {
     // Convert all controls from a file to ControlSetRows
-      let rows: ControlSetRows = [];
-      rows = this.convertRows(file);
-        // Convert our rows to CSV
-        const csvString = await new ObjectsToCsv(rows).toString()
-        // If we only have one file we can save just one csv file
-        this.files.push({
-          filename: this.cleanUpFilename(`${file.filename}.csv`),
-          data: csvString
-        })
+    let rows: ControlSetRows = [];
+    rows = this.convertRows(file);
+    // Convert our rows to CSV
+    const csvString = await new ObjectsToCsv(rows).toString();
+    // If we only have one file we can save just one csv file
+    this.files.push({
+      filename: this.cleanUpFilename(`${file.filename}.csv`),
+      data: csvString
+    });
   }
 
   exportCSV() {
     this.files = [];
     const fileConvertPromises = this.filter.fromFile.map((fileId) => {
-      const file = InspecDataModule.allFiles.find(
-        (f) => f.uniqueId === fileId
-      );
-      if(file) {
-        return this.convertData(file)
+      const file = InspecDataModule.allFiles.find((f) => f.uniqueId === fileId);
+      if (file) {
+        return this.convertData(file);
       }
       return null;
-    })
-    Promise.all(fileConvertPromises).then(() => saveSingleOrMultipleFiles(this.files, 'csv')).finally(() => {
-      this.closeModal();
-    })
+    });
+    Promise.all(fileConvertPromises)
+      .then(() => saveSingleOrMultipleFiles(this.files, 'csv'))
+      .finally(() => {
+        this.closeModal();
+      });
   }
 
   cleanUpFilename(filename: string): string {
