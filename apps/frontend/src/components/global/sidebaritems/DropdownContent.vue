@@ -59,10 +59,10 @@
 </template>
 
 <script lang="ts">
-import {Vue, Component, Prop} from 'vue-property-decorator';
 import FileList from '@/components/global/sidebaritems/SidebarFileList.vue';
-import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {Trinary} from '@/enums/Trinary';
+import {EvaluationFile, ProfileFile} from '@/store/report_intake';
+import {Component, Prop, Vue} from 'vue-property-decorator';
 
 @Component({
   components: {

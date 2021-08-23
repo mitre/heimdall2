@@ -130,19 +130,20 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import ControlRowHeader, {getControlRunTime} from '@/components/cards/controltable/ControlRowHeader.vue';
 import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails.vue';
-import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
+import ControlRowHeader, {
+  getControlRunTime
+} from '@/components/cards/controltable/ControlRowHeader.vue';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
-
+import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
 import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {HeightsModule} from '@/store/heights';
 import {control_unique_key} from '@/utilities/format_util';
 import {ContextualizedControl} from 'inspecjs';
-import {Prop, Ref} from 'vue-property-decorator';
-import {HeightsModule} from '@/store/heights';
 import _ from 'lodash';
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {Prop, Ref} from 'vue-property-decorator';
 
 // Tracks the visibility of an HDF control
 interface ListElt {
@@ -193,9 +194,9 @@ export default class ControlTable extends Vue {
   displayUnviewedControls = true;
 
   toggleControlViewed(control: ContextualizedControl) {
-    const alreadyViewed = this.viewedControlIds.indexOf(control.data.id)
+    const alreadyViewed = this.viewedControlIds.indexOf(control.data.id);
     // If the control hasn't been marked as viewed yet, mark it as viewed.
-    if(alreadyViewed === -1) {
+    if (alreadyViewed === -1) {
       this.viewedControlIds.push(control.data.id);
     }
     // Else, remove it from the view controls array.
@@ -212,7 +213,9 @@ export default class ControlTable extends Vue {
     // Allow the page to settle before checking the controlTableHeader height
     // (this is what $nextTick is supposed to do but it's firing too quickly)
     setTimeout(() => {
-      HeightsModule.setControlTableHeaderHeight(this.controlTableTitle?.clientHeight);
+      HeightsModule.setControlTableHeaderHeight(
+        this.controlTableTitle?.clientHeight
+      );
     }, 2000);
   }
 
@@ -247,7 +250,7 @@ export default class ControlTable extends Vue {
   }
 
   set expandAll(value: boolean) {
-    if(value) {
+    if (value) {
       this.singleExpand = false;
       this.expanded = this.items.map((items) => items.key);
     } else {
@@ -271,13 +274,13 @@ export default class ControlTable extends Vue {
 
   /** Closes all open controls when single-expand is re-enabled */
   async handleToggleSingleExpand(singleExpand: boolean): Promise<void> {
-    if(singleExpand){
+    if (singleExpand) {
       this.expandAll = false;
     }
   }
 
-  async updateTab(tab: string){
-    this.syncTab = tab
+  async updateTab(tab: string) {
+    this.syncTab = tab;
   }
 
   /** Toggles the given expansion of a control details panel */
@@ -307,15 +310,18 @@ export default class ControlTable extends Vue {
   }
 
   jump_to_key(key: string) {
-    if(!this.$vuetify.breakpoint.smAndDown){
+    if (!this.$vuetify.breakpoint.smAndDown) {
       this.$nextTick(() => {
-        this.$vuetify.goTo(`#${this.striptoChars(key)}`, {offset: this.topOfPage, duration: 300});
+        this.$vuetify.goTo(`#${this.striptoChars(key)}`, {
+          offset: this.topOfPage,
+          duration: 300
+        });
       });
     }
   }
 
   striptoChars(key: string) {
-    return key.replace(/[^a-z0-9]/gi,'');
+    return key.replace(/[^a-z0-9]/gi, '');
   }
 
   /** Return items as key, value pairs */
@@ -350,7 +356,7 @@ export default class ControlTable extends Vue {
     // Whether or not we need to sort
     let sort = true;
     // Our comparator function
-    let cmp: ((a: ListElt, b: ListElt) => number);
+    let cmp: (a: ListElt, b: ListElt) => number;
 
     let items = this.raw_items;
 
@@ -376,17 +382,17 @@ export default class ControlTable extends Vue {
       if (this.sortSeverity === 'ascending') {
         factor = -1;
       }
-    } else if (
-      this.sortSet === 'ascending' ||
-      this.sortSet === 'descending'
-    ) {
+    } else if (this.sortSet === 'ascending' || this.sortSet === 'descending') {
       cmp = (a: ListElt, b: ListElt) => a.filename.localeCompare(b.filename);
       if (this.sortSet === 'ascending') {
         factor = -1;
       }
-    } else if(this.sortRunTime === 'ascending' || this.sortRunTime === 'descending') {
+    } else if (
+      this.sortRunTime === 'ascending' ||
+      this.sortRunTime === 'descending'
+    ) {
       cmp = (a: ListElt, b: ListElt) =>
-        (getControlRunTime(b.control) - getControlRunTime(a.control));
+        getControlRunTime(b.control) - getControlRunTime(a.control);
       if (this.sortRunTime === 'ascending') {
         factor = -1;
       }
@@ -395,12 +401,14 @@ export default class ControlTable extends Vue {
     }
 
     // Displays only unviewed controls.
-    if(this.displayUnviewedControls) {
-      items = items.filter((val) => !this.viewedControlIds.includes(val.control.data.id));
+    if (this.displayUnviewedControls) {
+      items = items.filter(
+        (val) => !this.viewedControlIds.includes(val.control.data.id)
+      );
     }
 
-    if(sort === true) {
-      items = items.sort((a, b) => cmp(a, b) * factor)
+    if (sort === true) {
+      items = items.sort((a, b) => cmp(a, b) * factor);
     }
 
     return items;

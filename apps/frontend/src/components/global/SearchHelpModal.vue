@@ -62,17 +62,17 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component';
 import Modal from '@/components/global/Modal.vue';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 
 @Component({
-    components: {
-        Modal
-    }
+  components: {
+    Modal
+  }
 })
 export default class SearchHelpModal extends Vue {
-    @Prop({default: true}) readonly visible!: boolean;
+  @Prop({default: true}) readonly visible!: boolean;
 }
 </script>

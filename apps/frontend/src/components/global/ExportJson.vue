@@ -14,12 +14,11 @@
 </template>
 
 <script lang="ts">
+import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import {FilteredDataModule} from '@/store/data_filters';
+import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-
-import {FilteredDataModule} from '@/store/data_filters';
-import {saveSingleOrMultipleFiles} from '../../utilities/export_util';
 
 type FileData = {
   filename: string;
@@ -53,7 +52,7 @@ export default class ExportJSON extends Vue {
   //exports .zip of jsons if multiple are selected, if one is selected it will export that .json file
   export_json() {
     const files = this.populate_files();
-    saveSingleOrMultipleFiles(files, 'json')
+    saveSingleOrMultipleFiles(files, 'json');
   }
 
   cleanup_filename(filename: string): string {

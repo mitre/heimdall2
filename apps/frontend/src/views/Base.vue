@@ -33,15 +33,15 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import SearchBar from '@/components/global/SearchBar.vue';
+import SearchHelpModal from '@/components/global/SearchHelpModal.vue';
 import Sidebar from '@/components/global/Sidebar.vue';
 import Topbar from '@/components/global/Topbar.vue';
 import UpdateNotification from '@/components/global/UpdateNotification.vue';
-import SearchHelpModal from '@/components/global/SearchHelpModal.vue'
-import SearchBar from '@/components/global/SearchBar.vue'
-import {Prop} from 'vue-property-decorator';
 import {SidebarModule} from '@/store/sidebar_state';
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -61,7 +61,7 @@ export default class Base extends Vue {
 
   /** Models if the drawer is open */
   get drawer(): boolean {
-    return SidebarModule.active
+    return SidebarModule.active;
   }
 
   set drawer(state: boolean) {

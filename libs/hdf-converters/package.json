@@ -1,0 +1,45 @@
+{
+  "name": "@mitre/hdf-converters",
+  "version": "2.5.0",
+  "license": "Apache-2.0",
+  "description": "Converter util library used to transform various scan results into HDF format",
+  "files": [
+    "lib"
+  ],
+  "main": "src/index.ts",
+  "publishConfig": {
+    "main": "lib/index.js"
+  },
+  "scripts": {
+    "prepack": "yarn build && cp package.json package.json.orig && cat package.json.orig | jq '.main = (.publishConfig.main)' > package.json",
+    "postpack": "mv package.json.orig package.json",
+    "build": "tsc -p ./tsconfig.build.json && cp -R ./data ./lib",
+    "lint": "eslint \"**/*.ts\" --fix",
+    "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
+    "test": "jest --silent"
+  },
+  "dependencies": {
+    "csv-parse": "^4.16.0",
+    "fast-xml-parser": "^3.19.0",
+    "htmlparser2": "^6.1.0",
+    "inspecjs": "^2.5.0",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.0",
+    "@types/lodash": "^4.14.161",
+    "@types/node": "^15.0.1",
+    "htmlparser2": "^6.1.0",
+    "jest": "^27.0.6",
+    "quicktype": "^15.0.260",
+    "ts-jest": "^27.0.3",
+    "ts-node": "^10.0.0",
+    "typedoc": "^0.21.4"
+  },
+  "jest": {
+    "rootDir": ".",
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    }
+  }
+}

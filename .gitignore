@@ -42,8 +42,6 @@ test/videos
 .env-prod
 .env-dev
 
-data/
-
 # Ignore cloud.gov manifest
 manifest.yml
 
@@ -55,3 +53,12 @@ nginx/certs/ssl_certificate_key.key
 apps/frontend/public/static/export/bootstrap.min.css
 apps/frontend/public/static/export/bootstrap.min.js
 apps/frontend/public/static/export/jquery.min.js
+
+# Ignore yarn 2 new files
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*

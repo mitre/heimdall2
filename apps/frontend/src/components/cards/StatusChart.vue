@@ -8,13 +8,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
 import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
+import {ExtendedControlStatus, Filter} from '@/store/data_filters';
 import {StatusCountModule} from '@/store/status_counts';
 import {ControlStatus} from 'inspecjs';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {ExtendedControlStatus, Filter} from '@/store/data_filters';
 import {SearchModule} from '../../store/search';
 
 /**
@@ -27,7 +27,10 @@ import {SearchModule} from '../../store/search';
   }
 })
 export default class StatusChart extends Vue {
-  @Prop({type: Array, default: null}) readonly value!: ExtendedControlStatus[] | null;
+  @Prop({type: Array, default: null}) readonly value!:
+    | ExtendedControlStatus[]
+    | null;
+
   @Prop({type: Object, required: true}) readonly filter!: Filter;
   @Prop({type: Boolean, default: false}) showCompliance!: boolean;
 
@@ -89,9 +92,17 @@ export default class StatusChart extends Vue {
 
   onSelect(status: Category<ControlStatus>) {
     if (SearchModule.statusFilter?.indexOf(status.value) !== -1) {
-      SearchModule.removeSearchFilter({field: 'status', value: status.value, previousValues: this.value || []})
+      SearchModule.removeSearchFilter({
+        field: 'status',
+        value: status.value,
+        previousValues: this.value || []
+      });
     } else {
-      SearchModule.addSearchFilter({field: 'status', value: status.value, previousValues: this.value || []});
+      SearchModule.addSearchFilter({
+        field: 'status',
+        value: status.value,
+        previousValues: this.value || []
+      });
     }
   }
 }
