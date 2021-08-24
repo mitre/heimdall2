@@ -13,26 +13,26 @@ function omitVersions(input: ExecJSON.Execution): Partial<ExecJSON.Execution> {
   return _.omit(input, ['version', 'platform.release', 'profiles[0].sha256']);
 }
 
-// test('Test burpsuite_mapper', () => {
-//   const mapper = new BurpSuiteMapper(
-//     fs.readFileSync(
-//       'sample_jsons/burpsuite_mapper/sample_input_report/zero.webappsecurity.com.min',
-//       {encoding: 'utf-8'}
-//     )
-//   );
-//   const result: ExecJSON.Execution = mapper.toHdf();
-//   if (result !== undefined) {
-//     expect(omitVersions(result)).toEqual(
-//       omitVersions(
-//         JSON.parse(
-//           fs.readFileSync('sample_jsons/burpsuite_mapper/burpsuite-hdf.json', {
-//             encoding: 'utf-8'
-//           })
-//         )
-//       )
-//     );
-//   }
-// });
+test('Test burpsuite_mapper', () => {
+  const mapper = new BurpSuiteMapper(
+    fs.readFileSync(
+      'sample_jsons/burpsuite_mapper/sample_input_report/zero.webappsecurity.com.min',
+      {encoding: 'utf-8'}
+    )
+  );
+  const result: ExecJSON.Execution = mapper.toHdf();
+  if (result !== undefined) {
+    expect(omitVersions(result)).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync('sample_jsons/burpsuite_mapper/burpsuite-hdf.json', {
+            encoding: 'utf-8'
+          })
+        )
+      )
+    );
+  }
+});
 
 test('Test jfrog_xray_mapper', () => {
   const mapper = new JfrogXrayMapper(
@@ -54,127 +54,127 @@ test('Test jfrog_xray_mapper', () => {
     );
   }
 });
-// test('Test nikto_mapper', () => {
-//   const mapper = new NiktoMapper(
-//     fs.readFileSync(
-//       'sample_jsons/nikto_mapper/sample_input_report/zero.webappsecurity.json',
-//       {encoding: 'utf-8'}
-//     )
-//   );
-//   const result: ExecJSON.Execution = mapper.toHdf();
-//   if (result !== undefined) {
-//     expect(omitVersions(result)).toEqual(
-//       omitVersions(
-//         JSON.parse(
-//           fs.readFileSync('sample_jsons/nikto_mapper/nikto-hdf.json', {
-//             encoding: 'utf-8'
-//           })
-//         )
-//       )
-//     );
-//   }
-// });
-// test('Test sarif_mapper', () => {
-//   const mapper = new SarifMapper(
-//     fs.readFileSync(
-//       'sample_jsons/sarif_mapper/sample_input_report/sarif_input.sarif',
-//       {encoding: 'utf-8'}
-//     )
-//   );
-//   const result: ExecJSON.Execution = mapper.toHdf();
-//   if (result !== undefined) {
-//     expect(omitVersions(result)).toEqual(
-//       omitVersions(
-//         JSON.parse(
-//           fs.readFileSync('sample_jsons/sarif_mapper/sarif-hdf.json', {
-//             encoding: 'utf-8'
-//           })
-//         )
-//       )
-//     );
-//   }
-// });
-// test('Test scoutsuite_mapper', () => {
-//   const mapper = new ScoutsuiteMapper(
-//     fs.readFileSync(
-//       'sample_jsons/scoutsuite_mapper/sample_input_report/scoutsuite_sample.js',
-//       {encoding: 'utf-8'}
-//     )
-//   );
-//   const result: ExecJSON.Execution = mapper.toHdf();
-//   if (result !== undefined) {
-//     expect(omitVersions(result)).toEqual(
-//       omitVersions(
-//         JSON.parse(
-//           fs.readFileSync(
-//             'sample_jsons/scoutsuite_mapper/scoutsuite-hdf.json',
-//             {encoding: 'utf-8'}
-//           )
-//         )
-//       )
-//     );
-//   }
-// });
-// test('Test xccdf_results_mapper', () => {
-//   const mapper = new XCCDFResultsMapper(
-//     fs.readFileSync(
-//       'sample_jsons/xccdf_results_mapper/sample_input_report/xccdf-results.xml',
-//       {encoding: 'utf-8'}
-//     )
-//   );
-//   const result: ExecJSON.Execution = mapper.toHdf();
-//   if (result !== undefined) {
-//     expect(omitVersions(result)).toEqual(
-//       omitVersions(
-//         JSON.parse(
-//           fs.readFileSync('sample_jsons/xccdf_results_mapper/xccdf-hdf.json', {
-//             encoding: 'utf-8'
-//           })
-//         )
-//       )
-//     );
-//   }
-// });
-// test('Test zap_mapper webgoat.json', () => {
-//   const mapper = new ZapMapper(
-//     fs.readFileSync(
-//       'sample_jsons/zap_mapper/sample_input_report/webgoat.json',
-//       {encoding: 'utf-8'}
-//     ),
-//     'http://mymac.com:8191'
-//   );
-//   const result: ExecJSON.Execution = mapper.toHdf();
-//   if (result !== undefined) {
-//     expect(omitVersions(result)).toEqual(
-//       omitVersions(
-//         JSON.parse(
-//           fs.readFileSync('sample_jsons/zap_mapper/zap-webgoat-hdf.json', {
-//             encoding: 'utf-8'
-//           })
-//         )
-//       )
-//     );
-//   }
-// });
-// test('Test zap_mapper zero.webappsecurity.json', () => {
-//   const mapper = new ZapMapper(
-//     fs.readFileSync(
-//       'sample_jsons/zap_mapper/sample_input_report/zero.webappsecurity.json',
-//       {encoding: 'utf-8'}
-//     ),
-//     'http://zero.webappsecurity.com'
-//   );
-//   const result: ExecJSON.Execution = mapper.toHdf();
-//   if (result !== undefined) {
-//     expect(omitVersions(result)).toEqual(
-//       omitVersions(
-//         JSON.parse(
-//           fs.readFileSync(
-//             'sample_jsons/zap_mapper/zap-webappsecurity-hdf.json',
-//             {encoding: 'utf-8'}
-//           )
-//         )
-//       )
-//     );
-//   }
-// });
+test('Test nikto_mapper', () => {
+  const mapper = new NiktoMapper(
+    fs.readFileSync(
+      'sample_jsons/nikto_mapper/sample_input_report/zero.webappsecurity.json',
+      {encoding: 'utf-8'}
+    )
+  );
+  const result: ExecJSON.Execution = mapper.toHdf();
+  if (result !== undefined) {
+    expect(omitVersions(result)).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync('sample_jsons/nikto_mapper/nikto-hdf.json', {
+            encoding: 'utf-8'
+          })
+        )
+      )
+    );
+  }
+});
+test('Test sarif_mapper', () => {
+  const mapper = new SarifMapper(
+    fs.readFileSync(
+      'sample_jsons/sarif_mapper/sample_input_report/sarif_input.sarif',
+      {encoding: 'utf-8'}
+    )
+  );
+  const result: ExecJSON.Execution = mapper.toHdf();
+  if (result !== undefined) {
+    expect(omitVersions(result)).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync('sample_jsons/sarif_mapper/sarif-hdf.json', {
+            encoding: 'utf-8'
+          })
+        )
+      )
+    );
+  }
+});
+test('Test scoutsuite_mapper', () => {
+  const mapper = new ScoutsuiteMapper(
+    fs.readFileSync(
+      'sample_jsons/scoutsuite_mapper/sample_input_report/scoutsuite_sample.js',
+      {encoding: 'utf-8'}
+    )
+  );
+  const result: ExecJSON.Execution = mapper.toHdf();
+  if (result !== undefined) {
+    expect(omitVersions(result)).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/scoutsuite_mapper/scoutsuite-hdf.json',
+            {encoding: 'utf-8'}
+          )
+        )
+      )
+    );
+  }
+});
+test('Test xccdf_results_mapper', () => {
+  const mapper = new XCCDFResultsMapper(
+    fs.readFileSync(
+      'sample_jsons/xccdf_results_mapper/sample_input_report/xccdf-results.xml',
+      {encoding: 'utf-8'}
+    )
+  );
+  const result: ExecJSON.Execution = mapper.toHdf();
+  if (result !== undefined) {
+    expect(omitVersions(result)).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync('sample_jsons/xccdf_results_mapper/xccdf-hdf.json', {
+            encoding: 'utf-8'
+          })
+        )
+      )
+    );
+  }
+});
+test('Test zap_mapper webgoat.json', () => {
+  const mapper = new ZapMapper(
+    fs.readFileSync(
+      'sample_jsons/zap_mapper/sample_input_report/webgoat.json',
+      {encoding: 'utf-8'}
+    ),
+    'http://mymac.com:8191'
+  );
+  const result: ExecJSON.Execution = mapper.toHdf();
+  if (result !== undefined) {
+    expect(omitVersions(result)).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync('sample_jsons/zap_mapper/zap-webgoat-hdf.json', {
+            encoding: 'utf-8'
+          })
+        )
+      )
+    );
+  }
+});
+test('Test zap_mapper zero.webappsecurity.json', () => {
+  const mapper = new ZapMapper(
+    fs.readFileSync(
+      'sample_jsons/zap_mapper/sample_input_report/zero.webappsecurity.json',
+      {encoding: 'utf-8'}
+    ),
+    'http://zero.webappsecurity.com'
+  );
+  const result: ExecJSON.Execution = mapper.toHdf();
+  if (result !== undefined) {
+    expect(omitVersions(result)).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/zap_mapper/zap-webappsecurity-hdf.json',
+            {encoding: 'utf-8'}
+          )
+        )
+      )
+    );
+  }
+});

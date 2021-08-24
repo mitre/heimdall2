@@ -23,11 +23,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 
 const CWE_NIST_MAPPING = new CweNistMapping();
-const OWASP_NIST_MAPPING_FILE = path.resolve(
-  __dirname,
-  '../data/owasp-nist-mapping.csv'
-);
-const OWASP_NIST_MAPPING = new OwaspNistMapping(OWASP_NIST_MAPPING_FILE);
+const OWASP_NIST_MAPPING = new OwaspNistMapping();
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
 function parseXml(xml: string): Record<string, unknown> {

@@ -1,40 +1,16 @@
-import parser from 'fast-xml-parser';
-import fs from 'fs';
 import _ from 'lodash';
+import {default as data} from '../../data/cci-nist-mapping.json';
 import {CciNistMappingItem} from './CciNistMappingItem';
-
-const options = {
-  attributeNamePrefix: '',
-  textNodeName: 'text',
-  ignoreAttributes: false
-};
 
 export class CciNistMapping {
   data: CciNistMappingItem[];
 
-  constructor(xmlDataPath: string) {
+  constructor() {    
     this.data = [];
-    const tags = _.get(
-      parser.parse(fs.readFileSync(xmlDataPath, {encoding: 'utf-8'}), options),
-      'cci_list.cci_items.cci_item'
-    );
-    if (Array.isArray(tags)) {
-      tags.forEach((element) => {
-        let path = '';
-        if (Array.isArray(_.get(element, 'references.reference'))) {
-          path = 'references.reference[2].index';
-          if (
-            _.get(element, path) === null ||
-            _.get(element, path) === undefined
-          ) {
-            path = 'references.reference[0].index';
-          }
-        } else {
-          path = 'references.reference.index';
-        }
-        this.data.push(
-          new CciNistMappingItem(_.get(element, 'id'), _.get(element, path))
-        );
+
+    if (data.constructor === ({}).constructor) {
+      Object.entries(data).forEach(item => {
+        this.data.push(new CciNistMappingItem(item[0], item[1]));
       });
     }
   }

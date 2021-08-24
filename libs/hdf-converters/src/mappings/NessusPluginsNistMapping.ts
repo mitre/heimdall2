@@ -1,17 +1,24 @@
-import parse from 'csv-parse/lib/sync';
-import fs from 'fs';
+import {default as data} from '../../data/nessus-plugins-nist-mapping.json';
 import {NessusPluginsNistMappingItem} from './NessusPluginsNistMappingItem';
+
+//type PluginId = string | number;
+//type Revision = string | number;
+
+export interface INESSUSJSONID {
+  'pluginFamily': string;
+  'pluginID': string | number;
+  'NIST-ID': string;
+  'Rev': string | number;
+}
 
 export class NessusPluginsNistMapping {
   data: NessusPluginsNistMappingItem[];
 
-  constructor(csvDataPath: string) {
+  constructor() {
     this.data = [];
-    const contents = parse(fs.readFileSync(csvDataPath, {encoding: 'utf-8'}), {
-      skip_empty_lines: true
-    });
-    if (Array.isArray(contents)) {
-      contents.slice(1).forEach((line: string[]) => {
+
+    if (Array.isArray(data)) {
+      data.forEach((line: INESSUSJSONID) => {
         this.data.push(new NessusPluginsNistMappingItem(line));
       });
     }
