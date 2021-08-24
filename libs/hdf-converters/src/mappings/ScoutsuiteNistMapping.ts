@@ -2,7 +2,7 @@ import {default as data} from '../../data/scoutsuite-nist-mapping.json';
 import {ScoutsuiteNistMappingItem} from './ScoutsuiteNistMappingItem';
 
 export interface ISCOUTSUITEJSONID {
-  'RULE': string;
+  RULE: string;
   'NIST-ID': string;
 }
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];

@@ -15,7 +15,7 @@ export class NessusPluginsNistMappingItem {
       this.pluginFamily = values['pluginFamily'];
     }
     // Could be a string "*" or a number
-    if (typeof values['pluginID'] === "string") {
+    if (typeof values['pluginID'] === 'string') {
       this.pluginId = values['pluginID'];
     } else {
       this.pluginId = values['pluginID'].toString();
@@ -26,11 +26,11 @@ export class NessusPluginsNistMappingItem {
       this.nistId = values['NIST-ID'];
     }
     // Could possibly be number, string, or null
-    if (typeof values['Rev'] === "string") {
+    if (typeof values['Rev'] === 'string') {
       this.rev = parseInt(values['Rev']);
-    } else if (values['Rev'] === undefined || values['Rev'] === null ) {
+    } else if (values['Rev'] === undefined || values['Rev'] === null) {
       this.rev = 0;
-    }else {
+    } else {
       this.rev = values['Rev'];
     }
   }

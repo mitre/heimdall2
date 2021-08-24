@@ -1,15 +1,14 @@
-import _ from 'lodash';
 import {default as data} from '../../data/cci-nist-mapping.json';
 import {CciNistMappingItem} from './CciNistMappingItem';
 
 export class CciNistMapping {
   data: CciNistMappingItem[];
 
-  constructor() {    
+  constructor() {
     this.data = [];
 
-    if (data.constructor === ({}).constructor) {
-      Object.entries(data).forEach(item => {
+    if (data.constructor === {}.constructor) {
+      Object.entries(data).forEach((item) => {
         this.data.push(new CciNistMappingItem(item[0], item[1]));
       });
     }

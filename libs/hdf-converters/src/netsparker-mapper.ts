@@ -1,7 +1,6 @@
 import parser from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
-import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,

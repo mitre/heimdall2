@@ -5,7 +5,7 @@ export interface INIKJSONID {
   'NIKTO-ID': number;
   'PLUGIN-CATEGORY': string;
   'NIST-ID': string;
-  'OSVDB': number;
+  OSVDB: number;
 }
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 

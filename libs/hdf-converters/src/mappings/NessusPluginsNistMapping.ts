@@ -1,14 +1,11 @@
 import {default as data} from '../../data/nessus-plugins-nist-mapping.json';
 import {NessusPluginsNistMappingItem} from './NessusPluginsNistMappingItem';
 
-//type PluginId = string | number;
-//type Revision = string | number;
-
 export interface INESSUSJSONID {
-  'pluginFamily': string;
-  'pluginID': string | number;
+  pluginFamily: string;
+  pluginID: string | number;
   'NIST-ID': string;
-  'Rev': string | number;
+  Rev: string | number;
 }
 
 export class NessusPluginsNistMapping {

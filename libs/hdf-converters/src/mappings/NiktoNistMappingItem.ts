@@ -6,7 +6,7 @@ export class NiktoNistMappingItem {
   nistId: string;
   osvdb: number;
 
-  constructor(values: INIKJSONID) {    
+  constructor(values: INIKJSONID) {
     if (values['NIKTO-ID'] === undefined) {
       throw new Error('Nikto Nist Mapping Data must contain an id.');
     } else {

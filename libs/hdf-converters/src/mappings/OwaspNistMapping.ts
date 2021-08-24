@@ -5,7 +5,7 @@ export interface IOWASPJSONID {
   'OWASP-ID': string;
   'OWASP Name': string;
   'NIST-ID': string;
-  'Rev': number;
+  Rev: number;
   'NIST Name': string;
 }
 
