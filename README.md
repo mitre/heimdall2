@@ -184,9 +184,9 @@ $ cf push
 
 > Note: This is only for demonstration purposes, in order to run a production level federal/FISMA system. You will need to contact the [cloud.gov program](https://cloud.gov) and consult your organization's security team (for risk assessment and an Authority to Operate).
 
-## External Data Stores
+## External Data Sources
 
-Heimdall currently supports two external data stores for loading HDF data, AWS S3 and Splunk. 
+Heimdall currently supports two external data sources for loading HDF data, AWS S3 and Splunk. 
 
 ### AWS S3
 
