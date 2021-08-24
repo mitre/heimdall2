@@ -1,4 +1,4 @@
-import {ISCOUTSUITEJSONID} from './ScoutSuiteNistMapping';
+import {ISCOUTSUITEJSONID} from './ScoutsuiteNistMapping';
 
 export class ScoutsuiteNistMappingItem {
   rule: string;
