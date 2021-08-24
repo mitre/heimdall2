@@ -184,6 +184,39 @@ $ cf push
 
 > Note: This is only for demonstration purposes, in order to run a production level federal/FISMA system. You will need to contact the [cloud.gov program](https://cloud.gov) and consult your organization's security team (for risk assessment and an Authority to Operate).
 
+## External Data Stores
+
+Heimdall currently supports two external data stores for loading HDF data, AWS S3 and Splunk. 
+
+### AWS S3
+
+In order to allow Heidmdall to Connect to your AWS S3 bucket, you need to [add a Cross-Origin Resource Sharing policy](https://docs.aws.amazon.com/AmazonS3/latest/userguide/enabling-cors-examples.html) within the AWS Console. The following configuration is sufficent, however you need to change the allowed origin to where you are deploying Heimdall.
+
+```json
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "GET",
+            "HEAD"
+        ],
+        "AllowedOrigins": [
+            "https://heimdall.your.site.here"
+        ],
+        "ExposeHeaders": [],
+        "MaxAgeSeconds": 3000
+    }
+]
+```
+
+
+
+### Splunk
+
+First you need to [install the HDF -> Splunk Plugin](https://github.com/mitre/hdf-json-to-splunk#installation) and [enable Cross-Origin Resource Sharing](https://github.com/mitre/hdf-json-to-splunk#user-content-reading-this-data-back-out-in-heimdall-lite) to allow Heimdall to read your data. Then you can use the Splunk tab inside of the Upload Modal presented to you when you load Heimdall.
+
 ## API Usage
 
 API usage only works when using Heimdall Enterprise Server (AKA "Server Mode").
@@ -224,7 +257,7 @@ If you would like to change Heimdall to your needs, Heimdall has 'Development Mo
    - ```sql
      # Start the Postgres terminal
      psql postgres
-
+  
      # Create the user
      CREATE USER <username> with encrypted password '<password>';
      ALTER USER <username> CREATEDB;
