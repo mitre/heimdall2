@@ -186,7 +186,7 @@ $ cf push
 
 ## External Data Sources
 
-Heimdall currently supports two external data sources for loading HDF data, AWS S3 and Splunk. 
+Heimdall currently supports two external data sources for loading HDF data: AWS S3 and Splunk. 
 
 ### AWS S3
 
