@@ -5,7 +5,7 @@
 import {SourcedContextualizedEvaluation} from '@/store/report_intake';
 import {ContextualizedControl, ContextualizedEvaluation} from 'inspecjs';
 import {DateTime} from 'luxon';
-import {calculateCompliance} from '../store/status_counts';
+import {calculateCompliance} from '@/store/status_counts';
 
 export const NOT_SELECTED = 'not selected';
 
@@ -179,7 +179,7 @@ export function getResultsSetExecutionTime(
 export function getControlRunTime(control: ContextualizedControl): number {
   return (
     control.hdf.segments?.reduce(
-      (total, segment) => segment.run_time || 0 + total,
+      (total, segment) => (segment.run_time || 0) + total,
       0
     ) || 0
   );
