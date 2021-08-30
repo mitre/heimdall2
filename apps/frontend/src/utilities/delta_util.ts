@@ -191,27 +191,6 @@ export function getControlCount(
   return resultsSet.contains.reduce((sum, li) => sum + li.contains.length, 0);
 }
 
-export function getCompletedControlCount(
-  resultsSet: SourcedContextualizedEvaluation
-): number {
-  let count = 0;
-  resultsSet.contains.forEach((value) => {
-    value.contains.forEach((control) => {
-      if (
-        ![
-          'Not Applicable',
-          'Not Reviewed',
-          'Profile Error',
-          'From Profile'
-        ].includes(control.hdf.status)
-      ) {
-        count += 1;
-      }
-    });
-  });
-  return count;
-}
-
 /**
  * Grabs the "top" (IE non-overlayed/end of overlay chain) controls from the execution.
  *
