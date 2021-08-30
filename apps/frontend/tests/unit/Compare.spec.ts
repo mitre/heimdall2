@@ -7,7 +7,7 @@ import {shallowMount, Wrapper} from '@vue/test-utils';
 import 'jest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
-import {loadSample, removeAllFiles} from '../util/testingUtils';
+import {loadSample, removeAllFiles} from '@/util/testingUtils';
 
 const vuetify = new Vuetify();
 
