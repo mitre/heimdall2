@@ -179,7 +179,7 @@ export function getResultsSetExecutionTime(
 export function getControlRunTime(control: ContextualizedControl): number {
   return (
     control.hdf.segments?.reduce(
-      (total, segment) => segment.run_time || 0 + total,
+      (total, segment) => (segment.run_time || 0) + total,
       0
     ) || 0
   );
