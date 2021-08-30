@@ -68,25 +68,25 @@ import {Prop} from 'vue-property-decorator';
 import {InspecDataModule} from '../../store/data_store';
 import {EvaluationFile, ProfileFile} from '../../store/report_intake';
 
-const fieldNames: {[key: string]: string} = {
-  resultsSet: 'Results Set',
-  status: 'Status',
-  id: 'ID',
-  title: 'Title',
-  description: 'Description',
-  descriptions: 'Descriptions',
-  message: 'Message',
-  impact: 'Impact',
-  severity: 'Severity',
-  code: 'Code',
-  check: 'Check',
-  fix: 'Fix',
-  nistIds: '800-53 Controls',
-  cciIds: 'CCI IDs',
-  segments: 'Segments',
-  waived: 'Waived',
-  waiverData: 'Waiver Data'
-};
+const fieldNames = [
+  'Results Set',
+  'Status',
+  'ID',
+  'Title',
+  'Description',
+  'Descriptions',
+  'Message',
+  'Impact',
+  'Severity',
+  'Code',
+  'Check',
+  'Fix',
+  '800-53 Controls',
+  'CCI IDs',
+  'Segments',
+  'Waived',
+  'Waiver Data'
+];
 
 type ControlSetRow = {
   [key: string]: unknown;
@@ -108,8 +108,8 @@ export default class ExportCSVModal extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
 
   showingModal = false;
-  fields = Object.values(fieldNames);
-  fieldsToAdd: string[] = Object.values(fieldNames);
+  fields = _.clone(fieldNames);
+  fieldsToAdd: string[] = _.clone(fieldNames);
 
   closeModal() {
     this.showingModal = false;
@@ -196,60 +196,75 @@ export default class ExportCSVModal extends Vue {
     }
     this.fieldsToAdd.forEach((field) => {
       switch (field) {
-        case fieldNames.resultsSet:
-          result[fieldNames.resultsSet] = file.filename;
+        // Results Set
+        case fieldNames[0]:
+          result[fieldNames[0]] = file.filename;
           break;
-        case fieldNames.status:
-          result[fieldNames.status] = control.hdf.status;
+        // Status
+        case fieldNames[1]:
+          result[fieldNames[1]] = control.hdf.status;
           break;
-        case fieldNames.id:
-          result[fieldNames.id] = control.data.id;
+        // ID
+        case fieldNames[2]:
+          result[fieldNames[2]] = control.data.id;
           break;
-        case fieldNames.title:
-          result[fieldNames.title] = control.data.title;
+        // Title
+        case fieldNames[3]:
+          result[fieldNames[3]] = control.data.title;
           break;
-        case fieldNames.description:
-          result[fieldNames.description] = control.data.desc;
+        //Description
+        case fieldNames[4]:
+          result[fieldNames[4]] = control.data.desc;
           break;
-        case fieldNames.descriptions:
-          result[fieldNames.descriptions] = this.descriptionsToString(
+        // Descriptions
+        case fieldNames[5]:
+          result[fieldNames[5]] = this.descriptionsToString(
             control.data.descriptions
           );
           break;
-        case fieldNames.message:
-          result[fieldNames.message] = control.hdf.message;
+        // Message
+        case fieldNames[6]:
+          result[fieldNames[6]] = control.hdf.message;
           break;
-        case fieldNames.impact:
-          result[fieldNames.impact] = control.data.impact;
+        // Impact
+        case fieldNames[7]:
+          result[fieldNames[7]] = control.data.impact;
           break;
-        case fieldNames.severity:
-          result[fieldNames.severity] = control.hdf.severity;
+        // Severity
+        case fieldNames[8]:
+          result[fieldNames[8]] = control.hdf.severity;
           break;
-        case fieldNames.code:
-          result[fieldNames.code] = control.full_code;
+        // Code
+        case fieldNames[9]:
+          result[fieldNames[9]] = control.full_code;
           break;
-        case fieldNames.check:
-          result[fieldNames.check] = check;
+        // Check
+        case fieldNames[10]:
+          result[fieldNames[10]] = check;
           break;
-        case fieldNames.fix:
-          result[fieldNames.fix] = fix;
+        // Fix
+        case fieldNames[11]:
+          result[fieldNames[11]] = fix;
           break;
-        case fieldNames.nistIds:
-          result[fieldNames.nistIds] = control.hdf.rawNistTags.join(', ');
+        // NIST IDs
+        case fieldNames[12]:
+          result[fieldNames[12]] = control.hdf.rawNistTags.join(', ');
           break;
-        case fieldNames.cciIds:
-          result[fieldNames.cciIds] = (control.data.tags.cci || []).join(', ');
+        // CCI IDs
+        case fieldNames[13]:
+          result[fieldNames[13]] = (control.data.tags.cci || []).join(', ');
           break;
-        case fieldNames.segments:
-          result[fieldNames.segments] = this.segmentsToString(
-            control.hdf.segments
-          );
+        // Segments
+        case fieldNames[14]:
+          result[fieldNames[14]] = this.segmentsToString(control.hdf.segments);
           break;
-        case fieldNames.waived:
-          result[fieldNames.waived] = control.hdf.waived ? 'True' : 'False';
+        // Is Waived
+        case fieldNames[15]:
+          result[fieldNames[15]] = control.hdf.waived ? 'True' : 'False';
           break;
-        case fieldNames.waiverData:
-          result[fieldNames.waiverData] = JSON.stringify(
+        // Waiver Data (JSON)
+        case fieldNames[16]:
+          result[fieldNames[16]] = JSON.stringify(
             _.get(control, 'hdf.wraps.waiver_data')
           );
           break;
