@@ -36,10 +36,8 @@
               />
             </v-list-item>
             <v-list-item class="px-0">
-              <ExportCKLModal
-                :filter="all_filter"
-              />
-            </v-list-item>            
+              <ExportCKLModal :filter="all_filter" />
+            </v-list-item>
           </v-list>
         </v-menu>
       </div>

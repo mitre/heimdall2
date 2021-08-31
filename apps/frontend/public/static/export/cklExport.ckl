@@ -31,11 +31,11 @@
 				</SI_DATA>
 				<SI_DATA>
 					<SID_NAME>stigid</SID_NAME>
-					<SID_DATA>{{profileName}}</SID_DATA>
+					<SID_DATA>{{profileTitle}}</SID_DATA>
 				</SI_DATA>
 				<SI_DATA>
 					<SID_NAME>description</SID_NAME>
-					<SID_DATA>{{profileInfo}}}</SID_DATA>
+					<SID_DATA>{{profileInfo}}</SID_DATA>
 				</SI_DATA>
 				<SI_DATA>
 					<SID_NAME>filename</SID_NAME>
@@ -51,7 +51,7 @@
 				</SI_DATA>
 				<SI_DATA>
 					<SID_NAME>uuid</SID_NAME>
-					<SID_DATA>{{uuidV4}}</SID_DATA>
+					<SID_DATA>{{uuid}}</SID_DATA>
 				</SI_DATA>
 				<SI_DATA>
 					<SID_NAME>notice</SID_NAME>
@@ -61,6 +61,7 @@
 					<SID_NAME>source</SID_NAME>
 				</SI_DATA>
 			</STIG_INFO>
+			{{#controls}}
 			<VULN>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Vuln_Num</VULN_ATTRIBUTE>
@@ -180,6 +181,7 @@
 				<SEVERITY_OVERRIDE></SEVERITY_OVERRIDE>
 				<SEVERITY_JUSTIFICATION></SEVERITY_JUSTIFICATION>
 			</VULN>
+			{{/controls}}
 		</iSTIG>
 	</STIGS>
 </CHECKLIST>
