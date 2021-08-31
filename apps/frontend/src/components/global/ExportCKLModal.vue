@@ -40,11 +40,11 @@ import {v4} from 'uuid';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {Filter, FilteredDataModule} from '../../store/data_filters';
-import {InspecDataModule} from '../../store/data_store';
-import {EvaluationFile, ProfileFile} from '../../store/report_intake';
-import {SnackbarModule} from '../../store/snackbar';
-import {s2ab} from '../../utilities/export_util';
+import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {InspecDataModule} from '@/store/data_store';
+import {EvaluationFile, ProfileFile} from '@/store/report_intake';
+import {SnackbarModule} from '@/store/snackbar';
+import {s2ab} from '@/utilities/export_util';
 
 interface Control {
   vid: string;
@@ -158,21 +158,21 @@ export default class ExportCKLModal extends Vue {
   cklSeverity(severity: Severity): 'low' | 'medium' | 'high' {
     switch (severity) {
       case 'critical':
-        return 'high';
       case 'high':
         return 'high';
       case 'medium':
         return 'medium';
       case 'low':
-        return 'low';
       case 'none':
         return 'low';
+      default:
+        return 'high';
     }
   }
 
   cklStatus(
     status: ControlStatus
-  ): 'Open' | 'Not_Applicable' | 'NotAFinding' | 'Not_Reviewed' {
+  ): string {
     switch (status) {
       case 'Not Applicable':
       case 'From Profile':
