@@ -3,9 +3,9 @@
  */
 
 import {SourcedContextualizedEvaluation} from '@/store/report_intake';
+import {calculateCompliance} from '@/store/status_counts';
 import {ContextualizedControl, ContextualizedEvaluation} from 'inspecjs';
 import {DateTime} from 'luxon';
-import {calculateCompliance} from '@/store/status_counts';
 
 export const NOT_SELECTED = 'not selected';
 
