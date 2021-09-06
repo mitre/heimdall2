@@ -1,16 +1,25 @@
 <template>
   <v-stepper-content step="1">
-    <v-form v-model="valid">
-      <v-text-field v-model="username" label="Username" :rules="[reqRule]" />
+    <v-form v-model="valid" ref="form">
       <v-text-field
+        id="username_field"
+        v-model="username" 
+        label="Username"
+        data-cy="splunkusername"
+        :rules="[reqRule]" />
+      <v-text-field
+        id="password_field"
         v-model="password"
         label="Password"
+        data-cy="splunkpassword"
         type="password"
         :rules="[reqRule]"
       />
       <v-text-field
+        id="hostname_field"
         v-model="hostname"
         label="Hostname"
+        data-cy="splunkhostname"
         :rules="[reqRule]"
         hint="Ex: https://my.website.com:8089"
       />
@@ -21,6 +30,7 @@
         :disabled="!valid || loggingIn"
         :loading="loggingIn"
         class="my-2"
+        data-cy="splunkLoginButton"
         @click="try_login"
       >
         Login
