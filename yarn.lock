@@ -4108,22 +4108,13 @@
   dependencies:
     "@types/express" "*"
 
-"@types/pg@*":
-  version "8.6.0"
-  resolved "https://registry.yarnpkg.com/@types/pg/-/pg-8.6.0.tgz#34233b891a127d6caaad28e177b1baec1a2958d4"
-  integrity sha512-3JXFrsl8COoqVB1+2Pqelx6soaiFVXzkT3fkuSNe7GB40ysfT0FHphZFPiqIXpMyTHSFRdLTyZzrFBrJRPAArA==
+"@types/pg@*", "@types/pg@^8.6.1":
+  version "8.6.1"
+  resolved "https://registry.yarnpkg.com/@types/pg/-/pg-8.6.1.tgz#099450b8dc977e8197a44f5229cedef95c8747f9"
+  integrity sha512-1Kc4oAGzAl7uqUStZCDvaLFqZrW9qWSjXOmBfdgyBP5La7Us6Mg4GBvRlSoaZMhQF/zSj1C8CtKMBkoiT8eL8w==
   dependencies:
     "@types/node" "*"
     pg-protocol "*"
-    pg-types "^2.2.0"
-
-"@types/pg@^7.14.4":
-  version "7.14.11"
-  resolved "https://registry.yarnpkg.com/@types/pg/-/pg-7.14.11.tgz#daf5555504a1f7af4263df265d91f140fece52e3"
-  integrity sha512-EnZkZ1OMw9DvNfQkn2MTJrwKmhJYDEs5ujWrPfvseWNoI95N8B4HzU/Ltrq5ZfYxDX/Zg8mTzwr6UAyTjjFvXA==
-  dependencies:
-    "@types/node" "*"
-    pg-protocol "^1.2.0"
     pg-types "^2.2.0"
 
 "@types/prettier@^2.1.5":
@@ -7483,13 +7474,13 @@ connect-pause@^0.1.1:
   resolved "https://registry.yarnpkg.com/connect-pause/-/connect-pause-0.1.1.tgz#b269b2bb82ddb1ac3db5099c0fb582aba99fb37a"
   integrity sha1-smmyu4Ldsaw9tQmcD7WCq6mfs3o=
 
-connect-pg-simple@^6.2.1:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/connect-pg-simple/-/connect-pg-simple-6.2.1.tgz#21c3e7ff6223030afff230621eac53eaae3b1797"
-  integrity sha512-bwDp/gKyRtyz0V5Vxy3SATSxItWBK/wDhaacncC79+q1B1VB8SQ49AlVaQCM+XxmIO29cWX4cvsFj65mD2qrzA==
+connect-pg-simple@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/connect-pg-simple/-/connect-pg-simple-7.0.0.tgz#95bfaf9722b35dafea2dd592c5b556125d1139ba"
+  integrity sha512-fbNZUkxz8m+FRbctoxAU18DzRKp8GQSL+9gTJ0+LgSCElXLon2q8tDE8V74jUzf+w2ARZX8HKKyV0laX1NUZ/Q==
   dependencies:
-    "@types/pg" "^7.14.4"
-    pg "^8.2.1"
+    "@types/pg" "^8.6.1"
+    pg "^8.7.1"
 
 connect@^3.7.0:
   version "3.7.0"
@@ -16389,7 +16380,7 @@ pg-pool@^3.4.1:
   resolved "https://registry.yarnpkg.com/pg-pool/-/pg-pool-3.4.1.tgz#0e71ce2c67b442a5e862a9c182172c37eda71e9c"
   integrity sha512-TVHxR/gf3MeJRvchgNHxsYsTCHQ+4wm3VIHSS19z8NC0+gioEhq1okDY1sm/TYbfoP6JLFx01s0ShvZ3puP/iQ==
 
-pg-protocol@*, pg-protocol@^1.2.0, pg-protocol@^1.5.0:
+pg-protocol@*, pg-protocol@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/pg-protocol/-/pg-protocol-1.5.0.tgz#b5dd452257314565e2d54ab3c132adc46565a6a0"
   integrity sha512-muRttij7H8TqRNu/DxrAJQITO4Ac7RmX3Klyr/9mJEOBeIpgnF8f9jAfRz5d3XwQZl5qBjF9gLsUtMPJE0vezQ==
@@ -16405,7 +16396,7 @@ pg-types@^2.1.0, pg-types@^2.2.0:
     postgres-date "~1.0.4"
     postgres-interval "^1.1.0"
 
-pg@^8.2.1:
+pg@^8.2.1, pg@^8.7.1:
   version "8.7.1"
   resolved "https://registry.yarnpkg.com/pg/-/pg-8.7.1.tgz#9ea9d1ec225980c36f94e181d009ab9f4ce4c471"
   integrity sha512-7bdYcv7V6U3KAtWjpQJJBww0UEsWuh4yQ/EjNf2HeO/NnvKjpvhEIe/A/TleP6wtmSKnUnghs5A9jUoK6iDdkA==
