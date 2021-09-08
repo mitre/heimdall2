@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="evaluation">
     <v-edit-dialog large @save="save" @cancel="syncEvaluationTags">
       <template v-for="tag in evaluation.evaluationTags">
         <v-chip :key="tag.id + '_'" small close @click:close="deleteTag(tag)">{{
