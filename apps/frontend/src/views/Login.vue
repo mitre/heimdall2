@@ -108,7 +108,7 @@ export default class Login extends Vue {
       urlParams.get('logoff')?.toLowerCase() === 'true' &&
       ServerModule.token !== ''
     ) {
-      this.logoffMessage ==
+      this.logoffMessage =
         'An error occoured while logging you out and your token has not been discarded. Please clear your browsing data.';
       return false;
     } else {
