@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="showingModal" width="580">
+  <v-dialog v-model="showingModal">
     <template #activator="{on}">
       <LinkItem
         key="export_ckl"
@@ -14,8 +14,27 @@
       <v-card-text>
         <v-row>
           <v-col>
-            <v-text-field v-model="hostName" label="Host Name" />
-            <v-text-field v-model="classification" label="Classification" />
+            <v-data-table
+              v-model="selected"
+              dense
+              :headers="headers"
+              :items="evaluations"
+              :single-select="false"
+              item-key="uniqueId"
+              show-select
+            >
+              <template #[`item.hostname`]="{item}">
+                <v-text-field v-model="item.hostname" dense />
+              </template>
+              <template #[`item.ip`]="{item}">
+                <v-text-field v-model="item.ip" dense />
+              </template>
+              <template #[`item.mac`]="{item}">
+                <v-text-field v-model="item.mac" dense />
+              </template>
+              <template #[`item.fqdn`]="{item}">
+                <v-text-field v-model="item.fqdn" dense /> </template
+            ></v-data-table>
           </v-col>
         </v-row>
       </v-card-text>
@@ -23,7 +42,14 @@
       <v-card-actions>
         <v-spacer />
         <v-btn text @click="closeModal"> Cancel </v-btn>
-        <v-btn color="primary" text @click="exportCKL"> Export </v-btn>
+        <v-btn
+          color="primary"
+          text
+          :disabled="!selected.length"
+          @click="exportCKL"
+        >
+          Export
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -31,8 +57,21 @@
 
 <script lang="ts">
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {InspecDataModule} from '@/store/data_store';
+import {EvaluationFile, ProfileFile} from '@/store/report_intake';
+import {SnackbarModule} from '@/store/snackbar';
+import {
+  cleanUpFilename,
+  saveSingleOrMultipleFiles
+} from '@/utilities/export_util';
 import axios from 'axios';
-import {ContextualizedControl, ControlStatus, Severity} from 'inspecjs';
+import {
+  ContextualizedControl,
+  ControlStatus,
+  HDFControlSegment,
+  Severity
+} from 'inspecjs';
 import {ExecJSONProfile} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
 import Mustache from 'mustache';
@@ -40,11 +79,6 @@ import {v4} from 'uuid';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {Filter, FilteredDataModule} from '@/store/data_filters';
-import {InspecDataModule} from '@/store/data_store';
-import {EvaluationFile, ProfileFile} from '@/store/report_intake';
-import {SnackbarModule} from '@/store/snackbar';
-import {s2ab} from '@/utilities/export_util';
 
 interface Control {
   vid: string;
@@ -53,7 +87,6 @@ interface Control {
   description: string;
   checkText: string;
   fixText: string;
-  classification: string;
   profileName: string;
   startTime: string;
   targetKey: number;
@@ -64,9 +97,11 @@ interface Control {
 }
 
 interface ControlSet {
-  hostName: string;
+  hostname: string;
+  ip: string;
+  mac: string;
+  fqdn: string;
   targetKey: number;
-  classification: string;
   description: string;
   fileName: string;
   startTime: string;
@@ -76,9 +111,21 @@ interface ControlSet {
   controls: Control[];
 }
 
+type ExtendedEvaluationFile = (EvaluationFile | ProfileFile) & {
+  hostname: string;
+  ip: string;
+  mac: string;
+  fqdn: string;
+};
+
 interface OutputData {
   controlSets: ControlSet[];
 }
+
+type FileData = {
+  filename: string;
+  data: string;
+};
 
 @Component({
   components: {
@@ -93,8 +140,14 @@ export default class ExportCKLModal extends Vue {
     controlSets: []
   };
 
-  hostName = '';
-  classification = '';
+  selected: ExtendedEvaluationFile[] = [];
+  headers = [
+    {text: 'File Name', value: 'filename'},
+    {text: 'Host Name', value: 'hostname'},
+    {text: 'Host IP', value: 'ip'},
+    {text: 'Host MAC', value: 'mac'},
+    {text: 'Host FQDN', value: 'fqdn'}
+  ];
 
   /**
    * Invoked when file(s) are loaded.
@@ -105,6 +158,18 @@ export default class ExportCKLModal extends Vue {
 
   showModal() {
     this.showingModal = true;
+  }
+
+  // Get our evaluation info for our export table
+  get evaluations(): ExtendedEvaluationFile[] {
+    const files: ExtendedEvaluationFile[] = [];
+    this.filter.fromFile.forEach(async (fileId) => {
+      const file = InspecDataModule.allFiles.find((f) => f.uniqueId === fileId);
+      if (file) {
+        files.push({...file, hostname: '', fqdn: '', mac: '', ip: ''});
+      }
+    });
+    return files;
   }
 
   getProfileInfo(file: EvaluationFile | ProfileFile) {
@@ -131,11 +196,10 @@ export default class ExportCKLModal extends Vue {
     if (profile.controls.length) {
       result += `Control Count: ${profile.controls.length}\n`;
     }
-
     return result.trim();
   }
 
-  addFiledata(file: EvaluationFile | ProfileFile) {
+  addFiledata(file: ExtendedEvaluationFile) {
     const profileName = _.get(file, 'evaluation.data.profiles[0].name');
     const controls = FilteredDataModule.controls({
       ...this.filter,
@@ -143,9 +207,11 @@ export default class ExportCKLModal extends Vue {
     });
     this.outputData.controlSets.push({
       fileName: file.filename,
-      hostName: this.hostName,
+      hostname: file.hostname,
+      ip: file.ip,
+      mac: file.mac,
+      fqdn: file.fqdn,
       targetKey: 0,
-      classification: this.classification,
       description: 'desc',
       startTime: new Date().toString(),
       profileTitle: profileName,
@@ -170,9 +236,7 @@ export default class ExportCKLModal extends Vue {
     }
   }
 
-  cklStatus(
-    status: ControlStatus
-  ): string {
+  cklStatus(status: ControlStatus): string {
     switch (status) {
       case 'Not Applicable':
       case 'From Profile':
@@ -187,6 +251,18 @@ export default class ExportCKLModal extends Vue {
     }
   }
 
+  cklResults(segments?: HDFControlSegment[]): string {
+    if (typeof segments === 'undefined') {
+      return '';
+    } else {
+      return segments
+        .map((segment) => {
+          return `${segment.status}\n${segment.code_desc}\n${segment.message}`;
+        })
+        .join('\n--------------------------------\n');
+    }
+  }
+
   getDetails(control: ContextualizedControl, profileName: string): Control {
     return {
       vid: control.data.id,
@@ -195,16 +271,13 @@ export default class ExportCKLModal extends Vue {
       description: control.data.desc || '',
       checkText: control.hdf.descriptions.check || control.data.tags.check,
       fixText: control.hdf.descriptions.fix || control.data.tags.fix,
-      classification: this.classification,
       profileName: profileName,
-      startTime: new Date(
-        _.get(control, 'hdf.segments![0].start_time') || undefined
-      ).toString(),
+      startTime: _.get(control, 'hdf.segments![0].start_time'),
       targetKey: 0,
       uuidV4: v4(),
       cciId: control.data.tags.cci,
       status: this.cklStatus(control.hdf.status),
-      results: ''
+      results: this.cklResults(control.hdf.segments)
     };
   }
 
@@ -212,26 +285,19 @@ export default class ExportCKLModal extends Vue {
     if (this.filter.fromFile.length === 0) {
       return SnackbarModule.failure('No files have been loaded.');
     }
-    // template
     axios.get(`/static/export/cklExport.ckl`).then(({data}) => {
-      this.filter.fromFile.forEach(async (fileId) => {
-        const file = InspecDataModule.allFiles.find(
-          (f) => f.uniqueId === fileId
-        );
-        if (file) {
-          this.addFiledata(file);
+      this.selected.forEach(async (file) => {
+        this.addFiledata(file);
+      });
+      const files: FileData[] = this.outputData.controlSets.map(
+        (controlSet) => {
+          return {
+            filename: `${cleanUpFilename(controlSet.fileName)}.ckl`,
+            data: Mustache.render(data, controlSet).replace(/[^\x00-\x7F]/g, '')
+          };
         }
-      });
-      this.outputData.controlSets.forEach((controlSet) => {
-        const body = Mustache.render(data, controlSet).replace(
-          /[^\x00-\x7F]/g,
-          ''
-        );
-        saveAs(
-          new Blob([s2ab(body)], {type: 'application/octet-stream'}),
-          `${controlSet.fileName}.ckl`.replace(/[ :]/g, '_')
-        );
-      });
+      );
+      saveSingleOrMultipleFiles(files, 'ckl');
     });
 
     this.closeModal();

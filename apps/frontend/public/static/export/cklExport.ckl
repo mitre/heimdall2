@@ -3,11 +3,11 @@
 <CHECKLIST>
 	<ASSET>
 		<ROLE>None</ROLE>
-		<ASSET_TYPE>Non-Computing</ASSET_TYPE>
-		<HOST_NAME>{{hostName}}</HOST_NAME>
-		<HOST_IP></HOST_IP>
-		<HOST_MAC></HOST_MAC>
-		<HOST_FQDN></HOST_FQDN>
+		<ASSET_TYPE>Computing</ASSET_TYPE>
+		<HOST_NAME>{{hostname}}</HOST_NAME>
+		<HOST_IP>{{ip}}</HOST_IP>
+		<HOST_MAC>{{mac}}</HOST_MAC>
+		<HOST_FQDN>{{fqdn}}</HOST_FQDN>
 		<TARGET_COMMENT></TARGET_COMMENT>
 		<TECH_AREA></TECH_AREA>
 		<TARGET_KEY>{{targetKey}}</TARGET_KEY>
