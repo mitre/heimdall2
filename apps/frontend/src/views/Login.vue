@@ -1,5 +1,8 @@
 <template>
   <v-app id="inspire">
+    <v-snackbar v-model="logoffSnackbar" color="success">
+      {{ logoffMessage }}</v-snackbar
+    >
     <v-main>
       <v-container class="fill-height" fluid>
         <v-row align="center" justify="center">
@@ -61,6 +64,7 @@ const lastLoginTab = new LocalStorageVal<string>('login_curr_tab');
 })
 export default class Login extends Vue {
   activeTab: string = lastLoginTab.get_default('logintab-standard');
+  logoffMessage = 'You have successfully logged off';
 
   mounted() {
     this.checkLoggedIn();
@@ -90,6 +94,26 @@ export default class Login extends Vue {
 
   get ldapenabled() {
     return ServerModule.ldap;
+  }
+
+  get logoffSnackbar() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    if (
+      urlParams.get('logoff')?.toLowerCase() === 'true' &&
+      ServerModule.token === ''
+    ) {
+      return true;
+    } else if (
+      urlParams.get('logoff')?.toLowerCase() === 'true' &&
+      ServerModule.token !== ''
+    ) {
+      this.logoffMessage ==
+        'An error occoured while logging you out and your token has not been discarded. Please clear your browsing data.';
+      return false;
+    } else {
+      return false;
+    }
   }
 }
 </script>
