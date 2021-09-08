@@ -138,8 +138,8 @@ export class AuthnService {
   splitName(fullName: string): {firstName: string; lastName: string} {
     const nameArray = fullName.split(' ');
     return {
-      firstName: nameArray.slice(0, -1).join(' '),
-      lastName: nameArray[nameArray.length - 1]
+      firstName: nameArray[0],
+      lastName: nameArray.slice(1).join(' ')
     };
   }
 
