@@ -20093,9 +20093,9 @@ typedarray@^0.0.6:
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
 typedoc@^0.22.1:
-  version "0.22.1"
-  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.22.1.tgz#2919ed9d6bd3857dea7575d38bad907a9ba6ba68"
-  integrity sha512-JO1/nkMhUKb+Khiekn64HyBniuUuI3ePHN78BMiiFVHi4Oc8VqppWZiE2CNB38ZNqtwZFM+U3j0sJht3N6bWrg==
+  version "0.22.2"
+  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.22.2.tgz#bbf9a3d6a74629d419e0cae53857d6ee5a8fbfc6"
+  integrity sha512-p516wGGy6bCUj8k5ZpWWqOT2qa0e5lVU6APiQhEHS4T9LPmCTyAIb9PJgtHbSnkCBnaZE+oOK+lSgCKWGzgJ+w==
   dependencies:
     glob "^7.1.7"
     lunr "^2.3.9"
@@ -20588,9 +20588,9 @@ vue-cli-plugin-vuetify@~2.4.0:
     shelljs "^0.8.3"
 
 vue-clipboard2@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/vue-clipboard2/-/vue-clipboard2-0.3.1.tgz#6e551fb7bd384889b28b0da3b12289ed6bca4894"
-  integrity sha512-H5S/agEDj0kXjUb5GP2c0hCzIXWRBygaWLN3NEFsaI9I3uWin778SFEMt8QRXiPG+7anyjqWiw2lqcxWUSfkYg==
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/vue-clipboard2/-/vue-clipboard2-0.3.2.tgz#e7bf79e199720c7e1926a115660e5d1525358948"
+  integrity sha512-JUllOtw16qO0RF224eqN2kr9n21Xb7nCrbAehiJDTpX8eP00DKcdoYPbaT1dcs0vKou1D6hA42sJIte0Mm71IQ==
   dependencies:
     clipboard "^2.0.0"
 
