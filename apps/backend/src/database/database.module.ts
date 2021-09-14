@@ -2,8 +2,10 @@ import {Module} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import winston from 'winston';
 import {ConfigModule} from '../config/config.module';
-import {ConfigService, sensitiveKeys} from '../config/config.service';
+import {ConfigService} from '../config/config.service';
 import {DatabaseService} from './database.service';
+
+const configService = new ConfigService();
 
 const logger = winston.createLogger({
   transports: [new winston.transports.Console()],
@@ -27,7 +29,9 @@ function getSynchronize(configService: ConfigService): boolean {
 function sanitize(fields: string[], values?: string[]): string[] {
   return (
     values?.map((value, index) => {
-      if (sensitiveKeys.some((regex) => regex.test(fields[index]))) {
+      if (
+        configService.sensitiveKeys.some((regex) => regex.test(fields[index]))
+      ) {
         return 'REDACTED';
       } else {
         return value;

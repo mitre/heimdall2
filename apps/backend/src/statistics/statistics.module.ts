@@ -1,5 +1,6 @@
 import {Module} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
+import {ConfigModule} from '../config/config.module';
 import {DatabaseService} from '../database/database.service';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {EvaluationTagsService} from '../evaluation-tags/evaluation-tags.service';
@@ -14,7 +15,8 @@ import {StatisticsService} from './statistics.service';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([Evaluation, EvaluationTag, User, Group])
+    SequelizeModule.forFeature([Evaluation, EvaluationTag, User, Group]),
+    ConfigModule
   ],
   providers: [
     StatisticsService,
