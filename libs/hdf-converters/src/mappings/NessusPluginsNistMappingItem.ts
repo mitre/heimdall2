@@ -29,7 +29,7 @@ export class NessusPluginsNistMappingItem {
     if (typeof values['Rev'] === 'number') {
       this.rev = values['Rev'];
     } else {
-      this.rev = 0
+      this.rev = 0;
     }
   }
 }

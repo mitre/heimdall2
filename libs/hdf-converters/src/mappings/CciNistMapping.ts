@@ -7,7 +7,7 @@ export class CciNistMapping {
   constructor() {
     this.data = [];
 
-    if (data.constructor === {}.constructor) {
+    if (typeof data === 'object') {
       Object.entries(data).forEach((item) => {
         this.data.push(new CciNistMappingItem(item[0], item[1]));
       });

@@ -14,9 +14,7 @@ export class ScoutsuiteNistMapping {
     this.data = [];
 
     if (Array.isArray(data)) {
-      data.forEach((line: ISCOUTSUITEJSONID) => {
-        this.data.push(new ScoutsuiteNistMappingItem(line));
-      });
+      this.data = data.map((line) => new ScoutsuiteNistMappingItem(line));
     }
   }
   nistTag(rule: string): string[] {
