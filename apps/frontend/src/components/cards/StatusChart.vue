@@ -10,7 +10,7 @@
 <script lang="ts">
 import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
 import {ExtendedControlStatus, Filter} from '@/store/data_filters';
-import {StatusCountModule} from '@/store/status_counts';
+import {calculateCompliance, StatusCountModule} from '@/store/status_counts';
 import {ControlStatus} from 'inspecjs';
 import Vue from 'vue';
 import Component from 'vue-class-component';
@@ -64,17 +64,7 @@ export default class StatusChart extends Vue {
 
   get centerValue(): string {
     if (this.showCompliance) {
-      const passed = StatusCountModule.countOf(this.filter, 'Passed');
-      const total =
-        passed +
-        StatusCountModule.countOf(this.filter, 'Failed') +
-        StatusCountModule.countOf(this.filter, 'Profile Error') +
-        StatusCountModule.countOf(this.filter, 'Not Reviewed');
-      if (total === 0) {
-        return '0%';
-      } else {
-        return `${Math.round((100.0 * passed) / total)}%`;
-      }
+      return `${calculateCompliance(this.filter)}%`;
     } else {
       return '';
     }
