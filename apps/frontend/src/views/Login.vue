@@ -49,10 +49,10 @@
 import LDAPLogin from '@/components/global/login/LDAPLogin.vue';
 import LocalLogin from '@/components/global/login/LocalLogin.vue';
 import {ServerModule} from '@/store/server';
+import {SnackbarModule} from '@/store/snackbar';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {SnackbarModule} from '../store/snackbar';
 
 const lastLoginTab = new LocalStorageVal<string>('login_curr_tab');
 
@@ -109,7 +109,7 @@ export default class Login extends Vue {
       ServerModule.token !== ''
     ) {
       this.logoffMessage =
-        'An error occoured while logging you out and your token has not been discarded. Please clear your browsing data.';
+        'An error occurred during the logout process, your token has not been discarded. Please clear your browser data.';
       return false;
     } else {
       return false;
