@@ -26,12 +26,10 @@ export class NessusPluginsNistMappingItem {
       this.nistId = values['NIST-ID'];
     }
     // Could possibly be number, string, or null
-    if (typeof values['Rev'] === 'string') {
-      this.rev = parseInt(values['Rev']);
-    } else if (values['Rev'] === undefined || values['Rev'] === null) {
-      this.rev = 0;
-    } else {
+    if (typeof values['Rev'] === 'number') {
       this.rev = values['Rev'];
+    } else {
+      this.rev = 0
     }
   }
 }
