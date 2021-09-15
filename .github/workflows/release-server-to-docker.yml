@@ -1,4 +1,4 @@
-name: Push to docker on every release and tag as release-latest and version
+name: Push Heimdall Server to docker on every release and tag as release-latest and version
 
 on:
   release:
@@ -28,4 +28,4 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: mitre/heimdall-lite:release-latest,mitre/heimdall-lite:${{ steps.format-tag.outputs.replaced }}
+          tags: mitre/heimdall2:release-latest,mitre/heimdall2:${{ steps.format-tag.outputs.replaced }}
