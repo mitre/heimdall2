@@ -4,6 +4,7 @@ FROM $BASE_CONTAINER as builder
 
 ARG YARNREPO_MIRROR=https://registry.yarnpkg.com
 ENV YARNREPO=$YARNREPO_MIRROR
+ENV NODE_ENV=production
 
 WORKDIR /src
 USER 0
