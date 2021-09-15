@@ -1,4 +1,4 @@
-name: Push to docker on every merge to master and tag as latest
+name: Push Heimdall Server to Docker Hub on every merge to master and tag as latest
 
 on:
   push:
