@@ -1,6 +1,6 @@
 {
   "name": "inspecjs",
-  "version": "2.5.1",
+  "version": "2.5.0",
   "description": "© 2018 The MITRE Corporation.",
   "files": [
     "lib"
