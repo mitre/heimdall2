@@ -51,20 +51,19 @@
 </template>
 
 <script lang="ts">
+import ServerMixin from '@/mixins/ServerMixin';
+import {AppInfoModule} from '@/store/app_info';
+import {FileID, InspecIntakeModule} from '@/store/report_intake';
+import {SnackbarModule} from '@/store/snackbar';
 import Vue from 'vue';
 import Component, {mixins} from 'vue-class-component';
-
-import {SnackbarModule} from '@/store/snackbar';
-import {InspecIntakeModule, FileID} from '@/store/report_intake';
-import {AppInfoModule} from '@/store/app_info';
 import vueFileAgent from 'vue-file-agent';
-import ServerMixin from '@/mixins/ServerMixin';
 import 'vue-file-agent/dist/vue-file-agent.css';
 
 Vue.use(vueFileAgent);
 
 interface VueFileAgentRecord {
-  file: File
+  file: File;
 }
 
 /**

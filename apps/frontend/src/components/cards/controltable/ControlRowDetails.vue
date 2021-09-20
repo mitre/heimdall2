@@ -60,21 +60,19 @@
 </template>
 
 <script lang="ts">
-import Component, {mixins} from 'vue-class-component';
 import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
-
+import {ContextualizedControl} from 'inspecjs';
+import _ from 'lodash';
 //TODO: add line numbers
 import 'prismjs';
 import 'prismjs/components/prism-makefile.js';
 import 'prismjs/components/prism-ruby.js';
+import 'prismjs/themes/prism-tomorrow.css';
+import Component, {mixins} from 'vue-class-component';
 //@ts-ignore
 import Prism from 'vue-prism-component';
-import 'prismjs/themes/prism-tomorrow.css';
-
-import {context} from 'inspecjs';
 import {Prop, Watch} from 'vue-property-decorator';
-import _ from 'lodash';
 
 interface Detail {
   name: string;
@@ -90,13 +88,14 @@ interface Detail {
 })
 export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
   @Prop({type: String, default: 'tab-test'}) readonly tab!: string;
-  @Prop({type: Object, required: true}) readonly control!: context.ContextualizedControl;
+  @Prop({type: Object, required: true})
+  readonly control!: ContextualizedControl;
 
   localTab = this.tab;
 
   @Watch('tab')
   onTabChanged(newTab?: string, _oldVal?: string) {
-    if(newTab) {
+    if (newTab) {
       this.localTab = newTab;
     }
   }
@@ -142,25 +141,27 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     const c = this.control;
     const detailsMap = new Map();
 
-    detailsMap.set('Control', c.data.id)
-    detailsMap.set('Title', c.data.title)
-    detailsMap.set('Caveat', c.hdf.descriptions.caveat)
-    detailsMap.set('Desc', c.data.desc)
-    detailsMap.set('Rationale', c.hdf.descriptions.rationale)
-    detailsMap.set('Severity', c.root.hdf.severity)
-    detailsMap.set('Impact', c.data.impact)
-    detailsMap.set('Nist controls', c.hdf.raw_nist_tags.join(', '))
-    detailsMap.set('CCI controls', this.cciControlString)
-    detailsMap.set('Check', c.hdf.descriptions.check || c.data.tags.check)
-    detailsMap.set('Fix', c.hdf.descriptions.fix || c.data.tags.fix)
-    detailsMap.set('CWE ID', _.get(c, 'hdf.wraps.tags.cweid'))
+    detailsMap.set('Control', c.data.id);
+    detailsMap.set('Title', c.data.title);
+    detailsMap.set('Caveat', c.hdf.descriptions.caveat);
+    detailsMap.set('Desc', c.data.desc);
+    detailsMap.set('Rationale', c.hdf.descriptions.rationale);
+    detailsMap.set('Severity', c.root.hdf.severity);
+    detailsMap.set('Impact', c.data.impact);
+    detailsMap.set('Nist controls', c.hdf.rawNistTags.join(', '));
+    detailsMap.set('CCI controls', this.cciControlString);
+    detailsMap.set('Check', c.hdf.descriptions.check || c.data.tags.check);
+    detailsMap.set('Fix', c.hdf.descriptions.fix || c.data.tags.fix);
+    detailsMap.set('CWE ID', _.get(c, 'hdf.wraps.tags.cweid'));
 
     for (const prop in c.hdf.descriptions) {
-      if (!detailsMap.has(_.capitalize(prop))){
-        detailsMap.set(_.capitalize(prop), c.hdf.descriptions[prop])
+      if (!detailsMap.has(_.capitalize(prop))) {
+        detailsMap.set(_.capitalize(prop), c.hdf.descriptions[prop]);
       }
     }
-    return Array.from(detailsMap, ([name, value]) => ({name, value})).filter((v) => v.value);
+    return Array.from(detailsMap, ([name, value]) => ({name, value})).filter(
+      (v) => v.value
+    );
   }
 
   //for zebra background

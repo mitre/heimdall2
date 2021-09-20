@@ -3,8 +3,8 @@
  */
 
 import {SourcedContextualizedEvaluation} from '@/store/report_intake';
-import {context} from 'inspecjs';
-import {ContextualizedEvaluation} from 'inspecjs/dist/context';
+import {calculateCompliance} from '@/store/status_counts';
+import {ContextualizedControl, ContextualizedEvaluation} from 'inspecjs';
 import {DateTime} from 'luxon';
 
 export const NOT_SELECTED = 'not selected';
@@ -13,7 +13,7 @@ export const NOT_SELECTED = 'not selected';
 // Controls is a list of controls
 interface ResultControls {
   uniqueId: string;
-  controls: context.ContextualizedControl[];
+  controls: ContextualizedControl[];
 }
 
 /**
@@ -85,11 +85,11 @@ export class ControlChangeGroup {
  * Holds/computes the differences between two runs of the same control.
  */
 export class ControlDelta {
-  controls: context.ContextualizedControl[] = [];
-  controlsandnull: (context.ContextualizedControl | null)[] = [];
+  controls: ContextualizedControl[] = [];
+  controlsandnull: (ContextualizedControl | null)[] = [];
   numNull = 0;
 
-  constructor(controls: (context.ContextualizedControl | null)[]) {
+  constructor(controls: (ContextualizedControl | null)[]) {
     this.controlsandnull = controls;
     for (const value of controls) {
       if (value !== null) {
@@ -139,7 +139,7 @@ export class ControlDelta {
           if (c === null) {
             return NOT_SELECTED;
           }
-          return c.hdf.raw_nist_tags.join(', ');
+          return c.hdf.rawNistTags.join(', ');
         })
       )
     );
@@ -164,6 +164,33 @@ export function get_eval_start_time(
   return null;
 }
 
+export function getResultsSetExecutionTime(
+  resultsSet: SourcedContextualizedEvaluation
+): number {
+  let time = 0;
+  resultsSet.contains.forEach((value) => {
+    value.contains.forEach((control) => {
+      time += getControlRunTime(control);
+    });
+  });
+  return time;
+}
+
+export function getControlRunTime(control: ContextualizedControl): number {
+  return (
+    control.hdf.segments?.reduce(
+      (total, segment) => (segment.run_time || 0) + total,
+      0
+    ) || 0
+  );
+}
+
+export function getControlCount(
+  resultsSet: SourcedContextualizedEvaluation
+): number {
+  return resultsSet.contains.reduce((sum, li) => sum + li.contains.length, 0);
+}
+
 /**
  * Grabs the "top" (IE non-overlayed/end of overlay chain) controls from the execution.
  *
@@ -176,12 +203,12 @@ function extract_top_level_controls(
   const allControls = exec.contains.flatMap((p) => p.contains);
 
   // Filter to controls that aren't overlayed further
-  const top = allControls.filter((control) => control.extended_by.length === 0);
+  const top = allControls.filter((control) => control.extendedBy.length === 0);
   return {uniqueId: exec.from_file.uniqueId, controls: top};
 }
 
 /** An object of contextualized controls with the same V-ID */
-export type ControlSeries = {[key: string]: context.ContextualizedControl};
+export type ControlSeries = {[key: string]: ContextualizedControl};
 
 /** Matches ControlID keys to Arrays of Controls */
 export type ControlSeriesLookup = {[key: string]: ControlSeries};
@@ -257,4 +284,32 @@ export function compare_times(
   const bDate = parse_datetime(get_eval_start_time(b) || '');
 
   return aDate.valueOf() - bDate.valueOf();
+}
+
+export function compareExecutionTimes(
+  a: SourcedContextualizedEvaluation,
+  b: SourcedContextualizedEvaluation
+) {
+  const aExecutionTime = getResultsSetExecutionTime(a);
+  const bExecutionTime = getResultsSetExecutionTime(b);
+  return aExecutionTime - bExecutionTime;
+}
+
+export function compareControlCount(
+  a: SourcedContextualizedEvaluation,
+  b: SourcedContextualizedEvaluation
+) {
+  const aControlCount = getControlCount(a);
+  const bControlCount = getControlCount(b);
+  return aControlCount - bControlCount;
+}
+
+export function compareCompliance(
+  a: SourcedContextualizedEvaluation,
+  b: SourcedContextualizedEvaluation
+) {
+  return (
+    calculateCompliance({fromFile: [a.from_file.uniqueId]}) -
+    calculateCompliance({fromFile: [b.from_file.uniqueId]})
+  );
 }

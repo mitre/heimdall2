@@ -10,7 +10,14 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import {context, ControlStatus, nist, Severity} from 'inspecjs';
+import {
+  ContextualizedControl,
+  ContextualizedProfile,
+  ControlStatus,
+  NistControl,
+  Severity
+} from 'inspecjs';
+import _ from 'lodash';
 import LRUCache from 'lru-cache';
 import {
   Action,
@@ -22,6 +29,8 @@ import {
 
 const MAX_CACHE_ENTRIES = 20;
 
+export declare type ExtendedControlStatus = ControlStatus | 'Waived';
+
 /** Contains common filters on data from the store. */
 export interface Filter {
   // General
@@ -30,13 +39,28 @@ export interface Filter {
 
   // Control specific
   /** What status the controls can have. Undefined => any */
-  status?: ControlStatus | 'Waived';
+  status?: ExtendedControlStatus[];
 
   /** What severity the controls can have. Undefined => any */
-  severity?: Severity;
+  severity?: Severity[];
 
   /** Whether or not to allow/include overlayed controls */
   omit_overlayed_controls?: boolean;
+
+  /** Control IDs to search for */
+  ids?: string[];
+
+  /** Titles to search for */
+  titleSearchTerms?: string[];
+
+  /** Descriptions to search for */
+  descriptionSearchTerms?: string[];
+
+  /** Code to search for */
+  codeSearchTerms?: string[];
+
+  /** CCIs to search for */
+  nistIdFilter?: string[];
 
   /** A search term string, case insensitive
    * We look for this in
@@ -64,18 +88,18 @@ export type TreeMapState = string[]; // Representing the current path spec, from
  * @param contextControl The control to search for term in
  */
 function contains_term(
-  contextControl: context.ContextualizedControl,
+  contextControl: ContextualizedControl,
   term: string
 ): boolean {
-  const asHdf = contextControl.root.hdf;
+  const asHDF = contextControl.root.hdf;
   // Get our (non-null) searchable data
   const searchables: string[] = [
-    asHdf.wraps.id,
-    asHdf.wraps.title,
-    asHdf.wraps.code,
-    asHdf.severity,
-    asHdf.status,
-    asHdf.finding_details
+    asHDF.wraps.id,
+    asHDF.wraps.title,
+    asHDF.wraps.code,
+    asHDF.severity,
+    asHDF.status,
+    asHDF.finding_details
   ].filter((s) => s !== null) as string[];
 
   // See if any contain term
@@ -204,7 +228,7 @@ export class FilteredData extends VuexModule {
 
   get profiles_for_evaluations(): (
     files: FileID[]
-  ) => readonly context.ContextualizedProfile[] {
+  ) => readonly ContextualizedProfile[] {
     return (files: FileID[]) => {
       // Filter to those that match our filter. In this case that just means come from the right file id
       return this.evaluations(files).flatMap(
@@ -258,12 +282,10 @@ export class FilteredData extends VuexModule {
    * Get all controls from all profiles from the specified file id.
    * Utlizes the profiles getter to accelerate the file filter.
    */
-  get controls(): (filter: Filter) => readonly context.ContextualizedControl[] {
+  get controls(): (filter: Filter) => readonly ContextualizedControl[] {
     /** Cache by filter */
-    const localCache: LRUCache<
-      string,
-      readonly context.ContextualizedControl[]
-    > = new LRUCache(MAX_CACHE_ENTRIES);
+    const localCache: LRUCache<string, readonly ContextualizedControl[]> =
+      new LRUCache(MAX_CACHE_ENTRIES);
 
     return (filter: Filter) => {
       // Generate a hash for cache purposes.
@@ -277,47 +299,49 @@ export class FilteredData extends VuexModule {
       }
 
       // Get profiles from loaded Results
-      let profiles: readonly context.ContextualizedProfile[] =
+      let profiles: readonly ContextualizedProfile[] =
         this.profiles_for_evaluations(filter.fromFile);
 
       // Get profiles from loaded Profiles
       profiles = profiles.concat(this.profiles(filter.fromFile));
 
       // And all the controls they contain
-      let controls: readonly context.ContextualizedControl[] = profiles.flatMap(
+      let controls: readonly ContextualizedControl[] = profiles.flatMap(
         (profile) => profile.contains
       );
-      // Filter by control id
+
+      // Filter by single control id
       if (filter.control_id !== undefined) {
         controls = controls.filter((c) => c.data.id === filter.control_id);
       }
 
-      // Filter by status, if necessary
-      if (filter.status !== undefined) {
-        if (filter.status === 'Waived') {
-          controls = controls.filter((control) => control.hdf.waived);
-        } else {
-          controls = controls.filter(
-            (control) => control.root.hdf.status === filter.status
-          );
-        }
-      }
+      const controlFilters: Record<
+        string,
+        boolean | Array<string> | undefined
+      > = {
+        'root.hdf.severity': filter.severity,
+        'hdf.wraps.id': filter.ids,
+        'hdf.wraps.title': filter.titleSearchTerms,
+        'hdf.wraps.desc': filter.descriptionSearchTerms,
+        'hdf.rawNistTags': filter.nistIdFilter,
+        full_code: filter.codeSearchTerms,
+        'hdf.waived': filter.status?.includes('Waived'),
+        'root.hdf.status': _.filter(
+          filter.status,
+          (status) => status !== 'Waived'
+        )
+      };
 
-      // Filter by severity, if necessary
-      if (filter.severity !== undefined) {
-        controls = controls.filter(
-          (control) => control.root.hdf.severity === filter.severity
-        );
-      }
+      controls = filterControlsBy(controls, controlFilters);
 
       // Filter by overlay
       if (filter.omit_overlayed_controls) {
         controls = controls.filter(
-          (control) => control.extended_by.length === 0
+          (control) => control.extendedBy.length === 0
         );
       }
 
-      // Filter by search term
+      // Freeform search
       if (filter.searchTerm !== undefined) {
         const term = filter.searchTerm.toLowerCase();
 
@@ -328,11 +352,11 @@ export class FilteredData extends VuexModule {
       // Filter by nist stuff
       if (filter.treeFilters && filter.treeFilters.length > 0) {
         // Construct a nist control to represent the filter
-        const control = new nist.NistControl(filter.treeFilters);
+        const control = new NistControl(filter.treeFilters);
 
         controls = controls.filter((c) => {
           // Get an hdf version so we have the fixed nist tags
-          return c.root.hdf.parsed_nist_tags.some((t) => control.contains(t));
+          return c.root.hdf.parsedNistTags.some((t) => control.contains(t));
         });
       }
 
@@ -353,18 +377,48 @@ export const FilteredDataModule = getModule(FilteredData);
  * - defaulting "omit_overlayed_controls"
  */
 export function filter_cache_key(f: Filter) {
-  // fix the search term
-  let newSearch: string;
-  if (f.searchTerm !== undefined) {
-    newSearch = f.searchTerm.trim();
-  } else {
-    newSearch = '';
-  }
-
   const newFilter: Filter = {
-    searchTerm: newSearch,
+    searchTerm: f.searchTerm?.trim() || '',
     omit_overlayed_controls: f.omit_overlayed_controls || false,
     ...f
   };
   return JSON.stringify(newFilter);
+}
+
+export function filterControlsBy(
+  controls: readonly ContextualizedControl[],
+  filters: Record<string, boolean | Array<string> | undefined>
+): readonly ContextualizedControl[] {
+  const activeFilters: typeof filters = _.pickBy(
+    filters,
+    (value, _key) =>
+      (Array.isArray(value) && value.length > 0) ||
+      (typeof value === 'boolean' && value)
+  );
+  return controls.filter((control) => {
+    return Object.entries(activeFilters).every(([filter, value]) => {
+      const item: string | string[] | boolean = _.get(control, filter);
+      if (Array.isArray(value) && typeof item !== 'boolean') {
+        return value?.some((term) => {
+          return arrayOrStringIncludes(item, (compareValue) =>
+            compareValue.toLowerCase().includes(term.toLowerCase())
+          );
+        });
+      } else {
+        return item === value;
+      }
+    });
+  });
+}
+
+/** Iterate over a string or array of strings and call the string compare function provided on every element **/
+function arrayOrStringIncludes(
+  arrayOrString: string | string[],
+  comparator: (compareValue: string) => boolean
+) {
+  if (typeof arrayOrString === 'string') {
+    return comparator(arrayOrString);
+  } else {
+    return arrayOrString.some((value) => comparator(value));
+  }
 }

@@ -1,0 +1,170 @@
+{
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "statistics",
+    "controls",
+    "version"
+  ],
+  "properties": {
+    "statistics": {
+      "$ref": "#/definitions/Statistics"
+    },
+    "version": {
+      "type": "string"
+    },
+    "controls": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Exec_JSON-MIN_Control"
+      }
+    }
+  },
+  "title": "Exec JSON-MIN output",
+  "definitions": {
+    "Exec_JSON-MIN_Control": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "profile_sha256",
+        "status",
+        "code_desc"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "profile_id": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "profile_sha256": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "code_desc": {
+          "type": "string"
+        },
+        "skip_message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "resource": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "exception": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "backtrace": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "Exec JSON-MIN Control"
+    },
+    "Statistic_Block": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "total"
+      ],
+      "properties": {
+        "total": {
+          "type": "number",
+          "description": "Total number of controls (in this category) for this inspec execution."
+        }
+      },
+      "title": "Statistic Block"
+    },
+    "Statistic_Hash": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [],
+      "properties": {
+        "passed": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Block"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "skipped": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Block"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "failed": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Block"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "title": "Statistic Hash"
+    },
+    "Statistics": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "duration"
+      ],
+      "properties": {
+        "duration": {
+          "type": "number",
+          "description": "How long (in seconds) this inspec exec ran for."
+        },
+        "controls": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Hash",
+              "description": "Breakdowns of control statistics by result"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "title": "Statistics"
+    },
+    "Source_Location": {
+      "required": []
+    }
+  }
+}

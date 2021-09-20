@@ -14,14 +14,13 @@
 </template>
 
 <script lang="ts">
+import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import {FilteredDataModule} from '@/store/data_filters';
+import concat from 'concat-stream';
+import {saveAs} from 'file-saver';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {saveAs} from 'file-saver';
-import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-
-import {FilteredDataModule} from '@/store/data_filters';
 import {ZipFile} from 'yazl';
-import concat from 'concat-stream';
 
 type FileData = {
   name: string;

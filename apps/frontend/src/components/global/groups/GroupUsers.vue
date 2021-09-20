@@ -22,11 +22,11 @@
 </template>
 
 <script lang="ts">
+import Users from '@/components/global/groups/Users.vue';
+import {ISlimUser} from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {ISlimUser} from '@heimdall/interfaces';
 import {Prop, VModel} from 'vue-property-decorator';
-import Users from '@/components/global/groups/Users.vue';
 
 @Component({
   validations: {},

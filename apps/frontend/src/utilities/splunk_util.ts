@@ -1,4 +1,4 @@
-import {parse, schemas_1_0} from 'inspecjs';
+import {ConversionResult, convertFile, ExecJSON} from 'inspecjs';
 import {ElementCompact, xml2js} from 'xml-js';
 import {delay} from './async_util';
 import {basic_auth, group_by, map_hash} from './helper_util';
@@ -159,9 +159,7 @@ export class SplunkEndpoint {
     return this.hdf_event_search(specificEvaluation);
   }
 
-  async get_execution(
-    executionGuid: string
-  ): Promise<schemas_1_0.ExecJSON.Execution> {
+  async get_execution(executionGuid: string): Promise<ExecJSON.Execution> {
     return this.get_execution_events(executionGuid)
       .then((events) => consolidate_payloads(events))
       .then((execs) => {
@@ -173,9 +171,9 @@ export class SplunkEndpoint {
       })
       .then((fullEvent) => {
         // This is dumb and we should make the inspecjs layer more accepting of many file types
-        let result: parse.ConversionResult;
+        let result: ConversionResult;
         try {
-          result = parse.convertFile(JSON.stringify(fullEvent));
+          result = convertFile(JSON.stringify(fullEvent));
         } catch (e) {
           throw SplunkErrorCode.SchemaViolation;
         }

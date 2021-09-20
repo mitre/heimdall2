@@ -80,8 +80,8 @@ export class AuthnService {
       role: user.role,
       forcePasswordChange: user.forcePasswordChange
     };
-    if (payload.forcePasswordChange) {
-      // Give the user 10 minutes to (hopefully) change their password.
+    if (payload.forcePasswordChange || user.role === 'admin') {
+      // Admin sessions are only valid for 10 minutes, for regular users give them 10 minutes to (hopefully) change their password.
       return {
         userID: user.id,
         accessToken: this.jwtService.sign(payload, {expiresIn: '600s'})
@@ -97,8 +97,8 @@ export class AuthnService {
   splitName(fullName: string): {firstName: string; lastName: string} {
     const nameArray = fullName.split(' ');
     return {
-      firstName: nameArray.slice(0, -1).join(' '),
-      lastName: nameArray[nameArray.length - 1]
+      firstName: nameArray[0],
+      lastName: nameArray.slice(1).join(' ')
     };
   }
 }

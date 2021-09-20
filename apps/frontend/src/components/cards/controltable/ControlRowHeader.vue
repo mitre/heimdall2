@@ -88,24 +88,37 @@
         runTime
       }}</v-card-text></template
     >
+
+    <template #viewed>
+      <v-container class="py-0 my-0 fill-height">
+        <v-layout
+          class="py-0 my-0"
+          :justify-center="$vuetify.breakpoint.lgAndUp"
+          :align-center="$vuetify.breakpoint.lgAndUp"
+        >
+          <v-checkbox
+            v-model="wasViewed"
+            class="align-center justify-center py-0 my-0 pl-0"
+            hide-details
+            :label="$vuetify.breakpoint.lgAndUp ? '' : 'Viewed'"
+          />
+        </v-layout>
+      </v-container>
+    </template>
   </ResponsiveRowSwitch>
 </template>
 
 <script lang="ts">
-import Component, {mixins} from 'vue-class-component';
-import {nist, context} from 'inspecjs';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
-import {NIST_DESCRIPTIONS, nistCanonConfig} from '@/utilities/nist_util';
-import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import CircleRating from '@/components/generic/CircleRating.vue';
-import {is_control} from 'inspecjs/dist/nist';
-import {Prop} from 'vue-property-decorator';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
+import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
+import {getControlRunTime} from '@/utilities/delta_util';
+import {nistCanonConfig, NIST_DESCRIPTIONS} from '@/utilities/nist_util';
+import {ContextualizedControl, is_control, parse_nist} from 'inspecjs';
 import _ from 'lodash';
-
-export function getControlRunTime(control: context.ContextualizedControl): number {
-  return control.hdf.segments?.reduce((total, segment) => segment.run_time || 0 + total, 0) || 0
-}
+import Component, {mixins} from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
 
 interface Tag {
   label: string;
@@ -121,17 +134,23 @@ interface Tag {
 })
 export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   @Prop({type: Object, required: true})
-  readonly control!: context.ContextualizedControl;
+  readonly control!: ContextualizedControl;
+
+  @Prop({type: Array, required: true})
+  readonly viewedControls!: string[];
 
   @Prop({type: Boolean, default: false}) readonly controlExpanded!: boolean;
   @Prop({type: Boolean, default: false}) readonly showImpact!: boolean;
 
   get runTime(): string {
-    return `${_.truncate(getControlRunTime(this.control).toString(), {length: 5, omission: ''})}ms`
+    return `${_.truncate(getControlRunTime(this.control).toString(), {
+      length: 5,
+      omission: ''
+    })}ms`;
   }
 
   get filename(): string | undefined {
-    return _.get(this.control, 'sourced_from.sourced_from.from_file.filename')
+    return _.get(this.control, 'sourcedFrom.sourcedFrom.from_file.filename');
   }
 
   get truncated_title(): string {
@@ -145,6 +164,14 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   get status_color(): string {
     // maps stuff like "not applicable" -> "statusnotapplicable", which is a defined color name
     return `status${this.control.root.hdf.status.replace(' ', '')}`;
+  }
+
+  get wasViewed(): boolean {
+    return this.viewedControls.indexOf(this.control.data.id) !== -1;
+  }
+
+  set wasViewed(_value: boolean) {
+    this.$emit('control-viewed', this.control);
   }
 
   severity_arrow_count(severity: string): number {
@@ -165,7 +192,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   // Get NIST tag description for NIST tag, this is pulled from the 800-53 xml
   // and relies on a script not contained in the project
   descriptionForTag(tag: string): string {
-    const nisted = nist.parse_nist(tag);
+    const nisted = parse_nist(tag);
     if (is_control(nisted)) {
       const canon = nisted.canonize(nistCanonConfig);
       const found = NIST_DESCRIPTIONS[canon];
@@ -179,12 +206,12 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   }
 
   get nistTags(): Tag[] {
-    let nist_tags = this.control.hdf.raw_nist_tags;
-    nist_tags = nist_tags.filter((tag) => tag.search(/Rev.*\d/i) == -1);
-    return nist_tags.map((tag) => {
-      const nisted = nist.parse_nist(tag);
+    let nistTags = this.control.hdf.rawNistTags;
+    nistTags = nistTags.filter((tag) => tag.search(/Rev.*\d/i) === -1);
+    return nistTags.map((tag) => {
+      const nisted = parse_nist(tag);
       let url = '';
-      if (nist.is_control(nisted)) {
+      if (is_control(nisted)) {
         url = nisted.canonize({
           max_specifiers: 2,
           pad_zeros: false,

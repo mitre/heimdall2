@@ -12,21 +12,27 @@
       <!-- Toolbar -->
       <v-row v-resize="onResize">
         <v-row>
-          <v-col cols="12" md="5" class="pb-0">
+          <v-col cols="12" md="3" class="pb-0">
             <v-card-title class="pb-0">Results View Data</v-card-title>
           </v-col>
           <v-spacer />
-          <v-col cols="4" sm="auto" class="text-right pl-6 pb-0">
+          <v-col cols="3" md="auto" class="text-right pl-6 pb-0">
+            <v-switch
+              v-model="displayUnviewedControls"
+              label="Show Only Unviewed"
+            />
+          </v-col>
+          <v-col cols="3" md="auto" class="text-right pb-0">
             <v-switch v-model="syncTabs" label="Sync Tabs" />
           </v-col>
-          <v-col cols="4" sm="auto" class="text-right pb-0">
+          <v-col cols="3" md="auto" class="text-right pb-0">
             <v-switch
               v-model="singleExpand"
               label="Single Expand"
               @change="handleToggleSingleExpand"
             />
           </v-col>
-          <v-col cols="4" sm="auto" class="text-right pb-0">
+          <v-col cols="3" md="auto" class="text-right pb-0">
             <v-switch v-model="expandAll" label="Expand All" class="mr-5" />
           </v-col>
         </v-row>
@@ -81,6 +87,16 @@
             @input="set_sort('runTime', $event)"
           />
         </template>
+
+        <template #viewed class="my-2 px-1">
+          <ColumnHeader
+            text="Controls Viewed"
+            sort="disabled"
+            :viewed-header="true"
+            :number-of-viewed-controls="viewedControlIds.length"
+            :number-of-all-controls="raw_items.length"
+          />
+        </template>
       </ResponsiveRowSwitch>
     </div>
 
@@ -98,7 +114,9 @@
           :control="item.control"
           :expanded="expanded.includes(item.key)"
           :show-impact="showImpact"
+          :viewed-controls="viewedControlIds"
           @toggle="toggle(item.key)"
+          @control-viewed="toggleControlViewed"
         />
         <ControlRowDetails
           v-if="expanded.includes(item.key)"
@@ -112,19 +130,19 @@
 </template>
 
 <script lang="ts">
+import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails.vue';
+import ControlRowHeader from '@/components/cards/controltable/ControlRowHeader.vue';
+import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
+import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
+import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {HeightsModule} from '@/store/heights';
+import {getControlRunTime} from '@/utilities/delta_util';
+import {control_unique_key} from '@/utilities/format_util';
+import {ContextualizedControl} from 'inspecjs';
+import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import ControlRowHeader, {getControlRunTime} from '@/components/cards/controltable/ControlRowHeader.vue';
-import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails.vue';
-import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
-import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
-
-import {Filter, FilteredDataModule} from '@/store/data_filters';
-import {control_unique_key} from '@/utilities/format_util';
-import {context} from 'inspecjs';
 import {Prop, Ref} from 'vue-property-decorator';
-import {HeightsModule} from '@/store/heights';
-import _ from 'lodash';
 
 // Tracks the visibility of an HDF control
 interface ListElt {
@@ -137,7 +155,7 @@ interface ListElt {
   status_val: number;
   severity_val: number;
 
-  control: context.ContextualizedControl;
+  control: ContextualizedControl;
 }
 
 @Component({
@@ -170,6 +188,22 @@ export default class ControlTable extends Vue {
   sortSeverity: Sort = 'none';
   sortRunTime: Sort = 'none';
 
+  // Used for viewed/unviewed controls.
+  viewedControlIds: string[] = [];
+  displayUnviewedControls = true;
+
+  toggleControlViewed(control: ContextualizedControl) {
+    const alreadyViewed = this.viewedControlIds.indexOf(control.data.id);
+    // If the control hasn't been marked as viewed yet, mark it as viewed.
+    if (alreadyViewed === -1) {
+      this.viewedControlIds.push(control.data.id);
+    }
+    // Else, remove it from the view controls array.
+    else {
+      this.viewedControlIds.splice(alreadyViewed, 1);
+    }
+  }
+
   mounted() {
     this.onResize();
   }
@@ -178,7 +212,9 @@ export default class ControlTable extends Vue {
     // Allow the page to settle before checking the controlTableHeader height
     // (this is what $nextTick is supposed to do but it's firing too quickly)
     setTimeout(() => {
-      HeightsModule.setControlTableHeaderHeight(this.controlTableTitle?.clientHeight);
+      HeightsModule.setControlTableHeaderHeight(
+        this.controlTableTitle?.clientHeight
+      );
     }, 2000);
   }
 
@@ -213,7 +249,7 @@ export default class ControlTable extends Vue {
   }
 
   set expandAll(value: boolean) {
-    if(value) {
+    if (value) {
       this.singleExpand = false;
       this.expanded = this.items.map((items) => items.key);
     } else {
@@ -237,13 +273,13 @@ export default class ControlTable extends Vue {
 
   /** Closes all open controls when single-expand is re-enabled */
   async handleToggleSingleExpand(singleExpand: boolean): Promise<void> {
-    if(singleExpand){
+    if (singleExpand) {
       this.expandAll = false;
     }
   }
 
-  async updateTab(tab: string){
-    this.syncTab = tab
+  async updateTab(tab: string) {
+    this.syncTab = tab;
   }
 
   /** Toggles the given expansion of a control details panel */
@@ -273,15 +309,18 @@ export default class ControlTable extends Vue {
   }
 
   jump_to_key(key: string) {
-    if(!this.$vuetify.breakpoint.smAndDown){
+    if (!this.$vuetify.breakpoint.smAndDown) {
       this.$nextTick(() => {
-        this.$vuetify.goTo(`#${this.striptoChars(key)}`, {offset: this.topOfPage, duration: 300});
+        this.$vuetify.goTo(`#${this.striptoChars(key)}`, {
+          offset: this.topOfPage,
+          duration: 300
+        });
       });
     }
   }
 
   striptoChars(key: string) {
-    return key.replace(/[^a-z0-9]/gi,'');
+    return key.replace(/[^a-z0-9]/gi, '');
   }
 
   /** Return items as key, value pairs */
@@ -304,17 +343,21 @@ export default class ControlTable extends Vue {
         severity_val: ['none', 'low', 'medium', 'high', 'critical'].indexOf(
           d.root.hdf.severity
         ),
-        filename: _.get(d, 'sourced_from.sourced_from.from_file.filename')
+        filename: _.get(d, 'sourcedFrom.sourcedFrom.from_file.filename')
       };
     });
   }
 
-  /** Return items sorted */
+  /** Return items sorted and filters out viewed controls */
   get items(): ListElt[] {
     // Controls ascending/descending
     let factor = 1;
+    // Whether or not we need to sort
+    let sort = true;
     // Our comparator function
     let cmp: (a: ListElt, b: ListElt) => number;
+
+    let items = this.raw_items;
 
     if (this.sortId === 'ascending' || this.sortId === 'descending') {
       cmp = (a: ListElt, b: ListElt) =>
@@ -338,26 +381,36 @@ export default class ControlTable extends Vue {
       if (this.sortSeverity === 'ascending') {
         factor = -1;
       }
-    } else if (
-      this.sortSet === 'ascending' ||
-      this.sortSet === 'descending'
-    ) {
+    } else if (this.sortSet === 'ascending' || this.sortSet === 'descending') {
       cmp = (a: ListElt, b: ListElt) => a.filename.localeCompare(b.filename);
       if (this.sortSet === 'ascending') {
         factor = -1;
       }
-    } else if(this.sortRunTime === 'ascending' || this.sortRunTime === 'descending') {
+    } else if (
+      this.sortRunTime === 'ascending' ||
+      this.sortRunTime === 'descending'
+    ) {
       cmp = (a: ListElt, b: ListElt) =>
-        (getControlRunTime(b.control) - getControlRunTime(a.control));
+        getControlRunTime(b.control) - getControlRunTime(a.control);
       if (this.sortRunTime === 'ascending') {
         factor = -1;
       }
+    } else {
+      sort = false;
     }
 
-    else {
-      return this.raw_items;
+    // Displays only unviewed controls.
+    if (this.displayUnviewedControls) {
+      items = items.filter(
+        (val) => !this.viewedControlIds.includes(val.control.data.id)
+      );
     }
-    return this.raw_items.sort((a, b) => cmp(a, b) * factor);
+
+    if (sort === true) {
+      items = items.sort((a, b) => cmp(a, b) * factor);
+    }
+
+    return items;
   }
 }
 </script>

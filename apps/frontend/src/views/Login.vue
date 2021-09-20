@@ -1,5 +1,8 @@
 <template>
   <v-app id="inspire">
+    <v-snackbar v-model="logoffSnackbar" color="success">
+      {{ logoffMessage }}</v-snackbar
+    >
     <v-main>
       <v-container class="fill-height" fluid>
         <v-row align="center" justify="center">
@@ -43,13 +46,13 @@
   </v-app>
 </template>
 <script lang="ts">
+import LDAPLogin from '@/components/global/login/LDAPLogin.vue';
+import LocalLogin from '@/components/global/login/LocalLogin.vue';
+import {ServerModule} from '@/store/server';
+import {SnackbarModule} from '@/store/snackbar';
+import {LocalStorageVal} from '@/utilities/helper_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {LocalStorageVal} from '@/utilities/helper_util';
-import {ServerModule} from '@/store/server';
-import LocalLogin from '@/components/global/login/LocalLogin.vue'
-import LDAPLogin from '@/components/global/login/LDAPLogin.vue'
-import {SnackbarModule} from '../store/snackbar';
 
 const lastLoginTab = new LocalStorageVal<string>('login_curr_tab');
 
@@ -61,6 +64,7 @@ const lastLoginTab = new LocalStorageVal<string>('login_curr_tab');
 })
 export default class Login extends Vue {
   activeTab: string = lastLoginTab.get_default('logintab-standard');
+  logoffMessage = 'You have successfully logged off';
 
   mounted() {
     this.checkLoggedIn();
@@ -75,7 +79,11 @@ export default class Login extends Vue {
 
   checkForAuthenticationError() {
     if (this.$cookies.get('authenticationError')) {
-      SnackbarModule.failure(`Sorry, an problem occurred while signing you in. The reason given was: ${this.$cookies.get('authenticationError')}`);
+      SnackbarModule.failure(
+        `Sorry, an problem occurred while signing you in. The reason given was: ${this.$cookies.get(
+          'authenticationError'
+        )}`
+      );
       this.$cookies.remove('authenticationError');
     }
   }
@@ -86,6 +94,26 @@ export default class Login extends Vue {
 
   get ldapenabled() {
     return ServerModule.ldap;
+  }
+
+  get logoffSnackbar() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    if (
+      urlParams.get('logoff')?.toLowerCase() === 'true' &&
+      ServerModule.token === ''
+    ) {
+      return true;
+    } else if (
+      urlParams.get('logoff')?.toLowerCase() === 'true' &&
+      ServerModule.token !== ''
+    ) {
+      this.logoffMessage =
+        'An error occurred during the logout process, your token has not been discarded. Please clear your browser data.';
+      return false;
+    } else {
+      return false;
+    }
   }
 }
 </script>

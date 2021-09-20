@@ -1,5 +1,5 @@
 <template>
-  <Base title="Heimdall - Groups">
+  <Base :show-search="false" title="Heimdall - Groups">
     <template #main-content>
       <v-tabs v-model="activeTab" fixed-tabs dark>
         <v-tab key="my-groups"> My Groups </v-tab>
@@ -26,9 +26,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import GroupManagement from '@/components/global/groups/GroupManagement.vue';
 import Base from '@/views/Base.vue';
-import GroupManagement from '@/components/global/groups/GroupManagement.vue'
+import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
 
 @Component({
