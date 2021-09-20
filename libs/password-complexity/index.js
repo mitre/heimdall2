@@ -12,7 +12,7 @@ const validators = [
           RegExp('[a-z]'),
           RegExp('[A-Z]'),
           RegExp('[0-9]'),
-          RegExp(/[^\w\s]/)
+          RegExp(/[^A-Za-z0-9]/)
         ];
         return (
           checks.filter((expr) => expr.test(password)).length ===
