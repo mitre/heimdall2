@@ -1,4 +1,4 @@
-import {validators} from '@heimdall/password-complexity'; // Works
+import {validators} from '@heimdall/password-complexity';
 import {
   ArgumentMetadata,
   BadRequestException,
