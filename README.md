@@ -225,7 +225,7 @@ Proper API documentation does not exist yet. In the meantime here are quick inst
 
 ```sh
 # Create an API key using the Heimdall frontend and upload an evaluation with the following command
-curl -F "data=@Evaluation.json" -F "filename=Your Filename" -F "public=true/false" -H "Authorization: Api-Key apikeygoeshere" "http://localhost:3000/evaluations"
+curl -F "data=@<Path to Evaluation File>" -F "filename=<Filename To Show in Heimdall>" -F "public=true/false" -H "Authorization: Api-Key apikeygoeshere" "http://localhost:3000/evaluations"
 ```
 
 ## For Developers

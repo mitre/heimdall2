@@ -85,6 +85,7 @@
               style="cursor: pointer"
               @click="addAPIKey"
             >
+              <span class="pt-1">Add API Key</span>
               <v-icon>mdi-plus</v-icon>
             </div>
             <InputDialog
@@ -99,6 +100,7 @@
             <v-data-table
               :headers="apiKeyHeaders"
               :items="apiKeys"
+              :loading="apiKeyTableLoading"
               dense
               style="max-height: 300px"
               class="overflow-y-auto"
@@ -109,15 +111,43 @@
               <template #[`item.apiKey`]="{item}">{{
                 truncate(item.apiKey) || 'Only Shown on Creation'
               }}</template>
-              <template #[`item.action`]="{item}"
-                ><CopyButton v-if="item.apiKey" :text="item.apiKey" />
-                <v-icon class="mr-2" small @click="refreshAPIKey(item)"
-                  >mdi-refresh</v-icon
-                >
-                <v-icon class="mr-2" small @click="deleteAPIKey(item)"
-                  >mdi-delete</v-icon
-                ></template
-              >
+              <template #[`item.action`]="{item}">
+                <v-tooltip left>
+                  <template #activator="{on, attrs}">
+                    <v-icon
+                      class="mr-2"
+                      small
+                      v-bind="attrs"
+                      @click="refreshAPIKey(item)"
+                      v-on="on"
+                      >mdi-refresh</v-icon
+                    >
+                  </template>
+                  <span>Recreate this API Key</span>
+                </v-tooltip>
+                <v-tooltip top>
+                  <template #activator="{on, attrs}">
+                    <span v-bind="attrs" v-on="on">
+                      <CopyButton v-if="item.apiKey" :text="item.apiKey" />
+                    </span>
+                  </template>
+                  <span>Copy this API Key</span>
+                </v-tooltip>
+
+                <v-tooltip right>
+                  <template #activator="{on, attrs}">
+                    <v-icon
+                      class="mr-2"
+                      small
+                      v-bind="attrs"
+                      @click="deleteAPIKey(item)"
+                      v-on="on"
+                      >mdi-delete</v-icon
+                    >
+                  </template>
+                  <span>Delete this API Key</span>
+                </v-tooltip>
+              </template>
             </v-data-table>
           </div>
 
@@ -148,7 +178,7 @@
             id="toggleAPIKeys"
             class="ml-2"
             @click="toggleShowAPIKeys"
-            >Show API Keys</v-btn
+            >{{ showAPIKeys ? 'Hide API Keys' : 'Show API Keys' }}</v-btn
           >
           <div v-show="changePassword">
             <v-text-field
@@ -275,6 +305,7 @@ export default class UserModal extends Vue {
 
   apiKeys: IApiKey[] = [];
   apiKeysDisabled = false;
+  apiKeyTableLoading = false;
   activeAPIKey: IApiKey | null = null;
   inputPasswordDialog = false;
 
@@ -342,6 +373,7 @@ export default class UserModal extends Vue {
   }
 
   getAPIKeys() {
+    this.apiKeyTableLoading = true;
     axios
       .create()
       .get<IApiKey[]>(`/apikeys`, {params: {userId: this.user.id}})
@@ -356,10 +388,12 @@ export default class UserModal extends Vue {
           }
         }
       });
+    this.apiKeyTableLoading = false;
   }
 
   addAPIKey() {
     this.inputPasswordDialog = false;
+    this.apiKeyTableLoading = true;
     axios
       .post<IApiKey>(`/apikeys`, {
         userId: this.user.id,
@@ -376,7 +410,10 @@ export default class UserModal extends Vue {
         }
         throw error;
       })
-      .finally(() => (this.activeAPIKey = null));
+      .finally(() => {
+        this.activeAPIKey = null;
+        this.apiKeyTableLoading = false;
+      });
   }
 
   deleteAPIKey(keyToDelete: IApiKey) {
