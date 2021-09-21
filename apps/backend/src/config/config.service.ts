@@ -26,6 +26,10 @@ export class ConfigService {
     return this.get('REGISTRATION_DISABLED')?.toLowerCase() !== 'true';
   }
 
+  isInProductionMode(): boolean {
+    return this.get('NODE_ENV')?.toLowerCase() === 'production';
+  }
+
   frontendStartupSettings(): StartupSettingsDto {
     const enabledOauth: string[] = [];
     supportedOauth.forEach((oauthStrategy) => {
