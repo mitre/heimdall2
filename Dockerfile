@@ -12,9 +12,7 @@ COPY package.json yarn.lock lerna.json tsconfig.json .prettierrc ./
 COPY apps ./apps
 COPY libs ./libs
 RUN chmod 0400 package.json yarn.lock lerna.json tsconfig.json .prettierrc
-RUN chmod 0400 -R apps libs
-RUN chmod 0500 apps/frontend/src/server.js
-RUN /bin/sh -c 'find libs -type f -name "*.sh" -exec chmod u+x "{}" \;'
+RUN chmod 0500 -R apps libs
 
 RUN sed -i s^https://registry.yarnpkg.com^$YARNREPO^g yarn.lock
 RUN yarn --frozen-lockfile --production --network-timeout 600000
@@ -42,9 +40,7 @@ COPY apps/backend/seeders /app/apps/backend/seeders
 RUN chown node package.json yarn.lock lerna.json
 RUN chmod 0400 package.json yarn.lock lerna.json
 RUN chown -R node apps libs
-RUN chmod 0600 -R apps
-RUN chmod 0700 apps apps/backend
-RUN chmod 0700 -R apps/backend/node_modules apps/backend/config apps/backend/db apps/backend/dist apps/backend/seeders
+RUN chmod 0500 -R apps libs
 RUN chmod 0400 libs/interfaces/package.json
 
 EXPOSE 3000
