@@ -5,8 +5,6 @@ import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
 import {DatabaseService} from './database.service';
 
-const configService = new ConfigService();
-
 const logger = winston.createLogger({
   transports: [new winston.transports.Console()],
   format: winston.format.combine(
@@ -30,7 +28,9 @@ function sanitize(fields: string[], values?: string[]): string[] {
   return (
     values?.map((value, index) => {
       if (
-        configService.sensitiveKeys.some((regex) => regex.test(fields[index]))
+        ConfigService.prototype.sensitiveKeys.some((regex) =>
+          regex.test(fields[index])
+        )
       ) {
         return 'REDACTED';
       } else {
