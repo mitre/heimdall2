@@ -323,7 +323,7 @@ export class FilteredData extends VuexModule {
         'hdf.wraps.id': filter.ids,
         'hdf.wraps.title': filter.titleSearchTerms,
         'hdf.wraps.desc': filter.descriptionSearchTerms,
-        'hdf.raw_nist_tags': filter.nistIdFilter,
+        'hdf.rawNistTags': filter.nistIdFilter,
         full_code: filter.codeSearchTerms,
         'hdf.waived': filter.status?.includes('Waived'),
         'root.hdf.status': _.filter(
