@@ -16,7 +16,7 @@ export class CweNistMappingItem {
     if (values['CWE Name'] === undefined) {
       throw new Error('CWE Nist Mapping Data must contain a name.');
     } else {
-      this.name = values['CWE Name'];
+      this.name = values['CWE Name'].trim();
     }
     if (values['NIST-ID'] === undefined) {
       this.nistId = '';
