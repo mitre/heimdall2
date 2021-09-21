@@ -166,7 +166,13 @@ export default class ExportCKLModal extends Vue {
     this.filter.fromFile.forEach(async (fileId) => {
       const file = InspecDataModule.allFiles.find((f) => f.uniqueId === fileId);
       if (file) {
-        files.push({...file, hostname: '', fqdn: '', mac: '', ip: ''});
+        files.push({
+          ...file,
+          hostname: _.get(file, 'evaluation.data.passthrough.hostname') || '',
+          fqdn: _.get(file, 'evaluation.data.passthrough.fqdn') || '',
+          mac: _.get(file, 'evaluation.data.passthrough.mac') || '',
+          ip: _.get(file, 'evaluation.data.passthrough.ip') || ''
+        });
       }
     });
     return files;
