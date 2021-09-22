@@ -16,22 +16,20 @@
     "build": "tsc -p ./tsconfig.build.json && cp -R ./data ./lib",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
-    "test": "jest --silent",
-    "csv2json": "ts-node data/converters/csv2json.ts"
+    "test": "jest --silent"
   },
   "dependencies": {
     "csv-parse": "^4.16.0",
+    "csv2json": "^2.0.2",
     "fast-xml-parser": "^3.19.0",
     "htmlparser2": "^7.1.2",
     "inspecjs": "^2.5.1",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@types/csv2json": "^1.4.2",
     "@types/jest": "^27.0.0",
     "@types/lodash": "^4.14.161",
     "@types/node": "^15.0.1",
-    "csv2json": "^2.0.2",
     "htmlparser2": "^7.1.2",
     "jest": "^27.0.6",
     "quicktype": "^15.0.260",
