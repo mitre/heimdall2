@@ -304,6 +304,7 @@ export default class ExportCKLModal extends Vue {
         }
       );
       saveSingleOrMultipleFiles(files, 'ckl');
+      this.outputData.controlSets = [];
     });
 
     this.closeModal();
