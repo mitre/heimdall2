@@ -1,5 +1,6 @@
 /// <reference types="cypress" />
 
+import 'cypress-wait-until';
 import RegistrationPage from '../support/pages/RegistrationPage';
 import DatabaseHelper from './helpers/DatabaseHelper';
 
