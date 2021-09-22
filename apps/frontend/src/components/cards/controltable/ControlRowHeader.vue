@@ -113,20 +113,12 @@ import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSw
 import CircleRating from '@/components/generic/CircleRating.vue';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
+import {getControlRunTime} from '@/utilities/delta_util';
 import {nistCanonConfig, NIST_DESCRIPTIONS} from '@/utilities/nist_util';
 import {ContextualizedControl, is_control, parse_nist} from 'inspecjs';
 import _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-
-export function getControlRunTime(control: ContextualizedControl): number {
-  return (
-    control.hdf.segments?.reduce(
-      (total, segment) => segment.run_time || 0 + total,
-      0
-    ) || 0
-  );
-}
 
 interface Tag {
   label: string;
