@@ -1,41 +1,37 @@
 <template>
   <v-icon
-    v-clipboard:copy="shareItems(evaluation)"
+    v-clipboard:copy="text"
     v-clipboard:success="onCopy"
     v-clipboard:error="onCopyFailure"
     small
-    class="mr-5"
+    class="mr-2"
     type="button"
-    >mdi-share-variant</v-icon
+    >{{ icon }}</v-icon
   >
 </template>
 
 <script lang="ts">
 import {SnackbarModule} from '@/store/snackbar';
-import {IEvaluation} from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import VueClipboard from 'vue-clipboard2';
 import {Prop} from 'vue-property-decorator';
 
 VueClipboard.config.autoSetContainer = true;
-
 Vue.use(VueClipboard);
 
 @Component({})
-export default class ShareEvaluationButton extends Vue {
-  @Prop({required: true}) readonly evaluation!: IEvaluation;
+export default class CopyButton extends Vue {
+  @Prop({required: true}) readonly text!: string;
+  @Prop({required: false, default: 'mdi-clipboard-outline'})
+  readonly icon!: string;
 
   onCopy() {
-    SnackbarModule.notify('Link copied to clipboard');
+    SnackbarModule.notify('Text copied to your clipboard');
   }
 
   onCopyFailure() {
     SnackbarModule.failure('Failed to copy to your clipboard');
-  }
-
-  shareItems(evaluation: IEvaluation): string {
-    return `${window.location.origin}/results/${evaluation.id}`;
   }
 }
 </script>
