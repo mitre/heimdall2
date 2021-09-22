@@ -263,7 +263,11 @@ export default class ExportCKLModal extends Vue {
     } else {
       return segments
         .map((segment) => {
-          return `${segment.status}\n${segment.code_desc}\n${segment.message}`;
+          if (segment.message) {
+            return `${segment.status}\n${segment.code_desc}\n${segment.message}`;
+          } else {
+            return `${segment.status}\n${segment.code_desc}`;
+          }
         })
         .join('\n--------------------------------\n');
     }
