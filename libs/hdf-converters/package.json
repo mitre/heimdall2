@@ -16,7 +16,8 @@
     "build": "tsc -p ./tsconfig.build.json && cp -R ./data ./lib",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
-    "test": "jest --silent"
+    "test": "jest --silent",
+    "csv2json": "ts-node data/converters/csv2json.ts"
   },
   "dependencies": {
     "@types/csv2json": "^1.4.2",
