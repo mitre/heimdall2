@@ -6,8 +6,6 @@ export default class ToastVerifier {
   }
 
   toastTextNotContains(): void {
-    cy.get(this.snackBar, {timeout: 4000}).should(
-      'not.exist'
-    );
+    cy.get(this.snackBar, {timeout: 4000}).should('not.exist');
   }
 }
