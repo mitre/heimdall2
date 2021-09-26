@@ -1,9 +1,25 @@
+import {validators} from '@heimdall/password-complexity';
 import {
   ArgumentMetadata,
   BadRequestException,
   Injectable,
   PipeTransform
 } from '@nestjs/common';
+
+export function validatePassword(password?: string): string[] {
+  const errors = [];
+  if (typeof password !== 'string') {
+    errors.push('Password must be of type string');
+  } else {
+    validators.forEach((validator) => {
+      if (!validator.check(password)) {
+        errors.push(validator.name);
+      }
+    });
+  }
+
+  return errors;
+}
 
 @Injectable()
 export class PasswordComplexityPipe implements PipeTransform {
@@ -18,43 +34,14 @@ export class PasswordComplexityPipe implements PipeTransform {
       return value;
     }
     if (
-      typeof value.password == 'string' &&
-      this.hasClasses(value.password) &&
-      this.noRepeats(value.password)
+      typeof value.password === 'string' &&
+      validatePassword(value.password).length === 0
     ) {
       return value;
     } else {
       throw new BadRequestException(
-        'Password does not meet complexity requirements. Passwords are a minimum of 15' +
-          ' characters in length. Passwords must contain at least one special character, number, upper-case letter, and' +
-          ' lower-case letter. Passwords cannot contain more than three consecutive repeating characters.' +
-          ' Passwords cannot contain more than four repeating characters from the same character class.'
+        validatePassword(value.password).join(', ')
       );
     }
-  }
-
-  hasClasses(password: string): boolean {
-    const validators = [
-      RegExp('[a-z]'),
-      RegExp('[A-Z]'),
-      RegExp('[0-9]'),
-      RegExp(/[^\w\s]/),
-      RegExp('.{15,}')
-    ];
-    return (
-      validators.filter((expr) => expr.test(password)).length ===
-      validators.length
-    );
-  }
-
-  noRepeats(password: string): boolean {
-    const validators = [
-      RegExp(/(.)\1{3,}/),
-      RegExp('[a-z]{4,}'),
-      RegExp('[A-Z]{4,}'),
-      RegExp('[0-9]{4,}'),
-      RegExp(/[^\w\s]{4,}/)
-    ];
-    return validators.filter((expr) => expr.test(password)).length === 0;
   }
 }
