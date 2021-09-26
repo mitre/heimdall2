@@ -1,11 +1,12 @@
 export default class ToastVerifier {
+  readonly snackBar = 'div[class="v-snack__content"]';
   toastTextContains(textToCheck: string): void {
-    cy.get('div[class="v-snack__content"]', {timeout: 6000}).should('exist');
-    cy.get('div[class="v-snack__content"]').should('contain', textToCheck);
+    cy.get(this.snackBar, {timeout: 6000}).should('exist');
+    cy.get(this.snackBar).should('contain', textToCheck);
   }
 
   toastTextNotContains(): void {
-    cy.get('div[class="v-snack__content"]', {timeout: 4000}).should(
+    cy.get(this.snackBar, {timeout: 4000}).should(
       'not.exist'
     );
   }
