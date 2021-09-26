@@ -38,14 +38,14 @@ export const BAD_LDAP_AUTHENTICATION = {
 export const SPLUNK_AUTHENTICATION = {
   username: 'admin',
   password: 'Valid_password!',
-  hostname: 'localhost:8000'
+  hostname: 'https://localhost:8000'
 };
 
 export const BAD_SPLUNK_AUTHENTICATION = {
   username: 'admin',
   password: 'Invalid_password!',
-  hostname: 'localhost:8000'
-}
+  hostname: 'https://localhost:8000'
+};
 
 // @ts-ignore
 export const TEST_USER: User = {

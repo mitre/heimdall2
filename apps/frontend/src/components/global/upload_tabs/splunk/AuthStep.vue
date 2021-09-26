@@ -1,12 +1,13 @@
 <template>
   <v-stepper-content step="1">
-    <v-form v-model="valid" ref="form">
+    <v-form ref="form" v-model="valid">
       <v-text-field
         id="username_field"
-        v-model="username" 
+        v-model="username"
         label="Username"
         data-cy="splunkusername"
-        :rules="[reqRule]" />
+        :rules="[reqRule]"
+      />
       <v-text-field
         id="password_field"
         v-model="password"

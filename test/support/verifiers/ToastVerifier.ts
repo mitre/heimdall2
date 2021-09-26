@@ -5,6 +5,8 @@ export default class ToastVerifier {
   }
 
   toastTextNotContains(): void {
-    cy.get('div[class="v-snack__content"]', {timeout: 4000}).should('not.exist');
+    cy.get('div[class="v-snack__content"]', {timeout: 4000}).should(
+      'not.exist'
+    );
   }
 }
