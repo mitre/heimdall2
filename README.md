@@ -224,13 +224,8 @@ API usage only works when using Heimdall Enterprise Server (AKA "Server Mode").
 Proper API documentation does not exist yet. In the meantime here are quick instructions for uploading evaluations to Heimdall Server.
 
 ```sh
-# Create a user (only needs to be done once)
-curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "password", "passwordConfirmation": "password", "role": "user", "creationMethod": "local" }' http://localhost:3000/users
-# Log in
-curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "password" }' http://localhost:3000/authn/login
-# The previous command returns a Bearer Token that needs to get placed in the following command
-# Upload evaluation
-curl -F "data=@Evaluation.json" -F "filename=Your Filename" -F "public=true/false" -H "Authorization: Bearer bearertokengoeshere" "http://localhost:3000/evaluations"
+# Create an API key using the Heimdall frontend and upload an evaluation with the following command
+curl -F "data=@<Path to Evaluation File>" -F "filename=<Filename To Show in Heimdall>" -F "public=true/false" -H "Authorization: Api-Key apikeygoeshere" "http://localhost:3000/evaluations"
 ```
 
 ## For Developers

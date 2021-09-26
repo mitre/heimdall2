@@ -45,17 +45,17 @@
         </v-data-table>
       </v-col>
     </v-row>
-    <DeleteDialog
+    <ActionDialog
       v-model="dialogDelete"
       type="user"
-      @cancel="closeDeleteDialog"
+      @cancel="closeActionDialog"
       @confirm="deleteUserConfirm"
     />
   </div>
 </template>
 
 <script lang="ts">
-import DeleteDialog from '@/components/generic/DeleteDialog.vue';
+import ActionDialog from '@/components/generic/ActionDialog.vue';
 import {ServerModule} from '@/store/server';
 import {IVuetifyItems} from '@/utilities/helper_util';
 import {ISlimUser} from '@heimdall/interfaces';
@@ -65,7 +65,7 @@ import {Prop, VModel} from 'vue-property-decorator';
 
 @Component({
   components: {
-    DeleteDialog
+    ActionDialog
   }
 })
 export default class Users extends Vue {
@@ -131,7 +131,7 @@ export default class Users extends Vue {
     this.dialogDelete = true;
   }
 
-  closeDeleteDialog() {
+  closeActionDialog() {
     this.dialogDelete = false;
     this.editedUser = null;
   }
@@ -140,7 +140,7 @@ export default class Users extends Vue {
     if (this.editedUser) {
       this.currentUsers.splice(this.currentUsers.indexOf(this.editedUser), 1);
     }
-    this.closeDeleteDialog();
+    this.closeActionDialog();
   }
 
   // Filter out users that are already in the group from the user search
