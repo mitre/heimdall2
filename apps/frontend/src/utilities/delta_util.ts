@@ -32,7 +32,7 @@ export class ControlChange {
   }
 
   /** Checks if this actually changes anything.
-   * Returns true iff old !== new
+   * Returns true if old !== new
    */
   get valid(): boolean {
     let firstSelected = -1;
