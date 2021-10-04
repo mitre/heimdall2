@@ -30,7 +30,6 @@ context('Splunk', () => {
       uploadModal.switchToTab('splunk');
       splunkTabVerifier.splunkPresent();
       splunkPage.splunkLogin(SPLUNK_AUTHENTICATION);
-      toastVerifier.toastTextNotContains();
     });
 
     it('fails to authenticate a Splunk user with invalid credentials', () => {
