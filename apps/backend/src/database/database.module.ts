@@ -15,6 +15,8 @@ const logger = winston.createLogger({
   )
 });
 
+const localConfigService = new ConfigService();
+
 function getSynchronize(configService: ConfigService): boolean {
   const nodeEnvironment = configService.get('NODE_ENV');
   if (nodeEnvironment === undefined) {
@@ -28,8 +30,8 @@ function sanitize(fields: string[], values?: string[]): string[] {
   return (
     values?.map((value, index) => {
       if (
-        ConfigService.prototype.sensitiveKeys.some((regex) =>
-          regex.test(fields[index])
+        localConfigService.sensitiveKeys.some((regex) =>
+          regex.test(fields[index + 1])
         )
       ) {
         return 'REDACTED';
