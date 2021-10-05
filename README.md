@@ -186,7 +186,7 @@ $ cf push
 
 ## External Data Sources
 
-Heimdall currently supports two external data sources for loading HDF data: AWS S3 and Splunk. 
+Heimdall currently supports AWS S3 for loading external HDF data. 
 
 ### AWS S3
 
@@ -210,12 +210,6 @@ In order to allow Heidmdall to Connect to your AWS S3 bucket, you need to [add a
     }
 ]
 ```
-
-
-
-### Splunk
-
-First you need to [install the HDF -> Splunk Plugin](https://github.com/mitre/hdf-json-to-splunk#installation) and [enable Cross-Origin Resource Sharing](https://github.com/mitre/hdf-json-to-splunk#user-content-reading-this-data-back-out-in-heimdall-lite) to allow Heimdall to read your data. Then you can use the Splunk tab inside of the Upload Modal presented to you when you load Heimdall.
 
 ## API Usage
 
