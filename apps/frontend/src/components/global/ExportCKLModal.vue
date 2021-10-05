@@ -91,7 +91,7 @@ interface Control {
   startTime: string;
   targetKey: number;
   uuidV4: string;
-  cciId: string;
+  ccis: string[];
   status: string;
   results: string;
 }
@@ -287,7 +287,7 @@ export default class ExportCKLModal extends Vue {
       startTime: _.get(control, 'hdf.segments![0].start_time'),
       targetKey: 0,
       uuidV4: v4(),
-      cciId: control.data.tags.cci,
+      ccis: control.data.tags.cci,
       status: this.cklStatus(control.hdf.status),
       results: this.cklResults(control.hdf.segments)
     };
