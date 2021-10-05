@@ -27,6 +27,7 @@ COPY package.json yarn.lock lerna.json ./
 COPY apps/backend/package.json apps/backend/
 COPY apps/frontend/package.json apps/frontend/
 COPY libs/interfaces/package.json libs/interfaces/
+COPY libs/password-complexity/ libs/password-complexity/
 COPY --from=builder /src/apps/backend/node_modules apps/backend/node_modules
 COPY --from=builder /src/apps/backend/dist apps/backend/dist
 COPY --from=builder /src/dist/ dist/
