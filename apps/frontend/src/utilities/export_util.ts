@@ -6,15 +6,12 @@ type File = {
   filename: string;
   data: string;
 };
-
 export async function saveSingleOrMultipleFiles(
   files: File[],
   filetype: string
 ) {
   if (files.length === 1) {
-    const blob = new Blob([files[0].data], {
-      type: 'application/csv'
-    });
+    const blob = new Blob([files[0].data]);
     saveAs(blob, cleanUpFilename(`${files[0]?.filename}`));
   } else {
     const zipfile = new ZipFile();
