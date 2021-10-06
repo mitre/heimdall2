@@ -259,7 +259,7 @@ class Server extends VuexModule implements IServerState {
   public Logout(): void {
     this.CLEAR_USERID();
     this.CLEAR_TOKEN();
-    location.reload();
+    location.replace('/login?logoff=true');
   }
 }
 

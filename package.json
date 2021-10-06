@@ -17,7 +17,7 @@
     "lint:ci": "lerna run lint:ci",
     "pack:all": "lerna exec yarn pack --scope inspecjs --scope @mitre/heimdall-lite --scope @mitre/hdf-converters --parallel",
     "start": "yarn backend start",
-    "start:dev": "dotenv -e apps/backend/.env -- lerna exec yarn run start:dev --ignore @heimdall/interfaces --ignore @mitre/hdf-converters --ignore @heimdall/cypress-tests --ignore inspecjs",
+    "start:dev": "dotenv -e apps/backend/.env -- lerna exec yarn run start:dev --ignore @heimdall/interfaces --ignore @mitre/hdf-converters  --ignore @heimdall/password-complexity --ignore @heimdall/cypress-tests --ignore inspecjs",
     "test:ui": "cypress run",
     "test:ui:open": "cypress open"
   },
@@ -27,7 +27,7 @@
     "@typescript-eslint/parser": "^4.8.0",
     "eslint": "^7.13.0",
     "eslint-config-prettier": "^8.0.0",
-    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-prettier": "^4.0.0",
     "lerna": "^4.0.0",
     "prettier": "^2.1.2",
     "prettier-plugin-organize-imports": "^2.0.0",

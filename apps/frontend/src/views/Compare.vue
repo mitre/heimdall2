@@ -7,10 +7,21 @@
 
     <template #main-content>
       <v-container fluid grid-list-md pa-2>
-        <v-row>
-          <v-col cols="12">
+        <v-row justify="space-between">
+          <v-col cols="8">
             <div style="position: relative">
               <h1>Results Comparison</h1>
+            </div>
+          </v-col>
+          <v-col cols="4">
+            <div class="d-flex flex-nowrap">
+              <h4 class="pt-5 pr-1">Sort Results Sets By:</h4>
+              <v-select v-model="sortControlSetsBy" :items="compareItems" />
+              <v-btn class="mt-4" icon @click="reverseSort = !reverseSort"
+                ><v-icon>{{
+                  reverseSort ? 'mdi-sort-descending' : 'mdi-sort-ascending'
+                }}</v-icon></v-btn
+              >
             </div>
           </v-col>
         </v-row>
@@ -202,10 +213,18 @@ import SearchHelpModal from '@/components/global/SearchHelpModal.vue';
 import TagRow from '@/components/global/tags/TagRow.vue';
 import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
-import {EvaluationFile, FileID, ProfileFile} from '@/store/report_intake';
-import {SeverityCountModule} from '@/store/severity_counts';
-import {StatusCountModule} from '@/store/status_counts';
 import {
+  EvaluationFile,
+  FileID,
+  ProfileFile,
+  SourcedContextualizedEvaluation
+} from '@/store/report_intake';
+import {SeverityCountModule} from '@/store/severity_counts';
+import {calculateCompliance, StatusCountModule} from '@/store/status_counts';
+import {
+  compareCompliance,
+  compareControlCount,
+  compareExecutionTimes,
   compare_times,
   ComparisonContext,
   ControlSeries,
@@ -217,6 +236,7 @@ import {ControlStatus} from 'inspecjs';
 import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import {Watch} from 'vue-property-decorator';
 import {EvaluationModule} from '../store/evaluations';
 import {SearchModule} from '../store/search';
 
@@ -262,6 +282,15 @@ export default class Compare extends Vue {
     }
   ];
 
+  compareItems = [
+    'Scan Start Time',
+    'Run Time',
+    'Total Number of Controls',
+    'Passed Control Count',
+    'Compliance (Passed Control %)'
+  ];
+
+  sortControlSetsBy = '';
   changedOnly = true;
   expandedView = true;
   tab = 0;
@@ -269,8 +298,14 @@ export default class Compare extends Vue {
   startIndex = 0;
   ascending = true;
   chartsOpen = true;
+  reverseSort = false;
   ableTab = true;
   expansion = 0;
+
+  @Watch('files')
+  onChangeFiles() {
+    this.getPassthroughFields();
+  }
 
   /** Yields the current two selected reports as an ExecDelta,  */
   get curr_delta(): ComparisonContext {
@@ -337,12 +372,50 @@ export default class Compare extends Vue {
     );
   }
 
+  getPassthroughFields() {
+    this.files.forEach((file) => {
+      if ('passthrough' in file.evaluation.data) {
+        const passthroughData = _.get(file.evaluation.data, 'passthrough');
+        if (typeof passthroughData === 'object') {
+          this.compareItems = this.compareItems.concat(
+            Object.keys(passthroughData)
+              .filter(
+                (key) =>
+                  this.compareItems.indexOf(`Passthrough Field: ${key}`) === -1
+              )
+              .map((key) => `Passthrough Field: ${key}`)
+          );
+        }
+      }
+    });
+  }
+
   changeSort(): void {
     this.ascending = !this.ascending;
   }
 
   changeChartState(): void {
     this.chartsOpen = !this.chartsOpen;
+  }
+
+  comparePassthrough(
+    a: SourcedContextualizedEvaluation,
+    b: SourcedContextualizedEvaluation
+  ) {
+    const field = this.sortControlSetsBy.split('Passthrough Field: ')[1];
+    const aPassthroughField = _.get(a.data, `passthrough.${field}`);
+    const bPassthroughField = _.get(b.data, `passthrough.${field}`);
+    if (typeof aPassthroughField === typeof bPassthroughField) {
+      if (typeof aPassthroughField === 'string') {
+        return aPassthroughField.localeCompare(bPassthroughField);
+      } else if (typeof aPassthroughField === 'number') {
+        return aPassthroughField - bPassthroughField;
+      } else if (typeof aPassthroughField === 'boolean') {
+        return Number(aPassthroughField) - Number(bPassthroughField);
+      }
+    }
+
+    return 0;
   }
 
   get statusCols(): number {
@@ -357,7 +430,29 @@ export default class Compare extends Vue {
       FilteredDataModule.evaluations(FilteredDataModule.selected_file_ids)
     );
 
-    fileList.sort(compare_times);
+    switch (this.sortControlSetsBy) {
+      case '':
+      case 'Scan Start Time':
+        fileList.sort(compare_times);
+        break;
+      case 'Run Time':
+        fileList.sort(compareExecutionTimes);
+        break;
+      case 'Total Number of Controls':
+        fileList.sort(compareControlCount);
+        break;
+      case 'Compliance (Passed Control %)':
+        fileList.sort(compareCompliance);
+        break;
+      default:
+        if (this.sortControlSetsBy.startsWith('Passthrough Field')) {
+          fileList.sort(this.comparePassthrough);
+        }
+        break;
+    }
+    if (this.reverseSort) {
+      fileList.reverse();
+    }
     return fileList.map((evaluation) => evaluation.from_file);
   }
 
@@ -429,17 +524,7 @@ export default class Compare extends Vue {
     var series = [];
     for (const file of this.files) {
       const filter = {fromFile: [file.uniqueId]};
-      const passed = StatusCountModule.countOf(filter, 'Passed');
-      const total =
-        passed +
-        StatusCountModule.countOf(filter, 'Failed') +
-        StatusCountModule.countOf(filter, 'Profile Error') +
-        StatusCountModule.countOf(filter, 'Not Reviewed');
-      if (total === 0) {
-        series.push(0);
-      } else {
-        series.push(Math.round((100.0 * passed) / total));
-      }
+      series.push(calculateCompliance(filter));
     }
     return [{name: 'Compliance', data: series}];
   }
