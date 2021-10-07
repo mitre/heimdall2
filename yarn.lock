@@ -15522,13 +15522,13 @@ nth-check@^1.0.2:
   dependencies:
     boolbase "~1.0.0"
 
-null-loader@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/null-loader/-/null-loader-3.0.0.tgz#3e2b6c663c5bda8c73a54357d8fa0708dc61b245"
-  integrity sha512-hf5sNLl8xdRho4UPBOOeoIwT3WhjYcMUQm0zj44EhD6UscMAz72o2udpoDFBgykucdEDGIcd6SXbc/G6zssbzw==
+null-loader@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/null-loader/-/null-loader-4.0.1.tgz#8e63bd3a2dd3c64236a4679428632edd0a6dbc6a"
+  integrity sha512-pxqVbi4U6N26lq+LmgIbB5XATP0VdZKOG25DhHi8btMmJJefGArFyDg1yc4U3hWCJbMqSrw0qyrz1UQX+qYXqg==
   dependencies:
-    loader-utils "^1.2.3"
-    schema-utils "^1.0.0"
+    loader-utils "^2.0.0"
+    schema-utils "^3.0.0"
 
 num2fraction@^1.2.2:
   version "1.2.2"
@@ -20740,11 +20740,11 @@ vue-class-component@^7.0.2:
   integrity sha512-+eaQXVrAm/LldalI272PpDe3+i4mPis0ORiMYxF6Ae4hyuCh15W8Idet7wPUEs4N4YptgFHGys4UrgNQOMyO6w==
 
 vue-cli-plugin-vuetify@~2.4.0:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify/-/vue-cli-plugin-vuetify-2.4.2.tgz#f5c54a853cd5b06633da4a508ff4aa5b6b6275e0"
-  integrity sha512-aJXkzz3CbN/D1/aJ53slsp8hGaruQHhj/mkNjsfpkqhGglLex7UBnvcDwi5+D1tNk+XlddANLgRe9tmCFMorVA==
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify/-/vue-cli-plugin-vuetify-2.4.3.tgz#68a893642b354ed8d534e4a9bc63d0728a8987ac"
+  integrity sha512-dT9KpH1rXT6UWzBDFLMB69sgrNCoWFcxWiIyDDZ4vikv85JDweMHh2dT5n6QaAt7qsGlvL4IMOopjcyUTiPW9g==
   dependencies:
-    null-loader "^3.0.0"
+    null-loader "^4.0.1"
     semver "^7.1.2"
     shelljs "^0.8.3"
 
