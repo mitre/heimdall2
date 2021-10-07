@@ -146,7 +146,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     return `${_.truncate(getControlRunTime(this.control).toString(), {
       length: 5,
       omission: ''
-    })}ms`;
+    })}s`;
   }
 
   get filename(): string | undefined {
