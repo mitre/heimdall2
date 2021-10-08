@@ -11,6 +11,17 @@ export class ConfigService {
     this.appConfig = new AppConfig();
   }
 
+  public sensitiveKeys = [
+    /cookie/i,
+    /passw(or)?d/i,
+    /^pw$/,
+    /^pass$/i,
+    /secret/i,
+    /token/i,
+    /api[-._]?key/i,
+    /data/i
+  ];
+
   isRegistrationAllowed(): boolean {
     return this.get('REGISTRATION_DISABLED')?.toLowerCase() !== 'true';
   }
