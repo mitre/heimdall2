@@ -39,6 +39,11 @@ export class ConfigService {
     });
     return new StartupSettingsDto({
       banner: this.get('WARNING_BANNER') || '',
+      classificationBannerColor:
+        this.get('CLASSIFICATION_BANNER_COLOR') || 'red',
+      classificationBannerText: this.get('CLASSIFICATION_BANNER_TEXT') || '',
+      classificationBannerTextColor:
+        this.get('CLASSIFICATION_BANNER_TEXT_COLOR') || 'white',
       enabledOAuth: enabledOauth,
       oidcName: this.get('OIDC_NAME') || '',
       ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false,
