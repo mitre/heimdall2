@@ -18,6 +18,21 @@
       "internalConsoleOptions": "neverOpen",
       "port": 9229,
       "smartStep": true
+    },
+    {
+      "name": "Debug HDF Converters Jest Tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "${workspaceRoot}/libs/hdf-converters/node_modules/.bin/jest",
+        "--runInBand"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceRoot}/libs/hdf-converters",
+      "internalConsoleOptions": "neverOpen",
+      "port": 9229,
+      "smartStep": true
     }
   ]
 }

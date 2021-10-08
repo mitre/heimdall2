@@ -1,17 +1,22 @@
-import parse from 'csv-parse/lib/sync';
-import fs from 'fs';
+import {default as data} from '../../data/owasp-nist-mapping.json';
 import {OwaspNistMappingItem} from './OwaspNistMappingItem';
+
+export interface IOWASPJSONID {
+  'OWASP-ID': string;
+  'OWASP Name': string;
+  'NIST-ID': string;
+  Rev: number;
+  'NIST Name': string;
+}
 
 export class OwaspNistMapping {
   data: OwaspNistMappingItem[];
 
-  constructor(csvDataPath: string) {
+  constructor() {
     this.data = [];
-    const contents = parse(fs.readFileSync(csvDataPath, {encoding: 'utf-8'}), {
-      skip_empty_lines: true
-    });
-    if (Array.isArray(contents)) {
-      contents.slice(1).forEach((line: string[]) => {
+
+    if (Array.isArray(data)) {
+      data.forEach((line: IOWASPJSONID) => {
         this.data.push(new OwaspNistMappingItem(line));
       });
     }

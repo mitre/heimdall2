@@ -186,7 +186,7 @@ $ cf push
 
 ## External Data Sources
 
-Heimdall currently supports two external data sources for loading HDF data: AWS S3 and Splunk. 
+Heimdall currently supports AWS S3 for loading external HDF data. 
 
 ### AWS S3
 
@@ -210,12 +210,6 @@ In order to allow Heidmdall to Connect to your AWS S3 bucket, you need to [add a
     }
 ]
 ```
-
-
-
-### Splunk
-
-First you need to [install the HDF -> Splunk Plugin](https://github.com/mitre/hdf-json-to-splunk#installation) and [enable Cross-Origin Resource Sharing](https://github.com/mitre/hdf-json-to-splunk#user-content-reading-this-data-back-out-in-heimdall-lite) to allow Heimdall to read your data. Then you can use the Splunk tab inside of the Upload Modal presented to you when you load Heimdall.
 
 ## API Usage
 
@@ -333,9 +327,7 @@ The first command will start an instance of Heimdall Server and exposes addition
 
 **Note:** This action requires appropriate privileges on the repository to perform.
 
-1. Ensure you have pulled the latest copy of the code locally onto your machine.
-1. Using `lerna version`, run `lerna version <explicit version>` or alternatively use one of the appropriate lerna keywords: `'major', 'minor', 'patch', 'premajor', 'preminor', 'prepatch', or 'prerelease'` to bump the version. This will push a new tag to Github.
-1. Navigate to `Releases` on Github and edit the release notes that `Release Drafter` has created for you, and assign them to the tag that you just pushed.
+The steps to create a release are now on the [wiki](https://github.com/mitre/heimdall2/wiki/How-to-create-a-Heimdall2-release).
 
 ## Versioning and State of Development
 

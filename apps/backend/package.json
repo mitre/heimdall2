@@ -1,6 +1,6 @@
 {
   "name": "heimdall-server",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "description": "",
   "license": "Apache-2.0",
   "author": "",
@@ -44,8 +44,8 @@
   },
   "dependencies": {
     "@casl/ability": "^5.2.2",
-    "@heimdall/interfaces": "^2.5.0",
-    "@heimdall/password-complexity": "^2.5.0",
+    "@heimdall/interfaces": "^2.5.2",
+    "@heimdall/password-complexity": "^2.5.2",
     "@nestjs/cli": "^8.0.2",
     "@nestjs/common": "^8.0.2",
     "@nestjs/core": "^8.0.2",

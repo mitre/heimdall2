@@ -1,7 +1,6 @@
 import parser from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
-import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
@@ -26,15 +25,8 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 const COMPLIANCE_PATH = 'cm:compliance-reference';
 const NA_PLUGIN_OUTPUT = 'This Nessus Plugin does not provide output message.';
-const NESSUS_PLUGINS_NIST_MAPPING_FILE = path.resolve(
-  __dirname,
-  '../data/nessus-plugins-nist-mapping.csv'
-);
-const NESSUS_PLUGINS_NIST_MAPPING = new NessusPluginsNistMapping(
-  NESSUS_PLUGINS_NIST_MAPPING_FILE
-);
-const CCI_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/U_CCI_List.xml');
-const CCI_NIST_MAPPING = new CciNistMapping(CCI_NIST_MAPPING_FILE);
+const NESSUS_PLUGINS_NIST_MAPPING = new NessusPluginsNistMapping();
+const CCI_NIST_MAPPING = new CciNistMapping();
 const DEFAULT_NIST_TAG = ['unmapped'];
 
 function parseXml(xml: string): Record<string, unknown> {
