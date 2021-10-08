@@ -327,9 +327,7 @@ The first command will start an instance of Heimdall Server and exposes addition
 
 **Note:** This action requires appropriate privileges on the repository to perform.
 
-1. Ensure you have pulled the latest copy of the code locally onto your machine.
-1. Using `lerna version`, run `lerna version <explicit version>` or alternatively use one of the appropriate lerna keywords: `'major', 'minor', 'patch', 'premajor', 'preminor', 'prepatch', or 'prerelease'` to bump the version. This will push a new tag to Github.
-1. Navigate to `Releases` on Github and edit the release notes that `Release Drafter` has created for you, and assign them to the tag that you just pushed.
+The steps to create a release are now on the [wiki](https://github.com/mitre/heimdall2/wiki/How-to-create-a-Heimdall2-release).
 
 ## Versioning and State of Development
 

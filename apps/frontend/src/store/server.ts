@@ -26,6 +26,9 @@ export interface IServerState {
   loading: boolean;
   token: string;
   banner: string;
+  classificationBannerColor: string;
+  classificationBannerText: string;
+  classificationBannerTextColor: string;
   enabledOAuth: string[];
   registrationEnabled: boolean;
   oidcName: string;
@@ -41,6 +44,9 @@ export interface IServerState {
 })
 class Server extends VuexModule implements IServerState {
   banner = '';
+  classificationBannerColor = '';
+  classificationBannerText = '';
+  classificationBannerTextColor = '';
   ldap = false;
   serverUrl = '';
   serverMode = false;
@@ -83,6 +89,9 @@ class Server extends VuexModule implements IServerState {
   @Mutation
   SET_STARTUP_SETTINGS(settings: IStartupSettings) {
     this.banner = settings.banner;
+    this.classificationBannerText = settings.classificationBannerText;
+    this.classificationBannerColor = settings.classificationBannerColor;
+    this.classificationBannerTextColor = settings.classificationBannerTextColor;
     this.enabledOAuth = settings.enabledOAuth;
     this.registrationEnabled = settings.registrationEnabled;
     this.oidcName = settings.oidcName;
