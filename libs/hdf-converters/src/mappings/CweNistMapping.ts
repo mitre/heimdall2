@@ -1,17 +1,22 @@
-import parse from 'csv-parse/lib/sync';
-import * as fs from 'fs';
+import {default as data} from '../../data/cwe-nist-mapping.json';
 import {CweNistMappingItem} from './CweNistMappingItem';
+
+export interface ICWEJSONID {
+  'CWE-ID': number;
+  'CWE Name': string;
+  'NIST-ID': string;
+  Rev: number;
+  'NIST Name': string;
+}
 
 export class CweNistMapping {
   data: CweNistMappingItem[];
 
-  constructor(csvDataPath: string) {
+  constructor() {
     this.data = [];
-    const contents = parse(fs.readFileSync(csvDataPath, {encoding: 'utf-8'}), {
-      skip_empty_lines: true
-    });
-    if (Array.isArray(contents)) {
-      contents.slice(1).forEach((line: string[]) => {
+
+    if (Array.isArray(data)) {
+      data.forEach((line: ICWEJSONID) => {
         this.data.push(new CweNistMappingItem(line));
       });
     }
