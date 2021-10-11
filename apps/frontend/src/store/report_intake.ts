@@ -7,6 +7,19 @@ import Store from '@/store/store';
 import {Tag} from '@/types/models';
 import {read_file_async} from '@/utilities/async_util';
 import {
+  BurpSuiteMapper,
+  DBProtectMapper,
+  JfrogXrayMapper,
+  NessusResults,
+  NetsparkerMapper,
+  NiktoMapper,
+  SarifMapper,
+  ScoutsuiteMapper,
+  SnykResults,
+  XCCDFResultsMapper,
+  ZapMapper
+} from '@mitre/hdf-converters';
+import {
   ContextualizedEvaluation,
   ContextualizedProfile,
   contextualizeEvaluation,
@@ -14,6 +27,7 @@ import {
   ConversionResult,
   convertFile
 } from 'inspecjs';
+import _ from 'lodash';
 import {v4 as uuid} from 'uuid';
 import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
 import {FilteredDataModule} from './data_filters';
@@ -82,6 +96,22 @@ export type TextLoadOptions = {
   text: string;
 };
 
+// Fields to look for inside of JSON structures to determine type before passing to hdf-converters
+export const fileTypeFingerprints = {
+  fortify: ['FVDL', 'FVDL.EngineData.EngineVersion', 'FVDL.UUID'],
+  jfrog: ['total_count', 'data'],
+  nikto: ['banner', 'host', 'ip', 'port', 'vulnerabilities'],
+  sarif: ['$schema', 'version', 'runs'],
+  snyk: [
+    'projectName',
+    'policy',
+    'summary',
+    'vulnerabilities',
+    'vulnerabilities[0].identifiers'
+  ],
+  zap: ['@generated', '@version', 'site']
+};
+
 @Module({
   namespaced: true,
   dynamic: true,
@@ -94,13 +124,111 @@ export class InspecIntake extends VuexModule {
    */
   @Action
   async loadFile(options: FileLoadOptions): Promise<FileID> {
-    const read = read_file_async(options.file);
-    return read.then((text) =>
-      this.loadText({
-        text,
+    const read = await read_file_async(options.file);
+    if (await this.isHDF(read)) {
+      return this.loadText({
+        text: read,
         filename: options.file.name
-      })
+      });
+    } else {
+      return this.loadText({
+        text: await this.convertToHdf({file: options, data: read}),
+        filename: options.file.name
+      });
+    }
+  }
+
+  @Action
+  async isHDF(data: string): Promise<boolean> {
+    try {
+      // If our data loads correctly it could be HDF
+      const parsed = JSON.parse(data);
+      return parsed.platform !== undefined;
+    } catch {
+      // HDF isn't valid json, we have a different format
+      return false;
+    }
+  }
+
+  @Action
+  async convertToHdf(convertOptions: {
+    file: FileLoadOptions;
+    data: string;
+  }): Promise<string> {
+    try {
+      const parsed = JSON.parse(convertOptions.data);
+      // If the data passed is valid json, try to match up known keys
+      const typeGuess = await this.guessType(parsed);
+      if (typeGuess === 'jfrog') {
+        return JSON.stringify(new JfrogXrayMapper(convertOptions.data).toHdf());
+      } else if (typeGuess === 'zap') {
+        return JSON.stringify(new ZapMapper(convertOptions.data).toHdf());
+      } else if (typeGuess === 'nikto') {
+        return JSON.stringify(new NiktoMapper(convertOptions.data).toHdf());
+      } else if (typeGuess === 'sarif') {
+        return JSON.stringify(new SarifMapper(convertOptions.data).toHdf());
+      } else if (typeGuess === 'snyk') {
+        return JSON.stringify(new SnykResults(convertOptions.data).toHdf());
+      }
+    } catch {
+      // If we don't have JSON, fall back to checking strings inside of the text
+      // Nessus
+      if (convertOptions.file.file.name.toLowerCase().endsWith('.nessus')) {
+        return JSON.stringify(new NessusResults(convertOptions.data).toHdf());
+      }
+      // XCCDF Results
+      else if (
+        // If the file contains the Checklist schema or has xccdf in the filename
+        convertOptions.data.indexOf(
+          'schemaLocation="http://checklists.nist.gov/xccdf'
+        ) !== -1 ||
+        convertOptions.file.file.name.toLowerCase().indexOf('xccdf') !== -1
+      ) {
+        return JSON.stringify(
+          new XCCDFResultsMapper(convertOptions.data).toHdf()
+        );
+      }
+      // Burp Suite
+      else if (convertOptions.data.indexOf('issues burpVersion') !== -1) {
+        return JSON.stringify(new BurpSuiteMapper(convertOptions.data).toHdf());
+      }
+      // Scoutsuite
+      else if (convertOptions.data.indexOf('scoutsuite_results') !== -1) {
+        return JSON.stringify(
+          new ScoutsuiteMapper(convertOptions.data).toHdf()
+        );
+      }
+      // DBProtect
+      else if (
+        convertOptions.data.indexOf('Policy') !== -1 &&
+        convertOptions.data.indexOf('Job Name') !== -1 &&
+        convertOptions.data.indexOf('Check ID') !== -1 &&
+        convertOptions.data.indexOf('Result Status')
+      ) {
+        return JSON.stringify(new DBProtectMapper(convertOptions.data).toHdf());
+      } else if (convertOptions.data.indexOf('netsparker-enterprise')) {
+        return JSON.stringify(
+          new NetsparkerMapper(convertOptions.data).toHdf()
+        );
+      }
+    }
+
+    // If none of these match, return the original data
+    return convertOptions.data;
+  }
+
+  @Action
+  async guessType(parsedJSON: Record<string, unknown>): Promise<string> {
+    // Find the fingerprints that have the most matches
+    const fingerprinted = Object.entries(fileTypeFingerprints).reduce(
+      (a, b) => {
+        return a[1].filter((value) => _.get(parsedJSON, value)).length >
+          b[1].filter((value) => _.get(parsedJSON, value)).length
+          ? a
+          : b;
+      }
     );
+    return fingerprinted[0];
   }
 
   @Action
