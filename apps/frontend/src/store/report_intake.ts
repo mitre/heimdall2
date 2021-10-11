@@ -25,12 +25,14 @@ import {
   contextualizeEvaluation,
   contextualizeProfile,
   ConversionResult,
-  convertFile
+  convertFile,
+  ExecJSON
 } from 'inspecjs';
 import _ from 'lodash';
 import {v4 as uuid} from 'uuid';
 import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
 import {FilteredDataModule} from './data_filters';
+import {SnackbarModule} from './snackbar';
 
 /** Each FileID corresponds to a unique File in this store */
 export type FileID = string;
@@ -84,16 +86,23 @@ export type FileLoadOptions = {
 export type TextLoadOptions = {
   /** The filename to denote this object with */
   filename: string;
-
   database_id?: string;
-
   createdAt?: Date;
   updatedAt?: Date;
-
   tags?: Tag[];
 
   /** The text to use for it. */
   text: string;
+};
+
+export type ExecJSONLoadOptions = {
+  /** The filename to denote this object with */
+  filename: string;
+  database_id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  tags?: Tag[];
+  data: ExecJSON.Execution;
 };
 
 // Fields to look for inside of JSON structures to determine type before passing to hdf-converters
@@ -123,7 +132,7 @@ export class InspecIntake extends VuexModule {
    * Load a file with the specified options. Promises an error message on failure
    */
   @Action
-  async loadFile(options: FileLoadOptions): Promise<FileID> {
+  async loadFile(options: FileLoadOptions): Promise<FileID | FileID[]> {
     const read = await read_file_async(options.file);
     if (await this.isHDF(read)) {
       return this.loadText({
@@ -131,10 +140,24 @@ export class InspecIntake extends VuexModule {
         filename: options.file.name
       });
     } else {
-      return this.loadText({
-        text: await this.convertToHdf({file: options, data: read}),
-        filename: options.file.name
-      });
+      const converted = await this.convertToHdf({file: options, data: read});
+      if (Array.isArray(converted)) {
+        return Promise.all(
+          converted.map((evaluation) => {
+            return this.loadExecJson({
+              data: evaluation,
+              filename: options.file.name
+            });
+          })
+        );
+      } else if (converted) {
+        return this.loadExecJson({
+          data: converted,
+          filename: options.file.name
+        });
+      } else {
+        return [];
+      }
     }
   }
 
@@ -154,27 +177,27 @@ export class InspecIntake extends VuexModule {
   async convertToHdf(convertOptions: {
     file: FileLoadOptions;
     data: string;
-  }): Promise<string> {
+  }): Promise<ExecJSON.Execution | ExecJSON.Execution[] | void> {
     try {
       const parsed = JSON.parse(convertOptions.data);
       // If the data passed is valid json, try to match up known keys
       const typeGuess = await this.guessType(parsed);
       if (typeGuess === 'jfrog') {
-        return JSON.stringify(new JfrogXrayMapper(convertOptions.data).toHdf());
+        return new JfrogXrayMapper(convertOptions.data).toHdf();
       } else if (typeGuess === 'zap') {
-        return JSON.stringify(new ZapMapper(convertOptions.data).toHdf());
+        return new ZapMapper(convertOptions.data).toHdf();
       } else if (typeGuess === 'nikto') {
-        return JSON.stringify(new NiktoMapper(convertOptions.data).toHdf());
+        return new NiktoMapper(convertOptions.data).toHdf();
       } else if (typeGuess === 'sarif') {
-        return JSON.stringify(new SarifMapper(convertOptions.data).toHdf());
+        return new SarifMapper(convertOptions.data).toHdf();
       } else if (typeGuess === 'snyk') {
-        return JSON.stringify(new SnykResults(convertOptions.data).toHdf());
+        return new SnykResults(convertOptions.data).toHdf();
       }
     } catch {
       // If we don't have JSON, fall back to checking strings inside of the text
       // Nessus
       if (convertOptions.file.file.name.toLowerCase().endsWith('.nessus')) {
-        return JSON.stringify(new NessusResults(convertOptions.data).toHdf());
+        return new NessusResults(convertOptions.data).toHdf();
       }
       // XCCDF Results
       else if (
@@ -184,19 +207,15 @@ export class InspecIntake extends VuexModule {
         ) !== -1 ||
         convertOptions.file.file.name.toLowerCase().indexOf('xccdf') !== -1
       ) {
-        return JSON.stringify(
-          new XCCDFResultsMapper(convertOptions.data).toHdf()
-        );
+        return new XCCDFResultsMapper(convertOptions.data).toHdf();
       }
       // Burp Suite
       else if (convertOptions.data.indexOf('issues burpVersion') !== -1) {
-        return JSON.stringify(new BurpSuiteMapper(convertOptions.data).toHdf());
+        return new BurpSuiteMapper(convertOptions.data).toHdf();
       }
       // Scoutsuite
       else if (convertOptions.data.indexOf('scoutsuite_results') !== -1) {
-        return JSON.stringify(
-          new ScoutsuiteMapper(convertOptions.data).toHdf()
-        );
+        return new ScoutsuiteMapper(convertOptions.data).toHdf();
       }
       // DBProtect
       else if (
@@ -205,16 +224,14 @@ export class InspecIntake extends VuexModule {
         convertOptions.data.indexOf('Check ID') !== -1 &&
         convertOptions.data.indexOf('Result Status')
       ) {
-        return JSON.stringify(new DBProtectMapper(convertOptions.data).toHdf());
+        return new DBProtectMapper(convertOptions.data).toHdf();
       } else if (convertOptions.data.indexOf('netsparker-enterprise')) {
-        return JSON.stringify(
-          new NetsparkerMapper(convertOptions.data).toHdf()
-        );
+        return new NetsparkerMapper(convertOptions.data).toHdf();
       }
     }
-
-    // If none of these match, return the original data
-    return convertOptions.data;
+    return SnackbarModule.failure(
+      'Invalid file uploaded, no fingerprints matched.'
+    );
   }
 
   @Action
@@ -285,6 +302,36 @@ export class InspecIntake extends VuexModule {
         "Couldn't parse data. See developer's tools for more details."
       );
     }
+    return fileID;
+  }
+
+  // Instead of re-stringifying converted evaluations, add the allow loading the ExecJSON directly.
+  @Action
+  async loadExecJson(options: ExecJSONLoadOptions) {
+    // Convert it
+    const fileID: FileID = uuid();
+    // A bit of chicken and egg here, this will be our circular JSON structure
+    const evalFile = {
+      uniqueId: fileID,
+      filename: options.filename,
+      database_id: options.database_id,
+      createdAt: options.createdAt,
+      updatedAt: options.updatedAt,
+      tags: options.tags
+    } as EvaluationFile;
+
+    // Fixup the evaluation to be Sourced from a file.
+    const evaluation = contextualizeEvaluation(
+      options.data
+    ) as SourcedContextualizedEvaluation;
+    evaluation.from_file = evalFile;
+
+    // Set and freeze
+    evalFile.evaluation = evaluation;
+    Object.freeze(evaluation);
+    InspecDataModule.addExecution(evalFile);
+    FilteredDataModule.toggle_evaluation(evalFile.uniqueId);
+
     return fileID;
   }
 }

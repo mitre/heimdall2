@@ -91,10 +91,16 @@ export default class FileReader extends mixins(ServerMixin) {
         });
       })
     )
-      .then((fileIds: (FileID | void)[]) => {
-        // Since catching errors is handled by loadFile above,
-        // filter(Boolean) is used here to remove any falsey values.
-        this.$emit('got-files', fileIds.filter(Boolean));
+      .then((fileIds: (FileID | FileID[] | void)[]) => {
+        const allIds: FileID[] = [];
+        fileIds.forEach((fileId) => {
+          if (Array.isArray(fileId)) {
+            allIds.push(...fileId.filter(Boolean));
+          } else if (fileId) {
+            allIds.push(fileId);
+          }
+        });
+        this.$emit('got-files', allIds);
       })
       .finally(() => {
         this.loading = false;
