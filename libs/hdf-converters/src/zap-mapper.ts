@@ -12,8 +12,17 @@ import {CweNistMapping} from './mappings/CweNistMapping';
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
-function filterSite<T>(input: Array<T>, name: string) {
-  return input.find((element) => _.get(element, '@name') === name);
+function filterSite<T>(input: Array<T>, name?: string) {
+  // Choose the site passed if provided
+  if (name) {
+    return input.find((element) => _.get(element, '@name') === name);
+  }
+  // Otherwise choose the site with the most alerts
+  else {
+    return input.reduce((a, b) =>
+      _.get(a, 'alerts').length > _.get(b, 'alerts').length ? a : b
+    );
+  }
 }
 function impactMapping(input: unknown): number {
   if (typeof input === 'string') {
@@ -152,7 +161,7 @@ export class ZapMapper extends BaseConverter {
       }
     ]
   };
-  constructor(zapJson: string, name: string) {
+  constructor(zapJson: string, name?: string) {
     super(
       _.set(
         JSON.parse(zapJson),
