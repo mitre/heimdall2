@@ -140,7 +140,10 @@ export class InspecIntake extends VuexModule {
         filename: options.file.name
       });
     } else {
-      const converted = await this.convertToHdf({file: options, data: read});
+      const converted = await this.convertToHdf({
+        fileOptions: options,
+        data: read
+      });
       if (Array.isArray(converted)) {
         return Promise.all(
           converted.map((evaluation) => {
@@ -178,7 +181,7 @@ export class InspecIntake extends VuexModule {
 
   @Action
   async convertToHdf(convertOptions: {
-    file: FileLoadOptions;
+    fileOptions: FileLoadOptions;
     data: string;
   }): Promise<ExecJSON.Execution | ExecJSON.Execution[] | void> {
     try {
@@ -199,7 +202,9 @@ export class InspecIntake extends VuexModule {
     } catch {
       // If we don't have JSON, fall back to checking strings inside of the text
       // Nessus
-      if (convertOptions.file.file.name.toLowerCase().endsWith('.nessus')) {
+      if (
+        convertOptions.fileOptions.file.name.toLowerCase().endsWith('.nessus')
+      ) {
         return new NessusResults(convertOptions.data).toHdf();
       }
       // XCCDF Results
@@ -208,7 +213,8 @@ export class InspecIntake extends VuexModule {
         convertOptions.data.indexOf(
           'schemaLocation="http://checklists.nist.gov/xccdf'
         ) !== -1 ||
-        convertOptions.file.file.name.toLowerCase().indexOf('xccdf') !== -1
+        convertOptions.fileOptions.file.name.toLowerCase().indexOf('xccdf') !==
+          -1
       ) {
         return new XCCDFResultsMapper(convertOptions.data).toHdf();
       }

@@ -91,6 +91,7 @@ export default class FileReader extends mixins(ServerMixin) {
         });
       })
     )
+      // Since some HDF converters can return multiple results sets, we can sometimes have multiple file IDs returned
       .then((fileIds: (FileID | FileID[] | void)[]) => {
         const allIds: FileID[] = [];
         fileIds.forEach((fileId) => {
