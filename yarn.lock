@@ -4085,9 +4085,9 @@
     "@types/node" "*"
 
 "@types/objects-to-csv@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@types/objects-to-csv/-/objects-to-csv-1.3.0.tgz#81972cbfc4b00acf8c923f0983bb5065e95070f5"
-  integrity sha512-XpoV1G8YBbWAwHvQ7kHf6OLor5hhAdd82MV/rBRgznNiRTjDxVjYYU2oC723A9PbpmjdbIPi0pSx5IwfbqLm5A==
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@types/objects-to-csv/-/objects-to-csv-1.3.1.tgz#febce1e3103cb74e54054088fb801dcb02ea7903"
+  integrity sha512-RGZdFlzuj/3ARNTgrf/yJCKREZ2HGYP///wq3pxYWhsw47ImY0FFIBjyNcgdN9Us6lvIMdW6RfubpCAiJb65mg==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
