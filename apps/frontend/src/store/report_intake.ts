@@ -166,7 +166,10 @@ export class InspecIntake extends VuexModule {
     try {
       // If our data loads correctly it could be HDF
       const parsed = JSON.parse(data);
-      return parsed.platform !== undefined;
+      return (
+        Array.isArray(parsed.profiles) || // Execution JSON
+        (Boolean(parsed.controls) && Boolean(parsed.sha256)) // Profile JSON
+      );
     } catch {
       // HDF isn't valid json, we have a different format
       return false;
