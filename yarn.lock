@@ -152,15 +152,15 @@
     tslib "^2.3.0"
 
 "@aws-sdk/client-config-service@^3.23.0":
-  version "3.36.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.36.0.tgz#1790460be6713c8af7c1f0fd1dc78bc270188c28"
-  integrity sha512-EYgMbReINeULr/Ao6CZwbz4aJjIH8gC55sIY6DNuBSWOuTxYVQUvueyd/I6H8q9fKu4LGRMP4B5yfmFDhZxnaA==
+  version "3.36.1"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.36.1.tgz#2013b7c5a7fc67149b08c5a165ee2e3bcf8102d9"
+  integrity sha512-h8AK9ZnEfMl3BWMh1t7R5eIE23dAwJrpJ/g/y3HMV+3+VujkqJgwaoMx0gBe1R1gx48VI/GMCVMabRDDiEP91w==
   dependencies:
     "@aws-crypto/sha256-browser" "^1.0.0"
     "@aws-crypto/sha256-js" "^1.0.0"
-    "@aws-sdk/client-sts" "3.36.0"
+    "@aws-sdk/client-sts" "3.36.1"
     "@aws-sdk/config-resolver" "3.36.0"
-    "@aws-sdk/credential-provider-node" "3.36.0"
+    "@aws-sdk/credential-provider-node" "3.36.1"
     "@aws-sdk/fetch-http-handler" "3.36.0"
     "@aws-sdk/hash-node" "3.36.0"
     "@aws-sdk/invalid-dependency" "3.36.0"
@@ -188,10 +188,10 @@
     "@aws-sdk/util-utf8-node" "3.36.0"
     tslib "^2.3.0"
 
-"@aws-sdk/client-sso@3.36.0":
-  version "3.36.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-sso/-/client-sso-3.36.0.tgz#3f0b69d9f8ca9aeff34b63b9431e439642e96451"
-  integrity sha512-AYGX9nz0zv1IslX/N5Qe83PX9Fgu7Lvf+LIVeBocZzF4IlcHx5lYAVAWi/Bzr1wGWRFBC/XI3JZwXuzmrjWc1A==
+"@aws-sdk/client-sso@3.36.1":
+  version "3.36.1"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-sso/-/client-sso-3.36.1.tgz#bce2d51695c92e81400465ddc1625ad420e77ada"
+  integrity sha512-ZYhsmzv5aCoIvP+NqWr50jY8suA/lZkV5jRmwW6jbgEdxO2G32eV0I3jeNplZYhLx3PdfOWpTdnSsYEaiFD2iA==
   dependencies:
     "@aws-crypto/sha256-browser" "^1.0.0"
     "@aws-crypto/sha256-js" "^1.0.0"
@@ -222,15 +222,15 @@
     "@aws-sdk/util-utf8-node" "3.36.0"
     tslib "^2.3.0"
 
-"@aws-sdk/client-sts@3.36.0":
-  version "3.36.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-sts/-/client-sts-3.36.0.tgz#78df5113194d04a9ca2b82d81c8def4057e08483"
-  integrity sha512-NQ3BjVMvbTshWI2w1kTo8G3EHKUN7wsDz7Ixvjxm6mxSHVqgM+Yehuz52H0donynY+3O2rs+dafIOL+DESVsIQ==
+"@aws-sdk/client-sts@3.36.1":
+  version "3.36.1"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-sts/-/client-sts-3.36.1.tgz#f450135c7f864be019bcfaef3cba1e59d5539697"
+  integrity sha512-Bvpr1dquJs6lRd2hu/BjfUz2nfP/ESXsxh0YR0H7HMq+RtW2Mr+IDIV6n+EK5te21VUmc47LVpPfdiYDWyRxLQ==
   dependencies:
     "@aws-crypto/sha256-browser" "^1.0.0"
     "@aws-crypto/sha256-js" "^1.0.0"
     "@aws-sdk/config-resolver" "3.36.0"
-    "@aws-sdk/credential-provider-node" "3.36.0"
+    "@aws-sdk/credential-provider-node" "3.36.1"
     "@aws-sdk/fetch-http-handler" "3.36.0"
     "@aws-sdk/hash-node" "3.36.0"
     "@aws-sdk/invalid-dependency" "3.36.0"
@@ -290,14 +290,14 @@
     "@aws-sdk/url-parser" "3.36.0"
     tslib "^2.3.0"
 
-"@aws-sdk/credential-provider-ini@3.36.0":
-  version "3.36.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-ini/-/credential-provider-ini-3.36.0.tgz#68531a3bfd810c94261e78d153de07728634e5f8"
-  integrity sha512-d6X+cb82xokJyGq5TUITLuLa0uww93H6mSWeTdhpal5h02tidnTCT9+mrHsMXTtUYMrEKYbqIj7xfBZ1V+jNYw==
+"@aws-sdk/credential-provider-ini@3.36.1":
+  version "3.36.1"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-ini/-/credential-provider-ini-3.36.1.tgz#b28f3b2c7ba7282ec624d8a1fce8a9c4b806205a"
+  integrity sha512-DqApaEr6khLcPOiZBjQeZqQ8A4eI9DJrlmlP5Ov2p0ne5miXEddwXaqGAFryF+ylMdPOvfjJvza1TkRD7MxhwA==
   dependencies:
     "@aws-sdk/credential-provider-env" "3.36.0"
     "@aws-sdk/credential-provider-imds" "3.36.0"
-    "@aws-sdk/credential-provider-sso" "3.36.0"
+    "@aws-sdk/credential-provider-sso" "3.36.1"
     "@aws-sdk/credential-provider-web-identity" "3.36.0"
     "@aws-sdk/property-provider" "3.36.0"
     "@aws-sdk/shared-ini-file-loader" "3.36.0"
@@ -305,16 +305,16 @@
     "@aws-sdk/util-credentials" "3.36.0"
     tslib "^2.3.0"
 
-"@aws-sdk/credential-provider-node@3.36.0":
-  version "3.36.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-node/-/credential-provider-node-3.36.0.tgz#54c6e0b5c0ff3e2fb52dd7df0de6f04b858639b7"
-  integrity sha512-Z0tOT1R7hZv5PLSCIf+2twZmPvzOnS7mRSR09VUJtzjwkgFT3g+W/vu2j8AyA+cKouw4gbtgds5tYnByL49Yxg==
+"@aws-sdk/credential-provider-node@3.36.1":
+  version "3.36.1"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-node/-/credential-provider-node-3.36.1.tgz#ebfaae983c64aebed8935818eb01b43591f7d99f"
+  integrity sha512-SHBZOq+jOO/9Yqdrig5ATSLifjdNeVdi5/trCQj2ynwO6N9bAde0V1ni9TdBU/4kejYdtL+vIeEg8R29n1fMoA==
   dependencies:
     "@aws-sdk/credential-provider-env" "3.36.0"
     "@aws-sdk/credential-provider-imds" "3.36.0"
-    "@aws-sdk/credential-provider-ini" "3.36.0"
+    "@aws-sdk/credential-provider-ini" "3.36.1"
     "@aws-sdk/credential-provider-process" "3.36.0"
-    "@aws-sdk/credential-provider-sso" "3.36.0"
+    "@aws-sdk/credential-provider-sso" "3.36.1"
     "@aws-sdk/credential-provider-web-identity" "3.36.0"
     "@aws-sdk/property-provider" "3.36.0"
     "@aws-sdk/shared-ini-file-loader" "3.36.0"
@@ -333,12 +333,12 @@
     "@aws-sdk/util-credentials" "3.36.0"
     tslib "^2.3.0"
 
-"@aws-sdk/credential-provider-sso@3.36.0":
-  version "3.36.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-sso/-/credential-provider-sso-3.36.0.tgz#8651374f78998250143b140335cbf21d8bd91530"
-  integrity sha512-TUuizFuLaWkY/XE+VArQfzFRYK+uZzuJT3XvfLd4EYPa7yD1V0Wqzj3za7JmQsFIWx6YhTlJmnJRsestuoNDhw==
+"@aws-sdk/credential-provider-sso@3.36.1":
+  version "3.36.1"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-sso/-/credential-provider-sso-3.36.1.tgz#851871673a1c8c23fa413728f2ff7ccb7e12140b"
+  integrity sha512-uS6ZIwq0HbBGD7lhuUr/g2RIpQzEb2gT3e86r5Fesv5eLWTqzkhmXJ5jc7cHPuQK3Ojcu2S8atVcdeUGfdamgw==
   dependencies:
-    "@aws-sdk/client-sso" "3.36.0"
+    "@aws-sdk/client-sso" "3.36.1"
     "@aws-sdk/property-provider" "3.36.0"
     "@aws-sdk/shared-ini-file-loader" "3.36.0"
     "@aws-sdk/types" "3.36.0"
