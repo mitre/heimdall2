@@ -21142,9 +21142,9 @@ vuetify-loader@^1.6.0:
     loader-utils "^2.0.0"
 
 vuetify@^2.3.9:
-  version "2.5.9"
-  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-2.5.9.tgz#b6e6d9fff4a1691858f3415eceb2a75ca706d211"
-  integrity sha512-rQaa8MDxnv449l+XCmFCN9bRQpCUT8mewW6yIc6DHiXh9bAneD6jXF023doK0KkcS8+vRSrtgBESsLYA6te+dg==
+  version "2.5.10"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-2.5.10.tgz#165cb3de9dbffbc94bc775aa2f698eb9fa89eabe"
+  integrity sha512-UODZQrib36l7i1WGg0MUvurczLspYTe0nKAmfbwyMs6dC2lG1Q1VV9caqPbCAB9zgG6QIJaOmRQKSKduw9eZTw==
 
 vuex-module-decorators@^1.0.1:
   version "1.0.1"
