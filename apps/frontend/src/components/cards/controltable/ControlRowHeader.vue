@@ -18,7 +18,21 @@
     </template>
 
     <template #set>
-      <div class="pa-2 title" v-text="filename" />
+      <v-row class="pa-4">
+        <div class="pa-2 title" v-text="filename" />
+        <v-tooltip v-if="isOverlaid" bottom>
+          <template #activator="{on, attrs}">
+            <v-icon
+              style="cursor: pointer"
+              class="ml-2"
+              v-bind="attrs"
+              v-on="on"
+              >mdi-delta</v-icon
+            >
+          </template>
+          <span>This control has been modified in an overlay</span>
+        </v-tooltip>
+      </v-row>
     </template>
 
     <template #severity>
@@ -113,20 +127,12 @@ import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSw
 import CircleRating from '@/components/generic/CircleRating.vue';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
+import {getControlRunTime} from '@/utilities/delta_util';
 import {nistCanonConfig, NIST_DESCRIPTIONS} from '@/utilities/nist_util';
 import {ContextualizedControl, is_control, parse_nist} from 'inspecjs';
 import _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-
-export function getControlRunTime(control: ContextualizedControl): number {
-  return (
-    control.hdf.segments?.reduce(
-      (total, segment) => segment.run_time || 0 + total,
-      0
-    ) || 0
-  );
-}
 
 interface Tag {
   label: string;
@@ -154,7 +160,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     return `${_.truncate(getControlRunTime(this.control).toString(), {
       length: 5,
       omission: ''
-    })}ms`;
+    })}s`;
   }
 
   get filename(): string | undefined {
@@ -180,6 +186,10 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
 
   set wasViewed(_value: boolean) {
     this.$emit('control-viewed', this.control);
+  }
+
+  get isOverlaid() {
+    return Boolean(this.control.extendsFrom.length);
   }
 
   severity_arrow_count(severity: string): number {

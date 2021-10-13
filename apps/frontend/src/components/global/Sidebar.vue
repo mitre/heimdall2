@@ -3,7 +3,7 @@
     :value="value"
     :clipped="$vuetify.breakpoint.lgAndUp"
     app
-    style="margin-top: 48px; z-index: 11"
+    :style="{'margin-top': classification ? '5em' : '3.5em', 'z-index': 11}"
     disable-resize-watcher
     disable-route-watcher
     fixed
@@ -43,6 +43,7 @@ import {InspecDataModule} from '@/store/data_store';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
+import {ServerModule} from '../../store/server';
 
 @Component({
   components: {
@@ -99,6 +100,10 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   get compareViewActive(): boolean {
     return this.current_route === 'compare';
+  }
+
+  get classification(): string {
+    return ServerModule.classificationBannerText;
   }
 
   // toggle the "select all" for profiles

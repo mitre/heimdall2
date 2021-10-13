@@ -13,7 +13,7 @@
 <script lang="ts">
 import {ColorHackModule} from '@/store/color_hack';
 import {Filter} from '@/store/data_filters';
-import {StatusCountModule} from '@/store/status_counts';
+import {calculateCompliance} from '@/store/status_counts';
 import {ApexOptions} from 'apexcharts';
 import Vue from 'vue';
 import VueApexCharts from 'vue-apexcharts';
@@ -84,19 +84,7 @@ export default class ComplianceChart extends Vue {
    * We actually generate our series ourself! This is what shows up in the chart. It should be a single value
    */
   get series(): number[] {
-    // Get access to the status counts, to compute compliance percentages
-    const passed = StatusCountModule.countOf(this.filter, 'Passed');
-    const total =
-      passed +
-      StatusCountModule.countOf(this.filter, 'Failed') +
-      StatusCountModule.countOf(this.filter, 'Profile Error') +
-      StatusCountModule.countOf(this.filter, 'Not Reviewed') +
-      StatusCountModule.countOf(this.filter, 'Waived');
-    if (total === 0) {
-      return [0];
-    } else {
-      return [Math.round((100.0 * passed) / total)];
-    }
+    return [calculateCompliance(this.filter)];
   }
 }
 </script>
