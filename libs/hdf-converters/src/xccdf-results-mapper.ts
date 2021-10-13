@@ -1,7 +1,6 @@
 import parser from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
-import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
@@ -21,8 +20,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 
 const RULE_DESCRIPTION = 'cdf:Rule.cdf:description';
 const CCI_REGEX = /CCI-(\d*)/;
-const CCI_NIST_MAPPING_FILE = path.resolve(__dirname, '../data/U_CCI_List.xml');
-const CCI_NIST_MAPPING = new CciNistMapping(CCI_NIST_MAPPING_FILE);
+const CCI_NIST_MAPPING = new CciNistMapping();
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5', 'Rev_4'];
 
 let counter = '';

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="evaluation">
     <v-edit-dialog large @save="save" @cancel="syncEvaluationTags">
       <template v-for="tag in evaluation.evaluationTags">
         <v-chip :key="tag.id + '_'" small close @click:close="deleteTag(tag)">{{
@@ -8,7 +8,7 @@
       </template>
       <v-icon small class="ma-2"> mdi-tag-plus </v-icon>
       <template #input>
-        <v-combobox
+        <v-select
           v-model="tags"
           :items="allEvaluationTags"
           :search-input.sync="search"
@@ -31,10 +31,10 @@
               </v-list-item-content>
             </v-list-item>
           </template>
-        </v-combobox>
+        </v-select>
       </template>
     </v-edit-dialog>
-    <DeleteDialog
+    <ActionDialog
       v-model="deleteTagDialog"
       type="tag"
       @cancel="deleteTagDialog = false"
@@ -44,17 +44,17 @@
 </template>
 
 <script lang="ts">
-import DeleteDialog from '@/components/generic/DeleteDialog.vue';
+import ActionDialog from '@/components/generic/ActionDialog.vue';
 import {EvaluationModule} from '@/store/evaluations';
+import {SnackbarModule} from '@/store/snackbar';
 import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {SnackbarModule} from '../../../store/snackbar';
 
 @Component({
   components: {
-    DeleteDialog
+    ActionDialog
   }
 })
 export default class TagRow extends Vue {

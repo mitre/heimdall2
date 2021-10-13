@@ -3,6 +3,7 @@
  */
 
 import {SourcedContextualizedEvaluation} from '@/store/report_intake';
+import {calculateCompliance} from '@/store/status_counts';
 import {ContextualizedControl, ContextualizedEvaluation} from 'inspecjs';
 import {DateTime} from 'luxon';
 
@@ -31,7 +32,7 @@ export class ControlChange {
   }
 
   /** Checks if this actually changes anything.
-   * Returns true iff old !== new
+   * Returns true if old !== new
    */
   get valid(): boolean {
     let firstSelected = -1;
@@ -163,6 +164,33 @@ export function get_eval_start_time(
   return null;
 }
 
+export function getResultsSetExecutionTime(
+  resultsSet: SourcedContextualizedEvaluation
+): number {
+  let time = 0;
+  resultsSet.contains.forEach((value) => {
+    value.contains.forEach((control) => {
+      time += getControlRunTime(control);
+    });
+  });
+  return time;
+}
+
+export function getControlRunTime(control: ContextualizedControl): number {
+  return (
+    control.hdf.segments?.reduce(
+      (total, segment) => (segment.run_time || 0) + total,
+      0
+    ) || 0
+  );
+}
+
+export function getControlCount(
+  resultsSet: SourcedContextualizedEvaluation
+): number {
+  return resultsSet.contains.reduce((sum, li) => sum + li.contains.length, 0);
+}
+
 /**
  * Grabs the "top" (IE non-overlayed/end of overlay chain) controls from the execution.
  *
@@ -256,4 +284,32 @@ export function compare_times(
   const bDate = parse_datetime(get_eval_start_time(b) || '');
 
   return aDate.valueOf() - bDate.valueOf();
+}
+
+export function compareExecutionTimes(
+  a: SourcedContextualizedEvaluation,
+  b: SourcedContextualizedEvaluation
+) {
+  const aExecutionTime = getResultsSetExecutionTime(a);
+  const bExecutionTime = getResultsSetExecutionTime(b);
+  return aExecutionTime - bExecutionTime;
+}
+
+export function compareControlCount(
+  a: SourcedContextualizedEvaluation,
+  b: SourcedContextualizedEvaluation
+) {
+  const aControlCount = getControlCount(a);
+  const bControlCount = getControlCount(b);
+  return aControlCount - bControlCount;
+}
+
+export function compareCompliance(
+  a: SourcedContextualizedEvaluation,
+  b: SourcedContextualizedEvaluation
+) {
+  return (
+    calculateCompliance({fromFile: [a.from_file.uniqueId]}) -
+    calculateCompliance({fromFile: [b.from_file.uniqueId]})
+  );
 }

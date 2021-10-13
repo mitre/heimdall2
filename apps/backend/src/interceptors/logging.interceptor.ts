@@ -8,23 +8,18 @@ import {Request} from 'express';
 import _ from 'lodash';
 import {Observable} from 'rxjs';
 import winston from 'winston';
+import {ConfigService} from '../config/config.service';
 import {SlimUserDto} from '../users/dto/slim-user.dto';
 import {UserDto} from '../users/dto/user.dto';
 import {User} from '../users/user.model';
 
-const sensitiveKeys = [
-  /cookie/i,
-  /passw(or)?d/i,
-  /^pw$/,
-  /^pass$/i,
-  /secret/i,
-  /token/i,
-  /api[-._]?key/i,
-  /data/i
-];
-
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
+  private readonly configService: ConfigService;
+
+  constructor(configService: ConfigService) {
+    this.configService = configService;
+  }
   public logger = winston.createLogger({
     transports: [new winston.transports.Console()],
     format: winston.format.combine(
@@ -89,7 +84,7 @@ export class LoggingInterceptor implements NestInterceptor {
 
   redactObject(obj: Record<string, unknown>): Record<string, unknown> {
     Object.keys(obj).forEach((key) => {
-      if (sensitiveKeys.some((regex) => regex.test(key))) {
+      if (this.configService.sensitiveKeys.some((regex) => regex.test(key))) {
         obj[key] = '[REDACTED]';
       }
     });

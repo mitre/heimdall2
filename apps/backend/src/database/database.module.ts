@@ -5,17 +5,6 @@ import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
 import {DatabaseService} from './database.service';
 
-const sensitiveKeys = [
-  /cookie/i,
-  /passw(or)?d/i,
-  /^pw$/,
-  /^pass$/i,
-  /secret/i,
-  /token/i,
-  /api[-._]?key/i,
-  /data/i
-];
-
 const logger = winston.createLogger({
   transports: [new winston.transports.Console()],
   format: winston.format.combine(
@@ -25,6 +14,8 @@ const logger = winston.createLogger({
     winston.format.printf((info) => `[${[info.timestamp]}] ${info.message}`)
   )
 });
+
+const localConfigService = new ConfigService();
 
 function getSynchronize(configService: ConfigService): boolean {
   const nodeEnvironment = configService.get('NODE_ENV');
@@ -38,7 +29,11 @@ function getSynchronize(configService: ConfigService): boolean {
 function sanitize(fields: string[], values?: string[]): string[] {
   return (
     values?.map((value, index) => {
-      if (sensitiveKeys.some((regex) => regex.test(fields[index]))) {
+      if (
+        localConfigService.sensitiveKeys.some((regex) =>
+          regex.test(fields[index + 1])
+        )
+      ) {
         return 'REDACTED';
       } else {
         return value;

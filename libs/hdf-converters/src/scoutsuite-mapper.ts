@@ -1,6 +1,5 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
-import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
@@ -24,14 +23,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['warning', 0.5]
 ]);
 
-const SCOUTSUITE_NIST_MAPPING_FILE = path.resolve(
-  __dirname,
-  '../data/scoutsuite-nist-mapping.csv'
-);
-
-const SCOUTSUITE_NIST_MAPPING = new ScoutsuiteNistMapping(
-  SCOUTSUITE_NIST_MAPPING_FILE
-);
+const SCOUTSUITE_NIST_MAPPING = new ScoutsuiteNistMapping();
 
 function getRulesetName(file: unknown) {
   return _.get(file, 'last_run.ruleset_name');

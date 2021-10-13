@@ -6,7 +6,9 @@
         <strong>Tool Version:</strong> {{ inspec_version }}
       </div>
       <div v-if="platform"><strong>Platform:</strong> {{ platform }}</div>
-      <div v-if="duration"><strong>Duration:</strong> {{ duration }}</div>
+      <div v-if="duration">
+        <strong>Duration:</strong> {{ duration }} Seconds
+      </div>
       <div v-if="startTime"><strong>Start Time:</strong> {{ startTime }}</div>
       <div v-if="evaluation" class="d-flex flex-nowrap">
         <strong class="pt-2 pr-1">Tags:</strong>

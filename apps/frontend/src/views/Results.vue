@@ -24,6 +24,9 @@
               <ExportCaat :filter="all_filter" />
             </v-list-item>
             <v-list-item class="px-0">
+              <ExportCSVModal :filter="all_filter" />
+            </v-list-item>
+            <v-list-item class="px-0">
               <ExportNist :filter="all_filter" />
             </v-list-item>
             <v-list-item class="px-0">
@@ -34,6 +37,9 @@
                 :filter="all_filter"
                 :file-type="current_route_name"
               />
+            </v-list-item>
+            <v-list-item class="px-0">
+              <ExportCKLModal :filter="all_filter" />
             </v-list-item>
           </v-list>
         </v-menu>
@@ -189,6 +195,8 @@ import StatusChart from '@/components/cards/StatusChart.vue';
 import Treemap from '@/components/cards/treemap/Treemap.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
 import ExportCaat from '@/components/global/ExportCaat.vue';
+import ExportCKLModal from '@/components/global/ExportCKLModal.vue';
+import ExportCSVModal from '@/components/global/ExportCSVModal.vue';
 import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
@@ -229,8 +237,10 @@ import {compare_times} from '../utilities/delta_util';
     SeverityChart,
     ComplianceChart,
     ExportCaat,
+    ExportCSVModal,
     ExportNist,
     ExportJson,
+    ExportCKLModal,
     ExportHTMLModal,
     EvaluationInfo,
     ProfileData,

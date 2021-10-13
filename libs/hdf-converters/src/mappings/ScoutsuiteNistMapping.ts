@@ -1,21 +1,20 @@
-import parse from 'csv-parse/lib/sync';
-import fs from 'fs';
+import {default as data} from '../../data/scoutsuite-nist-mapping.json';
 import {ScoutsuiteNistMappingItem} from './ScoutsuiteNistMappingItem';
 
+export interface ISCOUTSUITEJSONID {
+  RULE: string;
+  'NIST-ID': string;
+}
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
 export class ScoutsuiteNistMapping {
   data: ScoutsuiteNistMappingItem[];
 
-  constructor(csvDataPath: string) {
+  constructor() {
     this.data = [];
-    const contents = parse(fs.readFileSync(csvDataPath, {encoding: 'utf-8'}), {
-      skip_empty_lines: true
-    });
-    if (Array.isArray(contents)) {
-      contents.slice(1).forEach((line: string[]) => {
-        this.data.push(new ScoutsuiteNistMappingItem(line));
-      });
+
+    if (Array.isArray(data)) {
+      this.data = data.map((line) => new ScoutsuiteNistMappingItem(line));
     }
   }
   nistTag(rule: string): string[] {

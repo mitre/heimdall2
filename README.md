@@ -184,6 +184,33 @@ $ cf push
 
 > Note: This is only for demonstration purposes, in order to run a production level federal/FISMA system. You will need to contact the [cloud.gov program](https://cloud.gov) and consult your organization's security team (for risk assessment and an Authority to Operate).
 
+## External Data Sources
+
+Heimdall currently supports AWS S3 for loading external HDF data. 
+
+### AWS S3
+
+In order to allow Heidmdall to Connect to your AWS S3 bucket, you need to [add a Cross-Origin Resource Sharing policy](https://docs.aws.amazon.com/AmazonS3/latest/userguide/enabling-cors-examples.html) within the AWS Console. The following configuration is sufficent, however you need to change the allowed origin to where you are deploying Heimdall.
+
+```json
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "GET",
+            "HEAD"
+        ],
+        "AllowedOrigins": [
+            "https://heimdall.your.site.here"
+        ],
+        "ExposeHeaders": [],
+        "MaxAgeSeconds": 3000
+    }
+]
+```
+
 ## API Usage
 
 API usage only works when using Heimdall Enterprise Server (AKA "Server Mode").
@@ -191,13 +218,8 @@ API usage only works when using Heimdall Enterprise Server (AKA "Server Mode").
 Proper API documentation does not exist yet. In the meantime here are quick instructions for uploading evaluations to Heimdall Server.
 
 ```sh
-# Create a user (only needs to be done once)
-curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "password", "passwordConfirmation": "password", "role": "user", "creationMethod": "local" }' http://localhost:3000/users
-# Log in
-curl -X POST -H "Content-Type: application/json" -d '{"email": "user@example.com", "password": "password" }' http://localhost:3000/authn/login
-# The previous command returns a Bearer Token that needs to get placed in the following command
-# Upload evaluation
-curl -F "data=@Evaluation.json" -F "filename=Your Filename" -F "public=true/false" -H "Authorization: Bearer bearertokengoeshere" "http://localhost:3000/evaluations"
+# Create an API key using the Heimdall frontend and upload an evaluation with the following command
+curl -F "data=@<Path to Evaluation File>" -F "filename=<Filename To Show in Heimdall>" -F "public=true/false" -H "Authorization: Api-Key apikeygoeshere" "http://localhost:3000/evaluations"
 ```
 
 ## For Developers
@@ -224,7 +246,7 @@ If you would like to change Heimdall to your needs, Heimdall has 'Development Mo
    - ```sql
      # Start the Postgres terminal
      psql postgres
-
+  
      # Create the user
      CREATE USER <username> with encrypted password '<password>';
      ALTER USER <username> CREATEDB;
@@ -305,9 +327,7 @@ The first command will start an instance of Heimdall Server and exposes addition
 
 **Note:** This action requires appropriate privileges on the repository to perform.
 
-1. Ensure you have pulled the latest copy of the code locally onto your machine.
-1. Using `lerna version`, run `lerna version <explicit version>` or alternatively use one of the appropriate lerna keywords: `'major', 'minor', 'patch', 'premajor', 'preminor', 'prepatch', or 'prerelease'` to bump the version. This will push a new tag to Github.
-1. Navigate to `Releases` on Github and edit the release notes that `Release Drafter` has created for you, and assign them to the tag that you just pushed.
+The steps to create a release are now on the [wiki](https://github.com/mitre/heimdall2/wiki/How-to-create-a-Heimdall2-release).
 
 ## Versioning and State of Development
 
