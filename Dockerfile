@@ -38,8 +38,6 @@ COPY apps/backend/db /app/apps/backend/db
 COPY apps/backend/config /app/apps/backend/config
 COPY apps/backend/migrations /app/apps/backend/migrations
 COPY apps/backend/seeders /app/apps/backend/seeders
-RUN chown node package.json yarn.lock lerna.json
-RUN chmod 0400 package.json yarn.lock lerna.json
 RUN chown -R node apps libs package.json yarn.lock lerna.json
 RUN chmod 0400 package.json yarn.lock lerna.json libs/interfaces/package.json
 RUN chmod 0500 -R apps libs
