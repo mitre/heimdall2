@@ -297,7 +297,7 @@ export default class ExportCKLModal extends Vue {
     if (this.filter.fromFile.length === 0) {
       return SnackbarModule.failure('No files have been loaded.');
     }
-    axios.get(`/static/export/cklExport.ckl`).then(({data}) => {
+    axios.get<string>(`/static/export/cklExport.ckl`).then(({data}) => {
       this.selected.forEach(async (file) => {
         this.addFiledata(file);
       });
