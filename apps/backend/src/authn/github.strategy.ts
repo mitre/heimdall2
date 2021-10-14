@@ -49,7 +49,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
   ): Promise<User> {
     // Get user's linked emails from Github
     const githubEmails = await axios
-      .get(
+      .get<GithubEmail[]>(
         `${
           this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL') ||
           this.configService.defaultGithubAPIURL
@@ -58,12 +58,12 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
           headers: {Authorization: `token ${accessToken}`}
         }
       )
-      .then((response): GithubEmail[] => {
-        return response.data;
+      .then(({data}) => {
+        return data;
       });
     // Get user's info
     const userInfoResponse = await axios
-      .get(
+      .get<GithubProfile>(
         `${
           this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL') ||
           this.configService.defaultGithubAPIURL
@@ -72,8 +72,8 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
           headers: {Authorization: `token ${accessToken}`}
         }
       )
-      .then((response): GithubProfile => {
-        return response.data;
+      .then(({data}) => {
+        return data;
       });
     let firstName = userInfoResponse.login;
     let lastName = '';
