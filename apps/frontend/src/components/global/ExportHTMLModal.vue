@@ -291,10 +291,14 @@ export default class ExportHTMLModal extends Vue {
     if (this.filter.fromFile.length === 0) {
       return SnackbarModule.failure('No files have been loaded.');
     }
-    const templateRequest = axios.get(`/static/export/template.html`);
-    const bootstrapCSSRequest = axios.get(`/static/export/bootstrap.min.css`);
-    const bootstrapJSRequest = axios.get(`/static/export/bootstrap.min.js`);
-    const jqueryRequest = axios.get(`/static/export/jquery.min.js`);
+    const templateRequest = axios.get<string>(`/static/export/template.html`);
+    const bootstrapCSSRequest = axios.get<string>(
+      `/static/export/bootstrap.min.css`
+    );
+    const bootstrapJSRequest = axios.get<string>(
+      `/static/export/bootstrap.min.js`
+    );
+    const jqueryRequest = axios.get<string>(`/static/export/jquery.min.js`);
 
     axios
       .all([

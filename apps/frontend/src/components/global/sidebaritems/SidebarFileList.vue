@@ -38,7 +38,7 @@ import {InspecDataModule} from '@/store/data_store';
 import {EvaluationModule} from '@/store/evaluations';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
-import {ICreateEvaluation} from '@heimdall/interfaces';
+import {ICreateEvaluation, IEvaluation} from '@heimdall/interfaces';
 import axios from 'axios';
 import _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
@@ -129,7 +129,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
       );
     }
     axios
-      .post('/evaluations', formData)
+      .post<IEvaluation>('/evaluations', formData)
       .then((response) => {
         SnackbarModule.notify('File saved successfully');
         file.database_id = parseInt(response.data.id);
