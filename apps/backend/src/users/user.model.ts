@@ -76,6 +76,10 @@ export class User extends Model {
   @Column(DataType.STRING)
   creationMethod!: string;
 
+  @AllowNull(true)
+  @Column(DataType.STRING)
+  jwtSecret!: string;
+
   @CreatedAt
   @AllowNull(false)
   @Column(DataType.DATE)
