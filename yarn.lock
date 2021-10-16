@@ -8860,14 +8860,14 @@ diff-sequences@^27.0.6:
   integrity sha512-ag6wfpBFyNXZ0p8pcuIDS//D8H062ZQJ3fzYxjpmeKjnz8W4pekL3AI8VohmyZmsWW2PWaHgjsmqR6L13101VQ==
 
 diff2html@^3.1.7:
-  version "3.4.12"
-  resolved "https://registry.yarnpkg.com/diff2html/-/diff2html-3.4.12.tgz#cde22948176e7c5c967e6caa51587c73b8dc2d04"
-  integrity sha512-wBkttlsIQHwJxrikGQeU98SSv9QQZysyKo3uEDtXLA0Axfj4bPSFkx6g4WT3jSGRLY67jLp1wmFXwtEaHsxD4A==
+  version "3.4.13"
+  resolved "https://registry.yarnpkg.com/diff2html/-/diff2html-3.4.13.tgz#a19fb9e47b05b7ed573590d57a45e7a132d3dd9c"
+  integrity sha512-IQb+P3aDVjjctcpRF089E9Uxjb6JInu/1SDklLaw2KapdwXKl3xd87mieweR2h6hNvdyAlylMHRrwK8M4oV1Sw==
   dependencies:
     diff "5.0.0"
     hogan.js "3.0.2"
   optionalDependencies:
-    highlight.js "11.1.0"
+    highlight.js "11.2.0"
 
 diff@5.0.0, diff@^5.0.0:
   version "5.0.0"
@@ -11350,15 +11350,10 @@ hex-color-regex@^1.1.0:
   resolved "https://registry.yarnpkg.com/hex-color-regex/-/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
   integrity sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==
 
-highlight.js@*, highlight.js@^11.0.0:
+highlight.js@*, highlight.js@11.2.0, highlight.js@^11.0.0:
   version "11.2.0"
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.2.0.tgz#a7e3b8c1fdc4f0538b93b2dc2ddd53a40c6ab0f0"
   integrity sha512-JOySjtOEcyG8s4MLR2MNbLUyaXqUunmSnL2kdV/KuGJOmHZuAR5xC54Ko7goAXBWNhf09Vy3B+U7vR62UZ/0iw==
-
-highlight.js@11.1.0:
-  version "11.1.0"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.1.0.tgz#0198f7326e64ddfbea5f76b00e84ab542cf24ae8"
-  integrity sha512-X9VVhYKHQPPuwffO8jk4bP/FVj+ibNCy3HxZZNDXFtJrq4O5FdcdCDRIkDis5MiMnjh7UwEdHgRZJcHFYdzDdA==
 
 highlight.js@^10.7.1:
   version "10.7.3"
