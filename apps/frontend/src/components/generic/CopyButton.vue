@@ -1,4 +1,4 @@
-<template ref="container">
+<template>
   <v-icon small class="mr-2" type="button" @click="copy">{{ icon }}</v-icon>
 </template>
 
@@ -18,16 +18,9 @@ export default class CopyButton extends Vue {
   readonly icon!: string;
 
   copy() {
-    this.$copyText(
-      this.text,
-      document.querySelector('.v-dialog') as HTMLElement
-    )
-      .then(() => {
-        SnackbarModule.notify('Text copied to your clipboard');
-      })
-      .catch(() => {
-        SnackbarModule.failure('Failed to copy to your clipboard');
-      });
+    this.$copyText(this.text, document.querySelector('.v-dialog') || undefined)
+      .then(() => SnackbarModule.notify('Text copied to your clipboard'))
+      .catch(() => SnackbarModule.failure('Failed to copy to your clipboard'));
   }
 }
 </script>
