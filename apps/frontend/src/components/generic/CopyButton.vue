@@ -1,13 +1,5 @@
-<template>
-  <v-icon
-    v-clipboard:copy="text"
-    v-clipboard:success="onCopy"
-    v-clipboard:error="onCopyFailure"
-    small
-    class="mr-2"
-    type="button"
-    >{{ icon }}</v-icon
-  >
+<template ref="container">
+  <v-icon small class="mr-2" type="button" @click="copy">{{ icon }}</v-icon>
 </template>
 
 <script lang="ts">
@@ -17,7 +9,6 @@ import Component from 'vue-class-component';
 import VueClipboard from 'vue-clipboard2';
 import {Prop} from 'vue-property-decorator';
 
-VueClipboard.config.autoSetContainer = true;
 Vue.use(VueClipboard);
 
 @Component({})
@@ -26,12 +17,17 @@ export default class CopyButton extends Vue {
   @Prop({required: false, default: 'mdi-clipboard-outline'})
   readonly icon!: string;
 
-  onCopy() {
-    SnackbarModule.notify('Text copied to your clipboard');
-  }
-
-  onCopyFailure() {
-    SnackbarModule.failure('Failed to copy to your clipboard');
+  copy() {
+    this.$copyText(
+      this.text,
+      document.querySelector('.v-dialog') as HTMLElement
+    )
+      .then(() => {
+        SnackbarModule.notify('Text copied to your clipboard');
+      })
+      .catch(() => {
+        SnackbarModule.failure('Failed to copy to your clipboard');
+      });
   }
 }
 </script>
