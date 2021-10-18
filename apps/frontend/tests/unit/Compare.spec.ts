@@ -1,13 +1,13 @@
 import {FilteredDataModule} from '@/store/data_filters';
 import {SearchModule} from '@/store/search';
-import {StatusCountModule} from '@/store/status_counts';
+import {calculateCompliance, StatusCountModule} from '@/store/status_counts';
 import {ComparisonContext, ControlSeries} from '@/utilities/delta_util';
 import Compare from '@/views/Compare.vue';
 import {shallowMount, Wrapper} from '@vue/test-utils';
 import 'jest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
-import {fileCompliance, loadSample, removeAllFiles} from '../util/testingUtils';
+import {loadSample, removeAllFiles} from '../util/testingUtils';
 
 const vuetify = new Vuetify();
 
@@ -238,8 +238,12 @@ describe('compare charts', () => {
       )
     ).toEqual(
       new Set([
-        fileCompliance(FilteredDataModule.selected_file_ids[0]),
-        fileCompliance(FilteredDataModule.selected_file_ids[1])
+        calculateCompliance({
+          fromFile: [FilteredDataModule.selected_file_ids[0]]
+        }),
+        calculateCompliance({
+          fromFile: [FilteredDataModule.selected_file_ids[1]]
+        })
       ])
     );
   });
@@ -258,8 +262,12 @@ describe('compare charts', () => {
       )
     ).toEqual(
       new Set([
-        fileCompliance(FilteredDataModule.selected_file_ids[0]),
-        fileCompliance(FilteredDataModule.selected_file_ids[1])
+        calculateCompliance({
+          fromFile: [FilteredDataModule.selected_file_ids[0]]
+        }),
+        calculateCompliance({
+          fromFile: [FilteredDataModule.selected_file_ids[1]]
+        })
       ])
     );
   });
@@ -278,8 +286,12 @@ describe('compare charts', () => {
       )
     ).toEqual(
       new Set([
-        fileCompliance(FilteredDataModule.selected_file_ids[0]),
-        fileCompliance(FilteredDataModule.selected_file_ids[1])
+        calculateCompliance({
+          fromFile: [FilteredDataModule.selected_file_ids[0]]
+        }),
+        calculateCompliance({
+          fromFile: [FilteredDataModule.selected_file_ids[1]]
+        })
       ])
     );
   });

@@ -1,6 +1,5 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
-import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
@@ -11,12 +10,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['note', 0.3]
 ]);
 const MESSAGE_TEXT = 'message.text';
-
-const CWE_NIST_MAPPING_FILE = path.resolve(
-  __dirname,
-  '../data/cwe-nist-mapping.csv'
-);
-const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE);
+const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
 function extractCwe(text: string): string[] {

@@ -45,6 +45,7 @@ export function parseHtml(input: unknown): string {
   });
   if (typeof input === 'string') {
     myParser.write(input);
+    myParser.end();
   }
   return textData.join('');
 }
