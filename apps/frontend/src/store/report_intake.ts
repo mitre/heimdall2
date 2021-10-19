@@ -186,79 +186,91 @@ export class InspecIntake extends VuexModule {
     fileOptions: FileLoadOptions;
     data: string;
   }): Promise<ExecJSON.Execution | ExecJSON.Execution[] | void> {
-    try {
-      const parsed = JSON.parse(convertOptions.data);
-      // If the data passed is valid json, try to match up known keys
-      const typeGuess = await this.guessType(parsed);
-      if (typeGuess === 'jfrog') {
+    // If the data passed is valid json, try to match up known keys
+    const typeGuess = await this.guessType({
+      data: convertOptions.data,
+      filename: convertOptions.fileOptions.file.name
+    });
+    switch (typeGuess) {
+      case 'jfrog':
         return new JfrogXrayMapper(convertOptions.data).toHdf();
-      } else if (typeGuess === 'asff') {
+      case 'asff':
         return new ASFFMapper(convertOptions.data).toHdf();
-      } else if (typeGuess === 'zap') {
+      case 'zap':
         return new ZapMapper(convertOptions.data).toHdf();
-      } else if (typeGuess === 'nikto') {
+      case 'nikto':
         return new NiktoMapper(convertOptions.data).toHdf();
-      } else if (typeGuess === 'sarif') {
+      case 'sarif':
         return new SarifMapper(convertOptions.data).toHdf();
-      } else if (typeGuess === 'snyk') {
+      case 'snyk':
         return new SnykResults(convertOptions.data).toHdf();
-      }
-    } catch {
-      // If we don't have JSON, fall back to checking strings inside of the text
-      // Nessus
-      if (
-        convertOptions.fileOptions.file.name.toLowerCase().endsWith('.nessus')
-      ) {
+      case 'nessus':
         return new NessusResults(convertOptions.data).toHdf();
-      }
-      // XCCDF Results
-      else if (
-        // If the file contains the Checklist schema or has xccdf in the filename
-        convertOptions.data.indexOf(
-          'schemaLocation="http://checklists.nist.gov/xccdf'
-        ) !== -1 ||
-        convertOptions.fileOptions.file.name.toLowerCase().indexOf('xccdf') !==
-          -1
-      ) {
+      case 'xccdf':
         return new XCCDFResultsMapper(convertOptions.data).toHdf();
-      }
-      // Burp Suite
-      else if (convertOptions.data.indexOf('issues burpVersion') !== -1) {
+      case 'burp':
         return new BurpSuiteMapper(convertOptions.data).toHdf();
-      }
-      // Scoutsuite
-      else if (convertOptions.data.indexOf('scoutsuite_results') !== -1) {
+      case 'scoutsuite':
         return new ScoutsuiteMapper(convertOptions.data).toHdf();
-      }
-      // DBProtect
-      else if (
-        convertOptions.data.indexOf('Policy') !== -1 &&
-        convertOptions.data.indexOf('Job Name') !== -1 &&
-        convertOptions.data.indexOf('Check ID') !== -1 &&
-        convertOptions.data.indexOf('Result Status')
-      ) {
+      case 'dbProtect':
         return new DBProtectMapper(convertOptions.data).toHdf();
-      } else if (convertOptions.data.indexOf('netsparker-enterprise')) {
+      case 'netsparker':
         return new NetsparkerMapper(convertOptions.data).toHdf();
-      }
+      default:
+        return SnackbarModule.failure(
+          `Invalid file uploaded (${convertOptions.fileOptions.file.name}), no fingerprints matched.`
+        );
     }
-    return SnackbarModule.failure(
-      'Invalid file uploaded, no fingerprints matched.'
-    );
   }
 
   @Action
-  async guessType(parsedJSON: Record<string, unknown>): Promise<string> {
-    // Find the fingerprints that have the most matches
-    const fingerprinted = Object.entries(fileTypeFingerprints).reduce(
-      (a, b) => {
-        return a[1].filter((value) => _.get(parsedJSON, value)).length >
-          b[1].filter((value) => _.get(parsedJSON, value)).length
-          ? a
-          : b;
+  async guessType(guessOptions: {
+    data: string;
+    filename: string;
+  }): Promise<string> {
+    try {
+      const parsed = JSON.parse(guessOptions.data);
+      // Find the fingerprints that have the most matches
+      const fingerprinted = Object.entries(fileTypeFingerprints).reduce(
+        (a, b) => {
+          return a[1].filter((value) => _.get(parsed, value)).length >
+            b[1].filter((value) => _.get(parsed, value)).length
+            ? {...a, count: a[1].filter((value) => _.get(parsed, value)).length}
+            : {
+                ...b,
+                count: b[1].filter((value) => _.get(parsed, value)).length
+              };
+        }
+      ) as unknown as Array<string> & {count: number};
+      const result = fingerprinted[0];
+      if (fingerprinted.count !== 0) {
+        return result;
       }
-    );
-    return fingerprinted[0];
+    } catch {
+      // If we don't have valid json, look for known strings inside the file text
+      if (guessOptions.filename.toLowerCase().endsWith('.nessus')) {
+        return 'nessus';
+      } else if (
+        guessOptions.data.indexOf(
+          'schemaLocation="http://checklists.nist.gov/xccdf'
+        ) !== -1 ||
+        guessOptions.filename.toLowerCase().indexOf('xccdf') !== -1
+      ) {
+        return 'xccdf';
+      } else if (guessOptions.data.indexOf('issues burpVersion') !== -1) {
+        return 'burp';
+      } else if (guessOptions.data.indexOf('scoutsuite_results') !== -1) {
+        return 'scoutsuite';
+      } else if (
+        guessOptions.data.indexOf('Policy') !== -1 &&
+        guessOptions.data.indexOf('Job Name') !== -1 &&
+        guessOptions.data.indexOf('Check ID') !== -1 &&
+        guessOptions.data.indexOf('Result Status')
+      ) {
+        return 'dbProtect';
+      }
+    }
+    return '';
   }
 
   @Action
