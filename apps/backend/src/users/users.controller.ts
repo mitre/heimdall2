@@ -135,6 +135,12 @@ export class UsersController {
     );
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('/logout')
+  async logOut(@Request() request: {user: User}): Promise<void> {
+    return this.usersService.updateUserSecret(request.user);
+  }
+
   @UseGuards(TestGuard)
   @Post('clear')
   async clear(): Promise<void> {
