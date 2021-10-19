@@ -1,7 +1,6 @@
 import {encode} from 'html-entities';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
-import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {AwsConfigMapping} from './mappings/AwsConfigMapping';
@@ -104,11 +103,7 @@ function getSecurityHub(): Record<string, Function> {
         `Invalid supporting docs for Security Hub:\nException: ${error}`
       );
     }
-    const AWS_CONFIG_MAPPING_FILE = path.resolve(
-      __dirname,
-      '../data/aws-config-mapping.csv'
-    );
-    const AWS_CONFIG_MAPPING = new AwsConfigMapping(AWS_CONFIG_MAPPING_FILE);
+    const AWS_CONFIG_MAPPING = new AwsConfigMapping();
     return {
       controls,
       awsConfigMapping: AWS_CONFIG_MAPPING

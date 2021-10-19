@@ -4,25 +4,30 @@ export class AwsConfigMappingItem {
   nistId: string;
   nistRevision: number;
 
-  constructor(values: string[]) {
-    if (values[0] === undefined) {
+  constructor(
+    AwsConfigRuleSourceIdentifier: string,
+    AwsConfigRuleName: string,
+    nistId: string,
+    revision: number
+  ) {
+    if (!AwsConfigRuleSourceIdentifier) {
       throw new Error(
         'AWS Config Mapping Data must contain a config rule source identifier.'
       );
     } else {
-      this.configRuleSourceIdentifier = values[0];
+      this.configRuleSourceIdentifier = AwsConfigRuleSourceIdentifier;
     }
-    if (values[1] === undefined) {
+    if (!AwsConfigRuleName) {
       throw new Error('AWS Config Mapping Data must contain a rule name.');
     } else {
-      this.configRuleName = values[1];
+      this.configRuleName = AwsConfigRuleName;
     }
-    if (values[2] === undefined) {
+    if (!nistId) {
       this.nistId = '';
     } else {
-      this.nistId = values[2];
+      this.nistId = nistId;
     }
     // Could possibly be NaN, which is a 'number'
-    this.nistRevision = parseInt(values[3]);
+    this.nistRevision = revision;
   }
 }

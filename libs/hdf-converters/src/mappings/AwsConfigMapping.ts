@@ -1,18 +1,22 @@
-import parse from 'csv-parse/lib/sync';
-import fs from 'fs';
+import {default as data} from '../../data/aws-config-mapping.json';
 import {AwsConfigMappingItem} from './AwsConfigMappingItem';
 
 export class AwsConfigMapping {
   data: AwsConfigMappingItem[];
 
-  constructor(csvDataPath: string) {
+  constructor() {
     this.data = [];
-    const contents = parse(fs.readFileSync(csvDataPath, {encoding: 'utf-8'}), {
-      skip_empty_lines: true
-    });
-    if (Array.isArray(contents)) {
-      contents.slice(1).forEach((line: string[]) => {
-        this.data.push(new AwsConfigMappingItem(line));
+    if (typeof data === 'object') {
+      Object.entries(data).forEach((item) => {
+        console.log(item);
+        this.data.push(
+          new AwsConfigMappingItem(
+            item[1].AwsConfigRuleSourceIdentifier,
+            item[1].AwsConfigRuleName,
+            item[1]['NIST-ID'],
+            item[1].Rev
+          )
+        );
       });
     }
   }
