@@ -8,7 +8,6 @@ export class AwsConfigMapping {
     this.data = [];
     if (typeof data === 'object') {
       Object.entries(data).forEach((item) => {
-        console.log(item);
         this.data.push(
           new AwsConfigMappingItem(
             item[1].AwsConfigRuleSourceIdentifier,

@@ -9,7 +9,6 @@ export class CciNistMapping {
 
     if (typeof data === 'object') {
       Object.entries(data).forEach((item) => {
-        console.log(item);
         this.data.push(new CciNistMappingItem(item[0], item[1]));
       });
     }

@@ -7,6 +7,7 @@ import Store from '@/store/store';
 import {Tag} from '@/types/models';
 import {read_file_async} from '@/utilities/async_util';
 import {
+  ASFFMapper,
   BurpSuiteMapper,
   DBProtectMapper,
   JfrogXrayMapper,
@@ -107,6 +108,7 @@ export type ExecJSONLoadOptions = {
 
 // Fields to look for inside of JSON structures to determine type before passing to hdf-converters
 export const fileTypeFingerprints = {
+  asff: ['Findings'],
   fortify: ['FVDL', 'FVDL.EngineData.EngineVersion', 'FVDL.UUID'],
   jfrog: ['total_count', 'data'],
   nikto: ['banner', 'host', 'ip', 'port', 'vulnerabilities'],
@@ -190,6 +192,8 @@ export class InspecIntake extends VuexModule {
       const typeGuess = await this.guessType(parsed);
       if (typeGuess === 'jfrog') {
         return new JfrogXrayMapper(convertOptions.data).toHdf();
+      } else if (typeGuess === 'asff') {
+        return new ASFFMapper(convertOptions.data).toHdf();
       } else if (typeGuess === 'zap') {
         return new ZapMapper(convertOptions.data).toHdf();
       } else if (typeGuess === 'nikto') {
