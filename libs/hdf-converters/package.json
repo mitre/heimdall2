@@ -26,8 +26,8 @@
     "csv-parse": "^4.16.0",
     "csv2json": "^2.0.2",
     "fast-xml-parser": "^3.19.0",
-    "htmlparser2": "^6.1.0",
-    "inspecjs": "^2.5.0",
+    "htmlparser2": "^7.1.2",
+    "inspecjs": "^2.5.3",
     "lodash": "^4.17.21",
     "html-entities": "^2.3.2",
     "xml2js": "^0.4.23"
