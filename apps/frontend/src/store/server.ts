@@ -16,6 +16,7 @@ import {
   VuexModule
 } from 'vuex-module-decorators';
 import {GroupsModule} from './groups';
+import {SnackbarModule} from './snackbar';
 
 const localToken = new LocalStorageVal<string | null>('auth_token');
 const localUserID = new LocalStorageVal<string | null>('localUserID');
@@ -263,10 +264,19 @@ class Server extends VuexModule implements IServerState {
   }
 
   @Action
-  public Logout(): void {
-    this.CLEAR_USERID();
-    this.CLEAR_TOKEN();
-    location.replace('/login?logoff=true');
+  public Logout(): Promise<void> {
+    return axios
+      .post(`/users/logout`)
+      .then(() => {
+        this.CLEAR_USERID();
+        this.CLEAR_TOKEN();
+        location.replace('/login?logoff=true');
+      })
+      .catch((error) => {
+        SnackbarModule.failure(
+          `An error occoured while signing you out: ${error.response.data}`
+        );
+      });
   }
 }
 
