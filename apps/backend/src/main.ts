@@ -46,29 +46,31 @@ async function bootstrap() {
     })
   );
   app.use(json({limit: '50mb'}));
-  // Sessions are only used for oauth callbacks
-  app.use(
-    session({
-      secret: generateDefault(),
-      store: new (postgresSessionStore(session))({
-        conObject: {
-          ...configService.getDbConfig(),
-          /* The pg conObject takes mostly the same parameters as Sequelize, except the ssl options,
-          those are equal to the dialectOptions passed to sequelize */
-          ssl: configService.getSSLConfig()
-        },
-        tableName: 'session'
-      }),
-      proxy: configService.isInProductionMode() ? true : undefined,
-      cookie: {
-        maxAge: 60 * 60,
-        secure: configService.isInProductionMode()
-      }, // 1 hour
-      saveUninitialized: true,
-      resave: false
-    })
-  );
   app.use(passport.initialize());
+  // Sessions are only used for oauth callbacks
+  if (configService.enabledOauthStrategies().length) {
+    app.use(
+      session({
+        secret: generateDefault(),
+        store: new (postgresSessionStore(session))({
+          conObject: {
+            ...configService.getDbConfig(),
+            /* The pg conObject takes mostly the same parameters as Sequelize, except the ssl options,
+          those are equal to the dialectOptions passed to sequelize */
+            ssl: configService.getSSLConfig()
+          },
+          tableName: 'session'
+        }),
+        proxy: configService.isInProductionMode() ? true : undefined,
+        cookie: {
+          maxAge: 60 * 60,
+          secure: configService.isInProductionMode()
+        }, // 1 hour
+        saveUninitialized: true,
+        resave: false
+      })
+    );
+  }
   app.use(passport.session());
   app.use(
     '/authn/login',
