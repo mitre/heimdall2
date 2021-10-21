@@ -16,7 +16,7 @@
     "build": "tsc -p ./tsconfig.build.json && cp -R ./data ./lib",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
-    "test": "jest",
+    "test": "jest --silent",
     "csv2json": "ts-node data/converters/csv2json.ts",
     "xml2json": "ts-node data/converters/xml2json.ts"
   },
