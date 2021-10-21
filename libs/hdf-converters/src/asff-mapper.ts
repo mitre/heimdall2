@@ -239,7 +239,7 @@ function getSecurityHub(): Record<string, Function> {
 
 export class ASFFMapper extends BaseConverter {
   securityhubStandardsJsonArray: string[] | undefined;
-  meta: Record<string, unknown> | null;
+  meta: Record<string, string | undefined> | null;
   supportingDocs: Map<RegExp, Record<string, Record<string, unknown>>>;
   mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
@@ -255,10 +255,7 @@ export class ASFFMapper extends BaseConverter {
       {
         name: {
           transformer: (): string => {
-            return (
-              (_.get(this.meta, 'name') as string) ||
-              'AWS Security Finding Format'
-            );
+            return this.meta?.name || 'AWS Security Finding Format';
           }
         },
         version: '',
@@ -283,7 +280,7 @@ export class ASFFMapper extends BaseConverter {
             key: 'id',
             arrayTransformer: this.consolidate,
             id: {
-              transformer: (finding: unknown): string =>
+              transformer: (finding): string =>
                 this.externalProductHandler(
                   _.get(finding, 'ProductArn'),
                   finding,
@@ -292,7 +289,7 @@ export class ASFFMapper extends BaseConverter {
                 ) as string
             },
             title: {
-              transformer: (finding: unknown): string =>
+              transformer: (finding): string =>
                 this.externalProductHandler(
                   _.get(finding, 'ProductArn'),
                   finding,
@@ -302,11 +299,11 @@ export class ASFFMapper extends BaseConverter {
             },
             desc: {
               path: 'Description',
-              transformer: (input: unknown): string => encode(input as string)
+              transformer: (input): string => encode(input as string)
             },
             impact: {
-              transformer: (finding: unknown): number => {
-                // There can be findings listed that are intentionally ignored due to the underlying control being superceded by a control from a different standard
+              transformer: (finding): number => {
+                // There can be findings listed that are intentionally ignored due to the underlying control being superseded by a control from a different standard
                 let impact: string | number;
                 if (_.get(finding, 'Workflow.Status') === 'SUPPRESSED') {
                   impact = 'INFORMATIONAL';
@@ -337,7 +334,7 @@ export class ASFFMapper extends BaseConverter {
                     'findingNistTag',
                     []
                   ) as string[];
-                  if (tags.length === 0) {
+                  if (!tags.length) {
                     return DEFAULT_NIST_TAG;
                   } else {
                     return tags;
@@ -367,8 +364,8 @@ export class ASFFMapper extends BaseConverter {
               {
                 url: {
                   path: 'SourceUrl',
-                  transformer: (input: unknown): string | undefined =>
-                    input === '' ? undefined : (input as string)
+                  transformer: (input): string | undefined =>
+                    !Boolean(input) ? undefined : (input as string)
                 }
               }
             ],
@@ -377,9 +374,7 @@ export class ASFFMapper extends BaseConverter {
             results: [
               {
                 status: {
-                  transformer: (
-                    finding: unknown
-                  ): ExecJSON.ControlResultStatus => {
+                  transformer: (finding): ExecJSON.ControlResultStatus => {
                     if (_.has(finding, COMPLIANCE_STATUS)) {
                       switch (_.get(finding, COMPLIANCE_STATUS)) {
                         case 'PASSED':
@@ -402,14 +397,14 @@ export class ASFFMapper extends BaseConverter {
                   }
                 },
                 code_desc: {
-                  transformer: (finding: unknown): string => {
+                  transformer: (finding): string => {
                     let output = this.externalProductHandler(
                       _.get(finding, 'ProductArn'),
                       finding,
                       'subfindingsCodeDesc',
                       ''
-                    );
-                    if (output !== '') {
+                    ) as string;
+                    if (output) {
                       output += '; ';
                     }
                     const resources = _.get(finding, 'Resources')
@@ -431,11 +426,11 @@ export class ASFFMapper extends BaseConverter {
                       })
                       .join(', ');
                     output += `Resources: [${resources}]`;
-                    return output as string;
+                    return output;
                   }
                 },
                 message: {
-                  transformer: (finding: unknown): string | undefined => {
+                  transformer: (finding): string | undefined => {
                     const statusReason = this.statusReason(finding);
                     switch (_.get(finding, COMPLIANCE_STATUS)) {
                       case undefined: // Possible for Compliance.Status to not be there, in which case it's a skip_message
@@ -454,7 +449,7 @@ export class ASFFMapper extends BaseConverter {
                   }
                 },
                 skip_message: {
-                  transformer: (finding: unknown): string | undefined => {
+                  transformer: (finding): string | undefined => {
                     const statusReason = this.statusReason(finding);
                     switch (_.get(finding, COMPLIANCE_STATUS)) {
                       case undefined: // Possible for Compliance.Status to not be there, in which case it's a skip_message
@@ -474,7 +469,7 @@ export class ASFFMapper extends BaseConverter {
                   }
                 },
                 start_time: {
-                  transformer: (finding: unknown): string =>
+                  transformer: (finding): string =>
                     _.get(finding, 'LastObservedAt') ||
                     _.get(finding, 'UpdatedAt')
                 }
@@ -496,11 +491,11 @@ export class ASFFMapper extends BaseConverter {
       .flat()
       .join('\n');
   }
+
   externalProductHandler(
     product: string | RegExp,
     data: unknown,
     func: string,
-    // eslint-disable-next-line @typescript-eslint/ban-types
     defaultVal: ExternalProductHandlerOutputs
   ): string | string[] | number {
     let arn = null;
@@ -533,7 +528,7 @@ export class ASFFMapper extends BaseConverter {
   }
   consolidate(input: unknown[], file: unknown): ExecJSON.Control[] {
     const allFindings = _.get(file, 'Findings');
-    // Group subfindings by ASFF Product ARN and HDF ID
+    // Group Sub-findings by ASFF Product ARN and HDF ID
     const productGroups: Map<
       RegExp,
       Map<string, Array<Array<unknown>>>
@@ -542,7 +537,7 @@ export class ASFFMapper extends BaseConverter {
       let arn = Array.from(PRODUCT_ARN_MAPPING.keys()).find((regex) =>
         _.get(allFindings[index], 'ProductArn').match(regex)
       );
-      if (arn === undefined) {
+      if (!arn) {
         const productInfo = _.get(allFindings[index], 'ProductArn')
           .split(':')
           .slice(-1)[0];
@@ -634,7 +629,7 @@ export class ASFFMapper extends BaseConverter {
   constructor(
     asffJson: string,
     securityhubStandardsJsonArray: undefined | string[] = undefined,
-    meta: null | Record<string, unknown> = null
+    meta: null | Record<string, string | undefined> = null
   ) {
     super(fixFileInput(asffJson));
     this.securityhubStandardsJsonArray = securityhubStandardsJsonArray;
