@@ -18,7 +18,21 @@
     </template>
 
     <template #set>
-      <div class="pa-2 title" v-text="filename" />
+      <v-row class="pa-4">
+        <div class="pa-2 title" v-text="filename" />
+        <v-tooltip v-if="isOverlaid" bottom>
+          <template #activator="{on, attrs}">
+            <v-icon
+              style="cursor: pointer"
+              class="ml-2"
+              v-bind="attrs"
+              v-on="on"
+              >mdi-delta</v-icon
+            >
+          </template>
+          <span>This control has been modified in an overlay</span>
+        </v-tooltip>
+      </v-row>
     </template>
 
     <template #severity>
@@ -172,6 +186,10 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
 
   set wasViewed(_value: boolean) {
     this.$emit('control-viewed', this.control);
+  }
+
+  get isOverlaid() {
+    return Boolean(this.control.extendsFrom.length);
   }
 
   severity_arrow_count(severity: string): number {

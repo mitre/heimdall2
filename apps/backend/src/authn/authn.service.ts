@@ -121,16 +121,26 @@ export class AuthnService {
       role: user.role,
       forcePasswordChange: user.forcePasswordChange
     };
+    // Users have their own JWT Secret to allow for session invalidation on sign out
+    const loginUser = await this.usersService.findById(user.id);
+    if (!loginUser.jwtSecret) {
+      this.usersService.updateUserSecret(loginUser);
+    }
     if (payload.forcePasswordChange || user.role === 'admin') {
       // Admin sessions are only valid for 10 minutes, for regular users give them 10 minutes to (hopefully) change their password.
       return {
         userID: user.id,
-        accessToken: this.jwtService.sign(payload, {expiresIn: '600s'})
+        accessToken: this.jwtService.sign(payload, {
+          expiresIn: '600s',
+          secret: this.configService.get('JWT_SECRET') + loginUser.jwtSecret
+        })
       };
     } else {
       return {
         userID: user.id,
-        accessToken: this.jwtService.sign(payload)
+        accessToken: this.jwtService.sign(payload, {
+          secret: this.configService.get('JWT_SECRET') + loginUser.jwtSecret
+        })
       };
     }
   }
