@@ -152,7 +152,6 @@ export class BaseConverter {
     );
     return result as MappedReform<T, ILookupPath>;
   }
-  // eslint-disable-next-line @typescript-eslint/ban-types
   evaluate<T extends object>(
     file: Record<string, unknown>,
     v: Array<T> | T

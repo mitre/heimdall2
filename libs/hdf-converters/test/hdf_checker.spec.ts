@@ -32,10 +32,29 @@ describe('asff_mapper', () => {
       )
     );
   });
-  it('Successfully converts Prowler ASFF', () => {
+  it('Successfully converts Prowler ASFF as Array', () => {
     const mapper = new ASFFMapper(
       fs.readFileSync(
         'sample_jsons/asff_mapper/sample_input_report/prowler_sample.json',
+        {encoding: 'utf-8'}
+      ),
+      undefined,
+      {name: 'Prowler', title: 'Prowler Findings'}
+    );
+    expect(omitVersions(mapper.toHdf())).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync('sample_jsons/asff_mapper/prowler-hdf.json', {
+            encoding: 'utf-8'
+          })
+        )
+      )
+    );
+  });
+  it('Successfully converts Prowler ASFF as Objects delimited by newline', () => {
+    const mapper = new ASFFMapper(
+      fs.readFileSync(
+        'sample_jsons/asff_mapper/sample_input_report/prower-sample.asff-json',
         {encoding: 'utf-8'}
       ),
       undefined,

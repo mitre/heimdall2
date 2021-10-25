@@ -37,11 +37,23 @@ type ExternalProductHandlerOutputs =
   | string[];
 
 function fixFileInput(asffJson: string) {
-  let output = JSON.parse(asffJson);
-  if (!_.has(output, 'Findings')) {
-    output = {Findings: [output]};
+  try {
+    let output = JSON.parse(asffJson);
+    if (!_.has(output, 'Findings')) {
+      output = {Findings: [output]};
+    }
+    return output;
+  } catch {
+    // Prowler gives us JSON Lines format but we need regular JSON
+    const fixedInput = `[${asffJson
+      .replace(/}\n/g, '},\n')
+      .replace(/\},\n\$/g, '')}]`;
+    let output = JSON.parse(fixedInput);
+    if (!_.has(output, 'Findings')) {
+      output = {Findings: output};
+    }
+    return output;
   }
-  return output;
 }
 // eslint-disable-next-line @typescript-eslint/ban-types
 function getFirewallManager(): Record<string, Function> {

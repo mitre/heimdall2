@@ -257,6 +257,11 @@ export class InspecIntake extends VuexModule {
         guessOptions.filename.toLowerCase().indexOf('xccdf') !== -1
       ) {
         return 'xccdf';
+      } else if (
+        guessOptions.data.indexOf('"AwsAccountId"') !== -1 &&
+        guessOptions.data.indexOf('"SchemaVersion"') !== -1
+      ) {
+        return 'asff';
       } else if (guessOptions.data.indexOf('issues burpVersion') !== -1) {
         return 'burp';
       } else if (guessOptions.data.indexOf('scoutsuite_results') !== -1) {
