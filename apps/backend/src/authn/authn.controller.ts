@@ -118,6 +118,7 @@ export class AuthnController {
 
   @Get('oidc/callback')
   @UseGuards(AuthGuard('oidc'))
+  @UseFilters(new AuthenticationExceptionFilter())
   async getUserFromOIDC(@Req() req: Request): Promise<void> {
     const session = await this.authnService.login(req.user as User);
     await this.setSessionCookies(req, session);
