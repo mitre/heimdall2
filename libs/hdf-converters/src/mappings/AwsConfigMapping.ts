@@ -6,18 +6,16 @@ export class AwsConfigMapping {
 
   constructor() {
     this.data = [];
-    if (typeof data === 'object') {
-      Object.entries(data).forEach((item) => {
-        this.data.push(
-          new AwsConfigMappingItem(
-            item[1].AwsConfigRuleSourceIdentifier,
-            item[1].AwsConfigRuleName,
-            item[1]['NIST-ID'],
-            item[1].Rev
-          )
-        );
-      });
-    }
+    Object.entries(data).forEach((item) => {
+      this.data.push(
+        new AwsConfigMappingItem(
+          item[1].AwsConfigRuleSourceIdentifier,
+          item[1].AwsConfigRuleName,
+          item[1]['NIST-ID'],
+          item[1].Rev
+        )
+      );
+    });
   }
   nistFilter(identifiers: string[]): string[] | null {
     if (identifiers.length === 0) {

@@ -18,6 +18,7 @@ const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 const SEVERITY_LABEL = 'Severity.Label';
 const COMPLIANCE_STATUS = 'Compliance.Status';
 
+// Use to extract control set specific data
 const FIREWALL_MANAGER_REGEX =
   /arn:.+:securityhub:.+:.*:product\/aws\/firewall-manager/;
 const SECURITYHUB_REGEX = /arn:.+:securityhub:.+:.*:product\/aws\/securityhub/;
