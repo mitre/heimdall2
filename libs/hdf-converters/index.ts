@@ -1,3 +1,4 @@
+export * from './src/asff-mapper';
 export * from './src/burpsuite-mapper';
 export * from './src/dbprotect-mapper';
 export * from './src/fortify-mapper';
