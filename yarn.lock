@@ -2853,9 +2853,9 @@
     unicode-trie "^0.3.0"
 
 "@mdi/font@^6.1.95":
-  version "6.3.95"
-  resolved "https://registry.yarnpkg.com/@mdi/font/-/font-6.3.95.tgz#5e22e0626ec652028a19aa541a20b28280399dd9"
-  integrity sha512-bbvnF7rNX9aMn7PeqDCa8ZQTPxEqerZeXo/lQQxE84Ka/7UrFcqvOO3XXVLtrCCtyA6uIqiG4oYFRPVJqv247Q==
+  version "6.4.95"
+  resolved "https://registry.yarnpkg.com/@mdi/font/-/font-6.4.95.tgz#d3b7a615c4c82ba2a9c29b2b59b158dced4f9b0e"
+  integrity sha512-jCQdXCD339EXirWYFbZv1Ansthm9j6O3FSQLsfi/mKamnGYxqbUBm5D4UjcVr6HVYIPNwTQQ46HNHlswPD8RcQ==
 
 "@mdi/js@^6.1.95":
   version "6.4.95"
