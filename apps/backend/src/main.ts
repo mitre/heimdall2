@@ -71,7 +71,6 @@ async function bootstrap() {
       })
     );
   }
-  app.use(passport.session());
   app.use(
     '/authn/login',
     rateLimit({
