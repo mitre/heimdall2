@@ -2,7 +2,7 @@
         Saves us the trouble of messing around with sidebar functionality
         in every view. "Subclass" by utilizing the slots. -->
 <template>
-  <div>
+  <div @drop.prevent="addFile" @dragover.prevent>
     <!-- Top appbar. The center content of it is configured via the topbar-content slot -->
     <span
       v-if="classification"
@@ -52,7 +52,9 @@ import {SidebarModule} from '@/store/sidebar_state';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
+import {InspecIntakeModule} from '../store/report_intake';
 import {ServerModule} from '../store/server';
+import {SnackbarModule} from '../store/snackbar';
 
 @Component({
   components: {
@@ -88,6 +90,17 @@ export default class Base extends Vue {
 
   get classification(): string {
     return ServerModule.classificationBannerText;
+  }
+
+  addFile(event: DragEvent) {
+    const droppedFiles = event.dataTransfer?.files;
+    if (droppedFiles) {
+      [...droppedFiles].forEach(async (file) => {
+        return InspecIntakeModule.loadFile({file}).catch((err) => {
+          SnackbarModule.failure(String(err));
+        });
+      });
+    }
   }
 }
 </script>

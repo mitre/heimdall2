@@ -7,16 +7,33 @@ import Store from '@/store/store';
 import {Tag} from '@/types/models';
 import {read_file_async} from '@/utilities/async_util';
 import {
+  ASFFMapper,
+  BurpSuiteMapper,
+  DBProtectMapper,
+  JfrogXrayMapper,
+  NessusResults,
+  NetsparkerMapper,
+  NiktoMapper,
+  SarifMapper,
+  ScoutsuiteMapper,
+  SnykResults,
+  XCCDFResultsMapper,
+  ZapMapper
+} from '@mitre/hdf-converters';
+import {
   ContextualizedEvaluation,
   ContextualizedProfile,
   contextualizeEvaluation,
   contextualizeProfile,
   ConversionResult,
-  convertFile
+  convertFile,
+  ExecJSON
 } from 'inspecjs';
+import _ from 'lodash';
 import {v4 as uuid} from 'uuid';
 import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
 import {FilteredDataModule} from './data_filters';
+import {SnackbarModule} from './snackbar';
 
 /** Each FileID corresponds to a unique File in this store */
 export type FileID = string;
@@ -70,16 +87,40 @@ export type FileLoadOptions = {
 export type TextLoadOptions = {
   /** The filename to denote this object with */
   filename: string;
-
   database_id?: string;
-
   createdAt?: Date;
   updatedAt?: Date;
-
   tags?: Tag[];
 
   /** The text to use for it. */
   text: string;
+};
+
+export type ExecJSONLoadOptions = {
+  /** The filename to denote this object with */
+  filename: string;
+  database_id?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  tags?: Tag[];
+  data: ExecJSON.Execution;
+};
+
+// Fields to look for inside of JSON structures to determine type before passing to hdf-converters
+export const fileTypeFingerprints = {
+  asff: ['Findings'],
+  fortify: ['FVDL', 'FVDL.EngineData.EngineVersion', 'FVDL.UUID'],
+  jfrog: ['total_count', 'data'],
+  nikto: ['banner', 'host', 'ip', 'port', 'vulnerabilities'],
+  sarif: ['$schema', 'version', 'runs'],
+  snyk: [
+    'projectName',
+    'policy',
+    'summary',
+    'vulnerabilities',
+    'vulnerabilities[0].identifiers'
+  ],
+  zap: ['@generated', '@version', 'site']
 };
 
 @Module({
@@ -93,14 +134,148 @@ export class InspecIntake extends VuexModule {
    * Load a file with the specified options. Promises an error message on failure
    */
   @Action
-  async loadFile(options: FileLoadOptions): Promise<FileID> {
-    const read = read_file_async(options.file);
-    return read.then((text) =>
-      this.loadText({
-        text,
+  async loadFile(options: FileLoadOptions): Promise<FileID | FileID[]> {
+    const read = await read_file_async(options.file);
+    if (await this.isHDF(read)) {
+      return this.loadText({
+        text: read,
         filename: options.file.name
-      })
-    );
+      });
+    } else {
+      const converted = await this.convertToHdf({
+        fileOptions: options,
+        data: read
+      });
+      if (Array.isArray(converted)) {
+        return Promise.all(
+          converted.map((evaluation) => {
+            return this.loadExecJson({
+              data: evaluation,
+              filename: options.file.name
+            });
+          })
+        );
+      } else if (converted) {
+        return this.loadExecJson({
+          data: converted,
+          filename: options.file.name
+        });
+      } else {
+        return [];
+      }
+    }
+  }
+
+  @Action
+  async isHDF(data: string): Promise<boolean> {
+    try {
+      // If our data loads correctly it could be HDF
+      const parsed = JSON.parse(data);
+      return (
+        Array.isArray(parsed.profiles) || // Execution JSON
+        (Boolean(parsed.controls) && Boolean(parsed.sha256)) // Profile JSON
+      );
+    } catch {
+      // HDF isn't valid json, we have a different format
+      return false;
+    }
+  }
+
+  @Action
+  async convertToHdf(convertOptions: {
+    fileOptions: FileLoadOptions;
+    data: string;
+  }): Promise<ExecJSON.Execution | ExecJSON.Execution[] | void> {
+    // If the data passed is valid json, try to match up known keys
+    const typeGuess = await this.guessType({
+      data: convertOptions.data,
+      filename: convertOptions.fileOptions.file.name
+    });
+    switch (typeGuess) {
+      case 'jfrog':
+        return new JfrogXrayMapper(convertOptions.data).toHdf();
+      case 'asff':
+        return new ASFFMapper(convertOptions.data).toHdf();
+      case 'zap':
+        return new ZapMapper(convertOptions.data).toHdf();
+      case 'nikto':
+        return new NiktoMapper(convertOptions.data).toHdf();
+      case 'sarif':
+        return new SarifMapper(convertOptions.data).toHdf();
+      case 'snyk':
+        return new SnykResults(convertOptions.data).toHdf();
+      case 'nessus':
+        return new NessusResults(convertOptions.data).toHdf();
+      case 'xccdf':
+        return new XCCDFResultsMapper(convertOptions.data).toHdf();
+      case 'burp':
+        return new BurpSuiteMapper(convertOptions.data).toHdf();
+      case 'scoutsuite':
+        return new ScoutsuiteMapper(convertOptions.data).toHdf();
+      case 'dbProtect':
+        return new DBProtectMapper(convertOptions.data).toHdf();
+      case 'netsparker':
+        return new NetsparkerMapper(convertOptions.data).toHdf();
+      default:
+        return SnackbarModule.failure(
+          `Invalid file uploaded (${convertOptions.fileOptions.file.name}), no fingerprints matched.`
+        );
+    }
+  }
+
+  @Action
+  async guessType(guessOptions: {
+    data: string;
+    filename: string;
+  }): Promise<string> {
+    try {
+      const parsed = JSON.parse(guessOptions.data);
+      // Find the fingerprints that have the most matches
+      const fingerprinted = Object.entries(fileTypeFingerprints).reduce(
+        (a, b) => {
+          return a[1].filter((value) => _.get(parsed, value)).length >
+            b[1].filter((value) => _.get(parsed, value)).length
+            ? {...a, count: a[1].filter((value) => _.get(parsed, value)).length}
+            : {
+                ...b,
+                count: b[1].filter((value) => _.get(parsed, value)).length
+              };
+        }
+      ) as unknown as Array<string> & {count: number};
+      const result = fingerprinted[0];
+      if (fingerprinted.count !== 0) {
+        return result;
+      }
+    } catch {
+      // If we don't have valid json, look for known strings inside the file text
+      if (guessOptions.filename.toLowerCase().endsWith('.nessus')) {
+        return 'nessus';
+      } else if (
+        guessOptions.data.indexOf(
+          'schemaLocation="http://checklists.nist.gov/xccdf'
+        ) !== -1 ||
+        guessOptions.filename.toLowerCase().indexOf('xccdf') !== -1
+      ) {
+        return 'xccdf';
+      } else if (
+        guessOptions.data.indexOf('"AwsAccountId"') !== -1 &&
+        guessOptions.data.indexOf('"SchemaVersion"') !== -1
+      ) {
+        return 'asff';
+      } else if (guessOptions.data.indexOf('issues burpVersion') !== -1) {
+        return 'burp';
+      } else if (guessOptions.data.indexOf('scoutsuite_results') !== -1) {
+        return 'scoutsuite';
+      } else if (
+        guessOptions.data.indexOf('Policy') !== -1 &&
+        guessOptions.data.indexOf('Job Name') !== -1 &&
+        guessOptions.data.indexOf('Check ID') !== -1 &&
+        guessOptions.data.indexOf('Result Status')
+      ) {
+        return 'dbProtect';
+      }
+    }
+    return '';
   }
 
   @Action
@@ -157,6 +332,36 @@ export class InspecIntake extends VuexModule {
         "Couldn't parse data. See developer's tools for more details."
       );
     }
+    return fileID;
+  }
+
+  // Instead of re-stringifying converted evaluations, add the allow loading the ExecJSON directly.
+  @Action
+  async loadExecJson(options: ExecJSONLoadOptions) {
+    // Convert it
+    const fileID: FileID = uuid();
+    // A bit of chicken and egg here, this will be our circular JSON structure
+    const evalFile = {
+      uniqueId: fileID,
+      filename: options.filename,
+      database_id: options.database_id,
+      createdAt: options.createdAt,
+      updatedAt: options.updatedAt,
+      tags: options.tags
+    } as EvaluationFile;
+
+    // Fixup the evaluation to be Sourced from a file.
+    const evaluation = contextualizeEvaluation(
+      options.data
+    ) as SourcedContextualizedEvaluation;
+    evaluation.from_file = evalFile;
+
+    // Set and freeze
+    evalFile.evaluation = evaluation;
+    Object.freeze(evaluation);
+    InspecDataModule.addExecution(evalFile);
+    FilteredDataModule.toggle_evaluation(evalFile.uniqueId);
+
     return fileID;
   }
 }
