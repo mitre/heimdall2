@@ -138,7 +138,10 @@ export class AuthnService {
     };
     // Users have their own JWT Secret to allow for session invalidation on sign out
     const loginUser = await this.usersService.findById(user.id);
-    if (!loginUser.jwtSecret) {
+    if (
+      !loginUser.jwtSecret ||
+      this.configService.get('ONE_SESSION_PER_USER')?.toLowerCase() === 'true'
+    ) {
       this.usersService.updateUserSecret(loginUser);
     }
     if (payload.forcePasswordChange || user.role === 'admin') {
