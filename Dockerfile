@@ -13,7 +13,7 @@ COPY apps ./apps
 COPY libs ./libs
 RUN chmod 0400 package.json yarn.lock lerna.json tsconfig.json .prettierrc
 RUN chmod 0500 -R apps libs
-RUN apk add python make g++
+RUN apk add python3 make g++
 RUN sed -i s^https://registry.yarnpkg.com^$YARNREPO^g yarn.lock
 RUN yarn --frozen-lockfile --production --network-timeout 600000
 
