@@ -5,7 +5,7 @@ import { StringLiteralLike } from 'typescript';
 import _ from 'lodash';
 import fs from 'fs';
 import { createHash } from "crypto";
-import { ExecJSONASFF } from './asff-types';
+
 
 
 export interface ILookupPathFH {
@@ -19,34 +19,19 @@ export interface ILookupPathFH {
 export class FromHdfBaseConverter {
 
     data: ExecJSON.Execution;
-    mappings?: MappedTransform<ExecJSONASFF, (ILookupPathFH & {passParent?: boolean})>;
+    mappings?: MappedTransform<any, (ILookupPathFH & {passParent?: boolean})>;
     collapseResults: boolean;
-    ioptions: iOptions;
+    
   
-    constructor(data: ExecJSON.Execution, ioptions: iOptions|undefined ,collapseResults = false) {
+    constructor(data: ExecJSON.Execution, collapseResults = false) {
       this.data = data;
       this.collapseResults = collapseResults;
-      this.ioptions = (ioptions === undefined)? this.defaultOptions() :ioptions;
-
     }
 
-    defaultOptions(): iOptions {
-
-      return {
-
-        input: "",
-        output: "",
-        awsAccountId: "",
-        accessKeyId: "",
-        accessKeySecret: "",
-        target: "default",
-        region: "",
-        upload: false
-      };
-    }
+    
   
     setMappings(
-      mappings: MappedTransform<ExecJSONASFF, ILookupPathFH>
+      mappings: MappedTransform<any, ILookupPathFH>
     ): void {
       this.mappings = mappings;
     }
@@ -251,19 +236,3 @@ export class FromHdfBaseConverter {
     return newArray;
   }
   }
-
-  
-
-
-
-
-export interface iOptions {
-  input: string;
-  output: string;
-  awsAccountId: string;
-  accessKeyId?: string;
-  accessKeySecret?: string;
-  target: string;
-  region: string;
-  upload?: boolean;
-}

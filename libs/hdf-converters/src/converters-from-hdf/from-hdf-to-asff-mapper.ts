@@ -1,6 +1,6 @@
-import { FromHdfBaseConverter, ILookupPathFH, iOptions } from "./from-hdf-base-converter";
+import { FromHdfBaseConverter, ILookupPathFH } from "./from-hdf-base-converter";
 import {MappedTransform, MappedReform, ObjectEntries} from '../base-converter';
-import { AWSCISStandard, ExecJSONASFF } from "./asff-types";
+import { AWSCISStandard, ExecJSONASFF, iOptions } from "./asff-types";
 import {ExecJSON} from 'inspecjs';
 import { convertFile, contextualizeEvaluation } from "inspecjs";
 import { cleanText, createAssumeRolePolicyDocument, createCode, createNote, getAllLayers, setupAwsAcct, setupControlStatus, setupCreated, setupDescr, setupDetailsAssume, setupFindingType, setupGeneratorId, setupId, setupProdFieldCheck, setupProductARN, setupRegion, setupRemRec, setupResourcesID, setupResourcesID2, setupSevLabel, setupSevOriginal, setupTitle, setupUpdated, statusCount } from "./transformers";
@@ -76,6 +76,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
 
     contextProfiles: any;
     counts: any;
+    ioptions: iOptions;
 
     impactMapping: Map<number, string> = new Map([
         [0.9, "CRITICAL"],
@@ -87,11 +88,26 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       
 
     constructor(hdfObj: ExecJSON.Execution, options: iOptions|undefined ) {
-      super(hdfObj, options);
+      
+      super(hdfObj);
+      this.ioptions = (options === undefined)? this.defaultOptions(): options
        this.contextProfiles = contextualizeEvaluation(hdfObj);
        this.counts = statusCount(this.contextProfiles);
-        
-      
+    }
+
+    defaultOptions(): iOptions {
+
+      return {
+
+        input: "",
+        output: "",
+        awsAccountId: "",
+        accessKeyId: "",
+        accessKeySecret: "",
+        target: "default",
+        region: "",
+        upload: false
+      };
     }
 
      sleep(milliseconds: number) {

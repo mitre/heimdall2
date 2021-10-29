@@ -1,4 +1,15 @@
 /////Interfaces for ExecJSON focused on ASFF
+
+export interface iOptions {
+    input: string;
+    output: string;
+    awsAccountId: string;
+    accessKeyId?: string;
+    accessKeySecret?: string;
+    target: string;
+    region: string;
+    upload?: boolean;
+  }
   
 export interface ExecJSONASFF {
     Findings:   FindingASFF[];
