@@ -15,6 +15,7 @@ export interface ILookupPathFH {
   key?: string;
 }
 
+//Base converter used to support conversions from HDF to Any Format
 export class FromHdfBaseConverter {
 
     data: ExecJSON.Execution;
@@ -29,18 +30,18 @@ export class FromHdfBaseConverter {
 
     }
 
-    defaultOptions(): iOptions{
+    defaultOptions(): iOptions {
 
       return {
 
         input: "",
-  output: "",
-  awsAccountId: "",
-  accessKeyId: "",
-  accessKeySecret: "",
-  target: "default",
-  region: "",
-  upload: false
+        output: "",
+        awsAccountId: "",
+        accessKeyId: "",
+        accessKeySecret: "",
+        target: "default",
+        region: "",
+        upload: false
       };
     }
   
@@ -81,6 +82,8 @@ export class FromHdfBaseConverter {
   ): T | Array<T> | MappedReform<T, ILookupPathFH> {
     const transformer = _.get(v, 'transformer');
     if (Array.isArray(v)) {
+
+
       return this.handleArray(file, v);
     } else if (
       typeof v === 'string' ||
@@ -94,6 +97,8 @@ export class FromHdfBaseConverter {
         let pathVal;
         if(_.get(v, 'path') as string == ""){
           pathVal = file;
+        }else if(_.get(v, 'path') as string ==  "IgnoreMyArray"){
+          return transformer(null,null);
         }else{
 
           pathVal = this.handlePath(file, _.get(v, 'path') as string);

@@ -20,7 +20,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
                     Id: {path: ``, transformer: setupId, passParent: true},
                     ProductArn: {path: ``, transformer: setupProductARN,passParent: true },
                     AwsAccountId: {path: ``, transformer: setupAwsAcct,passParent: true },
-                    Types: ["Software and Configuration Checks"],
+                    Types: {path:"IgnoreMyArray", transformer: ()=> ["Software and Configuration Checks"]},
                     CreatedAt: {path: `results`, transformer: setupCreated},
                     Region: {path: '', transformer: setupRegion, passParent: true},
                     UpdatedAt: {path: ``,transformer:setupUpdated},
@@ -64,7 +64,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
                       },
                     ],
                     Compliance: {
-                      RelatedRequirements: ["SEE REMEDIATION FIELD FOR RESULTS AND RECOMMENDED ACTION(S)"],
+                      RelatedRequirements: {path:"IgnoreMyArray", transformer: ()=> ["SEE REMEDIATION FIELD FOR RESULTS AND RECOMMENDED ACTION(S)"]},
                       Status: {path: "", transformer: setupControlStatus},
                     },
                   }
@@ -84,17 +84,14 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         [0.3, "LOW"],
         [0.0, "INFORMATIONAL"],
       ]);
-      target:any;
-      findings: AwsSecurityFinding[];
+      
 
     constructor(hdfObj: ExecJSON.Execution, options: iOptions|undefined ) {
       super(hdfObj, options);
        this.contextProfiles = contextualizeEvaluation(hdfObj);
        this.counts = statusCount(this.contextProfiles);
-        this.target = this.ioptions.target.toLowerCase().trim();
-        this.findings = []
-      //this.loadControlDictionary();
-      //this.performLogic();
+        
+      
     }
 
      sleep(milliseconds: number) {
@@ -106,53 +103,35 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         }
       }
 
-    loadControlDictionary(){
-
-        /*let awsCisStandard = JSON.parse(fs.readFileSync(
-            'sample_jsons/asff_mapper/sample_input_report/aws_cis_standard.json',
-            {encoding: 'utf-8'}
-          ))
-        
-          //Turn into an easy lookup
-          let aCSDict: Record<string, AWSCISStandard>= { };
-          awsCisStandard["Controls"].forEach(( element: AWSCISStandard ) => {
-            aCSDict[element.ControlId] = element;
-          });
-
-          this.controlDictionary = aCSDict;*/
-
-    }
+    
     setMappings(
       customMappings: MappedTransform<ExecJSONASFF, ILookupPathFH>
     ): void {
       super.setMappings(customMappings);
     }
 
-    flattenProContResV2(){//The control and result will be merged into profile object, so there will be one object for each finding
+    flattenProContResV2(){//The control and result will be merged into profile object, so there will be one object for each finding to be formed from
 
         let flattenedProfiles: object[] = [];
-
         this.data.profiles.forEach((profile) => {
             profile.controls.reverse().forEach((control) => {
               const layersOfControl = getAllLayers(this.data, control);
               control.results.forEach((segment) => {
                 // Ensure that the UpdatedAt time is different accross findings (to match the order in HDF)
                 this.sleep(1);
-                //let controlObj = Object.assign({}, control, {"results": segment}, {"layerOfControl":layersOfControl})
-                    //let profFlat = Object.assign({},profile, {"controls": controlObj});
                     let profFlat = Object.assign({},profile,{"controls":control},{"results": undefined}, {"results": segment}, {"layersOfControl":layersOfControl});
                     
-                    flattenedProfiles.push(profFlat);
+                    flattenedProfiles.push(profFlat);//Array of all the merged profile,control, result in a 1 to 1 way
 
               });
             });
           });
 
-        
         return flattenedProfiles;
       }
 
 
+    //Convert from HDF to ASFF 
     toAsff(): ExecJSONASFF|null {
         if (this.mappings === undefined) {
           throw new Error('Mappings must be provided');
@@ -166,8 +145,6 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
                 return this.convertInternal(fProfile , this.mappings)["Findings"][0];
             });
             
-
-
             //Form the ASFF format of Findings mapped to the array of findings
             let finalASFF = this.finalizeASFFSchema(resList);
             console.log("Here");
@@ -176,42 +153,10 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       }
   }
 
-  flattenProContRes(){//The control and result will be merged into profile object, so there will be one object for each finding
-    let flattenedProfiles: object[] = [];
-    const profiles: ExecJSON.Profile[] = this.data.profiles;
-    profiles.forEach((profile)=>{
-        profile.controls.forEach((control)=>{
-            control.results.forEach((result)=>{
-                let controlObj = Object.assign({}, control, {"results": result})
-                let profFlat = Object.assign({},profile, {"controls": controlObj});
-                flattenedProfiles.push(profFlat);
-
-            });
-        });
-    });
-    return flattenedProfiles;
-  }
 
   finalizeASFFSchema(findingList: any[]){
-
+    //Finish the formatting of ASFF, assign array of finding to Findings
     return {Findings: findingList}
   }
   
-
-
- 
-
-configureId(val: unknown, newThis:unknown): string {
-        //var newThis = this as ReverseASFFMapper;
-        /*var newerThis = newThis as ReverseASFFMapper
-        var newVal = val as {id: string, results: {code_desc: string}};
-
-        var controlObj: AWSCISStandard = newerThis.controlDictionary["CIS."+newVal.id];
-        if(controlObj == undefined){
-            return ""
-        }
-        return `${controlObj.StandardsControlArn}/finding/${createHash("sha256").update(controlObj.ControlId + newVal.results.code_desc).digest("hex")}`*/
-        return "";
-        
-  }
 }

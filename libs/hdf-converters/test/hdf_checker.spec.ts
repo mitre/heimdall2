@@ -17,17 +17,46 @@ function omitVersions(input: ExecJSON.Execution): Partial<ExecJSON.Execution> {
   return _.omit(input, ['version', 'platform.release', 'profiles[0].sha256']);
 }
 test('Test converter toASFF function', () => {
+
+  //One way to get a HDF example into the test. It converts the third party into HDF. The bottom function converts the HDF to ASFF
+  let example = 'sample_jsons/asff_mapper/sample_input_report/asff_sample.json';//ASFFMapper
   const mapper = new ASFFMapper(
     fs.readFileSync(
-      'sample_jsons/asff_mapper/sample_input_report/asff_sample.json',
+      example,
       {encoding: 'utf-8'}
     )
   );
   const hdfTemp: ExecJSON.Execution = mapper.toHdf();
-  const reverseMapper = new FromHdfToAsffMapper(hdfTemp, undefined); 
-  const result: ExecJSONASFF |null = reverseMapper.toAsff();
-  fs.writeFileSync( "to_asff_test2.json", JSON.stringify(result));
-  if (result !== undefined) {
+  //Other way to test with a fie in HDF json format. It's read in and converted into ASFF
+  /*
+  //let example = 'red_hat_bad.json';//Already in HDF format
+  //let example = 'aws-s3-baseline.json';
+  let example = 'owasp_zap_webgoat.json';
+  
+
+  let hdfTemp = JSON.parse(fs.readFileSync(
+    example, {
+      encoding: 'utf-8'
+    }
+  ));*/
+
+  //Options passed for the conversion to ASFF
+  const opt = {
+
+    input: "owasp_zap_webgoat.json",
+    output: "",
+    awsAccountId: "12345678910",
+    accessKeyId: "",
+    accessKeySecret: "",
+    target: "redhat-reverse-proxy",
+    region: "us-east-2",
+    upload: false
+  }
+  //The From Hdf to Asff mapper takes a HDF object and an options argument with the format of the CLI tool
+  const reverseMapper = new FromHdfToAsffMapper(hdfTemp, opt);
+  const result: ExecJSONASFF | null = reverseMapper.toAsff();
+  fs.writeFileSync("from_hdf_output.json", JSON.stringify(result));
+  if (result !== undefined) {//Actual test has not been finished
     /*expect(omitVersions(result)).toEqual(
       omitVersions(
         JSON.parse(

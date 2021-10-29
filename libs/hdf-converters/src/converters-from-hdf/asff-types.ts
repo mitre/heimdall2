@@ -13,7 +13,7 @@ export interface FindingASFF {
     Region:             string;
     GeneratorId:        string;
     AwsAccountId:       string;
-    Types:              string[];
+    Types:              string[]|{};
     FirstObservedAt?:     string;
     LastObservedAt?:      string;
     CreatedAt:           string;
@@ -70,7 +70,7 @@ export interface ResourcesASFF {
 export interface ComplianceASFF {
     Status: string;
     StatusReasons?: ({ReasonCode:string|null, Description:string|null } | null)[]|undefined ;
-    RelatedRequirements?:string[];
+    RelatedRequirements?:string[]|{};
 }
 export interface FindingProviderFieldsASFF {
     Severity: {Label: string, Original: string};

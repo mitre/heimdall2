@@ -5,6 +5,8 @@ import { ContextualizedControl, ContextualizedEvaluation, ExecJSON } from "inspe
 import { FromHdfToAsffMapper } from "./from-hdf-to-asff-mapper";
 import { createHash } from "crypto";
 
+
+//FromHdfToAsff mapper transformers
 type Counts = {
   Passed: number;
   PassedTests: number;
@@ -317,16 +319,6 @@ export function setupSevOriginal(val: unknown, newThis:unknown) {
   
 }
 
-/*export function setupSevOrigin(val: unknown, newThis:unknown) {
-
-  const newerThis = newThis as FromHdfToAsffMapper;
-  
-  const newVal = val as ExecJSON.Execution & {controls: any, results: any, name: string, layersOfControl: any}
-  const layerOfControl = newVal.layersOfControl;
-
-  return newerThis.impactMapping.get(layerOfControl.impact) || "INFORMATIONAL"
-
-}*/
 
 export function setupFindingType(val: unknown, newThis:unknown) {
 
