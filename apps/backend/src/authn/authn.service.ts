@@ -20,11 +20,12 @@ import {UsersService} from '../users/users.service';
 
 @Injectable()
 export class AuthnService {
+  public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
   public logger = winston.createLogger({
     transports: [new winston.transports.Console()],
     format: winston.format.combine(
       winston.format.timestamp({
-        format: 'MMM-DD-YYYY HH:mm:ss Z'
+        format: this.loggingTimeFormat
       }),
       winston.format.printf((info) => `[${[info.timestamp]}] ${info.message}`)
     )
@@ -143,7 +144,7 @@ export class AuthnService {
     if (payload.forcePasswordChange || user.role === 'admin') {
       // Admin sessions are only valid for 10 minutes, for regular users give them 10 minutes to (hopefully) change their password.
       const expireTime = moment(new Date(Date.now() + ms('600s'))).format(
-        'MMM-DD-YYYY HH:mm:ss Z'
+        this.loggingTimeFormat
       );
       this.logger.info({
         message: `New session for User<ID: ${user.id}> expires at ${expireTime}`
@@ -161,7 +162,7 @@ export class AuthnService {
         false
       );
       const expireTime = moment(new Date(Date.now() + expiresIn)).format(
-        'MMM-DD-YYYY HH:mm:ss Z'
+        this.loggingTimeFormat
       );
       this.logger.info({
         message: `New session for User<ID: ${user.id}> expires at ${expireTime}`
