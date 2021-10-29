@@ -3,6 +3,9 @@ import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {ASFFMapper} from '../src/asff-mapper';
 import {BurpSuiteMapper} from '../src/burpsuite-mapper';
+import { ExecJSONASFF } from '../src/converters-from-hdf/asff-types';
+import { FromHdfToAsffMapper } from '../src/converters-from-hdf/from-hdf-to-asff-mapper';
+
 import {JfrogXrayMapper} from '../src/jfrog-xray-mapper';
 import {NiktoMapper} from '../src/nikto-mapper';
 import {SarifMapper} from '../src/sarif-mapper';
@@ -13,6 +16,29 @@ import {ZapMapper} from '../src/zap-mapper';
 function omitVersions(input: ExecJSON.Execution): Partial<ExecJSON.Execution> {
   return _.omit(input, ['version', 'platform.release', 'profiles[0].sha256']);
 }
+test('Test converter toASFF function', () => {
+  const mapper = new ASFFMapper(
+    fs.readFileSync(
+      'sample_jsons/asff_mapper/sample_input_report/asff_sample.json',
+      {encoding: 'utf-8'}
+    )
+  );
+  const hdfTemp: ExecJSON.Execution = mapper.toHdf();
+  const reverseMapper = new FromHdfToAsffMapper(hdfTemp, undefined); 
+  const result: ExecJSONASFF |null = reverseMapper.toAsff();
+  fs.writeFileSync( "to_asff_test2.json", JSON.stringify(result));
+  if (result !== undefined) {
+    /*expect(omitVersions(result)).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync('sample_jsons/burpsuite_mapper/burpsuite-hdf.json', {
+            encoding: 'utf-8'
+          })
+        )
+      )
+    );*/
+  }
+});
 
 describe('asff_mapper', () => {
   it('Successfully converts Native ASFF', () => {
