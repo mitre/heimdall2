@@ -8,14 +8,28 @@ import {compare} from 'bcryptjs';
 import * as crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import _ from 'lodash';
+import moment from 'moment';
+import ms from 'ms';
+import winston from 'winston';
 import {ApiKeyService} from '../apikeys/apikey.service';
 import {ConfigService} from '../config/config.service';
+import {limitJWTTime} from '../token/token.providers';
 import {CreateUserDto} from '../users/dto/create-user.dto';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 
 @Injectable()
 export class AuthnService {
+  public logger = winston.createLogger({
+    transports: [new winston.transports.Console()],
+    format: winston.format.combine(
+      winston.format.timestamp({
+        format: 'MMM-DD-YYYY HH:mm:ss Z'
+      }),
+      winston.format.printf((info) => `[${[info.timestamp]}] ${info.message}`)
+    )
+  });
+
   constructor(
     private readonly apiKeyService: ApiKeyService,
     private readonly configService: ConfigService,
@@ -128,6 +142,12 @@ export class AuthnService {
     }
     if (payload.forcePasswordChange || user.role === 'admin') {
       // Admin sessions are only valid for 10 minutes, for regular users give them 10 minutes to (hopefully) change their password.
+      const expireTime = moment(new Date(Date.now() + ms('600s'))).format(
+        'MMM-DD-YYYY HH:mm:ss Z'
+      );
+      this.logger.info({
+        message: `New session for User<ID: ${user.id}> expires at ${expireTime}`
+      });
       return {
         userID: user.id,
         accessToken: this.jwtService.sign(payload, {
@@ -136,6 +156,16 @@ export class AuthnService {
         })
       };
     } else {
+      const expiresIn = limitJWTTime(
+        this.configService.get('JWT_EXPIRE_TIME') || '60s',
+        false
+      );
+      const expireTime = moment(new Date(Date.now() + expiresIn)).format(
+        'MMM-DD-YYYY HH:mm:ss Z'
+      );
+      this.logger.info({
+        message: `New session for User<ID: ${user.id}> expires at ${expireTime}`
+      });
       return {
         userID: user.id,
         accessToken: this.jwtService.sign(payload, {
