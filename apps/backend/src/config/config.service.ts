@@ -30,13 +30,17 @@ export class ConfigService {
     return this.get('NODE_ENV')?.toLowerCase() === 'production';
   }
 
-  frontendStartupSettings(): StartupSettingsDto {
+  enabledOauthStrategies() {
     const enabledOauth: string[] = [];
     supportedOauth.forEach((oauthStrategy) => {
       if (this.get(`${oauthStrategy.toUpperCase()}_CLIENTID`)) {
         enabledOauth.push(oauthStrategy);
       }
     });
+    return enabledOauth;
+  }
+
+  frontendStartupSettings(): StartupSettingsDto {
     return new StartupSettingsDto({
       banner: this.get('WARNING_BANNER') || '',
       classificationBannerColor:
@@ -44,7 +48,7 @@ export class ConfigService {
       classificationBannerText: this.get('CLASSIFICATION_BANNER_TEXT') || '',
       classificationBannerTextColor:
         this.get('CLASSIFICATION_BANNER_TEXT_COLOR') || 'white',
-      enabledOAuth: enabledOauth,
+      enabledOAuth: this.enabledOauthStrategies(),
       oidcName: this.get('OIDC_NAME') || '',
       ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false,
       registrationEnabled: this.isRegistrationAllowed()
