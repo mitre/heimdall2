@@ -1,7 +1,8 @@
 import {
   CREATE_USER_DTO_TEST_OBJ,
   LOGIN_AUTHENTICATION,
-  SPLUNK_AUTHENTICATION
+  SPLUNK_AUTHENTICATION,
+  BAD_SPLUNK_AUTHENTICATION
 } from '../../apps/backend/test/constants/users-test.constant';
 import UploadModal from '../support/components/UploadModal';
 import SplunkPage from '../support/pages/SplunkPage';
@@ -35,7 +36,7 @@ context('Splunk', () => {
     it('fails to authenticate a Splunk user with invalid credentials', () => {
       uploadModal.switchToTab('splunk');
       splunkTabVerifier.splunkPresent();
-      splunkPage.splunkLogin(SPLUNK_AUTHENTICATION);
+      splunkPage.splunkLogin(BAD_SPLUNK_AUTHENTICATION);
       toastVerifier.toastTextContains('Bad username or password.');
     });
   });
