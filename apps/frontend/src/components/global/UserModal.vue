@@ -425,7 +425,7 @@ export default class UserModal extends Vue {
   deleteAPIKeyConfirm() {
     this.inputPasswordDialog = false;
     axios
-      .delete(`/apikeys/${this.activeAPIKey?.id}`, {
+      .delete<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {
         data: {...this.activeAPIKey, currentPassword: this.currentPassword}
       })
       .then(({data}) => {

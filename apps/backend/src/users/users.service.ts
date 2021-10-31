@@ -8,6 +8,7 @@ import {
 import {InjectModel} from '@nestjs/sequelize';
 import {compare, hash} from 'bcryptjs';
 import {FindOptions} from 'sequelize/types';
+import {v4} from 'uuid';
 import {AuthnService} from '../authn/authn.service';
 import {Action} from '../casl/casl-ability.factory';
 import {CreateUserDto} from './dto/create-user.dto';
@@ -102,6 +103,11 @@ export class UsersService {
   async updateLoginMetadata(user: User): Promise<void> {
     user.lastLogin = new Date();
     user.loginCount++;
+    await user.save();
+  }
+
+  async updateUserSecret(user: User): Promise<void> {
+    user.jwtSecret = v4();
     await user.save();
   }
 

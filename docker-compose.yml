@@ -22,7 +22,6 @@ services:
     env_file: .env-prod
     ports:
       - "3000"
-      - "3000:3000"
     depends_on:
       - "database"
   nginx:

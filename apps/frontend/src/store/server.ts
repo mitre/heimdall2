@@ -16,6 +16,7 @@ import {
   VuexModule
 } from 'vuex-module-decorators';
 import {GroupsModule} from './groups';
+import {SnackbarModule} from './snackbar';
 
 const localToken = new LocalStorageVal<string | null>('auth_token');
 const localUserID = new LocalStorageVal<string | null>('localUserID');
@@ -34,6 +35,11 @@ export interface IServerState {
   oidcName: string;
   ldap: boolean;
   userInfo: IUser;
+}
+
+interface LoginData {
+  userID: string;
+  accessToken: string;
 }
 
 @Module({
@@ -172,7 +178,7 @@ class Server extends VuexModule implements IServerState {
   }
 
   @Action
-  public async handleLogin(data: {userID: string; accessToken: string}) {
+  public async handleLogin(data: LoginData) {
     this.context.commit('SET_USERID', data.userID);
     this.context.commit('SET_TOKEN', data.accessToken);
     this.GetUserInfo();
@@ -180,28 +186,30 @@ class Server extends VuexModule implements IServerState {
 
   @Action
   public async Login(userInfo: {email: string; password: string}) {
-    return axios.post('/authn/login', userInfo).then((response) => {
-      this.handleLogin(response.data);
+    return axios.post<LoginData>('/authn/login', userInfo).then(({data}) => {
+      this.handleLogin(data);
     });
   }
 
   @Action
   public async LoginLDAP(userInfo: {username: string; password: string}) {
-    return axios.post('/authn/login/ldap', userInfo).then((response) => {
-      this.handleLogin(response.data);
-    });
+    return axios
+      .post<LoginData>('/authn/login/ldap', userInfo)
+      .then(({data}) => {
+        this.handleLogin(data);
+      });
   }
 
   @Action
   public async LoginGithub(callbackCode: string | null) {
     return axios
-      .get(`/authn/github/callback`, {
+      .get<LoginData>(`/authn/github/callback`, {
         params: {
           code: callbackCode
         }
       })
-      .then((response) => {
-        this.handleLogin(response.data);
+      .then(({data}) => {
+        this.handleLogin(data);
       });
   }
 
@@ -256,10 +264,19 @@ class Server extends VuexModule implements IServerState {
   }
 
   @Action
-  public Logout(): void {
-    this.CLEAR_USERID();
-    this.CLEAR_TOKEN();
-    location.replace('/login?logoff=true');
+  public Logout(): Promise<void> {
+    return axios
+      .post(`/users/logout`)
+      .then(() => {
+        this.CLEAR_USERID();
+        this.CLEAR_TOKEN();
+        location.replace('/login?logoff=true');
+      })
+      .catch((error) => {
+        SnackbarModule.failure(
+          `An error occoured while signing you out: ${error.response.data}`
+        );
+      });
   }
 }
 
