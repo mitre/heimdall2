@@ -1,6 +1,9 @@
 <template>
   <v-app id="inspire">
-    <v-snackbar v-model="logoffSnackbar" color="success">
+    <v-snackbar
+      v-model="logoffSnackbar"
+      :color="logoffFailure ? 'red' : 'success'"
+    >
       {{ logoffMessage }}</v-snackbar
     >
     <v-main>
@@ -96,23 +99,44 @@ export default class Login extends Vue {
     return ServerModule.ldap;
   }
 
+  get logoffFailure() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    return (
+      urlParams.get('logoff')?.toLowerCase() === 'true' &&
+      (ServerModule.token !== '' || urlParams.get('error'))
+    );
+  }
+
   get logoffSnackbar() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     if (
-      urlParams.get('logoff')?.toLowerCase() === 'true' &&
-      ServerModule.token === ''
+      !this.logoffFailure &&
+      urlParams.get('logoff')?.toLowerCase() === 'true'
     ) {
       return true;
-    } else if (
-      urlParams.get('logoff')?.toLowerCase() === 'true' &&
-      ServerModule.token !== ''
-    ) {
-      this.logoffMessage =
-        'An error occurred during the logout process, your token has not been discarded. Please clear your browser data.';
-      return false;
     } else {
-      return false;
+      if (urlParams.get('error')) {
+        // If the token has expired or the user has changed their JWT secret
+        if (urlParams.get('error') === 'Unauthorized') {
+          this.logoffMessage = `Your session was invalid, please sign in again.`;
+        } else {
+          this.logoffMessage = `An error occurred while signing you out: ${urlParams.get(
+            'error'
+          )}`;
+        }
+        return true;
+      } else if (
+        urlParams.get('logoff')?.toLowerCase() === 'true' &&
+        ServerModule.token !== ''
+      ) {
+        this.logoffMessage =
+          'An error occurred during the logout process, your token has not been discarded. Please clear your browser data.';
+        return false;
+      } else {
+        return false;
+      }
     }
   }
 }
