@@ -92,7 +92,7 @@
             <v-card id="statusCounts" class="fill-height">
               <v-card-title class="justify-center">Status Counts</v-card-title>
               <v-card-actions class="justify-center">
-                <StatusChart v-model="statusFilter" :filter="all_filter" />
+                <!-- <StatusChart v-model="statusFilter" :filter="all_filter" /> -->
               </v-card-actions>
             </v-card>
           </v-col>
@@ -191,7 +191,7 @@ import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 import ProfileData from '@/components/cards/ProfileData.vue';
 import SeverityChart from '@/components/cards/SeverityChart.vue';
 import StatusCardRow from '@/components/cards/StatusCardRow.vue';
-import StatusChart from '@/components/cards/StatusChart.vue';
+// import StatusChart from '@/components/cards/StatusChart.vue';
 import Treemap from '@/components/cards/treemap/Treemap.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
 import ExportCaat from '@/components/global/ExportCaat.vue';
@@ -233,7 +233,7 @@ import {compare_times} from '../utilities/delta_util';
     StatusCardRow,
     Treemap,
     ControlTable,
-    StatusChart,
+    // StatusChart,
     SeverityChart,
     ComplianceChart,
     ExportCaat,

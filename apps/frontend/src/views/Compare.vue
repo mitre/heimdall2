@@ -74,13 +74,13 @@
                               </div>
                             </v-card-title>
                             <v-card-actions class="justify-center">
-                              <StatusChart
+                              <!-- <StatusChart
                                 :filter="{
                                   fromFile: [file.uniqueId],
                                   omit_overlayed_controls: true
                                 }"
                                 :show-compliance="true"
-                              />
+                              /> -->
                             </v-card-actions>
                           </v-card>
                         </v-slide-item>
@@ -89,23 +89,23 @@
                   </v-row>
                 </v-col>
                 <v-col v-else-if="tab == 1 && ableTab" cols="12">
-                  <ApexLineChart
+                  <!-- <ApexLineChart
                     :series="compliance_series"
                     :categories="fileTimes"
                     :upper-range="100"
                     :title="'Total Compliance'"
                     :y-title="'% Compliance'"
-                  />
+                  /> -->
                 </v-col>
                 <v-col v-else-if="tab == 2 && ableTab" cols="12">
-                  <ApexLineChart
+                  <!-- <ApexLineChart
                     :series="line_sev_series"
                     :categories="fileTimes"
                     :upper-range="total_failed + 1"
                     :sev-chart="true"
                     :title="'Failed Tests by Severity'"
                     :y-title="'Tests Failed'"
-                  />
+                  /> -->
                 </v-col>
                 <v-col v-else cols="12" />
               </keep-alive>
@@ -202,11 +202,8 @@
 <script lang="ts">
 import CompareRow from '@/components/cards/comparison/CompareRow.vue';
 import ProfileRow from '@/components/cards/comparison/ProfileRow.vue';
-import StatusChart from '@/components/cards/StatusChart.vue';
-import ApexLineChart, {
-  SeriesItem
-} from '@/components/generic/ApexLineChart.vue';
-import {Category} from '@/components/generic/ApexPieChart.vue';
+//import {SeriesItem} from '@/components/generic/ApexLineChart.vue';
+//import {Category} from '@/components/generic/ApexPieChart.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
 import Modal from '@/components/global/Modal.vue';
 import SearchHelpModal from '@/components/global/SearchHelpModal.vue';
@@ -232,7 +229,6 @@ import {
 } from '@/utilities/delta_util';
 import Base from '@/views/Base.vue';
 import {IEvaluation} from '@heimdall/interfaces';
-import {ControlStatus} from 'inspecjs';
 import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
@@ -246,15 +242,15 @@ import {SearchModule} from '../store/search';
     Modal,
     CompareRow,
     ProfileRow,
-    StatusChart,
+    // StatusChart,
     TagRow,
-    ApexLineChart,
+    //ApexLineChart,
     UploadButton,
     SearchHelpModal
   }
 })
 export default class Compare extends Vue {
-  categories: Category<ControlStatus>[] = [
+  categories: any[] = [
     {
       label: 'Passed',
       value: 'Passed',
@@ -507,7 +503,7 @@ export default class Compare extends Vue {
     return series;
   }
 
-  get line_sev_series(): SeriesItem[] {
+  get line_sev_series(): any[] {
     const series = [];
     const low = {name: 'Failed Low Severity', data: this.sev_series[0]};
     const med = {name: 'Failed Medium Severity', data: this.sev_series[1]};
@@ -520,7 +516,7 @@ export default class Compare extends Vue {
     return series;
   }
 
-  get compliance_series(): SeriesItem[] {
+  get compliance_series(): any[] {
     var series = [];
     for (const file of this.files) {
       const filter = {fromFile: [file.uniqueId]};

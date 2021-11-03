@@ -1,18 +1,16 @@
 <template>
-  <ApexPieChart
-    :categories="categories"
-    :series="series"
-    @category-selected="onSelect"
-  />
+  <v-container ref="severityContainer">
+    <D3PieChart :config="chart_config" :datum="chart_data" />
+  </v-container>
 </template>
 
 <script lang="ts">
-import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
 import {Filter} from '@/store/data_filters';
 import {SeverityCountModule} from '@/store/severity_counts';
 import {Severity} from 'inspecjs';
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import {D3PieChart} from 'vue-d3-charts';
 import {Prop} from 'vue-property-decorator';
 import {SearchModule, valueToSeverity} from '../../store/search';
 
@@ -22,7 +20,7 @@ import {SearchModule, valueToSeverity} from '../../store/search';
  */
 @Component({
   components: {
-    ApexPieChart
+    D3PieChart
   }
 })
 export default class SeverityChart extends Vue {
@@ -57,7 +55,7 @@ export default class SeverityChart extends Vue {
     ];
   }
 
-  onSelect(severity: Category<Severity>) {
+  onSelect(severity: any) {
     // In the case that the values are the same, we want to instead emit null
     if (
       this.value &&
