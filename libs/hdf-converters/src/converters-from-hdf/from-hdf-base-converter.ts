@@ -1,46 +1,31 @@
-import {MappedTransform, MappedReform, ObjectEntries} from '../base-converter';
 import {ExecJSON} from 'inspecjs';
-import { ExecJSONControl, ExecJSONProfile } from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
-import { StringLiteralLike } from 'typescript';
 import _ from 'lodash';
-import fs from 'fs';
-import { createHash } from "crypto";
-
-
+import {MappedReform, MappedTransform, ObjectEntries} from '../base-converter';
 
 export interface ILookupPathFH {
   path?: string;
-  transformer?: (value: unknown, newThis?: unknown) => unknown ;
+  transformer?: (value: unknown, newThis?: unknown) => unknown;
   arrayTransformer?: (value: unknown[], file: unknown) => unknown[];
   key?: string;
 }
 
 //Base converter used to support conversions from HDF to Any Format
 export class FromHdfBaseConverter {
+  data: ExecJSON.Execution;
+  mappings?: MappedTransform<any, ILookupPathFH & {passParent?: boolean}>;
+  collapseResults: boolean;
 
-    data: ExecJSON.Execution;
-    mappings?: MappedTransform<any, (ILookupPathFH & {passParent?: boolean})>;
-    collapseResults: boolean;
-    
-  
-    constructor(data: ExecJSON.Execution, collapseResults = false) {
-      this.data = data;
-      this.collapseResults = collapseResults;
-    }
+  constructor(data: ExecJSON.Execution, collapseResults = false) {
+    this.data = data;
+    this.collapseResults = collapseResults;
+  }
 
-    
-  
-    setMappings(
-      mappings: MappedTransform<any, ILookupPathFH>
-    ): void {
-      this.mappings = mappings;
-    }
-  
-    //Called over and over to iterate through objects assigned to keys too
-  convertInternal<T>(
-    file: object,
-    fields: T
-  ): MappedReform<T, ILookupPathFH> {
+  setMappings(mappings: MappedTransform<any, ILookupPathFH>): void {
+    this.mappings = mappings;
+  }
+
+  //Called over and over to iterate through objects assigned to keys too
+  convertInternal<T>(file: object, fields: T): MappedReform<T, ILookupPathFH> {
     const result = this.objectMap(fields, (v: ObjectEntries<T>) =>
       this.evaluate(file, v)
     );
@@ -59,7 +44,7 @@ export class FromHdfBaseConverter {
     ) as Record<keyof T, V>;
   }
 
-    //Used to get the data located at the paths  
+  //Used to get the data located at the paths
   // eslint-disable-next-line @typescript-eslint/ban-types
   evaluate<T extends object>(
     file: object,
@@ -67,8 +52,6 @@ export class FromHdfBaseConverter {
   ): T | Array<T> | MappedReform<T, ILookupPathFH> {
     const transformer = _.get(v, 'transformer');
     if (Array.isArray(v)) {
-
-
       return this.handleArray(file, v);
     } else if (
       typeof v === 'string' ||
@@ -80,24 +63,19 @@ export class FromHdfBaseConverter {
     } else if (_.has(v, 'path')) {
       if (typeof transformer === 'function') {
         let pathVal;
-        if(_.get(v, 'path') as string == ""){
+        if ((_.get(v, 'path') as string) == '') {
           pathVal = file;
-        }else if(_.get(v, 'path') as string ==  "IgnoreMyArray"){
-          return transformer(null,null);
-        }else{
-
+        } else if ((_.get(v, 'path') as string) == 'IgnoreMyArray') {
+          return transformer(null, null);
+        } else {
           pathVal = this.handlePath(file, _.get(v, 'path') as string);
         }
-        
+
         if (_.has(v, 'passParent')) {
-            return transformer( pathVal, this);
-        }else{
-
-            return transformer(pathVal);
+          return transformer(pathVal, this);
+        } else {
+          return transformer(pathVal);
         }
-
-
-     
       }
       const pathVal = this.handlePath(file, _.get(v, 'path') as string);
       if (Array.isArray(pathVal)) {
@@ -115,16 +93,17 @@ export class FromHdfBaseConverter {
   handleArray<T extends object>(
     file: object,
     v: Array<T & ILookupPathFH>
-  ): Array<T> {//Looks throguh parsed data file using the mapping setup in V
+  ): Array<T> {
+    //Looks throguh parsed data file using the mapping setup in V
     if (v.length === 0) {
       return [];
     }
     if (v[0].path === undefined) {
-      const arrayTransformer = v[0].arrayTransformer;//does nothing since null
+      const arrayTransformer = v[0].arrayTransformer; //does nothing since null
       v = v.map((element) => {
         return _.omit(element, ['arrayTransformer']) as T & ILookupPathFH;
-      });//does nothing too
-      let output: Array<T> = [];//Create empty array of generic to push evaluated values
+      }); //does nothing too
+      let output: Array<T> = []; //Create empty array of generic to push evaluated values
       v.forEach((element) => {
         output.push(this.evaluate(file, element) as T);
       });
@@ -138,7 +117,7 @@ export class FromHdfBaseConverter {
       const arrayTransformer = v[0].arrayTransformer;
       const transformer = v[0].transformer;
       if (this.hasPath(file, path)) {
-        const pathVal = this.handlePath(file, path);//Any matches in the path even if more than one,  will grab an array of results, the issues
+        const pathVal = this.handlePath(file, path); //Any matches in the path even if more than one,  will grab an array of results, the issues
         if (Array.isArray(pathVal)) {
           v = pathVal.map((element: Record<string, unknown>) => {
             return _.omit(this.convertInternal(element, v[0]), [
@@ -184,12 +163,12 @@ export class FromHdfBaseConverter {
     }
   }
 
-
- collapseDuplicates<T extends object>(
+  collapseDuplicates<T extends object>(
     array: Array<T>,
     key: string,
     collapseResults: boolean
-  ): Array<T> {//Method is used to take the array of issues that will be formatted as controlls. Then group the duplicates into results for the correct control number
+  ): Array<T> {
+    //Method is used to take the array of issues that will be formatted as controlls. Then group the duplicates into results for the correct control number
     const seen = new Map<string, number>();
     const newArray: T[] = [];
     let counter = 0;
@@ -197,7 +176,8 @@ export class FromHdfBaseConverter {
       const propertyValue = _.get(item, key);
       if (typeof propertyValue === 'string') {
         const index = seen.get(propertyValue) || 0;
-        if (!seen.has(propertyValue)) {//Sets the  control with first result
+        if (!seen.has(propertyValue)) {
+          //Sets the  control with first result
           newArray.push(item);
           seen.set(propertyValue, counter);
           counter++;
@@ -205,16 +185,17 @@ export class FromHdfBaseConverter {
           const oldResult = _.get(
             newArray[index],
             'results'
-          ) as ExecJSON.ControlResult[];//Grab cureent list if results
+          ) as ExecJSON.ControlResult[]; //Grab cureent list if results
           const descriptions = oldResult.map((element) =>
             _.get(element, 'code_desc')
-          );//grab description
+          ); //grab description
           if (collapseResults) {
             if (
               descriptions.indexOf(
                 _.get(item, 'results[0].code_desc') as string
               ) === -1
-            ) {//Handles appending the results to eachother if can't be found
+            ) {
+              //Handles appending the results to eachother if can't be found
               _.set(
                 newArray[index],
                 'results',
@@ -223,11 +204,14 @@ export class FromHdfBaseConverter {
                 )
               );
             }
-          } else {//Handles appending the results to eachother inside a control
+          } else {
+            //Handles appending the results to eachother inside a control
             _.set(
               newArray[index],
               'results',
-              oldResult.concat(_.get(item, 'results') as ExecJSON.ControlResult[])
+              oldResult.concat(
+                _.get(item, 'results') as ExecJSON.ControlResult[]
+              )
             );
           }
         }
@@ -235,4 +219,4 @@ export class FromHdfBaseConverter {
     });
     return newArray;
   }
-  }
+}

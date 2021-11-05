@@ -3,9 +3,8 @@ import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {ASFFMapper} from '../src/asff-mapper';
 import {BurpSuiteMapper} from '../src/burpsuite-mapper';
-import { ExecJSONASFF } from '../src/converters-from-hdf/asff-types';
-import { FromHdfToAsffMapper } from '../src/converters-from-hdf/from-hdf-to-asff-mapper';
-
+import {IExecJSONASFF} from '../src/converters-from-hdf/asff-types';
+import {FromHdfToAsffMapper} from '../src/converters-from-hdf/from-hdf-to-asff-mapper';
 import {JfrogXrayMapper} from '../src/jfrog-xray-mapper';
 import {NiktoMapper} from '../src/nikto-mapper';
 import {SarifMapper} from '../src/sarif-mapper';
@@ -17,15 +16,10 @@ function omitVersions(input: ExecJSON.Execution): Partial<ExecJSON.Execution> {
   return _.omit(input, ['version', 'platform.release', 'profiles[0].sha256']);
 }
 test('Test converter toASFF function', () => {
-
   //One way to get a HDF example into the test. It converts the third party into HDF. The bottom function converts the HDF to ASFF
-  let example = 'sample_jsons/asff_mapper/sample_input_report/asff_sample.json';//ASFFMapper
-  const mapper = new ASFFMapper(
-    fs.readFileSync(
-      example,
-      {encoding: 'utf-8'}
-    )
-  );
+  const example =
+    'sample_jsons/asff_mapper/sample_input_report/asff_sample.json'; //ASFFMapper
+  const mapper = new ASFFMapper(fs.readFileSync(example, {encoding: 'utf-8'}));
   const hdfTemp: ExecJSON.Execution = mapper.toHdf();
   //Other way to test with a fie in HDF json format. It's read in and converted into ASFF
   /*
@@ -42,21 +36,21 @@ test('Test converter toASFF function', () => {
 
   //Options passed for the conversion to ASFF
   const opt = {
-
-    input: "owasp_zap_webgoat.json",
-    output: "",
-    awsAccountId: "12345678910",
-    accessKeyId: "",
-    accessKeySecret: "",
-    target: "redhat-reverse-proxy",
-    region: "us-east-2",
+    input: 'owasp_zap_webgoat.json',
+    output: '',
+    awsAccountId: '12345678910',
+    accessKeyId: '',
+    accessKeySecret: '',
+    target: 'redhat-reverse-proxy',
+    region: 'us-east-2',
     upload: false
-  }
+  };
   //The From Hdf to Asff mapper takes a HDF object and an options argument with the format of the CLI tool
   const reverseMapper = new FromHdfToAsffMapper(hdfTemp, opt);
-  const result: ExecJSONASFF | null = reverseMapper.toAsff();
-  fs.writeFileSync("from_hdf_output.json", JSON.stringify(result));
-  if (result !== undefined) {//Actual test has not been finished
+  const result: IExecJSONASFF | null = reverseMapper.toAsff();
+  fs.writeFileSync('from_hdf_output.json', JSON.stringify(result));
+  if (result !== undefined) {
+    //Actual test has not been finished
     /*expect(omitVersions(result)).toEqual(
       omitVersions(
         JSON.parse(

@@ -1,10 +1,11 @@
-import { AwsSecurityFinding } from "@aws-sdk/client-securityhub";
-//import { Control, HDF, Result } from "./types/hdf";
-import _ from "lodash";
-import { ContextualizedControl, ContextualizedEvaluation, ExecJSON } from "inspecjs";
-import { FromHdfToAsffMapper } from "./from-hdf-to-asff-mapper";
-import { createHash } from "crypto";
-
+import {createHash} from 'crypto';
+import {
+  ContextualizedControl,
+  ContextualizedEvaluation,
+  ExecJSON
+} from 'inspecjs';
+import _ from 'lodash';
+import {FromHdfToAsffMapper} from './from-hdf-to-asff-mapper';
 
 //FromHdfToAsff mapper transformers
 type Counts = {
@@ -34,7 +35,7 @@ export function getRunTime(hdf: ExecJSON.Execution): Date {
 function filter_overlays(
   controls: ContextualizedControl[]
 ): ContextualizedControl[] {
-  const idHash: { [key: string]: ContextualizedControl } = {};
+  const idHash: {[key: string]: ContextualizedControl} = {};
   controls.forEach((c) => {
     const id = c.hdf.wraps.id;
     const old: ContextualizedControl | undefined = idHash[id];
@@ -67,23 +68,23 @@ export function statusCount(evaluation: ContextualizedEvaluation): Counts {
     Failed: 0,
     FailedTests: 0,
     NotApplicable: 0,
-    NotReviewed: 0,
+    NotReviewed: 0
   };
   controls.forEach((control) => {
-    if (control.hdf.status === "Passed") {
+    if (control.hdf.status === 'Passed') {
       statusCounts.Passed += 1;
       statusCounts.PassedTests += (control.hdf.segments || []).length;
-    } else if (control.hdf.status === "Failed") {
+    } else if (control.hdf.status === 'Failed') {
       statusCounts.PassingTestsFailedControl += (
         control.hdf.segments || []
-      ).filter((s) => s.status === "passed").length;
+      ).filter((s) => s.status === 'passed').length;
       statusCounts.FailedTests += (control.hdf.segments || []).filter(
-        (s) => s.status === "failed"
+        (s) => s.status === 'failed'
       ).length;
       statusCounts.Failed += 1;
-    } else if (control.hdf.status === "Not Applicable") {
+    } else if (control.hdf.status === 'Not Applicable') {
       statusCounts.NotApplicable += 1;
-    } else if (control.hdf.status === "Not Reviewed") {
+    } else if (control.hdf.status === 'Not Reviewed') {
       statusCounts.NotReviewed += 1;
     }
   });
@@ -104,17 +105,19 @@ export function createDescription(counts: Counts): string {
   } (Can only be tested manually at this time)`;
 }
 
-export function createAssumeRolePolicyDocument(layersOfControl: (ExecJSON.Control & { profileInfo?: Record<string, unknown> })[], segment: ExecJSON.ControlResult): string {
-  const segmentOverview = createNote(segment)
-  const code = layersOfControl.map((layer) => createCode(layer)).join("\n\n")
-  return `${code}\n\n${segmentOverview}`
+export function createAssumeRolePolicyDocument(
+  layersOfControl: (ExecJSON.Control & {
+    profileInfo?: Record<string, unknown>;
+  })[],
+  segment: ExecJSON.ControlResult
+): string {
+  const segmentOverview = createNote(segment);
+  const code = layersOfControl.map((layer) => createCode(layer)).join('\n\n');
+  return `${code}\n\n${segmentOverview}`;
 }
 
 // Slices an array into chunks, since AWS doens't allow uploading more than 100 findings at a time
-export function sliceIntoChunks(
-  arr: AwsSecurityFinding[],
-  chunkSize: number
-): AwsSecurityFinding[][] {
+export function sliceIntoChunks(arr: any[], chunkSize: number): any[][] {
   const res = [];
   for (let i = 0; i < arr.length; i += chunkSize) {
     const chunk = arr.slice(i, i + chunkSize);
@@ -126,7 +129,7 @@ export function sliceIntoChunks(
 // Gets rid of extra spacing + newlines as these aren't shown in Security Hub
 export function cleanText(text?: string | null): string | undefined {
   if (text) {
-    return text.replace(/  +/g, " ").replace(/\r?\n|\r/g, " ");
+    return text.replace(/  +/g, ' ').replace(/\r?\n|\r/g, ' ');
   } else {
     return undefined;
   }
@@ -136,16 +139,24 @@ export function cleanText(text?: string | null): string | undefined {
 export function getAllLayers(
   hdf: ExecJSON.Execution,
   knownControl: ExecJSON.Control
-): (ExecJSON.Control & { fix?: string,profileInfo?: Record<string, unknown> })[] {
+): (ExecJSON.Control & {
+  fix?: string;
+  profileInfo?: Record<string, unknown>;
+})[] {
   if (hdf.profiles.length == 1) {
-    return [{ ...knownControl, ..._.omit(hdf.profiles, 'controls')}];
+    return [{...knownControl, ..._.omit(hdf.profiles, 'controls')}];
   } else {
-    const foundControls: (ExecJSON.Control & { profileInfo?: Record<string, unknown> })[] = [];
+    const foundControls: (ExecJSON.Control & {
+      profileInfo?: Record<string, unknown>;
+    })[] = [];
     // For each control in each profile
     hdf.profiles.forEach((profile) => {
       profile.controls.forEach((control) => {
         if (control.id === knownControl.id) {
-          foundControls.push({ ...control, profileInfo: _.omit(profile, 'controls') });
+          foundControls.push({
+            ...control,
+            profileInfo: _.omit(profile, 'controls')
+          });
         }
       });
     });
@@ -164,351 +175,364 @@ export function createNote(segment: ExecJSON.ControlResult) {
   }
 }
 
-export function createCode(control: ExecJSON.Control & { profileInfo?: Record<string, unknown> }) {
-   
-        return `=========================================================\n# Profile name: ${control.profileInfo?.name}\n=========================================================\n\n${control.code?.replace(/\\\"/g, "\"")}`;
-
-    
+export function createCode(
+  control: ExecJSON.Control & {profileInfo?: Record<string, unknown>}
+) {
+  return `=========================================================\n# Profile name: ${
+    control.profileInfo?.name
+  }\n=========================================================\n\n${control.code?.replace(
+    /\\\"/g,
+    '"'
+  )}`;
 }
 
 ////Added transformers
-export function setupId(val: unknown, newThis:unknown) {
-
+export function setupId(val: unknown, newThis: unknown) {
   //newerThis: FromHdfToAsffMapper = newThis ;
 
-
   const newerThis = newThis as FromHdfToAsffMapper;
-  const newVal = val as ExecJSON.Execution & {controls: any, results: any, name: string}
-    const target = newerThis.ioptions.target.toLowerCase().trim();
-    const control = newVal.controls;
-    const segment = newVal.results;
-    const name = newVal.name;
+  const newVal = val as ExecJSON.Execution & {
+    controls: any;
+    results: any;
+    name: string;
+  };
+  const target = newerThis.ioptions.target.toLowerCase().trim();
+  const control = newVal.controls;
+  const segment = newVal.results;
+  const name = newVal.name;
 
-    return `${target}/${name}/${
-      control.id
-    }/finding/${createHash("sha256")
-      .update(control.id + segment.code_desc)
-      .digest("hex")}`;
- 
+  return `${target}/${name}/${control.id}/finding/${createHash('sha256')
+    .update(control.id + segment.code_desc)
+    .digest('hex')}`;
 }
 
-export function setupProductARN(val: unknown, newThis:unknown) {
-
+export function setupProductARN(val: unknown, newThis: unknown) {
   //ignore val
   const newerThis = newThis as FromHdfToAsffMapper;
-  return `arn:aws:securityhub:${newerThis.ioptions.region}:${newerThis.ioptions.awsAccountId}:product/${newerThis.ioptions.awsAccountId}/default`
-  
+  return `arn:aws:securityhub:${newerThis.ioptions.region}:${newerThis.ioptions.awsAccountId}:product/${newerThis.ioptions.awsAccountId}/default`;
 }
 
-export function setupAwsAcct(val: unknown, newThis:unknown) {
-
+export function setupAwsAcct(val: unknown, newThis: unknown) {
   //ignore val
   const newerThis = newThis as FromHdfToAsffMapper;
-  return newerThis.ioptions.awsAccountId
-  
+  return newerThis.ioptions.awsAccountId;
 }
 
 export function setupCreated(val: unknown) {
-
-  
   const newVal = val as {start_time: Date};
-  
-  return (
-    newVal || { start_time: new Date().toISOString() }
-  ).start_time;
-    
- 
+
+  return (newVal || {start_time: new Date().toISOString()}).start_time;
 }
 
-export function setupRegion(val: unknown, newThis:unknown) {
-
+export function setupRegion(val: unknown, newThis: unknown) {
   //ignore val
   const newerThis = newThis as FromHdfToAsffMapper;
-  return newerThis.ioptions.region
-  
+  return newerThis.ioptions.region;
 }
-export function setupUpdated(val: unknown, newThis:unknown){
-  return new Date().toISOString()
+export function setupUpdated(val: unknown, newThis: unknown) {
+  return new Date().toISOString();
 }
 
-export function setupGeneratorId(val: unknown, newThis:unknown) {
-
+export function setupGeneratorId(val: unknown, newThis: unknown) {
   const newerThis = newThis as FromHdfToAsffMapper;
-  const newVal = val as ExecJSON.Execution & {controls: any, results: any, name: string}
-    const control = newVal.controls;
-    const name = newVal.name;
+  const newVal = val as ExecJSON.Execution & {
+    controls: any;
+    results: any;
+    name: string;
+  };
+  const control = newVal.controls;
+  const name = newVal.name;
 
-    return `arn:aws:securityhub:us-east-2:${newerThis.ioptions.awsAccountId}:ruleset/set/${name}/rule/${control.id}`;
-  
+  return `arn:aws:securityhub:us-east-2:${newerThis.ioptions.awsAccountId}:ruleset/set/${name}/rule/${control.id}`;
 }
 
-
-export function setupTitle(val: unknown, newThis:unknown) {
-
- //ignore newThis
-  const newVal = val as ExecJSON.Execution & {controls: any, results: any, name: string, layersOfControl: any}
+export function setupTitle(val: unknown, newThis: unknown) {
+  //ignore newThis
+  const newVal = val as ExecJSON.Execution & {
+    controls: any;
+    results: any;
+    name: string;
+    layersOfControl: any;
+  };
 
   const control = newVal.controls;
   const layerOfControl = newVal.layersOfControl[0];
   return _.truncate(
     `${control.id} | ${
       layerOfControl.tags.nist
-        ? `[${_.get(layerOfControl, "tags.nist").join(", ")}]`
-        : ""
+        ? `[${_.get(layerOfControl, 'tags.nist').join(', ')}]`
+        : ''
     } | ${cleanText(layerOfControl.title)}`,
-    { length: 256 }
+    {length: 256}
   );
-    
-  
 }
 
-export function setupDescr(val: unknown, newThis:unknown) {
-
+export function setupDescr(val: unknown, newThis: unknown) {
   //const newerThis = newThis as FromHdfToAsffMapper;
   //ignore new this
-  const newVal = val as ExecJSON.Execution & {controls: any, results: any, name: string, layersOfControl: any}
+  const newVal = val as ExecJSON.Execution & {
+    controls: any;
+    results: any;
+    name: string;
+    layersOfControl: any;
+  };
   const layerOfControl = newVal.layersOfControl[0];
   // Checktext can either be a description or a tag
   const checktext: string =
-  layerOfControl.descriptions?.find(
-    (description: {label: string}) => description.label === "check"
-  )?.data ||
-  (layerOfControl.tags["check"] as string) ||
-  "Check not available";
-    
+    layerOfControl.descriptions?.find(
+      (description: {label: string}) => description.label === 'check'
+    )?.data ||
+    (layerOfControl.tags['check'] as string) ||
+    'Check not available';
 
-    let currentVal =  _.truncate(
-      cleanText(`${layerOfControl.desc} -- Check Text: ${checktext}`),
-      { length: 1024, omission: '[SEE FULL TEXT IN AssumeRolePolicyDocument]' }
-    )
+  const currentVal = _.truncate(
+    cleanText(`${layerOfControl.desc} -- Check Text: ${checktext}`),
+    {length: 1024, omission: '[SEE FULL TEXT IN AssumeRolePolicyDocument]'}
+  );
 
-    const caveat = layerOfControl.descriptions?.find(
-      (description:{label: string}) => description.label === "caveat"
-    )?.data;
+  const caveat = layerOfControl.descriptions?.find(
+    (description: {label: string}) => description.label === 'caveat'
+  )?.data;
 
-    if (caveat) {
-      return _.truncate(
-        `Caveat: ${cleanText(caveat)} --- Description: ${
-          currentVal
-        }`,
-        { length: 1024, omission: '' }
-      );
-    }
-    return currentVal;
-
+  if (caveat) {
+    return _.truncate(
+      `Caveat: ${cleanText(caveat)} --- Description: ${currentVal}`,
+      {length: 1024, omission: ''}
+    );
+  }
+  return currentVal;
 }
 
-
-export function setupSevLabel(val: unknown, newThis:unknown) {
-
+export function setupSevLabel(val: unknown, newThis: unknown) {
   const newerThis = newThis as FromHdfToAsffMapper;
-  
-  const newVal = val as ExecJSON.Execution & {controls: any, results: any, name: string, layersOfControl: any}
+
+  const newVal = val as ExecJSON.Execution & {
+    controls: any;
+    results: any;
+    name: string;
+    layersOfControl: any;
+  };
   const layerOfControl = newVal.layersOfControl[0];
 
-  return newerThis.impactMapping.get(layerOfControl.impact) || "INFORMATIONAL"
-
+  return newerThis.impactMapping.get(layerOfControl.impact) || 'INFORMATIONAL';
 }
 
-export function setupSevOriginal(val: unknown, newThis:unknown) {
-
-  const newVal = val as ExecJSON.Execution & {controls: any, results: any, name: string, layersOfControl: any}
+export function setupSevOriginal(val: unknown, newThis: unknown) {
+  const newVal = val as ExecJSON.Execution & {
+    controls: any;
+    results: any;
+    name: string;
+    layersOfControl: any;
+  };
   const layerOfControl = newVal.layersOfControl[0];
 
-  return `${layerOfControl.impact}`
-  
+  return `${layerOfControl.impact}`;
 }
 
-
-export function setupFindingType(val: unknown, newThis:unknown) {
-
+export function setupFindingType(val: unknown, newThis: unknown) {
   const newerThis = newThis as FromHdfToAsffMapper;
-  
-  const newVal = val as ExecJSON.Execution & {controls: any, results: any, name: string, layersOfControl: any}
-  
 
-  const slashSplit = newerThis.ioptions.input.split("\\")[newerThis.ioptions.input.split("\\").length - 1];
-  const filename = slashSplit.split("/")[slashSplit.split("/").length - 1];
-  
-  let typesArr = [
+  const newVal = val as ExecJSON.Execution & {
+    controls: any;
+    results: any;
+    name: string;
+    layersOfControl: any;
+  };
+
+  const slashSplit =
+    newerThis.ioptions.input.split('\\')[
+      newerThis.ioptions.input.split('\\').length - 1
+    ];
+  const filename = slashSplit.split('/')[slashSplit.split('/').length - 1];
+
+  const typesArr = [
     `File/Input/${filename}`,
-    `Control/Code/${newVal.layersOfControl.map((layer: ExecJSON.Control & { profileInfo?: Record<string, unknown> }) => createCode(layer)).join("\n\n").replace(/\//g, "∕")}`,
+    `Control/Code/${newVal.layersOfControl
+      .map(
+        (layer: ExecJSON.Control & {profileInfo?: Record<string, unknown>}) =>
+          createCode(layer)
+      )
+      .join('\n\n')
+      .replace(/\//g, '∕')}`
   ];
 
   const layersOfControl = newVal.layersOfControl;
   const segment = newVal.results;
 
- 
   // Add all layers of profile info to the Finding Provider Fields
-  let targets = ['name', 'version', 'sha256', 'title', 'maintainer', 'summary', 'license', 'copyright', 'copyright_email']
+  let targets = [
+    'name',
+    'version',
+    'sha256',
+    'title',
+    'maintainer',
+    'summary',
+    'license',
+    'copyright',
+    'copyright_email'
+  ];
   layersOfControl.forEach((layer: {profileInfo: string}) => {
-    const profileInfos: Record<string, string>[] = []
+    const profileInfos: Record<string, string>[] = [];
     targets.forEach((target) => {
       const value = _.get(layer.profileInfo, target);
-      if (typeof value === "string" && value) {
-        profileInfos.push({[target]: value})
+      if (typeof value === 'string' && value) {
+        profileInfos.push({[target]: value});
       }
     });
-    typesArr.push(`Profile/Info/${JSON.stringify(profileInfos).replace(/\//g, '∕')}`);
-  })
+    typesArr.push(
+      `Profile/Info/${JSON.stringify(profileInfos).replace(/\//g, '∕')}`
+    );
+  });
   // Add segment/result information to Finding Provider Fields
   targets = [
-    "code_desc",
-    "exception",
-    "message",
-    "resource",
-    "run_time",
-    "start_time",
-    "skip_message",
-    "status"
+    'code_desc',
+    'exception',
+    'message',
+    'resource',
+    'run_time',
+    'start_time',
+    'skip_message',
+    'status'
   ];
   targets.forEach((target) => {
     const value = _.get(segment, target);
-    if (typeof value === "string" && value) {
-      typesArr.push(
-        `Segment/${target}/${value.replace(/\//g, '∕')}`
-      );
+    if (typeof value === 'string' && value) {
+      typesArr.push(`Segment/${target}/${value.replace(/\//g, '∕')}`);
     }
   });
   // Add Tags to Finding Provider Fields
   for (const tag in layersOfControl[0].tags) {
     if (layersOfControl[0].tags[tag]) {
-      if (tag === "nist" && Array.isArray(layersOfControl[0].tags.nist)) {
+      if (tag === 'nist' && Array.isArray(layersOfControl[0].tags.nist)) {
+        typesArr.push(`Tags/nist/${layersOfControl[0].tags.nist.join(', ')}`);
+      } else if (tag === 'cci' && Array.isArray(layersOfControl[0].tags.cci)) {
+        typesArr.push(`Tags/cci/${layersOfControl[0].tags.cci.join(', ')}`);
+      } else if (typeof layersOfControl[0].tags[tag] === 'string') {
         typesArr.push(
-          `Tags/nist/${layersOfControl[0].tags.nist.join(", ")}`
-        );
-      } else if (
-        tag === "cci" &&
-        Array.isArray(layersOfControl[0].tags.cci)
-      ) {
-        typesArr.push(
-          `Tags/cci/${layersOfControl[0].tags.cci.join(", ")}`
-        );
-      } else if (typeof layersOfControl[0].tags[tag] === "string") {
-        typesArr.push(
-          `Tags/${tag.replace(/\//g, "∕")}/${(
+          `Tags/${tag.replace(/\//g, '∕')}/${(
             layersOfControl[0].tags[tag] as string
-          ).replace(/\//g, "∕")}`
+          ).replace(/\//g, '∕')}`
         );
       } else if (
-        typeof layersOfControl[0].tags[tag] === "object" &&
+        typeof layersOfControl[0].tags[tag] === 'object' &&
         Array.isArray(layersOfControl[0].tags[tag])
       ) {
         typesArr.push(
-          `Tags/${tag.replace(/\//g, "∕")}/${(
+          `Tags/${tag.replace(/\//g, '∕')}/${(
             layersOfControl[0].tags[tag] as Array<string>
           )
-            .join(", ")
-            .replace(/\//g, "∕")}`
+            .join(', ')
+            .replace(/\//g, '∕')}`
         );
       }
     }
   }
   // Add Descriptions to FindingProviderFields
-  layersOfControl[0].descriptions?.forEach((description: {data: string, label: string}) => {
-    if (description.data) {
-      typesArr.push(
-        `Descriptions/${description.label.replace(/\//g, "∕")}/${cleanText(
-          description.data
-        )?.replace(/\//g, "∕")}`
-      );
+  layersOfControl[0].descriptions?.forEach(
+    (description: {data: string; label: string}) => {
+      if (description.data) {
+        typesArr.push(
+          `Descriptions/${description.label.replace(/\//g, '∕')}/${cleanText(
+            description.data
+          )?.replace(/\//g, '∕')}`
+        );
+      }
     }
-  });
+  );
 
   return typesArr;
-  
-
 }
 
-export function setupRemRec(val: unknown, newThis:unknown) {
-
+export function setupRemRec(val: unknown, newThis: unknown) {
   const newerThis = newThis as FromHdfToAsffMapper;
-  
-  const newVal = val as ExecJSON.Execution & {controls: any, results: any, name: string, layersOfControl: any}
+
+  const newVal = val as ExecJSON.Execution & {
+    controls: any;
+    results: any;
+    name: string;
+    layersOfControl: any;
+  };
   const segment = newVal.results;
   const layerOfControl = newVal.layersOfControl[0];
 
   return _.truncate(
     cleanText(
-      createNote(segment) + " --- Fix: " +
+      createNote(segment) +
+        ' --- Fix: ' +
         (
           layerOfControl.descriptions?.find(
-            (description: {label: string}) => description.label === "fix"
+            (description: {label: string}) => description.label === 'fix'
           ) || {
-            data: layerOfControl.fix || "Fix not available",
+            data: layerOfControl.fix || 'Fix not available'
           }
         ).data
     ),
-    { length: 512, omission: '... [SEE FULL TEXT IN AssumeRolePolicyDocument]' }
+    {length: 512, omission: '... [SEE FULL TEXT IN AssumeRolePolicyDocument]'}
   );
-  
-  
-
 }
 
-
-export function setupProdFieldCheck(val: unknown, newThis:unknown) {
-
-
-  const newVal = val as ExecJSON.Execution & {controls: any, results: any, name: string, layersOfControl: any}
+export function setupProdFieldCheck(val: unknown, newThis: unknown) {
+  const newVal = val as ExecJSON.Execution & {
+    controls: any;
+    results: any;
+    name: string;
+    layersOfControl: any;
+  };
   const layerOfControl = newVal.layersOfControl[0];
   const checktext: string =
-  layerOfControl.descriptions?.find(
-    (description: {label: string}) => description.label === "check"
-  )?.data ||
-  (layerOfControl.tags["check"] as string) ||
-  "Check not available";
-  
-  return _.truncate(checktext, { length: 2048, omission: '' });
+    layerOfControl.descriptions?.find(
+      (description: {label: string}) => description.label === 'check'
+    )?.data ||
+    (layerOfControl.tags['check'] as string) ||
+    'Check not available';
 
+  return _.truncate(checktext, {length: 2048, omission: ''});
 }
 
-
-export function setupResourcesID(val: unknown, newThis:unknown) {
-
-
+export function setupResourcesID(val: unknown, newThis: unknown) {
   const newerThis = newThis as FromHdfToAsffMapper;
   return `AWS::::Account:${newerThis.ioptions.awsAccountId}`;
-
 }
 
-export function setupResourcesID2(val: unknown, newThis:unknown) {
-
-  const newVal = val as ExecJSON.Execution & {controls: any, results: any, name: string, layersOfControl: any}
+export function setupResourcesID2(val: unknown, newThis: unknown) {
+  const newVal = val as ExecJSON.Execution & {
+    controls: any;
+    results: any;
+    name: string;
+    layersOfControl: any;
+  };
   const layerOfControl = newVal.layersOfControl[0];
   return `${layerOfControl.id} Validation Code`;
-
 }
 
-
-export function setupDetailsAssume(val: unknown, newThis:unknown) {
-
+export function setupDetailsAssume(val: unknown, newThis: unknown) {
   const newerThis = newThis as FromHdfToAsffMapper;
-  
-  const newVal = val as ExecJSON.Execution & {controls: any, results: any, name: string, layersOfControl: any}
+
+  const newVal = val as ExecJSON.Execution & {
+    controls: any;
+    results: any;
+    name: string;
+    layersOfControl: any;
+  };
   const segment = newVal.results;
 
   return createAssumeRolePolicyDocument(newVal.layersOfControl, segment);
-  
-
 }
 
-
-
-
-
-export function setupControlStatus(val: unknown, newThis:unknown) {
-
-  const newVal = val as ExecJSON.Execution & {controls: any, results: any, name: string, layersOfControl: any}
+export function setupControlStatus(val: unknown, newThis: unknown) {
+  const newVal = val as ExecJSON.Execution & {
+    controls: any;
+    results: any;
+    name: string;
+    layersOfControl: any;
+  };
   const segment = newVal.results;
 
   const controlStatus =
-segment.status == "skipped"
-  ? "WARNING"
-  : segment.status == "passed"
-  ? "PASSED"
-  : "FAILED";
+    segment.status == 'skipped'
+      ? 'WARNING'
+      : segment.status == 'passed'
+      ? 'PASSED'
+      : 'FAILED';
   return controlStatus;
-  
-
 }
