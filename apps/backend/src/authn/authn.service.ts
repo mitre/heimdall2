@@ -8,14 +8,29 @@ import {compare} from 'bcryptjs';
 import * as crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import _ from 'lodash';
+import moment from 'moment';
+import ms from 'ms';
+import winston from 'winston';
 import {ApiKeyService} from '../apikeys/apikey.service';
 import {ConfigService} from '../config/config.service';
+import {limitJWTTime} from '../token/token.providers';
 import {CreateUserDto} from '../users/dto/create-user.dto';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 
 @Injectable()
 export class AuthnService {
+  public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
+  public logger = winston.createLogger({
+    transports: [new winston.transports.Console()],
+    format: winston.format.combine(
+      winston.format.timestamp({
+        format: this.loggingTimeFormat
+      }),
+      winston.format.printf((info) => `[${[info.timestamp]}] ${info.message}`)
+    )
+  });
+
   constructor(
     private readonly apiKeyService: ApiKeyService,
     private readonly configService: ConfigService,
@@ -121,16 +136,45 @@ export class AuthnService {
       role: user.role,
       forcePasswordChange: user.forcePasswordChange
     };
+    // Users have their own JWT Secret to allow for session invalidation on sign out
+    const loginUser = await this.usersService.findById(user.id);
+    if (
+      !loginUser.jwtSecret ||
+      this.configService.get('ONE_SESSION_PER_USER')?.toLowerCase() === 'true'
+    ) {
+      this.usersService.updateUserSecret(loginUser);
+    }
     if (payload.forcePasswordChange || user.role === 'admin') {
       // Admin sessions are only valid for 10 minutes, for regular users give them 10 minutes to (hopefully) change their password.
+      const expireTime = moment(new Date(Date.now() + ms('600s'))).format(
+        this.loggingTimeFormat
+      );
+      this.logger.info({
+        message: `New session for User<ID: ${user.id}> expires at ${expireTime}`
+      });
       return {
         userID: user.id,
-        accessToken: this.jwtService.sign(payload, {expiresIn: '600s'})
+        accessToken: this.jwtService.sign(payload, {
+          expiresIn: '600s',
+          secret: this.configService.get('JWT_SECRET') + loginUser.jwtSecret
+        })
       };
     } else {
+      const expiresIn = limitJWTTime(
+        this.configService.get('JWT_EXPIRE_TIME') || '60s',
+        false
+      );
+      const expireTime = moment(new Date(Date.now() + expiresIn)).format(
+        this.loggingTimeFormat
+      );
+      this.logger.info({
+        message: `New session for User<ID: ${user.id}> expires at ${expireTime}`
+      });
       return {
         userID: user.id,
-        accessToken: this.jwtService.sign(payload)
+        accessToken: this.jwtService.sign(payload, {
+          secret: this.configService.get('JWT_SECRET') + loginUser.jwtSecret
+        })
       };
     }
   }
