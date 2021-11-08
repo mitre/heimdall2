@@ -5,13 +5,13 @@ export default class Sidebar {
 
   save(name: string): void {
     this.openClose();
-    cy.get(`[title="${name}"] [data-cy=saveFile]`).click();
+    cy.get(`[title="${name}"] [data-cy=saveFile]`).click({force: true});
     this.openClose();
   }
 
   close(name: string): void {
     this.openClose();
-    cy.get(`[title="${name}"] [data-cy=closeFile]`).click();
+    cy.get(`[title="${name}"] [data-cy=closeFile]`).click({force: true});
     this.openClose();
   }
 }

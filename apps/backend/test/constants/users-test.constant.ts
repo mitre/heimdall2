@@ -35,6 +35,16 @@ export const BAD_LDAP_AUTHENTICATION = {
   password: 'zoiderg'
 };
 
+export const AWS_S3_AUTHENTICATION = {
+  accessToken: 'localkey',
+  secretToken: 'secretkey'
+};
+
+export const BAD_AWS_S3_AUTHENTICATION = {
+  accessToken: 'badlocalkey',
+  secretToken: 'badsecretkey'
+};
+
 // @ts-ignore
 export const TEST_USER: User = {
   email: 'abc@yahoo.com',
