@@ -1,5 +1,6 @@
 export * from './src/asff-mapper';
 export * from './src/burpsuite-mapper';
+export * from './src/converters-from-hdf/from-hdf-to-asff-mapper';
 export * from './src/dbprotect-mapper';
 export * from './src/fortify-mapper';
 export * from './src/jfrog-xray-mapper';

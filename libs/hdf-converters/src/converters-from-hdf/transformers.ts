@@ -187,11 +187,14 @@ export function createCode(
   )}`;
 }
 
-export function setupId(val: FlattenedExecJSON, context?: FromHdfToAsffMapper) {
+export function setupId(
+  hdfData: FlattenedExecJSON,
+  context?: FromHdfToAsffMapper
+) {
   const target = context?.ioptions.target.toLowerCase().trim();
-  const control = val.controls;
-  const segment = val.results;
-  const name = val.name;
+  const control = hdfData.controls;
+  const segment = hdfData.results;
+  const name = hdfData.name;
 
   return `${target}/${name}/${control.id}/finding/${createHash('sha256')
     .update(control.id + segment.code_desc)
@@ -212,8 +215,8 @@ export function setupAwsAcct(
   return context?.ioptions.awsAccountId;
 }
 
-export function setupCreated(val: FlattenedExecJSON) {
-  return (val || {start_time: new Date().toISOString()}).start_time;
+export function setupCreated(hdfData: FlattenedExecJSON) {
+  return (hdfData || {start_time: new Date().toISOString()}).start_time;
 }
 
 export function setupRegion(
@@ -227,30 +230,29 @@ export function setupUpdated() {
 }
 
 export function setupGeneratorId(
-  val: FlattenedExecJSON,
+  hdfData: FlattenedExecJSON,
   context?: FromHdfToAsffMapper
 ) {
-  const control = val.controls;
-  const name = val.name;
+  const control = hdfData.controls;
+  const name = hdfData.name;
 
   return `arn:aws:securityhub:us-east-2:${context?.ioptions.awsAccountId}:ruleset/set/${name}/rule/${control.id}`;
 }
 
-export function setupTitle(val: FlattenedExecJSON) {
-  const control = val.controls;
-  const layerOfControl = val.layersOfControl[0];
+export function setupTitle(hdfData: FlattenedExecJSON) {
+  const control = hdfData.controls;
+  const layerOfControl = hdfData.layersOfControl[0];
+  const nistTags = layerOfControl.tags.nist
+    ? `[${_.get(layerOfControl, 'tags.nist').join(', ')}]`
+    : '';
   return _.truncate(
-    `${control.id} | ${
-      layerOfControl.tags.nist
-        ? `[${_.get(layerOfControl, 'tags.nist').join(', ')}]`
-        : ''
-    } | ${cleanText(layerOfControl.title)}`,
+    `${control.id} | ${nistTags} | ${cleanText(layerOfControl.title)}`,
     {length: 256}
   );
 }
 
-export function setupDescr(val: FlattenedExecJSON) {
-  const layerOfControl = val.layersOfControl[0];
+export function setupDescr(hdfData: FlattenedExecJSON) {
+  const layerOfControl = hdfData.layersOfControl[0];
   // Check text can either be a description or a tag
   const checktext: string =
     layerOfControl.descriptions?.find(
@@ -278,44 +280,23 @@ export function setupDescr(val: FlattenedExecJSON) {
 }
 
 export function setupSevLabel(
-  val: FlattenedExecJSON,
+  hdfData: FlattenedExecJSON,
   context?: FromHdfToAsffMapper
 ) {
-  const layerOfControl = val.layersOfControl[0];
+  const layerOfControl = hdfData.layersOfControl[0];
 
   return context?.impactMapping.get(layerOfControl.impact) || 'INFORMATIONAL';
 }
 
-export function setupSevOriginal(val: FlattenedExecJSON) {
-  return `${val.layersOfControl[0].impact}`;
+export function setupSevOriginal(hdfData: FlattenedExecJSON) {
+  return `${hdfData.layersOfControl[0].impact}`;
 }
 
-export function setupFindingType(
-  val: FlattenedExecJSON,
-  context?: FromHdfToAsffMapper
-) {
-  const slashSplit =
-    context?.ioptions.input.split('\\')[
-      context?.ioptions.input.split('\\').length - 1
-    ];
-  const filename = slashSplit?.split('/')[slashSplit.split('/').length - 1];
-
-  const typesArr = [
-    `File/Input/${filename}`,
-    `Control/Code/${val.layersOfControl
-      .map(
-        (layer: ExecJSON.Control & {profileInfo?: Record<string, unknown>}) =>
-          createCode(layer)
-      )
-      .join('\n\n')
-      .replace(/\//g, '∕')}`
-  ];
-
-  const layersOfControl = val.layersOfControl;
-  const segment = val.results;
-
-  // Add all layers of profile info to the Finding Provider Fields
-  let targets = [
+function createProfileInfo(
+  layersOfControl: Record<string, unknown>[]
+): string[] {
+  const typesArr: string[] = [];
+  const targets = [
     'name',
     'version',
     'sha256',
@@ -326,11 +307,11 @@ export function setupFindingType(
     'copyright',
     'copyright_email'
   ];
-  layersOfControl.forEach((layer: {profileInfo: string}) => {
+  layersOfControl.forEach((layer) => {
     const profileInfos: Record<string, string>[] = [];
     targets.forEach((target) => {
       const value = _.get(layer.profileInfo, target);
-      if (typeof value === 'string' && value) {
+      if (typeof value === 'string') {
         profileInfos.push({[target]: value});
       }
     });
@@ -338,8 +319,12 @@ export function setupFindingType(
       `Profile/Info/${JSON.stringify(profileInfos).replace(/\//g, '∕')}`
     );
   });
-  // Add segment/result information to Finding Provider Fields
-  targets = [
+  return typesArr;
+}
+
+function createSegmentInfo(segment: unknown): string[] {
+  const typesArr: string[] = [];
+  const targets = [
     'code_desc',
     'exception',
     'message',
@@ -355,26 +340,30 @@ export function setupFindingType(
       typesArr.push(`Segment/${target}/${value.replace(/\//g, '∕')}`);
     }
   });
-  // Add Tags to Finding Provider Fields
-  for (const tag in layersOfControl[0].tags) {
-    if (layersOfControl[0].tags[tag]) {
-      if (tag === 'nist' && Array.isArray(layersOfControl[0].tags.nist)) {
-        typesArr.push(`Tags/nist/${layersOfControl[0].tags.nist.join(', ')}`);
-      } else if (tag === 'cci' && Array.isArray(layersOfControl[0].tags.cci)) {
-        typesArr.push(`Tags/cci/${layersOfControl[0].tags.cci.join(', ')}`);
-      } else if (typeof layersOfControl[0].tags[tag] === 'string') {
+  return typesArr;
+}
+
+function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
+  const typesArr: string[] = [];
+  for (const tag in control.tags) {
+    if (control) {
+      if (tag === 'nist' && Array.isArray(control.tags.nist)) {
+        typesArr.push(`Tags/nist/${control.tags.nist.join(', ')}`);
+      } else if (tag === 'cci' && Array.isArray(control.tags.cci)) {
+        typesArr.push(`Tags/cci/${control.tags.cci.join(', ')}`);
+      } else if (typeof control.tags[tag] === 'string') {
         typesArr.push(
           `Tags/${tag.replace(/\//g, '∕')}/${(
-            layersOfControl[0].tags[tag] as string
+            control.tags[tag] as string
           ).replace(/\//g, '∕')}`
         );
       } else if (
-        typeof layersOfControl[0].tags[tag] === 'object' &&
-        Array.isArray(layersOfControl[0].tags[tag])
+        typeof control.tags[tag] === 'object' &&
+        Array.isArray(control.tags[tag])
       ) {
         typesArr.push(
           `Tags/${tag.replace(/\//g, '∕')}/${(
-            layersOfControl[0].tags[tag] as Array<string>
+            control.tags[tag] as Array<string>
           )
             .join(', ')
             .replace(/\//g, '∕')}`
@@ -382,25 +371,65 @@ export function setupFindingType(
       }
     }
   }
+  return typesArr;
+}
+
+function createDescriptionInfo(control: {
+  descriptions: {
+    data: string;
+    label: string;
+  }[];
+}): string[] {
+  const typesArr: string[] = [];
+  control.descriptions.forEach((description) => {
+    typesArr.push(
+      `Descriptions/${description.label.replace(/\//g, '∕')}/${cleanText(
+        description.data
+      )?.replace(/\//g, '∕')}`
+    );
+  });
+  return typesArr;
+}
+
+export function setupFindingType(
+  hdfData: FlattenedExecJSON,
+  context?: FromHdfToAsffMapper
+) {
+  const slashSplit =
+    context?.ioptions.input.split('\\')[
+      context?.ioptions.input.split('\\').length - 1
+    ];
+  const filename = slashSplit?.split('/')[slashSplit.split('/').length - 1];
+
+  const typesArr = [
+    `File/Input/${filename}`,
+    `Control/Code/${hdfData.layersOfControl
+      .map(
+        (layer: ExecJSON.Control & {profileInfo?: Record<string, unknown>}) =>
+          createCode(layer)
+      )
+      .join('\n\n')
+      .replace(/\//g, '∕')}`
+  ];
+
+  const layersOfControl = hdfData.layersOfControl;
+  const segment = hdfData.results;
+
+  // Add all layers of profile info to the Finding Provider Fields
+  typesArr.push(...createProfileInfo(layersOfControl));
+  // Add segment/result information to Finding Provider Fields
+  typesArr.push(...createSegmentInfo(segment));
+  // Add Tags to Finding Provider Fields
+  typesArr.push(...createTagInfo(layersOfControl[0]));
   // Add Descriptions to FindingProviderFields
-  layersOfControl[0].descriptions?.forEach(
-    (description: {data: string; label: string}) => {
-      if (description.data) {
-        typesArr.push(
-          `Descriptions/${description.label.replace(/\//g, '∕')}/${cleanText(
-            description.data
-          )?.replace(/\//g, '∕')}`
-        );
-      }
-    }
-  );
+  typesArr.push(...createDescriptionInfo(layersOfControl[0]));
 
   return typesArr;
 }
 
-export function setupRemRec(val: FlattenedExecJSON) {
-  const segment = val.results;
-  const layerOfControl = val.layersOfControl[0];
+export function setupRemRec(hdfData: FlattenedExecJSON) {
+  const segment = hdfData.results;
+  const layerOfControl = hdfData.layersOfControl[0];
 
   const getFix = (control: ExecJSON.Control) =>
     control.descriptions?.find(
@@ -410,13 +439,13 @@ export function setupRemRec(val: FlattenedExecJSON) {
     'Fix not available';
 
   return _.truncate(
-    cleanText(createNote(segment) + ' --- Fix: ' + getFix(layerOfControl)),
+    cleanText(`${createNote(segment)} --- Fix: ${getFix(layerOfControl)}`),
     {length: 512, omission: '... [SEE FULL TEXT IN AssumeRolePolicyDocument]'}
   );
 }
 
-export function setupProdFieldCheck(val: FlattenedExecJSON) {
-  const layerOfControl = val.layersOfControl[0];
+export function setupProdFieldCheck(hdfData: FlattenedExecJSON) {
+  const layerOfControl = hdfData.layersOfControl[0];
   const checktext: string =
     layerOfControl.descriptions?.find(
       (description: {label: string}) => description.label === 'check'
@@ -434,16 +463,19 @@ export function setupResourcesID(
   return `AWS::::Account:${context?.ioptions.awsAccountId}`;
 }
 
-export function setupResourcesID2(val: FlattenedExecJSON) {
-  return `${val.layersOfControl[0].id} Validation Code`;
+export function setupResourcesID2(hdfData: FlattenedExecJSON) {
+  return `${hdfData.layersOfControl[0].id} Validation Code`;
 }
 
-export function setupDetailsAssume(val: FlattenedExecJSON) {
-  return createAssumeRolePolicyDocument(val.layersOfControl, val.results);
+export function setupDetailsAssume(hdfData: FlattenedExecJSON) {
+  return createAssumeRolePolicyDocument(
+    hdfData.layersOfControl,
+    hdfData.results
+  );
 }
 
-export function setupControlStatus(val: FlattenedExecJSON) {
-  const segment = val.results;
+export function setupControlStatus(hdfData: FlattenedExecJSON) {
+  const segment = hdfData.results;
 
   const status: string | boolean =
     segment.status === 'skipped' ? 'WARNING' : segment.status === 'passed';

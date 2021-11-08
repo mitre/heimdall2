@@ -21,7 +21,6 @@ function omitASFFTimes(input: IFindingASFF[]): Partial<IFindingASFF>[] {
 }
 
 test('Test converter toASFF function', () => {
-  //One way to get a HDF example into the test. It converts the third party into HDF. The bottom function converts the HDF to ASFF
   const inputData = JSON.parse(
     fs.readFileSync(
       'sample_jsons/asff_reverse_mapper/sample_input_report/rhel7-results.json',
