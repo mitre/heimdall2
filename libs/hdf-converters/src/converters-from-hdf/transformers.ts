@@ -116,7 +116,7 @@ export function createAssumeRolePolicyDocument(
   return `${code}\n\n${segmentOverview}`;
 }
 
-// Slices an array into chunks, since AWS doens't allow uploading more than 100 findings at a time
+// Slices an array into chunks, since AWS doesn't allow uploading more than 100 findings at a time
 export function sliceIntoChunks(arr: any[], chunkSize: number): any[][] {
   const res = [];
   for (let i = 0; i < arr.length; i += chunkSize) {
@@ -188,8 +188,6 @@ export function createCode(
 
 ////Added transformers
 export function setupId(val: unknown, newThis: unknown) {
-  //newerThis: FromHdfToAsffMapper = newThis ;
-
   const newerThis = newThis as FromHdfToAsffMapper;
   const newVal = val as ExecJSON.Execution & {
     controls: any;
@@ -206,7 +204,7 @@ export function setupId(val: unknown, newThis: unknown) {
     .digest('hex')}`;
 }
 
-export function setupProductARN(val: unknown, newThis: unknown) {
+export function setupProductARN(_val: unknown, newThis: unknown) {
   //ignore val
   const newerThis = newThis as FromHdfToAsffMapper;
   return `arn:aws:securityhub:${newerThis.ioptions.region}:${newerThis.ioptions.awsAccountId}:product/${newerThis.ioptions.awsAccountId}/default`;
@@ -224,12 +222,12 @@ export function setupCreated(val: unknown) {
   return (newVal || {start_time: new Date().toISOString()}).start_time;
 }
 
-export function setupRegion(val: unknown, newThis: unknown) {
+export function setupRegion(_val: unknown, newThis: unknown) {
   //ignore val
   const newerThis = newThis as FromHdfToAsffMapper;
   return newerThis.ioptions.region;
 }
-export function setupUpdated(val: unknown, newThis: unknown) {
+export function setupUpdated() {
   return new Date().toISOString();
 }
 
@@ -246,7 +244,7 @@ export function setupGeneratorId(val: unknown, newThis: unknown) {
   return `arn:aws:securityhub:us-east-2:${newerThis.ioptions.awsAccountId}:ruleset/set/${name}/rule/${control.id}`;
 }
 
-export function setupTitle(val: unknown, newThis: unknown) {
+export function setupTitle(val: unknown) {
   //ignore newThis
   const newVal = val as ExecJSON.Execution & {
     controls: any;
@@ -267,7 +265,7 @@ export function setupTitle(val: unknown, newThis: unknown) {
   );
 }
 
-export function setupDescr(val: unknown, newThis: unknown) {
+export function setupDescr(val: unknown) {
   //const newerThis = newThis as FromHdfToAsffMapper;
   //ignore new this
   const newVal = val as ExecJSON.Execution & {
@@ -277,7 +275,7 @@ export function setupDescr(val: unknown, newThis: unknown) {
     layersOfControl: any;
   };
   const layerOfControl = newVal.layersOfControl[0];
-  // Checktext can either be a description or a tag
+  // Check text can either be a description or a tag
   const checktext: string =
     layerOfControl.descriptions?.find(
       (description: {label: string}) => description.label === 'check'
@@ -317,7 +315,7 @@ export function setupSevLabel(val: unknown, newThis: unknown) {
   return newerThis.impactMapping.get(layerOfControl.impact) || 'INFORMATIONAL';
 }
 
-export function setupSevOriginal(val: unknown, newThis: unknown) {
+export function setupSevOriginal(val: unknown) {
   const newVal = val as ExecJSON.Execution & {
     controls: any;
     results: any;
@@ -443,9 +441,7 @@ export function setupFindingType(val: unknown, newThis: unknown) {
   return typesArr;
 }
 
-export function setupRemRec(val: unknown, newThis: unknown) {
-  const newerThis = newThis as FromHdfToAsffMapper;
-
+export function setupRemRec(val: unknown) {
   const newVal = val as ExecJSON.Execution & {
     controls: any;
     results: any;
@@ -471,7 +467,7 @@ export function setupRemRec(val: unknown, newThis: unknown) {
   );
 }
 
-export function setupProdFieldCheck(val: unknown, newThis: unknown) {
+export function setupProdFieldCheck(val: unknown) {
   const newVal = val as ExecJSON.Execution & {
     controls: any;
     results: any;
@@ -494,7 +490,7 @@ export function setupResourcesID(val: unknown, newThis: unknown) {
   return `AWS::::Account:${newerThis.ioptions.awsAccountId}`;
 }
 
-export function setupResourcesID2(val: unknown, newThis: unknown) {
+export function setupResourcesID2(val: unknown) {
   const newVal = val as ExecJSON.Execution & {
     controls: any;
     results: any;
@@ -505,9 +501,7 @@ export function setupResourcesID2(val: unknown, newThis: unknown) {
   return `${layerOfControl.id} Validation Code`;
 }
 
-export function setupDetailsAssume(val: unknown, newThis: unknown) {
-  const newerThis = newThis as FromHdfToAsffMapper;
-
+export function setupDetailsAssume(val: unknown) {
   const newVal = val as ExecJSON.Execution & {
     controls: any;
     results: any;
@@ -519,7 +513,7 @@ export function setupDetailsAssume(val: unknown, newThis: unknown) {
   return createAssumeRolePolicyDocument(newVal.layersOfControl, segment);
 }
 
-export function setupControlStatus(val: unknown, newThis: unknown) {
+export function setupControlStatus(val: unknown) {
   const newVal = val as ExecJSON.Execution & {
     controls: any;
     results: any;

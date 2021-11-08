@@ -1,6 +1,6 @@
 import {contextualizeEvaluation, ExecJSON} from 'inspecjs';
 import {MappedTransform} from '../base-converter';
-import {IExecJSONASFF, IOptions} from './asff-types';
+import {IExecJSONASFF, IFindingASFF, IOptions} from './asff-types';
 import {FromHdfBaseConverter, ILookupPathFH} from './from-hdf-base-converter';
 import {
   getAllLayers,
@@ -124,13 +124,9 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
   defaultOptions(): IOptions {
     return {
       input: '',
-      output: '',
       awsAccountId: '',
-      accessKeyId: '',
-      accessKeySecret: '',
       target: 'default',
-      region: '',
-      upload: false
+      region: ''
     };
   }
 
@@ -177,7 +173,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
   }
 
   //Convert from HDF to ASFF
-  toAsff(): IExecJSONASFF | null {
+  toAsff(): IFindingASFF[] {
     if (this.mappings === undefined) {
       throw new Error('Mappings must be provided');
     } else {
@@ -186,20 +182,13 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
 
       //Recursively transform the data into ASFF format
       //Returns an array of the findings
-      const resList: any[] = flattenedProfiles.map((fProfile) => {
-        return this.convertInternal(fProfile, this.mappings)['Findings'][0];
+      const resList: IFindingASFF[] = flattenedProfiles.map((fProfile) => {
+        return this.convertInternal(fProfile, this.mappings)[
+          'Findings'
+        ][0] as IFindingASFF;
       });
 
-      //Form the ASFF format of Findings mapped to the array of findings
-      const finalASFF = this.finalizeASFFSchema(resList);
-      console.log('Here');
-
-      return finalASFF;
+      return resList;
     }
-  }
-
-  finalizeASFFSchema(findingList: any[]) {
-    //Finish the formatting of ASFF, assign array of finding to Findings
-    return {Findings: findingList};
   }
 }

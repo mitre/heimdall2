@@ -34,7 +34,7 @@ export class FromHdfBaseConverter {
   //Map is passed here to get looked through by each key pairs
   //Inner most to outward,
   //You take the key value pair in array form from each pair in the map, then  create an array of the key mapped to the result of value passed to evaluate
-  // All the results should then be turned into one big object formed from the arrays of key value paids
+  // All the results should then be turned into one big object formed from the arrays of key value pairs
   //file is the parsed data
   //fields is the mapping the data is being formed into    ;  objectMap updates all the fields in objectMap
   //iterates through the keys in field map, and based on matches in the lookup , assigns the data to the fields
@@ -61,11 +61,11 @@ export class FromHdfBaseConverter {
     ) {
       return v;
     } else if (_.has(v, 'path')) {
+      let pathVal;
       if (typeof transformer === 'function') {
-        let pathVal;
-        if ((_.get(v, 'path') as string) == '') {
+        if ((_.get(v, 'path') as string) === '') {
           pathVal = file;
-        } else if ((_.get(v, 'path') as string) == 'IgnoreMyArray') {
+        } else if ((_.get(v, 'path') as string) === 'IgnoreMyArray') {
           return transformer(null, null);
         } else {
           pathVal = this.handlePath(file, _.get(v, 'path') as string);
@@ -77,7 +77,7 @@ export class FromHdfBaseConverter {
           return transformer(pathVal);
         }
       }
-      const pathVal = this.handlePath(file, _.get(v, 'path') as string);
+      pathVal = this.handlePath(file, _.get(v, 'path') as string);
       if (Array.isArray(pathVal)) {
         return pathVal as T[];
       }
@@ -94,7 +94,7 @@ export class FromHdfBaseConverter {
     file: object,
     v: Array<T & ILookupPathFH>
   ): Array<T> {
-    //Looks throguh parsed data file using the mapping setup in V
+    //Looks through parsed data file using the mapping setup in V
     if (v.length === 0) {
       return [];
     }
@@ -168,7 +168,7 @@ export class FromHdfBaseConverter {
     key: string,
     collapseResults: boolean
   ): Array<T> {
-    //Method is used to take the array of issues that will be formatted as controlls. Then group the duplicates into results for the correct control number
+    //Method is used to take the array of issues that will be formatted as controls. Then group the duplicates into results for the correct control number
     const seen = new Map<string, number>();
     const newArray: T[] = [];
     let counter = 0;
@@ -185,7 +185,7 @@ export class FromHdfBaseConverter {
           const oldResult = _.get(
             newArray[index],
             'results'
-          ) as ExecJSON.ControlResult[]; //Grab cureent list if results
+          ) as ExecJSON.ControlResult[]; //Grab current list if results
           const descriptions = oldResult.map((element) =>
             _.get(element, 'code_desc')
           ); //grab description
@@ -195,7 +195,7 @@ export class FromHdfBaseConverter {
                 _.get(item, 'results[0].code_desc') as string
               ) === -1
             ) {
-              //Handles appending the results to eachother if can't be found
+              //Handles appending the results to each other if can't be found
               _.set(
                 newArray[index],
                 'results',
@@ -205,7 +205,7 @@ export class FromHdfBaseConverter {
               );
             }
           } else {
-            //Handles appending the results to eachother inside a control
+            //Handles appending the results to each other inside a control
             _.set(
               newArray[index],
               'results',

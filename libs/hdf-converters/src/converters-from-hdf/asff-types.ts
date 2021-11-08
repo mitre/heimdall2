@@ -2,13 +2,9 @@
 
 export interface IOptions {
   input: string;
-  output: string;
   awsAccountId: string;
-  accessKeyId?: string;
-  accessKeySecret?: string;
   target: string;
   region: string;
-  upload?: boolean;
 }
 
 export interface IExecJSONASFF {
@@ -79,9 +75,10 @@ export interface IResourcesASFF {
 
 export interface IComplianceASFF {
   Status: string;
-  StatusReasons?:
-    | ({ReasonCode: string | null; Description: string | null} | null)[]
-    | undefined;
+  StatusReasons?: ({
+    ReasonCode: string | null;
+    Description: string | null;
+  } | null)[];
   RelatedRequirements?: string[] | Record<string, unknown>;
 }
 export interface IFindingProviderFieldsASFF {
