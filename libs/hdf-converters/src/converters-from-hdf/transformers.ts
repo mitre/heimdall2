@@ -5,6 +5,7 @@ import {
   ExecJSON
 } from 'inspecjs';
 import _ from 'lodash';
+import {FlattenedExecJSON} from './from-hdf-base-converter';
 import {FromHdfToAsffMapper} from './from-hdf-to-asff-mapper';
 
 //FromHdfToAsff mapper transformers
@@ -143,7 +144,7 @@ export function getAllLayers(
   fix?: string;
   profileInfo?: Record<string, unknown>;
 })[] {
-  if (hdf.profiles.length == 1) {
+  if (hdf.profiles.length === 1) {
     return [{...knownControl, ..._.omit(hdf.profiles, 'controls')}];
   } else {
     const foundControls: (ExecJSON.Control & {
@@ -186,75 +187,58 @@ export function createCode(
   )}`;
 }
 
-////Added transformers
-export function setupId(val: unknown, newThis: unknown) {
-  const newerThis = newThis as FromHdfToAsffMapper;
-  const newVal = val as ExecJSON.Execution & {
-    controls: any;
-    results: any;
-    name: string;
-  };
-  const target = newerThis.ioptions.target.toLowerCase().trim();
-  const control = newVal.controls;
-  const segment = newVal.results;
-  const name = newVal.name;
+export function setupId(val: FlattenedExecJSON, context?: FromHdfToAsffMapper) {
+  const target = context?.ioptions.target.toLowerCase().trim();
+  const control = val.controls;
+  const segment = val.results;
+  const name = val.name;
 
   return `${target}/${name}/${control.id}/finding/${createHash('sha256')
     .update(control.id + segment.code_desc)
     .digest('hex')}`;
 }
 
-export function setupProductARN(_val: unknown, newThis: unknown) {
-  //ignore val
-  const newerThis = newThis as FromHdfToAsffMapper;
-  return `arn:aws:securityhub:${newerThis.ioptions.region}:${newerThis.ioptions.awsAccountId}:product/${newerThis.ioptions.awsAccountId}/default`;
+export function setupProductARN(
+  _val: FlattenedExecJSON,
+  context?: FromHdfToAsffMapper
+) {
+  return `arn:aws:securityhub:${context?.ioptions.region}:${context?.ioptions.awsAccountId}:product/${context?.ioptions.awsAccountId}/default`;
 }
 
-export function setupAwsAcct(val: unknown, newThis: unknown) {
-  //ignore val
-  const newerThis = newThis as FromHdfToAsffMapper;
-  return newerThis.ioptions.awsAccountId;
+export function setupAwsAcct(
+  _val: FlattenedExecJSON,
+  context?: FromHdfToAsffMapper
+) {
+  return context?.ioptions.awsAccountId;
 }
 
-export function setupCreated(val: unknown) {
-  const newVal = val as {start_time: Date};
-
-  return (newVal || {start_time: new Date().toISOString()}).start_time;
+export function setupCreated(val: FlattenedExecJSON) {
+  return (val || {start_time: new Date().toISOString()}).start_time;
 }
 
-export function setupRegion(_val: unknown, newThis: unknown) {
-  //ignore val
-  const newerThis = newThis as FromHdfToAsffMapper;
-  return newerThis.ioptions.region;
+export function setupRegion(
+  _val: FlattenedExecJSON,
+  context?: FromHdfToAsffMapper
+) {
+  return context?.ioptions.region;
 }
 export function setupUpdated() {
   return new Date().toISOString();
 }
 
-export function setupGeneratorId(val: unknown, newThis: unknown) {
-  const newerThis = newThis as FromHdfToAsffMapper;
-  const newVal = val as ExecJSON.Execution & {
-    controls: any;
-    results: any;
-    name: string;
-  };
-  const control = newVal.controls;
-  const name = newVal.name;
+export function setupGeneratorId(
+  val: FlattenedExecJSON,
+  context?: FromHdfToAsffMapper
+) {
+  const control = val.controls;
+  const name = val.name;
 
-  return `arn:aws:securityhub:us-east-2:${newerThis.ioptions.awsAccountId}:ruleset/set/${name}/rule/${control.id}`;
+  return `arn:aws:securityhub:us-east-2:${context?.ioptions.awsAccountId}:ruleset/set/${name}/rule/${control.id}`;
 }
 
-export function setupTitle(val: unknown) {
-  //ignore newThis
-  const newVal = val as ExecJSON.Execution & {
-    controls: any;
-    results: any;
-    name: string;
-    layersOfControl: any;
-  };
-
-  const control = newVal.controls;
-  const layerOfControl = newVal.layersOfControl[0];
+export function setupTitle(val: FlattenedExecJSON) {
+  const control = val.controls;
+  const layerOfControl = val.layersOfControl[0];
   return _.truncate(
     `${control.id} | ${
       layerOfControl.tags.nist
@@ -265,16 +249,8 @@ export function setupTitle(val: unknown) {
   );
 }
 
-export function setupDescr(val: unknown) {
-  //const newerThis = newThis as FromHdfToAsffMapper;
-  //ignore new this
-  const newVal = val as ExecJSON.Execution & {
-    controls: any;
-    results: any;
-    name: string;
-    layersOfControl: any;
-  };
-  const layerOfControl = newVal.layersOfControl[0];
+export function setupDescr(val: FlattenedExecJSON) {
+  const layerOfControl = val.layersOfControl[0];
   // Check text can either be a description or a tag
   const checktext: string =
     layerOfControl.descriptions?.find(
@@ -301,51 +277,32 @@ export function setupDescr(val: unknown) {
   return currentVal;
 }
 
-export function setupSevLabel(val: unknown, newThis: unknown) {
-  const newerThis = newThis as FromHdfToAsffMapper;
+export function setupSevLabel(
+  val: FlattenedExecJSON,
+  context?: FromHdfToAsffMapper
+) {
+  const layerOfControl = val.layersOfControl[0];
 
-  const newVal = val as ExecJSON.Execution & {
-    controls: any;
-    results: any;
-    name: string;
-    layersOfControl: any;
-  };
-  const layerOfControl = newVal.layersOfControl[0];
-
-  return newerThis.impactMapping.get(layerOfControl.impact) || 'INFORMATIONAL';
+  return context?.impactMapping.get(layerOfControl.impact) || 'INFORMATIONAL';
 }
 
-export function setupSevOriginal(val: unknown) {
-  const newVal = val as ExecJSON.Execution & {
-    controls: any;
-    results: any;
-    name: string;
-    layersOfControl: any;
-  };
-  const layerOfControl = newVal.layersOfControl[0];
-
-  return `${layerOfControl.impact}`;
+export function setupSevOriginal(val: FlattenedExecJSON) {
+  return `${val.layersOfControl[0].impact}`;
 }
 
-export function setupFindingType(val: unknown, newThis: unknown) {
-  const newerThis = newThis as FromHdfToAsffMapper;
-
-  const newVal = val as ExecJSON.Execution & {
-    controls: any;
-    results: any;
-    name: string;
-    layersOfControl: any;
-  };
-
+export function setupFindingType(
+  val: FlattenedExecJSON,
+  context?: FromHdfToAsffMapper
+) {
   const slashSplit =
-    newerThis.ioptions.input.split('\\')[
-      newerThis.ioptions.input.split('\\').length - 1
+    context?.ioptions.input.split('\\')[
+      context?.ioptions.input.split('\\').length - 1
     ];
-  const filename = slashSplit.split('/')[slashSplit.split('/').length - 1];
+  const filename = slashSplit?.split('/')[slashSplit.split('/').length - 1];
 
   const typesArr = [
     `File/Input/${filename}`,
-    `Control/Code/${newVal.layersOfControl
+    `Control/Code/${val.layersOfControl
       .map(
         (layer: ExecJSON.Control & {profileInfo?: Record<string, unknown>}) =>
           createCode(layer)
@@ -354,8 +311,8 @@ export function setupFindingType(val: unknown, newThis: unknown) {
       .replace(/\//g, '∕')}`
   ];
 
-  const layersOfControl = newVal.layersOfControl;
-  const segment = newVal.results;
+  const layersOfControl = val.layersOfControl;
+  const segment = val.results;
 
   // Add all layers of profile info to the Finding Provider Fields
   let targets = [
@@ -441,40 +398,25 @@ export function setupFindingType(val: unknown, newThis: unknown) {
   return typesArr;
 }
 
-export function setupRemRec(val: unknown) {
-  const newVal = val as ExecJSON.Execution & {
-    controls: any;
-    results: any;
-    name: string;
-    layersOfControl: any;
-  };
-  const segment = newVal.results;
-  const layerOfControl = newVal.layersOfControl[0];
+export function setupRemRec(val: FlattenedExecJSON) {
+  const segment = val.results;
+  const layerOfControl = val.layersOfControl[0];
+
+  const getFix = (control: ExecJSON.Control) =>
+    control.descriptions?.find(
+      (description: {label: string}) => description.label === 'fix'
+    )?.data ||
+    control.tags.fix ||
+    'Fix not available';
 
   return _.truncate(
-    cleanText(
-      createNote(segment) +
-        ' --- Fix: ' +
-        (
-          layerOfControl.descriptions?.find(
-            (description: {label: string}) => description.label === 'fix'
-          ) || {
-            data: layerOfControl.fix || 'Fix not available'
-          }
-        ).data
-    ),
+    cleanText(createNote(segment) + ' --- Fix: ' + getFix(layerOfControl)),
     {length: 512, omission: '... [SEE FULL TEXT IN AssumeRolePolicyDocument]'}
   );
 }
 
-export function setupProdFieldCheck(val: unknown) {
-  const newVal = val as ExecJSON.Execution & {
-    controls: any;
-    results: any;
-    name: string;
-    layersOfControl: any;
-  };
-  const layerOfControl = newVal.layersOfControl[0];
+export function setupProdFieldCheck(val: FlattenedExecJSON) {
+  const layerOfControl = val.layersOfControl[0];
   const checktext: string =
     layerOfControl.descriptions?.find(
       (description: {label: string}) => description.label === 'check'
@@ -485,48 +427,28 @@ export function setupProdFieldCheck(val: unknown) {
   return _.truncate(checktext, {length: 2048, omission: ''});
 }
 
-export function setupResourcesID(val: unknown, newThis: unknown) {
-  const newerThis = newThis as FromHdfToAsffMapper;
-  return `AWS::::Account:${newerThis.ioptions.awsAccountId}`;
+export function setupResourcesID(
+  _val: FlattenedExecJSON,
+  context?: FromHdfToAsffMapper
+) {
+  return `AWS::::Account:${context?.ioptions.awsAccountId}`;
 }
 
-export function setupResourcesID2(val: unknown) {
-  const newVal = val as ExecJSON.Execution & {
-    controls: any;
-    results: any;
-    name: string;
-    layersOfControl: any;
-  };
-  const layerOfControl = newVal.layersOfControl[0];
-  return `${layerOfControl.id} Validation Code`;
+export function setupResourcesID2(val: FlattenedExecJSON) {
+  return `${val.layersOfControl[0].id} Validation Code`;
 }
 
-export function setupDetailsAssume(val: unknown) {
-  const newVal = val as ExecJSON.Execution & {
-    controls: any;
-    results: any;
-    name: string;
-    layersOfControl: any;
-  };
-  const segment = newVal.results;
-
-  return createAssumeRolePolicyDocument(newVal.layersOfControl, segment);
+export function setupDetailsAssume(val: FlattenedExecJSON) {
+  return createAssumeRolePolicyDocument(val.layersOfControl, val.results);
 }
 
-export function setupControlStatus(val: unknown) {
-  const newVal = val as ExecJSON.Execution & {
-    controls: any;
-    results: any;
-    name: string;
-    layersOfControl: any;
-  };
-  const segment = newVal.results;
+export function setupControlStatus(val: FlattenedExecJSON) {
+  const segment = val.results;
 
-  const controlStatus =
-    segment.status == 'skipped'
-      ? 'WARNING'
-      : segment.status == 'passed'
-      ? 'PASSED'
-      : 'FAILED';
-  return controlStatus;
+  const status: string | boolean =
+    segment.status === 'skipped' ? 'WARNING' : segment.status === 'passed';
+  if (typeof status === 'boolean') {
+    return status ? 'PASSED' : 'FAILED';
+  }
+  return status;
 }

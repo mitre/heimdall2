@@ -1,7 +1,10 @@
 import {contextualizeEvaluation, ExecJSON} from 'inspecjs';
 import {MappedTransform} from '../base-converter';
 import {IExecJSONASFF, IFindingASFF, IOptions} from './asff-types';
-import {FromHdfBaseConverter, ILookupPathFH} from './from-hdf-base-converter';
+import {
+  FlattenedExecJSON,
+  FromHdfBaseConverter
+} from './from-hdf-base-converter';
 import {
   getAllLayers,
   setupAwsAcct,
@@ -25,11 +28,19 @@ import {
   statusCount
 } from './transformers';
 
+export interface ILookupPathASFF {
+  path?: string;
+  transformer?: (
+    value: FlattenedExecJSON,
+    context?: FromHdfToAsffMapper
+  ) => unknown;
+  arrayTransformer?: (value: unknown[], file: ExecJSON.Execution) => unknown[];
+  key?: string;
+  passParent?: boolean;
+}
+
 export class FromHdfToAsffMapper extends FromHdfBaseConverter {
-  mappings: MappedTransform<
-    IExecJSONASFF,
-    ILookupPathFH & {passParent?: boolean}
-  > = {
+  mappings: MappedTransform<IExecJSONASFF, ILookupPathASFF> = {
     Findings: [
       {
         SchemaVersion: '2018-10-08',
@@ -37,7 +48,6 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         ProductArn: {path: ``, transformer: setupProductARN, passParent: true},
         AwsAccountId: {path: ``, transformer: setupAwsAcct, passParent: true},
         Types: {
-          path: 'IgnoreMyArray',
           transformer: () => ['Software and Configuration Checks']
         },
         CreatedAt: {path: `results`, transformer: setupCreated},
@@ -91,7 +101,6 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         ],
         Compliance: {
           RelatedRequirements: {
-            path: 'IgnoreMyArray',
             transformer: () => [
               'SEE REMEDIATION FIELD FOR RESULTS AND RECOMMENDED ACTION(S)'
             ]
@@ -140,7 +149,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
   }
 
   setMappings(
-    customMappings: MappedTransform<IExecJSONASFF, ILookupPathFH>
+    customMappings: MappedTransform<IExecJSONASFF, ILookupPathASFF>
   ): void {
     super.setMappings(customMappings);
   }
@@ -178,7 +187,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       throw new Error('Mappings must be provided');
     } else {
       //Flatten Results into Control and flatten in Profiles, so all main are a single iteration
-      const flattenedProfiles: object[] = this.flattenProContResV2(); //this.flattenProContRes();
+      const flattenedProfiles: object[] = this.flattenProContResV2();
 
       //Recursively transform the data into ASFF format
       //Returns an array of the findings

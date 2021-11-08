@@ -2,17 +2,26 @@ import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {MappedReform, MappedTransform, ObjectEntries} from '../base-converter';
 
+export type FlattenedExecJSON = ExecJSON.Execution & {
+  controls: any;
+  results: any;
+  name: string;
+  start_time: any;
+  layersOfControl: any;
+};
+
 export interface ILookupPathFH {
   path?: string;
-  transformer?: (value: unknown, newThis?: unknown) => unknown;
-  arrayTransformer?: (value: unknown[], file: unknown) => unknown[];
+  transformer?: (value: FlattenedExecJSON, context?: unknown) => unknown;
+  arrayTransformer?: (value: unknown[], file: ExecJSON.Execution) => unknown[];
   key?: string;
+  passParent?: boolean;
 }
 
 //Base converter used to support conversions from HDF to Any Format
 export class FromHdfBaseConverter {
   data: ExecJSON.Execution;
-  mappings?: MappedTransform<any, ILookupPathFH & {passParent?: boolean}>;
+  mappings?: MappedTransform<any, ILookupPathFH>;
   collapseResults: boolean;
 
   constructor(data: ExecJSON.Execution, collapseResults = false) {
@@ -31,13 +40,8 @@ export class FromHdfBaseConverter {
     );
     return result as MappedReform<T, ILookupPathFH>;
   }
-  //Map is passed here to get looked through by each key pairs
-  //Inner most to outward,
-  //You take the key value pair in array form from each pair in the map, then  create an array of the key mapped to the result of value passed to evaluate
-  // All the results should then be turned into one big object formed from the arrays of key value pairs
-  //file is the parsed data
-  //fields is the mapping the data is being formed into    ;  objectMap updates all the fields in objectMap
-  //iterates through the keys in field map, and based on matches in the lookup , assigns the data to the fields
+
+  // Preforms fn() on all entries inside the passed obj
   objectMap<T, V>(obj: T, fn: (v: ObjectEntries<T>) => V): {[K in keyof T]: V} {
     return Object.fromEntries(
       Object.entries(obj).map(([k, v]) => [k, fn(v)])
@@ -45,8 +49,7 @@ export class FromHdfBaseConverter {
   }
 
   //Used to get the data located at the paths
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  evaluate<T extends object>(
+  evaluate<T extends object & ILookupPathFH>(
     file: object,
     v: Array<T> | T
   ): T | Array<T> | MappedReform<T, ILookupPathFH> {
@@ -63,21 +66,19 @@ export class FromHdfBaseConverter {
     } else if (_.has(v, 'path')) {
       let pathVal;
       if (typeof transformer === 'function') {
-        if ((_.get(v, 'path') as string) === '') {
+        if (v.path === '') {
           pathVal = file;
-        } else if ((_.get(v, 'path') as string) === 'IgnoreMyArray') {
-          return transformer(null, null);
         } else {
-          pathVal = this.handlePath(file, _.get(v, 'path') as string);
+          pathVal = this.handlePath(file, v.path as string);
         }
 
-        if (_.has(v, 'passParent')) {
+        if (v.passParent) {
           return transformer(pathVal, this);
         } else {
           return transformer(pathVal);
         }
       }
-      pathVal = this.handlePath(file, _.get(v, 'path') as string);
+      pathVal = this.handlePath(file, v.path as string);
       if (Array.isArray(pathVal)) {
         return pathVal as T[];
       }
@@ -113,7 +114,6 @@ export class FromHdfBaseConverter {
       return output;
     } else {
       const path = v[0].path;
-      const key = v[0].key;
       const arrayTransformer = v[0].arrayTransformer;
       const transformer = v[0].transformer;
       if (this.hasPath(file, path)) {
@@ -127,16 +127,13 @@ export class FromHdfBaseConverter {
               'key'
             ]) as T;
           });
-          if (key !== undefined) {
-            v = this.collapseDuplicates(v, key, this.collapseResults);
-          }
           if (arrayTransformer !== undefined) {
             v = arrayTransformer(v, this.data) as T[];
           }
           return v;
         } else {
           if (transformer !== undefined) {
-            return [transformer(this.handlePath(file, path)) as T];
+            return [transformer(this.handlePath(file, path) as any) as T];
           } else {
             return [this.handlePath(file, path) as T];
           }
@@ -161,62 +158,5 @@ export class FromHdfBaseConverter {
     } else {
       return _.has(file, path);
     }
-  }
-
-  collapseDuplicates<T extends object>(
-    array: Array<T>,
-    key: string,
-    collapseResults: boolean
-  ): Array<T> {
-    //Method is used to take the array of issues that will be formatted as controls. Then group the duplicates into results for the correct control number
-    const seen = new Map<string, number>();
-    const newArray: T[] = [];
-    let counter = 0;
-    array.forEach((item: T) => {
-      const propertyValue = _.get(item, key);
-      if (typeof propertyValue === 'string') {
-        const index = seen.get(propertyValue) || 0;
-        if (!seen.has(propertyValue)) {
-          //Sets the  control with first result
-          newArray.push(item);
-          seen.set(propertyValue, counter);
-          counter++;
-        } else {
-          const oldResult = _.get(
-            newArray[index],
-            'results'
-          ) as ExecJSON.ControlResult[]; //Grab current list if results
-          const descriptions = oldResult.map((element) =>
-            _.get(element, 'code_desc')
-          ); //grab description
-          if (collapseResults) {
-            if (
-              descriptions.indexOf(
-                _.get(item, 'results[0].code_desc') as string
-              ) === -1
-            ) {
-              //Handles appending the results to each other if can't be found
-              _.set(
-                newArray[index],
-                'results',
-                oldResult.concat(
-                  _.get(item, 'results') as ExecJSON.ControlResult[]
-                )
-              );
-            }
-          } else {
-            //Handles appending the results to each other inside a control
-            _.set(
-              newArray[index],
-              'results',
-              oldResult.concat(
-                _.get(item, 'results') as ExecJSON.ControlResult[]
-              )
-            );
-          }
-        }
-      }
-    });
-    return newArray;
   }
 }

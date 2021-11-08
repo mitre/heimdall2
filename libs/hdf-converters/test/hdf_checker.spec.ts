@@ -24,7 +24,7 @@ test('Test converter toASFF function', () => {
   //One way to get a HDF example into the test. It converts the third party into HDF. The bottom function converts the HDF to ASFF
   const inputData = JSON.parse(
     fs.readFileSync(
-      '../../apps/frontend/public/static/samples/rhel7-results.json',
+      'sample_jsons/asff_reverse_mapper/sample_input_report/rhel7-results.json',
       {
         encoding: 'utf-8'
       }
@@ -37,7 +37,6 @@ test('Test converter toASFF function', () => {
     target: 'reverse-proxy',
     region: 'us-east-2'
   }).toAsff();
-  console.log(converted);
   const expectedJSON = JSON.parse(
     fs.readFileSync(
       'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json',
