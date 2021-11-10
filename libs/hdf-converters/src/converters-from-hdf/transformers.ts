@@ -5,7 +5,7 @@ import {
   ExecJSON
 } from 'inspecjs';
 import _ from 'lodash';
-import {FlattenedExecJSON} from './from-hdf-base-converter';
+import {SegmentedControl} from './from-hdf-base-converter';
 import {FromHdfToAsffMapper} from './from-hdf-to-asff-mapper';
 
 //FromHdfToAsff mapper transformers
@@ -107,9 +107,7 @@ export function createDescription(counts: Counts): string {
 }
 
 export function createAssumeRolePolicyDocument(
-  layersOfControl: (ExecJSON.Control & {
-    profileInfo?: Record<string, unknown>;
-  })[],
+  layersOfControl: ExecJSON.Control[],
   segment: ExecJSON.ControlResult
 ): string {
   const segmentOverview = createNote(segment);
@@ -140,10 +138,7 @@ export function cleanText(text?: string | null): string | undefined {
 export function getAllLayers(
   hdf: ExecJSON.Execution,
   knownControl: ExecJSON.Control
-): (ExecJSON.Control & {
-  fix?: string;
-  profileInfo?: Record<string, unknown>;
-})[] {
+): ExecJSON.Control[] {
   if (hdf.profiles.length === 1) {
     return [{...knownControl, ..._.omit(hdf.profiles, 'controls')}];
   } else {
@@ -154,10 +149,7 @@ export function getAllLayers(
     hdf.profiles.forEach((profile) => {
       profile.controls.forEach((control) => {
         if (control.id === knownControl.id) {
-          foundControls.push({
-            ...control,
-            profileInfo: _.omit(profile, 'controls')
-          });
+          foundControls.push(control);
         }
       });
     });
@@ -188,39 +180,37 @@ export function createCode(
 }
 
 export function setupId(
-  hdfData: FlattenedExecJSON,
+  control: SegmentedControl,
   context?: FromHdfToAsffMapper
 ) {
   const target = context?.ioptions.target.toLowerCase().trim();
-  const control = hdfData.controls;
-  const segment = hdfData.results;
-  const name = hdfData.name;
+  const name = context?.data.profiles[0].name;
 
   return `${target}/${name}/${control.id}/finding/${createHash('sha256')
-    .update(control.id + segment.code_desc)
+    .update(control.id + control.result.code_desc)
     .digest('hex')}`;
 }
 
 export function setupProductARN(
-  _val: FlattenedExecJSON,
+  _val: SegmentedControl,
   context?: FromHdfToAsffMapper
 ) {
   return `arn:aws:securityhub:${context?.ioptions.region}:${context?.ioptions.awsAccountId}:product/${context?.ioptions.awsAccountId}/default`;
 }
 
 export function setupAwsAcct(
-  _val: FlattenedExecJSON,
+  _val: SegmentedControl,
   context?: FromHdfToAsffMapper
 ) {
   return context?.ioptions.awsAccountId;
 }
 
-export function setupCreated(hdfData: FlattenedExecJSON) {
-  return (hdfData || {start_time: new Date().toISOString()}).start_time;
+export function setupCreated(control: SegmentedControl) {
+  return control.result.start_time || new Date().toISOString();
 }
 
 export function setupRegion(
-  _val: FlattenedExecJSON,
+  _val: SegmentedControl,
   context?: FromHdfToAsffMapper
 ) {
   return context?.ioptions.region;
@@ -230,43 +220,35 @@ export function setupUpdated() {
 }
 
 export function setupGeneratorId(
-  hdfData: FlattenedExecJSON,
+  control: SegmentedControl,
   context?: FromHdfToAsffMapper
 ) {
-  const control = hdfData.controls;
-  const name = hdfData.name;
-
-  return `arn:aws:securityhub:us-east-2:${context?.ioptions.awsAccountId}:ruleset/set/${name}/rule/${control.id}`;
+  return `arn:aws:securityhub:us-east-2:${context?.ioptions.awsAccountId}:ruleset/set/${context?.data.profiles[0].name}/rule/${control.id}`;
 }
 
-export function setupTitle(hdfData: FlattenedExecJSON) {
-  const control = hdfData.controls;
-  const layerOfControl = hdfData.layersOfControl[0];
-  const nistTags = layerOfControl.tags.nist
-    ? `[${_.get(layerOfControl, 'tags.nist').join(', ')}]`
-    : '';
+export function setupTitle(control: SegmentedControl) {
+  const nistTags = control.tags.nist ? `[${control.tags.nist.join(', ')}]` : '';
   return _.truncate(
-    `${control.id} | ${nistTags} | ${cleanText(layerOfControl.title)}`,
+    `${control.id} | ${nistTags} | ${cleanText(control.title)}`,
     {length: 256}
   );
 }
 
-export function setupDescr(hdfData: FlattenedExecJSON) {
-  const layerOfControl = hdfData.layersOfControl[0];
+export function setupDescr(control: SegmentedControl) {
   // Check text can either be a description or a tag
   const checktext: string =
-    layerOfControl.descriptions?.find(
+    control.descriptions?.find(
       (description: {label: string}) => description.label === 'check'
     )?.data ||
-    (layerOfControl.tags['check'] as string) ||
+    (control.tags['check'] as string) ||
     'Check not available';
 
   const currentVal = _.truncate(
-    cleanText(`${layerOfControl.desc} -- Check Text: ${checktext}`),
+    cleanText(`${control.desc} -- Check Text: ${checktext}`),
     {length: 1024, omission: '[SEE FULL TEXT IN AssumeRolePolicyDocument]'}
   );
 
-  const caveat = layerOfControl.descriptions?.find(
+  const caveat = control.descriptions?.find(
     (description: {label: string}) => description.label === 'caveat'
   )?.data;
 
@@ -280,21 +262,17 @@ export function setupDescr(hdfData: FlattenedExecJSON) {
 }
 
 export function setupSevLabel(
-  hdfData: FlattenedExecJSON,
+  control: SegmentedControl,
   context?: FromHdfToAsffMapper
 ) {
-  const layerOfControl = hdfData.layersOfControl[0];
-
-  return context?.impactMapping.get(layerOfControl.impact) || 'INFORMATIONAL';
+  return context?.impactMapping.get(control.impact) || 'INFORMATIONAL';
 }
 
-export function setupSevOriginal(hdfData: FlattenedExecJSON) {
-  return `${hdfData.layersOfControl[0].impact}`;
+export function setupSevOriginal(control: SegmentedControl) {
+  return `${control.impact}`;
 }
 
-function createProfileInfo(
-  layersOfControl: Record<string, unknown>[]
-): string[] {
+function createProfileInfo(hdf?: ExecJSON.Execution): string[] {
   const typesArr: string[] = [];
   const targets = [
     'name',
@@ -307,10 +285,10 @@ function createProfileInfo(
     'copyright',
     'copyright_email'
   ];
-  layersOfControl.forEach((layer) => {
+  hdf?.profiles.forEach((layer) => {
     const profileInfos: Record<string, string>[] = [];
     targets.forEach((target) => {
-      const value = _.get(layer.profileInfo, target);
+      const value = _.get(layer, target);
       if (typeof value === 'string') {
         profileInfos.push({[target]: value});
       }
@@ -322,7 +300,7 @@ function createProfileInfo(
   return typesArr;
 }
 
-function createSegmentInfo(segment: unknown): string[] {
+function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
   const typesArr: string[] = [];
   const targets = [
     'code_desc',
@@ -374,14 +352,9 @@ function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
   return typesArr;
 }
 
-function createDescriptionInfo(control: {
-  descriptions: {
-    data: string;
-    label: string;
-  }[];
-}): string[] {
+function createDescriptionInfo(control: ExecJSON.Control): string[] {
   const typesArr: string[] = [];
-  control.descriptions.forEach((description) => {
+  control.descriptions?.forEach((description) => {
     typesArr.push(
       `Descriptions/${description.label.replace(/\//g, '∕')}/${cleanText(
         description.data
@@ -392,7 +365,7 @@ function createDescriptionInfo(control: {
 }
 
 export function setupFindingType(
-  hdfData: FlattenedExecJSON,
+  control: SegmentedControl,
   context?: FromHdfToAsffMapper
 ) {
   const slashSplit =
@@ -403,7 +376,7 @@ export function setupFindingType(
 
   const typesArr = [
     `File/Input/${filename}`,
-    `Control/Code/${hdfData.layersOfControl
+    `Control/Code/${control.layersOfControl
       .map(
         (layer: ExecJSON.Control & {profileInfo?: Record<string, unknown>}) =>
           createCode(layer)
@@ -412,25 +385,19 @@ export function setupFindingType(
       .replace(/\//g, '∕')}`
   ];
 
-  const layersOfControl = hdfData.layersOfControl;
-  const segment = hdfData.results;
-
   // Add all layers of profile info to the Finding Provider Fields
-  typesArr.push(...createProfileInfo(layersOfControl));
+  typesArr.push(...createProfileInfo(context?.data));
   // Add segment/result information to Finding Provider Fields
-  typesArr.push(...createSegmentInfo(segment));
+  typesArr.push(...createSegmentInfo(control.result));
   // Add Tags to Finding Provider Fields
-  typesArr.push(...createTagInfo(layersOfControl[0]));
+  typesArr.push(...createTagInfo(control));
   // Add Descriptions to FindingProviderFields
-  typesArr.push(...createDescriptionInfo(layersOfControl[0]));
+  typesArr.push(...createDescriptionInfo(control));
 
   return typesArr;
 }
 
-export function setupRemRec(hdfData: FlattenedExecJSON) {
-  const segment = hdfData.results;
-  const layerOfControl = hdfData.layersOfControl[0];
-
+export function setupRemRec(control: SegmentedControl) {
   const getFix = (control: ExecJSON.Control) =>
     control.descriptions?.find(
       (description: {label: string}) => description.label === 'fix'
@@ -439,46 +406,45 @@ export function setupRemRec(hdfData: FlattenedExecJSON) {
     'Fix not available';
 
   return _.truncate(
-    cleanText(`${createNote(segment)} --- Fix: ${getFix(layerOfControl)}`),
+    cleanText(`${createNote(control.result)} --- Fix: ${getFix(control)}`),
     {length: 512, omission: '... [SEE FULL TEXT IN AssumeRolePolicyDocument]'}
   );
 }
 
-export function setupProdFieldCheck(hdfData: FlattenedExecJSON) {
-  const layerOfControl = hdfData.layersOfControl[0];
+export function setupProdFieldCheck(control: SegmentedControl) {
   const checktext: string =
-    layerOfControl.descriptions?.find(
+    control.descriptions?.find(
       (description: {label: string}) => description.label === 'check'
     )?.data ||
-    (layerOfControl.tags['check'] as string) ||
+    (control.tags['check'] as string) ||
     'Check not available';
 
   return _.truncate(checktext, {length: 2048, omission: ''});
 }
 
 export function setupResourcesID(
-  _val: FlattenedExecJSON,
+  _val: SegmentedControl,
   context?: FromHdfToAsffMapper
 ) {
   return `AWS::::Account:${context?.ioptions.awsAccountId}`;
 }
 
-export function setupResourcesID2(hdfData: FlattenedExecJSON) {
-  return `${hdfData.layersOfControl[0].id} Validation Code`;
+export function setupResourcesID2(control: SegmentedControl) {
+  return `${control.id} Validation Code`;
 }
 
-export function setupDetailsAssume(hdfData: FlattenedExecJSON) {
+export function setupDetailsAssume(control: SegmentedControl) {
   return createAssumeRolePolicyDocument(
-    hdfData.layersOfControl,
-    hdfData.results
+    control.layersOfControl,
+    control.result
   );
 }
 
-export function setupControlStatus(hdfData: FlattenedExecJSON) {
-  const segment = hdfData.results;
-
+export function setupControlStatus(control: SegmentedControl) {
   const status: string | boolean =
-    segment.status === 'skipped' ? 'WARNING' : segment.status === 'passed';
+    control.result.status === 'skipped'
+      ? 'WARNING'
+      : control.result.status === 'passed';
   if (typeof status === 'boolean') {
     return status ? 'PASSED' : 'FAILED';
   }

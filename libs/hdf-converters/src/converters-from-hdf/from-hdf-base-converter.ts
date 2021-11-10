@@ -2,17 +2,17 @@ import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {MappedReform, MappedTransform, ObjectEntries} from '../base-converter';
 
-export type FlattenedExecJSON = ExecJSON.Execution & {
-  controls: any;
-  results: any;
-  name: string;
-  start_time: any;
-  layersOfControl: any;
+export type SegmentedControl = ExecJSON.Control & {
+  result: ExecJSON.ControlResult;
+  layersOfControl: (ExecJSON.Control & {
+    fix?: string;
+    profileInfo?: Record<string, unknown>;
+  })[];
 };
 
 export interface ILookupPathFH {
   path?: string;
-  transformer?: (value: FlattenedExecJSON, context?: unknown) => unknown;
+  transformer?: (value: SegmentedControl, context?: any) => unknown;
   arrayTransformer?: (value: unknown[], file: ExecJSON.Execution) => unknown[];
   key?: string;
   passParent?: boolean;

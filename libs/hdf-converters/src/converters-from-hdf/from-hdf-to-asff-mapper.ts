@@ -2,8 +2,8 @@ import {contextualizeEvaluation, ExecJSON} from 'inspecjs';
 import {MappedTransform} from '../base-converter';
 import {IExecJSONASFF, IFindingASFF, IOptions} from './asff-types';
 import {
-  FlattenedExecJSON,
-  FromHdfBaseConverter
+  FromHdfBaseConverter,
+  SegmentedControl
 } from './from-hdf-base-converter';
 import {
   getAllLayers,
@@ -31,7 +31,7 @@ import {
 export interface ILookupPathASFF {
   path?: string;
   transformer?: (
-    value: FlattenedExecJSON,
+    value: SegmentedControl,
     context?: FromHdfToAsffMapper
   ) => unknown;
   arrayTransformer?: (value: unknown[], file: ExecJSON.Execution) => unknown[];
@@ -50,7 +50,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         Types: {
           transformer: () => ['Software and Configuration Checks']
         },
-        CreatedAt: {path: `results`, transformer: setupCreated},
+        CreatedAt: {path: ``, transformer: setupCreated},
         Region: {path: '', transformer: setupRegion, passParent: true},
         UpdatedAt: {path: ``, transformer: setupUpdated},
         GeneratorId: {
@@ -154,31 +154,23 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     super.setMappings(customMappings);
   }
 
-  flattenProContResV2() {
-    //The control and result will be merged into profile object, so there will be one object for each finding to be formed from
-
-    const flattenedProfiles: object[] = [];
+  // Security hub currently works at the sub-control level, meaning we need to create our mapped data based off control.results
+  controlsToSegments() {
+    const segments: SegmentedControl[] = [];
     this.data.profiles.forEach((profile) => {
       profile.controls.reverse().forEach((control) => {
-        const layersOfControl = getAllLayers(this.data, control);
         control.results.forEach((segment) => {
           // Ensure that the UpdatedAt time is different accross findings (to match the order in HDF)
-          this.sleep(1);
-          const profFlat = Object.assign(
-            {},
-            profile,
-            {controls: control},
-            {results: undefined},
-            {results: segment},
-            {layersOfControl: layersOfControl}
-          );
-
-          flattenedProfiles.push(profFlat); //Array of all the merged profile,control, result in a 1 to 1 way
+          segments.push({
+            ...control,
+            result: segment,
+            layersOfControl: getAllLayers(this.data, control)
+          });
         });
       });
     });
 
-    return flattenedProfiles;
+    return segments;
   }
 
   //Convert from HDF to ASFF
@@ -186,17 +178,15 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     if (this.mappings === undefined) {
       throw new Error('Mappings must be provided');
     } else {
-      //Flatten Results into Control and flatten in Profiles, so all main are a single iteration
-      const flattenedProfiles: object[] = this.flattenProContResV2();
-
       //Recursively transform the data into ASFF format
       //Returns an array of the findings
-      const resList: IFindingASFF[] = flattenedProfiles.map((fProfile) => {
-        return this.convertInternal(fProfile, this.mappings)[
-          'Findings'
-        ][0] as IFindingASFF;
-      });
-
+      const resList: IFindingASFF[] = this.controlsToSegments().map(
+        (segment) => {
+          return this.convertInternal(segment, this.mappings)[
+            'Findings'
+          ][0] as IFindingASFF;
+        }
+      );
       return resList;
     }
   }
