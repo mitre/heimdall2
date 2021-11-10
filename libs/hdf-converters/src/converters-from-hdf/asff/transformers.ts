@@ -5,8 +5,7 @@ import {
   ExecJSON
 } from 'inspecjs';
 import _ from 'lodash';
-import {SegmentedControl} from './from-hdf-base-converter';
-import {FromHdfToAsffMapper} from './from-hdf-to-asff-mapper';
+import {FromHdfToAsffMapper, SegmentedControl} from './reverse-asff-mapper';
 
 //FromHdfToAsff mapper transformers
 type Counts = {
@@ -397,16 +396,21 @@ export function setupFindingType(
   return typesArr;
 }
 
-export function setupRemRec(control: SegmentedControl) {
-  const getFix = (control: ExecJSON.Control) =>
+export function getFixForControl(control: SegmentedControl) {
+  return (
     control.descriptions?.find(
       (description: {label: string}) => description.label === 'fix'
     )?.data ||
     control.tags.fix ||
-    'Fix not available';
+    'Fix not available'
+  );
+}
 
+export function setupRemRec(control: SegmentedControl) {
   return _.truncate(
-    cleanText(`${createNote(control.result)} --- Fix: ${getFix(control)}`),
+    cleanText(
+      `${createNote(control.result)} --- Fix: ${getFixForControl(control)}`
+    ),
     {length: 512, omission: '... [SEE FULL TEXT IN AssumeRolePolicyDocument]'}
   );
 }

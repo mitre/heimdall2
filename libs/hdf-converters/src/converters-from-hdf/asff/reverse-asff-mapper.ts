@@ -1,10 +1,7 @@
 import {contextualizeEvaluation, ExecJSON} from 'inspecjs';
-import {MappedTransform} from '../base-converter';
+import {MappedTransform} from '../../base-converter';
+import {FromHdfBaseConverter} from '../reverse-base-converter';
 import {IExecJSONASFF, IFindingASFF, IOptions} from './asff-types';
-import {
-  FromHdfBaseConverter,
-  SegmentedControl
-} from './from-hdf-base-converter';
 import {
   getAllLayers,
   setupAwsAcct,
@@ -27,6 +24,14 @@ import {
   setupUpdated,
   statusCount
 } from './transformers';
+
+export type SegmentedControl = ExecJSON.Control & {
+  result: ExecJSON.ControlResult;
+  layersOfControl: (ExecJSON.Control & {
+    fix?: string;
+    profileInfo?: Record<string, unknown>;
+  })[];
+};
 
 export interface ILookupPathASFF {
   path?: string;

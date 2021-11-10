@@ -2,17 +2,9 @@ import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {MappedReform, MappedTransform, ObjectEntries} from '../base-converter';
 
-export type SegmentedControl = ExecJSON.Control & {
-  result: ExecJSON.ControlResult;
-  layersOfControl: (ExecJSON.Control & {
-    fix?: string;
-    profileInfo?: Record<string, unknown>;
-  })[];
-};
-
 export interface ILookupPathFH {
   path?: string;
-  transformer?: (value: SegmentedControl, context?: any) => unknown;
+  transformer?: (value: any, context?: any) => unknown;
   arrayTransformer?: (value: unknown[], file: ExecJSON.Execution) => unknown[];
   key?: string;
   passParent?: boolean;
@@ -51,47 +43,44 @@ export class FromHdfBaseConverter {
   //Used to get the data located at the paths
   evaluate<T extends object & ILookupPathFH>(
     file: object,
-    v: Array<T> | T
+    v: T | Array<T>
   ): T | Array<T> | MappedReform<T, ILookupPathFH> {
     const transformer = _.get(v, 'transformer');
     if (Array.isArray(v)) {
       return this.handleArray(file, v);
-    } else if (
+    }
+    if (
       typeof v === 'string' ||
       typeof v === 'number' ||
       typeof v === 'boolean' ||
       v === null
     ) {
       return v;
-    } else if (_.has(v, 'path')) {
-      let pathVal;
-      if (typeof transformer === 'function') {
-        if (v.path === '') {
-          pathVal = file;
-        } else {
-          pathVal = this.handlePath(file, v.path as string);
-        }
+    }
 
+    if (typeof transformer === 'function') {
+      if (!v.path) {
         if (v.passParent) {
-          return transformer(pathVal, this);
+          return transformer(file, this);
         } else {
-          return transformer(pathVal);
+          return transformer(file);
+        }
+      } else {
+        if (v.passParent) {
+          return transformer(this.handlePath(file, v.path as string), this);
+        } else {
+          return transformer(this.handlePath(file, v.path as string));
         }
       }
-      pathVal = this.handlePath(file, v.path as string);
-      if (Array.isArray(pathVal)) {
-        return pathVal as T[];
-      }
-      return pathVal as T;
-    }
-    if (typeof transformer === 'function') {
-      return transformer(file);
     } else {
-      return this.convertInternal(file, v);
+      if (v.path) {
+        return this.handlePath(file, v.path as string) as T | T[];
+      }
     }
+    return this.convertInternal(file, v);
   }
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  handleArray<T extends object>(
+
+  handleArray<T extends ILookupPathFH>(
     file: object,
     v: Array<T & ILookupPathFH>
   ): Array<T> {
