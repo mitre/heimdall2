@@ -67,14 +67,14 @@ export class FromHdfBaseConverter {
         }
       } else {
         if (v.passParent) {
-          return transformer(this.handlePath(file, v.path as string), this);
+          return transformer(this.handlePath(file, v.path), this);
         } else {
-          return transformer(this.handlePath(file, v.path as string));
+          return transformer(this.handlePath(file, v.path));
         }
       }
     } else {
       if (v.path) {
-        return this.handlePath(file, v.path as string) as T | T[];
+        return this.handlePath(file, v.path) as T | T[];
       }
     }
     return this.convertInternal(file, v);
