@@ -49,6 +49,7 @@ export class FromHdfBaseConverter {
     if (Array.isArray(v)) {
       return this.handleArray(file, v);
     }
+    // Do we have a static value set here?
     if (
       typeof v === 'string' ||
       typeof v === 'number' ||
@@ -84,53 +85,42 @@ export class FromHdfBaseConverter {
     file: object,
     v: Array<T & ILookupPathFH>
   ): Array<T> {
-    //Looks through parsed data file using the mapping setup in V
-    if (v.length === 0) {
-      return [];
-    }
-    if (v[0].path === undefined) {
+    // Looks through parsed data file using the mapping setup in V
+    if (v[0] && !v[0].path) {
       const arrayTransformer = v[0].arrayTransformer; //does nothing since null
-      v = v.map((element) => {
-        return _.omit(element, ['arrayTransformer']) as T & ILookupPathFH;
-      }); //does nothing too
-      let output: Array<T> = []; //Create empty array of generic to push evaluated values
-      v.forEach((element) => {
-        output.push(this.evaluate(file, element) as T);
-      });
-      if (arrayTransformer !== undefined) {
+      console.log(arrayTransformer);
+      let output: Array<T> = v.map(
+        (element) => this.evaluate(file, element) as T
+      );
+      if (arrayTransformer) {
         output = arrayTransformer(output, this.data) as T[];
       }
       return output;
-    } else {
+    } else if (v[0] && v[0].path) {
       const path = v[0].path;
       const arrayTransformer = v[0].arrayTransformer;
       const transformer = v[0].transformer;
       if (this.hasPath(file, path)) {
-        const pathVal = this.handlePath(file, path); //Any matches in the path even if more than one,  will grab an array of results, the issues
+        const pathVal = this.handlePath(file, path); //Any matches in the path even if more than one, will grab an array of results
         if (Array.isArray(pathVal)) {
-          v = pathVal.map((element: Record<string, unknown>) => {
-            return _.omit(this.convertInternal(element, v[0]), [
-              'path',
-              'transformer',
-              'arrayTransformer',
-              'key'
-            ]) as T;
-          });
-          if (arrayTransformer !== undefined) {
+          v = pathVal.map(
+            (element: Record<string, unknown>) =>
+              this.convertInternal(element, v[0]) as T
+          );
+          if (arrayTransformer) {
             v = arrayTransformer(v, this.data) as T[];
           }
           return v;
         } else {
-          if (transformer !== undefined) {
+          if (transformer) {
             return [transformer(this.handlePath(file, path) as any) as T];
           } else {
             return [this.handlePath(file, path) as T];
           }
         }
-      } else {
-        return [];
       }
     }
+    return [];
   }
 
   //Gets the value at the path using lodash and path stored in object
