@@ -83,7 +83,7 @@
     "date-fns": "^2.6.0",
     "diff": "^5.0.0",
     "diff2html": "^3.1.7",
-    "eslint-plugin-vue": "^7.0.1",
+    "eslint-plugin-vue": "^8.0.3",
     "express": "^4.17.1",
     "file-saver": "^2.0.2",
     "highlight.js": "^11.0.0",
