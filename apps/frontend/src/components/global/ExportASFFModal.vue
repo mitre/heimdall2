@@ -12,9 +12,50 @@
     <v-card>
       <v-card-title class="headline"> Export as ASFF </v-card-title>
       <v-card-text>
-        <v-text-field v-model="awsAccountId" label="AWS Account ID" />
-        <v-text-field v-model="target" label="Target Name" />
-        <v-text-field v-model="region" label="Region" />
+        <v-text-field v-model="awsAccountId" label="AWS Account ID">
+          <v-tooltip slot="append" bottom>
+            <template #activator="{on}">
+              <v-icon dark v-on="on"> mdi-information-outline </v-icon>
+            </template>
+            <span
+              >To find your Account ID, log into the AWS management console<br />
+              In navigation bar, click the dropdown containing your username<br />
+              Your Account ID will be listed next to "My Account"
+            </span>
+          </v-tooltip>
+        </v-text-field>
+
+        <v-text-field v-model="target" label="Target Name">
+          <v-tooltip slot="append" bottom>
+            <template #activator="{on}">
+              <v-icon dark v-on="on"> mdi-information-outline </v-icon>
+            </template>
+            <span
+              >The target name is a user-defined string that allows tracking
+              <br />
+              compliance accross time. If you upload a different results set of
+              <br />
+              the same controls using the same target name, the existing<br />
+              findings in security hub will be updated.
+            </span>
+          </v-tooltip>
+        </v-text-field>
+
+        <v-text-field v-model="region" label="Region">
+          <v-tooltip slot="append" bottom :close-delay="5000">
+            <template #activator="{on}">
+              <v-icon dark v-on="on" @click="openRegionDocumentation">
+                mdi-information-outline
+              </v-icon>
+            </template>
+            <span
+              >Choose the region that contains the Security Hub instance you
+              would like to upload findings to<br />
+              Click the <v-icon dense>mdi-information-outline</v-icon> icon to
+              see a list of regions
+            </span>
+          </v-tooltip>
+        </v-text-field>
       </v-card-text>
       <v-divider />
       <v-card-actions>
@@ -71,6 +112,12 @@ export default class ExportASFFModal extends Vue {
     } else {
       return true;
     }
+  }
+
+  openRegionDocumentation() {
+    window.open(
+      'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html'
+    );
   }
 
   sliceIntoChunks(
