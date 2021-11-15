@@ -42,7 +42,7 @@
         </v-text-field>
 
         <v-text-field v-model="region" label="Region">
-          <v-tooltip slot="append" bottom :close-delay="5000">
+          <v-tooltip slot="append" bottom>
             <template #activator="{on}">
               <v-icon dark v-on="on" @click="openRegionDocumentation">
                 mdi-information-outline
