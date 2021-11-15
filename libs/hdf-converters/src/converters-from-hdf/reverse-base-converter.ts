@@ -88,7 +88,6 @@ export class FromHdfBaseConverter {
     // Looks through parsed data file using the mapping setup in V
     if (v[0] && !v[0].path) {
       const arrayTransformer = v[0].arrayTransformer; //does nothing since null
-      console.log(arrayTransformer);
       let output: Array<T> = v.map(
         (element) => this.evaluate(file, element) as T
       );

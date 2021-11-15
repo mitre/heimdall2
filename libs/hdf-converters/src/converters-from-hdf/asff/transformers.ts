@@ -214,8 +214,14 @@ export function setupRegion(
 ) {
   return context?.ioptions.region;
 }
-export function setupUpdated() {
-  return new Date().toISOString();
+export function setupUpdated(
+  _control: SegmentedControl,
+  context?: FromHdfToAsffMapper
+) {
+  // Add one millisecond to the time by control index so the order is correct in security hub
+  const time = new Date();
+  time.setMilliseconds(time.getMilliseconds() + (context?.index || 0));
+  return time.toISOString();
 }
 
 export function setupGeneratorId(

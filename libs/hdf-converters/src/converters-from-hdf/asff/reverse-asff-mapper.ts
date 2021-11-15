@@ -57,7 +57,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         },
         CreatedAt: {path: ``, transformer: setupCreated},
         Region: {path: '', transformer: setupRegion, passParent: true},
-        UpdatedAt: {path: ``, transformer: setupUpdated},
+        UpdatedAt: {path: ``, transformer: setupUpdated, passParent: true},
         GeneratorId: {
           path: '',
           transformer: setupGeneratorId,
@@ -119,6 +119,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
   contextProfiles: any;
   counts: any;
   ioptions: IOptions;
+  index?: number;
 
   impactMapping: Map<number, string> = new Map([
     [0.9, 'CRITICAL'],
@@ -142,15 +143,6 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       target: 'default',
       region: ''
     };
-  }
-
-  sleep(milliseconds: number) {
-    const start = new Date().getTime();
-    for (let i = 0; i < 1e7; i++) {
-      if (new Date().getTime() - start > milliseconds) {
-        break;
-      }
-    }
   }
 
   setMappings(
@@ -186,7 +178,8 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       //Recursively transform the data into ASFF format
       //Returns an array of the findings
       const resList: IFindingASFF[] = this.controlsToSegments().map(
-        (segment) => {
+        (segment, index) => {
+          this.index = index;
           return this.convertInternal(segment, this.mappings)[
             'Findings'
           ][0] as IFindingASFF;
