@@ -2862,9 +2862,9 @@
     unicode-trie "^0.3.0"
 
 "@mdi/font@^6.1.95":
-  version "6.4.95"
-  resolved "https://registry.yarnpkg.com/@mdi/font/-/font-6.4.95.tgz#d3b7a615c4c82ba2a9c29b2b59b158dced4f9b0e"
-  integrity sha512-jCQdXCD339EXirWYFbZv1Ansthm9j6O3FSQLsfi/mKamnGYxqbUBm5D4UjcVr6HVYIPNwTQQ46HNHlswPD8RcQ==
+  version "6.5.95"
+  resolved "https://registry.yarnpkg.com/@mdi/font/-/font-6.5.95.tgz#203922f6dd46397de9eb1f5956b85339adb6344d"
+  integrity sha512-ES5rj6J39FUkHe/b3C9SJs8bqIungYhuU7rBINTBaHOv/Ce4RCb3Gw08CZVl32W33UEkgRkzyWaIedV4at+QHg==
 
 "@mdi/js@^6.1.95":
   version "6.4.95"
