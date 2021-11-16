@@ -23,7 +23,7 @@
   "dependencies": {
     "@types/csv2json": "^1.4.2",
     "@types/xml2js": "^0.4.9",
-    "csv-parse": "^4.16.0",
+    "csv-parse": "^5.0.1",
     "csv2json": "^2.0.2",
     "fast-xml-parser": "^3.19.0",
     "html-entities": "^2.3.2",
