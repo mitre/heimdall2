@@ -15604,9 +15604,9 @@ oauth-sign@~0.9.0:
   integrity sha512-fexhUFFPTGV8ybAtSIGbV6gOkSv8UtRbDBnAyLQw4QPKkgNlsH2ByPGtMUqdWkos6YCRmAqViwgZrJc/mRDzZQ==
 
 oauth2-mock-server@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-4.0.0.tgz#dd6068c7cee0752f2a8c22d15fd71c070ce93b9d"
-  integrity sha512-dW7B1CCgQkDOB14QgRWSd+LLnb6+eSJnyMoSmBMZrDglLjVrAd4jTxU3RW5fcCIIwSxXAF53bWuqbIa7u4Hu3g==
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-4.1.0.tgz#34ebb50283276171bfd420ebaa230cfbd70119f2"
+  integrity sha512-pH774UWIySYokWX+8q+IpCzcUtYmiPzZpvSgkMlaETRKIgYhfwLZOfNMbGtSwZpqU5EQV1Q9uYa1OAIU14LAeA==
   dependencies:
     basic-auth "^2.0.1"
     cors "^2.8.5"
