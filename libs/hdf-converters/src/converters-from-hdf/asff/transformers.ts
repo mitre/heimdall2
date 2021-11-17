@@ -2,9 +2,13 @@ import {createHash} from 'crypto';
 import {
   ContextualizedControl,
   ContextualizedEvaluation,
+  contextualizeEvaluation,
+  convertFile,
   ExecJSON
 } from 'inspecjs';
 import _ from 'lodash';
+import moment from 'moment';
+import {IFindingASFF, IOptions} from './asff-types';
 import {FromHdfToAsffMapper, SegmentedControl} from './reverse-asff-mapper';
 
 //FromHdfToAsff mapper transformers
@@ -54,6 +58,55 @@ function filter_overlays(
 
   // Return the set of keys
   return Array.from(Object.values(idHash));
+}
+
+export function createProfileInfoFinding(
+  hdf: ExecJSON.Execution,
+  options: IOptions
+): IFindingASFF {
+  const runTime = getRunTime(hdf);
+  const inspecJSJson = convertFile(JSON.stringify(hdf));
+  const contextualizedEvaluation = contextualizeEvaluation(
+    inspecJSJson['1_0_ExecJson'] as any
+  );
+  const counts = statusCount(contextualizedEvaluation);
+  const updatedAt = new Date();
+  updatedAt.setMilliseconds(
+    updatedAt.getMilliseconds() +
+      (contextualizedEvaluation.contains[0].contains.length || 0)
+  );
+  const profileInfo: Record<string, unknown> = {
+    SchemaVersion: '2018-10-08',
+    Id: `${options.target}/${hdf.profiles[0].name}`,
+    ProductArn: `arn:aws:securityhub:${options.region}:${options.awsAccountId}:product/${options.awsAccountId}/default`,
+    GeneratorId: `arn:aws:securityhub:us-east-2:${options.awsAccountId}:ruleset/set/${hdf.profiles[0].name}`,
+    AwsAccountId: options.awsAccountId,
+    CreatedAt: runTime.toISOString(),
+    UpdatedAt: updatedAt,
+    Title: `${options.target} | ${hdf.profiles[0].name} | ${moment().format(
+      'YYYY-MM-DD hh:mm:ss [GMT]ZZ'
+    )}`,
+    Description: createDescription(counts),
+    Severity: {
+      Label: 'INFORMATIONAL'
+    },
+    FindingProviderFields: {
+      Severity: {
+        Label: 'INFORMATIONAL'
+      },
+      Types: createProfileInfoFindingFields(hdf)
+    },
+    Resources: [
+      {
+        Type: 'AwsAccount',
+        Id: `AWS::::Account:${options.awsAccountId}`,
+        Partition: 'aws',
+        Region: options.region
+      }
+    ]
+  };
+
+  return profileInfo as unknown as IFindingASFF;
 }
 
 export function statusCount(evaluation: ContextualizedEvaluation): Counts {
@@ -302,6 +355,38 @@ function createProfileInfo(hdf?: ExecJSON.Execution): string[] {
       `Profile/Info/${JSON.stringify(profileInfos).replace(/\//g, '∕')}`
     );
   });
+  return typesArr;
+}
+
+function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
+  let typesArr: string[] = [];
+  hdf.profiles.forEach((profile) => {
+    const targets = [
+      'version',
+      'sha256',
+      'maintainer',
+      'summary',
+      'license',
+      'copyright',
+      'copyright_email'
+    ];
+    targets.forEach((target) => {
+      const value = _.get(profile, target);
+      if (typeof value === 'string') {
+        typesArr.push(`${profile.name}/${target}/${value}`);
+      }
+    });
+    const inputs: Record<string, unknown>[] = [];
+    profile.attributes.forEach((input) => {
+      if (input.options.value) {
+        inputs.push({[input.name]: input.options.value});
+      }
+    });
+    typesArr.push(
+      `${profile.name}/inputs/${JSON.stringify(inputs).replace(/\//g, '∕')}`
+    );
+  });
+  typesArr = typesArr.slice(0, 50);
   return typesArr;
 }
 

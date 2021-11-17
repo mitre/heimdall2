@@ -16,7 +16,16 @@ function omitVersions(input: ExecJSON.Execution): Partial<ExecJSON.Execution> {
   return _.omit(input, ['version', 'platform.release', 'profiles[0].sha256']);
 }
 
-function omitASFFTimes(input: IFindingASFF[]): Partial<IFindingASFF>[] {
+// Profile information title contains a changing value
+function omitASFFTitle(
+  input: Partial<IFindingASFF>[]
+): Partial<IFindingASFF>[] {
+  return input.map((finding) => _.omit(finding, 'Title'));
+}
+
+function omitASFFTimes(
+  input: Partial<IFindingASFF>[]
+): Partial<IFindingASFF>[] {
   return input.map((finding) => _.omit(finding, ['UpdatedAt', 'CreatedAt']));
 }
 
@@ -43,6 +52,16 @@ test('Test converter toASFF function', () => {
         encoding: 'utf-8'
       }
     )
+  );
+  const expectedProfileInfo = JSON.parse(
+    fs.readFileSync(
+      'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json.p0.json',
+      {encoding: 'utf-8'}
+    )
+  );
+  const profileInformation = [converted.pop() || {}];
+  expect(omitASFFTimes(omitASFFTitle(expectedProfileInfo))).toEqual(
+    omitASFFTimes(omitASFFTitle(profileInformation))
   );
   expect(omitASFFTimes(converted)).toEqual(omitASFFTimes(expectedJSON));
 });

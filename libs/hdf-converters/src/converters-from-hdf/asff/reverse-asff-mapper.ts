@@ -3,6 +3,7 @@ import {MappedTransform} from '../../base-converter';
 import {FromHdfBaseConverter} from '../reverse-base-converter';
 import {IExecJSONASFF, IFindingASFF, IOptions} from './asff-types';
 import {
+  createProfileInfoFinding,
   getAllLayers,
   setupAwsAcct,
   setupControlStatus,
@@ -185,6 +186,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
           ][0] as IFindingASFF;
         }
       );
+      resList.push(createProfileInfoFinding(this.data, this.ioptions));
       return resList;
     }
   }

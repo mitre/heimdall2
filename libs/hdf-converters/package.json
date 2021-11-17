@@ -30,6 +30,7 @@
     "htmlparser2": "^7.1.2",
     "inspecjs": "^2.6.1",
     "lodash": "^4.17.21",
+    "moment": "^2.29.1",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {

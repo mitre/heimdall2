@@ -17,10 +17,10 @@ export interface IFindingASFF {
   ProductArn: string;
   ProductName?: string;
   CompanyName?: string;
-  Region: string;
+  Region?: string;
   GeneratorId: string;
   AwsAccountId: string;
-  Types: string[] | Record<string, unknown>;
+  Types?: string[] | Record<string, unknown>;
   FirstObservedAt?: string;
   LastObservedAt?: string;
   CreatedAt: string;
@@ -42,7 +42,7 @@ export interface ISeverityASFF {
   Product?: number;
   Label: string;
   Normalized?: number;
-  Original: string;
+  Original?: string;
 }
 
 export interface IRemediationASFF {
@@ -82,6 +82,6 @@ export interface IComplianceASFF {
   RelatedRequirements?: string[] | Record<string, unknown>;
 }
 export interface IFindingProviderFieldsASFF {
-  Severity: {Label: string; Original: string};
+  Severity: {Label: string; Original?: string};
   Types: string[] | Record<string, unknown>;
 }
