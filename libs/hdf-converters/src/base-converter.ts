@@ -5,8 +5,8 @@ import _ from 'lodash';
 
 export interface ILookupPath {
   path?: string;
-  transformer?: (value: unknown) => unknown;
-  arrayTransformer?: (value: unknown[], file: unknown) => unknown[];
+  transformer?: (value: any) => unknown;
+  arrayTransformer?: (value: unknown[], file: any) => unknown[];
   key?: string;
 }
 
@@ -152,6 +152,7 @@ export class BaseConverter {
     );
     return result as MappedReform<T, ILookupPath>;
   }
+
   evaluate<T extends object>(
     file: Record<string, unknown>,
     v: Array<T> | T
@@ -182,7 +183,7 @@ export class BaseConverter {
       return this.convertInternal(file, v);
     }
   }
-  // eslint-disable-next-line @typescript-eslint/ban-types
+
   handleArray<T extends object>(
     file: Record<string, unknown>,
     v: Array<T & ILookupPath>
