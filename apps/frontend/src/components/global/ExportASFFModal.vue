@@ -18,9 +18,9 @@
               <v-icon dark v-on="on"> mdi-information-outline </v-icon>
             </template>
             <span
-              >To find your Account ID, log into the AWS management console<br />
+              >To find your Account ID, log into the AWS management console,<br />
               In navigation bar, click the dropdown containing your username<br />
-              Your Account ID will be listed next to "My Account"
+              Your Account ID will be listed next to "My Account".
             </span>
           </v-tooltip>
         </v-text-field>
@@ -31,12 +31,11 @@
               <v-icon dark v-on="on"> mdi-information-outline </v-icon>
             </template>
             <span
-              >The target name is a user-defined string that allows tracking
-              <br />
-              compliance accross time. If you upload a different results set of
-              <br />
-              the same controls using the same target name, the existing<br />
-              findings in security hub will be updated.
+              >The target name is a user-defined string that is used to update
+              exisitng controls in Security Hub.<br />
+              If you upload a different results set of the same controls and
+              using the same target name, the existing<br />
+              findings in Security Hub will be updated.
             </span>
           </v-tooltip>
         </v-text-field>
@@ -50,9 +49,9 @@
             </template>
             <span
               >Choose the region that contains the Security Hub instance you
-              would like to upload findings to<br />
+              would like to upload findings to.<br />
               Click the <v-icon dense>mdi-information-outline</v-icon> icon to
-              see a list of regions
+              see a list of regions.
             </span>
           </v-tooltip>
         </v-text-field>
