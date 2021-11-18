@@ -3,6 +3,8 @@ import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {ASFFMapper} from '../src/asff-mapper';
 import {BurpSuiteMapper} from '../src/burpsuite-mapper';
+import {IFindingASFF} from '../src/converters-from-hdf/asff/asff-types';
+import {FromHdfToAsffMapper} from '../src/converters-from-hdf/asff/reverse-asff-mapper';
 import {JfrogXrayMapper} from '../src/jfrog-xray-mapper';
 import {NiktoMapper} from '../src/nikto-mapper';
 import {SarifMapper} from '../src/sarif-mapper';
@@ -13,6 +15,56 @@ import {ZapMapper} from '../src/zap-mapper';
 function omitVersions(input: ExecJSON.Execution): Partial<ExecJSON.Execution> {
   return _.omit(input, ['version', 'platform.release', 'profiles[0].sha256']);
 }
+
+// Profile information title contains a changing value
+function omitASFFTitle(
+  input: Partial<IFindingASFF>[]
+): Partial<IFindingASFF>[] {
+  return input.map((finding) => _.omit(finding, 'Title'));
+}
+
+function omitASFFTimes(
+  input: Partial<IFindingASFF>[]
+): Partial<IFindingASFF>[] {
+  return input.map((finding) => _.omit(finding, ['UpdatedAt', 'CreatedAt']));
+}
+
+test('Test converter toASFF function', () => {
+  const inputData = JSON.parse(
+    fs.readFileSync(
+      'sample_jsons/asff_reverse_mapper/sample_input_report/rhel7-results.json',
+      {
+        encoding: 'utf-8'
+      }
+    )
+  );
+  //The From Hdf to Asff mapper takes a HDF object and an options argument with the format of the CLI tool
+  const converted = new FromHdfToAsffMapper(inputData, {
+    input: 'rhel7-results.json',
+    awsAccountId: '12345678910',
+    target: 'reverse-proxy',
+    region: 'us-east-2'
+  }).toAsff();
+  const expectedJSON = JSON.parse(
+    fs.readFileSync(
+      'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json',
+      {
+        encoding: 'utf-8'
+      }
+    )
+  );
+  const expectedProfileInfo = JSON.parse(
+    fs.readFileSync(
+      'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json.p0.json',
+      {encoding: 'utf-8'}
+    )
+  );
+  const profileInformation = [converted.pop() || {}];
+  expect(omitASFFTimes(omitASFFTitle(expectedProfileInfo))).toEqual(
+    omitASFFTimes(omitASFFTitle(profileInformation))
+  );
+  expect(omitASFFTimes(converted)).toEqual(omitASFFTimes(expectedJSON));
+});
 
 describe('asff_mapper', () => {
   it('Successfully converts Native ASFF', () => {

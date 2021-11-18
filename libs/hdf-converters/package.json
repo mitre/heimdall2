@@ -16,7 +16,7 @@
     "build": "tsc -p ./tsconfig.build.json && cp -R ./data ./lib",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
-    "test": "jest --silent",
+    "test": "jest",
     "csv2json": "ts-node data/converters/csv2json.ts",
     "xml2json": "ts-node data/converters/xml2json.ts"
   },
@@ -30,6 +30,7 @@
     "htmlparser2": "^7.1.2",
     "inspecjs": "^2.6.1",
     "lodash": "^4.17.21",
+    "moment": "^2.29.1",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
