@@ -31,5 +31,6 @@ export default class Modal extends Vue {
 <style lang="scss">
 .v-dialog {
   transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+  width: 100%;
 }
 </style>
