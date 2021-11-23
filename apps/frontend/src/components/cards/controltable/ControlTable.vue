@@ -88,7 +88,7 @@
           />
         </template>
 
-        <template #viewed class="my-2 px-1">
+        <template #viewed>
           <ColumnHeader
             text="Controls Viewed"
             sort="disabled"

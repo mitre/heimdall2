@@ -27,6 +27,9 @@
               <ExportCSVModal :filter="all_filter" />
             </v-list-item>
             <v-list-item class="px-0">
+              <ExportASFFModal :filter="all_filter" />
+            </v-list-item>
+            <v-list-item class="px-0">
               <ExportNist :filter="all_filter" />
             </v-list-item>
             <v-list-item class="px-0">
@@ -194,6 +197,7 @@ import StatusCardRow from '@/components/cards/StatusCardRow.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
 import Treemap from '@/components/cards/treemap/Treemap.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
+import ExportASFFModal from '@/components/global/ExportASFFModal.vue';
 import ExportCaat from '@/components/global/ExportCaat.vue';
 import ExportCKLModal from '@/components/global/ExportCKLModal.vue';
 import ExportCSVModal from '@/components/global/ExportCSVModal.vue';
@@ -236,6 +240,7 @@ import {compare_times} from '../utilities/delta_util';
     StatusChart,
     SeverityChart,
     ComplianceChart,
+    ExportASFFModal,
     ExportCaat,
     ExportCSVModal,
     ExportNist,
