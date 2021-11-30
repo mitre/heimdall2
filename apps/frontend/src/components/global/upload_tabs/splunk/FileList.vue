@@ -32,20 +32,24 @@
           range.
         </template>
       </v-data-table>
-      <!-- <v-btn block class="card-outter" @click="loadResults">
+      <v-btn block class="card-outter" @click="loadResults">
         Load Selected
         <v-icon class="pl-2"> mdi-file-download</v-icon>
-      </v-btn> -->
+      </v-btn>
     </div>
   </span>
 </template>
 
 <script lang="ts">
+import {InspecIntakeModule} from '@/store/report_intake';
+import {SnackbarModule} from '@/store/snackbar';
 import {
+  FileMetaData,
   getAllExecutions,
-  MetaData,
+  getExecution,
   SplunkClient
 } from '@/utilities/splunk_util';
+import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
@@ -54,8 +58,8 @@ export default class FileList extends Vue {
   @Prop({type: Object, required: true}) readonly splunkClient!: SplunkClient;
 
   search = '';
-  executions: MetaData[] = [];
-  selectedExecutions: MetaData[] = [];
+  executions: FileMetaData[] = [];
+  selectedExecutions: FileMetaData[] = [];
 
   /** Table info */
   headers = [
@@ -80,13 +84,19 @@ export default class FileList extends Vue {
     this.executions = await getAllExecutions(this.splunkClient);
   }
 
-  // loadResults() {
-  //   this.selectedExecutions.forEach((execution) => {
-  //     getExecution(this.splunkClient, execution.meta.guid).then((result) =>
-  //       console.log(result)
-  //     );
-  //   });
-  // }
+  loadResults() {
+    const files = this.selectedExecutions.map((execution) => {
+      return getExecution(this.splunkClient, execution.guid).then((result) =>
+        InspecIntakeModule.loadText({
+          text: JSON.stringify(result),
+          filename: _.get(result, 'meta.filename')
+        }).catch((err) => {
+          SnackbarModule.failure(String(err));
+        })
+      );
+    });
+    this.$emit('got-files', files);
+  }
 
   logout() {
     this.$emit('signOut');

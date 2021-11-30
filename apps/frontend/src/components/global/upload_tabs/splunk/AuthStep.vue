@@ -45,6 +45,9 @@ export default class AuthStep extends Vue {
       this.password
     );
     if (await splunkClient.validateCredentials()) {
+      localUsername.set(this.username)
+      localPassword.set(this.password)
+      localHostname.set(this.hostname)
       this.$emit('authenticated', splunkClient);
     }
   }

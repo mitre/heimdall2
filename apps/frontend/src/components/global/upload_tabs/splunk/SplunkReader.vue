@@ -14,12 +14,14 @@
           v-if="splunkClient"
           :splunk-client="splunkClient"
           @signOut="onSignOut"
+          @got-files="got_files"
         />
       </v-stepper-content>
     </v-stepper-items>
   </v-stepper>
 </template>
 <script lang="ts">
+import {FileID} from '@/store/report_intake';
 import {SplunkClient} from '@/utilities/splunk_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
@@ -38,6 +40,10 @@ export default class SplunkReader extends Vue {
   onAuthenticationComplete(splunkClient: SplunkClient) {
     this.splunkClient = splunkClient;
     this.step = 2;
+  }
+
+  got_files(files: FileID[]) {
+    this.$emit('got-files', files);
   }
 
   onSignOut() {
