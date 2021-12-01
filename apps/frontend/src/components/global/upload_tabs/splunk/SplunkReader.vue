@@ -1,9 +1,11 @@
 <template>
   <v-stepper v-model="step">
     <v-stepper-header class="elevation-0">
-      <v-stepper-step step="1"> Login Credentials </v-stepper-step>
+      <v-stepper-step id="step-1" step="1"> Login Credentials </v-stepper-step>
       <v-divider />
-      <v-stepper-step step="2"> Search Execution Events </v-stepper-step>
+      <v-stepper-step id="step-2" step="2">
+        Search Execution Events
+      </v-stepper-step>
     </v-stepper-header>
     <v-stepper-items>
       <v-stepper-content step="1">

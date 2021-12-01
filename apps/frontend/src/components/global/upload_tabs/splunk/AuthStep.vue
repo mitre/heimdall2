@@ -1,9 +1,25 @@
 <template>
   <div>
     <v-form>
-      <v-text-field v-model="username" label="Username" />
-      <v-text-field v-model="password" label="Password" type="password" />
-      <v-text-field v-model="hostname" label="Hostname" />
+      <v-text-field
+        v-model="username"
+        label="Username"
+        for="username_field"
+        data-cy="splunkusername"
+      />
+      <v-text-field
+        v-model="password"
+        label="Password"
+        for="password_field"
+        type="password"
+        data-cy="splunkpassword"
+      />
+      <v-text-field
+        v-model="hostname"
+        label="Hostname"
+        for="hostname_field"
+        data-cy="splunkhostname"
+      />
     </v-form>
     <v-row class="mx-1">
       <v-btn color="primary" class="my-4 mt-0" @click="login"> Login </v-btn>
@@ -45,9 +61,9 @@ export default class AuthStep extends Vue {
       this.password
     );
     if (await splunkClient.validateCredentials()) {
-      localUsername.set(this.username)
-      localPassword.set(this.password)
-      localHostname.set(this.hostname)
+      localUsername.set(this.username);
+      localPassword.set(this.password);
+      localHostname.set(this.hostname);
       this.$emit('authenticated', splunkClient);
     }
   }

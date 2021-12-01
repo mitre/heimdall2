@@ -67,7 +67,7 @@ async function waitForJob(
   if (!completed) {
     return waitForJob(splunkClient, id);
   } else {
-    const promise = apiClient
+    return apiClient
       .get(
         `${splunkClient.host}/services/search/jobs/${id}/results?output_mode=json&count=200000`
       )
@@ -79,7 +79,6 @@ async function waitForJob(
           JSON.parse(result._raw)
         );
       });
-    return promise;
   }
 }
 
@@ -158,7 +157,7 @@ export async function getAllExecutions(
   return waitForJob(splunkClient, jobId).then(
     (executions: GenericPayloadWithMetaData[]) =>
       executions.map((execution) => execution.meta)
-  ) as Promise<FileMetaData[]>;
+  );
 }
 
 export async function createSearch(
