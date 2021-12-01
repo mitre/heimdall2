@@ -9,17 +9,9 @@ const apiClient = axios.create();
 
 export const completedJobs: Record<number, unknown> = {};
 
-export interface MetaData {
-  statistics: {
-    duration: number;
-  };
-  version: string;
-  platform: {
-    release: string;
-    name: string;
-  };
+export interface GenericPayloadWithMetaData {
   meta: FileMetaData;
-  profiles: never[];
+  [key: string]: never[] | Record<string, unknown>;
 }
 
 export interface FileMetaData {
@@ -30,6 +22,8 @@ export interface FileMetaData {
   filetype: string;
   parse_time: Date;
   filename: string;
+  profile_sha256: string;
+  [key: string]: never[] | unknown;
 }
 
 export class SplunkClient {
@@ -44,9 +38,7 @@ export class SplunkClient {
   }
 
   async validateCredentials(): Promise<boolean> {
-    // Call axios.create() to skip the default interceptors setup in main.ts
-    return axios
-      .create()
+    return apiClient
       .get(`${this.host}/services/search/jobs`, {
         headers: {
           Authorization: basic_auth(this.username, this.password)
@@ -75,17 +67,9 @@ async function waitForJob(
   if (!completed) {
     return waitForJob(splunkClient, id);
   } else {
-    const promise = axios
+    const promise = apiClient
       .get(
-        `${splunkClient.host}/services/search/jobs/${id}/results?output_mode=json&count=200000`,
-        {
-          headers: {
-            Authorization: basic_auth(
-              splunkClient.username,
-              splunkClient.password
-            )
-          }
-        }
+        `${splunkClient.host}/services/search/jobs/${id}/results?output_mode=json&count=200000`
       )
       .then(({data}) => {
         completedJobs[id] = data.results.map((result: {_raw: string}) => {
@@ -99,21 +83,28 @@ async function waitForJob(
   }
 }
 
-export function consolidate_payloads(payloads: any[]): ExecJSON.Execution[] {
+export function consolidate_payloads(
+  payloads: GenericPayloadWithMetaData[]
+): ExecJSON.Execution[] {
   // Group by exec id
   const grouped = group_by(payloads, (pl) => pl.meta.guid);
 
-  const built = map_hash(grouped, consolidate_file_payloads);
+  const built = map_hash(grouped, consolidateFilePayloads);
   return Object.values(built);
 }
 
-function consolidate_file_payloads(filePayloads: any[]): any {
+function consolidateFilePayloads(
+  filePayloads: GenericPayloadWithMetaData[]
+): ExecJSON.Execution {
   // In the end we wish to produce a single evaluation EventPayload which in fact contains all data for the guid
   // Group by subtype
   const subtypes = group_by(filePayloads, (event) => event.meta.subtype);
-  const execEvents = (subtypes['header'] || []) as any[];
-  const profileEvents = (subtypes['profile'] || []) as any[];
-  const controlEvents = (subtypes['control'] || []) as any[];
+  const execEvents = (subtypes['header'] ||
+    []) as Partial<ExecJSON.Execution>[];
+  const profileEvents = (subtypes['profile'] ||
+    []) as unknown as (ExecJSON.Profile & GenericPayloadWithMetaData)[];
+  const controlEvents = (subtypes['control'] ||
+    []) as unknown as (ExecJSON.Control & GenericPayloadWithMetaData)[];
 
   // Verify we only have one exec event
   if (execEvents.length !== 1) {
@@ -126,7 +117,7 @@ function consolidate_file_payloads(filePayloads: any[]): any {
   const exec = execEvents[0];
 
   // Put all the profiles into the exec
-  exec.profiles.push(...profileEvents);
+  exec.profiles?.push(...profileEvents);
 
   // Group controls, and then put them into the profiles
   const shaGroupedControls = group_by(
@@ -140,7 +131,7 @@ function consolidate_file_payloads(filePayloads: any[]): any {
     profile.controls.push(...corrControls);
   }
 
-  return exec;
+  return exec as unknown as ExecJSON.Execution;
 }
 
 export async function getExecution(
@@ -164,9 +155,10 @@ export async function getAllExecutions(
     splunkClient,
     'spath "meta.subtype" | search "meta.subtype"=header'
   );
-  return waitForJob(splunkClient, jobId).then((executions: MetaData[]) =>
-    executions.map((execution) => execution.meta)
-  );
+  return waitForJob(splunkClient, jobId).then(
+    (executions: GenericPayloadWithMetaData[]) =>
+      executions.map((execution) => execution.meta)
+  ) as Promise<FileMetaData[]>;
 }
 
 export async function createSearch(
@@ -176,11 +168,10 @@ export async function createSearch(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<JobID> {
   const fullQuery = `search=search index="hdf" | ${searchString || ''}`;
-  return axios({
+  return apiClient({
     method: 'POST',
     url: `${splunkClient.host}/services/search/jobs?output_mode=json`,
     headers: {
-      Authorization: basic_auth(splunkClient.username, splunkClient.password),
       'Content-Type': 'text/plain'
     },
     data: fullQuery
