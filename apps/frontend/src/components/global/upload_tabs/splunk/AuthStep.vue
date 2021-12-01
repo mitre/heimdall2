@@ -41,6 +41,7 @@
 
 <script lang="ts">
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
+import {SnackbarModule} from '@/store/snackbar';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import {SplunkClient} from '@/utilities/splunk_util';
 import Vue from 'vue';
@@ -72,6 +73,8 @@ export default class AuthStep extends Vue {
       localPassword.set(this.password);
       localHostname.set(this.hostname);
       this.$emit('authenticated', splunkClient);
+    } else {
+      SnackbarModule.failure('Incorrect Username or Password');
     }
   }
 
