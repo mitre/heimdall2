@@ -22,7 +22,14 @@
       />
     </v-form>
     <v-row class="mx-1">
-      <v-btn color="primary" class="my-4 mt-0" @click="login"> Login </v-btn>
+      <v-btn
+        color="primary"
+        class="my-4 mt-0"
+        data-cy="splunkLoginButton"
+        @click="login"
+      >
+        Login
+      </v-btn>
       <v-spacer />
       <v-btn>
         Help
