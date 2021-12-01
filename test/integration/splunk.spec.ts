@@ -37,7 +37,7 @@ context('Splunk', () => {
       uploadModal.switchToTab('splunk');
       splunkTabVerifier.splunkPresent();
       splunkPage.splunkLogin(BAD_SPLUNK_AUTHENTICATION);
-      toastVerifier.toastTextContains('Bad username or password.');
+      toastVerifier.toastTextContains('Incorrect Username or Password.');
     });
   });
 });
