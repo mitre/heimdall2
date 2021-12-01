@@ -7,8 +7,6 @@ export type JobID = number;
 
 const apiClient = axios.create();
 
-export const completedJobs: Record<number, unknown> = {};
-
 export interface GenericPayloadWithMetaData {
   meta: FileMetaData;
   [key: string]: never[] | Record<string, unknown>;
@@ -72,9 +70,6 @@ async function waitForJob(
         `${splunkClient.host}/services/search/jobs/${id}/results?output_mode=json&count=200000`
       )
       .then(({data}) => {
-        completedJobs[id] = data.results.map((result: {_raw: string}) => {
-          return JSON.parse(result._raw);
-        });
         return data.results.map((result: {_raw: string}) =>
           JSON.parse(result._raw)
         );
