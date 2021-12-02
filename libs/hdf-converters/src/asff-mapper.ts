@@ -47,6 +47,7 @@ function fixFileInput(asffJson: string) {
   } catch {
     // Prowler gives us JSON Lines format but we need regular JSON
     const fixedInput = `[${asffJson
+      .trim()
       .replace(/}\n/g, '},\n')
       .replace(/\},\n\$/g, '')}]`;
     let output = JSON.parse(fixedInput);
