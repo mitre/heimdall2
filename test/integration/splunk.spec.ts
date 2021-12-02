@@ -31,13 +31,14 @@ context('Splunk', () => {
       uploadModal.switchToTab('splunk');
       splunkTabVerifier.splunkPresent();
       splunkPage.splunkLogin(SPLUNK_AUTHENTICATION);
+      toastVerifier.toastTextContains('You have successfully signed in');
     });
 
     it('fails to authenticate a Splunk user with invalid credentials', () => {
       uploadModal.switchToTab('splunk');
       splunkTabVerifier.splunkPresent();
       splunkPage.splunkLogin(BAD_SPLUNK_AUTHENTICATION);
-      toastVerifier.toastTextContains('Incorrect Username or Password.');
+      toastVerifier.toastTextContains('Incorrect Username or Password');
     });
   });
 });

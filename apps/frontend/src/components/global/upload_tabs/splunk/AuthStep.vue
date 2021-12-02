@@ -72,6 +72,7 @@ export default class AuthStep extends Vue {
       localUsername.set(this.username);
       localPassword.set(this.password);
       localHostname.set(this.hostname);
+      SnackbarModule.failure('You have successfully signed in');
       this.$emit('authenticated', splunkClient);
     } else {
       SnackbarModule.failure('Incorrect Username or Password');
