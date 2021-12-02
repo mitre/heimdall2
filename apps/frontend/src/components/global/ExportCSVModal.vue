@@ -164,6 +164,18 @@ export default class ExportCSVModal extends Vue {
     }
   }
 
+  createOverlaidCode(
+    file: ProfileFile | EvaluationFile,
+    control: ContextualizedControl
+  ) {
+    const controls = FilteredDataModule.controls({
+      ...this.filter,
+      ids: [control.data.id],
+      fromFile: [file.uniqueId]
+    });
+    return controls[0].full_code;
+  }
+
   convertRow(
     file: ProfileFile | EvaluationFile,
     control: ContextualizedControl
@@ -236,7 +248,7 @@ export default class ExportCSVModal extends Vue {
           break;
         // Code
         case fieldNames[9]:
-          result[fieldNames[9]] = control.full_code;
+          result[fieldNames[9]] = this.createOverlaidCode(file, control);
           break;
         // Check
         case fieldNames[10]:
@@ -279,8 +291,15 @@ export default class ExportCSVModal extends Vue {
       ...this.filter,
       fromFile: [file.uniqueId]
     });
+    const hitIds = new Set();
     for (const ctrl of controls) {
-      rows.push(this.convertRow(file, ctrl));
+      const root = ctrl.root;
+      if (hitIds.has(root.hdf.wraps.id)) {
+        continue;
+      } else {
+        hitIds.add(root.hdf.wraps.id);
+        rows.push(this.convertRow(file, root));
+      }
     }
     return rows;
   }
