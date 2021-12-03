@@ -137,6 +137,19 @@ export default class ExportCSVModal extends Vue {
   ): string {
     let result = '';
     if (Array.isArray(descriptions)) {
+      // Caveats are the first thing displayed if defined
+      // There should only ever be one, but better safe than sorry
+      const caveats = descriptions.filter(
+        (description) => description.label === 'caveat'
+      );
+      if (caveats.length) {
+        descriptions = descriptions.filter(
+          (description) => description.label !== 'caveat'
+        );
+        caveats.forEach((caveat) => {
+          result += `${caveat.label}: ${caveat.data}`;
+        });
+      }
       descriptions.forEach((description: ExecJSON.ControlDescription) => {
         result += `${description.label}: ${description.data}\r\n\r\n`;
       });
