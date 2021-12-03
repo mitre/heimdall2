@@ -8,7 +8,7 @@
       </template>
       <v-icon small class="ma-2"> mdi-tag-plus </v-icon>
       <template #input>
-        <v-select
+        <v-combobox
           v-model="tags"
           :items="allEvaluationTags"
           :search-input.sync="search"
@@ -31,7 +31,7 @@
               </v-list-item-content>
             </v-list-item>
           </template>
-        </v-select>
+        </v-combobox>
       </template>
     </v-edit-dialog>
     <ActionDialog
