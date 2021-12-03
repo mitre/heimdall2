@@ -47,6 +47,7 @@ import {
   mdiMinusCircle
 } from '@mdi/js';
 import axios from 'axios';
+import {saveAs} from 'file-saver';
 import {ContextualizedControl} from 'inspecjs';
 import _ from 'lodash';
 import Mustache from 'mustache';
