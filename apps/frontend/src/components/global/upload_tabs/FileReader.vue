@@ -1,9 +1,30 @@
 <template>
   <v-container fluid>
     <v-card style="position: relative" class="elevation-0">
-      <v-card-subtitle
-        >Easily load any supported Heimdall Data Format file</v-card-subtitle
-      >
+      <v-row class="pt-1" justify="space-between">
+        <v-card-subtitle>Easily load any supported Data Format</v-card-subtitle>
+        <v-tooltip bottom>
+          <template #activator="{on, attrs}">
+            <v-icon class="pr-2" :attrs="attrs" v-on="on"
+              >mdi-information-outline</v-icon
+            >
+          </template>
+          <span>Supported Formats:</span>
+          <ul>
+            <li>Burp Suite</li>
+            <li>DBProtect</li>
+            <li>JFrog Xray</li>
+            <li>Nessus</li>
+            <li>Netsparker</li>
+            <li>Nikto</li>
+            <li>Static Analysis Results Interchange Format (SARIF)</li>
+            <li>Scoutsuite</li>
+            <li>Snyk</li>
+            <li>XCCDF Results</li>
+            <li>OWASP ZAP</li>
+          </ul>
+        </v-tooltip>
+      </v-row>
       <v-container style="margin-top: 5%">
         <v-row>
           <v-col cols="12" align="center">
@@ -91,10 +112,17 @@ export default class FileReader extends mixins(ServerMixin) {
         });
       })
     )
-      .then((fileIds: (FileID | void)[]) => {
-        // Since catching errors is handled by loadFile above,
-        // filter(Boolean) is used here to remove any falsey values.
-        this.$emit('got-files', fileIds.filter(Boolean));
+      // Since some HDF converters can return multiple results sets, we can sometimes have multiple file IDs returned
+      .then((fileIds: (FileID | FileID[] | void)[]) => {
+        const allIds: FileID[] = [];
+        fileIds.forEach((fileId) => {
+          if (Array.isArray(fileId)) {
+            allIds.push(...fileId.filter(Boolean));
+          } else if (fileId) {
+            allIds.push(fileId);
+          }
+        });
+        this.$emit('got-files', allIds);
       })
       .finally(() => {
         this.loading = false;

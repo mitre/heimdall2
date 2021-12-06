@@ -88,7 +88,7 @@
           />
         </template>
 
-        <template #viewed class="my-2 px-1">
+        <template #viewed>
           <ColumnHeader
             text="Controls Viewed"
             sort="disabled"
@@ -131,13 +131,12 @@
 
 <script lang="ts">
 import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails.vue';
-import ControlRowHeader, {
-  getControlRunTime
-} from '@/components/cards/controltable/ControlRowHeader.vue';
+import ControlRowHeader from '@/components/cards/controltable/ControlRowHeader.vue';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
 import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {HeightsModule} from '@/store/heights';
+import {getControlRunTime} from '@/utilities/delta_util';
 import {control_unique_key} from '@/utilities/format_util';
 import {ContextualizedControl} from 'inspecjs';
 import _ from 'lodash';

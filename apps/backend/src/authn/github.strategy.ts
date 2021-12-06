@@ -7,7 +7,8 @@ import {User} from '../users/user.model';
 import {AuthnService} from './authn.service';
 
 interface GithubProfile {
-  name: string;
+  name: string | null;
+  login: string;
 }
 
 interface GithubEmail {
@@ -48,7 +49,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
   ): Promise<User> {
     // Get user's linked emails from Github
     const githubEmails = await axios
-      .get(
+      .get<GithubEmail[]>(
         `${
           this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL') ||
           this.configService.defaultGithubAPIURL
@@ -57,12 +58,12 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
           headers: {Authorization: `token ${accessToken}`}
         }
       )
-      .then((response): GithubEmail[] => {
-        return response.data;
+      .then(({data}) => {
+        return data;
       });
     // Get user's info
     const userInfoResponse = await axios
-      .get(
+      .get<GithubProfile>(
         `${
           this.configService.get('GITHUB_ENTERPRISE_INSTANCE_API_URL') ||
           this.configService.defaultGithubAPIURL
@@ -71,12 +72,16 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
           headers: {Authorization: `token ${accessToken}`}
         }
       )
-      .then((response): GithubProfile => {
-        return response.data;
+      .then(({data}) => {
+        return data;
       });
-    const {firstName, lastName} = this.authnService.splitName(
-      userInfoResponse.name
-    );
+    let firstName = userInfoResponse.login;
+    let lastName = '';
+    if (typeof userInfoResponse.name === 'string') {
+      firstName = this.authnService.splitName(userInfoResponse.name).firstName;
+      lastName = this.authnService.splitName(userInfoResponse.name).lastName;
+    }
+
     // Get first email
     const primaryEmail = githubEmails[0];
     // Only validate if the user has verified their email with Github

@@ -1,43 +1,49 @@
 <template>
-  <v-stepper-content step="1">
-    <v-form v-model="valid">
-      <v-text-field v-model="username" label="Username" :rules="[reqRule]" />
+  <div>
+    <v-form>
+      <v-text-field
+        v-model="username"
+        label="Username"
+        for="username_field"
+        data-cy="splunkusername"
+      />
       <v-text-field
         v-model="password"
         label="Password"
+        for="password_field"
         type="password"
-        :rules="[reqRule]"
+        data-cy="splunkpassword"
       />
       <v-text-field
         v-model="hostname"
         label="Hostname"
-        :rules="[reqRule]"
-        hint="Ex: https://my.website.com:8089"
+        for="hostname_field"
+        data-cy="splunkhostname"
       />
     </v-form>
     <v-row class="mx-1">
       <v-btn
         color="primary"
-        :disabled="!valid || loggingIn"
-        :loading="loggingIn"
-        class="my-2"
-        @click="try_login"
+        class="my-4 mt-0"
+        data-cy="splunkLoginButton"
+        @click="login"
       >
         Login
       </v-btn>
       <v-spacer />
-      <v-btn @click="$emit('show-help')">
+      <v-btn>
         Help
         <v-icon class="ml-2"> mdi-help-circle </v-icon>
       </v-btn>
     </v-row>
-  </v-stepper-content>
+  </div>
 </template>
 
 <script lang="ts">
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
+import {SnackbarModule} from '@/store/snackbar';
 import {LocalStorageVal} from '@/utilities/helper_util';
-import {SplunkEndpoint} from '@/utilities/splunk_util';
+import {SplunkClient} from '@/utilities/splunk_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
@@ -46,52 +52,32 @@ const localUsername = new LocalStorageVal<string>('splunk_username');
 const localPassword = new LocalStorageVal<string>('splunk_password');
 const localHostname = new LocalStorageVal<string>('splunk_hostname');
 
-/**
- *
- */
 @Component({
   components: {
     FileList
   }
 })
 export default class AuthStep extends Vue {
-  /** Models if currently displayed form is valid.
-   * Shouldn't be used to interpret literally anything else as valid - just checks fields filled
-   */
-  valid = false;
-
-  /** State of input fields */
   username = '';
   password = '';
   hostname = '';
 
-  /** Whether we are currently authenticating */
-  loggingIn = false;
-  try_login() {
-    // Save credentials
-    localUsername.set(this.username);
-    localPassword.set(this.password);
-    localHostname.set(this.hostname);
-
-    // Check splunk
-    const s = new SplunkEndpoint(this.hostname, this.username, this.password);
-
-    this.loggingIn = true;
-    s.check_auth()
-      .then(() => {
-        // all goes well, proceed
-        this.$emit('authenticated', s);
-        this.loggingIn = false;
-      })
-      .catch((err) => {
-        this.loggingIn = false;
-        this.$emit('error', err);
-      });
+  async login() {
+    const splunkClient = new SplunkClient(
+      this.hostname,
+      this.username,
+      this.password
+    );
+    if (await splunkClient.validateCredentials()) {
+      localUsername.set(this.username);
+      localPassword.set(this.password);
+      localHostname.set(this.hostname);
+      SnackbarModule.failure('You have successfully signed in');
+      this.$emit('authenticated', splunkClient);
+    } else {
+      SnackbarModule.failure('Incorrect Username or Password');
+    }
   }
-
-  /** Form required field rules. Maybe eventually expand to other stuff */
-  reqRule = (v: string | null | undefined) =>
-    (v || '').trim().length > 0 || 'Field is Required';
 
   /** Init our fields */
   mounted() {

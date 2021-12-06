@@ -58,12 +58,15 @@ export class AppInfo extends VuexModule implements IAppInfoState {
       // Call axios.create() to skip the default interceptors setup in main.ts
       axios
         .create()
-        .get('https://api.github.com/repos/mitre/heimdall2/tags', {
-          // Null out the request headers for this request
-          // in order to avoid sending the local app authorization
-          // to Github.
-          headers: {common: ''}
-        })
+        .get<{name: string}[]>(
+          'https://api.github.com/repos/mitre/heimdall2/tags',
+          {
+            // Null out the request headers for this request
+            // in order to avoid sending the local app authorization
+            // to Github.
+            headers: {common: ''}
+          }
+        )
         .then(({data}) => {
           const latest = data[0].name.replace('v', '');
           this.context.commit('SET_VERSION', latest);

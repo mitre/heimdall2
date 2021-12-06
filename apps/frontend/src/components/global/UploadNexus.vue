@@ -110,7 +110,7 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
     this.activeTab = newTab;
     SnackbarModule.visibility(false);
     localTab.set(newTab);
-    // Forces the v-group-slider to recalculate its position to prevent getting stuck between Splunk and Samples
+    // Forces the v-group-slider to recalculate its position to prevent getting stuck between S3 and Samples
     setTimeout(() => window.dispatchEvent(new Event('resize')), 250);
   }
 

@@ -23,6 +23,14 @@ JWT_EXPIRE_TIME=$expire
 EOF
 fi
 
+if ! grep -qF "API_KEY_SECRET" .env-prod; then
+	read -p ".env-prod does not contain API_KEY_SECRET, would you like to enable API Keys? [Y/n]" -n 1 -r
+	if [[ $REPLY =~ ^[Yy]$ ]]
+	then
+		echo "API_KEY_SECRET=$(openssl rand -hex 33)" >> .env-prod
+	fi
+fi
+
 if ! grep -qF "NGINX_HOST" .env; then
 	echo ".env does not contain NGINX_HOST..."
 	read -p 'Enter your FQDN/Hostname/IP Address: ' fqdn
@@ -42,7 +50,8 @@ else
 							-days 7 \
 							-nodes \
 							-out nginx/certs/ssl_certificate.crt \
-							-keyout nginx/certs/ssl_certificate_key.key
+							-keyout nginx/certs/ssl_certificate_key.key \
+							-subj "/C=US/ST=SelfSigned/L=SelfSigned/O=SelfSigned/OU=SelfSigned"
 fi
 
 echo "Done"

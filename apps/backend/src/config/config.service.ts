@@ -11,6 +11,17 @@ export class ConfigService {
     this.appConfig = new AppConfig();
   }
 
+  public sensitiveKeys = [
+    /cookie/i,
+    /passw(or)?d/i,
+    /^pw$/,
+    /^pass$/i,
+    /secret/i,
+    /token/i,
+    /api[-._]?key/i,
+    /data/i
+  ];
+
   isRegistrationAllowed(): boolean {
     return this.get('REGISTRATION_DISABLED')?.toLowerCase() !== 'true';
   }
@@ -19,16 +30,25 @@ export class ConfigService {
     return this.get('NODE_ENV')?.toLowerCase() === 'production';
   }
 
-  frontendStartupSettings(): StartupSettingsDto {
+  enabledOauthStrategies() {
     const enabledOauth: string[] = [];
     supportedOauth.forEach((oauthStrategy) => {
       if (this.get(`${oauthStrategy.toUpperCase()}_CLIENTID`)) {
         enabledOauth.push(oauthStrategy);
       }
     });
+    return enabledOauth;
+  }
+
+  frontendStartupSettings(): StartupSettingsDto {
     return new StartupSettingsDto({
       banner: this.get('WARNING_BANNER') || '',
-      enabledOAuth: enabledOauth,
+      classificationBannerColor:
+        this.get('CLASSIFICATION_BANNER_COLOR') || 'red',
+      classificationBannerText: this.get('CLASSIFICATION_BANNER_TEXT') || '',
+      classificationBannerTextColor:
+        this.get('CLASSIFICATION_BANNER_TEXT_COLOR') || 'white',
+      enabledOAuth: this.enabledOauthStrategies(),
       oidcName: this.get('OIDC_NAME') || '',
       ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false,
       registrationEnabled: this.isRegistrationAllowed()

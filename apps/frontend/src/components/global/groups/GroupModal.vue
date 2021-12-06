@@ -75,7 +75,7 @@
 </template>
 
 <script lang="ts">
-import DeleteDialog from '@/components/generic/DeleteDialog.vue';
+import ActionDialog from '@/components/generic/ActionDialog.vue';
 import Users from '@/components/global/groups/Users.vue';
 import {GroupsModule} from '@/store/groups';
 import {SnackbarModule} from '@/store/snackbar';
@@ -106,7 +106,7 @@ function newGroup(): IGroup {
 @Component({
   validations: {},
   components: {
-    DeleteDialog,
+    ActionDialog,
     Users
   }
 })

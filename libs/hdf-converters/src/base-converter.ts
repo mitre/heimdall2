@@ -5,8 +5,8 @@ import _ from 'lodash';
 
 export interface ILookupPath {
   path?: string;
-  transformer?: (value: unknown) => unknown;
-  arrayTransformer?: (value: unknown[], file: unknown) => unknown[];
+  transformer?: (value: any) => unknown;
+  arrayTransformer?: (value: unknown[], file: any) => unknown[];
   key?: string;
 }
 
@@ -18,17 +18,8 @@ export type MappedTransform<T, U extends ILookupPath> = {
     : T[K] extends Function
     ? T[K]
     : T[K] extends object
-    ? MappedTransform<
-        T[K] &
-          (U & {
-            arrayTransformer?: (
-              value: unknown[],
-              file: Record<string, unknown>
-            ) => T[K][];
-          }),
-        U
-      >
-    : T[K] | (U & {transformer?: (value: unknown) => T[K]});
+    ? MappedTransform<T[K] & U, U>
+    : T[K] | U;
 };
 export type MappedReform<T, U> = {
   [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
@@ -54,6 +45,7 @@ export function parseHtml(input: unknown): string {
   });
   if (typeof input === 'string') {
     myParser.write(input);
+    myParser.end();
   }
   return textData.join('');
 }
@@ -160,7 +152,7 @@ export class BaseConverter {
     );
     return result as MappedReform<T, ILookupPath>;
   }
-  // eslint-disable-next-line @typescript-eslint/ban-types
+
   evaluate<T extends object>(
     file: Record<string, unknown>,
     v: Array<T> | T
@@ -186,12 +178,12 @@ export class BaseConverter {
       return pathVal as T;
     }
     if (typeof transformer === 'function') {
-      return transformer(file);
+      return transformer.bind(this)(file);
     } else {
       return this.convertInternal(file, v);
     }
   }
-  // eslint-disable-next-line @typescript-eslint/ban-types
+
   handleArray<T extends object>(
     file: Record<string, unknown>,
     v: Array<T & ILookupPath>
@@ -200,7 +192,7 @@ export class BaseConverter {
       return [];
     }
     if (v[0].path === undefined) {
-      const arrayTransformer = v[0].arrayTransformer;
+      const arrayTransformer = v[0].arrayTransformer?.bind(this);
       v = v.map((element) => {
         return _.omit(element, ['arrayTransformer']) as T & ILookupPath;
       });
@@ -209,14 +201,21 @@ export class BaseConverter {
         output.push(this.evaluate(file, element) as T);
       });
       if (arrayTransformer !== undefined) {
-        output = arrayTransformer(output, this.data) as T[];
+        if (Array.isArray(arrayTransformer)) {
+          output = arrayTransformer[0].apply(arrayTransformer[1], [
+            v,
+            this.data
+          ]);
+        } else {
+          output = arrayTransformer.apply(null, [output, this.data]) as T[];
+        }
       }
       return output;
     } else {
       const path = v[0].path;
       const key = v[0].key;
-      const arrayTransformer = v[0].arrayTransformer;
-      const transformer = v[0].transformer;
+      const arrayTransformer = v[0].arrayTransformer?.bind(this);
+      const transformer = v[0].transformer?.bind(this);
       if (this.hasPath(file, path)) {
         const pathVal = this.handlePath(file, path);
         if (Array.isArray(pathVal)) {
@@ -228,11 +227,18 @@ export class BaseConverter {
               'key'
             ]) as T;
           });
+          if (arrayTransformer !== undefined) {
+            if (Array.isArray(arrayTransformer)) {
+              v = arrayTransformer[0].apply(arrayTransformer[1], [
+                v,
+                this.data
+              ]);
+            } else {
+              v = arrayTransformer.apply(null, [v, this.data]) as T[];
+            }
+          }
           if (key !== undefined) {
             v = collapseDuplicates(v, key, this.collapseResults);
-          }
-          if (arrayTransformer !== undefined) {
-            v = arrayTransformer(v, this.data) as T[];
           }
           return v;
         } else {

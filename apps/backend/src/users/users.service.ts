@@ -8,6 +8,8 @@ import {
 import {InjectModel} from '@nestjs/sequelize';
 import {compare, hash} from 'bcryptjs';
 import {FindOptions} from 'sequelize/types';
+import {v4} from 'uuid';
+import {AuthnService} from '../authn/authn.service';
 import {Action} from '../casl/casl-ability.factory';
 import {CreateUserDto} from './dto/create-user.dto';
 import {DeleteUserDto} from './dto/delete-user.dto';
@@ -70,7 +72,7 @@ export class UsersService {
     abac: Ability
   ): Promise<User> {
     if (!abac.can('update-no-password', userToUpdate)) {
-      await this.testPassword(updateUserDto, userToUpdate);
+      await AuthnService.prototype.testPassword(updateUserDto, userToUpdate);
     }
     if (
       updateUserDto.password == null &&
@@ -101,6 +103,11 @@ export class UsersService {
   async updateLoginMetadata(user: User): Promise<void> {
     user.lastLogin = new Date();
     user.loginCount++;
+    await user.save();
+  }
+
+  async updateUserSecret(user: User): Promise<void> {
+    user.jwtSecret = v4();
     await user.save();
   }
 
@@ -154,21 +161,6 @@ export class UsersService {
       throw new NotFoundException('User with given id not found');
     } else {
       return user;
-    }
-  }
-
-  async testPassword(updateUserDto: UpdateUserDto, user: User): Promise<void> {
-    try {
-      if (
-        !(await compare(
-          updateUserDto.currentPassword || '',
-          user.encryptedPassword
-        ))
-      ) {
-        throw new ForbiddenException('Current password is incorrect');
-      }
-    } catch {
-      throw new ForbiddenException('Current password is incorrect');
     }
   }
 }

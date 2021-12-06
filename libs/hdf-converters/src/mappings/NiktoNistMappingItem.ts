@@ -1,27 +1,29 @@
+import {INIKJSONID} from './NiktoNistMapping';
+
 export class NiktoNistMappingItem {
   id: number;
   pluginCategory: string;
   nistId: string;
   osvdb: number;
 
-  constructor(values: string[]) {
-    if (values[0] === undefined) {
+  constructor(values: INIKJSONID) {
+    if (values['NIKTO-ID'] === undefined) {
       throw new Error('Nikto Nist Mapping Data must contain an id.');
     } else {
-      this.id = parseInt(values[0]);
+      this.id = values['NIKTO-ID'];
     }
-    if (values[1] === undefined) {
+    if (values['PLUGIN-CATEGORY'] === undefined) {
       throw new Error(
         'Nikto Nist Mapping Data must contain a plugin category.'
       );
     } else {
-      this.pluginCategory = values[1];
+      this.pluginCategory = values['PLUGIN-CATEGORY'];
     }
-    if (values[2] === undefined) {
+    if (values['NIST-ID'] === undefined) {
       this.nistId = '';
     } else {
-      this.nistId = values[2];
+      this.nistId = values['NIST-ID'];
     }
-    this.osvdb = parseInt(values[3]);
+    this.osvdb = values['OSVDB'];
   }
 }

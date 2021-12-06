@@ -2,12 +2,22 @@
         Saves us the trouble of messing around with sidebar functionality
         in every view. "Subclass" by utilizing the slots. -->
 <template>
-  <div>
+  <div @drop.prevent="addFile" @dragover.prevent>
     <!-- Top appbar. The center content of it is configured via the topbar-content slot -->
+    <span
+      v-if="classification"
+      height="1.5em"
+      :style="classificationStyle"
+      class="classification-footer"
+      >{{ classification }}</span
+    >
     <Topbar
       v-if="showTopbar"
       :title="title"
-      :style="{'z-index': topbarZIndex}"
+      :style="{
+        'z-index': topbarZIndex,
+        'margin-top': classification ? '1.5em' : '0'
+      }"
       :minimal-topbar="minimalTopbar"
       @toggle-drawer="drawer = !drawer"
     >
@@ -42,6 +52,9 @@ import {SidebarModule} from '@/store/sidebar_state';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
+import {InspecIntakeModule} from '../store/report_intake';
+import {ServerModule} from '../store/server';
+import {SnackbarModule} from '../store/snackbar';
 
 @Component({
   components: {
@@ -67,5 +80,39 @@ export default class Base extends Vue {
   set drawer(state: boolean) {
     SidebarModule.UpdateActive(state);
   }
+
+  get classificationStyle() {
+    return {
+      background: ServerModule.classificationBannerColor,
+      color: `${ServerModule.classificationBannerTextColor} !important`
+    };
+  }
+
+  get classification(): string {
+    return ServerModule.classificationBannerText;
+  }
+
+  addFile(event: DragEvent) {
+    const droppedFiles = event.dataTransfer?.files;
+    if (droppedFiles) {
+      [...droppedFiles].forEach(async (file) => {
+        return InspecIntakeModule.loadFile({file}).catch((err) => {
+          SnackbarModule.failure(String(err));
+        });
+      });
+    }
+  }
 }
 </script>
+
+<style scoped>
+.classification-footer {
+  z-index: 1000;
+  position: fixed;
+  text-align: center;
+  left: 0;
+  right: 0;
+  height: 1.6em;
+  margin-top: -1.5em;
+}
+</style>
