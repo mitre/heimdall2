@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from 'axios';
-import {ExecJSON} from '../../inspecjs/src';
+import {ExecJSON} from 'inspecjs';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
@@ -7,6 +7,8 @@ import {
   impactMapping,
   MappedTransform
 } from './base-converter';
+import {CweNistMapping} from './mappings/CweNistMapping';
+import {OwaspNistMapping} from './mappings/OwaspNistMapping';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export interface Issue {
@@ -31,6 +33,7 @@ export interface Issue {
   scope: string;
   snip?: string;
   summary: string;
+  name?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -40,19 +43,21 @@ export interface IssueData {
   ps?: number;
   paging?: Record<string, number>;
   effortTotal?: number;
-  issues?: Issue[];
+  issues: Issue[];
   components?: Record<string, unknown>[];
   facets?: any[];
 }
 
 // Constants
 const IMPACT_MAPPING: Map<string, number> = new Map([
-  ['BLOCKER', 1.0],
-  ['CRITICAL', 0.7],
-  ['MAJOR', 0.5],
-  ['MINOR', 0.3],
-  ['INFO', 0.0]
+  ['blocker', 1.0],
+  ['critical', 0.7],
+  ['major', 0.5],
+  ['minor', 0.3],
+  ['info', 0.0]
 ]);
+const CWE_NIST_MAPPING = new CweNistMapping();
+const OWASP_NIST_MAPPING = new OwaspNistMapping();
 
 function formatCodeDesc(vulnerability: unknown): string {
   const typedVulnerability = vulnerability as {
@@ -69,7 +74,9 @@ function formatCodeDesc(vulnerability: unknown): string {
 }
 
 export class SonarQubeResults {
-  data: IssueData = {};
+  data: IssueData = {
+    issues: []
+  };
   sonarQubeHost = '';
   projectId = '';
   userToken = '';
@@ -94,12 +101,16 @@ export class SonarQubeResults {
           auth: {username: this.userToken, password: ''},
           params: {
             componentKeys: this.projectId,
-            types: 'CODE_SMELL,BUG,VULNERABILITY',
+            types: 'VULNERABILITY',
             p: page
           }
         })
         .then(({data}) => {
-          this.data.issues = data.issues;
+          if (data.issues) {
+            console.log(data.issues);
+            this.data.issues.push(...data.issues);
+            console.log(this.data);
+          }
           paging = data.paging?.total === 100;
           page += 1;
         });
@@ -119,13 +130,12 @@ export class SonarQubeResults {
     await axios.all(requests).then(
       axios.spread((...responses) => {
         responses.forEach((response, index) => {
-          (this.data.issues || [])[index].snip = response.data
+          this.data.issues[index].snip = response.data
             .split('\n')
             .slice(
-              ((this.data.issues || [])[index].textRange?.startLine as number) -
-                3,
+              (this.data.issues[index].textRange?.startLine as number) - 3,
               // api doesn't care if we request lines past end of file
-              ((this.data.issues || [])[index].textRange?.endLine as number) + 3
+              (this.data.issues[index].textRange?.endLine as number) + 3
             )
             .join('\n');
         });
@@ -146,7 +156,8 @@ export class SonarQubeResults {
     await axios.all(requests).then(
       axios.spread((...responses) => {
         responses.forEach((response, index) => {
-          (this.data.issues || [])[index].summary = response.data.rule.htmlDesc;
+          this.data.issues[index].name = response.data.rule.name;
+          this.data.issues[index].summary = response.data.rule.htmlDesc;
         });
       })
     );
@@ -201,11 +212,12 @@ export class SonarQubeMapper extends BaseConverter {
             refs: [],
             source_location: {},
             id: {path: 'rule'},
-            title: {path: 'message'},
+            title: {path: 'name'},
             impact: {
               path: 'severity',
               transformer: impactMapping(IMPACT_MAPPING)
             },
+            code: null,
             tags: {},
             results: [
               {
