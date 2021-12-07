@@ -29,7 +29,7 @@
         "message": "Verify the message's origin in this cross-origin communication.",
         "effort": "10min",
         "debt": "10min",
-        "author": "kaelwd@gmail.com",
+        "author": "example@example.com",
         "tags": [
           "cwe",
           "html5",
