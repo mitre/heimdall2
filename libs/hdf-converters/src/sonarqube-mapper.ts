@@ -80,9 +80,7 @@ function parseNistTags(issue: Issue): string[] {
       const identifier = [
         sysTag.toLowerCase().replace('owasp-', '').toUpperCase()
       ];
-      tags.push(
-        ...OWASP_NIST_MAPPING.nistFilterNoDefault(identifier as string[])
-      );
+      tags.push(...OWASP_NIST_MAPPING.nistFilterNoDefault(identifier));
     }
   });
   // CWE IDs are embedded inside of the HTML summary
