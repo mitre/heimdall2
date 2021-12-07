@@ -11,7 +11,7 @@ import {CweNistMapping} from './mappings/CweNistMapping';
 import {OwaspNistMapping} from './mappings/OwaspNistMapping';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export interface Issue {
+export type Issue = {
   key: string;
   rule: string;
   severity: string;
@@ -33,11 +33,11 @@ export interface Issue {
   scope: string;
   snip?: string;
   summary: string;
+  sysTags?: string[];
   name?: string;
-}
+};
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export interface IssueData {
+export type IssueData = {
   total?: number;
   p?: number;
   ps?: number;
@@ -46,7 +46,7 @@ export interface IssueData {
   issues: Issue[];
   components?: Record<string, unknown>[];
   facets?: any[];
-}
+};
 
 // Constants
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -71,6 +71,25 @@ function formatCodeDesc(vulnerability: unknown): string {
   } else {
     return '';
   }
+}
+
+function parseNistTags(issue: Issue): string[] {
+  const tags: string[] = [];
+  issue.sysTags?.forEach((sysTag) => {
+    if (sysTag.toLowerCase().startsWith('owasp-')) {
+      const identifier = [
+        sysTag.toLowerCase().replace('owasp-', '').toUpperCase()
+      ];
+      tags.push(
+        ...OWASP_NIST_MAPPING.nistFilterNoDefault(identifier as string[])
+      );
+    }
+  });
+  // CWE IDs are embedded inside of the HTML summary
+  issue.summary.match(/CWE-\d\d\d?\d?\d?\d?\d/gi)?.forEach((match) => {
+    tags.push(...CWE_NIST_MAPPING.nistFilter(match.split('-')[1]));
+  });
+  return tags;
 }
 
 export class SonarQubeResults {
@@ -107,9 +126,7 @@ export class SonarQubeResults {
         })
         .then(({data}) => {
           if (data.issues) {
-            console.log(data.issues);
             this.data.issues.push(...data.issues);
-            console.log(this.data);
           }
           paging = data.paging?.total === 100;
           page += 1;
@@ -127,8 +144,10 @@ export class SonarQubeResults {
         })
       );
     });
+    // Wait for all requests
     await axios.all(requests).then(
       axios.spread((...responses) => {
+        // Extract code snippets from SonarQube
         responses.forEach((response, index) => {
           this.data.issues[index].snip = response.data
             .split('\n')
@@ -156,6 +175,7 @@ export class SonarQubeResults {
     await axios.all(requests).then(
       axios.spread((...responses) => {
         responses.forEach((response, index) => {
+          this.data.issues[index].sysTags = response.data.rule.sysTags;
           this.data.issues[index].name = response.data.rule.name;
           this.data.issues[index].summary = response.data.rule.htmlDesc;
         });
@@ -218,7 +238,9 @@ export class SonarQubeMapper extends BaseConverter {
               transformer: impactMapping(IMPACT_MAPPING)
             },
             code: null,
-            tags: {},
+            tags: {
+              nist: {transformer: parseNistTags}
+            },
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
