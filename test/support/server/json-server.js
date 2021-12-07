@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const jsonServer = require('json-server');
 const server = jsonServer.create();
 const middlewares = jsonServer.defaults();
-
+const SonarQubeData = require('./SonarQube.json');
 // Set default middlewares (logger, static, cors and no-cache)
 server.use(middlewares);
 
@@ -73,6 +74,8 @@ server.use((req, res, next) => {
       scope: 'name:user',
       token_type: 'bearer'
     });
+  } else if (req.originalUrl.startsWith('/api')) {
+    res.send(SonarQubeData[unescape(req.originalUrl)]);
   } else {
     next();
   }
