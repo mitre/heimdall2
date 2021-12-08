@@ -23,7 +23,7 @@ jobs:
      - name: Setup Node.js
        uses: actions/setup-node@v1
        with:
-        node-version: '14.x'
+        node-version: '16.x'
 
      - name: Remove all test code from the application
        run: rm -rf apps/frontend/tests apps/backend/test test

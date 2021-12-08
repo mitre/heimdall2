@@ -29,7 +29,7 @@ jobs:
      - name: Setup Node.js
        uses: actions/setup-node@v1
        with:
-        node-version: '14.x'
+        node-version: '16.x'
 
      - name: Remove frontend and backend code to ensure the proper dependencies are declared in the hdf-converters package.json
        run: |
