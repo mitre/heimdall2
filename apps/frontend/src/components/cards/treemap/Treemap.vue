@@ -44,9 +44,7 @@ import {
   is_parent,
   TreemapNode
 } from '@/utilities/treemap_util';
-import {HierarchyRectangularNode} from 'd3';
-import {treemap} from 'd3-hierarchy';
-import {scaleLinear} from 'd3-scale';
+import {HierarchyRectangularNode, scaleLinear, treemap} from 'd3';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, PropSync, Ref} from 'vue-property-decorator';
