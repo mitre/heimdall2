@@ -34,9 +34,11 @@
                 <v-row :key="'tab' + index" :class="zebra(index)">
                   <v-col cols="12" :class="detail.class">
                     <h3>{{ detail.name }}:</h3>
-                    <!-- eslint-disable vue/no-v-html -->
-                    <h4 class="mono" v-html="sanitize_html(detail.value)" />
-                    <!-- eslint-enable vue/no-v-html -->
+                    <h4>
+                      <!-- eslint-disable vue/no-v-html -->
+                      <pre class="mono" v-html="sanitize_html(detail.value)" />
+                      <!-- eslint-enable vue/no-v-html -->
+                    </h4>
                   </v-col>
                   <v-divider />
                 </v-row>
