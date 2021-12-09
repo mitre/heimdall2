@@ -134,9 +134,9 @@ export default class Treemap extends Vue {
     };
   }
 
-  /** Generates a d3 heirarchy structure, with appropriate bounds to our width
+  /** Generates a d3 hierarchy structure, with appropriate bounds to our width
    *  detailing all of the controls in the nist hash */
-  get treemap_layout(): d3.HierarchyRectangularNode<TreemapNode> {
+  get treemap_layout(): HierarchyRectangularNode<TreemapNode> {
     // Get the current filtered data
     const controls = FilteredDataModule.controls(this.filter);
 
@@ -149,7 +149,7 @@ export default class Treemap extends Vue {
   }
 
   // Callbacks for our tree
-  select_node(n: d3.HierarchyRectangularNode<TreemapNode>): void {
+  select_node(n: HierarchyRectangularNode<TreemapNode>): void {
     // If it is a leaf, then select it
     if (is_leaf(n.data)) {
       const id = n.data.control.data.id;

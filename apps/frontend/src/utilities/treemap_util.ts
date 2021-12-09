@@ -4,7 +4,7 @@
 
 import {ColorHack} from '@/store/color_hack';
 import Chroma from 'chroma-js';
-import {hierarchy} from 'd3-hierarchy';
+import {hierarchy, HierarchyNode} from 'd3-hierarchy';
 import {
   ContextualizedControl,
   FULL_NIST_HIERARCHY,
@@ -44,7 +44,7 @@ export function is_parent(n: TreemapNode): n is TreemapNodeParent {
 
 /** The type of our treemap nodes, prior to rendering */
 export type TreemapNode = TreemapNodeLeaf | TreemapNodeParent;
-export type D3TreemapNode = d3.HierarchyNode<TreemapNode>;
+export type D3TreemapNode = HierarchyNode<TreemapNode>;
 
 /**
  * Converts a list of controls to treemap leaves.
