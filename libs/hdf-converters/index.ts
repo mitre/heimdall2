@@ -1,4 +1,6 @@
+export * from './src/asff-mapper';
 export * from './src/burpsuite-mapper';
+export * from './src/converters-from-hdf/asff/reverse-asff-mapper';
 export * from './src/dbprotect-mapper';
 export * from './src/fortify-mapper';
 export * from './src/jfrog-xray-mapper';
@@ -8,5 +10,6 @@ export * from './src/nikto-mapper';
 export * from './src/sarif-mapper';
 export * from './src/scoutsuite-mapper';
 export * from './src/snyk-mapper';
+export * from './src/sonarqube-mapper';
 export * from './src/xccdf-results-mapper';
 export * from './src/zap-mapper';

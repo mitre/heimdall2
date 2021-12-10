@@ -137,6 +137,19 @@ export default class ExportCSVModal extends Vue {
   ): string {
     let result = '';
     if (Array.isArray(descriptions)) {
+      // Caveats are the first thing displayed if defined
+      // There should only ever be one, but better safe than sorry
+      const caveats = descriptions.filter(
+        (description) => description.label === 'caveat'
+      );
+      if (caveats.length) {
+        descriptions = descriptions.filter(
+          (description) => description.label !== 'caveat'
+        );
+        caveats.forEach((caveat) => {
+          result += `${caveat.label}: ${caveat.data}`;
+        });
+      }
       descriptions.forEach((description: ExecJSON.ControlDescription) => {
         result += `${description.label}: ${description.data}\r\n\r\n`;
       });
@@ -162,6 +175,18 @@ export default class ExportCSVModal extends Vue {
     } else {
       return '';
     }
+  }
+
+  createOverlaidCode(
+    file: ProfileFile | EvaluationFile,
+    control: ContextualizedControl
+  ) {
+    const controls = FilteredDataModule.controls({
+      ...this.filter,
+      ids: [control.data.id],
+      fromFile: [file.uniqueId]
+    });
+    return controls[0].full_code;
   }
 
   convertRow(
@@ -236,7 +261,7 @@ export default class ExportCSVModal extends Vue {
           break;
         // Code
         case fieldNames[9]:
-          result[fieldNames[9]] = control.full_code;
+          result[fieldNames[9]] = this.createOverlaidCode(file, control);
           break;
         // Check
         case fieldNames[10]:
@@ -279,8 +304,15 @@ export default class ExportCSVModal extends Vue {
       ...this.filter,
       fromFile: [file.uniqueId]
     });
+    const hitIds = new Set();
     for (const ctrl of controls) {
-      rows.push(this.convertRow(file, ctrl));
+      const root = ctrl.root;
+      if (hitIds.has(root.hdf.wraps.id)) {
+        continue;
+      } else {
+        hitIds.add(root.hdf.wraps.id);
+        rows.push(this.convertRow(file, root));
+      }
     }
     return rows;
   }

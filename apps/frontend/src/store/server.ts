@@ -26,11 +26,19 @@ export interface IServerState {
   loading: boolean;
   token: string;
   banner: string;
+  classificationBannerColor: string;
+  classificationBannerText: string;
+  classificationBannerTextColor: string;
   enabledOAuth: string[];
   registrationEnabled: boolean;
   oidcName: string;
   ldap: boolean;
   userInfo: IUser;
+}
+
+interface LoginData {
+  userID: string;
+  accessToken: string;
 }
 
 @Module({
@@ -41,6 +49,9 @@ export interface IServerState {
 })
 class Server extends VuexModule implements IServerState {
   banner = '';
+  classificationBannerColor = '';
+  classificationBannerText = '';
+  classificationBannerTextColor = '';
   ldap = false;
   serverUrl = '';
   serverMode = false;
@@ -83,6 +94,9 @@ class Server extends VuexModule implements IServerState {
   @Mutation
   SET_STARTUP_SETTINGS(settings: IStartupSettings) {
     this.banner = settings.banner;
+    this.classificationBannerText = settings.classificationBannerText;
+    this.classificationBannerColor = settings.classificationBannerColor;
+    this.classificationBannerTextColor = settings.classificationBannerTextColor;
     this.enabledOAuth = settings.enabledOAuth;
     this.registrationEnabled = settings.registrationEnabled;
     this.oidcName = settings.oidcName;
@@ -163,7 +177,7 @@ class Server extends VuexModule implements IServerState {
   }
 
   @Action
-  public async handleLogin(data: {userID: string; accessToken: string}) {
+  public async handleLogin(data: LoginData) {
     this.context.commit('SET_USERID', data.userID);
     this.context.commit('SET_TOKEN', data.accessToken);
     this.GetUserInfo();
@@ -171,28 +185,30 @@ class Server extends VuexModule implements IServerState {
 
   @Action
   public async Login(userInfo: {email: string; password: string}) {
-    return axios.post('/authn/login', userInfo).then((response) => {
-      this.handleLogin(response.data);
+    return axios.post<LoginData>('/authn/login', userInfo).then(({data}) => {
+      this.handleLogin(data);
     });
   }
 
   @Action
   public async LoginLDAP(userInfo: {username: string; password: string}) {
-    return axios.post('/authn/login/ldap', userInfo).then((response) => {
-      this.handleLogin(response.data);
-    });
+    return axios
+      .post<LoginData>('/authn/login/ldap', userInfo)
+      .then(({data}) => {
+        this.handleLogin(data);
+      });
   }
 
   @Action
   public async LoginGithub(callbackCode: string | null) {
     return axios
-      .get(`/authn/github/callback`, {
+      .get<LoginData>(`/authn/github/callback`, {
         params: {
           code: callbackCode
         }
       })
-      .then((response) => {
-        this.handleLogin(response.data);
+      .then(({data}) => {
+        this.handleLogin(data);
       });
   }
 
@@ -247,10 +263,22 @@ class Server extends VuexModule implements IServerState {
   }
 
   @Action
-  public Logout(): void {
-    this.CLEAR_USERID();
-    this.CLEAR_TOKEN();
-    location.replace('/login?logoff=true');
+  public Logout(): Promise<void> {
+    return axios
+      .create() // Call axios.create() to skip the default interceptors setup in main.ts
+      .post(`/users/logout`)
+      .then(() => {
+        this.CLEAR_USERID();
+        this.CLEAR_TOKEN();
+        location.replace('/login?logoff=true');
+      })
+      .catch((error) => {
+        this.CLEAR_USERID();
+        this.CLEAR_TOKEN();
+        location.replace(
+          `/login?logoff=true&error=${error.response.data.message}`
+        );
+      });
   }
 }
 

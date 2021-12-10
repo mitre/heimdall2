@@ -1,5 +1,4 @@
 import {ExecJSON} from 'inspecjs';
-import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
@@ -14,11 +13,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['medium', 0.5],
   ['low', 0.3]
 ]);
-const CWE_NIST_MAPPING_FILE = path.resolve(
-  __dirname,
-  '../data/cwe-nist-mapping.csv'
-);
-const CWE_NIST_MAPPING = new CweNistMapping(CWE_NIST_MAPPING_FILE);
+const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
 function parseIdentifier(identifiers: unknown[] | unknown): string[] {

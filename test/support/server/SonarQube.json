@@ -1,0 +1,102 @@
+{
+  "/api/issues/search?componentKeys=xss&types=VULNERABILITY&p=1": {
+    "total": 1,
+    "p": 1,
+    "ps": 100,
+    "paging": {
+      "pageIndex": 1,
+      "pageSize": 100,
+      "total": 1
+    },
+    "effortTotal": 10,
+    "issues": [
+      {
+        "key": "AX2RcGnrl-KH7KTFNgLl",
+        "rule": "javascript:S2819",
+        "severity": "CRITICAL",
+        "component": "xss:packages/docs/src/service-worker.js",
+        "project": "xss",
+        "line": 29,
+        "hash": "8be50716e6366451fef374e82fb66aca",
+        "textRange": {
+          "startLine": 29,
+          "endLine": 29,
+          "startOffset": 0,
+          "endOffset": 21
+        },
+        "flows": [],
+        "status": "OPEN",
+        "message": "Verify the message's origin in this cross-origin communication.",
+        "effort": "10min",
+        "debt": "10min",
+        "author": "example@example.com",
+        "tags": [
+          "cwe",
+          "html5",
+          "owasp-a3"
+        ],
+        "creationDate": "2020-09-01T17:04:31+0000",
+        "updateDate": "2021-12-06T20:27:51+0000",
+        "type": "VULNERABILITY",
+        "scope": "MAIN",
+        "quickFixAvailable": false
+      }
+    ],
+    "components": [
+      {
+        "key": "xss:packages/docs/src/service-worker.js",
+        "enabled": true,
+        "qualifier": "FIL",
+        "name": "service-worker.js",
+        "longName": "packages/docs/src/service-worker.js",
+        "path": "packages/docs/src/service-worker.js"
+      },
+      {
+        "key": "xss",
+        "enabled": true,
+        "qualifier": "TRK",
+        "name": "xss",
+        "longName": "xss"
+      }
+    ],
+    "facets": []
+  },
+  "/api/sources/raw?key=xss:packages%2Fdocs%2Fsrc%2Fservice-worker.js": "// Imports\nimport { precacheAndRoute, matchPrecache } from 'workbox-precaching'\nimport { registerRoute, setDefaultHandler, setCatchHandler } from 'workbox-routing'\nimport { NetworkOnly, CacheFirst } from 'workbox-strategies'\n\nprecacheAndRoute(self.__WB_MANIFEST)\n\nconst cacheFirst = new CacheFirst()\nconst networkOnly = new NetworkOnly()\n\nregisterRoute(\n  ({ url, request }) => url.origin === self.location.origin && request.destination !== 'document',\n  cacheFirst\n)\n\nsetDefaultHandler(networkOnly)\n\nsetCatchHandler(async ({ url, request }) => {\n  if (\n    url.origin === self.location.origin &&\n    request.destination === 'document'\n  ) {\n    return matchPrecache(url.pathname.startsWith('/eo-UY/') ? '_crowdin.html' : '/_fallback.html')\n  }\n\n  return Response.error()\n})\n\nself.addEventListener('message', event => {\n  if (event.data === 'sw:update') self.skipWaiting()\n})\n\n",
+  "/api/rules/show?key=javascript:S2819": {
+    "rule": {
+      "key": "javascript:S2819",
+      "repo": "javascript",
+      "name": "Origins should be verified during cross-origin communications",
+      "createdAt": "2021-12-06T19:35:19+0000",
+      "htmlDesc": "<p>Browsers <a href=\"https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage\">allow message exchanges</a> between Window objects of\ndifferent origins.</p>\n<p>Because any window can send / receive messages from other window it is important to verify the sender’s / receiver’s identity:</p>\n<ul>\n  <li> When sending message with postMessage method, the identity’s receiver should be defined (the wildcard keyword (<code>*</code>) should not be\n  used). </li>\n  <li> When receiving message with message event, the sender’s identity should be verified using the origin and possibly source properties. </li>\n</ul>\n<h2>Noncompliant Code Example</h2>\n<p>When sending message:</p>\n<pre>\nvar iframe = document.getElementById(\"testiframe\");\niframe.contentWindow.postMessage(\"secret\", \"*\"); // Noncompliant: * is used\n</pre>\n<p>When receiving message:</p>\n<pre>\nwindow.addEventListener(\"message\", function(event) { // Noncompliant: no checks are done on the origin property.\n      console.log(event.data);\n });\n</pre>\n<h2>Compliant Solution</h2>\n<p>When sending message:</p>\n<pre>\nvar iframe = document.getElementById(\"testsecureiframe\");\niframe.contentWindow.postMessage(\"hello\", \"https://secure.example.com\"); // Compliant\n</pre>\n<p>When receiving message:</p>\n<pre>\nwindow.addEventListener(\"message\", function(event) {\n\n  if (event.origin !== \"http://example.org\") // Compliant\n    return;\n\n  console.log(event.data)\n});\n</pre>\n<h2>See</h2>\n<ul>\n  <li> <a href=\"https://owasp.org/Top10/A01_2021-Broken_Access_Control/\">OWASP Top 10 2021 Category A1</a> - Broken Access Control </li>\n  <li> <a href=\"https://www.owasp.org/index.php/Top_10_2010-A3-Broken_Authentication_and_Session_Management\">OWASP Top 10 2017 Category A3</a> -\n  Broken Authentication and Session Management </li>\n  <li> <a href=\"https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage\">developer.mozilla.org</a> - postMessage API </li>\n</ul>",
+      "mdDesc": "<p>Browsers <a href=\"https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage\">allow message exchanges</a> between Window objects of\ndifferent origins.</p>\n<p>Because any window can send / receive messages from other window it is important to verify the sender’s / receiver’s identity:</p>\n<ul>\n  <li> When sending message with postMessage method, the identity’s receiver should be defined (the wildcard keyword (<code>*</code>) should not be\n  used). </li>\n  <li> When receiving message with message event, the sender’s identity should be verified using the origin and possibly source properties. </li>\n</ul>\n<h2>Noncompliant Code Example</h2>\n<p>When sending message:</p>\n<pre>\nvar iframe = document.getElementById(\"testiframe\");\niframe.contentWindow.postMessage(\"secret\", \"*\"); // Noncompliant: * is used\n</pre>\n<p>When receiving message:</p>\n<pre>\nwindow.addEventListener(\"message\", function(event) { // Noncompliant: no checks are done on the origin property.\n      console.log(event.data);\n });\n</pre>\n<h2>Compliant Solution</h2>\n<p>When sending message:</p>\n<pre>\nvar iframe = document.getElementById(\"testsecureiframe\");\niframe.contentWindow.postMessage(\"hello\", \"https://secure.example.com\"); // Compliant\n</pre>\n<p>When receiving message:</p>\n<pre>\nwindow.addEventListener(\"message\", function(event) {\n\n  if (event.origin !== \"http://example.org\") // Compliant\n    return;\n\n  console.log(event.data)\n});\n</pre>\n<h2>See</h2>\n<ul>\n  <li> <a href=\"https://owasp.org/Top10/A01_2021-Broken_Access_Control/\">OWASP Top 10 2021 Category A1</a> - Broken Access Control </li>\n  <li> <a href=\"https://www.owasp.org/index.php/Top_10_2010-A3-Broken_Authentication_and_Session_Management\">OWASP Top 10 2017 Category A3</a> -\n  Broken Authentication and Session Management </li>\n  <li> <a href=\"https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage\">developer.mozilla.org</a> - postMessage API </li>\n</ul>",
+      "severity": "CRITICAL",
+      "status": "READY",
+      "isTemplate": false,
+      "tags": [],
+      "sysTags": [
+        "cwe",
+        "html5",
+        "owasp-a3"
+      ],
+      "lang": "js",
+      "langName": "JavaScript",
+      "params": [],
+      "defaultDebtRemFnType": "CONSTANT_ISSUE",
+      "defaultDebtRemFnOffset": "10min",
+      "debtOverloaded": false,
+      "debtRemFnType": "CONSTANT_ISSUE",
+      "debtRemFnOffset": "10min",
+      "type": "VULNERABILITY",
+      "defaultRemFnType": "CONSTANT_ISSUE",
+      "defaultRemFnBaseEffort": "10min",
+      "remFnType": "CONSTANT_ISSUE",
+      "remFnBaseEffort": "10min",
+      "remFnOverloaded": false,
+      "scope": "MAIN",
+      "isExternal": false
+    },
+    "actives": []
+  }
+}
+  

@@ -1,15 +1,10 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
-import path from 'path';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {NiktoNistMapping} from './mappings/NiktoNistMapping';
 
-const NIKTO_NIST_MAPPING_FILE = path.resolve(
-  __dirname,
-  '../data/nikto-nist-mapping.csv'
-);
-const NIKTO_NIST_MAPPING = new NiktoNistMapping(NIKTO_NIST_MAPPING_FILE);
+const NIKTO_NIST_MAPPING = new NiktoNistMapping();
 
 function formatTitle(file: unknown): string {
   return `Nikto Target: ${projectName(file)}`;
