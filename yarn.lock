@@ -5856,9 +5856,9 @@ autoprefixer@^9.8.6:
     postcss-value-parser "^4.1.0"
 
 aws-sdk@^2.573.0:
-  version "2.1044.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1044.0.tgz#0708eaf48daf8d961b414e698d84e8cd1f82c4ad"
-  integrity sha512-n55uGUONQGXteGGG1QlZ1rKx447KSuV/x6jUGNf2nOl41qMI8ZgLUhNUt0uOtw3qJrCTanzCyR/JKBq2PMiqEQ==
+  version "2.1046.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1046.0.tgz#9147b0fa1c86acbebd1a061e951ab5012f4499d7"
+  integrity sha512-ocwHclMXdIA+NWocUyvp9Ild3/zy2vr5mHp3mTyodf0WU5lzBE8PocCVLSWhMAXLxyia83xv2y5f5AzAcetbqA==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -14470,9 +14470,9 @@ lunr@^2.3.9:
   integrity sha512-zTU3DaZaF3Rt9rhN3uBMGQD3dD2/vFQqnvZCDv4dl5iOzq2IZQqTxu90r4E5J+nP70J3ilqVCrbho2eWaeW8Ow==
 
 luxon@^2.0.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/luxon/-/luxon-2.1.1.tgz#34052f7a33a7989767637be7cf80b47db264ff88"
-  integrity sha512-6VQVNw7+kQu3hL1ZH5GyOhnk8uZm21xS7XJ/6vDZaFNcb62dpFDKcH8TI5NkoZOdMRxr7af7aYGrJlE/Wv0i1w==
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-2.2.0.tgz#f5c4a234ba4016f792488b11aaed2d5bc14c888e"
+  integrity sha512-LwmknessH4jVIseCsizUgveIHwlLv/RQZWC2uDSMfGJs7w8faPUi2JFxfyfMcTPrpNbChTem3Uz6IKRtn+LcIA==
 
 macos-release@^2.5.0:
   version "2.5.0"
