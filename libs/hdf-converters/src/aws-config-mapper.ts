@@ -1,12 +1,11 @@
 import {
   ComplianceByConfigRule,
   ConfigRule,
-  ConfigService,
-  ConfigServiceClientConfig,
   DescribeConfigRulesCommandInput,
-  DescribeConfigRulesCommandOutput,
   EvaluationResult
 } from '@aws-sdk/client-config-service';
+import AWS from 'aws-sdk';
+import https from 'https';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
@@ -21,11 +20,21 @@ const NAME = 'AWS Config';
 const AWS_CONFIG_MAPPING = new AwsConfigMapping();
 
 export class AwsConfigMapper {
-  configService: ConfigService;
+  configService: AWS.ConfigService;
   issues: Promise<ConfigRule[]>;
   results: ExecJSON.ControlResult[][];
-  constructor(options: ConfigServiceClientConfig) {
-    this.configService = new ConfigService(options);
+  constructor(
+    options: AWS.ConfigService.ClientConfiguration,
+    verifySSLCertificates = true
+  ) {
+    AWS.config.update({
+      httpOptions: {
+        agent: new https.Agent({
+          rejectUnauthorized: verifySSLCertificates
+        })
+      }
+    });
+    this.configService = new AWS.ConfigService(options);
     this.results = [];
     this.issues = this.getAllConfigRules();
   }
@@ -70,9 +79,9 @@ export class AwsConfigMapper {
 
   private async getConfigRulePage(
     params: DescribeConfigRulesCommandInput
-  ): Promise<DescribeConfigRulesCommandOutput> {
-    await this.delay(5000);
-    return this.configService.describeConfigRules(params);
+  ): Promise<AWS.ConfigService.Types.DescribeConfigRulesResponse> {
+    await this.delay(500);
+    return this.configService.describeConfigRules(params).promise();
   }
 
   private async getResults(
@@ -84,20 +93,20 @@ export class AwsConfigMapper {
     for (let i = 0; i < configRules.length; i++) {
       const result: ExecJSON.ControlResult[] = [];
       let params = {
-        ConfigRuleName: configRules[i].ConfigRuleName,
+        ConfigRuleName: configRules[i].ConfigRuleName || '',
         Limit: 100
       };
       await this.delay(750);
-      let response = await this.configService.getComplianceDetailsByConfigRule(
-        params
-      );
+      let response = await this.configService
+        .getComplianceDetailsByConfigRule(params)
+        .promise();
       let ruleResults = response.EvaluationResults || [];
       while (response.NextToken !== undefined) {
         params = _.set(params, 'NextToken', response.NextToken);
         await this.delay(5000);
-        response = await this.configService.getComplianceDetailsByConfigRule(
-          params
-        );
+        response = await this.configService
+          .getComplianceDetailsByConfigRule(params)
+          .promise();
         ruleResults = ruleResults?.concat(response.EvaluationResults || []);
       }
       ruleResults.forEach((evaluation) => {
@@ -215,9 +224,11 @@ export class AwsConfigMapper {
     const configRuleSlices = this.chunkArray(configRules, 25);
     for (const slice of configRuleSlices) {
       await this.delay(5000);
-      const response = await this.configService.describeComplianceByConfigRule({
-        ConfigRuleNames: slice.map((rule) => rule.ConfigRuleName || '')
-      });
+      const response = await this.configService
+        .describeComplianceByConfigRule({
+          ConfigRuleNames: slice.map((rule) => rule.ConfigRuleName || '')
+        })
+        .promise();
       if (response.ComplianceByConfigRules === undefined) {
         throw new Error('No compliance data was returned');
       } else {
