@@ -80,7 +80,7 @@ export class AwsConfigMapper {
   private async getConfigRulePage(
     params: DescribeConfigRulesCommandInput
   ): Promise<AWS.ConfigService.Types.DescribeConfigRulesResponse> {
-    await this.delay(500);
+    await this.delay(10);
     return this.configService.describeConfigRules(params).promise();
   }
 
@@ -90,20 +90,20 @@ export class AwsConfigMapper {
     const complianceResults: ComplianceByConfigRule[] =
       await this.fetchAllComplianceInfo(configRules);
     const ruleData: ExecJSON.ControlResult[][] = [];
-    for (let i = 0; i < configRules.length; i++) {
+    for (const configRule of configRules) {
       const result: ExecJSON.ControlResult[] = [];
       let params = {
-        ConfigRuleName: configRules[i].ConfigRuleName || '',
+        ConfigRuleName: configRule.ConfigRuleName || '',
         Limit: 100
       };
-      await this.delay(750);
+      await this.delay(10);
       let response = await this.configService
         .getComplianceDetailsByConfigRule(params)
         .promise();
       let ruleResults = response.EvaluationResults || [];
       while (response.NextToken !== undefined) {
         params = _.set(params, 'NextToken', response.NextToken);
-        await this.delay(5000);
+        await this.delay(100);
         response = await this.configService
           .getComplianceDetailsByConfigRule(params)
           .promise();
@@ -127,8 +127,7 @@ export class AwsConfigMapper {
           switch (
             complianceResults.find(
               (complianceResult) =>
-                complianceResult.ConfigRuleName ===
-                configRules[i].ConfigRuleName
+                complianceResult.ConfigRuleName === configRule.ConfigRuleName
             )?.Compliance?.ComplianceType
           ) {
             case 'NOT_APPLICABLE':
@@ -159,7 +158,7 @@ export class AwsConfigMapper {
         }
       });
     }
-    return await Promise.all(ruleData);
+    return Promise.all(ruleData);
   }
 
   private getCodeDesc(result: EvaluationResult): string {
@@ -223,7 +222,7 @@ export class AwsConfigMapper {
     // Should slice config rules into arrays of max size: 25 and make one request for each slice
     const configRuleSlices = this.chunkArray(configRules, 25);
     for (const slice of configRuleSlices) {
-      await this.delay(5000);
+      await this.delay(100);
       const response = await this.configService
         .describeComplianceByConfigRule({
           ConfigRuleNames: slice.map((rule) => rule.ConfigRuleName || '')
