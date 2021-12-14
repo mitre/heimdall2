@@ -60,10 +60,18 @@ export class AwsConfigMapper {
     return configRules;
   }
 
+  private chunkArray(sourceArray: Array<any>, chunkSize: number) {
+    const result = [];
+    for (let i = 0; i < sourceArray.length; i += chunkSize) {
+      result.push(sourceArray.slice(i, i + chunkSize));
+    }
+    return result;
+  }
+
   private async getConfigRulePage(
     params: DescribeConfigRulesCommandInput
   ): Promise<DescribeConfigRulesCommandOutput> {
-    await this.delay(500);
+    await this.delay(5000);
     return this.configService.describeConfigRules(params);
   }
 
@@ -72,20 +80,21 @@ export class AwsConfigMapper {
   ): Promise<ExecJSON.ControlResult[][]> {
     const complianceResults: ComplianceByConfigRule[] =
       await this.fetchAllComplianceInfo(configRules);
-    const results = configRules.map(async (rule) => {
+    const ruleData: ExecJSON.ControlResult[][] = [];
+    for (let i = 0; i < configRules.length; i++) {
       const result: ExecJSON.ControlResult[] = [];
       let params = {
-        ConfigRuleName: rule.ConfigRuleName,
+        ConfigRuleName: configRules[i].ConfigRuleName,
         Limit: 100
       };
-      await this.delay(500);
+      await this.delay(750);
       let response = await this.configService.getComplianceDetailsByConfigRule(
         params
       );
       let ruleResults = response.EvaluationResults || [];
       while (response.NextToken !== undefined) {
         params = _.set(params, 'NextToken', response.NextToken);
-        await this.delay(500);
+        await this.delay(5000);
         response = await this.configService.getComplianceDetailsByConfigRule(
           params
         );
@@ -104,44 +113,44 @@ export class AwsConfigMapper {
           )
         };
         result.push(hdfResult);
-      });
-      const currentDate: string = new Date().toISOString();
-      if (result.length === 0) {
-        switch (
-          complianceResults.find(
-            (complianceResult) =>
-              complianceResult.ConfigRuleName === rule.ConfigRuleName
-          )?.Compliance?.ComplianceType
-        ) {
-          case 'NOT_APPLICABLE':
-            return [
-              {
-                run_time: 0,
-                code_desc: NOT_APPLICABLE_MSG,
-                skip_message: NOT_APPLICABLE_MSG,
-                start_time: currentDate,
-                status: ExecJSON.ControlResultStatus.Skipped
-              }
-            ];
-          case 'INSUFFICIENT_DATA':
-            return [
-              {
-                run_time: 0,
-                code_desc: INSUFFICIENT_DATA_MSG,
-                skip_message: INSUFFICIENT_DATA_MSG,
-                start_time: currentDate,
-                status: ExecJSON.ControlResultStatus.Skipped
-              }
-            ];
-          default:
-            return [];
+        const currentDate: string = new Date().toISOString();
+        if (result.length === 0) {
+          switch (
+            complianceResults.find(
+              (complianceResult) =>
+                complianceResult.ConfigRuleName ===
+                configRules[i].ConfigRuleName
+            )?.Compliance?.ComplianceType
+          ) {
+            case 'NOT_APPLICABLE':
+              return [
+                {
+                  run_time: 0,
+                  code_desc: NOT_APPLICABLE_MSG,
+                  skip_message: NOT_APPLICABLE_MSG,
+                  start_time: currentDate,
+                  status: ExecJSON.ControlResultStatus.Skipped
+                }
+              ];
+            case 'INSUFFICIENT_DATA':
+              return [
+                {
+                  run_time: 0,
+                  code_desc: INSUFFICIENT_DATA_MSG,
+                  skip_message: INSUFFICIENT_DATA_MSG,
+                  start_time: currentDate,
+                  status: ExecJSON.ControlResultStatus.Skipped
+                }
+              ];
+            default:
+              return [];
+          }
+        } else {
+          return ruleData.push(result);
         }
-      } else {
-        return result;
-      }
-    });
-    const output: ExecJSON.ControlResult[][] = await Promise.all(results);
-    return output;
+      });
+    }
+    return await Promise.all(ruleData);
   }
 
   private getCodeDesc(result: EvaluationResult): string {
@@ -202,9 +211,12 @@ export class AwsConfigMapper {
     configRules: ConfigRule[]
   ): Promise<ComplianceByConfigRule[]> {
     const complianceResults: ComplianceByConfigRule[] = [];
-    for (const rule of configRules) {
+    // Should slice config rules into arrays of max size: 25 and make one request for each slice
+    const configRuleSlices = this.chunkArray(configRules, 25);
+    for (const slice of configRuleSlices) {
+      await this.delay(5000);
       const response = await this.configService.describeComplianceByConfigRule({
-        ConfigRuleNames: [rule.ConfigRuleName || '']
+        ConfigRuleNames: slice.map((rule) => rule.ConfigRuleName || '')
       });
       if (response.ComplianceByConfigRules === undefined) {
         throw new Error('No compliance data was returned');
