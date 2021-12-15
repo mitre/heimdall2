@@ -161,11 +161,17 @@ export class AwsConfigMapper {
         }
       });
     }
-    const completedControlResults = await Promise.all(ruleData);
-    const extractedResourceNames = await this.extractResourceNamesFromIds(
-      allRulesResolved
-    );
 
+    return this.appendResourceNamesToResults(
+      await Promise.all(ruleData),
+      await this.extractResourceNamesFromIds(allRulesResolved)
+    );
+  }
+
+  private async appendResourceNamesToResults(
+    completedControlResults: ExecJSON.ControlResult[][],
+    extractedResourceNames: Record<string, string>
+  ) {
     return completedControlResults.map((completedControlResult) =>
       completedControlResult.map((completedControl) => {
         for (const extractedResourceName in extractedResourceNames) {
@@ -179,10 +185,7 @@ export class AwsConfigMapper {
           ) {
             return {
               ...completedControl,
-              code_desc:
-                completedControl.code_desc +
-                ', resource_name:' +
-                extractedResourceNames[extractedResourceName]
+              code_desc: `${completedControl.code_desc}, resource_name: ${extractedResourceNames[extractedResourceName]}`
             };
           }
         }
