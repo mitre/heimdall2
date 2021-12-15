@@ -67,7 +67,7 @@ test('Test converter toASFF function', () => {
   expect(omitASFFTimes(converted)).toEqual(omitASFFTimes(expectedJSON));
 });
 
-describe('asff_mapper', () => {
+describe('Test asff_mapper', () => {
   it('Successfully converts Native ASFF', () => {
     const mapper = new ASFFMapper(
       fs.readFileSync(
@@ -125,7 +125,7 @@ describe('asff_mapper', () => {
   });
 });
 
-test('Test burpsuite_mapper', () => {
+test('burpsuite_mapper', () => {
   const mapper = new BurpSuiteMapper(
     fs.readFileSync(
       'sample_jsons/burpsuite_mapper/sample_input_report/zero.webappsecurity.com.min',
@@ -143,7 +143,7 @@ test('Test burpsuite_mapper', () => {
   );
 });
 
-test('Test jfrog_xray_mapper', () => {
+test('jfrog_xray_mapper', () => {
   const mapper = new JfrogXrayMapper(
     fs.readFileSync(
       'sample_jsons/jfrog_xray_mapper/sample_input_report/jfrog_xray_sample.json',
@@ -160,7 +160,8 @@ test('Test jfrog_xray_mapper', () => {
     )
   );
 });
-test('Test nikto_mapper', () => {
+
+test('nikto_mapper', () => {
   const mapper = new NiktoMapper(
     fs.readFileSync(
       'sample_jsons/nikto_mapper/sample_input_report/zero.webappsecurity.json',
@@ -177,7 +178,8 @@ test('Test nikto_mapper', () => {
     )
   );
 });
-test('Test sarif_mapper', () => {
+
+test('sarif_mapper', () => {
   const mapper = new SarifMapper(
     fs.readFileSync(
       'sample_jsons/sarif_mapper/sample_input_report/sarif_input.sarif',
@@ -194,7 +196,7 @@ test('Test sarif_mapper', () => {
     )
   );
 });
-test('Test scoutsuite_mapper', () => {
+test('scoutsuite_mapper', () => {
   const mapper = new ScoutsuiteMapper(
     fs.readFileSync(
       'sample_jsons/scoutsuite_mapper/sample_input_report/scoutsuite_sample.js',
@@ -213,7 +215,7 @@ test('Test scoutsuite_mapper', () => {
     )
   );
 });
-test('Test sonarqube_mapper', async () => {
+test('sonarqube_mapper', async () => {
   const mapper = new SonarQubeResults(
     'http://127.0.0.1:3001',
     'xss',
@@ -230,8 +232,7 @@ test('Test sonarqube_mapper', async () => {
     )
   );
 });
-
-test('Test xccdf_results_mapper', () => {
+test('xccdf_results_mapper', () => {
   const mapper = new XCCDFResultsMapper(
     fs.readFileSync(
       'sample_jsons/xccdf_results_mapper/sample_input_report/xccdf-results.xml',
@@ -248,7 +249,7 @@ test('Test xccdf_results_mapper', () => {
     )
   );
 });
-test('Test zap_mapper webgoat.json', () => {
+test('zap_mapper webgoat.json', () => {
   const mapper = new ZapMapper(
     fs.readFileSync(
       'sample_jsons/zap_mapper/sample_input_report/webgoat.json',
@@ -266,7 +267,7 @@ test('Test zap_mapper webgoat.json', () => {
     )
   );
 });
-test('Test zap_mapper zero.webappsecurity.json', () => {
+test('zap_mapper zero.webappsecurity.json', () => {
   const mapper = new ZapMapper(
     fs.readFileSync(
       'sample_jsons/zap_mapper/sample_input_report/zero.webappsecurity.json',
