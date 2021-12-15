@@ -4,7 +4,7 @@ import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 
 export interface ILookupPath {
-  path?: string;
+  path?: string | string[];
   transformer?: (value: any) => unknown;
   arrayTransformer?: (value: unknown[], file: any) => unknown[];
   key?: string;
@@ -253,18 +253,45 @@ export class BaseConverter {
       }
     }
   }
-  handlePath(file: Record<string, unknown>, path: string): unknown {
-    if (path.startsWith('$.')) {
-      return _.get(this.data, path.slice(2)) || '';
+  handlePath(file: Record<string, unknown>, path: string | string[]): unknown {
+    let pathArray;
+    if (typeof path === 'string') {
+      pathArray = [path];
     } else {
-      return _.get(file, path) || '';
+      pathArray = path;
+    }
+
+    const index = _.findIndex(pathArray, (p) => {
+      if (p.startsWith('$.')) {
+        return _.has(this.data, p.slice(2));
+      } else {
+        return _.has(file, p);
+      }
+    });
+
+    if (index === -1) {
+      // should probably throw error here, but instead are providing a default value to match current behavior
+      return '';
+    } else if (pathArray[index].startsWith('$.')) {
+      return _.get(this.data, pathArray[index].slice(2)) || ''; // having default values implemented like this also prevents 'null' from being passed through
+    } else {
+      return _.get(file, pathArray[index]) || '';
     }
   }
-  hasPath(file: Record<string, unknown>, path: string): boolean {
-    if (path.startsWith('$.')) {
-      return _.has(this.data, path.slice(2));
+  hasPath(file: Record<string, unknown>, path: string | string[]): boolean {
+    let pathArray;
+    if (typeof path === 'string') {
+      pathArray = [path];
     } else {
-      return _.has(file, path);
+      pathArray = path;
     }
+
+    return _.some(pathArray, (p) => {
+      if (p.startsWith('$.')) {
+        return _.has(this.data, p.slice(2));
+      } else {
+        return _.has(file, p);
+      }
+    });
   }
 }

@@ -232,7 +232,7 @@ test('sonarqube_mapper', async () => {
     )
   );
 });
-test('xccdf_results_mapper', () => {
+test('xccdf_results_mapper scc', () => {
   const mapper = new XCCDFResultsMapper(
     fs.readFileSync(
       'sample_jsons/xccdf_results_mapper/sample_input_report/xccdf-results.xml',
@@ -249,6 +249,24 @@ test('xccdf_results_mapper', () => {
     )
   );
 });
+test('xccdf_results_mapper openscap', () => {
+  const mapper = new XCCDFResultsMapper(
+    fs.readFileSync(
+      'sample_jsons/xccdf_results_mapper/sample_input_report/xccdf-results-rhel8.xml',
+      {encoding: 'utf-8'}
+    )
+  );
+  expect(omitVersions(mapper.toHdf())).toEqual(
+    omitVersions(
+      JSON.parse(
+        fs.readFileSync('sample_jsons/xccdf_results_mapper/xccdf-hdf-rhel8.json', {
+          encoding: 'utf-8'
+        })
+      )
+    )
+  );
+});
+
 test('zap_mapper webgoat.json', () => {
   const mapper = new ZapMapper(
     fs.readFileSync(
