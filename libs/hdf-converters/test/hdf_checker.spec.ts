@@ -259,9 +259,12 @@ test('xccdf_results_mapper openscap', () => {
   expect(omitVersions(mapper.toHdf())).toEqual(
     omitVersions(
       JSON.parse(
-        fs.readFileSync('sample_jsons/xccdf_results_mapper/xccdf-hdf-rhel8.json', {
-          encoding: 'utf-8'
-        })
+        fs.readFileSync(
+          'sample_jsons/xccdf_results_mapper/xccdf-hdf-rhel8.json',
+          {
+            encoding: 'utf-8'
+          }
+        )
       )
     )
   );

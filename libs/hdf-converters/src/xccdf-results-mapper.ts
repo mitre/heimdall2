@@ -25,16 +25,24 @@ const DEFAULT_NIST_TAG = ['SA-11', 'RA-5', 'Rev_4'];
 
 let counter = ''; // TODO: why is it called counter when it doesn't count anything - it's a matching key/identifier
 
-function getStatus(file: unknown): ExecJSON.ControlResultStatus { // TODO: why is it called 'file' when it's just being passed a normal object?
-  const paths = [['cdf:rule-result', 'rule-result'], ['idref'], ['cdf:result', 'result']];
+// TODO: why is it called 'file' when it's just being passed a normal object?
+function getStatus(file: unknown): ExecJSON.ControlResultStatus {
+  const paths = [
+    ['cdf:rule-result', 'rule-result'],
+    ['idref'],
+    ['cdf:result', 'result']
+  ];
 
   for (const path_rule_result of paths[0]) {
     const rule_result = _.get(file, path_rule_result);
     if (rule_result === undefined) {
       continue;
     }
-    const match = rule_result.find(
-      (element: Record<string, unknown>) => _.some(paths[1].map((path_idref) => _.get(element, path_idref) === counter), Boolean)
+    const match = rule_result.find((element: Record<string, unknown>) =>
+      _.some(
+        paths[1].map((path_idref) => _.get(element, path_idref) === counter),
+        Boolean
+      )
     );
     for (const path_result of paths[2]) {
       if (_.get(match, path_result) === 'pass') {
@@ -64,7 +72,8 @@ function nistTag(input: unknown | unknown[]): string[] {
   const identifiers: string[] = extractCci(input);
   return CCI_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG, false);
 }
-function parseXml(xml: string) { // TODO: move this into base-converter as well as a utilty?  or split some of the utility functions out of base-converter into their own module
+// TODO: move this into base-converter as well as a utilty?  or split some of the utility functions out of base-converter into their own module
+function parseXml(xml: string) {
   const options = {
     attributeNamePrefix: '',
     textNodeName: 'text',
@@ -89,10 +98,22 @@ export class XCCDFResultsMapper extends BaseConverter {
         name: {path: ['cdf:Benchmark.id', 'Benchmark.id']},
         version: {path: ['cdf:Benchmark.style', 'Benchmark.style']},
         title: {path: ['cdf:Benchmark.cdf:title', 'Benchmark.title.text']}, // first instance where not just the path but also the underlying object is different
-        maintainer: {path: ['cdf:Benchmark.cdf:reference.dc:publisher', 'Benchmark.reference.dc:publisher']},
-        summary: {path: ['cdf:Benchmark.cdf:description', 'Benchmark.description.text']},
+        maintainer: {
+          path: [
+            'cdf:Benchmark.cdf:reference.dc:publisher',
+            'Benchmark.reference.dc:publisher'
+          ]
+        },
+        summary: {
+          path: ['cdf:Benchmark.cdf:description', 'Benchmark.description.text']
+        },
         license: {path: ['cdf:Benchmark.cdf:notice.id', 'Benchmark.notice.id']},
-        copyright: {path: ['cdf:Benchmark.cdf:metadata.dc:creator', 'Benchmark.metadata.dc:creator.text']},
+        copyright: {
+          path: [
+            'cdf:Benchmark.cdf:metadata.dc:creator',
+            'Benchmark.metadata.dc:creator.text'
+          ]
+        },
         copyright_email: 'disa.stig_spt@mail.mil',
         supports: [],
         attributes: [],
@@ -145,7 +166,10 @@ export class XCCDFResultsMapper extends BaseConverter {
               },
               {
                 data: {
-                  path: ['cdf:Rule.cdf:check.cdf:check-content-ref.name', 'Rule.check.check-content-ref.name'],
+                  path: [
+                    'cdf:Rule.cdf:check.cdf:check-content-ref.name',
+                    'Rule.check.check-content-ref.name'
+                  ],
                   transformer: parseHtml
                 },
                 label: 'check'
@@ -190,20 +214,34 @@ export class XCCDFResultsMapper extends BaseConverter {
               rid: {path: 'cdf:Rule.cdf:ident[1].text'}, // TODO: same ^
               stig_id: {path: ['$.cdf:Benchmark.id', '$.Benchmark.id']},
               fix_id: {path: ['cdf:Rule.cdf:fix.id', 'Rule.fix.id']},
-              cci: {path: ['cdf:Rule.cdf:ident', 'Rule.ident'], transformer: extractCci},
-              nist: {path: ['cdf:Rule.cdf:ident', 'Rule.ident'], transformer: nistTag}
+              cci: {
+                path: ['cdf:Rule.cdf:ident', 'Rule.ident'],
+                transformer: extractCci
+              },
+              nist: {
+                path: ['cdf:Rule.cdf:ident', 'Rule.ident'],
+                transformer: nistTag
+              }
             },
             code: '', // TODO: ask if we should just stuff some of the converted xml into here (if it's feasible)
             source_location: {},
             results: [
               {
                 status: {
-                  path: ['$.cdf:Benchmark.cdf:TestResult', '$.Benchmark.TestResult'],
+                  path: [
+                    '$.cdf:Benchmark.cdf:TestResult',
+                    '$.Benchmark.TestResult'
+                  ],
                   transformer: getStatus
                 },
                 code_desc: '',
                 run_time: 0, // TODO: ask if we should calculate this since we're given both a starttime and an endtime
-                start_time: {path: ['$.cdf:Benchmark.cdf:TestResult.start-time', '$.Benchmark.TestResult.start-time']},
+                start_time: {
+                  path: [
+                    '$.cdf:Benchmark.cdf:TestResult.start-time',
+                    '$.Benchmark.TestResult.start-time'
+                  ]
+                },
                 message: '',
                 resource: ''
               }
