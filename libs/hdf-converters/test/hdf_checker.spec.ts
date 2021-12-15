@@ -2,7 +2,6 @@ import fs from 'fs';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {ASFFMapper} from '../src/asff-mapper';
-import {AwsConfigMapper} from '../src/aws-config-mapper';
 import {BurpSuiteMapper} from '../src/burpsuite-mapper';
 import {IFindingASFF} from '../src/converters-from-hdf/asff/asff-types';
 import {FromHdfToAsffMapper} from '../src/converters-from-hdf/asff/reverse-asff-mapper';
@@ -125,11 +124,7 @@ describe('Test asff_mapper', () => {
     );
   });
 });
-test('aws_config_mapper', async () => {
-  const mapper = new AwsConfigMapper({region: 'ca-central-1'});
-  const data = await mapper.toHdf();
-  console.log(JSON.stringify(data));
-});
+
 test('burpsuite_mapper', () => {
   const mapper = new BurpSuiteMapper(
     fs.readFileSync(
@@ -147,6 +142,7 @@ test('burpsuite_mapper', () => {
     )
   );
 });
+
 test('jfrog_xray_mapper', () => {
   const mapper = new JfrogXrayMapper(
     fs.readFileSync(
@@ -164,6 +160,7 @@ test('jfrog_xray_mapper', () => {
     )
   );
 });
+
 test('nikto_mapper', () => {
   const mapper = new NiktoMapper(
     fs.readFileSync(
@@ -181,6 +178,7 @@ test('nikto_mapper', () => {
     )
   );
 });
+
 test('sarif_mapper', () => {
   const mapper = new SarifMapper(
     fs.readFileSync(
