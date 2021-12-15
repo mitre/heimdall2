@@ -80,7 +80,7 @@ export class AwsConfigMapper {
   private async getConfigRulePage(
     params: DescribeConfigRulesCommandInput
   ): Promise<AWS.ConfigService.Types.DescribeConfigRulesResponse> {
-    await this.delay(10);
+    await this.delay(150);
     return this.configService.describeConfigRules(params).promise();
   }
 
@@ -90,24 +90,27 @@ export class AwsConfigMapper {
     const complianceResults: ComplianceByConfigRule[] =
       await this.fetchAllComplianceInfo(configRules);
     const ruleData: ExecJSON.ControlResult[][] = [];
+    const allRulesResolved: AWS.ConfigService.EvaluationResults = [];
     for (const configRule of configRules) {
       const result: ExecJSON.ControlResult[] = [];
       let params = {
         ConfigRuleName: configRule.ConfigRuleName || '',
         Limit: 100
       };
-      await this.delay(10);
+      await this.delay(150);
       let response = await this.configService
         .getComplianceDetailsByConfigRule(params)
         .promise();
       let ruleResults = response.EvaluationResults || [];
+      allRulesResolved.push(...ruleResults);
       while (response.NextToken !== undefined) {
         params = _.set(params, 'NextToken', response.NextToken);
-        await this.delay(100);
+        await this.delay(150);
         response = await this.configService
           .getComplianceDetailsByConfigRule(params)
           .promise();
         ruleResults = ruleResults?.concat(response.EvaluationResults || []);
+        allRulesResolved.push(...ruleResults);
       }
       ruleResults.forEach((evaluation) => {
         const hdfResult: ExecJSON.ControlResult = {
@@ -158,7 +161,83 @@ export class AwsConfigMapper {
         }
       });
     }
-    return Promise.all(ruleData);
+    const completedControlResults = await Promise.all(ruleData);
+    const extractedResourceNames = await this.extractResourceNamesFromIds(
+      allRulesResolved
+    );
+
+    return completedControlResults.map((completedControlResult) =>
+      completedControlResult.map((completedControl) => {
+        for (const extractedResourceName in extractedResourceNames) {
+          if (
+            completedControl.code_desc.indexOf(
+              JSON.stringify(extractedResourceName)
+                .replace(/\"/gi, '')
+                .replace(/{/gi, '')
+                .replace(/}/gi, '')
+            ) !== -1
+          ) {
+            return {
+              ...completedControl,
+              code_desc:
+                completedControl.code_desc +
+                ', resource_name:' +
+                extractedResourceNames[extractedResourceName]
+            };
+          }
+        }
+        return completedControl;
+      })
+    );
+  }
+
+  private async extractResourceNamesFromIds(
+    evaluationResults: AWS.ConfigService.EvaluationResults
+  ) {
+    // Map of resource types to resource IDs {resourceType: ResourceId[]}
+    const resourceMap: Record<string, string[]> = {};
+    // Map of resource IDs to resource names
+    const resolvedResourcesMap: Record<string, string> = {};
+    // Extract resource Ids
+    evaluationResults.forEach((result) => {
+      const resourceType: string = _.get(
+        result,
+        'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceType'
+      );
+      const resourceId: string = _.get(
+        result,
+        'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceId'
+      );
+      if (!(resourceType in resourceMap)) {
+        resourceMap[resourceType] = [resourceId];
+      } else {
+        if (
+          !resourceMap[resourceType].includes(resourceId) &&
+          typeof resourceId === 'string'
+        ) {
+          resourceMap[resourceType].push(resourceId);
+        }
+      }
+    });
+    // Resolve resource names from AWS
+    for (const resourceType in resourceMap) {
+      const resourceIDSlices = this.chunkArray(resourceMap[resourceType], 20);
+      for (const slice of resourceIDSlices) {
+        await this.delay(150);
+        const resources = await this.configService
+          .listDiscoveredResources({
+            resourceType: resourceType,
+            resourceIds: slice
+          })
+          .promise();
+        resources.resourceIdentifiers?.forEach((resource) => {
+          if (resource.resourceId && resource.resourceName) {
+            resolvedResourcesMap[resource.resourceId] = resource.resourceName;
+          }
+        });
+      }
+    }
+    return resolvedResourcesMap;
   }
 
   private getCodeDesc(result: EvaluationResult): string {
@@ -222,7 +301,7 @@ export class AwsConfigMapper {
     // Should slice config rules into arrays of max size: 25 and make one request for each slice
     const configRuleSlices = this.chunkArray(configRules, 25);
     for (const slice of configRuleSlices) {
-      await this.delay(100);
+      await this.delay(150);
       const response = await this.configService
         .describeComplianceByConfigRule({
           ConfigRuleNames: slice.map((rule) => rule.ConfigRuleName || '')
