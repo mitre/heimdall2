@@ -1,6 +1,6 @@
 {
   "name": "@heimdall/password-complexity",
-  "version": "2.5.2",
+  "version": "2.6.5",
   "private": true,
   "description": "",
   "main": "index.js",
