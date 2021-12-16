@@ -23,19 +23,19 @@ jobs:
 
       - name: Publish Heimdall Lite to NPM
         if: always()
-        run: npm publish --access public apps/frontend/mitre-heimdall-lite*.tgz || true
+        run: npm publish --access public apps/frontend/mitre-heimdall-lite*.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish InSpecJS to NPM
         if: always()
-        run: npm publish --access public libs/inspecjs/inspecjs*.tgz || true
+        run: npm publish --access public libs/inspecjs/inspecjs*.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish HDF Converters to NPM
         if: always()
-        run: npm publish --access public libs/hdf-converters/mitre-hdf-converters*.tgz || true
+        run: npm publish --access public libs/hdf-converters/mitre-hdf-converters*.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -47,6 +47,6 @@ jobs:
 
       - name: Publish Heimdall Lite to GitHub Packages
         if: always()
-        run: npm publish --access public apps/frontend/mitre-heimdall-lite*.tgz || true
+        run: npm publish --access public apps/frontend/mitre-heimdall-lite*.tgz
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
