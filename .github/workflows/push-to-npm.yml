@@ -22,26 +22,31 @@ jobs:
         run: yarn pack:all
 
       - name: Publish Heimdall Lite to NPM
-        run: npm publish --access public apps/frontend/mitre-heimdall-lite*.tgz
+        if: always()
+        run: npm publish --access public apps/frontend/mitre-heimdall-lite*.tgz || true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish InSpecJS to NPM
-        run: npm publish --access public libs/inspecjs/inspecjs*.tgz
+        if: always()
+        run: npm publish --access public libs/inspecjs/inspecjs*.tgz || true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish HDF Converters to NPM
-        run: npm publish --access public libs/hdf-converters/mitre-hdf-converters*.tgz
+        if: always()
+        run: npm publish --access public libs/hdf-converters/mitre-hdf-converters*.tgz || true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # Setup .npmrc file to publish to GitHub Packages
       - uses: actions/setup-node@v1
+        if: always()
         with:
           registry-url: 'https://npm.pkg.github.com'
 
       - name: Publish Heimdall Lite to GitHub Packages
-        run: npm publish --access public apps/frontend/mitre-heimdall-lite*.tgz
+        if: always()
+        run: npm publish --access public apps/frontend/mitre-heimdall-lite*.tgz || true
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
