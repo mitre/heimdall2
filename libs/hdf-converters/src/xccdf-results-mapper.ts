@@ -23,10 +23,11 @@ const CCI_REGEX = /CCI-(\d*)/;
 const CCI_NIST_MAPPING = new CciNistMapping();
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5', 'Rev_4'];
 
-let counter = ''; // TODO: why is it called counter when it doesn't count anything - it's a matching key/identifier
+// TODO: change inspec schema so that the status is loaded, etc. not pass/fail/skip
 
-// TODO: why is it called 'file' when it's just being passed a normal object?
-function getStatus(file: unknown): ExecJSON.ControlResultStatus {
+let id_tracker = '';
+
+function getStatus(testresult: unknown): ExecJSON.ControlResultStatus {
   const paths = [
     ['cdf:rule-result', 'rule-result'],
     ['idref'],
@@ -34,13 +35,13 @@ function getStatus(file: unknown): ExecJSON.ControlResultStatus {
   ];
 
   for (const path_rule_result of paths[0]) {
-    const rule_result = _.get(file, path_rule_result);
+    const rule_result = _.get(testresult, path_rule_result);
     if (rule_result === undefined) {
       continue;
     }
     const match = rule_result.find((element: Record<string, unknown>) =>
       _.some(
-        paths[1].map((path_idref) => _.get(element, path_idref) === counter),
+        paths[1].map((path_idref) => _.get(element, path_idref) === id_tracker),
         Boolean
       )
     );
@@ -128,7 +129,7 @@ export class XCCDFResultsMapper extends BaseConverter {
               path: ['cdf:Rule.id', 'Rule.id'],
               transformer: (input: unknown): string => {
                 if (typeof input === 'string') {
-                  counter = input;
+                  id_tracker = input;
                   return input.split('_S')[1].split('r')[0];
                 } else {
                   return '';
