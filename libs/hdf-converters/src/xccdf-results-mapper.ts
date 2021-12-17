@@ -33,19 +33,19 @@ function getStatus(file: unknown): ExecJSON.ControlResultStatus {
     ['cdf:result', 'result']
   ];
 
-  for (const path_rule_result of paths[0]) {
-    const rule_result = _.get(file, path_rule_result);
-    if (rule_result === undefined) {
+  for (const pathRuleResult of paths[0]) {
+    const ruleResult = _.get(file, pathRuleResult);
+    if (ruleResult === undefined) {
       continue;
     }
-    const match = rule_result.find((element: Record<string, unknown>) =>
+    const match = ruleResult.find((element: Record<string, unknown>) =>
       _.some(
-        paths[1].map((path_idref) => _.get(element, path_idref) === counter),
+        paths[1].map((pathIDRef) => _.get(element, pathIDRef) === counter),
         Boolean
       )
     );
-    for (const path_result of paths[2]) {
-      if (_.get(match, path_result) === 'pass') {
+    for (const pathResult of paths[2]) {
+      if (_.get(match, pathResult) === 'pass') {
         return ExecJSON.ControlResultStatus.Passed;
       }
     }
@@ -72,7 +72,7 @@ function nistTag(input: unknown | unknown[]): string[] {
   const identifiers: string[] = extractCci(input);
   return CCI_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG, false);
 }
-// TODO: move this into base-converter as well as a utilty?  or split some of the utility functions out of base-converter into their own module
+// TODO: move this into base-converter as well as a utility?  or split some of the utility functions out of base-converter into their own module
 function parseXml(xml: string) {
   const options = {
     attributeNamePrefix: '',
