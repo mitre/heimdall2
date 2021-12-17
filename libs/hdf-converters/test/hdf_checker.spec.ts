@@ -215,9 +215,10 @@ describe('Mappers', () => {
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/scoutsuite_mapper/scoutsuite-hdf.json', {
-            encoding: 'utf-8'
-          })
+          fs.readFileSync(
+            'sample_jsons/scoutsuite_mapper/scoutsuite-hdf.json',
+            {encoding: 'utf-8'}
+          )
         )
       )
     );
