@@ -213,7 +213,7 @@ export class XCCDFResultsMapper extends BaseConverter {
             },
             refs: [],
             tags: {
-              severity: null,
+              severity: {path: ['cdf:Rule.severity', 'Rule.severity']},
               gtitle: {path: ['cdf:title', 'title.text']},
               satisfies: {
                 path: RULE_DESCRIPTION,
