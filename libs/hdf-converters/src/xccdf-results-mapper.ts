@@ -190,10 +190,6 @@ export class XCCDFResultsMapper extends BaseConverter {
                 label: 'default'
               },
               {
-                data: 'NA',
-                label: 'rationale'
-              },
-              {
                 data: {
                   path: [
                     'cdf:Rule.cdf:check.cdf:check-content-ref.name',
