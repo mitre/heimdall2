@@ -23,7 +23,7 @@ const CCI_REGEX = /CCI-(\d*)/;
 const CCI_NIST_MAPPING = new CciNistMapping();
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5', 'Rev_4'];
 
-// TODO: change inspec schema so that the status is loaded, etc. not pass/fail/skip
+// TODO: modify tests to work with changed results
 
 let id_tracker = '';
 
@@ -53,6 +53,33 @@ function getStatus(testresult: unknown): ExecJSON.ControlResultStatus {
   }
   return ExecJSON.ControlResultStatus.Failed;
 }
+
+function getStartTime(testresult: unknown): string {
+  const paths = [['cdf:rule-result', 'rule-result'], ['idref'], ['time']];
+
+  for (const path_rule_result of paths[0]) {
+    const rule_result = _.get(testresult, path_rule_result);
+    if (rule_result === undefined) {
+      continue;
+    }
+    const match = rule_result.find((element: Record<string, unknown>) =>
+      _.some(
+        paths[1].map((path_idref) => _.get(element, path_idref) === id_tracker),
+        Boolean
+      )
+    );
+    for (const path_result of paths[2]) {
+      const time = _.get(match, path_result);
+      if (time === undefined || time === null || time === '') {
+        console.log(testresult, time);
+      } else {
+        return time;
+      }
+    }
+  }
+  return '';
+}
+
 function extractCci(input: unknown | unknown[]): string[] {
   let inputArray;
   if (Array.isArray(input)) {
@@ -69,6 +96,7 @@ function extractCci(input: unknown | unknown[]): string[] {
   });
   return output;
 }
+
 function nistTag(input: unknown | unknown[]): string[] {
   const identifiers: string[] = extractCci(input);
   return CCI_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG, false);
@@ -120,7 +148,7 @@ export class XCCDFResultsMapper extends BaseConverter {
         attributes: [],
         depends: [],
         groups: [],
-        status: 'loaded', // TODO: ask to figure out what 'loaded' means
+        status: 'loaded',
         controls: [
           {
             path: ['cdf:Benchmark.cdf:Group', 'Benchmark.Group'],
@@ -141,7 +169,7 @@ export class XCCDFResultsMapper extends BaseConverter {
               path: RULE_DESCRIPTION,
               transformer: (input: unknown): string => {
                 if (typeof input === 'string') {
-                  return parseHtml(input.split('Satisfies')[0]); // TODO: doesn't seem to work for as intended (cut off the SRG number and then the massive block of html thing things like text<>text<text<text<>text) for at least the first of their results
+                  return parseHtml(input.split('Satisfies')[0]); // TODO: doesn't seem to work for as intended (cut off the SRG number and then the massive block of html thing things like text<>text<text<text<>text) for at least the first of their results.  answer: parse tags
                 } else {
                   return '';
                 }
@@ -224,7 +252,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                 transformer: nistTag
               }
             },
-            code: '', // TODO: ask if we should just stuff some of the converted xml into here (if it's feasible)
+            code: '',
             source_location: {},
             results: [
               {
@@ -236,12 +264,13 @@ export class XCCDFResultsMapper extends BaseConverter {
                   transformer: getStatus
                 },
                 code_desc: '',
-                run_time: 0, // TODO: ask if we should calculate this since we're given both a starttime and an endtime
+                run_time: 0,
                 start_time: {
                   path: [
-                    '$.cdf:Benchmark.cdf:TestResult.start-time',
-                    '$.Benchmark.TestResult.start-time'
-                  ]
+                    '$.cdf:Benchmark.cdf:TestResult',
+                    '$.Benchmark.TestResult'
+                  ],
+                  transformer: getStartTime
                 },
                 message: '',
                 resource: ''
