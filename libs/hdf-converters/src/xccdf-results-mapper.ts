@@ -19,7 +19,6 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 
 const RULE_DESCRIPTION = ['cdf:Rule.cdf:description', 'Rule.description.text'];
-const CCI_REGEX = /CCI-(\d*)/;
 const CCI_NIST_MAPPING = new CciNistMapping();
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5', 'Rev_4'];
 
@@ -85,6 +84,8 @@ function extractCci(input: unknown | unknown[]): string[] {
   } else {
     inputArray = [input];
   }
+
+  const CCI_REGEX = /CCI-(\d*)/;
 
   const output: string[] = [];
   inputArray.forEach((element) => {
