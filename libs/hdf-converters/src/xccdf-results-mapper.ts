@@ -1,3 +1,5 @@
+import parser from 'fast-xml-parser';
+import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
@@ -101,6 +103,20 @@ function nistTag(input: unknown | unknown[]): string[] {
   return CCI_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG, false);
 }
 
+function extractDescription(description: string): Record<string, unknown> {
+  const descXmlChunks: string[] = [];
+  const htmlParser = new htmlparser.Parser({
+    ontext(text: string) {
+      descXmlChunks.push(text);
+    }
+  });
+  htmlParser.write(description);
+  htmlParser.end();
+  const descXmlParsed = descXmlChunks.join('');
+
+  return parser.parse(descXmlParsed);
+}
+
 export class XCCDFResultsMapper extends BaseConverter {
   mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
@@ -157,24 +173,18 @@ export class XCCDFResultsMapper extends BaseConverter {
             title: {path: ['cdf:Rule.cdf:title', 'Rule.title.text']},
             desc: {
               path: RULE_DESCRIPTION,
-              transformer: (input: unknown): string => {
-                if (typeof input === 'string') {
-                  return parseHtml(input.split('Satisfies')[0]); // TODO: doesn't seem to work for as intended (cut off the SRG number and then the massive block of html thing things like text<>text<text<text<>text) for at least the first of their results.  answer: parse tags
-                } else {
-                  return '';
-                }
+              transformer: (description: string): string => {
+                const descTextJson = extractDescription(description);
+                return descTextJson['VulnDiscussion'] as string;
               }
             },
             descriptions: [
               {
                 data: {
                   path: RULE_DESCRIPTION,
-                  transformer: (input: unknown): string => {
-                    if (typeof input === 'string') {
-                      return parseHtml(input);
-                    } else {
-                      return '';
-                    }
+                  transformer: (description: string): string => {
+                    const descTextJson = extractDescription(description);
+                    return JSON.stringify(descTextJson, null, 2);
                   }
                 },
                 label: 'default'
