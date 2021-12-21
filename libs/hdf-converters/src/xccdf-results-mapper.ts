@@ -1,4 +1,3 @@
-import parser from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
@@ -7,7 +6,8 @@ import {
   ILookupPath,
   impactMapping,
   MappedTransform,
-  parseHtml
+  parseHtml,
+  parseXml
 } from './base-converter';
 import {CciNistMapping} from './mappings/CciNistMapping';
 
@@ -98,15 +98,6 @@ function extractCci(input: unknown | unknown[]): string[] {
 function nistTag(input: unknown | unknown[]): string[] {
   const identifiers: string[] = extractCci(input);
   return CCI_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG, false);
-}
-// TODO: move this into base-converter as well as a utility?  or split some of the utility functions out of base-converter into their own module
-function parseXml(xml: string) {
-  const options = {
-    attributeNamePrefix: '',
-    textNodeName: 'text',
-    ignoreAttributes: false
-  };
-  return parser.parse(xml, options);
 }
 
 export class XCCDFResultsMapper extends BaseConverter {

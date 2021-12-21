@@ -1,4 +1,5 @@
 import {createHash} from 'crypto';
+import parser from 'fast-xml-parser';
 import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
@@ -49,6 +50,16 @@ export function parseHtml(input: unknown): string {
   }
   return textData.join('');
 }
+
+export function parseXml(xml: string): Record<string, unknown> {
+  const options = {
+    attributeNamePrefix: '',
+    textNodeName: 'text',
+    ignoreAttributes: false
+  };
+  return parser.parse(xml, options);
+}
+
 export function impactMapping(
   mapping: Map<string, number>
 ): (severity: unknown) => number {
