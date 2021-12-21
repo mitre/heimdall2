@@ -25,28 +25,28 @@ const DEFAULT_NIST_TAG = ['SA-11', 'RA-5', 'Rev_4'];
 
 // TODO: modify tests to work with changed results
 
-let id_tracker = '';
+let idTracker = '';
 
-function getStatus(testresult: unknown): ExecJSON.ControlResultStatus {
+function getStatus(testResult: unknown): ExecJSON.ControlResultStatus {
   const paths = [
     ['cdf:rule-result', 'rule-result'],
     ['idref'],
     ['cdf:result', 'result']
   ];
 
-  for (const path_rule_result of paths[0]) {
-    const rule_result = _.get(testresult, path_rule_result);
-    if (rule_result === undefined) {
+  for (const pathRuleResult of paths[0]) {
+    const ruleResult = _.get(testResult, pathRuleResult);
+    if (ruleResult === undefined) {
       continue;
     }
-    const match = rule_result.find((element: Record<string, unknown>) =>
+    const match = ruleResult.find((element: Record<string, unknown>) =>
       _.some(
-        paths[1].map((path_idref) => _.get(element, path_idref) === id_tracker),
+        paths[1].map((pathIDRef) => _.get(element, pathIDRef) === idTracker),
         Boolean
       )
     );
-    for (const path_result of paths[2]) {
-      if (_.get(match, path_result) === 'pass') {
+    for (const pathResult of paths[2]) {
+      if (_.get(match, pathResult) === 'pass') {
         return ExecJSON.ControlResultStatus.Passed;
       }
     }
@@ -54,25 +54,23 @@ function getStatus(testresult: unknown): ExecJSON.ControlResultStatus {
   return ExecJSON.ControlResultStatus.Failed;
 }
 
-function getStartTime(testresult: unknown): string {
+function getStartTime(testResult: unknown): string {
   const paths = [['cdf:rule-result', 'rule-result'], ['idref'], ['time']];
 
-  for (const path_rule_result of paths[0]) {
-    const rule_result = _.get(testresult, path_rule_result);
-    if (rule_result === undefined) {
+  for (const pathRuleResult of paths[0]) {
+    const ruleResult = _.get(testResult, pathRuleResult);
+    if (ruleResult === undefined) {
       continue;
     }
-    const match = rule_result.find((element: Record<string, unknown>) =>
+    const match = ruleResult.find((element: Record<string, unknown>) =>
       _.some(
-        paths[1].map((path_idref) => _.get(element, path_idref) === id_tracker),
+        paths[1].map((pathIDRef) => _.get(element, pathIDRef) === idTracker),
         Boolean
       )
     );
-    for (const path_result of paths[2]) {
-      const time = _.get(match, path_result);
-      if (time === undefined || time === null || time === '') {
-        console.log(testresult, time);
-      } else {
+    for (const pathResult of paths[2]) {
+      const time = _.get(match, pathResult);
+      if (typeof time === 'string') {
         return time;
       }
     }
@@ -101,7 +99,7 @@ function nistTag(input: unknown | unknown[]): string[] {
   const identifiers: string[] = extractCci(input);
   return CCI_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG, false);
 }
-// TODO: move this into base-converter as well as a utilty?  or split some of the utility functions out of base-converter into their own module
+// TODO: move this into base-converter as well as a utility?  or split some of the utility functions out of base-converter into their own module
 function parseXml(xml: string) {
   const options = {
     attributeNamePrefix: '',
@@ -157,7 +155,7 @@ export class XCCDFResultsMapper extends BaseConverter {
               path: ['cdf:Rule.id', 'Rule.id'],
               transformer: (input: unknown): string => {
                 if (typeof input === 'string') {
-                  id_tracker = input;
+                  idTracker = input;
                   return input.split('_S')[1].split('r')[0];
                 } else {
                   return '';

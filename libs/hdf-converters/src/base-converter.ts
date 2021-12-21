@@ -261,13 +261,7 @@ export class BaseConverter {
       pathArray = path;
     }
 
-    const index = _.findIndex(pathArray, (p) => {
-      if (p.startsWith('$.')) {
-        return _.has(this.data, p.slice(2));
-      } else {
-        return _.has(file, p);
-      }
-    });
+    const index = _.findIndex(pathArray, (p) => this.hasPath(file, p));
 
     if (index === -1) {
       // should probably throw error here, but instead are providing a default value to match current behavior
