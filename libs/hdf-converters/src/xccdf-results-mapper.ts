@@ -28,55 +28,68 @@ const DEFAULT_NIST_TAG = ['SA-11', 'RA-5', 'Rev_4'];
 
 let idTracker = '';
 
-function getStatus(testResult: unknown): ExecJSON.ControlResultStatus {
+function getRuleResultItem(
+  testResult: Record<string, unknown>,
+  pathRuleResultPossibilities: string[],
+  pathIdRefPossibilities: string[] = ['idref'],
+  pathItemPossibilities: string[] = ['']
+): unknown {
+  for (const pathRuleResult of pathRuleResultPossibilities) {
+    const ruleResult: Record<string, unknown>[] | undefined = _.get(
+      testResult,
+      pathRuleResult
+    ) as Record<string, unknown>[] | undefined;
+    if (ruleResult === undefined) {
+      continue;
+    }
+    const match = ruleResult.find((element: Record<string, unknown>) =>
+      _.some(
+        pathIdRefPossibilities.map(
+          (pathIDRef) => _.get(element, pathIDRef) === idTracker
+        ),
+        Boolean
+      )
+    );
+    for (const pathItem of pathItemPossibilities) {
+      const item = _.get(match, pathItem);
+      if (item !== undefined) {
+        return item;
+      }
+    }
+  }
+  return undefined;
+}
+
+function getStatus(
+  testResult: Record<string, unknown>
+): ExecJSON.ControlResultStatus {
   const paths = [
     ['cdf:rule-result', 'rule-result'],
     ['idref'],
     ['cdf:result', 'result']
   ];
 
-  for (const pathRuleResult of paths[0]) {
-    const ruleResult = _.get(testResult, pathRuleResult);
-    if (ruleResult === undefined) {
-      continue;
-    }
-    const match = ruleResult.find((element: Record<string, unknown>) =>
-      _.some(
-        paths[1].map((pathIDRef) => _.get(element, pathIDRef) === idTracker),
-        Boolean
-      )
-    );
-    for (const pathResult of paths[2]) {
-      if (_.get(match, pathResult) === 'pass') {
-        return ExecJSON.ControlResultStatus.Passed;
-      }
-    }
+  const status = getRuleResultItem(testResult, paths[0], paths[1], paths[2]) as
+    | string
+    | undefined;
+  if (typeof status === 'string' && status === 'pass') {
+    return ExecJSON.ControlResultStatus.Passed;
+  } else {
+    return ExecJSON.ControlResultStatus.Failed;
   }
-  return ExecJSON.ControlResultStatus.Failed;
 }
 
-function getStartTime(testResult: unknown): string {
+function getStartTime(testResult: Record<string, unknown>): string {
   const paths = [['cdf:rule-result', 'rule-result'], ['idref'], ['time']];
 
-  for (const pathRuleResult of paths[0]) {
-    const ruleResult = _.get(testResult, pathRuleResult);
-    if (ruleResult === undefined) {
-      continue;
-    }
-    const match = ruleResult.find((element: Record<string, unknown>) =>
-      _.some(
-        paths[1].map((pathIDRef) => _.get(element, pathIDRef) === idTracker),
-        Boolean
-      )
-    );
-    for (const pathResult of paths[2]) {
-      const time = _.get(match, pathResult);
-      if (typeof time === 'string') {
-        return time;
-      }
-    }
+  const time = getRuleResultItem(testResult, paths[0], paths[1], paths[2]) as
+    | string
+    | undefined;
+  if (typeof time === 'string') {
+    return time;
+  } else {
+    return '';
   }
-  return '';
 }
 
 function extractCci(input: unknown | unknown[]): string[] {
