@@ -1,4 +1,4 @@
-import parser from 'fast-xml-parser';
+import parser from 'fast-xml-parser'; // once 4.x comes out of beta, won't need the dependency on htmlparser2 to decode the xml string
 import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
@@ -20,11 +20,8 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['low', 0.3]
 ]);
 
-const RULE_DESCRIPTION = ['cdf:Rule.cdf:description', 'Rule.description.text'];
 const CCI_NIST_MAPPING = new CciNistMapping();
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5', 'Rev_4'];
-
-// TODO: modify tests to work with changed results
 
 let idTracker = '';
 
@@ -92,7 +89,12 @@ function getStartTime(testResult: Record<string, unknown>): string {
   }
 }
 
-function extractCci(input: unknown | unknown[]): string[] {
+interface IIdent {
+  system: string;
+  text: string;
+}
+
+function extractCci(input: IIdent | IIdent[]): string[] {
   let inputArray;
   if (Array.isArray(input)) {
     inputArray = input;
@@ -104,30 +106,33 @@ function extractCci(input: unknown | unknown[]): string[] {
 
   const output: string[] = [];
   inputArray.forEach((element) => {
-    if (_.get(element, 'text').match(CCI_REGEX)) {
-      output.push(_.get(element, 'text'));
+    const text = _.get(element, 'text');
+    if (text.match(CCI_REGEX)) {
+      output.push(text);
     }
   });
   return output;
 }
 
-function nistTag(input: unknown | unknown[]): string[] {
+function nistTag(input: IIdent | IIdent[]): string[] {
   const identifiers: string[] = extractCci(input);
   return CCI_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG, false);
 }
 
-function extractDescription(description: string): Record<string, unknown> {
-  const descXmlChunks: string[] = [];
+function convertEncodedXmlIntoJson(
+  encodedXml: string
+): Record<string, unknown> {
+  const xmlChunks: string[] = [];
   const htmlParser = new htmlparser.Parser({
     ontext(text: string) {
-      descXmlChunks.push(text);
+      xmlChunks.push(text);
     }
   });
-  htmlParser.write(description);
+  htmlParser.write(encodedXml);
   htmlParser.end();
-  const descXmlParsed = descXmlChunks.join('');
+  const xmlParsed = xmlChunks.join('');
 
-  return parser.parse(descXmlParsed);
+  return parser.parse(xmlParsed);
 }
 
 export class XCCDFResultsMapper extends BaseConverter {
@@ -135,7 +140,9 @@ export class XCCDFResultsMapper extends BaseConverter {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
-      target_id: ''
+      target_id: {
+        path: ['cdf:Benchmark.cdf:platform.idref', 'Benchmark.platform.idref']
+      }
     },
     version: HeimdallToolsVersion,
     statistics: {
@@ -145,7 +152,7 @@ export class XCCDFResultsMapper extends BaseConverter {
       {
         name: {path: ['cdf:Benchmark.id', 'Benchmark.id']},
         version: {path: ['cdf:Benchmark.style', 'Benchmark.style']},
-        title: {path: ['cdf:Benchmark.cdf:title', 'Benchmark.title.text']}, // first instance where not just the path but also the underlying object is different
+        title: {path: ['cdf:Benchmark.cdf:title', 'Benchmark.title.text']},
         maintainer: {
           path: [
             'cdf:Benchmark.cdf:reference.dc:publisher',
@@ -154,6 +161,37 @@ export class XCCDFResultsMapper extends BaseConverter {
         },
         summary: {
           path: ['cdf:Benchmark.cdf:description', 'Benchmark.description.text']
+        },
+        description: {
+          path: ['cdf:Benchmark', 'Benchmark'],
+          transformer: (input: Record<string, unknown>): string => {
+            const descriptionPaths = [
+              ['cdf:description', 'description'],
+              ['cdf:front-matter', 'front-matter'],
+              ['cdf:metadata', 'metadata'],
+              ['model'],
+              ['cdf:plain-text', 'plain-text'],
+              ['cdf:rear-matter', 'rear-matter'],
+              ['cdf:reference', 'reference'],
+              ['cdf:status', 'status'],
+              ['cdf:version', 'version'],
+              ['xml:lang'],
+              ['xmlns:cdf', 'xmlns'],
+              ['xmlns:dc'],
+              ['xmlns:dsi'],
+              ['xsi:schemaLocation']
+            ];
+            const fullDescription: Record<string, unknown> = {};
+            for (const paths of descriptionPaths) {
+              for (const path of paths) {
+                const item = _.get(input, path);
+                if (item !== undefined) {
+                  fullDescription[path] = item;
+                }
+              }
+            }
+            return JSON.stringify(fullDescription, null, 2);
+          }
         },
         license: {path: ['cdf:Benchmark.cdf:notice.id', 'Benchmark.notice.id']},
         copyright: {
@@ -176,7 +214,7 @@ export class XCCDFResultsMapper extends BaseConverter {
               path: ['cdf:Rule.id', 'Rule.id'],
               transformer: (input: unknown): string => {
                 if (typeof input === 'string') {
-                  idTracker = input;
+                  idTracker = input; // NOTE: global variable
                   return input.split('_S')[1].split('r')[0];
                 } else {
                   return '';
@@ -185,23 +223,13 @@ export class XCCDFResultsMapper extends BaseConverter {
             },
             title: {path: ['cdf:Rule.cdf:title', 'Rule.title.text']},
             desc: {
-              path: RULE_DESCRIPTION,
+              path: ['cdf:Rule.cdf:description', 'Rule.description.text'],
               transformer: (description: string): string => {
-                const descTextJson = extractDescription(description);
-                return descTextJson['VulnDiscussion'] as string;
+                const descTextJson = convertEncodedXmlIntoJson(description);
+                return _.get(descTextJson, 'VulnDiscussion', '') as string;
               }
             },
             descriptions: [
-              {
-                data: {
-                  path: RULE_DESCRIPTION,
-                  transformer: (description: string): string => {
-                    const descTextJson = extractDescription(description);
-                    return JSON.stringify(descTextJson, null, 2);
-                  }
-                },
-                label: 'default'
-              },
               {
                 data: {
                   path: [
@@ -226,32 +254,6 @@ export class XCCDFResultsMapper extends BaseConverter {
             },
             refs: [],
             tags: {
-              severity: {path: ['cdf:Rule.severity', 'Rule.severity']},
-              gtitle: {path: ['cdf:title', 'title.text']},
-              satisfies: {
-                path: RULE_DESCRIPTION,
-                transformer: (input: string): string[] => {
-                  if (input.split('Satisfies: ')[1] !== undefined) {
-                    return input
-                      .split('Satisfies: ')[1]
-                      .split('&lt')[0]
-                      .replace(/', /gi, ',')
-                      .split(',');
-                  } else {
-                    return [];
-                  }
-                }
-              },
-              gid: {
-                path: ['cdf:Rule.id', 'Rule.id'],
-                transformer: (input: string): string => {
-                  return input.split('_').slice(-2, -1)[0].split('r')[0];
-                }
-              },
-              legacy_id: {path: 'cdf:Rule.cdf:ident[2].text'}, // TODO: doesn't seem like legacy ids are being provided in the new one.  this should work through default values
-              rid: {path: 'cdf:Rule.cdf:ident[1].text'}, // TODO: same ^
-              stig_id: {path: ['$.cdf:Benchmark.id', '$.Benchmark.id']},
-              fix_id: {path: ['cdf:Rule.cdf:fix.id', 'Rule.fix.id']},
               cci: {
                 path: ['cdf:Rule.cdf:ident', 'Rule.ident'],
                 transformer: extractCci
@@ -259,7 +261,29 @@ export class XCCDFResultsMapper extends BaseConverter {
               nist: {
                 path: ['cdf:Rule.cdf:ident', 'Rule.ident'],
                 transformer: nistTag
-              }
+              },
+              severity: {path: ['cdf:Rule.severity', 'Rule.severity']},
+              description: {
+                path: ['cdf:Rule.cdf:description', 'Rule.description.text'],
+                transformer: convertEncodedXmlIntoJson
+              },
+              group_id: {path: 'id'},
+              group_title: {path: ['cdf:title', 'title.text']},
+              group_description: {
+                path: ['cdf:description', 'description.text'],
+                transformer: convertEncodedXmlIntoJson
+              },
+              rule_id: {path: ['cdf:Rule.id', 'Rule.id']},
+              check: {path: ['cdf:Rule.cdf:check', 'Rule.check']},
+              fix_id: {path: ['cdf:Rule.cdf:fix.id', 'Rule.fix.id']},
+              fixtext_fixref: {
+                path: ['cdf:Rule.cdf:fixtext.fixref', 'Rule.fixtext.fixref']
+              },
+              ident: {path: ['cdf:Rule.cdf:ident', 'Rule.ident']},
+              reference: {path: ['cdf:Rule.cdf:reference', 'Rule.reference']},
+              selected: {path: 'Rule.selected'},
+              version: {path: ['cdf:Rule.id', 'Rule.version.text']}, // dunno why the field is called version when it's just an old id
+              weight: {path: ['cdf:Rule.weight', 'Rule.weight']}
             },
             code: '',
             source_location: {},
