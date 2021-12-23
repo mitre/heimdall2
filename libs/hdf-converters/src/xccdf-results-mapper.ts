@@ -29,7 +29,7 @@ function getRuleResultItem(
   testResult: Record<string, unknown>,
   pathRuleResultPossibilities: string[],
   pathIdRefPossibilities: string[] = ['idref'],
-  pathItemPossibilities: string[] = ['']
+  pathItemPossibilities: string[] | undefined = undefined
 ): unknown {
   for (const pathRuleResult of pathRuleResultPossibilities) {
     const ruleResult: Record<string, unknown>[] | undefined = _.get(
@@ -47,6 +47,9 @@ function getRuleResultItem(
         Boolean
       )
     );
+    if (pathItemPossibilities === undefined) {
+      return match;
+    }
     for (const pathItem of pathItemPossibilities) {
       const item = _.get(match, pathItem);
       if (item !== undefined) {
@@ -230,7 +233,30 @@ export class XCCDFResultsMapper extends BaseConverter {
               ['xmlns:cdf', 'xmlns'],
               ['xmlns:dc'],
               ['xmlns:dsi'],
-              ['xsi:schemaLocation']
+              ['xsi:schemaLocation'],
+              ['cdf:TestResult.cdf:benchmark', 'TestResult.benchmark'],
+              ['cdf:TestResult.start-time', 'TestResult.start-time'],
+              ['cdf:TestResult.end-time', 'TestResult.end-time'],
+              ['cdf:TestResult.id', 'TestResult.id'],
+              ['cdf:TestResult.cdf:identity', 'TestResult.identity'],
+              ['cdf:TestResult.cdf:organization'],
+              [
+                'cdf:TestResult.cdf:platform.idref',
+                'TestResult.platform.idref'
+              ],
+              ['cdf:TestResult.cdf:profile.idref', 'TestResult.profile.idref'], // this property makes me think that TestResult could be an array which will certainly cause this mapper to fail
+              ['cdf:TestResult.cdf:score', 'TestResult.score'],
+              ['cdf:TestResult.cdf:set-value', 'TestResult.set-value'],
+              ['cdf:TestResult.cdf:target', 'TestResult.target'],
+              [
+                'cdf:TestResult.cdf:target-address',
+                'TestResult.target-address'
+              ],
+              ['cdf:TestResult.cdf:target-facts', 'TestResult.target-facts'],
+              ['cdf:TestResult.cdf:target-id-ref'],
+              ['cdf:TestResult.test-system', 'TestResult.test-system'],
+              ['TestResult.title'],
+              ['cdf:TestResult.version', 'TestResult.version']
             ];
             const fullDescription: Record<string, unknown> = {};
             for (const paths of descriptionPaths) {
@@ -348,6 +374,17 @@ export class XCCDFResultsMapper extends BaseConverter {
                   };
                   return getProfiles(profiles, pathsSelect, paths);
                 }
+              },
+              rule_result: {
+                path: [
+                  '$.cdf:Benchmark.cdf:TestResult',
+                  '$.Benchmark.TestResult'
+                ],
+                transformer: (testResult: Record<string, unknown>): unknown =>
+                  getRuleResultItem(testResult, [
+                    'cdf:rule-result',
+                    'rule-result'
+                  ])
               }
             },
             code: '',
