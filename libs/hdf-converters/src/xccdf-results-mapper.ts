@@ -89,6 +89,73 @@ function getStartTime(testResult: Record<string, unknown>): string {
   }
 }
 
+function convertEncodedXmlIntoJson(
+  encodedXml: string
+): Record<string, unknown> {
+  const xmlChunks: string[] = [];
+  const htmlParser = new htmlparser.Parser({
+    ontext(text: string) {
+      xmlChunks.push(text);
+    }
+  });
+  htmlParser.write(encodedXml);
+  htmlParser.end();
+  const xmlParsed = xmlChunks.join('');
+
+  return parser.parse(xmlParsed);
+}
+
+type ProfileKey = 'id' | 'description' | 'title';
+
+function getProfiles(
+  profiles: Record<string, unknown>[],
+  pathSelectPossibilities: string[],
+  pathProfileItemPossibilities: Record<ProfileKey, string[]>
+): Record<ProfileKey, unknown>[] {
+  const profileInfos = [];
+  for (const profile of profiles) {
+    for (const pathSelect of pathSelectPossibilities) {
+      const select: Record<string, string>[] | undefined = _.get(
+        profile,
+        pathSelect
+      ) as Record<string, string>[] | undefined;
+      if (select === undefined) {
+        continue;
+      }
+      const selected = _.some(
+        select,
+        (element: Record<string, string>) =>
+          idTracker.replace('rule_SV', 'group_V').replace(/r\d+_rule/, '') ===
+            _.get(element, 'idref') && _.get(element, 'selected') === 'true'
+      );
+      if (selected) {
+        const profileInfo: Record<ProfileKey, unknown> = {
+          id: '',
+          description: '',
+          title: ''
+        };
+        for (const profileKey of Object.keys(pathProfileItemPossibilities)) {
+          for (const pathProfileItem of pathProfileItemPossibilities[
+            profileKey as ProfileKey
+          ]) {
+            const item = _.get(profile, pathProfileItem) as string | undefined;
+            if (item !== undefined) {
+              if (profileKey === 'description') {
+                profileInfo[profileKey as ProfileKey] =
+                  convertEncodedXmlIntoJson(item);
+              } else {
+                profileInfo[profileKey as ProfileKey] = item;
+              }
+            }
+          }
+        }
+        profileInfos.push(profileInfo);
+      }
+    }
+  }
+  return profileInfos;
+}
+
 interface IIdent {
   system: string;
   text: string;
@@ -117,22 +184,6 @@ function extractCci(input: IIdent | IIdent[]): string[] {
 function nistTag(input: IIdent | IIdent[]): string[] {
   const identifiers: string[] = extractCci(input);
   return CCI_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG, false);
-}
-
-function convertEncodedXmlIntoJson(
-  encodedXml: string
-): Record<string, unknown> {
-  const xmlChunks: string[] = [];
-  const htmlParser = new htmlparser.Parser({
-    ontext(text: string) {
-      xmlChunks.push(text);
-    }
-  });
-  htmlParser.write(encodedXml);
-  htmlParser.end();
-  const xmlParsed = xmlChunks.join('');
-
-  return parser.parse(xmlParsed);
 }
 
 export class XCCDFResultsMapper extends BaseConverter {
@@ -283,7 +334,21 @@ export class XCCDFResultsMapper extends BaseConverter {
               reference: {path: ['cdf:Rule.cdf:reference', 'Rule.reference']},
               selected: {path: 'Rule.selected'},
               version: {path: ['cdf:Rule.id', 'Rule.version.text']}, // dunno why the field is called version when it's just an old id
-              weight: {path: ['cdf:Rule.weight', 'Rule.weight']}
+              weight: {path: ['cdf:Rule.weight', 'Rule.weight']},
+              profiles: {
+                path: ['$.cdf:Benchmark.cdf:Profile', '$.Benchmark.Profile'],
+                transformer: (
+                  profiles: Record<string, unknown>[]
+                ): Record<ProfileKey, unknown>[] => {
+                  const pathsSelect = ['cdf:select', 'select'];
+                  const paths = {
+                    id: ['id'],
+                    description: ['cdf:description', 'description.text'],
+                    title: ['cdf:title', 'title.text']
+                  };
+                  return getProfiles(profiles, pathsSelect, paths);
+                }
+              }
             },
             code: '',
             source_location: {},
