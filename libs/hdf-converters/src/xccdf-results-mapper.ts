@@ -24,6 +24,7 @@ const CCI_NIST_MAPPING = new CciNistMapping();
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5', 'Rev_4'];
 
 let idTracker = '';
+let valueIdTracker: string | undefined = undefined;
 
 function getRuleResultItem(
   testResult: Record<string, unknown>,
@@ -288,11 +289,28 @@ export class XCCDFResultsMapper extends BaseConverter {
             path: ['cdf:Benchmark.cdf:Group', 'Benchmark.Group'],
             key: 'id',
             id: {
-              path: ['cdf:Rule.id', 'Rule.id'],
-              transformer: (input: unknown): string => {
-                if (typeof input === 'string') {
-                  idTracker = input; // NOTE: global variable
-                  return input.split('_S')[1].split('r')[0];
+              path: ['cdf:Rule', 'Rule'],
+              transformer: (input: Record<string, unknown>): string => {
+                const valueIdPaths = [
+                  'cdf:check.cdf:check-export.value-id',
+                  'check.check-export.value-id'
+                ];
+                let setValueIdTracker = false;
+                for (const path of valueIdPaths) {
+                  const valueId = _.get(input, path);
+                  if (valueId !== undefined) {
+                    valueIdTracker = valueId as string; // NOTE: global variable
+                    setValueIdTracker = true;
+                  }
+                }
+                if (!setValueIdTracker) {
+                  valueIdTracker = undefined;
+                }
+
+                const id = _.get(input, 'id');
+                if (typeof id === 'string') {
+                  idTracker = id; // NOTE: global variable
+                  return id.split('_S')[1].split('r')[0];
                 } else {
                   return '';
                 }
@@ -385,6 +403,15 @@ export class XCCDFResultsMapper extends BaseConverter {
                     'cdf:rule-result',
                     'rule-result'
                   ])
+              },
+              value: {
+                path: ['$.cdf:Benchmark.cdf:Value', '$.Benchmark.Value'],
+                transformer: (values: Record<string, unknown>[]): unknown => {
+                  return _.find(values, (value: Record<string, unknown>) => {
+                    const id = _.get(value, 'id') as string | undefined;
+                    return id !== undefined && id === valueIdTracker;
+                  });
+                }
               }
             },
             code: '',
