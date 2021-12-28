@@ -111,6 +111,33 @@ function convertEncodedXmlIntoJson(
 
 type ProfileKey = 'id' | 'description' | 'title';
 
+function extractProfile(
+  profile: Record<string, unknown>,
+  pathProfileItemPossibilities: Record<ProfileKey, string[]>
+) {
+  const profileInfo: Record<ProfileKey, unknown> = {
+    id: '',
+    description: '',
+    title: ''
+  };
+  for (const profileKey of Object.keys(pathProfileItemPossibilities)) {
+    for (const pathProfileItem of pathProfileItemPossibilities[
+      profileKey as ProfileKey
+    ]) {
+      const item = _.get(profile, pathProfileItem) as string | undefined;
+      if (item) {
+        if (profileKey === 'description') {
+          profileInfo[profileKey as ProfileKey] =
+            convertEncodedXmlIntoJson(item);
+        } else {
+          profileInfo[profileKey as ProfileKey] = item;
+        }
+      }
+    }
+  }
+  return profileInfo;
+}
+
 function getProfiles(
   profiles: Record<string, unknown>[],
   pathSelectPossibilities: string[],
@@ -133,27 +160,9 @@ function getProfiles(
             _.get(element, 'idref') && _.get(element, 'selected') === 'true'
       );
       if (selected) {
-        const profileInfo: Record<ProfileKey, unknown> = {
-          id: '',
-          description: '',
-          title: ''
-        };
-        for (const profileKey of Object.keys(pathProfileItemPossibilities)) {
-          for (const pathProfileItem of pathProfileItemPossibilities[
-            profileKey as ProfileKey
-          ]) {
-            const item = _.get(profile, pathProfileItem) as string | undefined;
-            if (item !== undefined) {
-              if (profileKey === 'description') {
-                profileInfo[profileKey as ProfileKey] =
-                  convertEncodedXmlIntoJson(item);
-              } else {
-                profileInfo[profileKey as ProfileKey] = item;
-              }
-            }
-          }
-        }
-        profileInfos.push(profileInfo);
+        profileInfos.push(
+          extractProfile(profile, pathProfileItemPossibilities)
+        );
       }
     }
   }
