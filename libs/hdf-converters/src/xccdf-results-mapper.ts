@@ -23,6 +23,8 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 const CCI_NIST_MAPPING = new CciNistMapping();
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5', 'Rev_4'];
 
+const RULE_RESULT_PATHS = ['cdf:rule-result', 'rule-result'];
+
 let idTracker = '';
 let valueIdTracker: string | undefined = undefined;
 
@@ -64,15 +66,12 @@ function getRuleResultItem(
 function getStatus(
   testResult: Record<string, unknown>
 ): ExecJSON.ControlResultStatus {
-  const paths = [
-    ['cdf:rule-result', 'rule-result'],
+  const status = getRuleResultItem(
+    testResult,
+    RULE_RESULT_PATHS,
     ['idref'],
     ['cdf:result', 'result']
-  ];
-
-  const status = getRuleResultItem(testResult, paths[0], paths[1], paths[2]) as
-    | string
-    | undefined;
+  ) as string | undefined;
   if (typeof status === 'string' && status === 'pass') {
     return ExecJSON.ControlResultStatus.Passed;
   } else {
@@ -81,11 +80,12 @@ function getStatus(
 }
 
 function getStartTime(testResult: Record<string, unknown>): string {
-  const paths = [['cdf:rule-result', 'rule-result'], ['idref'], ['time']];
-
-  const time = getRuleResultItem(testResult, paths[0], paths[1], paths[2]) as
-    | string
-    | undefined;
+  const time = getRuleResultItem(
+    testResult,
+    RULE_RESULT_PATHS,
+    ['idref'],
+    ['time']
+  ) as string | undefined;
   if (typeof time === 'string') {
     return time;
   } else {
@@ -399,17 +399,14 @@ export class XCCDFResultsMapper extends BaseConverter {
                   '$.Benchmark.TestResult'
                 ],
                 transformer: (testResult: Record<string, unknown>): unknown =>
-                  getRuleResultItem(testResult, [
-                    'cdf:rule-result',
-                    'rule-result'
-                  ])
+                  getRuleResultItem(testResult, RULE_RESULT_PATHS)
               },
               value: {
                 path: ['$.cdf:Benchmark.cdf:Value', '$.Benchmark.Value'],
                 transformer: (values: Record<string, unknown>[]): unknown => {
                   return _.find(values, (value: Record<string, unknown>) => {
-                    const id = _.get(value, 'id') as string | undefined;
-                    return id !== undefined && id === valueIdTracker;
+                    const id = _.get(value, 'id');
+                    return id && id === valueIdTracker;
                   });
                 }
               }
