@@ -251,7 +251,7 @@ export class InspecIntake extends VuexModule {
       if (guessOptions.filename.toLowerCase().endsWith('.nessus')) {
         return 'nessus';
       } else if (
-        guessOptions.data.match(/xmlns.*http.*\/xccdf/) ||
+        guessOptions.data.match(/xmlns.*http.*\/xccdf/) || // Keys matching (hopefully) all xccdf formats
         guessOptions.filename.toLowerCase().indexOf('xccdf') !== -1
       ) {
         return 'xccdf';

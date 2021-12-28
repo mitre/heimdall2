@@ -1,4 +1,4 @@
-import parser from 'fast-xml-parser'; // once 4.x comes out of beta, won't need the dependency on htmlparser2 to decode the xml string
+import parser from 'fast-xml-parser';
 import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
