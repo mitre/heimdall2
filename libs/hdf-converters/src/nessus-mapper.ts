@@ -1,4 +1,3 @@
-import parser from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
@@ -7,7 +6,8 @@ import {
   ILookupPath,
   impactMapping,
   MappedTransform,
-  parseHtml
+  parseHtml,
+  parseXml
 } from './base-converter';
 import {CciNistMapping} from './mappings/CciNistMapping';
 import {NessusPluginsNistMapping} from './mappings/NessusPluginsNistMapping';
@@ -28,15 +28,6 @@ const NA_PLUGIN_OUTPUT = 'This Nessus Plugin does not provide output message.';
 const NESSUS_PLUGINS_NIST_MAPPING = new NessusPluginsNistMapping();
 const CCI_NIST_MAPPING = new CciNistMapping();
 const DEFAULT_NIST_TAG = ['unmapped'];
-
-function parseXml(xml: string): Record<string, unknown> {
-  const options = {
-    attributeNamePrefix: '',
-    textNodeName: 'text',
-    ignoreAttributes: false
-  };
-  return parser.parse(xml, options);
-}
 
 let policyName: string;
 let version: string;
