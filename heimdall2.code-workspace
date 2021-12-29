@@ -8,6 +8,11 @@
       "name": "Backend",
       "path": "apps/backend"
     },
+
+    {
+      "name": "HDF Converters",
+      "path": "libs/hdf-converters"
+    },
     {
       "name": "InspecJS",
       "path": "libs/inspecjs"
