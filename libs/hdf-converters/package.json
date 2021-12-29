@@ -27,7 +27,7 @@
     "axios": "^0.24.0",
     "csv-parse": "^5.0.1",
     "csv2json": "^2.0.2",
-    "fast-xml-parser": "^3.19.0",
+    "fast-xml-parser": "^3.21.1",
     "html-entities": "^2.3.2",
     "htmlparser2": "^7.1.2",
     "inspecjs": "^2.6.2",

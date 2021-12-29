@@ -1,4 +1,3 @@
-import parser from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
@@ -7,7 +6,8 @@ import {
   ILookupPath,
   impactMapping,
   MappedTransform,
-  parseHtml
+  parseHtml,
+  parseXml
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {OwaspNistMapping} from './mappings/OwaspNistMapping';
@@ -25,14 +25,6 @@ const CWE_NIST_MAPPING = new CweNistMapping();
 const OWASP_NIST_MAPPING = new OwaspNistMapping();
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
-function parseXml(xml: string): Record<string, unknown> {
-  const options = {
-    attributeNamePrefix: '',
-    textNodeName: 'text',
-    ignoreAttributes: false
-  };
-  return parser.parse(xml, options);
-}
 function nistTag(classification: Record<string, unknown>): string[] {
   let cweTag = _.get(classification, 'cwe');
   if (!Array.isArray(cweTag)) {

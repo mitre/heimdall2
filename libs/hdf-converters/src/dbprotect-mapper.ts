@@ -1,4 +1,3 @@
-import parser from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
@@ -6,7 +5,8 @@ import {
   BaseConverter,
   ILookupPath,
   impactMapping,
-  MappedTransform
+  MappedTransform,
+  parseXml
 } from './base-converter';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -16,14 +16,6 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['informational', 0]
 ]);
 
-function parseXml(xml: string): Record<string, unknown> {
-  const options = {
-    attributeNamePrefix: '',
-    textNodeName: 'text',
-    ignoreAttributes: false
-  };
-  return parser.parse(xml, options);
-}
 function compileFindings(
   input: Record<string, unknown>
 ): Record<string, unknown> {
