@@ -284,7 +284,11 @@ export class InspecIntake extends VuexModule {
     const urlParams = new URLSearchParams(queryString);
     if (urlParams.get('predefinedLoad')?.toLowerCase() === 'true') {
       return axios
-        .get('/dynamic/predefinedload.json')
+        .get('/dynamic/predefinedload.json', {
+          headers: {
+            Accept: 'application/json'
+          }
+        })
         .then(async ({data}) => {
           data.forEach(async (file: {filename: string; data: string}) => {
             InspecIntakeModule.loadFile({
