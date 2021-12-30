@@ -3435,9 +3435,9 @@
     "@types/node" "*"
 
 "@types/bootstrap@^5.0.15":
-  version "5.1.6"
-  resolved "https://registry.yarnpkg.com/@types/bootstrap/-/bootstrap-5.1.6.tgz#669a0cd7fb37bca12424e0d68f1f4704cfcdb780"
-  integrity sha512-3L6IvOCKyoVd3e4bgQTH7VBPbuYEOG8IQbRcuZ0AbjfwPdRX+kVf5L/7mVt1EVM+D/BVw4+71rtp7Z8yYROlpQ==
+  version "5.1.7"
+  resolved "https://registry.yarnpkg.com/@types/bootstrap/-/bootstrap-5.1.7.tgz#6903a957e513c1bb9719ed697158f31d595368b5"
+  integrity sha512-CNRN73xaUuotNHfy1jFbBj+7pfXs918G4+P3HhlgKSqPPYw1SkVUkITMVNIxSDW7BzrpkC9jeuL0DZbvaXk6Lg==
   dependencies:
     "@popperjs/core" "^2.9.2"
     "@types/jquery" "*"
@@ -3912,9 +3912,9 @@
     jest-environment-node ">=24 <=26"
 
 "@types/jest@*", "@types/jest@^27.0.0":
-  version "27.0.3"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-27.0.3.tgz#0cf9dfe9009e467f70a342f0f94ead19842a783a"
-  integrity sha512-cmmwv9t7gBYt7hNKH5Spu7Kuu/DotGa+Ff+JGRKZ4db5eh8PnKS4LuebJ3YLUoyOyIHraTGyULn23YtEAm0VSg==
+  version "27.4.0"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-27.4.0.tgz#037ab8b872067cae842a320841693080f9cb84ed"
+  integrity sha512-gHl8XuC1RZ8H2j5sHv/JqsaxXkDDM9iDOgu0Wp8sjs4u/snb2PVehyWXJPr+ORA0RPpgw231mnutWI1+0hgjIQ==
   dependencies:
     jest-diff "^27.0.0"
     pretty-format "^27.0.0"
