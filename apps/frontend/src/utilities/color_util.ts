@@ -1,15 +1,15 @@
 /**
  * Contains various functions for the manipulation of color.
- * Not written with an eye towards efficiency - prefer that these be done staitcally
+ * Not written with an eye towards efficiency - prefer that these be done statically
  */
 
-import Chroma from 'chroma-js';
+import chroma from 'chroma-js';
 import {VuetifyParsedThemeItem} from 'vuetify/types/services/theme';
 
 /** Makes a color that is visible against the provided color */
 export function visible_against(colorHex: string): string {
   // Get the color
-  let color = Chroma.hex(colorHex);
+  let color = chroma.hex(colorHex);
 
   // Rotate 50 degrees in hue (arbitrary # but seems nice)
   color = color.set('hsl.h', '+180');
@@ -38,7 +38,7 @@ function lum_sigmoid(t: number, move: number) {
 
 /** Shifts a colors luminance by the specified amount */
 export function shift(baseColor: string, amount: number): string {
-  const c = Chroma.hex(baseColor);
+  const c = chroma.hex(baseColor);
   const baseL = c.luminance();
   const newL = lum_sigmoid(baseL, amount);
   const newC = c.luminance(newL);
