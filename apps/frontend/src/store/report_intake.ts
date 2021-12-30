@@ -20,6 +20,7 @@ import {
   XCCDFResultsMapper,
   ZapMapper
 } from '@mitre/hdf-converters';
+import axios from 'axios';
 import {
   ContextualizedEvaluation,
   ContextualizedProfile,
@@ -274,6 +275,37 @@ export class InspecIntake extends VuexModule {
       }
     }
     return '';
+  }
+
+  @Action
+  async detectAndLoadPredefinedJSON() {
+    // On page load, check for the flag to load the preloaded JSON file
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    if (urlParams.get('predefinedLoad')?.toLowerCase() === 'true') {
+      return axios
+        .get('/dynamic/predefinedload.json', {
+          headers: {
+            Accept: 'application/json'
+          }
+        })
+        .then(async ({data}) => {
+          data.forEach(async (file: {filename: string; data: string}) => {
+            InspecIntakeModule.loadFile({
+              file: new File([new Blob([file.data])], file.filename)
+            });
+          });
+          return true;
+        })
+        .catch((error) => {
+          SnackbarModule.failure(
+            `An error ocurred while loading your pre-defined file: ${error}`
+          );
+          return false;
+        });
+    } else {
+      return false;
+    }
   }
 
   @Action

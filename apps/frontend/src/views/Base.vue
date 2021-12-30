@@ -102,6 +102,14 @@ export default class Base extends Vue {
       });
     }
   }
+
+  mounted() {
+    InspecIntakeModule.detectAndLoadPredefinedJSON().then((resultLoaded) => {
+      if (resultLoaded) {
+        this.$router.push('/results');
+      }
+    });
+  }
 }
 </script>
 
