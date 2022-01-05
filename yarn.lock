@@ -18533,9 +18533,9 @@ sequelize-pool@^6.0.0:
   integrity sha512-4YwEw3ZgK/tY/so+GfnSgXkdwIJJ1I32uZJztIEgZeAO6HMgj64OzySbWLgxj+tXhZCJnzRfkY9gINw8Ft8ZMg==
 
 sequelize-typescript@^2.0.0:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/sequelize-typescript/-/sequelize-typescript-2.1.1.tgz#92445632062db868b760cd20215406403da737a2"
-  integrity sha512-4am/5O6dlAvtR/akH2KizcECm4rRAjWr+oc5mo9vFVMez8hrbOhQlDNzk0H6VMOQASCN7yBF+qOnSEN60V6/vA==
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/sequelize-typescript/-/sequelize-typescript-2.1.2.tgz#fcc2d3263ccc622710328c278f83e89f632a6d5a"
+  integrity sha512-+vhugJk1LLq5EVeLWi/UrkpGLrJGVD0R3UpEGHYouf6qeLRBL1V7QCIZr0pHZA57+nJPoK4PPTD+sGHS11uvvw==
   dependencies:
     glob "7.2.0"
 
