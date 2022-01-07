@@ -150,6 +150,10 @@ docker-compose down
 ```
 ---
 
+#### Helm Chart
+
+<https://github.com/nemonik/heimdall2-helm>
+
 #### Running via Cloud.gov
 
 Cloud.gov is a [FEDRAMP moderate Platform-as-a-Service (PaaS)](https://marketplace.fedramp.gov/#!/product/18f-cloudgov?sort=productName). This repository includes a sample [manifest.yml.example](manifest.yml.example) file ready to be pushed and run the latest version of Heimdall2 as a container. Make a copy of the example file and update the key values as appropriate.
