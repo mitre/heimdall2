@@ -191,7 +191,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   get isOverlaid() {
     return this.control.extendsFrom.some(
       (extension) =>
-        extension.data.code != this.control.data.code &&
+        extension.data.code !== this.control.data.code &&
         extension.data.code !== ''
     );
   }
