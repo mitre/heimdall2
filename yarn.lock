@@ -3927,9 +3927,9 @@
     jest-diff "^24.3.0"
 
 "@types/jquery@*", "@types/jquery@^3.5.5":
-  version "3.5.12"
-  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.5.12.tgz#f5275e26f34dc30400d78ccdf29d0386a0b10098"
-  integrity sha512-AlX/K29WByFhZ3UbVVn8eywPFwhDZGc/qhDWgy5mu4VVr9b+OQZKBegtS6Tqi9pk8A1aXVrYXuLhnjFJX8Wc/w==
+  version "3.5.13"
+  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.5.13.tgz#5482d3ee325d5862f77a91c09369ae0a5b082bf3"
+  integrity sha512-ZxJrup8nz/ZxcU0vantG+TPdboMhB24jad2uSap50zE7Q9rUeYlCF25kFMSmHR33qoeOgqcdHEp3roaookC0Sg==
   dependencies:
     "@types/sizzle" "*"
 
