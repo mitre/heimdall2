@@ -264,7 +264,16 @@ export class BaseConverter {
         }
       }
     }
-    return resultingData;
+
+    const uniqueResults: T[] = [];
+    resultingData.forEach((result) => {
+      if (
+        !uniqueResults.some((uniqueResult) => _.isEqual(result, uniqueResult))
+      ) {
+        uniqueResults.push(result);
+      }
+    });
+    return uniqueResults;
   }
   handlePath(file: Record<string, unknown>, path: string | string[]): unknown {
     let pathArray;
