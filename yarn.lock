@@ -5897,14 +5897,14 @@ autoprefixer@^9.8.6:
     postcss-value-parser "^4.1.0"
 
 aws-sdk@^2.1046.0, aws-sdk@^2.573.0:
-  version "2.1060.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1060.0.tgz#3b09be037571e4046d1076138e90e6184148cb81"
-  integrity sha512-c734/CZiVSsuVnEkx/7dodI8ndgOnxiCTwwlEFlMxdAZfLLJplteFwi6c/J2GZQktvz2ysV/HVtNKcJkasYJzw==
+  version "2.1061.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1061.0.tgz#79c75e6856e5a59e0857d0d066a8ff5ff5e0d752"
+  integrity sha512-T29yV+EPo4Fis9hAArxAXS/u6utKnlBq3DEu85LTSIA8i6e6Xg7e9u7Rveo8DmrlVrf7EGCNThaeF9WERHnwLg==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
     ieee754 "1.1.13"
-    jmespath "0.15.0"
+    jmespath "0.16.0"
     querystring "0.2.0"
     sax "1.2.1"
     url "0.10.3"
@@ -13502,10 +13502,10 @@ jju@^1.1.0:
   resolved "https://registry.yarnpkg.com/jju/-/jju-1.4.0.tgz#a3abe2718af241a2b2904f84a625970f389ae32a"
   integrity sha1-o6vicYryQaKykE+EpiWXDzia4yo=
 
-jmespath@0.15.0:
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/jmespath/-/jmespath-0.15.0.tgz#a3f222a9aae9f966f5d27c796510e28091764217"
-  integrity sha1-o/Iiqarp+Wb10nx5ZRDigJF2Qhc=
+jmespath@0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/jmespath/-/jmespath-0.16.0.tgz#b15b0a85dfd4d930d43e69ed605943c802785076"
+  integrity sha512-9FzQjJ7MATs1tSpnco1K6ayiYE3figslrXA72G2HQ/n76RzvYlofyi5QM+iX4YRs/pu3yzxlVQSST23+dMDknw==
 
 jose@^4.3.6:
   version "4.3.7"
