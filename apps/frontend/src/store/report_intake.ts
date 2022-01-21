@@ -256,6 +256,8 @@ export class InspecIntake extends VuexModule {
         guessOptions.filename.toLowerCase().indexOf('xccdf') !== -1
       ) {
         return 'xccdf';
+      } else if (guessOptions.data.match(/<netsparker-.*generated.*>/)) {
+        return 'netsparker';
       } else if (
         guessOptions.data.indexOf('"AwsAccountId"') !== -1 &&
         guessOptions.data.indexOf('"SchemaVersion"') !== -1
