@@ -8,6 +8,9 @@
   >
     <!-- The title and nav bar -->
     <v-toolbar-title id="toolbar_title" class="pr-2">
+      <v-app-bar-nav-icon v-if="showBackButton" @click.stop="goBack">
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-app-bar-nav-icon>
       <v-app-bar-nav-icon
         v-if="!minimalTopbar"
         data-cy="openSidebar"
@@ -42,6 +45,7 @@ import {Prop} from 'vue-property-decorator';
 export default class Topbar extends mixins(ServerMixin) {
   @Prop({type: String, required: true}) readonly title!: string;
   @Prop({default: false}) readonly minimalTopbar!: boolean;
+  @Prop({default: false}) readonly showBackButton!: boolean;
 
   mounted() {
     this.onResize();
@@ -55,6 +59,10 @@ export default class Topbar extends mixins(ServerMixin) {
         HeightsModule.setTopbarHeight(this.$el.clientHeight);
       }, 2000);
     });
+  }
+
+  goBack() {
+    this.$router.go(-1);
   }
 
   /** Submits an event to clear all filters */
