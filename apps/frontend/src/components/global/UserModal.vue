@@ -108,9 +108,11 @@
               <template #[`item.name`]="{item}"
                 ><v-text-field v-model="item.name" @change="updateAPIKey(item)"
               /></template>
-              <template #[`item.apiKey`]="{item}">{{
-                truncate(item.apiKey) || 'Only Shown on Creation'
-              }}</template>
+              <template #[`item.apiKey`]="{item}"
+                ><span class="break-lines">{{
+                  item.apiKey || 'Only Shown on Creation'
+                }}</span></template
+              >
               <template #[`item.action`]="{item}">
                 <v-tooltip left>
                   <template #activator="{on, attrs}">
@@ -247,7 +249,6 @@ import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
 import {IApiKey, IUpdateUser, IUser} from '@heimdall/interfaces';
 import axios from 'axios';
-import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
@@ -358,10 +359,6 @@ export default class UserModal extends Vue {
           this.buttonLoading = false;
         });
     }
-  }
-
-  truncate(str: string) {
-    return _.truncate(str, {length: 80});
   }
 
   changePasswordDialog() {
@@ -494,3 +491,9 @@ export default class UserModal extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.break-lines {
+  overflow-wrap: anywhere;
+}
+</style>
