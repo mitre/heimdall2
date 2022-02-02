@@ -1,15 +1,12 @@
 /* eslint-disable prettier/prettier */
 import parser from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
-import fs from 'fs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
   ILookupPath,
-  impactMapping,
   MappedTransform,
-  parseHtml
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 
@@ -196,8 +193,18 @@ function parseXml(xml: string) {
     textNodeName: 'text',
     ignoreAttributes: false
   };
-  //fs.writeFileSync("output2.json", JSON.stringify(parser.parse(xml, options), null, 2))
-  return parser.parse(xml, options);
+  
+  const parsedXML = parser.parse(xml, options);
+  const arrayedControls = _.get(parsedXML, 'detailedreport.severity').map((control: {category: unknown, level: string}) => {
+    if (Array.isArray(control.category)) {
+      return {level: control.level, category: control.category}
+    }
+    else {
+      return {level: control.level, category: [control.category]}
+    }
+  })
+  _.set(parsedXML, 'detailedreport.severity', arrayedControls)
+  return parsedXML
 }
 
 const resultsMapping = {
@@ -209,41 +216,43 @@ const resultsMapping = {
   resource: ''
 }
 
-const controlMapping = {
-  id: {path: 'categoryid'},
-  title: {path: 'categoryname'},
-  desc: {transformer: combineDesc},
-  descriptions: [
-    {
-      data: {transformer: combineRecommendations},
-      label: 'recommendations'
-    }
-  ],
-  impact: {transformer: formatImpact},
-  refs: [],
-  tags: {
-    cweid: {transformer: combineCweData},
-    cweDescription: {transformer: combineCweDesc}
-  },
-  code: {path: ''},
-  source_location: {
-    ref: {path: ''},
-    line: null
-  },
-  results: [
-    {
-      path: 'cwe.staticflaws.flaw',
-      transformer: (text: unknown): any => {
-        if (Array.isArray(text)) {
-          return text
-        }
-        else {
-          return [text]
-        }
-      },
-      ...resultsMapping
-    }
-  ]
+function controlMapping(level: number) {
+  return {
+    id: {path: 'categoryid'},
+    title: {path: 'categoryname'},
+    desc: {transformer: combineDesc},
+    descriptions: [
+      {
+        data: {transformer: combineRecommendations},
+        label: 'recommendations'
+      }
+    ],
+    impact: {transformer: formatImpact},
+    refs: [],
+    tags: {
+      cweid: {transformer: combineCweData},
+      cweDescription: {transformer: combineCweDesc}
+    },
+    code: {path: ''},
+    source_location: {
+      ref: {path: ''},
+      line: null
+    },
+    results: [
+      {
+        path: 'cwe.staticflaws.flaw',
+        transformer: (text: unknown): any => {
+          if (Array.isArray(text)) {
+            return text
+          }
+          else {
+            return [text]
+          }
+        },
+        ...resultsMapping
+      }
+    ]
+  }
 }
 
 
@@ -276,83 +285,35 @@ export class VeracodeMapper extends BaseConverter {
         controls: [
           {
             path: 'detailedreport.severity[0].category',
-            transformer: (text: unknown): any => {
-              if (Array.isArray(text)) {
-                return text
-              }
-              else {
-                return [text]
-              }
-            },
-            ...controlMapping
+            ...controlMapping(5)
           },
           {
             path: 'detailedreport.severity[1].category',
-            transformer: (text: unknown): any => {
-              if (Array.isArray(text)) {
-                return text
-              }
-              else {
-                return [text]
-              }
-            },
-            ...controlMapping
+            ...controlMapping(4)
           },
           {
             path: 'detailedreport.severity[2].category',
-            transformer: (text: unknown): any => {
-              if (Array.isArray(text)) {
-                return text
-              }
-              else {
-                return [text]
-              }
-            },
-            ...controlMapping
+            ...controlMapping(3)
           },
           {
             path: 'detailedreport.severity[3].category',
-            transformer: (text: unknown): any => {
-              if (Array.isArray(text)) {
-                return text
-              }
-              else {
-                return [text]
-              }
-            },
-            ...controlMapping
+            ...controlMapping(2)
           },
           {
             path: 'detailedreport.severity[4].category',
-            transformer: (text: unknown): any => {
-              if (Array.isArray(text)) {
-                return text
-              }
-              else {
-                return [text]
-              }
-            },
-            ...controlMapping
+            ...controlMapping(1)
           },
           {
             path: 'detailedreport.severity[5].category',
-            transformer: (text: unknown): any => {
-              if (Array.isArray(text)) {
-                return text
-              }
-              else {
-                return [text]
-              }
-            },
-            ...controlMapping
+            ...controlMapping(0)
           },
         ],
         sha256: ''
       }
     ]
   };
-  constructor(scapXml: string) {
-    super(parseXml(scapXml));
+  constructor(xml: string) {
+    super(parseXml(xml));
   }
   setMappings(
     customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
