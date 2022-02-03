@@ -17,8 +17,8 @@
         <h2>
           View the results of an
           <a href="htps://www.inspec.io">InSpec</a> profile execution (using
-          InSpec's JSON reporter) or the results from
-          <a href="https://github.com/mitre/heimdall_tools">Heimdall Tools</a>
+          InSpec's JSON reporter) or the results from the
+          <a href="https://github.com/mitre/saf">SAF CLI</a>
           which converts scanning results from many other non-InSpec tools to a
           Heimdall Data Format JSON file.
         </h2>
