@@ -21,9 +21,12 @@
     "xml2json": "ts-node data/converters/xml2json.ts"
   },
   "dependencies": {
+    "@azure/arm-policy": "^5.0.0",
+    "@azure/arm-policyinsights": "^5.0.0",
+    "@azure/identity": "^2.0.1",
     "@types/csv2json": "^1.4.2",
     "@types/xml2js": "^0.4.9",
-    "aws-sdk": "^2.1046.0",
+    "aws-sdk": "^2.1058.0",
     "axios": "^0.24.0",
     "csv-parse": "^5.0.1",
     "csv2json": "^2.0.2",
