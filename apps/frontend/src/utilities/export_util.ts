@@ -2,12 +2,12 @@ import concat from 'concat-stream';
 import {saveAs} from 'file-saver';
 import {ZipFile} from 'yazl';
 
-type File = {
+export type ExportFile = {
   filename: string;
   data: string;
 };
 export async function saveSingleOrMultipleFiles(
-  files: File[],
+  files: ExportFile[],
   filetype: string
 ) {
   if (files.length === 1) {

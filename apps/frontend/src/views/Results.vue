@@ -44,6 +44,9 @@
             <v-list-item class="px-0">
               <ExportJson />
             </v-list-item>
+            <v-list-item class="px-0">
+              <ExportXCCDF :filter="all_filter" />
+            </v-list-item>
           </v-list>
         </v-menu>
       </div>
@@ -204,6 +207,7 @@ import ExportCSVModal from '@/components/global/ExportCSVModal.vue';
 import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
+import ExportXCCDF from '@/components/global/ExportXCCDF.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import {
   ExtendedControlStatus,
@@ -247,6 +251,7 @@ import {compare_times} from '../utilities/delta_util';
     ExportJson,
     ExportCKLModal,
     ExportHTMLModal,
+    ExportXCCDF,
     EvaluationInfo,
     ProfileData,
     UploadButton
