@@ -21,14 +21,17 @@ const COMPLIANCE_STATUS = 'Compliance.Status';
 // Use to extract control set specific data
 const FIREWALL_MANAGER_REGEX =
   /arn:.+:securityhub:.+:.*:product\/aws\/firewall-manager/;
-const SECURITYHUB_REGEX = /arn:.+:securityhub:.+:.*:product\/aws\/securityhub/;
 const PROWLER_REGEX = /arn:.+:securityhub:.+:.*:product\/prowler\/prowler/;
+const SECURITYHUB_REGEX = /arn:.+:securityhub:.+:.*:product\/aws\/securityhub/;
+const TRIVY_REGEX =
+  /arn:.+:securityhub:.+:.*:product\/aquasecurity\/aquasecurity/;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const PRODUCT_ARN_MAPPING: Map<RegExp, Record<string, Function>> = new Map([
   [FIREWALL_MANAGER_REGEX, getFirewallManager()],
+  [PROWLER_REGEX, getProwler()],
   [SECURITYHUB_REGEX, getSecurityHub()],
-  [PROWLER_REGEX, getProwler()]
+  [TRIVY_REGEX, getTrivy()]
 ]);
 
 type ExternalProductHandlerOutputs =
@@ -248,6 +251,17 @@ function getSecurityHub(): Record<string, Function> {
     findingNistTag,
     findingTitle,
     productName
+  };
+}
+// eslint-disable-next-line @typescript-eslint/ban-types
+function getTrivy(): Record<string, Function> {
+  const findingId = (finding: unknown): string => {
+    const generatorId = _.get(finding, 'GeneratorId');
+    const id = _.get(finding, 'Id');
+    return encode(`${generatorId}/${id}`);
+  };
+  return {
+    findingId
   };
 }
 
