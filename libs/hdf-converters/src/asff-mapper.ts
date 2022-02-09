@@ -257,8 +257,13 @@ function getSecurityHub(): Record<string, Function> {
 function getTrivy(): Record<string, Function> {
   const findingId = (finding: unknown): string => {
     const generatorId = _.get(finding, 'GeneratorId');
-    const id = _.get(finding, 'Id');
-    return encode(`${generatorId}/${id}`);
+    const cveId = _.get(finding, 'Resources[0].Details.Other.CVE ID');
+    if (typeof cveId === 'string') {
+      return encode(`${generatorId}/${cveId}`);
+    } else {
+      const id = _.get(finding, 'Id');
+      return encode(`${generatorId}/${id}`);
+    }
   };
   return {
     findingId
