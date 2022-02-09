@@ -287,17 +287,17 @@ function getTrivy(): Record<
         finding,
         'Resources[0].Details.Other.Patched Package'
       );
+      const patchedVersionMessage =
+        patchedPackage.length === 0
+          ? 'There is no patched version of the package.'
+          : `The package has been patched since version(s): ${patchedPackage}.`;
       return `For package ${_.get(
         finding,
         'Resources[0].Details.Other.PkgName'
       )}, the current version that is installed is ${_.get(
         finding,
         'Resources[0].Details.Other.Installed Package'
-      )}.  ${
-        patchedPackage.length === 0
-          ? 'There is no patched version of the package.'
-          : `The package has been patched since version(s): ${patchedPackage}.`
-      }`;
+      )}.  ${patchedVersionMessage}`;
     } else {
       return undefined;
     }
