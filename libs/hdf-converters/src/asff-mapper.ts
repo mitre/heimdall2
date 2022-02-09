@@ -265,8 +265,18 @@ function getTrivy(): Record<string, Function> {
       return encode(`${generatorId}/${id}`);
     }
   };
+  const findingNistTag = (finding: unknown): string[] => {
+    const cveId = _.get(finding, 'Resources[0].Details.Other.CVE ID');
+    // i.e. it is a cve finding type
+    if (typeof cveId === 'string') {
+      return ['SI-2', 'RA-5'];
+    } else {
+      return [];
+    }
+  };
   return {
-    findingId
+    findingId,
+    findingNistTag
   };
 }
 
