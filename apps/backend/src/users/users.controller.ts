@@ -91,7 +91,7 @@ export class UsersController {
     // There should be no need to create users if user login is disabled
     if (!this.configService.isLocalLoginAllowed()) {
       throw new ForbiddenException(
-        'Local user login is disabled. Please allow local user logins to create new users.'
+        'Local user login is disabled. Please disable LOCAL_LOGIN_DISABLED to use this feature.'
       );
     }
     // If registration is not allowed then validate the current user has the permission to bypass this check

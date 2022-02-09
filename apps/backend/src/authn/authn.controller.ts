@@ -32,7 +32,7 @@ export class AuthnController {
   ): Promise<{userID: string; accessToken: string}> {
     if (!this.configService.isLocalLoginAllowed()) {
       throw new ForbiddenException(
-        'Local user login is disabled. Please allow local user to login to use this feature.'
+        'Local user login is disabled. Please disable LOCAL_LOGIN_DISABLED to use this feature.'
       );
     } else {
       return this.authnService.login(req.user as User);

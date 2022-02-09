@@ -1,5 +1,6 @@
 'use strict';
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const dotenv = require('dotenv');
 const fs = require('fs');
 
@@ -26,15 +27,14 @@ module.exports = {
           envConfig.ADMIN_USES_EXTERNAL_AUTH.toLowerCase() === 'true';
       }
       const password =
-        envConfig.ADMIN_PASSWORD ||
-        require('crypto').randomBytes(16).toString('hex');
-      console.log(`New administrator email is: ${email}`);
+        envConfig.ADMIN_PASSWORD || crypto.randomBytes(16).toString('hex');
 
-      if (adminUsesExternalAuth) {
+      console.log(`New administrator email is: ${email}`);
+      if (!adminUsesExternalAuth) {
         console.log('New administrator password is: ' + password);
+        console.log('You should change this password on first login.');
       }
 
-      console.log('You should change this password on first login.');
       return queryInterface.bulkInsert(
         'Users',
         [
