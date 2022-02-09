@@ -64,19 +64,19 @@ describe('ASFF Mapper', () => {
   it('Successfully converts Trivy ASFF as Array', () => {
     const mapper = new ASFFMapper(
       fs.readFileSync(
-        'sample_jsons/asff_mapper/sample_input_report/trivy_sample.json',
+        'sample_jsons/asff_mapper/sample_input_report/trivy-image_golang-1.12-alpine_sample.json',
         {encoding: 'utf-8'}
       ),
       undefined,
       {name: 'Trivy', title: 'Trivy Findings'}
     );
-    fs.writeFileSync('sample_jsons/asff_mapper/trivy-hdf.json', JSON.stringify(mapper.toHdf()), {encoding: 'utf-8'}) // TODO: remove when approval received for changes
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/asff_mapper/trivy-hdf.json', {
-            encoding: 'utf-8'
-          })
+          fs.readFileSync(
+            'sample_jsons/asff_mapper/trivy-image_golang-1.12-alpine-hdf.json',
+            {encoding: 'utf-8'}
+          )
         )
       )
     );
