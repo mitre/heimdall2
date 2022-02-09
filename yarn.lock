@@ -14435,6 +14435,11 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
+lru-cache@^7.3.0:
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.3.0.tgz#475ed4a39610204d8d23b243e902ed074dd8052d"
+  integrity sha512-itGqsGM9i3Jt0ZbEkYRKQ3K/Q61vOLNuUkmK0jyjt1VH76gfcvjHmPC6e9uvjSrKOP2aN3T9L1vN0nxQSkrAjA==
+
 lru-queue@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/lru-queue/-/lru-queue-0.1.0.tgz#2738bd9f0d3cf4f84490c5736c48699ac632cda3"
