@@ -256,6 +256,7 @@ function getSecurityHub(): Record<string, Function> {
 }
 // eslint-disable-next-line @typescript-eslint/ban-types
 function getTrivy(): Record<string, Function> {
+  // Trivy's ASFF template specifies only one item wihin the Resources array
   const findingId = (finding: unknown): string => {
     const generatorId = _.get(finding, 'GeneratorId');
     const cveId = _.get(finding, 'Resources[0].Details.Other.CVE ID');
