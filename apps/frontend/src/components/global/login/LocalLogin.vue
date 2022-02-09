@@ -2,6 +2,7 @@
   <v-card class="elevation-12 rounded-t-0">
     <v-card-text>
       <v-form
+        v-if="localLoginEnabled"
         id="login_form"
         ref="form"
         name="login_form"
@@ -46,11 +47,15 @@
           </v-btn>
         </v-container>
       </v-form>
+      <v-banner v-else>
+        NOTE: This Heimdall instance is in an external-authentication only mode.
+        Local user login is not available.
+      </v-banner>
     </v-card-text>
     <v-card-actions>
       <v-container fluid>
         <div
-          v-if="registrationEnabled"
+          v-if="registrationEnabled && localLoginEnabled"
           class="d-flex align-end flex-column mb-2"
         >
           <router-link to="/signup">
@@ -59,7 +64,9 @@
         </div>
         <v-spacer />
         <div v-show="showAlternateAuth">
-          <v-row align="center"> <v-divider />OR<v-divider /> </v-row>
+          <v-row v-if="localLoginEnabled" align="center">
+            <v-divider />OR<v-divider />
+          </v-row>
           <div class="d-flex justify-content-center flex-wrap">
             <v-btn
               v-if="authStrategySupported('oidc')"
@@ -183,6 +190,10 @@ export default class LocalLogin extends Vue {
 
   get showAlternateAuth() {
     return ServerModule.enabledOAuth.length !== 0;
+  }
+
+  get localLoginEnabled() {
+    return ServerModule.localLoginEnabled;
   }
 
   authStrategySupported(strategy: string) {

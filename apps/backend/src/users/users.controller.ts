@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
   Post,
@@ -87,6 +88,12 @@ export class UsersController {
     const abac = request.user
       ? this.authz.abac.createForUser(request.user)
       : this.authz.abac.createForAnonymous();
+    // There should be no need to create users if user login is disabled
+    if (!this.configService.isLocalLoginAllowed()) {
+      throw new ForbiddenException(
+        'Local user login is disabled. Please allow local user logins to create new users.'
+      );
+    }
     // If registration is not allowed then validate the current user has the permission to bypass this check
     if (!this.configService.isRegistrationAllowed()) {
       ForbiddenError.from(abac)
