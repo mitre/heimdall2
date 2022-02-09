@@ -254,8 +254,11 @@ function getSecurityHub(): Record<string, Function> {
     productName
   };
 }
-// eslint-disable-next-line @typescript-eslint/ban-types
-function getTrivy(): Record<string, Function> {
+
+function getTrivy(): Record<
+  string,
+  (finding: unknown) => string | string[] | undefined
+> {
   const findingId = (finding: unknown): string => {
     const generatorId = _.get(finding, 'GeneratorId');
     const cveId = _.get(finding, 'Resources[0].Details.Other.CVE ID');
@@ -466,13 +469,12 @@ export class ASFFMapper extends BaseConverter {
                         return ExecJSON.ControlResultStatus.Skipped;
                       }
                     };
-                    const status = this.externalProductHandler(
+                    return this.externalProductHandler(
                       _.get(finding, 'ProductArn'),
                       finding,
                       'subfindingsStatus',
                       defaultFunc
                     ) as ExecJSON.ControlResultStatus;
-                    return status;
                   }
                 },
                 code_desc: {
@@ -527,13 +529,12 @@ export class ASFFMapper extends BaseConverter {
                           return statusReason;
                       }
                     };
-                    const message = this.externalProductHandler(
+                    return this.externalProductHandler(
                       _.get(finding, 'ProductArn'),
                       finding,
                       'subfindingsMessage',
                       defaultFunc
                     ) as string | undefined;
-                    return message;
                   }
                 },
                 skip_message: {
