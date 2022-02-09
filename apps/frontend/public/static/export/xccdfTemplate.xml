@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type='text/xsl' href='STIG_unclass.xsl'?>
+{{#profiles}}
 <Benchmark xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cpe="http://cpe.mitre.org/language/2.0" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="http://checklists.nist.gov/xccdf/1.1 http://nvd.nist.gov/schema/xccdf-1.1.4.xsd http://cpe.mitre.org/dictionary/2.0 http://cpe.mitre.org/files/cpe-dictionary_2.1.xsd" id="RHEL_8_STIG" xml:lang="en" xmlns="http://checklists.nist.gov/xccdf/1.1">
-   <status date="2021-06-14">accepted</status>
-   <title>{{profile.title}}</title>
-   <description>{{profile.description}}</description>
+   <status date="{{date}}">accepted</status>
+   <title>{{title}}</title>
+   <description>{{description}}</description>
    <notice id="terms-of-use" xml:lang="en"></notice>
    <front-matter xml:lang="en"></front-matter>
    <rear-matter xml:lang="en"></rear-matter>
    <reference href="https://cyber.mil">
-      <dc:publisher>{{profile.maintainer}}</dc:publisher>
-      <dc:source>{{profile.source}}</dc:source>
+      <dc:publisher>{{maintainer}}</dc:publisher>
+      <dc:source>{{source}}</dc:source>
    </reference>
-   <version>1</version>
+   <version>{{hdfConvertersVersion}}</version>
    <Profile id="MAC-1_Classified">
       <title>I - Mission Critical Classified</title>
       <description>&lt;ProfileDescription&gt;&lt;/ProfileDescription&gt;</description>
@@ -95,3 +96,4 @@
    </Group>
    {{/groups}}
 </Benchmark>
+{{/profiles}}

@@ -2,7 +2,7 @@ import {version as HDFConvertersVersion} from '@mitre/hdf-converters/package.jso
 import {ExecJSON, Severity} from 'inspecjs';
 import _ from 'lodash';
 import Mustache from 'mustache';
-import {Identifier, XCCDFData} from './xccdf-types';
+import {Identifier, XCCDFData, XCCDFProfile} from './xccdf-types';
 
 export type XCCDFSeverities = 'unknown' | 'info' | 'low' | 'medium' | 'high';
 
@@ -78,14 +78,8 @@ export class FromHDFToXCCDFMapper {
   data: ExecJSON.Execution;
   xccdfTemplate: string;
   xccdfData: XCCDFData = {
-    profile: {
-      title: '',
-      description: '',
-      maintainer: '',
-      source: '',
-      converterVersion: HDFConvertersVersion
-    },
-    groups: []
+    hdfConvertersVersion: HDFConvertersVersion,
+    profiles: []
   };
 
   constructor(hdf: ExecJSON.Execution, xccdfTemplate: string) {
@@ -94,41 +88,42 @@ export class FromHDFToXCCDFMapper {
   }
 
   processHDF(hdf: ExecJSON.Execution): void {
-    const topProfile = hdf.profiles[0];
-
-    // Get profile information
-    this.xccdfData.profile.title = topProfile.title || '';
-    this.xccdfData.profile.description = topProfile.description || '';
-    this.xccdfData.profile.maintainer = topProfile.maintainer || '';
-    if (topProfile.copyright && topProfile.copyright_email) {
-      this.xccdfData.profile.maintainer = topProfile.maintainer || '';
-    }
-    this.xccdfData.profile.source = topProfile.copyright || '';
-
-    hdf.profiles[0].controls.forEach((control) => {
-      const controlId = _.get(control.tags, 'rid') || `${control.id}_rule`; // Splitting by underscore and checking for 'rule' is hardcoded into STIG Viewer
-      const group = {
-        id: control.id,
-        title: _.get(control.tags, 'gtitle'),
-        control: {
-          id: controlId,
-          title: control.title || 'N/A',
-          identifiers: getReferences(control),
-          description: generateRuleDescription(control),
-          severity: hdfSeverityToXCCDFSeverity(control.tags.severity),
-          checkContent:
-            control.descriptions?.find(
-              (desc) => desc.label.toLowerCase() === 'check'
-            )?.data || 'N/A',
-          checkId: control.tags.checkid || 'N/A',
-          fixContent:
-            control.descriptions?.find(
-              (desc) => desc.label.toLowerCase() === 'fix'
-            )?.data || 'N/A',
-          fixId: control.tags.fixid || 'N/A'
-        }
+    hdf.profiles.reverse().forEach((profile) => {
+      // Get profile information
+      const xccdfProfile: XCCDFProfile = {
+        title: profile.title || 'N/A',
+        description: profile.description || 'N/A',
+        maintainer: profile.maintainer || 'N/A',
+        source: profile.copyright_email || 'N/A',
+        date: new Date().toISOString().split('T')[0],
+        groups: []
       };
-      this.xccdfData.groups.push(group);
+      profile.controls.forEach((control) => {
+        const controlId = _.get(control.tags, 'rid', `${control.id}_rule`); // Splitting by underscore and checking for 'rule' is hardcoded into STIG Viewer
+        const group = {
+          id: control.id,
+          title: _.get(control.tags, 'gtitle', control.title),
+          control: {
+            id: controlId,
+            title: control.title || 'N/A',
+            identifiers: getReferences(control),
+            description: generateRuleDescription(control),
+            severity: hdfSeverityToXCCDFSeverity(control.tags.severity),
+            checkContent:
+              control.descriptions?.find(
+                (desc) => desc.label.toLowerCase() === 'check'
+              )?.data || 'N/A',
+            checkId: control.tags.checkid || 'N/A',
+            fixContent:
+              control.descriptions?.find(
+                (desc) => desc.label.toLowerCase() === 'fix'
+              )?.data || 'N/A',
+            fixId: control.tags.fixid || 'N/A'
+          }
+        };
+        xccdfProfile.groups.push(group);
+      });
+      this.xccdfData.profiles.push(xccdfProfile);
     });
   }
 
