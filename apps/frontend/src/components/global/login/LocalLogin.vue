@@ -48,8 +48,13 @@
         </v-container>
       </v-form>
       <v-banner v-else>
-        NOTE: This Heimdall instance is in an external-authentication only mode.
-        Local user login is not available.
+        <v-layout>
+          NOTE: This Heimdall instance is in an external-authentication only
+          mode.
+          <v-icon class="mr-3" @click="openExternalAuthModeDocumentation"
+            >mdi-help-circle-outline</v-icon
+          >
+        </v-layout>
       </v-banner>
     </v-card-text>
     <v-card-actions>
@@ -194,6 +199,12 @@ export default class LocalLogin extends Vue {
 
   get localLoginEnabled() {
     return ServerModule.localLoginEnabled;
+  }
+
+  openExternalAuthModeDocumentation() {
+    window.open(
+      'https://github.com/mitre/heimdall2/wiki/External-Authentication-Only'
+    );
   }
 
   authStrategySupported(strategy: string) {
