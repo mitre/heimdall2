@@ -26,6 +26,8 @@ import {
   statusCount
 } from './transformers';
 
+export const TO_ASFF_TYPES_SLASH_REPLACEMENT = '{{{SLASH}}}'; // The "Types" field of ASFF only supports a maximum of 2 slashes, and will get replaced with this text. Note that the default AWS CLI doesn't support UTF-8 encoding
+
 export type SegmentedControl = ExecJSON.Control & {
   result: ExecJSON.ControlResult;
   layersOfControl: (ExecJSON.Control & {

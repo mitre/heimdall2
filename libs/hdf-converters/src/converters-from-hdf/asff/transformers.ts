@@ -9,7 +9,11 @@ import {
 import _ from 'lodash';
 import moment from 'moment';
 import {IFindingASFF, IOptions} from './asff-types';
-import {FromHdfToAsffMapper, SegmentedControl} from './reverse-asff-mapper';
+import {
+  FromHdfToAsffMapper,
+  SegmentedControl,
+  TO_ASFF_TYPES_SLASH_REPLACEMENT
+} from './reverse-asff-mapper';
 
 //FromHdfToAsff mapper transformers
 type Counts = {
@@ -362,7 +366,7 @@ function createProfileInfo(hdf?: ExecJSON.Execution): string[] {
     typesArr.push(
       `Profile/Info/${JSON.stringify(profileInfos).replace(
         /\//g,
-        '{{{SLASH}}}'
+        TO_ASFF_TYPES_SLASH_REPLACEMENT
       )}`
     );
   });
@@ -396,7 +400,7 @@ function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
     typesArr.push(
       `${profile.name}/inputs/${JSON.stringify(inputs).replace(
         /\//g,
-        '{{{SLASH}}}'
+        TO_ASFF_TYPES_SLASH_REPLACEMENT
       )}`
     );
   });
@@ -419,7 +423,12 @@ function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
   targets.forEach((target) => {
     const value = _.get(segment, target);
     if (typeof value === 'string' && value) {
-      typesArr.push(`Segment/${target}/${value.replace(/\//g, '{{{SLASH}}}')}`);
+      typesArr.push(
+        `Segment/${target}/${value.replace(
+          /\//g,
+          TO_ASFF_TYPES_SLASH_REPLACEMENT
+        )}`
+      );
     }
   });
   return typesArr;
@@ -435,20 +444,20 @@ function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
         typesArr.push(`Tags/cci/${control.tags.cci.join(', ')}`);
       } else if (typeof control.tags[tag] === 'string') {
         typesArr.push(
-          `Tags/${tag.replace(/\//g, '{{{SLASH}}}')}/${(
+          `Tags/${tag.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}/${(
             control.tags[tag] as string
-          ).replace(/\//g, '{{{SLASH}}}')}`
+          ).replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}`
         );
       } else if (
         typeof control.tags[tag] === 'object' &&
         Array.isArray(control.tags[tag])
       ) {
         typesArr.push(
-          `Tags/${tag.replace(/\//g, '{{{SLASH}}}')}/${(
+          `Tags/${tag.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}/${(
             control.tags[tag] as Array<string>
           )
             .join(', ')
-            .replace(/\//g, '{{{SLASH}}}')}`
+            .replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}`
         );
       }
     }
@@ -462,8 +471,11 @@ function createDescriptionInfo(control: ExecJSON.Control): string[] {
     typesArr.push(
       `Descriptions/${description.label.replace(
         /\//g,
-        '{{{SLASH}}}'
-      )}/${cleanText(description.data)?.replace(/\//g, '{{{SLASH}}}')}`
+        TO_ASFF_TYPES_SLASH_REPLACEMENT
+      )}/${cleanText(description.data)?.replace(
+        /\//g,
+        TO_ASFF_TYPES_SLASH_REPLACEMENT
+      )}`
     );
   });
   return typesArr;
@@ -487,7 +499,7 @@ export function setupFindingType(
           createCode(layer)
       )
       .join('\n\n')
-      .replace(/\//g, '{{{SLASH}}}')}`
+      .replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}`
   ];
 
   // Add all layers of profile info to the Finding Provider Fields
