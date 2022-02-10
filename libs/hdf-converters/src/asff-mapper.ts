@@ -18,6 +18,8 @@ const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 const SEVERITY_LABEL = 'Severity.Label';
 const COMPLIANCE_STATUS = 'Compliance.Status';
 
+const FROM_ASFF_TYPES_SLASH_REPLACEMENT = /{{{SLASH}}}/gi; // The "Types" field of ASFF only supports a maximum of 2 slashes, and will get replaced with this text. Note that the default AWS CLI doesn't support UTF-8 encoding
+
 // Use to extract control set specific data
 const FIREWALL_MANAGER_REGEX =
   /arn:.+:securityhub:.+:.*:product\/aws\/firewall-manager/;
@@ -41,13 +43,29 @@ type ExternalProductHandlerOutputs =
   | string
   | string[];
 
+function replaceTypesSlashes(data: {Findings: {Types?: string[]}[]}) {
+  const findings = data.Findings.map((finding) => {
+    return {
+      ...finding,
+      Types: finding.Types?.map((type) =>
+        type.replace(FROM_ASFF_TYPES_SLASH_REPLACEMENT, '/')
+      )
+    };
+  });
+  return {Findings: findings};
+}
+
 function fixFileInput(asffJson: string) {
   try {
     let output = JSON.parse(asffJson);
     if (!_.has(output, 'Findings')) {
-      output = {Findings: [output]};
+      if (Array.isArray(output)) {
+        output = {Findings: output};
+      } else {
+        output = {Findings: [output]};
+      }
     }
-    return output;
+    return replaceTypesSlashes(output);
   } catch {
     // Prowler gives us JSON Lines format but we need regular JSON
     const fixedInput = `[${asffJson
@@ -56,9 +74,14 @@ function fixFileInput(asffJson: string) {
       .replace(/\},\n\$/g, '')}]`;
     let output = JSON.parse(fixedInput);
     if (!_.has(output, 'Findings')) {
-      output = {Findings: output};
+      if (Array.isArray(output)) {
+        output = {Findings: output};
+      } else {
+        output = {Findings: [output]};
+      }
     }
-    return output;
+    // Pre-process all types fields, fixes
+    return replaceTypesSlashes(output);
   }
 }
 // eslint-disable-next-line @typescript-eslint/ban-types
