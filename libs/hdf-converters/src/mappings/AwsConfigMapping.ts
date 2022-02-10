@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {default as data} from '../../data/aws-config-mapping.json';
 import {AwsConfigMappingItem} from './AwsConfigMappingItem';
 
@@ -6,7 +7,7 @@ export class AwsConfigMapping {
 
   constructor() {
     this.data = [];
-    Object.entries(data).forEach((item) => {
+    Object.entries(_.cloneDeep(data) as any[]).forEach((item) => {
       this.data.push(
         new AwsConfigMappingItem(
           item[1].AwsConfigRuleSourceIdentifier,
