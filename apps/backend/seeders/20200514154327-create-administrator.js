@@ -10,10 +10,21 @@ module.exports = {
       'SELECT COUNT(id) FROM "Users" WHERE role = \'admin\'',
       {type: queryInterface.sequelize.QueryTypes.SELECT}
     );
-    const envConfig = {
-      ...dotenv.parse(fs.readFileSync('.env')),
-      ...process.env
-    };
+
+    let envConfig = {};
+    try {
+      envConfig = dotenv.parse(fs.readFileSync('.env'));
+      console.log('Read config!');
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        // File probably does not exist
+        console.log('Unable to read configuration file `.env`!');
+        console.log('Falling back to environment or undefined values!');
+      } else {
+        throw error;
+      }
+    }
+    envConfig = {...envConfig, ...process.env};
 
     if (result[0].count === '0') {
       console.log('No administrator user exists! Creating an administrator.');
