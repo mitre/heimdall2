@@ -352,7 +352,10 @@ function createProfileInfo(hdf?: ExecJSON.Execution): string[] {
       }
     });
     typesArr.push(
-      `Profile/Info/${JSON.stringify(profileInfos).replace(/\//g, '∕')}`
+      `Profile/Info/${JSON.stringify(profileInfos).replace(
+        /\//g,
+        '{{{SLASH}}}'
+      )}`
     );
   });
   return typesArr;
@@ -383,7 +386,10 @@ function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
       }
     });
     typesArr.push(
-      `${profile.name}/inputs/${JSON.stringify(inputs).replace(/\//g, '∕')}`
+      `${profile.name}/inputs/${JSON.stringify(inputs).replace(
+        /\//g,
+        '{{{SLASH}}}'
+      )}`
     );
   });
   typesArr = typesArr.slice(0, 50);
@@ -405,7 +411,7 @@ function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
   targets.forEach((target) => {
     const value = _.get(segment, target);
     if (typeof value === 'string' && value) {
-      typesArr.push(`Segment/${target}/${value.replace(/\//g, '∕')}`);
+      typesArr.push(`Segment/${target}/${value.replace(/\//g, '{{{SLASH}}}')}`);
     }
   });
   return typesArr;
@@ -421,20 +427,20 @@ function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
         typesArr.push(`Tags/cci/${control.tags.cci.join(', ')}`);
       } else if (typeof control.tags[tag] === 'string') {
         typesArr.push(
-          `Tags/${tag.replace(/\//g, '∕')}/${(
+          `Tags/${tag.replace(/\//g, '{{{SLASH}}}')}/${(
             control.tags[tag] as string
-          ).replace(/\//g, '∕')}`
+          ).replace(/\//g, '{{{SLASH}}}')}`
         );
       } else if (
         typeof control.tags[tag] === 'object' &&
         Array.isArray(control.tags[tag])
       ) {
         typesArr.push(
-          `Tags/${tag.replace(/\//g, '∕')}/${(
+          `Tags/${tag.replace(/\//g, '{{{SLASH}}}')}/${(
             control.tags[tag] as Array<string>
           )
             .join(', ')
-            .replace(/\//g, '∕')}`
+            .replace(/\//g, '{{{SLASH}}}')}`
         );
       }
     }
@@ -446,9 +452,10 @@ function createDescriptionInfo(control: ExecJSON.Control): string[] {
   const typesArr: string[] = [];
   control.descriptions?.forEach((description) => {
     typesArr.push(
-      `Descriptions/${description.label.replace(/\//g, '∕')}/${cleanText(
-        description.data
-      )?.replace(/\//g, '∕')}`
+      `Descriptions/${description.label.replace(
+        /\//g,
+        '{{{SLASH}}}'
+      )}/${cleanText(description.data)?.replace(/\//g, '{{{SLASH}}}')}`
     );
   });
   return typesArr;
@@ -472,7 +479,7 @@ export function setupFindingType(
           createCode(layer)
       )
       .join('\n\n')
-      .replace(/\//g, '∕')}`
+      .replace(/\//g, '{{{SLASH}}}')}`
   ];
 
   // Add all layers of profile info to the Finding Provider Fields
