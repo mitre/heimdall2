@@ -43,11 +43,11 @@ type ExternalProductHandlerOutputs =
   | string
   | string[];
 
-function replaceTypesSlashes(data: {Findings: {Types: string[]}[]}) {
+function replaceTypesSlashes(data: {Findings: {Types?: string[]}[]}) {
   const findings = data.Findings.map((finding) => {
     return {
       ...finding,
-      Types: finding.Types.map((type) =>
+      Types: finding.Types?.map((type) =>
         type.replace(FROM_ASFF_TYPES_SLASH_REPLACEMENT, '/')
       )
     };
@@ -59,7 +59,11 @@ function fixFileInput(asffJson: string) {
   try {
     let output = JSON.parse(asffJson);
     if (!_.has(output, 'Findings')) {
-      output = {Findings: [output]};
+      if (Array.isArray(output)) {
+        output = {Findings: output};
+      } else {
+        output = {Findings: [output]};
+      }
     }
     return replaceTypesSlashes(output);
   } catch {
@@ -70,7 +74,11 @@ function fixFileInput(asffJson: string) {
       .replace(/\},\n\$/g, '')}]`;
     let output = JSON.parse(fixedInput);
     if (!_.has(output, 'Findings')) {
-      output = {Findings: output};
+      if (Array.isArray(output)) {
+        output = {Findings: output};
+      } else {
+        output = {Findings: [output]};
+      }
     }
     // Pre-process all types fields, fixes
     return replaceTypesSlashes(output);
