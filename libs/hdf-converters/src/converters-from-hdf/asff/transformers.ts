@@ -190,18 +190,26 @@ export function cleanText(text?: string | null): string | undefined {
 export function getAllLayers(
   hdf: ExecJSON.Execution,
   knownControl: ExecJSON.Control
-): ExecJSON.Control[] {
+): (ExecJSON.Control & Record<string, unknown>)[] {
   if (hdf.profiles.length === 1) {
-    return [{...knownControl, ..._.omit(hdf.profiles, 'controls')}];
+    return [
+      {
+        ...knownControl,
+        profileInfo: {
+          ..._.omit(hdf.profiles[0], 'controls')
+        }
+      }
+    ];
   } else {
-    const foundControls: (ExecJSON.Control & {
-      profileInfo?: Record<string, unknown>;
-    })[] = [];
+    const foundControls: (ExecJSON.Control & Record<string, unknown>)[] = [];
     // For each control in each profile
     hdf.profiles.forEach((profile) => {
       profile.controls.forEach((control) => {
         if (control.id === knownControl.id) {
-          foundControls.push(control);
+          foundControls.push({
+            ...control,
+            profileInfo: {..._.omit(profile, 'controls')}
+          });
         }
       });
     });
