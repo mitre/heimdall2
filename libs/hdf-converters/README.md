@@ -1,5 +1,8 @@
 # HDF Converters
-HDF Converters supplies several methods to convert output from various tools to and from "Heimdall Data Format" (HDF). HDF Converters can be used in a variety of tools, and is currently well integrated with Heimdall itself, and the [SAF CLI](https://github.com/mitre/saf).
+
+"[Heimdall Data Format (HDF)](https://saf.mitre.org/#/normalize)" is our common data format to preserve and transform security data.
+
+HDF Converters supplies several methods to convert various types of security tool data to and from this HDF standard. HDF Converters can be used in a variety of tools, and is currently well integrated with Heimdall itself, and the [SAF CLI](https://github.com/mitre/saf).
 
 ### NOTICE
 
