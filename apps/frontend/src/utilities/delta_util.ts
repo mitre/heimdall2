@@ -4,7 +4,11 @@
 
 import {SourcedContextualizedEvaluation} from '@/store/report_intake';
 import {calculateCompliance} from '@/store/status_counts';
-import {ContextualizedControl, ContextualizedEvaluation} from 'inspecjs';
+import {
+  ContextualizedControl,
+  ContextualizedEvaluation,
+  ContextualizedProfile
+} from 'inspecjs';
 import {DateTime} from 'luxon';
 
 export const NOT_SELECTED = 'not selected';
@@ -152,13 +156,17 @@ export class ControlDelta {
 }
 
 export function get_eval_start_time(
-  ev: ContextualizedEvaluation
+  ev: ContextualizedEvaluation | ContextualizedProfile
 ): string | null {
   for (const prof of ev.contains) {
-    for (const ctrl of prof.contains) {
-      if (ctrl.hdf.segments!.length) {
-        return ctrl.hdf.segments![0].start_time;
+    if ('contains' in prof) {
+      for (const ctrl of prof.contains) {
+        if (ctrl.hdf.segments!.length) {
+          return ctrl.hdf.segments![0].start_time;
+        }
       }
+    } else {
+      return null;
     }
   }
   return null;

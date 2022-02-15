@@ -16,11 +16,21 @@ export type XCCDFGroup = {
 
 export type XCCDFProfile = {
   title: string;
-  description: string;
+  description?: string;
   maintainer: string;
   date: string;
   source: string;
   groups: XCCDFGroup[];
+  resultId: string;
+  hasResults: boolean;
+  results: Result[];
+};
+
+export type Result = {
+  controlId: string; // Reference back to original control
+  severity: string;
+  result: string;
+  identifiers: Identifier[];
 };
 
 export type XCCDFData = {

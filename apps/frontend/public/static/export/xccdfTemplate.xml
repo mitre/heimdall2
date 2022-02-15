@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type='text/xsl' href='STIG_unclass.xsl'?>
 {{#profiles}}
-<Benchmark xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cpe="http://cpe.mitre.org/language/2.0" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="http://checklists.nist.gov/xccdf/1.1 http://nvd.nist.gov/schema/xccdf-1.1.4.xsd http://cpe.mitre.org/dictionary/2.0 http://cpe.mitre.org/files/cpe-dictionary_2.1.xsd" id="RHEL_8_STIG" xml:lang="en" xmlns="http://checklists.nist.gov/xccdf/1.1">
+<Benchmark xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cpe="http://cpe.mitre.org/language/2.0" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xsi:schemaLocation="http://checklists.nist.gov/xccdf/1.1 http://nvd.nist.gov/schema/xccdf-1.1.4.xsd http://cpe.mitre.org/dictionary/2.0 http://cpe.mitre.org/files/cpe-dictionary_2.1.xsd" id="XCCDF_HDF_EXPORT_STIG" xml:lang="en" xmlns="http://checklists.nist.gov/xccdf/1.1">
    <status date="{{date}}">accepted</status>
    <title>{{title}}</title>
    <description>{{description}}</description>
@@ -87,7 +87,7 @@
          {{#control.identifiers}}
          <ident system="{{{system}}}">{{value}}</ident>
          {{/control.identifiers}}
-         <fixtext fixref="{{{control.checkId}}}">{{control.checkContent}}</fixtext>
+         <fixtext fixref="{{{control.fixId}}}">{{control.checkContent}}</fixtext>
          <fix id="{{{control.fixId}}}" />
          <check system="{{{control.checkId}}}">
             <check-content>{{control.checkContent}}</check-content>
@@ -95,5 +95,17 @@
       </Rule>
    </Group>
    {{/groups}}
+   {{#hasResults}}
+   <TestResult id="{{resultId}}">
+      {{#results}}
+      <rule-result idref="{{controlId}}" severity="{{severity}}">
+         <result>{{result}}</result>
+         {{#identifiers}}
+         <ident system="{{{system}}}">{{value}}</ident>
+         {{/identifiers}}
+      </rule-result>
+      {{/results}}
+    </TestResult>
+   {{/hasResults}}
 </Benchmark>
 {{/profiles}}

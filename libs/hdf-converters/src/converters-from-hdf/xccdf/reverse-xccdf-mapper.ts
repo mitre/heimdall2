@@ -1,12 +1,30 @@
 import {version as HDFConvertersVersion} from '@mitre/hdf-converters/package.json';
-import {ExecJSON, Severity} from 'inspecjs';
+import {
+  AnyControl,
+  ContextualizedControl,
+  ContextualizedEvaluation,
+  ContextualizedProfile,
+  HDFControlSegment,
+  Severity
+} from 'inspecjs';
+import {ControlResultStatus} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
 import Mustache from 'mustache';
+import {v4 as uuid} from 'uuid';
 import {Identifier, XCCDFData, XCCDFProfile} from './xccdf-types';
 
 export type XCCDFSeverities = 'unknown' | 'info' | 'low' | 'medium' | 'high';
+export type XCCDFStatus =
+  | 'pass'
+  | 'fail'
+  | 'unknown'
+  | 'error'
+  | 'not applicable'
+  | 'notchecked'
+  | 'notselected'
+  | 'informational';
 
-export function getReferences(control: ExecJSON.Control): Identifier[] {
+export function getReferences(control: AnyControl): Identifier[] {
   const references: Identifier[] = [];
 
   control.tags.cci?.forEach((cci: string) => {
@@ -15,6 +33,8 @@ export function getReferences(control: ExecJSON.Control): Identifier[] {
       value: cci
     });
   });
+
+  console.log(references);
 
   return references;
 }
@@ -41,6 +61,20 @@ export function escapeXml(input?: string | null): string {
   return 'N/A';
 }
 
+export function hdfImpactToXCCDFSeverity(impact: number): XCCDFSeverities {
+  if (impact < 0.1) {
+    return 'info';
+  } else if (impact < 0.4) {
+    return 'low';
+  } else if (impact < 0.7) {
+    return 'medium';
+  } else if (impact <= 1) {
+    return 'high';
+  } else {
+    return 'unknown';
+  }
+}
+
 export function hdfSeverityToXCCDFSeverity(
   severity?: Severity
 ): XCCDFSeverities {
@@ -60,7 +94,7 @@ export function hdfSeverityToXCCDFSeverity(
   }
 }
 
-export function generateRuleDescription(control: ExecJSON.Control): string {
+export function generateRuleDescription(control: AnyControl): string {
   return `<VulnDiscussion>${escapeXml(control.desc)}</VulnDiscussion>
   <FalsePositives></FalsePositives>
   <FalseNegatives></FalseNegatives>
@@ -74,57 +108,205 @@ export function generateRuleDescription(control: ExecJSON.Control): string {
   <IAControls></IAControls>`;
 }
 
+export function extractTagOrDesc(
+  tags: {[key: string]: any} | {[key: string]: any}[] | null | undefined,
+  label: string
+) {
+  return (
+    (Array.isArray(tags)
+      ? tags.find((desc) => desc.label === label)?.data
+      : (tags || {[label]: null})[label]) || null
+  );
+}
+
+export function getAllSegments(
+  control: ContextualizedControl,
+  level = 0
+): HDFControlSegment[] {
+  // Sanity check, we shouldn't loop this many times
+  if (level >= 500) {
+    throw new Error(
+      'Recursive loop detected while extracting segments for XCCDF export'
+    );
+  }
+  const segments: HDFControlSegment[] = [];
+  segments.push(...(control.hdf.segments || []));
+  control.extendsFrom.forEach((control) => {
+    segments.push(...getAllSegments(control, level + 1));
+  });
+  return segments;
+}
+
+export function getStatus(segments: HDFControlSegment[]): XCCDFStatus {
+  let status: XCCDFStatus = 'fail';
+
+  // All segments passed
+  if (
+    segments.every((segment) => segment.status === ControlResultStatus.Passed)
+  ) {
+    status = 'pass';
+  }
+  // Any segments errored
+  if (
+    segments.some((segment) => segment.status === ControlResultStatus.Error)
+  ) {
+    status = 'error';
+  }
+
+  // If all segments are skipped
+  if (
+    segments.every((segment) => segment.status === ControlResultStatus.Skipped)
+  ) {
+    status = 'notselected';
+  }
+  // If some segments skip but the rest pass
+  else if (
+    segments.every(
+      (segment) =>
+        segment.status === ControlResultStatus.Skipped ||
+        segment.status === ControlResultStatus.Passed
+    )
+  ) {
+    status = 'pass';
+  }
+  return status;
+}
+
 export class FromHDFToXCCDFMapper {
-  data: ExecJSON.Execution;
+  data: ContextualizedEvaluation | ContextualizedProfile;
   xccdfTemplate: string;
   xccdfData: XCCDFData = {
     hdfConvertersVersion: HDFConvertersVersion,
     profiles: []
   };
 
-  constructor(hdf: ExecJSON.Execution, xccdfTemplate: string) {
+  constructor(
+    hdf: ContextualizedEvaluation | ContextualizedProfile,
+    xccdfTemplate: string
+  ) {
     this.data = hdf;
     this.xccdfTemplate = xccdfTemplate;
   }
 
-  processHDF(hdf: ExecJSON.Execution): void {
-    hdf.profiles.reverse().forEach((profile) => {
-      // Get profile information
-      const xccdfProfile: XCCDFProfile = {
-        title: profile.title || 'N/A',
-        description: profile.description || 'N/A',
-        maintainer: profile.maintainer || 'N/A',
-        source: profile.copyright_email || 'N/A',
+  processHDF(hdf: ContextualizedProfile | ContextualizedEvaluation): void {
+    console.log(hdf);
+    // If we have a profile JSON
+    let xccdfProfile: XCCDFProfile | undefined;
+    if ('extendedBy' in hdf) {
+      xccdfProfile = {
+        title: hdf.data.title || 'N/A',
+        maintainer: hdf.data.maintainer || 'N/A',
+        groups: [],
         date: new Date().toISOString().split('T')[0],
-        groups: []
+        hasResults: false,
+        resultId: uuid(),
+        source: hdf.data.copyright_email || 'N/A',
+        results: []
       };
-      profile.controls.forEach((control) => {
-        const controlId = _.get(control.tags, 'rid', `${control.id}_rule`); // Splitting by underscore and checking for 'rule' is hardcoded into STIG Viewer
-        const group = {
-          id: control.id,
-          title: _.get(control.tags, 'gtitle', control.title),
+      hdf.contains.forEach((control) => {
+        const controlId = _.get(
+          control.data.tags,
+          'rid',
+          `${control.data.id}_rule`
+        ); // Splitting by underscore and checking for 'rule' is hardcoded into STIG Viewer
+        xccdfProfile?.groups.push({
+          id: control.data.id,
+          title: _.get(control.hdf.wraps.tags, 'gtitle', control.data.title),
           control: {
             id: controlId,
-            title: control.title || 'N/A',
-            identifiers: getReferences(control),
-            description: generateRuleDescription(control),
-            severity: hdfSeverityToXCCDFSeverity(control.tags.severity),
+            title: control.data.title || 'N/A',
+            identifiers: getReferences(control.data),
+            description: generateRuleDescription(control.data),
+            severity: hdfSeverityToXCCDFSeverity(
+              control.hdf.wraps.tags.severity
+            ),
+            checkId: control.hdf.wraps.tags.checkid || 'N/A',
+            fixId: control.hdf.wraps.tags.fixid || 'N/A',
             checkContent:
-              control.descriptions?.find(
-                (desc) => desc.label.toLowerCase() === 'check'
-              )?.data || 'N/A',
-            checkId: control.tags.checkid || 'N/A',
+              control.hdf.wraps.tags.check ||
+              (control.hdf.wraps.descriptions as Record<string, string>)
+                .check ||
+              'N/A',
             fixContent:
-              control.descriptions?.find(
-                (desc) => desc.label.toLowerCase() === 'fix'
-              )?.data || 'N/A',
-            fixId: control.tags.fixid || 'N/A'
+              control.hdf.wraps.tags.fix ||
+              (control.hdf.wraps.descriptions as Record<string, string>).fix ||
+              'N/A'
           }
-        };
-        xccdfProfile.groups.push(group);
+        });
       });
       this.xccdfData.profiles.push(xccdfProfile);
-    });
+    } else {
+      if (hdf.contains.length >= 1) {
+        xccdfProfile = {
+          title: hdf.contains[0].data.title || 'NA',
+          maintainer: hdf.contains[0].data.maintainer || 'NA',
+          groups: [],
+          date: new Date().toISOString().split('T')[0],
+          hasResults: true,
+          resultId: uuid(),
+          source: hdf.contains[0].data.copyright_email || 'NA',
+          results: []
+        };
+        // Top level of ExecJSON includes overlaid data, except results
+        hdf.contains[0].contains.forEach((control) => {
+          const controlId = _.get(
+            control.hdf.wraps.tags,
+            'rid',
+            `${control.data.id}_rule`
+          ); // Splitting by underscore and checking for 'rule' is hardcoded into STIG Viewer
+          // Get control info
+          if (control.data.id === 'V-61697') {
+            console.log(control);
+          }
+          const group = {
+            id: control.data.id,
+            title: _.get(control.hdf.wraps.tags, 'gtitle', control.data.title),
+            control: {
+              id: controlId,
+              title: control.data.title || 'N/A',
+              identifiers: getReferences(control.data),
+              description: generateRuleDescription(control.data),
+              severity: extractTagOrDesc(
+                control.hdf.wraps.descriptions,
+                'severity'
+              )
+                ? hdfImpactToXCCDFSeverity(control.data.impact)
+                : hdfSeverityToXCCDFSeverity(control.hdf.wraps.tags.severity),
+              checkContent:
+                extractTagOrDesc(control.hdf.wraps.descriptions, 'check') ||
+                extractTagOrDesc(control.hdf.wraps.tags, 'check'),
+              checkId:
+                extractTagOrDesc(control.hdf.wraps.descriptions, 'checkid') ||
+                extractTagOrDesc(control.hdf.wraps.descriptions, 'check_id'),
+              fixContent:
+                extractTagOrDesc(control.hdf.wraps.descriptions, 'fix') ||
+                extractTagOrDesc(control.hdf.wraps.tags, 'fix'),
+              fixId:
+                extractTagOrDesc(control.hdf.wraps.tags, 'fixid') ||
+                extractTagOrDesc(control.hdf.wraps.tags, 'fix_id') ||
+                'N/A'
+            }
+          };
+          xccdfProfile?.groups.push(group);
+          // Get results info
+          const segments = getAllSegments(control);
+          if (segments.length >= 1) {
+            xccdfProfile?.results.push({
+              controlId: control.data.id,
+              severity: extractTagOrDesc(
+                control.hdf.wraps.descriptions,
+                'severity'
+              )
+                ? hdfSeverityToXCCDFSeverity(control.hdf.wraps.tags.severity)
+                : hdfImpactToXCCDFSeverity(control.data.impact),
+              result: getStatus(segments),
+              identifiers: getReferences(control.data)
+            });
+          }
+        });
+        this.xccdfData.profiles.push(xccdfProfile);
+      }
+    }
   }
 
   toXCCDF() {

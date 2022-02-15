@@ -46,7 +46,17 @@ export default class ExportXCCDF extends Vue {
       const ids = FilteredDataModule.selected_file_ids;
       for (const evaluation of FilteredDataModule.evaluations(ids)) {
         const convertedData = new FromHDFToXCCDFMapper(
-          evaluation.data,
+          evaluation,
+          data
+        ).toXCCDF();
+        convertedFiles.push({
+          filename: evaluation.from_file.filename + '.xml',
+          data: convertedData
+        });
+      }
+      for (const evaluation of FilteredDataModule.profiles(ids)) {
+        const convertedData = new FromHDFToXCCDFMapper(
+          evaluation,
           data
         ).toXCCDF();
         convertedFiles.push({
