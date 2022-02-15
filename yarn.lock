@@ -6845,7 +6845,7 @@ caw@^2.0.1:
     tunnel-agent "^0.6.0"
     url-to-options "^1.0.1"
 
-cfb@^1.1.4:
+cfb@~1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/cfb/-/cfb-1.2.1.tgz#209429e4c68efd30641f6fc74b2d6028bd202402"
   integrity sha512-wT2ScPAFGSVy7CY+aauMezZBnNrfnaLSrxHUHdea+Td/86vrk6ZquggV+ssBR88zNs0OnBkL2+lf9q0K+zVGzQ==
@@ -21557,12 +21557,12 @@ xdg-basedir@^4.0.0:
   integrity sha512-PSNhEJDejZYV7h50BohL09Er9VaIefr2LMAf3OEmpCkjOi34eYyQYAXUTjEQtZJTKcF0E2UKTh+osDLsgNim9Q==
 
 xlsx@^0.18.0:
-  version "0.18.0"
-  resolved "https://registry.yarnpkg.com/xlsx/-/xlsx-0.18.0.tgz#b16e5d9bc0ef9a83609ccc9a73bc72ae2174a120"
-  integrity sha512-zQluErfRAr7ga2me77sIlDoljSrPCXnrNaiKo2+YFLtGkd0aW0Z9zfARVgNn9nytYBhsEjf6A+H5TogTeddscg==
+  version "0.18.1"
+  resolved "https://registry.yarnpkg.com/xlsx/-/xlsx-0.18.1.tgz#38987f04cfa234e11d389be828fd04b6ad1e7b81"
+  integrity sha512-ycGi2qQv98oPDugY2RUidLyYLEQkwLN06/Y/6pQrGNpfWrRqz/H2qQ8DhfEEtsHKIJ55Af6PLxlipLX3902l/Q==
   dependencies:
     adler-32 "~1.3.0"
-    cfb "^1.1.4"
+    cfb "~1.2.1"
     codepage "~1.15.0"
     crc-32 "~1.2.1"
     ssf "~0.11.2"
