@@ -109,14 +109,17 @@ export function generateRuleDescription(control: AnyControl): string {
 }
 
 export function extractTagOrDesc(
-  tags: {[key: string]: any} | {[key: string]: any}[] | null | undefined,
-  label: string
-) {
-  return (
-    (Array.isArray(tags)
-      ? tags.find((desc) => desc.label === label)?.data
-      : (tags || {[label]: null})[label]) || null
-  );
+  tags?: {[key: string]: any} | {[key: string]: any}[] | null,
+  label?: string
+): string | null {
+  if (tags && label) {
+    return (
+      (Array.isArray(tags)
+        ? tags.find((desc) => desc.label === label)?.data
+        : tags[label]) || null
+    );
+  }
+  return null;
 }
 
 export function getAllSegments(
@@ -131,8 +134,8 @@ export function getAllSegments(
   }
   const segments: HDFControlSegment[] = [];
   segments.push(...(control.hdf.segments || []));
-  control.extendsFrom.forEach((control) => {
-    segments.push(...getAllSegments(control, level + 1));
+  control.extendsFrom.forEach((source) => {
+    segments.push(...getAllSegments(source, level + 1));
   });
   return segments;
 }
@@ -274,13 +277,16 @@ export class FromHDFToXCCDFMapper {
                 : hdfSeverityToXCCDFSeverity(control.hdf.wraps.tags.severity),
               checkContent:
                 extractTagOrDesc(control.hdf.wraps.descriptions, 'check') ||
-                extractTagOrDesc(control.hdf.wraps.tags, 'check'),
+                extractTagOrDesc(control.hdf.wraps.tags, 'check') ||
+                'N/A',
               checkId:
                 extractTagOrDesc(control.hdf.wraps.descriptions, 'checkid') ||
-                extractTagOrDesc(control.hdf.wraps.descriptions, 'check_id'),
+                extractTagOrDesc(control.hdf.wraps.descriptions, 'check_id') ||
+                'N/A',
               fixContent:
                 extractTagOrDesc(control.hdf.wraps.descriptions, 'fix') ||
-                extractTagOrDesc(control.hdf.wraps.tags, 'fix'),
+                extractTagOrDesc(control.hdf.wraps.tags, 'fix') ||
+                'N/A',
               fixId:
                 extractTagOrDesc(control.hdf.wraps.tags, 'fixid') ||
                 extractTagOrDesc(control.hdf.wraps.tags, 'fix_id') ||
