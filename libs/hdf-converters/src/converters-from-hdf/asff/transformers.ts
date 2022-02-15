@@ -293,7 +293,7 @@ export function setupGeneratorId(
   control: SegmentedControl,
   context?: FromHdfToAsffMapper
 ) {
-  return `arn:aws:securityhub:us-east-2:${context?.ioptions.awsAccountId}:ruleset/set/${context?.data.profiles[0].name}/rule/${control.id}`;
+  return `arn:aws:securityhub:${context?.ioptions.region}:${context?.ioptions.awsAccountId}:ruleset/set/${context?.data.profiles[0].name}/rule/${control.id}`;
 }
 
 export function setupTitle(control: SegmentedControl) {
