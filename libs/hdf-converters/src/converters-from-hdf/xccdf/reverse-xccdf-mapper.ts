@@ -33,9 +33,6 @@ export function getReferences(control: AnyControl): Identifier[] {
       value: cci
     });
   });
-
-  console.log(references);
-
   return references;
 }
 
@@ -192,7 +189,6 @@ export class FromHDFToXCCDFMapper {
   }
 
   processHDF(hdf: ContextualizedProfile | ContextualizedEvaluation): void {
-    console.log(hdf);
     // If we have a profile JSON
     let xccdfProfile: XCCDFProfile | undefined;
     if ('extendedBy' in hdf) {
@@ -258,9 +254,6 @@ export class FromHDFToXCCDFMapper {
             `${control.data.id}_rule`
           ); // Splitting by underscore and checking for 'rule' is hardcoded into STIG Viewer
           // Get control info
-          if (control.data.id === 'V-61697') {
-            console.log(control);
-          }
           const group = {
             id: control.data.id,
             title: _.get(control.hdf.wraps.tags, 'gtitle', control.data.title),
