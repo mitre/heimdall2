@@ -9,6 +9,7 @@ export class StartupSettingsDto implements IStartupSettings {
   readonly oidcName: string;
   readonly ldap: boolean;
   readonly registrationEnabled: boolean;
+  readonly localLoginEnabled: boolean;
 
   constructor(settings: IStartupSettings) {
     this.banner = settings.banner;
@@ -19,5 +20,6 @@ export class StartupSettingsDto implements IStartupSettings {
     this.oidcName = settings.oidcName;
     this.ldap = settings.ldap;
     this.registrationEnabled = settings.registrationEnabled;
+    this.localLoginEnabled = settings.localLoginEnabled;
   }
 }

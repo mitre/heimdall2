@@ -109,7 +109,7 @@ export type ExecJSONLoadOptions = {
 
 // Fields to look for inside of JSON structures to determine type before passing to hdf-converters
 export const fileTypeFingerprints = {
-  asff: ['Findings'],
+  asff: ['Findings', 'AwsAccountId', 'ProductArn'],
   fortify: ['FVDL', 'FVDL.EngineData.EngineVersion', 'FVDL.UUID'],
   jfrog: ['total_count', 'data'],
   nikto: ['banner', 'host', 'ip', 'port', 'vulnerabilities'],
@@ -231,15 +231,16 @@ export class InspecIntake extends VuexModule {
   }): Promise<string> {
     try {
       const parsed = JSON.parse(guessOptions.data);
+      const object = Array.isArray(parsed) ? parsed[0] : parsed;
       // Find the fingerprints that have the most matches
       const fingerprinted = Object.entries(fileTypeFingerprints).reduce(
         (a, b) => {
-          return a[1].filter((value) => _.get(parsed, value)).length >
-            b[1].filter((value) => _.get(parsed, value)).length
-            ? {...a, count: a[1].filter((value) => _.get(parsed, value)).length}
+          return a[1].filter((value) => _.get(object, value)).length >
+            b[1].filter((value) => _.get(object, value)).length
+            ? {...a, count: a[1].filter((value) => _.get(object, value)).length}
             : {
                 ...b,
-                count: b[1].filter((value) => _.get(parsed, value)).length
+                count: b[1].filter((value) => _.get(object, value)).length
               };
         }
       ) as unknown as Array<string> & {count: number};
