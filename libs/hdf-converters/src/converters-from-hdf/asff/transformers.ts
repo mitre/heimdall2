@@ -438,9 +438,17 @@ function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
   const typesArr: string[] = [];
   for (const tag in control.tags) {
     if (control) {
-      if (tag === 'nist' && Array.isArray(control.tags.nist)) {
+      if (
+        tag === 'nist' &&
+        Array.isArray(control.tags.nist) &&
+        control.tags.nist.length > 0
+      ) {
         typesArr.push(`Tags/nist/${control.tags.nist.join(', ')}`);
-      } else if (tag === 'cci' && Array.isArray(control.tags.cci)) {
+      } else if (
+        tag === 'cci' &&
+        Array.isArray(control.tags.cci) &&
+        control.tags.cci.length > 0
+      ) {
         typesArr.push(`Tags/cci/${control.tags.cci.join(', ')}`);
       } else if (typeof control.tags[tag] === 'string') {
         typesArr.push(
@@ -450,7 +458,8 @@ function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
         );
       } else if (
         typeof control.tags[tag] === 'object' &&
-        Array.isArray(control.tags[tag])
+        Array.isArray(control.tags[tag]) &&
+        (control.tags[tag] as Array<string>).length > 0
       ) {
         typesArr.push(
           `Tags/${tag.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}/${(
