@@ -343,6 +343,22 @@ export function setupSevOriginal(control: SegmentedControl) {
   return `${control.impact}`;
 }
 
+function createControlMetadata(control: SegmentedControl) {
+  const types = [
+    `Control/ID/${control.id}`,
+    `Control/Impact/${control.impact}`
+  ];
+  if (control.title) {
+    types.push(
+      `Control/Title/${control.title.replace(
+        /\//g,
+        TO_ASFF_TYPES_SLASH_REPLACEMENT
+      )}`
+    );
+  }
+  return types;
+}
+
 function createProfileInfo(hdf?: ExecJSON.Execution): string[] {
   const typesArr: string[] = [];
   const targets = [
@@ -504,6 +520,8 @@ export function setupFindingType(
       .replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}`
   ];
 
+  // Add control metadata to the Finding Provider Fields
+  typesArr.push(...createControlMetadata(control));
   // Add all layers of profile info to the Finding Provider Fields
   typesArr.push(...createProfileInfo(context?.data));
   // Add segment/result information to Finding Provider Fields
