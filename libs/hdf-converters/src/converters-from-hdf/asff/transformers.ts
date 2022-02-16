@@ -438,35 +438,37 @@ function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
   const typesArr: string[] = [];
   for (const tag in control.tags) {
     if (control) {
-      if (
-        tag === 'nist' &&
-        Array.isArray(control.tags.nist) &&
+      if (tag === 'nist' && Array.isArray(control.tags.nist)) {
         control.tags.nist.length > 0
-      ) {
-        typesArr.push(`Tags/nist/${control.tags.nist.join(', ')}`);
-      } else if (
-        tag === 'cci' &&
-        Array.isArray(control.tags.cci) &&
+          ? typesArr.push(`Tags/nist/${control.tags.nist.join(', ')}`)
+          : typesArr.push('Tags/nist/[]');
+      } else if (tag === 'cci' && Array.isArray(control.tags.cci)) {
         control.tags.cci.length > 0
-      ) {
-        typesArr.push(`Tags/cci/${control.tags.cci.join(', ')}`);
+          ? typesArr.push(`Tags/cci/${control.tags.cci.join(', ')}`)
+          : typesArr.push('Tags/cci/[]');
       } else if (typeof control.tags[tag] === 'string') {
         typesArr.push(
-          `Tags/${tag.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}/${(
-            control.tags[tag] as string
-          ).replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}`
+          `Tags/${tag.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}/${
+            (control.tags[tag] as string).length > 0
+              ? (control.tags[tag] as string).replace(
+                  /\//g,
+                  TO_ASFF_TYPES_SLASH_REPLACEMENT
+                )
+              : '""'
+          }`
         );
       } else if (
         typeof control.tags[tag] === 'object' &&
-        Array.isArray(control.tags[tag]) &&
-        (control.tags[tag] as Array<string>).length > 0
+        Array.isArray(control.tags[tag])
       ) {
         typesArr.push(
-          `Tags/${tag.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}/${(
-            control.tags[tag] as Array<string>
-          )
-            .join(', ')
-            .replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}`
+          `Tags/${tag.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}/${
+            (control.tags[tag] as Array<string>).length > 0
+              ? (control.tags[tag] as Array<string>)
+                  .join(', ')
+                  .replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)
+              : '[]'
+          }`
         );
       }
     }
