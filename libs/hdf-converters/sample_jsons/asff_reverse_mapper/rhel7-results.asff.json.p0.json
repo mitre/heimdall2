@@ -6,8 +6,8 @@
         "GeneratorId": "arn:aws:securityhub:us-east-2:12345678910:ruleset/set/disa_stig-el7",
         "AwsAccountId": "12345678910",
         "CreatedAt": "2019-11-04T21:17:17.000Z",
-        "UpdatedAt": "2021-11-08T16:48:41.838Z",
-        "Title": "reverse-proxy | disa_stig-el7 | 2021-11-08 11:48:41 GMT-0500",
+        "UpdatedAt": "2022-02-16T18:14:08.931Z",
+        "Title": "reverse-proxy | disa_stig-el7 | 2022-02-16 01:14:08 GMT-0500",
         "Description": "Passed: 78 (202 individual checks passed) --- Failed: 149 (122 individual checks failed out of 518 total checks) --- Not Applicable: 10 (System exception or absent component) --- Not Reviewed: 6 (Can only be tested manually at this time)",
         "Severity": {
             "Label": "INFORMATIONAL"
