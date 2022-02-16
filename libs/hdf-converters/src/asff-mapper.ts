@@ -20,20 +20,58 @@ const COMPLIANCE_STATUS = 'Compliance.Status';
 
 const FROM_ASFF_TYPES_SLASH_REPLACEMENT = /{{{SLASH}}}/gi; // The "Types" field of ASFF only supports a maximum of 2 slashes, and will get replaced with this text. Note that the default AWS CLI doesn't support UTF-8 encoding
 
-// Use to extract control set specific data
-const FIREWALL_MANAGER_REGEX =
-  /arn:.+:securityhub:.+:.*:product\/aws\/firewall-manager/;
-const PROWLER_REGEX = /arn:.+:securityhub:.+:.*:product\/prowler\/prowler/;
-const SECURITYHUB_REGEX = /arn:.+:securityhub:.+:.*:product\/aws\/securityhub/;
-const TRIVY_REGEX =
-  /arn:.+:securityhub:.+:.*:product\/aquasecurity\/aquasecurity/;
+// Sometimes certain ASFF file types require massaging in order to generate good HDF files.  These are the supported special cases and a catchall 'Default'.  'Default' files and non-special cased methods for otherwise special cased files do the pre-defined default behaviors when generating the HDF file.
+enum SpecialCasing {
+  FirewallManager = 'AWS Firewall Manager',
+  Prowler = 'Prowler',
+  SecurityHub = 'AWS Security Hub',
+  Trivy = 'Aqua Trivy',
+  HDF2ASFF = 'MITRE SAF HDF2ASFF',
+  Default = 'Default'
+}
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-const PRODUCT_ARN_MAPPING: Map<RegExp, Record<string, Function>> = new Map([
-  [FIREWALL_MANAGER_REGEX, getFirewallManager()],
-  [PROWLER_REGEX, getProwler()],
-  [SECURITYHUB_REGEX, getSecurityHub()],
-  [TRIVY_REGEX, getTrivy()]
+function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
+  const productArn = _.get(finding, 'ProductArn') as string;
+  if (
+    productArn.match(/arn:.+:securityhub:.+:.*:product\/aws\/firewall-manager/)
+  ) {
+    return SpecialCasing.FirewallManager;
+  } else if (
+    productArn.match(/arn:.+:securityhub:.+:.*:product\/prowler\/prowler/)
+  ) {
+    return SpecialCasing.Prowler;
+  } else if (
+    productArn.match(/arn:.+:securityhub:.+:.*:product\/aws\/securityhub/)
+  ) {
+    return SpecialCasing.SecurityHub;
+  } else if (
+    productArn.match(
+      /arn:.+:securityhub:.+:.*:product\/aquasecurity\/aquasecurity/
+    )
+  ) {
+    return SpecialCasing.Trivy;
+  } else if (
+    _.some(
+      _.get(finding, 'FindingProviderFields.Types') as string[],
+      (type: string) => _.startsWith(type, 'MITRE/SAF/')
+    )
+  ) {
+    return SpecialCasing.HDF2ASFF;
+  } else {
+    return SpecialCasing.Default;
+  }
+}
+
+const SPECIAL_CASE_MAPPING: Map<
+  SpecialCasing,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  Record<string, Function>
+> = new Map([
+  [SpecialCasing.FirewallManager, getFirewallManager()],
+  [SpecialCasing.Prowler, getProwler()],
+  [SpecialCasing.SecurityHub, getSecurityHub()],
+  [SpecialCasing.Trivy, getTrivy()],
+  [SpecialCasing.HDF2ASFF, getHDF2ASFF()]
 ]);
 
 type ExternalProductHandlerOutputs =
@@ -333,10 +371,17 @@ function getTrivy(): Record<
   };
 }
 
+function getHDF2ASFF(): Record<
+  string,
+  (finding: unknown) => string | string[] | undefined
+> {
+  return {};
+}
+
 export class ASFFMapper extends BaseConverter {
   securityhubStandardsJsonArray: string[] | undefined;
   meta: Record<string, string | undefined> | null;
-  supportingDocs: Map<RegExp, Record<string, Record<string, unknown>>>;
+  supportingDocs: Map<SpecialCasing, Record<string, Record<string, unknown>>>;
   mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
@@ -378,7 +423,7 @@ export class ASFFMapper extends BaseConverter {
             id: {
               transformer: (finding): string =>
                 this.externalProductHandler(
-                  _.get(finding, 'ProductArn'),
+                  whichSpecialCase(finding),
                   finding,
                   'findingId',
                   encode(_.get(finding, 'GeneratorId'))
@@ -387,7 +432,7 @@ export class ASFFMapper extends BaseConverter {
             title: {
               transformer: (finding): string =>
                 this.externalProductHandler(
-                  _.get(finding, 'ProductArn'),
+                  whichSpecialCase(finding),
                   finding,
                   'findingTitle',
                   encode(_.get(finding, 'Title'))
@@ -410,7 +455,7 @@ export class ASFFMapper extends BaseConverter {
                       ? _.get(finding, SEVERITY_LABEL)
                       : _.get(finding, 'Severity.Normalized') / 100.0;
                   impact = this.externalProductHandler(
-                    _.get(finding, 'ProductArn'),
+                    whichSpecialCase(finding),
                     finding,
                     'findingImpact',
                     defaultFunc
@@ -423,9 +468,9 @@ export class ASFFMapper extends BaseConverter {
             },
             tags: {
               nist: {
-                transformer: (finding: unknown): string[] => {
+                transformer: (finding: Record<string, unknown>): string[] => {
                   const tags = this.externalProductHandler(
-                    _.get(finding, 'ProductArn') as string,
+                    whichSpecialCase(finding),
                     finding,
                     'findingNistTag',
                     []
@@ -493,7 +538,7 @@ export class ASFFMapper extends BaseConverter {
                       }
                     };
                     return this.externalProductHandler(
-                      _.get(finding, 'ProductArn'),
+                      whichSpecialCase(finding),
                       finding,
                       'subfindingsStatus',
                       defaultFunc
@@ -503,7 +548,7 @@ export class ASFFMapper extends BaseConverter {
                 code_desc: {
                   transformer: (finding): string => {
                     let output = this.externalProductHandler(
-                      _.get(finding, 'ProductArn'),
+                      whichSpecialCase(finding),
                       finding,
                       'subfindingsCodeDesc',
                       ''
@@ -553,7 +598,7 @@ export class ASFFMapper extends BaseConverter {
                       }
                     };
                     return this.externalProductHandler(
-                      _.get(finding, 'ProductArn'),
+                      whichSpecialCase(finding),
                       finding,
                       'subfindingsMessage',
                       defaultFunc
@@ -605,31 +650,23 @@ export class ASFFMapper extends BaseConverter {
   }
 
   externalProductHandler(
-    product: string | RegExp,
+    product: SpecialCasing,
     data: unknown,
     func: string,
     defaultVal: ExternalProductHandlerOutputs
   ): string | string[] | number | undefined {
-    let arn = null;
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    let mapping: Record<string, Function> | undefined;
     if (
-      (product instanceof RegExp ||
-        (arn = Array.from(PRODUCT_ARN_MAPPING.keys()).find((regex) =>
-          regex.test(product)
-        ))) &&
-      (mapping = PRODUCT_ARN_MAPPING.get(arn || (product as RegExp))) !==
-        undefined &&
-      func in mapping
+      product !== SpecialCasing.Default &&
+      _.has(SPECIAL_CASE_MAPPING.get(product), func)
     ) {
       let keywords: Record<string, unknown> = {};
-      if (this.supportingDocs.has(arn || (product as RegExp))) {
-        keywords = {...this.supportingDocs.get(arn || (product as RegExp))};
+      if (this.supportingDocs.has(product)) {
+        keywords = {...this.supportingDocs.get(product)};
       }
-      return _.get(
-        PRODUCT_ARN_MAPPING.get(arn || (product as RegExp)),
-        func
-      )?.apply(this, [data, keywords]);
+      return _.get(SPECIAL_CASE_MAPPING.get(product), func)?.apply(this, [
+        data,
+        keywords
+      ]);
     } else {
       if (typeof defaultVal === 'function') {
         return defaultVal();
@@ -638,35 +675,40 @@ export class ASFFMapper extends BaseConverter {
       }
     }
   }
+  // consolidate the array of controls which were generated 1:1 with findings in order to have subfindings/results
   consolidate(input: unknown[], file: unknown): ExecJSON.Control[] {
     const allFindings = _.get(file, 'Findings');
     // Group Sub-findings by ASFF Product ARN and HDF ID
-    const productGroups: Map<
-      RegExp,
+    const productGroups = new Map<
+      SpecialCasing | RegExp,
       Map<string, Array<Array<unknown>>>
-    > = new Map<RegExp, Map<string, Array<Array<unknown>>>>();
+    >();
     input.forEach((item, index) => {
-      let arn = Array.from(PRODUCT_ARN_MAPPING.keys()).find((regex) =>
-        _.get(allFindings[index], 'ProductArn').match(regex)
+      let product: SpecialCasing | RegExp = whichSpecialCase(
+        allFindings[index]
       );
-      if (!arn) {
+      // both of these file types can contain findings with unique product arns
+      if (
+        product === SpecialCasing.HDF2ASFF ||
+        product === SpecialCasing.Default
+      ) {
         const productInfo = _.get(allFindings[index], 'ProductArn')
           .split(':')
           .slice(-1)[0];
-        arn = new RegExp(
+        product = new RegExp(
           `arn:.+:securityhub:.+:.*:product/${productInfo.split('/')[1]}/${
             productInfo.split('/')[2]
           }`
         );
       }
-      if (!productGroups.has(arn)) {
-        productGroups.set(arn, new Map<string, Array<Array<unknown>>>());
+      if (!productGroups.has(product)) {
+        productGroups.set(product, new Map<string, Array<Array<unknown>>>());
       }
-      if (!productGroups.get(arn)?.has(_.get(item, 'id'))) {
-        productGroups.get(arn)?.set(_.get(item, 'id'), []);
+      if (!productGroups.get(product)?.has(_.get(item, 'id'))) {
+        productGroups.get(product)?.set(_.get(item, 'id'), []);
       }
       productGroups
-        .get(arn)
+        .get(product)
         ?.get(_.get(item, 'id'))
         ?.push([item, allFindings[index]]);
     });
@@ -675,14 +717,16 @@ export class ASFFMapper extends BaseConverter {
     productGroups.forEach((idGroups, product) => {
       idGroups.forEach((data, id) => {
         const group = data.map((d) => d[0]);
-        const findings = data.map((d) => d[1]);
+        const findings = data.map((d) => d[1]) as Array<
+          Record<string, unknown>
+        >;
 
-        const productInfo = _.get(findings[0], 'ProductArn')
+        const productInfo = (_.get(findings[0], 'ProductArn') as string)
           .split(':')
           .slice(-1)[0]
           .split('/');
         const productName = this.externalProductHandler(
-          product,
+          whichSpecialCase(findings[0]),
           findings,
           'productName',
           encode(`${productInfo[1]}/${productInfo[2]}`)
@@ -708,7 +752,7 @@ export class ASFFMapper extends BaseConverter {
           },
           impact: Math.max(...group.map((d) => _.get(d, 'impact'))),
           desc: this.externalProductHandler(
-            product,
+            whichSpecialCase(findings[0]),
             group,
             'desc',
             _.uniq(group.map((d) => _.get(d, 'desc') as string)).join('\n')
@@ -747,16 +791,19 @@ export class ASFFMapper extends BaseConverter {
     this.securityhubStandardsJsonArray = securityhubStandardsJsonArray;
     this.meta = meta;
     this.supportingDocs = new Map<
-      RegExp,
+      SpecialCasing,
       Record<string, Record<string, unknown>>
     >();
-    const map = PRODUCT_ARN_MAPPING.get(SECURITYHUB_REGEX);
-    if (map) {
-      this.supportingDocs.set(
-        SECURITYHUB_REGEX,
-        _.get(map, 'supportingDocs')(this.securityhubStandardsJsonArray)
-      );
-    }
+    this.supportingDocs.set(
+      SpecialCasing.SecurityHub,
+      _.get(
+        SPECIAL_CASE_MAPPING.get(SpecialCasing.SecurityHub),
+        'supportingDocs',
+        (standards: string[] | undefined) => {
+          throw `supportingDocs function should've been defined: ${standards}`;
+        }
+      )(this.securityhubStandardsJsonArray)
+    );
   }
   setMappings(
     customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
