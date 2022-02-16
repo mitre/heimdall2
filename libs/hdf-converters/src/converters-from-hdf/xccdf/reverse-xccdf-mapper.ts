@@ -172,8 +172,10 @@ export function getStatus(segments: HDFControlSegment[]): XCCDFStatus {
   return status;
 }
 
-export function handleExecutionJSON(hdf: ContextualizedEvaluation): XCCDFProfile {
-  let xccdfProfile: XCCDFProfile = {
+export function handleExecutionJSON(
+  hdf: ContextualizedEvaluation
+): XCCDFProfile {
+  const xccdfProfile: XCCDFProfile = {
     title: hdf.contains[0].data.title || 'NA',
     maintainer: hdf.contains[0].data.maintainer || 'NA',
     groups: [],
@@ -199,10 +201,7 @@ export function handleExecutionJSON(hdf: ContextualizedEvaluation): XCCDFProfile
         title: control.data.title || 'N/A',
         identifiers: getReferences(control.data),
         description: generateRuleDescription(control.data),
-        severity: extractTagOrDesc(
-          control.hdf.wraps.descriptions,
-          'severity'
-        )
+        severity: extractTagOrDesc(control.hdf.wraps.descriptions, 'severity')
           ? hdfImpactToXCCDFSeverity(control.data.impact)
           : hdfSeverityToXCCDFSeverity(control.hdf.wraps.tags.severity),
         checkContent:
@@ -229,10 +228,7 @@ export function handleExecutionJSON(hdf: ContextualizedEvaluation): XCCDFProfile
     if (segments.length >= 1) {
       xccdfProfile?.results.push({
         controlId: control.data.id,
-        severity: extractTagOrDesc(
-          control.hdf.wraps.descriptions,
-          'severity'
-        )
+        severity: extractTagOrDesc(control.hdf.wraps.descriptions, 'severity')
           ? hdfSeverityToXCCDFSeverity(control.hdf.wraps.tags.severity)
           : hdfImpactToXCCDFSeverity(control.data.impact),
         result: getStatus(segments),
@@ -240,11 +236,11 @@ export function handleExecutionJSON(hdf: ContextualizedEvaluation): XCCDFProfile
       });
     }
   });
-  return xccdfProfile
+  return xccdfProfile;
 }
 
 export function handleProfileJSON(hdf: ContextualizedProfile): XCCDFProfile {
-  let xccdfProfile: XCCDFProfile = {
+  const xccdfProfile: XCCDFProfile = {
     title: hdf.data.title || 'N/A',
     maintainer: hdf.data.maintainer || 'N/A',
     groups: [],
@@ -268,15 +264,12 @@ export function handleProfileJSON(hdf: ContextualizedProfile): XCCDFProfile {
         title: control.data.title || 'N/A',
         identifiers: getReferences(control.data),
         description: generateRuleDescription(control.data),
-        severity: hdfSeverityToXCCDFSeverity(
-          control.hdf.wraps.tags.severity
-        ),
+        severity: hdfSeverityToXCCDFSeverity(control.hdf.wraps.tags.severity),
         checkId: control.hdf.wraps.tags.checkid || 'N/A',
         fixId: control.hdf.wraps.tags.fixid || 'N/A',
         checkContent:
           control.hdf.wraps.tags.check ||
-          (control.hdf.wraps.descriptions as Record<string, string>)
-            .check ||
+          (control.hdf.wraps.descriptions as Record<string, string>).check ||
           'N/A',
         fixContent:
           control.hdf.wraps.tags.fix ||
@@ -285,7 +278,7 @@ export function handleProfileJSON(hdf: ContextualizedProfile): XCCDFProfile {
       }
     });
   });
-  return xccdfProfile
+  return xccdfProfile;
 }
 
 export class FromHDFToXCCDFMapper {
@@ -306,7 +299,6 @@ export class FromHDFToXCCDFMapper {
 
   processHDF(hdf: ContextualizedProfile | ContextualizedEvaluation): void {
     // If we have a profile JSON
-    let xccdfProfile: XCCDFProfile | undefined;
     if ('extendedBy' in hdf) {
       this.xccdfData.profiles.push(handleProfileJSON(hdf));
     } else {
