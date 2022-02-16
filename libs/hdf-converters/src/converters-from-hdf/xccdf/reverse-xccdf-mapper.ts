@@ -172,6 +172,122 @@ export function getStatus(segments: HDFControlSegment[]): XCCDFStatus {
   return status;
 }
 
+export function handleExecutionJSON(hdf: ContextualizedEvaluation): XCCDFProfile {
+  let xccdfProfile: XCCDFProfile = {
+    title: hdf.contains[0].data.title || 'NA',
+    maintainer: hdf.contains[0].data.maintainer || 'NA',
+    groups: [],
+    date: new Date().toISOString().split('T')[0],
+    hasResults: true,
+    resultId: uuid(),
+    source: hdf.contains[0].data.copyright_email || 'NA',
+    results: []
+  };
+  // Top level of ExecJSON includes overlaid data, except results
+  hdf.contains[0].contains.forEach((control) => {
+    const controlId = _.get(
+      control.hdf.wraps.tags,
+      'rid',
+      `${control.data.id}_rule`
+    ); // Splitting by underscore and checking for 'rule' is hardcoded into STIG Viewer
+    // Get control info
+    const group = {
+      id: control.data.id,
+      title: _.get(control.hdf.wraps.tags, 'gtitle', control.data.title),
+      control: {
+        id: controlId,
+        title: control.data.title || 'N/A',
+        identifiers: getReferences(control.data),
+        description: generateRuleDescription(control.data),
+        severity: extractTagOrDesc(
+          control.hdf.wraps.descriptions,
+          'severity'
+        )
+          ? hdfImpactToXCCDFSeverity(control.data.impact)
+          : hdfSeverityToXCCDFSeverity(control.hdf.wraps.tags.severity),
+        checkContent:
+          extractTagOrDesc(control.hdf.wraps.descriptions, 'check') ||
+          extractTagOrDesc(control.hdf.wraps.tags, 'check') ||
+          'N/A',
+        checkId:
+          extractTagOrDesc(control.hdf.wraps.descriptions, 'checkid') ||
+          extractTagOrDesc(control.hdf.wraps.descriptions, 'check_id') ||
+          'N/A',
+        fixContent:
+          extractTagOrDesc(control.hdf.wraps.descriptions, 'fix') ||
+          extractTagOrDesc(control.hdf.wraps.tags, 'fix') ||
+          'N/A',
+        fixId:
+          extractTagOrDesc(control.hdf.wraps.tags, 'fixid') ||
+          extractTagOrDesc(control.hdf.wraps.tags, 'fix_id') ||
+          'N/A'
+      }
+    };
+    xccdfProfile?.groups.push(group);
+    // Get results info
+    const segments = getAllSegments(control);
+    if (segments.length >= 1) {
+      xccdfProfile?.results.push({
+        controlId: control.data.id,
+        severity: extractTagOrDesc(
+          control.hdf.wraps.descriptions,
+          'severity'
+        )
+          ? hdfSeverityToXCCDFSeverity(control.hdf.wraps.tags.severity)
+          : hdfImpactToXCCDFSeverity(control.data.impact),
+        result: getStatus(segments),
+        identifiers: getReferences(control.data)
+      });
+    }
+  });
+  return xccdfProfile
+}
+
+export function handleProfileJSON(hdf: ContextualizedProfile): XCCDFProfile {
+  let xccdfProfile: XCCDFProfile = {
+    title: hdf.data.title || 'N/A',
+    maintainer: hdf.data.maintainer || 'N/A',
+    groups: [],
+    date: new Date().toISOString().split('T')[0],
+    hasResults: false,
+    resultId: uuid(),
+    source: hdf.data.copyright_email || 'N/A',
+    results: []
+  };
+  hdf.contains.forEach((control) => {
+    const controlId = _.get(
+      control.data.tags,
+      'rid',
+      `${control.data.id}_rule`
+    ); // Splitting by underscore and checking for 'rule' is hardcoded into STIG Viewer
+    xccdfProfile?.groups.push({
+      id: control.data.id,
+      title: _.get(control.hdf.wraps.tags, 'gtitle', control.data.title),
+      control: {
+        id: controlId,
+        title: control.data.title || 'N/A',
+        identifiers: getReferences(control.data),
+        description: generateRuleDescription(control.data),
+        severity: hdfSeverityToXCCDFSeverity(
+          control.hdf.wraps.tags.severity
+        ),
+        checkId: control.hdf.wraps.tags.checkid || 'N/A',
+        fixId: control.hdf.wraps.tags.fixid || 'N/A',
+        checkContent:
+          control.hdf.wraps.tags.check ||
+          (control.hdf.wraps.descriptions as Record<string, string>)
+            .check ||
+          'N/A',
+        fixContent:
+          control.hdf.wraps.tags.fix ||
+          (control.hdf.wraps.descriptions as Record<string, string>).fix ||
+          'N/A'
+      }
+    });
+  });
+  return xccdfProfile
+}
+
 export class FromHDFToXCCDFMapper {
   data: ContextualizedEvaluation | ContextualizedProfile;
   xccdfTemplate: string;
@@ -192,118 +308,10 @@ export class FromHDFToXCCDFMapper {
     // If we have a profile JSON
     let xccdfProfile: XCCDFProfile | undefined;
     if ('extendedBy' in hdf) {
-      xccdfProfile = {
-        title: hdf.data.title || 'N/A',
-        maintainer: hdf.data.maintainer || 'N/A',
-        groups: [],
-        date: new Date().toISOString().split('T')[0],
-        hasResults: false,
-        resultId: uuid(),
-        source: hdf.data.copyright_email || 'N/A',
-        results: []
-      };
-      hdf.contains.forEach((control) => {
-        const controlId = _.get(
-          control.data.tags,
-          'rid',
-          `${control.data.id}_rule`
-        ); // Splitting by underscore and checking for 'rule' is hardcoded into STIG Viewer
-        xccdfProfile?.groups.push({
-          id: control.data.id,
-          title: _.get(control.hdf.wraps.tags, 'gtitle', control.data.title),
-          control: {
-            id: controlId,
-            title: control.data.title || 'N/A',
-            identifiers: getReferences(control.data),
-            description: generateRuleDescription(control.data),
-            severity: hdfSeverityToXCCDFSeverity(
-              control.hdf.wraps.tags.severity
-            ),
-            checkId: control.hdf.wraps.tags.checkid || 'N/A',
-            fixId: control.hdf.wraps.tags.fixid || 'N/A',
-            checkContent:
-              control.hdf.wraps.tags.check ||
-              (control.hdf.wraps.descriptions as Record<string, string>)
-                .check ||
-              'N/A',
-            fixContent:
-              control.hdf.wraps.tags.fix ||
-              (control.hdf.wraps.descriptions as Record<string, string>).fix ||
-              'N/A'
-          }
-        });
-      });
-      this.xccdfData.profiles.push(xccdfProfile);
+      this.xccdfData.profiles.push(handleProfileJSON(hdf));
     } else {
       if (hdf.contains.length >= 1) {
-        xccdfProfile = {
-          title: hdf.contains[0].data.title || 'NA',
-          maintainer: hdf.contains[0].data.maintainer || 'NA',
-          groups: [],
-          date: new Date().toISOString().split('T')[0],
-          hasResults: true,
-          resultId: uuid(),
-          source: hdf.contains[0].data.copyright_email || 'NA',
-          results: []
-        };
-        // Top level of ExecJSON includes overlaid data, except results
-        hdf.contains[0].contains.forEach((control) => {
-          const controlId = _.get(
-            control.hdf.wraps.tags,
-            'rid',
-            `${control.data.id}_rule`
-          ); // Splitting by underscore and checking for 'rule' is hardcoded into STIG Viewer
-          // Get control info
-          const group = {
-            id: control.data.id,
-            title: _.get(control.hdf.wraps.tags, 'gtitle', control.data.title),
-            control: {
-              id: controlId,
-              title: control.data.title || 'N/A',
-              identifiers: getReferences(control.data),
-              description: generateRuleDescription(control.data),
-              severity: extractTagOrDesc(
-                control.hdf.wraps.descriptions,
-                'severity'
-              )
-                ? hdfImpactToXCCDFSeverity(control.data.impact)
-                : hdfSeverityToXCCDFSeverity(control.hdf.wraps.tags.severity),
-              checkContent:
-                extractTagOrDesc(control.hdf.wraps.descriptions, 'check') ||
-                extractTagOrDesc(control.hdf.wraps.tags, 'check') ||
-                'N/A',
-              checkId:
-                extractTagOrDesc(control.hdf.wraps.descriptions, 'checkid') ||
-                extractTagOrDesc(control.hdf.wraps.descriptions, 'check_id') ||
-                'N/A',
-              fixContent:
-                extractTagOrDesc(control.hdf.wraps.descriptions, 'fix') ||
-                extractTagOrDesc(control.hdf.wraps.tags, 'fix') ||
-                'N/A',
-              fixId:
-                extractTagOrDesc(control.hdf.wraps.tags, 'fixid') ||
-                extractTagOrDesc(control.hdf.wraps.tags, 'fix_id') ||
-                'N/A'
-            }
-          };
-          xccdfProfile?.groups.push(group);
-          // Get results info
-          const segments = getAllSegments(control);
-          if (segments.length >= 1) {
-            xccdfProfile?.results.push({
-              controlId: control.data.id,
-              severity: extractTagOrDesc(
-                control.hdf.wraps.descriptions,
-                'severity'
-              )
-                ? hdfSeverityToXCCDFSeverity(control.hdf.wraps.tags.severity)
-                : hdfImpactToXCCDFSeverity(control.data.impact),
-              result: getStatus(segments),
-              identifiers: getReferences(control.data)
-            });
-          }
-        });
-        this.xccdfData.profiles.push(xccdfProfile);
+        this.xccdfData.profiles.push(handleExecutionJSON(hdf));
       }
     }
   }
