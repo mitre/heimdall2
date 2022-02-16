@@ -8,6 +8,7 @@ import {
 } from 'inspecjs';
 import _ from 'lodash';
 import moment from 'moment';
+import {version as HeimdallToolsVersion} from '../../../package.json';
 import {IFindingASFF, IOptions} from './asff-types';
 import {
   FromHdfToAsffMapper,
@@ -492,6 +493,7 @@ export function setupFindingType(
   const filename = slashSplit?.split('/')[slashSplit.split('/').length - 1];
 
   const typesArr = [
+    `MITRE/SAF/${HeimdallToolsVersion}-hdf2asff`,
     `File/Input/${filename}`,
     `Control/Code/${control.layersOfControl
       .map(

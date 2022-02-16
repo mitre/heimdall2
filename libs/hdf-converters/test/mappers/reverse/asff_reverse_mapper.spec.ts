@@ -1,6 +1,6 @@
 import fs from 'fs';
 import {FromHdfToAsffMapper} from '../../../src/converters-from-hdf/asff/reverse-asff-mapper';
-import {omitASFFTimes, omitASFFTitle} from '../../utils';
+import {omitASFFTimes, omitASFFTitle, omitASFFVersions} from '../../utils';
 
 describe('Describe ASFF Reverse Mapper', () => {
   it('Successfully converts HDF into ASFF', () => {
@@ -35,9 +35,11 @@ describe('Describe ASFF Reverse Mapper', () => {
       )
     );
 
-    expect(omitASFFTimes(omitASFFTitle(expectedProfileInfo))).toEqual(
-      omitASFFTimes(omitASFFTitle(profileInformation))
+    expect(
+      omitASFFVersions(omitASFFTimes(omitASFFTitle(expectedProfileInfo)))
+    ).toEqual(omitASFFTimes(omitASFFTitle(profileInformation)));
+    expect(omitASFFVersions(omitASFFTimes(converted))).toEqual(
+      omitASFFTimes(expectedJSON)
     );
-    expect(omitASFFTimes(converted)).toEqual(omitASFFTimes(expectedJSON));
   });
 });
