@@ -39,7 +39,7 @@ export type FileData = {
 export default class ExportXCCDF extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
 
-  //exports .zip of jsons if multiple are selected, if one is selected it will export that .json file
+  //exports .zip of XCCDFs if multiple are selected, if one is selected it will export that single file
   exportXCCDF() {
     axios.get<string>(`/static/export/xccdfTemplate.xml`).then(({data}) => {
       const convertedFiles: ExportFile[] = [];
