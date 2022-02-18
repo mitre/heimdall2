@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@types/csv2json": "^1.4.2",
+    "@types/splunk-logging": "^0.11.0",
     "@types/xml2js": "^0.4.9",
     "aws-sdk": "^2.1046.0",
     "axios": "^0.26.0",
@@ -33,6 +34,7 @@
     "inspecjs": "^2.6.6",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
+    "splunk-logging": "^0.11.1",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {

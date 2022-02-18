@@ -1,23 +1,14 @@
-import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {MappedReform, MappedTransform, ObjectEntries} from '../base-converter';
-
-export interface ILookupPathFH {
-  path?: string;
-  transformer?: (value: any, context?: any) => unknown;
-  arrayTransformer?: (value: unknown[], file: ExecJSON.Execution) => unknown[];
-  key?: string;
-  passParent?: boolean;
-  default?: any;
-}
+import {ILookupPathFH} from './reverse-base-converter';
 
 //Base converter used to support conversions from HDF to Any Format
-export class FromHdfBaseConverter {
-  data: ExecJSON.Execution;
+export class FromAnyBaseConverter {
+  data: any;
   mappings?: MappedTransform<any, ILookupPathFH>;
   collapseResults: boolean;
 
-  constructor(data: ExecJSON.Execution, collapseResults = false) {
+  constructor(data: any, collapseResults = false) {
     this.data = data;
     this.collapseResults = collapseResults;
   }
@@ -27,11 +18,10 @@ export class FromHdfBaseConverter {
   }
 
   //Called over and over to iterate through objects assigned to keys too
-  convertInternal<T>(file: object, fields: T): MappedReform<T, ILookupPathFH> {
-    const result = this.objectMap(fields, (v: ObjectEntries<T>) =>
+  convertInternal(file: object, fields: any): MappedReform<any, ILookupPathFH> {
+    return this.objectMap(fields, (v: ObjectEntries<any>) =>
       this.evaluate(file, v)
     );
-    return result as MappedReform<T, ILookupPathFH>;
   }
 
   // Preforms fn() on all entries inside the passed obj
