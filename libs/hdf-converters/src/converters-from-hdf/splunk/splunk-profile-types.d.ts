@@ -1,8 +1,10 @@
+import {ILookupPathFH} from '../reverse-base-converter';
+
 export type SplunkProfile = {
   meta: Meta;
   summary: string;
   sha256: string;
-  supports: any | any[];
+  supports: any[] | ILookupPathFH;
   name: string;
   copyright: string;
   maintainer: string;
@@ -11,9 +13,9 @@ export type SplunkProfile = {
   license: string;
   title: string;
   parent_profile: string;
-  depends: Depend[] | any;
-  attributes: Attribute[] | any;
-  groups: Group[] | any;
+  depends: Depend[] | ILookupPathFH;
+  attributes: Attribute[] | ILookupPathFH;
+  groups: Group[] | ILookupPathFH;
   status: string;
 };
 

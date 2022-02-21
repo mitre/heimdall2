@@ -1,12 +1,14 @@
+import {ILookupPathFH} from '../reverse-base-converter';
+
 export type SplunkControl = {
   meta: Meta;
   code: string;
   desc: string;
-  descriptions: Description[] | any;
+  descriptions: Description[] | ILookupPathFH;
   id: string;
   impact: number;
-  refs: any[] | any;
-  results?: Result[] | any;
+  refs: any[] | ILookupPathFH;
+  results?: Result[] | ILookupPathFH;
   source_location?: SourceLocation;
   tags: Tags;
 };
