@@ -60,6 +60,8 @@ jobs:
 
      - name: Run unit tests
        run: yarn hdf-converters test
+       env:
+         SPLUNK_HEC_TOKEN: ${{ secrets.SPLUNK_HEC_TOKEN }}
 
      - name: Ensure the hdf-converters builds cleanly
        run: yarn hdf-converters build
