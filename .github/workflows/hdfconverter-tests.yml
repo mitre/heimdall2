@@ -14,8 +14,8 @@ jobs:
       splunk:
         image: splunk/splunk
         volumes:
-          - /$(pwd)/test/configs/splunk/server.conf:/etc/system/local/server.conf
-          - /$(pwd)/test/configs/splunk/inputs.conf:/etc/system/local/inputs.conf
+          - $(pwd)/test/configs/splunk/server.conf:/etc/system/local/server.conf
+          - $(pwd)/test/configs/splunk/inputs.conf:/etc/system/local/inputs.conf
         ports:
           - 8089:8089
           - 8088:8088
