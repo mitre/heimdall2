@@ -13,6 +13,9 @@ jobs:
     services:
       splunk:
         image: splunk/splunk
+        volumes:
+          - /home/runner/work/heimdall2/heimdall2/test/configs/splunk/server.conf:/etc/system/local/server.conf
+          - /home/runner/work/heimdall2/heimdall2/test/configs/splunk/inputs.conf:/etc/system/local/inputs.conf
         ports:
           - 8089:8089
           - 8088:8088
