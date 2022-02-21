@@ -388,7 +388,12 @@ function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
     targets.forEach((target) => {
       const value = _.get(profile, target);
       if (typeof value === 'string') {
-        typesArr.push(`${profile.name}/${target}/${value}`);
+        typesArr.push(
+          `${profile.name}/${target}/${value.replace(
+            /\//g,
+            TO_ASFF_TYPES_SLASH_REPLACEMENT
+          )}`
+        );
       }
     });
     const inputs: Record<string, unknown>[] = [];
