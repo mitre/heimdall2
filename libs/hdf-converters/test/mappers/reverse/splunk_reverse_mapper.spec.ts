@@ -1,8 +1,8 @@
 import fs from 'fs';
 import {FromHDFToSplunkMapper} from '../../../src/converters-from-hdf/splunk/reverse-splunk-mapper';
 
-describe('Describe ASFF Reverse Mapper', () => {
-  it('Successfully converts HDF into ASFF', async () => {
+describe('Describe Splunk Reverse Mapper', () => {
+  it('Successfully converts HDF into Splunk', async () => {
     const inputData = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/sample_input_report/rhel7-results.json',
