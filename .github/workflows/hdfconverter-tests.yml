@@ -13,12 +13,15 @@ jobs:
     services:
       splunk:
         image: splunk/splunk
-        options: --rm -v ${{ github.workspace }}/test/configs/splunk/inputs.conf:/etc/system/local/inputs.conf:rw -v ${{ github.workspace }}/test/configs/splunk/server.conf:/etc/system/local/server.conf:rw
+        volumes:
+          - /$(pwd)/test/configs/splunk/server.conf:/etc/system/local/server.conf
         ports:
           - 8089:8089
           - 8088:8088
         env:
           SPLUNK_START_ARGS: --accept-license
+          SPLUNK_HEC_TOKEN: d9dfa42c-aa59-4fa3-a70a-072c32f6615d
+          SPLUNK_HEC_SSL: False
           SPLUNK_PASSWORD: Valid_password!
 
     steps:
