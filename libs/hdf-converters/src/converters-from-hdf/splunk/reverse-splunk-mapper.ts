@@ -83,7 +83,7 @@ export function getDependencies(
         dependencies.push(
           ...getDependencies(
             execution.profiles.find(
-              (profile) => profile.name === dependency.name
+              (execProfile) => execProfile.name === dependency.name
             ),
             execution
           )
