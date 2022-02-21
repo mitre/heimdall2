@@ -13,9 +13,7 @@ jobs:
     services:
       splunk:
         image: splunk/splunk
-        volumes:
-          - /home/runner/work/heimdall2/heimdall2/test/configs/splunk/server.conf:/etc/system/local/server.conf
-          - /home/runner/work/heimdall2/heimdall2/test/configs/splunk/inputs.conf:/etc/system/local/inputs.conf
+        options: --rm -v ${{ github.workspace }}/test/configs/splunk/inputs.conf:/etc/system/local/inputs.conf:rw -v ${{ github.workspace }}/test/configs/splunk/server.conf:/etc/system/local/server.conf:rw
         ports:
           - 8089:8089
           - 8088:8088
@@ -43,12 +41,6 @@ jobs:
        uses: actions/setup-node@v1
        with:
         node-version: '14.x'
-
-     - name: pwd
-       run: |
-          echo $GITHUB_WORKSPACE
-          echo $(pwd)
-          echo $pwd
 
      - name: Remove frontend and backend code to ensure the proper dependencies are declared in the hdf-converters package.json
        run: |
