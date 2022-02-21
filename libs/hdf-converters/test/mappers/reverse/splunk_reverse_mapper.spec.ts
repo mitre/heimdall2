@@ -14,7 +14,7 @@ describe('Describe ASFF Reverse Mapper', () => {
     const guid = await new FromHDFToSplunkMapper(inputData).toSplunk(
       {
         token: 'd9dfa42c-aa59-4fa3-a70a-072c32f6615d',
-        host: 'splunk',
+        host: '127.0.0.1',
         protocol: 'https',
         port: 8088
       },
