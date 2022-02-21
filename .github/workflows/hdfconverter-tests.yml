@@ -9,6 +9,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-20.04
+  
+    services:
+      splunk:
+        image: splunk/splunk
+        volumes:
+          - /$(pwd)/test/configs/splunk/server.conf:/etc/system/local/server.conf
+          - /$(pwd)/test/configs/splunk/default.yml:/tmp/defaults/default.yml
+        ports:
+          - 8089:8089
+          - 8088:8088
+        env:
+          SPLUNK_START_ARGS: --accept-license
+          SPLUNK_PASSWORD: Valid_password!
 
     steps:
      - uses: actions/checkout@v2
