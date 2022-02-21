@@ -20,7 +20,7 @@ jobs:
           - 8088:8088
         env:
           SPLUNK_START_ARGS: --accept-license
-          SPLUNK_HEC_TOKEN: d9dfa42c-aa59-4fa3-a70a-072c32f6615d
+          SPLUNK_HEC_TOKEN: ${{ secrets.SPLUNK_HEC_TOKEN }}
           SPLUNK_HEC_SSL: False
           SPLUNK_PASSWORD: Valid_password!
 
