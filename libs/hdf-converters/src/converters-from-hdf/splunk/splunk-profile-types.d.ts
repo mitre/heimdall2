@@ -2,7 +2,7 @@ export type SplunkProfile = {
   meta: Meta;
   summary: string;
   sha256: string;
-  supports: any[];
+  supports: any | any[];
   name: string;
   copyright: string;
   maintainer: string;
@@ -11,9 +11,9 @@ export type SplunkProfile = {
   license: string;
   title: string;
   parent_profile: string;
-  depends: Partial<Depend>[];
-  attributes: Partial<Attribute>[];
-  groups: Group[];
+  depends: Depend[] | any;
+  attributes: Attribute[] | any;
+  groups: Group[] | any;
   status: string;
 };
 

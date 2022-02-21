@@ -1,12 +1,12 @@
 export type SplunkControl = {
-  meta: Partial<Meta>;
+  meta: Meta;
   code: string;
   desc: string;
-  descriptions: Description[];
+  descriptions: Description[] | any;
   id: string;
   impact: number;
-  refs: any[];
-  results?: Result[];
+  refs: any[] | any;
+  results?: Result[] | any;
   source_location?: SourceLocation;
   tags: Tags;
 };
