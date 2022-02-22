@@ -1,3 +1,4 @@
+import axios from 'axios';
 import fs from 'fs';
 import {FromHDFToSplunkMapper} from '../../../src/converters-from-hdf/splunk/reverse-splunk-mapper';
 
@@ -23,6 +24,18 @@ describe('Describe Splunk Reverse Mapper', () => {
       'rhel7-results.json'
     );
 
+    const res = await axios.post(
+      `https://127.0.0.1:8089/servicesNS/admin/search/search/jobs?output_mode=json`,
+      `search=search index="main" meta.guid="${guid}"`,
+      {
+        headers: {
+          'Content-Type': 'text/plain',
+          Authorization: 'admin:Valid_password!'
+        }
+      }
+    );
+
+    console.log(res.data);
     console.log(guid);
 
     expect(typeof guid).toEqual('string');
