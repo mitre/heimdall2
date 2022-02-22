@@ -1,0 +1,4952 @@
+[
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1000 - Access Control Policy And Procedures",
+        "NIST-ID": "AC-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1001 - Access Control Policy And Procedures",
+        "NIST-ID": "AC-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "A maximum of 3 owners should be designated for your subscription",
+        "NIST-ID": "AC-2|AC-6|AC-6(7)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "An Azure Active Directory administrator should be provisioned for SQL servers",
+        "NIST-ID": "AC-2|AC-2(1)|AC-2(7)|AC-3|IA-2|IA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Audit usage of custom RBAC rules",
+        "NIST-ID": "AC-2|AC-2(7)|AC-6|AC-6(7)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Cognitive Services accounts should have local authentication methods disabled",
+        "NIST-ID": "AC-2|AC-2(1)|AC-2(7)|AC-3|IA-2|IA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Deprecated accounts should be removed from your subscription",
+        "NIST-ID": "AC-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Deprecated accounts with owner permissions should be removed from your subscription",
+        "NIST-ID": "AC-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "External accounts with owner permissions should be removed from your subscription",
+        "NIST-ID": "AC-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "External accounts with read permissions should be removed from your subscription",
+        "NIST-ID": "AC-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "External accounts with write permissions should be removed from your subscription",
+        "NIST-ID": "AC-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Managed identity should be used in your API App",
+        "NIST-ID": "AC-2|AC-3|IA-2|IA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Managed identity should be used in your Function App",
+        "NIST-ID": "AC-2|AC-3|IA-2|IA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Managed identity should be used in your Web App",
+        "NIST-ID": "AC-2|AC-3|IA-2|IA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1002 - Account Management",
+        "NIST-ID": "AC-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1003 - Account Management",
+        "NIST-ID": "AC-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1004 - Account Management",
+        "NIST-ID": "AC-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1005 - Account Management",
+        "NIST-ID": "AC-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1006 - Account Management",
+        "NIST-ID": "AC-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1007 - Account Management",
+        "NIST-ID": "AC-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1008 - Account Management",
+        "NIST-ID": "AC-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1009 - Account Management",
+        "NIST-ID": "AC-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1010 - Account Management",
+        "NIST-ID": "AC-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1011 - Account Management",
+        "NIST-ID": "AC-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1012 - Account Management",
+        "NIST-ID": "AC-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Service Fabric clusters should only use Azure Active Directory for client authentication",
+        "NIST-ID": "AC-2|AC-2(1)|AC-2(7)|AC-3|IA-2|IA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1013 - Account Management | Automated System Account Management",
+        "NIST-ID": "AC-2(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1014 - Account Management | Removal Of Temporary / Emergency Accounts",
+        "NIST-ID": "AC-2(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1015 - Account Management | Disable Inactive Accounts",
+        "NIST-ID": "AC-2(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1016 - Account Management | Automated Audit Actions",
+        "NIST-ID": "AC-2(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1017 - Account Management | Inactivity Logout",
+        "NIST-ID": "AC-2(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1018 - Account Management | Role-Based Schemes",
+        "NIST-ID": "AC-2(7)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1019 - Account Management | Role-Based Schemes",
+        "NIST-ID": "AC-2(7)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1020 - Account Management | Role-Based Schemes",
+        "NIST-ID": "AC-2(7)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Service principals should be used to protect your subscriptions instead of management certificates",
+        "NIST-ID": "AC-2(7)|IA-2|IA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1021 - Account Management | Restrictions On Use Of Shared / Group Accounts",
+        "NIST-ID": "AC-2(9)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1022 - Account Management | Shared / Group Account Credential Termination",
+        "NIST-ID": "AC-2(10)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1023 - Account Management | Usage Conditions",
+        "NIST-ID": "AC-2(11)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Arc enabled Kubernetes clusters should have Azure Defender's extension installed",
+        "NIST-ID": "AC-2(12)|AU-6|AU-6(4)|AU-6(5)|AU-12|AU-12(1)|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Defender for App Service should be enabled",
+        "NIST-ID": "AC-2(12)|AU-6|AU-6(4)|AU-6(5)|AU-12|AU-12(1)|IR-4|IR-5|RA-5|SI-2|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Defender for Azure SQL Database servers should be enabled",
+        "NIST-ID": "AC-2(12)|AU-6|AU-6(4)|AU-6(5)|AU-12|AU-12(1)|IR-4|IR-5|RA-5|SI-2|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Defender for container registries should be enabled",
+        "NIST-ID": "AC-2(12)|AU-6|AU-6(4)|AU-6(5)|AU-12|AU-12(1)|IR-4|IR-5|RA-5|SI-2|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Defender for DNS should be enabled",
+        "NIST-ID": "AC-2(12)|AU-6|AU-6(4)|AU-6(5)|AU-12|AU-12(1)|IR-4|IR-5|RA-5|SI-2|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Defender for Key Vault should be enabled",
+        "NIST-ID": "AC-2(12)|AU-6|AU-6(4)|AU-6(5)|AU-12|AU-12(1)|IR-4|IR-5|RA-5|SI-2|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Defender for Kubernetes should be enabled",
+        "NIST-ID": "AC-2(12)|AU-6|AU-6(4)|AU-6(5)|AU-12|AU-12(1)|IR-4|IR-5|RA-5|SI-2|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Defender for Resource Manager should be enabled",
+        "NIST-ID": "AC-2(12)|AU-6|AU-6(4)|AU-6(5)|AU-12|AU-12(1)|IR-4|IR-5|RA-5|SI-2|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Defender for servers should be enabled",
+        "NIST-ID": "AC-2(12)|AU-6|AU-6(4)|AU-6(5)|AU-12|AU-12(1)|CM-7|IR-4|IR-5|RA-5|SC-3|SI-2|SI-3|SI-3(1)|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Defender for SQL servers on machines should be enabled",
+        "NIST-ID": "AC-2(12)|AU-6|AU-6(4)|AU-6(5)|AU-12|AU-12(1)|IR-4|IR-5|RA-5|SI-2|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Defender for SQL should be enabled for unprotected SQL Managed Instances",
+        "NIST-ID": "AC-2(12)|AC-16|AU-6|AU-6(4)|AU-6(5)|AU-12|AU-12(1)|IR-4|IR-5|RA-5|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Defender for Storage should be enabled",
+        "NIST-ID": "AC-2(12)|AU-6|AU-6(4)|AU-6(5)|AU-12|AU-12(1)|IR-4|IR-5|RA-5|SI-2|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Management ports of virtual machines should be protected with just-in-time network access control",
+        "NIST-ID": "AC-2(12)|AC-4|AC-4(3)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1024 - Account Management | Account Monitoring / Atypical Usage",
+        "NIST-ID": "AC-2(12)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1025 - Account Management | Account Monitoring / Atypical Usage",
+        "NIST-ID": "AC-2(12)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1026 - Account Management | Disable Accounts For High-Risk Individuals",
+        "NIST-ID": "AC-2(13)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Add system-assigned managed identity to enable Guest Configuration assignments on virtual machines with no identities",
+        "NIST-ID": "AC-3|AC-17|AC-17(1)|IA-5|IA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Add system-assigned managed identity to enable Guest Configuration assignments on VMs with a user-assigned identity",
+        "NIST-ID": "AC-3|AC-17|AC-17(1)|IA-5|IA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Audit Linux machines that have accounts without passwords",
+        "NIST-ID": "AC-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Authentication to Linux machines should require SSH keys",
+        "NIST-ID": "AC-3|IA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Deploy the Linux Guest Configuration extension to enable Guest Configuration assignments on Linux VMs",
+        "NIST-ID": "AC-3|AC-17|AC-17(1)|IA-5|IA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "MFA should be enabled accounts with write permissions on your subscription",
+        "NIST-ID": "AC-3|IA-2|IA-2(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "MFA should be enabled on accounts with owner permissions on your subscription",
+        "NIST-ID": "AC-3|IA-2|IA-2(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "MFA should be enabled on accounts with read permissions on your subscription",
+        "NIST-ID": "AC-3|IA-2|IA-2(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1027 - Access Enforcement",
+        "NIST-ID": "AC-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Storage accounts should be migrated to new Azure Resource Manager resources",
+        "NIST-ID": "AC-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Virtual machines should be migrated to new Azure Resource Manager resources",
+        "NIST-ID": "AC-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Role-Based Access Control (RBAC) should be used on Kubernetes Services",
+        "NIST-ID": "AC-3(7)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Adaptive network hardening recommendations should be applied on internet facing virtual machines",
+        "NIST-ID": "AC-4|AC-4(3)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "All Internet traffic should be routed via your deployed Azure Firewall",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "All network ports should be restricted on network security groups associated to your virtual machine",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "API Management services should use a virtual network",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "App Configuration should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Authorized IP ranges should be defined on Kubernetes Services",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure API for FHIR should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Cache for Redis should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Cognitive Search service should use a SKU that supports private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Cognitive Search services should disable public network access",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Cognitive Search services should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Cosmos DB accounts should have firewall rules",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Data Factory should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Event Grid domains should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Event Grid topics should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure File Sync should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Key Vault should disable public network access",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Machine Learning workspaces should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Service Bus namespaces should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure SignalR Service should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Synapse workspaces should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Web PubSub Service should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Cognitive Services accounts should disable public network access",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Cognitive Services accounts should restrict network access",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Cognitive Services should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Container registries should not allow unrestricted network access",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Container registries should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "CORS should not allow every resource to access your Web Applications",
+        "NIST-ID": "AC-4|CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "CosmosDB accounts should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Disk access resources should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Event Hub namespaces should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Internet-facing virtual machines should be protected with network security groups",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "IoT Hub device provisioning service instances should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "IP Forwarding on your virtual machine should be disabled",
+        "NIST-ID": "AC-4|SC-5|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Management ports should be closed on your virtual machines",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1028 - Information Flow Enforcement",
+        "NIST-ID": "AC-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Non-internet-facing virtual machines should be protected with network security groups",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Private endpoint connections on Azure SQL Database should be enabled",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Private endpoint should be configured for Key Vault",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Private endpoint should be enabled for MariaDB servers",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Private endpoint should be enabled for MySQL servers",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Private endpoint should be enabled for PostgreSQL servers",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Public network access on Azure SQL Database should be disabled",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Public network access should be disabled for MariaDB servers",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Public network access should be disabled for MySQL servers",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Public network access should be disabled for PostgreSQL servers",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Storage account public access should be disallowed",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Storage accounts should restrict network access",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Storage accounts should restrict network access using virtual network rules",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Storage accounts should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Subnets should be associated with a Network Security Group",
+        "NIST-ID": "AC-4|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "VM Image Builder templates should use private link",
+        "NIST-ID": "AC-4|AC-17|AC-17(1)|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1029 - Information Flow Enforcement | Security Policy Filters",
+        "NIST-ID": "AC-4(8)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1030 - Information Flow Enforcement | Physical / Logical Separation Of Information Flows",
+        "NIST-ID": "AC-4(21)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1031 - Separation Of Duties",
+        "NIST-ID": "AC-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1032 - Separation Of Duties",
+        "NIST-ID": "AC-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1033 - Separation Of Duties",
+        "NIST-ID": "AC-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "There should be more than one owner assigned to your subscription",
+        "NIST-ID": "AC-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1034 - Least Privilege",
+        "NIST-ID": "AC-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1035 - Least Privilege | Authorize Access To Security Functions",
+        "NIST-ID": "AC-6(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1036 - Least Privilege | Non-Privileged Access For Nonsecurity Functions",
+        "NIST-ID": "AC-6(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1037 - Least Privilege | Network Access To Privileged Commands",
+        "NIST-ID": "AC-6(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1038 - Least Privilege | Privileged Accounts",
+        "NIST-ID": "AC-6(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1039 - Least Privilege | Review Of User Privileges",
+        "NIST-ID": "AC-6(7)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1040 - Least Privilege | Review Of User Privileges",
+        "NIST-ID": "AC-6(7)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1041 - Least Privilege | Privilege Levels For Code Execution",
+        "NIST-ID": "AC-6(8)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1042 - Least Privilege | Auditing Use Of Privileged Functions",
+        "NIST-ID": "AC-6(9)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1043 - Least Privilege | Prohibit Non-Privileged Users From Executing Privileged Functions",
+        "NIST-ID": "AC-6(10)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1044 - Unsuccessful Logon Attempts",
+        "NIST-ID": "AC-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1045 - Unsuccessful Logon Attempts",
+        "NIST-ID": "AC-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1046 - Automatic Account Lock | Purge / Wipe Mobile Device",
+        "NIST-ID": "AC-7(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1047 - System Use Notification",
+        "NIST-ID": "AC-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1048 - System Use Notification",
+        "NIST-ID": "AC-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1049 - System Use Notification",
+        "NIST-ID": "AC-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1050 - Concurrent Session Control",
+        "NIST-ID": "AC-10",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1051 - Session Lock",
+        "NIST-ID": "AC-11",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1052 - Session Lock",
+        "NIST-ID": "AC-11",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1053 - Session Lock | Pattern-Hiding Displays",
+        "NIST-ID": "AC-11(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1054 - Session Termination",
+        "NIST-ID": "AC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1055 - Session Termination| User-Initiated Logouts / Message Displays",
+        "NIST-ID": "AC-12(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1056 - Session Termination | User-Initiated Logouts / Message Displays",
+        "NIST-ID": "AC-12(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1057 - Permitted Actions Without Identification Or Authentication",
+        "NIST-ID": "AC-14",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1058 - Permitted Actions Without Identification Or Authentication",
+        "NIST-ID": "AC-14",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Defender for SQL should be enabled for unprotected Azure SQL servers",
+        "NIST-ID": "AC-16|AU-6|AU-6(4)|AU-6(5)|AU-12|AU-12(1)|IR-4|IR-5|RA-5|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Audit Linux machines that allow remote connections from accounts without passwords",
+        "NIST-ID": "AC-17|AC-17(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Cache for Redis should reside within a virtual network",
+        "NIST-ID": "AC-17|AC-17(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Spring Cloud should use network injection",
+        "NIST-ID": "AC-17|AC-17(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Deploy the Windows Guest Configuration extension to enable Guest Configuration assignments on Windows VMs",
+        "NIST-ID": "AC-17|AC-17(1)|IA-5|IA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1059 - Remote Access",
+        "NIST-ID": "AC-17",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1060 - Remote Access",
+        "NIST-ID": "AC-17",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Remote debugging should be turned off for API Apps",
+        "NIST-ID": "AC-17|AC-17(1)|CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Remote debugging should be turned off for Function Apps",
+        "NIST-ID": "AC-17|AC-17(1)|CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Remote debugging should be turned off for Web Applications",
+        "NIST-ID": "AC-17|AC-17(1)|CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1061 - Remote Access | Automated Monitoring / Control",
+        "NIST-ID": "AC-17(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1062 - Remote Access | Protection Of Confidentiality / Integrity Using Encryption",
+        "NIST-ID": "AC-17(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1063 - Remote Access | Managed Access Control Points",
+        "NIST-ID": "AC-17(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1064 - Remote Access | Privileged Commands / Access",
+        "NIST-ID": "AC-17(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1065 - Remote Access | Privileged Commands / Access",
+        "NIST-ID": "AC-17(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1066 - Remote Access | Disconnect / Disable Access",
+        "NIST-ID": "AC-17(9)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1067 - Wireless Access",
+        "NIST-ID": "AC-18",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1068 - Wireless Access",
+        "NIST-ID": "AC-18",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1069 - Wireless Access | Authentication And Encryption",
+        "NIST-ID": "AC-18(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1070 - Wireless Access | Disable Wireless Networking",
+        "NIST-ID": "AC-18(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1071 - Wireless Access | Restrict Configurations By Users",
+        "NIST-ID": "AC-18(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1072 - Wireless Access | Antennas / Transmission Power Levels",
+        "NIST-ID": "AC-18(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1073 - Access Control For Mobile Devices",
+        "NIST-ID": "AC-19",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1074 - Access Control For Mobile Devices",
+        "NIST-ID": "AC-19",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1075 - Access Control For Mobile Devices | Full Device / Container-Based  Encryption",
+        "NIST-ID": "AC-19(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1076 - Use Of External Information Systems",
+        "NIST-ID": "AC-20",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1077 - Use Of External Information Systems",
+        "NIST-ID": "AC-20",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1078 - Use Of External Information Systems | Limits On Authorized Use",
+        "NIST-ID": "AC-20(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1079 - Use Of External Information Systems | Limits On Authorized Use",
+        "NIST-ID": "AC-20(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1080 - Use Of External Information Systems | Portable Storage Devices",
+        "NIST-ID": "AC-20(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1081 - Information Sharing",
+        "NIST-ID": "AC-21",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1082 - Information Sharing",
+        "NIST-ID": "AC-21",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1083 - Publicly Accessible Content",
+        "NIST-ID": "AC-22",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1084 - Publicly Accessible Content",
+        "NIST-ID": "AC-22",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1085 - Publicly Accessible Content",
+        "NIST-ID": "AC-22",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1086 - Publicly Accessible Content",
+        "NIST-ID": "AC-22",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1087 - Security Awareness And Training Policy And Procedures",
+        "NIST-ID": "AT-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1088 - Security Awareness And Training Policy And Procedures",
+        "NIST-ID": "AT-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1089 - Security Awareness Training",
+        "NIST-ID": "AT-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1090 - Security Awareness Training",
+        "NIST-ID": "AT-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1091 - Security Awareness Training",
+        "NIST-ID": "AT-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1092 - Security Awareness Training | Insider Threat",
+        "NIST-ID": "AT-2(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1093 - Role-Based Security Training",
+        "NIST-ID": "AT-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1094 - Role-Based Security Training",
+        "NIST-ID": "AT-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1095 - Role-Based Security Training",
+        "NIST-ID": "AT-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1096 - Role-Based Security Training | Practical Exercises",
+        "NIST-ID": "AT-3(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1097 - Role-Based Security Training | Suspicious Communications And Anomalous System Behavior",
+        "NIST-ID": "AT-3(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1098 - Security Training Records",
+        "NIST-ID": "AT-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1099 - Security Training Records",
+        "NIST-ID": "AT-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1100 - Audit And Accountability Policy And Procedures",
+        "NIST-ID": "AU-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1101 - Audit And Accountability Policy And Procedures",
+        "NIST-ID": "AU-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1102 - Audit Events",
+        "NIST-ID": "AU-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1103 - Audit Events",
+        "NIST-ID": "AU-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1104 - Audit Events",
+        "NIST-ID": "AU-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1105 - Audit Events",
+        "NIST-ID": "AU-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1106 - Audit Events | Reviews And Updates",
+        "NIST-ID": "AU-2(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1107 - Content Of Audit Records",
+        "NIST-ID": "AU-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1108 - Content Of Audit Records | Additional Audit Information",
+        "NIST-ID": "AU-3(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1109 - Content Of Audit Records | Centralized Management Of Planned Audit Record Content",
+        "NIST-ID": "AU-3(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1110 - Audit Storage Capacity",
+        "NIST-ID": "AU-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1111 - Response To Audit Processing Failures",
+        "NIST-ID": "AU-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1112 - Response To Audit Processing Failures",
+        "NIST-ID": "AU-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1113 - Response To Audit Processing Failures | Audit Storage Capacity",
+        "NIST-ID": "AU-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1114 - Response To Audit Processing Failures | Real-Time Alerts",
+        "NIST-ID": "AU-5(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1115 - Audit Review, Analysis, And Reporting",
+        "NIST-ID": "AU-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1116 - Audit Review, Analysis, And Reporting",
+        "NIST-ID": "AU-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Network traffic data collection agent should be installed on Linux virtual machines",
+        "NIST-ID": "AU-6|AU-6(4)|AU-6(5)|AU-12|AU-12(1)|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Network traffic data collection agent should be installed on Windows virtual machines",
+        "NIST-ID": "AU-6|AU-6(4)|AU-6(5)|AU-12|AU-12(1)|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Network Watcher should be enabled",
+        "NIST-ID": "AU-6|AU-6(4)|AU-6(5)|AU-12|AU-12(1)|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1117 - Audit Review, Analysis, And Reporting | Process Integration",
+        "NIST-ID": "AU-6(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1118 - Audit Review, Analysis, And Reporting | Correlate Audit Repositories",
+        "NIST-ID": "AU-6(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Auditing on SQL server should be enabled",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Auto provisioning of the Log Analytics agent should be enabled on your subscription",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Diagnostic logs in App Services should be enabled",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Guest Configuration extension should be installed on your machines",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Log Analytics agent health issues should be resolved on your machines",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Log Analytics agent should be installed on your Linux Azure Arc machines",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Log Analytics agent should be installed on your virtual machine for Azure Security Center monitoring",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Log Analytics agent should be installed on your virtual machine scale sets for Azure Security Center monitoring",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Log Analytics agent should be installed on your Windows Azure Arc machines",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1119 - Audit Review, Analysis, And Reporting | Central Review And Analysis",
+        "NIST-ID": "AU-6(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Resource logs in Azure Data Lake Store should be enabled",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Resource logs in Azure Stream Analytics should be enabled",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Resource logs in Batch accounts should be enabled",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Resource logs in Data Lake Analytics should be enabled",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Resource logs in Event Hub should be enabled",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Resource logs in IoT Hub should be enabled",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Resource logs in Key Vault should be enabled",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Resource logs in Logic Apps should be enabled",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Resource logs in Search services should be enabled",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Resource logs in Service Bus should be enabled",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Resource logs in Virtual Machine Scale Sets should be enabled",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Virtual machines' Guest Configuration extension should be deployed with system-assigned managed identity",
+        "NIST-ID": "AU-6(4)|AU-6(5)|AU-12|AU-12(1)|SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1120 - Audit Review, Analysis, And Reporting | Integration / Scanning And Monitoring Capabilities",
+        "NIST-ID": "AU-6(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1121 - Audit Review, Analysis, And Reporting | Correlation With Physical Monitoring",
+        "NIST-ID": "AU-6(6)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1122 - Audit Review, Analysis, And Reporting | Permitted Actions",
+        "NIST-ID": "AU-6(7)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1123 - Audit Review, Analysis, And Reporting | Audit Level Adjustment",
+        "NIST-ID": "AU-6(10)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1124 - Audit Reduction And Report Generation",
+        "NIST-ID": "AU-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1125 - Audit Reduction And Report Generation",
+        "NIST-ID": "AU-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1126 - Audit Reduction And Report Generation | Automatic Processing",
+        "NIST-ID": "AU-7(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1127 - Time Stamps",
+        "NIST-ID": "AU-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1128 - Time Stamps",
+        "NIST-ID": "AU-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1129 - Time Stamps | Synchronization With Authoritative Time Source",
+        "NIST-ID": "AU-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1130 - Time Stamps | Synchronization With Authoritative Time Source",
+        "NIST-ID": "AU-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1131 - Protection Of Audit Information",
+        "NIST-ID": "AU-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1132 - Protection Of Audit Information | Audit Backup On Separate Physical Systems / Components",
+        "NIST-ID": "AU-9(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1133 - Protection Of Audit Information | Cryptographic Protection",
+        "NIST-ID": "AU-9(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1134 - Protection Of Audit Information | Access By Subset Of Privileged Users",
+        "NIST-ID": "AU-9(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1135 - Non-Repudiation",
+        "NIST-ID": "AU-10",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1136 - Audit Record Retention",
+        "NIST-ID": "AU-11",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "SQL servers with auditing to storage account destination should be configured with 90 days retention or higher",
+        "NIST-ID": "AU-11",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1137 - Audit Generation",
+        "NIST-ID": "AU-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1138 - Audit Generation",
+        "NIST-ID": "AU-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1139 - Audit Generation",
+        "NIST-ID": "AU-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1140 - Audit Generation | System-Wide / Time-Correlated Audit Trail",
+        "NIST-ID": "AU-12(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1141 - Audit Generation | Changes By Authorized Individuals",
+        "NIST-ID": "AU-12(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1142 - Security Assessment And Authorization Policy And Procedures",
+        "NIST-ID": "CA-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1143 - Security Assessment And Authorization Policy And Procedures",
+        "NIST-ID": "CA-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1144 - Security Assessments",
+        "NIST-ID": "CA-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1145 - Security Assessments",
+        "NIST-ID": "CA-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1146 - Security Assessments",
+        "NIST-ID": "CA-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1147 - Security Assessments",
+        "NIST-ID": "CA-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1148 - Security Assessments | Independent Assessors",
+        "NIST-ID": "CA-2(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1149 - Security Assessments | Specialized Assessments",
+        "NIST-ID": "CA-2(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1150 - Security Assessments | External Organizations",
+        "NIST-ID": "CA-2(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1151 - System Interconnections",
+        "NIST-ID": "CA-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1152 - System Interconnections",
+        "NIST-ID": "CA-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1153 - System Interconnections",
+        "NIST-ID": "CA-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1154 - System Interconnections | Unclassified Non-National Security System Connections",
+        "NIST-ID": "CA-3(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1155 - System Interconnections | Restrictions On External System Connections",
+        "NIST-ID": "CA-3(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1156 - Plan Of Action And Milestones",
+        "NIST-ID": "CA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1157 - Plan Of Action And Milestones",
+        "NIST-ID": "CA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1158 - Security Authorization",
+        "NIST-ID": "CA-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1159 - Security Authorization",
+        "NIST-ID": "CA-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1160 - Security Authorization",
+        "NIST-ID": "CA-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1161 - Continuous Monitoring",
+        "NIST-ID": "CA-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1162 - Continuous Monitoring",
+        "NIST-ID": "CA-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1163 - Continuous Monitoring",
+        "NIST-ID": "CA-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1164 - Continuous Monitoring",
+        "NIST-ID": "CA-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1165 - Continuous Monitoring",
+        "NIST-ID": "CA-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1166 - Continuous Monitoring",
+        "NIST-ID": "CA-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1167 - Continuous Monitoring",
+        "NIST-ID": "CA-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1168 - Continuous Monitoring | Independent Assessment",
+        "NIST-ID": "CA-7(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1169 - Continuous Monitoring | Trend Analyses",
+        "NIST-ID": "CA-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1170 - Penetration Testing",
+        "NIST-ID": "CA-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1171 - Penetration Testing | Independent Penetration Agent Or Team",
+        "NIST-ID": "CA-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1172 - Internal System Connections",
+        "NIST-ID": "CA-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1173 - Internal System Connections",
+        "NIST-ID": "CA-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1174 - Configuration Management Policy And Procedures",
+        "NIST-ID": "CM-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1175 - Configuration Management Policy And Procedures",
+        "NIST-ID": "CM-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1176 - Baseline Configuration",
+        "NIST-ID": "CM-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1177 - Baseline Configuration | Reviews And Updates",
+        "NIST-ID": "CM-2(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1178 - Baseline Configuration | Reviews And Updates",
+        "NIST-ID": "CM-2(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1179 - Baseline Configuration | Reviews And Updates",
+        "NIST-ID": "CM-2(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1180 - Baseline Configuration | Automation Support For Accuracy / Currency",
+        "NIST-ID": "CM-2(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1181 - Baseline Configuration | Retention Of Previous Configurations",
+        "NIST-ID": "CM-2(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1182 - Baseline Configuration | Configure Systems, Components, Or Devices For High-Risk Areas",
+        "NIST-ID": "CM-2(7)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1183 - Baseline Configuration | Configure Systems, Components, Or Devices For High-Risk Areas",
+        "NIST-ID": "CM-2(7)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1184 - Configuration Change Control",
+        "NIST-ID": "CM-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1185 - Configuration Change Control",
+        "NIST-ID": "CM-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1186 - Configuration Change Control",
+        "NIST-ID": "CM-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1187 - Configuration Change Control",
+        "NIST-ID": "CM-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1188 - Configuration Change Control",
+        "NIST-ID": "CM-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1189 - Configuration Change Control",
+        "NIST-ID": "CM-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1190 - Configuration Change Control",
+        "NIST-ID": "CM-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1191 - Configuration Change Control | Automated Document / Notification / Prohibition Of Changes",
+        "NIST-ID": "CM-3(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1192 - Configuration Change Control | Automated Document / Notification / Prohibition Of Changes",
+        "NIST-ID": "CM-3(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1193 - Configuration Change Control | Automated Document / Notification / Prohibition Of Changes",
+        "NIST-ID": "CM-3(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1194 - Configuration Change Control | Automated Document / Notification / Prohibition Of Changes",
+        "NIST-ID": "CM-3(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1195 - Configuration Change Control | Automated Document / Notification / Prohibition Of Changes",
+        "NIST-ID": "CM-3(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1196 - Configuration Change Control | Automated Document / Notification / Prohibition Of Changes",
+        "NIST-ID": "CM-3(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1197 - Configuration Change Control | Test / Validate / Document Changes",
+        "NIST-ID": "CM-3(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1198 - Configuration Change Control | Security Representative",
+        "NIST-ID": "CM-3(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1199 - Configuration Change Control | Cryptography Management",
+        "NIST-ID": "CM-3(6)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1200 - Security Impact Analysis",
+        "NIST-ID": "CM-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1201 - Security Impact Analysis | Separate Test Environments",
+        "NIST-ID": "CM-4(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1202 - Access Restrictions For Change",
+        "NIST-ID": "CM-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1203 - Access Restrictions For Change | Automated Access Enforcement / Auditing",
+        "NIST-ID": "CM-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1204 - Access Restrictions For Change | Review System Changes",
+        "NIST-ID": "CM-5(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1205 - Access Restrictions For Change | Signed Components",
+        "NIST-ID": "CM-5(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1206 - Access Restrictions For Change | Limit Production / Operational Privileges",
+        "NIST-ID": "CM-5(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1207 - Access Restrictions For Change | Limit Production / Operational Privileges",
+        "NIST-ID": "CM-5(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Policy Add-on for Kubernetes service (AKS) should be installed and enabled on your clusters",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "CORS should not allow every resource to access your API App",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "CORS should not allow every resource to access your Function Apps",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Ensure API app has 'Client Certificates (Incoming client certificates)' set to 'On'",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Ensure WEB app has 'Client Certificates (Incoming client certificates)' set to 'On'",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Function apps should have 'Client Certificates (Incoming client certificates)' enabled",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Kubernetes cluster containers CPU and memory resource limits should not exceed the specified limits",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Kubernetes cluster containers should not share host process ID or host IPC namespace",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Kubernetes cluster containers should only listen on allowed ports",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Kubernetes cluster containers should only use allowed AppArmor profiles",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Kubernetes cluster containers should only use allowed capabilities",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Kubernetes cluster containers should only use allowed images",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Kubernetes cluster containers should run with a read only root file system",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Kubernetes cluster pod hostPath volumes should only use allowed host paths",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Kubernetes cluster pods and containers should only run with approved user and group IDs",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Kubernetes cluster pods should only use approved host network and port range",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Kubernetes cluster services should listen only on allowed ports",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Kubernetes cluster should not allow privileged containers",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Kubernetes clusters should not allow container privilege escalation",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Linux machines should meet requirements for the Azure compute security baseline",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1208 - Configuration Settings",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1209 - Configuration Settings",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1210 - Configuration Settings",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1211 - Configuration Settings",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Windows machines should meet requirements of the Azure compute security baseline",
+        "NIST-ID": "CM-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1212 - Configuration Settings | Automated Central Management / Application / Verification",
+        "NIST-ID": "CM-6(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1213 - Configuration Settings | Respond To Unauthorized Changes",
+        "NIST-ID": "CM-6(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Adaptive application controls for defining safe applications should be enabled on your machines",
+        "NIST-ID": "CM-7|CM-7(2)|CM-7(5)|CM-10|CM-11",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Allowlist rules in your adaptive application control policy should be updated",
+        "NIST-ID": "CM-7|CM-7(2)|CM-7(5)|CM-10|CM-11",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1214 - Least Functionality",
+        "NIST-ID": "CM-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1215 - Least Functionality",
+        "NIST-ID": "CM-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1216 - Least Functionality | Periodic Review",
+        "NIST-ID": "CM-7(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1217 - Least Functionality | Periodic Review",
+        "NIST-ID": "CM-7(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1218 - Least Functionality | Prevent Program Execution",
+        "NIST-ID": "CM-7(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1219 - Least Functionality | Authorized Software / Whitelisting",
+        "NIST-ID": "CM-7(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1220 - Least Functionality | Authorized Software / Whitelisting",
+        "NIST-ID": "CM-7(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1221 - Least Functionality | Authorized Software / Whitelisting",
+        "NIST-ID": "CM-7(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1222 - Information System Component Inventory",
+        "NIST-ID": "CM-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1223 - Information System Component Inventory",
+        "NIST-ID": "CM-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1224 - Information System Component Inventory | Updates During Installations / Removals",
+        "NIST-ID": "CM-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1225 - Information System Component Inventory | Automated Maintenance",
+        "NIST-ID": "CM-8(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1226 - Information System Component Inventory | Automated Unauthorized Component Detection",
+        "NIST-ID": "CM-8(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1227 - Information System Component Inventory | Automated Unauthorized Component Detection",
+        "NIST-ID": "CM-8(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1228 - Information System Component Inventory | Accountability Information",
+        "NIST-ID": "CM-8(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1229 - Information System Component Inventory | No Duplicate Accounting Of Components",
+        "NIST-ID": "CM-8(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1230 - Configuration Management Plan",
+        "NIST-ID": "CM-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1231 - Configuration Management Plan",
+        "NIST-ID": "CM-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1232 - Configuration Management Plan",
+        "NIST-ID": "CM-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1233 - Configuration Management Plan",
+        "NIST-ID": "CM-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1234 - Software Usage Restrictions",
+        "NIST-ID": "CM-10",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1235 - Software Usage Restrictions",
+        "NIST-ID": "CM-10",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1236 - Software Usage Restrictions",
+        "NIST-ID": "CM-10",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1237 - Software Usage Restrictions | Open Source Software",
+        "NIST-ID": "CM-10(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1238 - User-Installed Software",
+        "NIST-ID": "CM-11",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1239 - User-Installed Software",
+        "NIST-ID": "CM-11",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1240 - User-Installed Software",
+        "NIST-ID": "CM-11",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1241 - User-Installed Software | Alerts For Unauthorized Installations",
+        "NIST-ID": "CM-11(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1242 - Contingency Planning Policy And Procedures",
+        "NIST-ID": "CP-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1243 - Contingency Planning Policy And Procedures",
+        "NIST-ID": "CP-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1244 - Contingency Plan",
+        "NIST-ID": "CP-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1245 - Contingency Plan",
+        "NIST-ID": "CP-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1246 - Contingency Plan",
+        "NIST-ID": "CP-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1247 - Contingency Plan",
+        "NIST-ID": "CP-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1248 - Contingency Plan",
+        "NIST-ID": "CP-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1249 - Contingency Plan",
+        "NIST-ID": "CP-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1250 - Contingency Plan",
+        "NIST-ID": "CP-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1251 - Contingency Plan | Coordinate With Related Plans",
+        "NIST-ID": "CP-2(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1252 - Contingency Plan | Capacity Planning",
+        "NIST-ID": "CP-2(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1253 - Contingency Plan | Resume Essential Missions / Business Functions",
+        "NIST-ID": "CP-2(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1254 - Contingency Plan | Resume All Missions / Business Functions",
+        "NIST-ID": "CP-2(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1255 - Contingency Plan | Continue  Essential Missions / Business Functions",
+        "NIST-ID": "CP-2(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1256 - Contingency Plan | Identify Critical Assets",
+        "NIST-ID": "CP-2(8)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1257 - Contingency Training",
+        "NIST-ID": "CP-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1258 - Contingency Training",
+        "NIST-ID": "CP-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1259 - Contingency Training",
+        "NIST-ID": "CP-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1260 - Contingency Training | Simulated Events",
+        "NIST-ID": "CP-3(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1261 - Contingency Plan Testing",
+        "NIST-ID": "CP-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1262 - Contingency Plan Testing",
+        "NIST-ID": "CP-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1263 - Contingency Plan Testing",
+        "NIST-ID": "CP-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1264 - Contingency Plan Testing | Coordinate With Related Plans",
+        "NIST-ID": "CP-4(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1265 - Contingency Plan Testing | Alternate Processing Site",
+        "NIST-ID": "CP-4(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1266 - Contingency Plan Testing | Alternate Processing Site",
+        "NIST-ID": "CP-4(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Geo-redundant backup should be enabled for Azure Database for MariaDB",
+        "NIST-ID": "CP-6|CP-6(1)|CP-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Geo-redundant backup should be enabled for Azure Database for MySQL",
+        "NIST-ID": "CP-6|CP-6(1)|CP-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Geo-redundant backup should be enabled for Azure Database for PostgreSQL",
+        "NIST-ID": "CP-6|CP-6(1)|CP-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Geo-redundant storage should be enabled for Storage Accounts",
+        "NIST-ID": "CP-6|CP-6(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Long-term geo-redundant backup should be enabled for Azure SQL Databases",
+        "NIST-ID": "CP-6|CP-6(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1267 - Alternate Storage Site",
+        "NIST-ID": "CP-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1268 - Alternate Storage Site",
+        "NIST-ID": "CP-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1269 - Alternate Storage Site | Separation From Primary Site",
+        "NIST-ID": "CP-6(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1270 - Alternate Storage Site | Recovery Time / Point Objectives",
+        "NIST-ID": "CP-6(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1271 - Alternate Storage Site | Accessibility",
+        "NIST-ID": "CP-6(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Audit virtual machines without disaster recovery configured",
+        "NIST-ID": "CP-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1272 - Alternate Processing Site",
+        "NIST-ID": "CP-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1273 - Alternate Processing Site",
+        "NIST-ID": "CP-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1274 - Alternate Processing Site",
+        "NIST-ID": "CP-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1275 - Alternate Processing Site | Separation From Primary Site",
+        "NIST-ID": "CP-7(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1276 - Alternate Processing Site | Accessibility",
+        "NIST-ID": "CP-7(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1277 - Alternate Processing Site | Priority Of Service",
+        "NIST-ID": "CP-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1278 - Alternate Processing Site | Preparation For Use",
+        "NIST-ID": "CP-7(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1279 - Telecommunications Services",
+        "NIST-ID": "CP-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1280 - Telecommunications Services | Priority Of Service Provisions",
+        "NIST-ID": "CP-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1281 - Telecommunications Services | Priority Of Service Provisions",
+        "NIST-ID": "CP-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1282 - Telecommunications Services | Single Points Of Failure",
+        "NIST-ID": "CP-8(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1283 - Telecommunications Services | Separation Of Primary / Alternate Providers",
+        "NIST-ID": "CP-8(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1284 - Telecommunications Services | Provider Contingency Plan",
+        "NIST-ID": "CP-8(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1285 - Telecommunications Services | Provider Contingency Plan",
+        "NIST-ID": "CP-8(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1286 - Telecommunications Services | Provider Contingency Plan",
+        "NIST-ID": "CP-8(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Backup should be enabled for Virtual Machines",
+        "NIST-ID": "CP-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Key vaults should have purge protection enabled",
+        "NIST-ID": "CP-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Key vaults should have soft delete enabled",
+        "NIST-ID": "CP-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1287 - Information System Backup",
+        "NIST-ID": "CP-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1288 - Information System Backup",
+        "NIST-ID": "CP-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1289 - Information System Backup",
+        "NIST-ID": "CP-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1290 - Information System Backup",
+        "NIST-ID": "CP-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1291 - Information System Backup | Testing For Reliability / Integrity",
+        "NIST-ID": "CP-9(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1292 - Information System Backup | Test Restoration Using Sampling",
+        "NIST-ID": "CP-9(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1293 - Information System Backup | Separate Storage For Critical Information",
+        "NIST-ID": "CP-9(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1294 - Information System Backup | Transfer To Alternate Storage Site",
+        "NIST-ID": "CP-9(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1295 - Information System Recovery And Reconstitution",
+        "NIST-ID": "CP-10",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1296 - Information System Recovery And Reconstitution | Transaction Recovery",
+        "NIST-ID": "CP-10(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1297 - Information System Recovery And Reconstitution | Restore Within Time Period",
+        "NIST-ID": "CP-10(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1298 - Identification And Authentication Policy And Procedures",
+        "NIST-ID": "IA-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1299 - Identification And Authentication Policy And Procedures",
+        "NIST-ID": "IA-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1300 - Identification And Authentication (Organizational Users)",
+        "NIST-ID": "IA-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1301 - Identification And Authentication (Org. Users) | Network Access To Privileged Accounts",
+        "NIST-ID": "IA-2(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1302 - Identification And Authentication (Org. Users) | Network Access To Non-Privileged Accounts",
+        "NIST-ID": "IA-2(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1303 - Identification And Authentication (Org. Users) | Local Access To Privileged Accounts",
+        "NIST-ID": "IA-2(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1304 - Identification And Authentication (Org. Users) | Local Access To Non-Privileged Accounts",
+        "NIST-ID": "IA-2(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1305 - Identification And Authentication (Org. Users) | Group Authentication",
+        "NIST-ID": "IA-2(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1306 - Identification And Authentication (Org. Users) | Net. Access To Priv. Accts. - Replay",
+        "NIST-ID": "IA-2(8)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1307 - Identification And Authentication (Org. Users) | Net. Access To Non-Priv. Accts. - Replay",
+        "NIST-ID": "IA-2(9)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1308 - Identification And Authentication (Org. Users) | Remote Access  - Separate Device",
+        "NIST-ID": "IA-2(11)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1309 - Identification And Authentication (Org. Users) | Acceptance Of Piv Credentials",
+        "NIST-ID": "IA-2(12)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1310 - Device Identification And Authentication",
+        "NIST-ID": "IA-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1311 - Identifier Management",
+        "NIST-ID": "IA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1312 - Identifier Management",
+        "NIST-ID": "IA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1313 - Identifier Management",
+        "NIST-ID": "IA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1314 - Identifier Management",
+        "NIST-ID": "IA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1315 - Identifier Management",
+        "NIST-ID": "IA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1316 - Identifier Management | Identify User Status",
+        "NIST-ID": "IA-4(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Audit Linux machines that do not have the passwd file permissions set to 0644",
+        "NIST-ID": "IA-5|IA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Audit Windows machines that do not store passwords using reversible encryption",
+        "NIST-ID": "IA-5|IA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Certificates should have the specified maximum validity period",
+        "NIST-ID": "IA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Key Vault keys should have an expiration date",
+        "NIST-ID": "IA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Key Vault secrets should have an expiration date",
+        "NIST-ID": "IA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1317 - Authenticator Management",
+        "NIST-ID": "IA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1318 - Authenticator Management",
+        "NIST-ID": "IA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1319 - Authenticator Management",
+        "NIST-ID": "IA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1320 - Authenticator Management",
+        "NIST-ID": "IA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1321 - Authenticator Management",
+        "NIST-ID": "IA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1322 - Authenticator Management",
+        "NIST-ID": "IA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1323 - Authenticator Management",
+        "NIST-ID": "IA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1324 - Authenticator Management",
+        "NIST-ID": "IA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1325 - Authenticator Management",
+        "NIST-ID": "IA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1326 - Authenticator Management",
+        "NIST-ID": "IA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Audit Windows machines that allow re-use of the previous 24 passwords",
+        "NIST-ID": "IA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Audit Windows machines that do not have a maximum password age of 70 days",
+        "NIST-ID": "IA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Audit Windows machines that do not have a minimum password age of 1 day",
+        "NIST-ID": "IA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Audit Windows machines that do not have the password complexity setting enabled",
+        "NIST-ID": "IA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Audit Windows machines that do not restrict the minimum password length to 14 characters",
+        "NIST-ID": "IA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1327 - Authenticator Management | Password-Based Authentication",
+        "NIST-ID": "IA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1328 - Authenticator Management | Password-Based Authentication",
+        "NIST-ID": "IA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1329 - Authenticator Management | Password-Based Authentication",
+        "NIST-ID": "IA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1330 - Authenticator Management | Password-Based Authentication",
+        "NIST-ID": "IA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1331 - Authenticator Management | Password-Based Authentication",
+        "NIST-ID": "IA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1332 - Authenticator Management | Password-Based Authentication",
+        "NIST-ID": "IA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1333 - Authenticator Management | Pki-Based Authentication",
+        "NIST-ID": "IA-5(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1334 - Authenticator Management | Pki-Based Authentication",
+        "NIST-ID": "IA-5(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1335 - Authenticator Management | Pki-Based Authentication",
+        "NIST-ID": "IA-5(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1336 - Authenticator Management | Pki-Based Authentication",
+        "NIST-ID": "IA-5(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1337 - Authenticator Management | In-Person Or Trusted Third-Party Registration",
+        "NIST-ID": "IA-5(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1338 - Authenticator Management | Automated Support  For Password Strength Determination",
+        "NIST-ID": "IA-5(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1339 - Authenticator Management | Protection Of Authenticators",
+        "NIST-ID": "IA-5(6)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1340 - Authenticator Management | No Embedded Unencrypted Static Authenticators",
+        "NIST-ID": "IA-5(7)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1341 - Authenticator Management | Multiple Information System Accounts",
+        "NIST-ID": "IA-5(8)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1342 - Authenticator Management | Hardware Token-Based Authentication",
+        "NIST-ID": "IA-5(11)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1343 - Authenticator Management | Expiration Of Cached Authenticators",
+        "NIST-ID": "IA-5(13)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1344 - Authenticator Feedback",
+        "NIST-ID": "IA-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1345 - Cryptographic Module Authentication",
+        "NIST-ID": "IA-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1346 - Identification And Authentication (Non-Organizational Users)",
+        "NIST-ID": "IA-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1347 - Identification And Authentication (Non-Org. Users) | Acceptance Of PIV Creds. From Other Agys.",
+        "NIST-ID": "IA-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1348 - Identification And Authentication (Non-Org. Users) | Acceptance Of Third-Party Credentials",
+        "NIST-ID": "IA-8(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1349 - Identification And Authentication (Non-Org. Users) | Use Of FICAM-Approved Products",
+        "NIST-ID": "IA-8(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1350 - Identification And Authentication (Non-Org. Users) | Use Of FICAM-Issued Profiles",
+        "NIST-ID": "IA-8(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1351 - Incident Response Policy And Procedures",
+        "NIST-ID": "IR-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1352 - Incident Response Policy And Procedures",
+        "NIST-ID": "IR-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1353 - Incident Response Training",
+        "NIST-ID": "IR-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1354 - Incident Response Training",
+        "NIST-ID": "IR-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1355 - Incident Response Training",
+        "NIST-ID": "IR-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1356 - Incident Response Training | Simulated Events",
+        "NIST-ID": "IR-2(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1357 - Incident Response Training | Automated Training Environments",
+        "NIST-ID": "IR-2(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1358 - Incident Response Testing",
+        "NIST-ID": "IR-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1359 - Incident Response Testing | Coordination With Related Plans",
+        "NIST-ID": "IR-3(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Email notification for high severity alerts should be enabled",
+        "NIST-ID": "IR-4|IR-5|IR-6(2)|SI-4(12)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Email notification to subscription owner for high severity alerts should be enabled",
+        "NIST-ID": "IR-4|IR-5|IR-6(2)|SI-4(12)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1360 - Incident Handling",
+        "NIST-ID": "IR-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1361 - Incident Handling",
+        "NIST-ID": "IR-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1362 - Incident Handling",
+        "NIST-ID": "IR-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Subscriptions should have a contact email address for security issues",
+        "NIST-ID": "IR-4|IR-5|IR-6(2)|SI-4(12)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1363 - Incident Handling | Automated Incident Handling Processes",
+        "NIST-ID": "IR-4(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1364 - Incident Handling | Dynamic Reconfiguration",
+        "NIST-ID": "IR-4(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1365 - Incident Handling | Continuity Of Operations",
+        "NIST-ID": "IR-4(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1366 - Incident Handling | Information Correlation",
+        "NIST-ID": "IR-4(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1367 - Incident Handling | Insider Threats - Specific Capabilities",
+        "NIST-ID": "IR-4(6)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1368 - Incident Handling | Correlation With External Organizations",
+        "NIST-ID": "IR-4(8)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1369 - Incident Monitoring",
+        "NIST-ID": "IR-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1370 - Incident Monitoring | Automated Tracking / Data Collection / Analysis",
+        "NIST-ID": "IR-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1371 - Incident Reporting",
+        "NIST-ID": "IR-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1372 - Incident Reporting",
+        "NIST-ID": "IR-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1373 - Incident Reporting | Automated Reporting",
+        "NIST-ID": "IR-6(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1374 - Incident Response Assistance",
+        "NIST-ID": "IR-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1375 - Incident Response Assistance | Automation Support For Availability Of Information / Support",
+        "NIST-ID": "IR-7(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1376 - Incident Response Assistance | Coordination With External Providers",
+        "NIST-ID": "IR-7(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1377 - Incident Response Assistance | Coordination With External Providers",
+        "NIST-ID": "IR-7(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1378 - Incident Response Plan",
+        "NIST-ID": "IR-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1379 - Incident Response Plan",
+        "NIST-ID": "IR-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1380 - Incident Response Plan",
+        "NIST-ID": "IR-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1381 - Incident Response Plan",
+        "NIST-ID": "IR-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1382 - Incident Response Plan",
+        "NIST-ID": "IR-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1383 - Incident Response Plan",
+        "NIST-ID": "IR-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1384 - Information Spillage Response",
+        "NIST-ID": "IR-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1385 - Information Spillage Response",
+        "NIST-ID": "IR-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1386 - Information Spillage Response",
+        "NIST-ID": "IR-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1387 - Information Spillage Response",
+        "NIST-ID": "IR-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1388 - Information Spillage Response",
+        "NIST-ID": "IR-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1389 - Information Spillage Response",
+        "NIST-ID": "IR-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1390 - Information Spillage Response | Responsible Personnel",
+        "NIST-ID": "IR-9(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1391 - Information Spillage Response | Training",
+        "NIST-ID": "IR-9(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1392 - Information Spillage Response | Post-Spill Operations",
+        "NIST-ID": "IR-9(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1393 - Information Spillage Response | Exposure To Unauthorized Personnel",
+        "NIST-ID": "IR-9(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1394 - System Maintenance Policy And Procedures",
+        "NIST-ID": "MA-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1395 - System Maintenance Policy And Procedures",
+        "NIST-ID": "MA-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1396 - Controlled Maintenance",
+        "NIST-ID": "MA-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1397 - Controlled Maintenance",
+        "NIST-ID": "MA-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1398 - Controlled Maintenance",
+        "NIST-ID": "MA-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1399 - Controlled Maintenance",
+        "NIST-ID": "MA-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1400 - Controlled Maintenance",
+        "NIST-ID": "MA-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1401 - Controlled Maintenance",
+        "NIST-ID": "MA-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1402 - Controlled Maintenance | Automated Maintenance Activities",
+        "NIST-ID": "MA-2(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1403 - Controlled Maintenance | Automated Maintenance Activities",
+        "NIST-ID": "MA-2(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1404 - Maintenance Tools",
+        "NIST-ID": "MA-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1405 - Maintenance Tools | Inspect Tools",
+        "NIST-ID": "MA-3(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1406 - Maintenance Tools | Inspect Media",
+        "NIST-ID": "MA-3(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1407 - Maintenance Tools | Prevent Unauthorized Removal",
+        "NIST-ID": "MA-3(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1408 - Maintenance Tools | Prevent Unauthorized Removal",
+        "NIST-ID": "MA-3(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1409 - Maintenance Tools | Prevent Unauthorized Removal",
+        "NIST-ID": "MA-3(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1410 - Maintenance Tools | Prevent Unauthorized Removal",
+        "NIST-ID": "MA-3(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1411 - Nonlocal Maintenance",
+        "NIST-ID": "MA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1412 - Nonlocal Maintenance",
+        "NIST-ID": "MA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1413 - Nonlocal Maintenance",
+        "NIST-ID": "MA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1414 - Nonlocal Maintenance",
+        "NIST-ID": "MA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1415 - Nonlocal Maintenance",
+        "NIST-ID": "MA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1416 - Nonlocal Maintenance | Document Nonlocal Maintenance",
+        "NIST-ID": "MA-4(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1417 - Nonlocal Maintenance | Comparable Security / Sanitization",
+        "NIST-ID": "MA-4(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1418 - Nonlocal Maintenance | Comparable Security / Sanitization",
+        "NIST-ID": "MA-4(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1419 - Nonlocal Maintenance | Cryptographic Protection",
+        "NIST-ID": "MA-4(6)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1420 - Maintenance Personnel",
+        "NIST-ID": "MA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1421 - Maintenance Personnel",
+        "NIST-ID": "MA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1422 - Maintenance Personnel",
+        "NIST-ID": "MA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1423 - Maintenance Personnel | Individuals Without Appropriate Access",
+        "NIST-ID": "MA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1424 - Maintenance Personnel | Individuals Without Appropriate Access",
+        "NIST-ID": "MA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1425 - Timely Maintenance",
+        "NIST-ID": "MA-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1426 - Media Protection Policy And Procedures",
+        "NIST-ID": "MP-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1427 - Media Protection Policy And Procedures",
+        "NIST-ID": "MP-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1428 - Media Access",
+        "NIST-ID": "MP-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1429 - Media Marking",
+        "NIST-ID": "MP-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1430 - Media Marking",
+        "NIST-ID": "MP-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1431 - Media Storage",
+        "NIST-ID": "MP-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1432 - Media Storage",
+        "NIST-ID": "MP-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1433 - Media Transport",
+        "NIST-ID": "MP-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1434 - Media Transport",
+        "NIST-ID": "MP-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1435 - Media Transport",
+        "NIST-ID": "MP-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1436 - Media Transport",
+        "NIST-ID": "MP-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1437 - Media Transport | Cryptographic Protection",
+        "NIST-ID": "MP-5(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1438 - Media Sanitization",
+        "NIST-ID": "MP-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1439 - Media Sanitization",
+        "NIST-ID": "MP-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1440 - Media Sanitization | Review / Approve / Track / Document / Verify",
+        "NIST-ID": "MP-6(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1441 - Media Sanitization | Equipment Testing",
+        "NIST-ID": "MP-6(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1442 - Media Sanitization | Nondestructive Techniques",
+        "NIST-ID": "MP-6(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1443 - Media Use",
+        "NIST-ID": "MP-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1444 - Media Use | Prohibit Use Without Owner",
+        "NIST-ID": "MP-7(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1445 - Physical And Environmental Protection Policy And Procedures",
+        "NIST-ID": "PE-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1446 - Physical And Environmental Protection Policy And Procedures",
+        "NIST-ID": "PE-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1447 - Physical Access Authorizations",
+        "NIST-ID": "PE-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1448 - Physical Access Authorizations",
+        "NIST-ID": "PE-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1449 - Physical Access Authorizations",
+        "NIST-ID": "PE-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1450 - Physical Access Authorizations",
+        "NIST-ID": "PE-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1451 - Physical Access Control",
+        "NIST-ID": "PE-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1452 - Physical Access Control",
+        "NIST-ID": "PE-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1453 - Physical Access Control",
+        "NIST-ID": "PE-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1454 - Physical Access Control",
+        "NIST-ID": "PE-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1455 - Physical Access Control",
+        "NIST-ID": "PE-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1456 - Physical Access Control",
+        "NIST-ID": "PE-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1457 - Physical Access Control",
+        "NIST-ID": "PE-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1458 - Physical Access Control | Information System Access",
+        "NIST-ID": "PE-3(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1459 - Access Control For Transmission Medium",
+        "NIST-ID": "PE-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1460 - Access Control For Output Devices",
+        "NIST-ID": "PE-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1461 - Monitoring Physical Access",
+        "NIST-ID": "PE-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1462 - Monitoring Physical Access",
+        "NIST-ID": "PE-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1463 - Monitoring Physical Access",
+        "NIST-ID": "PE-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1464 - Monitoring Physical Access | Intrusion Alarms / Surveillance Equipment",
+        "NIST-ID": "PE-6(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1465 - Monitoring Physical Access | Monitoring Physical Access To Information Systems",
+        "NIST-ID": "PE-6(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1466 - Visitor Access Records",
+        "NIST-ID": "PE-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1467 - Visitor Access Records",
+        "NIST-ID": "PE-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1468 - Visitor Access Records | Automated Records Maintenance / Review",
+        "NIST-ID": "PE-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1469 - Power Equipment And Cabling",
+        "NIST-ID": "PE-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1470 - Emergency Shutoff",
+        "NIST-ID": "PE-10",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1471 - Emergency Shutoff",
+        "NIST-ID": "PE-10",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1472 - Emergency Shutoff",
+        "NIST-ID": "PE-10",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1473 - Emergency Power",
+        "NIST-ID": "PE-11",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1474 - Emergency Power | Long-Term Alternate Power Supply - Minimal Operational Capability",
+        "NIST-ID": "PE-11(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1475 - Emergency Lighting",
+        "NIST-ID": "PE-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1476 - Fire Protection",
+        "NIST-ID": "PE-13",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1477 - Fire Protection | Detection Devices / Systems",
+        "NIST-ID": "PE-13(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1478 - Fire Protection | Suppression Devices / Systems",
+        "NIST-ID": "PE-13(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1479 - Fire Protection | Automatic Fire Suppression",
+        "NIST-ID": "PE-13(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1480 - Temperature And Humidity Controls",
+        "NIST-ID": "PE-14",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1481 - Temperature And Humidity Controls",
+        "NIST-ID": "PE-14",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1482 - Temperature And Humidity Controls | Monitoring With Alarms / Notifications",
+        "NIST-ID": "PE-14(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1483 - Water Damage Protection",
+        "NIST-ID": "PE-15",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1484 - Water Damage Protection | Automation Support",
+        "NIST-ID": "PE-15(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1485 - Delivery And Removal",
+        "NIST-ID": "PE-16",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1486 - Alternate Work Site",
+        "NIST-ID": "PE-17",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1487 - Alternate Work Site",
+        "NIST-ID": "PE-17",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1488 - Alternate Work Site",
+        "NIST-ID": "PE-17",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1489 - Location Of Information System Components",
+        "NIST-ID": "PE-18",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1490 - Security Planning Policy And Procedures",
+        "NIST-ID": "PL-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1491 - Security Planning Policy And Procedures",
+        "NIST-ID": "PL-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1492 - System Security Plan",
+        "NIST-ID": "PL-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1493 - System Security Plan",
+        "NIST-ID": "PL-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1494 - System Security Plan",
+        "NIST-ID": "PL-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1495 - System Security Plan",
+        "NIST-ID": "PL-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1496 - System Security Plan",
+        "NIST-ID": "PL-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1497 - System Security Plan | Plan / Coordinate With Other Organizational Entities",
+        "NIST-ID": "PL-2(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1498 - Rules Of Behavior",
+        "NIST-ID": "PL-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1499 - Rules Of Behavior",
+        "NIST-ID": "PL-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1500 - Rules Of Behavior",
+        "NIST-ID": "PL-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1501 - Rules Of Behavior",
+        "NIST-ID": "PL-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1502 - Rules Of Behavior | Social Media And Networking Restrictions",
+        "NIST-ID": "PL-4(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1503 - Information Security Architecture",
+        "NIST-ID": "PL-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1504 - Information Security Architecture",
+        "NIST-ID": "PL-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1505 - Information Security Architecture",
+        "NIST-ID": "PL-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1506 - Personnel Security Policy And Procedures",
+        "NIST-ID": "PS-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1507 - Personnel Security Policy And Procedures",
+        "NIST-ID": "PS-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1508 - Position Risk Designation",
+        "NIST-ID": "PS-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1509 - Position Risk Designation",
+        "NIST-ID": "PS-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1510 - Position Risk Designation",
+        "NIST-ID": "PS-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1511 - Personnel Screening",
+        "NIST-ID": "PS-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1512 - Personnel Screening",
+        "NIST-ID": "PS-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1513 - Personnel Screening | Information With Special Protection Measures",
+        "NIST-ID": "PS-3(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1514 - Personnel Screening | Information With Special Protection Measures",
+        "NIST-ID": "PS-3(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1515 - Personnel Termination",
+        "NIST-ID": "PS-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1516 - Personnel Termination",
+        "NIST-ID": "PS-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1517 - Personnel Termination",
+        "NIST-ID": "PS-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1518 - Personnel Termination",
+        "NIST-ID": "PS-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1519 - Personnel Termination",
+        "NIST-ID": "PS-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1520 - Personnel Termination",
+        "NIST-ID": "PS-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1521 - Personnel Termination | Automated Notification",
+        "NIST-ID": "PS-4(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1522 - Personnel Transfer",
+        "NIST-ID": "PS-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1523 - Personnel Transfer",
+        "NIST-ID": "PS-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1524 - Personnel Transfer",
+        "NIST-ID": "PS-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1525 - Personnel Transfer",
+        "NIST-ID": "PS-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1526 - Access Agreements",
+        "NIST-ID": "PS-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1527 - Access Agreements",
+        "NIST-ID": "PS-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1528 - Access Agreements",
+        "NIST-ID": "PS-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1529 - Third-Party Personnel Security",
+        "NIST-ID": "PS-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1530 - Third-Party Personnel Security",
+        "NIST-ID": "PS-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1531 - Third-Party Personnel Security",
+        "NIST-ID": "PS-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1532 - Third-Party Personnel Security",
+        "NIST-ID": "PS-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1533 - Third-Party Personnel Security",
+        "NIST-ID": "PS-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1534 - Personnel Sanctions",
+        "NIST-ID": "PS-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1535 - Personnel Sanctions",
+        "NIST-ID": "PS-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1536 - Risk Assessment Policy And Procedures",
+        "NIST-ID": "RA-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1537 - Risk Assessment Policy And Procedures",
+        "NIST-ID": "RA-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1538 - Security Categorization",
+        "NIST-ID": "RA-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1539 - Security Categorization",
+        "NIST-ID": "RA-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1540 - Security Categorization",
+        "NIST-ID": "RA-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1541 - Risk Assessment",
+        "NIST-ID": "RA-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1542 - Risk Assessment",
+        "NIST-ID": "RA-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1543 - Risk Assessment",
+        "NIST-ID": "RA-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1544 - Risk Assessment",
+        "NIST-ID": "RA-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1545 - Risk Assessment",
+        "NIST-ID": "RA-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "A vulnerability assessment solution should be enabled on your virtual machines",
+        "NIST-ID": "RA-5|SI-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1546 - Vulnerability Scanning",
+        "NIST-ID": "RA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1547 - Vulnerability Scanning",
+        "NIST-ID": "RA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1548 - Vulnerability Scanning",
+        "NIST-ID": "RA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1549 - Vulnerability Scanning",
+        "NIST-ID": "RA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1550 - Vulnerability Scanning",
+        "NIST-ID": "RA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "SQL databases should have vulnerability findings resolved",
+        "NIST-ID": "RA-5|SI-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "SQL servers on machines should have vulnerability findings resolved",
+        "NIST-ID": "RA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Vulnerabilities in Azure Container Registry images should be remediated",
+        "NIST-ID": "RA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Vulnerabilities in container security configurations should be remediated",
+        "NIST-ID": "RA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Vulnerabilities in security configuration on your machines should be remediated",
+        "NIST-ID": "RA-5|SI-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Vulnerabilities in security configuration on your virtual machine scale sets should be remediated",
+        "NIST-ID": "RA-5|SI-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Vulnerability assessment should be enabled on SQL Managed Instance",
+        "NIST-ID": "RA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Vulnerability assessment should be enabled on your SQL servers",
+        "NIST-ID": "RA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Vulnerability assessment should be enabled on your Synapse workspaces",
+        "NIST-ID": "RA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1551 - Vulnerability Scanning | Update Tool Capability",
+        "NIST-ID": "RA-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1552 - Vulnerability Scanning | Update By Frequency / Prior To New Scan / When Identified",
+        "NIST-ID": "RA-5(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1553 - Vulnerability Scanning | Breadth / Depth Of Coverage",
+        "NIST-ID": "RA-5(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1554 - Vulnerability Scanning | Discoverable Information",
+        "NIST-ID": "RA-5(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1555 - Vulnerability Scanning | Privileged Access",
+        "NIST-ID": "RA-5(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1556 - Vulnerability Scanning | Automated Trend Analyses",
+        "NIST-ID": "RA-5(6)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1557 - Vulnerability Scanning | Review Historic Audit Logs",
+        "NIST-ID": "RA-5(8)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1558 - Vulnerability Scanning | Correlate Scanning Information",
+        "NIST-ID": "RA-5(10)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1559 - System And Services Acquisition Policy And Procedures",
+        "NIST-ID": "SA-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1560 - System And Services Acquisition Policy And Procedures",
+        "NIST-ID": "SA-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1561 - Allocation Of Resources",
+        "NIST-ID": "SA-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1562 - Allocation Of Resources",
+        "NIST-ID": "SA-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1563 - Allocation Of Resources",
+        "NIST-ID": "SA-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1564 - System Development Life Cycle",
+        "NIST-ID": "SA-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1565 - System Development Life Cycle",
+        "NIST-ID": "SA-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1566 - System Development Life Cycle",
+        "NIST-ID": "SA-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1567 - System Development Life Cycle",
+        "NIST-ID": "SA-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1568 - Acquisition Process",
+        "NIST-ID": "SA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1569 - Acquisition Process",
+        "NIST-ID": "SA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1570 - Acquisition Process",
+        "NIST-ID": "SA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1571 - Acquisition Process",
+        "NIST-ID": "SA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1572 - Acquisition Process",
+        "NIST-ID": "SA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1573 - Acquisition Process",
+        "NIST-ID": "SA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1574 - Acquisition Process",
+        "NIST-ID": "SA-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1575 - Acquisition Process | Functional Properties Of Security Controls",
+        "NIST-ID": "SA-4(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1576 - Acquisition Process | Design / Implementation Information For Security Controls",
+        "NIST-ID": "SA-4(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1577 - Acquisition Process | Continuous Monitoring Plan",
+        "NIST-ID": "SA-4(8)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1578 - Acquisition Process | Functions / Ports / Protocols / Services In Use",
+        "NIST-ID": "SA-4(9)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1579 - Acquisition Process | Use Of Approved Piv Products",
+        "NIST-ID": "SA-4(10)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1580 - Information System Documentation",
+        "NIST-ID": "SA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1581 - Information System Documentation",
+        "NIST-ID": "SA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1582 - Information System Documentation",
+        "NIST-ID": "SA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1583 - Information System Documentation",
+        "NIST-ID": "SA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1584 - Information System Documentation",
+        "NIST-ID": "SA-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1585 - Security Engineering Principles",
+        "NIST-ID": "SA-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1586 - External Information System Services",
+        "NIST-ID": "SA-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1587 - External Information System Services",
+        "NIST-ID": "SA-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1588 - External Information System Services",
+        "NIST-ID": "SA-9",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1589 - External Information System Services | Risk Assessments / Organizational Approvals",
+        "NIST-ID": "SA-9(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1590 - External Information System Services | Risk Assessments / Organizational Approvals",
+        "NIST-ID": "SA-9(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1591 - External Information System Services | Ident. Of Functions / Ports / Protocols / Services",
+        "NIST-ID": "SA-9(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1592 - External Information System Services | Consistent Interests Of Consumers And Providers",
+        "NIST-ID": "SA-9(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1593 - External Information System Services | Processing, Storage, And Service Location",
+        "NIST-ID": "SA-9(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1594 - Developer Configuration Management",
+        "NIST-ID": "SA-10",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1595 - Developer Configuration Management",
+        "NIST-ID": "SA-10",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1596 - Developer Configuration Management",
+        "NIST-ID": "SA-10",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1597 - Developer Configuration Management",
+        "NIST-ID": "SA-10",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1598 - Developer Configuration Management",
+        "NIST-ID": "SA-10",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1599 - Developer Configuration Management | Software / Firmware Integrity Verification",
+        "NIST-ID": "SA-10(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1600 - Developer Security Testing And Evaluation",
+        "NIST-ID": "SA-11",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1601 - Developer Security Testing And Evaluation",
+        "NIST-ID": "SA-11",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1602 - Developer Security Testing And Evaluation",
+        "NIST-ID": "SA-11",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1603 - Developer Security Testing And Evaluation",
+        "NIST-ID": "SA-11",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1604 - Developer Security Testing And Evaluation",
+        "NIST-ID": "SA-11",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1605 - Developer Security Testing And Evaluation | Static Code Analysis",
+        "NIST-ID": "SA-11(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1606 - Developer Security Testing And Evaluation | Threat And Vulnerability Analyses",
+        "NIST-ID": "SA-11(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1607 - Developer Security Testing And Evaluation | Dynamic Code Analysis",
+        "NIST-ID": "SA-11(8)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1608 - Supply Chain Protection",
+        "NIST-ID": "SA-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1609 - Development Process, Standards, And Tools",
+        "NIST-ID": "SA-15",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1610 - Development Process, Standards, And Tools",
+        "NIST-ID": "SA-15",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1611 - Developer-Provided Training",
+        "NIST-ID": "SA-16",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1612 - Developer Security Architecture And Design",
+        "NIST-ID": "SA-17",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1613 - Developer Security Architecture And Design",
+        "NIST-ID": "SA-17",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1614 - Developer Security Architecture And Design",
+        "NIST-ID": "SA-17",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1615 - System And Communications Protection Policy And Procedures",
+        "NIST-ID": "SC-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1616 - System And Communications Protection Policy And Procedures",
+        "NIST-ID": "SC-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1617 - Application Partitioning",
+        "NIST-ID": "SC-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Endpoint protection solution should be installed on virtual machine scale sets",
+        "NIST-ID": "SC-3|SI-3|SI-3(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1618 - Security Function Isolation",
+        "NIST-ID": "SC-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Monitor missing Endpoint Protection in Azure Security Center",
+        "NIST-ID": "SC-3|SI-3|SI-3(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Windows Defender Exploit Guard should be enabled on your machines",
+        "NIST-ID": "SC-3|SI-3|SI-3(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1619 - Information In Shared Resources",
+        "NIST-ID": "SC-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure DDoS Protection Standard should be enabled",
+        "NIST-ID": "SC-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1620 - Denial Of Service Protection",
+        "NIST-ID": "SC-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Web Application Firewall (WAF) should be enabled for Application Gateway",
+        "NIST-ID": "SC-5|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Web Application Firewall (WAF) should be enabled for Azure Front Door Service service",
+        "NIST-ID": "SC-5|SC-7|SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1621 - Resource Availability",
+        "NIST-ID": "SC-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1622 - Boundary Protection",
+        "NIST-ID": "SC-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1623 - Boundary Protection",
+        "NIST-ID": "SC-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1624 - Boundary Protection",
+        "NIST-ID": "SC-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1625 - Boundary Protection | Access Points",
+        "NIST-ID": "SC-7(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1626 - Boundary Protection | External Telecommunications Services",
+        "NIST-ID": "SC-7(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1627 - Boundary Protection | External Telecommunications Services",
+        "NIST-ID": "SC-7(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1628 - Boundary Protection | External Telecommunications Services",
+        "NIST-ID": "SC-7(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1629 - Boundary Protection | External Telecommunications Services",
+        "NIST-ID": "SC-7(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1630 - Boundary Protection | External Telecommunications Services",
+        "NIST-ID": "SC-7(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1631 - Boundary Protection | Deny By Default / Allow By Exception",
+        "NIST-ID": "SC-7(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1632 - Boundary Protection | Prevent Split Tunneling For Remote Devices",
+        "NIST-ID": "SC-7(7)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1633 - Boundary Protection | Route Traffic To Authenticated Proxy Servers",
+        "NIST-ID": "SC-7(8)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1634 - Boundary Protection | Prevent Unauthorized Exfiltration",
+        "NIST-ID": "SC-7(10)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1635 - Boundary Protection | Host-Based Protection",
+        "NIST-ID": "SC-7(12)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1636 - Boundary Protection | Isolation Of Security Tools / Mechanisms / Support Components",
+        "NIST-ID": "SC-7(13)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1637 - Boundary Protection | Fail Secure",
+        "NIST-ID": "SC-7(18)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1638 - Boundary Protection | Dynamic Isolation / Segregation",
+        "NIST-ID": "SC-7(20)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1639 - Boundary Protection | Isolation Of Information System Components",
+        "NIST-ID": "SC-7(21)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "API App should only be accessible over HTTPS",
+        "NIST-ID": "SC-8|SC-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure HDInsight clusters should use encryption in transit to encrypt communication between Azure HDInsight cluster nodes",
+        "NIST-ID": "SC-8|SC-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Enforce SSL connection should be enabled for MySQL database servers",
+        "NIST-ID": "SC-8|SC-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Enforce SSL connection should be enabled for PostgreSQL database servers",
+        "NIST-ID": "SC-8|SC-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "FTPS only should be required in your API App",
+        "NIST-ID": "SC-8|SC-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "FTPS only should be required in your Function App",
+        "NIST-ID": "SC-8|SC-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "FTPS should be required in your Web App",
+        "NIST-ID": "SC-8|SC-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Function App should only be accessible over HTTPS",
+        "NIST-ID": "SC-8|SC-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Kubernetes clusters should be accessible only over HTTPS",
+        "NIST-ID": "SC-8|SC-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Latest TLS version should be used in your API App",
+        "NIST-ID": "SC-8|SC-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Latest TLS version should be used in your Function App",
+        "NIST-ID": "SC-8|SC-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Latest TLS version should be used in your Web App",
+        "NIST-ID": "SC-8|SC-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1640 - Transmission Confidentiality And Integrity",
+        "NIST-ID": "SC-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Only secure connections to your Azure Cache for Redis should be enabled",
+        "NIST-ID": "SC-8|SC-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Secure transfer to storage accounts should be enabled",
+        "NIST-ID": "SC-8|SC-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Web Application should only be accessible over HTTPS",
+        "NIST-ID": "SC-8|SC-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Windows web servers should be configured to use secure communication protocols",
+        "NIST-ID": "SC-8|SC-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1641 - Transmission Confidentiality And Integrity | Cryptographic Or Alternate Physical Protection",
+        "NIST-ID": "SC-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1642 - Network Disconnect",
+        "NIST-ID": "SC-10",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure API for FHIR should use a customer-managed key to encrypt data at rest",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Automation accounts should use customer-managed keys to encrypt data at rest",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Batch account should use customer-managed keys to encrypt data",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Container Instance container group should use customer-managed key for encryption",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Cosmos DB accounts should use customer-managed keys to encrypt data at rest",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Data Box jobs should use a customer-managed key to encrypt the device unlock password",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Data Explorer encryption at rest should use a customer-managed key",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure data factories should be encrypted with a customer-managed key",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure HDInsight clusters should use customer-managed keys to encrypt data at rest",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure HDInsight clusters should use encryption at host to encrypt data at rest",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Machine Learning workspaces should be encrypted with a customer-managed key",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Monitor Logs clusters should be encrypted with customer-managed key",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Recovery Services vaults should use customer-managed keys for encrypting backup data",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Stream Analytics jobs should use customer-managed keys to encrypt data",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Synapse workspaces should use customer-managed keys to encrypt data at rest",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Bot Service should be encrypted with a customer-managed key",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Both operating systems and data disks in Azure Kubernetes Service clusters should be encrypted by customer-managed keys",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Cognitive Services accounts should enable data encryption with a customer-managed key",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Container registries should be encrypted with a customer-managed key",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Event Hub namespaces should use a customer-managed key for encryption",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "HPC Cache accounts should use customer-managed key for encryption",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "IoT Hub device provisioning service data should be encrypted using customer-managed keys (CMK)",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Logic Apps Integration Service Environment should be encrypted with customer-managed keys",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Managed disks should be double encrypted with both platform-managed and customer-managed keys",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1643 - Cryptographic Key Establishment And Management",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "MySQL servers should use customer-managed keys to encrypt data at rest",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "OS and data disks should be encrypted with a customer-managed key",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "PostgreSQL servers should use customer-managed keys to encrypt data at rest",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Saved-queries in Azure Monitor should be saved in customer storage account for logs encryption",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Service Bus Premium namespaces should use a customer-managed key for encryption",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "SQL managed instances should use customer-managed keys to encrypt data at rest",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "SQL servers should use customer-managed keys to encrypt data at rest",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Storage account encryption scopes should use customer-managed keys to encrypt data at rest",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Storage accounts should use customer-managed key for encryption",
+        "NIST-ID": "SC-12",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1644 - Cryptographic Key Establishment And Management | Availability",
+        "NIST-ID": "SC-12(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1645 - Cryptographic Key Establishment And Management | Symmetric Keys",
+        "NIST-ID": "SC-12(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1646 - Cryptographic Key Establishment And Management | Asymmetric Keys",
+        "NIST-ID": "SC-12(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1647 - Cryptographic Protection",
+        "NIST-ID": "SC-13",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1648 - Collaborative Computing Devices",
+        "NIST-ID": "SC-15",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1649 - Collaborative Computing Devices",
+        "NIST-ID": "SC-15",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1650 - Public Key Infrastructure Certificates",
+        "NIST-ID": "SC-17",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1651 - Mobile Code",
+        "NIST-ID": "SC-18",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1652 - Mobile Code",
+        "NIST-ID": "SC-18",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1653 - Mobile Code",
+        "NIST-ID": "SC-18",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1654 - Voice Over Internet Protocol",
+        "NIST-ID": "SC-19",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1655 - Voice Over Internet Protocol",
+        "NIST-ID": "SC-19",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1656 - Secure Name / Address Resolution Service (Authoritative Source)",
+        "NIST-ID": "SC-20",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1657 - Secure Name / Address Resolution Service (Authoritative Source)",
+        "NIST-ID": "SC-20",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1658 - Secure Name / Address Resolution Service (Recursive Or Caching Resolver)",
+        "NIST-ID": "SC-21",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1659 - Architecture And Provisioning For Name / Address Resolution Service",
+        "NIST-ID": "SC-22",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1660 - Session Authenticity",
+        "NIST-ID": "SC-23",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1661 - Session Authenticity | Invalidate Session Identifiers At Logout",
+        "NIST-ID": "SC-23(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1662 - Fail In Known State",
+        "NIST-ID": "SC-24",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "App Service Environment should enable internal encryption",
+        "NIST-ID": "SC-28|SC-28(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Automation account variables should be encrypted",
+        "NIST-ID": "SC-28|SC-28(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Data Box jobs should enable double encryption for data at rest on the device",
+        "NIST-ID": "SC-28|SC-28(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Monitor Logs clusters should be created with infrastructure-encryption enabled (double encryption)",
+        "NIST-ID": "SC-28|SC-28(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Azure Stack Edge devices should use double-encryption",
+        "NIST-ID": "SC-28|SC-28(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Disk encryption should be enabled on Azure Data Explorer",
+        "NIST-ID": "SC-28|SC-28(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Double encryption should be enabled on Azure Data Explorer",
+        "NIST-ID": "SC-28|SC-28(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Infrastructure encryption should be enabled for Azure Database for MySQL servers",
+        "NIST-ID": "SC-28|SC-28(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Infrastructure encryption should be enabled for Azure Database for PostgreSQL servers",
+        "NIST-ID": "SC-28|SC-28(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1663 - Protection Of Information At Rest",
+        "NIST-ID": "SC-28",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Sensitive data in your SQL databases should be classified",
+        "NIST-ID": "SC-28|SC-28(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Service Fabric clusters should have the ClusterProtectionLevel property set to EncryptAndSign",
+        "NIST-ID": "SC-28|SC-28(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Storage accounts should have infrastructure encryption",
+        "NIST-ID": "SC-28|SC-28(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Temp disks and cache for agent node pools in Azure Kubernetes Service clusters should be encrypted at host",
+        "NIST-ID": "SC-28|SC-28(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Transparent Data Encryption on SQL databases should be enabled",
+        "NIST-ID": "SC-28|SC-28(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Virtual machines and virtual machine scale sets should have encryption at host enabled",
+        "NIST-ID": "SC-28|SC-28(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Virtual machines should encrypt temp disks, caches, and data flows between Compute and Storage resources",
+        "NIST-ID": "SC-28|SC-28(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1664 - Protection Of Information At Rest | Cryptographic Protection",
+        "NIST-ID": "SC-28(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1665 - Process Isolation",
+        "NIST-ID": "SC-39",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1666 - System And Information Integrity Policy And Procedures",
+        "NIST-ID": "SI-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1667 - System And Information Integrity Policy And Procedures",
+        "NIST-ID": "SI-1",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Ensure that 'HTTP Version' is the latest, if used to run the API app",
+        "NIST-ID": "SI-2|SI-2(6)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Ensure that 'HTTP Version' is the latest, if used to run the Function app",
+        "NIST-ID": "SI-2|SI-2(6)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Ensure that 'HTTP Version' is the latest, if used to run the Web app",
+        "NIST-ID": "SI-2|SI-2(6)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Ensure that 'Java version' is the latest, if used as a part of the API app",
+        "NIST-ID": "SI-2|SI-2(6)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Ensure that 'Java version' is the latest, if used as a part of the Function app",
+        "NIST-ID": "SI-2|SI-2(6)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Ensure that 'Java version' is the latest, if used as a part of the Web app",
+        "NIST-ID": "SI-2|SI-2(6)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Ensure that 'PHP version' is the latest, if used as a part of the API app",
+        "NIST-ID": "SI-2|SI-2(6)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Ensure that 'PHP version' is the latest, if used as a part of the WEB app",
+        "NIST-ID": "SI-2|SI-2(6)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Ensure that 'Python version' is the latest, if used as a part of the API app",
+        "NIST-ID": "SI-2|SI-2(6)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Ensure that 'Python version' is the latest, if used as a part of the Function app",
+        "NIST-ID": "SI-2|SI-2(6)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Ensure that 'Python version' is the latest, if used as a part of the Web app",
+        "NIST-ID": "SI-2|SI-2(6)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Kubernetes Services should be upgraded to a non-vulnerable Kubernetes version",
+        "NIST-ID": "SI-2|SI-2(6)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1668 - Flaw Remediation",
+        "NIST-ID": "SI-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1669 - Flaw Remediation",
+        "NIST-ID": "SI-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1670 - Flaw Remediation",
+        "NIST-ID": "SI-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1671 - Flaw Remediation",
+        "NIST-ID": "SI-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "System updates on virtual machine scale sets should be installed",
+        "NIST-ID": "SI-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "System updates should be installed on your machines",
+        "NIST-ID": "SI-2",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1672 - Flaw Remediation | Central Management",
+        "NIST-ID": "SI-2(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1673 - Flaw Remediation | Automated Flaw Remediation Status",
+        "NIST-ID": "SI-2(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1674 - Flaw Remediation | Time To Remediate Flaws / Benchmarks For Corrective Actions",
+        "NIST-ID": "SI-2(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1675 - Flaw Remediation | Time To Remediate Flaws / Benchmarks For Corrective Actions",
+        "NIST-ID": "SI-2(3)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1676 - Malicious Code Protection",
+        "NIST-ID": "SI-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1677 - Malicious Code Protection",
+        "NIST-ID": "SI-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1678 - Malicious Code Protection",
+        "NIST-ID": "SI-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1679 - Malicious Code Protection",
+        "NIST-ID": "SI-3",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1680 - Malicious Code Protection | Central Management",
+        "NIST-ID": "SI-3(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1681 - Malicious Code Protection | Automatic Updates",
+        "NIST-ID": "SI-3(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1682 - Malicious Code Protection | Nonsignature-Based Detection",
+        "NIST-ID": "SI-3(7)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1683 - Information System Monitoring",
+        "NIST-ID": "SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1684 - Information System Monitoring",
+        "NIST-ID": "SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1685 - Information System Monitoring",
+        "NIST-ID": "SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1686 - Information System Monitoring",
+        "NIST-ID": "SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1687 - Information System Monitoring",
+        "NIST-ID": "SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1688 - Information System Monitoring",
+        "NIST-ID": "SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1689 - Information System Monitoring",
+        "NIST-ID": "SI-4",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1690 - Information System Monitoring | System-Wide Intrusion Detection System",
+        "NIST-ID": "SI-4(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1691 - Information System Monitoring | Automated Tools For Real-Time Analysis",
+        "NIST-ID": "SI-4(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1692 - Information System Monitoring | Inbound And Outbound Communications Traffic",
+        "NIST-ID": "SI-4(4)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1693 - Information System Monitoring | System-Generated Alerts",
+        "NIST-ID": "SI-4(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1694 - Information System Monitoring | Analyze Communications Traffic Anomalies",
+        "NIST-ID": "SI-4(11)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1695 - Information System Monitoring | Wireless Intrusion Detection",
+        "NIST-ID": "SI-4(14)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1696 - Information System Monitoring | Correlate Monitoring Information",
+        "NIST-ID": "SI-4(16)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1697 - Information System Monitoring | Analyze Traffic / Covert Exfiltration",
+        "NIST-ID": "SI-4(18)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1698 - Information System Monitoring | Individuals Posing Greater Risk",
+        "NIST-ID": "SI-4(19)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1699 - Information System Monitoring | Privileged Users",
+        "NIST-ID": "SI-4(20)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1700 - Information System Monitoring | Unauthorized Network Services",
+        "NIST-ID": "SI-4(22)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1701 - Information System Monitoring | Host-Based Devices",
+        "NIST-ID": "SI-4(23)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1702 - Information System Monitoring | Indicators Of Compromise",
+        "NIST-ID": "SI-4(24)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1703 - Security Alerts, Advisories, And Directives",
+        "NIST-ID": "SI-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1704 - Security Alerts, Advisories, And Directives",
+        "NIST-ID": "SI-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1705 - Security Alerts, Advisories, And Directives",
+        "NIST-ID": "SI-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1706 - Security Alerts, Advisories, And Directives",
+        "NIST-ID": "SI-5",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1707 - Security Alerts, Advisories, And Directives | Automated Alerts And Advisories",
+        "NIST-ID": "SI-5(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1708 - Security Function Verification",
+        "NIST-ID": "SI-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1709 - Security Function Verification",
+        "NIST-ID": "SI-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1710 - Security Function Verification",
+        "NIST-ID": "SI-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1711 - Security Function Verification",
+        "NIST-ID": "SI-6",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1712 - Software, Firmware, And Information Integrity",
+        "NIST-ID": "SI-7",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1713 - Software, Firmware, And Information Integrity | Integrity Checks",
+        "NIST-ID": "SI-7(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1714 - Software, Firmware, And Information Integrity | Automated Notifications Of Integrity Violations",
+        "NIST-ID": "SI-7(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1715 - Software, Firmware, And Information Integrity | Automated Response To Integrity Violations",
+        "NIST-ID": "SI-7(5)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1716 - Software, Firmware, And Information Integrity | Integration Of Detection And Response",
+        "NIST-ID": "SI-7(7)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1717 - Software, Firmware, And Information Integrity | Binary Or Machine Executable Code",
+        "NIST-ID": "SI-7(14)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1718 - Software, Firmware, And Information Integrity | Binary Or Machine Executable Code",
+        "NIST-ID": "SI-7(14)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1719 - Spam Protection",
+        "NIST-ID": "SI-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1720 - Spam Protection",
+        "NIST-ID": "SI-8",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1721 - Spam Protection | Central Management",
+        "NIST-ID": "SI-8(1)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1722 - Spam Protection | Automatic Updates",
+        "NIST-ID": "SI-8(2)",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1723 - Information Input Validation",
+        "NIST-ID": "SI-10",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1724 - Error Handling",
+        "NIST-ID": "SI-11",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1725 - Error Handling",
+        "NIST-ID": "SI-11",
+        "Rev": 4
+    },
+    {
+        "AzurePolicyName": "Microsoft Managed Control 1726 - Information Handling And Retention",
+        "NIST-ID": "SI-12",
+        "Rev": 4
+    }
+]
