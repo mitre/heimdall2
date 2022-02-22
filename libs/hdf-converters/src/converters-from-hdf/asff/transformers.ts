@@ -26,6 +26,10 @@ type Counts = {
   NotReviewed: number;
 };
 
+export function escapeForwardSlashes(s: string): string {
+  return s.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT);
+}
+
 export function getRunTime(hdf: ExecJSON.Execution): Date {
   let time = new Date();
   hdf.profiles.forEach((profile) => {
@@ -364,10 +368,7 @@ function createProfileInfo(hdf?: ExecJSON.Execution): string[] {
       }
     });
     typesArr.push(
-      `Profile/Info/${JSON.stringify(profileInfos).replace(
-        /\//g,
-        TO_ASFF_TYPES_SLASH_REPLACEMENT
-      )}`
+      `Profile/Info/${escapeForwardSlashes(JSON.stringify(profileInfos))}`
     );
   });
   return typesArr;
@@ -388,7 +389,11 @@ function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
     targets.forEach((target) => {
       const value = _.get(profile, target);
       if (typeof value === 'string') {
-        typesArr.push(`${profile.name}/${target}/${value}`);
+        typesArr.push(
+          `${escapeForwardSlashes(profile.name)}/${escapeForwardSlashes(
+            target
+          )}/${escapeForwardSlashes(value)}`
+        );
       }
     });
     const inputs: Record<string, unknown>[] = [];
@@ -398,9 +403,8 @@ function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
       }
     });
     typesArr.push(
-      `${profile.name}/inputs/${JSON.stringify(inputs).replace(
-        /\//g,
-        TO_ASFF_TYPES_SLASH_REPLACEMENT
+      `${escapeForwardSlashes(profile.name)}/inputs/${escapeForwardSlashes(
+        JSON.stringify(inputs)
       )}`
     );
   });
@@ -424,10 +428,7 @@ function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
     const value = _.get(segment, target);
     if (typeof value === 'string' && value) {
       typesArr.push(
-        `Segment/${target}/${value.replace(
-          /\//g,
-          TO_ASFF_TYPES_SLASH_REPLACEMENT
-        )}`
+        `Segment/${escapeForwardSlashes(target)}/${escapeForwardSlashes(value)}`
       );
     }
   });
@@ -439,25 +440,27 @@ function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
   for (const tag in control.tags) {
     if (control) {
       if (tag === 'nist' && Array.isArray(control.tags.nist)) {
-        typesArr.push(`Tags/nist/${control.tags.nist.join(', ')}`);
+        typesArr.push(
+          `Tags/nist/${escapeForwardSlashes(control.tags.nist.join(', '))}`
+        );
       } else if (tag === 'cci' && Array.isArray(control.tags.cci)) {
-        typesArr.push(`Tags/cci/${control.tags.cci.join(', ')}`);
+        typesArr.push(
+          `Tags/cci/${escapeForwardSlashes(control.tags.cci.join(', '))}`
+        );
       } else if (typeof control.tags[tag] === 'string') {
         typesArr.push(
-          `Tags/${tag.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}/${(
+          `Tags/${escapeForwardSlashes(tag)}/${escapeForwardSlashes(
             control.tags[tag] as string
-          ).replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}`
+          )}`
         );
       } else if (
         typeof control.tags[tag] === 'object' &&
         Array.isArray(control.tags[tag])
       ) {
         typesArr.push(
-          `Tags/${tag.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}/${(
-            control.tags[tag] as Array<string>
-          )
-            .join(', ')
-            .replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}`
+          `Tags/${escapeForwardSlashes(tag)}/${escapeForwardSlashes(
+            (control.tags[tag] as Array<string>).join(', ')
+          )}`
         );
       }
     }
@@ -469,13 +472,9 @@ function createDescriptionInfo(control: ExecJSON.Control): string[] {
   const typesArr: string[] = [];
   control.descriptions?.forEach((description) => {
     typesArr.push(
-      `Descriptions/${description.label.replace(
-        /\//g,
-        TO_ASFF_TYPES_SLASH_REPLACEMENT
-      )}/${cleanText(description.data)?.replace(
-        /\//g,
-        TO_ASFF_TYPES_SLASH_REPLACEMENT
-      )}`
+      `Descriptions/${escapeForwardSlashes(
+        description.label
+      )}/${escapeForwardSlashes(cleanText(description.data) || 'No Value')}`
     );
   });
   return typesArr;
@@ -493,13 +492,14 @@ export function setupFindingType(
 
   const typesArr = [
     `File/Input/${filename}`,
-    `Control/Code/${control.layersOfControl
-      .map(
-        (layer: ExecJSON.Control & {profileInfo?: Record<string, unknown>}) =>
-          createCode(layer)
-      )
-      .join('\n\n')
-      .replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}`
+    `Control/Code/${escapeForwardSlashes(
+      control.layersOfControl
+        .map(
+          (layer: ExecJSON.Control & {profileInfo?: Record<string, unknown>}) =>
+            createCode(layer)
+        )
+        .join('\n\n')
+    )}`
   ];
 
   // Add all layers of profile info to the Finding Provider Fields
