@@ -25,7 +25,7 @@ describe('Describe Splunk Reverse Mapper', () => {
     );
 
     const res = await axios.post(
-      `https://127.0.0.1:8089/servicesNS/admin/search/search/jobs?output_mode=json`,
+      `http://127.0.0.1:8089/servicesNS/admin/search/search/jobs?output_mode=json`,
       `search=search index="main" meta.guid="${guid}"`,
       {
         headers: {
