@@ -53,8 +53,6 @@ export type Meta = {
   filename: string;
   subtype: string;
   profile_sha256: string;
-  parse_time?: string;
-  start_time: string;
   hdf_splunk_schema: string;
   is_baseline: boolean;
 };

@@ -1,12 +1,14 @@
 import axios, {AxiosResponse} from 'axios';
 import {
+  ContextualizedControl,
   ContextualizedEvaluation,
+  ContextualizedProfile,
   contextualizeEvaluation,
   ExecJSON
 } from 'inspecjs';
 import {MappedTransform} from '../../base-converter';
 import {FromAnyBaseConverter} from '../reverse-any-base-converter';
-import {FromHdfBaseConverter, ILookupPathFH} from '../reverse-base-converter';
+import {ILookupPathFH} from '../reverse-base-converter';
 import {SplunkControl} from './splunk-control-types';
 import {SplunkProfile} from './splunk-profile-types';
 import {SplunkReport} from './splunk-report-types';
@@ -17,6 +19,7 @@ export type SplunkConfig = {
   port: number;
   token: string;
   protocol: string;
+  index?: string;
 };
 
 export type SplunkData = {
@@ -36,6 +39,16 @@ export function createGUID(length: number) {
   return result;
 }
 
+export function contextualizeIfNeeded(
+  data: ExecJSON.Execution | ContextualizedEvaluation
+) {
+  if ('contains' in data) {
+    return data;
+  } else {
+    return contextualizeEvaluation(data);
+  }
+}
+
 export function postDataToSplunkHEC(
   data: Record<string, unknown> | Record<string, unknown>[],
   config: SplunkConfig
@@ -45,7 +58,8 @@ export function postDataToSplunkHEC(
       axios.post(
         `${config.protocol}://${config.host}:${config.port}/services/collector`,
         {
-          event: item
+          event: item,
+          index: config.index || 'main'
         },
         {
           headers: {
@@ -71,19 +85,38 @@ export function postDataToSplunkHEC(
   }
 }
 
+export function createReportMapping(
+  execution: ContextualizedEvaluation,
+  filename: string,
+  guid: string
+): MappedTransform<SplunkReport, ILookupPathFH> {
+  return {
+    meta: {
+      guid: guid,
+      filename: filename,
+      subtype: 'header',
+      hdf_splunk_schema: HDF_SPLUNK_SCHEMA,
+      filetype: 'evaluation'
+    },
+    platform: execution.data.platform,
+    statistics: execution.data.statistics,
+    version: execution.data.version
+  };
+}
+
 export function getDependencies(
-  profile?: ExecJSON.Profile,
-  execution?: ExecJSON.Execution
+  profile?: ContextualizedProfile,
+  execution?: ContextualizedEvaluation
 ) {
   if (profile && execution) {
     const dependencies: string[] = [];
-    profile.depends?.forEach((dependency) => {
+    profile.data.depends?.forEach((dependency) => {
       if (dependency.name) {
         dependencies.push(dependency.name);
         dependencies.push(
           ...getDependencies(
-            execution.profiles.find(
-              (execProfile) => execProfile.name === dependency.name
+            execution.contains.find(
+              (execProfile) => execProfile.data.name === dependency.name
             ),
             execution
           )
@@ -97,8 +130,8 @@ export function getDependencies(
 }
 
 export function getProfileRunLevel(
-  profile: ExecJSON.Profile,
-  execution: ExecJSON.Execution
+  profile: ContextualizedProfile,
+  execution: ContextualizedEvaluation
 ): number {
   return getDependencies(profile, execution).length;
 }
@@ -114,141 +147,132 @@ export function createProfileMapping(
       guid: guid,
       hdf_splunk_schema: HDF_SPLUNK_SCHEMA,
       is_baseline: true,
-      parse_time: new Date().toISOString(),
       profile_sha256: {
-        path: 'sha256'
+        path: 'data.sha256'
       },
-      start_time: new Date().toISOString(),
       subtype: 'header'
     },
     summary: {
-      path: 'summary'
+      path: 'data.summary'
     },
     name: {
-      path: 'name'
+      path: 'data.name'
     },
     sha256: {
-      path: 'sha256'
+      path: 'data.sha256'
     },
     supports: {
-      path: 'supports'
+      path: 'data.supports'
     },
     copyright: {
-      path: 'copyright'
+      path: 'data.copyright'
     },
     copyright_email: {
-      path: 'copyright_email'
+      path: 'data.copyright_email'
     },
     maintainer: {
-      path: 'maintainer'
+      path: 'data.maintainer'
     },
     version: {
-      path: 'version'
+      path: 'data.version'
     },
     license: {
-      path: 'license',
-      default: ''
+      path: 'data.license'
     },
     title: {
-      path: 'title',
+      path: 'data.title',
       default: 'No Title'
     },
     parent_profile: {
-      path: 'depends[0].name'
+      path: 'data.depends[0].name'
     },
     depends: {
-      path: 'depends'
+      path: 'data.depends'
     },
     attributes: {
-      path: 'attributes'
+      path: 'data.attributes'
     },
     groups: {
-      path: 'groups'
+      path: 'data.groups'
     },
     status: {
-      path: 'status',
-      default: 'loaded'
+      path: 'data.status'
     }
   };
 }
 
-export function getSplunkFullCode(
-  control: ExecJSON.Control,
-  execution: ExecJSON.Execution
-): string[] {
-  const codes: string[] = [];
-  execution.profiles.forEach((profile) =>
-    profile.controls.forEach((profileControl) =>
-      profileControl.id === control.id
-        ? codes.push(`${profile.name}: ${control.code}`)
-        : codes.push(...[])
-    )
-  );
-  return codes;
-}
-
 export function createControlMapping(
-  control: ExecJSON.Control,
-  profile: ExecJSON.Profile,
-  execution: ExecJSON.Execution,
+  control: ContextualizedControl,
+  profile: ContextualizedProfile,
+  execution: ContextualizedEvaluation,
   filename: string,
   guid: string
 ): MappedTransform<SplunkControl, ILookupPathFH> {
   return {
     meta: {
       guid: guid,
-      control_id: {
-        path: 'id'
-      },
-      status: 'Passed',
-      profile_sha256: profile.sha256,
+      status: control.hdf.status,
+      profile_sha256: profile.data.sha256,
       filename: filename,
       subtype: 'control',
-      start_time: new Date().toISOString(),
-      parse_time: new Date().toISOString(),
       hdf_splunk_schema: HDF_SPLUNK_SCHEMA,
       filetype: 'evaluation',
-      full_code: getSplunkFullCode(control, execution),
       is_baseline: getProfileRunLevel(profile, execution) === 0,
-      is_waived: {
-        path: 'waiver_data.skipped_due_to_waiver',
-        transformer: Boolean
-      },
-      overlay_depth: getProfileRunLevel(profile, execution)
+      is_waived: control.hdf.waived,
+      overlay_depth: getProfileRunLevel(profile, execution) + 1
     },
-    code: {
-      path: 'code'
+    code: control.data.code || '',
+    desc: control.data.desc || '',
+    descriptions: {
+      path: 'data.descriptions',
+      transformer: (data: {label: string; data: string}[]) => {
+        const descObjects: Record<string, string> = {};
+        data.forEach((data) => {
+          descObjects[data['label']] = data['data'];
+        });
+        return descObjects;
+      }
     },
-    desc: {
-      path: 'desc'
-    },
-    descriptions: {path: 'descriptions'},
-    id: {
-      path: 'id'
-    },
-    impact: {
-      path: 'impact'
-    },
-    refs: {
-      path: 'refs'
-    },
-    source_location: {
-      path: 'source_location'
-    },
-    tags: {
-      path: 'tags'
-    },
-    results: {
-      path: 'results'
-    }
+    id: control.data.id,
+    impact: control.data.impact,
+    refs: control.data.refs || [],
+    source_location: control.data.source_location,
+    tags: control.data.tags,
+    results: control.hdf.segments
   };
+}
+
+export class FromHDFExecutionToSplunkExecutionMapper extends FromAnyBaseConverter {
+  constructor(
+    evaluation: ContextualizedEvaluation,
+    filename: string,
+    guid: string
+  ) {
+    super(evaluation);
+    this.setMappings(createReportMapping(evaluation, filename, guid));
+  }
+
+  toSplunkExecution() {
+    return this.convertInternal(this.data, this.mappings);
+  }
+}
+
+export class FromHDFProfileToSplunkProfileMapper extends FromAnyBaseConverter {
+  constructor(profile: ContextualizedProfile, filename: string, guid: string) {
+    super(profile);
+    this.setMappings(createProfileMapping(filename, guid));
+  }
+
+  toSplunkProfile() {
+    return this.convertInternal(this.data, this.mappings);
+  }
 }
 
 export class FromHDFControlToSplunkControlMapper extends FromAnyBaseConverter {
   constructor(
-    control: ExecJSON.Control,
-    profile: ExecJSON.Profile,
-    execution: ExecJSON.Execution,
+    control: ContextualizedControl,
+    profile: ContextualizedProfile,
+    execution: ContextualizedEvaluation,
     filename: string,
     guid: string
   ) {
@@ -259,28 +283,16 @@ export class FromHDFControlToSplunkControlMapper extends FromAnyBaseConverter {
   }
 
   toSplunkControl() {
-    return this.convertInternal(this.data as ExecJSON.Control, this.mappings);
+    return this.convertInternal(this.data, this.mappings);
   }
 }
 
-export class FromHDFProfileToSplunkProfileMapper extends FromAnyBaseConverter {
-  constructor(profile: ExecJSON.Profile, filename: string, guid: string) {
-    super(profile);
-    this.setMappings(createProfileMapping(filename, guid));
-  }
-
-  toSplunkProfile() {
-    return this.convertInternal(this.data as ExecJSON.Profile, this.mappings);
-  }
-}
-
-export class FromHDFToSplunkMapper extends FromHdfBaseConverter {
+export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
   mappings?: MappedTransform<SplunkData, ILookupPathFH>;
   contextualizedEvaluation?: ContextualizedEvaluation;
 
-  constructor(data: ExecJSON.Execution) {
-    super(data);
-    this.contextualizedEvaluation = contextualizeEvaluation(data);
+  constructor(data: ExecJSON.Execution | ContextualizedEvaluation) {
+    super(contextualizeIfNeeded(data));
   }
 
   async toSplunk(config: SplunkConfig, filename: string) {
@@ -290,7 +302,14 @@ export class FromHDFToSplunkMapper extends FromHdfBaseConverter {
       reports: []
     };
     const guid = createGUID(30);
-    this.data.profiles.forEach((profile) => {
+    splunkData.reports.push(
+      new FromHDFExecutionToSplunkExecutionMapper(
+        this.data,
+        filename,
+        guid
+      ).toSplunkExecution() as SplunkReport
+    );
+    this.data.contains.forEach((profile: ContextualizedProfile) => {
       splunkData.profiles.push(
         new FromHDFProfileToSplunkProfileMapper(
           profile,
@@ -298,7 +317,7 @@ export class FromHDFToSplunkMapper extends FromHdfBaseConverter {
           guid
         ).toSplunkProfile() as SplunkProfile
       );
-      profile.controls.forEach((control) => {
+      profile.contains.forEach((control) => {
         splunkData.controls.push(
           new FromHDFControlToSplunkControlMapper(
             control,
