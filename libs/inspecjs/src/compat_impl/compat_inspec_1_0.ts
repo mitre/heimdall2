@@ -47,8 +47,8 @@ abstract class HDFControl10 implements HDFControl {
     this.waived = waived;
     this.isProfile = isProfile;
 
+    // Most applications treat NIST tags an array, however the InSpec schema says the could also be a string
     const tempNistTags = HDFControl10.compute_raw_nist_tags(this.wraps);
-
     this.rawNistTags = Array.isArray(tempNistTags)
       ? tempNistTags
       : [tempNistTags];
