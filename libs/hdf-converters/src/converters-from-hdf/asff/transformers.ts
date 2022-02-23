@@ -353,12 +353,7 @@ function createControlMetadata(control: SegmentedControl) {
     `Control/Impact/${control.impact}`
   ];
   if (control.title) {
-    types.push(
-      `Control/Title/${control.title.replace(
-        /\//g,
-        TO_ASFF_TYPES_SLASH_REPLACEMENT
-      )}`
-    );
+    types.push(`Control/Title/${escapeForwardSlashes(control.title)}`);
   }
   return types;
 }
