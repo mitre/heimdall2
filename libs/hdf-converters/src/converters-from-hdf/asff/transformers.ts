@@ -439,19 +439,7 @@ function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
   const typesArr: string[] = [];
   for (const tag in control.tags) {
     if (control) {
-      if (tag === 'nist' && Array.isArray(control.tags.nist)) {
-        control.tags.nist.length > 0
-          ? typesArr.push(
-              `Tags/nist/${escapeForwardSlashes(control.tags.nist.join(', '))}`
-            )
-          : typesArr.push('Tags/nist/[]');
-      } else if (tag === 'cci' && Array.isArray(control.tags.cci)) {
-        control.tags.cci.length > 0
-          ? typesArr.push(
-              `Tags/cci/${escapeForwardSlashes(control.tags.cci.join(', '))}`
-            )
-          : typesArr.push('Tags/cci/[]');
-      } else if (typeof control.tags[tag] === 'string') {
+      if (typeof control.tags[tag] === 'string') {
         typesArr.push(
           `Tags/${escapeForwardSlashes(tag)}/${
             (control.tags[tag] as string).length > 0
@@ -459,10 +447,7 @@ function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
               : '""'
           }`
         );
-      } else if (
-        typeof control.tags[tag] === 'object' &&
-        Array.isArray(control.tags[tag])
-      ) {
+      } else if (Array.isArray(control.tags[tag])) {
         typesArr.push(
           `Tags/${escapeForwardSlashes(tag)}/${
             (control.tags[tag] as Array<string>).length > 0
