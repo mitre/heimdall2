@@ -297,7 +297,7 @@ export function setupGeneratorId(
   control: SegmentedControl,
   context?: FromHdfToAsffMapper
 ) {
-  return `arn:aws:securityhub:us-east-2:${context?.ioptions.awsAccountId}:ruleset/set/${context?.data.profiles[0].name}/rule/${control.id}`;
+  return `arn:aws:securityhub:${context?.ioptions.region}:${context?.ioptions.awsAccountId}:ruleset/set/${context?.data.profiles[0].name}/rule/${control.id}`;
 }
 
 export function setupTitle(control: SegmentedControl) {
@@ -439,28 +439,23 @@ function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
   const typesArr: string[] = [];
   for (const tag in control.tags) {
     if (control) {
-      if (tag === 'nist' && Array.isArray(control.tags.nist)) {
+      if (typeof control.tags[tag] === 'string') {
         typesArr.push(
-          `Tags/nist/${escapeForwardSlashes(control.tags.nist.join(', '))}`
+          `Tags/${escapeForwardSlashes(tag)}/${
+            (control.tags[tag] as string).length > 0
+              ? escapeForwardSlashes(control.tags[tag] as string)
+              : '""'
+          }`
         );
-      } else if (tag === 'cci' && Array.isArray(control.tags.cci)) {
+      } else if (Array.isArray(control.tags[tag])) {
         typesArr.push(
-          `Tags/cci/${escapeForwardSlashes(control.tags.cci.join(', '))}`
-        );
-      } else if (typeof control.tags[tag] === 'string') {
-        typesArr.push(
-          `Tags/${escapeForwardSlashes(tag)}/${escapeForwardSlashes(
-            control.tags[tag] as string
-          )}`
-        );
-      } else if (
-        typeof control.tags[tag] === 'object' &&
-        Array.isArray(control.tags[tag])
-      ) {
-        typesArr.push(
-          `Tags/${escapeForwardSlashes(tag)}/${escapeForwardSlashes(
-            (control.tags[tag] as Array<string>).join(', ')
-          )}`
+          `Tags/${escapeForwardSlashes(tag)}/${
+            (control.tags[tag] as Array<string>).length > 0
+              ? escapeForwardSlashes(
+                  (control.tags[tag] as Array<string>).join(', ')
+                )
+              : '[]'
+          }`
         );
       }
     }
