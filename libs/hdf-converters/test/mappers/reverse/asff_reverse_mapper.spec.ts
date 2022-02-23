@@ -19,13 +19,6 @@ describe('Describe ASFF Reverse Mapper', () => {
       region: 'us-east-2'
     }).toAsff();
 
-    const expectedProfileInfo = JSON.parse(
-      fs.readFileSync(
-        'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json.p0.json',
-        {encoding: 'utf-8'}
-      )
-    );
-
     const profileInformation = [converted.pop() || {}];
 
     const expectedJSON = JSON.parse(
@@ -35,11 +28,18 @@ describe('Describe ASFF Reverse Mapper', () => {
       )
     );
 
+    const expectedProfileInfo = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json.p0.json',
+        {encoding: 'utf-8'}
+      )
+    );
+
     expect(
-      omitASFFVersions(omitASFFTimes(omitASFFTitle(expectedProfileInfo)))
-    ).toEqual(omitASFFTimes(omitASFFTitle(profileInformation)));
-    expect(omitASFFVersions(omitASFFTimes(converted))).toEqual(
-      omitASFFTimes(expectedJSON)
+      omitASFFVersions(omitASFFTimes(omitASFFTitle(profileInformation)))
+    ).toEqual(omitASFFTimes(omitASFFTitle(expectedProfileInfo)));
+    expect(omitASFFVersions(omitASFFTimes(omitASFFTitle(converted)))).toEqual(
+      omitASFFVersions(omitASFFTimes(omitASFFTitle(expectedJSON)))
     );
   });
 });
