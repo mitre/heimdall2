@@ -7,7 +7,7 @@ Splunk2HDF has follows 3 schemas for importing data into Splunk.
 An example query to preview data data splunk is as follows:
 
 ```
-index="<<YOUR INDEX>>" | stats list(meta.filename) list(meta.filetype) list(tags.*) list(descriptions.*) list(meta.subtype) list(meta.full_code*) list(meta.parse_time) list(meta.start_time) list(meta.hdf_splunk_schema) list(id) list(meta.profile_sha256) list(code) list(meta.is_baseline) by meta.guid id | join meta.guid [search index="yeet" meta.guid="*" platform.name="*" | stats count by meta.guid platform.name] | join meta.guid [search index="yeet" meta.guid="*" name="*" | stats count values(name) by meta.guid]
+index="<<YOUR INDEX>>" | stats list(meta.filename) list(meta.filetype) list(tags.*) list(descriptions.*) list(meta.subtype) list(meta.full_code*) list(meta.parse_time) list(meta.start_time) list(meta.hdf_splunk_schema) list(id) list(meta.profile_sha256) list(code) list(meta.is_baseline) by meta.guid id | join meta.guid [search index="<<YOUR INDEX>>" meta.guid="*" platform.name="*" | stats count by meta.guid platform.name] | join meta.guid [search index="<<YOUR INDEX>>" meta.guid="*" name="*" | stats count values(name) by meta.guid]
 ```
 
 ### Control
