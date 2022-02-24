@@ -800,7 +800,9 @@ export class ASFFMapper extends BaseConverter {
         SPECIAL_CASE_MAPPING.get(SpecialCasing.SecurityHub),
         'supportingDocs',
         (standards: string[] | undefined) => {
-          throw `supportingDocs function should've been defined: ${standards}`;
+          throw new Error(
+            `supportingDocs function should've been defined: ${standards}`
+          );
         }
       )(this.securityhubStandardsJsonArray)
     );
