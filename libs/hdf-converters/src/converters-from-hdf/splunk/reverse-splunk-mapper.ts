@@ -148,7 +148,9 @@ export function createProfileMapping(
       hdf_splunk_schema: HDF_SPLUNK_SCHEMA,
       is_baseline: {
         path: 'data.depends[0].name',
-        transformer: Boolean
+        transformer: (value?: string) => {
+          return !Boolean(value);
+        }
       },
       profile_sha256: {
         path: 'data.sha256'
