@@ -52,15 +52,14 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     Findings: [
       {
         SchemaVersion: '2018-10-08',
-        Id: {path: ``, transformer: setupId, passParent: true},
-        ProductArn: {path: ``, transformer: setupProductARN, passParent: true},
-        AwsAccountId: {path: ``, transformer: setupAwsAcct, passParent: true},
+        Id: {path: '', transformer: setupId, passParent: true},
+        ProductArn: {path: '', transformer: setupProductARN, passParent: true},
+        AwsAccountId: {path: '', transformer: setupAwsAcct, passParent: true},
         Types: {
           transformer: () => ['Software and Configuration Checks']
         },
-        CreatedAt: {path: ``, transformer: setupCreated},
-        Region: {path: '', transformer: setupRegion, passParent: true},
-        UpdatedAt: {path: ``, transformer: setupUpdated, passParent: true},
+        CreatedAt: {path: '', transformer: setupCreated},
+        UpdatedAt: {path: '', transformer: setupUpdated, passParent: true},
         GeneratorId: {
           path: '',
           transformer: setupGeneratorId,
