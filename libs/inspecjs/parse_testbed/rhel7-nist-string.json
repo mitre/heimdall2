@@ -1,0 +1,60 @@
+{
+    "platform": {
+        "name": "centos",
+        "release": "7.5.1804"
+    },
+    "profiles": [
+        {
+            "name": "cms-ars3.1-moderate-inspec-profile-disa_stig-el7",
+            "version": "0.1.0",
+            "sha256": "3ca1ab0095b707e23ada1c7f5d2d33736dd09b0a467a671b288962253d4e8599",
+            "title": "cms-ars3.1-moderate-inspec-profile-disa_stig-el7",
+            "maintainer": "CMS InSpec Dev team",
+            "summary": "CMS ARS 3.1 Moderate Overlay InSpec Validation Profile for RHEL7 STIG",
+            "license": "Apache-2.0",
+            "supports": [],
+            "attributes": [],
+            "groups": [
+                {
+                    "id": "/root/.inspec/cache/70e4e076509d039a68dd3e869d3a5f34449e59b4/d20180510-19622-19dycr8/controls/V-72231.rb",
+                    "controls": [
+                        "V-72231"
+                    ]
+                }
+            ],
+            "controls": [
+                {
+                    "id": "V-72231",
+                    "title": "The operating system must implement cryptography to protect the\nintegrity of Lightweight Directory Access Protocol (LDAP) communications.",
+                    "desc": "Without cryptographic integrity protections, information can be altered by\nunauthorized users without detection.\n\n    Cryptographic mechanisms used for protecting the integrity of information\ninclude, for example, signed hash functions using asymmetric cryptography\nenabling distribution of the public key to verify the hash information while\nmaintaining the confidentiality of the key used to generate the hash.",
+                    "impact": 0.0,
+                    "refs": [],
+                    "tags": {
+                        "gtitle": "SRG-OS-000250-GPOS-00093",
+                        "gid": "V-72231",
+                        "rid": "SV-86855r2_rule",
+                        "stig_id": "RHEL-07-040200",
+                        "cci": [
+                            "CCI-001453"
+                        ],
+                        "documentable": false,
+                        "nist": "AC-17 (2)",
+                        "check": "Verify the operating system implements cryptography to protect\nthe integrity of remote ldap access sessions.\n\nTo determine if LDAP is being used for authentication, use the following\ncommand:\n\n# grep -i useldapauth /etc/sysconfig/authconfig\nUSELDAPAUTH=yes\n\nIf USELDAPAUTH=yes, then LDAP is being used.\n\nCheck that the path to the X.509 certificate for peer authentication with the\nfollowing command:\n\n# grep -i cacertfile /etc/pam_ldap.conf\ntls_cacertfile /etc/openldap/ldap-cacert.pem\n\nVerify the \"tls_cacertfile\" option points to a file that contains the trusted\nCA certificate.\n\nIf this file does not exist, or the option is commented out or missing, this is\na finding.",
+                        "fix": "Configure the operating system to implement cryptography to\nprotect the integrity of LDAP remote access sessions.\n\nSet the \"tls_cacertfile\" option in \"/etc/pam_ldap.conf\" to point to the\npath for the X.509 certificates used for peer authentication.",
+                        "fix_id": "F-78585r1_fix"
+                    },
+                    "code": "",
+                    "source_location": {
+                        "line": 10,
+                        "ref": "/root/.inspec/cache/70e4e076509d039a68dd3e869d3a5f34449e59b4/d20180510-19622-19dycr8/controls/V-72231.rb"
+                    },
+                    "results": []
+                }
+            ]
+        }
+    ],
+    "statistics": {
+        "duration": 58.411735638
+    },
+    "version": "2.1.10"
+}
