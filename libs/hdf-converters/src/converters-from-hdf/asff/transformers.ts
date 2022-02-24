@@ -463,9 +463,11 @@ function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
         typesArr.push(
           `Tags/${escapeForwardSlashes(tag)}/${
             (control.tags[tag] as Array<string>).length > 0
-              ? escapeForwardSlashes(
+              ? '[' +
+                escapeForwardSlashes(
                   (control.tags[tag] as Array<string>).join(', ')
-                )
+                ) +
+                ']'
               : '[]'
           }`
         );
