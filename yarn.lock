@@ -20006,9 +20006,9 @@ vue-class-component@^7.0.2:
   integrity sha512-+eaQXVrAm/LldalI272PpDe3+i4mPis0ORiMYxF6Ae4hyuCh15W8Idet7wPUEs4N4YptgFHGys4UrgNQOMyO6w==
 
 vue-cli-plugin-vuetify@~2.4.0:
-  version "2.4.5"
-  resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify/-/vue-cli-plugin-vuetify-2.4.5.tgz#5dfae4d78c717c400530731f0b75c0350c3b6add"
-  integrity sha512-CnCVzG6iZAsMMqTkijZ0gRkPB6s4zHPWyFX1VpBBKVyxZESayQhUoMCZRZUOZNjvvZpq1LPgviq+8zcliSu73g==
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/vue-cli-plugin-vuetify/-/vue-cli-plugin-vuetify-2.4.6.tgz#a4d24ead149eb6d69be05464d993088de199160e"
+  integrity sha512-rM4ORStIIHlivDVJ5o0e/YQzkShHyKnituq6OLhnGGZdRRWF5USxlUPtAHZOrhw3o6dUnoj74LlL4kOuR5D+fg==
   dependencies:
     null-loader "^4.0.1"
     semver "^7.1.2"
