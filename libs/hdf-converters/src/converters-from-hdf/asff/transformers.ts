@@ -460,17 +460,13 @@ function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
           }`
         );
       } else if (Array.isArray(control.tags[tag])) {
-        typesArr.push(
-          `Tags/${escapeForwardSlashes(tag)}/${
-            (control.tags[tag] as Array<string>).length > 0
-              ? '[' +
-                escapeForwardSlashes(
-                  (control.tags[tag] as Array<string>).join(', ')
-                ) +
-                ']'
-              : '[]'
-          }`
-        );
+        const classifier =
+          (control.tags[tag] as Array<string>).length > 0
+            ? `[${escapeForwardSlashes(
+                (control.tags[tag] as Array<string>).join(', ')
+              )}]`
+            : '[]';
+        typesArr.push(`Tags/${escapeForwardSlashes(tag)}/${classifier}`);
       }
     }
   }
