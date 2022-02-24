@@ -8,7 +8,6 @@ export interface ILookupPathFH {
   arrayTransformer?: (value: unknown[], file: ExecJSON.Execution) => unknown[];
   key?: string;
   passParent?: boolean;
-  default?: any;
 }
 
 //Base converter used to support conversions from HDF to Any Format
@@ -47,7 +46,6 @@ export class FromHdfBaseConverter {
     v: T | Array<T>
   ): T | Array<T> | MappedReform<T, ILookupPathFH> {
     const transformer = _.get(v, 'transformer');
-
     if (Array.isArray(v)) {
       return this.handleArray(file, v);
     }
@@ -63,24 +61,19 @@ export class FromHdfBaseConverter {
     }
 
     if (typeof transformer === 'function') {
-      let result: T | Array<T> | MappedReform<T, ILookupPathFH>;
       if (!v.path) {
         if (v.passParent) {
-          result = transformer(file, this);
+          return transformer(file, this);
         } else {
-          result = transformer(file);
+          return transformer(file);
         }
       } else {
         if (v.passParent) {
-          result = transformer(this.handlePath(file, v.path), this);
+          return transformer(this.handlePath(file, v.path), this);
         } else {
-          result = transformer(this.handlePath(file, v.path));
+          return transformer(this.handlePath(file, v.path));
         }
       }
-      if (typeof result === 'undefined' && v.default) {
-        return v.default;
-      }
-      return result;
     } else {
       if (v.path) {
         return this.handlePath(file, v.path) as T | T[];

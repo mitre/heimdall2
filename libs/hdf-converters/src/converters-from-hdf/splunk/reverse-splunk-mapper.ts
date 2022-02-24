@@ -185,8 +185,7 @@ export function createProfileMapping(
       path: 'data.license'
     },
     title: {
-      path: 'data.title',
-      default: 'No Title'
+      path: 'data.title'
     },
     parent_profile: {
       path: 'data.depends[0].name'
