@@ -59,7 +59,7 @@ export function postDataToSplunkHEC(
         `${config.protocol}://${config.host}:${config.port}/services/collector`,
         {
           event: item,
-          index: config.index || 'main'
+          index: config.index
         },
         {
           headers: {
@@ -146,7 +146,10 @@ export function createProfileMapping(
       filetype: 'evaluation',
       guid: guid,
       hdf_splunk_schema: HDF_SPLUNK_SCHEMA,
-      is_baseline: true,
+      is_baseline: {
+        path: 'data.depends[0].name',
+        transformer: Boolean
+      },
       profile_sha256: {
         path: 'data.sha256'
       },
