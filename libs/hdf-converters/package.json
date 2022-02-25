@@ -48,6 +48,7 @@
   },
   "jest": {
     "rootDir": ".",
+    "testTimeout": 50000,
     "transform": {
       "^.+\\.ts$": "ts-jest"
     }
