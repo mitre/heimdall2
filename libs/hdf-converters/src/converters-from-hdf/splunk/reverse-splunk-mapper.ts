@@ -6,7 +6,9 @@ import {
   contextualizeEvaluation,
   ExecJSON
 } from 'inspecjs';
+import winston from 'winston';
 import {MappedTransform} from '../../base-converter';
+import {createWinstonLogger} from '../../utils/global';
 import {FromAnyBaseConverter} from '../reverse-any-base-converter';
 import {ILookupPathFH} from '../reverse-base-converter';
 import {SplunkControl} from './splunk-control-types';
@@ -14,6 +16,8 @@ import {SplunkProfile} from './splunk-profile-types';
 import {SplunkReport} from './splunk-report-types';
 
 export const HDF_SPLUNK_SCHEMA = '1.0';
+export const MAPPER_NAME = 'HDF2Splunk';
+
 export type SplunkConfig = {
   host: string;
   port: number;
@@ -27,6 +31,8 @@ export type SplunkData = {
   controls: SplunkControl[];
   reports: SplunkReport[];
 };
+
+let logger: winston.Logger | undefined = undefined;
 
 export function createGUID(length: number) {
   let result = '';
@@ -252,9 +258,18 @@ export class FromHDFExecutionToSplunkExecutionMapper extends FromAnyBaseConverte
   constructor(
     evaluation: ContextualizedEvaluation,
     filename: string,
-    guid: string
+    guid: string,
+    logService?: winston.Logger,
+    loggingLevel?: string
   ) {
     super(evaluation);
+    if (logService) {
+      logger = logService;
+    } else {
+      logger = createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
+    }
+    logger.debug('Got Execution: ' + filename);
+    logger.debug('Using GUID: ' + guid);
     this.setMappings(createReportMapping(evaluation, filename, guid));
   }
 
@@ -315,6 +330,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
         guid
       ).toSplunkExecution() as SplunkReport
     );
+    logger?.debug(`Converted execution: ${JSON.stringify(splunkData.reports)}`);
     this.data.contains.forEach((profile: ContextualizedProfile) => {
       splunkData.profiles.push(
         new FromHDFProfileToSplunkProfileMapper(
@@ -337,10 +353,19 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     });
 
     const uploads: Promise<AxiosResponse>[] = [];
+    logger?.info(
+      'Data converted, uploading to Splunk with config: ' +
+        JSON.stringify(config)
+    );
     uploads.push(...postDataToSplunkHEC(splunkData.reports, config));
     uploads.push(...postDataToSplunkHEC(splunkData.profiles, config));
     uploads.push(...postDataToSplunkHEC(splunkData.controls, config));
 
-    return Promise.all(uploads).then(() => guid);
+    return Promise.all(uploads).then(() => {
+      logger?.info(
+        `Uploaded into splunk successfully, to find this data search for: meta.guid="${guid}"`
+      );
+      return guid;
+    });
   }
 }
