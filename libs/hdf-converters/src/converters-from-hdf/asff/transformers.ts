@@ -35,7 +35,7 @@ export function getRunTime(hdf: ExecJSON.Execution): Date {
   let time = new Date();
   hdf.profiles.forEach((profile) => {
     if (
-      profile.controls[0].results.length &&
+      _.get(profile, 'controls[0].results', []).length &&
       profile.controls[0].results[0].start_time
     ) {
       time = new Date(profile.controls[0].results[0].start_time);
