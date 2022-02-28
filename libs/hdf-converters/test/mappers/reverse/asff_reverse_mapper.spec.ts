@@ -42,4 +42,31 @@ describe('Describe ASFF Reverse Mapper', () => {
       omitASFFVersions(omitASFFTimes(omitASFFTitle(expectedJSON)))
     );
   });
+
+  it('Successfuly processes HDF files with no controls', () => {
+    const inputData = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/asff_reverse_mapper/sample_input_report/snyk-no-results.json',
+        {encoding: 'utf-8'}
+      )
+    );
+
+    const converted = new FromHdfToAsffMapper(inputData, {
+      input: 'snyk-no-results.json',
+      awsAccountId: '12345678910',
+      target: 'storybook-link',
+      region: 'us-east-2'
+    }).toAsff();
+
+    const expectedJSON = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/asff_reverse_mapper/snyk-no-results.asff.json',
+        {encoding: 'utf-8'}
+      )
+    );
+
+    expect(omitASFFVersions(omitASFFTimes(omitASFFTitle(converted)))).toEqual(
+      omitASFFVersions(omitASFFTimes(omitASFFTitle(expectedJSON)))
+    );
+  });
 });
