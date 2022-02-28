@@ -164,7 +164,7 @@ export function createProfileMapping(
       profile_sha256: {
         path: 'data.sha256'
       },
-      subtype: 'header'
+      subtype: 'profile'
     },
     summary: {
       path: 'data.summary'

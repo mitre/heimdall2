@@ -18,13 +18,14 @@
         v-model="hostname"
         label="Hostname"
         for="hostname_field"
+        hint="https://yourdomain.com:8089"
         data-cy="splunkhostname"
       />
     </v-form>
     <v-row class="mx-1">
       <v-btn
         color="primary"
-        class="my-4 mt-0"
+        class="my-4 mt-4"
         data-cy="splunkLoginButton"
         @click="login"
       >
