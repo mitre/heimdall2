@@ -252,7 +252,7 @@ export function setupId(
   control: SegmentedControl,
   context?: FromHdfToAsffMapper
 ) {
-  const target = context?.ioptions.target.toLowerCase().trim();
+  const target = context?.ioptions.target;
   const name = context?.data.profiles[0].name;
 
   return `${target}/${name}/${control.id}/finding/${createHash('sha256')
