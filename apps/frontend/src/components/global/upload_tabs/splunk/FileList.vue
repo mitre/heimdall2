@@ -86,14 +86,15 @@ export default class FileList extends Vue {
 
   loadResults() {
     const files = this.selectedExecutions.map((execution) => {
-      return getExecution(this.splunkClient, execution.guid).then((result) =>
+      return getExecution(this.splunkClient, execution.guid).then((result) => {
+        console.log(result);
         InspecIntakeModule.loadText({
           text: JSON.stringify(result),
           filename: _.get(result, 'meta.filename')
         }).catch((err) => {
           SnackbarModule.failure(String(err));
-        })
-      );
+        });
+      });
     });
     this.$emit('got-files', files);
   }
