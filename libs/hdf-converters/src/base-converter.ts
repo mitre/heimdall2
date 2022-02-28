@@ -188,8 +188,15 @@ export class BaseConverter {
       }
       return pathVal as T;
     }
-    if (typeof transformer === 'function') {
-      return transformer.bind(this)(file);
+    if (_.has(v, 'transformer') && typeof transformer === 'function') {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/ban-types
+      const {transformer: ignored, ...remainderOfV}: any = v; // TODO: fix the types here
+      const transformed = transformer.bind(this)(file);
+      if (_.isEmpty(remainderOfV)) {
+        return transformed;
+      } else {
+        return {...transformed, ...this.convertInternal(file, remainderOfV)};
+      }
     } else {
       return this.convertInternal(file, v);
     }
