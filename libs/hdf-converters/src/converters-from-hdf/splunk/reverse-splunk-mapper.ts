@@ -231,9 +231,11 @@ export function createControlMapping(
       path: 'data.descriptions',
       transformer: (data: {label: string; data: string}[]) => {
         const descObjects: Record<string, string> = {};
-        data.forEach((item) => {
-          descObjects[item['label']] = item['data'];
-        });
+        if (Array.isArray(data)) {
+          data.forEach((item) => {
+            descObjects[item['label']] = item['data'];
+          });
+        }
         return descObjects;
       }
     },
