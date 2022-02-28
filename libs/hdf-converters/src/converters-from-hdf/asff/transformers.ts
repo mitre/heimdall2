@@ -115,7 +115,7 @@ export function createProfileInfoFinding(
     ]
   };
 
-  return profileInfo as unknown as IFindingASFF;
+  return profileInfo as IFindingASFF;
 }
 
 export function statusCount(evaluation: ContextualizedEvaluation): Counts {

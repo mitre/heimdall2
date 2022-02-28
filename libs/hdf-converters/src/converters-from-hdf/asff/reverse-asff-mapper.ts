@@ -60,7 +60,9 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         },
         CreatedAt: {path: '', transformer: setupCreated},
         UpdatedAt: {path: '', transformer: setupUpdated, passParent: true},
-        ...(this.ioptions.regionAttribute && { Region: {path: '', transformer: setupRegion, passParent: true}}),
+        ...(this.ioptions.regionAttribute && {
+          Region: {path: '', transformer: setupRegion, passParent: true}
+        }),
         GeneratorId: {
           path: '',
           transformer: setupGeneratorId,
@@ -160,7 +162,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     this.data.profiles.forEach((profile) => {
       profile.controls.reverse().forEach((control) => {
         control.results.forEach((segment) => {
-          // Ensure that the UpdatedAt time is different accross findings (to match the order in HDF)
+          // Ensure that the UpdatedAt time is different across findings (to match the order in HDF)
           segments.push({
             ...control,
             result: segment,
