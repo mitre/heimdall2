@@ -115,7 +115,8 @@ export function createProfileInfoFinding(
     ]
   };
 
-  return profileInfo as IFindingASFF;
+  // need the intermediate caste to tell typescript that this cast is intentional
+  return profileInfo as unknown as IFindingASFF;
 }
 
 export function statusCount(evaluation: ContextualizedEvaluation): Counts {
