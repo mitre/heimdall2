@@ -18,8 +18,6 @@ const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 const SEVERITY_LABEL = 'Severity.Label';
 const COMPLIANCE_STATUS = 'Compliance.Status';
 
-const FROM_ASFF_TYPES_SLASH_REPLACEMENT = /{{{SLASH}}}/gi; // The "Types" field of ASFF only supports a maximum of 2 slashes, and will get replaced with this text. Note that the default AWS CLI doesn't support UTF-8 encoding
-
 // Sometimes certain ASFF file types require massaging in order to generate good HDF files.  These are the supported special cases and a catchall 'Default'.  'Default' files and non-special cased methods for otherwise special cased files do the pre-defined default behaviors when generating the HDF file.
 enum SpecialCasing {
   FirewallManager = 'AWS Firewall Manager',
@@ -79,48 +77,30 @@ type ExternalProductHandlerOutputs =
   | (() => string | undefined)
   | number
   | string
-  | string[];
-
-function replaceTypesSlashes(data: {Findings: {Types?: string[]}[]}) {
-  const findings = data.Findings.map((finding) => {
-    return {
-      ...finding,
-      Types: finding.Types?.map((type) =>
-        type.replace(FROM_ASFF_TYPES_SLASH_REPLACEMENT, '/')
-      )
-    };
-  });
-  return {Findings: findings};
-}
+  | string[]
+  | Record<string, unknown>
+  | undefined;
 
 function fixFileInput(asffJson: string) {
+  let output = {};
   try {
-    let output = JSON.parse(asffJson);
-    if (!_.has(output, 'Findings')) {
-      if (Array.isArray(output)) {
-        output = {Findings: output};
-      } else {
-        output = {Findings: [output]};
-      }
-    }
-    return replaceTypesSlashes(output);
+    output = JSON.parse(asffJson);
   } catch {
     // Prowler gives us JSON Lines format but we need regular JSON
     const fixedInput = `[${asffJson
       .trim()
       .replace(/}\n/g, '},\n')
       .replace(/\},\n\$/g, '')}]`;
-    let output = JSON.parse(fixedInput);
-    if (!_.has(output, 'Findings')) {
-      if (Array.isArray(output)) {
-        output = {Findings: output};
-      } else {
-        output = {Findings: [output]};
-      }
-    }
-    // Pre-process all types fields, fixes
-    return replaceTypesSlashes(output);
+    output = JSON.parse(fixedInput);
   }
+  if (!_.has(output, 'Findings')) {
+    if (Array.isArray(output)) {
+      output = {Findings: output};
+    } else {
+      output = {Findings: [output]};
+    }
+  }
+  return output;
 }
 // eslint-disable-next-line @typescript-eslint/ban-types
 function getFirewallManager(): Record<string, Function> {
@@ -316,10 +296,8 @@ function getSecurityHub(): Record<string, Function> {
   };
 }
 
-function getTrivy(): Record<
-  string,
-  (finding: unknown) => string | string[] | undefined
-> {
+// eslint-disable-next-line @typescript-eslint/ban-types
+function getTrivy(): Record<string, Function> {
   const findingId = (finding: unknown): string => {
     const generatorId = _.get(finding, 'GeneratorId');
     const cveId = _.get(finding, 'Resources[0].Details.Other.CVE ID');
@@ -371,11 +349,78 @@ function getTrivy(): Record<
   };
 }
 
-function getHDF2ASFF(): Record<
-  string,
-  (finding: unknown) => string | string[] | undefined
-> {
-  return {};
+// eslint-disable-next-line @typescript-eslint/ban-types
+function getHDF2ASFF(): Record<string, Function> {
+  const replaceTypesSlashes = (type: string): string => {
+    const FROM_ASFF_TYPES_SLASH_REPLACEMENT = /{{{SLASH}}}/gi; // The "Types" field of ASFF only supports a maximum of 2 slashes, and will get replaced with this text. Note that the default AWS CLI doesn't support UTF-8 encoding
+    return type.replace(FROM_ASFF_TYPES_SLASH_REPLACEMENT, '/');
+  };
+  const getFilteredTypes = (
+    finding: unknown,
+    {
+      startsWith = [''],
+      doesNotStartWith = []
+    }: {startsWith?: string[]; doesNotStartWith?: string[]} = {}
+  ): string[] => {
+    return _.filter(
+      _.get(finding, 'FindingProviderFields.Types'),
+      (type) =>
+        _.some(startsWith, (beginning) => _.startsWith(type, beginning)) &&
+        _.every(doesNotStartWith, (beginning) => !_.startsWith(type, beginning))
+    );
+  };
+  const convertClassifierStringToExpectedType = (
+    c: string
+  ): string | string[] => {
+    // brittle since the assumption is that if the classifier is an array, it can be tokenized via commas, i.e. the tokens themselves don't contain any commas
+    if (c.startsWith('[') && c.endsWith(']')) {
+      return c.slice(1, -1).split(', ');
+    }
+    return c;
+  };
+  const findingNistTag = (finding: unknown): string[] => {
+    return _.reduce(
+      getFilteredTypes(finding, {startsWith: ['Tags/nist/']}),
+      (acc: string[], cur: string) =>
+        _.endsWith(cur, '/[]')
+          ? acc
+          : acc.concat(
+              convertClassifierStringToExpectedType(
+                replaceTypesSlashes(_.replace(cur, 'Tags/nist/', ''))
+              )
+            ),
+      []
+    );
+  };
+  const findingTags = (finding: unknown): Record<string, unknown> => {
+    return _.reduce(
+      getFilteredTypes(finding, {
+        startsWith: ['Tags'],
+        doesNotStartWith: ['Tags/nist/']
+      }),
+      (acc: Record<string, unknown>, cur: string) => {
+        const [, category, classifier] = cur.split('/');
+        if (classifier === '[]') {
+          return {...acc, [replaceTypesSlashes(category)]: []};
+        } else if (classifier === '""') {
+          return {...acc, [replaceTypesSlashes(category)]: ''};
+        } else {
+          return {
+            ...acc,
+            [replaceTypesSlashes(category)]:
+              convertClassifierStringToExpectedType(
+                replaceTypesSlashes(classifier)
+              )
+          };
+        }
+      },
+      {}
+    );
+  };
+  return {
+    findingNistTag,
+    findingTags
+  };
 }
 
 export class ASFFMapper extends BaseConverter {
@@ -467,6 +512,17 @@ export class ASFFMapper extends BaseConverter {
               }
             },
             tags: {
+              transformer: (
+                finding: Record<string, unknown>
+              ): Record<string, unknown> | undefined => {
+                const tags = this.externalProductHandler(
+                  whichSpecialCase(finding),
+                  finding,
+                  'findingTags',
+                  {}
+                ) as Record<string, unknown>;
+                return tags;
+              },
               nist: {
                 transformer: (finding: Record<string, unknown>): string[] => {
                   const tags = this.externalProductHandler(
@@ -654,7 +710,7 @@ export class ASFFMapper extends BaseConverter {
     data: unknown,
     func: string,
     defaultVal: ExternalProductHandlerOutputs
-  ): string | string[] | number | undefined {
+  ): ExternalProductHandlerOutputs {
     if (
       product !== SpecialCasing.Default &&
       _.has(SPECIAL_CASE_MAPPING.get(product), func)
@@ -745,11 +801,19 @@ export class ASFFMapper extends BaseConverter {
           title: `${productName}: ${_.uniq(
             group.map((d) => _.get(d, 'title') as string)
           ).join(';')}`,
-          tags: {
-            nist: _.uniq(
-              group.map((d) => _.get(d, 'tags.nist') as string[]).flat()
-            )
-          },
+          tags: _.mergeWith(
+            {},
+            ...group.map((d) => _.get(d, 'tags')),
+            (acc: unknown, cur: unknown) => {
+              if (acc === undefined || cur === undefined) {
+                return undefined;
+              } else if (_.isEqual(acc, cur)) {
+                return acc;
+              } else {
+                return _.uniq(_.concat([], acc, cur));
+              }
+            }
+          ),
           impact: Math.max(...group.map((d) => _.get(d, 'impact'))),
           desc: this.externalProductHandler(
             whichSpecialCase(findings[0]),
