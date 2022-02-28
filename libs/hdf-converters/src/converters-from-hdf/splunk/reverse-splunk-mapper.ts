@@ -109,6 +109,7 @@ export function createReportMapping(
       hdf_splunk_schema: HDF_SPLUNK_SCHEMA,
       filetype: 'evaluation'
     },
+    profiles: [],
     platform: execution.data.platform,
     statistics: execution.data.statistics,
     version: execution.data.version
