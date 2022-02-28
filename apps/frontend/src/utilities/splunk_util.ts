@@ -179,7 +179,7 @@ export async function createSearch(
   // We basically can't, and really shouldn't, do typescript here. Output is changes depending on the job called
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<JobID> {
-  const fullQuery = `search=search index="hdf" | ${searchString || ''}`;
+  const fullQuery = `search=search ${searchString || ''}`;
   return apiClient({
     method: 'POST',
     url: `${splunkClient.host}/services/search/jobs?output_mode=json`,
