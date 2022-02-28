@@ -150,7 +150,10 @@ export async function getExecution(
   splunkClient: SplunkClient,
   guid: string
 ): Promise<ExecJSON.Execution> {
-  const jobId = await createSearch(splunkClient, `search "meta.guid"=${guid}`);
+  const jobId = await createSearch(
+    splunkClient,
+    `spath "meta.guid" | search "meta.guid"=${guid}`
+  );
   const executionPayloads = waitForJob(splunkClient, jobId);
   return executionPayloads
     .then((payloads) => consolidate_payloads(payloads))
@@ -162,7 +165,7 @@ export async function getAllExecutions(
 ): Promise<FileMetaData[]> {
   const jobId = await createSearch(
     splunkClient,
-    'search "meta.subtype"=header'
+    'spath "meta.subtype" | search "meta.subtype"=header'
   );
   return waitForJob(splunkClient, jobId).then(
     (executions: GenericPayloadWithMetaData[]) =>
@@ -176,7 +179,7 @@ export async function createSearch(
   // We basically can't, and really shouldn't, do typescript here. Output is changes depending on the job called
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<JobID> {
-  const fullQuery = `search=search ${searchString || ''}`;
+  const fullQuery = `search=search index="*" | ${searchString || ''}`;
   return apiClient({
     method: 'POST',
     url: `${splunkClient.host}/services/search/jobs?output_mode=json`,
