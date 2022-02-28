@@ -141,7 +141,16 @@ function consolidateFilePayloads(
     // Get the corresponding controls, and put them into the profile
     const sha = profile.meta.profile_sha256;
     const corrControls = shaGroupedControls[sha] || [];
-    profile.controls.push(...corrControls);
+    profile.controls.push(
+      ...replaceKeyValueDescriptions(
+        corrControls as unknown as (ExecJSON.Control &
+          GenericPayloadWithMetaData & {
+            descriptions?:
+              | {[key: string]: string}
+              | ExecJSON.ControlDescription[];
+          })[]
+      )
+    );
   }
 
   return exec as unknown as ExecJSON.Execution;
