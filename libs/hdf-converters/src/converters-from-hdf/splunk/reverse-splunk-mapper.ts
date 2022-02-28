@@ -1,4 +1,4 @@
-import axios, {AxiosResponse} from 'axios';
+import axios, {AxiosError, AxiosResponse} from 'axios';
 import https from 'https';
 import {
   ContextualizedControl,
@@ -63,21 +63,19 @@ export function postDataToSplunkHEC(
   config: SplunkConfig
 ) {
   if (Array.isArray(data)) {
-    return data.map((item) =>
+    return [
       axios.post(
         `${config.protocol}://${config.host}:${config.port}/services/collector`,
-        {
-          event: item,
-          index: config.index
-        },
+        data.map((item) => JSON.stringify(item)).join('\n'),
         {
           httpsAgent: httpsAgent,
           headers: {
-            Authorization: `Splunk ${config.token}`
+            Authorization: `Splunk ${config.token}`,
+            'Content-Type': 'application/json'
           }
         }
       )
-    );
+    ];
   } else {
     return [
       axios.post(
@@ -371,11 +369,15 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     uploads.push(...postDataToSplunkHEC(splunkData.profiles, config));
     uploads.push(...postDataToSplunkHEC(splunkData.controls, config));
 
-    return Promise.all(uploads).then(() => {
-      logger?.info(
-        `Uploaded into splunk successfully, to find this data search for: meta.guid="${guid}"`
-      );
-      return guid;
-    });
+    return Promise.all(uploads)
+      .then(() => {
+        logger?.info(
+          `Uploaded into splunk successfully, to find this data search for: meta.guid="${guid}"`
+        );
+        return guid;
+      })
+      .catch((error: AxiosError) => {
+        logger?.error(error);
+      });
   }
 }
