@@ -153,6 +153,7 @@ index="<<YOUR INDEX>>" | stats list(meta.filename) list(meta.filetype) list(tags
             "compliance": "?"
         }
     ],
+    controls: [], // An empty array, for backwards compatibility with versions of Heimdall that assume this is already defined
     // "Inputs" in modern Inspec parlance, Attributes are the parameters specified at runtime for the profile.
     "attributes": [
         {

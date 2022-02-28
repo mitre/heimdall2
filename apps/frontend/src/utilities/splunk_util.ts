@@ -137,6 +137,7 @@ function consolidateFilePayloads(
     (ctrl) => ctrl.meta.profile_sha256
   );
   for (const profile of profileEvents) {
+    profile.controls = [];
     // Get the corresponding controls, and put them into the profile
     const sha = profile.meta.profile_sha256;
     const corrControls = shaGroupedControls[sha] || [];

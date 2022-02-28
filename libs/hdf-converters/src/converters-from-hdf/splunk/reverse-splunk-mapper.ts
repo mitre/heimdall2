@@ -198,6 +198,7 @@ export function createProfileMapping(
     title: {
       path: 'data.title'
     },
+    controls: [],
     parent_profile: {
       path: 'data.depends[0].name'
     },
