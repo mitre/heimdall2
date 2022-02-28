@@ -5,6 +5,7 @@
         v-model="username"
         label="Username"
         for="username_field"
+        hint="admin"
         data-cy="splunkusername"
       />
       <v-text-field
