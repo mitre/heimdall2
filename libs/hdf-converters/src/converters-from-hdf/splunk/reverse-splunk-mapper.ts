@@ -1,4 +1,5 @@
 import axios, {AxiosResponse} from 'axios';
+import https from 'https';
 import {
   ContextualizedControl,
   ContextualizedEvaluation,
@@ -21,6 +22,7 @@ export const MAPPER_NAME = 'HDF2Splunk';
 export type SplunkConfig = {
   host: string;
   port: number;
+  insecure?: boolean;
   token: string;
   protocol: string;
   index?: string;
@@ -33,6 +35,7 @@ export type SplunkData = {
 };
 
 let logger: winston.Logger | undefined = undefined;
+let httpsAgent = new https.Agent();
 
 export function createGUID(length: number) {
   let result = '';
@@ -68,6 +71,7 @@ export function postDataToSplunkHEC(
           index: config.index
         },
         {
+          httpsAgent: httpsAgent,
           headers: {
             Authorization: `Splunk ${config.token}`
           }
@@ -82,6 +86,7 @@ export function postDataToSplunkHEC(
           event: data
         },
         {
+          httpsAgent: httpsAgent,
           headers: {
             Authorization: `Splunk ${config.token}`
           }
@@ -322,6 +327,11 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
       profiles: [],
       reports: []
     };
+    if (config.insecure) {
+      httpsAgent = new https.Agent({
+        rejectUnauthorized: false
+      });
+    }
     const guid = createGUID(30);
     splunkData.reports.push(
       new FromHDFExecutionToSplunkExecutionMapper(
