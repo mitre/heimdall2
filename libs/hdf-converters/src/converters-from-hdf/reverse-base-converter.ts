@@ -54,6 +54,7 @@ export class FromHdfBaseConverter {
       typeof v === 'string' ||
       typeof v === 'number' ||
       typeof v === 'boolean' ||
+      v === undefined ||
       v === null
     ) {
       return v;

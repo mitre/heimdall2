@@ -9,7 +9,11 @@ import {
 import _ from 'lodash';
 import moment from 'moment';
 import {IFindingASFF, IOptions} from './asff-types';
-import {FromHdfToAsffMapper, SegmentedControl} from './reverse-asff-mapper';
+import {
+  FromHdfToAsffMapper,
+  SegmentedControl,
+  TO_ASFF_TYPES_SLASH_REPLACEMENT
+} from './reverse-asff-mapper';
 
 //FromHdfToAsff mapper transformers
 type Counts = {
@@ -21,6 +25,10 @@ type Counts = {
   NotApplicable: number;
   NotReviewed: number;
 };
+
+export function escapeForwardSlashes(s: string): string {
+  return s.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT);
+}
 
 export function getRunTime(hdf: ExecJSON.Execution): Date {
   let time = new Date();
@@ -190,18 +198,26 @@ export function cleanText(text?: string | null): string | undefined {
 export function getAllLayers(
   hdf: ExecJSON.Execution,
   knownControl: ExecJSON.Control
-): ExecJSON.Control[] {
+): (ExecJSON.Control & Record<string, unknown>)[] {
   if (hdf.profiles.length === 1) {
-    return [{...knownControl, ..._.omit(hdf.profiles, 'controls')}];
+    return [
+      {
+        ...knownControl,
+        profileInfo: {
+          ..._.omit(hdf.profiles[0], 'controls')
+        }
+      }
+    ];
   } else {
-    const foundControls: (ExecJSON.Control & {
-      profileInfo?: Record<string, unknown>;
-    })[] = [];
+    const foundControls: (ExecJSON.Control & Record<string, unknown>)[] = [];
     // For each control in each profile
     hdf.profiles.forEach((profile) => {
       profile.controls.forEach((control) => {
         if (control.id === knownControl.id) {
-          foundControls.push(control);
+          foundControls.push({
+            ...control,
+            profileInfo: {..._.omit(profile, 'controls')}
+          });
         }
       });
     });
@@ -281,7 +297,7 @@ export function setupGeneratorId(
   control: SegmentedControl,
   context?: FromHdfToAsffMapper
 ) {
-  return `arn:aws:securityhub:us-east-2:${context?.ioptions.awsAccountId}:ruleset/set/${context?.data.profiles[0].name}/rule/${control.id}`;
+  return `arn:aws:securityhub:${context?.ioptions.region}:${context?.ioptions.awsAccountId}:ruleset/set/${context?.data.profiles[0].name}/rule/${control.id}`;
 }
 
 export function setupTitle(control: SegmentedControl) {
@@ -352,7 +368,7 @@ function createProfileInfo(hdf?: ExecJSON.Execution): string[] {
       }
     });
     typesArr.push(
-      `Profile/Info/${JSON.stringify(profileInfos).replace(/\//g, '∕')}`
+      `Profile/Info/${escapeForwardSlashes(JSON.stringify(profileInfos))}`
     );
   });
   return typesArr;
@@ -373,7 +389,11 @@ function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
     targets.forEach((target) => {
       const value = _.get(profile, target);
       if (typeof value === 'string') {
-        typesArr.push(`${profile.name}/${target}/${value}`);
+        typesArr.push(
+          `${escapeForwardSlashes(profile.name)}/${escapeForwardSlashes(
+            target
+          )}/${escapeForwardSlashes(value)}`
+        );
       }
     });
     const inputs: Record<string, unknown>[] = [];
@@ -383,7 +403,9 @@ function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
       }
     });
     typesArr.push(
-      `${profile.name}/inputs/${JSON.stringify(inputs).replace(/\//g, '∕')}`
+      `${escapeForwardSlashes(profile.name)}/inputs/${escapeForwardSlashes(
+        JSON.stringify(inputs)
+      )}`
     );
   });
   typesArr = typesArr.slice(0, 50);
@@ -405,7 +427,9 @@ function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
   targets.forEach((target) => {
     const value = _.get(segment, target);
     if (typeof value === 'string' && value) {
-      typesArr.push(`Segment/${target}/${value.replace(/\//g, '∕')}`);
+      typesArr.push(
+        `Segment/${escapeForwardSlashes(target)}/${escapeForwardSlashes(value)}`
+      );
     }
   });
   return typesArr;
@@ -415,26 +439,23 @@ function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
   const typesArr: string[] = [];
   for (const tag in control.tags) {
     if (control) {
-      if (tag === 'nist' && Array.isArray(control.tags.nist)) {
-        typesArr.push(`Tags/nist/${control.tags.nist.join(', ')}`);
-      } else if (tag === 'cci' && Array.isArray(control.tags.cci)) {
-        typesArr.push(`Tags/cci/${control.tags.cci.join(', ')}`);
-      } else if (typeof control.tags[tag] === 'string') {
+      if (typeof control.tags[tag] === 'string') {
         typesArr.push(
-          `Tags/${tag.replace(/\//g, '∕')}/${(
-            control.tags[tag] as string
-          ).replace(/\//g, '∕')}`
+          `Tags/${escapeForwardSlashes(tag)}/${
+            (control.tags[tag] as string).length > 0
+              ? escapeForwardSlashes(control.tags[tag] as string)
+              : '""'
+          }`
         );
-      } else if (
-        typeof control.tags[tag] === 'object' &&
-        Array.isArray(control.tags[tag])
-      ) {
+      } else if (Array.isArray(control.tags[tag])) {
         typesArr.push(
-          `Tags/${tag.replace(/\//g, '∕')}/${(
-            control.tags[tag] as Array<string>
-          )
-            .join(', ')
-            .replace(/\//g, '∕')}`
+          `Tags/${escapeForwardSlashes(tag)}/${
+            (control.tags[tag] as Array<string>).length > 0
+              ? escapeForwardSlashes(
+                  (control.tags[tag] as Array<string>).join(', ')
+                )
+              : '[]'
+          }`
         );
       }
     }
@@ -446,9 +467,9 @@ function createDescriptionInfo(control: ExecJSON.Control): string[] {
   const typesArr: string[] = [];
   control.descriptions?.forEach((description) => {
     typesArr.push(
-      `Descriptions/${description.label.replace(/\//g, '∕')}/${cleanText(
-        description.data
-      )?.replace(/\//g, '∕')}`
+      `Descriptions/${escapeForwardSlashes(
+        description.label
+      )}/${escapeForwardSlashes(cleanText(description.data) || 'No Value')}`
     );
   });
   return typesArr;
@@ -466,13 +487,14 @@ export function setupFindingType(
 
   const typesArr = [
     `File/Input/${filename}`,
-    `Control/Code/${control.layersOfControl
-      .map(
-        (layer: ExecJSON.Control & {profileInfo?: Record<string, unknown>}) =>
-          createCode(layer)
-      )
-      .join('\n\n')
-      .replace(/\//g, '∕')}`
+    `Control/Code/${escapeForwardSlashes(
+      control.layersOfControl
+        .map(
+          (layer: ExecJSON.Control & {profileInfo?: Record<string, unknown>}) =>
+            createCode(layer)
+        )
+        .join('\n\n')
+    )}`
   ];
 
   // Add all layers of profile info to the Finding Provider Fields

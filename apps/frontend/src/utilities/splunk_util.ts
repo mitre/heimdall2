@@ -87,6 +87,24 @@ export function consolidate_payloads(
   return Object.values(built);
 }
 
+export function replaceKeyValueDescriptions(
+  controls: (ExecJSON.Control &
+    GenericPayloadWithMetaData & {
+      descriptions?: {[key: string]: string} | ExecJSON.ControlDescription[];
+    })[]
+) {
+  return controls.map((control) => {
+    if (control.descriptions && !Array.isArray(control.descriptions)) {
+      const extractedDescriptions: ExecJSON.ControlDescription[] = [];
+      Object.entries(control.descriptions).forEach(([key, value]) => {
+        extractedDescriptions.push({label: key, data: value as string});
+      });
+      control.descriptions = extractedDescriptions;
+    }
+    return control;
+  });
+}
+
 function consolidateFilePayloads(
   filePayloads: GenericPayloadWithMetaData[]
 ): ExecJSON.Execution {

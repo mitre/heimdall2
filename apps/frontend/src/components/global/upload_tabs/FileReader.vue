@@ -11,6 +11,7 @@
           </template>
           <span>Supported Formats:</span>
           <ul>
+            <li>InSpec/Heimdall Data Format</li>
             <li>Burp Suite</li>
             <li>DBProtect</li>
             <li>JFrog Xray</li>

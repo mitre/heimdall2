@@ -60,4 +60,25 @@ describe('ASFF Mapper', () => {
       )
     );
   });
+
+  it('Successfully converts Trivy ASFF as Array', () => {
+    const mapper = new ASFFMapper(
+      fs.readFileSync(
+        'sample_jsons/asff_mapper/sample_input_report/trivy-image_golang-1.12-alpine_sample.json',
+        {encoding: 'utf-8'}
+      ),
+      undefined,
+      {name: 'Trivy', title: 'Trivy Findings'}
+    );
+    expect(omitVersions(mapper.toHdf())).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/asff_mapper/trivy-image_golang-1.12-alpine-hdf.json',
+            {encoding: 'utf-8'}
+          )
+        )
+      )
+    );
+  });
 });

@@ -25,7 +25,7 @@ This software is currently in EARLY ALPHA DEVELOPMENT. No guarantees whatsoever 
 
 ### NOTICE
 
-© 2018 The MITRE Corporation.
+© 2022 The MITRE Corporation.
 
 Approved for Public Release; Distribution Unlimited. Case Number 18-3678.
 
