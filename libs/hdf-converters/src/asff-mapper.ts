@@ -81,7 +81,52 @@ type ExternalProductHandlerOutputs =
   | Record<string, unknown>
   | undefined;
 
-function fixFileInput(asffJson: string) {
+function externalProductHandler(
+  context: ASFFMapper | ASFFResults,
+  product: SpecialCasing,
+  data: unknown,
+  func: string,
+  defaultVal: ExternalProductHandlerOutputs
+): ExternalProductHandlerOutputs {
+  if (
+    product !== SpecialCasing.Default &&
+    _.has(SPECIAL_CASE_MAPPING.get(product), func)
+  ) {
+    let keywords: Record<string, unknown> = {};
+    if (context.supportingDocs.has(product)) {
+      keywords = {...context.supportingDocs.get(product)};
+    }
+    return _.get(SPECIAL_CASE_MAPPING.get(product), func)?.apply(context, [
+      data,
+      keywords
+    ]);
+  } else {
+    if (typeof defaultVal === 'function') {
+      return defaultVal();
+    } else {
+      return defaultVal;
+    }
+  }
+}
+
+function wrapWithFindingsObject(
+  output:
+    | Record<string, unknown>
+    | Record<string, unknown>[]
+    | Record<string, Record<string, unknown>[]>
+): Record<string, Record<string, unknown>[]> {
+  if (!_.has(output, 'Findings')) {
+    if (Array.isArray(output)) {
+      output = {Findings: output};
+    } else {
+      output = {Findings: [output]};
+    }
+  }
+  return output as Record<string, Record<string, unknown>[]>;
+}
+function fixFileInput(
+  asffJson: string
+): Record<string, Record<string, unknown>[]> {
   let output = {};
   try {
     output = JSON.parse(asffJson);
@@ -93,26 +138,23 @@ function fixFileInput(asffJson: string) {
       .replace(/\},\n\$/g, '')}]`;
     output = JSON.parse(fixedInput);
   }
-  if (!_.has(output, 'Findings')) {
-    if (Array.isArray(output)) {
-      output = {Findings: output};
-    } else {
-      output = {Findings: [output]};
-    }
-  }
-  return output;
+  return wrapWithFindingsObject(output);
 }
 // eslint-disable-next-line @typescript-eslint/ban-types
 function getFirewallManager(): Record<string, Function> {
-  const findingId = (finding: unknown): string =>
-    encode(_.get(finding, 'Title'));
-  const productName = (findings: unknown[]): string =>
-    encode(
-      `${_.get(
-        findings[0],
-        'ProductFields.aws/securityhub/CompanyName'
-      )} ${_.get(findings[0], 'ProductFields.aws/securityhub/ProductName')}`
+  const findingId = (finding: Record<string, unknown>): string =>
+    encode(_.get(finding, 'Title') as string);
+  const productName = (
+    findings: Record<string, unknown> | Record<string, unknown>[]
+  ): string => {
+    const finding = Array.isArray(findings) ? findings[0] : findings;
+    return encode(
+      `${_.get(finding, 'ProductFields.aws/securityhub/CompanyName')} ${_.get(
+        finding,
+        'ProductFields.aws/securityhub/ProductName'
+      )}`
     );
+  };
   return {
     findingId,
     productName
@@ -127,8 +169,12 @@ function getProwler(): Record<string, Function> {
     const hyphenIndex = generatorId.indexOf('-');
     return encode(generatorId.slice(hyphenIndex + 1));
   };
-  const productName = (findings: unknown[]): string =>
-    encode(_.get(findings[0], 'ProductFields.ProviderName'));
+  const productName = (
+    findings: Record<string, unknown> | Record<string, unknown>[]
+  ): string => {
+    const finding = Array.isArray(findings) ? findings[0] : findings;
+    return encode(_.get(finding, 'ProductFields.ProviderName') as string);
+  };
   const desc = (): string => ' ';
   return {
     subfindingsCodeDesc,
@@ -247,28 +293,31 @@ function getSecurityHub(): Record<string, Function> {
       return encode(_.get(finding, 'Title'));
     }
   };
-  const productName = (findings: unknown[]): string => {
+  const productName = (
+    findings: Record<string, unknown> | Record<string, unknown>[]
+  ): string => {
+    const finding = Array.isArray(findings) ? findings[0] : findings;
     // `${_.get(findings[0], 'ProductFields.aws/securityhub/CompanyName')} ${_.get(findings[0], 'ProductFields.aws/securityhub/ProductName')}`
     // not using above due to wanting to provide the standard's name instead
     let standardName: string;
     if (
-      _.get(findings[0], 'Types[0]')
+      (_.get(finding, 'Types[0]') as string)
         .split('/')
         .slice(-1)[0]
         .replace(/-/gi, ' ')
         .toLowerCase() ===
-      _.get(findings[0], FINDING_STANDARDS_CONTROL_ARN)
+      (_.get(finding, FINDING_STANDARDS_CONTROL_ARN) as string)
         .split('/')
         .slice(-4)[0]
         .replace(/-/gi, ' ')
         .toLowerCase()
     ) {
-      standardName = _.get(findings[0], 'Types[0]')
+      standardName = (_.get(finding, 'Types[0]') as string)
         .split('/')
         .slice(-1)[0]
         .replace(/-/gi, ' ');
     } else {
-      standardName = _.get(findings[0], FINDING_STANDARDS_CONTROL_ARN)
+      standardName = (_.get(finding, FINDING_STANDARDS_CONTROL_ARN) as string)
         .split('/')
         .slice(-4)[0]
         .replace(/-/gi, ' ')
@@ -280,7 +329,7 @@ function getSecurityHub(): Record<string, Function> {
     }
     return encode(
       `${standardName} v${
-        _.get(findings[0], FINDING_STANDARDS_CONTROL_ARN)
+        (_.get(finding, FINDING_STANDARDS_CONTROL_ARN) as string)
           .split('/')
           .slice(-2)[0]
       }`
@@ -341,11 +390,15 @@ function getTrivy(): Record<string, Function> {
       return undefined;
     }
   };
+  const productName = (): string => {
+    return 'Aqua Security - Trivy';
+  };
   return {
     findingId,
     findingNistTag,
     subfindingsStatus,
-    subfindingsMessage
+    subfindingsMessage,
+    productName
   };
 }
 
@@ -417,9 +470,17 @@ function getHDF2ASFF(): Record<string, Function> {
       {}
     );
   };
+  const productName = (
+    findings: Record<string, unknown> | Record<string, unknown>[]
+  ): string => {
+    const finding = Array.isArray(findings) ? findings[0] : findings;
+    const name = _.get(finding, 'Title') as string;
+    return encode(name.substring(0, name.lastIndexOf(' | ')));
+  };
   return {
     findingNistTag,
-    findingTags
+    findingTags,
+    productName
   };
 }
 
@@ -467,7 +528,8 @@ export class ASFFMapper extends BaseConverter {
             arrayTransformer: this.consolidate,
             id: {
               transformer: (finding): string =>
-                this.externalProductHandler(
+                externalProductHandler(
+                  this,
                   whichSpecialCase(finding),
                   finding,
                   'findingId',
@@ -476,7 +538,8 @@ export class ASFFMapper extends BaseConverter {
             },
             title: {
               transformer: (finding): string =>
-                this.externalProductHandler(
+                externalProductHandler(
+                  this,
                   whichSpecialCase(finding),
                   finding,
                   'findingTitle',
@@ -499,7 +562,8 @@ export class ASFFMapper extends BaseConverter {
                     _.get(finding, SEVERITY_LABEL)
                       ? _.get(finding, SEVERITY_LABEL)
                       : _.get(finding, 'Severity.Normalized') / 100.0;
-                  impact = this.externalProductHandler(
+                  impact = externalProductHandler(
+                    this,
                     whichSpecialCase(finding),
                     finding,
                     'findingImpact',
@@ -515,7 +579,8 @@ export class ASFFMapper extends BaseConverter {
               transformer: (
                 finding: Record<string, unknown>
               ): Record<string, unknown> | undefined => {
-                const tags = this.externalProductHandler(
+                const tags = externalProductHandler(
+                  this,
                   whichSpecialCase(finding),
                   finding,
                   'findingTags',
@@ -525,7 +590,8 @@ export class ASFFMapper extends BaseConverter {
               },
               nist: {
                 transformer: (finding: Record<string, unknown>): string[] => {
-                  const tags = this.externalProductHandler(
+                  const tags = externalProductHandler(
+                    this,
                     whichSpecialCase(finding),
                     finding,
                     'findingNistTag',
@@ -593,7 +659,8 @@ export class ASFFMapper extends BaseConverter {
                         return ExecJSON.ControlResultStatus.Skipped;
                       }
                     };
-                    return this.externalProductHandler(
+                    return externalProductHandler(
+                      this,
                       whichSpecialCase(finding),
                       finding,
                       'subfindingsStatus',
@@ -603,7 +670,8 @@ export class ASFFMapper extends BaseConverter {
                 },
                 code_desc: {
                   transformer: (finding): string => {
-                    let output = this.externalProductHandler(
+                    let output = externalProductHandler(
+                      this,
                       whichSpecialCase(finding),
                       finding,
                       'subfindingsCodeDesc',
@@ -653,7 +721,8 @@ export class ASFFMapper extends BaseConverter {
                           return statusReason;
                       }
                     };
-                    return this.externalProductHandler(
+                    return externalProductHandler(
+                      this,
                       whichSpecialCase(finding),
                       finding,
                       'subfindingsMessage',
@@ -705,32 +774,6 @@ export class ASFFMapper extends BaseConverter {
       .join('\n');
   }
 
-  externalProductHandler(
-    product: SpecialCasing,
-    data: unknown,
-    func: string,
-    defaultVal: ExternalProductHandlerOutputs
-  ): ExternalProductHandlerOutputs {
-    if (
-      product !== SpecialCasing.Default &&
-      _.has(SPECIAL_CASE_MAPPING.get(product), func)
-    ) {
-      let keywords: Record<string, unknown> = {};
-      if (this.supportingDocs.has(product)) {
-        keywords = {...this.supportingDocs.get(product)};
-      }
-      return _.get(SPECIAL_CASE_MAPPING.get(product), func)?.apply(this, [
-        data,
-        keywords
-      ]);
-    } else {
-      if (typeof defaultVal === 'function') {
-        return defaultVal();
-      } else {
-        return defaultVal;
-      }
-    }
-  }
   // consolidate the array of controls which were generated 1:1 with findings in order to have subfindings/results
   consolidate(input: unknown[], file: unknown): ExecJSON.Control[] {
     const allFindings = _.get(file, 'Findings');
@@ -781,7 +824,8 @@ export class ASFFMapper extends BaseConverter {
           .split(':')
           .slice(-1)[0]
           .split('/');
-        const productName = this.externalProductHandler(
+        const productName = externalProductHandler(
+          this,
           whichSpecialCase(findings[0]),
           findings,
           'productName',
@@ -815,7 +859,8 @@ export class ASFFMapper extends BaseConverter {
             }
           ),
           impact: Math.max(...group.map((d) => _.get(d, 'impact'))),
-          desc: this.externalProductHandler(
+          desc: externalProductHandler(
+            this,
             whichSpecialCase(findings[0]),
             group,
             'desc',
@@ -875,5 +920,61 @@ export class ASFFMapper extends BaseConverter {
     customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
   ): void {
     super.setMappings(customMappings);
+  }
+}
+
+export class ASFFResults {
+  data: Record<string, Record<string, unknown>[]>;
+  securityhubStandardsJsonArray: string[] | undefined;
+  meta: Record<string, string | undefined> | null;
+  supportingDocs: Map<SpecialCasing, Record<string, Record<string, unknown>>>;
+  constructor(
+    asffJson: string,
+    securityhubStandardsJsonArray: undefined | string[] = undefined,
+    meta: null | Record<string, string | undefined> = null
+  ) {
+    this.data = _.groupBy(_.get(fixFileInput(asffJson), 'Findings'), (val) => {
+      const productInfo = (_.get(val, 'ProductArn') as string)
+        .split(':')
+        .slice(-1)[0]
+        .split('/');
+      const productName = externalProductHandler(
+        this,
+        whichSpecialCase(val),
+        val,
+        'productName',
+        encode(`${productInfo[1]} | ${productInfo[2]}`)
+      );
+      return productName;
+    });
+
+    this.securityhubStandardsJsonArray = securityhubStandardsJsonArray;
+    this.meta = meta;
+    this.supportingDocs = new Map<
+      SpecialCasing,
+      Record<string, Record<string, unknown>>
+    >();
+    this.supportingDocs.set(
+      SpecialCasing.SecurityHub,
+      _.get(
+        SPECIAL_CASE_MAPPING.get(SpecialCasing.SecurityHub),
+        'supportingDocs',
+        (standards: string[] | undefined) => {
+          throw new Error(
+            `supportingDocs function should've been defined: ${standards}`
+          );
+        }
+      )(this.securityhubStandardsJsonArray)
+    );
+  }
+
+  toHdf(): Record<string, ExecJSON.Execution> {
+    return _.mapValues(this.data, (val) =>
+      new ASFFMapper(
+        JSON.stringify(val),
+        this.securityhubStandardsJsonArray,
+        this.meta
+      ).toHdf()
+    );
   }
 }
