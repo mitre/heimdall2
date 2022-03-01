@@ -201,10 +201,12 @@ export function createProfileMapping(
     },
     controls: [],
     parent_profile: {
-      path: 'data.depends[0].name'
+      path: 'data.parent_profile',
+      default: undefined
     },
     depends: {
-      path: 'data.depends'
+      path: 'data.depends',
+      default: []
     },
     attributes: {
       path: 'data.attributes'

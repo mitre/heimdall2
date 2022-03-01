@@ -13,7 +13,7 @@ export type SplunkProfile = {
   version: string;
   license: string;
   title: string;
-  parent_profile: string;
+  parent_profile: string | undefined;
   depends: Depend[] | ILookupPathFH;
   attributes: Attribute[] | ILookupPathFH;
   groups: Group[] | ILookupPathFH;
