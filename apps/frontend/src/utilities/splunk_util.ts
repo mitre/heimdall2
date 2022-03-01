@@ -192,12 +192,10 @@ export async function getExecution(
 }
 
 export async function getAllExecutions(
-  splunkClient: SplunkClient
+  splunkClient: SplunkClient,
+  query = 'spath "meta.subtype" | search "meta.subtype"=header'
 ): Promise<FileMetaData[]> {
-  const jobId = await createSearch(
-    splunkClient,
-    'spath "meta.subtype" | search "meta.subtype"=header'
-  );
+  const jobId = await createSearch(splunkClient, query);
   return waitForJob(splunkClient, jobId).then(
     (executions: GenericPayloadWithMetaData[]) =>
       executions.map((execution) => execution.meta)
