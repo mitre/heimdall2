@@ -5,7 +5,6 @@
         v-model="username"
         label="Username"
         for="username_field"
-        hint="admin"
         data-cy="splunkusername"
       />
       <v-text-field
@@ -33,7 +32,7 @@
         Login
       </v-btn>
       <v-spacer />
-      <v-btn>
+      <v-btn @click="$emit('show-help')">
         Help
         <v-icon class="ml-2"> mdi-help-circle </v-icon>
       </v-btn>
@@ -70,15 +69,20 @@ export default class AuthStep extends Vue {
       this.username,
       this.password
     );
-    if (await splunkClient.validateCredentials()) {
-      localUsername.set(this.username);
-      localPassword.set(this.password);
-      localHostname.set(this.hostname);
-      SnackbarModule.failure('You have successfully signed in');
-      this.$emit('authenticated', splunkClient);
-    } else {
-      SnackbarModule.failure('Incorrect Username or Password');
-    }
+    splunkClient.validateCredentials().then((result) => {
+      if (result === true) {
+        localUsername.set(this.username);
+        localPassword.set(this.password);
+        localHostname.set(this.hostname);
+        SnackbarModule.failure('You have successfully signed in');
+        this.$emit('authenticated', splunkClient);
+      } else if (result === false) {
+        SnackbarModule.failure('Incorrect Username or Password');
+      } else {
+        SnackbarModule.failure(result);
+        this.$emit('error');
+      }
+    });
   }
 
   /** Init our fields */

@@ -37,20 +37,41 @@ export class SplunkClient {
 
   async validateCredentials(): Promise<boolean> {
     return apiClient
-      .get(`${this.host}/services/search/jobs`, {
+      .get(`${this.host}/services/search/jobs?output_mode=json`, {
         headers: {
           Authorization: basic_auth(this.username, this.password)
         },
+        validateStatus: () => true, // Instead of throwing a generic error we can use the response instead to create a better one
         method: 'GET'
       })
-      .then(() => {
-        apiClient.defaults.headers.common['Authorization'] = basic_auth(
-          this.username,
-          this.password
-        );
-        return true;
+      .then((response) => {
+        if (response.status === 200) {
+          apiClient.defaults.headers.common['Authorization'] = basic_auth(
+            this.username,
+            this.password
+          );
+          return true;
+        } else if (response.status === 401) {
+          return false;
+        } else {
+          // Did we get a message from Splunk?
+          if (_.get(response.data, 'messages')) {
+            return `Error Received from Splunk: ${response.data.messages
+              .map((message: {type: string; text: string}) => message.text)
+              .join(', ')}`;
+          }
+          // Something else responded, likely a corporate proxy
+          else {
+            return `Unexpected response code ${
+              response.status
+            } received, are you behind a proxy preventing you from connecting to your Splunk instance? Data received: ${_.truncate(
+              response.data,
+              {length: 256}
+            )}`;
+          }
+        }
       })
-      .catch(() => false);
+      .catch((err) => err);
   }
 }
 
