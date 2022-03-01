@@ -52,12 +52,12 @@ import {
 import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop, Watch} from 'vue-property-decorator';
+import {Prop} from 'vue-property-decorator';
 @Component({})
 export default class FileList extends Vue {
   @Prop({type: Object, required: true}) readonly splunkClient!: SplunkClient;
 
-  search = 'spath "meta.subtype" | search "meta.subtype"=header';
+  search = '';
   executions: FileMetaData[] = [];
   selectedExecutions: FileMetaData[] = [];
 
@@ -80,13 +80,8 @@ export default class FileList extends Vue {
     }
   ];
 
-  @Watch('search')
-  async onUpdateSearch() {
-    this.executions = await getAllExecutions(this.splunkClient, this.search);
-  }
-
   async mounted() {
-    this.executions = await getAllExecutions(this.splunkClient, this.search);
+    this.executions = await getAllExecutions(this.splunkClient);
   }
 
   loadResults() {
