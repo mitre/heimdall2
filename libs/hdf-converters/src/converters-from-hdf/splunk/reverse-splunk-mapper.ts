@@ -333,7 +333,8 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     };
     if (config.insecure) {
       httpsAgent = new https.Agent({
-        rejectUnauthorized: false
+        // We make it very clear that this is not recommended within the SAF CLI, and this feature is ignored in the browser.
+        rejectUnauthorized: false // lgtm [js/disabling-certificate-validation]
       });
     }
     const guid = createGUID(30);
