@@ -487,7 +487,6 @@ function getHDF2ASFF(): Record<string, Function> {
 }
 
 export class ASFFMapper extends BaseConverter {
-  securityhubStandardsJsonArray: string[] | undefined;
   meta: Record<string, string | undefined> | null;
   supportingDocs: Map<SpecialCasing, Record<string, Record<string, unknown>>>;
   mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
@@ -896,29 +895,13 @@ export class ASFFMapper extends BaseConverter {
     return output;
   }
   constructor(
-    asffJson: string,
-    securityhubStandardsJsonArray: undefined | string[] = undefined,
+    asff: Record<string, unknown>,
+    supportingDocs: Map<SpecialCasing, Record<string, Record<string, unknown>>>,
     meta: null | Record<string, string | undefined> = null
   ) {
-    super(fixFileInput(asffJson));
-    this.securityhubStandardsJsonArray = securityhubStandardsJsonArray;
+    super(asff);
     this.meta = meta;
-    this.supportingDocs = new Map<
-      SpecialCasing,
-      Record<string, Record<string, unknown>>
-    >();
-    this.supportingDocs.set(
-      SpecialCasing.SecurityHub,
-      _.get(
-        SPECIAL_CASE_MAPPING.get(SpecialCasing.SecurityHub),
-        'supportingDocs',
-        (standards: string[] | undefined) => {
-          throw new Error(
-            `supportingDocs function should've been defined: ${standards}`
-          );
-        }
-      )(this.securityhubStandardsJsonArray)
-    );
+    this.supportingDocs = supportingDocs;
   }
   setMappings(
     customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
@@ -929,7 +912,6 @@ export class ASFFMapper extends BaseConverter {
 
 export class ASFFResults {
   data: Record<string, Record<string, unknown>[]>;
-  securityhubStandardsJsonArray: string[] | undefined;
   meta: Record<string, string | undefined> | null;
   supportingDocs: Map<SpecialCasing, Record<string, Record<string, unknown>>>;
   constructor(
@@ -937,7 +919,6 @@ export class ASFFResults {
     securityhubStandardsJsonArray: undefined | string[] = undefined,
     meta: null | Record<string, string | undefined> = null
   ) {
-    this.securityhubStandardsJsonArray = securityhubStandardsJsonArray;
     this.meta = meta;
     this.supportingDocs = new Map<
       SpecialCasing,
@@ -953,7 +934,7 @@ export class ASFFResults {
             `supportingDocs function should've been defined: ${standards}`
           );
         }
-      )(this.securityhubStandardsJsonArray)
+      )(securityhubStandardsJsonArray)
     );
     this.data = _.groupBy(_.get(fixFileInput(asffJson), 'Findings'), (val) => {
       const productInfo = (_.get(val, 'ProductArn') as string)
@@ -974,8 +955,8 @@ export class ASFFResults {
   toHdf(): Record<string, ExecJSON.Execution> {
     return _.mapValues(this.data, (val) => {
       const hdf = new ASFFMapper(
-        JSON.stringify(val),
-        this.securityhubStandardsJsonArray,
+        wrapWithFindingsObject(val),
+        this.supportingDocs,
         this.meta
       ).toHdf();
       return hdf;
