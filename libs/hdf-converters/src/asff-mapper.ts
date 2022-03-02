@@ -406,6 +406,7 @@ function getTrivy(): Record<string, Function> {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 function getHDF2ASFF(): Record<string, Function> {
+  const TYPE_NIST_TAG = 'Tags/nist/';
   const replaceTypesSlashes = (type: string): string => {
     const FROM_ASFF_TYPES_SLASH_REPLACEMENT = /{{{SLASH}}}/gi; // The "Types" field of ASFF only supports a maximum of 2 slashes, and will get replaced with this text. Note that the default AWS CLI doesn't support UTF-8 encoding
     return type.replace(FROM_ASFF_TYPES_SLASH_REPLACEMENT, '/');
@@ -435,13 +436,13 @@ function getHDF2ASFF(): Record<string, Function> {
   };
   const findingNistTag = (finding: unknown): string[] => {
     return _.reduce(
-      getFilteredTypes(finding, {startsWith: ['Tags/nist/']}),
+      getFilteredTypes(finding, {startsWith: [TYPE_NIST_TAG]}),
       (acc: string[], cur: string) =>
         _.endsWith(cur, '/[]')
           ? acc
           : acc.concat(
               convertClassifierStringToExpectedType(
-                replaceTypesSlashes(_.replace(cur, 'Tags/nist/', ''))
+                replaceTypesSlashes(_.replace(cur, TYPE_NIST_TAG, ''))
               )
             ),
       []
@@ -451,7 +452,7 @@ function getHDF2ASFF(): Record<string, Function> {
     return _.reduce(
       getFilteredTypes(finding, {
         startsWith: ['Tags'],
-        doesNotStartWith: ['Tags/nist/']
+        doesNotStartWith: [TYPE_NIST_TAG]
       }),
       (acc: Record<string, unknown>, cur: string) => {
         const [, category, classifier] = cur.split('/');
@@ -579,16 +580,14 @@ export class ASFFMapper extends BaseConverter {
             tags: {
               transformer: (
                 finding: Record<string, unknown>
-              ): Record<string, unknown> | undefined => {
-                const tags = externalProductHandler(
+              ): Record<string, unknown> | undefined =>
+                externalProductHandler(
                   this,
                   whichSpecialCase(finding),
                   finding,
                   'findingTags',
                   {}
-                ) as Record<string, unknown>;
-                return tags;
-              },
+                ) as Record<string, unknown>,
               nist: {
                 transformer: (finding: Record<string, unknown>): string[] => {
                   const tags = externalProductHandler(
@@ -704,7 +703,7 @@ export class ASFFMapper extends BaseConverter {
                   }
                 },
                 transformer: (finding): Record<string, unknown> => {
-                  const message = ((finding) => {
+                  const message = (() => {
                     const defaultFunc = () => {
                       const statusReason = this.statusReason(finding);
                       switch (_.get(finding, COMPLIANCE_STATUS)) {
@@ -729,8 +728,8 @@ export class ASFFMapper extends BaseConverter {
                       'subfindingsMessage',
                       defaultFunc
                     ) as string | undefined;
-                  })(finding);
-                  const skip_message = ((finding) => {
+                  })();
+                  const skipMessage = (() => {
                     const statusReason = this.statusReason(finding);
                     switch (_.get(finding, COMPLIANCE_STATUS)) {
                       case undefined: // Possible for Compliance.Status to not be there, in which case it's a skip_message
@@ -747,10 +746,12 @@ export class ASFFMapper extends BaseConverter {
                       default:
                         return undefined;
                     }
-                  })(finding);
+                  })();
                   return {
                     ...(message !== undefined && {message}),
-                    ...(skip_message !== undefined && {skip_message})
+                    ...(skipMessage !== undefined && {
+                      skip_message: skipMessage
+                    })
                   };
                 },
                 start_time: {
@@ -941,25 +942,23 @@ export class ASFFResults {
         .split(':')
         .slice(-1)[0]
         .split('/');
-      const productName = externalProductHandler(
+      return externalProductHandler(
         this,
         whichSpecialCase(val),
         val,
         'productName',
         encode(`${productInfo[1]} | ${productInfo[2]}`)
       );
-      return productName;
     });
   }
 
   toHdf(): Record<string, ExecJSON.Execution> {
     return _.mapValues(this.data, (val) => {
-      const hdf = new ASFFMapper(
+      return new ASFFMapper(
         wrapWithFindingsObject(val),
         this.supportingDocs,
         this.meta
       ).toHdf();
-      return hdf;
     });
   }
 }
