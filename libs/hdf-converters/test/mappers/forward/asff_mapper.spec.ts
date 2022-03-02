@@ -58,7 +58,7 @@ describe('ASFF Mapper', () => {
   it('Successfully converts Prowler ASFF as Objects delimited by newline', () => {
     const mapper = new Mapper(
       fs.readFileSync(
-        'sample_jsons/asff_mapper/sample_input_report/prower-sample.asff-json',
+        'sample_jsons/asff_mapper/sample_input_report/prowler-sample.asff-json',
         {encoding: 'utf-8'}
       ),
       undefined,
