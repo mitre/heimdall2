@@ -31,20 +31,22 @@ enum SpecialCasing {
 function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
   const productArn = _.get(finding, 'ProductArn') as string;
   if (
-    productArn.match(/arn:.+:securityhub:.+:.*:product\/aws\/firewall-manager/)
+    productArn.match(
+      /^arn:.+:securityhub:.+:.*:product\/aws\/firewall-manager$/
+    )
   ) {
     return SpecialCasing.FirewallManager;
   } else if (
-    productArn.match(/arn:.+:securityhub:.+:.*:product\/prowler\/prowler/)
+    productArn.match(/^arn:.+:securityhub:.+:.*:product\/prowler\/prowler$/)
   ) {
     return SpecialCasing.Prowler;
   } else if (
-    productArn.match(/arn:.+:securityhub:.+:.*:product\/aws\/securityhub/)
+    productArn.match(/^arn:.+:securityhub:.+:.*:product\/aws\/securityhub$/)
   ) {
     return SpecialCasing.SecurityHub;
   } else if (
     productArn.match(
-      /arn:.+:securityhub:.+:.*:product\/aquasecurity\/aquasecurity/
+      /^arn:.+:securityhub:.+:.*:product\/aquasecurity\/aquasecurity$/
     )
   ) {
     return SpecialCasing.Trivy;
