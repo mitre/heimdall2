@@ -474,8 +474,8 @@ function getHDF2ASFF(): Record<string, Function> {
     findings: Record<string, unknown> | Record<string, unknown>[]
   ): string => {
     const finding = Array.isArray(findings) ? findings[0] : findings;
-    const name = _.get(finding, 'Title') as string;
-    return encode(name.substring(0, name.lastIndexOf(' | ')));
+    const name = _.get(finding, 'Id') as string;
+    return encode(name.split('/').slice(0, 2).join(' - '));
   };
   return {
     findingNistTag,
@@ -702,8 +702,8 @@ export class ASFFMapper extends BaseConverter {
                     return output;
                   }
                 },
-                message: {
-                  transformer: (finding): string | undefined => {
+                transformer: (finding): Record<string, unknown> => {
+                  const message = ((finding) => {
                     const defaultFunc = () => {
                       const statusReason = this.statusReason(finding);
                       switch (_.get(finding, COMPLIANCE_STATUS)) {
@@ -728,10 +728,8 @@ export class ASFFMapper extends BaseConverter {
                       'subfindingsMessage',
                       defaultFunc
                     ) as string | undefined;
-                  }
-                },
-                skip_message: {
-                  transformer: (finding): string | undefined => {
+                  })(finding);
+                  const skip_message = ((finding) => {
                     const statusReason = this.statusReason(finding);
                     switch (_.get(finding, COMPLIANCE_STATUS)) {
                       case undefined: // Possible for Compliance.Status to not be there, in which case it's a skip_message
@@ -748,7 +746,11 @@ export class ASFFMapper extends BaseConverter {
                       default:
                         return undefined;
                     }
-                  }
+                  })(finding);
+                  return {
+                    ...(message !== undefined && {message}),
+                    ...(skip_message !== undefined && {skip_message})
+                  };
                 },
                 start_time: {
                   transformer: (finding): string =>
@@ -933,21 +935,6 @@ export class ASFFResults {
     securityhubStandardsJsonArray: undefined | string[] = undefined,
     meta: null | Record<string, string | undefined> = null
   ) {
-    this.data = _.groupBy(_.get(fixFileInput(asffJson), 'Findings'), (val) => {
-      const productInfo = (_.get(val, 'ProductArn') as string)
-        .split(':')
-        .slice(-1)[0]
-        .split('/');
-      const productName = externalProductHandler(
-        this,
-        whichSpecialCase(val),
-        val,
-        'productName',
-        encode(`${productInfo[1]} | ${productInfo[2]}`)
-      );
-      return productName;
-    });
-
     this.securityhubStandardsJsonArray = securityhubStandardsJsonArray;
     this.meta = meta;
     this.supportingDocs = new Map<
@@ -966,15 +953,30 @@ export class ASFFResults {
         }
       )(this.securityhubStandardsJsonArray)
     );
+    this.data = _.groupBy(_.get(fixFileInput(asffJson), 'Findings'), (val) => {
+      const productInfo = (_.get(val, 'ProductArn') as string)
+        .split(':')
+        .slice(-1)[0]
+        .split('/');
+      const productName = externalProductHandler(
+        this,
+        whichSpecialCase(val),
+        val,
+        'productName',
+        encode(`${productInfo[1]} | ${productInfo[2]}`)
+      );
+      return productName;
+    });
   }
 
   toHdf(): Record<string, ExecJSON.Execution> {
-    return _.mapValues(this.data, (val) =>
-      new ASFFMapper(
+    return _.mapValues(this.data, (val) => {
+      const hdf = new ASFFMapper(
         JSON.stringify(val),
         this.securityhubStandardsJsonArray,
         this.meta
-      ).toHdf()
-    );
+      ).toHdf();
+      return hdf;
+    });
   }
 }
