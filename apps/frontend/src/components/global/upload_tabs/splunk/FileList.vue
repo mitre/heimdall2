@@ -21,7 +21,7 @@
         :headers="headers"
         item-key="guid"
         :items="executions"
-        :search="search"
+        :loading="loading"
         show-select
       >
         <template #[`item.actions`]="{item}">
@@ -52,12 +52,13 @@ import {
 import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
+import {Prop, Watch} from 'vue-property-decorator';
 @Component({})
 export default class FileList extends Vue {
   @Prop({type: Object, required: true}) readonly splunkClient!: SplunkClient;
 
-  search = '';
+  search = 'index="*" "meta.subtype"=header';
+  loading = false;
   executions: FileMetaData[] = [];
   selectedExecutions: FileMetaData[] = [];
 
@@ -80,14 +81,28 @@ export default class FileList extends Vue {
     }
   ];
 
-  async mounted() {
-    this.executions = await getAllExecutions(this.splunkClient);
+  @Watch('search')
+  async onUpdateSearch() {
+    this.loading = true;
+    this.executions = await getAllExecutions(this.splunkClient, this.search).then((executions) => {
+      this.loading = false;
+      return executions
+    })
   }
 
-  loadResults() {
-    const files = this.selectedExecutions.map((execution) => {
-      return getExecution(this.splunkClient, execution.guid).then((result) => {
-        InspecIntakeModule.loadText({
+  async mounted() {
+    this.loading = true;
+    this.executions = await getAllExecutions(this.splunkClient, this.search).then((executions) => {
+      this.loading = false;
+      return executions
+    })
+  }
+
+  async loadResults() {
+    this.loading = true;
+    const files = this.selectedExecutions.map(async (execution) => {
+      return getExecution(this.splunkClient, execution.guid).then(async (result) => {
+        return InspecIntakeModule.loadText({
           text: JSON.stringify(result),
           filename: _.get(result, 'meta.filename')
         }).catch((err) => {

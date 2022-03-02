@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
+import {delay} from './async_util';
 import {basic_auth, group_by, map_hash} from './helper_util';
 
 export type JobID = number;
@@ -84,6 +85,7 @@ async function waitForJob(
     .get(`${splunkClient.host}/services/search/jobs/${id}?output_mode=json`)
     .then(({data}) => data.entry[0].content.isDone);
   if (!completed) {
+    await delay(500);
     return waitForJob(splunkClient, id);
   } else {
     return apiClient
@@ -183,7 +185,7 @@ export async function getExecution(
 ): Promise<ExecJSON.Execution> {
   const jobId = await createSearch(
     splunkClient,
-    `spath "meta.guid" | search "meta.guid"=${guid}`
+    `"meta.guid"=${guid}`
   );
   const executionPayloads = waitForJob(splunkClient, jobId);
   return executionPayloads
@@ -192,11 +194,12 @@ export async function getExecution(
 }
 
 export async function getAllExecutions(
-  splunkClient: SplunkClient
+  splunkClient: SplunkClient,
+  searchQuery: string
 ): Promise<FileMetaData[]> {
   const jobId = await createSearch(
     splunkClient,
-    'spath "meta.subtype" | search "meta.subtype"=header'
+    searchQuery
   );
   return waitForJob(splunkClient, jobId).then(
     (executions: GenericPayloadWithMetaData[]) =>
@@ -210,7 +213,7 @@ export async function createSearch(
   // We basically can't, and really shouldn't, do typescript here. Output is changes depending on the job called
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<JobID> {
-  const fullQuery = `search=search index="*" | ${searchString || ''}`;
+  const fullQuery = `search=search ${searchString || ''}`;
   return apiClient({
     method: 'POST',
     url: `${splunkClient.host}/services/search/jobs?output_mode=json`,
