@@ -26,7 +26,7 @@
             "controls": [
                 {
                     "id": "Trivy/CVE-2021-36159",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-36159 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-36159 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -55,7 +55,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2021-30139",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-30139 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-30139 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -84,7 +84,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2021-28831",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-28831 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-28831 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -119,7 +119,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2021-42378",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-42378 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42378 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -154,7 +154,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2021-42379",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-42379 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42379 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -189,7 +189,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2021-42380",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-42380 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42380 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -224,7 +224,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2021-42381",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-42381 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42381 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -259,7 +259,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2021-42382",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-42382 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42382 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -294,7 +294,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2021-42383",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-42383 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42383 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -329,7 +329,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2021-42384",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-42384 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42384 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -364,7 +364,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2021-42385",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-42385 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42385 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -399,7 +399,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2021-42386",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-42386 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42386 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -434,7 +434,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2021-42374",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-42374 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42374 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -469,7 +469,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2021-3711",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-3711 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-3711 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -504,7 +504,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2020-1967",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2020-1967 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2020-1967 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -539,7 +539,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2021-23840",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-23840 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-23840 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -574,7 +574,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2021-3450",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-3450 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-3450 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -609,7 +609,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2021-3712",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-3712 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-3712 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -644,7 +644,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2020-1971",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2020-1971 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2020-1971 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -679,7 +679,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2021-23841",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-23841 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-23841 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -714,7 +714,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2021-3449",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-3449 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-3449 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -749,7 +749,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2021-23839",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2021-23839 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-23839 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
@@ -784,7 +784,7 @@
                 },
                 {
                     "id": "Trivy/CVE-2020-28928",
-                    "title": "aquasecurity/aquasecurity: Trivy found a vulnerability to CVE-2020-28928 in container golang:1.12-alpine (alpine 3.11.3)",
+                    "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2020-28928 in container golang:1.12-alpine (alpine 3.11.3)",
                     "tags": {
                         "nist": [
                             "SI-2",
