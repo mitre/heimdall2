@@ -240,6 +240,7 @@ export function createControlMapping(
       is_waived: control.hdf.waived,
       overlay_depth: getProfileRunLevel(profile, execution) + 1
     },
+    title: control.data.title,
     code: control.data.code || '',
     desc: control.data.desc || '',
     descriptions: {
