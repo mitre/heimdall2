@@ -5,6 +5,7 @@ export type SplunkControl = {
   meta: Meta;
   code: string;
   desc: string;
+  title?: string | null;
   descriptions: Record<string, string>[] | ILookupPathFH;
   id: string;
   impact: number;
