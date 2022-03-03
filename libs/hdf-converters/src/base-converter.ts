@@ -11,7 +11,7 @@ export interface ILookupPath {
   key?: string;
 }
 
-export type ObjectEntries<T> = {[K in keyof T]: readonly [K, T[K]]}[keyof T];
+export type ObjectEntryValue<T> = {[K in keyof T]: readonly [K, T[K]]}[keyof T];
 /* eslint-disable @typescript-eslint/ban-types */
 export type MappedTransform<T, U extends ILookupPath> = {
   [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
@@ -149,7 +149,10 @@ export class BaseConverter {
     }
   }
 
-  objectMap<T, V>(obj: T, fn: (v: ObjectEntries<T>) => V): {[K in keyof T]: V} {
+  objectMap<T, V>(
+    obj: T,
+    fn: (v: ObjectEntryValue<T>) => V
+  ): {[K in keyof T]: V} {
     return Object.fromEntries(
       Object.entries(obj).map(([k, v]) => [k, fn(v)])
     ) as Record<keyof T, V>;
@@ -158,51 +161,65 @@ export class BaseConverter {
     file: Record<string, unknown>,
     fields: T
   ): MappedReform<T, ILookupPath> {
-    const result = this.objectMap(fields, (v: ObjectEntries<T>) =>
+    const result = this.objectMap(fields, (v: ObjectEntryValue<T>) =>
       this.evaluate(file, v)
     );
     return result as MappedReform<T, ILookupPath>;
   }
 
-  evaluate<T extends object>(
+  evaluate<T>(
     file: Record<string, unknown>,
-    v: Array<T> | T
+    v: T | Array<T>
   ): T | Array<T> | MappedReform<T, ILookupPath> {
-    const transformer = _.get(v, 'transformer');
-    if (Array.isArray(v)) {
-      return this.handleArray(file, v);
-    } else if (
-      typeof v === 'string' ||
-      typeof v === 'number' ||
-      typeof v === 'boolean' ||
-      v === null
+    const hasTransformer =
+      _.isObject(v) &&
+      _.has(v, 'transformer') &&
+      _.isFunction(_.get(v, 'transformer'));
+    let transformer = (val: unknown) => val;
+    if (hasTransformer) {
+      transformer = _.get(v, 'transformer');
+      v = _.omit(v as object, 'transformer') as T;
+    }
+
+    const hasPath = _.isObject(v) && _.has(v, 'path');
+    let pathV = v;
+    if (hasPath) {
+      pathV = this.handlePath(file, _.get(v, 'path') as string) as T | T[];
+      v = _.omit(v as object, 'path') as T;
+    }
+
+    if (
+      _.isString(pathV) ||
+      _.isNumber(pathV) ||
+      _.isBoolean(pathV) ||
+      _.isNull(pathV)
     ) {
-      return v;
-    } else if (_.has(v, 'path')) {
-      if (typeof transformer === 'function') {
-        return transformer(this.handlePath(file, _.get(v, 'path') as string));
-      }
-      const pathVal = this.handlePath(file, _.get(v, 'path') as string);
-      if (Array.isArray(pathVal)) {
-        return pathVal as T[];
-      }
-      return pathVal as T;
+      return transformer(pathV) as T;
     }
-    if (_.has(v, 'transformer') && typeof transformer === 'function') {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/ban-types
-      const {transformer: ignored, ...remainderOfV}: any = v; // TODO: fix the types here
-      const transformed = transformer.bind(this)(file);
-      if (_.isEmpty(remainderOfV)) {
-        return transformed;
-      } else {
-        return {...transformed, ...this.convertInternal(file, remainderOfV)};
-      }
-    } else {
-      return this.convertInternal(file, v);
+
+    if (Array.isArray(pathV)) {
+      return hasPath
+        ? (transformer(pathV) as T[])
+        : this.handleArray(file, pathV);
     }
+
+    if (_.keys(v).length > 0 && hasTransformer) {
+      return {
+        ...(hasTransformer && (transformer(hasPath ? pathV : file) as object)),
+        ...(_.keys(v).length > 0 && this.convertInternal(file, v))
+      } as MappedReform<T, ILookupPath>;
+    }
+
+    return (
+      hasTransformer
+        ? transformer(hasPath ? pathV : file)
+        : hasPath
+        ? pathV
+        : this.convertInternal(file, v)
+    ) as T | T[] | MappedReform<T, ILookupPath>;
   }
 
-  handleArray<T extends object>(
+  handleArray<T>(
     file: Record<string, unknown>,
     v: Array<T & ILookupPath>
   ): Array<T> {
@@ -245,7 +262,7 @@ export class BaseConverter {
                 'transformer',
                 'arrayTransformer',
                 'key'
-              ]) as T;
+              ]) as unknown as T;
             });
             if (arrayTransformer !== undefined) {
               if (Array.isArray(arrayTransformer)) {

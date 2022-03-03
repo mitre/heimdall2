@@ -1,6 +1,10 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
-import {MappedReform, MappedTransform, ObjectEntries} from '../base-converter';
+import {
+  MappedReform,
+  MappedTransform,
+  ObjectEntryValue
+} from '../base-converter';
 
 export interface ILookupPathFH {
   path?: string;
@@ -27,14 +31,17 @@ export class FromHdfBaseConverter {
 
   //Called over and over to iterate through objects assigned to keys too
   convertInternal<T>(file: object, fields: T): MappedReform<T, ILookupPathFH> {
-    const result = this.objectMap(fields, (v: ObjectEntries<T>) =>
+    const result = this.objectMap(fields, (v: ObjectEntryValue<T>) =>
       this.evaluate(file, v)
     );
     return result as MappedReform<T, ILookupPathFH>;
   }
 
   // Preforms fn() on all entries inside the passed obj
-  objectMap<T, V>(obj: T, fn: (v: ObjectEntries<T>) => V): {[K in keyof T]: V} {
+  objectMap<T, V>(
+    obj: T,
+    fn: (v: ObjectEntryValue<T>) => V
+  ): {[K in keyof T]: V} {
     return Object.fromEntries(
       Object.entries(obj).map(([k, v]) => [k, fn(v)])
     ) as Record<keyof T, V>;
