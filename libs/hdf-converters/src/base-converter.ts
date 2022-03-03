@@ -1,8 +1,13 @@
+import {parse} from 'csv-parse/sync';
+//import {generate, parse, transform, stringify} from 'csv/sync';
+
 import {createHash} from 'crypto';
 import parser from 'fast-xml-parser';
 import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
+
+//import {PrismaDTO} from './prisma-mapper';
 
 export interface ILookupPath {
   path?: string | string[];
@@ -71,6 +76,18 @@ export function impactMapping(
     }
   };
 }
+export function parseCsv(csv: string): Record<string, unknown>  {
+  const rawRecords: string[][] = parse(csv);
+
+  return {
+    records: rawRecords.slice(1).map((record, index) => {
+      const mapRecord: Record<string, unknown> = {}
+      record.forEach( (value,valueIndex) => mapRecord[rawRecords[0][valueIndex]] = value )
+      return mapRecord
+    })
+  }
+}
+
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 function collapseDuplicates<T extends object>(
