@@ -140,7 +140,7 @@ export class BurpSuiteMapper extends BaseConverter {
     ]
   };
   constructor(burpsXml: string) {
-    super(parseXml(burpsXml));
+    super(parseXml(burpsXml), undefined, 'burpsuite2hdf');
   }
   setMappings(
     customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>

@@ -157,7 +157,7 @@ export class DBProtectMapper extends BaseConverter {
     ]
   };
   constructor(dbProtectXml: string) {
-    super(compileFindings(parseXml(dbProtectXml)));
+    super(compileFindings(parseXml(dbProtectXml)), undefined, 'dbprotect2hdf');
   }
   setMappings(
     customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>

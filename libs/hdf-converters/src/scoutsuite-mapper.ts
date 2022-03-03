@@ -265,7 +265,7 @@ export class ScoutsuiteMapper extends BaseConverter {
     ]
   };
   constructor(scoutsuiteJson: string) {
-    super(collapseServices(JSON.parse(scoutsuiteJson.split('\n', 2)[1])));
+    super(collapseServices(JSON.parse(scoutsuiteJson.split('\n', 2)[1])), undefined, 'scoutsuite2hdf');
   }
   setMappings(
     customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>

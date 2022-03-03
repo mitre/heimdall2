@@ -3,10 +3,12 @@ import parser from 'fast-xml-parser';
 import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
+import winston from 'winston';
+import {createWinstonLogger} from './utils/global';
 
 export interface ILookupPath {
   path?: string | string[];
-  transformer?: (value: any) => unknown;
+  transformer?: (value: any, logger?: winston.Logger) => unknown;
   arrayTransformer?: (value: unknown[], file: any) => unknown[];
   key?: string;
 }
@@ -127,10 +129,14 @@ export class BaseConverter {
   data: Record<string, unknown>;
   mappings?: MappedTransform<ExecJSON.Execution, ILookupPath>;
   collapseResults: boolean;
+  mapperName: string;
+  logger: winston.Logger;
 
-  constructor(data: Record<string, unknown>, collapseResults = false) {
+  constructor(data: Record<string, unknown>, collapseResults = false, mapperName: string, logger?: winston.Logger, logLevel?: 'debug' | 'info' | 'warn' | 'verbose') {
     this.data = data;
     this.collapseResults = collapseResults;
+    this.mapperName = mapperName;
+    this.logger = logger ? logger : createWinstonLogger(mapperName, logLevel || 'debug');
   }
   setMappings(
     mappings: MappedTransform<ExecJSON.Execution, ILookupPath>
@@ -139,6 +145,7 @@ export class BaseConverter {
   }
   toHdf(): ExecJSON.Execution {
     if (this.mappings === undefined) {
+      this.logger.error('Mappings must be provided');
       throw new Error('Mappings must be provided');
     } else {
       const v = this.convertInternal(this.data, this.mappings);
@@ -170,6 +177,7 @@ export class BaseConverter {
   ): T | Array<T> | MappedReform<T, ILookupPath> {
     const transformer = _.get(v, 'transformer');
     if (Array.isArray(v)) {
+      this.logger.debug(`Got array for value v: ${v}.`);
       return this.handleArray(file, v);
     } else if (
       typeof v === 'string' ||
@@ -177,20 +185,27 @@ export class BaseConverter {
       typeof v === 'boolean' ||
       v === null
     ) {
+      this.logger.debug(`Got primitive for value v: ${v}.`);
       return v;
     } else if (_.has(v, 'path')) {
+      this.logger.verbose(`Searching for path ${_.get(v, 'path')}.`);
       if (typeof transformer === 'function') {
-        return transformer(this.handlePath(file, _.get(v, 'path') as string));
+        const result = this.handlePath(file, _.get(v, 'path') as string);
+        this.logger.verbose(`Calling transformer for result: ${JSON.stringify(result)}.`);
+        return transformer(result, this.logger);
       }
       const pathVal = this.handlePath(file, _.get(v, 'path') as string);
+      this.logger.verbose(`Got value for path ${_.get(v, 'path')}: ${JSON.stringify(pathVal)}.`);
       if (Array.isArray(pathVal)) {
         return pathVal as T[];
       }
       return pathVal as T;
     }
     if (typeof transformer === 'function') {
+      this.logger.verbose(`Calling transformer on inputed data: ${file}.`);
       return transformer.bind(this)(file);
     } else {
+      this.logger.verbose(`No path or transformer specified for v: ${v}. Passing to convertInternal.`)
       return this.convertInternal(file, v);
     }
   }
@@ -287,6 +302,7 @@ export class BaseConverter {
 
     if (index === -1) {
       // should probably throw error here, but instead are providing a default value to match current behavior
+      this.logger.debug(`Value for path ${path} was not found`)
       return '';
     } else if (pathArray[index].startsWith('$.')) {
       return _.get(this.data, pathArray[index].slice(2)) || ''; // having default values implemented like this also prevents 'null' from being passed through

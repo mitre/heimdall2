@@ -170,7 +170,7 @@ export class JfrogXrayMapper extends BaseConverter {
     ]
   };
   constructor(xrayJson: string) {
-    super(JSON.parse(xrayJson), true);
+    super(JSON.parse(xrayJson), true, 'jfrog-xray2hdf');
   }
   setMappings(
     customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>

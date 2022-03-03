@@ -212,7 +212,7 @@ export class NetsparkerMapper extends BaseConverter {
     ]
   };
   constructor(netsparkerXml: string) {
-    super(parseXml(netsparkerXml));
+    super(parseXml(netsparkerXml), undefined, 'netsparker2hdf');
   }
   setMappings(
     customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>

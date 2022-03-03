@@ -743,7 +743,7 @@ export class ASFFMapper extends BaseConverter {
     securityhubStandardsJsonArray: undefined | string[] = undefined,
     meta: null | Record<string, string | undefined> = null
   ) {
-    super(fixFileInput(asffJson));
+    super(fixFileInput(asffJson), undefined, 'asff2hdf');
     this.securityhubStandardsJsonArray = securityhubStandardsJsonArray;
     this.meta = meta;
     this.supportingDocs = new Map<

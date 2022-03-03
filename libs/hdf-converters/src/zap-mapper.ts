@@ -168,7 +168,8 @@ export class ZapMapper extends BaseConverter {
         'site',
         filterSite(_.get(JSON.parse(zapJson), 'site'), name)
       ),
-      false
+      false,
+      'zap2hdf'
     );
   }
   setMappings(

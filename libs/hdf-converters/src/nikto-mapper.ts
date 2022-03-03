@@ -84,7 +84,7 @@ export class NiktoMapper extends BaseConverter {
     ]
   };
   constructor(niktoJson: string) {
-    super(JSON.parse(niktoJson));
+    super(JSON.parse(niktoJson), undefined, 'nikto2hdf');
   }
   setMappings(
     customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>

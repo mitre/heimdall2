@@ -193,7 +193,7 @@ export class SonarQubeResults {
 export class SonarQubeMapper extends BaseConverter {
   projectName = '';
   constructor(issuesJSON: IssueData, projectName: string) {
-    super(issuesJSON as Record<string, any>);
+    super(issuesJSON as Record<string, any>, undefined, 'sonarqube2hdf');
     this.projectName = projectName;
   }
   mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {

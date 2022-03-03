@@ -301,6 +301,6 @@ export class NessusMapper extends BaseConverter {
     ]
   };
   constructor(nessusJson: Record<string, unknown>) {
-    super(nessusJson);
+    super(nessusJson, undefined, 'nessus2hdf');
   }
 }

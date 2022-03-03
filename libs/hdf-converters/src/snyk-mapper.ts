@@ -159,7 +159,7 @@ export class SnykMapper extends BaseConverter {
     ]
   };
   constructor(snykJson: Record<string, unknown>) {
-    super(snykJson);
+    super(snykJson, undefined, 'synk2hdf');
   }
   setMappings(
     customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>

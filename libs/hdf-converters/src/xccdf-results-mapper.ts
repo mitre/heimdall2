@@ -451,6 +451,6 @@ export class XCCDFResultsMapper extends BaseConverter {
     ]
   };
   constructor(scapXml: string) {
-    super(parseXml(scapXml));
+    super(parseXml(scapXml), undefined, 'xccdf-results2hdf');
   }
 }
