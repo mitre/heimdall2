@@ -84,31 +84,39 @@ export default class FileList extends Vue {
   @Watch('search')
   async onUpdateSearch() {
     this.loading = true;
-    this.executions = await getAllExecutions(this.splunkClient, this.search).then((executions) => {
+    this.executions = await getAllExecutions(
+      this.splunkClient,
+      this.search
+    ).then((executions) => {
       this.loading = false;
-      return executions
-    })
+      return executions;
+    });
   }
 
   async mounted() {
     this.loading = true;
-    this.executions = await getAllExecutions(this.splunkClient, this.search).then((executions) => {
+    this.executions = await getAllExecutions(
+      this.splunkClient,
+      this.search
+    ).then((executions) => {
       this.loading = false;
-      return executions
-    })
+      return executions;
+    });
   }
 
   async loadResults() {
     this.loading = true;
     const files = this.selectedExecutions.map(async (execution) => {
-      return getExecution(this.splunkClient, execution.guid).then(async (result) => {
-        return InspecIntakeModule.loadText({
-          text: JSON.stringify(result),
-          filename: _.get(result, 'meta.filename')
-        }).catch((err) => {
-          SnackbarModule.failure(String(err));
-        });
-      });
+      return getExecution(this.splunkClient, execution.guid).then(
+        async (result) => {
+          return InspecIntakeModule.loadText({
+            text: JSON.stringify(result),
+            filename: _.get(result, 'meta.filename')
+          }).catch((err) => {
+            SnackbarModule.failure(String(err));
+          });
+        }
+      );
     });
     this.$emit('got-files', files);
   }

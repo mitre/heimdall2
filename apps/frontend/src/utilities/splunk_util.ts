@@ -183,10 +183,7 @@ export async function getExecution(
   splunkClient: SplunkClient,
   guid: string
 ): Promise<ExecJSON.Execution> {
-  const jobId = await createSearch(
-    splunkClient,
-    `"meta.guid"=${guid}`
-  );
+  const jobId = await createSearch(splunkClient, `"meta.guid"=${guid}`);
   const executionPayloads = waitForJob(splunkClient, jobId);
   return executionPayloads
     .then((payloads) => consolidate_payloads(payloads))
@@ -197,10 +194,7 @@ export async function getAllExecutions(
   splunkClient: SplunkClient,
   searchQuery: string
 ): Promise<FileMetaData[]> {
-  const jobId = await createSearch(
-    splunkClient,
-    searchQuery
-  );
+  const jobId = await createSearch(splunkClient, searchQuery);
   return waitForJob(splunkClient, jobId).then(
     (executions: GenericPayloadWithMetaData[]) =>
       executions.map((execution) => execution.meta)

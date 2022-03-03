@@ -1,5 +1,3 @@
-import axios, {AxiosResponse} from 'axios';
-import https from 'https';
 import {
   ContextualizedControl,
   ContextualizedEvaluation,
@@ -7,6 +5,7 @@ import {
   contextualizeEvaluation,
   ExecJSON
 } from 'inspecjs';
+import splunkjs from 'splunk-sdk';
 import winston from 'winston';
 import {MappedTransform} from '../../base-converter';
 import {createWinstonLogger} from '../../utils/global';
@@ -16,16 +15,17 @@ import {SplunkControl} from './splunk-control-types';
 import {SplunkProfile} from './splunk-profile-types';
 import {SplunkReport} from './splunk-report-types';
 
-export const HDF_SPLUNK_SCHEMA = '1.0';
+export const HDF_SPLUNK_SCHEMA = '1.1';
 export const MAPPER_NAME = 'HDF2Splunk';
 
 export type SplunkConfig = {
   host: string;
-  port: number;
+  port?: number;
+  username: string;
+  password: string;
   insecure?: boolean;
-  token: string;
   protocol: string;
-  index?: string;
+  index: string;
 };
 
 export type SplunkData = {
@@ -34,8 +34,7 @@ export type SplunkData = {
   reports: SplunkReport[];
 };
 
-let logger: winston.Logger | undefined = undefined;
-let httpsAgent = new https.Agent();
+let logger: winston.Logger = winston.createLogger();
 
 export function createGUID(length: number) {
   let result = '';
@@ -55,44 +54,6 @@ export function contextualizeIfNeeded(
     return data;
   } else {
     return contextualizeEvaluation(data);
-  }
-}
-
-export function postDataToSplunkHEC(
-  data: Record<string, unknown> | Record<string, unknown>[],
-  config: SplunkConfig
-) {
-  if (Array.isArray(data)) {
-    return data.map((item) =>
-      axios.post(
-        `${config.protocol}://${config.host}:${config.port}/services/collector`,
-        {
-          event: item,
-          index: config.index
-        },
-        {
-          httpsAgent: httpsAgent,
-          headers: {
-            Authorization: `Splunk ${config.token}`
-          }
-        }
-      )
-    );
-  } else {
-    return [
-      axios.post(
-        `${config.protocol}://${config.host}:${config.port}/services/collector`,
-        {
-          event: data
-        },
-        {
-          httpsAgent: httpsAgent,
-          headers: {
-            Authorization: `Splunk ${config.token}`
-          }
-        }
-      )
-    ];
   }
 }
 
@@ -268,18 +229,9 @@ export class FromHDFExecutionToSplunkExecutionMapper extends FromAnyBaseConverte
   constructor(
     evaluation: ContextualizedEvaluation,
     filename: string,
-    guid: string,
-    logService?: winston.Logger,
-    loggingLevel?: string
+    guid: string
   ) {
     super(evaluation);
-    if (logService) {
-      logger = logService;
-    } else {
-      logger = createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
-    }
-    logger.debug('Got Execution: ' + filename);
-    logger.debug('Using GUID: ' + guid);
     this.setMappings(createReportMapping(evaluation, filename, guid));
   }
 
@@ -322,66 +274,119 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
   mappings?: MappedTransform<SplunkData, ILookupPathFH>;
   contextualizedEvaluation?: ContextualizedEvaluation;
 
-  constructor(data: ExecJSON.Execution | ContextualizedEvaluation) {
+  constructor(
+    data: ExecJSON.Execution | ContextualizedEvaluation,
+    logService?: winston.Logger,
+    loggingLevel?: string
+  ) {
+    if (logService) {
+      logger = logService;
+    } else {
+      logger = createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
+    }
+
     super(contextualizeIfNeeded(data));
   }
 
-  async toSplunk(config: SplunkConfig, filename: string) {
-    const splunkData: SplunkData = {
-      controls: [],
-      profiles: [],
-      reports: []
-    };
-    if (config.insecure) {
-      httpsAgent = new https.Agent({
-        // We make it very clear that this is not recommended within the SAF CLI, and this feature is ignored in the browser.
-        rejectUnauthorized: false // lgtm [js/disabling-certificate-validation]
-      });
-    }
+  toSplunk(config: SplunkConfig, filename: string) {
+    const service = new splunkjs.Service(config);
+    logger.info(
+      `Logging into Splunk Service: ${config.host} with user ${config.username}`
+    );
+    logger.debug('Got Execution: ' + filename);
     const guid = createGUID(30);
-    splunkData.reports.push(
-      new FromHDFExecutionToSplunkExecutionMapper(
-        this.data,
-        filename,
-        guid
-      ).toSplunkExecution() as SplunkReport
-    );
-    logger?.debug(`Converted execution: ${JSON.stringify(splunkData.reports)}`);
-    this.data.contains.forEach((profile: ContextualizedProfile) => {
-      splunkData.profiles.push(
-        new FromHDFProfileToSplunkProfileMapper(
-          profile,
-          filename,
-          guid
-        ).toSplunkProfile() as SplunkProfile
-      );
-      profile.contains.forEach((control) => {
-        splunkData.controls.push(
-          new FromHDFControlToSplunkControlMapper(
-            control,
-            profile,
-            this.data,
-            filename,
-            guid
-          ).toSplunkControl() as SplunkControl
-        );
+    logger.debug('Using GUID: ' + guid);
+
+    service.login((err: any, success: any) => {
+      if (err) {
+        throw err;
+      }
+      logger.info('Login was successful: ' + success);
+      service.indexes().fetch((err: any, indexes: any) => {
+        const availableIndexes: string[] = indexes.list().map((index: {name: string}) => index.name)
+        logger.debug(`Available Indexes:  + ${availableIndexes.join(', ')}`);
+        if(availableIndexes.includes(config.index)) {
+          var targetIndex = indexes.item(config.index);
+          logger?.debug(`Have index ${targetIndex.name}`)
+          const splunkData: SplunkData = {
+            controls: [],
+            profiles: [],
+            reports: []
+          };
+          splunkData.reports.push(
+            new FromHDFExecutionToSplunkExecutionMapper(
+              this.data,
+              filename,
+              guid
+            ).toSplunkExecution() as SplunkReport
+          );
+          this.data.contains.forEach((profile: ContextualizedProfile) => {
+            splunkData.profiles.push(
+              new FromHDFProfileToSplunkProfileMapper(
+                profile,
+                filename,
+                guid
+              ).toSplunkProfile() as SplunkProfile
+            );
+            profile.contains.forEach((control) => {
+              splunkData.controls.push(
+                new FromHDFControlToSplunkControlMapper(
+                  control,
+                  profile,
+                  this.data,
+                  filename,
+                  guid
+                ).toSplunkControl() as SplunkControl
+              );
+            });
+          });
+          // Upload execution event
+          splunkData.reports.forEach((report) => {
+            targetIndex.submitEvent(JSON.stringify(report), {
+              sourcetype: MAPPER_NAME,
+              index: config.index
+            }, (err: any, result: any, postedIndex: any) => {
+              if (err) {
+                console.error(err)
+                throw err
+              }
+              logger.debug(`Successfully uploaded execution for ${report.meta.filename}`)
+            })
+          })
+          // Upload profile event(s)
+          // \r\n Is the default LINE_BREAKER for splunk, this is very poorly documented.
+          // See https://docs.splunk.com/Documentation/StreamProcessor/standard/FunctionReference/LineBreak
+          targetIndex.submitEvent(splunkData.profiles.map((profile) => JSON.stringify(profile)).join('\n'), {
+            sourcetype: MAPPER_NAME,
+            index: config.index
+          }, (err: any, result: any, postedIndex: any) => {
+            if (err) {
+              console.error(err)
+              throw err
+            }
+            logger.debug(`Successfully uploaded ${splunkData.profiles.length} profile layer(s)`)
+          })
+
+           // Upload control event(s)
+           targetIndex.submitEvent(splunkData.controls.map((control) => JSON.stringify(control)).join('\n'), {
+            sourcetype: MAPPER_NAME,
+            index: config.index
+          }, (err: any, result: any, postedIndex: any) => {
+            if (err) {
+              console.error(err)
+              throw err
+            }
+            logger.debug(`Successfully uploaded ${splunkData.controls.length} control(s)`)
+          })
+          
+          
+          
+        } else {
+          logger.error(`Invalid Index: ${config.index}`);
+          throw new Error(`Invalid Index: ${config.index}`); 
+        }
       });
     });
-
-    const uploads: Promise<AxiosResponse>[] = [];
-    logger?.info(
-      'Data converted, uploading to Splunk with config: ' +
-        JSON.stringify(config)
-    );
-    uploads.push(...postDataToSplunkHEC(splunkData.reports, config));
-    uploads.push(...postDataToSplunkHEC(splunkData.profiles, config));
-    uploads.push(...postDataToSplunkHEC(splunkData.controls, config));
-
-    return Promise.all(uploads).then(() => {
-      logger?.info(
-        `Uploaded into splunk successfully, to find this data search for: meta.guid="${guid}"`
-      );
-      return guid;
-    });
+    return guid;
   }
 }
