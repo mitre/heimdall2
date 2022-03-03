@@ -2942,6 +2942,16 @@
   resolved "https://registry.yarnpkg.com/@mdi/js/-/js-6.5.95.tgz#2d895b013408f213252b77c30e0fdaaba6dc8b4b"
   integrity sha512-x/bwEoAGP+Mo10Dfk5audNIPi7Yz8ZBrILcbXLW3ShOI/njpgodzpgpC2WYK3D2ZSC392peRRemIFb/JsyzzYQ==
 
+"@mitre/splunk-sdk-no-env@^1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@mitre/splunk-sdk-no-env/-/splunk-sdk-no-env-1.10.0.tgz#e78a39025d27b3d558161ed7c9c14309909f2694"
+  integrity sha512-RWpyZcPhNQ5dFupq/ZQU3GReRD/BPMnhPzKjo3lWWzdE06Chyd4nD7fKdoyR5HTKURapcSrHBP7j65kMFu51jg==
+  dependencies:
+    cookie "0.4.1"
+    dotenv "^10.0.0"
+    elementtree "0.1.7"
+    needle "2.6.0"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
