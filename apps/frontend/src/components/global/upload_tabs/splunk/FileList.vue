@@ -83,14 +83,7 @@ export default class FileList extends Vue {
 
   @Watch('search')
   async onUpdateSearch() {
-    this.loading = true;
-    this.executions = await getAllExecutions(
-      this.splunkClient,
-      this.search
-    ).then((executions) => {
-      this.loading = false;
-      return executions;
-    });
+    this.mounted();
   }
 
   async mounted() {

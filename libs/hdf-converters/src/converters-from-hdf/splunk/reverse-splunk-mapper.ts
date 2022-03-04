@@ -19,13 +19,18 @@ export const HDF_SPLUNK_SCHEMA = '1.1';
 export const MAPPER_NAME = 'HDF2Splunk';
 
 export type SplunkConfig = {
+  scheme?: 'http' | 'https';
   host: string;
-  managementPort?: number;
+  port?: number;
   username: string;
   password: string;
-  insecure?: boolean;
-  protocol: string;
   index: string;
+  owner?: string;
+  app?: string;
+  sessionKey?: string;
+  autologin?: boolean;
+  version?: string;
+  insecure?: boolean;
 };
 
 export type SplunkData = {
@@ -288,10 +293,107 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     super(contextualizeIfNeeded(data));
   }
 
+  createSplunkData(guid: string, filename: string) {
+    const splunkData: SplunkData = {
+      controls: [],
+      profiles: [],
+      reports: []
+    };
+    splunkData.reports.push(
+      new FromHDFExecutionToSplunkExecutionMapper(
+        this.data,
+        filename,
+        guid
+      ).toSplunkExecution() as SplunkReport
+    );
+    this.data.contains.forEach((profile: ContextualizedProfile) => {
+      splunkData.profiles.push(
+        new FromHDFProfileToSplunkProfileMapper(
+          profile,
+          filename,
+          guid
+        ).toSplunkProfile() as SplunkProfile
+      );
+      profile.contains.forEach((control) => {
+        splunkData.controls.push(
+          new FromHDFControlToSplunkControlMapper(
+            control,
+            profile,
+            this.data,
+            filename,
+            guid
+          ).toSplunkControl() as SplunkControl
+        );
+      });
+    });
+    return splunkData;
+  }
+
+  uploadSplunkData(targetIndex: any, splunkData: SplunkData) {
+    // Upload execution event
+    splunkData.reports.forEach((report) => {
+      targetIndex.submitEvent(
+        JSON.stringify(report),
+        {
+          sourcetype: MAPPER_NAME,
+          index: targetIndex.name
+        },
+        (err: any) => {
+          if (err) {
+            console.error(err);
+            throw err;
+          }
+          logger.debug(
+            `Successfully uploaded execution for ${report.meta.filename}`
+          );
+        }
+      );
+    });
+    // Upload profile event(s)
+    // \r\n Is the default LINE_BREAKER for splunk, this is very poorly documented.
+    // See https://docs.splunk.com/Documentation/StreamProcessor/standard/FunctionReference/LineBreak
+    targetIndex.submitEvent(
+      splunkData.profiles.map((profile) => JSON.stringify(profile)).join('\n'),
+      {
+        sourcetype: MAPPER_NAME,
+        index: targetIndex.name
+      },
+      (err: any) => {
+        if (err) {
+          console.error(err);
+          throw err;
+        }
+        logger.debug(
+          `Successfully uploaded ${splunkData.profiles.length} profile layer(s)`
+        );
+      }
+    );
+
+    // Upload control event(s)
+    targetIndex.submitEvent(
+      splunkData.controls.map((control) => JSON.stringify(control)).join('\n'),
+      {
+        sourcetype: MAPPER_NAME,
+        index: targetIndex.name
+      },
+      (err: any) => {
+        if (err) {
+          console.error(err);
+          throw err;
+        }
+        logger.debug(
+          `Successfully uploaded ${splunkData.controls.length} control(s)`
+        );
+      }
+    );
+  }
+
   toSplunk(config: SplunkConfig, filename: string) {
     const service = new splunkjs.Service(config);
     if (!config.insecure) {
       service.requestOptions.strictSSL = true;
+    } else {
+      logger.info(`SSL Verification Disabled`);
     }
     logger.info(
       `Logging into Splunk Service: ${config.host} with user ${config.username}`
@@ -312,99 +414,9 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
         logger.debug(`Available Indexes:  + ${availableIndexes.join(', ')}`);
         if (availableIndexes.includes(config.index)) {
           const targetIndex = indexes.item(config.index);
+          const splunkData = this.createSplunkData(guid, filename);
+          this.uploadSplunkData(targetIndex, splunkData);
           logger?.debug(`Have index ${targetIndex.name}`);
-          const splunkData: SplunkData = {
-            controls: [],
-            profiles: [],
-            reports: []
-          };
-          splunkData.reports.push(
-            new FromHDFExecutionToSplunkExecutionMapper(
-              this.data,
-              filename,
-              guid
-            ).toSplunkExecution() as SplunkReport
-          );
-          this.data.contains.forEach((profile: ContextualizedProfile) => {
-            splunkData.profiles.push(
-              new FromHDFProfileToSplunkProfileMapper(
-                profile,
-                filename,
-                guid
-              ).toSplunkProfile() as SplunkProfile
-            );
-            profile.contains.forEach((control) => {
-              splunkData.controls.push(
-                new FromHDFControlToSplunkControlMapper(
-                  control,
-                  profile,
-                  this.data,
-                  filename,
-                  guid
-                ).toSplunkControl() as SplunkControl
-              );
-            });
-          });
-          // Upload execution event
-          splunkData.reports.forEach((report) => {
-            targetIndex.submitEvent(
-              JSON.stringify(report),
-              {
-                sourcetype: MAPPER_NAME,
-                index: config.index
-              },
-              (err: any, result: any, postedIndex: any) => {
-                if (err) {
-                  console.error(err);
-                  throw err;
-                }
-                logger.debug(
-                  `Successfully uploaded execution for ${report.meta.filename}`
-                );
-              }
-            );
-          });
-          // Upload profile event(s)
-          // \r\n Is the default LINE_BREAKER for splunk, this is very poorly documented.
-          // See https://docs.splunk.com/Documentation/StreamProcessor/standard/FunctionReference/LineBreak
-          targetIndex.submitEvent(
-            splunkData.profiles
-              .map((profile) => JSON.stringify(profile))
-              .join('\n'),
-            {
-              sourcetype: MAPPER_NAME,
-              index: config.index
-            },
-            (err: any, _result: any, _postedIndex: any) => {
-              if (err) {
-                console.error(err);
-                throw err;
-              }
-              logger.debug(
-                `Successfully uploaded ${splunkData.profiles.length} profile layer(s)`
-              );
-            }
-          );
-
-          // Upload control event(s)
-          targetIndex.submitEvent(
-            splunkData.controls
-              .map((control) => JSON.stringify(control))
-              .join('\n'),
-            {
-              sourcetype: MAPPER_NAME,
-              index: config.index
-            },
-            (err: any, _result: any, _postedIndex: any) => {
-              if (err) {
-                console.error(err);
-                throw err;
-              }
-              logger.debug(
-                `Successfully uploaded ${splunkData.controls.length} control(s)`
-              );
-            }
-          );
         } else {
           logger.error(`Invalid Index: ${config.index}`);
           throw new Error(`Invalid Index: ${config.index}`);
