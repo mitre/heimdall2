@@ -62,14 +62,13 @@ describe('Describe Splunk Reverse Mapper', () => {
     );
 
     //The From Hdf to Asff mapper takes a HDF object and an options argument with the format of the CLI tool
-    const guid = await new FromHDFToSplunkMapper(inputData).toSplunk(
+    const guid = new FromHDFToSplunkMapper(inputData).toSplunk(
       {
-        token:
-          process.env.SPLUNK_HEC_TOKEN ||
-          'SET SPLUNK_HEC_TOKEN OR THIS WILL BREAK',
         host: '127.0.0.1',
-        protocol: 'http',
-        port: 8088
+        username: 'admin',
+        password: 'Valid_password!',
+        index: 'hdf',
+        insecure: true
       },
       'rhel7-results.json'
     );
