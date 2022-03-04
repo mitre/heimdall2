@@ -1,12 +1,9 @@
-import axios from 'axios';
+import splunkjs, {SplunkConfig} from '@mitre/splunk-sdk-no-env';
+import ProxyHTTP from '@mitre/splunk-sdk-no-env/lib/platform/client/jquery_http';
 import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
-import {delay} from './async_util';
-import {basic_auth, group_by, map_hash} from './helper_util';
+import {group_by, map_hash} from './helper_util';
 
 export type JobID = number;
-
-const apiClient = axios.create();
 
 export interface GenericPayloadWithMetaData {
   meta: FileMetaData;
@@ -26,77 +23,20 @@ export interface FileMetaData {
 }
 
 export class SplunkClient {
-  host: string;
-  username: string;
-  password: string;
+  service: splunkjs.Service;
 
-  constructor(host: string, username: string, password: string) {
-    this.host = host;
-    this.username = username;
-    this.password = password;
+  constructor(config: SplunkConfig) {
+    this.service = new splunkjs.Service(new ProxyHTTP.JQueryHttp(''), config);
   }
 
-  async validateCredentials(): Promise<boolean> {
-    return apiClient
-      .get(`${this.host}/services/search/jobs?output_mode=json`, {
-        headers: {
-          Authorization: basic_auth(this.username, this.password)
-        },
-        validateStatus: () => true, // Instead of throwing a generic error we can use the response instead to create a better one
-        method: 'GET'
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          apiClient.defaults.headers.common['Authorization'] = basic_auth(
-            this.username,
-            this.password
-          );
-          return true;
-        } else if (response.status === 401) {
-          return false;
-        } else {
-          // Did we get a message from Splunk?
-          if (_.get(response.data, 'messages')) {
-            return `Error Received from Splunk: ${response.data.messages
-              .map((message: {type: string; text: string}) => message.text)
-              .join(', ')}`;
-          }
-          // Something else responded, likely a corporate proxy
-          else {
-            return `Unexpected response code ${
-              response.status
-            } received, are you behind a proxy preventing you from connecting to your Splunk instance? Data received: ${_.truncate(
-              response.data,
-              {length: 256}
-            )}`;
-          }
-        }
-      })
-      .catch((err) => err);
-  }
-}
-
-async function waitForJob(
-  splunkClient: SplunkClient,
-  id: JobID
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<any> {
-  const completed = await apiClient
-    .get(`${splunkClient.host}/services/search/jobs/${id}?output_mode=json`)
-    .then(({data}) => data.entry[0].content.isDone);
-  if (!completed) {
-    await delay(500);
-    return waitForJob(splunkClient, id);
-  } else {
-    return apiClient
-      .get(
-        `${splunkClient.host}/services/search/jobs/${id}/results?output_mode=json&count=200000`
-      )
-      .then(({data}) => {
-        return data.results.map((result: {_raw: string}) =>
-          JSON.parse(result._raw)
-        );
-      });
+  validateCredentials(): boolean {
+    return this.service.login((error, success) => {
+      if (error) {
+        throw error;
+      } else {
+        return success;
+      }
+    });
   }
 }
 
@@ -179,43 +119,43 @@ function consolidateFilePayloads(
   return exec as unknown as ExecJSON.Execution;
 }
 
-export async function getExecution(
-  splunkClient: SplunkClient,
-  guid: string
-): Promise<ExecJSON.Execution> {
-  const jobId = await createSearch(splunkClient, `"meta.guid"=${guid}`);
-  const executionPayloads = waitForJob(splunkClient, jobId);
-  return executionPayloads
-    .then((payloads) => consolidate_payloads(payloads))
-    .then((executions) => executions[0]);
-}
+// export async function getExecution(
+//   splunkClient: SplunkClient,
+//   guid: string
+// ): Promise<ExecJSON.Execution> {
+//   const jobId = await createSearch(splunkClient, `"meta.guid"=${guid}`);
+//   const executionPayloads = waitForJob(splunkClient, jobId);
+//   return executionPayloads
+//     .then((payloads) => consolidate_payloads(payloads))
+//     .then((executions) => executions[0]);
+// }
 
-export async function getAllExecutions(
-  splunkClient: SplunkClient,
-  searchQuery: string
-): Promise<FileMetaData[]> {
-  const jobId = await createSearch(splunkClient, searchQuery);
-  return waitForJob(splunkClient, jobId).then(
-    (executions: GenericPayloadWithMetaData[]) =>
-      executions.map((execution) => execution.meta)
-  );
-}
+// export async function getAllExecutions(
+//   splunkClient: SplunkClient,
+//   searchQuery: string
+// ): Promise<FileMetaData[]> {
+//   const jobId = await createSearch(splunkClient, searchQuery);
+//   return waitForJob(splunkClient, jobId).then(
+//     (executions: GenericPayloadWithMetaData[]) =>
+//       executions.map((execution) => execution.meta)
+//   );
+// }
 
-export async function createSearch(
-  splunkClient: SplunkClient,
-  searchString?: string
-  // We basically can't, and really shouldn't, do typescript here. Output is changes depending on the job called
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<JobID> {
-  const fullQuery = `search=search ${searchString || ''}`;
-  return apiClient({
-    method: 'POST',
-    url: `${splunkClient.host}/services/search/jobs?output_mode=json`,
-    headers: {
-      'Content-Type': 'text/plain'
-    },
-    data: fullQuery
-  }).then(({data}) => {
-    return _.get(data, 'sid');
-  });
-}
+// export async function createSearch(
+//   splunkClient: SplunkClient,
+//   searchString?: string
+//   // We basically can't, and really shouldn't, do typescript here. Output is changes depending on the job called
+//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+// ): Promise<JobID> {
+//   const fullQuery = `search=search ${searchString || ''}`;
+//   return apiClient({
+//     method: 'POST',
+//     url: `${splunkClient.host}/services/search/jobs?output_mode=json`,
+//     headers: {
+//       'Content-Type': 'text/plain'
+//     },
+//     data: fullQuery
+//   }).then(({data}) => {
+//     return _.get(data, 'sid');
+//   });
+// }

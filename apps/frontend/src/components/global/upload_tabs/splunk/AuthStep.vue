@@ -42,7 +42,6 @@
 
 <script lang="ts">
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
-import {SnackbarModule} from '@/store/snackbar';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import {SplunkClient} from '@/utilities/splunk_util';
 import Vue from 'vue';
@@ -64,25 +63,28 @@ export default class AuthStep extends Vue {
   hostname = '';
 
   async login() {
-    const splunkClient = new SplunkClient(
-      this.hostname,
-      this.username,
-      this.password
-    );
-    splunkClient.validateCredentials().then((result) => {
-      if (result === true) {
-        localUsername.set(this.username);
-        localPassword.set(this.password);
-        localHostname.set(this.hostname);
-        SnackbarModule.notify('You have successfully signed in');
-        this.$emit('authenticated', splunkClient);
-      } else if (result === false) {
-        SnackbarModule.failure('Incorrect Username or Password');
-      } else {
-        SnackbarModule.failure(result);
-        this.$emit('error');
-      }
+    const splunkClient = new SplunkClient({
+      username: this.username,
+      host: this.hostname,
+      password: this.password,
+      index: 'hdf'
     });
+    const authenticated = splunkClient.validateCredentials();
+    console.log(authenticated);
+    // .then((result) => {
+    //   if (result === true) {
+    //     localUsername.set(this.username);
+    //     localPassword.set(this.password);
+    //     localHostname.set(this.hostname);
+    //     SnackbarModule.notify('You have successfully signed in');
+    //     this.$emit('authenticated', splunkClient);
+    //   } else if (result === false) {
+    //     SnackbarModule.failure('Incorrect Username or Password');
+    //   } else {
+    //     SnackbarModule.failure(result);
+    //     this.$emit('error');
+    //   }
+    // });
   }
 
   /** Init our fields */
