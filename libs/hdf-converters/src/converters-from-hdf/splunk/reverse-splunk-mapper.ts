@@ -343,7 +343,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
             console.error(err);
             throw err;
           }
-          logger.debug(
+          logger.verbose(
             `Successfully uploaded execution for ${report.meta.filename}`
           );
         }
@@ -363,7 +363,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
           console.error(err);
           throw err;
         }
-        logger.debug(
+        logger.verbose(
           `Successfully uploaded ${splunkData.profiles.length} profile layer(s)`
         );
       }
@@ -381,7 +381,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
           console.error(err);
           throw err;
         }
-        logger.debug(
+        logger.verbose(
           `Successfully uploaded ${splunkData.controls.length} control(s)`
         );
       }
@@ -398,25 +398,29 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     logger.info(
       `Logging into Splunk Service: ${config.host} with user ${config.username}`
     );
-    logger.debug('Got Execution: ' + filename);
+    logger.verbose('Got Execution: ' + filename);
     const guid = createGUID(30);
-    logger.debug('Using GUID: ' + guid);
+    logger.verbose('Using GUID: ' + guid);
 
     service.login((err: any, success: any) => {
       if (err) {
         throw err;
       }
       logger.info('Login was successful: ' + success);
-      service.indexes().fetch((err: any, indexes: any) => {
+      service.indexes().fetch((error: any, indexes: any) => {
+        if (error) {
+          logger.error(error);
+          throw error;
+        }
         const availableIndexes: string[] = indexes
           .list()
           .map((index: {name: string}) => index.name);
-        logger.debug(`Available Indexes:  + ${availableIndexes.join(', ')}`);
+        logger.verbose(`Available Indexes:  + ${availableIndexes.join(', ')}`);
         if (availableIndexes.includes(config.index)) {
           const targetIndex = indexes.item(config.index);
           const splunkData = this.createSplunkData(guid, filename);
           this.uploadSplunkData(targetIndex, splunkData);
-          logger?.debug(`Have index ${targetIndex.name}`);
+          logger?.verbose(`Have index ${targetIndex.name}`);
         } else {
           logger.error(`Invalid Index: ${config.index}`);
           throw new Error(`Invalid Index: ${config.index}`);
