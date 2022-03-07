@@ -68,7 +68,8 @@ describe('Describe Splunk Reverse Mapper', () => {
         username: 'admin',
         password: 'Valid_password!',
         index: 'main',
-        insecure: true
+        insecure: true,
+        scheme: 'http'
       },
       'rhel7-results.json'
     );
