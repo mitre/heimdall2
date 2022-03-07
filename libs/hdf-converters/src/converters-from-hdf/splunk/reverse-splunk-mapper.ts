@@ -373,7 +373,9 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
 
     // Upload control event(s)
     targetIndex.submitEvent(
-      splunkData.controls.map((control) => JSON.stringify(control)).join('\n'),
+      splunkData.controls
+        .map((control) => JSON.stringify(control))
+        .join('{{{FIX_EVENT_BREAKER_NEWLINE}}}'),
       {
         sourcetype: MAPPER_NAME,
         index: targetIndex.name
