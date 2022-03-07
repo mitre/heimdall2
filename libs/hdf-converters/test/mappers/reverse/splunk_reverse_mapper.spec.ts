@@ -34,7 +34,16 @@ async function waitForJob(id: string): Promise<any> {
         }
       )
       .then(({data}) => {
-        return data;
+        return data.results.map((result: {_raw: string}) => {
+          if (typeof result._raw === 'string') {
+            return JSON.parse(`"${result._raw}"`)
+              .split('\n')
+              .map((result: string) => {
+                return JSON.parse(result);
+              });
+          }
+          return JSON.parse(result._raw);
+        });
       });
   }
 }
