@@ -34,9 +34,7 @@ async function waitForJob(id: string): Promise<any> {
         }
       )
       .then(({data}) => {
-        return data.results.map((result: {_raw: string}) =>
-          JSON.parse(result._raw)
-        );
+        return data;
       });
   }
 }
