@@ -67,7 +67,7 @@ describe('Describe Splunk Reverse Mapper', () => {
         host: '127.0.0.1',
         username: 'admin',
         password: 'Valid_password!',
-        index: 'hdf',
+        index: 'main',
         insecure: true
       },
       'rhel7-results.json'
@@ -76,7 +76,7 @@ describe('Describe Splunk Reverse Mapper', () => {
     // Wait for data to be indexed
     await delay(10000);
 
-    // Upload to Splunk
+    // Search for data
     const jobID = await axios
       .post(
         `http://127.0.0.1:8089/servicesNS/admin/search/search/jobs?output_mode=json`,
