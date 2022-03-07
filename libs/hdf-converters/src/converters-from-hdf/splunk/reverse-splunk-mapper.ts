@@ -353,9 +353,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     // \r\n Is the default LINE_BREAKER for splunk, this is very poorly documented.
     // See https://docs.splunk.com/Documentation/StreamProcessor/standard/FunctionReference/LineBreak
     targetIndex.submitEvent(
-      splunkData.profiles
-        .map((profile) => JSON.stringify(profile))
-        .join('{{{FIX_EVENT_BREAKER_NEWLINE}}}'),
+      splunkData.profiles.map((profile) => JSON.stringify(profile)).join('\n'),
       {
         sourcetype: MAPPER_NAME,
         index: targetIndex.name
@@ -373,9 +371,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
 
     // Upload control event(s)
     targetIndex.submitEvent(
-      splunkData.controls
-        .map((control) => JSON.stringify(control))
-        .join('{{{FIX_EVENT_BREAKER_NEWLINE}}}'),
+      splunkData.controls.map((control) => JSON.stringify(control)).join('\n'),
       {
         sourcetype: MAPPER_NAME,
         index: targetIndex.name
