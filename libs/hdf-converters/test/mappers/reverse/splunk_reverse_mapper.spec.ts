@@ -45,9 +45,11 @@ async function waitForJob(id: string): Promise<any> {
                 }
               }
             );
-            return result._raw.split('\n').map((result: string) => {
-              return JSON.parse(result);
-            });
+            return result._raw
+              .split('{{{FIX_EVENT_BREAKER_NEWLINE}}}')
+              .map((result: string) => {
+                return JSON.parse(result);
+              });
           }
           return JSON.parse(result._raw);
         });
