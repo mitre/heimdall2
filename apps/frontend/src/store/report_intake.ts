@@ -14,6 +14,7 @@ import {
   NessusResults,
   NetsparkerMapper,
   NiktoMapper,
+  PrismaMapper,
   SarifMapper,
   ScoutsuiteMapper,
   SnykResults,
@@ -217,6 +218,8 @@ export class InspecIntake extends VuexModule {
         return new DBProtectMapper(convertOptions.data).toHdf();
       case 'netsparker':
         return new NetsparkerMapper(convertOptions.data).toHdf();
+      case 'prisma':
+        return new PrismaMapper(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${convertOptions.fileOptions.file.name}), no fingerprints matched.`
@@ -275,6 +278,13 @@ export class InspecIntake extends VuexModule {
         guessOptions.data.indexOf('Result Status')
       ) {
         return 'dbProtect';
+      } else if (
+        // Match CSV Headers, global and case-insensitive
+        guessOptions.data.match(
+          /Hostname.*Distro.*CVE ID.*Compliance ID.*Type.*Severity/gi
+        )
+      ) {
+        return 'prisma';
       }
     }
     return '';

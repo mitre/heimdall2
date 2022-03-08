@@ -11,8 +11,11 @@ describe('prisma_mapper', () => {
       )
     );
 
-    fs.writeFileSync('sample_jsons/prisma_mapper/prisma-hdf.json',JSON.stringify(mapper.toHdf()) );
-    
+    fs.writeFileSync(
+      'sample_jsons/prisma_mapper/prisma-hdf.json',
+      JSON.stringify(mapper.toHdf())
+    );
+
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
