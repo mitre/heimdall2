@@ -43,7 +43,7 @@ describe('Describe ASFF Reverse Mapper', () => {
     );
   });
 
-  it('Successfuly processes HDF files with no controls', () => {
+  it('Successfully processes HDF files with no controls', () => {
     const inputData = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/sample_input_report/snyk-no-results.json',
