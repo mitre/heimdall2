@@ -389,6 +389,28 @@ function createProfileInfo(hdf?: ExecJSON.Execution): string[] {
 
 function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
   let typesArr: string[] = [];
+  const executuionTargets = [
+    'platform',
+    'statistics',
+    'version',
+    'passthrough'
+  ];
+  executuionTargets.forEach((target) => {
+    const value = _.get(hdf, target);
+    if (typeof value === 'string') {
+      typesArr.push(
+        `Execution/${escapeForwardSlashes(target)}/${escapeForwardSlashes(
+          value
+        )}`
+      );
+    } else if (typeof value === 'object') {
+      typesArr.push(
+        `Execution/${escapeForwardSlashes(target)}/${escapeForwardSlashes(
+          JSON.stringify(value)
+        )}`
+      );
+    }
+  });
   hdf.profiles.forEach((profile) => {
     const targets = [
       'version',
@@ -397,7 +419,10 @@ function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
       'summary',
       'license',
       'copyright',
-      'copyright_email'
+      'copyright_email',
+      'name',
+      'title',
+      'depends'
     ];
     targets.forEach((target) => {
       const value = _.get(profile, target);
@@ -406,6 +431,12 @@ function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
           `${escapeForwardSlashes(profile.name)}/${escapeForwardSlashes(
             target
           )}/${escapeForwardSlashes(value)}`
+        );
+      } else if (typeof value === 'object') {
+        typesArr.push(
+          `${escapeForwardSlashes(profile.name)}/${escapeForwardSlashes(
+            target
+          )}/${escapeForwardSlashes(JSON.stringify(value))}`
         );
       }
     });
