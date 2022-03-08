@@ -3,7 +3,7 @@
 Up to date as of Sept 16
 
 
-## UploadNexus Component
+## Upload Nexus Component
 
 The entry point to our data flow is the UploadNexus.vue component.
 This acts as a multiplexer between various sub-components, which all individually handle submitting their selected files to the report intake module.

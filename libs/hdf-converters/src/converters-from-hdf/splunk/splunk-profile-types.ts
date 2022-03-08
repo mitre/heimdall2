@@ -4,6 +4,7 @@ export type SplunkProfile = {
   meta: Meta;
   summary: string;
   sha256: string;
+  controls: any[];
   supports: any[] | ILookupPathFH;
   name: string;
   copyright: string;
@@ -12,7 +13,7 @@ export type SplunkProfile = {
   version: string;
   license: string;
   title: string;
-  parent_profile: string;
+  parent_profile: string | undefined;
   depends: Depend[] | ILookupPathFH;
   attributes: Attribute[] | ILookupPathFH;
   groups: Group[] | ILookupPathFH;

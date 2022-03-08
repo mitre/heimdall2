@@ -36,6 +36,7 @@ index="<<YOUR INDEX>>" | stats list(meta.filename) list(meta.filetype) list(tags
         // How much of an overlay this control is. 0 <==> is_baseline, 1 implies direct overlay to baseline, etc. Will be null if ambiguous
         "overlay_depth": 0, // or 1, 2, 3, ...
     },
+    "title": "The control title",
     "code": "The code for the control, not including over/underlays!",
     "desc": "The description of the control",
     "descriptions": {
@@ -153,6 +154,7 @@ index="<<YOUR INDEX>>" | stats list(meta.filename) list(meta.filetype) list(tags
             "compliance": "?"
         }
     ],
+    controls: [], // An empty array, for backwards compatibility with versions of Heimdall that assume this is already defined
     // "Inputs" in modern Inspec parlance, Attributes are the parameters specified at runtime for the profile.
     "attributes": [
         {
