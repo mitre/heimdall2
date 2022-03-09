@@ -1,11 +1,14 @@
 import {ValidationPipe} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
+import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
 import {json} from 'express';
 import rateLimit from 'express-rate-limit';
 import multer from 'multer';
+import {version} from '../package.json';
 import {AppModule} from './app.module';
 import {ConfigService} from './config/config.service';
 import {generateDefault} from './token/token.providers';
+
 import session = require('express-session');
 import postgresSessionStore = require('connect-pg-simple');
 import helmet = require('helmet');
@@ -47,6 +50,18 @@ async function bootstrap() {
   );
   app.use(json({limit: '50mb'}));
   app.use(passport.initialize());
+
+  // Generate Swagger docks
+  const config = new DocumentBuilder()
+    .setTitle('Heimdall Server')
+    .setDescription('The REST Endpoints for Heimdall Enterprise Server 2.0')
+    .setVersion(version)
+    .addTag('heimdall')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
   // Sessions are only used for oauth callbacks
   if (configService.enabledOauthStrategies().length) {
     app.use(
