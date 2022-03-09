@@ -413,10 +413,28 @@ export default class UserModal extends Vue {
       });
   }
 
-  deleteAPIKey(keyToDelete: IApiKey) {
-    this.activeAPIKey = keyToDelete;
-    this.updateCallback = this.deleteAPIKeyConfirm;
-    this.inputPasswordDialog = true;
+  deleteAPIKey(item: IApiKey) {
+    if (typeof item === 'object') {
+      this.activeAPIKey = item;
+    }
+    this.inputPasswordDialog = false;
+    axios
+      .delete<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {
+        data: {...this.activeAPIKey, currentPassword: this.currentPassword}
+      })
+      .then(() => {
+        this.apiKeys = this.apiKeys.filter((key) => key.id !== item.id);
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 403) {
+            this.updateCallback = this.deleteAPIKeyConfirm;
+            this.inputPasswordDialog = true;
+          }
+        }
+        throw error;
+      });
+    this.activeAPIKey = null;
   }
 
   deleteAPIKeyConfirm() {
@@ -460,10 +478,29 @@ export default class UserModal extends Vue {
     this.activeAPIKey = null;
   }
 
-  refreshAPIKey(keyToRefresh: IApiKey) {
-    this.activeAPIKey = keyToRefresh;
-    this.updateCallback = this.refreshAPIKeyConfirm;
-    this.inputPasswordDialog = true;
+  refreshAPIKey(item: IApiKey) {
+    if (typeof item === 'object') {
+      this.activeAPIKey = item;
+    }
+    this.inputPasswordDialog = false;
+    axios
+      .delete<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {
+        data: {...this.activeAPIKey, currentPassword: this.currentPassword}
+      })
+      .then(() => {
+        this.apiKeys = this.apiKeys.filter((key) => key.id !== item.id);
+        this.addAPIKey();
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 403) {
+            this.updateCallback = this.refreshAPIKeyConfirm;
+            this.inputPasswordDialog = true;
+          }
+        }
+        throw error;
+      });
+    this.activeAPIKey = null;
   }
 
   refreshAPIKeyConfirm() {
