@@ -30,14 +30,18 @@ export function escapeForwardSlashes(s: string): string {
   return s.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT);
 }
 
-export function getRunTime(hdf: ExecJSON.Execution): Date {
-  let time = new Date();
+export function getRunTime(hdf: ExecJSON.Execution): string {
+  let time = new Date().toISOString();
   hdf.profiles.forEach((profile) => {
     if (
       profile.controls[0].results.length &&
       profile.controls[0].results[0].start_time
     ) {
-      time = new Date(profile.controls[0].results[0].start_time);
+      try {
+        time = new Date(profile.controls[0].results[0].start_time).toISOString();
+      } catch {
+        time = new Date().toISOString();
+      } 
     }
   });
   return time;
@@ -89,7 +93,7 @@ export function createProfileInfoFinding(
     ProductArn: `arn:aws:securityhub:${options.region}:${options.awsAccountId}:product/${options.awsAccountId}/default`,
     GeneratorId: `arn:aws:securityhub:us-east-2:${options.awsAccountId}:ruleset/set/${hdf.profiles[0].name}`,
     AwsAccountId: options.awsAccountId,
-    CreatedAt: runTime.toISOString(),
+    CreatedAt: runTime,
     UpdatedAt: updatedAt,
     Title: `${options.target} | ${hdf.profiles[0].name} | ${moment().format(
       'YYYY-MM-DD hh:mm:ss [GMT]ZZ'
@@ -236,15 +240,22 @@ export function createNote(segment: ExecJSON.ControlResult) {
   }
 }
 
+function cleanObjectValues<T>(value: T): boolean {
+  if(Array.isArray(value)) {
+    return value.length < 0;
+  }
+  return !Boolean(value);
+}
+
 export function createCode(
   control: ExecJSON.Control & {profileInfo?: Record<string, unknown>}
 ) {
   return `=========================================================\n# Profile name: ${
     control.profileInfo?.name
-  }\n=========================================================\n\n${control.code?.replace(
+  }\n=========================================================\n\n${control.code ? control.code?.replace(
     /\\\"/g,
     '"'
-  )}`;
+  ) : JSON.stringify(_.omitBy(_.omit(control, 'results'), cleanObjectValues))}`;
 }
 
 export function setupId(
