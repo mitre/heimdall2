@@ -388,7 +388,7 @@ function createProfileInfo(hdf?: ExecJSON.Execution): string[] {
 }
 
 function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
-  let typesArr: string[] = [];
+  let typesArr = [`MITRE/SAF/${HeimdallToolsVersion}-hdf2asff`];
   const executuionTargets = [
     'platform',
     'statistics',
