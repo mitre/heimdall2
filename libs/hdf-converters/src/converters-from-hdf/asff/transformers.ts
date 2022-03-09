@@ -38,10 +38,12 @@ export function getRunTime(hdf: ExecJSON.Execution): string {
       profile.controls[0].results[0].start_time
     ) {
       try {
-        time = new Date(profile.controls[0].results[0].start_time).toISOString();
+        time = new Date(
+          profile.controls[0].results[0].start_time
+        ).toISOString();
       } catch {
         time = new Date().toISOString();
-      } 
+      }
     }
   });
   return time;
@@ -241,7 +243,7 @@ export function createNote(segment: ExecJSON.ControlResult) {
 }
 
 function cleanObjectValues<T>(value: T): boolean {
-  if(Array.isArray(value)) {
+  if (Array.isArray(value)) {
     return value.length < 0;
   }
   return !Boolean(value);
@@ -252,10 +254,11 @@ export function createCode(
 ) {
   return `=========================================================\n# Profile name: ${
     control.profileInfo?.name
-  }\n=========================================================\n\n${control.code ? control.code?.replace(
-    /\\\"/g,
-    '"'
-  ) : JSON.stringify(_.omitBy(_.omit(control, 'results'), cleanObjectValues))}`;
+  }\n=========================================================\n\n${
+    control.code
+      ? control.code?.replace(/\\\"/g, '"')
+      : JSON.stringify(_.omitBy(_.omit(control, 'results'), cleanObjectValues))
+  }`;
 }
 
 export function setupId(
