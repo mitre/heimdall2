@@ -21,7 +21,7 @@
       <v-row class="pa-4">
         <div
           class="pa-2 title"
-          :style="$vuetify.breakpoint.lgAndUp ? 'width: 15vw' : 'width:18vh'"
+          :style="$vuetify.breakpoint.lgAndUp ? 'width: 15vw' : 'width:18vw'"
           v-text="filename"
         />
         <v-tooltip v-if="isOverlaid" bottom>
