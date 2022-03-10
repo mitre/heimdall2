@@ -8,6 +8,10 @@ import {
   parseCsv
 } from './base-converter';
 
+export type PrismaControls = {
+  records: Record<string, string>[];
+};
+
 const SEVERITY_LOOKUP: Record<string, number> = {
   low: 0,
   moderate: 0.5,
@@ -21,8 +25,10 @@ function getTitle(item: Record<string, string>): string {
   return hostName.toString().concat(distro, type);
 }
 
-export class PrismaMapper extends BaseConverter {
-  //data: Record<string, unknown>;
+export class PrismaControlMapper extends BaseConverter {
+  data: PrismaControls = {
+    records: []
+  };
   mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
@@ -105,7 +111,32 @@ export class PrismaMapper extends BaseConverter {
       }
     ]
   };
+
+  constructor(prismaControls: Record<string, string>[]) {
+    super({records: prismaControls});
+  }
+}
+
+export class PrismaMapper {
+  data: Record<string, string>[] = [];
+
+  toHdf(): ExecJSON.Execution | ExecJSON.Execution[] {
+    const executions: ExecJSON.Execution[] = [];
+    const hostnameToControls: Record<string, Record<string, string>[]> = {}
+    this.data.forEach((record: Record<string, string>) => {
+      hostnameToControls[record['Hostname']] = hostnameToControls[record['Hostname']] || [];
+      hostnameToControls[record['Hostname']].push(record)
+    });
+    Object.entries(hostnameToControls).forEach(([hostname, controls]) => {
+      const converted = new PrismaControlMapper(controls).toHdf()
+      _.set(converted, 'platform.target_id', hostname)
+      executions.push(converted)
+    })
+    console.log(executions)
+    return executions;
+  }
+
   constructor(prismaCsv: string) {
-    super(parseCsv(prismaCsv));
+    this.data = parseCsv(prismaCsv) as Record<string, string>[];
   }
 }

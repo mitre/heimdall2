@@ -74,14 +74,14 @@ export function impactMapping(
     }
   };
 }
-export function parseCsv(csv: string): Record<string, unknown> {
+export function parseCsv(csv: string): unknown[] {
   const result = Papa.parse(csv.trim(), {header: true});
 
   if (result.errors.length) {
     throw result.errors;
   }
 
-  return {records: result.data};
+  return result.data;
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
