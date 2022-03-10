@@ -150,25 +150,50 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
   }
 
   get details(): Detail[] {
-    const c = this.control;
     const detailsMap = new Map();
 
-    detailsMap.set('Control', c.data.id);
-    detailsMap.set('Title', c.data.title);
-    detailsMap.set('Caveat', c.hdf.descriptions.caveat);
-    detailsMap.set('Desc', c.data.desc);
-    detailsMap.set('Rationale', c.hdf.descriptions.rationale);
-    detailsMap.set('Severity', c.root.hdf.severity);
-    detailsMap.set('Impact', c.data.impact);
-    detailsMap.set('Nist controls', c.hdf.rawNistTags.join(', '));
-    detailsMap.set('CCI controls', this.cciControlString);
-    detailsMap.set('Check', c.hdf.descriptions.check || c.data.tags.check);
-    detailsMap.set('Fix', c.hdf.descriptions.fix || c.data.tags.fix);
-    detailsMap.set('CWE ID', _.get(c, 'hdf.wraps.tags.cweid'));
+    detailsMap.set('Control', this.control.data.id);
+    detailsMap.set('Title', this.control.data.title);
+    detailsMap.set('Caveat', this.control.hdf.descriptions.caveat);
+    detailsMap.set('Desc', this.control.data.desc);
+    detailsMap.set('Rationale', this.control.hdf.descriptions.rationale);
+    detailsMap.set('Severity', this.control.root.hdf.severity);
+    detailsMap.set('Impact', this.control.data.impact);
+    detailsMap.set('NIST Controls', this.control.hdf.rawNistTags.join(', '));
+    detailsMap.set('CCI Controls', this.cciControlString);
+    detailsMap.set(
+      'Check',
+      this.control.hdf.descriptions.check || this.control.data.tags.check
+    );
+    detailsMap.set(
+      'Fix',
+      this.control.hdf.descriptions.fix || this.control.data.tags.fix
+    );
+    detailsMap.set('CWE ID', _.get(this.control, 'hdf.wraps.tags.cweid'));
 
-    for (const prop in c.hdf.descriptions) {
+    const sparseControl = _.omit(this.control, [
+      'data.tags.nist',
+      'data.tags.cci',
+      'data.tags.cwe'
+    ]);
+
+    // Convert all tags to Details
+    Object.entries(sparseControl.data?.tags || {}).forEach(([key, value]) => {
+      if (!detailsMap.has(_.startCase(key))) {
+        // Make sure all values are strings
+        if (Array.isArray(value)) {
+          detailsMap.set(_.startCase(key), value.join(', '));
+        } else if (typeof value === 'object') {
+          detailsMap.set(_.startCase(key), JSON.stringify(value));
+        } else {
+          detailsMap.set(_.startCase(key), String(value));
+        }
+      }
+    });
+
+    for (const prop in this.control.hdf.descriptions) {
       if (!detailsMap.has(_.capitalize(prop))) {
-        detailsMap.set(_.capitalize(prop), c.hdf.descriptions[prop]);
+        detailsMap.set(_.startCase(prop), this.control.hdf.descriptions[prop]);
       }
     }
     return Array.from(detailsMap, ([name, value]) => ({name, value})).filter(
