@@ -50,7 +50,7 @@
             <v-container fluid>
               <v-row>
                 <v-col cols="12">
-                  <prism language="ruby">{{ control.full_code }}</prism>
+                  <prism :language="language">{{ control.full_code }}</prism>
                 </v-col>
               </v-row>
             </v-container>
@@ -68,6 +68,7 @@ import {ContextualizedControl} from 'inspecjs';
 import _ from 'lodash';
 //TODO: add line numbers
 import 'prismjs';
+import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-makefile.js';
 import 'prismjs/components/prism-ruby.js';
 import 'prismjs/themes/prism-tomorrow.css';
@@ -118,6 +119,15 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
       return this.control.data.desc.trim();
     } else {
       return 'No description';
+    }
+  }
+
+  get language(): string {
+    try {
+      JSON.parse(this.control.data.code || '');
+      return 'json';
+    } catch {
+      return 'ruby';
     }
   }
 
