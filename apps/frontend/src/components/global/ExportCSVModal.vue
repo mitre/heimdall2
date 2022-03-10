@@ -268,7 +268,7 @@ export default class ExportCSVModal extends Vue {
           break;
         // NIST IDs
         case fieldNames[11]:
-          result[fieldNames[12]] = control.hdf.rawNistTags.join(', ');
+          result[fieldNames[11]] = control.hdf.rawNistTags.join(', ');
           break;
         // CCI IDs
         case fieldNames[12]:
