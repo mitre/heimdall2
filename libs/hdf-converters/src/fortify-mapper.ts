@@ -11,7 +11,7 @@ import {
 
 const NIST_REFERENCE_NAME =
   'Standards Mapping - NIST Special Publication 800-53 Revision 4';
-const DEFAULT_NIST_TAG = ['unmapped', 'Rev_4'];
+const DEFAULT_NIST_TAG: string[] = [];
 
 function impactMapping(input: Record<string, unknown>, id: string): number {
   if (Array.isArray(input)) {
@@ -23,6 +23,7 @@ function impactMapping(input: Record<string, unknown>, id: string): number {
     return parseFloat(_.get(input, 'ClassInfo.DefaultSeverity') as string) / 5;
   }
 }
+
 function nistTag(rule: Record<string, unknown>): string[] {
   let references = _.get(rule, 'References.Reference');
   if (!Array.isArray(references)) {
