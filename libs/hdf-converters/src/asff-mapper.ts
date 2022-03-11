@@ -904,11 +904,6 @@ export class ASFFMapper extends BaseConverter {
     this.meta = meta;
     this.supportingDocs = supportingDocs;
   }
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
-  }
 }
 
 export class ASFFResults {
