@@ -207,8 +207,8 @@ export class BaseConverter {
 
     if (_.keys(v).length > 0 && hasTransformer) {
       return {
-        ...(hasTransformer && (transformer(hasPath ? pathV : file) as object)),
-        ...(_.keys(v).length > 0 && this.convertInternal(file, v))
+        ...(_.keys(v).length > 0 && this.convertInternal(file, v)),
+        ...(hasTransformer && (transformer(hasPath ? pathV : file) as object))
       } as MappedReform<T, ILookupPath>;
     }
 
