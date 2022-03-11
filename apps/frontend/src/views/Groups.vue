@@ -1,5 +1,10 @@
 <template>
-  <Base :show-search="false" title="Heimdall - Groups">
+  <Base
+    :show-search="false"
+    :minimal-topbar="true"
+    :show-back-button="true"
+    title="Heimdall - Groups"
+  >
     <template #main-content>
       <v-tabs v-model="activeTab" fixed-tabs dark>
         <v-tab key="my-groups"> My Groups </v-tab>

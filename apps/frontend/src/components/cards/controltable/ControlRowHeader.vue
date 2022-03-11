@@ -189,7 +189,11 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   }
 
   get isOverlaid() {
-    return Boolean(this.control.extendsFrom.length);
+    return this.control.extendsFrom.some(
+      (extension) =>
+        extension.data.code !== this.control.data.code &&
+        extension.data.code !== ''
+    );
   }
 
   severity_arrow_count(severity: string): number {

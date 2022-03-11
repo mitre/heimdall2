@@ -47,7 +47,11 @@ abstract class HDFControl10 implements HDFControl {
     this.waived = waived;
     this.isProfile = isProfile;
 
-    this.rawNistTags = HDFControl10.compute_raw_nist_tags(this.wraps);
+    // Most applications treat NIST tags an array, however the InSpec schema says the could also be a string
+    const tempNistTags = HDFControl10.compute_raw_nist_tags(this.wraps);
+    this.rawNistTags = Array.isArray(tempNistTags)
+      ? tempNistTags
+      : [tempNistTags];
     const tmp = HDFControl10.compute_proper_nist_tags(this.rawNistTags);
     this.parsedNistTags = tmp[0];
     this.parsedNistRevision = tmp[1];
@@ -96,8 +100,8 @@ abstract class HDFControl10 implements HDFControl {
 
   private static compute_raw_nist_tags(
     raw: ResultControl_1_0 | ProfileControl_1_0
-  ): string[] {
-    const fetched: string[] | undefined | null = raw.tags['nist'];
+  ): string[] | string {
+    const fetched: string[] | string | undefined | null = raw.tags['nist'];
     if (!fetched) {
       return ['UM-1'];
     } else {
@@ -107,7 +111,7 @@ abstract class HDFControl10 implements HDFControl {
 
   /** Generates the nist tags, as needed. */
   private static compute_proper_nist_tags(
-    raw: string[]
+    raw: string[] | string
   ): [NistControl[], NistRevision | null] {
     // Initialize
     let parsedNistTags: NistControl[] = [];
@@ -115,7 +119,7 @@ abstract class HDFControl10 implements HDFControl {
     const seenSpecs = new Set<string>(); // Used to track duplication
 
     // Process item by item
-    raw.map(parse_nist).forEach((x) => {
+    (Array.isArray(raw) ? raw : [raw]).map(parse_nist).forEach((x) => {
       if (!x) {
         return;
       } else if (is_control(x)) {

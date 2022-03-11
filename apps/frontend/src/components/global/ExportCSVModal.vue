@@ -75,7 +75,6 @@ const fieldNames = [
   'Title',
   'Description',
   'Descriptions',
-  'Message',
   'Impact',
   'Severity',
   'Code',
@@ -83,7 +82,7 @@ const fieldNames = [
   'Fix',
   '800-53 Controls',
   'CCI IDs',
-  'Segments',
+  'Results',
   'Waived',
   'Waiver Data'
 ];
@@ -247,49 +246,45 @@ export default class ExportCSVModal extends Vue {
             control.data.descriptions
           );
           break;
-        // Message
-        case fieldNames[6]:
-          result[fieldNames[6]] = control.hdf.message;
-          break;
         // Impact
-        case fieldNames[7]:
-          result[fieldNames[7]] = control.data.impact;
+        case fieldNames[6]:
+          result[fieldNames[6]] = control.data.impact;
           break;
         // Severity
-        case fieldNames[8]:
-          result[fieldNames[8]] = control.hdf.severity;
+        case fieldNames[7]:
+          result[fieldNames[7]] = control.hdf.severity;
           break;
         // Code
-        case fieldNames[9]:
-          result[fieldNames[9]] = this.createOverlaidCode(file, control);
+        case fieldNames[8]:
+          result[fieldNames[8]] = this.createOverlaidCode(file, control);
           break;
         // Check
-        case fieldNames[10]:
-          result[fieldNames[10]] = check;
+        case fieldNames[9]:
+          result[fieldNames[9]] = check;
           break;
         // Fix
-        case fieldNames[11]:
-          result[fieldNames[11]] = fix;
+        case fieldNames[10]:
+          result[fieldNames[10]] = fix;
           break;
         // NIST IDs
-        case fieldNames[12]:
-          result[fieldNames[12]] = control.hdf.rawNistTags.join(', ');
+        case fieldNames[11]:
+          result[fieldNames[11]] = control.hdf.rawNistTags.join(', ');
           break;
         // CCI IDs
-        case fieldNames[13]:
-          result[fieldNames[13]] = (control.data.tags.cci || []).join(', ');
+        case fieldNames[12]:
+          result[fieldNames[12]] = (control.data.tags.cci || []).join(', ');
           break;
-        // Segments
-        case fieldNames[14]:
-          result[fieldNames[14]] = this.segmentsToString(control.hdf.segments);
+        // Results
+        case fieldNames[13]:
+          result[fieldNames[13]] = this.segmentsToString(control.hdf.segments);
           break;
         // Is Waived
-        case fieldNames[15]:
-          result[fieldNames[15]] = control.hdf.waived ? 'True' : 'False';
+        case fieldNames[14]:
+          result[fieldNames[14]] = control.hdf.waived ? 'True' : 'False';
           break;
         // Waiver Data (JSON)
-        case fieldNames[16]:
-          result[fieldNames[16]] = JSON.stringify(
+        case fieldNames[15]:
+          result[fieldNames[15]] = JSON.stringify(
             _.get(control, 'hdf.wraps.waiver_data')
           );
           break;

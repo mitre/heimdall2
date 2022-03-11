@@ -8,6 +8,7 @@ export interface ILookupPathFH {
   arrayTransformer?: (value: unknown[], file: ExecJSON.Execution) => unknown[];
   key?: string;
   passParent?: boolean;
+  default?: any;
 }
 
 //Base converter used to support conversions from HDF to Any Format
@@ -54,6 +55,7 @@ export class FromHdfBaseConverter {
       typeof v === 'string' ||
       typeof v === 'number' ||
       typeof v === 'boolean' ||
+      v === undefined ||
       v === null
     ) {
       return v;
@@ -85,6 +87,7 @@ export class FromHdfBaseConverter {
     file: object,
     v: Array<T & ILookupPathFH>
   ): Array<T> {
+    const resultingData: Array<T> = [];
     // Looks through parsed data file using the mapping setup in V
     if (v[0] && !v[0].path) {
       const arrayTransformer = v[0].arrayTransformer; //does nothing since null
@@ -94,7 +97,7 @@ export class FromHdfBaseConverter {
       if (arrayTransformer) {
         output = arrayTransformer(output, this.data) as T[];
       }
-      return output;
+      resultingData.push(...output);
     } else if (v[0] && v[0].path) {
       const path = v[0].path;
       const arrayTransformer = v[0].arrayTransformer;
@@ -109,25 +112,36 @@ export class FromHdfBaseConverter {
           if (arrayTransformer) {
             v = arrayTransformer(v, this.data) as T[];
           }
-          return v;
+          resultingData.push(...v);
         } else {
           if (transformer) {
-            return [transformer(this.handlePath(file, path) as any) as T];
+            resultingData.push(
+              transformer(this.handlePath(file, path) as any) as T
+            );
           } else {
-            return [this.handlePath(file, path) as T];
+            resultingData.push(this.handlePath(file, path) as T);
           }
         }
       }
     }
-    return [];
+
+    const uniqueResults: T[] = [];
+    resultingData.forEach((result) => {
+      if (
+        !uniqueResults.some((uniqueResult) => _.isEqual(result, uniqueResult))
+      ) {
+        uniqueResults.push(result);
+      }
+    });
+    return uniqueResults;
   }
 
   //Gets the value at the path using lodash and path stored in object
   handlePath(file: object, path: string): unknown {
     if (path.startsWith('$.')) {
-      return _.get(this.data, path.slice(2)) || '';
+      return _.get(this.data, path.slice(2));
     } else {
-      return _.get(file, path) || '';
+      return _.get(file, path);
     }
   }
   hasPath(file: object, path: string): boolean {

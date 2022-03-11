@@ -18,32 +18,54 @@ const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 const SEVERITY_LABEL = 'Severity.Label';
 const COMPLIANCE_STATUS = 'Compliance.Status';
 
+const FROM_ASFF_TYPES_SLASH_REPLACEMENT = /{{{SLASH}}}/gi; // The "Types" field of ASFF only supports a maximum of 2 slashes, and will get replaced with this text. Note that the default AWS CLI doesn't support UTF-8 encoding
+
 // Use to extract control set specific data
 const FIREWALL_MANAGER_REGEX =
   /arn:.+:securityhub:.+:.*:product\/aws\/firewall-manager/;
-const SECURITYHUB_REGEX = /arn:.+:securityhub:.+:.*:product\/aws\/securityhub/;
 const PROWLER_REGEX = /arn:.+:securityhub:.+:.*:product\/prowler\/prowler/;
+const SECURITYHUB_REGEX = /arn:.+:securityhub:.+:.*:product\/aws\/securityhub/;
+const TRIVY_REGEX =
+  /arn:.+:securityhub:.+:.*:product\/aquasecurity\/aquasecurity/;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const PRODUCT_ARN_MAPPING: Map<RegExp, Record<string, Function>> = new Map([
   [FIREWALL_MANAGER_REGEX, getFirewallManager()],
+  [PROWLER_REGEX, getProwler()],
   [SECURITYHUB_REGEX, getSecurityHub()],
-  [PROWLER_REGEX, getProwler()]
+  [TRIVY_REGEX, getTrivy()]
 ]);
 
 type ExternalProductHandlerOutputs =
   | (() => string | number)
+  | (() => string | undefined)
   | number
   | string
   | string[];
+
+function replaceTypesSlashes(data: {Findings: {Types?: string[]}[]}) {
+  const findings = data.Findings.map((finding) => {
+    return {
+      ...finding,
+      Types: finding.Types?.map((type) =>
+        type.replace(FROM_ASFF_TYPES_SLASH_REPLACEMENT, '/')
+      )
+    };
+  });
+  return {Findings: findings};
+}
 
 function fixFileInput(asffJson: string) {
   try {
     let output = JSON.parse(asffJson);
     if (!_.has(output, 'Findings')) {
-      output = {Findings: [output]};
+      if (Array.isArray(output)) {
+        output = {Findings: output};
+      } else {
+        output = {Findings: [output]};
+      }
     }
-    return output;
+    return replaceTypesSlashes(output);
   } catch {
     // Prowler gives us JSON Lines format but we need regular JSON
     const fixedInput = `[${asffJson
@@ -52,9 +74,14 @@ function fixFileInput(asffJson: string) {
       .replace(/\},\n\$/g, '')}]`;
     let output = JSON.parse(fixedInput);
     if (!_.has(output, 'Findings')) {
-      output = {Findings: output};
+      if (Array.isArray(output)) {
+        output = {Findings: output};
+      } else {
+        output = {Findings: [output]};
+      }
     }
-    return output;
+    // Pre-process all types fields, fixes
+    return replaceTypesSlashes(output);
   }
 }
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -251,6 +278,61 @@ function getSecurityHub(): Record<string, Function> {
   };
 }
 
+function getTrivy(): Record<
+  string,
+  (finding: unknown) => string | string[] | undefined
+> {
+  const findingId = (finding: unknown): string => {
+    const generatorId = _.get(finding, 'GeneratorId');
+    const cveId = _.get(finding, 'Resources[0].Details.Other.CVE ID');
+    if (typeof cveId === 'string') {
+      return encode(`${generatorId}/${cveId}`);
+    } else {
+      const id = _.get(finding, 'Id');
+      return encode(`${generatorId}/${id}`);
+    }
+  };
+  const findingNistTag = (finding: unknown): string[] => {
+    const cveId = _.get(finding, 'Resources[0].Details.Other.CVE ID');
+    if (typeof cveId === 'string') {
+      return ['SI-2', 'RA-5'];
+    } else {
+      return [];
+    }
+  };
+  const subfindingsStatus = (): ExecJSON.ControlResultStatus => {
+    return ExecJSON.ControlResultStatus.Failed;
+  };
+  const subfindingsMessage = (finding: unknown): string | undefined => {
+    const cveId = _.get(finding, 'Resources[0].Details.Other.CVE ID');
+    if (typeof cveId === 'string') {
+      const patchedPackage = _.get(
+        finding,
+        'Resources[0].Details.Other.Patched Package'
+      );
+      const patchedVersionMessage =
+        patchedPackage.length === 0
+          ? 'There is no patched version of the package.'
+          : `The package has been patched since version(s): ${patchedPackage}.`;
+      return `For package ${_.get(
+        finding,
+        'Resources[0].Details.Other.PkgName'
+      )}, the current version that is installed is ${_.get(
+        finding,
+        'Resources[0].Details.Other.Installed Package'
+      )}.  ${patchedVersionMessage}`;
+    } else {
+      return undefined;
+    }
+  };
+  return {
+    findingId,
+    findingNistTag,
+    subfindingsStatus,
+    subfindingsMessage
+  };
+}
+
 export class ASFFMapper extends BaseConverter {
   securityhubStandardsJsonArray: string[] | undefined;
   meta: Record<string, string | undefined> | null;
@@ -389,25 +471,33 @@ export class ASFFMapper extends BaseConverter {
               {
                 status: {
                   transformer: (finding): ExecJSON.ControlResultStatus => {
-                    if (_.has(finding, COMPLIANCE_STATUS)) {
-                      switch (_.get(finding, COMPLIANCE_STATUS)) {
-                        case 'PASSED':
-                          return ExecJSON.ControlResultStatus.Passed;
-                        case 'WARNING':
-                          return ExecJSON.ControlResultStatus.Skipped;
-                        case 'FAILED':
-                          return ExecJSON.ControlResultStatus.Failed;
-                        case 'NOT_AVAILABLE':
-                          // primary meaning is that the check could not be performed due to a service outage or API error, but it's also overloaded to mean NOT_APPLICABLE so technically 'skipped' or 'error' could be applicable, but AWS seems to do the equivalent of skipped
-                          return ExecJSON.ControlResultStatus.Skipped;
-                        default:
-                          // not a valid value for the status enum
-                          return ExecJSON.ControlResultStatus.Error;
+                    const defaultFunc = () => {
+                      if (_.has(finding, COMPLIANCE_STATUS)) {
+                        switch (_.get(finding, COMPLIANCE_STATUS)) {
+                          case 'PASSED':
+                            return ExecJSON.ControlResultStatus.Passed;
+                          case 'WARNING':
+                            return ExecJSON.ControlResultStatus.Skipped;
+                          case 'FAILED':
+                            return ExecJSON.ControlResultStatus.Failed;
+                          case 'NOT_AVAILABLE':
+                            // primary meaning is that the check could not be performed due to a service outage or API error, but it's also overloaded to mean NOT_APPLICABLE so technically 'skipped' or 'error' could be applicable, but AWS seems to do the equivalent of skipped
+                            return ExecJSON.ControlResultStatus.Skipped;
+                          default:
+                            // not a valid value for the status enum
+                            return ExecJSON.ControlResultStatus.Error;
+                        }
+                      } else {
+                        // if no compliance status is provided which is a weird but possible case, then skip
+                        return ExecJSON.ControlResultStatus.Skipped;
                       }
-                    } else {
-                      // if no compliance status is provided which is a weird but possible case, then skip
-                      return ExecJSON.ControlResultStatus.Skipped;
-                    }
+                    };
+                    return this.externalProductHandler(
+                      _.get(finding, 'ProductArn'),
+                      finding,
+                      'subfindingsStatus',
+                      defaultFunc
+                    ) as ExecJSON.ControlResultStatus;
                   }
                 },
                 code_desc: {
@@ -445,21 +535,29 @@ export class ASFFMapper extends BaseConverter {
                 },
                 message: {
                   transformer: (finding): string | undefined => {
-                    const statusReason = this.statusReason(finding);
-                    switch (_.get(finding, COMPLIANCE_STATUS)) {
-                      case undefined: // Possible for Compliance.Status to not be there, in which case it's a skip_message
-                        return undefined;
-                      case 'PASSED':
-                        return statusReason;
-                      case 'WARNING':
-                        return undefined;
-                      case 'FAILED':
-                        return statusReason;
-                      case 'NOT_AVAILABLE':
-                        return undefined;
-                      default:
-                        return statusReason;
-                    }
+                    const defaultFunc = () => {
+                      const statusReason = this.statusReason(finding);
+                      switch (_.get(finding, COMPLIANCE_STATUS)) {
+                        case undefined: // Possible for Compliance.Status to not be there, in which case it's a skip_message
+                          return undefined;
+                        case 'PASSED':
+                          return statusReason;
+                        case 'WARNING':
+                          return undefined;
+                        case 'FAILED':
+                          return statusReason;
+                        case 'NOT_AVAILABLE':
+                          return undefined;
+                        default:
+                          return statusReason;
+                      }
+                    };
+                    return this.externalProductHandler(
+                      _.get(finding, 'ProductArn'),
+                      finding,
+                      'subfindingsMessage',
+                      defaultFunc
+                    ) as string | undefined;
                   }
                 },
                 skip_message: {
@@ -511,7 +609,7 @@ export class ASFFMapper extends BaseConverter {
     data: unknown,
     func: string,
     defaultVal: ExternalProductHandlerOutputs
-  ): string | string[] | number {
+  ): string | string[] | number | undefined {
     let arn = null;
     // eslint-disable-next-line @typescript-eslint/ban-types
     let mapping: Record<string, Function> | undefined;

@@ -20,6 +20,7 @@ import {
   XCCDFResultsMapper,
   ZapMapper
 } from '@mitre/hdf-converters';
+import axios from 'axios';
 import {
   ContextualizedEvaluation,
   ContextualizedProfile,
@@ -108,7 +109,7 @@ export type ExecJSONLoadOptions = {
 
 // Fields to look for inside of JSON structures to determine type before passing to hdf-converters
 export const fileTypeFingerprints = {
-  asff: ['Findings'],
+  asff: ['Findings', 'AwsAccountId', 'ProductArn'],
   fortify: ['FVDL', 'FVDL.EngineData.EngineVersion', 'FVDL.UUID'],
   jfrog: ['total_count', 'data'],
   nikto: ['banner', 'host', 'ip', 'port', 'vulnerabilities'],
@@ -147,11 +148,22 @@ export class InspecIntake extends VuexModule {
         data: read
       });
       if (Array.isArray(converted)) {
+        const originalFileSplit = options.file.name.split('.');
+        // Default to .json if not found
+        let originalFileType = '.json';
+        if (originalFileSplit.length > 1) {
+          originalFileType = originalFileSplit[originalFileSplit.length - 1];
+        }
         return Promise.all(
           converted.map((evaluation) => {
             return this.loadExecJson({
               data: evaluation,
-              filename: options.file.name
+              filename: `${options.file.name
+                .replace(/.json/gi, '')
+                .replace(/.nessus/gi, '')}-${_.get(
+                evaluation,
+                'platform.target_id'
+              )}.${originalFileType}`
             });
           })
         );
@@ -230,15 +242,16 @@ export class InspecIntake extends VuexModule {
   }): Promise<string> {
     try {
       const parsed = JSON.parse(guessOptions.data);
+      const object = Array.isArray(parsed) ? parsed[0] : parsed;
       // Find the fingerprints that have the most matches
       const fingerprinted = Object.entries(fileTypeFingerprints).reduce(
         (a, b) => {
-          return a[1].filter((value) => _.get(parsed, value)).length >
-            b[1].filter((value) => _.get(parsed, value)).length
-            ? {...a, count: a[1].filter((value) => _.get(parsed, value)).length}
+          return a[1].filter((value) => _.get(object, value)).length >
+            b[1].filter((value) => _.get(object, value)).length
+            ? {...a, count: a[1].filter((value) => _.get(object, value)).length}
             : {
                 ...b,
-                count: b[1].filter((value) => _.get(parsed, value)).length
+                count: b[1].filter((value) => _.get(object, value)).length
               };
         }
       ) as unknown as Array<string> & {count: number};
@@ -255,6 +268,8 @@ export class InspecIntake extends VuexModule {
         guessOptions.filename.toLowerCase().indexOf('xccdf') !== -1
       ) {
         return 'xccdf';
+      } else if (guessOptions.data.match(/<netsparker-.*generated.*>/)) {
+        return 'netsparker';
       } else if (
         guessOptions.data.indexOf('"AwsAccountId"') !== -1 &&
         guessOptions.data.indexOf('"SchemaVersion"') !== -1
@@ -274,6 +289,37 @@ export class InspecIntake extends VuexModule {
       }
     }
     return '';
+  }
+
+  @Action
+  async detectAndLoadPredefinedJSON() {
+    // On page load, check for the flag to load the preloaded JSON file
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    if (urlParams.get('predefinedLoad')?.toLowerCase() === 'true') {
+      return axios
+        .get('/dynamic/predefinedload.json', {
+          headers: {
+            Accept: 'application/json'
+          }
+        })
+        .then(async ({data}) => {
+          data.forEach(async (file: {filename: string; data: string}) => {
+            InspecIntakeModule.loadFile({
+              file: new File([new Blob([file.data])], file.filename)
+            });
+          });
+          return true;
+        })
+        .catch((error) => {
+          SnackbarModule.failure(
+            `An error ocurred while loading your pre-defined file: ${error}`
+          );
+          return false;
+        });
+    } else {
+      return false;
+    }
   }
 
   @Action

@@ -18,20 +18,21 @@
         v-model="hostname"
         label="Hostname"
         for="hostname_field"
+        hint="https://yourdomain.com:8089"
         data-cy="splunkhostname"
       />
     </v-form>
     <v-row class="mx-1">
       <v-btn
         color="primary"
-        class="my-4 mt-0"
+        class="my-4 mt-4"
         data-cy="splunkLoginButton"
         @click="login"
       >
         Login
       </v-btn>
       <v-spacer />
-      <v-btn>
+      <v-btn @click="$emit('show-help')">
         Help
         <v-icon class="ml-2"> mdi-help-circle </v-icon>
       </v-btn>
@@ -68,15 +69,20 @@ export default class AuthStep extends Vue {
       this.username,
       this.password
     );
-    if (await splunkClient.validateCredentials()) {
-      localUsername.set(this.username);
-      localPassword.set(this.password);
-      localHostname.set(this.hostname);
-      SnackbarModule.failure('You have successfully signed in');
-      this.$emit('authenticated', splunkClient);
-    } else {
-      SnackbarModule.failure('Incorrect Username or Password');
-    }
+    splunkClient.validateCredentials().then((result) => {
+      if (result === true) {
+        localUsername.set(this.username);
+        localPassword.set(this.password);
+        localHostname.set(this.hostname);
+        SnackbarModule.notify('You have successfully signed in');
+        this.$emit('authenticated', splunkClient);
+      } else if (result === false) {
+        SnackbarModule.failure('Incorrect Username or Password');
+      } else {
+        SnackbarModule.failure(result);
+        this.$emit('error');
+      }
+    });
   }
 
   /** Init our fields */
