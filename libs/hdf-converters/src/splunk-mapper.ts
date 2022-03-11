@@ -203,7 +203,7 @@ export class SplunkMapper {
       job.track(
         {},
         {
-          done: (job) =>
+          done: () =>
             job.results({count: 100000}, (err, results) => {
               if (err) {
                 reject(err);

@@ -118,6 +118,9 @@ export default class FileList extends Vue {
           }).catch((err) => {
             SnackbarModule.failure(String(err));
           });
+        } else {
+          SnackbarModule.failure('Attempted to load an undefined executuion');
+          throw new Error('Attempted to load an undefined executuion');
         }
       }
     );
