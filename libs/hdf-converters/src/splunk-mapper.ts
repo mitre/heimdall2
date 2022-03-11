@@ -138,7 +138,7 @@ function consolidateFilePayloads(
 }
 
 export async function checkSplunkCredentials(
-  config: SplunkConfigNoIndex
+  config: SplunkConfig
 ): Promise<boolean> {
   const service = new splunkjs.Service(new ProxyHTTP.JQueryHttp(''), config);
   return new Promise((resolve, reject) => {

@@ -6,7 +6,7 @@ declare module '@mitre/splunk-sdk-no-env' {
     port?: number;
     username: string;
     password: string;
-    index?: string;
+    index: string;
     owner?: string;
     app?: string;
     sessionKey?: string;

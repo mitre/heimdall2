@@ -43,7 +43,6 @@
 <script lang="ts">
 import {InspecIntakeModule} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
-import {LocalStorageVal} from '@/utilities/helper_util';
 import {FileMetaData, SplunkConfig} from '@mitre/hdf-converters';
 import {SplunkReport} from '@mitre/hdf-converters/src/converters-from-hdf/splunk/splunk-report-types';
 import {SplunkMapper} from '@mitre/hdf-converters/src/splunk-mapper';
@@ -51,8 +50,6 @@ import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';
-
-const localSplunkQuery = new LocalStorageVal<string>('splunk_query');
 
 @Component({})
 export default class FileList extends Vue {
@@ -63,7 +60,7 @@ export default class FileList extends Vue {
   executions: Omit<FileMetaData, 'profile_sha256'>[] = [];
   selectedExecutions: Omit<FileMetaData, 'profile_sha256'>[] = [];
 
-  search = 'search index="*" "meta.subtype"=header';
+  search = '';
   loading = false;
 
   /** Table info */
@@ -89,7 +86,6 @@ export default class FileList extends Vue {
     this.loading = true;
     this.splunkConverter = new SplunkMapper(this.splunkConfig);
     const results = await this.splunkConverter.queryData(this.search);
-    localSplunkQuery.set(this.search);
     this.executions = [];
     results.forEach((result: SplunkReport) => {
       // Only get header objects
@@ -101,9 +97,7 @@ export default class FileList extends Vue {
   }
 
   async mounted() {
-    this.search = localSplunkQuery.get_default(
-      'search index="*" "meta.subtype"=header'
-    );
+    this.search = `search index="${this.splunkConfig.index}" "meta.subtype"=header`;
   }
 
   async loadResults() {

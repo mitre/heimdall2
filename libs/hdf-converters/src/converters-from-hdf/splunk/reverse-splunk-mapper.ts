@@ -1,4 +1,5 @@
 import splunkjs from '@mitre/splunk-sdk-no-env';
+import ProxyHTTP from '@mitre/splunk-sdk-no-env/lib/platform/client/jquery_http';
 import {
   ContextualizedControl,
   ContextualizedEvaluation,
@@ -30,7 +31,6 @@ export type SplunkConfig = {
   sessionKey?: string;
   autologin?: boolean;
   version?: string;
-  insecure?: boolean;
 };
 
 export type SplunkData = {
@@ -288,8 +288,8 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     } else {
       logger = createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
     }
-
     super(contextualizeIfNeeded(data));
+    logger.debug(`Initialized ${this.constructor.name} successfully`);
   }
 
   createSplunkData(guid: string, filename: string) {
@@ -328,71 +328,82 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     return splunkData;
   }
 
-  uploadSplunkData(targetIndex: any, splunkData: SplunkData) {
-    // Upload execution event
-    splunkData.reports.forEach((report) => {
+  async uploadSplunkData(
+    targetIndex: any,
+    splunkData: SplunkData
+  ): Promise<void> {
+    return new Promise((resolve, reject) => {
+      // Upload execution event
+      splunkData.reports.forEach((report) => {
+        targetIndex.submitEvent(
+          JSON.stringify(report),
+          {
+            sourcetype: MAPPER_NAME,
+            index: targetIndex.name
+          },
+          (err: any) => {
+            if (err) {
+              reject(err);
+            }
+            logger.verbose(
+              `Successfully uploaded execution for ${report.meta.filename}`
+            );
+          }
+        );
+      });
+      // Upload profile event(s)
+      // \r\n Is the default LINE_BREAKER for splunk, this is very poorly documented.
+      // See https://docs.splunk.com/Documentation/StreamProcessor/standard/FunctionReference/LineBreak
       targetIndex.submitEvent(
-        JSON.stringify(report),
+        splunkData.profiles
+          .map((profile) => JSON.stringify(profile))
+          .join('\n'),
         {
           sourcetype: MAPPER_NAME,
           index: targetIndex.name
         },
         (err: any) => {
           if (err) {
-            console.error(err);
-            throw err;
+            reject(err);
           }
           logger.verbose(
-            `Successfully uploaded execution for ${report.meta.filename}`
+            `Successfully uploaded ${splunkData.profiles.length} profile layer(s)`
           );
         }
       );
-    });
-    // Upload profile event(s)
-    // \r\n Is the default LINE_BREAKER for splunk, this is very poorly documented.
-    // See https://docs.splunk.com/Documentation/StreamProcessor/standard/FunctionReference/LineBreak
-    targetIndex.submitEvent(
-      splunkData.profiles.map((profile) => JSON.stringify(profile)).join('\n'),
-      {
-        sourcetype: MAPPER_NAME,
-        index: targetIndex.name
-      },
-      (err: any) => {
-        if (err) {
-          console.error(err);
-          throw err;
-        }
-        logger.verbose(
-          `Successfully uploaded ${splunkData.profiles.length} profile layer(s)`
-        );
-      }
-    );
 
-    // Upload control event(s)
-    targetIndex.submitEvent(
-      splunkData.controls.map((control) => JSON.stringify(control)).join('\n'),
-      {
-        sourcetype: MAPPER_NAME,
-        index: targetIndex.name
-      },
-      (err: any) => {
-        if (err) {
-          console.error(err);
-          throw err;
+      // Upload control event(s)
+      targetIndex.submitEvent(
+        splunkData.controls
+          .map((control) => JSON.stringify(control))
+          .join('\n'),
+        {
+          sourcetype: MAPPER_NAME,
+          index: targetIndex.name
+        },
+        (err: any) => {
+          if (err) {
+            reject(err);
+          }
+          logger.verbose(
+            `Successfully uploaded ${splunkData.controls.length} control(s)`
+          );
+          resolve();
         }
-        logger.verbose(
-          `Successfully uploaded ${splunkData.controls.length} control(s)`
-        );
-      }
-    );
+      );
+    });
   }
 
-  toSplunk(config: SplunkConfig, filename: string) {
-    const service = new splunkjs.Service(config);
-    if (!config.insecure) {
-      service.requestOptions.strictSSL = true;
+  async toSplunk(
+    config: SplunkConfig,
+    filename: string,
+    webCompatibility = false
+  ): Promise<string> {
+    let service: splunkjs.Service;
+    if (webCompatibility) {
+      service = new splunkjs.Service(new ProxyHTTP.JQueryHttp(''), config);
     } else {
-      logger.info(`SSL Verification Disabled`);
+      service = new splunkjs.Service(config);
     }
     logger.info(
       `Logging into Splunk Service: ${config.host} with user ${config.username}`
@@ -400,32 +411,38 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     logger.verbose('Got Execution: ' + filename);
     const guid = createGUID(30);
     logger.verbose('Using GUID: ' + guid);
-
-    service.login((err: any, success: any) => {
-      if (err) {
-        throw err;
-      }
-      logger.info('Login was successful: ' + success);
-      service.indexes().fetch((error: any, indexes: any) => {
-        if (error) {
-          logger.error(error);
-          throw error;
+    return new Promise((resolve, reject) => {
+      service.login((err: any, success: any) => {
+        if (err) {
+          logger.error(err);
+          reject(err);
         }
-        const availableIndexes: string[] = indexes
-          .list()
-          .map((index: {name: string}) => index.name);
-        logger.verbose(`Available Indexes:  + ${availableIndexes.join(', ')}`);
-        if (availableIndexes.includes(config.index)) {
-          const targetIndex = indexes.item(config.index);
-          const splunkData = this.createSplunkData(guid, filename);
-          this.uploadSplunkData(targetIndex, splunkData);
-          logger?.verbose(`Have index ${targetIndex.name}`);
-        } else {
-          logger.error(`Invalid Index: ${config.index}`);
-          throw new Error(`Invalid Index: ${config.index}`);
-        }
+        logger.info('Login was successful: ' + success);
+        service.indexes().fetch(async (error: any, indexes: any) => {
+          if (error) {
+            logger.error(error);
+            reject(error);
+          }
+          const availableIndexes: string[] = indexes
+            .list()
+            .map((index: {name: string}) => index.name);
+          logger.verbose(
+            `Available Indexes:  + ${availableIndexes.join(', ')}`
+          );
+          if (availableIndexes.includes(config.index)) {
+            const targetIndex = indexes.item(config.index);
+            logger?.verbose(`Have index ${targetIndex.name}`);
+            const splunkData = this.createSplunkData(guid, filename);
+            this.uploadSplunkData(targetIndex, splunkData)
+              .then(() => resolve(guid))
+              .catch((resolvedError) => reject(resolvedError));
+          } else {
+            logger.error(`Invalid Index: ${config.index}`);
+            reject(new Error(`Invalid Index: ${config.index}`));
+          }
+        });
       });
+      return guid;
     });
-    return guid;
   }
 }
