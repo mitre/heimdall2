@@ -8,6 +8,7 @@ export interface ILookupPathFH {
   arrayTransformer?: (value: unknown[], file: ExecJSON.Execution) => unknown[];
   key?: string;
   passParent?: boolean;
+  default?: any;
 }
 
 //Base converter used to support conversions from HDF to Any Format

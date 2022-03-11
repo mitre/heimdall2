@@ -170,7 +170,8 @@ export function createProfileMapping(
       path: 'data.parent_profile'
     },
     depends: {
-      path: 'data.depends'
+      path: 'data.depends',
+      default: []
     },
     attributes: {
       path: 'data.attributes'
