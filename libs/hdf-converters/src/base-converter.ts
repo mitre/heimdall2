@@ -184,7 +184,9 @@ export class BaseConverter {
     const hasPath = _.isObject(v) && _.has(v, 'path');
     let pathV = v;
     if (hasPath) {
-      pathV = this.handlePath(file, _.get(v, 'path') as string) as T | T[];
+      pathV = this.handlePath(file, _.get(v, 'path') as string | string[]) as
+        | T
+        | T[];
       v = _.omit(v as object, 'path') as T;
     }
 
