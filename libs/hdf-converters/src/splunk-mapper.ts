@@ -8,12 +8,12 @@ export type Hash<T> = {[key: string]: T};
 
 export type SplunkConfigNoIndex = Omit<SplunkConfig, 'index'>;
 
-export interface GenericPayloadWithMetaData {
+export type GenericPayloadWithMetaData = {
   meta: FileMetaData;
   [key: string]: never[] | Record<string, unknown>;
-}
+};
 
-export interface FileMetaData {
+export type FileMetaData = {
   guid: string;
   subtype: string;
   hdf_splunk_schema: string;
@@ -21,7 +21,7 @@ export interface FileMetaData {
   filename: string;
   profile_sha256: string;
   [key: string]: never[] | unknown;
-}
+};
 
 // Groups items by using the provided key function
 export function group_by<T>(

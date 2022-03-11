@@ -121,6 +121,7 @@ export default class FileList extends Vue {
         }
       }
     );
+    await Promise.all(files);
     this.loading = false;
     this.$emit('got-files', files);
   }
