@@ -337,12 +337,6 @@ export class AwsConfigMapper {
         _.get(result, 'nist').concat(defaultMatch)
       );
     }
-    if (
-      Array.isArray(_.get(result, 'nist')) &&
-      _.get(result, 'nist').length === 0
-    ) {
-      result = _.set(result, 'nist', ['unmapped']);
-    }
     return result;
   }
 

@@ -1,20 +1,18 @@
 {
     "platform": {
         "name": "Heimdall Tools",
-        "release": "2.6.1",
-        "target_id": ""
+        "release": "2.6.14",
+        "target_id": "xss"
     },
-    "version": "2.6.1",
-    "statistics": {
-        "duration": null
-    },
+    "version": "2.6.14",
+    "statistics": {"duration": null},
     "profiles": [
         {
             "name": "Sonarqube Scan",
             "version": "",
-            "title": "SonarQube Scan of Project ",
+            "title": "SonarQube Scan of Project xss",
             "maintainer": null,
-            "summary": "SonarQube Scan of Project ",
+            "summary": "SonarQube Scan of Project xss",
             "license": null,
             "copyright": null,
             "copyright_email": null,
@@ -33,11 +31,7 @@
                     "title": "Origins should be verified during cross-origin communications",
                     "impact": 0.7,
                     "code": null,
-                    "tags": {
-                        "nist": [
-                            "SI-11"
-                        ]
-                    },
+                    "tags": {"nist": ["SI-11"]},
                     "results": [
                         {
                             "status": "failed",
@@ -48,7 +42,7 @@
                     ]
                 }
             ],
-            "sha256": "7961925fc2e9b3c3b3beee6985818b9efaee33e4ab390e210375d90f29388764"
+            "sha256": "109a103c41ae88f05daa76576dbc272d8e6c240a9e42aa5e4449b150ddbb1e76"
         }
     ]
 }
