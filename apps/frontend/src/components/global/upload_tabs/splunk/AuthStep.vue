@@ -42,8 +42,12 @@
 
 <script lang="ts">
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
+import {SnackbarModule} from '@/store/snackbar';
 import {LocalStorageVal} from '@/utilities/helper_util';
-import {SplunkClient} from '@/utilities/splunk_util';
+import {
+  checkSplunkCredentials,
+  SplunkConfigNoIndex
+} from '@mitre/hdf-converters/src/splunk-mapper';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
@@ -62,29 +66,33 @@ export default class AuthStep extends Vue {
   password = '';
   hostname = '';
 
-  async login() {
-    const splunkClient = new SplunkClient({
+  async login(): Promise<void> {
+    if (!/http(s)\:\/\//.test(this.hostname)) {
+      this.hostname = `https://${this.hostname}`;
+    }
+
+    const parsedURL = new URL(this.hostname);
+
+    const config: SplunkConfigNoIndex = {
+      host: parsedURL.hostname,
       username: this.username,
-      host: this.hostname,
       password: this.password,
-      index: 'hdf'
-    });
-    const authenticated = splunkClient.validateCredentials();
-    console.log(authenticated);
-    // .then((result) => {
-    //   if (result === true) {
-    //     localUsername.set(this.username);
-    //     localPassword.set(this.password);
-    //     localHostname.set(this.hostname);
-    //     SnackbarModule.notify('You have successfully signed in');
-    //     this.$emit('authenticated', splunkClient);
-    //   } else if (result === false) {
-    //     SnackbarModule.failure('Incorrect Username or Password');
-    //   } else {
-    //     SnackbarModule.failure(result);
-    //     this.$emit('error');
-    //   }
-    // });
+      port: parseInt(parsedURL.port) || 8089
+    };
+
+    await checkSplunkCredentials(config)
+      .then(() => {
+        localUsername.set(this.username);
+        localPassword.set(this.password);
+        localHostname.set(this.hostname);
+        this.$emit('authenticated', config);
+      })
+      .catch((error) => {
+        if (error !== 'Incorrect Username or Password') {
+          this.$emit('error');
+        }
+        SnackbarModule.failure(error);
+      });
   }
 
   /** Init our fields */

@@ -17,8 +17,8 @@
       </v-stepper-content>
       <v-stepper-content step="2">
         <FileList
-          v-if="splunkClient"
-          :splunk-client="splunkClient"
+          v-if="splunkConfig"
+          :splunk-config="splunkConfig"
           @signOut="onSignOut"
           @got-files="got_files"
         />
@@ -57,7 +57,7 @@
 </template>
 <script lang="ts">
 import {FileID} from '@/store/report_intake';
-import {SplunkClient} from '@/utilities/splunk_util';
+import {SplunkConfigNoIndex} from '@mitre/hdf-converters/src/splunk-mapper';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import AuthStep from './AuthStep.vue';
@@ -71,10 +71,10 @@ import FileList from './FileList.vue';
 export default class SplunkReader extends Vue {
   step = 1;
   errorCount = 0;
-  splunkClient: SplunkClient | null = null;
+  splunkConfig: SplunkConfigNoIndex | null = null;
 
-  onAuthenticationComplete(splunkClient: SplunkClient) {
-    this.splunkClient = splunkClient;
+  onAuthenticationComplete(splunkConfig: SplunkConfigNoIndex) {
+    this.splunkConfig = splunkConfig;
     this.step = 2;
   }
 
@@ -84,7 +84,7 @@ export default class SplunkReader extends Vue {
 
   onSignOut() {
     this.step = 1;
-    this.splunkClient = null;
+    this.splunkConfig = null;
   }
 }
 </script>

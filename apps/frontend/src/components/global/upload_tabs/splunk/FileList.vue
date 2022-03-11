@@ -32,32 +32,39 @@
           range.
         </template>
       </v-data-table>
-      <!-- <v-btn block class="card-outter" @click="loadResults">
+      <v-btn block class="card-outter" @click="loadResults">
         Load Selected
         <v-icon class="pl-2"> mdi-file-download</v-icon>
-      </v-btn> -->
+      </v-btn>
     </div>
   </span>
 </template>
 
 <script lang="ts">
-import {
-  FileMetaData,
-  // getAllExecutions,
-  // getExecution,
-  SplunkClient
-} from '@/utilities/splunk_util';
+import {InspecIntakeModule} from '@/store/report_intake';
+import {SnackbarModule} from '@/store/snackbar';
+import {LocalStorageVal} from '@/utilities/helper_util';
+import {FileMetaData, SplunkConfig} from '@mitre/hdf-converters';
+import {SplunkReport} from '@mitre/hdf-converters/src/converters-from-hdf/splunk/splunk-report-types';
+import {SplunkMapper} from '@mitre/hdf-converters/src/splunk-mapper';
+import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';
+
+const localSplunkQuery = new LocalStorageVal<string>('splunk_query');
+
 @Component({})
 export default class FileList extends Vue {
-  @Prop({type: Object, required: true}) readonly splunkClient!: SplunkClient;
+  @Prop({type: Object, required: true}) readonly splunkConfig!: SplunkConfig;
 
-  search = 'index="*" "meta.subtype"=header';
+  splunkConverter?: SplunkMapper;
+
+  executions: Omit<FileMetaData, 'profile_sha256'>[] = [];
+  selectedExecutions: Omit<FileMetaData, 'profile_sha256'>[] = [];
+
+  search = 'search index="*" "meta.subtype"=header';
   loading = false;
-  executions: FileMetaData[] = [];
-  selectedExecutions: FileMetaData[] = [];
 
   /** Table info */
   headers = [
@@ -69,47 +76,54 @@ export default class FileList extends Vue {
     },
     {
       text: 'Time',
-      value: 'start_time'
-    },
-    {
-      text: 'Action',
-      value: 'action',
-      sortable: false
+      value: 'parse_time'
     }
   ];
 
   @Watch('search')
   async onUpdateSearch() {
-    this.mounted();
+    this.updateSearch();
+  }
+
+  async updateSearch() {
+    this.loading = true;
+    this.splunkConverter = new SplunkMapper(this.splunkConfig);
+    const results = await this.splunkConverter.queryData(this.search);
+    localSplunkQuery.set(this.search);
+    this.executions = [];
+    results.forEach((result: SplunkReport) => {
+      // Only get header objects
+      if (_.get(result, 'meta.subtype').toLowerCase() === 'header') {
+        this.executions.push(result.meta);
+      }
+    });
+    this.loading = false;
   }
 
   async mounted() {
-    this.loading = true;
-    // this.executions = await getAllExecutions(
-    //   this.splunkClient,
-    //   this.search
-    // ).then((executions) => {
-    //   this.loading = false;
-    //   return executions;
-    // });
+    this.search = localSplunkQuery.get_default(
+      'search index="*" "meta.subtype"=header'
+    );
   }
 
-  // async loadResults() {
-  //   this.loading = true;
-  //   const files = this.selectedExecutions.map(async (execution) => {
-  //     return getExecution(this.splunkClient, execution.guid).then(
-  //       async (result) => {
-  //         return InspecIntakeModule.loadText({
-  //           text: JSON.stringify(result),
-  //           filename: _.get(result, 'meta.filename')
-  //         }).catch((err) => {
-  //           SnackbarModule.failure(String(err));
-  //         });
-  //       }
-  //     );
-  //   });
-  //   this.$emit('got-files', files);
-  // }
+  async loadResults() {
+    this.loading = true;
+    const files = this.selectedExecutions.map(
+      async (execution: Partial<FileMetaData>) => {
+        const hdf = await this.splunkConverter?.toHdf(execution.guid || '');
+        if (hdf) {
+          return InspecIntakeModule.loadText({
+            text: JSON.stringify(hdf),
+            filename: _.get(hdf, 'meta.filename')
+          }).catch((err) => {
+            SnackbarModule.failure(String(err));
+          });
+        }
+      }
+    );
+    this.loading = false;
+    this.$emit('got-files', files);
+  }
 
   logout() {
     this.$emit('signOut');
