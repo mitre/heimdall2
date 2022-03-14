@@ -85,7 +85,7 @@ export default class AuthStep extends Vue {
   index = '';
 
   async login(): Promise<void> {
-    if (!/http(s)\:\/\//.test(this.hostname)) {
+    if (!/^https?:\/\//.test(this.hostname)) {
       this.hostname = `https://${this.hostname}`;
     }
 
@@ -96,7 +96,8 @@ export default class AuthStep extends Vue {
       username: this.username,
       password: this.password,
       port: parseInt(parsedURL.port) || 8089,
-      index: this.index
+      index: this.index,
+      scheme: parsedURL.protocol.split(':')[0] || 'https'
     };
 
     await checkSplunkCredentials(config)

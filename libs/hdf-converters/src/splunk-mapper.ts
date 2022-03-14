@@ -142,8 +142,8 @@ export async function checkSplunkCredentials(
 ): Promise<boolean> {
   const service = new splunkjs.Service(new ProxyHTTP.JQueryHttp(''), config);
   return new Promise((resolve, reject) => {
-    try {
-      service.login((error, result) => {
+    service.login((error, result) => {
+      try {
         if (error) {
           if ('status' in error) {
             if (error.status === 401) {
@@ -158,10 +158,10 @@ export async function checkSplunkCredentials(
         } else {
           reject(new Error('Failed to Login'));
         }
-      });
-    } catch (e) {
-      reject(e);
-    }
+      } catch (e) {
+        reject(e);
+      }
+    });
   });
 }
 
@@ -223,7 +223,17 @@ export class SplunkMapper {
                 ) || 4;
 
               results.rows.forEach((value) => {
-                const object = JSON.parse(value[rawDataIndex]);
+                let object;
+                try {
+                  object = JSON.parse(value[rawDataIndex]);
+                } catch {
+                  reject(
+                    new Error(
+                      'Unable to parse file. Have you configured EVENT_BREAKER?'
+                    )
+                  );
+                }
+
                 // Set the date from the _indextime
                 try {
                   _.set(
@@ -248,10 +258,10 @@ export class SplunkMapper {
   async toHdf(guid: string): Promise<ExecJSON.Execution> {
     return checkSplunkCredentials(this.config)
       .then(async () => {
-        const executuiondata = await this.queryData(
-          `search meta.guid="${guid}"`
+        const executionData = await this.queryData(
+          `search index="*" meta.guid="${guid}"`
         );
-        return consolidate_payloads(executuiondata)[0];
+        return consolidate_payloads(executionData)[0];
       })
       .catch((error) => {
         throw error;

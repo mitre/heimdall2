@@ -8,7 +8,7 @@
       <span>Sign Out</span>
       <v-icon color="red" class="pr-2">mdi-logout</v-icon>
     </div>
-    <div class="d-flex flex-column">
+    <div class="d-flex">
       <v-text-field
         v-model="search"
         class="px-3"
@@ -16,6 +16,12 @@
         label="Search"
         hide-details
       />
+      <v-btn class="mt-3" icon @click="updateSearch">
+        <v-icon>mdi-refresh</v-icon>
+      </v-btn>
+    </div>
+
+    <div class="d-flex flex-column">
       <v-data-table
         v-model="selectedExecutions"
         :headers="headers"
@@ -61,6 +67,8 @@ export default class FileList extends Vue {
   selectedExecutions: Omit<FileMetaData, 'profile_sha256'>[] = [];
 
   search = '';
+  awaitingSearch = false;
+  initalSearchDone = false;
   loading = false;
 
   /** Table info */
@@ -79,7 +87,18 @@ export default class FileList extends Vue {
 
   @Watch('search')
   async onUpdateSearch() {
-    this.updateSearch();
+    // On first load we update the search field which triggers this function, instead of waiting this time we can just search right away
+    if (!this.initalSearchDone) {
+      this.initalSearchDone = true;
+      return this.updateSearch();
+    }
+    if (!this.awaitingSearch) {
+      setTimeout(() => {
+        this.updateSearch();
+        this.awaitingSearch = false;
+      }, 1000); // Wait for user input for 1 second before executing our query
+    }
+    this.awaitingSearch = true;
   }
 
   async updateSearch() {
@@ -104,7 +123,13 @@ export default class FileList extends Vue {
     this.loading = true;
     const files = this.selectedExecutions.map(
       async (execution: Partial<FileMetaData>) => {
-        const hdf = await this.splunkConverter?.toHdf(execution.guid || '');
+        const hdf = await this.splunkConverter
+          ?.toHdf(execution.guid || '')
+          .catch((error) => {
+            SnackbarModule.failure(error);
+            this.loading = false;
+            throw error;
+          });
         if (hdf) {
           return InspecIntakeModule.loadText({
             text: JSON.stringify(hdf),
