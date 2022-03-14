@@ -13,9 +13,10 @@ export type PrismaControls = {
 };
 
 const SEVERITY_LOOKUP: Record<string, number> = {
-  low: 0,
+  low: 0.1,
   moderate: 0.5,
-  high: 0.7
+  high: 0.7,
+  critial: 1
 };
 
 function getTitle(item: Record<string, string>): string {
@@ -67,7 +68,6 @@ export class PrismaControlMapper extends BaseConverter {
             source_location: {path: 'Hostname'},
             id: {path: 'Compliance ID'},
             title: {transformer: getTitle},
-            desc: {path: 'Description'},
             impact: {
               path: 'Severity',
               transformer: (severity?: 'low' | 'moderate' | 'high') => {
@@ -78,28 +78,47 @@ export class PrismaControlMapper extends BaseConverter {
                 }
               }
             },
-            code: '',
+            code: {
+              transformer: (obj: Record<string, string>) => JSON.stringify(obj, null, 2)
+            },
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {
-                  path: 'Cause',
-                  transformer: (cause?: string) => {
-                    if (cause) {
-                      return `Cause: ${cause}`;
+                  transformer: (obj: {Packages: string, Description: string, Distro: string, Type: string, Hostname: string}) => {
+                    let result = ""
+                    if (obj.Type === 'image') {
+                      if (obj['Packages'] !== '') {
+                        result += `Version check of package: ${obj['Packages']}`
+                      }
+                    } else if (obj.Type === 'linux') {
+                      if (obj.Distro !== '') {
+                        result += `Configuration check for ${obj.Distro}`
+                      } else {
+                        result += ``
+                      }
                     } else {
-                      return `Unknown`;
+                      result += `${obj.Type} check for ${obj.Hostname}`
                     }
+
+                    result += `\n\n${obj.Description}`
+                    
+                    return result
                   }
                 },
                 message: {
-                  path: 'Fix Status',
-                  transformer: (fixStatus?: string) => {
-                    if (fixStatus) {
-                      return `Fix Status: ${fixStatus}`;
+                  transformer: (obj: {'Fix Status'?: string, Cause?: string}) => {
+                    let result = "";
+                    if(obj['Fix Status'] !== '' && obj.Cause !== '') {
+                      result += `Fix Status: ${obj['Fix Status']}\n\n${obj.Cause}`
+                    } else if (obj['Fix Status'] !== '') {
+                      result += `Fix Status: ${obj['Fix Status']}`
+                    } else if (obj.Cause !== '') {
+                      result += `Cause: ${obj.Cause}`
                     } else {
-                      return `Unknown`;
+                      result += "Unknown"
                     }
+                    return result
                   }
                 },
                 start_time: {path: 'Published'}
@@ -114,6 +133,7 @@ export class PrismaControlMapper extends BaseConverter {
 
   constructor(prismaControls: Record<string, string>[]) {
     super({records: prismaControls});
+    this.data = {records: prismaControls}
   }
 }
 
