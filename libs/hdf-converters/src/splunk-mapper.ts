@@ -142,6 +142,15 @@ export async function checkSplunkCredentials(
 ): Promise<boolean> {
   const service = new splunkjs.Service(new ProxyHTTP.JQueryHttp(''), config);
   return new Promise((resolve, reject) => {
+    setTimeout(
+      () =>
+        reject(
+          new Error(
+            'Login timed out. Please check your CORS configuration or validate you have inputted the correct domain'
+          )
+        ),
+      5000
+    );
     service.login((error, result) => {
       try {
         if (error) {
