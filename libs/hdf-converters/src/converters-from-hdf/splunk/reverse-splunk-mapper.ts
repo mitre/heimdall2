@@ -7,6 +7,7 @@ import {
   contextualizeEvaluation,
   ExecJSON
 } from 'inspecjs';
+import _ from 'lodash';
 import winston from 'winston';
 import {MappedTransform} from '../../base-converter';
 import {createWinstonLogger} from '../../utils/global';
@@ -18,6 +19,7 @@ import {SplunkReport} from './splunk-report-types';
 
 export const HDF_SPLUNK_SCHEMA = '1.1';
 export const MAPPER_NAME = 'HDF2Splunk';
+export const UPLOAD_CHUNK_SIZE = 100;
 
 export type SplunkConfig = {
   scheme?: string;
@@ -373,24 +375,22 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
       );
 
       // Upload control event(s)
-      targetIndex.submitEvent(
-        splunkData.controls
-          .map((control) => JSON.stringify(control))
-          .join('\n'),
-        {
-          sourcetype: MAPPER_NAME,
-          index: targetIndex.name
-        },
-        (err: any) => {
-          if (err) {
-            reject(err);
+      _.chunk(splunkData.controls, UPLOAD_CHUNK_SIZE).forEach((chunk) => {
+        targetIndex.submitEvent(
+          chunk.map((control) => JSON.stringify(control)).join('\n'),
+          {
+            sourcetype: MAPPER_NAME,
+            index: targetIndex.name
+          },
+          (err: any) => {
+            if (err) {
+              reject(err);
+            }
+            logger.verbose(`Successfully uploaded ${chunk.length} control(s)`);
+            resolve();
           }
-          logger.verbose(
-            `Successfully uploaded ${splunkData.controls.length} control(s)`
-          );
-          resolve();
-        }
-      );
+        );
+      });
     });
   }
 

@@ -110,6 +110,7 @@ export default class AuthStep extends Vue {
         } else {
           localHDF2SplunkIndex.set(this.index);
         }
+        SnackbarModule.notify('You have successfully signed in');
         this.$emit('authenticated', config);
       })
       .catch((error) => {
