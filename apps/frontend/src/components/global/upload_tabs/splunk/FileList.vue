@@ -90,15 +90,14 @@ export default class FileList extends Vue {
     // On first load we update the search field which triggers this function, instead of waiting this time we can just search right away
     if (!this.initalSearchDone) {
       this.initalSearchDone = true;
-      return this.updateSearch();
-    }
-    if (!this.awaitingSearch) {
+      this.updateSearch();
+    } else if (!this.awaitingSearch) {
       setTimeout(() => {
         this.updateSearch();
         this.awaitingSearch = false;
       }, 1000); // Wait for user input for 1 second before executing our query
+      this.awaitingSearch = true;
     }
-    this.awaitingSearch = true;
   }
 
   async updateSearch() {
@@ -116,7 +115,7 @@ export default class FileList extends Vue {
   }
 
   async mounted() {
-    this.search = `search index="${this.splunkConfig.index}" "meta.subtype"=header`;
+    this.search = `search index="${this.splunkConfig.index}" meta.subtype="header"`;
   }
 
   async loadResults() {
