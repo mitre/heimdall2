@@ -233,6 +233,66 @@ export class SplunkMapper {
     });
   }
 
+  parseSplunkResponse(
+    query: string,
+    results: {fields: string[]; rows: string[]}
+  ) {
+    logger.info(`Got results for query: ${query}`);
+
+    // Our data parsed as Key/Value pairs
+    const objects: Record<string, unknown>[] = [];
+    // Find _raw field, this contains our data
+    let rawDataIndex = results?.fields.findIndex(
+      (field) => field.toLowerCase() === '_raw'
+    );
+
+    if (rawDataIndex === -1) {
+      logger.error(`Field _raw not found, using default index 3`);
+      rawDataIndex = 3;
+    }
+
+    logger.debug(`Got field _raw at index ${rawDataIndex}`);
+
+    // Find _indextime, this is when the data was imported into splunk
+    let indexTimeIndex = results?.fields.findIndex(
+      (field) => field.toLowerCase() === '_indextime'
+    );
+
+    if (indexTimeIndex === -1) {
+      logger.error(`Field _indextime not found, using default index 2`);
+      indexTimeIndex = 2;
+    }
+
+    logger.debug(`Got field _indextime at index ${indexTimeIndex}`);
+    logger.verbose(`Parsing data returned by Splunk and appending timestamps`);
+    results.rows.forEach((value) => {
+      let object;
+      try {
+        object = JSON.parse(value[rawDataIndex]);
+      } catch {
+        throw new Error(
+          'Unable to parse file. Have you configured EVENT_BREAKER?'
+        );
+      }
+
+      // Set the date from the _indextime
+      try {
+        _.set(
+          object,
+          'meta.parse_time',
+          unixTimeToDate(value[indexTimeIndex]).toISOString()
+        );
+      } catch {
+        // Parsing dates can be tricky sometimes
+        _.set(object, 'meta.parse_time', new Date().toISOString());
+      }
+
+      objects.push(object);
+    });
+    logger.debug('Successfully parsed and added timestamps');
+    return objects;
+  }
+
   async queryData(query: string): Promise<any[]> {
     const job = await this.createJob(query);
     return new Promise((resolve, reject) => {
@@ -242,68 +302,15 @@ export class SplunkMapper {
           done: () => {
             logger.debug(`Getting results for query: ${query}`);
             job.results({count: 100000}, (err, results) => {
-              logger.info(`Got results for query: ${query}`);
               if (err) {
                 reject(err);
-              }
-              // Our data parsed as Key/Value pairs
-              const objects: Record<string, unknown>[] = [];
-              // Find _raw field, this contains our data
-              let rawDataIndex = results?.fields.findIndex(
-                (field) => field.toLowerCase() === '_raw'
-              );
-
-              if (rawDataIndex === -1) {
-                logger.error(`Field _raw not found, using default index 3`);
-                rawDataIndex = 3;
-              }
-
-              logger.debug(`Got field _raw at index ${rawDataIndex}`);
-
-              // Find _indextime, this is when the data was imported into splunk
-              let indexTimeIndex = results?.fields.findIndex(
-                (field) => field.toLowerCase() === '_indextime'
-              );
-
-              if (indexTimeIndex === -1) {
-                logger.error(
-                  `Field _indextime not found, using default index 2`
-                );
-                indexTimeIndex = 2;
-              }
-
-              logger.debug(`Got field _indextime at index ${indexTimeIndex}`);
-              logger.verbose(
-                `Parsing data returned by Splunk and appending timestamps`
-              );
-              results.rows.forEach((value) => {
-                let object;
+              } else {
                 try {
-                  object = JSON.parse(value[rawDataIndex]);
-                } catch {
-                  reject(
-                    new Error(
-                      'Unable to parse file. Have you configured EVENT_BREAKER?'
-                    )
-                  );
+                  resolve(this.parseSplunkResponse(query, results));
+                } catch (e) {
+                  reject(e);
                 }
-
-                // Set the date from the _indextime
-                try {
-                  _.set(
-                    object,
-                    'meta.parse_time',
-                    unixTimeToDate(value[indexTimeIndex]).toISOString()
-                  );
-                } catch {
-                  // Parsing dates can be tricky sometimes
-                  _.set(object, 'meta.parse_time', new Date().toISOString());
-                }
-
-                objects.push(object);
-              });
-              logger.debug('Successfully parsed and added timestamps');
-              resolve(objects);
+              }
             });
           }
         }
