@@ -17,9 +17,9 @@ import {SplunkControl} from './splunk-control-types';
 import {SplunkProfile} from './splunk-profile-types';
 import {SplunkReport} from './splunk-report-types';
 
-export const HDF_SPLUNK_SCHEMA = '1.1';
-export const MAPPER_NAME = 'HDF2Splunk';
-export const UPLOAD_CHUNK_SIZE = 100;
+const HDF_SPLUNK_SCHEMA = '1.1';
+const MAPPER_NAME = 'HDF2Splunk';
+const UPLOAD_CHUNK_SIZE = 100;
 
 export type SplunkConfig = {
   scheme?: string;

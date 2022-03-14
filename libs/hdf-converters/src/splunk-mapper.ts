@@ -2,7 +2,9 @@ import splunkjs, {Job} from '@mitre/splunk-sdk-no-env';
 import ProxyHTTP from '@mitre/splunk-sdk-no-env/lib/platform/client/jquery_http';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
+import winston from 'winston';
 import {SplunkConfig} from './converters-from-hdf/splunk/reverse-splunk-mapper';
+import {createWinstonLogger} from './utils/global';
 
 export type Hash<T> = {[key: string]: T};
 
@@ -22,6 +24,10 @@ export type FileMetaData = {
   profile_sha256: string;
   [key: string]: never[] | unknown;
 };
+
+const MAPPER_NAME = 'Splunk2HDF';
+
+let logger: winston.Logger = winston.createLogger();
 
 // Groups items by using the provided key function
 export function group_by<T>(
@@ -99,6 +105,10 @@ function consolidateFilePayloads(
   const controlEvents = (subtypes['control'] ||
     []) as unknown as (ExecJSON.Control & GenericPayloadWithMetaData)[];
 
+  logger.debug(`Have ${execEvents.length} execution events`);
+  logger.debug(`Have ${profileEvents.length} profile events`);
+  logger.debug(`Have ${controlEvents.length} control events`);
+
   // Verify we only have one exec event
   if (execEvents.length !== 1) {
     throw new Error(
@@ -106,7 +116,7 @@ function consolidateFilePayloads(
     );
   }
 
-  // Pull it out
+  // Pull out the first (and only) execution event
   const exec = execEvents[0];
 
   // Put all the profiles into the exec
@@ -121,6 +131,7 @@ function consolidateFilePayloads(
     profile.controls = [];
     // Get the corresponding controls, and put them into the profile
     const sha = profile.meta.profile_sha256;
+    logger.debug(`Adding controls for profile with SHA256: ${sha}`);
     const corrControls = shaGroupedControls[sha] || [];
     profile.controls.push(
       ...replaceKeyValueDescriptions(
@@ -131,6 +142,9 @@ function consolidateFilePayloads(
               | ExecJSON.ControlDescription[];
           })[]
       )
+    );
+    logger.debug(
+      `Added ${profile.controls.length} controls to profile with SHA256 ${sha}`
     );
   }
 
@@ -183,12 +197,25 @@ export class SplunkMapper {
   config: SplunkConfig;
   service: splunkjs.Service;
 
-  constructor(config: SplunkConfig) {
+  constructor(
+    config: SplunkConfig,
+    logService?: winston.Logger,
+    loggingLevel?: string
+  ) {
     this.config = config;
+
+    if (logService) {
+      logger = logService;
+    } else {
+      logger = createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
+    }
+    logger.debug(`Initializing Splunk Client`);
     this.service = new splunkjs.Service(new ProxyHTTP.JQueryHttp(''), config);
+    logger.debug(`Initialized ${this.constructor.name} successfully`);
   }
 
   async createJob(query: string): Promise<Job> {
+    logger.debug(`Creating job for query: ${query}`);
     return new Promise((resolve, reject) => {
       this.service
         .jobs()
@@ -212,25 +239,43 @@ export class SplunkMapper {
       job.track(
         {},
         {
-          done: () =>
+          done: () => {
+            logger.debug(`Getting results for query: ${query}`);
             job.results({count: 100000}, (err, results) => {
+              logger.info(`Got results for query: ${query}`);
               if (err) {
                 reject(err);
               }
               // Our data parsed as Key/Value pairs
               const objects: Record<string, unknown>[] = [];
               // Find _raw field, this contains our data
-              const rawDataIndex =
-                results?.fields.findIndex(
-                  (field) => field.toLowerCase() === '_raw'
-                ) || 4;
+              let rawDataIndex = results?.fields.findIndex(
+                (field) => field.toLowerCase() === '_raw'
+              );
+
+              if (rawDataIndex === -1) {
+                logger.error(`Field _raw not found, using default index 3`);
+                rawDataIndex = 3;
+              }
+
+              logger.debug(`Got field _raw at index ${rawDataIndex}`);
 
               // Find _indextime, this is when the data was imported into splunk
-              const indexTimeIndex =
-                results?.fields.findIndex(
-                  (field) => field.toLowerCase() === '_indextime'
-                ) || 4;
+              let indexTimeIndex = results?.fields.findIndex(
+                (field) => field.toLowerCase() === '_indextime'
+              );
 
+              if (indexTimeIndex === -1) {
+                logger.error(
+                  `Field _indextime not found, using default index 2`
+                );
+                indexTimeIndex = 2;
+              }
+
+              logger.debug(`Got field _indextime at index ${indexTimeIndex}`);
+              logger.verbose(
+                `Parsing data returned by Splunk and appending timestamps`
+              );
               results.rows.forEach((value) => {
                 let object;
                 try {
@@ -257,18 +302,25 @@ export class SplunkMapper {
 
                 objects.push(object);
               });
+              logger.debug('Successfully parsed and added timestamps');
               resolve(objects);
-            })
+            });
+          }
         }
       );
     });
   }
 
   async toHdf(guid: string): Promise<ExecJSON.Execution> {
+    logger.info(`Starting conversion of guid ${guid}`);
     return checkSplunkCredentials(this.config)
       .then(async () => {
+        logger.info(`Credentials valid, querying data for ${guid}`);
         const executionData = await this.queryData(
           `search index="*" meta.guid="${guid}"`
+        );
+        logger.info(
+          `Data recieved, consolidating payloads for ${executionData.length} items`
         );
         return consolidate_payloads(executionData)[0];
       })
