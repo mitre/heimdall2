@@ -1,6 +1,6 @@
 # Schemas
 
-Splunk2HDF has follows 3 schemas for importing data into Splunk.
+Splunk2HDF has the following 3 schemas for importing data into Splunk.
 
 ## Previewing Data Within Splunk
 
