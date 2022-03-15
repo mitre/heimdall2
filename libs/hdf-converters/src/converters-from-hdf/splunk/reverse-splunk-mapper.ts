@@ -199,10 +199,10 @@ export function createControlMapping(
       guid: guid,
       status: {
         transformer: (data: ContextualizedControl) => {
-          if (data.data.id === 'V-61409') {
-            console.log(data);
-          }
-          if (data.hdf.segments?.length === 0 && data.extendsFrom.length != 0) {
+          if (
+            data.hdf.segments?.length === 0 &&
+            data.extendsFrom.length !== 0
+          ) {
             return 'Overlaid Control';
           } else {
             return data.hdf.status;
