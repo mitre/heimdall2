@@ -4,7 +4,7 @@ Splunk2HDF has follows 3 schemas for importing data into Splunk.
 
 ## Previewing Data Within Splunk
 
-An example query to preview data data splunk is as follows:
+An example query to preview data sithin Splunk is as follows:
 
 ```
 index="<<YOUR INDEX>>" meta.subtype=control | stats  values(meta.filename) values(meta.filetype) list(meta.profile_sha256) values(meta.hdf_splunk_schema) values(meta.status)  list(meta.is_baseline) list(title) list(code) list(desc) list(descriptions.*)  values(id) values(impact) list(refs{}.*) list(results{}.*) list(source_location{}.*) values(tags.*)  by meta.guid id 
