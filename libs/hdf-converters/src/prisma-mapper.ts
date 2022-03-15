@@ -11,11 +11,14 @@ import {
 export type PrismaControls = {
   records: Record<string, string>[];
 };
-
+// There is a Common Vulnerability Scoring System (cvss) field that contains a cvss qualitative severity rating, 
+// however this field does not correlate to the "Severity" (low, moderate, important, high, and critical) field
+// that is mapped to the hdf "impact" field. Severity is mapped to the SEVERITY_LOOKUP"
 const SEVERITY_LOOKUP: Record<string, number> = {
-  low: 0.1,
+  low: 0.3,
   moderate: 0.5,
-  high: 0.7,
+  important: 0.7,
+  high: 0.9,
   critial: 1
 };
 
@@ -70,7 +73,7 @@ export class PrismaControlMapper extends BaseConverter {
             title: {transformer: getTitle},
             impact: {
               path: 'Severity',
-              transformer: (severity?: 'low' | 'moderate' | 'high') => {
+              transformer: (severity?: 'low' | 'moderate' | 'important' | 'high' | 'critical') => {
                 if (severity) {
                   return SEVERITY_LOOKUP[severity];
                 } else {
@@ -133,7 +136,8 @@ export class PrismaControlMapper extends BaseConverter {
 
   constructor(prismaControls: Record<string, string>[]) {
     super({records: prismaControls});
-    this.data = {records: prismaControls}
+    // Initializing BaseConverter with super did NOT properly initialized the data variable
+    this.data = {records: prismaControls};
   }
 }
 
@@ -152,7 +156,6 @@ export class PrismaMapper {
       _.set(converted, 'platform.target_id', hostname)
       executions.push(converted)
     })
-    console.log(executions)
     return executions;
   }
 

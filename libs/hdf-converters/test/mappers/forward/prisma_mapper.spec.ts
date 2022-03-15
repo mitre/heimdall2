@@ -11,19 +11,23 @@ describe('prisma_mapper', () => {
       )
     );
 
-    fs.writeFileSync(
-      'sample_jsons/prisma_mapper/prisma-hdf.json',
-      JSON.stringify(mapper.toHdf())
-    );
+    const converted = mapper.toHdf();
+    // Object.entries(converted).forEach(([index, obj]) => {
+    //   const fileName = 'sample_jsons/prisma_mapper/'+obj.platform.target_id+'.json';
+    //   fs.writeFileSync(fileName, JSON.stringify(obj) );
+    // });
 
-    expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync('sample_jsons/prisma_mapper/prisma-hdf.json', {
-            encoding: 'utf-8'
-          })
+    Object.entries(converted).forEach(([index, obj]) => {
+      const fileName = 'sample_jsons/prisma_mapper/'+obj.platform.target_id+'.json';
+      expect(omitVersions(obj)).toEqual(
+        omitVersions(
+          JSON.parse(
+            fs.readFileSync(fileName, {
+              encoding: 'utf-8'
+            })
+          )
         )
-      )
-    );
+      );
+    });
   });
 });
