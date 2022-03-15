@@ -7,7 +7,11 @@ Splunk2HDF has follows 3 schemas for importing data into Splunk.
 An example query to preview data data splunk is as follows:
 
 ```
-index="<<YOUR INDEX>>" | stats list(meta.filename) list(meta.filetype) list(tags.*) list(descriptions.*) list(meta.subtype) list(meta.full_code*) list(meta.parse_time) list(meta.start_time) list(meta.hdf_splunk_schema) list(id) list(meta.profile_sha256) list(code) list(meta.is_baseline) by meta.guid id | join meta.guid [search index="<<YOUR INDEX>>" meta.guid="*" platform.name="*" | stats count by meta.guid platform.name] | join meta.guid [search index="<<YOUR INDEX>>" meta.guid="*" name="*" | stats count values(name) by meta.guid]
+index="<<YOUR INDEX>>" meta.subtype=control | stats  values(meta.filename) values(meta.filetype) list(meta.profile_sha256) values(meta.hdf_splunk_schema) values(meta.status)  list(meta.is_baseline) list(title) list(code) list(desc) list(descriptions.*)  values(id) values(impact) list(refs{}.*) list(results{}.*) list(source_location{}.*) values(tags.*)  by meta.guid id 
+| join  meta.guid 
+    [search index="<<YOUR INDEX>>"  meta.subtype=header | stats values(meta.filename) values(meta.filetype) values(meta.hdf_splunk_schema) list(statistics.duration)  list(platform.*) list(version)  by meta.guid] 
+| join meta.guid 
+    [search index="<<YOUR INDEX>>"  meta.subtype=profile | stats values(meta.filename) values(meta.filetype) values(meta.hdf_splunk_schema) list(meta.profile_sha256) list(meta.is_baseline)  list(summary) list(sha256) list(supports{}.*) list(name) list(copyright) list(maintainer) list(copyright_email) list(version) list(license) list(title) list(parent_profile) list(depends{}.*) list(controls{}.*) list(attributes{}.*) list(status) by meta.guid]
 ```
 
 ### Control
