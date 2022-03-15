@@ -103,7 +103,7 @@ index="<<YOUR INDEX>>" | stats list(meta.filename) list(meta.filetype) list(tags
 ```
 {
     "meta": {
-        // This field is consistent accross all events per upload, i.e you can get all data related to a results set by querying meta.guid="<<GUID>>"
+        // This field is consistent across all events per upload, i.e you can get all data related to a results set by querying meta.guid="<<GUID>>"
         "guid": "bXZNMQ3mNOs2PvHFv6Ze48RCdxI2FM",
         //  Whether the converted file came from an evaluation file or profile file
         "filetype": "evaluation | profile",
@@ -128,7 +128,7 @@ index="<<YOUR INDEX>>" | stats list(meta.filename) list(meta.filetype) list(tags
     "copyright_email": "you@example.com",
     "version": "0.1.0",
     "license": "License. E.g. Apache-2.0",
-    "title": "InSpec Profile Title",
+    "title": "Profile Title",
     // The name of the parent profile, as would be found in its "name" field. In the case of JSON output, this is the name of the "parent" profile that loaded this "child" profile as a dependency (see below), typically to overlay controls
     "parent_profile": "cms-ars-3.1-moderate-mongodb-enterprise-advanced-3-stig-overlay",
     // List of profiles this profile depends on, either overlaying or combining them (or both). Note that none of these fields are specifically required - all depends on how the dependency is expressed in the profile
@@ -181,7 +181,7 @@ index="<<YOUR INDEX>>" | stats list(meta.filename) list(meta.filetype) list(tags
 }
 ```
 
-### Execution
+### (Execution) Header
 ```
 
 {
