@@ -28,7 +28,7 @@ index="<<YOUR INDEX>>" | stats list(meta.filename) list(meta.filetype) list(tags
         "hdf_splunk_schema": "1.1",
         // The controls computed status, based on result statuses. See https://github.com/mitre/inspecjs/blob/master/src/compat_wrappers.ts for explanation
         // Note that overlays will inherit the baseline status, instead of the "proper" result which would always just be Profile Error
-        "status": "passed | failed | not applicable | not reviewed | profile error",
+        "status": "passed | failed | not applicable | not reviewed | profile error | overlaid control",
         // Whether or not this control was waived
         "is_waived": true, // or false
         // Whether this control is the baseline - IE, is it an overlay of a different control in this file?. Can differ from its containing profiles is_baseline

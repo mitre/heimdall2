@@ -182,7 +182,7 @@ export function createProfileMapping(
       path: 'data.groups'
     },
     status: {
-      path: 'data.status'
+      path: ''
     }
   };
 }
@@ -197,7 +197,18 @@ export function createControlMapping(
   return {
     meta: {
       guid: guid,
-      status: control.hdf.status,
+      status: {
+        transformer: (data: ContextualizedControl) => {
+          if (data.data.id === 'V-61409') {
+            console.log(data);
+          }
+          if (data.hdf.segments?.length === 0 && data.extendsFrom.length != 0) {
+            return 'Overlaid Control';
+          } else {
+            return data.hdf.status;
+          }
+        }
+      },
       profile_sha256: profile.data.sha256,
       filename: filename,
       subtype: 'control',
