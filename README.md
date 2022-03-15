@@ -2,7 +2,7 @@
 
 ![Run E2E Backend + Frontend Tests](https://github.com/mitre/heimdall2/workflows/Run%20E2E%20Backend%20+%20Frontend%20Tests/badge.svg) ![Run Frontend Tests](https://github.com/mitre/heimdall2/workflows/Run%20Frontend%20Tests/badge.svg) ![Run Backend Tests](https://github.com/mitre/heimdall2/workflows/Run%20Backend%20Tests/badge.svg)
 
-This repository contains the source code for the Heimdall 2 Backend and Frontend (Heimdall-Lite).
+This repository contains the source code for the Heimdall's [Backend](https://github.com/mitre/heimdall2/tree/mentionInSpecJSandHDFConverters/apps/backend), [Frontend (AKA Heimdall Lite)](https://github.com/mitre/heimdall2/tree/mentionInSpecJSandHDFConverters/apps/frontend), [HDF Converters](https://github.com/mitre/heimdall2/tree/master/libs/hdf-converters), and [InSpec JS](https://github.com/mitre/heimdall2/tree/master/libs/inspecjs).
 
 ## Demos
 
@@ -21,8 +21,6 @@ This repository contains the source code for the Heimdall 2 Backend and Frontend
 #### Current *Development Master Branch* Preview
 
 [Heimdall Lite](https://heimdall-lite.netlify.com/) | [Heimdall Server](https://mitre-heimdall-staging.herokuapp.com/)
-
-
 
 ## Heimdall vs Heimdall-Lite
 

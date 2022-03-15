@@ -202,67 +202,78 @@ export class BaseConverter {
     if (v.length === 0) {
       return [];
     }
-    if (v[0].path === undefined) {
-      const arrayTransformer = v[0].arrayTransformer?.bind(this);
-      v = v.map((element) => {
-        return _.omit(element, ['arrayTransformer']) as T & ILookupPath;
-      });
-      let output: Array<T> = [];
-      v.forEach((element) => {
-        output.push(this.evaluate(file, element) as T);
-      });
-      if (arrayTransformer !== undefined) {
-        if (Array.isArray(arrayTransformer)) {
-          output = arrayTransformer[0].apply(arrayTransformer[1], [
-            v,
-            this.data
-          ]);
-        } else {
-          output = arrayTransformer.apply(null, [output, this.data]) as T[];
+    const resultingData: Array<T> = [];
+    for (const lookupPath of v) {
+      if (lookupPath.path === undefined) {
+        const arrayTransformer = lookupPath.arrayTransformer?.bind(this);
+        v = v.map((element) => {
+          return _.omit(element, ['arrayTransformer']) as T & ILookupPath;
+        });
+        let output: Array<T> = [];
+        v.forEach((element) => {
+          output.push(this.evaluate(file, element) as T);
+        });
+        if (arrayTransformer !== undefined) {
+          if (Array.isArray(arrayTransformer)) {
+            output = arrayTransformer[0].apply(arrayTransformer[1], [
+              v,
+              this.data
+            ]);
+          } else {
+            output = arrayTransformer.apply(null, [output, this.data]) as T[];
+          }
         }
-      }
-      return output;
-    } else {
-      const path = v[0].path;
-      const key = v[0].key;
-      const arrayTransformer = v[0].arrayTransformer?.bind(this);
-      const transformer = v[0].transformer?.bind(this);
-      if (this.hasPath(file, path)) {
-        const pathVal = this.handlePath(file, path);
-        if (Array.isArray(pathVal)) {
-          v = pathVal.map((element: Record<string, unknown>) => {
-            return _.omit(this.convertInternal(element, v[0]), [
-              'path',
-              'transformer',
-              'arrayTransformer',
-              'key'
-            ]) as T;
-          });
-          if (arrayTransformer !== undefined) {
-            if (Array.isArray(arrayTransformer)) {
-              v = arrayTransformer[0].apply(arrayTransformer[1], [
-                v,
-                this.data
-              ]);
+        resultingData.push(...output);
+      } else {
+        const path = lookupPath.path;
+        const key = lookupPath.key;
+        const arrayTransformer = lookupPath.arrayTransformer?.bind(this);
+        const transformer = lookupPath.transformer?.bind(this);
+        if (this.hasPath(file, path)) {
+          const pathVal = this.handlePath(file, path);
+          if (Array.isArray(pathVal)) {
+            v = pathVal.map((element: Record<string, unknown>) => {
+              return _.omit(this.convertInternal(element, lookupPath), [
+                'path',
+                'transformer',
+                'arrayTransformer',
+                'key'
+              ]) as T;
+            });
+            if (arrayTransformer !== undefined) {
+              if (Array.isArray(arrayTransformer)) {
+                v = arrayTransformer[0].apply(arrayTransformer[1], [
+                  v,
+                  this.data
+                ]);
+              } else {
+                v = arrayTransformer.apply(null, [v, this.data]) as T[];
+              }
+            }
+            if (key !== undefined) {
+              v = collapseDuplicates(v, key, this.collapseResults);
+            }
+            resultingData.push(...v);
+          } else {
+            if (transformer !== undefined) {
+              resultingData.push(transformer(this.handlePath(file, path)) as T);
             } else {
-              v = arrayTransformer.apply(null, [v, this.data]) as T[];
+              resultingData.push(this.handlePath(file, path) as T);
             }
           }
-          if (key !== undefined) {
-            v = collapseDuplicates(v, key, this.collapseResults);
-          }
-          return v;
-        } else {
-          if (transformer !== undefined) {
-            return [transformer(this.handlePath(file, path)) as T];
-          } else {
-            return [this.handlePath(file, path) as T];
-          }
         }
-      } else {
-        return [];
       }
     }
+
+    const uniqueResults: T[] = [];
+    resultingData.forEach((result) => {
+      if (
+        !uniqueResults.some((uniqueResult) => _.isEqual(result, uniqueResult))
+      ) {
+        uniqueResults.push(result);
+      }
+    });
+    return uniqueResults;
   }
   handlePath(file: Record<string, unknown>, path: string | string[]): unknown {
     let pathArray;

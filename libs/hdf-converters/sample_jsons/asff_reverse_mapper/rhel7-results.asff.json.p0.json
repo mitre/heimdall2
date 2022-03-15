@@ -1,1 +1,39 @@
-[{"SchemaVersion":"2018-10-08","Id":"reverse-proxy/disa_stig-el7","ProductArn":"arn:aws:securityhub:us-east-2:12345678910:product/12345678910/default","GeneratorId":"arn:aws:securityhub:us-east-2:12345678910:ruleset/set/disa_stig-el7","AwsAccountId":"12345678910","CreatedAt":"2019-11-04T21:17:17.000Z","UpdatedAt":"2021-11-08T16:48:41.838Z","Title":"reverse-proxy | disa_stig-el7 | 2021-11-08 11:48:41 GMT-0500","Description":"Passed: 78 (202 individual checks passed) --- Failed: 149 (122 individual checks failed out of 518 total checks) --- Not Applicable: 10 (System exception or absent component) --- Not Reviewed: 6 (Can only be tested manually at this time)","Severity":{"Label":"INFORMATIONAL"},"FindingProviderFields":{"Severity":{"Label":"INFORMATIONAL"},"Types":["disa_stig-el7/version/0.2.0","disa_stig-el7/sha256/d4ecb3e201285a383a4aa6af8d9028e8311cb1975af2b380f098a21c895246ff","disa_stig-el7/maintainer/SIMP Team","disa_stig-el7/summary/The `disa_stig-el7` inspec profile helps scan your system aginst the DISA RHEL7 STIG","disa_stig-el7/license/Apache-2.0","disa_stig-el7/copyright/SIMP Team","disa_stig-el7/copyright_email/simp-dev@googlegroups.com","disa_stig-el7/inputs/[]"]},"Resources":[{"Type":"AwsAccount","Id":"AWS::::Account:12345678910","Partition":"aws","Region":"us-east-2"}]}]
+[
+    {
+        "SchemaVersion": "2018-10-08",
+        "Id": "reverse-proxy/disa_stig-el7",
+        "ProductArn": "arn:aws:securityhub:us-east-2:12345678910:product/12345678910/default",
+        "GeneratorId": "arn:aws:securityhub:us-east-2:12345678910:ruleset/set/disa_stig-el7",
+        "AwsAccountId": "12345678910",
+        "CreatedAt": "2019-11-04T21:17:17.000Z",
+        "UpdatedAt": "2021-11-08T16:48:41.838Z",
+        "Title": "reverse-proxy | disa_stig-el7 | 2021-11-08 11:48:41 GMT-0500",
+        "Description": "Passed: 78 (202 individual checks passed) --- Failed: 149 (122 individual checks failed out of 518 total checks) --- Not Applicable: 10 (System exception or absent component) --- Not Reviewed: 6 (Can only be tested manually at this time)",
+        "Severity": {
+            "Label": "INFORMATIONAL"
+        },
+        "FindingProviderFields": {
+            "Severity": {
+                "Label": "INFORMATIONAL"
+            },
+            "Types": [
+                "disa_stig-el7/version/0.2.0",
+                "disa_stig-el7/sha256/d4ecb3e201285a383a4aa6af8d9028e8311cb1975af2b380f098a21c895246ff",
+                "disa_stig-el7/maintainer/SIMP Team",
+                "disa_stig-el7/summary/The `disa_stig-el7` inspec profile helps scan your system aginst the DISA RHEL7 STIG",
+                "disa_stig-el7/license/Apache-2.0",
+                "disa_stig-el7/copyright/SIMP Team",
+                "disa_stig-el7/copyright_email/simp-dev@googlegroups.com",
+                "disa_stig-el7/inputs/[]"
+            ]
+        },
+        "Resources": [
+            {
+                "Type": "AwsAccount",
+                "Id": "AWS::::Account:12345678910",
+                "Partition": "aws",
+                "Region": "us-east-2"
+            }
+        ]
+    }
+]

@@ -62,6 +62,9 @@ updates:
     versions:
     - 7.x
     - 8.x
+  - dependency-name: xlsx
+    versions:
+    - 0.18.x
   - dependency-name: sass-loader
     versions:
     - 11.0.0

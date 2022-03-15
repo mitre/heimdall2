@@ -19,7 +19,11 @@
 
     <template #set>
       <v-row class="pa-4">
-        <div class="pa-2 title" v-text="filename" />
+        <div
+          class="pa-2 title"
+          :style="$vuetify.breakpoint.lgAndUp ? 'width: 15vw' : 'width:20vw'"
+          v-text="filename"
+        />
         <v-tooltip v-if="isOverlaid" bottom>
           <template #activator="{on, attrs}">
             <v-icon
@@ -189,7 +193,11 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   }
 
   get isOverlaid() {
-    return Boolean(this.control.extendsFrom.length);
+    return this.control.extendsFrom.some(
+      (extension) =>
+        extension.data.code !== this.control.data.code &&
+        extension.data.code !== ''
+    );
   }
 
   severity_arrow_count(severity: string): number {
@@ -236,7 +244,9 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
           add_spaces: false,
           allow_letters: false
         });
-        url = 'https://nvd.nist.gov/800-53/Rev4/control/' + url;
+        url =
+          'https://csrc.nist.gov/Projects/risk-management/sp800-53-controls/release-search#/control?version=4.0&number=' +
+          url;
       }
       return {label: tag, url: url, description: this.descriptionForTag(tag)};
     });

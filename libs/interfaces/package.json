@@ -1,6 +1,6 @@
 {
   "name": "@heimdall/interfaces",
-  "version": "2.6.6",
+  "version": "2.6.14",
   "private": true,
   "description": "",
   "main": "index.ts",
