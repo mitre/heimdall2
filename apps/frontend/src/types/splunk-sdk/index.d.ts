@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 declare module '@mitre/splunk-sdk-no-env' {
   export type SplunkConfig = {
-    scheme?: string;
+    scheme: string;
     host: string;
     port?: number;
     username: string;
@@ -27,15 +26,23 @@ declare module '@mitre/splunk-sdk-no-env' {
     constructor();
   }
 
-  class Indexs {
-    fetch(callback: (error: any, success: any, indexes: Index[]) => void): void;
-  }
-
   class Logger {
     error(message: any): void;
   }
 
-  class Index {}
+  class Indexs {
+    fetch(callback: (error: any, success: any, indexes: Index[]) => void): void;
+  }
+
+  class Index {
+    name: string;
+
+    submitEvent(
+      event: string,
+      config: {sourcetype: string; index: string},
+      callback: (error: any) => void
+    ): void;
+  }
 
   class Jobs {
     fetch(callback: (error: any, success: any, jobs: Job[]) => void): void;

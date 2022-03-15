@@ -1,11 +1,11 @@
 declare module '@mitre/splunk-sdk-no-env' {
   export type SplunkConfig = {
-    scheme?: string;
+    scheme: string;
     host: string;
     port?: number;
     username: string;
     password: string;
-    index?: string;
+    index: string;
     owner?: string;
     app?: string;
     sessionKey?: string;
@@ -34,7 +34,15 @@ declare module '@mitre/splunk-sdk-no-env' {
     fetch(callback: (error: any, success: any, indexes: Index[]) => void): void;
   }
 
-  class Index {}
+  class Index {
+    name: string;
+
+    submitEvent(
+      event: string,
+      config: {sourcetype: string; index: string},
+      callback: (error: any) => void
+    ): void;
+  }
 
   class Jobs {
     fetch(callback: (error: any, success: any, jobs: Job[]) => void): void;

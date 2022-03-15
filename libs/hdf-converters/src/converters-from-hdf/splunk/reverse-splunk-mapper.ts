@@ -22,7 +22,7 @@ const MAPPER_NAME = 'HDF2Splunk';
 const UPLOAD_CHUNK_SIZE = 100;
 
 export type SplunkConfig = {
-  scheme?: string;
+  scheme: string;
   host: string;
   port?: number;
   username: string;
@@ -342,7 +342,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
   }
 
   async uploadSplunkData(
-    targetIndex: any,
+    targetIndex: splunkjs.Index,
     splunkData: SplunkData
   ): Promise<void> {
     return new Promise((resolve, reject) => {
