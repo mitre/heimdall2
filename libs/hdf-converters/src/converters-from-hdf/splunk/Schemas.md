@@ -4,10 +4,14 @@ Splunk2HDF has follows 3 schemas for importing data into Splunk.
 
 ## Previewing Data Within Splunk
 
-An example query to preview data data splunk is as follows:
+An example query to preview data within Splunk is as follows:
 
 ```
-index="<<YOUR INDEX>>" | stats list(meta.filename) list(meta.filetype) list(tags.*) list(descriptions.*) list(meta.subtype) list(meta.full_code*) list(meta.parse_time) list(meta.start_time) list(meta.hdf_splunk_schema) list(id) list(meta.profile_sha256) list(code) list(meta.is_baseline) by meta.guid id | join meta.guid [search index="<<YOUR INDEX>>" meta.guid="*" platform.name="*" | stats count by meta.guid platform.name] | join meta.guid [search index="<<YOUR INDEX>>" meta.guid="*" name="*" | stats count values(name) by meta.guid]
+index="<<YOUR INDEX>>" meta.subtype=control | stats  values(meta.filename) values(meta.filetype) list(meta.profile_sha256) values(meta.hdf_splunk_schema) values(meta.status)  list(meta.is_baseline) list(title) list(code) list(desc) list(descriptions.*)  values(id) values(impact) list(refs{}.*) list(results{}.*) list(source_location{}.*) values(tags.*)  by meta.guid id 
+| join  meta.guid 
+    [search index="<<YOUR INDEX>>"  meta.subtype=header | stats values(meta.filename) values(meta.filetype) values(meta.hdf_splunk_schema) list(statistics.duration)  list(platform.*) list(version)  by meta.guid] 
+| join meta.guid 
+    [search index="<<YOUR INDEX>>"  meta.subtype=profile | stats values(meta.filename) values(meta.filetype) values(meta.hdf_splunk_schema) list(meta.profile_sha256) list(meta.is_baseline)  list(summary) list(sha256) list(supports{}.*) list(name) list(copyright) list(maintainer) list(copyright_email) list(version) list(license) list(title) list(parent_profile) list(depends{}.*) list(controls{}.*) list(attributes{}.*) list(status) by meta.guid]
 ```
 
 ### Control
@@ -103,7 +107,7 @@ index="<<YOUR INDEX>>" | stats list(meta.filename) list(meta.filetype) list(tags
 ```
 {
     "meta": {
-        // This field is consistent accross all events per upload, i.e you can get all data related to a results set by querying meta.guid="<<GUID>>"
+        // This field is consistent across all events per upload, i.e you can get all data related to a results set by querying meta.guid="<<GUID>>"
         "guid": "bXZNMQ3mNOs2PvHFv6Ze48RCdxI2FM",
         //  Whether the converted file came from an evaluation file or profile file
         "filetype": "evaluation | profile",
@@ -128,7 +132,7 @@ index="<<YOUR INDEX>>" | stats list(meta.filename) list(meta.filetype) list(tags
     "copyright_email": "you@example.com",
     "version": "0.1.0",
     "license": "License. E.g. Apache-2.0",
-    "title": "InSpec Profile Title",
+    "title": "Profile Title",
     // The name of the parent profile, as would be found in its "name" field. In the case of JSON output, this is the name of the "parent" profile that loaded this "child" profile as a dependency (see below), typically to overlay controls
     "parent_profile": "cms-ars-3.1-moderate-mongodb-enterprise-advanced-3-stig-overlay",
     // List of profiles this profile depends on, either overlaying or combining them (or both). Note that none of these fields are specifically required - all depends on how the dependency is expressed in the profile
@@ -181,7 +185,7 @@ index="<<YOUR INDEX>>" | stats list(meta.filename) list(meta.filetype) list(tags
 }
 ```
 
-### Execution
+### (Execution) Header
 ```
 
 {
