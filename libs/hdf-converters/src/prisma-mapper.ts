@@ -11,7 +11,7 @@ import {
 export type PrismaControls = {
   records: Record<string, string>[];
 };
-// There is a Common Vulnerability Scoring System (cvss) field that contains a cvss qualitative severity rating, 
+// There is a Common Vulnerability Scoring System (cvss) field that contains a cvss qualitative severity rating,
 // however this field does not correlate to the "Severity" (low, moderate, important, high, and critical) field
 // that is mapped to the hdf "impact" field. Severity is mapped to the SEVERITY_LOOKUP"
 const SEVERITY_LOOKUP: Record<string, number> = {
@@ -73,7 +73,14 @@ export class PrismaControlMapper extends BaseConverter {
             title: {transformer: getTitle},
             impact: {
               path: 'Severity',
-              transformer: (severity?: 'low' | 'moderate' | 'important' | 'high' | 'critical') => {
+              transformer: (
+                severity?:
+                  | 'low'
+                  | 'moderate'
+                  | 'important'
+                  | 'high'
+                  | 'critical'
+              ) => {
                 if (severity) {
                   return SEVERITY_LOOKUP[severity];
                 } else {
@@ -82,46 +89,54 @@ export class PrismaControlMapper extends BaseConverter {
               }
             },
             code: {
-              transformer: (obj: Record<string, string>) => JSON.stringify(obj, null, 2)
+              transformer: (obj: Record<string, string>) =>
+                JSON.stringify(obj, null, 2)
             },
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {
-                  transformer: (obj: {Packages: string, Description: string, Distro: string, Type: string, Hostname: string}) => {
-                    let result = ""
+                  transformer: (obj: {
+                    Packages: string;
+                    Description: string;
+                    Distro: string;
+                    Type: string;
+                    Hostname: string;
+                  }) => {
+                    let result = '';
                     if (obj.Type === 'image') {
                       if (obj['Packages'] !== '') {
-                        result += `Version check of package: ${obj['Packages']}`
+                        result += `Version check of package: ${obj['Packages']}`;
                       }
                     } else if (obj.Type === 'linux') {
                       if (obj.Distro !== '') {
-                        result += `Configuration check for ${obj.Distro}`
+                        result += `Configuration check for ${obj.Distro}`;
                       } else {
-                        result += ``
+                        result += ``;
                       }
                     } else {
-                      result += `${obj.Type} check for ${obj.Hostname}`
+                      result += `${obj.Type} check for ${obj.Hostname}`;
                     }
-
-                    result += `\n\n${obj.Description}`
-                    
-                    return result
+                    result += `\n\n${obj.Description}`;
+                    return result;
                   }
                 },
                 message: {
-                  transformer: (obj: {'Fix Status'?: string, Cause?: string}) => {
-                    let result = "";
-                    if(obj['Fix Status'] !== '' && obj.Cause !== '') {
-                      result += `Fix Status: ${obj['Fix Status']}\n\n${obj.Cause}`
+                  transformer: (obj: {
+                    'Fix Status'?: string;
+                    Cause?: string;
+                  }) => {
+                    let result = '';
+                    if (obj['Fix Status'] !== '' && obj.Cause !== '') {
+                      result += `Fix Status: ${obj['Fix Status']}\n\n${obj.Cause}`;
                     } else if (obj['Fix Status'] !== '') {
-                      result += `Fix Status: ${obj['Fix Status']}`
+                      result += `Fix Status: ${obj['Fix Status']}`;
                     } else if (obj.Cause !== '') {
-                      result += `Cause: ${obj.Cause}`
+                      result += `Cause: ${obj.Cause}`;
                     } else {
-                      result += "Unknown"
+                      result += 'Unknown';
                     }
-                    return result
+                    return result;
                   }
                 },
                 start_time: {path: 'Published'}
@@ -146,16 +161,17 @@ export class PrismaMapper {
 
   toHdf(): ExecJSON.Execution | ExecJSON.Execution[] {
     const executions: ExecJSON.Execution[] = [];
-    const hostnameToControls: Record<string, Record<string, string>[]> = {}
+    const hostnameToControls: Record<string, Record<string, string>[]> = {};
     this.data.forEach((record: Record<string, string>) => {
-      hostnameToControls[record['Hostname']] = hostnameToControls[record['Hostname']] || [];
-      hostnameToControls[record['Hostname']].push(record)
+      hostnameToControls[record['Hostname']] =
+        hostnameToControls[record['Hostname']] || [];
+      hostnameToControls[record['Hostname']].push(record);
     });
     Object.entries(hostnameToControls).forEach(([hostname, controls]) => {
-      const converted = new PrismaControlMapper(controls).toHdf()
-      _.set(converted, 'platform.target_id', hostname)
-      executions.push(converted)
-    })
+      const converted = new PrismaControlMapper(controls).toHdf();
+      _.set(converted, 'platform.target_id', hostname);
+      executions.push(converted);
+    });
     return executions;
   }
 
