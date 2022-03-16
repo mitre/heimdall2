@@ -4743,10 +4743,10 @@
     semver "^6.1.0"
     strip-ansi "^6.0.0"
 
-"@vue/cli-shared-utils@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@vue/cli-shared-utils/-/cli-shared-utils-5.0.1.tgz#9e33cacefad427bbf8939f953204373ad107fbee"
-  integrity sha512-oL164c3yDhdLHgiFvSkXuP7z0eEY8gqTYzHHbvQJCIBtRZ/0H9Q7xICpAeMZ63lJvS2+fA5bQfv+kPII/kcjmQ==
+"@vue/cli-shared-utils@^5.0.1", "@vue/cli-shared-utils@^5.0.3":
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@vue/cli-shared-utils/-/cli-shared-utils-5.0.3.tgz#e8facc759f4e2ceed4a26f33943c0005a834e4af"
+  integrity sha512-xAHxFDYVohHWXOLdmGvka3ffQcRgKdACempFQkGJX74Q7OBf0zPf5WH+vQXhlR17eA3LmWdY+Nv8OfsIGim6Fg==
   dependencies:
     chalk "^4.1.2"
     execa "^1.0.0"
@@ -4754,30 +4754,30 @@
     launch-editor "^2.2.1"
     lru-cache "^6.0.0"
     node-fetch "^2.6.7"
-    node-ipc "^9.1.1"
+    node-ipc "9.2.1"
     open "^8.0.2"
     ora "^5.3.0"
     read-pkg "^5.1.1"
     semver "^7.3.4"
     strip-ansi "^6.0.0"
 
-"@vue/cli-ui-addon-webpack@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@vue/cli-ui-addon-webpack/-/cli-ui-addon-webpack-5.0.1.tgz#7926fd3641425e0284af4ded9effa03c5e064401"
-  integrity sha512-vaiILTed+6e1so1zqKMA6ej3gYszXJH9kuTdcU3vIYjQfYtSnwPEjNtraM9twsdZzI4zAVLS5nSHCG5fohOJlQ==
+"@vue/cli-ui-addon-webpack@^5.0.3":
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@vue/cli-ui-addon-webpack/-/cli-ui-addon-webpack-5.0.3.tgz#b989da01eaf46d79726559a5042cc79a1684a5ab"
+  integrity sha512-ie922PUHlDYakUtDvzScV+F1UuQR+BYUcYP/nr2Gn9hQkbaUPsxK/TF+2Xhh+HaC1vcDf59UrBMXG/yx4XKzQg==
 
-"@vue/cli-ui-addon-widgets@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@vue/cli-ui-addon-widgets/-/cli-ui-addon-widgets-5.0.1.tgz#8c047cfed2ba988a0d600abc975304d94139f941"
-  integrity sha512-PiNz7W7rkz1CuRIuj1aa6f6UaL1iN4CI427mfCjpwy5V50GV6OSnLsmG1KIP3b0ld0X56iUpKw4pb5d77jzuNA==
+"@vue/cli-ui-addon-widgets@^5.0.3":
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@vue/cli-ui-addon-widgets/-/cli-ui-addon-widgets-5.0.3.tgz#308b74eeebe449feca894d0c455d2a9cf7c4b5d5"
+  integrity sha512-H6mdmAM8hip/fHL/YnT3xDzzjaHUsQ5zDf8Sti0QgjNn3QBVq5sCIllKK3MQhQk5LPu6y+Js+q4/omgzdKpDEw==
 
-"@vue/cli-ui@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@vue/cli-ui/-/cli-ui-5.0.1.tgz#8ba4e0f2369fd91e695a26d3d004a40a185ecedd"
-  integrity sha512-ikUsGRPc5wW/zbXIpBAp3NwDbTnwJzyAcM0QZwpa6YJ5Rx6kqI2DeUAyRBap6nMAWGtqSeN9I522UwwUY48CEA==
+"@vue/cli-ui@^5.0.3":
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@vue/cli-ui/-/cli-ui-5.0.3.tgz#a788db90a980ef0a683f3d8419dbb48c1cb180c0"
+  integrity sha512-XFJPPKa8MWQL1dGWHHbzBvJgj28Rybt3KuCWU5YZWRAqxMVRiTKjvpohYWsDnaKawe/fGDDVcPKf6HmOoAEnnQ==
   dependencies:
     "@akryum/winattr" "^3.0.0"
-    "@vue/cli-shared-utils" "^5.0.1"
+    "@vue/cli-shared-utils" "^5.0.3"
     apollo-server-express "^2.21.0"
     clone "^2.1.1"
     deepmerge "^4.2.2"
@@ -4795,7 +4795,7 @@
     lodash.merge "^4.6.1"
     lowdb "^1.0.0"
     lru-cache "^6.0.0"
-    node-ipc "^9.1.1"
+    node-ipc "9.2.1"
     node-notifier "^10.0.0"
     parse-git-config "^3.0.0"
     portfinder "^1.0.26"
@@ -4805,16 +4805,16 @@
     typescript "~4.5.5"
 
 "@vue/cli@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@vue/cli/-/cli-5.0.1.tgz#2c2d597bd19d9c616b8326bc25841446be05bb01"
-  integrity sha512-h+htWyKCxzIwBTAr+Ni0vHjLbMmrVcjeU4QVB3t/VcwPgvHIL+MpLIcGEFqzROi9mXNeyYqrxl6MZd1gLHUibQ==
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@vue/cli/-/cli-5.0.3.tgz#791323e51ed46ffc353927d8cfbf3a1338e787dc"
+  integrity sha512-E9AE4OEi1Xld4rRMCdm8+1OtrBwZseFP3ugqVEhQ97MwKomliM2UuPQ8zHsJrcHIbKwPz7/2yDlPUwqkN9g0sw==
   dependencies:
     "@types/ejs" "^3.0.6"
     "@types/inquirer" "^8.1.3"
-    "@vue/cli-shared-utils" "^5.0.1"
-    "@vue/cli-ui" "^5.0.1"
-    "@vue/cli-ui-addon-webpack" "^5.0.1"
-    "@vue/cli-ui-addon-widgets" "^5.0.1"
+    "@vue/cli-shared-utils" "^5.0.3"
+    "@vue/cli-ui" "^5.0.3"
+    "@vue/cli-ui-addon-webpack" "^5.0.3"
+    "@vue/cli-ui-addon-widgets" "^5.0.3"
     boxen "^5.0.0"
     commander "^7.1.0"
     debug "^4.1.0"
@@ -14710,7 +14710,7 @@ node-int64@^0.4.0:
   resolved "https://registry.yarnpkg.com/node-int64/-/node-int64-0.4.0.tgz#87a9065cdb355d3182d8f94ce11188b825c68a3b"
   integrity sha1-h6kGXNs1XTGC2PlM4RGIuCXGijs=
 
-node-ipc@^9.1.1:
+node-ipc@9.2.1, node-ipc@^9.1.1:
   version "9.2.1"
   resolved "https://registry.yarnpkg.com/node-ipc/-/node-ipc-9.2.1.tgz#b32f66115f9d6ce841dc4ec2009d6a733f98bb6b"
   integrity sha512-mJzaM6O3xHf9VT8BULvJSbdVbmHUKRNOH7zDDkCrA1/T+CVjq2WVIDfLt0azZRXpgArJtl3rtmEozrbXPZ9GaQ==
