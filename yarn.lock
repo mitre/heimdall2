@@ -4630,14 +4630,14 @@
     fork-ts-checker-webpack-plugin-v5 "npm:fork-ts-checker-webpack-plugin@^5.0.11"
 
 "@vue/cli-plugin-unit-jest@~5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-unit-jest/-/cli-plugin-unit-jest-5.0.1.tgz#57098d87b99cace7eebf44dd6067625b19656db3"
-  integrity sha512-TIvoR2HpaLnerAoWughuojnKSB7YxFVWJvVGpiJUJe22+wduAU/eMthfYbNYbsazUFgA7j9T5nNJ9Sd0aDeWqA==
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-unit-jest/-/cli-plugin-unit-jest-5.0.3.tgz#0d0663889b89b80345edbd669e2dc2341504096d"
+  integrity sha512-gpBFjlTRdZPQT7UZ9j4D9kGBNR+htLhKbyYO6IlClnOW/SXL98gmcaQV3bXv7sDjAj/Foh/PtB7Ob9FXgrbx3Q==
   dependencies:
     "@babel/core" "^7.12.16"
     "@babel/plugin-transform-modules-commonjs" "^7.15.0"
     "@types/jest" "^27.0.1"
-    "@vue/cli-shared-utils" "^5.0.1"
+    "@vue/cli-shared-utils" "^5.0.3"
     babel-jest "^27.1.0"
     deepmerge "^4.2.2"
     jest "^27.1.0"
