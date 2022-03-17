@@ -182,7 +182,7 @@ export function createProfileMapping(
       path: 'data.groups'
     },
     status: {
-      path: ''
+      path: 'data.status'
     }
   };
 }
