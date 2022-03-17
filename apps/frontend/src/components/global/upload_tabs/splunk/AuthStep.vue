@@ -100,7 +100,7 @@ export default class AuthStep extends Vue {
       scheme: parsedURL.protocol.split(':')[0] || 'https'
     };
 
-    await checkSplunkCredentials(config)
+    await checkSplunkCredentials(config, true)
       .then(() => {
         localUsername.set(this.username);
         localPassword.set(this.password);

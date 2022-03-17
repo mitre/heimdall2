@@ -102,7 +102,7 @@ export default class FileList extends Vue {
 
   async updateSearch() {
     this.loading = true;
-    this.splunkConverter = new SplunkMapper(this.splunkConfig);
+    this.splunkConverter = new SplunkMapper(this.splunkConfig, true);
     const results = await this.splunkConverter.queryData(this.search);
     this.executions = [];
     results.forEach((result: SplunkReport) => {

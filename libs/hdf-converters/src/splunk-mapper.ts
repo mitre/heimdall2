@@ -152,9 +152,15 @@ function consolidateFilePayloads(
 }
 
 export async function checkSplunkCredentials(
-  config: SplunkConfig
+  config: SplunkConfig,
+  webCompatibility: boolean
 ): Promise<boolean> {
-  const service = new splunkjs.Service(new ProxyHTTP.JQueryHttp(''), config);
+  let service: splunkjs.Service;
+  if (webCompatibility) {
+    service = new splunkjs.Service(new ProxyHTTP.JQueryHttp(''), config);
+  } else {
+    service = new splunkjs.Service(config);
+  }
   return new Promise((resolve, reject) => {
     setTimeout(
       () =>
@@ -199,18 +205,22 @@ export class SplunkMapper {
 
   constructor(
     config: SplunkConfig,
+    webCompatibility = false,
     logService?: winston.Logger,
     loggingLevel?: string
   ) {
     this.config = config;
-
     if (logService) {
       logger = logService;
     } else {
       logger = createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
     }
     logger.debug(`Initializing Splunk Client`);
-    this.service = new splunkjs.Service(new ProxyHTTP.JQueryHttp(''), config);
+    if (webCompatibility) {
+      this.service = new splunkjs.Service(new ProxyHTTP.JQueryHttp(''), config);
+    } else {
+      this.service = new splunkjs.Service(config);
+    }
     logger.debug(`Initialized ${this.constructor.name} successfully`);
   }
 
@@ -320,7 +330,7 @@ export class SplunkMapper {
 
   async toHdf(guid: string): Promise<ExecJSON.Execution> {
     logger.info(`Starting conversion of guid ${guid}`);
-    return checkSplunkCredentials(this.config)
+    return checkSplunkCredentials(this.config, true)
       .then(async () => {
         logger.info(`Credentials valid, querying data for ${guid}`);
         const executionData = await this.queryData(
