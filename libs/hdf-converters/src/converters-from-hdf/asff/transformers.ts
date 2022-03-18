@@ -8,6 +8,7 @@ import {
 } from 'inspecjs';
 import _ from 'lodash';
 import moment from 'moment';
+import {version as HeimdallToolsVersion} from '../../../package.json';
 import {IFindingASFF, IOptions} from './asff-types';
 import {
   FromHdfToAsffMapper,
@@ -121,6 +122,7 @@ export function createProfileInfoFinding(
     ]
   };
 
+  // need the intermediate caste to tell typescript that this cast is intentional
   return profileInfo as unknown as IFindingASFF;
 }
 
@@ -266,7 +268,7 @@ export function setupId(
   control: SegmentedControl,
   context?: FromHdfToAsffMapper
 ) {
-  const target = context?.ioptions.target.toLowerCase().trim();
+  const target = context?.ioptions.target;
   const name = context?.data.profiles[0].name;
 
   return `${target}/${name}/${control.id}/finding/${createHash('sha256')
@@ -361,6 +363,17 @@ export function setupSevOriginal(control: SegmentedControl) {
   return `${control.impact}`;
 }
 
+function createControlMetadata(control: SegmentedControl) {
+  const types = [
+    `Control/ID/${control.id}`,
+    `Control/Impact/${control.impact}`
+  ];
+  if (control.title) {
+    types.push(`Control/Title/${escapeForwardSlashes(control.title)}`);
+  }
+  return types;
+}
+
 function createProfileInfo(hdf?: ExecJSON.Execution): string[] {
   const typesArr: string[] = [];
   const targets = [
@@ -390,7 +403,29 @@ function createProfileInfo(hdf?: ExecJSON.Execution): string[] {
 }
 
 function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
-  let typesArr: string[] = [];
+  let typesArr = [`MITRE/SAF/${HeimdallToolsVersion}-hdf2asff`];
+  const executuionTargets = [
+    'platform',
+    'statistics',
+    'version',
+    'passthrough'
+  ];
+  executuionTargets.forEach((target) => {
+    const value = _.get(hdf, target);
+    if (typeof value === 'string') {
+      typesArr.push(
+        `Execution/${escapeForwardSlashes(target)}/${escapeForwardSlashes(
+          value
+        )}`
+      );
+    } else if (typeof value === 'object') {
+      typesArr.push(
+        `Execution/${escapeForwardSlashes(target)}/${escapeForwardSlashes(
+          JSON.stringify(value)
+        )}`
+      );
+    }
+  });
   hdf.profiles.forEach((profile) => {
     const targets = [
       'version',
@@ -399,7 +434,10 @@ function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
       'summary',
       'license',
       'copyright',
-      'copyright_email'
+      'copyright_email',
+      'name',
+      'title',
+      'depends'
     ];
     targets.forEach((target) => {
       const value = _.get(profile, target);
@@ -408,6 +446,12 @@ function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
           `${escapeForwardSlashes(profile.name)}/${escapeForwardSlashes(
             target
           )}/${escapeForwardSlashes(value)}`
+        );
+      } else if (typeof value === 'object') {
+        typesArr.push(
+          `${escapeForwardSlashes(profile.name)}/${escapeForwardSlashes(
+            target
+          )}/${escapeForwardSlashes(JSON.stringify(value))}`
         );
       }
     });
@@ -463,15 +507,13 @@ function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
           }`
         );
       } else if (Array.isArray(control.tags[tag])) {
-        typesArr.push(
-          `Tags/${escapeForwardSlashes(tag)}/${
-            (control.tags[tag] as Array<string>).length > 0
-              ? escapeForwardSlashes(
-                  (control.tags[tag] as Array<string>).join(', ')
-                )
-              : '[]'
-          }`
-        );
+        const classifier =
+          (control.tags[tag] as string[]).length > 0
+            ? `[${escapeForwardSlashes(
+                (control.tags[tag] as string[]).join(', ')
+              )}]`
+            : '[]';
+        typesArr.push(`Tags/${escapeForwardSlashes(tag)}/${classifier}`);
       }
     }
   }
@@ -501,6 +543,7 @@ export function setupFindingType(
   const filename = slashSplit?.split('/')[slashSplit.split('/').length - 1];
 
   const typesArr = [
+    `MITRE/SAF/${HeimdallToolsVersion}-hdf2asff`,
     `File/Input/${filename}`,
     `Control/Code/${escapeForwardSlashes(
       control.layersOfControl
@@ -512,6 +555,8 @@ export function setupFindingType(
     )}`
   ];
 
+  // Add control metadata to the Finding Provider Fields
+  typesArr.push(...createControlMetadata(control));
   // Add all layers of profile info to the Finding Provider Fields
   typesArr.push(...createProfileInfo(context?.data));
   // Add segment/result information to Finding Provider Fields
