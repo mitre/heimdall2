@@ -236,7 +236,7 @@ export default class RegistrationModal extends Vue {
   }
 
   get passwordConfirmationErrors() {
-    const errors: Array<string> = [];
+    const errors: string[] = [];
     if (!this.$v.passwordConfirmation.$dirty) {
       return errors;
     }

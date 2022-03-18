@@ -508,9 +508,9 @@ function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
         );
       } else if (Array.isArray(control.tags[tag])) {
         const classifier =
-          (control.tags[tag] as Array<string>).length > 0
+          (control.tags[tag] as string[]).length > 0
             ? `[${escapeForwardSlashes(
-                (control.tags[tag] as Array<string>).join(', ')
+                (control.tags[tag] as string[]).join(', ')
               )}]`
             : '[]';
         typesArr.push(`Tags/${escapeForwardSlashes(tag)}/${classifier}`);

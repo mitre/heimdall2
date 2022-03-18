@@ -254,7 +254,7 @@ export class InspecIntake extends VuexModule {
                 count: b[1].filter((value) => _.get(object, value)).length
               };
         }
-      ) as unknown as Array<string> & {count: number};
+      ) as unknown as string[] & {count: number};
       const result = fingerprinted[0];
       if (fingerprinted.count !== 0) {
         return result;
