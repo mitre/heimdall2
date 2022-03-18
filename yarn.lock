@@ -4593,7 +4593,7 @@
   resolved "https://registry.yarnpkg.com/@vue/cli-overlay/-/cli-overlay-4.5.15.tgz#0700fd6bad39336d4189ba3ff7d25e638e818c9c"
   integrity sha512-0zI0kANAVmjFO2LWGUIzdGPMeE3+9k+KeRDXsUqB30YfRF7abjfiiRPq5BU9pOzlJbVdpRkisschBrvdJqDuDg==
 
-"@vue/cli-plugin-eslint@^5.0.1":
+"@vue/cli-plugin-eslint@^5.0.3":
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/@vue/cli-plugin-eslint/-/cli-plugin-eslint-5.0.3.tgz#47f00fea50205513f1908fbb1f93420760f6091c"
   integrity sha512-gp2UdXYp3ofXndD2vKWQ56e6GXwCkrkS5yBzfM6T9aKFS9+3TV5FipQGQf4O2V3rhlCjWulUV4i3uaQMRems6g==
@@ -4629,7 +4629,7 @@
   optionalDependencies:
     fork-ts-checker-webpack-plugin-v5 "npm:fork-ts-checker-webpack-plugin@^5.0.11"
 
-"@vue/cli-plugin-unit-jest@~5.0.1":
+"@vue/cli-plugin-unit-jest@~5.0.3":
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/@vue/cli-plugin-unit-jest/-/cli-plugin-unit-jest-5.0.3.tgz#0d0663889b89b80345edbd669e2dc2341504096d"
   integrity sha512-gpBFjlTRdZPQT7UZ9j4D9kGBNR+htLhKbyYO6IlClnOW/SXL98gmcaQV3bXv7sDjAj/Foh/PtB7Ob9FXgrbx3Q==
@@ -4792,7 +4792,7 @@
     shortid "^2.2.15"
     typescript "~4.5.5"
 
-"@vue/cli@^5.0.1":
+"@vue/cli@^5.0.3":
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/@vue/cli/-/cli-5.0.3.tgz#791323e51ed46ffc353927d8cfbf3a1338e787dc"
   integrity sha512-E9AE4OEi1Xld4rRMCdm8+1OtrBwZseFP3ugqVEhQ97MwKomliM2UuPQ8zHsJrcHIbKwPz7/2yDlPUwqkN9g0sw==
