@@ -173,20 +173,17 @@ export async function checkSplunkCredentials(
     );
     service.login((error, result) => {
       try {
-        if (error) {
-          if ('status' in error) {
-            if (error.status === 401) {
-              reject('Incorrect Username or Password');
-            }
+        if (error && error.status === 401) {
+          if (error.status === 401) {
+            reject('Incorrect Username or Password');
+          } else if ('data' in error) {
             reject(_.get(error, 'data.messages[0].text'));
-          } else {
-            reject(error);
           }
+          reject(error);
         } else if (result) {
           resolve(result);
-        } else {
-          reject(new Error('Failed to Login'));
         }
+        reject(new Error('Failed to Login'));
       } catch (e) {
         reject(e);
       }
