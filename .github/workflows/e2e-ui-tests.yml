@@ -1,5 +1,9 @@
 name: Run E2E Backend + Frontend Tests
 
+concurrency: 
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches: [master]
