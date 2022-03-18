@@ -21,10 +21,6 @@ In order to test your inspecjs changes in another application (for example Heimd
 
 ### NOTICE
 
-This software is currently in EARLY ALPHA DEVELOPMENT. No guarantees whatsoever are made to its safety, reliability, or accuracy with regards to the parsing and analyzing of inspec files. Do NOT use in production, and do NOT expect current API to remain stable. Use at your own risk.
-
-### NOTICE
-
 © 2022 The MITRE Corporation.
 
 Approved for Public Release; Distribution Unlimited. Case Number 18-3678.
