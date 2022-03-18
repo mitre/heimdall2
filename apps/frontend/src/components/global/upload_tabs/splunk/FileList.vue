@@ -8,7 +8,7 @@
       <span>Sign Out</span>
       <v-icon color="red" class="pr-2">mdi-logout</v-icon>
     </div>
-    <div class="d-flex flex-column">
+    <div class="d-flex">
       <v-text-field
         v-model="search"
         class="px-3"
@@ -16,6 +16,12 @@
         label="Search"
         hide-details
       />
+      <v-btn class="mt-3" icon @click="updateSearch">
+        <v-icon>mdi-refresh</v-icon>
+      </v-btn>
+    </div>
+
+    <div class="d-flex flex-column">
       <v-data-table
         v-model="selectedExecutions"
         :headers="headers"
@@ -43,24 +49,27 @@
 <script lang="ts">
 import {InspecIntakeModule} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
-import {
-  FileMetaData,
-  getAllExecutions,
-  getExecution,
-  SplunkClient
-} from '@/utilities/splunk_util';
+import {FileMetaData, SplunkConfig} from '@mitre/hdf-converters';
+import {SplunkReport} from '@mitre/hdf-converters/src/converters-from-hdf/splunk/splunk-report-types';
+import {SplunkMapper} from '@mitre/hdf-converters/src/splunk-mapper';
 import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';
+
 @Component({})
 export default class FileList extends Vue {
-  @Prop({type: Object, required: true}) readonly splunkClient!: SplunkClient;
+  @Prop({type: Object, required: true}) readonly splunkConfig!: SplunkConfig;
 
-  search = 'index="*" "meta.subtype"=header';
+  splunkConverter?: SplunkMapper;
+
+  executions: Omit<FileMetaData, 'profile_sha256'>[] = [];
+  selectedExecutions: Omit<FileMetaData, 'profile_sha256'>[] = [];
+
+  search = '';
+  awaitingSearch = false;
+  initalSearchDone = false;
   loading = false;
-  executions: FileMetaData[] = [];
-  selectedExecutions: FileMetaData[] = [];
 
   /** Table info */
   headers = [
@@ -72,45 +81,69 @@ export default class FileList extends Vue {
     },
     {
       text: 'Time',
-      value: 'start_time'
-    },
-    {
-      text: 'Action',
-      value: 'action',
-      sortable: false
+      value: 'parse_time'
     }
   ];
 
   @Watch('search')
   async onUpdateSearch() {
-    this.mounted();
+    // On first load we update the search field which triggers this function, instead of waiting this time we can just search right away
+    if (!this.initalSearchDone) {
+      this.initalSearchDone = true;
+      this.updateSearch();
+    } else if (!this.awaitingSearch) {
+      setTimeout(() => {
+        this.updateSearch();
+        this.awaitingSearch = false;
+      }, 1000); // Wait for user input for 1 second before executing our query
+      this.awaitingSearch = true;
+    }
+  }
+
+  async updateSearch() {
+    this.loading = true;
+    this.splunkConverter = new SplunkMapper(this.splunkConfig, true);
+    const results = await this.splunkConverter.queryData(this.search);
+    this.executions = [];
+    results.forEach((result: SplunkReport) => {
+      // Only get header objects
+      if (_.get(result, 'meta.subtype').toLowerCase() === 'header') {
+        this.executions.push(result.meta);
+      }
+    });
+    this.loading = false;
   }
 
   async mounted() {
-    this.loading = true;
-    this.executions = await getAllExecutions(
-      this.splunkClient,
-      this.search
-    ).then((executions) => {
-      this.loading = false;
-      return executions;
-    });
+    this.search = `search index="${this.splunkConfig.index}" meta.subtype="header"`;
   }
 
   async loadResults() {
     this.loading = true;
-    const files = this.selectedExecutions.map(async (execution) => {
-      return getExecution(this.splunkClient, execution.guid).then(
-        async (result) => {
+    const files = this.selectedExecutions.map(
+      async (execution: Partial<FileMetaData>) => {
+        const hdf = await this.splunkConverter
+          ?.toHdf(execution.guid || '')
+          .catch((error) => {
+            SnackbarModule.failure(error);
+            this.loading = false;
+            throw error;
+          });
+        if (hdf) {
           return InspecIntakeModule.loadText({
-            text: JSON.stringify(result),
-            filename: _.get(result, 'meta.filename')
+            text: JSON.stringify(hdf),
+            filename: _.get(hdf, 'meta.filename')
           }).catch((err) => {
             SnackbarModule.failure(String(err));
           });
+        } else {
+          SnackbarModule.failure('Attempted to load an undefined executuion');
+          throw new Error('Attempted to load an undefined executuion');
         }
-      );
-    });
+      }
+    );
+    await Promise.all(files);
+    this.loading = false;
     this.$emit('got-files', files);
   }
 
