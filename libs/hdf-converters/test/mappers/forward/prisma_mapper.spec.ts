@@ -12,17 +12,14 @@ describe('prisma_mapper', () => {
     );
 
     const converted = mapper.toHdf();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    // Object.entries(converted).forEach(([index, obj]) => {
-    //   const fileName =
-    //     'sample_jsons/prisma_mapper/' + obj.platform.target_id + '.json';
-    //   fs.writeFileSync(fileName, JSON.stringify(obj));
-    // });
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    Object.entries(converted).forEach(([index, obj]) => {
-      const fileName =
-        'sample_jsons/prisma_mapper/' + obj.platform.target_id + '.json';
+    Object.entries(converted).forEach(([, obj]) => {
+      const fileName = `sample_jsons/prisma_mapper/${obj.platform.target_id}.json`;
+      fs.writeFileSync(fileName, JSON.stringify(obj, null, 2));
+    });
+
+    Object.entries(converted).forEach(([, obj]) => {
+      const fileName = `sample_jsons/prisma_mapper/${obj.platform.target_id}.json`;
       expect(omitVersions(obj)).toEqual(
         omitVersions(
           JSON.parse(

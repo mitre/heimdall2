@@ -11,28 +11,48 @@ import {
 export type PrismaControls = {
   records: Record<string, string>[];
 };
-// There is a Common Vulnerability Scoring System (cvss) field that contains a cvss qualitative severity rating,
-// however this field does not correlate to the "Severity" (low, moderate, important, high, and critical) field
-// that is mapped to the hdf "impact" field. Severity is mapped to the SEVERITY_LOOKUP"
+
 const SEVERITY_LOOKUP: Record<string, number> = {
   low: 0.3,
   moderate: 0.5,
-  important: 0.7,
-  high: 0.9,
+  high: 0.7,
+  important: 0.9,
   critial: 1
 };
 
+const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
+const BASE_NIST_TAG = ['SI-2', 'RA-5'];
+
+function nistTag(cveTag: Record<string, string>): string[] {
+  if (!cveTag) {
+    return DEFAULT_NIST_TAG;
+  } else {
+    return BASE_NIST_TAG;
+  }
+}
+function getId(value: Record<string, string>): string {
+  return (
+    _.get(value, 'Compliance ID') +
+    '-' +
+    (_.get(value, 'CVE ID') ||
+      _.get(value, 'Distro') + '-' + _.get(value, 'Severity'))
+  );
+}
 function getTitle(item: Record<string, string>): string {
   const hostName = _.get(item, 'Hostname');
   const distro = _.get(item, 'Distro');
   const type = _.get(item, 'Type');
   return hostName.toString().concat(distro, type);
 }
+function getImpact(severity: string): number {
+  if (severity) {
+    return SEVERITY_LOOKUP[severity];
+  } else {
+    return 0.5;
+  }
+}
 
 export class PrismaControlMapper extends BaseConverter {
-  data: PrismaControls = {
-    records: []
-  };
   mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
@@ -46,7 +66,7 @@ export class PrismaControlMapper extends BaseConverter {
     profiles: [
       {
         name: 'Palo Alto Prisma Cloud Tool',
-        version: HeimdallToolsVersion,
+        version: '',
         title: 'Prisma Cloud Scan Report',
         maintainer: null,
         summary: '',
@@ -62,32 +82,18 @@ export class PrismaControlMapper extends BaseConverter {
           {
             path: 'records',
             key: 'id',
+            desc: {path: 'Description'},
             tags: {
+              nist: {path: 'CVE ID', transformer: nistTag},
               cve: {path: 'CVE ID'},
               cvss: {path: 'cssv'}
             },
             descriptions: [],
             refs: [{url: {path: 'Vulnerability Link'}}],
             source_location: {path: 'Hostname'},
-            id: {path: 'Compliance ID'},
+            id: {transformer: getId},
             title: {transformer: getTitle},
-            impact: {
-              path: 'Severity',
-              transformer: (
-                severity?:
-                  | 'low'
-                  | 'moderate'
-                  | 'important'
-                  | 'high'
-                  | 'critical'
-              ) => {
-                if (severity) {
-                  return SEVERITY_LOOKUP[severity];
-                } else {
-                  return 0.5;
-                }
-              }
-            },
+            impact: {path: 'Severity', transformer: getImpact},
             code: {
               transformer: (obj: Record<string, string>) =>
                 JSON.stringify(obj, null, 2)
@@ -151,15 +157,13 @@ export class PrismaControlMapper extends BaseConverter {
 
   constructor(prismaControls: Record<string, string>[]) {
     super({records: prismaControls});
-    // Initializing BaseConverter with super did NOT properly initialized the data variable
-    this.data = {records: prismaControls};
   }
 }
 
 export class PrismaMapper {
   data: Record<string, string>[] = [];
 
-  toHdf(): ExecJSON.Execution | ExecJSON.Execution[] {
+  toHdf(): ExecJSON.Execution[] {
     const executions: ExecJSON.Execution[] = [];
     const hostnameToControls: Record<string, Record<string, string>[]> = {};
     this.data.forEach((record: Record<string, string>) => {

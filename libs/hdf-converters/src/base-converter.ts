@@ -5,8 +5,6 @@ import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import Papa from 'papaparse';
 
-//import {PrismaDTO} from './prisma-mapper';
-
 export interface ILookupPath {
   path?: string | string[];
   transformer?: (value: any) => unknown;
@@ -63,6 +61,16 @@ export function parseXml(xml: string): Record<string, unknown> {
   return parser.parse(xml, options);
 }
 
+export function parseCsv(csv: string): unknown[] {
+  const result = Papa.parse(csv.trim(), {header: true});
+
+  if (result.errors.length) {
+    throw result.errors;
+  }
+
+  return result.data;
+}
+
 export function impactMapping(
   mapping: Map<string, number>
 ): (severity: unknown) => number {
@@ -73,15 +81,6 @@ export function impactMapping(
       return 0;
     }
   };
-}
-export function parseCsv(csv: string): unknown[] {
-  const result = Papa.parse(csv.trim(), {header: true});
-
-  if (result.errors.length) {
-    throw result.errors;
-  }
-
-  return result.data;
 }
 
 // eslint-disable-next-line @typescript-eslint/ban-types
