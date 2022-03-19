@@ -22,6 +22,7 @@ const SEVERITY_LOOKUP: Record<string, number> = {
 
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 const BASE_NIST_TAG = ['SI-2', 'RA-5'];
+const DASH = '-';
 
 function nistTag(cveTag: Record<string, string>): string[] {
   if (!cveTag) {
@@ -31,12 +32,11 @@ function nistTag(cveTag: Record<string, string>): string[] {
   }
 }
 function getId(value: Record<string, string>): string {
-  return (
-    _.get(value, 'Compliance ID') +
-    '-' +
-    (_.get(value, 'CVE ID') ||
-      _.get(value, 'Distro') + '-' + _.get(value, 'Severity'))
-  );
+  const complianceID = _.get(value, 'Compliance ID');
+  const cveID = _.get(value, 'CVE ID');
+  const distro = _.get(value, 'Distro');
+  const severity = _.get(value, 'Severity');
+  return complianceID.concat(DASH, (cveID ? cveID : `${distro}${DASH}${severity}`)); 
 }
 function getTitle(item: Record<string, string>): string {
   const hostName = _.get(item, 'Hostname');
