@@ -10,25 +10,29 @@
   ],
   "properties": {
     "name": {
-      "type": "string"
+      "type": "string",
+      "description": "The name - must be unique."
     },
     "supports": {
       "type": "array",
       "items": {
         "$ref": "#/definitions/Supported_Platform"
-      }
+      },
+      "description": "The set of supported platform targets."
     },
     "controls": {
       "type": "array",
       "items": {
         "$ref": "#/definitions/Profile_JSON_Control"
-      }
+      },
+      "description": "The set of controls - contains no findings as the assessment has not yet occurred."
     },
     "groups": {
       "type": "array",
       "items": {
         "$ref": "#/definitions/Control_Group"
-      }
+      },
+      "description": "A set of descriptions for the control groups.  Example: the ids of the controls."
     },
     "inputs": {
       "type": [
@@ -37,22 +41,27 @@
       ],
       "items": {
         "type": "object",
-        "additionalProperties": true
-      }
+        "additionalProperties": true,
+        "description": "An input or attribute used in the run."
+      },
+      "description": "The input(s) or attribute(s) used to be in the run."
     },
     "sha256": {
-      "type": "string"
+      "type": "string",
+      "description": "The checksum of the profile."
     },
     "status": {
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "description": "The status.  Example: skipped."
     },
     "generator": {
       "anyOf": [
         {
-          "$ref": "#/definitions/Generator"
+          "$ref": "#/definitions/Generator",
+          "description": "The tool that generated this file.  Example: Chef Inspec."
         },
         {
           "type": "null"
@@ -63,31 +72,36 @@
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "description": "The version of the profile."
     },
     "title": {
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "description": "The title - should be human readable."
     },
     "maintainer": {
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "description": "The maintainer(s)."
     },
     "copyright": {
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "description": "The copyright holder(s)."
     },
     "copyright_email": {
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "description": "The email address or other contract information of the copyright holder(s)."
     },
     "depends": {
       "type": [
@@ -96,9 +110,11 @@
       ],
       "items": {
         "$ref": "#/definitions/Dependency"
-      }
+      },
+      "description": "The set of dependencies this profile depends on.  Example: an overlay profile is dependent on another profile."
     }
   },
+  "description": "Information on the set of controls that can be assessed.  Example: it can include the name of the Inspec profile.",
   "title": "Profile JSON Profile",
   "definitions": {
     "Control_Group": {
@@ -111,23 +127,24 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "The unique identifier of the group"
+          "description": "The unique identifier for the group.  Example: the relative path to the file specifying the controls."
         },
         "title": {
           "type": [
             "null",
             "string"
           ],
-          "description": "The name of the group"
+          "description": "The title of the group - should be human readable."
         },
         "controls": {
           "type": "array",
           "items": {
             "type": "string"
           },
-          "description": "The control IDs in this group"
+          "description": "The set of controls as specified by their ids in this group.  Example: 'V-75443'."
         }
       },
+      "description": "Descriptions for controls in a group, such as the list of all the controls.",
       "title": "Control Group"
     },
     "Dependency": {
@@ -139,57 +156,67 @@
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The name/assigned alias."
         },
         "url": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The address of the dependency."
         },
         "branch": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The branch name for a git repo."
         },
         "path": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The relative path if the dependency is locally available."
         },
         "status_message": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The reason for the status if it is 'failed' or 'skipped'."
         },
         "status": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The status.  Should be: 'loaded', 'failed', or 'skipped'."
         },
         "git": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The location of the git repo.  Example: 'https://github.com/mitre/canonical-ubuntu-18.04-lts-stig-baseline.git'."
         },
         "supermarket": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The 'user/profilename' attribute for a Supermarket server."
         },
         "compliance": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The 'user/profilename' attribute for an Automate server."
         }
       },
+      "description": "A dependency for a profile.  Can include relative paths or urls for where to find the dependency.",
       "title": "Dependency"
     },
     "Generator": {
@@ -202,13 +229,14 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "The name of the software that generated this report."
+          "description": "The name.  Example: Chef Inspec."
         },
         "version": {
           "type": "string",
-          "description": "The version of the software that generated this report."
+          "description": "The version.  Example: 4.18.108."
         }
       },
+      "description": "The tool that generated this file.  Example: Chef Inspec.",
       "title": "Generator"
     },
     "Profile_JSON_Control": {
@@ -223,24 +251,27 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "The ID of this control"
+          "description": "The id."
         },
         "title": {
           "type": [
             "null",
             "string"
-          ]
+          ],
+          "description": "The title - is nullable."
         },
         "desc": {
           "type": [
             "null",
             "string"
-          ]
+          ],
+          "description": "The description for the overarching control."
         },
         "descriptions": {
           "anyOf": [
             {
-              "$ref": "#/definitions/Profile_JSON_Control_Descriptions"
+              "$ref": "#/definitions/Profile_JSON_Control_Descriptions",
+              "description": "A set of additional descriptions.  Example: the 'fix' text."
             },
             {
               "type": "null"
@@ -250,7 +281,8 @@
         "impact": {
           "type": "number",
           "minimum": 0,
-          "maximum": 1
+          "maximum": 1,
+          "description": "The impactfulness or severity."
         },
         "refs": {
           "type": [
@@ -259,20 +291,23 @@
           ],
           "items": {
             "$ref": "#/definitions/Reference"
-          }
+          },
+          "description": "The set of references to external documents."
         },
         "tags": {
           "type": "object",
-          "additionalProperties": true
+          "additionalProperties": true,
+          "description": "A set of tags - usually metadata."
         },
         "code": {
           "type": "string",
-          "description": "The raw source code of the control. Note that if this is an overlay control, it does not include the underlying source code"
+          "description": "The raw source code of the control. Note that if this is an overlay control, it does not include the underlying source code."
         },
         "source_location": {
           "anyOf": [
             {
-              "$ref": "#/definitions/Source_Location"
+              "$ref": "#/definitions/Source_Location",
+              "description": "The explicit location of the control within the source code."
             },
             {
               "type": "null"
@@ -280,14 +315,16 @@
           ]
         }
       },
+      "description": "The set of all tests within the control.",
       "title": "Profile JSON Control"
     },
     "Profile_JSON_Control_Descriptions": {
       "type": "object",
-      "aditionalProperties": {
+      "additionalProperties": {
         "type": "string"
       },
       "required": [],
+      "description": "An arbitrary set of descriptions for a control.",
       "title": "Profile JSON Control Descriptions"
     },
     "Reference": {
@@ -301,7 +338,8 @@
             "ref": {
               "type": "string"
             }
-          }
+          },
+          "description": "A human readable/meaningful reference.  Example: a book title."
         },
         {
           "type": "object",
@@ -312,7 +350,8 @@
             "url": {
               "type": "string"
             }
-          }
+          },
+          "description": "A url pointing at the reference."
         },
         {
           "type": "object",
@@ -323,7 +362,8 @@
             "uri": {
               "type": "string"
             }
-          }
+          },
+          "description": "A uri pointing at the reference."
         },
         {
           "type": "object",
@@ -338,9 +378,11 @@
                 "additionalProperties": true
               }
             }
-          }
+          },
+          "description": ""
         }
       ],
+      "description": "A reference to an external document.",
       "title": "Reference"
     },
     "Source_Location": {
@@ -352,17 +394,18 @@
             "string",
             "null"
           ],
-          "description": "Path to the file that this statement originates from"
+          "description": "Path to the file that this control originates from."
         },
         "line": {
           "type": [
             "number",
             "null"
           ],
-          "description": "The line at which this statement is located in the file"
+          "description": "The line on which this control is located."
         }
       },
       "required": [],
+      "description": "The explicit location of the control.",
       "title": "Source Location"
     },
     "Supported_Platform": {
@@ -374,39 +417,46 @@
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The platform family.  Example: 'redhat'."
         },
         "platform-name": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The platform name - can include wildcards.  Example: 'debian'."
         },
         "platform": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The location of the platform.  Can be: 'os', 'aws', 'azure', or 'gcp'."
         },
         "release": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The release of the platform.  Example: '20.04' for 'ubuntu'."
         },
         "os-family": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "Deprecated in favor of platform-family."
         },
         "os-name": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "Deprecated in favor of platform-name."
         }
       },
+      "description": "A supported platform target.  Example: the platform name being 'ubuntu'.",
       "title": "Supported Platform"
     }
   }
