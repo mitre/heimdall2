@@ -25,7 +25,7 @@ function calculateColor(colorName: string): string {
     // Make a (padded) integer representing the hex code
     const value = (1 << 24) + (colors[0] << 16) + (colors[1] << 8) + colors[2];
     // Parse it as hex, and replace the leading 1 with a #
-    return `#${value.toString(16).substr(1)}`;
+    return `#${value.toString(16).substring(1)}`;
   } else {
     throw new Error(`Error generating color ${colorName}`);
   }
