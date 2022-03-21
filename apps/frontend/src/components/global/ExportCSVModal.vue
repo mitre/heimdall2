@@ -132,7 +132,7 @@ export default class ExportCSVModal extends Vue {
   descriptionsToString(
     descriptions?:
       | ExecJSON.ControlDescription[]
-      | {[key: string]: unknown}
+      | {[key: string]: string}
       | null
   ): string {
     let result = '';
