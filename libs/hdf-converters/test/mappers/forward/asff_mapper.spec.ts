@@ -12,7 +12,7 @@ describe('ASFF Mapper', () => {
       )
     );
     expect(_.mapValues(mapper.toHdf(), omitVersions)).toEqual({
-      'CIS AWS Foundations Benchmark v1.2.0': omitVersions(
+      'CIS AWS Foundations Benchmark v1.2.0.json': omitVersions(
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/asff_mapper/asff-cis_aws-foundations_benchmark_v1.2.0-hdf.json',
@@ -22,7 +22,7 @@ describe('ASFF Mapper', () => {
           )
         )
       ),
-      'AWS Foundational Security Best Practices v1.0.0': omitVersions(
+      'AWS Foundational Security Best Practices v1.0.0.json': omitVersions(
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/asff_mapper/asff-aws_foundational_security_best_practices_v1.0.0-hdf.json',
@@ -40,11 +40,9 @@ describe('ASFF Mapper', () => {
       fs.readFileSync(
         'sample_jsons/asff_mapper/sample_input_report/prowler_sample.json',
         {encoding: 'utf-8'}
-      ),
-      undefined,
-      {name: 'Prowler', title: 'Prowler Findings'}
+      )
     );
-    expect(omitVersions(mapper.toHdf()['Prowler'])).toEqual(
+    expect(omitVersions(mapper.toHdf()['Prowler.json'])).toEqual(
       omitVersions(
         JSON.parse(
           fs.readFileSync('sample_jsons/asff_mapper/prowler-hdf.json', {
@@ -60,11 +58,9 @@ describe('ASFF Mapper', () => {
       fs.readFileSync(
         'sample_jsons/asff_mapper/sample_input_report/prowler-sample.asff-json',
         {encoding: 'utf-8'}
-      ),
-      undefined,
-      {name: 'Prowler', title: 'Prowler Findings'}
+      )
     );
-    expect(omitVersions(mapper.toHdf()['Prowler'])).toEqual(
+    expect(omitVersions(mapper.toHdf()['Prowler.json'])).toEqual(
       omitVersions(
         JSON.parse(
           fs.readFileSync('sample_jsons/asff_mapper/prowler-hdf.json', {
@@ -80,11 +76,9 @@ describe('ASFF Mapper', () => {
       fs.readFileSync(
         'sample_jsons/asff_mapper/sample_input_report/trivy-image_golang-1.12-alpine_sample.json',
         {encoding: 'utf-8'}
-      ),
-      undefined,
-      {name: 'Trivy', title: 'Trivy Findings'}
+      )
     );
-    expect(omitVersions(mapper.toHdf()['Aqua Security - Trivy'])).toEqual(
+    expect(omitVersions(mapper.toHdf()['Aqua Security - Trivy.json'])).toEqual(
       omitVersions(
         JSON.parse(
           fs.readFileSync(
@@ -105,9 +99,7 @@ describe('ASFF Mapper', () => {
     );
     expect(
       omitVersions(
-        mapper.toHdf()[
-          'reverse-proxy - second-layer-example-inspec-overlay-profile-against-1st-layer-example-inspec-overlay-profile'
-        ]
+        mapper.toHdf()['example-3-layer-rh7-overlay_02092022_original.json']
       )
     ).toEqual(
       omitVersions(

@@ -287,12 +287,16 @@ function getProwler(): Record<string, Function> {
   const filename = (findings: Record<string, unknown>[]): string => {
     return `${productName(findings)}.json`;
   };
+  const meta = (): Record<string, string> => {
+    return {name: 'Prowler', title: 'Prowler Findings'};
+  };
   return {
     subfindingsCodeDesc,
     findingId,
     productName,
     desc,
-    filename
+    filename,
+    meta
   };
 }
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -512,13 +516,17 @@ function getTrivy(): Record<string, Function> {
   const filename = (): string => {
     return `${productName()}.json`;
   };
+  const meta = (): Record<string, string> => {
+    return {name: 'Trivy', title: 'Trivy Findings'};
+  };
   return {
     findingId,
     findingNistTag,
     subfindingsStatus,
     subfindingsMessage,
     productName,
-    filename
+    filename,
+    meta
   };
 }
 
@@ -652,18 +660,8 @@ function getHDF2ASFF(): Record<string, Function> {
 }
 
 export class ASFFMapper extends BaseConverter {
-  meta: Record<string, string | undefined> | null;
+  meta: Record<string, string | undefined> | undefined;
   supportingDocs: Map<SpecialCasing, Record<string, Record<string, unknown>>>;
-  constructor(
-    asff: Record<string, unknown>,
-    supportingDocs: Map<SpecialCasing, Record<string, Record<string, unknown>>>,
-    meta: null | Record<string, string | undefined> = null
-  ) {
-    super(asff);
-    this.meta = meta;
-    this.supportingDocs = supportingDocs;
-    this.setMappings();
-  }
 
   statusReason(finding: unknown): string | undefined {
     return _.get(finding, 'Compliance.StatusReasons')
@@ -823,8 +821,16 @@ export class ASFFMapper extends BaseConverter {
                 ],
                 refs: [
                   {
-                    url: {
-                      path: 'SourceUrl' // TODO: check if this works without transformer
+                    transformer: (
+                      finding: Record<string, unknown>
+                    ): Record<string, unknown> => {
+                      return {
+                        ...(_.has(finding, 'SourceUrl') && {
+                          url: {
+                            path: 'SourceUrl'
+                          }
+                        })
+                      };
                     }
                   }
                 ],
@@ -976,16 +982,27 @@ export class ASFFMapper extends BaseConverter {
       }
     ) as MappedTransform<ExecJSON.Execution, ILookupPath>;
   }
+
+  constructor(
+    asff: Record<string, unknown>,
+    supportingDocs: Map<SpecialCasing, Record<string, Record<string, unknown>>>,
+    meta: Record<string, string | undefined> | undefined = undefined
+  ) {
+    super(asff);
+    this.meta = meta;
+    this.supportingDocs = supportingDocs;
+    this.setMappings();
+  }
 }
 
 export class ASFFResults {
   data: Record<string, Record<string, unknown>[]>;
-  meta: Record<string, string | undefined> | null;
+  meta: Record<string, string | undefined> | undefined;
   supportingDocs: Map<SpecialCasing, Record<string, Record<string, unknown>>>;
   constructor(
     asffJson: string,
     securityhubStandardsJsonArray: undefined | string[] = undefined,
-    meta: null | Record<string, string | undefined> = null
+    meta: Record<string, string | undefined> | undefined = undefined
   ) {
     this.meta = meta;
     this.supportingDocs = new Map<
@@ -1005,16 +1022,16 @@ export class ASFFResults {
       )(securityhubStandardsJsonArray)
     );
     const findings = _.get(fixFileInput(asffJson), 'Findings');
-    this.data = _.groupBy(findings, (val) => {
-      const productInfo = (_.get(val, 'ProductArn') as string)
+    this.data = _.groupBy(findings, (finding) => {
+      const productInfo = (_.get(finding, 'ProductArn') as string)
         .split(':')
         .slice(-1)[0]
         .split('/');
       const defaultFilename = `${productInfo[1]} | ${productInfo[2]}.json`;
       return externalProductHandler(
         this,
-        whichSpecialCase(val),
-        findings,
+        whichSpecialCase(finding),
+        finding,
         'filename',
         encode(defaultFilename)
       );
@@ -1043,9 +1060,16 @@ export class ASFFResults {
           'supportingDocs',
           this.supportingDocs
         ) as Map<SpecialCasing, Record<string, Record<string, unknown>>>,
-        this.meta // TODO: make an external call for this too
+        externalProductHandler(
+          this,
+          whichSpecialCase(
+            _.get(wrapped, 'Findings[0]') as unknown as Record<string, unknown>
+          ),
+          undefined,
+          'meta',
+          this.meta
+        ) as Record<string, string>
       ).toHdf();
     });
   }
 }
-// externalproducthandler wrappers around the arguments (wrapped DONE, docs DONE, meta) in the tohdf to put the execution data finding in the supporting docs and then remove it from the list of findings and then plan can continue as before just make sure to write subfindingsId for line 135
