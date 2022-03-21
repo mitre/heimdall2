@@ -9,6 +9,7 @@ import {
 import _ from 'lodash';
 import moment from 'moment';
 import {version as HeimdallToolsVersion} from '../../../package.json';
+import {getDescription} from '../../utils/global';
 import {IFindingASFF, IOptions} from './asff-types';
 import {
   FromHdfToAsffMapper,
@@ -327,21 +328,17 @@ export function setupTitle(control: SegmentedControl) {
 
 export function setupDescr(control: SegmentedControl) {
   // Check text can either be a description or a tag
-  const checktext: string =
-    control.descriptions?.find(
-      (description: {label: string}) => description.label === 'check'
-    )?.data ||
-    (control.tags['check'] as string) ||
+  const checkText: string =
+    getDescription(control.descriptions || [], 'check') ||
+    (control.tags.check as string) ||
     'Check not available';
 
   const currentVal = _.truncate(
-    cleanText(`${control.desc} -- Check Text: ${checktext}`),
+    cleanText(`${control.desc} -- Check Text: ${checkText}`),
     {length: 1024, omission: '[SEE FULL TEXT IN AssumeRolePolicyDocument]'}
   );
 
-  const caveat = control.descriptions?.find(
-    (description: {label: string}) => description.label === 'caveat'
-  )?.data;
+  const caveat = getDescription(control.descriptions || [], 'caveat');
 
   if (caveat) {
     return _.truncate(
@@ -404,13 +401,8 @@ function createProfileInfo(hdf?: ExecJSON.Execution): string[] {
 
 function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
   let typesArr = [`MITRE/SAF/${HeimdallToolsVersion}-hdf2asff`];
-  const executuionTargets = [
-    'platform',
-    'statistics',
-    'version',
-    'passthrough'
-  ];
-  executuionTargets.forEach((target) => {
+  const executionTargets = ['platform', 'statistics', 'version', 'passthrough'];
+  executionTargets.forEach((target) => {
     const value = _.get(hdf, target);
     if (typeof value === 'string') {
       typesArr.push(
@@ -522,13 +514,24 @@ function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
 
 function createDescriptionInfo(control: ExecJSON.Control): string[] {
   const typesArr: string[] = [];
-  control.descriptions?.forEach((description) => {
-    typesArr.push(
-      `Descriptions/${escapeForwardSlashes(
-        description.label
-      )}/${escapeForwardSlashes(cleanText(description.data) || 'No Value')}`
-    );
-  });
+  if (Array.isArray(control.descriptions)) {
+    control.descriptions?.forEach((description) => {
+      typesArr.push(
+        `Descriptions/${escapeForwardSlashes(
+          description.label
+        )}/${escapeForwardSlashes(cleanText(description.data) || 'No Value')}`
+      );
+    });
+  } else {
+    Object.entries(control.descriptions || {}).forEach(([key, value]) => {
+      typesArr.push(
+        `Descriptions/${escapeForwardSlashes(key)}/${escapeForwardSlashes(
+          cleanText(value as string) || 'No Value'
+        )}`
+      );
+    });
+  }
+
   return typesArr;
 }
 
@@ -571,9 +574,7 @@ export function setupFindingType(
 
 export function getFixForControl(control: SegmentedControl) {
   return (
-    control.descriptions?.find(
-      (description: {label: string}) => description.label === 'fix'
-    )?.data ||
+    getDescription(control.descriptions || [], 'fix') ||
     control.tags.fix ||
     'Fix not available'
   );
@@ -589,14 +590,12 @@ export function setupRemRec(control: SegmentedControl) {
 }
 
 export function setupProdFieldCheck(control: SegmentedControl) {
-  const checktext: string =
-    control.descriptions?.find(
-      (description: {label: string}) => description.label === 'check'
-    )?.data ||
-    (control.tags['check'] as string) ||
+  const checkText: string =
+    getDescription(control.descriptions || [], 'check') ||
+    (control.tags.check as string) ||
     'Check not available';
 
-  return _.truncate(checktext, {length: 2048, omission: ''});
+  return _.truncate(checkText, {length: 2048, omission: ''});
 }
 
 export function setupResourcesID(
