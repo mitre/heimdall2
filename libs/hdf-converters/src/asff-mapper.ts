@@ -81,6 +81,8 @@ type ExternalProductHandlerOutputs =
   | string
   | string[]
   | Record<string, unknown>
+  | Map<SpecialCasing, Record<string, Record<string, unknown>>>
+  | MappedTransform<ExecJSON.Execution, ILookupPath>
   | undefined;
 
 function externalProductHandler(
@@ -109,6 +111,105 @@ function externalProductHandler(
       return defaultVal;
     }
   }
+}
+
+// consolidate the array of controls which were generated 1:1 with findings in order to have subfindings/results
+function consolidate(
+  context: ASFFMapper,
+  input: unknown[],
+  file: Record<string, unknown>
+): ExecJSON.Control[] {
+  // Group Sub-findings by HDF ID
+  const allFindings = _.get(file, 'Findings') as Record<string, unknown>[];
+  if (input.length !== allFindings.length) {
+    throw new Error(
+      'The number of generated controls should be the same as the number of findings at this point in the process.'
+    );
+  }
+  const idGroups = _.groupBy(
+    _.zip(input, allFindings),
+    (value: [ExecJSON.Control, Record<string, unknown>]) => {
+      const [hdfControl, asffFinding] = value;
+      // TODO: unsure if this is actually necessary to do via externalProductHandler
+      return externalProductHandler(
+        context,
+        whichSpecialCase(asffFinding),
+        asffFinding,
+        'subfindingsId',
+        _.get(hdfControl, 'id')
+      ) as string;
+    }
+  ) as Record<string, [ExecJSON.Control, Record<string, unknown>][]>;
+
+  const output: ExecJSON.Control[] = [];
+  Object.entries(idGroups).forEach((idGroup) => {
+    const [id, data] = idGroup;
+    const group = data.map((d) => d[0]);
+    const findings = data.map((d) => d[1]);
+
+    const productInfo = (_.get(findings[0], 'ProductArn') as string)
+      .split(':')
+      .slice(-1)[0]
+      .split('/');
+    const productName = externalProductHandler(
+      context,
+      whichSpecialCase(findings[0]),
+      findings,
+      'productName',
+      encode(`${productInfo[1]}/${productInfo[2]}`)
+    );
+
+    const item: ExecJSON.Control = {
+      // Add productName to ID if any ID's are the same across products
+      id: id,
+      title: `${productName}: ${_.uniq(group.map((d) => d.title)).join(';')}`,
+      tags: _.mergeWith(
+        {},
+        ...group.map((d) => d.tags),
+        (acc: unknown, cur: unknown) => {
+          if (acc === undefined || cur === undefined) {
+            return undefined;
+          } else if (_.isEqual(acc, cur)) {
+            return acc;
+          } else {
+            return _.uniq(_.concat([], acc, cur));
+          }
+        }
+      ),
+      impact: Math.max(...group.map((d) => d.impact)),
+      desc: externalProductHandler(
+        context,
+        whichSpecialCase(findings[0]),
+        group,
+        'desc',
+        _.uniq(group.map((d) => d.desc)).join('\n')
+      ) as string,
+      descriptions: group
+        .map((d) => d.descriptions)
+        .flat()
+        .filter(
+          (element, index, arr) =>
+            element !== null &&
+            element !== undefined &&
+            element.data !== '' &&
+            index ===
+              arr.findIndex(
+                (e) => e !== null && e !== undefined && e.data === element.data
+              ) // https://stackoverflow.com/a/36744732/645647
+        ) as ExecJSON.ControlDescription[],
+      refs: group
+        .map((d) => d.refs)
+        .flat()
+        .filter(
+          (element) => _.get(element, 'url') !== undefined
+        ) as ExecJSON.Reference[],
+      source_location: {},
+      code: JSON.stringify({Findings: findings}, null, 2),
+      results: group.map((d) => d.results).flat() as ExecJSON.ControlResult[]
+    };
+    output.push(item);
+  });
+  return output;
 }
 
 function wrapWithFindingsObject(
@@ -142,6 +243,7 @@ function fixFileInput(
   }
   return wrapWithFindingsObject(output);
 }
+
 // eslint-disable-next-line @typescript-eslint/ban-types
 function getFirewallManager(): Record<string, Function> {
   const findingId = (finding: Record<string, unknown>): string =>
@@ -157,9 +259,13 @@ function getFirewallManager(): Record<string, Function> {
       )}`
     );
   };
+  const filename = (findings: Record<string, unknown>[]): string => {
+    return `${productName(findings)}.json`;
+  };
   return {
     findingId,
-    productName
+    productName,
+    filename
   };
 }
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -178,11 +284,15 @@ function getProwler(): Record<string, Function> {
     return encode(_.get(finding, 'ProductFields.ProviderName') as string);
   };
   const desc = (): string => ' ';
+  const filename = (findings: Record<string, unknown>[]): string => {
+    return `${productName(findings)}.json`;
+  };
   return {
     subfindingsCodeDesc,
     findingId,
     productName,
-    desc
+    desc,
+    filename
   };
 }
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -195,7 +305,7 @@ function getSecurityHub(): Record<string, Function> {
         _.get(finding, FINDING_STANDARDS_CONTROL_ARN)
     );
   };
-  const supportingDocs = (standards: string[] | undefined) => {
+  const securityhubSupportingDocs = (standards: string[] | undefined) => {
     let controls: null | unknown[];
     try {
       if (Array.isArray(standards)) {
@@ -337,13 +447,17 @@ function getSecurityHub(): Record<string, Function> {
       }`
     );
   };
+  const filename = (findings: Record<string, unknown>[]): string => {
+    return `${productName(findings)}.json`;
+  };
   return {
-    supportingDocs,
+    securityhubSupportingDocs,
     findingId,
     findingImpact,
     findingNistTag,
     findingTitle,
-    productName
+    productName,
+    filename
   };
 }
 
@@ -395,12 +509,16 @@ function getTrivy(): Record<string, Function> {
   const productName = (): string => {
     return 'Aqua Security - Trivy';
   };
+  const filename = (): string => {
+    return `${productName()}.json`;
+  };
   return {
     findingId,
     findingNistTag,
     subfindingsStatus,
     subfindingsMessage,
-    productName
+    productName,
+    filename
   };
 }
 
@@ -433,6 +551,38 @@ function getHDF2ASFF(): Record<string, Function> {
       return c.slice(1, -1).split(', ');
     }
     return c;
+  };
+  const findExecutionFindingIndex = (
+    asffOrFindings: Record<string, unknown> | Record<string, unknown>[]
+  ): number => {
+    return _.findIndex(
+      Array.isArray(asffOrFindings)
+        ? asffOrFindings
+        : (_.get(asffOrFindings, 'Findings') as Record<string, unknown>[]),
+      (finding) => (_.get(finding, 'Id') as string).split('/').length === 2
+    );
+  };
+  const preprocessingASFF = (
+    asff: Record<string, unknown>
+  ): Record<string, unknown> => {
+    const clone = _.cloneDeep(asff);
+    const index = findExecutionFindingIndex(clone);
+    _.pullAt(_.get(clone, 'Findings') as Record<string, unknown>[], index);
+    return clone;
+  };
+  const supportingDocs = (
+    input: [
+      Record<string, unknown>,
+      Map<SpecialCasing, Record<string, Record<string, unknown>>>
+    ]
+  ): Map<SpecialCasing, Record<string, Record<string, unknown>>> => {
+    const [asff, supportingDocs] = input;
+    const index = findExecutionFindingIndex(asff);
+    const docsClone = _.cloneDeep(supportingDocs);
+    docsClone.set(SpecialCasing.HDF2ASFF, {
+      execution: _.get(asff, `Findings[${index}]`) as Record<string, unknown>
+    });
+    return docsClone;
   };
   const findingNistTag = (finding: unknown): string[] => {
     return _.reduce(
@@ -480,293 +630,41 @@ function getHDF2ASFF(): Record<string, Function> {
     const name = _.get(finding, 'Id') as string;
     return encode(name.split('/').slice(0, 2).join(' - '));
   };
+  const filename = (findings: Record<string, unknown>[]): string => {
+    const index = findExecutionFindingIndex(findings);
+    return getFilteredTypes(findings[index], {startsWith: ['File/Input/']})[0];
+  };
+  const mapping = (
+    context: ASFFMapper
+  ): MappedTransform<ExecJSON.Execution, ILookupPath> => {
+    // TODO: implement
+    return context.mappings as MappedTransform<ExecJSON.Execution, ILookupPath>;
+  };
   return {
+    preprocessingASFF,
+    supportingDocs,
     findingNistTag,
     findingTags,
-    productName
+    productName,
+    filename,
+    mapping
   };
 }
 
 export class ASFFMapper extends BaseConverter {
   meta: Record<string, string | undefined> | null;
   supportingDocs: Map<SpecialCasing, Record<string, Record<string, unknown>>>;
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
-    platform: {
-      name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
-      target_id: ''
-    },
-    version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
-    },
-    profiles: [
-      {
-        name: {
-          transformer: (): string => {
-            return this.meta?.name || 'AWS Security Finding Format';
-          }
-        },
-        version: '',
-        title: {
-          transformer: (): string => {
-            return (_.get(this.meta, 'title') as string) || 'ASFF Findings';
-          }
-        },
-        maintainer: null,
-        summary: '',
-        license: null,
-        copyright: null,
-        copyright_email: null,
-        supports: [],
-        attributes: [],
-        depends: [],
-        groups: [],
-        status: 'loaded',
-        controls: [
-          {
-            path: 'Findings',
-            key: 'id',
-            arrayTransformer: this.consolidate,
-            id: {
-              transformer: (finding): string =>
-                externalProductHandler(
-                  this,
-                  whichSpecialCase(finding),
-                  finding,
-                  'findingId',
-                  encode(_.get(finding, 'GeneratorId'))
-                ) as string
-            },
-            title: {
-              transformer: (finding): string =>
-                externalProductHandler(
-                  this,
-                  whichSpecialCase(finding),
-                  finding,
-                  'findingTitle',
-                  encode(_.get(finding, 'Title'))
-                ) as string
-            },
-            desc: {
-              path: 'Description',
-              transformer: (input): string => encode(input as string)
-            },
-            impact: {
-              transformer: (finding): number => {
-                // There can be findings listed that are intentionally ignored due to the underlying control being superseded by a control from a different standard
-                let impact: string | number;
-                if (_.get(finding, 'Workflow.Status') === 'SUPPRESSED') {
-                  impact = 'INFORMATIONAL';
-                } else {
-                  // Severity is required, but can be either 'label' or 'normalized' internally with 'label' being preferred.  other values can be in here too such as the original severity rating.
-                  const defaultFunc = () =>
-                    _.get(finding, SEVERITY_LABEL)
-                      ? _.get(finding, SEVERITY_LABEL)
-                      : _.get(finding, 'Severity.Normalized') / 100.0;
-                  impact = externalProductHandler(
-                    this,
-                    whichSpecialCase(finding),
-                    finding,
-                    'findingImpact',
-                    defaultFunc
-                  ) as string | number;
-                }
-                return typeof impact === 'string'
-                  ? IMPACT_MAPPING.get(impact) || 0
-                  : impact;
-              }
-            },
-            tags: {
-              transformer: (
-                finding: Record<string, unknown>
-              ): Record<string, unknown> | undefined =>
-                externalProductHandler(
-                  this,
-                  whichSpecialCase(finding),
-                  finding,
-                  'findingTags',
-                  {}
-                ) as Record<string, unknown>,
-              nist: {
-                transformer: (finding: Record<string, unknown>): string[] => {
-                  const tags = externalProductHandler(
-                    this,
-                    whichSpecialCase(finding),
-                    finding,
-                    'findingNistTag',
-                    []
-                  ) as string[];
-                  if (!tags.length) {
-                    return DEFAULT_NIST_TAG;
-                  } else {
-                    return tags;
-                  }
-                }
-              }
-            },
-            descriptions: [
-              {
-                data: {
-                  path: 'Remediation.Recommendation',
-                  transformer: (input: unknown): string => {
-                    const data: string[] = [];
-                    if (_.has(input, 'Text')) {
-                      data.push(_.get(input, 'Text'));
-                    }
-                    if (_.has(input, 'Url')) {
-                      data.push(_.get(input, 'Url'));
-                    }
-                    return data.join('\n');
-                  }
-                },
-                label: 'fix'
-              }
-            ],
-            refs: [
-              {
-                url: {
-                  path: 'SourceUrl',
-                  transformer: (input): string | undefined =>
-                    !Boolean(input) ? undefined : (input as string)
-                }
-              }
-            ],
-            source_location: {},
-            code: '',
-            results: [
-              {
-                status: {
-                  transformer: (finding): ExecJSON.ControlResultStatus => {
-                    const defaultFunc = () => {
-                      if (_.has(finding, COMPLIANCE_STATUS)) {
-                        switch (_.get(finding, COMPLIANCE_STATUS)) {
-                          case 'PASSED':
-                            return ExecJSON.ControlResultStatus.Passed;
-                          case 'WARNING':
-                            return ExecJSON.ControlResultStatus.Skipped;
-                          case 'FAILED':
-                            return ExecJSON.ControlResultStatus.Failed;
-                          case 'NOT_AVAILABLE':
-                            // primary meaning is that the check could not be performed due to a service outage or API error, but it's also overloaded to mean NOT_APPLICABLE so technically 'skipped' or 'error' could be applicable, but AWS seems to do the equivalent of skipped
-                            return ExecJSON.ControlResultStatus.Skipped;
-                          default:
-                            // not a valid value for the status enum
-                            return ExecJSON.ControlResultStatus.Error;
-                        }
-                      } else {
-                        // if no compliance status is provided which is a weird but possible case, then skip
-                        return ExecJSON.ControlResultStatus.Skipped;
-                      }
-                    };
-                    return externalProductHandler(
-                      this,
-                      whichSpecialCase(finding),
-                      finding,
-                      'subfindingsStatus',
-                      defaultFunc
-                    ) as ExecJSON.ControlResultStatus;
-                  }
-                },
-                code_desc: {
-                  transformer: (finding): string => {
-                    let output = externalProductHandler(
-                      this,
-                      whichSpecialCase(finding),
-                      finding,
-                      'subfindingsCodeDesc',
-                      ''
-                    ) as string;
-                    if (output) {
-                      output += '; ';
-                    }
-                    const resources = _.get(finding, 'Resources')
-                      .map((resource: unknown) => {
-                        let hash = `Type: ${encode(
-                          _.get(resource, 'Type')
-                        )}, Id: ${encode(_.get(resource, 'Id'))}`;
-                        if (_.has(resource, 'Partition')) {
-                          hash += `, Partition: ${encode(
-                            _.get(resource, 'Partition')
-                          )}`;
-                        }
-                        if (_.has(resource, 'Region')) {
-                          hash += `, Region: ${encode(
-                            _.get(resource, 'Region')
-                          )}`;
-                        }
-                        return hash;
-                      })
-                      .join(', ');
-                    output += `Resources: [${resources}]`;
-                    return output;
-                  }
-                },
-                transformer: (finding): Record<string, unknown> => {
-                  const message = (() => {
-                    const defaultFunc = () => {
-                      const statusReason = this.statusReason(finding);
-                      switch (_.get(finding, COMPLIANCE_STATUS)) {
-                        case undefined: // Possible for Compliance.Status to not be there, in which case it's a skip_message
-                          return undefined;
-                        case 'PASSED':
-                          return statusReason;
-                        case 'WARNING':
-                          return undefined;
-                        case 'FAILED':
-                          return statusReason;
-                        case 'NOT_AVAILABLE':
-                          return undefined;
-                        default:
-                          return statusReason;
-                      }
-                    };
-                    return externalProductHandler(
-                      this,
-                      whichSpecialCase(finding),
-                      finding,
-                      'subfindingsMessage',
-                      defaultFunc
-                    ) as string | undefined;
-                  })();
-                  const skipMessage = (() => {
-                    const statusReason = this.statusReason(finding);
-                    switch (_.get(finding, COMPLIANCE_STATUS)) {
-                      case undefined: // Possible for Compliance.Status to not be there, in which case it's a skip_message
-                        return statusReason;
-                      case 'PASSED':
-                        return undefined;
-                      case 'WARNING':
-                        return statusReason;
-                      case 'FAILED':
-                        return undefined;
-                      case 'NOT_AVAILABLE':
-                        // primary meaning is that the check could not be performed due to a service outage or API error, but it's also overloaded to mean NOT_APPLICABLE so technically 'skipped' or 'error' could be applicable, but AWS seems to do the equivalent of skipped
-                        return statusReason;
-                      default:
-                        return undefined;
-                    }
-                  })();
-                  return {
-                    ...(message !== undefined && {message}),
-                    ...(skipMessage !== undefined && {
-                      skip_message: skipMessage
-                    })
-                  };
-                },
-                start_time: {
-                  transformer: (finding): string =>
-                    _.get(finding, 'LastObservedAt') ||
-                    _.get(finding, 'UpdatedAt')
-                }
-              }
-            ]
-          }
-        ],
-        sha256: ''
-      }
-    ]
-  };
+  constructor(
+    asff: Record<string, unknown>,
+    supportingDocs: Map<SpecialCasing, Record<string, Record<string, unknown>>>,
+    meta: null | Record<string, string | undefined> = null
+  ) {
+    super(asff);
+    this.meta = meta;
+    this.supportingDocs = supportingDocs;
+    this.setMappings();
+  }
+
   statusReason(finding: unknown): string | undefined {
     return _.get(finding, 'Compliance.StatusReasons')
       ?.map((reason: Record<string, string>) =>
@@ -778,131 +676,305 @@ export class ASFFMapper extends BaseConverter {
       .join('\n');
   }
 
-  // consolidate the array of controls which were generated 1:1 with findings in order to have subfindings/results
-  consolidate(input: unknown[], file: unknown): ExecJSON.Control[] {
-    const allFindings = _.get(file, 'Findings');
-    // Group Sub-findings by ASFF Product ARN and HDF ID
-    const productGroups = new Map<
-      SpecialCasing | RegExp,
-      Map<string, Array<Array<unknown>>>
-    >();
-    input.forEach((item, index) => {
-      let product: SpecialCasing | RegExp = whichSpecialCase(
-        allFindings[index]
-      );
-      // both of these file types can contain findings with unique product arns
-      if (
-        product === SpecialCasing.HDF2ASFF ||
-        product === SpecialCasing.Default
-      ) {
-        const productInfo = _.get(allFindings[index], 'ProductArn')
-          .split(':')
-          .slice(-1)[0];
-        product = new RegExp(
-          `arn:.+:securityhub:.+:.*:product/${productInfo.split('/')[1]}/${
-            productInfo.split('/')[2]
-          }`
-        );
-      }
-      if (!productGroups.has(product)) {
-        productGroups.set(product, new Map<string, Array<Array<unknown>>>());
-      }
-      if (!productGroups.get(product)?.has(_.get(item, 'id'))) {
-        productGroups.get(product)?.set(_.get(item, 'id'), []);
-      }
-      productGroups
-        .get(product)
-        ?.get(_.get(item, 'id'))
-        ?.push([item, allFindings[index]]);
-    });
-
-    const output: ExecJSON.Control[] = [];
-    productGroups.forEach((idGroups, product) => {
-      idGroups.forEach((data, id) => {
-        const group = data.map((d) => d[0]);
-        const findings = data.map((d) => d[1]) as Array<
-          Record<string, unknown>
-        >;
-
-        const productInfo = (_.get(findings[0], 'ProductArn') as string)
-          .split(':')
-          .slice(-1)[0]
-          .split('/');
-        const productName = externalProductHandler(
-          this,
-          whichSpecialCase(findings[0]),
-          findings,
-          'productName',
-          encode(`${productInfo[1]}/${productInfo[2]}`)
-        );
-
-        const item: ExecJSON.Control = {
-          // Add productName to ID if any ID's are the same across products
-          id:
-            Array.from(
-              new Map(
-                [...productGroups].filter(([pg]) => pg !== product) // Check case when running into dupe ID's
-              ).values()
-            ).find((ig) => Array.from(ig.keys()).includes(id)) !== undefined
-              ? `[${productName}] ${id}`
-              : id,
-          title: `${productName}: ${_.uniq(
-            group.map((d) => _.get(d, 'title') as string)
-          ).join(';')}`,
-          tags: _.mergeWith(
-            {},
-            ...group.map((d) => _.get(d, 'tags')),
-            (acc: unknown, cur: unknown) => {
-              if (acc === undefined || cur === undefined) {
-                return undefined;
-              } else if (_.isEqual(acc, cur)) {
-                return acc;
-              } else {
-                return _.uniq(_.concat([], acc, cur));
+  setMappings(): void {
+    this.mappings = externalProductHandler(
+      this,
+      whichSpecialCase(
+        _.get(this.data, 'Findings[0]') as Record<string, unknown>
+      ),
+      this.data,
+      'mapping',
+      {
+        platform: {
+          name: 'Heimdall Tools',
+          release: HeimdallToolsVersion,
+          target_id: ''
+        },
+        version: HeimdallToolsVersion,
+        statistics: {
+          duration: null
+        },
+        profiles: [
+          {
+            name: {
+              transformer: (): string => {
+                return this.meta?.name || 'AWS Security Finding Format';
               }
-            }
-          ),
-          impact: Math.max(...group.map((d) => _.get(d, 'impact'))),
-          desc: externalProductHandler(
-            this,
-            whichSpecialCase(findings[0]),
-            group,
-            'desc',
-            _.uniq(group.map((d) => _.get(d, 'desc') as string)).join('\n')
-          ) as string,
-          descriptions: group
-            .map((d) => _.get(d, 'descriptions'))
-            .flat()
-            .filter(
-              (element, index, arr) =>
-                element.data !== '' &&
-                index === arr.findIndex((e) => e.data === element.data) // https://stackoverflow.com/a/36744732/645647
-            ) as ExecJSON.ControlDescription[],
-          refs: group
-            .map((d) => _.get(d, 'refs'))
-            .flat()
-            .filter(
-              (element) => _.get(element, 'url') !== undefined
-            ) as ExecJSON.Reference[],
-          source_location: {},
-          code: JSON.stringify({Findings: findings}, null, 2),
-          results: group
-            .map((d) => _.get(d, 'results'))
-            .flat() as ExecJSON.ControlResult[]
-        };
-        output.push(item);
-      });
-    });
-    return output;
-  }
-  constructor(
-    asff: Record<string, unknown>,
-    supportingDocs: Map<SpecialCasing, Record<string, Record<string, unknown>>>,
-    meta: null | Record<string, string | undefined> = null
-  ) {
-    super(asff);
-    this.meta = meta;
-    this.supportingDocs = supportingDocs;
+            },
+            version: '',
+            title: {
+              transformer: (): string => {
+                return (_.get(this.meta, 'title') as string) || 'ASFF Findings';
+              }
+            },
+            maintainer: null,
+            summary: '',
+            license: null,
+            copyright: null,
+            copyright_email: null,
+            supports: [],
+            attributes: [],
+            depends: [],
+            groups: [],
+            status: 'loaded',
+            controls: [
+              {
+                path: 'Findings',
+                key: 'id',
+                arrayTransformer: consolidate.bind(this, this),
+                id: {
+                  transformer: (finding: Record<string, unknown>): string =>
+                    externalProductHandler(
+                      this,
+                      whichSpecialCase(finding),
+                      finding,
+                      'findingId',
+                      encode(_.get(finding, 'GeneratorId') as string)
+                    ) as string
+                },
+                title: {
+                  transformer: (finding: Record<string, unknown>): string =>
+                    externalProductHandler(
+                      this,
+                      whichSpecialCase(finding),
+                      finding,
+                      'findingTitle',
+                      encode(_.get(finding, 'Title') as string)
+                    ) as string
+                },
+                desc: {
+                  path: 'Description',
+                  transformer: (input: string): string =>
+                    encode(input as string)
+                },
+                impact: {
+                  transformer: (finding: Record<string, unknown>): number => {
+                    // There can be findings listed that are intentionally ignored due to the underlying control being superseded by a control from a different standard
+                    let impact: string | number;
+                    if (_.get(finding, 'Workflow.Status') === 'SUPPRESSED') {
+                      impact = 'INFORMATIONAL';
+                    } else {
+                      // Severity is required, but can be either 'label' or 'normalized' internally with 'label' being preferred.  other values can be in here too such as the original severity rating.
+                      const defaultFunc = (): string | number =>
+                        (_.get(finding, SEVERITY_LABEL) as string | undefined)
+                          ? (_.get(finding, SEVERITY_LABEL) as string)
+                          : (_.get(finding, 'Severity.Normalized') as number) /
+                            100.0;
+                      impact = externalProductHandler(
+                        this,
+                        whichSpecialCase(finding),
+                        finding,
+                        'findingImpact',
+                        defaultFunc
+                      ) as string | number;
+                    }
+                    return typeof impact === 'string'
+                      ? IMPACT_MAPPING.get(impact) || 0
+                      : impact;
+                  }
+                },
+                tags: {
+                  transformer: (
+                    finding: Record<string, unknown>
+                  ): Record<string, unknown> | undefined =>
+                    externalProductHandler(
+                      this,
+                      whichSpecialCase(finding),
+                      finding,
+                      'findingTags',
+                      {}
+                    ) as Record<string, unknown>,
+                  nist: {
+                    transformer: (
+                      finding: Record<string, unknown>
+                    ): string[] => {
+                      const tags = externalProductHandler(
+                        this,
+                        whichSpecialCase(finding),
+                        finding,
+                        'findingNistTag',
+                        []
+                      ) as string[];
+                      if (!tags.length) {
+                        return DEFAULT_NIST_TAG;
+                      } else {
+                        return tags;
+                      }
+                    }
+                  }
+                },
+                descriptions: [
+                  {
+                    data: {
+                      path: 'Remediation.Recommendation',
+                      transformer: (input: Record<string, string>): string => {
+                        const data: string[] = [];
+                        if (_.has(input, 'Text')) {
+                          data.push(_.get(input, 'Text'));
+                        }
+                        if (_.has(input, 'Url')) {
+                          data.push(_.get(input, 'Url'));
+                        }
+                        return data.join('\n');
+                      }
+                    },
+                    label: 'fix'
+                  }
+                ],
+                refs: [
+                  {
+                    url: {
+                      path: 'SourceUrl' // TODO: check if this works without transformer
+                    }
+                  }
+                ],
+                source_location: {},
+                code: '',
+                results: [
+                  {
+                    status: {
+                      transformer: (
+                        finding: Record<string, unknown>
+                      ): ExecJSON.ControlResultStatus => {
+                        const defaultFunc = () => {
+                          if (_.has(finding, COMPLIANCE_STATUS)) {
+                            switch (_.get(finding, COMPLIANCE_STATUS)) {
+                              case 'PASSED':
+                                return ExecJSON.ControlResultStatus.Passed;
+                              case 'WARNING':
+                                return ExecJSON.ControlResultStatus.Skipped;
+                              case 'FAILED':
+                                return ExecJSON.ControlResultStatus.Failed;
+                              case 'NOT_AVAILABLE':
+                                // primary meaning is that the check could not be performed due to a service outage or API error, but it's also overloaded to mean NOT_APPLICABLE so technically 'skipped' or 'error' could be applicable, but AWS seems to do the equivalent of skipped
+                                return ExecJSON.ControlResultStatus.Skipped;
+                              default:
+                                // not a valid value for the status enum
+                                return ExecJSON.ControlResultStatus.Error;
+                            }
+                          } else {
+                            // if no compliance status is provided which is a weird but possible case, then skip
+                            return ExecJSON.ControlResultStatus.Skipped;
+                          }
+                        };
+                        return externalProductHandler(
+                          this,
+                          whichSpecialCase(finding),
+                          finding,
+                          'subfindingsStatus',
+                          defaultFunc
+                        ) as ExecJSON.ControlResultStatus;
+                      }
+                    },
+                    code_desc: {
+                      transformer: (
+                        finding: Record<string, unknown>
+                      ): string => {
+                        let output = externalProductHandler(
+                          this,
+                          whichSpecialCase(finding),
+                          finding,
+                          'subfindingsCodeDesc',
+                          ''
+                        ) as string;
+                        if (output) {
+                          output += '; ';
+                        }
+                        const resources = (
+                          _.get(finding, 'Resources') as Record<
+                            string,
+                            unknown
+                          >[]
+                        )
+                          .map((resource: unknown) => {
+                            let hash = `Type: ${encode(
+                              _.get(resource, 'Type')
+                            )}, Id: ${encode(_.get(resource, 'Id'))}`;
+                            if (_.has(resource, 'Partition')) {
+                              hash += `, Partition: ${encode(
+                                _.get(resource, 'Partition')
+                              )}`;
+                            }
+                            if (_.has(resource, 'Region')) {
+                              hash += `, Region: ${encode(
+                                _.get(resource, 'Region')
+                              )}`;
+                            }
+                            return hash;
+                          })
+                          .join(', ');
+                        output += `Resources: [${resources}]`;
+                        return output;
+                      }
+                    },
+                    transformer: (
+                      finding: Record<string, unknown>
+                    ): Record<string, unknown> => {
+                      const message = (() => {
+                        const defaultFunc = () => {
+                          const statusReason = this.statusReason(finding);
+                          switch (_.get(finding, COMPLIANCE_STATUS)) {
+                            case undefined: // Possible for Compliance.Status to not be there, in which case it's a skip_message
+                              return undefined;
+                            case 'PASSED':
+                              return statusReason;
+                            case 'WARNING':
+                              return undefined;
+                            case 'FAILED':
+                              return statusReason;
+                            case 'NOT_AVAILABLE':
+                              return undefined;
+                            default:
+                              return statusReason;
+                          }
+                        };
+                        return externalProductHandler(
+                          this,
+                          whichSpecialCase(finding),
+                          finding,
+                          'subfindingsMessage',
+                          defaultFunc
+                        ) as string | undefined;
+                      })();
+                      const skipMessage = (() => {
+                        const statusReason = this.statusReason(finding);
+                        switch (_.get(finding, COMPLIANCE_STATUS)) {
+                          case undefined: // Possible for Compliance.Status to not be there, in which case it's a skip_message
+                            return statusReason;
+                          case 'PASSED':
+                            return undefined;
+                          case 'WARNING':
+                            return statusReason;
+                          case 'FAILED':
+                            return undefined;
+                          case 'NOT_AVAILABLE':
+                            // primary meaning is that the check could not be performed due to a service outage or API error, but it's also overloaded to mean NOT_APPLICABLE so technically 'skipped' or 'error' could be applicable, but AWS seems to do the equivalent of skipped
+                            return statusReason;
+                          default:
+                            return undefined;
+                        }
+                      })();
+                      return {
+                        ...(message !== undefined && {message}),
+                        ...(skipMessage !== undefined && {
+                          skip_message: skipMessage
+                        })
+                      };
+                    },
+                    start_time: {
+                      transformer: (finding: Record<string, unknown>): string =>
+                        (_.get(finding, 'LastObservedAt') as string) ||
+                        (_.get(finding, 'UpdatedAt') as string)
+                    }
+                  }
+                ]
+              }
+            ],
+            sha256: ''
+          }
+        ]
+      }
+    ) as MappedTransform<ExecJSON.Execution, ILookupPath>;
   }
 }
 
@@ -924,7 +996,7 @@ export class ASFFResults {
       SpecialCasing.SecurityHub,
       _.get(
         SPECIAL_CASE_MAPPING.get(SpecialCasing.SecurityHub),
-        'supportingDocs',
+        'securityhubSupportingDocs',
         (standards: string[] | undefined) => {
           throw new Error(
             `supportingDocs function should've been defined: ${standards}`
@@ -932,28 +1004,48 @@ export class ASFFResults {
         }
       )(securityhubStandardsJsonArray)
     );
-    this.data = _.groupBy(_.get(fixFileInput(asffJson), 'Findings'), (val) => {
+    const findings = _.get(fixFileInput(asffJson), 'Findings');
+    this.data = _.groupBy(findings, (val) => {
       const productInfo = (_.get(val, 'ProductArn') as string)
         .split(':')
         .slice(-1)[0]
         .split('/');
+      const defaultFilename = `${productInfo[1]} | ${productInfo[2]}.json`;
       return externalProductHandler(
         this,
         whichSpecialCase(val),
-        val,
-        'productName',
-        encode(`${productInfo[1]} | ${productInfo[2]}`)
+        findings,
+        'filename',
+        encode(defaultFilename)
       );
     });
   }
 
   toHdf(): Record<string, ExecJSON.Execution> {
     return _.mapValues(this.data, (val) => {
+      const wrapped = wrapWithFindingsObject(val);
       return new ASFFMapper(
-        wrapWithFindingsObject(val),
-        this.supportingDocs,
-        this.meta
+        externalProductHandler(
+          this,
+          whichSpecialCase(
+            _.get(wrapped, 'Findings[0]') as unknown as Record<string, unknown>
+          ),
+          wrapped,
+          'preprocessingASFF',
+          wrapped
+        ) as Record<string, unknown>,
+        externalProductHandler(
+          this,
+          whichSpecialCase(
+            _.get(wrapped, 'Findings[0]') as unknown as Record<string, unknown>
+          ),
+          [wrapped, this.supportingDocs],
+          'supportingDocs',
+          this.supportingDocs
+        ) as Map<SpecialCasing, Record<string, Record<string, unknown>>>,
+        this.meta // TODO: make an external call for this too
       ).toHdf();
     });
   }
 }
+// externalproducthandler wrappers around the arguments (wrapped DONE, docs DONE, meta) in the tohdf to put the execution data finding in the supporting docs and then remove it from the list of findings and then plan can continue as before just make sure to write subfindingsId for line 135
