@@ -1,3 +1,5 @@
+import {ExecJSON} from 'inspecjs';
+import _ from 'lodash';
 import winston from 'winston';
 
 export function createWinstonLogger(
@@ -16,4 +18,26 @@ export function createWinstonLogger(
       )
     )
   });
+}
+
+/** Get description from Array of descriptions or Key/Value pairs */
+export function getDescription(
+  descriptions:
+    | {
+        [key: string]: string;
+      }
+    | ExecJSON.ControlDescription[],
+  key: string
+): string | undefined {
+  let found: string | undefined;
+  if (Array.isArray(descriptions)) {
+    found = descriptions.find(
+      (description: ExecJSON.ControlDescription) =>
+        description.label.toLowerCase() === key
+    )?.data;
+  } else {
+    found = _.get(descriptions, key);
+  }
+
+  return found;
 }

@@ -1,5 +1,8 @@
 /** For helper functions that don't belong anywhere else */
 
+import {ExecJSON} from 'inspecjs';
+import _ from 'lodash';
+
 /** Compares arrays a and b, returning a number indicating their lexicographic ordering
  * with the same output semantics.
  * That is,
@@ -80,6 +83,28 @@ export class LocalStorageVal<T> {
   clear(): void {
     window.localStorage.removeItem(this.storageKey);
   }
+}
+
+/** Get descripion from Array of descriptions or Key/String pair */
+export function getDescription(
+  descriptions:
+    | {
+        [key: string]: string;
+      }
+    | ExecJSON.ControlDescription[],
+  key: string
+): string | undefined {
+  let found: string | undefined;
+  if (Array.isArray(descriptions)) {
+    found = descriptions.find(
+      (description: ExecJSON.ControlDescription) =>
+        description.label.toLowerCase() === key
+    )?.data;
+  } else {
+    found = _.get(descriptions, key);
+  }
+
+  return found;
 }
 
 /** A useful shorthand */
