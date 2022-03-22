@@ -263,6 +263,7 @@ export class InspecIntake extends VuexModule {
         return result;
       }
     } catch {
+      const splitLines = guessOptions.data.trim().split('\n');
       // If we don't have valid json, look for known strings inside the file text
       if (guessOptions.filename.toLowerCase().endsWith('.nessus')) {
         return 'nessus';
@@ -292,9 +293,12 @@ export class InspecIntake extends VuexModule {
       } else if (
         // Match CSV Headers, global and case-insensitive
         // We could implement indexOf which ignores order
-        guessOptions.data.match(
-          /Hostname.*Distro.*CVE ID.*Compliance ID.*Type.*Severity/gi
-        )
+        splitLines[0].includes('Hostname') &&
+        splitLines[0].includes('Distro') &&
+        splitLines[0].includes('CVE ID') &&
+        splitLines[0].includes('Compliance ID') &&
+        splitLines[0].includes('Type') &&
+        splitLines[0].includes('Severity')
       ) {
         return 'prisma';
       }
