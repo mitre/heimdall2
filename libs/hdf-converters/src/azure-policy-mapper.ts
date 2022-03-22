@@ -27,7 +27,7 @@ if (process.env["AZURE_SUBSCRIPTION_ID"] === undefined) {
     console.log("Error: Environment variable \"AZURE_SUBSCRIPTION_ID\" is undefined. Set this variable with the Azure Subscription Id.");
     process.exit(1);
 } else {
-    subscriptionId = process.env["AZURE_SUBSCRIPTION_ID"]!;
+    subscriptionId = process.env["AZURE_SUBSCRIPTION_ID"];
 }
 
 // Create credential object. Reference the environment variable notes above.
@@ -113,7 +113,7 @@ class AzurePolicyConverter {
 
             // Create AzureResource object
             const azureResource: AzureResource = {
-                id: policyState.resourceId!,
+                id: policyState.resourceId || "Not Available",
                 subscriptionId: subscriptionId,
                 type: policyState.resourceType,
                 state: complianceState,
@@ -164,31 +164,33 @@ class AzurePolicyConverter {
 
         for (let i = 0; i < staticPolicies.length; i++) {
             // Get Policy Details
-            const policyAssignmentList = await policyClient.policyAssignments.getById(staticPolicies[i].id!);
-            // Get Policy Control Mapping
-            groupNames = AZURE_POLICY_MAPPING.nistFilter([policyAssignmentList.displayName!])!;
-            if (groupNames === null || groupNames === undefined) {
-                groupNames = []
-            }
+            if (staticPolicies[i]) {
+                const policyAssignmentList = await policyClient.policyAssignments.getById(staticPolicies[i].id);
+                // Get Policy Control Mapping
+                groupNames = AZURE_POLICY_MAPPING.nistFilter([policyAssignmentList.displayName!])!;
+                if (groupNames === null || groupNames === undefined) {
+                    groupNames = []
+                }
 
-            const azureResource: AzureResource = {
-                id: "Microsoft Managed",
-                subscriptionId: subscriptionId,
-                type: "N/A",
-                state: "compliant",
-                location: "N/A"
-            }
+                const azureResource: AzureResource = {
+                    id: "Microsoft Managed",
+                    subscriptionId: subscriptionId,
+                    type: "N/A",
+                    state: "compliant",
+                    location: "N/A"
+                }
 
-            policyDefinitions.push({
-                id: staticPolicies[i].id || "Not Available",
-                subscriptionId: subscriptionId,
-                detailedName: policyAssignmentList.displayName,
-                name: policyAssignmentList.name,
-                description: policyAssignmentList.description,
-                groupNames: groupNames,
-                state: "compliant",
-                resources: [azureResource]
-            })
+                policyDefinitions.push({
+                    id: staticPolicies[i].id || "Not Available",
+                    subscriptionId: subscriptionId,
+                    detailedName: policyAssignmentList.displayName,
+                    name: policyAssignmentList.name,
+                    description: policyAssignmentList.description,
+                    groupNames: groupNames,
+                    state: "compliant",
+                    resources: [azureResource]
+                })
+            }
 
         }
 
@@ -224,19 +226,16 @@ class AzurePolicyConverter {
             ]
         };
 
-        hdf.profiles.forEach((profile) => {
-        })
-
         //Testing writing to file
         var outputJson = JSON.stringify(hdf);
         fs.writeFile('azure-policy-test.json', outputJson, function (err: string) {
-            if (err) throw err;
+            if (err) { throw err; }
             console.log('complete');
         });
 
         return policyDefinitions;
 
-    };
+    }
 
     private async getControls(policyDefinitions: PolicyDefinition[]): Promise<ExecJSON.Control[]> {
         let index = 0;
@@ -262,18 +261,18 @@ class AzurePolicyConverter {
 
     // Build Results
     private getTestResults(policyDefinition: PolicyDefinition) {
-        let results: ExecJSON.ControlResult[] = [];
+        const results: ExecJSON.ControlResult[] = [];
         if (policyDefinition.resources !== undefined) {
             for (let i = 0; i < policyDefinition.resources.length; i++) {
-                let hdfResult: ExecJSON.ControlResult = {
-                    code_desc: "Resource: " + policyDefinition.resources[i].id
-                        + "\nType: " + policyDefinition.resources[i].type
-                        + "\nLocation: " + policyDefinition.resources[i].location
-                        + "\nSubscription: " + policyDefinition.resources[i].subscriptionId,
+                const hdfResult: ExecJSON.ControlResult = {
+                    code_desc: `Resource: ${policyDefinition.resources[i].id}`
+                        + `\nType: ${policyDefinition.resources[i].type}`
+                        + `\nLocation: ${policyDefinition.resources[i].location}`
+                        + `\nSubscription: ${policyDefinition.resources[i].subscriptionId}`,
                     resource: policyDefinition.resources[i].id,
                     start_time: '',
                     run_time: 0.00,
-                    status: this.getStatus(policyDefinition.resources[i].state!)
+                    status: this.getStatus(policyDefinition.resources[i].state || "noncompliant")
                 };
                 results.push(hdfResult)
             }
@@ -285,8 +284,8 @@ class AzurePolicyConverter {
     // Currently only parsing NIST groupNames
     // Add notes to explain parsing
     private parseGroupNames(groupNames: string[]) {
-        let hdfTags: string[] = []
-        let nistTag: string = ""
+        const hdfTags: string[] = []
+        let nistTag = ""
         if (groupNames !== undefined) {
             for (let i = 0; i < groupNames.length; i++) {
                 if (groupNames[i].includes("nist")) {
@@ -294,14 +293,14 @@ class AzurePolicyConverter {
                     hdfTags.push(nistTag.charAt(0).toUpperCase() + nistTag.charAt(1).toUpperCase() + nistTag.slice(2))
                 };
             };
-        };
+        }
         if (hdfTags.length > 0) {
             return hdfTags;
         } else {
             return [];
         }
 
-    };
+    }
 
     private getStatus(state: string): ExecJSON.ControlResultStatus {
         if (state === 'compliant') {
@@ -316,6 +315,6 @@ class AzurePolicyConverter {
     private delay(ms: number): Promise<void> {
         return new Promise((resolve) => setTimeout(resolve, ms));
     }
-};
+}
 
-let azurePolicyConverter = new AzurePolicyConverter(credential, subscriptionId);
+const azurePolicyConverter = new AzurePolicyConverter(credential, subscriptionId);
