@@ -7,13 +7,38 @@
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
 
+/**
+ * The top level value containing all of the results.
+ */
 export interface ExecJSON {
-    platform:   Platform;
-    profiles:   ExecJSONProfile[];
+    /**
+     * Information on the platform the run from the tool that generated the findings was from.
+     * Example: the name of the operating system.
+     */
+    platform: Platform;
+    /**
+     * Information on the run(s) from the tool that generated the findings.  Example: the
+     * findings.
+     */
+    profiles: ExecJSONProfile[];
+    /**
+     * Statistics for the run(s) from the tool that generated the findings.  Example: the
+     * runtime duration.
+     */
     statistics: Statistics;
-    version:    string;
+    /**
+     * Version number of the tool that generated the findings.  Example: '4.18.108' is a version
+     * of Chef InSpec.
+     */
+    version: string;
 }
 
+/**
+ * Information on the platform the run from the tool that generated the findings was from.
+ * Example: the name of the operating system.
+ *
+ * Platform information such as its name.
+ */
 export interface Platform {
     /**
      * The name of the platform this was run on.
@@ -22,86 +47,237 @@ export interface Platform {
     /**
      * The version of the platform this was run on.
      */
-    release:    string;
+    release: string;
+    /**
+     * The id of the target.  Example: the name and version of the operating system were not
+     * sufficient to identify the platform so a release identifier can additionally be provided
+     * like '21H2' for the release version of MS Windows 10.
+     */
     target_id?: null | string;
 }
 
+/**
+ * Information on the set of controls assessed.  Example: it can include the name of the
+ * Inspec profile and any findings.
+ */
 export interface ExecJSONProfile {
-    attributes:       { [key: string]: any }[];
-    controls:         ExecJSONControl[];
-    copyright?:       null | string;
+    /**
+     * The input(s) or attribute(s) used in the run.
+     */
+    attributes: { [key: string]: any }[];
+    /**
+     * The set of controls including any findings.
+     */
+    controls: ExecJSONControl[];
+    /**
+     * The copyright holder(s).
+     */
+    copyright?: null | string;
+    /**
+     * The email address or other contact information of the copyright holder(s).
+     */
     copyright_email?: null | string;
-    depends?:         Dependency[] | null;
-    description?:     null | string;
-    groups:           ControlGroup[];
-    inspec_version?:  null | string;
-    license?:         null | string;
-    maintainer?:      null | string;
-    name:             string;
-    parent_profile?:  null | string;
-    sha256:           string;
-    skip_message?:    null | string;
-    status?:          null | string;
-    status_message?:  null | string;
-    summary?:         null | string;
-    supports:         SupportedPlatform[];
-    title?:           null | string;
-    version?:         null | string;
+    /**
+     * The set of dependencies this profile depends on.  Example: an overlay profile is
+     * dependent on another profile.
+     */
+    depends?: Dependency[] | null;
+    /**
+     * The description - should be more detailed than the summary.
+     */
+    description?: null | string;
+    /**
+     * A set of descriptions for the control groups.  Example: the ids of the controls.
+     */
+    groups: ControlGroup[];
+    /**
+     * The version of Inspec.
+     */
+    inspec_version?: null | string;
+    /**
+     * The copyright license.  Example: the full text or the name, such as 'Apache License,
+     * Version 2.0'.
+     */
+    license?: null | string;
+    /**
+     * The maintainer(s).
+     */
+    maintainer?: null | string;
+    /**
+     * The name - must be unique.
+     */
+    name: string;
+    /**
+     * The name of the parent profile if the profile is a dependency of another.
+     */
+    parent_profile?: null | string;
+    /**
+     * The checksum of the profile.
+     */
+    sha256: string;
+    /**
+     * The reason for skipping if it was skipped.
+     */
+    skip_message?: null | string;
+    /**
+     * The status.  Example: loaded.
+     */
+    status?: null | string;
+    /**
+     * The reason for the status.  Example: why it was skipped or failed to load.
+     */
+    status_message?: null | string;
+    /**
+     * The summary.  Example: the Security Technical Implementation Guide (STIG) header.
+     */
+    summary?: null | string;
+    /**
+     * The set of supported platform targets.
+     */
+    supports: SupportedPlatform[];
+    /**
+     * The title - should be human readable.
+     */
+    title?: null | string;
+    /**
+     * The version of the profile.
+     */
+    version?: null | string;
 }
 
+/**
+ * Describes a control and any findings it has.
+ */
 export interface ExecJSONControl {
     /**
      * The raw source code of the control. Note that if this is an overlay control, it does not
-     * include the underlying source code
+     * include the underlying source code.
      */
-    code?:         null | string;
-    desc?:         null | string;
+    code?: null | string;
+    /**
+     * The description for the overarching control.
+     */
+    desc?: null | string;
+    /**
+     * A set of additional descriptions.  Example: the 'fix' text.
+     */
     descriptions?: ControlDescription[] | null;
     /**
-     * The ID of this control
+     * The id.
      */
-    id:     string;
-    impact: number;
-    refs:   Reference[];
+    id: string;
     /**
-     * A list of all results of the controls describe blocks.
-     *
-     * For instance, if in the controls code we had the following:
+     * The impactfulness or severity.
+     */
+    impact: number;
+    /**
+     * The set of references to external documents.
+     */
+    refs: Reference[];
+    /**
+     * The set of all tests within the control and their results and findings.
+     * Example:
+     * For Chef Inspec, if in the control's code we had the following:
      * describe sshd_config do
      * its('Port') { should cmp 22 }
      * end
-     * The result of this block as a ControlResult would be appended to the results list.
+     * The findings from this block would be appended to the results, as well as those of any
+     * other blocks within the control.
      */
-    results:         ControlResult[];
+    results: ControlResult[];
+    /**
+     * The explicit location of the control within the source code.
+     */
     source_location: SourceLocation;
-    tags:            { [key: string]: any };
-    title?:          null | string;
-    waiver_data?:    null | WaiverData;
+    /**
+     * A set of tags - usually metadata.
+     */
+    tags: { [key: string]: any };
+    /**
+     * The title - is nullable.
+     */
+    title?:       null | string;
+    waiver_data?: null | WaiverData;
 }
 
+/**
+ * A description for a control.
+ */
 export interface ControlDescription {
-    data:  string;
+    /**
+     * The text of the description.
+     */
+    data: string;
+    /**
+     * The type of description.  Examples: 'fix' or 'check'.
+     */
     label: string;
 }
 
+/**
+ * A reference to an external document.
+ *
+ * A human readable/meaningful reference.  Example: a book title.
+ *
+ * A url pointing at the reference.
+ *
+ * A uri pointing at the reference.
+ */
 export interface Reference {
     ref?: { [key: string]: any }[] | string;
     url?: string;
     uri?: string;
 }
 
+/**
+ * A test within a control and its results and findings such as how long it took to run.
+ */
 export interface ControlResult {
-    backtrace?:    string[] | null;
-    code_desc:     string;
-    exception?:    null | string;
-    message?:      null | string;
-    resource?:     null | string;
-    run_time?:     number | null;
+    /**
+     * The stacktrace/backtrace of the exception if one occurred.
+     */
+    backtrace?: string[] | null;
+    /**
+     * A description of this test.  Example: 'limits.conf * is expected to include ['hard',
+     * 'maxlogins', '10'].
+     */
+    code_desc: string;
+    /**
+     * The type of exception if an exception was thrown.
+     */
+    exception?: null | string;
+    /**
+     * An explanation of the test status - usually only provided when the test fails.
+     */
+    message?: null | string;
+    /**
+     * The resource used in the test.  Example: in Inspec, you can use the 'File' resource.
+     */
+    resource?: null | string;
+    /**
+     * The unique identifier of the resource.
+     */
+    resource_id?: null | string;
+    /**
+     * The execution time in seconds for the test.
+     */
+    run_time?: number | null;
+    /**
+     * An explanation of the test status if the status was 'skipped.
+     */
     skip_message?: null | string;
-    start_time:    string;
-    status?:       ControlResultStatus | null;
+    /**
+     * The time at which the test started.
+     */
+    start_time: string;
+    status?:    ControlResultStatus | null;
 }
 
+/**
+ * The status of this test within the control.  Example: 'failed'.
+ *
+ * The status of a control.  Should be one of 'passed', 'failed', 'skipped', or 'error'.
+ */
 export enum ControlResultStatus {
     Error = "error",
     Failed = "failed",
@@ -109,13 +285,18 @@ export enum ControlResultStatus {
     Skipped = "skipped",
 }
 
+/**
+ * The explicit location of the control within the source code.
+ *
+ * The explicit location of the control.
+ */
 export interface SourceLocation {
     /**
-     * The line at which this statement is located in the file
+     * The line on which this control is located.
      */
     line?: number | null;
     /**
-     * Path to the file that this statement originates from
+     * Path to the file that this control originates from.
      */
     ref?: null | string;
 }
@@ -128,52 +309,117 @@ export interface WaiverData {
     skipped_due_to_waiver?: boolean | null | string;
 }
 
+/**
+ * A dependency for a profile.  Can include relative paths or urls for where to find the
+ * dependency.
+ */
 export interface Dependency {
-    branch?:         null | string;
-    compliance?:     null | string;
-    git?:            null | string;
-    name?:           null | string;
-    path?:           null | string;
-    status?:         null | string;
+    /**
+     * The branch name for a git repo.
+     */
+    branch?: null | string;
+    /**
+     * The 'user/profilename' attribute for an Automate server.
+     */
+    compliance?: null | string;
+    /**
+     * The location of the git repo.  Example:
+     * 'https://github.com/mitre/canonical-ubuntu-18.04-lts-stig-baseline.git'.
+     */
+    git?: null | string;
+    /**
+     * The name/assigned alias.
+     */
+    name?: null | string;
+    /**
+     * The relative path if the dependency is locally available.
+     */
+    path?: null | string;
+    /**
+     * The status.  Should be: 'loaded', 'failed', or 'skipped'.
+     */
+    status?: null | string;
+    /**
+     * The reason for the status if it is 'failed' or 'skipped'.
+     */
     status_message?: null | string;
-    supermarket?:    null | string;
-    url?:            null | string;
+    /**
+     * The 'user/profilename' attribute for a Supermarket server.
+     */
+    supermarket?: null | string;
+    /**
+     * The address of the dependency.
+     */
+    url?: null | string;
 }
 
+/**
+ * Descriptions for controls in a group, such as the list of all the controls.
+ */
 export interface ControlGroup {
     /**
-     * The control IDs in this group
+     * The set of controls as specified by their ids in this group.  Example: 'V-75443'.
      */
     controls: string[];
     /**
-     * The unique identifier of the group
+     * The unique identifier for the group.  Example: the relative path to the file specifying
+     * the controls.
      */
     id: string;
     /**
-     * The name of the group
+     * The title of the group - should be human readable.
      */
     title?: null | string;
 }
 
+/**
+ * A supported platform target.  Example: the platform name being 'ubuntu'.
+ */
 export interface SupportedPlatform {
-    "os-family"?:       null | string;
-    "os-name"?:         null | string;
-    platform?:          null | string;
+    /**
+     * Deprecated in favor of platform-family.
+     */
+    "os-family"?: null | string;
+    /**
+     * Deprecated in favor of platform-name.
+     */
+    "os-name"?: null | string;
+    /**
+     * The location of the platform.  Can be: 'os', 'aws', 'azure', or 'gcp'.
+     */
+    platform?: null | string;
+    /**
+     * The platform family.  Example: 'redhat'.
+     */
     "platform-family"?: null | string;
-    "platform-name"?:   null | string;
-    release?:           null | string;
+    /**
+     * The platform name - can include wildcards.  Example: 'debian'.
+     */
+    "platform-name"?: null | string;
+    /**
+     * The release of the platform.  Example: '20.04' for 'ubuntu'.
+     */
+    release?: null | string;
 }
 
+/**
+ * Statistics for the run(s) from the tool that generated the findings.  Example: the
+ * runtime duration.
+ *
+ * Statistics for the run(s) such as how long it took.
+ */
 export interface Statistics {
     controls?: null | StatisticHash;
     /**
-     * How long (in seconds) this inspec exec ran for.
+     * How long (in seconds) this run by the tool was.
      */
     duration?: number | null;
 }
 
 /**
  * Breakdowns of control statistics by result
+ *
+ * Statistics for the control results.
  */
 export interface StatisticHash {
     failed?:  null | StatisticBlock;
@@ -181,9 +427,18 @@ export interface StatisticHash {
     skipped?: null | StatisticBlock;
 }
 
+/**
+ * Statistics for the controls that failed.
+ *
+ * Statistics for a given item, such as the total.
+ *
+ * Statistics for the controls that passed.
+ *
+ * Statistics for the controls that were skipped.
+ */
 export interface StatisticBlock {
     /**
-     * Total number of controls (in this category) for this inspec execution.
+     * The total.  Example: the total number of controls in a given category for a run.
      */
     total: number;
 }
@@ -394,6 +649,7 @@ const typeMap: any = {
         { json: "exception", js: "exception", typ: u(undefined, u(null, "")) },
         { json: "message", js: "message", typ: u(undefined, u(null, "")) },
         { json: "resource", js: "resource", typ: u(undefined, u(null, "")) },
+        { json: "resource_id", js: "resource_id", typ: u(undefined, u(null, "")) },
         { json: "run_time", js: "run_time", typ: u(undefined, u(3.14, null)) },
         { json: "skip_message", js: "skip_message", typ: u(undefined, u(null, "")) },
         { json: "start_time", js: "start_time", typ: "" },

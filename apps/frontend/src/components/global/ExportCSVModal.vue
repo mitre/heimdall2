@@ -67,6 +67,7 @@ import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {InspecDataModule} from '../../store/data_store';
 import {EvaluationFile, ProfileFile} from '../../store/report_intake';
+import {getDescription} from '../../utilities/helper_util';
 
 const fieldNames = [
   'Results Set',
@@ -131,7 +132,7 @@ export default class ExportCSVModal extends Vue {
   descriptionsToString(
     descriptions?:
       | ExecJSON.ControlDescription[]
-      | {[key: string]: unknown}
+      | {[key: string]: string}
       | null
   ): string {
     let result = '';
@@ -198,25 +199,13 @@ export default class ExportCSVModal extends Vue {
 
     if (control.data.tags.check) {
       check = control.data.tags.check;
-    } else if (typeof control.data.descriptions === 'object') {
-      const found = control.data.descriptions?.find(
-        (description: ExecJSON.ControlDescription) =>
-          description.label.toLowerCase() === 'check'
-      );
-      if (found) {
-        check = found.data;
-      }
+    } else if (control.data.descriptions) {
+      check = getDescription(control.data.descriptions, 'check') || '';
     }
     if (control.data.tags.fix) {
       fix = control.data.tags.fix;
-    } else if (typeof control.data.descriptions === 'object') {
-      const found = control.data.descriptions?.find(
-        (description: ExecJSON.ControlDescription) =>
-          description.label.toLowerCase() === 'fix'
-      );
-      if (found) {
-        fix = found.data;
-      }
+    } else if (control.data.descriptions) {
+      fix = getDescription(control.data.descriptions, 'fix') || '';
     }
     this.fieldsToAdd.forEach((field) => {
       switch (field) {
