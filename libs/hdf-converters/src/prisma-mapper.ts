@@ -30,11 +30,11 @@ const SEVERITY_LOOKUP: Record<string, number> = {
   critical: 1
 };
 
-// The DEFAULT_NIST_TAG is applicable to the following controls:
+// DEFAULT_NIST_TAG is applicable to all automated configuration tests.
 // SA-11 (DEVELOPER SECURITY TESTING AND EVALUATION) - RA-5 (VULNERABILITY SCANNING)
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
-// The REMEDIATION_NIST_TAG is applicable to the following controls:
+// REMEDIATION_NIST_TAG the set of default applicable NIST 800-53 controls for ensuring up-to-date packages.
 // SI-2 (FLAW REMEDIATION) - 	RA-5 (VULNERABILITY SCANNING)
 const REMEDIATION_NIST_TAG = ['SI-2', 'RA-5'];
 
@@ -60,7 +60,7 @@ function getTitle(item: Record<string, string>): string {
   const hostName = _.get(item, 'Hostname');
   const distro = _.get(item, 'Distro');
   const type = _.get(item, 'Type');
-  return hostName.toString().concat(distro, type);
+  return `${hostName}-${distro}-${type}`;
 }
 function getImpact(severity: string): number {
   if (severity) {
