@@ -9,6 +9,21 @@ on:
 jobs:
   build:
     runs-on: ubuntu-20.04
+  
+    services:
+      splunk:
+        image: splunk/splunk
+        volumes:
+          - /$(pwd)/test/configs/splunk/server.conf:/etc/system/local/server.conf
+        ports:
+          - 8089:8089
+          - 8088:8088
+        env:
+          SPLUNK_START_ARGS: --accept-license
+          SPLUNKD_SSL_ENABLE: False
+          SPLUNK_HEC_TOKEN: ${{ secrets.SPLUNK_HEC_TOKEN }}
+          SPLUNK_HEC_SSL: False
+          SPLUNK_PASSWORD: Valid_password!
 
     steps:
      - uses: actions/checkout@v2
@@ -39,13 +54,17 @@ jobs:
      - name: Install project dependencies
        run: |
         yarn hdf-converters install --frozen-lockfile
-        yarn workspace @heimdall/cypress-tests install 
+        yarn workspace @heimdall/cypress-tests install
+       env:
+        CYPRESS_INSTALL_BINARY: 0
     
      - name: Start Mock Sonarqube Server
        run: yarn run cypress-test mock-json &
 
      - name: Run unit tests
        run: yarn hdf-converters test
+       env:
+         SPLUNK_HEC_TOKEN: ${{ secrets.SPLUNK_HEC_TOKEN }}
 
      - name: Ensure the hdf-converters builds cleanly
        run: yarn hdf-converters build

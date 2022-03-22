@@ -20,3 +20,18 @@ export function omitASFFTimes(
 ): Partial<IFindingASFF>[] {
   return input.map((finding) => _.omit(finding, ['UpdatedAt', 'CreatedAt']));
 }
+
+export function omitASFFVersions(
+  input: Partial<IFindingASFF>[]
+): Partial<IFindingASFF>[] {
+  return input.map((finding) => {
+    if (_.has(finding, 'FindingProviderFields.Types')) {
+      const typesArray = _.reject(
+        _.get(finding, 'FindingProviderFields.Types'),
+        (type) => _.startsWith(type, 'MITRE/SAF/')
+      );
+      _.set(finding, 'FindingProviderFields.Types', typesArray);
+    }
+    return finding;
+  });
+}

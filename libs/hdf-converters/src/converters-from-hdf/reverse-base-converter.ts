@@ -12,6 +12,7 @@ export interface ILookupPathFH {
   arrayTransformer?: (value: unknown[], file: ExecJSON.Execution) => unknown[];
   key?: string;
   passParent?: boolean;
+  default?: any;
 }
 
 //Base converter used to support conversions from HDF to Any Format
@@ -61,6 +62,7 @@ export class FromHdfBaseConverter {
       typeof v === 'string' ||
       typeof v === 'number' ||
       typeof v === 'boolean' ||
+      v === undefined ||
       v === null
     ) {
       return v;
@@ -144,9 +146,9 @@ export class FromHdfBaseConverter {
   //Gets the value at the path using lodash and path stored in object
   handlePath(file: object, path: string): unknown {
     if (path.startsWith('$.')) {
-      return _.get(this.data, path.slice(2)) || '';
+      return _.get(this.data, path.slice(2));
     } else {
-      return _.get(file, path) || '';
+      return _.get(file, path);
     }
   }
   hasPath(file: object, path: string): boolean {

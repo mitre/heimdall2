@@ -1,6 +1,6 @@
 import fs from 'fs';
 import {FromHdfToAsffMapper} from '../../../src/converters-from-hdf/asff/reverse-asff-mapper';
-import {omitASFFTimes, omitASFFTitle} from '../../utils';
+import {omitASFFTimes, omitASFFTitle, omitASFFVersions} from '../../utils';
 
 describe('Describe ASFF Reverse Mapper', () => {
   it('Successfully converts HDF into ASFF', () => {
@@ -19,13 +19,6 @@ describe('Describe ASFF Reverse Mapper', () => {
       region: 'us-east-2'
     }).toAsff();
 
-    const expectedProfileInfo = JSON.parse(
-      fs.readFileSync(
-        'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json.p0.json',
-        {encoding: 'utf-8'}
-      )
-    );
-
     const profileInformation = [converted.pop() || {}];
 
     const expectedJSON = JSON.parse(
@@ -35,9 +28,45 @@ describe('Describe ASFF Reverse Mapper', () => {
       )
     );
 
-    expect(omitASFFTimes(omitASFFTitle(expectedProfileInfo))).toEqual(
-      omitASFFTimes(omitASFFTitle(profileInformation))
+    const expectedProfileInfo = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json.p0.json',
+        {encoding: 'utf-8'}
+      )
     );
-    expect(omitASFFTimes(converted)).toEqual(omitASFFTimes(expectedJSON));
+
+    expect(
+      omitASFFVersions(omitASFFTimes(omitASFFTitle(profileInformation)))
+    ).toEqual(omitASFFTimes(omitASFFTitle(expectedProfileInfo)));
+    expect(omitASFFVersions(omitASFFTimes(omitASFFTitle(converted)))).toEqual(
+      omitASFFVersions(omitASFFTimes(omitASFFTitle(expectedJSON)))
+    );
+  });
+
+  it('Successfully processes HDF files with no controls', () => {
+    const inputData = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/asff_reverse_mapper/sample_input_report/snyk-no-results.json',
+        {encoding: 'utf-8'}
+      )
+    );
+
+    const converted = new FromHdfToAsffMapper(inputData, {
+      input: 'snyk-no-results.json',
+      awsAccountId: '12345678910',
+      target: 'storybook-link',
+      region: 'us-east-2'
+    }).toAsff();
+
+    const expectedJSON = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/asff_reverse_mapper/snyk-no-results.asff.json',
+        {encoding: 'utf-8'}
+      )
+    );
+
+    expect(omitASFFVersions(omitASFFTimes(omitASFFTitle(converted)))).toEqual(
+      omitASFFVersions(omitASFFTimes(omitASFFTitle(expectedJSON)))
+    );
   });
 });

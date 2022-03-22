@@ -7,104 +7,240 @@
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
 
+/**
+ * Information on the set of controls that can be assessed.  Example: it can include the
+ * name of the Inspec profile.
+ */
 export interface ProfileJSON {
-    controls:         ProfileJSONControl[];
-    copyright?:       null | string;
+    /**
+     * The set of controls - contains no findings as the assessment has not yet occurred.
+     */
+    controls: ProfileJSONControl[];
+    /**
+     * The copyright holder(s).
+     */
+    copyright?: null | string;
+    /**
+     * The email address or other contract information of the copyright holder(s).
+     */
     copyright_email?: null | string;
-    depends?:         Dependency[] | null;
-    generator?:       null | Generator;
-    groups:           ControlGroup[];
-    inputs?:          { [key: string]: any }[] | null;
-    maintainer?:      null | string;
-    name:             string;
-    sha256:           string;
-    status?:          null | string;
-    supports:         SupportedPlatform[];
-    title?:           null | string;
-    version?:         null | string;
+    /**
+     * The set of dependencies this profile depends on.  Example: an overlay profile is
+     * dependent on another profile.
+     */
+    depends?:   Dependency[] | null;
+    generator?: null | Generator;
+    /**
+     * A set of descriptions for the control groups.  Example: the ids of the controls.
+     */
+    groups: ControlGroup[];
+    /**
+     * The input(s) or attribute(s) used to be in the run.
+     */
+    inputs?: { [key: string]: any }[] | null;
+    /**
+     * The maintainer(s).
+     */
+    maintainer?: null | string;
+    /**
+     * The name - must be unique.
+     */
+    name: string;
+    /**
+     * The checksum of the profile.
+     */
+    sha256: string;
+    /**
+     * The status.  Example: skipped.
+     */
+    status?: null | string;
+    /**
+     * The set of supported platform targets.
+     */
+    supports: SupportedPlatform[];
+    /**
+     * The title - should be human readable.
+     */
+    title?: null | string;
+    /**
+     * The version of the profile.
+     */
+    version?: null | string;
 }
 
+/**
+ * The set of all tests within the control.
+ */
 export interface ProfileJSONControl {
     /**
      * The raw source code of the control. Note that if this is an overlay control, it does not
-     * include the underlying source code
+     * include the underlying source code.
      */
-    code:          string;
-    desc?:         null | string;
-    descriptions?: { [key: string]: any } | null;
+    code: string;
     /**
-     * The ID of this control
+     * The description for the overarching control.
      */
-    id:               string;
-    impact:           number;
+    desc?:         null | string;
+    descriptions?: { [key: string]: string } | null;
+    /**
+     * The id.
+     */
+    id: string;
+    /**
+     * The impactfulness or severity.
+     */
+    impact: number;
+    /**
+     * The set of references to external documents.
+     */
     refs?:            Reference[] | null;
     source_location?: null | SourceLocation;
-    tags:             { [key: string]: any };
-    title?:           null | string;
+    /**
+     * A set of tags - usually metadata.
+     */
+    tags: { [key: string]: any };
+    /**
+     * The title - is nullable.
+     */
+    title?: null | string;
 }
 
+/**
+ * A reference to an external document.
+ *
+ * A human readable/meaningful reference.  Example: a book title.
+ *
+ * A url pointing at the reference.
+ *
+ * A uri pointing at the reference.
+ */
 export interface Reference {
     ref?: { [key: string]: any }[] | string;
     url?: string;
     uri?: string;
 }
 
+/**
+ * The explicit location of the control within the source code.
+ *
+ * The explicit location of the control.
+ */
 export interface SourceLocation {
     /**
-     * The line at which this statement is located in the file
+     * The line on which this control is located.
      */
     line?: number | null;
     /**
-     * Path to the file that this statement originates from
+     * Path to the file that this control originates from.
      */
     ref?: null | string;
 }
 
+/**
+ * A dependency for a profile.  Can include relative paths or urls for where to find the
+ * dependency.
+ */
 export interface Dependency {
-    branch?:         null | string;
-    compliance?:     null | string;
-    git?:            null | string;
-    name?:           null | string;
-    path?:           null | string;
-    status?:         null | string;
+    /**
+     * The branch name for a git repo.
+     */
+    branch?: null | string;
+    /**
+     * The 'user/profilename' attribute for an Automate server.
+     */
+    compliance?: null | string;
+    /**
+     * The location of the git repo.  Example:
+     * 'https://github.com/mitre/canonical-ubuntu-18.04-lts-stig-baseline.git'.
+     */
+    git?: null | string;
+    /**
+     * The name/assigned alias.
+     */
+    name?: null | string;
+    /**
+     * The relative path if the dependency is locally available.
+     */
+    path?: null | string;
+    /**
+     * The status.  Should be: 'loaded', 'failed', or 'skipped'.
+     */
+    status?: null | string;
+    /**
+     * The reason for the status if it is 'failed' or 'skipped'.
+     */
     status_message?: null | string;
-    supermarket?:    null | string;
-    url?:            null | string;
+    /**
+     * The 'user/profilename' attribute for a Supermarket server.
+     */
+    supermarket?: null | string;
+    /**
+     * The address of the dependency.
+     */
+    url?: null | string;
 }
 
+/**
+ * The tool that generated this file.  Example: Chef Inspec.
+ */
 export interface Generator {
     /**
-     * The name of the software that generated this report.
+     * The name.  Example: Chef Inspec.
      */
     name: string;
     /**
-     * The version of the software that generated this report.
+     * The version.  Example: 4.18.108.
      */
     version: string;
 }
 
+/**
+ * Descriptions for controls in a group, such as the list of all the controls.
+ */
 export interface ControlGroup {
     /**
-     * The control IDs in this group
+     * The set of controls as specified by their ids in this group.  Example: 'V-75443'.
      */
     controls: string[];
     /**
-     * The unique identifier of the group
+     * The unique identifier for the group.  Example: the relative path to the file specifying
+     * the controls.
      */
     id: string;
     /**
-     * The name of the group
+     * The title of the group - should be human readable.
      */
     title?: null | string;
 }
 
+/**
+ * A supported platform target.  Example: the platform name being 'ubuntu'.
+ */
 export interface SupportedPlatform {
-    "os-family"?:       null | string;
-    "os-name"?:         null | string;
-    platform?:          null | string;
+    /**
+     * Deprecated in favor of platform-family.
+     */
+    "os-family"?: null | string;
+    /**
+     * Deprecated in favor of platform-name.
+     */
+    "os-name"?: null | string;
+    /**
+     * The location of the platform.  Can be: 'os', 'aws', 'azure', or 'gcp'.
+     */
+    platform?: null | string;
+    /**
+     * The platform family.  Example: 'redhat'.
+     */
     "platform-family"?: null | string;
-    "platform-name"?:   null | string;
-    release?:           null | string;
+    /**
+     * The platform name - can include wildcards.  Example: 'debian'.
+     */
+    "platform-name"?: null | string;
+    /**
+     * The release of the platform.  Example: '20.04' for 'ubuntu'.
+     */
+    release?: null | string;
 }
 
 // Converts JSON strings to/from your types
@@ -271,7 +407,7 @@ const typeMap: any = {
     "ProfileJSONControl": o([
         { json: "code", js: "code", typ: "" },
         { json: "desc", js: "desc", typ: u(undefined, u(null, "")) },
-        { json: "descriptions", js: "descriptions", typ: u(undefined, u(m("any"), null)) },
+        { json: "descriptions", js: "descriptions", typ: u(undefined, u(m(""), null)) },
         { json: "id", js: "id", typ: "" },
         { json: "impact", js: "impact", typ: 3.14 },
         { json: "refs", js: "refs", typ: u(undefined, u(a(r("Reference")), null)) },

@@ -22,8 +22,6 @@ This repository contains the source code for the Heimdall's [Backend](https://gi
 
 [Heimdall Lite](https://heimdall-lite.netlify.com/) | [Heimdall Server](https://mitre-heimdall-staging.herokuapp.com/)
 
-
-
 ## Heimdall vs Heimdall-Lite
 
 There are two versions of the MITRE Heimdall Viewer - the full Heimdall Enterprise Server and the Heimdall-Lite version. Both share the same frontend but have been produced to meet different needs and use-cases.
