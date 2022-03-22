@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.14",
+    "release": "2.6.16",
     "target_id": "my-fake-host-11.somewhere.cloud"
   },
-  "version": "2.6.14",
+  "version": "2.6.16",
   "statistics": {
     "duration": null
   },
@@ -193,6 +193,7 @@
           "source_location": "my-fake-host-11.somewhere.cloud",
           "id": "46-CVE-2021-44142",
           "title": "my-fake-host-11.somewhere.cloudredhat-RHEL7image",
+          "impact": 1,
           "code": "{\n  \"Hostname\": \"my-fake-host-11.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-44142\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"samba-common\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"4.10.16-17.el7_9\",\n  \"Package License\": \"GPLv3+ and LGPLv3+\",\n  \"CVSS\": \"9.90\",\n  \"Fix Status\": \"fixed in 4.10.16-18.el7_9\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Samba is an open-source implementation of the Server Message Block (SMB) protocol and the related Common Internet File System (CIFS) protocol, which allow PC-compatible machines to share files, printers, and various information.  Security Fix(es):  * samba: Out-of-bounds heap read/write vulnerability in VFS module vfs_fruit allows code execution (CVE-2021-44142)  For more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.  Bug Fix(es):  * Fix username map script regression introduced with CVE-2020-25717 (BZ#2046173)\",\n  \"Cause\": \"\",\n  \"Published\": \"2022-01-31 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/errata/RHSA-2022:0328\"\n}",
           "results": [
             {
@@ -204,7 +205,7 @@
           ]
         }
       ],
-      "sha256": "6dd9cbd991e2cf28eae21d682f6ec3fd841f9af078fe14b17b7408b4b7e4cdc4"
+      "sha256": "24379fdae2594e5f5a1995ffa1798ac8094f6697d9b775d31fade2f928d6dd73"
     }
   ]
 }

@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.14",
+    "release": "2.6.16",
     "target_id": "my-fake-host-12.somewhere.cloud"
   },
-  "version": "2.6.14",
+  "version": "2.6.16",
   "statistics": {
     "duration": null
   },
@@ -73,6 +73,7 @@
           "source_location": "my-fake-host-12.somewhere.cloud",
           "id": "6143-redhat-RHEL7-critical",
           "title": "my-fake-host-12.somewhere.cloudredhat-RHEL7linux",
+          "impact": 1,
           "code": "{\n  \"Hostname\": \"my-fake-host-12.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"6143\",\n  \"Type\": \"linux\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode\",\n  \"Cause\": \"Password should be set for user \\\"root\\\". File: /etc/shadow\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
           "results": [
             {
@@ -204,7 +205,7 @@
           ]
         }
       ],
-      "sha256": "9c264a58f39b22d13afa2f525fc328dd20d831f6e0b505d91ca875e58e0336c6"
+      "sha256": "e46059f0cdaa15ec7f0b38f7eff7dd15cf71a92f4b52ccf5f1394971d0e92fee"
     }
   ]
 }

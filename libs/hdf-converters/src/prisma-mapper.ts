@@ -17,18 +17,22 @@ const SEVERITY_LOOKUP: Record<string, number> = {
   moderate: 0.5,
   high: 0.7,
   important: 0.9,
-  critial: 1
+  critical: 1
 };
 
+// The DEFAULT_NIST_TAG is applicable to the following controls:
+// SA-11 (DEVELOPER SECURITY TESTING AND EVALUATION) - RA-5 (VULNERABILITY SCANNING)
 const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
-const BASE_NIST_TAG = ['SI-2', 'RA-5'];
-const DASH = '-';
+
+// The REMEDIATION_NIST_TAG is applicable to the following controls:
+// SI-2 (FLAW REMEDIATION) - 	RA-5 (VULNERABILITY SCANNING)
+const REMEDIATION_NIST_TAG = ['SI-2', 'RA-5'];
 
 function nistTag(cveTag: Record<string, string>): string[] {
   if (!cveTag) {
     return DEFAULT_NIST_TAG;
   } else {
-    return BASE_NIST_TAG;
+    return REMEDIATION_NIST_TAG;
   }
 }
 function getId(value: Record<string, string>): string {
@@ -36,7 +40,11 @@ function getId(value: Record<string, string>): string {
   const cveID = _.get(value, 'CVE ID');
   const distro = _.get(value, 'Distro');
   const severity = _.get(value, 'Severity');
-  return complianceID.concat(DASH, (cveID ? cveID : `${distro}${DASH}${severity}`)); 
+  if (cveID) {
+    return `${complianceID}-${cveID}`;
+  } else {
+    return `${complianceID}-${distro}-${severity}`;
+  }
 }
 function getTitle(item: Record<string, string>): string {
   const hostName = _.get(item, 'Hostname');

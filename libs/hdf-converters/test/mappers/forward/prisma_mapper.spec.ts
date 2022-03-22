@@ -10,15 +10,7 @@ describe('prisma_mapper', () => {
         {encoding: 'utf-8'}
       )
     );
-
-    const converted = mapper.toHdf();
-
-    Object.entries(converted).forEach(([, obj]) => {
-      const fileName = `sample_jsons/prisma_mapper/${obj.platform.target_id}.json`;
-      fs.writeFileSync(fileName, JSON.stringify(obj, null, 2));
-    });
-
-    Object.entries(converted).forEach(([, obj]) => {
+    Object.entries(mapper.toHdf()).forEach(([, obj]) => {
       const fileName = `sample_jsons/prisma_mapper/${obj.platform.target_id}.json`;
       expect(omitVersions(obj)).toEqual(
         omitVersions(

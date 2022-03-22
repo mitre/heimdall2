@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.14",
+    "release": "2.6.16",
     "target_id": "my-fake-host-13.somewhere.cloud"
   },
-  "version": "2.6.14",
+  "version": "2.6.16",
   "statistics": {
     "duration": null
   },
@@ -73,6 +73,7 @@
           "source_location": "my-fake-host-13.somewhere.cloud",
           "id": "6143-redhat-RHEL7-critical",
           "title": "my-fake-host-13.somewhere.cloudredhat-RHEL7linux",
+          "impact": 1,
           "code": "{\n  \"Hostname\": \"my-fake-host-13.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"6143\",\n  \"Type\": \"linux\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode\",\n  \"Cause\": \"Password should be set for user \\\"root\\\". File: /etc/shadow\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
           "results": [
             {
@@ -222,6 +223,7 @@
           "source_location": "my-fake-host-13.somewhere.cloud",
           "id": "411-CVE-2021-38297",
           "title": "my-fake-host-13.somewhere.cloudredhat-RHEL7image",
+          "impact": 1,
           "code": "{\n  \"Hostname\": \"my-fake-host-13.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-38297\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.17.1\",\n  \"Package License\": \"\",\n  \"CVSS\": \"9.80\",\n  \"Fix Status\": \"fixed in 1.17.2, 1.16.9\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Red Hat\\\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.\",\n  \"Cause\": \"\",\n  \"Published\": \"2021-10-07 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2021-38297\"\n}",
           "results": [
             {
@@ -233,7 +235,7 @@
           ]
         }
       ],
-      "sha256": "66132ce981739f8d4928e01ce810d10e83d2979108031f1bc6415f6c3126a221"
+      "sha256": "1f3c2e5893114f469da6ae1a4fb6833d814e16b4e4bc45fff28d8beddef63c4f"
     }
   ]
 }
