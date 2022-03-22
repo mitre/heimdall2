@@ -1,4 +1,4 @@
-import {MappedReform, ObjectEntries} from '../base-converter';
+import {MappedReform, ObjectEntryValue} from '../base-converter';
 import {FromHdfBaseConverter, ILookupPathFH} from './reverse-base-converter';
 
 // Base converter used to support conversions from HDF to Any Format
@@ -11,13 +11,13 @@ export class FromAnyBaseConverter extends FromHdfBaseConverter {
 
   // Called over and over to iterate through objects assigned to keys too
   convertInternal(file: object, fields: any): MappedReform<any, ILookupPathFH> {
-    return this.objectMap(fields, (v: ObjectEntries<any>) =>
+    return this.objectMap(fields, (v: ObjectEntryValue<any>) =>
       this.evaluate(file, v)
     );
   }
 
   // Preforms fn() on all entries inside the passed obj
-  objectMap<T, V>(obj: T, fn: (v: ObjectEntries<T>) => V): {[K in keyof T]: V} {
+  objectMap<T, V>(obj: T, fn: (v: ObjectEntryValue<T>) => V): {[K in keyof T]: V} {
     return Object.fromEntries(
       Object.entries(obj).map(([k, v]) => [k, fn(v)])
     ) as Record<keyof T, V>;
