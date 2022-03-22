@@ -7,27 +7,37 @@
 //  AZURE_USERNAME - Username to authenticate with.
 //  AZURE_PASSWORD - Passord to authenticate with.
 // This converter was written for: https://docs.microsoft.com/en-us/azure/governance/policy/samples/nist-sp-800-53-r4
+
 import { DefaultAzureCredential } from "@azure/identity";
 import { PolicyInsightsClient } from "@azure/arm-policyinsights";
 import { PolicyClient } from "@azure/arm-policy";
 import { ExecJSON } from 'inspecjs';
 import { AzurePolicyMapping } from './mappings/AzurePolicyMapping';
 import { version as HeimdallToolsVersion } from '../package.json';
-import { setLogLevel } from "@azure/logger"; // helps with troubleshooting
+
 // For troubleshooting API calls, uncomment below
+//import { setLogLevel } from "@azure/logger"; // helps with troubleshooting
 //setLogLevel("info");
 
 var fs = require('fs');
 
 // Load Azure Subscription ID as a variable from an OS environment variable.
-const subscriptionId: string = process.env["AZURE_SUBSCRIPTION_ID"]!; // Might need to check this with input validation & error handling..
+let subscriptionId = "";
+if (process.env["AZURE_SUBSCRIPTION_ID"] === undefined) {
+    console.log("Error: Environment variable \"AZURE_SUBSCRIPTION_ID\" is undefined. Set this variable with the Azure Subscription Id.");
+    process.exit(1);
+} else {
+    subscriptionId = process.env["AZURE_SUBSCRIPTION_ID"]!;
+}
+
 // Create credential object. Reference the environment variable notes above.
 const credential = new DefaultAzureCredential();
-
+// Set HDF name and initialize AzurePolicyMapping object.
 const NAME = "Azure Policy"
 const AZURE_POLICY_MAPPING = new AzurePolicyMapping();
 
 // Interfaces
+// PolicyDefinition contains data used to populate HDF.
 interface PolicyDefinition {
     id: string;
     subscriptionId: string;
@@ -38,7 +48,7 @@ interface PolicyDefinition {
     state?: string;
     resources?: AzureResource[];
 }
-
+// AzureResource contains data about a specific Azure Resource (i.e. virtualMachine).
 interface AzureResource {
     id: string;
     subscriptionId: string;
@@ -46,7 +56,7 @@ interface AzureResource {
     state?: string;
     location?: string;
 }
-
+// HDFResult contains data about a specific compliance test.
 interface HDFResult {
     code_desc: string,
     run_time: number,
@@ -65,7 +75,7 @@ class AzurePolicyConverter {
     constructor(credential: DefaultAzureCredential, subscriptionId: string) {
         console.log("Generating HDF")
         this.results = [];
-        let policyDefinitions = this.toHDF(credential, subscriptionId);
+        this.toHDF(credential, subscriptionId);
     }
 
     //generateHDF
@@ -78,19 +88,18 @@ class AzurePolicyConverter {
         // Array for holding Group Names (NIST mappings)
         let groupNames: string[] = [];
         // Flag for Policy Compliance State
-        let complianceState: string = ""
+        let complianceState = "";
         // Initalize Policy Insights Client
         const policyInsightsClient = new PolicyInsightsClient(credential, subscriptionId);
         // Initalize Policy Client
         const policyClient = new PolicyClient(credential, subscriptionId);
-        var count: number = 0;
 
 
         for await (const policyState of policyInsightsClient.policyStates.listQueryResultsForSubscription('default', subscriptionId)) {
             // Reset Array for GroupNames
             groupNames = [];
             if (policyState.isCompliant !== undefined) {
-                complianceState = policyState.isCompliant == false ? "noncompliant" : "compliant";
+                complianceState = policyState.isCompliant === false ? "noncompliant" : "compliant";
             } else {
                 complianceState = "compliant"
             }
@@ -103,7 +112,7 @@ class AzurePolicyConverter {
             }
 
             // Create AzureResource object
-            let azureResource: AzureResource = {
+            const azureResource: AzureResource = {
                 id: policyState.resourceId!,
                 subscriptionId: subscriptionId,
                 type: policyState.resourceType,
@@ -124,8 +133,8 @@ class AzurePolicyConverter {
                     })
                 }
             } else {
-                let policyDefinitionIndex = policyDefinitions.findIndex(PolicyDefinition => PolicyDefinition.id === policyState.policyDefinitionId)
-                let resourceIndex = policyDefinitions[policyDefinitionIndex].resources?.findIndex(AzureResource => AzureResource.id === azureResource.id)
+                const policyDefinitionIndex = policyDefinitions.findIndex(PolicyDefinition => PolicyDefinition.id === policyState.policyDefinitionId)
+                const resourceIndex = policyDefinitions[policyDefinitionIndex].resources?.findIndex(AzureResource => AzureResource.id === azureResource.id)
 
                 if (resourceIndex === -1) {
                     policyDefinitions[policyDefinitionIndex].resources?.push(azureResource)
@@ -139,7 +148,7 @@ class AzurePolicyConverter {
         // Loop through each Policy and retrieve the metadata (name, description, etc.) associated with that policy.
         for (let i = 0; i < policyDefinitions.length; i++) {
             await this.delay(150);
-            let policyAssignmentList = await policyClient.policyAssignments.getById(policyDefinitions[i].id);
+            const policyAssignmentList = await policyClient.policyAssignments.getById(policyDefinitions[i].id);
             policyDefinitions[i].detailedName = policyAssignmentList.displayName;
             policyDefinitions[i].name = policyAssignmentList.name;
             policyDefinitions[i].description = policyAssignmentList.description;
@@ -147,7 +156,7 @@ class AzurePolicyConverter {
 
         // Get Static Policies that Microsoft is responsible for meeting NIST 800-53 controls.
         // Async pull static policies from the Policy Insights API
-        let staticPolicies = [];
+        const staticPolicies = [];
         for await (const item of policyClient.policyDefinitions.list({ filter: "policyType eq 'Static'" })) {
             staticPolicies.push(item);
         }
@@ -155,14 +164,14 @@ class AzurePolicyConverter {
 
         for (let i = 0; i < staticPolicies.length; i++) {
             // Get Policy Details
-            let policyAssignmentList = await policyClient.policyAssignments.getById(staticPolicies[i].id!);
+            const policyAssignmentList = await policyClient.policyAssignments.getById(staticPolicies[i].id!);
             // Get Policy Control Mapping
             groupNames = AZURE_POLICY_MAPPING.nistFilter([policyAssignmentList.displayName!])!;
             if (groupNames === null || groupNames === undefined) {
                 groupNames = []
             }
 
-            let azureResource: AzureResource = {
+            const azureResource: AzureResource = {
                 id: "Microsoft Managed",
                 subscriptionId: subscriptionId,
                 type: "N/A",
@@ -171,7 +180,7 @@ class AzurePolicyConverter {
             }
 
             policyDefinitions.push({
-                id: staticPolicies[i].id!,
+                id: staticPolicies[i].id || "Not Available",
                 subscriptionId: subscriptionId,
                 detailedName: policyAssignmentList.displayName,
                 name: policyAssignmentList.name,
