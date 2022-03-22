@@ -1,6 +1,6 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["*.ts", "**/*.ts"],
+  "include": ["*.ts", "**/*.ts", "./.eslintrc.js"],
   "exclude": ["lib"],
   "compilerOptions": {
     "outDir": "./lib",

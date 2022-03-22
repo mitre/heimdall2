@@ -3,7 +3,8 @@
   "include": [
     "*.ts",
     "**/*.ts",
-    "types/*.d.ts"
+    "types/*.d.ts",
+    "./.eslintrc.js"
   ],
   "exclude": ["lib"],
   "compilerOptions": {

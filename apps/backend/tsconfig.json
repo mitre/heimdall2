@@ -18,6 +18,7 @@
     "node_modules",
   ],
   "include": [
+    "./.eslintrc.js",
     "src/**/*",
     "test/**/*"
   ]
