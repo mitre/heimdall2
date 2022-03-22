@@ -293,7 +293,7 @@ export class InspecIntake extends VuexModule {
         // Match CSV Headers, global and case-insensitive
         // We could implement indexOf which ignores order
         guessOptions.data.match(
-         /Hostname.*Distro.*CVE ID.*Compliance ID.*Type.*Severity/gi
+          /Hostname.*Distro.*CVE ID.*Compliance ID.*Type.*Severity/gi
         )
       ) {
         return 'prisma';

@@ -12,6 +12,16 @@ export type PrismaControls = {
   records: Record<string, string>[];
 };
 
+export type PrismaControl = {
+  Packages: string;
+  Description: string;
+  Distro: string;
+  Type: string;
+  Hostname: string;
+  'Fix Status'?: string;
+  Cause?: string;
+};
+
 const SEVERITY_LOOKUP: Record<string, number> = {
   low: 0.3,
   moderate: 0.5,
@@ -36,7 +46,10 @@ function getId(value: Record<string, string>): string {
   const cveID = _.get(value, 'CVE ID');
   const distro = _.get(value, 'Distro');
   const severity = _.get(value, 'Severity');
-  return complianceID.concat(DASH, (cveID ? cveID : `${distro}${DASH}${severity}`)); 
+  return complianceID.concat(
+    DASH,
+    cveID ? cveID : `${distro}${DASH}${severity}`
+  );
 }
 function getTitle(item: Record<string, string>): string {
   const hostName = _.get(item, 'Hostname');
@@ -102,13 +115,7 @@ export class PrismaControlMapper extends BaseConverter {
               {
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {
-                  transformer: (obj: {
-                    Packages: string;
-                    Description: string;
-                    Distro: string;
-                    Type: string;
-                    Hostname: string;
-                  }) => {
+                  transformer: (obj: PrismaControl) => {
                     let result = '';
                     if (obj.Type === 'image') {
                       if (obj['Packages'] !== '') {
@@ -128,10 +135,7 @@ export class PrismaControlMapper extends BaseConverter {
                   }
                 },
                 message: {
-                  transformer: (obj: {
-                    'Fix Status'?: string;
-                    Cause?: string;
-                  }) => {
+                  transformer: (obj: PrismaControl) => {
                     let result = '';
                     if (obj['Fix Status'] !== '' && obj.Cause !== '') {
                       result += `Fix Status: ${obj['Fix Status']}\n\n${obj.Cause}`;
