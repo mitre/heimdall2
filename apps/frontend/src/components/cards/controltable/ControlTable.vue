@@ -179,7 +179,7 @@ export default class ControlTable extends Vue {
   syncTab = 'tab-test';
 
   // List of currently expanded options. If unique id is in here, it is expanded
-  expanded: Array<string> = [];
+  expanded: string[] = [];
 
   // Sorts
   sortId: Sort = 'none';

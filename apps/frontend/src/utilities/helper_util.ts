@@ -1,5 +1,8 @@
 /** For helper functions that don't belong anywhere else */
 
+import {ExecJSON} from 'inspecjs';
+import _ from 'lodash';
+
 /** Compares arrays a and b, returning a number indicating their lexicographic ordering
  * with the same output semantics.
  * That is,
@@ -82,43 +85,30 @@ export class LocalStorageVal<T> {
   }
 }
 
+/** Get descripion from Array of descriptions or Key/String pair */
+export function getDescription(
+  descriptions:
+    | {
+        [key: string]: string;
+      }
+    | ExecJSON.ControlDescription[],
+  key: string
+): string | undefined {
+  let found: string | undefined;
+  if (Array.isArray(descriptions)) {
+    found = descriptions.find(
+      (description: ExecJSON.ControlDescription) =>
+        description.label.toLowerCase() === key
+    )?.data;
+  } else {
+    found = _.get(descriptions, key);
+  }
+
+  return found;
+}
+
 /** A useful shorthand */
 export type Hash<T> = {[key: string]: T};
-
-/** Groups items by using the provided key function */
-export function group_by<T>(
-  items: Array<T>,
-  keyGetter: (v: T) => string
-): Hash<Array<T>> {
-  const result: Hash<Array<T>> = {};
-  for (const i of items) {
-    // Get the items key
-    const key = keyGetter(i);
-
-    // Get the list it should go in
-    const corrList = result[key];
-    if (corrList) {
-      // If list exists, place
-      corrList.push(i);
-    } else {
-      // List does not exist; create and put
-      result[key] = [i];
-    }
-  }
-  return result;
-}
-
-/** Maps a hash to a new hash, with the same keys but each value replaced with a new (mapped) value */
-export function map_hash<T, G>(
-  old: Hash<T>,
-  mapFunction: (v: T) => G
-): Hash<G> {
-  const result: Hash<G> = {};
-  for (const key in old) {
-    result[key] = mapFunction(old[key]);
-  }
-  return result;
-}
 
 /** Converts a simple, single level json dict into uri params */
 export function to_uri_params(params: Hash<string | number | boolean>) {

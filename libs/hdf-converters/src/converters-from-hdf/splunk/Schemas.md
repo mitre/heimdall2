@@ -1,13 +1,27 @@
 # Schemas
 
-Splunk2HDF has follows 3 schemas for importing data into Splunk.
+hdf2Splunk has the following 3 schemas for importing data into Splunk.
 
-## Previewing Data Within Splunk
+## Previewing HDF Data Within Splunk
 
-An example query to preview data data splunk is as follows:
+A full raw search query:
+```
+index="<<YOUR INDEX>>" meta.subtype=control | stats  values(meta.filename) values(meta.filetype) list(meta.profile_sha256) values(meta.hdf_splunk_schema) first(meta.status)  list(meta.status)  list(meta.is_baseline) values(title) last(code) list(code) values(desc) values(descriptions.*)  values(id) values(impact) list(refs{}.*) list(results{}.*) list(source_location{}.*) values(tags.*)  by meta.guid id 
+| join  meta.guid 
+    [search index="hdf"  meta.subtype=header | stats values(meta.filename) values(meta.filetype) values(meta.hdf_splunk_schema) list(statistics.duration)  list(platform.*) list(version)  by meta.guid] 
+| join meta.guid 
+    [search index="hdf"  meta.subtype=profile | stats values(meta.filename) values(meta.filetype) values(meta.hdf_splunk_schema) list(meta.profile_sha256) list(meta.is_baseline)  last(summary) list(summary) list(sha256) list(supports{}.*) last(name) list(name) list(copyright) list(maintainer) list(copyright_email) last(version) list(version) list(license) list(title) list(parent_profile) list(depends{}.*) list(controls{}.*) list(attributes{}.*) list(status) by meta.guid] 
 
 ```
-index="<<YOUR INDEX>>" | stats list(meta.filename) list(meta.filetype) list(tags.*) list(descriptions.*) list(meta.subtype) list(meta.full_code*) list(meta.parse_time) list(meta.start_time) list(meta.hdf_splunk_schema) list(id) list(meta.profile_sha256) list(code) list(meta.is_baseline) by meta.guid id | join meta.guid [search index="<<YOUR INDEX>>" meta.guid="*" platform.name="*" | stats count by meta.guid platform.name] | join meta.guid [search index="<<YOUR INDEX>>" meta.guid="*" name="*" | stats count values(name) by meta.guid]
+A formatted table search query:
+```
+index="<<YOUR INDEX>>" meta.subtype=control | stats  values(meta.filename) values(meta.filetype) list(meta.profile_sha256) values(meta.hdf_splunk_schema) first(meta.status)  list(meta.status)  list(meta.is_baseline) values(title) last(code) list(code) values(desc) values(descriptions.*)  values(id) values(impact) list(refs{}.*) list(results{}.*) list(source_location{}.*) values(tags.*)  by meta.guid id 
+| join  meta.guid 
+    [search index="hdf"  meta.subtype=header | stats values(meta.filename) values(meta.filetype) values(meta.hdf_splunk_schema) list(statistics.duration)  list(platform.*) list(version)  by meta.guid] 
+| join meta.guid 
+    [search index="hdf"  meta.subtype=profile | stats values(meta.filename) values(meta.filetype) values(meta.hdf_splunk_schema) list(meta.profile_sha256) list(meta.is_baseline)  last(summary) list(summary) list(sha256) list(supports{}.*) last(name) list(name) list(copyright) list(maintainer) list(copyright_email) last(version) list(version) list(license) list(title) list(parent_profile) list(depends{}.*) list(controls{}.*) list(attributes{}.*) list(status) by meta.guid] 
+| rename values(meta.filename) AS "Results Set", values(meta.filetype) AS "Scan Type", list(statistics.duration) AS "Scan Duration", first(meta.status) AS "Control Status", list(results{}.status) AS "Test(s) Status", id AS "ID", values(title) AS "Title", values(desc) AS "Description", values(impact) AS "Impact", last(code) AS Code, values(descriptions.check) AS "Check", values(descriptions.fix) AS "Fix", values(tags.cci{}) AS "CCI IDs", list(results{}.code_desc) AS "Results Description",  list(results{}.skip_message) AS "Results Skip Message (if applicable)", values(tags.nist{}) AS "NIST SP 800-53 Controls", last(name) AS "Scan (Profile) Name", last(summary) AS "Scan (Profile) Summary", last(version) AS "Scan (Profile) Version"
+| table meta.guid "Results Set" "Scan Type" "Scan (Profile) Name" ID "NIST SP 800-53 Controls" Title "Control Status" "Test(s) Status" "Results Description" "Results Skip Message (if applicable)"  Description Impact Severity  Check Fix "CCI IDs" Code "Scan Duration" "Scan (Profile) Summary" "Scan (Profile) Version"
 ```
 
 ### Control
@@ -28,7 +42,7 @@ index="<<YOUR INDEX>>" | stats list(meta.filename) list(meta.filetype) list(tags
         "hdf_splunk_schema": "1.1",
         // The controls computed status, based on result statuses. See https://github.com/mitre/inspecjs/blob/master/src/compat_wrappers.ts for explanation
         // Note that overlays will inherit the baseline status, instead of the "proper" result which would always just be Profile Error
-        "status": "passed | failed | not applicable | not reviewed | profile error",
+        "status": "passed | failed | not applicable | not reviewed | profile error | overlaid control",
         // Whether or not this control was waived
         "is_waived": true, // or false
         // Whether this control is the baseline - IE, is it an overlay of a different control in this file?. Can differ from its containing profiles is_baseline
@@ -103,7 +117,7 @@ index="<<YOUR INDEX>>" | stats list(meta.filename) list(meta.filetype) list(tags
 ```
 {
     "meta": {
-        // This field is consistent accross all events per upload, i.e you can get all data related to a results set by querying meta.guid="<<GUID>>"
+        // This field is consistent across all events per upload, i.e you can get all data related to a results set by querying meta.guid="<<GUID>>"
         "guid": "bXZNMQ3mNOs2PvHFv6Ze48RCdxI2FM",
         //  Whether the converted file came from an evaluation file or profile file
         "filetype": "evaluation | profile",
@@ -128,7 +142,7 @@ index="<<YOUR INDEX>>" | stats list(meta.filename) list(meta.filetype) list(tags
     "copyright_email": "you@example.com",
     "version": "0.1.0",
     "license": "License. E.g. Apache-2.0",
-    "title": "InSpec Profile Title",
+    "title": "Profile Title",
     // The name of the parent profile, as would be found in its "name" field. In the case of JSON output, this is the name of the "parent" profile that loaded this "child" profile as a dependency (see below), typically to overlay controls
     "parent_profile": "cms-ars-3.1-moderate-mongodb-enterprise-advanced-3-stig-overlay",
     // List of profiles this profile depends on, either overlaying or combining them (or both). Note that none of these fields are specifically required - all depends on how the dependency is expressed in the profile
@@ -181,7 +195,7 @@ index="<<YOUR INDEX>>" | stats list(meta.filename) list(meta.filetype) list(tags
 }
 ```
 
-### Execution
+### (Execution) Header
 ```
 
 {

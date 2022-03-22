@@ -1,0 +1,35 @@
+[
+  {
+    "SchemaVersion": "2018-10-08",
+    "Id": "project-example-analysis/Undefined Code Test Case",
+    "ProductArn": "arn:aws:securityhub:us-east-2:12345678910:product/12345678910/default",
+    "GeneratorId": "arn:aws:securityhub:us-east-2:12345678910:ruleset/set/Undefined Code Test Case",
+    "AwsAccountId": "12345678910",
+    "CreatedAt": "2022-03-18T18:45:13.591Z",
+    "UpdatedAt": "2022-03-18T18:45:13.592Z",
+    "Title": "project-example-analysis | Undefined Code Test Case | 2022-03-18 02:45:13 GMT-0400",
+    "Description": "Passed: 0 (0 individual checks passed) --- Failed: 1 (0 individual checks failed out of 2 total checks) --- Not Applicable: 0 (System exception or absent component) --- Not Reviewed: 0 (Can only be tested manually at this time)",
+    "Severity": {"Label": "INFORMATIONAL"},
+    "FindingProviderFields": {
+      "Severity": {"Label": "INFORMATIONAL"},
+      "Types": [
+        "Undefined Code Test Case/version/0.2.0",
+        "Undefined Code Test Case/sha256/d4ecb3e201285a383a4aa6af8d9028e8311cb1975af2b380f098a21c895246ff",
+        "Undefined Code Test Case/maintainer/SIMP Team",
+        "Undefined Code Test Case/summary/This profile is used to test the undefined code case within HDF2ASFF, the expected value for AssumeRolePolicyDocument should be the control (minus results) stringified",
+        "Undefined Code Test Case/license/Apache-2.0",
+        "Undefined Code Test Case/copyright/The MITRE Corporation",
+        "Undefined Code Test Case/copyright_email/saf@groups.mitre.org",
+        "Undefined Code Test Case/inputs/[]"
+      ]
+    },
+    "Resources": [
+      {
+        "Type": "AwsAccount",
+        "Id": "AWS::::Account:12345678910",
+        "Partition": "aws",
+        "Region": "us-east-2"
+      }
+    ]
+  }
+]

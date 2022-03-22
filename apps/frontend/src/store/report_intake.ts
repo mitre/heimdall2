@@ -149,11 +149,22 @@ export class InspecIntake extends VuexModule {
         data: read
       });
       if (Array.isArray(converted)) {
+        const originalFileSplit = options.file.name.split('.');
+        // Default to .json if not found
+        let originalFileType = '.json';
+        if (originalFileSplit.length > 1) {
+          originalFileType = originalFileSplit[originalFileSplit.length - 1];
+        }
         return Promise.all(
           converted.map((evaluation) => {
             return this.loadExecJson({
               data: evaluation,
-              filename: options.file.name
+              filename: `${options.file.name
+                .replace(/.json/gi, '')
+                .replace(/.nessus/gi, '')}-${_.get(
+                evaluation,
+                'platform.target_id'
+              )}.${originalFileType}`
             });
           })
         );
@@ -246,7 +257,7 @@ export class InspecIntake extends VuexModule {
                 count: b[1].filter((value) => _.get(object, value)).length
               };
         }
-      ) as unknown as Array<string> & {count: number};
+      ) as unknown as string[] & {count: number};
       const result = fingerprinted[0];
       if (fingerprinted.count !== 0) {
         return result;
