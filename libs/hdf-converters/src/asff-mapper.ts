@@ -32,21 +32,21 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
   const productArn = _.get(finding, 'ProductArn') as string;
   if (
     productArn.match(
-      /^arn:.+:securityhub:.+:.*:product\/aws\/firewall-manager$/
+      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/firewall-manager$/
     )
   ) {
     return SpecialCasing.FirewallManager;
   } else if (
-    productArn.match(/^arn:.+:securityhub:.+:.*:product\/prowler\/prowler$/)
+    productArn.match(/^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/prowler\/prowler$/)
   ) {
     return SpecialCasing.Prowler;
   } else if (
-    productArn.match(/^arn:.+:securityhub:.+:.*:product\/aws\/securityhub$/)
+    productArn.match(/^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/securityhub$/)
   ) {
     return SpecialCasing.SecurityHub;
   } else if (
     productArn.match(
-      /^arn:.+:securityhub:.+:.*:product\/aquasecurity\/aquasecurity$/
+      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aquasecurity\/aquasecurity$/
     )
   ) {
     return SpecialCasing.Trivy;
@@ -130,7 +130,6 @@ function consolidate(
     _.zip(input, allFindings),
     (value: [ExecJSON.Control, Record<string, unknown>]) => {
       const [hdfControl, asffFinding] = value;
-      // TODO: unsure if this is actually necessary to do via externalProductHandler
       return externalProductHandler(
         context,
         whichSpecialCase(asffFinding),
@@ -584,9 +583,9 @@ function getHDF2ASFF(): Record<string, Function> {
       Map<SpecialCasing, Record<string, Record<string, unknown>>>
     ]
   ): Map<SpecialCasing, Record<string, Record<string, unknown>>> => {
-    const [asff, supportingDocs] = input;
+    const [asff, docs] = input;
     const index = findExecutionFindingIndex(asff);
-    const docsClone = _.cloneDeep(supportingDocs);
+    const docsClone = _.cloneDeep(docs);
     docsClone.set(SpecialCasing.HDF2ASFF, {
       execution: _.get(asff, `Findings[${index}]`) as Record<string, unknown>
     });
@@ -743,7 +742,7 @@ export class ASFFMapper extends BaseConverter {
                 desc: {
                   path: 'Description',
                   transformer: (input: string): string =>
-                    encode(input as string)
+                    encode(input)
                 },
                 impact: {
                   transformer: (finding: Record<string, unknown>): number => {
