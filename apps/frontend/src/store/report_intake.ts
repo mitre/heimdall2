@@ -291,8 +291,6 @@ export class InspecIntake extends VuexModule {
       ) {
         return 'dbProtect';
       } else if (
-        // Match CSV Headers, global and case-insensitive
-        // We could implement indexOf which ignores order
         splitLines[0].includes('Hostname') &&
         splitLines[0].includes('Distro') &&
         splitLines[0].includes('CVE ID') &&
