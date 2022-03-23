@@ -8,10 +8,6 @@ import {
   parseCsv
 } from './base-converter';
 
-export type PrismaControls = {
-  records: PrismaControl[];
-};
-
 export type PrismaControl = {
   Packages: string;
   Description: string;
