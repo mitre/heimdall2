@@ -3,6 +3,7 @@ import parser from 'fast-xml-parser';
 import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
+import Papa from 'papaparse';
 
 export interface ILookupPath {
   path?: string | string[];
@@ -58,6 +59,16 @@ export function parseXml(xml: string): Record<string, unknown> {
     ignoreAttributes: false
   };
   return parser.parse(xml, options);
+}
+
+export function parseCsv(csv: string): unknown[] {
+  const result = Papa.parse(csv.trim(), {header: true});
+
+  if (result.errors.length) {
+    throw result.errors;
+  }
+
+  return result.data;
 }
 
 export function impactMapping(

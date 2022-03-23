@@ -1,0 +1,180 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.16",
+    "target_id": "my-fake-host-8.somewhere.cloud"
+  },
+  "version": "2.6.16",
+  "statistics": {
+    "duration": null
+  },
+  "profiles": [
+    {
+      "name": "Palo Alto Prisma Cloud Tool",
+      "version": "",
+      "title": "Prisma Cloud Scan Report",
+      "maintainer": null,
+      "summary": "",
+      "license": null,
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "desc": "(CIS_Linux_2.0.0 - 1.4.1) Ensure permissions on bootloader config are configured",
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cve": "",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": ""
+            }
+          ],
+          "source_location": "my-fake-host-8.somewhere.cloud",
+          "id": "6141-redhat-RHEL7-high",
+          "title": "my-fake-host-8.somewhere.cloud-redhat-RHEL7-linux",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"my-fake-host-8.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"6141\",\n  \"Type\": \"linux\",\n  \"Severity\": \"high\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 1.4.1) Ensure permissions on bootloader config are configured\",\n  \"Cause\": \"File permissions not configured properly, expected: 600, actual: 644. Full path: /boot/grub2/grub.cfg\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 1.4.1) Ensure permissions on bootloader config are configured",
+              "message": "Cause: File permissions not configured properly, expected: 600, actual: 644. Full path: /boot/grub2/grub.cfg",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cve": "",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": ""
+            }
+          ],
+          "source_location": "my-fake-host-8.somewhere.cloud",
+          "id": "6143-redhat-RHEL7-critical",
+          "title": "my-fake-host-8.somewhere.cloud-redhat-RHEL7-linux",
+          "impact": 1,
+          "code": "{\n  \"Hostname\": \"my-fake-host-8.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"6143\",\n  \"Type\": \"linux\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode\",\n  \"Cause\": \"Password should be set for user \\\"root\\\". File: /etc/shadow\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
+              "message": "Cause: Password should be set for user \"root\". File: /etc/shadow",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "DOCUMENTATION: A flaw was found Go\\'s net/http package. Servers using ReverseProxy from net/http in the Go standard library are vulnerable to a data race that results in a denial of service. The highest threat from this vulnerability is to system availability.             STATEMENT: OpenShift Container Platform (OCP) components are primarily written in Go, meaning that any component using the net/http package includes the vulnerable code. OCP server endpoints using ReverseProxy are protected by authentication, reducing the severity of this vulnerability to Low for OCP.  Similar to OCP, OpenShift ServiceMesh (OSSM), RedHat OpenShift Jaeger (RHOSJ) and OpenShift Virtualization are also primarily written in Go and are protected via authentication, reducing the severity of this vulnerability to Low.  Red Hat Gluster Storage 3 and Red Hat Openshift Container Storage 4 components are built with the affected version of Go, however the vulnerable functionality is currently not used by these products and hence this issue has been rated as having a security impact of Low.  Red Hat Ceph Storage 3 and 4 components are built with the affected version of Go, however the vulnerable functionality is currently not used by these products and hence this issue has been rated as having a security impact of Low.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2020-15586",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/detail/CVE-2020-15586"
+            }
+          ],
+          "source_location": "my-fake-host-8.somewhere.cloud",
+          "id": "411-CVE-2020-15586",
+          "title": "my-fake-host-8.somewhere.cloud-redhat-RHEL7-image",
+          "code": "{\n  \"Hostname\": \"my-fake-host-8.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2020-15586\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"medium\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.14.4\",\n  \"Package License\": \"\",\n  \"CVSS\": \"5.90\",\n  \"Fix Status\": \"fixed in 1.14.5, 1.13.13\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"DOCUMENTATION: A flaw was found Go\\\\'s net/http package. Servers using ReverseProxy from net/http in the Go standard library are vulnerable to a data race that results in a denial of service. The highest threat from this vulnerability is to system availability.             STATEMENT: OpenShift Container Platform (OCP) components are primarily written in Go, meaning that any component using the net/http package includes the vulnerable code. OCP server endpoints using ReverseProxy are protected by authentication, reducing the severity of this vulnerability to Low for OCP.  Similar to OCP, OpenShift ServiceMesh (OSSM), RedHat OpenShift Jaeger (RHOSJ) and OpenShift Virtualization are also primarily written in Go and are protected via authentication, reducing the severity of this vulnerability to Low.  Red Hat Gluster Storage 3 and Red Hat Openshift Container Storage 4 components are built with the affected version of Go, however the vulnerable functionality is currently not used by these products and hence this issue has been rated as having a security impact of Low.  Red Hat Ceph Storage 3 and 4 components are built with the affected version of Go, however the vulnerable functionality is currently not used by these products and hence this issue has been rated as having a security impact of Low.\",\n  \"Cause\": \"\",\n  \"Published\": \"2020-07-14 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2020-15586\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: go\n\nDOCUMENTATION: A flaw was found Go\\'s net/http package. Servers using ReverseProxy from net/http in the Go standard library are vulnerable to a data race that results in a denial of service. The highest threat from this vulnerability is to system availability.             STATEMENT: OpenShift Container Platform (OCP) components are primarily written in Go, meaning that any component using the net/http package includes the vulnerable code. OCP server endpoints using ReverseProxy are protected by authentication, reducing the severity of this vulnerability to Low for OCP.  Similar to OCP, OpenShift ServiceMesh (OSSM), RedHat OpenShift Jaeger (RHOSJ) and OpenShift Virtualization are also primarily written in Go and are protected via authentication, reducing the severity of this vulnerability to Low.  Red Hat Gluster Storage 3 and Red Hat Openshift Container Storage 4 components are built with the affected version of Go, however the vulnerable functionality is currently not used by these products and hence this issue has been rated as having a security impact of Low.  Red Hat Ceph Storage 3 and 4 components are built with the affected version of Go, however the vulnerable functionality is currently not used by these products and hence this issue has been rated as having a security impact of Low.",
+              "message": "Fix Status: fixed in 1.14.5, 1.13.13",
+              "start_time": "2020-07-14 00:00:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "In archive/zip in Go before 1.16.8 and 1.17.x before 1.17.1, a crafted archive header (falsely designating that many files are present) can cause a NewReader or OpenReader panic. NOTE: this issue exists because of an incomplete fix for CVE-2021-33196.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-39293",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/detail/CVE-2021-39293"
+            }
+          ],
+          "source_location": "my-fake-host-8.somewhere.cloud",
+          "id": "411-CVE-2021-39293",
+          "title": "my-fake-host-8.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"my-fake-host-8.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-39293\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"high\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.14.4\",\n  \"Package License\": \"\",\n  \"CVSS\": \"7.50\",\n  \"Fix Status\": \"fixed in 1.17.1, 1.16.8\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"In archive/zip in Go before 1.16.8 and 1.17.x before 1.17.1, a crafted archive header (falsely designating that many files are present) can cause a NewReader or OpenReader panic. NOTE: this issue exists because of an incomplete fix for CVE-2021-33196.\",\n  \"Cause\": \"\",\n  \"Published\": \"2022-01-24 01:15:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2021-39293\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: go\n\nIn archive/zip in Go before 1.16.8 and 1.17.x before 1.17.1, a crafted archive header (falsely designating that many files are present) can cause a NewReader or OpenReader panic. NOTE: this issue exists because of an incomplete fix for CVE-2021-33196.",
+              "message": "Fix Status: fixed in 1.17.1, 1.16.8",
+              "start_time": "2022-01-24 01:15:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "Red Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-38297",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/detail/CVE-2021-38297"
+            }
+          ],
+          "source_location": "my-fake-host-8.somewhere.cloud",
+          "id": "411-CVE-2021-38297",
+          "title": "my-fake-host-8.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 1,
+          "code": "{\n  \"Hostname\": \"my-fake-host-8.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-38297\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.14.4\",\n  \"Package License\": \"\",\n  \"CVSS\": \"9.80\",\n  \"Fix Status\": \"fixed in 1.17.2, 1.16.9\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Red Hat\\\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.\",\n  \"Cause\": \"\",\n  \"Published\": \"2021-10-07 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2021-38297\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: go\n\nRed Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.",
+              "message": "Fix Status: fixed in 1.17.2, 1.16.9",
+              "start_time": "2021-10-07 00:00:00.000"
+            }
+          ]
+        }
+      ],
+      "sha256": "2739537572d4ba20db734ada02290d4be590b8b76131486c6455f600cf4eb79c"
+    }
+  ]
+}

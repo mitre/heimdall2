@@ -1,0 +1,241 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.16",
+    "target_id": "my-fake-host-15.somewhere.cloud"
+  },
+  "version": "2.6.16",
+  "statistics": {
+    "duration": null
+  },
+  "profiles": [
+    {
+      "name": "Palo Alto Prisma Cloud Tool",
+      "version": "",
+      "title": "Prisma Cloud Scan Report",
+      "maintainer": null,
+      "summary": "",
+      "license": null,
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "desc": "(CIS_Linux_2.0.0 - 1.4.1) Ensure permissions on bootloader config are configured",
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cve": "",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": ""
+            }
+          ],
+          "source_location": "my-fake-host-15.somewhere.cloud",
+          "id": "6141-redhat-RHEL7-high",
+          "title": "my-fake-host-15.somewhere.cloud-redhat-RHEL7-linux",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"my-fake-host-15.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"6141\",\n  \"Type\": \"linux\",\n  \"Severity\": \"high\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 1.4.1) Ensure permissions on bootloader config are configured\",\n  \"Cause\": \"File permissions not configured properly, expected: 600, actual: 644. Full path: /boot/grub2/grub.cfg\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 1.4.1) Ensure permissions on bootloader config are configured",
+              "message": "Cause: File permissions not configured properly, expected: 600, actual: 644. Full path: /boot/grub2/grub.cfg",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cve": "",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": ""
+            }
+          ],
+          "source_location": "my-fake-host-15.somewhere.cloud",
+          "id": "6143-redhat-RHEL7-critical",
+          "title": "my-fake-host-15.somewhere.cloud-redhat-RHEL7-linux",
+          "impact": 1,
+          "code": "{\n  \"Hostname\": \"my-fake-host-15.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"6143\",\n  \"Type\": \"linux\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode\",\n  \"Cause\": \"Password should be set for user \\\"root\\\". File: /etc/shadow\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
+              "message": "Cause: Password should be set for user \"root\". File: /etc/shadow",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "hostapd 0.6.7 through 2.5 and wpa_supplicant 0.6.7 through 2.5 do not reject \\n and \\r characters in passphrase parameters, which allows remote attackers to cause a denial of service (daemon outage) via a crafted WPS operation.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2016-4476",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2016-4476"
+            }
+          ],
+          "source_location": "my-fake-host-15.somewhere.cloud",
+          "id": "46-CVE-2016-4476",
+          "title": "my-fake-host-15.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.3,
+          "code": "{\n  \"Hostname\": \"my-fake-host-15.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2016-4476\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"low\",\n  \"Packages\": \"wpa_supplicant\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"2.6-12.el7_9.2\",\n  \"Package License\": \"BSD\",\n  \"CVSS\": \"5.90\",\n  \"Fix Status\": \"will not fix\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"hostapd 0.6.7 through 2.5 and wpa_supplicant 0.6.7 through 2.5 do not reject \\\\n and \\\\r characters in passphrase parameters, which allows remote attackers to cause a denial of service (daemon outage) via a crafted WPS operation.\",\n  \"Cause\": \"\",\n  \"Published\": \"2016-05-09 10:59:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2016-4476\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: wpa_supplicant\n\nhostapd 0.6.7 through 2.5 and wpa_supplicant 0.6.7 through 2.5 do not reject \\n and \\r characters in passphrase parameters, which allows remote attackers to cause a denial of service (daemon outage) via a crafted WPS operation.",
+              "message": "Fix Status: will not fix",
+              "start_time": "2016-05-09 10:59:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "The implementations of EAP-pwd in hostapd before 2.10 and wpa_supplicant before 2.10 are vulnerable to side-channel attacks as a result of cache access patterns. NOTE: this issue exists because of an incomplete fix for CVE-2019-9495.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2022-23304",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2022-23304"
+            }
+          ],
+          "source_location": "my-fake-host-15.somewhere.cloud",
+          "id": "46-CVE-2022-23304",
+          "title": "my-fake-host-15.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.5,
+          "code": "{\n  \"Hostname\": \"my-fake-host-15.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2022-23304\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"moderate\",\n  \"Packages\": \"wpa_supplicant\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"2.6-12.el7_9.2\",\n  \"Package License\": \"BSD\",\n  \"CVSS\": \"5.30\",\n  \"Fix Status\": \"under investigation\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"The implementations of EAP-pwd in hostapd before 2.10 and wpa_supplicant before 2.10 are vulnerable to side-channel attacks as a result of cache access patterns. NOTE: this issue exists because of an incomplete fix for CVE-2019-9495.\",\n  \"Cause\": \"\",\n  \"Published\": \"2022-01-17 02:15:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2022-23304\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: wpa_supplicant\n\nThe implementations of EAP-pwd in hostapd before 2.10 and wpa_supplicant before 2.10 are vulnerable to side-channel attacks as a result of cache access patterns. NOTE: this issue exists because of an incomplete fix for CVE-2019-9495.",
+              "message": "Fix Status: under investigation",
+              "start_time": "2022-01-17 02:15:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "DOCUMENTATION: A vulnerability was found in archive/zip of the Go standard library. Applications written in Go where Reader.Open (the API implementing io/fs.FS introduced in Go 1.16) can panic when parsing a crafted ZIP archive containing completely invalid names or an empty filename argument.             STATEMENT: * In OpenShift Container Platform multiple components are written in Go and use archive/zip from the standard library. However, all such components are short lived client side tools, not long lived server side executables. As the maximum impact of this vulnerability is a denial of service in client utilities, this vulnerability is rated Low for OpenShift Container Plaform.  * Because Service Telemetry Framework1.2 will be retiring soon and the flaw\\'s impact is lower, no update will be provided at this time for STF1.2\\'s sg-core-container.  * Because Red Hat Ceph Storage only uses Go\\'s archive/zip for the Grafana CLI and thus is not directly exploitable, the vulnerability has been rated low for Red Hat Ceph Storage.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-41772",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/detail/CVE-2021-41772"
+            }
+          ],
+          "source_location": "my-fake-host-15.somewhere.cloud",
+          "id": "411-CVE-2021-41772",
+          "title": "my-fake-host-15.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"my-fake-host-15.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-41772\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"high\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.17.1\",\n  \"Package License\": \"\",\n  \"CVSS\": \"7.50\",\n  \"Fix Status\": \"fixed in 1.17.3, 1.16.10\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"DOCUMENTATION: A vulnerability was found in archive/zip of the Go standard library. Applications written in Go where Reader.Open (the API implementing io/fs.FS introduced in Go 1.16) can panic when parsing a crafted ZIP archive containing completely invalid names or an empty filename argument.             STATEMENT: * In OpenShift Container Platform multiple components are written in Go and use archive/zip from the standard library. However, all such components are short lived client side tools, not long lived server side executables. As the maximum impact of this vulnerability is a denial of service in client utilities, this vulnerability is rated Low for OpenShift Container Plaform.  * Because Service Telemetry Framework1.2 will be retiring soon and the flaw\\\\'s impact is lower, no update will be provided at this time for STF1.2\\\\'s sg-core-container.  * Because Red Hat Ceph Storage only uses Go\\\\'s archive/zip for the Grafana CLI and thus is not directly exploitable, the vulnerability has been rated low for Red Hat Ceph Storage.\",\n  \"Cause\": \"\",\n  \"Published\": \"2021-08-30 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2021-41772\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: go\n\nDOCUMENTATION: A vulnerability was found in archive/zip of the Go standard library. Applications written in Go where Reader.Open (the API implementing io/fs.FS introduced in Go 1.16) can panic when parsing a crafted ZIP archive containing completely invalid names or an empty filename argument.             STATEMENT: * In OpenShift Container Platform multiple components are written in Go and use archive/zip from the standard library. However, all such components are short lived client side tools, not long lived server side executables. As the maximum impact of this vulnerability is a denial of service in client utilities, this vulnerability is rated Low for OpenShift Container Plaform.  * Because Service Telemetry Framework1.2 will be retiring soon and the flaw\\'s impact is lower, no update will be provided at this time for STF1.2\\'s sg-core-container.  * Because Red Hat Ceph Storage only uses Go\\'s archive/zip for the Grafana CLI and thus is not directly exploitable, the vulnerability has been rated low for Red Hat Ceph Storage.",
+              "message": "Fix Status: fixed in 1.17.3, 1.16.10",
+              "start_time": "2021-08-30 00:00:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "Red Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-38297",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/detail/CVE-2021-38297"
+            }
+          ],
+          "source_location": "my-fake-host-15.somewhere.cloud",
+          "id": "411-CVE-2021-38297",
+          "title": "my-fake-host-15.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 1,
+          "code": "{\n  \"Hostname\": \"my-fake-host-15.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-38297\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.17.1\",\n  \"Package License\": \"\",\n  \"CVSS\": \"9.80\",\n  \"Fix Status\": \"fixed in 1.17.2, 1.16.9\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Red Hat\\\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.\",\n  \"Cause\": \"\",\n  \"Published\": \"2021-10-07 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2021-38297\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: go\n\nRed Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.",
+              "message": "Fix Status: fixed in 1.17.2, 1.16.9",
+              "start_time": "2021-10-07 00:00:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "A flaw was found in the crypto subsystem of the Linux kernel before version kernel-4.15-rc4. The \\\"null skcipher\\\" was being dropped when each af_alg_ctx was freed instead of when the aead_tfm was freed. This can cause the null skcipher to be freed while it is still in use leading to a local user being able to crash the system or possibly escalate privileges.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2018-14619",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2018-14619"
+            }
+          ],
+          "source_location": "my-fake-host-15.somewhere.cloud",
+          "id": "46-CVE-2018-14619",
+          "title": "my-fake-host-15.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.9,
+          "code": "{\n  \"Hostname\": \"my-fake-host-15.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2018-14619\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"important\",\n  \"Packages\": \"kernel\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"3.10.0-1160.45.1.el7\",\n  \"Package License\": \"GPLv2\",\n  \"CVSS\": \"6.20\",\n  \"Fix Status\": \"affected\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"A flaw was found in the crypto subsystem of the Linux kernel before version kernel-4.15-rc4. The \\\\\\\"null skcipher\\\\\\\" was being dropped when each af_alg_ctx was freed instead of when the aead_tfm was freed. This can cause the null skcipher to be freed while it is still in use leading to a local user being able to crash the system or possibly escalate privileges.\",\n  \"Cause\": \"\",\n  \"Published\": \"2018-08-30 12:29:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2018-14619\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: kernel\n\nA flaw was found in the crypto subsystem of the Linux kernel before version kernel-4.15-rc4. The \\\"null skcipher\\\" was being dropped when each af_alg_ctx was freed instead of when the aead_tfm was freed. This can cause the null skcipher to be freed while it is still in use leading to a local user being able to crash the system or possibly escalate privileges.",
+              "message": "Fix Status: affected",
+              "start_time": "2018-08-30 12:29:00.000"
+            }
+          ]
+        }
+      ],
+      "sha256": "5da87942951d832ef43974bac1ff4869b2e54284d5fabc28bdf3c0a29b5c73a4"
+    }
+  ]
+}

@@ -9,6 +9,7 @@ export * from './src/jfrog-xray-mapper';
 export * from './src/nessus-mapper';
 export * from './src/netsparker-mapper';
 export * from './src/nikto-mapper';
+export * from './src/prisma-mapper';
 export * from './src/sarif-mapper';
 export * from './src/scoutsuite-mapper';
 export * from './src/snyk-mapper';

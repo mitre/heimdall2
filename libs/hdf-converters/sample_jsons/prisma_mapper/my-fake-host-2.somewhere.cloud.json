@@ -1,0 +1,151 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.16",
+    "target_id": "my-fake-host-2.somewhere.cloud"
+  },
+  "version": "2.6.16",
+  "statistics": {
+    "duration": null
+  },
+  "profiles": [
+    {
+      "name": "Palo Alto Prisma Cloud Tool",
+      "version": "",
+      "title": "Prisma Cloud Scan Report",
+      "maintainer": null,
+      "summary": "",
+      "license": null,
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "desc": "(CIS_Linux_2.0.0 - 5.2.2) Ensure permissions on SSH private host key files are configured",
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cve": "",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": ""
+            }
+          ],
+          "source_location": "my-fake-host-2.somewhere.cloud",
+          "id": "60522-redhat-RHEL7-high",
+          "title": "my-fake-host-2.somewhere.cloud-redhat-RHEL7-linux",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"my-fake-host-2.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"60522\",\n  \"Type\": \"linux\",\n  \"Severity\": \"high\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 5.2.2) Ensure permissions on SSH private host key files are configured\",\n  \"Cause\": \"File ownership is wrong, expected: 0:root, actual 0:ssh_keys. Full path: /etc/ssh/ssh_host_ecdsa_key\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 5.2.2) Ensure permissions on SSH private host key files are configured",
+              "message": "Cause: File ownership is wrong, expected: 0:root, actual 0:ssh_keys. Full path: /etc/ssh/ssh_host_ecdsa_key",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "Red Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-28964.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-28964",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2021-28964"
+            }
+          ],
+          "source_location": "my-fake-host-2.somewhere.cloud",
+          "id": "46-CVE-2021-28964",
+          "title": "my-fake-host-2.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.5,
+          "code": "{\n  \"Hostname\": \"my-fake-host-2.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-28964\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"moderate\",\n  \"Packages\": \"python-perf\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"3.10.0-1160.45.1.el7\",\n  \"Package License\": \"GPLv2\",\n  \"CVSS\": \"4.10\",\n  \"Fix Status\": \"will not fix\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Red Hat\\\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-28964.\",\n  \"Cause\": \"\",\n  \"Published\": \"2021-03-16 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2021-28964\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: python-perf\n\nRed Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-28964.",
+              "message": "Fix Status: will not fix",
+              "start_time": "2021-03-16 00:00:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "The ip6gre_err function in net/ipv6/ip6_gre.c in the Linux kernel allows remote attackers to have unspecified impact via vectors involving GRE flags in an IPv6 packet, which trigger an out-of-bounds access.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2017-5897",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2017-5897"
+            }
+          ],
+          "source_location": "my-fake-host-2.somewhere.cloud",
+          "id": "46-CVE-2017-5897",
+          "title": "my-fake-host-2.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.3,
+          "code": "{\n  \"Hostname\": \"my-fake-host-2.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2017-5897\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"low\",\n  \"Packages\": \"python-perf\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"3.10.0-1160.45.1.el7\",\n  \"Package License\": \"GPLv2\",\n  \"CVSS\": \"3.70\",\n  \"Fix Status\": \"will not fix\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"The ip6gre_err function in net/ipv6/ip6_gre.c in the Linux kernel allows remote attackers to have unspecified impact via vectors involving GRE flags in an IPv6 packet, which trigger an out-of-bounds access.\",\n  \"Cause\": \"\",\n  \"Published\": \"2017-03-23 16:59:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2017-5897\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: python-perf\n\nThe ip6gre_err function in net/ipv6/ip6_gre.c in the Linux kernel allows remote attackers to have unspecified impact via vectors involving GRE flags in an IPv6 packet, which trigger an out-of-bounds access.",
+              "message": "Fix Status: will not fix",
+              "start_time": "2017-03-23 16:59:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "The ecryptfs_privileged_open function in fs/ecryptfs/kthread.c in the Linux kernel before 4.6.3 allows local users to gain privileges or cause a denial of service (stack memory consumption) via vectors involving crafted mmap calls for /proc pathnames, leading to recursive pagefault handling.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2016-1583",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2016-1583"
+            }
+          ],
+          "source_location": "my-fake-host-2.somewhere.cloud",
+          "id": "46-CVE-2016-1583",
+          "title": "my-fake-host-2.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.9,
+          "code": "{\n  \"Hostname\": \"my-fake-host-2.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2016-1583\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"important\",\n  \"Packages\": \"python-perf\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"3.10.0-1160.45.1.el7\",\n  \"Package License\": \"GPLv2\",\n  \"CVSS\": \"8.10\",\n  \"Fix Status\": \"affected\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"The ecryptfs_privileged_open function in fs/ecryptfs/kthread.c in the Linux kernel before 4.6.3 allows local users to gain privileges or cause a denial of service (stack memory consumption) via vectors involving crafted mmap calls for /proc pathnames, leading to recursive pagefault handling.\",\n  \"Cause\": \"\",\n  \"Published\": \"2016-06-27 10:59:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2016-1583\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: python-perf\n\nThe ecryptfs_privileged_open function in fs/ecryptfs/kthread.c in the Linux kernel before 4.6.3 allows local users to gain privileges or cause a denial of service (stack memory consumption) via vectors involving crafted mmap calls for /proc pathnames, leading to recursive pagefault handling.",
+              "message": "Fix Status: affected",
+              "start_time": "2016-06-27 10:59:00.000"
+            }
+          ]
+        }
+      ],
+      "sha256": "1997783fd71adfa8148b3f2afad173b593c5c15b0f9496a4429f7db82e874324"
+    }
+  ]
+}
