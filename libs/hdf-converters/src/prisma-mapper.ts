@@ -9,7 +9,7 @@ import {
 } from './base-converter';
 
 export type PrismaControls = {
-  records: Record<string, string>[];
+  records: PrismaControl[];
 };
 
 export type PrismaControl = {
@@ -18,7 +18,10 @@ export type PrismaControl = {
   Distro: string;
   Type: string;
   Hostname: string;
+  'Compliance ID': string;
   'Fix Status'?: string;
+  'CVE ID': string;
+  Severity: string;
   Cause?: string;
 };
 
@@ -37,38 +40,6 @@ const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 // REMEDIATION_NIST_TAG the set of default applicable NIST 800-53 controls for ensuring up-to-date packages.
 // SI-2 (FLAW REMEDIATION) - 	RA-5 (VULNERABILITY SCANNING)
 const REMEDIATION_NIST_TAG = ['SI-2', 'RA-5'];
-
-function nistTag(cveTag: Record<string, string>): string[] {
-  if (!cveTag) {
-    return DEFAULT_NIST_TAG;
-  } else {
-    return REMEDIATION_NIST_TAG;
-  }
-}
-function getId(value: Record<string, string>): string {
-  const complianceID = _.get(value, 'Compliance ID');
-  const cveID = _.get(value, 'CVE ID');
-  const distro = _.get(value, 'Distro');
-  const severity = _.get(value, 'Severity');
-  if (cveID) {
-    return `${complianceID}-${cveID}`;
-  } else {
-    return `${complianceID}-${distro}-${severity}`;
-  }
-}
-function getTitle(item: Record<string, string>): string {
-  const hostName = _.get(item, 'Hostname');
-  const distro = _.get(item, 'Distro');
-  const type = _.get(item, 'Type');
-  return `${hostName}-${distro}-${type}`;
-}
-function getImpact(severity: string): number {
-  if (severity) {
-    return SEVERITY_LOOKUP[severity];
-  } else {
-    return 0.5;
-  }
-}
 
 export class PrismaControlMapper extends BaseConverter {
   mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
@@ -102,19 +73,47 @@ export class PrismaControlMapper extends BaseConverter {
             key: 'id',
             desc: {path: 'Description'},
             tags: {
-              nist: {path: 'CVE ID', transformer: nistTag},
+              nist: {
+                path: 'CVE ID',
+                transformer: (cveTag: string | undefined) => {
+                  if (!cveTag) {
+                    return DEFAULT_NIST_TAG;
+                  } else {
+                    return REMEDIATION_NIST_TAG;
+                  }
+                }
+              },
               cve: {path: 'CVE ID'},
               cvss: {path: 'cssv'}
             },
             descriptions: [],
             refs: [{url: {path: 'Vulnerability Link'}}],
             source_location: {path: 'Hostname'},
-            id: {transformer: getId},
-            title: {transformer: getTitle},
-            impact: {path: 'Severity', transformer: getImpact},
+            id: {
+              transformer: (item: PrismaControl) => {
+                if (item['CVE ID']) {
+                  return `${item['Compliance ID']}-${item['CVE ID']}`;
+                } else {
+                  return `${item['Compliance ID']}-${item.Distro}-${item.Severity}`;
+                }
+              }
+            },
+            title: {
+              transformer: (item: PrismaControl) =>
+                `${item.Hostname}-${item.Distro}-${item.Type}`
+            },
+            impact: {
+              path: 'Severity',
+              transformer: (severity: string) => {
+                if (severity) {
+                  return SEVERITY_LOOKUP[severity];
+                } else {
+                  return 0.5;
+                }
+              }
+            },
             code: {
-              transformer: (obj: Record<string, string>) =>
-                JSON.stringify(obj, null, 2)
+              transformer: (obj: PrismaControl) => JSON.stringify(obj, null, 2)
             },
             results: [
               {
@@ -164,18 +163,18 @@ export class PrismaControlMapper extends BaseConverter {
     ]
   };
 
-  constructor(prismaControls: Record<string, string>[]) {
+  constructor(prismaControls: PrismaControl[]) {
     super({records: prismaControls});
   }
 }
 
 export class PrismaMapper {
-  data: Record<string, string>[] = [];
+  data: PrismaControl[] = [];
 
   toHdf(): ExecJSON.Execution[] {
     const executions: ExecJSON.Execution[] = [];
-    const hostnameToControls: Record<string, Record<string, string>[]> = {};
-    this.data.forEach((record: Record<string, string>) => {
+    const hostnameToControls: Record<string, PrismaControl[]> = {};
+    this.data.forEach((record: PrismaControl) => {
       hostnameToControls[record['Hostname']] =
         hostnameToControls[record['Hostname']] || [];
       hostnameToControls[record['Hostname']].push(record);
@@ -189,6 +188,6 @@ export class PrismaMapper {
   }
 
   constructor(prismaCsv: string) {
-    this.data = parseCsv(prismaCsv) as Record<string, string>[];
+    this.data = parseCsv(prismaCsv) as PrismaControl[];
   }
 }
