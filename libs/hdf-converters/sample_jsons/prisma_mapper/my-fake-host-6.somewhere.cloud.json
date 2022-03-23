@@ -1,0 +1,181 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.16",
+    "target_id": "my-fake-host-6.somewhere.cloud"
+  },
+  "version": "2.6.16",
+  "statistics": {
+    "duration": null
+  },
+  "profiles": [
+    {
+      "name": "Palo Alto Prisma Cloud Tool",
+      "version": "",
+      "title": "Prisma Cloud Scan Report",
+      "maintainer": null,
+      "summary": "",
+      "license": null,
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "desc": "(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cve": "",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": ""
+            }
+          ],
+          "source_location": "my-fake-host-6.somewhere.cloud",
+          "id": "6143-redhat-RHEL7-critical",
+          "title": "my-fake-host-6.somewhere.cloud-redhat-RHEL7-linux",
+          "impact": 1,
+          "code": "{\n  \"Hostname\": \"my-fake-host-6.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"6143\",\n  \"Type\": \"linux\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode\",\n  \"Cause\": \"Password should be set for user \\\"root\\\". File: /etc/shadow\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
+              "message": "Cause: Password should be set for user \"root\". File: /etc/shadow",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "(CIS_Linux_2.0.0 - 6.2.8) Ensure users' home directories permissions are 750 or more restrictive",
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cve": "",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": ""
+            }
+          ],
+          "source_location": "my-fake-host-6.somewhere.cloud",
+          "id": "6628-redhat-RHEL7-high",
+          "title": "my-fake-host-6.somewhere.cloud-redhat-RHEL7-linux",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"my-fake-host-6.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"6628\",\n  \"Type\": \"linux\",\n  \"Severity\": \"high\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 6.2.8) Ensure users' home directories permissions are 750 or more restrictive\",\n  \"Cause\": \"Home directory permissions of 2 users are more permissive than 750, e.g /opt/splunkforwarder:755\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 6.2.8) Ensure users' home directories permissions are 750 or more restrictive",
+              "message": "Cause: Home directory permissions of 2 users are more permissive than 750, e.g /opt/splunkforwarder:755",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "Google Chrome before 43.0.2357.65 relies on libvpx code that was not built with an appropriate --size-limit value, which allows remote attackers to trigger a negative value for a size field, and consequently cause a denial of service or possibly have unspecified other impact, via a crafted frame size in VP9 video data.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2015-1258",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2015-1258"
+            }
+          ],
+          "source_location": "my-fake-host-6.somewhere.cloud",
+          "id": "46-CVE-2015-1258",
+          "title": "my-fake-host-6.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.5,
+          "code": "{\n  \"Hostname\": \"my-fake-host-6.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2015-1258\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"moderate\",\n  \"Packages\": \"libvpx\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.3.0-8.el7\",\n  \"Package License\": \"BSD\",\n  \"CVSS\": \"5.10\",\n  \"Fix Status\": \"will not fix\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Google Chrome before 43.0.2357.65 relies on libvpx code that was not built with an appropriate --size-limit value, which allows remote attackers to trigger a negative value for a size field, and consequently cause a denial of service or possibly have unspecified other impact, via a crafted frame size in VP9 video data.\",\n  \"Cause\": \"\",\n  \"Published\": \"2015-05-20 10:59:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2015-1258\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: libvpx\n\nGoogle Chrome before 43.0.2357.65 relies on libvpx code that was not built with an appropriate --size-limit value, which allows remote attackers to trigger a negative value for a size field, and consequently cause a denial of service or possibly have unspecified other impact, via a crafted frame size in VP9 video data.",
+              "message": "Fix Status: will not fix",
+              "start_time": "2015-05-20 10:59:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "A vulnerability in the Android media framework (libvpx) related to odd frame width. Product: Android. Versions: 7.0, 7.1.1, 7.1.2, 8.0, 8.1. Android ID: A-64710201.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2017-13194",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2017-13194"
+            }
+          ],
+          "source_location": "my-fake-host-6.somewhere.cloud",
+          "id": "46-CVE-2017-13194",
+          "title": "my-fake-host-6.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.3,
+          "code": "{\n  \"Hostname\": \"my-fake-host-6.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2017-13194\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"low\",\n  \"Packages\": \"libvpx\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.3.0-8.el7\",\n  \"Package License\": \"BSD\",\n  \"CVSS\": \"3.50\",\n  \"Fix Status\": \"will not fix\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"A vulnerability in the Android media framework (libvpx) related to odd frame width. Product: Android. Versions: 7.0, 7.1.1, 7.1.2, 8.0, 8.1. Android ID: A-64710201.\",\n  \"Cause\": \"\",\n  \"Published\": \"2018-01-12 23:29:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2017-13194\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: libvpx\n\nA vulnerability in the Android media framework (libvpx) related to odd frame width. Product: Android. Versions: 7.0, 7.1.1, 7.1.2, 8.0, 8.1. Android ID: A-64710201.",
+              "message": "Fix Status: will not fix",
+              "start_time": "2018-01-12 23:29:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "net/http in Go before 1.16.12 and 1.17.x before 1.17.5 allows uncontrolled memory consumption in the header canonicalization cache via HTTP/2 requests.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-44716",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/detail/CVE-2021-44716"
+            }
+          ],
+          "source_location": "my-fake-host-6.somewhere.cloud",
+          "id": "411-CVE-2021-44716",
+          "title": "my-fake-host-6.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"my-fake-host-6.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-44716\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"high\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.16.6\",\n  \"Package License\": \"\",\n  \"CVSS\": \"7.50\",\n  \"Fix Status\": \"fixed in 1.17.5, 1.16.12\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"net/http in Go before 1.16.12 and 1.17.x before 1.17.5 allows uncontrolled memory consumption in the header canonicalization cache via HTTP/2 requests.\",\n  \"Cause\": \"\",\n  \"Published\": \"2022-01-01 05:15:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2021-44716\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: go\n\nnet/http in Go before 1.16.12 and 1.17.x before 1.17.5 allows uncontrolled memory consumption in the header canonicalization cache via HTTP/2 requests.",
+              "message": "Fix Status: fixed in 1.17.5, 1.16.12",
+              "start_time": "2022-01-01 05:15:00.000"
+            }
+          ]
+        }
+      ],
+      "sha256": "b8c9961c0efbd62c46338e9c8138be3480bb76da7ddaed5a4797f96e27de882a"
+    }
+  ]
+}

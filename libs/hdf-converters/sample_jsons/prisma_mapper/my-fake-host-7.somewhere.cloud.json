@@ -1,0 +1,180 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.16",
+    "target_id": "my-fake-host-7.somewhere.cloud"
+  },
+  "version": "2.6.16",
+  "statistics": {
+    "duration": null
+  },
+  "profiles": [
+    {
+      "name": "Palo Alto Prisma Cloud Tool",
+      "version": "",
+      "title": "Prisma Cloud Scan Report",
+      "maintainer": null,
+      "summary": "",
+      "license": null,
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "desc": "(CIS_Linux_2.0.0 - 5.1.8) Ensure at/cron is restricted to authorized users",
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cve": "",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": ""
+            }
+          ],
+          "source_location": "my-fake-host-7.somewhere.cloud",
+          "id": "6518-redhat-RHEL7-high",
+          "title": "my-fake-host-7.somewhere.cloud-redhat-RHEL7-linux",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"my-fake-host-7.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"6518\",\n  \"Type\": \"linux\",\n  \"Severity\": \"high\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 5.1.8) Ensure at/cron is restricted to authorized users\",\n  \"Cause\": \"Forbidden cron file exists. File /etc/cron.deny\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 5.1.8) Ensure at/cron is restricted to authorized users",
+              "message": "Cause: Forbidden cron file exists. File /etc/cron.deny",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "Red Hat OpenShift Container Platform is Red Hat\\'s cloud computing Kubernetes application platform solution designed for on-premise or private cloud deployments.  This advisory contains the RPM packages for Red Hat OpenShift Container Platform 4.8.9. See the following advisory for the container images for this release:  http://somewhere.cloud/errata/RHBA-2021:3247  Security Fix(es):  * golang: net/http: panic in ReadRequest and ReadResponse when reading a very large header (CVE-2021-31525)  * golang: net: lookup functions may return invalid host names (CVE-2021-33195)  * golang: net/http/httputil: ReverseProxy forwards connection headers if first one is empty (CVE-2021-33197)  * golang: math/big.Rat: may cause a panic or an unrecoverable fatal error if passed inputs with very large exponents (CVE-2021-33198)  * golang: crypto/tls: certificate of wrong type is causing TLS client to panic (CVE-2021-34558)  For more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.  All OpenShift Container Platform 4.8 users are advised to upgrade to these updated packages and images when they are available in the appropriate release channel. To check for available updates, use the OpenShift Console or the CLI oc command. Instructions for upgrading a cluster are avail",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-33197",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/detail/CVE-2021-33197"
+            }
+          ],
+          "source_location": "my-fake-host-7.somewhere.cloud",
+          "id": "411-CVE-2021-33197",
+          "title": "my-fake-host-7.somewhere.cloud-redhat-RHEL7-image",
+          "code": "{\n  \"Hostname\": \"my-fake-host-7.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-33197\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"medium\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.14.4\",\n  \"Package License\": \"\",\n  \"CVSS\": \"5.30\",\n  \"Fix Status\": \"fixed in 1.16.5, 1.15.13\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Red Hat OpenShift Container Platform is Red Hat\\\\'s cloud computing Kubernetes application platform solution designed for on-premise or private cloud deployments.  This advisory contains the RPM packages for Red Hat OpenShift Container Platform 4.8.9. See the following advisory for the container images for this release:  http://somewhere.cloud/errata/RHBA-2021:3247  Security Fix(es):  * golang: net/http: panic in ReadRequest and ReadResponse when reading a very large header (CVE-2021-31525)  * golang: net: lookup functions may return invalid host names (CVE-2021-33195)  * golang: net/http/httputil: ReverseProxy forwards connection headers if first one is empty (CVE-2021-33197)  * golang: math/big.Rat: may cause a panic or an unrecoverable fatal error if passed inputs with very large exponents (CVE-2021-33198)  * golang: crypto/tls: certificate of wrong type is causing TLS client to panic (CVE-2021-34558)  For more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.  All OpenShift Container Platform 4.8 users are advised to upgrade to these updated packages and images when they are available in the appropriate release channel. To check for available updates, use the OpenShift Console or the CLI oc command. Instructions for upgrading a cluster are avail\",\n  \"Cause\": \"\",\n  \"Published\": \"2021-05-21 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2021-33197\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: go\n\nRed Hat OpenShift Container Platform is Red Hat\\'s cloud computing Kubernetes application platform solution designed for on-premise or private cloud deployments.  This advisory contains the RPM packages for Red Hat OpenShift Container Platform 4.8.9. See the following advisory for the container images for this release:  http://somewhere.cloud/errata/RHBA-2021:3247  Security Fix(es):  * golang: net/http: panic in ReadRequest and ReadResponse when reading a very large header (CVE-2021-31525)  * golang: net: lookup functions may return invalid host names (CVE-2021-33195)  * golang: net/http/httputil: ReverseProxy forwards connection headers if first one is empty (CVE-2021-33197)  * golang: math/big.Rat: may cause a panic or an unrecoverable fatal error if passed inputs with very large exponents (CVE-2021-33198)  * golang: crypto/tls: certificate of wrong type is causing TLS client to panic (CVE-2021-34558)  For more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.  All OpenShift Container Platform 4.8 users are advised to upgrade to these updated packages and images when they are available in the appropriate release channel. To check for available updates, use the OpenShift Console or the CLI oc command. Instructions for upgrading a cluster are avail",
+              "message": "Fix Status: fixed in 1.16.5, 1.15.13",
+              "start_time": "2021-05-21 00:00:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "Red Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-38297",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/detail/CVE-2021-38297"
+            }
+          ],
+          "source_location": "my-fake-host-7.somewhere.cloud",
+          "id": "411-CVE-2021-38297",
+          "title": "my-fake-host-7.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 1,
+          "code": "{\n  \"Hostname\": \"my-fake-host-7.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-38297\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.17.1\",\n  \"Package License\": \"\",\n  \"CVSS\": \"9.80\",\n  \"Fix Status\": \"fixed in 1.17.2, 1.16.9\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Red Hat\\\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.\",\n  \"Cause\": \"\",\n  \"Published\": \"2021-10-07 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2021-38297\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: go\n\nRed Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.",
+              "message": "Fix Status: fixed in 1.17.2, 1.16.9",
+              "start_time": "2021-10-07 00:00:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "net/http in Go before 1.16.12 and 1.17.x before 1.17.5 allows uncontrolled memory consumption in the header canonicalization cache via HTTP/2 requests.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-44716",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/detail/CVE-2021-44716"
+            }
+          ],
+          "source_location": "my-fake-host-7.somewhere.cloud",
+          "id": "411-CVE-2021-44716",
+          "title": "my-fake-host-7.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"my-fake-host-7.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-44716\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"high\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.17.1\",\n  \"Package License\": \"\",\n  \"CVSS\": \"7.50\",\n  \"Fix Status\": \"fixed in 1.17.5, 1.16.12\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"net/http in Go before 1.16.12 and 1.17.x before 1.17.5 allows uncontrolled memory consumption in the header canonicalization cache via HTTP/2 requests.\",\n  \"Cause\": \"\",\n  \"Published\": \"2022-01-01 05:15:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2021-44716\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: go\n\nnet/http in Go before 1.16.12 and 1.17.x before 1.17.5 allows uncontrolled memory consumption in the header canonicalization cache via HTTP/2 requests.",
+              "message": "Fix Status: fixed in 1.17.5, 1.16.12",
+              "start_time": "2022-01-01 05:15:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "The ecryptfs_privileged_open function in fs/ecryptfs/kthread.c in the Linux kernel before 4.6.3 allows local users to gain privileges or cause a denial of service (stack memory consumption) via vectors involving crafted mmap calls for /proc pathnames, leading to recursive pagefault handling.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2016-1583",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2016-1583"
+            }
+          ],
+          "source_location": "my-fake-host-7.somewhere.cloud",
+          "id": "46-CVE-2016-1583",
+          "title": "my-fake-host-7.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.9,
+          "code": "{\n  \"Hostname\": \"my-fake-host-7.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2016-1583\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"important\",\n  \"Packages\": \"kernel\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"3.10.0-1160.49.1.el7\",\n  \"Package License\": \"GPLv2\",\n  \"CVSS\": \"8.10\",\n  \"Fix Status\": \"affected\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"The ecryptfs_privileged_open function in fs/ecryptfs/kthread.c in the Linux kernel before 4.6.3 allows local users to gain privileges or cause a denial of service (stack memory consumption) via vectors involving crafted mmap calls for /proc pathnames, leading to recursive pagefault handling.\",\n  \"Cause\": \"\",\n  \"Published\": \"2016-06-27 10:59:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2016-1583\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: kernel\n\nThe ecryptfs_privileged_open function in fs/ecryptfs/kthread.c in the Linux kernel before 4.6.3 allows local users to gain privileges or cause a denial of service (stack memory consumption) via vectors involving crafted mmap calls for /proc pathnames, leading to recursive pagefault handling.",
+              "message": "Fix Status: affected",
+              "start_time": "2016-06-27 10:59:00.000"
+            }
+          ]
+        }
+      ],
+      "sha256": "2146c551bc1da34e3fa5ef752ef1024201dc95823d12a89f2dd6c9fbb7ce3c96"
+    }
+  ]
+}
