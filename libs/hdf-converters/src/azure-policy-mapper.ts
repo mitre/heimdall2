@@ -72,17 +72,17 @@ class AzurePolicyConverter {
     //Class Constructor
     // credential - Azure Credentials object to authenticate with.
     // subscriptionId - Subscription ID to query against.
-    constructor(credential: DefaultAzureCredential, subscriptionId: string) {
+    constructor() {
         console.log("Generating HDF")
         this.results = [];
-        this.toHDF(credential, subscriptionId);
+        this.toHDF();
     }
 
     //generateHDF
     // This main function pulls in data from Azure Policy and Azure Policy Insights and generates
     // a Heimdall Data Format file.
     // To Do: Add Try Catch and Error Handling
-    private async toHDF(credential: DefaultAzureCredential, subscriptionId: string): Promise<PolicyDefinition[]> {
+    private async toHDF(): Promise<PolicyDefinition[]> {
         const policyDefinitions: PolicyDefinition[] = [];
         const staticPolicyDefinitions: PolicyDefinition[] = [];
         // Array for holding Group Names (NIST mappings)
@@ -229,7 +229,9 @@ class AzurePolicyConverter {
         //Testing writing to file
         var outputJson = JSON.stringify(hdf);
         fs.writeFile('azure-policy-test.json', outputJson, function (err: string) {
-            if (err) { throw err; }
+            if (err) {
+                throw err;
+            }
             console.log('complete');
         });
 
@@ -273,7 +275,7 @@ class AzurePolicyConverter {
                     start_time: '',
                     run_time: 0.00,
                     status: this.getStatus(policyDefinition.resources[i].state || "noncompliant")
-                };
+                }
                 results.push(hdfResult)
             }
 
@@ -291,8 +293,8 @@ class AzurePolicyConverter {
                 if (groupNames[i].includes("nist")) {
                     nistTag = groupNames[i].substring(groupNames[i].lastIndexOf("_") + 1);
                     hdfTags.push(nistTag.charAt(0).toUpperCase() + nistTag.charAt(1).toUpperCase() + nistTag.slice(2))
-                };
-            };
+                }
+            }
         }
         if (hdfTags.length > 0) {
             return hdfTags;
@@ -317,4 +319,4 @@ class AzurePolicyConverter {
     }
 }
 
-const azurePolicyConverter = new AzurePolicyConverter(credential, subscriptionId);
+const azurePolicyConverter = new AzurePolicyConverter();
