@@ -42,7 +42,7 @@
           ],
           "source_location": "my-fake-host-12.somewhere.cloud",
           "id": "64118-redhat-RHEL7-high",
-          "title": "my-fake-host-12.somewhere.cloudredhat-RHEL7linux",
+          "title": "my-fake-host-12.somewhere.cloud-redhat-RHEL7-linux",
           "impact": 0.7,
           "code": "{\n  \"Hostname\": \"my-fake-host-12.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"64118\",\n  \"Type\": \"linux\",\n  \"Severity\": \"high\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 4.1.19) Ensure the audit configuration is immutable\",\n  \"Cause\": \"Audit rules can be modified with auditctl\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
           "results": [
@@ -72,7 +72,7 @@
           ],
           "source_location": "my-fake-host-12.somewhere.cloud",
           "id": "6143-redhat-RHEL7-critical",
-          "title": "my-fake-host-12.somewhere.cloudredhat-RHEL7linux",
+          "title": "my-fake-host-12.somewhere.cloud-redhat-RHEL7-linux",
           "impact": 1,
           "code": "{\n  \"Hostname\": \"my-fake-host-12.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"6143\",\n  \"Type\": \"linux\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode\",\n  \"Cause\": \"Password should be set for user \\\"root\\\". File: /etc/shadow\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
           "results": [
@@ -102,7 +102,7 @@
           ],
           "source_location": "my-fake-host-12.somewhere.cloud",
           "id": "46-CVE-2021-3981",
-          "title": "my-fake-host-12.somewhere.cloudredhat-RHEL7image",
+          "title": "my-fake-host-12.somewhere.cloud-redhat-RHEL7-image",
           "impact": 0.3,
           "code": "{\n  \"Hostname\": \"my-fake-host-12.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-3981\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"low\",\n  \"Packages\": \"grub2-tools-extra\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"2.02-0.87.el7_9.7\",\n  \"Package License\": \"GPLv3+\",\n  \"CVSS\": \"3.30\",\n  \"Fix Status\": \"will not fix\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"grub2: Incorrect permission in grub.cfg allow unprivileged user to read the file content\",\n  \"Cause\": \"\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2021-3981\"\n}",
           "results": [
@@ -132,7 +132,7 @@
           ],
           "source_location": "my-fake-host-12.somewhere.cloud",
           "id": "46-CVE-2021-3408",
-          "title": "my-fake-host-12.somewhere.cloudredhat-RHEL7image",
+          "title": "my-fake-host-12.somewhere.cloud-redhat-RHEL7-image",
           "impact": 0.5,
           "code": "{\n  \"Hostname\": \"my-fake-host-12.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-3408\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"moderate\",\n  \"Packages\": \"grub2-tools-extra\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"2.02-0.87.el7_9.7\",\n  \"Package License\": \"GPLv3+\",\n  \"CVSS\": \"7.50\",\n  \"Fix Status\": \"under investigation\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"no description is available for this cve.\",\n  \"Cause\": \"\",\n  \"Published\": \"2021-03-02 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2021-3408\"\n}",
           "results": [
@@ -162,7 +162,7 @@
           ],
           "source_location": "my-fake-host-12.somewhere.cloud",
           "id": "46-CVE-2021-4155",
-          "title": "my-fake-host-12.somewhere.cloudredhat-RHEL7image",
+          "title": "my-fake-host-12.somewhere.cloud-redhat-RHEL7-image",
           "impact": 0.9,
           "code": "{\n  \"Hostname\": \"my-fake-host-12.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-4155\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"important\",\n  \"Packages\": \"kernel\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"3.10.0-1160.49.1.el7\",\n  \"Package License\": \"GPLv2\",\n  \"CVSS\": \"5.50\",\n  \"Fix Status\": \"affected\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"This is a kernel live patch module which is automatically loaded by the RPM post-install script to modify the code of a running kernel.  Security Fix(es):  * kernel: xfs: raw block device data leak in XFS_IOC_ALLOCSP IOCTL (CVE-2021-4155)  For more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.\",\n  \"Cause\": \"\",\n  \"Published\": \"2022-01-10 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2021-4155\"\n}",
           "results": [
@@ -192,7 +192,7 @@
           ],
           "source_location": "my-fake-host-12.somewhere.cloud",
           "id": "411-CVE-2020-28362",
-          "title": "my-fake-host-12.somewhere.cloudredhat-RHEL7image",
+          "title": "my-fake-host-12.somewhere.cloud-redhat-RHEL7-image",
           "impact": 0.7,
           "code": "{\n  \"Hostname\": \"my-fake-host-12.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2020-28362\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"high\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.14.4\",\n  \"Package License\": \"\",\n  \"CVSS\": \"7.50\",\n  \"Fix Status\": \"fixed in 1.15.4, 1.14.12\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Red Hat\\\\'s versions of the associated software have been determined to NOT be affected by CVE-2020-28362.\",\n  \"Cause\": \"\",\n  \"Published\": \"2020-11-12 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2020-28362\"\n}",
           "results": [
@@ -205,7 +205,7 @@
           ]
         }
       ],
-      "sha256": "e46059f0cdaa15ec7f0b38f7eff7dd15cf71a92f4b52ccf5f1394971d0e92fee"
+      "sha256": "05ed1936ffa45448f0433da7a3d90ca62080a05eab0468e00df92a9f9c7098a9"
     }
   ]
 }
