@@ -2,6 +2,15 @@
 # yarn lockfile v1
 
 
+"@achrinza/node-ipc@9.2.2":
+  version "9.2.2"
+  resolved "https://registry.yarnpkg.com/@achrinza/node-ipc/-/node-ipc-9.2.2.tgz#ae1b5d3d6a9362034eea60c8d946b93893c2e4ec"
+  integrity sha512-b90U39dx0cU6emsOvy5hxU4ApNXnE3+Tuo8XQZfiKTGelDwpMwBVgBP7QX6dGTcJgu/miyJuNJ/2naFBliNWEw==
+  dependencies:
+    "@node-ipc/js-queue" "2.0.3"
+    event-pubsub "4.3.0"
+    js-message "1.0.7"
+
 "@akryum/winattr@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@akryum/winattr/-/winattr-3.0.0.tgz#c345d49f8415583897e345729c12b3503927dd11"
@@ -3056,6 +3065,13 @@
     optional "0.1.4"
     tslib "2.3.1"
 
+"@node-ipc/js-queue@2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@node-ipc/js-queue/-/js-queue-2.0.3.tgz#ac7fe33d766fa53e233ef8fedaf3443a01c5a4cd"
+  integrity sha512-fL1wpr8hhD5gT2dA1qifeVaoDFlQR5es8tFuKqjHX+kdOtdNHnxkVZbtIrR2rxnMFvehkjaZRNV2H/gPXlb0hw==
+  dependencies:
+    easy-stack "1.0.1"
+
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz#7619c2eb21b25483f6d167548b4cfd5a7488c3d5"
@@ -4601,11 +4617,11 @@
   integrity sha512-RJB9I/3OMhycm0Hn0ArC2/2UGHJTldujPWZ0FDureX3YbK5CaE0Zfjg+qgp1i2HzIoIGPf25u6LLUsxPngKQ4w==
 
 "@vue/cli-plugin-eslint@^5.0.3":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-eslint/-/cli-plugin-eslint-5.0.3.tgz#47f00fea50205513f1908fbb1f93420760f6091c"
-  integrity sha512-gp2UdXYp3ofXndD2vKWQ56e6GXwCkrkS5yBzfM6T9aKFS9+3TV5FipQGQf4O2V3rhlCjWulUV4i3uaQMRems6g==
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-eslint/-/cli-plugin-eslint-5.0.4.tgz#33ee3e971d8ee1664d55ffd15b2af548af66fef8"
+  integrity sha512-NLBEKFTFJhYHMzQ3z+sb6xlkcNaN/RcbZ3hiCY72aJe4YOO8jEAp0XkPzlHd4xYkMW7jrmOwwLOPw+3BJ4b77Q==
   dependencies:
-    "@vue/cli-shared-utils" "^5.0.3"
+    "@vue/cli-shared-utils" "^5.0.4"
     eslint-webpack-plugin "^3.1.0"
     globby "^11.0.2"
     webpack "^5.54.0"
@@ -4637,14 +4653,14 @@
     fork-ts-checker-webpack-plugin-v5 "npm:fork-ts-checker-webpack-plugin@^5.0.11"
 
 "@vue/cli-plugin-unit-jest@~5.0.3":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-unit-jest/-/cli-plugin-unit-jest-5.0.3.tgz#0d0663889b89b80345edbd669e2dc2341504096d"
-  integrity sha512-gpBFjlTRdZPQT7UZ9j4D9kGBNR+htLhKbyYO6IlClnOW/SXL98gmcaQV3bXv7sDjAj/Foh/PtB7Ob9FXgrbx3Q==
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-unit-jest/-/cli-plugin-unit-jest-5.0.4.tgz#32c0ec4b151e025f33edc237ceb0cdd70ae44270"
+  integrity sha512-M4Vuh9j/PUzuuSl5RfVElAGzVlZ8oaOZr6AlWV5IdQJRdFMN5WzbqYrjzu2cpNwmjfvp0F7MXnJxyFq1SY8lmQ==
   dependencies:
     "@babel/core" "^7.12.16"
     "@babel/plugin-transform-modules-commonjs" "^7.15.0"
     "@types/jest" "^27.0.1"
-    "@vue/cli-shared-utils" "^5.0.3"
+    "@vue/cli-shared-utils" "^5.0.4"
     babel-jest "^27.1.0"
     deepmerge "^4.2.2"
     jest "^27.1.0"
@@ -4738,41 +4754,42 @@
     semver "^6.1.0"
     strip-ansi "^6.0.0"
 
-"@vue/cli-shared-utils@^5.0.3":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@vue/cli-shared-utils/-/cli-shared-utils-5.0.3.tgz#e8facc759f4e2ceed4a26f33943c0005a834e4af"
-  integrity sha512-xAHxFDYVohHWXOLdmGvka3ffQcRgKdACempFQkGJX74Q7OBf0zPf5WH+vQXhlR17eA3LmWdY+Nv8OfsIGim6Fg==
+"@vue/cli-shared-utils@^5.0.4":
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/@vue/cli-shared-utils/-/cli-shared-utils-5.0.4.tgz#e3f42575cb6b70e021272ef2c8bb52ca544ecf27"
+  integrity sha512-nfAsj8Nopu5sVHMBIaut/YL7NaJFVmTBSTJD7LM17jc5uytrM9JwiRtzCiv3JWRBG78Xdb/s2Xb/1YR4fkdmkQ==
   dependencies:
+    "@achrinza/node-ipc" "9.2.2"
     chalk "^4.1.2"
     execa "^1.0.0"
     joi "^17.4.0"
     launch-editor "^2.2.1"
     lru-cache "^6.0.0"
     node-fetch "^2.6.7"
-    node-ipc "9.2.1"
     open "^8.0.2"
     ora "^5.3.0"
     read-pkg "^5.1.1"
     semver "^7.3.4"
     strip-ansi "^6.0.0"
 
-"@vue/cli-ui-addon-webpack@^5.0.3":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@vue/cli-ui-addon-webpack/-/cli-ui-addon-webpack-5.0.3.tgz#b989da01eaf46d79726559a5042cc79a1684a5ab"
-  integrity sha512-ie922PUHlDYakUtDvzScV+F1UuQR+BYUcYP/nr2Gn9hQkbaUPsxK/TF+2Xhh+HaC1vcDf59UrBMXG/yx4XKzQg==
+"@vue/cli-ui-addon-webpack@^5.0.4":
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/@vue/cli-ui-addon-webpack/-/cli-ui-addon-webpack-5.0.4.tgz#8cf00453f64aad1d6968e52b05bef531b762d530"
+  integrity sha512-QVF5rG9qOVizdq4iZ4NhqwLEigOH+Ulhx9IZpaoLh0VlLqbqrwuHs4QOKNFsuvdGM4LHXCp8XH6EKFScPbJ9Mg==
 
-"@vue/cli-ui-addon-widgets@^5.0.3":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@vue/cli-ui-addon-widgets/-/cli-ui-addon-widgets-5.0.3.tgz#308b74eeebe449feca894d0c455d2a9cf7c4b5d5"
-  integrity sha512-H6mdmAM8hip/fHL/YnT3xDzzjaHUsQ5zDf8Sti0QgjNn3QBVq5sCIllKK3MQhQk5LPu6y+Js+q4/omgzdKpDEw==
+"@vue/cli-ui-addon-widgets@^5.0.4":
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/@vue/cli-ui-addon-widgets/-/cli-ui-addon-widgets-5.0.4.tgz#3343795da7259ebbdde4a207d6ec13b4b14caeca"
+  integrity sha512-KmJUazIEZWhy0UaFHV5Uy8AXpTqJgCPizEHhtxs3f8mIkUnwWjcQFG7FGfsAW7RgsN8hwcSZ5ZFjmXhllVwrkw==
 
-"@vue/cli-ui@^5.0.3":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@vue/cli-ui/-/cli-ui-5.0.3.tgz#a788db90a980ef0a683f3d8419dbb48c1cb180c0"
-  integrity sha512-XFJPPKa8MWQL1dGWHHbzBvJgj28Rybt3KuCWU5YZWRAqxMVRiTKjvpohYWsDnaKawe/fGDDVcPKf6HmOoAEnnQ==
+"@vue/cli-ui@^5.0.4":
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/@vue/cli-ui/-/cli-ui-5.0.4.tgz#1d763f0272f60c2f02d12725da5a180ec2281f3f"
+  integrity sha512-6RkvN5XphYHfBUhKS7wG2ChrEhdLx05v6ppq53wy0/3N126j/5UM+fl48vbnMzCeRgpTn75IRI89ysPqiDyX3A==
   dependencies:
+    "@achrinza/node-ipc" "9.2.2"
     "@akryum/winattr" "^3.0.0"
-    "@vue/cli-shared-utils" "^5.0.3"
+    "@vue/cli-shared-utils" "^5.0.4"
     apollo-server-express "^2.21.0"
     clone "^2.1.1"
     deepmerge "^4.2.2"
@@ -4790,7 +4807,6 @@
     lodash.merge "^4.6.1"
     lowdb "^1.0.0"
     lru-cache "^6.0.0"
-    node-ipc "9.2.1"
     node-notifier "^10.0.0"
     parse-git-config "^3.0.0"
     portfinder "^1.0.26"
@@ -4800,16 +4816,16 @@
     typescript "~4.5.5"
 
 "@vue/cli@^5.0.3":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@vue/cli/-/cli-5.0.3.tgz#791323e51ed46ffc353927d8cfbf3a1338e787dc"
-  integrity sha512-E9AE4OEi1Xld4rRMCdm8+1OtrBwZseFP3ugqVEhQ97MwKomliM2UuPQ8zHsJrcHIbKwPz7/2yDlPUwqkN9g0sw==
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/@vue/cli/-/cli-5.0.4.tgz#bebd12eb92c27cd170d5f4e993688a1877bb98f6"
+  integrity sha512-v9fHBQ3MCTAo92+uA/J8C/PYxGrZJCSM/myPEGzX4zrlbT4bBLfuP0pFRJZO9wQGE3NHp95coIdOghXdMm/atw==
   dependencies:
     "@types/ejs" "^3.0.6"
     "@types/inquirer" "^8.1.3"
-    "@vue/cli-shared-utils" "^5.0.3"
-    "@vue/cli-ui" "^5.0.3"
-    "@vue/cli-ui-addon-webpack" "^5.0.3"
-    "@vue/cli-ui-addon-widgets" "^5.0.3"
+    "@vue/cli-shared-utils" "^5.0.4"
+    "@vue/cli-ui" "^5.0.4"
+    "@vue/cli-ui-addon-webpack" "^5.0.4"
+    "@vue/cli-ui-addon-widgets" "^5.0.4"
     boxen "^5.0.0"
     commander "^7.1.0"
     debug "^4.1.0"
@@ -5924,9 +5940,9 @@ autoprefixer@^9.8.6:
     postcss-value-parser "^4.1.0"
 
 aws-sdk@^2.1046.0, aws-sdk@^2.573.0:
-  version "2.1097.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1097.0.tgz#1e53ee27d8ab7523760d023b934b24a9512bd719"
-  integrity sha512-fChMDiSfWcW0EUWmiqlyc+VAIXKH0w7BBruL3cVWSwO+5oA5A9juGF4NCBV2/KAHzaKaG0hXKPE49Wh6Lq74ag==
+  version "2.1098.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1098.0.tgz#54f8c1592b57e545c3d010f68dc70f5c2ee9ebb5"
+  integrity sha512-h81SAgqAxij1db9zbFAXEneaC1LNcx/xIIf13tF/IutdYOzd7mQ3lHFCgjp+fB1Msl8z73Vs0VGstyrhK7+zPw==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -9097,7 +9113,7 @@ duplexify@^4.1.1:
     readable-stream "^3.1.1"
     stream-shift "^1.0.0"
 
-easy-stack@^1.0.1:
+easy-stack@1.0.1, easy-stack@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/easy-stack/-/easy-stack-1.0.1.tgz#8afe4264626988cabb11f3c704ccd0c835411066"
   integrity sha512-wK2sCs4feiiJeFXn3zvY0p41mdU5VUgbgs1rNsc/y5ngFUijdWd+iIN8eoyuZHKB8xN6BL4PdWmzqFmxNg6V2w==
@@ -14254,10 +14270,15 @@ minimist-options@4.1.0:
     is-plain-obj "^1.1.0"
     kind-of "^6.0.3"
 
-minimist@1.2.5, minimist@^1.1.3, minimist@^1.2.0, minimist@^1.2.5:
+minimist@1.2.5:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
   integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
+
+minimist@^1.1.3, minimist@^1.2.0, minimist@^1.2.5, minimist@^1.2.6:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.6.tgz#8637a5b759ea0d6e98702cfb3a9283323c93af44"
+  integrity sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==
 
 minipass-collect@^1.0.2:
   version "1.0.2"
@@ -19312,13 +19333,13 @@ tsconfig-paths@3.12.0:
     strip-bom "^3.0.0"
 
 tsconfig-paths@^3.12.0, tsconfig-paths@^3.9.0:
-  version "3.14.0"
-  resolved "https://registry.yarnpkg.com/tsconfig-paths/-/tsconfig-paths-3.14.0.tgz#4fcc48f9ccea8826c41b9ca093479de7f5018976"
-  integrity sha512-cg/1jAZoL57R39+wiw4u/SCC6Ic9Q5NqjBOb+9xISedOYurfog9ZNmKJSxAnb2m/5Bq4lE9lhUcau33Ml8DM0g==
+  version "3.14.1"
+  resolved "https://registry.yarnpkg.com/tsconfig-paths/-/tsconfig-paths-3.14.1.tgz#ba0734599e8ea36c862798e920bcf163277b137a"
+  integrity sha512-fxDhWnFSLt3VuTwtvJt5fpwxBHg5AdKWMsgcPOOIilyjymcYVZoCQF8fvFRezCNfblEXmi+PcM1eYHeOAgXCOQ==
   dependencies:
     "@types/json5" "^0.0.29"
     json5 "^1.0.1"
-    minimist "^1.2.0"
+    minimist "^1.2.6"
     strip-bom "^3.0.0"
 
 tsconfig@^7.0.0:
