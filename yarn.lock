@@ -2930,9 +2930,9 @@
     unicode-trie "^0.3.0"
 
 "@mdi/font@^6.1.95":
-  version "6.5.95"
-  resolved "https://registry.yarnpkg.com/@mdi/font/-/font-6.5.95.tgz#203922f6dd46397de9eb1f5956b85339adb6344d"
-  integrity sha512-ES5rj6J39FUkHe/b3C9SJs8bqIungYhuU7rBINTBaHOv/Ce4RCb3Gw08CZVl32W33UEkgRkzyWaIedV4at+QHg==
+  version "6.6.95"
+  resolved "https://registry.yarnpkg.com/@mdi/font/-/font-6.6.95.tgz#668e023f19aa3cab1549088c767df055387c6b8a"
+  integrity sha512-WAQfnO/eqZEwXd+wD4mFV/Vna9RrVEyOdYKFa2H+sqf+PJ/a/803pPacEioOAuzGfXUVScm8cdZi8KqyeCCs1Q==
 
 "@mdi/js@^6.1.95":
   version "6.5.95"
