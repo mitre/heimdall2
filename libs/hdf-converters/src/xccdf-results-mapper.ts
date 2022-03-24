@@ -369,13 +369,19 @@ export class XCCDFResultsMapper extends BaseConverter {
               severity: {path: ['cdf:Rule.severity', 'Rule.severity']},
               description: {
                 path: ['cdf:Rule.cdf:description', 'Rule.description.text'],
-                transformer: convertEncodedXmlIntoJson
+                transformer: (description: string) =>
+                  JSON.stringify(
+                    _.pickBy(convertEncodedXmlIntoJson(description), _.identity)
+                  )
               },
               group_id: {path: 'id'},
               group_title: {path: ['cdf:title', 'title.text']},
               group_description: {
                 path: ['cdf:description', 'description.text'],
-                transformer: convertEncodedXmlIntoJson
+                transformer: (description: string) =>
+                  JSON.stringify(
+                    _.pickBy(convertEncodedXmlIntoJson(description), _.identity)
+                  )
               },
               rule_id: {path: ['cdf:Rule.id', 'Rule.id']},
               check: {path: ['cdf:Rule.cdf:check', 'Rule.check']},
