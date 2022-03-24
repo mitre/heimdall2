@@ -405,35 +405,30 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     });
   }
 
-  handleSplunkError(error: Record<string, unknown>): string {
-    try {
-      const errorCode = _.get(error, 'status');
-      // Connection errors are reported as 6XX here
-      if (typeof errorCode === 'number' && errorCode >= 600) {
-        logger.error(
-          "Unable to connect to your splunk instance. Are you sure you're using the right HTTP Scheme? (http/https)"
-        );
-        return "Unable to connect to your splunk instance. Are you sure you're using the right HTTP Scheme? (http/https)";
+  handleSplunkError(error?: Record<string, unknown>): void {
+    if (error) {
+      let errorMessage = '';
+      try {
+        const errorCode = _.get(error, 'status');
+        // Connection errors are reported as 6XX here
+        if (typeof errorCode === 'number' && errorCode >= 600) {
+          errorMessage =
+            "Unable to connect to your splunk instance. Are you sure you're using the right HTTP Scheme? (http/https)";
+        } else if (typeof errorCode === 'number' && errorCode === 401) {
+          errorMessage =
+            'Unable to login to your splunk instance. Incorrect username or password';
+        } else if (typeof errorCode === 'number' && errorCode === 400) {
+          errorMessage =
+            'Unable to authenticate to your splunk instance. Invalid Token provided';
+        } else {
+          errorMessage = JSON.stringify(error);
+        }
+      } catch {
+        errorMessage = String(error);
       }
-      if (typeof errorCode === 'number' && errorCode === 401) {
-        logger.error(
-          'Unable to login to your splunk instance. Incorrect username or password'
-        );
-        return 'Unable to login to your splunk instance. Incorrect username or password';
-      }
-      if (typeof errorCode === 'number' && errorCode === 400) {
-        logger.error(
-          'Unable to authenticate to your splunk instance. Invalid Token provided'
-        );
-        return 'Unable to login to your splunk instance. Invalid Token provided';
-      } else {
-        logger.error(JSON.stringify(error));
-        return JSON.stringify(error);
-      }
-    } catch {
-      logger.error(error);
+      logger.error(errorMessage);
+      throw new Error(errorMessage);
     }
-    return String(error);
   }
 
   async toSplunk(
@@ -455,15 +450,13 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     logger.verbose('Using GUID: ' + guid);
     return new Promise((resolve) => {
       if (config.username && config.password) {
-        service.login((err: any) => {
-          if (err) {
-            throw new Error(this.handleSplunkError(err));
-          }
+        service.login((error: any) => {
+          this.handleSplunkError(error);
         });
       }
       service.indexes().fetch(async (error: any, indexes: any) => {
         if (error) {
-          throw new Error(this.handleSplunkError(error));
+          this.handleSplunkError(error);
         } else if (!indexes) {
           throw new Error(
             'Unable to get available indexes, double-check your scheme configuration and try again'
