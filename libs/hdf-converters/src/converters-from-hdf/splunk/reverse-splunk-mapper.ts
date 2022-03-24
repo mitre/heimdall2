@@ -25,8 +25,8 @@ export type SplunkConfig = {
   scheme: string;
   host: string;
   port?: number;
-  username: string;
-  password: string;
+  username?: string;
+  password?: string;
   index: string;
   owner?: string;
   app?: string;
@@ -405,6 +405,32 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     });
   }
 
+  handleSplunkError(error?: Record<string, unknown>): void {
+    if (error) {
+      let errorMessage = '';
+      try {
+        const errorCode = _.get(error, 'status');
+        // Connection errors are reported as 6XX here
+        if (typeof errorCode === 'number' && errorCode >= 600) {
+          errorMessage =
+            "Unable to connect to your splunk instance. Are you sure you're using the right HTTP Scheme? (http/https)";
+        } else if (typeof errorCode === 'number' && errorCode === 401) {
+          errorMessage =
+            'Unable to login to your splunk instance. Incorrect username or password';
+        } else if (typeof errorCode === 'number' && errorCode === 400) {
+          errorMessage =
+            'Unable to authenticate to your splunk instance. Invalid Token provided';
+        } else {
+          errorMessage = JSON.stringify(error);
+        }
+      } catch {
+        errorMessage = String(error);
+      }
+      logger.error(errorMessage);
+      throw new Error(errorMessage);
+    }
+  }
+
   async toSplunk(
     config: SplunkConfig,
     filename: string,
@@ -422,18 +448,20 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     logger.verbose('Got Execution: ' + filename);
     const guid = createGUID(30);
     logger.verbose('Using GUID: ' + guid);
-    return new Promise((resolve, reject) => {
-      service.login((err: any, success: any) => {
-        if (err) {
-          logger.error(err);
-          reject(err);
-        }
-        logger.info('Login was successful: ' + success);
-        service.indexes().fetch(async (error: any, indexes: any) => {
-          if (error) {
-            logger.error(error);
-            reject(error);
-          }
+    return new Promise((resolve) => {
+      if (config.username && config.password) {
+        service.login((error: any) => {
+          this.handleSplunkError(error);
+        });
+      }
+      service.indexes().fetch(async (error: any, indexes: any) => {
+        if (error) {
+          this.handleSplunkError(error);
+        } else if (!indexes) {
+          throw new Error(
+            'Unable to get available indexes, double-check your scheme configuration and try again'
+          );
+        } else {
           const availableIndexes: string[] = indexes
             .list()
             .map((index: {name: string}) => index.name);
@@ -445,14 +473,20 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
             logger?.verbose(`Have index ${targetIndex.name}`);
             const splunkData = this.createSplunkData(guid, filename);
             this.uploadSplunkData(targetIndex, splunkData)
-              .then(() => resolve(guid))
-              .catch((resolvedError) => reject(resolvedError));
+              .then(() => {
+                logger.info(`Successfully uploaded to ${config.index}`);
+                resolve(guid);
+              })
+              .catch((resolvedError) => {
+                throw new Error(resolvedError);
+              });
           } else {
             logger.error(`Invalid Index: ${config.index}`);
-            reject(new Error(`Invalid Index: ${config.index}`));
+            throw new Error(`Invalid Index: ${config.index}`);
           }
-        });
+        }
       });
+
       return guid;
     });
   }
