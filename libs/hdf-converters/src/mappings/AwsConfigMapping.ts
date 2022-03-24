@@ -1,44 +1,51 @@
-import {default as data} from '../../data/aws-config-mapping.json';
-import {AwsConfigMappingItem} from './AwsConfigMappingItem';
+import _ from 'lodash';
+import {default as AWSNISTMappings} from '../../data/aws-config-mapping.json';
 
 export class AwsConfigMapping {
-  data: AwsConfigMappingItem[];
+  awsConfigRuleNameMappings: Record<string, string[]> = {};
+  awsConfigRuleSourceIdentifierMappings: Record<string, string[]> = {};
 
   constructor() {
-    this.data = [];
-    Object.entries(data).forEach((item) => {
-      this.data.push(
-        new AwsConfigMappingItem(
-          item[1].AwsConfigRuleSourceIdentifier,
-          item[1].AwsConfigRuleName,
-          item[1]['NIST-ID'],
-          item[1].Rev
-        )
-      );
+    AWSNISTMappings.forEach((mapping) => {
+      this.awsConfigRuleNameMappings[mapping.AwsConfigRuleName] =
+        mapping['NIST-ID'].split('|');
+      this.awsConfigRuleSourceIdentifierMappings[
+        mapping.AwsConfigRuleSourceIdentifier
+      ] = mapping['NIST-ID'].split('|');
     });
   }
-  nistFilter(identifiers: string[]): string[] | null {
+
+  searchNIST(identifiers: string[]): string[] {
     if (identifiers.length === 0) {
-      return null;
+      return [];
     } else {
       let matches: string[] = [];
-      identifiers.forEach((sourceIdentifier) => {
-        const item = this.data.find(
-          (element) => element.configRuleSourceIdentifier === sourceIdentifier
-        );
-        if (
-          item !== null &&
-          item !== undefined &&
-          item.nistId !== '' &&
-          matches.indexOf(item.nistId) === -1
-        ) {
-          matches = matches.concat(item.nistId.split('|'));
+      Object.entries(this.awsConfigRuleNameMappings).forEach(
+        ([awsConfigRuleName, NISTTags]) => {
+          identifiers.forEach((identifier) => {
+            if (
+              identifier.toLowerCase().toLowerCase().includes(awsConfigRuleName)
+            ) {
+              matches = matches.concat(NISTTags);
+            }
+          });
         }
-      });
-      if (matches.length === 0) {
-        return null;
-      }
-      return matches;
+      );
+
+      Object.entries(this.awsConfigRuleSourceIdentifierMappings).forEach(
+        ([awsConfigRuleSourceIdentifier, NISTTags]) => {
+          identifiers.forEach((identifier) => {
+            if (
+              identifier
+                .toLowerCase()
+                .includes(awsConfigRuleSourceIdentifier.toLowerCase())
+            ) {
+              matches = matches.concat(NISTTags);
+            }
+          });
+        }
+      );
+      return _.uniq(matches);
     }
   }
 }

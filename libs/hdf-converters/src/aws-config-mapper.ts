@@ -328,7 +328,7 @@ export class AwsConfigMapper {
     result = _.set(result, 'nist', []);
     let defaultMatch: string[] | null = [];
     if (sourceIdentifier !== undefined) {
-      defaultMatch = AWS_CONFIG_MAPPING.nistFilter([sourceIdentifier]);
+      defaultMatch = AWS_CONFIG_MAPPING.searchNIST([sourceIdentifier]);
     }
     if (Array.isArray(defaultMatch) && defaultMatch.length !== 0) {
       result = _.set(
