@@ -334,7 +334,7 @@ export class SplunkMapper {
           `search index="*" meta.guid="${guid}"`
         );
         logger.info(
-          `Data recieved, consolidating payloads for ${executionData.length} items`
+          `Data received, consolidating payloads for ${executionData.length} items`
         );
         return consolidate_payloads(executionData)[0];
       })
