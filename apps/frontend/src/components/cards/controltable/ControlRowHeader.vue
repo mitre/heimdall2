@@ -245,7 +245,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
           allow_letters: false
         });
         url =
-          'https://csrc.nist.gov/Projects/risk-management/sp800-53-controls/release-search#/control?version=4.0&number=' +
+          'https://csrc.nist.gov/Projects/risk-management/sp800-53-controls/release-search#/control?version=5.1&number=' +
           url;
       }
       return {label: tag, url: url, description: this.descriptionForTag(tag)};
