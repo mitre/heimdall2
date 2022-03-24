@@ -425,10 +425,19 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     return new Promise((resolve, reject) => {
       service.login((err: any, success: any) => {
         if (err) {
-          logger.error(err);
+          try {
+            logger.error(JSON.stringify(err));
+          } catch {
+            logger.error(err)
+          }
+          
           reject(err);
         }
         logger.info('Login was successful: ' + success);
+        if (!success) {
+          logger.error("Unable to login to Splunk Instance, check your credentials and try again.")
+          reject(new Error("Unable to login to Splunk Instance, check your credentials and try again."))
+        }
         service.indexes().fetch(async (error: any, indexes: any) => {
           if (error) {
             logger.error(error);
@@ -445,7 +454,10 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
             logger?.verbose(`Have index ${targetIndex.name}`);
             const splunkData = this.createSplunkData(guid, filename);
             this.uploadSplunkData(targetIndex, splunkData)
-              .then(() => resolve(guid))
+              .then(() => {
+                logger.info(`Succesfully uploaded to ${config.index}`)
+                resolve(guid)
+              })
               .catch((resolvedError) => reject(resolvedError));
           } else {
             logger.error(`Invalid Index: ${config.index}`);
