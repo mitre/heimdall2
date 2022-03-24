@@ -36,7 +36,7 @@ export function compare_arrays<T>(
   }
 }
 
-/** Stores/retrives a simple JSON object from localstorage.
+/** Stores/retrieves a simple JSON object from localstorage.
  * Will not store/retrieve methods - be advised! It won't work with class types!
  */
 export class LocalStorageVal<T> {
@@ -85,7 +85,7 @@ export class LocalStorageVal<T> {
   }
 }
 
-/** Get descripion from Array of descriptions or Key/String pair */
+/** Get description from Array of descriptions or Key/String pair */
 export function getDescription(
   descriptions:
     | {
