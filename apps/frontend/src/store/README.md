@@ -3,11 +3,11 @@
 Up to date as of Sept 16
 
 
-## UploadNexus Component
+## Upload Nexus Component
 
 The entry point to our data flow is the UploadNexus.vue component.
 This acts as a multiplexer between various sub-components, which all individually handle submitting their selected files to the report intake module.
-These readers don't typically actually do any data handling on their own; it simply accepts files and routes them to an appropraite location.
+These readers don't typically actually do any data handling on their own; it simply accepts files and routes them to an appropriate location.
 This is achieved by dispatching a "loadFile" action with the file as a payload.
 Upon success, they report the newly filled file ids as an array via the "got-files" event
 

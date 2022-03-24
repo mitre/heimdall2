@@ -1,0 +1,241 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.16",
+    "target_id": "my-fake-host-14.somewhere.cloud"
+  },
+  "version": "2.6.16",
+  "statistics": {
+    "duration": null
+  },
+  "profiles": [
+    {
+      "name": "Palo Alto Prisma Cloud Tool",
+      "version": "",
+      "title": "Prisma Cloud Scan Report",
+      "maintainer": null,
+      "summary": "",
+      "license": null,
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "desc": "(CIS_Linux_2.0.0 - 4.1.3) Ensure auditd service is enabled",
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cve": "",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": ""
+            }
+          ],
+          "source_location": "my-fake-host-14.somewhere.cloud",
+          "id": "6412-redhat-RHEL7-high",
+          "title": "my-fake-host-14.somewhere.cloud-redhat-RHEL7-linux",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"my-fake-host-14.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"6412\",\n  \"Type\": \"linux\",\n  \"Severity\": \"high\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 4.1.3) Ensure auditd service is enabled\",\n  \"Cause\": \"\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 4.1.3) Ensure auditd service is enabled",
+              "message": "Unknown",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cve": "",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": ""
+            }
+          ],
+          "source_location": "my-fake-host-14.somewhere.cloud",
+          "id": "6143-redhat-RHEL7-critical",
+          "title": "my-fake-host-14.somewhere.cloud-redhat-RHEL7-linux",
+          "impact": 1,
+          "code": "{\n  \"Hostname\": \"my-fake-host-14.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"6143\",\n  \"Type\": \"linux\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode\",\n  \"Cause\": \"Password should be set for user \\\"root\\\". File: /etc/shadow\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
+              "message": "Cause: Password should be set for user \"root\". File: /etc/shadow",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "The authentication_agent_new function in polkitbackend/polkitbackendinteractiveauthority.c in PolicyKit (aka polkit) before 0.113 allows local users to cause a denial of service (NULL pointer dereference and polkitd daemon crash) by calling RegisterAuthenticationAgent with an invalid object path.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2015-3218",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2015-3218"
+            }
+          ],
+          "source_location": "my-fake-host-14.somewhere.cloud",
+          "id": "46-CVE-2015-3218",
+          "title": "my-fake-host-14.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.3,
+          "code": "{\n  \"Hostname\": \"my-fake-host-14.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2015-3218\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"low\",\n  \"Packages\": \"polkit\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"0.112-26.el7_9.1\",\n  \"Package License\": \"LGPLv2+\",\n  \"CVSS\": \"2.10\",\n  \"Fix Status\": \"will not fix\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"The authentication_agent_new function in polkitbackend/polkitbackendinteractiveauthority.c in PolicyKit (aka polkit) before 0.113 allows local users to cause a denial of service (NULL pointer dereference and polkitd daemon crash) by calling RegisterAuthenticationAgent with an invalid object path.\",\n  \"Cause\": \"\",\n  \"Published\": \"2015-10-26 19:59:00.000\",\n  \"Services\": \"polkit\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2015-3218\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: polkit\n\nThe authentication_agent_new function in polkitbackend/polkitbackendinteractiveauthority.c in PolicyKit (aka polkit) before 0.113 allows local users to cause a denial of service (NULL pointer dereference and polkitd daemon crash) by calling RegisterAuthenticationAgent with an invalid object path.",
+              "message": "Fix Status: will not fix",
+              "start_time": "2015-10-26 19:59:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "The polkit_backend_action_pool_init function in polkitbackend/polkitbackendactionpool.c in PolicyKit (aka polkit) before 0.113 might allow local users to gain privileges via duplicate action IDs in action descriptions.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2015-3255",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2015-3255"
+            }
+          ],
+          "source_location": "my-fake-host-14.somewhere.cloud",
+          "id": "46-CVE-2015-3255",
+          "title": "my-fake-host-14.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.5,
+          "code": "{\n  \"Hostname\": \"my-fake-host-14.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2015-3255\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"moderate\",\n  \"Packages\": \"polkit\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"0.112-26.el7_9.1\",\n  \"Package License\": \"LGPLv2+\",\n  \"CVSS\": \"4.40\",\n  \"Fix Status\": \"will not fix\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"The polkit_backend_action_pool_init function in polkitbackend/polkitbackendactionpool.c in PolicyKit (aka polkit) before 0.113 might allow local users to gain privileges via duplicate action IDs in action descriptions.\",\n  \"Cause\": \"\",\n  \"Published\": \"2015-10-26 19:59:00.000\",\n  \"Services\": \"polkit\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2015-3255\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: polkit\n\nThe polkit_backend_action_pool_init function in polkitbackend/polkitbackendactionpool.c in PolicyKit (aka polkit) before 0.113 might allow local users to gain privileges via duplicate action IDs in action descriptions.",
+              "message": "Fix Status: will not fix",
+              "start_time": "2015-10-26 19:59:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "Red Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-38297",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/detail/CVE-2021-38297"
+            }
+          ],
+          "source_location": "my-fake-host-14.somewhere.cloud",
+          "id": "411-CVE-2021-38297",
+          "title": "my-fake-host-14.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 1,
+          "code": "{\n  \"Hostname\": \"my-fake-host-14.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-38297\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.17.1\",\n  \"Package License\": \"\",\n  \"CVSS\": \"9.80\",\n  \"Fix Status\": \"fixed in 1.17.2, 1.16.9\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Red Hat\\\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.\",\n  \"Cause\": \"\",\n  \"Published\": \"2021-10-07 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2021-38297\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: go\n\nRed Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.",
+              "message": "Fix Status: fixed in 1.17.2, 1.16.9",
+              "start_time": "2021-10-07 00:00:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "DOCUMENTATION: A flaw was found in golang. An attacker can craft an input to ParseFragment within parse.go that would cause it to enter an infinite loop and never return. The greatest threat to the system is of availability.             STATEMENT: Red Hat Developer Tools go-toolset-1.14-golang not affected because the vulnerable code is not shipped.  This vulnerability within golang and buildah shipped with RHEL-7 are out of support scope. For more information on Red Hat\\'s support scope, visit: http://somewhere.cloud/support/policy/updates/errata  For RHEL-8\\'s go-toolset:rhel8/golang, container-tools:1.0/buildah, container-tools:2.0/buildah, and container-tools:rhel8/buildah, the affected function is only used in e2e tests.  For RHEL-9\\'s golang and buildah, the affected function is only used in e2e tests.  Red Hat Openshift Container Storage has dependencies with the affected code, however, low priority trackers were filed as the vulnerable code is not shipped or used.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-33194",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/detail/CVE-2021-33194"
+            }
+          ],
+          "source_location": "my-fake-host-14.somewhere.cloud",
+          "id": "411-CVE-2021-33194",
+          "title": "my-fake-host-14.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"my-fake-host-14.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-33194\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"high\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.14.4\",\n  \"Package License\": \"\",\n  \"CVSS\": \"7.50\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"DOCUMENTATION: A flaw was found in golang. An attacker can craft an input to ParseFragment within parse.go that would cause it to enter an infinite loop and never return. The greatest threat to the system is of availability.             STATEMENT: Red Hat Developer Tools go-toolset-1.14-golang not affected because the vulnerable code is not shipped.  This vulnerability within golang and buildah shipped with RHEL-7 are out of support scope. For more information on Red Hat\\\\'s support scope, visit: http://somewhere.cloud/support/policy/updates/errata  For RHEL-8\\\\'s go-toolset:rhel8/golang, container-tools:1.0/buildah, container-tools:2.0/buildah, and container-tools:rhel8/buildah, the affected function is only used in e2e tests.  For RHEL-9\\\\'s golang and buildah, the affected function is only used in e2e tests.  Red Hat Openshift Container Storage has dependencies with the affected code, however, low priority trackers were filed as the vulnerable code is not shipped or used.\",\n  \"Cause\": \"\",\n  \"Published\": \"2021-05-20 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2021-33194\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: go\n\nDOCUMENTATION: A flaw was found in golang. An attacker can craft an input to ParseFragment within parse.go that would cause it to enter an infinite loop and never return. The greatest threat to the system is of availability.             STATEMENT: Red Hat Developer Tools go-toolset-1.14-golang not affected because the vulnerable code is not shipped.  This vulnerability within golang and buildah shipped with RHEL-7 are out of support scope. For more information on Red Hat\\'s support scope, visit: http://somewhere.cloud/support/policy/updates/errata  For RHEL-8\\'s go-toolset:rhel8/golang, container-tools:1.0/buildah, container-tools:2.0/buildah, and container-tools:rhel8/buildah, the affected function is only used in e2e tests.  For RHEL-9\\'s golang and buildah, the affected function is only used in e2e tests.  Red Hat Openshift Container Storage has dependencies with the affected code, however, low priority trackers were filed as the vulnerable code is not shipped or used.",
+              "message": "Unknown",
+              "start_time": "2021-05-20 00:00:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "Use-after-free vulnerability in hw/ide/ahci.c in QEMU, when built with IDE AHCI Emulation support, allows guest OS users to cause a denial of service (instance crash) or possibly execute arbitrary code via an invalid AHCI Native Command Queuing (NCQ) AIO command.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2016-1568",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2016-1568"
+            }
+          ],
+          "source_location": "my-fake-host-14.somewhere.cloud",
+          "id": "46-CVE-2016-1568",
+          "title": "my-fake-host-14.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.9,
+          "code": "{\n  \"Hostname\": \"my-fake-host-14.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2016-1568\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"important\",\n  \"Packages\": \"qemu-guest-agent\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"2.12.0-3.el7\",\n  \"Package License\": \"GPLv2\",\n  \"CVSS\": \"4.00\",\n  \"Fix Status\": \"affected\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Use-after-free vulnerability in hw/ide/ahci.c in QEMU, when built with IDE AHCI Emulation support, allows guest OS users to cause a denial of service (instance crash) or possibly execute arbitrary code via an invalid AHCI Native Command Queuing (NCQ) AIO command.\",\n  \"Cause\": \"\",\n  \"Published\": \"2016-04-12 02:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2016-1568\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: qemu-guest-agent\n\nUse-after-free vulnerability in hw/ide/ahci.c in QEMU, when built with IDE AHCI Emulation support, allows guest OS users to cause a denial of service (instance crash) or possibly execute arbitrary code via an invalid AHCI Native Command Queuing (NCQ) AIO command.",
+              "message": "Fix Status: affected",
+              "start_time": "2016-04-12 02:00:00.000"
+            }
+          ]
+        }
+      ],
+      "sha256": "72a12ab3a4a27a1a3b6c9ef61130b128775d0ff646f2fde55859fa693cee3592"
+    }
+  ]
+}

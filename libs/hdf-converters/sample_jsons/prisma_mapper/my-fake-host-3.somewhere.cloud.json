@@ -1,0 +1,181 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.16",
+    "target_id": "my-fake-host-3.somewhere.cloud"
+  },
+  "version": "2.6.16",
+  "statistics": {
+    "duration": null
+  },
+  "profiles": [
+    {
+      "name": "Palo Alto Prisma Cloud Tool",
+      "version": "",
+      "title": "Prisma Cloud Scan Report",
+      "maintainer": null,
+      "summary": "",
+      "license": null,
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "desc": "(CIS_Linux_2.0.0 - 4.1.3) Ensure auditd service is enabled",
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cve": "",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": ""
+            }
+          ],
+          "source_location": "my-fake-host-3.somewhere.cloud",
+          "id": "6412-redhat-RHEL7-high",
+          "title": "my-fake-host-3.somewhere.cloud-redhat-RHEL7-linux",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"my-fake-host-3.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"6412\",\n  \"Type\": \"linux\",\n  \"Severity\": \"high\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 4.1.3) Ensure auditd service is enabled\",\n  \"Cause\": \"\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 4.1.3) Ensure auditd service is enabled",
+              "message": "Unknown",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "STATEMENT: As per upstream \\\"Prior to Samba 4.15.0 patches for this are not possible, due to the prior design of the Samba VFS layer which used pathname-based calls for most meta-data operations. A two and a half year effort was undertaken to completely re-write the Samba VFS layer to stop use of pathname-based calls in all cases involving reading and writing of metadata returned to the client. This work has finally been completed in Samba 4.15.0.\\\"             MITIGATION: Do not enable SMB1 (please note SMB1 is disabled by default in Samba from version 4.11.0 and onwards). This prevents the creation of symbolic links via SMB1. If SMB1 must be enabled for backwards compatibility then add the parameter:  unix extensions = no  to the [global] section of your smb.conf and restart smbd. This prevents SMB1 clients from creating symlinks on the exported file system.  However, if the same region of the file system is also exported using NFS, NFS clients can create symlinks that potentially can also hit the race condition. For non-patched versions of Samba we recommend only exporting areas of the file system by either SMB2 or NFS, not both.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-20316",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2021-20316"
+            }
+          ],
+          "source_location": "my-fake-host-3.somewhere.cloud",
+          "id": "46-CVE-2021-20316",
+          "title": "my-fake-host-3.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.5,
+          "code": "{\n  \"Hostname\": \"my-fake-host-3.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-20316\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"moderate\",\n  \"Packages\": \"samba-common\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"4.10.16-15.el7_9\",\n  \"Package License\": \"GPLv3+ and LGPLv3+\",\n  \"CVSS\": \"5.90\",\n  \"Fix Status\": \"will not fix\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"STATEMENT: As per upstream \\\\\\\"Prior to Samba 4.15.0 patches for this are not possible, due to the prior design of the Samba VFS layer which used pathname-based calls for most meta-data operations. A two and a half year effort was undertaken to completely re-write the Samba VFS layer to stop use of pathname-based calls in all cases involving reading and writing of metadata returned to the client. This work has finally been completed in Samba 4.15.0.\\\\\\\"             MITIGATION: Do not enable SMB1 (please note SMB1 is disabled by default in Samba from version 4.11.0 and onwards). This prevents the creation of symbolic links via SMB1. If SMB1 must be enabled for backwards compatibility then add the parameter:  unix extensions = no  to the [global] section of your smb.conf and restart smbd. This prevents SMB1 clients from creating symlinks on the exported file system.  However, if the same region of the file system is also exported using NFS, NFS clients can create symlinks that potentially can also hit the race condition. For non-patched versions of Samba we recommend only exporting areas of the file system by either SMB2 or NFS, not both.\",\n  \"Cause\": \"\",\n  \"Published\": \"2022-01-10 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2021-20316\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: samba-common\n\nSTATEMENT: As per upstream \\\"Prior to Samba 4.15.0 patches for this are not possible, due to the prior design of the Samba VFS layer which used pathname-based calls for most meta-data operations. A two and a half year effort was undertaken to completely re-write the Samba VFS layer to stop use of pathname-based calls in all cases involving reading and writing of metadata returned to the client. This work has finally been completed in Samba 4.15.0.\\\"             MITIGATION: Do not enable SMB1 (please note SMB1 is disabled by default in Samba from version 4.11.0 and onwards). This prevents the creation of symbolic links via SMB1. If SMB1 must be enabled for backwards compatibility then add the parameter:  unix extensions = no  to the [global] section of your smb.conf and restart smbd. This prevents SMB1 clients from creating symlinks on the exported file system.  However, if the same region of the file system is also exported using NFS, NFS clients can create symlinks that potentially can also hit the race condition. For non-patched versions of Samba we recommend only exporting areas of the file system by either SMB2 or NFS, not both.",
+              "message": "Fix Status: will not fix",
+              "start_time": "2022-01-10 00:00:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "All versions of Samba prior to 4.13.16 are vulnerable to a malicious client using an SMB1 or NFS race to allow a directory to be created in an area of the server file system not exported under the share definition. Note that SMB1 has to be enabled, or the share also available via NFS in order for this attack to succeed.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-43566",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2021-43566"
+            }
+          ],
+          "source_location": "my-fake-host-3.somewhere.cloud",
+          "id": "46-CVE-2021-43566",
+          "title": "my-fake-host-3.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.3,
+          "code": "{\n  \"Hostname\": \"my-fake-host-3.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-43566\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"low\",\n  \"Packages\": \"samba-common\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"4.10.16-15.el7_9\",\n  \"Package License\": \"GPLv3+ and LGPLv3+\",\n  \"CVSS\": \"2.60\",\n  \"Fix Status\": \"will not fix\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"All versions of Samba prior to 4.13.16 are vulnerable to a malicious client using an SMB1 or NFS race to allow a directory to be created in an area of the server file system not exported under the share definition. Note that SMB1 has to be enabled, or the share also available via NFS in order for this attack to succeed.\",\n  \"Cause\": \"\",\n  \"Published\": \"2022-01-11 16:15:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2021-43566\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: samba-common\n\nAll versions of Samba prior to 4.13.16 are vulnerable to a malicious client using an SMB1 or NFS race to allow a directory to be created in an area of the server file system not exported under the share definition. Note that SMB1 has to be enabled, or the share also available via NFS in order for this attack to succeed.",
+              "message": "Fix Status: will not fix",
+              "start_time": "2022-01-11 16:15:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "Samba is an open-source implementation of the Server Message Block (SMB) protocol and the related Common Internet File System (CIFS) protocol, which allow PC-compatible machines to share files, printers, and various information.  Security Fix(es):  * samba: Out-of-bounds heap read/write vulnerability in VFS module vfs_fruit allows code execution (CVE-2021-44142)  For more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-44142",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/errata/RHSA-2022:0328"
+            }
+          ],
+          "source_location": "my-fake-host-3.somewhere.cloud",
+          "id": "46-CVE-2021-44142",
+          "title": "my-fake-host-3.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 1,
+          "code": "{\n  \"Hostname\": \"my-fake-host-3.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-44142\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"samba-common\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"4.10.16-15.el7_9\",\n  \"Package License\": \"GPLv3+ and LGPLv3+\",\n  \"CVSS\": \"9.90\",\n  \"Fix Status\": \"fixed in 4.10.16-18.el7_9\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Samba is an open-source implementation of the Server Message Block (SMB) protocol and the related Common Internet File System (CIFS) protocol, which allow PC-compatible machines to share files, printers, and various information.  Security Fix(es):  * samba: Out-of-bounds heap read/write vulnerability in VFS module vfs_fruit allows code execution (CVE-2021-44142)  For more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.\",\n  \"Cause\": \"\",\n  \"Published\": \"2022-01-31 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/errata/RHSA-2022:0328\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: samba-common\n\nSamba is an open-source implementation of the Server Message Block (SMB) protocol and the related Common Internet File System (CIFS) protocol, which allow PC-compatible machines to share files, printers, and various information.  Security Fix(es):  * samba: Out-of-bounds heap read/write vulnerability in VFS module vfs_fruit allows code execution (CVE-2021-44142)  For more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.",
+              "message": "Fix Status: fixed in 4.10.16-18.el7_9",
+              "start_time": "2022-01-31 00:00:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "DOCUMENTATION: A flaw was found in golang. Extraneous zero characters at the beginning of an IP address octet are not properly considered which could allow an attacker to bypass IP-based access controls. The highest threat from this vulnerability is to data confidentiality and integrity as well as system availability.             STATEMENT: This vulnerability potentially affects any component written in Go that uses the net standard library and ParseIP / ParseCIDR functions. There are components which might not use these functions or might use them to parse IP addresses and not manage them in any way (only store information about the ip address) . This reducing the severity of this vulnerability to Low for the following components: * OpenShift distributed tracing (formerly OpenShift Jaeger) * OpenShift Migration Toolkit for Containers * OpenShift Container Platform             MITIGATION: Mitigation for this issue is either not available or the currently available options do not meet the Red Hat Product Security criteria comprising ease of use and deployment, applicability to widespread installation base or stability.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-29923",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/detail/CVE-2021-29923"
+            }
+          ],
+          "source_location": "my-fake-host-3.somewhere.cloud",
+          "id": "411-CVE-2021-29923",
+          "title": "my-fake-host-3.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"my-fake-host-3.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-29923\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"high\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.16.6\",\n  \"Package License\": \"\",\n  \"CVSS\": \"7.50\",\n  \"Fix Status\": \"fixed in 1.17\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"DOCUMENTATION: A flaw was found in golang. Extraneous zero characters at the beginning of an IP address octet are not properly considered which could allow an attacker to bypass IP-based access controls. The highest threat from this vulnerability is to data confidentiality and integrity as well as system availability.             STATEMENT: This vulnerability potentially affects any component written in Go that uses the net standard library and ParseIP / ParseCIDR functions. There are components which might not use these functions or might use them to parse IP addresses and not manage them in any way (only store information about the ip address) . This reducing the severity of this vulnerability to Low for the following components: * OpenShift distributed tracing (formerly OpenShift Jaeger) * OpenShift Migration Toolkit for Containers * OpenShift Container Platform             MITIGATION: Mitigation for this issue is either not available or the currently available options do not meet the Red Hat Product Security criteria comprising ease of use and deployment, applicability to widespread installation base or stability.\",\n  \"Cause\": \"\",\n  \"Published\": \"2021-03-22 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2021-29923\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: go\n\nDOCUMENTATION: A flaw was found in golang. Extraneous zero characters at the beginning of an IP address octet are not properly considered which could allow an attacker to bypass IP-based access controls. The highest threat from this vulnerability is to data confidentiality and integrity as well as system availability.             STATEMENT: This vulnerability potentially affects any component written in Go that uses the net standard library and ParseIP / ParseCIDR functions. There are components which might not use these functions or might use them to parse IP addresses and not manage them in any way (only store information about the ip address) . This reducing the severity of this vulnerability to Low for the following components: * OpenShift distributed tracing (formerly OpenShift Jaeger) * OpenShift Migration Toolkit for Containers * OpenShift Container Platform             MITIGATION: Mitigation for this issue is either not available or the currently available options do not meet the Red Hat Product Security criteria comprising ease of use and deployment, applicability to widespread installation base or stability.",
+              "message": "Fix Status: fixed in 1.17",
+              "start_time": "2021-03-22 00:00:00.000"
+            }
+          ]
+        }
+      ],
+      "sha256": "37e1cf406624a79c136ea6d2e512c4580ea770db7de7ce042e7fdb175b481e32"
+    }
+  ]
+}

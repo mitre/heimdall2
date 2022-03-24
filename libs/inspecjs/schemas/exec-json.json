@@ -9,21 +9,26 @@
   ],
   "properties": {
     "platform": {
-      "$ref": "#/definitions/Platform"
+      "$ref": "#/definitions/Platform",
+      "description": "Information on the platform the run from the tool that generated the findings was from.  Example: the name of the operating system."
     },
     "profiles": {
       "type": "array",
       "items": {
         "$ref": "#/definitions/Exec_JSON_Profile"
-      }
+      },
+      "description": "Information on the run(s) from the tool that generated the findings.  Example: the findings."
     },
     "statistics": {
-      "$ref": "#/definitions/Statistics"
+      "$ref": "#/definitions/Statistics",
+      "description": "Statistics for the run(s) from the tool that generated the findings.  Example: the runtime duration."
     },
     "version": {
-      "type": "string"
+      "type": "string",
+      "description": "Version number of the tool that generated the findings.  Example: '4.18.108' is a version of Chef InSpec."
     }
   },
+  "description": "The top level value containing all of the results.",
   "title": "Exec JSON Output",
   "definitions": {
     "Control_Description": {
@@ -35,12 +40,15 @@
       ],
       "properties": {
         "label": {
-          "type": "string"
+          "type": "string",
+          "description": "The type of description.  Examples: 'fix' or 'check'."
         },
         "data": {
-          "type": "string"
+          "type": "string",
+          "description": "The text of the description."
         }
       },
+      "description": "A description for a control.",
       "title": "Control Description"
     },
     "Control_Group": {
@@ -53,23 +61,24 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "The unique identifier of the group"
+          "description": "The unique identifier for the group.  Example: the relative path to the file specifying the controls."
         },
         "title": {
           "type": [
             "null",
             "string"
           ],
-          "description": "The name of the group"
+          "description": "The title of the group - should be human readable."
         },
         "controls": {
           "type": "array",
           "items": {
             "type": "string"
           },
-          "description": "The control IDs in this group"
+          "description": "The set of controls as specified by their ids in this group.  Example: 'V-75443'."
         }
       },
+      "description": "Descriptions for controls in a group, such as the list of all the controls.",
       "title": "Control Group"
     },
     "Control_Result": {
@@ -83,7 +92,8 @@
         "status": {
           "anyOf": [
             {
-              "$ref": "#/definitions/Control_Result_Status"
+              "$ref": "#/definitions/Control_Result_Status",
+              "description": "The status of this test within the control.  Example: 'failed'."
             },
             {
               "type": "null"
@@ -91,40 +101,54 @@
           ]
         },
         "code_desc": {
-          "type": "string"
+          "type": "string",
+          "description": "A description of this test.  Example: 'limits.conf * is expected to include ['hard', 'maxlogins', '10']."
         },
         "run_time": {
           "type": [
             "number",
             "null"
-          ]
+          ],
+          "description": "The execution time in seconds for the test."
         },
         "start_time": {
-          "type": "string"
+          "type": "string",
+          "description": "The time at which the test started."
         },
         "resource": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The resource used in the test.  Example: in Inspec, you can use the 'File' resource."
         },
         "message": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "An explanation of the test status - usually only provided when the test fails."
         },
         "skip_message": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "An explanation of the test status if the status was 'skipped."
         },
         "exception": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The type of exception if an exception was thrown."
+        },
+        "resource_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The unique identifier of the resource."
         },
         "backtrace": {
           "anyOf": [
@@ -137,9 +161,11 @@
             {
               "type": "null"
             }
-          ]
+          ],
+          "description": "The stacktrace/backtrace of the exception if one occurred."
         }
       },
+      "description": "A test within a control and its results and findings such as how long it took to run.",
       "title": "Control Result"
     },
     "Control_Result_Status": {
@@ -150,6 +176,7 @@
         "skipped",
         "error"
       ],
+      "description": "The status of a control.  Should be one of 'passed', 'failed', 'skipped', or 'error'.",
       "title": "Control Result Status"
     },
     "Dependency": {
@@ -161,57 +188,67 @@
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The name/assigned alias."
         },
         "url": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The address of the dependency."
         },
         "branch": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The branch name for a git repo."
         },
         "path": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The relative path if the dependency is locally available."
         },
         "status_message": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The reason for the status if it is 'failed' or 'skipped'."
         },
         "status": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The status.  Should be: 'loaded', 'failed', or 'skipped'."
         },
         "git": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The location of the git repo.  Example: 'https://github.com/mitre/canonical-ubuntu-18.04-lts-stig-baseline.git'."
         },
         "supermarket": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The 'user/profilename' attribute for a Supermarket server."
         },
         "compliance": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The 'user/profilename' attribute for an Automate server."
         }
       },
+      "description": "A dependency for a profile.  Can include relative paths or urls for where to find the dependency.",
       "title": "Dependency"
     },
     "Exec_JSON_Control": {
@@ -228,19 +265,21 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "The ID of this control"
+          "description": "The id."
         },
         "title": {
           "type": [
             "null",
             "string"
-          ]
+          ],
+          "description": "The title - is nullable."
         },
         "desc": {
           "type": [
             "null",
             "string"
-          ]
+          ],
+          "description": "The description for the overarching control."
         },
         "descriptions": {
           "type": [
@@ -249,39 +288,44 @@
           ],
           "items": {
             "$ref": "#/definitions/Control_Description"
-          }
+          },
+          "description": "A set of additional descriptions.  Example: the 'fix' text."
         },
         "impact": {
           "type": "number",
           "minimum": 0,
-          "maximum": 1
+          "maximum": 1,
+          "description": "The impactfulness or severity."
         },
         "refs": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Reference"
-          }
+          },
+          "description": "The set of references to external documents."
         },
         "tags": {
           "type": "object",
-          "additionalProperties": true
+          "additionalProperties": true,
+          "description": "A set of tags - usually metadata."
         },
         "code": {
           "type": [
             "string",
             "null"
           ],
-          "description": "The raw source code of the control. Note that if this is an overlay control, it does not include the underlying source code"
+          "description": "The raw source code of the control. Note that if this is an overlay control, it does not include the underlying source code."
         },
         "source_location": {
-          "$ref": "#/definitions/Source_Location"
+          "$ref": "#/definitions/Source_Location",
+          "description": "The explicit location of the control within the source code."
         },
         "results": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Control_Result"
           },
-          "description": "\n              A list of all results of the controls describe blocks.\n\n              For instance, if in the controls code we had the following:\n                describe sshd_config do\n                  its('Port') { should cmp 22 }\n                end\n              The result of this block as a ControlResult would be appended to the results list.\n              "
+          "description": "\n             The set of all tests within the control and their results and findings.  Example:\n             For Chef Inspec, if in the control's code we had the following:\n               describe sshd_config do\n                 its('Port') { should cmp 22 }\n               end\n             The findings from this block would be appended to the results, as well as those of any other blocks within the control.\n          "
         },
         "waiver_data": {
           "anyOf": [
@@ -294,6 +338,7 @@
           ]
         }
       },
+      "description": "Describes a control and any findings it has.",
       "title": "Exec JSON Control"
     },
     "Exec_JSON_Profile": {
@@ -309,31 +354,36 @@
       ],
       "properties": {
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "The name - must be unique."
         },
         "title": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The title - should be human readable."
         },
         "maintainer": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The maintainer(s)."
         },
         "copyright": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The copyright holder(s)."
         },
         "copyright_email": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The email address or other contact information of the copyright holder(s)."
         },
         "depends": {
           "type": [
@@ -342,91 +392,108 @@
           ],
           "items": {
             "$ref": "#/definitions/Dependency"
-          }
+          },
+          "description": "The set of dependencies this profile depends on.  Example: an overlay profile is dependent on another profile."
         },
         "parent_profile": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The name of the parent profile if the profile is a dependency of another."
         },
         "license": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The copyright license.  Example: the full text or the name, such as 'Apache License, Version 2.0'."
         },
         "summary": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The summary.  Example: the Security Technical Implementation Guide (STIG) header."
         },
         "version": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The version of the profile."
         },
         "supports": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Supported_Platform"
-          }
+          },
+          "description": "The set of supported platform targets."
         },
         "description": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The description - should be more detailed than the summary."
         },
         "inspec_version": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The version of Inspec."
         },
         "sha256": {
-          "type": "string"
+          "type": "string",
+          "description": "The checksum of the profile."
         },
         "status": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The status.  Example: loaded."
         },
         "status_message": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The reason for the status.  Example: why it was skipped or failed to load."
         },
         "skip_message": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The reason for skipping if it was skipped."
         },
         "controls": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Exec_JSON_Control"
-          }
+          },
+          "description": "The set of controls including any findings."
         },
         "groups": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Control_Group"
-          }
+          },
+          "description": "A set of descriptions for the control groups.  Example: the ids of the controls."
         },
         "attributes": {
           "type": "array",
           "items": {
             "type": "object",
-            "additionalProperties": true
-          }
+            "additionalProperties": true,
+            "description": "An input or attribute used in the run."
+          },
+          "description": "The input(s) or attribute(s) used in the run."
         }
       },
+      "description": "Information on the set of controls assessed.  Example: it can include the name of the Inspec profile and any findings.",
       "title": "Exec JSON Profile"
     },
     "Platform": {
@@ -449,9 +516,11 @@
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The id of the target.  Example: the name and version of the operating system were not sufficient to identify the platform so a release identifier can additionally be provided like '21H2' for the release version of MS Windows 10."
         }
       },
+      "description": "Platform information such as its name.",
       "title": "Platform"
     },
     "Reference": {
@@ -465,7 +534,8 @@
             "ref": {
               "type": "string"
             }
-          }
+          },
+          "description": "A human readable/meaningful reference.  Example: a book title."
         },
         {
           "type": "object",
@@ -476,7 +546,8 @@
             "url": {
               "type": "string"
             }
-          }
+          },
+          "description": "A url pointing at the reference."
         },
         {
           "type": "object",
@@ -487,7 +558,8 @@
             "uri": {
               "type": "string"
             }
-          }
+          },
+          "description": "A uri pointing at the reference."
         },
         {
           "type": "object",
@@ -502,9 +574,11 @@
                 "additionalProperties": true
               }
             }
-          }
+          },
+          "description": ""
         }
       ],
+      "description": "A reference to an external document.",
       "title": "Reference"
     },
     "Source_Location": {
@@ -516,17 +590,18 @@
             "string",
             "null"
           ],
-          "description": "Path to the file that this statement originates from"
+          "description": "Path to the file that this control originates from."
         },
         "line": {
           "type": [
             "number",
             "null"
           ],
-          "description": "The line at which this statement is located in the file"
+          "description": "The line on which this control is located."
         }
       },
       "required": [],
+      "description": "The explicit location of the control.",
       "title": "Source Location"
     },
     "Statistic_Block": {
@@ -538,9 +613,10 @@
       "properties": {
         "total": {
           "type": "number",
-          "description": "Total number of controls (in this category) for this inspec execution."
+          "description": "The total.  Example: the total number of controls in a given category for a run."
         }
       },
+      "description": "Statistics for a given item, such as the total.",
       "title": "Statistic Block"
     },
     "Statistic_Hash": {
@@ -551,7 +627,8 @@
         "passed": {
           "anyOf": [
             {
-              "$ref": "#/definitions/Statistic_Block"
+              "$ref": "#/definitions/Statistic_Block",
+              "description": "Statistics for the controls that passed."
             },
             {
               "type": "null"
@@ -561,7 +638,8 @@
         "skipped": {
           "anyOf": [
             {
-              "$ref": "#/definitions/Statistic_Block"
+              "$ref": "#/definitions/Statistic_Block",
+              "description": "Statistics for the controls that were skipped."
             },
             {
               "type": "null"
@@ -571,7 +649,8 @@
         "failed": {
           "anyOf": [
             {
-              "$ref": "#/definitions/Statistic_Block"
+              "$ref": "#/definitions/Statistic_Block",
+              "description": "Statistics for the controls that failed."
             },
             {
               "type": "null"
@@ -579,6 +658,7 @@
           ]
         }
       },
+      "description": "Statistics for the control results.",
       "title": "Statistic Hash"
     },
     "Statistics": {
@@ -591,7 +671,7 @@
             "number",
             "null"
           ],
-          "description": "How long (in seconds) this inspec exec ran for."
+          "description": "How long (in seconds) this run by the tool was."
         },
         "controls": {
           "anyOf": [
@@ -605,6 +685,7 @@
           ]
         }
       },
+      "description": "Statistics for the run(s) such as how long it took.",
       "title": "Statistics"
     },
     "Supported_Platform": {
@@ -616,39 +697,46 @@
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The platform family.  Example: 'redhat'."
         },
         "platform-name": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The platform name - can include wildcards.  Example: 'debian'."
         },
         "platform": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The location of the platform.  Can be: 'os', 'aws', 'azure', or 'gcp'."
         },
         "release": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "The release of the platform.  Example: '20.04' for 'ubuntu'."
         },
         "os-family": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "Deprecated in favor of platform-family."
         },
         "os-name": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "description": "Deprecated in favor of platform-name."
         }
       },
+      "description": "A supported platform target.  Example: the platform name being 'ubuntu'.",
       "title": "Supported Platform"
     },
     "Waiver_Data": {

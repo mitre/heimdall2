@@ -1,0 +1,312 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.16",
+    "target_id": "localhost"
+  },
+  "version": "2.6.16",
+  "statistics": {
+    "duration": null
+  },
+  "profiles": [
+    {
+      "name": "Palo Alto Prisma Cloud Tool",
+      "version": "",
+      "title": "Prisma Cloud Scan Report",
+      "maintainer": null,
+      "summary": "",
+      "license": null,
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "desc": "(CIS_Linux_2.0.0 - 5.2.2) Ensure permissions on SSH private host key files are configured",
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cve": "",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": ""
+            }
+          ],
+          "source_location": "localhost",
+          "id": "60522-redhat-RHEL7-high",
+          "title": "localhost-redhat-RHEL7-linux",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"localhost\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"60522\",\n  \"Type\": \"linux\",\n  \"Severity\": \"high\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 5.2.2) Ensure permissions on SSH private host key files are configured\",\n  \"Cause\": \"File ownership is wrong, expected: 0:root, actual 0:ssh_keys. Full path: /etc/ssh/ssh_host_ecdsa_key\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 5.2.2) Ensure permissions on SSH private host key files are configured",
+              "message": "Cause: File ownership is wrong, expected: 0:root, actual 0:ssh_keys. Full path: /etc/ssh/ssh_host_ecdsa_key",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 5.2.2) Ensure permissions on SSH private host key files are configured",
+              "message": "Cause: File ownership is wrong, expected: 0:root, actual 0:ssh_keys. Full path: /etc/ssh/ssh_host_ed25519_key",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 5.2.2) Ensure permissions on SSH private host key files are configured",
+              "message": "Cause: File ownership is wrong, expected: 0:root, actual 0:ssh_keys. Full path: /etc/ssh/ssh_host_rsa_key",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cve": "",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": ""
+            }
+          ],
+          "source_location": "localhost",
+          "id": "6143-redhat-RHEL7-critical",
+          "title": "localhost-redhat-RHEL7-linux",
+          "impact": 1,
+          "code": "{\n  \"Hostname\": \"localhost\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"6143\",\n  \"Type\": \"linux\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode\",\n  \"Cause\": \"Password should be set for user \\\"root\\\". File: /etc/shadow\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
+              "message": "Cause: Password should be set for user \"root\". File: /etc/shadow",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "(CIS_Linux_2.0.0 - 6.2.9) Ensure users own their home directories",
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cve": "",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": ""
+            }
+          ],
+          "source_location": "localhost",
+          "id": "6629-redhat-RHEL7-high",
+          "title": "localhost-redhat-RHEL7-linux",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"localhost\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"6629\",\n  \"Type\": \"linux\",\n  \"Severity\": \"high\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 6.2.9) Ensure users own their home directories\",\n  \"Cause\": \"Home directory of user sftpGuest is owned by 0 but should be owned by 1003\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 6.2.9) Ensure users own their home directories",
+              "message": "Cause: Home directory of user sftpGuest is owned by 0 but should be owned by 1003",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "Vixie Cron before the 3.0pl1-133 Debian package allows local users to cause a denial of service (daemon crash) via a large crontab file because the calloc return value is not checked.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2019-9704",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2019-9704"
+            }
+          ],
+          "source_location": "localhost",
+          "id": "46-CVE-2019-9704",
+          "title": "localhost-redhat-RHEL7-image",
+          "impact": 0.3,
+          "code": "{\n  \"Hostname\": \"localhost\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2019-9704\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"low\",\n  \"Packages\": \"cronie\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.4.11-23.el7\",\n  \"Package License\": \"MIT and BSD and ISC and GPLv2+\",\n  \"CVSS\": \"3.30\",\n  \"Fix Status\": \"will not fix\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Vixie Cron before the 3.0pl1-133 Debian package allows local users to cause a denial of service (daemon crash) via a large crontab file because the calloc return value is not checked.\",\n  \"Cause\": \"\",\n  \"Published\": \"\",\n  \"Services\": \"crond\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2019-9704\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: cronie\n\nVixie Cron before the 3.0pl1-133 Debian package allows local users to cause a denial of service (daemon crash) via a large crontab file because the calloc return value is not checked.",
+              "message": "Fix Status: will not fix",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "Vixie Cron before the 3.0pl1-133 Debian package allows local users to cause a denial of service (memory consumption) via a large crontab file because an unlimited number of lines is accepted.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2019-9705",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2019-9705"
+            }
+          ],
+          "source_location": "localhost",
+          "id": "46-CVE-2019-9705",
+          "title": "localhost-redhat-RHEL7-image",
+          "impact": 0.5,
+          "code": "{\n  \"Hostname\": \"localhost\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2019-9705\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"moderate\",\n  \"Packages\": \"cronie\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.4.11-23.el7\",\n  \"Package License\": \"MIT and BSD and ISC and GPLv2+\",\n  \"CVSS\": \"5.50\",\n  \"Fix Status\": \"will not fix\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Vixie Cron before the 3.0pl1-133 Debian package allows local users to cause a denial of service (memory consumption) via a large crontab file because an unlimited number of lines is accepted.\",\n  \"Cause\": \"\",\n  \"Published\": \"\",\n  \"Services\": \"crond\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2019-9705\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: cronie\n\nVixie Cron before the 3.0pl1-133 Debian package allows local users to cause a denial of service (memory consumption) via a large crontab file because an unlimited number of lines is accepted.",
+              "message": "Fix Status: will not fix",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "Samba is an open-source implementation of the Server Message Block (SMB) protocol and the related Common Internet File System (CIFS) protocol, which allow PC-compatible machines to share files, printers, and various information.  Security Fix(es):  * samba: Out-of-bounds heap read/write vulnerability in VFS module vfs_fruit allows code execution (CVE-2021-44142)  For more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.  Bug Fix(es):  * Fix username map script regression introduced with CVE-2020-25717 (BZ#2046173)",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-44142",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/errata/RHSA-2022:0328"
+            }
+          ],
+          "source_location": "localhost",
+          "id": "46-CVE-2021-44142",
+          "title": "localhost-redhat-RHEL7-image",
+          "impact": 1,
+          "code": "{\n  \"Hostname\": \"localhost\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-44142\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"samba-libs\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"4.10.16-17.el7_9\",\n  \"Package License\": \"GPLv3+ and LGPLv3+\",\n  \"CVSS\": \"9.90\",\n  \"Fix Status\": \"fixed in 4.10.16-18.el7_9\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Samba is an open-source implementation of the Server Message Block (SMB) protocol and the related Common Internet File System (CIFS) protocol, which allow PC-compatible machines to share files, printers, and various information.  Security Fix(es):  * samba: Out-of-bounds heap read/write vulnerability in VFS module vfs_fruit allows code execution (CVE-2021-44142)  For more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.  Bug Fix(es):  * Fix username map script regression introduced with CVE-2020-25717 (BZ#2046173)\",\n  \"Cause\": \"\",\n  \"Published\": \"2022-01-31 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/errata/RHSA-2022:0328\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: samba-libs\n\nSamba is an open-source implementation of the Server Message Block (SMB) protocol and the related Common Internet File System (CIFS) protocol, which allow PC-compatible machines to share files, printers, and various information.  Security Fix(es):  * samba: Out-of-bounds heap read/write vulnerability in VFS module vfs_fruit allows code execution (CVE-2021-44142)  For more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.  Bug Fix(es):  * Fix username map script regression introduced with CVE-2020-25717 (BZ#2046173)",
+              "message": "Fix Status: fixed in 4.10.16-18.el7_9",
+              "start_time": "2022-01-31 00:00:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "DOCUMENTATION: A vulnerability was found in archive/zip of the Go standard library. Applications written in Go where Reader.Open (the API implementing io/fs.FS introduced in Go 1.16) can panic when parsing a crafted ZIP archive containing completely invalid names or an empty filename argument.             STATEMENT: * In OpenShift Container Platform multiple components are written in Go and use archive/zip from the standard library. However, all such components are short lived client side tools, not long lived server side executables. As the maximum impact of this vulnerability is a denial of service in client utilities, this vulnerability is rated Low for OpenShift Container Plaform.  * Because Service Telemetry Framework1.2 will be retiring soon and the flaw\\'s impact is lower, no update will be provided at this time for STF1.2\\'s sg-core-container.  * Because Red Hat Ceph Storage only uses Go\\'s archive/zip for the Grafana CLI and thus is not directly exploitable, the vulnerability has been rated low for Red Hat Ceph Storage.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-41772",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/detail/CVE-2021-41772"
+            }
+          ],
+          "source_location": "localhost",
+          "id": "411-CVE-2021-41772",
+          "title": "localhost-redhat-RHEL7-image",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"localhost\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-41772\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"high\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.17.1\",\n  \"Package License\": \"\",\n  \"CVSS\": \"7.50\",\n  \"Fix Status\": \"fixed in 1.17.3, 1.16.10\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"DOCUMENTATION: A vulnerability was found in archive/zip of the Go standard library. Applications written in Go where Reader.Open (the API implementing io/fs.FS introduced in Go 1.16) can panic when parsing a crafted ZIP archive containing completely invalid names or an empty filename argument.             STATEMENT: * In OpenShift Container Platform multiple components are written in Go and use archive/zip from the standard library. However, all such components are short lived client side tools, not long lived server side executables. As the maximum impact of this vulnerability is a denial of service in client utilities, this vulnerability is rated Low for OpenShift Container Plaform.  * Because Service Telemetry Framework1.2 will be retiring soon and the flaw\\\\'s impact is lower, no update will be provided at this time for STF1.2\\\\'s sg-core-container.  * Because Red Hat Ceph Storage only uses Go\\\\'s archive/zip for the Grafana CLI and thus is not directly exploitable, the vulnerability has been rated low for Red Hat Ceph Storage.\",\n  \"Cause\": \"\",\n  \"Published\": \"2021-08-30 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2021-41772\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: go\n\nDOCUMENTATION: A vulnerability was found in archive/zip of the Go standard library. Applications written in Go where Reader.Open (the API implementing io/fs.FS introduced in Go 1.16) can panic when parsing a crafted ZIP archive containing completely invalid names or an empty filename argument.             STATEMENT: * In OpenShift Container Platform multiple components are written in Go and use archive/zip from the standard library. However, all such components are short lived client side tools, not long lived server side executables. As the maximum impact of this vulnerability is a denial of service in client utilities, this vulnerability is rated Low for OpenShift Container Plaform.  * Because Service Telemetry Framework1.2 will be retiring soon and the flaw\\'s impact is lower, no update will be provided at this time for STF1.2\\'s sg-core-container.  * Because Red Hat Ceph Storage only uses Go\\'s archive/zip for the Grafana CLI and thus is not directly exploitable, the vulnerability has been rated low for Red Hat Ceph Storage.",
+              "message": "Fix Status: fixed in 1.17.3, 1.16.10",
+              "start_time": "2021-08-30 00:00:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "Red Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-38297",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/detail/CVE-2021-38297"
+            }
+          ],
+          "source_location": "localhost",
+          "id": "411-CVE-2021-38297",
+          "title": "localhost-redhat-RHEL7-image",
+          "impact": 1,
+          "code": "{\n  \"Hostname\": \"localhost\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-38297\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.17.1\",\n  \"Package License\": \"\",\n  \"CVSS\": \"9.80\",\n  \"Fix Status\": \"fixed in 1.17.2, 1.16.9\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Red Hat\\\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.\",\n  \"Cause\": \"\",\n  \"Published\": \"2021-10-07 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2021-38297\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: go\n\nRed Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.",
+              "message": "Fix Status: fixed in 1.17.2, 1.16.9",
+              "start_time": "2021-10-07 00:00:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "Red Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2020-24553.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2020-24553",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/detail/CVE-2020-24553"
+            }
+          ],
+          "source_location": "localhost",
+          "id": "411-CVE-2020-24553",
+          "title": "localhost-redhat-RHEL7-image",
+          "code": "{\n  \"Hostname\": \"localhost\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2020-24553\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"medium\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.14.4\",\n  \"Package License\": \"\",\n  \"CVSS\": \"6.10\",\n  \"Fix Status\": \"fixed in 1.15.1, 1.14.8\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Red Hat\\\\'s versions of the associated software have been determined to NOT be affected by CVE-2020-24553.\",\n  \"Cause\": \"\",\n  \"Published\": \"2020-08-01 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2020-24553\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: go\n\nRed Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2020-24553.",
+              "message": "Fix Status: fixed in 1.15.1, 1.14.8",
+              "start_time": "2020-08-01 00:00:00.000"
+            }
+          ]
+        }
+      ],
+      "sha256": "00362f6e469781493d3b33c72fbeb9ea65f6a94206dec4b4d8373e9f321a128e"
+    }
+  ]
+}

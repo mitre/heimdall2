@@ -1,0 +1,241 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.16",
+    "target_id": "my-fake-host-13.somewhere.cloud"
+  },
+  "version": "2.6.16",
+  "statistics": {
+    "duration": null
+  },
+  "profiles": [
+    {
+      "name": "Palo Alto Prisma Cloud Tool",
+      "version": "",
+      "title": "Prisma Cloud Scan Report",
+      "maintainer": null,
+      "summary": "",
+      "license": null,
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "desc": "(CIS_Linux_2.0.0 - 4.1.3) Ensure auditd service is enabled",
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cve": "",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": ""
+            }
+          ],
+          "source_location": "my-fake-host-13.somewhere.cloud",
+          "id": "6412-redhat-RHEL7-high",
+          "title": "my-fake-host-13.somewhere.cloud-redhat-RHEL7-linux",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"my-fake-host-13.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"6412\",\n  \"Type\": \"linux\",\n  \"Severity\": \"high\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 4.1.3) Ensure auditd service is enabled\",\n  \"Cause\": \"\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 4.1.3) Ensure auditd service is enabled",
+              "message": "Unknown",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cve": "",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": ""
+            }
+          ],
+          "source_location": "my-fake-host-13.somewhere.cloud",
+          "id": "6143-redhat-RHEL7-critical",
+          "title": "my-fake-host-13.somewhere.cloud-redhat-RHEL7-linux",
+          "impact": 1,
+          "code": "{\n  \"Hostname\": \"my-fake-host-13.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"6143\",\n  \"Type\": \"linux\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode\",\n  \"Cause\": \"Password should be set for user \\\"root\\\". File: /etc/shadow\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
+              "message": "Cause: Password should be set for user \"root\". File: /etc/shadow",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "In SQLite through 3.22.0, databases whose schema is corrupted using a CREATE TABLE AS statement could cause a NULL pointer dereference, related to build.c and prepare.c.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2018-8740",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2018-8740"
+            }
+          ],
+          "source_location": "my-fake-host-13.somewhere.cloud",
+          "id": "46-CVE-2018-8740",
+          "title": "my-fake-host-13.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.3,
+          "code": "{\n  \"Hostname\": \"my-fake-host-13.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2018-8740\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"low\",\n  \"Packages\": \"sqlite\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"3.7.17-8.el7_7.1\",\n  \"Package License\": \"Public Domain\",\n  \"CVSS\": \"3.30\",\n  \"Fix Status\": \"will not fix\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"In SQLite through 3.22.0, databases whose schema is corrupted using a CREATE TABLE AS statement could cause a NULL pointer dereference, related to build.c and prepare.c.\",\n  \"Cause\": \"\",\n  \"Published\": \"2018-03-17 00:29:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2018-8740\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: sqlite\n\nIn SQLite through 3.22.0, databases whose schema is corrupted using a CREATE TABLE AS statement could cause a NULL pointer dereference, related to build.c and prepare.c.",
+              "message": "Fix Status: will not fix",
+              "start_time": "2018-03-17 00:29:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "An issue was discovered in certain Apple products. iOS before 10.3.2 is affected. macOS before 10.12.5 is affected. The issue involves the \\\"SQLite\\\" component. It allows remote attackers to execute arbitrary code or cause a denial of service (memory corruption and application crash) via a crafted web site.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2017-7000",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2017-7000"
+            }
+          ],
+          "source_location": "my-fake-host-13.somewhere.cloud",
+          "id": "46-CVE-2017-7000",
+          "title": "my-fake-host-13.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.5,
+          "code": "{\n  \"Hostname\": \"my-fake-host-13.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2017-7000\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"moderate\",\n  \"Packages\": \"sqlite\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"3.7.17-8.el7_7.1\",\n  \"Package License\": \"Public Domain\",\n  \"CVSS\": \"6.50\",\n  \"Fix Status\": \"will not fix\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"An issue was discovered in certain Apple products. iOS before 10.3.2 is affected. macOS before 10.12.5 is affected. The issue involves the \\\\\\\"SQLite\\\\\\\" component. It allows remote attackers to execute arbitrary code or cause a denial of service (memory corruption and application crash) via a crafted web site.\",\n  \"Cause\": \"\",\n  \"Published\": \"2017-07-25 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2017-7000\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: sqlite\n\nAn issue was discovered in certain Apple products. iOS before 10.3.2 is affected. macOS before 10.12.5 is affected. The issue involves the \\\"SQLite\\\" component. It allows remote attackers to execute arbitrary code or cause a denial of service (memory corruption and application crash) via a crafted web site.",
+              "message": "Fix Status: will not fix",
+              "start_time": "2017-07-25 00:00:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "The ecryptfs_privileged_open function in fs/ecryptfs/kthread.c in the Linux kernel before 4.6.3 allows local users to gain privileges or cause a denial of service (stack memory consumption) via vectors involving crafted mmap calls for /proc pathnames, leading to recursive pagefault handling.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2016-1583",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2016-1583"
+            }
+          ],
+          "source_location": "my-fake-host-13.somewhere.cloud",
+          "id": "46-CVE-2016-1583",
+          "title": "my-fake-host-13.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.9,
+          "code": "{\n  \"Hostname\": \"my-fake-host-13.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2016-1583\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"important\",\n  \"Packages\": \"kernel\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"3.10.0-1160.45.1.el7\",\n  \"Package License\": \"GPLv2\",\n  \"CVSS\": \"8.10\",\n  \"Fix Status\": \"affected\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"The ecryptfs_privileged_open function in fs/ecryptfs/kthread.c in the Linux kernel before 4.6.3 allows local users to gain privileges or cause a denial of service (stack memory consumption) via vectors involving crafted mmap calls for /proc pathnames, leading to recursive pagefault handling.\",\n  \"Cause\": \"\",\n  \"Published\": \"2016-06-27 10:59:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2016-1583\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: kernel\n\nThe ecryptfs_privileged_open function in fs/ecryptfs/kthread.c in the Linux kernel before 4.6.3 allows local users to gain privileges or cause a denial of service (stack memory consumption) via vectors involving crafted mmap calls for /proc pathnames, leading to recursive pagefault handling.",
+              "message": "Fix Status: affected",
+              "start_time": "2016-06-27 10:59:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "DOCUMENTATION: A null pointer dereference vulnerability was found in golang. When using the library\\'s ssh server without specifying an option for GSSAPIWithMICConfig, it is possible for an attacker to craft an ssh client connection using the `gssapi-with-mic` authentication method and cause the server to panic resulting in a denial of service. The highest threat from this vulnerability is to system availability.             STATEMENT: A large number of products include the affected package, but do not make use of the vulnerable SSH server code.  Accordingly, the flaw itself is rated as \\\"Important\\\", but these products themselves all have a \\\"Low\\\" severity rating.  Additionally, a number of products include golang.org/x/crypto (or even golang.org/x/crypto/ssh/terminal) but not specifically golang.org/x/crypto/ssh/server.go in the final build. As this would result in a very large number of entries of not affected products, only products which include the ssh server code (golang.org/x/crypto/ssh/server.go) have been represented here.    Red Hat Enterprise Linux 8 container-tools:rhel8/containernetworking-plugins is not affected because although it uses some functionality from golang.org/x/crypto, it does not use or import anything from golang.org/x/crypto/ssh/*.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2020-29652",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/detail/CVE-2020-29652"
+            }
+          ],
+          "source_location": "my-fake-host-13.somewhere.cloud",
+          "id": "416-CVE-2020-29652",
+          "title": "my-fake-host-13.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"my-fake-host-13.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2020-29652\",\n  \"Compliance ID\": \"416\",\n  \"Type\": \"image\",\n  \"Severity\": \"high\",\n  \"Packages\": \"golang.org/x/crypto\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"v0.0.0-20200510223506-06a226fb4e37\",\n  \"Package License\": \"\",\n  \"CVSS\": \"7.50\",\n  \"Fix Status\": \"fixed in v0.0.0-20201216223049-8b5274cf687f\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"DOCUMENTATION: A null pointer dereference vulnerability was found in golang. When using the library\\\\'s ssh server without specifying an option for GSSAPIWithMICConfig, it is possible for an attacker to craft an ssh client connection using the `gssapi-with-mic` authentication method and cause the server to panic resulting in a denial of service. The highest threat from this vulnerability is to system availability.             STATEMENT: A large number of products include the affected package, but do not make use of the vulnerable SSH server code.  Accordingly, the flaw itself is rated as \\\\\\\"Important\\\\\\\", but these products themselves all have a \\\\\\\"Low\\\\\\\" severity rating.  Additionally, a number of products include golang.org/x/crypto (or even golang.org/x/crypto/ssh/terminal) but not specifically golang.org/x/crypto/ssh/server.go in the final build. As this would result in a very large number of entries of not affected products, only products which include the ssh server code (golang.org/x/crypto/ssh/server.go) have been represented here.    Red Hat Enterprise Linux 8 container-tools:rhel8/containernetworking-plugins is not affected because although it uses some functionality from golang.org/x/crypto, it does not use or import anything from golang.org/x/crypto/ssh/*.\",\n  \"Cause\": \"\",\n  \"Published\": \"2020-12-16 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2020-29652\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: golang.org/x/crypto\n\nDOCUMENTATION: A null pointer dereference vulnerability was found in golang. When using the library\\'s ssh server without specifying an option for GSSAPIWithMICConfig, it is possible for an attacker to craft an ssh client connection using the `gssapi-with-mic` authentication method and cause the server to panic resulting in a denial of service. The highest threat from this vulnerability is to system availability.             STATEMENT: A large number of products include the affected package, but do not make use of the vulnerable SSH server code.  Accordingly, the flaw itself is rated as \\\"Important\\\", but these products themselves all have a \\\"Low\\\" severity rating.  Additionally, a number of products include golang.org/x/crypto (or even golang.org/x/crypto/ssh/terminal) but not specifically golang.org/x/crypto/ssh/server.go in the final build. As this would result in a very large number of entries of not affected products, only products which include the ssh server code (golang.org/x/crypto/ssh/server.go) have been represented here.    Red Hat Enterprise Linux 8 container-tools:rhel8/containernetworking-plugins is not affected because although it uses some functionality from golang.org/x/crypto, it does not use or import anything from golang.org/x/crypto/ssh/*.",
+              "message": "Fix Status: fixed in v0.0.0-20201216223049-8b5274cf687f",
+              "start_time": "2020-12-16 00:00:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "Red Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-38297",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/detail/CVE-2021-38297"
+            }
+          ],
+          "source_location": "my-fake-host-13.somewhere.cloud",
+          "id": "411-CVE-2021-38297",
+          "title": "my-fake-host-13.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 1,
+          "code": "{\n  \"Hostname\": \"my-fake-host-13.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-38297\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.17.1\",\n  \"Package License\": \"\",\n  \"CVSS\": \"9.80\",\n  \"Fix Status\": \"fixed in 1.17.2, 1.16.9\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Red Hat\\\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.\",\n  \"Cause\": \"\",\n  \"Published\": \"2021-10-07 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2021-38297\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: go\n\nRed Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.",
+              "message": "Fix Status: fixed in 1.17.2, 1.16.9",
+              "start_time": "2021-10-07 00:00:00.000"
+            }
+          ]
+        }
+      ],
+      "sha256": "e2a512c681de2c4191559de4dcf4e29a56e4897aad9cf8b9780558c4b28aee51"
+    }
+  ]
+}
