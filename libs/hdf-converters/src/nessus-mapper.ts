@@ -168,10 +168,6 @@ function getStartTime(tag: unknown): string {
   }
 }
 
-function getMessage(item: unknown): string {
-  return _.get(item, 'plugin_output');
-}
-
 function cleanData(control: unknown[]): ExecJSON.Control[] {
   const filteredControl = control as ExecJSON.Control[];
   filteredControl.forEach((element) => {
@@ -323,7 +319,9 @@ export class NessusMapper extends BaseConverter {
               {
                 status: {transformer: getStatus},
                 code_desc: {transformer: formatCodeDesc},
-                message: {transformer: getMessage},
+                message: {
+                  path: ['plugin_output', 'cm:compliance-actual-value']
+                },
                 run_time: 0,
                 start_time: {
                   path: '$.HostProperties.tag',
