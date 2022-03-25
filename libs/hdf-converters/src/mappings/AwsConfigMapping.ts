@@ -1,12 +1,12 @@
 import _ from 'lodash';
-import {default as AWSNISTMappings} from '../../data/aws-config-mapping.json';
+import {data as AWSConfigMappingData} from './AwsConfigMappingData';
 
 export class AwsConfigMapping {
   awsConfigRuleNameMappings: Record<string, string[]> = {};
   awsConfigRuleSourceIdentifierMappings: Record<string, string[]> = {};
 
   constructor() {
-    AWSNISTMappings.forEach((mapping) => {
+    AWSConfigMappingData.forEach((mapping) => {
       this.awsConfigRuleNameMappings[mapping.AwsConfigRuleName] =
         mapping['NIST-ID'].split('|');
       this.awsConfigRuleSourceIdentifierMappings[

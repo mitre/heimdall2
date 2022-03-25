@@ -1,10 +1,10 @@
 {
     "platform": {
         "name": "Heimdall Tools",
-        "release": "0.1.0",
+        "release": "2.6.18",
         "target_id": "Host: zero.webappsecurity.com Port: 443"
     },
-    "version": "0.1.0",
+    "version": "2.6.18",
     "statistics": {
         "duration": null
     },
@@ -27,6 +27,7 @@
                 {
                     "tags": {
                         "nist": [
+                            "AC-3",
                             "SA-11",
                             "RA-5"
                         ],
@@ -52,6 +53,7 @@
                 {
                     "tags": {
                         "nist": [
+                            "AC-3",
                             "SA-11",
                             "RA-5"
                         ],
@@ -77,6 +79,7 @@
                 {
                     "tags": {
                         "nist": [
+                            "AC-3",
                             "SA-11",
                             "RA-5"
                         ],
@@ -102,6 +105,7 @@
                 {
                     "tags": {
                         "nist": [
+                            "AC-3",
                             "SA-11",
                             "RA-5"
                         ],
@@ -127,6 +131,7 @@
                 {
                     "tags": {
                         "nist": [
+                            "AC-3",
                             "SA-11",
                             "RA-5"
                         ],
@@ -152,6 +157,7 @@
                 {
                     "tags": {
                         "nist": [
+                            "AC-3",
                             "SA-11",
                             "RA-5"
                         ],
@@ -177,6 +183,7 @@
                 {
                     "tags": {
                         "nist": [
+                            "AC-3",
                             "SA-11",
                             "RA-5"
                         ],
@@ -322,6 +329,7 @@
                 {
                     "tags": {
                         "nist": [
+                            "AC-3",
                             "SA-11",
                             "RA-5"
                         ],
@@ -347,6 +355,7 @@
                 {
                     "tags": {
                         "nist": [
+                            "AC-3",
                             "SA-11",
                             "RA-5"
                         ],
@@ -370,7 +379,7 @@
                     ]
                 }
             ],
-            "sha256": "10cb6aef71feeb68bc8b81152eb1674cc88b31c2230e67428f18586b2f18ad42"
+            "sha256": "08b165a5d6d01621dadca5c89d820c0d8296dc1c992c21ad91878f7674df0dc2"
         }
     ]
 }
