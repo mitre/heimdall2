@@ -14,7 +14,7 @@ export class NiktoNistMapping {
       return DEFAULT_NIST_TAG;
     } else {
       if (id in data) {
-        return [(data as Record<string, string>)[id]]
+        return [(data as Record<string, string>)[id]];
       } else {
         return DEFAULT_NIST_TAG;
       }
