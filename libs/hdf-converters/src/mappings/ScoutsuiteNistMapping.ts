@@ -1,4 +1,4 @@
-import {default as data} from '../../data/scoutsuite-nist-mapping.json';
+import {data} from './ScoutsuiteNistMappingData';
 import {ScoutsuiteNistMappingItem} from './ScoutsuiteNistMappingItem';
 
 export interface ISCOUTSUITEJSONID {
