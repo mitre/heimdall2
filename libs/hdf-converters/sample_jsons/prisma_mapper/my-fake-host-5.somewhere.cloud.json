@@ -1,0 +1,121 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.16",
+    "target_id": "my-fake-host-5.somewhere.cloud"
+  },
+  "version": "2.6.16",
+  "statistics": {
+    "duration": null
+  },
+  "profiles": [
+    {
+      "name": "Palo Alto Prisma Cloud Tool",
+      "version": "",
+      "title": "Prisma Cloud Scan Report",
+      "maintainer": null,
+      "summary": "",
+      "license": null,
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "desc": "(CIS_Linux_2.0.0 - 5.2.2) Ensure permissions on SSH private host key files are configured",
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cve": "",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": ""
+            }
+          ],
+          "source_location": "my-fake-host-5.somewhere.cloud",
+          "id": "60522-redhat-RHEL7-high",
+          "title": "my-fake-host-5.somewhere.cloud-redhat-RHEL7-linux",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"my-fake-host-5.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"60522\",\n  \"Type\": \"linux\",\n  \"Severity\": \"high\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 5.2.2) Ensure permissions on SSH private host key files are configured\",\n  \"Cause\": \"File ownership is wrong, expected: 0:root, actual 0:ssh_keys. Full path: /etc/ssh/ssh_host_ecdsa_key\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 5.2.2) Ensure permissions on SSH private host key files are configured",
+              "message": "Cause: File ownership is wrong, expected: 0:root, actual 0:ssh_keys. Full path: /etc/ssh/ssh_host_ecdsa_key",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "DOCUMENTATION: A vulnerability was found in archive/zip of the Go standard library. Applications written in Go where Reader.Open (the API implementing io/fs.FS introduced in Go 1.16) can panic when parsing a crafted ZIP archive containing completely invalid names or an empty filename argument.             STATEMENT: * In OpenShift Container Platform multiple components are written in Go and use archive/zip from the standard library. However, all such components are short lived client side tools, not long lived server side executables. As the maximum impact of this vulnerability is a denial of service in client utilities, this vulnerability is rated Low for OpenShift Container Plaform.  * Because Service Telemetry Framework1.2 will be retiring soon and the flaw\\'s impact is lower, no update will be provided at this time for STF1.2\\'s sg-core-container.  * Because Red Hat Ceph Storage only uses Go\\'s archive/zip for the Grafana CLI and thus is not directly exploitable, the vulnerability has been rated low for Red Hat Ceph Storage.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-41772",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/detail/CVE-2021-41772"
+            }
+          ],
+          "source_location": "my-fake-host-5.somewhere.cloud",
+          "id": "411-CVE-2021-41772",
+          "title": "my-fake-host-5.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"my-fake-host-5.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-41772\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"high\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.17.1\",\n  \"Package License\": \"\",\n  \"CVSS\": \"7.50\",\n  \"Fix Status\": \"fixed in 1.17.3, 1.16.10\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"DOCUMENTATION: A vulnerability was found in archive/zip of the Go standard library. Applications written in Go where Reader.Open (the API implementing io/fs.FS introduced in Go 1.16) can panic when parsing a crafted ZIP archive containing completely invalid names or an empty filename argument.             STATEMENT: * In OpenShift Container Platform multiple components are written in Go and use archive/zip from the standard library. However, all such components are short lived client side tools, not long lived server side executables. As the maximum impact of this vulnerability is a denial of service in client utilities, this vulnerability is rated Low for OpenShift Container Plaform.  * Because Service Telemetry Framework1.2 will be retiring soon and the flaw\\\\'s impact is lower, no update will be provided at this time for STF1.2\\\\'s sg-core-container.  * Because Red Hat Ceph Storage only uses Go\\\\'s archive/zip for the Grafana CLI and thus is not directly exploitable, the vulnerability has been rated low for Red Hat Ceph Storage.\",\n  \"Cause\": \"\",\n  \"Published\": \"2021-08-30 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2021-41772\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: go\n\nDOCUMENTATION: A vulnerability was found in archive/zip of the Go standard library. Applications written in Go where Reader.Open (the API implementing io/fs.FS introduced in Go 1.16) can panic when parsing a crafted ZIP archive containing completely invalid names or an empty filename argument.             STATEMENT: * In OpenShift Container Platform multiple components are written in Go and use archive/zip from the standard library. However, all such components are short lived client side tools, not long lived server side executables. As the maximum impact of this vulnerability is a denial of service in client utilities, this vulnerability is rated Low for OpenShift Container Plaform.  * Because Service Telemetry Framework1.2 will be retiring soon and the flaw\\'s impact is lower, no update will be provided at this time for STF1.2\\'s sg-core-container.  * Because Red Hat Ceph Storage only uses Go\\'s archive/zip for the Grafana CLI and thus is not directly exploitable, the vulnerability has been rated low for Red Hat Ceph Storage.",
+              "message": "Fix Status: fixed in 1.17.3, 1.16.10",
+              "start_time": "2021-08-30 00:00:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "Red Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-38297",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/detail/CVE-2021-38297"
+            }
+          ],
+          "source_location": "my-fake-host-5.somewhere.cloud",
+          "id": "411-CVE-2021-38297",
+          "title": "my-fake-host-5.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 1,
+          "code": "{\n  \"Hostname\": \"my-fake-host-5.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-38297\",\n  \"Compliance ID\": \"411\",\n  \"Type\": \"image\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"go\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"1.17.1\",\n  \"Package License\": \"\",\n  \"CVSS\": \"9.80\",\n  \"Fix Status\": \"fixed in 1.17.2, 1.16.9\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Red Hat\\\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.\",\n  \"Cause\": \"\",\n  \"Published\": \"2021-10-07 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/detail/CVE-2021-38297\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: go\n\nRed Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.",
+              "message": "Fix Status: fixed in 1.17.2, 1.16.9",
+              "start_time": "2021-10-07 00:00:00.000"
+            }
+          ]
+        }
+      ],
+      "sha256": "b73ebe7bc296a684e71c96180e2268f9ec823d6dbf3d822a9f8429b5c032cbd5"
+    }
+  ]
+}

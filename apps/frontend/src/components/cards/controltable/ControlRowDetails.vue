@@ -10,8 +10,12 @@
 
           <v-tab-item value="tab-test">
             <div class="pa-4">
-              <div v-if="caveat">
-                Caveat: {{ caveat }}
+              <div v-if="caveat || justification || rationale">
+                <span v-if="caveat">Caveat: {{ caveat }}<br /></span>
+                <span v-if="justification"
+                  >Justification: {{ justification }}<br
+                /></span>
+                <span v-if="rationale">Rationale: {{ rationale }}<br /></span>
                 <v-divider />
                 <br />
               </div>
@@ -147,6 +151,14 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
 
   get caveat(): string | undefined {
     return this.control.hdf.descriptions.caveat;
+  }
+
+  get rationale(): string | undefined {
+    return this.control.hdf.descriptions.rationale;
+  }
+
+  get justification(): string | undefined {
+    return this.control.hdf.descriptions.justification;
   }
 
   get details(): Detail[] {

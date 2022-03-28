@@ -1,4 +1,4 @@
-import {default as data} from '../../data/cwe-nist-mapping.json';
+import {data} from './CweNistMappingData';
 import {CweNistMappingItem} from './CweNistMappingItem';
 
 export interface ICWEJSONID {
