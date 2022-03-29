@@ -2945,9 +2945,9 @@
   integrity sha512-WAQfnO/eqZEwXd+wD4mFV/Vna9RrVEyOdYKFa2H+sqf+PJ/a/803pPacEioOAuzGfXUVScm8cdZi8KqyeCCs1Q==
 
 "@mdi/js@^6.1.95":
-  version "6.6.95"
-  resolved "https://registry.yarnpkg.com/@mdi/js/-/js-6.6.95.tgz#c4cfe586b75e5cb3185169c60d30aa5e86e60cb1"
-  integrity sha512-w5BZHSwI91YeRmWPqrQWz9RFavyzazkoo5DCMN9NQ2eQy634D2KtH7jFnR64Jd1Iuf5qXA9DR3slXVRNVmKvaA==
+  version "6.6.96"
+  resolved "https://registry.yarnpkg.com/@mdi/js/-/js-6.6.96.tgz#119f79fa9327359421167a7d4b8bde26e84702ce"
+  integrity sha512-ke9PN5DjPCOlMfhioxeZYADz8Yiz6v47W0IYRza01SSJD7y1EwESVpwFnnFUso+eCoWtE1CO9cTIvQF6sEreuA==
 
 "@mitre/splunk-sdk-no-env@^1.10.0":
   version "1.10.0"
