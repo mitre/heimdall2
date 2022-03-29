@@ -17,6 +17,7 @@
         "Label": "INFORMATIONAL"
       },
       "Types": [
+        "File/Input/snyk-no-results.json",
         "Execution/platform/{\"name\":\"Heimdall Tools\",\"release\":\"2.6.9\",\"target_id\":\"storybook-link\"}",
         "Execution/statistics/{\"duration\":null}",
         "Execution/version/2.6.9",

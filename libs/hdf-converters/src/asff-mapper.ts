@@ -258,8 +258,8 @@ function getFirewallManager(): Record<string, Function> {
       )}`
     );
   };
-  const filename = (findings: Record<string, unknown>[]): string => {
-    return `${productName(findings)}.json`;
+  const filename = (findingInfo: [Record<string, unknown>, Record<string, unknown>[]]): string => {
+    return `${productName(findingInfo[1])}.json`;
   };
   return {
     findingId,
@@ -283,8 +283,8 @@ function getProwler(): Record<string, Function> {
     return encode(_.get(finding, 'ProductFields.ProviderName') as string);
   };
   const desc = (): string => ' ';
-  const filename = (findings: Record<string, unknown>[]): string => {
-    return `${productName(findings)}.json`;
+  const filename = (findingInfo: [Record<string, unknown>, Record<string, unknown>[]]): string => {
+    return `${productName(findingInfo[1])}.json`;
   };
   const meta = (): Record<string, string> => {
     return {name: 'Prowler', title: 'Prowler Findings'};
@@ -450,8 +450,8 @@ function getSecurityHub(): Record<string, Function> {
       }`
     );
   };
-  const filename = (findings: Record<string, unknown>[]): string => {
-    return `${productName(findings)}.json`;
+  const filename = (findingInfo: [Record<string, unknown>, Record<string, unknown>[]]): string => {
+    return `${productName(findingInfo[0])}.json`;
   };
   return {
     securityhubSupportingDocs,
@@ -679,7 +679,7 @@ export class ASFFMapper extends BaseConverter {
       whichSpecialCase(
         _.get(this.data, 'Findings[0]') as Record<string, unknown>
       ),
-      this.data,
+      this,
       'mapping',
       {
         platform: {
@@ -1030,7 +1030,7 @@ export class ASFFResults {
       return externalProductHandler(
         this,
         whichSpecialCase(finding),
-        finding,
+        [finding, findings],
         'filename',
         encode(defaultFilename)
       );

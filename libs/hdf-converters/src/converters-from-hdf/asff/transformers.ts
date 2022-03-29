@@ -38,7 +38,7 @@ export function getRunTime(hdf: ExecJSON.Execution): string {
     if (
       profile.controls[0] &&
       profile.controls[0].results.length &&
-      profile.controls[0].results[0].start_time
+    profile.controls[0].results[0].start_time
     ) {
       try {
         time = new Date(
@@ -111,7 +111,7 @@ export function createProfileInfoFinding(
       Severity: {
         Label: 'INFORMATIONAL'
       },
-      Types: createProfileInfoFindingFields(hdf)
+      Types: createProfileInfoFindingFields(hdf, options)
     },
     Resources: [
       {
@@ -399,8 +399,19 @@ function createProfileInfo(hdf?: ExecJSON.Execution): string[] {
   return typesArr;
 }
 
-function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
-  let typesArr = [`MITRE/SAF/${HeimdallToolsVersion}-hdf2asff`];
+function getFilename(options?: IOptions): string {
+  const slashSplit =
+    options?.input.split('\\')[
+    options?.input.split('\\').length - 1
+  ];
+  return slashSplit?.split('/')[slashSplit.split('/').length - 1] ?? '';
+}
+
+function createProfileInfoFindingFields(hdf: ExecJSON.Execution, options: IOptions): string[] {
+  let typesArr = [
+    `MITRE/SAF/${HeimdallToolsVersion}-hdf2asff`,
+    `File/Input/${getFilename(options)}`
+  ];
   const executionTargets = ['platform', 'statistics', 'version', 'passthrough'];
   executionTargets.forEach((target) => {
     const value = _.get(hdf, target);
@@ -502,10 +513,10 @@ function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
         const classifier =
           (control.tags[tag] as string[]).length > 0
             ? `[${escapeForwardSlashes(
-                (control.tags[tag] as string[]).join(', ')
-              )}]`
-            : '[]';
-        typesArr.push(`Tags/${escapeForwardSlashes(tag)}/${classifier}`);
+              (control.tags[tag] as string[]).join(', ')
+            )}]`
+              : '[]';
+              typesArr.push(`Tags/${escapeForwardSlashes(tag)}/${classifier}`);
       }
     }
   }
@@ -539,22 +550,16 @@ export function setupFindingType(
   control: SegmentedControl,
   context?: FromHdfToAsffMapper
 ) {
-  const slashSplit =
-    context?.ioptions.input.split('\\')[
-      context?.ioptions.input.split('\\').length - 1
-    ];
-  const filename = slashSplit?.split('/')[slashSplit.split('/').length - 1];
-
   const typesArr = [
     `MITRE/SAF/${HeimdallToolsVersion}-hdf2asff`,
-    `File/Input/${filename}`,
+    `File/Input/${getFilename(context?.ioptions)}`,
     `Control/Code/${escapeForwardSlashes(
       control.layersOfControl
-        .map(
-          (layer: ExecJSON.Control & {profileInfo?: Record<string, unknown>}) =>
-            createCode(layer)
-        )
-        .join('\n\n')
+      .map(
+        (layer: ExecJSON.Control & {profileInfo?: Record<string, unknown>}) =>
+        createCode(layer)
+      )
+      .join('\n\n')
     )}`
   ];
 
@@ -575,8 +580,8 @@ export function setupFindingType(
 export function getFixForControl(control: SegmentedControl) {
   return (
     getDescription(control.descriptions || [], 'fix') ||
-    control.tags.fix ||
-    'Fix not available'
+      control.tags.fix ||
+      'Fix not available'
   );
 }
 
@@ -621,8 +626,8 @@ export function setupControlStatus(control: SegmentedControl) {
     control.result.status === 'skipped'
       ? 'WARNING'
       : control.result.status === 'passed';
-  if (typeof status === 'boolean') {
-    return status ? 'PASSED' : 'FAILED';
-  }
-  return status;
+      if (typeof status === 'boolean') {
+        return status ? 'PASSED' : 'FAILED';
+      }
+      return status;
 }

@@ -17,6 +17,7 @@
                 "Label": "INFORMATIONAL"
             },
             "Types": [
+                "File/Input/rhel7-results.json",
                 "Execution/platform/{\"name\":\"centos\",\"release\":\"7.6.1810\"}",
                 "Execution/statistics/{\"duration\":10.681128104}",
                 "Execution/version/4.16.0",
