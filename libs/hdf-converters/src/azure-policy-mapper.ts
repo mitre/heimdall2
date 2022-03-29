@@ -146,12 +146,12 @@ class AzurePolicyConverter {
         }
 
         // Loop through each Policy and retrieve the metadata (name, description, etc.) associated with that policy.
-        for (let i = 0; i < policyDefinitions.length; i++) {
+        for (let policyDefinition of policyDefinitions) {
             await this.delay(150);
-            const policyAssignmentList = await policyClient.policyAssignments.getById(policyDefinitions[i].id);
-            policyDefinitions[i].detailedName = policyAssignmentList.displayName;
-            policyDefinitions[i].name = policyAssignmentList.name;
-            policyDefinitions[i].description = policyAssignmentList.description;
+            const policyAssignmentList = await policyClient.policyAssignments.getById(policyDefinition.id);
+            policyDefinition.detailedName = policyAssignmentList.displayName;
+            policyDefinition.name = policyAssignmentList.name;
+            policyDefinition.description = policyAssignmentList.description;
         }
 
         // Get Static Policies that Microsoft is responsible for meeting NIST 800-53 controls.
@@ -165,7 +165,8 @@ class AzurePolicyConverter {
         for (let i = 0; i < staticPolicies.length; i++) {
             // Get Policy Details
             if (staticPolicies[i]) {
-                const policyAssignmentList = await policyClient.policyAssignments.getById(staticPolicies[i].id);
+                const policyAssignmentList = await policyClient.policyAssignments.getById(staticPolicies[i].id!);
+
                 // Get Policy Control Mapping
                 groupNames = AZURE_POLICY_MAPPING.nistFilter([policyAssignmentList.displayName!])!;
                 if (groupNames === null || groupNames === undefined) {
@@ -242,14 +243,14 @@ class AzurePolicyConverter {
     private async getControls(policyDefinitions: PolicyDefinition[]): Promise<ExecJSON.Control[]> {
         let index = 0;
 
-        return (await policyDefinitions).map((policyDefinition: PolicyDefinition) => {
+        return (policyDefinitions).map((policyDefinition: PolicyDefinition) => {
             const control: ExecJSON.Control = {
                 id: policyDefinition.name || '',
                 title: policyDefinition.detailedName || '',
                 desc: policyDefinition.description || null,
                 impact: 0.5,
                 tags: { nist: policyDefinition.groupNames },
-                descriptions: [],//this.hdfDescriptions(issue),
+                descriptions: [],
                 refs: [],
                 source_location: { ref: policyDefinition.subscriptionId, line: 1 },
                 code: '',
