@@ -200,7 +200,7 @@ export class BaseConverter {
     }
 
     if (Array.isArray(pathV)) {
-      return hasPath
+      return hasTransformer
         ? (transformer(pathV) as T[])
         : this.handleArray(file, pathV);
     }
