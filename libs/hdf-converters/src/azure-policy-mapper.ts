@@ -141,12 +141,10 @@ class AzurePolicyConverter {
                 }
             }
 
-
-
         }
 
         // Loop through each Policy and retrieve the metadata (name, description, etc.) associated with that policy.
-        for (let policyDefinition of policyDefinitions) {
+        for (const policyDefinition of policyDefinitions) {
             await this.delay(150);
             const policyAssignmentList = await policyClient.policyAssignments.getById(policyDefinition.id);
             policyDefinition.detailedName = policyAssignmentList.displayName;
@@ -161,36 +159,37 @@ class AzurePolicyConverter {
             staticPolicies.push(item);
         }
         await this.delay(150);
-
-        for (let i = 0; i < staticPolicies.length; i++) {
+        for (const staticPolicy of staticPolicies) {
             // Get Policy Details
-            if (staticPolicies[i]) {
-                const policyAssignmentList = await policyClient.policyAssignments.getById(staticPolicies[i].id!);
+            if (staticPolicy.id) {
+                const policyAssignmentList = await policyClient.policyAssignments.getById(staticPolicy.id);
 
                 // Get Policy Control Mapping
-                groupNames = AZURE_POLICY_MAPPING.nistFilter([policyAssignmentList.displayName!])!;
-                if (groupNames === null || groupNames === undefined) {
-                    groupNames = []
-                }
+                if (policyAssignmentList.displayName) {
+                    groupNames = AZURE_POLICY_MAPPING.nistFilter([policyAssignmentList.displayName]) || [""];
+                    if (groupNames === null || groupNames === undefined) {
+                        groupNames = []
+                    }
 
-                const azureResource: AzureResource = {
-                    id: "Microsoft Managed",
-                    subscriptionId: subscriptionId,
-                    type: "N/A",
-                    state: "compliant",
-                    location: "N/A"
-                }
+                    const azureResource: AzureResource = {
+                        id: "Microsoft Managed",
+                        subscriptionId: subscriptionId,
+                        type: "N/A",
+                        state: "compliant",
+                        location: "N/A"
+                    }
 
-                policyDefinitions.push({
-                    id: staticPolicies[i].id || "Not Available",
-                    subscriptionId: subscriptionId,
-                    detailedName: policyAssignmentList.displayName,
-                    name: policyAssignmentList.name,
-                    description: policyAssignmentList.description,
-                    groupNames: groupNames,
-                    state: "compliant",
-                    resources: [azureResource]
-                })
+                    policyDefinitions.push({
+                        id: staticPolicy.id || "Not Available",
+                        subscriptionId: subscriptionId,
+                        detailedName: policyAssignmentList.displayName,
+                        name: policyAssignmentList.name,
+                        description: policyAssignmentList.description,
+                        groupNames: groupNames,
+                        state: "compliant",
+                        resources: [azureResource]
+                    })
+                }
             }
 
         }
