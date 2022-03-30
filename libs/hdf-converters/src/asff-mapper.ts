@@ -4,7 +4,6 @@ import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {AwsConfigMapping} from './mappings/AwsConfigMapping';
-import {AwsConfigMappingItem} from './mappings/AwsConfigMappingItem';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['CRITICAL', 0.9],
@@ -392,15 +391,9 @@ function getSecurityHub(): Record<string, Function> {
     ) {
       return [];
     }
-    const matches = awsConfigMapping.data.filter(
-      (element: AwsConfigMappingItem) =>
-        _.get(finding, 'ProductFields.RelatedAWSResources:0/name')?.includes(
-          element.configRuleName
-        )
-    );
-    return _.uniq(
-      matches.map((rule: AwsConfigMappingItem) => rule.nistId.split('|')).flat()
-    ); // Broken until CSV is fixed
+    return awsConfigMapping.searchNIST([
+      _.get(finding, 'ProductFields.RelatedAWSResources:0/name')
+    ]);
   };
   const findingTitle = (
     finding: unknown,
@@ -987,7 +980,7 @@ export class ASFFMapper extends BaseConverter {
                         'findingNistTag',
                         []
                       ) as string[];
-                      if (!tags.length) {
+                      if (tags.length === 0) {
                         return DEFAULT_NIST_TAG;
                       } else {
                         return tags;

@@ -1,0 +1,181 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.16",
+    "target_id": "my-fake-host-4.somewhere.cloud"
+  },
+  "version": "2.6.16",
+  "statistics": {
+    "duration": null
+  },
+  "profiles": [
+    {
+      "name": "Palo Alto Prisma Cloud Tool",
+      "version": "",
+      "title": "Prisma Cloud Scan Report",
+      "maintainer": null,
+      "summary": "",
+      "license": null,
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "desc": "(CIS_Linux_2.0.0 - 1.4.1) Ensure permissions on bootloader config are configured",
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cve": "",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": ""
+            }
+          ],
+          "source_location": "my-fake-host-4.somewhere.cloud",
+          "id": "6141-redhat-RHEL7-high",
+          "title": "my-fake-host-4.somewhere.cloud-redhat-RHEL7-linux",
+          "impact": 0.7,
+          "code": "{\n  \"Hostname\": \"my-fake-host-4.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"6141\",\n  \"Type\": \"linux\",\n  \"Severity\": \"high\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 1.4.1) Ensure permissions on bootloader config are configured\",\n  \"Cause\": \"File permissions not configured properly, expected: 600, actual: 644. Full path: /boot/grub2/grub.cfg\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 1.4.1) Ensure permissions on bootloader config are configured",
+              "message": "Cause: File permissions not configured properly, expected: 600, actual: 644. Full path: /boot/grub2/grub.cfg",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cve": "",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": ""
+            }
+          ],
+          "source_location": "my-fake-host-4.somewhere.cloud",
+          "id": "6143-redhat-RHEL7-critical",
+          "title": "my-fake-host-4.somewhere.cloud-redhat-RHEL7-linux",
+          "impact": 1,
+          "code": "{\n  \"Hostname\": \"my-fake-host-4.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"\",\n  \"Compliance ID\": \"6143\",\n  \"Type\": \"linux\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"\",\n  \"Package License\": \"\",\n  \"CVSS\": \"0.00\",\n  \"Fix Status\": \"\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode\",\n  \"Cause\": \"Password should be set for user \\\"root\\\". File: /etc/shadow\",\n  \"Published\": \"\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Configuration check for redhat-RHEL7\n\n(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
+              "message": "Cause: Password should be set for user \"root\". File: /etc/shadow",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "desc": "All versions of Samba prior to 4.13.16 are vulnerable to a malicious client using an SMB1 or NFS race to allow a directory to be created in an area of the server file system not exported under the share definition. Note that SMB1 has to be enabled, or the share also available via NFS in order for this attack to succeed.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-43566",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2021-43566"
+            }
+          ],
+          "source_location": "my-fake-host-4.somewhere.cloud",
+          "id": "46-CVE-2021-43566",
+          "title": "my-fake-host-4.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.3,
+          "code": "{\n  \"Hostname\": \"my-fake-host-4.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-43566\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"low\",\n  \"Packages\": \"libwbclient\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"4.10.16-17.el7_9\",\n  \"Package License\": \"GPLv3+ and LGPLv3+\",\n  \"CVSS\": \"2.60\",\n  \"Fix Status\": \"will not fix\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"All versions of Samba prior to 4.13.16 are vulnerable to a malicious client using an SMB1 or NFS race to allow a directory to be created in an area of the server file system not exported under the share definition. Note that SMB1 has to be enabled, or the share also available via NFS in order for this attack to succeed.\",\n  \"Cause\": \"\",\n  \"Published\": \"2022-01-11 16:15:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2021-43566\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: libwbclient\n\nAll versions of Samba prior to 4.13.16 are vulnerable to a malicious client using an SMB1 or NFS race to allow a directory to be created in an area of the server file system not exported under the share definition. Note that SMB1 has to be enabled, or the share also available via NFS in order for this attack to succeed.",
+              "message": "Fix Status: will not fix",
+              "start_time": "2022-01-11 16:15:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "STATEMENT: As per upstream \\\"Prior to Samba 4.15.0 patches for this are not possible, due to the prior design of the Samba VFS layer which used pathname-based calls for most meta-data operations. A two and a half year effort was undertaken to completely re-write the Samba VFS layer to stop use of pathname-based calls in all cases involving reading and writing of metadata returned to the client. This work has finally been completed in Samba 4.15.0.\\\"             MITIGATION: Do not enable SMB1 (please note SMB1 is disabled by default in Samba from version 4.11.0 and onwards). This prevents the creation of symbolic links via SMB1. If SMB1 must be enabled for backwards compatibility then add the parameter:  unix extensions = no  to the [global] section of your smb.conf and restart smbd. This prevents SMB1 clients from creating symlinks on the exported file system.  However, if the same region of the file system is also exported using NFS, NFS clients can create symlinks that potentially can also hit the race condition. For non-patched versions of Samba we recommend only exporting areas of the file system by either SMB2 or NFS, not both.",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-20316",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/security/cve/CVE-2021-20316"
+            }
+          ],
+          "source_location": "my-fake-host-4.somewhere.cloud",
+          "id": "46-CVE-2021-20316",
+          "title": "my-fake-host-4.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 0.5,
+          "code": "{\n  \"Hostname\": \"my-fake-host-4.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-20316\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"moderate\",\n  \"Packages\": \"libwbclient\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"4.10.16-17.el7_9\",\n  \"Package License\": \"GPLv3+ and LGPLv3+\",\n  \"CVSS\": \"5.90\",\n  \"Fix Status\": \"will not fix\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"STATEMENT: As per upstream \\\\\\\"Prior to Samba 4.15.0 patches for this are not possible, due to the prior design of the Samba VFS layer which used pathname-based calls for most meta-data operations. A two and a half year effort was undertaken to completely re-write the Samba VFS layer to stop use of pathname-based calls in all cases involving reading and writing of metadata returned to the client. This work has finally been completed in Samba 4.15.0.\\\\\\\"             MITIGATION: Do not enable SMB1 (please note SMB1 is disabled by default in Samba from version 4.11.0 and onwards). This prevents the creation of symbolic links via SMB1. If SMB1 must be enabled for backwards compatibility then add the parameter:  unix extensions = no  to the [global] section of your smb.conf and restart smbd. This prevents SMB1 clients from creating symlinks on the exported file system.  However, if the same region of the file system is also exported using NFS, NFS clients can create symlinks that potentially can also hit the race condition. For non-patched versions of Samba we recommend only exporting areas of the file system by either SMB2 or NFS, not both.\",\n  \"Cause\": \"\",\n  \"Published\": \"2022-01-10 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/security/cve/CVE-2021-20316\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: libwbclient\n\nSTATEMENT: As per upstream \\\"Prior to Samba 4.15.0 patches for this are not possible, due to the prior design of the Samba VFS layer which used pathname-based calls for most meta-data operations. A two and a half year effort was undertaken to completely re-write the Samba VFS layer to stop use of pathname-based calls in all cases involving reading and writing of metadata returned to the client. This work has finally been completed in Samba 4.15.0.\\\"             MITIGATION: Do not enable SMB1 (please note SMB1 is disabled by default in Samba from version 4.11.0 and onwards). This prevents the creation of symbolic links via SMB1. If SMB1 must be enabled for backwards compatibility then add the parameter:  unix extensions = no  to the [global] section of your smb.conf and restart smbd. This prevents SMB1 clients from creating symlinks on the exported file system.  However, if the same region of the file system is also exported using NFS, NFS clients can create symlinks that potentially can also hit the race condition. For non-patched versions of Samba we recommend only exporting areas of the file system by either SMB2 or NFS, not both.",
+              "message": "Fix Status: will not fix",
+              "start_time": "2022-01-10 00:00:00.000"
+            }
+          ]
+        },
+        {
+          "desc": "Samba is an open-source implementation of the Server Message Block (SMB) protocol and the related Common Internet File System (CIFS) protocol, which allow PC-compatible machines to share files, printers, and various information.  Security Fix(es):  * samba: Out-of-bounds heap read/write vulnerability in VFS module vfs_fruit allows code execution (CVE-2021-44142)  For more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.  Bug Fix(es):  * Fix username map script regression introduced with CVE-2020-25717 (BZ#2046173)",
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cve": "CVE-2021-44142",
+            "cvss": ""
+          },
+          "descriptions": [],
+          "refs": [
+            {
+              "url": "http://somewhere.cloud/errata/RHSA-2022:0328"
+            }
+          ],
+          "source_location": "my-fake-host-4.somewhere.cloud",
+          "id": "46-CVE-2021-44142",
+          "title": "my-fake-host-4.somewhere.cloud-redhat-RHEL7-image",
+          "impact": 1,
+          "code": "{\n  \"Hostname\": \"my-fake-host-4.somewhere.cloud\",\n  \"Distro\": \"redhat-RHEL7\",\n  \"CVE ID\": \"CVE-2021-44142\",\n  \"Compliance ID\": \"46\",\n  \"Type\": \"image\",\n  \"Severity\": \"critical\",\n  \"Packages\": \"libwbclient\",\n  \"Source Package\": \"\",\n  \"Package Version\": \"4.10.16-17.el7_9\",\n  \"Package License\": \"GPLv3+ and LGPLv3+\",\n  \"CVSS\": \"9.90\",\n  \"Fix Status\": \"fixed in 4.10.16-18.el7_9\",\n  \"Vulnerability Tags\": \"\",\n  \"Description\": \"Samba is an open-source implementation of the Server Message Block (SMB) protocol and the related Common Internet File System (CIFS) protocol, which allow PC-compatible machines to share files, printers, and various information.  Security Fix(es):  * samba: Out-of-bounds heap read/write vulnerability in VFS module vfs_fruit allows code execution (CVE-2021-44142)  For more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.  Bug Fix(es):  * Fix username map script regression introduced with CVE-2020-25717 (BZ#2046173)\",\n  \"Cause\": \"\",\n  \"Published\": \"2022-01-31 00:00:00.000\",\n  \"Services\": \"\",\n  \"Cluster\": \"\",\n  \"Vulnerability Link\": \"http://somewhere.cloud/errata/RHSA-2022:0328\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Version check of package: libwbclient\n\nSamba is an open-source implementation of the Server Message Block (SMB) protocol and the related Common Internet File System (CIFS) protocol, which allow PC-compatible machines to share files, printers, and various information.  Security Fix(es):  * samba: Out-of-bounds heap read/write vulnerability in VFS module vfs_fruit allows code execution (CVE-2021-44142)  For more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.  Bug Fix(es):  * Fix username map script regression introduced with CVE-2020-25717 (BZ#2046173)",
+              "message": "Fix Status: fixed in 4.10.16-18.el7_9",
+              "start_time": "2022-01-31 00:00:00.000"
+            }
+          ]
+        }
+      ],
+      "sha256": "e5b09e975e6a89f0cd9e80dae51fecb03ed9d6d76d0f4c4ca2dcefe0de000ca6"
+    }
+  ]
+}
