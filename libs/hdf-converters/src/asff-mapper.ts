@@ -37,11 +37,15 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
   ) {
     return SpecialCasing.FirewallManager;
   } else if (
-    productArn.match(/^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/prowler\/prowler$/)
+    productArn.match(
+      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/prowler\/prowler$/
+    )
   ) {
     return SpecialCasing.Prowler;
   } else if (
-    productArn.match(/^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/securityhub$/)
+    productArn.match(
+      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/securityhub$/
+    )
   ) {
     return SpecialCasing.SecurityHub;
   } else if (
@@ -258,7 +262,9 @@ function getFirewallManager(): Record<string, Function> {
       )}`
     );
   };
-  const filename = (findingInfo: [Record<string, unknown>, Record<string, unknown>[]]): string => {
+  const filename = (
+    findingInfo: [Record<string, unknown>, Record<string, unknown>[]]
+  ): string => {
     return `${productName(findingInfo[1])}.json`;
   };
   return {
@@ -283,7 +289,9 @@ function getProwler(): Record<string, Function> {
     return encode(_.get(finding, 'ProductFields.ProviderName') as string);
   };
   const desc = (): string => ' ';
-  const filename = (findingInfo: [Record<string, unknown>, Record<string, unknown>[]]): string => {
+  const filename = (
+    findingInfo: [Record<string, unknown>, Record<string, unknown>[]]
+  ): string => {
     return `${productName(findingInfo[1])}.json`;
   };
   const meta = (): Record<string, string> => {
@@ -450,7 +458,9 @@ function getSecurityHub(): Record<string, Function> {
       }`
     );
   };
-  const filename = (findingInfo: [Record<string, unknown>, Record<string, unknown>[]]): string => {
+  const filename = (
+    findingInfo: [Record<string, unknown>, Record<string, unknown>[]]
+  ): string => {
     return `${productName(findingInfo[0])}.json`;
   };
   return {
@@ -532,7 +542,10 @@ function getTrivy(): Record<string, Function> {
 // eslint-disable-next-line @typescript-eslint/ban-types
 function getHDF2ASFF(): Record<string, Function> {
   const TYPE_NIST_TAG = 'Tags/nist/';
-  const replaceTypesSlashes = (type: string): string => {
+  const replaceTypesSlashes = <T>(type: T): T | string => {
+    if (!_.isString(type)) {
+      return type;
+    }
     const FROM_ASFF_TYPES_SLASH_REPLACEMENT = /{{{SLASH}}}/gi; // The "Types" field of ASFF only supports a maximum of 2 slashes, and will get replaced with this text. Note that the default AWS CLI doesn't support UTF-8 encoding
     return type.replace(FROM_ASFF_TYPES_SLASH_REPLACEMENT, '/');
   };
@@ -591,25 +604,10 @@ function getHDF2ASFF(): Record<string, Function> {
     });
     return docsClone;
   };
-  const findingNistTag = (finding: unknown): string[] => {
-    return _.reduce(
-      getFilteredTypes(finding, {startsWith: [TYPE_NIST_TAG]}),
-      (acc: string[], cur: string) =>
-        _.endsWith(cur, '/[]')
-          ? acc
-          : acc.concat(
-              convertClassifierStringToExpectedType(
-                replaceTypesSlashes(_.replace(cur, TYPE_NIST_TAG, ''))
-              )
-            ),
-      []
-    );
-  };
-  const findingTags = (finding: unknown): Record<string, unknown> => {
+  const findingByTopLevelObject = (finding: unknown, objectName: string): Record<string, unknown> => {
     return _.reduce(
       getFilteredTypes(finding, {
-        startsWith: ['Tags'],
-        doesNotStartWith: [TYPE_NIST_TAG]
+        startsWith: [objectName]
       }),
       (acc: Record<string, unknown>, cur: string) => {
         const [, category, classifier] = cur.split('/');
@@ -637,21 +635,219 @@ function getHDF2ASFF(): Record<string, Function> {
     const name = _.get(finding, 'Id') as string;
     return encode(name.split('/').slice(0, 2).join(' - '));
   };
-  const filename = (findings: Record<string, unknown>[]): string => {
-    const index = findExecutionFindingIndex(findings);
-    return getFilteredTypes(findings[index], {startsWith: ['File/Input/']})[0];
+  const filename = (
+    findingInfo: [Record<string, unknown>, Record<string, unknown>[]]
+  ): string => {
+    const finding = findingInfo[0];
+    return getFilteredTypes(finding, {startsWith: ['File/Input/']})[0]
+      .split('/')
+      .slice(-1)[0];
   };
   const mapping = (
     context: ASFFMapper
   ): MappedTransform<ExecJSON.Execution, ILookupPath> => {
-    // TODO: implement
-    return context.mappings as MappedTransform<ExecJSON.Execution, ILookupPath>;
+    const execution = _.get(
+      context.supportingDocs.get(SpecialCasing.HDF2ASFF),
+      'execution'
+    );
+    // NOTE: waiting on inspecjs to include passthrough as a potential value in the type
+    /*
+    const passthroughTag = getFilteredTypes(execution, {
+      startsWith: ['Execution/passthrough/']
+    });
+    */
+    const profileNames = _.chain(
+      getFilteredTypes(execution, {
+        doesNotStartWith: ['MITRE', 'File', 'Execution']
+      })
+    )
+      .map((type) => type.split('/')[0])
+      .uniq()
+      .value();
+    const ret = {
+      platform: JSON.parse(
+        getFilteredTypes(execution, {
+          startsWith: ['Execution/platform/']
+        })[0]
+          .split('/')
+          .slice(2)[0]
+      ),
+      version: getFilteredTypes(execution, {
+        startsWith: ['Execution/version/']
+      })[0]
+        .split('/')
+        .slice(2)[0],
+      statistics: JSON.parse(
+        getFilteredTypes(execution, {
+          startsWith: ['Execution/statistics/']
+        })[0]
+          .split('/')
+          .slice(2)[0]
+      ),
+      /*
+      ...(passthroughTag.length > 0 && {
+        passthrough: JSON.parse(passthroughTag[0].split('/').slice(2)[0])
+      }),
+      */
+      profiles: _.map(profileNames, (profileName: string) => {
+        return {
+          name:
+            replaceTypesSlashes(
+              getFilteredTypes(execution, {
+                startsWith: [`${profileName}/name/`]
+              })[0]
+                ?.split('/')
+                .slice(2)[0]
+            ) ?? 'AWS Security Finding Format',
+          version:
+            replaceTypesSlashes(
+              getFilteredTypes(execution, {
+                startsWith: [`${profileName}/version/`]
+              })[0]
+                ?.split('/')
+                .slice(2)[0]
+            ) ?? '',
+          title:
+            replaceTypesSlashes(
+              getFilteredTypes(execution, {
+                startsWith: [`${profileName}/title/`]
+              })[0]
+                ?.split('/')
+                .slice(2)[0]
+            ) ?? 'ASFF Findings',
+          maintainer:
+            replaceTypesSlashes(
+              getFilteredTypes(execution, {
+                startsWith: [`${profileName}/maintainer/`]
+              })[0]
+                ?.split('/')
+                .slice(2)[0]
+            ) ?? null,
+          summary:
+            replaceTypesSlashes(
+              getFilteredTypes(execution, {
+                startsWith: [`${profileName}/summary/`]
+              })[0]
+                ?.split('/')
+                .slice(2)[0]
+            ) ?? '',
+          license:
+            replaceTypesSlashes(
+              getFilteredTypes(execution, {
+                startsWith: [`${profileName}/license/`]
+              })[0]
+                ?.split('/')
+                .slice(2)[0]
+            ) ?? null,
+          copyright:
+            replaceTypesSlashes(
+              getFilteredTypes(execution, {
+                startsWith: [`${profileName}/copyright/`]
+              })[0]
+                ?.split('/')
+                .slice(2)[0]
+            ) ?? null,
+          copyright_email:
+            replaceTypesSlashes(
+              getFilteredTypes(execution, {
+                startsWith: [`${profileName}/copyright_email/`]
+              })[0]
+                ?.split('/')
+                .slice(2)[0]
+            ) ?? null,
+          supports: [],
+          attributes: JSON.parse(
+            replaceTypesSlashes(
+              getFilteredTypes(execution, {
+                startsWith: [`${profileName}/inputs/`]
+              })[0]
+                ?.split('/')
+                .slice(2)[0]
+            ) ?? '[]'
+          ),
+          depends: JSON.parse(
+            replaceTypesSlashes(
+              getFilteredTypes(execution, {
+                startsWith: [`${profileName}/depends/`]
+              })[0]
+                ?.split('/')
+                .slice(2)[0]
+            ) ?? '[]'
+          ),
+          groups: [],
+          status: 'loaded',
+          controls: consolidate(
+            context,
+            _.map(
+              _.get(context.data, 'Findings') as Record<string, unknown>[],
+              (finding: Record<string, unknown>) => {
+                return {
+                  id:
+                    replaceTypesSlashes(
+                      getFilteredTypes(execution, {
+                        startsWith: ['Control/ID/']
+                      })[0]
+                        ?.split('/')
+                        .slice(2)[0]
+                    ) ?? '',
+                  title:
+                    replaceTypesSlashes(
+                      getFilteredTypes(execution, {
+                        startsWith: ['Control/Title/']
+                      })[0]
+                        ?.split('/')
+                        .slice(2)[0]
+                    ) ?? '',
+                  desc: '',
+                  impact: JSON.parse(
+                    replaceTypesSlashes(
+                      getFilteredTypes(execution, {
+                        startsWith: ['Control/Impact/']
+                      })[0]
+                        ?.split('/')
+                        .slice(2)[0]
+                    ) ?? '0'
+                  ),
+                  tags: {
+                    ...findingByTopLevelObject(finding, 'Tags/'),
+                    target: replaceTypesSlashes(
+                      (_.get(execution, 'Id') as string).split('/')[0]
+                    )
+                  },
+                  descriptions: _.map(Object.entries(findingByTopLevelObject(finding, 'Descriptions/')), ([key, value]) => ({ 'label': key, 'data': value })),
+                  refs: [],
+                  source_location: {},
+                  code:
+                    replaceTypesSlashes(
+                      getFilteredTypes(execution, {
+                        startsWith: ['Control/Code/']
+                      })[0]
+                        ?.split('/')
+                        .slice(2)[0]
+                    ) ?? '',
+                  results: [findingByTopLevelObject(finding, 'Segment/')]
+                };
+              }
+            ),
+            context.data
+          ),
+          sha256:
+            replaceTypesSlashes(
+              getFilteredTypes(execution, {
+                startsWith: [`${profileName}/sha256/`]
+              })[0]
+                ?.split('/')
+                .slice(2)[0]
+            ) ?? ''
+        };
+      })
+    };
+    console.log(ret);
+    return ret;
   };
   return {
     preprocessingASFF,
     supportingDocs,
-    findingNistTag,
-    findingTags,
     productName,
     filename,
     mapping
@@ -741,8 +937,7 @@ export class ASFFMapper extends BaseConverter {
                 },
                 desc: {
                   path: 'Description',
-                  transformer: (input: string): string =>
-                    encode(input)
+                  transformer: (input: string): string => encode(input)
                 },
                 impact: {
                   transformer: (finding: Record<string, unknown>): number => {
@@ -980,6 +1175,7 @@ export class ASFFMapper extends BaseConverter {
         ]
       }
     ) as MappedTransform<ExecJSON.Execution, ILookupPath>;
+    console.log('mappings defined');
   }
 
   constructor(
@@ -1040,7 +1236,7 @@ export class ASFFResults {
   toHdf(): Record<string, ExecJSON.Execution> {
     return _.mapValues(this.data, (val) => {
       const wrapped = wrapWithFindingsObject(val);
-      return new ASFFMapper(
+      const ret = new ASFFMapper(
         externalProductHandler(
           this,
           whichSpecialCase(
@@ -1069,6 +1265,8 @@ export class ASFFResults {
           this.meta
         ) as Record<string, string>
       ).toHdf();
+      console.log('created an hdf file');
+      return ret;
     });
   }
 }

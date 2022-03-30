@@ -204,7 +204,7 @@ export function cleanText(text?: string | null): string | undefined {
   }
 }
 
-// Gets all layers of a control accross overlaid profiles given the ID
+// Gets all layers of a control across overlaid profiles given the ID
 export function getAllLayers(
   hdf: ExecJSON.Execution,
   knownControl: ExecJSON.Control
