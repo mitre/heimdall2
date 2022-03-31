@@ -9,7 +9,7 @@
     "profiles": [
         {
             "name": "Sonarqube Scan",
-            "version": "",
+            "version": null,
             "title": "SonarQube Scan of Project xss",
             "maintainer": null,
             "summary": "SonarQube Scan of Project xss",
