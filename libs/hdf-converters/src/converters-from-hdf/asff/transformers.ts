@@ -261,7 +261,12 @@ export function createCode(
   }\n=========================================================\n\n${
     control.code
       ? control.code?.replace(/\\\"/g, '"')
-      : JSON.stringify(_.omitBy(_.omit(control, 'results'), cleanObjectValues))
+      : JSON.stringify(
+          _.omitBy(
+            _.omit(control, ['results', 'profileInfo']),
+            cleanObjectValues
+          )
+        )
   }`;
 }
 
@@ -438,7 +443,7 @@ function createProfileInfoFindingFields(
   const executionTargets = ['platform', 'statistics', 'version', 'passthrough'];
   executionTargets.forEach((target) => {
     const value = _.get(hdf, target);
-    if (typeof value === 'string') {
+    if (typeof value === 'string' && value.trim()) {
       typesArr.push(
         `Execution/${escapeForwardSlashes(target)}/${escapeForwardSlashes(
           value

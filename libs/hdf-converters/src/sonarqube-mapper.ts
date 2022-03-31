@@ -207,7 +207,7 @@ function createSonarqubeMappings(
     profiles: [
       {
         name: 'Sonarqube Scan',
-        version: '',
+        version: null,
         title: `SonarQube Scan of Project ${projectName}`,
         maintainer: null,
         summary: `SonarQube Scan of Project ${projectName}`,
