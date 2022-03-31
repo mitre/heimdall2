@@ -261,7 +261,12 @@ export function createCode(
   }\n=========================================================\n\n${
     control.code
       ? control.code?.replace(/\\\"/g, '"')
-      : JSON.stringify(_.omitBy(_.omit(control, 'results'), cleanObjectValues))
+      : JSON.stringify(
+          _.omitBy(
+            _.omit(control, ['results', 'profileInfo']),
+            cleanObjectValues
+          )
+        )
   }`;
 }
 
