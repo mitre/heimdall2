@@ -597,10 +597,17 @@ function getHDF2ASFF(): Record<string, Function> {
     });
     return docsClone;
   };
-  const findingByTopLevelObject = (finding: unknown, objectName: string): Record<string, unknown> => {
+  const findingByTopLevelObject = (
+    finding: unknown,
+    {
+      startsWith = [''],
+      doesNotStartWith = []
+    }: {startsWith?: string[]; doesNotStartWith?: string[]} = {}
+  ): Record<string, unknown> => {
     return _.reduce(
       getFilteredTypes(finding, {
-        startsWith: [objectName]
+        startsWith: startsWith,
+        doesNotStartWith: doesNotStartWith
       }),
       (acc: Record<string, unknown>, cur: string) => {
         const [, category, classifier] = cur.split('/');
@@ -619,6 +626,20 @@ function getHDF2ASFF(): Record<string, Function> {
         }
       },
       {}
+    );
+  };
+  const findingNistTag = (finding: unknown): string[] => {
+    return _.reduce(
+      getFilteredTypes(finding, {startsWith: [TYPE_NIST_TAG]}),
+      (acc: string[], cur: string) =>
+        _.endsWith(cur, '/[]')
+          ? acc
+          : acc.concat(
+              convertClassifierStringToExpectedType(
+                replaceTypesSlashes(_.replace(cur, TYPE_NIST_TAG, ''))
+              )
+            ),
+      []
     );
   };
   const productName = (
@@ -645,10 +666,8 @@ function getHDF2ASFF(): Record<string, Function> {
     );
     // NOTE: waiting on inspecjs to include passthrough as a potential value in the type
     /*
-    const passthroughTag = getFilteredTypes(execution, {
-      startsWith: ['Execution/passthrough/']
-    });
-    */
+      const passthroughTag = getFilteredTypes(execution, {startsWith: ['Execution/passthrough/']});
+*/
     const profileNames = _.chain(
       getFilteredTypes(execution, {
         doesNotStartWith: ['MITRE', 'File', 'Execution']
@@ -678,11 +697,12 @@ function getHDF2ASFF(): Record<string, Function> {
           .slice(2)[0]
       ),
       /*
-      ...(passthroughTag.length > 0 && {
-        passthrough: JSON.parse(passthroughTag[0].split('/').slice(2)[0])
-      }),
-      */
-      profiles: _.map(profileNames, (profileName: string) => {
+     ...(passthroughTag.length > 0 && {
+     passthrough: JSON.parse(passthroughTag[0].split('/').slice(2)[0])
+     }),
+     */
+      profiles: _.map(profileNames, (profileName: string, index: number) => {
+        // order could be incorrect since we're only doing it via index instead of mapping the depends tree properly
         return {
           name:
             replaceTypesSlashes(
@@ -777,7 +797,7 @@ function getHDF2ASFF(): Record<string, Function> {
                 return {
                   id:
                     replaceTypesSlashes(
-                      getFilteredTypes(execution, {
+                      getFilteredTypes(finding, {
                         startsWith: ['Control/ID/']
                       })[0]
                         ?.split('/')
@@ -785,16 +805,23 @@ function getHDF2ASFF(): Record<string, Function> {
                     ) ?? '',
                   title:
                     replaceTypesSlashes(
-                      getFilteredTypes(execution, {
+                      getFilteredTypes(finding, {
                         startsWith: ['Control/Title/']
                       })[0]
                         ?.split('/')
                         .slice(2)[0]
                     ) ?? '',
-                  desc: '',
+                  desc:
+                    replaceTypesSlashes(
+                      getFilteredTypes(finding, {
+                        startsWith: ['Control/Desc/']
+                      })[0]
+                        ?.split('/')
+                        .slice(2)[0]
+                    ) ?? '',
                   impact: JSON.parse(
                     replaceTypesSlashes(
-                      getFilteredTypes(execution, {
+                      getFilteredTypes(finding, {
                         startsWith: ['Control/Impact/']
                       })[0]
                         ?.split('/')
@@ -802,23 +829,69 @@ function getHDF2ASFF(): Record<string, Function> {
                     ) ?? '0'
                   ),
                   tags: {
-                    ...findingByTopLevelObject(finding, 'Tags/'),
+                    ...findingByTopLevelObject(finding, {
+                      startsWith: ['Tags/'],
+                      doesNotStartWith: [TYPE_NIST_TAG]
+                    }),
+                    nist: {
+                      transformer: (): string[] => {
+                        const nisttags = findingNistTag(finding);
+                        if (nisttags.length === 0) {
+                          return DEFAULT_NIST_TAG;
+                        } else {
+                          return nisttags;
+                        }
+                      }
+                    },
                     target: replaceTypesSlashes(
+                      // TODO: remove from here and move to only filename prepend
                       (_.get(execution, 'Id') as string).split('/')[0]
                     )
                   },
-                  descriptions: _.map(Object.entries(findingByTopLevelObject(finding, 'Descriptions/')), ([key, value]) => ({ 'label': key, 'data': value })),
-                  refs: [],
-                  source_location: {},
-                  code:
+                  descriptions: _.map(
+                    Object.entries(
+                      findingByTopLevelObject(finding, {
+                        startsWith: ['Descriptions/']
+                      })
+                    ),
+                    ([key, value]) => ({label: key, data: value})
+                  ),
+                  refs: JSON.parse(
                     replaceTypesSlashes(
                       getFilteredTypes(execution, {
-                        startsWith: ['Control/Code/']
+                        startsWith: ['Control/Refs/']
                       })[0]
                         ?.split('/')
                         .slice(2)[0]
-                    ) ?? '',
-                  results: [findingByTopLevelObject(finding, 'Segment/')]
+                    ) ?? '[]'
+                  ),
+                  source_location: JSON.parse(
+                    replaceTypesSlashes(
+                      getFilteredTypes(execution, {
+                        startsWith: ['Control/Source_Location/']
+                      })[0]
+                        ?.split('/')
+                        .slice(2)[0]
+                    ) ?? '{}'
+                  ),
+                  waiver_data: JSON.parse(
+                    replaceTypesSlashes(
+                      getFilteredTypes(execution, {
+                        startsWith: ['Control/Waiver_Data/']
+                      })[0]
+                        ?.split('/')
+                        .slice(2)[0]
+                    ) ?? '{}'
+                  ),
+                  code: '', // potentially just to empty string but otherwise gonna need to extract out of here per profile
+                  results: // very brittle since depends on profile indexes instead of finding the baseline profile
+                    index === profileNames.length - 1
+                      ? [
+                          findingByTopLevelObject(finding, {
+                            startsWith: ['Segment/']
+                          })
+                        ]
+                      : []
                 };
               }
             ),
