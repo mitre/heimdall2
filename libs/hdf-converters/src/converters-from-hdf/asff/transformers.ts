@@ -38,7 +38,7 @@ export function getRunTime(hdf: ExecJSON.Execution): string {
     if (
       profile.controls[0] &&
       profile.controls[0].results.length &&
-    profile.controls[0].results[0].start_time
+      profile.controls[0].results[0].start_time
     ) {
       try {
         time = new Date(
@@ -261,7 +261,12 @@ export function createCode(
   }\n=========================================================\n\n${
     control.code
       ? control.code?.replace(/\\\"/g, '"')
-      : JSON.stringify(_.omitBy(_.omit(control, 'results'), cleanObjectValues))
+      : JSON.stringify(
+          _.omitBy(
+            _.omit(control, ['results', 'profileInfo']),
+            cleanObjectValues
+          )
+        )
   }`;
 }
 
@@ -365,6 +370,31 @@ function createControlMetadata(control: SegmentedControl) {
     `Control/ID/${control.id}`,
     `Control/Impact/${control.impact}`
   ];
+  if (control.desc) {
+    types.push(`Control/Desc/${escapeForwardSlashes(control.desc)}`);
+  }
+  if (control.refs && control.refs.length >= 1) {
+    types.push(
+      `Control/Refs/${escapeForwardSlashes(JSON.stringify(control.refs))}`
+    );
+  }
+  if (
+    control.source_location &&
+    Object.keys(control.source_location).length >= 1
+  ) {
+    types.push(
+      `Control/Source_Location/${escapeForwardSlashes(
+        JSON.stringify(control.source_location)
+      )}`
+    );
+  }
+  if (control.waiver_data && Object.keys(control.waiver_data).length >= 1) {
+    types.push(
+      `Control/Waiver_Data/${escapeForwardSlashes(
+        JSON.stringify(control.waiver_data)
+      )}`
+    );
+  }
   if (control.title) {
     types.push(`Control/Title/${escapeForwardSlashes(control.title)}`);
   }
@@ -401,13 +431,14 @@ function createProfileInfo(hdf?: ExecJSON.Execution): string[] {
 
 function getFilename(options?: IOptions): string {
   const slashSplit =
-    options?.input.split('\\')[
-    options?.input.split('\\').length - 1
-  ];
+    options?.input.split('\\')[options?.input.split('\\').length - 1];
   return slashSplit?.split('/')[slashSplit.split('/').length - 1] ?? '';
 }
 
-function createProfileInfoFindingFields(hdf: ExecJSON.Execution, options: IOptions): string[] {
+function createProfileInfoFindingFields(
+  hdf: ExecJSON.Execution,
+  options: IOptions
+): string[] {
   let typesArr = [
     `MITRE/SAF/${HeimdallToolsVersion}-hdf2asff`,
     `File/Input/${getFilename(options)}`
@@ -415,7 +446,7 @@ function createProfileInfoFindingFields(hdf: ExecJSON.Execution, options: IOptio
   const executionTargets = ['platform', 'statistics', 'version', 'passthrough'];
   executionTargets.forEach((target) => {
     const value = _.get(hdf, target);
-    if (typeof value === 'string') {
+    if (typeof value === 'string' && value.trim()) {
       typesArr.push(
         `Execution/${escapeForwardSlashes(target)}/${escapeForwardSlashes(
           value
@@ -513,10 +544,10 @@ function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
         const classifier =
           (control.tags[tag] as string[]).length > 0
             ? `[${escapeForwardSlashes(
-              (control.tags[tag] as string[]).join(', ')
-            )}]`
-              : '[]';
-              typesArr.push(`Tags/${escapeForwardSlashes(tag)}/${classifier}`);
+                (control.tags[tag] as string[]).join(', ')
+              )}]`
+            : '[]';
+        typesArr.push(`Tags/${escapeForwardSlashes(tag)}/${classifier}`);
       }
     }
   }
@@ -555,11 +586,11 @@ export function setupFindingType(
     `File/Input/${getFilename(context?.ioptions)}`,
     `Control/Code/${escapeForwardSlashes(
       control.layersOfControl
-      .map(
-        (layer: ExecJSON.Control & {profileInfo?: Record<string, unknown>}) =>
-        createCode(layer)
-      )
-      .join('\n\n')
+        .map(
+          (layer: ExecJSON.Control & {profileInfo?: Record<string, unknown>}) =>
+            createCode(layer)
+        )
+        .join('\n\n')
     )}`
   ];
 
@@ -580,8 +611,8 @@ export function setupFindingType(
 export function getFixForControl(control: SegmentedControl) {
   return (
     getDescription(control.descriptions || [], 'fix') ||
-      control.tags.fix ||
-      'Fix not available'
+    control.tags.fix ||
+    'Fix not available'
   );
 }
 
@@ -626,8 +657,8 @@ export function setupControlStatus(control: SegmentedControl) {
     control.result.status === 'skipped'
       ? 'WARNING'
       : control.result.status === 'passed';
-      if (typeof status === 'boolean') {
-        return status ? 'PASSED' : 'FAILED';
-      }
-      return status;
+  if (typeof status === 'boolean') {
+    return status ? 'PASSED' : 'FAILED';
+  }
+  return status;
 }
