@@ -404,7 +404,7 @@ function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
   const executionTargets = ['platform', 'statistics', 'version', 'passthrough'];
   executionTargets.forEach((target) => {
     const value = _.get(hdf, target);
-    if (typeof value === 'string') {
+    if (typeof value === 'string' && value.trim()) {
       typesArr.push(
         `Execution/${escapeForwardSlashes(target)}/${escapeForwardSlashes(
           value
