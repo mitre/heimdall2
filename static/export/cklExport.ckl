@@ -24,7 +24,7 @@
 				</SI_DATA>
 				<SI_DATA>
 					<SID_NAME>classification</SID_NAME>
-					<SID_DATA>{{classification}}</SID_DATA>
+					<SID_DATA>UNCLASSIFIED</SID_DATA>
 				</SI_DATA>
 				<SI_DATA>
 					<SID_NAME>customname</SID_NAME>
