@@ -368,21 +368,24 @@ function createControlMetadata(control: SegmentedControl) {
   if (control.desc) {
     types.push(`Control/Desc/${escapeForwardSlashes(control.desc)}`);
   }
-  if (control.refs) {
+  if (control.refs && control.refs.length >= 1) {
     types.push(
-      `Control/Desc/${escapeForwardSlashes(JSON.stringify(control.refs))}`
+      `Control/Refs/${escapeForwardSlashes(JSON.stringify(control.refs))}`
     );
   }
-  if (control.source_location) {
+  if (
+    control.source_location &&
+    Object.keys(control.source_location).length >= 1
+  ) {
     types.push(
-      `Control/Desc/${escapeForwardSlashes(
+      `Control/Source_Location/${escapeForwardSlashes(
         JSON.stringify(control.source_location)
       )}`
     );
   }
-  if (control.waiver_data) {
+  if (control.waiver_data && Object.keys(control.waiver_data).length >= 1) {
     types.push(
-      `Control/Desc/${escapeForwardSlashes(
+      `Control/Waiver_Data/${escapeForwardSlashes(
         JSON.stringify(control.waiver_data)
       )}`
     );
