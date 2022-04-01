@@ -6304,7 +6304,7 @@ bn.js@^5.0.0, bn.js@^5.1.1:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.2.0.tgz#358860674396c6997771a9d051fcc1b57d4ae002"
   integrity sha512-D7iWRBvnZE8ecXiLj/9wbxH7Tk79fAh8IHaTNq1RWRixsS02W+5qS+iE9yq6RYl0asXx5tw0bLhmT5pIfbSquw==
 
-body-parser@1.19.2, body-parser@^1.18.3, body-parser@^1.19.0, body-parser@^1.19.1:
+body-parser@1.19.2, body-parser@^1.18.3, body-parser@^1.19.0, body-parser@^1.19.2:
   version "1.19.2"
   resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.19.2.tgz#4714ccd9c157d44797b8b5607d72c0b89952f26e"
   integrity sha512-SAAwOxgoCKMGs9uUAUFHygfLAyaniaoun6I8mFY9pRAJL9+Kec34aU+oIjDhTycub1jozEfEwx1W1IuOYxVSFw==
@@ -9894,7 +9894,7 @@ express-urlrewrite@^1.4.0:
     debug "*"
     path-to-regexp "^1.0.3"
 
-express@4.17.3, express@^4.16.3, express@^4.17.1, express@^4.17.2:
+express@4.17.3, express@^4.16.3, express@^4.17.1, express@^4.17.3:
   version "4.17.3"
   resolved "https://registry.yarnpkg.com/express/-/express-4.17.3.tgz#f6c7302194a4fb54271b73a1fe7a06478c8f85a1"
   integrity sha512-yuSQpz5I+Ch7gFrPCk4/c+dIBKlQUxtgwqzph132bsT6qhuzss6I8cLJQz7B3rFblzd6wtcI0ZbGltH/C4LjUg==
@@ -12950,10 +12950,10 @@ joi@^17.4.0:
     "@sideway/formula" "^3.0.0"
     "@sideway/pinpoint" "^2.0.0"
 
-jose@^4.4.0:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/jose/-/jose-4.4.0.tgz#459954544088244836a361172eb32a704bc55c5f"
-  integrity sha512-3CsqCQWuEUPpNlSLRcLRC8eO/ATFe1tLJMZCtjx2+ma1gkjGQ62HF50oWs3cwtWjLCpM8bdMPpQbxpgc3fhxrQ==
+jose@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-4.6.0.tgz#f3ff007ddcbce462c091d3d41b7af2e35dec348c"
+  integrity sha512-0hNAkhMBNi4soKSAX4zYOFV+aqJlEz/4j4fregvasJzEVtjDChvWqRjPvHwLqr5hx28Ayr6bsOs1Kuj87V0O8w==
 
 jquery@^3.6.0:
   version "3.6.0"
@@ -15035,15 +15035,15 @@ oauth-sign@~0.9.0:
   integrity sha512-fexhUFFPTGV8ybAtSIGbV6gOkSv8UtRbDBnAyLQw4QPKkgNlsH2ByPGtMUqdWkos6YCRmAqViwgZrJc/mRDzZQ==
 
 oauth2-mock-server@^4.0.0:
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-4.3.0.tgz#a1a0e8e99c4bfa0fe52a37d806f74e79de3cc245"
-  integrity sha512-oBp5/RqBuCjXWahxq80MwEo1SooDY2RDGUTAvzE8LczbWLx7rDiJe94CqfNfK4GKJ2FeMTxg8xwEoXMbLYRK4w==
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-4.3.1.tgz#cc29af2be629ae637824c33f6bbdfb2fe6614eb3"
+  integrity sha512-WMz/NCzujuCTzRp6oz2e9vfNOEFtBzQ7/6o16mqJ+Dtmb37Rg7qfyCc57WB700edy+Q6w/fPVOHCeWZDOIFkaA==
   dependencies:
     basic-auth "^2.0.1"
-    body-parser "^1.19.1"
+    body-parser "^1.19.2"
     cors "^2.8.5"
-    express "^4.17.2"
-    jose "^4.4.0"
+    express "^4.17.3"
+    jose "^4.6.0"
     lodash.isplainobject "^4.0.6"
     uuid "^8.3.2"
 
