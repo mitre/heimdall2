@@ -531,25 +531,11 @@ function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
 function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
   const typesArr: string[] = [];
   for (const tag in control.tags) {
-    if (control) {
-      if (typeof control.tags[tag] === 'string') {
-        typesArr.push(
-          `Tags/${escapeForwardSlashes(tag)}/${
-            (control.tags[tag] as string).length > 0
-              ? escapeForwardSlashes(control.tags[tag] as string)
-              : '""'
-          }`
-        );
-      } else if (Array.isArray(control.tags[tag])) {
-        const classifier =
-          (control.tags[tag] as string[]).length > 0
-            ? `[${escapeForwardSlashes(
-                (control.tags[tag] as string[]).join(', ')
-              )}]`
-            : '[]';
-        typesArr.push(`Tags/${escapeForwardSlashes(tag)}/${classifier}`);
-      }
-    }
+    typesArr.push(
+      `Tags/${escapeForwardSlashes(tag)}/${escapeForwardSlashes(
+        JSON.stringify(control.tags[tag])
+      )}`
+    );
   }
   return typesArr;
 }

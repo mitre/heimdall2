@@ -556,15 +556,6 @@ function getHDF2ASFF(): Record<string, Function> {
         _.every(doesNotStartWith, (beginning) => !_.startsWith(type, beginning))
     );
   };
-  const convertClassifierStringToExpectedType = (
-    c: string
-  ): string | string[] => {
-    // brittle since the assumption is that if the classifier is an array, it can be tokenized via commas, i.e. the tokens themselves don't contain any commas
-    if (c.startsWith('[') && c.endsWith(']')) {
-      return c.slice(1, -1).split(', ');
-    }
-    return c;
-  };
   const findExecutionFindingIndex = (
     asffOrFindings: Record<string, unknown> | Record<string, unknown>[]
   ): number => {
@@ -611,35 +602,26 @@ function getHDF2ASFF(): Record<string, Function> {
       }),
       (acc: Record<string, unknown>, cur: string) => {
         const [, category, classifier] = cur.split('/');
-        if (classifier === '[]') {
-          return {...acc, [replaceTypesSlashes(category)]: []};
-        } else if (classifier === '""') {
-          return {...acc, [replaceTypesSlashes(category)]: ''};
-        } else {
-          return {
-            ...acc,
-            [replaceTypesSlashes(category)]:
-              convertClassifierStringToExpectedType(
-                replaceTypesSlashes(classifier)
-              )
-          };
-        }
+        // need to handle situations where unencoded strings are passed through as well as valid json
+        let parsed = replaceTypesSlashes(classifier);
+        try {
+          parsed = JSON.parse(parsed);
+        } catch {}
+        return {
+          ...acc,
+          [replaceTypesSlashes(category)]: parsed
+        };
       },
       {}
     );
   };
   const findingNistTag = (finding: unknown): string[] => {
-    return _.reduce(
-      getFilteredTypes(finding, {startsWith: [TYPE_NIST_TAG]}),
-      (acc: string[], cur: string) =>
-        _.endsWith(cur, '/[]')
-          ? acc
-          : acc.concat(
-              convertClassifierStringToExpectedType(
-                replaceTypesSlashes(_.replace(cur, TYPE_NIST_TAG, ''))
-              )
-            ),
-      []
+    return JSON.parse(
+      _.replace(
+        getFilteredTypes(finding, {startsWith: [TYPE_NIST_TAG]})[0],
+        TYPE_NIST_TAG,
+        ''
+      )
     );
   };
   const productName = (
