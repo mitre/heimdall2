@@ -81,6 +81,7 @@ type ExternalProductHandlerOutputs =
   | (() => string | number)
   | (() => string | undefined)
   | number
+  | boolean
   | string
   | string[]
   | Record<string, unknown>
@@ -160,17 +161,32 @@ function consolidate(
       'productName',
       encode(`${productInfo[1]}/${productInfo[2]}`)
     );
+    const hasNoTitlePrefix = externalProductHandler(
+      context,
+      whichSpecialCase(findings[0]),
+      null,
+      'doesNotHaveFindingTitlePrefix',
+      false
+    );
+    const titlePrefix = hasNoTitlePrefix ? '' : `${productName}: `;
+    const waiverData = externalProductHandler(
+      context,
+      whichSpecialCase(findings[0]),
+      group,
+      'waiverData',
+      {}
+    ) as ExecJSON.ControlWaiverData;
 
     const item: ExecJSON.Control = {
       // Add productName to ID if any ID's are the same across products
       id: id,
-      title: `${productName}: ${_.uniq(group.map((d) => d.title)).join(';')}`,
+      title: `${titlePrefix}${_.uniq(group.map((d) => d.title)).join(';')}`,
       tags: _.mergeWith(
         {},
         ...group.map((d) => d.tags),
         (acc: unknown, cur: unknown) => {
           if (acc === undefined || cur === undefined) {
-            return undefined;
+            return acc || cur;
           } else if (_.isEqual(acc, cur)) {
             return acc;
           } else {
@@ -205,8 +221,26 @@ function consolidate(
         .filter(
           (element) => _.get(element, 'url') !== undefined
         ) as ExecJSON.Reference[],
-      source_location: {},
-      code: JSON.stringify({Findings: findings}, null, 2),
+      source_location: ((): ExecJSON.SourceLocation => {
+        const locs = _.uniq(group.map((d) => d.source_location)).filter(
+          (loc) => Object.keys(loc).length !== 0
+        );
+        if (locs.length === 0) {
+          return {};
+        } else if (locs.length === 1) {
+          return locs[0];
+        } else {
+          return {ref: JSON.stringify(locs)};
+        }
+      })(),
+      ...(Object.keys(waiverData).length !== 0 && {waiver_data: waiverData}),
+      code: externalProductHandler(
+        context,
+        whichSpecialCase(findings[0]),
+        group,
+        'code',
+        JSON.stringify({Findings: findings}, null, 2)
+      ) as string,
       results: group.map((d) => d.results).flat() as ExecJSON.ControlResult[]
     };
     output.push(item);
@@ -515,6 +549,7 @@ function getTrivy(): Record<string, Function> {
   const productName = (): string => {
     return 'Aqua Security - Trivy';
   };
+  const doesNotHaveFindingTitlePrefix = (): boolean => true;
   const filename = (): string => {
     return `${productName()}.json`;
   };
@@ -526,6 +561,7 @@ function getTrivy(): Record<string, Function> {
     findingNistTag,
     subfindingsStatus,
     subfindingsMessage,
+    doesNotHaveFindingTitlePrefix,
     productName,
     filename,
     meta
@@ -631,13 +667,32 @@ function getHDF2ASFF(): Record<string, Function> {
     const name = _.get(finding, 'Id') as string;
     return encode(name.split('/').slice(0, 2).join(' - '));
   };
+  const doesNotHaveFindingTitlePrefix = (): boolean => true;
+  const code = (group: ExecJSON.Control[]): string => {
+    return group[0].code || '';
+  };
+  const waiverData = (
+    group: ExecJSON.Control[]
+  ): ExecJSON.ControlWaiverData => {
+    return group[0].waiver_data || {};
+  };
   const filename = (
     findingInfo: [Record<string, unknown>, Record<string, unknown>[]]
   ): string => {
+    const target = replaceTypesSlashes(
+      (
+        _.get(
+          findingInfo[1][findExecutionFindingIndex(findingInfo[1])],
+          'Id'
+        ) as string
+      ).split('/')[0]
+    );
     const finding = findingInfo[0];
-    return getFilteredTypes(finding, {startsWith: ['File/Input/']})[0]
-      .split('/')
-      .slice(-1)[0];
+    return `${target}_${
+      getFilteredTypes(finding, {startsWith: ['File/Input/']})[0]
+        .split('/')
+        .slice(-1)[0]
+    }`;
   };
   const mapping = (
     context: ASFFMapper
@@ -773,110 +828,136 @@ function getHDF2ASFF(): Record<string, Function> {
           status: 'loaded',
           controls: consolidate(
             context,
-            _.map(
-              _.get(context.data, 'Findings') as Record<string, unknown>[],
-              (finding: Record<string, unknown>) => {
-                return {
-                  id:
-                    replaceTypesSlashes(
-                      getFilteredTypes(finding, {
-                        startsWith: ['Control/ID/']
-                      })[0]
-                        ?.split('/')
-                        .slice(2)[0]
-                    ) ?? '',
-                  title:
-                    replaceTypesSlashes(
-                      getFilteredTypes(finding, {
-                        startsWith: ['Control/Title/']
-                      })[0]
-                        ?.split('/')
-                        .slice(2)[0]
-                    ) ?? '',
-                  desc:
-                    replaceTypesSlashes(
-                      getFilteredTypes(finding, {
-                        startsWith: ['Control/Desc/']
-                      })[0]
-                        ?.split('/')
-                        .slice(2)[0]
-                    ) ?? '',
-                  impact: JSON.parse(
-                    replaceTypesSlashes(
-                      getFilteredTypes(finding, {
-                        startsWith: ['Control/Impact/']
-                      })[0]
-                        ?.split('/')
-                        .slice(2)[0]
-                    ) ?? '0'
-                  ),
-                  tags: {
-                    ...findingByTopLevelObject(finding, {
-                      startsWith: ['Tags/'],
-                      doesNotStartWith: [TYPE_NIST_TAG]
-                    }),
-                    nist: {
-                      transformer: (): string[] => {
-                        const nisttags = findingNistTag(finding);
-                        if (nisttags.length === 0) {
-                          return DEFAULT_NIST_TAG;
-                        } else {
-                          return nisttags;
+            ((): ExecJSON.Control[] => {
+              console.log(
+                'findings length',
+                (_.get(context.data, 'Findings') as Record<string, unknown>[])
+                  .length
+              );
+              return _.map(
+                _.get(context.data, 'Findings') as Record<string, unknown>[],
+                (finding: Record<string, unknown>) => {
+                  return {
+                    id:
+                      replaceTypesSlashes(
+                        getFilteredTypes(finding, {
+                          startsWith: ['Control/ID/']
+                        })[0]
+                          ?.split('/')
+                          .slice(2)[0]
+                      ) ?? '',
+                    title:
+                      replaceTypesSlashes(
+                        getFilteredTypes(finding, {
+                          startsWith: ['Control/Title/']
+                        })[0]
+                          ?.split('/')
+                          .slice(2)[0]
+                      ) ?? '',
+                    desc:
+                      replaceTypesSlashes(
+                        getFilteredTypes(finding, {
+                          startsWith: ['Control/Desc/']
+                        })[0]
+                          ?.split('/')
+                          .slice(2)[0]
+                      ) ?? '',
+                    impact: JSON.parse(
+                      replaceTypesSlashes(
+                        getFilteredTypes(finding, {
+                          startsWith: ['Control/Impact/']
+                        })[0]
+                          ?.split('/')
+                          .slice(2)[0]
+                      ) ?? '0'
+                    ),
+                    tags: {
+                      ...findingByTopLevelObject(finding, {
+                        startsWith: ['Tags/'],
+                        doesNotStartWith: [TYPE_NIST_TAG]
+                      }),
+                      nist: {
+                        transformer: (): string[] => {
+                          const nisttags = findingNistTag(finding);
+                          if (nisttags.length === 0) {
+                            return DEFAULT_NIST_TAG;
+                          } else {
+                            return nisttags;
+                          }
                         }
                       }
                     },
-                    target: replaceTypesSlashes(
-                      // TODO: remove from here and move to only filename prepend
-                      (_.get(execution, 'Id') as string).split('/')[0]
-                    )
-                  },
-                  descriptions: _.map(
-                    Object.entries(
-                      findingByTopLevelObject(finding, {
-                        startsWith: ['Descriptions/']
-                      })
+                    descriptions: _.map(
+                      Object.entries(
+                        findingByTopLevelObject(finding, {
+                          startsWith: ['Descriptions/']
+                        })
+                      ),
+                      ([key, value]) => ({label: key, data: value as string})
                     ),
-                    ([key, value]) => ({label: key, data: value})
-                  ),
-                  refs: JSON.parse(
-                    replaceTypesSlashes(
-                      getFilteredTypes(execution, {
-                        startsWith: ['Control/Refs/']
-                      })[0]
-                        ?.split('/')
-                        .slice(2)[0]
-                    ) ?? '[]'
-                  ),
-                  source_location: JSON.parse(
-                    replaceTypesSlashes(
-                      getFilteredTypes(execution, {
-                        startsWith: ['Control/Source_Location/']
-                      })[0]
-                        ?.split('/')
-                        .slice(2)[0]
-                    ) ?? '{}'
-                  ),
-                  waiver_data: JSON.parse(
-                    replaceTypesSlashes(
-                      getFilteredTypes(execution, {
-                        startsWith: ['Control/Waiver_Data/']
-                      })[0]
-                        ?.split('/')
-                        .slice(2)[0]
-                    ) ?? '{}'
-                  ),
-                  code: '', // potentially just to empty string but otherwise gonna need to extract out of here per profile
-                  results: // very brittle since depends on profile indexes instead of finding the baseline profile
-                    index === profileNames.length - 1
-                      ? [
-                          findingByTopLevelObject(finding, {
-                            startsWith: ['Segment/']
-                          })
-                        ]
-                      : []
-                };
-              }
-            ),
+                    refs: JSON.parse(
+                      replaceTypesSlashes(
+                        getFilteredTypes(finding, {
+                          startsWith: ['Control/Refs/']
+                        })[0]
+                          ?.split('/')
+                          .slice(2)[0]
+                      ) ?? '[]'
+                    ),
+                    source_location: JSON.parse(
+                      replaceTypesSlashes(
+                        getFilteredTypes(finding, {
+                          startsWith: ['Control/Source_Location/']
+                        })[0]
+                          ?.split('/')
+                          .slice(2)[0]
+                      ) ?? '{}'
+                    ),
+                    waiver_data: JSON.parse(
+                      replaceTypesSlashes(
+                        getFilteredTypes(finding, {
+                          startsWith: ['Control/Waiver_Data/']
+                        })[0]
+                          ?.split('/')
+                          .slice(2)[0]
+                      ) ?? '{}'
+                    ),
+                    code: '', // potentially just to empty string but otherwise gonna need to extract out of here per profile
+                    // very brittle since depends on profile indexes instead of finding the baseline profile
+                    results:
+                      index === profileNames.length - 1
+                        ? [
+                            {
+                              code_desc:
+                                replaceTypesSlashes(
+                                  getFilteredTypes(finding, {
+                                    startsWith: ['Segment/code_desc/']
+                                  })[0]
+                                    ?.split('/')
+                                    .slice(2)[0]
+                                ) ?? '',
+                              start_time:
+                                replaceTypesSlashes(
+                                  getFilteredTypes(finding, {
+                                    startsWith: ['Segment/start_time/']
+                                  })[0]
+                                    ?.split('/')
+                                    .slice(2)[0]
+                                ) ?? '',
+                              ...findingByTopLevelObject(finding, {
+                                startsWith: ['Segment/'],
+                                doesNotStartWith: [
+                                  'Segment/code_desc',
+                                  'Segment/start_time'
+                                ]
+                              })
+                            }
+                          ]
+                        : []
+                  };
+                }
+              );
+            })(),
             context.data
           ),
           sha256:
@@ -890,13 +971,16 @@ function getHDF2ASFF(): Record<string, Function> {
         };
       })
     };
-    console.log(ret);
+    console.log(ret['profiles'][0]['controls'][0]['tags']);
     return ret;
   };
   return {
     preprocessingASFF,
     supportingDocs,
     productName,
+    doesNotHaveFindingTitlePrefix,
+    code,
+    waiverData,
     filename,
     mapping
   };
