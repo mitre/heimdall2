@@ -99,7 +99,7 @@ describe('ASFF Mapper', () => {
     );
     expect(
       omitVersions(
-        mapper.toHdf()['example-3-layer-overlay_03062022.json']
+        mapper.toHdf()['this-is-a-test_example-3-layer-overlay_03062022.json']
       )
     ).toEqual(
       omitVersions(

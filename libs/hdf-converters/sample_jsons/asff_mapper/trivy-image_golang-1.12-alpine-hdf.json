@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.8",
+    "release": "2.6.20",
     "target_id": ""
   },
-  "version": "2.6.8",
+  "version": "2.6.20",
   "statistics": {
     "duration": null
   },
@@ -26,7 +26,7 @@
       "controls": [
         {
           "id": "Trivy/CVE-2021-36159",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-36159 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-36159 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -48,14 +48,14 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package apk-tools, the current version that is installed is 2.10.4-r3.  The package has been patched since version(s): 2.10.7-r0.",
-              "start_time": "2022-02-07T23:51:26.938817-05:00"
+              "start_time": "2022-02-07T23:51:26.938817-05:00",
+              "message": "For package apk-tools, the current version that is installed is 2.10.4-r3.  The package has been patched since version(s): 2.10.7-r0."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2021-30139",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-30139 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-30139 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -77,14 +77,14 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package apk-tools, the current version that is installed is 2.10.4-r3.  The package has been patched since version(s): 2.10.6-r0.",
-              "start_time": "2022-02-07T23:51:26.939283-05:00"
+              "start_time": "2022-02-07T23:51:26.939283-05:00",
+              "message": "For package apk-tools, the current version that is installed is 2.10.4-r3.  The package has been patched since version(s): 2.10.6-r0."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2021-28831",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-28831 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-28831 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -106,20 +106,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r10.",
-              "start_time": "2022-02-07T23:51:26.939749-05:00"
+              "start_time": "2022-02-07T23:51:26.939749-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r10."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r10.",
-              "start_time": "2022-02-07T23:51:26.94787-05:00"
+              "start_time": "2022-02-07T23:51:26.94787-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r10."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2021-42378",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42378 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-42378 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -141,20 +141,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.94001-05:00"
+              "start_time": "2022-02-07T23:51:26.94001-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.948105-05:00"
+              "start_time": "2022-02-07T23:51:26.948105-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2021-42379",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42379 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-42379 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -176,20 +176,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.940279-05:00"
+              "start_time": "2022-02-07T23:51:26.940279-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.948345-05:00"
+              "start_time": "2022-02-07T23:51:26.948345-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2021-42380",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42380 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-42380 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -211,20 +211,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.940524-05:00"
+              "start_time": "2022-02-07T23:51:26.940524-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.948585-05:00"
+              "start_time": "2022-02-07T23:51:26.948585-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2021-42381",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42381 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-42381 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -246,20 +246,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.940792-05:00"
+              "start_time": "2022-02-07T23:51:26.940792-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.948835-05:00"
+              "start_time": "2022-02-07T23:51:26.948835-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2021-42382",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42382 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-42382 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -281,20 +281,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.941038-05:00"
+              "start_time": "2022-02-07T23:51:26.941038-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.949084-05:00"
+              "start_time": "2022-02-07T23:51:26.949084-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2021-42383",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42383 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-42383 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -316,20 +316,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.941302-05:00"
+              "start_time": "2022-02-07T23:51:26.941302-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.94933-05:00"
+              "start_time": "2022-02-07T23:51:26.94933-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2021-42384",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42384 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-42384 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -351,20 +351,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.941561-05:00"
+              "start_time": "2022-02-07T23:51:26.941561-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.949583-05:00"
+              "start_time": "2022-02-07T23:51:26.949583-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2021-42385",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42385 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-42385 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -386,20 +386,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.941815-05:00"
+              "start_time": "2022-02-07T23:51:26.941815-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.949831-05:00"
+              "start_time": "2022-02-07T23:51:26.949831-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2021-42386",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42386 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-42386 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -421,20 +421,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.942077-05:00"
+              "start_time": "2022-02-07T23:51:26.942077-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.950071-05:00"
+              "start_time": "2022-02-07T23:51:26.950071-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2021-42374",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-42374 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-42374 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -456,20 +456,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.942328-05:00"
+              "start_time": "2022-02-07T23:51:26.942328-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11.",
-              "start_time": "2022-02-07T23:51:26.950306-05:00"
+              "start_time": "2022-02-07T23:51:26.950306-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2021-3711",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-3711 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-3711 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -491,20 +491,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1l-r0.",
-              "start_time": "2022-02-07T23:51:26.942607-05:00"
+              "start_time": "2022-02-07T23:51:26.942607-05:00",
+              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1l-r0."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1l-r0.",
-              "start_time": "2022-02-07T23:51:26.945056-05:00"
+              "start_time": "2022-02-07T23:51:26.945056-05:00",
+              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1l-r0."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2020-1967",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2020-1967 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2020-1967 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -526,20 +526,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1g-r0.",
-              "start_time": "2022-02-07T23:51:26.942885-05:00"
+              "start_time": "2022-02-07T23:51:26.942885-05:00",
+              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1g-r0."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1g-r0.",
-              "start_time": "2022-02-07T23:51:26.94532-05:00"
+              "start_time": "2022-02-07T23:51:26.94532-05:00",
+              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1g-r0."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2021-23840",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-23840 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-23840 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -561,20 +561,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1j-r0.",
-              "start_time": "2022-02-07T23:51:26.943155-05:00"
+              "start_time": "2022-02-07T23:51:26.943155-05:00",
+              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1j-r0."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1j-r0.",
-              "start_time": "2022-02-07T23:51:26.94558-05:00"
+              "start_time": "2022-02-07T23:51:26.94558-05:00",
+              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1j-r0."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2021-3450",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-3450 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-3450 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -596,20 +596,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1k-r0.",
-              "start_time": "2022-02-07T23:51:26.943438-05:00"
+              "start_time": "2022-02-07T23:51:26.943438-05:00",
+              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1k-r0."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1k-r0.",
-              "start_time": "2022-02-07T23:51:26.945838-05:00"
+              "start_time": "2022-02-07T23:51:26.945838-05:00",
+              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1k-r0."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2021-3712",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-3712 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-3712 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -631,20 +631,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1l-r0.",
-              "start_time": "2022-02-07T23:51:26.94371-05:00"
+              "start_time": "2022-02-07T23:51:26.94371-05:00",
+              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1l-r0."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1l-r0.",
-              "start_time": "2022-02-07T23:51:26.946111-05:00"
+              "start_time": "2022-02-07T23:51:26.946111-05:00",
+              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1l-r0."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2020-1971",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2020-1971 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2020-1971 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -666,20 +666,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1i-r0.",
-              "start_time": "2022-02-07T23:51:26.943977-05:00"
+              "start_time": "2022-02-07T23:51:26.943977-05:00",
+              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1i-r0."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1i-r0.",
-              "start_time": "2022-02-07T23:51:26.94639-05:00"
+              "start_time": "2022-02-07T23:51:26.94639-05:00",
+              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1i-r0."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2021-23841",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-23841 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-23841 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -701,20 +701,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1j-r0.",
-              "start_time": "2022-02-07T23:51:26.944245-05:00"
+              "start_time": "2022-02-07T23:51:26.944245-05:00",
+              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1j-r0."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1j-r0.",
-              "start_time": "2022-02-07T23:51:26.946659-05:00"
+              "start_time": "2022-02-07T23:51:26.946659-05:00",
+              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1j-r0."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2021-3449",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-3449 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-3449 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -736,20 +736,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1k-r0.",
-              "start_time": "2022-02-07T23:51:26.944524-05:00"
+              "start_time": "2022-02-07T23:51:26.944524-05:00",
+              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1k-r0."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1k-r0.",
-              "start_time": "2022-02-07T23:51:26.946902-05:00"
+              "start_time": "2022-02-07T23:51:26.946902-05:00",
+              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1k-r0."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2021-23839",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2021-23839 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2021-23839 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -771,20 +771,20 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1j-r0.",
-              "start_time": "2022-02-07T23:51:26.944783-05:00"
+              "start_time": "2022-02-07T23:51:26.944783-05:00",
+              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1j-r0."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1j-r0.",
-              "start_time": "2022-02-07T23:51:26.947149-05:00"
+              "start_time": "2022-02-07T23:51:26.947149-05:00",
+              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1j-r0."
             }
           ]
         },
         {
           "id": "Trivy/CVE-2020-28928",
-          "title": "Aqua Security - Trivy: Trivy found a vulnerability to CVE-2020-28928 in container golang:1.12-alpine (alpine 3.11.3)",
+          "title": "Trivy found a vulnerability to CVE-2020-28928 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
             "nist": [
               "SI-2",
@@ -806,19 +806,19 @@
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package musl, the current version that is installed is 1.1.24-r0.  The package has been patched since version(s): 1.1.24-r3.",
-              "start_time": "2022-02-07T23:51:26.947393-05:00"
+              "start_time": "2022-02-07T23:51:26.947393-05:00",
+              "message": "For package musl, the current version that is installed is 1.1.24-r0.  The package has been patched since version(s): 1.1.24-r3."
             },
             {
               "status": "failed",
               "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
-              "message": "For package musl-utils, the current version that is installed is 1.1.24-r0.  The package has been patched since version(s): 1.1.24-r3.",
-              "start_time": "2022-02-07T23:51:26.947634-05:00"
+              "start_time": "2022-02-07T23:51:26.947634-05:00",
+              "message": "For package musl-utils, the current version that is installed is 1.1.24-r0.  The package has been patched since version(s): 1.1.24-r3."
             }
           ]
         }
       ],
-      "sha256": "bd8abad84740e4594279348c7f21271ba979e6a18cae80b76c9c0dda90e47048"
+      "sha256": "f9122ed75d0b4d41a3a0fbd1dd53ecd4967c61f6c3af896ebdc20cd853ef73f0"
     }
   ]
 }
