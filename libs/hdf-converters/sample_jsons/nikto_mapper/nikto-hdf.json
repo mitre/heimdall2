@@ -1,10 +1,10 @@
 {
     "platform": {
         "name": "Heimdall Tools",
-        "release": "2.6.18",
+        "release": "2.6.20",
         "target_id": "Host: zero.webappsecurity.com Port: 443"
     },
-    "version": "2.6.18",
+    "version": "2.6.20",
     "statistics": {
         "duration": null
     },
