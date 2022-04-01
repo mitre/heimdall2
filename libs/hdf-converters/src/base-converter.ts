@@ -218,8 +218,8 @@ export class BaseConverter {
 
     if (_.keys(v).length > 0 && hasTransformer) {
       return {
-        ...(_.keys(v).length > 0 && this.convertInternal(file, v)),
-        ...(hasTransformer && (transformer(hasPath ? pathV : file) as object))
+        ...this.convertInternal(file, v),
+        ...transformer(hasPath ? pathV : file) as object
       } as MappedReform<T, ILookupPath>;
     }
 
@@ -244,7 +244,7 @@ export class BaseConverter {
       if (lookupPath.path === undefined) {
         const arrayTransformer = lookupPath.arrayTransformer?.bind(this);
         v = v.map((element) => {
-          return _.omit(element, ['arrayTransformer']) as T & ILookupPath;
+          return _.isObject(element) ? _.omit(element, ['arrayTransformer']) as T & ILookupPath : element;
         });
         let output: Array<T> = [];
         v.forEach((element) => {
