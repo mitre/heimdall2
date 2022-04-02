@@ -181,7 +181,8 @@ function consolidate(
       // Add productName to ID if any ID's are the same across products
       id: id,
       title: `${titlePrefix}${_.uniq(group.map((d) => d.title)).join(';')}`,
-      tags: _.mergeWith(
+      tags: (() => {
+        const ret = _.mergeWith(
         {},
         ...group.map((d) => d.tags),
         (acc: unknown, cur: unknown) => {
@@ -193,7 +194,10 @@ function consolidate(
             return _.uniq(_.concat([], acc, cur));
           }
         }
-      ),
+      );
+      console.log('posttag', ret);
+      return ret;
+      })(),
       impact: Math.max(...group.map((d) => d.impact)),
       desc: externalProductHandler(
         context,
@@ -876,16 +880,15 @@ function getHDF2ASFF(): Record<string, Function> {
                         startsWith: ['Tags/'],
                         doesNotStartWith: [TYPE_NIST_TAG]
                       }),
-                      nist: {
-                        transformer: (): string[] => {
+                      nist: ((): string[] => {
                           const nisttags = findingNistTag(finding);
+                          console.log('nisttags', nisttags);
                           if (nisttags.length === 0) {
                             return DEFAULT_NIST_TAG;
                           } else {
                             return nisttags;
                           }
-                        }
-                      }
+                        })()
                     },
                     descriptions: _.map(
                       Object.entries(
