@@ -98,18 +98,13 @@ describe('ASFF Mapper', () => {
       )
     );
     expect(
-      omitVersions(
-        mapper.toHdf()['this-is-a-test_rhel7_V-71931.json']
-      )
+      omitVersions(mapper.toHdf()['this-is-a-test_rhel7_V-71931.json'])
     ).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/asff_mapper/rhel7_V-71931-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
+          fs.readFileSync('sample_jsons/asff_mapper/rhel7_V-71931-hdf.json', {
+            encoding: 'utf-8'
+          })
         )
       )
     );

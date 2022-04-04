@@ -29,7 +29,9 @@ type Counts = {
 };
 
 export function escapeForwardSlashes<T>(s: T): T {
-  return _.isString(s) ? s.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT) as unknown as T : s;
+  return _.isString(s)
+    ? (s.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT) as unknown as T)
+    : s;
 }
 
 export function getRunTime(hdf: ExecJSON.Execution): string {
@@ -542,19 +544,23 @@ function createDescriptionInfo(control: ExecJSON.Control): string[] {
   const typesArr: string[] = [];
   if (Array.isArray(control.descriptions)) {
     control.descriptions?.forEach((description) => {
-      typesArr.push(
-        `Descriptions/${escapeForwardSlashes(
-          description.label
-        )}/${escapeForwardSlashes(cleanText(description.data) || 'No Value')}`
-      );
+      if (cleanText(description.data)) {
+        typesArr.push(
+          `Descriptions/${escapeForwardSlashes(
+            description.label
+          )}/${escapeForwardSlashes(cleanText(description.data))}`
+        );
+      }
     });
   } else {
     Object.entries(control.descriptions || {}).forEach(([key, value]) => {
-      typesArr.push(
-        `Descriptions/${escapeForwardSlashes(key)}/${escapeForwardSlashes(
-          cleanText(value as string) || 'No Value'
-        )}`
-      );
+      if (cleanText(value as string)) {
+        typesArr.push(
+          `Descriptions/${escapeForwardSlashes(key)}/${escapeForwardSlashes(
+            cleanText(value as string)
+          )}`
+        );
+      }
     });
   }
 

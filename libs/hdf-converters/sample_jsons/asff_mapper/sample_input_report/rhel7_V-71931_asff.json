@@ -40,7 +40,6 @@
         "Tags/cci/[\"CCI-000199\"]",
         "Tags/nist/[\"IA-5 (1) (d)\"]",
         "Descriptions/default/Any password, no matter how complex, can eventually be cracked. Therefore, passwords need to be changed periodically. If the operating system does not limit the lifetime of passwords and force users to change their passwords, there is the risk that the operating system passwords could be compromised.",
-        "Descriptions/rationale/No Value",
         "Descriptions/check/Check whether the maximum time period for existing passwords is restricted to 60 days.   # awk -F: '$5 > 60 {print $1 \" \" $5}' {{{SLASH}}}etc{{{SLASH}}}shadow   If any results are returned that are not associated with a system account, this is a finding.",
         "Descriptions/fix/Configure non-compliant accounts to enforce a 60-day maximum password lifetime restriction.   # chage -M 60 [user]"
       ]
@@ -123,7 +122,6 @@
         "Tags/cci/[\"CCI-000199\"]",
         "Tags/nist/[\"IA-5 (1) (d)\"]",
         "Descriptions/default/Any password, no matter how complex, can eventually be cracked. Therefore, passwords need to be changed periodically. If the operating system does not limit the lifetime of passwords and force users to change their passwords, there is the risk that the operating system passwords could be compromised.",
-        "Descriptions/rationale/No Value",
         "Descriptions/check/Check whether the maximum time period for existing passwords is restricted to 60 days.   # awk -F: '$5 > 60 {print $1 \" \" $5}' {{{SLASH}}}etc{{{SLASH}}}shadow   If any results are returned that are not associated with a system account, this is a finding.",
         "Descriptions/fix/Configure non-compliant accounts to enforce a 60-day maximum password lifetime restriction.   # chage -M 60 [user]"
       ]

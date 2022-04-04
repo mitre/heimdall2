@@ -21,6 +21,11 @@ describe('ASFF Reverse Mapper', () => {
 
     const profileInformation = [converted[converted.length - 1] || {}];
 
+    fs.writeFileSync(
+      'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json',
+      JSON.stringify(converted, null, 2)
+    );
+
     const expectedJSON = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json',
