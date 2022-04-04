@@ -1,7 +1,8 @@
 {
   "platform": {
     "name": "centos",
-    "release": "7.9.2009"
+    "release": "7.9.2009",
+    "target_id": "this-is-a-test"
   },
   "version": "4.52.9",
   "statistics": {
@@ -658,7 +659,7 @@
           ]
         }
       ],
-      "sha256": "e40634204851d548d8de1c14d343aead0c67a92b6f0fa6b8b5f16e1a596929a6"
+      "sha256": "f4d6b6b93ad0d2466b4ec7fb22e2ced6f3ae7ea529fdbec35c1fdc1df5ccff6e"
     }
   ]
 }

@@ -659,7 +659,10 @@ function getHDF2ASFF(): Record<string, Function> {
       ).split('/')[0]
     );
     const finding = findingInfo[0];
-    return `${target}_${_.get(objectifyTypesArray(finding), 'File.Input')}`;
+    return `${_.get(
+      objectifyTypesArray(finding),
+      'File.Input'
+    )}-${target}.json`;
   };
   const mapping = (
     context: ASFFMapper
@@ -668,13 +671,26 @@ function getHDF2ASFF(): Record<string, Function> {
       context.supportingDocs.get(SpecialCasing.HDF2ASFF),
       'execution'
     );
-    const executionTypes = objectifyTypesArray(execution as Record<string, unknown>);
-    const profileNames = Object.keys(executionTypes).filter((type) => !(['MITRE', 'File', 'Execution'].includes(type)));
+    const executionTypes = objectifyTypesArray(
+      execution as Record<string, unknown>
+    );
+    const profileNames = Object.keys(executionTypes).filter(
+      (type) => !['MITRE', 'File', 'Execution'].includes(type)
+    );
     const ret = {
       shortcircuit: true,
-      platform: _.get(executionTypes, 'Execution.platform') as unknown as ExecJSON.Platform,
+      platform: {
+        ..._.get(executionTypes, 'Execution.platform'),
+        target_id: (
+          context.supportingDocs.get(SpecialCasing.HDF2ASFF)?.execution
+            .Id as string
+        ).split('/')[0]
+      } as unknown as ExecJSON.Platform,
       version: _.get(executionTypes, 'Execution.version') as unknown as string,
-      statistics: _.get(executionTypes, 'Execution.statistics') as unknown as ExecJSON.Statistics,
+      statistics: _.get(
+        executionTypes,
+        'Execution.statistics'
+      ) as unknown as ExecJSON.Statistics,
       /*
       NOTE: waiting on inspecjs to include passthrough as a potential value in the type
       ...(_.has(executionTypes, 'Execution.passthrough') && {passthrough: _.get(executionTypes, 'Execution.passthrough')}),
@@ -683,23 +699,71 @@ function getHDF2ASFF(): Record<string, Function> {
         // order could be incorrect since we're only doing it via index instead of mapping the depends tree properly
         return {
           name: _.get(executionTypes, `${profileName}.name`),
-          ...(_.has(executionTypes, `${profileName}.version`) && {version: _.get(executionTypes, `${profileName}.version`)}),
-          ...(_.has(executionTypes, `${profileName}.title`) && {title: _.get(executionTypes, `${profileName}.title`)}),
-          ...(_.has(executionTypes, `${profileName}.maintainer`) && {maintainer: _.get(executionTypes, `${profileName}.maintainer`)}),
-          ...(_.has(executionTypes, `${profileName}.summary`) && {summary: _.get(executionTypes, `${profileName}.summary`)}),
-          ...(_.has(executionTypes, `${profileName}.license`) && {license: _.get(executionTypes, `${profileName}.license`)}),
-          ...(_.has(executionTypes, `${profileName}.copyright`) && {copyright: _.get(executionTypes, `${profileName}.copyright`)}),
-          ...(_.has(executionTypes, `${profileName}.copyright_email`) && {copyright_email: _.get(executionTypes, `${profileName}.copyright_email`)}),
-          supports: _.get(executionTypes, `${profileName}.supports`, []) as ExecJSON.SupportedPlatform[],
-          attributes: _.get(executionTypes, `${profileName}.attributes`, []) as Record<string, unknown>[],
-          ...(_.has(executionTypes, `${profileName}.depends`) && {depends: _.get(executionTypes, `${profileName}.depends`) as any}),
+          ...(_.has(executionTypes, `${profileName}.version`) && {
+            version: _.get(executionTypes, `${profileName}.version`)
+          }),
+          ...(_.has(executionTypes, `${profileName}.title`) && {
+            title: _.get(executionTypes, `${profileName}.title`)
+          }),
+          ...(_.has(executionTypes, `${profileName}.maintainer`) && {
+            maintainer: _.get(executionTypes, `${profileName}.maintainer`)
+          }),
+          ...(_.has(executionTypes, `${profileName}.summary`) && {
+            summary: _.get(executionTypes, `${profileName}.summary`)
+          }),
+          ...(_.has(executionTypes, `${profileName}.license`) && {
+            license: _.get(executionTypes, `${profileName}.license`)
+          }),
+          ...(_.has(executionTypes, `${profileName}.copyright`) && {
+            copyright: _.get(executionTypes, `${profileName}.copyright`)
+          }),
+          ...(_.has(executionTypes, `${profileName}.copyright_email`) && {
+            copyright_email: _.get(
+              executionTypes,
+              `${profileName}.copyright_email`
+            )
+          }),
+          supports: _.get(
+            executionTypes,
+            `${profileName}.supports`,
+            []
+          ) as ExecJSON.SupportedPlatform[],
+          attributes: _.get(
+            executionTypes,
+            `${profileName}.attributes`,
+            []
+          ) as Record<string, unknown>[],
+          ...(_.has(executionTypes, `${profileName}.depends`) && {
+            depends: _.get(executionTypes, `${profileName}.depends`) as any
+          }),
           groups: [],
-          ...(_.has(executionTypes, `${profileName}.status`) && {status: _.get(executionTypes, `${profileName}.status`)}),
-          ...(_.has(executionTypes, `${profileName}.description`) && {description: _.get(executionTypes, `${profileName}.description`)}),
-          ...(_.has(executionTypes, `${profileName}.inspec_version`) && {inspec_version: _.get(executionTypes, `${profileName}.inspec_version`)}),
-          ...(_.has(executionTypes, `${profileName}.parent_profile`) && {parent_profile: _.get(executionTypes, `${profileName}.parent_profile`)}),
-          ...(_.has(executionTypes, `${profileName}.skip_message`) && {skip_message: _.get(executionTypes, `${profileName}.skip_message`)}),
-          ...(_.has(executionTypes, `${profileName}.status_message`) && {status_message: _.get(executionTypes, `${profileName}.status_message`)}),
+          ...(_.has(executionTypes, `${profileName}.status`) && {
+            status: _.get(executionTypes, `${profileName}.status`)
+          }),
+          ...(_.has(executionTypes, `${profileName}.description`) && {
+            description: _.get(executionTypes, `${profileName}.description`)
+          }),
+          ...(_.has(executionTypes, `${profileName}.inspec_version`) && {
+            inspec_version: _.get(
+              executionTypes,
+              `${profileName}.inspec_version`
+            )
+          }),
+          ...(_.has(executionTypes, `${profileName}.parent_profile`) && {
+            parent_profile: _.get(
+              executionTypes,
+              `${profileName}.parent_profile`
+            )
+          }),
+          ...(_.has(executionTypes, `${profileName}.skip_message`) && {
+            skip_message: _.get(executionTypes, `${profileName}.skip_message`)
+          }),
+          ...(_.has(executionTypes, `${profileName}.status_message`) && {
+            status_message: _.get(
+              executionTypes,
+              `${profileName}.status_message`
+            )
+          }),
           controls: consolidate(
             context,
             ((): ExecJSON.Control[] => {
@@ -714,13 +778,29 @@ function getHDF2ASFF(): Record<string, Function> {
                   const findingTypes = objectifyTypesArray(finding);
                   return {
                     id: _.get(findingTypes, 'Control.ID') as unknown as string,
-                    ...(_.has(findingTypes, 'Control.Title') && {title: _.get(findingTypes, 'Control.Title') as unknown as string}),
-                    ...(_.has(findingTypes, 'Control.Desc') && {desc: _.get(findingTypes, 'Control.Desc') as unknown as string}),
-                    impact: _.get(findingTypes, 'Control.Impact') as unknown as number,
+                    ...(_.has(findingTypes, 'Control.Title') && {
+                      title: _.get(
+                        findingTypes,
+                        'Control.Title'
+                      ) as unknown as string
+                    }),
+                    ...(_.has(findingTypes, 'Control.Desc') && {
+                      desc: _.get(
+                        findingTypes,
+                        'Control.Desc'
+                      ) as unknown as string
+                    }),
+                    impact: _.get(
+                      findingTypes,
+                      'Control.Impact'
+                    ) as unknown as number,
                     tags: {
                       ..._.omit(_.get(findingTypes, 'Tags'), ['nist']),
                       nist: ((): string[] => {
-                        const nisttags = _.get(findingTypes, 'Tags.nist') as unknown as undefined | string[];
+                        const nisttags = _.get(
+                          findingTypes,
+                          'Tags.nist'
+                        ) as unknown as undefined | string[];
                         if (nisttags === undefined || nisttags.length === 0) {
                           return DEFAULT_NIST_TAG;
                         } else {
@@ -729,23 +809,43 @@ function getHDF2ASFF(): Record<string, Function> {
                       })()
                     },
                     descriptions: _.map(
-                      Object.entries(
-                        _.get(findingTypes, 'Descriptions')
-                      ),
+                      Object.entries(_.get(findingTypes, 'Descriptions')),
                       ([key, value]) => ({label: key, data: value as string})
                     ),
-                    refs: _.get(findingTypes, 'Control.Refs', []) as ExecJSON.Reference[],
-                    source_location: _.get(findingTypes, 'Control.Source_Location', {}) as ExecJSON.SourceLocation,
-                    ...(_.has(findingTypes, 'Control.Waiver_Data') && {waiver_data: _.get(findingTypes, 'Control.Waiver_Data') as unknown as ExecJSON.ControlWaiverData}),
+                    refs: _.get(
+                      findingTypes,
+                      'Control.Refs',
+                      []
+                    ) as ExecJSON.Reference[],
+                    source_location: _.get(
+                      findingTypes,
+                      'Control.Source_Location',
+                      {}
+                    ) as ExecJSON.SourceLocation,
+                    ...(_.has(findingTypes, 'Control.Waiver_Data') && {
+                      waiver_data: _.get(
+                        findingTypes,
+                        'Control.Waiver_Data'
+                      ) as unknown as ExecJSON.ControlWaiverData
+                    }),
                     code: '', // empty string for now but gonna need to extract out of here per profile
                     // very brittle since depends on profile indexes instead of finding the baseline profile - need to do research, but could be as simple as finding the profile without any values in its depends array
                     results:
                       index === profileNames.length - 1
                         ? [
                             {
-                              code_desc: _.get(findingTypes, 'Segment.code_desc') as unknown as string,
-                              start_time: _.get(findingTypes, 'Segment.start_time') as unknown as string,
-                              ..._.omit(_.get(findingTypes, 'Segment'), ['code_desc', 'start_time'])
+                              code_desc: _.get(
+                                findingTypes,
+                                'Segment.code_desc'
+                              ) as unknown as string,
+                              start_time: _.get(
+                                findingTypes,
+                                'Segment.start_time'
+                              ) as unknown as string,
+                              ..._.omit(_.get(findingTypes, 'Segment'), [
+                                'code_desc',
+                                'start_time'
+                              ])
                             }
                           ]
                         : []

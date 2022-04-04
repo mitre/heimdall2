@@ -97,8 +97,9 @@ describe('ASFF Mapper', () => {
         {encoding: 'utf-8'}
       )
     );
+
     expect(
-      omitVersions(mapper.toHdf()['this-is-a-test_rhel7_V-71931.json'])
+      omitVersions(mapper.toHdf()['rhel7_V-71931.json-this-is-a-test.json'])
     ).toEqual(
       omitVersions(
         JSON.parse(
@@ -114,9 +115,12 @@ describe('ASFF Mapper', () => {
         {encoding: 'utf-8'}
       )
     );
+
     expect(
       omitVersions(
-        mapper.toHdf()['this-is-a-test_example-3-layer-overlay_03062022.json']
+        mapper.toHdf()[
+          'example-3-layer-overlay_03062022.json-this-is-a-test.json'
+        ]
       )
     ).toEqual(
       omitVersions(

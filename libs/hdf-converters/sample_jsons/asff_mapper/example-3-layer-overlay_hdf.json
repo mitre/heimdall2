@@ -1,7 +1,8 @@
 {
   "platform": {
     "name": "centos",
-    "release": "7.9.2009"
+    "release": "7.9.2009",
+    "target_id": "this-is-a-test"
   },
   "version": "4.52.9",
   "statistics": {
@@ -10792,7 +10793,7 @@
           "results": []
         }
       ],
-      "sha256": "17ab2f481bd2888dd39a1c516b424ba4a7886646e8cde541a51edcf7cccc8067"
+      "sha256": "ba4f4944011c704333a4a2ec0f5ed3f4bcb54fcc66bdbd80b97b5817521a282f"
     },
     {
       "name": "example-inspec-overlay-profile-against-rhel7-stig-baseline-profile",
@@ -21579,7 +21580,7 @@
           "results": []
         }
       ],
-      "sha256": "328df9c4f9108943325ee5151d52e98c2695f30813b3eb70e7a4ffbd0233c013"
+      "sha256": "e0b651ee454edd043027b324c33503a0cf87d91194644b994d5a89e5e66ac5d4"
     },
     {
       "name": "redhat-enterprise-linux-7-stig-baseline",
@@ -37697,7 +37698,7 @@
           ]
         }
       ],
-      "sha256": "b59daea1db993c462c6285699973689cba4ed18438c4b3913536b1dd6d7c7fa3"
+      "sha256": "d6f198d3b24b4ef8424c6d9dec8131fe983e19ac2332a628f2bc68f234f8431f"
     }
   ]
 }
