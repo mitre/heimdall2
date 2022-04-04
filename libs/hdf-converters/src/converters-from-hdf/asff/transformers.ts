@@ -258,9 +258,6 @@ function cleanObjectValues<T>(value: T): boolean {
 export function createCode(
   control: ExecJSON.Control & {profileInfo?: Record<string, unknown>}
 ) {
-  if (!control.code) {
-    console.log(control.profileInfo);
-  }
   return `=========================================================\n# Profile name: ${
     control.profileInfo?.name
   }\n=========================================================\n\n${
@@ -302,7 +299,14 @@ export function setupAwsAcct(
 }
 
 export function setupCreated(control: SegmentedControl) {
-  return control.result.start_time || new Date().toISOString();
+  try {
+    return (
+      new Date(control.result.start_time).toISOString() ||
+      new Date().toISOString()
+    );
+  } catch {
+    return new Date().toISOString();
+  }
 }
 
 export function setupRegion(

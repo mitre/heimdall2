@@ -29,6 +29,9 @@ enum SpecialCasing {
 
 function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
   const productArn = _.get(finding, 'ProductArn') as string;
+  if (!productArn) {
+    console.trace(finding, productArn);
+  }
   if (
     productArn.match(
       /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/firewall-manager$/
@@ -56,7 +59,19 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
   } else if (
     _.some(
       _.get(finding, 'FindingProviderFields.Types') as string[],
-      (type: string) => _.startsWith(type, 'MITRE/SAF/')
+      (type: string) => {
+        const version = type.split('/')[2].split('-')[0];
+        const [major, minor, patch] = version.split('.');
+        if (
+          parseInt(major) > 1 &&
+          parseInt(minor) > 5 &&
+          parseInt(patch) >= 20
+        ) {
+          return _.startsWith(type, 'MITRE/SAF/');
+        } else {
+          return false;
+        }
+      }
     )
   ) {
     return SpecialCasing.HDF2ASFF;
@@ -145,7 +160,7 @@ function consolidate(
   ) as Record<string, [ExecJSON.Control, Record<string, unknown>][]>;
 
   const output: ExecJSON.Control[] = [];
-  Object.entries(idGroups).forEach((idGroup) => {
+  Object.entries(idGroups || {}).forEach((idGroup) => {
     const [id, data] = idGroup;
     const group = data.map((d) => d[0]);
     const findings = data.map((d) => d[1]);
@@ -223,7 +238,7 @@ function consolidate(
         ) as ExecJSON.Reference[],
       source_location: ((): ExecJSON.SourceLocation => {
         const locs = _.uniq(group.map((d) => d.source_location)).filter(
-          (loc) => Object.keys(loc).length !== 0
+          (loc) => Object.keys(loc || {}).length !== 0
         );
         if (locs.length === 0) {
           return {};
@@ -233,7 +248,9 @@ function consolidate(
           return {ref: JSON.stringify(locs)};
         }
       })(),
-      ...(Object.keys(waiverData).length !== 0 && {waiver_data: waiverData}),
+      ...(Object.keys(waiverData || {}).length !== 0 && {
+        waiver_data: waiverData
+      }),
       code: externalProductHandler(
         context,
         whichSpecialCase(findings[0]),
@@ -599,9 +616,25 @@ function getHDF2ASFF(): Record<string, Function> {
     }
     return ret;
   };
+
   const findExecutionFindingIndex = (
-    asffOrFindings: Record<string, unknown> | Record<string, unknown>[]
+    asffOrFindings: Record<string, unknown> | Record<string, unknown>[],
+    asffFindingToMatch?: {Id: string}
   ): number => {
+    if (asffFindingToMatch) {
+      const targetToMatch = asffFindingToMatch.Id.split('/')[0];
+      const index = _.findIndex(
+        Array.isArray(asffOrFindings)
+          ? asffOrFindings
+          : (_.get(asffOrFindings, 'Findings') as Record<string, unknown>[]),
+        (finding) =>
+          (_.get(finding, 'Id') as string).split('/').length === 2 &&
+          (_.get(finding, 'Id') as string).startsWith(targetToMatch)
+      );
+      if (index === -1) {
+        //console.log(asffFindingToMatch)
+      }
+    }
     return _.findIndex(
       Array.isArray(asffOrFindings)
         ? asffOrFindings
@@ -650,13 +683,13 @@ function getHDF2ASFF(): Record<string, Function> {
   const filename = (
     findingInfo: [Record<string, unknown>, Record<string, unknown>[]]
   ): string => {
+    const index = findExecutionFindingIndex(
+      findingInfo[1],
+      findingInfo[0] as {Id: string}
+    );
+
     const target = replaceTypesSlashes(
-      (
-        _.get(
-          findingInfo[1][findExecutionFindingIndex(findingInfo[1])],
-          'Id'
-        ) as string
-      ).split('/')[0]
+      (_.get(findingInfo[1][index], 'Id') as string).split('/')[0]
     );
     const finding = findingInfo[0];
     return `${_.get(
@@ -674,8 +707,12 @@ function getHDF2ASFF(): Record<string, Function> {
     const executionTypes = objectifyTypesArray(
       execution as Record<string, unknown>
     );
-    const profileNames = Object.keys(executionTypes).filter(
+    const profileNames = Object.keys(executionTypes || {}).filter(
       (type) => !['MITRE', 'File', 'Execution'].includes(type)
+    );
+    console.log(context);
+    console.log(
+      context.supportingDocs.get(SpecialCasing.HDF2ASFF)?.execution.Id
     );
     const ret = {
       shortcircuit: true,
@@ -809,7 +846,7 @@ function getHDF2ASFF(): Record<string, Function> {
                       })()
                     },
                     descriptions: _.map(
-                      Object.entries(_.get(findingTypes, 'Descriptions')),
+                      Object.entries(_.get(findingTypes, 'Descriptions') || {}),
                       ([key, value]) => ({label: key, data: value as string})
                     ),
                     refs: _.get(
@@ -859,7 +896,6 @@ function getHDF2ASFF(): Record<string, Function> {
         };
       })
     };
-    console.log(ret);
     return ret;
   };
   return {
@@ -881,7 +917,7 @@ export class ASFFMapper extends BaseConverter {
   statusReason(finding: unknown): string | undefined {
     return _.get(finding, 'Compliance.StatusReasons')
       ?.map((reason: Record<string, string>) =>
-        Object.entries(reason).map(([key, value]: [string, string]) => {
+        Object.entries(reason || {}).map(([key, value]: [string, string]) => {
           return `${encode(key)}: ${encode(value)}`;
         })
       )
@@ -890,6 +926,7 @@ export class ASFFMapper extends BaseConverter {
   }
 
   setMappings(): void {
+    console.log('somestring ' + (this.data.Findings as any[]).length);
     this.mappings = externalProductHandler(
       this,
       whichSpecialCase(

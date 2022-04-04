@@ -110,10 +110,9 @@ describe('ASFF Mapper', () => {
       )
     );
     mapper = new Mapper(
-      fs.readFileSync(
-        'sample_jsons/asff_mapper/sample_input_report/example-3-layer-overlay_asff.json',
-        {encoding: 'utf-8'}
-      )
+      fs.readFileSync('/Users/cmoors/Downloads/us-west-2.asff.json', {
+        encoding: 'utf-8'
+      })
     );
 
     expect(
