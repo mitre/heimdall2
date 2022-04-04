@@ -182,18 +182,18 @@ function consolidate(
       id: id,
       title: `${titlePrefix}${_.uniq(group.map((d) => d.title)).join(';')}`,
       tags: _.mergeWith(
-          {},
-          ...group.map((d) => d.tags),
-          (acc: unknown, cur: unknown) => {
-            if (acc === undefined || cur === undefined) {
-              return acc || cur;
-            } else if (_.isEqual(acc, cur)) {
-              return acc;
-            } else {
-              return _.uniq(_.concat([], acc, cur));
-            }
+        {},
+        ...group.map((d) => d.tags),
+        (acc: unknown, cur: unknown) => {
+          if (acc === undefined || cur === undefined) {
+            return acc || cur;
+          } else if (_.isEqual(acc, cur)) {
+            return acc;
+          } else {
+            return _.uniq(_.concat([], acc, cur));
           }
-        ),
+        }
+      ),
       impact: Math.max(...group.map((d) => d.impact)),
       desc: externalProductHandler(
         context,
@@ -570,7 +570,6 @@ function getTrivy(): Record<string, Function> {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 function getHDF2ASFF(): Record<string, Function> {
-  const TYPE_NIST_TAG = 'Tags/nist/';
   const replaceTypesSlashes = <T>(type: T): T | string => {
     if (!_.isString(type)) {
       return type;
@@ -578,19 +577,27 @@ function getHDF2ASFF(): Record<string, Function> {
     const FROM_ASFF_TYPES_SLASH_REPLACEMENT = /{{{SLASH}}}/gi; // The "Types" field of ASFF only supports a maximum of 2 slashes, and will get replaced with this text. Note that the default AWS CLI doesn't support UTF-8 encoding
     return type.replace(FROM_ASFF_TYPES_SLASH_REPLACEMENT, '/');
   };
-  const getFilteredTypes = (
-    finding: unknown,
-    {
-      startsWith = [''],
-      doesNotStartWith = []
-    }: {startsWith?: string[]; doesNotStartWith?: string[]} = {}
-  ): string[] => {
-    return _.filter(
-      _.get(finding, 'FindingProviderFields.Types'),
-      (type) =>
-        _.some(startsWith, (beginning) => _.startsWith(type, beginning)) &&
-        _.every(doesNotStartWith, (beginning) => !_.startsWith(type, beginning))
-    );
+  const objectifyTypesArray = (
+    typesArray: string[] | Record<string, unknown>
+  ): Record<string, Record<string, unknown>> => {
+    if (!Array.isArray(typesArray)) {
+      typesArray = _.get(typesArray, 'FindingProviderFields.Types') as string[];
+    }
+    const ret = {};
+    for (const typeString of typesArray) {
+      _.merge(
+        ret,
+        ((): Record<string, unknown> => {
+          const [type, attribute, value] = typeString.split('/');
+          let parsed = replaceTypesSlashes(value);
+          try {
+            parsed = JSON.parse(parsed);
+          } catch {}
+          return {[type]: {[attribute]: parsed}};
+        })()
+      );
+    }
+    return ret;
   };
   const findExecutionFindingIndex = (
     asffOrFindings: Record<string, unknown> | Record<string, unknown>[]
@@ -624,42 +631,6 @@ function getHDF2ASFF(): Record<string, Function> {
     });
     return docsClone;
   };
-  const findingByTopLevelObject = (
-    finding: unknown,
-    {
-      startsWith = [''],
-      doesNotStartWith = []
-    }: {startsWith?: string[]; doesNotStartWith?: string[]} = {}
-  ): Record<string, unknown> => {
-    return _.reduce(
-      getFilteredTypes(finding, {
-        startsWith: startsWith,
-        doesNotStartWith: doesNotStartWith
-      }),
-      (acc: Record<string, unknown>, cur: string) => {
-        const [, category, classifier] = cur.split('/');
-        // need to handle situations where unencoded strings are passed through as well as valid json
-        let parsed = replaceTypesSlashes(classifier);
-        try {
-          parsed = JSON.parse(parsed);
-        } catch {}
-        return {
-          ...acc,
-          [replaceTypesSlashes(category)]: parsed
-        };
-      },
-      {}
-    );
-  };
-  const findingNistTag = (finding: unknown): string[] => {
-    return JSON.parse(
-      _.replace(
-        getFilteredTypes(finding, {startsWith: [TYPE_NIST_TAG]})[0],
-        TYPE_NIST_TAG,
-        ''
-      )
-    );
-  };
   const productName = (
     findings: Record<string, unknown> | Record<string, unknown>[]
   ): string => {
@@ -688,11 +659,7 @@ function getHDF2ASFF(): Record<string, Function> {
       ).split('/')[0]
     );
     const finding = findingInfo[0];
-    return `${target}_${
-      getFilteredTypes(finding, {startsWith: ['File/Input/']})[0]
-        .split('/')
-        .slice(-1)[0]
-    }`;
+    return `${target}_${_.get(objectifyTypesArray(finding), 'File.Input')}`;
   };
   const mapping = (
     context: ASFFMapper
@@ -701,139 +668,37 @@ function getHDF2ASFF(): Record<string, Function> {
       context.supportingDocs.get(SpecialCasing.HDF2ASFF),
       'execution'
     );
-    // NOTE: waiting on inspecjs to include passthrough as a potential value in the type
-    /*
-      const passthroughTag = getFilteredTypes(execution, {startsWith: ['Execution/passthrough/']});
-*/
-    const profileNames = _.chain(
-      getFilteredTypes(execution, {
-        doesNotStartWith: ['MITRE', 'File', 'Execution']
-      })
-    )
-      .map((type) => type.split('/')[0])
-      .uniq()
-      .value();
+    const executionTypes = objectifyTypesArray(execution as Record<string, unknown>);
+    const profileNames = Object.keys(executionTypes).filter((type) => !(['MITRE', 'File', 'Execution'].includes(type)));
     const ret = {
-      platform: JSON.parse(
-        getFilteredTypes(execution, {
-          startsWith: ['Execution/platform/']
-        })[0]
-          .split('/')
-          .slice(2)[0]
-      ),
-      version: getFilteredTypes(execution, {
-        startsWith: ['Execution/version/']
-      })[0]
-        .split('/')
-        .slice(2)[0],
-      statistics: JSON.parse(
-        getFilteredTypes(execution, {
-          startsWith: ['Execution/statistics/']
-        })[0]
-          .split('/')
-          .slice(2)[0]
-      ),
+      platform: _.get(executionTypes, 'Execution.platform') as unknown as ExecJSON.Platform,
+      version: _.get(executionTypes, 'Execution.version') as unknown as string,
+      statistics: _.get(executionTypes, 'Execution.statistics') as unknown as ExecJSON.Statistics,
       /*
-     ...(passthroughTag.length > 0 && {
-     passthrough: JSON.parse(passthroughTag[0].split('/').slice(2)[0])
-     }),
-     */
+      NOTE: waiting on inspecjs to include passthrough as a potential value in the type
+      ...(_.has(executionTypes, 'Execution.passthrough') && {passthrough: _.get(executionTypes, 'Execution.passthrough')}),
+      */
       profiles: _.map(profileNames, (profileName: string, index: number) => {
         // order could be incorrect since we're only doing it via index instead of mapping the depends tree properly
         return {
-          name:
-            replaceTypesSlashes(
-              getFilteredTypes(execution, {
-                startsWith: [`${profileName}/name/`]
-              })[0]
-                ?.split('/')
-                .slice(2)[0]
-            ) ?? 'AWS Security Finding Format',
-          version:
-            replaceTypesSlashes(
-              getFilteredTypes(execution, {
-                startsWith: [`${profileName}/version/`]
-              })[0]
-                ?.split('/')
-                .slice(2)[0]
-            ) ?? '',
-          title:
-            replaceTypesSlashes(
-              getFilteredTypes(execution, {
-                startsWith: [`${profileName}/title/`]
-              })[0]
-                ?.split('/')
-                .slice(2)[0]
-            ) ?? 'ASFF Findings',
-          maintainer:
-            replaceTypesSlashes(
-              getFilteredTypes(execution, {
-                startsWith: [`${profileName}/maintainer/`]
-              })[0]
-                ?.split('/')
-                .slice(2)[0]
-            ) ?? null,
-          summary:
-            replaceTypesSlashes(
-              getFilteredTypes(execution, {
-                startsWith: [`${profileName}/summary/`]
-              })[0]
-                ?.split('/')
-                .slice(2)[0]
-            ) ?? '',
-          license:
-            replaceTypesSlashes(
-              getFilteredTypes(execution, {
-                startsWith: [`${profileName}/license/`]
-              })[0]
-                ?.split('/')
-                .slice(2)[0]
-            ) ?? null,
-          copyright:
-            replaceTypesSlashes(
-              getFilteredTypes(execution, {
-                startsWith: [`${profileName}/copyright/`]
-              })[0]
-                ?.split('/')
-                .slice(2)[0]
-            ) ?? null,
-          copyright_email:
-            replaceTypesSlashes(
-              getFilteredTypes(execution, {
-                startsWith: [`${profileName}/copyright_email/`]
-              })[0]
-                ?.split('/')
-                .slice(2)[0]
-            ) ?? null,
-          supports: JSON.parse(
-            replaceTypesSlashes(
-              getFilteredTypes(execution, {
-                startsWith: [`${profileName}/supports/`]
-              })[0]
-                ?.split('/')
-                .slice(2)[0]
-            ) ?? '[]'
-          ),
-          attributes: JSON.parse(
-            replaceTypesSlashes(
-              getFilteredTypes(execution, {
-                startsWith: [`${profileName}/attributes/`]
-              })[0]
-                ?.split('/')
-                .slice(2)[0]
-            ) ?? '[]'
-          ),
-          depends: JSON.parse(
-            replaceTypesSlashes(
-              getFilteredTypes(execution, {
-                startsWith: [`${profileName}/depends/`]
-              })[0]
-                ?.split('/')
-                .slice(2)[0]
-            ) ?? '[]'
-          ),
+          name: _.get(executionTypes, `${profileName}.name`),
+          ...(_.has(executionTypes, `${profileName}.version`) && {version: _.get(executionTypes, `${profileName}.version`)}),
+          ...(_.has(executionTypes, `${profileName}.title`) && {title: _.get(executionTypes, `${profileName}.title`)}),
+          ...(_.has(executionTypes, `${profileName}.maintainer`) && {maintainer: _.get(executionTypes, `${profileName}.maintainer`)}),
+          ...(_.has(executionTypes, `${profileName}.summary`) && {summary: _.get(executionTypes, `${profileName}.summary`)}),
+          ...(_.has(executionTypes, `${profileName}.license`) && {license: _.get(executionTypes, `${profileName}.license`)}),
+          ...(_.has(executionTypes, `${profileName}.copyright`) && {copyright: _.get(executionTypes, `${profileName}.copyright`)}),
+          ...(_.has(executionTypes, `${profileName}.copyright_email`) && {copyright_email: _.get(executionTypes, `${profileName}.copyright_email`)}),
+          supports: _.get(executionTypes, `${profileName}.supports`, []) as ExecJSON.SupportedPlatform[],
+          attributes: _.get(executionTypes, `${profileName}.attributes`, []) as Record<string, unknown>[],
+          ...(_.has(executionTypes, `${profileName}.depends`) && {depends: _.get(executionTypes, `${profileName}.depends`) as any}),
           groups: [],
-          status: 'loaded',
+          ...(_.has(executionTypes, `${profileName}.status`) && {status: _.get(executionTypes, `${profileName}.status`)}),
+          ...(_.has(executionTypes, `${profileName}.description`) && {description: _.get(executionTypes, `${profileName}.description`)}),
+          ...(_.has(executionTypes, `${profileName}.inspec_version`) && {inspec_version: _.get(executionTypes, `${profileName}.inspec_version`)}),
+          ...(_.has(executionTypes, `${profileName}.parent_profile`) && {parent_profile: _.get(executionTypes, `${profileName}.parent_profile`)}),
+          ...(_.has(executionTypes, `${profileName}.skip_message`) && {skip_message: _.get(executionTypes, `${profileName}.skip_message`)}),
+          ...(_.has(executionTypes, `${profileName}.status_message`) && {status_message: _.get(executionTypes, `${profileName}.status_message`)}),
           controls: consolidate(
             context,
             ((): ExecJSON.Control[] => {
@@ -845,48 +710,17 @@ function getHDF2ASFF(): Record<string, Function> {
               return _.map(
                 _.get(context.data, 'Findings') as Record<string, unknown>[],
                 (finding: Record<string, unknown>) => {
+                  const findingTypes = objectifyTypesArray(finding);
                   return {
-                    id:
-                      replaceTypesSlashes(
-                        getFilteredTypes(finding, {
-                          startsWith: ['Control/ID/']
-                        })[0]
-                          ?.split('/')
-                          .slice(2)[0]
-                      ) ?? '',
-                    title:
-                      replaceTypesSlashes(
-                        getFilteredTypes(finding, {
-                          startsWith: ['Control/Title/']
-                        })[0]
-                          ?.split('/')
-                          .slice(2)[0]
-                      ) ?? '',
-                    desc:
-                      replaceTypesSlashes(
-                        getFilteredTypes(finding, {
-                          startsWith: ['Control/Desc/']
-                        })[0]
-                          ?.split('/')
-                          .slice(2)[0]
-                      ) ?? '',
-                    impact: JSON.parse(
-                      replaceTypesSlashes(
-                        getFilteredTypes(finding, {
-                          startsWith: ['Control/Impact/']
-                        })[0]
-                          ?.split('/')
-                          .slice(2)[0]
-                      ) ?? '0'
-                    ),
+                    id: _.get(findingTypes, 'Control.ID') as unknown as string,
+                    ...(_.has(findingTypes, 'Control.Title') && {title: _.get(findingTypes, 'Control.Title') as unknown as string}),
+                    ...(_.has(findingTypes, 'Control.Desc') && {desc: _.get(findingTypes, 'Control.Desc') as unknown as string}),
+                    impact: _.get(findingTypes, 'Control.Impact') as unknown as number,
                     tags: {
-                      ...findingByTopLevelObject(finding, {
-                        startsWith: ['Tags/'],
-                        doesNotStartWith: [TYPE_NIST_TAG]
-                      }),
+                      ..._.omit(_.get(findingTypes, 'Tags'), ['nist']),
                       nist: ((): string[] => {
-                        const nisttags = findingNistTag(finding);
-                        if (nisttags.length === 0) {
+                        const nisttags = _.get(findingTypes, 'Tags.nist') as unknown as undefined | string[];
+                        if (nisttags === undefined || nisttags.length === 0) {
                           return DEFAULT_NIST_TAG;
                         } else {
                           return nisttags;
@@ -895,68 +729,22 @@ function getHDF2ASFF(): Record<string, Function> {
                     },
                     descriptions: _.map(
                       Object.entries(
-                        findingByTopLevelObject(finding, {
-                          startsWith: ['Descriptions/']
-                        })
+                        _.get(findingTypes, 'Descriptions')
                       ),
                       ([key, value]) => ({label: key, data: value as string})
                     ),
-                    refs: JSON.parse(
-                      replaceTypesSlashes(
-                        getFilteredTypes(finding, {
-                          startsWith: ['Control/Refs/']
-                        })[0]
-                          ?.split('/')
-                          .slice(2)[0]
-                      ) ?? '[]'
-                    ),
-                    source_location: JSON.parse(
-                      replaceTypesSlashes(
-                        getFilteredTypes(finding, {
-                          startsWith: ['Control/Source_Location/']
-                        })[0]
-                          ?.split('/')
-                          .slice(2)[0]
-                      ) ?? '{}'
-                    ),
-                    waiver_data: JSON.parse(
-                      replaceTypesSlashes(
-                        getFilteredTypes(finding, {
-                          startsWith: ['Control/Waiver_Data/']
-                        })[0]
-                          ?.split('/')
-                          .slice(2)[0]
-                      ) ?? '{}'
-                    ),
-                    code: '', // potentially just to empty string but otherwise gonna need to extract out of here per profile
-                    // very brittle since depends on profile indexes instead of finding the baseline profile
+                    refs: _.get(findingTypes, 'Control.Refs', []) as ExecJSON.Reference[],
+                    source_location: _.get(findingTypes, 'Control.Source_Location', {}) as ExecJSON.SourceLocation,
+                    ...(_.has(findingTypes, 'Control.Waiver_Data') && {waiver_data: _.get(findingTypes, 'Control.Waiver_Data') as unknown as ExecJSON.ControlWaiverData}),
+                    code: '', // empty string for now but gonna need to extract out of here per profile
+                    // very brittle since depends on profile indexes instead of finding the baseline profile - need to do research, but could be as simple as finding the profile without any values in its depends array
                     results:
                       index === profileNames.length - 1
                         ? [
                             {
-                              code_desc:
-                                replaceTypesSlashes(
-                                  getFilteredTypes(finding, {
-                                    startsWith: ['Segment/code_desc/']
-                                  })[0]
-                                    ?.split('/')
-                                    .slice(2)[0]
-                                ) ?? '',
-                              start_time:
-                                replaceTypesSlashes(
-                                  getFilteredTypes(finding, {
-                                    startsWith: ['Segment/start_time/']
-                                  })[0]
-                                    ?.split('/')
-                                    .slice(2)[0]
-                                ) ?? '',
-                              ...findingByTopLevelObject(finding, {
-                                startsWith: ['Segment/'],
-                                doesNotStartWith: [
-                                  'Segment/code_desc',
-                                  'Segment/start_time'
-                                ]
-                              })
+                              code_desc: _.get(findingTypes, 'Segment.code_desc') as unknown as string,
+                              start_time: _.get(findingTypes, 'Segment.start_time') as unknown as string,
+                              ..._.omit(_.get(findingTypes, 'Segment'), ['code_desc', 'start_time'])
                             }
                           ]
                         : []
@@ -966,14 +754,7 @@ function getHDF2ASFF(): Record<string, Function> {
             })(),
             context.data
           ),
-          sha256:
-            replaceTypesSlashes(
-              getFilteredTypes(execution, {
-                startsWith: [`${profileName}/sha256/`]
-              })[0]
-                ?.split('/')
-                .slice(2)[0]
-            ) ?? ''
+          sha256: _.get(executionTypes, `${profileName}.sha256`)
         };
       })
     };
