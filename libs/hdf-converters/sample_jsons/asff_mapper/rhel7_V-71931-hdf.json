@@ -599,9 +599,9 @@
           }
         }
       ],
-      "depends": [],
       "groups": [],
       "status": "loaded",
+      "status_message": "",
       "controls": [
         {
           "id": "V-71931",
@@ -662,7 +662,7 @@
           ]
         }
       ],
-      "sha256": "832e791f70ad75edcee09ac49661c06ffcf1351fd9e6bbbc7c8483a661ba8b6c"
+      "sha256": "e40634204851d548d8de1c14d343aead0c67a92b6f0fa6b8b5f16e1a596929a6"
     }
   ]
 }

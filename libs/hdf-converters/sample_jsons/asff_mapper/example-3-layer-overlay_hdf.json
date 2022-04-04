@@ -15,7 +15,6 @@
       "maintainer": "Example project2",
       "summary": "Example InSpec profile using dependency feature, aka 'overlay'",
       "license": "Apache-2.0",
-      "copyright": null,
       "copyright_email": ".",
       "supports": [],
       "attributes": [],
@@ -28,6 +27,7 @@
       ],
       "groups": [],
       "status": "loaded",
+      "status_message": "",
       "controls": [
         {
           "id": "V-94843",
@@ -11743,7 +11743,7 @@
           "results": []
         }
       ],
-      "sha256": "2af986570a86803a985111e2944b8dbb5ea433360814e97750fc9165099b79aa"
+      "sha256": "414fe0c13b9cef2a052b943a05827350144d46239228fa719c4a195cfd3c72bd"
     },
     {
       "name": "example-inspec-overlay-profile-against-rhel7-stig-baseline-profile",
@@ -11752,7 +11752,6 @@
       "maintainer": "Example project",
       "summary": "Example InSpec profile using dependency feature, aka 'overlay'",
       "license": "Apache-2.0",
-      "copyright": null,
       "copyright_email": ".",
       "supports": [],
       "attributes": [],
@@ -11765,6 +11764,8 @@
       ],
       "groups": [],
       "status": "loaded",
+      "parent_profile": "second-layer-example-inspec-overlay-profile-against-1st-layer-example-inspec-overlay-profile",
+      "status_message": "",
       "controls": [
         {
           "id": "V-94843",
@@ -23480,7 +23481,7 @@
           "results": []
         }
       ],
-      "sha256": "828ea4c96d3b4d2a52e0b4a7bef1d13900ec8a41407231e03aa72f6ab6281566"
+      "sha256": "fa606e08c15abda361b02bd9294433561f9602abaed7fbed3c1e12396081f31a"
     },
     {
       "name": "redhat-enterprise-linux-7-stig-baseline",
@@ -24073,9 +24074,10 @@
           }
         }
       ],
-      "depends": [],
       "groups": [],
       "status": "loaded",
+      "parent_profile": "example-inspec-overlay-profile-against-rhel7-stig-baseline-profile",
+      "status_message": "",
       "controls": [
         {
           "id": "V-94843",
@@ -40548,7 +40550,7 @@
           ]
         }
       ],
-      "sha256": "0b2767a00419bad100a5464455d79a80dd92705476187f841a34da7002537dc0"
+      "sha256": "7b2ff78c4070a54e15725da59ff7ddb7be0ea0cf949ba2bc8ee6e045f890c5fb"
     }
   ]
 }
