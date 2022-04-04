@@ -671,6 +671,7 @@ function getHDF2ASFF(): Record<string, Function> {
     const executionTypes = objectifyTypesArray(execution as Record<string, unknown>);
     const profileNames = Object.keys(executionTypes).filter((type) => !(['MITRE', 'File', 'Execution'].includes(type)));
     const ret = {
+      shortcircuit: true,
       platform: _.get(executionTypes, 'Execution.platform') as unknown as ExecJSON.Platform,
       version: _.get(executionTypes, 'Execution.version') as unknown as string,
       statistics: _.get(executionTypes, 'Execution.statistics') as unknown as ExecJSON.Statistics,

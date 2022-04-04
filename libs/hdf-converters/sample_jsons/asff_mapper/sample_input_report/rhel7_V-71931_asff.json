@@ -8,7 +8,7 @@
       "Software and Configuration Checks"
     ],
     "CreatedAt": "2022-03-31T23:43:55+00:00",
-    "UpdatedAt": "2022-04-04T10:14:27.147Z",
+    "UpdatedAt": "2022-04-04T16:39:30.536Z",
     "GeneratorId": "arn:aws:securityhub:us-east-2:12345678910:ruleset/set/redhat-enterprise-linux-7-stig-baseline/rule/V-71931",
     "Title": "V-71931 | [IA-5 (1) (d)] | The Red Hat Enterprise Linux operating system must be configured so that existing passwords are restricted to a 60-day maximum lifetime.",
     "Description": "Any password, no matter how complex, can eventually be cracked. Therefore, passwords need to be changed periodically. If the operating system does not limit the lifetime of passwords and force users to change their passwords, there is the risk that the operating system passwords could be compromised. -- Check Text: Check whether the maximum time period for existing passwords is restricted to 60 days.   # awk -F: '$5 > 60 {print $1 \" \" $5}' /etc/shadow   If any results are returned that are not associated with a system account, this is a finding.",
@@ -90,7 +90,7 @@
       "Software and Configuration Checks"
     ],
     "CreatedAt": "2022-03-31T23:43:55+00:00",
-    "UpdatedAt": "2022-04-04T10:14:27.148Z",
+    "UpdatedAt": "2022-04-04T16:39:30.537Z",
     "GeneratorId": "arn:aws:securityhub:us-east-2:12345678910:ruleset/set/redhat-enterprise-linux-7-stig-baseline/rule/V-71931",
     "Title": "V-71931 | [IA-5 (1) (d)] | The Red Hat Enterprise Linux operating system must be configured so that existing passwords are restricted to a 60-day maximum lifetime.",
     "Description": "Any password, no matter how complex, can eventually be cracked. Therefore, passwords need to be changed periodically. If the operating system does not limit the lifetime of passwords and force users to change their passwords, there is the risk that the operating system passwords could be compromised. -- Check Text: Check whether the maximum time period for existing passwords is restricted to 60 days.   # awk -F: '$5 > 60 {print $1 \" \" $5}' /etc/shadow   If any results are returned that are not associated with a system account, this is a finding.",
@@ -171,8 +171,8 @@
     "GeneratorId": "arn:aws:securityhub:us-east-2:12345678910:ruleset/set/redhat-enterprise-linux-7-stig-baseline",
     "AwsAccountId": "12345678910",
     "CreatedAt": "2022-03-31T23:43:55.000Z",
-    "UpdatedAt": "2022-04-04T10:14:27.150Z",
-    "Title": "this-is-a-test | redhat-enterprise-linux-7-stig-baseline | 2022-04-04 06:14:27 GMT-0400",
+    "UpdatedAt": "2022-04-04T16:39:30.539Z",
+    "Title": "this-is-a-test | redhat-enterprise-linux-7-stig-baseline | 2022-04-04 12:39:30 GMT-0400",
     "Description": "Passed: 0 (0 individual checks passed) --- Failed: 1 (1 individual checks failed out of 2 total checks) --- Not Applicable: 0 (System exception or absent component) --- Not Reviewed: 0 (Can only be tested manually at this time)",
     "Severity": {
       "Label": "INFORMATIONAL"
