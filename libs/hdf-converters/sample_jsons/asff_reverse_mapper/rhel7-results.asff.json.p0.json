@@ -6,8 +6,8 @@
     "GeneratorId": "arn:aws:securityhub:us-east-2:12345678910:ruleset/set/disa_stig-el7",
     "AwsAccountId": "12345678910",
     "CreatedAt": "2019-11-04T21:17:17.000Z",
-    "UpdatedAt": "2022-04-01T02:29:22.680Z",
-    "Title": "reverse-proxy | disa_stig-el7 | 2022-03-31 10:29:22 GMT-0400",
+    "UpdatedAt": "2022-04-04T03:09:25.610Z",
+    "Title": "reverse-proxy | disa_stig-el7 | 2022-04-03 11:09:25 GMT-0400",
     "Description": "Passed: 78 (202 individual checks passed) --- Failed: 149 (122 individual checks failed out of 518 total checks) --- Not Applicable: 10 (System exception or absent component) --- Not Reviewed: 6 (Can only be tested manually at this time)",
     "Severity": {
       "Label": "INFORMATIONAL"
@@ -31,7 +31,8 @@
         "disa_stig-el7/copyright_email/simp-dev@googlegroups.com",
         "disa_stig-el7/name/disa_stig-el7",
         "disa_stig-el7/title/DISA RedHat Enterprise Linux 7 STIG - v1r4",
-        "disa_stig-el7/inputs/[]"
+        "disa_stig-el7/supports/[]",
+        "disa_stig-el7/attributes/[]"
       ]
     },
     "Resources": [

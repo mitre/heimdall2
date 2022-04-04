@@ -181,23 +181,19 @@ function consolidate(
       // Add productName to ID if any ID's are the same across products
       id: id,
       title: `${titlePrefix}${_.uniq(group.map((d) => d.title)).join(';')}`,
-      tags: (() => {
-        const ret = _.mergeWith(
-        {},
-        ...group.map((d) => d.tags),
-        (acc: unknown, cur: unknown) => {
-          if (acc === undefined || cur === undefined) {
-            return acc || cur;
-          } else if (_.isEqual(acc, cur)) {
-            return acc;
-          } else {
-            return _.uniq(_.concat([], acc, cur));
+      tags: _.mergeWith(
+          {},
+          ...group.map((d) => d.tags),
+          (acc: unknown, cur: unknown) => {
+            if (acc === undefined || cur === undefined) {
+              return acc || cur;
+            } else if (_.isEqual(acc, cur)) {
+              return acc;
+            } else {
+              return _.uniq(_.concat([], acc, cur));
+            }
           }
-        }
-      );
-      console.log('posttag', ret);
-      return ret;
-      })(),
+        ),
       impact: Math.max(...group.map((d) => d.impact)),
       desc: externalProductHandler(
         context,
@@ -809,11 +805,19 @@ function getHDF2ASFF(): Record<string, Function> {
                 ?.split('/')
                 .slice(2)[0]
             ) ?? null,
-          supports: [],
+          supports: JSON.parse(
+            replaceTypesSlashes(
+              getFilteredTypes(execution, {
+                startsWith: [`${profileName}/supports/`]
+              })[0]
+                ?.split('/')
+                .slice(2)[0]
+            ) ?? '[]'
+          ),
           attributes: JSON.parse(
             replaceTypesSlashes(
               getFilteredTypes(execution, {
-                startsWith: [`${profileName}/inputs/`]
+                startsWith: [`${profileName}/attributes/`]
               })[0]
                 ?.split('/')
                 .slice(2)[0]
@@ -881,14 +885,13 @@ function getHDF2ASFF(): Record<string, Function> {
                         doesNotStartWith: [TYPE_NIST_TAG]
                       }),
                       nist: ((): string[] => {
-                          const nisttags = findingNistTag(finding);
-                          console.log('nisttags', nisttags);
-                          if (nisttags.length === 0) {
-                            return DEFAULT_NIST_TAG;
-                          } else {
-                            return nisttags;
-                          }
-                        })()
+                        const nisttags = findingNistTag(finding);
+                        if (nisttags.length === 0) {
+                          return DEFAULT_NIST_TAG;
+                        } else {
+                          return nisttags;
+                        }
+                      })()
                     },
                     descriptions: _.map(
                       Object.entries(
@@ -974,7 +977,7 @@ function getHDF2ASFF(): Record<string, Function> {
         };
       })
     };
-    console.log(ret['profiles'][0]['controls'][0]['tags']);
+    console.log(ret);
     return ret;
   };
   return {

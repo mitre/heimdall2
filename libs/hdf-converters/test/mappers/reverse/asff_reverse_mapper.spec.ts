@@ -2,7 +2,7 @@ import fs from 'fs';
 import {FromHdfToAsffMapper} from '../../../src/converters-from-hdf/asff/reverse-asff-mapper';
 import {omitASFFTimes, omitASFFTitle, omitASFFVersions} from '../../utils';
 
-describe('Describe ASFF Reverse Mapper', () => {
+describe('ASFF Reverse Mapper', () => {
   it('Successfully converts HDF into ASFF', () => {
     const inputData = JSON.parse(
       fs.readFileSync(

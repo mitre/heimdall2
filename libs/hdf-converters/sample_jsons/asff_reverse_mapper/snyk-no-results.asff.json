@@ -5,9 +5,9 @@
     "ProductArn": "arn:aws:securityhub:us-east-2:12345678910:product/12345678910/default",
     "GeneratorId": "arn:aws:securityhub:us-east-2:12345678910:ruleset/set/# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.22.1\nignore: {}\npatch: {}\n",
     "AwsAccountId": "12345678910",
-    "CreatedAt": "2022-03-08T21:24:34.162Z",
-    "UpdatedAt": "2022-03-08T21:24:34.163Z",
-    "Title": "storybook-link | # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.22.1\nignore: {}\npatch: {}\n | 2022-03-08 04:24:34 GMT-0500",
+    "CreatedAt": "2022-04-04T03:09:25.712Z",
+    "UpdatedAt": "2022-04-04T03:09:25.713Z",
+    "Title": "storybook-link | # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.22.1\nignore: {}\npatch: {}\n | 2022-04-03 11:09:25 GMT-0400",
     "Description": "Passed: 0 (0 individual checks passed) --- Failed: 0 (0 individual checks failed out of 0 total checks) --- Not Applicable: 0 (System exception or absent component) --- Not Reviewed: 0 (Can only be tested manually at this time)",
     "Severity": {
       "Label": "INFORMATIONAL"
@@ -17,6 +17,7 @@
         "Label": "INFORMATIONAL"
       },
       "Types": [
+        "MITRE/SAF/2.6.20-hdf2asff",
         "File/Input/snyk-no-results.json",
         "Execution/platform/{\"name\":\"Heimdall Tools\",\"release\":\"2.6.9\",\"target_id\":\"storybook-link\"}",
         "Execution/statistics/{\"duration\":null}",
@@ -31,7 +32,8 @@
         "# Snyk (https:{{{SLASH}}}{{{SLASH}}}snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.22.1\nignore: {}\npatch: {}\n/name/# Snyk (https:{{{SLASH}}}{{{SLASH}}}snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.22.1\nignore: {}\npatch: {}\n",
         "# Snyk (https:{{{SLASH}}}{{{SLASH}}}snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.22.1\nignore: {}\npatch: {}\n/title/Snyk Project: storybook-link",
         "# Snyk (https:{{{SLASH}}}{{{SLASH}}}snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.22.1\nignore: {}\npatch: {}\n/depends/[]",
-        "# Snyk (https:{{{SLASH}}}{{{SLASH}}}snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.22.1\nignore: {}\npatch: {}\n/inputs/[]"
+        "# Snyk (https:{{{SLASH}}}{{{SLASH}}}snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.22.1\nignore: {}\npatch: {}\n/supports/[]",
+        "# Snyk (https:{{{SLASH}}}{{{SLASH}}}snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.22.1\nignore: {}\npatch: {}\n/attributes/[]"
       ]
     },
     "Resources": [

@@ -91,9 +91,31 @@ describe('ASFF Mapper', () => {
   });
 
   it('Successfully converts HDF2ASFF', () => {
-    const mapper = new Mapper(
+    let mapper = new Mapper(
       fs.readFileSync(
-        'sample_jsons/asff_mapper/sample_input_report/example-3-layer-rh7-overlay-asff.json',
+        'sample_jsons/asff_mapper/sample_input_report/rhel7_V-71931_asff.json',
+        {encoding: 'utf-8'}
+      )
+    );
+    expect(
+      omitVersions(
+        mapper.toHdf()['this-is-a-test_rhel7_V-71931.json']
+      )
+    ).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/asff_mapper/rhel7_V-71931-hdf.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
+        )
+      )
+    );
+    mapper = new Mapper(
+      fs.readFileSync(
+        'sample_jsons/asff_mapper/sample_input_report/example-3-layer-overlay_asff.json',
         {encoding: 'utf-8'}
       )
     );
@@ -105,7 +127,7 @@ describe('ASFF Mapper', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync(
-            'sample_jsons/asff_mapper/example-3-layer-rh7-overlay-hdf.json',
+            'sample_jsons/asff_mapper/example-3-layer-overlay_hdf.json',
             {
               encoding: 'utf-8'
             }

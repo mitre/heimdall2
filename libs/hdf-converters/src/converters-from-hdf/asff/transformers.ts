@@ -28,8 +28,8 @@ type Counts = {
   NotReviewed: number;
 };
 
-export function escapeForwardSlashes(s: string): string {
-  return s.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT);
+export function escapeForwardSlashes<T>(s: T): T {
+  return _.isString(s) ? s.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT) as unknown as T : s;
 }
 
 export function getRunTime(hdf: ExecJSON.Execution): string {
@@ -471,7 +471,9 @@ function createProfileInfoFindingFields(
       'copyright_email',
       'name',
       'title',
-      'depends'
+      'depends',
+      'supports',
+      'attributes'
     ];
     targets.forEach((target) => {
       const value = _.get(profile, target);
@@ -489,17 +491,6 @@ function createProfileInfoFindingFields(
         );
       }
     });
-    const inputs: Record<string, unknown>[] = [];
-    profile.attributes.forEach((input) => {
-      if (input.options.value) {
-        inputs.push({[input.name]: input.options.value});
-      }
-    });
-    typesArr.push(
-      `${escapeForwardSlashes(profile.name)}/inputs/${escapeForwardSlashes(
-        JSON.stringify(inputs)
-      )}`
-    );
   });
   typesArr = typesArr.slice(0, 50);
   return typesArr;
@@ -518,10 +509,11 @@ function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
     'status'
   ];
   targets.forEach((target) => {
-    const value = _.get(segment, target);
-    if (typeof value === 'string' && value) {
+    if (_.has(segment, target)) {
       typesArr.push(
-        `Segment/${escapeForwardSlashes(target)}/${escapeForwardSlashes(value)}`
+        `Segment/${escapeForwardSlashes(target)}/${escapeForwardSlashes(
+          _.get(segment, target)
+        )}`
       );
     }
   });
