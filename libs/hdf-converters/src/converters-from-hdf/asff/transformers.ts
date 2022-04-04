@@ -200,7 +200,7 @@ export function sliceIntoChunks(arr: any[], chunkSize: number): any[][] {
 // Gets rid of extra spacing + newlines as these aren't shown in Security Hub
 export function cleanText(text?: string | null): string | undefined {
   if (text) {
-    return text.replace(/  +/g, ' ').replace(/\r?\n|\r/g, ' ');
+    return text.replace(/  +/g, ' ');
   } else {
     return undefined;
   }
@@ -258,6 +258,9 @@ function cleanObjectValues<T>(value: T): boolean {
 export function createCode(
   control: ExecJSON.Control & {profileInfo?: Record<string, unknown>}
 ) {
+  if (!control.code) {
+    console.log(control.profileInfo);
+  }
   return `=========================================================\n# Profile name: ${
     control.profileInfo?.name
   }\n=========================================================\n\n${
@@ -485,7 +488,7 @@ function createProfileInfoFindingFields(
     ];
     targets.forEach((target) => {
       const value = _.get(profile, target);
-      if (typeof value === 'string') {
+      if (typeof value === 'string' && value) {
         typesArr.push(
           `${escapeForwardSlashes(profile.name)}/${escapeForwardSlashes(
             target
@@ -518,11 +521,15 @@ function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
   ];
   targets.forEach((target) => {
     if (_.has(segment, target) && _.get(segment, target) !== undefined) {
-      typesArr.push(
-        `Segment/${escapeForwardSlashes(target)}/${escapeForwardSlashes(
-          _.get(segment, target)
-        )}`
-      );
+      if (_.get(segment, target) === '') {
+        typesArr.push(`Segment/${escapeForwardSlashes(target)}/''`);
+      } else {
+        typesArr.push(
+          `Segment/${escapeForwardSlashes(target)}/${escapeForwardSlashes(
+            _.get(segment, target)
+          )}`
+        );
+      }
     }
   });
   return typesArr;
@@ -586,8 +593,6 @@ export function setupFindingType(
 
   // Add control metadata to the Finding Provider Fields
   typesArr.push(...createControlMetadata(control));
-  // Add all layers of profile info to the Finding Provider Fields
-  typesArr.push(...createProfileInfo(context?.data));
   // Add segment/result information to Finding Provider Fields
   typesArr.push(...createSegmentInfo(control.result));
   // Add Tags to Finding Provider Fields
