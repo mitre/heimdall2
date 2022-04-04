@@ -373,14 +373,14 @@ function createControlMetadata(control: SegmentedControl) {
   if (control.desc) {
     types.push(`Control/Desc/${escapeForwardSlashes(control.desc)}`);
   }
-  if (control.refs && control.refs.length >= 1) {
+  if (control.refs && control.refs.length > 0) {
     types.push(
       `Control/Refs/${escapeForwardSlashes(JSON.stringify(control.refs))}`
     );
   }
   if (
     control.source_location &&
-    Object.keys(control.source_location).length >= 1
+    Object.keys(control.source_location).length > 0
   ) {
     types.push(
       `Control/Source_Location/${escapeForwardSlashes(
@@ -388,7 +388,7 @@ function createControlMetadata(control: SegmentedControl) {
       )}`
     );
   }
-  if (control.waiver_data && Object.keys(control.waiver_data).length >= 1) {
+  if (control.waiver_data && Object.keys(control.waiver_data).length > 0) {
     types.push(
       `Control/Waiver_Data/${escapeForwardSlashes(
         JSON.stringify(control.waiver_data)
@@ -473,7 +473,13 @@ function createProfileInfoFindingFields(
       'title',
       'depends',
       'supports',
-      'attributes'
+      'attributes',
+      'description',
+      'inspec_version',
+      'parent_profile',
+      'skip_message',
+      'status',
+      'status_message'
     ];
     targets.forEach((target) => {
       const value = _.get(profile, target);
