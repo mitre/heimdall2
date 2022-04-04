@@ -515,7 +515,7 @@ function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
     'status'
   ];
   targets.forEach((target) => {
-    if (_.has(segment, target)) {
+    if (_.has(segment, target) && _.get(segment, target) !== undefined) {
       typesArr.push(
         `Segment/${escapeForwardSlashes(target)}/${escapeForwardSlashes(
           _.get(segment, target)
