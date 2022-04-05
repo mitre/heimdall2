@@ -18,7 +18,7 @@
         "Original": "MEDIUM"
       },
       "Types": [
-        "MITRE/SAF/2.6.20-hdf2asff",
+        "MITRE/SAF/2.6.21-hdf2asff",
         "File/Input/rhel7_V-71931.json",
         "Control/Code/=========================================================\n# Profile name: redhat-enterprise-linux-7-stig-baseline\n=========================================================\n\ncontrol \"V-71931\" do\n  title \"The Red Hat Enterprise Linux operating system must be configured so\nthat existing passwords are restricted to a 60-day maximum lifetime.\"\n  desc  \"Any password, no matter how complex, can eventually be cracked.\nTherefore, passwords need to be changed periodically. If the operating system\ndoes not limit the lifetime of passwords and force users to change their\npasswords, there is the risk that the operating system passwords could be\ncompromised.\"\n  desc  \"rationale\", \"\"\n  desc  \"check\", \"\n    Check whether the maximum time period for existing passwords is restricted\nto 60 days.\n\n    # awk -F: '$5 > 60 {print $1 \" \" $5}' {{{SLASH}}}etc{{{SLASH}}}shadow\n\n    If any results are returned that are not associated with a system account,\nthis is a finding.\n\n  \"\n  desc  \"fix\", \"\n    Configure non-compliant accounts to enforce a 60-day maximum password\nlifetime restriction.\n\n    # chage -M 60 [user]\n  \"\n  impact 0.5\n  tag severity: nil\n  tag gtitle: \"SRG-OS-000076-GPOS-00044\"\n  tag gid: \"V-71931\"\n  tag rid: \"SV-86555r3_rule\"\n  tag stig_id: \"RHEL-07-010260\"\n  tag fix_id: \"F-78283r1_fix\"\n  tag cci: [\"CCI-000199\"]\n  tag nist: [\"IA-5 (1) (d)\"]\n\n  shadow.users.each do |user|\n    # filtering on non-system accounts (uid >= 1000)\n    next unless user(user).uid >= 1000\n    describe shadow.users(user) do\n      its('max_days.first.to_i') { should cmp <= 60 }\n    end\n  end\nend\n",
         "Control/ID/V-71931",
@@ -99,7 +99,7 @@
         "Original": "MEDIUM"
       },
       "Types": [
-        "MITRE/SAF/2.6.20-hdf2asff",
+        "MITRE/SAF/2.6.21-hdf2asff",
         "File/Input/rhel7_V-71931.json",
         "Control/Code/=========================================================\n# Profile name: redhat-enterprise-linux-7-stig-baseline\n=========================================================\n\ncontrol \"V-71931\" do\n  title \"The Red Hat Enterprise Linux operating system must be configured so\nthat existing passwords are restricted to a 60-day maximum lifetime.\"\n  desc  \"Any password, no matter how complex, can eventually be cracked.\nTherefore, passwords need to be changed periodically. If the operating system\ndoes not limit the lifetime of passwords and force users to change their\npasswords, there is the risk that the operating system passwords could be\ncompromised.\"\n  desc  \"rationale\", \"\"\n  desc  \"check\", \"\n    Check whether the maximum time period for existing passwords is restricted\nto 60 days.\n\n    # awk -F: '$5 > 60 {print $1 \" \" $5}' {{{SLASH}}}etc{{{SLASH}}}shadow\n\n    If any results are returned that are not associated with a system account,\nthis is a finding.\n\n  \"\n  desc  \"fix\", \"\n    Configure non-compliant accounts to enforce a 60-day maximum password\nlifetime restriction.\n\n    # chage -M 60 [user]\n  \"\n  impact 0.5\n  tag severity: nil\n  tag gtitle: \"SRG-OS-000076-GPOS-00044\"\n  tag gid: \"V-71931\"\n  tag rid: \"SV-86555r3_rule\"\n  tag stig_id: \"RHEL-07-010260\"\n  tag fix_id: \"F-78283r1_fix\"\n  tag cci: [\"CCI-000199\"]\n  tag nist: [\"IA-5 (1) (d)\"]\n\n  shadow.users.each do |user|\n    # filtering on non-system accounts (uid >= 1000)\n    next unless user(user).uid >= 1000\n    describe shadow.users(user) do\n      its('max_days.first.to_i') { should cmp <= 60 }\n    end\n  end\nend\n",
         "Control/ID/V-71931",
@@ -180,7 +180,7 @@
         "Label": "INFORMATIONAL"
       },
       "Types": [
-        "MITRE/SAF/2.6.20-hdf2asff",
+        "MITRE/SAF/2.6.21-hdf2asff",
         "File/Input/rhel7_V-71931.json",
         "Execution/platform/{\"name\":\"centos\",\"release\":\"7.9.2009\"}",
         "Execution/statistics/{\"duration\":0.029982749}",

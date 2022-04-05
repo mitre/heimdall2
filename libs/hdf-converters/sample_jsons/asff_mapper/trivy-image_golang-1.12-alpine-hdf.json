@@ -2,7 +2,7 @@
   "platform": {
     "name": "Heimdall Tools",
     "release": "2.6.20",
-    "target_id": ""
+    "target_id": "Aqua Security - Trivy"
   },
   "version": "2.6.20",
   "statistics": {

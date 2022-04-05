@@ -2,7 +2,7 @@
   "platform": {
     "name": "Heimdall Tools",
     "release": "2.6.8",
-    "target_id": ""
+    "target_id": "Prowler"
   },
   "version": "2.6.8",
   "statistics": {

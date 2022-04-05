@@ -2,7 +2,7 @@
   "platform": {
     "name": "Heimdall Tools",
     "release": "2.6.9",
-    "target_id": ""
+    "target_id": "AWS Foundational Security Best Practices v1.0.0"
   },
   "version": "2.6.9",
   "statistics": {
