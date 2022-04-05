@@ -8,7 +8,6 @@ const goodNginxResultsPath = '/static/samples/good_nginxresults.json';
 const owaspZapWebgoatPath = '/static/samples/owasp_zap_webgoat.json';
 const owaspZapZeroPath = '/static/samples/owasp_zap_zero.webappsecurity.json';
 const redhatBadPath = '/static/samples/red_hat_bad.json';
-const redhatGoodPath = '/static/samples/red_hat_good.json';
 const rhel7ResultsPath = '/static/samples/rhel7-results.json';
 const rhelCveVulnerabilityScanBaselineWithFailuresPath =
   '/static/samples/rhel_cve_vulnerability_scan_baseline_with_failures.json';
@@ -91,11 +90,6 @@ export const samples: Sample[] = [
     filename: 'Red Hat With Failing Tests',
     data: () => fetch(redhatBadPath),
     path: redhatBadPath
-  },
-  {
-    filename: 'Red Hat Clean Sample',
-    data: () => fetch(redhatGoodPath),
-    path: redhatGoodPath
   },
   {
     filename: 'Triple Overlay Example',
