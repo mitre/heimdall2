@@ -7,7 +7,7 @@ import Store from '@/store/store';
 import {Tag} from '@/types/models';
 import {read_file_async} from '@/utilities/async_util';
 import {
-  ASFFMapper,
+  ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
   DBProtectMapper,
   JfrogXrayMapper,
@@ -208,7 +208,9 @@ export class InspecIntake extends VuexModule {
       case 'jfrog':
         return new JfrogXrayMapper(convertOptions.data).toHdf();
       case 'asff':
-        return new ASFFMapper(convertOptions.data).toHdf();
+        return Object.values(
+          new ASFFResultsMapper(convertOptions.data).toHdf()
+        );
       case 'zap':
         return new ZapMapper(convertOptions.data).toHdf();
       case 'nikto':

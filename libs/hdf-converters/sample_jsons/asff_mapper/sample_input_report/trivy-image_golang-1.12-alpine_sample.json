@@ -6,7 +6,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.938789-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.938817-05:00",
       "Severity": {
@@ -20,7 +22,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-36159"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -28,7 +32,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-36159",
               "CVE Title": "",
@@ -51,7 +57,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.939264-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.939283-05:00",
       "Severity": {
@@ -65,7 +73,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-30139"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -73,7 +83,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-30139",
               "CVE Title": "",
@@ -96,7 +108,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.939735-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.939749-05:00",
       "Severity": {
@@ -110,7 +124,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-28831"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -118,7 +134,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-28831",
               "CVE Title": "busybox: invalid free or segmentation fault via malformed gzip data",
@@ -141,7 +159,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.939999-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.94001-05:00",
       "Severity": {
@@ -155,7 +175,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42378"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -163,7 +185,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42378",
               "CVE Title": "busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the getvar_i()",
@@ -186,7 +210,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.940267-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.940279-05:00",
       "Severity": {
@@ -200,7 +226,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42379"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -208,7 +236,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42379",
               "CVE Title": "busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the next_input_file()",
@@ -231,7 +261,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.940513-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.940524-05:00",
       "Severity": {
@@ -245,7 +277,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42380"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -253,7 +287,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42380",
               "CVE Title": "busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the clrvar()",
@@ -276,7 +312,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.940781-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.940792-05:00",
       "Severity": {
@@ -290,7 +328,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42381"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -298,7 +338,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42381",
               "CVE Title": "busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the hash_init()",
@@ -321,7 +363,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.941027-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.941038-05:00",
       "Severity": {
@@ -335,7 +379,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42382"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -343,7 +389,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42382",
               "CVE Title": "busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the getvar_s()",
@@ -366,7 +414,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.941291-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.941302-05:00",
       "Severity": {
@@ -380,7 +430,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42383"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -388,7 +440,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42383",
               "CVE Title": "busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the evaluate()",
@@ -411,7 +465,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.941549-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.941561-05:00",
       "Severity": {
@@ -425,7 +481,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42384"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -433,7 +491,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42384",
               "CVE Title": "busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the handle_special()",
@@ -456,7 +516,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.941804-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.941815-05:00",
       "Severity": {
@@ -470,7 +532,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42385"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -478,7 +542,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42385",
               "CVE Title": "busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the evaluate()",
@@ -501,7 +567,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.942066-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.942077-05:00",
       "Severity": {
@@ -515,7 +583,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42386"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -523,7 +593,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42386",
               "CVE Title": "busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the nvalloc()",
@@ -546,7 +618,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.942317-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.942328-05:00",
       "Severity": {
@@ -560,7 +634,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42374"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -568,7 +644,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42374",
               "CVE Title": "busybox: out-of-bounds read in unlzma applet leads to information leak and denial of service when crafted LZMA-compressed input is decompressed",
@@ -591,7 +669,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.942596-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.942607-05:00",
       "Severity": {
@@ -605,7 +685,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-3711"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -613,7 +695,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-3711",
               "CVE Title": "openssl: SM2 Decryption Buffer Overflow",
@@ -636,7 +720,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.942873-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.942885-05:00",
       "Severity": {
@@ -650,7 +736,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2020-1967"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -658,7 +746,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2020-1967",
               "CVE Title": "openssl: Segmentation fault in SSL_check_chain causes denial of service",
@@ -681,7 +771,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.943143-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.943155-05:00",
       "Severity": {
@@ -695,7 +787,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-23840"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -703,7 +797,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-23840",
               "CVE Title": "openssl: integer overflow in CipherUpdate",
@@ -726,7 +822,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.943427-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.943438-05:00",
       "Severity": {
@@ -740,7 +838,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-3450"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -748,7 +848,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-3450",
               "CVE Title": "openssl: CA certificate check bypass with X509_V_FLAG_X509_STRICT",
@@ -771,7 +873,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.943699-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.94371-05:00",
       "Severity": {
@@ -785,7 +889,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-3712"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -793,7 +899,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-3712",
               "CVE Title": "openssl: Read buffer overruns processing ASN.1 strings",
@@ -816,7 +924,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.943965-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.943977-05:00",
       "Severity": {
@@ -830,7 +940,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2020-1971"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -838,7 +950,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2020-1971",
               "CVE Title": "openssl: EDIPARTYNAME NULL pointer de-reference",
@@ -861,7 +975,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.944234-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.944245-05:00",
       "Severity": {
@@ -875,7 +991,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-23841"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -883,7 +1001,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-23841",
               "CVE Title": "openssl: NULL pointer dereference in X509_issuer_and_serial_hash()",
@@ -906,7 +1026,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.944512-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.944524-05:00",
       "Severity": {
@@ -920,7 +1042,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-3449"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -928,7 +1052,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-3449",
               "CVE Title": "openssl: NULL pointer dereference in signature_algorithms processing",
@@ -951,7 +1077,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.944771-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.944783-05:00",
       "Severity": {
@@ -965,7 +1093,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-23839"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -973,7 +1103,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-23839",
               "CVE Title": "openssl: incorrect SSLv2 rollback protection",
@@ -996,7 +1128,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.945044-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.945056-05:00",
       "Severity": {
@@ -1010,7 +1144,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-3711"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1018,7 +1154,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-3711",
               "CVE Title": "openssl: SM2 Decryption Buffer Overflow",
@@ -1041,7 +1179,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.945309-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.94532-05:00",
       "Severity": {
@@ -1055,7 +1195,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2020-1967"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1063,7 +1205,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2020-1967",
               "CVE Title": "openssl: Segmentation fault in SSL_check_chain causes denial of service",
@@ -1086,7 +1230,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.945568-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.94558-05:00",
       "Severity": {
@@ -1100,7 +1246,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-23840"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1108,7 +1256,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-23840",
               "CVE Title": "openssl: integer overflow in CipherUpdate",
@@ -1131,7 +1281,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.945826-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.945838-05:00",
       "Severity": {
@@ -1145,7 +1297,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-3450"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1153,7 +1307,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-3450",
               "CVE Title": "openssl: CA certificate check bypass with X509_V_FLAG_X509_STRICT",
@@ -1176,7 +1332,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.9461-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.946111-05:00",
       "Severity": {
@@ -1190,7 +1348,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-3712"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1198,7 +1358,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-3712",
               "CVE Title": "openssl: Read buffer overruns processing ASN.1 strings",
@@ -1221,7 +1383,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.946379-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.94639-05:00",
       "Severity": {
@@ -1235,7 +1399,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2020-1971"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1243,7 +1409,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2020-1971",
               "CVE Title": "openssl: EDIPARTYNAME NULL pointer de-reference",
@@ -1266,7 +1434,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.946648-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.946659-05:00",
       "Severity": {
@@ -1280,7 +1450,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-23841"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1288,7 +1460,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-23841",
               "CVE Title": "openssl: NULL pointer dereference in X509_issuer_and_serial_hash()",
@@ -1311,7 +1485,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.946892-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.946902-05:00",
       "Severity": {
@@ -1325,7 +1501,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-3449"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1333,7 +1511,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-3449",
               "CVE Title": "openssl: NULL pointer dereference in signature_algorithms processing",
@@ -1356,7 +1536,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.947138-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.947149-05:00",
       "Severity": {
@@ -1370,7 +1552,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-23839"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1378,7 +1562,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-23839",
               "CVE Title": "openssl: incorrect SSLv2 rollback protection",
@@ -1401,7 +1587,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.947382-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.947393-05:00",
       "Severity": {
@@ -1415,7 +1603,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2020-28928"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1423,7 +1613,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2020-28928",
               "CVE Title": "",
@@ -1446,7 +1638,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.947623-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.947634-05:00",
       "Severity": {
@@ -1460,7 +1654,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2020-28928"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1468,7 +1664,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2020-28928",
               "CVE Title": "",
@@ -1491,7 +1689,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.947859-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.94787-05:00",
       "Severity": {
@@ -1505,7 +1705,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-28831"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1513,7 +1715,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-28831",
               "CVE Title": "busybox: invalid free or segmentation fault via malformed gzip data",
@@ -1536,7 +1740,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.948095-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.948105-05:00",
       "Severity": {
@@ -1550,7 +1756,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42378"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1558,7 +1766,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42378",
               "CVE Title": "busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the getvar_i()",
@@ -1581,7 +1791,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.948334-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.948345-05:00",
       "Severity": {
@@ -1595,7 +1807,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42379"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1603,7 +1817,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42379",
               "CVE Title": "busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the next_input_file()",
@@ -1626,7 +1842,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.948574-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.948585-05:00",
       "Severity": {
@@ -1640,7 +1858,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42380"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1648,7 +1868,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42380",
               "CVE Title": "busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the clrvar()",
@@ -1671,7 +1893,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.948823-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.948835-05:00",
       "Severity": {
@@ -1685,7 +1909,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42381"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1693,7 +1919,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42381",
               "CVE Title": "busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the hash_init()",
@@ -1716,7 +1944,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.949072-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.949084-05:00",
       "Severity": {
@@ -1730,7 +1960,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42382"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1738,7 +1970,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42382",
               "CVE Title": "busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the getvar_s()",
@@ -1761,7 +1995,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.949319-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.94933-05:00",
       "Severity": {
@@ -1775,7 +2011,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42383"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1783,7 +2021,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42383",
               "CVE Title": "busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the evaluate()",
@@ -1806,7 +2046,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.949571-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.949583-05:00",
       "Severity": {
@@ -1820,7 +2062,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42384"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1828,7 +2072,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42384",
               "CVE Title": "busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the handle_special()",
@@ -1851,7 +2097,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.94982-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.949831-05:00",
       "Severity": {
@@ -1865,7 +2113,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42385"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1873,7 +2123,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42385",
               "CVE Title": "busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the evaluate()",
@@ -1896,7 +2148,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.95006-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.950071-05:00",
       "Severity": {
@@ -1910,7 +2164,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42386"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1918,7 +2174,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42386",
               "CVE Title": "busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the nvalloc()",
@@ -1941,7 +2199,9 @@
       "ProductArn": "arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity",
       "GeneratorId": "Trivy",
       "AwsAccountId": "123456789012",
-      "Types": [ "Software and Configuration Checks/Vulnerabilities/CVE" ],
+      "Types": [
+        "Software and Configuration Checks/Vulnerabilities/CVE"
+      ],
       "CreatedAt": "2022-02-07T23:51:26.950295-05:00",
       "UpdatedAt": "2022-02-07T23:51:26.950306-05:00",
       "Severity": {
@@ -1955,7 +2215,9 @@
           "Url": "https://avd.aquasec.com/nvd/cve-2021-42374"
         }
       },
-      "ProductFields": { "Product Name": "Trivy" },
+      "ProductFields": {
+        "Product Name": "Trivy"
+      },
       "Resources": [
         {
           "Type": "Container",
@@ -1963,7 +2225,9 @@
           "Partition": "aws",
           "Region": "us-east-1",
           "Details": {
-            "Container": { "ImageName": "golang:1.12-alpine (alpine 3.11.3)" },
+            "Container": {
+              "ImageName": "golang:1.12-alpine (alpine 3.11.3)"
+            },
             "Other": {
               "CVE ID": "CVE-2021-42374",
               "CVE Title": "busybox: out-of-bounds read in unlzma applet leads to information leak and denial of service when crafted LZMA-compressed input is decompressed",

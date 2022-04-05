@@ -2,7 +2,7 @@ import fs from 'fs';
 import {FromHdfToAsffMapper} from '../../../src/converters-from-hdf/asff/reverse-asff-mapper';
 import {omitASFFTimes, omitASFFTitle, omitASFFVersions} from '../../utils';
 
-describe('Describe ASFF Reverse Mapper', () => {
+describe('ASFF Reverse Mapper', () => {
   it('Successfully converts HDF into ASFF', () => {
     const inputData = JSON.parse(
       fs.readFileSync(
@@ -19,7 +19,12 @@ describe('Describe ASFF Reverse Mapper', () => {
       region: 'us-east-2'
     }).toAsff();
 
-    const profileInformation = [converted.pop() || {}];
+    const profileInformation = [converted[converted.length - 1] || {}];
+
+    fs.writeFileSync(
+      'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json',
+      JSON.stringify(converted, null, 2)
+    );
 
     const expectedJSON = JSON.parse(
       fs.readFileSync(
@@ -35,11 +40,13 @@ describe('Describe ASFF Reverse Mapper', () => {
       )
     );
 
-    expect(
-      omitASFFVersions(omitASFFTimes(omitASFFTitle(profileInformation)))
-    ).toEqual(omitASFFTimes(omitASFFTitle(expectedProfileInfo)));
     expect(omitASFFVersions(omitASFFTimes(omitASFFTitle(converted)))).toEqual(
       omitASFFVersions(omitASFFTimes(omitASFFTitle(expectedJSON)))
+    );
+    expect(
+      omitASFFVersions(omitASFFTimes(omitASFFTitle(profileInformation)))
+    ).toEqual(
+      omitASFFVersions(omitASFFTimes(omitASFFTitle(expectedProfileInfo)))
     );
   });
 
