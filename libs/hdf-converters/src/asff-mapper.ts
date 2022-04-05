@@ -65,7 +65,7 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
         if (
           parseInt(major) > 1 &&
           parseInt(minor) > 5 &&
-          parseInt(patch) >= 20
+          parseInt(patch) > 20
         ) {
           return _.startsWith(type, 'MITRE/SAF/');
         } else {
