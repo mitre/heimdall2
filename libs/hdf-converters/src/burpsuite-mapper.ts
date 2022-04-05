@@ -64,7 +64,7 @@ function nistTag(input: string): string[] {
   return CWE_NIST_MAPPING.nistFilter(
     cwe,
     DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
-  ).concat(['Rev_4']);
+  );
 }
 
 export class BurpSuiteMapper extends BaseConverter {
