@@ -623,7 +623,7 @@ function getHDF2ASFF(): Record<string, Function> {
   ): number => {
     if (asffFindingToMatch) {
       const targetToMatch = asffFindingToMatch.Id.split('/')[0];
-      const index = _.findIndex(
+      return _.findIndex(
         Array.isArray(asffOrFindings)
           ? asffOrFindings
           : (_.get(asffOrFindings, 'Findings') as Record<string, unknown>[]),

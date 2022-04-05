@@ -413,34 +413,6 @@ function createControlMetadata(control: SegmentedControl) {
   return types;
 }
 
-function createProfileInfo(hdf?: ExecJSON.Execution): string[] {
-  const typesArr: string[] = [];
-  const targets = [
-    'name',
-    'version',
-    'sha256',
-    'title',
-    'maintainer',
-    'summary',
-    'license',
-    'copyright',
-    'copyright_email'
-  ];
-  hdf?.profiles.forEach((layer) => {
-    const profileInfos: Record<string, string>[] = [];
-    targets.forEach((target) => {
-      const value = _.get(layer, target);
-      if (typeof value === 'string') {
-        profileInfos.push({[target]: value});
-      }
-    });
-    typesArr.push(
-      `Profile/Info/${escapeForwardSlashes(JSON.stringify(profileInfos))}`
-    );
-  });
-  return typesArr;
-}
-
 function getFilename(options?: IOptions): string {
   const slashSplit =
     options?.input.split('\\')[options?.input.split('\\').length - 1];

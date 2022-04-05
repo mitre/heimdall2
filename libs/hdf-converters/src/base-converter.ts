@@ -173,9 +173,16 @@ export class BaseConverter {
     file: Record<string, unknown>,
     fields: T
   ): MappedReform<T, ILookupPath> {
-    const isShortcircuiting = _.isObject(fields) && _.has(fields, 'shortcircuit') && _.isBoolean(_.get(fields, 'shortcircuit')) && _.get(fields, 'shortcircuit');
-    if(isShortcircuiting) {
-      return _.omit(fields as object, 'shortcircuit') as MappedReform<T, ILookupPath>;
+    const isShortcircuiting =
+      _.isObject(fields) &&
+      _.has(fields, 'shortcircuit') &&
+      _.isBoolean(_.get(fields, 'shortcircuit')) &&
+      _.get(fields, 'shortcircuit');
+    if (isShortcircuiting) {
+      return _.omit(fields as object, 'shortcircuit') as MappedReform<
+        T,
+        ILookupPath
+      >;
     }
 
     const result = this.objectMap(fields, (v: ObjectEntryValue<T>) =>
