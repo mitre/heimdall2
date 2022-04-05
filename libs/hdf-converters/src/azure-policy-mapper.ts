@@ -14,10 +14,9 @@ import { PolicyClient } from "@azure/arm-policy";
 import { ExecJSON } from 'inspecjs';
 import { AzurePolicyMapping } from './mappings/AzurePolicyMapping';
 import { version as HeimdallToolsVersion } from '../package.json';
-import { write } from "fs";
 
 // For troubleshooting API calls, uncomment below
-//import { setLogLevel } from "@azure/logger"; // helps with troubleshooting
+//import { setLogLevel } from "@azure/logger";
 //setLogLevel("info");
 
 var fs = require('fs');
@@ -72,8 +71,8 @@ class AzurePolicyConverter {
     results: ExecJSON.ControlResult[][];
     policyDefinitions: PolicyDefinition[] = [];
     //Class Flags
-    staticPoliciesComplete: boolean = false;
-    dynamicPoliciesComplete: boolean = false;
+    staticPoliciesComplete = false;
+    dynamicPoliciesComplete = false;
     //Class Constructor
     // credential - Azure Credentials object to authenticate with.
     // subscriptionId - Subscription ID to query against.
@@ -233,10 +232,6 @@ class AzurePolicyConverter {
 
         // ---
 
-        //await this.delay(150);
-
-        // ---
-
         for (const staticPolicy of staticPolicies) {
             // Get Policy Details
             if (staticPolicy.id) {
@@ -273,10 +268,8 @@ class AzurePolicyConverter {
         }
         this.staticPoliciesComplete = true;
         console.log("Static Policies Complete")
-        //console.log(this.policyDefinitions)
     }
 
-    // 
     private async getControls(policyDefinitions: PolicyDefinition[]): Promise<ExecJSON.Control[]> {
         return (policyDefinitions).map((policyDefinition: PolicyDefinition) => {
             const control: ExecJSON.Control = {
