@@ -7,6 +7,7 @@ import {
   MappedTransform,
   parseCsv
 } from './base-converter';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
 
 export type PrismaControl = {
   Packages: string;
@@ -28,10 +29,6 @@ const SEVERITY_LOOKUP: Record<string, number> = {
   important: 0.9,
   critical: 1
 };
-
-// DEFAULT_NIST_TAG is applicable to all automated configuration tests.
-// SA-11 (DEVELOPER SECURITY TESTING AND EVALUATION) - RA-5 (VULNERABILITY SCANNING)
-const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
 // REMEDIATION_NIST_TAG the set of default applicable NIST 800-53 controls for ensuring up-to-date packages.
 // SI-2 (FLAW REMEDIATION) - 	RA-5 (VULNERABILITY SCANNING)
@@ -73,7 +70,7 @@ export class PrismaControlMapper extends BaseConverter {
                 path: 'CVE ID',
                 transformer: (cveTag: string | undefined) => {
                   if (!cveTag) {
-                    return DEFAULT_NIST_TAG;
+                    return DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
                   } else {
                     return REMEDIATION_NIST_TAG;
                   }

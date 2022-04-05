@@ -8,9 +8,9 @@ import {
   parseHtml
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
-const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
 function filterSite<T>(input: Array<T>, name?: string) {
   // Choose the site passed if provided
@@ -41,8 +41,11 @@ function impactMapping(input: unknown): number {
   }
 }
 function nistTag(cweid: string): string[] {
-  const result = CWE_NIST_MAPPING.nistFilter([cweid], DEFAULT_NIST_TAG);
-  if (result === DEFAULT_NIST_TAG) {
+  const result = CWE_NIST_MAPPING.nistFilter(
+    [cweid],
+    DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
+  );
+  if (result === DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS) {
     return result;
   } else {
     return result.concat('Rev_4');

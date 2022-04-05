@@ -11,6 +11,7 @@ import {
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {OwaspNistMapping} from './mappings/OwaspNistMapping';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 1.0],
@@ -40,7 +41,7 @@ function nistTag(classification: Record<string, unknown>): string[] {
   if (result.length !== 0) {
     return result;
   } else {
-    return DEFAULT_NIST_TAG;
+    return DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
   }
 }
 function formatControlDesc(vulnerability: unknown): string {

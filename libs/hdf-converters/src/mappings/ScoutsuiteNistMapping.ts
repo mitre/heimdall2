@@ -1,3 +1,4 @@
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from '../utils/global';
 import {data} from './ScoutsuiteNistMappingData';
 import {ScoutsuiteNistMappingItem} from './ScoutsuiteNistMappingItem';
 
@@ -5,7 +6,6 @@ export interface ISCOUTSUITEJSONID {
   RULE: string;
   'NIST-ID': string;
 }
-const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
 export class ScoutsuiteNistMapping {
   data: ScoutsuiteNistMappingItem[];
@@ -19,13 +19,13 @@ export class ScoutsuiteNistMapping {
   }
   nistTag(rule: string): string[] {
     if (rule === '' || rule === undefined) {
-      return DEFAULT_NIST_TAG;
+      return DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
     } else {
       const item = this.data.find((element) => element.rule === rule);
       if (item !== null && item !== undefined) {
         return item.nistId.split('|');
       } else {
-        return DEFAULT_NIST_TAG;
+        return DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
       }
     }
   }
