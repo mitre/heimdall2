@@ -707,7 +707,7 @@ function getHDF2ASFF(): Record<string, Function> {
     const profileNames = Object.keys(executionTypes || {}).filter(
       (type) => !['MITRE', 'File', 'Execution'].includes(type)
     );
-    const ret = {
+    return {
       shortcircuit: true,
       platform: {
         ..._.get(executionTypes, 'Execution.platform'),
@@ -888,8 +888,7 @@ function getHDF2ASFF(): Record<string, Function> {
           sha256: _.get(executionTypes, `${profileName}.sha256`)
         };
       })
-    };
-    return ret;
+    } as MappedTransform<ExecJSON.Execution, ILookupPath>;
   };
   return {
     preprocessingASFF,
