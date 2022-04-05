@@ -631,9 +631,6 @@ function getHDF2ASFF(): Record<string, Function> {
           (_.get(finding, 'Id') as string).split('/').length === 2 &&
           (_.get(finding, 'Id') as string).startsWith(targetToMatch)
       );
-      if (index === -1) {
-        //console.log(asffFindingToMatch)
-      }
     }
     return _.findIndex(
       Array.isArray(asffOrFindings)
@@ -709,10 +706,6 @@ function getHDF2ASFF(): Record<string, Function> {
     );
     const profileNames = Object.keys(executionTypes || {}).filter(
       (type) => !['MITRE', 'File', 'Execution'].includes(type)
-    );
-    console.log(context);
-    console.log(
-      context.supportingDocs.get(SpecialCasing.HDF2ASFF)?.execution.Id
     );
     const ret = {
       shortcircuit: true,
@@ -926,7 +919,6 @@ export class ASFFMapper extends BaseConverter {
   }
 
   setMappings(): void {
-    console.log('somestring ' + (this.data.Findings as any[]).length);
     this.mappings = externalProductHandler(
       this,
       whichSpecialCase(
@@ -938,7 +930,26 @@ export class ASFFMapper extends BaseConverter {
         platform: {
           name: 'Heimdall Tools',
           release: HeimdallToolsVersion,
-          target_id: ''
+          target_id: {
+            transformer: (record: Record<string, unknown>) => {
+              const productInfo = (
+                _.get(record, 'Findings[0].ProductArn') as string
+              )
+                .split(':')
+                .slice(-1)[0]
+                .split('/');
+              const defaultTargetId = `${productInfo[1]} | ${productInfo[2]}`;
+              return externalProductHandler(
+                this,
+                whichSpecialCase(
+                  _.get(record, 'Findings[0]') as Record<string, unknown>
+                ),
+                [_.get(record, 'Findings[0]'), record.Findings],
+                'productName',
+                encode(defaultTargetId)
+              );
+            }
+          }
         },
         version: HeimdallToolsVersion,
         statistics: {
@@ -1232,7 +1243,6 @@ export class ASFFMapper extends BaseConverter {
         ]
       }
     ) as MappedTransform<ExecJSON.Execution, ILookupPath>;
-    console.log('mappings defined');
   }
 
   constructor(
@@ -1322,7 +1332,6 @@ export class ASFFResults {
           this.meta
         ) as Record<string, string>
       ).toHdf();
-      console.log('created an hdf file');
       return ret;
     });
   }

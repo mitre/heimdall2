@@ -31,7 +31,10 @@ type Counts = {
 export function escapeForwardSlashes<T>(s: T): T {
   return _.isString(s)
     ? (s.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT) as unknown as T)
-    : s;
+    : (JSON.stringify(s).replace(
+        /\//g,
+        TO_ASFF_TYPES_SLASH_REPLACEMENT
+      ) as unknown as T);
 }
 
 export function getRunTime(hdf: ExecJSON.Execution): string {
@@ -514,8 +517,9 @@ function createProfileInfoFindingFields(
 function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
   const typesArr: string[] = [];
   const targets = [
-    'code_desc',
+    'backtrace',
     'exception',
+    'code_desc',
     'message',
     'resource',
     'run_time',
@@ -555,7 +559,7 @@ function createDescriptionInfo(control: ExecJSON.Control): string[] {
   const typesArr: string[] = [];
   if (Array.isArray(control.descriptions)) {
     control.descriptions?.forEach((description) => {
-      if (cleanText(description.data)) {
+      if (description.data && cleanText(description.data)) {
         typesArr.push(
           `Descriptions/${escapeForwardSlashes(
             description.label
@@ -565,7 +569,7 @@ function createDescriptionInfo(control: ExecJSON.Control): string[] {
     });
   } else {
     Object.entries(control.descriptions || {}).forEach(([key, value]) => {
-      if (cleanText(value as string)) {
+      if (value && cleanText(value as string)) {
         typesArr.push(
           `Descriptions/${escapeForwardSlashes(key)}/${escapeForwardSlashes(
             cleanText(value as string)
@@ -652,6 +656,9 @@ export function setupDetailsAssume(control: SegmentedControl) {
 }
 
 export function setupControlStatus(control: SegmentedControl) {
+  if (control.results.some((result) => 'backtrace' in result)) {
+    return 'NOT_AVAILABLE';
+  }
   const status: string | boolean =
     control.result.status === 'skipped'
       ? 'WARNING'
