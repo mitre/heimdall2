@@ -219,11 +219,6 @@ export function getHDF2ASFF(): Record<string, Function> {
           controls: consolidate(
             context,
             ((): ExecJSON.Control[] => {
-              console.log(
-                'findings length',
-                (_.get(context.data, 'Findings') as Record<string, unknown>[])
-                  .length
-              );
               return _.map(
                 _.get(context.data, 'Findings') as Record<string, unknown>[],
                 (finding: Record<string, unknown>) => {

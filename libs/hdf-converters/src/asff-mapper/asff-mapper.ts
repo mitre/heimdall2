@@ -33,9 +33,6 @@ export enum SpecialCasing {
 
 function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
   const productArn = _.get(finding, 'ProductArn') as string;
-  if (!productArn) {
-    console.trace(finding, productArn);
-  }
   if (
     productArn.match(
       /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/firewall-manager$/
