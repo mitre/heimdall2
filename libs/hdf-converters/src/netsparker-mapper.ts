@@ -24,7 +24,6 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 const OWASP_NIST_MAPPING = new OwaspNistMapping();
-const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
 function nistTag(classification: Record<string, unknown>): string[] {
   let cweTag = _.get(classification, 'cwe');

@@ -12,7 +12,7 @@ import {
   parseXml
 } from './base-converter';
 import {CciNistMapping} from './mappings/CciNistMapping';
-import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global'
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
