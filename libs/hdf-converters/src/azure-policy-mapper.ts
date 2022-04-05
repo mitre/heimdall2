@@ -14,6 +14,7 @@ import { PolicyClient } from "@azure/arm-policy";
 import { ExecJSON } from 'inspecjs';
 import { AzurePolicyMapping } from './mappings/AzurePolicyMapping';
 import { version as HeimdallToolsVersion } from '../package.json';
+import { write } from "fs";
 
 // For troubleshooting API calls, uncomment below
 //import { setLogLevel } from "@azure/logger"; // helps with troubleshooting
@@ -69,6 +70,10 @@ interface HDFResult {
 class AzurePolicyConverter {
     //Class Variables
     results: ExecJSON.ControlResult[][];
+    policyDefinitions: PolicyDefinition[] = [];
+    //Class Flags
+    staticPoliciesComplete: boolean = false;
+    dynamicPoliciesComplete: boolean = false;
     //Class Constructor
     // credential - Azure Credentials object to authenticate with.
     // subscriptionId - Subscription ID to query against.
@@ -83,115 +88,28 @@ class AzurePolicyConverter {
     // a Heimdall Data Format file.
     // To Do: Add Try Catch and Error Handling
     private async toHDF(): Promise<PolicyDefinition[]> {
-        const policyDefinitions: PolicyDefinition[] = [];
+
         const staticPolicyDefinitions: PolicyDefinition[] = [];
-        // Array for holding Group Names (NIST mappings)
-        let groupNames: string[] = [];
-        // Flag for Policy Compliance State
-        let complianceState = "";
         // Initalize Policy Insights Client
         const policyInsightsClient = new PolicyInsightsClient(credential, subscriptionId);
         // Initalize Policy Client
         const policyClient = new PolicyClient(credential, subscriptionId);
 
+        this.getDynamicPolicies(policyClient, policyInsightsClient);
 
-        for await (const policyState of policyInsightsClient.policyStates.listQueryResultsForSubscription('default', subscriptionId)) {
-            // Reset Array for GroupNames
-            groupNames = [];
-            if (policyState.isCompliant !== undefined) {
-                complianceState = policyState.isCompliant === false ? "noncompliant" : "compliant";
-            } else {
-                complianceState = "compliant"
-            }
-
-            // Loop through NIST 800-53 control mappings and add to groupNames list
-            if (policyState.policyDefinitionGroupNames !== undefined) {
-                policyState.policyDefinitionGroupNames.forEach((groupName) => {
-                    groupNames.push(groupName);
-                });
-            }
-
-            // Create AzureResource object
-            const azureResource: AzureResource = {
-                id: policyState.resourceId || "Not Available",
-                subscriptionId: subscriptionId,
-                type: policyState.resourceType,
-                state: complianceState,
-                location: policyState.resourceLocation
-            }
-
-            // If policyDefinitions array doesn't contain current policyDefinition then add it
-            if (policyDefinitions.findIndex(PolicyDefinition => PolicyDefinition.id === policyState.policyDefinitionId) === -1) {
-
-                if (policyState.policyDefinitionId !== undefined) {
-                    policyDefinitions.push({
-                        id: policyState.policyDefinitionId,
-                        subscriptionId: subscriptionId,
-                        state: complianceState,
-                        groupNames: this.parseGroupNames(groupNames || []),
-                        resources: [azureResource]
-                    })
-                }
-            } else {
-                const policyDefinitionIndex = policyDefinitions.findIndex(PolicyDefinition => PolicyDefinition.id === policyState.policyDefinitionId)
-                const resourceIndex = policyDefinitions[policyDefinitionIndex].resources?.findIndex(AzureResource => AzureResource.id === azureResource.id)
-
-                if (resourceIndex === -1) {
-                    policyDefinitions[policyDefinitionIndex].resources?.push(azureResource)
-                }
-            }
-
+        while (this.dynamicPoliciesComplete === false) {
+            console.log("Waiting for dynamic policies..")
+            await this.delay(1000);
         }
+        // ---
 
-        // Loop through each Policy and retrieve the metadata (name, description, etc.) associated with that policy.
-        for (const policyDefinition of policyDefinitions) {
-            await this.delay(150);
-            const policyAssignmentList = await policyClient.policyAssignments.getById(policyDefinition.id);
-            policyDefinition.detailedName = policyAssignmentList.displayName;
-            policyDefinition.name = policyAssignmentList.name;
-            policyDefinition.description = policyAssignmentList.description;
-        }
+        this.getStaticPolicies(policyClient);
 
-        // Get Static Policies that Microsoft is responsible for meeting NIST 800-53 controls.
-        // Async pull static policies from the Policy Insights API
-        const staticPolicies = [];
-        for await (const item of policyClient.policyDefinitions.list({ filter: "policyType eq 'Static'" })) {
-            staticPolicies.push(item);
-        }
-        await this.delay(150);
-        for (const staticPolicy of staticPolicies) {
-            // Get Policy Details
-            if (staticPolicy.id) {
-                const policyAssignmentList = await policyClient.policyAssignments.getById(staticPolicy.id);
+        // ---
 
-                // Get Policy Control Mapping
-                if (policyAssignmentList.displayName) {
-                    groupNames = AZURE_POLICY_MAPPING.nistFilter([policyAssignmentList.displayName]) || [""];
-                    if (groupNames === null || groupNames === undefined) {
-                        groupNames = []
-                    }
-
-                    const azureResource: AzureResource = {
-                        id: "Microsoft Managed",
-                        subscriptionId: subscriptionId,
-                        type: "N/A",
-                        state: "compliant",
-                        location: "N/A"
-                    }
-
-                    policyDefinitions.push({
-                        id: staticPolicy.id || "Not Available",
-                        subscriptionId: subscriptionId,
-                        detailedName: policyAssignmentList.displayName,
-                        name: policyAssignmentList.name,
-                        description: policyAssignmentList.description,
-                        groupNames: groupNames,
-                        state: "compliant",
-                        resources: [azureResource]
-                    })
-                }
-            }
-
+        while (this.staticPoliciesComplete === false) {
+            console.log("Waiting for static policies..")
+            await this.delay(5000);
         }
 
         const hdf: ExecJSON.Execution = {
@@ -220,28 +138,146 @@ class AzurePolicyConverter {
                     depends: [],
                     groups: [],
                     status: 'loaded',
-                    controls: await this.getControls(policyDefinitions),
+                    controls: await this.getControls(this.policyDefinitions),
                     sha256: ''
                 }
             ]
-        };
+        }
 
-        //Testing writing to file
-        var outputJson = JSON.stringify(hdf);
-        fs.writeFile('azure-policy-test.json', outputJson, function (err: string) {
-            if (err) {
-                throw err;
+        // ---
+
+        this.writeHdf(hdf)
+
+        return this.policyDefinitions;
+    }
+
+    // Get Dynamic Policies
+    private async getDynamicPolicies(policyClient: PolicyClient, policyInsightsClient: PolicyInsightsClient) {
+        // Array for holding Group Names (NIST mappings)
+        let groupNames: string[] = [];
+        // Flag for Policy Compliance State
+        let complianceState = "";
+
+        for await (const policyState of policyInsightsClient.policyStates.listQueryResultsForSubscription('default', subscriptionId)) {
+            // Reset Array for GroupNames
+            groupNames = [];
+            if (policyState.isCompliant !== undefined) {
+                complianceState = policyState.isCompliant === false ? "noncompliant" : "compliant";
+            } else {
+                complianceState = "compliant"
             }
-            console.log('complete');
-        });
 
-        return policyDefinitions;
+            // Loop through NIST 800-53 control mappings and add to groupNames list
+            if (policyState.policyDefinitionGroupNames !== undefined) {
+                policyState.policyDefinitionGroupNames.forEach((groupName) => {
+                    groupNames.push(groupName);
+                });
+            }
+
+            // Create AzureResource object
+            const azureResource: AzureResource = {
+                id: policyState.resourceId || "Not Available",
+                subscriptionId: subscriptionId,
+                type: policyState.resourceType,
+                state: complianceState,
+                location: policyState.resourceLocation
+            }
+
+            // If policyDefinitions array doesn't contain current policyDefinition then add it
+            if (this.policyDefinitions.findIndex(PolicyDefinition => PolicyDefinition.id === policyState.policyDefinitionId) === -1) {
+
+                if (policyState.policyDefinitionId !== undefined) {
+                    this.policyDefinitions.push({
+                        id: policyState.policyDefinitionId,
+                        subscriptionId: subscriptionId,
+                        state: complianceState,
+                        groupNames: this.parseGroupNames(groupNames || []),
+                        resources: [azureResource]
+                    })
+                }
+            } else {
+                const policyDefinitionIndex = this.policyDefinitions.findIndex(PolicyDefinition => PolicyDefinition.id === policyState.policyDefinitionId)
+                const resourceIndex = this.policyDefinitions[policyDefinitionIndex].resources?.findIndex(AzureResource => AzureResource.id === azureResource.id)
+
+                if (resourceIndex === -1) {
+                    this.policyDefinitions[policyDefinitionIndex].resources?.push(azureResource)
+                }
+            }
+
+        }
+
+        console.log("TEST")
+        // Loop through each Policy and retrieve the metadata (name, description, etc.) associated with that policy.
+        for (const policyDefinition of this.policyDefinitions) {
+            await this.delay(150);
+            const policyAssignmentList = await policyClient.policyAssignments.getById(policyDefinition.id);
+            policyDefinition.detailedName = policyAssignmentList.displayName;
+            policyDefinition.name = policyAssignmentList.name;
+            policyDefinition.description = policyAssignmentList.description;
+        }
+        this.dynamicPoliciesComplete = true;
+        console.log("Dynamic Policies Complete")
 
     }
 
-    private async getControls(policyDefinitions: PolicyDefinition[]): Promise<ExecJSON.Control[]> {
-        let index = 0;
+    // Get Static Policies
+    private async getStaticPolicies(policyClient: PolicyClient) {
+        // Get Static Policies that Microsoft is responsible for meeting NIST 800-53 controls.
+        // Async pull static policies from the Policy Insights API
+        const staticPolicies = [];
+        let groupNames: string[] = [];
 
+        for await (const item of policyClient.policyDefinitions.list({ filter: "policyType eq 'Static'" })) {
+            staticPolicies.push(item);
+        }
+
+        // ---
+
+        //await this.delay(150);
+
+        // ---
+
+        for (const staticPolicy of staticPolicies) {
+            // Get Policy Details
+            if (staticPolicy.id) {
+                const policyAssignmentList = await policyClient.policyAssignments.getById(staticPolicy.id);
+
+                // Get Policy Control Mapping
+                if (policyAssignmentList.displayName) {
+                    groupNames = AZURE_POLICY_MAPPING.nistFilter([policyAssignmentList.displayName]) || [""];
+                    if (groupNames === null || groupNames === undefined) {
+                        groupNames = []
+                    }
+
+                    const azureResource: AzureResource = {
+                        id: "Microsoft Managed",
+                        subscriptionId: subscriptionId,
+                        type: "N/A",
+                        state: "compliant",
+                        location: "N/A"
+                    }
+
+                    this.policyDefinitions.push({
+                        id: staticPolicy.id || "Not Available",
+                        subscriptionId: subscriptionId,
+                        detailedName: policyAssignmentList.displayName,
+                        name: policyAssignmentList.name,
+                        description: policyAssignmentList.description,
+                        groupNames: groupNames,
+                        state: "compliant",
+                        resources: [azureResource]
+                    })
+                }
+            }
+
+        }
+        this.staticPoliciesComplete = true;
+        console.log("Static Policies Complete")
+        //console.log(this.policyDefinitions)
+    }
+
+    // 
+    private async getControls(policyDefinitions: PolicyDefinition[]): Promise<ExecJSON.Control[]> {
         return (policyDefinitions).map((policyDefinition: PolicyDefinition) => {
             const control: ExecJSON.Control = {
                 id: policyDefinition.name || '',
@@ -254,27 +290,26 @@ class AzurePolicyConverter {
                 source_location: { ref: policyDefinition.subscriptionId, line: 1 },
                 code: '',
                 results: this.getTestResults(policyDefinition)
-            };
-            index++;
+            }
             return control
-
-        });
+        })
     }
 
     // Build Results
+    // Information about Azure Resource is in the code_desc
     private getTestResults(policyDefinition: PolicyDefinition) {
         const results: ExecJSON.ControlResult[] = [];
-        if (policyDefinition.resources !== undefined) {
-            for (let i = 0; i < policyDefinition.resources.length; i++) {
+        if (policyDefinition.resources) {
+            for (const resource of policyDefinition.resources) {
                 const hdfResult: ExecJSON.ControlResult = {
-                    code_desc: `Resource: ${policyDefinition.resources[i].id}`
-                        + `\nType: ${policyDefinition.resources[i].type}`
-                        + `\nLocation: ${policyDefinition.resources[i].location}`
-                        + `\nSubscription: ${policyDefinition.resources[i].subscriptionId}`,
-                    resource: policyDefinition.resources[i].id,
+                    code_desc: `Resource: ${resource.id}`
+                        + `\nType: ${resource.type}`
+                        + `\nLocation: ${resource.location}`
+                        + `\nSubscription: ${resource.subscriptionId}`,
+                    resource: resource.id,
                     start_time: '',
                     run_time: 0.00,
-                    status: this.getStatus(policyDefinition.resources[i].state || "noncompliant")
+                    status: this.getStatus(resource.state || "noncompliant")
                 }
                 results.push(hdfResult)
             }
@@ -288,10 +323,10 @@ class AzurePolicyConverter {
     private parseGroupNames(groupNames: string[]) {
         const hdfTags: string[] = []
         let nistTag = ""
-        if (groupNames !== undefined) {
-            for (let i = 0; i < groupNames.length; i++) {
-                if (groupNames[i].includes("nist")) {
-                    nistTag = groupNames[i].substring(groupNames[i].lastIndexOf("_") + 1);
+        if (groupNames) {
+            for (const groupName of groupNames) {
+                if (groupName.includes("nist")) {
+                    nistTag = groupName.substring(groupName.lastIndexOf("_") + 1);
                     hdfTags.push(nistTag.charAt(0).toUpperCase() + nistTag.charAt(1).toUpperCase() + nistTag.slice(2))
                 }
             }
@@ -304,6 +339,7 @@ class AzurePolicyConverter {
 
     }
 
+    // Get the compliance status of an Azure resource
     private getStatus(state: string): ExecJSON.ControlResultStatus {
         if (state === 'compliant') {
             return ExecJSON.ControlResultStatus.Passed;
@@ -314,9 +350,22 @@ class AzurePolicyConverter {
         }
     }
 
+    // Helper Function
     private delay(ms: number): Promise<void> {
         return new Promise((resolve) => setTimeout(resolve, ms));
     }
-}
 
+    // Helper Function
+    // Testing writing to file
+    private async writeHdf(hdf: ExecJSON.Execution) {
+        var outputJson = JSON.stringify(hdf);
+        fs.writeFile('azure-policy-test.json', outputJson, function (err: string) {
+            if (err) {
+                throw err;
+            }
+            console.log('complete');
+
+        })
+    }
+}
 const azurePolicyConverter = new AzurePolicyConverter();
