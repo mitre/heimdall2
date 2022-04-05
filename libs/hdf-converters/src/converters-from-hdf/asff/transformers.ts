@@ -28,8 +28,13 @@ type Counts = {
   NotReviewed: number;
 };
 
-export function escapeForwardSlashes(s: string): string {
-  return s.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT);
+export function escapeForwardSlashes<T>(s: T): T {
+  return _.isString(s)
+    ? (s.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT) as unknown as T)
+    : (JSON.stringify(s).replace(
+        /\//g,
+        TO_ASFF_TYPES_SLASH_REPLACEMENT
+      ) as unknown as T);
 }
 
 export function getRunTime(hdf: ExecJSON.Execution): string {
@@ -111,7 +116,7 @@ export function createProfileInfoFinding(
       Severity: {
         Label: 'INFORMATIONAL'
       },
-      Types: createProfileInfoFindingFields(hdf)
+      Types: createProfileInfoFindingFields(hdf, options)
     },
     Resources: [
       {
@@ -198,13 +203,13 @@ export function sliceIntoChunks(arr: any[], chunkSize: number): any[][] {
 // Gets rid of extra spacing + newlines as these aren't shown in Security Hub
 export function cleanText(text?: string | null): string | undefined {
   if (text) {
-    return text.replace(/  +/g, ' ').replace(/\r?\n|\r/g, ' ');
+    return text.replace(/  +/g, ' ');
   } else {
     return undefined;
   }
 }
 
-// Gets all layers of a control accross overlaid profiles given the ID
+// Gets all layers of a control across overlaid profiles given the ID
 export function getAllLayers(
   hdf: ExecJSON.Execution,
   knownControl: ExecJSON.Control
@@ -297,7 +302,14 @@ export function setupAwsAcct(
 }
 
 export function setupCreated(control: SegmentedControl) {
-  return control.result.start_time || new Date().toISOString();
+  try {
+    return (
+      new Date(control.result.start_time).toISOString() ||
+      new Date().toISOString()
+    );
+  } catch {
+    return new Date().toISOString();
+  }
 }
 
 export function setupRegion(
@@ -370,42 +382,51 @@ function createControlMetadata(control: SegmentedControl) {
     `Control/ID/${control.id}`,
     `Control/Impact/${control.impact}`
   ];
+  if (control.desc) {
+    types.push(`Control/Desc/${escapeForwardSlashes(control.desc)}`);
+  }
+  if (control.refs && control.refs.length > 0) {
+    types.push(
+      `Control/Refs/${escapeForwardSlashes(JSON.stringify(control.refs))}`
+    );
+  }
+  if (
+    control.source_location &&
+    Object.keys(control.source_location).length > 0
+  ) {
+    types.push(
+      `Control/Source_Location/${escapeForwardSlashes(
+        JSON.stringify(control.source_location)
+      )}`
+    );
+  }
+  if (control.waiver_data && Object.keys(control.waiver_data).length > 0) {
+    types.push(
+      `Control/Waiver_Data/${escapeForwardSlashes(
+        JSON.stringify(control.waiver_data)
+      )}`
+    );
+  }
   if (control.title) {
     types.push(`Control/Title/${escapeForwardSlashes(control.title)}`);
   }
   return types;
 }
 
-function createProfileInfo(hdf?: ExecJSON.Execution): string[] {
-  const typesArr: string[] = [];
-  const targets = [
-    'name',
-    'version',
-    'sha256',
-    'title',
-    'maintainer',
-    'summary',
-    'license',
-    'copyright',
-    'copyright_email'
-  ];
-  hdf?.profiles.forEach((layer) => {
-    const profileInfos: Record<string, string>[] = [];
-    targets.forEach((target) => {
-      const value = _.get(layer, target);
-      if (typeof value === 'string') {
-        profileInfos.push({[target]: value});
-      }
-    });
-    typesArr.push(
-      `Profile/Info/${escapeForwardSlashes(JSON.stringify(profileInfos))}`
-    );
-  });
-  return typesArr;
+function getFilename(options?: IOptions): string {
+  const slashSplit =
+    options?.input.split('\\')[options?.input.split('\\').length - 1];
+  return slashSplit?.split('/')[slashSplit.split('/').length - 1] ?? '';
 }
 
-function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
-  let typesArr = [`MITRE/SAF/${HeimdallToolsVersion}-hdf2asff`];
+function createProfileInfoFindingFields(
+  hdf: ExecJSON.Execution,
+  options: IOptions
+): string[] {
+  let typesArr = [
+    `MITRE/SAF/${HeimdallToolsVersion}-hdf2asff`,
+    `File/Input/${getFilename(options)}`
+  ];
   const executionTargets = ['platform', 'statistics', 'version', 'passthrough'];
   executionTargets.forEach((target) => {
     const value = _.get(hdf, target);
@@ -434,11 +455,19 @@ function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
       'copyright_email',
       'name',
       'title',
-      'depends'
+      'depends',
+      'supports',
+      'attributes',
+      'description',
+      'inspec_version',
+      'parent_profile',
+      'skip_message',
+      'status',
+      'status_message'
     ];
     targets.forEach((target) => {
       const value = _.get(profile, target);
-      if (typeof value === 'string') {
+      if (typeof value === 'string' && value) {
         typesArr.push(
           `${escapeForwardSlashes(profile.name)}/${escapeForwardSlashes(
             target
@@ -452,17 +481,6 @@ function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
         );
       }
     });
-    const inputs: Record<string, unknown>[] = [];
-    profile.attributes.forEach((input) => {
-      if (input.options.value) {
-        inputs.push({[input.name]: input.options.value});
-      }
-    });
-    typesArr.push(
-      `${escapeForwardSlashes(profile.name)}/inputs/${escapeForwardSlashes(
-        JSON.stringify(inputs)
-      )}`
-    );
   });
   typesArr = typesArr.slice(0, 50);
   return typesArr;
@@ -471,8 +489,9 @@ function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
 function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
   const typesArr: string[] = [];
   const targets = [
-    'code_desc',
+    'backtrace',
     'exception',
+    'code_desc',
     'message',
     'resource',
     'run_time',
@@ -481,11 +500,16 @@ function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
     'status'
   ];
   targets.forEach((target) => {
-    const value = _.get(segment, target);
-    if (typeof value === 'string' && value) {
-      typesArr.push(
-        `Segment/${escapeForwardSlashes(target)}/${escapeForwardSlashes(value)}`
-      );
+    if (_.has(segment, target) && _.get(segment, target) !== undefined) {
+      if (_.get(segment, target) === '') {
+        typesArr.push(`Segment/${escapeForwardSlashes(target)}/''`);
+      } else {
+        typesArr.push(
+          `Segment/${escapeForwardSlashes(target)}/${escapeForwardSlashes(
+            _.get(segment, target)
+          )}`
+        );
+      }
     }
   });
   return typesArr;
@@ -494,25 +518,11 @@ function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
 function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
   const typesArr: string[] = [];
   for (const tag in control.tags) {
-    if (control) {
-      if (typeof control.tags[tag] === 'string') {
-        typesArr.push(
-          `Tags/${escapeForwardSlashes(tag)}/${
-            (control.tags[tag] as string).length > 0
-              ? escapeForwardSlashes(control.tags[tag] as string)
-              : '""'
-          }`
-        );
-      } else if (Array.isArray(control.tags[tag])) {
-        const classifier =
-          (control.tags[tag] as string[]).length > 0
-            ? `[${escapeForwardSlashes(
-                (control.tags[tag] as string[]).join(', ')
-              )}]`
-            : '[]';
-        typesArr.push(`Tags/${escapeForwardSlashes(tag)}/${classifier}`);
-      }
-    }
+    typesArr.push(
+      `Tags/${escapeForwardSlashes(tag)}/${escapeForwardSlashes(
+        JSON.stringify(control.tags[tag])
+      )}`
+    );
   }
   return typesArr;
 }
@@ -521,19 +531,23 @@ function createDescriptionInfo(control: ExecJSON.Control): string[] {
   const typesArr: string[] = [];
   if (Array.isArray(control.descriptions)) {
     control.descriptions?.forEach((description) => {
-      typesArr.push(
-        `Descriptions/${escapeForwardSlashes(
-          description.label
-        )}/${escapeForwardSlashes(cleanText(description.data) || 'No Value')}`
-      );
+      if (description.data && cleanText(description.data)) {
+        typesArr.push(
+          `Descriptions/${escapeForwardSlashes(
+            description.label
+          )}/${escapeForwardSlashes(cleanText(description.data))}`
+        );
+      }
     });
   } else {
     Object.entries(control.descriptions || {}).forEach(([key, value]) => {
-      typesArr.push(
-        `Descriptions/${escapeForwardSlashes(key)}/${escapeForwardSlashes(
-          cleanText(value as string) || 'No Value'
-        )}`
-      );
+      if (value && cleanText(value as string)) {
+        typesArr.push(
+          `Descriptions/${escapeForwardSlashes(key)}/${escapeForwardSlashes(
+            cleanText(value as string)
+          )}`
+        );
+      }
     });
   }
 
@@ -544,15 +558,9 @@ export function setupFindingType(
   control: SegmentedControl,
   context?: FromHdfToAsffMapper
 ) {
-  const slashSplit =
-    context?.ioptions.input.split('\\')[
-      context?.ioptions.input.split('\\').length - 1
-    ];
-  const filename = slashSplit?.split('/')[slashSplit.split('/').length - 1];
-
   const typesArr = [
     `MITRE/SAF/${HeimdallToolsVersion}-hdf2asff`,
-    `File/Input/${filename}`,
+    `File/Input/${getFilename(context?.ioptions)}`,
     `Control/Code/${escapeForwardSlashes(
       control.layersOfControl
         .map(
@@ -565,8 +573,6 @@ export function setupFindingType(
 
   // Add control metadata to the Finding Provider Fields
   typesArr.push(...createControlMetadata(control));
-  // Add all layers of profile info to the Finding Provider Fields
-  typesArr.push(...createProfileInfo(context?.data));
   // Add segment/result information to Finding Provider Fields
   typesArr.push(...createSegmentInfo(control.result));
   // Add Tags to Finding Provider Fields
@@ -622,6 +628,9 @@ export function setupDetailsAssume(control: SegmentedControl) {
 }
 
 export function setupControlStatus(control: SegmentedControl) {
+  if (control.results.some((result) => 'backtrace' in result)) {
+    return 'NOT_AVAILABLE';
+  }
   const status: string | boolean =
     control.result.status === 'skipped'
       ? 'WARNING'
