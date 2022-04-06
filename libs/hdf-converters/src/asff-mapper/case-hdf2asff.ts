@@ -135,6 +135,7 @@ function mapping(
   );
   return {
     shortcircuit: true,
+    passthrough: {..._.get(executionTypes, 'Execution.passthrough')},
     platform: {
       ..._.get(executionTypes, 'Execution.platform'),
       target_id: (
