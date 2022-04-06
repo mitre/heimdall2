@@ -29,7 +29,7 @@ There is little we can do at this point; the file simply isn't compatible, and w
 
 ### InspecJS recognizes the schema -- but we don't know what to do with it.
 
-The only case where this currently happens is if the data is in the JSON-MIN output format, in which controls are cut down to a very minimal dataform.
+The only case where this currently happens is if the data is in the JSON-MIN output format, in which controls are cut down to a very minimal data-form.
 We might eventually add support for it, but for now we just error out.
 
 ### InspecJS recognizes and successfully parses the schema.
