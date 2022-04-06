@@ -41,15 +41,10 @@ function impactMapping(input: unknown): number {
   }
 }
 function nistTag(cweid: string): string[] {
-  const result = CWE_NIST_MAPPING.nistFilter(
+  return CWE_NIST_MAPPING.nistFilter(
     [cweid],
     DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
   );
-  if (result === DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS) {
-    return result;
-  } else {
-    return result.concat('Rev_4');
-  }
 }
 function checkText(input: Record<string, unknown>): string {
   const text = [];
