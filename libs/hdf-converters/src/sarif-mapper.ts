@@ -81,8 +81,21 @@ export class SarifMapper extends BaseConverter {
             descriptions: [],
             refs: [],
             source_location: {
-              ref: {path: 'locations[0].physicalLocation.artifactLocation.uri'},
-              line: {path: 'locations[0].physicalLocation.region.startLine'}
+              transformer: (value: unknown) => {
+                return _.omitBy(
+                  {
+                    ref: _.get(
+                      value,
+                      'locations[0].physicalLocation.artifactLocation.uri'
+                    ),
+                    line: _.get(
+                      value,
+                      'locations[0].physicalLocation.region.startLine'
+                    )
+                  },
+                  (value) => value === ''
+                );
+              }
             },
             title: {
               path: MESSAGE_TEXT,
