@@ -1,5 +1,5 @@
-import { default as data } from '../../data/azure-policy-mapping.json';
-import { AzurePolicyMappingItem } from './AzurePolicyMappingItem';
+import {default as data} from '../../data/azure-policy-mapping.json';
+import {AzurePolicyMappingItem} from './AzurePolicyMappingItem';
 
 export class AzurePolicyMapping {
   data: AzurePolicyMappingItem[];

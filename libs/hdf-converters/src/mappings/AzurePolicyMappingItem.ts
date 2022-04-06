@@ -3,11 +3,7 @@ export class AzurePolicyMappingItem {
   nistId: string;
   nistRevision: number;
 
-  constructor(
-    AzurePolicyName: string,
-    nistId: string,
-    revision: number
-  ) {
+  constructor(AzurePolicyName: string, nistId: string, revision: number) {
     if (!AzurePolicyName) {
       throw new Error('Azure Policy must contain a name.');
     } else {
