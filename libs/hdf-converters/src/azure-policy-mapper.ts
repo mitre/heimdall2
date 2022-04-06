@@ -205,7 +205,6 @@ class AzurePolicyConverter {
 
         }
 
-        console.log("TEST")
         // Loop through each Policy and retrieve the metadata (name, description, etc.) associated with that policy.
         for (const policyDefinition of this.policyDefinitions) {
             await this.delay(150);
