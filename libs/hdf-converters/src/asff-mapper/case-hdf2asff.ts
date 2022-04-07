@@ -120,6 +120,38 @@ function filename(
   return `${_.get(objectifyTypesArray(finding), 'File.Input')}-${target}.json`;
 }
 
+function getCodeForProfileLayer(
+  finding: Record<string, unknown>,
+  profileName: string
+) {
+  const profileLayerToCodeMapping: Record<string, string> = {};
+  (
+    _.get(finding, 'Resources') as {
+      Type: string;
+      Id: string;
+      Details?: {
+        AwsIamRole?: {AssumeRolePolicyDocument: string};
+      };
+    }[]
+  )
+    .find((resource) => resource.Type === 'AwsIamRole')
+    ?.Details?.AwsIamRole?.AssumeRolePolicyDocument.split(
+      '=========================================================\n# Profile name: '
+    )
+    .filter((codeLayer) => codeLayer)
+    .forEach((codeLayer) => {
+      const [profileName, code] = codeLayer.split(
+        '\n=========================================================\n\n'
+      );
+      profileLayerToCodeMapping[profileName] = code.trim();
+    });
+  if (profileName in profileLayerToCodeMapping) {
+    return profileLayerToCodeMapping[profileName];
+  } else {
+    return '';
+  }
+}
+
 function mapping(
   context: ASFFMapper
 ): MappedTransform<ExecJSON.Execution, ILookupPath> {
@@ -191,6 +223,7 @@ function mapping(
               _.get(context.data, 'Findings') as Record<string, unknown>[],
               (finding: Record<string, unknown>) => {
                 const findingTypes = objectifyTypesArray(finding);
+                console.log(getCodeForProfileLayer(finding, profileName));
                 return {
                   id: _.get(findingTypes, 'Control.ID') as unknown as string,
                   ...(_.has(findingTypes, 'Control.Title') && {
@@ -243,7 +276,7 @@ function mapping(
                       'Control.Waiver_Data'
                     ) as unknown as ExecJSON.ControlWaiverData
                   }),
-                  code: '', // empty string for now but gonna need to extract out of here per profile
+                  code: getCodeForProfileLayer(finding, profileName), // empty string for now but gonna need to extract out of here per profile
                   // very brittle since depends on profile indexes instead of finding the baseline profile - need to do research, but could be as simple as finding the profile without any values in its depends array
                   results:
                     index === profileNames.length - 1
