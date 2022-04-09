@@ -92,7 +92,7 @@
     "inspecjs": "^2.6.17",
     "jquery": "^3.6.0",
     "lodash": "4.17.21",
-    "lru-cache": "^6.0.0",
+    "lru-cache": "^7.8.0",
     "luxon": "^2.0.1",
     "mustache": "^4.2.0",
     "objects-to-csv": "^1.3.6",
