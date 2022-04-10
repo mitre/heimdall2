@@ -1,5 +1,6 @@
 export * from './src/asff-mapper';
 export * from './src/aws-config-mapper';
+export * from './src/azure-policy-mapper';
 export * from './src/burpsuite-mapper';
 export * from './src/converters-from-hdf/asff/reverse-asff-mapper';
 export * from './src/converters-from-hdf/splunk/reverse-splunk-mapper';

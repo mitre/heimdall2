@@ -8,16 +8,19 @@
 //  AZURE_PASSWORD - Passord to authenticate with.
 // This converter was written for: https://docs.microsoft.com/en-us/azure/governance/policy/samples/nist-sp-800-53-r4
 
-import {PolicyClient} from '@azure/arm-policy';
-import {PolicyInsightsClient} from '@azure/arm-policyinsights';
-import {DefaultAzureCredential} from '@azure/identity';
+import { PolicyClient } from '@azure/arm-policy';
+import { PolicyInsightsClient } from '@azure/arm-policyinsights';
+import { DefaultAzureCredential } from '@azure/identity';
+import { ExecJSON } from 'inspecjs';
+import { AzurePolicyMapping } from './mappings/AzurePolicyMapping';
+import * as fs from 'fs';
+import { version as HeimdallToolsVersion } from '../package.json';
+
 // For troubleshooting API calls, uncomment below
 //import { setLogLevel } from "@azure/logger";
 //setLogLevel("info");
-import fs from 'fs';
-import {ExecJSON} from 'inspecjs';
-import {version as HeimdallToolsVersion} from '../package.json';
-import {AzurePolicyMapping} from './mappings/AzurePolicyMapping';
+
+//const fs = require('fs'); //import from fs
 
 // Load Azure Subscription ID as a variable from an OS environment variable.
 let subscriptionId = '';
@@ -47,7 +50,7 @@ type PolicyDefinition = {
   groupNames?: string[];
   state?: string;
   resources?: AzureResource[];
-};
+}
 // AzureResource contains data about a specific Azure Resource (i.e. virtualMachine).
 type AzureResource = {
   id: string;
@@ -55,15 +58,7 @@ type AzureResource = {
   type?: string;
   state?: string;
   location?: string;
-};
-// HDFResult contains data about a specific compliance test.
-type HDFResult = {
-  code_desc: string;
-  run_time: number;
-  skip_message: string;
-  start_time: string;
-  status: string;
-};
+}
 
 //Azure Policy Converter Class
 class AzurePolicyConverter {
@@ -177,7 +172,7 @@ class AzurePolicyConverter {
 
       // Loop through NIST 800-53 control mappings and add to groupNames list
       if (policyState.policyDefinitionGroupNames !== undefined) {
-        policyState.policyDefinitionGroupNames.forEach((groupName) => {
+        policyState.policyDefinitionGroupNames.forEach((groupName: string) => {
           groupNames.push(groupName);
         });
       }
@@ -304,10 +299,10 @@ class AzurePolicyConverter {
         title: policyDefinition.detailedName || '',
         desc: policyDefinition.description || null,
         impact: 0.5,
-        tags: {nist: policyDefinition.groupNames},
+        tags: { nist: policyDefinition.groupNames },
         descriptions: [],
         refs: [],
-        source_location: {ref: policyDefinition.subscriptionId, line: 1},
+        source_location: { ref: policyDefinition.subscriptionId, line: 1 },
         code: '',
         results: this.getTestResults(policyDefinition)
       };
@@ -349,8 +344,8 @@ class AzurePolicyConverter {
           nistTag = groupName.substring(groupName.lastIndexOf('_') + 1);
           hdfTags.push(
             nistTag.charAt(0).toUpperCase() +
-              nistTag.charAt(1).toUpperCase() +
-              nistTag.slice(2)
+            nistTag.charAt(1).toUpperCase() +
+            nistTag.slice(2)
           );
         }
       }
@@ -382,7 +377,7 @@ class AzurePolicyConverter {
   // Testing writing to file
   private async writeHdf(hdf: ExecJSON.Execution) {
     const outputJson = JSON.stringify(hdf);
-    fs.writeFile('azure-policy-test.json', outputJson, function (err: string) {
+    fs.writeFile('azure-policy-test.json', outputJson, (err: any) => {
       if (err) {
         throw err;
       }
