@@ -20086,9 +20086,9 @@ vue-codemod@^0.0.5:
     yargs "^16.2.0"
 
 vue-cookies@^1.7.4:
-  version "1.7.5"
-  resolved "https://registry.yarnpkg.com/vue-cookies/-/vue-cookies-1.7.5.tgz#375815bd56608d2fbd9ce861273e1796a497e2e4"
-  integrity sha512-u/ht3LpuTgwYl6nR1FJGy9EaSoVcbcRXpJgGGlYwglotiJwPvmkn3yfuustDF8cAJJpn5nL3DQQKH6AaJWCkKw==
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/vue-cookies/-/vue-cookies-1.8.0.tgz#1deb0227364f9b5b59f3519c64d86431c9a0d5f0"
+  integrity sha512-5nxAwW4kIS6uP0G9UnWcmSj2NlFpV1wkvAAwGgkWqyPDVCP1IEzFZfg7YUBLiYowZ/cFnxaXqS1nWPIBwfXGRw==
 
 vue-eslint-parser@^8.0.0, vue-eslint-parser@^8.0.1:
   version "8.0.1"
