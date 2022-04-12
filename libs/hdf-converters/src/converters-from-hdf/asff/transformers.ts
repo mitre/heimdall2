@@ -379,7 +379,7 @@ export function setupSevOriginal(control: SegmentedControl) {
 
 function createControlMetadata(control: SegmentedControl) {
   const types = [
-    `Control/ID/${control.id}`,
+    `Control/ID/${escapeForwardSlashes(control.id)}`,
     `Control/Impact/${control.impact}`
   ];
   if (control.desc) {
