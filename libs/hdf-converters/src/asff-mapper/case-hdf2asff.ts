@@ -167,7 +167,7 @@ function mapping(
   );
   return {
     shortcircuit: true,
-    passthrough: {..._.get(executionTypes, 'Execution.passthrough')},
+    passthrough: _.get(executionTypes, 'Execution.passthrough'),
     platform: {
       ..._.get(executionTypes, 'Execution.platform'),
       target_id: (
@@ -223,7 +223,6 @@ function mapping(
               _.get(context.data, 'Findings') as Record<string, unknown>[],
               (finding: Record<string, unknown>) => {
                 const findingTypes = objectifyTypesArray(finding);
-                console.log(getCodeForProfileLayer(finding, profileName));
                 return {
                   id: _.get(findingTypes, 'Control.ID') as unknown as string,
                   ...(_.has(findingTypes, 'Control.Title') && {
