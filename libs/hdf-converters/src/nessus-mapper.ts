@@ -320,9 +320,14 @@ export class NessusMapper extends BaseConverter {
                 code_desc: {transformer: formatCodeDesc},
                 message: {
                   path: ['plugin_output', 'cm:compliance-actual-value'],
-                  transformer: String
+                  transformer: (value: unknown) => {
+                    if (value === null || value === undefined) {
+                      return value
+                    }
+                    return String(value)
+                  } 
                 },
-                run_time: 0,
+                run_time: 0.0,
                 start_time: {
                   path: '$.HostProperties.tag',
                   transformer: getStartTime
