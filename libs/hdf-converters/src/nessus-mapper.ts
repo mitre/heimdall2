@@ -322,10 +322,10 @@ export class NessusMapper extends BaseConverter {
                   path: ['plugin_output', 'cm:compliance-actual-value'],
                   transformer: (value: unknown) => {
                     if (value === null || value === undefined) {
-                      return value
+                      return value;
                     }
-                    return String(value)
-                  } 
+                    return String(value);
+                  }
                 },
                 run_time: 0.0,
                 start_time: {

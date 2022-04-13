@@ -11,19 +11,19 @@ describe('nessus_mapper', () => {
         {encoding: 'utf-8'}
       )
     );
-    
-    const converted = mapper.toHdf()
-    
-    expect(Array.isArray(converted)).toBe(true)
+
+    const converted = mapper.toHdf();
+
+    expect(Array.isArray(converted)).toBe(true);
 
     if (Array.isArray(converted)) {
-        expect(converted.map((resultsSet) => omitVersions(resultsSet))).toEqual(
-            JSON.parse(
-                fs.readFileSync('sample_jsons/nessus_mapper/nessus-converted.json', {
-                  encoding: 'utf-8'
-                })
-            ).map((resultsSet: ExecJSON.Execution) => omitVersions(resultsSet))
-        )
+      expect(converted.map((resultsSet) => omitVersions(resultsSet))).toEqual(
+        JSON.parse(
+          fs.readFileSync('sample_jsons/nessus_mapper/nessus-converted.json', {
+            encoding: 'utf-8'
+          })
+        ).map((resultsSet: ExecJSON.Execution) => omitVersions(resultsSet))
+      );
     }
   });
 });
