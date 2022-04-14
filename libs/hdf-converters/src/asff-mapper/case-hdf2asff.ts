@@ -143,7 +143,9 @@ function getCodeForProfileLayer(
       const [profileLevel, code] = codeLayer.split(
         '\n=========================================================\n\n'
       );
-      profileLayerToCodeMapping[profileLevel] = code.trim();
+      profileLayerToCodeMapping[profileLevel] = code
+        .split('Test Description:')[0]
+        .trim();
     });
   if (profileName in profileLayerToCodeMapping) {
     return profileLayerToCodeMapping[profileName];
