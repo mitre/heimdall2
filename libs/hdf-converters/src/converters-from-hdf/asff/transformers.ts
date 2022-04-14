@@ -270,7 +270,9 @@ export function createCode(
             cleanObjectValues
           )
         );
-  console.log(noCodeValue);
+  if (!control.code && noCodeValue === '') {
+    return '';
+  }
   return `=========================================================\n# Profile name: ${
     control.profileInfo?.name
   }\n=========================================================\n\n${
