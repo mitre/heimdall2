@@ -140,10 +140,10 @@ function getCodeForProfileLayer(
     )
     .filter((codeLayer) => codeLayer)
     .forEach((codeLayer) => {
-      const [profileName, code] = codeLayer.split(
+      const [profileLevel, code] = codeLayer.split(
         '\n=========================================================\n\n'
       );
-      profileLayerToCodeMapping[profileName] = code.trim();
+      profileLayerToCodeMapping[profileLevel] = code.trim();
     });
   if (profileName in profileLayerToCodeMapping) {
     return profileLayerToCodeMapping[profileName];
