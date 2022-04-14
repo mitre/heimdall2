@@ -81,15 +81,15 @@ export class SarifMapper extends BaseConverter {
             descriptions: [],
             refs: [],
             source_location: {
-              transformer: (value: unknown) => {
+              transformer: (control: unknown) => {
                 return _.omitBy(
                   {
                     ref: _.get(
-                      value,
+                      control,
                       'locations[0].physicalLocation.artifactLocation.uri'
                     ),
                     line: _.get(
-                      value,
+                      control,
                       'locations[0].physicalLocation.region.startLine'
                     )
                   },
