@@ -4,7 +4,7 @@ import {NessusResults} from '../../../src/nessus-mapper';
 import {omitVersions} from '../../utils';
 
 describe('nessus_mapper', () => {
-  it('Successfully converts JFrog Xray data', () => {
+  it('Successfully converts Nessus data', () => {
     const mapper = new NessusResults(
       fs.readFileSync(
         'sample_jsons/nessus_mapper/sample_input_report/sample.nessus',
