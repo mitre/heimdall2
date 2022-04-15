@@ -17,7 +17,7 @@ function replaceTypesSlashes<T>(type: T): T | string {
 
 function objectifyTypesArray(
   typesArray: string[] | Record<string, unknown>
-): Record<string, Record<string, unknown>> {
+): Record<string, unknown> {
   if (!Array.isArray(typesArray)) {
     typesArray = _.get(typesArray, 'FindingProviderFields.Types') as string[];
   }
@@ -171,17 +171,14 @@ function mapping(
     shortcircuit: true,
     passthrough: _.get(executionTypes, 'Execution.passthrough'),
     platform: {
-      ..._.get(executionTypes, 'Execution.platform'),
+      ...(_.get(executionTypes, 'Execution.platform') as ExecJSON.Platform),
       target_id: (
         context.supportingDocs.get(SpecialCasing.HDF2ASFF)?.execution
           .Id as string
       ).split('/')[0]
-    } as unknown as ExecJSON.Platform,
-    version: _.get(executionTypes, 'Execution.version') as unknown as string,
-    statistics: _.get(
-      executionTypes,
-      'Execution.statistics'
-    ) as unknown as ExecJSON.Statistics,
+    },
+    version: _.get(executionTypes, 'Execution.version'),
+    statistics: _.get(executionTypes, 'Execution.statistics'),
     profiles: _.map(profileNames, (profileName: string, index: number) => {
       // order could be incorrect since we're only doing it via index instead of mapping the depends tree properly
       return {
@@ -196,17 +193,9 @@ function mapping(
           executionTypes,
           `${profileName}.copyright_email`
         ),
-        supports: _.get(
-          executionTypes,
-          `${profileName}.supports`,
-          []
-        ) as ExecJSON.SupportedPlatform[],
-        attributes: _.get(
-          executionTypes,
-          `${profileName}.attributes`,
-          []
-        ) as Record<string, unknown>[],
-        depends: _.get(executionTypes, `${profileName}.depends`) as any,
+        supports: _.get(executionTypes, `${profileName}.supports`, []),
+        attributes: _.get(executionTypes, `${profileName}.attributes`, []),
+        depends: _.get(executionTypes, `${profileName}.depends`),
         groups: [],
         status: _.get(executionTypes, `${profileName}.status`),
         description: _.get(executionTypes, `${profileName}.description`),
@@ -222,56 +211,46 @@ function mapping(
               (finding: Record<string, unknown>) => {
                 const findingTypes = objectifyTypesArray(finding);
                 return {
-                  id: _.get(findingTypes, 'Control.ID') as unknown as string,
+                  id: _.get(findingTypes, 'Control.ID'),
                   ...(_.has(findingTypes, 'Control.Title') && {
-                    title: _.get(
-                      findingTypes,
-                      'Control.Title'
-                    ) as unknown as string
+                    title: _.get(findingTypes, 'Control.Title')
                   }),
                   ...(_.has(findingTypes, 'Control.Desc') && {
-                    desc: _.get(
-                      findingTypes,
-                      'Control.Desc'
-                    ) as unknown as string
+                    desc: _.get(findingTypes, 'Control.Desc')
                   }),
-                  impact: _.get(
-                    findingTypes,
-                    'Control.Impact'
-                  ) as unknown as number,
+                  impact: _.get(findingTypes, 'Control.Impact'),
                   tags: {
-                    ..._.omit(_.get(findingTypes, 'Tags'), ['nist']),
+                    ..._.omit(
+                      _.get(findingTypes, 'Tags') as object | null | undefined,
+                      ['nist']
+                    ),
                     nist: ((): string[] => {
-                      const nisttags = _.get(
-                        findingTypes,
-                        'Tags.nist'
-                      ) as unknown as undefined | string[];
+                      const nisttags = _.get(findingTypes, 'Tags.nist') as
+                        | undefined
+                        | string[];
                       if (nisttags === undefined || nisttags.length === 0) {
                         return DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
-                      } else {
-                        return nisttags;
                       }
+                      return nisttags;
                     })()
                   },
                   descriptions: _.map(
-                    Object.entries(_.get(findingTypes, 'Descriptions') || {}),
-                    ([key, value]) => ({label: key, data: value as string})
+                    Object.entries(
+                      (_.get(findingTypes, 'Descriptions') as Record<
+                        string,
+                        string
+                      >) || {}
+                    ),
+                    ([key, value]) => ({label: key, data: value})
                   ),
-                  refs: _.get(
-                    findingTypes,
-                    'Control.Refs',
-                    []
-                  ) as ExecJSON.Reference[],
+                  refs: _.get(findingTypes, 'Control.Refs', []),
                   source_location: _.get(
                     findingTypes,
                     'Control.Source_Location',
                     {}
-                  ) as ExecJSON.SourceLocation,
+                  ),
                   ...(_.has(findingTypes, 'Control.Waiver_Data') && {
-                    waiver_data: _.get(
-                      findingTypes,
-                      'Control.Waiver_Data'
-                    ) as unknown as ExecJSON.ControlWaiverData
+                    waiver_data: _.get(findingTypes, 'Control.Waiver_Data')
                   }),
                   code: getCodeForProfileLayer(finding, profileName), // empty string for now but gonna need to extract out of here per profile
                   // very brittle since depends on profile indexes instead of finding the baseline profile - need to do research, but could be as simple as finding the profile without any values in its depends array
@@ -282,26 +261,29 @@ function mapping(
                             code_desc: _.get(
                               findingTypes,
                               'Segment.code_desc'
-                            ) as unknown as string,
+                            ) as string,
                             start_time: _.get(
                               findingTypes,
                               'Segment.start_time'
-                            ) as unknown as string,
-                            ..._.omit(_.get(findingTypes, 'Segment'), [
-                              'code_desc',
-                              'start_time'
-                            ])
+                            ) as string,
+                            ..._.omit(
+                              _.get(findingTypes, 'Segment') as Record<
+                                string,
+                                unknown
+                              >,
+                              ['code_desc', 'start_time']
+                            )
                           }
                         ]
                       : []
-                };
+                } as ExecJSON.Control;
               }
             );
           })(),
           context.data
         ),
         sha256: _.get(executionTypes, `${profileName}.sha256`)
-      };
+      } as ExecJSON.Profile;
     })
   } as MappedTransform<ExecJSON.Execution, ILookupPath>;
 }
