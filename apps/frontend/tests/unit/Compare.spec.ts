@@ -213,13 +213,13 @@ describe('compare charts', () => {
 
   it('sev chart gets correct data with 2 files with overlayed profiles', () => {
     removeAllFiles();
-    loadSample('Triple Overlay Example');
+    loadSample('Three Layer RHEL7 Overlay Example');
     loadSample('Acme Overlay Example');
     //the values in expected are the correct data
     expect((wrapper.vm as Vue & {sev_series: number[][]}).sev_series).toEqual([
-      [3, 0],
-      [51, 0],
-      [1, 0],
+      [8, 0],
+      [126, 0],
+      [4, 0],
       [0, 60]
     ]);
   });
@@ -274,7 +274,7 @@ describe('compare charts', () => {
 
   it('compliance chart gets correct data with 2 files with overlayed profiles', () => {
     removeAllFiles();
-    loadSample('Triple Overlay Example');
+    loadSample('Three Layer RHEL7 Overlay Example');
     loadSample('Acme Overlay Example');
     expect(
       new Set(

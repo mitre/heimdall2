@@ -196,7 +196,9 @@ export class BaseConverter {
     v: T | Array<T>
   ): T | Array<T> | MappedReform<T, ILookupPath> {
     const hasTransformer =
-      _.has(v, 'transformer') && _.isFunction(_.get(v, 'transformer'));
+      _.isObject(v) &&
+      _.has(v, 'transformer') &&
+      _.isFunction(_.get(v, 'transformer'));
     let transformer = (val: unknown) => val;
     if (hasTransformer) {
       transformer = _.get(v, 'transformer');
@@ -234,19 +236,13 @@ export class BaseConverter {
       } as MappedReform<T, ILookupPath>;
     }
 
-    if (hasTransformer) {
-      return transformer(hasPath ? pathV : file) as
-        | T
-        | T[]
-        | MappedReform<T, ILookupPath>;
-    }
-
-    return hasPath
-      ? pathV
-      : (this.convertInternal(file, v) as
-          | T
-          | T[]
-          | MappedReform<T, ILookupPath>);
+    return (
+      hasTransformer
+        ? transformer(hasPath ? pathV : file)
+        : hasPath
+        ? pathV
+        : this.convertInternal(file, v)
+    ) as T | T[] | MappedReform<T, ILookupPath>;
   }
 
   handleArray<T>(
@@ -331,12 +327,12 @@ export class BaseConverter {
     });
     return uniqueResults;
   }
-
   handlePath(file: Record<string, unknown>, path: string | string[]): unknown {
-    let pathArray = path;
-
+    let pathArray;
     if (typeof path === 'string') {
       pathArray = [path];
+    } else {
+      pathArray = path;
     }
 
     const index = _.findIndex(pathArray, (p) => this.hasPath(file, p));

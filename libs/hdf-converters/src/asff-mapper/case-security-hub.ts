@@ -37,23 +37,21 @@ function findingId(
   finding: unknown,
   {controls = null}: {controls: unknown[] | null}
 ) {
-  let output: string;
   let control;
   if (
     controls !== null &&
     (control = correspondingControl(controls, finding)) !== null
   ) {
-    output = _.get(control, 'ControlId');
+    return encode(_.get(control, 'ControlId'));
   } else if (_.has(finding, 'ProductFields.ControlId')) {
-    // check if aws
-    output = _.get(finding, 'ProductFields.ControlId');
+    // AWS Standards
+    return _.get(finding, 'ProductFields.ControlId');
   } else if (_.has(finding, 'ProductFields.RuleId')) {
-    // check if cis
-    output = _.get(finding, 'ProductFields.RuleId');
+    // CIS
+    return encode(_.get(finding, 'ProductFields.RuleId'));
   } else {
-    output = _.get(finding, 'GeneratorId').split('/').slice(-1)[0];
+    return encode(_.get(finding, 'GeneratorId').split('/').slice(-1)[0]);
   }
-  return encode(output);
 }
 
 function findingImpact(

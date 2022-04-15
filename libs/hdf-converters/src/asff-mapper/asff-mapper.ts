@@ -98,7 +98,7 @@ function externalProductHandler<T>(
   product: SpecialCasing,
   data: unknown,
   func: string,
-  defaultVal: T
+  defaultVal: T | (() => T)
 ): T {
   if (
     product !== SpecialCasing.Default &&
@@ -114,7 +114,7 @@ function externalProductHandler<T>(
     ]);
   } else {
     if (typeof defaultVal === 'function') {
-      return defaultVal();
+      return (defaultVal as () => T)();
     } else {
       return defaultVal;
     }
@@ -166,10 +166,10 @@ function handleIdGroup(
       (acc: unknown, cur: unknown) => {
         if (acc === undefined || cur === undefined) {
           return acc || cur;
-        } else if (acc === cur) {
-          return acc;
         } else {
-          return _.uniq(_.concat([], acc, cur));
+          return Array.isArray(acc) || Array.isArray(cur)
+            ? _.uniq(_.concat([], acc, cur))
+            : acc;
         }
       }
     ),
@@ -196,7 +196,7 @@ function handleIdGroup(
     refs: group
       .map((d) => d.refs)
       .flat()
-      .filter((element) => _.get(element, 'url')),
+      .filter((element) => _.get(element, 'url') !== undefined),
     source_location: ((): ExecJSON.SourceLocation => {
       const locs = _.uniq(group.map((d) => d.source_location)).filter(
         (loc) => Object.keys(loc || {}).length !== 0
@@ -390,7 +390,7 @@ export class ASFFMapper extends BaseConverter {
                     whichSpecialCase(finding),
                     finding,
                     'findingImpact',
-                    defaultFunc()
+                    defaultFunc
                   );
                 }
                 return typeof impact === 'string'
@@ -493,7 +493,7 @@ export class ASFFMapper extends BaseConverter {
                       whichSpecialCase(finding),
                       finding,
                       'subfindingsStatus',
-                      defaultFunc()
+                      defaultFunc
                     ) as ExecJSON.ControlResultStatus;
                   }
                 },
@@ -559,7 +559,7 @@ export class ASFFMapper extends BaseConverter {
                       whichSpecialCase(finding),
                       finding,
                       'subfindingsMessage',
-                      defaultFunc()
+                      defaultFunc
                     );
                   })();
                   const skipMessage = (() => {
