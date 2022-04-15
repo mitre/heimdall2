@@ -182,10 +182,6 @@ function mapping(
       executionTypes,
       'Execution.statistics'
     ) as unknown as ExecJSON.Statistics,
-    /*
-      NOTE: waiting on inspecjs to include passthrough as a potential value in the type
-      ...(_.has(executionTypes, 'Execution.passthrough') && {passthrough: _.get(executionTypes, 'Execution.passthrough')}),
-      */
     profiles: _.map(profileNames, (profileName: string, index: number) => {
       // order could be incorrect since we're only doing it via index instead of mapping the depends tree properly
       return {
