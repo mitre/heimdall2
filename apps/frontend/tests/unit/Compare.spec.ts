@@ -217,10 +217,10 @@ describe('compare charts', () => {
     loadSample('Acme Overlay Example');
     //the values in expected are the correct data
     expect((wrapper.vm as Vue & {sev_series: number[][]}).sev_series).toEqual([
-      [8, 0],
-      [126, 0],
-      [4, 0],
-      [0, 60]
+      [0, 8],
+      [0, 126],
+      [0, 4],
+      [60, 0]
     ]);
   });
 
