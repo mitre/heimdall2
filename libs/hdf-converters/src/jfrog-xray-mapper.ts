@@ -9,6 +9,7 @@ import {
   MappedTransform
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
 
 // Constants
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -18,7 +19,6 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 
 const CWE_NIST_MAPPING = new CweNistMapping();
-const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
 // Transformation Functions
 function hashId(vulnerability: unknown): string {
@@ -97,7 +97,10 @@ function parseIdentifier(identifier: Record<string, unknown>): string[] {
 }
 function nistTag(identifier: Record<string, unknown>): string[] {
   const identifiers = parseIdentifier(identifier);
-  return CWE_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG);
+  return CWE_NIST_MAPPING.nistFilter(
+    identifiers,
+    DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
+  );
 }
 
 // Mappings
