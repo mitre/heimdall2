@@ -1,6 +1,7 @@
 import splunkjs, {Job} from '@mitre/splunk-sdk-no-env';
 import ProxyHTTP from '@mitre/splunk-sdk-no-env/lib/platform/client/jquery_http';
 import {ExecJSON} from 'inspecjs';
+import {Logger} from 'winston'
 import _ from 'lodash';
 import {SplunkConfig} from './converters-from-hdf/splunk/reverse-splunk-mapper';
 import {createWinstonLogger} from './utils/global';
@@ -203,7 +204,7 @@ export class SplunkMapper {
   constructor(
     config: SplunkConfig,
     webCompatibility = false,
-    logService?: winston.Logger,
+    logService?: Logger,
     loggingLevel?: string
   ) {
     this.config = config;
