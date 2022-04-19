@@ -7,7 +7,7 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "target": "ES6",
+    "target": "ES2019",
     "esModuleInterop": true,
     "noImplicitAny": true,
     "resolveJsonModule": true
