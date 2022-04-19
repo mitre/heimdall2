@@ -8,7 +8,7 @@ import {
   ExecJSON
 } from 'inspecjs';
 import _ from 'lodash';
-import {Logger} from 'winston'
+import {Logger} from 'winston';
 import {MappedTransform} from '../../base-converter';
 import {createWinstonLogger} from '../../utils/global';
 import {FromAnyBaseConverter} from '../reverse-any-base-converter';
@@ -41,7 +41,7 @@ export type SplunkData = {
   reports: SplunkReport[];
 };
 
-let logger = createWinstonLogger("HDF2Splunk", "INFO");
+let logger = createWinstonLogger('HDF2Splunk', 'INFO');
 
 export function createGUID(length: number) {
   let result = '';
