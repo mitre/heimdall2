@@ -8,7 +8,7 @@ import {
   ExecJSON
 } from 'inspecjs';
 import _ from 'lodash';
-import winston from 'winston';
+import {Logger} from 'winston';
 import {MappedTransform} from '../../base-converter';
 import {createWinstonLogger} from '../../utils/global';
 import {FromAnyBaseConverter} from '../reverse-any-base-converter';
@@ -41,7 +41,7 @@ export type SplunkData = {
   reports: SplunkReport[];
 };
 
-let logger: winston.Logger = winston.createLogger();
+let logger = createWinstonLogger('HDF2Splunk', 'INFO');
 
 export function createGUID(length: number) {
   let result = '';
@@ -293,7 +293,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
 
   constructor(
     data: ExecJSON.Execution | ContextualizedEvaluation,
-    logService?: winston.Logger,
+    logService?: Logger,
     loggingLevel?: string
   ) {
     if (logService) {
