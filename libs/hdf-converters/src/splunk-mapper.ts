@@ -2,7 +2,6 @@ import splunkjs, {Job} from '@mitre/splunk-sdk-no-env';
 import ProxyHTTP from '@mitre/splunk-sdk-no-env/lib/platform/client/jquery_http';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
-import winston from 'winston';
 import {SplunkConfig} from './converters-from-hdf/splunk/reverse-splunk-mapper';
 import {createWinstonLogger} from './utils/global';
 
@@ -27,7 +26,7 @@ export type FileMetaData = {
 
 const MAPPER_NAME = 'Splunk2HDF';
 
-let logger: winston.Logger = winston.createLogger();
+let logger = createWinstonLogger("Splunk2HDF")
 
 // Groups items by using the provided key function
 export function group_by<T>(

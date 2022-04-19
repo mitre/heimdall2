@@ -1,6 +1,6 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
-import winston from 'winston';
+import {createLogger, transports, format} from 'winston';
 
 // DEFAULT_NIST_TAG is applicable to all automated configuration tests.
 // SA-11 (DEVELOPER SECURITY TESTING AND EVALUATION) - RA-5 (VULNERABILITY SCANNING)
@@ -12,15 +12,15 @@ export const FROM_ASFF_TYPES_SLASH_REPLACEMENT = /{{{SLASH}}}/gi;
 export function createWinstonLogger(
   mapperName: string,
   level = 'debug'
-): winston.Logger {
-  return winston.createLogger({
-    transports: [new winston.transports.Console()],
+) {
+  return createLogger({
+    transports: [new transports.Console()],
     level: level,
-    format: winston.format.combine(
-      winston.format.timestamp({
+    format: format.combine(
+      format.timestamp({
         format: 'MMM-DD-YYYY HH:mm:ss Z'
       }),
-      winston.format.printf(
+      format.printf(
         (info) => `[${[info.timestamp]}] ${mapperName} ${info.message}`
       )
     )
