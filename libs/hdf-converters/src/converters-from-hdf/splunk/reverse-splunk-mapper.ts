@@ -77,6 +77,7 @@ export function createReportMapping(
       hdf_splunk_schema: HDF_SPLUNK_SCHEMA,
       filetype: 'evaluation'
     },
+    passthrough: _.get(execution, 'data.passthrough'),
     profiles: [],
     platform: execution.data.platform,
     statistics: execution.data.statistics,
