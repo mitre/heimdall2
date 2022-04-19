@@ -4481,9 +4481,9 @@
     xml-js "*"
 
 "@types/xml2js@^0.4.9":
-  version "0.4.10"
-  resolved "https://registry.yarnpkg.com/@types/xml2js/-/xml2js-0.4.10.tgz#8e2df0ecde46074456e268b4b3e4264978f5f20e"
-  integrity sha512-SuiMNi9WxzxbUgI6uJjf0ztaOfBZ79rmbgi9Fp+g9Xk+YIBh3arN33tWito5WTSsBPxPRMOgdTSU5YIXCldaDg==
+  version "0.4.11"
+  resolved "https://registry.yarnpkg.com/@types/xml2js/-/xml2js-0.4.11.tgz#bf46a84ecc12c41159a7bd9cf51ae84129af0e79"
+  integrity sha512-JdigeAKmCyoJUiQljjr7tQG3if9NkqGUgwEUqBvV0N7LM4HyQk7UXCnusRa1lnvXAEYJ8mw8GtZWioagNztOwA==
   dependencies:
     "@types/node" "*"
 
