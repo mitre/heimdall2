@@ -5,20 +5,11 @@
       style="cursor: pointer"
       @click="logout"
     >
-      <span>Sign Out</span>
-      <v-icon color="red" class="pr-2">mdi-logout</v-icon>
-    </div>
-    <div class="d-flex">
-      <v-text-field
-        v-model="search"
-        class="px-3"
-        append-icon="mdi-magnify"
-        label="Search"
-        hide-details
-      />
-      <v-btn class="mt-3" icon @click="updateSearch">
+      <v-btn icon @click="updateSearch">
         <v-icon>mdi-refresh</v-icon>
       </v-btn>
+      <span class="pt-2 pr-4">Sign Out</span>
+      <v-icon color="red" class="pr-2">mdi-logout</v-icon>
     </div>
 
     <div class="d-flex flex-column">
@@ -66,20 +57,6 @@ export default class FileList extends Vue {
   executions: Omit<FileMetaData, 'profile_sha256'>[] = [];
   selectedExecutions: Omit<FileMetaData, 'profile_sha256'>[] = [];
 
-  unsafeCommands = [
-    'collect',
-    'dump',
-    'delete',
-    'outputcsv',
-    'outputlookup',
-    'run',
-    'runshellscript',
-    'script',
-    'sendalert',
-    'sendemail',
-    'tscollect'
-  ];
-
   search = '';
   awaitingSearch = false;
   initalSearchDone = false;
@@ -116,24 +93,15 @@ export default class FileList extends Vue {
 
   async updateSearch() {
     this.loading = true;
-    if (
-      this.unsafeCommands.some(
-        (command) => this.search.toLowerCase().indexOf(command) !== -1
-      )
-    ) {
-      SnackbarModule.failure('Unable to execute command - Unsafe keyword');
-    } else {
-      this.splunkConverter = new SplunkMapper(this.splunkConfig, true);
-      const results = await this.splunkConverter.queryData(this.search);
-      this.executions = [];
-      results.forEach((result: SplunkReport) => {
-        // Only get header objects
-        if (_.get(result, 'meta.subtype').toLowerCase() === 'header') {
-          this.executions.push(result.meta);
-        }
-      });
-    }
-
+    this.splunkConverter = new SplunkMapper(this.splunkConfig, true);
+    const results = await this.splunkConverter.queryData(this.search);
+    this.executions = [];
+    results.forEach((result: SplunkReport) => {
+      // Only get header objects
+      if (_.get(result, 'meta.subtype').toLowerCase() === 'header') {
+        this.executions.push(result.meta);
+      }
+    });
     this.loading = false;
   }
 
@@ -160,8 +128,8 @@ export default class FileList extends Vue {
             SnackbarModule.failure(String(err));
           });
         } else {
-          SnackbarModule.failure('Attempted to load an undefined executuion');
-          throw new Error('Attempted to load an undefined executuion');
+          SnackbarModule.failure('Attempted to load an undefined execution');
+          throw new Error('Attempted to load an undefined execution');
         }
       }
     );
