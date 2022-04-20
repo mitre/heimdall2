@@ -5,20 +5,11 @@
       style="cursor: pointer"
       @click="logout"
     >
-      <span>Sign Out</span>
-      <v-icon color="red" class="pr-2">mdi-logout</v-icon>
-    </div>
-    <div class="d-flex">
-      <v-text-field
-        v-model="search"
-        class="px-3"
-        append-icon="mdi-magnify"
-        label="Search"
-        hide-details
-      />
-      <v-btn class="mt-3" icon @click="updateSearch">
+      <v-btn icon @click="updateSearch">
         <v-icon>mdi-refresh</v-icon>
       </v-btn>
+      <span class="pt-2 pr-4">Sign Out</span>
+      <v-icon color="red" class="pr-2">mdi-logout</v-icon>
     </div>
 
     <div class="d-flex flex-column">
@@ -137,8 +128,8 @@ export default class FileList extends Vue {
             SnackbarModule.failure(String(err));
           });
         } else {
-          SnackbarModule.failure('Attempted to load an undefined executuion');
-          throw new Error('Attempted to load an undefined executuion');
+          SnackbarModule.failure('Attempted to load an undefined execution');
+          throw new Error('Attempted to load an undefined execution');
         }
       }
     );
