@@ -66,6 +66,20 @@ export default class FileList extends Vue {
   executions: Omit<FileMetaData, 'profile_sha256'>[] = [];
   selectedExecutions: Omit<FileMetaData, 'profile_sha256'>[] = [];
 
+  unsafeCommands = [
+    'collect',
+    'dump',
+    'delete',
+    'outputcsv',
+    'outputlookup',
+    'run',
+    'runshellscript',
+    'script',
+    'sendalert',
+    'sendemail',
+    'tscollect'
+  ];
+
   search = '';
   awaitingSearch = false;
   initalSearchDone = false;
@@ -102,15 +116,24 @@ export default class FileList extends Vue {
 
   async updateSearch() {
     this.loading = true;
-    this.splunkConverter = new SplunkMapper(this.splunkConfig, true);
-    const results = await this.splunkConverter.queryData(this.search);
-    this.executions = [];
-    results.forEach((result: SplunkReport) => {
-      // Only get header objects
-      if (_.get(result, 'meta.subtype').toLowerCase() === 'header') {
-        this.executions.push(result.meta);
-      }
-    });
+    if (
+      this.unsafeCommands.some(
+        (command) => this.search.toLowerCase().indexOf(command) !== -1
+      )
+    ) {
+      SnackbarModule.failure('Unable to execute command - Unsafe keyword');
+    } else {
+      this.splunkConverter = new SplunkMapper(this.splunkConfig, true);
+      const results = await this.splunkConverter.queryData(this.search);
+      this.executions = [];
+      results.forEach((result: SplunkReport) => {
+        // Only get header objects
+        if (_.get(result, 'meta.subtype').toLowerCase() === 'header') {
+          this.executions.push(result.meta);
+        }
+      });
+    }
+
     this.loading = false;
   }
 

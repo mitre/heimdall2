@@ -4,7 +4,7 @@ export type SplunkProfile = {
   meta: Meta;
   summary: string;
   sha256: string;
-  controls: any[];
+  controls: unknown[];
   supports: any[] | ILookupPathFH;
   name: string;
   copyright: string;

@@ -4,7 +4,7 @@ export type SplunkReport = {
   meta: Meta;
   statistics?: ExecJSON.Statistics;
   passthrough: any;
-  profiles: any[];
+  profiles: unknown[];
   platform: Platform;
   version: string;
 };
