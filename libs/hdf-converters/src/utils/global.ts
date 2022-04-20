@@ -1,19 +1,23 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
-import winston from 'winston';
+import {createLogger, format, transports} from 'winston';
 
-export function createWinstonLogger(
-  mapperName: string,
-  level = 'debug'
-): winston.Logger {
-  return winston.createLogger({
-    transports: [new winston.transports.Console()],
+// DEFAULT_NIST_TAG is applicable to all automated configuration tests.
+// SA-11 (DEVELOPER SECURITY TESTING AND EVALUATION) - RA-5 (VULNERABILITY SCANNING)
+export const DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS = ['SA-11', 'RA-5'];
+
+// The "Types" field of ASFF only supports a maximum of 2 slashes, and will get replaced with this text. Note that the default AWS CLI doesn't support UTF-8 encoding
+export const FROM_ASFF_TYPES_SLASH_REPLACEMENT = /{{{SLASH}}}/gi;
+
+export function createWinstonLogger(mapperName: string, level = 'debug') {
+  return createLogger({
+    transports: [new transports.Console()],
     level: level,
-    format: winston.format.combine(
-      winston.format.timestamp({
+    format: format.combine(
+      format.timestamp({
         format: 'MMM-DD-YYYY HH:mm:ss Z'
       }),
-      winston.format.printf(
+      format.printf(
         (info) => `[${[info.timestamp]}] ${mapperName} ${info.message}`
       )
     )

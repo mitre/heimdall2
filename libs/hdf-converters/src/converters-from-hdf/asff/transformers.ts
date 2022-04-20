@@ -261,17 +261,22 @@ function cleanObjectValues<T>(value: T): boolean {
 export function createCode(
   control: ExecJSON.Control & {profileInfo?: Record<string, unknown>}
 ) {
-  return `=========================================================\n# Profile name: ${
-    control.profileInfo?.name
-  }\n=========================================================\n\n${
-    control.code
-      ? control.code?.replace(/\\\"/g, '"')
+  const noCodeValue =
+    (_.get(control, 'profileInfo.depends') || []).length > 0
+      ? ''
       : JSON.stringify(
           _.omitBy(
             _.omit(control, ['results', 'profileInfo']),
             cleanObjectValues
           )
-        )
+        );
+  if (!control.code && noCodeValue === '') {
+    return '';
+  }
+  return `=========================================================\n# Profile name: ${
+    control.profileInfo?.name
+  }\n=========================================================\n\n${
+    control.code ? control.code?.replace(/\\\"/g, '"') : noCodeValue
   }`;
 }
 

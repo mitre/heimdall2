@@ -1,6 +1,6 @@
 import fs from 'fs';
 import _ from 'lodash';
-import {ASFFResults as Mapper} from '../../../src/asff-mapper';
+import {ASFFResults as Mapper} from '../../../src/asff-mapper/asff-mapper';
 import {omitVersions} from '../../utils';
 
 describe('ASFF Mapper', () => {

@@ -32,8 +32,7 @@
           "tags": {
             "nist": [
               "SA-11",
-              "RA-5",
-              "Rev_4"
+              "RA-5"
             ],
             "cweid": "CWE-942: Overly Permissive Cross-domain Whitelist",
             "confidence": "Certain"
@@ -134,8 +133,7 @@
           "tags": {
             "nist": [
               "SA-11",
-              "RA-5",
-              "Rev_4"
+              "RA-5"
             ],
             "cweid": "CWE-942: Overly Permissive Cross-domain Whitelist",
             "confidence": "Certain"
@@ -235,8 +233,7 @@
           "impact": 0.3,
           "tags": {
             "nist": [
-              "SI-10",
-              "Rev_4"
+              "SI-10"
             ],
             "cweid": "CWE-20: Improper Input Validation\nCWE-116: Improper Encoding or Escaping of Output",
             "confidence": "Certain"
@@ -391,8 +388,7 @@
           "tags": {
             "nist": [
               "SA-11",
-              "RA-5",
-              "Rev_4"
+              "RA-5"
             ],
             "cweid": "CWE-530: Exposure of Backup File to an Unauthorized Control Sphere",
             "confidence": "Certain"
@@ -433,8 +429,7 @@
           "tags": {
             "nist": [
               "SA-11",
-              "RA-5",
-              "Rev_4"
+              "RA-5"
             ],
             "cweid": "CWE-16: Configuration",
             "confidence": "Certain"
@@ -469,8 +464,7 @@
           "tags": {
             "nist": [
               "SC-12",
-              "SC-13",
-              "Rev_4"
+              "SC-13"
             ],
             "cweid": "CWE-295: Improper Certificate Validation\nCWE-326: Inadequate Encryption Strength\nCWE-327: Use of a Broken or Risky Cryptographic Algorithm",
             "confidence": "Certain"
@@ -505,8 +499,7 @@
           "tags": {
             "nist": [
               "SA-11",
-              "RA-5",
-              "Rev_4"
+              "RA-5"
             ],
             "cweid": "CWE-16: Configuration\nCWE-436: Interpretation Conflict",
             "confidence": "Certain"
@@ -541,8 +534,7 @@
           "tags": {
             "nist": [
               "SA-11",
-              "RA-5",
-              "Rev_4"
+              "RA-5"
             ],
             "cweid": "CWE-524: Information Exposure Through Caching\nCWE-525: Information Exposure Through Browser Caching",
             "confidence": "Certain"
@@ -576,8 +568,7 @@
           "impact": 0.3,
           "tags": {
             "nist": [
-              "SC-8",
-              "Rev_4"
+              "SC-8"
             ],
             "cweid": "CWE-200: Information Exposure",
             "confidence": "Certain"
@@ -612,8 +603,7 @@
           "tags": {
             "nist": [
               "SA-11",
-              "RA-5",
-              "Rev_4"
+              "RA-5"
             ],
             "cweid": "CWE-523: Unprotected Transport of Credentials",
             "confidence": "Certain"
@@ -653,8 +643,7 @@
           "impact": 0.3,
           "tags": {
             "nist": [
-              "SC-8",
-              "Rev_4"
+              "SC-8"
             ],
             "cweid": "CWE-200: Information Exposure",
             "confidence": "Certain"
@@ -688,8 +677,7 @@
           "impact": 0.3,
           "tags": {
             "nist": [
-              "IA-5",
-              "Rev_4"
+              "IA-5"
             ],
             "cweid": "CWE-693: Protection Mechanism Failure",
             "confidence": "Firm"
@@ -736,8 +724,7 @@
           "tags": {
             "nist": [
               "SC-8",
-              "SI-11",
-              "Rev_4"
+              "SI-11"
             ],
             "cweid": "CWE-200: Information Exposure\nCWE-388: Error Handling",
             "confidence": "Certain"
@@ -771,8 +758,7 @@
           "impact": 0.3,
           "tags": {
             "nist": [
-              "SC-12",
-              "Rev_4"
+              "SC-12"
             ],
             "cweid": "CWE-326: Inadequate Encryption Strength",
             "confidence": "Certain"

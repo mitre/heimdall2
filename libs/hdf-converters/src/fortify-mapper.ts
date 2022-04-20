@@ -36,9 +36,7 @@ function nistTag(rule: Record<string, unknown>): string[] {
     if (tag === null || tag === undefined) {
       return DEFAULT_NIST_TAG;
     } else {
-      return _.get(tag, 'Title')
-        .match(/[a-zA-Z][a-zA-Z]-\d{1,2}/)
-        .concat(['Rev_4']);
+      return _.get(tag, 'Title').match(/[a-zA-Z][a-zA-Z]-\d{1,2}/);
     }
   }
   return [];

@@ -12,6 +12,7 @@ import {
   parseXml
 } from './base-converter';
 import {CciNistMapping} from './mappings/CciNistMapping';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
@@ -21,7 +22,6 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 
 const CCI_NIST_MAPPING = new CciNistMapping();
-const DEFAULT_NIST_TAG = ['SA-11', 'RA-5', 'Rev_4'];
 
 const RULE_RESULT_PATHS = ['cdf:rule-result', 'rule-result'];
 
@@ -196,7 +196,11 @@ function extractCci(input: IIdent | IIdent[]): string[] {
 
 function nistTag(input: IIdent | IIdent[]): string[] {
   const identifiers: string[] = extractCci(input);
-  return CCI_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG, false);
+  return CCI_NIST_MAPPING.nistFilter(
+    identifiers,
+    DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+    false
+  );
 }
 
 export class XCCDFResultsMapper extends BaseConverter {

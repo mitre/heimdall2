@@ -101,9 +101,7 @@ index="<<YOUR INDEX>>" meta.subtype=control | stats  values(meta.filename) value
             // The actual nist tag (s). AC-1 provided as an example
             "AC-1",
             // Note that there can be multiple, and they can contain enhancements
-            "AT-1 (c)",
-            // Typically, the last tag is the revision
-            "Rev_4"
+            "AT-1 (c)"
         ],
         "other_tag_0": "There can be as many or as few tags as the profile developer wishes",
         "my_tag": "e.x. 1",
