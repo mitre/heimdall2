@@ -61,22 +61,23 @@ export class Evaluation extends VuexModule {
     );
     const loadedIds: FileID[] = [];
     await Promise.all(
-      unloadedIds.map(async (id) => {
-        return this.loadEvaluation(id)
+      unloadedIds.map(async (id) =>
+        this.loadEvaluation(id)
           .then(async (evaluation) => {
             if (await InspecIntakeModule.isHDF(evaluation.data)) {
-              return InspecIntakeModule.loadText({
+              InspecIntakeModule.loadText({
                 text: JSON.stringify(evaluation.data),
                 filename: evaluation.filename,
                 database_id: evaluation.id,
                 createdAt: evaluation.createdAt,
                 updatedAt: evaluation.updatedAt,
                 tags: [] // Tags are not yet implemented, so for now the value is passed in empty
-              }).catch((err) => {
-                SnackbarModule.failure(err);
-              });
+              })
+                .then((fileId) => loadedIds.push(fileId))
+                .catch((err) => {
+                  SnackbarModule.failure(err);
+                });
             } else if (evaluation.data) {
-              // Construct a file
               const inputFile: FileLoadOptions = {
                 filename: evaluation.filename
               };
@@ -97,8 +98,8 @@ export class Evaluation extends VuexModule {
           })
           .catch((err) => {
             SnackbarModule.failure(err);
-          });
-      })
+          })
+      )
     );
     return loadedIds;
   }
