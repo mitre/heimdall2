@@ -83,7 +83,9 @@ export type ProfileFile = InspecFile & {
 
 export type FileLoadOptions = {
   /** The file to load */
-  file: File;
+  file?: File;
+  filename?: string;
+  data?: string;
 };
 
 export type TextLoadOptions = {
@@ -137,11 +139,20 @@ export class InspecIntake extends VuexModule {
    */
   @Action
   async loadFile(options: FileLoadOptions): Promise<FileID | FileID[]> {
-    const read = await read_file_async(options.file);
+    let read: string;
+    const filename =
+      options.file?.name || options.filename || 'Missing Filename';
+    if (options.file) {
+      read = await read_file_async(options.file);
+    } else if (options.data) {
+      read = options.data;
+    } else {
+      throw Error('No file or data passed to report intake');
+    }
     if (await this.isHDF(read)) {
       return this.loadText({
         text: read,
-        filename: options.file.name
+        filename: filename
       });
     } else {
       const converted = await this.convertToHdf({
@@ -149,7 +160,7 @@ export class InspecIntake extends VuexModule {
         data: read
       });
       if (Array.isArray(converted)) {
-        const originalFileSplit = options.file.name.split('.');
+        const originalFileSplit = filename.split('.');
         // Default to .json if not found
         let originalFileType = '.json';
         if (originalFileSplit.length > 1) {
@@ -159,7 +170,7 @@ export class InspecIntake extends VuexModule {
           converted.map((evaluation) => {
             return this.loadExecJson({
               data: evaluation,
-              filename: `${options.file.name
+              filename: `${filename
                 .replace(/.json/gi, '')
                 .replace(/.nessus/gi, '')}-${_.get(
                 evaluation,
@@ -171,7 +182,7 @@ export class InspecIntake extends VuexModule {
       } else if (converted) {
         return this.loadExecJson({
           data: converted,
-          filename: options.file.name
+          filename: filename
         });
       } else {
         return [];
@@ -180,16 +191,31 @@ export class InspecIntake extends VuexModule {
   }
 
   @Action
-  async isHDF(data: string): Promise<boolean> {
-    try {
-      // If our data loads correctly it could be HDF
-      const parsed = JSON.parse(data);
+  async isHDF(
+    data: string | Record<string, unknown> | undefined
+  ): Promise<boolean> {
+    if (typeof data === 'string') {
+      try {
+        // If our data loads correctly it could be HDF
+        const parsed = JSON.parse(data);
+        return (
+          Array.isArray(parsed.profiles) || // Execution JSON
+          (Boolean(parsed.controls) && Boolean(parsed.sha256)) // Profile JSON
+        );
+      } catch {
+        // HDF isn't valid json, we have a different format
+        return false;
+      }
+    } else if (typeof data === 'object') {
       return (
-        Array.isArray(parsed.profiles) || // Execution JSON
-        (Boolean(parsed.controls) && Boolean(parsed.sha256)) // Profile JSON
+        Array.isArray(data.profiles) || // Execution JSON
+        (Boolean(data.controls) && Boolean(data.sha256)) // Profile JSON
       );
-    } catch {
-      // HDF isn't valid json, we have a different format
+    } else if (typeof data === 'undefined') {
+      SnackbarModule.failure('Missing data to convert to validate HDF');
+      return false;
+    } else {
+      SnackbarModule.failure('Unknown file data type');
       return false;
     }
   }
@@ -199,10 +225,14 @@ export class InspecIntake extends VuexModule {
     fileOptions: FileLoadOptions;
     data: string;
   }): Promise<ExecJSON.Execution | ExecJSON.Execution[] | void> {
+    const filename =
+      convertOptions.fileOptions.file?.name ||
+      convertOptions.fileOptions.filename ||
+      'No Filename';
     // If the data passed is valid json, try to match up known keys
     const typeGuess = await this.guessType({
       data: convertOptions.data,
-      filename: convertOptions.fileOptions.file.name
+      filename: filename
     });
     switch (typeGuess) {
       case 'jfrog':
@@ -235,7 +265,7 @@ export class InspecIntake extends VuexModule {
         return new PrismaMapper(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
-          `Invalid file uploaded (${convertOptions.fileOptions.file.name}), no fingerprints matched.`
+          `Invalid file uploaded (${filename}), no fingerprints matched.`
         );
     }
   }

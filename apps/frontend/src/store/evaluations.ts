@@ -17,6 +17,7 @@ import {InspecDataModule} from './data_store';
 import {
   EvaluationFile,
   FileID,
+  FileLoadOptions,
   InspecIntakeModule,
   ProfileFile
 } from './report_intake';
@@ -58,32 +59,54 @@ export class Evaluation extends VuexModule {
       evaluationIds,
       InspecDataModule.loadedDatabaseIds
     );
-    return Promise.all(
+    const loadedIds: FileID[] = [];
+    await Promise.all(
       unloadedIds.map(async (id) => {
         return this.loadEvaluation(id)
           .then(async (evaluation) => {
-            return InspecIntakeModule.loadText({
-              text: JSON.stringify(evaluation.data),
-              filename: evaluation.filename,
-              database_id: evaluation.id,
-              createdAt: evaluation.createdAt,
-              updatedAt: evaluation.updatedAt,
-              tags: [] // Tags are not yet implemented, so for now the value is passed in empty
-            }).catch((err) => {
-              SnackbarModule.failure(err);
-            });
+            if (await InspecIntakeModule.isHDF(evaluation.data)) {
+              return InspecIntakeModule.loadText({
+                text: JSON.stringify(evaluation.data),
+                filename: evaluation.filename,
+                database_id: evaluation.id,
+                createdAt: evaluation.createdAt,
+                updatedAt: evaluation.updatedAt,
+                tags: [] // Tags are not yet implemented, so for now the value is passed in empty
+              }).catch((err) => {
+                SnackbarModule.failure(err);
+              });
+            } else if (evaluation.data) {
+              // Construct a file
+              const inputFile: FileLoadOptions = {
+                filename: evaluation.filename
+              };
+              if (
+                'originalResultsData' in evaluation.data &&
+                evaluation.data.originalResultsData
+              ) {
+                inputFile.data = evaluation.data.originalResultsData;
+              } else {
+                inputFile.data = JSON.stringify(evaluation.data);
+              }
+
+              const fileIds = await InspecIntakeModule.loadFile(inputFile);
+              loadedIds.push(...fileIds);
+            } else {
+              SnackbarModule.failure(`Empty File: ${evaluation.filename}`);
+            }
           })
           .catch((err) => {
             SnackbarModule.failure(err);
           });
       })
     );
+    return loadedIds;
   }
 
   @Action
   async loadEvaluation(id: string) {
     return axios.get<IEvaluation>(`/evaluations/${id}`).then(({data}) => {
-      this.context.commit('SAVE_EVALUTION', data);
+      this.context.commit('SAVE_EVALUATION', data);
       return data;
     });
   }
@@ -93,7 +116,7 @@ export class Evaluation extends VuexModule {
     return axios
       .put<IEvaluation>(`/evaluations/${evaluation.id}`, evaluation)
       .then(({data}) => {
-        this.context.commit('SAVE_EVALUTION', data);
+        this.context.commit('SAVE_EVALUATION', data);
         return data;
       });
   }
@@ -127,7 +150,7 @@ export class Evaluation extends VuexModule {
 
   // Save an evaluation or update it if is already saved.
   @Mutation
-  SAVE_EVALUTION(evaluationToSave: IEvaluation) {
+  SAVE_EVALUATION(evaluationToSave: IEvaluation) {
     let found = false;
     for (const [index, evaluation] of this.allEvaluations.entries()) {
       if (evaluationToSave.id === evaluation.id) {

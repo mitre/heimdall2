@@ -91,7 +91,13 @@ export class EvaluationsController {
     @UploadedFile() data: Express.Multer.File,
     @Request() request: {user: User}
   ): Promise<EvaluationDto> {
-    const serializedDta: JSON = JSON.parse(data.buffer.toString('utf8'));
+    let serializedDta: Record<string, unknown>;
+    try {
+      serializedDta = JSON.parse(data.buffer.toString('utf8'));
+    } catch {
+      serializedDta = {originalResultsData: data.buffer.toString('utf8')};
+    }
+
     let groups: Group[] = createEvaluationDto.groups
       ? await this.groupsService.findByIds(createEvaluationDto.groups)
       : [];
