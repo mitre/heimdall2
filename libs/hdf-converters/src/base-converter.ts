@@ -3,15 +3,17 @@ import parser from 'fast-xml-parser';
 import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
+import Papa from 'papaparse';
 
 export interface ILookupPath {
+  shortcircuit?: boolean;
   path?: string | string[];
   transformer?: (value: any) => unknown;
   arrayTransformer?: (value: unknown[], file: any) => unknown[];
   key?: string;
 }
 
-export type ObjectEntries<T> = {[K in keyof T]: readonly [K, T[K]]}[keyof T];
+export type ObjectEntryValue<T> = {[K in keyof T]: readonly [K, T[K]]}[keyof T];
 /* eslint-disable @typescript-eslint/ban-types */
 export type MappedTransform<T, U extends ILookupPath> = {
   [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
@@ -58,6 +60,16 @@ export function parseXml(xml: string): Record<string, unknown> {
     ignoreAttributes: false
   };
   return parser.parse(xml, options);
+}
+
+export function parseCsv(csv: string): unknown[] {
+  const result = Papa.parse(csv.trim(), {header: true});
+
+  if (result.errors.length) {
+    throw result.errors;
+  }
+
+  return result.data;
 }
 
 export function impactMapping(
@@ -149,7 +161,10 @@ export class BaseConverter {
     }
   }
 
-  objectMap<T, V>(obj: T, fn: (v: ObjectEntries<T>) => V): {[K in keyof T]: V} {
+  objectMap<T, V>(
+    obj: T,
+    fn: (v: ObjectEntryValue<T>) => V
+  ): {[K in keyof T]: V} {
     return Object.fromEntries(
       Object.entries(obj).map(([k, v]) => [k, fn(v)])
     ) as Record<keyof T, V>;
@@ -158,44 +173,83 @@ export class BaseConverter {
     file: Record<string, unknown>,
     fields: T
   ): MappedReform<T, ILookupPath> {
-    const result = this.objectMap(fields, (v: ObjectEntries<T>) =>
+    const isShortcircuiting =
+      _.isObject(fields) &&
+      _.has(fields, 'shortcircuit') &&
+      _.isBoolean(_.get(fields, 'shortcircuit')) &&
+      _.get(fields, 'shortcircuit');
+    if (isShortcircuiting) {
+      return _.omit(fields as object, 'shortcircuit') as MappedReform<
+        T,
+        ILookupPath
+      >;
+    }
+
+    const result = this.objectMap(fields, (v: ObjectEntryValue<T>) =>
       this.evaluate(file, v)
     );
     return result as MappedReform<T, ILookupPath>;
   }
 
-  evaluate<T extends object>(
+  evaluate<T>(
     file: Record<string, unknown>,
-    v: Array<T> | T
+    v: T | Array<T>
   ): T | Array<T> | MappedReform<T, ILookupPath> {
-    const transformer = _.get(v, 'transformer');
-    if (Array.isArray(v)) {
-      return this.handleArray(file, v);
-    } else if (
-      typeof v === 'string' ||
-      typeof v === 'number' ||
-      typeof v === 'boolean' ||
-      v === null
+    const hasTransformer =
+      _.has(v, 'transformer') && _.isFunction(_.get(v, 'transformer'));
+    let transformer = (val: unknown) => val;
+    if (hasTransformer) {
+      transformer = _.get(v, 'transformer');
+      v = _.omit(v as object, 'transformer') as T;
+    }
+
+    const hasPath = _.isObject(v) && _.has(v, 'path');
+    let pathV = v;
+    if (hasPath) {
+      pathV = this.handlePath(file, _.get(v, 'path') as string | string[]) as
+        | T
+        | T[];
+      v = _.omit(v as object, 'path') as T;
+    }
+
+    if (
+      _.isString(pathV) ||
+      _.isNumber(pathV) ||
+      _.isBoolean(pathV) ||
+      _.isNull(pathV)
     ) {
-      return v;
-    } else if (_.has(v, 'path')) {
-      if (typeof transformer === 'function') {
-        return transformer(this.handlePath(file, _.get(v, 'path') as string));
-      }
-      const pathVal = this.handlePath(file, _.get(v, 'path') as string);
-      if (Array.isArray(pathVal)) {
-        return pathVal as T[];
-      }
-      return pathVal as T;
+      return transformer(pathV) as T;
     }
-    if (typeof transformer === 'function') {
-      return transformer.bind(this)(file);
-    } else {
-      return this.convertInternal(file, v);
+
+    if (Array.isArray(pathV)) {
+      return hasTransformer
+        ? (transformer(pathV) as T[])
+        : this.handleArray(file, pathV);
     }
+
+    if (_.keys(v).length > 0 && hasTransformer) {
+      return {
+        ...this.convertInternal(file, v),
+        ...(transformer(hasPath ? pathV : file) as object)
+      } as MappedReform<T, ILookupPath>;
+    }
+
+    if (hasTransformer) {
+      return transformer(hasPath ? pathV : file) as
+        | T
+        | T[]
+        | MappedReform<T, ILookupPath>;
+    }
+
+    return hasPath
+      ? pathV
+      : (this.convertInternal(file, v) as
+          | T
+          | T[]
+          | MappedReform<T, ILookupPath>);
   }
 
-  handleArray<T extends object>(
+  handleArray<T>(
     file: Record<string, unknown>,
     v: Array<T & ILookupPath>
   ): Array<T> {
@@ -207,7 +261,9 @@ export class BaseConverter {
       if (lookupPath.path === undefined) {
         const arrayTransformer = lookupPath.arrayTransformer?.bind(this);
         v = v.map((element) => {
-          return _.omit(element, ['arrayTransformer']) as T & ILookupPath;
+          return _.isObject(element)
+            ? (_.omit(element, ['arrayTransformer']) as T & ILookupPath)
+            : element;
         });
         let output: Array<T> = [];
         v.forEach((element) => {
@@ -238,7 +294,7 @@ export class BaseConverter {
                 'transformer',
                 'arrayTransformer',
                 'key'
-              ]) as T;
+              ]) as unknown as T;
             });
             if (arrayTransformer !== undefined) {
               if (Array.isArray(arrayTransformer)) {
@@ -275,12 +331,12 @@ export class BaseConverter {
     });
     return uniqueResults;
   }
+
   handlePath(file: Record<string, unknown>, path: string | string[]): unknown {
-    let pathArray;
+    let pathArray = path;
+
     if (typeof path === 'string') {
       pathArray = [path];
-    } else {
-      pathArray = path;
     }
 
     const index = _.findIndex(pathArray, (p) => this.hasPath(file, p));

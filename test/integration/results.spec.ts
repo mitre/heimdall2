@@ -37,7 +37,7 @@ context('Results', () => {
       resultsPage.openProfileInfo();
       // Make results data is correct
       resultsPageVerifier.resultsDataCorrect();
-      // Scroll controlls into view
+      // Scroll controls into view
       cy.scrollTo('bottom');
     });
   });

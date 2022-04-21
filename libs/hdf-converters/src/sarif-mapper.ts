@@ -3,6 +3,7 @@ import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['error', 0.7],
@@ -11,7 +12,6 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 const MESSAGE_TEXT = 'message.text';
 const CWE_NIST_MAPPING = new CweNistMapping();
-const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
 function extractCwe(text: string): string[] {
   let output = text.split('(').slice(-1)[0].slice(0, -2).split(', ');
@@ -37,7 +37,10 @@ function formatCodeDesc(input: unknown): string {
 function nistTag(text: string): string[] {
   let identifiers = extractCwe(text);
   identifiers = identifiers.map((element) => element.split('-')[1]);
-  return CWE_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG);
+  return CWE_NIST_MAPPING.nistFilter(
+    identifiers,
+    DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
+  );
 }
 
 export class SarifMapper extends BaseConverter {
@@ -81,8 +84,21 @@ export class SarifMapper extends BaseConverter {
             descriptions: [],
             refs: [],
             source_location: {
-              ref: {path: 'locations[0].physicalLocation.artifactLocation.uri'},
-              line: {path: 'locations[0].physicalLocation.region.startLine'}
+              transformer: (control: unknown) => {
+                return _.omitBy(
+                  {
+                    ref: _.get(
+                      control,
+                      'locations[0].physicalLocation.artifactLocation.uri'
+                    ),
+                    line: _.get(
+                      control,
+                      'locations[0].physicalLocation.region.startLine'
+                    )
+                  },
+                  (value) => value === ''
+                );
+              }
             },
             title: {
               path: MESSAGE_TEXT,

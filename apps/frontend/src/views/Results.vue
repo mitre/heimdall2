@@ -42,6 +42,9 @@
               />
             </v-list-item>
             <v-list-item class="px-0">
+              <ExportSplunkModal />
+            </v-list-item>
+            <v-list-item class="px-0">
               <ExportJson />
             </v-list-item>
             <v-list-item class="px-0">
@@ -207,6 +210,7 @@ import ExportCSVModal from '@/components/global/ExportCSVModal.vue';
 import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
+import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
 import ExportXCCDF from '@/components/global/ExportXCCDF.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import {
@@ -253,6 +257,7 @@ import {compare_times} from '../utilities/delta_util';
     ExportHTMLModal,
     ExportXCCDF,
     EvaluationInfo,
+    ExportSplunkModal,
     ProfileData,
     UploadButton
   }

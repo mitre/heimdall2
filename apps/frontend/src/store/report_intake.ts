@@ -7,13 +7,14 @@ import Store from '@/store/store';
 import {Tag} from '@/types/models';
 import {read_file_async} from '@/utilities/async_util';
 import {
-  ASFFMapper,
+  ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
   DBProtectMapper,
   JfrogXrayMapper,
   NessusResults,
   NetsparkerMapper,
   NiktoMapper,
+  PrismaMapper,
   SarifMapper,
   ScoutsuiteMapper,
   SnykResults,
@@ -148,11 +149,22 @@ export class InspecIntake extends VuexModule {
         data: read
       });
       if (Array.isArray(converted)) {
+        const originalFileSplit = options.file.name.split('.');
+        // Default to .json if not found
+        let originalFileType = '.json';
+        if (originalFileSplit.length > 1) {
+          originalFileType = originalFileSplit[originalFileSplit.length - 1];
+        }
         return Promise.all(
           converted.map((evaluation) => {
             return this.loadExecJson({
               data: evaluation,
-              filename: options.file.name
+              filename: `${options.file.name
+                .replace(/.json/gi, '')
+                .replace(/.nessus/gi, '')}-${_.get(
+                evaluation,
+                'platform.target_id'
+              )}.${originalFileType}`
             });
           })
         );
@@ -196,7 +208,9 @@ export class InspecIntake extends VuexModule {
       case 'jfrog':
         return new JfrogXrayMapper(convertOptions.data).toHdf();
       case 'asff':
-        return new ASFFMapper(convertOptions.data).toHdf();
+        return Object.values(
+          new ASFFResultsMapper(convertOptions.data).toHdf()
+        );
       case 'zap':
         return new ZapMapper(convertOptions.data).toHdf();
       case 'nikto':
@@ -217,6 +231,8 @@ export class InspecIntake extends VuexModule {
         return new DBProtectMapper(convertOptions.data).toHdf();
       case 'netsparker':
         return new NetsparkerMapper(convertOptions.data).toHdf();
+      case 'prisma':
+        return new PrismaMapper(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${convertOptions.fileOptions.file.name}), no fingerprints matched.`
@@ -243,12 +259,13 @@ export class InspecIntake extends VuexModule {
                 count: b[1].filter((value) => _.get(object, value)).length
               };
         }
-      ) as unknown as Array<string> & {count: number};
+      ) as unknown as string[] & {count: number};
       const result = fingerprinted[0];
       if (fingerprinted.count !== 0) {
         return result;
       }
     } catch {
+      const splitLines = guessOptions.data.trim().split('\n');
       // If we don't have valid json, look for known strings inside the file text
       if (guessOptions.filename.toLowerCase().endsWith('.nessus')) {
         return 'nessus';
@@ -275,6 +292,15 @@ export class InspecIntake extends VuexModule {
         guessOptions.data.indexOf('Result Status')
       ) {
         return 'dbProtect';
+      } else if (
+        splitLines[0].includes('Hostname') &&
+        splitLines[0].includes('Distro') &&
+        splitLines[0].includes('CVE ID') &&
+        splitLines[0].includes('Compliance ID') &&
+        splitLines[0].includes('Type') &&
+        splitLines[0].includes('Severity')
+      ) {
+        return 'prisma';
       }
     }
     return '';

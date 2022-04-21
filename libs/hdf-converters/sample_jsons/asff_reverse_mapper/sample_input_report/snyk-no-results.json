@@ -1,0 +1,28 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.9",
+    "target_id": "storybook-link"
+  },
+  "version": "2.6.9",
+  "statistics": { "duration": null },
+  "profiles": [
+    {
+      "name": "# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.22.1\nignore: {}\npatch: {}\n",
+      "version": "v1.22.1",
+      "title": "Snyk Project: storybook-link",
+      "maintainer": null,
+      "summary": "Snyk Summary: No known vulnerabilities",
+      "license": null,
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [],
+      "sha256": "a6b1cc876d58d1a3749bce335f220a1f7bfe37046e82f1bb7b0cbc1a8046f85a"
+    }
+  ]
+}

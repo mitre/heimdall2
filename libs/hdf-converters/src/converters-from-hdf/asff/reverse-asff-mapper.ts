@@ -48,19 +48,21 @@ export interface ILookupPathASFF {
 }
 
 export class FromHdfToAsffMapper extends FromHdfBaseConverter {
-  mappings: MappedTransform<IExecJSONASFF, ILookupPathASFF> = {
+  mappings: () => MappedTransform<IExecJSONASFF, ILookupPathASFF> = () => ({
     Findings: [
       {
         SchemaVersion: '2018-10-08',
-        Id: {path: ``, transformer: setupId, passParent: true},
-        ProductArn: {path: ``, transformer: setupProductARN, passParent: true},
-        AwsAccountId: {path: ``, transformer: setupAwsAcct, passParent: true},
+        Id: {path: '', transformer: setupId, passParent: true},
+        ProductArn: {path: '', transformer: setupProductARN, passParent: true},
+        AwsAccountId: {path: '', transformer: setupAwsAcct, passParent: true},
         Types: {
           transformer: () => ['Software and Configuration Checks']
         },
-        CreatedAt: {path: ``, transformer: setupCreated},
-        Region: {path: '', transformer: setupRegion, passParent: true},
-        UpdatedAt: {path: ``, transformer: setupUpdated, passParent: true},
+        CreatedAt: {path: '', transformer: setupCreated},
+        UpdatedAt: {path: '', transformer: setupUpdated, passParent: true},
+        ...(this.ioptions.regionAttribute && {
+          Region: {path: '', transformer: setupRegion, passParent: true}
+        }),
         GeneratorId: {
           path: '',
           transformer: setupGeneratorId,
@@ -117,7 +119,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         }
       }
     ]
-  };
+  });
 
   contextProfiles: any;
   counts: any;
@@ -143,7 +145,8 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       input: '',
       awsAccountId: '',
       target: 'default',
-      region: ''
+      region: '',
+      regionAttribute: false
     };
   }
 
@@ -159,7 +162,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     this.data.profiles.forEach((profile) => {
       profile.controls.reverse().forEach((control) => {
         control.results.forEach((segment) => {
-          // Ensure that the UpdatedAt time is different accross findings (to match the order in HDF)
+          // Ensure that the UpdatedAt time is different across findings (to match the order in HDF)
           segments.push({
             ...control,
             result: segment,
@@ -174,7 +177,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
 
   //Convert from HDF to ASFF
   toAsff(): IFindingASFF[] {
-    if (this.mappings === undefined) {
+    if (this.mappings() === undefined) {
       throw new Error('Mappings must be provided');
     } else {
       //Recursively transform the data into ASFF format
@@ -182,7 +185,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       const resList: IFindingASFF[] = this.controlsToSegments().map(
         (segment, index) => {
           this.index = index;
-          return this.convertInternal(segment, this.mappings)[
+          return this.convertInternal(segment, this.mappings())[
             'Findings'
           ][0] as IFindingASFF;
         }

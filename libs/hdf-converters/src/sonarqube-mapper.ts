@@ -179,6 +179,7 @@ export class SonarQubeResults {
         });
       })
     );
+
     const result = new SonarQubeMapper(this.data, this.projectId);
     return result.toHdf();
   }
@@ -190,17 +191,14 @@ export class SonarQubeResults {
   }
 }
 
-export class SonarQubeMapper extends BaseConverter {
-  projectName = '';
-  constructor(issuesJSON: IssueData, projectName: string) {
-    super(issuesJSON as Record<string, any>);
-    this.projectName = projectName;
-  }
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+function createSonarqubeMappings(
+  projectName: string
+): MappedTransform<ExecJSON.Execution, ILookupPath> {
+  return {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
-      target_id: this.projectName
+      target_id: projectName
     },
     version: HeimdallToolsVersion,
     statistics: {
@@ -209,10 +207,10 @@ export class SonarQubeMapper extends BaseConverter {
     profiles: [
       {
         name: 'Sonarqube Scan',
-        version: '',
-        title: `SonarQube Scan of Project ${this.projectName}`,
+        version: null,
+        title: `SonarQube Scan of Project ${projectName}`,
         maintainer: null,
-        summary: `SonarQube Scan of Project ${this.projectName}`,
+        summary: `SonarQube Scan of Project ${projectName}`,
         license: null,
         copyright: null,
         copyright_email: null,
@@ -253,6 +251,15 @@ export class SonarQubeMapper extends BaseConverter {
       }
     ]
   };
+}
+
+export class SonarQubeMapper extends BaseConverter {
+  projectName = '';
+  constructor(issuesJSON: IssueData, projectName: string) {
+    super(issuesJSON as Record<string, any>);
+    this.setMappings(createSonarqubeMappings(projectName));
+  }
+
   setMappings(
     customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
   ): void {

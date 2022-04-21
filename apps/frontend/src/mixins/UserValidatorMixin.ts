@@ -8,7 +8,7 @@ import {validationMixin} from 'vuelidate';
 })
 export default class UserValidatorMixin extends Vue {
   emailErrors(field: ValidationProperties<unknown>) {
-    const errors: Array<string> = [];
+    const errors: string[] = [];
     const dirty = _.get(field, '$dirty');
     const required = _.get(field, 'required');
     const email = _.get(field, 'email');
@@ -21,7 +21,7 @@ export default class UserValidatorMixin extends Vue {
   }
 
   requiredFieldError(field: ValidationProperties<unknown>, name: string) {
-    const errors: Array<string> = [];
+    const errors: string[] = [];
     const dirty = _.get(field, '$dirty');
     const required = _.get(field, 'required');
     if (!dirty) {

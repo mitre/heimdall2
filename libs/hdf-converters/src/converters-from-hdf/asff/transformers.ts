@@ -8,6 +8,8 @@ import {
 } from 'inspecjs';
 import _ from 'lodash';
 import moment from 'moment';
+import {version as HeimdallToolsVersion} from '../../../package.json';
+import {getDescription} from '../../utils/global';
 import {IFindingASFF, IOptions} from './asff-types';
 import {
   FromHdfToAsffMapper,
@@ -26,14 +28,30 @@ type Counts = {
   NotReviewed: number;
 };
 
-export function getRunTime(hdf: ExecJSON.Execution): Date {
-  let time = new Date();
+export function escapeForwardSlashes<T>(s: T): T {
+  return _.isString(s)
+    ? (s.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT) as unknown as T)
+    : (JSON.stringify(s).replace(
+        /\//g,
+        TO_ASFF_TYPES_SLASH_REPLACEMENT
+      ) as unknown as T);
+}
+
+export function getRunTime(hdf: ExecJSON.Execution): string {
+  let time = new Date().toISOString();
   hdf.profiles.forEach((profile) => {
     if (
+      profile.controls[0] &&
       profile.controls[0].results.length &&
       profile.controls[0].results[0].start_time
     ) {
-      time = new Date(profile.controls[0].results[0].start_time);
+      try {
+        time = new Date(
+          profile.controls[0].results[0].start_time
+        ).toISOString();
+      } catch {
+        time = new Date().toISOString();
+      }
     }
   });
   return time;
@@ -85,7 +103,7 @@ export function createProfileInfoFinding(
     ProductArn: `arn:aws:securityhub:${options.region}:${options.awsAccountId}:product/${options.awsAccountId}/default`,
     GeneratorId: `arn:aws:securityhub:us-east-2:${options.awsAccountId}:ruleset/set/${hdf.profiles[0].name}`,
     AwsAccountId: options.awsAccountId,
-    CreatedAt: runTime.toISOString(),
+    CreatedAt: runTime,
     UpdatedAt: updatedAt,
     Title: `${options.target} | ${hdf.profiles[0].name} | ${moment().format(
       'YYYY-MM-DD hh:mm:ss [GMT]ZZ'
@@ -98,7 +116,7 @@ export function createProfileInfoFinding(
       Severity: {
         Label: 'INFORMATIONAL'
       },
-      Types: createProfileInfoFindingFields(hdf)
+      Types: createProfileInfoFindingFields(hdf, options)
     },
     Resources: [
       {
@@ -110,6 +128,7 @@ export function createProfileInfoFinding(
     ]
   };
 
+  // need the intermediate caste to tell typescript that this cast is intentional
   return profileInfo as unknown as IFindingASFF;
 }
 
@@ -184,13 +203,13 @@ export function sliceIntoChunks(arr: any[], chunkSize: number): any[][] {
 // Gets rid of extra spacing + newlines as these aren't shown in Security Hub
 export function cleanText(text?: string | null): string | undefined {
   if (text) {
-    return text.replace(/  +/g, ' ').replace(/\r?\n|\r/g, ' ');
+    return text.replace(/  +/g, ' ');
   } else {
     return undefined;
   }
 }
 
-// Gets all layers of a control accross overlaid profiles given the ID
+// Gets all layers of a control across overlaid profiles given the ID
 export function getAllLayers(
   hdf: ExecJSON.Execution,
   knownControl: ExecJSON.Control
@@ -232,22 +251,40 @@ export function createNote(segment: ExecJSON.ControlResult) {
   }
 }
 
+function cleanObjectValues<T>(value: T): boolean {
+  if (Array.isArray(value)) {
+    return value.length < 0;
+  }
+  return !Boolean(value);
+}
+
 export function createCode(
   control: ExecJSON.Control & {profileInfo?: Record<string, unknown>}
 ) {
+  const noCodeValue =
+    (_.get(control, 'profileInfo.depends') || []).length > 0
+      ? ''
+      : JSON.stringify(
+          _.omitBy(
+            _.omit(control, ['results', 'profileInfo']),
+            cleanObjectValues
+          )
+        );
+  if (!control.code && noCodeValue === '') {
+    return '';
+  }
   return `=========================================================\n# Profile name: ${
     control.profileInfo?.name
-  }\n=========================================================\n\n${control.code?.replace(
-    /\\\"/g,
-    '"'
-  )}`;
+  }\n=========================================================\n\n${
+    control.code ? control.code?.replace(/\\\"/g, '"') : noCodeValue
+  }`;
 }
 
 export function setupId(
   control: SegmentedControl,
   context?: FromHdfToAsffMapper
 ) {
-  const target = context?.ioptions.target.toLowerCase().trim();
+  const target = context?.ioptions.target;
   const name = context?.data.profiles[0].name;
 
   return `${target}/${name}/${control.id}/finding/${createHash('sha256')
@@ -270,7 +307,14 @@ export function setupAwsAcct(
 }
 
 export function setupCreated(control: SegmentedControl) {
-  return control.result.start_time || new Date().toISOString();
+  try {
+    return (
+      new Date(control.result.start_time).toISOString() ||
+      new Date().toISOString()
+    );
+  } catch {
+    return new Date().toISOString();
+  }
 }
 
 export function setupRegion(
@@ -293,7 +337,7 @@ export function setupGeneratorId(
   control: SegmentedControl,
   context?: FromHdfToAsffMapper
 ) {
-  return `arn:aws:securityhub:us-east-2:${context?.ioptions.awsAccountId}:ruleset/set/${context?.data.profiles[0].name}/rule/${control.id}`;
+  return `arn:aws:securityhub:${context?.ioptions.region}:${context?.ioptions.awsAccountId}:ruleset/set/${context?.data.profiles[0].name}/rule/${control.id}`;
 }
 
 export function setupTitle(control: SegmentedControl) {
@@ -306,21 +350,17 @@ export function setupTitle(control: SegmentedControl) {
 
 export function setupDescr(control: SegmentedControl) {
   // Check text can either be a description or a tag
-  const checktext: string =
-    control.descriptions?.find(
-      (description: {label: string}) => description.label === 'check'
-    )?.data ||
-    (control.tags['check'] as string) ||
+  const checkText: string =
+    getDescription(control.descriptions || [], 'check') ||
+    (control.tags.check as string) ||
     'Check not available';
 
   const currentVal = _.truncate(
-    cleanText(`${control.desc} -- Check Text: ${checktext}`),
+    cleanText(`${control.desc} -- Check Text: ${checkText}`),
     {length: 1024, omission: '[SEE FULL TEXT IN AssumeRolePolicyDocument]'}
   );
 
-  const caveat = control.descriptions?.find(
-    (description: {label: string}) => description.label === 'caveat'
-  )?.data;
+  const caveat = getDescription(control.descriptions || [], 'caveat');
 
   if (caveat) {
     return _.truncate(
@@ -342,39 +382,73 @@ export function setupSevOriginal(control: SegmentedControl) {
   return `${control.impact}`;
 }
 
-function createProfileInfo(hdf?: ExecJSON.Execution): string[] {
-  const typesArr: string[] = [];
-  const targets = [
-    'name',
-    'version',
-    'sha256',
-    'title',
-    'maintainer',
-    'summary',
-    'license',
-    'copyright',
-    'copyright_email'
+function createControlMetadata(control: SegmentedControl) {
+  const types = [
+    `Control/ID/${escapeForwardSlashes(control.id)}`,
+    `Control/Impact/${control.impact}`
   ];
-  hdf?.profiles.forEach((layer) => {
-    const profileInfos: Record<string, string>[] = [];
-    targets.forEach((target) => {
-      const value = _.get(layer, target);
-      if (typeof value === 'string') {
-        profileInfos.push({[target]: value});
-      }
-    });
-    typesArr.push(
-      `Profile/Info/${JSON.stringify(profileInfos).replace(
-        /\//g,
-        TO_ASFF_TYPES_SLASH_REPLACEMENT
+  if (control.desc) {
+    types.push(`Control/Desc/${escapeForwardSlashes(control.desc)}`);
+  }
+  if (control.refs && control.refs.length > 0) {
+    types.push(
+      `Control/Refs/${escapeForwardSlashes(JSON.stringify(control.refs))}`
+    );
+  }
+  if (
+    control.source_location &&
+    Object.keys(control.source_location).length > 0
+  ) {
+    types.push(
+      `Control/Source_Location/${escapeForwardSlashes(
+        JSON.stringify(control.source_location)
       )}`
     );
-  });
-  return typesArr;
+  }
+  if (control.waiver_data && Object.keys(control.waiver_data).length > 0) {
+    types.push(
+      `Control/Waiver_Data/${escapeForwardSlashes(
+        JSON.stringify(control.waiver_data)
+      )}`
+    );
+  }
+  if (control.title) {
+    types.push(`Control/Title/${escapeForwardSlashes(control.title)}`);
+  }
+  return types;
 }
 
-function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
-  let typesArr: string[] = [];
+function getFilename(options?: IOptions): string {
+  const slashSplit =
+    options?.input.split('\\')[options?.input.split('\\').length - 1];
+  return slashSplit?.split('/')[slashSplit.split('/').length - 1] ?? '';
+}
+
+function createProfileInfoFindingFields(
+  hdf: ExecJSON.Execution,
+  options: IOptions
+): string[] {
+  let typesArr = [
+    `MITRE/SAF/${HeimdallToolsVersion}-hdf2asff`,
+    `File/Input/${getFilename(options)}`
+  ];
+  const executionTargets = ['platform', 'statistics', 'version', 'passthrough'];
+  executionTargets.forEach((target) => {
+    const value = _.get(hdf, target);
+    if (typeof value === 'string' && value.trim()) {
+      typesArr.push(
+        `Execution/${escapeForwardSlashes(target)}/${escapeForwardSlashes(
+          value
+        )}`
+      );
+    } else if (typeof value === 'object') {
+      typesArr.push(
+        `Execution/${escapeForwardSlashes(target)}/${escapeForwardSlashes(
+          JSON.stringify(value)
+        )}`
+      );
+    }
+  });
   hdf.profiles.forEach((profile) => {
     const targets = [
       'version',
@@ -383,26 +457,35 @@ function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
       'summary',
       'license',
       'copyright',
-      'copyright_email'
+      'copyright_email',
+      'name',
+      'title',
+      'depends',
+      'supports',
+      'attributes',
+      'description',
+      'inspec_version',
+      'parent_profile',
+      'skip_message',
+      'status',
+      'status_message'
     ];
     targets.forEach((target) => {
       const value = _.get(profile, target);
-      if (typeof value === 'string') {
-        typesArr.push(`${profile.name}/${target}/${value}`);
+      if (typeof value === 'string' && value) {
+        typesArr.push(
+          `${escapeForwardSlashes(profile.name)}/${escapeForwardSlashes(
+            target
+          )}/${escapeForwardSlashes(value)}`
+        );
+      } else if (typeof value === 'object') {
+        typesArr.push(
+          `${escapeForwardSlashes(profile.name)}/${escapeForwardSlashes(
+            target
+          )}/${escapeForwardSlashes(JSON.stringify(value))}`
+        );
       }
     });
-    const inputs: Record<string, unknown>[] = [];
-    profile.attributes.forEach((input) => {
-      if (input.options.value) {
-        inputs.push({[input.name]: input.options.value});
-      }
-    });
-    typesArr.push(
-      `${profile.name}/inputs/${JSON.stringify(inputs).replace(
-        /\//g,
-        TO_ASFF_TYPES_SLASH_REPLACEMENT
-      )}`
-    );
   });
   typesArr = typesArr.slice(0, 50);
   return typesArr;
@@ -411,8 +494,9 @@ function createProfileInfoFindingFields(hdf: ExecJSON.Execution): string[] {
 function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
   const typesArr: string[] = [];
   const targets = [
-    'code_desc',
+    'backtrace',
     'exception',
+    'code_desc',
     'message',
     'resource',
     'run_time',
@@ -421,14 +505,16 @@ function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
     'status'
   ];
   targets.forEach((target) => {
-    const value = _.get(segment, target);
-    if (typeof value === 'string' && value) {
-      typesArr.push(
-        `Segment/${target}/${value.replace(
-          /\//g,
-          TO_ASFF_TYPES_SLASH_REPLACEMENT
-        )}`
-      );
+    if (_.has(segment, target) && _.get(segment, target) !== undefined) {
+      if (_.get(segment, target) === '') {
+        typesArr.push(`Segment/${escapeForwardSlashes(target)}/''`);
+      } else {
+        typesArr.push(
+          `Segment/${escapeForwardSlashes(target)}/${escapeForwardSlashes(
+            _.get(segment, target)
+          )}`
+        );
+      }
     }
   });
   return typesArr;
@@ -437,47 +523,39 @@ function createSegmentInfo(segment: ExecJSON.ControlResult): string[] {
 function createTagInfo(control: {tags: Record<string, unknown>}): string[] {
   const typesArr: string[] = [];
   for (const tag in control.tags) {
-    if (control) {
-      if (tag === 'nist' && Array.isArray(control.tags.nist)) {
-        typesArr.push(`Tags/nist/${control.tags.nist.join(', ')}`);
-      } else if (tag === 'cci' && Array.isArray(control.tags.cci)) {
-        typesArr.push(`Tags/cci/${control.tags.cci.join(', ')}`);
-      } else if (typeof control.tags[tag] === 'string') {
-        typesArr.push(
-          `Tags/${tag.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}/${(
-            control.tags[tag] as string
-          ).replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}`
-        );
-      } else if (
-        typeof control.tags[tag] === 'object' &&
-        Array.isArray(control.tags[tag])
-      ) {
-        typesArr.push(
-          `Tags/${tag.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}/${(
-            control.tags[tag] as Array<string>
-          )
-            .join(', ')
-            .replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}`
-        );
-      }
-    }
+    typesArr.push(
+      `Tags/${escapeForwardSlashes(tag)}/${escapeForwardSlashes(
+        JSON.stringify(control.tags[tag])
+      )}`
+    );
   }
   return typesArr;
 }
 
 function createDescriptionInfo(control: ExecJSON.Control): string[] {
   const typesArr: string[] = [];
-  control.descriptions?.forEach((description) => {
-    typesArr.push(
-      `Descriptions/${description.label.replace(
-        /\//g,
-        TO_ASFF_TYPES_SLASH_REPLACEMENT
-      )}/${cleanText(description.data)?.replace(
-        /\//g,
-        TO_ASFF_TYPES_SLASH_REPLACEMENT
-      )}`
-    );
-  });
+  if (Array.isArray(control.descriptions)) {
+    control.descriptions?.forEach((description) => {
+      if (description.data && cleanText(description.data)) {
+        typesArr.push(
+          `Descriptions/${escapeForwardSlashes(
+            description.label
+          )}/${escapeForwardSlashes(cleanText(description.data))}`
+        );
+      }
+    });
+  } else {
+    Object.entries(control.descriptions || {}).forEach(([key, value]) => {
+      if (value && cleanText(value as string)) {
+        typesArr.push(
+          `Descriptions/${escapeForwardSlashes(key)}/${escapeForwardSlashes(
+            cleanText(value as string)
+          )}`
+        );
+      }
+    });
+  }
+
   return typesArr;
 }
 
@@ -485,25 +563,21 @@ export function setupFindingType(
   control: SegmentedControl,
   context?: FromHdfToAsffMapper
 ) {
-  const slashSplit =
-    context?.ioptions.input.split('\\')[
-      context?.ioptions.input.split('\\').length - 1
-    ];
-  const filename = slashSplit?.split('/')[slashSplit.split('/').length - 1];
-
   const typesArr = [
-    `File/Input/${filename}`,
-    `Control/Code/${control.layersOfControl
-      .map(
-        (layer: ExecJSON.Control & {profileInfo?: Record<string, unknown>}) =>
-          createCode(layer)
-      )
-      .join('\n\n')
-      .replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT)}`
+    `MITRE/SAF/${HeimdallToolsVersion}-hdf2asff`,
+    `File/Input/${getFilename(context?.ioptions)}`,
+    `Control/Code/${escapeForwardSlashes(
+      control.layersOfControl
+        .map(
+          (layer: ExecJSON.Control & {profileInfo?: Record<string, unknown>}) =>
+            createCode(layer)
+        )
+        .join('\n\n')
+    )}`
   ];
 
-  // Add all layers of profile info to the Finding Provider Fields
-  typesArr.push(...createProfileInfo(context?.data));
+  // Add control metadata to the Finding Provider Fields
+  typesArr.push(...createControlMetadata(control));
   // Add segment/result information to Finding Provider Fields
   typesArr.push(...createSegmentInfo(control.result));
   // Add Tags to Finding Provider Fields
@@ -516,9 +590,7 @@ export function setupFindingType(
 
 export function getFixForControl(control: SegmentedControl) {
   return (
-    control.descriptions?.find(
-      (description: {label: string}) => description.label === 'fix'
-    )?.data ||
+    getDescription(control.descriptions || [], 'fix') ||
     control.tags.fix ||
     'Fix not available'
   );
@@ -534,14 +606,12 @@ export function setupRemRec(control: SegmentedControl) {
 }
 
 export function setupProdFieldCheck(control: SegmentedControl) {
-  const checktext: string =
-    control.descriptions?.find(
-      (description: {label: string}) => description.label === 'check'
-    )?.data ||
-    (control.tags['check'] as string) ||
+  const checkText: string =
+    getDescription(control.descriptions || [], 'check') ||
+    (control.tags.check as string) ||
     'Check not available';
 
-  return _.truncate(checktext, {length: 2048, omission: ''});
+  return _.truncate(checkText, {length: 2048, omission: ''});
 }
 
 export function setupResourcesID(
@@ -563,6 +633,9 @@ export function setupDetailsAssume(control: SegmentedControl) {
 }
 
 export function setupControlStatus(control: SegmentedControl) {
+  if (control.results.some((result) => 'backtrace' in result)) {
+    return 'NOT_AVAILABLE';
+  }
   const status: string | boolean =
     control.result.status === 'skipped'
       ? 'WARNING'
