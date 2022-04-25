@@ -10,6 +10,7 @@ import {
   ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
   DBProtectMapper,
+  IonChannelMapper,
   JfrogXrayMapper,
   NessusResults,
   NetsparkerMapper,
@@ -114,6 +115,7 @@ export type ExecJSONLoadOptions = {
 export const fileTypeFingerprints = {
   asff: ['Findings', 'AwsAccountId', 'ProductArn'],
   fortify: ['FVDL', 'FVDL.EngineData.EngineVersion', 'FVDL.UUID'],
+  ionchannel: ['analysis_id', 'team_id', 'source', 'trigger_hash'],
   jfrog: ['total_count', 'data'],
   nikto: ['banner', 'host', 'ip', 'port', 'vulnerabilities'],
   sarif: ['$schema', 'version', 'runs'],
@@ -255,6 +257,8 @@ export class InspecIntake extends VuexModule {
         return new XCCDFResultsMapper(convertOptions.data).toHdf();
       case 'burp':
         return new BurpSuiteMapper(convertOptions.data).toHdf();
+      case 'ionchannel':
+        return new IonChannelMapper(convertOptions.data).toHdf();
       case 'scoutsuite':
         return new ScoutsuiteMapper(convertOptions.data).toHdf();
       case 'dbProtect':

@@ -6,6 +6,9 @@ import {createLogger, format, transports} from 'winston';
 // SA-11 (DEVELOPER SECURITY TESTING AND EVALUATION) - RA-5 (VULNERABILITY SCANNING)
 export const DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS = ['SA-11', 'RA-5'];
 
+// Applicable to dependency management
+export const DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT = ['CM-8'];
+
 // The "Types" field of ASFF only supports a maximum of 2 slashes, and will get replaced with this text. Note that the default AWS CLI doesn't support UTF-8 encoding
 export const FROM_ASFF_TYPES_SLASH_REPLACEMENT = /{{{SLASH}}}/gi;
 

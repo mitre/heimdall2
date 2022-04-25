@@ -5,6 +5,7 @@ export * from './src/converters-from-hdf/asff/reverse-asff-mapper';
 export * from './src/converters-from-hdf/splunk/reverse-splunk-mapper';
 export * from './src/dbprotect-mapper';
 export * from './src/fortify-mapper';
+export * from './src/ionchannel-mapper';
 export * from './src/jfrog-xray-mapper';
 export * as AwsConfigMappingData from './src/mappings/AwsConfigMappingData';
 export * as CciNistMappingData from './src/mappings/CciNistMappingData';
