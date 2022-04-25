@@ -95,7 +95,7 @@ function getStartTime(testResult: Record<string, unknown>): string {
 
 function convertEncodedXmlIntoJson(
   encodedXml: string
-): Record<string, unknown> {
+): Record<string, unknown> | string {
   const xmlChunks: string[] = [];
   const htmlParser = new htmlparser.Parser({
     ontext(text: string) {
@@ -107,6 +107,50 @@ function convertEncodedXmlIntoJson(
   const xmlParsed = xmlChunks.join('');
 
   return parser.parse(xmlParsed);
+}
+
+type Group = {
+  Group?: Group | Group[];
+  Rule?: Record<string, unknown> | Record<string, unknown>[];
+  'cdf:Group'?: Group | Group[];
+  'cdf:Rule'?: Record<string, unknown> | Record<string, unknown>[];
+};
+
+function preprocessXCCDFJSON(obj: {
+  Benchmark: {Group: Group[]};
+  'cdf:Benchmark': {'cdf:Group': Group[]};
+}) {
+  const transformed = {
+    Benchmark: {
+      ..._.omit(obj.Benchmark || obj['cdf:Benchmark'], 'Group'),
+      Group: [] as Group[]
+    }
+  };
+
+  function getRules(group: Group) {
+    if (group) {
+      const targetGroup = group.Group || group['cdf:Group'];
+      if (Array.isArray(targetGroup)) {
+        targetGroup.forEach((subGroup) => getRules(subGroup));
+      } else if (targetGroup) {
+        getRules(targetGroup);
+      }
+      if (group.Rule) {
+        transformed.Benchmark.Group.push(_.omit(group, 'Group'));
+      } else if (group['cdf:Rule']) {
+        transformed.Benchmark.Group.push(_.omit(group, 'cdf:Group'));
+      }
+    }
+  }
+
+  const targetBenchmark = obj.Benchmark || obj['cdf:Benchmark'];
+
+  if (Array.isArray(targetBenchmark.Group)) {
+    targetBenchmark.Group.forEach((group) => getRules(group));
+  } else {
+    getRules(targetBenchmark.Group);
+  }
+  return transformed as Record<string, unknown>;
 }
 
 type ProfileKey = 'id' | 'description' | 'title';
@@ -186,9 +230,13 @@ function extractCci(input: IIdent | IIdent[]): string[] {
 
   const output: string[] = [];
   inputArray.forEach((element) => {
-    const text = _.get(element, 'text');
-    if (text.match(CCI_REGEX)) {
-      output.push(text);
+    try {
+      const text = _.get(element, 'text');
+      if (text.match(CCI_REGEX)) {
+        output.push(text);
+      }
+    } catch {
+      return;
     }
   });
   return output;
@@ -322,8 +370,12 @@ export class XCCDFResultsMapper extends BaseConverter {
 
                 const id = _.get(input, 'id');
                 if (typeof id === 'string') {
-                  idTracker = id; // NOTE: global variable
-                  return id.split('_S')[1].split('r')[0];
+                  try {
+                    idTracker = id; // NOTE: global variable
+                    return id.split('_S')[1].split('r')[0];
+                  } catch {
+                    return id;
+                  }
                 } else {
                   return '';
                 }
@@ -333,8 +385,12 @@ export class XCCDFResultsMapper extends BaseConverter {
             desc: {
               path: ['cdf:Rule.cdf:description', 'Rule.description.text'],
               transformer: (description: string): string => {
-                const descTextJson = convertEncodedXmlIntoJson(description);
-                return _.get(descTextJson, 'VulnDiscussion', '') as string;
+                const descText = convertEncodedXmlIntoJson(description);
+                if (typeof descText === 'object') {
+                  return _.get(descText, 'VulnDiscussion', '') as string;
+                } else {
+                  return description;
+                }
               }
             },
             descriptions: [
@@ -430,7 +486,9 @@ export class XCCDFResultsMapper extends BaseConverter {
                 }
               }
             },
-            code: '',
+            code: {
+              transformer: (group: Group) => JSON.stringify(group, null, 2)
+            },
             source_location: {},
             results: [
               {
@@ -461,6 +519,11 @@ export class XCCDFResultsMapper extends BaseConverter {
     ]
   };
   constructor(scapXml: string) {
-    super(parseXml(scapXml));
+    super(
+      preprocessXCCDFJSON(parseXml(scapXml) as {
+        Benchmark: {Group: Group[]};
+        'cdf:Benchmark': {'cdf:Group': Group[]};
+      })
+    );
   }
 }

@@ -57,7 +57,8 @@ export function parseXml(xml: string): Record<string, unknown> {
   const options = {
     attributeNamePrefix: '',
     textNodeName: 'text',
-    ignoreAttributes: false
+    ignoreAttributes: false,
+    stopNodes: ['description'] // Stop parsing of XCCDF descriptions as XML
   };
   return parser.parse(xml, options);
 }
