@@ -18,9 +18,11 @@ function extractAllDependencies(
     ...dependency,
     parentDependencies: []
   });
-  dependency.dependencies.forEach((subDependency) => {
-    result.push(...extractAllDependencies(subDependency));
-  });
+  if (Array.isArray(dependency.dependencies)) {
+    dependency.dependencies.forEach((subDependency) => {
+      result.push(...extractAllDependencies(subDependency));
+    });
+  }
 
   return result;
 }
