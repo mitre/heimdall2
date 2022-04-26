@@ -1,9 +1,11 @@
+import axios from 'axios';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   ContextualizedDependency,
   Dependency,
+  IonChannel,
   ScanSummary
 } from '../types/ionchannel';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
@@ -67,7 +69,7 @@ function preprocessIonChannelData(ionchannelData: string) {
     });
   } else {
     throw new Error(
-      `Ion Channel scan_summaries invalid summary data (expecting array, got ${typeof scanSummaries}`
+      `Ion Channel scan_summaries invalid summary data (expecting array, got ${typeof scanSummaries})`
     );
   }
 
@@ -95,6 +97,62 @@ function preprocessIonChannelData(ionchannelData: string) {
   });
 
   return result;
+}
+
+export class IonChannelAPIMapper {
+  apiKey: string;
+  projectId?: string;
+  teamId?: string;
+  analysisId?: string;
+
+  constructor(
+    apiKey: string,
+    projectId?: string,
+    teamId?: string,
+    analysisId?: string
+  ) {
+    this.apiKey = apiKey;
+    this.projectId = projectId;
+    this.teamId = teamId;
+    this.analysisId = analysisId;
+  }
+
+  async toHdf(): Promise<ExecJSON.Execution> {
+    const analysis: {data: {analysis: IonChannel}} = await this.getAnalysis();
+    const mapper = new IonChannelMapper(JSON.stringify(analysis.data.analysis));
+    return mapper.toHdf();
+  }
+
+  async getAnalysis() {
+    if (this.apiKey && this.projectId && this.teamId && this.analysisId) {
+      return axios
+        .get('https://api.ionchannel.io/v1/report/getAnalysis', {
+          params: {
+            project_id: this.projectId,
+            team_id: this.teamId,
+            analysis_id: this.analysisId
+          },
+          headers: {
+            Authorization: this.apiKey,
+            Accept: 'application/json, text/plain, */*'
+          }
+        })
+        .then(({data}) => data);
+    } else {
+      if (!this.apiKey) {
+        throw new Error('No IonChannel API-Key Defined');
+      }
+      if (!this.projectId) {
+        throw new Error('No Project ID Defined');
+      }
+      if (!this.teamId) {
+        throw new Error('No Team ID Defined');
+      }
+      if (!this.analysisId) {
+        throw new Error('No Analysis ID Defined');
+      }
+    }
+  }
 }
 
 export class IonChannelMapper extends BaseConverter {
