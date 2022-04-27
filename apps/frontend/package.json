@@ -73,7 +73,7 @@
     "@vue/eslint-config-typescript": "^10.0.0",
     "apexcharts": "^3.10.1",
     "aws-sdk": "^2.573.0",
-    "axios": "^0.26.0",
+    "axios": "^0.27.1",
     "bootstrap": "^5.0.2",
     "chroma-js": "^2.1.0",
     "class-transformer": "^0.5.1",
