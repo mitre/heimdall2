@@ -2,7 +2,11 @@ export type ContextualizedDependency = Dependency & {
   parentDependencies: string[];
 };
 
-export type IonChannel = {
+export type IonChannelAnalysisResponse = {
+  analysis: IonChannelAnalysis;
+};
+
+export type IonChannelAnalysis = {
   id: string;
   analysis_id: string;
   team_id: string;

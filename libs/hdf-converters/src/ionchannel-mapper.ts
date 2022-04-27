@@ -1,13 +1,15 @@
-import axios from 'axios';
+import axios, {AxiosInstance} from 'axios';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   ContextualizedDependency,
   Dependency,
-  IonChannel,
+  IonChannelAnalysisResponse,
   ScanSummary
-} from '../types/ionchannel';
+} from '../types/ionchannelAnalysis';
+import {Project} from '../types/ionchannelProjects';
+import {Team} from '../types/ionchannelTeams';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT} from './utils/global';
 
@@ -105,6 +107,8 @@ export class IonChannelAPIMapper {
   teamId?: string;
   analysisId?: string;
 
+  apiClient: AxiosInstance;
+
   constructor(
     apiKey: string,
     projectId?: string,
@@ -115,32 +119,97 @@ export class IonChannelAPIMapper {
     this.projectId = projectId;
     this.teamId = teamId;
     this.analysisId = analysisId;
+
+    this.apiClient = axios.create();
+    this.apiClient.defaults.headers.common[
+      'Authorization'
+    ] = `Bearer ${this.apiKey}`;
+    this.apiClient.defaults.headers.common['Accept'] =
+      'application/json, text/plain, */*';
   }
 
   async toHdf(): Promise<ExecJSON.Execution> {
-    const analysis: {data: {analysis: IonChannel}} = await this.getAnalysis();
-    const mapper = new IonChannelMapper(JSON.stringify(analysis.data.analysis));
+    const analysis = await this.getAnalysis();
+    const mapper = new IonChannelMapper(JSON.stringify(analysis.analysis));
     return mapper.toHdf();
   }
 
-  async getAnalysis() {
+  async setTeam(teamName: string) {
+    const availableTeams = await this.getTeams();
+    const foundTeam = availableTeams.find(
+      (team) => team.name.toLowerCase() === teamName.toLowerCase()
+    );
+    if (foundTeam) {
+      this.teamId = foundTeam.id;
+    } else {
+      throw new Error(
+        `Team ${teamName} not found in available teams: ${availableTeams
+          .map((team) => team.name)
+          .join(', ')}`
+      );
+    }
+  }
+
+  async getTeams(): Promise<Team[]> {
+    if (this.apiKey) {
+      return this.apiClient
+        .get('https://api.ionchannel.io/v1/teams/getTeams')
+        .then(({data}) => data.data);
+    } else {
+      throw new Error('No API-Key Set');
+    }
+  }
+
+  async setProject(projectName: string) {
+    const availableProjects = await this.getProjects();
+    const foundProject = availableProjects.find(
+      (project) => project.name.toLowerCase() === projectName.toLowerCase()
+    );
+    if (foundProject) {
+      this.projectId = foundProject.id;
+    } else {
+      throw new Error(
+        `Project ${projectName} not found in available projects: ${availableProjects
+          .map((project) => project.name)
+          .join(', ')}`
+      );
+    }
+  }
+
+  async getProjects(): Promise<Project[]> {
+    if (this.apiKey && this.teamId) {
+      return this.apiClient
+        .get('https://api.ionchannel.io/v1/report/getProjects', {
+          params: {
+            team_id: this.teamId
+          }
+        })
+        .then(({data}) => data.data);
+    } else {
+      if (!this.apiKey) {
+        throw new Error('No API-Key Defined');
+      }
+      if (!this.projectId) {
+        throw new Error('No Project ID Defined');
+      }
+      throw new Error('Unknown missing required value');
+    }
+  }
+
+  async getAnalysis(): Promise<IonChannelAnalysisResponse> {
     if (this.apiKey && this.projectId && this.teamId && this.analysisId) {
-      return axios
+      return this.apiClient
         .get('https://api.ionchannel.io/v1/report/getAnalysis', {
           params: {
             project_id: this.projectId,
             team_id: this.teamId,
             analysis_id: this.analysisId
-          },
-          headers: {
-            Authorization: this.apiKey,
-            Accept: 'application/json, text/plain, */*'
           }
         })
-        .then(({data}) => data);
+        .then(({data}) => data.data);
     } else {
       if (!this.apiKey) {
-        throw new Error('No IonChannel API-Key Defined');
+        throw new Error('No API-Key Defined');
       }
       if (!this.projectId) {
         throw new Error('No Project ID Defined');
@@ -151,6 +220,7 @@ export class IonChannelAPIMapper {
       if (!this.analysisId) {
         throw new Error('No Analysis ID Defined');
       }
+      throw new Error('Unknown missing required value');
     }
   }
 }
