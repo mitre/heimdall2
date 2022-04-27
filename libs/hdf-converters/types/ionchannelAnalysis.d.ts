@@ -97,8 +97,8 @@ export type Dependency = {
   latest_version: string;
   org: string;
   name: string;
-  type: TypeEnum;
-  package: Package;
+  type: string;
+  package: string;
   version: string;
   scope: Scope;
   requirement: string;
@@ -118,17 +118,8 @@ export type OutdatedVersion = {
   patch_behind: number;
 };
 
-export enum Package {
-  Package = 'package'
-}
-
 export enum Scope {
   Runtime = 'runtime'
-}
-
-export enum TypeEnum {
-  Npm = 'npm',
-  Npmjs = 'npmjs'
 }
 
 export type DockerFile = {

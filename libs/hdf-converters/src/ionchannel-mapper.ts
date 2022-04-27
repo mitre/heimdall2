@@ -87,11 +87,13 @@ function preprocessIonChannelData(ionchannelData: string) {
 
   // Associate dependencies with each-other
   Object.entries(dependencyGraph).forEach(([, dependency]) => {
-    dependency.dependencies.forEach((subDependency) => {
-      dependencyGraph[
-        `${subDependency.org}/${subDependency.name}`
-      ].parentDependencies.push(`${dependency.org}/${dependency.name}`);
-    });
+    if (Array.isArray(dependency.dependencies)) {
+      dependency.dependencies.forEach((subDependency) => {
+        dependencyGraph[
+          `${subDependency.org}/${subDependency.name}`
+        ].parentDependencies.push(`${dependency.org}/${dependency.name}`);
+      });
+    }
   });
 
   Object.entries(dependencyGraph).forEach(([, dependency]) => {
@@ -167,6 +169,7 @@ export class IonChannelAPIMapper {
     );
     if (foundProject) {
       this.projectId = foundProject.id;
+      this.analysisId = foundProject.analysis_summary.analysis_id;
     } else {
       throw new Error(
         `Project ${projectName} not found in available projects: ${availableProjects
@@ -251,7 +254,7 @@ export class IonChannelMapper extends BaseConverter {
           transformer: (source?: string) => `IonChannel Analysis of ${source}`
         },
         maintainer: 'saf@groups.mitre.org',
-        summary: {},
+        summary: '',
         license: null,
         copyright: null,
         copyright_email: null,
@@ -266,13 +269,18 @@ export class IonChannelMapper extends BaseConverter {
             key: 'id',
             tags: {
               transformer: (dependency: Dependency) => {
-                return {
-                  ..._.omit(dependency, 'dependencies'),
-                  nist: DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT,
-                  dependencies: dependency.dependencies.map(
-                    (subDependency) => `${subDependency.name}`
-                  )
-                };
+                return Array.isArray(dependency.dependencies)
+                  ? {
+                      ..._.omit(dependency, 'dependencies'),
+                      nist: DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT,
+                      dependencies: dependency.dependencies.map(
+                        (subDependency) => `${subDependency.name}`
+                      )
+                    }
+                  : {
+                      ..._.omit(dependency, 'dependencies'),
+                      nist: DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT
+                    };
               }
             },
             descriptions: [],
@@ -280,9 +288,32 @@ export class IonChannelMapper extends BaseConverter {
             source_location: {},
             title: {
               transformer: (dependency: Dependency) => {
-                return dependency.org
-                  ? `Dependency ${dependency.name} from ${dependency.org} @ ${dependency.version} (Required "${dependency.requirement}")`
-                  : `Dependency ${dependency.name} @ ${dependency.version} (Required "${dependency.requirement}")`;
+                // Specific to Python requirements, commonly called requirements.txt or requirements_dev.txt
+                if (
+                  dependency.type === 'pypi' &&
+                  dependency.package === 'egg' &&
+                  dependency.name === '-e'
+                ) {
+                  return `Python requirements file ${dependency.file}`;
+                }
+
+                let title = `Dependency ${dependency.name} `;
+                if (dependency.org && dependency.org.toLowerCase() !== 'n/a') {
+                  title += `from ${dependency.org} `;
+                }
+                if (
+                  dependency.version &&
+                  dependency.version.toLowerCase() !== 'n/a'
+                ) {
+                  title += `@ ${dependency.version} `;
+                }
+                if (
+                  dependency.requirement &&
+                  dependency.requirement.toLowerCase() !== 'n/a'
+                ) {
+                  title += `(Required ${dependency.requirement}) `;
+                }
+                return title.trim();
               }
             },
             id: {
