@@ -1,4 +1,5 @@
 import {ExecJSON} from 'inspecjs';
+import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
@@ -70,7 +71,10 @@ export class SnykResults {
 }
 
 export class SnykMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -82,27 +86,19 @@ export class SnykMapper extends BaseConverter {
     },
     profiles: [
       {
-        name: {path: 'policy'},
-        version: {
-          path: 'policy',
-          transformer: (policy: unknown): string => {
-            if (typeof policy === 'string') {
-              return policy.split('version: ')[1].split('\n')[0];
-            } else {
-              return '';
-            }
-          }
-        },
+        name: 'Snyk Scan',
         title: {
-          path: 'projectName',
-          transformer: (projectName: unknown): string => {
-            return `Snyk Project: ${projectName}`;
+          transformer: (data: Record<string, unknown>): string => {
+            const projectName = _.has(data, 'projectName')
+              ? `Snyk Project: ${_.get(data, 'projectName')} `
+              : '';
+            return `${projectName}Snyk Path: ${_.get(data, 'path')}`;
           }
         },
         maintainer: null,
         summary: {
           path: 'summary',
-          transformer: (summary: unknown): string => {
+          transformer: (summary: string): string => {
             return `Snyk Summary: ${summary}`;
           }
         },
@@ -134,7 +130,11 @@ export class SnykMapper extends BaseConverter {
               path: 'severity',
               transformer: impactMapping(IMPACT_MAPPING)
             },
-            code: '',
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string => {
+                return JSON.stringify(vulnerability, null, 2);
+              }
+            },
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
@@ -156,7 +156,16 @@ export class SnykMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ]
+    ],
+    passthrough: {
+      snyk_metadata: {
+        transformer: (
+          data: Record<string, unknown>
+        ): Record<string, unknown> => {
+          return _.omit(data, ['vulnerabilities']);
+        }
+      }
+    }
   };
   constructor(snykJson: Record<string, unknown>) {
     super(snykJson);
