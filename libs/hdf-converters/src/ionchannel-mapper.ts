@@ -11,7 +11,7 @@ import {
 import {Project} from '../types/ionchannelProjects';
 import {Team} from '../types/ionchannelTeams';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
-import {DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT} from './utils/global';
+import {DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS} from './utils/global';
 
 // Extracts all levels of dependencies from any dependency (including sub-dependencies)
 function extractAllDependencies(
@@ -153,13 +153,12 @@ export class IonChannelAPIMapper {
   }
 
   async getTeams(): Promise<Team[]> {
-    if (this.apiKey) {
-      return this.apiClient
-        .get('https://api.ionchannel.io/v1/teams/getTeams')
-        .then(({data}) => data.data);
-    } else {
+    if (!this.apiKey) {
       throw new Error('No API-Key Set');
     }
+    return this.apiClient
+      .get('https://api.ionchannel.io/v1/teams/getTeams')
+      .then(({data}) => data.data);
   }
 
   async setProject(projectName: string) {
@@ -180,51 +179,40 @@ export class IonChannelAPIMapper {
   }
 
   async getProjects(): Promise<Project[]> {
-    if (this.apiKey && this.teamId) {
-      return this.apiClient
-        .get('https://api.ionchannel.io/v1/report/getProjects', {
-          params: {
-            team_id: this.teamId
-          }
-        })
-        .then(({data}) => data.data);
-    } else {
-      if (!this.apiKey) {
-        throw new Error('No API-Key Defined');
-      }
-      if (!this.projectId) {
-        throw new Error('No Project ID Defined');
-      }
-      throw new Error('Unknown missing required value');
+    if (!this.apiKey) {
+      throw new Error('No API-Key Defined');
     }
+    return this.apiClient
+      .get('https://api.ionchannel.io/v1/report/getProjects', {
+        params: {
+          team_id: this.teamId
+        }
+      })
+      .then(({data}) => data.data);
   }
 
   async getAnalysis(): Promise<IonChannelAnalysisResponse> {
-    if (this.apiKey && this.projectId && this.teamId && this.analysisId) {
-      return this.apiClient
-        .get('https://api.ionchannel.io/v1/report/getAnalysis', {
-          params: {
-            project_id: this.projectId,
-            team_id: this.teamId,
-            analysis_id: this.analysisId
-          }
-        })
-        .then(({data}) => data.data);
-    } else {
-      if (!this.apiKey) {
-        throw new Error('No API-Key Defined');
-      }
-      if (!this.projectId) {
-        throw new Error('No Project ID Defined');
-      }
-      if (!this.teamId) {
-        throw new Error('No Team ID Defined');
-      }
-      if (!this.analysisId) {
-        throw new Error('No Analysis ID Defined');
-      }
-      throw new Error('Unknown missing required value');
+    if (!this.apiKey) {
+      throw new Error('No API-Key Defined');
     }
+    if (!this.projectId) {
+      throw new Error('No Project ID Defined');
+    }
+    if (!this.teamId) {
+      throw new Error('No Team ID Defined');
+    }
+    if (!this.analysisId) {
+      throw new Error('No Analysis ID Defined');
+    }
+    return this.apiClient
+      .get('https://api.ionchannel.io/v1/report/getAnalysis', {
+        params: {
+          project_id: this.projectId,
+          team_id: this.teamId,
+          analysis_id: this.analysisId
+        }
+      })
+      .then(({data}) => data.data);
   }
 }
 
@@ -234,12 +222,14 @@ export class IonChannelMapper extends BaseConverter {
     ILookupPath
   > = {
     platform: {
-      name: 'Ion Channel',
+      name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
       target_id: {path: 'metadata.project_id'}
     },
     passthrough: {
-      path: 'metadata'
+      ionchannel_metadata: {
+        path: 'metadata'
+      }
     },
     version: HeimdallToolsVersion,
     statistics: {
@@ -272,14 +262,14 @@ export class IonChannelMapper extends BaseConverter {
                 return Array.isArray(dependency.dependencies)
                   ? {
                       ..._.omit(dependency, 'dependencies'),
-                      nist: DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT,
+                      nist: DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS,
                       dependencies: dependency.dependencies.map(
                         (subDependency) => `${subDependency.name}`
                       )
                     }
                   : {
                       ..._.omit(dependency, 'dependencies'),
-                      nist: DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT
+                      nist: DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS
                     };
               }
             },
