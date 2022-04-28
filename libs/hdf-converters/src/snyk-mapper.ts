@@ -164,11 +164,6 @@ export class SnykMapper extends BaseConverter {
         ): Record<string, unknown> => {
           return _.omit(data, ['vulnerabilities']);
         }
-      },
-      original: {
-        transformer: (data: Record<string, unknown>): string => {
-          return JSON.stringify(data);
-        }
       }
     }
   };
