@@ -88,7 +88,6 @@ export class SnykMapper extends BaseConverter {
       {
         name: 'Snyk Scan',
         title: {
-          path: 'projectName',
           transformer: (data: Record<string, unknown>): string => {
             const projectName = _.has(data, 'projectName')
               ? `Snyk Project: ${_.get(data, 'projectName')} `
