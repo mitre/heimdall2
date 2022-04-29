@@ -3977,9 +3977,9 @@
     "@types/istanbul-lib-report" "*"
 
 "@types/jest-environment-puppeteer@^5.0.0":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@types/jest-environment-puppeteer/-/jest-environment-puppeteer-5.0.1.tgz#293f83859ac137952749b4621bb72b07c9534397"
-  integrity sha512-QVf/EQEJihbOjJdmQ9Mq5jDAIba93Rh/32l41HC2O0jOMjT8Syvrr5acBArf6BN+RdkIKtAUkTadIY7j89eD+A==
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@types/jest-environment-puppeteer/-/jest-environment-puppeteer-5.0.2.tgz#604370c20b3c62e40d155b19eb544d1580dbc69e"
+  integrity sha512-YCdegQnDou6aIK8wqygDDctHgJZtlXd03fI9Bgbqkdu66EFKnImmt7auiR9OkxkSSiqS9smn0joX2pGpVs7ErA==
   dependencies:
     "@jest/types" ">=24 <=27"
     "@types/puppeteer" "*"
