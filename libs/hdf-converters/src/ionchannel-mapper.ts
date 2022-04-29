@@ -179,6 +179,9 @@ export class IonChannelAPIMapper {
     if (!this.apiKey) {
       throw new Error('No API-Key Defined');
     }
+    if (!this.teamId) {
+      throw new Error('No Team ID Defined');
+    }
     return this.apiClient
       .get('https://api.ionchannel.io/v1/report/getProjects', {
         params: {
