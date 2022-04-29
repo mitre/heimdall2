@@ -54,26 +54,25 @@ function preprocessIonChannelData(ionchannelData: string) {
 
   result.metadata = _.omit(parsed, 'scan_summaries');
 
-  if (Array.isArray(scanSummaries)) {
-    scanSummaries.forEach((scanSummary: ScanSummary) => {
-      switch (scanSummary.name) {
-        case 'dependency':
-          if (scanSummary.results.data.dependencies) {
-            result.scans.dependency.dependencies =
-              scanSummary.results.data.dependencies;
-          } else {
-            throw new Error('Dependency scan contains no dependencies array');
-          }
-        // We only care about dependencies at the moment
-        default:
-          break;
-      }
-    });
-  } else {
+  if (!Array.isArray(scanSummaries)) {
     throw new Error(
       `Ion Channel scan_summaries invalid summary data (expecting array, got ${typeof scanSummaries})`
     );
   }
+
+  scanSummaries.forEach((scanSummary: ScanSummary) => {
+    switch (scanSummary.name) {
+      case 'dependency':
+        if (!scanSummary.results.data.dependencies) {
+          throw new Error('Dependency scan contains no dependencies array');
+        }
+        result.scans.dependency.dependencies = scanSummary.results.data.dependencies;
+        break;
+      // We only care about dependencies at the moment
+      default:
+        break;
+    }
+  });
 
   const dependencyGraph: Record<string, ContextualizedDependency> = {};
 
@@ -141,15 +140,14 @@ export class IonChannelAPIMapper {
     const foundTeam = availableTeams.find(
       (team) => team.name.toLowerCase() === teamName.toLowerCase()
     );
-    if (foundTeam) {
-      this.teamId = foundTeam.id;
-    } else {
+    if (!foundTeam) {
       throw new Error(
         `Team ${teamName} not found in available teams: ${availableTeams
           .map((team) => team.name)
           .join(', ')}`
       );
     }
+    this.teamId = foundTeam.id;
   }
 
   async getTeams(): Promise<Team[]> {
@@ -166,16 +164,15 @@ export class IonChannelAPIMapper {
     const foundProject = availableProjects.find(
       (project) => project.name.toLowerCase() === projectName.toLowerCase()
     );
-    if (foundProject) {
-      this.projectId = foundProject.id;
-      this.analysisId = foundProject.analysis_summary.analysis_id;
-    } else {
+    if (!foundProject) {
       throw new Error(
         `Project ${projectName} not found in available projects: ${availableProjects
           .map((project) => project.name)
           .join(', ')}`
       );
     }
+    this.projectId = foundProject.id;
+    this.analysisId = foundProject.analysis_summary.analysis_id;
   }
 
   async getProjects(): Promise<Project[]> {
