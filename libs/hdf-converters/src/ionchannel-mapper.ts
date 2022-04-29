@@ -66,7 +66,8 @@ function preprocessIonChannelData(ionchannelData: string) {
         if (!scanSummary.results.data.dependencies) {
           throw new Error('Dependency scan contains no dependencies array');
         }
-        result.scans.dependency.dependencies = scanSummary.results.data.dependencies;
+        result.scans.dependency.dependencies =
+          scanSummary.results.data.dependencies;
         break;
       // We only care about dependencies at the moment
       default:
