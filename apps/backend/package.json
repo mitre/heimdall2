@@ -104,7 +104,7 @@
     "sequelize-typescript": "^2.0.0",
     "ts-loader": "^9.1.0",
     "ts-node": "^10.0.0",
-    "tsconfig-paths": "^3.9.0",
+    "tsconfig-paths": "^4.0.0",
     "uuid": "^8.3.2",
     "winston": "^3.3.3"
   },
