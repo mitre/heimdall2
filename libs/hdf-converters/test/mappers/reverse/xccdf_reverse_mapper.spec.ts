@@ -23,6 +23,6 @@ describe('XCCDF Results Revse Mapper', () => {
       'utf-8'
     );
 
-    expect(converted).toEqual(expected)
+    expect(converted).toEqual(expected);
   });
 });

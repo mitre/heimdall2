@@ -47,6 +47,9 @@
             <v-list-item class="px-0">
               <ExportJson />
             </v-list-item>
+            <v-list-item class="px-0">
+              <ExportXCCDFResults :filter="all_filter" />
+            </v-list-item>
           </v-list>
         </v-menu>
       </div>
@@ -208,6 +211,7 @@ import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
+import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import {
   ExtendedControlStatus,
@@ -249,6 +253,7 @@ import {compare_times} from '../utilities/delta_util';
     ExportCSVModal,
     ExportNist,
     ExportJson,
+    ExportXCCDFResults,
     ExportCKLModal,
     ExportHTMLModal,
     EvaluationInfo,

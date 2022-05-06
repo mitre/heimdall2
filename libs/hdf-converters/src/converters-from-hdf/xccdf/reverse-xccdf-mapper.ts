@@ -29,7 +29,7 @@ function getXCCDFResultMessageSeverity(segments: ExecJSON.ControlResult[]) {
   if (segments.some((result) => result.backtrace)) {
     return 'medium';
   }
-  return 'info'
+  return 'info';
 }
 
 function toMessageLine(segment: ExecJSON.ControlResult): string {
@@ -59,7 +59,7 @@ export class FromHDFToXCCDFMapper {
   constructor(data: string, xccdfTemplate: string, dateOverride = false) {
     this.data = JSON.parse(data);
     this.xccdfTemplate = xccdfTemplate;
-    this.dateOverride = dateOverride
+    this.dateOverride = dateOverride;
   }
 
   toXCCDF() {
@@ -75,7 +75,9 @@ export class FromHDFToXCCDFMapper {
         Profile: [],
         Rule: [],
         TestResult: {
-          endTime: this.dateOverride ? '2022-05-06T21:46:47.939Z' : new Date().toISOString(),
+          endTime: this.dateOverride
+            ? '2022-05-06T21:46:47.939Z'
+            : new Date().toISOString(),
           hasAttributes: false,
           attributes: [],
           results: []
