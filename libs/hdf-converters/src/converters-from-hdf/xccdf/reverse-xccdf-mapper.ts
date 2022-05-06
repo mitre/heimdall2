@@ -15,12 +15,17 @@ function getXCCDFResult(control: ExecJSON.Control): TestResultEnum {
     return 'unknown';
   }
 
-  if (control.results.every((result) => result.status === 'passed'))
+  if (control.results.every((result) => result.status === 'passed')) {
     return 'pass';
-  if (control.results.every((result) => result.status === 'skipped'))
+  }
+
+  if (control.results.every((result) => result.status === 'skipped')) {
     return 'notchecked';
-  if (control.results.some((result) => result.status === 'failed'))
+  }
+
+  if (control.results.some((result) => result.status === 'failed')) {
     return 'fail';
+  }
 
   return 'unknown';
 }
@@ -62,6 +67,50 @@ export class FromHDFToXCCDFMapper {
     this.dateOverride = dateOverride;
   }
 
+  getControlInfo(control: ExecJSON.Control) {
+    return {
+      groupId:
+        'xccdf_mitre.hdf-converters.xccdf_group_' +
+        control.id.replace(/\s/g, '_'),
+      id:
+        'xccdf_mitre.hdf-converters.xccdf_rule_' +
+        control.id.replace(/\s/g, '_'),
+      title: control.title || '',
+      description:
+        control.desc ||
+        control.descriptions?.find(
+          (description) => description.label === 'default'
+        )?.data ||
+        '',
+      checkContent:
+        control.descriptions?.find(
+          (description) => description.label === 'check'
+        )?.data ||
+        control.tags.check ||
+        '',
+      code: control.code || '',
+      fix:
+        control.descriptions?.find(
+          (description) => description.label === 'fix'
+        )?.data ||
+        control.tags.fix ||
+        '',
+      ccis: control.tags.cci || []
+    }
+  }
+
+  getControlResultsInfo(control: ExecJSON.Control) {
+    return {
+      idref:
+        'xccdf_mitre.hdf-converters.xccdf_rule_' +
+        control.id.replace(/\s/g, '_'),
+      result: getXCCDFResult(control),
+      message: getMessages(control.results),
+      messageType: getXCCDFResultMessageSeverity(control.results),
+      check: control.code || ''
+    }
+  }
+
   toXCCDF() {
     const mappedData: MappedXCCDFtoHDF = {
       Benchmark: {
@@ -93,11 +142,12 @@ export class FromHDFToXCCDFMapper {
           (profile.title?.replace(/\s/g, '_') || 'profile_missing_title'),
         title: profile.title || '',
         description: profile.description || '',
+        // All control IDs
         select: profile.controls.map(
           (control) =>
             'xccdf_mitre.hdf-converters.xccdf_rule_' +
             control.id.replace(/\s/g, '_')
-        ) // All control IDs
+        ) 
       });
       mappedData.Benchmark.TestResult.attributes.push(
         ...(profile.attributes || [])
@@ -105,47 +155,12 @@ export class FromHDFToXCCDFMapper {
       if (mappedData.Benchmark.TestResult.attributes.length > 0) {
         mappedData.Benchmark.TestResult.hasAttributes = true;
       }
+
       profile.controls.forEach((control) => {
         // Add control info
-        mappedData.Benchmark.Rule.push({
-          groupId:
-            'xccdf_mitre.hdf-converters.xccdf_group_' +
-            control.id.replace(/\s/g, '_'),
-          id:
-            'xccdf_mitre.hdf-converters.xccdf_rule_' +
-            control.id.replace(/\s/g, '_'),
-          title: control.title || '',
-          description:
-            control.desc ||
-            control.descriptions?.find(
-              (description) => description.label === 'default'
-            )?.data ||
-            '',
-          checkContent:
-            control.descriptions?.find(
-              (description) => description.label === 'check'
-            )?.data ||
-            control.tags.check ||
-            '',
-          code: control.code || '',
-          fix:
-            control.descriptions?.find(
-              (description) => description.label === 'fix'
-            )?.data ||
-            control.tags.fix ||
-            '',
-          ccis: control.tags.cci || []
-        });
+        mappedData.Benchmark.Rule.push(this.getControlInfo(control));
         // Add results info
-        mappedData.Benchmark.TestResult.results.push({
-          idref:
-            'xccdf_mitre.hdf-converters.xccdf_rule_' +
-            control.id.replace(/\s/g, '_'),
-          result: getXCCDFResult(control),
-          message: getMessages(control.results),
-          messageType: getXCCDFResultMessageSeverity(control.results),
-          check: control.code || ''
-        });
+        mappedData.Benchmark.TestResult.results.push(this.getControlResultsInfo(control));
       });
     });
 
