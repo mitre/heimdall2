@@ -90,13 +90,12 @@ export class FromHDFToXCCDFMapper {
         '',
       code: control.code || '',
       fix:
-        control.descriptions?.find(
-          (description) => description.label === 'fix'
-        )?.data ||
+        control.descriptions?.find((description) => description.label === 'fix')
+          ?.data ||
         control.tags.fix ||
         '',
       ccis: control.tags.cci || []
-    }
+    };
   }
 
   getControlResultsInfo(control: ExecJSON.Control) {
@@ -108,7 +107,7 @@ export class FromHDFToXCCDFMapper {
       message: getMessages(control.results),
       messageType: getXCCDFResultMessageSeverity(control.results),
       check: control.code || ''
-    }
+    };
   }
 
   toXCCDF() {
@@ -147,7 +146,7 @@ export class FromHDFToXCCDFMapper {
           (control) =>
             'xccdf_mitre.hdf-converters.xccdf_rule_' +
             control.id.replace(/\s/g, '_')
-        ) 
+        )
       });
       mappedData.Benchmark.TestResult.attributes.push(
         ...(profile.attributes || [])
@@ -160,7 +159,9 @@ export class FromHDFToXCCDFMapper {
         // Add control info
         mappedData.Benchmark.Rule.push(this.getControlInfo(control));
         // Add results info
-        mappedData.Benchmark.TestResult.results.push(this.getControlResultsInfo(control));
+        mappedData.Benchmark.TestResult.results.push(
+          this.getControlResultsInfo(control)
+        );
       });
     });
 
