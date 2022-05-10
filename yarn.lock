@@ -4281,9 +4281,9 @@
     htmlparser2 "^6.0.0"
 
 "@types/sequelize@^4.28.9":
-  version "4.28.12"
-  resolved "https://registry.yarnpkg.com/@types/sequelize/-/sequelize-4.28.12.tgz#baf503516c547c5b5f3354bf517fab592ee2b661"
-  integrity sha512-lzuuCmpB5famZ2qMNTPsVuMshVXmuwobewvRY96fnYTVDhDk0ht/Hs5qKCtE/4lcsHh7R27y+e6njKfLfkFzVw==
+  version "4.28.13"
+  resolved "https://registry.yarnpkg.com/@types/sequelize/-/sequelize-4.28.13.tgz#68eeea275d3e3dc7846dd0955bbc166cf7429952"
+  integrity sha512-ZR7k22F3xEqbGUWW7ZgysttmOUPIFyTPA2oPPjlT47h2iJtALrtNTXdEF5erW7bHCG2H+Byuy5MbpLj3znE7wQ==
   dependencies:
     "@types/bluebird" "*"
     "@types/continuation-local-storage" "*"
