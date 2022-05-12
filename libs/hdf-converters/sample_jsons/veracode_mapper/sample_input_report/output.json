@@ -1,0 +1,524 @@
+{
+  detailedreport: {
+    'xmlns:xsi': 'http&#x3a;&#x2f;&#x2f;www.w3.org&#x2f;2001&#x2f;XMLSchema-instance',
+    xmlns: 'https&#x3a;&#x2f;&#x2f;www.veracode.com&#x2f;schema&#x2f;reports&#x2f;export&#x2f;1.0',
+    'xsi:schemaLocation': 'https&#x3a;&#x2f;&#x2f;www.veracode.com&#x2f;schema&#x2f;reports&#x2f;export&#x2f;1.0 https&#x3a;&#x2f;&#x2f;analysiscenter.veracode.com&#x2f;resource&#x2f;detailedreport.xsd',
+    report_format_version: '1.5',
+    account_id: '17742',
+    app_name: 'swaptest',
+    app_id: '1280564',
+    analysis_id: '14973284',
+    static_analysis_unit_id: '14988940',
+    sandbox_id: '4031687',
+    first_build_submitted_date: '2021-11-04 18&#x3a;43&#x3a;13 UTC',
+    version: '4 Nov 2021 Static',
+    build_id: '15000173',
+    submitter: 'Dave Anderson',
+    platform: 'Not Specified',
+    assurance_level: '3',
+    business_criticality: '3',
+    generation_date: '2021-11-04 19&#x3a;03&#x3a;30 UTC',
+    veracode_level: 'VL3 &#x2b; SCA',
+    total_flaws: '11',
+    flaws_not_mitigated: '11',
+    teams: 'SwAP Development',
+    life_cycle_stage: 'Not Specified',
+    planned_deployment_date: '2021-11-04 18&#x3a;39&#x3a;03 UTC',
+    last_update_time: '2021-11-04 18&#x3a;44&#x3a;54 UTC',
+    is_latest_build: 'true',
+    policy_name: 'Veracode Recommended Medium',
+    policy_version: '1',
+    policy_compliance_status: 'Pass',
+    policy_rules_status: 'Pass',
+    grace_period_expired: 'false',
+    scan_overdue: 'false',
+    business_owner: '',
+    business_unit: 'Not Specified',
+    tags: '',
+    legacy_scan_engine: 'false',
+    'static-analysis': {
+      rating: 'A',
+      score: '95',
+      submitted_date: '2021-11-04 18&#x3a;43&#x3a;03 UTC',
+      published_date: '2021-11-04 18&#x3a;44&#x3a;54 UTC',
+      version: '4 Nov 2021 Static',
+      next_scan_due: '2022-02-04 19&#x3a;44&#x3a;54 UTC',
+      analysis_size_bytes: '28810',
+      engine_version: '20211008192557',
+      modules: {
+        module: {
+          name: 'Python files within homoglyph.tar',
+          compiler: 'Python',
+          os: '',
+          architecture: 'Python',
+          loc: '1838',
+          score: '95',
+          numflawssev0: '0',
+          numflawssev1: '0',
+          numflawssev2: '0',
+          numflawssev3: '11',
+          numflawssev4: '0',
+          numflawssev5: '0'
+        }
+      }
+    },
+    severity: [
+      { level: '5' },
+      { level: '4' },
+      {
+        level: '3',
+        category: [
+          {
+            categoryid: '21',
+            categoryname: 'CRLF Injection',
+            pcirelated: 'true',
+            desc: {
+              para: {
+                text: 'The acronym CRLF stands for &#x22;Carriage Return, Line Feed&#x22; and refers to the sequence of characters used to denote the end of a line of text.  CRLF injection vulnerabilities occur when data enters an application from an untrusted source and is not properly validated before being used.  For example, if an attacker is able to inject a CRLF into a log file, he could append falsified log entries, thereby misleading administrators or cover traces of the attack.  If an attacker is able to inject CRLFs into an HTTP response header, he can use this ability to carry out other attacks such as cache poisoning.  CRLF vulnerabilities primarily affect data integrity.'
+              }
+            },
+            recommendations: {
+              para: {
+                text: 'Apply robust input filtering for all user-supplied data, using centralized data validation routines when possible.  Use output filters to sanitize all output derived from user-supplied input, replacing non-alphanumeric characters with their HTML entity equivalents.'
+              }
+            },
+            cwe: {
+              cweid: '117',
+              cwename: 'Improper Output Neutralization for Logs',
+              pcirelated: 'true',
+              owasp: '1027',
+              certjava: '1134',
+              description: {
+                text: {
+                  text: 'A function call could result in a log forging attack.  Writing untrusted data into a log file allows an attacker to forge log entries or inject malicious content into log files.  Corrupted log files can be used to cover an attacker&#x27;s tracks or as a delivery mechanism for an attack on a log viewing or processing utility.  For example, if a web administrator uses a browser-based utility to review logs, a cross-site scripting attack might be possible.'
+                }
+              },
+              staticflaws: {
+                flaw: [
+                  {
+                    severity: '3',
+                    categoryname: 'Improper Output Neutralization for Logs',
+                    count: '1',
+                    issueid: '6',
+                    module: 'Python files within homoglyph.tar',
+                    type: 'log_forging_python_117',
+                    description: 'This call to logging.Logger.info&#x28;&#x29; could result in a log forging attack. Writing unsanitized user-supplied data into a log file allows an attacker to forge log entries or inject malicious content into log files. Corrupted log files can be used to cover an attacker&#x27;s tracks or as a delivery mechanism for an attack on a log viewing or processing utility. For example, if a web administrator uses a browser-based utility to review logs, a cross-site scripting attack might be possible.&#xd;&#xa;&#xd;&#xa;Avoid directly embedding user input in log files when possible. Sanitize user-supplied data used to construct log entries by using a safe logging mechanism such as the OWASP ESAPI Logger, which will automatically remove unexpected carriage returns and line feeds and can be configured to use HTML entity encoding for non-alphanumeric data. Only create a custom blocklist when absolutely necessary. Always validate user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.&#xd;&#xa;&#xd;&#xa;References&#x3a; &#xd;&#xa;CWE &#x28;http&#x3a;&#x2f;&#x2f;cwe.mitre.org&#x2f;data&#x2f;definitions&#x2f;117.html&#x29; &#xd;&#xa;OWASP &#x28;http&#x3a;&#x2f;&#x2f;www.owasp.org&#x2f;index.php&#x2f;Log_injection&#x29; &#xd;&#xa;WASC &#x28;http&#x3a;&#x2f;&#x2f;webappsec.pbworks.com&#x2f;Improper-Output-Handling&#x29;&#xd;&#xa;&#xd;&#xa;',
+                    note: '',
+                    cweid: '117',
+                    remediationeffort: '2',
+                    exploitLevel: '1',
+                    categoryid: '21',
+                    pcirelated: 'true',
+                    date_first_occurrence: '2021-11-04 18&#x3a;39&#x3a;01 UTC',
+                    remediation_status: 'New',
+                    cia_impact: 'npp',
+                    grace_period_expires: '',
+                    affects_policy_compliance: 'false',
+                    mitigation_status: 'none',
+                    mitigation_status_desc: 'Not Mitigated',
+                    sourcefile: 'test_homoglyph.py',
+                    line: '448',
+                    sourcefilepath: '&#x2f;homoglyph&#x2f;tests&#x2f;',
+                    scope: 'Global Scope',
+                    functionprototype: '',
+                    functionrelativelocation: '0'
+                  },
+                  {
+                    severity: '3',
+                    categoryname: 'Improper Output Neutralization for Logs',
+                    count: '1',
+                    issueid: '1',
+                    module: 'Python files within homoglyph.tar',
+                    type: 'log_forging_python_117',
+                    description: 'This call to logging.Logger.info&#x28;&#x29; could result in a log forging attack. Writing unsanitized user-supplied data into a log file allows an attacker to forge log entries or inject malicious content into log files. Corrupted log files can be used to cover an attacker&#x27;s tracks or as a delivery mechanism for an attack on a log viewing or processing utility. For example, if a web administrator uses a browser-based utility to review logs, a cross-site scripting attack might be possible.&#xd;&#xa;&#xd;&#xa;Avoid directly embedding user input in log files when possible. Sanitize user-supplied data used to construct log entries by using a safe logging mechanism such as the OWASP ESAPI Logger, which will automatically remove unexpected carriage returns and line feeds and can be configured to use HTML entity encoding for non-alphanumeric data. Only create a custom blocklist when absolutely necessary. Always validate user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.&#xd;&#xa;&#xd;&#xa;References&#x3a; &#xd;&#xa;CWE &#x28;http&#x3a;&#x2f;&#x2f;cwe.mitre.org&#x2f;data&#x2f;definitions&#x2f;117.html&#x29; &#xd;&#xa;OWASP &#x28;http&#x3a;&#x2f;&#x2f;www.owasp.org&#x2f;index.php&#x2f;Log_injection&#x29; &#xd;&#xa;WASC &#x28;http&#x3a;&#x2f;&#x2f;webappsec.pbworks.com&#x2f;Improper-Output-Handling&#x29;&#xd;&#xa;&#xd;&#xa;',
+                    note: '',
+                    cweid: '117',
+                    remediationeffort: '2',
+                    exploitLevel: '1',
+                    categoryid: '21',
+                    pcirelated: 'true',
+                    date_first_occurrence: '2021-11-04 18&#x3a;39&#x3a;01 UTC',
+                    remediation_status: 'New',
+                    cia_impact: 'npp',
+                    grace_period_expires: '',
+                    affects_policy_compliance: 'false',
+                    mitigation_status: 'none',
+                    mitigation_status_desc: 'Not Mitigated',
+                    sourcefile: 'test_homoglyph.py',
+                    line: '449',
+                    sourcefilepath: '&#x2f;homoglyph&#x2f;tests&#x2f;',
+                    scope: 'Global Scope',
+                    functionprototype: '',
+                    functionrelativelocation: '0'
+                  },
+                  {
+                    severity: '3',
+                    categoryname: 'Improper Output Neutralization for Logs',
+                    count: '1',
+                    issueid: '10',
+                    module: 'Python files within homoglyph.tar',
+                    type: 'log_forging_python_117',
+                    description: 'This call to logging.Logger.info&#x28;&#x29; could result in a log forging attack. Writing unsanitized user-supplied data into a log file allows an attacker to forge log entries or inject malicious content into log files. Corrupted log files can be used to cover an attacker&#x27;s tracks or as a delivery mechanism for an attack on a log viewing or processing utility. For example, if a web administrator uses a browser-based utility to review logs, a cross-site scripting attack might be possible.&#xd;&#xa;&#xd;&#xa;Avoid directly embedding user input in log files when possible. Sanitize user-supplied data used to construct log entries by using a safe logging mechanism such as the OWASP ESAPI Logger, which will automatically remove unexpected carriage returns and line feeds and can be configured to use HTML entity encoding for non-alphanumeric data. Only create a custom blocklist when absolutely necessary. Always validate user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.&#xd;&#xa;&#xd;&#xa;References&#x3a; &#xd;&#xa;CWE &#x28;http&#x3a;&#x2f;&#x2f;cwe.mitre.org&#x2f;data&#x2f;definitions&#x2f;117.html&#x29; &#xd;&#xa;OWASP &#x28;http&#x3a;&#x2f;&#x2f;www.owasp.org&#x2f;index.php&#x2f;Log_injection&#x29; &#xd;&#xa;WASC &#x28;http&#x3a;&#x2f;&#x2f;webappsec.pbworks.com&#x2f;Improper-Output-Handling&#x29;&#xd;&#xa;&#xd;&#xa;',
+                    note: '',
+                    cweid: '117',
+                    remediationeffort: '2',
+                    exploitLevel: '1',
+                    categoryid: '21',
+                    pcirelated: 'true',
+                    date_first_occurrence: '2021-11-04 18&#x3a;39&#x3a;01 UTC',
+                    remediation_status: 'New',
+                    cia_impact: 'npp',
+                    grace_period_expires: '',
+                    affects_policy_compliance: 'false',
+                    mitigation_status: 'none',
+                    mitigation_status_desc: 'Not Mitigated',
+                    sourcefile: 'test_homoglyph.py',
+                    line: '450',
+                    sourcefilepath: '&#x2f;homoglyph&#x2f;tests&#x2f;',
+                    scope: 'Global Scope',
+                    functionprototype: '',
+                    functionrelativelocation: '0'
+                  },
+                  {
+                    severity: '3',
+                    categoryname: 'Improper Output Neutralization for Logs',
+                    count: '1',
+                    issueid: '2',
+                    module: 'Python files within homoglyph.tar',
+                    type: 'log_forging_python_117',
+                    description: 'This call to logging.Logger.info&#x28;&#x29; could result in a log forging attack. Writing unsanitized user-supplied data into a log file allows an attacker to forge log entries or inject malicious content into log files. Corrupted log files can be used to cover an attacker&#x27;s tracks or as a delivery mechanism for an attack on a log viewing or processing utility. For example, if a web administrator uses a browser-based utility to review logs, a cross-site scripting attack might be possible.&#xd;&#xa;&#xd;&#xa;Avoid directly embedding user input in log files when possible. Sanitize user-supplied data used to construct log entries by using a safe logging mechanism such as the OWASP ESAPI Logger, which will automatically remove unexpected carriage returns and line feeds and can be configured to use HTML entity encoding for non-alphanumeric data. Only create a custom blocklist when absolutely necessary. Always validate user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.&#xd;&#xa;&#xd;&#xa;References&#x3a; &#xd;&#xa;CWE &#x28;http&#x3a;&#x2f;&#x2f;cwe.mitre.org&#x2f;data&#x2f;definitions&#x2f;117.html&#x29; &#xd;&#xa;OWASP &#x28;http&#x3a;&#x2f;&#x2f;www.owasp.org&#x2f;index.php&#x2f;Log_injection&#x29; &#xd;&#xa;WASC &#x28;http&#x3a;&#x2f;&#x2f;webappsec.pbworks.com&#x2f;Improper-Output-Handling&#x29;&#xd;&#xa;&#xd;&#xa;',
+                    note: '',
+                    cweid: '117',
+                    remediationeffort: '2',
+                    exploitLevel: '1',
+                    categoryid: '21',
+                    pcirelated: 'true',
+                    date_first_occurrence: '2021-11-04 18&#x3a;39&#x3a;01 UTC',
+                    remediation_status: 'New',
+                    cia_impact: 'npp',
+                    grace_period_expires: '',
+                    affects_policy_compliance: 'false',
+                    mitigation_status: 'none',
+                    mitigation_status_desc: 'Not Mitigated',
+                    sourcefile: 'test_homoglyph.py',
+                    line: '453',
+                    sourcefilepath: '&#x2f;homoglyph&#x2f;tests&#x2f;',
+                    scope: 'Global Scope',
+                    functionprototype: '',
+                    functionrelativelocation: '0'
+                  },
+                  {
+                    severity: '3',
+                    categoryname: 'Improper Output Neutralization for Logs',
+                    count: '1',
+                    issueid: '4',
+                    module: 'Python files within homoglyph.tar',
+                    type: 'log_forging_python_117',
+                    description: 'This call to logging.Logger.info&#x28;&#x29; could result in a log forging attack. Writing unsanitized user-supplied data into a log file allows an attacker to forge log entries or inject malicious content into log files. Corrupted log files can be used to cover an attacker&#x27;s tracks or as a delivery mechanism for an attack on a log viewing or processing utility. For example, if a web administrator uses a browser-based utility to review logs, a cross-site scripting attack might be possible.&#xd;&#xa;&#xd;&#xa;Avoid directly embedding user input in log files when possible. Sanitize user-supplied data used to construct log entries by using a safe logging mechanism such as the OWASP ESAPI Logger, which will automatically remove unexpected carriage returns and line feeds and can be configured to use HTML entity encoding for non-alphanumeric data. Only create a custom blocklist when absolutely necessary. Always validate user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.&#xd;&#xa;&#xd;&#xa;References&#x3a; &#xd;&#xa;CWE &#x28;http&#x3a;&#x2f;&#x2f;cwe.mitre.org&#x2f;data&#x2f;definitions&#x2f;117.html&#x29; &#xd;&#xa;OWASP &#x28;http&#x3a;&#x2f;&#x2f;www.owasp.org&#x2f;index.php&#x2f;Log_injection&#x29; &#xd;&#xa;WASC &#x28;http&#x3a;&#x2f;&#x2f;webappsec.pbworks.com&#x2f;Improper-Output-Handling&#x29;&#xd;&#xa;&#xd;&#xa;',
+                    note: '',
+                    cweid: '117',
+                    remediationeffort: '2',
+                    exploitLevel: '1',
+                    categoryid: '21',
+                    pcirelated: 'true',
+                    date_first_occurrence: '2021-11-04 18&#x3a;39&#x3a;01 UTC',
+                    remediation_status: 'New',
+                    cia_impact: 'npp',
+                    grace_period_expires: '',
+                    affects_policy_compliance: 'false',
+                    mitigation_status: 'none',
+                    mitigation_status_desc: 'Not Mitigated',
+                    sourcefile: 'test_homoglyph.py',
+                    line: '464',
+                    sourcefilepath: '&#x2f;homoglyph&#x2f;tests&#x2f;',
+                    scope: 'Global Scope',
+                    functionprototype: '',
+                    functionrelativelocation: '0'
+                  },
+                  {
+                    severity: '3',
+                    categoryname: 'Improper Output Neutralization for Logs',
+                    count: '1',
+                    issueid: '5',
+                    module: 'Python files within homoglyph.tar',
+                    type: 'log_forging_python_117',
+                    description: 'This call to logging.Logger.warning&#x28;&#x29; could result in a log forging attack. Writing unsanitized user-supplied data into a log file allows an attacker to forge log entries or inject malicious content into log files. Corrupted log files can be used to cover an attacker&#x27;s tracks or as a delivery mechanism for an attack on a log viewing or processing utility. For example, if a web administrator uses a browser-based utility to review logs, a cross-site scripting attack might be possible.&#xd;&#xa;&#xd;&#xa;Avoid directly embedding user input in log files when possible. Sanitize user-supplied data used to construct log entries by using a safe logging mechanism such as the OWASP ESAPI Logger, which will automatically remove unexpected carriage returns and line feeds and can be configured to use HTML entity encoding for non-alphanumeric data. Only create a custom blocklist when absolutely necessary. Always validate user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.&#xd;&#xa;&#xd;&#xa;References&#x3a; &#xd;&#xa;CWE &#x28;http&#x3a;&#x2f;&#x2f;cwe.mitre.org&#x2f;data&#x2f;definitions&#x2f;117.html&#x29; &#xd;&#xa;OWASP &#x28;http&#x3a;&#x2f;&#x2f;www.owasp.org&#x2f;index.php&#x2f;Log_injection&#x29; &#xd;&#xa;WASC &#x28;http&#x3a;&#x2f;&#x2f;webappsec.pbworks.com&#x2f;Improper-Output-Handling&#x29;&#xd;&#xa;&#xd;&#xa;',
+                    note: '',
+                    cweid: '117',
+                    remediationeffort: '2',
+                    exploitLevel: '1',
+                    categoryid: '21',
+                    pcirelated: 'true',
+                    date_first_occurrence: '2021-11-04 18&#x3a;39&#x3a;01 UTC',
+                    remediation_status: 'New',
+                    cia_impact: 'npp',
+                    grace_period_expires: '',
+                    affects_policy_compliance: 'false',
+                    mitigation_status: 'none',
+                    mitigation_status_desc: 'Not Mitigated',
+                    sourcefile: 'test_homoglyph.py',
+                    line: '501',
+                    sourcefilepath: '&#x2f;homoglyph&#x2f;tests&#x2f;',
+                    scope: 'Global Scope',
+                    functionprototype: '',
+                    functionrelativelocation: '0'
+                  }
+                ]
+              }
+            }
+          },
+          {
+            categoryid: '12',
+            categoryname: 'Cryptographic Issues',
+            pcirelated: 'false',
+            desc: {
+              para: [
+                {
+                  text: 'Applications commonly use cryptography to implement authentication mechanisms and to ensure the confidentiality and integrity of sensitive data, both in transit and at rest.  The proper and accurate implementation of cryptography is extremely critical to its efficacy.  Configuration or coding mistakes as well as incorrect assumptions may negate a large degree of the protection it affords, leaving the crypto implementation vulnerable to attack.'
+                },
+                {
+                  text: 'Common cryptographic mistakes include, but are not limited to, selecting weak keys or weak cipher modes, unintentionally exposing sensitive cryptographic data, using predictable entropy sources, and mismanaging or hard-coding keys.'
+                },
+                {
+                  text: 'Developers often make the dangerous assumption that they can improve security by designing their own cryptographic algorithm&#x3b; however, one of the basic tenets of cryptography is that any cipher whose effectiveness is reliant on the secrecy of the algorithm is fundamentally flawed.'
+                }
+              ]
+            },
+            recommendations: {
+              para: {
+                text: 'Select the appropriate type of cryptography for the intended purpose.  Avoid proprietary encryption algorithms as they typically rely on &#x22;security through obscurity&#x22; rather than sound mathematics.  Select key sizes appropriate for the data being protected&#x3b; for high assurance applications, 256-bit symmetric keys and 2048-bit asymmetric keys are sufficient.  Follow best practices for key storage, and ensure that plaintext data and key material are not inadvertently exposed.'
+              }
+            },
+            cwe: {
+              cweid: '331',
+              cwename: 'Insufficient Entropy',
+              pcirelated: 'false',
+              sans: '327',
+              certc: '1170',
+              description: {
+                text: {
+                  text: 'Standard random number generators do not provide a sufficient amount of entropy when used for security purposes. Attackers can brute force the output of pseudorandom number generators such as rand&#x28;&#x29;.'
+                }
+              },
+              staticflaws: {
+                flaw: {
+                  severity: '3',
+                  categoryname: 'Insufficient Entropy',
+                  count: '1',
+                  issueid: '3',
+                  module: 'Python files within homoglyph.tar',
+                  type: 'RANDMSG_python_331',
+                  description: 'Standard random number generators do not provide a sufficient amount of entropy when used for security purposes. Attackers can brute force the output of pseudorandom number generators such as rand&#x28;&#x29;.&#xd;&#xa;&#xd;&#xa;If this random number is used where security is a concern, such as generating passwords, session keys, authentication etc, use a trusted cryptographic random number generator instead. The new secrets module introduced in Python 3.6, is used for generating such cryptographically strong random number generators.&#xd;&#xa;&#xd;&#xa;References&#x3a;&#xd;&#xa;CWE &#x28;http&#x3a;&#x2f;&#x2f;cwe.mitre.org&#x2f;data&#x2f;definitions&#x2f;331.html&#x29; &#xd;&#xa;secrets module &#x28;https&#x3a;&#x2f;&#x2f;docs.python.org&#x2f;3&#x2f;library&#x2f;secrets.html&#x23;module-secrets&#x29;&#xd;&#xa;cryptography.io &#x28;https&#x3a;&#x2f;&#x2f;cryptography.io&#x2f;en&#x2f;latest&#x2f;&#x29;&#xd;&#xa;&#xd;&#xa;',
+                  note: '',
+                  cweid: '331',
+                  remediationeffort: '2',
+                  exploitLevel: '-1',
+                  categoryid: '12',
+                  pcirelated: 'false',
+                  date_first_occurrence: '2021-11-04 18&#x3a;39&#x3a;01 UTC',
+                  remediation_status: 'New',
+                  cia_impact: 'ppn',
+                  grace_period_expires: '',
+                  affects_policy_compliance: 'false',
+                  mitigation_status: 'none',
+                  mitigation_status_desc: 'Not Mitigated',
+                  sourcefile: 'SortedCollection.py',
+                  line: '258',
+                  sourcefilepath: '&#x2f;homoglyph&#x2f;tests&#x2f;',
+                  scope: 'Global Scope',
+                  functionprototype: '',
+                  functionrelativelocation: '0'
+                }
+              }
+            }
+          },
+          {
+            categoryid: '1',
+            categoryname: 'Directory Traversal',
+            pcirelated: 'false',
+            desc: {
+              para: [
+                {
+                  text: 'Allowing user input to control paths used in filesystem operations may enable an attacker to access or modify otherwise protected system resources that would normally be inaccessible to end users.  In some cases, the user-provided input may be passed directly to the filesystem operation, or it may be concatenated to one or more fixed strings to construct a fully-qualified path.'
+                },
+                {
+                  text: 'When an application improperly cleanses special character sequences in user-supplied filenames, a path traversal &#x28;or directory traversal&#x29; vulnerability may occur.  For example, an attacker could specify a filename such as &#x22;..&#x2f;..&#x2f;etc&#x2f;passwd&#x22;, which resolves to a file outside of the intended directory that the attacker would not normally be authorized to view.'
+                }
+              ]
+            },
+            recommendations: {
+              para: {
+                text: 'Assume all user-supplied input is malicious.  Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible.  When using black lists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters and ensure that the end result is not dangerous.'
+              }
+            },
+            cwe: {
+              cweid: '73',
+              cwename: 'External Control of File Name or Path',
+              pcirelated: 'false',
+              sans: '22',
+              certcpp: '877',
+              description: {
+                text: {
+                  text: 'This call contains a path manipulation flaw.  The argument to the function is a filename constructed using untrusted input.  If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users.  The level of exposure depends on the effectiveness of input validation routines, if any.'
+                }
+              },
+              staticflaws: {
+                flaw: [
+                  {
+                    severity: '3',
+                    categoryname: 'External Control of File Name or Path',
+                    count: '1',
+                    issueid: '8',
+                    module: 'Python files within homoglyph.tar',
+                    type: 'path_manip_python_73',
+                    description: 'This call to open&#x28;&#x29; contains a path manipulation flaw. The argument to the function is a filename constructed using user-supplied input. If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users. The level of exposure depends on the effectiveness of input validation routines, if any.&#xd;&#xa;&#xd;&#xa;Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using blocklists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters.&#xd;&#xa;&#xd;&#xa;References&#x3a; &#xd;&#xa;CWE &#x28;http&#x3a;&#x2f;&#x2f;cwe.mitre.org&#x2f;data&#x2f;definitions&#x2f;73.html&#x29; &#xd;&#xa;WASC &#x28;http&#x3a;&#x2f;&#x2f;webappsec.pbworks.com&#x2f;Path-Traversal&#x29;&#xd;&#xa;&#xd;&#xa;',
+                    note: '',
+                    cweid: '73',
+                    remediationeffort: '2',
+                    exploitLevel: '1',
+                    categoryid: '1',
+                    pcirelated: 'false',
+                    date_first_occurrence: '2021-11-04 18&#x3a;39&#x3a;01 UTC',
+                    remediation_status: 'New',
+                    cia_impact: 'ppn',
+                    grace_period_expires: '',
+                    affects_policy_compliance: 'false',
+                    mitigation_status: 'none',
+                    mitigation_status_desc: 'Not Mitigated',
+                    sourcefile: 'test_homoglyph.py',
+                    line: '457',
+                    sourcefilepath: '&#x2f;homoglyph&#x2f;tests&#x2f;',
+                    scope: 'Global Scope',
+                    functionprototype: '',
+                    functionrelativelocation: '0'
+                  },
+                  {
+                    severity: '3',
+                    categoryname: 'External Control of File Name or Path',
+                    count: '1',
+                    issueid: '7',
+                    module: 'Python files within homoglyph.tar',
+                    type: 'path_manip_python_73',
+                    description: 'This call to open&#x28;&#x29; contains a path manipulation flaw. The argument to the function is a filename constructed using user-supplied input. If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users. The level of exposure depends on the effectiveness of input validation routines, if any.&#xd;&#xa;&#xd;&#xa;Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using blocklists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters.&#xd;&#xa;&#xd;&#xa;References&#x3a; &#xd;&#xa;CWE &#x28;http&#x3a;&#x2f;&#x2f;cwe.mitre.org&#x2f;data&#x2f;definitions&#x2f;73.html&#x29; &#xd;&#xa;WASC &#x28;http&#x3a;&#x2f;&#x2f;webappsec.pbworks.com&#x2f;Path-Traversal&#x29;&#xd;&#xa;&#xd;&#xa;',
+                    note: '',
+                    cweid: '73',
+                    remediationeffort: '2',
+                    exploitLevel: '1',
+                    categoryid: '1',
+                    pcirelated: 'false',
+                    date_first_occurrence: '2021-11-04 18&#x3a;39&#x3a;01 UTC',
+                    remediation_status: 'New',
+                    cia_impact: 'ppn',
+                    grace_period_expires: '',
+                    affects_policy_compliance: 'false',
+                    mitigation_status: 'none',
+                    mitigation_status_desc: 'Not Mitigated',
+                    sourcefile: 'test_homoglyph.py',
+                    line: '468',
+                    sourcefilepath: '&#x2f;homoglyph&#x2f;tests&#x2f;',
+                    scope: 'Global Scope',
+                    functionprototype: '',
+                    functionrelativelocation: '0'
+                  },
+                  {
+                    severity: '3',
+                    categoryname: 'External Control of File Name or Path',
+                    count: '1',
+                    issueid: '11',
+                    module: 'Python files within homoglyph.tar',
+                    type: 'path_manip_python_73',
+                    description: 'This call to open&#x28;&#x29; contains a path manipulation flaw. The argument to the function is a filename constructed using user-supplied input. If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users. The level of exposure depends on the effectiveness of input validation routines, if any.&#xd;&#xa;&#xd;&#xa;Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using blocklists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters.&#xd;&#xa;&#xd;&#xa;References&#x3a; &#xd;&#xa;CWE &#x28;http&#x3a;&#x2f;&#x2f;cwe.mitre.org&#x2f;data&#x2f;definitions&#x2f;73.html&#x29; &#xd;&#xa;WASC &#x28;http&#x3a;&#x2f;&#x2f;webappsec.pbworks.com&#x2f;Path-Traversal&#x29;&#xd;&#xa;&#xd;&#xa;',
+                    note: '',
+                    cweid: '73',
+                    remediationeffort: '2',
+                    exploitLevel: '1',
+                    categoryid: '1',
+                    pcirelated: 'false',
+                    date_first_occurrence: '2021-11-04 18&#x3a;39&#x3a;01 UTC',
+                    remediation_status: 'New',
+                    cia_impact: 'ppn',
+                    grace_period_expires: '',
+                    affects_policy_compliance: 'false',
+                    mitigation_status: 'none',
+                    mitigation_status_desc: 'Not Mitigated',
+                    sourcefile: 'umbrella.py',
+                    line: '49',
+                    sourcefilepath: '&#x2f;homoglyph&#x2f;homoglyph&#x2f;',
+                    scope: 'Global Scope',
+                    functionprototype: '',
+                    functionrelativelocation: '0'
+                  },
+                  {
+                    severity: '3',
+                    categoryname: 'External Control of File Name or Path',
+                    count: '1',
+                    issueid: '9',
+                    module: 'Python files within homoglyph.tar',
+                    type: 'path_manip_python_73',
+                    description: 'This call to open&#x28;&#x29; contains a path manipulation flaw. The argument to the function is a filename constructed using user-supplied input. If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users. The level of exposure depends on the effectiveness of input validation routines, if any.&#xd;&#xa;&#xd;&#xa;Validate all user-supplied input to ensure that it conforms to the expected format, using centralized data validation routines when possible. When using blocklists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters.&#xd;&#xa;&#xd;&#xa;References&#x3a; &#xd;&#xa;CWE &#x28;http&#x3a;&#x2f;&#x2f;cwe.mitre.org&#x2f;data&#x2f;definitions&#x2f;73.html&#x29; &#xd;&#xa;WASC &#x28;http&#x3a;&#x2f;&#x2f;webappsec.pbworks.com&#x2f;Path-Traversal&#x29;&#xd;&#xa;&#xd;&#xa;',
+                    note: '',
+                    cweid: '73',
+                    remediationeffort: '2',
+                    exploitLevel: '1',
+                    categoryid: '1',
+                    pcirelated: 'false',
+                    date_first_occurrence: '2021-11-04 18&#x3a;39&#x3a;01 UTC',
+                    remediation_status: 'New',
+                    cia_impact: 'ppn',
+                    grace_period_expires: '',
+                    affects_policy_compliance: 'false',
+                    mitigation_status: 'none',
+                    mitigation_status_desc: 'Not Mitigated',
+                    sourcefile: 'umbrella.py',
+                    line: '79',
+                    sourcefilepath: '&#x2f;homoglyph&#x2f;homoglyph&#x2f;',
+                    scope: 'Global Scope',
+                    functionprototype: '',
+                    functionrelativelocation: '0'
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      { level: '2' },
+      { level: '1' },
+      { level: '0' }
+    ],
+    'flaw-status': {
+      new: '11',
+      reopen: '0',
+      open: '0',
+      'cannot-reproduce': '0',
+      fixed: '0',
+      total: '11',
+      not_mitigated: '11',
+      'sev-1-change': '0',
+      'sev-2-change': '0',
+      'sev-3-change': '11',
+      'sev-4-change': '0',
+      'sev-5-change': '0'
+    },
+    customfields: {
+      customfield: [
+        { name: 'Custom 1', value: '' },
+        { name: 'Custom 2', value: '' },
+        { name: 'Custom 3', value: '' },
+        { name: 'Custom 4', value: '' },
+        { name: 'Custom 5', value: '' },
+        { name: 'Custom 6', value: '' },
+        { name: 'Custom 7', value: '' },
+        { name: 'Custom 8', value: '' },
+        { name: 'Custom 9', value: '' },
+        { name: 'Custom 10', value: '' }
+      ]
+    },
+    software_composition_analysis: {
+      third_party_components: '0',
+      violate_policy: 'false',
+      components_violated_policy: '0',
+      vulnerable_components: ''
+    }
+  }
+}
