@@ -142,6 +142,31 @@ function formatSourceLocation(input: unknown): string {
   return text.join('\n');
 }
 
+function cvemaker(input: unknown): string {
+  const text = []
+  const len = Number(`${_.size(_.get(input, 'vulnerability'))}`)
+  for (let index = 0; index < len; index++) {
+       let label = 'cve_id: ' + `${_.get(input, 'vulnerability[' + index + '].cve_id')}` + ';\n';
+       label += 'cwe_id: ' + `${_.get(input, 'vulnerability[' + index + '].cwe_id')}` + ';\n';
+       label += 'severity: ' + `${_.get(input, 'vulnerability[' + index + '].severity')}` + ';\n';
+       label += 'cve_summary: ' + `${_.get(input, 'vulnerability[' + index + '].cve_summary')}` + ';\n';
+       text.push(label)
+  }
+  return text.join('\n');
+}
+/*
+function cvemaker(input: unknown): string {
+  const text = []
+  const len = Number(`${_.get(input, 'length')}`)
+  for (let index = 0; index < len; index++) {
+    const len2 = Number(`${_.get(input, '[' + index + '].vulnerabilities.vulnerability.length')}`)
+    for (let index2 = 0; index2 < len2; index2++)
+      text.push(`${_.get(input, '[' + index + '].vulnerabiltites.vulnerability[' + index2 + ']')}`)
+  }
+  return text.join('\n');
+}
+*/
+
 function formatCodeDesc(input: unknown): string {
   const text = []
   if (`${_.get(input, 'sourcefilepath')}` !== "undefined") {
@@ -292,10 +317,13 @@ function controlMappingCwe(severity: number) {
   }
 }
 
-const controlMappingCve = {
-    id: {path: 'component_id'},
+function controlMappingCve() {
+    return {
+      id: {path: 'component_id'},
     title: {path: 'library'},
     desc: {path: 'description'},
+    cves: {path: 'vulnerability',
+            transformer:cvemaker},
     impact: 0,
     refs: [],
     tags: {
@@ -321,6 +349,7 @@ const controlMappingCve = {
         resource: ''
       }
     ]
+  }
 }
 
 
@@ -377,7 +406,7 @@ export class VeracodeMapper extends BaseConverter {
           },
           {
             path: 'detailedreport.software_composition_analysis.vulnerabilities',
-            ...controlMappingCve
+            ...controlMappingCve()
           },
         ],
         sha256: ''
