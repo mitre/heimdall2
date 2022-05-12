@@ -1,7 +1,7 @@
 import fs from 'fs';
 import {FromHDFToXCCDFMapper} from '../../../index';
 
-describe('XCCDF Results Revse Mapper', () => {
+describe('XCCDF Results Reverse Mapper', () => {
   it('Successfully converts HDF into XCCDF-Results', () => {
     const inputData = fs.readFileSync(
       'sample_jsons/xccdf_reverse_mapper/sample_input_report/rhel7-results.json',

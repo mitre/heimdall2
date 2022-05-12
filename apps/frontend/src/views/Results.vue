@@ -23,31 +23,31 @@
             <v-list-item class="px-0">
               <ExportCaat :filter="all_filter" />
             </v-list-item>
-            <v-list-item class="px-0">
+            <v-list-item v-if="is_result_view" class="px-0">
               <ExportNist :filter="all_filter" />
             </v-list-item>
-            <v-list-item class="px-0">
+            <v-list-item v-if="is_result_view" class="px-0">
               <ExportASFFModal :filter="all_filter" />
             </v-list-item>
-            <v-list-item class="px-0">
+            <v-list-item v-if="is_result_view" class="px-0">
               <ExportCKLModal :filter="all_filter" />
             </v-list-item>
             <v-list-item class="px-0">
               <ExportCSVModal :filter="all_filter" />
             </v-list-item>
-            <v-list-item class="px-0">
+            <v-list-item v-if="is_result_view" class="px-0">
               <ExportHTMLModal
                 :filter="all_filter"
                 :file-type="current_route_name"
               />
             </v-list-item>
-            <v-list-item class="px-0">
+            <v-list-item v-if="is_result_view" class="px-0">
               <ExportSplunkModal />
             </v-list-item>
             <v-list-item class="px-0">
               <ExportJson />
             </v-list-item>
-            <v-list-item class="px-0">
+            <v-list-item v-if="is_result_view" class="px-0">
               <ExportXCCDFResults :filter="all_filter" />
             </v-list-item>
           </v-list>

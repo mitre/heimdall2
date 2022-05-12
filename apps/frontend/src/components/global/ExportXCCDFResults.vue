@@ -35,7 +35,7 @@ export default class ExportXCCDF extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
   //exports .zip of XCCDFs if multiple are selected, if one is selected it will export that single file
   exportXCCDF() {
-    axios.get<string>(`/static/export/xccdfTemplate.xml`).then(({data}) => {
+    axios.get<string>(`/static/export/xccdfTemplate.xml`).then(({data: template}) => {
       const convertedFiles: {
         filename: string;
         data: string;
@@ -44,17 +44,7 @@ export default class ExportXCCDF extends Vue {
       for (const evaluation of FilteredDataModule.evaluations(ids)) {
         const convertedData = new FromHDFToXCCDFMapper(
           JSON.stringify(evaluation.data),
-          data
-        ).toXCCDF();
-        convertedFiles.push({
-          filename: evaluation.from_file.filename + '.xml',
-          data: convertedData
-        });
-      }
-      for (const evaluation of FilteredDataModule.profiles(ids)) {
-        const convertedData = new FromHDFToXCCDFMapper(
-          JSON.stringify(evaluation),
-          data
+          template
         ).toXCCDF();
         convertedFiles.push({
           filename: evaluation.from_file.filename + '.xml',
