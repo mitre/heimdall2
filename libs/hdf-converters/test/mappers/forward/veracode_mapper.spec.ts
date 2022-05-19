@@ -5,7 +5,7 @@ describe('veracode_mapper', () => {
   it('Successfully converts Veracode reports', () => {
     const mapper = new VeracodeMapper(
       fs.readFileSync(
-        'sample_jsons/veracode_mapper/sample_input_report/veracodeoutput2.xml',
+        'sample_jsons/veracode_mapper/sample_input_report/veracodeoutput.xml',
         {encoding: 'utf-8'}
       )
     );
