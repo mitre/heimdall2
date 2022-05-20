@@ -14,7 +14,7 @@ import {
 import {CweNistMapping} from './mappings/CweNistMapping';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
-const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
+const DEFAULT_NIST_TAG = ['Si-2', 'RA-5'];
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['5', 0.9],
   ['4', 0.7],
@@ -187,28 +187,37 @@ function formatCodeDesc(input: unknown): string {
 
 function formatSCACodeDesc(input: unknown): string {
   const text = []
-  if (`${_.get(input, 'cve_id')}` !== "undefined") {
-    let flawDesc = "cve_id: " + `${_.get(input, 'cve_id')}` + ";"
-    if (`${_.get(input, 'cvss_score')}` !== "undefined") {
-      flawDesc += "cvss_score: " + `${_.get(input, 'cvss_score')}` + ";"
+  if (`${_.get(input, 'component_id')}` !== "undefined") {
+    let flawDesc = "component_id: " + `${_.get(input, 'component_id')}` + ";"
+    if (`${_.get(input, 'file_name')}` !== "undefined") {
+      flawDesc += "file_name: " + `${_.get(input, 'file_name')}` + ";"
     }
-    if (`${_.get(input, 'severity')}` !== "undefined") {
-      flawDesc += "severity: " + `${_.get(input, 'severity')}` + ";"
+    if (`${_.get(input, 'sha1')}` !== "undefined") {
+      flawDesc += "sha1: " + `${_.get(input, 'sha1')}` + ";"
     }
-    if (`${_.get(input, 'first_found_date')}` !== "undefined") {
-      flawDesc += "first_found_date: " + `${_.get(input, 'first_found_date')}` + ";"
+    if (`${_.get(input, 'max_cvss_score')}` !== "undefined") {
+      flawDesc += "max_cvss_score: " + `${_.get(input, 'max_cvss_score')}` + ";"
     }
-    if (`${_.get(input, 'cve_summary')}` !== "undefined") {
-      flawDesc += "cve_summary: " + `${_.get(input, 'cve_summary')}` + ";"
+    if (`${_.get(input, 'version')}` !== "undefined") {
+      flawDesc += "version: " + `${_.get(input, 'version')}` + ";"
     }
-    if (`${_.get(input, 'severity_desc')}` !== "undefined") {
-      flawDesc += "severity_desc: " + `${_.get(input, 'severity_desc')}` + ";"
+    if (`${_.get(input, 'library')}` !== "undefined") {
+      flawDesc += "library: " + `${_.get(input, 'library')}` + ";"
     }
-    if (`${_.get(input, 'mititgation')}` !== "undefined") {
-      flawDesc += "mitigation: " + `${_.get(input, 'mitigation')}` + ";"
+    if (`${_.get(input, 'vendor')}` !== "undefined") {
+      flawDesc += "vendor: " + `${_.get(input, 'vender')}` + ";"
     }
-    if (`${_.get(input, 'vulnerability_affects_policy_compliance')}` !== "undefined") {
-      flawDesc += "vulnerability_affects_policy_compliance: " + `${_.get(input, 'vulnerability_affects_policy_compliance')}` + ";"
+    if (`${_.get(input, 'description')}` !== "undefined") {
+      flawDesc += "description: " + `${_.get(input, 'description')}` + ";"
+    }
+    if (`${_.get(input, 'added_date')}` !== "undefined") {
+      flawDesc += "added_date: " + `${_.get(input, 'added_date')}` + ";"
+    }
+    if (`${_.get(input, 'component_affects_policy_compliance')}` !== "undefined") {
+      flawDesc += "component_affects_policy_compliance: " + `${_.get(input, 'component_affects_policy_compliance')}` + ";"
+    }
+    if (`${_.get(input, 'file_paths.file_path.value')}` !== "undefined") {
+      flawDesc += "file_path: " + `${_.get(input, 'file_paths.file_path.value')}` + ";"
     }
     text.push(flawDesc);
   }
@@ -305,13 +314,22 @@ for (let k = 0; k <  Number(_.get(parsedXML, 'detailedreport.software_compositio
  
   for (let m = 0; m < Number(_.get(parsedXML, 'detailedreport.software_composition_analysis.cves.length')); m++){
     let components = []
+    let location = ''
     let currcve = _.get(parsedXML, 'detailedreport.software_composition_analysis.cves[' + m + '].cve_id')
+    let cwe = []
+    cwe.push(_.get(parsedXML, 'detailedreport.software_composition_analysis.cves[' + m + '].cwe_id'))
+    let tag = CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG).concat(['Rev_4']);
+    _.set(parsedXML, 'detailedreport.software_composition_analysis.cves[' + m + '].nist', tag)
+    let impact = impactMapping(_.get(parsedXML, 'detailedreport.software_composition_analysis.cves[' + m + '].severity'))
+    _.set(parsedXML, 'detailedreport.software_composition_analysis.cves[' + m + '].impact', impact)
     for (let l = 0; l <  Number(_.get(parsedXML, 'detailedreport.software_composition_analysis.vulnerabilities.length')); l++) {
         let hascve = false
         for(let n = 0; n < Number(_.get(parsedXML, 'detailedreport.software_composition_analysis.vulnerabilities[' + l + '].cves.length')); n++){
           let cve = _.get(parsedXML, 'detailedreport.software_composition_analysis.vulnerabilities[' + l + '].cves[' + n + ']')
           if (cve == currcve){
             hascve = true
+            location += ' ' +  _.get(parsedXML, 'detailedreport.software_composition_analysis.vulnerabilities[' + l + '].file_paths.file_path')
+            _.set(parsedXML, 'detailedreport.software_composition_analysis.cves[' + m + '].paths', location)
           }
         }
         if(hascve == true){
@@ -369,25 +387,23 @@ function controlMappingCwe(severity: number) {
 
 function controlMappingCve() {
     return {
-      id: {path: 'component_id'},
-    title: {path: 'library'},
-    desc: {path: 'description'},
-    impact: {path: 'severity'},
+      id: {path: 'cve_id'},
+    title: {path: 'cve_id'},
+    desc: {path: 'cve_summary'},
+    impact: {path: 'impact'},
     refs: [],
     tags: {
-      cves: {path: 'cves'},
+      cwe: {path: 'cwe_id'},
       nist: {path: 'nist'}
     },
     code: {path: ''},
     source_location: {
-      ref: {
-        path: 'file_name',
-      },
+      ref: {path: 'paths'},
       line: 0
     },
     results: [
       {
-        path: 'vulnerabilities.vulnerability',
+        path: 'components',
         status: ExecJSON.ControlResultStatus.Failed,
         code_desc: {transformer:formatSCACodeDesc},
         run_time: 0,
@@ -450,6 +466,10 @@ export class VeracodeMapper extends BaseConverter {
           {
             path: 'detailedreport.severity[5].category',
             ...controlMappingCwe(0)
+          },
+          {
+            path: 'detailedreport.software_composition_analysis.cves',
+            ...controlMappingCve()
           },
         ],
         sha256: ''
