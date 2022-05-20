@@ -295,8 +295,7 @@ function parseXml(xml: string) {
   }
   _.set(parsedXML, 'detailedreport.software_composition_analysis.vulnerabilities', cveArr)
 
-//format software_composition_analysis for hdf, includes moving a severity level, along with tags for cves and nist tags up to component (software_composition_analysis.vulnerabilities)
-//also turn software_composition_anlysis.vulnerabilities[].vulnberailities.vulnerability into an array in all instances were there is only one cve
+//format software_composition_analysis for hdf
 let vulnarr = []  
 for (let k = 0; k <  Number(_.get(parsedXML, 'detailedreport.software_composition_analysis.vulnerabilities.length')); k++) {
     let cves = []
@@ -341,7 +340,6 @@ for (let k = 0; k <  Number(_.get(parsedXML, 'detailedreport.software_compositio
     }
     _.set(parsedXML, 'detailedreport.software_composition_analysis.cves['+ m + '].components', components)
   }
-  fs.writeFileSync('sample_jsons/veracode_mapper/output.json', JSON.stringify(parsedXML))
   return parsedXML
 }
 
