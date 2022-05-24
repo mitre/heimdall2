@@ -107,7 +107,7 @@
     "vue": "~2.6.10",
     "vue-apexcharts": "^1.5.1",
     "vue-class-component": "^7.0.2",
-    "vue-cli-plugin-vuetify": "~2.4.0",
+    "vue-cli-plugin-vuetify": "~2.5.0",
     "vue-clipboard2": "^0.3.1",
     "vue-cookies": "^1.7.4",
     "vue-file-agent": "^1.7.3",
@@ -138,7 +138,7 @@
     "chai-as-promised": "^7.1.1",
     "jest": "^27.0.6",
     "jest-useragent-mock": "^0.1.1",
-    "sinon": "^13.0.0",
+    "sinon": "^14.0.0",
     "ts-jest": "^27.0.2",
     "vue-jest": "^3.0.7"
   },
