@@ -98,6 +98,33 @@ export class FromHDFToXCCDFMapper {
     };
   }
 
+  getExecutionTime(isoTime = false): string {
+    // Find first available sub-control execution time
+    for (const profile of this.data.profiles) {
+      for (const controls of profile.controls) {
+        for (const result of controls.results) {
+          console.log(result)
+          if (
+            typeof result.start_time === 'string' &&
+            result.start_time.trim()
+          ) {
+            // Date parsing can be tricky sometimes
+            try {
+              console.log(result.start_time)
+              console.log(moment(result.start_time))
+              return isoTime ? moment(result.start_time).toISOString() : moment(result.start_time, false).format('YYYY-MM-DD');
+            } catch {
+              return isoTime ? moment().toISOString() : moment().format('YYYY-MM-DD');
+            }
+          }
+        }
+      }
+    }
+
+    // Default return date is now
+    return isoTime ? moment().toISOString() : moment().format('YYYY-MM-DD');
+  }
+
   getControlResultsInfo(control: ExecJSON.Control) {
     return {
       idref:
@@ -114,7 +141,7 @@ export class FromHDFToXCCDFMapper {
     const mappedData: MappedXCCDFtoHDF = {
       Benchmark: {
         id: 'xccdf_mitre.hdf-converters.xccdf_benchmark_hdf2xccdf',
-        date: this.dateOverride ? '1970-01-01' : moment().format('YYYY-MM-DD'),
+        date: this.dateOverride ? '1970-01-01' : this.getExecutionTime(),
         metadata: {
           copyright: this.data.profiles[0].copyright || '',
           maintainer: this.data.profiles[0].maintainer || ''
@@ -125,7 +152,7 @@ export class FromHDFToXCCDFMapper {
         TestResult: {
           endTime: this.dateOverride
             ? '2022-05-06T21:46:47.939Z'
-            : new Date().toISOString(),
+            : this.getExecutionTime(true),
           hasAttributes: false,
           attributes: [],
           results: []
