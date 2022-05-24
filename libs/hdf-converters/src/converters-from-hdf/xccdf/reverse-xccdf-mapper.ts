@@ -103,28 +103,28 @@ export class FromHDFToXCCDFMapper {
   }
 
   getExecutionTime(isoTime = false): string {
-    // Find first available sub-control execution time
-    for (const profile of this.data.profiles) {
-      for (const controls of profile.controls) {
-        for (const result of controls.results) {
-          if (
-            typeof result.start_time === 'string' &&
-            result.start_time.trim()
-          ) {
-            // Date parsing can be tricky sometimes
-            try {
-              const parsedDate = moment(result.start_time);
-              if (parsedDate.isValid()) {
-                return isoTime
-                  ? moment(result.start_time).toISOString()
-                  : moment(result.start_time, false).format(DATE_FORMAT);
-              }
-            } catch {
-              return isoTime
-                ? moment().toISOString()
-                : moment().format(DATE_FORMAT);
-            }
+    // Extract the first results from profile level
+    const results: ExecJSON.ControlResult[] = [];
+
+    this.data.profiles.forEach((profile) =>
+      results.push(...profile.controls[0].results)
+    );
+
+    // Find the execution time from the first profile level that contains it
+    for (const result of results) {
+      if (typeof result.start_time === 'string') {
+        // Date parsing can be tricky sometimes
+        try {
+          const parsedDate = moment(result.start_time);
+          if (parsedDate.isValid()) {
+            return isoTime
+              ? moment(result.start_time).toISOString()
+              : moment(result.start_time, false).format(DATE_FORMAT);
           }
+        } catch {
+          return isoTime
+            ? moment().toISOString()
+            : moment().format(DATE_FORMAT);
         }
       }
     }
