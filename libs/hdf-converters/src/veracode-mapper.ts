@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-import { String } from 'aws-sdk/clients/acm';
 import parser from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
