@@ -107,7 +107,6 @@ export class FromHDFToXCCDFMapper {
     for (const profile of this.data.profiles) {
       for (const controls of profile.controls) {
         for (const result of controls.results) {
-          console.log(result);
           if (
             typeof result.start_time === 'string' &&
             result.start_time.trim()
