@@ -12,6 +12,7 @@ import {CweNistMapping} from './mappings/CweNistMapping';
 const CWE_LENGTH = 'cwe.length'
 const STATICFLAWS_FLAWS = '].cwe[0].staticflaws.flaw'
 const SCA_VULNERABILITIES = 'detailedreport.software_composition_analysis.vulnerabilities['
+const REPORT_SEVERITY = 'detailedreport.severity['
 const SCA_CVES = 'detailedreport.software_composition_analysis.cves['
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['Si-2', 'RA-5'];
@@ -52,14 +53,14 @@ function formatRecommendations(input: unknown): string {
     else {
       const len = Number(`${_.get(input, 'recommendations.para.length')}`)
       for (let index = 0; index < len; index++) {
-        text.push(`${_.get(input, 'recommendations.para[' + index + '].text')}`)
+        text.push(`${_.get(input, `recommendations.para[${index}].text`)}`)
       }
     }
   }
   if (_.has(input, 'recommendations.para.bulletitem')) {
     const len = Number(`${_.get(input, 'recommendations.para.bulletitem.length')}`)
     for (let index = 0; index < len; index++) {
-      text.push(`${_.get(input, 'recommendations.para.bulletitem[' + index + '].text')}`)
+      text.push(`${_.get(input, `recommendations.para.bulletitem[${index}].text`)}`)
     }
   }
   return text.join('\n');
@@ -76,7 +77,7 @@ function formatDesc(input: unknown): string {
     else {
       const len = Number(`${_.get(input, 'desc.para.length')}`)
       for (let index = 0; index < len; index++) {
-        text.push(`${_.get(input, 'desc.para[' + index + '].text')}`)
+        text.push(`${_.get(input, `desc.para[${index}].text`)}`)
       }
     }
   }
@@ -88,8 +89,8 @@ function formatCweData(input: unknown): string {
   if (_.has(input, 'cwe')) {
     const len = Number(`${_.get(input, CWE_LENGTH)}`)
     for (let index = 0; index < len; index++) {
-      let cwe = 'CWE-'.concat(`${_.get(input, 'cwe[' + index + '].cweid')}`) + ': ';
-      cwe += `${_.get(input, 'cwe[' + index + '].cwename')}`
+      let cwe = 'CWE-'.concat(`${_.get(input, `cwe[${index}].cweid`)}`) + ': ';
+      cwe += `${_.get(input, `cwe[${index}].cwename`)}`
       if (`${_.get(input, 'cwe[' + index + '].pcirelated')}` !== 'undefined') {
         cwe += '; pcirelated: ' + `${_.get(input, 'cwe[' + index + '].pcirelated')}`
       }
@@ -252,35 +253,35 @@ function parseXml(xml: string) {
   // Sets cwe and flaw keys to be arrays
   // Moves staticflaws up one level for control mapping
   for (let i = 0; i < 6; i++) {
-    if (_.has(parsedXML, 'detailedreport.severity[' + i + '].category[0]')) {
-      for (let k = 0; k <  Number(_.get(parsedXML, 'detailedreport.severity[' + i + '].category.length')); k++) {
+    if (_.has(parsedXML, REPORT_SEVERITY + i + '].category[0]')) {
+      for (let k = 0; k <  Number(_.get(parsedXML, REPORT_SEVERITY + i + '].category.length')); k++) {
         let flawArr: any[] = []
-        if (Array.isArray(_.get(parsedXML, 'detailedreport.severity[' + i + '].category[' + k + '].cwe'))) {
-          for (let j = 0; j < Number(_.get(parsedXML, 'detailedreport.severity[' + i + '].category[' + k + '].cwe.length')); j++) {
-            if (!Array.isArray(_.get(parsedXML, 'detailedreport.severity[' + i + '].category[' + k + '].cwe[' + j + '].staticflaws.flaw'))) {
-              flawArr.push(_.get(parsedXML, 'detailedreport.severity[' + i + '].category[' + k + '].cwe[' + j + '].staticflaws.flaw'))
+        if (Array.isArray(_.get(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].cwe'))) {
+          for (let j = 0; j < Number(_.get(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].cwe.length')); j++) {
+            if (!Array.isArray(_.get(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].cwe[' + j + '].staticflaws.flaw'))) {
+              flawArr.push(_.get(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].cwe[' + j + '].staticflaws.flaw'))
             }
             else {
-              flawArr = flawArr.concat(_.get(parsedXML, 'detailedreport.severity[' + i + '].category[' + k + '].cwe[' + j + '].staticflaws.flaw'))
+              flawArr = flawArr.concat(_.get(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].cwe[' + j + '].staticflaws.flaw'))
             }
             // maybe change this to unset
-            _.set(parsedXML, 'detailedreport.severity[' + i + '].category[' + k + '].cwe[' + j + '].staticflaws', null)
+            _.set(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].cwe[' + j + '].staticflaws', null)
           }
         }
         else {
-          const cwes = [_.get(parsedXML, 'detailedreport.severity[' + i + '].category[' + k + '].cwe')]
-          _.set(parsedXML, 'detailedreport.severity[' + i + '].category[' + k + '].cwe', cwes)
-          if (!Array.isArray(_.get(parsedXML, 'detailedreport.severity[' + i + '].category[' + k + STATICFLAWS_FLAWS))) {
-            flawArr.push(_.get(parsedXML, 'detailedreport.severity[' + i + '].category[' + k + STATICFLAWS_FLAWS))
+          const cwes = [_.get(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].cwe')]
+          _.set(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].cwe', cwes)
+          if (!Array.isArray(_.get(parsedXML, REPORT_SEVERITY + i + '].category[' + k + STATICFLAWS_FLAWS))) {
+            flawArr.push(_.get(parsedXML, REPORT_SEVERITY + i + '].category[' + k + STATICFLAWS_FLAWS))
           }
           else {
-            flawArr = flawArr.concat(_.get(parsedXML, 'detailedreport.severity[' + i + '].category[' + k + STATICFLAWS_FLAWS))
+            flawArr = flawArr.concat(_.get(parsedXML, REPORT_SEVERITY + i + '].category[' + k + STATICFLAWS_FLAWS))
           }
           // maybe change this to unset
-          _.set(parsedXML, 'detailedreport.severity[' + i + '].category[' + k + '].cwe[0].staticflaws', null)
+          _.set(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].cwe[0].staticflaws', null)
         }
         const flaws = {flaw: flawArr}
-        _.set(parsedXML, 'detailedreport.severity[' + i + '].category[' + k + '].staticflaws', flaws)
+        _.set(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].staticflaws', flaws)
       }
     }
   }
@@ -317,22 +318,22 @@ for (let k = 0; k <  Number(_.get(parsedXML, 'detailedreport.software_compositio
     const currcve = _.get(parsedXML, SCA_CVES + m + '].cve_id')
     let cwe = []
     cwe.push(_.get(parsedXML, SCA_CVES + m + '].cwe_id'))
-    let tag = CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG).concat(['Rev_4']);
+    const tag = CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG).concat(['Rev_4']);
     _.set(parsedXML, SCA_CVES + m + '].nist', tag)
-    let impact = impactMapping(_.get(parsedXML, SCA_CVES + m + '].severity'))
+    const impact = impactMapping(_.get(parsedXML, SCA_CVES + m + '].severity'))
     _.set(parsedXML, SCA_CVES + m + '].impact', impact)
     for (let l = 0; l <  Number(_.get(parsedXML, 'detailedreport.software_composition_analysis.vulnerabilities.length')); l++) {
         let hascve = false
         for(let n = 0; n < Number(_.get(parsedXML, SCA_VULNERABILITIES + l + '].cves.length')); n++){
-          let cve = _.get(parsedXML, SCA_VULNERABILITIES + l + '].cves[' + n + ']')
-          if (cve == currcve){
+          const cve = _.get(parsedXML, SCA_VULNERABILITIES + l + '].cves[' + n + ']')
+          if (cve === currcve){
             hascve = true
             location += ' ' +  _.get(parsedXML, SCA_VULNERABILITIES + l + '].file_paths.file_path')
             _.set(parsedXML, SCA_CVES + m + '].paths', location)
           }
         }
-        if(hascve == true){
-          let proxy = _.cloneDeep(parsedXML)
+        if(hascve === true){
+          const proxy = _.cloneDeep(parsedXML)
           let omitted = _.omit(proxy, SCA_VULNERABILITIES + l + '].vulnerabilities')
           omitted = _.omit(omitted, SCA_VULNERABILITIES + l + '].cves')
           components.push(_.get(omitted, SCA_VULNERABILITIES + l + ']'))
