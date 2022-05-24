@@ -181,7 +181,7 @@
     "@aws-sdk/types" "3.78.0"
     tslib "^2.3.1"
 
-"@aws-sdk/client-config-service@^3.23.0":
+"@aws-sdk/client-config-service@^3.23.0", "@aws-sdk/client-config-service@^3.95.0":
   version "3.95.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.95.0.tgz#97dc941c3b679d406e24fecc208558baa4086aa6"
   integrity sha512-mhC4hFTvVnJrEzZeZCUZK+oZCnYdwMZ6BXaQBn03og6DWqWud7O8KQp8TfCfftIt/cYPKY+D+t5mD1REPlrihA==

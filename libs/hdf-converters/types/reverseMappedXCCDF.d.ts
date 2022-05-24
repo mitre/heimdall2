@@ -43,7 +43,7 @@ export type MetaData = {
   copyright?: string;
 };
 
-export type TestResultEnum =
+export type TestResultStatus =
   | 'pass'
   | 'fail'
   | 'error'
@@ -56,8 +56,8 @@ export type TestResultEnum =
 
 export type TestResult = {
   idref: string;
-  result: TestResultEnum;
+  result: TestResultStatus;
   messageType: string;
   message: string;
-  check: string;
+  code: string;
 };

@@ -54,7 +54,7 @@
             <result>{{result}}</result>
             <message severity="{{messageType}}">{{message}}</message>
             <check system="">
-                <check-content>{{check}}</check-content>
+                <check-content>{{code}}</check-content>
             </check>
         </rule-result>
         {{/Benchmark.TestResult.results}}

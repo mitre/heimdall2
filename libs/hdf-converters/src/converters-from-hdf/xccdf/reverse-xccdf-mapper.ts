@@ -4,10 +4,12 @@ import Mustache from 'mustache';
 import {version as HeimdallToolsVersion} from '../../../package.json';
 import {
   MappedXCCDFtoHDF,
-  TestResultEnum
+  TestResultStatus
 } from '../../../types/reverseMappedXCCDF';
 
-function getXCCDFResult(control: ExecJSON.Control): TestResultEnum {
+const DATE_FORMAT = 'YYYY-MM-DD';
+
+function getXCCDFResult(control: ExecJSON.Control): TestResultStatus {
   if (control.results.some((result) => result.backtrace)) {
     return 'error';
   }
@@ -71,10 +73,10 @@ export class FromHDFToXCCDFMapper {
     return {
       groupId:
         'xccdf_mitre.hdf-converters.xccdf_group_' +
-        control.id.replace(/\s/g, '_'),
+        control.id.replace(/[^\w]/g, '_').replace(/\s/g, '_'),
       id:
         'xccdf_mitre.hdf-converters.xccdf_rule_' +
-        control.id.replace(/\s/g, '_'),
+        control.id.replace(/[^\w]/g, '_').replace(/\s/g, '_'),
       title: control.title || '',
       description:
         control.desc ||
@@ -103,18 +105,23 @@ export class FromHDFToXCCDFMapper {
     for (const profile of this.data.profiles) {
       for (const controls of profile.controls) {
         for (const result of controls.results) {
-          console.log(result)
+          console.log(result);
           if (
             typeof result.start_time === 'string' &&
             result.start_time.trim()
           ) {
             // Date parsing can be tricky sometimes
             try {
-              console.log(result.start_time)
-              console.log(moment(result.start_time))
-              return isoTime ? moment(result.start_time).toISOString() : moment(result.start_time, false).format('YYYY-MM-DD');
+              const parsedDate = moment(result.start_time);
+              if (parsedDate.isValid()) {
+                return isoTime
+                  ? moment(result.start_time).toISOString()
+                  : moment(result.start_time, false).format(DATE_FORMAT);
+              }
             } catch {
-              return isoTime ? moment().toISOString() : moment().format('YYYY-MM-DD');
+              return isoTime
+                ? moment().toISOString()
+                : moment().format(DATE_FORMAT);
             }
           }
         }
@@ -122,18 +129,18 @@ export class FromHDFToXCCDFMapper {
     }
 
     // Default return date is now
-    return isoTime ? moment().toISOString() : moment().format('YYYY-MM-DD');
+    return isoTime ? moment().toISOString() : moment().format(DATE_FORMAT);
   }
 
   getControlResultsInfo(control: ExecJSON.Control) {
     return {
       idref:
         'xccdf_mitre.hdf-converters.xccdf_rule_' +
-        control.id.replace(/\s/g, '_'),
+        control.id.replace(/[^\w]/g, '_').replace(/\s/g, '_'),
       result: getXCCDFResult(control),
       message: getMessages(control.results),
       messageType: getXCCDFResultMessageSeverity(control.results),
-      check: control.code || ''
+      code: control.code || ''
     };
   }
 
@@ -165,14 +172,16 @@ export class FromHDFToXCCDFMapper {
       mappedData.Benchmark.Profile.push({
         id:
           'xccdf_mitre.hdf-converters_profile_hdf2xccdf_' +
-          (profile.title?.replace(/\s/g, '_') || 'profile_missing_title'),
+          // Replace all non-word characters and spaces with underscores
+          (profile.title?.replace(/[^\w]/g, '_').replace(/\s/g, '_') ||
+            'profile_missing_title'),
         title: profile.title || '',
         description: profile.description || '',
         // All control IDs
         select: profile.controls.map(
           (control) =>
             'xccdf_mitre.hdf-converters.xccdf_rule_' +
-            control.id.replace(/\s/g, '_')
+            control.id.replace(/[^\w]/g, '_').replace(/\s/g, '_')
         )
       });
       mappedData.Benchmark.TestResult.attributes.push(
