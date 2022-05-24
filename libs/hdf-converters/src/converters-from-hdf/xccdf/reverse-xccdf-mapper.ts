@@ -8,6 +8,8 @@ import {
 } from '../../../types/reverseMappedXCCDF';
 
 const DATE_FORMAT = 'YYYY-MM-DD';
+const TESTING_DATE_OVERRIDE = '1970-01-01';
+const TESTING_DATETIME_OVERRIDE = '2022-05-06T21:46:47.939Z';
 
 function getXCCDFResult(control: ExecJSON.Control): TestResultStatus {
   if (control.results.some((result) => result.backtrace)) {
@@ -148,7 +150,9 @@ export class FromHDFToXCCDFMapper {
     const mappedData: MappedXCCDFtoHDF = {
       Benchmark: {
         id: 'xccdf_mitre.hdf-converters.xccdf_benchmark_hdf2xccdf',
-        date: this.dateOverride ? '1970-01-01' : this.getExecutionTime(),
+        date: this.dateOverride
+          ? TESTING_DATE_OVERRIDE
+          : this.getExecutionTime(),
         metadata: {
           copyright: this.data.profiles[0].copyright || '',
           maintainer: this.data.profiles[0].maintainer || ''
@@ -158,7 +162,7 @@ export class FromHDFToXCCDFMapper {
         Rule: [],
         TestResult: {
           endTime: this.dateOverride
-            ? '2022-05-06T21:46:47.939Z'
+            ? TESTING_DATETIME_OVERRIDE
             : this.getExecutionTime(true),
           hasAttributes: false,
           attributes: [],
@@ -192,13 +196,16 @@ export class FromHDFToXCCDFMapper {
       }
 
       profile.controls.forEach((control) => {
-        // Add control info
-        mappedData.Benchmark.Rule.push(this.getControlInfo(control));
         // Add results info
         mappedData.Benchmark.TestResult.results.push(
           this.getControlResultsInfo(control)
         );
       });
+    });
+
+    // Add the control metadata for the top-level profile
+    this.data.profiles[0].controls.forEach((control) => {
+      mappedData.Benchmark.Rule.push(this.getControlInfo(control));
     });
 
     return Mustache.render(this.xccdfTemplate, mappedData);
