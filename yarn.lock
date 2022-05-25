@@ -5907,9 +5907,9 @@ autoprefixer@^9.8.6:
     postcss-value-parser "^4.1.0"
 
 aws-sdk@^2.1046.0, aws-sdk@^2.573.0:
-  version "2.1141.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1141.0.tgz#c7b1227c1557c0d188e7af497cca2b292cee2d2a"
-  integrity sha512-AIZhWB51UEMcU7zKOrbCzCnHtXJTjmO+3PDIjwc5+8tT623Ud/vcrvSlxmqNxrgSnlXThLrxH9fTw/n/sxiXxg==
+  version "2.1142.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1142.0.tgz#8fca9cfa100153d10d753afbc11a3ad7af6fe72b"
+  integrity sha512-ii+4Q8jqN31CiXpn9i/4vGCjqo02TGihmre5b44OUsTiKNXSjqr/aRrcirMsfuBFWRdrdcU12ez7Mg+N9GDNjw==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -7693,9 +7693,9 @@ core-js@^2.4.0:
   integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
 
 core-js@^3.4.1:
-  version "3.22.6"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.22.6.tgz#294dd824b4cae2c24725a36baa4a791ed00bb0de"
-  integrity sha512-2IGcGH00z9I4twgNWU4uGCNEsBFG1s2JudVQrgSCoVhOfwoTwQjxC8aMo9exrpTMOxvobggEpaHnGMmQY4cfBQ==
+  version "3.22.7"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.22.7.tgz#8d6c37f630f6139b8732d10f2c114c3f1d00024f"
+  integrity sha512-Jt8SReuDKVNZnZEzyEQT5eK6T2RRCXkfTq7Lo09kpm+fHjgGewSbNjV+Wt4yZMhPDdzz2x1ulI5z/w4nxpBseg==
 
 core-util-is@1.0.2:
   version "1.0.2"
