@@ -8,6 +8,7 @@ export type Benchmark = {
   Profile: Profile[];
   Rule: Rule[];
   metadata: MetaData;
+  passthrough: string;
   version: string;
   TestResult: {
     endTime: string;

@@ -1,4 +1,5 @@
 import {ExecJSON} from 'inspecjs';
+import _ from 'lodash';
 import moment from 'moment';
 import Mustache from 'mustache';
 import {version as HeimdallToolsVersion} from '../../../package.json';
@@ -71,7 +72,21 @@ export class FromHDFToXCCDFMapper {
     this.dateOverride = dateOverride;
   }
 
+  getSeverity(control: ExecJSON.Control): 'info' | 'low' | 'medium' | 'high' {
+    if (control.impact < 0.1) {
+      return 'info';
+    } else if (control.impact < 0.4) {
+      return 'low';
+    } else if (control.impact < 0.7) {
+      return 'medium';
+    } else {
+      return 'high';
+    }
+  }
+
   getControlInfo(control: ExecJSON.Control) {
+    const knownDescriptions = ['default', 'check', 'fix'];
+
     return {
       groupId:
         'xccdf_mitre.hdf-converters.xccdf_group_' +
@@ -80,18 +95,25 @@ export class FromHDFToXCCDFMapper {
         'xccdf_mitre.hdf-converters.xccdf_rule_' +
         control.id.replace(/[^\w]/g, '_').replace(/\s/g, '_'),
       title: control.title || '',
+      severity: this.getSeverity(control),
       description:
         control.desc ||
         control.descriptions?.find(
           (description) => description.label === 'default'
         )?.data ||
         '',
+      descriptions: (control.descriptions || []).filter(
+        (description) => !knownDescriptions.includes(description.label)
+      ),
       checkContent:
         control.descriptions?.find(
           (description) => description.label === 'check'
         )?.data ||
         control.tags.check ||
         '',
+      tags: Object.entries(control.tags).map(
+        ([key, value]) => `${key}: ${value}`
+      ),
       code: control.code || '',
       fix:
         control.descriptions?.find((description) => description.label === 'fix')
@@ -156,6 +178,7 @@ export class FromHDFToXCCDFMapper {
           copyright: this.data.profiles[0].copyright || '',
           maintainer: this.data.profiles[0].maintainer || ''
         },
+        passthrough: _.get(this.data, 'passthrough'),
         version: HeimdallToolsVersion,
         Profile: [],
         Rule: [],

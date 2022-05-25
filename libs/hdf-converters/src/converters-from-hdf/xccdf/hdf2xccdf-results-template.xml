@@ -6,7 +6,7 @@
     <title>HDF to XCCDF Benchmark</title>
     <description>HDF Results Set converted Into XCCDF Benchmark</description>
     <notice id="terms-of-use" xml:lang="en"></notice>
-    <front-matter xml:lang="en"></front-matter>
+    <front-matter xml:lang="en">{{Benchmark.passthrough}}</front-matter>
     <rear-matter xml:lang="en"></rear-matter>
     <version>{{Benchmark.version}}</version>
     <metadata xmlns:xhtml="http://www.w3.org/1999/xhtml">
@@ -27,16 +27,27 @@
     <Group id="{{groupId}}">
         <title>{{title}}</title>
         <description>{{description}}</description>
-        <Rule id="{{id}}">
+        <Rule id="{{id}}" severity="{{severity}}">
             <title>{{title}}</title>
             <description>{{description}}</description>
+            {{#descriptions}}
+            <description>{{.}}</description>
+            {{/descriptions}}
+            {{#tags}}
+            <description>{{.}}</description>
+            {{/tags}}
             {{#ccis}}
             <ident system="http://iase.disa.mil/cci">{{.}}</ident>
             {{/ccis}}
-            <fix>{{fix}}</fix>
-            <check system="http://www.w3.org/1999/xhtml">
-                <check-content>{{code}}</check-content>
-            </check>
+            <fixtext>{{fix}}</fixtext>
+            <complex-check operator="OR">
+                <check system="http://www.w3.org/1999/xhtml">
+                    <check-content>{{checkContent}}</check-content>
+                </check>
+                <check system="http://www.w3.org/1999/xhtml">
+                    <check-content>{{code}}</check-content>
+                </check>
+            </complex-check>
         </Rule>
     </Group>
     {{/Benchmark.Rule}}
