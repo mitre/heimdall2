@@ -10,7 +10,6 @@ import {
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 const CWE_LENGTH = 'cwe.length'
-const STATICFLAWS_FLAWS = '].cwe[0].staticflaws.flaw'
 const SCA_VULNERABILITIES = 'detailedreport.software_composition_analysis.vulnerabilities['
 const REPORT_SEVERITY = 'detailedreport.severity['
 const SCA_CVES = 'detailedreport.software_composition_analysis.cves['
@@ -137,13 +136,14 @@ function formatCweDesc(input: unknown): string {
   if (_.has(input, 'cwe')) {
     const len = Number(`${_.get(input, CWE_LENGTH)}`)
     for (let index = 0; index < len; index++) {
-      let cwe = 'CWE-'.concat(`${_.get(input, 'cwe[' + index + '].cweid')}`) + ': ';
+      let cwe_id = `cwe[${index}].cweid`
+      let cwe = 'CWE-'.concat(`${_.get(input, cwe_id)}`) + ': ';
       let cwename = `cwe[${index}].cwename`
       let desc = `cwe[${index}].description.text.text`
       cwe += `${_.get(input, cwename)}` + ': ';
       cwe += `${_.get(input, desc)}`;
       text.push(cwe);
-    }  
+    }
   }
   return text.join('\n');
 }
@@ -267,35 +267,46 @@ function parseXml(xml: string) {
   // Sets cwe and flaw keys to be arrays
   // Moves staticflaws up one level for control mapping
   for (let i = 0; i < 6; i++) {
-    if (_.has(parsedXML, REPORT_SEVERITY + i + '].category[0]')) {
-      for (let k = 0; k <  Number(_.get(parsedXML, REPORT_SEVERITY + i + '].category.length')); k++) {
+    let inputstr = REPORT_SEVERITY + i + '].category[0]'
+    if (_.has(parsedXML, inputstr)) {
+      inputstr = REPORT_SEVERITY + i + '].category.length'
+      for (let k = 0; k <  Number(_.get(parsedXML, inputstr)); k++) {
         let flawArr: any[] = []
-        if (Array.isArray(_.get(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].cwe'))) {
-          for (let j = 0; j < Number(_.get(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].cwe.length')); j++) {
-            if (!Array.isArray(_.get(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].cwe[' + j + '].staticflaws.flaw'))) {
-              flawArr.push(_.get(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].cwe[' + j + '].staticflaws.flaw'))
+        let inputstr = REPORT_SEVERITY + i + CATEGORY + k + '].cwe'
+        if (Array.isArray(_.get(parsedXML, inputstr))) {
+          inputstr = REPORT_SEVERITY + i + CATEGORY + k + '].cwe.length'
+          for (let j = 0; j < Number(_.get(parsedXML, inputstr)); j++) {
+            inputstr = REPORT_SEVERITY + i + CATEGORY + k + '].cwe[' + j + '].staticflaws.flaw'
+            if (!Array.isArray(_.get(parsedXML, inputstr))) {
+              flawArr.push(_.get(parsedXML, inputstr))
             }
             else {
-              flawArr = flawArr.concat(_.get(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].cwe[' + j + '].staticflaws.flaw'))
+              inputstr = REPORT_SEVERITY + i + CATEGORY + k + '].cwe[' + j + '].staticflaws.flaw'
+              flawArr = flawArr.concat(_.get(parsedXML, inputstr))
             }
             // maybe change this to unset
-            _.set(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].cwe[' + j + '].staticflaws', null)
+            inputstr = REPORT_SEVERITY + i + CATEGORY + k + '].cwe[' + j + '].staticflaws'
+            _.set(parsedXML, inputstr, null)
           }
         }
         else {
-          const cwes = [_.get(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].cwe')]
-          _.set(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].cwe', cwes)
-          if (!Array.isArray(_.get(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + STATICFLAWS_FLAWS))) {
-            flawArr.push(_.get(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + STATICFLAWS_FLAWS))
+          inputstr = REPORT_SEVERITY + i + CATEGORY + k + '].cwe'
+          const cwes = [_.get(parsedXML, inputstr)]
+          _.set(parsedXML, inputstr, cwes)
+          inputstr = REPORT_SEVERITY + i + CATEGORY + k + "].cwe[0].staticflaws.flaw"
+          if (!Array.isArray(_.get(parsedXML, inputstr))) {
+            flawArr.push(_.get(parsedXML, inputstr))
           }
           else {
-            flawArr = flawArr.concat(_.get(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + STATICFLAWS_FLAWS))
+            flawArr = flawArr.concat(_.get(parsedXML, inputstr))
           }
           // maybe change this to unset
-          _.set(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].cwe[0].staticflaws', null)
+          inputstr =  REPORT_SEVERITY + i + CATEGORY + k + '].cwe[0].staticflaws'
+          _.set(parsedXML, inputstr , null)
         }
         const flaws = {flaw: flawArr}
-        _.set(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].staticflaws', flaws)
+        inputstr = REPORT_SEVERITY + i + CATEGORY + k + '].staticflaws'
+        _.set(parsedXML, inputstr, flaws)
       }
     }
   }
