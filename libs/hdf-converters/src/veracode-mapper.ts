@@ -14,6 +14,7 @@ const STATICFLAWS_FLAWS = '].cwe[0].staticflaws.flaw'
 const SCA_VULNERABILITIES = 'detailedreport.software_composition_analysis.vulnerabilities['
 const REPORT_SEVERITY = 'detailedreport.severity['
 const SCA_CVES = 'detailedreport.software_composition_analysis.cves['
+const CATEGORY = '].category['
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['Si-2', 'RA-5'];
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -53,7 +54,8 @@ function formatRecommendations(input: unknown): string {
     else {
       const len = Number(`${_.get(input, 'recommendations.para.length')}`)
       for (let index = 0; index < len; index++) {
-        text.push(`${_.get(input, `recommendations.para[${index}].text`)}`)
+        let topush = `recommendations.para[${index}].text`
+        text.push(`${_.get(input, topush)}`)
       }
     }
   }
@@ -89,31 +91,40 @@ function formatCweData(input: unknown): string {
   if (_.has(input, 'cwe')) {
     const len = Number(`${_.get(input, CWE_LENGTH)}`)
     for (let index = 0; index < len; index++) {
-      let cwe = 'CWE-'.concat(`${_.get(input, `cwe[${index}].cweid`)}`) + ': ';
+      let inputstr = `cwe[${index}].cweid`
+      let cwe = 'CWE-'.concat(`${_.get(input, inputstr)}`) + ': ';
       cwe += `${_.get(input, `cwe[${index}].cwename`)}`
-      if (`${_.get(input, 'cwe[' + index + '].pcirelated')}` !== 'undefined') {
-        cwe += '; pcirelated: ' + `${_.get(input, 'cwe[' + index + '].pcirelated')}`
+      inputstr = `cwe[${index}].pcirelated`
+      if (`${_.get(input, inputstr)}` !== 'undefined') {
+        cwe += '; pcirelated: ' + `${_.get(input, inputstr)}`
       }
-      if (`${_.get(input, 'cwe[' + index + '].owasp')}` !== 'undefined') {
-        cwe += '; owasp: ' + `${_.get(input, 'cwe[' + index + '].owasp')}`
+      inputstr = `cwe[${index}].owasp`
+      if (`${_.get(input, inputstr)}` !== 'undefined') {
+        cwe += '; owasp: ' + `${_.get(input, inputstr)}`
       }
-      if (`${_.get(input, 'cwe[' + index + '].owasp2013')}` !== 'undefined') {
-        cwe += '; owasp2013: ' + `${_.get(input, 'cwe[' + index + '].owasp2013')}`
+      inputstr = `cwe[${index}].owasp2013`
+      if (`${_.get(input, inputstr)}` !== 'undefined') {
+        cwe += '; owasp2013: ' + `${_.get(input, inputstr)}`
       }
-      if (`${_.get(input, 'cwe[' + index + '].sans')}` !== 'undefined') {
-        cwe += '; sans: ' + `${_.get(input, 'cwe[' + index + '].sans')}`
+      inputstr = `cwe[${index}].sans`
+      if (`${_.get(input, inputstr)}` !== 'undefined') {
+        cwe += '; sans: ' + `${_.get(input, inputstr)}`
       }
-      if (`${_.get(input, 'cwe[' + index + '].certc')}` !== 'undefined') {
-        cwe += '; certc: ' + `${_.get(input, 'cwe[' + index + '].certc')}`
+      inputstr = `cwe[${index}].certc`
+      if (`${_.get(input, inputstr)}` !== 'undefined') {
+        cwe += '; certc: ' + `${_.get(input, inputstr)}`
       }
-      if (`${_.get(input, 'cwe[' + index + '].certcpp')}` !== 'undefined') {
-        cwe += '; certcpp: ' + `${_.get(input, 'cwe[' + index + '].certcpp')}`
+      inputstr = `cwe[${index}].certcpp`
+      if (`${_.get(input, inputstr)}` !== 'undefined') {
+        cwe += '; certcpp: ' + `${_.get(input, inputstr)}`
       }
-      if (`${_.get(input, 'cwe[' + index + '].certjava')}` !== 'undefined') {
-        cwe += '; certjava: ' + `${_.get(input, 'cwe[' + index + '].certjava')}`
+      inputstr = `cwe[${index}].certjava`
+      if (`${_.get(input, inputstr)}` !== 'undefined') {
+        cwe += '; certjava: ' + `${_.get(input, inputstr)}`
       }
-      if (`${_.get(input, 'cwe[' + index + '].owaspmobile')}` !== 'undefined') {
-        cwe += '; owaspmobile: ' + `${_.get(input, 'cwe[' + index + '].owaspmobile')}`
+      inputstr = `cwe[${index}].owaspmobile`
+      if (`${_.get(input, inputstr)}` !== 'undefined') {
+        cwe += '; owaspmobile: ' + `${_.get(input, inputstr)}`
       }
       text.push(cwe);
     }
@@ -127,8 +138,10 @@ function formatCweDesc(input: unknown): string {
     const len = Number(`${_.get(input, CWE_LENGTH)}`)
     for (let index = 0; index < len; index++) {
       let cwe = 'CWE-'.concat(`${_.get(input, 'cwe[' + index + '].cweid')}`) + ': ';
-      cwe += `${_.get(input, 'cwe[' + index + '].cwename')}` + ': ';
-      cwe += `${_.get(input, 'cwe[' + index + '].description.text.text')}`;
+      let cwename = `cwe[${index}].cwename`
+      let desc = `cwe[${index}].description.text.text`
+      cwe += `${_.get(input, cwename)}` + ': ';
+      cwe += `${_.get(input, desc)}`;
       text.push(cwe);
     }  
   }
@@ -139,7 +152,8 @@ function formatSourceLocation(input: unknown): string {
   const text = []
   const len = Number(`${_.get(input, 'length')}`)
   for (let index = 0; index < len; index++) {
-    text.push(`${_.get(input, '[' + index + '].sourcefile')}`)
+    let source = `[${index}].sourcefile`
+    text.push(`${_.get(input, source)}`)
   }
   return text.join('\n');
 }
@@ -256,32 +270,32 @@ function parseXml(xml: string) {
     if (_.has(parsedXML, REPORT_SEVERITY + i + '].category[0]')) {
       for (let k = 0; k <  Number(_.get(parsedXML, REPORT_SEVERITY + i + '].category.length')); k++) {
         let flawArr: any[] = []
-        if (Array.isArray(_.get(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].cwe'))) {
-          for (let j = 0; j < Number(_.get(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].cwe.length')); j++) {
-            if (!Array.isArray(_.get(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].cwe[' + j + '].staticflaws.flaw'))) {
-              flawArr.push(_.get(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].cwe[' + j + '].staticflaws.flaw'))
+        if (Array.isArray(_.get(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].cwe'))) {
+          for (let j = 0; j < Number(_.get(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].cwe.length')); j++) {
+            if (!Array.isArray(_.get(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].cwe[' + j + '].staticflaws.flaw'))) {
+              flawArr.push(_.get(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].cwe[' + j + '].staticflaws.flaw'))
             }
             else {
-              flawArr = flawArr.concat(_.get(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].cwe[' + j + '].staticflaws.flaw'))
+              flawArr = flawArr.concat(_.get(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].cwe[' + j + '].staticflaws.flaw'))
             }
             // maybe change this to unset
-            _.set(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].cwe[' + j + '].staticflaws', null)
+            _.set(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].cwe[' + j + '].staticflaws', null)
           }
         }
         else {
-          const cwes = [_.get(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].cwe')]
-          _.set(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].cwe', cwes)
-          if (!Array.isArray(_.get(parsedXML, REPORT_SEVERITY + i + '].category[' + k + STATICFLAWS_FLAWS))) {
-            flawArr.push(_.get(parsedXML, REPORT_SEVERITY + i + '].category[' + k + STATICFLAWS_FLAWS))
+          const cwes = [_.get(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].cwe')]
+          _.set(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].cwe', cwes)
+          if (!Array.isArray(_.get(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + STATICFLAWS_FLAWS))) {
+            flawArr.push(_.get(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + STATICFLAWS_FLAWS))
           }
           else {
-            flawArr = flawArr.concat(_.get(parsedXML, REPORT_SEVERITY + i + '].category[' + k + STATICFLAWS_FLAWS))
+            flawArr = flawArr.concat(_.get(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + STATICFLAWS_FLAWS))
           }
           // maybe change this to unset
-          _.set(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].cwe[0].staticflaws', null)
+          _.set(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].cwe[0].staticflaws', null)
         }
         const flaws = {flaw: flawArr}
-        _.set(parsedXML, REPORT_SEVERITY + i + '].category[' + k + '].staticflaws', flaws)
+        _.set(parsedXML, REPORT_SEVERITY + i + CATEGORY + k + '].staticflaws', flaws)
       }
     }
   }
