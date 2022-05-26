@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import { integer } from 'aws-sdk/clients/cloudfront';
 import parser from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
@@ -87,12 +88,9 @@ function formatDesc(input: unknown): string {
   return text.join('\n');
 }
 
-function formatCweData(input: unknown): string {
-  const text = [];
-  if (_.has(input, 'cwe')) {
-    const len = Number(`${_.get(input, CWE_LENGTH)}`)
-    for (let index = 0; index < len; index++) {
-      let inputstr = `cwe[${index}].cweid`
+function cweloop(input: unknown, index:integer ): string{
+
+  let inputstr = `cwe[${index}].cweid`
       let cwe = 'CWE-'.concat(`${_.get(input, inputstr)}`) + ': ';
       const cwename = `cwe[${index}].cwename`
       cwe += `${_.get(input, cwename)}`
@@ -128,6 +126,15 @@ function formatCweData(input: unknown): string {
       if (`${_.get(input, inputstr)}` !== 'undefined') {
         cwe += '; owaspmobile: ' + `${_.get(input, inputstr)}`
       }
+      return cwe
+}
+
+function formatCweData(input: unknown): string {
+  const text = [];
+  if (_.has(input, 'cwe')) {
+    const len = Number(`${_.get(input, CWE_LENGTH)}`)
+    for (let index = 0; index < len; index++) {
+      let cwe = cweloop(input, index)
       text.push(cwe);
     }
   }
