@@ -204,13 +204,11 @@ export class FromHDFToXCCDFMapper {
   toXCCDF() {
     const passthrough = _.get(this.data, 'passthrough');
     let passthroughString = '';
-    if (typeof passthrough === 'object' && passthrough) {
+    if (typeof passthrough === 'object') {
       passthroughString = JSON.stringify(passthrough);
     } else if (typeof passthrough !== 'undefined') {
       passthroughString = String(passthrough);
     }
-
-    console.log(this.data);
 
     const mappedData: MappedXCCDFtoHDF = {
       Benchmark: {
