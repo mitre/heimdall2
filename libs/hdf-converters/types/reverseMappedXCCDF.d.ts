@@ -45,6 +45,8 @@ export type MetaData = {
   copyright?: string;
 };
 
+export type XCCDFSeverity = 'info' | 'low' | 'medium' | 'high';
+
 export type TestResultStatus =
   | 'pass'
   | 'fail'

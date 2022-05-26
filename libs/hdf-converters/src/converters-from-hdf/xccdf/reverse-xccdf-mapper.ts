@@ -5,7 +5,8 @@ import Mustache from 'mustache';
 import {version as HeimdallToolsVersion} from '../../../package.json';
 import {
   MappedXCCDFtoHDF,
-  TestResultStatus
+  TestResultStatus,
+  XCCDFSeverity
 } from '../../../types/reverseMappedXCCDF';
 
 const DATE_FORMAT = 'YYYY-MM-DD';
@@ -72,7 +73,7 @@ export class FromHDFToXCCDFMapper {
     this.dateOverride = dateOverride;
   }
 
-  getSeverity(control: ExecJSON.Control): 'info' | 'low' | 'medium' | 'high' {
+  getSeverity(control: ExecJSON.Control): XCCDFSeverity {
     if (control.impact < 0.1) {
       return 'info';
     } else if (control.impact < 0.4) {
@@ -85,7 +86,18 @@ export class FromHDFToXCCDFMapper {
   }
 
   getControlInfo(control: ExecJSON.Control) {
-    const knownDescriptions = ['default', 'check', 'fix', 'gtitle', 'gid', 'stig_id', 'cci', 'satisfies', 'fix_id', 'documentable'];
+    const knownDescriptions = [
+      'default',
+      'check',
+      'fix',
+      'gtitle',
+      'gid',
+      'stig_id',
+      'cci',
+      'satisfies',
+      'fix_id',
+      'documentable'
+    ];
 
     return {
       groupId:
@@ -98,7 +110,10 @@ export class FromHDFToXCCDFMapper {
       title: control.tags.gtitle || control.title || '',
       severity: this.getSeverity(control),
       description:
-        control.desc + (control.tags.satisfies ? '\n\nSatisfies: ' + control.tags.satisfies.join(', ') : '') ||
+        control.desc +
+          (control.tags.satisfies
+            ? '\n\nSatisfies: ' + control.tags.satisfies.join(', ')
+            : '') ||
         control.descriptions?.find(
           (description) => description.label === 'default'
         )?.data ||
@@ -113,9 +128,9 @@ export class FromHDFToXCCDFMapper {
         )?.data ||
         control.tags.check ||
         '',
-      tags: Object.entries(control.tags).filter(([key]) => !knownDescriptions.includes(key)).map(
-        ([key, value]) => `${key}: ${value}`
-      ),
+      tags: Object.entries(control.tags)
+        .filter(([key]) => !knownDescriptions.includes(key))
+        .map(([key, value]) => `${key}: ${value}`),
       code: control.code || '',
       fixid: control.tags.fix_id,
       fix:
@@ -217,8 +232,9 @@ export class FromHDFToXCCDFMapper {
         description: profile.description || '',
         // All control IDs
         select: profile.controls.map(
-          (control) => 'xccdf_mitre.hdf-converters.xccdf_rule_' +
-          control.id.replace(/[^\w]/g, '_').replace(/\s/g, '_')
+          (control) =>
+            'xccdf_mitre.hdf-converters.xccdf_rule_' +
+            control.id.replace(/[^\w]/g, '_').replace(/\s/g, '_')
         )
       });
       mappedData.Benchmark.TestResult.attributes.push(
