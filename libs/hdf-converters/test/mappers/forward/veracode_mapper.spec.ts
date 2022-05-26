@@ -13,5 +13,14 @@ describe('veracode_mapper', () => {
       'sample_jsons/veracode_mapper/veracode-hdf.json',
       JSON.stringify(mapper.toHdf())
     );
+    // expect(omitVersions(mapper.toHdf())).toEqual(
+    //   omitVersions(
+    //     JSON.parse(
+    //       fs.readFileSync('sample_jsons/veracode_mapper/veracode-hdf.json', {
+    //         encoding: 'utf-8'
+    //       })
+    //     )
+    //   )
+    // );
   });
 });
