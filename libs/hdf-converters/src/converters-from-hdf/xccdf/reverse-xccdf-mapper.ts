@@ -92,6 +92,7 @@ export class FromHDFToXCCDFMapper {
       'fix',
       'gtitle',
       'gid',
+      'rid',
       'stig_id',
       'cci',
       'satisfies',
@@ -102,11 +103,11 @@ export class FromHDFToXCCDFMapper {
     return {
       groupId:
         'xccdf_hdf_group_' +
-        control.id.replace(/[^\w]/g, '_').replace(/\s/g, '_'),
+        control.id.replace(/[^\w-]/g, '_').replace(/\s/g, '_'),
       id:
         'xccdf_hdf_rule_' +
         (control.tags.rid ||
-          control.id.replace(/[^\w]/g, '_').replace(/\s/g, '_')),
+          control.id.replace(/[^\w-]/g, '_').replace(/\s/g, '_')),
       version: control.tags.stig_id || '',
       title: control.tags.gtitle || control.title || '',
       severity: this.getSeverity(control),
@@ -179,7 +180,7 @@ export class FromHDFToXCCDFMapper {
       idref:
         'xccdf_hdf_rule_' +
         (control.tags.rid ||
-          control.id.replace(/[^\w]/g, '_').replace(/\s/g, '_')),
+          control.id.replace(/[^\w-]/g, '_').replace(/\s/g, '_')),
       result: getXCCDFResult(control),
       message: getMessages(control.results),
       messageType: getXCCDFResultMessageSeverity(control.results),
@@ -228,7 +229,7 @@ export class FromHDFToXCCDFMapper {
         id:
           'xccdf_mitre.hdf-converters_profile_hdf2xccdf_' +
           // Replace all non-word characters and spaces with underscores
-          (profile.title?.replace(/[^\w]/g, '_').replace(/\s/g, '_') ||
+          (profile.title?.replace(/[^\w-]/g, '_').replace(/\s/g, '_') ||
             'profile_missing_title'),
         title: profile.title || '',
         description: profile.description || '',
@@ -236,7 +237,7 @@ export class FromHDFToXCCDFMapper {
         select: profile.controls.map(
           (control) =>
             'xccdf_hdf_group_' +
-            control.id.replace(/[^\w]/g, '_').replace(/\s/g, '_')
+            control.id.replace(/[^\w-]/g, '_').replace(/\s/g, '_')
         )
       });
       mappedData.Benchmark.TestResult.attributes.push(
