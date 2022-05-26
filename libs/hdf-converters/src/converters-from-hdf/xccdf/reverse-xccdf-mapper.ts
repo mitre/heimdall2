@@ -104,7 +104,8 @@ export class FromHDFToXCCDFMapper {
         'xccdf_hdf_group_' +
         control.id.replace(/[^\w]/g, '_').replace(/\s/g, '_'),
       id:
-        'xccdf_hdf_rule_' + (control.tags.rid || 
+        'xccdf_hdf_rule_' +
+        (control.tags.rid ||
           control.id.replace(/[^\w]/g, '_').replace(/\s/g, '_')),
       version: control.tags.stig_id || '',
       title: control.tags.gtitle || control.title || '',
@@ -176,8 +177,9 @@ export class FromHDFToXCCDFMapper {
   getControlResultsInfo(control: ExecJSON.Control) {
     return {
       idref:
-      'xccdf_hdf_rule_' + (control.tags.rid || 
-        control.id.replace(/[^\w]/g, '_').replace(/\s/g, '_')),
+        'xccdf_hdf_rule_' +
+        (control.tags.rid ||
+          control.id.replace(/[^\w]/g, '_').replace(/\s/g, '_')),
       result: getXCCDFResult(control),
       message: getMessages(control.results),
       messageType: getXCCDFResultMessageSeverity(control.results),
