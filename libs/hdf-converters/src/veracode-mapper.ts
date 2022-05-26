@@ -134,7 +134,7 @@ function formatCweData(input: unknown): string {
   if (_.has(input, 'cwe')) {
     const len = Number(`${_.get(input, CWE_LENGTH)}`)
     for (let index = 0; index < len; index++) {
-      let cwe = cweloop(input, index)
+      const cwe = cweloop(input, index)
       text.push(cwe);
     }
   }
@@ -277,10 +277,10 @@ function parseXml(xml: string) {
   // Sets cwe and flaw keys to be arrays
   // Moves staticflaws up one level for control mapping
   for (let i = 0; i < 6; i++) {
-    let inputstr = `${REPORT_SEVERITY}${i}].category[0]`
-    if (_.has(parsedXML, inputstr)) {
-      inputstr = `${REPORT_SEVERITY}${i}].category.length`
-      for (let k = 0; k <  Number(_.get(parsedXML, inputstr)); k++) {
+    let inputstr1 = `${REPORT_SEVERITY}${i}].category[0]`
+    if (_.has(parsedXML, inputstr1)) {
+      inputstr1 = `${REPORT_SEVERITY}${i}].category.length`
+      for (let k = 0; k <  Number(_.get(parsedXML, inputstr1)); k++) {
         let flawArr: any[] = []
         let inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe`
         if (Array.isArray(_.get(parsedXML, inputstr))) {
@@ -339,8 +339,9 @@ for (let k = 0; k <  Number(_.get(parsedXML, 'detailedreport.software_compositio
         cves.push(_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability[${l}].cve_id`))
         vulnarr.push(_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability[${l}]`))
     }
-    if(`${_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.cve_id`)}` !== "undefined"){
-      cves.push(_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.cve_id`))
+    let cvei = _.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.cve_id`)
+    if(`${cvei}` !== "undefined"){
+      cves.push(cvei)
       vulnarr.push(_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability`))
     }
     _.set(parsedXML, `${SCA_VULNERABILITIES}${k}].cves`, cves)
