@@ -52,9 +52,8 @@ function formatRecommendations(input: unknown): string {
     }
     else {
       const len = Number(`${_.get(input, 'recommendations.para.length')}`)
-      for (let index = 0; index < len; index++) {
-        let topush = `recommendations.para[${index}].text`
-        text.push(`${_.get(input, topush)}`)
+      for (let index = 0; index < len; index++) { 
+        text.push(`${_.get(input, `recommendations.para[${index}].text`)}`)
       }
     }
   }
@@ -136,8 +135,7 @@ function formatCweDesc(input: unknown): string {
   if (_.has(input, 'cwe')) {
     const len = Number(`${_.get(input, CWE_LENGTH)}`)
     for (let index = 0; index < len; index++) {
-      let cwe_id = `cwe[${index}].cweid`
-      let cwe = 'CWE-'.concat(`${_.get(input, cwe_id)}`) + ': ';
+      let cwe = 'CWE-'.concat(`${_.get(input, `cwe[${index}].cweid`)}`) + ': ';
       let cwename = `cwe[${index}].cwename`
       let desc = `cwe[${index}].description.text.text`
       cwe += `${_.get(input, cwename)}` + ': ';
@@ -246,7 +244,7 @@ function parseXml(xml: string) {
     textNodeName: 'text',
     ignoreAttributes: false
   };
-  
+
   const parsedXML = parser.parse(xml, options);
   if (_.has(parsedXML, 'summaryreport')) {
     throw new Error('Current mapper does not accept sumarry reports');
@@ -267,46 +265,35 @@ function parseXml(xml: string) {
   // Sets cwe and flaw keys to be arrays
   // Moves staticflaws up one level for control mapping
   for (let i = 0; i < 6; i++) {
-    let inputstr = REPORT_SEVERITY + i + '].category[0]'
-    if (_.has(parsedXML, inputstr)) {
-      inputstr = REPORT_SEVERITY + i + '].category.length'
-      for (let k = 0; k <  Number(_.get(parsedXML, inputstr)); k++) {
+    if (_.has(parsedXML, `${REPORT_SEVERITY}${i}].category[0]`)) {
+      for (let k = 0; k <  Number(_.get(parsedXML, `${REPORT_SEVERITY}${i}].category.length`)); k++) {
         let flawArr: any[] = []
-        let inputstr = REPORT_SEVERITY + i + CATEGORY + k + '].cwe'
-        if (Array.isArray(_.get(parsedXML, inputstr))) {
-          inputstr = REPORT_SEVERITY + i + CATEGORY + k + '].cwe.length'
-          for (let j = 0; j < Number(_.get(parsedXML, inputstr)); j++) {
-            inputstr = REPORT_SEVERITY + i + CATEGORY + k + '].cwe[' + j + '].staticflaws.flaw'
-            if (!Array.isArray(_.get(parsedXML, inputstr))) {
-              flawArr.push(_.get(parsedXML, inputstr))
+        if (Array.isArray(_.get(parsedXML, `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe`))) {
+          for (let j = 0; j < Number(_.get(parsedXML, `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe.length`)); j++) {
+            if (!Array.isArray(_.get(parsedXML, `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[${j}].staticflaws.flaw`))) {
+              flawArr.push(_.get(parsedXML, `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[${j}].staticflaws.flaw`))
             }
             else {
-              inputstr = REPORT_SEVERITY + i + CATEGORY + k + '].cwe[' + j + '].staticflaws.flaw'
-              flawArr = flawArr.concat(_.get(parsedXML, inputstr))
+              flawArr = flawArr.concat(_.get(parsedXML, `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[${j}].staticflaws.flaw`))
             }
             // maybe change this to unset
-            inputstr = REPORT_SEVERITY + i + CATEGORY + k + '].cwe[' + j + '].staticflaws'
-            _.set(parsedXML, inputstr, null)
+            _.set(parsedXML, `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[${j}].staticflaws`, null)
           }
         }
         else {
-          inputstr = REPORT_SEVERITY + i + CATEGORY + k + '].cwe'
-          const cwes = [_.get(parsedXML, inputstr)]
-          _.set(parsedXML, inputstr, cwes)
-          inputstr = REPORT_SEVERITY + i + CATEGORY + k + "].cwe[0].staticflaws.flaw"
-          if (!Array.isArray(_.get(parsedXML, inputstr))) {
-            flawArr.push(_.get(parsedXML, inputstr))
+          const cwes = [_.get(parsedXML, `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[`)]
+          _.set(parsedXML, `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[`, cwes)
+          if (!Array.isArray(_.get(parsedXML, `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[0].staticflaws.flaw`))) {
+            flawArr.push(_.get(parsedXML, `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[0].staticflaws.flaw`))
           }
           else {
-            flawArr = flawArr.concat(_.get(parsedXML, inputstr))
+            flawArr = flawArr.concat(_.get(parsedXML, `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[0].staticflaws.flaw`))
           }
           // maybe change this to unset
-          inputstr =  REPORT_SEVERITY + i + CATEGORY + k + '].cwe[0].staticflaws'
-          _.set(parsedXML, inputstr , null)
+          _.set(parsedXML, `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[0].staticflaws` , null)
         }
         const flaws = {flaw: flawArr}
-        inputstr = REPORT_SEVERITY + i + CATEGORY + k + '].staticflaws'
-        _.set(parsedXML, inputstr, flaws)
+        _.set(parsedXML,  `${REPORT_SEVERITY}${i}${CATEGORY}${k}].staticflaws`, flaws)
       }
     }
   }
@@ -315,8 +302,8 @@ function parseXml(xml: string) {
   const len = _.get(parsedXML, 'detailedreport.software_composition_analysis.vulnerable_components.component.length')
   const cveArr = []
   for (let i = 0; i < len; i++) {
-    if (_.get(parsedXML, 'detailedreport.software_composition_analysis.vulnerable_components.component[' + i + '].vulnerabilities') !== "") {
-      cveArr.push(_.get(parsedXML, 'detailedreport.software_composition_analysis.vulnerable_components.component[' + i + ']'))
+    if (_.get(parsedXML, `detailedreport.software_composition_analysis.vulnerable_components.component[${i}].vulnerabilities`) !== "") {
+      cveArr.push(_.get(parsedXML, `detailedreport.software_composition_analysis.vulnerable_components.component[${i}]`))
     }
   }
   _.set(parsedXML, 'detailedreport.software_composition_analysis.vulnerabilities', cveArr)
@@ -325,46 +312,46 @@ function parseXml(xml: string) {
 const vulnarr = []
 for (let k = 0; k <  Number(_.get(parsedXML, 'detailedreport.software_composition_analysis.vulnerabilities.length')); k++) {
     const cves = []
-    for (let l = 0; l <  Number(_.get(parsedXML, SCA_VULNERABILITIES + k + '].vulnerabilities.vulnerability.length')); l++) {
-        cves.push(_.get(parsedXML, SCA_VULNERABILITIES + k + '].vulnerabilities.vulnerability[' + l + '].cve_id'))
-        vulnarr.push(_.get(parsedXML, SCA_VULNERABILITIES + k + '].vulnerabilities.vulnerability[' + l + ']'))
+    for (let l = 0; l <  Number(_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.length`)); l++) {
+        cves.push(_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability[${l}].cve_id`))
+        vulnarr.push(_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability[${l}]`))
     }
-    if(`${_.get(parsedXML, SCA_VULNERABILITIES + k + '].vulnerabilities.vulnerability.cve_id')}` !== "undefined"){
-      cves.push(_.get(parsedXML, SCA_VULNERABILITIES + k + '].vulnerabilities.vulnerability.cve_id'))
-      vulnarr.push(_.get(parsedXML, SCA_VULNERABILITIES + k + '].vulnerabilities.vulnerability'))
+    if(`${_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.cve_id`)}` !== "undefined"){
+      cves.push(_.get(parsedXML,  `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.cve_id`))
+      vulnarr.push(_.get(parsedXML,  `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.cve_id`))
     }
-    _.set(parsedXML, SCA_VULNERABILITIES + k + '].cves', cves)
+    _.set(parsedXML, `${SCA_VULNERABILITIES}${k}].cves`, cves)
   }
   _.set(parsedXML, 'detailedreport.software_composition_analysis.cves', vulnarr)
  
   for (let m = 0; m < Number(_.get(parsedXML, 'detailedreport.software_composition_analysis.cves.length')); m++){
     const components = []
     let location = ''
-    const currcve = _.get(parsedXML, SCA_CVES + m + '].cve_id')
+    const currcve = _.get(parsedXML, `${SCA_CVES}${m}].cve_id`)
     let cwe = []
-    cwe.push(_.get(parsedXML, SCA_CVES + m + '].cwe_id'))
+    cwe.push(_.get(parsedXML, `${SCA_CVES}${m}].cwe_id`))
     const tag = CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG).concat(['Rev_4']);
-    _.set(parsedXML, SCA_CVES + m + '].nist', tag)
-    const impact = impactMapping(_.get(parsedXML, SCA_CVES + m + '].severity'))
-    _.set(parsedXML, SCA_CVES + m + '].impact', impact)
+    _.set(parsedXML, `${SCA_CVES}${m}].nist`, tag)
+    const impact = impactMapping(_.get(parsedXML, `${SCA_CVES}${m}].severity`))
+    _.set(parsedXML, `${SCA_CVES}${m}].impact`, impact)
     for (let l = 0; l <  Number(_.get(parsedXML, 'detailedreport.software_composition_analysis.vulnerabilities.length')); l++) {
         let hascve = false
-        for(let n = 0; n < Number(_.get(parsedXML, SCA_VULNERABILITIES + l + '].cves.length')); n++){
-          const cve = _.get(parsedXML, SCA_VULNERABILITIES + l + '].cves[' + n + ']')
+        for(let n = 0; n < Number(_.get(parsedXML, `${SCA_VULNERABILITIES}${l}].cves.length`)); n++){
+          const cve = _.get(parsedXML, `${SCA_VULNERABILITIES}${l}].cves[${n}]`)
           if (cve === currcve){
             hascve = true
-            location += ' ' +  _.get(parsedXML, SCA_VULNERABILITIES + l + '].file_paths.file_path')
-            _.set(parsedXML, SCA_CVES + m + '].paths', location)
+            location += ' ' +  _.get(parsedXML, `${SCA_VULNERABILITIES}${l}].file_paths.file_path`)
+            _.set(parsedXML, `${SCA_CVES}${m}].paths`, location)
           }
         }
         if(hascve === true){
           const proxy = _.cloneDeep(parsedXML)
-          let omitted = _.omit(proxy, SCA_VULNERABILITIES + l + '].vulnerabilities')
-          omitted = _.omit(omitted, SCA_VULNERABILITIES + l + '].cves')
-          components.push(_.get(omitted, SCA_VULNERABILITIES + l + ']'))
+          let omitted = _.omit(proxy, `${SCA_VULNERABILITIES}${l}].vulnerabilities`)
+          omitted = _.omit(omitted, `${SCA_VULNERABILITIES}${l}].cves`)
+          components.push(_.get(omitted, `${SCA_VULNERABILITIES}${l}]`))
         }
     }
-    _.set(parsedXML, SCA_CVES+ m + '].components', components)
+    _.set(parsedXML, `${SCA_CVES}${m}].components`, components)
   }
   return parsedXML
 }
