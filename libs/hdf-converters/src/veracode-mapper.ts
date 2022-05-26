@@ -61,7 +61,8 @@ function formatRecommendations(input: unknown): string {
   if (_.has(input, 'recommendations.para.bulletitem')) {
     const len = Number(`${_.get(input, 'recommendations.para.bulletitem.length')}`)
     for (let index = 0; index < len; index++) {
-      text.push(`${_.get(input, `recommendations.para.bulletitem[${index}].text`)}`)
+      const bulletitem = `recommendations.para.bulletitem[${index}].text`
+      text.push(`${_.get(input, bulletitem)}`)
     }
   }
   return text.join('\n');
@@ -78,7 +79,8 @@ function formatDesc(input: unknown): string {
     else {
       const len = Number(`${_.get(input, 'desc.para.length')}`)
       for (let index = 0; index < len; index++) {
-        text.push(`${_.get(input, `desc.para[${index}].text`)}`)
+        const paratext = `desc.para[${index}].text`
+        text.push(`${_.get(input, paratext)}`)
       }
     }
   }
@@ -92,7 +94,8 @@ function formatCweData(input: unknown): string {
     for (let index = 0; index < len; index++) {
       let inputstr = `cwe[${index}].cweid`
       let cwe = 'CWE-'.concat(`${_.get(input, inputstr)}`) + ': ';
-      cwe += `${_.get(input, `cwe[${index}].cwename`)}`
+      const cwename = `cwe[${index}].cwename`
+      cwe += `${_.get(input, cwename)}`
       inputstr = `cwe[${index}].pcirelated`
       if (`${_.get(input, inputstr)}` !== 'undefined') {
         cwe += '; pcirelated: ' + `${_.get(input, inputstr)}`
@@ -272,7 +275,7 @@ function parseXml(xml: string) {
       inputstr = `${REPORT_SEVERITY}${i}].category.length`
       for (let k = 0; k <  Number(_.get(parsedXML, inputstr)); k++) {
         let flawArr: any[] = []
-        inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe`
+        let inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe`
         if (Array.isArray(_.get(parsedXML, inputstr))) {
           inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe.length`
           for (let j = 0; j < Number(_.get(parsedXML, inputstr)); j++) {
