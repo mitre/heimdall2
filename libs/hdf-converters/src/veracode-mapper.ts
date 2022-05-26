@@ -168,10 +168,8 @@ function formatSourceLocation(input: unknown): string {
   return text.join('\n');
 }
 
-function formatCodeDesc(input: unknown): string {
-  const text = []
-  if (`${_.get(input, 'sourcefilepath')}` !== "undefined") {
-    let flawDesc = "Sourcefile Path: " + `${_.get(input, 'sourcefilepath')}` + ";"
+function stringifyCodeDesc(input: unknown): string {
+  let flawDesc = "Sourcefile Path: " + `${_.get(input, 'sourcefilepath')}` + ";"
     if (`${_.get(input, 'line')}` !== "undefined") {
       flawDesc += "Line Number: " + `${_.get(input, 'line')}` + ";"
     }
@@ -205,45 +203,57 @@ function formatCodeDesc(input: unknown): string {
     if (`${_.get(input, 'description')}` !== "undefined") {
       flawDesc += "Description: " + `${_.get(input, 'description')}`
     }
+    return flawDesc
+}
+
+function formatCodeDesc(input: unknown): string {
+  const text = []
+  if (`${_.get(input, 'sourcefilepath')}` !== "undefined") {
+    let flawDesc = stringifyCodeDesc(input)
     text.push(flawDesc);
   }
   return text.join('\n');
 }
 
+function SCAstringify(input:unknown): string {
+  let flawDesc = "component_id: " + `${_.get(input, 'component_id')}` + ";"
+  if (`${_.get(input, 'file_name')}` !== "undefined") {
+    flawDesc += "file_name: " + `${_.get(input, 'file_name')}` + ";"
+  }
+  if (`${_.get(input, 'sha1')}` !== "undefined") {
+    flawDesc += "sha1: " + `${_.get(input, 'sha1')}` + ";"
+  }
+  if (`${_.get(input, 'max_cvss_score')}` !== "undefined") {
+    flawDesc += "max_cvss_score: " + `${_.get(input, 'max_cvss_score')}` + ";"
+  }
+  if (`${_.get(input, 'version')}` !== "undefined") {
+    flawDesc += "version: " + `${_.get(input, 'version')}` + ";"
+  }
+  if (`${_.get(input, 'library')}` !== "undefined") {
+    flawDesc += "library: " + `${_.get(input, 'library')}` + ";"
+  }
+  if (`${_.get(input, 'vendor')}` !== "undefined") {
+    flawDesc += "vendor: " + `${_.get(input, 'vender')}` + ";"
+  }
+  if (`${_.get(input, 'description')}` !== "undefined") {
+    flawDesc += "description: " + `${_.get(input, 'description')}` + ";"
+  }
+  if (`${_.get(input, 'added_date')}` !== "undefined") {
+    flawDesc += "added_date: " + `${_.get(input, 'added_date')}` + ";"
+  }
+  if (`${_.get(input, 'component_affects_policy_compliance')}` !== "undefined") {
+    flawDesc += "component_affects_policy_compliance: " + `${_.get(input, 'component_affects_policy_compliance')}` + ";"
+  }
+  if (`${_.get(input, 'file_paths.file_path.value')}` !== "undefined") {
+    flawDesc += "file_path: " + `${_.get(input, 'file_paths.file_path.value')}` + ";"
+  }
+  return flawDesc
+}
+
 function formatSCACodeDesc(input: unknown): string {
   const text = []
   if (`${_.get(input, 'component_id')}` !== "undefined") {
-    let flawDesc = "component_id: " + `${_.get(input, 'component_id')}` + ";"
-    if (`${_.get(input, 'file_name')}` !== "undefined") {
-      flawDesc += "file_name: " + `${_.get(input, 'file_name')}` + ";"
-    }
-    if (`${_.get(input, 'sha1')}` !== "undefined") {
-      flawDesc += "sha1: " + `${_.get(input, 'sha1')}` + ";"
-    }
-    if (`${_.get(input, 'max_cvss_score')}` !== "undefined") {
-      flawDesc += "max_cvss_score: " + `${_.get(input, 'max_cvss_score')}` + ";"
-    }
-    if (`${_.get(input, 'version')}` !== "undefined") {
-      flawDesc += "version: " + `${_.get(input, 'version')}` + ";"
-    }
-    if (`${_.get(input, 'library')}` !== "undefined") {
-      flawDesc += "library: " + `${_.get(input, 'library')}` + ";"
-    }
-    if (`${_.get(input, 'vendor')}` !== "undefined") {
-      flawDesc += "vendor: " + `${_.get(input, 'vender')}` + ";"
-    }
-    if (`${_.get(input, 'description')}` !== "undefined") {
-      flawDesc += "description: " + `${_.get(input, 'description')}` + ";"
-    }
-    if (`${_.get(input, 'added_date')}` !== "undefined") {
-      flawDesc += "added_date: " + `${_.get(input, 'added_date')}` + ";"
-    }
-    if (`${_.get(input, 'component_affects_policy_compliance')}` !== "undefined") {
-      flawDesc += "component_affects_policy_compliance: " + `${_.get(input, 'component_affects_policy_compliance')}` + ";"
-    }
-    if (`${_.get(input, 'file_paths.file_path.value')}` !== "undefined") {
-      flawDesc += "file_path: " + `${_.get(input, 'file_paths.file_path.value')}` + ";"
-    }
+    let flawDesc = SCAstringify(input)
     text.push(flawDesc);
   }
   return text.join('\n');
@@ -339,7 +349,7 @@ for (let k = 0; k <  Number(_.get(parsedXML, 'detailedreport.software_compositio
         cves.push(_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability[${l}].cve_id`))
         vulnarr.push(_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability[${l}]`))
     }
-    let cvei = _.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.cve_id`)
+    const cvei = _.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.cve_id`)
     if(`${cvei}` !== "undefined"){
       cves.push(cvei)
       vulnarr.push(_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability`))
