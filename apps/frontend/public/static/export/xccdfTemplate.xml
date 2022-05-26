@@ -43,14 +43,9 @@
             {{#fixid}}
             <fix id="{{fixid}}" />
             {{/fixid}}
-            <complex-check operator="OR">
-                <check system="http://www.w3.org/1999/xhtml">
-                    <check-content>{{checkContent}}</check-content>
-                </check>
-                <check system="http://www.w3.org/1999/xhtml">
-                    <check-content>{{code}}</check-content>
-                </check>
-            </complex-check>
+            <check system="http://www.w3.org/1999/xhtml">
+                <check-content>{{checkContent}}</check-content>
+            </check>
         </Rule>
     </Group>
     {{/Benchmark.Rule}}

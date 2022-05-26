@@ -107,7 +107,7 @@ export class FromHDFToXCCDFMapper {
       id:
         'xccdf_hdf_rule_' +
         (control.tags.rid ||
-          control.id.replace(/[^\w-]/g, '_').replace(/\s/g, '_')),
+          control.id.replace(/[^\w-]/g, '_').replace(/\s/g, '_')+'_rule'),
       version: control.tags.stig_id || '',
       title: control.tags.gtitle || control.title || '',
       severity: this.getSeverity(control),
@@ -180,7 +180,7 @@ export class FromHDFToXCCDFMapper {
       idref:
         'xccdf_hdf_rule_' +
         (control.tags.rid ||
-          control.id.replace(/[^\w-]/g, '_').replace(/\s/g, '_')),
+          control.id.replace(/[^\w-]/g, '_').replace(/\s/g, '_')+'_rule'),
       result: getXCCDFResult(control),
       message: getMessages(control.results),
       messageType: getXCCDFResultMessageSeverity(control.results),
