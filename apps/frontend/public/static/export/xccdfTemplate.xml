@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <Benchmark xmlns="http://checklists.nist.gov/xccdf/1.2"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://checklists.nist.gov/xccdf/1.2 https://csrc.nist.gov/schema/xccdf/1.2/xccdf_1.2.xsd" id="xccdf_mitre.hdf-converters.xccdf_benchmark_hdf2xccdf">
     <status date="{{Benchmark.date}}">draft</status>
-    <title>HDF to XCCDF Benchmark</title>
+    <title>{{Benchmark.title}}</title>
     <description>HDF Results Set converted Into XCCDF Benchmark</description>
     <notice id="terms-of-use" xml:lang="en"></notice>
     <front-matter xml:lang="en">{{Benchmark.passthrough}}</front-matter>
@@ -28,8 +27,9 @@
         <title>{{title}}</title>
         <description>{{description}}</description>
         <Rule id="{{id}}" severity="{{severity}}">
+            <version>{{version}}</version>
             <title>{{title}}</title>
-            <description>{{description}}</description>
+            <description>&lt;VulnDiscussion&gt;{{description}}&lt;/VulnDiscussion&gt;&lt;FalsePositives&gt;&lt;/FalsePositives&gt;&lt;FalseNegatives&gt;&lt;/FalseNegatives&gt;&lt;Documentable&gt;{{documentable}}&lt;/Documentable&gt;&lt;Mitigations&gt;&lt;/Mitigations&gt;&lt;SeverityOverrideGuidance&gt;&lt;/SeverityOverrideGuidance&gt;&lt;PotentialImpacts&gt;&lt;/PotentialImpacts&gt;&lt;ThirdPartyTools&gt;&lt;/ThirdPartyTools&gt;&lt;MitigationControl&gt;&lt;/MitigationControl&gt;&lt;Responsibility&gt;&lt;/Responsibility&gt;&lt;IAControls&gt;&lt;/IAControls&gt;</description>
             {{#descriptions}}
             <description>{{.}}</description>
             {{/descriptions}}
@@ -39,7 +39,10 @@
             {{#ccis}}
             <ident system="http://iase.disa.mil/cci">{{.}}</ident>
             {{/ccis}}
-            <fixtext>{{fix}}</fixtext>
+            <fixtext {{#fixid}} fixref="{{fixid}}" {{/fixid}}>{{fix}}</fixtext>
+            {{#fixid}}
+            <fix id="{{fixid}}" />
+            {{/fixid}}
             <complex-check operator="OR">
                 <check system="http://www.w3.org/1999/xhtml">
                     <check-content>{{checkContent}}</check-content>

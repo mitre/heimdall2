@@ -85,7 +85,7 @@ export class FromHDFToXCCDFMapper {
   }
 
   getControlInfo(control: ExecJSON.Control) {
-    const knownDescriptions = ['default', 'check', 'fix'];
+    const knownDescriptions = ['default', 'check', 'fix', 'gtitle', 'gid', 'stig_id', 'cci', 'satisfies', 'fix_id', 'documentable'];
 
     return {
       groupId:
@@ -94,14 +94,16 @@ export class FromHDFToXCCDFMapper {
       id:
         'xccdf_mitre.hdf-converters.xccdf_rule_' +
         control.id.replace(/[^\w]/g, '_').replace(/\s/g, '_'),
-      title: control.title || '',
+      version: control.tags.stig_id || '',
+      title: control.tags.gtitle || control.title || '',
       severity: this.getSeverity(control),
       description:
-        control.desc ||
+        control.desc + (control.tags.satisfies ? '\n\nSatisfies: ' + control.tags.satisfies.join(', ') : '') ||
         control.descriptions?.find(
           (description) => description.label === 'default'
         )?.data ||
         '',
+      documentable: control.tags.documentable || false,
       descriptions: (control.descriptions || []).filter(
         (description) => !knownDescriptions.includes(description.label)
       ),
@@ -111,10 +113,11 @@ export class FromHDFToXCCDFMapper {
         )?.data ||
         control.tags.check ||
         '',
-      tags: Object.entries(control.tags).map(
+      tags: Object.entries(control.tags).filter(([key]) => !knownDescriptions.includes(key)).map(
         ([key, value]) => `${key}: ${value}`
       ),
       code: control.code || '',
+      fixid: control.tags.fix_id,
       fix:
         control.descriptions?.find((description) => description.label === 'fix')
           ?.data ||
@@ -168,9 +171,18 @@ export class FromHDFToXCCDFMapper {
   }
 
   toXCCDF() {
+    const passthrough = _.get(this.data, 'passthrough');
+    let passthroughString = '';
+    if (typeof passthrough === 'object' && passthrough) {
+      passthroughString = JSON.stringify(passthrough);
+    } else if (typeof passthrough !== 'undefined') {
+      passthroughString = String(passthrough);
+    }
+
     const mappedData: MappedXCCDFtoHDF = {
       Benchmark: {
         id: 'xccdf_mitre.hdf-converters.xccdf_benchmark_hdf2xccdf',
+        title: this.data.profiles[0].title || 'HDF to XCCDF Benchmark',
         date: this.dateOverride
           ? TESTING_DATE_OVERRIDE
           : this.getExecutionTime(),
@@ -178,7 +190,7 @@ export class FromHDFToXCCDFMapper {
           copyright: this.data.profiles[0].copyright || '',
           maintainer: this.data.profiles[0].maintainer || ''
         },
-        passthrough: _.get(this.data, 'passthrough'),
+        passthrough: passthroughString,
         version: HeimdallToolsVersion,
         Profile: [],
         Rule: [],
@@ -205,9 +217,8 @@ export class FromHDFToXCCDFMapper {
         description: profile.description || '',
         // All control IDs
         select: profile.controls.map(
-          (control) =>
-            'xccdf_mitre.hdf-converters.xccdf_rule_' +
-            control.id.replace(/[^\w]/g, '_').replace(/\s/g, '_')
+          (control) => 'xccdf_mitre.hdf-converters.xccdf_rule_' +
+          control.id.replace(/[^\w]/g, '_').replace(/\s/g, '_')
         )
       });
       mappedData.Benchmark.TestResult.attributes.push(

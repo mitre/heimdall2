@@ -5,6 +5,7 @@ export type MappedXCCDFtoHDF = {
 export type Benchmark = {
   id: string;
   date: string;
+  title: string;
   Profile: Profile[];
   Rule: Rule[];
   metadata: MetaData;

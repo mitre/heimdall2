@@ -18567,6 +18567,10 @@
       "status": "loaded"
     }
   ],
+  "passthrough": {
+    "example": "value",
+    "array": ["item1", "item2"]
+  },
   "statistics": {
     "duration": 10.681128104
   },
