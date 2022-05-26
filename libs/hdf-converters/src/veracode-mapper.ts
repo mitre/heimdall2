@@ -53,7 +53,7 @@ function formatRecommendations(input: unknown): string {
     else {
       const len = Number(`${_.get(input, 'recommendations.para.length')}`)
       for (let index = 0; index < len; index++) {
-        let topush = `recommendations.para[${index}].text`
+        const topush = `recommendations.para[${index}].text`
         text.push(`${_.get(input, topush)}`)
       }
     }
@@ -136,10 +136,10 @@ function formatCweDesc(input: unknown): string {
   if (_.has(input, 'cwe')) {
     const len = Number(`${_.get(input, CWE_LENGTH)}`)
     for (let index = 0; index < len; index++) {
-      let cweid = `cwe[${index}].cweid`
+      const cweid = `cwe[${index}].cweid`
       let cwe = 'CWE-'.concat(`${_.get(input, cweid)}`) + ': ';
-      let cwename = `cwe[${index}].cwename`
-      let desc = `cwe[${index}].description.text.text`
+      const cwename = `cwe[${index}].cwename`
+      const desc = `cwe[${index}].description.text.text`
       cwe += `${_.get(input, cwename)}` + ': ';
       cwe += `${_.get(input, desc)}`;
       text.push(cwe);
@@ -152,7 +152,7 @@ function formatSourceLocation(input: unknown): string {
   const text = []
   const len = Number(`${_.get(input, 'length')}`)
   for (let index = 0; index < len; index++) {
-    let source = `[${index}].sourcefile`
+    const source = `[${index}].sourcefile`
     text.push(`${_.get(input, source)}`)
   }
   return text.join('\n');
@@ -272,7 +272,7 @@ function parseXml(xml: string) {
       inputstr = `${REPORT_SEVERITY}${i}].category.length`
       for (let k = 0; k <  Number(_.get(parsedXML, inputstr)); k++) {
         let flawArr: any[] = []
-        let inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe`
+        inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe`
         if (Array.isArray(_.get(parsedXML, inputstr))) {
           inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe.length`
           for (let j = 0; j < Number(_.get(parsedXML, inputstr)); j++) {
@@ -336,12 +336,12 @@ for (let k = 0; k <  Number(_.get(parsedXML, 'detailedreport.software_compositio
     _.set(parsedXML, `${SCA_VULNERABILITIES}${k}].cves`, cves)
   }
   _.set(parsedXML, 'detailedreport.software_composition_analysis.cves', vulnarr)
- 
+
   for (let m = 0; m < Number(_.get(parsedXML, 'detailedreport.software_composition_analysis.cves.length')); m++){
     const components = []
     let location = ''
     const currcve = _.get(parsedXML, `${SCA_CVES}${m}].cve_id`)
-    let cwe = []
+    const cwe = []
     cwe.push(_.get(parsedXML, `${SCA_CVES}${m}].cwe_id`))
     const tag = CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG).concat(['Rev_4']);
     _.set(parsedXML, `${SCA_CVES}${m}].nist`, tag)
