@@ -138,6 +138,7 @@ export class FromHDFToXCCDFMapper {
       descriptions: arrayifyObjectDescriptions(
         control.descriptions || []
       ).filter((description) => !knownDescriptions.includes(description.label)),
+      waiver: control.waiver_data ? JSON.stringify(control.waiver_data) : '',
       checkContent:
         getDescription(control.descriptions || [], 'check') ||
         control.tags.check ||

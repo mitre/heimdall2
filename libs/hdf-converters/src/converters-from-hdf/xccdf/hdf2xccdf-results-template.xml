@@ -22,6 +22,7 @@
         {{/select}}
     </Profile>
     {{/Benchmark.Profile}}
+    
     {{#Benchmark.Rule}}
     <Group id="{{groupId}}">
         <title>{{title}}</title>
@@ -29,7 +30,7 @@
         <Rule id="{{id}}" severity="{{severity}}">
             <version>{{version}}</version>
             <title>{{title}}</title>
-            <description>&lt;VulnDiscussion&gt;{{description}}&lt;/VulnDiscussion&gt;&lt;FalsePositives&gt;&lt;/FalsePositives&gt;&lt;FalseNegatives&gt;&lt;/FalseNegatives&gt;&lt;Documentable&gt;{{documentable}}&lt;/Documentable&gt;&lt;Mitigations&gt;&lt;/Mitigations&gt;&lt;SeverityOverrideGuidance&gt;&lt;/SeverityOverrideGuidance&gt;&lt;PotentialImpacts&gt;&lt;/PotentialImpacts&gt;&lt;ThirdPartyTools&gt;&lt;/ThirdPartyTools&gt;&lt;MitigationControl&gt;&lt;/MitigationControl&gt;&lt;Responsibility&gt;&lt;/Responsibility&gt;&lt;IAControls&gt;&lt;/IAControls&gt;</description>
+            <description>&lt;VulnDiscussion&gt;{{description}}&lt;/VulnDiscussion&gt;&lt;FalsePositives&gt;&lt;/FalsePositives&gt;&lt;FalseNegatives&gt;&lt;/FalseNegatives&gt;&lt;Documentable&gt;{{documentable}}&lt;/Documentable&gt;&lt;Mitigations&gt;&lt;/Mitigations&gt;&lt;SeverityOverrideGuidance&gt;{{waiver}}&lt;/SeverityOverrideGuidance&gt;&lt;PotentialImpacts&gt;&lt;/PotentialImpacts&gt;&lt;ThirdPartyTools&gt;&lt;/ThirdPartyTools&gt;&lt;MitigationControl&gt;&lt;/MitigationControl&gt;&lt;Responsibility&gt;&lt;/Responsibility&gt;&lt;IAControls&gt;&lt;/IAControls&gt;</description>
             {{#descriptions}}
             <description>{{.}}</description>
             {{/descriptions}}
@@ -43,14 +44,9 @@
             {{#fixid}}
             <fix id="{{fixid}}" />
             {{/fixid}}
-            <complex-check operator="OR">
-                <check system="http://www.w3.org/1999/xhtml">
-                    <check-content>{{checkContent}}</check-content>
-                </check>
-                <check system="http://www.w3.org/1999/xhtml">
-                    <check-content>{{code}}</check-content>
-                </check>
-            </complex-check>
+            <check system="http://www.w3.org/1999/xhtml">
+                <check-content>{{checkContent}}</check-content>
+            </check>
         </Rule>
     </Group>
     {{/Benchmark.Rule}}
