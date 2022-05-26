@@ -8,10 +8,26 @@ import {
   TestResultStatus,
   XCCDFSeverity
 } from '../../../types/reverseMappedXCCDF';
+import {getDescription} from '../../utils/global';
 
 const DATE_FORMAT = 'YYYY-MM-DD';
 const TESTING_DATE_OVERRIDE = '1970-01-01';
 const TESTING_DATETIME_OVERRIDE = '2022-05-06T21:46:47.939Z';
+
+function arrayifyObjectDescriptions(
+  descriptions: {[key: string]: any} | ExecJSON.ControlDescription[]
+): ExecJSON.ControlDescription[] {
+  if (Array.isArray(descriptions)) {
+    return descriptions;
+  }
+
+  return Object.entries(descriptions).map(([key, value]) => {
+    return {
+      label: key,
+      data: value
+    };
+  });
+}
 
 function getXCCDFResult(control: ExecJSON.Control): TestResultStatus {
   if (control.results.some((result) => result.backtrace)) {
@@ -107,7 +123,7 @@ export class FromHDFToXCCDFMapper {
       id:
         'xccdf_hdf_rule_' +
         (control.tags.rid ||
-          control.id.replace(/[^\w-]/g, '_').replace(/\s/g, '_')+'_rule'),
+          control.id.replace(/[^\w-]/g, '_').replace(/\s/g, '_') + '_rule'),
       version: control.tags.stig_id || '',
       title: control.tags.gtitle || control.title || '',
       severity: this.getSeverity(control),
@@ -116,18 +132,14 @@ export class FromHDFToXCCDFMapper {
           (control.tags.satisfies
             ? '\n\nSatisfies: ' + control.tags.satisfies.join(', ')
             : '') ||
-        control.descriptions?.find(
-          (description) => description.label === 'default'
-        )?.data ||
+        getDescription(control.descriptions || [], 'default') ||
         '',
       documentable: control.tags.documentable || false,
-      descriptions: (control.descriptions || []).filter(
-        (description) => !knownDescriptions.includes(description.label)
-      ),
+      descriptions: arrayifyObjectDescriptions(
+        control.descriptions || []
+      ).filter((description) => !knownDescriptions.includes(description.label)),
       checkContent:
-        control.descriptions?.find(
-          (description) => description.label === 'check'
-        )?.data ||
+        getDescription(control.descriptions || [], 'check') ||
         control.tags.check ||
         '',
       tags: Object.entries(control.tags)
@@ -136,8 +148,7 @@ export class FromHDFToXCCDFMapper {
       code: control.code || '',
       fixid: control.tags.fix_id,
       fix:
-        control.descriptions?.find((description) => description.label === 'fix')
-          ?.data ||
+        getDescription(control.descriptions || [], 'fix') ||
         control.tags.fix ||
         '',
       ccis: control.tags.cci || []
@@ -148,9 +159,11 @@ export class FromHDFToXCCDFMapper {
     // Extract the first results from profile level
     const results: ExecJSON.ControlResult[] = [];
 
-    this.data.profiles.forEach((profile) =>
-      results.push(...profile.controls[0].results)
-    );
+    this.data.profiles.forEach((profile) => {
+      if (profile.controls[0].results) {
+        results.push(...profile.controls[0].results);
+      }
+    });
 
     // Find the execution time from the first profile level that contains it
     for (const result of results) {
@@ -180,7 +193,7 @@ export class FromHDFToXCCDFMapper {
       idref:
         'xccdf_hdf_rule_' +
         (control.tags.rid ||
-          control.id.replace(/[^\w-]/g, '_').replace(/\s/g, '_')+'_rule'),
+          control.id.replace(/[^\w-]/g, '_').replace(/\s/g, '_') + '_rule'),
       result: getXCCDFResult(control),
       message: getMessages(control.results),
       messageType: getXCCDFResultMessageSeverity(control.results),
@@ -196,6 +209,8 @@ export class FromHDFToXCCDFMapper {
     } else if (typeof passthrough !== 'undefined') {
       passthroughString = String(passthrough);
     }
+
+    console.log(this.data);
 
     const mappedData: MappedXCCDFtoHDF = {
       Benchmark: {
@@ -248,10 +263,12 @@ export class FromHDFToXCCDFMapper {
       }
 
       profile.controls.forEach((control) => {
-        // Add results info
-        mappedData.Benchmark.TestResult.results.push(
-          this.getControlResultsInfo(control)
-        );
+        if (control.results) {
+          // Add results info
+          mappedData.Benchmark.TestResult.results.push(
+            this.getControlResultsInfo(control)
+          );
+        }
       });
     });
 

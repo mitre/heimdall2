@@ -47,8 +47,11 @@
             <v-list-item class="px-0">
               <ExportJson />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
-              <ExportXCCDFResults :filter="all_filter" />
+            <v-list-item class="px-0">
+              <ExportXCCDFResults
+                :filter="all_filter"
+                :is-result-view="is_result_view"
+              />
             </v-list-item>
           </v-list>
         </v-menu>

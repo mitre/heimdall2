@@ -3,7 +3,7 @@
     <template #activator="{on}">
       <IconLinkItem
         key="export_xccdf"
-        text="Export as XCCDF Results"
+        :text="isResultView ? 'Export as XCCDF Results' : 'Export as XCCDF'"
         icon="mdi-xml"
         @click="exportXCCDF()"
         v-on="on"
@@ -33,6 +33,7 @@ export type FileData = {
 })
 export default class ExportXCCDF extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({type: Boolean, required: true}) readonly isResultView!: boolean;
   //exports .zip of XCCDFs if multiple are selected, if one is selected it will export that single file
   exportXCCDF() {
     axios
@@ -53,6 +54,18 @@ export default class ExportXCCDF extends Vue {
             data: convertedData
           });
         }
+
+        for (const profile of FilteredDataModule.profiles(ids)) {
+          const convertedData = new FromHDFToXCCDFMapper(
+            JSON.stringify({profiles: [profile.data]}),
+            template
+          ).toXCCDF();
+          convertedFiles.push({
+            filename: profile.from_file.filename + '.xml',
+            data: convertedData
+          });
+        }
+
         saveSingleOrMultipleFiles(convertedFiles, 'xccdf');
       });
   }
