@@ -209,7 +209,7 @@ function stringifyCodeDesc(input: unknown): string {
 function formatCodeDesc(input: unknown): string {
   const text = []
   if (`${_.get(input, 'sourcefilepath')}` !== "undefined") {
-    let flawDesc = stringifyCodeDesc(input)
+    const flawDesc = stringifyCodeDesc(input)
     text.push(flawDesc);
   }
   return text.join('\n');
@@ -253,7 +253,7 @@ function SCAstringify(input:unknown): string {
 function formatSCACodeDesc(input: unknown): string {
   const text = []
   if (`${_.get(input, 'component_id')}` !== "undefined") {
-    let flawDesc = SCAstringify(input)
+    const flawDesc = SCAstringify(input)
     text.push(flawDesc);
   }
   return text.join('\n');
