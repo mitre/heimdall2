@@ -36,6 +36,7 @@
     "moment": "^2.29.1",
     "papaparse": "^5.3.1",
     "winston": "^3.6.0",
+    "xlsx": "^0.18.5",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
