@@ -258,6 +258,45 @@ function formatSCACodeDesc(input: unknown): string {
   }
   return text.join('\n');
 }
+function staticflawmanip(parsedXML: any, i: integer, k: integer){
+  let flawArr: any[] = []
+  let inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe`
+  if (Array.isArray(_.get(parsedXML, inputstr))) {
+    inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe.length`
+    for (let j = 0; j < Number(_.get(parsedXML, inputstr)); j++) {
+      inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[${j}].staticflaws.flaw`
+      if (!Array.isArray(_.get(parsedXML, inputstr))) {
+        flawArr.push(_.get(parsedXML, inputstr))
+      }
+      else {
+        inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[${j}].staticflaws.flaw`
+        flawArr = flawArr.concat(_.get(parsedXML, inputstr))
+      }
+      // maybe change this to unset
+      inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[${j}].staticflaws`
+      _.set(parsedXML, inputstr, null)
+    }
+  }
+  else {
+    inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe`
+    const cwes = [_.get(parsedXML, inputstr)]
+    _.set(parsedXML, inputstr, cwes)
+    inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[0].staticflaws.flaw`
+    if (!Array.isArray(_.get(parsedXML, inputstr))) {
+      flawArr.push(_.get(parsedXML, inputstr))
+    }
+    else {
+      flawArr = flawArr.concat(_.get(parsedXML, inputstr))
+    }
+    // maybe change this to unset
+    inputstr =  `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[0].staticflaws`
+    _.set(parsedXML, inputstr , null)
+  }
+  const flaws = {flaw: flawArr}
+  inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].staticflaws`
+  _.set(parsedXML, inputstr, flaws)
+  return parsedXML
+}
 
 function staticflawmover(parsedXML: any){
   for (let i = 0; i < 6; i++) {
@@ -265,45 +304,30 @@ function staticflawmover(parsedXML: any){
     if (_.has(parsedXML, inputstr1)) {
       inputstr1 = `${REPORT_SEVERITY}${i}].category.length`
       for (let k = 0; k <  Number(_.get(parsedXML, inputstr1)); k++) {
-        let flawArr: any[] = []
-        let inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe`
-        if (Array.isArray(_.get(parsedXML, inputstr))) {
-          inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe.length`
-          for (let j = 0; j < Number(_.get(parsedXML, inputstr)); j++) {
-            inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[${j}].staticflaws.flaw`
-            if (!Array.isArray(_.get(parsedXML, inputstr))) {
-              flawArr.push(_.get(parsedXML, inputstr))
-            }
-            else {
-              inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[${j}].staticflaws.flaw`
-              flawArr = flawArr.concat(_.get(parsedXML, inputstr))
-            }
-            // maybe change this to unset
-            inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[${j}].staticflaws`
-            _.set(parsedXML, inputstr, null)
-          }
-        }
-        else {
-          inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe`
-          const cwes = [_.get(parsedXML, inputstr)]
-          _.set(parsedXML, inputstr, cwes)
-          inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[0].staticflaws.flaw`
-          if (!Array.isArray(_.get(parsedXML, inputstr))) {
-            flawArr.push(_.get(parsedXML, inputstr))
-          }
-          else {
-            flawArr = flawArr.concat(_.get(parsedXML, inputstr))
-          }
-          // maybe change this to unset
-          inputstr =  `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[0].staticflaws`
-          _.set(parsedXML, inputstr , null)
-        }
-        const flaws = {flaw: flawArr}
-        inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].staticflaws`
-        _.set(parsedXML, inputstr, flaws)
+        _.set(parsedXML, '', staticflawmanip(parsedXML, i, k) )
       }
     }
   }
+  return parsedXML
+}
+
+
+function cvesformatter(parsedXML: any){
+  const vulnarr = []
+  for (let k = 0; k <  Number(_.get(parsedXML, 'detailedreport.software_composition_analysis.vulnerabilities.length')); k++) {
+    const cves = []
+    for (let l = 0; l <  Number(_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.length`)); l++) {
+        cves.push(_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability[${l}].cve_id`))
+        vulnarr.push(_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability[${l}]`))
+    }
+    const cvei = _.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.cve_id`)
+    if(`${cvei}` !== "undefined"){
+      cves.push(cvei)
+      vulnarr.push(_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability`))
+    }
+    _.set(parsedXML, `${SCA_VULNERABILITIES}${k}].cves`, cves)
+  }
+  _.set(parsedXML, 'detailedreport.software_composition_analysis.cves', vulnarr)
   return parsedXML
 }
 function parseXml(xml: string) {
@@ -346,21 +370,8 @@ function parseXml(xml: string) {
   _.set(parsedXML, 'detailedreport.software_composition_analysis.vulnerabilities', cveArr)
 
 //format software_composition_analysis for hdf
-const vulnarr = []
-for (let k = 0; k <  Number(_.get(parsedXML, 'detailedreport.software_composition_analysis.vulnerabilities.length')); k++) {
-    const cves = []
-    for (let l = 0; l <  Number(_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.length`)); l++) {
-        cves.push(_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability[${l}].cve_id`))
-        vulnarr.push(_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability[${l}]`))
-    }
-    const cvei = _.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.cve_id`)
-    if(`${cvei}` !== "undefined"){
-      cves.push(cvei)
-      vulnarr.push(_.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability`))
-    }
-    _.set(parsedXML, `${SCA_VULNERABILITIES}${k}].cves`, cves)
-  }
-  _.set(parsedXML, 'detailedreport.software_composition_analysis.cves', vulnarr)
+_.set(parsedXML, '', cvesformatter(parsedXML))
+
 
   for (let m = 0; m < Number(_.get(parsedXML, 'detailedreport.software_composition_analysis.cves.length')); m++){
     const components = []
