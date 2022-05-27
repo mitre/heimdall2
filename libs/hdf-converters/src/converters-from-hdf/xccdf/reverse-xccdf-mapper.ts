@@ -119,13 +119,16 @@ export class FromHDFToXCCDFMapper {
     return {
       groupId:
         'xccdf_hdf_group_' +
-        control.id.replace(/[^\w-]/g, '_').replace(/\s/g, '_'),
+        control.id
+          .replace(/_/g, '-') // Prevents STIG Viewer from parsing IDs incorrectly when there is underscores after group_
+          .replace(/[^\w-.]/g, '_'), // Change everything that isn't a word, underscore, or dash into an underscore
       id:
         'xccdf_hdf_rule_' +
         (control.tags.rid ||
-          control.id.replace(/[^\w-]/g, '_').replace(/\s/g, '_') + '_rule'),
+          control.id.replace(/_/g, '-').replace(/[^\w-.]/g, '_') + '_rule'),
       version: control.tags.stig_id || '',
-      title: control.tags.gtitle || control.title || '',
+      gtitle: control.tags.gtitle || control.title,
+      title: control.title || '',
       severity: this.getSeverity(control),
       description:
         control.desc +
@@ -194,7 +197,9 @@ export class FromHDFToXCCDFMapper {
       idref:
         'xccdf_hdf_rule_' +
         (control.tags.rid ||
-          control.id.replace(/[^\w-]/g, '_').replace(/\s/g, '_') + '_rule'),
+          control.id
+            .replace(/_/g, '-') // Prevent STIG Viewer from parsing IDs incorrectly when there is underscores after rule_
+            .replace(/[^\w-.]/g, '_') + '_rule'),
       result: getXCCDFResult(control),
       message: getMessages(control.results),
       messageType: getXCCDFResultMessageSeverity(control.results),
@@ -243,15 +248,14 @@ export class FromHDFToXCCDFMapper {
         id:
           'xccdf_mitre.hdf-converters_profile_hdf2xccdf_' +
           // Replace all non-word characters and spaces with underscores
-          (profile.title?.replace(/[^\w-]/g, '_').replace(/\s/g, '_') ||
-            'profile_missing_title'),
+          (profile.title?.replace(/[^\w-.]/g, '_') || 'profile_missing_title'),
         title: profile.title || '',
         description: profile.description || '',
         // All control IDs
         select: profile.controls.map(
           (control) =>
             'xccdf_hdf_group_' +
-            control.id.replace(/[^\w-]/g, '_').replace(/\s/g, '_')
+            control.id.replace(/_/g, '-').replace(/[^\w-.]/g, '_')
         )
       });
       mappedData.Benchmark.TestResult.attributes.push(
