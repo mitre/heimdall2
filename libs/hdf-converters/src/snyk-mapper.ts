@@ -63,11 +63,6 @@ export class SnykResults {
       return result.toHdf();
     }
   }
-  setMappings(
-    customMapping: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    this.customMapping = customMapping;
-  }
 }
 
 export class SnykMapper extends BaseConverter {
@@ -169,10 +164,5 @@ export class SnykMapper extends BaseConverter {
   };
   constructor(snykJson: Record<string, unknown>) {
     super(snykJson);
-  }
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
   }
 }

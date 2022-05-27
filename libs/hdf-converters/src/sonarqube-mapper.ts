@@ -183,12 +183,6 @@ export class SonarQubeResults {
     const result = new SonarQubeMapper(this.data, this.projectId);
     return result.toHdf();
   }
-
-  setMappings(
-    customMapping: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    this.customMapping = customMapping;
-  }
 }
 
 function createSonarqubeMappings(
@@ -258,11 +252,5 @@ export class SonarQubeMapper extends BaseConverter {
   constructor(issuesJSON: IssueData, projectName: string) {
     super(issuesJSON as Record<string, any>);
     this.setMappings(createSonarqubeMappings(projectName));
-  }
-
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
   }
 }
