@@ -15,8 +15,12 @@ const TESTING_DATE_OVERRIDE = '1970-01-01';
 const TESTING_DATETIME_OVERRIDE = '2022-05-06T21:46:47.939Z';
 
 function arrayifyObjectDescriptions(
-  descriptions: {[key: string]: any} | ExecJSON.ControlDescription[]
+  descriptions?: {[key: string]: any} | ExecJSON.ControlDescription[] | null
 ): ExecJSON.ControlDescription[] {
+  if (!descriptions) {
+    return [];
+  }
+
   if (Array.isArray(descriptions)) {
     return descriptions;
   }
@@ -138,9 +142,9 @@ export class FromHDFToXCCDFMapper {
         getDescription(control.descriptions || [], 'default') ||
         '',
       documentable: control.tags.documentable || false,
-      descriptions: arrayifyObjectDescriptions(
-        control.descriptions || []
-      ).filter((description) => !knownDescriptions.includes(description.label)),
+      descriptions: arrayifyObjectDescriptions(control.descriptions).filter(
+        (description) => !knownDescriptions.includes(description.label)
+      ),
       waiver: control.waiver_data ? JSON.stringify(control.waiver_data) : '',
       checkContent:
         getDescription(control.descriptions || [], 'check') ||
