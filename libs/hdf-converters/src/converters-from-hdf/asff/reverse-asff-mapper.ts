@@ -150,12 +150,6 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     };
   }
 
-  setMappings(
-    customMappings: MappedTransform<IExecJSONASFF, ILookupPathASFF>
-  ): void {
-    super.setMappings(customMappings);
-  }
-
   // Security hub currently works at the sub-control level, meaning we need to create our mapped data based off control.results
   controlsToSegments() {
     const segments: SegmentedControl[] = [];
