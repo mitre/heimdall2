@@ -258,8 +258,9 @@ export class FromHDFToXCCDFMapper {
         // All control IDs
         select: profile.controls.map(
           (control) =>
-            'xccdf_hdf_group_' +
-            control.id.replace(/_/g, '-').replace(/[^\w-.]/g, '_')
+            'xccdf_hdf_rule_' +
+            (control.tags.rid ||
+              control.id.replace(/_/g, '-').replace(/[^\w-.]/g, '_') + '_rule')
         )
       });
       mappedData.Benchmark.TestResult.attributes.push(
