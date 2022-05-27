@@ -311,6 +311,39 @@ function staticflawmover(parsedXML: any){
   return parsedXML
 }
 
+function setcomponents(parsedXML: any){
+  for (let m = 0; m < Number(_.get(parsedXML, 'detailedreport.software_composition_analysis.cves.length')); m++){
+    const components = []
+    let location = ''
+    const currcve = _.get(parsedXML, `${SCA_CVES}${m}].cve_id`)
+    const cwe = []
+    cwe.push(_.get(parsedXML, `${SCA_CVES}${m}].cwe_id`))
+    const tag = CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG).concat(['Rev_4']);
+    _.set(parsedXML, `${SCA_CVES}${m}].nist`, tag)
+    const impact = impactMapping(_.get(parsedXML, `${SCA_CVES}${m}].severity`))
+    _.set(parsedXML, `${SCA_CVES}${m}].impact`, impact)
+    for (let l = 0; l <  Number(_.get(parsedXML, 'detailedreport.software_composition_analysis.vulnerabilities.length')); l++) {
+        let hascve = false
+        for(let n = 0; n < Number(_.get(parsedXML, `${SCA_VULNERABILITIES}${l}].cves.length`)); n++){
+          const cve = _.get(parsedXML, `${SCA_VULNERABILITIES}${l}].cves[${n}]`)
+          if (cve === currcve){
+            hascve = true
+            location += ' ' +  _.get(parsedXML, `${SCA_VULNERABILITIES}${l}].file_paths.file_path`)
+            _.set(parsedXML, `${SCA_CVES}${m}].paths`, location)
+          }
+        }
+        if(hascve === true){
+          const proxy = _.cloneDeep(parsedXML)
+          let omitted = _.omit(proxy, `${SCA_VULNERABILITIES}${l}].vulnerabilities`)
+          omitted = _.omit(omitted, `${SCA_VULNERABILITIES}${l}].cves`)
+          components.push(_.get(omitted, `${SCA_VULNERABILITIES}${l}]`))
+        }
+    }
+    _.set(parsedXML, `${SCA_CVES}${m}].components`, components)
+  }
+  return parsedXML
+}
+
 
 function cvesformatter(parsedXML: any){
   const vulnarr = []
@@ -372,36 +405,8 @@ function parseXml(xml: string) {
 //format software_composition_analysis for hdf
 _.set(parsedXML, '', cvesformatter(parsedXML))
 
+_.set(parsedXML, '', setcomponents(parsedXML))
 
-  for (let m = 0; m < Number(_.get(parsedXML, 'detailedreport.software_composition_analysis.cves.length')); m++){
-    const components = []
-    let location = ''
-    const currcve = _.get(parsedXML, `${SCA_CVES}${m}].cve_id`)
-    const cwe = []
-    cwe.push(_.get(parsedXML, `${SCA_CVES}${m}].cwe_id`))
-    const tag = CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG).concat(['Rev_4']);
-    _.set(parsedXML, `${SCA_CVES}${m}].nist`, tag)
-    const impact = impactMapping(_.get(parsedXML, `${SCA_CVES}${m}].severity`))
-    _.set(parsedXML, `${SCA_CVES}${m}].impact`, impact)
-    for (let l = 0; l <  Number(_.get(parsedXML, 'detailedreport.software_composition_analysis.vulnerabilities.length')); l++) {
-        let hascve = false
-        for(let n = 0; n < Number(_.get(parsedXML, `${SCA_VULNERABILITIES}${l}].cves.length`)); n++){
-          const cve = _.get(parsedXML, `${SCA_VULNERABILITIES}${l}].cves[${n}]`)
-          if (cve === currcve){
-            hascve = true
-            location += ' ' +  _.get(parsedXML, `${SCA_VULNERABILITIES}${l}].file_paths.file_path`)
-            _.set(parsedXML, `${SCA_CVES}${m}].paths`, location)
-          }
-        }
-        if(hascve === true){
-          const proxy = _.cloneDeep(parsedXML)
-          let omitted = _.omit(proxy, `${SCA_VULNERABILITIES}${l}].vulnerabilities`)
-          omitted = _.omit(omitted, `${SCA_VULNERABILITIES}${l}].cves`)
-          components.push(_.get(omitted, `${SCA_VULNERABILITIES}${l}]`))
-        }
-    }
-    _.set(parsedXML, `${SCA_CVES}${m}].components`, components)
-  }
   return parsedXML
 }
 
