@@ -259,33 +259,7 @@ function formatSCACodeDesc(input: unknown): string {
   return text.join('\n');
 }
 
-
-function parseXml(xml: string) {
-  const options = {
-    attributeNamePrefix: '',
-    textNodeName: 'text',
-    ignoreAttributes: false
-  };
-
-  const parsedXML = parser.parse(xml, options);
-  if (_.has(parsedXML, 'summaryreport')) {
-    throw new Error('Current mapper does not accept sumarry reports');
-  }
-  const arrayedControls = _.get(parsedXML, 'detailedreport.severity').map((control: {category: unknown, level: string}) => {
-    if (Array.isArray(control.category)) {
-      return {level: control.level, category: control.category}
-    }
-    else if (!control.category) {
-      return {level: control.level}
-    }
-    else {
-      return {level: control.level, category: [control.category]}
-    }
-  })
-  _.set(parsedXML, 'detailedreport.severity', arrayedControls)
-
-  // Sets cwe and flaw keys to be arrays
-  // Moves staticflaws up one level for control mapping
+function staticflawmover(parsedXML: any){
   for (let i = 0; i < 6; i++) {
     let inputstr1 = `${REPORT_SEVERITY}${i}].category[0]`
     if (_.has(parsedXML, inputstr1)) {
@@ -330,6 +304,36 @@ function parseXml(xml: string) {
       }
     }
   }
+  return parsedXML
+}
+function parseXml(xml: string) {
+  const options = {
+    attributeNamePrefix: '',
+    textNodeName: 'text',
+    ignoreAttributes: false
+  };
+
+  const parsedXML = parser.parse(xml, options);
+  if (_.has(parsedXML, 'summaryreport')) {
+    throw new Error('Current mapper does not accept sumarry reports');
+  }
+  const arrayedControls = _.get(parsedXML, 'detailedreport.severity').map((control: {category: unknown, level: string}) => {
+    if (Array.isArray(control.category)) {
+      return {level: control.level, category: control.category}
+    }
+    else if (!control.category) {
+      return {level: control.level}
+    }
+    else {
+      return {level: control.level, category: [control.category]}
+    }
+  })
+  _.set(parsedXML, 'detailedreport.severity', arrayedControls)
+
+  // Sets cwe and flaw keys to be arrays
+  // Moves staticflaws up one level for control mapping
+  _.set(parsedXML, '', staticflawmover(parsedXML))
+
 
   // Moves cves up one level for control mapping
   const len = _.get(parsedXML, 'detailedreport.software_composition_analysis.vulnerable_components.component.length')
