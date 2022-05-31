@@ -123,7 +123,7 @@ export class SonarQubeResults {
             types: 'VULNERABILITY',
             p: page,
             ...(this.branchName ? { branch: this.branchName } : {})
-            //this is optional, if not specified sonarqube will default to the 
+            //this is optional, if not specified sonarqube will default to the
             // default branch from git.
           }
         })
