@@ -61,15 +61,110 @@
     ],
     "facets": []
   },
+  "/api/issues/search?componentKeys=libc_unix&types=VULNERABILITY&p=1&branch=release": {
+    "total": 2,
+    "p": 1,
+    "ps": 100,
+    "paging": {
+      "pageIndex": 1,
+      "pageSize": 100,
+      "total": 2
+    },
+    "effortTotal": 20,
+    "issues": [
+      {
+        "key": "AXzck64vC85-0Ss6yFbS",
+        "rule": "c:S5847",
+        "severity": "CRITICAL",
+        "component": "libc_unix:dev/src/libc_unix/sumapss7.c",
+        "project": "libc_unix",
+        "line": 136,
+        "hash": "8430f2c6db3e4549755fbd9e481817c7",
+        "textRange": {
+          "startLine": 136,
+          "endLine": 136,
+          "startOffset": 11,
+          "endOffset": 33
+        },
+        "flows": [
+          {
+            "locations": [
+              {
+                "component": "libc_unix:dev/src/libc_unix/sumapss7.c",
+                "textRange": {
+                  "startLine": 122,
+                  "endLine": 122,
+                  "startOffset": 8,
+                  "endOffset": 30
+                },
+                "msg": "File checked here"
+              }
+            ]
+          },
+          {
+            "locations": [
+              {
+                "component": "libc_unix:dev/src/libc_unix/sumapss7.c",
+                "textRange": {
+                  "startLine": 136,
+                  "endLine": 136,
+                  "startOffset": 11,
+                  "endOffset": 33
+                },
+                "msg": "File used here"
+              }
+            ]
+          }
+        ],
+        "status": "OPEN",
+        "message": "Remove this TOCTOU race condition window when accessing files",
+        "effort": "10min",
+        "debt": "10min",
+        "author": "",
+        "tags": [
+          "cert",
+          "cwe",
+          "owasp-a5"
+        ],
+        "creationDate": "2021-10-05T07:48:39-0400",
+        "updateDate": "2021-10-05T07:48:39-0400",
+        "type": "VULNERABILITY",
+        "branch": "release",
+        "scope": "MAIN",
+        "quickFixAvailable": false
+      }
+    ],
+    "components": [
+      {
+        "key": "libc_unix:dev/src/libc_unix/sumapss7.c",
+        "enabled": true,
+        "qualifier": "FIL",
+        "name": "sumapss7.c",
+        "longName": "dev/src/libc_unix/sumapss7.c",
+        "path": "dev/src/libc_unix/sumapss7.c",
+        "branch": "release"
+      },
+      {
+        "key": "libc_unix",
+        "enabled": true,
+        "qualifier": "TRK",
+        "name": "libc_unix",
+        "longName": "libc_unix",
+        "branch": "release"
+      }
+    ],
+    "facets": []
+  },
   "/api/sources/raw?key=xss:packages%2Fdocs%2Fsrc%2Fservice-worker.js": "// Imports\nimport { precacheAndRoute, matchPrecache } from 'workbox-precaching'\nimport { registerRoute, setDefaultHandler, setCatchHandler } from 'workbox-routing'\nimport { NetworkOnly, CacheFirst } from 'workbox-strategies'\n\nprecacheAndRoute(self.__WB_MANIFEST)\n\nconst cacheFirst = new CacheFirst()\nconst networkOnly = new NetworkOnly()\n\nregisterRoute(\n  ({ url, request }) => url.origin === self.location.origin && request.destination !== 'document',\n  cacheFirst\n)\n\nsetDefaultHandler(networkOnly)\n\nsetCatchHandler(async ({ url, request }) => {\n  if (\n    url.origin === self.location.origin &&\n    request.destination === 'document'\n  ) {\n    return matchPrecache(url.pathname.startsWith('/eo-UY/') ? '_crowdin.html' : '/_fallback.html')\n  }\n\n  return Response.error()\n})\n\nself.addEventListener('message', event => {\n  if (event.data === 'sw:update') self.skipWaiting()\n})\n\n",
+  "api/sources/raw?key=c130j_libc_unix:dev%2Fsrc%2Flibc_unix%2Fsumapss7.c": "\\\\sanitized\n#include <stdio.h>endif\n\n#include <sys/types.h>\n#include <sys/stat.h>\n#ifdef __linux\n#include <sys/ipc.h>\n#include <sys/shm.h>\n#endif\n#include <errno.h>\n#include <string.h>\n#include <fcntl.h>\n\n#ifndef PAGE_SIZE\n#define PAGE_SIZE 4096\n#endif\n\nvoid map_segment_rmnet( char *physDevName,\n                        void **Mapped_Address, char *Result );\nvoid map_segment_rfm2g( char *physDevName,\n                        void **Mapped_Address, char *Result );\n\n\n/************************************************************************\n ** ! void c_map_segment( char *Key_String,\n ** !                     long Size_Of_Area,\n ** !                     char Map_Local,\n ** !                     void **Mapped_Address,\n ** !                     char *Error );\n ** !\n ** ! INPUTS :\n ** ! char *Key_String      : Key identifying segment to be mapped.\n ** ! long Size_Of_Area     : Number of bytes to map.\n ** ! char Map_Local        : If this flag is set and the machine supports\n ** !                       : local memory then map the segment into \"hard\"\n ** !                       : local memory.\n ** !\n ** ! OUTPUTS :\n ** ! void **Mapped_Address : Logical address mapped.\n ** ! char *Error           : Succes of mapping. 0 = Ok, 1 = Fail.\n ** !\n ************************************************************************/\n\n#define RETURN_ERROR \\n         *Mapped_Address = NULL; \\n         *Error = 1; \\n         return;\nvoid c_map_segment( char *Key_String, long Size_Of_Area, char Map_Local,\n                    void **Mapped_Address, char *Error )\n\n{\n#ifndef WIN32\n\n   /*** NOTE : Map_Local is not yet implemented ***/\n\n   struct stat buf;            /* Used to check validity of key */\n   key_t       key;\n   int         shmid;\n   int         shmctrl;\n   struct shmid_ds shmid_buf;      /* struct shmid_ds from shm.h */\n   char       *Address_Mapped = NULL;\n   char       Key_Is_Physical_Device = ! strncmp(\"/dev/\", Key_String, 5);\n\n   /* ! If Key String is invalid */\n   if ( stat(Key_String, &buf) )\n   {\n      FILE *fd;\n      /* !! If this is a physical device, error is fatal */\n      if ( Key_Is_Physical_Device )\n      {\n         /* !!! Exit with error. */\n         (void)fprintf(stderr,\n            \">>> %s:%d:ERROR : c_map_segment : during open of %s\n\",\n           __FILE__, __LINE__, Key_String);\n         perror(\"--> \");\n         RETURN_ERROR\n      }\n      /* !! Try to create the file */\n      fd = fopen(Key_String, \"w\");\n      /* !! If NOT sucessfull */\n      if (! fd )\n      {\n         /* !! Exit with error. */\n         (void)fprintf(stderr,\n            \">>> ERROR : c_map_segment : during open of %s\n\", Key_String);\n         perror(\"--> \");\n         RETURN_ERROR\n      }\n\n      /* !! File open Ok, Write to File. */\n      fprintf(fd, \"Key\n\");\n      /* !! Close File. */\n      fclose(fd);\n\n      /* !! Try Key String again */\n      if ( stat(Key_String, &buf) )\n      {\n         /* !!! Exit with error. */\n         (void)fprintf(stderr,\n            \">>> ERROR : c_map_segment : during stat of %s\n\", Key_String);\n         perror(\"--> \");\n         RETURN_ERROR\n      }\n   }\n   /* ! End If */\n\n",
   "/api/rules/show?key=javascript:S2819": {
     "rule": {
       "key": "javascript:S2819",
       "repo": "javascript",
       "name": "Origins should be verified during cross-origin communications",
       "createdAt": "2021-12-06T19:35:19+0000",
-      "htmlDesc": "<p>Browsers <a href=\"https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage\">allow message exchanges</a> between Window objects of\ndifferent origins.</p>\n<p>Because any window can send / receive messages from other window it is important to verify the sender’s / receiver’s identity:</p>\n<ul>\n  <li> When sending message with postMessage method, the identity’s receiver should be defined (the wildcard keyword (<code>*</code>) should not be\n  used). </li>\n  <li> When receiving message with message event, the sender’s identity should be verified using the origin and possibly source properties. </li>\n</ul>\n<h2>Noncompliant Code Example</h2>\n<p>When sending message:</p>\n<pre>\nvar iframe = document.getElementById(\"testiframe\");\niframe.contentWindow.postMessage(\"secret\", \"*\"); // Noncompliant: * is used\n</pre>\n<p>When receiving message:</p>\n<pre>\nwindow.addEventListener(\"message\", function(event) { // Noncompliant: no checks are done on the origin property.\n      console.log(event.data);\n });\n</pre>\n<h2>Compliant Solution</h2>\n<p>When sending message:</p>\n<pre>\nvar iframe = document.getElementById(\"testsecureiframe\");\niframe.contentWindow.postMessage(\"hello\", \"https://secure.example.com\"); // Compliant\n</pre>\n<p>When receiving message:</p>\n<pre>\nwindow.addEventListener(\"message\", function(event) {\n\n  if (event.origin !== \"http://example.org\") // Compliant\n    return;\n\n  console.log(event.data)\n});\n</pre>\n<h2>See</h2>\n<ul>\n  <li> <a href=\"https://owasp.org/Top10/A01_2021-Broken_Access_Control/\">OWASP Top 10 2021 Category A1</a> - Broken Access Control </li>\n  <li> <a href=\"https://www.owasp.org/index.php/Top_10_2010-A3-Broken_Authentication_and_Session_Management\">OWASP Top 10 2017 Category A3</a> -\n  Broken Authentication and Session Management </li>\n  <li> <a href=\"https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage\">developer.mozilla.org</a> - postMessage API </li>\n</ul>",
-      "mdDesc": "<p>Browsers <a href=\"https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage\">allow message exchanges</a> between Window objects of\ndifferent origins.</p>\n<p>Because any window can send / receive messages from other window it is important to verify the sender’s / receiver’s identity:</p>\n<ul>\n  <li> When sending message with postMessage method, the identity’s receiver should be defined (the wildcard keyword (<code>*</code>) should not be\n  used). </li>\n  <li> When receiving message with message event, the sender’s identity should be verified using the origin and possibly source properties. </li>\n</ul>\n<h2>Noncompliant Code Example</h2>\n<p>When sending message:</p>\n<pre>\nvar iframe = document.getElementById(\"testiframe\");\niframe.contentWindow.postMessage(\"secret\", \"*\"); // Noncompliant: * is used\n</pre>\n<p>When receiving message:</p>\n<pre>\nwindow.addEventListener(\"message\", function(event) { // Noncompliant: no checks are done on the origin property.\n      console.log(event.data);\n });\n</pre>\n<h2>Compliant Solution</h2>\n<p>When sending message:</p>\n<pre>\nvar iframe = document.getElementById(\"testsecureiframe\");\niframe.contentWindow.postMessage(\"hello\", \"https://secure.example.com\"); // Compliant\n</pre>\n<p>When receiving message:</p>\n<pre>\nwindow.addEventListener(\"message\", function(event) {\n\n  if (event.origin !== \"http://example.org\") // Compliant\n    return;\n\n  console.log(event.data)\n});\n</pre>\n<h2>See</h2>\n<ul>\n  <li> <a href=\"https://owasp.org/Top10/A01_2021-Broken_Access_Control/\">OWASP Top 10 2021 Category A1</a> - Broken Access Control </li>\n  <li> <a href=\"https://www.owasp.org/index.php/Top_10_2010-A3-Broken_Authentication_and_Session_Management\">OWASP Top 10 2017 Category A3</a> -\n  Broken Authentication and Session Management </li>\n  <li> <a href=\"https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage\">developer.mozilla.org</a> - postMessage API </li>\n</ul>",
+      "htmlDesc": "<p>Browsers <a href=https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage>allow message exchanges</a> between Window objects of\ndifferent origins.</p>\n<p>Because any window can send / receive messages from other window it is important to verify the sender’s / receiver’s identity:</p>\n<ul>\n  <li> When sending message with postMessage method, the identity’s receiver should be defined (the wildcard keyword (<code>*</code>) should not be\n  used). </li>\n  <li> When receiving message with message event, the sender’s identity should be verified using the origin and possibly source properties. </li>\n</ul>\n<h2>Noncompliant Code Example</h2>\n<p>When sending message:</p>\n<pre>\nvar iframe = document.getElementById(testiframe);\niframe.contentWindow.postMessage(secret, *); // Noncompliant: * is used\n</pre>\n<p>When receiving message:</p>\n<pre>\nwindow.addEventListener(message, function(event) { // Noncompliant: no checks are done on the origin property.\n      console.log(event.data);\n });\n</pre>\n<h2>Compliant Solution</h2>\n<p>When sending message:</p>\n<pre>\nvar iframe = document.getElementById(testsecureiframe);\niframe.contentWindow.postMessage(hello, https://secure.example.com); // Compliant\n</pre>\n<p>When receiving message:</p>\n<pre>\nwindow.addEventListener(message, function(event) {\n\n  if (event.origin !== http://example.org) // Compliant\n    return;\n\n  console.log(event.data)\n});\n</pre>\n<h2>See</h2>\n<ul>\n  <li> <a href=https://owasp.org/Top10/A01_2021-Broken_Access_Control/>OWASP Top 10 2021 Category A1</a> - Broken Access Control </li>\n  <li> <a href=https://www.owasp.org/index.php/Top_10_2010-A3-Broken_Authentication_and_Session_Management>OWASP Top 10 2017 Category A3</a> -\n  Broken Authentication and Session Management </li>\n  <li> <a href=https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage>developer.mozilla.org</a> - postMessage API </li>\n</ul>",
+      "mdDesc": "<p>Browsers <a href=https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage>allow message exchanges</a> between Window objects of\ndifferent origins.</p>\n<p>Because any window can send / receive messages from other window it is important to verify the sender’s / receiver’s identity:</p>\n<ul>\n  <li> When sending message with postMessage method, the identity’s receiver should be defined (the wildcard keyword (<code>*</code>) should not be\n  used). </li>\n  <li> When receiving message with message event, the sender’s identity should be verified using the origin and possibly source properties. </li>\n</ul>\n<h2>Noncompliant Code Example</h2>\n<p>When sending message:</p>\n<pre>\nvar iframe = document.getElementById(testiframe);\niframe.contentWindow.postMessage(secret, *); // Noncompliant: * is used\n</pre>\n<p>When receiving message:</p>\n<pre>\nwindow.addEventListener(message, function(event) { // Noncompliant: no checks are done on the origin property.\n      console.log(event.data);\n });\n</pre>\n<h2>Compliant Solution</h2>\n<p>When sending message:</p>\n<pre>\nvar iframe = document.getElementById(testsecureiframe);\niframe.contentWindow.postMessage(hello, https://secure.example.com); // Compliant\n</pre>\n<p>When receiving message:</p>\n<pre>\nwindow.addEventListener(message, function(event) {\n\n  if (event.origin !== http://example.org) // Compliant\n    return;\n\n  console.log(event.data)\n});\n</pre>\n<h2>See</h2>\n<ul>\n  <li> <a href=https://owasp.org/Top10/A01_2021-Broken_Access_Control/>OWASP Top 10 2021 Category A1</a> - Broken Access Control </li>\n  <li> <a href=https://www.owasp.org/index.php/Top_10_2010-A3-Broken_Authentication_and_Session_Management>OWASP Top 10 2017 Category A3</a> -\n  Broken Authentication and Session Management </li>\n  <li> <a href=https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage>developer.mozilla.org</a> - postMessage API </li>\n</ul>",
       "severity": "CRITICAL",
       "status": "READY",
       "isTemplate": false,
@@ -97,6 +192,41 @@
       "isExternal": false
     },
     "actives": []
+  },
+  "/api/rules/show?key=c:S5847": {
+    "rule": {
+      "key": "c:S5847",
+      "repo": "c",
+      "name": "Accessing files should not introduce TOCTOU vulnerabilities",
+      "createdAt": "2021-01-21T16:26:38-0500",
+      "htmlDesc": "<p>Time Of Check to Time Of Use (TOCTOU) vulnerabilities occur when an application:</p>\n<ul>\n  <li> First, checks permissions or attributes of a file: for instance, is a file a symbolic link? </li>\n  <li> Next, performs some operations such as writing data to this file. </li>\n</ul>\n<p>The application cannot assume the state of the file is unchanged between these two steps, there is a race condition (ie: two different processes\ncan access and modify the same shared object/file at the same time, which can lead to privilege escalation, denial of service and other unexpected\nresults).</p>\n<p>For instance, attackers can benefit from this situation by creating a symbolic link to a sensitive file directly after the first step (eg in Unix:\n<code>/etc/passwd</code>) and try to elevate their privileges (eg: if the written data has the correct <code>/etc/passwd</code> file format).</p>\n<p>To avoid TOCTOU vulnerabilities, one possible solution is to do a single atomic operation for the check and use actions, therefore removing the\nrace condition window. Another possibility is to use file descriptors. This way the binding of the file descriptor to the file cannot be changed by a\nconcurrent process.</p>\n<h2>Noncompliant Code Example</h2>\n<p>A check function (for instance <code>access</code>, <code>stat</code> …​ in this case <code>access</code> to verify the existence of a file) is\nused, followed by a use function (<code>open</code>, <code>fopen</code> …​) to write data inside a non existing file. These two consecutive calls\ncreate a TOCTOU race condition:</p>\n<pre>\n#include &lt;stdio.h&gt;\n\nvoid fopen_with_toctou(const char *file) {\n  if (access(file, F_OK) == -1 &amp;&amp; errno == ENOENT) {\n    // the file doesn\u0027t exist\n    // it is now created in order to write some data inside\n    FILE *f = fopen(file, w); // Noncompliant: a race condition window exist from access() call to fopen() call calls\n    if (NULL == f) {\n      /* Handle error */\n    }\n\n    if (fclose(f) == EOF) {\n      /* Handle error */\n    }\n  }\n}\n</pre>\n<h2>Compliant Solution</h2>\n<p>If the file already exists on the disk, <code>fopen</code> with <code>x</code> mode will fail:</p>\n<pre>\n#include &lt;stdio.h&gt;\n\nvoid open_without_toctou(const char *file) {\n  FILE *f = fopen(file, wx); // Compliant\n  if (NULL == f) {\n    /* Handle error */\n  }\n  /* Write to file */\n  if (fclose(f) == EOF) {\n    /* Handle error */\n  }\n}\n</pre>\n<p>A more generic solution is to use file descriptors:</p>\n<pre>\nvoid open_without_toctou(const char *file) {\n  int fd = open(file, O_CREAT | O_EXCL | O_WRONLY);\n  if (-1 != fd) {\n    FILE *f = fdopen(fd, w);  // Compliant\n  }\n}\n</pre>\n<h2>See</h2>\n<ul>\n  <li> <a href=https://owasp.org/Top10/A01_2021-Broken_Access_Control/>OWASP Top 10 2021 Category A1</a> - Broken Access Control </li>\n  <li> <a href=https://www.owasp.org/index.php/Top_10-2017_A5-Broken_Access_Control>OWASP Top 10 2017 Category A5</a> - Boken Access Control </li>\n  <li> <a href=https://cwe.mitre.org/data/definitions/367.html>MITRE, CWE-367</a> - Time-of-check Time-of-use (TOCTOU) Race Condition </li>\n  <li> <a href=https://wiki.sei.cmu.edu/confluence/display/c/FIO45-C.+Avoid+TOCTOU+race+conditions+while+accessing+files>CERT, FIO45-C.</a> - Avoid\n  TOCTOU race conditions while accessing files </li>\n</ul>",
+      "mdDesc": "<p>Time Of Check to Time Of Use (TOCTOU) vulnerabilities occur when an application:</p>\n<ul>\n  <li> First, checks permissions or attributes of a file: for instance, is a file a symbolic link? </li>\n  <li> Next, performs some operations such as writing data to this file. </li>\n</ul>\n<p>The application cannot assume the state of the file is unchanged between these two steps, there is a race condition (ie: two different processes\ncan access and modify the same shared object/file at the same time, which can lead to privilege escalation, denial of service and other unexpected\nresults).</p>\n<p>For instance, attackers can benefit from this situation by creating a symbolic link to a sensitive file directly after the first step (eg in Unix:\n<code>/etc/passwd</code>) and try to elevate their privileges (eg: if the written data has the correct <code>/etc/passwd</code> file format).</p>\n<p>To avoid TOCTOU vulnerabilities, one possible solution is to do a single atomic operation for the check and use actions, therefore removing the\nrace condition window. Another possibility is to use file descriptors. This way the binding of the file descriptor to the file cannot be changed by a\nconcurrent process.</p>\n<h2>Noncompliant Code Example</h2>\n<p>A check function (for instance <code>access</code>, <code>stat</code> …​ in this case <code>access</code> to verify the existence of a file) is\nused, followed by a use function (<code>open</code>, <code>fopen</code> …​) to write data inside a non existing file. These two consecutive calls\ncreate a TOCTOU race condition:</p>\n<pre>\n#include &lt;stdio.h&gt;\n\nvoid fopen_with_toctou(const char *file) {\n  if (access(file, F_OK) == -1 &amp;&amp; errno == ENOENT) {\n    // the file doesn\u0027t exist\n    // it is now created in order to write some data inside\n    FILE *f = fopen(file, w); // Noncompliant: a race condition window exist from access() call to fopen() call calls\n    if (NULL == f) {\n      /* Handle error */\n    }\n\n    if (fclose(f) == EOF) {\n      /* Handle error */\n    }\n  }\n}\n</pre>\n<h2>Compliant Solution</h2>\n<p>If the file already exists on the disk, <code>fopen</code> with <code>x</code> mode will fail:</p>\n<pre>\n#include &lt;stdio.h&gt;\n\nvoid open_without_toctou(const char *file) {\n  FILE *f = fopen(file, wx); // Compliant\n  if (NULL == f) {\n    /* Handle error */\n  }\n  /* Write to file */\n  if (fclose(f) == EOF) {\n    /* Handle error */\n  }\n}\n</pre>\n<p>A more generic solution is to use file descriptors:</p>\n<pre>\nvoid open_without_toctou(const char *file) {\n  int fd = open(file, O_CREAT | O_EXCL | O_WRONLY);\n  if (-1 != fd) {\n    FILE *f = fdopen(fd, w);  // Compliant\n  }\n}\n</pre>\n<h2>See</h2>\n<ul>\n  <li> <a href=https://owasp.org/Top10/A01_2021-Broken_Access_Control/>OWASP Top 10 2021 Category A1</a> - Broken Access Control </li>\n  <li> <a href=https://www.owasp.org/index.php/Top_10-2017_A5-Broken_Access_Control>OWASP Top 10 2017 Category A5</a> - Boken Access Control </li>\n  <li> <a href=https://cwe.mitre.org/data/definitions/367.html>MITRE, CWE-367</a> - Time-of-check Time-of-use (TOCTOU) Race Condition </li>\n  <li> <a href=https://wiki.sei.cmu.edu/confluence/display/c/FIO45-C.+Avoid+TOCTOU+race+conditions+while+accessing+files>CERT, FIO45-C.</a> - Avoid\n  TOCTOU race conditions while accessing files </li>\n</ul>",
+      "severity": "CRITICAL",
+      "status": "READY",
+      "isTemplate": false,
+      "tags": [],
+      "sysTags": [
+        "cert",
+        "cwe",
+        "owasp-a5"
+      ],
+      "lang": "c",
+      "langName": "C",
+      "params": [],
+      "defaultDebtRemFnType": "CONSTANT_ISSUE",
+      "defaultDebtRemFnOffset": "10min",
+      "debtOverloaded": false,
+      "debtRemFnType": "CONSTANT_ISSUE",
+      "debtRemFnOffset": "10min",
+      "type": "VULNERABILITY",
+      "defaultRemFnType": "CONSTANT_ISSUE",
+      "defaultRemFnBaseEffort": "10min",
+      "remFnType": "CONSTANT_ISSUE",
+      "remFnBaseEffort": "10min",
+      "remFnOverloaded": false,
+      "scope": "MAIN",
+      "isExternal": false
+    },
+    "actives": []
   }
 }
-  
