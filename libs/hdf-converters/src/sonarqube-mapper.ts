@@ -97,11 +97,14 @@ export class SonarQubeResults {
   sonarQubeHost = '';
   projectId = '';
   userToken = '';
+  //TODO: add PR to SAF CLI to add flag to SQ converter 
+  branchName = "";
   customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
-  constructor(sonarQubeHost: string, projectId: string, userToken: string) {
+  constructor(sonarQubeHost: string, projectId: string, userToken: string, branchName?: string) {
     this.sonarQubeHost = sonarQubeHost;
     this.projectId = projectId;
     this.userToken = userToken;
+    this.branchName = branchName ? branchName : "main";
   }
 
   async toHdf(): Promise<ExecJSON.Execution> {
@@ -119,7 +122,8 @@ export class SonarQubeResults {
           params: {
             componentKeys: this.projectId,
             types: 'VULNERABILITY',
-            p: page
+            p: page,
+            branch: this.branchName
           }
         })
         .then(({data}) => {
