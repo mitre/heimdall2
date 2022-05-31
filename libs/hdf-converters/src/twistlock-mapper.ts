@@ -11,7 +11,7 @@ import {CweNistMapping} from './mappings/CweNistMapping';
 import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
-  ['critical', 1],
+  ['critical', 0.9],
   ['high', 0.7],
   ['medium', 0.5],
   ['low', 0.3]
@@ -32,18 +32,18 @@ function parseIdentifier(identifiers: unknown[] | unknown): string[] {
   }
 }
 
-export class TwistcliResults {
+export class TwistlockResults {
   data: Record<string, unknown>;
   customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
-  constructor(twistcliJson: string) {
-    this.data = JSON.parse(twistcliJson);
+  constructor(TwistlockJson: string) {
+    this.data = JSON.parse(TwistlockJson);
   }
 
   toHdf(): ExecJSON.Execution[] | ExecJSON.Execution {
     const results: ExecJSON.Execution[] = [];
     if (Array.isArray(this.data)) {
       this.data.forEach((element) => {
-        const entry = new TwistcliMapper(element);
+        const entry = new TwistlockMapper(element);
         if (this.customMapping !== undefined) {
           entry.setMappings(this.customMapping);
         }
@@ -51,7 +51,7 @@ export class TwistcliResults {
       });
       return results;
     } else {
-      const result = new TwistcliMapper(this.data);
+      const result = new TwistlockMapper(this.data);
       if (this.customMapping !== undefined) {
         result.setMappings(this.customMapping);
       }
@@ -65,7 +65,7 @@ export class TwistcliResults {
   }
 }
 
-export class TwistcliMapper extends BaseConverter {
+export class TwistlockMapper extends BaseConverter {
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
     ILookupPath
@@ -81,20 +81,20 @@ export class TwistcliMapper extends BaseConverter {
     },
     profiles: [
       {
-        name: 'Twistcli Scan',
+        name: 'Twistlock Scan',
         title: {
           transformer: (data: Record<string, unknown>): string => {
             const projectName = _.has(data, 'results.name')
-              ? `Twistcli Project: ${_.get(data, 'results.name')} `
+              ? `Twistlock Project: ${_.get(data, 'results.name')} `
               : '';
-            return `${projectName}Twistcli Path: ${_.get(data, 'path')}`;
+            return `${projectName}Twistlock Path: ${_.get(data, 'path')}`;
           }
         },
         maintainer: null,
         summary: {
           transformer: (data: Record<string, unknown>): string => {
             return _.has(data, 'vulnerabilityDistribution')
-              ? `Twistcli Summary: ${JSON.stringify(_.get(data, 'vulnerabilityDistribution'), null, 2)} `
+              ? `Twistlock Summary: ${JSON.stringify(_.get(data, 'vulnerabilityDistribution'), null, 2)} `
               : '';
         },
         license: null,
@@ -141,7 +141,7 @@ export class TwistcliMapper extends BaseConverter {
       }
     ],
     passthrough: {
-      Twistcli_metadata: {
+      Twistlock_metadata: {
         transformer: (
           data: Record<string, unknown>
         ): Record<string, unknown> => {
@@ -150,8 +150,8 @@ export class TwistcliMapper extends BaseConverter {
       }
     }
   };
-  constructor(twistcliJson: Record<string, unknown>) {
-    super(twistcliJson);
+  constructor(TwistlockJson: Record<string, unknown>) {
+    super(TwistlockJson);
   }
   setMappings(
     customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
