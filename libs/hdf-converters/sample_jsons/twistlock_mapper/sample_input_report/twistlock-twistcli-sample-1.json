@@ -1,0 +1,485 @@
+{
+	"results": [
+		{
+			"id": "sha256:b1c0237ebd29860066656372da10d8d7da33b34715986f74b3d5a7e4ba060d1b",
+			"name": "registry.io:test",
+			"distro": "Red Hat Enterprise Linux release 8.6 (Ootpa)",
+			"distroRelease": "RHEL8",
+			"digest": "sha256:c0274cb1e0c6e92d2ccc1e23bd19b7dddedbaa2da26861c225d4ad6cec5047f4",
+			"collections": [
+				"All",
+				"TEST-COLLECTION"
+			],
+			"packages": [
+				{
+					"type": "os",
+					"name": "tzdata",
+					"version": "2022a-1.el8",
+					"licenses": [
+						"Public Domain"
+					]
+				},
+				{
+					"type": "os",
+					"name": "python3-pip-wheel",
+					"version": "9.0.3-22.el8",
+					"licenses": [
+						"MIT and Python and ASL 2.0 and BSD and ISC and LGPLv2 and MPLv2.0 and (ASL 2.0 or BSD)"
+					]
+				},
+				{
+					"type": "os",
+					"name": "redhat-release",
+					"version": "8.6-0.1.el8",
+					"licenses": [
+						"GPLv2"
+					]
+				},
+				{
+					"type": "os",
+					"name": "filesystem",
+					"version": "3.8-6.el8",
+					"licenses": [
+						"Public Domain"
+					]
+				},
+				{
+					"type": "os",
+					"name": "publicsuffix-list-dafsa",
+					"version": "20180723-1.el8",
+					"licenses": [
+						"MPLv2.0"
+					]
+				},
+				{
+					"type": "os",
+					"name": "pcre2",
+					"version": "10.32-2.el8",
+					"licenses": [
+						"BSD"
+					]
+				},
+				{
+					"type": "os",
+					"name": "ncurses-libs",
+					"version": "6.1-9.20180224.el8",
+					"licenses": [
+						"MIT"
+					]
+				},
+				{
+					"type": "os",
+					"name": "glibc-common",
+					"version": "2.28-189.1.el8",
+					"licenses": [
+						"LGPLv2+ and LGPLv2+ with exceptions and GPLv2+ and GPLv2+ with exceptions and BSD and Inner-Net and ISC and Public Domain and GFDL"
+					]
+				},
+				{
+					"type": "os",
+					"name": "libstdc++",
+					"version": "8.5.0-10.el8",
+					"licenses": [
+						"GPLv3+ and GPLv3+ with exceptions and GPLv2+ with exceptions and LGPLv2+ and BSD"
+					]
+				},
+				{
+					"type": "python",
+					"name": "subscription-manager",
+					"version": "1.28.29",
+					"licenses": [
+						"GPLv2"
+					]
+				}
+			],
+			"applications": [
+				{
+					"name": "asp.net-core",
+					"version": "5.0.17",
+					"path": "/usr/lib64/dotnet/dotnet"
+				},
+				{
+					"name": ".net-core",
+					"version": "5.0.17",
+					"path": "/usr/lib64/dotnet/dotnet"
+				}
+			],
+			"complianceDistribution": {
+				"critical": 0,
+				"high": 0,
+				"medium": 0,
+				"low": 0,
+				"total": 0
+			},
+			"complianceScanPassed": true,
+			"vulnerabilities": [
+				{
+					"id": "CVE-2021-43529",
+					"status": "affected",
+					"cvss": 9.8,
+					"description": "DOCUMENTATION: A remote code execution flaw was found in the way NSS verifies certificates. This flaw allows an attacker posing as an SSL/TLS server to trigger this issue in a client application compiled with NSS when it tries to initiate an SSL/TLS connection.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client, triggering the flaw. The highest threat to this vulnerability is confidentiality, integrity, as well as system availability.              STATEMENT: The issue is not limited to TLS. Any applications that use NSS certificate verification are vulnerable; S/MIME is impacted as well.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client.  Firefox is not vulnerable to this flaw as it uses the mozilla::pkix for certificate verification. Thunderbird is affected when parsing email with the S/MIME signature.  Thunderbird on Red Hat Enterprise Linux 8.4 and later does not need to be updated since it uses the system NSS library, but earlier Red Hat Enterprise Linux 8 extended life streams will need to update Thunderbird as well as NSS.             MITIGATION: Red Hat has investigated whether a possible mitigation exists for this issue, and has not been able to identify a practical example. Please update the affec",
+					"severity": "critical",
+					"packageName": "nss-util",
+					"packageVersion": "3.67.0-7.el8_5",
+					"link": "https://access.redhat.com/security/cve/CVE-2021-43529",
+					"riskFactors": [
+						"Remote execution",
+						"Attack complexity: low",
+						"Attack vector: network",
+						"Critical severity",
+						"Recent vulnerability"
+					],
+					"impactedVersions": [
+						"*"
+					],
+					"publishedDate": "2021-12-01T00:00:00Z",
+					"discoveredDate": "2022-05-18T12:24:22Z",
+					"layerTime": "2022-05-16T23:12:25Z"
+				},
+				{
+					"id": "CVE-2021-43529",
+					"status": "affected",
+					"cvss": 9.8,
+					"description": "DOCUMENTATION: A remote code execution flaw was found in the way NSS verifies certificates. This flaw allows an attacker posing as an SSL/TLS server to trigger this issue in a client application compiled with NSS when it tries to initiate an SSL/TLS connection.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client, triggering the flaw. The highest threat to this vulnerability is confidentiality, integrity, as well as system availability.              STATEMENT: The issue is not limited to TLS. Any applications that use NSS certificate verification are vulnerable; S/MIME is impacted as well.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client.  Firefox is not vulnerable to this flaw as it uses the mozilla::pkix for certificate verification. Thunderbird is affected when parsing email with the S/MIME signature.  Thunderbird on Red Hat Enterprise Linux 8.4 and later does not need to be updated since it uses the system NSS library, but earlier Red Hat Enterprise Linux 8 extended life streams will need to update Thunderbird as well as NSS.             MITIGATION: Red Hat has investigated whether a possible mitigation exists for this issue, and has not been able to identify a practical example. Please update the affec",
+					"severity": "critical",
+					"packageName": "nss-sysinit",
+					"packageVersion": "3.67.0-7.el8_5",
+					"link": "https://access.redhat.com/security/cve/CVE-2021-43529",
+					"riskFactors": [
+						"Critical severity",
+						"Recent vulnerability",
+						"Remote execution",
+						"Attack complexity: low",
+						"Attack vector: network"
+					],
+					"impactedVersions": [
+						"*"
+					],
+					"publishedDate": "2021-12-01T00:00:00Z",
+					"discoveredDate": "2022-05-18T12:24:22Z",
+					"layerTime": "2022-05-16T23:12:25Z"
+				},
+				{
+					"id": "CVE-2021-43529",
+					"status": "affected",
+					"cvss": 9.8,
+					"description": "DOCUMENTATION: A remote code execution flaw was found in the way NSS verifies certificates. This flaw allows an attacker posing as an SSL/TLS server to trigger this issue in a client application compiled with NSS when it tries to initiate an SSL/TLS connection.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client, triggering the flaw. The highest threat to this vulnerability is confidentiality, integrity, as well as system availability.              STATEMENT: The issue is not limited to TLS. Any applications that use NSS certificate verification are vulnerable; S/MIME is impacted as well.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client.  Firefox is not vulnerable to this flaw as it uses the mozilla::pkix for certificate verification. Thunderbird is affected when parsing email with the S/MIME signature.  Thunderbird on Red Hat Enterprise Linux 8.4 and later does not need to be updated since it uses the system NSS library, but earlier Red Hat Enterprise Linux 8 extended life streams will need to update Thunderbird as well as NSS.             MITIGATION: Red Hat has investigated whether a possible mitigation exists for this issue, and has not been able to identify a practical example. Please update the affec",
+					"severity": "critical",
+					"packageName": "nss",
+					"packageVersion": "3.67.0-7.el8_5",
+					"link": "https://access.redhat.com/security/cve/CVE-2021-43529",
+					"riskFactors": [
+						"Attack complexity: low",
+						"Attack vector: network",
+						"Critical severity",
+						"Recent vulnerability",
+						"Remote execution"
+					],
+					"impactedVersions": [
+						"*"
+					],
+					"publishedDate": "2021-12-01T00:00:00Z",
+					"discoveredDate": "2022-05-18T12:24:22Z",
+					"layerTime": "2022-05-16T23:12:25Z"
+				},
+				{
+					"id": "CVE-2021-43529",
+					"status": "affected",
+					"cvss": 9.8,
+					"description": "DOCUMENTATION: A remote code execution flaw was found in the way NSS verifies certificates. This flaw allows an attacker posing as an SSL/TLS server to trigger this issue in a client application compiled with NSS when it tries to initiate an SSL/TLS connection.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client, triggering the flaw. The highest threat to this vulnerability is confidentiality, integrity, as well as system availability.              STATEMENT: The issue is not limited to TLS. Any applications that use NSS certificate verification are vulnerable; S/MIME is impacted as well.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client.  Firefox is not vulnerable to this flaw as it uses the mozilla::pkix for certificate verification. Thunderbird is affected when parsing email with the S/MIME signature.  Thunderbird on Red Hat Enterprise Linux 8.4 and later does not need to be updated since it uses the system NSS library, but earlier Red Hat Enterprise Linux 8 extended life streams will need to update Thunderbird as well as NSS.             MITIGATION: Red Hat has investigated whether a possible mitigation exists for this issue, and has not been able to identify a practical example. Please update the affec",
+					"severity": "critical",
+					"packageName": "nss-softokn",
+					"packageVersion": "3.67.0-7.el8_5",
+					"link": "https://access.redhat.com/security/cve/CVE-2021-43529",
+					"riskFactors": [
+						"Recent vulnerability",
+						"Remote execution",
+						"Attack complexity: low",
+						"Attack vector: network",
+						"Critical severity"
+					],
+					"impactedVersions": [
+						"*"
+					],
+					"publishedDate": "2021-12-01T00:00:00Z",
+					"discoveredDate": "2022-05-18T12:24:22Z",
+					"layerTime": "2022-05-16T23:12:25Z"
+				},
+				{
+					"id": "CVE-2021-43529",
+					"status": "affected",
+					"cvss": 9.8,
+					"description": "DOCUMENTATION: A remote code execution flaw was found in the way NSS verifies certificates. This flaw allows an attacker posing as an SSL/TLS server to trigger this issue in a client application compiled with NSS when it tries to initiate an SSL/TLS connection.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client, triggering the flaw. The highest threat to this vulnerability is confidentiality, integrity, as well as system availability.              STATEMENT: The issue is not limited to TLS. Any applications that use NSS certificate verification are vulnerable; S/MIME is impacted as well.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client.  Firefox is not vulnerable to this flaw as it uses the mozilla::pkix for certificate verification. Thunderbird is affected when parsing email with the S/MIME signature.  Thunderbird on Red Hat Enterprise Linux 8.4 and later does not need to be updated since it uses the system NSS library, but earlier Red Hat Enterprise Linux 8 extended life streams will need to update Thunderbird as well as NSS.             MITIGATION: Red Hat has investigated whether a possible mitigation exists for this issue, and has not been able to identify a practical example. Please update the affec",
+					"severity": "critical",
+					"packageName": "nss-softokn-freebl",
+					"packageVersion": "3.67.0-7.el8_5",
+					"link": "https://access.redhat.com/security/cve/CVE-2021-43529",
+					"riskFactors": [
+						"Attack complexity: low",
+						"Attack vector: network",
+						"Critical severity",
+						"Recent vulnerability",
+						"Remote execution"
+					],
+					"impactedVersions": [
+						"*"
+					],
+					"publishedDate": "2021-12-01T00:00:00Z",
+					"discoveredDate": "2022-05-18T12:24:22Z",
+					"layerTime": "2022-05-16T23:12:25Z"
+				},
+				{
+					"id": "CVE-2022-1650",
+					"status": "under investigation",
+					"cvss": 8.1,
+					"description": "Exposure of Sensitive Information to an Unauthorized Actor in GitHub repository eventsource/eventsource prior to v2.0.2.",
+					"severity": "important",
+					"packageName": "dotnet-host",
+					"packageVersion": "6.0.5-1.el8_6",
+					"link": "https://access.redhat.com/security/cve/CVE-2022-1650",
+					"riskFactors": [
+						"Attack complexity: low",
+						"Attack vector: network",
+						"High severity",
+						"Recent vulnerability"
+					],
+					"impactedVersions": [
+						"*"
+					],
+					"publishedDate": "2022-05-12T11:15:00Z",
+					"discoveredDate": "2022-05-18T12:24:22Z",
+					"layerTime": "2022-05-16T23:46:22Z"
+				},
+				{
+					"id": "CVE-2022-22824",
+					"status": "affected",
+					"cvss": 9.8,
+					"vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+					"description": "defineAttribute in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.",
+					"severity": "moderate",
+					"packageName": "expat",
+					"packageVersion": "2.2.5-8.el8",
+					"link": "https://access.redhat.com/security/cve/CVE-2022-22824",
+					"riskFactors": [
+						"Medium severity",
+						"Recent vulnerability",
+						"Attack complexity: low",
+						"Attack vector: network"
+					],
+					"impactedVersions": [
+						"*"
+					],
+					"publishedDate": "2022-01-10T14:12:00Z",
+					"discoveredDate": "2022-05-18T12:24:22Z",
+					"layerTime": "2022-05-03T08:38:31Z"
+				},
+				{
+					"id": "CVE-2022-22823",
+					"status": "affected",
+					"cvss": 9.8,
+					"vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+					"description": "build_model in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.",
+					"severity": "moderate",
+					"packageName": "expat",
+					"packageVersion": "2.2.5-8.el8",
+					"link": "https://access.redhat.com/security/cve/CVE-2022-22823",
+					"riskFactors": [
+						"Attack vector: network",
+						"Medium severity",
+						"Recent vulnerability",
+						"Attack complexity: low"
+					],
+					"impactedVersions": [
+						"*"
+					],
+					"publishedDate": "2022-01-10T14:12:00Z",
+					"discoveredDate": "2022-05-18T12:24:22Z",
+					"layerTime": "2022-05-03T08:38:31Z"
+				},
+				{
+					"id": "CVE-2022-22822",
+					"status": "affected",
+					"cvss": 9.8,
+					"vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+					"description": "addBinding in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.",
+					"severity": "moderate",
+					"packageName": "expat",
+					"packageVersion": "2.2.5-8.el8",
+					"link": "https://access.redhat.com/security/cve/CVE-2022-22822",
+					"riskFactors": [
+						"Medium severity",
+						"Recent vulnerability",
+						"Attack complexity: low",
+						"Attack vector: network"
+					],
+					"impactedVersions": [
+						"*"
+					],
+					"publishedDate": "2022-01-10T14:12:00Z",
+					"discoveredDate": "2022-05-18T12:24:22Z",
+					"layerTime": "2022-05-03T08:38:31Z"
+				},
+				{
+					"id": "CVE-2017-14166",
+					"status": "affected",
+					"cvss": 3.3,
+					"vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
+					"description": "libarchive 3.3.2 allows remote attackers to cause a denial of service (xml_data heap-based buffer over-read and application crash) via a crafted xar archive, related to the mishandling of empty strings in the atol8 function in archive_read_support_format_xar.c.",
+					"severity": "low",
+					"packageName": "libarchive",
+					"packageVersion": "3.3.3-3.el8_5",
+					"link": "https://access.redhat.com/security/cve/CVE-2017-14166",
+					"riskFactors": [
+						"Attack complexity: low",
+						"DoS"
+					],
+					"impactedVersions": [
+						"*"
+					],
+					"publishedDate": "2017-09-06T18:29:00Z",
+					"discoveredDate": "2022-05-18T12:24:22Z",
+					"layerTime": "2022-05-03T08:38:31Z"
+				}
+			],
+			"vulnerabilityDistribution": {
+				"critical": 5,
+				"high": 1,
+				"medium": 86,
+				"low": 5,
+				"total": 97
+			},
+			"vulnerabilityScanPassed": true,
+			"history": [
+				{
+					"created": "2022-05-03T08:38:31Z"
+				},
+				{
+					"created": "2022-05-03T08:39:27Z"
+				},
+				{
+					"created": "2022-05-16T23:12:02Z",
+					"instruction": "ARG GOPROXY=http://nexus-repository-manager.nexus-repository-manager.svc.cluster.local:8081/repository/goproxy/ HTTP_PROXY=http://localhost:3128 http_proxy=http://localhost:3128"
+				},
+				{
+					"created": "2022-05-16T23:12:02Z",
+					"instruction": "ARG GOPROXY=http://nexus-repository-manager.nexus-repository-manager.svc.cluster.local:8081/repository/goproxy/ GOSUMDB=sum.golang.org http://nexus-repository-manager.nexus-repository-manager.svc.cluster.local:8081/repository/gosum HTTP_PROXY=http://localhost:3128 http_proxy=http://localhost:3128"
+				},
+				{
+					"created": "2022-05-16T23:12:02Z",
+					"instruction": "COPY dir:d879ba5c4ce1365afd2d73d9ca22dde522b5bc855fa4b72bc9f756c44654db3b in /dsop-fix/ "
+				},
+				{
+					"created": "2022-05-16T23:12:03Z",
+					"instruction": "COPY file:bd69419b4ad4fadd7c90adb4226d57365d63f58988aaac98c246d7c5351aebcf in /etc/pki/ca-trust/source/anchors/Certificates_PKCS7_v5.9_DoD.pem "
+				},
+				{
+					"created": "2022-05-16T23:12:03Z",
+					"instruction": "COPY file:256923016d82be8b59dd5cf92e01537ad0a3606573ce6270b762994ad2398087 in /etc/pki/ca-trust/source/anchors/Certificates_PKCS7_v5.13_WCF.pem "
+				},
+				{
+					"created": "2022-05-16T23:12:03Z",
+					"instruction": "COPY file:a5fbb98dfe766c185eaf98d93a13209fa81d62fff9022eebfd5d3bb3fd3a8843 in /etc/ "
+				},
+				{
+					"created": "2022-05-16T23:12:24Z",
+					"instruction": "RUN |5 GOPROXY=http://nexus-repository-manager.nexus-repository-manager.svc.cluster.local:8081/repository/goproxy/ GOSUMDB=sum.golang.org http://nexus-repository-manager.nexus-repository-manager.svc.cluster.local:8081/repository/gosum HTTP_PROXY=http://localhost:3128 http_proxy=http://localhost:3128 /bin/sh -c echo Update packages and install DISA STIG fixes \u0026\u0026     sed -i \"s/enabled=1/enabled=0/\" /etc/dnf/plugins/subscription-manager.conf \u0026\u0026     echo \"exclude=filesystem-*\" \u003e\u003e /etc/dnf/dnf.conf \u0026\u0026     chmod 644 /etc/issue /etc/pki/ca-trust/source/anchors/*.pem \u0026\u0026     chmod +x /dsop-fix/*.sh \u0026\u0026     dnf repolist \u0026\u0026     dnf update -y \u0026\u0026     dnf install -y cracklib-dicts nss \u0026\u0026     echo \"* hard maxlogins 10\" \u003e /etc/security/limits.d/maxlogins.conf \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_account_disable_post_pw_expiration.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_logon_fail_delay.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_max_concurrent_login_sessions.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_maximum_age_login_defs.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_minimum_age_login_defs.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_password_minlen_login_defs.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_password_pam_dcredit.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_password_pam_dictcheck.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_password_pam_difok.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_password_pam_lcredit.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_password_pam_maxclassrepeat.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_password_pam_maxrepeat.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_password_pam_minclass.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_password_pam_minlen.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_password_pam_ocredit.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_password_pam_pwhistory_remember_password_auth.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_password_pam_pwhistory_remember_system_auth.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_password_pam_ucredit.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_password_pam_unix_remember.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_passwords_pam_faillock_deny.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_passwords_pam_faillock_deny_root.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_passwords_pam_faillock_interval.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_passwords_pam_faillock_unlock_time.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_passwords_pam_faillock.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_umask_etc_bashrc.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_umask_etc_csh_cshrc.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_umask_etc_login_defs.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_accounts_umask_etc_profile.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_banner_etc_issue.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_configure_kerberos_crypto_policy.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_configure_openssl_crypto_policy.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_coredump_disable_backtraces.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_coredump_disable_storage.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_disable_ctrlaltdel_burstaction.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_disable_users_coredumps.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_display_login_attempts.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_ensure_gpgcheck_local_packages.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_file_groupownership_system_commands_dirs.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_network_configure_name_resolution.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_no_empty_passwords.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_openssl_use_strong_entropy.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_package_crypto-policies_installed.sh \u0026\u0026     /dsop-fix/xccdf_org.ssgproject.content_rule_package_iptables_installed.sh \u0026\u0026     update-ca-trust \u0026\u0026     update-ca-trust force-enable \u0026\u0026     dnf clean all \u0026\u0026     rm -rf /dsop-fix/ /var/cache/dnf/ /var/tmp/* /tmp/* /var/tmp/.???* /tmp/.???*"
+				},
+				{
+					"created": "2022-05-16T23:12:24Z",
+					"instruction": "ENV container oci"
+				},
+				{
+					"created": "2022-05-16T23:12:24Z",
+					"instruction": "ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+				},
+				{
+					"created": "2022-05-16T23:12:25Z",
+					"instruction": "CMD [\"/bin/bash\"]"
+				},
+				{
+					"created": "2022-05-16T23:46:01Z",
+					"instruction": "ARG GOPROXY=http://nexus-repository-manager.nexus-repository-manager.svc.cluster.local:8081/repository/goproxy/ HTTP_PROXY=http://localhost:3128 http_proxy=http://localhost:3128"
+				},
+				{
+					"created": "2022-05-16T23:46:01Z",
+					"instruction": "ARG GOPROXY=http://nexus-repository-manager.nexus-repository-manager.svc.cluster.local:8081/repository/goproxy/ GOSUMDB=sum.golang.org http://nexus-repository-manager.nexus-repository-manager.svc.cluster.local:8081/repository/gosum HTTP_PROXY=http://localhost:3128 http_proxy=http://localhost:3128"
+				},
+				{
+					"created": "2022-05-16T23:46:01Z",
+					"instruction": "USER 0"
+				},
+				{
+					"created": "2022-05-16T23:46:21Z",
+					"instruction": "RUN |5 GOPROXY=http://nexus-repository-manager.nexus-repository-manager.svc.cluster.local:8081/repository/goproxy/ GOSUMDB=sum.golang.org http://nexus-repository-manager.nexus-repository-manager.svc.cluster.local:8081/repository/gosum HTTP_PROXY=http://localhost:3128 http_proxy=http://localhost:3128 /bin/sh -c useradd dotnet -m -d /home/dotnet -s /sbin/nologin     \u0026\u0026 mkdir -p /app     \u0026\u0026 chown -R dotnet /app     \u0026\u0026 dnf update -y     \u0026\u0026 dnf install -y aspnetcore-runtime-5.0     \u0026\u0026 dnf clean all     \u0026\u0026 rm -rf /var/cache/dnf"
+				},
+				{
+					"created": "2022-05-16T23:46:21Z",
+					"instruction": "USER dotnet"
+				},
+				{
+					"created": "2022-05-16T23:46:22Z",
+					"instruction": "HEALTHCHECK NONE"
+				},
+				{
+					"created": "2022-05-18T12:22:43Z",
+					"instruction": "ENV ASPNETCORE_URLS=http://*:5000"
+				},
+				{
+					"created": "2022-05-18T12:22:44Z",
+					"instruction": "WORKDIR /app"
+				},
+				{
+					"created": "2022-05-18T12:22:44Z",
+					"instruction": "USER root"
+				},
+				{
+					"created": "2022-05-18T12:22:44Z",
+					"instruction": "COPY dir:3fb2cd6c4462b2552bc23abd909e4376a9f2f9bf85e16faca5ca66a2e9bb8fcd in /opt/signatures "
+				},
+				{
+					"created": "2022-05-18T12:22:44Z",
+					"instruction": "COPY --chown=dotnet:0file:88391622e7a33c9e10af09a623b35f19ab2df0c3db5698b2355b4b6c3ae71d9c in /tmp/dragonfly-api-start.sh "
+				},
+				{
+					"created": "2022-05-18T12:22:44Z",
+					"instruction": "COPY --chown=dotnet:0file:d672443aac164979eef4ad77fe67a864489002fddb50064445fbcd577394f543 in ./ "
+				},
+				{
+					"created": "2022-05-18T12:22:44Z",
+					"instruction": "COPY --chown=dotnet:0dir:1ce8f3c08ff0e796e71e0bb8f34d68c930f5f92b0654370acbdb9446b8a6e931 in /health "
+				},
+				{
+					"created": "2022-05-18T12:22:45Z",
+					"instruction": "COPY --chown=dotnet:0dir:8c003f7894931f0505c882bdb6cca4cb74f0fcbfe3f503d98cc92c610e429ffd in ./ "
+				},
+				{
+					"created": "2022-05-18T12:23:09Z",
+					"instruction": "RUN rpm --import /opt/signatures/*     \u0026\u0026 dnf -y install https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm     \u0026\u0026 dnf install -y postgresql12.x86_64     \u0026\u0026 dnf clean all     \u0026\u0026 rm -rf /var/cache/dnf     \u0026\u0026 rm -rf /opt/signatures"
+				},
+				{
+					"created": "2022-05-18T12:23:11Z",
+					"instruction": "RUN usermod -a -G root dotnet     \u0026\u0026 chmod 775 /tmp/start.sh     \u0026\u0026 chmod 775 -R /app     \u0026\u0026 chmod 777 /health     \u0026\u0026 chmod 644 /health/*.*     \u0026\u0026 chmod 755 /health/*.sh"
+				},
+				{
+					"created": "2022-05-18T12:23:12Z",
+					"instruction": "USER 1000:0"
+				},
+				{
+					"created": "2022-05-18T12:23:12Z",
+					"instruction": "EXPOSE 5000"
+				},
+				{
+					"created": "2022-05-18T12:23:12Z",
+					"instruction": "HEALTHCHECK \u0026{[\"CMD-SHELL\" \"/health/health_check.sh || exit 1\"] \"30s\" \"10s\" \"30s\" '\\x00'}"
+				},
+				{
+					"created": "2022-05-18T12:23:12Z",
+					"instruction": "ENTRYPOINT [\"/tmp/start.sh\"]"
+				}
+			],
+			"scanTime": "2022-05-18T12:24:32.855444532Z",
+			"scanID": "6284e580d9600f8d0db159e2"
+		}
+	],
+	"consoleURL": "https://twistlock.test.net/#!/monitor/vulnerabilities/images/ci?search=sha256%3Ab1c0237ebd29860066656372da10d8d7da33b34715986f74b3d5a7e4ba060d1b"
+}
