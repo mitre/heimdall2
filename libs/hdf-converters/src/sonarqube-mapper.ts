@@ -204,6 +204,7 @@ function createSonarqubeMappings(
   branchName?: string,
   pullRequestID?: string
 ): MappedTransform<ExecJSON.Execution, ILookupPath> {
+  const scanDescriptionModifier = (branchName ? ` Branch ${branchName}` : "") + (pullRequestID ? ` Pull Request ${pullRequestID}` : "");
   return {
     platform: {
       name: 'Heimdall Tools',
@@ -218,9 +219,9 @@ function createSonarqubeMappings(
       {
         name: 'Sonarqube Scan',
         version: null,
-        title: `SonarQube Scan of Project ${projectName}${branchName ? ` Branch ${branchName}` : ""}${pullRequestID ? ` Pull Request ${pullRequestID}` : ""}`,
+        title: `SonarQube Scan of Project ${projectName}${scanDescriptionModifier}`,
         maintainer: null,
-        summary: `SonarQube Scan of Project ${projectName}${branchName ? ` Branch ${branchName}` : ""}${pullRequestID ? ` Pull Request ${pullRequestID}` : ""}`,
+        summary: `SonarQube Scan of Project ${projectName}${scanDescriptionModifier}`,
         license: null,
         copyright: null,
         copyright_email: null,
