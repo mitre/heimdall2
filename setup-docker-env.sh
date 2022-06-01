@@ -12,22 +12,20 @@ if ! grep -qF "DATABASE_PASSWORD" .env; then
 	echo "DATABASE_PASSWORD=$(openssl rand -hex 33)" >> .env
 fi
 
-if [ -f .env-prod ]; then
-	echo ".env-prod already exists, if you would like to regenerate your secrets, please delete this file and re-run the script."
-else
-	echo ".env-prod does not exist, creating..."
-  read -p 'Enter JWT_EXPIRE_TIME ex. 1d or 25m: ' expire
-  cat >.env-prod - << EOF
-JWT_SECRET=$(openssl rand -hex 64)
-JWT_EXPIRE_TIME=$expire
-EOF
+if ! grep -qF "JWT_EXPIRE_TIME" .env; then
+  	read -p 'Enter JWT_EXPIRE_TIME ex. 1d or 25m: ' expire
+	echo "JWT_EXPIRE_TIME=$expire" >> .env
 fi
 
-if ! grep -qF "API_KEY_SECRET" .env-prod; then
-	read -p ".env-prod does not contain API_KEY_SECRET, would you like to enable API Keys? [Y/n]" -n 1 -r
+if ! grep -qF "JWT_SECRET" .env; then
+	echo "JWT_SECRET=$(openssl rand -hex 64)" >> .env
+fi
+
+if ! grep -qF "API_KEY_SECRET" .env; then
+	read -p ".env does not contain API_KEY_SECRET, would you like to enable API Keys? [Y/n]" -n 1 -r
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
-		echo "API_KEY_SECRET=$(openssl rand -hex 33)" >> .env-prod
+		echo "API_KEY_SECRET=$(openssl rand -hex 33)" >> .env
 	fi
 fi
 
