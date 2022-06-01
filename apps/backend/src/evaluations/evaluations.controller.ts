@@ -8,12 +8,11 @@ import {
   Post,
   Put,
   Request,
-  UploadedFile,
   UploadedFiles,
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
-import {AnyFilesInterceptor, FilesInterceptor} from '@nestjs/platform-express';
+import {AnyFilesInterceptor} from '@nestjs/platform-express';
 import _ from 'lodash';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
@@ -86,7 +85,10 @@ export class EvaluationsController {
 
   @UseGuards(APIKeyOrJwtAuthGuard)
   @Post()
-  @UseInterceptors(AnyFilesInterceptor({limits: {files: 100}}), CreateEvaluationInterceptor)
+  @UseInterceptors(
+    AnyFilesInterceptor({limits: {files: 100}}),
+    CreateEvaluationInterceptor
+  )
   async create(
     @Body() createEvaluationDto: CreateEvaluationDto,
     @UploadedFiles() data: Express.Multer.File[],
@@ -111,7 +113,8 @@ export class EvaluationsController {
       const evaluation = await this.evaluationsService
         .create({
           // Only respect custom file names for single file uploads
-          filename: data.length > 1 ? file.originalname : createEvaluationDto.filename,
+          filename:
+            data.length > 1 ? file.originalname : createEvaluationDto.filename, // lgtm [js/type-confusion-through-parameter-tampering]
           evaluationTags: createEvaluationDto.evaluationTags || [],
           public: createEvaluationDto.public,
           data: serializedDta,
@@ -126,14 +129,16 @@ export class EvaluationsController {
       const createdDto: EvaluationDto = new EvaluationDto(
         evaluation,
         true,
-        `${this.configService.get('EXTERNAL_URL') || ''}/results/${evaluation.id}`
+        `${this.configService.get('EXTERNAL_URL') || ''}/results/${
+          evaluation.id
+        }`
       );
       return _.omit(createdDto, 'data');
-    })
+    });
     if (uploadedFiles.length === 1) {
-      return uploadedFiles[0]
+      return uploadedFiles[0];
     }
-    return Promise.all(uploadedFiles)
+    return Promise.all(uploadedFiles);
   }
 
   @UseGuards(JwtAuthGuard)
