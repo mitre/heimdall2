@@ -240,10 +240,15 @@ describe('EvaluationsController', () => {
     it('should allow a user to create an evaluation', async () => {
       const evaluation = await evaluationsController.create(
         EVALUATION_WITH_TAGS_1,
-        mockFile,
+        [mockFile],
         {user: user}
       );
       expect(evaluation).toBeDefined();
+      if (Array.isArray(evaluation)) {
+        throw new Error(
+          'Returned evaluation for one file upload should not be an array'
+        );
+      }
       expect(evaluation.evaluationTags.length).toEqual(1);
       // Creating an evaluation should return a DTO without data.
       expect(evaluation.data).not.toBeDefined();
@@ -252,10 +257,15 @@ describe('EvaluationsController', () => {
     it('should create an evaluation without tags', async () => {
       const evaluation = await evaluationsController.create(
         CREATE_EVALUATION_DTO_WITHOUT_TAGS,
-        mockFile,
+        [mockFile],
         {user: user}
       );
       expect(evaluation).toBeDefined();
+      if (Array.isArray(evaluation)) {
+        throw new Error(
+          'Returned evaluation for one file upload should not be an array'
+        );
+      }
       expect(evaluation.evaluationTags.length).toEqual(0);
     });
   });
