@@ -98,12 +98,14 @@ export class SonarQubeResults {
   projectId = '';
   userToken = '';
   branchName? = "";
+  pullRequestID? = "";
   customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
-  constructor(sonarQubeHost: string, projectId: string, userToken: string, branchName?: string) {
+  constructor(sonarQubeHost: string, projectId: string, userToken: string, branchName?: string, pullRequestID?: string ) {
     this.sonarQubeHost = sonarQubeHost;
     this.projectId = projectId;
     this.userToken = userToken;
     this.branchName = branchName;
+    this.pullRequestID = pullRequestID;
   }
 
   async toHdf(): Promise<ExecJSON.Execution> {
@@ -122,8 +124,9 @@ export class SonarQubeResults {
             componentKeys: this.projectId,
             types: 'VULNERABILITY',
             p: page,
-            ...(this.branchName ? { branch: this.branchName } : {})
-            //this is optional, if not specified sonarqube will default to the
+            ...(this.branchName ? { branch: this.branchName } : {}),
+            ...(this.pullRequestID ? { pullRequest: this.pullRequestID } : {})
+            //these are optional, if not specified sonarqube will default to the
             // default branch from git.
           }
         })

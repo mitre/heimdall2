@@ -43,3 +43,25 @@ describe('sonarqube_mapper_specify_branch', () => {
     );
   });
 });
+
+describe('sonarqube_mapper_specify_pull_request', () => {
+  it('Successfully pulls SonarQube vulnerabilities from a particular PullRequest', async () => {
+    const mapper = new SonarQubeResults(
+      'http://127.0.0.1:3001',
+      'libc_unix',
+      'NotARealKey',
+      "",
+      "123"
+    );
+    const result: ExecJSON.Execution = await mapper.toHdf();
+    expect(omitVersions(result)).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync('sample_jsons/sonarqube_mapper/sonarqube-branch-hdf.json', {
+            encoding: 'utf-8'
+          })
+        )
+      )
+    );
+  });
+});
