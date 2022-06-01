@@ -3,10 +3,12 @@ import {ExecJSON} from 'inspecjs';
 import {SonarQubeResults} from '../../../src/sonarqube-mapper';
 import {omitVersions} from '../../utils';
 
+const testURL = 'http://127.0.0.1:3001';
+
 describe('sonarqube_mapper', () => {
   it('Successfully pulls SonarQube vulnerabilities', async () => {
     const mapper = new SonarQubeResults(
-      'http://127.0.0.1:3001',
+      testURL,
       'xss',
       'NotARealKey'
     );
@@ -26,7 +28,7 @@ describe('sonarqube_mapper', () => {
 describe('sonarqube_mapper_specify_branch', () => {
   it('Successfully pulls SonarQube vulnerabilities from a particular branch', async () => {
     const mapper = new SonarQubeResults(
-      'http://127.0.0.1:3001',
+      testURL,
       'libc_unix',
       'NotARealKey',
       "release"
@@ -47,7 +49,7 @@ describe('sonarqube_mapper_specify_branch', () => {
 describe('sonarqube_mapper_specify_pull_request', () => {
   it('Successfully pulls SonarQube vulnerabilities from a particular PullRequest', async () => {
     const mapper = new SonarQubeResults(
-      'http://127.0.0.1:3001',
+      testURL,
       'libc_unix',
       'NotARealKey',
       "",
