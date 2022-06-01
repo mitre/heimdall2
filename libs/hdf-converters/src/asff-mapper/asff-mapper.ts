@@ -62,7 +62,7 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
       _.get(finding, 'FindingProviderFields.Types') as string[],
       (type: string) => {
         const delimitedType = type.split('/');
-        const version = delimitedType[delimitedType.length-1].split('-')[0];
+        const version = delimitedType[delimitedType.length - 1].split('-')[0];
         const [major, minor, patch] = version.split('.');
         if (
           parseInt(major) > 1 &&
