@@ -23,9 +23,6 @@ describe('sonarqube_mapper', () => {
       )
     );
   });
-});
-
-describe('sonarqube_mapper_specify_branch', () => {
   it('Successfully pulls SonarQube vulnerabilities from a particular branch', async () => {
     const mapper = new SonarQubeResults(
       testURL,
@@ -44,9 +41,6 @@ describe('sonarqube_mapper_specify_branch', () => {
       )
     );
   });
-});
-
-describe('sonarqube_mapper_specify_pull_request', () => {
   it('Successfully pulls SonarQube vulnerabilities from a particular PullRequest', async () => {
     const mapper = new SonarQubeResults(
       testURL,
@@ -67,3 +61,4 @@ describe('sonarqube_mapper_specify_pull_request', () => {
     );
   });
 });
+
