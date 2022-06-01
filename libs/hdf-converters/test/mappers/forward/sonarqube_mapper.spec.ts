@@ -7,17 +7,13 @@ const testURL = 'http://127.0.0.1:3001';
 
 describe('sonarqube_mapper', () => {
   it('Successfully pulls SonarQube vulnerabilities', async () => {
-    const mapper = new SonarQubeResults(
-      testURL,
-      'xss',
-      'NotARealKey'
-    );
+    const mapper = new SonarQubeResults(testURL, 'xss', 'NotARealKey');
     const result: ExecJSON.Execution = await mapper.toHdf();
     expect(omitVersions(result)).toEqual(
       omitVersions(
         JSON.parse(
           fs.readFileSync('sample_jsons/sonarqube_mapper/sonarqube-hdf.json', {
-            encoding: 'utf-8'
+            encoding: 'utf-8',
           })
         )
       )
@@ -28,15 +24,18 @@ describe('sonarqube_mapper', () => {
       testURL,
       'libc_unix',
       'NotARealKey',
-      "release"
+      'release'
     );
     const result: ExecJSON.Execution = await mapper.toHdf();
     expect(omitVersions(result)).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/sonarqube_mapper/sonarqube-branch-hdf.json', {
-            encoding: 'utf-8'
-          })
+          fs.readFileSync(
+            'sample_jsons/sonarqube_mapper/sonarqube-branch-hdf.json',
+            {
+              encoding: 'utf-8',
+            }
+          )
         )
       )
     );
@@ -46,19 +45,21 @@ describe('sonarqube_mapper', () => {
       testURL,
       'libc_unix',
       'NotARealKey',
-      "",
-      "123"
+      '',
+      '123'
     );
     const result: ExecJSON.Execution = await mapper.toHdf();
     expect(omitVersions(result)).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/sonarqube_mapper/sonarqube-pull-request-hdf.json', {
-            encoding: 'utf-8'
-          })
+          fs.readFileSync(
+            'sample_jsons/sonarqube_mapper/sonarqube-pull-request-hdf.json',
+            {
+              encoding: 'utf-8',
+            }
+          )
         )
       )
     );
   });
 });
-

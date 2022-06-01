@@ -1,14 +1,14 @@
-import axios, {AxiosResponse} from 'axios';
-import {ExecJSON} from 'inspecjs';
-import {version as HeimdallToolsVersion} from '../package.json';
+import axios, { AxiosResponse } from 'axios';
+import { ExecJSON } from 'inspecjs';
+import { version as HeimdallToolsVersion } from '../package.json';
 import {
   BaseConverter,
   ILookupPath,
   impactMapping,
   MappedTransform
 } from './base-converter';
-import {CweNistMapping} from './mappings/CweNistMapping';
-import {OwaspNistMapping} from './mappings/OwaspNistMapping';
+import { CweNistMapping } from './mappings/CweNistMapping';
+import { OwaspNistMapping } from './mappings/OwaspNistMapping';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export type Issue = {
@@ -62,7 +62,7 @@ const OWASP_NIST_MAPPING = new OwaspNistMapping();
 function formatCodeDesc(vulnerability: unknown): string {
   const typedVulnerability = vulnerability as {
     component: string;
-    textRange: {startLine: string; endLine: string};
+    textRange: { startLine: string; endLine: string };
     snip: string;
   };
   if (typedVulnerability.textRange) {
@@ -97,10 +97,16 @@ export class SonarQubeResults {
   sonarQubeHost = '';
   projectId = '';
   userToken = '';
-  branchName? = "";
-  pullRequestID? = "";
+  branchName?= '';
+  pullRequestID?= '';
   customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
-  constructor(sonarQubeHost: string, projectId: string, userToken: string, branchName?: string, pullRequestID?: string ) {
+  constructor(
+    sonarQubeHost: string,
+    projectId: string,
+    userToken: string,
+    branchName?: string,
+    pullRequestID?: string
+  ) {
     this.sonarQubeHost = sonarQubeHost;
     this.projectId = projectId;
     this.userToken = userToken;
@@ -119,7 +125,7 @@ export class SonarQubeResults {
     while (paging) {
       await axios
         .get<IssueData>(`${this.sonarQubeHost}/api/issues/search`, {
-          auth: {username: this.userToken, password: ''},
+          auth: { username: this.userToken, password: '' },
           params: {
             componentKeys: this.projectId,
             types: 'VULNERABILITY',
@@ -130,7 +136,7 @@ export class SonarQubeResults {
             // default branch from git.
           }
         })
-        .then(({data}) => {
+        .then(({ data }) => {
           if (data.issues) {
             this.data.issues.push(...data.issues);
           }
@@ -143,7 +149,7 @@ export class SonarQubeResults {
     this.data.issues?.forEach((issue) => {
       requests.push(
         axios.get(`${this.sonarQubeHost}/api/sources/raw`, {
-          auth: {username: this.userToken, password: ''},
+          auth: { username: this.userToken, password: '' },
           params: {
             key: issue.component
           }
@@ -171,7 +177,7 @@ export class SonarQubeResults {
     this.data.issues?.forEach((issue) => {
       requests.push(
         axios.get(`${this.sonarQubeHost}/api/rules/show`, {
-          auth: {username: this.userToken, password: ''},
+          auth: { username: this.userToken, password: '' },
           params: {
             key: issue.rule
           }
@@ -188,7 +194,11 @@ export class SonarQubeResults {
       })
     );
 
-    const result = new SonarQubeMapper(this.data, this.projectId, this.branchName, this.pullRequestID);
+    const result = new SonarQubeMapper(
+      this.data,
+      this.projectId,
+      this.branchName,
+      this.pullRequestID);
     return result.toHdf();
   }
 
@@ -204,7 +214,9 @@ function createSonarqubeMappings(
   branchName?: string,
   pullRequestID?: string
 ): MappedTransform<ExecJSON.Execution, ILookupPath> {
-  const scanDescriptionModifier = (branchName ? ` Branch ${branchName}` : "") + (pullRequestID ? ` Pull Request ${pullRequestID}` : "");
+  const scanDescriptionModifier = (
+    branchName ? ` Branch ${branchName}` : "")
+    + (pullRequestID ? ` Pull Request ${pullRequestID}` : "");
   return {
     platform: {
       name: 'Heimdall Tools',
@@ -234,24 +246,24 @@ function createSonarqubeMappings(
           {
             path: 'issues',
             key: 'id',
-            desc: {path: 'summary'},
+            desc: { path: 'summary' },
             descriptions: [],
             refs: [],
             source_location: {},
-            id: {path: 'rule'},
-            title: {path: 'name'},
+            id: { path: 'rule' },
+            title: { path: 'name' },
             impact: {
               path: 'severity',
               transformer: impactMapping(IMPACT_MAPPING)
             },
             code: null,
             tags: {
-              nist: {transformer: parseNistTags}
+              nist: { transformer: parseNistTags }
             },
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
-                code_desc: {transformer: formatCodeDesc},
+                code_desc: { transformer: formatCodeDesc },
                 run_time: 0,
                 start_time: ''
               }
@@ -268,9 +280,16 @@ export class SonarQubeMapper extends BaseConverter {
   projectName = '';
   branchName = '';
   pullRequestID = '';
-  constructor(issuesJSON: IssueData, projectName: string, branchName?: string, pullRequestID?: string) {
+  constructor(
+    issuesJSON: IssueData,
+    projectName: string,
+    branchName?: string,
+    pullRequestID?: string
+  ) {
     super(issuesJSON as Record<string, any>);
-    this.setMappings(createSonarqubeMappings(projectName, branchName, pullRequestID));
+    this.setMappings(createSonarqubeMappings(
+      projectName, branchName, pullRequestID)
+    );
   }
 
   setMappings(
