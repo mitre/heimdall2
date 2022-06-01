@@ -118,7 +118,6 @@ export function addAttestationToHDF(
       attestations.forEach((attestation) => {
         if (attestation.control_id.toLowerCase() === control.id.toLowerCase()) {
           control.results.push(convertAttestationToSegment(attestation));
-          return control;
         }
       });
       return control;
