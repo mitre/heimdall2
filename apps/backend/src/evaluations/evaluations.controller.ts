@@ -8,11 +8,11 @@ import {
   Post,
   Put,
   Request,
-  UploadedFile,
+  UploadedFiles,
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
-import {FileInterceptor} from '@nestjs/platform-express';
+import {AnyFilesInterceptor} from '@nestjs/platform-express';
 import _ from 'lodash';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
@@ -85,47 +85,60 @@ export class EvaluationsController {
 
   @UseGuards(APIKeyOrJwtAuthGuard)
   @Post()
-  @UseInterceptors(FileInterceptor('data'), CreateEvaluationInterceptor)
+  @UseInterceptors(
+    AnyFilesInterceptor({limits: {files: 100}}),
+    CreateEvaluationInterceptor
+  )
   async create(
     @Body() createEvaluationDto: CreateEvaluationDto,
-    @UploadedFile() data: Express.Multer.File,
+    @UploadedFiles() data: Express.Multer.File[],
     @Request() request: {user: User}
-  ): Promise<EvaluationDto> {
-    let serializedDta: Record<string, unknown>;
-    try {
-      serializedDta = JSON.parse(data.buffer.toString('utf8'));
-    } catch {
-      serializedDta = {originalResultsData: data.buffer.toString('utf8')};
-    }
+  ): Promise<EvaluationDto | EvaluationDto[]> {
+    const uploadedFiles = data.map(async (file) => {
+      let serializedDta: Record<string, unknown>;
+      try {
+        serializedDta = JSON.parse(file.buffer.toString('utf8'));
+      } catch {
+        serializedDta = {originalResultsData: file.buffer.toString('utf8')};
+      }
 
-    let groups: Group[] = createEvaluationDto.groups
-      ? await this.groupsService.findByIds(createEvaluationDto.groups)
-      : [];
-    // Make sure the user can add evaluations to each group
-    const abac = this.authz.abac.createForUser(request.user);
-    groups = groups.filter((group) => {
-      return abac.can(Action.AddEvaluation, group);
-    });
-    const evaluation = await this.evaluationsService
-      .create({
-        filename: createEvaluationDto.filename,
-        evaluationTags: createEvaluationDto.evaluationTags || [],
-        public: createEvaluationDto.public,
-        data: serializedDta,
-        userId: request.user.id // Do not include userId on the DTO so we can set it automatically to the uploader's id.
-      })
-      .then((createdEvaluation) => {
-        groups.forEach((group) =>
-          this.groupsService.addEvaluationToGroup(group, createdEvaluation)
-        );
-        return createdEvaluation;
+      let groups: Group[] = createEvaluationDto.groups
+        ? await this.groupsService.findByIds(createEvaluationDto.groups)
+        : [];
+      // Make sure the user can add evaluations to each group
+      const abac = this.authz.abac.createForUser(request.user);
+      groups = groups.filter((group) => {
+        return abac.can(Action.AddEvaluation, group);
       });
-    const createdDto: EvaluationDto = new EvaluationDto(
-      evaluation,
-      true,
-      `${this.configService.get('EXTERNAL_URL') || ''}/results/${evaluation.id}`
-    );
-    return _.omit(createdDto, 'data');
+      const evaluation = await this.evaluationsService
+        .create({
+          // Only respect custom file names for single file uploads
+          filename:
+            data.length > 1 ? file.originalname : createEvaluationDto.filename, // lgtm [js/type-confusion-through-parameter-tampering]
+          evaluationTags: createEvaluationDto.evaluationTags || [],
+          public: createEvaluationDto.public,
+          data: serializedDta,
+          userId: request.user.id // Do not include userId on the DTO so we can set it automatically to the uploader's id.
+        })
+        .then((createdEvaluation) => {
+          groups.forEach((group) =>
+            this.groupsService.addEvaluationToGroup(group, createdEvaluation)
+          );
+          return createdEvaluation;
+        });
+      const createdDto: EvaluationDto = new EvaluationDto(
+        evaluation,
+        true,
+        `${this.configService.get('EXTERNAL_URL') || ''}/results/${
+          evaluation.id
+        }`
+      );
+      return _.omit(createdDto, 'data');
+    });
+    if (uploadedFiles.length === 1) {
+      return uploadedFiles[0];
+    }
+    return Promise.all(uploadedFiles);
   }
 
   @UseGuards(JwtAuthGuard)
