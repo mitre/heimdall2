@@ -188,7 +188,7 @@ export class SonarQubeResults {
       })
     );
 
-    const result = new SonarQubeMapper(this.data, this.projectId);
+    const result = new SonarQubeMapper(this.data, this.projectId, this.branchName, this.pullRequestID);
     return result.toHdf();
   }
 
@@ -200,7 +200,9 @@ export class SonarQubeResults {
 }
 
 function createSonarqubeMappings(
-  projectName: string
+  projectName: string,
+  branchName?: string,
+  pullRequestID?: string
 ): MappedTransform<ExecJSON.Execution, ILookupPath> {
   return {
     platform: {
@@ -216,9 +218,9 @@ function createSonarqubeMappings(
       {
         name: 'Sonarqube Scan',
         version: null,
-        title: `SonarQube Scan of Project ${projectName}`,
+        title: `SonarQube Scan of Project ${projectName}${branchName ? ` Branch ${branchName}` : ""}${pullRequestID ? ` Pull Request ${pullRequestID}` : ""}`,
         maintainer: null,
-        summary: `SonarQube Scan of Project ${projectName}`,
+        summary: `SonarQube Scan of Project ${projectName}${branchName ? ` Branch ${branchName}` : ""}${pullRequestID ? ` Pull Request ${pullRequestID}` : ""}`,
         license: null,
         copyright: null,
         copyright_email: null,
@@ -263,9 +265,11 @@ function createSonarqubeMappings(
 
 export class SonarQubeMapper extends BaseConverter {
   projectName = '';
-  constructor(issuesJSON: IssueData, projectName: string) {
+  branchName = '';
+  pullRequestID = '';
+  constructor(issuesJSON: IssueData, projectName: string, branchName?: string, pullRequestID?: string) {
     super(issuesJSON as Record<string, any>);
-    this.setMappings(createSonarqubeMappings(projectName));
+    this.setMappings(createSonarqubeMappings(projectName, branchName, pullRequestID));
   }
 
   setMappings(

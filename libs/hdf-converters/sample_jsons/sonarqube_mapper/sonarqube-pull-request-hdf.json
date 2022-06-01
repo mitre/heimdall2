@@ -10,9 +10,9 @@
         {
             "name": "Sonarqube Scan",
             "version": null,
-            "title": "SonarQube Scan of Project libc_unix Branch release",
+            "title": "SonarQube Scan of Project libc_unix Pull Request 123",
             "maintainer": null,
-            "summary": "SonarQube Scan of Project libc_unix Branch release",
+            "summary": "SonarQube Scan of Project libc_unix Pull Request 123",
             "license": null,
             "copyright": null,
             "copyright_email": null,

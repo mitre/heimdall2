@@ -59,7 +59,7 @@ describe('sonarqube_mapper_specify_pull_request', () => {
     expect(omitVersions(result)).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/sonarqube_mapper/sonarqube-branch-hdf.json', {
+          fs.readFileSync('sample_jsons/sonarqube_mapper/sonarqube-pull-request-hdf.json', {
             encoding: 'utf-8'
           })
         )
