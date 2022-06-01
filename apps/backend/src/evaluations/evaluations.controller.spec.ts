@@ -38,6 +38,12 @@ import {EvaluationsService} from './evaluations.service';
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 //@ts-ignore
 const mockFile: Express.Multer.File = {
+  originalname: 'abc.json',
+  buffer: Buffer.from('{}')
+};
+//@ts-ignore
+const secondMockFile: Express.Multer.File = {
+  originalname: 'cda.json',
   buffer: Buffer.from('{}')
 };
 /* eslint-enable @typescript-eslint/ban-ts-comment */
@@ -267,6 +273,25 @@ describe('EvaluationsController', () => {
         );
       }
       expect(evaluation.evaluationTags.length).toEqual(0);
+    });
+
+    it('should accept multiple evaluations', async () => {
+      const evaluations = await evaluationsController.create(
+        EVALUATION_WITH_TAGS_1,
+        [mockFile, secondMockFile],
+        {user: user}
+      );
+      expect(evaluations).toBeDefined();
+      if (!Array.isArray(evaluations)) {
+        throw new Error(
+          'Returned evaluation for multiple file upload should be an array'
+        );
+      }
+      expect(evaluations.length).toEqual(2);
+      expect(evaluations[0].filename).toEqual(mockFile.originalname);
+      expect(evaluations[1].filename).toEqual(secondMockFile.originalname);
+      // Creating an evaluation should return a DTO without data.
+      expect(evaluations[0].data).not.toBeDefined();
     });
   });
 
