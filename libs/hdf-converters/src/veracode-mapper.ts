@@ -16,7 +16,7 @@ const REPORT_SEVERITY = 'detailedreport.severity['
 const SCA_CVES = 'detailedreport.software_composition_analysis.cves['
 const CATEGORY = '].category['
 const CWE_NIST_MAPPING = new CweNistMapping();
-const DEFAULT_NIST_TAG = ['Si-2', 'RA-5'];
+const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['5', 0.9],
   ['4', 0.7],
