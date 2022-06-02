@@ -130,8 +130,8 @@ export class SonarQubeResults {
             componentKeys: this.projectId,
             types: 'VULNERABILITY',
             p: page,
-            ...(this.branchName ? {branch: this.branchName} : {}),
-            ...(this.pullRequestID ? {pullRequest: this.pullRequestID} : {})
+            ...(this.branchName && {branch: this.branchName}),
+            ...(this.pullRequestID && {pullRequest: this.pullRequestID})
             //these are optional, if not specified sonarqube will default to the
             // default branch from git.
           }
@@ -288,14 +288,8 @@ export class SonarQubeMapper extends BaseConverter {
     pullRequestID?: string
   ) {
     super(issuesJSON as Record<string, any>);
-    this.setMappings(
+    super.setMappings(
       createSonarqubeMappings(projectName, branchName, pullRequestID)
     );
-  }
-
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
   }
 }
