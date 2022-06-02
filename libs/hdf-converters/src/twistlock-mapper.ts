@@ -76,7 +76,7 @@ export class TwistlockMapper extends BaseConverter {
     },
     profiles: [
       {
-        path: 'results[0]',
+        path: 'results',
         name: 'Twistlock Scan',
         title: {
           transformer: (data: Record<string, unknown>): string => {
@@ -110,7 +110,7 @@ export class TwistlockMapper extends BaseConverter {
         //consider compliance controls
         controls: [
           {
-            path: 'results[0].vulnerabilities',
+            path: 'results.vulnerabilities',
             key: 'id',
             tags: {
               cveid: {path: 'id', transformer: parseIdentifier}
