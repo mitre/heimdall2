@@ -127,12 +127,12 @@ export const fileTypeFingerprints = {
     'vulnerabilities',
     'vulnerabilities[0].identifiers'
   ],
-  /*twistlock: [
-    'complianceDistribution', 
-    'vulnerabilityDistribution',
-    'collections',
-    'digest'
-  ],*/
+  //twistlock: [
+  //  'complianceDistribution', 
+  //  'vulnerabilityDistribution',
+  //  'collections',
+  //  'digest'
+  //],
   zap: ['@generated', '@version', 'site']
 };
 
