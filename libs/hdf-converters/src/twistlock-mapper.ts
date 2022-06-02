@@ -68,7 +68,7 @@ export class TwistlockMapper extends BaseConverter {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
-      target_id: {path: 'results[0].name'}
+      target_id: {path: 'results.name'}
     },
     version: HeimdallToolsVersion,
     statistics: {
@@ -76,14 +76,14 @@ export class TwistlockMapper extends BaseConverter {
     },
     profiles: [
       {
-        path: 'results'[0],
+        path: 'results',
         name: 'Twistlock Scan',
         title: {
           transformer: (data: Record<string, unknown>): string => {
             const projectName = _.has(data, 'collections')
               ? `${_.get(data, 'collections[1]')}`
-              : 'N/A';
-            return `Twistlock Project: ${projectName} Twistlock Path: ${_.get(data, 'path')}`;
+                    : 'N/A';
+            return `Twistlock Project: ${projectName}`;
           }
         },
         maintainer: null,
@@ -147,7 +147,7 @@ export class TwistlockMapper extends BaseConverter {
     passthrough: {
       twistlock_metadata: {
         transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-          return _.omit(data, ['results.vulnerabilities, results.collections']);
+          return _.omit(data, ['vulnerabilities, collections']);
         }
       }
     }
