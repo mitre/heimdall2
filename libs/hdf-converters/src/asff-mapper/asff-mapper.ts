@@ -61,7 +61,8 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
     _.some(
       _.get(finding, 'FindingProviderFields.Types') as string[],
       (type: string) => {
-        const version = type.split('/')[2].split('-')[0];
+        const delimitedType = type.split('/');
+        const version = delimitedType[delimitedType.length - 1].split('-')[0];
         const [major, minor, patch] = version.split('.');
         if (
           parseInt(major) > 1 &&
@@ -303,7 +304,7 @@ export class ASFFMapper extends BaseConverter {
             .split(':')
             .slice(-1)[0]
             .split('/');
-          const defaultTargetId = `${productInfo[1]} | ${productInfo[2]}`;
+          const defaultTargetId = `${productInfo[1]} - ${productInfo[2]}`;
           return externalProductHandler(
             this,
             whichSpecialCase(
@@ -451,9 +452,7 @@ export class ASFFMapper extends BaseConverter {
                 ): Record<string, unknown> => {
                   return {
                     ...(_.has(finding, 'SourceUrl') && {
-                      url: {
-                        path: 'SourceUrl'
-                      }
+                      url: _.get(finding, 'SourceUrl')
                     })
                   };
                 }
@@ -668,7 +667,7 @@ export class ASFFResults {
         .split(':')
         .slice(-1)[0]
         .split('/');
-      const defaultFilename = `${productInfo[1]} | ${productInfo[2]}.json`;
+      const defaultFilename = `${productInfo[1]} - ${productInfo[2]}.json`;
       return externalProductHandler(
         this,
         whichSpecialCase(finding),
