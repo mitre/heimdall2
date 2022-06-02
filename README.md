@@ -233,10 +233,19 @@ curl -F "data=@<Path to first evaluation File>" -F "data=@<Path to second evalua
 
 If you would like to change Heimdall to your needs, Heimdall has 'Development Mode' you can use, where if you make changes to the code, the app will automatically rebuild itself and use those changes. Please note that you should *not* run development mode when deploying Heimdall for general usage. To get started on a Debian-based distribution, follow these steps:
 
-1. Install system dependencies:
+1. Install system dependencies with your system's package manager.
+
+   Debian/Ubuntu:
 
    - ```bash
-     sudo apt install postgresql nodejs nano git
+     sudo apt install postgresql nodejs=16 nano git
+     sudo npm install -g yarn
+     ```
+     
+   OSX:
+   
+   - ```bash
+     brew install postgresql nodejs@16 nano git
      sudo npm install -g yarn
      ```
 
