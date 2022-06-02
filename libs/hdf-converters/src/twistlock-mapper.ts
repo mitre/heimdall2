@@ -76,7 +76,7 @@ export class TwistlockMapper extends BaseConverter {
     },
     profiles: [
       {
-        path: 'results[0]',
+        path: 'results'[0],
         name: 'Twistlock Scan',
         title: {
           transformer: (data: Record<string, unknown>): string => {
@@ -147,7 +147,7 @@ export class TwistlockMapper extends BaseConverter {
     passthrough: {
       twistlock_metadata: {
         transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-          return _.omit(data, ['results[0].vulnerabilities, results[0].collections']);
+          return _.omit(data, ['results.vulnerabilities, results.collections']);
         }
       }
     }
