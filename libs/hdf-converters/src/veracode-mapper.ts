@@ -95,7 +95,7 @@ function cweloop(input: Record<string, unknown>, index: integer): string {
   const cwename = `cwe[${index}].cwename`;
   cwe += `${_.get(input, cwename)}`;
   categories.forEach(function (value) {
-    if (`${_.has(input, `cwe[${index}].${value}`)}`) {
+    if (_.has(input, `cwe[${index}].${value}`)) {
       cwe += `; ${value}: ` + `${_.get(input, `cwe[${index}].${value}`)}`;
     }
   });
@@ -158,7 +158,7 @@ function stringifyCodeDesc(input: Record<string, unknown>): string {
   let flawDesc =
     'Sourcefile Path: ' + `${_.get(input, 'sourcefilepath')}` + ';';
   categories.forEach(function (value) {
-    if (`${_.has(input, value[1])}`) {
+    if (_.has(input, value[1])) {
       flawDesc += `${value[0]}: ` + `${_.get(input, value[1])}` + ';';
     }
   });
@@ -187,7 +187,7 @@ function SCAstringify(input: Record<string, unknown>): string {
   ];
   let flawDesc = 'component_id: ' + `${_.get(input, 'component_id')}` + ';';
   categories.forEach(function (value) {
-    if (`${_.has(input, value)}`) {
+    if (_.has(input, value)) {
       flawDesc += `${value}: ` + `${_.get(input, value)}` + ';';
     }
   });
