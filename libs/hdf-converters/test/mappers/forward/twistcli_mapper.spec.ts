@@ -1,13 +1,13 @@
 import fs from 'fs';
-import {SnykMapper} from '../../../src/snyk-mapper';
+import {TwistlockMapper} from '../../../src/twistlock-mapper';
 import {omitVersions} from '../../utils';
 
-describe('snyk_mapper', () => {
-  it('Successfully converts Snyk cli targeted at a local/cloned repository data', () => {
-    const mapper = new SnykMapper(
+describe('twistlock_mapper', () => {
+  it('Successfully converts Twist cli targeted at a local/cloned repository data', () => {
+    const mapper = new TwistlockMapper(
       JSON.parse(
         fs.readFileSync(
-          'sample_jsons/snyk_mapper/sample_input_report/nodejs-goof-local.json',
+          'sample_jsons/twistlock_mapper/sample_input_report/twistlock-twistcli-sample-1.json',
           {encoding: 'utf-8'}
         )
       )
@@ -46,5 +46,5 @@ describe('snyk_mapper', () => {
   //       )
   //     )
   //   );
-  // });
+   });
 });

@@ -127,7 +127,12 @@ export const fileTypeFingerprints = {
     'vulnerabilities',
     'vulnerabilities[0].identifiers'
   ],
-  Twistlock: ['results.id', 'results.vulnerabilities[0].id'],
+  twistlock: [
+    'complianceDistribution', 
+    'vulnerabilityDistribution',
+    'collections',
+    'digest'
+  ],
   zap: ['@generated', '@version', 'site']
 };
 
@@ -253,7 +258,7 @@ export class InspecIntake extends VuexModule {
         return new SarifMapper(convertOptions.data).toHdf();
       case 'snyk':
         return new SnykResults(convertOptions.data).toHdf();
-      case 'Twistlock':
+      case 'twistlock':
         return new TwistlockResults(convertOptions.data).toHdf();
       case 'nessus':
         return new NessusResults(convertOptions.data).toHdf();

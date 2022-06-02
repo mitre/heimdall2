@@ -32,11 +32,12 @@ function parseIdentifier(identifiers: unknown[] | unknown): string[] {
   }
 }
 
+//clean up
 export class TwistlockResults {
   data: Record<string, unknown>;
   customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
-  constructor(TwistlockJson: string) {
-    this.data = JSON.parse(TwistlockJson);
+  constructor(twistlockJson: string) {
+    this.data = JSON.parse(twistlockJson);
   }
 
   toHdf(): ExecJSON.Execution[] | ExecJSON.Execution {
@@ -58,11 +59,6 @@ export class TwistlockResults {
       return result.toHdf();
     }
   }
-  setMappings(
-    customMapping: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    this.customMapping = customMapping;
-  }
 }
 
 export class TwistlockMapper extends BaseConverter {
@@ -81,21 +77,27 @@ export class TwistlockMapper extends BaseConverter {
     },
     profiles: [
       {
+        path: 'results',
         name: 'Twistlock Scan',
         title: {
           transformer: (data: Record<string, unknown>): string => {
-            const projectName = _.has(data, 'results.name')
-              ? `Twistlock Project: ${_.get(data, 'results.name')} `
-              : '';
-            return `${projectName}Twistlock Path: ${_.get(data, 'path')}`;
+            const projectName = _.has(data, 'collections')
+              ? `${_.get(data, 'collections[1]')}`
+              : 'N/A';
+            return `Twistlock Project: ${projectName} Twistlock Path: ${_.get(data, 'path')}`;
           }
         },
         maintainer: null,
         summary: {
           transformer: (data: Record<string, unknown>): string => {
-            return _.has(data, 'vulnerabilityDistribution')
-              ? `Twistlock Summary: ${JSON.stringify(_.get(data, 'vulnerabilityDistribution'), null, 2)} `
-              : '';
+            const vulnerabilityTotal = _.has(data, 'vulnerabilityDistribution')
+              ? `${JSON.stringify(_.get(data, 'vulnerabilityDistribution.total'))}`
+              : 'N/A';
+            const complianceTotal = _.has(data, 'complianceDistribution')
+              ? `${JSON.stringify(_.get(data, 'complianceDistribution.total'))}`
+              : 'N/A';
+            return `Package Vulnerability Summary: ${vulnerabilityTotal} Application Compliance Issue Total: ${complianceTotal}`;
+          }
         },
         license: null,
         copyright: null,
@@ -105,17 +107,20 @@ export class TwistlockMapper extends BaseConverter {
         depends: [],
         groups: [],
         status: 'loaded',
+        //naive parsing
+        //consider compliance controls
         controls: [
           {
             path: 'results.vulnerabilities',
             key: 'id',
             tags: {
-              cveid: {path: 'id', transformer: parseIdentifier},
+              cveid: {path: 'id', transformer: parseIdentifier}
             },
             descriptions: [],
             refs: [],
             source_location: {},
-            title: {path: 'packageName'},
+            //need proper cve title call
+            title: {path: 'id'},
             id: {path: 'id'},
             desc: {path: 'description'},
             impact: {
@@ -132,7 +137,7 @@ export class TwistlockMapper extends BaseConverter {
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: '',
                 run_time: 0,
-                start_time: ''
+                start_time: {path: 'discoveredDate'}
               }
             ]
           }
@@ -141,21 +146,14 @@ export class TwistlockMapper extends BaseConverter {
       }
     ],
     passthrough: {
-      Twistlock_metadata: {
-        transformer: (
-          data: Record<string, unknown>
-        ): Record<string, unknown> => {
-          return _.omit(data, ['vulnerabilities']);
+      twistlock_metadata: {
+        transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+          return _.omit(data, ['results.vulnerabilities, results.collections']);
         }
       }
     }
   };
-  constructor(TwistlockJson: Record<string, unknown>) {
-    super(TwistlockJson);
-  }
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
+  constructor(twistlockJson: Record<string, unknown>) {
+    super(twistlockJson);
   }
 }
