@@ -68,7 +68,7 @@ export class TwistlockMapper extends BaseConverter {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
-      target_id: {path: 'results.name'}
+      target_id: {path: 'results[0].name'}
     },
     version: HeimdallToolsVersion,
     statistics: {
@@ -76,7 +76,7 @@ export class TwistlockMapper extends BaseConverter {
     },
     profiles: [
       {
-        path: 'results',
+        path: 'results[0]',
         name: 'Twistlock Scan',
         title: {
           transformer: (data: Record<string, unknown>): string => {
@@ -110,7 +110,7 @@ export class TwistlockMapper extends BaseConverter {
         //consider compliance controls
         controls: [
           {
-            path: 'results.vulnerabilities',
+            path: 'vulnerabilities',
             key: 'id',
             tags: {
               cveid: {path: 'id', transformer: parseIdentifier}
@@ -147,7 +147,7 @@ export class TwistlockMapper extends BaseConverter {
     passthrough: {
       twistlock_metadata: {
         transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-          return _.omit(data, ['results.vulnerabilities, results.collections']);
+          return _.omit(data, ['results[0].vulnerabilities, results[0].collections']);
         }
       }
     }
