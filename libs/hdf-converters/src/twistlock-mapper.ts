@@ -8,7 +8,6 @@ import {
   MappedTransform
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
@@ -77,7 +76,7 @@ export class TwistlockMapper extends BaseConverter {
     },
     profiles: [
       {
-        path: 'results',
+        path: 'results[0]',
         name: 'Twistlock Scan',
         title: {
           transformer: (data: Record<string, unknown>): string => {
@@ -111,7 +110,7 @@ export class TwistlockMapper extends BaseConverter {
         //consider compliance controls
         controls: [
           {
-            path: 'results.vulnerabilities',
+            path: 'results[0].vulnerabilities',
             key: 'id',
             tags: {
               cveid: {path: 'id', transformer: parseIdentifier}

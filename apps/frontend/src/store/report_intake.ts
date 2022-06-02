@@ -128,7 +128,7 @@ export const fileTypeFingerprints = {
     'vulnerabilities[0].identifiers'
   ],
   twistlock: [
-    'results[0].complianceDistribution', 
+    'results[0].complianceDistribution',
     'results[0].vulnerabilityDistribution',
     'results[0].collections',
     'results[0].digest'
