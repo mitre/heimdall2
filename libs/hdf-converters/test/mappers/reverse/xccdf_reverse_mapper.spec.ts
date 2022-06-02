@@ -30,7 +30,9 @@ describe('XCCDF Results Reverse Mapper', () => {
       'utf-8'
     );
 
-    expect(converted).toEqual(expected.replace(/2\.6\.24/gi, hdfConvertersVersion));
+    expect(converted).toEqual(
+      expected.replace(/2\.6\.24/gi, hdfConvertersVersion)
+    );
   });
 
   it('Successfully converts a 3 layer overlay HDF into XCCDF-Results', () => {
@@ -60,6 +62,8 @@ describe('XCCDF Results Reverse Mapper', () => {
       'utf-8'
     );
 
-    expect(converted).toEqual(expected.replace(/2\.6\.24/gi, hdfConvertersVersion));
+    expect(converted).toEqual(
+      expected.replace(/2\.6\.24/gi, hdfConvertersVersion)
+    );
   });
 });
