@@ -1,0 +1,48 @@
+{
+    "platform": {
+        "name": "Heimdall Tools",
+        "release": "2.6.14",
+        "target_id": "libc_unix"
+    },
+    "version": "2.6.14",
+    "statistics": {"duration": null},
+    "profiles": [
+        {
+            "name": "Sonarqube Scan",
+            "version": null,
+            "title": "SonarQube Scan of Project libc_unix Branch release",
+            "maintainer": null,
+            "summary": "SonarQube Scan of Project libc_unix Branch release",
+            "license": null,
+            "copyright": null,
+            "copyright_email": null,
+            "supports": [],
+            "attributes": [],
+            "depends": [],
+            "groups": [],
+            "status": "loaded",
+            "controls": [
+                {
+                    "desc": "<p>Time Of Check to Time Of Use (TOCTOU) vulnerabilities occur when an application:</p>\n<ul>\n  <li> First, checks permissions or attributes of a file: for instance, is a file a symbolic link? </li>\n  <li> Next, performs some operations such as writing data to this file. </li>\n</ul>\n<p>The application cannot assume the state of the file is unchanged between these two steps, there is a race condition (ie: two different processes\ncan access and modify the same shared object/file at the same time, which can lead to privilege escalation, denial of service and other unexpected\nresults).</p>\n<p>For instance, attackers can benefit from this situation by creating a symbolic link to a sensitive file directly after the first step (eg in Unix:\n<code>/etc/passwd</code>) and try to elevate their privileges (eg: if the written data has the correct <code>/etc/passwd</code> file format).</p>\n<p>To avoid TOCTOU vulnerabilities, one possible solution is to do a single atomic operation for the check and use actions, therefore removing the\nrace condition window. Another possibility is to use file descriptors. This way the binding of the file descriptor to the file cannot be changed by a\nconcurrent process.</p>\n<h2>Noncompliant Code Example</h2>\n<p>A check function (for instance <code>access</code>, <code>stat</code> …​ in this case <code>access</code> to verify the existence of a file) is\nused, followed by a use function (<code>open</code>, <code>fopen</code> …​) to write data inside a non existing file. These two consecutive calls\ncreate a TOCTOU race condition:</p>\n<pre>\n#include &lt;stdio.h&gt;\n\nvoid fopen_with_toctou(const char *file) {\n  if (access(file, F_OK) == -1 &amp;&amp; errno == ENOENT) {\n    // the file doesn\u0027t exist\n    // it is now created in order to write some data inside\n    FILE *f = fopen(file, w); // Noncompliant: a race condition window exist from access() call to fopen() call calls\n    if (NULL == f) {\n      /* Handle error */\n    }\n\n    if (fclose(f) == EOF) {\n      /* Handle error */\n    }\n  }\n}\n</pre>\n<h2>Compliant Solution</h2>\n<p>If the file already exists on the disk, <code>fopen</code> with <code>x</code> mode will fail:</p>\n<pre>\n#include &lt;stdio.h&gt;\n\nvoid open_without_toctou(const char *file) {\n  FILE *f = fopen(file, wx); // Compliant\n  if (NULL == f) {\n    /* Handle error */\n  }\n  /* Write to file */\n  if (fclose(f) == EOF) {\n    /* Handle error */\n  }\n}\n</pre>\n<p>A more generic solution is to use file descriptors:</p>\n<pre>\nvoid open_without_toctou(const char *file) {\n  int fd = open(file, O_CREAT | O_EXCL | O_WRONLY);\n  if (-1 != fd) {\n    FILE *f = fdopen(fd, w);  // Compliant\n  }\n}\n</pre>\n<h2>See</h2>\n<ul>\n  <li> <a href=https://owasp.org/Top10/A01_2021-Broken_Access_Control/>OWASP Top 10 2021 Category A1</a> - Broken Access Control </li>\n  <li> <a href=https://www.owasp.org/index.php/Top_10-2017_A5-Broken_Access_Control>OWASP Top 10 2017 Category A5</a> - Boken Access Control </li>\n  <li> <a href=https://cwe.mitre.org/data/definitions/367.html>MITRE, CWE-367</a> - Time-of-check Time-of-use (TOCTOU) Race Condition </li>\n  <li> <a href=https://wiki.sei.cmu.edu/confluence/display/c/FIO45-C.+Avoid+TOCTOU+race+conditions+while+accessing+files>CERT, FIO45-C.</a> - Avoid\n  TOCTOU race conditions while accessing files </li>\n</ul>",
+                    "descriptions": [],
+                    "refs": [],
+                    "source_location": {},
+                    "id": "c:S5847",
+                    "title": "Accessing files should not introduce TOCTOU vulnerabilities",
+                    "impact": 0.7,
+                    "code": null,
+                    "tags": {"nist": ["AC-3"]},
+                    "results": [
+                        {
+                            "status": "failed",
+                            "code_desc": "Path:libc_unix:dev/src/libc_unix/sumapss7.c:136:136 StartLine: 136, EndLine: 136<br>Code:<pre></pre>",
+                            "run_time": 0,
+                            "start_time": ""
+                        }
+                    ]
+                }
+            ],
+            "sha256": "109a103c41ae88f05daa76576dbc272d8e6c240a9e42aa5e4449b150ddbb1e76"
+        }
+    ]
+}
