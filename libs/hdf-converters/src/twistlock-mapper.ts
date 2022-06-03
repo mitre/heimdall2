@@ -108,7 +108,6 @@ export class TwistlockMapper extends BaseConverter {
         depends: [],
         groups: [],
         status: 'loaded',
-        //naive parsing
         //consider compliance controls
         controls: [
           {
