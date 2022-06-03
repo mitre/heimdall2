@@ -5,6 +5,7 @@ import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
+import fs from 'fs';
 const CWE_LENGTH = 'cwe.length';
 const SCA_VULNERABILITIES =
   'detailedreport.software_composition_analysis.vulnerabilities[';
@@ -23,26 +24,18 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 
 function impactMapping(severity: number): number {
-  if (typeof severity === 'string' || typeof severity === 'number') {
-    return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0.1;
-  } else {
-    return 0.1;
-  }
+  return IMPACT_MAPPING.get(severity.toString()) || 0.1;
 }
 
 function nistTag(input: string): string[] {
-  const len = Number(`${_.get(input, CWE_LENGTH)}`);
-  const cwes = [];
-  for (let index = 0; index < len; index++) {
-    cwes.push(`${_.get(input, 'cwe.cweid')}`);
-  }
-  return CWE_NIST_MAPPING.nistFilter(cwes, DEFAULT_NIST_TAG).concat(['Rev_4']);
+  const cwes = _.get(input, 'cwe').map((value: any)=> _.get(value, 'cweid'))
+  return CWE_NIST_MAPPING.nistFilter(cwes, DEFAULT_NIST_TAG);
 }
 
-function formatRecommendations(input: unknown): string {
+function formatRecommendations(input: Record<string, unknown>): string {
   const text = [];
   if (_.has(input, 'recommendations.para')) {
-    if (`${_.get(input, 'recommendations.para.text')}` !== 'undefined') {
+    if (_.has(input, 'recommendations.para.text')) {
       text.push(`${_.get(input, 'recommendations.para.text')}`);
     } else {
       const len = Number(`${_.get(input, 'recommendations.para.length')}`);
@@ -64,10 +57,10 @@ function formatRecommendations(input: unknown): string {
   return text.join('\n');
 }
 
-function formatDesc(input: unknown): string {
+function formatDesc(input: Record<string,unknown>): string {
   const text = [];
   if (_.has(input, 'desc.para')) {
-    if (`${_.get(input, 'desc.para.text')}` !== 'undefined') {
+    if (_.has(input, 'desc.para.text')) {
       text.push(`${_.get(input, 'desc.para.text')}`);
     } else {
       const len = Number(`${_.get(input, 'desc.para.length')}`);
@@ -80,7 +73,8 @@ function formatDesc(input: unknown): string {
   return text.join('\n');
 }
 
-function cweloop(input: Record<string, unknown>, index: integer): string {
+function formatCweData(input: Record<string, unknown>): string {
+  const text = [];
   const categories = [
     'pcrirelated',
     'owasp',
@@ -91,7 +85,10 @@ function cweloop(input: Record<string, unknown>, index: integer): string {
     'certjava',
     'owaspmobile'
   ];
-  let cwe = 'CWE-' + `${_.get(input, `cwe[${index}].cweid`)}` + ': ';
+  if (_.has(input, 'cwe')) {
+    const len = Number(`${_.get(input, CWE_LENGTH)}`);
+    for (let index = 0; index < len; index++) {
+  let cwe = `CWE-${_.get(input, `cwe[${index}].cweid`)}: `;
   const cwename = `cwe[${index}].cwename`;
   cwe += `${_.get(input, cwename)}`;
   categories.forEach(function (value) {
@@ -99,15 +96,6 @@ function cweloop(input: Record<string, unknown>, index: integer): string {
       cwe += `; ${value}: ` + `${_.get(input, `cwe[${index}].${value}`)}`;
     }
   });
-  return cwe;
-}
-
-function formatCweData(input: Record<string, unknown>): string {
-  const text = [];
-  if (_.has(input, 'cwe')) {
-    const len = Number(`${_.get(input, CWE_LENGTH)}`);
-    for (let index = 0; index < len; index++) {
-      const cwe = cweloop(input, index);
       text.push(cwe);
     }
   }
@@ -141,7 +129,8 @@ function formatSourceLocation(input: Record<string, unknown>): string {
   return text.join('\n');
 }
 
-function stringifyCodeDesc(input: Record<string, unknown>): string {
+function formatCodeDesc(input: Record<string, unknown>): string {
+  const text = [];
   const categories = [
     ['Line Number', 'line'],
     ['Affect Policy Compliance', 'affects_policy_compliance'],
@@ -155,26 +144,21 @@ function stringifyCodeDesc(input: Record<string, unknown>): string {
     ['CIA Impact', 'cia_impact'],
     ['Description', 'description']
   ];
-  let flawDesc =
-    'Sourcefile Path: ' + `${_.get(input, 'sourcefilepath')}` + ';';
-  categories.forEach(function (value) {
-    if (_.has(input, value[1])) {
-      flawDesc += `${value[0]}: ` + `${_.get(input, value[1])}` + ';';
-    }
-  });
-  return flawDesc;
-}
-
-function formatCodeDesc(input: Record<string, unknown>): string {
-  const text = [];
-  if (`${_.get(input, 'sourcefilepath')}` !== 'undefined') {
-    const flawDesc = stringifyCodeDesc(input);
+  if (_.has(input, 'sourcefilepath')) {
+    let flawDesc =
+      `Sourcefile Path: ${_.get(input, 'sourcefilepath')};`;
+    categories.forEach(function (value) {
+      if (_.has(input, value[1])) {
+        flawDesc += `${value[0]}: ${_.get(input, value[1])};`;
+      }
+    });
     text.push(flawDesc);
   }
   return text.join('\n');
 }
 
-function SCAstringify(input: Record<string, unknown>): string {
+function formatSCACodeDesc(input: Record<string, unknown>): string {
+  const text = [];
   const categories = [
     'sha1',
     'max_cvss_score',
@@ -185,27 +169,22 @@ function SCAstringify(input: Record<string, unknown>): string {
     'added_date',
     'component_affects_policy_compliance'
   ];
-  let flawDesc = 'component_id: ' + `${_.get(input, 'component_id')}` + ';';
-  categories.forEach(function (value) {
-    if (_.has(input, value)) {
-      flawDesc += `${value}: ` + `${_.get(input, value)}` + ';';
+  if (_.has(input, 'component_id')) {
+    let flawDesc = `component_id: ${_.get(input, 'component_id')};`;
+    categories.forEach(function (value) {
+      if (_.has(input, value)) {
+        flawDesc += `${value}: ${_.get(input, value)};`;
+      }
+    });
+    if (_.has(input, 'file_paths.file_path.value')) {
+      flawDesc +=
+        `file_path: ${_.get(input, 'file_paths.file_path.value')};`;
     }
-  });
-  if (`${_.has(input, 'file_paths.file_path.value')}`) {
-    flawDesc +=
-      'file_path: ' + `${_.get(input, 'file_paths.file_path.value')}` + ';';
-  }
-  return flawDesc;
-}
-
-function formatSCACodeDesc(input: Record<string, unknown>): string {
-  const text = [];
-  if (`${_.get(input, 'component_id')}` !== 'undefined') {
-    const flawDesc = SCAstringify(input);
     text.push(flawDesc);
   }
   return text.join('\n');
 }
+
 function staticflawmanip(parsedXML: any, i: integer, k: integer) {
   let flawArr: any[] = [];
   let inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe`;
@@ -250,6 +229,7 @@ function staticflawmover(parsedXML: any) {
       inputstr1 = `${REPORT_SEVERITY}${i}].category.length`;
       for (let k = 0; k < Number(_.get(parsedXML, inputstr1)); k++) {
         _.set(parsedXML, '', staticflawmanip(parsedXML, i, k));
+
       }
     }
   }
@@ -365,7 +345,7 @@ function cvesformatter(parsedXML: any) {
       parsedXML,
       `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.cve_id`
     );
-    if (`${cvei}` !== 'undefined') {
+    if (_.has(parsedXML,`${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.cve_id`)) {
       cves.push(cvei);
       vulnarr.push(
         _.get(
@@ -409,8 +389,7 @@ function parseXml(xml: string) {
 
   // Sets cwe and flaw keys to be arrays
   // Moves staticflaws up one level for control mapping
-  _.set(parsedXML, '', staticflawmover(parsedXML));
-
+ _.set(parsedXML, '', staticflawmover(parsedXML));
   // Moves cves up one level for control mapping
   const len = _.get(
     parsedXML,
@@ -440,7 +419,6 @@ function parseXml(xml: string) {
 
   //format software_composition_analysis for hdf
   _.set(parsedXML, '', cvesformatter(parsedXML));
-
   _.set(parsedXML, '', setcomponents(parsedXML));
 
   return parsedXML;
