@@ -202,12 +202,6 @@ export class SonarQubeResults {
     );
     return result.toHdf();
   }
-
-  setMappings(
-    customMapping: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    this.customMapping = customMapping;
-  }
 }
 
 function createSonarqubeMappings(
