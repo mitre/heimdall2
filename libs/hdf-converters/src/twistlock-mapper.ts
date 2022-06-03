@@ -66,9 +66,10 @@ export class TwistlockMapper extends BaseConverter {
     ILookupPath
   > = {
     platform: {
+      path: 'results',
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
-      target_id: {path: 'results.name'}
+      target_id: {path: 'name'}
     },
     version: HeimdallToolsVersion,
     statistics: {
@@ -117,7 +118,7 @@ export class TwistlockMapper extends BaseConverter {
             },
             descriptions: [],
             refs: [],
-            source_location: {},
+            source_location: {path: 'link'},
             //need proper cve title call
             title: {path: 'id'},
             id: {path: 'id'},
@@ -145,6 +146,7 @@ export class TwistlockMapper extends BaseConverter {
       }
     ],
     passthrough: {
+      path: 'results',
       twistlock_metadata: {
         transformer: (data: Record<string, unknown>): Record<string, unknown> => {
           return _.omit(data, ['vulnerabilities, collections']);
