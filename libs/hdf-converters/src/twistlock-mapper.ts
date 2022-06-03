@@ -66,10 +66,9 @@ export class TwistlockMapper extends BaseConverter {
     ILookupPath
   > = {
     platform: {
-      path: 'results',
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
-      target_id: {path: 'name'}
+      target_id: {path: 'results[0].name'}
     },
     version: HeimdallToolsVersion,
     statistics: {
@@ -135,7 +134,14 @@ export class TwistlockMapper extends BaseConverter {
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
-                code_desc: '',
+                code_desc: {
+                  transformer: (data: Record<string, unknown>): string => {
+                    const packageName = {path: 'packageName'};
+                    const packageVersion = {path: 'packageVersion'};
+                    const riskFactors = {path: 'riskFactors'};
+                    return `Package: ${packageName} Version: ${packageVersion} Risk Factors: ${riskFactors}`;
+                  }
+                },
                 run_time: 0,
                 start_time: {path: 'discoveredDate'}
               }
@@ -146,10 +152,10 @@ export class TwistlockMapper extends BaseConverter {
       }
     ],
     passthrough: {
-      path: 'results',
       twistlock_metadata: {
+        path: 'results',
         transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-          return _.omit(data, ['vulnerabilities, collections']);
+          return _.omit(data, ['vulnerabilities']);
         }
       }
     }
