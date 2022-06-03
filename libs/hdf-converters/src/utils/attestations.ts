@@ -7,47 +7,36 @@ import XLSX from 'xlsx';
 export type Attestation = {
   control_id: string;
   explanation: string;
-  frequency: AdvanceDateFrequency;
+  frequency: string;
   status: ControlResultStatus;
   updated: string;
   updated_by: string;
 };
 
-export enum AdvanceDateFrequency {
-  'annually',
-  'semiannually',
-  'quarterly',
-  'monthly',
-  'every2weeks',
-  'weekly',
-  'every3days',
-  'daily'
-}
-
 function advanceDate(
   date: moment.Moment,
-  frequency: AdvanceDateFrequency
+  frequency: string
 ): moment.Moment {
   switch (frequency) {
-    case AdvanceDateFrequency.annually:
+    case 'annually':
       date.add(1, 'year');
       break;
-    case AdvanceDateFrequency.semiannually:
+    case 'semiannually':
       date.add(6, 'months');
       break;
-    case AdvanceDateFrequency.quarterly:
+    case 'quarterly':
       date.add(3, 'months');
       break;
-    case AdvanceDateFrequency.monthly:
+    case 'monthly':
       date.add(1, 'month');
       break;
-    case AdvanceDateFrequency.every2weeks:
+    case 'every2weeks':
       date.add(2, 'weeks');
       break;
-    case AdvanceDateFrequency.weekly:
+    case 'weekly':
       date.add(1, 'week');
       break;
-    case AdvanceDateFrequency.daily:
+    case 'daily':
       date.add(1, 'day');
       break;
   }
@@ -80,10 +69,6 @@ export function convertAttestationToSegment(
 ): ExecJSON.ControlResult {
   const updateDate = moment(attestation.updated);
   const expiresAt = advanceDate(updateDate, attestation.frequency);
-
-  if (!(attestation.frequency in AdvanceDateFrequency)) {
-    throw new Error(`Invalid Frequency: ${attestation.frequency}`);
-  }
 
   if (expiresAt.isBefore(new Date())) {
     console.log(
