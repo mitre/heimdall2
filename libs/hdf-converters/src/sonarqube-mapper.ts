@@ -97,11 +97,21 @@ export class SonarQubeResults {
   sonarQubeHost = '';
   projectId = '';
   userToken = '';
+  branchName? = '';
+  pullRequestID? = '';
   customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
-  constructor(sonarQubeHost: string, projectId: string, userToken: string) {
+  constructor(
+    sonarQubeHost: string,
+    projectId: string,
+    userToken: string,
+    branchName?: string,
+    pullRequestID?: string
+  ) {
     this.sonarQubeHost = sonarQubeHost;
     this.projectId = projectId;
     this.userToken = userToken;
+    this.branchName = branchName;
+    this.pullRequestID = pullRequestID;
   }
 
   async toHdf(): Promise<ExecJSON.Execution> {
@@ -119,7 +129,11 @@ export class SonarQubeResults {
           params: {
             componentKeys: this.projectId,
             types: 'VULNERABILITY',
-            p: page
+            p: page,
+            ...(this.branchName && {branch: this.branchName}),
+            ...(this.pullRequestID && {pullRequest: this.pullRequestID})
+            //these are optional, if not specified sonarqube will default to the
+            // default branch from git.
           }
         })
         .then(({data}) => {
@@ -180,7 +194,12 @@ export class SonarQubeResults {
       })
     );
 
-    const result = new SonarQubeMapper(this.data, this.projectId);
+    const result = new SonarQubeMapper(
+      this.data,
+      this.projectId,
+      this.branchName,
+      this.pullRequestID
+    );
     return result.toHdf();
   }
 
@@ -192,8 +211,13 @@ export class SonarQubeResults {
 }
 
 function createSonarqubeMappings(
-  projectName: string
+  projectName: string,
+  branchName?: string,
+  pullRequestID?: string
 ): MappedTransform<ExecJSON.Execution, ILookupPath> {
+  const scanDescriptionModifier =
+    (branchName ? ` Branch ${branchName}` : '') +
+    (pullRequestID ? ` Pull Request ${pullRequestID}` : '');
   return {
     platform: {
       name: 'Heimdall Tools',
@@ -208,9 +232,9 @@ function createSonarqubeMappings(
       {
         name: 'Sonarqube Scan',
         version: null,
-        title: `SonarQube Scan of Project ${projectName}`,
+        title: `SonarQube Scan of Project ${projectName}${scanDescriptionModifier}`,
         maintainer: null,
-        summary: `SonarQube Scan of Project ${projectName}`,
+        summary: `SonarQube Scan of Project ${projectName}${scanDescriptionModifier}`,
         license: null,
         copyright: null,
         copyright_email: null,
@@ -255,14 +279,17 @@ function createSonarqubeMappings(
 
 export class SonarQubeMapper extends BaseConverter {
   projectName = '';
-  constructor(issuesJSON: IssueData, projectName: string) {
+  branchName = '';
+  pullRequestID = '';
+  constructor(
+    issuesJSON: IssueData,
+    projectName: string,
+    branchName?: string,
+    pullRequestID?: string
+  ) {
     super(issuesJSON as Record<string, any>);
-    this.setMappings(createSonarqubeMappings(projectName));
-  }
-
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
+    super.setMappings(
+      createSonarqubeMappings(projectName, branchName, pullRequestID)
+    );
   }
 }
