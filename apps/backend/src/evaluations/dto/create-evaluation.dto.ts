@@ -1,4 +1,5 @@
 import {ICreateEvaluation} from '@heimdall/interfaces';
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
   IsBoolean,
@@ -9,6 +10,10 @@ import {
 import {CreateEvaluationTagDto} from '../../evaluation-tags/dto/create-evaluation-tag.dto';
 
 export class CreateEvaluationDto implements ICreateEvaluation {
+  /**
+   * A list of user's roles
+   * @example ['admin']
+   */
   @IsNotEmpty()
   @IsString()
   readonly filename!: string;

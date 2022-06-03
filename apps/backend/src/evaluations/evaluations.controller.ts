@@ -13,6 +13,7 @@ import {
   UseInterceptors
 } from '@nestjs/common';
 import {FileInterceptor} from '@nestjs/platform-express';
+import { ApiProperty, ApiTags } from '@nestjs/swagger';
 import _ from 'lodash';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
@@ -32,6 +33,7 @@ import {EvaluationsService} from './evaluations.service';
 
 @Controller('evaluations')
 @UseInterceptors(LoggingInterceptor)
+@ApiTags('Evaluations')
 export class EvaluationsController {
   constructor(
     private readonly evaluationsService: EvaluationsService,
@@ -130,6 +132,7 @@ export class EvaluationsController {
 
   @UseGuards(JwtAuthGuard)
   @Put(':id')
+  // @ApiProperty({name})
   async update(
     @Param('id') id: string,
     @Request() request: {user: User},
