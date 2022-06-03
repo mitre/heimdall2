@@ -21,6 +21,7 @@ import {
   SnykResults,
   TwistlockMapper,
   XCCDFResultsMapper,
+  VeracodeMapper,
   ZapMapper
 } from '@mitre/hdf-converters';
 import axios from 'axios';
@@ -276,6 +277,8 @@ export class InspecIntake extends VuexModule {
         return new NetsparkerMapper(convertOptions.data).toHdf();
       case 'prisma':
         return new PrismaMapper(convertOptions.data).toHdf();
+      case 'veracode':
+        return new VeracodeMapper(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${filename}), no fingerprints matched.`
@@ -344,6 +347,11 @@ export class InspecIntake extends VuexModule {
         splitLines[0].includes('Severity')
       ) {
         return 'prisma';
+      } else if (
+        guessOptions.data.indexOf('veracode') !== -1 &&
+        guessOptions.data.indexOf('detailedreport') !== -1
+        ) {
+        return 'veracode';
       }
     }
     return '';
