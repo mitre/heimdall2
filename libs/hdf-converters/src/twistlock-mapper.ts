@@ -13,6 +13,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
   ['high', 0.7],
   ['medium', 0.5],
+  ['moderate', 0.5],
   ['low', 0.3]
 ]);
 const CWE_NIST_MAPPING = new CweNistMapping();
@@ -128,7 +129,7 @@ export class TwistlockMapper extends BaseConverter {
             },
             code: {
               transformer: (vulnerability: Record<string, unknown>): string => {
-                return JSON.stringify(vulnerability, null, 2);
+                return JSON.stringify(_.omit(vulnerability, ['packageName', 'packageVersion', 'riskFactors']), null, 2);
               }
             },
             results: [
@@ -161,7 +162,7 @@ export class TwistlockMapper extends BaseConverter {
       twistlock_metadata: {
         path: 'results[0]',
         transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-          return _.omit(data, 'vulnerabilities');
+          return _.omit(data, ['collections', 'vulnerabilities']);
         }
       }
     }
