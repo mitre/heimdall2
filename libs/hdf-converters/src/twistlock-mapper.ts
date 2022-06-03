@@ -11,8 +11,10 @@ import {CweNistMapping} from './mappings/CweNistMapping';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
+  ['important', 0.9],
   ['high', 0.7],
   ['medium', 0.5],
+  ['moderate', 0.5],
   ['low', 0.3]
 ]);
 const CWE_NIST_MAPPING = new CweNistMapping();
@@ -128,7 +130,7 @@ export class TwistlockMapper extends BaseConverter {
             },
             code: {
               transformer: (vulnerability: Record<string, unknown>): string => {
-                return JSON.stringify(_.omit(vulnerability, ['packageName', 'packageVersion', 'riskFactors']), null, 2);
+                return JSON.stringify(_.omit(vulnerability, ['packageName', 'packageVersion', 'impactedVersions', 'riskFactors']), null, 2);
               }
             },
             results: [
@@ -142,10 +144,13 @@ export class TwistlockMapper extends BaseConverter {
                     const packageVersion = _.has(data, 'packageVersion')
                       ? `${JSON.stringify(_.get(data, 'packageVersion'))}`
                       : 'N/A';
+                    const impactedVersions = _.has(data, 'impactedVersions')
+                      ? `${JSON.stringify(_.get(data, 'impactedVersions'))}`
+                      : 'N/A';
                     const riskFactors = _.has(data, 'riskFactors')
                       ? `${JSON.stringify(_.get(data, 'riskFactors'))}`
                       : 'N/A';
-                    return `Package: ${packageName} Version: ${packageVersion} Risk Factors: ${riskFactors}`;
+                    return `Package: ${packageName} Version: ${packageVersion} Impacted Versions: ${impactedVersions} Risk Factors: ${riskFactors}`;
                   }
                 },
                 run_time: 0,
@@ -161,7 +166,7 @@ export class TwistlockMapper extends BaseConverter {
       twistlock_metadata: {
         path: 'results[0]',
         transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-          return _.omit(data, ['collections', 'vulnerabilities']);
+          return _.omit(data, ['name', 'collections', 'vulnerabilities']);
         }
       }
     }
