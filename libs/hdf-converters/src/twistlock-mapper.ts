@@ -136,9 +136,15 @@ export class TwistlockMapper extends BaseConverter {
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {
                   transformer: (data: Record<string, unknown>): string => {
-                    const packageName = {path: 'packageName'};
-                    const packageVersion = {path: 'packageVersion'};
-                    const riskFactors = {path: 'riskFactors'};
+                    const packageName = _.has(data, 'packageName')
+                      ? `${JSON.stringify(_.get(data, 'packageName'))}`
+                      : 'N/A';
+                    const packageVersion = _.has(data, 'packageVersion')
+                      ? `${JSON.stringify(_.get(data, 'packageVersion'))}`
+                      : 'N/A';
+                    const riskFactors = _.has(data, 'riskFactors')
+                      ? `${JSON.stringify(_.get(data, 'riskFactors'))}`
+                      : 'N/A';
                     return `Package: ${packageName} Version: ${packageVersion} Risk Factors: ${riskFactors}`;
                   }
                 },
@@ -153,9 +159,9 @@ export class TwistlockMapper extends BaseConverter {
     ],
     passthrough: {
       twistlock_metadata: {
-        path: 'results',
+        path: 'results[0]',
         transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-          return _.omit(data, ['vulnerabilities']);
+          return _.omit(data, 'vulnerabilities');
         }
       }
     }
