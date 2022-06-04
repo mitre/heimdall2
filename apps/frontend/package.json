@@ -45,7 +45,6 @@
     "@mdi/font": "^6.1.95",
     "@mdi/js": "^6.1.95",
     "@mitre/splunk-sdk-no-env": "^1.10.0",
-    "@nestjs/common": "^8.4.6",
     "@types/bootstrap": "^5.0.15",
     "@types/chroma-js": "^2.1.0",
     "@types/concat-stream": "^2.0.0",
