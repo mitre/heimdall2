@@ -2,9 +2,8 @@ import {ExecJSON} from 'inspecjs';
 import {ControlResultStatus} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
 import moment from 'moment';
-import XLSX from 'xlsx';
-import yaml from 'yaml'
 import ms from 'ms';
+import XLSX from 'xlsx';
 
 export type Attestation = {
   control_id: string;
@@ -15,10 +14,7 @@ export type Attestation = {
   updated_by: string;
 };
 
-function advanceDate(
-  date: moment.Moment,
-  frequency: string
-): moment.Moment {
+function advanceDate(date: moment.Moment, frequency: string): moment.Moment {
   switch (frequency) {
     case 'annually':
       date.add(1, 'year');
@@ -42,7 +38,7 @@ function advanceDate(
       date.add(1, 'day');
       break;
     default:
-      date.add(ms(frequency), 'milliseconds')
+      date.add(ms(frequency), 'milliseconds');
       break;
   }
 
