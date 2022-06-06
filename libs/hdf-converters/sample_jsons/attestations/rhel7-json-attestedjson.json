@@ -7999,13 +7999,6 @@
               "start_time": "2019-11-04T16:17:15-05:00",
               "resource": "",
               "skip_message": "File '/etc/audisp/audisp-remote.conf' cannot be found. This check must be performed manually"
-            },
-            {
-              "code_desc": "Manually verified Status provided through attestation",
-              "status": "passed",
-              "run_time": 0,
-              "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: The routine review through interview/examination attests to this control passing\n\nUpdated: Sun Apr 06 2059 00:00:00 GMT+0000 (Coordinated Universal Time)\nUpdated By: John Doe, ISSO\nFrequency: annually",
-              "start_time": "2022-06-06T17:49:33.323Z"
             }
           ]
         },
@@ -8066,13 +8059,6 @@
               "start_time": "2019-11-04T16:17:15-05:00",
               "resource": "Parse Config File /etc/audisp/audisp-remote.conf",
               "skip_message": "Can't find file: /etc/audisp/audisp-remote.conf"
-            },
-            {
-              "code_desc": "Manually verified Status provided through attestation",
-              "status": "passed",
-              "run_time": 0,
-              "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: The routine review through interview/examination attests to this control passing\n\nUpdated: Sun Apr 06 2059 00:00:00 GMT+0000 (Coordinated Universal Time)\nUpdated By: John Doe, ISSO\nFrequency: semiannually",
-              "start_time": "2022-06-06T17:49:33.323Z"
             }
           ]
         },
@@ -8138,11 +8124,11 @@
               "skip_message": "Can't find file: /etc/audisp/audisp-remote.conf"
             },
             {
-              "code_desc": "Manually verified Status provided through attestation",
-              "status": "passed",
+              "code_desc": "Manual verification status via attestation has expired",
+              "status": "skipped",
               "run_time": 0,
-              "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: The routine review through interview/examination attests to this control passing\n\nUpdated: Sun Apr 06 2059 00:00:00 GMT+0000 (Coordinated Universal Time)\nUpdated By: John Doe, ISSO\nFrequency: quarterly",
-              "start_time": "2022-06-06T17:49:33.323Z"
+              "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: Audit logs are automatically backed up and cleared as necessary\n\nUpdated: 2022-05-02\nUpdated By: Json Smith, Security\nFrequency: monthly",
+              "start_time": "2022-06-06T17:49:33.200Z"
             }
           ]
         },
@@ -13939,13 +13925,6 @@
               "start_time": "2019-11-04T16:17:15-05:00",
               "resource": "",
               "skip_message": "This check must be preformed manually"
-            },
-            {
-              "code_desc": "Manual verification status via attestation has expired",
-              "status": "skipped",
-              "run_time": 0,
-              "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: The routine review through interview/examination attests to this control passing\n\nUpdated: Tue Apr 06 1999 00:00:00 GMT+0000 (Coordinated Universal Time)\nUpdated By: John Doe, ISSO\nFrequency: monthly",
-              "start_time": "2022-06-06T17:49:33.325Z"
             }
           ]
         },
@@ -17047,13 +17026,6 @@
               "start_time": "2019-11-04T16:17:17-05:00",
               "resource": "",
               "skip_message": "You must review this control manually."
-            },
-            {
-              "code_desc": "Manually verified Status provided through attestation",
-              "status": "passed",
-              "run_time": 0,
-              "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: The routine review through interview/examination attests to this control passing\n\nUpdated: Sun Apr 06 2059 00:00:00 GMT+0000 (Coordinated Universal Time)\nUpdated By: John Doe, ISSO\nFrequency: every2weeks",
-              "start_time": "2022-06-06T17:49:33.325Z"
             }
           ]
         },
@@ -17723,11 +17695,11 @@
               "skip_message": "Can't find file: /etc/audisp/audisp-remote.conf"
             },
             {
-              "code_desc": "Manually verified Status provided through attestation",
-              "status": "passed",
+              "code_desc": "Manual verification status via attestation has expired",
+              "status": "skipped",
               "run_time": 0,
-              "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: The routine review through interview/examination attests to this control passing\n\nUpdated: Sun Apr 06 2059 00:00:00 GMT+0000 (Coordinated Universal Time)\nUpdated By: John Doe, ISSO\nFrequency: weekly",
-              "start_time": "2022-06-06T17:49:33.325Z"
+              "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: Audit records are enabled for this system.\n\nUpdated: 2022-01-02\nUpdated By: Alec Hardison, Security\nFrequency: 1d",
+              "start_time": "2022-06-06T17:49:33.203Z"
             }
           ]
         },

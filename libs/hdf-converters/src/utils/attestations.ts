@@ -58,7 +58,7 @@ function createAttestationMessage(attestation: Attestation, expired: boolean) {
     message += `Explanation: ${attestation.explanation}\n\n`;
   }
 
-  message += `Update: ${attestation.updated}\n`;
+  message += `Updated: ${attestation.updated}\n`;
   message += `Updated By: ${attestation.updated_by}\n`;
   message += `Frequency: ${attestation.frequency}`;
 

@@ -35,7 +35,18 @@ describe('attestations', () => {
       }
     ]);
 
-    fs.writeFileSync('output.json', JSON.stringify(output, null, 2));
+    // fs.writeFileSync('sample_jsons/attestations/rhel7-json-attestedjson.json', JSON.stringify(output, null, 2))
+
+    const expected = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/attestations/rhel7-json-attestedjson.json',
+        'utf-8'
+      )
+    );
+
+    expect(omitHDFTimes(omitVersions(output))).toEqual(
+      omitHDFTimes(omitVersions(expected))
+    );
   });
 
   it('Should successfully parse XLSX attestations', async () => {
@@ -59,6 +70,8 @@ describe('attestations', () => {
         'utf-8'
       )
     );
+
+    // fs.writeFileSync('sample_jsons/attestations/rhel7-json-spreadsheet.json', JSON.stringify(output, null, 2))
 
     expect(omitHDFTimes(omitVersions(output))).toEqual(
       omitHDFTimes(omitVersions(expected))
