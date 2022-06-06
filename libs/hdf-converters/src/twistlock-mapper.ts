@@ -40,7 +40,7 @@ export class TwistlockResults {
 
   toHdf(): ExecJSON.Execution[] | ExecJSON.Execution {
     const results: ExecJSON.Execution[] = [];
-    /*if (Array.isArray(this.data)) {
+    if (Array.isArray(this.data)) {
       this.data.forEach((element) => {
         const entry = new TwistlockMapper(element);
         if (this.customMapping !== undefined) {
@@ -49,13 +49,13 @@ export class TwistlockResults {
         results.push(entry.toHdf());
       });
       return results;
-    } else {*/
+    } else {
       const result = new TwistlockMapper(this.data);
       if (this.customMapping !== undefined) {
         result.setMappings(this.customMapping);
       }
       return result.toHdf();
-    //}
+    }
   }
 }
 
