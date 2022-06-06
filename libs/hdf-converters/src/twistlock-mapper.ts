@@ -61,7 +61,7 @@ export class TwistlockResults {
 }
 
 export class TwistlockMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
