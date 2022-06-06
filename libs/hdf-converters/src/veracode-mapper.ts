@@ -5,7 +5,6 @@ import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import fs from 'fs';
 const CWE_LENGTH = 'cwe.length';
 const SCA_VULNERABILITIES =
   'detailedreport.software_composition_analysis.vulnerabilities[';
@@ -28,7 +27,7 @@ function impactMapping(severity: number): number {
 }
 
 function nistTag(input: string): string[] {
-  const cwes = _.get(input, 'cwe').map((value: any)=> _.get(value, 'cweid'))
+  const cwes = _.get(input, 'cwe').map((value: any) => _.get(value, 'cweid'));
   return CWE_NIST_MAPPING.nistFilter(cwes, DEFAULT_NIST_TAG);
 }
 
@@ -50,14 +49,13 @@ function formatRecommendations(input: Record<string, unknown>): string {
       `${_.get(input, 'recommendations.para.bulletitem.length')}`
     );
     for (let index = 0; index < len; index++) {
-      const bulletitem = `recommendations.para.bulletitem[${index}].text`;
-      text.push(`${_.get(input, bulletitem)}`);
+      text.push(`${_.get(input, `recommendations.para.bulletitem[${index}].text`)}`);
     }
   }
   return text.join('\n');
 }
 
-function formatDesc(input: Record<string,unknown>): string {
+function formatDesc(input: Record<string, unknown>): string {
   const text = [];
   if (_.has(input, 'desc.para')) {
     if (_.has(input, 'desc.para.text')) {
@@ -88,14 +86,17 @@ function formatCweData(input: Record<string, unknown>): string {
   if (_.has(input, 'cwe')) {
     const len = Number(`${_.get(input, CWE_LENGTH)}`);
     for (let index = 0; index < len; index++) {
-  let cwe = `CWE-${_.get(input, `cwe[${index}].cweid`)}: `;
-  const cwename = `cwe[${index}].cwename`;
-  cwe += `${_.get(input, cwename)}`;
-  categories.forEach(function (value) {
-    if (_.has(input, `cwe[${index}].${value}`)) {
-      cwe += `; ${value}: ` + `${_.get(input, `cwe[${index}].${value}`)}`;
-    }
-  });
+      let cwe = `CWE-${_.get(input, `cwe[${index}].cweid`)}: `;
+      const cwename = `cwe[${index}].cwename`;
+      cwe += `${_.get(input, cwename)}`;
+      cwe += categories.map(function(value: string) {
+        if (_.has(input, `cwe[${index}].${value}`)) {
+            return `; ${value}: ` + `${_.get(input, `cwe[${index}].${value}`)}`;
+        }
+        else{
+            return ''
+        }
+      }).join('');
       text.push(cwe);
     }
   }
@@ -145,13 +146,16 @@ function formatCodeDesc(input: Record<string, unknown>): string {
     ['Description', 'description']
   ];
   if (_.has(input, 'sourcefilepath')) {
-    let flawDesc =
-      `Sourcefile Path: ${_.get(input, 'sourcefilepath')};`;
-    categories.forEach(function (value) {
+    let flawDesc = `Sourcefile Path: ${_.get(input, 'sourcefilepath')};`;
+
+    flawDesc += categories.map(function(value: string[]) {
       if (_.has(input, value[1])) {
-        flawDesc += `${value[0]}: ${_.get(input, value[1])};`;
+          return `${value[0]}: ${_.get(input, value[1])};`;
       }
-    });
+      else{
+          return ''
+      }
+    }).join('');
     text.push(flawDesc);
   }
   return text.join('\n');
@@ -171,14 +175,16 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
   ];
   if (_.has(input, 'component_id')) {
     let flawDesc = `component_id: ${_.get(input, 'component_id')};`;
-    categories.forEach(function (value) {
+    flawDesc += categories.map(function(value: string) {
       if (_.has(input, value)) {
-        flawDesc += `${value}: ${_.get(input, value)};`;
+          return `${value}: ${_.get(input, value)};`;
       }
-    });
+      else{
+          return ''
+      }
+    }).join('');
     if (_.has(input, 'file_paths.file_path.value')) {
-      flawDesc +=
-        `file_path: ${_.get(input, 'file_paths.file_path.value')};`;
+      flawDesc += `file_path: ${_.get(input, 'file_paths.file_path.value')};`;
     }
     text.push(flawDesc);
   }
@@ -229,7 +235,6 @@ function staticflawmover(parsedXML: any) {
       inputstr1 = `${REPORT_SEVERITY}${i}].category.length`;
       for (let k = 0; k < Number(_.get(parsedXML, inputstr1)); k++) {
         _.set(parsedXML, '', staticflawmanip(parsedXML, i, k));
-
       }
     }
   }
@@ -345,7 +350,12 @@ function cvesformatter(parsedXML: any) {
       parsedXML,
       `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.cve_id`
     );
-    if (_.has(parsedXML,`${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.cve_id`)) {
+    if (
+      _.has(
+        parsedXML,
+        `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.cve_id`
+      )
+    ) {
       cves.push(cvei);
       vulnarr.push(
         _.get(
@@ -389,7 +399,7 @@ function parseXml(xml: string) {
 
   // Sets cwe and flaw keys to be arrays
   // Moves staticflaws up one level for control mapping
- _.set(parsedXML, '', staticflawmover(parsedXML));
+  _.set(parsedXML, '', staticflawmover(parsedXML));
   // Moves cves up one level for control mapping
   const len = _.get(
     parsedXML,
