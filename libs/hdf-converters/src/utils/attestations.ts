@@ -3,6 +3,8 @@ import {ControlResultStatus} from 'inspecjs/src/generated_parsers/v_1_0/exec-jso
 import _ from 'lodash';
 import moment from 'moment';
 import XLSX from 'xlsx';
+import yaml from 'yaml'
+import ms from 'ms';
 
 export type Attestation = {
   control_id: string;
@@ -38,6 +40,9 @@ function advanceDate(
       break;
     case 'daily':
       date.add(1, 'day');
+      break;
+    default:
+      date.add(ms(frequency), 'milliseconds')
       break;
   }
 
