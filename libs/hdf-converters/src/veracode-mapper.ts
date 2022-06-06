@@ -131,7 +131,7 @@ function formatSourceLocation(input: Record<string, unknown>): string {
 }
 
 function formatCodeDesc(input: Record<string, unknown>): string {
-  const text = [];
+  let flawDesc = ''
   const categories = [
     ['Line Number', 'line'],
     ['Affect Policy Compliance', 'affects_policy_compliance'],
@@ -146,7 +146,7 @@ function formatCodeDesc(input: Record<string, unknown>): string {
     ['Description', 'description']
   ];
   if (_.has(input, 'sourcefilepath')) {
-    let flawDesc = `Sourcefile Path: ${_.get(input, 'sourcefilepath')};`;
+    flawDesc = `Sourcefile Path: ${_.get(input, 'sourcefilepath')};`;
 
     flawDesc += categories.map(function(value: string[]) {
       if (_.has(input, value[1])) {
@@ -156,13 +156,12 @@ function formatCodeDesc(input: Record<string, unknown>): string {
           return ''
       }
     }).join('');
-    text.push(flawDesc);
   }
-  return text.join('\n');
+  return flawDesc;
 }
 
 function formatSCACodeDesc(input: Record<string, unknown>): string {
-  const text = [];
+  let flawDesc = ''
   const categories = [
     'sha1',
     'max_cvss_score',
@@ -174,7 +173,7 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
     'component_affects_policy_compliance'
   ];
   if (_.has(input, 'component_id')) {
-    let flawDesc = `component_id: ${_.get(input, 'component_id')};`;
+    flawDesc = `component_id: ${_.get(input, 'component_id')};`;
     flawDesc += categories.map(function(value: string) {
       if (_.has(input, value)) {
           return `${value}: ${_.get(input, value)};`;
@@ -186,9 +185,8 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
     if (_.has(input, 'file_paths.file_path.value')) {
       flawDesc += `file_path: ${_.get(input, 'file_paths.file_path.value')};`;
     }
-    text.push(flawDesc);
   }
-  return text.join('\n');
+  return flawDesc;
 }
 
 function staticflawmanip(parsedXML: any, i: integer, k: integer) {
