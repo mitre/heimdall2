@@ -68,8 +68,7 @@ function createAttestationMessage(attestation: Attestation, expired: boolean) {
 export function convertAttestationToSegment(
   attestation: Attestation
 ): ExecJSON.ControlResult {
-  const updateDate = moment(attestation.updated);
-  const expiresAt = advanceDate(updateDate, attestation.frequency);
+  const expiresAt = advanceDate(moment(attestation.updated), attestation.frequency);
 
   if (expiresAt.isBefore(new Date())) {
     console.log(
