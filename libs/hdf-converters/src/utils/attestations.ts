@@ -77,14 +77,14 @@ export function convertAttestationToSegment(
       } (Expired at ${expirationDate.toString()})`
     );
     return {
-      code_desc: 'Manual verification status via attestation has expired',
+      code_desc: 'Manual verification status provided through attestation has expired',
       status: ExecJSON.ControlResultStatus.Skipped,
       message: createAttestationMessage(attestation, true),
       start_time: new Date().toISOString()
     };
   } else {
     return {
-      code_desc: 'Manually verified Status provided through attestation',
+      code_desc: 'Manually verified status provided through attestation',
       status: attestation.status,
       message: createAttestationMessage(attestation, true),
       start_time: new Date().toISOString()
@@ -96,17 +96,15 @@ export function addAttestationToHDF(
   hdf: ExecJSON.Execution,
   attestations: Attestation[]
 ): ExecJSON.Execution {
-  hdf.profiles = hdf.profiles.map((profile) => {
-    profile.controls = profile.controls.map((control) => {
-      attestations.forEach((attestation) => {
+  for (const profile of hdf.profiles) {
+    for (const control of profile.controls) {
+      for (const attestation of attestations) {
         if (attestation.control_id.toLowerCase() === control.id.toLowerCase()) {
           control.results.push(convertAttestationToSegment(attestation));
         }
-      });
-      return control;
-    });
-    return profile;
-  });
+      }
+    }
+  }
 
   return hdf;
 }
