@@ -108,7 +108,7 @@ export class TwistlockMapper extends BaseConverter {
             path: 'vulnerabilities',
             key: 'id',
             tags: {
-              cveid: {path: 'id'}
+              cveid: {path: 'id', transformer: parseIdentifier}
             },
             descriptions: [],
             refs: [],
