@@ -40,7 +40,9 @@ export class TwistlockResults {
 
   toHdf(): ExecJSON.Execution[] | ExecJSON.Execution {
     const results: ExecJSON.Execution[] = [];
-    if (Array.isArray(this.data)) {
+    const result = new TwistlockMapper(this.data);
+    return result.toHdf();
+    /*if (Array.isArray(this.data)) {
       this.data.forEach((element) => {
         const entry = new TwistlockMapper(element);
         if (this.customMapping !== undefined) {
@@ -55,10 +57,10 @@ export class TwistlockResults {
         result.setMappings(this.customMapping);
       }
       return result.toHdf();
-    }
+    }*/
   }
 }
-/*
+
 export class TwistlockMapper extends BaseConverter {
   mappings: MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> = {
     platform: {
@@ -166,7 +168,7 @@ export class TwistlockMapper extends BaseConverter {
     super(twistlockJson);
   }
 }
-*/
+/*
 export class TwistlockMapper extends BaseConverter {
     mappings: MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> = {
     platform: {
@@ -255,4 +257,4 @@ export class TwistlockMapper extends BaseConverter {
   constructor(twistlockJson: Record<string, unknown>) {
     super(twistlockJson);
   }
-}
+}*/
