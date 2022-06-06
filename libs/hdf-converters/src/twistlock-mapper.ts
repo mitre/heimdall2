@@ -30,8 +30,7 @@ function parseIdentifier(identifiers: unknown[] | unknown): string[] {
     return [];
   }
 }
-/*
-//clean up
+
 export class TwistlockResults {
   data: Record<string, unknown>;
   customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
@@ -58,7 +57,7 @@ export class TwistlockResults {
       return result.toHdf();
     }
   }
-}*/
+}
 
 export class TwistlockMapper extends BaseConverter {
   mappings: MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> = {
@@ -165,7 +164,7 @@ export class TwistlockMapper extends BaseConverter {
       }
     }
   };
-  constructor(twistlockJson: string) {
-    super(JSON.parse(twistlockJson), true);
+  constructor(twistlockJson: Record<string, unknown>) {
+    super(twistlockJson);
   }
 }

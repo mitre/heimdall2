@@ -19,7 +19,7 @@ import {
   SarifMapper,
   ScoutsuiteMapper,
   SnykResults,
-  TwistlockMapper,
+  TwistlockResults,
   XCCDFResultsMapper,
   ZapMapper
 } from '@mitre/hdf-converters';
@@ -259,7 +259,7 @@ export class InspecIntake extends VuexModule {
       case 'snyk':
         return new SnykResults(convertOptions.data).toHdf();
       case 'twistlock':
-        return new TwistlockMapper(convertOptions.data).toHdf();
+        return new TwistlockResults(convertOptions.data).toHdf();
       case 'nessus':
         return new NessusResults(convertOptions.data).toHdf();
       case 'xccdf':
