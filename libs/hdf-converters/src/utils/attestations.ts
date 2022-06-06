@@ -117,7 +117,7 @@ export function addAttestationToHDF(
 export async function parseXLSXAttestations(
   attestationXLSX: Uint8Array
 ): Promise<Attestation[]> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const workbook = XLSX.read(attestationXLSX, {
       cellDates: true
     });
