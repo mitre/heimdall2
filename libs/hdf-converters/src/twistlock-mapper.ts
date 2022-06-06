@@ -7,7 +7,6 @@ import {
   impactMapping,
   MappedTransform
 } from './base-converter';
-import {CweNistMapping} from './mappings/CweNistMapping';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
@@ -17,7 +16,6 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['moderate', 0.5],
   ['low', 0.3]
 ]);
-const CWE_NIST_MAPPING = new CweNistMapping();
 
 function parseIdentifier(identifiers: unknown[] | unknown): string[] {
   const output: string[] = [];
@@ -114,7 +112,7 @@ export class TwistlockMapper extends BaseConverter {
             path: 'vulnerabilities',
             key: 'id',
             tags: {
-              cveid: {path: 'id', transformer: parseIdentifier}
+              cveid: 'id'
             },
             descriptions: [],
             refs: [],
