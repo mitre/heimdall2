@@ -30,7 +30,7 @@ function parseIdentifier(identifiers: unknown[] | unknown): string[] {
     return [];
   }
 }
-
+/*
 //clean up
 export class TwistlockResults {
   data: Record<string, unknown>;
@@ -58,10 +58,10 @@ export class TwistlockResults {
       return result.toHdf();
     }
   }
-}
+}*/
 
 export class TwistlockMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -165,7 +165,7 @@ export class TwistlockMapper extends BaseConverter {
       }
     }
   };
-  constructor(twistlockJson: Record<string, unknown>) {
-    super(twistlockJson);
+  constructor(twistlockJson: string) {
+    super(JSON.parse(twistlockJson), true);
   }
 }
