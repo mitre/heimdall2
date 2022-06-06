@@ -214,7 +214,7 @@ export class TwistlockMapper extends BaseConverter {
         status: 'loaded',
         controls: [
           {
-            path: 'compliances[0]',
+            path: 'results[0].compliances',
             key: 'id',
             tags: {},
             descriptions: [],
@@ -228,7 +228,8 @@ export class TwistlockMapper extends BaseConverter {
               transformer: impactMapping(IMPACT_MAPPING)
             },
             code: {
-              transformer: (vulnerability: Record<string, unknown>): string => {
+                transformer: (vulnerability: Record<string, unknown>): string => {
+                console.log(vulnerability);
                 return JSON.stringify(vulnerability, null, 2);
               }
             },
