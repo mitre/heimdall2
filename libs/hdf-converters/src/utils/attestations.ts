@@ -128,7 +128,6 @@ export async function parseXLSXAttestations(
     const sheet = workbook.Sheets['attestations'];
     const data: Record<string, unknown>[] = XLSX.utils.sheet_to_json(sheet);
     const attestations: Attestation[] = data.map((attestation) => {
-      console.log(attestation);
       return {
         control_id: getFirstPath(attestation, [
           'Control_ID',

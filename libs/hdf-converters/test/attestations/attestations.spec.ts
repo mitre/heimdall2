@@ -2,7 +2,6 @@ import fs from 'fs';
 import {ExecJSON} from 'inspecjs';
 import {
   addAttestationToHDF,
-  AdvanceDateFrequency,
   parseXLSXAttestations
 } from '../../src/utils/attestations';
 import {omitHDFTimes, omitVersions} from '../utils';
@@ -21,7 +20,7 @@ describe('attestations', () => {
         control_id: 'V-72087',
         explanation:
           'Audit logs are automatically backed up and cleared as necessary',
-        frequency: AdvanceDateFrequency.monthly,
+        frequency: 'monthly',
         status: ExecJSON.ControlResultStatus.Passed,
         updated: '2022-05-02',
         updated_by: 'Json Smith, Security'
@@ -29,7 +28,7 @@ describe('attestations', () => {
       {
         control_id: 'V-73163',
         explanation: 'Audit records are enabled for this system.',
-        frequency: AdvanceDateFrequency.daily,
+        frequency: '1d',
         status: ExecJSON.ControlResultStatus.Passed,
         updated: '2022-01-02',
         updated_by: 'Alec Hardison, Security'
