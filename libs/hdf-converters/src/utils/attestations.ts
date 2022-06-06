@@ -68,13 +68,13 @@ function createAttestationMessage(attestation: Attestation, expired: boolean) {
 export function convertAttestationToSegment(
   attestation: Attestation
 ): ExecJSON.ControlResult {
-  const expiresAt = advanceDate(moment(attestation.updated), attestation.frequency);
+  const expirationDate = advanceDate(moment(attestation.updated), attestation.frequency);
 
-  if (expiresAt.isBefore(new Date())) {
+  if (expirationDate.isBefore(new Date())) {
     console.log(
       `Warning: Attestation Expired: ${
         attestation.control_id
-      } (Expired at ${expiresAt.toString()})`
+      } (Expired at ${expirationDate.toString()})`
     );
     return {
       code_desc: 'Manual verification status via attestation has expired',
