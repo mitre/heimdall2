@@ -60,7 +60,7 @@ export class TwistlockResults {
     }*/
   }
 }
-/*
+
 export class TwistlockMapper extends BaseConverter {
   mappings: MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> = {
     platform: {
@@ -167,8 +167,8 @@ export class TwistlockMapper extends BaseConverter {
   constructor(twistlockJson: Record<string, unknown>) {
     super(twistlockJson);
   }
-}*/
-
+}
+/*
 export class TwistlockMapper extends BaseConverter {
     mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
@@ -250,4 +250,4 @@ export class TwistlockMapper extends BaseConverter {
   constructor(twistlockJson: Record<string, unknown>) {
     super(twistlockJson);
   }
-}
+}*/
