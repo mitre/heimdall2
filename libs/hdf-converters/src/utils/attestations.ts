@@ -68,7 +68,10 @@ function createAttestationMessage(attestation: Attestation, expired: boolean) {
 export function convertAttestationToSegment(
   attestation: Attestation
 ): ExecJSON.ControlResult {
-  const expirationDate = advanceDate(moment(attestation.updated), attestation.frequency);
+  const expirationDate = advanceDate(
+    moment(attestation.updated),
+    attestation.frequency
+  );
 
   if (expirationDate.isBefore(new Date())) {
     console.log(
@@ -77,7 +80,8 @@ export function convertAttestationToSegment(
       } (Expired at ${expirationDate.toString()})`
     );
     return {
-      code_desc: 'Manual verification status provided through attestation has expired',
+      code_desc:
+        'Manual verification status provided through attestation has expired',
       status: ExecJSON.ControlResultStatus.Skipped,
       message: createAttestationMessage(attestation, true),
       start_time: new Date().toISOString()
@@ -119,34 +123,20 @@ export async function parseXLSXAttestations(
     const sheet = workbook.Sheets['attestations'];
     const data: Record<string, unknown>[] = XLSX.utils.sheet_to_json(sheet);
     const attestations: Attestation[] = data.map((attestation) => {
+      const lowerAttestation = _.mapKeys(attestation, (v, k) => {
+        return k.toLowerCase().replace(/\s/g, '_');
+      });
       return {
-        control_id: getFirstPath(attestation, [
-          'Control_ID',
+        control_id: getFirstPath(lowerAttestation, [
           'control_id',
           'id',
           'control'
         ]),
-        explanation: getFirstPath(attestation, [
-          'Explanation',
-          'explanation',
-          'explain'
-        ]),
-        frequency: getFirstPath(attestation, ['Frequency', 'frequency']),
-        status: getFirstPath(attestation, ['Status', 'status']),
-        updated: getFirstPath(attestation, [
-          'Updated',
-          'updated',
-          'Updated At',
-          'updated at',
-          'Updated_At',
-          'updated_at'
-        ]),
-        updated_by: getFirstPath(attestation, [
-          'Updated_By',
-          'updated_by',
-          'Updated By',
-          'Updated by'
-        ])
+        explanation: getFirstPath(lowerAttestation, ['explanation', 'explain']),
+        frequency: getFirstPath(lowerAttestation, ['frequency']),
+        status: getFirstPath(lowerAttestation, ['status']),
+        updated: getFirstPath(lowerAttestation, ['updated', 'updated_at']),
+        updated_by: getFirstPath(lowerAttestation, ['updated_by'])
       } as Attestation;
     });
     resolve(attestations);
