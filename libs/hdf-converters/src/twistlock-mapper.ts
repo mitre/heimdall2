@@ -214,7 +214,7 @@ export class TwistlockMapper extends BaseConverter {
         status: 'loaded',
         controls: [
           {
-            path: 'results[0].compliances',
+            path: 'vulnerabilities',
             key: 'id',
             tags: {},
             descriptions: [],
