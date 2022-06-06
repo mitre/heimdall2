@@ -238,11 +238,6 @@ export class NessusResults {
       return result.toHdf();
     }
   }
-  setMappings(
-    customMapping: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    this.customMapping = customMapping;
-  }
 }
 
 export class NessusMapper extends BaseConverter {

@@ -175,9 +175,4 @@ export class JfrogXrayMapper extends BaseConverter {
   constructor(xrayJson: string) {
     super(JSON.parse(xrayJson), true);
   }
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
-  }
 }
