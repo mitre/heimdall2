@@ -79,7 +79,6 @@ export function convertAttestationToSegment(
     return {
       code_desc: 'Manual verification status via attestation has expired',
       status: ExecJSON.ControlResultStatus.Skipped,
-      run_time: 0.0,
       message: createAttestationMessage(attestation, true),
       start_time: new Date().toISOString()
     };
@@ -87,7 +86,6 @@ export function convertAttestationToSegment(
     return {
       code_desc: 'Manually verified Status provided through attestation',
       status: attestation.status,
-      run_time: 0.0,
       message: createAttestationMessage(attestation, true),
       start_time: new Date().toISOString()
     };
