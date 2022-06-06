@@ -61,10 +61,7 @@ export class TwistlockResults {
 }
 
 export class TwistlockMapper extends BaseConverter {
-  mappings: MappedTransform<
-    ExecJSON.Execution & {passthrough: unknown},
-    ILookupPath
-  > = {
+  mappings: MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -112,7 +109,7 @@ export class TwistlockMapper extends BaseConverter {
             path: 'vulnerabilities',
             key: 'id',
             tags: {
-              cveid: 'id'
+              cveid: {path: 'id'}
             },
             descriptions: [],
             refs: [],
