@@ -58,7 +58,7 @@ export class TwistlockResults {
     }
   }
 }
-
+/*
 export class TwistlockMapper extends BaseConverter {
   mappings: MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> = {
     platform: {
@@ -162,6 +162,88 @@ export class TwistlockMapper extends BaseConverter {
       }
     }
   };
+  constructor(twistlockJson: Record<string, unknown>) {
+    super(twistlockJson);
+  }
+}
+*/
+export class TwistlockMapper extends BaseConverter {
+    mappings: MappedTransform<ExecJSON.Execution , ILookupPath> = {
+        platform: {
+            name: 'Heimdall Tools',
+            release: HeimdallToolsVersion,
+            target_id: { path: 'results[0].name' }
+        },
+        version: HeimdallToolsVersion,
+        statistics: {
+            duration: null
+        },
+        profiles: [
+            {
+                path: 'results',
+                name: 'Twistlock Scan',
+                title: {
+                    transformer: (data: Record<string, unknown>): string => {
+                        const projectName = _.has(data, 'collections')
+                            ? `${_.get(data, 'collections[1]')}`
+                            : 'N/A';
+                        return `Twistlock Project: ${projectName}`;
+                    }
+                },
+                maintainer: null,
+                summary: {
+                    transformer: (data: Record<string, unknown>): string => {
+                        const vulnerabilityTotal = _.has(data, 'vulnerabilityDistribution')
+                            ? `${JSON.stringify(_.get(data, 'vulnerabilityDistribution.total'))}`
+                            : 'N/A';
+                        const complianceTotal = _.has(data, 'complianceDistribution')
+                            ? `${JSON.stringify(_.get(data, 'complianceDistribution.total'))}`
+                            : 'N/A';
+                        return `Package Vulnerability Summary: ${vulnerabilityTotal} Application Compliance Issue Total: ${complianceTotal}`;
+                    }
+                },
+                license: null,
+                copyright: null,
+                copyright_email: null,
+                supports: [],
+                attributes: [],
+                depends: [],
+                groups: [],
+                status: 'loaded',
+                controls: [
+                    {
+                        path: 'compliances',
+                        key: 'id',
+                        tags: {},
+                        descriptions: [],
+                        refs: [],
+                        source_location: {},
+                        title: { path: 'title' },
+                        id: { path: 'id' },
+                        desc: { path: 'cause' },
+                        impact: {
+                            path: 'severity',
+                            transformer: impactMapping(IMPACT_MAPPING)
+                        },
+                        code: {
+                            transformer: (vulnerability: Record<string, unknown>): string => {
+                                return JSON.stringify(vulnerability, null, 2);
+                            }
+                        },
+                        results: [
+                            {
+                                status: ExecJSON.ControlResultStatus.Failed,
+                                code_desc: {},
+                                run_time: 0,
+                                start_time: ''
+                            }
+                        ]
+                    }
+                ],
+                sha256: ''
+            }
+        ],
+    };
   constructor(twistlockJson: Record<string, unknown>) {
     super(twistlockJson);
   }
