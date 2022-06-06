@@ -55,7 +55,7 @@ export function omitHDFTimes(
               return {
                 ..._.omit(result, 'start_time'),
                 message: result.message?.replace(/Updated:.*\n/g, '')
-              }
+              };
             })
           };
         })
