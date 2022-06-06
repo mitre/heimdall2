@@ -143,11 +143,16 @@ export async function parseXLSXAttestations(
   });
 }
 
-function getFirstPath(object: Record<string, unknown>, paths: string[]): string {
+function getFirstPath(
+  object: Record<string, unknown>,
+  paths: string[]
+): string {
   const index = _.findIndex(paths, (p) => hasPath(object, p));
 
   if (index === -1) {
-    throw new Error(`Attestation is missing one of these paths: ${paths.join(', ')}`);
+    throw new Error(
+      `Attestation is missing one of these paths: ${paths.join(', ')}`
+    );
   } else {
     return _.get(object, paths[index]) as string;
   }
