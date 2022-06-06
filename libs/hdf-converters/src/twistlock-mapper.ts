@@ -60,7 +60,7 @@ export class TwistlockResults {
     }*/
   }
 }
-
+/*
 export class TwistlockMapper extends BaseConverter {
   mappings: MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> = {
     platform: {
@@ -167,10 +167,10 @@ export class TwistlockMapper extends BaseConverter {
   constructor(twistlockJson: Record<string, unknown>) {
     super(twistlockJson);
   }
-}
-/*
+}*/
+
 export class TwistlockMapper extends BaseConverter {
-    mappings: MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> = {
+    mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -212,49 +212,41 @@ export class TwistlockMapper extends BaseConverter {
         depends: [],
         groups: [],
         status: 'loaded',
-            controls: [
-                {
-                    path: 'compliances',
-                    key: 'id',
-                    tags: {},
-                    descriptions: [],
-                    refs: [],
-                    source_location: {},
-                    title: { path: 'title' },
-                    id: { path: 'id' },
-                    desc: { path: 'cause' },
-                    impact: {
-                        path: 'severity',
-                        transformer: impactMapping(IMPACT_MAPPING)
-                    },
-                    code: {
-                        transformer: (vulnerability: Record<string, unknown>): string => {
-                            return JSON.stringify(vulnerability, null, 2);
-                        }
-                    },
-                    results: [
-                        {
-                            status: ExecJSON.ControlResultStatus.Failed,
-                            code_desc: {},
-                            run_time: 0,
-                            start_time: ''
-                        }
-                    ]
-                }
-            ],
+        controls: [
+          {
+            path: 'compliances[0]',
+            key: 'id',
+            tags: {},
+            descriptions: [],
+            refs: [],
+            source_location: {},
+            title: { path: 'title' },
+            id: { path: 'id' },
+            desc: { path: 'cause' },
+            impact: {
+              path: 'severity',
+              transformer: impactMapping(IMPACT_MAPPING)
+            },
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string => {
+                return JSON.stringify(vulnerability, null, 2);
+              }
+            },
+            results: [
+              {
+                status: ExecJSON.ControlResultStatus.Failed,
+                code_desc: {},
+                run_time: 0,
+                start_time: ''
+              }
+            ]
+          }
+          ],
         sha256: ''
       }
     ],
-    passthrough: {
-      twistlock_metadata: {
-        path: 'results[0]',
-        transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-          return _.omit(data, ['name', 'collections', 'vulnerabilities']);
-        }
-      }
-    }
   };
   constructor(twistlockJson: Record<string, unknown>) {
     super(twistlockJson);
   }
-}*/
+}
