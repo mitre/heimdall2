@@ -30,7 +30,6 @@ export class TwistlockResults {
   }
 }
 
-//Consider compliance integration
 export class TwistlockMapper extends BaseConverter {
   mappings: MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> = {
     platform: {
@@ -93,12 +92,7 @@ export class TwistlockMapper extends BaseConverter {
             },
             descriptions: [],
             refs: [],
-            source_location: {
-              path: 'link',
-              transformer: (srcLcValue: string): Object => {
-                return JSON.parse(srcLcValue);
-              }
-            },
+            source_location: {},
             title: {path: 'id'},
             id: {path: 'id'},
             desc: {path: 'description'},
@@ -139,9 +133,8 @@ export class TwistlockMapper extends BaseConverter {
     ],
     passthrough: {
       twistlock_metadata: {
-        path: 'results[0]',
         transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-          return _.omit(data, ['name', 'collections', 'vulnerabilities']);
+          return data;
         }
       }
     }
