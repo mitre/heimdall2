@@ -66,7 +66,7 @@ export class TwistlockMapper extends BaseConverter {
             return `Package Vulnerability Summary: ${vulnerabilityTotal} Application Compliance Issue Total: ${complianceTotal}`;
           }
         },
-        license: {path: 'compliances.id'},
+        license: {path: 'compliances[0].id'},
         copyright: null,
         copyright_email: null,
         supports: [],
