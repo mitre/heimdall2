@@ -76,19 +76,19 @@ export class TwistlockMapper extends BaseConverter {
         status: 'loaded',
         controls: [
           {
-            path: 'compliances',
+            path: 'vulnerabilities',
             key: 'id',
             //Need CVE to NIST mapping for tags
             tags: {
               cveid: {
-                /*path: 'id',
+                path: 'id',
                 transformer: (idValue: string): string[] => {
                     const output: string[] = [];
                     const numbers = idValue.split('-');
                     numbers.shift();
                     output.push(numbers.join('-'));
                     return output;
-                }*/
+                }
               }
             },
             descriptions: [],
