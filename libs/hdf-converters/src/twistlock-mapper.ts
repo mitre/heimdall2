@@ -66,7 +66,7 @@ export class TwistlockMapper extends BaseConverter {
             return `Package Vulnerability Summary: ${vulnerabilityTotal} Application Compliance Issue Total: ${complianceTotal}`;
           }
         },
-        license: null,
+        license: {path: 'compliances.id'},
         copyright: null,
         copyright_email: null,
         supports: [],
@@ -77,7 +77,8 @@ export class TwistlockMapper extends BaseConverter {
         controls: [
           {
             path: 'vulnerabilities',
-            key: 'id',
+              key: 'id',
+            //Need CVE to NIST for tags
             tags: {
               cveid: {
                 path: 'id',
