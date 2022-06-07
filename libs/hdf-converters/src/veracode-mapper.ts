@@ -32,24 +32,27 @@ function nistTag(input: string): string[] {
 }
 
 function formatRecommendations(input: Record<string, unknown>): string {
-  const text = [];
+  let text: any[] = [];
   if (_.has(input, 'recommendations.para')) {
     if (_.has(input, 'recommendations.para.text')) {
       text.push(`${_.get(input, 'recommendations.para.text')}`);
-    } else {
-      const len = Number(`${_.get(input, 'recommendations.para.length')}`);
-      for (let index = 0; index < len; index++) {
-        const topush = `recommendations.para[${index}].text`;
-        text.push(`${_.get(input, topush)}`);
-      }
+    } 
+    else {
+      text = (_.get(input, `recommendations.para`) as Record<string, unknown>[]).map( function(value: any) { 
+        return _.get(value, 'text')
+      });
     }
   }
   if (_.has(input, 'recommendations.para.bulletitem')) {
-    const len = Number(
-      `${_.get(input, 'recommendations.para.bulletitem.length')}`
-    );
-    for (let index = 0; index < len; index++) {
-      text.push(`${_.get(input, `recommendations.para.bulletitem[${index}].text`)}`);
+    if (_.has(input, 'recommendations.para.bulletitem.text')) {
+      text.push(`${_.get(input, 'recommendations.para.bulletitem.text')}`);
+      
+    }
+    else {
+      const text2 = (_.get(input, `recommendations.para.bulletitem`) as Record<string, unknown>[]).map( function(value: any) { 
+        return _.get(value, 'text')
+      });
+      text = text.concat(text2)
     }
   }
   return text.join('\n');
@@ -91,7 +94,7 @@ function formatCweData(input: Record<string, unknown>): string {
       cwe += `${_.get(input, cwename)}`;
       cwe += categories.map(function(value: string) {
         if (_.has(input, `cwe[${index}].${value}`)) {
-            return `; ${value}: ` + `${_.get(input, `cwe[${index}].${value}`)}`;
+            return `; ${value}: ${_.get(input, `cwe[${index}].${value}`)}`;
         }
         else{
             return ''
