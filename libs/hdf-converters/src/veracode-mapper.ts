@@ -36,9 +36,9 @@ function formatRecommendations(input: Record<string, unknown>): string {
   if (_.has(input, 'recommendations.para')) {
     if (_.has(input, 'recommendations.para.text')) {
       text.push(`${_.get(input, 'recommendations.para.text')}`);
-    } 
+    }
     else {
-      text = (_.get(input, `recommendations.para`) as Record<string, unknown>[]).map( function(value: any) { 
+      text = (_.get(input, `recommendations.para`) as Record<string, unknown>[]).map( function(value: any) {
         return _.get(value, 'text')
       });
     }
@@ -46,10 +46,10 @@ function formatRecommendations(input: Record<string, unknown>): string {
   if (_.has(input, 'recommendations.para.bulletitem')) {
     if (_.has(input, 'recommendations.para.bulletitem.text')) {
       text.push(`${_.get(input, 'recommendations.para.bulletitem.text')}`);
-      
+
     }
     else {
-      const text2 = (_.get(input, `recommendations.para.bulletitem`) as Record<string, unknown>[]).map( function(value: any) { 
+      const text2 = (_.get(input, `recommendations.para.bulletitem`) as Record<string, unknown>[]).map( function(value: any) {
         return _.get(value, 'text')
       });
       text = text.concat(text2)
