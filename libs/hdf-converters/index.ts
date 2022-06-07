@@ -24,6 +24,7 @@ export * from './src/scoutsuite-mapper';
 export * from './src/snyk-mapper';
 export * from './src/sonarqube-mapper';
 export * from './src/splunk-mapper';
+export * from './src/utils/attestations';
 export * from './src/xccdf-results-mapper';
 export * from './src/zap-mapper';
 export * from './src/twistlock-mapper';
