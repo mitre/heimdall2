@@ -30,6 +30,7 @@ export class TwistlockResults {
   }
 }
 
+//Consider compliance integration
 export class TwistlockMapper extends BaseConverter {
   mappings: MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> = {
     platform: {
@@ -77,7 +78,7 @@ export class TwistlockMapper extends BaseConverter {
           {
             path: 'vulnerabilities',
               key: 'id',
-            //Need CVE to NIST for tags
+            //Need CVE to NIST mapping for tags
             tags: {
               cveid: {
                 path: 'id',
