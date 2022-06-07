@@ -76,8 +76,8 @@ export class TwistlockMapper extends BaseConverter {
         status: 'loaded',
         controls: [
           {
-            path: 'vulnerabilities',
-              key: 'id',
+            path: 'compliances',
+            key: 'id',
             //Need CVE to NIST mapping for tags
             tags: {
               cveid: {
