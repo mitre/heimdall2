@@ -336,6 +336,16 @@
               "type": "null"
             }
           ]
+        },
+        "attestation_data": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Attestation_Data"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "description": "Describes a control and any findings it has.",
@@ -774,6 +784,42 @@
             "null",
             "string"
           ]
+        }
+      }
+    },
+    "Attestation_Data": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "control_id",
+        "explanation",
+        "frequency",
+        "status",
+        "updated",
+        "updated_by"
+      ],
+      "properties": {
+        "control_id": {
+          "type": "string"
+        },
+        "explanation": {
+          "type": "string"
+        },
+        "frequency": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "passed",
+            "failed"
+          ]
+        },
+        "updated": {
+          "type": "string"
+        },
+        "updated_by": {
+          "type": "string"
         }
       }
     }
