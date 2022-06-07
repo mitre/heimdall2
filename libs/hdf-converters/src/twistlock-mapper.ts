@@ -93,7 +93,12 @@ export class TwistlockMapper extends BaseConverter {
             },
             descriptions: [],
             refs: [],
-            source_location: {path: 'link'},
+            source_location: {
+              path: 'link',
+              transformer: (srcLcValue: string): Object => {
+                return JSON.parse(srcLcValue);
+              }
+            },
             title: {path: 'id'},
             id: {path: 'id'},
             desc: {path: 'description'},

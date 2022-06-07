@@ -1,6 +1,6 @@
 import fs from 'fs';
 import {TwistlockMapper} from '../../../src/twistlock-mapper';
-import {omitVersions} from '../../utils';
+//import {omitVersions} from '../../utils';
 
 describe('twistlock_mapper', () => {
   it('Successfully converts Twistlock  targeted at a local/cloned repository data', () => {
