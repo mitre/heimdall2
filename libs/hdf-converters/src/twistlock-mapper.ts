@@ -103,7 +103,7 @@ export class TwistlockMapper extends BaseConverter {
             },
             code: {
               transformer: (vulnerability: Record<string, unknown>): string => {
-                return JSON.stringify(_.omit(vulnerability, ['packageName', 'packageVersion', 'impactedVersions', 'riskFactors']), null, 2);
+                return JSON.stringify(_.omit(vulnerability, ['packageName', 'packageVersion', 'impactedVersions']), null, 2);
               }
             },
             results: [
@@ -120,10 +120,7 @@ export class TwistlockMapper extends BaseConverter {
                     const impactedVersions = _.has(data, 'impactedVersions')
                       ? `${JSON.stringify(_.get(data, 'impactedVersions'))}`
                       : 'N/A';
-                    const riskFactors = _.has(data, 'riskFactors')
-                      ? `${JSON.stringify(_.get(data, 'riskFactors'))}`
-                      : 'N/A';
-                    return `Package: ${packageName} Version: ${packageVersion} Impacted Versions: ${impactedVersions} Risk Factors: ${riskFactors}`;
+                    return `Package: ${packageName} Version: ${packageVersion} Impacted Versions: ${impactedVersions}`;
                   }
                 },
                 run_time: 0,
