@@ -1,6 +1,6 @@
 import fs from 'fs';
 import {TwistlockMapper} from '../../../src/twistlock-mapper';
-//import {omitVersions} from '../../utils';
+import {omitVersions} from '../../utils';
 
 describe('twistlock_mapper', () => {
   it('Successfully converts Twistlock  targeted at a local/cloned repository data', () => {
@@ -12,18 +12,17 @@ describe('twistlock_mapper', () => {
         )
       )
     );
-  //   expect(omitVersions(mapper.toHdf())).toEqual(
-  //     omitVersions(
-  //       JSON.parse(
-  //         fs.readFileSync(
-  //           'sample_jsons/snyk_mapper/nodejs-goof-local-hdf.json',
-  //           {
-  //             encoding: 'utf-8'
-  //           }
-  //         )
-  //       )
-  //     )
-  //   );
-  // });
+     expect(omitVersions(mapper.toHdf())).toEqual(
+       omitVersions(
+         JSON.parse(
+           fs.readFileSync(
+             'sample_jsons/twistlock_mapper/twistlock-twistcli-sample-1-hdf.json',
+             {
+               encoding: 'utf-8'
+             }
+           )
+         )
+       )
+     );
    });
 });
