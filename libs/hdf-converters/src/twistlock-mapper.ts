@@ -31,7 +31,9 @@ export class TwistlockResults {
 }
 
 export class TwistlockMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> = {
+  mappings: MappedTransform<
+    ExecJSON.Execution & { passthrough: unknown },
+    ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -48,8 +50,8 @@ export class TwistlockMapper extends BaseConverter {
         title: {
           transformer: (data: Record<string, unknown>): string => {
             const projectName = _.has(data, 'collections')
-              ? `${_.get(data, 'collections[1]')}`
-                    : 'N/A';
+            ? `${_.get(data, 'collections[1]')}`
+            : 'N/A';
             return `Twistlock Project: ${projectName}`;
           }
         },
@@ -57,7 +59,8 @@ export class TwistlockMapper extends BaseConverter {
         summary: {
           transformer: (data: Record<string, unknown>): string => {
             const vulnerabilityTotal = _.has(data, 'vulnerabilityDistribution')
-              ? `${JSON.stringify(_.get(data, 'vulnerabilityDistribution.total'))}`
+              ? `${JSON.stringify(
+                  _.get(data, 'vulnerabilityDistribution.total'))}`
               : 'N/A';
             const complianceTotal = _.has(data, 'complianceDistribution')
               ? `${JSON.stringify(_.get(data, 'complianceDistribution.total'))}`
@@ -102,7 +105,13 @@ export class TwistlockMapper extends BaseConverter {
             },
             code: {
               transformer: (vulnerability: Record<string, unknown>): string => {
-                return JSON.stringify(_.omit(vulnerability, ['packageName', 'packageVersion', 'impactedVersions']), null, 2);
+                return JSON.stringify(
+                  _.omit(vulnerability,
+                    [
+                    'packageName', 
+                    'packageVersion',
+                    'impactedVersions'
+                    ]), null, 2);
               }
             },
             results: [

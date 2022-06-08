@@ -12,17 +12,17 @@ describe('twistlock_mapper', () => {
         )
       )
     );
-     expect(omitVersions(mapper.toHdf())).toEqual(
-       omitVersions(
-         JSON.parse(
-           fs.readFileSync(
-             'sample_jsons/twistlock_mapper/twistlock-twistcli-sample-1-hdf.json',
-             {
-               encoding: 'utf-8'
-             }
-           )
-         )
-       )
-     );
-   });
+    expect(omitVersions(mapper.toHdf())).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/twistlock_mapper/twistlock-twistcli-sample-1-hdf.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
+        )
+      )
+    );
+  });
 });
