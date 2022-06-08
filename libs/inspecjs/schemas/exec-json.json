@@ -787,6 +787,15 @@
         }
       }
     },
+    "Attestation_Status": {
+      "type": "string",
+      "enum": [
+        "passed",
+        "failed"
+      ],
+      "description": "The attested status of the control",
+      "title": "Control Attestation Status"
+    },
     "Attestation_Data": {
       "type": "object",
       "additionalProperties": true,
@@ -809,11 +818,7 @@
           "type": "string"
         },
         "status": {
-          "type": "string",
-          "enum": [
-            "passed",
-            "failed"
-          ]
+          "$ref": "#/definitions/Attestation_Status"
         },
         "updated": {
           "type": "string"

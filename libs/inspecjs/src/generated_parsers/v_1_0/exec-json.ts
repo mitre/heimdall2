@@ -205,12 +205,15 @@ export interface AttestationData {
     control_id:  string;
     explanation: string;
     frequency:   string;
-    status:      Status;
+    status:      ControlAttestationStatus;
     updated:     string;
     updated_by:  string;
 }
 
-export enum Status {
+/**
+ * The attested status of the control
+ */
+export enum ControlAttestationStatus {
     Failed = "failed",
     Passed = "passed",
 }
@@ -654,7 +657,7 @@ const typeMap: any = {
         { json: "control_id", js: "control_id", typ: "" },
         { json: "explanation", js: "explanation", typ: "" },
         { json: "frequency", js: "frequency", typ: "" },
-        { json: "status", js: "status", typ: r("Status") },
+        { json: "status", js: "status", typ: r("ControlAttestationStatus") },
         { json: "updated", js: "updated", typ: "" },
         { json: "updated_by", js: "updated_by", typ: "" },
     ], "any"),
@@ -726,7 +729,7 @@ const typeMap: any = {
     "StatisticBlock": o([
         { json: "total", js: "total", typ: 3.14 },
     ], "any"),
-    "Status": [
+    "ControlAttestationStatus": [
         "failed",
         "passed",
     ],
