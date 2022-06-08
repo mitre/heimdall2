@@ -148,7 +148,7 @@ export class TwistlockMapper extends BaseConverter {
       twistlock_metadata: {
         transformer: (
           data: Record<string, unknown>
-          ): Record<string, unknown> => {
+        ): Record<string, unknown> => {
           return data;
         }
       }
