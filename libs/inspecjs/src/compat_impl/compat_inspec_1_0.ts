@@ -32,7 +32,7 @@ abstract class HDFControl10 implements HDFControl {
   readonly severity: Severity;
   readonly waived: boolean;
   readonly attested: boolean;
-  readonly attestationStatus?: 'passed' | 'failed'
+  readonly attestationStatus?: 'passed' | 'failed';
   readonly descriptions: {[key: string]: string} = {};
   readonly isProfile: boolean;
 
@@ -190,7 +190,8 @@ export class ExecControl extends HDFControl10 implements HDFControl {
     super(
       control,
       false,
-      Boolean(control.waiver_data) && Boolean(control.waiver_data?.skipped_due_to_waiver),
+      Boolean(control.waiver_data) &&
+        Boolean(control.waiver_data?.skipped_due_to_waiver),
       Boolean(control.attestation_data)
     );
 
@@ -244,11 +245,13 @@ export class ExecControl extends HDFControl10 implements HDFControl {
       return 'Passed';
     } else if (this.attested) {
       if (this.attestationStatus === 'failed') {
-        return 'Failed'
+        return 'Failed';
       } else if (this.attestationStatus === 'passed') {
-        return 'Passed'
+        return 'Passed';
       } else {
-        throw new Error(`Attestation for control ${this.wraps.id} exists with invalid status: ${this.attestationStatus}`)
+        throw new Error(
+          `Attestation for control ${this.wraps.id} exists with invalid status: ${this.attestationStatus}`
+        );
       }
     } else if (this.status_list.includes('skipped')) {
       return 'Not Reviewed';
