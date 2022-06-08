@@ -33,7 +33,7 @@ export class TwistlockResults {
 export class TwistlockMapper extends BaseConverter {
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
-    ILookupPath> = {
+      ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -60,7 +60,7 @@ export class TwistlockMapper extends BaseConverter {
           transformer: (data: Record<string, unknown>): string => {
             const vulnerabilityTotal = _.has(data, 'vulnerabilityDistribution')
               ? `${JSON.stringify(
-                  _.get(data, 'vulnerabilityDistribution.total'))}`
+                _.get(data, 'vulnerabilityDistribution.total'))}`
               : 'N/A';
             const complianceTotal = _.has(data, 'complianceDistribution')
               ? `${JSON.stringify(_.get(data, 'complianceDistribution.total'))}`
@@ -106,11 +106,11 @@ export class TwistlockMapper extends BaseConverter {
             code: {
               transformer: (vulnerability: Record<string, unknown>): string => {
                 return JSON.stringify(
-                  _.omit(vulnerability,
+                   _.omit(vulnerability,
                     [
-                   'packageName',
-                   'packageVersion',
-                   'impactedVersions'
+                    'packageName',
+                    'packageVersion',
+                    'impactedVersions'
                   ]),
                   null,
                   2
@@ -146,7 +146,7 @@ export class TwistlockMapper extends BaseConverter {
     passthrough: {
       twistlock_metadata: {
         transformer: (
-        data: Record<string, unknown>): Record<string, unknown> => {
+          data: Record<string, unknown>): Record<string, unknown> => {
           return data;
         }
       }
