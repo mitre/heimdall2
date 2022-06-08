@@ -1,5 +1,5 @@
 import {createHash} from 'crypto';
-import parser from 'fast-xml-parser';
+import { XMLParser } from 'fast-xml-parser';
 import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
@@ -59,7 +59,8 @@ export function parseXml(xml: string): Record<string, unknown> {
     textNodeName: 'text',
     ignoreAttributes: false
   };
-  return parser.parse(xml, options);
+  const parser = new XMLParser(options);
+  return parser.parse(xml);
 }
 
 export function parseCsv(csv: string): unknown[] {
