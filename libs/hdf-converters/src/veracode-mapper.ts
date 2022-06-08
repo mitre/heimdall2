@@ -27,7 +27,7 @@ function impactMapping(severity: number): number {
 }
 
 function nistTag(input: string): string[] {
-  const cwes = _.get(input, 'cwe').map((value: any) => _.get(value, 'cweid'));
+  const cwes = _.get(input, 'cwe').map((value: Record<string, unknown>) => _.get(value, 'cweid'));
   return CWE_NIST_MAPPING.nistFilter(cwes, DEFAULT_NIST_TAG);
 }
 
@@ -38,22 +38,15 @@ function formatRecommendations(input: Record<string, unknown>): string {
       text.push(`${_.get(input, 'recommendations.para.text')}`);
     }
     else {
-      text = (_.get(input, `recommendations.para`) as Record<string, unknown>[]).map( function(value: any) {
+      text.push(...(_.get(input, `recommendations.para`) as Record<string, unknown>[]).map( function(value: any) {
         return _.get(value, 'text')
-      });
+      }));
     }
   }
   if (_.has(input, 'recommendations.para.bulletitem')) {
-    if (_.has(input, 'recommendations.para.bulletitem.text')) {
-      text.push(`${_.get(input, 'recommendations.para.bulletitem.text')}`);
-
-    }
-    else {
-      const text2 = (_.get(input, `recommendations.para.bulletitem`) as Record<string, unknown>[]).map( function(value: any) {
-        return _.get(value, 'text')
-      });
-      text = text.concat(text2)
-    }
+    text.push(...(_.get(input, `recommendations.para.bulletitem`) as Record<string, unknown>[]).map( function(value: any) {
+      return _.get(value, 'text')
+    }));
   }
   return text.join('\n');
 }
@@ -289,7 +282,7 @@ function setcomponents(parsedXML: any) {
             ' ' +
             _.get(
               parsedXML,
-              `${SCA_VULNERABILITIES}${l}].file_paths.file_path`
+              `${SCA_VULNERABILITIES}${l}].file_paths.file_path.value`
             );
           _.set(parsedXML, `${SCA_CVES}${m}].paths`, location);
         }
@@ -453,13 +446,11 @@ function controlMappingCwe(severity: number) {
       cweDescription: {transformer: formatCweDesc},
       nist: {transformer: nistTag}
     },
-    code: {path: ''},
     source_location: {
       ref: {
         path: 'staticflaws.flaw',
         transformer: formatSourceLocation
       },
-      line: 0
     },
     results: [
       {
@@ -468,13 +459,11 @@ function controlMappingCwe(severity: number) {
         code_desc: {transformer: formatCodeDesc},
         run_time: 0,
         start_time: {path: '$.detailedreport.first_build_submitted_date'},
-        message: 'exploitability_adjustments.exploitability_adjustment.note',
-        resource: ''
+        message: {path: 'exploitability_adjustments.exploitability_adjustment.note'}
       }
     ]
   };
 }
-
 function controlMappingCve() {
   return {
     id: {path: 'cve_id'},
@@ -486,10 +475,8 @@ function controlMappingCve() {
       cwe: {path: 'cwe_id'},
       nist: {path: 'nist'}
     },
-    code: {path: ''},
     source_location: {
-      ref: {path: 'paths'},
-      line: 0
+      ref: {path: 'paths'}
     },
     results: [
       {
@@ -497,9 +484,7 @@ function controlMappingCve() {
         status: ExecJSON.ControlResultStatus.Failed,
         code_desc: {transformer: formatSCACodeDesc},
         run_time: 0,
-        start_time: {path: '$.detailedreport.first_build_submitted_date'},
-        message: '',
-        resource: ''
+        start_time: {path: '$.detailedreport.first_build_submitted_date'}
       }
     ]
   };
@@ -514,12 +499,11 @@ export class VeracodeMapper extends BaseConverter {
     },
     version: HeimdallToolsVersion,
     statistics: {
-      duration: 0
     },
     profiles: [
       {
         name: {path: 'detailedreport.policy_name'},
-        version: {path: 'detailedreport.static-analysis.version'},
+        version: {path: 'detailedreport.version'},
         title: {path: 'detailedreport.static-analysis.modules.module.name'},
         maintainer: null,
         summary: null,
@@ -567,10 +551,5 @@ export class VeracodeMapper extends BaseConverter {
   };
   constructor(xml: string) {
     super(parseXml(xml));
-  }
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
   }
 }
