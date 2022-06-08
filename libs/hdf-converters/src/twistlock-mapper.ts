@@ -33,7 +33,7 @@ export class TwistlockResults {
 export class TwistlockMapper extends BaseConverter {
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
-      ILookupPath> = {
+    ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -106,7 +106,7 @@ export class TwistlockMapper extends BaseConverter {
             code: {
               transformer: (vulnerability: Record<string, unknown>): string => {
                 return JSON.stringify(
-                   _.omit(vulnerability,
+                  _.omit(vulnerability,
                     [
                     'packageName',
                     'packageVersion',
