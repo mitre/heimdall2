@@ -41,9 +41,7 @@ export class TwistlockMapper extends BaseConverter {
       target_id: {path: 'results[0].name'}
     },
     version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
-    },
+    statistics: {},
     profiles: [
       {
         path: 'results',
@@ -56,7 +54,6 @@ export class TwistlockMapper extends BaseConverter {
             return `Twistlock Project: ${projectName}`;
           }
         },
-        maintainer: null,
         summary: {
           transformer: (data: Record<string, unknown>): string => {
             const vulnerabilityTotal = _.has(data, 'vulnerabilityDistribution')
@@ -70,12 +67,8 @@ export class TwistlockMapper extends BaseConverter {
             return `Package Vulnerability Summary: ${vulnerabilityTotal} Application Compliance Issue Total: ${complianceTotal}`;
           }
         },
-        license: null,
-        copyright: null,
-        copyright_email: null,
         supports: [],
         attributes: [],
-        depends: [],
         groups: [],
         status: 'loaded',
         controls: [
@@ -95,7 +88,6 @@ export class TwistlockMapper extends BaseConverter {
                 }
               }
             },
-            descriptions: [],
             refs: [],
             source_location: {},
             title: {path: 'id'},
@@ -121,7 +113,8 @@ export class TwistlockMapper extends BaseConverter {
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
-                code_desc: {
+                code_desc: '',
+                message: {
                   transformer: (data: Record<string, unknown>): string => {
                     const packageName = _.has(data, 'packageName')
                       ? `${JSON.stringify(_.get(data, 'packageName'))}`
@@ -135,7 +128,6 @@ export class TwistlockMapper extends BaseConverter {
                     return `Package: ${packageName} Version: ${packageVersion} Impacted Versions: ${impactedVersions}`;
                   }
                 },
-                run_time: 0,
                 start_time: {path: 'discoveredDate'}
               }
             ]

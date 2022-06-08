@@ -3,7 +3,7 @@ import {TwistlockMapper} from '../../../src/twistlock-mapper';
 import {omitVersions} from '../../utils';
 
 describe('twistlock_mapper', () => {
-  it('Successfully converts Twistlock  targeted at a local/cloned repository data', () => {
+  it('Successfully converts Twistlock targeted at a local/cloned repository data', () => {
     const mapper = new TwistlockMapper(
       JSON.parse(
         fs.readFileSync(
