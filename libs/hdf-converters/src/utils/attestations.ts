@@ -107,10 +107,7 @@ export function addAttestationToHDF(
     for (const control of profile.controls) {
       for (const attestation of attestations) {
         if (attestation.control_id.toLowerCase() === control.id.toLowerCase()) {
-          if (
-            attestation.status == 'passed' ||
-            attestation.status == 'failed'
-          ) {
+          if (['passed', 'failed'].includes(attestation.status)) {
             // Attestation status is expecting type enum Status (failed, passed), however we just have a string status which can only be (failed or passed)
             control.attestation_data =
               attestation as unknown as AttestationData;
