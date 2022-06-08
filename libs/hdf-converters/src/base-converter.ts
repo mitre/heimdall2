@@ -59,8 +59,8 @@ export function parseXml(xml: string): Record<string, unknown> {
     textNodeName: 'text',
     ignoreAttributes: false
   };
-  const parser = new XMLParser(options);
-  return parser.parse(xml);
+  const xmlParser = new XMLParser(options);
+  return xmlParser.parse(xml);
 }
 
 export function parseCsv(csv: string): unknown[] {

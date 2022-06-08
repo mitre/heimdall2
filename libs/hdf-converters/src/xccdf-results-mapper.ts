@@ -1,4 +1,4 @@
-import parser from 'fast-xml-parser';
+import { XMLParser } from 'fast-xml-parser';
 import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
@@ -105,8 +105,8 @@ function convertEncodedXmlIntoJson(
   htmlParser.write(encodedXml);
   htmlParser.end();
   const xmlParsed = xmlChunks.join('');
-
-  return parser.parse(xmlParsed);
+  const xmlParser = new XMLParser();
+  return xmlParser.parse(xmlParsed);
 }
 
 type ProfileKey = 'id' | 'description' | 'title';
