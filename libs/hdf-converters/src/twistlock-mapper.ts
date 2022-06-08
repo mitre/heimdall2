@@ -32,8 +32,8 @@ export class TwistlockResults {
 
 export class TwistlockMapper extends BaseConverter {
   mappings: MappedTransform<
-    ExecJSON.Execution & { passthrough: unknown },
-    ILookupPath> = {
+    ExecJSON.Execution & {passthrough: unknown},
+      ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -50,8 +50,8 @@ export class TwistlockMapper extends BaseConverter {
         title: {
           transformer: (data: Record<string, unknown>): string => {
             const projectName = _.has(data, 'collections')
-            ? `${_.get(data, 'collections[1]')}`
-            : 'N/A';
+              ? `${_.get(data, 'collections[1]')}`
+              : 'N/A';
             return `Twistlock Project: ${projectName}`;
           }
         },
@@ -60,7 +60,7 @@ export class TwistlockMapper extends BaseConverter {
           transformer: (data: Record<string, unknown>): string => {
             const vulnerabilityTotal = _.has(data, 'vulnerabilityDistribution')
               ? `${JSON.stringify(
-                  _.get(data, 'vulnerabilityDistribution.total'))}`
+                _.get(data, 'vulnerabilityDistribution.total'))}`
               : 'N/A';
             const complianceTotal = _.has(data, 'complianceDistribution')
               ? `${JSON.stringify(_.get(data, 'complianceDistribution.total'))}`
@@ -85,11 +85,11 @@ export class TwistlockMapper extends BaseConverter {
               cveid: {
                 path: 'id',
                 transformer: (idValue: string): string[] => {
-                    const output: string[] = [];
-                    const numbers = idValue.split('-');
-                    numbers.shift();
-                    output.push(numbers.join('-'));
-                    return output;
+                  const output: string[] = [];
+                  const numbers = idValue.split('-');
+                  numbers.shift();
+                  output.push(numbers.join('-'));
+                  return output;
                 }
               }
             },
@@ -111,7 +111,10 @@ export class TwistlockMapper extends BaseConverter {
                     'packageName', 
                     'packageVersion',
                     'impactedVersions'
-                    ]), null, 2);
+                    ]),
+                  null,
+                  2
+                  );
               }
             },
             results: [
@@ -142,7 +145,8 @@ export class TwistlockMapper extends BaseConverter {
     ],
     passthrough: {
       twistlock_metadata: {
-        transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        transformer: (
+          data: Record<string, unknown>): Record<string, unknown> => {
           return data;
         }
       }
