@@ -51,6 +51,7 @@ export function omitHDFTimes(
         controls: profile.controls.map((control) => {
           return {
             ...control,
+            attestation_data: _.omit(control.attestation_data, 'updated'),
             results: control.results.map((result) => {
               return {
                 ..._.omit(result, 'start_time'),
