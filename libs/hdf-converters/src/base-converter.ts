@@ -1,5 +1,5 @@
 import {createHash} from 'crypto';
-import { XMLParser } from 'fast-xml-parser';
+import {XMLParser} from 'fast-xml-parser';
 import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
