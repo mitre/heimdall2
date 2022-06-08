@@ -107,8 +107,8 @@ export class TwistlockMapper extends BaseConverter {
             },
             code: {
               transformer: (vulnerability: Record<string, unknown>): string => {
-                return JSON.stringify(_.omit(vulnerability,
-                    [
+                    return JSON.stringify(
+                    _.omit(vulnerability, [
                     'packageName',
                     'packageVersion',
                     'impactedVersions'
@@ -147,8 +147,8 @@ export class TwistlockMapper extends BaseConverter {
     passthrough: {
       twistlock_metadata: {
         transformer: (
-          data: Record<string, unknown>):
-          Record<string, unknown> => {
+          data: Record<string, unknown>
+          ): Record<string, unknown> => {
           return data;
         }
       }
