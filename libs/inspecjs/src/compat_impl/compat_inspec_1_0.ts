@@ -186,12 +186,11 @@ export class ExecControl extends HDFControl10 implements HDFControl {
   readonly status: ControlStatus;
 
   constructor(control: ResultControl_1_0) {
-    // Waived is true if waived_data is present and skipped_due_to_waiver is true
+    // Waived is true if skipped_due_to_waiver is true
     super(
       control,
       false,
-      Boolean(control.waiver_data) &&
-        Boolean(control.waiver_data?.skipped_due_to_waiver),
+      Boolean(control.waiver_data?.skipped_due_to_waiver),
       Boolean(control.attestation_data)
     );
 
