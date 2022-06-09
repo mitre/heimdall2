@@ -67,16 +67,7 @@ export class TwistlockMapper extends BaseConverter {
             key: 'id',
             tags: {
               nist: ['SI-2', 'RA-5'],
-              cveid: {
-                path: 'id',
-                transformer: (idValue: string): string[] => {
-                  const output: string[] = [];
-                  const numbers = idValue.split('-');
-                  numbers.shift();
-                  output.push(numbers.join('-'));
-                  return output;
-                }
-              }
+              cveid: {path: 'id'}
             },
             refs: [],
             source_location: {},
@@ -89,14 +80,14 @@ export class TwistlockMapper extends BaseConverter {
             },
             code: {
               transformer: (vulnerability: Record<string, unknown>): string => {
-                return JSON.stringify(
-                  _.omit(vulnerability, [
+                return JSON.stringify(vulnerability
+                  /*_.omit(vulnerability, [
                     'packageName',
                     'packageVersion',
                     'impactedVersions'
                   ]),
                   null,
-                  2
+                  2*/
                 );
               }
             },
@@ -111,7 +102,7 @@ export class TwistlockMapper extends BaseConverter {
                     const impactedVersions = _.has(data, 'impactedVersions')
                       ? `${JSON.stringify(_.get(data, 'impactedVersions'))}`
                       : 'N/A';
-                    return `Package ${packageName} should be updated to latest version above impact versions ${impactedVersions}`;
+                    return `Package ${packageName} should be updated to latest version above impacted versions ${impactedVersions}`;
                   }
                 },
                 message: {
@@ -122,7 +113,7 @@ export class TwistlockMapper extends BaseConverter {
                     const packageVersion = _.has(data, 'packageVersion')
                       ? `${JSON.stringify(_.get(data, 'packageVersion'))}`
                       : 'N/A';
-                    return `Expected latest version of ${packageName} \n Detected vulnerable version ${packageVersion} of ${packageName}`;
+                    return `Expected latest version of ${packageName}\nDetected vulnerable version ${packageVersion} of ${packageName}`;
                   }
                 },
                 start_time: {path: 'discoveredDate'}
@@ -134,7 +125,7 @@ export class TwistlockMapper extends BaseConverter {
       }
     ],
     passthrough: {
-      twistlock_metadata: {
+      twistlock_raw: {
         transformer: (
           data: Record<string, unknown>
         ): Record<string, unknown> => {
