@@ -5,21 +5,14 @@
 		"target_id": "registry.io/test:1a7a431a105aa04632f5f5fbe8f753bd245add0a"
 	},
 	"version": "2.6.25",
-	"statistics": {
-		"duration": null
-	},
+	"statistics": {},
 	"profiles": [
 		{
 			"name": "Twistlock Scan",
-			"title": "Twistlock Project: TEST-COLLECTION",
-			"maintainer": null,
+			"title": "Twistlock Project: All / TEST-COLLECTION",
 			"summary": "Package Vulnerability Summary: 97 Application Compliance Issue Total: 0",
-			"license": null,
-			"copyright": null,
-			"copyright_email": null,
 			"supports": [],
 			"attributes": [],
-			"depends": [],
 			"groups": [],
 			"status": "loaded",
 			"controls": [
@@ -29,47 +22,44 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2021-43529"
-						]
+						"cveid": "CVE-2021-43529"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2021-43529",
 					"id": "CVE-2021-43529",
 					"desc": "DOCUMENTATION: A remote code execution flaw was found in the way NSS verifies certificates. This flaw allows an attacker posing as an SSL/TLS server to trigger this issue in a client application compiled with NSS when it tries to initiate an SSL/TLS connection.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client, triggering the flaw. The highest threat to this vulnerability is confidentiality, integrity, as well as system availability.              STATEMENT: The issue is not limited to TLS. Any applications that use NSS certificate verification are vulnerable; S/MIME is impacted as well.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client.  Firefox is not vulnerable to this flaw as it uses the mozilla::pkix for certificate verification. Thunderbird is affected when parsing email with the S/MIME signature.  Thunderbird on Red Hat Enterprise Linux 8.4 and later does not need to be updated since it uses the system NSS library, but earlier Red Hat Enterprise Linux 8 extended life streams will need to update Thunderbird as well as NSS.             MITIGATION: Red Hat has investigated whether a possible mitigation exists for this issue, and has not been able to identify a practical example. Please update the affec",
 					"impact": 0.9,
-					"code": "{\n  \"id\": \"CVE-2021-43529\",\n  \"status\": \"affected\",\n  \"cvss\": 9.8,\n  \"description\": \"DOCUMENTATION: A remote code execution flaw was found in the way NSS verifies certificates. This flaw allows an attacker posing as an SSL/TLS server to trigger this issue in a client application compiled with NSS when it tries to initiate an SSL/TLS connection.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client, triggering the flaw. The highest threat to this vulnerability is confidentiality, integrity, as well as system availability.              STATEMENT: The issue is not limited to TLS. Any applications that use NSS certificate verification are vulnerable; S/MIME is impacted as well.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client.  Firefox is not vulnerable to this flaw as it uses the mozilla::pkix for certificate verification. Thunderbird is affected when parsing email with the S/MIME signature.  Thunderbird on Red Hat Enterprise Linux 8.4 and later does not need to be updated since it uses the system NSS library, but earlier Red Hat Enterprise Linux 8 extended life streams will need to update Thunderbird as well as NSS.             MITIGATION: Red Hat has investigated whether a possible mitigation exists for this issue, and has not been able to identify a practical example. Please update the affec\",\n  \"severity\": \"critical\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-43529\",\n  \"riskFactors\": [\n    \"Remote execution\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Critical severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2021-12-01T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-16T23:12:25Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2021-43529\",\n  \"status\": \"affected\",\n  \"cvss\": 9.8,\n  \"description\": \"DOCUMENTATION: A remote code execution flaw was found in the way NSS verifies certificates. This flaw allows an attacker posing as an SSL/TLS server to trigger this issue in a client application compiled with NSS when it tries to initiate an SSL/TLS connection.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client, triggering the flaw. The highest threat to this vulnerability is confidentiality, integrity, as well as system availability.              STATEMENT: The issue is not limited to TLS. Any applications that use NSS certificate verification are vulnerable; S/MIME is impacted as well.  Similarly, a server application compiled with NSS, which processes client certificates, can receive a malicious certificate via a client.  Firefox is not vulnerable to this flaw as it uses the mozilla::pkix for certificate verification. Thunderbird is affected when parsing email with the S/MIME signature.  Thunderbird on Red Hat Enterprise Linux 8.4 and later does not need to be updated since it uses the system NSS library, but earlier Red Hat Enterprise Linux 8 extended life streams will need to update Thunderbird as well as NSS.             MITIGATION: Red Hat has investigated whether a possible mitigation exists for this issue, and has not been able to identify a practical example. Please update the affec\",\n  \"severity\": \"critical\",\n  \"packageName\": \"nss-util\",\n  \"packageVersion\": \"3.67.0-7.el8_5\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-43529\",\n  \"riskFactors\": [\n    \"Remote execution\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Critical severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2021-12-01T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-16T23:12:25Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"nss-util\" Version: \"3.67.0-7.el8_5\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"nss-util\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"nss-util\"\nDetected vulnerable version \"3.67.0-7.el8_5\" of \"nss-util\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"nss-sysinit\" Version: \"3.67.0-7.el8_5\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"nss-sysinit\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"nss-sysinit\"\nDetected vulnerable version \"3.67.0-7.el8_5\" of \"nss-sysinit\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"nss\" Version: \"3.67.0-7.el8_5\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"nss\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"nss\"\nDetected vulnerable version \"3.67.0-7.el8_5\" of \"nss\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"nss-softokn\" Version: \"3.67.0-7.el8_5\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"nss-softokn\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"nss-softokn\"\nDetected vulnerable version \"3.67.0-7.el8_5\" of \"nss-softokn\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"nss-softokn-freebl\" Version: \"3.67.0-7.el8_5\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"nss-softokn-freebl\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"nss-softokn-freebl\"\nDetected vulnerable version \"3.67.0-7.el8_5\" of \"nss-softokn-freebl\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -80,23 +70,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-1650"
-						]
+						"cveid": "CVE-2022-1650"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-1650",
 					"id": "CVE-2022-1650",
 					"desc": "Exposure of Sensitive Information to an Unauthorized Actor in GitHub repository eventsource/eventsource prior to v2.0.2.",
 					"impact": 0.9,
-					"code": "{\n  \"id\": \"CVE-2022-1650\",\n  \"status\": \"under investigation\",\n  \"cvss\": 8.1,\n  \"description\": \"Exposure of Sensitive Information to an Unauthorized Actor in GitHub repository eventsource/eventsource prior to v2.0.2.\",\n  \"severity\": \"important\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-1650\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"High severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-05-12T11:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-16T23:46:22Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-1650\",\n  \"status\": \"under investigation\",\n  \"cvss\": 8.1,\n  \"description\": \"Exposure of Sensitive Information to an Unauthorized Actor in GitHub repository eventsource/eventsource prior to v2.0.2.\",\n  \"severity\": \"important\",\n  \"packageName\": \"dotnet-host\",\n  \"packageVersion\": \"6.0.5-1.el8_6\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-1650\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"High severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-05-12T11:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-16T23:46:22Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"dotnet-host\" Version: \"6.0.5-1.el8_6\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"dotnet-host\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"dotnet-host\"\nDetected vulnerable version \"6.0.5-1.el8_6\" of \"dotnet-host\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -107,23 +94,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-22824"
-						]
+						"cveid": "CVE-2022-22824"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-22824",
 					"id": "CVE-2022-22824",
 					"desc": "defineAttribute in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-22824\",\n  \"status\": \"affected\",\n  \"cvss\": 9.8,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n  \"description\": \"defineAttribute in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-22824\",\n  \"riskFactors\": [\n    \"Medium severity\",\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\"\n  ],\n  \"publishedDate\": \"2022-01-10T14:12:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-22824\",\n  \"status\": \"affected\",\n  \"cvss\": 9.8,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n  \"description\": \"defineAttribute in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"expat\",\n  \"packageVersion\": \"2.2.5-8.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-22824\",\n  \"riskFactors\": [\n    \"Medium severity\",\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-01-10T14:12:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"expat\" Version: \"2.2.5-8.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"expat\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"expat\"\nDetected vulnerable version \"2.2.5-8.el8\" of \"expat\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -134,23 +118,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-22823"
-						]
+						"cveid": "CVE-2022-22823"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-22823",
 					"id": "CVE-2022-22823",
 					"desc": "build_model in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-22823\",\n  \"status\": \"affected\",\n  \"cvss\": 9.8,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n  \"description\": \"build_model in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-22823\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\",\n    \"Attack complexity: low\"\n  ],\n  \"publishedDate\": \"2022-01-10T14:12:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-22823\",\n  \"status\": \"affected\",\n  \"cvss\": 9.8,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n  \"description\": \"build_model in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"expat\",\n  \"packageVersion\": \"2.2.5-8.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-22823\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\",\n    \"Attack complexity: low\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-01-10T14:12:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"expat\" Version: \"2.2.5-8.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"expat\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"expat\"\nDetected vulnerable version \"2.2.5-8.el8\" of \"expat\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -161,23 +142,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-22822"
-						]
+						"cveid": "CVE-2022-22822"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-22822",
 					"id": "CVE-2022-22822",
 					"desc": "addBinding in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-22822\",\n  \"status\": \"affected\",\n  \"cvss\": 9.8,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n  \"description\": \"addBinding in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-22822\",\n  \"riskFactors\": [\n    \"Medium severity\",\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\"\n  ],\n  \"publishedDate\": \"2022-01-10T14:12:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-22822\",\n  \"status\": \"affected\",\n  \"cvss\": 9.8,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n  \"description\": \"addBinding in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"expat\",\n  \"packageVersion\": \"2.2.5-8.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-22822\",\n  \"riskFactors\": [\n    \"Medium severity\",\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-01-10T14:12:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"expat\" Version: \"2.2.5-8.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"expat\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"expat\"\nDetected vulnerable version \"2.2.5-8.el8\" of \"expat\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -188,23 +166,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-22827"
-						]
+						"cveid": "CVE-2022-22827"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-22827",
 					"id": "CVE-2022-22827",
 					"desc": "storeAtts in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-22827\",\n  \"status\": \"affected\",\n  \"cvss\": 8.8,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"storeAtts in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-22827\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-01-10T14:12:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-22827\",\n  \"status\": \"affected\",\n  \"cvss\": 8.8,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"storeAtts in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"expat\",\n  \"packageVersion\": \"2.2.5-8.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-22827\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-01-10T14:12:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"expat\" Version: \"2.2.5-8.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"expat\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"expat\"\nDetected vulnerable version \"2.2.5-8.el8\" of \"expat\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -215,23 +190,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-22826"
-						]
+						"cveid": "CVE-2022-22826"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-22826",
 					"id": "CVE-2022-22826",
 					"desc": "nextScaffoldPart in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-22826\",\n  \"status\": \"affected\",\n  \"cvss\": 8.8,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"nextScaffoldPart in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-22826\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-01-10T14:12:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-22826\",\n  \"status\": \"affected\",\n  \"cvss\": 8.8,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"nextScaffoldPart in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"expat\",\n  \"packageVersion\": \"2.2.5-8.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-22826\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-01-10T14:12:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"expat\" Version: \"2.2.5-8.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"expat\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"expat\"\nDetected vulnerable version \"2.2.5-8.el8\" of \"expat\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -242,23 +214,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-22825"
-						]
+						"cveid": "CVE-2022-22825"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-22825",
 					"id": "CVE-2022-22825",
 					"desc": "lookup in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-22825\",\n  \"status\": \"affected\",\n  \"cvss\": 8.8,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"lookup in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-22825\",\n  \"riskFactors\": [\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\"\n  ],\n  \"publishedDate\": \"2022-01-10T14:12:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-22825\",\n  \"status\": \"affected\",\n  \"cvss\": 8.8,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"lookup in xmlparse.c in Expat (aka libexpat) before 2.4.3 has an integer overflow.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"expat\",\n  \"packageVersion\": \"2.2.5-8.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-22825\",\n  \"riskFactors\": [\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-01-10T14:12:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"expat\" Version: \"2.2.5-8.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"expat\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"expat\"\nDetected vulnerable version \"2.2.5-8.el8\" of \"expat\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -269,23 +238,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2021-44569"
-						]
+						"cveid": "CVE-2021-44569"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2021-44569",
 					"id": "CVE-2021-44569",
 					"desc": "A heap-buffer openSUSE libsolv through 13 Dec 2020 exists in the solver_solve function at src/solver.c: line 3445.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2021-44569\",\n  \"status\": \"under investigation\",\n  \"cvss\": 8.8,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"A heap-buffer openSUSE libsolv through 13 Dec 2020 exists in the solver_solve function at src/solver.c: line 3445.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-44569\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\",\n    \"Attack complexity: low\"\n  ],\n  \"publishedDate\": \"2022-02-21T19:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2021-44569\",\n  \"status\": \"under investigation\",\n  \"cvss\": 8.8,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"A heap-buffer openSUSE libsolv through 13 Dec 2020 exists in the solver_solve function at src/solver.c: line 3445.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"libsolv\",\n  \"packageVersion\": \"0.7.20-1.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-44569\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\",\n    \"Attack complexity: low\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-02-21T19:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libsolv\" Version: \"0.7.20-1.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libsolv\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libsolv\"\nDetected vulnerable version \"0.7.20-1.el8\" of \"libsolv\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -296,23 +262,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2017-15412"
-						]
+						"cveid": "CVE-2017-15412"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2017-15412",
 					"id": "CVE-2017-15412",
 					"desc": "Use after free in libxml2 before 2.9.5, as used in Google Chrome prior to 63.0.3239.84 and other products, allowed a remote attacker to potentially exploit heap corruption via a crafted HTML page.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2017-15412\",\n  \"status\": \"affected\",\n  \"cvss\": 8.8,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"Use after free in libxml2 before 2.9.5, as used in Google Chrome prior to 63.0.3239.84 and other products, allowed a remote attacker to potentially exploit heap corruption via a crafted HTML page.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-15412\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\"\n  ],\n  \"publishedDate\": \"2018-01-29T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2017-15412\",\n  \"status\": \"affected\",\n  \"cvss\": 8.8,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"Use after free in libxml2 before 2.9.5, as used in Google Chrome prior to 63.0.3239.84 and other products, allowed a remote attacker to potentially exploit heap corruption via a crafted HTML page.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"python3-libxml2\",\n  \"packageVersion\": \"2.9.7-13.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-15412\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2018-01-29T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"python3-libxml2\" Version: \"2.9.7-13.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"python3-libxml2\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"python3-libxml2\"\nDetected vulnerable version \"2.9.7-13.el8\" of \"python3-libxml2\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -323,23 +286,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2016-5131"
-						]
+						"cveid": "CVE-2016-5131"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2016-5131",
 					"id": "CVE-2016-5131",
 					"desc": "Use-after-free vulnerability in libxml2 through 2.9.4, as used in Google Chrome before 52.0.2743.82, allows remote attackers to cause a denial of service or possibly have unspecified other impact via vectors related to the XPointer range-to function.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2016-5131\",\n  \"status\": \"affected\",\n  \"cvss\": 8.8,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"Use-after-free vulnerability in libxml2 through 2.9.4, as used in Google Chrome before 52.0.2743.82, allows remote attackers to cause a denial of service or possibly have unspecified other impact via vectors related to the XPointer range-to function.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2016-5131\",\n  \"riskFactors\": [\n    \"DoS\",\n    \"Medium severity\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\"\n  ],\n  \"publishedDate\": \"2016-07-23T19:59:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2016-5131\",\n  \"status\": \"affected\",\n  \"cvss\": 8.8,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"Use-after-free vulnerability in libxml2 through 2.9.4, as used in Google Chrome before 52.0.2743.82, allows remote attackers to cause a denial of service or possibly have unspecified other impact via vectors related to the XPointer range-to function.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"python3-libxml2\",\n  \"packageVersion\": \"2.9.7-13.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2016-5131\",\n  \"riskFactors\": [\n    \"DoS\",\n    \"Medium severity\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2016-07-23T19:59:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"python3-libxml2\" Version: \"2.9.7-13.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"python3-libxml2\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"python3-libxml2\"\nDetected vulnerable version \"2.9.7-13.el8\" of \"python3-libxml2\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -350,23 +310,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2017-0663"
-						]
+						"cveid": "CVE-2017-0663"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2017-0663",
 					"id": "CVE-2017-0663",
 					"desc": "A remote code execution vulnerability in libxml2 could enable an attacker using a specially crafted file to execute arbitrary code within the context of an unprivileged process. This issue is rated as High due to the possibility of remote code execution in an application that uses this library. Product: Android. Versions: 4.4.4, 5.0.2, 5.1.1, 6.0, 6.0.1, 7.0, 7.1.1, 7.1.2. Android ID: A-37104170.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2017-0663\",\n  \"status\": \"affected\",\n  \"cvss\": 8.1,\n  \"vector\": \"CVSS:3.0/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"A remote code execution vulnerability in libxml2 could enable an attacker using a specially crafted file to execute arbitrary code within the context of an unprivileged process. This issue is rated as High due to the possibility of remote code execution in an application that uses this library. Product: Android. Versions: 4.4.4, 5.0.2, 5.1.1, 6.0, 6.0.1, 7.0, 7.1.1, 7.1.2. Android ID: A-37104170.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-0663\",\n  \"riskFactors\": [\n    \"Remote execution\",\n    \"Attack vector: network\",\n    \"Medium severity\"\n  ],\n  \"publishedDate\": \"2017-06-14T13:29:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2017-0663\",\n  \"status\": \"affected\",\n  \"cvss\": 8.1,\n  \"vector\": \"CVSS:3.0/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"A remote code execution vulnerability in libxml2 could enable an attacker using a specially crafted file to execute arbitrary code within the context of an unprivileged process. This issue is rated as High due to the possibility of remote code execution in an application that uses this library. Product: Android. Versions: 4.4.4, 5.0.2, 5.1.1, 6.0, 6.0.1, 7.0, 7.1.1, 7.1.2. Android ID: A-37104170.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"python3-libxml2\",\n  \"packageVersion\": \"2.9.7-13.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-0663\",\n  \"riskFactors\": [\n    \"Remote execution\",\n    \"Attack vector: network\",\n    \"Medium severity\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2017-06-14T13:29:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"python3-libxml2\" Version: \"2.9.7-13.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"python3-libxml2\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"python3-libxml2\"\nDetected vulnerable version \"2.9.7-13.el8\" of \"python3-libxml2\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -377,23 +334,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2021-46143"
-						]
+						"cveid": "CVE-2021-46143"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2021-46143",
 					"id": "CVE-2021-46143",
 					"desc": "In doProlog in xmlparse.c in Expat (aka libexpat) before 2.4.3, an integer overflow exists for m_groupSize.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2021-46143\",\n  \"status\": \"affected\",\n  \"cvss\": 7.8,\n  \"vector\": \"CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"In doProlog in xmlparse.c in Expat (aka libexpat) before 2.4.3, an integer overflow exists for m_groupSize.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-46143\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-01-06T04:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2021-46143\",\n  \"status\": \"affected\",\n  \"cvss\": 7.8,\n  \"vector\": \"CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"In doProlog in xmlparse.c in Expat (aka libexpat) before 2.4.3, an integer overflow exists for m_groupSize.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"expat\",\n  \"packageVersion\": \"2.2.5-8.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-46143\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-01-06T04:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"expat\" Version: \"2.2.5-8.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"expat\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"expat\"\nDetected vulnerable version \"2.2.5-8.el8\" of \"expat\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -404,41 +358,38 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-29167"
-						]
+						"cveid": "CVE-2022-29167"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-29167",
 					"id": "CVE-2022-29167",
 					"desc": "Hawk is an HTTP authentication scheme providing mechanisms for making authenticated HTTP requests with partial cryptographic verification of the request and response, covering the HTTP method, request URI, host, and optionally the request payload. Hawk used a regular expression to parse `Host` HTTP header (`Hawk.utils.parseHost()`), which was subject to regular expression DoS attack - meaning each added character in the attacker\\'s input increases the computation time exponentially. `parseHost()` was patched in `9.0.1` to use built-in `URL` class to parse hostname instead. `Hawk.authenticate()` accepts `options` argument. If that contains `host` and `port`, those would be used instead of a call to `utils.parseHost()`.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-29167\",\n  \"status\": \"under investigation\",\n  \"cvss\": 7.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n  \"description\": \"Hawk is an HTTP authentication scheme providing mechanisms for making authenticated HTTP requests with partial cryptographic verification of the request and response, covering the HTTP method, request URI, host, and optionally the request payload. Hawk used a regular expression to parse `Host` HTTP header (`Hawk.utils.parseHost()`), which was subject to regular expression DoS attack - meaning each added character in the attacker\\\\'s input increases the computation time exponentially. `parseHost()` was patched in `9.0.1` to use built-in `URL` class to parse hostname instead. `Hawk.authenticate()` accepts `options` argument. If that contains `host` and `port`, those would be used instead of a call to `utils.parseHost()`.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-29167\",\n  \"riskFactors\": [\n    \"DoS\",\n    \"Medium severity\",\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\"\n  ],\n  \"publishedDate\": \"2022-05-06T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-16T23:46:22Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-29167\",\n  \"status\": \"under investigation\",\n  \"cvss\": 7.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n  \"description\": \"Hawk is an HTTP authentication scheme providing mechanisms for making authenticated HTTP requests with partial cryptographic verification of the request and response, covering the HTTP method, request URI, host, and optionally the request payload. Hawk used a regular expression to parse `Host` HTTP header (`Hawk.utils.parseHost()`), which was subject to regular expression DoS attack - meaning each added character in the attacker\\\\'s input increases the computation time exponentially. `parseHost()` was patched in `9.0.1` to use built-in `URL` class to parse hostname instead. `Hawk.authenticate()` accepts `options` argument. If that contains `host` and `port`, those would be used instead of a call to `utils.parseHost()`.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"aspnetcore-runtime-5.0\",\n  \"packageVersion\": \"5.0.17-1.el8_6\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-29167\",\n  \"riskFactors\": [\n    \"DoS\",\n    \"Medium severity\",\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-05-06T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-16T23:46:22Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"aspnetcore-runtime-5.0\" Version: \"5.0.17-1.el8_6\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"aspnetcore-runtime-5.0\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"aspnetcore-runtime-5.0\"\nDetected vulnerable version \"5.0.17-1.el8_6\" of \"aspnetcore-runtime-5.0\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"dotnet-host\" Version: \"6.0.5-1.el8_6\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"dotnet-host\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"dotnet-host\"\nDetected vulnerable version \"6.0.5-1.el8_6\" of \"dotnet-host\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"dotnet-hostfxr-5.0\" Version: \"5.0.17-1.el8_6\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"dotnet-hostfxr-5.0\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"dotnet-hostfxr-5.0\"\nDetected vulnerable version \"5.0.17-1.el8_6\" of \"dotnet-hostfxr-5.0\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"dotnet-runtime-5.0\" Version: \"5.0.17-1.el8_6\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"dotnet-runtime-5.0\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"dotnet-runtime-5.0\"\nDetected vulnerable version \"5.0.17-1.el8_6\" of \"dotnet-runtime-5.0\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -449,23 +400,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-25314"
-						]
+						"cveid": "CVE-2022-25314"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-25314",
 					"id": "CVE-2022-25314",
 					"desc": "In Expat (aka libexpat) before 2.4.5, there is an integer overflow in copyString.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-25314\",\n  \"status\": \"affected\",\n  \"cvss\": 7.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n  \"description\": \"In Expat (aka libexpat) before 2.4.5, there is an integer overflow in copyString.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-25314\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-02-18T05:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-25314\",\n  \"status\": \"affected\",\n  \"cvss\": 7.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n  \"description\": \"In Expat (aka libexpat) before 2.4.5, there is an integer overflow in copyString.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"expat\",\n  \"packageVersion\": \"2.2.5-8.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-25314\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-02-18T05:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"expat\" Version: \"2.2.5-8.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"expat\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"expat\"\nDetected vulnerable version \"2.2.5-8.el8\" of \"expat\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -476,41 +424,38 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-24772"
-						]
+						"cveid": "CVE-2022-24772"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-24772",
 					"id": "CVE-2022-24772",
 					"desc": "Forge (also called `node-forge`) is a native implementation of Transport Layer Security in JavaScript. Prior to version 1.3.0, RSA PKCS#1 v1.5 signature verification code does not check for tailing garbage bytes after decoding a `DigestInfo` ASN.1 structure. This can allow padding bytes to be removed and garbage data added to forge a signature when a low public exponent is being used. The issue has been addressed in `node-forge` version 1.3.0. There are currently no known workarounds.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-24772\",\n  \"status\": \"under investigation\",\n  \"cvss\": 7.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N\",\n  \"description\": \"Forge (also called `node-forge`) is a native implementation of Transport Layer Security in JavaScript. Prior to version 1.3.0, RSA PKCS#1 v1.5 signature verification code does not check for tailing garbage bytes after decoding a `DigestInfo` ASN.1 structure. This can allow padding bytes to be removed and garbage data added to forge a signature when a low public exponent is being used. The issue has been addressed in `node-forge` version 1.3.0. There are currently no known workarounds.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-24772\",\n  \"riskFactors\": [\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\"\n  ],\n  \"publishedDate\": \"2022-03-18T14:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-16T23:46:22Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-24772\",\n  \"status\": \"under investigation\",\n  \"cvss\": 7.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N\",\n  \"description\": \"Forge (also called `node-forge`) is a native implementation of Transport Layer Security in JavaScript. Prior to version 1.3.0, RSA PKCS#1 v1.5 signature verification code does not check for tailing garbage bytes after decoding a `DigestInfo` ASN.1 structure. This can allow padding bytes to be removed and garbage data added to forge a signature when a low public exponent is being used. The issue has been addressed in `node-forge` version 1.3.0. There are currently no known workarounds.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"dotnet-runtime-5.0\",\n  \"packageVersion\": \"5.0.17-1.el8_6\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-24772\",\n  \"riskFactors\": [\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-03-18T14:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-16T23:46:22Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"dotnet-runtime-5.0\" Version: \"5.0.17-1.el8_6\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"dotnet-runtime-5.0\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"dotnet-runtime-5.0\"\nDetected vulnerable version \"5.0.17-1.el8_6\" of \"dotnet-runtime-5.0\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"dotnet-hostfxr-5.0\" Version: \"5.0.17-1.el8_6\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"dotnet-hostfxr-5.0\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"dotnet-hostfxr-5.0\"\nDetected vulnerable version \"5.0.17-1.el8_6\" of \"dotnet-hostfxr-5.0\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"aspnetcore-runtime-5.0\" Version: \"5.0.17-1.el8_6\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"aspnetcore-runtime-5.0\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"aspnetcore-runtime-5.0\"\nDetected vulnerable version \"5.0.17-1.el8_6\" of \"aspnetcore-runtime-5.0\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"dotnet-host\" Version: \"6.0.5-1.el8_6\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"dotnet-host\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"dotnet-host\"\nDetected vulnerable version \"6.0.5-1.el8_6\" of \"dotnet-host\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -521,41 +466,38 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-24771"
-						]
+						"cveid": "CVE-2022-24771"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-24771",
 					"id": "CVE-2022-24771",
 					"desc": "Forge (also called `node-forge`) is a native implementation of Transport Layer Security in JavaScript. Prior to version 1.3.0, RSA PKCS#1 v1.5 signature verification code is lenient in checking the digest algorithm structure. This can allow a crafted structure that steals padding bytes and uses unchecked portion of the PKCS#1 encoded message to forge a signature when a low public exponent is being used. The issue has been addressed in `node-forge` version 1.3.0. There are currently no known workarounds.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-24771\",\n  \"status\": \"under investigation\",\n  \"cvss\": 7.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N\",\n  \"description\": \"Forge (also called `node-forge`) is a native implementation of Transport Layer Security in JavaScript. Prior to version 1.3.0, RSA PKCS#1 v1.5 signature verification code is lenient in checking the digest algorithm structure. This can allow a crafted structure that steals padding bytes and uses unchecked portion of the PKCS#1 encoded message to forge a signature when a low public exponent is being used. The issue has been addressed in `node-forge` version 1.3.0. There are currently no known workarounds.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-24771\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-03-18T14:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-16T23:46:22Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-24771\",\n  \"status\": \"under investigation\",\n  \"cvss\": 7.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N\",\n  \"description\": \"Forge (also called `node-forge`) is a native implementation of Transport Layer Security in JavaScript. Prior to version 1.3.0, RSA PKCS#1 v1.5 signature verification code is lenient in checking the digest algorithm structure. This can allow a crafted structure that steals padding bytes and uses unchecked portion of the PKCS#1 encoded message to forge a signature when a low public exponent is being used. The issue has been addressed in `node-forge` version 1.3.0. There are currently no known workarounds.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"dotnet-host\",\n  \"packageVersion\": \"6.0.5-1.el8_6\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-24771\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-03-18T14:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-16T23:46:22Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"dotnet-host\" Version: \"6.0.5-1.el8_6\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"dotnet-host\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"dotnet-host\"\nDetected vulnerable version \"6.0.5-1.el8_6\" of \"dotnet-host\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"dotnet-hostfxr-5.0\" Version: \"5.0.17-1.el8_6\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"dotnet-hostfxr-5.0\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"dotnet-hostfxr-5.0\"\nDetected vulnerable version \"5.0.17-1.el8_6\" of \"dotnet-hostfxr-5.0\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"aspnetcore-runtime-5.0\" Version: \"5.0.17-1.el8_6\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"aspnetcore-runtime-5.0\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"aspnetcore-runtime-5.0\"\nDetected vulnerable version \"5.0.17-1.el8_6\" of \"aspnetcore-runtime-5.0\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"dotnet-runtime-5.0\" Version: \"5.0.17-1.el8_6\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"dotnet-runtime-5.0\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"dotnet-runtime-5.0\"\nDetected vulnerable version \"5.0.17-1.el8_6\" of \"dotnet-runtime-5.0\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -566,23 +508,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2021-3580"
-						]
+						"cveid": "CVE-2021-3580"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2021-3580",
 					"id": "CVE-2021-3580",
 					"desc": "A flaw was found in the way nettle\\'s RSA decryption functions handled specially crafted ciphertext. An attacker could use this flaw to provide a manipulated ciphertext leading to application crash and denial of service.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2021-3580\",\n  \"status\": \"affected\",\n  \"cvss\": 7.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n  \"description\": \"A flaw was found in the way nettle\\\\'s RSA decryption functions handled specially crafted ciphertext. An attacker could use this flaw to provide a manipulated ciphertext leading to application crash and denial of service.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-3580\",\n  \"riskFactors\": [\n    \"Medium severity\",\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"DoS\"\n  ],\n  \"publishedDate\": \"2021-08-05T21:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2021-3580\",\n  \"status\": \"affected\",\n  \"cvss\": 7.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n  \"description\": \"A flaw was found in the way nettle\\\\'s RSA decryption functions handled specially crafted ciphertext. An attacker could use this flaw to provide a manipulated ciphertext leading to application crash and denial of service.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"nettle\",\n  \"packageVersion\": \"3.4.1-7.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-3580\",\n  \"riskFactors\": [\n    \"Medium severity\",\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"DoS\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2021-08-05T21:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"nettle\" Version: \"3.4.1-7.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"nettle\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"nettle\"\nDetected vulnerable version \"3.4.1-7.el8\" of \"nettle\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -593,23 +532,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2017-9047"
-						]
+						"cveid": "CVE-2017-9047"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2017-9047",
 					"id": "CVE-2017-9047",
 					"desc": "A buffer overflow was discovered in libxml2 20904-GITv2.9.4-16-g0741801. The function xmlSnprintfElementContent in valid.c is supposed to recursively dump the element content definition into a char buffer \\'buf\\' of size \\'size\\'. The variable len is assigned strlen(buf). If the content->type is XML_ELEMENT_CONTENT_ELEMENT, then (i) the content->prefix is appended to buf (if it actually fits) whereupon (ii) content->name is written to the buffer. However, the check for whether the content->name actually fits also uses \\'len\\' rather than the updated buffer length strlen(buf). This allows us to write about \\\"size\\\" many bytes beyond the allocated memory. This vulnerability causes programs that use libxml2, such as PHP, to crash.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2017-9047\",\n  \"status\": \"affected\",\n  \"cvss\": 7.5,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n  \"description\": \"A buffer overflow was discovered in libxml2 20904-GITv2.9.4-16-g0741801. The function xmlSnprintfElementContent in valid.c is supposed to recursively dump the element content definition into a char buffer \\\\'buf\\\\' of size \\\\'size\\\\'. The variable len is assigned strlen(buf). If the content->type is XML_ELEMENT_CONTENT_ELEMENT, then (i) the content->prefix is appended to buf (if it actually fits) whereupon (ii) content->name is written to the buffer. However, the check for whether the content->name actually fits also uses \\\\'len\\\\' rather than the updated buffer length strlen(buf). This allows us to write about \\\\\\\"size\\\\\\\" many bytes beyond the allocated memory. This vulnerability causes programs that use libxml2, such as PHP, to crash.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-9047\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\"\n  ],\n  \"publishedDate\": \"2017-05-18T06:29:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2017-9047\",\n  \"status\": \"affected\",\n  \"cvss\": 7.5,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n  \"description\": \"A buffer overflow was discovered in libxml2 20904-GITv2.9.4-16-g0741801. The function xmlSnprintfElementContent in valid.c is supposed to recursively dump the element content definition into a char buffer \\\\'buf\\\\' of size \\\\'size\\\\'. The variable len is assigned strlen(buf). If the content->type is XML_ELEMENT_CONTENT_ELEMENT, then (i) the content->prefix is appended to buf (if it actually fits) whereupon (ii) content->name is written to the buffer. However, the check for whether the content->name actually fits also uses \\\\'len\\\\' rather than the updated buffer length strlen(buf). This allows us to write about \\\\\\\"size\\\\\\\" many bytes beyond the allocated memory. This vulnerability causes programs that use libxml2, such as PHP, to crash.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"python3-libxml2\",\n  \"packageVersion\": \"2.9.7-13.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-9047\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2017-05-18T06:29:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"python3-libxml2\" Version: \"2.9.7-13.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"python3-libxml2\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"python3-libxml2\"\nDetected vulnerable version \"2.9.7-13.el8\" of \"python3-libxml2\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -620,29 +556,26 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-29824"
-						]
+						"cveid": "CVE-2022-29824"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-29824",
 					"id": "CVE-2022-29824",
 					"desc": "In libxml2 before 2.9.14, several buffer handling functions in buf.c (xmlBuf*) and tree.c (xmlBuffer*) don\\'t check for integer overflows. This can result in out-of-bounds memory writes. Exploitation requires a victim to open a crafted, multi-gigabyte XML file. Other software using libxml2\\'s buffer functions, for example libxslt through 1.1.35, is affected as well.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-29824\",\n  \"status\": \"affected\",\n  \"cvss\": 7.4,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"In libxml2 before 2.9.14, several buffer handling functions in buf.c (xmlBuf*) and tree.c (xmlBuffer*) don\\\\'t check for integer overflows. This can result in out-of-bounds memory writes. Exploitation requires a victim to open a crafted, multi-gigabyte XML file. Other software using libxml2\\\\'s buffer functions, for example libxslt through 1.1.35, is affected as well.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-29824\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-05-03T03:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-29824\",\n  \"status\": \"affected\",\n  \"cvss\": 7.4,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"In libxml2 before 2.9.14, several buffer handling functions in buf.c (xmlBuf*) and tree.c (xmlBuffer*) don\\\\'t check for integer overflows. This can result in out-of-bounds memory writes. Exploitation requires a victim to open a crafted, multi-gigabyte XML file. Other software using libxml2\\\\'s buffer functions, for example libxslt through 1.1.35, is affected as well.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"python3-libxml2\",\n  \"packageVersion\": \"2.9.7-13.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-29824\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-05-03T03:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"python3-libxml2\" Version: \"2.9.7-13.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"python3-libxml2\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"python3-libxml2\"\nDetected vulnerable version \"2.9.7-13.el8\" of \"python3-libxml2\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libxml2\" Version: \"2.9.7-13.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libxml2\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libxml2\"\nDetected vulnerable version \"2.9.7-13.el8\" of \"libxml2\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -653,23 +586,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-1621"
-						]
+						"cveid": "CVE-2022-1621"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-1621",
 					"id": "CVE-2022-1621",
 					"desc": "Heap buffer overflow in vim_strncpy find_word in GitHub repository vim/vim prior to 8.2.4919. This vulnerability is capable of crashing software, Bypass Protection Mechanism, Modify Memory, and possible remote execution",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-1621\",\n  \"status\": \"under investigation\",\n  \"cvss\": 7.3,\n  \"vector\": \"CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"Heap buffer overflow in vim_strncpy find_word in GitHub repository vim/vim prior to 8.2.4919. This vulnerability is capable of crashing software, Bypass Protection Mechanism, Modify Memory, and possible remote execution\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-1621\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-05-10T14:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-1621\",\n  \"status\": \"under investigation\",\n  \"cvss\": 7.3,\n  \"vector\": \"CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"Heap buffer overflow in vim_strncpy find_word in GitHub repository vim/vim prior to 8.2.4919. This vulnerability is capable of crashing software, Bypass Protection Mechanism, Modify Memory, and possible remote execution\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"vim-minimal\",\n  \"packageVersion\": \"8.0.1763-16.el8_5.13\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-1621\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-05-10T14:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"vim-minimal\" Version: \"8.0.1763-16.el8_5.13\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"vim-minimal\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"vim-minimal\"\nDetected vulnerable version \"8.0.1763-16.el8_5.13\" of \"vim-minimal\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -680,29 +610,26 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2015-20107"
-						]
+						"cveid": "CVE-2015-20107"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2015-20107",
 					"id": "CVE-2015-20107",
 					"desc": "In Python (aka CPython) through 3.10.4, the mailcap module does not add escape characters into commands discovered in the system mailcap file. This may allow attackers to inject shell commands into applications that call mailcap.findmatch with untrusted input (if they lack validation of user-provided filenames or arguments).",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2015-20107\",\n  \"status\": \"affected\",\n  \"cvss\": 7.1,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n  \"description\": \"In Python (aka CPython) through 3.10.4, the mailcap module does not add escape characters into commands discovered in the system mailcap file. This may allow attackers to inject shell commands into applications that call mailcap.findmatch with untrusted input (if they lack validation of user-provided filenames or arguments).\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2015-20107\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Attack complexity: low\"\n  ],\n  \"publishedDate\": \"2022-04-13T16:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2015-20107\",\n  \"status\": \"affected\",\n  \"cvss\": 7.1,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n  \"description\": \"In Python (aka CPython) through 3.10.4, the mailcap module does not add escape characters into commands discovered in the system mailcap file. This may allow attackers to inject shell commands into applications that call mailcap.findmatch with untrusted input (if they lack validation of user-provided filenames or arguments).\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"platform-python\",\n  \"packageVersion\": \"3.6.8-45.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2015-20107\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Attack complexity: low\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-04-13T16:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"platform-python\" Version: \"3.6.8-45.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"platform-python\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"platform-python\"\nDetected vulnerable version \"3.6.8-45.el8\" of \"platform-python\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"python3-libs\" Version: \"3.6.8-45.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"python3-libs\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"python3-libs\"\nDetected vulnerable version \"3.6.8-45.el8\" of \"python3-libs\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -713,23 +640,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-1304"
-						]
+						"cveid": "CVE-2022-1304"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-1304",
 					"id": "CVE-2022-1304",
 					"desc": "An out-of-bounds read/write vulnerability was found in e2fsprogs 1.46.5. This issue leads to a segmentation fault and possibly arbitrary code execution via a specially crafted filesystem.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-1304\",\n  \"status\": \"affected\",\n  \"cvss\": 7,\n  \"vector\": \"CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"An out-of-bounds read/write vulnerability was found in e2fsprogs 1.46.5. This issue leads to a segmentation fault and possibly arbitrary code execution via a specially crafted filesystem.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-1304\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-04-14T21:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-1304\",\n  \"status\": \"affected\",\n  \"cvss\": 7,\n  \"vector\": \"CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"An out-of-bounds read/write vulnerability was found in e2fsprogs 1.46.5. This issue leads to a segmentation fault and possibly arbitrary code execution via a specially crafted filesystem.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"libcom_err\",\n  \"packageVersion\": \"1.45.6-4.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-1304\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-04-14T21:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libcom_err\" Version: \"1.45.6-4.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libcom_err\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libcom_err\"\nDetected vulnerable version \"1.45.6-4.el8\" of \"libcom_err\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -740,23 +664,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-1629"
-						]
+						"cveid": "CVE-2022-1629"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-1629",
 					"id": "CVE-2022-1629",
 					"desc": "Buffer Over-read in function find_next_quote in GitHub repository vim/vim prior to 8.2.4925. This vulnerabilities are capable of crashing software, Modify Memory, and possible remote execution",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-1629\",\n  \"status\": \"under investigation\",\n  \"cvss\": 6.6,\n  \"vector\": \"CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"Buffer Over-read in function find_next_quote in GitHub repository vim/vim prior to 8.2.4925. This vulnerabilities are capable of crashing software, Modify Memory, and possible remote execution\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-1629\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-05-10T14:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-1629\",\n  \"status\": \"under investigation\",\n  \"cvss\": 6.6,\n  \"vector\": \"CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"Buffer Over-read in function find_next_quote in GitHub repository vim/vim prior to 8.2.4925. This vulnerabilities are capable of crashing software, Modify Memory, and possible remote execution\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"vim-minimal\",\n  \"packageVersion\": \"8.0.1763-16.el8_5.13\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-1629\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-05-10T14:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"vim-minimal\" Version: \"8.0.1763-16.el8_5.13\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"vim-minimal\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"vim-minimal\"\nDetected vulnerable version \"8.0.1763-16.el8_5.13\" of \"vim-minimal\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -767,23 +688,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-25313"
-						]
+						"cveid": "CVE-2022-25313"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-25313",
 					"id": "CVE-2022-25313",
 					"desc": "In Expat (aka libexpat) before 2.4.5, an attacker can trigger stack exhaustion in build_model via a large nesting depth in the DTD element.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-25313\",\n  \"status\": \"affected\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"In Expat (aka libexpat) before 2.4.5, an attacker can trigger stack exhaustion in build_model via a large nesting depth in the DTD element.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-25313\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-02-18T05:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-25313\",\n  \"status\": \"affected\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"In Expat (aka libexpat) before 2.4.5, an attacker can trigger stack exhaustion in build_model via a large nesting depth in the DTD element.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"expat\",\n  \"packageVersion\": \"2.2.5-8.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-25313\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-02-18T05:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"expat\" Version: \"2.2.5-8.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"expat\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"expat\"\nDetected vulnerable version \"2.2.5-8.el8\" of \"expat\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -794,29 +712,26 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-0391"
-						]
+						"cveid": "CVE-2022-0391"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-0391",
 					"id": "CVE-2022-0391",
 					"desc": "A flaw was found in Python, specifically within the urllib.parse module. This module helps break Uniform Resource Locator (URL) strings into components. The issue involves how the urlparse method does not sanitize input and allows characters like \\'\\r\\' and \\'\\n\\' in the URL path. This flaw allows an attacker to input a crafted URL, leading to injection attacks. This flaw affects Python versions prior to 3.10.0b1, 3.9.5, 3.8.11, 3.7.11 and 3.6.14.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-0391\",\n  \"status\": \"affected\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N\",\n  \"description\": \"A flaw was found in Python, specifically within the urllib.parse module. This module helps break Uniform Resource Locator (URL) strings into components. The issue involves how the urlparse method does not sanitize input and allows characters like \\\\'\\\\r\\\\' and \\\\'\\\\n\\\\' in the URL path. This flaw allows an attacker to input a crafted URL, leading to injection attacks. This flaw affects Python versions prior to 3.10.0b1, 3.9.5, 3.8.11, 3.7.11 and 3.6.14.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-0391\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-02-09T23:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-0391\",\n  \"status\": \"affected\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N\",\n  \"description\": \"A flaw was found in Python, specifically within the urllib.parse module. This module helps break Uniform Resource Locator (URL) strings into components. The issue involves how the urlparse method does not sanitize input and allows characters like \\\\'\\\\r\\\\' and \\\\'\\\\n\\\\' in the URL path. This flaw allows an attacker to input a crafted URL, leading to injection attacks. This flaw affects Python versions prior to 3.10.0b1, 3.9.5, 3.8.11, 3.7.11 and 3.6.14.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"python3-libs\",\n  \"packageVersion\": \"3.6.8-45.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-0391\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-02-09T23:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"python3-libs\" Version: \"3.6.8-45.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"python3-libs\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"python3-libs\"\nDetected vulnerable version \"3.6.8-45.el8\" of \"python3-libs\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"platform-python\" Version: \"3.6.8-45.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"platform-python\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"platform-python\"\nDetected vulnerable version \"3.6.8-45.el8\" of \"platform-python\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -827,23 +742,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2021-44577"
-						]
+						"cveid": "CVE-2021-44577"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2021-44577",
 					"id": "CVE-2021-44577",
 					"desc": "Two heap-overflow vulnerabilities exist in openSUSE libsolv through 13 Dec 2020 bugs in the propagate function at src/solver.c: line 490 and 524.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2021-44577\",\n  \"status\": \"under investigation\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"Two heap-overflow vulnerabilities exist in openSUSE libsolv through 13 Dec 2020 bugs in the propagate function at src/solver.c: line 490 and 524.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-44577\",\n  \"riskFactors\": [\n    \"Medium severity\",\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\"\n  ],\n  \"publishedDate\": \"2022-02-21T20:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2021-44577\",\n  \"status\": \"under investigation\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"Two heap-overflow vulnerabilities exist in openSUSE libsolv through 13 Dec 2020 bugs in the propagate function at src/solver.c: line 490 and 524.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"libsolv\",\n  \"packageVersion\": \"0.7.20-1.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-44577\",\n  \"riskFactors\": [\n    \"Medium severity\",\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-02-21T20:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libsolv\" Version: \"0.7.20-1.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libsolv\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libsolv\"\nDetected vulnerable version \"0.7.20-1.el8\" of \"libsolv\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -854,23 +766,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2021-44576"
-						]
+						"cveid": "CVE-2021-44576"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2021-44576",
 					"id": "CVE-2021-44576",
 					"desc": "Two memory vulnerabilities exists in openSUSE libsolv through 13 Dec 2020 in the resolve_weak function at src/solver.c: line 2222 and 2249.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2021-44576\",\n  \"status\": \"under investigation\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"Two memory vulnerabilities exists in openSUSE libsolv through 13 Dec 2020 in the resolve_weak function at src/solver.c: line 2222 and 2249.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-44576\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-02-21T20:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2021-44576\",\n  \"status\": \"under investigation\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"Two memory vulnerabilities exists in openSUSE libsolv through 13 Dec 2020 in the resolve_weak function at src/solver.c: line 2222 and 2249.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"libsolv\",\n  \"packageVersion\": \"0.7.20-1.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-44576\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-02-21T20:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libsolv\" Version: \"0.7.20-1.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libsolv\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libsolv\"\nDetected vulnerable version \"0.7.20-1.el8\" of \"libsolv\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -881,23 +790,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2021-44575"
-						]
+						"cveid": "CVE-2021-44575"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2021-44575",
 					"id": "CVE-2021-44575",
 					"desc": "Two heap-overflow vulnerabilities exists in openSUSE libsolv through 13 Dec 2020 in the makeruledecisions function at src/solver.c: line 147 and 307.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2021-44575\",\n  \"status\": \"under investigation\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"Two heap-overflow vulnerabilities exists in openSUSE libsolv through 13 Dec 2020 in the makeruledecisions function at src/solver.c: line 147 and 307.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-44575\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-02-21T20:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2021-44575\",\n  \"status\": \"under investigation\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"Two heap-overflow vulnerabilities exists in openSUSE libsolv through 13 Dec 2020 in the makeruledecisions function at src/solver.c: line 147 and 307.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"libsolv\",\n  \"packageVersion\": \"0.7.20-1.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-44575\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-02-21T20:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libsolv\" Version: \"0.7.20-1.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libsolv\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libsolv\"\nDetected vulnerable version \"0.7.20-1.el8\" of \"libsolv\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -908,23 +814,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2021-44573"
-						]
+						"cveid": "CVE-2021-44573"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2021-44573",
 					"id": "CVE-2021-44573",
 					"desc": "Two heap overflow vulnerabilities exist in oenSUSE libsolv through 13 Dec 2020 in the resolve_installed function at src/solver.c: line 1728 & 1766.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2021-44573\",\n  \"status\": \"under investigation\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"Two heap overflow vulnerabilities exist in oenSUSE libsolv through 13 Dec 2020 in the resolve_installed function at src/solver.c: line 1728 & 1766.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-44573\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-02-21T20:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2021-44573\",\n  \"status\": \"under investigation\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"Two heap overflow vulnerabilities exist in oenSUSE libsolv through 13 Dec 2020 in the resolve_installed function at src/solver.c: line 1728 & 1766.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"libsolv\",\n  \"packageVersion\": \"0.7.20-1.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-44573\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-02-21T20:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libsolv\" Version: \"0.7.20-1.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libsolv\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libsolv\"\nDetected vulnerable version \"0.7.20-1.el8\" of \"libsolv\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -935,23 +838,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2021-44571"
-						]
+						"cveid": "CVE-2021-44571"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2021-44571",
 					"id": "CVE-2021-44571",
 					"desc": "A heap overflow vulnerability exisfts in openSUSE libsolv through 13 Dec 2020 in the prefer_suggested function at src/policy.c: line 442.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2021-44571\",\n  \"status\": \"under investigation\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"A heap overflow vulnerability exisfts in openSUSE libsolv through 13 Dec 2020 in the prefer_suggested function at src/policy.c: line 442.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-44571\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-02-21T20:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2021-44571\",\n  \"status\": \"under investigation\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"A heap overflow vulnerability exisfts in openSUSE libsolv through 13 Dec 2020 in the prefer_suggested function at src/policy.c: line 442.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"libsolv\",\n  \"packageVersion\": \"0.7.20-1.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-44571\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-02-21T20:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libsolv\" Version: \"0.7.20-1.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libsolv\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libsolv\"\nDetected vulnerable version \"0.7.20-1.el8\" of \"libsolv\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -962,29 +862,26 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2021-3733"
-						]
+						"cveid": "CVE-2021-3733"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2021-3733",
 					"id": "CVE-2021-3733",
 					"desc": "There\\'s a flaw in urllib\\'s AbstractBasicAuthHandler class. An attacker who controls a malicious HTTP server that an HTTP client (such as web browser) connects to, could trigger a Regular Expression Denial of Service (ReDOS) during an authentication request with a specially crafted payload that is sent by the server to the client. The greatest threat that this flaw poses is to application availability.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2021-3733\",\n  \"status\": \"affected\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H\",\n  \"description\": \"There\\\\'s a flaw in urllib\\\\'s AbstractBasicAuthHandler class. An attacker who controls a malicious HTTP server that an HTTP client (such as web browser) connects to, could trigger a Regular Expression Denial of Service (ReDOS) during an authentication request with a specially crafted payload that is sent by the server to the client. The greatest threat that this flaw poses is to application availability.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-3733\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"DoS\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-03-10T17:42:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2021-3733\",\n  \"status\": \"affected\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H\",\n  \"description\": \"There\\\\'s a flaw in urllib\\\\'s AbstractBasicAuthHandler class. An attacker who controls a malicious HTTP server that an HTTP client (such as web browser) connects to, could trigger a Regular Expression Denial of Service (ReDOS) during an authentication request with a specially crafted payload that is sent by the server to the client. The greatest threat that this flaw poses is to application availability.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"platform-python\",\n  \"packageVersion\": \"3.6.8-45.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-3733\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"DoS\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-03-10T17:42:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"platform-python\" Version: \"3.6.8-45.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"platform-python\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"platform-python\"\nDetected vulnerable version \"3.6.8-45.el8\" of \"platform-python\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"python3-libs\" Version: \"3.6.8-45.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"python3-libs\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"python3-libs\"\nDetected vulnerable version \"3.6.8-45.el8\" of \"python3-libs\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -995,41 +892,38 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2021-35939"
-						]
+						"cveid": "CVE-2021-35939"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2021-35939",
 					"id": "CVE-2021-35939",
 					"desc": "DOCUMENTATION: It was found that the fix for CVE-2017-7500 and CVE-2017-7501 was incomplete: the check was only implemented for the parent directory of the file to be created. A local unprivileged user who owns another ancestor directory could potentially use this flaw to gain root privileges. The highest threat from this vulnerability is to data confidentiality and integrity as well as system availability.             STATEMENT: System and service accounts may have the required permissions to exploit this flaw. Conversely, regular user accounts should not be allowed to manipulate RPM artifacts during installation, thus reducing the attack surface and hence the impact of this flaw considerably.             MITIGATION: Mitigation for this issue is either not available or the currently available options do not meet the Red Hat Product Security criteria comprising ease of use and deployment, applicability to widespread installation base or stability.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2021-35939\",\n  \"status\": \"affected\",\n  \"cvss\": 6.5,\n  \"description\": \"DOCUMENTATION: It was found that the fix for CVE-2017-7500 and CVE-2017-7501 was incomplete: the check was only implemented for the parent directory of the file to be created. A local unprivileged user who owns another ancestor directory could potentially use this flaw to gain root privileges. The highest threat from this vulnerability is to data confidentiality and integrity as well as system availability.             STATEMENT: System and service accounts may have the required permissions to exploit this flaw. Conversely, regular user accounts should not be allowed to manipulate RPM artifacts during installation, thus reducing the attack surface and hence the impact of this flaw considerably.             MITIGATION: Mitigation for this issue is either not available or the currently available options do not meet the Red Hat Product Security criteria comprising ease of use and deployment, applicability to widespread installation base or stability.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-35939\",\n  \"riskFactors\": [\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Medium severity\"\n  ],\n  \"publishedDate\": \"2021-06-30T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2021-35939\",\n  \"status\": \"affected\",\n  \"cvss\": 6.5,\n  \"description\": \"DOCUMENTATION: It was found that the fix for CVE-2017-7500 and CVE-2017-7501 was incomplete: the check was only implemented for the parent directory of the file to be created. A local unprivileged user who owns another ancestor directory could potentially use this flaw to gain root privileges. The highest threat from this vulnerability is to data confidentiality and integrity as well as system availability.             STATEMENT: System and service accounts may have the required permissions to exploit this flaw. Conversely, regular user accounts should not be allowed to manipulate RPM artifacts during installation, thus reducing the attack surface and hence the impact of this flaw considerably.             MITIGATION: Mitigation for this issue is either not available or the currently available options do not meet the Red Hat Product Security criteria comprising ease of use and deployment, applicability to widespread installation base or stability.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"python3-rpm\",\n  \"packageVersion\": \"4.14.3-23.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-35939\",\n  \"riskFactors\": [\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Medium severity\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2021-06-30T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"python3-rpm\" Version: \"4.14.3-23.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"python3-rpm\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"python3-rpm\"\nDetected vulnerable version \"4.14.3-23.el8\" of \"python3-rpm\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"rpm-libs\" Version: \"4.14.3-23.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"rpm-libs\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"rpm-libs\"\nDetected vulnerable version \"4.14.3-23.el8\" of \"rpm-libs\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"rpm-build-libs\" Version: \"4.14.3-23.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"rpm-build-libs\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"rpm-build-libs\"\nDetected vulnerable version \"4.14.3-23.el8\" of \"rpm-build-libs\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"rpm\" Version: \"4.14.3-23.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"rpm\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"rpm\"\nDetected vulnerable version \"4.14.3-23.el8\" of \"rpm\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1040,41 +934,38 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2021-35938"
-						]
+						"cveid": "CVE-2021-35938"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2021-35938",
 					"id": "CVE-2021-35938",
 					"desc": "DOCUMENTATION: A symbolic link issue was found in rpm. It occurs when rpm sets the desired permissions and credentials after installing a file. A local unprivileged user could use this flaw to exchange the original file with a symbolic link to a security-critical file and escalate their privileges on the system. The highest threat from this vulnerability is to data confidentiality and integrity as well as system availability.             STATEMENT: System and service accounts may have the required permissions to exploit this flaw. Conversely, regular user accounts should not be allowed to manipulate RPM artifacts during installation, thus reducing the attack surface and hence the impact of this flaw considerably.             MITIGATION: Mitigation for this issue is either not available or the currently available options do not meet the Red Hat Product Security criteria comprising ease of use and deployment, applicability to widespread installation base or stability.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2021-35938\",\n  \"status\": \"affected\",\n  \"cvss\": 6.5,\n  \"description\": \"DOCUMENTATION: A symbolic link issue was found in rpm. It occurs when rpm sets the desired permissions and credentials after installing a file. A local unprivileged user could use this flaw to exchange the original file with a symbolic link to a security-critical file and escalate their privileges on the system. The highest threat from this vulnerability is to data confidentiality and integrity as well as system availability.             STATEMENT: System and service accounts may have the required permissions to exploit this flaw. Conversely, regular user accounts should not be allowed to manipulate RPM artifacts during installation, thus reducing the attack surface and hence the impact of this flaw considerably.             MITIGATION: Mitigation for this issue is either not available or the currently available options do not meet the Red Hat Product Security criteria comprising ease of use and deployment, applicability to widespread installation base or stability.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-35938\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2021-06-30T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2021-35938\",\n  \"status\": \"affected\",\n  \"cvss\": 6.5,\n  \"description\": \"DOCUMENTATION: A symbolic link issue was found in rpm. It occurs when rpm sets the desired permissions and credentials after installing a file. A local unprivileged user could use this flaw to exchange the original file with a symbolic link to a security-critical file and escalate their privileges on the system. The highest threat from this vulnerability is to data confidentiality and integrity as well as system availability.             STATEMENT: System and service accounts may have the required permissions to exploit this flaw. Conversely, regular user accounts should not be allowed to manipulate RPM artifacts during installation, thus reducing the attack surface and hence the impact of this flaw considerably.             MITIGATION: Mitigation for this issue is either not available or the currently available options do not meet the Red Hat Product Security criteria comprising ease of use and deployment, applicability to widespread installation base or stability.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"rpm\",\n  \"packageVersion\": \"4.14.3-23.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-35938\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2021-06-30T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"rpm\" Version: \"4.14.3-23.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"rpm\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"rpm\"\nDetected vulnerable version \"4.14.3-23.el8\" of \"rpm\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"python3-rpm\" Version: \"4.14.3-23.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"python3-rpm\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"python3-rpm\"\nDetected vulnerable version \"4.14.3-23.el8\" of \"python3-rpm\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"rpm-libs\" Version: \"4.14.3-23.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"rpm-libs\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"rpm-libs\"\nDetected vulnerable version \"4.14.3-23.el8\" of \"rpm-libs\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"rpm-build-libs\" Version: \"4.14.3-23.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"rpm-build-libs\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"rpm-build-libs\"\nDetected vulnerable version \"4.14.3-23.el8\" of \"rpm-build-libs\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1085,23 +976,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2017-9050"
-						]
+						"cveid": "CVE-2017-9050"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2017-9050",
 					"id": "CVE-2017-9050",
 					"desc": "libxml2 20904-GITv2.9.4-16-g0741801 is vulnerable to a heap-based buffer over-read in the xmlDictAddString function in dict.c. This vulnerability causes programs that use libxml2, such as PHP, to crash. This vulnerability exists because of an incomplete fix for CVE-2016-1839.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2017-9050\",\n  \"status\": \"affected\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n  \"description\": \"libxml2 20904-GITv2.9.4-16-g0741801 is vulnerable to a heap-based buffer over-read in the xmlDictAddString function in dict.c. This vulnerability causes programs that use libxml2, such as PHP, to crash. This vulnerability exists because of an incomplete fix for CVE-2016-1839.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-9050\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\"\n  ],\n  \"publishedDate\": \"2017-09-19T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2017-9050\",\n  \"status\": \"affected\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n  \"description\": \"libxml2 20904-GITv2.9.4-16-g0741801 is vulnerable to a heap-based buffer over-read in the xmlDictAddString function in dict.c. This vulnerability causes programs that use libxml2, such as PHP, to crash. This vulnerability exists because of an incomplete fix for CVE-2016-1839.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"python3-libxml2\",\n  \"packageVersion\": \"2.9.7-13.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-9050\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2017-09-19T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"python3-libxml2\" Version: \"2.9.7-13.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"python3-libxml2\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"python3-libxml2\"\nDetected vulnerable version \"2.9.7-13.el8\" of \"python3-libxml2\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1112,23 +1000,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2017-9049"
-						]
+						"cveid": "CVE-2017-9049"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2017-9049",
 					"id": "CVE-2017-9049",
 					"desc": "libxml2 20904-GITv2.9.4-16-g0741801 is vulnerable to a heap-based buffer over-read in the xmlDictComputeFastKey function in dict.c. This vulnerability causes programs that use libxml2, such as PHP, to crash. This vulnerability exists because of an incomplete fix for libxml2 Bug 759398.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2017-9049\",\n  \"status\": \"affected\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n  \"description\": \"libxml2 20904-GITv2.9.4-16-g0741801 is vulnerable to a heap-based buffer over-read in the xmlDictComputeFastKey function in dict.c. This vulnerability causes programs that use libxml2, such as PHP, to crash. This vulnerability exists because of an incomplete fix for libxml2 Bug 759398.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-9049\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\"\n  ],\n  \"publishedDate\": \"2017-05-18T06:29:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2017-9049\",\n  \"status\": \"affected\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n  \"description\": \"libxml2 20904-GITv2.9.4-16-g0741801 is vulnerable to a heap-based buffer over-read in the xmlDictComputeFastKey function in dict.c. This vulnerability causes programs that use libxml2, such as PHP, to crash. This vulnerability exists because of an incomplete fix for libxml2 Bug 759398.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"python3-libxml2\",\n  \"packageVersion\": \"2.9.7-13.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-9049\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2017-05-18T06:29:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"python3-libxml2\" Version: \"2.9.7-13.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"python3-libxml2\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"python3-libxml2\"\nDetected vulnerable version \"2.9.7-13.el8\" of \"python3-libxml2\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1139,23 +1024,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2017-7375"
-						]
+						"cveid": "CVE-2017-7375"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2017-7375",
 					"id": "CVE-2017-7375",
 					"desc": "A flaw in libxml2 allows remote XML entity inclusion with default parser flags (i.e., when the caller did not request entity substitution, DTD validation, external DTD subset loading, or default DTD attributes). Depending on the context, this may expose a higher-risk attack surface in libxml2 not usually reachable with default parser flags, and expose content from local files, HTTP, or FTP servers (which might be otherwise unreachable).",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2017-7375\",\n  \"status\": \"affected\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n  \"description\": \"A flaw in libxml2 allows remote XML entity inclusion with default parser flags (i.e., when the caller did not request entity substitution, DTD validation, external DTD subset loading, or default DTD attributes). Depending on the context, this may expose a higher-risk attack surface in libxml2 not usually reachable with default parser flags, and expose content from local files, HTTP, or FTP servers (which might be otherwise unreachable).\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-7375\",\n  \"riskFactors\": [\n    \"Medium severity\",\n    \"Attack vector: network\"\n  ],\n  \"publishedDate\": \"2018-02-19T19:29:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2017-7375\",\n  \"status\": \"affected\",\n  \"cvss\": 6.5,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n  \"description\": \"A flaw in libxml2 allows remote XML entity inclusion with default parser flags (i.e., when the caller did not request entity substitution, DTD validation, external DTD subset loading, or default DTD attributes). Depending on the context, this may expose a higher-risk attack surface in libxml2 not usually reachable with default parser flags, and expose content from local files, HTTP, or FTP servers (which might be otherwise unreachable).\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"python3-libxml2\",\n  \"packageVersion\": \"2.9.7-13.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-7375\",\n  \"riskFactors\": [\n    \"Medium severity\",\n    \"Attack vector: network\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2018-02-19T19:29:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"python3-libxml2\" Version: \"2.9.7-13.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"python3-libxml2\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"python3-libxml2\"\nDetected vulnerable version \"2.9.7-13.el8\" of \"python3-libxml2\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1166,23 +1048,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-1292"
-						]
+						"cveid": "CVE-2022-1292"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-1292",
 					"id": "CVE-2022-1292",
 					"desc": "The c_rehash script does not properly sanitise shell metacharacters to prevent command injection. This script is distributed by some operating systems in a manner where it is automatically executed. On such operating systems, an attacker could execute arbitrary commands with the privileges of the script. Use of the c_rehash script is considered obsolete and should be replaced by the OpenSSL rehash command line tool. Fixed in OpenSSL 3.0.3 (Affected 3.0.0,3.0.1,3.0.2). Fixed in OpenSSL 1.1.1o (Affected 1.1.1-1.1.1n). Fixed in OpenSSL 1.0.2ze (Affected 1.0.2-1.0.2zd).",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-1292\",\n  \"status\": \"under investigation\",\n  \"cvss\": 6.3,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n  \"description\": \"The c_rehash script does not properly sanitise shell metacharacters to prevent command injection. This script is distributed by some operating systems in a manner where it is automatically executed. On such operating systems, an attacker could execute arbitrary commands with the privileges of the script. Use of the c_rehash script is considered obsolete and should be replaced by the OpenSSL rehash command line tool. Fixed in OpenSSL 3.0.3 (Affected 3.0.0,3.0.1,3.0.2). Fixed in OpenSSL 1.1.1o (Affected 1.1.1-1.1.1n). Fixed in OpenSSL 1.0.2ze (Affected 1.0.2-1.0.2zd).\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-1292\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-05-03T16:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-1292\",\n  \"status\": \"under investigation\",\n  \"cvss\": 6.3,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n  \"description\": \"The c_rehash script does not properly sanitise shell metacharacters to prevent command injection. This script is distributed by some operating systems in a manner where it is automatically executed. On such operating systems, an attacker could execute arbitrary commands with the privileges of the script. Use of the c_rehash script is considered obsolete and should be replaced by the OpenSSL rehash command line tool. Fixed in OpenSSL 3.0.3 (Affected 3.0.0,3.0.1,3.0.2). Fixed in OpenSSL 1.1.1o (Affected 1.1.1-1.1.1n). Fixed in OpenSSL 1.0.2ze (Affected 1.0.2-1.0.2zd).\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"openssl-libs\",\n  \"packageVersion\": \"1.1.1k-6.el8_5\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-1292\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-05-03T16:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"openssl-libs\" Version: \"1.1.1k-6.el8_5\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"openssl-libs\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"openssl-libs\"\nDetected vulnerable version \"1.1.1k-6.el8_5\" of \"openssl-libs\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1193,41 +1072,38 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2021-35937"
-						]
+						"cveid": "CVE-2021-35937"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2021-35937",
 					"id": "CVE-2021-35937",
 					"desc": "DOCUMENTATION: A race condition vulnerability was found in rpm. A local unprivileged user could use this flaw to bypass the checks that were introduced in response to CVE-2017-7500 and CVE-2017-7501, potentially gaining root privileges. The highest threat from this vulnerability is to data confidentiality and integrity as well as system availability.             STATEMENT: System and service accounts may have the required permissions to exploit this flaw. Conversely, regular user accounts should not be allowed to manipulate RPM artifacts during installation, thus reducing the attack surface and hence the impact of this flaw considerably.             MITIGATION: Mitigation for this issue is either not available or the currently available options do not meet the Red Hat Product Security criteria comprising ease of use and deployment, applicability to widespread installation base or stability.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2021-35937\",\n  \"status\": \"affected\",\n  \"cvss\": 6.3,\n  \"description\": \"DOCUMENTATION: A race condition vulnerability was found in rpm. A local unprivileged user could use this flaw to bypass the checks that were introduced in response to CVE-2017-7500 and CVE-2017-7501, potentially gaining root privileges. The highest threat from this vulnerability is to data confidentiality and integrity as well as system availability.             STATEMENT: System and service accounts may have the required permissions to exploit this flaw. Conversely, regular user accounts should not be allowed to manipulate RPM artifacts during installation, thus reducing the attack surface and hence the impact of this flaw considerably.             MITIGATION: Mitigation for this issue is either not available or the currently available options do not meet the Red Hat Product Security criteria comprising ease of use and deployment, applicability to widespread installation base or stability.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-35937\",\n  \"riskFactors\": [\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2021-06-30T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2021-35937\",\n  \"status\": \"affected\",\n  \"cvss\": 6.3,\n  \"description\": \"DOCUMENTATION: A race condition vulnerability was found in rpm. A local unprivileged user could use this flaw to bypass the checks that were introduced in response to CVE-2017-7500 and CVE-2017-7501, potentially gaining root privileges. The highest threat from this vulnerability is to data confidentiality and integrity as well as system availability.             STATEMENT: System and service accounts may have the required permissions to exploit this flaw. Conversely, regular user accounts should not be allowed to manipulate RPM artifacts during installation, thus reducing the attack surface and hence the impact of this flaw considerably.             MITIGATION: Mitigation for this issue is either not available or the currently available options do not meet the Red Hat Product Security criteria comprising ease of use and deployment, applicability to widespread installation base or stability.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"rpm-libs\",\n  \"packageVersion\": \"4.14.3-23.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-35937\",\n  \"riskFactors\": [\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2021-06-30T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"rpm-libs\" Version: \"4.14.3-23.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"rpm-libs\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"rpm-libs\"\nDetected vulnerable version \"4.14.3-23.el8\" of \"rpm-libs\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"rpm-build-libs\" Version: \"4.14.3-23.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"rpm-build-libs\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"rpm-build-libs\"\nDetected vulnerable version \"4.14.3-23.el8\" of \"rpm-build-libs\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"rpm\" Version: \"4.14.3-23.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"rpm\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"rpm\"\nDetected vulnerable version \"4.14.3-23.el8\" of \"rpm\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"python3-rpm\" Version: \"4.14.3-23.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"python3-rpm\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"python3-rpm\"\nDetected vulnerable version \"4.14.3-23.el8\" of \"python3-rpm\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1238,29 +1114,26 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-27782"
-						]
+						"cveid": "CVE-2022-27782"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-27782",
 					"id": "CVE-2022-27782",
 					"desc": "DOCUMENTATION: No description is available for this CVE.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-27782\",\n  \"status\": \"affected\",\n  \"cvss\": 6,\n  \"description\": \"DOCUMENTATION: No description is available for this CVE.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-27782\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-05-11T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-27782\",\n  \"status\": \"affected\",\n  \"cvss\": 6,\n  \"description\": \"DOCUMENTATION: No description is available for this CVE.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"curl\",\n  \"packageVersion\": \"7.61.1-22.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-27782\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-05-11T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"curl\" Version: \"7.61.1-22.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"curl\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"curl\"\nDetected vulnerable version \"7.61.1-22.el8\" of \"curl\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libcurl\" Version: \"7.61.1-22.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libcurl\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libcurl\"\nDetected vulnerable version \"7.61.1-22.el8\" of \"libcurl\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1271,23 +1144,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2021-40528"
-						]
+						"cveid": "CVE-2021-40528"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2021-40528",
 					"id": "CVE-2021-40528",
 					"desc": "The ElGamal implementation in Libgcrypt before 1.9.4 allows plaintext recovery because, during interaction between two cryptographic libraries, a certain dangerous combination of the prime defined by the receiver\\'s public key, the generator defined by the receiver\\'s public key, and the sender\\'s ephemeral exponents can lead to a cross-configuration attack against OpenPGP.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2021-40528\",\n  \"status\": \"affected\",\n  \"cvss\": 5.9,\n  \"vector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N\",\n  \"description\": \"The ElGamal implementation in Libgcrypt before 1.9.4 allows plaintext recovery because, during interaction between two cryptographic libraries, a certain dangerous combination of the prime defined by the receiver\\\\'s public key, the generator defined by the receiver\\\\'s public key, and the sender\\\\'s ephemeral exponents can lead to a cross-configuration attack against OpenPGP.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-40528\",\n  \"riskFactors\": [\n    \"Medium severity\",\n    \"Recent vulnerability\",\n    \"Attack vector: network\"\n  ],\n  \"publishedDate\": \"2021-09-06T19:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2021-40528\",\n  \"status\": \"affected\",\n  \"cvss\": 5.9,\n  \"vector\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N\",\n  \"description\": \"The ElGamal implementation in Libgcrypt before 1.9.4 allows plaintext recovery because, during interaction between two cryptographic libraries, a certain dangerous combination of the prime defined by the receiver\\\\'s public key, the generator defined by the receiver\\\\'s public key, and the sender\\\\'s ephemeral exponents can lead to a cross-configuration attack against OpenPGP.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"libgcrypt\",\n  \"packageVersion\": \"1.8.5-6.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-40528\",\n  \"riskFactors\": [\n    \"Medium severity\",\n    \"Recent vulnerability\",\n    \"Attack vector: network\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2021-09-06T19:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libgcrypt\" Version: \"1.8.5-6.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libgcrypt\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libgcrypt\"\nDetected vulnerable version \"1.8.5-6.el8\" of \"libgcrypt\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1298,23 +1168,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2021-44574"
-						]
+						"cveid": "CVE-2021-44574"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2021-44574",
 					"id": "CVE-2021-44574",
 					"desc": "A heap-overflow vulnerability exists in openSUSE libsolv through 13 Dec 2020 in the resolve_jobrules function at src/solver.c at line 1599.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2021-44574\",\n  \"status\": \"under investigation\",\n  \"cvss\": 5.6,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"A heap-overflow vulnerability exists in openSUSE libsolv through 13 Dec 2020 in the resolve_jobrules function at src/solver.c at line 1599.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-44574\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-02-21T20:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2021-44574\",\n  \"status\": \"under investigation\",\n  \"cvss\": 5.6,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"A heap-overflow vulnerability exists in openSUSE libsolv through 13 Dec 2020 in the resolve_jobrules function at src/solver.c at line 1599.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"libsolv\",\n  \"packageVersion\": \"0.7.20-1.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-44574\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-02-21T20:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libsolv\" Version: \"0.7.20-1.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libsolv\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libsolv\"\nDetected vulnerable version \"0.7.20-1.el8\" of \"libsolv\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1325,29 +1192,26 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-27943"
-						]
+						"cveid": "CVE-2022-27943"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-27943",
 					"id": "CVE-2022-27943",
 					"desc": "libiberty/rust-demangle.c in GNU GCC 11.2 allows stack consumption in demangle_const, as demonstrated by nm-new.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-27943\",\n  \"status\": \"under investigation\",\n  \"cvss\": 5.5,\n  \"vector\": \"CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"libiberty/rust-demangle.c in GNU GCC 11.2 allows stack consumption in demangle_const, as demonstrated by nm-new.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-27943\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-03-26T13:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-27943\",\n  \"status\": \"under investigation\",\n  \"cvss\": 5.5,\n  \"vector\": \"CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"libiberty/rust-demangle.c in GNU GCC 11.2 allows stack consumption in demangle_const, as demonstrated by nm-new.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"libgcc\",\n  \"packageVersion\": \"8.5.0-10.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-27943\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-03-26T13:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libgcc\" Version: \"8.5.0-10.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libgcc\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libgcc\"\nDetected vulnerable version \"8.5.0-10.el8\" of \"libgcc\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libstdc++\" Version: \"8.5.0-10.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libstdc++\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libstdc++\"\nDetected vulnerable version \"8.5.0-10.el8\" of \"libstdc++\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1358,23 +1222,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-1586"
-						]
+						"cveid": "CVE-2022-1586"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-1586",
 					"id": "CVE-2022-1586",
 					"desc": "An out-of-bounds read vulnerability was discovered in the PCRE2 library in the compile_xclass_matchingpath() function of the pcre2_jit_compile.c file. This involves a unicode property matching issue in JIT-compiled regular expressions. The issue occurs because the character was not fully read in case-less matching within JIT.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-1586\",\n  \"status\": \"affected\",\n  \"cvss\": 5.5,\n  \"description\": \"An out-of-bounds read vulnerability was discovered in the PCRE2 library in the compile_xclass_matchingpath() function of the pcre2_jit_compile.c file. This involves a unicode property matching issue in JIT-compiled regular expressions. The issue occurs because the character was not fully read in case-less matching within JIT.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-1586\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-05-16T21:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-1586\",\n  \"status\": \"affected\",\n  \"cvss\": 5.5,\n  \"description\": \"An out-of-bounds read vulnerability was discovered in the PCRE2 library in the compile_xclass_matchingpath() function of the pcre2_jit_compile.c file. This involves a unicode property matching issue in JIT-compiled regular expressions. The issue occurs because the character was not fully read in case-less matching within JIT.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"pcre2\",\n  \"packageVersion\": \"10.32-2.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-1586\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-05-16T21:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"pcre2\" Version: \"10.32-2.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"pcre2\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"pcre2\"\nDetected vulnerable version \"10.32-2.el8\" of \"pcre2\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1385,23 +1246,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2021-44570"
-						]
+						"cveid": "CVE-2021-44570"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2021-44570",
 					"id": "CVE-2021-44570",
 					"desc": "Two heap-overflow vulnerabilities exists in openSUSE/libsolv through 13 Dec 2020 in the bugs in the solver_get_recommendations funtion function at src/solver.c: line 4286 & line 4305 FOR_PROVIDES.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2021-44570\",\n  \"status\": \"under investigation\",\n  \"cvss\": 5.5,\n  \"vector\": \"CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"Two heap-overflow vulnerabilities exists in openSUSE/libsolv through 13 Dec 2020 in the bugs in the solver_get_recommendations funtion function at src/solver.c: line 4286 & line 4305 FOR_PROVIDES.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-44570\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-02-21T19:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2021-44570\",\n  \"status\": \"under investigation\",\n  \"cvss\": 5.5,\n  \"vector\": \"CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"Two heap-overflow vulnerabilities exists in openSUSE/libsolv through 13 Dec 2020 in the bugs in the solver_get_recommendations funtion function at src/solver.c: line 4286 & line 4305 FOR_PROVIDES.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"libsolv\",\n  \"packageVersion\": \"0.7.20-1.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-44570\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-02-21T19:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libsolv\" Version: \"0.7.20-1.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libsolv\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libsolv\"\nDetected vulnerable version \"0.7.20-1.el8\" of \"libsolv\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1412,41 +1270,38 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-24773"
-						]
+						"cveid": "CVE-2022-24773"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-24773",
 					"id": "CVE-2022-24773",
 					"desc": "Forge (also called `node-forge`) is a native implementation of Transport Layer Security in JavaScript. Prior to version 1.3.0, RSA PKCS#1 v1.5 signature verification code does not properly check `DigestInfo` for a proper ASN.1 structure. This can lead to successful verification with signatures that contain invalid structures but a valid digest. The issue has been addressed in `node-forge` version 1.3.0. There are currently no known workarounds.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-24773\",\n  \"status\": \"under investigation\",\n  \"cvss\": 5.3,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N\",\n  \"description\": \"Forge (also called `node-forge`) is a native implementation of Transport Layer Security in JavaScript. Prior to version 1.3.0, RSA PKCS#1 v1.5 signature verification code does not properly check `DigestInfo` for a proper ASN.1 structure. This can lead to successful verification with signatures that contain invalid structures but a valid digest. The issue has been addressed in `node-forge` version 1.3.0. There are currently no known workarounds.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-24773\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-03-18T14:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-16T23:46:22Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-24773\",\n  \"status\": \"under investigation\",\n  \"cvss\": 5.3,\n  \"vector\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N\",\n  \"description\": \"Forge (also called `node-forge`) is a native implementation of Transport Layer Security in JavaScript. Prior to version 1.3.0, RSA PKCS#1 v1.5 signature verification code does not properly check `DigestInfo` for a proper ASN.1 structure. This can lead to successful verification with signatures that contain invalid structures but a valid digest. The issue has been addressed in `node-forge` version 1.3.0. There are currently no known workarounds.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"aspnetcore-runtime-5.0\",\n  \"packageVersion\": \"5.0.17-1.el8_6\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-24773\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-03-18T14:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-16T23:46:22Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"aspnetcore-runtime-5.0\" Version: \"5.0.17-1.el8_6\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"aspnetcore-runtime-5.0\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"aspnetcore-runtime-5.0\"\nDetected vulnerable version \"5.0.17-1.el8_6\" of \"aspnetcore-runtime-5.0\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"dotnet-host\" Version: \"6.0.5-1.el8_6\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"dotnet-host\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"dotnet-host\"\nDetected vulnerable version \"6.0.5-1.el8_6\" of \"dotnet-host\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"dotnet-hostfxr-5.0\" Version: \"5.0.17-1.el8_6\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"dotnet-hostfxr-5.0\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"dotnet-hostfxr-5.0\"\nDetected vulnerable version \"5.0.17-1.el8_6\" of \"dotnet-hostfxr-5.0\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"dotnet-runtime-5.0\" Version: \"5.0.17-1.el8_6\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"dotnet-runtime-5.0\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"dotnet-runtime-5.0\"\nDetected vulnerable version \"5.0.17-1.el8_6\" of \"dotnet-runtime-5.0\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1457,29 +1312,26 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2021-4189"
-						]
+						"cveid": "CVE-2021-4189"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2021-4189",
 					"id": "CVE-2021-4189",
 					"desc": "DOCUMENTATION: No description is available for this CVE.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2021-4189\",\n  \"status\": \"affected\",\n  \"cvss\": 5.3,\n  \"description\": \"DOCUMENTATION: No description is available for this CVE.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-4189\",\n  \"riskFactors\": [\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\"\n  ],\n  \"publishedDate\": \"2021-12-21T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2021-4189\",\n  \"status\": \"affected\",\n  \"cvss\": 5.3,\n  \"description\": \"DOCUMENTATION: No description is available for this CVE.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"platform-python\",\n  \"packageVersion\": \"3.6.8-45.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2021-4189\",\n  \"riskFactors\": [\n    \"Recent vulnerability\",\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2021-12-21T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"platform-python\" Version: \"3.6.8-45.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"platform-python\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"platform-python\"\nDetected vulnerable version \"3.6.8-45.el8\" of \"platform-python\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"python3-libs\" Version: \"3.6.8-45.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"python3-libs\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"python3-libs\"\nDetected vulnerable version \"3.6.8-45.el8\" of \"python3-libs\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1490,23 +1342,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2016-4658"
-						]
+						"cveid": "CVE-2016-4658"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2016-4658",
 					"id": "CVE-2016-4658",
 					"desc": "xpointer.c in libxml2 before 2.9.5 (as used in Apple iOS before 10, OS X before 10.12, tvOS before 10, and watchOS before 3, and other products) does not forbid namespace nodes in XPointer ranges, which allows remote attackers to execute arbitrary code or cause a denial of service (use-after-free and memory corruption) via a crafted XML document.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2016-4658\",\n  \"status\": \"affected\",\n  \"cvss\": 5.3,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n  \"description\": \"xpointer.c in libxml2 before 2.9.5 (as used in Apple iOS before 10, OS X before 10.12, tvOS before 10, and watchOS before 3, and other products) does not forbid namespace nodes in XPointer ranges, which allows remote attackers to execute arbitrary code or cause a denial of service (use-after-free and memory corruption) via a crafted XML document.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2016-4658\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"DoS\",\n    \"Medium severity\",\n    \"Remote execution\"\n  ],\n  \"publishedDate\": \"2017-03-11T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2016-4658\",\n  \"status\": \"affected\",\n  \"cvss\": 5.3,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n  \"description\": \"xpointer.c in libxml2 before 2.9.5 (as used in Apple iOS before 10, OS X before 10.12, tvOS before 10, and watchOS before 3, and other products) does not forbid namespace nodes in XPointer ranges, which allows remote attackers to execute arbitrary code or cause a denial of service (use-after-free and memory corruption) via a crafted XML document.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"python3-libxml2\",\n  \"packageVersion\": \"2.9.7-13.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2016-4658\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"DoS\",\n    \"Medium severity\",\n    \"Remote execution\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2017-03-11T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"python3-libxml2\" Version: \"2.9.7-13.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"python3-libxml2\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"python3-libxml2\"\nDetected vulnerable version \"2.9.7-13.el8\" of \"python3-libxml2\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1517,29 +1366,26 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-27774"
-						]
+						"cveid": "CVE-2022-27774"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-27774",
 					"id": "CVE-2022-27774",
 					"desc": "DOCUMENTATION: No description is available for this CVE.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-27774\",\n  \"status\": \"affected\",\n  \"cvss\": 5,\n  \"description\": \"DOCUMENTATION: No description is available for this CVE.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-27774\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-04-27T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-27774\",\n  \"status\": \"affected\",\n  \"cvss\": 5,\n  \"description\": \"DOCUMENTATION: No description is available for this CVE.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"curl\",\n  \"packageVersion\": \"7.61.1-22.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-27774\",\n  \"riskFactors\": [\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-04-27T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"curl\" Version: \"7.61.1-22.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"curl\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"curl\"\nDetected vulnerable version \"7.61.1-22.el8\" of \"curl\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libcurl\" Version: \"7.61.1-22.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libcurl\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libcurl\"\nDetected vulnerable version \"7.61.1-22.el8\" of \"libcurl\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1550,29 +1396,26 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-22576"
-						]
+						"cveid": "CVE-2022-22576"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-22576",
 					"id": "CVE-2022-22576",
 					"desc": "Red Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2022-22576.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-22576\",\n  \"status\": \"affected\",\n  \"cvss\": 4.6,\n  \"description\": \"Red Hat\\\\'s versions of the associated software have been determined to NOT be affected by CVE-2022-22576.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-22576\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-04-27T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-22576\",\n  \"status\": \"affected\",\n  \"cvss\": 4.6,\n  \"description\": \"Red Hat\\\\'s versions of the associated software have been determined to NOT be affected by CVE-2022-22576.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"libcurl\",\n  \"packageVersion\": \"7.61.1-22.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-22576\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-04-27T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libcurl\" Version: \"7.61.1-22.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libcurl\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libcurl\"\nDetected vulnerable version \"7.61.1-22.el8\" of \"libcurl\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"curl\" Version: \"7.61.1-22.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"curl\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"curl\"\nDetected vulnerable version \"7.61.1-22.el8\" of \"curl\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1583,23 +1426,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-1619"
-						]
+						"cveid": "CVE-2022-1619"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-1619",
 					"id": "CVE-2022-1619",
 					"desc": "Heap-based Buffer Overflow in function cmdline_erase_chars in GitHub repository vim/vim prior to 8.2.4899. This vulnerabilities are capable of crashing software, modify memory, and possible remote execution",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-1619\",\n  \"status\": \"under investigation\",\n  \"cvss\": 4.4,\n  \"vector\": \"CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"Heap-based Buffer Overflow in function cmdline_erase_chars in GitHub repository vim/vim prior to 8.2.4899. This vulnerabilities are capable of crashing software, modify memory, and possible remote execution\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-1619\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-05-08T10:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-1619\",\n  \"status\": \"under investigation\",\n  \"cvss\": 4.4,\n  \"vector\": \"CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"Heap-based Buffer Overflow in function cmdline_erase_chars in GitHub repository vim/vim prior to 8.2.4899. This vulnerabilities are capable of crashing software, modify memory, and possible remote execution\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"vim-minimal\",\n  \"packageVersion\": \"8.0.1763-16.el8_5.13\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-1619\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-05-08T10:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"vim-minimal\" Version: \"8.0.1763-16.el8_5.13\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"vim-minimal\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"vim-minimal\"\nDetected vulnerable version \"8.0.1763-16.el8_5.13\" of \"vim-minimal\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1610,47 +1450,44 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2020-12401"
-						]
+						"cveid": "CVE-2020-12401"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2020-12401",
 					"id": "CVE-2020-12401",
 					"desc": "During ECDSA signature generation, padding applied in the nonce designed to ensure constant-time scalar multiplication was removed, resulting in variable-time execution dependent on secret data. This vulnerability affects Firefox < 80 and Firefox for Android < 80.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2020-12401\",\n  \"status\": \"affected\",\n  \"cvss\": 4.4,\n  \"vector\": \"CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:N/A:N\",\n  \"description\": \"During ECDSA signature generation, padding applied in the nonce designed to ensure constant-time scalar multiplication was removed, resulting in variable-time execution dependent on secret data. This vulnerability affects Firefox < 80 and Firefox for Android < 80.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2020-12401\",\n  \"riskFactors\": [\n    \"Medium severity\"\n  ],\n  \"publishedDate\": \"2020-10-08T14:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-16T23:12:25Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2020-12401\",\n  \"status\": \"affected\",\n  \"cvss\": 4.4,\n  \"vector\": \"CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:N/A:N\",\n  \"description\": \"During ECDSA signature generation, padding applied in the nonce designed to ensure constant-time scalar multiplication was removed, resulting in variable-time execution dependent on secret data. This vulnerability affects Firefox < 80 and Firefox for Android < 80.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"nss\",\n  \"packageVersion\": \"3.67.0-7.el8_5\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2020-12401\",\n  \"riskFactors\": [\n    \"Medium severity\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2020-10-08T14:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-16T23:12:25Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"nss\" Version: \"3.67.0-7.el8_5\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"nss\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"nss\"\nDetected vulnerable version \"3.67.0-7.el8_5\" of \"nss\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"nss-softokn\" Version: \"3.67.0-7.el8_5\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"nss-softokn\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"nss-softokn\"\nDetected vulnerable version \"3.67.0-7.el8_5\" of \"nss-softokn\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"nss-util\" Version: \"3.67.0-7.el8_5\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"nss-util\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"nss-util\"\nDetected vulnerable version \"3.67.0-7.el8_5\" of \"nss-util\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"nss-sysinit\" Version: \"3.67.0-7.el8_5\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"nss-sysinit\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"nss-sysinit\"\nDetected vulnerable version \"3.67.0-7.el8_5\" of \"nss-sysinit\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"nss-softokn-freebl\" Version: \"3.67.0-7.el8_5\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"nss-softokn-freebl\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"nss-softokn-freebl\"\nDetected vulnerable version \"3.67.0-7.el8_5\" of \"nss-softokn-freebl\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1661,29 +1498,26 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2022-27776"
-						]
+						"cveid": "CVE-2022-27776"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2022-27776",
 					"id": "CVE-2022-27776",
 					"desc": "DOCUMENTATION: No description is available for this CVE.",
 					"impact": 0.5,
-					"code": "{\n  \"id\": \"CVE-2022-27776\",\n  \"status\": \"affected\",\n  \"cvss\": 4.3,\n  \"description\": \"DOCUMENTATION: No description is available for this CVE.\",\n  \"severity\": \"moderate\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-27776\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"publishedDate\": \"2022-04-27T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2022-27776\",\n  \"status\": \"affected\",\n  \"cvss\": 4.3,\n  \"description\": \"DOCUMENTATION: No description is available for this CVE.\",\n  \"severity\": \"moderate\",\n  \"packageName\": \"curl\",\n  \"packageVersion\": \"7.61.1-22.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2022-27776\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"Medium severity\",\n    \"Recent vulnerability\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2022-04-27T00:00:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"curl\" Version: \"7.61.1-22.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"curl\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"curl\"\nDetected vulnerable version \"7.61.1-22.el8\" of \"curl\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						},
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libcurl\" Version: \"7.61.1-22.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libcurl\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libcurl\"\nDetected vulnerable version \"7.61.1-22.el8\" of \"libcurl\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1694,23 +1528,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2018-16301"
-						]
+						"cveid": "CVE-2018-16301"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2018-16301",
 					"id": "CVE-2018-16301",
 					"desc": "The command-line argument parser in tcpdump before 4.99.0 has a buffer overflow in tcpdump.c:read_infile(). To trigger this vulnerability the attacker needs to create a 4GB file on the local filesystem and to specify the file name as the value of the -F command-line argument of tcpdump.",
 					"impact": 0.3,
-					"code": "{\n  \"id\": \"CVE-2018-16301\",\n  \"status\": \"affected\",\n  \"cvss\": 5.3,\n  \"vector\": \"CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"The command-line argument parser in tcpdump before 4.99.0 has a buffer overflow in tcpdump.c:read_infile(). To trigger this vulnerability the attacker needs to create a 4GB file on the local filesystem and to specify the file name as the value of the -F command-line argument of tcpdump.\",\n  \"severity\": \"low\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2018-16301\",\n  \"riskFactors\": [\n    \"Attack complexity: low\"\n  ],\n  \"publishedDate\": \"2019-10-03T16:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-16T23:12:25Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2018-16301\",\n  \"status\": \"affected\",\n  \"cvss\": 5.3,\n  \"vector\": \"CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H\",\n  \"description\": \"The command-line argument parser in tcpdump before 4.99.0 has a buffer overflow in tcpdump.c:read_infile(). To trigger this vulnerability the attacker needs to create a 4GB file on the local filesystem and to specify the file name as the value of the -F command-line argument of tcpdump.\",\n  \"severity\": \"low\",\n  \"packageName\": \"libpcap\",\n  \"packageVersion\": \"1.9.1-5.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2018-16301\",\n  \"riskFactors\": [\n    \"Attack complexity: low\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2019-10-03T16:15:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-16T23:12:25Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libpcap\" Version: \"1.9.1-5.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libpcap\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libpcap\"\nDetected vulnerable version \"1.9.1-5.el8\" of \"libpcap\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1721,23 +1552,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2017-9048"
-						]
+						"cveid": "CVE-2017-9048"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2017-9048",
 					"id": "CVE-2017-9048",
 					"desc": "libxml2 20904-GITv2.9.4-16-g0741801 is vulnerable to a stack-based buffer overflow. The function xmlSnprintfElementContent in valid.c is supposed to recursively dump the element content definition into a char buffer \\'buf\\' of size \\'size\\'. At the end of the routine, the function may strcat two more characters without checking whether the current strlen(buf) + 2 < size. This vulnerability causes programs that use libxml2, such as PHP, to crash.",
 					"impact": 0.3,
-					"code": "{\n  \"id\": \"CVE-2017-9048\",\n  \"status\": \"affected\",\n  \"cvss\": 4.8,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n  \"description\": \"libxml2 20904-GITv2.9.4-16-g0741801 is vulnerable to a stack-based buffer overflow. The function xmlSnprintfElementContent in valid.c is supposed to recursively dump the element content definition into a char buffer \\\\'buf\\\\' of size \\\\'size\\\\'. At the end of the routine, the function may strcat two more characters without checking whether the current strlen(buf) + 2 < size. This vulnerability causes programs that use libxml2, such as PHP, to crash.\",\n  \"severity\": \"low\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-9048\",\n  \"riskFactors\": [\n    \"Attack vector: network\"\n  ],\n  \"publishedDate\": \"2017-05-18T06:29:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2017-9048\",\n  \"status\": \"affected\",\n  \"cvss\": 4.8,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n  \"description\": \"libxml2 20904-GITv2.9.4-16-g0741801 is vulnerable to a stack-based buffer overflow. The function xmlSnprintfElementContent in valid.c is supposed to recursively dump the element content definition into a char buffer \\\\'buf\\\\' of size \\\\'size\\\\'. At the end of the routine, the function may strcat two more characters without checking whether the current strlen(buf) + 2 < size. This vulnerability causes programs that use libxml2, such as PHP, to crash.\",\n  \"severity\": \"low\",\n  \"packageName\": \"python3-libxml2\",\n  \"packageVersion\": \"2.9.7-13.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-9048\",\n  \"riskFactors\": [\n    \"Attack vector: network\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2017-05-18T06:29:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"python3-libxml2\" Version: \"2.9.7-13.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"python3-libxml2\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"python3-libxml2\"\nDetected vulnerable version \"2.9.7-13.el8\" of \"python3-libxml2\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1748,23 +1576,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2017-18258"
-						]
+						"cveid": "CVE-2017-18258"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2017-18258",
 					"id": "CVE-2017-18258",
 					"desc": "The xz_head function in xzlib.c in libxml2 before 2.9.6 allows remote attackers to cause a denial of service (memory consumption) via a crafted LZMA file, because the decoder functionality does not restrict memory usage to what is required for a legitimate file.",
 					"impact": 0.3,
-					"code": "{\n  \"id\": \"CVE-2017-18258\",\n  \"status\": \"affected\",\n  \"cvss\": 3.5,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"The xz_head function in xzlib.c in libxml2 before 2.9.6 allows remote attackers to cause a denial of service (memory consumption) via a crafted LZMA file, because the decoder functionality does not restrict memory usage to what is required for a legitimate file.\",\n  \"severity\": \"low\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-18258\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"DoS\"\n  ],\n  \"publishedDate\": \"2018-04-08T17:29:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2017-18258\",\n  \"status\": \"affected\",\n  \"cvss\": 3.5,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"The xz_head function in xzlib.c in libxml2 before 2.9.6 allows remote attackers to cause a denial of service (memory consumption) via a crafted LZMA file, because the decoder functionality does not restrict memory usage to what is required for a legitimate file.\",\n  \"severity\": \"low\",\n  \"packageName\": \"python3-libxml2\",\n  \"packageVersion\": \"2.9.7-13.el8\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-18258\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"Attack vector: network\",\n    \"DoS\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2018-04-08T17:29:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"python3-libxml2\" Version: \"2.9.7-13.el8\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"python3-libxml2\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"python3-libxml2\"\nDetected vulnerable version \"2.9.7-13.el8\" of \"python3-libxml2\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1775,23 +1600,20 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2017-14501"
-						]
+						"cveid": "CVE-2017-14501"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2017-14501",
 					"id": "CVE-2017-14501",
 					"desc": "An out-of-bounds read flaw exists in parse_file_info in archive_read_support_format_iso9660.c in libarchive 3.3.2 when extracting a specially crafted iso9660 iso file, related to archive_read_format_iso9660_read_header.",
 					"impact": 0.3,
-					"code": "{\n  \"id\": \"CVE-2017-14501\",\n  \"status\": \"affected\",\n  \"cvss\": 3.3,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"An out-of-bounds read flaw exists in parse_file_info in archive_read_support_format_iso9660.c in libarchive 3.3.2 when extracting a specially crafted iso9660 iso file, related to archive_read_format_iso9660_read_header.\",\n  \"severity\": \"low\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-14501\",\n  \"riskFactors\": [\n    \"Attack complexity: low\"\n  ],\n  \"publishedDate\": \"2017-09-17T18:29:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2017-14501\",\n  \"status\": \"affected\",\n  \"cvss\": 3.3,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"An out-of-bounds read flaw exists in parse_file_info in archive_read_support_format_iso9660.c in libarchive 3.3.2 when extracting a specially crafted iso9660 iso file, related to archive_read_format_iso9660_read_header.\",\n  \"severity\": \"low\",\n  \"packageName\": \"libarchive\",\n  \"packageVersion\": \"3.3.3-3.el8_5\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-14501\",\n  \"riskFactors\": [\n    \"Attack complexity: low\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2017-09-17T18:29:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libarchive\" Version: \"3.3.3-3.el8_5\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libarchive\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libarchive\"\nDetected vulnerable version \"3.3.3-3.el8_5\" of \"libarchive\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
@@ -1802,33 +1624,30 @@
 							"SI-2",
 							"RA-5"
 						],
-						"cveid": [
-							"2017-14166"
-						]
+						"cveid": "CVE-2017-14166"
 					},
-					"descriptions": [],
 					"refs": [],
 					"source_location": {},
 					"title": "CVE-2017-14166",
 					"id": "CVE-2017-14166",
 					"desc": "libarchive 3.3.2 allows remote attackers to cause a denial of service (xml_data heap-based buffer over-read and application crash) via a crafted xar archive, related to the mishandling of empty strings in the atol8 function in archive_read_support_format_xar.c.",
 					"impact": 0.3,
-					"code": "{\n  \"id\": \"CVE-2017-14166\",\n  \"status\": \"affected\",\n  \"cvss\": 3.3,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"libarchive 3.3.2 allows remote attackers to cause a denial of service (xml_data heap-based buffer over-read and application crash) via a crafted xar archive, related to the mishandling of empty strings in the atol8 function in archive_read_support_format_xar.c.\",\n  \"severity\": \"low\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-14166\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"DoS\"\n  ],\n  \"publishedDate\": \"2017-09-06T18:29:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
+					"code": "{\n  \"id\": \"CVE-2017-14166\",\n  \"status\": \"affected\",\n  \"cvss\": 3.3,\n  \"vector\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H\",\n  \"description\": \"libarchive 3.3.2 allows remote attackers to cause a denial of service (xml_data heap-based buffer over-read and application crash) via a crafted xar archive, related to the mishandling of empty strings in the atol8 function in archive_read_support_format_xar.c.\",\n  \"severity\": \"low\",\n  \"packageName\": \"libarchive\",\n  \"packageVersion\": \"3.3.3-3.el8_5\",\n  \"link\": \"https://access.redhat.com/security/cve/CVE-2017-14166\",\n  \"riskFactors\": [\n    \"Attack complexity: low\",\n    \"DoS\"\n  ],\n  \"impactedVersions\": [\n    \"*\"\n  ],\n  \"publishedDate\": \"2017-09-06T18:29:00Z\",\n  \"discoveredDate\": \"2022-05-18T12:24:22Z\",\n  \"layerTime\": \"2022-05-03T08:38:31Z\"\n}",
 					"results": [
 						{
 							"status": "failed",
-							"code_desc": "Package: \"libarchive\" Version: \"3.3.3-3.el8_5\" Impacted Versions: [\"*\"]",
-							"run_time": 0,
+							"code_desc": "Package \"libarchive\" should be updated to latest version above impacted versions [\"*\"]",
+							"message": "Expected latest version of \"libarchive\"\nDetected vulnerable version \"3.3.3-3.el8_5\" of \"libarchive\"",
 							"start_time": "2022-05-18T12:24:22Z"
 						}
 					]
 				}
 			],
-			"sha256": "a3f4863716405f3029d29bcec9754bcdbe800e3dd5408158da6df5c3447343a8"
+			"sha256": "0ebe1bc47461fee01ba6fe9ab5e36cf30df13ed39ee833f5f306b9a93c656169"
 		}
 	],
 	"passthrough": {
-		"twistlock_metadata": {
+		"raw": {
 			"results": [
 				{
 					"id": "sha256:b1c0237ebd29860066656372da10d8d7da33b34715986f74b3d5a7e4ba060d1b",
