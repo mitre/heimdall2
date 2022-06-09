@@ -220,7 +220,8 @@ API usage only works when using Heimdall Enterprise Server (AKA "Server Mode").
 Proper API documentation does not exist yet. In the meantime here are quick instructions for uploading evaluations to Heimdall Server.
 
 ```sh
-# Create an API key using the Heimdall frontend and upload an evaluation with the following command
+# To use API Keys, ensure you have set the API_KEY_SECRET environment variable. To create a secret run: openssl rand -hex 33
+# Create an API key using the Heimdall frontend (within the edit user profile modal) and upload an evaluation with the following command
 curl -F "data=@<Path to Evaluation File>" -F "filename=<Filename To Show in Heimdall>" -F "public=true/false" -H "Authorization: Api-Key apikeygoeshere" "http://localhost:3000/evaluations"
 # You can upload multiple files at once (up to 100)
 curl -F "data=@<Path to first evaluation File>" -F "data=@<Path to second evaluation File>" ... -F "public=true/false" -H "Authorization: Api-Key apikeygoeshere" "http://localhost:3000/evaluations"
