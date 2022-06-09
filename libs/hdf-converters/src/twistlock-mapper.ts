@@ -80,15 +80,7 @@ export class TwistlockMapper extends BaseConverter {
             },
             code: {
               transformer: (vulnerability: Record<string, unknown>): string => {
-                return JSON.stringify(
-                  _.omit(vulnerability, [
-                    'packageName',
-                    'packageVersion',
-                    'impactedVersions'
-                  ]),
-                  null//,
-                  //2
-                );
+                return JSON.stringify(vulnerability, null, 2);
               }
             },
             results: [
