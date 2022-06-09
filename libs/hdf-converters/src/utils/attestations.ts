@@ -1,5 +1,8 @@
 import {ExecJSON} from 'inspecjs';
-import {ControlResultStatus} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
+import {
+  AttestationData,
+  ControlResultStatus
+} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
 import moment from 'moment';
 import ms from 'ms';
@@ -9,7 +12,7 @@ export type Attestation = {
   control_id: string;
   explanation: string;
   frequency: string;
-  status: ControlResultStatus;
+  status: 'passed' | 'failed';
   updated: string;
   updated_by: string;
 };
@@ -89,7 +92,7 @@ export function convertAttestationToSegment(
   } else {
     return {
       code_desc: 'Manually verified status provided through attestation',
-      status: attestation.status,
+      status: attestation.status as ControlResultStatus,
       message: createAttestationMessage(attestation, true),
       start_time: new Date().toISOString()
     };
@@ -104,7 +107,16 @@ export function addAttestationToHDF(
     for (const control of profile.controls) {
       for (const attestation of attestations) {
         if (attestation.control_id.toLowerCase() === control.id.toLowerCase()) {
-          control.results.push(convertAttestationToSegment(attestation));
+          if (['passed', 'failed'].includes(attestation.status)) {
+            // Attestation status is expecting type enum Status (failed, passed), however we just have a string status which can only be (failed or passed)
+            control.attestation_data =
+              attestation as unknown as AttestationData;
+            control.results.push(convertAttestationToSegment(attestation));
+          } else {
+            console.error(
+              `Invalid attestation status for Control ${control.id}: ${attestation.status} - Status must be passed or failed. To make this control 'not applicable', use a waiver.`
+            );
+          }
         }
       }
     }
