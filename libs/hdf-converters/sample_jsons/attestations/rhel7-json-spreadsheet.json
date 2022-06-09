@@ -8004,9 +8004,17 @@
               "code_desc": "Manually verified status provided through attestation",
               "status": "passed",
               "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: The routine review through interview/examination attests to this control passing\n\nUpdated: Sun Apr 06 2059 00:00:00 GMT+0000 (Coordinated Universal Time)\nUpdated By: John Doe, ISSO\nFrequency: annually",
-              "start_time": "2022-06-06T17:49:33.323Z"
+              "start_time": "2022-06-08T14:25:39.323Z"
             }
-          ]
+          ],
+          "attestation_data": {
+            "control_id": "V-72083",
+            "explanation": "The routine review through interview/examination attests to this control passing",
+            "frequency": "annually",
+            "status": "passed",
+            "updated": "2059-04-06T00:00:00.000Z",
+            "updated_by": "John Doe, ISSO"
+          }
         },
         {
           "id": "V-72085",
@@ -8070,9 +8078,17 @@
               "code_desc": "Manually verified status provided through attestation",
               "status": "passed",
               "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: The routine review through interview/examination attests to this control passing\n\nUpdated: Sun Apr 06 2059 00:00:00 GMT+0000 (Coordinated Universal Time)\nUpdated By: John Doe, ISSO\nFrequency: semiannually",
-              "start_time": "2022-06-06T17:49:33.323Z"
+              "start_time": "2022-06-08T14:25:39.323Z"
             }
-          ]
+          ],
+          "attestation_data": {
+            "control_id": "V-72085",
+            "explanation": "The routine review through interview/examination attests to this control passing",
+            "frequency": "semiannually",
+            "status": "passed",
+            "updated": "2059-04-06T00:00:00.000Z",
+            "updated_by": "John Doe, ISSO"
+          }
         },
         {
           "id": "V-72087",
@@ -8139,9 +8155,17 @@
               "code_desc": "Manually verified status provided through attestation",
               "status": "passed",
               "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: The routine review through interview/examination attests to this control passing\n\nUpdated: Sun Apr 06 2059 00:00:00 GMT+0000 (Coordinated Universal Time)\nUpdated By: John Doe, ISSO\nFrequency: quarterly",
-              "start_time": "2022-06-06T17:49:33.323Z"
+              "start_time": "2022-06-08T14:25:39.323Z"
             }
-          ]
+          ],
+          "attestation_data": {
+            "control_id": "V-72087",
+            "explanation": "The routine review through interview/examination attests to this control passing",
+            "frequency": "quarterly",
+            "status": "passed",
+            "updated": "2059-04-06T00:00:00.000Z",
+            "updated_by": "John Doe, ISSO"
+          }
         },
         {
           "id": "V-72089",
@@ -13941,9 +13965,17 @@
               "code_desc": "Manual verification status provided through attestation has expired",
               "status": "skipped",
               "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: The routine review through interview/examination attests to this control passing\n\nUpdated: Tue Apr 06 1999 00:00:00 GMT+0000 (Coordinated Universal Time)\nUpdated By: John Doe, ISSO\nFrequency: monthly",
-              "start_time": "2022-06-06T17:49:33.325Z"
+              "start_time": "2022-06-08T14:25:39.326Z"
             }
-          ]
+          ],
+          "attestation_data": {
+            "control_id": "V-72219",
+            "explanation": "The routine review through interview/examination attests to this control passing",
+            "frequency": "monthly",
+            "status": "passed",
+            "updated": "1999-04-06T00:00:00.000Z",
+            "updated_by": "John Doe, ISSO"
+          }
         },
         {
           "id": "V-72221",
@@ -17048,9 +17080,17 @@
               "code_desc": "Manually verified status provided through attestation",
               "status": "passed",
               "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: The routine review through interview/examination attests to this control passing\n\nUpdated: Sun Apr 06 2059 00:00:00 GMT+0000 (Coordinated Universal Time)\nUpdated By: John Doe, ISSO\nFrequency: every2weeks",
-              "start_time": "2022-06-06T17:49:33.325Z"
+              "start_time": "2022-06-08T14:25:39.326Z"
             }
-          ]
+          ],
+          "attestation_data": {
+            "control_id": "V-72315",
+            "explanation": "The routine review through interview/examination attests to this control passing",
+            "frequency": "every2weeks",
+            "status": "passed",
+            "updated": "2059-04-06T00:00:00.000Z",
+            "updated_by": "John Doe, ISSO"
+          }
         },
         {
           "id": "V-72317",
@@ -17721,9 +17761,17 @@
               "code_desc": "Manually verified status provided through attestation",
               "status": "passed",
               "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: The routine review through interview/examination attests to this control passing\n\nUpdated: Sun Apr 06 2059 00:00:00 GMT+0000 (Coordinated Universal Time)\nUpdated By: John Doe, ISSO\nFrequency: weekly",
-              "start_time": "2022-06-06T17:49:33.325Z"
+              "start_time": "2022-06-08T14:25:39.326Z"
             }
-          ]
+          ],
+          "attestation_data": {
+            "control_id": "V-73163",
+            "explanation": "The routine review through interview/examination attests to this control passing",
+            "frequency": "weekly",
+            "status": "passed",
+            "updated": "2059-04-06T00:00:00.000Z",
+            "updated_by": "John Doe, ISSO"
+          }
         },
         {
           "id": "V-73165",
