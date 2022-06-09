@@ -17,19 +17,6 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['low', 0.3]
 ]);
 
-//Wrapper may be reused for compliance integration, if not then delete
-export class TwistlockResults {
-  data: Record<string, unknown>;
-  customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
-  constructor(twistlockJson: string) {
-    this.data = JSON.parse(twistlockJson);
-  }
-
-  toHdf(): ExecJSON.Execution[] | ExecJSON.Execution {
-    return new TwistlockMapper(this.data).toHdf();
-  }
-}
-
 export class TwistlockMapper extends BaseConverter {
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
