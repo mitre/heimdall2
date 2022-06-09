@@ -116,7 +116,17 @@ export class TwistlockMapper extends BaseConverter {
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
-                code_desc: '',
+                code_desc: {
+                  transformer: (data: Record<string, unknown>): string => {
+                    const packageName = _.has(data, 'packageName')
+                      ? `${JSON.stringify(_.get(data, 'packageName'))}`
+                      : 'N/A';
+                    const impactedVersions = _.has(data, 'impactedVersions')
+                      ? `${JSON.stringify(_.get(data, 'impactedVersions'))}`
+                      : 'N/A';
+                     return `Package ${packageName} should be updated to latest version above impact versions ${impactedVersions}`;
+                  }
+                },
                 message: {
                   transformer: (data: Record<string, unknown>): string => {
                     const packageName = _.has(data, 'packageName')
@@ -125,10 +135,7 @@ export class TwistlockMapper extends BaseConverter {
                     const packageVersion = _.has(data, 'packageVersion')
                       ? `${JSON.stringify(_.get(data, 'packageVersion'))}`
                       : 'N/A';
-                    const impactedVersions = _.has(data, 'impactedVersions')
-                      ? `${JSON.stringify(_.get(data, 'impactedVersions'))}`
-                      : 'N/A';
-                    return `Package: ${packageName} Version: ${packageVersion} Impacted Versions: ${impactedVersions}`;
+                    return `Expected latest version of ${packageName} \n Detected vulnerable version ${packageVersion} of ${packageName}`;
                   }
                 },
                 start_time: {path: 'discoveredDate'}
