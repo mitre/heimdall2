@@ -48,9 +48,12 @@ export class TwistlockMapper extends BaseConverter {
         name: 'Twistlock Scan',
         title: {
           transformer: (data: Record<string, unknown>): string => {
-            const projectName = _.has(data, 'collections')
-              ? `${_.get(data, 'collections[1]')}`
+            const projectArr = _.has(data, 'collections')
+              ? _.get(data, 'collections')
               : 'N/A';
+            const projectName = Array.isArray(projectArr)
+              ? projectArr.join(' / ')
+              : projectArr;
             return `Twistlock Project: ${projectName}`;
           }
         },
