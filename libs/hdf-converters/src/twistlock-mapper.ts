@@ -124,7 +124,7 @@ export class TwistlockMapper extends BaseConverter {
                     const impactedVersions = _.has(data, 'impactedVersions')
                       ? `${JSON.stringify(_.get(data, 'impactedVersions'))}`
                       : 'N/A';
-                     return `Package ${packageName} should be updated to latest version above impact versions ${impactedVersions}`;
+                    return `Package ${packageName} should be updated to latest version above impact versions ${impactedVersions}`;
                   }
                 },
                 message: {
