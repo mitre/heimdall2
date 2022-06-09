@@ -127,7 +127,6 @@ export class TwistlockMapper extends BaseConverter {
     }
   };
     constructor(twistlockJson: string) {
-        console.log(twistlockJson);
-    super(JSON.parse(twistlockJson));
-  }
+        super(JSON.parse(twistlockJson));
+    }
 }
