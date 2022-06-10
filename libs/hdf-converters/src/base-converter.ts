@@ -10,6 +10,7 @@ export interface ILookupPath {
   path?: string | string[];
   transformer?: (value: any) => unknown;
   arrayTransformer?: (value: unknown[], file: any) => unknown[];
+  pathReplace?: (value: any, file: any) => unknown; 
   key?: string;
 }
 
@@ -203,6 +204,14 @@ export class BaseConverter {
       v = _.omit(v as object, 'transformer') as T;
     }
 
+    const hasPathReplace = 
+    _.has(v, 'pathReplace') && _.isFunction(_.get(v, 'pathReplace'));
+    let pathReplace = (val: T | T[]) => val;
+    if (hasPathReplace) {
+      pathReplace = _.get(v, 'pathReplace');
+      v = _.omit(v as object, 'pathReplace') as T;
+    }
+
     const hasPath = _.isObject(v) && _.has(v, 'path');
     let pathV = v;
     if (hasPath) {
@@ -211,6 +220,8 @@ export class BaseConverter {
         | T[];
       v = _.omit(v as object, 'path') as T;
     }
+    
+    pathV = pathReplace(pathV);
 
     if (
       _.isString(pathV) ||
