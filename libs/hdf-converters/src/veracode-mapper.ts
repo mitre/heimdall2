@@ -101,7 +101,7 @@ function formatCweDesc(input: Record<string, unknown>): string {
   return text.join('\n');
 }
 
-function flaws(input: Record<string, unknown>[]): string[] {
+function getFlaws(input: Record<string, unknown>[]): string[] {
   let flawArr: string[] = [];
   if (Array.isArray(input)) {
     (input).map(
@@ -375,7 +375,8 @@ function controlMappingCwe(severity: number) {
     },
     results: [
       {
-        path: 'staticflaws.flaw',
+        path: 'cwe',
+        pathReplace: getFlaws,
         status: ExecJSON.ControlResultStatus.Failed,
         code_desc: {transformer: formatCodeDesc},
         start_time: {path: '$.detailedreport.first_build_submitted_date'},

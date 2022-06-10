@@ -10,7 +10,7 @@ export interface ILookupPath {
   path?: string | string[];
   transformer?: (value: any) => unknown;
   arrayTransformer?: (value: unknown[], file: any) => unknown[];
-  pathReplace?: (value: any, file: any) => unknown; 
+  pathReplace?: (value: unknown, file: Record<string, unknown>) => unknown; 
   key?: string;
 }
 
@@ -206,8 +206,12 @@ export class BaseConverter {
 
     const hasPathReplace = 
     _.has(v, 'pathReplace') && _.isFunction(_.get(v, 'pathReplace'));
-    let pathReplace = (val: T | T[]) => val;
+    if (_.has(v, 'pathReplace')){
+      console.log("pathreplace present")
+    }
+    let pathReplace = (val: T | T[], file:Record<string, unknown>) => val;
     if (hasPathReplace) {
+      console.log("haspath is true")
       pathReplace = _.get(v, 'pathReplace');
       v = _.omit(v as object, 'pathReplace') as T;
     }
@@ -220,8 +224,6 @@ export class BaseConverter {
         | T[];
       v = _.omit(v as object, 'path') as T;
     }
-    
-    pathV = pathReplace(pathV);
 
     if (
       _.isString(pathV) ||
@@ -229,31 +231,31 @@ export class BaseConverter {
       _.isBoolean(pathV) ||
       _.isNull(pathV)
     ) {
-      return transformer(pathV) as T;
+      return transformer(pathReplace(pathV, file)) as T;
     }
 
     if (Array.isArray(pathV)) {
       return hasTransformer
-        ? (transformer(pathV) as T[])
+        ? (transformer(pathReplace(pathV, file)) as T[])
         : this.handleArray(file, pathV);
     }
 
     if (_.keys(v).length > 0 && hasTransformer) {
       return {
         ...this.convertInternal(file, v),
-        ...(transformer(hasPath ? pathV : file) as object)
+        ...(transformer(pathReplace(hasPath ? pathV : file as T | T[], file)) as object)
       } as MappedReform<T, ILookupPath>;
     }
 
     if (hasTransformer) {
-      return transformer(hasPath ? pathV : file) as
+      return transformer(pathReplace(hasPath ? pathV : file as T | T[], file)) as
         | T
         | T[]
         | MappedReform<T, ILookupPath>;
     }
 
     return hasPath
-      ? pathV
+      ? pathReplace(pathV, file)
       : (this.convertInternal(file, v) as
           | T
           | T[]
