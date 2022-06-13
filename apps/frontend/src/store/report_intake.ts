@@ -19,6 +19,7 @@ import {
   SarifMapper,
   ScoutsuiteMapper,
   SnykResults,
+  TwistlockMapper,
   XCCDFResultsMapper,
   ZapMapper
 } from '@mitre/hdf-converters';
@@ -125,6 +126,12 @@ export const fileTypeFingerprints = {
     'summary',
     'vulnerabilities',
     'vulnerabilities[0].identifiers'
+  ],
+  twistlock: [
+    'results[0].complianceDistribution',
+    'results[0].vulnerabilityDistribution',
+    'results[0].collections',
+    'results[0].digest'
   ],
   zap: ['@generated', '@version', 'site']
 };
@@ -251,6 +258,8 @@ export class InspecIntake extends VuexModule {
         return new SarifMapper(convertOptions.data).toHdf();
       case 'snyk':
         return new SnykResults(convertOptions.data).toHdf();
+      case 'twistlock':
+        return new TwistlockMapper(convertOptions.data).toHdf();
       case 'nessus':
         return new NessusResults(convertOptions.data).toHdf();
       case 'xccdf':

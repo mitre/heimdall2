@@ -8127,9 +8127,17 @@
               "code_desc": "Manual verification status provided through attestation has expired",
               "status": "skipped",
               "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: Audit logs are automatically backed up and cleared as necessary\n\nUpdated: 2022-05-02\nUpdated By: Json Smith, Security\nFrequency: monthly",
-              "start_time": "2022-06-06T17:49:33.200Z"
+              "start_time": "2022-06-08T14:25:39.202Z"
             }
-          ]
+          ],
+          "attestation_data": {
+            "control_id": "V-72087",
+            "explanation": "Audit logs are automatically backed up and cleared as necessary",
+            "frequency": "monthly",
+            "status": "passed",
+            "updated": "2022-05-02",
+            "updated_by": "Json Smith, Security"
+          }
         },
         {
           "id": "V-72089",
@@ -17697,9 +17705,17 @@
               "code_desc": "Manual verification status provided through attestation has expired",
               "status": "skipped",
               "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: Audit records are enabled for this system.\n\nUpdated: 2022-01-02\nUpdated By: Alec Hardison, Security\nFrequency: 1d",
-              "start_time": "2022-06-06T17:49:33.203Z"
+              "start_time": "2022-06-08T14:25:39.204Z"
             }
-          ]
+          ],
+          "attestation_data": {
+            "control_id": "V-73163",
+            "explanation": "Audit records are enabled for this system.",
+            "frequency": "1d",
+            "status": "passed",
+            "updated": "2022-01-02",
+            "updated_by": "Alec Hardison, Security"
+          }
         },
         {
           "id": "V-73165",
