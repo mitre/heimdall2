@@ -10,7 +10,7 @@ export interface ILookupPath {
   path?: string | string[];
   transformer?: (value: any) => unknown;
   arrayTransformer?: (value: unknown[], file: any) => unknown[];
-  pathReplace?: (value: unknown, file: Record<string, unknown>) => unknown; 
+  pathReplace?: (value: unknown, file: any) => unknown;
   key?: string;
 }
 
@@ -204,11 +204,11 @@ export class BaseConverter {
       v = _.omit(v as object, 'transformer') as T;
     }
 
-    const hasPathReplace = 
-    _.has(v, 'pathReplace') && _.isFunction(_.get(v, 'pathReplace'));
+    const hasPathReplace = _.has(v, 'pathReplace') && _.isFunction(_.get(v, 'pathReplace'));
     if (_.has(v, 'pathReplace')){
       console.log("pathreplace present")
     }
+
     let pathReplace = (val: T | T[], file:Record<string, unknown>) => val;
     if (hasPathReplace) {
       console.log("haspath is true")
@@ -219,9 +219,7 @@ export class BaseConverter {
     const hasPath = _.isObject(v) && _.has(v, 'path');
     let pathV = v;
     if (hasPath) {
-      pathV = this.handlePath(file, _.get(v, 'path') as string | string[]) as
-        | T
-        | T[];
+      pathV = pathReplace(this.handlePath(file, _.get(v, 'path') as string | string[]) as T | T[], file);
       v = _.omit(v as object, 'path') as T;
     }
 
@@ -231,31 +229,31 @@ export class BaseConverter {
       _.isBoolean(pathV) ||
       _.isNull(pathV)
     ) {
-      return transformer(pathReplace(pathV, file)) as T;
+      return transformer(pathV) as T;
     }
 
     if (Array.isArray(pathV)) {
       return hasTransformer
-        ? (transformer(pathReplace(pathV, file)) as T[])
+        ? (transformer(pathV) as T[])
         : this.handleArray(file, pathV);
     }
 
     if (_.keys(v).length > 0 && hasTransformer) {
       return {
         ...this.convertInternal(file, v),
-        ...(transformer(pathReplace(hasPath ? pathV : file as T | T[], file)) as object)
+        ...(transformer(hasPath ? pathV : file as T | T[]) as object)
       } as MappedReform<T, ILookupPath>;
     }
 
     if (hasTransformer) {
-      return transformer(pathReplace(hasPath ? pathV : file as T | T[], file)) as
+      return transformer(hasPath ? pathV : file as T | T[]) as
         | T
         | T[]
         | MappedReform<T, ILookupPath>;
     }
 
     return hasPath
-      ? pathReplace(pathV, file)
+      ? pathV
       : (this.convertInternal(file, v) as
           | T
           | T[]
@@ -298,15 +296,20 @@ export class BaseConverter {
         const key = lookupPath.key;
         const arrayTransformer = lookupPath.arrayTransformer?.bind(this);
         const transformer = lookupPath.transformer?.bind(this);
+        const pathReplace = lookupPath.pathReplace?.bind(this);
         if (this.hasPath(file, path)) {
-          const pathVal = this.handlePath(file, path);
+          let pathVal = this.handlePath(file, path);
+          if (pathReplace !== undefined) {
+            pathVal = pathReplace(pathVal, file);
+          }
           if (Array.isArray(pathVal)) {
             v = pathVal.map((element: Record<string, unknown>) => {
               return _.omit(this.convertInternal(element, lookupPath), [
                 'path',
                 'transformer',
                 'arrayTransformer',
-                'key'
+                'key',
+                'pathReplace'
               ]) as unknown as T;
             });
             if (arrayTransformer !== undefined) {
@@ -325,10 +328,9 @@ export class BaseConverter {
             resultingData.push(...v);
           } else {
             if (transformer !== undefined) {
-              resultingData.push(transformer(this.handlePath(file, path)) as T);
-            } else {
-              resultingData.push(this.handlePath(file, path) as T);
+              pathVal = transformer(pathVal);
             }
+            resultingData.push(pathVal as T);
           }
         }
       }

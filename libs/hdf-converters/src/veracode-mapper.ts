@@ -101,7 +101,7 @@ function formatCweDesc(input: Record<string, unknown>): string {
   return text.join('\n');
 }
 
-function getFlaws(input: Record<string, unknown>[]): string[] {
+function getFlaws(input: unknown): string[] {
   let flawArr: string[] = [];
   if (Array.isArray(input)) {
     (input).map(
@@ -115,10 +115,10 @@ function getFlaws(input: Record<string, unknown>[]): string[] {
     });
   } else {
     input = [input];
-    if (!Array.isArray(_.get(input[0], 'staticflaws.flaw'))) {
-      flawArr.push(_.get(input[0], 'staticflaws.flaw') as string);
+    if (!Array.isArray(_.get((input as Record<string, unknown>[])[0], 'staticflaws.flaw'))) {
+      flawArr.push(_.get((input as Record<string, unknown>[])[0], 'staticflaws.flaw') as string);
     } else {
-      flawArr = flawArr.concat(_.get(input[0], 'staticflaws.flaw') as string[]);
+      flawArr = flawArr.concat(_.get((input as Record<string, unknown>[])[0], 'staticflaws.flaw') as string[]);
     }
   }
   return flawArr
@@ -349,7 +349,7 @@ function parseXml(xml: string) {
   return parsedXML;
 }
 
-function controlMappingCwe(severity: number) {
+function controlMappingCwe(severity: number): MappedTransform<ExecJSON.Control & ILookupPath, ILookupPath> {
   return {
     id: {path: 'categoryid'},
     title: {path: 'categoryname'},
@@ -385,7 +385,7 @@ function controlMappingCwe(severity: number) {
     ]
   };
 }
-function controlMappingCve() {
+function controlMappingCve(): MappedTransform<ExecJSON.Control & ILookupPath, ILookupPath> {
   return {
     id: {path: 'cve_id'},
     title: {path: 'cve_id'},
