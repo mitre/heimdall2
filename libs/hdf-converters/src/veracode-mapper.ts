@@ -25,9 +25,15 @@ function impactMapping(severity: number): number {
   return IMPACT_MAPPING.get(severity.toString()) || 0.1;
 }
 
-function nistTag(input: string): string[] {
-  const cwes = _.get(input, 'cwe').map((value: Record<string, unknown>) => _.get(value, 'cweid'));
-  return CWE_NIST_MAPPING.nistFilter(cwes, DEFAULT_NIST_TAG);
+function nistTag(input: Record<string, unknown>): string[] {
+  const cwes = []
+  if (Array.isArray(_.get(input, 'cwe'))){
+    cwes.push(...(_.get(input, 'cwe') as Record<string, unknown>[]).map((value: Record<string, unknown>) => _.get(value, 'cweid')));
+  }
+  else {
+    cwes.push([_.get(input, 'cwe')].map((value) =>  _.get(value, 'cweid')));
+  }
+  return CWE_NIST_MAPPING.nistFilter(cwes as string[], DEFAULT_NIST_TAG);
 }
 
 function formatRecommendations(input: Record<string, unknown>): string {
@@ -72,20 +78,36 @@ function formatCweData(input: Record<string, unknown>): string {
     'owaspmobile'
   ];
   if (_.has(input, 'cwe')) {
-    const len = Number(`${_.get(input, CWE_LENGTH)}`);
-    for (let index = 0; index < len; index++) {
-      let cwe = `CWE-${_.get(input, `cwe[${index}].cweid`)}: `;
-      const cwename = `cwe[${index}].cwename`;
-      cwe += `${_.get(input, cwename)}`;
-      cwe += categories.map((value: string)  => {
-        if (_.has(input, `cwe[${index}].${value}`)) {
-            return `${value}: ${_.get(input, `cwe[${index}].${value}`)}`;
-        }
-        else{
-            return ''
-        }
-      }).join('\n');
-      text.push(cwe);
+    if (Array.isArray(_.get(input, 'cwe'))){ 
+      const len = Number(`${_.get(input, CWE_LENGTH)}`);
+      for (let index = 0; index < len; index++) {
+        let cwe = `CWE-${_.get(input, `cwe[${index}].cweid`)}: `;
+        const cwename = `cwe[${index}].cwename`;
+        cwe += `${_.get(input, cwename)}`;
+        cwe += categories.map((value: string)  => {
+          if (_.has(input, `cwe[${index}].${value}`)) {
+              return `${value}: ${_.get(input, `cwe[${index}].${value}`)}\n`;
+          }
+          else{
+              return ''
+          }
+        }).join('');
+        text.push(cwe);
+      }
+    }
+    else {
+      let cwe = `CWE-${_.get(input, `cwe.cweid`)}: `;
+        const cwename = `cwe.cwename`;
+        cwe += `${_.get(input, cwename)}`;
+        cwe += categories.map((value: string)  => {
+          if (_.has(input, `cwe.${value}`)) {
+              return `${value}: ${_.get(input, `cwe.${value}`)}\n`;
+          }
+          else{
+              return ''
+          }
+        }).join('');
+        text.push(cwe);
     }
   }
   return text.join('\n');
@@ -94,9 +116,16 @@ function formatCweData(input: Record<string, unknown>): string {
 function formatCweDesc(input: Record<string, unknown>): string {
   const text = [];
   if (_.has(input, 'cwe')) {
-    text.push(...((_.get(input, 'cwe') as Record<string,unknown>[]).map((value: Record<string,unknown>) =>  
-    `CWE-${_.get(value, 'cweid')}: ${_.get(value, 'cwename')} Description: ${_.get(value, 'description.text.text')}; `
-    )));
+    if(Array.isArray(_.get(input, 'cwe'))){
+      text.push(...((_.get(input, 'cwe') as Record<string,unknown>[]).map((value: Record<string,unknown>) =>  
+      `CWE-${_.get(value, 'cweid')}: ${_.get(value, 'cwename')} Description: ${_.get(value, 'description.text.text')}; `
+      )));
+    }
+    else{
+      text.push(...([(_.get(input, 'cwe') as Record<string,unknown>)].map((value: Record<string,unknown>) =>  
+      `CWE-${_.get(value, 'cweid')}: ${_.get(value, 'cwename')} Description: ${_.get(value, 'description.text.text')}; `
+      )));
+    }
   }
   return text.join('\n');
 }
@@ -104,15 +133,14 @@ function formatCweDesc(input: Record<string, unknown>): string {
 function getFlaws(input: unknown): string[] {
   let flawArr: string[] = [];
   if (Array.isArray(input)) {
-    (input).map(
-      function(value: Record<string,unknown>) {
-        if (!Array.isArray(_.get(value, 'staticflaws.flaw'))) {
-          flawArr.push(_.get(value, 'staticflaws.flaw') as string);
-        } 
-        else {
-          flawArr.push(..._.get(value, 'staticflaws.flaw') as string[]);
-        }
-    });
+    for(let value of input){
+      if (!Array.isArray(_.get(value, 'staticflaws.flaw'))) {
+        flawArr.push(_.get(value, 'staticflaws.flaw') as string);
+      } 
+      else {
+        flawArr.push(..._.get(value, 'staticflaws.flaw') as string[]);
+      }
+    }
   } else {
     input = [input];
     if (!Array.isArray(_.get((input as Record<string, unknown>[])[0], 'staticflaws.flaw'))) {
@@ -143,12 +171,12 @@ function formatCodeDesc(input: Record<string, unknown>[]): string {
 
     flawDesc += categories.map(function([title, name]) {
       if (_.has(input, name)) {
-          return `${title}: ${_.get(input, name)}`;
+          return `${title}: ${_.get(input, name)}\n`;
       }
       else{
           return ''
       }
-    }).join('\n');
+    }).join('');
   }
   return flawDesc;
 }
@@ -185,15 +213,14 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
 function formatSourceLocation(input: Record<string,unknown>[]): string {
   let flawArr: string[] = [];
   if (Array.isArray(input)) {
-    (input).map(
-      function(value: Record<string,unknown>) {
+    for(let value of input) {
         if (!Array.isArray(_.get(value, 'staticflaws.flaw'))) {
           flawArr.push(_.get(value, 'staticflaws.flaw') as string);
         } 
         else {
           flawArr.push(..._.get(value, 'staticflaws.flaw') as string[]);
         }
-    });
+    }
   } else {
     input = [input];
     if (!Array.isArray(_.get(input[0], 'staticflaws.flaw'))) {
@@ -205,44 +232,19 @@ function formatSourceLocation(input: Record<string,unknown>[]): string {
  return flawArr.map((value) => _.get(value, 'sourcefile')).join('\n') 
 }
 
-function staticflawmover(parsedXML: Record<string, unknown>) {
-  for (let i = 0; i < 6; i++) {
-    let inputstr1 = `${REPORT_SEVERITY}${i}].category[0]`;
-    if (_.has(parsedXML, inputstr1)) {
-      inputstr1 = `${REPORT_SEVERITY}${i}].category.length`;
-      for (let k = 0; k < Number(_.get(parsedXML, inputstr1)); k++) {
-          let flawArr: string[] = [];
-          let inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe`;
-          if (Array.isArray(_.get(parsedXML, inputstr))) {
-            (_.get(parsedXML, `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe`) as Record<string, unknown>[]).map(
-              function(value: Record<string,unknown>) {
-                if (!Array.isArray(_.get(value, 'staticflaws.flaw'))) {
-                  flawArr.push(_.get(value, 'staticflaws.flaw') as string);
-                } 
-                else {
-                  flawArr.push(..._.get(value, 'staticflaws.flaw') as string[]);
-                }
-            });
-          } else {
-            inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe`;
-            const cwes = [_.get(parsedXML, inputstr)];
-            _.set(parsedXML, inputstr, cwes);
-            inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[0].staticflaws.flaw`;
-            if (!Array.isArray(_.get(parsedXML, inputstr))) {
-              flawArr.push(_.get(parsedXML, inputstr) as string);
-            } else {
-              flawArr = flawArr.concat(_.get(parsedXML, inputstr) as string[]);
-            }
-            // maybe change this to unset
-            inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].cwe[0].staticflaws`;
-          }
-          const flaws = {flaw: flawArr};
-          inputstr = `${REPORT_SEVERITY}${i}${CATEGORY}${k}].staticflaws`;
-          _.set(parsedXML, inputstr, flaws);
+function onetoone(input: any): Record<string, unknown>[][]{
+  const mapping: Record<string,unknown>[][] = [];
+  for(let component of _.get(input, 'vulnerable_components')){
+    if(_.get(component, 'vulnerabilities') != ''){
+      for(let vuln of _.get(component, 'vulnerabilites.vulnerability')){
+        const entry = []
+        entry.push(_.omit(component, 'vulnerabilities'))
+        entry.push(vuln)
+        mapping.push(entry)
       }
     }
   }
-  return parsedXML;
+   return mapping
 }
 
 function setcomponents(parsedXML: any) {
@@ -326,9 +328,6 @@ function parseXml(xml: string) {
   );
   _.set(parsedXML, 'detailedreport.severity', arrayedControls);
 
-  // Sets cwe and flaw keys to be arrays
-  // Moves staticflaws up one level for control mapping
-  _.set(parsedXML, '', staticflawmover(parsedXML));
   // Moves cves up one level for control mapping
   const len = _.get(
     parsedXML,
@@ -376,7 +375,7 @@ function controlMappingCwe(severity: number): MappedTransform<ExecJSON.Control &
     results: [
       {
         path: 'cwe',
-        pathReplace: getFlaws,
+        pathTransform: getFlaws,
         status: ExecJSON.ControlResultStatus.Failed,
         code_desc: {transformer: formatCodeDesc},
         start_time: {path: '$.detailedreport.first_build_submitted_date'},
