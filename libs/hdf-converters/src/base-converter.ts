@@ -10,7 +10,7 @@ export interface ILookupPath {
   path?: string | string[];
   transformer?: (value: any) => unknown;
   arrayTransformer?: (value: unknown[], file: any) => unknown[];
-  pathReplace?: (value: unknown, file: any) => unknown;
+  pathTransform?: (value: unknown, file: any) => unknown;
   key?: string;
 }
 
@@ -204,22 +204,18 @@ export class BaseConverter {
       v = _.omit(v as object, 'transformer') as T;
     }
 
-    const hasPathReplace = _.has(v, 'pathReplace') && _.isFunction(_.get(v, 'pathReplace'));
-    if (_.has(v, 'pathReplace')){
-      console.log("pathreplace present")
-    }
+    const haspathTransform = _.has(v, 'pathTransform') && _.isFunction(_.get(v, 'pathTransform'));
 
-    let pathReplace = (val: T | T[], file:Record<string, unknown>) => val;
-    if (hasPathReplace) {
-      console.log("haspath is true")
-      pathReplace = _.get(v, 'pathReplace');
-      v = _.omit(v as object, 'pathReplace') as T;
+    let pathTransform = (val: T | T[], file:Record<string, unknown>) => val;
+    if (haspathTransform) {
+      pathTransform = _.get(v, 'pathTransform');
+      v = _.omit(v as object, 'pathTransform') as T;
     }
 
     const hasPath = _.isObject(v) && _.has(v, 'path');
     let pathV = v;
     if (hasPath) {
-      pathV = pathReplace(this.handlePath(file, _.get(v, 'path') as string | string[]) as T | T[], file);
+      pathV = pathTransform(this.handlePath(file, _.get(v, 'path') as string | string[]) as T | T[], file);
       v = _.omit(v as object, 'path') as T;
     }
 
@@ -296,11 +292,11 @@ export class BaseConverter {
         const key = lookupPath.key;
         const arrayTransformer = lookupPath.arrayTransformer?.bind(this);
         const transformer = lookupPath.transformer?.bind(this);
-        const pathReplace = lookupPath.pathReplace?.bind(this);
+        const pathTransform = lookupPath.pathTransform?.bind(this);
         if (this.hasPath(file, path)) {
           let pathVal = this.handlePath(file, path);
-          if (pathReplace !== undefined) {
-            pathVal = pathReplace(pathVal, file);
+          if (pathTransform !== undefined) {
+            pathVal = pathTransform(pathVal, file);
           }
           if (Array.isArray(pathVal)) {
             v = pathVal.map((element: Record<string, unknown>) => {
@@ -309,7 +305,7 @@ export class BaseConverter {
                 'transformer',
                 'arrayTransformer',
                 'key',
-                'pathReplace'
+                'pathTransform'
               ]) as unknown as T;
             });
             if (arrayTransformer !== undefined) {
