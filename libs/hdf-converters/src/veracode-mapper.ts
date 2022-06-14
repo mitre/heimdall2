@@ -232,75 +232,78 @@ function formatSourceLocation(input: Record<string,unknown>[]): string {
  return flawArr.map((value) => _.get(value, 'sourcefile')).join('\n') 
 }
 
-function onetoone(input: any): Record<string, unknown>[][]{
-  const mapping: Record<string,unknown>[][] = [];
-  for(let component of _.get(input, 'vulnerable_components')){
+function onetoone(input: any){
+  const mapping: Record<string,unknown>[] = [];
+  for(let component of _.get(input, 'vulnerable_components') as Record<string, unknown>[]){
     if(_.get(component, 'vulnerabilities') != ''){
-      for(let vuln of _.get(component, 'vulnerabilites.vulnerability')){
-        const entry = []
-        entry.push(_.omit(component, 'vulnerabilities'))
-        entry.push(vuln)
-        mapping.push(entry)
+      for(let vuln of _.get(component, 'vulnerabilites.vulnerability') as Record<string, unknown>[]){
+        _.set(vuln, 'component', _.omit(component, 'vulnerabilities'))
+        mapping.push(vuln)
       }
     }
   }
-   return mapping
+  return mapping
 }
 
-function setcomponents(parsedXML: any) {
-  for (let m = 0; m < Number(_.get( parsedXML,'detailedreport.software_composition_analysis.cves.length'));m++) {
+function componenttransform(input: any) {
+  const componentlist = [];
+  for (let value of _.get(input, `component`)) {
+    if (_.get(value,`vulnerabilities`) !== '') {
+      componentlist.push(value);
+    }
+  }
+
+
+  const vulnarr = [];
+  for ( let component of componentlist) {
+    const cves = [];
+    if (Array.isArray(_.get(component, `vulnerabilities.vulnerability`))){
+      for ( let vuln of  _.get(component, `vulnerabilities.vulnerability`)) {
+        vulnarr.push(vuln);
+      }
+    }
+    else {
+      vulnarr.push( _.get(component, `vulnerabilities.vulnerability`));
+    }
+  }
+
+  for (let vuln of vulnarr) {
     const components = [];
     let location = '';
-    const currcve = _.get(parsedXML, `${SCA_CVES}${m}].cve_id`);
+    const currcve = _.get(vuln, `cve_id`);
     const cwe = [];
-    cwe.push(_.get(parsedXML, `${SCA_CVES}${m}].cwe_id`));
+    cwe.push(_.get(vuln, `cwe_id`));
     const tag = CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG);
-    _.set(parsedXML, `${SCA_CVES}${m}].nist`, tag);
-    const impact = impactMapping(_.get(parsedXML, `${SCA_CVES}${m}].severity`));
-    _.set(parsedXML, `${SCA_CVES}${m}].impact`, impact);
-    for ( let l = 0; l < Number( _.get( parsedXML, 'detailedreport.software_composition_analysis.vulnerabilities.length'));l++) {
+    _.set(vuln, `nist`, tag);
+    const impact = impactMapping(_.get(vuln, `severity`));
+    _.set(vuln, `impact`, impact);
+    for ( let component of componentlist) {
       let hascve = false;
-      for (let n = 0;n < Number(_.get(parsedXML, `${SCA_VULNERABILITIES}${l}].cves.length`)); n++) {
-        const cve = _.get(parsedXML, `${SCA_VULNERABILITIES}${l}].cves[${n}]`);
-        if (cve === currcve) {
-          hascve = true;
-          location +=' ' + _.get(parsedXML,`${SCA_VULNERABILITIES}${l}].file_paths.file_path.value`);
-          _.set(parsedXML, `${SCA_CVES}${m}].paths`, location);
+      if(Array.isArray(_.get(component, `vulnerabilities.vulnerability`))){
+        for (let compcve of _.get(component, `vulnerabilities.vulnerability`)) {
+          if (_.get(compcve, 'cve_id') === currcve) {
+            hascve = true;
+            location +=' ' + _.get(component,`file_paths.file_path.value`);
+            _.set(vuln, `paths`, location);
+          }
         }
       }
+      else{
+        if (_.get(component, 'vulnerabilities.vulnerability.cve_id') === currcve) {
+          hascve = true;
+          location +=' ' + _.get(component,`file_paths.file_path.value`);
+          _.set(vuln, `paths`, location);
+        }
+
+      }
       if (hascve === true) {
-        const proxy = _.cloneDeep(parsedXML);
-        let omitted = _.omit(proxy,`${SCA_VULNERABILITIES}${l}].vulnerabilities`);
-        omitted = _.omit(omitted, `${SCA_VULNERABILITIES}${l}].cves`);
-        components.push(_.get(omitted, `${SCA_VULNERABILITIES}${l}]`));
+        const proxy = _.cloneDeep(component)
+        components.push( _.omit(proxy, `vulnerabilities`));
       }
     }
-    _.set(parsedXML, `${SCA_CVES}${m}].components`, components);
+    _.set(vuln, `components`, components);
   }
-  return parsedXML;
-}
-
-function cvesformatter(parsedXML: any) {
-  const vulnarr = [];
-  for ( let k = 0; k < Number( _.get( parsedXML,'detailedreport.software_composition_analysis.vulnerabilities.length')); k++) {
-    const cves = [];
-    for ( let l = 0; l < Number( _.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.length`));l++) {
-      cves.push(_.get(  parsedXML,`${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability[${l}].cve_id`));
-      vulnarr.push(_.get(parsedXML,`${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability[${l}]`));
-    }
-    const cvei = _.get(parsedXML, `${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.cve_id`);
-    if ( _.has(parsedXML,`${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability.cve_id`)) {
-      cves.push(cvei);
-      vulnarr.push( _.get(parsedXML,`${SCA_VULNERABILITIES}${k}].vulnerabilities.vulnerability`));
-    }
-    _.set(parsedXML, `${SCA_VULNERABILITIES}${k}].cves`, cves);
-  }
-  _.set(
-    parsedXML,
-    'detailedreport.software_composition_analysis.cves',
-    vulnarr
-  );
-  return parsedXML;
+  return vulnarr
 }
 
 
@@ -333,17 +336,6 @@ function parseXml(xml: string) {
     parsedXML,
     'detailedreport.software_composition_analysis.vulnerable_components.component.length'
   );
-  const cveArr = [];
-  for (let i = 0; i < len; i++) {
-    if (_.get(parsedXML,`detailedreport.software_composition_analysis.vulnerable_components.component[${i}].vulnerabilities`) !== '') {
-      cveArr.push(_.get( parsedXML,`detailedreport.software_composition_analysis.vulnerable_components.component[${i}]`));
-    }
-  }
-  _.set(parsedXML,'detailedreport.software_composition_analysis.vulnerabilities',cveArr);
-
-  //format software_composition_analysis for hdf
-  _.set(parsedXML, '', cvesformatter(parsedXML));
-  _.set(parsedXML, '', setcomponents(parsedXML));
 
   return parsedXML;
 }
@@ -380,30 +372,6 @@ function controlMappingCwe(severity: number): MappedTransform<ExecJSON.Control &
         code_desc: {transformer: formatCodeDesc},
         start_time: {path: '$.detailedreport.first_build_submitted_date'},
         message: {path: 'exploitability_adjustments.exploitability_adjustment.note'}
-      }
-    ]
-  };
-}
-function controlMappingCve(): MappedTransform<ExecJSON.Control & ILookupPath, ILookupPath> {
-  return {
-    id: {path: 'cve_id'},
-    title: {path: 'cve_id'},
-    desc: {path: 'cve_summary'},
-    impact: {path: 'impact'},
-    refs: [],
-    tags: {
-      cwe: {path: 'cwe_id'},
-      nist: {path: 'nist'}
-    },
-    source_location: {
-      ref: {path: 'paths'}
-    },
-    results: [
-      {
-        path: 'components',
-        status: ExecJSON.ControlResultStatus.Failed,
-        code_desc: {transformer: formatSCACodeDesc},
-        start_time: {path: '$.detailedreport.first_build_submitted_date'}
       }
     ]
   };
@@ -459,8 +427,28 @@ export class VeracodeMapper extends BaseConverter {
             ...controlMappingCwe(0)
           },
           {
-            path: 'detailedreport.software_composition_analysis.cves',
-            ...controlMappingCve()
+            path: 'detailedreport.software_composition_analysis.vulnerable_components',
+            pathTransform: componenttransform,
+            id: {path: "cve_id"},
+            title: {path: 'cve_id'},
+            desc: {path: 'cve_summary'},
+            impact: {path: 'impact'},
+            refs: [],
+            tags: {
+              cwe: {path: 'cwe_id'},
+              nist: {path: 'nist'}
+            },
+            source_location: {
+              ref: {path: 'paths'}
+            },
+            results:[
+              {
+                path: 'components',
+                status: ExecJSON.ControlResultStatus.Failed,
+                code_desc: {transformer: formatSCACodeDesc},
+                start_time: {path: '$.detailedreport.first_build_submitted_date'}
+              }
+            ]
           }
         ],
         sha256: ''
