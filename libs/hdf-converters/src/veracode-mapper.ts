@@ -5,11 +5,6 @@ import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 const CWE_LENGTH = 'cwe.length';
-const SCA_VULNERABILITIES =
-  'detailedreport.software_composition_analysis.vulnerabilities[';
-const REPORT_SEVERITY = 'detailedreport.severity[';
-const SCA_CVES = 'detailedreport.software_composition_analysis.cves[';
-const CATEGORY = '].category[';
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -37,7 +32,7 @@ function nistTag(input: Record<string, unknown>): string[] {
 }
 
 function formatRecommendations(input: Record<string, unknown>): string {
-  let text: string[] = [];
+  const text: string[] = [];
   if (_.has(input, 'recommendations.para')) {
     if (_.has(input, 'recommendations.para.text')) {
       text.push(`${_.get(input, 'recommendations.para.text')}`);
@@ -47,7 +42,9 @@ function formatRecommendations(input: Record<string, unknown>): string {
     }
   }
   if (_.has(input, 'recommendations.para.bulletitem')) {
-    text.push(...(_.get(input, `recommendations.para.bulletitem`) as Record<string, unknown>[]).map( (value: Record<string, unknown>) => (_.get(value, 'text') as string)));
+    if (Array.isArray(_.get(input, `recommendations.para.bulletitem`))) {
+      text.push(...(_.get(input, `recommendations.para.bulletitem`) as Record<string, unknown>[]).map( (value: Record<string, unknown>) => (_.get(value, 'text') as string)));
+   }
   }
   return text.join('\n');
 }
@@ -131,7 +128,7 @@ function formatCweDesc(input: Record<string, unknown>): string {
 }
 
 function getFlaws(input: unknown): string[] {
-  let flawArr: string[] = [];
+  const flawArr: string[] = [];
   if (Array.isArray(input)) {
     for(let value of input){
       if (!Array.isArray(_.get(value, 'staticflaws.flaw'))) {
@@ -146,7 +143,7 @@ function getFlaws(input: unknown): string[] {
     if (!Array.isArray(_.get((input as Record<string, unknown>[])[0], 'staticflaws.flaw'))) {
       flawArr.push(_.get((input as Record<string, unknown>[])[0], 'staticflaws.flaw') as string);
     } else {
-      flawArr = flawArr.concat(_.get((input as Record<string, unknown>[])[0], 'staticflaws.flaw') as string[]);
+      flawArr.push(..._.get((input as Record<string, unknown>[])[0], 'staticflaws.flaw') as string[]);
     }
   }
   return flawArr
@@ -211,7 +208,7 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
 }
 
 function formatSourceLocation(input: Record<string,unknown>[]): string {
-  let flawArr: string[] = [];
+  const flawArr: string[] = [];
   if (Array.isArray(input)) {
     for(let value of input) {
         if (!Array.isArray(_.get(value, 'staticflaws.flaw'))) {
@@ -226,7 +223,7 @@ function formatSourceLocation(input: Record<string,unknown>[]): string {
     if (!Array.isArray(_.get(input[0], 'staticflaws.flaw'))) {
       flawArr.push(_.get(input[0], 'staticflaws.flaw') as string);
     } else {
-      flawArr = flawArr.concat(_.get(input[0], 'staticflaws.flaw') as string[]);
+      flawArr.push(..._.get(input[0], 'staticflaws.flaw') as string[]);
     }
   }
  return flawArr.map((value) => _.get(value, 'sourcefile')).join('\n') 
@@ -283,7 +280,7 @@ function componenttransform(input: any) {
         for (let compcve of _.get(component, `vulnerabilities.vulnerability`)) {
           if (_.get(compcve, 'cve_id') === currcve) {
             hascve = true;
-            location +=' ' + _.get(component,`file_paths.file_path.value`);
+            location +=` ${_.get(component,`file_paths.file_path.value`)}`;
             _.set(vuln, `paths`, location);
           }
         }
@@ -291,7 +288,7 @@ function componenttransform(input: any) {
       else{
         if (_.get(component, 'vulnerabilities.vulnerability.cve_id') === currcve) {
           hascve = true;
-          location +=' ' + _.get(component,`file_paths.file_path.value`);
+          location +=` ${_.get(component,`file_paths.file_path.value`)}`;
           _.set(vuln, `paths`, location);
         }
 
@@ -316,7 +313,7 @@ function parseXml(xml: string) {
 
   const parsedXML = parser.parse(xml, options);
   if (_.has(parsedXML, 'summaryreport')) {
-    throw new Error('Current mapper does not accept sumarry reports');
+    throw new Error('Current mapper does not accept summary reports');
   }
   const arrayedControls = _.get(parsedXML, 'detailedreport.severity').map(
     (control: {category: unknown; level: string}) => {
@@ -330,12 +327,6 @@ function parseXml(xml: string) {
     }
   );
   _.set(parsedXML, 'detailedreport.severity', arrayedControls);
-
-  // Moves cves up one level for control mapping
-  const len = _.get(
-    parsedXML,
-    'detailedreport.software_composition_analysis.vulnerable_components.component.length'
-  );
 
   return parsedXML;
 }
@@ -378,11 +369,49 @@ function controlMappingCwe(severity: number): MappedTransform<ExecJSON.Control &
 }
 
 export class VeracodeMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
       target_id: ''
+    },
+    passthrough: {
+      'xmlns:xsi': { path: 'detailedreport.xmlns:xsi'},
+      xmlns: {path: 'detailedreport.xmlns'},
+      'xsi:schemaLocation': {path:'detailedreport.xsi:schemaLocation'},
+      report_format_version: {path: 'detailedreport.report_fomrat_version'},
+      account_id: {path: 'detailedreport.account_id'},
+      app_name: {path: 'detailedreport.app_name'},
+      analysis_id: {path: 'detailedreport.analysis_id'},
+      static_analysis_unit_id: {path: 'detailedreport.static_analysis_unit_id'},
+      sandbox_id: {path: 'detailedreport.sandbox_id'},
+      version: {path: 'detailedreport.version'},
+      build_id: {path: 'detailedreport.build_id'},
+      submitter: {path: 'detailedreport.submitter'},
+      platform: {path: 'detailedreport.platform'},
+      assurance_level: {path: 'detailedreport.assurance_level'},
+      business_criticality: {path: 'detailedreport.business_criticality'},
+      generation_date: {path: 'detailedreport.generation_data'},
+      veracode_level: {path: 'detailedreport.veracode_level'},
+      total_flaws: {path: 'detailedreport.total_flaws'},
+      flaws_not_mitigated: {path: 'detailedreport.flaws_not_mitigated'},
+      teams: {path: 'detailedreport.teams'},
+      life_cycle_stage: {path: 'detailedreport.life_cycle_stage'},
+      planned_deployment_date: {path: 'detailedreport.planned_deployment_date'},
+      last_update_time: {path: 'detailedreport.last_update_time'},
+      is_latest_build: {path: 'detailedreport.is_latest_build'},
+      policy_name: {path: 'detailedreport.policy_name'},
+      policy_version: {path: 'detailedreport.policy_version'},
+      policy_compliance_status: {path: 'detailedreport.plolicy_compliance_status'},
+      policy_rules_status: {path: 'detailedreport.plolicy_rules_status'},
+      grace_period_expired: {path: 'detailedreport.grace_period_expired'},
+      scan_overdue: {path: 'detailedreport.scan_overdue'},
+      business_owner: {path: 'detailedreport.business_owner'},
+      business_unit: {path: 'detailedreport.business_unit'},
+      tags: {path: 'detailedreport.tags'},
+      legacy_scan_engine: {path: 'detailedreport.legacy_scan_engtine'},
+      custom_fields: {path: 'detailedreport.custom_fields'}
+
     },
     version: HeimdallToolsVersion,
     statistics: {
@@ -392,11 +421,7 @@ export class VeracodeMapper extends BaseConverter {
         name: {path: 'detailedreport.policy_name'},
         version: {path: 'detailedreport.version'},
         title: {path: 'detailedreport.static-analysis.modules.module.name'},
-        maintainer: null,
-        summary: null,
-        license: null,
         copyright: 'Copyright Veracode, Inc., 2014.',
-        copyright_email: null,
         supports: [],
         attributes: [],
         groups: [],
