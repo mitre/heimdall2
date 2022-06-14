@@ -4,6 +4,43 @@
     "release": "2.6.26",
     "target_id": ""
   },
+  "passthrough": {
+    "xmlns:xsi": "http&#x3a;&#x2f;&#x2f;www.w3.org&#x2f;2001&#x2f;XMLSchema-instance",
+    "xmlns": "https&#x3a;&#x2f;&#x2f;www.veracode.com&#x2f;schema&#x2f;reports&#x2f;export&#x2f;1.0",
+    "xsi:schemaLocation": "https&#x3a;&#x2f;&#x2f;www.veracode.com&#x2f;schema&#x2f;reports&#x2f;export&#x2f;1.0 https&#x3a;&#x2f;&#x2f;analysiscenter.veracode.com&#x2f;resource&#x2f;detailedreport.xsd",
+    "report_format_version": "",
+    "account_id": "17742",
+    "app_name": "jenkinspipe",
+    "analysis_id": "15929175",
+    "static_analysis_unit_id": "15944831",
+    "sandbox_id": "4045062",
+    "version": "verademoscan",
+    "build_id": "15956303",
+    "submitter": "Jordon Burton",
+    "platform": "Not Specified",
+    "assurance_level": "3",
+    "business_criticality": "3",
+    "generation_date": "",
+    "veracode_level": "VL1",
+    "total_flaws": "194",
+    "flaws_not_mitigated": "194",
+    "teams": "SwAP Development",
+    "life_cycle_stage": "Not Specified",
+    "planned_deployment_date": "",
+    "last_update_time": "2021-12-29 22&#x3a;20&#x3a;32 UTC",
+    "is_latest_build": "true",
+    "policy_name": "Veracode Recommended Medium",
+    "policy_version": "1",
+    "policy_compliance_status": "",
+    "policy_rules_status": "",
+    "grace_period_expired": "true",
+    "scan_overdue": "false",
+    "business_owner": "",
+    "business_unit": "Not Specified",
+    "tags": "",
+    "legacy_scan_engine": "",
+    "custom_fields": ""
+  },
   "version": "2.6.26",
   "statistics": {},
   "profiles": [
@@ -11,11 +48,7 @@
       "name": "Veracode Recommended Medium",
       "version": "verademoscan",
       "title": "verademo.war",
-      "maintainer": null,
-      "summary": null,
-      "license": null,
       "copyright": "Copyright Veracode, Inc., 2014.",
-      "copyright_email": null,
       "supports": [],
       "attributes": [],
       "groups": [],
@@ -2488,7 +2521,7 @@
           ]
         }
       ],
-      "sha256": "71b05f42908531a1e512cd8d97ab6c773b6913b873680a8793a3095da27345e6"
+      "sha256": "5aa0e519e5d2001f2939985fcbf835de37eb3bcd32ab44cf11ce684489b80741"
     }
   ]
 }
