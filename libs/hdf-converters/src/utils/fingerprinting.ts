@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 // Fields to look for inside of JSON structures to determine type before passing to hdf-converters
-export const fileTypeFingerprints = {
+const fileTypeFingerprints = {
   asff: ['Findings', 'AwsAccountId', 'ProductArn'],
   fortify: ['FVDL', 'FVDL.EngineData.EngineVersion', 'FVDL.UUID'],
   ionchannel: ['analysis_id', 'team_id', 'source', 'trigger_hash'],
