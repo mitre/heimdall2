@@ -24,7 +24,7 @@ export const fileTypeFingerprints = {
   zap: ['@generated', '@version', 'site']
 };
 
-export function guessType(guessOptions: {
+export function fingerprint(guessOptions: {
   data: string;
   filename: string;
 }): string {
