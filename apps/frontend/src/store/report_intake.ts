@@ -216,7 +216,7 @@ export class InspecIntake extends VuexModule {
       convertOptions.fileOptions.filename ||
       'No Filename';
     // If the data passed is valid json, try to match up known keys
-    const typeGuess = guessType({
+    const typeGuess = fingerprint({
       data: convertOptions.data,
       filename: filename
     });
