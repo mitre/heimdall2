@@ -1,4 +1,4 @@
-export {ASFFResults} from './src/asff-mapper/asff-mapper';
+export { ASFFResults } from './src/asff-mapper/asff-mapper';
 export * from './src/aws-config-mapper';
 export * from './src/burpsuite-mapper';
 export * from './src/converters-from-hdf/asff/reverse-asff-mapper';
@@ -26,5 +26,6 @@ export * from './src/sonarqube-mapper';
 export * from './src/splunk-mapper';
 export * from './src/twistlock-mapper';
 export * from './src/utils/attestations';
+export * from './src/utils/check-input-format'
 export * from './src/xccdf-results-mapper';
 export * from './src/zap-mapper';

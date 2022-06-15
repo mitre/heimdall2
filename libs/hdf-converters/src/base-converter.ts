@@ -136,13 +136,6 @@ function collapseDuplicates<T extends object>(
   return newArray;
 }
 
-function objectDeepKeys(obj: Object): string[] {
-  let keys = (Object.keys(obj) as (keyof typeof obj)[])
-  return keys.filter(key => obj[key] instanceof Object && !(obj[key] instanceof Array)) // Take all keys with another layer
-    .map(key => objectDeepKeys(obj[key])) // Recursively look for keys
-    .reduce((x, y) => x.concat(y), keys) // Add to list of keys
-}
-
 export class BaseConverter {
   data: Record<string, unknown>;
   fingerprint: string[] = [];
