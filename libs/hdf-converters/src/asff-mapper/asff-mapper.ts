@@ -3,7 +3,7 @@ import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from '../base-converter';
-import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from '../utils/global';
+import {DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS, DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from '../utils/global';
 import {getFirewallManager} from './case-firewall-manager';
 import {getHDF2ASFF} from './case-hdf2asff';
 import {getProwler} from './case-prowler';
@@ -410,6 +410,7 @@ export class ASFFMapper extends BaseConverter {
                   'findingTags',
                   {}
                 ) as Record<string, unknown>,
+              cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS,
               nist: {
                 transformer: (finding: Record<string, unknown>): string[] => {
                   const tags = externalProductHandler(

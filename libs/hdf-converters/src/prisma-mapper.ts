@@ -7,7 +7,7 @@ import {
   MappedTransform,
   parseCsv
 } from './base-converter';
-import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
+import {DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS, DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
 
 export type PrismaControl = {
   Packages: string;
@@ -66,6 +66,7 @@ export class PrismaControlMapper extends BaseConverter {
             key: 'id',
             desc: {path: 'Description'},
             tags: {
+              cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS,
               nist: {
                 path: 'CVE ID',
                 transformer: (cveTag: string | undefined) => {

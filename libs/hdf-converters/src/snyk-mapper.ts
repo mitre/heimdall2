@@ -110,6 +110,7 @@ export class SnykMapper extends BaseConverter {
             path: 'vulnerabilities',
             key: 'id',
             tags: {
+              cci: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
               nist: {path: 'identifiers.CWE', transformer: nistTag},
               cweid: {path: 'identifiers.CWE', transformer: parseIdentifier},
               cveid: {path: 'identifiers.CVE', transformer: parseIdentifier},

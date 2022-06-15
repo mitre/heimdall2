@@ -132,6 +132,7 @@ export class ZapMapper extends BaseConverter {
             desc: {path: 'desc', transformer: parseHtml},
             impact: {path: 'riskcode', transformer: impactMapping},
             tags: {
+              cci: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
               nist: {path: 'cweid', transformer: nistTag},
               cweid: {path: 'cweid'},
               wascid: {path: 'wascid'},

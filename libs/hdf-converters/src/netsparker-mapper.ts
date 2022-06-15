@@ -11,7 +11,7 @@ import {
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {OwaspNistMapping} from './mappings/OwaspNistMapping';
-import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
+import {DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS, DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 1.0],
@@ -181,6 +181,7 @@ export class NetsparkerMapper extends BaseConverter {
               transformer: impactMapping(IMPACT_MAPPING)
             },
             tags: {
+              cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS,
               nist: {path: 'classification', transformer: nistTag}
             },
             descriptions: [
