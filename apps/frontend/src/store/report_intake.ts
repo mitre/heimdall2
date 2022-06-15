@@ -10,6 +10,7 @@ import {
   ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
   DBProtectMapper,
+  guessType,
   IonChannelMapper,
   JfrogXrayMapper,
   NessusResults,
@@ -36,7 +37,6 @@ import {
 import _ from 'lodash';
 import {v4 as uuid} from 'uuid';
 import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
-import {guessType} from '../../../../libs/hdf-converters/src/utils/check-input-format'; // TODO - figure out how we want to import this
 import {FilteredDataModule} from './data_filters';
 import {SnackbarModule} from './snackbar';
 
