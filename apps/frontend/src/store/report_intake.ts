@@ -10,7 +10,7 @@ import {
   ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
   DBProtectMapper,
-  guessType,
+  fingerprint,
   IonChannelMapper,
   JfrogXrayMapper,
   NessusResults,
