@@ -36,13 +36,13 @@ export async function guessType(guessOptions: {
       (a, b) => {
         return a[1].filter((value) => _.get(object, value)).length >
           b[1].filter((value) => _.get(object, value)).length
-          ? { ...a, count: a[1].filter((value) => _.get(object, value)).length }
+          ? {...a, count: a[1].filter((value) => _.get(object, value)).length}
           : {
-            ...b,
-            count: b[1].filter((value) => _.get(object, value)).length
-          };
+              ...b,
+              count: b[1].filter((value) => _.get(object, value)).length
+            };
       }
-    ) as unknown as string[] & { count: number };
+    ) as unknown as string[] & {count: number};
     const result = fingerprinted[0];
     if (fingerprinted.count !== 0) {
       return result;

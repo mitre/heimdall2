@@ -2,10 +2,10 @@
  * Reads and parses inspec files
  */
 
-import { InspecDataModule } from '@/store/data_store';
+import {InspecDataModule} from '@/store/data_store';
 import Store from '@/store/store';
-import { Tag } from '@/types/models';
-import { read_file_async } from '@/utilities/async_util';
+import {Tag} from '@/types/models';
+import {read_file_async} from '@/utilities/async_util';
 import {
   ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
@@ -33,12 +33,12 @@ import {
   convertFile,
   ExecJSON
 } from 'inspecjs';
-import { guessType } from '../../../../libs/hdf-converters/src/utils/check-input-format' // TODO - figure out how we want to import this
 import _ from 'lodash';
-import { v4 as uuid } from 'uuid';
-import { Action, getModule, Module, VuexModule } from 'vuex-module-decorators';
-import { FilteredDataModule } from './data_filters';
-import { SnackbarModule } from './snackbar';
+import {v4 as uuid} from 'uuid';
+import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
+import {guessType} from '../../../../libs/hdf-converters/src/utils/check-input-format'; // TODO - figure out how we want to import this
+import {FilteredDataModule} from './data_filters';
+import {SnackbarModule} from './snackbar';
 
 /** Each FileID corresponds to a unique File in this store */
 export type FileID = string;
@@ -159,9 +159,9 @@ export class InspecIntake extends VuexModule {
               filename: `${filename
                 .replace(/.json/gi, '')
                 .replace(/.nessus/gi, '')}-${_.get(
-                  evaluation,
-                  'platform.target_id'
-                )}.${originalFileType}`
+                evaluation,
+                'platform.target_id'
+              )}.${originalFileType}`
             });
           })
         );
@@ -272,8 +272,8 @@ export class InspecIntake extends VuexModule {
             Accept: 'application/json'
           }
         })
-        .then(async ({ data }) => {
-          data.forEach(async (file: { filename: string; data: string }) => {
+        .then(async ({data}) => {
+          data.forEach(async (file: {filename: string; data: string}) => {
             InspecIntakeModule.loadFile({
               file: new File([new Blob([file.data])], file.filename)
             });
