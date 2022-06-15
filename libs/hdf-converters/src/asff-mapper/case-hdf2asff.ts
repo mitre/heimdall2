@@ -207,7 +207,10 @@ function mapping(
           context,
           ((): ExecJSON.Control[] => {
             return _.map(
-              _.get(context.data, 'Findings') as Record<string, unknown>[],
+              _.get(context.unconvertedData, 'Findings') as Record<
+                string,
+                unknown
+              >[],
               (finding: Record<string, unknown>) => {
                 const findingTypes = objectifyTypesArray(finding);
                 return {
@@ -280,7 +283,7 @@ function mapping(
               }
             );
           })(),
-          context.data
+          context.unconvertedData
         ),
         sha256: _.get(executionTypes, `${profileName}.sha256`)
       } as ExecJSON.Profile;
