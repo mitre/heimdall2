@@ -1,25 +1,18 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.23",
-    "target_id": "goof"
+    "release": "2.6.24",
+    "target_id": "Snyk Project: goof Snyk Path: .\\nodejs-goof\\"
   },
-  "version": "2.6.23",
-  "statistics": {
-    "duration": null
-  },
+  "version": "2.6.24",
+  "statistics": {},
   "profiles": [
     {
       "name": "Snyk Scan",
       "title": "Snyk Project: goof Snyk Path: .\\nodejs-goof\\",
-      "maintainer": null,
       "summary": "Snyk Summary: 379 vulnerable dependency paths",
-      "license": null,
-      "copyright": null,
-      "copyright_email": null,
       "supports": [],
       "attributes": [],
-      "depends": [],
       "groups": [],
       "status": "loaded",
       "controls": [
@@ -29,12 +22,14 @@
               "SI-10"
             ],
             "cweid": [
-              "22"
+              "CWE-22"
             ],
             "cveid": [],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Directory Traversal",
@@ -46,7 +41,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , adm-zip@0.4.7 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -58,28 +52,29 @@
               "RA-5"
             ],
             "cweid": [
-              "29"
+              "CWE-29"
             ],
             "cveid": [
-              "2018-1002204"
+              "CVE-2018-1002204"
             ],
             "ghsaid": [
-              "3v6h-hqm4-2rg6"
-            ]
+              "GHSA-3v6h-hqm4-2rg6"
+            ],
+            "exploitMaturity": "High",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Arbitrary File Write via Archive Extraction (Zip Slip)",
           "id": "npm:adm-zip:20180415",
           "desc": "## Overview\n\n[adm-zip](https://www.npmjs.com/package/adm-zip) is a JavaScript implementation for zip data compression for NodeJS.\n\n\nAffected versions of this package are vulnerable to Arbitrary File Write via Archive Extraction (Zip Slip).\n\n## Details\nIt is exploited using a specially crafted zip archive, that holds path traversal filenames. When exploited, a filename in a malicious archive is concatenated to the target extraction directory, which results in the final path ending up outside of the target folder. For instance, a zip may hold a file with a \"../../file.exe\" location and thus break out of the target folder. If an executable or a configuration file is overwritten with a file containing malicious code, the problem can turn into an arbitrary code execution issue quite easily.\r\n\r\nThe following is an example of a zip archive with one benign file and one malicious file. Extracting the malicous file will result in traversing out of the target folder, ending up in `/root/.ssh/` overwriting the `authorized_keys` file:\r\n\r\n```\r\n\r\n+2018-04-15 22:04:29 ..... 19 19 good.txt\r\n\r\n+2018-04-15 22:04:42 ..... 20 20 ../../../../../../root/.ssh/authorized_keys\r\n\r\n```\n\n## Remediation\n\nUpgrade `adm-zip` to version 0.4.11 or higher.\n\n\n## References\n\n- [GitHub Commit](https://github.com/cthackers/adm-zip/commit/d01fa8c80c3a5fcf5ce1eda82d96600c62910d3f)\n\n- [GitHub Commit](https://github.com/cthackers/adm-zip/pull/212/commits/6f4dfeb9a2166e93207443879988f97d88a37cde)\n\n- [Hackerone Report](https://hackerone.com/reports/362118)\n\n- [Zip Slip Advisory](https://github.com/snyk/zip-slip-vulnerability)\n\n- [Zip Slip Advisory](https://snyk.io/research/zip-slip-vulnerability)\n",
-          "impact": 0,
+          "impact": 0.9,
           "code": "{\n  \"CVSSv3\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:H/A:H/E:H/RL:O/RC:C\",\n  \"alternativeIds\": [\n    \"SNYK-JS-ADMZIP-11093\"\n  ],\n  \"creationTime\": \"2018-05-30T12:09:16.138000Z\",\n  \"credit\": [\n    \"Snyk Security Research\",\n    \"Sébastien Mignot\",\n    \"Alex Chapman\"\n  ],\n  \"cvssScore\": 9.4,\n  \"description\": \"## Overview\\n\\n[adm-zip](https://www.npmjs.com/package/adm-zip) is a JavaScript implementation for zip data compression for NodeJS.\\n\\n\\nAffected versions of this package are vulnerable to Arbitrary File Write via Archive Extraction (Zip Slip).\\n\\n## Details\\nIt is exploited using a specially crafted zip archive, that holds path traversal filenames. When exploited, a filename in a malicious archive is concatenated to the target extraction directory, which results in the final path ending up outside of the target folder. For instance, a zip may hold a file with a \\\"../../file.exe\\\" location and thus break out of the target folder. If an executable or a configuration file is overwritten with a file containing malicious code, the problem can turn into an arbitrary code execution issue quite easily.\\r\\n\\r\\nThe following is an example of a zip archive with one benign file and one malicious file. Extracting the malicous file will result in traversing out of the target folder, ending up in `/root/.ssh/` overwriting the `authorized_keys` file:\\r\\n\\r\\n```\\r\\n\\r\\n+2018-04-15 22:04:29 ..... 19 19 good.txt\\r\\n\\r\\n+2018-04-15 22:04:42 ..... 20 20 ../../../../../../root/.ssh/authorized_keys\\r\\n\\r\\n```\\n\\n## Remediation\\n\\nUpgrade `adm-zip` to version 0.4.11 or higher.\\n\\n\\n## References\\n\\n- [GitHub Commit](https://github.com/cthackers/adm-zip/commit/d01fa8c80c3a5fcf5ce1eda82d96600c62910d3f)\\n\\n- [GitHub Commit](https://github.com/cthackers/adm-zip/pull/212/commits/6f4dfeb9a2166e93207443879988f97d88a37cde)\\n\\n- [Hackerone Report](https://hackerone.com/reports/362118)\\n\\n- [Zip Slip Advisory](https://github.com/snyk/zip-slip-vulnerability)\\n\\n- [Zip Slip Advisory](https://snyk.io/research/zip-slip-vulnerability)\\n\",\n  \"disclosureTime\": \"2018-04-14T21:00:00Z\",\n  \"exploit\": \"High\",\n  \"fixedIn\": [\n    \"0.4.11\"\n  ],\n  \"functions\": [\n    {\n      \"functionId\": {\n        \"className\": null,\n        \"filePath\": \"adm-zip.js\",\n        \"functionName\": \"module.exports.getEntry\"\n      },\n      \"version\": [\n        \">0.1.1 <0.4.11\"\n      ]\n    }\n  ],\n  \"functions_new\": [\n    {\n      \"functionId\": {\n        \"filePath\": \"adm-zip.js\",\n        \"functionName\": \"module.exports.getEntry\"\n      },\n      \"version\": [\n        \">0.1.1 <0.4.11\"\n      ]\n    }\n  ],\n  \"id\": \"npm:adm-zip:20180415\",\n  \"identifiers\": {\n    \"ALTERNATIVE\": [\n      \"SNYK-JS-ADMZIP-11093\"\n    ],\n    \"CVE\": [\n      \"CVE-2018-1002204\"\n    ],\n    \"CWE\": [\n      \"CWE-29\"\n    ],\n    \"GHSA\": [\n      \"GHSA-3v6h-hqm4-2rg6\"\n    ],\n    \"NSP\": [\n      \"994\",\n      \"681\"\n    ]\n  },\n  \"language\": \"js\",\n  \"malicious\": false,\n  \"modificationTime\": \"2020-12-22T17:02:11.882075Z\",\n  \"moduleName\": \"adm-zip\",\n  \"packageManager\": \"npm\",\n  \"packageName\": \"adm-zip\",\n  \"patches\": [],\n  \"proprietary\": true,\n  \"publicationTime\": \"2018-05-31T07:09:16Z\",\n  \"references\": [\n    {\n      \"title\": \"GitHub Commit\",\n      \"url\": \"https://github.com/cthackers/adm-zip/commit/d01fa8c80c3a5fcf5ce1eda82d96600c62910d3f\"\n    },\n    {\n      \"title\": \"GitHub Commit\",\n      \"url\": \"https://github.com/cthackers/adm-zip/pull/212/commits/6f4dfeb9a2166e93207443879988f97d88a37cde\"\n    },\n    {\n      \"title\": \"Hackerone Report\",\n      \"url\": \"https://hackerone.com/reports/362118\"\n    },\n    {\n      \"title\": \"Zip Slip Advisory\",\n      \"url\": \"https://github.com/snyk/zip-slip-vulnerability\"\n    },\n    {\n      \"title\": \"Zip Slip Advisory\",\n      \"url\": \"https://snyk.io/research/zip-slip-vulnerability\"\n    }\n  ],\n  \"semver\": {\n    \"vulnerable\": [\n      \"<0.4.11\"\n    ]\n  },\n  \"severity\": \"critical\",\n  \"socialTrendAlert\": false,\n  \"title\": \"Arbitrary File Write via Archive Extraction (Zip Slip)\",\n  \"severityWithCritical\": \"critical\",\n  \"from\": [\n    \"goof@1.0.1\",\n    \"adm-zip@0.4.7\"\n  ],\n  \"upgradePath\": [\n    false,\n    \"adm-zip@0.4.11\"\n  ],\n  \"isUpgradable\": true,\n  \"isPatchable\": false,\n  \"name\": \"adm-zip\",\n  \"version\": \"0.4.7\"\n}",
           "results": [
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , adm-zip@0.4.7 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -90,14 +85,16 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2020-15366"
+              "CVE-2020-15366"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -109,7 +106,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , coveralls@3.0.9 , request@2.88.0 , har-validator@5.1.3 , ajv@6.10.2 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -120,14 +116,16 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2021-3807"
+              "CVE-2021-3807"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -139,79 +137,66 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , yargs@11.1.0 , string-width@2.1.1 , strip-ansi@4.0.0 , ansi-regex@3.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , yargs@11.1.0 , cliui@4.1.0 , strip-ansi@4.0.0 , ansi-regex@3.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , yargs@11.1.0 , cliui@4.1.0 , string-width@2.1.1 , strip-ansi@4.0.0 , ansi-regex@3.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , typeorm@0.2.24 , cli-highlight@2.1.4 , yargs@15.4.1 , string-width@4.2.0 , strip-ansi@6.0.0 , ansi-regex@5.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , typeorm@0.2.24 , cli-highlight@2.1.4 , yargs@15.4.1 , cliui@6.0.0 , strip-ansi@6.0.0 , ansi-regex@5.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , typeorm@0.2.24 , cli-highlight@2.1.4 , yargs@15.4.1 , cliui@6.0.0 , string-width@4.2.0 , strip-ansi@6.0.0 , ansi-regex@5.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , typeorm@0.2.24 , cli-highlight@2.1.4 , yargs@15.4.1 , cliui@6.0.0 , wrap-ansi@6.2.0 , strip-ansi@6.0.0 , ansi-regex@5.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , typeorm@0.2.24 , cli-highlight@2.1.4 , yargs@15.4.1 , cliui@6.0.0 , wrap-ansi@6.2.0 , string-width@4.2.0 , strip-ansi@6.0.0 , ansi-regex@5.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , typeorm@0.2.24 , yargs@13.3.2 , string-width@3.1.0 , strip-ansi@5.2.0 , ansi-regex@4.1.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , typeorm@0.2.24 , yargs@13.3.2 , cliui@5.0.0 , strip-ansi@5.2.0 , ansi-regex@4.1.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , typeorm@0.2.24 , yargs@13.3.2 , cliui@5.0.0 , string-width@3.1.0 , strip-ansi@5.2.0 , ansi-regex@4.1.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , typeorm@0.2.24 , yargs@13.3.2 , cliui@5.0.0 , wrap-ansi@5.1.0 , strip-ansi@5.2.0 , ansi-regex@4.1.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , typeorm@0.2.24 , yargs@13.3.2 , cliui@5.0.0 , wrap-ansi@5.1.0 , string-width@3.1.0 , strip-ansi@5.2.0 , ansi-regex@4.1.0 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -223,14 +208,16 @@
               "RA-5"
             ],
             "cweid": [
-              "1321"
+              "CWE-1321"
             ],
             "cveid": [
-              "2021-43138"
+              "CVE-2021-43138"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -242,19 +229,16 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , hbs@4.0.4 , handlebars@4.0.14 , async@2.6.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , mongoose@4.2.4 , async@0.9.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-reports@1.4.0 , handlebars@4.0.11 , async@1.5.2 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -265,16 +249,18 @@
               "AC-3"
             ],
             "cweid": [
-              "9"
+              "CWE-9"
             ],
             "cveid": [
-              "2020-8244"
+              "CVE-2020-8244"
             ],
             "ghsaid": [
-              "pp7h-53gx-mx7r"
-            ]
+              "GHSA-pp7h-53gx-mx7r"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Remote Memory Exposure",
@@ -286,7 +272,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , mongodb@3.5.9 , bl@2.2.0 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -298,12 +283,14 @@
               "RA-5"
             ],
             "cweid": [
-              "1321"
+              "CWE-1321"
             ],
             "cveid": [],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -315,7 +302,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , dustjs-linkedin@2.5.0 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -326,12 +312,14 @@
               "SI-10"
             ],
             "cweid": [
-              "95"
+              "CWE-95"
             ],
             "cveid": [],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Code Injection",
@@ -343,7 +331,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , dustjs-linkedin@2.5.0 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -354,12 +341,14 @@
               "SI-10"
             ],
             "cweid": [
-              "94"
+              "CWE-94"
             ],
             "cveid": [],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Arbitrary Code Injection",
@@ -371,13 +360,11 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , ejs@1.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , ejs-locals@1.0.2 , ejs@0.8.8 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -388,14 +375,16 @@
               "SI-10"
             ],
             "cweid": [
-              "94"
+              "CWE-94"
             ],
             "cveid": [
-              "2022-29078"
+              "CVE-2022-29078"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Remote Code Execution (RCE)",
@@ -407,13 +396,11 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , ejs@1.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , ejs-locals@1.0.2 , ejs@0.8.8 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -424,14 +411,16 @@
               "SI-10"
             ],
             "cweid": [
-              "94"
+              "CWE-94"
             ],
             "cveid": [
-              "2017-1000228"
+              "CVE-2017-1000228"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Arbitrary Code Execution",
@@ -443,13 +432,11 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , ejs@1.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , ejs-locals@1.0.2 , ejs@0.8.8 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -460,14 +447,16 @@
               "SI-10"
             ],
             "cweid": [
-              "79"
+              "CWE-79"
             ],
             "cveid": [
-              "2017-1000188"
+              "CVE-2017-1000188"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Cross-site Scripting (XSS)",
@@ -479,13 +468,11 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , ejs@1.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , ejs-locals@1.0.2 , ejs@0.8.8 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -496,14 +483,16 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2017-1000189"
+              "CVE-2017-1000189"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Denial of Service (DoS)",
@@ -515,13 +504,11 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , ejs@1.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , ejs-locals@1.0.2 , ejs@0.8.8 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -532,14 +519,16 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [],
             "ghsaid": [
-              "q3w9-g74q-vp5f"
-            ]
+              "GHSA-q3w9-g74q-vp5f"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Denial of Service (DoS)",
@@ -551,7 +540,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , express-fileupload@0.0.5 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -562,16 +550,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2020-7699"
+              "CVE-2020-7699"
             ],
             "ghsaid": [
-              "9wcg-jrwf-8gg7"
-            ]
+              "GHSA-9wcg-jrwf-8gg7"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -583,7 +573,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , express-fileupload@0.0.5 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -594,16 +583,18 @@
               "SI-10"
             ],
             "cweid": [
-              "94"
+              "CWE-94"
             ],
             "cveid": [
-              "2021-23369"
+              "CVE-2021-23369"
             ],
             "ghsaid": [
-              "f2jv-r9rf-7988"
-            ]
+              "GHSA-f2jv-r9rf-7988"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Remote Code Execution (RCE)",
@@ -615,13 +606,11 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , hbs@4.0.4 , handlebars@4.0.14 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-reports@1.4.0 , handlebars@4.0.11 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -633,14 +622,16 @@
               "RA-5"
             ],
             "cweid": [
-              "1321"
+              "CWE-1321"
             ],
             "cveid": [
-              "2021-23383"
+              "CVE-2021-23383"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -652,13 +643,11 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , hbs@4.0.4 , handlebars@4.0.14 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-reports@1.4.0 , handlebars@4.0.11 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -669,16 +658,18 @@
               "AC-3"
             ],
             "cweid": [
-              "471"
+              "CWE-471"
             ],
             "cveid": [
-              "2019-19919"
+              "CVE-2019-19919"
             ],
             "ghsaid": [
-              "w457-6q6x-cgp9"
-            ]
+              "GHSA-w457-6q6x-cgp9"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -690,13 +681,11 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , hbs@4.0.4 , handlebars@4.0.14 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-reports@1.4.0 , handlebars@4.0.11 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -707,16 +696,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2019-20922"
+              "CVE-2019-20922"
             ],
             "ghsaid": [
-              "f52g-6jhx-586p"
-            ]
+              "GHSA-f52g-6jhx-586p"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Denial of Service (DoS)",
@@ -728,13 +719,11 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , hbs@4.0.4 , handlebars@4.0.14 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-reports@1.4.0 , handlebars@4.0.11 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -745,17 +734,19 @@
               "SI-10"
             ],
             "cweid": [
-              "94"
+              "CWE-94"
             ],
             "cveid": [
-              "2019-20920"
+              "CVE-2019-20920"
             ],
             "ghsaid": [
-              "2cf5-4w76-r9qv",
-              "q2c6-c6pm-g3gh"
-            ]
+              "GHSA-2cf5-4w76-r9qv",
+              "GHSA-q2c6-c6pm-g3gh"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Arbitrary Code Execution",
@@ -767,13 +758,11 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , hbs@4.0.4 , handlebars@4.0.14 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-reports@1.4.0 , handlebars@4.0.11 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -784,32 +773,32 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [],
             "ghsaid": [
-              "g9r4-xpmj-mj65"
-            ]
+              "GHSA-g9r4-xpmj-mj65"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
           "id": "SNYK-JS-HANDLEBARS-534988",
           "desc": "## Overview\n\n[handlebars](https://www.npmjs.com/package/handlebars) is an extension to the Mustache templating language.\n\n\nAffected versions of this package are vulnerable to Prototype Pollution.\nIt is possible to add or modify properties to the Object prototype through a malicious template. This may allow attackers to crash the application or execute Arbitrary Code in specific conditions.\n\n## Details\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `_proto_`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\r\n\r\nThere are two main ways in which the pollution of prototypes occurs:\r\n\r\n-   Unsafe `Object` recursive merge\r\n    \r\n-   Property definition by path\r\n    \r\n\r\n### Unsafe Object recursive merge\r\n\r\nThe logic of a vulnerable recursive merge function follows the following high-level model:\r\n```\r\nmerge (target, source)\r\n\r\n  foreach property of source\r\n\r\n    if property exists and is an object on both the target and the source\r\n\r\n      merge(target[property], source[property])\r\n\r\n    else\r\n\r\n      target[property] = source[property]\r\n```\r\n<br>  \r\n\r\nWhen the source object contains a property named `_proto_` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\r\n\r\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\r\n\r\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\r\n\r\n### Property definition by path\r\n\r\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\r\n\r\nIf the attacker can control the value of “path”, they can set this value to `_proto_.myValue`. `myValue` is then assigned to the prototype of the class of the object.\r\n\r\n## Types of attacks\r\n\r\nThere are a few methods by which Prototype Pollution can be manipulated:\r\n\r\n| Type |Origin  |Short description |\r\n|--|--|--|\r\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\r\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\r\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\r\n\r\n## Affected environments\r\n\r\nThe following environments are susceptible to a Prototype Pollution attack:\r\n\r\n-   Application server\r\n    \r\n-   Web server\r\n    \r\n\r\n## How to prevent\r\n\r\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\r\n    \r\n2.  Require schema validation of JSON input.\r\n    \r\n3.  Avoid using unsafe recursive merge functions.\r\n    \r\n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\r\n    \r\n5.  As a best practice use `Map` instead of `Object`.\r\n\r\n### For more information on this vulnerability type:\r\n\r\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\n\n## Remediation\n\nUpgrade `handlebars` to version 4.5.3, 3.0.8 or higher.\n\n\n## References\n\n- [GitHub Commit](https://github.com/wycats/handlebars.js/commit/198887808780bbef9dba67a8af68ece091d5baa7)\n\n- [NPM Security Advisory](https://www.npmjs.com/advisories/1325)\n",
-          "impact": 0,
+          "impact": 0.9,
           "code": "{\n  \"CVSSv3\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n  \"alternativeIds\": [],\n  \"creationTime\": \"2019-11-20T09:54:27.277624Z\",\n  \"credit\": [\n    \"Vladyslav Babkin\"\n  ],\n  \"cvssScore\": 9.8,\n  \"description\": \"## Overview\\n\\n[handlebars](https://www.npmjs.com/package/handlebars) is an extension to the Mustache templating language.\\n\\n\\nAffected versions of this package are vulnerable to Prototype Pollution.\\nIt is possible to add or modify properties to the Object prototype through a malicious template. This may allow attackers to crash the application or execute Arbitrary Code in specific conditions.\\n\\n## Details\\nPrototype Pollution is a vulnerability affecting JavaScript. Prototype Pollution refers to the ability to inject properties into existing JavaScript language construct prototypes, such as objects. JavaScript allows all Object attributes to be altered, including their magical attributes such as `_proto_`, `constructor` and `prototype`. An attacker manipulates these attributes to overwrite, or pollute, a JavaScript application object prototype of the base object by injecting other values.  Properties on the `Object.prototype` are then inherited by all the JavaScript objects through the prototype chain. When that happens, this leads to either denial of service by triggering JavaScript exceptions, or it tampers with the application source code to force the code path that the attacker injects, thereby leading to remote code execution.\\r\\n\\r\\nThere are two main ways in which the pollution of prototypes occurs:\\r\\n\\r\\n-   Unsafe `Object` recursive merge\\r\\n    \\r\\n-   Property definition by path\\r\\n    \\r\\n\\r\\n### Unsafe Object recursive merge\\r\\n\\r\\nThe logic of a vulnerable recursive merge function follows the following high-level model:\\r\\n```\\r\\nmerge (target, source)\\r\\n\\r\\n  foreach property of source\\r\\n\\r\\n    if property exists and is an object on both the target and the source\\r\\n\\r\\n      merge(target[property], source[property])\\r\\n\\r\\n    else\\r\\n\\r\\n      target[property] = source[property]\\r\\n```\\r\\n<br>  \\r\\n\\r\\nWhen the source object contains a property named `_proto_` defined with `Object.defineProperty()` , the condition that checks if the property exists and is an object on both the target and the source passes and the merge recurses with the target, being the prototype of `Object` and the source of `Object` as defined by the attacker. Properties are then copied on the `Object` prototype.\\r\\n\\r\\nClone operations are a special sub-class of unsafe recursive merges, which occur when a recursive merge is conducted on an empty object: `merge({},source)`.\\r\\n\\r\\n`lodash` and `Hoek` are examples of libraries susceptible to recursive merge attacks.\\r\\n\\r\\n### Property definition by path\\r\\n\\r\\nThere are a few JavaScript libraries that use an API to define property values on an object based on a given path. The function that is generally affected contains this signature: `theFunction(object, path, value)`\\r\\n\\r\\nIf the attacker can control the value of “path”, they can set this value to `_proto_.myValue`. `myValue` is then assigned to the prototype of the class of the object.\\r\\n\\r\\n## Types of attacks\\r\\n\\r\\nThere are a few methods by which Prototype Pollution can be manipulated:\\r\\n\\r\\n| Type |Origin  |Short description |\\r\\n|--|--|--|\\r\\n| **Denial of service (DoS)**|Client  |This is the most likely attack. <br>DoS occurs when `Object` holds generic functions that are implicitly called for various operations (for example, `toString` and `valueOf`). <br> The attacker pollutes `Object.prototype.someattr` and alters its state to an unexpected value such as `Int` or `Object`. In this case, the code fails and is likely to cause a denial of service.  <br>**For example:** if an attacker pollutes `Object.prototype.toString` by defining it as an integer, if the codebase at any point was reliant on `someobject.toString()` it would fail. |\\r\\n |**Remote Code Execution**|Client|Remote code execution is generally only possible in cases where the codebase evaluates a specific attribute of an object, and then executes that evaluation.<br>**For example:** `eval(someobject.someattr)`. In this case, if the attacker pollutes `Object.prototype.someattr` they are likely to be able to leverage this in order to execute code.|\\r\\n|**Property Injection**|Client|The attacker pollutes properties that the codebase relies on for their informative value, including security properties such as cookies or tokens.<br>  **For example:** if a codebase checks privileges for `someuser.isAdmin`, then when the attacker pollutes `Object.prototype.isAdmin` and sets it to equal `true`, they can then achieve admin privileges.|\\r\\n\\r\\n## Affected environments\\r\\n\\r\\nThe following environments are susceptible to a Prototype Pollution attack:\\r\\n\\r\\n-   Application server\\r\\n    \\r\\n-   Web server\\r\\n    \\r\\n\\r\\n## How to prevent\\r\\n\\r\\n1.  Freeze the prototype— use `Object.freeze (Object.prototype)`.\\r\\n    \\r\\n2.  Require schema validation of JSON input.\\r\\n    \\r\\n3.  Avoid using unsafe recursive merge functions.\\r\\n    \\r\\n4.  Consider using objects without prototypes (for example, `Object.create(null)`), breaking the prototype chain and preventing pollution.\\r\\n    \\r\\n5.  As a best practice use `Map` instead of `Object`.\\r\\n\\r\\n### For more information on this vulnerability type:\\r\\n\\r\\n[Arteau, Oliver. “JavaScript prototype pollution attack in NodeJS application.” GitHub, 26 May 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)\\n\\n## Remediation\\n\\nUpgrade `handlebars` to version 4.5.3, 3.0.8 or higher.\\n\\n\\n## References\\n\\n- [GitHub Commit](https://github.com/wycats/handlebars.js/commit/198887808780bbef9dba67a8af68ece091d5baa7)\\n\\n- [NPM Security Advisory](https://www.npmjs.com/advisories/1325)\\n\",\n  \"disclosureTime\": \"2019-11-18T19:42:01Z\",\n  \"exploit\": \"Not Defined\",\n  \"fixedIn\": [\n    \"4.5.3\",\n    \"3.0.8\"\n  ],\n  \"functions\": [],\n  \"functions_new\": [],\n  \"id\": \"SNYK-JS-HANDLEBARS-534988\",\n  \"identifiers\": {\n    \"CVE\": [],\n    \"CWE\": [\n      \"CWE-400\"\n    ],\n    \"GHSA\": [\n      \"GHSA-g9r4-xpmj-mj65\"\n    ],\n    \"NSP\": [\n      \"1325\"\n    ]\n  },\n  \"language\": \"js\",\n  \"malicious\": false,\n  \"modificationTime\": \"2021-02-07T10:34:40.084216Z\",\n  \"moduleName\": \"handlebars\",\n  \"packageManager\": \"npm\",\n  \"packageName\": \"handlebars\",\n  \"patches\": [],\n  \"proprietary\": false,\n  \"publicationTime\": \"2019-11-20T09:55:17Z\",\n  \"references\": [\n    {\n      \"title\": \"GitHub Commit\",\n      \"url\": \"https://github.com/wycats/handlebars.js/commit/198887808780bbef9dba67a8af68ece091d5baa7\"\n    },\n    {\n      \"title\": \"NPM Security Advisory\",\n      \"url\": \"https://www.npmjs.com/advisories/1325\"\n    }\n  ],\n  \"semver\": {\n    \"vulnerable\": [\n      \">=4.0.0 <4.5.3\",\n      \"<3.0.8\"\n    ]\n  },\n  \"severity\": \"critical\",\n  \"socialTrendAlert\": false,\n  \"title\": \"Prototype Pollution\",\n  \"severityWithCritical\": \"critical\",\n  \"from\": [\n    \"goof@1.0.1\",\n    \"hbs@4.0.4\",\n    \"handlebars@4.0.14\"\n  ],\n  \"upgradePath\": [\n    false,\n    \"hbs@4.1.0\",\n    \"handlebars@4.5.3\"\n  ],\n  \"isUpgradable\": true,\n  \"isPatchable\": false,\n  \"name\": \"handlebars\",\n  \"version\": \"4.0.14\"\n}",
           "results": [
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , hbs@4.0.4 , handlebars@4.0.14 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-reports@1.4.0 , handlebars@4.0.11 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -820,12 +809,14 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -837,13 +828,11 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , hbs@4.0.4 , handlebars@4.0.14 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-reports@1.4.0 , handlebars@4.0.11 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -854,14 +843,16 @@
               "AC-3"
             ],
             "cweid": [
-              "471"
+              "CWE-471"
             ],
             "cveid": [],
             "ghsaid": [
-              "6r5x-hmgg-7h53"
-            ]
+              "GHSA-6r5x-hmgg-7h53"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -873,7 +864,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-reports@1.4.0 , handlebars@4.0.11 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -884,14 +874,16 @@
               "AC-3"
             ],
             "cweid": [
-              "471"
+              "CWE-471"
             ],
             "cveid": [],
             "ghsaid": [
-              "q42p-pg8m-cqh6"
-            ]
+              "GHSA-q42p-pg8m-cqh6"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -903,7 +895,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-reports@1.4.0 , handlebars@4.0.11 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -914,14 +905,16 @@
               "SC-8"
             ],
             "cweid": [
-              "200"
+              "CWE-200"
             ],
             "cveid": [
-              "2021-32822"
+              "CVE-2021-32822"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Information Exposure",
@@ -933,7 +926,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , hbs@4.0.4 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -944,16 +936,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2020-26237"
+              "CVE-2020-26237"
             ],
             "ghsaid": [
-              "vfrc-7r7c-w9mx"
-            ]
+              "GHSA-vfrc-7r7c-w9mx"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -965,7 +959,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , typeorm@0.2.24 , cli-highlight@2.1.4 , highlight.js@9.18.1 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -976,14 +969,16 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [],
             "ghsaid": [
-              "7wwv-vh3v-89cq"
-            ]
+              "GHSA-7wwv-vh3v-89cq"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -995,7 +990,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , typeorm@0.2.24 , cli-highlight@2.1.4 , highlight.js@9.18.1 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -1006,16 +1000,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2021-23362"
+              "CVE-2021-23362"
             ],
             "ghsaid": [
-              "43f8-2h32-f4cj"
-            ]
+              "GHSA-43f8-2h32-f4cj"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -1027,7 +1023,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , read-pkg-up@1.0.1 , read-pkg@1.1.0 , normalize-package-data@2.4.0 , hosted-git-info@2.6.0 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -1038,16 +1033,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2020-7788"
+              "CVE-2020-7788"
             ],
             "ghsaid": [
-              "qqgx-2p2h-9c37"
-            ]
+              "GHSA-qqgx-2p2h-9c37"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -1059,13 +1056,11 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , npmconf@0.0.24 , config-chain@1.1.12 , ini@1.3.5 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , npmconf@0.0.24 , ini@1.1.0 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -1077,12 +1072,14 @@
               "RA-5"
             ],
             "cweid": [
-              "1022"
+              "CWE-1022"
             ],
             "cveid": [],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Reverse Tabnabbing",
@@ -1094,7 +1091,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-reports@1.4.0 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -1105,17 +1101,19 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2019-11358",
-              "2019-5428"
+              "CVE-2019-11358",
+              "CVE-2019-5428"
             ],
             "ghsaid": [
-              "wv67-q8rr-grjp"
-            ]
+              "GHSA-wv67-q8rr-grjp"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -1127,7 +1125,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , jquery@2.2.4 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -1138,16 +1135,18 @@
               "SI-10"
             ],
             "cweid": [
-              "79"
+              "CWE-79"
             ],
             "cveid": [
-              "2020-11023"
+              "CVE-2020-11023"
             ],
             "ghsaid": [
-              "jpcq-cgw6-v4j6"
-            ]
+              "GHSA-jpcq-cgw6-v4j6"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Cross-site Scripting (XSS)",
@@ -1159,7 +1158,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , jquery@2.2.4 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -1170,17 +1168,19 @@
               "SI-10"
             ],
             "cweid": [
-              "79"
+              "CWE-79"
             ],
             "cveid": [
-              "2020-11022"
+              "CVE-2020-11022"
             ],
             "ghsaid": [
-              "gxr4-xjj5-5px2",
-              "v73w-r9xg-7cr9"
-            ]
+              "GHSA-gxr4-xjj5-5px2",
+              "GHSA-v73w-r9xg-7cr9"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Cross-site Scripting (XSS)",
@@ -1192,7 +1192,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , jquery@2.2.4 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -1203,17 +1202,19 @@
               "SI-10"
             ],
             "cweid": [
-              "79"
+              "CWE-79"
             ],
             "cveid": [
-              "2015-9251",
-              "2017-16012"
+              "CVE-2015-9251",
+              "CVE-2017-16012"
             ],
             "ghsaid": [
-              "rmxg-73gg-4p98"
-            ]
+              "GHSA-rmxg-73gg-4p98"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Cross-site Scripting (XSS)",
@@ -1225,7 +1226,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , jquery@2.2.4 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -1237,14 +1237,16 @@
               "RA-5"
             ],
             "cweid": [
-              "1321"
+              "CWE-1321"
             ],
             "cveid": [
-              "2021-3918"
+              "CVE-2021-3918"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -1256,7 +1258,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , coveralls@3.0.9 , request@2.88.0 , http-signature@1.2.0 , jsprim@1.4.1 , json-schema@0.2.3 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -1267,16 +1268,18 @@
               "SI-10"
             ],
             "cweid": [
-              "114"
+              "CWE-114"
             ],
             "cveid": [
-              "2020-13110"
+              "CVE-2020-13110"
             ],
             "ghsaid": [
-              "m2mx-rfpw-jghv"
-            ]
+              "GHSA-m2mx-rfpw-jghv"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "DLL Injection",
@@ -1288,7 +1291,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , mongoose@4.2.4 , mongodb@2.0.46 , mongodb-core@1.2.19 , kerberos@0.0.24 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -1299,16 +1301,18 @@
               "SI-10"
             ],
             "cweid": [
-              "20"
+              "CWE-20"
             ],
             "cveid": [
-              "2019-20149"
+              "CVE-2019-20149"
             ],
             "ghsaid": [
-              "6c8f-qphg-qjgp"
-            ]
+              "GHSA-6c8f-qphg-qjgp"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Validation Bypass",
@@ -1320,589 +1324,491 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , nanomatch@1.2.9 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , define-property@2.0.2 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , snapdragon@0.8.2 , use@3.1.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , nanomatch@1.2.9 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , define-property@2.0.2 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , define-property@2.0.2 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , define-property@1.0.0 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , nanomatch@1.2.9 , define-property@2.0.2 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , define-property@2.0.2 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , use@3.1.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , use@3.1.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , use@3.1.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , snapdragon@0.8.2 , use@3.1.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , define-property@1.0.0 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , nanomatch@1.2.9 , define-property@2.0.2 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , define-property@2.0.2 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , define-property@1.0.0 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , nanomatch@1.2.9 , define-property@2.0.2 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , define-property@2.0.2 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , braces@2.3.2 , snapdragon-node@2.1.1 , define-property@1.0.0 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , define-property@1.0.0 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , braces@2.3.2 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , nanomatch@1.2.9 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , nanomatch@1.2.9 , define-property@2.0.2 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , use@3.1.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , use@3.1.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , use@3.1.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , use@3.1.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , braces@2.3.2 , snapdragon-node@2.1.1 , define-property@1.0.0 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , define-property@1.0.0 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , braces@2.3.2 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , nanomatch@1.2.9 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , nanomatch@1.2.9 , define-property@2.0.2 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , braces@2.3.2 , snapdragon-node@2.1.1 , define-property@1.0.0 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , define-property@1.0.0 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , braces@2.3.2 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , nanomatch@1.2.9 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , nanomatch@1.2.9 , define-property@2.0.2 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , braces@2.3.2 , snapdragon-node@2.1.1 , define-property@1.0.0 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , braces@2.3.2 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , nanomatch@1.2.9 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , use@3.1.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , braces@2.3.2 , snapdragon-node@2.1.1 , define-property@1.0.0 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , braces@2.3.2 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , nanomatch@1.2.9 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , braces@2.3.2 , snapdragon-node@2.1.1 , define-property@1.0.0 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , braces@2.3.2 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , nanomatch@1.2.9 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , to-regex@3.0.2 , define-property@2.0.2 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-accessor-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , base@0.11.2 , define-property@1.0.0 , is-descriptor@1.0.2 , is-data-descriptor@1.0.0 , kind-of@6.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -1913,14 +1819,16 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2020-28500"
+              "CVE-2020-28500"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -1932,61 +1840,51 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , lodash@4.17.4 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-generator@6.26.1 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-traverse@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-generator@6.26.1 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-traverse@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-traverse@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-traverse@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -1997,16 +1895,18 @@
               "SI-10"
             ],
             "cweid": [
-              "78"
+              "CWE-78"
             ],
             "cveid": [
-              "2021-23337"
+              "CVE-2021-23337"
             ],
             "ghsaid": [
-              "35jh-r3h4-6jhm"
-            ]
+              "GHSA-35jh-r3h4-6jhm"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Command Injection",
@@ -2018,61 +1918,51 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , lodash@4.17.4 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-generator@6.26.1 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-traverse@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-generator@6.26.1 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-traverse@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-traverse@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-traverse@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -2083,16 +1973,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2019-10744"
+              "CVE-2019-10744"
             ],
             "ghsaid": [
-              "jf85-cpcp-j695"
-            ]
+              "GHSA-jf85-cpcp-j695"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -2104,61 +1996,51 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , lodash@4.17.4 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-generator@6.26.1 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-traverse@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-generator@6.26.1 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-traverse@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-traverse@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-traverse@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -2169,16 +2051,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2020-8203"
+              "CVE-2020-8203"
             ],
             "ghsaid": [
-              "p6mc-m468-83gw"
-            ]
+              "GHSA-p6mc-m468-83gw"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -2190,61 +2074,51 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , lodash@4.17.4 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-generator@6.26.1 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-traverse@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-generator@6.26.1 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-traverse@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-traverse@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-traverse@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -2255,12 +2129,14 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -2272,61 +2148,51 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , lodash@4.17.4 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-generator@6.26.1 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-traverse@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-generator@6.26.1 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-traverse@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-traverse@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-traverse@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -2337,16 +2203,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2018-16487"
+              "CVE-2018-16487"
             ],
             "ghsaid": [
-              "4xc9-xhrj-v574"
-            ]
+              "GHSA-4xc9-xhrj-v574"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -2358,61 +2226,51 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , lodash@4.17.4 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-generator@6.26.1 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-traverse@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-generator@6.26.1 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-traverse@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-traverse@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-traverse@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -2424,14 +2282,16 @@
               "RA-5"
             ],
             "cweid": [
-              "185"
+              "CWE-185"
             ],
             "cveid": [
-              "2019-1010266"
+              "CVE-2019-1010266"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -2443,61 +2303,51 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , lodash@4.17.4 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-generator@6.26.1 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-traverse@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-generator@6.26.1 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-traverse@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-traverse@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-instrument@1.10.1 , babel-template@6.26.0 , babel-traverse@6.26.0 , babel-types@6.26.0 , lodash@4.17.10 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -2508,19 +2358,21 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2018-3721"
+              "CVE-2018-3721"
             ],
             "ghsaid": [
-              "2m96-9w4j-wgv7",
-              "46fh-8fc5-xcwx",
-              "5947-m4fg-xhqg",
-              "fvqr-27wr-82fm"
-            ]
+              "GHSA-2m96-9w4j-wgv7",
+              "GHSA-46fh-8fc5-xcwx",
+              "GHSA-5947-m4fg-xhqg",
+              "GHSA-fvqr-27wr-82fm"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -2532,7 +2384,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , lodash@4.17.4 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -2543,12 +2394,14 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -2560,7 +2413,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , marked@0.3.5 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -2572,16 +2424,18 @@
               "RA-5"
             ],
             "cweid": [
-              "1333"
+              "CWE-1333"
             ],
             "cveid": [
-              "2022-21681"
+              "CVE-2022-21681"
             ],
             "ghsaid": [
-              "5v2h-r2cx-5xgj"
-            ]
+              "GHSA-5v2h-r2cx-5xgj"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -2593,7 +2447,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , marked@0.3.5 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -2605,16 +2458,18 @@
               "RA-5"
             ],
             "cweid": [
-              "1333"
+              "CWE-1333"
             ],
             "cveid": [
-              "2022-21680"
+              "CVE-2022-21680"
             ],
             "ghsaid": [
-              "rrrm-qjm4-v8hf"
-            ]
+              "GHSA-rrrm-qjm4-v8hf"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -2626,7 +2481,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , marked@0.3.5 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -2637,12 +2491,14 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -2654,7 +2510,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , marked@0.3.5 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -2666,12 +2521,14 @@
               "RA-5"
             ],
             "cweid": [
-              "1333"
+              "CWE-1333"
             ],
             "cveid": [],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Unproven",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -2683,7 +2540,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , marked@0.3.5 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -2694,16 +2550,18 @@
               "SI-10"
             ],
             "cweid": [
-              "79"
+              "CWE-79"
             ],
             "cveid": [
-              "2016-10531"
+              "CVE-2016-10531"
             ],
             "ghsaid": [
-              "vfvf-mqq8-rwqc"
-            ]
+              "GHSA-vfvf-mqq8-rwqc"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Cross-site Scripting (XSS)",
@@ -2715,7 +2573,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , marked@0.3.5 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -2726,14 +2583,16 @@
               "SI-10"
             ],
             "cweid": [
-              "79"
+              "CWE-79"
             ],
             "cveid": [
-              "2017-1000427"
+              "CVE-2017-1000427"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Cross-site Scripting (XSS)",
@@ -2745,7 +2604,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , marked@0.3.5 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -2756,14 +2614,16 @@
               "SI-10"
             ],
             "cweid": [
-              "79"
+              "CWE-79"
             ],
             "cveid": [],
             "ghsaid": [
-              "8wp3-cp9v-44fm"
-            ]
+              "GHSA-8wp3-cp9v-44fm"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Cross-site Scripting (XSS)",
@@ -2775,7 +2635,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , marked@0.3.5 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -2786,14 +2645,16 @@
               "SI-10"
             ],
             "cweid": [
-              "79"
+              "CWE-79"
             ],
             "cveid": [],
             "ghsaid": [
-              "wjmf-58vc-xqjr"
-            ]
+              "GHSA-wjmf-58vc-xqjr"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Cross-site Scripting (XSS)",
@@ -2805,7 +2666,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , marked@0.3.5 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -2816,16 +2676,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2017-16114"
+              "CVE-2017-16114"
             ],
             "ghsaid": [
-              "x5pg-88wf-qq4p"
-            ]
+              "GHSA-x5pg-88wf-qq4p"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -2837,7 +2699,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , marked@0.3.5 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -2848,15 +2709,17 @@
               "SI-10"
             ],
             "cweid": [
-              "185",
-              "400"
+              "CWE-185",
+              "CWE-400"
             ],
             "cveid": [],
             "ghsaid": [
-              "xf5p-87ch-gxw2"
-            ]
+              "GHSA-xf5p-87ch-gxw2"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -2868,7 +2731,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , marked@0.3.5 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -2880,14 +2742,16 @@
               "RA-5"
             ],
             "cweid": [
-              "1321"
+              "CWE-1321"
             ],
             "cveid": [
-              "2021-44906"
+              "CVE-2021-44906"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -2899,67 +2763,56 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , hbs@4.0.4 , handlebars@4.0.14 , optimist@0.6.1 , minimist@0.0.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , coveralls@3.0.9 , minimist@1.2.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , mkdirp@0.5.1 , minimist@0.0.8 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , mkdirp@0.5.1 , minimist@0.0.8 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , caching-transform@1.0.1 , mkdirp@0.5.1 , minimist@0.0.8 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , find-cache-dir@0.1.1 , mkdirp@0.5.1 , minimist@0.0.8 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-report@1.1.3 , mkdirp@0.5.1 , minimist@0.0.8 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-source-maps@1.2.3 , mkdirp@0.5.1 , minimist@0.0.8 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , spawn-wrap@1.4.2 , mkdirp@0.5.1 , minimist@0.0.8 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-reports@1.4.0 , handlebars@4.0.11 , optimist@0.6.1 , minimist@0.0.8 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , typeorm@0.2.24 , mkdirp@0.5.5 , minimist@1.2.5 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -2970,16 +2823,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2020-7598"
+              "CVE-2020-7598"
             ],
             "ghsaid": [
-              "vh95-rmgr-6w4m"
-            ]
+              "GHSA-vh95-rmgr-6w4m"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -2991,61 +2846,51 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , hbs@4.0.4 , handlebars@4.0.14 , optimist@0.6.1 , minimist@0.0.10 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , coveralls@3.0.9 , minimist@1.2.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , mkdirp@0.5.1 , minimist@0.0.8 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , mkdirp@0.5.1 , minimist@0.0.8 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , caching-transform@1.0.1 , mkdirp@0.5.1 , minimist@0.0.8 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , find-cache-dir@0.1.1 , mkdirp@0.5.1 , minimist@0.0.8 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-report@1.1.3 , mkdirp@0.5.1 , minimist@0.0.8 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-source-maps@1.2.3 , mkdirp@0.5.1 , minimist@0.0.8 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , spawn-wrap@1.4.2 , mkdirp@0.5.1 , minimist@0.0.8 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-reports@1.4.0 , handlebars@4.0.11 , optimist@0.6.1 , minimist@0.0.8 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3056,16 +2901,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2019-10746"
+              "CVE-2019-10746"
             ],
             "ghsaid": [
-              "fhjf-83wg-r2j9"
-            ]
+              "GHSA-fhjf-83wg-r2j9"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -3077,61 +2924,51 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , snapdragon@0.8.2 , base@0.11.2 , mixin-deep@1.3.1 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , base@0.11.2 , mixin-deep@1.3.1 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , base@0.11.2 , mixin-deep@1.3.1 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , base@0.11.2 , mixin-deep@1.3.1 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , snapdragon@0.8.2 , base@0.11.2 , mixin-deep@1.3.1 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , base@0.11.2 , mixin-deep@1.3.1 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , base@0.11.2 , mixin-deep@1.3.1 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , base@0.11.2 , mixin-deep@1.3.1 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , base@0.11.2 , mixin-deep@1.3.1 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , base@0.11.2 , mixin-deep@1.3.1 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3142,16 +2979,18 @@
               "SI-10"
             ],
             "cweid": [
-              "22"
+              "CWE-22"
             ],
             "cveid": [
-              "2022-24785"
+              "CVE-2022-24785"
             ],
             "ghsaid": [
-              "8hfj-j24r-96c4"
-            ]
+              "GHSA-8hfj-j24r-96c4"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Directory Traversal",
@@ -3163,7 +3002,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , moment@2.15.1 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3174,12 +3012,14 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -3191,7 +3031,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , moment@2.15.1 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3202,16 +3041,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2017-18214"
+              "CVE-2017-18214"
             ],
             "ghsaid": [
-              "446m-mv8f-q348"
-            ]
+              "GHSA-446m-mv8f-q348"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -3223,7 +3064,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , moment@2.15.1 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3234,14 +3074,16 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [],
             "ghsaid": [
-              "mh5c-679w-hh4r"
-            ]
+              "GHSA-mh5c-679w-hh4r"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Denial of Service (DoS)",
@@ -3253,7 +3095,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , mongoose@4.2.4 , mongodb@2.0.46 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3265,12 +3106,14 @@
               "RA-5"
             ],
             "cweid": [
-              "1321"
+              "CWE-1321"
             ],
             "cveid": [],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -3282,7 +3125,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , mongoose@4.2.4 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3293,14 +3135,16 @@
               "SC-8"
             ],
             "cweid": [
-              "200"
+              "CWE-200"
             ],
             "cveid": [
-              "2019-17426"
+              "CVE-2019-17426"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Information Exposure",
@@ -3312,7 +3156,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , mongoose@4.2.4 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3324,14 +3167,16 @@
               "RA-5"
             ],
             "cweid": [
-              "201"
+              "CWE-201"
             ],
             "cveid": [],
             "ghsaid": [
-              "r5xw-q988-826m"
-            ]
+              "GHSA-r5xw-q988-826m"
+            ],
+            "exploitMaturity": "Functional",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Remote Memory Exposure",
@@ -3343,7 +3188,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , mongoose@4.2.4 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3355,14 +3199,16 @@
               "RA-5"
             ],
             "cweid": [
-              "1321"
+              "CWE-1321"
             ],
             "cveid": [
-              "2021-23438"
+              "CVE-2021-23438"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -3374,7 +3220,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , mongoose@4.2.4 , mpath@0.1.1 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3385,16 +3230,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2020-35149"
+              "CVE-2020-35149"
             ],
             "ghsaid": [
-              "45q2-34rf-mr94"
-            ]
+              "GHSA-45q2-34rf-mr94"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -3406,7 +3253,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , mongoose@4.2.4 , mquery@1.6.3 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3418,12 +3264,14 @@
               "RA-5"
             ],
             "cweid": [
-              "1321"
+              "CWE-1321"
             ],
             "cveid": [],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -3435,7 +3283,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , mongoose@4.2.4 , mquery@1.6.3 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3446,14 +3293,16 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2021-23343"
+              "CVE-2021-23343"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -3465,7 +3314,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-lib-report@1.1.3 , path-parse@1.0.5 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3477,14 +3325,16 @@
               "RA-5"
             ],
             "cweid": [
-              "1321"
+              "CWE-1321"
             ],
             "cveid": [
-              "2021-23440"
+              "CVE-2021-23440"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -3496,121 +3346,101 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3621,16 +3451,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2019-10747"
+              "CVE-2019-10747"
             ],
             "ghsaid": [
-              "4g88-fppr-53pp"
-            ]
+              "GHSA-4g88-fppr-53pp"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -3642,121 +3474,101 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , set-value@2.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , union-value@1.0.0 , set-value@0.4.3 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3767,16 +3579,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2020-8158"
+              "CVE-2020-8158"
             ],
             "ghsaid": [
-              "pf2j-9qmp-jqr2"
-            ]
+              "GHSA-pf2j-9qmp-jqr2"
+            ],
+            "exploitMaturity": "Functional",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -3788,7 +3602,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , typeorm@0.2.24 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3800,12 +3613,14 @@
               "RA-5"
             ],
             "cweid": [
-              "1333"
+              "CWE-1333"
             ],
             "cveid": [],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -3817,13 +3632,11 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , hbs@4.0.4 , handlebars@4.0.14 , uglify-js@3.13.9 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , istanbul-reports@1.4.0 , handlebars@4.0.11 , uglify-js@2.8.29 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3834,16 +3647,18 @@
               "SI-10"
             ],
             "cweid": [
-              "94"
+              "CWE-94"
             ],
             "cveid": [
-              "2021-23358"
+              "CVE-2021-23358"
             ],
             "ghsaid": [
-              "cf4h-3jhx-xvhq"
-            ]
+              "GHSA-cf4h-3jhx-xvhq"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Arbitrary Code Injection",
@@ -3855,7 +3670,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , cfenv@1.2.2 , underscore@1.9.1 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3867,12 +3681,14 @@
               "RA-5"
             ],
             "cweid": [
-              "1321"
+              "CWE-1321"
             ],
             "cveid": [],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -3884,61 +3700,51 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , unset-value@1.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , unset-value@1.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , unset-value@1.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , unset-value@1.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , unset-value@1.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , braces@2.3.2 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , unset-value@1.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , unset-value@1.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , unset-value@1.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , nanomatch@1.2.9 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , unset-value@1.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , test-exclude@4.2.1 , micromatch@3.1.10 , extglob@2.0.4 , expand-brackets@2.1.4 , snapdragon@0.8.2 , base@0.11.2 , cache-base@1.0.1 , unset-value@1.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3949,12 +3755,14 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -3966,7 +3774,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , validator@13.5.2 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -3977,14 +3784,16 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2021-3765"
+              "CVE-2021-3765"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -3996,7 +3805,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , validator@13.5.2 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -4007,12 +3815,14 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -4024,7 +3834,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , validator@13.5.2 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -4035,12 +3844,14 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -4052,7 +3863,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , validator@13.5.2 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -4063,16 +3873,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2020-7774"
+              "CVE-2020-7774"
             ],
             "ghsaid": [
-              "c4w7-xm78-47vh"
-            ]
+              "GHSA-c4w7-xm78-47vh"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -4084,19 +3896,16 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , yargs@11.1.0 , y18n@3.2.1 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , typeorm@0.2.24 , yargs@13.3.2 , y18n@4.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , typeorm@0.2.24 , cli-highlight@2.1.4 , yargs@15.4.1 , y18n@4.0.0 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -4107,14 +3916,16 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2020-7608"
+              "CVE-2020-7608"
             ],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Pollution",
@@ -4126,13 +3937,11 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , yargs@11.1.0 , yargs-parser@9.0.2 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , yargs-parser@8.1.0 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -4143,16 +3952,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2017-16137"
+              "CVE-2017-16137"
             ],
             "ghsaid": [
-              "gxpj-cx7g-858c"
-            ]
+              "GHSA-gxpj-cx7g-858c"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -4164,31 +3975,26 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , express@4.12.4 , debug@2.2.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , express@4.12.4 , finalhandler@0.3.6 , debug@2.2.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , express@4.12.4 , send@0.12.3 , debug@2.2.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , mongoose@4.2.4 , mquery@1.6.3 , debug@2.2.0 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , express@4.12.4 , serve-static@1.9.3 , send@0.12.3 , debug@2.2.0 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -4199,16 +4005,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2017-16119"
+              "CVE-2017-16119"
             ],
             "ghsaid": [
-              "9qj9-36jm-prpv"
-            ]
+              "GHSA-9qj9-36jm-prpv"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -4220,19 +4028,16 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , express@4.12.4 , fresh@0.2.4 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , express@4.12.4 , send@0.12.3 , fresh@0.2.4 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , express@4.12.4 , serve-static@1.9.3 , send@0.12.3 , fresh@0.2.4 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -4243,14 +4048,16 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [],
             "ghsaid": [
-              "4xcv-9jjx-gfj3"
-            ]
+              "GHSA-4xcv-9jjx-gfj3"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Denial of Service (DoS)",
@@ -4262,7 +4069,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , tap@11.1.5 , nyc@11.9.0 , yargs@11.1.0 , os-locale@2.1.0 , mem@1.1.0 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -4273,16 +4079,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2017-16138"
+              "CVE-2017-16138"
             ],
             "ghsaid": [
-              "wrvr-8mpx-r7pp"
-            ]
+              "GHSA-wrvr-8mpx-r7pp"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -4294,19 +4102,16 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , express@4.12.4 , send@0.12.3 , mime@1.3.4 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , express@4.12.4 , serve-static@1.9.3 , send@0.12.3 , mime@1.3.4 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , st@0.2.4 , mime@1.2.11 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -4317,16 +4122,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2015-8315"
+              "CVE-2015-8315"
             ],
             "ghsaid": [
-              "3fx5-fwvr-xrjg"
-            ]
+              "GHSA-3fx5-fwvr-xrjg"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -4338,7 +4145,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , humanize-ms@1.0.1 , ms@0.6.2 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -4349,12 +4155,14 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [],
-            "ghsaid": []
+            "ghsaid": [],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -4366,55 +4174,46 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , mongoose@4.2.4 , ms@0.7.1 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , express@4.12.4 , debug@2.2.0 , ms@0.7.1 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , express@4.12.4 , send@0.12.3 , ms@0.7.1 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , express@4.12.4 , finalhandler@0.3.6 , debug@2.2.0 , ms@0.7.1 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , express@4.12.4 , send@0.12.3 , debug@2.2.0 , ms@0.7.1 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , mongoose@4.2.4 , mquery@1.6.3 , debug@2.2.0 , ms@0.7.1 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , express@4.12.4 , serve-static@1.9.3 , send@0.12.3 , ms@0.7.1 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , express@4.12.4 , serve-static@1.9.3 , send@0.12.3 , debug@2.2.0 , ms@0.7.1 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , ms@0.7.3 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -4425,16 +4224,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2016-10539"
+              "CVE-2016-10539"
             ],
             "ghsaid": [
-              "7mc5-chhp-fmc3"
-            ]
+              "GHSA-7mc5-chhp-fmc3"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -4446,19 +4247,16 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , errorhandler@1.2.0 , accepts@1.1.4 , negotiator@0.4.9 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , express@4.12.4 , accepts@1.2.13 , negotiator@0.5.3 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , st@0.2.4 , negotiator@0.2.8 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -4470,14 +4268,16 @@
               "RA-5"
             ],
             "cweid": [
-              "201"
+              "CWE-201"
             ],
             "cveid": [],
             "ghsaid": [
-              "57cf-349j-352g"
-            ]
+              "GHSA-57cf-349j-352g"
+            ],
+            "exploitMaturity": "Functional",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Uninitialized Memory Exposure",
@@ -4489,7 +4289,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , npmconf@0.0.24 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -4500,16 +4299,18 @@
               "SI-10"
             ],
             "cweid": [
-              "20"
+              "CWE-20"
             ],
             "cveid": [
-              "2017-1000048"
+              "CVE-2017-1000048"
             ],
             "ghsaid": [
-              "gqgv-6jq5-jjj9"
-            ]
+              "GHSA-gqgv-6jq5-jjj9"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Prototype Override Protection Bypass",
@@ -4521,13 +4322,11 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , body-parser@1.9.0 , qs@2.2.4 ]",
-              "run_time": 0,
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , express@4.12.4 , qs@2.4.2 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -4538,16 +4337,18 @@
               "SI-10"
             ],
             "cweid": [
-              "400"
+              "CWE-400"
             ],
             "cveid": [
-              "2015-8855"
+              "CVE-2015-8855"
             ],
             "ghsaid": [
-              "x6fg-f45m-jf5q"
-            ]
+              "GHSA-x6fg-f45m-jf5q"
+            ],
+            "exploitMaturity": "Not Defined",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Regular Expression Denial of Service (ReDoS)",
@@ -4559,7 +4360,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , npmconf@0.0.24 , semver@1.1.4 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -4570,16 +4370,18 @@
               "SI-10"
             ],
             "cweid": [
-              "22"
+              "CWE-22"
             ],
             "cveid": [
-              "2014-3744"
+              "CVE-2014-3744"
             ],
             "ghsaid": [
-              "69rr-wvh9-6c4q"
-            ]
+              "GHSA-69rr-wvh9-6c4q"
+            ],
+            "exploitMaturity": "Proof of Concept",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Directory Traversal",
@@ -4591,7 +4393,6 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , st@0.2.4 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
@@ -4602,16 +4403,18 @@
               "SI-10"
             ],
             "cweid": [
-              "601"
+              "CWE-601"
             ],
             "cveid": [
-              "2017-16224"
+              "CVE-2017-16224"
             ],
             "ghsaid": [
-              "72fg-jqhx-c68p"
-            ]
+              "GHSA-72fg-jqhx-c68p"
+            ],
+            "exploitMaturity": "High",
+            "CVSSv3": "",
+            "cvssScore": ""
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "Open Redirect",
@@ -4623,13 +4426,12 @@
             {
               "status": "failed",
               "code_desc": "From : [ goof@1.0.1 , st@0.2.4 ]",
-              "run_time": 0,
               "start_time": ""
             }
           ]
         }
       ],
-      "sha256": "ad6bc463bb37093dbb9b02e19c0cc6f28a5bac49a4bcdc941393b1af56ac4870"
+      "sha256": "c9c5fb6bf1614b973ba1f7a99bfebdbc0be49cf9a1ccd6abaf373656f6ba6153"
     }
   ],
   "passthrough": {
