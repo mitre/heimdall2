@@ -4745,14 +4745,14 @@
     fork-ts-checker-webpack-plugin-v5 "npm:fork-ts-checker-webpack-plugin@^5.0.11"
 
 "@vue/cli-plugin-unit-jest@~5.0.3":
-  version "5.0.4"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-unit-jest/-/cli-plugin-unit-jest-5.0.4.tgz#32c0ec4b151e025f33edc237ceb0cdd70ae44270"
-  integrity sha512-M4Vuh9j/PUzuuSl5RfVElAGzVlZ8oaOZr6AlWV5IdQJRdFMN5WzbqYrjzu2cpNwmjfvp0F7MXnJxyFq1SY8lmQ==
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-unit-jest/-/cli-plugin-unit-jest-5.0.5.tgz#7d602fc476b5a97132ebc7e0368f386f8392f03f"
+  integrity sha512-sRNr52ck0HyeDheoZxbDsRaZGqBpPQMdtLAa8PWpRQlJDQu7RQ38WXW1IAUcBEHzIbX3DRqQ8G3PxHZmfdNJOA==
   dependencies:
     "@babel/core" "^7.12.16"
     "@babel/plugin-transform-modules-commonjs" "^7.15.0"
     "@types/jest" "^27.0.1"
-    "@vue/cli-shared-utils" "^5.0.4"
+    "@vue/cli-shared-utils" "^5.0.5"
     babel-jest "^27.1.0"
     deepmerge "^4.2.2"
     jest "^27.1.0"
@@ -4846,7 +4846,7 @@
     semver "^6.1.0"
     strip-ansi "^6.0.0"
 
-"@vue/cli-shared-utils@^5.0.4", "@vue/cli-shared-utils@^5.0.5":
+"@vue/cli-shared-utils@^5.0.5":
   version "5.0.5"
   resolved "https://registry.yarnpkg.com/@vue/cli-shared-utils/-/cli-shared-utils-5.0.5.tgz#c0d9865c7af136445339fa42f3db3990b2e36645"
   integrity sha512-L7cdGQUTYBeSOBA5c5ktXAdjH/3tfKaKkIJEGfu77JvWQ7ixGcHG2lJE6criCRLMfZLtaJmKQL1QIE6QA2sQQw==
