@@ -4864,24 +4864,24 @@
     semver "^7.3.4"
     strip-ansi "^6.0.0"
 
-"@vue/cli-ui-addon-webpack@^5.0.5":
-  version "5.0.5"
-  resolved "https://registry.yarnpkg.com/@vue/cli-ui-addon-webpack/-/cli-ui-addon-webpack-5.0.5.tgz#6e4ab0cda54fb749d16dcaf722c53313156bc84a"
-  integrity sha512-NqIZ+wdJ36SNfdfiV9lbm64M2eIDSgjJANBkNZTB1Z8hxhGfhL6g2sttswM3SxhAkRjr2iu54l5J4lyHvy/kPw==
+"@vue/cli-ui-addon-webpack@^5.0.6":
+  version "5.0.6"
+  resolved "https://registry.yarnpkg.com/@vue/cli-ui-addon-webpack/-/cli-ui-addon-webpack-5.0.6.tgz#812571efac99c3a202b03a6100da2cdd69d7bc2a"
+  integrity sha512-rkVVTlzo2vqQJZCfcF9LVM1m1KU6p4HAJ0D/1I786uusOp45pfIptymCBqIgp8w7CzjlEkaRs8TgGrjMk3L6PQ==
 
-"@vue/cli-ui-addon-widgets@^5.0.5":
-  version "5.0.5"
-  resolved "https://registry.yarnpkg.com/@vue/cli-ui-addon-widgets/-/cli-ui-addon-widgets-5.0.5.tgz#d7eaa4dfb6d1a9e8cb8068ac3133650bd86b4296"
-  integrity sha512-el8CayACnIM16ldBsf+AmG0fgz5hXApP7B/50EgNksOeQKZdb1C/zOKasyxtPV7O7XCy2Mv9IYW2w6urwPFQOw==
+"@vue/cli-ui-addon-widgets@^5.0.6":
+  version "5.0.6"
+  resolved "https://registry.yarnpkg.com/@vue/cli-ui-addon-widgets/-/cli-ui-addon-widgets-5.0.6.tgz#640792953c7423283ff0693985018e33a3c9b4cb"
+  integrity sha512-ZhRO1RIA/oNeEJfrLWcwX2pXvc3ohMtDeLHkxDFKDtqafgwrww9wr+Gdg4ZLFY6ldmfurU9/vHPmowTBHx2O+Q==
 
-"@vue/cli-ui@^5.0.5":
-  version "5.0.5"
-  resolved "https://registry.yarnpkg.com/@vue/cli-ui/-/cli-ui-5.0.5.tgz#61acf523f2cb4fadabc4a2f5d5781c9c30e68dd7"
-  integrity sha512-1zu/TquDLslD24Wu2aBgMMSV+7Kd5tLhcIjOciryYiC1zeo7wKTCy+4bdohVh2cL8ZhkReMz+okCe1NWNNvWJQ==
+"@vue/cli-ui@^5.0.6":
+  version "5.0.6"
+  resolved "https://registry.yarnpkg.com/@vue/cli-ui/-/cli-ui-5.0.6.tgz#97e2525970ecd9047fc4fa1fe3c68e10e3a0545e"
+  integrity sha512-FiqRfA0zy53OikLRW9cz00+DXhRjaRRAoRSa5TPBJt8ZwYNdBOwKMw3jssKCrl97Ye4lK5/qE0Y3UGb+gDIHUw==
   dependencies:
     "@achrinza/node-ipc" "^9.2.5"
     "@akryum/winattr" "^3.0.0"
-    "@vue/cli-shared-utils" "^5.0.5"
+    "@vue/cli-shared-utils" "^5.0.6"
     apollo-server-express "^2.21.0"
     clone "^2.1.1"
     deepmerge "^4.2.2"
@@ -4908,16 +4908,16 @@
     typescript "~4.5.5"
 
 "@vue/cli@^5.0.3":
-  version "5.0.5"
-  resolved "https://registry.yarnpkg.com/@vue/cli/-/cli-5.0.5.tgz#7d680c315380e68861db9baa1d16dc630c820731"
-  integrity sha512-ThWAkNQPbX+bQm/ssraTe+uLPbtb7rPekiy301VDzwSdNr2MyYqP2MraKRN0lz/AFDw6pBBqm7LMpSlmVQn+uQ==
+  version "5.0.6"
+  resolved "https://registry.yarnpkg.com/@vue/cli/-/cli-5.0.6.tgz#737984a0c41bb8a7f724ee0e7a5488189fd9dac2"
+  integrity sha512-iWvWCupn/bM+qxjYUo2vYcMu2KUARfMSqA2Zl1wC6e+BsMu2Qr2GdV6dpaGwCJrsYPfdmc2zOXTwCdPLede2vQ==
   dependencies:
     "@types/ejs" "^3.0.6"
     "@types/inquirer" "^8.1.3"
-    "@vue/cli-shared-utils" "^5.0.5"
-    "@vue/cli-ui" "^5.0.5"
-    "@vue/cli-ui-addon-webpack" "^5.0.5"
-    "@vue/cli-ui-addon-widgets" "^5.0.5"
+    "@vue/cli-shared-utils" "^5.0.6"
+    "@vue/cli-ui" "^5.0.6"
+    "@vue/cli-ui-addon-webpack" "^5.0.6"
+    "@vue/cli-ui-addon-widgets" "^5.0.6"
     boxen "^5.0.0"
     commander "^7.1.0"
     debug "^4.1.0"
