@@ -182,15 +182,15 @@
     tslib "^2.3.1"
 
 "@aws-sdk/client-config-service@^3.23.0", "@aws-sdk/client-config-service@^3.95.0":
-  version "3.110.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.110.0.tgz#d36966901a6997323a401dc17258ef3d686d797b"
-  integrity sha512-AY1lei0/kfsFYRl6B1/1CDVDuBFCqdtfLJkHgQLkzjOt4xfcLr/KovibWprWUWjUfzFvDe3Ap8LQfnNRg3899Q==
+  version "3.112.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.112.0.tgz#a337567d637abeddba3fa6d0cb51396e7f8cd0e6"
+  integrity sha512-dw6oLUaqgY89tAmRFSZ/Ui7x1+yTB5OkatRXGiqqN2pPhV+u6IWLonc5jYCLdo9+G9X0Oq+/DtCvJgpcJG0PYQ==
   dependencies:
     "@aws-crypto/sha256-browser" "2.0.0"
     "@aws-crypto/sha256-js" "2.0.0"
-    "@aws-sdk/client-sts" "3.110.0"
+    "@aws-sdk/client-sts" "3.112.0"
     "@aws-sdk/config-resolver" "3.110.0"
-    "@aws-sdk/credential-provider-node" "3.110.0"
+    "@aws-sdk/credential-provider-node" "3.112.0"
     "@aws-sdk/fetch-http-handler" "3.110.0"
     "@aws-sdk/hash-node" "3.110.0"
     "@aws-sdk/invalid-dependency" "3.110.0"
@@ -221,10 +221,10 @@
     "@aws-sdk/util-utf8-node" "3.109.0"
     tslib "^2.3.1"
 
-"@aws-sdk/client-sso@3.110.0":
-  version "3.110.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-sso/-/client-sso-3.110.0.tgz#3945b1145bd780653fd7acb1d8aefa7fd309938f"
-  integrity sha512-Mzj8bfHaB+Ajghf0iMDdbpzL6jY+GbRDKATpmUOAswBDy72JifoBq7qUAV+NwhjUdF+jUzXkdCAAIaai2kglrg==
+"@aws-sdk/client-sso@3.112.0":
+  version "3.112.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-sso/-/client-sso-3.112.0.tgz#5f308d34566441b94c633018af74036530e69ac6"
+  integrity sha512-FwFmiapxuVQiyMdDaBvCpajnJkVWEUHBdO+7rIpzgKHkODEPou5/AwboaGRPEFYULOyYeI0HiDFzpK0G6de+7Q==
   dependencies:
     "@aws-crypto/sha256-browser" "2.0.0"
     "@aws-crypto/sha256-js" "2.0.0"
@@ -258,15 +258,15 @@
     "@aws-sdk/util-utf8-node" "3.109.0"
     tslib "^2.3.1"
 
-"@aws-sdk/client-sts@3.110.0":
-  version "3.110.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-sts/-/client-sts-3.110.0.tgz#cab709b17af4a6ce4b79c154ae2c22d98d84fc46"
-  integrity sha512-BJD0fxCoqqL7eA/tRRj7z5n4/P8tIZZgOOWJqd6euf6t90uPssz/MJw01bFJBljMl4BtMGvLXHKkyzWtVezI0w==
+"@aws-sdk/client-sts@3.112.0":
+  version "3.112.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-sts/-/client-sts-3.112.0.tgz#97aa584562b7b9b18ca09b5a025e3f5093e07a72"
+  integrity sha512-hSApRO2wg3jk9VRGM6SCZO3aFP7DKVSUqs6FrvlXlj+JU88ZKObjrGE61cCzXoD89Dh+b9t8A2T6W51Nzriaxw==
   dependencies:
     "@aws-crypto/sha256-browser" "2.0.0"
     "@aws-crypto/sha256-js" "2.0.0"
     "@aws-sdk/config-resolver" "3.110.0"
-    "@aws-sdk/credential-provider-node" "3.110.0"
+    "@aws-sdk/credential-provider-node" "3.112.0"
     "@aws-sdk/fetch-http-handler" "3.110.0"
     "@aws-sdk/hash-node" "3.110.0"
     "@aws-sdk/invalid-dependency" "3.110.0"
@@ -331,30 +331,30 @@
     "@aws-sdk/url-parser" "3.110.0"
     tslib "^2.3.1"
 
-"@aws-sdk/credential-provider-ini@3.110.0":
-  version "3.110.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-ini/-/credential-provider-ini-3.110.0.tgz#88e3c00da31634f219b5d7036a150d5819210836"
-  integrity sha512-DVbCWGnvXBvxdf0XGB0nVQjZNwEJc7OhhBFUfF/bP2LXwyZX7n2w4NGNpi2fLnwrgbySoPNbBpp8X3NhVvK14g==
+"@aws-sdk/credential-provider-ini@3.112.0":
+  version "3.112.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-ini/-/credential-provider-ini-3.112.0.tgz#46001d9e61957ddc5a253ba2c45be92474960b43"
+  integrity sha512-ebgZ6/jZdTGHQ3zfq/ccmS+7YmLk6yUWHDmh69VK+B1Dd+S1jFwbD9EQ+pYWCp/gEl9F620NSwb6KghRylPWEQ==
   dependencies:
     "@aws-sdk/credential-provider-env" "3.110.0"
     "@aws-sdk/credential-provider-imds" "3.110.0"
-    "@aws-sdk/credential-provider-sso" "3.110.0"
+    "@aws-sdk/credential-provider-sso" "3.112.0"
     "@aws-sdk/credential-provider-web-identity" "3.110.0"
     "@aws-sdk/property-provider" "3.110.0"
     "@aws-sdk/shared-ini-file-loader" "3.110.0"
     "@aws-sdk/types" "3.110.0"
     tslib "^2.3.1"
 
-"@aws-sdk/credential-provider-node@3.110.0":
-  version "3.110.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-node/-/credential-provider-node-3.110.0.tgz#263a8f7f0bac1645c1ef09ff94bbb7efd5163042"
-  integrity sha512-6AE97H6KDwOYTRjzP7dIyEg4jUd33ZLehgmtaBbJ1GhchtU3L8W0+Mh7ICpwKX/cYMJcKJKzT27BwYVWtOtCDA==
+"@aws-sdk/credential-provider-node@3.112.0":
+  version "3.112.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-node/-/credential-provider-node-3.112.0.tgz#66a87f8d759aabca06bf3205453e1a28301ddeac"
+  integrity sha512-7txS7P3BAaU4cksFw/PnoVskVvO8h/TPvOl/BxFtCiUdwA6FRltLvBeMlN08fwUoqgM6z06q8areBdeDqCHOSw==
   dependencies:
     "@aws-sdk/credential-provider-env" "3.110.0"
     "@aws-sdk/credential-provider-imds" "3.110.0"
-    "@aws-sdk/credential-provider-ini" "3.110.0"
+    "@aws-sdk/credential-provider-ini" "3.112.0"
     "@aws-sdk/credential-provider-process" "3.110.0"
-    "@aws-sdk/credential-provider-sso" "3.110.0"
+    "@aws-sdk/credential-provider-sso" "3.112.0"
     "@aws-sdk/credential-provider-web-identity" "3.110.0"
     "@aws-sdk/property-provider" "3.110.0"
     "@aws-sdk/shared-ini-file-loader" "3.110.0"
@@ -371,12 +371,12 @@
     "@aws-sdk/types" "3.110.0"
     tslib "^2.3.1"
 
-"@aws-sdk/credential-provider-sso@3.110.0":
-  version "3.110.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-sso/-/credential-provider-sso-3.110.0.tgz#2a9c21eb4c7033d465c0c42f91af648a7fae1a7c"
-  integrity sha512-fXV9mc/2U2M5pP5E61uBSFdQXIMgNO4yebitkqNiseI3lg5dJVkYGfiWlvw6qGo6BNxKiEmvJD5Mu6/laYIvbw==
+"@aws-sdk/credential-provider-sso@3.112.0":
+  version "3.112.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-sso/-/credential-provider-sso-3.112.0.tgz#1ef5e8f331040b8e5be9b011f8074c682bf068ba"
+  integrity sha512-b6rOrSXbNK3fGyPvNpyF5zdktmAoNOqHCTmFSUcxRxOipyRGb5JACsbjWthIQkpWkpNCT8GFNLEg9spXPFIdLA==
   dependencies:
-    "@aws-sdk/client-sso" "3.110.0"
+    "@aws-sdk/client-sso" "3.112.0"
     "@aws-sdk/property-provider" "3.110.0"
     "@aws-sdk/shared-ini-file-loader" "3.110.0"
     "@aws-sdk/types" "3.110.0"
