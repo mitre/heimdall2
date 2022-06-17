@@ -102,7 +102,7 @@ function nistTag(identifier: Record<string, unknown>): string[] {
 // Mappings
 export class JfrogXrayMapper extends BaseConverter {
   mappings: MappedTransform<
-    ExecJSON.Execution & {passthrough: unknown},
+    ExecJSON.Execution/* & {passthrough: unknown}*/,
     ILookupPath
   > = {
     platform: {
@@ -143,7 +143,11 @@ export class JfrogXrayMapper extends BaseConverter {
               path: 'severity',
               transformer: impactMapping(IMPACT_MAPPING)
             },
-            code: '',
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string => {
+                return JSON.stringify(vulnerability, null, 2);
+              }
+            },
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
@@ -156,7 +160,7 @@ export class JfrogXrayMapper extends BaseConverter {
         sha256: ''
       }
     ],
-    passthrough: {
+    /*passthrough: {
       raw: {
         transformer: (
           data: Record<string, unknown>
@@ -164,7 +168,7 @@ export class JfrogXrayMapper extends BaseConverter {
           return data;
         }
       }
-    }
+    }*/
   };
   constructor(xrayJson: string) {
     super(JSON.parse(xrayJson), true);
