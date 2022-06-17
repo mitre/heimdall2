@@ -73,7 +73,7 @@ export class TwistlockMapper extends BaseConverter {
             refs: [],
             source_location: {},
             id: {path: 'id'},
-            title: { path: 'id' },
+            title: {path: 'id'},
             desc: {path: 'description'},
             impact: {
               path: 'severity',

@@ -104,7 +104,7 @@ export class JfrogXrayMapper extends BaseConverter {
   mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
+      release: HeimdallToolsVersion
     },
     version: HeimdallToolsVersion,
     statistics: {},
@@ -126,7 +126,7 @@ export class JfrogXrayMapper extends BaseConverter {
                 path: 'component_versions.more_details.cves[0].cwe',
                 transformer: nistTag
               },
-              cweid: { path: 'component_versions.more_details.cves[0].cwe' }
+              cweid: {path: 'component_versions.more_details.cves[0].cwe'}
             },
             refs: [],
             source_location: {},
