@@ -139,10 +139,7 @@ export class JfrogXrayMapper extends BaseConverter {
                 path: 'component_versions.more_details.cves[0].cwe',
                 transformer: nistTag
               },
-              cweid: {
-                path: 'component_versions.more_details.cves[0].cwe',
-                transformer: parseIdentifier
-              }
+              cweid: { path: 'component_versions.more_details.cves[0].cwe' }
             },
             descriptions: [],
             refs: [],
