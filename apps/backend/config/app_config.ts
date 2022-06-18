@@ -10,7 +10,7 @@ export default class AppConfig {
     try {
       this.envConfig = dotenv.parse(fs.readFileSync('.env'));
       console.log('Read config!');
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === 'ENOENT') {
         this.envConfig = {};
         // File probably does not exist

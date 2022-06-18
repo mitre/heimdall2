@@ -32,6 +32,7 @@ import {EvaluationsService} from './evaluations.service';
 
 @Controller('evaluations')
 @UseInterceptors(LoggingInterceptor)
+@ApiTags('Evaluations')
 export class EvaluationsController {
   constructor(
     private readonly evaluationsService: EvaluationsService,
@@ -143,6 +144,7 @@ export class EvaluationsController {
 
   @UseGuards(JwtAuthGuard)
   @Put(':id')
+  // @ApiProperty({name})
   async update(
     @Param('id') id: string,
     @Request() request: {user: User},
