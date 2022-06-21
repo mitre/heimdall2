@@ -101,7 +101,7 @@ function nistTag(identifier: Record<string, unknown>): string[] {
 
 // Mappings
 export class JfrogXrayMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion
@@ -156,7 +156,16 @@ export class JfrogXrayMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ]
+    ],
+    passthrough: {
+      raw: {
+        transformer: (
+          data: Record<string, unknown>
+        ): Record<string, unknown> => {
+          return data;
+        }
+      }
+    }
   };
   constructor(xrayJson: string) {
     super(JSON.parse(xrayJson), true);
