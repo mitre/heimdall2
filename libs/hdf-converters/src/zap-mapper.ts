@@ -92,12 +92,9 @@ export class ZapMapper extends BaseConverter {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
-      target_id: ''
     },
     version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
-    },
+    statistics: {},
     profiles: [
       {
         name: 'OWASP ZAP Scan',
@@ -108,29 +105,20 @@ export class ZapMapper extends BaseConverter {
             return `OWASP ZAP Scan of Host: ${input}`;
           }
         },
-        maintainer: null,
         summary: {
           path: 'site.@host',
           transformer: (input: unknown): string => {
             return `OWASP ZAP Scan of Host: ${input}`;
           }
         },
-        license: null,
-        copyright: null,
-        copyright_email: null,
         supports: [],
         attributes: [],
-        depends: [],
         groups: [],
         status: 'loaded',
         controls: [
           {
             path: 'site.alerts',
             arrayTransformer: deduplicateId,
-            id: {path: 'pluginid'},
-            title: {path: 'name'},
-            desc: {path: 'desc', transformer: parseHtml},
-            impact: {path: 'riskcode', transformer: impactMapping},
             tags: {
               nist: {path: 'cweid', transformer: nistTag},
               cweid: {path: 'cweid'},
@@ -140,16 +128,22 @@ export class ZapMapper extends BaseConverter {
               riskdesc: {path: 'riskdesc'},
               check: {transformer: checkText}
             },
-            descriptions: [],
             refs: [],
             source_location: {},
-            code: '',
+            title: {path: 'name'},
+            id: {path: 'pluginid'},
+            desc: {path: 'desc', transformer: parseHtml},
+            impact: {path: 'riskcode', transformer: impactMapping},
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string => {
+                return JSON.stringify(vulnerability, null, 2);
+              }
+            },
             results: [
               {
                 path: 'instances',
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {transformer: formatCodeDesc},
-                run_time: 0,
                 start_time: {path: '$.@generated'}
               }
             ]
