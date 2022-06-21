@@ -44,7 +44,10 @@ function nistTag(text: string): string[] {
 }
 
 export class SarifMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> = {
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
