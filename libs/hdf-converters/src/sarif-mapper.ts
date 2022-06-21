@@ -44,7 +44,7 @@ function nistTag(text: string): string[] {
 }
 
 export class SarifMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -113,7 +113,11 @@ export class SarifMapper extends BaseConverter {
               }
             },
             impact: {path: 'level', transformer: impactMapping},
-            code: '',
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string => {
+                return JSON.stringify(vulnerability, null, 2);
+              }
+            },
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
@@ -121,6 +125,7 @@ export class SarifMapper extends BaseConverter {
                   path: 'locations[0].physicalLocation',
                   transformer: formatCodeDesc
                 },
+
                 start_time: ''
               }
             ]
@@ -128,7 +133,16 @@ export class SarifMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ]
+    ],
+    passthrough: {
+      raw: {
+        transformer: (
+          data: Record<string, unknown>
+        ): Record<string, unknown> => {
+          return data;
+        }
+      }
+    }
   };
   constructor(sarifJson: string) {
     super(JSON.parse(sarifJson));
