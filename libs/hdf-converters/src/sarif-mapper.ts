@@ -51,23 +51,15 @@ export class SarifMapper extends BaseConverter {
       target_id: 'Static Analysis Results Interchange Format'
     },
     version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
-    },
+    statistics: {},
     profiles: [
       {
         path: 'runs',
         name: 'SARIF',
         version: {path: '$.version'},
         title: 'Static Analysis Results Interchange Format',
-        maintainer: null,
-        summary: '',
-        license: null,
-        copyright: null,
-        copyright_email: null,
         supports: [],
         attributes: [],
-        depends: [],
         groups: [],
         status: 'loaded',
         controls: [
@@ -75,13 +67,12 @@ export class SarifMapper extends BaseConverter {
             path: 'results',
             key: 'id',
             tags: {
+              nist: {path: MESSAGE_TEXT, transformer: nistTag},
               cwe: {
                 path: MESSAGE_TEXT,
                 transformer: extractCwe
-              },
-              nist: {path: MESSAGE_TEXT, transformer: nistTag}
+              }
             },
-            descriptions: [],
             refs: [],
             source_location: {
               transformer: (control: unknown) => {
@@ -130,7 +121,6 @@ export class SarifMapper extends BaseConverter {
                   path: 'locations[0].physicalLocation',
                   transformer: formatCodeDesc
                 },
-                run_time: 0,
                 start_time: ''
               }
             ]
