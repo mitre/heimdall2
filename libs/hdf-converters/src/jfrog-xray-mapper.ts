@@ -84,19 +84,15 @@ function formatCodeDesc(vulnerability: unknown): string {
   }
   return codeDescArray.join('\n').replace(re, ', ');
 }
-function parseIdentifier(identifier: Record<string, unknown>): string[] {
-  const output: string[] = [];
+function nistTag(identifier: Record<string, unknown>): string[] {
+  const identifiers: string[] = [];
   if (Array.isArray(identifier)) {
     identifier.forEach((element) => {
       if (element.split('CWE-')[1]) {
-        output.push(element.split('CWE-')[1]);
+        identifiers.push(element.split('CWE-')[1]);
       }
     });
   }
-  return output;
-}
-function nistTag(identifier: Record<string, unknown>): string[] {
-  const identifiers = parseIdentifier(identifier);
   return CWE_NIST_MAPPING.nistFilter(
     identifiers,
     DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
@@ -108,26 +104,17 @@ export class JfrogXrayMapper extends BaseConverter {
   mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
-      target_id: ''
+      release: HeimdallToolsVersion
     },
     version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
-    },
+    statistics: {},
     profiles: [
       {
         name: 'JFrog Xray Scan',
-        version: '',
         title: 'JFrog Xray Scan',
-        maintainer: null,
         summary: 'Continuous Security and Universal Artifact Analysis',
-        license: null,
-        copyright: null,
-        copyright_email: null,
         supports: [],
         attributes: [],
-        depends: [],
         groups: [],
         status: 'loaded',
         controls: [
@@ -139,12 +126,8 @@ export class JfrogXrayMapper extends BaseConverter {
                 path: 'component_versions.more_details.cves[0].cwe',
                 transformer: nistTag
               },
-              cweid: {
-                path: 'component_versions.more_details.cves[0].cwe',
-                transformer: parseIdentifier
-              }
+              cweid: {path: 'component_versions.more_details.cves[0].cwe'}
             },
-            descriptions: [],
             refs: [],
             source_location: {},
             id: {transformer: hashId},
@@ -157,12 +140,15 @@ export class JfrogXrayMapper extends BaseConverter {
               path: 'severity',
               transformer: impactMapping(IMPACT_MAPPING)
             },
-            code: '',
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string => {
+                return JSON.stringify(vulnerability, null, 2);
+              }
+            },
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {transformer: formatCodeDesc},
-                run_time: 0,
                 start_time: ''
               }
             ]
