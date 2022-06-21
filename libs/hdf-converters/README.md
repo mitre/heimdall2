@@ -4,6 +4,27 @@
 
 HDF Converters supplies several methods to convert various types of security tool data to and from this HDF standard. HDF Converters can be used in a variety of tools, and is currently well integrated with Heimdall itself, and the [SAF CLI](https://github.com/mitre/saf).
 
+## Supported Formats
+1.  [**asff-mapper**] - AWS Security Finding Format JSON file, Prowler-derived AWS Security Finding Format results from concatenated JSON blobs, and Trivy-derived AWS Security Finding Format results from concatenated JSON blobs
+2.  [**aws-config-mapper**] - AWS Config
+3.  [**burpsuite-mapper**] - BurpSuite Pro XML file
+4.  [**dbprotect-mapper**] - DBProtect report in "Check Results Details" XML format
+5.  [**fortify-mapper**] - Fortify results FVDL file
+6.  [**ionchannel-mapper**] - SBOM data from Ion Channel
+7.  [**jfrog-xray-mapper**] - JFrog Xray results JSON file
+8.  [**nessus-mapper**] - Nessus XML results file
+9.  [**netsparker-mapper**] - Netsparker XML results file
+10. [**nikto-mapper**] - Nikto results JSON file
+11. [**prisma-mapper**] - **TODO?**
+12. [**sarif-mapper**] - SARIF JSON file
+13. [**scoutsuite-mapper**] - ScoutSuite results from a Javascript object
+14. [**snyk-mapper**] - Snyk results JSON file
+15. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
+16. [**splunk-mapper**] - Splunk instance
+17. [**twistlock-mapper**] - Twistlock CLI output file
+18. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
+19. [**zap-mapper**] - OWASP ZAP results JSON
+
 ### NOTICE
 
 © 2022 The MITRE Corporation.
