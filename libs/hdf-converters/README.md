@@ -15,7 +15,7 @@ HDF Converters supplies several methods to convert various types of security too
 8.  [**nessus-mapper**] - Nessus XML results file
 9.  [**netsparker-mapper**] - Netsparker XML results file
 10. [**nikto-mapper**] - Nikto results JSON file
-11. [**prisma-mapper**] - **TODO?**
+11. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
 12. [**sarif-mapper**] - SARIF JSON file
 13. [**scoutsuite-mapper**] - ScoutSuite results from a Javascript object
 14. [**snyk-mapper**] - Snyk results JSON file
