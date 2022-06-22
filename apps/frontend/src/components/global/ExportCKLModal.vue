@@ -82,6 +82,9 @@ import {Prop} from 'vue-property-decorator';
 
 interface Control {
   vid: string;
+  rid: string;
+  gid: string;
+  gtitle: string;
   severity: string;
   title: string;
   description: string;
@@ -294,6 +297,9 @@ export default class ExportCKLModal extends Vue {
   getDetails(control: ContextualizedControl, profileName: string): Control {
     return {
       vid: control.data.id,
+      rid: control.data.tags.rid || control.data.id,
+      gid: control.data.tags.gid || control.data.id,
+      gtitle: control.data.tags.gtitle || control.data.id,
       severity: this.cklSeverity(control.root.hdf.severity),
       title: control.data.title || '',
       description: control.data.desc || '',
