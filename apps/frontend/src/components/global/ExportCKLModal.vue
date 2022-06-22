@@ -85,6 +85,7 @@ interface Control {
   rid: string;
   gid: string;
   gtitle: string;
+  ruleVersion: string;
   severity: string;
   title: string;
   description: string;
@@ -299,6 +300,7 @@ export default class ExportCKLModal extends Vue {
       vid: control.data.id,
       rid: control.data.tags.rid || control.data.id,
       gid: control.data.tags.gid || control.data.id,
+      ruleVersion: control.data.tags.stig_id || control.data.id,
       gtitle: control.data.tags.gtitle || control.data.id,
       severity: this.cklSeverity(control.root.hdf.severity),
       title: control.data.title || '',
