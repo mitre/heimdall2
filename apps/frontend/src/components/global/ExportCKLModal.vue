@@ -211,6 +211,20 @@ export default class ExportCKLModal extends Vue {
       ...this.filter,
       fromFile: [file.uniqueId]
     });
+
+    const knownRootControls = new Set();
+    const rootControls = [];
+
+    for (const ctrl of controls) {
+      const root = ctrl.root;
+      if (knownRootControls.has(root.hdf.wraps.id)) {
+        continue;
+      } else {
+        knownRootControls.add(root.hdf.wraps.id);
+        rootControls.push(root);
+      }
+    }
+
     this.outputData.controlSets.push({
       fileName: file.filename,
       hostname: file.hostname,
@@ -223,7 +237,9 @@ export default class ExportCKLModal extends Vue {
       profileTitle: profileName,
       profileInfo: this.getProfileInfo(file),
       uuid: v4(),
-      controls: controls.map((control) => this.getDetails(control, profileName))
+      controls: rootControls.map((control) =>
+        this.getDetails(control, profileName)
+      )
     });
   }
 
