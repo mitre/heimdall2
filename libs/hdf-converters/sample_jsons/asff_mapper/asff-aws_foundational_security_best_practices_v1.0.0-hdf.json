@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.9",
+    "release": "2.6.27",
     "target_id": "AWS Foundational Security Best Practices v1.0.0"
   },
-  "version": "2.6.9",
+  "version": "2.6.27",
   "statistics": {
     "duration": null
   },
@@ -28,6 +28,9 @@
           "id": "Config.1",
           "title": "AWS Foundational Security Best Practices v1.0.0: Config.1 AWS Config should be enabled",
           "tags": {
+            "cci": [
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -56,6 +59,12 @@
           "id": "S3.2",
           "title": "AWS Foundational Security Best Practices v1.0.0: S3.2 S3 buckets should prohibit public read access",
           "tags": {
+            "cci": [
+              "CCI-000213",
+              "CCI-001368",
+              "CCI-001414",
+              "CCI-000225"
+            ],
             "nist": [
               "AC-3",
               "AC-4",
@@ -85,7 +94,7 @@
           ]
         }
       ],
-      "sha256": "04e9ee5f79b7269514dbe6c085b15218af79ad258544aa280532cf38c9ec62df"
+      "sha256": "ea43179f7a1fa2c41b49314a2afb2f73c375ddb2e2ac076b59ce2af784a66efc"
     }
   ]
 }

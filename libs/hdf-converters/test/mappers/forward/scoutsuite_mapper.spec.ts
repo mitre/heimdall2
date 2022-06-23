@@ -10,6 +10,12 @@ describe('scoutsuite_mapper', () => {
         {encoding: 'utf-8'}
       )
     );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/scoutsuite_mapper/scoutsuite-hdf.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
+
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(

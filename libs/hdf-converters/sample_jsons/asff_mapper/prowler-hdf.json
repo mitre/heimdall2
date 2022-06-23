@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.8",
+    "release": "2.6.27",
     "target_id": "Prowler"
   },
-  "version": "2.6.8",
+  "version": "2.6.27",
   "statistics": {
     "duration": null
   },
@@ -28,6 +28,9 @@
           "id": "check11",
           "title": "Prowler: [check11] Avoid the use of the root account (Scored)",
           "tags": {
+            "cci": [
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -51,6 +54,9 @@
           "id": "check12",
           "title": "Prowler: [check12] Ensure multi-factor authentication (MFA) is enabled for all IAM users that have a console password (Scored)",
           "tags": {
+            "cci": [
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -111,7 +117,7 @@
           ]
         }
       ],
-      "sha256": "5f68c260cdec8711f2b611630bf10777278386ce6c65edd323a21e709cce8c66"
+      "sha256": "c3c1ad647edb38e67ca3d6935e41767c94c00b4bf9585733c76770db82d8b556"
     }
   ]
 }

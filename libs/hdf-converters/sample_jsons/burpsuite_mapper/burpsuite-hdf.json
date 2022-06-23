@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "0.1.0",
+    "release": "2.6.27",
     "target_id": ""
   },
-  "version": "0.1.0",
+  "version": "2.6.27",
   "statistics": {
     "duration": null
   },
@@ -35,6 +35,9 @@
               "RA-5"
             ],
             "cweid": "CWE-942: Overly Permissive Cross-domain Whitelist",
+            "cci": [
+              "CCI-001643"
+            ],
             "confidence": "Certain"
           },
           "descriptions": [
@@ -136,6 +139,9 @@
               "RA-5"
             ],
             "cweid": "CWE-942: Overly Permissive Cross-domain Whitelist",
+            "cci": [
+              "CCI-001643"
+            ],
             "confidence": "Certain"
           },
           "descriptions": [
@@ -236,6 +242,7 @@
               "SI-10"
             ],
             "cweid": "CWE-20: Improper Input Validation\nCWE-116: Improper Encoding or Escaping of Output",
+            "cci": [],
             "confidence": "Certain"
           },
           "descriptions": [
@@ -391,6 +398,9 @@
               "RA-5"
             ],
             "cweid": "CWE-530: Exposure of Backup File to an Unauthorized Control Sphere",
+            "cci": [
+              "CCI-001643"
+            ],
             "confidence": "Certain"
           },
           "descriptions": [
@@ -432,6 +442,9 @@
               "RA-5"
             ],
             "cweid": "CWE-16: Configuration",
+            "cci": [
+              "CCI-001643"
+            ],
             "confidence": "Certain"
           },
           "descriptions": [
@@ -467,6 +480,7 @@
               "SC-13"
             ],
             "cweid": "CWE-295: Improper Certificate Validation\nCWE-326: Inadequate Encryption Strength\nCWE-327: Use of a Broken or Risky Cryptographic Algorithm",
+            "cci": [],
             "confidence": "Certain"
           },
           "descriptions": [
@@ -502,6 +516,9 @@
               "RA-5"
             ],
             "cweid": "CWE-16: Configuration\nCWE-436: Interpretation Conflict",
+            "cci": [
+              "CCI-001643"
+            ],
             "confidence": "Certain"
           },
           "descriptions": [
@@ -537,6 +554,9 @@
               "RA-5"
             ],
             "cweid": "CWE-524: Information Exposure Through Caching\nCWE-525: Information Exposure Through Browser Caching",
+            "cci": [
+              "CCI-001643"
+            ],
             "confidence": "Certain"
           },
           "descriptions": [
@@ -571,6 +591,9 @@
               "SC-8"
             ],
             "cweid": "CWE-200: Information Exposure",
+            "cci": [
+              "CCI-002418"
+            ],
             "confidence": "Certain"
           },
           "descriptions": [
@@ -606,6 +629,9 @@
               "RA-5"
             ],
             "cweid": "CWE-523: Unprotected Transport of Credentials",
+            "cci": [
+              "CCI-001643"
+            ],
             "confidence": "Certain"
           },
           "descriptions": [
@@ -646,6 +672,9 @@
               "SC-8"
             ],
             "cweid": "CWE-200: Information Exposure",
+            "cci": [
+              "CCI-002418"
+            ],
             "confidence": "Certain"
           },
           "descriptions": [
@@ -680,6 +709,11 @@
               "IA-5"
             ],
             "cweid": "CWE-693: Protection Mechanism Failure",
+            "cci": [
+              "CCI-001544",
+              "CCI-000183",
+              "CCI-002042"
+            ],
             "confidence": "Firm"
           },
           "descriptions": [
@@ -727,6 +761,9 @@
               "SI-11"
             ],
             "cweid": "CWE-200: Information Exposure\nCWE-388: Error Handling",
+            "cci": [
+              "CCI-002418"
+            ],
             "confidence": "Certain"
           },
           "descriptions": [
@@ -761,6 +798,7 @@
               "SC-12"
             ],
             "cweid": "CWE-326: Inadequate Encryption Strength",
+            "cci": [],
             "confidence": "Certain"
           },
           "descriptions": [
@@ -786,7 +824,7 @@
           ]
         }
       ],
-      "sha256": "5d42a2f4c4f94920b1457165adbf5d89159eecaedd3e6011c31dd32271803e96"
+      "sha256": "dfc527aab1b7e2ea5c2edcf60bea58757f0852552e2996246577dc7f8836d6aa"
     }
   ]
 }

@@ -1,385 +1,434 @@
 {
-    "platform": {
-        "name": "Heimdall Tools",
-        "release": "2.6.20",
-        "target_id": "Host: zero.webappsecurity.com Port: 443"
-    },
-    "version": "2.6.20",
-    "statistics": {
-        "duration": null
-    },
-    "profiles": [
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.27",
+    "target_id": "Host: zero.webappsecurity.com Port: 443"
+  },
+  "version": "2.6.27",
+  "statistics": {
+    "duration": null
+  },
+  "profiles": [
+    {
+      "name": "Nikto Website Scanner",
+      "version": "",
+      "title": "Nikto Target: Host: zero.webappsecurity.com Port: 443",
+      "maintainer": null,
+      "summary": "Banner: Apache/2.2.6 (Win32) mod_ssl/2.2.6 OpenSSL/0.9.8e mod_jk/1.2.40",
+      "license": null,
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
         {
-            "name": "Nikto Website Scanner",
-            "version": "",
-            "title": "Nikto Target: Host: zero.webappsecurity.com Port: 443",
-            "maintainer": null,
-            "summary": "Banner: Apache/2.2.6 (Win32) mod_ssl/2.2.6 OpenSSL/0.9.8e mod_jk/1.2.40",
-            "license": null,
-            "copyright": null,
-            "copyright_email": null,
-            "supports": [],
-            "attributes": [],
-            "depends": [],
-            "groups": [],
-            "status": "loaded",
-            "controls": [
-                {
-                    "tags": {
-                        "nist": [
-                            "AC-3",
-                            "SA-11",
-                            "RA-5"
-                        ],
-                        "ösvdb": "0"
-                    },
-                    "descriptions": [],
-                    "refs": [],
-                    "source_location": {},
-                    "title": "Retrieved access-control-allow-origin header: *",
-                    "id": "999986",
-                    "desc": "Retrieved access-control-allow-origin header: *",
-                    "impact": 0.5,
-                    "code": "",
-                    "results": [
-                        {
-                            "status": "failed",
-                            "code_desc": "URL : / Method: GET",
-                            "run_time": 0,
-                            "start_time": ""
-                        }
-                    ]
-                },
-                {
-                    "tags": {
-                        "nist": [
-                            "AC-3",
-                            "SA-11",
-                            "RA-5"
-                        ],
-                        "ösvdb": "0"
-                    },
-                    "descriptions": [],
-                    "refs": [],
-                    "source_location": {},
-                    "title": "Server may leak inodes via ETags, header found with file /, inode: 150562, size: 44, mtime: Fri Jul  7 04:07:28 2006",
-                    "id": "999984",
-                    "desc": "Server may leak inodes via ETags, header found with file /, inode: 150562, size: 44, mtime: Fri Jul  7 04:07:28 2006",
-                    "impact": 0.5,
-                    "code": "",
-                    "results": [
-                        {
-                            "status": "failed",
-                            "code_desc": "URL : / Method: GET",
-                            "run_time": 0,
-                            "start_time": ""
-                        }
-                    ]
-                },
-                {
-                    "tags": {
-                        "nist": [
-                            "AC-3",
-                            "SA-11",
-                            "RA-5"
-                        ],
-                        "ösvdb": "0"
-                    },
-                    "descriptions": [],
-                    "refs": [],
-                    "source_location": {},
-                    "title": "The anti-clickjacking X-Frame-Options header is not present.",
-                    "id": "999957",
-                    "desc": "The anti-clickjacking X-Frame-Options header is not present.",
-                    "impact": 0.5,
-                    "code": "",
-                    "results": [
-                        {
-                            "status": "failed",
-                            "code_desc": "URL : / Method: GET",
-                            "run_time": 0,
-                            "start_time": ""
-                        }
-                    ]
-                },
-                {
-                    "tags": {
-                        "nist": [
-                            "AC-3",
-                            "SA-11",
-                            "RA-5"
-                        ],
-                        "ösvdb": "0"
-                    },
-                    "descriptions": [],
-                    "refs": [],
-                    "source_location": {},
-                    "title": "The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS",
-                    "id": "999102",
-                    "desc": "The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS",
-                    "impact": 0.5,
-                    "code": "",
-                    "results": [
-                        {
-                            "status": "failed",
-                            "code_desc": "URL : / Method: GET",
-                            "run_time": 0,
-                            "start_time": ""
-                        }
-                    ]
-                },
-                {
-                    "tags": {
-                        "nist": [
-                            "AC-3",
-                            "SA-11",
-                            "RA-5"
-                        ],
-                        "ösvdb": "0"
-                    },
-                    "descriptions": [],
-                    "refs": [],
-                    "source_location": {},
-                    "title": "The site uses SSL and the Strict-Transport-Security HTTP header is not defined.",
-                    "id": "999970",
-                    "desc": "The site uses SSL and the Strict-Transport-Security HTTP header is not defined.",
-                    "impact": 0.5,
-                    "code": "",
-                    "results": [
-                        {
-                            "status": "failed",
-                            "code_desc": "URL : / Method: GET",
-                            "run_time": 0,
-                            "start_time": ""
-                        }
-                    ]
-                },
-                {
-                    "tags": {
-                        "nist": [
-                            "AC-3",
-                            "SA-11",
-                            "RA-5"
-                        ],
-                        "ösvdb": "0"
-                    },
-                    "descriptions": [],
-                    "refs": [],
-                    "source_location": {},
-                    "title": "The site uses SSL and Expect-CT header is not present.",
-                    "id": "999955",
-                    "desc": "The site uses SSL and Expect-CT header is not present.",
-                    "impact": 0.5,
-                    "code": "",
-                    "results": [
-                        {
-                            "status": "failed",
-                            "code_desc": "URL : / Method: GET",
-                            "run_time": 0,
-                            "start_time": ""
-                        }
-                    ]
-                },
-                {
-                    "tags": {
-                        "nist": [
-                            "AC-3",
-                            "SA-11",
-                            "RA-5"
-                        ],
-                        "ösvdb": "0"
-                    },
-                    "descriptions": [],
-                    "refs": [],
-                    "source_location": {},
-                    "title": "The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type.",
-                    "id": "999103",
-                    "desc": "The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type.",
-                    "impact": 0.5,
-                    "code": "",
-                    "results": [
-                        {
-                            "status": "failed",
-                            "code_desc": "URL : / Method: GET",
-                            "run_time": 0,
-                            "start_time": ""
-                        }
-                    ]
-                },
-                {
-                    "tags": {
-                        "nist": [
-                            "SI-2"
-                        ],
-                        "ösvdb": "0"
-                    },
-                    "descriptions": [],
-                    "refs": [],
-                    "source_location": {},
-                    "title": "mod_jk/1.2.40 appears to be outdated (current is at least 1.2.46)",
-                    "id": "600463",
-                    "desc": "mod_jk/1.2.40 appears to be outdated (current is at least 1.2.46)",
-                    "impact": 0.5,
-                    "code": "",
-                    "results": [
-                        {
-                            "status": "failed",
-                            "code_desc": "URL : / Method: HEAD",
-                            "run_time": 0,
-                            "start_time": ""
-                        }
-                    ]
-                },
-                {
-                    "tags": {
-                        "nist": [
-                            "SI-2"
-                        ],
-                        "ösvdb": "0"
-                    },
-                    "descriptions": [],
-                    "refs": [],
-                    "source_location": {},
-                    "title": "mod_ssl/2.2.6 appears to be outdated (current is at least 2.8.31) (may depend on server version)",
-                    "id": "600511",
-                    "desc": "mod_ssl/2.2.6 appears to be outdated (current is at least 2.8.31) (may depend on server version)",
-                    "impact": 0.5,
-                    "code": "",
-                    "results": [
-                        {
-                            "status": "failed",
-                            "code_desc": "URL : / Method: HEAD",
-                            "run_time": 0,
-                            "start_time": ""
-                        }
-                    ]
-                },
-                {
-                    "tags": {
-                        "nist": [
-                            "SI-2"
-                        ],
-                        "ösvdb": "0"
-                    },
-                    "descriptions": [],
-                    "refs": [],
-                    "source_location": {},
-                    "title": "Apache/2.2.6 appears to be outdated (current is at least Apache/2.4.41). Apache 2.2.34 is the EOL for the 2.x branch.",
-                    "id": "600050",
-                    "desc": "Apache/2.2.6 appears to be outdated (current is at least Apache/2.4.41). Apache 2.2.34 is the EOL for the 2.x branch.",
-                    "impact": 0.5,
-                    "code": "",
-                    "results": [
-                        {
-                            "status": "failed",
-                            "code_desc": "URL : / Method: HEAD",
-                            "run_time": 0,
-                            "start_time": ""
-                        }
-                    ]
-                },
-                {
-                    "tags": {
-                        "nist": [
-                            "SI-2"
-                        ],
-                        "ösvdb": "0"
-                    },
-                    "descriptions": [],
-                    "refs": [],
-                    "source_location": {},
-                    "title": "OpenSSL/0.9.8e appears to be outdated (current is at least 1.1.1d). OpenSSL 1.0.0o and 0.9.8zc are also current.",
-                    "id": "600595",
-                    "desc": "OpenSSL/0.9.8e appears to be outdated (current is at least 1.1.1d). OpenSSL 1.0.0o and 0.9.8zc are also current.",
-                    "impact": 0.5,
-                    "code": "",
-                    "results": [
-                        {
-                            "status": "failed",
-                            "code_desc": "URL : / Method: HEAD",
-                            "run_time": 0,
-                            "start_time": ""
-                        }
-                    ]
-                },
-                {
-                    "tags": {
-                        "nist": [
-                            "SI-10"
-                        ],
-                        "ösvdb": "0"
-                    },
-                    "descriptions": [],
-                    "refs": [],
-                    "source_location": {},
-                    "title": "mod_ssl/2.2.6 OpenSSL/0.9.8e mod_jk/1.2.40 - mod_ssl 2.8.7 and lower are vulnerable to a remote buffer overflow which may allow a remote shell. CVE-2002-0082, OSVDB-756.",
-                    "id": "800132",
-                    "desc": "mod_ssl/2.2.6 OpenSSL/0.9.8e mod_jk/1.2.40 - mod_ssl 2.8.7 and lower are vulnerable to a remote buffer overflow which may allow a remote shell. CVE-2002-0082, OSVDB-756.",
-                    "impact": 0.5,
-                    "code": "",
-                    "results": [
-                        {
-                            "status": "failed",
-                            "code_desc": "URL : / Method: GET",
-                            "run_time": 0,
-                            "start_time": ""
-                        }
-                    ]
-                },
-                {
-                    "tags": {
-                        "nist": [
-                            "AC-3",
-                            "SA-11",
-                            "RA-5"
-                        ],
-                        "ösvdb": "0"
-                    },
-                    "descriptions": [],
-                    "refs": [],
-                    "source_location": {},
-                    "title": "Allowed HTTP Methods: GET, HEAD, POST, OPTIONS, TRACE ",
-                    "id": "999990",
-                    "desc": "Allowed HTTP Methods: GET, HEAD, POST, OPTIONS, TRACE ",
-                    "impact": 0.5,
-                    "code": "",
-                    "results": [
-                        {
-                            "status": "failed",
-                            "code_desc": "URL : / Method: OPTIONS",
-                            "run_time": 0,
-                            "start_time": ""
-                        }
-                    ]
-                },
-                {
-                    "tags": {
-                        "nist": [
-                            "AC-3",
-                            "SA-11",
-                            "RA-5"
-                        ],
-                        "ösvdb": "877"
-                    },
-                    "descriptions": [],
-                    "refs": [],
-                    "source_location": {},
-                    "title": "HTTP TRACE method is active, suggesting the host is vulnerable to XST",
-                    "id": "999971",
-                    "desc": "HTTP TRACE method is active, suggesting the host is vulnerable to XST",
-                    "impact": 0.5,
-                    "code": "",
-                    "results": [
-                        {
-                            "status": "failed",
-                            "code_desc": "URL : / Method: TRACE",
-                            "run_time": 0,
-                            "start_time": ""
-                        }
-                    ]
-                }
+          "tags": {
+            "nist": [
+              "AC-3",
+              "SA-11",
+              "RA-5"
             ],
-            "sha256": "08b165a5d6d01621dadca5c89d820c0d8296dc1c992c21ad91878f7674df0dc2"
+            "cci": [
+              "CCI-000213",
+              "CCI-001643"
+            ],
+            "ösvdb": "0"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": "Retrieved access-control-allow-origin header: *",
+          "id": "999986",
+          "desc": "Retrieved access-control-allow-origin header: *",
+          "impact": 0.5,
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: GET",
+              "run_time": 0,
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "AC-3",
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-000213",
+              "CCI-001643"
+            ],
+            "ösvdb": "0"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": "Server may leak inodes via ETags, header found with file /, inode: 150562, size: 44, mtime: Fri Jul  7 04:07:28 2006",
+          "id": "999984",
+          "desc": "Server may leak inodes via ETags, header found with file /, inode: 150562, size: 44, mtime: Fri Jul  7 04:07:28 2006",
+          "impact": 0.5,
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: GET",
+              "run_time": 0,
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "AC-3",
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-000213",
+              "CCI-001643"
+            ],
+            "ösvdb": "0"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": "The anti-clickjacking X-Frame-Options header is not present.",
+          "id": "999957",
+          "desc": "The anti-clickjacking X-Frame-Options header is not present.",
+          "impact": 0.5,
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: GET",
+              "run_time": 0,
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "AC-3",
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-000213",
+              "CCI-001643"
+            ],
+            "ösvdb": "0"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": "The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS",
+          "id": "999102",
+          "desc": "The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS",
+          "impact": 0.5,
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: GET",
+              "run_time": 0,
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "AC-3",
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-000213",
+              "CCI-001643"
+            ],
+            "ösvdb": "0"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": "The site uses SSL and the Strict-Transport-Security HTTP header is not defined.",
+          "id": "999970",
+          "desc": "The site uses SSL and the Strict-Transport-Security HTTP header is not defined.",
+          "impact": 0.5,
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: GET",
+              "run_time": 0,
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "AC-3",
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-000213",
+              "CCI-001643"
+            ],
+            "ösvdb": "0"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": "The site uses SSL and Expect-CT header is not present.",
+          "id": "999955",
+          "desc": "The site uses SSL and Expect-CT header is not present.",
+          "impact": 0.5,
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: GET",
+              "run_time": 0,
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "AC-3",
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-000213",
+              "CCI-001643"
+            ],
+            "ösvdb": "0"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": "The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type.",
+          "id": "999103",
+          "desc": "The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type.",
+          "impact": 0.5,
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: GET",
+              "run_time": 0,
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-2"
+            ],
+            "cci": [
+              "CCI-002605"
+            ],
+            "ösvdb": "0"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": "mod_jk/1.2.40 appears to be outdated (current is at least 1.2.46)",
+          "id": "600463",
+          "desc": "mod_jk/1.2.40 appears to be outdated (current is at least 1.2.46)",
+          "impact": 0.5,
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: HEAD",
+              "run_time": 0,
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-2"
+            ],
+            "cci": [
+              "CCI-002605"
+            ],
+            "ösvdb": "0"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": "mod_ssl/2.2.6 appears to be outdated (current is at least 2.8.31) (may depend on server version)",
+          "id": "600511",
+          "desc": "mod_ssl/2.2.6 appears to be outdated (current is at least 2.8.31) (may depend on server version)",
+          "impact": 0.5,
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: HEAD",
+              "run_time": 0,
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-2"
+            ],
+            "cci": [
+              "CCI-002605"
+            ],
+            "ösvdb": "0"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": "Apache/2.2.6 appears to be outdated (current is at least Apache/2.4.41). Apache 2.2.34 is the EOL for the 2.x branch.",
+          "id": "600050",
+          "desc": "Apache/2.2.6 appears to be outdated (current is at least Apache/2.4.41). Apache 2.2.34 is the EOL for the 2.x branch.",
+          "impact": 0.5,
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: HEAD",
+              "run_time": 0,
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-2"
+            ],
+            "cci": [
+              "CCI-002605"
+            ],
+            "ösvdb": "0"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": "OpenSSL/0.9.8e appears to be outdated (current is at least 1.1.1d). OpenSSL 1.0.0o and 0.9.8zc are also current.",
+          "id": "600595",
+          "desc": "OpenSSL/0.9.8e appears to be outdated (current is at least 1.1.1d). OpenSSL 1.0.0o and 0.9.8zc are also current.",
+          "impact": 0.5,
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: HEAD",
+              "run_time": 0,
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-10"
+            ],
+            "cci": [],
+            "ösvdb": "0"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": "mod_ssl/2.2.6 OpenSSL/0.9.8e mod_jk/1.2.40 - mod_ssl 2.8.7 and lower are vulnerable to a remote buffer overflow which may allow a remote shell. CVE-2002-0082, OSVDB-756.",
+          "id": "800132",
+          "desc": "mod_ssl/2.2.6 OpenSSL/0.9.8e mod_jk/1.2.40 - mod_ssl 2.8.7 and lower are vulnerable to a remote buffer overflow which may allow a remote shell. CVE-2002-0082, OSVDB-756.",
+          "impact": 0.5,
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: GET",
+              "run_time": 0,
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "AC-3",
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-000213",
+              "CCI-001643"
+            ],
+            "ösvdb": "0"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": "Allowed HTTP Methods: GET, HEAD, POST, OPTIONS, TRACE ",
+          "id": "999990",
+          "desc": "Allowed HTTP Methods: GET, HEAD, POST, OPTIONS, TRACE ",
+          "impact": 0.5,
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: OPTIONS",
+              "run_time": 0,
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "AC-3",
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-000213",
+              "CCI-001643"
+            ],
+            "ösvdb": "877"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": "HTTP TRACE method is active, suggesting the host is vulnerable to XST",
+          "id": "999971",
+          "desc": "HTTP TRACE method is active, suggesting the host is vulnerable to XST",
+          "impact": 0.5,
+          "code": "",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: TRACE",
+              "run_time": 0,
+              "start_time": ""
+            }
+          ]
         }
-    ]
+      ],
+      "sha256": "b3d19e89d96d51ec1fd2769395b4c9b4c2f6780ae9583ec0c415981a2686158f"
+    }
+  ]
 }

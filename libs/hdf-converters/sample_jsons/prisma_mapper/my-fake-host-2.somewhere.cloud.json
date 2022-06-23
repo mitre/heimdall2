@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.16",
+    "release": "2.6.27",
     "target_id": "my-fake-host-2.somewhere.cloud"
   },
-  "version": "2.6.16",
+  "version": "2.6.27",
   "statistics": {
     "duration": null
   },
@@ -27,6 +27,9 @@
         {
           "desc": "(CIS_Linux_2.0.0 - 5.2.2) Ensure permissions on SSH private host key files are configured",
           "tags": {
+            "cci": [
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -57,6 +60,10 @@
         {
           "desc": "Red Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-28964.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -87,6 +94,10 @@
         {
           "desc": "The ip6gre_err function in net/ipv6/ip6_gre.c in the Linux kernel allows remote attackers to have unspecified impact via vectors involving GRE flags in an IPv6 packet, which trigger an out-of-bounds access.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -117,6 +128,10 @@
         {
           "desc": "The ecryptfs_privileged_open function in fs/ecryptfs/kthread.c in the Linux kernel before 4.6.3 allows local users to gain privileges or cause a denial of service (stack memory consumption) via vectors involving crafted mmap calls for /proc pathnames, leading to recursive pagefault handling.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -145,7 +160,7 @@
           ]
         }
       ],
-      "sha256": "1997783fd71adfa8148b3f2afad173b593c5c15b0f9496a4429f7db82e874324"
+      "sha256": "e912913202f64858aded79b0efbffbf14b826050493ed4ece407ba9319faa45c"
     }
   ]
 }

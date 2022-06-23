@@ -11,6 +11,25 @@ describe('ASFF Mapper', () => {
         {encoding: 'utf-8'}
       )
     );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/asff_mapper/asff-cis_aws-foundations_benchmark_v1.2.0-hdf.json',
+    //   JSON.stringify(
+    //     mapper.toHdf()['CIS AWS Foundations Benchmark v1.2.0.json'],
+    //     null,
+    //     2
+    //   )
+    // );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/asff_mapper/asff-aws_foundational_security_best_practices_v1.0.0-hdf.json',
+    //   JSON.stringify(
+    //     mapper.toHdf()['AWS Foundational Security Best Practices v1.0.0.json'],
+    //     null,
+    //     2
+    //   )
+    // );
+
     expect(_.mapValues(mapper.toHdf(), omitVersions)).toEqual({
       'CIS AWS Foundations Benchmark v1.2.0.json': omitVersions(
         JSON.parse(
@@ -42,6 +61,12 @@ describe('ASFF Mapper', () => {
         {encoding: 'utf-8'}
       )
     );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/asff_mapper/prowler-hdf.json',
+    //   JSON.stringify(mapper.toHdf()['Prowler.json'], null, 2)
+    // );
+
     expect(omitVersions(mapper.toHdf()['Prowler.json'])).toEqual(
       omitVersions(
         JSON.parse(
@@ -60,6 +85,12 @@ describe('ASFF Mapper', () => {
         {encoding: 'utf-8'}
       )
     );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/asff_mapper/prowler-hdf.json',
+    //   JSON.stringify(mapper.toHdf()['Prowler.json'], null, 2)
+    // );
+
     expect(omitVersions(mapper.toHdf()['Prowler.json'])).toEqual(
       omitVersions(
         JSON.parse(
@@ -78,6 +109,12 @@ describe('ASFF Mapper', () => {
         {encoding: 'utf-8'}
       )
     );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/asff_mapper/trivy-image_golang-1.12-alpine-hdf.json',
+    //   JSON.stringify(mapper.toHdf()['Aqua Security - Trivy.json'], null, 2)
+    // );
+
     expect(omitVersions(mapper.toHdf()['Aqua Security - Trivy.json'])).toEqual(
       omitVersions(
         JSON.parse(
@@ -98,6 +135,15 @@ describe('ASFF Mapper', () => {
       )
     );
 
+    // fs.writeFileSync(
+    //   'sample_jsons/asff_mapper/rhel7_V-71931-hdf.json',
+    //   JSON.stringify(
+    //     mapper.toHdf()['rhel7_V-71931.json-this-is-a-test.json'],
+    //     null,
+    //     2
+    //   )
+    // );
+
     expect(
       omitVersions(mapper.toHdf()['rhel7_V-71931.json-this-is-a-test.json'])
     ).toEqual(
@@ -117,6 +163,17 @@ describe('ASFF Mapper', () => {
         }
       )
     );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/asff_mapper/example-3-layer-overlay_hdf.json',
+    //   JSON.stringify(
+    //     mapper.toHdf()[
+    //       'example-3-layer-overlay_03062022.json-this-is-a-test.json'
+    //     ],
+    //     null,
+    //     2
+    //   )
+    // );
 
     expect(
       omitVersions(
