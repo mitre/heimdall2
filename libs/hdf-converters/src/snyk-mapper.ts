@@ -122,7 +122,7 @@ export class SnykMapper extends BaseConverter {
               },
               nist: {path: CWE_PATH, transformer: nistTag},
               cweid: {path: CWE_PATH, transformer: parseIdentifier},
-              cveid: {path: CWE_PATH, transformer: parseIdentifier},
+              cveid: {path: 'identifiers.CVE', transformer: parseIdentifier},
               ghsaid: {path: 'identifiers.GHSA', transformer: parseIdentifier}
             },
             descriptions: [],

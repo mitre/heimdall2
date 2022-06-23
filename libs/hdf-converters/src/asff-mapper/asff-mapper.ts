@@ -4,8 +4,8 @@ import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from '../base-converter';
 import {
-  DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS,
-  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
+  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+  getCCIsForNISTTags
 } from '../utils/global';
 import {getFirewallManager} from './case-firewall-manager';
 import {getHDF2ASFF} from './case-hdf2asff';
@@ -413,7 +413,24 @@ export class ASFFMapper extends BaseConverter {
                   'findingTags',
                   {}
                 ) as Record<string, unknown>,
-              cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS,
+              cci: {
+                transformer: (finding: Record<string, unknown>): string[] => {
+                  const tags = externalProductHandler(
+                    this,
+                    whichSpecialCase(finding),
+                    finding,
+                    'findingNistTag',
+                    []
+                  ) as string[];
+                  if (tags.length === 0) {
+                    return getCCIsForNISTTags(
+                      DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
+                    );
+                  } else {
+                    return getCCIsForNISTTags(tags);
+                  }
+                }
+              },
               nist: {
                 transformer: (finding: Record<string, unknown>): string[] => {
                   const tags = externalProductHandler(
