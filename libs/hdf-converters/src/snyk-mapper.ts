@@ -20,6 +20,8 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 const CWE_NIST_MAPPING = new CweNistMapping();
 
+const CWE_PATH = 'identifiers.CWE';
+
 function parseIdentifier(identifiers: unknown[] | unknown): string[] {
   const output: string[] = [];
   if (identifiers !== undefined && Array.isArray(identifiers)) {
@@ -114,13 +116,13 @@ export class SnykMapper extends BaseConverter {
             key: 'id',
             tags: {
               cci: {
-                path: 'identifiers.CWE',
+                path: CWE_PATH,
                 transformer: (cwe: unknown[]) =>
                   getCCIsForNISTTags(nistTag(cwe))
               },
-              nist: {path: 'identifiers.CWE', transformer: nistTag},
-              cweid: {path: 'identifiers.CWE', transformer: parseIdentifier},
-              cveid: {path: 'identifiers.CVE', transformer: parseIdentifier},
+              nist: {path: CWE_PATH, transformer: nistTag},
+              cweid: {path: CWE_PATH, transformer: parseIdentifier},
+              cveid: {path: CWE_PATH, transformer: parseIdentifier},
               ghsaid: {path: 'identifiers.GHSA', transformer: parseIdentifier}
             },
             descriptions: [],

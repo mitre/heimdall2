@@ -21,6 +21,8 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['low', 0.3]
 ]);
 
+const CWE_PATH = 'component_versions.more_details.cves[0].cwe';
+
 const CWE_NIST_MAPPING = new CweNistMapping();
 
 // Transformation Functions
@@ -129,15 +131,15 @@ export class JfrogXrayMapper extends BaseConverter {
             key: 'id',
             tags: {
               cci: {
-                path: 'component_versions.more_details.cves[0].cwe',
+                path: CWE_PATH,
                 transformer: (identifier: Record<string, unknown>) =>
                   getCCIsForNISTTags(nistTag(identifier))
               },
               nist: {
-                path: 'component_versions.more_details.cves[0].cwe',
+                path: CWE_PATH,
                 transformer: nistTag
               },
-              cweid: {path: 'component_versions.more_details.cves[0].cwe'}
+              cweid: {path: CWE_PATH}
             },
             refs: [],
             source_location: {},
