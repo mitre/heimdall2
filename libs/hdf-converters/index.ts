@@ -13,9 +13,9 @@ export * as CciNistMappingData from './src/mappings/CciNistMappingData';
 export * as CweNistMappingData from './src/mappings/CweNistMappingData';
 export * as NessusPluginNistMappingData from './src/mappings/NessusPluginNistMappingData';
 export * as NiktoNistMappingData from './src/mappings/NiktoNistMappingData';
+export * as NistCciMappingData from './src/mappings/NistCciMappingData';
 export * as OWaspNistMappingData from './src/mappings/OWaspNistMappingData';
 export * as ScoutsuiteNistMappingData from './src/mappings/ScoutsuiteNistMappingData';
-export * as NistCciMappingData from './src/mappings/NistCciMappingData'
 export * from './src/nessus-mapper';
 export * from './src/netsparker-mapper';
 export * from './src/nikto-mapper';

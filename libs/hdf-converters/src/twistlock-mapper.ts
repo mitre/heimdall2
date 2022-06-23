@@ -7,6 +7,7 @@ import {
   impactMapping,
   MappedTransform
 } from './base-converter';
+import {getCCIsForNISTTags} from './utils/global';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
@@ -67,7 +68,7 @@ export class TwistlockMapper extends BaseConverter {
             key: 'id',
             tags: {
               nist: ['SI-2', 'RA-5'],
-              cci: ['CCI-002605', 'CCI-001643'],
+              cci: getCCIsForNISTTags(['SI-2', 'RA-5']),
               cveid: {path: 'id'}
             },
             refs: [],

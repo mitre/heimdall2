@@ -9,7 +9,10 @@ import {
   MappedTransform
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import {DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS, DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
+import {
+  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+  getCCIsForNISTTags
+} from './utils/global';
 
 // Constants
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -135,7 +138,11 @@ export class JfrogXrayMapper extends BaseConverter {
             path: 'data',
             key: 'id',
             tags: {
-              cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS,
+              cci: {
+                path: 'component_versions.more_details.cves[0].cwe',
+                transformer: (identifier: Record<string, unknown>) =>
+                  getCCIsForNISTTags(nistTag(identifier))
+              },
               nist: {
                 path: 'component_versions.more_details.cves[0].cwe',
                 transformer: nistTag

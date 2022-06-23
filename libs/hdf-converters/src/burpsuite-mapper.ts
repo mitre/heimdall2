@@ -10,7 +10,10 @@ import {
   parseXml
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import {DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS, DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
+import {
+  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+  getCCIsForNISTTags
+} from './utils/global';
 
 // Constant
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -57,6 +60,7 @@ function idToString(id: unknown): string {
 function formatCweId(input: string): string {
   return parseHtml(input).slice(1, -1).trimStart();
 }
+
 function nistTag(input: string): string[] {
   let cwe = formatCweId(input).split('CWE-');
   cwe.shift();
@@ -105,7 +109,6 @@ export class BurpSuiteMapper extends BaseConverter {
               transformer: impactMapping(IMPACT_MAPPING)
             },
             tags: {
-              cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS,
               nist: {
                 path: 'vulnerabilityClassifications',
                 transformer: nistTag
@@ -113,6 +116,10 @@ export class BurpSuiteMapper extends BaseConverter {
               cweid: {
                 path: 'vulnerabilityClassifications',
                 transformer: formatCweId
+              },
+              cci: {
+                path: 'vulnerabilityClassifications',
+                transformer: (data: string) => getCCIsForNISTTags(nistTag(data))
               },
               confidence: {path: 'confidence'}
             },

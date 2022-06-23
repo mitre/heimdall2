@@ -7,7 +7,10 @@ import {
   MappedTransform,
   parseCsv
 } from './base-converter';
-import {DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS, DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
+import {
+  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+  getCCIsForNISTTags
+} from './utils/global';
 
 export type PrismaControl = {
   Packages: string;
@@ -33,6 +36,14 @@ const SEVERITY_LOOKUP: Record<string, number> = {
 // REMEDIATION_NIST_TAG the set of default applicable NIST 800-53 controls for ensuring up-to-date packages.
 // SI-2 (FLAW REMEDIATION) - 	RA-5 (VULNERABILITY SCANNING)
 const REMEDIATION_NIST_TAG = ['SI-2', 'RA-5'];
+
+export function nistTag(cveTag: string | undefined) {
+  if (!cveTag) {
+    return DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
+  } else {
+    return REMEDIATION_NIST_TAG;
+  }
+}
 
 export class PrismaControlMapper extends BaseConverter {
   mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
@@ -66,16 +77,13 @@ export class PrismaControlMapper extends BaseConverter {
             key: 'id',
             desc: {path: 'Description'},
             tags: {
-              cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS,
+              cci: {
+                path: 'CVE ID',
+                transformer: (cve: string) => getCCIsForNISTTags(nistTag(cve))
+              },
               nist: {
                 path: 'CVE ID',
-                transformer: (cveTag: string | undefined) => {
-                  if (!cveTag) {
-                    return DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
-                  } else {
-                    return REMEDIATION_NIST_TAG;
-                  }
-                }
+                transformer: nistTag
               },
               cve: {path: 'CVE ID'},
               cvss: {path: 'cssv'}

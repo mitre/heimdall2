@@ -1,13 +1,14 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {createLogger, format, transports} from 'winston';
-import { data as NistCciMappingData } from '../mappings/NistCciMappingData';
+import {data as NistCciMappingData} from '../mappings/NistCciMappingData';
 
 // DEFAULT_NIST_TAG is applicable to all automated configuration tests.
 // SA-11 (DEVELOPER SECURITY TESTING AND EVALUATION) - RA-5 (VULNERABILITY SCANNING)
 export const DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS = ['SA-11', 'RA-5'];
 
-export const DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS =  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS.map((tag) => NistCciMappingData[tag])
+export const DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS =
+  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS.map((tag) => NistCciMappingData[tag]);
 
 // Applicable to dependency management
 export const DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS = [
@@ -52,4 +53,17 @@ export function getDescription(
   }
 
   return found;
+}
+
+export function getCCIsForNISTTags(nistTags: string[]): string[] {
+  const cciTags: string[] = [];
+  nistTags.forEach((tag) => {
+    const baseTag = /\w\w-\d/g.exec(tag);
+    if (baseTag) {
+      if (baseTag[0] in NistCciMappingData) {
+        cciTags.push(...NistCciMappingData[tag]);
+      }
+    }
+  });
+  return cciTags;
 }

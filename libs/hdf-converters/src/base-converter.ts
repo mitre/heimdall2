@@ -144,11 +144,13 @@ export class BaseConverter {
     this.data = data;
     this.collapseResults = collapseResults;
   }
+
   setMappings(
     mappings: MappedTransform<ExecJSON.Execution, ILookupPath>
   ): void {
     this.mappings = mappings;
   }
+
   toHdf(): ExecJSON.Execution {
     if (this.mappings === undefined) {
       throw new Error('Mappings must be provided');
