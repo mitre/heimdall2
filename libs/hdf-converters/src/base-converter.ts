@@ -135,6 +135,7 @@ function collapseDuplicates<T extends object>(
   });
   return newArray;
 }
+
 export class BaseConverter {
   data: Record<string, unknown>;
   mappings?: MappedTransform<ExecJSON.Execution, ILookupPath>;
