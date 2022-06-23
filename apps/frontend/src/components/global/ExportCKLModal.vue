@@ -217,17 +217,6 @@ export default class ExportCKLModal extends Vue {
     });
 
     const rootControls = _.uniqBy(controls, 'root.hdf.wraps.id').map(({root}) => root);
-    const rootControls = [];
-
-    for (const ctrl of controls) {
-      const root = ctrl.root;
-      if (knownRootControls.has(root.hdf.wraps.id)) {
-        continue;
-      } else {
-        knownRootControls.add(root.hdf.wraps.id);
-        rootControls.push(root);
-      }
-    }
 
     this.outputData.controlSets.push({
       fileName: file.filename,
