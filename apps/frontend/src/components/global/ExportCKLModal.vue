@@ -216,7 +216,9 @@ export default class ExportCKLModal extends Vue {
       fromFile: [file.uniqueId]
     });
 
-    const rootControls = _.uniqBy(controls, 'root.hdf.wraps.id').map(({root}) => root);
+    const rootControls = _.uniqBy(controls, 'root.hdf.wraps.id').map(
+      ({root}) => root
+    );
 
     this.outputData.controlSets.push({
       fileName: file.filename,
