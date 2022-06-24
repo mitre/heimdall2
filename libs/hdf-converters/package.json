@@ -6,14 +6,16 @@
   "files": [
     "lib"
   ],
-  "main": "src/index.ts",
+  "main": "lib/index.js",
   "publishConfig": {
     "main": "lib/index.js"
   },
   "scripts": {
-    "prepack": "yarn build && cp package.json package.json.orig && cat package.json.orig | jq '.main = (.publishConfig.main)' > package.json",
-    "postpack": "mv package.json.orig package.json",
-    "build": "tsc -p ./tsconfig.build.json && cp -R ./data ./lib",
+    "prepack": "run-script-os",
+    "prepack:darwin:linux": "yarn build && cp package.json package.json.orig && cat package.json.orig | jq '.main = (.publishConfig.main)' > package.json",
+    "prepack:win32": "yarn build && copy package.json package.json.orig && type package.json.orig | jq '.main = (.publishConfig.main)' > package.json",
+    "postpack": "mv package.json.orig package.json || move package.json.orig package.json",
+    "build": "tsc -p ./tsconfig.build.json && (cp -R ./data ./lib || xcopy ./data ./lib)",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
     "test": "jest",
@@ -52,6 +54,7 @@
     "htmlparser2": "^7.1.2",
     "jest": "^27.0.6",
     "quicktype": "^15.0.260",
+    "run-script-os": "^1.1.6",
     "ts-jest": "^27.0.3",
     "ts-node": "^10.0.0",
     "typedoc": "^0.22.1"
