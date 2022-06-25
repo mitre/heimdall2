@@ -3056,9 +3056,9 @@
     pluralize "8.0.0"
 
 "@nestjs/sequelize@^8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@nestjs/sequelize/-/sequelize-8.0.0.tgz#850aa1260dd77e1a8d1860f6408e504060215ea3"
-  integrity sha512-+hCs/uO1b+Vjt9EmKc31Srr5j9k8MI6eDg+NtSkym/u18hC8eW2RjcxxK+62yn5maxMLyp5fTtAEg3YmicYL4Q==
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/sequelize/-/sequelize-8.0.1.tgz#d32dbec3a2d1e90eb55fe57918ba8046b661d325"
+  integrity sha512-nO1Pipvl1Msvb3h0wQusbIDDz5713Qlc4EIZFaVenNXwktbuPNqbmbNlclWmfBhnJNjs9cOWWDLPE1wm7uvlqQ==
   dependencies:
     uuid "8.3.2"
 
