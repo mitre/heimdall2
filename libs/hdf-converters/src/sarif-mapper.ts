@@ -145,7 +145,8 @@ export class SarifMapper extends BaseConverter {
           data = _.omit(data, ['version']);
           const keys = Object.keys(data['runs']);
           keys.forEach((key) => {
-            data.runs[key] = _.omit(data.runs[key], ['results'])});
+            data.runs[key] = _.omit(data.runs[key], ['results']);
+          });
           return data;
         }
       },
