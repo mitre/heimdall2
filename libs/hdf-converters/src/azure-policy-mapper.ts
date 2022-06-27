@@ -23,10 +23,9 @@ import {AzurePolicyMapping} from './mappings/AzurePolicyMapping';
 // Load Azure Subscription ID as a variable from an OS environment variable.
 let subscriptionId = '';
 if (process.env['AZURE_SUBSCRIPTION_ID'] === undefined) {
-  console.log(
-    'Error: Environment variable "AZURE_SUBSCRIPTION_ID" is undefined. Set this variable with the Azure Subscription Id.'
+  throw new Error(
+    'Environment variable "AZURE_SUBSCRIPTION_ID" is undefined. Set this variable with the Azure Subscription Id.'
   );
-  process.exit(1);
 } else {
   subscriptionId = process.env['AZURE_SUBSCRIPTION_ID'];
 }
@@ -194,7 +193,7 @@ export class AzurePolicyMapper {
           id: policyState.policyDefinitionId,
           subscriptionId: subscriptionId,
           state: complianceState,
-          groupNames: this.parseGroupNames(groupNames || []),
+          groupNames: this.parseGroupNames(groupNames),
           resources: [azureResource]
         });
       } else {
