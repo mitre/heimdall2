@@ -4,6 +4,7 @@ import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
+import omitDeep from 'omit-deep-lodash';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['error', 0.7],
@@ -144,11 +145,9 @@ export class SarifMapper extends BaseConverter {
         transformer: (
           data: Record<string, unknown>
           ): unknown[] | Record<string, unknown> => {
-          let passData = this.passRaw
+          return this.passRaw
             ? data 
-            : _.map(data.runs, (elements: Object) => _.omit(elements, ['results']));
-
-          return passData
+            : omitDeep(data, 'version', 'results');
         }
       }
     }
