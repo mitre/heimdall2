@@ -141,12 +141,11 @@ export class SarifMapper extends BaseConverter {
     ],
     passthrough: {
       meta_data: {
-        transformer: (
-          data: Record<string, any>
-        ): Record<string, unknown> => {
+        transformer: (data: Record<string, any>): Record<string, unknown> => {
           data = _.omit(data, ['version']);
-          let keys = Object.keys(data['runs']);
-          keys.forEach(key => {data.runs = _.omit(data.runs[key], ['results'])});
+          const keys = Object.keys(data['runs']);
+          keys.forEach((key) => {
+            data.runs = _.omit(data.runs[key], ['results'])});
           return data;
         }
       },
