@@ -20,8 +20,6 @@ import {AzurePolicyMapping} from './mappings/AzurePolicyMapping';
 //import { setLogLevel } from "@azure/logger";
 //setLogLevel("info");
 
-//const fs = require('fs'); //import from fs
-
 // Load Azure Subscription ID as a variable from an OS environment variable.
 let subscriptionId = '';
 if (process.env['AZURE_SUBSCRIPTION_ID'] === undefined) {
@@ -61,7 +59,7 @@ type AzureResource = {
 };
 
 //Azure Policy Converter Class
-class AzurePolicyConverter {
+export class AzurePolicyMapper {
   //Class Variables
   results: ExecJSON.ControlResult[][];
   policyDefinitions: PolicyDefinition[] = [];
@@ -162,12 +160,11 @@ class AzurePolicyConverter {
     )) {
       // Reset Array for GroupNames
       groupNames = [];
-      if (policyState.isCompliant !== undefined) {
-        complianceState =
-          policyState.isCompliant === false ? 'noncompliant' : 'compliant';
-      } else {
-        complianceState = 'compliant';
-      }
+      complianceState =
+        policyState.isCompliant === true ||
+        policyState.isCompliant === undefined
+          ? 'compliant'
+          : 'noncompliant';
 
       // Loop through NIST 800-53 control mappings and add to groupNames list
       if (policyState.policyDefinitionGroupNames !== undefined) {
@@ -190,17 +187,16 @@ class AzurePolicyConverter {
         this.policyDefinitions.findIndex(
           (PolicyDefinition) =>
             PolicyDefinition.id === policyState.policyDefinitionId
-        ) === -1
+        ) === -1 &&
+        policyState.policyDefinitionId !== undefined
       ) {
-        if (policyState.policyDefinitionId !== undefined) {
-          this.policyDefinitions.push({
-            id: policyState.policyDefinitionId,
-            subscriptionId: subscriptionId,
-            state: complianceState,
-            groupNames: this.parseGroupNames(groupNames || []),
-            resources: [azureResource]
-          });
-        }
+        this.policyDefinitions.push({
+          id: policyState.policyDefinitionId,
+          subscriptionId: subscriptionId,
+          state: complianceState,
+          groupNames: this.parseGroupNames(groupNames || []),
+          resources: [azureResource]
+        });
       } else {
         const policyDefinitionIndex = this.policyDefinitions.findIndex(
           (PolicyDefinition) =>
