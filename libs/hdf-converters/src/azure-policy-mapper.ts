@@ -8,27 +8,17 @@
 //  AZURE_PASSWORD - Passord to authenticate with.
 // This converter was written for: https://docs.microsoft.com/en-us/azure/governance/policy/samples/nist-sp-800-53-r4
 
-import {PolicyClient} from '@azure/arm-policy';
-import {PolicyInsightsClient} from '@azure/arm-policyinsights';
-import {DefaultAzureCredential} from '@azure/identity';
+import { PolicyClient } from '@azure/arm-policy';
+import { PolicyInsightsClient } from '@azure/arm-policyinsights';
+import { DefaultAzureCredential } from '@azure/identity';
 import * as fs from 'fs';
-import {ExecJSON} from 'inspecjs';
-import {version as HeimdallToolsVersion} from '../package.json';
-import {AzurePolicyMapping} from './mappings/AzurePolicyMapping';
+import { ExecJSON } from 'inspecjs';
+import { version as HeimdallToolsVersion } from '../package.json';
+import { AzurePolicyMapping } from './mappings/AzurePolicyMapping';
 
 // For troubleshooting API calls, uncomment below
 //import { setLogLevel } from "@azure/logger";
 //setLogLevel("info");
-
-// Load Azure Subscription ID as a variable from an OS environment variable.
-let subscriptionId = '';
-if (process.env['AZURE_SUBSCRIPTION_ID'] === undefined) {
-  throw new Error(
-    'Environment variable "AZURE_SUBSCRIPTION_ID" is undefined. Set this variable with the Azure Subscription Id.'
-  );
-} else {
-  subscriptionId = process.env['AZURE_SUBSCRIPTION_ID'];
-}
 
 // Create credential object. Reference the environment variable notes above.
 const credential = new DefaultAzureCredential();
@@ -60,6 +50,7 @@ type AzureResource = {
 //Azure Policy Converter Class
 export class AzurePolicyMapper {
   //Class Variables
+  subscriptionId = '';
   results: ExecJSON.ControlResult[][];
   policyDefinitions: PolicyDefinition[] = [];
   //Class Flags
@@ -69,6 +60,15 @@ export class AzurePolicyMapper {
   // credential - Azure Credentials object to authenticate with.
   // subscriptionId - Subscription ID to query against.
   constructor() {
+    // Load Azure Subscription ID as a variable from an OS environment variable.
+    if (process.env['AZURE_SUBSCRIPTION_ID'] === undefined) {
+      throw new Error(
+        'Environment variable "AZURE_SUBSCRIPTION_ID" is undefined. Set this variable with the Azure Subscription Id.'
+      );
+    } else {
+      this.subscriptionId = process.env['AZURE_SUBSCRIPTION_ID'];
+    }
+
     console.log('Generating HDF');
     this.results = [];
     this.toHDF();
@@ -82,10 +82,10 @@ export class AzurePolicyMapper {
     // Initalize Policy Insights Client
     const policyInsightsClient = new PolicyInsightsClient(
       credential,
-      subscriptionId
+      this.subscriptionId
     );
     // Initalize Policy Client
-    const policyClient = new PolicyClient(credential, subscriptionId);
+    const policyClient = new PolicyClient(credential, this.subscriptionId);
 
     this.getDynamicPolicies(policyClient, policyInsightsClient);
 
@@ -155,13 +155,13 @@ export class AzurePolicyMapper {
 
     for await (const policyState of policyInsightsClient.policyStates.listQueryResultsForSubscription(
       'default',
-      subscriptionId
+      this.subscriptionId
     )) {
       // Reset Array for GroupNames
       groupNames = [];
       complianceState =
         policyState.isCompliant === true ||
-        policyState.isCompliant === undefined
+          policyState.isCompliant === undefined
           ? 'compliant'
           : 'noncompliant';
 
@@ -175,7 +175,7 @@ export class AzurePolicyMapper {
       // Create AzureResource object
       const azureResource: AzureResource = {
         id: policyState.resourceId || 'Not Available',
-        subscriptionId: subscriptionId,
+        subscriptionId: this.subscriptionId,
         type: policyState.resourceType,
         state: complianceState,
         location: policyState.resourceLocation
@@ -191,7 +191,7 @@ export class AzurePolicyMapper {
       ) {
         this.policyDefinitions.push({
           id: policyState.policyDefinitionId,
-          subscriptionId: subscriptionId,
+          subscriptionId: this.subscriptionId,
           state: complianceState,
           groupNames: this.parseGroupNames(groupNames),
           resources: [azureResource]
@@ -261,7 +261,7 @@ export class AzurePolicyMapper {
 
           const azureResource: AzureResource = {
             id: 'Microsoft Managed',
-            subscriptionId: subscriptionId,
+            subscriptionId: this.subscriptionId,
             type: 'N/A',
             state: 'compliant',
             location: 'N/A'
@@ -269,7 +269,7 @@ export class AzurePolicyMapper {
 
           this.policyDefinitions.push({
             id: staticPolicy.id || 'Not Available',
-            subscriptionId: subscriptionId,
+            subscriptionId: this.subscriptionId,
             detailedName: policyAssignmentList.displayName,
             name: policyAssignmentList.name,
             description: policyAssignmentList.description,
@@ -293,10 +293,10 @@ export class AzurePolicyMapper {
         title: policyDefinition.detailedName || '',
         desc: policyDefinition.description || null,
         impact: 0.5,
-        tags: {nist: policyDefinition.groupNames},
+        tags: { nist: policyDefinition.groupNames },
         descriptions: [],
         refs: [],
-        source_location: {ref: policyDefinition.subscriptionId, line: 1},
+        source_location: { ref: policyDefinition.subscriptionId, line: 1 },
         code: '',
         results: this.getTestResults(policyDefinition)
       };
@@ -338,8 +338,8 @@ export class AzurePolicyMapper {
           nistTag = groupName.substring(groupName.lastIndexOf('_') + 1);
           hdfTags.push(
             nistTag.charAt(0).toUpperCase() +
-              nistTag.charAt(1).toUpperCase() +
-              nistTag.slice(2)
+            nistTag.charAt(1).toUpperCase() +
+            nistTag.slice(2)
           );
         }
       }
