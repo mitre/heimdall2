@@ -3,7 +3,7 @@
   "include": [
     "*.ts",
     "**/*.ts",
-    "types/*.d.ts"
+    "**/*.d.ts"
   ],
   "exclude": ["lib"],
   "compilerOptions": {
