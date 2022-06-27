@@ -140,13 +140,23 @@ export class SarifMapper extends BaseConverter {
       }
     ],
     passthrough: {
+      meta_data: {
+        schema: '$schema',
+        runs: [
+          {
+            path: 'runs',
+            tool: 'tool',
+            columnKind: 'columnKind',
+            externalPropertyFileReferences: 'externalPropertyFileReferences'
+
+          }
+        ]
+      },
       raw: {
         transformer: (
           data: Record<string, unknown>
-          ): Record<string, unknown> => {
-          return this.passRaw
-            ? data 
-            : _.omit(data, 'version', 'runs');
+        ): Record<string, unknown> | string => {
+          return this.passRaw ? data : '';
         }
       }
     }
