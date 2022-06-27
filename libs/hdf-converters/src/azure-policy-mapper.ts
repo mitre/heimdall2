@@ -8,13 +8,13 @@
 //  AZURE_PASSWORD - Passord to authenticate with.
 // This converter was written for: https://docs.microsoft.com/en-us/azure/governance/policy/samples/nist-sp-800-53-r4
 
-import { PolicyClient } from '@azure/arm-policy';
-import { PolicyInsightsClient } from '@azure/arm-policyinsights';
-import { DefaultAzureCredential } from '@azure/identity';
-import { ExecJSON } from 'inspecjs';
+import {PolicyClient} from '@azure/arm-policy';
+import {PolicyInsightsClient} from '@azure/arm-policyinsights';
+import {DefaultAzureCredential} from '@azure/identity';
 import * as fs from 'fs';
-import { version as HeimdallToolsVersion } from '../package.json';
-import { AzurePolicyMapping } from './mappings/AzurePolicyMapping';
+import {ExecJSON} from 'inspecjs';
+import {version as HeimdallToolsVersion} from '../package.json';
+import {AzurePolicyMapping} from './mappings/AzurePolicyMapping';
 
 // For troubleshooting API calls, uncomment below
 //import { setLogLevel } from "@azure/logger";
@@ -298,10 +298,10 @@ class AzurePolicyConverter {
         title: policyDefinition.detailedName || '',
         desc: policyDefinition.description || null,
         impact: 0.5,
-        tags: { nist: policyDefinition.groupNames },
+        tags: {nist: policyDefinition.groupNames},
         descriptions: [],
         refs: [],
-        source_location: { ref: policyDefinition.subscriptionId, line: 1 },
+        source_location: {ref: policyDefinition.subscriptionId, line: 1},
         code: '',
         results: this.getTestResults(policyDefinition)
       };
@@ -343,8 +343,8 @@ class AzurePolicyConverter {
           nistTag = groupName.substring(groupName.lastIndexOf('_') + 1);
           hdfTags.push(
             nistTag.charAt(0).toUpperCase() +
-            nistTag.charAt(1).toUpperCase() +
-            nistTag.slice(2)
+              nistTag.charAt(1).toUpperCase() +
+              nistTag.slice(2)
           );
         }
       }
