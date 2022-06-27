@@ -144,7 +144,9 @@ export class SarifMapper extends BaseConverter {
         transformer: (
           data: Record<string, unknown>
         ): Record<string, unknown> => {
-          return this.passRaw ? data : _.omit(data, ['version', 'results']);
+          return this.passRaw
+            ? data 
+            : _.omit(data, ['version', 'results']);
         }
       }
     }
