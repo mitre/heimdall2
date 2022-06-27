@@ -143,10 +143,10 @@ export class SarifMapper extends BaseConverter {
       raw: {
         transformer: (
           data: Record<string, unknown>
-        ): Record<string, unknown> => {
+          ): unknown[] | Record<string, unknown> => {
           return this.passRaw
             ? data 
-              : _.map((_.omit(data, ['version'])).runs, function (runsItem: unknown[]) {return _.omit(runsItem, ['results'])});
+            : _.map(data.runs, (obj: unknown) => _.pick(obj, ['tool']));
         }
       }
     }
