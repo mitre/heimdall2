@@ -146,7 +146,7 @@ export class SarifMapper extends BaseConverter {
         ): Record<string, unknown> => {
           return this.passRaw
             ? data 
-            : _.map((_.omit(data, ['version'])).runs, function (runsItem) {return _.omit(runsItem, ['results'])});
+              : _.map((_.omit(data, ['version'])).runs, function (runsItem: Record<string, unknown>) {return _.omit(runsItem, ['results'])});
         }
       }
     }
