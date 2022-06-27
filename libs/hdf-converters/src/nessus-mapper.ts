@@ -27,7 +27,7 @@ const COMPLIANCE_PATH = 'cm:compliance-reference';
 const NA_PLUGIN_OUTPUT = 'This Nessus Plugin does not provide output message.';
 const NESSUS_PLUGINS_NIST_MAPPING = new NessusPluginsNistMapping();
 const CCI_NIST_MAPPING = new CciNistMapping();
-const DEFAULT_NIST_TAG = ['unmapped'];
+const DEFAULT_NIST_TAG: string[] = [];
 
 let policyName: string;
 let version: string;
@@ -90,6 +90,7 @@ function getImpact(item: unknown): number {
     return impactMapping(IMPACT_MAPPING)(_.get(item, 'severity'));
   }
 }
+
 function getCheck(item: unknown): string {
   if (_.has(item, 'cm:compliance-solution')) {
     return parseHtml(_.get(item, 'cm:compliance-solution'));
@@ -97,6 +98,15 @@ function getCheck(item: unknown): string {
     return '';
   }
 }
+
+function getFix(item: unknown): string {
+  const fix = _.get(item, 'solution');
+  if (fix && fix !== 'n/a') {
+    return fix;
+  }
+  return '';
+}
+
 function getNist(item: unknown): string[] {
   if (_.has(item, COMPLIANCE_PATH)) {
     return cciNistTag(_.get(item, COMPLIANCE_PATH));
@@ -157,6 +167,7 @@ function getStartTime(tag: unknown): string {
     return _.get(tag, 'text');
   }
 }
+
 function cleanData(control: unknown[]): ExecJSON.Control[] {
   const filteredControl = control as ExecJSON.Control[];
   filteredControl.forEach((element) => {
@@ -170,10 +181,11 @@ function cleanData(control: unknown[]): ExecJSON.Control[] {
       if (_.get(element.tags, 'stig_id') === '') {
         element.tags = _.omit(element.tags, 'stig_id');
       }
+      element.refs = element.refs.filter((ref) => ref.url);
       if (element.descriptions !== undefined && element.descriptions !== null) {
-        if (_.get(element.descriptions[0], 'data') === '') {
-          element.descriptions = [];
-        }
+        element.descriptions = element.descriptions.filter(
+          (description) => description && description.data
+        );
       }
     }
   });
@@ -226,11 +238,6 @@ export class NessusResults {
       return result.toHdf();
     }
   }
-  setMappings(
-    customMapping: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    this.customMapping = customMapping;
-  }
 }
 
 export class NessusMapper extends BaseConverter {
@@ -268,26 +275,54 @@ export class NessusMapper extends BaseConverter {
               nist: {transformer: getNist},
               cci: {transformer: getCci},
               rid: {transformer: getRid},
-              stig_id: {transformer: getStig}
+              stig_id: {transformer: getStig},
+              risk_factor: {path: 'risk_factor'},
+              plugin_type: {path: 'plugin_type'},
+              plugin_publication_date: {path: 'plugin_publication_date'},
+              fname: {path: 'fname'},
+              cvss3_base_score: {path: 'cvss3_base_score'},
+              cvss_base_score: {path: 'cvss_base_score'}
             },
             descriptions: [
               {
                 data: {transformer: getCheck},
                 label: 'check'
+              },
+              {
+                data: {transformer: getFix},
+                label: 'fix'
               }
             ],
-            refs: [],
+            refs: [
+              {
+                url: {
+                  path: 'see_also'
+                }
+              }
+            ],
             source_location: {},
             id: {transformer: getId},
             title: {transformer: getTitle},
             desc: {transformer: getDesc},
             impact: {transformer: getImpact},
-            code: '',
+            code: {
+              transformer: (reportItem: unknown) =>
+                JSON.stringify(reportItem, null, 2)
+            },
             results: [
               {
                 status: {transformer: getStatus},
                 code_desc: {transformer: formatCodeDesc},
-                run_time: 0,
+                message: {
+                  path: ['plugin_output', 'cm:compliance-actual-value'],
+                  transformer: (value: unknown) => {
+                    if (value === null || value === undefined) {
+                      return value;
+                    }
+                    return String(value);
+                  }
+                },
+                run_time: 0.0,
                 start_time: {
                   path: '$.HostProperties.tag',
                   transformer: getStartTime

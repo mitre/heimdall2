@@ -7,16 +7,20 @@ import Store from '@/store/store';
 import {Tag} from '@/types/models';
 import {read_file_async} from '@/utilities/async_util';
 import {
-  ASFFMapper,
+  ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
   DBProtectMapper,
+  fingerprint,
+  IonChannelMapper,
   JfrogXrayMapper,
   NessusResults,
   NetsparkerMapper,
   NiktoMapper,
+  PrismaMapper,
   SarifMapper,
   ScoutsuiteMapper,
   SnykResults,
+  TwistlockMapper,
   XCCDFResultsMapper,
   ZapMapper
 } from '@mitre/hdf-converters';
@@ -82,7 +86,9 @@ export type ProfileFile = InspecFile & {
 
 export type FileLoadOptions = {
   /** The file to load */
-  file: File;
+  file?: File;
+  filename?: string;
+  data?: string;
 };
 
 export type TextLoadOptions = {
@@ -107,23 +113,6 @@ export type ExecJSONLoadOptions = {
   data: ExecJSON.Execution;
 };
 
-// Fields to look for inside of JSON structures to determine type before passing to hdf-converters
-export const fileTypeFingerprints = {
-  asff: ['Findings', 'AwsAccountId', 'ProductArn'],
-  fortify: ['FVDL', 'FVDL.EngineData.EngineVersion', 'FVDL.UUID'],
-  jfrog: ['total_count', 'data'],
-  nikto: ['banner', 'host', 'ip', 'port', 'vulnerabilities'],
-  sarif: ['$schema', 'version', 'runs'],
-  snyk: [
-    'projectName',
-    'policy',
-    'summary',
-    'vulnerabilities',
-    'vulnerabilities[0].identifiers'
-  ],
-  zap: ['@generated', '@version', 'site']
-};
-
 @Module({
   namespaced: true,
   dynamic: true,
@@ -136,11 +125,20 @@ export class InspecIntake extends VuexModule {
    */
   @Action
   async loadFile(options: FileLoadOptions): Promise<FileID | FileID[]> {
-    const read = await read_file_async(options.file);
+    let read: string;
+    const filename =
+      options.file?.name || options.filename || 'Missing Filename';
+    if (options.file) {
+      read = await read_file_async(options.file);
+    } else if (options.data) {
+      read = options.data;
+    } else {
+      throw Error('No file or data passed to report intake');
+    }
     if (await this.isHDF(read)) {
       return this.loadText({
         text: read,
-        filename: options.file.name
+        filename: filename
       });
     } else {
       const converted = await this.convertToHdf({
@@ -148,7 +146,7 @@ export class InspecIntake extends VuexModule {
         data: read
       });
       if (Array.isArray(converted)) {
-        const originalFileSplit = options.file.name.split('.');
+        const originalFileSplit = filename.split('.');
         // Default to .json if not found
         let originalFileType = '.json';
         if (originalFileSplit.length > 1) {
@@ -158,7 +156,7 @@ export class InspecIntake extends VuexModule {
           converted.map((evaluation) => {
             return this.loadExecJson({
               data: evaluation,
-              filename: `${options.file.name
+              filename: `${filename
                 .replace(/.json/gi, '')
                 .replace(/.nessus/gi, '')}-${_.get(
                 evaluation,
@@ -170,7 +168,7 @@ export class InspecIntake extends VuexModule {
       } else if (converted) {
         return this.loadExecJson({
           data: converted,
-          filename: options.file.name
+          filename: filename
         });
       } else {
         return [];
@@ -179,16 +177,31 @@ export class InspecIntake extends VuexModule {
   }
 
   @Action
-  async isHDF(data: string): Promise<boolean> {
-    try {
-      // If our data loads correctly it could be HDF
-      const parsed = JSON.parse(data);
+  async isHDF(
+    data: string | Record<string, unknown> | undefined
+  ): Promise<boolean> {
+    if (typeof data === 'string') {
+      try {
+        // If our data loads correctly it could be HDF
+        const parsed = JSON.parse(data);
+        return (
+          Array.isArray(parsed.profiles) || // Execution JSON
+          (Boolean(parsed.controls) && Boolean(parsed.sha256)) // Profile JSON
+        );
+      } catch {
+        // HDF isn't valid json, we have a different format
+        return false;
+      }
+    } else if (typeof data === 'object') {
       return (
-        Array.isArray(parsed.profiles) || // Execution JSON
-        (Boolean(parsed.controls) && Boolean(parsed.sha256)) // Profile JSON
+        Array.isArray(data.profiles) || // Execution JSON
+        (Boolean(data.controls) && Boolean(data.sha256)) // Profile JSON
       );
-    } catch {
-      // HDF isn't valid json, we have a different format
+    } else if (typeof data === 'undefined') {
+      SnackbarModule.failure('Missing data to convert to validate HDF');
+      return false;
+    } else {
+      SnackbarModule.failure('Unknown file data type');
       return false;
     }
   }
@@ -198,16 +211,22 @@ export class InspecIntake extends VuexModule {
     fileOptions: FileLoadOptions;
     data: string;
   }): Promise<ExecJSON.Execution | ExecJSON.Execution[] | void> {
+    const filename =
+      convertOptions.fileOptions.file?.name ||
+      convertOptions.fileOptions.filename ||
+      'No Filename';
     // If the data passed is valid json, try to match up known keys
-    const typeGuess = await this.guessType({
+    const typeGuess = fingerprint({
       data: convertOptions.data,
-      filename: convertOptions.fileOptions.file.name
+      filename: filename
     });
     switch (typeGuess) {
       case 'jfrog':
         return new JfrogXrayMapper(convertOptions.data).toHdf();
       case 'asff':
-        return new ASFFMapper(convertOptions.data).toHdf();
+        return Object.values(
+          new ASFFResultsMapper(convertOptions.data).toHdf()
+        );
       case 'zap':
         return new ZapMapper(convertOptions.data).toHdf();
       case 'nikto':
@@ -216,79 +235,29 @@ export class InspecIntake extends VuexModule {
         return new SarifMapper(convertOptions.data).toHdf();
       case 'snyk':
         return new SnykResults(convertOptions.data).toHdf();
+      case 'twistlock':
+        return new TwistlockMapper(convertOptions.data).toHdf();
       case 'nessus':
         return new NessusResults(convertOptions.data).toHdf();
       case 'xccdf':
         return new XCCDFResultsMapper(convertOptions.data).toHdf();
       case 'burp':
         return new BurpSuiteMapper(convertOptions.data).toHdf();
+      case 'ionchannel':
+        return new IonChannelMapper(convertOptions.data).toHdf();
       case 'scoutsuite':
         return new ScoutsuiteMapper(convertOptions.data).toHdf();
       case 'dbProtect':
         return new DBProtectMapper(convertOptions.data).toHdf();
       case 'netsparker':
         return new NetsparkerMapper(convertOptions.data).toHdf();
+      case 'prisma':
+        return new PrismaMapper(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
-          `Invalid file uploaded (${convertOptions.fileOptions.file.name}), no fingerprints matched.`
+          `Invalid file uploaded (${filename}), no fingerprints matched.`
         );
     }
-  }
-
-  @Action
-  async guessType(guessOptions: {
-    data: string;
-    filename: string;
-  }): Promise<string> {
-    try {
-      const parsed = JSON.parse(guessOptions.data);
-      const object = Array.isArray(parsed) ? parsed[0] : parsed;
-      // Find the fingerprints that have the most matches
-      const fingerprinted = Object.entries(fileTypeFingerprints).reduce(
-        (a, b) => {
-          return a[1].filter((value) => _.get(object, value)).length >
-            b[1].filter((value) => _.get(object, value)).length
-            ? {...a, count: a[1].filter((value) => _.get(object, value)).length}
-            : {
-                ...b,
-                count: b[1].filter((value) => _.get(object, value)).length
-              };
-        }
-      ) as unknown as string[] & {count: number};
-      const result = fingerprinted[0];
-      if (fingerprinted.count !== 0) {
-        return result;
-      }
-    } catch {
-      // If we don't have valid json, look for known strings inside the file text
-      if (guessOptions.filename.toLowerCase().endsWith('.nessus')) {
-        return 'nessus';
-      } else if (
-        guessOptions.data.match(/xmlns.*http.*\/xccdf/) || // Keys matching (hopefully) all xccdf formats
-        guessOptions.filename.toLowerCase().indexOf('xccdf') !== -1
-      ) {
-        return 'xccdf';
-      } else if (guessOptions.data.match(/<netsparker-.*generated.*>/)) {
-        return 'netsparker';
-      } else if (
-        guessOptions.data.indexOf('"AwsAccountId"') !== -1 &&
-        guessOptions.data.indexOf('"SchemaVersion"') !== -1
-      ) {
-        return 'asff';
-      } else if (guessOptions.data.indexOf('issues burpVersion') !== -1) {
-        return 'burp';
-      } else if (guessOptions.data.indexOf('scoutsuite_results') !== -1) {
-        return 'scoutsuite';
-      } else if (
-        guessOptions.data.indexOf('Policy') !== -1 &&
-        guessOptions.data.indexOf('Job Name') !== -1 &&
-        guessOptions.data.indexOf('Check ID') !== -1 &&
-        guessOptions.data.indexOf('Result Status')
-      ) {
-        return 'dbProtect';
-      }
-    }
-    return '';
   }
 
   @Action

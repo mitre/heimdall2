@@ -31,8 +31,7 @@
                     "impact": 0.3,
                     "tags": {
                         "nist": [
-                            "SC-8",
-                            "Rev_4"
+                            "SC-8"
                         ],
                         "cweid": "200",
                         "wascid": "45",
@@ -391,8 +390,7 @@
                     "impact": 0.3,
                     "tags": {
                         "nist": [
-                            "SC-8",
-                            "Rev_4"
+                            "SC-8"
                         ],
                         "cweid": "200",
                         "wascid": "45",
@@ -535,8 +533,7 @@
                     "impact": 0.3,
                     "tags": {
                         "nist": [
-                            "SC-8",
-                            "Rev_4"
+                            "SC-8"
                         ],
                         "cweid": "200",
                         "wascid": "45",
@@ -679,8 +676,7 @@
                     "impact": 0.5,
                     "tags": {
                         "nist": [
-                            "SC-8",
-                            "Rev_4"
+                            "SC-8"
                         ],
                         "cweid": "200",
                         "wascid": "45",
@@ -823,8 +819,7 @@
                     "impact": 0.3,
                     "tags": {
                         "nist": [
-                            "AC-3",
-                            "Rev_4"
+                            "AC-3"
                         ],
                         "cweid": "352",
                         "wascid": "9",
@@ -967,8 +962,7 @@
                     "impact": 0.3,
                     "tags": {
                         "nist": [
-                            "SC-8",
-                            "Rev_4"
+                            "SC-8"
                         ],
                         "cweid": "200",
                         "wascid": "13",
@@ -1111,8 +1105,7 @@
                     "impact": 0.3,
                     "tags": {
                         "nist": [
-                            "SC-8",
-                            "Rev_4"
+                            "SC-8"
                         ],
                         "cweid": "200",
                         "wascid": "45",
@@ -1255,8 +1248,7 @@
                     "impact": 0.3,
                     "tags": {
                         "nist": [
-                            "SC-8",
-                            "Rev_4"
+                            "SC-8"
                         ],
                         "cweid": "200",
                         "wascid": "45",
@@ -1399,8 +1391,7 @@
                     "impact": 0.3,
                     "tags": {
                         "nist": [
-                            "SC-8",
-                            "Rev_4"
+                            "SC-8"
                         ],
                         "cweid": "200",
                         "wascid": "13",
@@ -1459,8 +1450,7 @@
                     "impact": 0.3,
                     "tags": {
                         "nist": [
-                            "SC-8",
-                            "Rev_4"
+                            "SC-8"
                         ],
                         "cweid": "200",
                         "wascid": "13",
@@ -1519,8 +1509,7 @@
                     "impact": 0.3,
                     "tags": {
                         "nist": [
-                            "SC-8",
-                            "Rev_4"
+                            "SC-8"
                         ],
                         "cweid": "200",
                         "wascid": "13",
@@ -1579,8 +1568,7 @@
                     "impact": 0.5,
                     "tags": {
                         "nist": [
-                            "SC-8",
-                            "Rev_4"
+                            "SC-8"
                         ],
                         "cweid": "200",
                         "wascid": "45",
@@ -1723,8 +1711,7 @@
                     "impact": 0.3,
                     "tags": {
                         "nist": [
-                            "SC-8",
-                            "Rev_4"
+                            "SC-8"
                         ],
                         "cweid": "200",
                         "wascid": "45",
@@ -1867,8 +1854,7 @@
                     "impact": 0.3,
                     "tags": {
                         "nist": [
-                            "SC-8",
-                            "Rev_4"
+                            "SC-8"
                         ],
                         "cweid": "200",
                         "wascid": "13",
@@ -1921,8 +1907,7 @@
                     "impact": 0.3,
                     "tags": {
                         "nist": [
-                            "SC-8",
-                            "Rev_4"
+                            "SC-8"
                         ],
                         "cweid": "200",
                         "wascid": "45",
@@ -2065,8 +2050,7 @@
                     "impact": 0.5,
                     "tags": {
                         "nist": [
-                            "SC-8",
-                            "Rev_4"
+                            "SC-8"
                         ],
                         "cweid": "200",
                         "wascid": "13",
@@ -2197,8 +2181,7 @@
                     "impact": 0.7,
                     "tags": {
                         "nist": [
-                            "AC-3",
-                            "Rev_4"
+                            "AC-3"
                         ],
                         "cweid": "352",
                         "wascid": "9",
@@ -2323,8 +2306,7 @@
                     "impact": 0.5,
                     "tags": {
                         "nist": [
-                            "SI-10",
-                            "Rev_4"
+                            "SI-10"
                         ],
                         "cweid": "20",
                         "wascid": "20",
@@ -2359,8 +2341,7 @@
                     "impact": 0.7,
                     "tags": {
                         "nist": [
-                            "SI-10",
-                            "Rev_4"
+                            "SI-10"
                         ],
                         "cweid": "89",
                         "wascid": "19",
@@ -2419,8 +2400,7 @@
                     "impact": 0.3,
                     "tags": {
                         "nist": [
-                            "SC-8",
-                            "Rev_4"
+                            "SC-8"
                         ],
                         "cweid": "200",
                         "wascid": "13",

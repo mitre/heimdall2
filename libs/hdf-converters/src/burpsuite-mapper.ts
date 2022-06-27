@@ -10,6 +10,7 @@ import {
   parseXml
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
 
 // Constant
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -20,7 +21,6 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 const NAME = 'BurpSuite Pro Scan';
 const CWE_NIST_MAPPING = new CweNistMapping();
-const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
 // Transformation Functions
 function formatCodeDesc(issue: unknown): string {
@@ -61,7 +61,10 @@ function nistTag(input: string): string[] {
   let cwe = formatCweId(input).split('CWE-');
   cwe.shift();
   cwe = cwe.map((x) => x.split(':')[0]);
-  return CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG).concat(['Rev_4']);
+  return CWE_NIST_MAPPING.nistFilter(
+    cwe,
+    DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
+  );
 }
 
 export class BurpSuiteMapper extends BaseConverter {
@@ -141,10 +144,5 @@ export class BurpSuiteMapper extends BaseConverter {
   };
   constructor(burpsXml: string) {
     super(parseXml(burpsXml));
-  }
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
   }
 }

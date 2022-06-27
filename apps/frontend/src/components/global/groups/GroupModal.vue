@@ -127,6 +127,7 @@ export default class GroupModal extends Vue {
   changePassword = false;
 
   groupInfo: IGroup = _.cloneDeep(this.group);
+
   currentPassword = '';
   newPassword = '';
   passwordConfirmation = '';

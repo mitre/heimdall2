@@ -8,9 +8,9 @@ import {
   parseHtml
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
-const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
 function filterSite<T>(input: Array<T>, name?: string) {
   // Choose the site passed if provided
@@ -41,12 +41,10 @@ function impactMapping(input: unknown): number {
   }
 }
 function nistTag(cweid: string): string[] {
-  const result = CWE_NIST_MAPPING.nistFilter([cweid], DEFAULT_NIST_TAG);
-  if (result === DEFAULT_NIST_TAG) {
-    return result;
-  } else {
-    return result.concat('Rev_4');
-  }
+  return CWE_NIST_MAPPING.nistFilter(
+    [cweid],
+    DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
+  );
 }
 function checkText(input: Record<string, unknown>): string {
   const text = [];
@@ -171,11 +169,7 @@ export class ZapMapper extends BaseConverter {
       false
     );
   }
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
-  }
+
   toHdf(): ExecJSON.Execution {
     const original = super.toHdf();
     _.get(original, 'profiles').forEach((profile) => {

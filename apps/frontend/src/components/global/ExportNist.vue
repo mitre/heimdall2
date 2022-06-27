@@ -141,12 +141,13 @@ export default class ExportNIST extends Vue {
     // Push all sheets
     sheets.forEach((sheet) => {
       // Avoid name duplication
-      const i = 2;
+      let i = 2;
       let newName = sheet.name;
       while (wb.SheetNames.includes(newName)) {
         const appendage = ` (${i})`;
         newName = sheet.name.slice(0, MAX_SHEET_NAME_SIZE - appendage.length);
         newName += appendage;
+        i++;
       }
       wb.SheetNames.push(newName);
 

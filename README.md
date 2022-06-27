@@ -2,7 +2,7 @@
 
 ![Run E2E Backend + Frontend Tests](https://github.com/mitre/heimdall2/workflows/Run%20E2E%20Backend%20+%20Frontend%20Tests/badge.svg) ![Run Frontend Tests](https://github.com/mitre/heimdall2/workflows/Run%20Frontend%20Tests/badge.svg) ![Run Backend Tests](https://github.com/mitre/heimdall2/workflows/Run%20Backend%20Tests/badge.svg)
 
-This repository contains the source code for the Heimdall's [Backend](https://github.com/mitre/heimdall2/tree/mentionInSpecJSandHDFConverters/apps/backend), [Frontend (AKA Heimdall Lite)](https://github.com/mitre/heimdall2/tree/mentionInSpecJSandHDFConverters/apps/frontend), [HDF Converters](https://github.com/mitre/heimdall2/tree/master/libs/hdf-converters), and [InSpec JS](https://github.com/mitre/heimdall2/tree/master/libs/inspecjs).
+This repository contains the source code for the Heimdall's [Backend](https://github.com/mitre/heimdall2/tree/mentionInSpecJSandHDFConverters/apps/backend), [Frontend (AKA Heimdall Lite)](https://github.com/mitre/heimdall2/tree/mentionInSpecJSandHDFConverters/apps/frontend), [HDF Converters](https://github.com/mitre/heimdall2/tree/master/libs/hdf-converters), and [InSpecJS](https://github.com/mitre/heimdall2/tree/master/libs/inspecjs).
 
 ## Demos
 
@@ -220,8 +220,11 @@ API usage only works when using Heimdall Enterprise Server (AKA "Server Mode").
 Proper API documentation does not exist yet. In the meantime here are quick instructions for uploading evaluations to Heimdall Server.
 
 ```sh
-# Create an API key using the Heimdall frontend and upload an evaluation with the following command
+# To use API Keys, ensure you have set the API_KEY_SECRET environment variable. To create a secret run: openssl rand -hex 33
+# Create an API key using the Heimdall frontend (within the edit user profile modal) and upload an evaluation with the following command
 curl -F "data=@<Path to Evaluation File>" -F "filename=<Filename To Show in Heimdall>" -F "public=true/false" -H "Authorization: Api-Key apikeygoeshere" "http://localhost:3000/evaluations"
+# You can upload multiple files at once (up to 100)
+curl -F "data=@<Path to first evaluation File>" -F "data=@<Path to second evaluation File>" ... -F "public=true/false" -H "Authorization: Api-Key apikeygoeshere" "http://localhost:3000/evaluations"
 ```
 
 ## For Developers

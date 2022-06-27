@@ -2,7 +2,7 @@ import splunkjs, {Job} from '@mitre/splunk-sdk-no-env';
 import ProxyHTTP from '@mitre/splunk-sdk-no-env/lib/platform/client/jquery_http';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
-import winston from 'winston';
+import {Logger} from 'winston';
 import {SplunkConfig} from './converters-from-hdf/splunk/reverse-splunk-mapper';
 import {createWinstonLogger} from './utils/global';
 
@@ -27,7 +27,7 @@ export type FileMetaData = {
 
 const MAPPER_NAME = 'Splunk2HDF';
 
-let logger: winston.Logger = winston.createLogger();
+let logger = createWinstonLogger('Splunk2HDF');
 
 // Groups items by using the provided key function
 export function group_by<T>(
@@ -199,21 +199,23 @@ function unixTimeToDate(unixTime: string): Date {
 export class SplunkMapper {
   config: SplunkConfig;
   service: splunkjs.Service;
+  webCompatibility: boolean;
 
   constructor(
     config: SplunkConfig,
     webCompatibility = false,
-    logService?: winston.Logger,
+    logService?: Logger,
     loggingLevel?: string
   ) {
     this.config = config;
+    this.webCompatibility = webCompatibility;
     if (logService) {
       logger = logService;
     } else {
       logger = createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
     }
     logger.debug(`Initializing Splunk Client`);
-    if (webCompatibility) {
+    if (this.webCompatibility) {
       this.service = new splunkjs.Service(new ProxyHTTP.JQueryHttp(''), config);
     } else {
       this.service = new splunkjs.Service(config);
@@ -278,7 +280,7 @@ export class SplunkMapper {
         object = JSON.parse(value[rawDataIndex]);
       } catch {
         throw new Error(
-          'Unable to parse file. Have you configured EVENT_BREAKER?'
+          'Unable to parse file. Have you configured EVENT_BREAKER? See https://github.com/mitre/saf/wiki/Splunk-Configuration'
         );
       }
 
@@ -327,14 +329,14 @@ export class SplunkMapper {
 
   async toHdf(guid: string): Promise<ExecJSON.Execution> {
     logger.info(`Starting conversion of guid ${guid}`);
-    return checkSplunkCredentials(this.config, true)
+    return checkSplunkCredentials(this.config, this.webCompatibility)
       .then(async () => {
         logger.info(`Credentials valid, querying data for ${guid}`);
         const executionData = await this.queryData(
           `search index="*" meta.guid="${guid}"`
         );
         logger.info(
-          `Data recieved, consolidating payloads for ${executionData.length} items`
+          `Data received, consolidating payloads for ${executionData.length} items`
         );
         return consolidate_payloads(executionData)[0];
       })

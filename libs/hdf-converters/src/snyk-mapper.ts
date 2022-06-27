@@ -1,4 +1,5 @@
 import {ExecJSON} from 'inspecjs';
+import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
@@ -7,6 +8,7 @@ import {
   MappedTransform
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['high', 0.7],
@@ -14,7 +16,6 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['low', 0.3]
 ]);
 const CWE_NIST_MAPPING = new CweNistMapping();
-const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
 function parseIdentifier(identifiers: unknown[] | unknown): string[] {
   const output: string[] = [];
@@ -32,7 +33,7 @@ function parseIdentifier(identifiers: unknown[] | unknown): string[] {
 function nistTag(identifiers: unknown[]): string[] {
   return CWE_NIST_MAPPING.nistFilter(
     parseIdentifier(identifiers),
-    DEFAULT_NIST_TAG
+    DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
   );
 }
 
@@ -62,15 +63,13 @@ export class SnykResults {
       return result.toHdf();
     }
   }
-  setMappings(
-    customMapping: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    this.customMapping = customMapping;
-  }
 }
 
 export class SnykMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -82,27 +81,19 @@ export class SnykMapper extends BaseConverter {
     },
     profiles: [
       {
-        name: {path: 'policy'},
-        version: {
-          path: 'policy',
-          transformer: (policy: unknown): string => {
-            if (typeof policy === 'string') {
-              return policy.split('version: ')[1].split('\n')[0];
-            } else {
-              return '';
-            }
-          }
-        },
+        name: 'Snyk Scan',
         title: {
-          path: 'projectName',
-          transformer: (projectName: unknown): string => {
-            return `Snyk Project: ${projectName}`;
+          transformer: (data: Record<string, unknown>): string => {
+            const projectName = _.has(data, 'projectName')
+              ? `Snyk Project: ${_.get(data, 'projectName')} `
+              : '';
+            return `${projectName}Snyk Path: ${_.get(data, 'path')}`;
           }
         },
         maintainer: null,
         summary: {
           path: 'summary',
-          transformer: (summary: unknown): string => {
+          transformer: (summary: string): string => {
             return `Snyk Summary: ${summary}`;
           }
         },
@@ -134,7 +125,11 @@ export class SnykMapper extends BaseConverter {
               path: 'severity',
               transformer: impactMapping(IMPACT_MAPPING)
             },
-            code: '',
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string => {
+                return JSON.stringify(vulnerability, null, 2);
+              }
+            },
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
@@ -156,14 +151,18 @@ export class SnykMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ]
+    ],
+    passthrough: {
+      snyk_metadata: {
+        transformer: (
+          data: Record<string, unknown>
+        ): Record<string, unknown> => {
+          return _.omit(data, ['vulnerabilities']);
+        }
+      }
+    }
   };
   constructor(snykJson: Record<string, unknown>) {
     super(snykJson);
-  }
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
   }
 }

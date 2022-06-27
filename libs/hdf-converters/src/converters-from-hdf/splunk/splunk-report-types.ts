@@ -3,7 +3,8 @@ import {ExecJSON} from 'inspecjs';
 export type SplunkReport = {
   meta: Meta;
   statistics?: ExecJSON.Statistics;
-  profiles: any[];
+  passthrough: any;
+  profiles: unknown[];
   platform: Platform;
   version: string;
 };
