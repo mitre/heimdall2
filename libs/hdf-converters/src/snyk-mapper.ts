@@ -102,7 +102,13 @@ export class SnykResults {
       'Authorization'
     ] = `token ${apiToken}`;
     ret.apiClient.defaults.baseURL = `https://snyk.io/api/v${apiVersion}/`;
-    axiosRetry(ret.apiClient, {retryDelay: axiosRetry.exponentialDelay});
+    axiosRetry(ret.apiClient, {
+      retryDelay: axiosRetry.exponentialDelay,
+      retryCondition: (error) =>
+        axiosRetry.isNetworkOrIdempotentRequestError(error) ||
+        (_.has(error, 'response.status') &&
+          _.get(error, 'response.status') === 429)
+    });
 
     return ret;
   }
@@ -255,7 +261,8 @@ export class SnykResults {
                     )
                   )
                   .flat();
-                console.log( // TODO: logger
+                console.log(
+                  // TODO: logger
                   'pushed',
                   'input',
                   i,
