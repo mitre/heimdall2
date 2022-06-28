@@ -44,7 +44,7 @@ function nistTag(text: string): string[] {
 }
 
 export class SarifMapper extends BaseConverter {
-  passRaw: boolean;
+  withRaw: boolean;
 
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
@@ -143,10 +143,11 @@ export class SarifMapper extends BaseConverter {
       meta_data: {
         transformer: (data: Record<string, any>): Record<string, unknown> => {
           data = _.omit(data, ['version']);
-          const keys = Object.keys(data['runs']);
-          keys.forEach((key) => {
+          //const keys = Object.keys(data['runs']);
+          data.runs = data.runs.map((run: any) => _.omit(run, ['results']));
+          /*keys.forEach((key) => {
             data.runs[key] = _.omit(data.runs[key], ['results']);
-          });
+          });*/
           return data;
         }
       },
@@ -154,13 +155,13 @@ export class SarifMapper extends BaseConverter {
         transformer: (
           data: Record<string, unknown>
         ): Record<string, unknown> | string => {
-          return this.passRaw ? data : '';
+          return this.withRaw ? data : '';
         }
       }
     }
   };
-  constructor(sarifJson: string, passRaw = false) {
+  constructor(sarifJson: string, withRaw = false) {
     super(JSON.parse(sarifJson));
-    this.passRaw = passRaw;
+    this.withRaw = withRaw;
   }
 }
