@@ -1,6 +1,6 @@
 {
   "name": "inspecjs",
-  "version": "2.6.24",
+  "version": "2.6.26",
   "description": "© 2018 The MITRE Corporation.",
   "files": [
     "lib"
@@ -30,7 +30,7 @@
     "docs": "typedoc --out docs ./src",
     "gen-types": "bash scripts/update_schema.sh",
     "validate-types": "git diff --quiet HEAD -- schemas/ src/generated_parsers/",
-    "lint": "eslint --fix",
+    "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
     "test": "jest --silent"
   },

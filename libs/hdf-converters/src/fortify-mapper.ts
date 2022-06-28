@@ -185,9 +185,4 @@ export class FortifyMapper extends BaseConverter {
       'FVDL.CreatedTS.date'
     )} ${_.get(this.unconvertedData, 'FVDL.CreatedTS.time')}`;
   }
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
-  }
 }
