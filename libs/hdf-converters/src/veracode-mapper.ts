@@ -55,7 +55,6 @@ function formatDesc(input: Record<string, unknown>): string {
     if (_.has(input, 'desc.para.text')) {
       text.push(`${_.get(input, 'desc.para.text')}`);
     } else {
-      const len = Number(`${_.get(input, 'desc.para.length')}`);
       text.push(...(_.get(input, `desc.para`) as Record<string, unknown>[]).map((value) => _.get(value, 'text')))
     }
   }
@@ -75,7 +74,7 @@ function formatCweData(input: Record<string, unknown>): string {
     'owaspmobile'
   ];
   if (_.has(input, 'cwe')) {
-    if (Array.isArray(_.get(input, 'cwe'))){ 
+    if (Array.isArray(_.get(input, 'cwe'))){
       const len = Number(`${_.get(input, CWE_LENGTH)}`);
       for (let index = 0; index < len; index++) {
         let cwe = `CWE-${_.get(input, `cwe[${index}].cweid`)}: `;
@@ -119,7 +118,7 @@ function formatCweDesc(input: Record<string, unknown>): string {
       )));
     }
     else{
-      text.push(...([(_.get(input, 'cwe') as Record<string,unknown>)].map((value: Record<string,unknown>) =>  
+      text.push(...([(_.get(input, 'cwe') as Record<string,unknown>)].map((value: Record<string,unknown>) =>
       `CWE-${_.get(value, 'cweid')}: ${_.get(value, 'cwename')} Description: ${_.get(value, 'description.text.text')}; `
       )));
     }
@@ -130,7 +129,7 @@ function formatCweDesc(input: Record<string, unknown>): string {
 function getFlaws(input: unknown): string[] {
   const flawArr: string[] = [];
   if (Array.isArray(input)) {
-    for(let value of input){
+    for(const value of input){
       if (!Array.isArray(_.get(value, 'staticflaws.flaw'))) {
         flawArr.push(_.get(value, 'staticflaws.flaw') as string);
       } 
@@ -210,7 +209,7 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
 function formatSourceLocation(input: Record<string,unknown>[]): string {
   const flawArr: string[] = [];
   if (Array.isArray(input)) {
-    for(let value of input) {
+    for(const value of input) {
         if (!Array.isArray(_.get(value, 'staticflaws.flaw'))) {
           flawArr.push(_.get(value, 'staticflaws.flaw') as string);
         } 
@@ -231,9 +230,9 @@ function formatSourceLocation(input: Record<string,unknown>[]): string {
 
 function onetoone(input: any){
   const mapping: Record<string,unknown>[] = [];
-  for(let component of _.get(input, 'vulnerable_components') as Record<string, unknown>[]){
-    if(_.get(component, 'vulnerabilities') != ''){
-      for(let vuln of _.get(component, 'vulnerabilites.vulnerability') as Record<string, unknown>[]){
+  for(const component of _.get(input, 'vulnerable_components') as Record<string, unknown>[]){
+    if(_.get(component, 'vulnerabilities') !== ''){
+      for(const vuln of _.get(component, 'vulnerabilites.vulnerability') as Record<string, unknown>[]){
         _.set(vuln, 'component', _.omit(component, 'vulnerabilities'))
         mapping.push(vuln)
       }
@@ -244,7 +243,7 @@ function onetoone(input: any){
 
 function componenttransform(input: any) {
   const componentlist = [];
-  for (let value of _.get(input, `component`)) {
+  for (const value of _.get(input, `component`)) {
     if (_.get(value,`vulnerabilities`) !== '') {
       componentlist.push(value);
     }
@@ -252,8 +251,7 @@ function componenttransform(input: any) {
 
 
   const vulnarr = [];
-  for ( let component of componentlist) {
-    const cves = [];
+  for ( const component of componentlist) {
     if (Array.isArray(_.get(component, `vulnerabilities.vulnerability`))){
       for ( let vuln of  _.get(component, `vulnerabilities.vulnerability`)) {
         vulnarr.push(vuln);
@@ -264,7 +262,7 @@ function componenttransform(input: any) {
     }
   }
 
-  for (let vuln of vulnarr) {
+  for (const vuln of vulnarr) {
     const components = [];
     let location = '';
     const currcve = _.get(vuln, `cve_id`);
@@ -277,7 +275,7 @@ function componenttransform(input: any) {
     for ( let component of componentlist) {
       let hascve = false;
       if(Array.isArray(_.get(component, `vulnerabilities.vulnerability`))){
-        for (let compcve of _.get(component, `vulnerabilities.vulnerability`)) {
+        for (const compcve of _.get(component, `vulnerabilities.vulnerability`)) {
           if (_.get(compcve, 'cve_id') === currcve) {
             hascve = true;
             location +=` ${_.get(component,`file_paths.file_path.value`)}`;
