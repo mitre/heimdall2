@@ -18,6 +18,8 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 
 export class TwistlockMapper extends BaseConverter {
+  withRaw: boolean;
+
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
     ILookupPath
@@ -118,16 +120,23 @@ export class TwistlockMapper extends BaseConverter {
       }
     ],
     passthrough: {
+      other_source_tool_data: {
+        transformer: (data: Record<string, any>): Record<string, unknown> => {
+          data.results[0] = _.omit(data.results[0], ['name', 'collections', 'complianceDistribution', 'vulnerabilities', 'vulnerabilityDistribution']);
+          return data;
+        }
+      },
       raw: {
         transformer: (
           data: Record<string, unknown>
-        ): Record<string, unknown> => {
-          return data;
+        ): Record<string, unknown> | string => {
+          return this.withRaw ? data : '';
         }
       }
     }
   };
-  constructor(twistlockJson: string) {
+  constructor(twistlockJson: string, withRaw = false) {
     super(JSON.parse(twistlockJson), true);
+    this.withRaw = withRaw;
   }
 }
