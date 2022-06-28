@@ -165,7 +165,7 @@ export class JfrogXrayMapper extends BaseConverter {
     passthrough: {
       other_source_tool_data: {
         transformer: (data: Record<string, any>): Record<string, unknown> => {
-          return _.omit(data, ['data']);
+          return _.pick(data, ['total_count']);
         }
       },
       raw: {
