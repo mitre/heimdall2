@@ -171,7 +171,7 @@ export class JfrogXrayMapper extends BaseConverter {
       raw: {
         transformer: (
           data: Record<string, unknown>
-        ): Record<string, unknown> | string=> {
+        ): Record<string, unknown> | string => {
           return this.withRaw ? data : '';
         }
       }
