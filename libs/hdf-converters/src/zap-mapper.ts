@@ -88,6 +88,8 @@ function deduplicateId(input: unknown[]): ExecJSON.Control[] {
 }
 
 export class ZapMapper extends BaseConverter {
+  withRaw: boolean;
+
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
     ILookupPath
@@ -156,16 +158,23 @@ export class ZapMapper extends BaseConverter {
       }
     ],
     passthrough: {
+      other_source_tool_data: {
+        transformer: (data: Record<string, any>): Record<string, unknown> => {
+          data = _.omit(data, ['@generated', '@version']);
+          data.site = data.site.map((run: any) => _.omit(run, ['@host', 'alerts']));
+          return data;
+        }
+      },
       raw: {
         transformer: (
           data: Record<string, unknown>
-        ): Record<string, unknown> => {
-          return data;
+        ): Record<string, unknown> | string => {
+          return this.withRaw ? data : '';
         }
       }
     }
   };
-  constructor(zapJson: string, name?: string) {
+  constructor(zapJson: string, name?: string, withRaw = false) {
     super(
       _.set(
         JSON.parse(zapJson),
@@ -174,6 +183,7 @@ export class ZapMapper extends BaseConverter {
       ),
       false
     );
+    this.withRaw = withRaw;
   }
 
   toHdf(): ExecJSON.Execution {
