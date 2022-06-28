@@ -67,6 +67,7 @@ export class TwistlockMapper extends BaseConverter {
             key: 'id',
             tags: {
               nist: ['SI-2', 'RA-5'],
+              cci: ['CCI-002605', 'CCI-001643'],
               cveid: {path: 'id'}
             },
             refs: [],
