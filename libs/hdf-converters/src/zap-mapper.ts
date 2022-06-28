@@ -161,9 +161,6 @@ export class ZapMapper extends BaseConverter {
       other_source_tool_data: {
         transformer: (data: Record<string, any>): Record<string, unknown> => {
           data = _.omit(data, ['@generated', '@version']);
-          /*data.site = data.site.map((run: any) =>
-            _.omit(run, ['@host', 'alerts'])
-          );*/
           return data;
         }
       },
