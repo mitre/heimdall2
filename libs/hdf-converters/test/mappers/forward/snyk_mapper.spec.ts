@@ -12,6 +12,14 @@ describe('snyk_mapper', () => {
       )
     );
 
+    /*
+    fs.writeFileSync(
+      'sample_jsons/snyk_mapper/nodejs-goof-local-hdf.json',
+      JSON.stringify(await mapper.toHdf(), null, 2),
+      {encoding: 'utf-8'}
+    );
+    */
+
     expect(omitVersions((await mapper.toHdf()) as ExecJSON.Execution)).toEqual(
       omitVersions(
         JSON.parse(
@@ -32,6 +40,14 @@ describe('snyk_mapper', () => {
         {encoding: 'utf-8'}
       )
     );
+
+    /*
+    fs.writeFileSync(
+      'sample_jsons/snyk_mapper/nodejs-goof-remote-hdf.json',
+      JSON.stringify(await mapper.toHdf(), null, 2),
+      {encoding: 'utf-8'}
+    );
+    */
 
     expect(omitVersions((await mapper.toHdf()) as ExecJSON.Execution)).toEqual(
       omitVersions(

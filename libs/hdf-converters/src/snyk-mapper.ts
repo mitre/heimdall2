@@ -1,4 +1,5 @@
 import axios, {AxiosInstance} from 'axios';
+import axiosRetry from 'axios-retry';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
@@ -48,13 +49,14 @@ type SnykDatum = SnykUserInputDatum & {
   organizationData: Record<string, unknown>;
   project: string;
   projectData: Record<string, unknown>;
-  issues: Record<string, unknown>;
+  issues: Record<string, unknown>[];
   dependencyGraph: Record<string, unknown>;
   dependencyChains: Record<string, string[][]>;
 };
 
 export class SnykResults {
   data?: Record<string, unknown>[] | SnykDatum[];
+  withRaw: boolean;
 
   apiInput?: SnykUserInputDatum[];
   usingApi = false;
@@ -62,13 +64,14 @@ export class SnykResults {
   apiVersion?: 1; // can be 1 or (to be implemented) 3
   apiClient?: AxiosInstance;
 
-  constructor(snykJson?: string) {
+  constructor(snykJson?: string, withRaw?: boolean) {
     if (snykJson !== undefined) {
       this.data = JSON.parse(snykJson);
     }
     if (this.data !== undefined && !Array.isArray(this.data)) {
       this.data = [this.data];
     }
+    this.withRaw = withRaw === true ? true : false; // this.withRaw can't be boolean | udefined
   }
 
   // api constructor
@@ -92,7 +95,6 @@ export class SnykResults {
       return {organization: id};
     });
 
-    // TODO: gotta come up with some way to handle ratelimiting properly.  currently it's 2k/min which is a hell of a lot so I'm not too worried for this one, but we should probably try to find/write something to handle this generally for all of our api stuff.  probably gonna make this an issue and not part of this pr.
     ret.apiClient = axios.create();
     ret.apiClient.defaults.headers.common['Content-Type'] =
       'application/json; charset=utf-8';
@@ -100,6 +102,7 @@ export class SnykResults {
       'Authorization'
     ] = `token ${apiToken}`;
     ret.apiClient.defaults.baseURL = `https://snyk.io/api/v${apiVersion}/`;
+    axiosRetry(ret.apiClient, {retryDelay: axiosRetry.exponentialDelay});
 
     return ret;
   }
@@ -173,9 +176,10 @@ export class SnykResults {
       throw new Error("Can't use the Snyk API without an API token.");
     }
 
-    let organizations: Record<string, unknown>[] = await this.apiClient!.get(
-      'orgs'
-    ).then(({data: {orgs}}) => orgs);
+    let organizations: Record<string, unknown>[] = [];
+    organizations = await this.apiClient!.get('orgs').then(
+      ({data: {orgs}}) => orgs
+    );
 
     if (this.apiInput === undefined) {
       this.apiInput = organizations.map(({id}) => ({
@@ -214,42 +218,64 @@ export class SnykResults {
                 organization: Record<string, unknown>,
                 project: Record<string, unknown>
               ) => {
-                console.log('input', i);
-                const issues = _.get(
+                const issues = _(
                   await this.apiClient!.post(
                     `org/${i.organization}/project/${i.project}/aggregated-issues`,
                     {
                       includeDescription: true,
                       includeIntroducedThrough: true,
-                      filters: {types: ['vuln']}
+                      filters: {types: ['vuln']} // nominally this should filter out anything but 'vuln' type issues, but we're still getting 'configuration' type issues so need to do a manual filter
                     }
-                  ),
-                  'data'
-                ) as Record<string, unknown>;
+                  ).catch((error: Record<string, unknown>) => {
+                    // on occasion, strange things happen (ex. 403) so just print it out and move on
+                    console.log(
+                      `Error occured with message "${_.get(
+                        error,
+                        'message'
+                      )}".  Full call data: ${error}`
+                    );
+                    return {data: {issues: []}};
+                  })
+                )
+                  .get('data.issues')
+                  .filter(
+                    ({issueType}: Record<string, unknown>) =>
+                      issueType === 'vuln'
+                  ) as Record<string, unknown>[];
                 const dependencyGraph = _.get(
                   await this.apiClient!.get(
                     `org/${i.organization}/project/${i.project}/dep-graph`
                   ),
                   'data'
                 ) as Record<string, unknown>;
-                const packages = (
-                  _.get(issues, 'issues') as Record<string, unknown>[]
-                )
+                const packages = issues
                   .map(({pkgName, pkgVersions}: Record<string, unknown>) =>
                     (pkgVersions as string[]).map(
-                      version => `${pkgName}@${version}` // TODO: template strings break highlighting for me every now and again, but here if i wrap 'version' in parentheses it causes some wild stuff to happen with the subsequent template string.  gotta file a bug report against the plugin
+                      (version) => `${pkgName}@${version}`
                     )
                   )
                   .flat();
+                console.log( // TODO: logger
+                  'pushed',
+                  'input',
+                  i,
+                  'issues',
+                  issues,
+                  'issue count',
+                  issues.length,
+                  'packages',
+                  packages,
+                  'depgraph',
+                  dependencyGraph
+                );
                 this.data!.push({
                   ...i,
                   organizationData: organization,
                   projectData: project,
-                  issues,
+                  issues: issues,
                   dependencyGraph,
                   dependencyChains:
-                    (_.get(issues, 'issues') as Record<string, unknown>[])
-                      .length === 0
+                    issues.length === 0
                       ? {}
                       : this.getDependencyChains(
                           packages,
@@ -316,12 +342,12 @@ export class SnykResults {
 }
 
 export class SnykMapper extends BaseConverter {
-  defaultMapping(isApi?: {
-    apiVersion: 1;
-  }): MappedTransform<
-    ExecJSON.Execution & {passthrough: unknown},
-    ILookupPath
-  > {
+  defaultMapping(
+    isApi?: {
+      apiVersion: 1;
+    },
+    withRaw?: boolean
+  ): MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> {
     return {
       platform: {
         name: 'Heimdall Tools',
@@ -374,8 +400,7 @@ export class SnykMapper extends BaseConverter {
           status: 'loaded',
           controls: [
             {
-              path:
-                isApi?.apiVersion === 1 ? 'issues.issues' : 'vulnerabilities',
+              path: isApi?.apiVersion === 1 ? 'issues' : 'vulnerabilities',
               key: 'id',
               tags: {
                 nist: {
@@ -427,8 +452,70 @@ export class SnykMapper extends BaseConverter {
               desc: {
                 path: `${
                   isApi?.apiVersion === 1 ? 'issueData.' : ''
-                }description`
+                }description`,
+                transformer: (description: string): string => {
+                  return (
+                    description
+                      .split(/(?:^|\s)## /g)
+                      .find((section) => section.startsWith('Overview'))
+                      ?.substring('Overview'.length)
+                      ?.trim() || description
+                  );
+                }
               },
+              descriptions: [
+                {
+                  label: 'fix',
+                  data: {
+                    path: `${
+                      isApi?.apiVersion === 1 ? 'issueData.' : ''
+                    }description`,
+                    transformer: (description: string): string => {
+                      return (
+                        description
+                          .split(/(?:^|\s)## /g)
+                          .find((section) => section.startsWith('Remediation'))
+                          ?.substring('Remediation'.length)
+                          ?.trim() || ''
+                      );
+                    }
+                  }
+                },
+                {
+                  label: 'check',
+                  data: {
+                    path: `${
+                      isApi?.apiVersion === 1 ? 'issueData.' : ''
+                    }description`,
+                    transformer: (description: string): string => {
+                      return (
+                        description
+                          .split(/(?:^|\s)## /g)
+                          .find((section) => section.startsWith('Details'))
+                          ?.substring('Details'.length)
+                          ?.trim() || ''
+                      );
+                    }
+                  }
+                },
+                {
+                  label: 'refs',
+                  data: {
+                    path: `${
+                      isApi?.apiVersion === 1 ? 'issueData.' : ''
+                    }description`,
+                    transformer: (description: string): string => {
+                      return (
+                        description
+                          .split(/(?:^|\s)## /g)
+                          .find((section) => section.startsWith('References'))
+                          ?.substring('References'.length)
+                          ?.trim() || ''
+                      );
+                    }
+                  }
+                }
+              ],
               impact: {
                 path: `${isApi?.apiVersion === 1 ? 'issueData.' : ''}severity`,
                 transformer: impactMapping(IMPACT_MAPPING)
@@ -486,20 +573,33 @@ export class SnykMapper extends BaseConverter {
         transformer: (data: Record<string, unknown>): Record<string, unknown> =>
           isApi?.apiVersion === 1
             ? {
-                raw: _.omit(data, [
+                snyk_unmapped_data: _.omit(data, [
+                  'issues',
                   'organization',
                   'project',
                   'dependencyChains'
-                ])
+                ]),
+                ...(withRaw && {
+                  raw: _.omit(data, [
+                    'organization',
+                    'project',
+                    'dependencyChains'
+                  ])
+                })
               }
             : {
-                snyk_metadata: _.omit(data, ['vulnerabilities'])
+                snyk_unmapped_data: _.omit(data, ['vulnerabilities']),
+                ...(withRaw && {raw: data})
               }
       }
     };
   }
-  constructor(snykJson: Record<string, unknown>, isApi?: {apiVersion: 1}) {
+  constructor(
+    snykJson: Record<string, unknown>,
+    isApi?: {apiVersion: 1},
+    withRaw?: boolean
+  ) {
     super(snykJson);
-    this.setMappings(this.defaultMapping(isApi));
+    this.setMappings(this.defaultMapping(isApi, withRaw));
   }
 }

@@ -27,6 +27,7 @@
     "@types/xml2js": "^0.4.9",
     "aws-sdk": "^2.1046.0",
     "axios": "^0.27.2",
+    "axios-retry": "^3.2.5",
     "csv2json": "^2.0.2",
     "fast-xml-parser": "^3.21.1",
     "html-entities": "^2.3.2",
