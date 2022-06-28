@@ -140,7 +140,7 @@ export class SarifMapper extends BaseConverter {
       }
     ],
     passthrough: {
-      meta_data: {
+      other_source_tool_data: {
         transformer: (data: Record<string, any>): Record<string, unknown> => {
           data = _.omit(data, ['version']);
           data.runs = data.runs.map((run: any) => _.omit(run, ['results']));
