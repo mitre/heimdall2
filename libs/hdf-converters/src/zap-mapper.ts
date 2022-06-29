@@ -160,9 +160,8 @@ export class ZapMapper extends BaseConverter {
     passthrough: {
       other_source_tool_data: {
         transformer: (data: Record<string, any>): Record<string, unknown> => {
-              data = _.omit(data, ['@generated', '@version']);
-              //Temporary until confirmed that site dropping is intentional
-              data.site = _.omit(data.site, ['@host', '@name', 'alerts']);
+          data = _.omit(data, ['@generated', '@version']);
+          data.site = _.omit(data.site, ['@host', '@name', 'alerts']);
           return data;
         }
       },
