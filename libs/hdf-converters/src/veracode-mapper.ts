@@ -1,6 +1,7 @@
 import parser from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
+import { LineCounter } from 'yaml';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
@@ -85,14 +86,11 @@ function formatCweData(input: Record<string, unknown>): string {
         let cwe = `CWE-${_.get(input, `cwe[${index}].cweid`)}: `;
         const cwename = `cwe[${index}].cwename`;
         cwe += `${_.get(input, cwename)}`;
-        cwe += categories.map((value: string)  => {
+        cwe += _.compact(categories.map((value: string)  => {
           if (_.has(input, `cwe[${index}].${value}`)) {
               return `${value}: ${_.get(input, `cwe[${index}].${value}`)}\n`;
           }
-          else{
-              return ''
-          }
-        }).join('');
+        })).join('');;
         text.push(cwe);
       }
     }
@@ -100,14 +98,11 @@ function formatCweData(input: Record<string, unknown>): string {
       let cwe = `CWE-${_.get(input, `cwe.cweid`)}: `;
         const cwename = `cwe.cwename`;
         cwe += `${_.get(input, cwename)}`;
-        cwe += categories.map((value: string)  => {
+        cwe += _.compact(categories.map((value: string)  => {
           if (_.has(input, `cwe.${value}`)) {
               return `${value}: ${_.get(input, `cwe.${value}`)}\n`;
           }
-          else{
-              return ''
-          }
-        }).join('');
+        })).join('');
         text.push(cwe);
     }
   }
@@ -217,7 +212,7 @@ function formatSourceLocation(input: Record<string,unknown>[]): string {
     for(const value of input) {
         if (!Array.isArray(_.get(value, 'staticflaws.flaw'))) {
           flawArr.push(_.get(value, 'staticflaws.flaw') as string);
-        } 
+        }
         else {
           flawArr.push(..._.get(value, 'staticflaws.flaw') as string[]);
         }
