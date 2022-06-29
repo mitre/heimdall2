@@ -61,17 +61,5 @@ describe('snyk_mapper', () => {
         )
       )
     );
-    expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/snyk_mapper/nodejs-goof-remote-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
-        )
-      )
-    );
   });
 });
