@@ -1,47 +1,134 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.26",
+    "release": "2.6.27",
     "target_id": ""
   },
-  "passthrough": {
-    "xmlns:xsi": "http&#x3a;&#x2f;&#x2f;www.w3.org&#x2f;2001&#x2f;XMLSchema-instance",
-    "xmlns": "https&#x3a;&#x2f;&#x2f;www.veracode.com&#x2f;schema&#x2f;reports&#x2f;export&#x2f;1.0",
-    "xsi:schemaLocation": "https&#x3a;&#x2f;&#x2f;www.veracode.com&#x2f;schema&#x2f;reports&#x2f;export&#x2f;1.0 https&#x3a;&#x2f;&#x2f;analysiscenter.veracode.com&#x2f;resource&#x2f;detailedreport.xsd",
-    "report_format_version": "",
-    "account_id": "17742",
-    "app_name": "jenkinspipe",
-    "analysis_id": "15929175",
-    "static_analysis_unit_id": "15944831",
-    "sandbox_id": "4045062",
-    "version": "verademoscan",
-    "build_id": "15956303",
-    "submitter": "Jordon Burton",
-    "platform": "Not Specified",
-    "assurance_level": "3",
-    "business_criticality": "3",
-    "generation_date": "",
-    "veracode_level": "VL1",
-    "total_flaws": "194",
-    "flaws_not_mitigated": "194",
-    "teams": "SwAP Development",
-    "life_cycle_stage": "Not Specified",
-    "planned_deployment_date": "",
-    "last_update_time": "2021-12-29 22&#x3a;20&#x3a;32 UTC",
-    "is_latest_build": "true",
-    "policy_name": "Veracode Recommended Medium",
-    "policy_version": "1",
-    "policy_compliance_status": "",
-    "policy_rules_status": "",
-    "grace_period_expired": "true",
-    "scan_overdue": "false",
-    "business_owner": "",
-    "business_unit": "Not Specified",
-    "tags": "",
-    "legacy_scan_engine": "",
-    "custom_fields": ""
+  "data_remainder": {
+    "detailedreport": {
+      "xmlns:xsi": "http&#x3a;&#x2f;&#x2f;www.w3.org&#x2f;2001&#x2f;XMLSchema-instance",
+      "xmlns": "https&#x3a;&#x2f;&#x2f;www.veracode.com&#x2f;schema&#x2f;reports&#x2f;export&#x2f;1.0",
+      "xsi:schemaLocation": "https&#x3a;&#x2f;&#x2f;www.veracode.com&#x2f;schema&#x2f;reports&#x2f;export&#x2f;1.0 https&#x3a;&#x2f;&#x2f;analysiscenter.veracode.com&#x2f;resource&#x2f;detailedreport.xsd",
+      "report_format_version": "1.5",
+      "account_id": "17742",
+      "app_name": "jenkinspipe",
+      "app_id": "1283917",
+      "analysis_id": "15929175",
+      "static_analysis_unit_id": "15944831",
+      "sandbox_id": "4045062",
+      "first_build_submitted_date": "2021-12-29 22&#x3a;16&#x3a;36 UTC",
+      "version": "verademoscan",
+      "build_id": "15956303",
+      "submitter": "Jordon Burton",
+      "platform": "Not Specified",
+      "assurance_level": "3",
+      "business_criticality": "3",
+      "generation_date": "2022-01-11 19&#x3a;30&#x3a;26 UTC",
+      "veracode_level": "VL1",
+      "total_flaws": "194",
+      "flaws_not_mitigated": "194",
+      "teams": "SwAP Development",
+      "life_cycle_stage": "Not Specified",
+      "planned_deployment_date": "",
+      "last_update_time": "2021-12-29 22&#x3a;20&#x3a;32 UTC",
+      "is_latest_build": "true",
+      "policy_name": "Veracode Recommended Medium",
+      "policy_version": "1",
+      "policy_compliance_status": "Did Not Pass",
+      "policy_rules_status": "Did Not Pass",
+      "grace_period_expired": "true",
+      "scan_overdue": "false",
+      "business_owner": "",
+      "business_unit": "Not Specified",
+      "tags": "",
+      "legacy_scan_engine": "false",
+      "static-analysis": {
+        "rating": "B",
+        "score": "63",
+        "submitted_date": "2021-12-29 22&#x3a;16&#x3a;26 UTC",
+        "published_date": "2021-12-29 22&#x3a;20&#x3a;22 UTC",
+        "version": "verademoscan",
+        "next_scan_due": "2022-03-29 21&#x3a;20&#x3a;22 UTC",
+        "analysis_size_bytes": "83996",
+        "engine_version": "20211221160743",
+        "modules": {
+          "module": {
+            "name": "verademo.war",
+            "compiler": "JAVAC_8",
+            "os": "Java J2SE 8",
+            "architecture": "JVM",
+            "loc": "4068",
+            "score": "63",
+            "numflawssev0": "20",
+            "numflawssev1": "0",
+            "numflawssev2": "62",
+            "numflawssev3": "96",
+            "numflawssev4": "14",
+            "numflawssev5": "2"
+          }
+        }
+      },
+      "flaw-status": {
+        "new": "194",
+        "reopen": "0",
+        "open": "0",
+        "cannot-reproduce": "0",
+        "fixed": "0",
+        "total": "194",
+        "not_mitigated": "194",
+        "sev-1-change": "0",
+        "sev-2-change": "62",
+        "sev-3-change": "96",
+        "sev-4-change": "14",
+        "sev-5-change": "2"
+      },
+      "customfields": {
+        "customfield": [
+          {
+            "name": "Custom 1",
+            "value": ""
+          },
+          {
+            "name": "Custom 2",
+            "value": ""
+          },
+          {
+            "name": "Custom 3",
+            "value": ""
+          },
+          {
+            "name": "Custom 4",
+            "value": ""
+          },
+          {
+            "name": "Custom 5",
+            "value": ""
+          },
+          {
+            "name": "Custom 6",
+            "value": ""
+          },
+          {
+            "name": "Custom 7",
+            "value": ""
+          },
+          {
+            "name": "Custom 8",
+            "value": ""
+          },
+          {
+            "name": "Custom 9",
+            "value": ""
+          },
+          {
+            "name": "Custom 10",
+            "value": ""
+          }
+        ]
+      }
+    }
   },
-  "version": "2.6.26",
+  "version": "2.6.27",
   "statistics": {},
   "profiles": [
     {

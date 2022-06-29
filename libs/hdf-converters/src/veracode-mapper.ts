@@ -31,6 +31,11 @@ function nistTag(input: Record<string, unknown>): string[] {
   return CWE_NIST_MAPPING.nistFilter(cwes as string[], DEFAULT_NIST_TAG);
 }
 
+function formatPassthroughData(input: Record<string, unknown>): Record<string,unknown>{
+  let omitted =_.omit(input,'detailedreport.severity')
+  omitted = _.omit(omitted, 'detailedreport.software_composition_analysis')
+  return omitted
+}
 function formatRecommendations(input: Record<string, unknown>): string {
   const text: string[] = [];
   if (_.has(input, 'recommendations.para')) {
@@ -316,6 +321,31 @@ function parseXml(xml: string) {
   return parsedXML;
 }
 
+function controlMappingCve():MappedTransform<ExecJSON.Control & ILookupPath, ILookupPath> {
+  return {
+    id: {path: "cve_id"},
+    title: {path: 'cve_id'},
+    desc: {path: 'cve_summary'},
+    impact: {path: 'impact'},
+    refs: [],
+    tags: {
+      cwe: {path: 'cwe_id'},
+      nist: {path: 'nist'}
+    },
+    source_location: {
+      ref: {path: 'paths'}
+    },
+    results:[
+      {
+        path: 'components',
+        status: ExecJSON.ControlResultStatus.Failed,
+        code_desc: {transformer: formatSCACodeDesc},
+        start_time: {path: '$.detailedreport.first_build_submitted_date'}
+      }
+    ]
+  }
+}
+
 function controlMappingCwe(severity: number): MappedTransform<ExecJSON.Control & ILookupPath, ILookupPath> {
   return {
     id: {path: 'categoryid'},
@@ -354,49 +384,14 @@ function controlMappingCwe(severity: number): MappedTransform<ExecJSON.Control &
 }
 
 export class VeracodeMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> = {
+  mappings: MappedTransform<ExecJSON.Execution & {data_remainder: unknown}, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
       target_id: ''
     },
-    passthrough: {
-      'xmlns:xsi': { path: 'detailedreport.xmlns:xsi'},
-      xmlns: {path: 'detailedreport.xmlns'},
-      'xsi:schemaLocation': {path:'detailedreport.xsi:schemaLocation'},
-      report_format_version: {path: 'detailedreport.report_fomrat_version'},
-      account_id: {path: 'detailedreport.account_id'},
-      app_name: {path: 'detailedreport.app_name'},
-      analysis_id: {path: 'detailedreport.analysis_id'},
-      static_analysis_unit_id: {path: 'detailedreport.static_analysis_unit_id'},
-      sandbox_id: {path: 'detailedreport.sandbox_id'},
-      version: {path: 'detailedreport.version'},
-      build_id: {path: 'detailedreport.build_id'},
-      submitter: {path: 'detailedreport.submitter'},
-      platform: {path: 'detailedreport.platform'},
-      assurance_level: {path: 'detailedreport.assurance_level'},
-      business_criticality: {path: 'detailedreport.business_criticality'},
-      generation_date: {path: 'detailedreport.generation_data'},
-      veracode_level: {path: 'detailedreport.veracode_level'},
-      total_flaws: {path: 'detailedreport.total_flaws'},
-      flaws_not_mitigated: {path: 'detailedreport.flaws_not_mitigated'},
-      teams: {path: 'detailedreport.teams'},
-      life_cycle_stage: {path: 'detailedreport.life_cycle_stage'},
-      planned_deployment_date: {path: 'detailedreport.planned_deployment_date'},
-      last_update_time: {path: 'detailedreport.last_update_time'},
-      is_latest_build: {path: 'detailedreport.is_latest_build'},
-      policy_name: {path: 'detailedreport.policy_name'},
-      policy_version: {path: 'detailedreport.policy_version'},
-      policy_compliance_status: {path: 'detailedreport.plolicy_compliance_status'},
-      policy_rules_status: {path: 'detailedreport.plolicy_rules_status'},
-      grace_period_expired: {path: 'detailedreport.grace_period_expired'},
-      scan_overdue: {path: 'detailedreport.scan_overdue'},
-      business_owner: {path: 'detailedreport.business_owner'},
-      business_unit: {path: 'detailedreport.business_unit'},
-      tags: {path: 'detailedreport.tags'},
-      legacy_scan_engine: {path: 'detailedreport.legacy_scan_engtine'},
-      custom_fields: {path: 'detailedreport.custom_fields'}
-
+    data_remainder: {
+      transformer: formatPassthroughData
     },
     version: HeimdallToolsVersion,
     statistics: {
@@ -439,26 +434,7 @@ export class VeracodeMapper extends BaseConverter {
           {
             path: 'detailedreport.software_composition_analysis.vulnerable_components',
             pathTransform: componenttransform,
-            id: {path: "cve_id"},
-            title: {path: 'cve_id'},
-            desc: {path: 'cve_summary'},
-            impact: {path: 'impact'},
-            refs: [],
-            tags: {
-              cwe: {path: 'cwe_id'},
-              nist: {path: 'nist'}
-            },
-            source_location: {
-              ref: {path: 'paths'}
-            },
-            results:[
-              {
-                path: 'components',
-                status: ExecJSON.ControlResultStatus.Failed,
-                code_desc: {transformer: formatSCACodeDesc},
-                start_time: {path: '$.detailedreport.first_build_submitted_date'}
-              }
-            ]
+            ...controlMappingCve()
           }
         ],
         sha256: ''
