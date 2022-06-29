@@ -32,6 +32,11 @@ export type MappedReform<T, U> = {
     : Exclude<T[K], U>;
 };
 /* eslint-enable @typescript-eslint/ban-types */
+export type UnevaluatedMapping<T> =
+  | T
+  | Array<T>
+  | (T & ILookupPath)
+  | Array<T & ILookupPath>;
 
 // Hashing Function
 export function generateHash(data: string, algorithm = 'sha256'): string {
@@ -197,7 +202,7 @@ export class BaseConverter {
 
   evaluate<T>(
     data: unknown,
-    mapping: T | Array<T> | (T & ILookupPath) | Array<T & ILookupPath>
+    mapping: UnevaluatedMapping<T>
   ): T | Array<T> | MappedReform<T, ILookupPath> {
     if (
       _.isString(mapping) ||
@@ -216,12 +221,10 @@ export class BaseConverter {
       _.isObject(mapping) &&
       _.has(mapping, 'transformer') &&
       _.isFunction(_.get(mapping, 'transformer'));
-    let transformer: (internalData: unknown) => unknown = (
-      internalData: unknown
-    ) => internalData;
+    let transformer: (i: unknown) => unknown = (i: unknown) => i;
     if (hasTransformer) {
       transformer = (
-        _.get(mapping, 'transformer') as (internalData: unknown) => unknown
+        _.get(mapping, 'transformer') as (i: unknown) => unknown
       ).bind(this);
       mapping = _.omit(mapping as object, 'transformer') as
         | (T & ILookupPath)
