@@ -178,35 +178,37 @@ export class SnykResults {
   }
 
   async getDataFromApi() {
-    if (this.apiToken === undefined) {
+    if (this.apiToken === undefined || this.apiClient === undefined) {
       throw new Error("Can't use the Snyk API without an API token.");
     }
 
     let organizations: Record<string, unknown>[] = [];
-    organizations = await this.apiClient!.get('orgs').then(
-      ({data: {orgs}}) => orgs
-    );
+    organizations = await this.apiClient
+      .get('orgs')
+      .then(({data: {orgs}}) => orgs);
 
     if (this.apiInput === undefined) {
       this.apiInput = organizations.map(({id}) => ({
         organization: id as string
       }));
-    } else if (this.apiInput.length > 0) {
-      organizations = organizations.filter(({id}) =>
-        this.apiInput!.map(({organization}) => organization).includes(
-          id as string
-        )
+    } else {
+      organizations = organizations.filter(
+        ({id}) =>
+          this.apiInput &&
+          this.apiInput
+            .map(({organization}) => organization)
+            .includes(id as string)
       );
 
       if (
         _.difference(
-          this.apiInput!.map(({organization}) => organization),
+          this.apiInput.map(({organization}) => organization),
           organizations.map(({id}) => id)
         ).length !== 0
       ) {
         throw new Error(
           `Please make sure that the API token is correct and/or has sufficient permissions since the following expected organizations were not in the data returned by the Snyk API: ${_.difference(
-            this.apiInput!.map(({organization}) => organization),
+            this.apiInput.map(({organization}) => organization),
             organizations.map(({id}) => id)
           ).join(', ')}`
         );
@@ -217,31 +219,34 @@ export class SnykResults {
     await Promise.all(
       this.apiInput.map(
         async (input) =>
-          await this.apiClient!.post(`org/${input.organization}/projects`).then(
-            async ({data: {projects}}) => {
+          await this.apiClient
+            ?.post(`org/${input.organization}/projects`)
+            .then(async ({data: {projects}}) => {
               const pushToData = async (
                 i: SnykUserInputDatum & {project: string},
                 organization: Record<string, unknown>,
                 project: Record<string, unknown>
               ) => {
                 const issues = _(
-                  await this.apiClient!.post(
-                    `org/${i.organization}/project/${i.project}/aggregated-issues`,
-                    {
-                      includeDescription: true,
-                      includeIntroducedThrough: true,
-                      filters: {types: ['vuln']} // nominally this should filter out anything but 'vuln' type issues, but we're still getting 'configuration' type issues so need to do a manual filter
-                    }
-                  ).catch((error: Record<string, unknown>) => {
-                    // on occasion, strange things happen (ex. 403) so just print it out and move on
-                    console.log(
-                      `Error occured with message "${_.get(
-                        error,
-                        'message'
-                      )}".  Full call data: ${error}`
-                    );
-                    return {data: {issues: []}};
-                  })
+                  await this.apiClient
+                    ?.post(
+                      `org/${i.organization}/project/${i.project}/aggregated-issues`,
+                      {
+                        includeDescription: true,
+                        includeIntroducedThrough: true,
+                        filters: {types: ['vuln']} // nominally this should filter out anything but 'vuln' type issues, but we're still getting 'configuration' type issues so need to do a manual filter
+                      }
+                    )
+                    .catch((error: Record<string, unknown>) => {
+                      // on occasion, strange things happen (ex. 403) so just print it out and move on
+                      console.log(
+                        `Error occured with message "${_.get(
+                          error,
+                          'message'
+                        )}".  Full call data: ${error}`
+                      );
+                      return {data: {issues: []}};
+                    })
                 )
                   .get('data.issues')
                   .filter(
@@ -249,7 +254,7 @@ export class SnykResults {
                       issueType === 'vuln'
                   ) as Record<string, unknown>[];
                 const dependencyGraph = _.get(
-                  await this.apiClient!.get(
+                  await this.apiClient?.get(
                     `org/${i.organization}/project/${i.project}/dep-graph`
                   ),
                   'data'
@@ -275,7 +280,7 @@ export class SnykResults {
                   'depgraph',
                   dependencyGraph
                 );
-                this.data!.push({
+                this.data?.push({
                   ...i,
                   organizationData: organization,
                   projectData: project,
@@ -306,10 +311,10 @@ export class SnykResults {
                 }
                 await pushToData(
                   input as SnykUserInputDatum & {project: string},
-                  organizations.find(({id}) => id === input.organization)!,
+                  organizations.find(({id}) => id === input.organization) || {}, // should never hit these default cases since there is extensive pre-checking to make sure that the input aligns with these api calls
                   projects.find(
                     ({id}: Record<string, unknown>) => id === input.project
-                  )!
+                  ) || {}
                 );
               } else {
                 const monitoredProjects = projects.filter(
@@ -321,13 +326,12 @@ export class SnykResults {
                     organizations.find(
                       ({id}: Record<string, unknown>) =>
                         id === input.organization
-                    )!,
+                    ) || {},
                     project
                   );
                 }
               }
-            }
-          )
+            })
       )
     );
   }
@@ -336,7 +340,10 @@ export class SnykResults {
     let isApi: {apiVersion: 1} | undefined = undefined;
     if (this.usingApi) {
       await this.getDataFromApi();
-      isApi = {apiVersion: this.apiVersion!};
+      if (!this.apiVersion) {
+        throw new Error('API version must be specified');
+      }
+      isApi = {apiVersion: this.apiVersion};
     }
 
     const results: ExecJSON.Execution[] = [];
