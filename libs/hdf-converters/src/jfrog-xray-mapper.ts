@@ -163,17 +163,11 @@ export class JfrogXrayMapper extends BaseConverter {
       }
     ],
     passthrough: {
-      other_source_tool_data: {
-        transformer: (data: Record<string, any>): Record<string, unknown> => {
-          return _.pick(data, ['total_count']);
-        }
-      },
-      raw: {
-        transformer: (
-          data: Record<string, unknown>
-        ): Record<string, unknown> | string => {
-          return this.withRaw ? data : '';
-        }
+      transformer: (data: Record<string, any>): Record<string, unknown> => {
+        return {
+          auxiliary_data: [{name: 'Twistlock', data: _.omit(data, ['data'])}],
+          ...(this.withRaw && {raw: data})
+        };
       }
     }
   };

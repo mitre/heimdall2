@@ -120,24 +120,19 @@ export class TwistlockMapper extends BaseConverter {
       }
     ],
     passthrough: {
-      other_source_tool_data: {
-        transformer: (data: Record<string, any>): Record<string, unknown> => {
-          data.results[0] = _.omit(data.results[0], [
-            'name',
-            'collections',
-            'complianceDistribution',
-            'vulnerabilities',
-            'vulnerabilityDistribution'
-          ]);
-          return data;
-        }
-      },
-      raw: {
-        transformer: (
-          data: Record<string, unknown>
-        ): Record<string, unknown> | string => {
-          return this.withRaw ? data : '';
-        }
+      transformer: (data: Record<string, any>): Record<string, unknown> => {
+        const auxData = data;
+        auxData.results[0] = _.omit(auxData.results[0], [
+          'name',
+          'collections',
+          'complianceDistribution',
+          'vulnerabilities',
+          'vulnerabilityDistribution'
+        ]);
+        return {
+          auxiliary_data: [{name: 'Twistlock', data: auxData}],
+          ...(this.withRaw && {raw: data})
+        };
       }
     }
   };
