@@ -175,7 +175,7 @@ export class SnykResults {
       _.get(graph[pkg], 'pkgId')
     );
     dependencyChains = _.mapValues(dependencyChains, (allpaths) =>
-      allpaths.map((path) => path.map((pkg) => _.get(graph[pkg], 'pkgId')))
+      allpaths.map((p) => p.map((pkg) => _.get(graph[pkg], 'pkgId')))
     );
     return dependencyChains;
   }
