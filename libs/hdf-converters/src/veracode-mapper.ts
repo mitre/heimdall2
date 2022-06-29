@@ -1,11 +1,10 @@
 import parser from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
-import { LineCounter } from 'yaml';
+import _, { isArray } from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-const CWE_LENGTH = 'cwe.length';
+const STATIC_FLAWS = 'staticflaws.flaw'
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -81,7 +80,7 @@ function formatCweData(input: Record<string, unknown>): string {
   ];
   if (_.has(input, 'cwe')) {
     if (Array.isArray(_.get(input, 'cwe'))){
-      const len = Number(`${_.get(input, CWE_LENGTH)}`);
+      const len = Number(`${_.get(input, 'cwe.length')}`);
       for (let index = 0; index < len; index++) {
         let cwe = `CWE-${_.get(input, `cwe[${index}].cweid`)}: `;
         const cwename = `cwe[${index}].cwename`;
@@ -90,7 +89,7 @@ function formatCweData(input: Record<string, unknown>): string {
           if (_.has(input, `cwe[${index}].${value}`)) {
               return `${value}: ${_.get(input, `cwe[${index}].${value}`)}\n`;
           }
-        })).join('');;
+        })).join('');
         text.push(cwe);
       }
     }
@@ -130,19 +129,19 @@ function getFlaws(input: unknown): string[] {
   const flawArr: string[] = [];
   if (Array.isArray(input)) {
     for(const value of input){
-      if (!Array.isArray(_.get(value, 'staticflaws.flaw'))) {
-        flawArr.push(_.get(value, 'staticflaws.flaw') as string);
+      if (!Array.isArray(_.get(value, STATIC_FLAWS))) {
+        flawArr.push(_.get(value, STATIC_FLAWS) as string);
       }
       else {
-        flawArr.push(..._.get(value, 'staticflaws.flaw') as string[]);
+        flawArr.push(..._.get(value, STATIC_FLAWS) as string[]);
       }
     }
   } else {
     input = [input];
-    if (!Array.isArray(_.get((input as Record<string, unknown>[])[0], 'staticflaws.flaw'))) {
-      flawArr.push(_.get((input as Record<string, unknown>[])[0], 'staticflaws.flaw') as string);
+    if (!Array.isArray(_.get((input as Record<string, unknown>[])[0], STATIC_FLAWS))) {
+      flawArr.push(_.get((input as Record<string, unknown>[])[0], STATIC_FLAWS) as string);
     } else {
-      flawArr.push(..._.get((input as Record<string, unknown>[])[0], 'staticflaws.flaw') as string[]);
+      flawArr.push(..._.get((input as Record<string, unknown>[])[0], STATIC_FLAWS) as string[]);
     }
   }
   return flawArr
@@ -210,19 +209,19 @@ function formatSourceLocation(input: Record<string,unknown>[]): string {
   const flawArr: string[] = [];
   if (Array.isArray(input)) {
     for(const value of input) {
-        if (!Array.isArray(_.get(value, 'staticflaws.flaw'))) {
-          flawArr.push(_.get(value, 'staticflaws.flaw') as string);
+        if (!Array.isArray(_.get(value, STATIC_FLAWS))) {
+          flawArr.push(_.get(value, STATIC_FLAWS) as string);
         }
         else {
-          flawArr.push(..._.get(value, 'staticflaws.flaw') as string[]);
+          flawArr.push(..._.get(value, STATIC_FLAWS) as string[]);
         }
     }
   } else {
     input = [input];
-    if (!Array.isArray(_.get(input[0], 'staticflaws.flaw'))) {
-      flawArr.push(_.get(input[0], 'staticflaws.flaw') as string);
+    if (!Array.isArray(_.get(input[0], STATIC_FLAWS))) {
+      flawArr.push(_.get(input[0], STATIC_FLAWS) as string);
     } else {
-      flawArr.push(..._.get(input[0], 'staticflaws.flaw') as string[]);
+      flawArr.push(..._.get(input[0], STATIC_FLAWS) as string[]);
     }
   }
  return flawArr.map((value) => _.get(value, 'sourcefile')).join('\n')
