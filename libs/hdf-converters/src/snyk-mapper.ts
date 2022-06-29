@@ -611,7 +611,7 @@ export class SnykMapper extends BaseConverter {
   constructor(
     snykJson: Record<string, unknown>,
     isApi?: {apiVersion: 1},
-    withRaw?: boolean
+    withRaw = false
   ) {
     super(snykJson);
     this.setMappings(this.defaultMapping(isApi, withRaw));
