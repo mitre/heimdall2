@@ -220,121 +220,118 @@ export class SnykResults {
 
     this.data = [];
     await Promise.all(
-      this.apiInput.map(
-        async (input) =>
-          await this.apiClient
-            ?.post(`org/${input.organization}/projects`)
-            .then(async ({data: {projects}}) => {
-              const pushToData = async (
-                i: SnykUserInputDatum & {project: string},
-                organization: Record<string, unknown>,
-                project: Record<string, unknown>
-              ) => {
-                const issues = _(
-                  await this.apiClient
-                    ?.post(
-                      `org/${i.organization}/project/${i.project}/aggregated-issues`,
-                      {
-                        includeDescription: true,
-                        includeIntroducedThrough: true,
-                        filters: {types: ['vuln']} // nominally this should filter out anything but 'vuln' type issues, but we're still getting 'configuration' type issues so need to do a manual filter
-                      }
-                    )
-                    .catch((error: Record<string, unknown>) => {
-                      // on occasion, strange things happen (ex. 403) so just print it out and move on
-                      console.log(
-                        `Error occured with message "${_.get(
-                          error,
-                          'message'
-                        )}".  Full call data: ${error}`
-                      );
-                      return {data: {issues: []}};
-                    })
-                )
-                  .get('data.issues')
-                  .filter(
-                    ({issueType}: Record<string, unknown>) =>
-                      issueType === 'vuln'
-                  ) as Record<string, unknown>[];
-                const dependencyGraph = _.get(
-                  await this.apiClient?.get(
-                    `org/${i.organization}/project/${i.project}/dep-graph`
-                  ),
-                  'data'
-                ) as Record<string, unknown>;
-                const packages = issues
-                  .map(({pkgName, pkgVersions}: Record<string, unknown>) =>
-                    (pkgVersions as string[]).map(
-                      (version) => `${pkgName}@${version}`
-                    )
+      this.apiInput.map(async (input) =>
+        this.apiClient
+          ?.post(`org/${input.organization}/projects`)
+          .then(async ({data: {projects}}) => {
+            const pushToData = async (
+              i: SnykUserInputDatum & {project: string},
+              organization: Record<string, unknown>,
+              project: Record<string, unknown>
+            ) => {
+              const issues = _(
+                await this.apiClient
+                  ?.post(
+                    `org/${i.organization}/project/${i.project}/aggregated-issues`,
+                    {
+                      includeDescription: true,
+                      includeIntroducedThrough: true,
+                      filters: {types: ['vuln']} // nominally this should filter out anything but 'vuln' type issues, but we're still getting 'configuration' type issues so need to do a manual filter
+                    }
                   )
-                  .flat();
-                console.log(
-                  // TODO: logger
-                  'pushed',
-                  'input',
-                  i,
-                  'issues',
-                  issues,
-                  'issue count',
-                  issues.length,
-                  'packages',
-                  packages,
-                  'depgraph',
-                  dependencyGraph
-                );
-                this.data?.push({
-                  ...i,
-                  organizationData: organization,
-                  projectData: project,
-                  issues: issues,
-                  dependencyGraph,
-                  dependencyChains:
-                    issues.length === 0
-                      ? {}
-                      : this.getDependencyChains(
-                          packages,
-                          _.get(dependencyGraph, 'depGraph.graph') as Record<
-                            string,
-                            unknown
-                          >
-                        )
-                });
-              };
+                  .catch((error: Record<string, unknown>) => {
+                    // on occasion, strange things happen (ex. 403) so just print it out and move on
+                    console.log(
+                      `Error occured with message "${_.get(
+                        error,
+                        'message'
+                      )}".  Full call data: ${error}`
+                    );
+                    return {data: {issues: []}};
+                  })
+              )
+                .get('data.issues')
+                .filter(
+                  ({issueType}: Record<string, unknown>) => issueType === 'vuln'
+                ) as Record<string, unknown>[];
+              const dependencyGraph = _.get(
+                await this.apiClient?.get(
+                  `org/${i.organization}/project/${i.project}/dep-graph`
+                ),
+                'data'
+              ) as Record<string, unknown>;
+              const packages = issues
+                .map(({pkgName, pkgVersions}: Record<string, unknown>) =>
+                  (pkgVersions as string[]).map(
+                    (version) => `${pkgName}@${version}`
+                  )
+                )
+                .flat();
+              console.log(
+                // TODO: logger
+                'pushed',
+                'input',
+                i,
+                'issues',
+                issues,
+                'issue count',
+                issues.length,
+                'packages',
+                packages,
+                'depgraph',
+                dependencyGraph
+              );
+              this.data?.push({
+                ...i,
+                organizationData: organization,
+                projectData: project,
+                issues: issues,
+                dependencyGraph,
+                dependencyChains:
+                  issues.length === 0
+                    ? {}
+                    : this.getDependencyChains(
+                        packages,
+                        _.get(dependencyGraph, 'depGraph.graph') as Record<
+                          string,
+                          unknown
+                        >
+                      )
+              });
+            };
 
-              if (input.project) {
-                if (
-                  !projects
-                    .map(({id}: Record<string, unknown>) => id)
-                    .includes(input.project)
-                ) {
-                  throw new Error(
-                    `Project ${input.project} not found in organization ${input.organization}`
-                  );
-                }
-                await pushToData(
-                  input as SnykUserInputDatum & {project: string},
-                  organizations.find(({id}) => id === input.organization) || {}, // should never hit these default cases since there is extensive pre-checking to make sure that the input aligns with these api calls
-                  projects.find(
-                    ({id}: Record<string, unknown>) => id === input.project
-                  ) || {}
+            if (input.project) {
+              if (
+                !projects
+                  .map(({id}: Record<string, unknown>) => id)
+                  .includes(input.project)
+              ) {
+                throw new Error(
+                  `Project ${input.project} not found in organization ${input.organization}`
                 );
-              } else {
-                const monitoredProjects = projects.filter(
-                  ({isMonitored}: Record<string, unknown>) => isMonitored
-                );
-                for (const project of monitoredProjects) {
-                  await pushToData(
-                    {...input, project: _.get(project, 'id')},
-                    organizations.find(
-                      ({id}: Record<string, unknown>) =>
-                        id === input.organization
-                    ) || {},
-                    project
-                  );
-                }
               }
-            })
+              await pushToData(
+                input as SnykUserInputDatum & {project: string},
+                organizations.find(({id}) => id === input.organization) || {}, // should never hit these default cases since there is extensive pre-checking to make sure that the input aligns with these api calls
+                projects.find(
+                  ({id}: Record<string, unknown>) => id === input.project
+                ) || {}
+              );
+            } else {
+              const monitoredProjects = projects.filter(
+                ({isMonitored}: Record<string, unknown>) => isMonitored
+              );
+              for (const project of monitoredProjects) {
+                await pushToData(
+                  {...input, project: _.get(project, 'id')},
+                  organizations.find(
+                    ({id}: Record<string, unknown>) => id === input.organization
+                  ) || {},
+                  project
+                );
+              }
+            }
+          })
       )
     );
   }
