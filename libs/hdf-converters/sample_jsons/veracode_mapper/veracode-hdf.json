@@ -4,138 +4,144 @@
     "release": "2.6.27",
     "target_id": ""
   },
-  "data_remainder": {
-    "detailedreport": {
-      "xmlns:xsi": "http&#x3a;&#x2f;&#x2f;www.w3.org&#x2f;2001&#x2f;XMLSchema-instance",
-      "xmlns": "https&#x3a;&#x2f;&#x2f;www.veracode.com&#x2f;schema&#x2f;reports&#x2f;export&#x2f;1.0",
-      "xsi:schemaLocation": "https&#x3a;&#x2f;&#x2f;www.veracode.com&#x2f;schema&#x2f;reports&#x2f;export&#x2f;1.0 https&#x3a;&#x2f;&#x2f;analysiscenter.veracode.com&#x2f;resource&#x2f;detailedreport.xsd",
-      "report_format_version": "1.5",
-      "account_id": "17742",
-      "app_name": "jenkinspipe",
-      "app_id": "1283917",
-      "analysis_id": "15929175",
-      "static_analysis_unit_id": "15944831",
-      "sandbox_id": "4045062",
-      "first_build_submitted_date": "2021-12-29 22&#x3a;16&#x3a;36 UTC",
-      "version": "verademoscan",
-      "build_id": "15956303",
-      "submitter": "Jordon Burton",
-      "platform": "Not Specified",
-      "assurance_level": "3",
-      "business_criticality": "3",
-      "generation_date": "2022-01-11 19&#x3a;30&#x3a;26 UTC",
-      "veracode_level": "VL1",
-      "total_flaws": "194",
-      "flaws_not_mitigated": "194",
-      "teams": "SwAP Development",
-      "life_cycle_stage": "Not Specified",
-      "planned_deployment_date": "",
-      "last_update_time": "2021-12-29 22&#x3a;20&#x3a;32 UTC",
-      "is_latest_build": "true",
-      "policy_name": "Veracode Recommended Medium",
-      "policy_version": "1",
-      "policy_compliance_status": "Did Not Pass",
-      "policy_rules_status": "Did Not Pass",
-      "grace_period_expired": "true",
-      "scan_overdue": "false",
-      "business_owner": "",
-      "business_unit": "Not Specified",
-      "tags": "",
-      "legacy_scan_engine": "false",
-      "static-analysis": {
-        "rating": "B",
-        "score": "63",
-        "submitted_date": "2021-12-29 22&#x3a;16&#x3a;26 UTC",
-        "published_date": "2021-12-29 22&#x3a;20&#x3a;22 UTC",
-        "version": "verademoscan",
-        "next_scan_due": "2022-03-29 21&#x3a;20&#x3a;22 UTC",
-        "analysis_size_bytes": "83996",
-        "engine_version": "20211221160743",
-        "modules": {
-          "module": {
-            "name": "verademo.war",
-            "compiler": "JAVAC_8",
-            "os": "Java J2SE 8",
-            "architecture": "JVM",
-            "loc": "4068",
-            "score": "63",
-            "numflawssev0": "20",
-            "numflawssev1": "0",
-            "numflawssev2": "62",
-            "numflawssev3": "96",
-            "numflawssev4": "14",
-            "numflawssev5": "2"
+  "passthrough": {
+    "auxiliarry_data": [
+      {
+        "name": "veracode",
+        "data": {
+          "detailedreport": {
+            "xmlns:xsi": "http&#x3a;&#x2f;&#x2f;www.w3.org&#x2f;2001&#x2f;XMLSchema-instance",
+            "xmlns": "https&#x3a;&#x2f;&#x2f;www.veracode.com&#x2f;schema&#x2f;reports&#x2f;export&#x2f;1.0",
+            "xsi:schemaLocation": "https&#x3a;&#x2f;&#x2f;www.veracode.com&#x2f;schema&#x2f;reports&#x2f;export&#x2f;1.0 https&#x3a;&#x2f;&#x2f;analysiscenter.veracode.com&#x2f;resource&#x2f;detailedreport.xsd",
+            "report_format_version": "1.5",
+            "account_id": "17742",
+            "app_name": "jenkinspipe",
+            "app_id": "1283917",
+            "analysis_id": "15929175",
+            "static_analysis_unit_id": "15944831",
+            "sandbox_id": "4045062",
+            "first_build_submitted_date": "2021-12-29 22&#x3a;16&#x3a;36 UTC",
+            "version": "verademoscan",
+            "build_id": "15956303",
+            "submitter": "Jordon Burton",
+            "platform": "Not Specified",
+            "assurance_level": "3",
+            "business_criticality": "3",
+            "generation_date": "2022-01-11 19&#x3a;30&#x3a;26 UTC",
+            "veracode_level": "VL1",
+            "total_flaws": "194",
+            "flaws_not_mitigated": "194",
+            "teams": "SwAP Development",
+            "life_cycle_stage": "Not Specified",
+            "planned_deployment_date": "",
+            "last_update_time": "2021-12-29 22&#x3a;20&#x3a;32 UTC",
+            "is_latest_build": "true",
+            "policy_name": "Veracode Recommended Medium",
+            "policy_version": "1",
+            "policy_compliance_status": "Did Not Pass",
+            "policy_rules_status": "Did Not Pass",
+            "grace_period_expired": "true",
+            "scan_overdue": "false",
+            "business_owner": "",
+            "business_unit": "Not Specified",
+            "tags": "",
+            "legacy_scan_engine": "false",
+            "static-analysis": {
+              "rating": "B",
+              "score": "63",
+              "submitted_date": "2021-12-29 22&#x3a;16&#x3a;26 UTC",
+              "published_date": "2021-12-29 22&#x3a;20&#x3a;22 UTC",
+              "version": "verademoscan",
+              "next_scan_due": "2022-03-29 21&#x3a;20&#x3a;22 UTC",
+              "analysis_size_bytes": "83996",
+              "engine_version": "20211221160743",
+              "modules": {
+                "module": {
+                  "name": "verademo.war",
+                  "compiler": "JAVAC_8",
+                  "os": "Java J2SE 8",
+                  "architecture": "JVM",
+                  "loc": "4068",
+                  "score": "63",
+                  "numflawssev0": "20",
+                  "numflawssev1": "0",
+                  "numflawssev2": "62",
+                  "numflawssev3": "96",
+                  "numflawssev4": "14",
+                  "numflawssev5": "2"
+                }
+              }
+            },
+            "flaw-status": {
+              "new": "194",
+              "reopen": "0",
+              "open": "0",
+              "cannot-reproduce": "0",
+              "fixed": "0",
+              "total": "194",
+              "not_mitigated": "194",
+              "sev-1-change": "0",
+              "sev-2-change": "62",
+              "sev-3-change": "96",
+              "sev-4-change": "14",
+              "sev-5-change": "2"
+            },
+            "customfields": {
+              "customfield": [
+                {
+                  "name": "Custom 1",
+                  "value": ""
+                },
+                {
+                  "name": "Custom 2",
+                  "value": ""
+                },
+                {
+                  "name": "Custom 3",
+                  "value": ""
+                },
+                {
+                  "name": "Custom 4",
+                  "value": ""
+                },
+                {
+                  "name": "Custom 5",
+                  "value": ""
+                },
+                {
+                  "name": "Custom 6",
+                  "value": ""
+                },
+                {
+                  "name": "Custom 7",
+                  "value": ""
+                },
+                {
+                  "name": "Custom 8",
+                  "value": ""
+                },
+                {
+                  "name": "Custom 9",
+                  "value": ""
+                },
+                {
+                  "name": "Custom 10",
+                  "value": ""
+                }
+              ]
+            }
           }
         }
-      },
-      "flaw-status": {
-        "new": "194",
-        "reopen": "0",
-        "open": "0",
-        "cannot-reproduce": "0",
-        "fixed": "0",
-        "total": "194",
-        "not_mitigated": "194",
-        "sev-1-change": "0",
-        "sev-2-change": "62",
-        "sev-3-change": "96",
-        "sev-4-change": "14",
-        "sev-5-change": "2"
-      },
-      "customfields": {
-        "customfield": [
-          {
-            "name": "Custom 1",
-            "value": ""
-          },
-          {
-            "name": "Custom 2",
-            "value": ""
-          },
-          {
-            "name": "Custom 3",
-            "value": ""
-          },
-          {
-            "name": "Custom 4",
-            "value": ""
-          },
-          {
-            "name": "Custom 5",
-            "value": ""
-          },
-          {
-            "name": "Custom 6",
-            "value": ""
-          },
-          {
-            "name": "Custom 7",
-            "value": ""
-          },
-          {
-            "name": "Custom 8",
-            "value": ""
-          },
-          {
-            "name": "Custom 9",
-            "value": ""
-          },
-          {
-            "name": "Custom 10",
-            "value": ""
-          }
-        ]
       }
-    }
+    ]
   },
   "version": "2.6.27",
   "statistics": {},
   "profiles": [
     {
       "name": "Veracode Recommended Medium",
-      "version": "verademoscan",
+      "version": "1",
       "title": "verademo.war",
-      "copyright": "Copyright Veracode, Inc., 2014.",
       "supports": [],
       "attributes": [],
       "groups": [],
@@ -1680,7 +1686,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: 1793362a-098a-47f2-95e8-0565117aa7fd;sha1: 964cd74171f427720480efdec40a7c7f6e58426a\nmax_cvss_score: 5.8\nversion: 3.1\nlibrary: HttpClient\nvendor: commons-httpclient\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-httpclient-3.1.jar",
+              "code_desc": "",
+              "message": "component_id: 1793362a-098a-47f2-95e8-0565117aa7fd;sha1: 964cd74171f427720480efdec40a7c7f6e58426a\nmax_cvss_score: 5.8\nversion: 3.1\nlibrary: HttpClient\nvendor: commons-httpclient\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-httpclient-3.1.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -1704,7 +1711,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: 1793362a-098a-47f2-95e8-0565117aa7fd;sha1: 964cd74171f427720480efdec40a7c7f6e58426a\nmax_cvss_score: 5.8\nversion: 3.1\nlibrary: HttpClient\nvendor: commons-httpclient\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-httpclient-3.1.jar",
+              "code_desc": "",
+              "message": "component_id: 1793362a-098a-47f2-95e8-0565117aa7fd;sha1: 964cd74171f427720480efdec40a7c7f6e58426a\nmax_cvss_score: 5.8\nversion: 3.1\nlibrary: HttpClient\nvendor: commons-httpclient\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-httpclient-3.1.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -1728,7 +1736,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: 1793362a-098a-47f2-95e8-0565117aa7fd;sha1: 964cd74171f427720480efdec40a7c7f6e58426a\nmax_cvss_score: 5.8\nversion: 3.1\nlibrary: HttpClient\nvendor: commons-httpclient\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-httpclient-3.1.jar",
+              "code_desc": "",
+              "message": "component_id: 1793362a-098a-47f2-95e8-0565117aa7fd;sha1: 964cd74171f427720480efdec40a7c7f6e58426a\nmax_cvss_score: 5.8\nversion: 3.1\nlibrary: HttpClient\nvendor: commons-httpclient\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-httpclient-3.1.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -1752,7 +1761,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: 1793362a-098a-47f2-95e8-0565117aa7fd;sha1: 964cd74171f427720480efdec40a7c7f6e58426a\nmax_cvss_score: 5.8\nversion: 3.1\nlibrary: HttpClient\nvendor: commons-httpclient\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-httpclient-3.1.jar",
+              "code_desc": "",
+              "message": "component_id: 1793362a-098a-47f2-95e8-0565117aa7fd;sha1: 964cd74171f427720480efdec40a7c7f6e58426a\nmax_cvss_score: 5.8\nversion: 3.1\nlibrary: HttpClient\nvendor: commons-httpclient\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-httpclient-3.1.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -1776,7 +1786,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: 28614053-0ad6-4c0f-817e-6b4c89777501;sha1: 9140be77aafa5050bf4bb936d560cbacb5a6b5c1\nmax_cvss_score: 3.5\nversion: 5.1.48\nlibrary: MySQL Connector&#x2f;J\nvendor: mysql\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;mysql-connector-java-5.1.48.jar",
+              "code_desc": "",
+              "message": "component_id: 28614053-0ad6-4c0f-817e-6b4c89777501;sha1: 9140be77aafa5050bf4bb936d560cbacb5a6b5c1\nmax_cvss_score: 3.5\nversion: 5.1.48\nlibrary: MySQL Connector&#x2f;J\nvendor: mysql\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;mysql-connector-java-5.1.48.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -1800,7 +1811,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: 28614053-0ad6-4c0f-817e-6b4c89777501;sha1: 9140be77aafa5050bf4bb936d560cbacb5a6b5c1\nmax_cvss_score: 3.5\nversion: 5.1.48\nlibrary: MySQL Connector&#x2f;J\nvendor: mysql\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;mysql-connector-java-5.1.48.jar",
+              "code_desc": "",
+              "message": "component_id: 28614053-0ad6-4c0f-817e-6b4c89777501;sha1: 9140be77aafa5050bf4bb936d560cbacb5a6b5c1\nmax_cvss_score: 3.5\nversion: 5.1.48\nlibrary: MySQL Connector&#x2f;J\nvendor: mysql\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;mysql-connector-java-5.1.48.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -1824,12 +1836,14 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: 31117674-2020-41e0-be67-1385f0a4257d;sha1: 33fa5038aa66be6e9cc188000c2188aa4dd33c85\nmax_cvss_score: 5.0\nversion: 9.0.36\nlibrary: tomcat-embed-websocket\nvendor: org.apache.tomcat.embed\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-websocket-9.0.36.jar",
+              "code_desc": "",
+              "message": "component_id: 31117674-2020-41e0-be67-1385f0a4257d;sha1: 33fa5038aa66be6e9cc188000c2188aa4dd33c85\nmax_cvss_score: 5.0\nversion: 9.0.36\nlibrary: tomcat-embed-websocket\nvendor: org.apache.tomcat.embed\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-websocket-9.0.36.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             },
             {
               "status": "failed",
-              "code_desc": "component_id: d6ad47d1-6990-4a6d-b248-aa8cb1a968c1;sha1: \nmax_cvss_score: 5.0\nversion: 9.0.36\nlibrary: tomcat-websocket\nvendor: org.apache.tomcat\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-websocket-9.0.36.jar&#x3a;tomcat-websocket-9.0.36.jar",
+              "code_desc": "",
+              "message": "component_id: d6ad47d1-6990-4a6d-b248-aa8cb1a968c1;sha1: \nmax_cvss_score: 5.0\nversion: 9.0.36\nlibrary: tomcat-websocket\nvendor: org.apache.tomcat\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-websocket-9.0.36.jar&#x3a;tomcat-websocket-9.0.36.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -1853,7 +1867,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: 36fa0a91-39cf-4663-96e1-a413324a37df;sha1: bbf5d96a49a2b58b8988202a3c8728461639090e\nmax_cvss_score: 5.0\nversion: 1.5.1\nlibrary: Apache XML Security for Java\nvendor: org.apache.santuario\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;xmlsec-1.5.1.jar",
+              "code_desc": "",
+              "message": "component_id: 36fa0a91-39cf-4663-96e1-a413324a37df;sha1: bbf5d96a49a2b58b8988202a3c8728461639090e\nmax_cvss_score: 5.0\nversion: 1.5.1\nlibrary: Apache XML Security for Java\nvendor: org.apache.santuario\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;xmlsec-1.5.1.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -1877,7 +1892,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: 36fa0a91-39cf-4663-96e1-a413324a37df;sha1: bbf5d96a49a2b58b8988202a3c8728461639090e\nmax_cvss_score: 5.0\nversion: 1.5.1\nlibrary: Apache XML Security for Java\nvendor: org.apache.santuario\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;xmlsec-1.5.1.jar",
+              "code_desc": "",
+              "message": "component_id: 36fa0a91-39cf-4663-96e1-a413324a37df;sha1: bbf5d96a49a2b58b8988202a3c8728461639090e\nmax_cvss_score: 5.0\nversion: 1.5.1\nlibrary: Apache XML Security for Java\nvendor: org.apache.santuario\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;xmlsec-1.5.1.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -1901,7 +1917,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: 36fa0a91-39cf-4663-96e1-a413324a37df;sha1: bbf5d96a49a2b58b8988202a3c8728461639090e\nmax_cvss_score: 5.0\nversion: 1.5.1\nlibrary: Apache XML Security for Java\nvendor: org.apache.santuario\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;xmlsec-1.5.1.jar",
+              "code_desc": "",
+              "message": "component_id: 36fa0a91-39cf-4663-96e1-a413324a37df;sha1: bbf5d96a49a2b58b8988202a3c8728461639090e\nmax_cvss_score: 5.0\nversion: 1.5.1\nlibrary: Apache XML Security for Java\nvendor: org.apache.santuario\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;xmlsec-1.5.1.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -1925,7 +1942,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: 38678b7f-6718-4b4f-adb6-390ca146c1dc;sha1: 56e14a3a5e2813534b5db2da1502cd58ab5bc61d\nmax_cvss_score: 4.0\nversion: 5.2.7.RELEASE\nlibrary: Spring Core\nvendor: org.springframework\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-core-5.2.7.RELEASE.jar",
+              "code_desc": "",
+              "message": "component_id: 38678b7f-6718-4b4f-adb6-390ca146c1dc;sha1: 56e14a3a5e2813534b5db2da1502cd58ab5bc61d\nmax_cvss_score: 4.0\nversion: 5.2.7.RELEASE\nlibrary: Spring Core\nvendor: org.springframework\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-core-5.2.7.RELEASE.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -1949,12 +1967,14 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: 47004b3b-df69-4a60-a235-ac4a0e62d206;sha1: 7c4f3c474fb2c041d8028740440937705ebb473a\nmax_cvss_score: 8.5\nversion: 1.2.3\nlibrary: Logback Classic Module\nvendor: ch.qos.logback\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;logback-classic-1.2.3.jar",
+              "code_desc": "",
+              "message": "component_id: 47004b3b-df69-4a60-a235-ac4a0e62d206;sha1: 7c4f3c474fb2c041d8028740440937705ebb473a\nmax_cvss_score: 8.5\nversion: 1.2.3\nlibrary: Logback Classic Module\nvendor: ch.qos.logback\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;logback-classic-1.2.3.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             },
             {
               "status": "failed",
-              "code_desc": "component_id: 58dab3c5-b691-4006-9be3-91edbf87d27f;sha1: 864344400c3d4d92dfeb0a305dc87d953677c03c\nmax_cvss_score: 8.5\nversion: 1.2.3\nlibrary: Logback Core Module\nvendor: ch.qos.logback\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;21 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;logback-core-1.2.3.jar",
+              "code_desc": "",
+              "message": "component_id: 58dab3c5-b691-4006-9be3-91edbf87d27f;sha1: 864344400c3d4d92dfeb0a305dc87d953677c03c\nmax_cvss_score: 8.5\nversion: 1.2.3\nlibrary: Logback Core Module\nvendor: ch.qos.logback\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;21 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;logback-core-1.2.3.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -1978,7 +1998,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: 4ebeadf3-e305-4520-8e20-f7b2b15141c4;sha1: e49ccba652b735c93bd6e6f59760d8254cf597dd\nmax_cvss_score: 1.9\nversion: 4.13\nlibrary: JUnit\nvendor: junit\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;junit-4.13.jar",
+              "code_desc": "",
+              "message": "component_id: 4ebeadf3-e305-4520-8e20-f7b2b15141c4;sha1: e49ccba652b735c93bd6e6f59760d8254cf597dd\nmax_cvss_score: 1.9\nversion: 4.13\nlibrary: JUnit\nvendor: junit\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;junit-4.13.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2002,7 +2023,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: 8b4f55d4-ea0b-4115-a79f-41e564717d1e;sha1: 74aca283cd4f4b4f3e425f5820cda58f44409547\nmax_cvss_score: 7.5\nversion: 1.2\nlibrary: jstl\nvendor: javax.servlet\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;jstl-1.2.jar",
+              "code_desc": "",
+              "message": "component_id: 8b4f55d4-ea0b-4115-a79f-41e564717d1e;sha1: 74aca283cd4f4b4f3e425f5820cda58f44409547\nmax_cvss_score: 7.5\nversion: 1.2\nlibrary: jstl\nvendor: javax.servlet\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;jstl-1.2.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2026,7 +2048,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: 8d9a63d8-808b-4233-9e54-279d0f51826f;sha1: 5af35056b4d257e4b64b9e8069c0746e8b08629f\nmax_cvss_score: 7.5\nversion: 1.2.17\nlibrary: Apache Log4j\nvendor: log4j\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;log4j-1.2.17.jar",
+              "code_desc": "",
+              "message": "component_id: 8d9a63d8-808b-4233-9e54-279d0f51826f;sha1: 5af35056b4d257e4b64b9e8069c0746e8b08629f\nmax_cvss_score: 7.5\nversion: 1.2.17\nlibrary: Apache Log4j\nvendor: log4j\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;log4j-1.2.17.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2050,7 +2073,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: 8d9a63d8-808b-4233-9e54-279d0f51826f;sha1: 5af35056b4d257e4b64b9e8069c0746e8b08629f\nmax_cvss_score: 7.5\nversion: 1.2.17\nlibrary: Apache Log4j\nvendor: log4j\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;log4j-1.2.17.jar",
+              "code_desc": "",
+              "message": "component_id: 8d9a63d8-808b-4233-9e54-279d0f51826f;sha1: 5af35056b4d257e4b64b9e8069c0746e8b08629f\nmax_cvss_score: 7.5\nversion: 1.2.17\nlibrary: Apache Log4j\nvendor: log4j\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;log4j-1.2.17.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2074,7 +2098,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: 97f0fb05-af1a-4a15-bb80-89dc2ac6f707;sha1: b984f6288bb695b49d5eed9e3fcc3d75d5fe5e9f\nmax_cvss_score: 4.3\nversion: 2.0.2-incubator\nlibrary: Apache Sling API\nvendor: org.apache.sling\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;org.apache.sling.api-2.0.2-incubator.jar",
+              "code_desc": "",
+              "message": "component_id: 97f0fb05-af1a-4a15-bb80-89dc2ac6f707;sha1: b984f6288bb695b49d5eed9e3fcc3d75d5fe5e9f\nmax_cvss_score: 4.3\nversion: 2.0.2-incubator\nlibrary: Apache Sling API\nvendor: org.apache.sling\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;org.apache.sling.api-2.0.2-incubator.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2098,7 +2123,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: 9fdb0cb9-3f05-4fb3-b221-cd97bdacc307;sha1: da217367fd25e88df52ba79e47658d4cf928b0d1\nmax_cvss_score: 7.5\nversion: 4.0\nlibrary: Apache Commons Collections\nvendor: org.apache.commons\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-collections4-4.0.jar",
+              "code_desc": "",
+              "message": "component_id: 9fdb0cb9-3f05-4fb3-b221-cd97bdacc307;sha1: da217367fd25e88df52ba79e47658d4cf928b0d1\nmax_cvss_score: 7.5\nversion: 4.0\nlibrary: Apache Commons Collections\nvendor: org.apache.commons\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-collections4-4.0.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2122,7 +2148,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: 9fdb0cb9-3f05-4fb3-b221-cd97bdacc307;sha1: da217367fd25e88df52ba79e47658d4cf928b0d1\nmax_cvss_score: 7.5\nversion: 4.0\nlibrary: Apache Commons Collections\nvendor: org.apache.commons\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-collections4-4.0.jar",
+              "code_desc": "",
+              "message": "component_id: 9fdb0cb9-3f05-4fb3-b221-cd97bdacc307;sha1: da217367fd25e88df52ba79e47658d4cf928b0d1\nmax_cvss_score: 7.5\nversion: 4.0\nlibrary: Apache Commons Collections\nvendor: org.apache.commons\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-collections4-4.0.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2146,7 +2173,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: a05bbd80-250f-4a54-b4fe-cc8d11957d25;sha1: fe2d9c5f23767d681a7e38fc8986b812400ec583\nmax_cvss_score: 5.0\nversion: 0.3m\nlibrary: jBCrypt\nvendor: org.mindrot\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;jbcrypt-0.3m.jar",
+              "code_desc": "",
+              "message": "component_id: a05bbd80-250f-4a54-b4fe-cc8d11957d25;sha1: fe2d9c5f23767d681a7e38fc8986b812400ec583\nmax_cvss_score: 5.0\nversion: 0.3m\nlibrary: jBCrypt\nvendor: org.mindrot\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;jbcrypt-0.3m.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2170,7 +2198,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: a71a1300-9a17-45dd-81a6-bd4ec5dd18d9;sha1: 73cebee358d4738326d4540ea496eefa1e5ad05f\nmax_cvss_score: 6.4\nversion: 1.8.1.Final\nlibrary: Keycloak SAML Core\nvendor: org.keycloak\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;keycloak-saml-core-1.8.1.Final.jar",
+              "code_desc": "",
+              "message": "component_id: a71a1300-9a17-45dd-81a6-bd4ec5dd18d9;sha1: 73cebee358d4738326d4540ea496eefa1e5ad05f\nmax_cvss_score: 6.4\nversion: 1.8.1.Final\nlibrary: Keycloak SAML Core\nvendor: org.keycloak\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;keycloak-saml-core-1.8.1.Final.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2194,7 +2223,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: a71a1300-9a17-45dd-81a6-bd4ec5dd18d9;sha1: 73cebee358d4738326d4540ea496eefa1e5ad05f\nmax_cvss_score: 6.4\nversion: 1.8.1.Final\nlibrary: Keycloak SAML Core\nvendor: org.keycloak\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;keycloak-saml-core-1.8.1.Final.jar",
+              "code_desc": "",
+              "message": "component_id: a71a1300-9a17-45dd-81a6-bd4ec5dd18d9;sha1: 73cebee358d4738326d4540ea496eefa1e5ad05f\nmax_cvss_score: 6.4\nversion: 1.8.1.Final\nlibrary: Keycloak SAML Core\nvendor: org.keycloak\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;keycloak-saml-core-1.8.1.Final.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2218,7 +2248,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: a71a1300-9a17-45dd-81a6-bd4ec5dd18d9;sha1: 73cebee358d4738326d4540ea496eefa1e5ad05f\nmax_cvss_score: 6.4\nversion: 1.8.1.Final\nlibrary: Keycloak SAML Core\nvendor: org.keycloak\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;keycloak-saml-core-1.8.1.Final.jar",
+              "code_desc": "",
+              "message": "component_id: a71a1300-9a17-45dd-81a6-bd4ec5dd18d9;sha1: 73cebee358d4738326d4540ea496eefa1e5ad05f\nmax_cvss_score: 6.4\nversion: 1.8.1.Final\nlibrary: Keycloak SAML Core\nvendor: org.keycloak\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;keycloak-saml-core-1.8.1.Final.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2242,7 +2273,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: c08a27c6-e9a8-4a4d-8696-221ff9d1c6be;sha1: cf6574dd9c4764e60c548b69da52fc07a5a0a9bd\nmax_cvss_score: 5.8\nversion: 9.0.36\nlibrary: tomcat-embed-core\nvendor: org.apache.tomcat.embed\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar",
+              "code_desc": "",
+              "message": "component_id: c08a27c6-e9a8-4a4d-8696-221ff9d1c6be;sha1: cf6574dd9c4764e60c548b69da52fc07a5a0a9bd\nmax_cvss_score: 5.8\nversion: 9.0.36\nlibrary: tomcat-embed-core\nvendor: org.apache.tomcat.embed\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2266,7 +2298,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: c08a27c6-e9a8-4a4d-8696-221ff9d1c6be;sha1: cf6574dd9c4764e60c548b69da52fc07a5a0a9bd\nmax_cvss_score: 5.8\nversion: 9.0.36\nlibrary: tomcat-embed-core\nvendor: org.apache.tomcat.embed\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar",
+              "code_desc": "",
+              "message": "component_id: c08a27c6-e9a8-4a4d-8696-221ff9d1c6be;sha1: cf6574dd9c4764e60c548b69da52fc07a5a0a9bd\nmax_cvss_score: 5.8\nversion: 9.0.36\nlibrary: tomcat-embed-core\nvendor: org.apache.tomcat.embed\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2290,7 +2323,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: c08a27c6-e9a8-4a4d-8696-221ff9d1c6be;sha1: cf6574dd9c4764e60c548b69da52fc07a5a0a9bd\nmax_cvss_score: 5.8\nversion: 9.0.36\nlibrary: tomcat-embed-core\nvendor: org.apache.tomcat.embed\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar",
+              "code_desc": "",
+              "message": "component_id: c08a27c6-e9a8-4a4d-8696-221ff9d1c6be;sha1: cf6574dd9c4764e60c548b69da52fc07a5a0a9bd\nmax_cvss_score: 5.8\nversion: 9.0.36\nlibrary: tomcat-embed-core\nvendor: org.apache.tomcat.embed\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2314,7 +2348,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: c08a27c6-e9a8-4a4d-8696-221ff9d1c6be;sha1: cf6574dd9c4764e60c548b69da52fc07a5a0a9bd\nmax_cvss_score: 5.8\nversion: 9.0.36\nlibrary: tomcat-embed-core\nvendor: org.apache.tomcat.embed\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar",
+              "code_desc": "",
+              "message": "component_id: c08a27c6-e9a8-4a4d-8696-221ff9d1c6be;sha1: cf6574dd9c4764e60c548b69da52fc07a5a0a9bd\nmax_cvss_score: 5.8\nversion: 9.0.36\nlibrary: tomcat-embed-core\nvendor: org.apache.tomcat.embed\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2338,7 +2373,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: c08a27c6-e9a8-4a4d-8696-221ff9d1c6be;sha1: cf6574dd9c4764e60c548b69da52fc07a5a0a9bd\nmax_cvss_score: 5.8\nversion: 9.0.36\nlibrary: tomcat-embed-core\nvendor: org.apache.tomcat.embed\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar",
+              "code_desc": "",
+              "message": "component_id: c08a27c6-e9a8-4a4d-8696-221ff9d1c6be;sha1: cf6574dd9c4764e60c548b69da52fc07a5a0a9bd\nmax_cvss_score: 5.8\nversion: 9.0.36\nlibrary: tomcat-embed-core\nvendor: org.apache.tomcat.embed\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2362,7 +2398,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: c08a27c6-e9a8-4a4d-8696-221ff9d1c6be;sha1: cf6574dd9c4764e60c548b69da52fc07a5a0a9bd\nmax_cvss_score: 5.8\nversion: 9.0.36\nlibrary: tomcat-embed-core\nvendor: org.apache.tomcat.embed\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar",
+              "code_desc": "",
+              "message": "component_id: c08a27c6-e9a8-4a4d-8696-221ff9d1c6be;sha1: cf6574dd9c4764e60c548b69da52fc07a5a0a9bd\nmax_cvss_score: 5.8\nversion: 9.0.36\nlibrary: tomcat-embed-core\nvendor: org.apache.tomcat.embed\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2386,7 +2423,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: c08a27c6-e9a8-4a4d-8696-221ff9d1c6be;sha1: cf6574dd9c4764e60c548b69da52fc07a5a0a9bd\nmax_cvss_score: 5.8\nversion: 9.0.36\nlibrary: tomcat-embed-core\nvendor: org.apache.tomcat.embed\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar",
+              "code_desc": "",
+              "message": "component_id: c08a27c6-e9a8-4a4d-8696-221ff9d1c6be;sha1: cf6574dd9c4764e60c548b69da52fc07a5a0a9bd\nmax_cvss_score: 5.8\nversion: 9.0.36\nlibrary: tomcat-embed-core\nvendor: org.apache.tomcat.embed\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2410,7 +2448,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: c08a27c6-e9a8-4a4d-8696-221ff9d1c6be;sha1: cf6574dd9c4764e60c548b69da52fc07a5a0a9bd\nmax_cvss_score: 5.8\nversion: 9.0.36\nlibrary: tomcat-embed-core\nvendor: org.apache.tomcat.embed\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar",
+              "code_desc": "",
+              "message": "component_id: c08a27c6-e9a8-4a4d-8696-221ff9d1c6be;sha1: cf6574dd9c4764e60c548b69da52fc07a5a0a9bd\nmax_cvss_score: 5.8\nversion: 9.0.36\nlibrary: tomcat-embed-core\nvendor: org.apache.tomcat.embed\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2434,7 +2473,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: c7ce22bf-c9d5-4465-9fb7-5aedd8261079;sha1: b1b6ea3b7e4aa4f492509a4952029cd8e48019ad\nmax_cvss_score: 5.8\nversion: 2.4\nlibrary: Apache Commons IO\nvendor: commons-io\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-io-2.4.jar",
+              "code_desc": "",
+              "message": "component_id: c7ce22bf-c9d5-4465-9fb7-5aedd8261079;sha1: b1b6ea3b7e4aa4f492509a4952029cd8e48019ad\nmax_cvss_score: 5.8\nversion: 2.4\nlibrary: Apache Commons IO\nvendor: commons-io\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-io-2.4.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2458,7 +2498,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: c7ce22bf-c9d5-4465-9fb7-5aedd8261079;sha1: b1b6ea3b7e4aa4f492509a4952029cd8e48019ad\nmax_cvss_score: 5.8\nversion: 2.4\nlibrary: Apache Commons IO\nvendor: commons-io\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-io-2.4.jar",
+              "code_desc": "",
+              "message": "component_id: c7ce22bf-c9d5-4465-9fb7-5aedd8261079;sha1: b1b6ea3b7e4aa4f492509a4952029cd8e48019ad\nmax_cvss_score: 5.8\nversion: 2.4\nlibrary: Apache Commons IO\nvendor: commons-io\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-io-2.4.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2482,7 +2523,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: c9daab8d-4347-44b0-ae8f-3d9a6060193f;sha1: 5d7491ed6ebd02b6a8d2305f8e6b7fe5dbd95f72\nmax_cvss_score: 7.5\nversion: 1.3.2\nlibrary: Apache Commons FileUpload\nvendor: commons-fileupload\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-fileupload-1.3.2.jar",
+              "code_desc": "",
+              "message": "component_id: c9daab8d-4347-44b0-ae8f-3d9a6060193f;sha1: 5d7491ed6ebd02b6a8d2305f8e6b7fe5dbd95f72\nmax_cvss_score: 7.5\nversion: 1.3.2\nlibrary: Apache Commons FileUpload\nvendor: commons-fileupload\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-fileupload-1.3.2.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2506,7 +2548,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: d3ff7550-8371-4531-97c7-c20d70b6e537;sha1: 0f9ac8399aae46521a8d50703e68e1849722580e\nmax_cvss_score: 4.3\nversion: 1.0-alpha-3\nlibrary: Plexus Archiver Component\nvendor: org.codehaus.plexus\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;plexus-archiver-1.0-alpha-3.jar",
+              "code_desc": "",
+              "message": "component_id: d3ff7550-8371-4531-97c7-c20d70b6e537;sha1: 0f9ac8399aae46521a8d50703e68e1849722580e\nmax_cvss_score: 4.3\nversion: 1.0-alpha-3\nlibrary: Plexus Archiver Component\nvendor: org.codehaus.plexus\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;plexus-archiver-1.0-alpha-3.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2530,7 +2573,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: d6ad47d1-6990-4a6d-b248-aa8cb1a968c1;sha1: \nmax_cvss_score: 5.0\nversion: 9.0.36\nlibrary: tomcat-websocket\nvendor: org.apache.tomcat\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-websocket-9.0.36.jar&#x3a;tomcat-websocket-9.0.36.jar",
+              "code_desc": "",
+              "message": "component_id: d6ad47d1-6990-4a6d-b248-aa8cb1a968c1;sha1: \nmax_cvss_score: 5.0\nversion: 9.0.36\nlibrary: tomcat-websocket\nvendor: org.apache.tomcat\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;19 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-websocket-9.0.36.jar&#x3a;tomcat-websocket-9.0.36.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2554,7 +2598,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: ee9b8868-dd77-47d1-8019-7b21861a87f4;sha1: 050a27c77e1731f3b7af5c2ae7caf6fe59bcc309\nmax_cvss_score: 4.6\nversion: 5.2.7.RELEASE\nlibrary: Spring Web\nvendor: org.springframework\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-web-5.2.7.RELEASE.jar",
+              "code_desc": "",
+              "message": "component_id: ee9b8868-dd77-47d1-8019-7b21861a87f4;sha1: 050a27c77e1731f3b7af5c2ae7caf6fe59bcc309\nmax_cvss_score: 4.6\nversion: 5.2.7.RELEASE\nlibrary: Spring Web\nvendor: org.springframework\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-web-5.2.7.RELEASE.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2578,7 +2623,8 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: ee9b8868-dd77-47d1-8019-7b21861a87f4;sha1: 050a27c77e1731f3b7af5c2ae7caf6fe59bcc309\nmax_cvss_score: 4.6\nversion: 5.2.7.RELEASE\nlibrary: Spring Web\nvendor: org.springframework\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-web-5.2.7.RELEASE.jar",
+              "code_desc": "",
+              "message": "component_id: ee9b8868-dd77-47d1-8019-7b21861a87f4;sha1: 050a27c77e1731f3b7af5c2ae7caf6fe59bcc309\nmax_cvss_score: 4.6\nversion: 5.2.7.RELEASE\nlibrary: Spring Web\nvendor: org.springframework\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-web-5.2.7.RELEASE.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
@@ -2602,13 +2648,14 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "component_id: eebcd29b-5d6b-4c58-b15b-897448f67f4f;sha1: 60783e4623f2e44063cf2d43d9fbacb2816855c2\nmax_cvss_score: 7.5\nversion: 1.0.4\nlibrary: Plexus Common Utilities\nvendor: org.codehaus.plexus\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;plexus-utils-1.0.4.jar",
+              "code_desc": "",
+              "message": "component_id: eebcd29b-5d6b-4c58-b15b-897448f67f4f;sha1: 60783e4623f2e44063cf2d43d9fbacb2816855c2\nmax_cvss_score: 7.5\nversion: 1.0.4\nlibrary: Plexus Common Utilities\nvendor: org.codehaus.plexus\n\nadded_date: 2021-12-29 22&#x3a;18&#x3a;20 UTC\ncomponent_affects_policy_compliance: falsefile_path: verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;plexus-utils-1.0.4.jar",
               "start_time": "2021-12-29 22&#x3a;16&#x3a;36 UTC"
             }
           ]
         }
       ],
-      "sha256": "5aa0e519e5d2001f2939985fcbf835de37eb3bcd32ab44cf11ce684489b80741"
+      "sha256": "62ab5c84f597181bf35d9ade4b7794a9acc12d514943a9683633ea191c020faa"
     }
   ]
 }

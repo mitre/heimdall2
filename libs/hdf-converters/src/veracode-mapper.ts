@@ -1,6 +1,6 @@
 import parser from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
-import _, { isArray } from 'lodash';
+import _, { isArray, range } from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
@@ -80,18 +80,19 @@ function formatCweData(input: Record<string, unknown>): string {
   ];
   if (_.has(input, 'cwe')) {
     if (Array.isArray(_.get(input, 'cwe'))){
-      const len = Number(`${_.get(input, 'cwe.length')}`);
-      for (let index = 0; index < len; index++) {
-        let cwe = `CWE-${_.get(input, `cwe[${index}].cweid`)}: `;
-        const cwename = `cwe[${index}].cwename`;
-        cwe += `${_.get(input, cwename)}`;
-        cwe += _.compact(categories.map((value: string)  => {
-          if (_.has(input, `cwe[${index}].${value}`)) {
-              return `${value}: ${_.get(input, `cwe[${index}].${value}`)}\n`;
+     text.push(...(_.get(input, 'cwe') as Record<string, unknown>[]).map((cweinfo) => {
+        let cwe = `CWE-${_.get(cweinfo, `cweid`)}: `;
+        cwe += `${_.get(cweinfo, 'cwename')}`;
+        cwe += categories.map((value: string)  => {
+          if (_.has(cweinfo, value)) {
+              return `${value}: ${_.get(cweinfo, value)}\n`;
           }
-        })).join('');
-        text.push(cwe);
-      }
+          else {
+            return '';
+          }
+        }).join('');
+        return cwe
+      }));
     }
     else {
       let cwe = `CWE-${_.get(input, `cwe.cweid`)}: `;
@@ -101,11 +102,14 @@ function formatCweData(input: Record<string, unknown>): string {
           if (_.has(input, `cwe.${value}`)) {
               return `${value}: ${_.get(input, `cwe.${value}`)}\n`;
           }
+          else {
+            return '';
+          }
         })).join('');
         text.push(cwe);
     }
   }
-  return text.join('\n');
+  return text.join('\n') as string;
 }
 
 function formatCweDesc(input: Record<string, unknown>): string {
@@ -164,7 +168,7 @@ function formatCodeDesc(input: Record<string, unknown>[]): string {
   if (_.has(input, 'sourcefilepath')) {
     flawDesc = `Sourcefile Path: ${_.get(input, 'sourcefilepath')}\n`;
 
-    flawDesc += categories.map(function([title, name]) {
+    flawDesc += categories.map(([title, name]) => {
       if (_.has(input, name)) {
           return `${title}: ${_.get(input, name)}\n`;
       }
@@ -190,7 +194,7 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
   ];
   if (_.has(input, 'component_id')) {
     flawDesc = `component_id: ${_.get(input, 'component_id')};`;
-    flawDesc += categories.map(function(value: string) {
+    flawDesc += categories.map((value: string) => {
       if (_.has(input, value)) {
           return `${value}: ${_.get(input, value)}`;
       }
@@ -227,24 +231,25 @@ function formatSourceLocation(input: Record<string,unknown>[]): string {
  return flawArr.map((value) => _.get(value, 'sourcefile')).join('\n')
 }
 
-function componenttransform(input: any) {
-  const componentlist = [];
-  for (const value of _.get(input, `component`)) {
+function componentTransform(input: unknown) {
+  const componentlist: Record<string, unknown>[] = [];
+  ///add check if component is an array
+  for (const value of (_.get(input, `component`) as Record<string, unknown>[])) {
     if (_.get(value,`vulnerabilities`) !== '') {
       componentlist.push(value);
     }
   }
 
 
-  const vulnarr = [];
+  const vulnarr: Record<string, unknown>[] = [];
   for ( const component of componentlist) {
     if (Array.isArray(_.get(component, `vulnerabilities.vulnerability`))){
-      for ( const vuln of  _.get(component, `vulnerabilities.vulnerability`)) {
+      for ( const vuln of  (_.get(component, `vulnerabilities.vulnerability`) as Record<string, unknown>[])) {
         vulnarr.push(vuln);
       }
     }
     else {
-      vulnarr.push( _.get(component, `vulnerabilities.vulnerability`));
+      vulnarr.push( _.get(component, `vulnerabilities.vulnerability`) as Record<string, unknown>);
     }
   }
 
@@ -252,16 +257,12 @@ function componenttransform(input: any) {
     const components = [];
     let location = '';
     const currcve = _.get(vuln, `cve_id`);
-    const cwe = [];
-    cwe.push(_.get(vuln, `cwe_id`));
-    const tag = CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG);
-    _.set(vuln, `nist`, tag);
-    const impact = impactMapping(_.get(vuln, `severity`));
+    const impact = impactMapping(_.get(vuln, `severity`) as number);
     _.set(vuln, `impact`, impact);
     for ( const component of componentlist) {
       let hascve = false;
       if(Array.isArray(_.get(component, `vulnerabilities.vulnerability`))){
-        for (const compcve of _.get(component, `vulnerabilities.vulnerability`)) {
+        for (const compcve of (_.get(component, `vulnerabilities.vulnerability`) as Record<string, unknown>[])) {
           if (_.get(compcve, 'cve_id') === currcve) {
             hascve = true;
             location +=` ${_.get(component,`file_paths.file_path.value`)}`;
@@ -284,7 +285,7 @@ function componenttransform(input: any) {
     }
     _.set(vuln, `components`, components);
   }
-  return vulnarr
+  return vulnarr as unknown
 }
 
 
@@ -324,16 +325,29 @@ function controlMappingCve():MappedTransform<ExecJSON.Control & ILookupPath, ILo
     refs: [],
     tags: {
       cwe: {path: 'cwe_id'},
-      nist: {path: 'nist'}
+      nist: {
+        path: 'cwe_id',
+        transformer: (value: string) => {
+          if(isArray(value)){
+            return CWE_NIST_MAPPING.nistFilter(value as string[], DEFAULT_NIST_TAG);
+          }
+          else {
+            return CWE_NIST_MAPPING.nistFilter([value as string], DEFAULT_NIST_TAG);
+          }
+        } 
+      }
     },
     source_location: {
       ref: {path: 'paths'}
     },
+
     results:[
       {
         path: 'components',
         status: ExecJSON.ControlResultStatus.Failed,
-        code_desc: {transformer: formatSCACodeDesc},
+        ///code vs message, make sure code_desc is a description
+        code_desc: '',
+        message: {transformer: formatSCACodeDesc},
         start_time: {path: '$.detailedreport.first_build_submitted_date'}
       }
     ]
@@ -378,64 +392,53 @@ function controlMappingCwe(severity: number): MappedTransform<ExecJSON.Control &
 }
 
 export class VeracodeMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution & {data_remainder: unknown}, ILookupPath> = {
-    platform: {
-      name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
-      target_id: ''
-    },
-    data_remainder: {
-      transformer: formatPassthroughData
-    },
-    version: HeimdallToolsVersion,
-    statistics: {
-    },
-    profiles: [
-      {
-        name: {path: 'detailedreport.policy_name'},
-        version: {path: 'detailedreport.version'},
-        title: {path: 'detailedreport.static-analysis.modules.module.name'},
-        copyright: 'Copyright Veracode, Inc., 2014.',
-        supports: [],
-        attributes: [],
-        groups: [],
-        status: 'loaded',
-        controls: [
+  Original_Data: unknown;
+  defaultMapping(withRaw = false): MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> {
+    return {
+      platform: {
+        name: 'Heimdall Tools',
+        release: HeimdallToolsVersion,
+        target_id: ''
+      },
+      passthrough: {
+        auxiliarry_data: [  
           {
-            path: 'detailedreport.severity[0].category',
-            ...controlMappingCwe(5)
-          },
-          {
-            path: 'detailedreport.severity[1].category',
-            ...controlMappingCwe(4)
-          },
-          {
-            path: 'detailedreport.severity[2].category',
-            ...controlMappingCwe(3)
-          },
-          {
-            path: 'detailedreport.severity[3].category',
-            ...controlMappingCwe(2)
-          },
-          {
-            path: 'detailedreport.severity[4].category',
-            ...controlMappingCwe(1)
-          },
-          {
-            path: 'detailedreport.severity[5].category',
-            ...controlMappingCwe(0)
-          },
-          {
-            path: 'detailedreport.software_composition_analysis.vulnerable_components',
-            pathTransform: componenttransform,
-            ...controlMappingCve()
+            name: 'veracode',
+            data: {transformer: formatPassthroughData}
           }
         ],
-        sha256: ''
-      }
-    ]
+        ...(withRaw && {raw: this.Original_Data})
+      },
+      version: HeimdallToolsVersion,
+      statistics: {},
+      profiles: [
+        {
+          name: {path: 'detailedreport.policy_name'},
+          version: {path: 'detailedreport.policy_version'},
+          title: {path: 'detailedreport.static-analysis.modules.module.name'},
+          supports: [],
+          attributes: [],
+          groups: [],
+          status: 'loaded',
+          controls: [
+              ..._.range(0,6).map((value) => ({
+                path: `detailedreport.severity[${value}].category`,
+                ...controlMappingCwe(5-value)
+              })),
+            {
+              path: 'detailedreport.software_composition_analysis.vulnerable_components',
+              pathTransform: componentTransform,
+              ...controlMappingCve()
+            }
+          ],
+          sha256: ''
+        }
+      ]
+    }
   };
-  constructor(xml: string) {
+  constructor(xml: string, withRaw = false) {
     super(parseXml(xml));
+    this.Original_Data = xml
+    this.setMappings(this.defaultMapping(withRaw))
   }
 }
