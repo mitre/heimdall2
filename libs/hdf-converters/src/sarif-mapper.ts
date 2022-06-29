@@ -141,9 +141,12 @@ export class SarifMapper extends BaseConverter {
     ],
     passthrough: {
       transformer: (data: Record<string, any>): Record<string, unknown> => {
-        let auxData = _.omit(data, ['version']);
+        const auxData = _.omit(data, ['version']);
         auxData.runs = auxData.runs.map((run: any) => _.omit(run, ['results']));
-        return {auxiliary_data: [{name: 'SARIF', data: auxData}], ...(this.withRaw && {raw: data})};
+        return {
+            auxiliary_data: [{ name: 'SARIF', data: auxData }],
+            ...(this.withRaw && { raw: data })
+        };
       }
     }
   };
