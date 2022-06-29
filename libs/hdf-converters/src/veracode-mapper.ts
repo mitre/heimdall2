@@ -113,7 +113,7 @@ function formatCweDesc(input: Record<string, unknown>): string {
   const text = [];
   if (_.has(input, 'cwe')) {
     if(Array.isArray(_.get(input, 'cwe'))){
-      text.push(...((_.get(input, 'cwe') as Record<string,unknown>[]).map((value: Record<string,unknown>) =>  
+      text.push(...((_.get(input, 'cwe') as Record<string,unknown>[]).map((value: Record<string,unknown>) =>
       `CWE-${_.get(value, 'cweid')}: ${_.get(value, 'cwename')} Description: ${_.get(value, 'description.text.text')}; `
       )));
     }
@@ -132,7 +132,7 @@ function getFlaws(input: unknown): string[] {
     for(const value of input){
       if (!Array.isArray(_.get(value, 'staticflaws.flaw'))) {
         flawArr.push(_.get(value, 'staticflaws.flaw') as string);
-      } 
+      }
       else {
         flawArr.push(..._.get(value, 'staticflaws.flaw') as string[]);
       }
@@ -225,20 +225,7 @@ function formatSourceLocation(input: Record<string,unknown>[]): string {
       flawArr.push(..._.get(input[0], 'staticflaws.flaw') as string[]);
     }
   }
- return flawArr.map((value) => _.get(value, 'sourcefile')).join('\n') 
-}
-
-function onetoone(input: any){
-  const mapping: Record<string,unknown>[] = [];
-  for(const component of _.get(input, 'vulnerable_components') as Record<string, unknown>[]){
-    if(_.get(component, 'vulnerabilities') !== ''){
-      for(const vuln of _.get(component, 'vulnerabilites.vulnerability') as Record<string, unknown>[]){
-        _.set(vuln, 'component', _.omit(component, 'vulnerabilities'))
-        mapping.push(vuln)
-      }
-    }
-  }
-  return mapping
+ return flawArr.map((value) => _.get(value, 'sourcefile')).join('\n')
 }
 
 function componenttransform(input: any) {
@@ -253,7 +240,7 @@ function componenttransform(input: any) {
   const vulnarr = [];
   for ( const component of componentlist) {
     if (Array.isArray(_.get(component, `vulnerabilities.vulnerability`))){
-      for ( let vuln of  _.get(component, `vulnerabilities.vulnerability`)) {
+      for ( const vuln of  _.get(component, `vulnerabilities.vulnerability`)) {
         vulnarr.push(vuln);
       }
     }
@@ -272,7 +259,7 @@ function componenttransform(input: any) {
     _.set(vuln, `nist`, tag);
     const impact = impactMapping(_.get(vuln, `severity`));
     _.set(vuln, `impact`, impact);
-    for ( let component of componentlist) {
+    for ( const component of componentlist) {
       let hascve = false;
       if(Array.isArray(_.get(component, `vulnerabilities.vulnerability`))){
         for (const compcve of _.get(component, `vulnerabilities.vulnerability`)) {

@@ -84,6 +84,11 @@ export function fingerprint(guessOptions: {
       splitLines[0].includes('Severity')
     ) {
       return 'prisma';
+    } else if (
+      guessOptions.data.indexOf('veracode') !== -1 &&
+      guessOptions.data.indexOf('detailedreport') !== -1
+      ) {
+      return 'veracode';
     }
   }
   return '';
