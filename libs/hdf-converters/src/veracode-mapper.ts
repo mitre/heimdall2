@@ -1,10 +1,12 @@
 import parser from 'fast-xml-parser';
+import fs from 'fs';
 import {ExecJSON} from 'inspecjs';
-import _, { isArray, range } from 'lodash';
+import _, { isArray } from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import {BaseConverter, ILookupPath, MappedTransform, parseXml} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 const STATIC_FLAWS = 'staticflaws.flaw'
+const SEVERITY = 'detailedreport.severity'
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -32,7 +34,7 @@ function nistTag(input: Record<string, unknown>): string[] {
 }
 
 function formatPassthroughData(input: Record<string, unknown>): Record<string,unknown>{
-  let omitted =_.omit(input,'detailedreport.severity')
+  let omitted =_.omit(input,SEVERITY)
   omitted = _.omit(omitted, 'detailedreport.software_composition_analysis')
   return omitted
 }
@@ -81,11 +83,11 @@ function formatCweData(input: Record<string, unknown>): string {
   if (_.has(input, 'cwe')) {
     if (Array.isArray(_.get(input, 'cwe'))){
      text.push(...(_.get(input, 'cwe') as Record<string, unknown>[]).map((cweinfo) => {
-        let cwe = `CWE-${_.get(cweinfo, `cweid`)}: `;
+        let cwe = `CWE-${_.get(cweinfo, 'cweid')}: `;
         cwe += `${_.get(cweinfo, 'cwename')}`;
         cwe += categories.map((value: string)  => {
           if (_.has(cweinfo, value)) {
-              return `${value}: ${_.get(cweinfo, value)}\n`;
+            return `${value}: ${_.get(cweinfo, value)}\n`;
           }
           else {
             return '';
@@ -95,12 +97,13 @@ function formatCweData(input: Record<string, unknown>): string {
       }));
     }
     else {
-      let cwe = `CWE-${_.get(input, `cwe.cweid`)}: `;
+      let cwe = `CWE-${_.get(input, 'cwe.cweid')}: `;
         const cwename = `cwe.cwename`;
         cwe += `${_.get(input, cwename)}`;
         cwe += _.compact(categories.map((value: string)  => {
-          if (_.has(input, `cwe.${value}`)) {
-              return `${value}: ${_.get(input, `cwe.${value}`)}\n`;
+          const cwevalue = `cwe.${value}`
+          if (_.has(input, cwevalue)) {
+            return `${value}: ${_.get(input, cwevalue)}\n`;
           }
           else {
             return '';
@@ -109,7 +112,7 @@ function formatCweData(input: Record<string, unknown>): string {
         text.push(cwe);
     }
   }
-  return text.join('\n') as string;
+  return text.join('\n');
 }
 
 function formatCweDesc(input: Record<string, unknown>): string {
@@ -233,13 +236,16 @@ function formatSourceLocation(input: Record<string,unknown>[]): string {
 
 function componentTransform(input: unknown) {
   const componentlist: Record<string, unknown>[] = [];
-  ///add check if component is an array
-  for (const value of (_.get(input, `component`) as Record<string, unknown>[])) {
-    if (_.get(value,`vulnerabilities`) !== '') {
-      componentlist.push(value);
+  if(isArray(_.get(input, `component`))){
+    for (const value of (_.get(input, `component`) as Record<string, unknown>[])) {
+      if (_.get(value,`vulnerabilities`) !== '') {
+       componentlist.push(value);
+      }
     }
   }
-
+  else {
+    componentlist.push(_.get(input, 'component')as Record<string, unknown>) 
+  }
 
   const vulnarr: Record<string, unknown>[] = [];
   for ( const component of componentlist) {
@@ -265,7 +271,7 @@ function componentTransform(input: unknown) {
         for (const compcve of (_.get(component, `vulnerabilities.vulnerability`) as Record<string, unknown>[])) {
           if (_.get(compcve, 'cve_id') === currcve) {
             hascve = true;
-            location +=` ${_.get(component,`file_paths.file_path.value`)}`;
+            location +=` ${_.get(component,'file_paths.file_path.value')}`;
             _.set(vuln, `paths`, location);
           }
         }
@@ -273,7 +279,7 @@ function componentTransform(input: unknown) {
       else{
         if (_.get(component, 'vulnerabilities.vulnerability.cve_id') === currcve) {
           hascve = true;
-          location +=` ${_.get(component,`file_paths.file_path.value`)}`;
+          location +=` ${_.get(component,'file_paths.file_path.value')}`;
           _.set(vuln, `paths`, location);
         }
 
@@ -286,34 +292,6 @@ function componentTransform(input: unknown) {
     _.set(vuln, `components`, components);
   }
   return vulnarr as unknown
-}
-
-
-function parseXml(xml: string) {
-  const options = {
-    attributeNamePrefix: '',
-    textNodeName: 'text',
-    ignoreAttributes: false
-  };
-
-  const parsedXML = parser.parse(xml, options);
-  if (_.has(parsedXML, 'summaryreport')) {
-    throw new Error('Current mapper does not accept summary reports');
-  }
-  const arrayedControls = _.get(parsedXML, 'detailedreport.severity').map(
-    (control: {category: unknown; level: string}) => {
-      if (Array.isArray(control.category)) {
-        return {level: control.level, category: control.category};
-      } else if (!control.category) {
-        return {level: control.level};
-      } else {
-        return {level: control.level, category: [control.category]};
-      }
-    }
-  );
-  _.set(parsedXML, 'detailedreport.severity', arrayedControls);
-
-  return parsedXML;
 }
 
 function controlMappingCve():MappedTransform<ExecJSON.Control & ILookupPath, ILookupPath> {
@@ -332,9 +310,9 @@ function controlMappingCve():MappedTransform<ExecJSON.Control & ILookupPath, ILo
             return CWE_NIST_MAPPING.nistFilter(value as string[], DEFAULT_NIST_TAG);
           }
           else {
-            return CWE_NIST_MAPPING.nistFilter([value as string], DEFAULT_NIST_TAG);
+            return CWE_NIST_MAPPING.nistFilter([value], DEFAULT_NIST_TAG);
           }
-        } 
+        }
       }
     },
     source_location: {
@@ -392,7 +370,7 @@ function controlMappingCwe(severity: number): MappedTransform<ExecJSON.Control &
 }
 
 export class VeracodeMapper extends BaseConverter {
-  Original_Data: unknown;
+  originalData: unknown;
   defaultMapping(withRaw = false): MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> {
     return {
       platform: {
@@ -401,13 +379,13 @@ export class VeracodeMapper extends BaseConverter {
         target_id: ''
       },
       passthrough: {
-        auxiliarry_data: [  
+        auxiliarry_data: [
           {
             name: 'veracode',
             data: {transformer: formatPassthroughData}
           }
         ],
-        ...(withRaw && {raw: this.Original_Data})
+        ...(withRaw && {raw: this.originalData})
       },
       version: HeimdallToolsVersion,
       statistics: {},
@@ -435,10 +413,26 @@ export class VeracodeMapper extends BaseConverter {
         }
       ]
     }
-  };
+  }
   constructor(xml: string, withRaw = false) {
-    super(parseXml(xml));
-    this.Original_Data = xml
+    const parsedXML = parseXml(xml);
+    if (_.has(parsedXML, 'summaryreport')) {
+      throw new Error('Current mapper does not accept summary reports');
+    }
+    const arrayedControls = (_.get(parsedXML, SEVERITY) as []).map(
+      (control: {category: unknown; level: string}) => {
+        if (Array.isArray(control.category)) {
+          return {level: control.level, category: control.category};
+        } else if (!control.category) {
+          return {level: control.level};
+        } else {
+          return {level: control.level, category: [control.category]};
+        }
+      }
+    );
+    _.set(parsedXML, SEVERITY, arrayedControls);
+    super(parsedXML);
+    this.originalData = xml
     this.setMappings(this.defaultMapping(withRaw))
   }
 }
