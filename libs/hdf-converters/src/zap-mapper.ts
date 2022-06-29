@@ -158,7 +158,7 @@ export class ZapMapper extends BaseConverter {
       }
     ],
     passthrough: {
-      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+      transformer: (data: Record<string, any>): Record<string, unknown> => {
         const auxData = _.omit(data, ['@generated', '@version']);
         auxData.site = _.omit(auxData.site, ['@host', '@name', 'alerts']);
         return {
