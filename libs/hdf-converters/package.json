@@ -6,7 +6,7 @@
   "files": [
     "lib"
   ],
-  "main": "src/index.ts",
+  "main": "lib/index.js",
   "publishConfig": {
     "main": "lib/index.js"
   },
@@ -24,7 +24,7 @@
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
     "test": "jest",
     "csv2json": "ts-node data/converters/csv2json.ts",
-    "xml2json": "ts-node data/converters/xml2json.ts"
+    "xml2json": "ts-node data/converters/xml2json.ts"    
   },
   "dependencies": {
     "@aws-sdk/client-config-service": "^3.95.0",
