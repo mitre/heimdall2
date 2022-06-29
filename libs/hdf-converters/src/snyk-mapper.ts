@@ -356,6 +356,22 @@ export class SnykResults {
 }
 
 export class SnykMapper extends BaseConverter {
+  generateTitle(
+    isApi: {apiVersion: 1} | undefined,
+    data: Record<string, unknown>
+  ): string {
+    if (isApi?.apiVersion === 1) {
+      return `Snyk Organization: ${_.get(
+        data,
+        'organizationData.name'
+      )} Snyk Project: ${_.get(data, 'projectData.name')}`;
+    }
+    const projectName = _.has(data, 'projectName')
+      ? `Snyk Project: ${_.get(data, 'projectName')} `
+      : '';
+    return `${projectName}Snyk Path: ${_.get(data, 'path')}`;
+  }
+
   defaultMapping(
     isApi?: {
       apiVersion: 1;
@@ -367,18 +383,7 @@ export class SnykMapper extends BaseConverter {
         name: 'Heimdall Tools',
         release: HeimdallToolsVersion,
         target_id: {
-          transformer: (data: Record<string, unknown>): string => {
-            if (isApi?.apiVersion === 1) {
-              return `Snyk Organization: ${_.get(
-                data,
-                'organizationData.name'
-              )} Snyk Project: ${_.get(data, 'projectData.name')}`;
-            }
-            const projectName = _.has(data, 'projectName')
-              ? `Snyk Project: ${_.get(data, 'projectName')} `
-              : '';
-            return `${projectName}Snyk Path: ${_.get(data, 'path')}`;
-          }
+          transformer: this.generateTitle.bind(this, isApi)
         }
       },
       version: HeimdallToolsVersion,
@@ -387,18 +392,7 @@ export class SnykMapper extends BaseConverter {
         {
           name: 'Snyk Scan',
           title: {
-            transformer: (data: Record<string, unknown>): string => {
-              if (isApi?.apiVersion === 1) {
-                return `Snyk Organization: ${_.get(
-                  data,
-                  'organizationData.name'
-                )} Snyk Project: ${_.get(data, 'projectData.name')}`;
-              }
-              const projectName = _.has(data, 'projectName')
-                ? `Snyk Project: ${_.get(data, 'projectName')} `
-                : '';
-              return `${projectName}Snyk Path: ${_.get(data, 'path')}`;
-            }
+            transformer: this.generateTitle.bind(this, isApi)
           },
           ...(!isApi && {
             summary: {
