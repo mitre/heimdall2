@@ -378,7 +378,7 @@ export class SnykMapper extends BaseConverter {
     isApi?: {
       apiVersion: 1;
     },
-    withRaw?: boolean
+    withRaw = false
   ): MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> {
     return {
       platform: {
