@@ -64,21 +64,22 @@ export class SnykResults {
   apiVersion?: 1; // can be 1 or (to be implemented) 3
   apiClient?: AxiosInstance;
 
-  constructor(snykJson?: string, withRaw?: boolean) {
+  constructor(snykJson?: string, withRaw = false) {
     if (snykJson !== undefined) {
       this.data = JSON.parse(snykJson);
     }
     if (this.data !== undefined && !Array.isArray(this.data)) {
       this.data = [this.data];
     }
-    this.withRaw = withRaw === true ? true : false; // this.withRaw can't be boolean | udefined
+    this.withRaw = withRaw;
   }
 
   // api constructor
   static SnykAPI(
     apiToken: string,
     apiVersion: 1 = 1,
-    ids?: string[] // should be in the form of organizationId or organizationId:projectId
+    ids?: string[], // should be an array with items in the form of organizationId or organizationId:projectId
+    withRaw = false
   ): SnykResults {
     const ret = new SnykResults();
     ret.usingApi = true;
@@ -109,6 +110,8 @@ export class SnykResults {
         (_.has(error, 'response.status') &&
           _.get(error, 'response.status') === 429)
     });
+
+    ret.withRaw = withRaw;
 
     return ret;
   }
