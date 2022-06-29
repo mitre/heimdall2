@@ -355,6 +355,8 @@ export class SnykResults {
   }
 }
 
+const SNYK_API_ISSUE_DATA_PATH = 'issueData.';
+
 export class SnykMapper extends BaseConverter {
   generateTitle(
     isApi: {apiVersion: 1} | undefined,
@@ -413,53 +415,55 @@ export class SnykMapper extends BaseConverter {
               tags: {
                 nist: {
                   path: `${
-                    isApi?.apiVersion === 1 ? 'issueData.' : ''
+                    isApi?.apiVersion === 1 ? SNYK_API_ISSUE_DATA_PATH : ''
                   }identifiers.CWE`,
                   transformer: nistTag
                 },
                 cweid: {
                   path: `${
-                    isApi?.apiVersion === 1 ? 'issueData.' : ''
+                    isApi?.apiVersion === 1 ? SNYK_API_ISSUE_DATA_PATH : ''
                   }identifiers.CWE`,
                   transformer: (input: unknown) => input || []
                 },
                 cveid: {
                   path: `${
-                    isApi?.apiVersion === 1 ? 'issueData.' : ''
+                    isApi?.apiVersion === 1 ? SNYK_API_ISSUE_DATA_PATH : ''
                   }identifiers.CVE`,
                   transformer: (input: unknown) => input || []
                 },
                 ghsaid: {
                   path: `${
-                    isApi?.apiVersion === 1 ? 'issueData.' : ''
+                    isApi?.apiVersion === 1 ? SNYK_API_ISSUE_DATA_PATH : ''
                   }identifiers.GHSA`,
                   transformer: (input: unknown) => input || []
                 },
                 exploitMaturity: {
-                  path: `${isApi?.apiVersion === 1 ? 'issueData.' : ''}exploit${
-                    isApi?.apiVersion === 1 ? 'Maturity' : ''
-                  }`
+                  path: `${
+                    isApi?.apiVersion === 1 ? SNYK_API_ISSUE_DATA_PATH : ''
+                  }exploit${isApi?.apiVersion === 1 ? 'Maturity' : ''}`
                 },
                 CVSSv3: {
                   path: `${
-                    isApi?.apiVersion === 1 ? 'issueData.' : ''
+                    isApi?.apiVersion === 1 ? SNYK_API_ISSUE_DATA_PATH : ''
                   }identifiers.CVSSv3`
                 },
                 cvssScore: {
                   path: `${
-                    isApi?.apiVersion === 1 ? 'issueData.' : ''
+                    isApi?.apiVersion === 1 ? SNYK_API_ISSUE_DATA_PATH : ''
                   }identifiers.cvssScore`
                 }
               },
               refs: [],
               source_location: {},
               title: {
-                path: `${isApi?.apiVersion === 1 ? 'issueData.' : ''}title`
+                path: `${
+                  isApi?.apiVersion === 1 ? SNYK_API_ISSUE_DATA_PATH : ''
+                }title`
               },
               id: {path: 'id'},
               desc: {
                 path: `${
-                  isApi?.apiVersion === 1 ? 'issueData.' : ''
+                  isApi?.apiVersion === 1 ? SNYK_API_ISSUE_DATA_PATH : ''
                 }description`,
                 transformer: (description: string): string => {
                   return (
@@ -476,7 +480,7 @@ export class SnykMapper extends BaseConverter {
                   label: 'fix',
                   data: {
                     path: `${
-                      isApi?.apiVersion === 1 ? 'issueData.' : ''
+                      isApi?.apiVersion === 1 ? SNYK_API_ISSUE_DATA_PATH : ''
                     }description`,
                     transformer: (description: string): string => {
                       return (
@@ -493,7 +497,7 @@ export class SnykMapper extends BaseConverter {
                   label: 'check',
                   data: {
                     path: `${
-                      isApi?.apiVersion === 1 ? 'issueData.' : ''
+                      isApi?.apiVersion === 1 ? SNYK_API_ISSUE_DATA_PATH : ''
                     }description`,
                     transformer: (description: string): string => {
                       return (
@@ -510,7 +514,7 @@ export class SnykMapper extends BaseConverter {
                   label: 'refs',
                   data: {
                     path: `${
-                      isApi?.apiVersion === 1 ? 'issueData.' : ''
+                      isApi?.apiVersion === 1 ? SNYK_API_ISSUE_DATA_PATH : ''
                     }description`,
                     transformer: (description: string): string => {
                       return (
@@ -525,7 +529,9 @@ export class SnykMapper extends BaseConverter {
                 }
               ],
               impact: {
-                path: `${isApi?.apiVersion === 1 ? 'issueData.' : ''}severity`,
+                path: `${
+                  isApi?.apiVersion === 1 ? SNYK_API_ISSUE_DATA_PATH : ''
+                }severity`,
                 transformer: impactMapping(IMPACT_MAPPING)
               },
               code: {
