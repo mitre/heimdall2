@@ -1,6 +1,6 @@
 import fs from 'fs';
 import {VeracodeMapper} from '../../../src/veracode-mapper';
-import {omitVersions} from '../../utils'
+import {omitVersions} from '../../utils';
 describe('veracode_mapper', () => {
   it('Successfully converts Veracode reports', () => {
     const mapper = new VeracodeMapper(

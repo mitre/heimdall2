@@ -87,7 +87,7 @@ export function fingerprint(guessOptions: {
     } else if (
       guessOptions.data.indexOf('veracode') !== -1 &&
       guessOptions.data.indexOf('detailedreport') !== -1
-      ) {
+    ) {
       return 'veracode';
     }
   }
