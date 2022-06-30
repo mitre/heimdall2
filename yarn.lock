@@ -8558,9 +8558,9 @@ d3-zoom@3:
     d3-transition "2 - 3"
 
 d3@^7.2.0:
-  version "7.4.5"
-  resolved "https://registry.yarnpkg.com/d3/-/d3-7.4.5.tgz#9f12c46bd91519bf2d7f2617978ac081d316aed2"
-  integrity sha512-Jl349p+A0oTrTeoSFSD6oIlKVDi2B4eJDOhn2kFSE+Fq7wRABBTWLwbG8IZKKdUFI3/fBgMxjUYwTjyoAB0EJg==
+  version "7.5.0"
+  resolved "https://registry.yarnpkg.com/d3/-/d3-7.5.0.tgz#495a2eb30159c34ad54dacf872ac056dd763f3ae"
+  integrity sha512-b0hUpzWOI99VOek1VpmARF67izlrvd6C83wAAP+Wm7c3Prx7080W26ETt51XTiUn5HDdgVytjrz1UX/0P48VdQ==
   dependencies:
     d3-array "3"
     d3-axis "3"
