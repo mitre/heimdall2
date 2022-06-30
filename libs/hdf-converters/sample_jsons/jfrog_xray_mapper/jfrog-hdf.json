@@ -441,9 +441,13 @@
     }
   ],
   "passthrough": {
-    "other_source_tool_data": {
-      "total_count": 30
-    },
-    "raw": ""
+    "auxiliary_data": [
+      {
+        "name": "Twistlock",
+        "data": {
+          "total_count": 30
+        }
+      }
+    ]
   }
 }
