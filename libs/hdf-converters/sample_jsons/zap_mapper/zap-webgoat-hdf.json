@@ -2121,12 +2121,16 @@
     }
   ],
   "passthrough": {
-    "other_source_tool_data": {
-      "site": {
-        "@port": "8191",
-        "@ssl": "false"
+    "auxiliary_data": [
+      {
+        "name": "OWASP ZAP",
+        "data": {
+          "site": {
+            "@port": "8191",
+            "@ssl": "false"
+          }
+        }
       }
-    },
-    "raw": ""
+    ]
   }
 }

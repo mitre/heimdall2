@@ -162,8 +162,8 @@ export class ZapMapper extends BaseConverter {
         const auxData = _.omit(data, ['@generated', '@version']);
         auxData.site = _.omit(auxData.site, ['@host', '@name', 'alerts']);
         return {
-          auxiliary_data: [{ name: 'OWASP ZAP', data: auxData }],
-            ...(this.withRaw && {raw: data})
+          auxiliary_data: [{name: 'OWASP ZAP', data: auxData}],
+          ...(this.withRaw && {raw: data})
         };
       }
     }
