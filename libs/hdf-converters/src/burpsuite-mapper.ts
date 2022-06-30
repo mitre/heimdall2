@@ -76,7 +76,7 @@ export class BurpSuiteMapper extends BaseConverter {
   > = {
     platform: {
       name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
+      release: HeimdallToolsVersion
     },
     version: HeimdallToolsVersion,
     statistics: {},
@@ -143,15 +143,13 @@ export class BurpSuiteMapper extends BaseConverter {
     ],
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        const auxData = _.omit(data, []);
         return {
-          auxiliary_data: [{name: 'Burp Suite', data: auxData}],
           ...(this.withRaw && {raw: data})
         };
       }
     }
   };
-  constructor(burpsXml: string, withRaw = false) {
+  constructor(burpsXml: string, withRaw = true) {
     super(parseXml(burpsXml));
     this.withRaw = withRaw;
   }
