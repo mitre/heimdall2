@@ -275,7 +275,7 @@ export class ScoutsuiteMapper extends BaseConverter {
       }
     }
   };
-  constructor(scoutsuiteJson: string, withRaw = false) {
+  constructor(scoutsuiteJson: string, withRaw = true) {
     super(collapseServices(JSON.parse(scoutsuiteJson.split('\n', 2)[1])));
     this.withRaw = withRaw;
   }
