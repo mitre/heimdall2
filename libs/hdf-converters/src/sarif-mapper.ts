@@ -144,7 +144,7 @@ export class SarifMapper extends BaseConverter {
         const runsData = _.get(data, 'runs');
         let i: keyof typeof runsData;
         for (i in runsData) {
-          runsData[i] = _.omit(runsData, ['results']);
+          runsData[i] = _.omit(runsData[i], ['results']);
         }
         return {
           auxiliary_data: [
