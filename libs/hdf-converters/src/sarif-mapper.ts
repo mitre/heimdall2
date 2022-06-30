@@ -148,7 +148,7 @@ export class SarifMapper extends BaseConverter {
               name: 'SARIF',
               data: {
                 $schema: _.get(data, '$schema'),
-                runs: _.map(runsData, (run: Record<string, unknown>) => _.get(run, ['tool', 'columnKind', 'externalPropertyFileReferences']))
+                runs: _.map(runsData, (run: Record<string, unknown>) => _.pick(run, ['tool', 'columnKind', 'externalPropertyFileReferences']))
               }
             }
           ],
