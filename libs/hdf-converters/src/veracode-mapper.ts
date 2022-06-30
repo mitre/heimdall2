@@ -336,16 +336,16 @@ function componentTransform(input: unknown) {
     for (const component of componentlist) {
       let hascve = false;
       if (Array.isArray(_.get(component, `vulnerabilities.vulnerability`))) {
-        for (const compcve of _.get(
+        (_.get(
           component,
           `vulnerabilities.vulnerability`
-        ) as Record<string, unknown>[]) {
+        ) as Record<string, unknown>[]).forEach((compcve) => {
           if (_.get(compcve, 'cve_id') === currcve) {
             hascve = true;
             location += ` ${_.get(component, FILE_PATH_VALUE)}`;
             _.set(vuln, `paths`, location);
           }
-        }
+        })
       } else {
         if (
           _.get(component, 'vulnerabilities.vulnerability.cve_id') === currcve
