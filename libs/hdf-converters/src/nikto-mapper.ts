@@ -25,7 +25,10 @@ function nistTag(id: string): string[] {
 export class NiktoMapper extends BaseConverter {
   withRaw: boolean;
 
-  mappings: MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> = {
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -81,7 +84,12 @@ export class NiktoMapper extends BaseConverter {
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
         return {
-          auxiliary_data: [{name: 'Nikto', data: _.omit(data, ['banner', 'host', 'port', 'vulnerabilities'])}],
+          auxiliary_data: [
+            {
+              name: 'Nikto',
+              data: _.omit(data, ['banner', 'host', 'port', 'vulnerabilities'])
+            }
+          ],
           ...(this.withRaw && {raw: data})
         };
       }
