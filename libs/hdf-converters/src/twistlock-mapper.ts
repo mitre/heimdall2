@@ -134,8 +134,14 @@ export class TwistlockMapper extends BaseConverter {
                     digest: _.get(data, 'results[0].digest'),
                     packages: _.get(data, 'results[0].packages'),
                     applications: _.get(data, 'results[0].applications'),
-                    complianceScanPassed: _.get(data, 'results[0].complianceScanPassed'),
-                    vulnerabilityScanPassed: _.get(data, 'results[0].vulnerabilityScanPassed'),
+                    complianceScanPassed: _.get(
+                      data,
+                      'results[0].complianceScanPassed'
+                    ),
+                    vulnerabilityScanPassed: _.get(
+                      data,
+                      'results[0].vulnerabilityScanPassed'
+                    ),
                     history: _.get(data, 'results[0].history'),
                     scanTime: _.get(data, 'results[0].scanTime'),
                     scanID: _.get(data, 'results[0].scanID')

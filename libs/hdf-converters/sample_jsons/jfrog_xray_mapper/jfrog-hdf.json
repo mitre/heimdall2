@@ -443,7 +443,7 @@
   "passthrough": {
     "auxiliary_data": [
       {
-        "name": "Twistlock",
+        "name": "JFrog Xray",
         "data": {
           "total_count": 30
         }
