@@ -141,10 +141,17 @@ export class SarifMapper extends BaseConverter {
     ],
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        const auxData = _.omit(data, ['version']);
-        auxData.runs = auxData.runs.map((run: Record<string, unknown>) => _.omit(run, ['results']));
+        const runsData = _.get(data, 'runs');
         return {
-          auxiliary_data: [{name: 'SARIF', data: auxData}],
+          auxiliary_data: [
+            {
+              name: 'SARIF',
+              data: {
+                $schema: _.get(data, '$schema'),
+                runs: _.map(runsData, (run: Record<string, unknown>) => _.get(run, ['tool', 'columnKind', 'externalPropertyFileReferences']))
+              }
+            }
+          ],
           ...(this.withRaw && {raw: data})
         };
       }
