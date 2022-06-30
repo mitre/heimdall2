@@ -143,8 +143,11 @@ export class BurpSuiteMapper extends BaseConverter {
     ],
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-
-        return {};
+        const auxData = _.omit(data, []);
+        return {
+          auxiliary_data: [{name: 'Burp Suite', data: auxData}],
+          ...(this.withRaw && {raw: data})
+        };
       }
     }
   };
