@@ -160,13 +160,10 @@ function formatCweDesc(input: Record<string, unknown>): string {
       );
     } else {
       text.push(
-        ...[_.get(input, 'cwe') as Record<string, unknown>].map(
-          (value: Record<string, unknown>) =>
-            `CWE-${_.get(value, 'cweid')}: ${_.get(
-              value,
-              'cwename'
-            )} Description: ${_.get(value, 'description.text.text')}; `
-        )
+            `CWE-${_.get(input, 'cwe.cweid')}: ${_.get(
+              input,
+              'cwe.cwename'
+            )} Description: ${_.get(input, 'cwe.description.text.text')}; `
       );
     }
   }
@@ -286,22 +283,8 @@ function formatSourceLocation(input: Record<string, unknown>[]): string {
   return flawArr.map((value) => _.get(value, 'sourcefile')).join('\n');
 }
 
-function componentTransform(input: unknown) {
-  const componentlist: Record<string, unknown>[] = [];
-  if (isArray(_.get(input, `component`))) {
-    for (const value of _.get(input, `component`) as Record<
-      string,
-      unknown
-    >[]) {
-      if (_.get(value, `vulnerabilities`) !== '') {
-        componentlist.push(value);
-      }
-    }
-  } else {
-    componentlist.push(_.get(input, 'component') as Record<string, unknown>);
-  }
-
-  const vulnarr: Record<string, unknown>[] = [];
+function vulnarrcreate(componentlist: Record<string, unknown>[]): Record<string, unknown>[] {
+  const vulnarr: Record<string, unknown>[] = []
   for (const component of componentlist) {
     if (Array.isArray(_.get(component, `vulnerabilities.vulnerability`))) {
       for (const vuln of _.get(
@@ -319,8 +302,33 @@ function componentTransform(input: unknown) {
       );
     }
   }
+  return vulnarr;
+}
 
-  for (const vuln of vulnarr) {
+function componentlistcreate(input:unknown){
+  const componentlist: Record<string, unknown>[] =[]
+  if (isArray(_.get(input, `component`))) {
+    for (const value of _.get(input, `component`) as Record<
+      string,
+      unknown
+    >[]) {
+      if (_.get(value, `vulnerabilities`) !== '') {
+        componentlist.push(value);
+      }
+    }
+  } else {
+    componentlist.push(_.get(input, 'component') as Record<string, unknown>);
+  }
+  return componentlist
+}
+
+function componentTransform(input: unknown) {
+  const componentlist: Record<string, unknown>[] = componentlistcreate(input);
+
+  const vulnarr: Record<string, unknown>[] = vulnarrcreate(componentlist);
+  
+
+  for (let vuln of vulnarr) {
     const components = [];
     let location = '';
     const currcve = _.get(vuln, `cve_id`);
