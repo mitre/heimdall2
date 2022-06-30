@@ -116,26 +116,25 @@ function collapseServices(
   return file;
 }
 export class ScoutsuiteMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  withRaw: boolean;
+
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
       target_id: {transformer: formatTargetId}
     },
     version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
-    },
+    statistics: {},
     profiles: [
       {
         name: 'Scout Suite Multi-Cloud Security Auditing Tool',
         version: {path: 'last_run.version'},
         title: {transformer: formatTitle},
-        maintainer: null,
         summary: {path: 'last_run.ruleset_about'},
-        license: null,
-        copyright: null,
-        copyright_email: null,
         supports: [],
         attributes: [
           {
@@ -220,22 +219,22 @@ export class ScoutsuiteMapper extends BaseConverter {
             }
           }
         ],
-        depends: [],
         groups: [],
         status: 'loaded',
         controls: [
           {
             path: 'services',
             key: 'id',
-            id: {path: '[0]'},
-            title: {path: '[1].description'},
             tags: {
               nist: {path: '[0]', transformer: nistTag}
             },
-            impact: {
-              path: '[1].level',
-              transformer: impactMapping(IMPACT_MAPPING)
-            },
+            refs: [
+              {url: {path: '[1].references[0]'}},
+              {ref: {path: '[1].compliance', transformer: compliance}}
+            ],
+            source_location: {},
+            title: {path: '[1].description'},
+            id: {path: '[0]'},
             desc: {path: '[1].rationale'},
             descriptions: [
               {data: {path: '[1].remediation'}, label: 'fix'},
@@ -243,18 +242,21 @@ export class ScoutsuiteMapper extends BaseConverter {
               {data: {path: '[1].path'}, label: 'path'},
               {data: {path: '[1].id_suffix'}, label: 'id_suffix'}
             ],
-            refs: [
-              {url: {path: '[1].references[0]'}},
-              {ref: {path: '[1].compliance', transformer: compliance}}
-            ],
-            source_location: {},
-            code: '',
+            impact: {
+              path: '[1].level',
+              transformer: impactMapping(IMPACT_MAPPING)
+            },
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string => {
+                return JSON.stringify(vulnerability, null, 2);
+              }
+            },
             results: [
               {
                 status: {path: '[1]', transformer: getStatus},
                 skip_message: {path: '[1]', transformer: checkSkip},
-                message: {path: '[1]', transformer: getMessage},
                 code_desc: {path: '[1].description'},
+                message: {path: '[1]', transformer: getMessage},
                 start_time: {path: '$.last_run.time'}
               }
             ]
@@ -262,9 +264,19 @@ export class ScoutsuiteMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ]
+    ],
+    passthrough: {
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+
+        return {
+          //auxiliary_data: [{name: 'Twistlock', data: auxData}],
+          ...(this.withRaw && {raw: data})
+        };
+      }
+    }
   };
-  constructor(scoutsuiteJson: string) {
+  constructor(scoutsuiteJson: string, withRaw = false) {
     super(collapseServices(JSON.parse(scoutsuiteJson.split('\n', 2)[1])));
+    this.withRaw = withRaw;
   }
 }
