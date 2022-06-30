@@ -400,8 +400,7 @@ function controlMappingCve(): MappedTransform<
         path: 'components',
         status: ExecJSON.ControlResultStatus.Failed,
         ///code vs message, make sure code_desc is a description
-        code_desc: '',
-        message: {transformer: formatSCACodeDesc},
+        code_desc: {transformer: formatSCACodeDesc},
         start_time: {path: '$.detailedreport.first_build_submitted_date'}
       }
     ]

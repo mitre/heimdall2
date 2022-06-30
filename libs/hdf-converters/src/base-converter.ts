@@ -208,7 +208,7 @@ export class BaseConverter {
     const haspathTransform =
       _.has(v, 'pathTransform') && _.isFunction(_.get(v, 'pathTransform'));
 
-    let pathTransform = (val: T | T[], file: Record<string, unknown>) => val;
+    let pathTransform = (val: T | T[], f: Record<string, unknown>) => val;
     if (haspathTransform) {
       pathTransform = _.get(v, 'pathTransform');
       v = _.omit(v as object, 'pathTransform') as T;
