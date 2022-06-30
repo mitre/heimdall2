@@ -327,7 +327,7 @@ function componentTransform(input: unknown) {
 
   const vulnarr: Record<string, unknown>[] = vulnarrcreate(componentlist);
 
-  for (const vuln of vulnarr) {
+  vulnarr.forEach((vuln) => {
     const components = [];
     let location = '';
     const currcve = _.get(vuln, `cve_id`);
@@ -361,7 +361,7 @@ function componentTransform(input: unknown) {
       }
     }
     _.set(vuln, `components`, components);
-  }
+  })
   return vulnarr as unknown;
 }
 
