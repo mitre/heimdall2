@@ -141,10 +141,9 @@ export class SarifMapper extends BaseConverter {
     ],
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        const runsData = _.get(data, 'runs');
-        let i: keyof typeof runsData;
-        for (i in runsData) {
-          runsData[i] = _.omit(runsData[i], ['results']);
+        let runsData = _.get(data, 'runs');
+        if (Array.isArray(runsData)) {
+          runsData = runsData.map((run: any) => _.omit(run, ['results']));
         }
         return {
           auxiliary_data: [
