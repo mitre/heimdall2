@@ -160,7 +160,17 @@ export class ZapMapper extends BaseConverter {
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
         return {
-          auxiliary_data: [{ name: 'OWASP ZAP', data: {'site': {'@port': _.get(data, 'site.@port'), '@ssl': _.get(data, 'site.@ssl')}}}],
+          auxiliary_data: [
+            {
+              name: 'OWASP ZAP',
+              data: {
+                'site': {
+                  '@port': _.get(data, 'site.@port'),
+                  '@ssl': _.get(data, 'site.@ssl')
+                }
+              }
+            }
+          ],
           ...(this.withRaw && {raw: data})
         };
       }
