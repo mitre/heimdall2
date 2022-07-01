@@ -82,6 +82,10 @@ import {Prop} from 'vue-property-decorator';
 
 interface Control {
   vid: string;
+  rid: string;
+  gid: string;
+  gtitle: string;
+  ruleVersion: string;
   severity: string;
   title: string;
   description: string;
@@ -211,6 +215,11 @@ export default class ExportCKLModal extends Vue {
       ...this.filter,
       fromFile: [file.uniqueId]
     });
+
+    const rootControls = _.uniqBy(controls, 'root.hdf.wraps.id').map(
+      ({root}) => root
+    );
+
     this.outputData.controlSets.push({
       fileName: file.filename,
       hostname: file.hostname,
@@ -223,7 +232,9 @@ export default class ExportCKLModal extends Vue {
       profileTitle: profileName,
       profileInfo: this.getProfileInfo(file),
       uuid: v4(),
-      controls: controls.map((control) => this.getDetails(control, profileName))
+      controls: rootControls.map((control) =>
+        this.getDetails(control, profileName)
+      )
     });
   }
 
@@ -278,6 +289,10 @@ export default class ExportCKLModal extends Vue {
   getDetails(control: ContextualizedControl, profileName: string): Control {
     return {
       vid: control.data.id,
+      rid: control.data.tags.rid || control.data.id,
+      gid: control.data.tags.gid || control.data.id,
+      ruleVersion: control.data.tags.stig_id || control.data.id,
+      gtitle: control.data.tags.gtitle || control.data.id,
       severity: this.cklSeverity(control.root.hdf.severity),
       title: control.data.title || '',
       description: control.data.desc || '',
