@@ -58,7 +58,6 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.NOT_FOUND]: []
 };
 
-INPUT_TYPES.ASFF;
 export function fingerprint(guessOptions: {
   data: string;
   filename: string;
