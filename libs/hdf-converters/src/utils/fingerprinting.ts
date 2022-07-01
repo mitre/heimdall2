@@ -5,7 +5,7 @@ export enum INPUT_TYPES {
   BURP = 'burp',
   FORTIFY = 'fortify',
   IONCHANNEL = 'ionchannel',
-  JFROG = "jfrog",
+  JFROG = 'jfrog',
   NIKTO = 'nikto',
   SARIF = 'sarif',
   SNYK = 'snyk',
@@ -24,7 +24,12 @@ export enum INPUT_TYPES {
 const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.ASFF]: ['Findings', 'AwsAccountId', 'ProductArn'],
   [INPUT_TYPES.FORTIFY]: ['FVDL', 'FVDL.EngineData.EngineVersion', 'FVDL.UUID'],
-  [INPUT_TYPES.IONCHANNEL]: ['analysis_id', 'team_id', 'source', 'trigger_hash'],
+  [INPUT_TYPES.IONCHANNEL]: [
+    'analysis_id',
+    'team_id',
+    'source',
+    'trigger_hash'
+  ],
   [INPUT_TYPES.JFROG]: ['total_count', 'data'],
   [INPUT_TYPES.NIKTO]: ['banner', 'host', 'ip', 'port', 'vulnerabilities'],
   [INPUT_TYPES.SARIF]: ['$schema', 'version', 'runs'],
@@ -53,8 +58,7 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.NOT_FOUND]: []
 };
 
-
-INPUT_TYPES.ASFF
+INPUT_TYPES.ASFF;
 export function fingerprint(guessOptions: {
   data: string;
   filename: string;
@@ -67,13 +71,13 @@ export function fingerprint(guessOptions: {
       (a, b) => {
         return a[1].filter((value) => _.get(object, value)).length >
           b[1].filter((value) => _.get(object, value)).length
-          ? { ...a, count: a[1].filter((value) => _.get(object, value)).length }
+          ? {...a, count: a[1].filter((value) => _.get(object, value)).length}
           : {
-            ...b,
-            count: b[1].filter((value) => _.get(object, value)).length
-          };
+              ...b,
+              count: b[1].filter((value) => _.get(object, value)).length
+            };
       }
-    ) as unknown as INPUT_TYPES[] & { count: number };
+    ) as unknown as INPUT_TYPES[] & {count: number};
     const result = fingerprinted[0];
     if (fingerprinted.count !== 0) {
       return result;
