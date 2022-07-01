@@ -235,10 +235,15 @@ If you would like to change Heimdall to your needs, Heimdall has 'Development Mo
 
 1. Install system dependencies with your system's package manager.
 
-   Debian/Ubuntu:
+   Ubuntu:
 
    - ```bash
-     sudo apt install postgresql nodejs=16 nano git
+     # grab nodesource for recent version of nodejs
+     sudo curl -sL https://deb.nodesource.com/setup_16.x -o /tmp/nodesource_setup.sh
+     sudo /tmp/nodesource_setup.sh
+
+     # use apt to install dependencies
+     sudo apt install postgresql nodejs nano git
      sudo npm install -g yarn
      ```
      
@@ -258,13 +263,19 @@ If you would like to change Heimdall to your needs, Heimdall has 'Development Mo
 3. Create the Postgres role:
 
    - ```sql
+     # Switch to the OS postgres user
+     sudo -u postgres -i
+
      # Start the Postgres terminal
      psql postgres
   
-     # Create the user
+     # Create the database user
      CREATE USER <username> with encrypted password '<password>';
      ALTER USER <username> CREATEDB;
      \q
+
+     # Switch back to your original OS user
+     exit
      ```
 
 4. Install project dependencies:
