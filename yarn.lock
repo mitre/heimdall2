@@ -20332,9 +20332,9 @@ vue-style-loader@^4.1.0, vue-style-loader@^4.1.2:
     loader-utils "^1.0.2"
 
 vue-svg-inline-loader@^2.0.0:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/vue-svg-inline-loader/-/vue-svg-inline-loader-2.1.3.tgz#0a0f8ba8cd913e5975d0e3da443e2ee09dffc912"
-  integrity sha512-2tYl1BVwjozD+MWxzHLH/vBhmmZIcqla6KIBpMKMDCZV/+Q7NZ+oLBH3qZ/57l5TiDUzLkrmN6BcaKWrBT4nsQ==
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/vue-svg-inline-loader/-/vue-svg-inline-loader-2.1.5.tgz#1af1b16dc5efdb575694293a519ca26d108f46db"
+  integrity sha512-4CTMaVr7FKFz5NtEygRTUtAx3zlNQUKExG1Nrocwb8B/PKSTdKeanAcl60dxG8jPy53ews2rTwiUUbC52I3Drg==
   dependencies:
     loader-utils "^2.0.0"
     schema-utils "^3.0.0"
