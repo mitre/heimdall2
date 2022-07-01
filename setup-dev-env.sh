@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -f apps/backend/.env ]; then
-	echo "apps/backend/.env already exists, if you would like to regenerate your secrets, please delete this file and re-run the script."
+	echo "apps/backend/.env already exists, so all unset environment variables will now be filled by default values. If you would like to completely regenerate your secrets, please delete this file and then re-run the script."
 else
 	echo "apps/backend/.env does not exist, creating..."
 	(umask 066; touch apps/backend/.env)
@@ -45,10 +45,10 @@ if ! grep -qF "NGINX_HOST" apps/backend/.env; then
 fi
 
 if [ -f ./nginx/certs/ssl_certificate.crt ]; then
-	echo "SSL Certificate already exists. if you would like to regenerate your certificates, please delete the files in ./nginx/certs/ and re-run this script."
+	echo "SSL Certificate already exists. If you would like to regenerate your certificates, please delete the files in ./nginx/certs/ and re-run this script."
 else
 	echo "SSL Certificate does not exist, creating self-signed certificate..."
-	echo "Do not use a self-signed certificate in a production environment."
+	echo "Be sure your production environment is configured to work with your self-signed certificate."
 	echo
 	echo "Generating certificate (Expires in 7 days)..."
 	openssl req -newkey rsa:4096 \
