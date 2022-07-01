@@ -31,6 +31,8 @@ abstract class HDFControl10 implements HDFControl {
   readonly parsedNistRevision: NistRevision | null;
   readonly severity: Severity;
   readonly waived: boolean;
+  readonly attested: boolean;
+  readonly attestationStatus?: 'passed' | 'failed';
   readonly descriptions: {[key: string]: string} = {};
   readonly isProfile: boolean;
 
@@ -41,10 +43,14 @@ abstract class HDFControl10 implements HDFControl {
   constructor(
     forControl: ResultControl_1_0 | ProfileControl_1_0,
     isProfile: boolean,
-    waived: boolean
+    waived: boolean,
+    attested: boolean,
+    attestationStatus?: 'passed' | 'failed'
   ) {
     this.wraps = forControl;
     this.waived = waived;
+    this.attested = attested;
+    this.attestationStatus = attestationStatus;
     this.isProfile = isProfile;
 
     // Most applications treat NIST tags an array, however the InSpec schema says the could also be a string
@@ -180,11 +186,12 @@ export class ExecControl extends HDFControl10 implements HDFControl {
   readonly status: ControlStatus;
 
   constructor(control: ResultControl_1_0) {
-    // Waived is true iff waived_data is present and skipped_due_to_waiver is true
+    // Waived is true if skipped_due_to_waiver is true
     super(
       control,
       false,
-      !!(control.waiver_data && control.waiver_data.skipped_due_to_waiver)
+      Boolean(control.waiver_data?.skipped_due_to_waiver),
+      Boolean(control.attestation_data)
     );
 
     // Build descriptions
@@ -235,6 +242,16 @@ export class ExecControl extends HDFControl10 implements HDFControl {
       return 'Failed';
     } else if (this.status_list.includes('passed')) {
       return 'Passed';
+    } else if (this.attested) {
+      if (this.attestationStatus === 'failed') {
+        return 'Failed';
+      } else if (this.attestationStatus === 'passed') {
+        return 'Passed';
+      } else {
+        throw new Error(
+          `Attestation for control ${this.wraps.id} exists with invalid status: ${this.attestationStatus}`
+        );
+      }
     } else if (this.status_list.includes('skipped')) {
       return 'Not Reviewed';
     } else {
@@ -286,7 +303,7 @@ export class ProfileControl extends HDFControl10 implements HDFControl {
   readonly status = 'From Profile';
 
   constructor(control: ProfileControl_1_0) {
-    super(control, true, false);
+    super(control, true, false, false);
     // Build descriptions
     if (control.descriptions) {
       for (const key of Object.keys(control.descriptions)) {

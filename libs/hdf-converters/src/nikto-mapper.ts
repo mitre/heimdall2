@@ -86,9 +86,4 @@ export class NiktoMapper extends BaseConverter {
   constructor(niktoJson: string) {
     super(JSON.parse(niktoJson));
   }
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
-  }
 }

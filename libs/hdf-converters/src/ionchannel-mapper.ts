@@ -329,9 +329,4 @@ export class IonChannelMapper extends BaseConverter {
   constructor(ionchannelJson: string) {
     super(preprocessIonChannelData(ionchannelJson));
   }
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
-  }
 }

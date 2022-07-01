@@ -143,9 +143,4 @@ export class SarifMapper extends BaseConverter {
   constructor(sarifJson: string) {
     super(JSON.parse(sarifJson));
   }
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
-  }
 }

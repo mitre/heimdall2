@@ -145,9 +145,4 @@ export class BurpSuiteMapper extends BaseConverter {
   constructor(burpsXml: string) {
     super(parseXml(burpsXml));
   }
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
-  }
 }

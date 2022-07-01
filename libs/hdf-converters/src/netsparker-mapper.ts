@@ -214,9 +214,4 @@ export class NetsparkerMapper extends BaseConverter {
   constructor(netsparkerXml: string) {
     super(parseXml(netsparkerXml));
   }
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
-  }
 }

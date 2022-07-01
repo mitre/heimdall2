@@ -169,11 +169,7 @@ export class ZapMapper extends BaseConverter {
       false
     );
   }
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
-  }
+
   toHdf(): ExecJSON.Execution {
     const original = super.toHdf();
     _.get(original, 'profiles').forEach((profile) => {

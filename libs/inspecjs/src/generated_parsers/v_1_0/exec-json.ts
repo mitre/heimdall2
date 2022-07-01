@@ -149,6 +149,7 @@ export interface ExecJSONProfile {
  * Describes a control and any findings it has.
  */
 export interface ExecJSONControl {
+    attestation_data?: null | AttestationData;
     /**
      * The raw source code of the control. Note that if this is an overlay control, it does not
      * include the underlying source code.
@@ -198,6 +199,23 @@ export interface ExecJSONControl {
      */
     title?:       null | string;
     waiver_data?: null | WaiverData;
+}
+
+export interface AttestationData {
+    control_id:  string;
+    explanation: string;
+    frequency:   string;
+    status:      ControlAttestationStatus;
+    updated:     string;
+    updated_by:  string;
+}
+
+/**
+ * The attested status of the control
+ */
+export enum ControlAttestationStatus {
+    Failed = "failed",
+    Passed = "passed",
 }
 
 /**
@@ -622,6 +640,7 @@ const typeMap: any = {
         { json: "version", js: "version", typ: u(undefined, u(null, "")) },
     ], "any"),
     "ExecJSONControl": o([
+        { json: "attestation_data", js: "attestation_data", typ: u(undefined, u(null, r("AttestationData"))) },
         { json: "code", js: "code", typ: u(undefined, u(null, "")) },
         { json: "desc", js: "desc", typ: u(undefined, u(null, "")) },
         { json: "descriptions", js: "descriptions", typ: u(undefined, u(a(r("ControlDescription")), null)) },
@@ -633,6 +652,14 @@ const typeMap: any = {
         { json: "tags", js: "tags", typ: m("any") },
         { json: "title", js: "title", typ: u(undefined, u(null, "")) },
         { json: "waiver_data", js: "waiver_data", typ: u(undefined, u(null, r("WaiverData"))) },
+    ], "any"),
+    "AttestationData": o([
+        { json: "control_id", js: "control_id", typ: "" },
+        { json: "explanation", js: "explanation", typ: "" },
+        { json: "frequency", js: "frequency", typ: "" },
+        { json: "status", js: "status", typ: r("ControlAttestationStatus") },
+        { json: "updated", js: "updated", typ: "" },
+        { json: "updated_by", js: "updated_by", typ: "" },
     ], "any"),
     "ControlDescription": o([
         { json: "data", js: "data", typ: "" },
@@ -702,6 +729,10 @@ const typeMap: any = {
     "StatisticBlock": o([
         { json: "total", js: "total", typ: 3.14 },
     ], "any"),
+    "ControlAttestationStatus": [
+        "failed",
+        "passed",
+    ],
     "ControlResultStatus": [
         "error",
         "failed",
