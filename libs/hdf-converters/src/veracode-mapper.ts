@@ -1,5 +1,5 @@
 import {ExecJSON} from 'inspecjs';
-import _, {isArray} from 'lodash';
+import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
@@ -43,9 +43,11 @@ function nistTag(input: Record<string, unknown>): string[] {
 function formatPassthroughData(
   input: Record<string, unknown>
 ): Record<string, unknown> {
-  let omitted = _.omit(input, SEVERITY);
-  omitted = _.omit(omitted, 'detailedreport.software_composition_analysis');
-  return omitted;
+  return _.omit(
+    input,
+    SEVERITY,
+    'detailedreport.software_composition_analysis'
+  );
 }
 function formatRecommendations(input: Record<string, unknown>): string {
   const text: string[] = [];
@@ -172,31 +174,14 @@ function formatCweDesc(input: Record<string, unknown>): string {
 
 function getFlaws(input: unknown): string[] {
   const flawArr: string[] = [];
-  if (Array.isArray(input)) {
-    for (const value of input) {
-      if (!Array.isArray(_.get(value, STATIC_FLAWS))) {
-        flawArr.push(_.get(value, STATIC_FLAWS) as string);
-      } else {
-        flawArr.push(...(_.get(value, STATIC_FLAWS) as string[]));
-      }
-    }
-  } else {
+  if (!Array.isArray(input)) {
     input = [input];
-    if (
-      !Array.isArray(
-        _.get((input as Record<string, unknown>[])[0], STATIC_FLAWS)
-      )
-    ) {
-      flawArr.push(
-        _.get((input as Record<string, unknown>[])[0], STATIC_FLAWS) as string
-      );
+  }
+  for (const value of input as Record<string, unknown>[]) {
+    if (!Array.isArray(_.get(value, STATIC_FLAWS))) {
+      flawArr.push(_.get(value, STATIC_FLAWS) as string);
     } else {
-      flawArr.push(
-        ...(_.get(
-          (input as Record<string, unknown>[])[0],
-          STATIC_FLAWS
-        ) as string[])
-      );
+      flawArr.push(...(_.get(value, STATIC_FLAWS) as string[]));
     }
   }
   return flawArr;
@@ -239,21 +224,21 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
     'version',
     'library',
     'vendor',
-    'descritpion',
+    'description',
     'added_date',
     'component_affects_policy_compliance'
   ];
   if (_.has(input, 'component_id')) {
     flawDesc = `component_id: ${_.get(input, 'component_id')};`;
-    flawDesc += categories
-      .map((value: string) => {
+    flawDesc += _.compact(
+      categories.map((value: string) => {
         if (_.has(input, value)) {
           return `${value}: ${_.get(input, value)}`;
         } else {
           return '';
         }
       })
-      .join('\n');
+    ).join('\n');
     if (_.has(input, FILE_PATH_VALUE)) {
       flawDesc += `file_path: ${_.get(input, FILE_PATH_VALUE)}`;
     }
@@ -282,11 +267,28 @@ function formatSourceLocation(input: Record<string, unknown>[]): string {
   return flawArr.map((value) => _.get(value, 'sourcefile')).join('\n');
 }
 
-function vulnarrcreate(
-  componentlist: Record<string, unknown>[]
+function componentListCreate(input: unknown): Record<string, unknown>[] {
+  const componentList: Record<string, unknown>[] = [];
+  if (Array.isArray(_.get(input, 'component'))) {
+    for (const value of _.get(input, 'component') as Record<
+      string,
+      unknown
+    >[]) {
+      if (_.get(value, `vulnerabilities`) !== '') {
+        componentList.push(value);
+      }
+    }
+  } else {
+    componentList.push(_.get(input, 'component') as Record<string, unknown>);
+  }
+  return componentList as Record<string, unknown>[];
+}
+
+function vulnarrCreate(
+  componentList: Record<string, unknown>[]
 ): Record<string, unknown>[] {
   const vulnarr: Record<string, unknown>[] = [];
-  for (const component of componentlist) {
+  for (const component of componentList) {
     if (Array.isArray(_.get(component, `vulnerabilities.vulnerability`))) {
       for (const vuln of _.get(
         component,
@@ -306,27 +308,10 @@ function vulnarrcreate(
   return vulnarr;
 }
 
-function componentlistcreate(input: unknown) {
-  const componentlist: Record<string, unknown>[] = [];
-  if (isArray(_.get(input, `component`))) {
-    for (const value of _.get(input, `component`) as Record<
-      string,
-      unknown
-    >[]) {
-      if (_.get(value, `vulnerabilities`) !== '') {
-        componentlist.push(value);
-      }
-    }
-  } else {
-    componentlist.push(_.get(input, 'component') as Record<string, unknown>);
-  }
-  return componentlist;
-}
+function componentTransform(input: unknown): Record<string, unknown>[] {
+  const componentList: Record<string, unknown>[] = componentListCreate(input);
 
-function componentTransform(input: unknown) {
-  const componentlist: Record<string, unknown>[] = componentlistcreate(input);
-
-  const vulnarr: Record<string, unknown>[] = vulnarrcreate(componentlist);
+  const vulnarr: Record<string, unknown>[] = vulnarrCreate(componentList);
 
   vulnarr.forEach((vuln) => {
     const components = [];
@@ -334,7 +319,7 @@ function componentTransform(input: unknown) {
     const currcve = _.get(vuln, `cve_id`);
     const impact = impactMapping(_.get(vuln, `severity`) as number);
     _.set(vuln, `impact`, impact);
-    for (const component of componentlist) {
+    for (const component of componentList) {
       let hascve = false;
       if (Array.isArray(_.get(component, `vulnerabilities.vulnerability`))) {
         (
@@ -363,9 +348,9 @@ function componentTransform(input: unknown) {
         components.push(_.omit(proxy, `vulnerabilities`));
       }
     }
-    _.set(vuln, `components`, components);
+    _.set(vuln, 'components', components);
   });
-  return vulnarr as unknown;
+  return vulnarr as Record<string, unknown>[];
 }
 
 function controlMappingCve(): MappedTransform<
@@ -376,14 +361,14 @@ function controlMappingCve(): MappedTransform<
     id: {path: 'cve_id'},
     title: {path: 'cve_id'},
     desc: {path: 'cve_summary'},
-    impact: {path: 'impact'},
+    impact: {path: 'severity', transformer: impactMapping},
     refs: [],
     tags: {
       cwe: {path: 'cwe_id'},
       nist: {
         path: 'cwe_id',
         transformer: (value: string) => {
-          if (isArray(value)) {
+          if (Array.isArray(value)) {
             return CWE_NIST_MAPPING.nistFilter(
               value as string[],
               DEFAULT_NIST_TAG
@@ -397,12 +382,10 @@ function controlMappingCve(): MappedTransform<
     source_location: {
       ref: {path: 'paths'}
     },
-
     results: [
       {
         path: 'components',
         status: ExecJSON.ControlResultStatus.Failed,
-        ///code vs message, make sure code_desc is a description
         code_desc: {transformer: formatSCACodeDesc},
         start_time: {path: '$.detailedreport.first_build_submitted_date'}
       }
@@ -459,11 +442,10 @@ export class VeracodeMapper extends BaseConverter {
     return {
       platform: {
         name: 'Heimdall Tools',
-        release: HeimdallToolsVersion,
-        target_id: ''
+        release: HeimdallToolsVersion
       },
       passthrough: {
-        auxiliarry_data: [
+        auxiliary_data: [
           {
             name: 'veracode',
             data: {transformer: formatPassthroughData}
