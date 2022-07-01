@@ -121,32 +121,22 @@ export class TwistlockMapper extends BaseConverter {
     ],
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        let resultsData = _.get(data, 'results');
+        if (Array.isArray(resultsData)) {
+            resultsData = resultsData.map((result: Record<string, unknown>) =>
+              _.omit(result, [
+                'name',
+                'collections',
+                'complianceDistribution',
+                'vulnerabilities',
+                'vulnerabilityDistribution']));
+        }
         return {
           auxiliary_data: [
             {
               name: 'Twistlock',
               data: {
-                results: [
-                  {
-                    id: _.get(data, 'results[0].id'),
-                    distro: _.get(data, 'results[0].distro'),
-                    distroRelease: _.get(data, 'results[0].distroRelease'),
-                    digest: _.get(data, 'results[0].digest'),
-                    packages: _.get(data, 'results[0].packages'),
-                    applications: _.get(data, 'results[0].applications'),
-                    complianceScanPassed: _.get(
-                      data,
-                      'results[0].complianceScanPassed'
-                    ),
-                    vulnerabilityScanPassed: _.get(
-                      data,
-                      'results[0].vulnerabilityScanPassed'
-                    ),
-                    history: _.get(data, 'results[0].history'),
-                    scanTime: _.get(data, 'results[0].scanTime'),
-                    scanID: _.get(data, 'results[0].scanID')
-                  }
-                ],
+                results: resultsData,
                 consoleURL: _.get(data, 'consoleURL')
               }
             }
