@@ -168,9 +168,7 @@ export class JfrogXrayMapper extends BaseConverter {
           auxiliary_data: [
             {
               name: 'JFrog Xray',
-              data: {
-                total_count: _.get(data, 'total_count')
-              }
+              data: _.pick(data, ['total_count'])
             }
           ],
           ...(this.withRaw && {raw: data})
