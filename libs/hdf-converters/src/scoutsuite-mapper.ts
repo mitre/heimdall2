@@ -267,9 +267,12 @@ export class ScoutsuiteMapper extends BaseConverter {
     ],
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-
+        let auxData = _.omit(data, ['account_id', 'environment', 'partition', 'provider_code', 'provider_name', 'services']);
+        if (auxData instanceof Object) {
+          auxData.last_run = _.pick(auxData.last_run, ['summary']);
+        }
         return {
-            auxiliary_data: _.omit(data, ['account_id', 'environment', 'partition', 'provider_code', 'provider_name', 'services']),
+          auxiliary_data: auxData,
           ...(this.withRaw && {raw: data})
         };
       }
