@@ -123,13 +123,15 @@ export class TwistlockMapper extends BaseConverter {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
         let resultsData = _.get(data, 'results');
         if (Array.isArray(resultsData)) {
-            resultsData = resultsData.map((result: Record<string, unknown>) =>
-              _.omit(result, [
-                'name',
-                'collections',
-                'complianceDistribution',
-                'vulnerabilities',
-                'vulnerabilityDistribution']));
+          resultsData = resultsData.map((result: Record<string, unknown>) =>
+            _.omit(result, [
+              'name',
+              'collections',
+              'complianceDistribution',
+              'vulnerabilities',
+              'vulnerabilityDistribution'
+            ])
+          );
         }
         return {
           auxiliary_data: [
