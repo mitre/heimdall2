@@ -163,12 +163,7 @@ export class ZapMapper extends BaseConverter {
           auxiliary_data: [
             {
               name: 'OWASP ZAP',
-              data: {
-                site: {
-                  '@port': _.get(data, 'site.@port'),
-                  '@ssl': _.get(data, 'site.@ssl')
-                }
-              }
+              data: _.pick(data, ['site.@port', 'site.@ssl'])
             }
           ],
           ...(this.withRaw && {raw: data})
