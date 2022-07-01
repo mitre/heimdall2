@@ -241,29 +241,27 @@ export class NessusResults {
 }
 
 export class NessusMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  withRaw: boolean;
+
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
       target_id: {path: 'name'}
     },
     version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
-    },
+    statistics: {},
     profiles: [
       {
         name: {transformer: getPolicyName},
         version: {transformer: getVersion},
         title: {transformer: getPolicyName},
-        maintainer: null,
         summary: {transformer: getPolicyName},
-        license: null,
-        copyright: null,
-        copyright_email: null,
         supports: [],
         attributes: [],
-        depends: [],
         groups: [],
         status: 'loaded',
         controls: [
@@ -283,6 +281,17 @@ export class NessusMapper extends BaseConverter {
               cvss3_base_score: {path: 'cvss3_base_score'},
               cvss_base_score: {path: 'cvss_base_score'}
             },
+            refs: [
+              {
+                url: {
+                  path: 'see_also'
+                }
+              }
+            ],
+            source_location: {},
+            title: {transformer: getTitle},
+            id: {transformer: getId},
+            desc: {transformer: getDesc},
             descriptions: [
               {
                 data: {transformer: getCheck},
@@ -293,17 +302,6 @@ export class NessusMapper extends BaseConverter {
                 label: 'fix'
               }
             ],
-            refs: [
-              {
-                url: {
-                  path: 'see_also'
-                }
-              }
-            ],
-            source_location: {},
-            id: {transformer: getId},
-            title: {transformer: getTitle},
-            desc: {transformer: getDesc},
             impact: {transformer: getImpact},
             code: {
               transformer: (reportItem: unknown) =>
@@ -322,7 +320,6 @@ export class NessusMapper extends BaseConverter {
                     return String(value);
                   }
                 },
-                run_time: 0.0,
                 start_time: {
                   path: '$.HostProperties.tag',
                   transformer: getStartTime
@@ -333,9 +330,13 @@ export class NessusMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ]
+    ],
+    passthrough: {
+      
+    }
   };
-  constructor(nessusJson: Record<string, unknown>) {
+  constructor(nessusJson: Record<string, unknown>, withRaw = false) {
     super(nessusJson);
+    this.withRaw = withRaw;
   }
 }
