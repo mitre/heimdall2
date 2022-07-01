@@ -12,7 +12,7 @@
   },
   "scripts": {
     "prepack": "run-script-os",
-    "prepack:darwin:linux": "yarn build && cp package.json package.json.orig && cat package.json.orig | sed 's_lib/index.js_lib/index.js_' > package.json",
+    "prepack:darwin:linux": "yarn build && cp package.json package.json.orig && cat package.json.orig | sed 's_src/index.ts_lib/index.js_' > package.json",
     "prepack:win32": "yarn build && copy package.json package.json.orig && copy package.release.json package.json",
     "postpack": "run-script-os",
     "postpack:darwin:linux": "mv package.json.orig package.json ",
