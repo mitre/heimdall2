@@ -21,8 +21,8 @@ import {
   ScoutsuiteMapper,
   SnykResults,
   TwistlockMapper,
-  XCCDFResultsMapper,
   VeracodeMapper,
+  XCCDFResultsMapper,
   ZapMapper
 } from '@mitre/hdf-converters';
 import axios from 'axios';
