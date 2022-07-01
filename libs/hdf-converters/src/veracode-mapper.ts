@@ -160,10 +160,10 @@ function formatCweDesc(input: Record<string, unknown>): string {
       );
     } else {
       text.push(
-            `CWE-${_.get(input, 'cwe.cweid')}: ${_.get(
-              input,
-              'cwe.cwename'
-            )} Description: ${_.get(input, 'cwe.description.text.text')}; `
+        `CWE-${_.get(input, 'cwe.cweid')}: ${_.get(
+          input,
+          'cwe.cwename'
+        )} Description: ${_.get(input, 'cwe.description.text.text')}; `
       );
     }
   }
@@ -218,7 +218,6 @@ function formatCodeDesc(input: Record<string, unknown>[]): string {
   ];
   if (_.has(input, 'sourcefilepath')) {
     flawDesc = `Sourcefile Path: ${_.get(input, 'sourcefilepath')}\n`;
-
     flawDesc += categories
       .map(([title, name]) => {
         if (_.has(input, name)) {
@@ -283,8 +282,10 @@ function formatSourceLocation(input: Record<string, unknown>[]): string {
   return flawArr.map((value) => _.get(value, 'sourcefile')).join('\n');
 }
 
-function vulnarrcreate(componentlist: Record<string, unknown>[]): Record<string, unknown>[] {
-  const vulnarr: Record<string, unknown>[] = []
+function vulnarrcreate(
+  componentlist: Record<string, unknown>[]
+): Record<string, unknown>[] {
+  const vulnarr: Record<string, unknown>[] = [];
   for (const component of componentlist) {
     if (Array.isArray(_.get(component, `vulnerabilities.vulnerability`))) {
       for (const vuln of _.get(
@@ -305,8 +306,8 @@ function vulnarrcreate(componentlist: Record<string, unknown>[]): Record<string,
   return vulnarr;
 }
 
-function componentlistcreate(input:unknown){
-  const componentlist: Record<string, unknown>[] =[]
+function componentlistcreate(input: unknown) {
+  const componentlist: Record<string, unknown>[] = [];
   if (isArray(_.get(input, `component`))) {
     for (const value of _.get(input, `component`) as Record<
       string,
@@ -319,7 +320,7 @@ function componentlistcreate(input:unknown){
   } else {
     componentlist.push(_.get(input, 'component') as Record<string, unknown>);
   }
-  return componentlist
+  return componentlist;
 }
 
 function componentTransform(input: unknown) {
@@ -336,16 +337,18 @@ function componentTransform(input: unknown) {
     for (const component of componentlist) {
       let hascve = false;
       if (Array.isArray(_.get(component, `vulnerabilities.vulnerability`))) {
-        (_.get(
-          component,
-          `vulnerabilities.vulnerability`
-        ) as Record<string, unknown>[]).forEach((compcve) => {
+        (
+          _.get(component, `vulnerabilities.vulnerability`) as Record<
+            string,
+            unknown
+          >[]
+        ).forEach((compcve) => {
           if (_.get(compcve, 'cve_id') === currcve) {
             hascve = true;
             location += ` ${_.get(component, FILE_PATH_VALUE)}`;
             _.set(vuln, `paths`, location);
           }
-        })
+        });
       } else {
         if (
           _.get(component, 'vulnerabilities.vulnerability.cve_id') === currcve
@@ -361,7 +364,7 @@ function componentTransform(input: unknown) {
       }
     }
     _.set(vuln, `components`, components);
-  })
+  });
   return vulnarr as unknown;
 }
 
