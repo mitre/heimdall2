@@ -28,6 +28,7 @@
           "desc": "(CIS_Linux_2.0.0 - 4.1.19) Ensure the audit configuration is immutable",
           "tags": {
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "nist": [
@@ -61,6 +62,7 @@
           "desc": "(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
           "tags": {
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "nist": [
@@ -227,7 +229,7 @@
           ]
         }
       ],
-      "sha256": "8a5ccc23560e31dd5ab3d7baf160b7f62aa761ee207cd542f30be2b3b6a4f1d7"
+      "sha256": "ae5153fefbd693da7e9ccd3f0699ab5d99a9f463252b536372ec3882a47aed01"
     }
   ]
 }

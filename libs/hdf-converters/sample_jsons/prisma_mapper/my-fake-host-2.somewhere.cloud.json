@@ -28,6 +28,7 @@
           "desc": "(CIS_Linux_2.0.0 - 5.2.2) Ensure permissions on SSH private host key files are configured",
           "tags": {
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "nist": [
@@ -160,7 +161,7 @@
           ]
         }
       ],
-      "sha256": "e912913202f64858aded79b0efbffbf14b826050493ed4ece407ba9319faa45c"
+      "sha256": "efdeed2dc23bf7f06ad745a889cdeed64e48f6932746eff54447f7293521e89f"
     }
   ]
 }

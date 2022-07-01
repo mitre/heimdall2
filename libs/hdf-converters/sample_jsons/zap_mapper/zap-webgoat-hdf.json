@@ -177,6 +177,7 @@
           "impact": 0.3,
           "tags": {
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "nist": [
@@ -252,6 +253,7 @@
           "impact": 0.5,
           "tags": {
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "nist": [
@@ -2163,6 +2165,7 @@
           "impact": 0.7,
           "tags": {
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "nist": [
@@ -2202,6 +2205,7 @@
           "impact": 0.3,
           "tags": {
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "nist": [
@@ -2368,7 +2372,9 @@
           "desc": "Unspecified form action: HTTP parameter override attack potentially possible. This is a known problem with Java Servlets but other platforms may also be vulnerable.",
           "impact": 0.5,
           "tags": {
-            "cci": [],
+            "cci": [
+              "CCI-001310"
+            ],
             "nist": [
               "SI-10"
             ],
@@ -2404,7 +2410,9 @@
           "desc": "SQL injection may be possible.",
           "impact": 0.7,
           "tags": {
-            "cci": [],
+            "cci": [
+              "CCI-001310"
+            ],
             "nist": [
               "SI-10"
             ],
@@ -2503,6 +2511,7 @@
           "impact": 0.3,
           "tags": {
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "nist": [
@@ -2530,7 +2539,7 @@
           ]
         }
       ],
-      "sha256": "8535cec2a6f838af31859c64351360db339a85ba237c674f9c936e6f84ee85a4"
+      "sha256": "299eb458159a0c3da2113df32e416870090e6d7fbbdbf0726932bb4374442c88"
     }
   ]
 }

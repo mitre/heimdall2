@@ -28,6 +28,7 @@
           "desc": "(CIS_Linux_2.0.0 - 5.1.8) Ensure at/cron is restricted to authorized users",
           "tags": {
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "nist": [
@@ -193,7 +194,7 @@
           ]
         }
       ],
-      "sha256": "17d6c94c7ae37a4758e465a81c3a7f82197aa88ab6579abefa52bd2cf4517b4c"
+      "sha256": "7364bc55ee685652f941b6dc0e57c0fc10718f5d4f21b4a53171d2351e62f86b"
     }
   ]
 }

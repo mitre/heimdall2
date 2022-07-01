@@ -36,6 +36,7 @@
             ],
             "cweid": "CWE-942: Overly Permissive Cross-domain Whitelist",
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "confidence": "Certain"
@@ -140,6 +141,7 @@
             ],
             "cweid": "CWE-942: Overly Permissive Cross-domain Whitelist",
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "confidence": "Certain"
@@ -242,7 +244,9 @@
               "SI-10"
             ],
             "cweid": "CWE-20: Improper Input Validation\nCWE-116: Improper Encoding or Escaping of Output",
-            "cci": [],
+            "cci": [
+              "CCI-001310"
+            ],
             "confidence": "Certain"
           },
           "descriptions": [
@@ -399,6 +403,7 @@
             ],
             "cweid": "CWE-530: Exposure of Backup File to an Unauthorized Control Sphere",
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "confidence": "Certain"
@@ -443,6 +448,7 @@
             ],
             "cweid": "CWE-16: Configuration",
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "confidence": "Certain"
@@ -480,7 +486,10 @@
               "SC-13"
             ],
             "cweid": "CWE-295: Improper Certificate Validation\nCWE-326: Inadequate Encryption Strength\nCWE-327: Use of a Broken or Risky Cryptographic Algorithm",
-            "cci": [],
+            "cci": [
+              "CCI-002438",
+              "CCI-002450"
+            ],
             "confidence": "Certain"
           },
           "descriptions": [
@@ -517,6 +526,7 @@
             ],
             "cweid": "CWE-16: Configuration\nCWE-436: Interpretation Conflict",
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "confidence": "Certain"
@@ -555,6 +565,7 @@
             ],
             "cweid": "CWE-524: Information Exposure Through Caching\nCWE-525: Information Exposure Through Browser Caching",
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "confidence": "Certain"
@@ -630,6 +641,7 @@
             ],
             "cweid": "CWE-523: Unprotected Transport of Credentials",
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "confidence": "Certain"
@@ -762,7 +774,8 @@
             ],
             "cweid": "CWE-200: Information Exposure\nCWE-388: Error Handling",
             "cci": [
-              "CCI-002418"
+              "CCI-002418",
+              "CCI-001312"
             ],
             "confidence": "Certain"
           },
@@ -798,7 +811,9 @@
               "SC-12"
             ],
             "cweid": "CWE-326: Inadequate Encryption Strength",
-            "cci": [],
+            "cci": [
+              "CCI-002438"
+            ],
             "confidence": "Certain"
           },
           "descriptions": [
@@ -824,7 +839,7 @@
           ]
         }
       ],
-      "sha256": "dfc527aab1b7e2ea5c2edcf60bea58757f0852552e2996246577dc7f8836d6aa"
+      "sha256": "de4123e079445e24b8d140bf5ea7a26babf5d4e82d768aaeb286c2ab1e25461c"
     }
   ]
 }

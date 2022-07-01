@@ -28,6 +28,7 @@
           "desc": "(CIS_Linux_2.0.0 - 1.4.1) Ensure permissions on bootloader config are configured",
           "tags": {
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "nist": [
@@ -61,6 +62,7 @@
           "desc": "(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
           "tags": {
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "nist": [
@@ -227,7 +229,7 @@
           ]
         }
       ],
-      "sha256": "322c521c056d1ea8dfddf837dd512b50fb4077f17c55b49d561ef1685e30af3d"
+      "sha256": "d75b6060aeb96db0f282fc2d010d9e97b366d3c77c6b5cf0b079610ff02b7ae4"
     }
   ]
 }

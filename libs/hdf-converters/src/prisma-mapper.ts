@@ -9,6 +9,7 @@ import {
 } from './base-converter';
 import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+  DEFAULT_UPDATE_REMEDIATION_NIST_TAGS,
   getCCIsForNISTTags
 } from './utils/global';
 
@@ -33,15 +34,11 @@ const SEVERITY_LOOKUP: Record<string, number> = {
   critical: 1
 };
 
-// REMEDIATION_NIST_TAG the set of default applicable NIST 800-53 controls for ensuring up-to-date packages.
-// SI-2 (FLAW REMEDIATION) - 	RA-5 (VULNERABILITY SCANNING)
-const REMEDIATION_NIST_TAG = ['SI-2', 'RA-5'];
-
 export function nistTag(cveTag: string | undefined) {
   if (!cveTag) {
     return DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
   } else {
-    return REMEDIATION_NIST_TAG;
+    return DEFAULT_UPDATE_REMEDIATION_NIST_TAGS;
   }
 }
 

@@ -12,23 +12,23 @@ describe('ASFF Mapper', () => {
       )
     );
 
-    // fs.writeFileSync(
-    //   'sample_jsons/asff_mapper/asff-cis_aws-foundations_benchmark_v1.2.0-hdf.json',
-    //   JSON.stringify(
-    //     mapper.toHdf()['CIS AWS Foundations Benchmark v1.2.0.json'],
-    //     null,
-    //     2
-    //   )
-    // );
+    fs.writeFileSync(
+      'sample_jsons/asff_mapper/asff-cis_aws-foundations_benchmark_v1.2.0-hdf.json',
+      JSON.stringify(
+        mapper.toHdf()['CIS AWS Foundations Benchmark v1.2.0.json'],
+        null,
+        2
+      )
+    );
 
-    // fs.writeFileSync(
-    //   'sample_jsons/asff_mapper/asff-aws_foundational_security_best_practices_v1.0.0-hdf.json',
-    //   JSON.stringify(
-    //     mapper.toHdf()['AWS Foundational Security Best Practices v1.0.0.json'],
-    //     null,
-    //     2
-    //   )
-    // );
+    fs.writeFileSync(
+      'sample_jsons/asff_mapper/asff-aws_foundational_security_best_practices_v1.0.0-hdf.json',
+      JSON.stringify(
+        mapper.toHdf()['AWS Foundational Security Best Practices v1.0.0.json'],
+        null,
+        2
+      )
+    );
 
     expect(_.mapValues(mapper.toHdf(), omitVersions)).toEqual({
       'CIS AWS Foundations Benchmark v1.2.0.json': omitVersions(
@@ -62,10 +62,10 @@ describe('ASFF Mapper', () => {
       )
     );
 
-    // fs.writeFileSync(
-    //   'sample_jsons/asff_mapper/prowler-hdf.json',
-    //   JSON.stringify(mapper.toHdf()['Prowler.json'], null, 2)
-    // );
+    fs.writeFileSync(
+      'sample_jsons/asff_mapper/prowler-hdf.json',
+      JSON.stringify(mapper.toHdf()['Prowler.json'], null, 2)
+    );
 
     expect(omitVersions(mapper.toHdf()['Prowler.json'])).toEqual(
       omitVersions(

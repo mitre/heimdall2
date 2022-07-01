@@ -29,6 +29,7 @@
           "title": "Prowler: [check11] Avoid the use of the root account (Scored)",
           "tags": {
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "nist": [
@@ -55,6 +56,7 @@
           "title": "Prowler: [check12] Ensure multi-factor authentication (MFA) is enabled for all IAM users that have a console password (Scored)",
           "tags": {
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "nist": [
@@ -117,7 +119,7 @@
           ]
         }
       ],
-      "sha256": "c3c1ad647edb38e67ca3d6935e41767c94c00b4bf9585733c76770db82d8b556"
+      "sha256": "3b20f394ea8a31946642407f38ff6ffb3c79db748ed026055eb9dd8f20638a43"
     }
   ]
 }

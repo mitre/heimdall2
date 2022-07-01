@@ -28,6 +28,7 @@
           "desc": "(CIS_Linux_2.0.0 - 5.2.2) Ensure permissions on SSH private host key files are configured",
           "tags": {
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "nist": [
@@ -73,6 +74,7 @@
           "desc": "(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
           "tags": {
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "nist": [
@@ -106,6 +108,7 @@
           "desc": "(CIS_Linux_2.0.0 - 6.2.9) Ensure users own their home directories",
           "tags": {
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "nist": [
@@ -339,7 +342,7 @@
           ]
         }
       ],
-      "sha256": "d40c6af41551b303e323b95c4008a9f072a2ecbdc0dd18337a21a579ba6461f7"
+      "sha256": "2539e31314f1cfdf559b581fe359efb19a8906d1f81e9507615b8f54815bfb50"
     }
   ]
 }

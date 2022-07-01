@@ -34,7 +34,9 @@
           "impact": 0.7,
           "code": null,
           "tags": {
-            "cci": [],
+            "cci": [
+              "CCI-001312"
+            ],
             "nist": [
               "SI-11"
             ]
@@ -49,7 +51,7 @@
           ]
         }
       ],
-      "sha256": "929cb5481394fff4319217b777d4c6d1ed4f2cf95943b7cf2fa3978e713e3e7e"
+      "sha256": "a3274b3e5cb49da5936ddbcd0b9bbdc1c78923b3adb8e92d05ac9bf0d6e705b3"
     }
   ]
 }

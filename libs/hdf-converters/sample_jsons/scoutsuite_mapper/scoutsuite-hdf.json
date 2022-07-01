@@ -151,7 +151,9 @@
               "AU-12",
               "SI-4(2)"
             ],
-            "cci": []
+            "cci": [
+              "CCI-000172"
+            ]
           },
           "impact": 0.5,
           "desc": "The lack of integration with CloudWatch hinders ral-time and historic activity logging as well as not allowing the configuration of alarms and notifications for anomalous account activity.",
@@ -200,7 +202,9 @@
             "nist": [
               "AU-12"
             ],
-            "cci": []
+            "cci": [
+              "CCI-000172"
+            ]
           },
           "impact": 0.5,
           "desc": "CloudTrail Data Logging is not configured, which means that S3 access and Lambda invocations are not logged. <br><br>Note: S3 bucket logging can be used in place of CloudTrail data events for S3. If that is the case, logs for Lambda invocations may still be missing.",
@@ -298,7 +302,9 @@
             "nist": [
               "AU-12"
             ],
-            "cci": []
+            "cci": [
+              "CCI-000172"
+            ]
           },
           "impact": 0.7,
           "desc": "API activity for global services such as IAM and STS is not logged. Investigation of incidents will be incomplete due to the lack of information.",
@@ -396,7 +402,9 @@
             "nist": [
               "AU-12"
             ],
-            "cci": []
+            "cci": [
+              "CCI-000172"
+            ]
           },
           "impact": 0.7,
           "desc": "Logging is disabled for a given Trail. Depending on the configuration, logs for important API activity may be missing.",
@@ -445,7 +453,9 @@
             "nist": [
               "AU-12"
             ],
-            "cci": []
+            "cci": [
+              "CCI-000172"
+            ]
           },
           "impact": 0.7,
           "desc": "CloudTrail is not configured, which means that API activity is not logged.",
@@ -488,7 +498,7 @@
           ]
         }
       ],
-      "sha256": "e95aae785e3ae5e791f733aef9dd6fffc1ea2be81a16239bb5a90d25de867c55"
+      "sha256": "e4818d2ebf20383b85cd289de52dd2a9e0485e945226368d06d5911c7b8828f3"
     }
   ]
 }

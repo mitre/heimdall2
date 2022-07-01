@@ -28,6 +28,7 @@
           "desc": "(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
           "tags": {
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "nist": [
@@ -61,6 +62,7 @@
           "desc": "(CIS_Linux_2.0.0 - 6.2.8) Ensure users' home directories permissions are 750 or more restrictive",
           "tags": {
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "nist": [
@@ -193,7 +195,7 @@
           ]
         }
       ],
-      "sha256": "6052153c793770c999b58259a187968bd53391aab75224543e5032734868b32f"
+      "sha256": "8a8aec34e9b73286220fc8058f2f89b5c73cf87103f2b2d277ad28f83d95d1d8"
     }
   ]
 }

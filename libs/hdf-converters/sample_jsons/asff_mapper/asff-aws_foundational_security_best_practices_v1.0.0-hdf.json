@@ -29,6 +29,7 @@
           "title": "AWS Foundational Security Best Practices v1.0.0: Config.1 AWS Config should be enabled",
           "tags": {
             "cci": [
+              "CCI-003173",
               "CCI-001643"
             ],
             "nist": [
@@ -94,7 +95,7 @@
           ]
         }
       ],
-      "sha256": "ea43179f7a1fa2c41b49314a2afb2f73c375ddb2e2ac076b59ce2af784a66efc"
+      "sha256": "7a54e62e4326166cd6eba7a73a9b887cec5d0eef872295f205ba7be251ec6d68"
     }
   ]
 }
