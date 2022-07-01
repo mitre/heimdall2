@@ -269,13 +269,13 @@ export class ScoutsuiteMapper extends BaseConverter {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
 
         return {
-          //auxiliary_data: [{name: 'Twistlock', data: auxData}],
+            auxiliary_data: _.omit(data, ['account_id', 'environment', 'partition', 'provider_code', 'provider_name', 'services']),
           ...(this.withRaw && {raw: data})
         };
       }
     }
   };
-  constructor(scoutsuiteJson: string, withRaw = true) {
+  constructor(scoutsuiteJson: string, withRaw = false) {
     super(collapseServices(JSON.parse(scoutsuiteJson.split('\n', 2)[1])));
     this.withRaw = withRaw;
   }
