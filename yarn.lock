@@ -19753,9 +19753,9 @@ typedarray@^0.0.6:
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
 typedoc@^0.23.2:
-  version "0.23.3"
-  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.23.3.tgz#52a3e2395b61ce050dbf28695954ed66d8455f7e"
-  integrity sha512-klFzfV8hV1Vu5BE95BRY5lN1a/GmuMRPebhW7yeY3JERcu1O6X3HZE4pahkNHmmVpe77/O2lRtNVFnmb5+47ZA==
+  version "0.23.4"
+  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.23.4.tgz#58a93033181d907baea616115190da3b5273416e"
+  integrity sha512-KvDc3aO7eSrPhPJ36zPfjKNdOMSQFeUOMOMZdG7jACQePJny+qEbufINCac/wAH8nMaCE3TRa5jcDmouRy58nA==
   dependencies:
     lunr "^2.3.9"
     marked "^4.0.16"
