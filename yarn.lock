@@ -4249,10 +4249,10 @@
   resolved "https://registry.yarnpkg.com/@types/mustache/-/mustache-4.1.3.tgz#467119da74ef48d9dd21c0a2f6dd398e1337421f"
   integrity sha512-Bc3wzdDGfHE8kcf6HsDwqq/IDUginRlWLHbs8dYFAo/2jj91lip6/XJFgKvcCbFO6aEVpOBT1RGF72LZgNIbKQ==
 
-"@types/node@*", "@types/node@^17.0.25":
-  version "17.0.39"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.39.tgz#3652d82e2a16b4ea679d5ea3143b816c91b7e113"
-  integrity sha512-JDU3YLlnPK3WDao6/DlXLOgSNpG13ct+CwIO17V8q0/9fWJyeMJJ/VyZ1lv8kDprihvZMydzVwf0tQOqGiY2Nw==
+"@types/node@*", "@types/node@^18.0.0":
+  version "18.0.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.0.0.tgz#67c7b724e1bcdd7a8821ce0d5ee184d3b4dd525a"
+  integrity sha512-cHlGmko4gWLVI27cGJntjs/Sj8th9aYwplmZFwmmgYQQvL5NUsgVJG7OddLvNfLqYS31KFN0s3qlaD9qCaxACA==
 
 "@types/node@12.12.50":
   version "12.12.50"
