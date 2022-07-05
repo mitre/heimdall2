@@ -11,7 +11,7 @@
     "main": "lib/index.js"
   },
   "scripts": {
-    "prepack": "yarn build && node pack-script.js",
+    "prepack": "yarn build && node prepack.js",
     "postpack": "run-script-os",
     "postpack:darwin:linux": "mv package.json.orig package.json ",
     "postpack:win32": "move package.json.orig package.json",
