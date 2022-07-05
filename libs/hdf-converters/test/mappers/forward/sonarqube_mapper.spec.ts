@@ -62,10 +62,10 @@ describe('sonarqube_mapper', () => {
     );
     const result: ExecJSON.Execution = await mapper.toHdf();
 
-    fs.writeFileSync(
-      'sample_jsons/sonarqube_mapper/sonarqube-pull-request-hdf.json',
-      JSON.stringify(result, null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/sonarqube_mapper/sonarqube-pull-request-hdf.json',
+    //   JSON.stringify(result, null, 2)
+    // );
 
     expect(omitVersions(result)).toEqual(
       omitVersions(

@@ -11,10 +11,10 @@ describe('jfrog_xray_mapper', () => {
       )
     );
 
-    fs.writeFileSync(
-      'sample_jsons/jfrog_xray_mapper/jfrog-hdf.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/jfrog_xray_mapper/jfrog-hdf.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
