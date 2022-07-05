@@ -204,7 +204,12 @@ function nistTag(input: IIdent | IIdent[]): string[] {
 }
 
 export class XCCDFResultsMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  withRaw: boolean;
+
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -388,7 +393,6 @@ export class XCCDFResultsMapper extends BaseConverter {
                 if (!setValueIdTracker) {
                   valueIdTracker = undefined;
                 }
-
                 const id = _.get(input, 'id');
                 if (typeof id === 'string') {
                   idTracker = id; // NOTE: global variable
@@ -449,16 +453,22 @@ export class XCCDFResultsMapper extends BaseConverter {
                     '$.Benchmark.TestResult'
                   ],
                   transformer: getStartTime
-                },
+                }
               }
             ]
           }
         ],
         sha256: ''
       }
-    ]
+    ],
+    passthrough: {
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        return {...(this.withRaw && {raw: data})};
+      }
+    }
   };
-  constructor(scapXml: string) {
+  constructor(scapXml: string, withRaw = true) {
     super(parseXml(scapXml));
+    this.withRaw = withRaw;
   }
 }
