@@ -143,13 +143,10 @@ export class NetsparkerMapper extends BaseConverter {
       target_id: {path: 'netsparker-enterprise.target.url'}
     },
     version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
-    },
+    statistics: {},
     profiles: [
       {
         name: 'Netsparker Enterprise Scan',
-        version: '',
         title: {
           path: 'netsparker-enterprise.target',
           transformer: (input: unknown): string => {
@@ -159,30 +156,23 @@ export class NetsparkerMapper extends BaseConverter {
             )} URL: ${_.get(input, 'url')}`;
           }
         },
-        maintainer: null,
         summary: 'Netsparker Enterprise Scan',
-        license: null,
-        copyright: null,
-        copyright_email: null,
         supports: [],
         attributes: [],
-        depends: [],
         groups: [],
         status: 'loaded',
         controls: [
           {
             path: 'netsparker-enterprise.vulnerabilities.vulnerability',
             key: 'id',
-            id: {path: 'LookupId'},
-            title: {path: 'name'},
-            desc: {transformer: formatControlDesc},
-            impact: {
-              path: 'severity',
-              transformer: impactMapping(IMPACT_MAPPING)
-            },
             tags: {
               nist: {path: 'classification', transformer: nistTag}
             },
+            refs: [],
+            source_location: {},
+            title: {path: 'name'},
+            id: {path: 'LookupId'},
+            desc: {transformer: formatControlDesc},
             descriptions: [
               {
                 data: {transformer: formatCheck},
@@ -193,15 +183,20 @@ export class NetsparkerMapper extends BaseConverter {
                 label: 'fix'
               }
             ],
-            refs: [],
-            source_location: {},
-            code: '',
+            impact: {
+              path: 'severity',
+              transformer: impactMapping(IMPACT_MAPPING)
+            },
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string => {
+                return JSON.stringify(vulnerability, null, 2);
+              }
+            },
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {path: 'http-request', transformer: formatCodeDesc},
                 message: {path: 'http-response', transformer: formatMessage},
-                run_time: 0,
                 start_time: {path: '$.netsparker-enterprise.target.initiated'}
               }
             ]

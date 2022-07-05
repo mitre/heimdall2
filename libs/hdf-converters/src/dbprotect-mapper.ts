@@ -103,49 +103,42 @@ export class DBProtectMapper extends BaseConverter {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
-      target_id: ''
     },
     version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
-    },
+    statistics: {},
     profiles: [
       {
         name: {path: 'data.[0].Policy'},
-        version: '',
         title: {path: 'data.[0].Job Name'},
-        maintainer: null,
         summary: {path: 'data.[0]', transformer: formatSummary},
-        license: null,
-        copyright: null,
-        copyright_email: null,
         supports: [],
         attributes: [],
-        depends: [],
         groups: [],
         status: 'loaded',
         controls: [
           {
             path: 'data',
             key: 'id',
-            id: {path: 'Check ID', transformer: idToString},
+            tags: {},
+            refs: [],
+            source_location: {},
             title: {path: 'Check'},
+            id: {path: 'Check ID', transformer: idToString},
             desc: {transformer: formatDesc},
             impact: {
               path: 'Risk DV',
               transformer: impactMapping(IMPACT_MAPPING)
             },
-            tags: {},
-            descriptions: [],
-            refs: [],
-            source_location: {},
-            code: '',
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string => {
+                return JSON.stringify(vulnerability, null, 2);
+              }
+            },
             results: [
               {
                 arrayTransformer: handleBacktrace,
                 status: {path: 'Result Status', transformer: getStatus},
                 code_desc: {path: 'Details'},
-                run_time: 0,
                 start_time: {path: 'Date'},
                 backtrace: [{path: 'Result Status', transformer: getBacktrace}]
               }
