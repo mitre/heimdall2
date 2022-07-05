@@ -40,15 +40,6 @@ function nistTag(input: Record<string, unknown>): string[] {
   return CWE_NIST_MAPPING.nistFilter(cwes as string[], DEFAULT_NIST_TAG);
 }
 
-function formatPassthroughData(
-  input: Record<string, unknown>
-): Record<string, unknown> {
-  return _.omit(
-    input,
-    SEVERITY,
-    'detailedreport.software_composition_analysis'
-  );
-}
 function formatRecommendations(input: Record<string, unknown>): string {
   const text: string[] = [];
   if (_.has(input, 'recommendations.para')) {
@@ -248,20 +239,14 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
 
 function formatSourceLocation(input: Record<string, unknown>[]): string {
   const flawArr: string[] = [];
-  if (Array.isArray(input)) {
-    for (const value of input) {
-      if (!Array.isArray(_.get(value, STATIC_FLAWS))) {
-        flawArr.push(_.get(value, STATIC_FLAWS) as string);
-      } else {
-        flawArr.push(...(_.get(value, STATIC_FLAWS) as string[]));
-      }
-    }
-  } else {
-    input = [input];
-    if (!Array.isArray(_.get(input[0], STATIC_FLAWS))) {
-      flawArr.push(_.get(input[0], STATIC_FLAWS) as string);
+  if (!Array.isArray(input)){
+    input = [input]
+  }
+  for (const value of input) {
+    if (!Array.isArray(_.get(value, STATIC_FLAWS))) {
+      flawArr.push(_.get(value, STATIC_FLAWS) as string);
     } else {
-      flawArr.push(...(_.get(input[0], STATIC_FLAWS) as string[]));
+      flawArr.push(...(_.get(value, STATIC_FLAWS) as string[]));
     }
   }
   return flawArr.map((value) => _.get(value, 'sourcefile')).join('\n');
@@ -281,7 +266,7 @@ function componentListCreate(input: unknown): Record<string, unknown>[] {
   } else {
     componentList.push(_.get(input, 'component') as Record<string, unknown>);
   }
-  return componentList as Record<string, unknown>[];
+  return componentList;
 }
 
 function vulnarrCreate(
@@ -350,7 +335,7 @@ function componentTransform(input: unknown): Record<string, unknown>[] {
     }
     _.set(vuln, 'components', components);
   });
-  return vulnarr as Record<string, unknown>[];
+  return vulnarr;
 }
 
 function controlMappingCve(): MappedTransform<
@@ -448,7 +433,13 @@ export class VeracodeMapper extends BaseConverter {
         auxiliary_data: [
           {
             name: 'veracode',
-            data: {transformer: formatPassthroughData}
+            data: {transformer: (value:Record<string, unknown>) => {
+              return _.omit(
+                value,
+                SEVERITY,
+                'detailedreport.software_composition_analysis'
+              );
+            }}
           }
         ],
         ...(withRaw && {raw: this.originalData})
@@ -471,6 +462,35 @@ export class VeracodeMapper extends BaseConverter {
             })),
             {
               path: 'detailedreport.software_composition_analysis.vulnerable_components',
+              /* The original formal of vulnerable_components is the following:
+              
+              [
+                {
+                  component_data (including file path)
+                  vulnerabliities{
+                    vulnerability{
+                      cve_data
+                    }
+                  }
+                }
+                ...
+              ]
+              
+              these need to be switched to be:
+              [
+                {
+                  cve_data
+                  filepaths
+                  components [
+                    {component_data}
+                  ]
+                }
+              ]
+              this is because in heimdall, in general each control should be the error itself, with tests
+              being specific failure instances having the cve, being listed as the control since it is an issue
+              and the component, where the issue happened as being a test is a better aproximation of this 
+              format. 
+              */
               pathTransform: componentTransform,
               ...controlMappingCve()
             }
