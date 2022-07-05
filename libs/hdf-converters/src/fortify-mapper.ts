@@ -116,30 +116,22 @@ export class FortifyMapper extends BaseConverter {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
-      target_id: ''
     },
     version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
-    },
+    statistics: {},
     profiles: [
       {
         name: 'Fortify Static Analyzer Scan',
         version: {path: 'FVDL.EngineData.EngineVersion'},
         title: 'Fortify Static Analyzer Scan',
-        maintainer: null,
         summary: {
           path: 'FVDL.UUID',
           transformer: (uuid: unknown): string => {
             return `Fortify Static Analyzer Scan of UUID: ${uuid}`;
           }
         },
-        license: null,
-        copyright: null,
-        copyright_email: null,
         supports: [],
         attributes: [],
-        depends: [],
         groups: [],
         status: 'loaded',
         controls: [
@@ -147,23 +139,25 @@ export class FortifyMapper extends BaseConverter {
             arrayTransformer: filterVuln,
             path: 'FVDL.Description',
             key: 'id',
-            id: {path: 'classID'},
-            title: {path: 'Abstract', transformer: parseHtml},
-            desc: {path: 'Explanation', transformer: parseHtml},
-            impact: {path: '$.FVDL.Vulnerabilities.Vulnerability'},
             tags: {
               nist: {transformer: nistTag}
             },
-            descriptions: [],
             refs: [],
             source_location: {},
-            code: '',
+            title: {path: 'Abstract', transformer: parseHtml},
+            id: {path: 'classID'},
+            desc: {path: 'Explanation', transformer: parseHtml},
+            impact: {path: '$.FVDL.Vulnerabilities.Vulnerability'},            
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string => {
+                return JSON.stringify(vulnerability, null, 2);
+              }
+            },
             results: [
               {
                 path: '$.FVDL.Snippets.Snippet',
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {transformer: processEntry},
-                run_time: 0,
                 start_time: {
                   path: '$.FVDL.CreatedTS',
                   transformer: (input: unknown): string => {
