@@ -195,7 +195,7 @@ export class NessusResults {
   data: Record<string, unknown>;
   customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
   withRaw: boolean;
-  constructor(nessusXml: string, withRaw = true) {
+  constructor(nessusXml: string, withRaw = false) {
     this.data = parseXml(nessusXml);
     this.withRaw = withRaw;
   }
