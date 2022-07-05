@@ -463,7 +463,16 @@ export class XCCDFResultsMapper extends BaseConverter {
     ],
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return {...(this.withRaw && {raw: data})};
+        const auxData = _.omit(data, ['Benchmark']);
+        return {
+          auxiliary_data: [
+            {
+              name: 'XCCDF',
+              data: _.omit(auxData, ['id', 'xml:lang', 'style', 'title', 'description', 'notice', 'front-matter', 'reference', 'platform', 'version', 'model', 'Group', 'TestResult'])
+            }
+          ],
+          ...(this.withRaw && {raw: data})
+        };
       }
     }
   };
