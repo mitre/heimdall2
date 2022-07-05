@@ -191,7 +191,8 @@ export class ExecControl extends HDFControl10 implements HDFControl {
       control,
       false,
       Boolean(control.waiver_data?.skipped_due_to_waiver),
-      Boolean(control.attestation_data)
+      Boolean(control.attestation_data),
+      control.attestation_data?.status
     );
 
     // Build descriptions
