@@ -13,7 +13,7 @@
   "scripts": {
     "prepack": "yarn build && node prepack.js",
     "postpack": "run-script-os",
-    "postpack:darwin:linux": "mv package.json.orig package.json ",
+    "postpack:darwin:linux": "mv package.json.orig package.json",
     "postpack:win32": "move package.json.orig package.json",
     "build": "run-script-os",
     "build:darwin:linux": "tsc -p ./tsconfig.build.json && cp -R ./data ./lib",
