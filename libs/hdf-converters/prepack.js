@@ -1,9 +1,10 @@
 import fs from 'fs'
 
-fs.copyFileSync('package.json', 'package.json.orig')
+const packageFile = 'package.json'
+fs.copyFileSync(packageFile, `${packageFile}.orig`)
 
-const input = JSON.parse(fs.readFileSync('package.json', 'utf8'))
+const input = JSON.parse(fs.readFileSync(packageFile, 'utf8'))
 
 input.main = 'lib/index.js'
 
-fs.writeFileSync('package.json', JSON.stringify(input, null, 2))
+fs.writeFileSync(packageFile, JSON.stringify(input, null, 2))
