@@ -1,4 +1,4 @@
-const fs = require('fs')
+import fs from 'fs'
 
 fs.copyFileSync('package.json', 'package.json.orig')
 
