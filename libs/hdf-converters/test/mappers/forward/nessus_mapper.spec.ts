@@ -14,16 +14,30 @@ describe('nessus_mapper', () => {
 
     const converted = mapper.toHdf();
     const expectedSet = [
-      JSON.parse(fs.readFileSync('sample_jsons/nessus_mapper/sample-10.0.0.1.json', {encoding: 'utf-8'})),
-      JSON.parse(fs.readFileSync('sample_jsons/nessus_mapper/sample-10.0.0.2.json', {encoding: 'utf-8'})),
-      JSON.parse(fs.readFileSync('sample_jsons/nessus_mapper/sample-10.0.0.3.json', {encoding: 'utf-8'}))
-    ]
+      JSON.parse(
+        fs.readFileSync('sample_jsons/nessus_mapper/sample-10.0.0.3.json', {
+          encoding: 'utf-8'
+        })
+      ),
+      JSON.parse(
+        fs.readFileSync('sample_jsons/nessus_mapper/sample-10.0.0.2.json', {
+          encoding: 'utf-8'
+        })
+      ),
+      JSON.parse(
+        fs.readFileSync('sample_jsons/nessus_mapper/sample-10.0.0.1.json', {
+          encoding: 'utf-8'
+        })
+      )
+    ];
 
     expect(Array.isArray(converted)).toBe(true);
 
     if (Array.isArray(converted)) {
-      expect(converted.map((resultsSet, i) => omitVersions(resultsSet))).toEqual(
-        expectedSet.map((resultsSet: ExecJSON.Execution) => omitVersions(resultsSet))
+      expect(converted.map((resultsSet) => omitVersions(resultsSet))).toEqual(
+        expectedSet.map((resultsSet: ExecJSON.Execution) =>
+          omitVersions(resultsSet)
+        )
       );
     }
   });
