@@ -485,7 +485,9 @@ export class XCCDFResultsMapper extends BaseConverter {
           auxiliary_data: [
             {
               name: 'XCCDF',
-              data: auxData
+              data: {
+                Benchmark: auxData
+              }
             }
           ],
           ...(this.withRaw && {raw: data})
