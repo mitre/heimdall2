@@ -28,15 +28,15 @@ function impactMapping(severity: number): number {
 
 function nistTag(input: Record<string, unknown>): string[] {
   const cwes = [];
-  if (Array.isArray(_.get(input, 'cwe'))) {
-    cwes.push(
-      ...(_.get(input, 'cwe') as Record<string, unknown>[]).map(
-        (value: Record<string, unknown>) => _.get(value, 'cweid')
-      )
-    );
-  } else {
-    cwes.push([_.get(input, 'cwe')].map((value) => _.get(value, 'cweid')));
+  let cwe = _.get(input, 'cwe');
+  if (!Array.isArray(cwe)) {
+    cwe = [cwe];
   }
+  cwes.push(
+    ...(cwe as Record<string, unknown>[]).map(
+      (value: Record<string, unknown>) => _.get(value, 'cweid')
+    )
+  );
   return CWE_NIST_MAPPING.nistFilter(cwes as string[], DEFAULT_NIST_TAG);
 }
 
@@ -101,39 +101,26 @@ function formatCweData(input: Record<string, unknown>): string {
     'owaspmobile'
   ];
   if (_.has(input, 'cwe')) {
-    if (Array.isArray(_.get(input, 'cwe'))) {
-      text.push(
-        ...(_.get(input, 'cwe') as Record<string, unknown>[]).map((cweinfo) => {
-          let cwe = `CWE-${_.get(cweinfo, 'cweid')}: `;
-          cwe += `${_.get(cweinfo, 'cwename')}`;
-          cwe += categories
-            .map((value: string) => {
-              if (_.has(cweinfo, value)) {
-                return `${value}: ${_.get(cweinfo, value)}\n`;
-              } else {
-                return '';
-              }
-            })
-            .join('');
-          return cwe;
-        })
-      );
-    } else {
-      let cwe = `CWE-${_.get(input, 'cwe.cweid')}: `;
-      const cwename = `cwe.cwename`;
-      cwe += `${_.get(input, cwename)}`;
-      cwe += _.compact(
-        categories.map((value: string) => {
-          const cwevalue = `cwe.${value}`;
-          if (_.has(input, cwevalue)) {
-            return `${value}: ${_.get(input, cwevalue)}\n`;
-          } else {
-            return '';
-          }
-        })
-      ).join('');
-      text.push(cwe);
+    let cweInput = _.get(input, 'cwe');
+    if (!Array.isArray(cweInput)) {
+      cweInput = [cweInput];
     }
+    text.push(
+      ...(cweInput as Record<string, unknown>[]).map((cweinfo) => {
+        let cwe = `CWE-${_.get(cweinfo, 'cweid')}: `;
+        cwe += `${_.get(cweinfo, 'cwename')}`;
+        cwe += categories
+          .map((value: string) => {
+            if (_.has(cweinfo, value)) {
+              return `${value}: ${_.get(cweinfo, value)}\n`;
+            } else {
+              return '';
+            }
+          })
+          .join('');
+        return cwe;
+      })
+    );
   }
   return text.join('\n');
 }
@@ -141,39 +128,37 @@ function formatCweData(input: Record<string, unknown>): string {
 function formatCweDesc(input: Record<string, unknown>): string {
   const text = [];
   if (_.has(input, 'cwe')) {
-    if (Array.isArray(_.get(input, 'cwe'))) {
-      text.push(
-        ...(_.get(input, 'cwe') as Record<string, unknown>[]).map(
-          (value: Record<string, unknown>) =>
-            `CWE-${_.get(value, 'cweid')}: ${_.get(
-              value,
-              'cwename'
-            )} Description: ${_.get(value, 'description.text.text')}; `
-        )
-      );
-    } else {
-      text.push(
-        `CWE-${_.get(input, 'cwe.cweid')}: ${_.get(
-          input,
-          'cwe.cwename'
-        )} Description: ${_.get(input, 'cwe.description.text.text')}; `
-      );
+    let cwe = _.get(input, 'cwe');
+    if (!Array.isArray(cwe)) {
+      cwe = [cwe];
     }
+    text.push(
+      ...(cwe as Record<string, unknown>[]).map(
+        (value: Record<string, unknown>) =>
+          `CWE-${_.get(value, 'cweid')}: ${_.get(
+            value,
+            'cwename'
+          )} Description: ${_.get(value, 'description.text.text')}; `
+      )
+    );
   }
   return text.join('\n');
 }
 
-function getFlaws(input: unknown): string[] {
-  const flawArr: string[] = [];
+function getFlaws(input: unknown): Record<string, unknown>[] {
+  const flawArr: Record<string, unknown>[] = [];
   if (!Array.isArray(input)) {
     input = [input];
   }
   for (const value of input as Record<string, unknown>[]) {
-    if (!Array.isArray(_.get(value, STATIC_FLAWS))) {
-      flawArr.push(_.get(value, STATIC_FLAWS) as string);
-    } else {
-      flawArr.push(...(_.get(value, STATIC_FLAWS) as string[]));
+    // change name
+    let staticFlaw = _.get(value, STATIC_FLAWS) as
+      | Record<string, unknown>
+      | Record<string, unknown>[];
+    if (!Array.isArray(staticFlaw)) {
+      staticFlaw = [staticFlaw];
     }
+    flawArr.push(...(staticFlaw as Record<string, unknown>[]));
   }
   return flawArr;
 }
@@ -239,8 +224,8 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
 
 function formatSourceLocation(input: Record<string, unknown>[]): string {
   const flawArr: string[] = [];
-  if (!Array.isArray(input)){
-    input = [input]
+  if (!Array.isArray(input)) {
+    input = [input];
   }
   for (const value of input) {
     if (!Array.isArray(_.get(value, STATIC_FLAWS))) {
@@ -254,88 +239,49 @@ function formatSourceLocation(input: Record<string, unknown>[]): string {
 
 function componentListCreate(input: unknown): Record<string, unknown>[] {
   const componentList: Record<string, unknown>[] = [];
-  if (Array.isArray(_.get(input, 'component'))) {
-    for (const value of _.get(input, 'component') as Record<
-      string,
-      unknown
-    >[]) {
-      if (_.get(value, `vulnerabilities`) !== '') {
-        componentList.push(value);
-      }
+  let component = _.get(input, 'component');
+  if (!Array.isArray(component)) {
+    component = [component];
+  }
+  for (const value of component as Record<string, unknown>[]) {
+    if (_.get(value, `vulnerabilities`) !== '') {
+      componentList.push(value);
     }
-  } else {
-    componentList.push(_.get(input, 'component') as Record<string, unknown>);
   }
   return componentList;
-}
-
-function vulnarrCreate(
-  componentList: Record<string, unknown>[]
-): Record<string, unknown>[] {
-  const vulnarr: Record<string, unknown>[] = [];
-  for (const component of componentList) {
-    if (Array.isArray(_.get(component, `vulnerabilities.vulnerability`))) {
-      for (const vuln of _.get(
-        component,
-        `vulnerabilities.vulnerability`
-      ) as Record<string, unknown>[]) {
-        vulnarr.push(vuln);
-      }
-    } else {
-      vulnarr.push(
-        _.get(component, `vulnerabilities.vulnerability`) as Record<
-          string,
-          unknown
-        >
-      );
-    }
-  }
-  return vulnarr;
 }
 
 function componentTransform(input: unknown): Record<string, unknown>[] {
   const componentList: Record<string, unknown>[] = componentListCreate(input);
 
-  const vulnarr: Record<string, unknown>[] = vulnarrCreate(componentList);
-
-  vulnarr.forEach((vuln) => {
-    const components = [];
-    let location = '';
-    const currcve = _.get(vuln, `cve_id`);
-    const impact = impactMapping(_.get(vuln, `severity`) as number);
-    _.set(vuln, `impact`, impact);
-    for (const component of componentList) {
-      let hascve = false;
-      if (Array.isArray(_.get(component, `vulnerabilities.vulnerability`))) {
-        (
-          _.get(component, `vulnerabilities.vulnerability`) as Record<
-            string,
-            unknown
-          >[]
-        ).forEach((compcve) => {
-          if (_.get(compcve, 'cve_id') === currcve) {
-            hascve = true;
-            location += ` ${_.get(component, FILE_PATH_VALUE)}`;
-            _.set(vuln, `paths`, location);
-          }
-        });
+  const vulns: Record<string, unknown>[] = componentList
+    .map((component) => {
+      let vulnerability = _.get(component, 'vulnerabilities.vulnerability') as
+        | Record<string, unknown>
+        | Record<string, unknown>[];
+      if (!Array.isArray(vulnerability)) {
+        vulnerability = [vulnerability];
+      }
+      vulnerability = vulnerability.map((vuln) => ({
+        ...vuln,
+        components: [component]
+      }));
+      return vulnerability;
+    })
+    .flat()
+    .reduce((acc: Record<string, unknown>[], cur: Record<string, unknown>) => {
+      const cveId = _.get(cur, 'cve_id');
+      const index = acc.findIndex(({cve_id}) => cveId === cve_id);
+      if (index === -1) {
+        return [...acc, cur];
       } else {
-        if (
-          _.get(component, 'vulnerabilities.vulnerability.cve_id') === currcve
-        ) {
-          hascve = true;
-          location += ` ${_.get(component, FILE_PATH_VALUE)}`;
-          _.set(vuln, `paths`, location);
-        }
+        (_.get(acc[index], 'components') as Record<string, unknown>[]).push(
+          ...(_.get(cur, 'components') as Record<string, unknown>[])
+        );
+        return acc;
       }
-      if (hascve === true) {
-        const proxy = _.cloneDeep(component);
-        components.push(_.omit(proxy, `vulnerabilities`));
-      }
-    }
-    _.set(vuln, 'components', components);
-  });
-  return vulnarr;
+    }, []);
+  return vulns;
 }
 
 function controlMappingCve(): MappedTransform<
@@ -352,20 +298,26 @@ function controlMappingCve(): MappedTransform<
       cwe: {path: 'cwe_id'},
       nist: {
         path: 'cwe_id',
-        transformer: (value: string) => {
-          if (Array.isArray(value)) {
-            return CWE_NIST_MAPPING.nistFilter(
-              value as string[],
-              DEFAULT_NIST_TAG
-            );
-          } else {
-            return CWE_NIST_MAPPING.nistFilter([value], DEFAULT_NIST_TAG);
+        transformer: (value: string | string[]) => {
+          if (!Array.isArray(value)) {
+            value = [value];
           }
+          return CWE_NIST_MAPPING.nistFilter(
+            value as string[],
+            DEFAULT_NIST_TAG
+          );
         }
       }
     },
     source_location: {
-      ref: {path: 'paths'}
+      ref: {
+        transformer: (vuln: Record<string, unknown>) =>
+          (_.get(vuln, 'components') as Record<string, unknown>[])
+            .map((comp: Record<string, unknown>) =>
+              _.get(comp, FILE_PATH_VALUE)
+            )
+            .join('\n')
+      }
     },
     results: [
       {
@@ -433,13 +385,14 @@ export class VeracodeMapper extends BaseConverter {
         auxiliary_data: [
           {
             name: 'veracode',
-            data: {transformer: (value:Record<string, unknown>) => {
-              return _.omit(
-                value,
-                SEVERITY,
-                'detailedreport.software_composition_analysis'
-              );
-            }}
+            data: {
+              transformer: (value: Record<string, unknown>) =>
+                _.omit(
+                  value,
+                  SEVERITY,
+                  'detailedreport.software_composition_analysis'
+                )
+            }
           }
         ],
         ...(withRaw && {raw: this.originalData})
@@ -468,9 +421,9 @@ export class VeracodeMapper extends BaseConverter {
                 {
                   component_data (including file path)
                   vulnerabliities{
-                    vulnerability{
+                    vulnerability[
                       cve_data
-                    }
+                    ]
                   }
                 }
                 ...
