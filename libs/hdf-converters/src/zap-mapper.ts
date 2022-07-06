@@ -140,9 +140,8 @@ export class ZapMapper extends BaseConverter {
             desc: {path: 'desc', transformer: parseHtml},
             impact: {path: 'riskcode', transformer: impactMapping},
             code: {
-              transformer: (vulnerability: Record<string, unknown>): string => {
-                return JSON.stringify(vulnerability, null, 2);
-              }
+              transformer: (vulnerability: Record<string, unknown>): string =>
+                JSON.stringify(vulnerability, null, 2)
             },
             results: [
               {
