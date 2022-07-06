@@ -4709,11 +4709,11 @@
   integrity sha512-RJB9I/3OMhycm0Hn0ArC2/2UGHJTldujPWZ0FDureX3YbK5CaE0Zfjg+qgp1i2HzIoIGPf25u6LLUsxPngKQ4w==
 
 "@vue/cli-plugin-eslint@^5.0.3":
-  version "5.0.5"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-eslint/-/cli-plugin-eslint-5.0.5.tgz#2a2fe7514171c9527a381a2bd21d850f6d266360"
-  integrity sha512-eEe4HY6VQkeaUDsgKitqdxanlSfzLkxEroMjLQrQB8pPtOpw9w4V9d9DqWJJhQnbw4LxQHnYvcu4eluDS3X0dA==
+  version "5.0.7"
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-eslint/-/cli-plugin-eslint-5.0.7.tgz#078d3c7fb8c31023fd0dcc38558fb385a0235912"
+  integrity sha512-KOiMq+zcMkKC1oUpPWHGYd4g+7ehCx2/NJqqA3Ds2wsLSNPZCJWGTfzK1p1j87kDVgM3zTPXxRCBFHa2lZW8eg==
   dependencies:
-    "@vue/cli-shared-utils" "^5.0.5"
+    "@vue/cli-shared-utils" "^5.0.7"
     eslint-webpack-plugin "^3.1.0"
     globby "^11.0.2"
     webpack "^5.54.0"
@@ -4846,7 +4846,7 @@
     semver "^6.1.0"
     strip-ansi "^6.0.0"
 
-"@vue/cli-shared-utils@^5.0.5", "@vue/cli-shared-utils@^5.0.6", "@vue/cli-shared-utils@^5.0.7":
+"@vue/cli-shared-utils@^5.0.6", "@vue/cli-shared-utils@^5.0.7":
   version "5.0.7"
   resolved "https://registry.yarnpkg.com/@vue/cli-shared-utils/-/cli-shared-utils-5.0.7.tgz#c6774573ea2e8106e11d3d6df342c2bd2554330a"
   integrity sha512-SzpqSExsp31gg7w+UAsqdrFyZGxKNTIE8MVwcfkevEx4BgugpLcmUxgcelgDktMs7GGykxluPIm0ZHDk3ytXeg==
