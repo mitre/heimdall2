@@ -247,9 +247,8 @@ export class ScoutsuiteMapper extends BaseConverter {
               transformer: impactMapping(IMPACT_MAPPING)
             },
             code: {
-              transformer: (vulnerability: Record<string, unknown>): string => {
-                return JSON.stringify(vulnerability, null, 2);
-              }
+              transformer: (vulnerability: Record<string, unknown>): string =>
+                JSON.stringify(vulnerability, null, 2)
             },
             results: [
               {
