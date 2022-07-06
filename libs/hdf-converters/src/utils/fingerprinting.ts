@@ -17,7 +17,7 @@ export enum INPUT_TYPES {
   SCOUTSUITE = 'scoutsuite',
   DB_PROTECT = 'dbProtect',
   PRISMA = 'prisma',
-  VERACODE = 'veracode'
+  VERACODE = 'veracode',
   NOT_FOUND = ''
 }
 
@@ -56,7 +56,8 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.XCCDF]: [],
   [INPUT_TYPES.NETSPARKER]: [],
   [INPUT_TYPES.SCOUTSUITE]: [],
-  [INPUT_TYPES.NOT_FOUND]: []
+  [INPUT_TYPES.NOT_FOUND]: [],
+  [INPUT_TYPES.VERACODE]: []
 };
 
 export function fingerprint(guessOptions: {
