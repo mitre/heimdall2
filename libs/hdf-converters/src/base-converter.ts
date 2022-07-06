@@ -10,6 +10,7 @@ export interface ILookupPath {
   path?: string | string[];
   transformer?: (value: any) => unknown;
   arrayTransformer?: (value: unknown[], file: any) => unknown[];
+  pathTransform?: (value: unknown, file: any) => unknown;
   key?: string;
 }
 
@@ -204,12 +205,25 @@ export class BaseConverter {
       v = _.omit(v as object, 'transformer') as T;
     }
 
+    const haspathTransform =
+      _.has(v, 'pathTransform') && _.isFunction(_.get(v, 'pathTransform'));
+
+    let pathTransform: (
+      val: T | T[],
+      f?: Record<string, unknown>
+    ) => T | T[] = (val: T | T[]) => val;
+    if (haspathTransform) {
+      pathTransform = _.get(v, 'pathTransform');
+      v = _.omit(v as object, 'pathTransform') as T;
+    }
+
     const hasPath = _.isObject(v) && _.has(v, 'path');
     let pathV = v;
     if (hasPath) {
-      pathV = this.handlePath(file, _.get(v, 'path') as string | string[]) as
-        | T
-        | T[];
+      pathV = pathTransform(
+        this.handlePath(file, _.get(v, 'path') as string | string[]) as T | T[],
+        file
+      );
       v = _.omit(v as object, 'path') as T;
     }
 
@@ -231,12 +245,12 @@ export class BaseConverter {
     if (_.keys(v).length > 0 && hasTransformer) {
       return {
         ...this.convertInternal(file, v),
-        ...(transformer(hasPath ? pathV : file) as object)
+        ...(transformer(hasPath ? pathV : (file as T | T[])) as object)
       } as MappedReform<T, ILookupPath>;
     }
 
     if (hasTransformer) {
-      return transformer(hasPath ? pathV : file) as
+      return transformer(hasPath ? pathV : (file as T | T[])) as
         | T
         | T[]
         | MappedReform<T, ILookupPath>;
@@ -286,15 +300,20 @@ export class BaseConverter {
         const key = lookupPath.key;
         const arrayTransformer = lookupPath.arrayTransformer?.bind(this);
         const transformer = lookupPath.transformer?.bind(this);
+        const pathTransform = lookupPath.pathTransform?.bind(this);
         if (this.hasPath(file, path)) {
-          const pathVal = this.handlePath(file, path);
+          let pathVal = this.handlePath(file, path);
+          if (pathTransform !== undefined) {
+            pathVal = pathTransform(pathVal, file);
+          }
           if (Array.isArray(pathVal)) {
             v = pathVal.map((element: Record<string, unknown>) => {
               return _.omit(this.convertInternal(element, lookupPath), [
                 'path',
                 'transformer',
                 'arrayTransformer',
-                'key'
+                'key',
+                'pathTransform'
               ]) as unknown as T;
             });
             if (arrayTransformer !== undefined) {
@@ -313,10 +332,9 @@ export class BaseConverter {
             resultingData.push(...v);
           } else {
             if (transformer !== undefined) {
-              resultingData.push(transformer(this.handlePath(file, path)) as T);
-            } else {
-              resultingData.push(this.handlePath(file, path) as T);
+              pathVal = transformer(pathVal);
             }
+            resultingData.push(pathVal as T);
           }
         }
       }
