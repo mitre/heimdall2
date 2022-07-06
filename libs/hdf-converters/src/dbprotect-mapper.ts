@@ -99,10 +99,15 @@ function idToString(id: unknown): string {
 }
 
 export class DBProtectMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  withRaw: boolean;
+
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > = {
     platform: {
       name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
+      release: HeimdallToolsVersion
     },
     version: HeimdallToolsVersion,
     statistics: {},
@@ -147,9 +152,15 @@ export class DBProtectMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ]
+    ],
+    passthrough: {
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        return {...(this.withRaw && {raw: data})};
+      }
+    }
   };
-  constructor(dbProtectXml: string) {
+  constructor(dbProtectXml: string, withRaw = false) {
     super(compileFindings(parseXml(dbProtectXml)));
+    this.withRaw = withRaw;
   }
 }

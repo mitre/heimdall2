@@ -136,7 +136,12 @@ function formatMessage(response: unknown): string {
   return text.join('\n');
 }
 export class NetsparkerMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  withRaw: boolean;
+
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -204,9 +209,15 @@ export class NetsparkerMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ]
+    ],
+    passthrough: {
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        return {...(this.withRaw && {raw: data})};
+      }
+    }
   };
-  constructor(netsparkerXml: string) {
+  constructor(netsparkerXml: string, withRaw = false) {
     super(parseXml(netsparkerXml));
+    this.withRaw = withRaw;
   }
 }

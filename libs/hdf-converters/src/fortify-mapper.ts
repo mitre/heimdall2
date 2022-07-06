@@ -112,10 +112,15 @@ function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
 
 export class FortifyMapper extends BaseConverter {
   startTime: string;
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  withRaw: boolean;
+
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > = {
     platform: {
       name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
+      release: HeimdallToolsVersion
     },
     version: HeimdallToolsVersion,
     statistics: {},
@@ -147,7 +152,7 @@ export class FortifyMapper extends BaseConverter {
             title: {path: 'Abstract', transformer: parseHtml},
             id: {path: 'classID'},
             desc: {path: 'Explanation', transformer: parseHtml},
-            impact: {path: '$.FVDL.Vulnerabilities.Vulnerability'},            
+            impact: {path: '$.FVDL.Vulnerabilities.Vulnerability'},
             code: {
               transformer: (vulnerability: Record<string, unknown>): string => {
                 return JSON.stringify(vulnerability, null, 2);
@@ -170,13 +175,19 @@ export class FortifyMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ]
+    ],
+    passthrough: {
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        return {...(this.withRaw && {raw: data})};
+      }
+    }
   };
-  constructor(fvdl: string) {
+  constructor(fvdl: string, withRaw = false) {
     super(parseXml(fvdl));
     this.startTime = `${_.get(this.data, 'FVDL.CreatedTS.date')} ${_.get(
       this.data,
       'FVDL.CreatedTS.time'
     )}`;
+    this.withRaw = withRaw;
   }
 }
