@@ -11,6 +11,7 @@ import {
   BurpSuiteMapper,
   DBProtectMapper,
   fingerprint,
+  INPUT_TYPES,
   IonChannelMapper,
   JfrogXrayMapper,
   NessusResults,
@@ -222,37 +223,37 @@ export class InspecIntake extends VuexModule {
       filename: filename
     });
     switch (typeGuess) {
-      case 'jfrog':
+      case INPUT_TYPES.JFROG:
         return new JfrogXrayMapper(convertOptions.data).toHdf();
-      case 'asff':
+      case INPUT_TYPES.ASFF:
         return Object.values(
           new ASFFResultsMapper(convertOptions.data).toHdf()
         );
-      case 'zap':
+      case INPUT_TYPES.ZAP:
         return new ZapMapper(convertOptions.data).toHdf();
-      case 'nikto':
+      case INPUT_TYPES.NIKTO:
         return new NiktoMapper(convertOptions.data).toHdf();
-      case 'sarif':
+      case INPUT_TYPES.SARIF:
         return new SarifMapper(convertOptions.data).toHdf();
-      case 'snyk':
+      case INPUT_TYPES.SNYK:
         return new SnykResults(convertOptions.data).toHdf();
-      case 'twistlock':
+      case INPUT_TYPES.TWISTLOCK:
         return new TwistlockMapper(convertOptions.data).toHdf();
-      case 'nessus':
+      case INPUT_TYPES.NESSUS:
         return new NessusResults(convertOptions.data).toHdf();
-      case 'xccdf':
+      case INPUT_TYPES.XCCDF:
         return new XCCDFResultsMapper(convertOptions.data).toHdf();
-      case 'burp':
+      case INPUT_TYPES.BURP:
         return new BurpSuiteMapper(convertOptions.data).toHdf();
-      case 'ionchannel':
+      case INPUT_TYPES.IONCHANNEL:
         return new IonChannelMapper(convertOptions.data).toHdf();
-      case 'scoutsuite':
+      case INPUT_TYPES.SCOUTSUITE:
         return new ScoutsuiteMapper(convertOptions.data).toHdf();
-      case 'dbProtect':
+      case INPUT_TYPES.DB_PROTECT:
         return new DBProtectMapper(convertOptions.data).toHdf();
-      case 'netsparker':
+      case INPUT_TYPES.NETSPARKER:
         return new NetsparkerMapper(convertOptions.data).toHdf();
-      case 'prisma':
+      case INPUT_TYPES.PRISMA:
         return new PrismaMapper(convertOptions.data).toHdf();
       case 'veracode':
         return new VeracodeMapper(convertOptions.data).toHdf();
