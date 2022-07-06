@@ -10,10 +10,10 @@ describe('sonarqube_mapper', () => {
     const mapper = new SonarQubeResults(testURL, 'xss', 'NotARealKey');
     const result: ExecJSON.Execution = await mapper.toHdf();
 
-    fs.writeFileSync(
-      'sample_jsons/sonarqube_mapper/sonarqube-hdf.json',
-      JSON.stringify(result, null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/sonarqube_mapper/sonarqube-hdf.json',
+    //   JSON.stringify(result, null, 2)
+    // );
 
     expect(omitVersions(result)).toEqual(
       omitVersions(
@@ -34,10 +34,10 @@ describe('sonarqube_mapper', () => {
     );
     const result: ExecJSON.Execution = await mapper.toHdf();
 
-    fs.writeFileSync(
-      'sample_jsons/sonarqube_mapper/sonarqube-branch-hdf.json',
-      JSON.stringify(result, null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/sonarqube_mapper/sonarqube-branch-hdf.json',
+    //   JSON.stringify(result, null, 2)
+    // );
 
     expect(omitVersions(result)).toEqual(
       omitVersions(
