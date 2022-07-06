@@ -158,7 +158,7 @@ function getFlaws(input: unknown): Record<string, unknown>[] {
     if (!Array.isArray(staticFlaw)) {
       staticFlaw = [staticFlaw];
     }
-    flawArr.push(...(staticFlaw as Record<string, unknown>[]));
+    flawArr.push(...staticFlaw);
   }
   return flawArr;
 }
@@ -302,10 +302,7 @@ function controlMappingCve(): MappedTransform<
           if (!Array.isArray(value)) {
             value = [value];
           }
-          return CWE_NIST_MAPPING.nistFilter(
-            value as string[],
-            DEFAULT_NIST_TAG
-          );
+          return CWE_NIST_MAPPING.nistFilter(value, DEFAULT_NIST_TAG);
         }
       }
     },
@@ -416,7 +413,7 @@ export class VeracodeMapper extends BaseConverter {
             {
               path: 'detailedreport.software_composition_analysis.vulnerable_components',
               /* The original formal of vulnerable_components is the following:
-              
+
               [
                 {
                   component_data (including file path)
@@ -428,7 +425,7 @@ export class VeracodeMapper extends BaseConverter {
                 }
                 ...
               ]
-              
+
               these need to be switched to be:
               [
                 {
@@ -441,8 +438,8 @@ export class VeracodeMapper extends BaseConverter {
               ]
               this is because in heimdall, in general each control should be the error itself, with tests
               being specific failure instances having the cve, being listed as the control since it is an issue
-              and the component, where the issue happened as being a test is a better aproximation of this 
-              format. 
+              and the component, where the issue happened as being a test is a better aproximation of this.
+              format.
               */
               pathTransform: componentTransform,
               ...controlMappingCve()
