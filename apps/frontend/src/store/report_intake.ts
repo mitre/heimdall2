@@ -22,6 +22,7 @@ import {
   ScoutsuiteMapper,
   SnykResults,
   TwistlockMapper,
+  VeracodeMapper,
   XCCDFResultsMapper,
   ZapMapper
 } from '@mitre/hdf-converters';
@@ -254,6 +255,8 @@ export class InspecIntake extends VuexModule {
         return new NetsparkerMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.PRISMA:
         return new PrismaMapper(convertOptions.data).toHdf();
+      case 'veracode':
+        return new VeracodeMapper(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${filename}), no fingerprints matched.`
