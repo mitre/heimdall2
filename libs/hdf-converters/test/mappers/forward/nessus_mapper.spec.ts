@@ -15,17 +15,17 @@ describe('nessus_mapper', () => {
     const converted = mapper.toHdf();
     const expectedSet = [
       JSON.parse(
-        fs.readFileSync('sample_jsons/nessus_mapper/sample-10.0.0.3.json', {
+        fs.readFileSync('sample_jsons/nessus_mapper/nessus-hdf-10.0.0.3.json', {
           encoding: 'utf-8'
         })
       ),
       JSON.parse(
-        fs.readFileSync('sample_jsons/nessus_mapper/sample-10.0.0.2.json', {
+        fs.readFileSync('sample_jsons/nessus_mapper/nessus-hdf-10.0.0.2.json', {
           encoding: 'utf-8'
         })
       ),
       JSON.parse(
-        fs.readFileSync('sample_jsons/nessus_mapper/sample-10.0.0.1.json', {
+        fs.readFileSync('sample_jsons/nessus_mapper/nessus-hdf-10.0.0.1.json', {
           encoding: 'utf-8'
         })
       )
