@@ -57,71 +57,7 @@
             "selected": "",
             "version": "xccdf_mil.disa.stig_rule_SV-230221r743913_rule",
             "weight": "10.0",
-            "profiles": [
-              {
-                "id": "xccdf_mil.disa.stig_profile_MAC-1_Classified",
-                "description": {
-                  "ProfileDescription": ""
-                },
-                "title": "I - Mission Critical Classified"
-              },
-              {
-                "id": "xccdf_mil.disa.stig_profile_MAC-1_Public",
-                "description": {
-                  "ProfileDescription": ""
-                },
-                "title": "I - Mission Critical Public"
-              },
-              {
-                "id": "xccdf_mil.disa.stig_profile_MAC-1_Sensitive",
-                "description": {
-                  "ProfileDescription": ""
-                },
-                "title": "I - Mission Critical Sensitive"
-              },
-              {
-                "id": "xccdf_mil.disa.stig_profile_MAC-2_Classified",
-                "description": {
-                  "ProfileDescription": ""
-                },
-                "title": "II - Mission Support Classified"
-              },
-              {
-                "id": "xccdf_mil.disa.stig_profile_MAC-2_Public",
-                "description": {
-                  "ProfileDescription": ""
-                },
-                "title": "II - Mission Support Public"
-              },
-              {
-                "id": "xccdf_mil.disa.stig_profile_MAC-2_Sensitive",
-                "description": {
-                  "ProfileDescription": ""
-                },
-                "title": "II - Mission Support Sensitive"
-              },
-              {
-                "id": "xccdf_mil.disa.stig_profile_MAC-3_Classified",
-                "description": {
-                  "ProfileDescription": ""
-                },
-                "title": "III - Administrative Classified"
-              },
-              {
-                "id": "xccdf_mil.disa.stig_profile_MAC-3_Public",
-                "description": {
-                  "ProfileDescription": ""
-                },
-                "title": "III - Administrative Public"
-              },
-              {
-                "id": "xccdf_mil.disa.stig_profile_MAC-3_Sensitive",
-                "description": {
-                  "ProfileDescription": ""
-                },
-                "title": "III - Administrative Sensitive"
-              }
-            ]
+            "profiles": []
           },
           "refs": [],
           "source_location": {},
@@ -36705,7 +36641,7 @@
           ]
         }
       ],
-      "sha256": "6f487da663e6ab2c4d0e63c5945cc4f4644d7bf16b3b9d8a9f27a54a962c72a4"
+      "sha256": "18aa16a2719193772da21f9434b17a18e9ef5140d816c1261c2a4f04f51f2c92"
     }
   ],
   "passthrough": {

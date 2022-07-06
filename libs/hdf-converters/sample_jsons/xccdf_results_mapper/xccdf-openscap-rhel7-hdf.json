@@ -74,7 +74,104 @@
             "selected": "true",
             "version": "RHEL-07-010030",
             "weight": "10.000000",
-            "profiles": []
+            "profiles": [
+              {
+                "id": "xccdf_mil.disa.stig_profile_MAC-1_Classified",
+                "description": {
+                  "ProfileDescription": ""
+                },
+                "title": "I - Mission Critical Classified"
+              },
+              {
+                "id": "xccdf_mil.disa.stig_profile_MAC-1_Public",
+                "description": {
+                  "ProfileDescription": ""
+                },
+                "title": "I - Mission Critical Public"
+              },
+              {
+                "id": "xccdf_mil.disa.stig_profile_MAC-1_Sensitive",
+                "description": {
+                  "ProfileDescription": ""
+                },
+                "title": "I - Mission Critical Sensitive"
+              },
+              {
+                "id": "xccdf_mil.disa.stig_profile_MAC-2_Classified",
+                "description": {
+                  "ProfileDescription": ""
+                },
+                "title": "II - Mission Support Classified"
+              },
+              {
+                "id": "xccdf_mil.disa.stig_profile_MAC-2_Public",
+                "description": {
+                  "ProfileDescription": ""
+                },
+                "title": "II - Mission Support Public"
+              },
+              {
+                "id": "xccdf_mil.disa.stig_profile_MAC-2_Sensitive",
+                "description": {
+                  "ProfileDescription": ""
+                },
+                "title": "II - Mission Support Sensitive"
+              },
+              {
+                "id": "xccdf_mil.disa.stig_profile_MAC-3_Classified",
+                "description": {
+                  "ProfileDescription": ""
+                },
+                "title": "III - Administrative Classified"
+              },
+              {
+                "id": "xccdf_mil.disa.stig_profile_MAC-3_Public",
+                "description": {
+                  "ProfileDescription": ""
+                },
+                "title": "III - Administrative Public"
+              },
+              {
+                "id": "xccdf_mil.disa.stig_profile_MAC-3_Sensitive",
+                "description": {
+                  "ProfileDescription": ""
+                },
+                "title": "III - Administrative Sensitive"
+              }
+            ],
+            "rule_result": {
+              "idref": "xccdf_mil.disa.stig_rule_SV-214799r603261_rule",
+              "time": "2021-12-17T10:40:58",
+              "severity": "high",
+              "version": "RHEL-07-010020",
+              "weight": "10.000000",
+              "result": "pass",
+              "ident": [
+                {
+                  "text": "CCE-27157-7",
+                  "system": "http://cce.mitre.org"
+                },
+                {
+                  "text": "SV-86479",
+                  "system": "http://cyber.mil/legacy"
+                },
+                {
+                  "text": "V-71855",
+                  "system": "http://cyber.mil/legacy"
+                },
+                {
+                  "text": "CCI-001749",
+                  "system": "http://cyber.mil/cci"
+                }
+              ],
+              "check": {
+                "system": "http://oval.mitre.org/XMLSchema/oval-definitions-5",
+                "check-content-ref": {
+                  "name": "oval:mil.disa.stig.rhel7:def:1340",
+                  "href": "U_RHEL_7_V3R5_STIG_SCAP_1-2_Benchmark-oval.xml"
+                }
+              }
+            }
           },
           "refs": [],
           "source_location": {},
@@ -33414,7 +33511,7 @@
           ]
         }
       ],
-      "sha256": "72c57b78297e0b77e52ab003c5f1808eb424b56e83a17bb0e5a4e8a09cf2c0e2"
+      "sha256": "23f9a40a7607ce25f63a69ecb0a32e7d148a2595f003719f425c2527500172fe"
     }
   ],
   "passthrough": {
