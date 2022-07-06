@@ -350,7 +350,7 @@ export class NessusMapper extends BaseConverter {
       }
     }
   };
-  constructor(nessusJson: Record<string, unknown>, withRaw: boolean) {
+  constructor(nessusJson: Record<string, unknown>, withRaw = false) {
     super(nessusJson);
     this.withRaw = withRaw;
   }
