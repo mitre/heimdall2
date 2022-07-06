@@ -615,7 +615,7 @@ export class ASFFMapper extends BaseConverter {
     this.mappings = externalProductHandler(
       this,
       whichSpecialCase(
-        _.get(this.data, 'Findings[0]') as Record<string, unknown>
+        _.get(this.unconvertedData, 'Findings[0]') as Record<string, unknown>
       ),
       this,
       'mapping',
