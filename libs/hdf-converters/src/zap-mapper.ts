@@ -130,14 +130,19 @@ export class ZapMapper extends BaseConverter {
               wascid: {path: 'wascid'},
               sourceid: {path: 'sourceid'},
               confidence: {path: 'confidence'},
-              riskdesc: {path: 'riskdesc'},
-              check: {transformer: checkText}
+              riskdesc: {path: 'riskdesc'}
             },
             refs: [],
             source_location: {},
             title: {path: 'name'},
             id: {path: 'pluginid'},
             desc: {path: 'desc', transformer: parseHtml},
+            descriptions: [
+              {
+                data: {transformer: checkText},
+                label: 'check'
+              }
+            ],
             impact: {path: 'riskcode', transformer: impactMapping},
             code: {
               transformer: (vulnerability: Record<string, unknown>): string =>
