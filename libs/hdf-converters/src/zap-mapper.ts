@@ -13,7 +13,7 @@ import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
 const CWE_NIST_MAPPING = new CweNistMapping();
 
 function filterSite<T>(input: Array<T>, name?: string) {
-  // Choose the site passed if provided
+  // Choose passed site if provided
   if (name) {
     return input.find((element) => _.get(element, '@name') === name);
   }
