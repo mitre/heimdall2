@@ -119,7 +119,8 @@ export class SarifMapper extends BaseConverter {
             },
             impact: {path: 'level', transformer: impactMapping},
             code: {
-              transformer: (vulnerability: Record<string, unknown>): string => JSON.stringify(vulnerability, null, 2)
+              transformer: (vulnerability: Record<string, unknown>): string =>
+                JSON.stringify(vulnerability, null, 2)
             },
             results: [
               {
