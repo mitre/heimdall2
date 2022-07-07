@@ -190,7 +190,7 @@ export class FortifyMapper extends BaseConverter {
       }
     }
   };
-  constructor(fvdl: string, withRaw = false) {
+  constructor(fvdl: string, withRaw = true) {
     super(parseXml(fvdl));
     this.startTime = `${_.get(this.data, 'FVDL.CreatedTS.date')} ${_.get(
       this.data,
