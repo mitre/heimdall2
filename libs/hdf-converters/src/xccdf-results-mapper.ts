@@ -462,8 +462,9 @@ export class XCCDFResultsMapper extends BaseConverter {
     ],
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        let auxData = _.get(data, 'Benchmark');
-        auxData = _.get(data, 'cdf:Benchmark');
+        let auxData = _.has(data, 'Benchmark')
+          ? _.get(data, 'Benchmark')
+          : _.get(data, 'cdf:Benchmark');
         if (auxData instanceof Object) {
           auxData = _.omit(auxData, [
             'id',
@@ -490,13 +491,14 @@ export class XCCDFResultsMapper extends BaseConverter {
             'cdf:TestResult'
           ]);
         }
+        auxData = _.has(data, 'Benchmark')
+          ? {Benchmark: auxData}
+          : {'cdf:Benchmark': auxData};
         return {
           auxiliary_data: [
             {
               name: 'XCCDF',
-              data: {
-                Benchmark: auxData
-              }
+              data: auxData
             }
           ],
           ...(this.withRaw && {raw: data})
@@ -504,7 +506,7 @@ export class XCCDFResultsMapper extends BaseConverter {
       }
     }
   };
-  constructor(scapXml: string, withRaw = true) {
+  constructor(scapXml: string, withRaw = false) {
     super(parseXml(scapXml));
     this.withRaw = withRaw;
   }
