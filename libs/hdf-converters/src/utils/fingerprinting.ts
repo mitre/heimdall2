@@ -125,6 +125,8 @@ export function fingerprint(guessOptions: {
       guessOptions.data.indexOf('detailedreport') !== -1
     ) {
       return INPUT_TYPES.VERACODE;
+    } else if (guessOptions.filename.toLowerCase().endsWith('.fvdl')) {
+      return INPUT_TYPES.FORTIFY;
     }
   }
   return INPUT_TYPES.NOT_FOUND;
