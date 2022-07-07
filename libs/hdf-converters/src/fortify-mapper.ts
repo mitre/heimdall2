@@ -178,7 +178,15 @@ export class FortifyMapper extends BaseConverter {
     ],
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return {...(this.withRaw && {raw: data})};
+        return {
+          auxiliary_data: [
+            {
+              name: 'Fortify',
+              data: {}
+            }
+          ],
+          ...(this.withRaw && {raw: data})
+        };
       }
     }
   };
