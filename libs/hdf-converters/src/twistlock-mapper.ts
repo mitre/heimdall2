@@ -18,6 +18,8 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 
 export class TwistlockMapper extends BaseConverter {
+  withRaw: boolean;
+
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
     ILookupPath
@@ -67,6 +69,7 @@ export class TwistlockMapper extends BaseConverter {
             key: 'id',
             tags: {
               nist: ['SI-2', 'RA-5'],
+              cci: ['CCI-002605', 'CCI-001643'],
               cveid: {path: 'id'}
             },
             refs: [],
@@ -117,16 +120,36 @@ export class TwistlockMapper extends BaseConverter {
       }
     ],
     passthrough: {
-      raw: {
-        transformer: (
-          data: Record<string, unknown>
-        ): Record<string, unknown> => {
-          return data;
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        let resultsData = _.get(data, 'results');
+        if (Array.isArray(resultsData)) {
+          resultsData = resultsData.map((result: Record<string, unknown>) =>
+            _.omit(result, [
+              'name',
+              'collections',
+              'complianceDistribution',
+              'vulnerabilities',
+              'vulnerabilityDistribution'
+            ])
+          );
         }
+        return {
+          auxiliary_data: [
+            {
+              name: 'Twistlock',
+              data: {
+                results: resultsData,
+                consoleURL: _.get(data, 'consoleURL')
+              }
+            }
+          ],
+          ...(this.withRaw && {raw: data})
+        };
       }
     }
   };
-  constructor(twistlockJson: string) {
+  constructor(twistlockJson: string, withRaw = false) {
     super(JSON.parse(twistlockJson), true);
+    this.withRaw = withRaw;
   }
 }

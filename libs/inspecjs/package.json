@@ -1,6 +1,6 @@
 {
   "name": "inspecjs",
-  "version": "2.6.26",
+  "version": "2.6.28",
   "description": "© 2018 The MITRE Corporation.",
   "files": [
     "lib"
@@ -15,7 +15,7 @@
     "jest": "^27.0.6",
     "quicktype": "^15.0.260",
     "ts-jest": "^27.0.3",
-    "typedoc": "^0.22.1"
+    "typedoc": "^0.23.2"
   },
   "jest": {
     "rootDir": ".",
