@@ -274,9 +274,7 @@ export class ScoutsuiteMapper extends BaseConverter {
           'provider_name',
           'services'
         ]);
-        if (auxData instanceof Object) {
-          auxData.last_run = _.pick(auxData.last_run, ['summary']);
-        }
+        auxData.last_run = _.pick(auxData.last_run, ['summary']);
         return {
           auxiliary_data: auxData,
           ...(this.withRaw && {raw: data})
