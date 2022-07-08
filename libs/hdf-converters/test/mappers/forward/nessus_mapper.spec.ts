@@ -13,16 +13,31 @@ describe('nessus_mapper', () => {
     );
 
     const converted = mapper.toHdf();
+    const expectedSet = [
+      JSON.parse(
+        fs.readFileSync('sample_jsons/nessus_mapper/nessus-hdf-10.0.0.3.json', {
+          encoding: 'utf-8'
+        })
+      ),
+      JSON.parse(
+        fs.readFileSync('sample_jsons/nessus_mapper/nessus-hdf-10.0.0.2.json', {
+          encoding: 'utf-8'
+        })
+      ),
+      JSON.parse(
+        fs.readFileSync('sample_jsons/nessus_mapper/nessus-hdf-10.0.0.1.json', {
+          encoding: 'utf-8'
+        })
+      )
+    ];
 
     expect(Array.isArray(converted)).toBe(true);
 
     if (Array.isArray(converted)) {
       expect(converted.map((resultsSet) => omitVersions(resultsSet))).toEqual(
-        JSON.parse(
-          fs.readFileSync('sample_jsons/nessus_mapper/nessus-converted.json', {
-            encoding: 'utf-8'
-          })
-        ).map((resultsSet: ExecJSON.Execution) => omitVersions(resultsSet))
+        expectedSet.map((resultsSet: ExecJSON.Execution) =>
+          omitVersions(resultsSet)
+        )
       );
     }
   });
