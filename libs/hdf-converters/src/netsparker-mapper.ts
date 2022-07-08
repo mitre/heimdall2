@@ -193,9 +193,8 @@ export class NetsparkerMapper extends BaseConverter {
               transformer: impactMapping(IMPACT_MAPPING)
             },
             code: {
-              transformer: (vulnerability: Record<string, unknown>): string => {
-                return JSON.stringify(vulnerability, null, 2);
-              }
+              transformer: (vulnerability: Record<string, unknown>): string =>
+                JSON.stringify(vulnerability, null, 2)
             },
             results: [
               {
@@ -212,11 +211,23 @@ export class NetsparkerMapper extends BaseConverter {
     ],
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        const auxData = _.get(data, 'netsparker-enterprise');
+        const genData = _.get(auxData, 'generated');
+        const targetData = _.omit(_.get(auxData, 'target'), [
+          'scan-id',
+          'url',
+          'initiated'
+        ]);
         return {
           auxiliary_data: [
             {
               name: 'Netsparker',
-              data: {}
+              data: {
+                'netsparker-enterprise': {
+                  generated: genData,
+                  target: targetData
+                }
+              }
             }
           ],
           ...(this.withRaw && {raw: data})
@@ -224,7 +235,7 @@ export class NetsparkerMapper extends BaseConverter {
       }
     }
   };
-  constructor(netsparkerXml: string, withRaw = true) {
+  constructor(netsparkerXml: string, withRaw = false) {
     super(parseXml(netsparkerXml));
     this.withRaw = withRaw;
   }
