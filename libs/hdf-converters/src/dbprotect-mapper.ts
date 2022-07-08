@@ -135,9 +135,8 @@ export class DBProtectMapper extends BaseConverter {
               transformer: impactMapping(IMPACT_MAPPING)
             },
             code: {
-              transformer: (vulnerability: Record<string, unknown>): string => {
-                return JSON.stringify(vulnerability, null, 2);
-              }
+              transformer: (vulnerability: Record<string, unknown>): string =>
+                JSON.stringify(vulnerability, null, 2)
             },
             results: [
               {
@@ -155,19 +154,11 @@ export class DBProtectMapper extends BaseConverter {
     ],
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return {
-          auxiliary_data: [
-            {
-              name: 'DbProtect',
-              data: {}
-            }
-          ],
-          ...(this.withRaw && {raw: data})
-        };
+        return {...(this.withRaw && {raw: data})};
       }
     }
   };
-  constructor(dbProtectXml: string, withRaw = true) {
+  constructor(dbProtectXml: string, withRaw = false) {
     super(compileFindings(parseXml(dbProtectXml)));
     this.withRaw = withRaw;
   }
