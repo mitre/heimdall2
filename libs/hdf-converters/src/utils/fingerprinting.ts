@@ -95,6 +95,8 @@ export function fingerprint(guessOptions: {
       return INPUT_TYPES.XCCDF;
     } else if (guessOptions.data.match(/<netsparker-.*generated.*>/)) {
       return INPUT_TYPES.NETSPARKER;
+    } else if (guessOptions.filename.toLowerCase().endsWith('.fvdl')) {
+      return INPUT_TYPES.FORTIFY;
     } else if (
       guessOptions.data.indexOf('"AwsAccountId"') !== -1 &&
       guessOptions.data.indexOf('"SchemaVersion"') !== -1
@@ -125,7 +127,7 @@ export function fingerprint(guessOptions: {
       guessOptions.data.indexOf('detailedreport') !== -1
     ) {
       return INPUT_TYPES.VERACODE;
-    } //else if (guessOptions.filename.toLowerCase().endsWith('.fvdl')) {return INPUT_TYPES.FORTIFY}
+    }
   }
   return INPUT_TYPES.NOT_FOUND;
 }
