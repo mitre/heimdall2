@@ -52,7 +52,7 @@
     "@nestjs/jwt": "^9.0.0",
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^8.0.2",
-    "@nestjs/schematics": "^8.0.1",
+    "@nestjs/schematics": "^9.0.1",
     "@nestjs/sequelize": "^9.0.0",
     "@nestjs/serve-static": "^2.2.2",
     "@types/bcryptjs": "^2.4.2",
