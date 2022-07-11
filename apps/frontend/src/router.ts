@@ -3,6 +3,7 @@ import {InspecDataModule} from '@/store/data_store';
 import {EvaluationModule} from '@/store/evaluations';
 import {ServerModule} from '@/store/server';
 import Admin from '@/views/Admin.vue';
+import Checklist from '@/views/Checklist.vue';
 import Compare from '@/views/Compare.vue';
 import Groups from '@/views/Groups.vue';
 import Landing from '@/views/Landing.vue';
@@ -43,6 +44,12 @@ const router = new Router({
           meta: {requiresAuth: true, hasIdParams: true}
         }
       ]
+    },
+    {
+      path: '/checklist',
+      name: 'checklist',
+      component: Checklist,
+      meta: {requiresAuth: true, hasIdParams: false}
     },
     {
       path: '/',
