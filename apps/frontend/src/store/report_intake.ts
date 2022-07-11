@@ -43,6 +43,7 @@ import {
 import * as _ from 'lodash';
 import {v4 as uuid} from 'uuid';
 import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
+import router from '../router';
 import {FilteredDataModule} from './data_filters';
 import {SnackbarModule} from './snackbar';
 
@@ -146,6 +147,9 @@ export class InspecIntake extends VuexModule {
         text: read,
         filename: filename
       });
+    } else if (await this.isChecklist(read)) {
+      router.push('/checklist');
+      return [];
     } else {
       const converted = await this.convertToHdf({
         fileOptions: options,
@@ -180,6 +184,19 @@ export class InspecIntake extends VuexModule {
         return [];
       }
     }
+  }
+
+  @Action
+  async isChecklist(
+    data: string | Record<string, unknown> | undefined
+  ): Promise<boolean> {
+    if (
+      typeof data === 'string' &&
+      data.toLowerCase().includes('<checklist>')
+    ) {
+      return true;
+    }
+    return false;
   }
 
   @Action
