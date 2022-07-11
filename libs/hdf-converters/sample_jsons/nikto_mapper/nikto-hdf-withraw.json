@@ -1,0 +1,465 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.29",
+    "target_id": "Host: zero.webappsecurity.com Port: 443"
+  },
+  "version": "2.6.29",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "Nikto Website Scanner",
+      "title": "Nikto Target: Host: zero.webappsecurity.com Port: 443",
+      "summary": "Banner: Apache/2.2.6 (Win32) mod_ssl/2.2.6 OpenSSL/0.9.8e mod_jk/1.2.40",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "tags": {
+            "nist": [
+              "AC-3",
+              "SA-11",
+              "RA-5"
+            ],
+            "ösvdb": "0"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Retrieved access-control-allow-origin header: *",
+          "id": "999986",
+          "desc": "Retrieved access-control-allow-origin header: *",
+          "impact": 0.5,
+          "code": "{\n  \"OSVDB\": \"0\",\n  \"id\": \"999986\",\n  \"method\": \"GET\",\n  \"msg\": \"Retrieved access-control-allow-origin header: *\",\n  \"url\": \"/\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: GET",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "AC-3",
+              "SA-11",
+              "RA-5"
+            ],
+            "ösvdb": "0"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Server may leak inodes via ETags, header found with file /, inode: 150562, size: 44, mtime: Fri Jul  7 04:07:28 2006",
+          "id": "999984",
+          "desc": "Server may leak inodes via ETags, header found with file /, inode: 150562, size: 44, mtime: Fri Jul  7 04:07:28 2006",
+          "impact": 0.5,
+          "code": "{\n  \"OSVDB\": \"0\",\n  \"id\": \"999984\",\n  \"method\": \"GET\",\n  \"msg\": \"Server may leak inodes via ETags, header found with file /, inode: 150562, size: 44, mtime: Fri Jul  7 04:07:28 2006\",\n  \"url\": \"/\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: GET",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "AC-3",
+              "SA-11",
+              "RA-5"
+            ],
+            "ösvdb": "0"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "The anti-clickjacking X-Frame-Options header is not present.",
+          "id": "999957",
+          "desc": "The anti-clickjacking X-Frame-Options header is not present.",
+          "impact": 0.5,
+          "code": "{\n  \"OSVDB\": \"0\",\n  \"id\": \"999957\",\n  \"method\": \"GET\",\n  \"msg\": \"The anti-clickjacking X-Frame-Options header is not present.\",\n  \"url\": \"/\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: GET",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "AC-3",
+              "SA-11",
+              "RA-5"
+            ],
+            "ösvdb": "0"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS",
+          "id": "999102",
+          "desc": "The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS",
+          "impact": 0.5,
+          "code": "{\n  \"OSVDB\": \"0\",\n  \"id\": \"999102\",\n  \"method\": \"GET\",\n  \"msg\": \"The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS\",\n  \"url\": \"/\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: GET",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "AC-3",
+              "SA-11",
+              "RA-5"
+            ],
+            "ösvdb": "0"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "The site uses SSL and the Strict-Transport-Security HTTP header is not defined.",
+          "id": "999970",
+          "desc": "The site uses SSL and the Strict-Transport-Security HTTP header is not defined.",
+          "impact": 0.5,
+          "code": "{\n  \"OSVDB\": \"0\",\n  \"id\": \"999970\",\n  \"method\": \"GET\",\n  \"msg\": \"The site uses SSL and the Strict-Transport-Security HTTP header is not defined.\",\n  \"url\": \"/\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: GET",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "AC-3",
+              "SA-11",
+              "RA-5"
+            ],
+            "ösvdb": "0"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "The site uses SSL and Expect-CT header is not present.",
+          "id": "999955",
+          "desc": "The site uses SSL and Expect-CT header is not present.",
+          "impact": 0.5,
+          "code": "{\n  \"OSVDB\": \"0\",\n  \"id\": \"999955\",\n  \"method\": \"GET\",\n  \"msg\": \"The site uses SSL and Expect-CT header is not present.\",\n  \"url\": \"/\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: GET",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "AC-3",
+              "SA-11",
+              "RA-5"
+            ],
+            "ösvdb": "0"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type.",
+          "id": "999103",
+          "desc": "The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type.",
+          "impact": 0.5,
+          "code": "{\n  \"OSVDB\": \"0\",\n  \"id\": \"999103\",\n  \"method\": \"GET\",\n  \"msg\": \"The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type.\",\n  \"url\": \"/\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: GET",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-2"
+            ],
+            "ösvdb": "0"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "mod_jk/1.2.40 appears to be outdated (current is at least 1.2.46)",
+          "id": "600463",
+          "desc": "mod_jk/1.2.40 appears to be outdated (current is at least 1.2.46)",
+          "impact": 0.5,
+          "code": "{\n  \"OSVDB\": \"0\",\n  \"id\": \"600463\",\n  \"method\": \"HEAD\",\n  \"msg\": \"mod_jk/1.2.40 appears to be outdated (current is at least 1.2.46)\",\n  \"url\": \"/\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: HEAD",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-2"
+            ],
+            "ösvdb": "0"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "mod_ssl/2.2.6 appears to be outdated (current is at least 2.8.31) (may depend on server version)",
+          "id": "600511",
+          "desc": "mod_ssl/2.2.6 appears to be outdated (current is at least 2.8.31) (may depend on server version)",
+          "impact": 0.5,
+          "code": "{\n  \"OSVDB\": \"0\",\n  \"id\": \"600511\",\n  \"method\": \"HEAD\",\n  \"msg\": \"mod_ssl/2.2.6 appears to be outdated (current is at least 2.8.31) (may depend on server version)\",\n  \"url\": \"/\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: HEAD",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-2"
+            ],
+            "ösvdb": "0"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Apache/2.2.6 appears to be outdated (current is at least Apache/2.4.41). Apache 2.2.34 is the EOL for the 2.x branch.",
+          "id": "600050",
+          "desc": "Apache/2.2.6 appears to be outdated (current is at least Apache/2.4.41). Apache 2.2.34 is the EOL for the 2.x branch.",
+          "impact": 0.5,
+          "code": "{\n  \"OSVDB\": \"0\",\n  \"id\": \"600050\",\n  \"method\": \"HEAD\",\n  \"msg\": \"Apache/2.2.6 appears to be outdated (current is at least Apache/2.4.41). Apache 2.2.34 is the EOL for the 2.x branch.\",\n  \"url\": \"/\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: HEAD",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-2"
+            ],
+            "ösvdb": "0"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "OpenSSL/0.9.8e appears to be outdated (current is at least 1.1.1d). OpenSSL 1.0.0o and 0.9.8zc are also current.",
+          "id": "600595",
+          "desc": "OpenSSL/0.9.8e appears to be outdated (current is at least 1.1.1d). OpenSSL 1.0.0o and 0.9.8zc are also current.",
+          "impact": 0.5,
+          "code": "{\n  \"OSVDB\": \"0\",\n  \"id\": \"600595\",\n  \"method\": \"HEAD\",\n  \"msg\": \"OpenSSL/0.9.8e appears to be outdated (current is at least 1.1.1d). OpenSSL 1.0.0o and 0.9.8zc are also current.\",\n  \"url\": \"/\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: HEAD",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-10"
+            ],
+            "ösvdb": "0"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "mod_ssl/2.2.6 OpenSSL/0.9.8e mod_jk/1.2.40 - mod_ssl 2.8.7 and lower are vulnerable to a remote buffer overflow which may allow a remote shell. CVE-2002-0082, OSVDB-756.",
+          "id": "800132",
+          "desc": "mod_ssl/2.2.6 OpenSSL/0.9.8e mod_jk/1.2.40 - mod_ssl 2.8.7 and lower are vulnerable to a remote buffer overflow which may allow a remote shell. CVE-2002-0082, OSVDB-756.",
+          "impact": 0.5,
+          "code": "{\n  \"OSVDB\": \"0\",\n  \"id\": \"800132\",\n  \"method\": \"GET\",\n  \"msg\": \"mod_ssl/2.2.6 OpenSSL/0.9.8e mod_jk/1.2.40 - mod_ssl 2.8.7 and lower are vulnerable to a remote buffer overflow which may allow a remote shell. CVE-2002-0082, OSVDB-756.\",\n  \"url\": \"/\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: GET",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "AC-3",
+              "SA-11",
+              "RA-5"
+            ],
+            "ösvdb": "0"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Allowed HTTP Methods: GET, HEAD, POST, OPTIONS, TRACE ",
+          "id": "999990",
+          "desc": "Allowed HTTP Methods: GET, HEAD, POST, OPTIONS, TRACE ",
+          "impact": 0.5,
+          "code": "{\n  \"OSVDB\": \"0\",\n  \"id\": \"999990\",\n  \"method\": \"OPTIONS\",\n  \"msg\": \"Allowed HTTP Methods: GET, HEAD, POST, OPTIONS, TRACE \",\n  \"url\": \"/\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: OPTIONS",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "AC-3",
+              "SA-11",
+              "RA-5"
+            ],
+            "ösvdb": "877"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "HTTP TRACE method is active, suggesting the host is vulnerable to XST",
+          "id": "999971",
+          "desc": "HTTP TRACE method is active, suggesting the host is vulnerable to XST",
+          "impact": 0.5,
+          "code": "{\n  \"OSVDB\": \"877\",\n  \"id\": \"999971\",\n  \"method\": \"TRACE\",\n  \"msg\": \"HTTP TRACE method is active, suggesting the host is vulnerable to XST\",\n  \"url\": \"/\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "URL : / Method: TRACE",
+              "start_time": ""
+            }
+          ]
+        }
+      ],
+      "sha256": "0742c6230fde6671b44f07bd356f8c822977de36d5782c007893650d7fb3be30"
+    }
+  ],
+  "passthrough": {
+    "auxiliary_data": [
+      {
+        "name": "Nikto",
+        "data": {
+          "ip": "54.82.22.214"
+        }
+      }
+    ],
+    "raw": {
+      "banner": "Apache/2.2.6 (Win32) mod_ssl/2.2.6 OpenSSL/0.9.8e mod_jk/1.2.40",
+      "host": "zero.webappsecurity.com",
+      "ip": "54.82.22.214",
+      "port": "443",
+      "vulnerabilities": [
+        {
+          "OSVDB": "0",
+          "id": "999986",
+          "method": "GET",
+          "msg": "Retrieved access-control-allow-origin header: *",
+          "url": "/"
+        },
+        {
+          "OSVDB": "0",
+          "id": "999984",
+          "method": "GET",
+          "msg": "Server may leak inodes via ETags, header found with file /, inode: 150562, size: 44, mtime: Fri Jul  7 04:07:28 2006",
+          "url": "/"
+        },
+        {
+          "OSVDB": "0",
+          "id": "999957",
+          "method": "GET",
+          "msg": "The anti-clickjacking X-Frame-Options header is not present.",
+          "url": "/"
+        },
+        {
+          "OSVDB": "0",
+          "id": "999102",
+          "method": "GET",
+          "msg": "The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS",
+          "url": "/"
+        },
+        {
+          "OSVDB": "0",
+          "id": "999970",
+          "method": "GET",
+          "msg": "The site uses SSL and the Strict-Transport-Security HTTP header is not defined.",
+          "url": "/"
+        },
+        {
+          "OSVDB": "0",
+          "id": "999955",
+          "method": "GET",
+          "msg": "The site uses SSL and Expect-CT header is not present.",
+          "url": "/"
+        },
+        {
+          "OSVDB": "0",
+          "id": "999103",
+          "method": "GET",
+          "msg": "The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type.",
+          "url": "/"
+        },
+        {
+          "OSVDB": "0",
+          "id": "600463",
+          "method": "HEAD",
+          "msg": "mod_jk/1.2.40 appears to be outdated (current is at least 1.2.46)",
+          "url": "/"
+        },
+        {
+          "OSVDB": "0",
+          "id": "600511",
+          "method": "HEAD",
+          "msg": "mod_ssl/2.2.6 appears to be outdated (current is at least 2.8.31) (may depend on server version)",
+          "url": "/"
+        },
+        {
+          "OSVDB": "0",
+          "id": "600050",
+          "method": "HEAD",
+          "msg": "Apache/2.2.6 appears to be outdated (current is at least Apache/2.4.41). Apache 2.2.34 is the EOL for the 2.x branch.",
+          "url": "/"
+        },
+        {
+          "OSVDB": "0",
+          "id": "600595",
+          "method": "HEAD",
+          "msg": "OpenSSL/0.9.8e appears to be outdated (current is at least 1.1.1d). OpenSSL 1.0.0o and 0.9.8zc are also current.",
+          "url": "/"
+        },
+        {
+          "OSVDB": "0",
+          "id": "800132",
+          "method": "GET",
+          "msg": "mod_ssl/2.2.6 OpenSSL/0.9.8e mod_jk/1.2.40 - mod_ssl 2.8.7 and lower are vulnerable to a remote buffer overflow which may allow a remote shell. CVE-2002-0082, OSVDB-756.",
+          "url": "/"
+        },
+        {
+          "OSVDB": "0",
+          "id": "999990",
+          "method": "OPTIONS",
+          "msg": "Allowed HTTP Methods: GET, HEAD, POST, OPTIONS, TRACE ",
+          "url": "/"
+        },
+        {
+          "OSVDB": "877",
+          "id": "999971",
+          "method": "TRACE",
+          "msg": "HTTP TRACE method is active, suggesting the host is vulnerable to XST",
+          "url": "/"
+        }
+      ]
+    }
+  }
+}

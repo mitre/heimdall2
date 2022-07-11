@@ -1,0 +1,1287 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.29"
+  },
+  "version": "2.6.29",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "JFrog Xray Scan",
+      "title": "JFrog Xray Scan",
+      "summary": "Continuous Security and Universal Artifact Analysis",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cweid": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "id": "9c1087964ee65be54f9ddd2a55646e23",
+          "title": "Acorn regexp.js Regular Expression Validation UTF-16 Surrogate Handling Infinite Loop DoS",
+          "desc": "Acorn contains an infinite loop condition in regexp.js that is triggered when handling UTF_16 surrogates while validating regular expressions. This may allow a context-dependent attacker to hang a process using the library.<br>cves: [{\"cvss_v2\"=>\"7.1/AV:N/AC:M/Au:N/C:N/I:N/A:C\", \"cvss_v3\"=>\"7.5/CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\"}]",
+          "impact": 0.7,
+          "code": "{\n  \"id\": \"\",\n  \"severity\": \"High\",\n  \"summary\": \"Acorn regexp.js Regular Expression Validation UTF-16 Surrogate Handling Infinite Loop DoS\",\n  \"issue_type\": \"security\",\n  \"provider\": \"JFrog\",\n  \"component\": \"acorn\",\n  \"source_id\": \"npm://acorn\",\n  \"source_comp_id\": \"npm://acorn:5.7.3\",\n  \"component_versions\": {\n    \"id\": \"acorn\",\n    \"vulnerable_versions\": [\n      \"5.5.0 ≤ Version < 5.7.4\",\n      \"6.0.0 ≤ Version < 6.4.1\",\n      \"7.0.0\",\n      \"7.1.0\"\n    ],\n    \"fixed_versions\": [\n      \"5.7.4\",\n      \"6.4.1\",\n      \"7.1.1\"\n    ],\n    \"more_details\": {\n      \"cves\": [\n        {\n          \"cvss_v2\": \"7.1/AV:N/AC:M/Au:N/C:N/I:N/A:C\",\n          \"cvss_v3\": \"7.5/CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\"\n        }\n      ],\n      \"description\": \"Acorn contains an infinite loop condition in regexp.js that is triggered when handling UTF_16 surrogates while validating regular expressions. This may allow a context-dependent attacker to hang a process using the library.\",\n      \"provider\": \"JFrog\"\n    }\n  },\n  \"edited\": \"2020-11-03T19:30:42-05:00\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://acorn:5.7.3\nvulnerable_versions : [\"5.5.0 ≤ Version < 5.7.4\", \"6.0.0 ≤ Version < 6.4.1\", \"7.0.0\", \"7.1.0\"]\nfixed_versions : [\"5.7.4\", \"6.4.1\", \"7.1.1\"]\nissue_type : security\nprovider : JFrog",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cweid": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "id": "e07aca2a7ad4c6aa9a3cf2c270fba126",
+          "title": "Lodash Package for Node.js .internal/baseZipObject.js baseZipObject() Function Property Manipulation Resource Exhaustion DoS",
+          "desc": "",
+          "impact": 0.7,
+          "code": "{\n  \"id\": \"\",\n  \"severity\": \"High\",\n  \"summary\": \"Lodash Package for Node.js .internal/baseZipObject.js baseZipObject() Function Property Manipulation Resource Exhaustion DoS\",\n  \"issue_type\": \"security\",\n  \"provider\": \"JFrog\",\n  \"component\": \"lodash\",\n  \"source_id\": \"npm://lodash\",\n  \"source_comp_id\": \"npm://lodash:4.17.5\",\n  \"component_versions\": {\n    \"more_details\": {}\n  },\n  \"edited\": \"2020-11-03T19:30:46-05:00\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://lodash:4.17.5\nvulnerable_versions : \nfixed_versions : \nissue_type : security\nprovider : JFrog",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://lodash:4.17.15\nvulnerable_versions : \nfixed_versions : \nissue_type : security\nprovider : JFrog",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cweid": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "id": "35d062ea90a478ee971ff390d58a0c78",
+          "title": "node-handlebars Template Handling Prototype Manipulation Remote Code Execution",
+          "desc": "node-handlebars contains a flaw that is triggered during the handling of a specially crafted template. This may allow a remote attacker to make changes to an object's prototype and execute arbitrary code.<br>cves: [{\"cvss_v2\"=>\"10.0/CVSS:2.0/AV:N/AC:L/Au:N/C:C/I:C/A:C\"}]",
+          "impact": 0.7,
+          "code": "{\n  \"id\": \"\",\n  \"severity\": \"High\",\n  \"summary\": \"node-handlebars Template Handling Prototype Manipulation Remote Code Execution\",\n  \"issue_type\": \"security\",\n  \"provider\": \"JFrog\",\n  \"component\": \"handlebars\",\n  \"source_id\": \"npm://handlebars\",\n  \"source_comp_id\": \"npm://handlebars:4.0.11\",\n  \"component_versions\": {\n    \"id\": \"handlebars\",\n    \"vulnerable_versions\": [\n      \"1.0.6\",\n      \"1.0.7 ≤ Version ≤ 1.3.0\",\n      \"2.0.0 ≤ Version ≤ 4.0.13\",\n      \"4.1.0 ≤ Version ≤ 4.1.1\"\n    ],\n    \"fixed_versions\": [\n      \"4.0.14\",\n      \"4.1.2\"\n    ],\n    \"more_details\": {\n      \"cves\": [\n        {\n          \"cvss_v2\": \"10.0/CVSS:2.0/AV:N/AC:L/Au:N/C:C/I:C/A:C\"\n        }\n      ],\n      \"description\": \"node-handlebars contains a flaw that is triggered during the handling of a specially crafted template. This may allow a remote attacker to make changes to an object's prototype and execute arbitrary code.\",\n      \"provider\": \"JFrog\"\n    }\n  },\n  \"edited\": \"2020-03-06T11:41:08-05:00\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://handlebars:4.0.11\nvulnerable_versions : [\"1.0.6\", \"1.0.7 ≤ Version ≤ 1.3.0\", \"2.0.0 ≤ Version ≤ 4.0.13\", \"4.1.0 ≤ Version ≤ 4.1.1\"]\nfixed_versions : [\"4.0.14\", \"4.1.2\"]\nissue_type : security\nprovider : JFrog",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cweid": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "id": "d98309fead85aab01d452173775b31fd",
+          "title": "Handlebars.js lib/handlebars/helpers/lookup.js Template Handling Prototype Manipulation Arbitrary Code Execution",
+          "desc": "",
+          "impact": 0.7,
+          "code": "{\n  \"id\": \"\",\n  \"severity\": \"High\",\n  \"summary\": \"Handlebars.js lib/handlebars/helpers/lookup.js Template Handling Prototype Manipulation Arbitrary Code Execution\",\n  \"issue_type\": \"security\",\n  \"provider\": \"JFrog\",\n  \"component\": \"handlebars\",\n  \"source_id\": \"npm://handlebars\",\n  \"source_comp_id\": \"npm://handlebars:4.0.11\",\n  \"component_versions\": {\n    \"more_details\": {}\n  },\n  \"edited\": \"2020-11-03T19:30:31-05:00\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://handlebars:4.0.11\nvulnerable_versions : \nfixed_versions : \nissue_type : security\nprovider : JFrog",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cweid": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "id": "cc3ab7963c9b9d07a1c7782940fc6298",
+          "title": "Arbitrary Code Execution",
+          "desc": "Versions of `handlebars` prior to 3.0.8 or 4.5.3 are vulnerable to Arbitrary Code Execution. The package's lookup helper fails to properly validate templates, allowing attackers to submit templates that execute arbitrary JavaScript in the system. It is due to an incomplete fix for a [previous issue](https://www.npmjs.com/advisories/1316). This vulnerability can be used to run arbitrary code in a server processing Handlebars templates or on a victim's browser (effectively serving as Cross-Site Scripting).",
+          "impact": 0.7,
+          "code": "{\n  \"id\": \"\",\n  \"severity\": \"High\",\n  \"summary\": \"Arbitrary Code Execution\",\n  \"issue_type\": \"security\",\n  \"provider\": \"npm advisory\",\n  \"component\": \"handlebars\",\n  \"source_id\": \"npm://handlebars\",\n  \"source_comp_id\": \"npm://handlebars:4.0.11\",\n  \"component_versions\": {\n    \"id\": \"handlebars\",\n    \"vulnerable_versions\": [\n      \"< 3.0.8\",\n      \"4.0.0 ≤ Version < 4.5.3\"\n    ],\n    \"fixed_versions\": [\n      \"3.0.8 ≤ Version < 4.0.0\",\n      \"≥ 4.5.3\"\n    ],\n    \"more_details\": {\n      \"description\": \"Versions of `handlebars` prior to 3.0.8 or 4.5.3 are vulnerable to Arbitrary Code Execution. The package's lookup helper fails to properly validate templates, allowing attackers to submit templates that execute arbitrary JavaScript in the system. It is due to an incomplete fix for a [previous issue](https://www.npmjs.com/advisories/1316). This vulnerability can be used to run arbitrary code in a server processing Handlebars templates or on a victim's browser (effectively serving as Cross-Site Scripting).\",\n      \"provider\": \"npm advisory\"\n    }\n  },\n  \"edited\": \"2020-04-07T14:40:56-04:00\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://handlebars:4.0.11\nvulnerable_versions : [\"< 3.0.8\", \"4.0.0 ≤ Version < 4.5.3\"]\nfixed_versions : [\"3.0.8 ≤ Version < 4.0.0\", \"≥ 4.5.3\"]\nissue_type : security\nprovider : npm advisory",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cweid": [
+              "CWE-74"
+            ]
+          },
+          "refs": [],
+          "source_location": {},
+          "id": "f4fa30f15a503ca51fcd0ca8b0cedbe7",
+          "title": "Versions of handlebars prior to 4.3.0 are vulnerable to Prototype Pollution leading to Remote Code Execution. Templates may alter an Object's __proto__ and __defineGetter__ properties, which may allow an attacker to execute arbitrary code through crafted payloads.",
+          "desc": "Versions of handlebars prior to 4.3.0 are vulnerable to Prototype Pollution leading to Remote Code Execution. Templates may alter an Object's __proto__ and __defineGetter__ properties, which may allow an attacker to execute arbitrary code through crafted payloads.<br>cves: [{\"cve\"=>\"CVE-2019-19919\", \"cwe\"=>[\"CWE-74\"], \"cvss_v2\"=>\"7.5/CVSS:2.0/AV:N/AC:L/Au:N/C:P/I:P/A:P\", \"cvss_v3\"=>\"9.8/CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\"}]",
+          "impact": 0.7,
+          "code": "{\n  \"id\": \"\",\n  \"severity\": \"High\",\n  \"summary\": \"Versions of handlebars prior to 4.3.0 are vulnerable to Prototype Pollution leading to Remote Code Execution. Templates may alter an Object's __proto__ and __defineGetter__ properties, which may allow an attacker to execute arbitrary code through crafted payloads.\",\n  \"issue_type\": \"security\",\n  \"provider\": \"JFrog\",\n  \"component\": \"handlebars\",\n  \"source_id\": \"npm://handlebars\",\n  \"source_comp_id\": \"npm://handlebars:4.0.11\",\n  \"component_versions\": {\n    \"id\": \"handlebars\",\n    \"vulnerable_versions\": [\n      \"1.0.6\",\n      \"1.0.7 ≤ Version ≤ 1.3.0\",\n      \"2.0.0\",\n      \"3.0.0 ≤ Version ≤ 4.1.1\",\n      \"4.1.2\",\n      \"4.2.0 ≤ Version < 4.3.0\"\n    ],\n    \"fixed_versions\": [\n      \"4.3.0\"\n    ],\n    \"more_details\": {\n      \"cves\": [\n        {\n          \"cve\": \"CVE-2019-19919\",\n          \"cwe\": [\n            \"CWE-74\"\n          ],\n          \"cvss_v2\": \"7.5/CVSS:2.0/AV:N/AC:L/Au:N/C:P/I:P/A:P\",\n          \"cvss_v3\": \"9.8/CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\"\n        }\n      ],\n      \"description\": \"Versions of handlebars prior to 4.3.0 are vulnerable to Prototype Pollution leading to Remote Code Execution. Templates may alter an Object's __proto__ and __defineGetter__ properties, which may allow an attacker to execute arbitrary code through crafted payloads.\",\n      \"provider\": \"JFrog\"\n    }\n  },\n  \"edited\": \"2020-08-26T23:19:55-04:00\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://handlebars:4.0.11\nvulnerable_versions : [\"1.0.6\", \"1.0.7 ≤ Version ≤ 1.3.0\", \"2.0.0\", \"3.0.0 ≤ Version ≤ 4.1.1\", \"4.1.2\", \"4.2.0 ≤ Version < 4.3.0\"]\nfixed_versions : [\"4.3.0\"]\nissue_type : security\nprovider : JFrog",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cweid": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "id": "72cfb6becbe5b5a11cf56d65ceb1fa34",
+          "title": "Lodash Package for Node.js lodash.js baseSet() Function Prototype Pollution DoS",
+          "desc": "Lodash Package for Node.js contains a prototype pollution flaw in the baseSet() function in lodash.js that is triggered as access to object prototypes is not properly handled. This may allow a context-dependent attacker to manipulate object properties and crash a Node process using the library.<br>cves: [{\"cvss_v2\"=>\"7.1/AV:N/AC:M/Au:N/C:N/I:N/A:C\", \"cvss_v3\"=>\"7.5/CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\"}]",
+          "impact": 0.7,
+          "code": "{\n  \"id\": \"\",\n  \"severity\": \"High\",\n  \"summary\": \"Lodash Package for Node.js lodash.js baseSet() Function Prototype Pollution DoS\",\n  \"issue_type\": \"security\",\n  \"provider\": \"JFrog\",\n  \"component\": \"lodash\",\n  \"source_id\": \"npm://lodash\",\n  \"source_comp_id\": \"npm://lodash:4.17.15\",\n  \"component_versions\": {\n    \"id\": \"lodash\",\n    \"vulnerable_versions\": [\n      \"4.0.0 ≤ Version < 4.17.16\"\n    ],\n    \"fixed_versions\": [\n      \"4.17.16\"\n    ],\n    \"more_details\": {\n      \"cves\": [\n        {\n          \"cvss_v2\": \"7.1/AV:N/AC:M/Au:N/C:N/I:N/A:C\",\n          \"cvss_v3\": \"7.5/CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\"\n        }\n      ],\n      \"description\": \"Lodash Package for Node.js contains a prototype pollution flaw in the baseSet() function in lodash.js that is triggered as access to object prototypes is not properly handled. This may allow a context-dependent attacker to manipulate object properties and crash a Node process using the library.\",\n      \"provider\": \"JFrog\"\n    }\n  },\n  \"edited\": \"2020-11-03T19:31:27-05:00\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://lodash:4.17.15\nvulnerable_versions : [\"4.0.0 ≤ Version < 4.17.16\"]\nfixed_versions : [\"4.17.16\"]\nissue_type : security\nprovider : JFrog",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://lodash:4.17.5\nvulnerable_versions : [\"4.0.0 ≤ Version < 4.17.16\"]\nfixed_versions : [\"4.17.16\"]\nissue_type : security\nprovider : JFrog",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cweid": [
+              "CWE-835"
+            ]
+          },
+          "refs": [],
+          "source_location": {},
+          "id": "c512ddff1296e4e801a46150ad769169",
+          "title": "Handlebars before 4.4.5 allows Regular Expression Denial of Service (ReDoS) because of eager matching. The parser may be forced into an endless loop while processing crafted templates. This may allow attackers to exhaust system resources.",
+          "desc": "Handlebars before 4.4.5 allows Regular Expression Denial of Service (ReDoS) because of eager matching. The parser may be forced into an endless loop while processing crafted templates. This may allow attackers to exhaust system resources.<br>cves: [{\"cve\"=>\"CVE-2019-20922\", \"cwe\"=>[\"CWE-835\"], \"cvss_v2\"=>\"7.8/CVSS:2.0/AV:N/AC:L/Au:N/C:N/I:N/A:C\", \"cvss_v3\"=>\"7.5/CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\"}]",
+          "impact": 0.7,
+          "code": "{\n  \"id\": \"\",\n  \"severity\": \"High\",\n  \"summary\": \"Handlebars before 4.4.5 allows Regular Expression Denial of Service (ReDoS) because of eager matching. The parser may be forced into an endless loop while processing crafted templates. This may allow attackers to exhaust system resources.\",\n  \"issue_type\": \"security\",\n  \"provider\": \"JFrog\",\n  \"component\": \"handlebars\",\n  \"source_id\": \"npm://handlebars\",\n  \"source_comp_id\": \"npm://handlebars:4.0.11\",\n  \"component_versions\": {\n    \"id\": \"handlebars\",\n    \"vulnerable_versions\": [\n      \"4.0.0 ≤ Version ≤ 4.1.1\",\n      \"4.1.2\",\n      \"4.2.0 ≤ Version ≤ 4.4.4\"\n    ],\n    \"fixed_versions\": [\n      \"4.4.5\"\n    ],\n    \"more_details\": {\n      \"cves\": [\n        {\n          \"cve\": \"CVE-2019-20922\",\n          \"cwe\": [\n            \"CWE-835\"\n          ],\n          \"cvss_v2\": \"7.8/CVSS:2.0/AV:N/AC:L/Au:N/C:N/I:N/A:C\",\n          \"cvss_v3\": \"7.5/CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\"\n        }\n      ],\n      \"description\": \"Handlebars before 4.4.5 allows Regular Expression Denial of Service (ReDoS) because of eager matching. The parser may be forced into an endless loop while processing crafted templates. This may allow attackers to exhaust system resources.\",\n      \"provider\": \"JFrog\"\n    }\n  },\n  \"edited\": \"2020-10-08T22:59:49-04:00\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://handlebars:4.0.11\nvulnerable_versions : [\"4.0.0 ≤ Version ≤ 4.1.1\", \"4.1.2\", \"4.2.0 ≤ Version ≤ 4.4.4\"]\nfixed_versions : [\"4.4.5\"]\nissue_type : security\nprovider : JFrog",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cweid": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "id": "3a43eb23e70882f59894fde231de2815",
+          "title": "Lodash Package for Node.js lodash.js safeGet() Function Object Prototype Manipulation Unspecified Issue",
+          "desc": "Lodash Package for Node.js contains a flaw in the safeGet() function in lodash.js that is triggered as access to object prototypes is not properly handled. This may allow a context-dependent attacker to add attributes to arbitrary objects, resulting in a denial of service.<br>cves: [{\"cvss_v2\"=>\"9.3/AV:N/AC:M/Au:N/C:C/I:C/A:C\", \"cvss_v3\"=>\"9.8/CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\"}]",
+          "impact": 0.7,
+          "code": "{\n  \"id\": \"\",\n  \"severity\": \"High\",\n  \"summary\": \"Lodash Package for Node.js lodash.js safeGet() Function Object Prototype Manipulation Unspecified Issue\",\n  \"issue_type\": \"security\",\n  \"provider\": \"JFrog\",\n  \"component\": \"lodash\",\n  \"source_id\": \"npm://lodash\",\n  \"source_comp_id\": \"npm://lodash:4.17.5\",\n  \"component_versions\": {\n    \"id\": \"lodash\",\n    \"vulnerable_versions\": [\n      \"4.17.5 ≤ Version ≤ 4.17.11\"\n    ],\n    \"fixed_versions\": [\n      \"4.17.12\"\n    ],\n    \"more_details\": {\n      \"cves\": [\n        {\n          \"cvss_v2\": \"9.3/AV:N/AC:M/Au:N/C:C/I:C/A:C\",\n          \"cvss_v3\": \"9.8/CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\"\n        }\n      ],\n      \"description\": \"Lodash Package for Node.js contains a flaw in the safeGet() function in lodash.js that is triggered as access to object prototypes is not properly handled. This may allow a context-dependent attacker to add attributes to arbitrary objects, resulting in a denial of service.\",\n      \"provider\": \"JFrog\"\n    }\n  },\n  \"edited\": \"2020-11-03T19:30:16-05:00\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://lodash:4.17.5\nvulnerable_versions : [\"4.17.5 ≤ Version ≤ 4.17.11\"]\nfixed_versions : [\"4.17.12\"]\nissue_type : security\nprovider : JFrog",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cweid": [
+              "CWE-668"
+            ]
+          },
+          "refs": [],
+          "source_location": {},
+          "id": "f7b4206fc55bb695ec848d12544647c9",
+          "title": "ctorName in index.js in kind-of v6.0.2 allows external user input to overwrite certain internal attributes via a conflicting name, as demonstrated by 'constructor': {'name':'Symbol'}. Hence, a crafted payload can overwrite this builtin attribute to manipulate the type detection result.",
+          "desc": "ctorName in index.js in kind-of v6.0.2 allows external user input to overwrite certain internal attributes via a conflicting name, as demonstrated by 'constructor': {'name':'Symbol'}. Hence, a crafted payload can overwrite this builtin attribute to manipulate the type detection result.<br>cves: [{\"cve\"=>\"CVE-2019-20149\", \"cwe\"=>[\"CWE-668\"], \"cvss_v2\"=>\"5.0/CVSS:2.0/AV:N/AC:L/Au:N/C:N/I:P/A:N\", \"cvss_v3\"=>\"7.5/CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N\"}]",
+          "impact": 0.5,
+          "code": "{\n  \"id\": \"\",\n  \"severity\": \"Medium\",\n  \"summary\": \"ctorName in index.js in kind-of v6.0.2 allows external user input to overwrite certain internal attributes via a conflicting name, as demonstrated by 'constructor': {'name':'Symbol'}. Hence, a crafted payload can overwrite this builtin attribute to manipulate the type detection result.\",\n  \"issue_type\": \"security\",\n  \"provider\": \"JFrog\",\n  \"component\": \"kind-of\",\n  \"source_id\": \"npm://kind-of\",\n  \"source_comp_id\": \"npm://kind-of:6.0.2\",\n  \"component_versions\": {\n    \"id\": \"kind-of\",\n    \"vulnerable_versions\": [\n      \"6.0.0 ≤ Version ≤ 6.0.2\"\n    ],\n    \"fixed_versions\": [\n      \"6.0.3\"\n    ],\n    \"more_details\": {\n      \"cves\": [\n        {\n          \"cve\": \"CVE-2019-20149\",\n          \"cwe\": [\n            \"CWE-668\"\n          ],\n          \"cvss_v2\": \"5.0/CVSS:2.0/AV:N/AC:L/Au:N/C:N/I:P/A:N\",\n          \"cvss_v3\": \"7.5/CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N\"\n        }\n      ],\n      \"description\": \"ctorName in index.js in kind-of v6.0.2 allows external user input to overwrite certain internal attributes via a conflicting name, as demonstrated by 'constructor': {'name':'Symbol'}. Hence, a crafted payload can overwrite this builtin attribute to manipulate the type detection result.\",\n      \"provider\": \"JFrog\"\n    }\n  },\n  \"edited\": \"2020-08-26T23:19:58-04:00\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://kind-of:6.0.2\nvulnerable_versions : [\"6.0.0 ≤ Version ≤ 6.0.2\"]\nfixed_versions : [\"6.0.3\"]\nissue_type : security\nprovider : JFrog",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-10"
+            ],
+            "cweid": [
+              "CWE-20"
+            ]
+          },
+          "refs": [],
+          "source_location": {},
+          "id": "3786b6b00e3c3ad8e73f3e76d523503b",
+          "title": "An issue was discovered in ajv.validate() in Ajv (aka Another JSON Schema Validator) 6.12.2. A carefully crafted JSON schema could be provided that allows execution of other code by prototype pollution. (While untrusted schemas are recommended against, the worst case of an untrusted schema should be a denial of service, not execution of code.)",
+          "desc": "An issue was discovered in ajv.validate() in Ajv (aka Another JSON Schema Validator) 6.12.2. A carefully crafted JSON schema could be provided that allows execution of other code by prototype pollution. (While untrusted schemas are recommended against, the worst case of an untrusted schema should be a denial of service, not execution of code.)<br>cves: [{\"cve\"=>\"CVE-2020-15366\", \"cwe\"=>[\"CWE-20\"], \"cvss_v2\"=>\"6.8/CVSS:2.0/AV:N/AC:M/Au:N/C:P/I:P/A:P\", \"cvss_v3\"=>\"5.6/CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L\"}]",
+          "impact": 0.5,
+          "code": "{\n  \"id\": \"\",\n  \"severity\": \"Medium\",\n  \"summary\": \"An issue was discovered in ajv.validate() in Ajv (aka Another JSON Schema Validator) 6.12.2. A carefully crafted JSON schema could be provided that allows execution of other code by prototype pollution. (While untrusted schemas are recommended against, the worst case of an untrusted schema should be a denial of service, not execution of code.)\",\n  \"issue_type\": \"security\",\n  \"provider\": \"JFrog\",\n  \"component\": \"ajv\",\n  \"source_id\": \"npm://ajv\",\n  \"source_comp_id\": \"npm://ajv:5.5.2\",\n  \"component_versions\": {\n    \"id\": \"ajv\",\n    \"vulnerable_versions\": [\n      \"5.0.0 ≤ Version < 6.12.3\"\n    ],\n    \"fixed_versions\": [\n      \"6.12.3\"\n    ],\n    \"more_details\": {\n      \"cves\": [\n        {\n          \"cve\": \"CVE-2020-15366\",\n          \"cwe\": [\n            \"CWE-20\"\n          ],\n          \"cvss_v2\": \"6.8/CVSS:2.0/AV:N/AC:M/Au:N/C:P/I:P/A:P\",\n          \"cvss_v3\": \"5.6/CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L\"\n        }\n      ],\n      \"description\": \"An issue was discovered in ajv.validate() in Ajv (aka Another JSON Schema Validator) 6.12.2. A carefully crafted JSON schema could be provided that allows execution of other code by prototype pollution. (While untrusted schemas are recommended against, the worst case of an untrusted schema should be a denial of service, not execution of code.)\",\n      \"provider\": \"JFrog\"\n    }\n  },\n  \"edited\": \"2020-08-26T23:25:27-04:00\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://ajv:5.5.2\nvulnerable_versions : [\"5.0.0 ≤ Version < 6.12.3\"]\nfixed_versions : [\"6.12.3\"]\nissue_type : security\nprovider : JFrog",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-10"
+            ],
+            "cweid": [
+              "CWE-20"
+            ]
+          },
+          "refs": [],
+          "source_location": {},
+          "id": "3227d5464f91bad68451782b532f6e2d",
+          "title": "minimist before 1.2.2 could be tricked into adding or modifying properties of Object.prototype using a \"constructor\" or \"__proto__\" payload.",
+          "desc": "minimist before 1.2.2 could be tricked into adding or modifying properties of Object.prototype using a \"constructor\" or \"__proto__\" payload.<br>cves: [{\"cve\"=>\"CVE-2020-7598\", \"cwe\"=>[\"CWE-20\"], \"cvss_v2\"=>\"6.8/CVSS:2.0/AV:N/AC:M/Au:N/C:P/I:P/A:P\", \"cvss_v3\"=>\"5.6/CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L\"}]",
+          "impact": 0.5,
+          "code": "{\n  \"id\": \"\",\n  \"severity\": \"Medium\",\n  \"summary\": \"minimist before 1.2.2 could be tricked into adding or modifying properties of Object.prototype using a \\\"constructor\\\" or \\\"__proto__\\\" payload.\",\n  \"issue_type\": \"security\",\n  \"provider\": \"JFrog\",\n  \"component\": \"minimist\",\n  \"source_id\": \"npm://minimist\",\n  \"source_comp_id\": \"npm://minimist:0.0.8\",\n  \"component_versions\": {\n    \"id\": \"minimist\",\n    \"vulnerable_versions\": [\n      \"< 0.2.1\",\n      \"1.0.0 ≤ Version < 1.2.3\"\n    ],\n    \"fixed_versions\": [\n      \"0.2.1\",\n      \"1.2.3\"\n    ],\n    \"more_details\": {\n      \"cves\": [\n        {\n          \"cve\": \"CVE-2020-7598\",\n          \"cwe\": [\n            \"CWE-20\"\n          ],\n          \"cvss_v2\": \"6.8/CVSS:2.0/AV:N/AC:M/Au:N/C:P/I:P/A:P\",\n          \"cvss_v3\": \"5.6/CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L\"\n        }\n      ],\n      \"description\": \"minimist before 1.2.2 could be tricked into adding or modifying properties of Object.prototype using a \\\"constructor\\\" or \\\"__proto__\\\" payload.\",\n      \"provider\": \"JFrog\"\n    }\n  },\n  \"edited\": \"2020-08-26T23:20:29-04:00\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://minimist:0.0.8\nvulnerable_versions : [\"< 0.2.1\", \"1.0.0 ≤ Version < 1.2.3\"]\nfixed_versions : [\"0.2.1\", \"1.2.3\"]\nissue_type : security\nprovider : JFrog",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cweid": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "id": "411aaf7a625451554e605c3f0aac4446",
+          "title": "braces Package for Node.js lib/parsers.js Regular Expression Handling DoS",
+          "desc": "braces Package for Node.js contains a flaw in lib/parsers.js that is triggered during the handling of regular expressions. This may allow a context-dependent attacker to slow down a node process using the library.<br>cves: [{\"cvss_v2\"=>\"4.3/CVSS:2.0/AV:N/AC:M/Au:N/C:N/I:N/A:P\"}]",
+          "impact": 0.5,
+          "code": "{\n  \"id\": \"\",\n  \"severity\": \"Medium\",\n  \"summary\": \"braces Package for Node.js lib/parsers.js Regular Expression Handling DoS\",\n  \"issue_type\": \"security\",\n  \"provider\": \"JFrog\",\n  \"component\": \"braces\",\n  \"source_id\": \"npm://braces\",\n  \"source_comp_id\": \"npm://braces:1.8.5\",\n  \"component_versions\": {\n    \"id\": \"braces\",\n    \"vulnerable_versions\": [\n      \"0.1.0 ≤ Version ≤ 2.3.0\"\n    ],\n    \"fixed_versions\": [\n      \"2.3.1\"\n    ],\n    \"more_details\": {\n      \"cves\": [\n        {\n          \"cvss_v2\": \"4.3/CVSS:2.0/AV:N/AC:M/Au:N/C:N/I:N/A:P\"\n        }\n      ],\n      \"description\": \"braces Package for Node.js contains a flaw in lib/parsers.js that is triggered during the handling of regular expressions. This may allow a context-dependent attacker to slow down a node process using the library.\",\n      \"provider\": \"JFrog\"\n    }\n  },\n  \"edited\": \"2020-03-06T11:41:28-05:00\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://braces:1.8.5\nvulnerable_versions : [\"0.1.0 ≤ Version ≤ 2.3.0\"]\nfixed_versions : [\"2.3.1\"]\nissue_type : security\nprovider : JFrog",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-10"
+            ],
+            "cweid": [
+              "CWE-20"
+            ]
+          },
+          "refs": [],
+          "source_location": {},
+          "id": "0ee6534e22aa493b13323120ebbe4054",
+          "title": "yargs-parser could be tricked into adding or modifying properties of Object.prototype using a \"__proto__\" payload.",
+          "desc": "yargs-parser could be tricked into adding or modifying properties of Object.prototype using a \"__proto__\" payload.<br>cves: [{\"cve\"=>\"CVE-2020-7608\", \"cwe\"=>[\"CWE-20\"], \"cvss_v2\"=>\"4.6/CVSS:2.0/AV:L/AC:L/Au:N/C:P/I:P/A:P\", \"cvss_v3\"=>\"5.3/CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:L\"}]",
+          "impact": 0.5,
+          "code": "{\n  \"id\": \"\",\n  \"severity\": \"Medium\",\n  \"summary\": \"yargs-parser could be tricked into adding or modifying properties of Object.prototype using a \\\"__proto__\\\" payload.\",\n  \"issue_type\": \"security\",\n  \"provider\": \"JFrog\",\n  \"component\": \"yargs-parser\",\n  \"source_id\": \"npm://yargs-parser\",\n  \"source_comp_id\": \"npm://yargs-parser:8.1.0\",\n  \"component_versions\": {\n    \"id\": \"yargs-parser\",\n    \"vulnerable_versions\": [\n      \"< 13.1.2\",\n      \"14.0.0 ≤ Version < 15.0.1\",\n      \"16.0.0 ≤ Version < 18.1.1\"\n    ],\n    \"fixed_versions\": [\n      \"13.1.2\",\n      \"15.0.1\",\n      \"18.1.1\"\n    ],\n    \"more_details\": {\n      \"cves\": [\n        {\n          \"cve\": \"CVE-2020-7608\",\n          \"cwe\": [\n            \"CWE-20\"\n          ],\n          \"cvss_v2\": \"4.6/CVSS:2.0/AV:L/AC:L/Au:N/C:P/I:P/A:P\",\n          \"cvss_v3\": \"5.3/CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:L\"\n        }\n      ],\n      \"description\": \"yargs-parser could be tricked into adding or modifying properties of Object.prototype using a \\\"__proto__\\\" payload.\",\n      \"provider\": \"JFrog\"\n    }\n  },\n  \"edited\": \"2020-08-26T23:20:33-04:00\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://yargs-parser:8.1.0\nvulnerable_versions : [\"< 13.1.2\", \"14.0.0 ≤ Version < 15.0.1\", \"16.0.0 ≤ Version < 18.1.1\"]\nfixed_versions : [\"13.1.2\", \"15.0.1\", \"18.1.1\"]\nissue_type : security\nprovider : JFrog",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://yargs-parser:7.0.0\nvulnerable_versions : [\"< 13.1.2\", \"14.0.0 ≤ Version < 15.0.1\", \"16.0.0 ≤ Version < 18.1.1\"]\nfixed_versions : [\"13.1.2\", \"15.0.1\", \"18.1.1\"]\nissue_type : security\nprovider : JFrog",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://yargs-parser:9.0.2\nvulnerable_versions : [\"< 13.1.2\", \"14.0.0 ≤ Version < 15.0.1\", \"16.0.0 ≤ Version < 18.1.1\"]\nfixed_versions : [\"13.1.2\", \"15.0.1\", \"18.1.1\"]\nissue_type : security\nprovider : JFrog",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cweid": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "id": "db78619ad6e966904f9e3db89d031caa",
+          "title": "mem Package for Node.js index.js Cache Handling Memory Exhaustion Remote DoS Weakness",
+          "desc": "mem Package for Node.js contains a flaw in index.js that is triggered as old results are not properly handled in the cache. This may allow a remote attacker to exhaust available memory and potentially cause a denial of service.<br>cves: [{\"cvss_v2\"=>\"5.0/CVSS:2.0/AV:N/AC:L/Au:N/C:N/I:N/A:P\"}]",
+          "impact": 0.5,
+          "code": "{\n  \"id\": \"\",\n  \"severity\": \"Medium\",\n  \"summary\": \"mem Package for Node.js index.js Cache Handling Memory Exhaustion Remote DoS Weakness\",\n  \"issue_type\": \"security\",\n  \"provider\": \"JFrog\",\n  \"component\": \"mem\",\n  \"source_id\": \"npm://mem\",\n  \"source_comp_id\": \"npm://mem:1.1.0\",\n  \"component_versions\": {\n    \"id\": \"mem\",\n    \"vulnerable_versions\": [\n      \"< 4.0.0\"\n    ],\n    \"fixed_versions\": [\n      \"4.0.0\"\n    ],\n    \"more_details\": {\n      \"cves\": [\n        {\n          \"cvss_v2\": \"5.0/CVSS:2.0/AV:N/AC:L/Au:N/C:N/I:N/A:P\"\n        }\n      ],\n      \"description\": \"mem Package for Node.js contains a flaw in index.js that is triggered as old results are not properly handled in the cache. This may allow a remote attacker to exhaust available memory and potentially cause a denial of service.\",\n      \"provider\": \"JFrog\"\n    }\n  },\n  \"edited\": \"2020-05-12T20:33:03-04:00\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://mem:1.1.0\nvulnerable_versions : [\"< 4.0.0\"]\nfixed_versions : [\"4.0.0\"]\nissue_type : security\nprovider : JFrog",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-10"
+            ],
+            "cweid": [
+              "CWE-94"
+            ]
+          },
+          "refs": [],
+          "source_location": {},
+          "id": "090d2953c0a3f239576204a01f96bd0d",
+          "title": "Handlebars before 3.0.8 and 4.x before 4.5.3 is vulnerable to Arbitrary Code Execution. The lookup helper fails to properly validate templates, allowing attackers to submit templates that execute arbitrary JavaScript. This can be used to run arbitrary code on a server processing Handlebars templates or in a victim's browser (effectively serving as XSS).",
+          "desc": "Handlebars before 3.0.8 and 4.x before 4.5.3 is vulnerable to Arbitrary Code Execution. The lookup helper fails to properly validate templates, allowing attackers to submit templates that execute arbitrary JavaScript. This can be used to run arbitrary code on a server processing Handlebars templates or in a victim's browser (effectively serving as XSS).<br>cves: [{\"cve\"=>\"CVE-2019-20920\", \"cwe\"=>[\"CWE-94\"], \"cvss_v2\"=>\"6.8/CVSS:2.0/AV:N/AC:M/Au:N/C:P/I:P/A:P\", \"cvss_v3\"=>\"8.1/CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:L/A:L\"}]",
+          "impact": 0.5,
+          "code": "{\n  \"id\": \"\",\n  \"severity\": \"Medium\",\n  \"summary\": \"Handlebars before 3.0.8 and 4.x before 4.5.3 is vulnerable to Arbitrary Code Execution. The lookup helper fails to properly validate templates, allowing attackers to submit templates that execute arbitrary JavaScript. This can be used to run arbitrary code on a server processing Handlebars templates or in a victim's browser (effectively serving as XSS).\",\n  \"issue_type\": \"security\",\n  \"provider\": \"JFrog\",\n  \"component\": \"handlebars\",\n  \"source_id\": \"npm://handlebars\",\n  \"source_comp_id\": \"npm://handlebars:4.0.11\",\n  \"component_versions\": {\n    \"id\": \"handlebars\",\n    \"vulnerable_versions\": [\n      \"1.0.6\",\n      \"1.0.7 ≤ Version ≤ 1.3.0\",\n      \"2.0.0\",\n      \"3.0.0 ≤ Version < 3.0.8\",\n      \"4.0.0 ≤ Version ≤ 4.1.1\",\n      \"4.1.2\",\n      \"4.2.0 ≤ Version ≤ 4.5.2\"\n    ],\n    \"fixed_versions\": [\n      \"3.0.8\",\n      \"4.5.3\"\n    ],\n    \"more_details\": {\n      \"cves\": [\n        {\n          \"cve\": \"CVE-2019-20920\",\n          \"cwe\": [\n            \"CWE-94\"\n          ],\n          \"cvss_v2\": \"6.8/CVSS:2.0/AV:N/AC:M/Au:N/C:P/I:P/A:P\",\n          \"cvss_v3\": \"8.1/CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:L/A:L\"\n        }\n      ],\n      \"description\": \"Handlebars before 3.0.8 and 4.x before 4.5.3 is vulnerable to Arbitrary Code Execution. The lookup helper fails to properly validate templates, allowing attackers to submit templates that execute arbitrary JavaScript. This can be used to run arbitrary code on a server processing Handlebars templates or in a victim's browser (effectively serving as XSS).\",\n      \"provider\": \"JFrog\"\n    }\n  },\n  \"edited\": \"2020-10-17T22:12:40-04:00\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://handlebars:4.0.11\nvulnerable_versions : [\"1.0.6\", \"1.0.7 ≤ Version ≤ 1.3.0\", \"2.0.0\", \"3.0.0 ≤ Version < 3.0.8\", \"4.0.0 ≤ Version ≤ 4.1.1\", \"4.1.2\", \"4.2.0 ≤ Version ≤ 4.5.2\"]\nfixed_versions : [\"3.0.8\", \"4.5.3\"]\nissue_type : security\nprovider : JFrog",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cweid": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "id": "69e87d64acc0e98c9921ebf199e228fb",
+          "title": "Prototype Pollution",
+          "desc": "Affected versions of `yargs-parser` are vulnerable to prototype pollution. Arguments are not properly sanitized, allowing an attacker to modify the prototype of `Object`, causing the addition or modification of an existing property that will exist on all objects.  \nParsing the argument `--foo.__proto__.bar baz'` adds a `bar` property with value `baz` to all objects. This is only exploitable if attackers have control over the arguments being passed to `yargs-parser`.\n",
+          "impact": 0.3,
+          "code": "{\n  \"id\": \"\",\n  \"severity\": \"Low\",\n  \"summary\": \"Prototype Pollution\",\n  \"issue_type\": \"security\",\n  \"provider\": \"npm advisory\",\n  \"component\": \"yargs-parser\",\n  \"source_id\": \"npm://yargs-parser\",\n  \"source_comp_id\": \"npm://yargs-parser:9.0.2\",\n  \"component_versions\": {\n    \"id\": \"yargs-parser\",\n    \"vulnerable_versions\": [\n      \"< 13.1.2\",\n      \"14.0.0 ≤ Version < 15.0.1\",\n      \"16.0.0 ≤ Version < 18.1.2\"\n    ],\n    \"fixed_versions\": [\n      \"13.1.2 ≤ Version < 14.0.0\",\n      \"15.0.1 ≤ Version < 16.0.0\",\n      \"≥ 18.1.2\"\n    ],\n    \"more_details\": {\n      \"description\": \"Affected versions of `yargs-parser` are vulnerable to prototype pollution. Arguments are not properly sanitized, allowing an attacker to modify the prototype of `Object`, causing the addition or modification of an existing property that will exist on all objects.  \\nParsing the argument `--foo.__proto__.bar baz'` adds a `bar` property with value `baz` to all objects. This is only exploitable if attackers have control over the arguments being passed to `yargs-parser`.\\n\",\n      \"provider\": \"npm advisory\"\n    }\n  },\n  \"edited\": \"2020-05-04T15:42:22-04:00\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "source_comp_id : npm://yargs-parser:9.0.2\nvulnerable_versions : [\"< 13.1.2\", \"14.0.0 ≤ Version < 15.0.1\", \"16.0.0 ≤ Version < 18.1.2\"]\nfixed_versions : [\"13.1.2 ≤ Version < 14.0.0\", \"15.0.1 ≤ Version < 16.0.0\", \"≥ 18.1.2\"]\nissue_type : security\nprovider : npm advisory",
+              "start_time": ""
+            }
+          ]
+        }
+      ],
+      "sha256": "59053172c009e944c565873a6af1f507f8e8b43974bfddcf234495843788d5d1"
+    }
+  ],
+  "passthrough": {
+    "auxiliary_data": [
+      {
+        "name": "JFrog Xray",
+        "data": {
+          "total_count": 30
+        }
+      }
+    ],
+    "raw": {
+      "total_count": 30,
+      "data": [
+        {
+          "id": "",
+          "severity": "High",
+          "summary": "Acorn regexp.js Regular Expression Validation UTF-16 Surrogate Handling Infinite Loop DoS",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "acorn",
+          "source_id": "npm://acorn",
+          "source_comp_id": "npm://acorn:5.7.3",
+          "component_versions": {
+            "id": "acorn",
+            "vulnerable_versions": [
+              "5.5.0 ≤ Version < 5.7.4",
+              "6.0.0 ≤ Version < 6.4.1",
+              "7.0.0",
+              "7.1.0"
+            ],
+            "fixed_versions": [
+              "5.7.4",
+              "6.4.1",
+              "7.1.1"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cvss_v2": "7.1/AV:N/AC:M/Au:N/C:N/I:N/A:C",
+                  "cvss_v3": "7.5/CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+                }
+              ],
+              "description": "Acorn contains an infinite loop condition in regexp.js that is triggered when handling UTF_16 surrogates while validating regular expressions. This may allow a context-dependent attacker to hang a process using the library.",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-11-03T19:30:42-05:00"
+        },
+        {
+          "id": "",
+          "severity": "High",
+          "summary": "Acorn regexp.js Regular Expression Validation UTF-16 Surrogate Handling Infinite Loop DoS",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "acorn",
+          "source_id": "npm://acorn",
+          "source_comp_id": "npm://acorn:5.7.3",
+          "component_versions": {
+            "id": "acorn",
+            "vulnerable_versions": [
+              "5.5.0 ≤ Version < 5.7.4",
+              "6.0.0 ≤ Version < 6.4.1",
+              "7.0.0",
+              "7.1.0"
+            ],
+            "fixed_versions": [
+              "5.7.4",
+              "6.4.1",
+              "7.1.1"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cvss_v2": "7.1/AV:N/AC:M/Au:N/C:N/I:N/A:C",
+                  "cvss_v3": "7.5/CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+                }
+              ],
+              "description": "Acorn contains an infinite loop condition in regexp.js that is triggered when handling UTF_16 surrogates while validating regular expressions. This may allow a context-dependent attacker to hang a process using the library.",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-11-03T19:30:42-05:00"
+        },
+        {
+          "id": "",
+          "severity": "High",
+          "summary": "Lodash Package for Node.js .internal/baseZipObject.js baseZipObject() Function Property Manipulation Resource Exhaustion DoS",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "lodash",
+          "source_id": "npm://lodash",
+          "source_comp_id": "npm://lodash:4.17.5",
+          "component_versions": {
+            "more_details": {}
+          },
+          "edited": "2020-11-03T19:30:46-05:00"
+        },
+        {
+          "id": "",
+          "severity": "High",
+          "summary": "Lodash Package for Node.js .internal/baseZipObject.js baseZipObject() Function Property Manipulation Resource Exhaustion DoS",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "lodash",
+          "source_id": "npm://lodash",
+          "source_comp_id": "npm://lodash:4.17.15",
+          "component_versions": {
+            "more_details": {}
+          },
+          "edited": "2020-11-03T19:30:46-05:00"
+        },
+        {
+          "id": "",
+          "severity": "High",
+          "summary": "node-handlebars Template Handling Prototype Manipulation Remote Code Execution",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "handlebars",
+          "source_id": "npm://handlebars",
+          "source_comp_id": "npm://handlebars:4.0.11",
+          "component_versions": {
+            "id": "handlebars",
+            "vulnerable_versions": [
+              "1.0.6",
+              "1.0.7 ≤ Version ≤ 1.3.0",
+              "2.0.0 ≤ Version ≤ 4.0.13",
+              "4.1.0 ≤ Version ≤ 4.1.1"
+            ],
+            "fixed_versions": [
+              "4.0.14",
+              "4.1.2"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cvss_v2": "10.0/CVSS:2.0/AV:N/AC:L/Au:N/C:C/I:C/A:C"
+                }
+              ],
+              "description": "node-handlebars contains a flaw that is triggered during the handling of a specially crafted template. This may allow a remote attacker to make changes to an object's prototype and execute arbitrary code.",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-03-06T11:41:08-05:00"
+        },
+        {
+          "id": "",
+          "severity": "High",
+          "summary": "node-handlebars Template Handling Prototype Manipulation Remote Code Execution",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "handlebars",
+          "source_id": "npm://handlebars",
+          "source_comp_id": "npm://handlebars:4.0.11",
+          "component_versions": {
+            "id": "handlebars",
+            "vulnerable_versions": [
+              "1.0.6",
+              "1.0.7 ≤ Version ≤ 1.3.0",
+              "2.0.0 ≤ Version ≤ 4.0.13",
+              "4.1.0 ≤ Version ≤ 4.1.1"
+            ],
+            "fixed_versions": [
+              "4.0.14",
+              "4.1.2"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cvss_v2": "10.0/CVSS:2.0/AV:N/AC:L/Au:N/C:C/I:C/A:C"
+                }
+              ],
+              "description": "node-handlebars contains a flaw that is triggered during the handling of a specially crafted template. This may allow a remote attacker to make changes to an object's prototype and execute arbitrary code.",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-03-06T11:41:08-05:00"
+        },
+        {
+          "id": "",
+          "severity": "High",
+          "summary": "Handlebars.js lib/handlebars/helpers/lookup.js Template Handling Prototype Manipulation Arbitrary Code Execution",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "handlebars",
+          "source_id": "npm://handlebars",
+          "source_comp_id": "npm://handlebars:4.0.11",
+          "component_versions": {
+            "more_details": {}
+          },
+          "edited": "2020-11-03T19:30:31-05:00"
+        },
+        {
+          "id": "",
+          "severity": "High",
+          "summary": "Handlebars.js lib/handlebars/helpers/lookup.js Template Handling Prototype Manipulation Arbitrary Code Execution",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "handlebars",
+          "source_id": "npm://handlebars",
+          "source_comp_id": "npm://handlebars:4.0.11",
+          "component_versions": {
+            "more_details": {}
+          },
+          "edited": "2020-11-03T19:30:31-05:00"
+        },
+        {
+          "id": "",
+          "severity": "High",
+          "summary": "Arbitrary Code Execution",
+          "issue_type": "security",
+          "provider": "npm advisory",
+          "component": "handlebars",
+          "source_id": "npm://handlebars",
+          "source_comp_id": "npm://handlebars:4.0.11",
+          "component_versions": {
+            "id": "handlebars",
+            "vulnerable_versions": [
+              "< 3.0.8",
+              "4.0.0 ≤ Version < 4.5.3"
+            ],
+            "fixed_versions": [
+              "3.0.8 ≤ Version < 4.0.0",
+              "≥ 4.5.3"
+            ],
+            "more_details": {
+              "description": "Versions of `handlebars` prior to 3.0.8 or 4.5.3 are vulnerable to Arbitrary Code Execution. The package's lookup helper fails to properly validate templates, allowing attackers to submit templates that execute arbitrary JavaScript in the system. It is due to an incomplete fix for a [previous issue](https://www.npmjs.com/advisories/1316). This vulnerability can be used to run arbitrary code in a server processing Handlebars templates or on a victim's browser (effectively serving as Cross-Site Scripting).",
+              "provider": "npm advisory"
+            }
+          },
+          "edited": "2020-04-07T14:40:56-04:00"
+        },
+        {
+          "id": "",
+          "severity": "High",
+          "summary": "Arbitrary Code Execution",
+          "issue_type": "security",
+          "provider": "npm advisory",
+          "component": "handlebars",
+          "source_id": "npm://handlebars",
+          "source_comp_id": "npm://handlebars:4.0.11",
+          "component_versions": {
+            "id": "handlebars",
+            "vulnerable_versions": [
+              "< 3.0.8",
+              "4.0.0 ≤ Version < 4.5.3"
+            ],
+            "fixed_versions": [
+              "3.0.8 ≤ Version < 4.0.0",
+              "≥ 4.5.3"
+            ],
+            "more_details": {
+              "description": "Versions of `handlebars` prior to 3.0.8 or 4.5.3 are vulnerable to Arbitrary Code Execution. The package's lookup helper fails to properly validate templates, allowing attackers to submit templates that execute arbitrary JavaScript in the system. It is due to an incomplete fix for a [previous issue](https://www.npmjs.com/advisories/1316). This vulnerability can be used to run arbitrary code in a server processing Handlebars templates or on a victim's browser (effectively serving as Cross-Site Scripting).",
+              "provider": "npm advisory"
+            }
+          },
+          "edited": "2020-04-07T14:40:56-04:00"
+        },
+        {
+          "id": "",
+          "severity": "High",
+          "summary": "Versions of handlebars prior to 4.3.0 are vulnerable to Prototype Pollution leading to Remote Code Execution. Templates may alter an Object's __proto__ and __defineGetter__ properties, which may allow an attacker to execute arbitrary code through crafted payloads.",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "handlebars",
+          "source_id": "npm://handlebars",
+          "source_comp_id": "npm://handlebars:4.0.11",
+          "component_versions": {
+            "id": "handlebars",
+            "vulnerable_versions": [
+              "1.0.6",
+              "1.0.7 ≤ Version ≤ 1.3.0",
+              "2.0.0",
+              "3.0.0 ≤ Version ≤ 4.1.1",
+              "4.1.2",
+              "4.2.0 ≤ Version < 4.3.0"
+            ],
+            "fixed_versions": [
+              "4.3.0"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cve": "CVE-2019-19919",
+                  "cwe": [
+                    "CWE-74"
+                  ],
+                  "cvss_v2": "7.5/CVSS:2.0/AV:N/AC:L/Au:N/C:P/I:P/A:P",
+                  "cvss_v3": "9.8/CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+                }
+              ],
+              "description": "Versions of handlebars prior to 4.3.0 are vulnerable to Prototype Pollution leading to Remote Code Execution. Templates may alter an Object's __proto__ and __defineGetter__ properties, which may allow an attacker to execute arbitrary code through crafted payloads.",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-08-26T23:19:55-04:00"
+        },
+        {
+          "id": "",
+          "severity": "High",
+          "summary": "Versions of handlebars prior to 4.3.0 are vulnerable to Prototype Pollution leading to Remote Code Execution. Templates may alter an Object's __proto__ and __defineGetter__ properties, which may allow an attacker to execute arbitrary code through crafted payloads.",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "handlebars",
+          "source_id": "npm://handlebars",
+          "source_comp_id": "npm://handlebars:4.0.11",
+          "component_versions": {
+            "id": "handlebars",
+            "vulnerable_versions": [
+              "1.0.6",
+              "1.0.7 ≤ Version ≤ 1.3.0",
+              "2.0.0",
+              "3.0.0 ≤ Version ≤ 4.1.1",
+              "4.1.2",
+              "4.2.0 ≤ Version < 4.3.0"
+            ],
+            "fixed_versions": [
+              "4.3.0"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cve": "CVE-2019-19919",
+                  "cwe": [
+                    "CWE-74"
+                  ],
+                  "cvss_v2": "7.5/CVSS:2.0/AV:N/AC:L/Au:N/C:P/I:P/A:P",
+                  "cvss_v3": "9.8/CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+                }
+              ],
+              "description": "Versions of handlebars prior to 4.3.0 are vulnerable to Prototype Pollution leading to Remote Code Execution. Templates may alter an Object's __proto__ and __defineGetter__ properties, which may allow an attacker to execute arbitrary code through crafted payloads.",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-08-26T23:19:55-04:00"
+        },
+        {
+          "id": "",
+          "severity": "High",
+          "summary": "Lodash Package for Node.js lodash.js baseSet() Function Prototype Pollution DoS",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "lodash",
+          "source_id": "npm://lodash",
+          "source_comp_id": "npm://lodash:4.17.15",
+          "component_versions": {
+            "id": "lodash",
+            "vulnerable_versions": [
+              "4.0.0 ≤ Version < 4.17.16"
+            ],
+            "fixed_versions": [
+              "4.17.16"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cvss_v2": "7.1/AV:N/AC:M/Au:N/C:N/I:N/A:C",
+                  "cvss_v3": "7.5/CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+                }
+              ],
+              "description": "Lodash Package for Node.js contains a prototype pollution flaw in the baseSet() function in lodash.js that is triggered as access to object prototypes is not properly handled. This may allow a context-dependent attacker to manipulate object properties and crash a Node process using the library.",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-11-03T19:31:27-05:00"
+        },
+        {
+          "id": "",
+          "severity": "High",
+          "summary": "Lodash Package for Node.js lodash.js baseSet() Function Prototype Pollution DoS",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "lodash",
+          "source_id": "npm://lodash",
+          "source_comp_id": "npm://lodash:4.17.5",
+          "component_versions": {
+            "id": "lodash",
+            "vulnerable_versions": [
+              "4.0.0 ≤ Version < 4.17.16"
+            ],
+            "fixed_versions": [
+              "4.17.16"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cvss_v2": "7.1/AV:N/AC:M/Au:N/C:N/I:N/A:C",
+                  "cvss_v3": "7.5/CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+                }
+              ],
+              "description": "Lodash Package for Node.js contains a prototype pollution flaw in the baseSet() function in lodash.js that is triggered as access to object prototypes is not properly handled. This may allow a context-dependent attacker to manipulate object properties and crash a Node process using the library.",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-11-03T19:31:27-05:00"
+        },
+        {
+          "id": "",
+          "severity": "High",
+          "summary": "Handlebars before 4.4.5 allows Regular Expression Denial of Service (ReDoS) because of eager matching. The parser may be forced into an endless loop while processing crafted templates. This may allow attackers to exhaust system resources.",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "handlebars",
+          "source_id": "npm://handlebars",
+          "source_comp_id": "npm://handlebars:4.0.11",
+          "component_versions": {
+            "id": "handlebars",
+            "vulnerable_versions": [
+              "4.0.0 ≤ Version ≤ 4.1.1",
+              "4.1.2",
+              "4.2.0 ≤ Version ≤ 4.4.4"
+            ],
+            "fixed_versions": [
+              "4.4.5"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cve": "CVE-2019-20922",
+                  "cwe": [
+                    "CWE-835"
+                  ],
+                  "cvss_v2": "7.8/CVSS:2.0/AV:N/AC:L/Au:N/C:N/I:N/A:C",
+                  "cvss_v3": "7.5/CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+                }
+              ],
+              "description": "Handlebars before 4.4.5 allows Regular Expression Denial of Service (ReDoS) because of eager matching. The parser may be forced into an endless loop while processing crafted templates. This may allow attackers to exhaust system resources.",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-10-08T22:59:49-04:00"
+        },
+        {
+          "id": "",
+          "severity": "High",
+          "summary": "Handlebars before 4.4.5 allows Regular Expression Denial of Service (ReDoS) because of eager matching. The parser may be forced into an endless loop while processing crafted templates. This may allow attackers to exhaust system resources.",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "handlebars",
+          "source_id": "npm://handlebars",
+          "source_comp_id": "npm://handlebars:4.0.11",
+          "component_versions": {
+            "id": "handlebars",
+            "vulnerable_versions": [
+              "4.0.0 ≤ Version ≤ 4.1.1",
+              "4.1.2",
+              "4.2.0 ≤ Version ≤ 4.4.4"
+            ],
+            "fixed_versions": [
+              "4.4.5"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cve": "CVE-2019-20922",
+                  "cwe": [
+                    "CWE-835"
+                  ],
+                  "cvss_v2": "7.8/CVSS:2.0/AV:N/AC:L/Au:N/C:N/I:N/A:C",
+                  "cvss_v3": "7.5/CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+                }
+              ],
+              "description": "Handlebars before 4.4.5 allows Regular Expression Denial of Service (ReDoS) because of eager matching. The parser may be forced into an endless loop while processing crafted templates. This may allow attackers to exhaust system resources.",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-10-08T22:59:49-04:00"
+        },
+        {
+          "id": "",
+          "severity": "High",
+          "summary": "Lodash Package for Node.js lodash.js safeGet() Function Object Prototype Manipulation Unspecified Issue",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "lodash",
+          "source_id": "npm://lodash",
+          "source_comp_id": "npm://lodash:4.17.5",
+          "component_versions": {
+            "id": "lodash",
+            "vulnerable_versions": [
+              "4.17.5 ≤ Version ≤ 4.17.11"
+            ],
+            "fixed_versions": [
+              "4.17.12"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cvss_v2": "9.3/AV:N/AC:M/Au:N/C:C/I:C/A:C",
+                  "cvss_v3": "9.8/CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+                }
+              ],
+              "description": "Lodash Package for Node.js contains a flaw in the safeGet() function in lodash.js that is triggered as access to object prototypes is not properly handled. This may allow a context-dependent attacker to add attributes to arbitrary objects, resulting in a denial of service.",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-11-03T19:30:16-05:00"
+        },
+        {
+          "id": "",
+          "severity": "Medium",
+          "summary": "ctorName in index.js in kind-of v6.0.2 allows external user input to overwrite certain internal attributes via a conflicting name, as demonstrated by 'constructor': {'name':'Symbol'}. Hence, a crafted payload can overwrite this builtin attribute to manipulate the type detection result.",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "kind-of",
+          "source_id": "npm://kind-of",
+          "source_comp_id": "npm://kind-of:6.0.2",
+          "component_versions": {
+            "id": "kind-of",
+            "vulnerable_versions": [
+              "6.0.0 ≤ Version ≤ 6.0.2"
+            ],
+            "fixed_versions": [
+              "6.0.3"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cve": "CVE-2019-20149",
+                  "cwe": [
+                    "CWE-668"
+                  ],
+                  "cvss_v2": "5.0/CVSS:2.0/AV:N/AC:L/Au:N/C:N/I:P/A:N",
+                  "cvss_v3": "7.5/CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+                }
+              ],
+              "description": "ctorName in index.js in kind-of v6.0.2 allows external user input to overwrite certain internal attributes via a conflicting name, as demonstrated by 'constructor': {'name':'Symbol'}. Hence, a crafted payload can overwrite this builtin attribute to manipulate the type detection result.",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-08-26T23:19:58-04:00"
+        },
+        {
+          "id": "",
+          "severity": "Medium",
+          "summary": "An issue was discovered in ajv.validate() in Ajv (aka Another JSON Schema Validator) 6.12.2. A carefully crafted JSON schema could be provided that allows execution of other code by prototype pollution. (While untrusted schemas are recommended against, the worst case of an untrusted schema should be a denial of service, not execution of code.)",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "ajv",
+          "source_id": "npm://ajv",
+          "source_comp_id": "npm://ajv:5.5.2",
+          "component_versions": {
+            "id": "ajv",
+            "vulnerable_versions": [
+              "5.0.0 ≤ Version < 6.12.3"
+            ],
+            "fixed_versions": [
+              "6.12.3"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cve": "CVE-2020-15366",
+                  "cwe": [
+                    "CWE-20"
+                  ],
+                  "cvss_v2": "6.8/CVSS:2.0/AV:N/AC:M/Au:N/C:P/I:P/A:P",
+                  "cvss_v3": "5.6/CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L"
+                }
+              ],
+              "description": "An issue was discovered in ajv.validate() in Ajv (aka Another JSON Schema Validator) 6.12.2. A carefully crafted JSON schema could be provided that allows execution of other code by prototype pollution. (While untrusted schemas are recommended against, the worst case of an untrusted schema should be a denial of service, not execution of code.)",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-08-26T23:25:27-04:00"
+        },
+        {
+          "id": "",
+          "severity": "Medium",
+          "summary": "minimist before 1.2.2 could be tricked into adding or modifying properties of Object.prototype using a \"constructor\" or \"__proto__\" payload.",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "minimist",
+          "source_id": "npm://minimist",
+          "source_comp_id": "npm://minimist:0.0.8",
+          "component_versions": {
+            "id": "minimist",
+            "vulnerable_versions": [
+              "< 0.2.1",
+              "1.0.0 ≤ Version < 1.2.3"
+            ],
+            "fixed_versions": [
+              "0.2.1",
+              "1.2.3"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cve": "CVE-2020-7598",
+                  "cwe": [
+                    "CWE-20"
+                  ],
+                  "cvss_v2": "6.8/CVSS:2.0/AV:N/AC:M/Au:N/C:P/I:P/A:P",
+                  "cvss_v3": "5.6/CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L"
+                }
+              ],
+              "description": "minimist before 1.2.2 could be tricked into adding or modifying properties of Object.prototype using a \"constructor\" or \"__proto__\" payload.",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-08-26T23:20:29-04:00"
+        },
+        {
+          "id": "",
+          "severity": "Medium",
+          "summary": "braces Package for Node.js lib/parsers.js Regular Expression Handling DoS",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "braces",
+          "source_id": "npm://braces",
+          "source_comp_id": "npm://braces:1.8.5",
+          "component_versions": {
+            "id": "braces",
+            "vulnerable_versions": [
+              "0.1.0 ≤ Version ≤ 2.3.0"
+            ],
+            "fixed_versions": [
+              "2.3.1"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cvss_v2": "4.3/CVSS:2.0/AV:N/AC:M/Au:N/C:N/I:N/A:P"
+                }
+              ],
+              "description": "braces Package for Node.js contains a flaw in lib/parsers.js that is triggered during the handling of regular expressions. This may allow a context-dependent attacker to slow down a node process using the library.",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-03-06T11:41:28-05:00"
+        },
+        {
+          "id": "",
+          "severity": "Medium",
+          "summary": "yargs-parser could be tricked into adding or modifying properties of Object.prototype using a \"__proto__\" payload.",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "yargs-parser",
+          "source_id": "npm://yargs-parser",
+          "source_comp_id": "npm://yargs-parser:8.1.0",
+          "component_versions": {
+            "id": "yargs-parser",
+            "vulnerable_versions": [
+              "< 13.1.2",
+              "14.0.0 ≤ Version < 15.0.1",
+              "16.0.0 ≤ Version < 18.1.1"
+            ],
+            "fixed_versions": [
+              "13.1.2",
+              "15.0.1",
+              "18.1.1"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cve": "CVE-2020-7608",
+                  "cwe": [
+                    "CWE-20"
+                  ],
+                  "cvss_v2": "4.6/CVSS:2.0/AV:L/AC:L/Au:N/C:P/I:P/A:P",
+                  "cvss_v3": "5.3/CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:L"
+                }
+              ],
+              "description": "yargs-parser could be tricked into adding or modifying properties of Object.prototype using a \"__proto__\" payload.",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-08-26T23:20:33-04:00"
+        },
+        {
+          "id": "",
+          "severity": "Medium",
+          "summary": "yargs-parser could be tricked into adding or modifying properties of Object.prototype using a \"__proto__\" payload.",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "yargs-parser",
+          "source_id": "npm://yargs-parser",
+          "source_comp_id": "npm://yargs-parser:7.0.0",
+          "component_versions": {
+            "id": "yargs-parser",
+            "vulnerable_versions": [
+              "< 13.1.2",
+              "14.0.0 ≤ Version < 15.0.1",
+              "16.0.0 ≤ Version < 18.1.1"
+            ],
+            "fixed_versions": [
+              "13.1.2",
+              "15.0.1",
+              "18.1.1"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cve": "CVE-2020-7608",
+                  "cwe": [
+                    "CWE-20"
+                  ],
+                  "cvss_v2": "4.6/CVSS:2.0/AV:L/AC:L/Au:N/C:P/I:P/A:P",
+                  "cvss_v3": "5.3/CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:L"
+                }
+              ],
+              "description": "yargs-parser could be tricked into adding or modifying properties of Object.prototype using a \"__proto__\" payload.",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-08-26T23:20:33-04:00"
+        },
+        {
+          "id": "",
+          "severity": "Medium",
+          "summary": "yargs-parser could be tricked into adding or modifying properties of Object.prototype using a \"__proto__\" payload.",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "yargs-parser",
+          "source_id": "npm://yargs-parser",
+          "source_comp_id": "npm://yargs-parser:9.0.2",
+          "component_versions": {
+            "id": "yargs-parser",
+            "vulnerable_versions": [
+              "< 13.1.2",
+              "14.0.0 ≤ Version < 15.0.1",
+              "16.0.0 ≤ Version < 18.1.1"
+            ],
+            "fixed_versions": [
+              "13.1.2",
+              "15.0.1",
+              "18.1.1"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cve": "CVE-2020-7608",
+                  "cwe": [
+                    "CWE-20"
+                  ],
+                  "cvss_v2": "4.6/CVSS:2.0/AV:L/AC:L/Au:N/C:P/I:P/A:P",
+                  "cvss_v3": "5.3/CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:L/I:L/A:L"
+                }
+              ],
+              "description": "yargs-parser could be tricked into adding or modifying properties of Object.prototype using a \"__proto__\" payload.",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-08-26T23:20:33-04:00"
+        },
+        {
+          "id": "",
+          "severity": "Medium",
+          "summary": "mem Package for Node.js index.js Cache Handling Memory Exhaustion Remote DoS Weakness",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "mem",
+          "source_id": "npm://mem",
+          "source_comp_id": "npm://mem:1.1.0",
+          "component_versions": {
+            "id": "mem",
+            "vulnerable_versions": [
+              "< 4.0.0"
+            ],
+            "fixed_versions": [
+              "4.0.0"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cvss_v2": "5.0/CVSS:2.0/AV:N/AC:L/Au:N/C:N/I:N/A:P"
+                }
+              ],
+              "description": "mem Package for Node.js contains a flaw in index.js that is triggered as old results are not properly handled in the cache. This may allow a remote attacker to exhaust available memory and potentially cause a denial of service.",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-05-12T20:33:03-04:00"
+        },
+        {
+          "id": "",
+          "severity": "Medium",
+          "summary": "Handlebars before 3.0.8 and 4.x before 4.5.3 is vulnerable to Arbitrary Code Execution. The lookup helper fails to properly validate templates, allowing attackers to submit templates that execute arbitrary JavaScript. This can be used to run arbitrary code on a server processing Handlebars templates or in a victim's browser (effectively serving as XSS).",
+          "issue_type": "security",
+          "provider": "JFrog",
+          "component": "handlebars",
+          "source_id": "npm://handlebars",
+          "source_comp_id": "npm://handlebars:4.0.11",
+          "component_versions": {
+            "id": "handlebars",
+            "vulnerable_versions": [
+              "1.0.6",
+              "1.0.7 ≤ Version ≤ 1.3.0",
+              "2.0.0",
+              "3.0.0 ≤ Version < 3.0.8",
+              "4.0.0 ≤ Version ≤ 4.1.1",
+              "4.1.2",
+              "4.2.0 ≤ Version ≤ 4.5.2"
+            ],
+            "fixed_versions": [
+              "3.0.8",
+              "4.5.3"
+            ],
+            "more_details": {
+              "cves": [
+                {
+                  "cve": "CVE-2019-20920",
+                  "cwe": [
+                    "CWE-94"
+                  ],
+                  "cvss_v2": "6.8/CVSS:2.0/AV:N/AC:M/Au:N/C:P/I:P/A:P",
+                  "cvss_v3": "8.1/CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:L/A:L"
+                }
+              ],
+              "description": "Handlebars before 3.0.8 and 4.x before 4.5.3 is vulnerable to Arbitrary Code Execution. The lookup helper fails to properly validate templates, allowing attackers to submit templates that execute arbitrary JavaScript. This can be used to run arbitrary code on a server processing Handlebars templates or in a victim's browser (effectively serving as XSS).",
+              "provider": "JFrog"
+            }
+          },
+          "edited": "2020-10-17T22:12:40-04:00"
+        },
+        {
+          "id": "",
+          "severity": "Low",
+          "summary": "Prototype Pollution",
+          "issue_type": "security",
+          "provider": "npm advisory",
+          "component": "yargs-parser",
+          "source_id": "npm://yargs-parser",
+          "source_comp_id": "npm://yargs-parser:9.0.2",
+          "component_versions": {
+            "id": "yargs-parser",
+            "vulnerable_versions": [
+              "< 13.1.2",
+              "14.0.0 ≤ Version < 15.0.1",
+              "16.0.0 ≤ Version < 18.1.2"
+            ],
+            "fixed_versions": [
+              "13.1.2 ≤ Version < 14.0.0",
+              "15.0.1 ≤ Version < 16.0.0",
+              "≥ 18.1.2"
+            ],
+            "more_details": {
+              "description": "Affected versions of `yargs-parser` are vulnerable to prototype pollution. Arguments are not properly sanitized, allowing an attacker to modify the prototype of `Object`, causing the addition or modification of an existing property that will exist on all objects.  \nParsing the argument `--foo.__proto__.bar baz'` adds a `bar` property with value `baz` to all objects. This is only exploitable if attackers have control over the arguments being passed to `yargs-parser`.\n",
+              "provider": "npm advisory"
+            }
+          },
+          "edited": "2020-05-04T15:42:22-04:00"
+        }
+      ]
+    }
+  }
+}
