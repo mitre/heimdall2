@@ -8,7 +8,7 @@ import {
   parseXml
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import { getCCIsForNISTTags } from './utils/global';
+import {getCCIsForNISTTags} from './utils/global';
 const STATIC_FLAWS = 'staticflaws.flaw';
 const SEVERITY = 'detailedreport.severity';
 const FILE_PATH_VALUE = 'file_paths.file_path.value';
@@ -347,7 +347,8 @@ function controlMappingCwe(
       cweid: {transformer: formatCweData},
       cweDescription: {transformer: formatCweDesc},
       cci: {
-        transformer: (data: Record<string, unknown>) => getCCIsForNISTTags(nistTag(data))
+        transformer: (data: Record<string, unknown>) =>
+          getCCIsForNISTTags(nistTag(data))
       },
       nist: {transformer: nistTag}
     },
