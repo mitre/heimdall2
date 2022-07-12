@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.16",
+    "release": "2.6.29",
     "target_id": "my-fake-host-1.somewhere.cloud"
   },
-  "version": "2.6.16",
+  "version": "2.6.29",
   "statistics": {
     "duration": null
   },
@@ -27,6 +27,10 @@
         {
           "desc": "(CIS_Linux_2.0.0 - 5.2.2) Ensure permissions on SSH private host key files are configured",
           "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -57,6 +61,10 @@
         {
           "desc": "(CIS_Linux_2.0.0 - 4.1.3) Ensure auditd service is enabled",
           "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -87,6 +95,10 @@
         {
           "desc": "Red Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2019-19927.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -117,6 +129,10 @@
         {
           "desc": "Integer overflow in the string_appends function in cplus-dem.c in libiberty allows remote attackers to execute arbitrary code via a crafted executable, which triggers a buffer overflow.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -147,6 +163,10 @@
         {
           "desc": "DOCUMENTATION: An input validation vulnerability was found in Go. If cgo is specified in a Go file, it is possible to bypass the validation of arguments to the gcc compiler. This flaw allows an attacker to create a malicious repository that can execute arbitrary code when downloaded and run via `go get` or `go build` while building a Go project. The highest threat from this vulnerability is to confidentiality and integrity as well as system availability.             STATEMENT: While the OpenShift Container Platform (OCP), Red Hat OpenShift Jaeger (RHOSJ),  OpenShift Service Mesh (OSSM), and OpenShift Virtualization all contain RPMs and containers that are compiled with a vulnerable version of Go, the vulnerability is specific to the building of the Go code itself. Using `go get` or `go build` and as such, the relevant components have been marked as not affected.  Additionally, only the main RPMs and containers for OCP, RHOSJ, OSSM, and OpenShift Virtualization are represented due to the large volume of not affected components.  Red Hat Ceph Storage 3 ships the vulnerable version of go, and an attacker building go code on RHCS 3 could potentially exploit this vulnerability.             MITIGATION: If it\\'s possible to confirm that the go project being built does not rely on any cgo code in the included dependencies, the env variable CGO_ENABLED=0 can be specified when using eithe",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -177,6 +197,10 @@
         {
           "desc": "The s_mp_div function in lib/freebl/mpi/mpi.c in Mozilla Network Security Services (NSS) before 3.21, as used in Mozilla Firefox before 44.0, improperly divides numbers, which might make it easier for remote attackers to defeat cryptographic protection mechanisms by leveraging use of the (1) mp_div or (2) mp_exptmod function.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -207,6 +231,10 @@
         {
           "desc": "The ecryptfs_privileged_open function in fs/ecryptfs/kthread.c in the Linux kernel before 4.6.3 allows local users to gain privileges or cause a denial of service (stack memory consumption) via vectors involving crafted mmap calls for /proc pathnames, leading to recursive pagefault handling.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -235,7 +263,7 @@
           ]
         }
       ],
-      "sha256": "c566b858380ca471fa4ae05a65b68e81d691f1a9eaddb31b0da9f4611ad34a63"
+      "sha256": "8733e69d05230cb6acb6329e5f0ed1d5c741af9492c23c7bfbda8e65db582ca7"
     }
   ]
 }
