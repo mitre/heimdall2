@@ -37,6 +37,9 @@ export class InspecData extends VuexModule {
   /** State var containing all profile files that have been added */
   profileFiles: ProfileFile[] = [];
 
+  /** State var containing all Checklists that have been added */
+  checklistFiles: any[] = [];
+
   /** Return all of the files that we currently have. */
   get allFiles(): (EvaluationFile | ProfileFile)[] {
     const result: (EvaluationFile | ProfileFile)[] = [];
