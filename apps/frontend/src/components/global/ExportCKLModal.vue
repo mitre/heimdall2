@@ -320,7 +320,12 @@ export default class ExportCKLModal extends Vue {
         (controlSet) => {
           return {
             filename: `${cleanUpFilename(controlSet.fileName)}.ckl`,
-            data: Mustache.render(data, controlSet).replace(/[^\x00-\x7F]/g, '')
+            data: Mustache.render(data, controlSet)
+              .replace(/\x1b\[[0-9;]*m/g, '') // ANSI Colors
+              .replace(
+                /[\x00-\x08\x0b\x0c\x0e-\x1F\uD800-\uDFFF\uFFFE\uFFFF]/g,
+                '\uFFFD'
+              ) // Invalid unicode for XML
           };
         }
       );
