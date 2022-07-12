@@ -1,0 +1,12 @@
+import {encode} from 'html-entities';
+import _ from 'lodash';
+
+function findingId(finding: Record<string, unknown>): string {
+  return encode((_.get(finding, 'GeneratorId') as string) + (_.get(finding, 'Title') as string));
+}
+
+export function getGuardDuty(): Record<string, (...inputs: any) => any> {
+  return {
+    findingId
+  };
+}

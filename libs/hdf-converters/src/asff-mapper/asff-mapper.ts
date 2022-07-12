@@ -8,6 +8,7 @@ import {
   getCCIsForNISTTags
 } from '../utils/global';
 import {getFirewallManager} from './case-firewall-manager';
+import {getGuardDuty} from './case-guardduty';
 import {getHDF2ASFF} from './case-hdf2asff';
 import {getProwler} from './case-prowler';
 import {getSecurityHub} from './case-security-hub';
@@ -31,6 +32,7 @@ export enum SpecialCasing {
   SecurityHub = 'AWS Security Hub',
   Trivy = 'Aqua Trivy',
   HDF2ASFF = 'MITRE SAF HDF2ASFF',
+  GuardDuty = 'AWS GuardDuty',
   Default = 'Default'
 }
 
@@ -42,6 +44,12 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
     )
   ) {
     return SpecialCasing.FirewallManager;
+  } else if (
+    productArn.match(
+      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/guardduty$/
+    )
+  ) {
+    return SpecialCasing.GuardDuty;
   } else if (
     productArn.match(
       /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/prowler\/prowler$/
@@ -504,8 +512,8 @@ export class ASFFMapper extends BaseConverter {
                             return ExecJSON.ControlResultStatus.Error;
                         }
                       } else {
-                        // if no compliance status is provided which is a weird but possible case, then skip
-                        return ExecJSON.ControlResultStatus.Skipped;
+                        // if no compliance status is provided which is a weird but possible case, then fail
+                        return ExecJSON.ControlResultStatus.Failed;
                       }
                     };
                     return externalProductHandler(
