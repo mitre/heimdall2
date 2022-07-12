@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.16",
+    "release": "2.6.29",
     "target_id": "my-fake-host-8.somewhere.cloud"
   },
-  "version": "2.6.16",
+  "version": "2.6.29",
   "statistics": {
     "duration": null
   },
@@ -27,6 +27,10 @@
         {
           "desc": "(CIS_Linux_2.0.0 - 1.4.1) Ensure permissions on bootloader config are configured",
           "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -57,6 +61,10 @@
         {
           "desc": "(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
           "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -87,6 +95,10 @@
         {
           "desc": "DOCUMENTATION: A flaw was found Go\\'s net/http package. Servers using ReverseProxy from net/http in the Go standard library are vulnerable to a data race that results in a denial of service. The highest threat from this vulnerability is to system availability.             STATEMENT: OpenShift Container Platform (OCP) components are primarily written in Go, meaning that any component using the net/http package includes the vulnerable code. OCP server endpoints using ReverseProxy are protected by authentication, reducing the severity of this vulnerability to Low for OCP.  Similar to OCP, OpenShift ServiceMesh (OSSM), RedHat OpenShift Jaeger (RHOSJ) and OpenShift Virtualization are also primarily written in Go and are protected via authentication, reducing the severity of this vulnerability to Low.  Red Hat Gluster Storage 3 and Red Hat Openshift Container Storage 4 components are built with the affected version of Go, however the vulnerable functionality is currently not used by these products and hence this issue has been rated as having a security impact of Low.  Red Hat Ceph Storage 3 and 4 components are built with the affected version of Go, however the vulnerable functionality is currently not used by these products and hence this issue has been rated as having a security impact of Low.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -116,6 +128,10 @@
         {
           "desc": "In archive/zip in Go before 1.16.8 and 1.17.x before 1.17.1, a crafted archive header (falsely designating that many files are present) can cause a NewReader or OpenReader panic. NOTE: this issue exists because of an incomplete fix for CVE-2021-33196.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -146,6 +162,10 @@
         {
           "desc": "Red Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -174,7 +194,7 @@
           ]
         }
       ],
-      "sha256": "2739537572d4ba20db734ada02290d4be590b8b76131486c6455f600cf4eb79c"
+      "sha256": "6609705adba79a6b777a2786aad8d10d5adf32e0182baf5a1dcbc4b47767fdcf"
     }
   ]
 }

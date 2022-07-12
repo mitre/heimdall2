@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.28",
+    "release": "2.6.29",
     "target_id": "default ruleset:Amazon Web Services:916481805664"
   },
-  "version": "2.6.28",
+  "version": "2.6.29",
   "statistics": {},
   "profiles": [
     {
@@ -91,7 +91,8 @@
           "tags": {
             "nist": [
               "AU-6"
-            ]
+            ],
+            "cci": []
           },
           "refs": [
             {
@@ -140,6 +141,9 @@
             "nist": [
               "AU-12",
               "SI-4(2)"
+            ],
+            "cci": [
+              "CCI-000172"
             ]
           },
           "refs": [
@@ -188,6 +192,9 @@
           "tags": {
             "nist": [
               "AU-12"
+            ],
+            "cci": [
+              "CCI-000172"
             ]
           },
           "refs": [
@@ -236,7 +243,8 @@
           "tags": {
             "nist": [
               "AU-6"
-            ]
+            ],
+            "cci": []
           },
           "refs": [
             {
@@ -284,6 +292,9 @@
           "tags": {
             "nist": [
               "AU-12"
+            ],
+            "cci": [
+              "CCI-000172"
             ]
           },
           "refs": [
@@ -332,7 +343,8 @@
           "tags": {
             "nist": [
               "AU-6"
-            ]
+            ],
+            "cci": []
           },
           "refs": [
             {
@@ -380,6 +392,9 @@
           "tags": {
             "nist": [
               "AU-12"
+            ],
+            "cci": [
+              "CCI-000172"
             ]
           },
           "refs": [
@@ -428,6 +443,9 @@
           "tags": {
             "nist": [
               "AU-12"
+            ],
+            "cci": [
+              "CCI-000172"
             ]
           },
           "refs": [
@@ -473,7 +491,7 @@
           ]
         }
       ],
-      "sha256": "48246c363b3e5dcd36b898120841093ba2e5987c2c33913805261a05c91b595a"
+      "sha256": "bf3fe3a8edcf7a2118c9eaffcc8bee5110454d8db2df851d3ba673d8f6e65e00"
     }
   ],
   "passthrough": {

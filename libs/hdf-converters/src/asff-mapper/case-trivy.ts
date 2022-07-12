@@ -1,6 +1,7 @@
 import {encode} from 'html-entities';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
+import {DEFAULT_UPDATE_REMEDIATION_NIST_TAGS} from '../utils/global';
 
 function findingId(finding: unknown): string {
   const generatorId = _.get(finding, 'GeneratorId');
@@ -16,7 +17,7 @@ function findingId(finding: unknown): string {
 function findingNistTag(finding: unknown): string[] {
   const cveId = _.get(finding, 'Resources[0].Details.Other.CVE ID');
   if (typeof cveId === 'string') {
-    return ['SI-2', 'RA-5'];
+    return DEFAULT_UPDATE_REMEDIATION_NIST_TAGS;
   } else {
     return [];
   }

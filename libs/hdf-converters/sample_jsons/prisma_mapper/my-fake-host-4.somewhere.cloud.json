@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.16",
+    "release": "2.6.29",
     "target_id": "my-fake-host-4.somewhere.cloud"
   },
-  "version": "2.6.16",
+  "version": "2.6.29",
   "statistics": {
     "duration": null
   },
@@ -27,6 +27,10 @@
         {
           "desc": "(CIS_Linux_2.0.0 - 1.4.1) Ensure permissions on bootloader config are configured",
           "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -57,6 +61,10 @@
         {
           "desc": "(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
           "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -87,6 +95,10 @@
         {
           "desc": "All versions of Samba prior to 4.13.16 are vulnerable to a malicious client using an SMB1 or NFS race to allow a directory to be created in an area of the server file system not exported under the share definition. Note that SMB1 has to be enabled, or the share also available via NFS in order for this attack to succeed.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -117,6 +129,10 @@
         {
           "desc": "STATEMENT: As per upstream \\\"Prior to Samba 4.15.0 patches for this are not possible, due to the prior design of the Samba VFS layer which used pathname-based calls for most meta-data operations. A two and a half year effort was undertaken to completely re-write the Samba VFS layer to stop use of pathname-based calls in all cases involving reading and writing of metadata returned to the client. This work has finally been completed in Samba 4.15.0.\\\"             MITIGATION: Do not enable SMB1 (please note SMB1 is disabled by default in Samba from version 4.11.0 and onwards). This prevents the creation of symbolic links via SMB1. If SMB1 must be enabled for backwards compatibility then add the parameter:  unix extensions = no  to the [global] section of your smb.conf and restart smbd. This prevents SMB1 clients from creating symlinks on the exported file system.  However, if the same region of the file system is also exported using NFS, NFS clients can create symlinks that potentially can also hit the race condition. For non-patched versions of Samba we recommend only exporting areas of the file system by either SMB2 or NFS, not both.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -147,6 +163,10 @@
         {
           "desc": "Samba is an open-source implementation of the Server Message Block (SMB) protocol and the related Common Internet File System (CIFS) protocol, which allow PC-compatible machines to share files, printers, and various information.  Security Fix(es):  * samba: Out-of-bounds heap read/write vulnerability in VFS module vfs_fruit allows code execution (CVE-2021-44142)  For more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.  Bug Fix(es):  * Fix username map script regression introduced with CVE-2020-25717 (BZ#2046173)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -175,7 +195,7 @@
           ]
         }
       ],
-      "sha256": "e5b09e975e6a89f0cd9e80dae51fecb03ed9d6d76d0f4c4ca2dcefe0de000ca6"
+      "sha256": "a530cc34f8ee12cba32136ba638825fd25a8bbd9ecb4d24f76c935372b799748"
     }
   ]
 }
