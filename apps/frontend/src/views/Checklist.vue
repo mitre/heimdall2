@@ -169,8 +169,8 @@
           </v-col>
           <v-col xs="4">
             <v-card height="60%">
-              <v-card-title>DATA WILL GO HERE</v-card-title>
-              <v-card-subtitle>DATA WILL GO HERE</v-card-subtitle>
+              <v-card-title>Vulnerabilities</v-card-title>
+              <v-card-subtitle>{{ 'Checklist File Name' }}</v-card-subtitle>
               <pre>
 {{ 'something' }} <br />{{ 'something Else' }}
               </pre>
