@@ -1,4 +1,7 @@
+import { FileID } from "@/store/report_intake";
+
 export type Checklist = {
+  uniqueId: FileID;
   header: ChecklistHeader;
   vulns: ChecklistVuln[];
 };
@@ -34,5 +37,10 @@ export type ChecklistVuln = {
   mitigations: string;
   potentialImpact: string;
   thirdPartyTools: string;
-  // Others
+  mitigationControl: string;
+  responsibility: string;
+  securityOverrideGuidance: string;
+  checkContentRef: string;
+  stigRef: string;
+  // Others not included, but can be added if needed
 };

@@ -17,7 +17,7 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
-import {FilteredDataModule} from './data_filters';
+import { FilteredDataModule } from './data_filters';
 
 /** We make some new variant types of the Contextual types, to include their files*/
 export function isFromProfileFile(p: SourcedContextualizedProfile) {
@@ -36,9 +36,6 @@ export class InspecData extends VuexModule {
 
   /** State var containing all profile files that have been added */
   profileFiles: ProfileFile[] = [];
-
-  /** State var containing all Checklists that have been added */
-  checklistFiles: any[] = [];
 
   /** Return all of the files that we currently have. */
   get allFiles(): (EvaluationFile | ProfileFile)[] {
