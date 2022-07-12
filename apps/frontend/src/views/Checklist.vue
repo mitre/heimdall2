@@ -48,57 +48,72 @@
     </div>
   </template>
   <template #main-content>
-    <v-container id="fileCards" mx-0 px-0 fluid>
-      <!-- Evaluation Info -->
-      <v-row no-gutters class="mx-n3 mb-3">
-        <v-col>
-          <v-slide-group v-model="evalInfo" show-arrows>
-            <v-slide-item v-for="(file, i) in activeFiles" :key="i">
-              <v-card width="100%" max-width="100%" class="mx-3" data-cy="profileInfo" @click="toggle_profile(file)">
-                <EvaluationInfo :file="file" />
-                <v-card-subtitle class="bottom-right">
-                  File Info ↓
-                </v-card-subtitle>
-              </v-card>
-            </v-slide-item>
-          </v-slide-group>
+    <v-container fluid grid-list-md pt-0 pa-2>
+      <v-container id="fileCards" mx-0 px-0 fluid>
+        <!-- Evaluation Info -->
+        <v-row no-gutters class="mx-n3 mb-3">
+          <v-col>
+            <v-slide-group v-model="evalInfo" show-arrows>
+              <v-slide-item v-for="(file, i) in activeFiles" :key="i">
+                <v-card width="100%" max-width="100%" class="mx-3" data-cy="profileInfo" @click="toggle_profile(file)">
+                  <EvaluationInfo :file="file" />
+                  <v-card-subtitle class="bottom-right">
+                    File Info ↓
+                  </v-card-subtitle>
+                </v-card>
+              </v-slide-item>
+            </v-slide-group>
+          </v-col>
+        </v-row>
+        <ProfileData v-if="evalInfo != null" class="my-4 mx-2" :file="evalInfo" />
+      </v-container>
+      <!-- Count Cards -->
+      <StatusCardRow :filter="all_filter" :current-status-filter="statusFilter" @show-errors="showErrors"
+        @show-waived="showWaived" @add-filter="addStatusSearch" @remove-filter="removeStatusFilter" />
+      <!-- Compliance Cards -->
+      <v-row id="complianceCards" justify="space-around">
+        <v-col xs="4">
+          <v-card id="statusCounts" class="fill-height">
+            <v-card-title class="justify-center">Status Counts</v-card-title>
+            <v-card-actions class="justify-center">
+              <StatusChart v-model="statusFilter" :filter="all_filter" />
+            </v-card-actions>
+          </v-card>
+        </v-col>
+        <v-col xs="4">
+          <v-card id="severityCounts" class="fill-height">
+            <v-card-title class="justify-center">Severity Counts</v-card-title>
+            <v-card-actions class="justify-center">
+              <SeverityChart v-model="severityFilter" :filter="all_filter" />
+            </v-card-actions>
+          </v-card>
+        </v-col>
+        <v-col xs="4">
+          <v-card id="complianceLevel" class="fill-height">
+            <v-card-title class="justify-center">Compliance Level</v-card-title>
+            <v-card-actions class="justify-center">
+              <ComplianceChart :filter="all_filter" />
+            </v-card-actions>
+            <v-card-text style="text-align: center">[Passed/(Passed + Failed + Not Reviewed + Profile Error<span
+                v-if="waivedProfilesExist">
+                + Waived</span>) * 100]</v-card-text>
+          </v-card>
         </v-col>
       </v-row>
-      <ProfileData v-if="evalInfo != null" class="my-4 mx-2" :file="evalInfo" />
+      <!-- DataTable -->
+      <v-row>
+        <v-col xs="4">
+          <v-data-table height="60%" item-key="name" :headers="headers" class="fixed-bottom" :fixed-header="true">
+          </v-data-table>
+        </v-col>
+        <v-col xs="4">
+          <v-card height="60%">
+            <v-card-title>DATA WILL GO HERE</v-card-title>
+            <v-card-subtitle>DATA WILL GO HERE</v-card-subtitle>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-container>
-    <!-- Count Cards -->
-    <StatusCardRow :filter="all_filter" :current-status-filter="statusFilter" @show-errors="showErrors"
-      @show-waived="showWaived" @add-filter="addStatusSearch" @remove-filter="removeStatusFilter" />
-    <!-- Compliance Cards -->
-    <v-row id="complianceCards" justify="space-around">
-      <v-col xs="4">
-        <v-card id="statusCounts" class="fill-height">
-          <v-card-title class="justify-center">Status Counts</v-card-title>
-          <v-card-actions class="justify-center">
-            <StatusChart v-model="statusFilter" :filter="all_filter" />
-          </v-card-actions>
-        </v-card>
-      </v-col>
-      <v-col xs="4">
-        <v-card id="severityCounts" class="fill-height">
-          <v-card-title class="justify-center">Severity Counts</v-card-title>
-          <v-card-actions class="justify-center">
-            <SeverityChart v-model="severityFilter" :filter="all_filter" />
-          </v-card-actions>
-        </v-card>
-      </v-col>
-      <v-col xs="4">
-        <v-card id="complianceLevel" class="fill-height">
-          <v-card-title class="justify-center">Compliance Level</v-card-title>
-          <v-card-actions class="justify-center">
-            <ComplianceChart :filter="all_filter" />
-          </v-card-actions>
-          <v-card-text style="text-align: center">[Passed/(Passed + Failed + Not Reviewed + Profile Error<span
-              v-if="waivedProfilesExist">
-              + Waived</span>) * 100]</v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
   </template>
   </Base>
 </template>
@@ -307,6 +322,15 @@ export default class Checklist extends RouteMixin {
 
   get waivedProfilesExist(): boolean {
     return StatusCountModule.countOf(this.all_filter, 'Waived') >= 1;
+  }
+
+  get headers() {
+    return [
+      { text: 'Status', value: 'status', },
+      { text: 'Vul ID', value: 'vulId' },
+      { text: 'Rule ID', value: 'ruleId' },
+      { text: 'Rule Name', value: 'ruleName' }
+    ]
   }
 
   /**
