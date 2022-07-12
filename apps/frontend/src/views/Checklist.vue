@@ -48,7 +48,7 @@
     </div>
   </template>
   <template #main-content>
-    <v-container fluid grid-list-md pt-0 pa-2>
+    <v-container fluid grid-list-md pt-0 pa-2 style="height: 90vh">
       <v-container id="fileCards" mx-0 px-0 fluid>
         <!-- Evaluation Info -->
         <v-row no-gutters class="mx-n3 mb-3">
@@ -103,8 +103,11 @@
       <!-- DataTable -->
       <v-row>
         <v-col xs="4">
-          <v-data-table height="60%" item-key="name" :headers="headers" class="fixed-bottom" :fixed-header="true">
-          </v-data-table>
+          <v-flex md6 style="overflow:auto">
+            <v-data-table item-key="name" :headers="headers" class="fixed-bottom" :items="rulesAndStuff"
+              :fixed-header="true">
+            </v-data-table>
+          </v-flex>
         </v-col>
         <v-col xs="4">
           <v-card height="60%">
@@ -330,6 +333,21 @@ export default class Checklist extends RouteMixin {
       { text: 'Vul ID', value: 'vulId' },
       { text: 'Rule ID', value: 'ruleId' },
       { text: 'Rule Name', value: 'ruleName' }
+    ]
+  }
+
+  get rulesAndStuff() {
+    return [
+      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" },
+      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" },
+      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" },
+      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" },
+      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" },
+      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" },
+      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" },
+      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" },
+      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" },
+      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" }
     ]
   }
 
