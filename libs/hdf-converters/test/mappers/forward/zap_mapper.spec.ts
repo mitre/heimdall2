@@ -49,14 +49,18 @@ describe('zap_mapper', () => {
         'sample_jsons/zap_mapper/sample_input_report/webgoat.json',
         {encoding: 'utf-8'}
       ),
-      'http://mymac.com:8191', true
+      'http://mymac.com:8191',
+      true
     );
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/zap_mapper/zap-webgoat-hdf-withraw.json', {
-            encoding: 'utf-8'
-          })
+          fs.readFileSync(
+            'sample_jsons/zap_mapper/zap-webgoat-hdf-withraw.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
         )
       )
     );
@@ -67,7 +71,8 @@ describe('zap_mapper', () => {
         'sample_jsons/zap_mapper/sample_input_report/zero.webappsecurity.json',
         {encoding: 'utf-8'}
       ),
-      'http://zero.webappsecurity.com', true
+      'http://zero.webappsecurity.com',
+      true
     );
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(

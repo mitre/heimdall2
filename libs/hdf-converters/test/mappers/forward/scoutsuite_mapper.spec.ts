@@ -29,7 +29,8 @@ describe('scoutsuite_mapper_withraw', () => {
       fs.readFileSync(
         'sample_jsons/scoutsuite_mapper/sample_input_report/scoutsuite_sample.js',
         {encoding: 'utf-8'}
-      ), true
+      ),
+      true
     );
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(

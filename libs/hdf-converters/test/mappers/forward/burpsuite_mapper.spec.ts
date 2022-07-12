@@ -28,14 +28,18 @@ describe('burpsuite_mapper_withraw', () => {
       fs.readFileSync(
         'sample_jsons/burpsuite_mapper/sample_input_report/zero.webappsecurity.com.min',
         {encoding: 'utf-8'}
-      ), true
+      ),
+      true
     );
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/burpsuite_mapper/burpsuite-hdf-withraw.json', {
-            encoding: 'utf-8'
-          })
+          fs.readFileSync(
+            'sample_jsons/burpsuite_mapper/burpsuite-hdf-withraw.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
         )
       )
     );

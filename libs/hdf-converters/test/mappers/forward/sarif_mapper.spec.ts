@@ -28,7 +28,8 @@ describe('sarif_mapper_withraw', () => {
       fs.readFileSync(
         'sample_jsons/sarif_mapper/sample_input_report/sarif_input.sarif',
         {encoding: 'utf-8'}
-      ), true
+      ),
+      true
     );
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(

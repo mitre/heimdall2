@@ -28,7 +28,8 @@ describe('nikto_mapper_withraw', () => {
       fs.readFileSync(
         'sample_jsons/nikto_mapper/sample_input_report/zero.webappsecurity.json',
         {encoding: 'utf-8'}
-      ), true
+      ),
+      true
     );
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(

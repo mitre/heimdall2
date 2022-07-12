@@ -28,14 +28,18 @@ describe('jfrog_xray_mapper_withraw', () => {
       fs.readFileSync(
         'sample_jsons/jfrog_xray_mapper/sample_input_report/jfrog_xray_sample.json',
         {encoding: 'utf-8'}
-      ), true
+      ),
+      true
     );
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/jfrog_xray_mapper/jfrog-hdf-withraw.json', {
-            encoding: 'utf-8'
-          })
+          fs.readFileSync(
+            'sample_jsons/jfrog_xray_mapper/jfrog-hdf-withraw.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
         )
       )
     );
