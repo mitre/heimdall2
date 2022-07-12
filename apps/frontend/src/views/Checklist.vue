@@ -152,14 +152,14 @@
                     </thead>
                     <tbody>
                       <tr
-                        v-for="rule in rulesAndStuff"
+                        v-for="rule in rules"
                         :key="rule.ruleId"
                         @click="showRule(rule)"
                       >
                         <td>{{ rule.status }}</td>
-                        <td>{{ rule.vulId }}</td>
+                        <td>{{ rule.vulnNum }}</td>
                         <td>{{ rule.ruleId }}</td>
-                        <td>{{ rule.ruleName }}</td>
+                        <td>{{ rule.ruleTitle }}</td>
                       </tr>
                     </tbody></template
                   >
@@ -171,6 +171,9 @@
             <v-card height="60%">
               <v-card-title>DATA WILL GO HERE</v-card-title>
               <v-card-subtitle>DATA WILL GO HERE</v-card-subtitle>
+              <pre>
+{{ 'something' }} <br />{{ 'something Else' }}
+              </pre>
             </v-card>
           </v-col>
         </v-row>
@@ -189,6 +192,7 @@ import {
   Filter,
   FilteredDataModule
 } from '@/store/data_filters';
+import {FilteredChecklistDataModule} from '@/store/checklist_data_filters';
 import {
   EvaluationFile,
   FileID,
@@ -220,6 +224,7 @@ import ExportJson from '@/components/global/ExportJson.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
 import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
+import {ChecklistVuln} from '../types/checklist/control';
 
 @Component({
   components: {
@@ -361,6 +366,7 @@ export default class Checklist extends RouteMixin {
   }
 
   showRule(rule: Record<string, unknown>) {
+    // Run selectRule from Checklist store
     console.log(rule);
   }
 
@@ -407,19 +413,14 @@ export default class Checklist extends RouteMixin {
     ];
   }
 
-  get rulesAndStuff() {
-    return [
-      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'},
-      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'},
-      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'},
-      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'},
-      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'},
-      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'},
-      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'},
-      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'},
-      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'},
-      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'}
-    ];
+  get rules() {
+    const rulesList: ChecklistVuln[] = [];
+    Object.entries(FilteredChecklistDataModule.loadedChecklists)
+      .map(([_fileId, checklist]) => checklist.vulns)
+      .forEach((rulesItems) => {
+        rulesList.push(...rulesItems);
+      });
+    return rulesList;
   }
 
   /**
