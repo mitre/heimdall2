@@ -99,6 +99,7 @@ const SPECIAL_CASE_MAPPING: Map<
   Record<string, Function>
 > = new Map([
   [SpecialCasing.FirewallManager, getFirewallManager()],
+  [SpecialCasing.GuardDuty, getGuardDuty()],
   [SpecialCasing.Prowler, getProwler()],
   [SpecialCasing.SecurityHub, getSecurityHub()],
   [SpecialCasing.Trivy, getTrivy()],
